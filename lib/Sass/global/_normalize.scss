@@ -9,7 +9,8 @@
  */
 
 html {
-  line-height: 1.15; /* 1 */
+  /* Removed as it affects text rendering in a few places, eg: workbench item titles */
+  /* line-height: 1.15; */ /* 1 */
   -webkit-text-size-adjust: 100%; /* 2 */
 }
 
