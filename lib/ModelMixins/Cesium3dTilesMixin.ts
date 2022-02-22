@@ -10,6 +10,7 @@ import {
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
+import Color from "terriajs-cesium/Source/Core/Color";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
 import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
@@ -17,13 +18,11 @@ import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
-import Color from "terriajs-cesium/Source/Core/Color";
 import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
 import Constructor from "../Core/Constructor";
-import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import { isJsonObject, JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
@@ -32,9 +31,10 @@ import TerriaError from "../Core/TerriaError";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
+import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
+import StratumOrder from "../Models/Definition/StratumOrder";
 import Feature from "../Models/Feature";
-import { SelectableDimension } from "../Models/SelectableDimensions";
 import Cesium3DTilesCatalogItemTraits from "../Traits/TraitsClasses/Cesium3DTilesCatalogItemTraits";
 import Cesium3dTilesTraits, {
   OptionsTraits
@@ -43,8 +43,6 @@ import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
 import ClippingMixin from "./ClippingMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
-import LoadableStratum from "../Models/Definition/LoadableStratum";
-import StratumOrder from "../Models/Definition/StratumOrder";
 
 class Cesium3dTilesStratum extends LoadableStratum(Cesium3dTilesTraits) {
   duplicateLoadableStratum(model: BaseModel): this {
@@ -290,14 +288,6 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       });
 
       return [this.tileset, ...this.clippingMapItems];
-    }
-
-    @computed get selectableDimensions(): SelectableDimension[] {
-      return filterOutUndefined([
-        ...super.selectableDimensions,
-        this.shadowDimension,
-        this.clippingDimension
-      ]);
     }
 
     @computed

@@ -17,17 +17,17 @@ import BoxDrawing from "../Models/BoxDrawing";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
-import { SelectableDimension } from "../Models/SelectableDimensions";
+import SelectableDimensions, {
+  SelectableDimension
+} from "../Models/SelectableDimensions";
 import ClippingPlanesTraits from "../Traits/TraitsClasses/ClippingPlanesTraits";
 import HeadingPitchRollTraits from "../Traits/TraitsClasses/HeadingPitchRollTraits";
 import LatLonHeightTraits from "../Traits/TraitsClasses/LatLonHeightTraits";
-import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 
-type BaseType = Model<ClippingPlanesTraits & MappableTraits>;
+type BaseType = Model<ClippingPlanesTraits> & SelectableDimensions;
 type InstanceType = BaseType & {
   clippingPlanesOriginMatrix(): Matrix4;
   clippingPlaneCollection: ClippingPlaneCollection | undefined;
-  clippingDimension: SelectableDimension | undefined;
   clippingMapItems: CustomDataSource[];
 };
 
@@ -249,103 +249,106 @@ function ClippingMixin<T extends Constructor<BaseType>>(
     }
 
     @computed
-    get clippingDimension(): SelectableDimension | undefined {
+    get selectableDimensions(): SelectableDimension[] {
       if (!this.clippingBox.enableFeature) {
-        return undefined;
+        return super.selectableDimensions;
       }
 
-      return {
-        type: "checkbox-group",
-        id: "clipping-box",
-        selectedId: this.clippingBox.clipModel ? "true" : "false",
-        options: [
-          {
-            id: "true",
-            name: i18next.t("models.clippingBox.clipModel")
-          },
-          {
-            id: "false",
-            name: i18next.t("models.clippingBox.clipModel")
-          }
-        ],
-        setDimensionValue: (stratumId, value) => {
-          this.clippingBox.setTrait(stratumId, "clipModel", value === "true");
-        },
-        selectableDimensions: [
-          {
-            id: "show-clip-editor-ui",
-            type: "checkbox",
-            selectedId: this.clippingBox.showEditorUi ? "true" : "false",
-            disable: this.clippingBox.clipModel === false,
-            options: [
-              {
-                id: "true",
-                name: i18next.t("models.clippingBox.showEditorUi")
-              },
-              {
-                id: "false",
-                name: i18next.t("models.clippingBox.showEditorUi")
-              }
-            ],
-            setDimensionValue: (stratumId, value) => {
-              this.clippingBox.setTrait(
-                stratumId,
-                "showEditorUi",
-                value === "true"
-              );
+      return [
+        ...super.selectableDimensions,
+        {
+          type: "checkbox-group",
+          id: "clipping-box",
+          selectedId: this.clippingBox.clipModel ? "true" : "false",
+          options: [
+            {
+              id: "true",
+              name: i18next.t("models.clippingBox.clipModel")
+            },
+            {
+              id: "false",
+              name: i18next.t("models.clippingBox.clipModel")
             }
+          ],
+          setDimensionValue: (stratumId, value) => {
+            this.clippingBox.setTrait(stratumId, "clipModel", value === "true");
           },
-          {
-            id: "clamp-box-to-ground",
-            type: "checkbox",
-            selectedId: this.clippingBox.clampBoxToGround ? "true" : "false",
-            disable:
-              this.clippingBox.clipModel === false ||
-              this.clippingBox.showEditorUi === false,
-            options: [
-              {
-                id: "true",
-                name: i18next.t("models.clippingBox.clampBoxToGround")
-              },
-              {
-                id: "false",
-                name: i18next.t("models.clippingBox.clampBoxToGround")
+          selectableDimensions: [
+            {
+              id: "show-clip-editor-ui",
+              type: "checkbox",
+              selectedId: this.clippingBox.showEditorUi ? "true" : "false",
+              disable: this.clippingBox.clipModel === false,
+              options: [
+                {
+                  id: "true",
+                  name: i18next.t("models.clippingBox.showEditorUi")
+                },
+                {
+                  id: "false",
+                  name: i18next.t("models.clippingBox.showEditorUi")
+                }
+              ],
+              setDimensionValue: (stratumId, value) => {
+                this.clippingBox.setTrait(
+                  stratumId,
+                  "showEditorUi",
+                  value === "true"
+                );
               }
-            ],
-            setDimensionValue: (stratumId, value) => {
-              this.clippingBox.setTrait(
-                stratumId,
-                "clampBoxToGround",
-                value === "true"
-              );
-            }
-          },
-          {
-            id: "clip-direction",
-            name: i18next.t("models.clippingBox.clipDirection.name"),
-            type: "select",
-            selectedId: this.clippingBox.clipDirection,
-            disable: this.clippingBox.clipModel === false,
-            options: [
-              {
-                id: "inside",
-                name: i18next.t(
-                  "models.clippingBox.clipDirection.options.inside"
-                )
-              },
-              {
-                id: "outside",
-                name: i18next.t(
-                  "models.clippingBox.clipDirection.options.outside"
-                )
+            },
+            {
+              id: "clamp-box-to-ground",
+              type: "checkbox",
+              selectedId: this.clippingBox.clampBoxToGround ? "true" : "false",
+              disable:
+                this.clippingBox.clipModel === false ||
+                this.clippingBox.showEditorUi === false,
+              options: [
+                {
+                  id: "true",
+                  name: i18next.t("models.clippingBox.clampBoxToGround")
+                },
+                {
+                  id: "false",
+                  name: i18next.t("models.clippingBox.clampBoxToGround")
+                }
+              ],
+              setDimensionValue: (stratumId, value) => {
+                this.clippingBox.setTrait(
+                  stratumId,
+                  "clampBoxToGround",
+                  value === "true"
+                );
               }
-            ],
-            setDimensionValue: (stratumId, value) => {
-              this.clippingBox.setTrait(stratumId, "clipDirection", value);
+            },
+            {
+              id: "clip-direction",
+              name: i18next.t("models.clippingBox.clipDirection.name"),
+              type: "select",
+              selectedId: this.clippingBox.clipDirection,
+              disable: this.clippingBox.clipModel === false,
+              options: [
+                {
+                  id: "inside",
+                  name: i18next.t(
+                    "models.clippingBox.clipDirection.options.inside"
+                  )
+                },
+                {
+                  id: "outside",
+                  name: i18next.t(
+                    "models.clippingBox.clipDirection.options.outside"
+                  )
+                }
+              ],
+              setDimensionValue: (stratumId, value) => {
+                this.clippingBox.setTrait(stratumId, "clipDirection", value);
+              }
             }
-          }
-        ]
-      };
+          ]
+        }
+      ];
     }
   }
 
