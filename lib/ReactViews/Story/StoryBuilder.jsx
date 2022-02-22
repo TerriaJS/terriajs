@@ -216,18 +216,7 @@ const StoryBuilder = observer(
 
     runStories() {
       this.closeShareRemoving();
-      runInAction(() => {
-        this.props.viewState.storyBuilderShown = false;
-        this.props.viewState.storyShown = true;
-      });
-      setTimeout(function() {
-        triggerResize();
-      }, this.props.animationDuration || 1);
-      this.props.terria.currentViewer.notifyRepaintRequired();
-      this.props.terria.analytics?.logEvent(
-        Category.story,
-        StoryAction.runStory
-      );
+      this.props.viewState.runStories();
     },
 
     editStory(story) {
@@ -309,7 +298,11 @@ const StoryBuilder = observer(
             btnText={t("story.play")}
             onClick={this.runStories}
           >
-            <StyledIcon glyph={Icon.GLYPHS.play} light styledWidth={"20px"} />
+            <StyledIcon
+              glyph={Icon.GLYPHS.playStory}
+              light
+              styledWidth={"20px"}
+            />
           </StoryButton>
           <Spacing right={1} />
           <SharePanel

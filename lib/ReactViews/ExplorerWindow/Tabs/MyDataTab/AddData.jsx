@@ -20,10 +20,6 @@ import Loader from "../../../Loader";
 import Styles from "./add-data.scss";
 import FileInput from "./FileInput";
 
-// Local and remote data have different dataType options
-const defaultRemoteDataTypes = getDataType().remoteDataType;
-const defaultLocalDataTypes = getDataType().localDataType;
-
 /**
  * Add data panel in modal window -> My data tab
  */
@@ -35,23 +31,19 @@ const AddData = createReactClass({
     viewState: PropTypes.object,
     resetTab: PropTypes.func,
     activeTab: PropTypes.string,
-    localDataTypes: PropTypes.arrayOf(PropTypes.object),
-    remoteDataTypes: PropTypes.arrayOf(PropTypes.object),
     onFileAddFinished: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired
   },
 
-  getDefaultProps() {
-    return {
-      remoteDataTypes: defaultRemoteDataTypes,
-      localDataTypes: defaultLocalDataTypes
-    };
-  },
-
   getInitialState() {
+    const remoteDataTypes = getDataType().remoteDataType;
+    const localDataTypes = getDataType().localDataType;
+
     return {
-      localDataType: this.props.localDataTypes[0], // By default select the first item (auto)
-      remoteDataType: this.props.remoteDataTypes[0],
+      remoteDataTypes,
+      localDataTypes,
+      remoteDataType: remoteDataTypes[0], // By default select the first item (auto)
+      localDataType: localDataTypes[0],
       remoteUrl: "", // By default there's no remote url
       isLoading: false
     };
@@ -166,7 +158,7 @@ const AddData = createReactClass({
       icon: <Icon glyph={Icon.GLYPHS.opened} />
     };
 
-    const dataTypes = this.props.localDataTypes.reduce(function(
+    const dataTypes = this.state.localDataTypes.reduce(function(
       result,
       currentDataType
     ) {
@@ -191,7 +183,7 @@ const AddData = createReactClass({
               </Trans>
             </label>
             <Dropdown
-              options={this.props.localDataTypes}
+              options={this.state.localDataTypes}
               selected={this.state.localDataType}
               selectOption={this.selectLocalOption}
               matchWidth={true}
@@ -218,7 +210,7 @@ const AddData = createReactClass({
               </Trans>
             </label>
             <Dropdown
-              options={this.props.remoteDataTypes}
+              options={this.state.remoteDataTypes}
               selected={this.state.remoteDataType}
               selectOption={this.selectRemoteOption}
               matchWidth={true}
