@@ -115,10 +115,10 @@ export class ClippingBoxTraits extends mixTraits(BoxDrawingTraits) {
 
   @primitiveTrait({
     type: "boolean",
-    name: "Show clipping box editor UI",
-    description: "Toggles the Cesium map UI for editing the clipping plane."
+    name: "Show clipping box",
+    description: "Shows a 3D box and associated UI for editing the clip volume."
   })
-  showEditorUi = false;
+  showClippingBox = false;
 
   @primitiveTrait({
     type: "boolean",

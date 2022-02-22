@@ -1515,7 +1515,7 @@
     "clippingBox": {
       "groupName": "Clipping Box",
       "clipModel": "Clip model",
-      "showEditorUi": "Show clip editor",
+      "showClippingBox": "Show clipping box",
       "keepBoxAboveGround": "Above ground only",
       "clipDirection": {
         "name": "Clip direction",

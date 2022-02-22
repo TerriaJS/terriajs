@@ -136,7 +136,7 @@ function ClippingMixin<T extends Constructor<BaseType>>(
         !cesium ||
         !options.enableFeature ||
         !options.clipModel ||
-        !options.showEditorUi
+        !options.showClippingBox
       ) {
         if (this._clippingBoxDrawing) {
           this._clippingBoxDrawing = undefined;
@@ -277,22 +277,22 @@ function ClippingMixin<T extends Constructor<BaseType>>(
             {
               id: "show-clip-editor-ui",
               type: "checkbox",
-              selectedId: this.clippingBox.showEditorUi ? "true" : "false",
+              selectedId: this.clippingBox.showClippingBox ? "true" : "false",
               disable: this.clippingBox.clipModel === false,
               options: [
                 {
                   id: "true",
-                  name: i18next.t("models.clippingBox.showEditorUi")
+                  name: i18next.t("models.clippingBox.showClippingBox")
                 },
                 {
                   id: "false",
-                  name: i18next.t("models.clippingBox.showEditorUi")
+                  name: i18next.t("models.clippingBox.showClippingBox")
                 }
               ],
               setDimensionValue: (stratumId, value) => {
                 this.clippingBox.setTrait(
                   stratumId,
-                  "showEditorUi",
+                  "showClippingBox",
                   value === "true"
                 );
               }
@@ -305,7 +305,7 @@ function ClippingMixin<T extends Constructor<BaseType>>(
                 : "false",
               disable:
                 this.clippingBox.clipModel === false ||
-                this.clippingBox.showEditorUi === false,
+                this.clippingBox.showClippingBox === false,
               options: [
                 {
                   id: "true",
