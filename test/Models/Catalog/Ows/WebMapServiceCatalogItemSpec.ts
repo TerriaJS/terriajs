@@ -302,6 +302,7 @@ describe("WebMapServiceCatalogItem", function() {
 
   it("uses tileWidth and tileHeight", async function() {
     let wms: WebMapServiceCatalogItem;
+    i;
     const terria = new Terria();
     wms = new WebMapServiceCatalogItem("test", terria);
     runInAction(() => {

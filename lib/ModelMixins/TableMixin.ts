@@ -21,7 +21,8 @@ import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
-  SelectableDimension
+  SelectableDimension,
+  SelectableDimensionEnum
 } from "../Models/SelectableDimensions/SelectableDimensions";
 import TableStylingWorkflow from "../Models/SelectableDimensions/TableStylingWorkflow";
 import ViewingControls, { ViewingControl } from "../Models/ViewingControls";
@@ -481,7 +482,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      * Takes {@link TableStyle}s and returns a SelectableDimension which can be rendered in a Select dropdown
      */
     @computed
-    get styleDimensions(): SelectableDimension | undefined {
+    get styleDimensions(): SelectableDimensionEnum | undefined {
       if (this.mapItems.length === 0 && !this.enableManualRegionMapping) {
         return;
       }
@@ -513,7 +514,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      * {@link TableTraits#enableManualRegionMapping} must be enabled.
      */
     @computed
-    get regionProviderDimensions(): SelectableDimension | undefined {
+    get regionProviderDimensions(): SelectableDimensionEnum | undefined {
       if (
         !Array.isArray(this.regionProviderList?.regionProviders) ||
         !isDefined(this.activeTableStyle.regionColumn)

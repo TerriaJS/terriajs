@@ -188,7 +188,7 @@ export const Button = (
             rightIcon={props.rightIcon}
             {...iconProps}
           >
-            {props!.renderIcon()}
+            {props!.renderIcon!()}
           </Icon>
         )
       : undefined;

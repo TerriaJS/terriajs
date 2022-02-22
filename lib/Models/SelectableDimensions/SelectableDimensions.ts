@@ -44,12 +44,6 @@ export interface ButtonDimension extends Dimension {
   readonly value?: string;
 }
 
-export const isEnumDimension = (
-  dim: Dimension
-): dim is EnumDimension<unknown> => {
-  return "options" in dim;
-};
-
 export type SelectableDimensionType =
   | undefined
   | "select"
@@ -164,15 +158,15 @@ export const isCheckbox = (
   dim: SelectableDimension
 ): dim is SelectableDimensionCheckbox => dim.type === "checkbox";
 
-export const isSelect = (
+export const isEnum = (
   dim: SelectableDimension
 ): dim is SelectableDimensionEnum =>
   dim.type === "select" || dim.type === undefined;
 
 /** Return only SelectableDimensionSelect from array of SelectableDimension */
-export const filterSelects = (
+export const filterEnums = (
   dims: SelectableDimension[]
-): SelectableDimensionEnum[] => dims.filter(isSelect);
+): SelectableDimensionEnum[] => dims.filter(isEnum);
 
 export const isGroup = (
   dim: SelectableDimension
@@ -222,8 +216,8 @@ export const filterSelectableDimensions = (placement?: Placement) => (
       // Filter by placement if defined, otherwise use default placement
       (!isDefined(placement) || isCorrectPlacement(placement)(dim)) &&
       isEnabled(dim) &&
-      // Check enum dimensions for valid options
-      (!isEnumDimension(dim) || enumHasValidOptions(dim)) &&
+      // Check enum (select and checkbox) dimensions for valid options
+      ((!isEnum(dim) && !isCheckbox(dim)) || enumHasValidOptions(dim)) &&
       // Only show groups if they have at least one SelectableDimension
       (!isGroup(dim) || dim.selectableDimensions.length > 0)
   );
@@ -236,7 +230,7 @@ export const findSelectedValueName = (
     return dim.selectedId === "true" ? "Enabled" : "Disabled";
   }
 
-  if (isSelect(dim)) {
+  if (isEnum(dim)) {
     return dim.options?.find(opt => opt.id === dim.selectedId)?.name;
   }
 

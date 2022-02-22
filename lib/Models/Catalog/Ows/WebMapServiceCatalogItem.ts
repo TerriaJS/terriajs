@@ -664,8 +664,8 @@ class WebMapServiceCatalogItem
   }
 
   @computed
-  get wmsDimensionSelectableDimensions(): SelectableDimension[] {
-    const dimensions: SelectableDimension[] = [];
+  get wmsDimensionSelectableDimensions(): SelectableDimensionEnum[] {
+    const dimensions: SelectableDimensionEnum[] = [];
 
     // For each layer -> For each dimension
     this.availableDimensions.forEach(layer => {
