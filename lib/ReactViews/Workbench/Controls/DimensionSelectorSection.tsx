@@ -283,7 +283,7 @@ export const DimensionSelectorButton: React.FC<{
   );
 };
 
-const debounceSetDimensionValue = debounce(
+const debounceSetColorDimensionValue = debounce(
   action((dim: SelectableDimensionColor, value: string) => {
     // Only update value if it has changed
     dim.value !== value
@@ -383,7 +383,7 @@ export const DimensionSelectorColor: React.FC<{
               const colorString = isDefined(evt.rgb.a)
                 ? `rgba(${evt.rgb.r},${evt.rgb.g},${evt.rgb.b},${evt.rgb.a})`
                 : `rgb(${evt.rgb.r},${evt.rgb.g},${evt.rgb.b})`;
-              debounceSetDimensionValue(dim, colorString);
+              debounceSetColorDimensionValue(dim, colorString);
             }}
           />
         </div>
