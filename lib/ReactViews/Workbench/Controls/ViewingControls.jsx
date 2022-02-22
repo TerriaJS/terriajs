@@ -154,15 +154,7 @@ const ViewingControls = observer(
         const theDirection = vectorToJson(item?.initialCamera?.direction);
         const theUp = vectorToJson(item?.initialCamera?.up);
 
-        if (
-          theWest &&
-          theEast &&
-          theNorth &&
-          theSouth &&
-          thePosition &&
-          theDirection &&
-          theUp
-        ) {
+        if (theWest && theEast && theNorth && theSouth) {
           // No value checking here. Improper values can lead to unexpected results.
           const initialCamera = {
             west: theWest,

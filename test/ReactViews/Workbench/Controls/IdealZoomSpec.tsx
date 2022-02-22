@@ -208,7 +208,7 @@ describe("Ideal Zoom", function() {
     expect(theCameraView.up).toBe(undefined);
   });
 
-  it("should use initial camera if the given parameters are valid.", async function() {
+  it("should use initialCamera if the given parameters are complete.", async function() {
     const initialCamera = {
       west: 143.85665964592238,
       south: -37.5588985189224,
@@ -263,9 +263,6 @@ describe("Ideal Zoom", function() {
     expect(theCameraView.up?.y).toBeCloseTo(initialCamera.up.y, 6);
     expect(theCameraView.up?.z).toBeCloseTo(initialCamera.up.z, 6);
 
-    // The rectangle values are calculated from the given idealZoom parameters,
-    // i.e., the customised camera's direction, position and up parameters.
-    // A 2D viewer will zoom to this rectangle only.
     expect(theCameraView.rectangle?.east).toBeCloseTo(
       CesiumMath.toRadians(initialCamera.east),
       6
@@ -284,7 +281,7 @@ describe("Ideal Zoom", function() {
     );
   });
 
-  it("should use default camera view if missing any required parameters.", async function() {
+  it("should use given rectangle if any other values are missing in initialCamera.", async function() {
     const initialCamera = {
       west: 143.85665964592238,
       south: -37.5588985189224,
@@ -294,6 +291,62 @@ describe("Ideal Zoom", function() {
         x: -4088564.111098504,
         y: 2985823.720726511,
         z: undefined
+      },
+      direction: {
+        x: 0.25654239033528903,
+        y: 0.8049473516085732,
+        z: 0.5350194044138963
+      },
+      up: {
+        x: -0.6168995401836412,
+        y: 0.5624968267277541,
+        z: -0.5504836757274634
+      }
+    };
+
+    theItem.setTrait("definition", "initialCamera", initialCamera);
+    await theItem.loadMapItems();
+    act(() => {
+      testRenderer = TestRenderer.create(
+        <ViewingControls item={theItem} viewState={viewState} />
+      );
+    });
+
+    testRenderer.root.findAllByType("button")[0].props.onClick();
+    const theCameraView = terria.currentViewer.getCurrentCameraView();
+
+    expect(theCameraView.direction).toBe(undefined);
+    expect(theCameraView.position).toBe(undefined);
+    expect(theCameraView.up).toBe(undefined);
+
+    expect(theCameraView.rectangle?.east).toBeCloseTo(
+      CesiumMath.toRadians(initialCamera.east),
+      6
+    );
+    expect(theCameraView.rectangle?.north).toBeCloseTo(
+      CesiumMath.toRadians(initialCamera.north),
+      6
+    );
+    expect(theCameraView.rectangle?.south).toBeCloseTo(
+      CesiumMath.toRadians(initialCamera.south),
+      6
+    );
+    expect(theCameraView.rectangle?.west).toBeCloseTo(
+      CesiumMath.toRadians(initialCamera.west),
+      6
+    );
+  });
+
+  it("should use default camera view if missing any required rectagle parameters in initialCamera.", async function() {
+    const initialCamera = {
+      west: undefined,
+      south: -37.5588985189224,
+      east: 143.85932639124115,
+      north: -37.55761610087383,
+      position: {
+        x: -4088564.111098504,
+        y: 2985823.720726511,
+        z: -3867066.0705771768
       },
       direction: {
         x: 0.25654239033528903,
