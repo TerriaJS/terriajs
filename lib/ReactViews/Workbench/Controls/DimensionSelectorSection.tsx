@@ -373,11 +373,13 @@ export const DimensionSelectorColor: React.FC<{
               top: "0px",
               right: "0px",
               bottom: "0px",
-              left: "0px"
+              left: "0px",
+              width: "340px"
             }}
             onClick={() => setIsOpen(false)}
           />
           <ChromePicker
+            css={{ transform: "translate(50px, -50%);" }}
             color={dim.value}
             onChangeComplete={evt => {
               const colorString = isDefined(evt.rgb.a)
