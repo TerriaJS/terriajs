@@ -17,7 +17,7 @@ import SelectableDimensions, {
   isColor,
   isGroup,
   isNumeric,
-  isSelect,
+  isEnum,
   isText,
   Placement,
   SelectableDimension,
@@ -94,7 +94,7 @@ export const DimensionSelector: React.FC<{
         </>
       ) : null}
       {isCheckbox(dim) && <DimensionSelectorCheckbox id={id} dim={dim} />}
-      {isSelect(dim) && <DimensionSelectorSelect id={id} dim={dim} />}
+      {isEnum(dim) && <DimensionSelectorSelect id={id} dim={dim} />}
       {isGroup(dim) && <DimensionSelectorGroup id={id} dim={dim} />}
       {isNumeric(dim) && <DimensionSelectorNumeric id={id} dim={dim} />}
       {isText(dim) && <DimensionSelectorText id={id} dim={dim} />}

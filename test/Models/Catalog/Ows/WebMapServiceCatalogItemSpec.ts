@@ -6,6 +6,7 @@ import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import { isEnum } from "../../../../lib/Models/SelectableDimensions/SelectableDimensions";
 
 describe("WebMapServiceCatalogItem", function() {
   it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specified", function() {

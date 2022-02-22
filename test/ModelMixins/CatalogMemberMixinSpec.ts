@@ -1,9 +1,10 @@
-import { runInAction, IReactionDisposer, reaction } from "mobx";
-import Terria from "../../lib/Models/Terria";
+import { IReactionDisposer, reaction, runInAction } from "mobx";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
-import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
+import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
+import { isEnum } from "../../lib/Models/SelectableDimensions/SelectableDimensions";
+import Terria from "../../lib/Models/Terria";
 import EnumDimensionTraits, {
   DimensionOptionTraits
 } from "../../lib/Traits/TraitsClasses/DimensionTraits";
@@ -157,6 +158,9 @@ describe("CatalogMemberMixin", function() {
       const modelDimension = wmsItem.selectableDimensions.find(
         dim => dim.id === "modelDimensions"
       );
+
+      if (!modelDimension || !isEnum(modelDimension))
+        throw "Couldn't find modelDimensions";
 
       modelDimension?.setDimensionValue(CommonStrata.user, "styles-test");
 
