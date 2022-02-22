@@ -1516,7 +1516,7 @@
       "groupName": "Clipping Box",
       "clipModel": "Clip model",
       "showEditorUi": "Show clip editor",
-      "clampBoxToGround": "Clamp box to ground",
+      "keepBoxAboveGround": "Above ground only",
       "clipDirection": {
         "name": "Clip direction",
         "options": {

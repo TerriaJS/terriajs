@@ -124,7 +124,7 @@ type InteractionState =
   | { is: "hovering"; entity: Entity & Interactable };
 
 type BoxDrawingOptions = {
-  clampBoxToGround?: boolean;
+  keepBoxAboveGround?: boolean;
   onChange?: (params: { modelMatrix: Matrix4; isFinished: boolean }) => void;
 };
 
@@ -187,7 +187,7 @@ export default class BoxDrawing {
   @observable
   public dataSource: CustomDataSource;
 
-  public clampBoxToGround: boolean;
+  public keepBoxAboveGround: boolean;
 
   // An external transform to convert the box in local coordinates to world coordinates
   private readonly worldTransform: Matrix4 = Matrix4.IDENTITY.clone();
@@ -220,7 +220,7 @@ export default class BoxDrawing {
     readonly options: BoxDrawingOptions
   ) {
     this.scene = cesium.scene;
-    this.clampBoxToGround = options.clampBoxToGround ?? false;
+    this.keepBoxAboveGround = options.keepBoxAboveGround ?? false;
     this.dataSource = new Proxy(new CustomDataSource(), {
       set: (target, prop, value) => {
         if (prop === "show") {
@@ -270,7 +270,7 @@ export default class BoxDrawing {
         moveStep,
         scratchNewPosition
       );
-      if (this.clampBoxToGround) {
+      if (this.keepBoxAboveGround) {
         const cartographic = Cartographic.fromCartesian(
           nextPosition,
           undefined,
@@ -1049,7 +1049,11 @@ export default class BoxDrawing {
       // Prevent scaling in Z axis if it will result in the box going underground.
       const isDraggingBottomScalePoint = axisLocal.z < 0;
       const isUpscaling = scaleAmount > 0;
-      if (this.clampBoxToGround && isUpscaling && isDraggingBottomScalePoint) {
+      if (
+        this.keepBoxAboveGround &&
+        isUpscaling &&
+        isDraggingBottomScalePoint
+      ) {
         const boxCenterHeight = Cartographic.fromCartesian(
           this.trs.translation,
           undefined,

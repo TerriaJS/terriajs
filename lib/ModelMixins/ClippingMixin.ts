@@ -198,10 +198,10 @@ function ClippingMixin<T extends Constructor<BaseType>>(
 
       if (this._clippingBoxDrawing) {
         this._clippingBoxDrawing.setTransform(boxTransform);
-        this._clippingBoxDrawing.clampBoxToGround = this.clippingBox.clampBoxToGround;
+        this._clippingBoxDrawing.keepBoxAboveGround = this.clippingBox.keepBoxAboveGround;
       } else {
         this._clippingBoxDrawing = new BoxDrawing(cesium, boxTransform, {
-          clampBoxToGround: this.clippingBox.clampBoxToGround,
+          keepBoxAboveGround: this.clippingBox.keepBoxAboveGround,
           onChange: action(({ modelMatrix, isFinished }) => {
             Matrix4.multiply(
               this.inverseClippingPlanesOriginMatrix,
@@ -300,24 +300,26 @@ function ClippingMixin<T extends Constructor<BaseType>>(
             {
               id: "clamp-box-to-ground",
               type: "checkbox",
-              selectedId: this.clippingBox.clampBoxToGround ? "true" : "false",
+              selectedId: this.clippingBox.keepBoxAboveGround
+                ? "true"
+                : "false",
               disable:
                 this.clippingBox.clipModel === false ||
                 this.clippingBox.showEditorUi === false,
               options: [
                 {
                   id: "true",
-                  name: i18next.t("models.clippingBox.clampBoxToGround")
+                  name: i18next.t("models.clippingBox.keepBoxAboveGround")
                 },
                 {
                   id: "false",
-                  name: i18next.t("models.clippingBox.clampBoxToGround")
+                  name: i18next.t("models.clippingBox.keepBoxAboveGround")
                 }
               ],
               setDimensionValue: (stratumId, value) => {
                 this.clippingBox.setTrait(
                   stratumId,
-                  "clampBoxToGround",
+                  "keepBoxAboveGround",
                   value === "true"
                 );
               }

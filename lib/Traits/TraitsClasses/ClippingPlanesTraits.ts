@@ -122,10 +122,10 @@ export class ClippingBoxTraits extends mixTraits(BoxDrawingTraits) {
 
   @primitiveTrait({
     type: "boolean",
-    name: "Clamp box to ground",
+    name: "Keep clipping box above ground",
     description: "When true, prevents the box from going underground."
   })
-  clampBoxToGround = true;
+  keepBoxAboveGround = true;
 
   @objectTrait({
     type: LatLonHeightTraits,
