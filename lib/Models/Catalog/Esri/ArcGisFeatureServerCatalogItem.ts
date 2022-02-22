@@ -404,11 +404,16 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
     const featuresPerRequest = this.featuresPerRequest;
     const maxFeatures = this.maxFeatures;
     let combinedEsriLayerJson = await getEsriLayerJson(0);
+
+    const mapObjectIds = (features: any) =>
+      features.map(
+        (feature: any) =>
+          feature.attributes.OBJECTID ?? feature.attributes.objectid
+      );
     const seenIDs: Set<string> = new Set(
-      combinedEsriLayerJson.features.map(
-        (feature: any) => feature.attributes.OBJECTID
-      )
+      mapObjectIds(combinedEsriLayerJson.features)
     );
+
     let currentOffset = 0;
     let exceededTransferLimit = combinedEsriLayerJson.exceededTransferLimit;
     while (
@@ -424,9 +429,7 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
         break;
       }
 
-      const newIds: string[] = newEsriLayerJson.features.map(
-        (feature: any) => feature.attributes.OBJECTID
-      );
+      const newIds: string[] = mapObjectIds(newEsriLayerJson.features);
 
       if (newIds.every((id: string) => seenIDs.has(id))) {
         // We're getting data that we've received already, assume have everything we need and stop fetching

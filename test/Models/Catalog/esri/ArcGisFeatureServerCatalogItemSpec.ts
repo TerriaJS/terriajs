@@ -63,7 +63,10 @@ describe("ArcGisFeatureServerCatalogItem", function() {
       let url = args[0];
       const originalUrl = url;
       url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
-      url = url.replace(/FeatureServer\/query\?f=json.*$/i, "layerDefs.json");
+      url = url.replace(
+        /FeatureServer\/[0-9]+\/query\?f=json.*$/i,
+        "layer.json"
+      );
 
       if (originalUrl.match("Water_Network/FeatureServer")) {
         url = url.replace(/FeatureServer\/2\/?\?.*/i, "2.json");
@@ -77,16 +80,14 @@ describe("ArcGisFeatureServerCatalogItem", function() {
       } else if (originalUrl.match("Water_Network_Multi/FeatureServer")) {
         // We're getting this feature service in multiple requests, so we need to return different data on subsequent
         // calls
-        if (originalUrl.includes("layerDefs") && multiCallCount >= 2) {
-          url = url.replace("layerDefs.json", "layerDefsC.json");
-        } else if (originalUrl.includes("layerDefs") && multiCallCount === 1) {
-          url = url.replace("layerDefs.json", "layerDefsB.json");
+        if (originalUrl.includes("layer") && multiCallCount === 1) {
+          url = url.replace("layer.json", "layerB.json");
         }
-        if (originalUrl.includes("layerDefs")) {
+        if (originalUrl.includes("layer")) {
           multiCallCount++;
         }
         url = url.replace(/FeatureServer\/2\/?\?.*/i, "2.json");
-        args[0] = "test/ArcGisFeatureServer/WaterMulti/" + url;
+        args[0] = "test/ArcGisFeatureServer/Water_Network_Multi/" + url;
       }
 
       return realLoadWithXhr(...args);
@@ -180,8 +181,8 @@ describe("ArcGisFeatureServerCatalogItem", function() {
         13
       );
 
-      // 1 call for metadata, and 3 calls for features
-      expect(xhrSpy).toHaveBeenCalledTimes(4);
+      // 1 call for metadata, and 2 calls for features
+      expect(xhrSpy).toHaveBeenCalledTimes(3);
     });
   });
 

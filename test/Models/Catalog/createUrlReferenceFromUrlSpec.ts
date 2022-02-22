@@ -14,8 +14,8 @@ import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 
 const Water_Network = {
-  layerDefs: JSON.stringify(
-    require("../../../wwwroot/test/ArcGisFeatureServer/Water_Network/layerDefs.json")
+  layer: JSON.stringify(
+    require("../../../wwwroot/test/ArcGisFeatureServer/Water_Network/layer.json")
   ),
   layer2: JSON.stringify(
     require("../../../wwwroot/test/ArcGisFeatureServer/Water_Network/2.json")
@@ -102,8 +102,8 @@ describe("createUrlReferenceFromUrl", function() {
       // Fail all requests by default.
       jasmine.Ajax.stubRequest(/.*/).andError({});
       jasmine.Ajax.stubRequest(
-        /http:\/\/example.com\/arcgis\/rest\/services\/Water_Network\/FeatureServer\/query\?f=json.*$/i
-      ).andReturn({ responseText: Water_Network.layerDefs });
+        /http:\/\/example.com\/arcgis\/rest\/services\/Water_Network\/FeatureServer\/[0-9]+\/query\?f=json.*$/i
+      ).andReturn({ responseText: Water_Network.layer });
       jasmine.Ajax.stubRequest(
         /http:\/\/example.com\/arcgis\/rest\/services\/Water_Network\/FeatureServer\/2\/?\?.*/i
       ).andReturn({ responseText: Water_Network.layer2 });
