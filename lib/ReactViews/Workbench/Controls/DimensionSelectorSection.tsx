@@ -3,12 +3,11 @@ import { debounce } from "lodash-es";
 import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React, { useState } from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
 import { ChromePicker } from "react-color";
-
-import ReactSelect, { FormatOptionLabelMeta, OptionProps } from "react-select";
+import { WithTranslation, withTranslation } from "react-i18next";
+import ReactSelect from "react-select";
 import { useTheme } from "styled-components";
-import Color from "terriajs-cesium/Source/Core/Color";
+import isDefined from "../../../Core/isDefined";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import { BaseModel } from "../../../Models/Definition/Model";
 import SelectableDimensions, {
@@ -16,9 +15,9 @@ import SelectableDimensions, {
   isButton,
   isCheckbox,
   isColor,
+  isEnum,
   isGroup,
   isNumeric,
-  isEnum,
   isText,
   Placement,
   SelectableDimension,
@@ -269,20 +268,9 @@ export const DimensionSelectorButton: React.FC<{
 
 const debounceSetDimensionValue = debounce(
   action((dim: SelectableDimensionColor, value: string) => {
-    // Convert color values to 8 digit hex color (lower case)
-
-    let oldValue = dim.value?.toLowerCase() ?? "#00000000";
-    if (oldValue?.length === 7) {
-      oldValue += "ff";
-    }
-    let newValue = value?.toLowerCase();
-    if (newValue?.length === 7) {
-      newValue += "ff";
-    }
-
     // Only update value if it has changed
-    oldValue !== newValue
-      ? dim.setDimensionValue(CommonStrata.user, newValue)
+    dim.value !== value
+      ? dim.setDimensionValue(CommonStrata.user, value)
       : null;
   }),
   100
@@ -295,27 +283,48 @@ export const DimensionSelectorColor: React.FC<{
   const [open, setIsOpen] = useState(false);
   return (
     <div>
-      <div
-        css={{
-          padding: "5px",
-          background: "#fff",
-          borderRadius: "1px",
-          boxShadow: "0 0 0 1px rgba(0,0,0,.1)",
-          display: "inline-block",
-          cursor: "pointer"
-        }}
-        onClick={() => setIsOpen(true)}
-      >
+      {dim.value ? (
         <div
           css={{
-            width: "36px",
-            height: "14px",
-            borderRadius: "2px",
-            background: dim.value ?? "#aaa"
+            padding: "5px",
+            background: "#fff",
+            borderRadius: "1px",
+            boxShadow: "0 0 0 1px rgba(0,0,0,.1)",
+            display: "inline-block",
+            cursor: "pointer"
           }}
-        ></div>
-      </div>
-      {/* Show "Clear" button if `allowUndefined */}
+          onClick={() => setIsOpen(true)}
+        >
+          <div
+            css={{
+              width: "36px",
+              height: "14px",
+              borderRadius: "2px",
+              background: dim.value ?? "#aaa"
+            }}
+          ></div>
+        </div>
+      ) : null}
+      {/* Show "Add" button if value is undefined */}
+      {!dim.value ? (
+        <>
+          &nbsp;
+          <RawButton
+            onClick={() =>
+              runInAction(() =>
+                dim.setDimensionValue(CommonStrata.user, "#000000")
+              )
+            }
+            activeStyles
+            fullHeight
+          >
+            <TextSpan small light css={{ margin: 0 }}>
+              Add
+            </TextSpan>
+          </RawButton>
+        </>
+      ) : null}
+      {/* Show "Clear" button if `allowUndefined` */}
       {dim.value && dim.allowUndefined ? (
         <>
           &nbsp;
@@ -354,7 +363,10 @@ export const DimensionSelectorColor: React.FC<{
           <ChromePicker
             color={dim.value}
             onChangeComplete={evt => {
-              debounceSetDimensionValue(dim, evt.hex);
+              const colorString = isDefined(evt.rgb.a)
+                ? `rgba(${evt.rgb.r},${evt.rgb.g},${evt.rgb.b},${evt.rgb.a})`
+                : `rgb(${evt.rgb.r},${evt.rgb.g},${evt.rgb.b})`;
+              debounceSetDimensionValue(dim, colorString);
             }}
           />
         </div>
