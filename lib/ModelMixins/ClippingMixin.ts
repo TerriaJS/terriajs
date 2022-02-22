@@ -352,7 +352,7 @@ function ClippingMixin<T extends Constructor<BaseType>>(
     }
   }
 
-  return MixedClass as any;
+  return MixedClass;
 }
 
 export default ClippingMixin;
