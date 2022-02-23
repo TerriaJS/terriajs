@@ -118,7 +118,7 @@ export class ClippingBoxTraits extends mixTraits(BoxDrawingTraits) {
     name: "Show clipping box",
     description: "Shows a 3D box and associated UI for editing the clip volume."
   })
-  showClippingBox = false;
+  showClippingBox = true;
 
   @primitiveTrait({
     type: "boolean",
