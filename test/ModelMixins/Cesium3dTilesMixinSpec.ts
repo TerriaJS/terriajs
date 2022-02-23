@@ -63,18 +63,17 @@ describe("Cesium3dTilesMixin", function() {
     });
 
     it(" - Property ClippingPlaneCollection to be defined", function() {
-      expect(cesium3dTiles.cesiumTileClippingPlaneCollection).toBeDefined();
+      expect(cesium3dTiles.clippingPlaneCollection).toBeDefined();
     });
 
     it(" - Property ClippingPlaneCollection is a ClippingPlaneCollection type", function() {
       expect(
-        cesium3dTiles.cesiumTileClippingPlaneCollection instanceof
-          ClippingPlaneCollection
+        cesium3dTiles.clippingPlaneCollection instanceof ClippingPlaneCollection
       ).toBe(true);
     });
 
     it(" - ClippingPlaneCollection must contain a ClippingPlane", function() {
-      const cpc = cesium3dTiles.cesiumTileClippingPlaneCollection;
+      const cpc = cesium3dTiles.clippingPlaneCollection;
       expect(
         cpc?.contains(
           new ClippingPlane(Cartesian3.fromArray([-1, 0.0, 0.0]), 40)
@@ -83,27 +82,27 @@ describe("Cesium3dTilesMixin", function() {
     });
 
     it(" - ClippingPlaneCollection must be enabled", function() {
-      const cpc = cesium3dTiles.cesiumTileClippingPlaneCollection;
+      const cpc = cesium3dTiles.clippingPlaneCollection;
       expect(cpc?.enabled).toBe(true);
     });
 
     it(" - ClippingPlaneCollection unionClippingRegions must be false", function() {
-      const cpc = cesium3dTiles.cesiumTileClippingPlaneCollection;
+      const cpc = cesium3dTiles.clippingPlaneCollection;
       expect(cpc?.unionClippingRegions).toBe(false);
     });
 
     it(" - ClippingPlaneCollection edgeWidth must be 12.0", function() {
-      const cpc = cesium3dTiles.cesiumTileClippingPlaneCollection;
+      const cpc = cesium3dTiles.clippingPlaneCollection;
       expect(cpc?.edgeWidth).toBe(12.0);
     });
 
     it(" - ClippingPlaneCollection edgeColor must be Blue", function() {
-      const cpc = cesium3dTiles.cesiumTileClippingPlaneCollection;
+      const cpc = cesium3dTiles.clippingPlaneCollection;
       expect(cpc?.edgeColor.equals(Color.BLUE)).toBe(true);
     });
 
     it(" - ClippingPlaneCollection must content Identity Matrix as modelMatrix", function() {
-      const cpc = cesium3dTiles.cesiumTileClippingPlaneCollection;
+      const cpc = cesium3dTiles.clippingPlaneCollection;
       expect(cpc?.modelMatrix.equals(Matrix4.IDENTITY)).toBe(true);
     });
   });
