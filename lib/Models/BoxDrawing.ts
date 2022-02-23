@@ -341,6 +341,10 @@ export default class BoxDrawing {
   })();
 
   setBoxAboveGround() {
+    if (!this.keepBoxAboveGround) {
+      return;
+    }
+
     // Get the latest terrain height estimate and update the box position
     this.updateTerrainHeightEstimate(true).then(() => {
       this.moveBoxWithClamping(Cartesian3.ZERO);
