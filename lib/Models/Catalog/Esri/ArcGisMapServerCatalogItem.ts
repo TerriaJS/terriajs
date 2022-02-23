@@ -337,7 +337,7 @@ class MapServerStratum extends LoadableStratum(
         return;
       }
 
-      l.legend.forEach(leg => {
+      l.legend?.forEach(leg => {
         const title = replaceUnderscores(
           leg.label !== "" ? leg.label : l.layerName
         );
