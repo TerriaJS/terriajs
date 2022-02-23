@@ -99,7 +99,7 @@ interface Legend {
 }
 
 interface Legends {
-  layers?: { layerId: number; layerName: string; legend: Legend[] }[];
+  layers?: { layerId: number; layerName: string; legend?: Legend[] }[];
 }
 
 class MapServerStratum extends LoadableStratum(
