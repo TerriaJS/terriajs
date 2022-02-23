@@ -5,6 +5,7 @@ import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Color from "terriajs-cesium/Source/Core/Color";
+import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
@@ -13,6 +14,7 @@ import Plane from "terriajs-cesium/Source/Core/Plane";
 import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import Ray from "terriajs-cesium/Source/Core/Ray";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
 import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
 import TranslationRotationScale from "terriajs-cesium/Source/Core/TranslationRotationScale";
@@ -209,6 +211,10 @@ export default class BoxDrawing {
   // Scale points on the box defined as cesium entities with additional properties
   private readonly scalePoints: ScalePoint[] = [];
 
+  private heightUpdateInProgress: boolean = false;
+  private isHeightUpdateInProgress: boolean = false;
+  private terrainHeightEstimate: number = 0;
+
   /**
    * @param cesium A Cesium instance
    * @param transform A transformation that positions the box in the world.
@@ -276,15 +282,71 @@ export default class BoxDrawing {
           undefined,
           scratchCartographic
         );
-        const bottomHeight = cartographic.height - this.trs.scale.z / 2;
-        if (bottomHeight < 0) {
-          cartographic.height += Math.abs(bottomHeight);
+        const boxBottomHeight = cartographic.height - this.trs.scale.z / 2;
+        const floorHeight: number = this.terrainHeightEstimate;
+        if (boxBottomHeight < floorHeight) {
+          cartographic.height += floorHeight - boxBottomHeight;
           Cartographic.toCartesian(cartographic, undefined, nextPosition);
         }
       }
       Cartesian3.clone(nextPosition, this.trs.translation);
     };
   })();
+
+  /**
+   * Update the terrain height estimate at the current box position.
+   *
+   * If the terrainProvider is the `EllipsoidTerrainProvider` this simply sets
+   * the estimate to 0.  Otherwise we request the terrain provider for the most
+   * detailed height estimate.  To avoid concurrent attempts we skip the call
+   * if any other request is active. `forceUpdate` can be used to force an
+   * update even when an earlier request is active.
+   */
+  private updateTerrainHeightEstimate = (() => {
+    const scratchBoxCenter = new Cartographic();
+    const scratchFloor = new Cartographic();
+
+    return async (forceUpdate = false) => {
+      if (!this.keepBoxAboveGround) {
+        return;
+      }
+
+      if (this.isHeightUpdateInProgress && !forceUpdate) {
+        return;
+      }
+
+      const terrainProvider = this.scene.terrainProvider;
+      if (terrainProvider instanceof EllipsoidTerrainProvider) {
+        this.terrainHeightEstimate = 0;
+        return;
+      }
+
+      this.isHeightUpdateInProgress = true;
+      const boxCenter = Cartographic.fromCartesian(
+        this.trs.translation,
+        undefined,
+        scratchBoxCenter
+      );
+      try {
+        const [floor] = await sampleTerrainMostDetailed(terrainProvider, [
+          Cartographic.clone(boxCenter, scratchFloor)
+        ]);
+        if (floor.height !== undefined) {
+          this.terrainHeightEstimate = floor.height;
+        }
+      } finally {
+        this.isHeightUpdateInProgress = false;
+      }
+    };
+  })();
+
+  setBoxAboveGround() {
+    // Get the latest terrain height estimate and update the box position
+    this.updateTerrainHeightEstimate(true).then(() => {
+      this.moveBoxWithClamping(Cartesian3.ZERO);
+      this.updateBox();
+    });
+  }
 
   /**
    * Sets up event handlers if not already done.
@@ -668,6 +730,12 @@ export default class BoxDrawing {
           surfacePoint,
           scratchSurfacePoint2d
         );
+
+        if (!surfacePoint2d) {
+          // cartesianToCanvasCoordinates can unexpectedly return undefined.
+          return;
+        }
+
         // Floor the startPosition and endPosition above the ellipsoid.
         const yDiff = mouseMove.endPosition.y - mouseMove.startPosition.y;
         mouseMove.startPosition.y = surfacePoint2d.y;
@@ -691,6 +759,7 @@ export default class BoxDrawing {
       }
 
       // Update box position and fire change event
+      this.updateTerrainHeightEstimate();
       this.moveBoxWithClamping(moveStep);
       this.updateBox();
       this.options.onChange?.({
@@ -728,6 +797,7 @@ export default class BoxDrawing {
     };
 
     const onRelease = () => {
+      this.setBoxAboveGround();
       unHighlightAllSides();
       setCanvasCursor(scene, "auto");
       this.options.onChange?.({
