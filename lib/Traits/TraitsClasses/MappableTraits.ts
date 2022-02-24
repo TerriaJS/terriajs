@@ -35,7 +35,7 @@ export class RectangleTraits extends ModelTraits {
   north?: number;
 }
 
-export class IdealZoomTraits extends ModelTraits {
+export class LookAtTraits extends ModelTraits {
   @primitiveTrait({
     type: "number",
     name: "Target longitude",
@@ -82,26 +82,25 @@ export class IdealZoomTraits extends ModelTraits {
   })
   range?: number = 500;
 }
-
 export class VectorTraits extends ModelTraits {
   @primitiveTrait({
     type: "number",
     name: "x",
-    description: "x"
+    description: "X component of vector in the Earth-centered Fixed frame."
   })
   x?: number;
 
   @primitiveTrait({
     type: "number",
     name: "y",
-    description: "y"
+    description: "Y component of vector in the Earth-centered Fixed frame."
   })
   y?: number;
 
   @primitiveTrait({
     type: "number",
     name: "z",
-    description: "z"
+    description: "Z component of vector in the Earth-centered Fixed frame."
   })
   z?: number;
 }
@@ -157,6 +156,23 @@ export class InitialCameraTraits extends ModelTraits {
       "The up vector direction of the camera in the Earth-centered Fixed frame."
   })
   up?: VectorTraits;
+}
+
+export class IdealZoomTraits extends ModelTraits {
+  @objectTrait({
+    type: LookAtTraits,
+    name: "Look at",
+    description: "Parameters for camera to look at a target."
+  })
+  lookAt?: LookAtTraits;
+
+  @objectTrait({
+    type: InitialCameraTraits,
+    name: "initial camera",
+    description:
+      "Use camera position, direction and up if fully defined. Otherwise use rectangle if fully defined."
+  })
+  initialCamera?: InitialCameraTraits;
 }
 export class InitialMessageTraits extends ModelTraits {
   @primitiveTrait({
@@ -226,14 +242,6 @@ export default class MappableTraits extends mixTraits(AttributionTraits) {
     description: "Override default ideal zoom if the given values are valid."
   })
   idealZoom?: IdealZoomTraits;
-
-  @objectTrait({
-    type: InitialCameraTraits,
-    name: "Initial camera",
-    description:
-      "Override default ideal zoom if the given values are valid. Also overrides idealZoom trait."
-  })
-  initialCamera?: InitialCameraTraits;
 
   @primitiveTrait({
     type: "boolean",

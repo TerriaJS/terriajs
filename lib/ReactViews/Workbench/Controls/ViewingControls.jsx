@@ -145,15 +145,38 @@ const ViewingControls = observer(
           }
         }
 
-        const theWest = item?.initialCamera?.west;
-        const theEast = item?.initialCamera?.east;
-        const theNorth = item?.initialCamera?.north;
-        const theSouth = item?.initialCamera?.south;
-        const thePosition = vectorToJson(item?.initialCamera?.position);
-        const theDirection = vectorToJson(item?.initialCamera?.direction);
-        const theUp = vectorToJson(item?.initialCamera?.up);
+        // initialCamera is likely used more often than lookAt.
+        const theWest = item?.idealZoom?.initialCamera?.west;
+        const theEast = item?.idealZoom?.initialCamera?.east;
+        const theNorth = item?.idealZoom?.initialCamera?.north;
+        const theSouth = item?.idealZoom?.initialCamera?.south;
 
-        if (theWest && theEast && theNorth && theSouth) {
+        if (
+          item.idealZoom?.lookAt?.targetLongitude &&
+          item.idealZoom?.lookAt?.targetLatitude &&
+          item.idealZoom?.lookAt?.range >= 0
+        ) {
+          // No value checking here. Improper values can lead to unexpected results.
+          const lookAt = {
+            targetLongitude: item.idealZoom.lookAt.targetLongitude,
+            targetLatitude: item.idealZoom.lookAt.targetLatitude,
+            targetHeight: item.idealZoom.lookAt.targetHeight,
+            heading: item.idealZoom.lookAt.heading,
+            pitch: item.idealZoom.lookAt.pitch,
+            range: item.idealZoom.lookAt.range
+          };
+
+          // In the case of 2D viewer, it zooms to rectangle area approximated by the camera view parameters.
+          zoomToView = CameraView.fromJson({ lookAt: lookAt });
+        } else if (theWest && theEast && theNorth && theSouth) {
+          const thePosition = vectorToJson(
+            item?.idealZoom?.initialCamera?.position
+          );
+          const theDirection = vectorToJson(
+            item?.idealZoom?.initialCamera?.direction
+          );
+          const theUp = vectorToJson(item?.idealZoom?.initialCamera?.up);
+
           // No value checking here. Improper values can lead to unexpected results.
           const initialCamera = {
             west: theWest,
@@ -166,24 +189,6 @@ const ViewingControls = observer(
           };
 
           zoomToView = CameraView.fromJson(initialCamera);
-        } else if (
-          item.idealZoom !== undefined &&
-          item.idealZoom.targetLongitude !== undefined &&
-          item.idealZoom.targetLatitude !== undefined &&
-          item.idealZoom.range >= 0
-        ) {
-          // No value checking here. Improper values can lead to unexpected results.
-          const lookAt = {
-            targetLongitude: item.idealZoom.targetLongitude,
-            targetLatitude: item.idealZoom.targetLatitude,
-            targetHeight: item.idealZoom.targetHeight,
-            heading: item.idealZoom.heading,
-            pitch: item.idealZoom.pitch,
-            range: item.idealZoom.range
-          };
-
-          // In the case of 2D viewer, it zooms to rectangle area approximated by the camera view parameters.
-          zoomToView = CameraView.fromJson({ lookAt: lookAt });
         } else if (
           item.rectangle !== undefined &&
           item.rectangle.east - item.rectangle.west >= 360

@@ -2,7 +2,7 @@ Change Log
 ==========
 
 #### next release (8.1.23)
-* `IDEAL ZOOM` can be customised by providing `initialCamera` property in `MappableTraits`. This method is easier than using `idealZoom` property.
+* `IDEAL ZOOM` can be customised by providing `lookAt` or `initialCamera` for `idealZoom` in `MappableTraits`. The `lookAt` takes presidence of `initialCamera` if both exist. The values for `initialCamera` can be easily obtained from shared link api.
 * [The next improvement]
 
 #### 8.1.22
