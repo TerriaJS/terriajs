@@ -62,6 +62,7 @@ export const GLYPHS = {
   remove: require("../../wwwroot/images/icons/remove.svg"),
   right: require("../../wwwroot/images/icons/right.svg"),
   right2: require("../../wwwroot/images/icons/right2.svg"),
+  revert: require("../../wwwroot/images/icons/revert.svg"),
   search: require("../../wwwroot/images/icons/search.svg"),
   selected: require("../../wwwroot/images/icons/selected.svg"),
   settings: require("../../wwwroot/images/icons/settings.svg"),

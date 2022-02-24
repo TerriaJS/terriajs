@@ -22,7 +22,7 @@ import ProgressBar from "../Map/ProgressBar";
 import SidePanel from "../SidePanel/SidePanel";
 import processCustomElements from "./processCustomElements";
 import FullScreenButton from "./../SidePanel/FullScreenButton";
-import StoryPanel from "./../Story/StoryPanel";
+import StoryPanel from "../Story/StoryPanel/StoryPanel";
 import StoryBuilder from "./../Story/StoryBuilder";
 
 import PrintView from "../../ReactViews/Map/Panels/SharePanel/Print/PrintView";

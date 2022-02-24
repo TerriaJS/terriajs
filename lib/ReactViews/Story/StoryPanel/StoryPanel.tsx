@@ -2,28 +2,22 @@ import classNames from "classnames";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import {
-  useTranslation,
-  WithTranslation,
-  withTranslation
-} from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Swipeable } from "react-swipeable";
 import {
   Category,
   StoryAction
-} from "../../Core/AnalyticEvents/analyticEvents";
-import getPath from "../../Core/getPath";
-import TerriaError from "../../Core/TerriaError";
-import Terria from "../../Models/Terria";
-import { Story } from "./Story";
-import ViewState from "../../ReactViewModels/ViewState";
-import Icon from "../../Styled/Icon";
-import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
-// import { Medium, Small } from "../Generic/Responsive";
-import Styles from "./story-panel.scss";
-import Box from "../../Styled/Box";
-import styled from "styled-components";
-import { animateEnd } from "../../Core/animation";
+} from "../../../Core/AnalyticEvents/analyticEvents";
+import getPath from "../../../Core/getPath";
+import TerriaError from "../../../Core/TerriaError";
+import Terria from "../../../Models/Terria";
+import { Story } from "../Story";
+import ViewState from "../../../ReactViewModels/ViewState";
+import Styles from "../story-panel.scss";
+import { animateEnd } from "../../../Core/animation";
+import TitleBar from "./TitleBar";
+import FooterBar from "./StoryFooterBar";
+import StoryBody from "./StoryBody";
 
 /**
  *
@@ -75,115 +69,6 @@ export async function activateStory(scene: Story, terria: Terria) {
   });
 }
 
-interface BtnProp {
-  onClick: () => void;
-}
-
-const ExitBtn = ({ onClick }: BtnProp) => {
-  const { t } = useTranslation();
-  return (
-    <button
-      className={Styles.exitBtn}
-      title={t("story.exitBtn")}
-      onClick={onClick}
-    >
-      <Icon glyph={Icon.GLYPHS.close} />
-    </button>
-  );
-};
-
-const CollapseBtn = ({
-  isCollapsed,
-  onClick
-}: { isCollapsed: boolean } & BtnProp) => {
-  const { t } = useTranslation();
-  return (
-    <button
-      className={Styles.exitBtn}
-      title={isCollapsed ? t("story.expand") : t("story.collapse")}
-      onClick={onClick}
-    >
-      <Icon glyph={isCollapsed ? Icon.GLYPHS.info : Icon.GLYPHS.arrowDown} />
-    </button>
-  );
-};
-
-const LocationBtn = ({ onClick }: BtnProp) => {
-  const { t } = useTranslation();
-
-  return (
-    <button
-      className={Styles.locationBtn}
-      title={t("story.locationBtn")}
-      onClick={onClick}
-    >
-      <Icon glyph={Icon.GLYPHS.location} />
-    </button>
-  );
-};
-
-const TitleContainer = styled.div`
-  flex: 1;
-`;
-
-const ClampedTitle = styled.h3`
-  /* clamp fallback */
-  white-space: nowrap;
-  text-overflow: ellipsis;
-
-  overflow: hidden;
-  padding: 0;
-  margin: 10px;
-
-  @supports (-webkit-line-clamp: 2) {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    white-space: unset;
-  }
-`;
-
-const TitleBar = ({
-  title,
-  isCollapsed,
-  collapseHandler,
-  closeHandler
-}: {
-  title?: string;
-  isCollapsed: boolean;
-  collapseHandler: () => void;
-  closeHandler: () => void;
-}) => {
-  const { t } = useTranslation();
-  return (
-    <Box fullWidth>
-      <TitleContainer>
-        <ClampedTitle>{title ? title : t("story.untitled")}</ClampedTitle>
-      </TitleContainer>
-      <Box>
-        <CollapseBtn isCollapsed={isCollapsed} onClick={collapseHandler} />
-        <ExitBtn onClick={closeHandler} />
-      </Box>
-    </Box>
-  );
-};
-
-const StoryBody = ({
-  isCollapsed,
-  story
-}: {
-  isCollapsed: boolean;
-  story: Story;
-}) => (
-  <div
-    className={classNames(Styles.body, {
-      [Styles.isCollapsed]: isCollapsed
-    })}
-  >
-    {story.text && parseCustomHtmlToReact(story.text)}
-  </div>
-);
-
 interface Props extends WithTranslation {
   terria: Terria;
   viewState: ViewState;
@@ -193,6 +78,7 @@ interface State {
   inView: boolean;
   isCollapsed: boolean;
 }
+
 @observer
 class StoryPanel extends React.Component<Props, State> {
   escKeyListener: EventListener | undefined;
@@ -302,7 +188,6 @@ class StoryPanel extends React.Component<Props, State> {
   }
 
   render() {
-    const { t } = this.props;
     const stories = this.props.terria.stories || [];
     const story = stories[this.props.viewState.currentStoryId];
 
@@ -338,6 +223,14 @@ class StoryPanel extends React.Component<Props, State> {
               closeHandler={() => this.exitStory()}
             />
             <StoryBody isCollapsed={this.state.isCollapsed} story={story} />
+            <FooterBar
+              goPrev={() => this.goToPrevStory()}
+              goNext={() => this.goToNextStory()}
+              jumpToStory={(index: number) => this.navigateStory(index)}
+              zoomTo={() => this.onCenterScene(story)}
+              currentHumanIndex={this.props.viewState.currentStoryId + 1}
+              totalStories={stories.length}
+            />
           </div>
         </div>
       </Swipeable>

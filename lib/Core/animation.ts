@@ -3,7 +3,7 @@ const ANIMATION_TIMEOUT = 500;
 const transitionEnd = (element: Element | null) =>
   new Promise<void>((resolve, reject) => {
     if (!element) {
-      reject("Element is null");
+      reject("Animation: Element is null");
     } else {
       const onEnd = () => {
         element.removeEventListener("transitionend", onEnd);

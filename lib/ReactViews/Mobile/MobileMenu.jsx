@@ -10,10 +10,7 @@ import MobileMenuItem from "./MobileMenuItem";
 import SettingPanel from "../Map/Panels/SettingPanel";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel";
 // import HelpMenuPanelBasic from "../HelpScreens/HelpMenuPanelBasic";
-import Terria from "../../Models/Terria";
 import { withTranslation } from "react-i18next";
-
-import ViewState from "../../ReactViewModels/ViewState";
 
 import Styles from "./mobile-menu.scss";
 import { runInAction } from "mobx";
@@ -28,9 +25,9 @@ const MobileMenu = observer(
     propTypes: {
       menuItems: PropTypes.arrayOf(PropTypes.element),
       menuLeftItems: PropTypes.arrayOf(PropTypes.element),
-      viewState: PropTypes.instanceOf(ViewState).isRequired,
+      viewState: PropTypes.object.isRequired,
       showFeedback: PropTypes.bool,
-      terria: PropTypes.instanceOf(Terria).isRequired,
+      terria: PropTypes.object.isRequired,
       i18n: PropTypes.object,
       allBaseMaps: PropTypes.array.isRequired,
       t: PropTypes.func.isRequired
