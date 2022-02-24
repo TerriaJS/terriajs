@@ -1073,8 +1073,20 @@ export function toFeatureCollection(
 ): FeatureCollectionWithCrs | undefined {
   if (isFeatureCollection(json)) return json; // It's already a feature collection, do nothing
 
-  if (isFeature(json))
+  if (isFeature(json)) {
+    // Move CRS data from Feature to FeatureCollection
+    if ("crs" in json && isJsonObject((json as any).crs)) {
+      const crs = (json as any).crs;
+      delete (json as any).crs;
+
+      const fc = featureCollection([json]) as FeatureCollectionWithCrs;
+      fc.crs = crs;
+      return fc;
+    }
+
     return featureCollection([json]) as FeatureCollectionWithCrs;
+  }
+
   if (isGeometries(json))
     return featureCollection([feature(json)]) as FeatureCollectionWithCrs;
   if (Array.isArray(json) && json.every(item => isFeature(item))) {

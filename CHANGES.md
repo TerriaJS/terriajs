@@ -4,6 +4,7 @@ Change Log
 #### next release (8.1.23)
 
 * Fixed crash caused by ArcGisMapServerCatalogItem layer missing legend.
+* Add support for `crs` property in GeoJSON `Feature`
 * [The next improvement]
 
 #### 8.1.22
