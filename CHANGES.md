@@ -4,6 +4,8 @@ Change Log
 #### next release (8.1.23)
 
 * Fixed crash caused by ArcGisMapServerCatalogItem layer missing legend.
+* Refactored StoryPanel and made it be collapsible
+* Added animation.ts as a utility function to handle animation end changes (instead of using timeout)
 * [The next improvement]
 
 #### 8.1.22
