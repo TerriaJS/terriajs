@@ -29,6 +29,7 @@ const Checkbox = memo(
       value,
       children,
       textProps,
+      className,
       ...rest
     } = props;
 
@@ -70,6 +71,7 @@ const Checkbox = memo(
         as={"label"}
         title={title}
         htmlFor={`checkbox-${id}`}
+        className={className}
         css={`
           display: flex;
           flex-shrink: 0;
