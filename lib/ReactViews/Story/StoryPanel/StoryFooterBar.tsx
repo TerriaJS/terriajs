@@ -22,7 +22,13 @@ const FooterContainer = styled(Box)`
 
 const NavigationButton = styled(RawButton)`
   padding: 15px;
+  cursor: pointer;
 `;
+
+const StoryCount = styled.div`
+  padding: 0 10px;
+`;
+
 const FooterBar = ({
   goPrev,
   goNext,
@@ -58,9 +64,9 @@ const FooterBar = ({
           glyph={Icon.GLYPHS.menu}
           fillColor={theme.grey}
         />
-        <div>
+        <StoryCount>
           {currentHumanIndex} / {totalStories}
-        </div>
+        </StoryCount>
         <LocationBtn onClick={zoomTo} />
       </Box>
       <Box flex={1} right>
