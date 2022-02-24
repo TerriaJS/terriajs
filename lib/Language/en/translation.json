@@ -716,6 +716,7 @@
       "carto": "Carto",
       "gltf": "GLTF",
       "shp": "Shapefile (zip)",
+      "socrata-group": "Socrata Server",
       "other": "Other (use conversion service)"
     },
     "printWindow": {
@@ -1514,6 +1515,19 @@
         "cast": "Cast Only",
         "receive": "Receive Only",
         "both": "Cast and Receive"
+      }
+    },
+    "clippingBox": {
+      "groupName": "Clipping Box",
+      "clipModel": "Clip model",
+      "showClippingBox": "Show clipping box",
+      "keepBoxAboveGround": "Above ground only",
+      "clipDirection": {
+        "name": "Clip direction",
+        "options": {
+          "inside": "Clip inside the box",
+          "outside": "Clip outside the box"
+        }
       }
     },
     "commonModelErrors": {

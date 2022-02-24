@@ -1,6 +1,6 @@
-const i18next = require("i18next").default;
+import i18next from "i18next";
 
-module.exports = function() {
+export default function() {
   return {
     remoteDataType: [
       {
@@ -159,4 +159,4 @@ module.exports = function() {
       }
     ]
   };
-};
+}

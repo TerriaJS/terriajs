@@ -1,9 +1,15 @@
 Change Log
 ==========
 
-#### next release (8.1.22)
+#### next release (8.1.23)
 
+* Fixed crash caused by ArcGisMapServerCatalogItem layer missing legend.
+* [The next improvement]
+
+#### 8.1.22
 * Added play story button in mobile view when there is an active story
+* `IDEAL ZOOM` can be customised by providing `idealZoom` property in `MappableTraits`.
+* Fix `AddData` options
 
 #### 8.1.21
 

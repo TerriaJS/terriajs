@@ -42,6 +42,8 @@ export type ICheckboxProps = {
   children?: React.ReactChild;
 
   textProps?: ITextProps;
+
+  className?: string;
 };
 
 export interface CheckboxIconProps {
