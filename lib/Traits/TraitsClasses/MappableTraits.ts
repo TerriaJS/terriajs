@@ -104,35 +104,7 @@ export class VectorTraits extends ModelTraits {
   })
   z?: number;
 }
-export class InitialCameraTraits extends ModelTraits {
-  @primitiveTrait({
-    type: "number",
-    name: "west",
-    description: "Longitude towards the west in degrees."
-  })
-  west?: number;
-
-  @primitiveTrait({
-    type: "number",
-    name: "east",
-    description: "Longitude towards the east in degrees."
-  })
-  east?: number;
-
-  @primitiveTrait({
-    type: "number",
-    name: "north",
-    description: "Latitude towards the north in degrees."
-  })
-  north?: number;
-
-  @primitiveTrait({
-    type: "number",
-    name: "south",
-    description: "Latitude towards the south in degrees."
-  })
-  south?: number;
-
+export class InitialCameraTraits extends RectangleTraits {
   @objectTrait({
     type: VectorTraits,
     name: "position",
