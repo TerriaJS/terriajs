@@ -145,11 +145,11 @@ const ViewingControls = observer(
           }
         }
 
-        // initialCamera is likely used more often than lookAt.
-        const theWest = item?.idealZoom?.initialCamera?.west;
-        const theEast = item?.idealZoom?.initialCamera?.east;
-        const theNorth = item?.idealZoom?.initialCamera?.north;
-        const theSouth = item?.idealZoom?.initialCamera?.south;
+        // camera is likely used more often than lookAt.
+        const theWest = item?.idealZoom?.camera?.west;
+        const theEast = item?.idealZoom?.camera?.east;
+        const theNorth = item?.idealZoom?.camera?.north;
+        const theSouth = item?.idealZoom?.camera?.south;
 
         if (
           item.idealZoom?.lookAt?.targetLongitude &&
@@ -169,16 +169,12 @@ const ViewingControls = observer(
           // In the case of 2D viewer, it zooms to rectangle area approximated by the camera view parameters.
           zoomToView = CameraView.fromJson({ lookAt: lookAt });
         } else if (theWest && theEast && theNorth && theSouth) {
-          const thePosition = vectorToJson(
-            item?.idealZoom?.initialCamera?.position
-          );
-          const theDirection = vectorToJson(
-            item?.idealZoom?.initialCamera?.direction
-          );
-          const theUp = vectorToJson(item?.idealZoom?.initialCamera?.up);
+          const thePosition = vectorToJson(item?.idealZoom?.camera?.position);
+          const theDirection = vectorToJson(item?.idealZoom?.camera?.direction);
+          const theUp = vectorToJson(item?.idealZoom?.camera?.up);
 
           // No value checking here. Improper values can lead to unexpected results.
-          const initialCamera = {
+          const camera = {
             west: theWest,
             east: theEast,
             north: theNorth,
@@ -188,7 +184,7 @@ const ViewingControls = observer(
             up: theUp
           };
 
-          zoomToView = CameraView.fromJson(initialCamera);
+          zoomToView = CameraView.fromJson(camera);
         } else if (
           item.rectangle !== undefined &&
           item.rectangle.east - item.rectangle.west >= 360

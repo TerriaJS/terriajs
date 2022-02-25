@@ -11,7 +11,7 @@ import ViewState from "../../../../lib/ReactViewModels/ViewState";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import {
   IdealZoomTraits,
-  InitialCameraTraits,
+  CameraTraits,
   LookAtTraits
 } from "../../../../lib/Traits/TraitsClasses/MappableTraits";
 import createStratumInstance from "../../../../lib/Models/Definition/createStratumInstance";
@@ -225,8 +225,8 @@ describe("Ideal Zoom", function() {
     expect(theCameraView.up).toBe(undefined);
   });
 
-  it("should custimise camera view if the given initialCamera parameters are complete.", async function() {
-    const initialCameraValues = {
+  it("should custimise camera view if the given camera parameters are complete.", async function() {
+    const cameraValues = {
       west: 143.85665964592238,
       south: -37.5588985189224,
       east: 143.85932639124115,
@@ -248,12 +248,9 @@ describe("Ideal Zoom", function() {
       }
     };
 
-    const initialCamera = createStratumInstance(
-      InitialCameraTraits,
-      initialCameraValues
-    );
+    const camera = createStratumInstance(CameraTraits, cameraValues);
     const idealZoom = createStratumInstance(IdealZoomTraits);
-    idealZoom.initialCamera = initialCamera;
+    idealZoom.camera = camera;
 
     theItem.setTrait("definition", "idealZoom", idealZoom);
     await theItem.loadMapItems();
@@ -266,56 +263,38 @@ describe("Ideal Zoom", function() {
     testRenderer.root.findAllByType("button")[0].props.onClick();
     const theCameraView = terria.currentViewer.getCurrentCameraView();
 
-    expect(theCameraView.direction?.x).toBeCloseTo(
-      initialCameraValues.direction.x,
-      6
-    );
-    expect(theCameraView.direction?.y).toBeCloseTo(
-      initialCameraValues.direction.y,
-      6
-    );
-    expect(theCameraView.direction?.z).toBeCloseTo(
-      initialCameraValues.direction.z,
-      6
-    );
+    expect(theCameraView.direction?.x).toBeCloseTo(cameraValues.direction.x, 6);
+    expect(theCameraView.direction?.y).toBeCloseTo(cameraValues.direction.y, 6);
+    expect(theCameraView.direction?.z).toBeCloseTo(cameraValues.direction.z, 6);
 
-    expect(theCameraView.position?.x).toBeCloseTo(
-      initialCameraValues.position.x,
-      6
-    );
-    expect(theCameraView.position?.y).toBeCloseTo(
-      initialCameraValues.position.y,
-      6
-    );
-    expect(theCameraView.position?.z).toBeCloseTo(
-      initialCameraValues.position.z,
-      6
-    );
+    expect(theCameraView.position?.x).toBeCloseTo(cameraValues.position.x, 6);
+    expect(theCameraView.position?.y).toBeCloseTo(cameraValues.position.y, 6);
+    expect(theCameraView.position?.z).toBeCloseTo(cameraValues.position.z, 6);
 
-    expect(theCameraView.up?.x).toBeCloseTo(initialCameraValues.up.x, 6);
-    expect(theCameraView.up?.y).toBeCloseTo(initialCameraValues.up.y, 6);
-    expect(theCameraView.up?.z).toBeCloseTo(initialCameraValues.up.z, 6);
+    expect(theCameraView.up?.x).toBeCloseTo(cameraValues.up.x, 6);
+    expect(theCameraView.up?.y).toBeCloseTo(cameraValues.up.y, 6);
+    expect(theCameraView.up?.z).toBeCloseTo(cameraValues.up.z, 6);
 
     expect(theCameraView.rectangle?.east).toBeCloseTo(
-      CesiumMath.toRadians(initialCameraValues.east),
+      CesiumMath.toRadians(cameraValues.east),
       6
     );
     expect(theCameraView.rectangle?.north).toBeCloseTo(
-      CesiumMath.toRadians(initialCameraValues.north),
+      CesiumMath.toRadians(cameraValues.north),
       6
     );
     expect(theCameraView.rectangle?.south).toBeCloseTo(
-      CesiumMath.toRadians(initialCameraValues.south),
+      CesiumMath.toRadians(cameraValues.south),
       6
     );
     expect(theCameraView.rectangle?.west).toBeCloseTo(
-      CesiumMath.toRadians(initialCameraValues.west),
+      CesiumMath.toRadians(cameraValues.west),
       6
     );
   });
 
-  it("should use given rectangle if any other values are missing in initialCamera.", async function() {
-    const initialCameraValues = {
+  it("should use given rectangle if any other values are missing in camera.", async function() {
+    const cameraValues = {
       west: 143.85665964592238,
       south: -37.5588985189224,
       east: 143.85932639124115,
@@ -337,12 +316,9 @@ describe("Ideal Zoom", function() {
       }
     };
 
-    const initialCamera = createStratumInstance(
-      InitialCameraTraits,
-      initialCameraValues
-    );
+    const camera = createStratumInstance(CameraTraits, cameraValues);
     const idealZoom = createStratumInstance(IdealZoomTraits);
-    idealZoom.initialCamera = initialCamera;
+    idealZoom.camera = camera;
 
     theItem.setTrait("definition", "idealZoom", idealZoom);
     await theItem.loadMapItems();
@@ -360,25 +336,25 @@ describe("Ideal Zoom", function() {
     expect(theCameraView.up).toBe(undefined);
 
     expect(theCameraView.rectangle?.east).toBeCloseTo(
-      CesiumMath.toRadians(initialCameraValues.east),
+      CesiumMath.toRadians(cameraValues.east),
       6
     );
     expect(theCameraView.rectangle?.north).toBeCloseTo(
-      CesiumMath.toRadians(initialCameraValues.north),
+      CesiumMath.toRadians(cameraValues.north),
       6
     );
     expect(theCameraView.rectangle?.south).toBeCloseTo(
-      CesiumMath.toRadians(initialCameraValues.south),
+      CesiumMath.toRadians(cameraValues.south),
       6
     );
     expect(theCameraView.rectangle?.west).toBeCloseTo(
-      CesiumMath.toRadians(initialCameraValues.west),
+      CesiumMath.toRadians(cameraValues.west),
       6
     );
   });
 
-  it("should use default camera view if missing any required rectagle parameters in initialCamera.", async function() {
-    const initialCameraValues = {
+  it("should use default camera view if missing any required rectagle parameters in camera.", async function() {
+    const cameraValues = {
       west: undefined,
       south: -37.5588985189224,
       east: 143.85932639124115,
@@ -400,12 +376,9 @@ describe("Ideal Zoom", function() {
       }
     };
 
-    const initialCamera = createStratumInstance(
-      InitialCameraTraits,
-      initialCameraValues
-    );
+    const camera = createStratumInstance(CameraTraits, cameraValues);
     const idealZoom = createStratumInstance(IdealZoomTraits);
-    idealZoom.initialCamera = initialCamera;
+    idealZoom.camera = camera;
 
     theItem.setTrait("definition", "idealZoom", idealZoom);
     await theItem.loadMapItems();
@@ -435,7 +408,7 @@ describe("Ideal Zoom", function() {
     expect(theCameraView.rectangle?.west).toBeCloseTo(rectangle.west, 6);
   });
 
-  it("should custimise camera view based on the given lookAt parameters when initialCamera parameters also exist.", async function() {
+  it("should custimise camera view based on the given lookAt parameters when camera parameters also exist.", async function() {
     const lookAtValues = {
       targetLongitude: 150.60832,
       targetLatitude: -34.19483,
@@ -446,9 +419,7 @@ describe("Ideal Zoom", function() {
     };
     const lookAt = createStratumInstance(LookAtTraits, lookAtValues);
 
-    const idealZoom = createStratumInstance(IdealZoomTraits);
-    idealZoom.lookAt = lookAt;
-    const initialCameraValues = {
+    const cameraValues = {
       west: 143.85665964592238,
       south: -37.5588985189224,
       east: 143.85932639124115,
@@ -469,12 +440,11 @@ describe("Ideal Zoom", function() {
         z: -0.5504836757274634
       }
     };
+    const camera = createStratumInstance(CameraTraits, cameraValues);
 
-    const initialCamera = createStratumInstance(
-      InitialCameraTraits,
-      initialCameraValues
-    );
-    idealZoom.initialCamera = initialCamera;
+    const idealZoom = createStratumInstance(IdealZoomTraits);
+    idealZoom.lookAt = lookAt;
+    idealZoom.camera = camera;
 
     theItem.setTrait("definition", "idealZoom", idealZoom);
 

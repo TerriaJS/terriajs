@@ -104,7 +104,7 @@ export class VectorTraits extends ModelTraits {
   })
   z?: number;
 }
-export class InitialCameraTraits extends RectangleTraits {
+export class CameraTraits extends RectangleTraits {
   @objectTrait({
     type: VectorTraits,
     name: "position",
@@ -139,12 +139,12 @@ export class IdealZoomTraits extends ModelTraits {
   lookAt?: LookAtTraits;
 
   @objectTrait({
-    type: InitialCameraTraits,
-    name: "initial camera",
+    type: CameraTraits,
+    name: "Camera",
     description:
       "Use camera position, direction and up if fully defined. Otherwise use rectangle if fully defined."
   })
-  initialCamera?: InitialCameraTraits;
+  camera?: CameraTraits;
 }
 export class InitialMessageTraits extends ModelTraits {
   @primitiveTrait({
