@@ -2,7 +2,7 @@ Change Log
 ==========
 
 #### next release (8.1.23)
-
+* `IDEAL ZOOM` can be customised by providing `lookAt` or `camera` for `idealZoom` in `MappableTraits`. The `lookAt` takes precedence of `camera` if both exist. The values for `camera` can be easily obtained from property `initialCamera` by calling shared link api .
 * Fixed crash caused by ArcGisMapServerCatalogItem layer missing legend.
 * [The next improvement]
 
