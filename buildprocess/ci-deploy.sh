@@ -21,7 +21,7 @@ npm install -g yarn@^1.19.0
 
 # Clone and build TerriaMap, using this version of TerriaJS
 TERRIAJS_COMMIT_HASH=$(git rev-parse HEAD)
-git clone -b main https://github.com/TerriaJS/TerriaMap.git
+git clone -b 6151-spa-routing https://github.com/TerriaJS/TerriaMap.git
 cd TerriaMap
 TERRIAMAP_COMMIT_HASH=$(git rev-parse HEAD)
 sed -i -e 's@"terriajs": ".*"@"terriajs": "'$GITHUB_REPOSITORY'#'${GITHUB_BRANCH}'"@g' package.json
@@ -33,7 +33,7 @@ git tag -a "TerriaMap-$TERRIAMAP_COMMIT_HASH--TerriaJS-$TERRIAJS_COMMIT_HASH" -m
 rm yarn.lock # because TerriaMap's yarn.lock won't reflect terriajs dependencies
 yarn install
 yarn add -W moment@2.24.0
-yarn gulp build
+yarn gulp build --baseHref="/${SAFE_BRANCH_NAME}/"
 
 yarn "--terriajs-map:docker_name=terriajs-ci" docker-build-ci -- --tag "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME"
 gcloud auth configure-docker asia.gcr.io --quiet
