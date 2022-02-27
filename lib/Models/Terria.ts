@@ -1051,7 +1051,6 @@ export default class Terria {
             `Start data from story \`"${this.appName}/${segments[1]}"\``
           );
           this.userProperties.set("playStory", "1");
-          history.replaceState({}, "", `${document.baseURI}#${hash ?? ""}`);
         }
       }
     } catch (e) {
