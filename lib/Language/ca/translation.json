@@ -375,7 +375,12 @@
     "promptHtml1": "<0>Podeu veure i crear històries en qualsevol moment fent clic aquí.</0>",
     "loadSceneErrorTitle": "Error carregant Story Scene",
     "captureSceneTitle": "captura l'escena actual",
-    "playStory": "Història"
+    "playStory": "Història",
+    "expand": "Expandir",
+    "collapse": "Reduir",
+    "prev": "Ant",
+    "next": "Prox",
+    "restart": "Reinicia"
   },
   "satelliteGuidance": {
     "menuTitle": "Podeu accedir a les guies de mapes en qualsevol moment consultant el <2>menú d'ajuda</2>.",
@@ -1518,6 +1523,19 @@
     },
     "commonModelErrors": {
       "3dTypeIn2dMode": "**Nota:** aquest conjunt de dades no es pot mostrar al visualitzador 2D. Canvia a un dels modes de mapa 3D."
+    },
+    "clippingBox": {
+      "clipDirection": {
+        "options": {
+          "outside": "Clip fora de la caixa",
+          "inside": "Clip dins de la caixa"
+        },
+        "name": "Direcció del clip"
+      },
+      "groupName": "Caixa de retalls",
+      "clipModel": "Model de clip",
+      "showClippingBox": "Mostra el quadre de retall",
+      "keepBoxAboveGround": "Només sobre terra"
     }
   },
   "deltaTool": {
