@@ -1014,11 +1014,14 @@ export default class Terria {
         console.warn(
           "Terria expected document.baseURI to end with a '/'. Routes may not work as intended"
         );
-      const pageUrl = new URL(document.documentURI);
-      const baseUrl = new URL(document.baseURI);
-
-      if (pageUrl.origin === baseUrl.origin) {
-        const segments = pageUrl.pathname.slice(1).split("/");
+      if (document.documentURI.startsWith(document.baseURI)) {
+        const pageUrl = new URL(document.documentURI);
+        // Find relative path from baseURI to documentURI excluding query and hash
+        // then split into url segments
+        // e.g. "http://ci.terria.io/main/story/1#map=2d" -> ["story", "1"]
+        const segments = (pageUrl.origin + pageUrl.pathname)
+          .slice(document.baseURI.length)
+          .split("/");
         if (
           segments.length === 2 &&
           segments[0] === "catalog" &&
@@ -1031,8 +1034,8 @@ export default class Terria {
               previewedItemId: decodeURIComponent(segments[1])
             }
           });
-          const replaceUrl = new URL(pageUrl.href);
-          replaceUrl.pathname = baseUrl.pathname;
+          const replaceUrl = new URL(document.documentURI);
+          replaceUrl.pathname = new URL(document.baseURI).pathname;
           history.replaceState({}, "", replaceUrl.href);
         } else if (
           segments.length === 2 &&
