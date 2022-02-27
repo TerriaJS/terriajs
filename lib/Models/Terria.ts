@@ -1008,36 +1008,32 @@ export default class Terria {
           .hash("")
       );
 
-      // Determine relative path from baseURI
-      const baseURI = document.baseURI.endsWith("/")
-        ? document.baseURI.slice(0, document.baseURI.length - 1)
-        : document.baseURI;
-      let relative = null;
-      if (document.documentURI === baseURI) {
-        relative = "/";
-      } else if (
-        document.documentURI.startsWith(baseURI) &&
-        document.documentURI.charAt(baseURI.length) === "/"
-      ) {
-        relative = document.documentURI.slice(baseURI.length);
-      }
+      // /catalog/ and /story/ routes
 
-      if (relative) {
-        const [preHash, hash] = relative.split("#");
-        const segments = preHash.slice(1).split("/");
+      if (!document.baseURI.endsWith("/"))
+        console.warn(
+          "Terria expected document.baseURI to end with a '/'. Routes may not work as intended"
+        );
+      const pageUrl = new URL(document.documentURI);
+      const baseUrl = new URL(document.baseURI);
+
+      if (pageUrl.origin === baseUrl.origin) {
+        const segments = pageUrl.pathname.slice(1).split("/");
         if (
           segments.length === 2 &&
           segments[0] === "catalog" &&
           segments[1].length > 0
         ) {
           this.initSources.push({
-            name: `Go to ${relative}`,
+            name: `Go to ${pageUrl.pathname}`,
             errorSeverity: TerriaErrorSeverity.Error,
             data: {
               previewedItemId: decodeURIComponent(segments[1])
             }
           });
-          history.replaceState({}, "", `${document.baseURI}#${hash ?? ""}`);
+          const replaceUrl = new URL(pageUrl.href);
+          replaceUrl.pathname = baseUrl.pathname;
+          history.replaceState({}, "", replaceUrl.href);
         } else if (
           segments.length === 2 &&
           segments[0] === "story" &&
