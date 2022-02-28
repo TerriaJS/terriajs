@@ -37,7 +37,7 @@ export default abstract class GlobeOrMap {
   abstract readonly terria: Terria;
   abstract readonly canShowSplitter: boolean;
 
-  protected static _featureHighlightID = "___$FeatureHighlight&__";
+  public static featureHighlightID = "___$FeatureHighlight&__";
   protected static _featureHighlightName = "TerriaJS Feature Highlight Marker";
 
   private _removeHighlightCallback?: () => Promise<void> | void;
@@ -351,11 +351,11 @@ export default abstract class GlobeOrMap {
 
             let catalogItem = this.terria.getModelById(
               GeoJsonCatalogItem,
-              GlobeOrMap._featureHighlightID
+              GlobeOrMap.featureHighlightID
             );
             if (catalogItem === undefined) {
               catalogItem = new GeoJsonCatalogItem(
-                GlobeOrMap._featureHighlightID,
+                GlobeOrMap.featureHighlightID,
                 this.terria
               );
               catalogItem.setTrait(

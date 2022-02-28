@@ -1,3 +1,4 @@
+import { Cartesian3 } from "terriajs-cesium";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
@@ -34,7 +35,7 @@ export class RectangleTraits extends ModelTraits {
   north?: number;
 }
 
-export class IdealZoomTraits extends ModelTraits {
+export class LookAtTraits extends ModelTraits {
   @primitiveTrait({
     type: "number",
     name: "Target longitude",
@@ -80,6 +81,70 @@ export class IdealZoomTraits extends ModelTraits {
       "The range in meters. It is the distance between the target position and camera position projected onto the local plane. Not negative and default to 500."
   })
   range?: number = 500;
+}
+export class VectorTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "number",
+    name: "x",
+    description: "X component of vector in the Earth-centered Fixed frame."
+  })
+  x?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "y",
+    description: "Y component of vector in the Earth-centered Fixed frame."
+  })
+  y?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "z",
+    description: "Z component of vector in the Earth-centered Fixed frame."
+  })
+  z?: number;
+}
+export class CameraTraits extends RectangleTraits {
+  @objectTrait({
+    type: VectorTraits,
+    name: "position",
+    description:
+      "Position of the camera in the Earth-centered Fixed frame in meters."
+  })
+  position?: VectorTraits;
+
+  @objectTrait({
+    type: VectorTraits,
+    name: "direction",
+    description:
+      "The look direction of the camera in the Earth-centered Fixed frame."
+  })
+  direction?: VectorTraits;
+
+  @objectTrait({
+    type: VectorTraits,
+    name: "up",
+    description:
+      "The up vector direction of the camera in the Earth-centered Fixed frame."
+  })
+  up?: VectorTraits;
+}
+
+export class IdealZoomTraits extends ModelTraits {
+  @objectTrait({
+    type: LookAtTraits,
+    name: "Look at",
+    description: "Parameters for camera to look at a target."
+  })
+  lookAt?: LookAtTraits;
+
+  @objectTrait({
+    type: CameraTraits,
+    name: "Camera",
+    description:
+      "Use camera position, direction and up if fully defined. Otherwise use rectangle if fully defined."
+  })
+  camera?: CameraTraits;
 }
 export class InitialMessageTraits extends ModelTraits {
   @primitiveTrait({
