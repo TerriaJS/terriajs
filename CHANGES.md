@@ -5,6 +5,7 @@ Change Log
 
 * Fixed crash caused by ArcGisMapServerCatalogItem layer missing legend.
 * Add support for `crs` property in GeoJSON `Feature`
+* Add feature highlighting for Protomaps vector tiles
 * [The next improvement]
 
 #### 8.1.22
