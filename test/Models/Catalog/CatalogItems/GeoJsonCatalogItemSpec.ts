@@ -18,11 +18,15 @@ import ContinuousColorMap from "../../../../lib/Map/ContinuousColorMap";
 import ProtomapsImageryProvider, {
   GEOJSON_SOURCE_LAYER_NAME
 } from "../../../../lib/Map/ProtomapsImageryProvider";
-import { getColor } from "../../../../lib/ModelMixins/GeojsonMixin";
+import {
+  FEATURE_ID_PROP,
+  getColor
+} from "../../../../lib/ModelMixins/GeojsonMixin";
 import GeoJsonCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import SplitItemReference from "../../../../lib/Models/Catalog/CatalogReferences/SplitItemReference";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
+import Feature from "../../../../lib/Models/Feature";
 import Terria from "../../../../lib/Models/Terria";
 
 describe("GeoJsonCatalogItemSpec", () => {
@@ -999,7 +1003,6 @@ describe("GeoJsonCatalogItemSpec", () => {
         }`
       );
       await geojson.loadMapItems();
-      console.log(JSON.stringify(geojson.readyData));
       expect(geojson.readyData).toEqual({
         type: "FeatureCollection",
         features: [
@@ -1074,7 +1077,6 @@ describe("GeoJsonCatalogItemSpec", () => {
       }`
       );
       await geojson.loadMapItems();
-      console.log(JSON.stringify(geojson.readyData));
       expect(geojson.readyData).toEqual({
         type: "FeatureCollection",
         features: [
@@ -1100,6 +1102,43 @@ describe("GeoJsonCatalogItemSpec", () => {
         ],
         crs: { type: "EPSG", properties: { code: "4326" } }
       });
+    });
+  });
+
+  describe("pick features", function() {
+    let terria: Terria;
+    let geojson: GeoJsonCatalogItem;
+
+    beforeEach(async function() {
+      terria = new Terria({
+        baseUrl: "./"
+      });
+      geojson = new GeoJsonCatalogItem("test-geojson", terria);
+    });
+
+    it("ProtomapsImageryProvider.createHighlightImageryProvider", async function() {
+      geojson.setTrait(
+        CommonStrata.definition,
+        "geoJsonString",
+        `{"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[145.5908203125,-40.17887331434695],[143.349609375,-42.08191667830631],[146.35986328124997,-44.040218713142124],[149.08447265625,-42.859859815062784],[148.55712890625,-41.36031866306708],[145.5908203125,-40.17887331434695]]]}},{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[75.9375,51.069016659603896],[59.94140624999999,39.095962936305476],[79.453125,42.032974332441405],[80.15625,46.800059446787316],[75.673828125,51.45400691005982],[75.9375,51.069016659603896]]]}}]}`
+      );
+
+      (await geojson.loadMapItems()).throwIfError();
+
+      const imagery = geojson.mapItems[0];
+
+      if ("imageryProvider" in imagery) {
+        const highlight = imagery.imageryProvider.createHighlightImageryProvider(
+          new Feature({ properties: { [FEATURE_ID_PROP]: "0" } })
+        );
+        expect(highlight).toBeDefined();
+
+        expect(highlight?.paintRules[0].dataLayer).toBe(
+          GEOJSON_SOURCE_LAYER_NAME
+        );
+      } else {
+        throw "Invalid geojson.mapItems";
+      }
     });
   });
 });
