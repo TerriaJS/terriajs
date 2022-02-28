@@ -7,6 +7,7 @@ Change Log
 * Fixed crash caused by ArcGisMapServerCatalogItem layer missing legend.
 * Refactored StoryPanel and made it be collapsible
 * Added animation.ts as a utility function to handle animation end changes (instead of using timeout)
+* Fixed a bug where `buildShareLink` serialised the feature highlight model & geometry. Picked features are still serialised and geometry is reloaded on accessing the share link.
 * [The next improvement]
 
 #### 8.1.22
