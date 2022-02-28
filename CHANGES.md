@@ -2,6 +2,8 @@ Change Log
 ==========
 
 #### next release (8.1.24)
+
+* Ignores duplicate model ids in members array in `updateModelFromJson`
 * [The next improvement]
 
 #### 8.1.23
