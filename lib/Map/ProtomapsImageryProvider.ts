@@ -626,7 +626,7 @@ export default class ProtomapsImageryProvider
     });
   }
 
-  /** Duplicates ImageryProvider, and sets painRules to highlight picked features */
+  /** Duplicates ImageryProvider, and sets paintRules to highlight picked features */
   @action
   createHighlightImageryProvider(
     feature: CesiumFeature
