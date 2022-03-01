@@ -406,7 +406,12 @@
     "removeAllStoriesDialog_0": "Opravdu si přejete odstranit {{ count }} scénu?",
     "removeAllStoriesDialog_1": "Opravdu si přejete odstranit {{ count }} scény?",
     "removeAllStoriesDialog_2": "Opravdu si přejete odstranit {{ count }} scén?",
-    "playStory": "Příběh"
+    "playStory": "Příběh",
+    "expand": "Rozbalit",
+    "collapse": "Sbalit",
+    "prev": "Předchozí",
+    "next": "Další",
+    "restart": "Restartovat"
   },
   "satelliteGuidance": {
     "menuTitle": "Do mapových průvodců se můžete kdykoli podívat v nabídce <2>nápověda</2>.",
@@ -1519,6 +1524,19 @@
     },
     "threddsItem": {
       "name": "THREDDS Odkaz na položku"
+    },
+    "clippingBox": {
+      "groupName": "Ořezový rámeček",
+      "clipModel": "Ořezový model",
+      "clipDirection": {
+        "name": "Směr ořezu",
+        "options": {
+          "inside": "Ořez uvnitř rámečku",
+          "outside": "Ořez vně rámečku"
+        }
+      },
+      "showClippingBox": "Zobrazit ořezový rámeček",
+      "keepBoxAboveGround": "Pouze nad zemí"
     }
   },
   "deltaTool": {
