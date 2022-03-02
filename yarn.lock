@@ -13045,14 +13045,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"moment@npm:2.24.0":
-  version: 2.24.0
-  resolution: "moment@npm:2.24.0"
-  checksum: 9cd93a251a2b33cb1b532eade0e496a2a7547faa6cfe37a283ee7bf69e202cd7c8ab0673d66883b5b29aed051353176dc0e6684f04073a75b0a155c500be1580
-  languageName: node
-  linkType: hard
-
-"moment@npm:>= 2.9.0, moment@npm:^2.17.1, moment@npm:^2.21.0, moment@npm:^2.22.2":
+"moment@npm:>= 2.9.0, moment@npm:^2.17.1, moment@npm:^2.21.0, moment@npm:^2.22.2, moment@npm:^2.29.1":
   version: 2.29.1
   resolution: "moment@npm:2.29.1"
   checksum: 1e14d5f422a2687996be11dd2d50c8de3bd577c4a4ca79ba5d02c397242a933e5b941655de6c8cb90ac18f01cc4127e55b4a12ae3c527a6c0a274e455979345e
@@ -18435,7 +18428,7 @@ __metadata:
     mobx: ^4.15.4
     mobx-react: ^6.3.1
     mobx-utils: ^5.4.1
-    moment: 2.24.0
+    moment: ^2.29.1
     mustache: ^2.2.1
     mutationobserver-shim: ^0.3.1
     node-fetch: ^2.6.1
