@@ -20,3 +20,11 @@ dist
 
 # Catalog index generation files
 catalog-index*.json
+
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*

@@ -219,7 +219,7 @@
     "yaml": "^1.10.0"
   },
   "scripts": {
-    "prepack": "gulp prepack && pinst --disable",
+    "prepack": "gulp prepack && yarn build-for-node && pinst --disable",
     "postpublish": "bash -c \"if [ -z \"$GITHUB_ACTION\" ]; then git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}; fi \"",
     "gulp": "gulp",
     "make-schema": "gulp make-schema",
@@ -234,13 +234,8 @@
     "pretty-quick": "pretty-quick",
     "prettier-check": "prettier --check \"**/*\"",
     "build-for-node": "tsc -b tsconfig-node.json",
-    "prepare": "yarn build-for-node",
     "postinstall": "node ./install-husky.js",
     "postpack": "pinst --enable"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
-    }
-  }
+  "packageManager": "yarn@3.2.0"
 }
