@@ -31,7 +31,7 @@ git config --global user.name "GitHub Actions"
 git commit -a -m 'temporary commit' # so the version doesn't indicate local modifications
 git tag -a "TerriaMap-$TERRIAMAP_COMMIT_HASH--TerriaJS-$TERRIAJS_COMMIT_HASH" -m 'temporary tag'
 rm yarn.lock && touch yarn.lock # because TerriaMap's yarn.lock won't reflect terriajs dependencies
-YARN_ENABLE_IMMUTABLE_INSTALLS=false
+export YARN_ENABLE_IMMUTABLE_INSTALLS=false
 yarn install
 yarn add -W moment@2.24.0
 yarn gulp build
