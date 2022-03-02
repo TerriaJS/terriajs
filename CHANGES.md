@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.24)
 
+* Ignores duplicate model ids in members array in `updateModelFromJson`
 * Add support for `crs` property in GeoJSON `Feature`
 * Add feature highlighting for Protomaps vector tiles
 * [The next improvement]
