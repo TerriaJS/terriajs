@@ -184,7 +184,7 @@
     "fs-extra": "^7.0.1",
     "generate-terriajs-schema": "^1.5.0",
     "glob-all": "^3.0.1",
-    "husky": "^2.7.0",
+    "husky": "^7.0.0",
     "istanbul-instrumenter-loader": "^3.0.1",
     "jasmine-ajax": "^4.0.0",
     "jasmine-core": "^2.9.1",
@@ -206,6 +206,7 @@
     "node-fetch": "^2.6.1",
     "node-notifier": "^5.1.2",
     "node-sass": "^6.0.1",
+    "pinst": "^3.0.0",
     "plugin-error": "^1.0.1",
     "prettier": "^1.19.1",
     "pretty-quick": "^1.10.0",
@@ -218,7 +219,7 @@
     "yaml": "^1.10.0"
   },
   "scripts": {
-    "prepack": "gulp prepack",
+    "prepack": "gulp prepack && pinst --disable",
     "postpublish": "bash -c \"if [ -z \"$GITHUB_ACTION\" ]; then git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}; fi \"",
     "gulp": "gulp",
     "make-schema": "gulp make-schema",
@@ -233,7 +234,9 @@
     "pretty-quick": "pretty-quick",
     "prettier-check": "prettier --check \"**/*\"",
     "build-for-node": "tsc -b tsconfig-node.json",
-    "prepare": "yarn build-for-node"
+    "prepare": "yarn build-for-node",
+    "postinstall": "husky install",
+    "postpack": "pinst --enable"
   },
   "husky": {
     "hooks": {
