@@ -235,7 +235,7 @@
     "prettier-check": "prettier --check \"**/*\"",
     "build-for-node": "tsc -b tsconfig-node.json",
     "prepare": "yarn build-for-node",
-    "postinstall": "husky install",
+    "postinstall": "node ./install-husky.js",
     "postpack": "pinst --enable"
   },
   "husky": {

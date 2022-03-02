@@ -26,6 +26,7 @@
 !buildprocess/generateDocs.ts
 !buildprocess/generateCatalogIndex.ts
 !buildprocess/patchNetworkRequests.ts
+!install-husky.js
 
 !wwwroot
 !wwwroot/test
