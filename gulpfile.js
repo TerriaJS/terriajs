@@ -3,11 +3,6 @@
 
 'use strict';
 
-
-// Every module required-in here must be a `dependency` in package.json, not just a `devDependency`,
-// so that our postinstall script (which runs `gulp post-npm-install`) is able to run without
-// the devDependencies available.  Individual tasks, other than `post-npm-install` and any tasks it
-// calls, may require in `devDependency` modules locally.
 var gulp = require('gulp');
 
 gulp.task('build-specs', function(done) {
@@ -183,5 +178,5 @@ gulp.task('docs', gulp.series('user-guide', function docs(done) {
 gulp.task('build', gulp.series('copy-cesium-assets', 'build-specs'));
 gulp.task('release', gulp.series('copy-cesium-assets', 'release-specs'));
 gulp.task('watch', gulp.series('copy-cesium-assets', 'watch-specs'));
-gulp.task('post-npm-install', gulp.series('copy-cesium-assets'));
+gulp.task('prepack', gulp.series('copy-cesium-assets'));
 gulp.task('default', gulp.series('lint', 'build'));

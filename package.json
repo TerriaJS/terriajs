@@ -218,9 +218,8 @@
     "yaml": "^1.10.0"
   },
   "scripts": {
-    "prepublish": "gulp post-npm-install",
+    "prepack": "gulp prepack",
     "postpublish": "bash -c \"if [ -z \"$GITHUB_ACTION\" ]; then git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}; fi \"",
-    "postinstall": "gulp post-npm-install",
     "gulp": "gulp",
     "make-schema": "gulp make-schema",
     "start": "terriajs-server --port 3002",
