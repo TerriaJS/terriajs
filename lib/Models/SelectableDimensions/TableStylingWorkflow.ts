@@ -37,7 +37,8 @@ import ViewingControls from "../ViewingControls";
 import {
   SelectableDimensionGroup,
   SelectableDimensionNumeric,
-  SelectableDimensionWorkflowGroup
+  SelectableDimensionWorkflowGroup,
+  SelectableDimensionText
 } from "./SelectableDimensions";
 import SelectableDimensionWorkflow from "./SelectableDimensionWorkflow";
 import VectorStylingWorkflow from "./VectorStylingWorkflow";
@@ -102,6 +103,33 @@ export default class TableStylingWorkflow
 
   onClose() {
     this.activeStyleDisposer();
+  }
+
+  @computed
+  get menu() {
+    return {
+      options: filterOutUndefined([
+        {
+          text: `${
+            this.showAdvancedOptions ? "Hide" : "Show"
+          } advanced options`,
+          onSelect: action(() => {
+            this.showAdvancedOptions = !this.showAdvancedOptions;
+          })
+        },
+        this.showAdvancedOptions
+          ? {
+              text: "Copy user stratum to clipboard",
+              onSelect: () => {
+                navigator.clipboard.writeText(
+                  JSON.stringify(this.item.strata.get(CommonStrata.user))
+                );
+              },
+              disable: !this.showAdvancedOptions
+            }
+          : undefined
+      ])
+    };
   }
 
   get name() {
@@ -474,19 +502,7 @@ export default class TableStylingWorkflow
                 this.setColorSchemeTypeFromPalette();
               }
             }
-          : undefined,
-        {
-          type: "checkbox",
-          id: "show-advanced-options",
-          options: [
-            { id: "false", name: "Show advanced options" },
-            { id: "true", name: "Hide advanced options" }
-          ],
-          selectedId: this.showAdvancedOptions ? "true" : "false",
-          setDimensionValue: (stratumId, id) => {
-            this.showAdvancedOptions = id === "true";
-          }
-        }
+          : undefined
       ])
     };
   }
@@ -962,6 +978,144 @@ export default class TableStylingWorkflow
     };
   }
 
+  @computed
+  get advancedTableDimensions(): SelectableDimensionWorkflowGroup[] {
+    return [
+      {
+        type: "group",
+        id: "Legend",
+        isOpen: false,
+        selectableDimensions: filterOutUndefined([
+          {
+            type: "text",
+            id: "legend-title",
+            name: "Title",
+            value: this.tableStyle.colorTraits.legend.title,
+            setDimensionValue: (stratumId, value) => {
+              this.getTableStyleTraits(stratumId)?.color.legend.setTrait(
+                stratumId,
+                "title",
+                value
+              );
+            }
+          },
+          this.colorSchemeType === "diverging-continuous" ||
+          this.colorSchemeType === "sequential-continuous"
+            ? {
+                type: "numeric",
+                id: "legend-ticks",
+                name: "Ticks",
+                min: 2,
+                value: this.tableStyle.colorTraits.legendTicks,
+                setDimensionValue: (stratumId, value) => {
+                  this.getTableStyleTraits(stratumId)?.color.setTrait(
+                    stratumId,
+                    "legendTicks",
+                    value
+                  );
+                }
+              }
+            : undefined,
+
+          ...this.tableStyle.colorTraits.legend.items.map(
+            (legendItem, idx) =>
+              ({
+                type: "text",
+                id: `legend-${idx}-title`,
+                name: `Item ${idx + 1} Title`,
+                value: legendItem.title,
+                setDimensionValue: (stratumId, value) => {
+                  legendItem.setTrait(stratumId, "title", value);
+                }
+              } as SelectableDimensionText)
+          )
+        ])
+      },
+      {
+        type: "group",
+        id: "Table",
+        isOpen: false,
+        selectableDimensions: filterOutUndefined([
+          {
+            type: "checkbox",
+            id: "showDisableStyleOption",
+            name: "Show disable style option",
+            options: [{ id: "true" }, { id: "false" }],
+            selectedId: this.item.showDisableStyleOption ? "true" : "false",
+            setDimensionValue: (stratumId, value) => {
+              this.item.setTrait(
+                stratumId,
+                "showDisableStyleOption",
+                value === "true"
+              );
+            }
+          },
+          {
+            type: "checkbox",
+            id: "showDisableTimeOption",
+            name: "Show disable time option",
+            options: [{ id: "true" }, { id: "false" }],
+            selectedId: this.item.showDisableTimeOption ? "true" : "false",
+            setDimensionValue: (stratumId, value) => {
+              this.item.setTrait(
+                stratumId,
+                "showDisableTimeOption",
+                value === "true"
+              );
+            }
+          },
+          {
+            type: "checkbox",
+            id: "enableManualRegionMapping",
+            name: "Enable manual region mapping",
+            options: [{ id: "true" }, { id: "false" }],
+            selectedId: this.item.enableManualRegionMapping ? "true" : "false",
+            setDimensionValue: (stratumId, value) => {
+              this.item.setTrait(
+                stratumId,
+                "enableManualRegionMapping",
+                value === "true"
+              );
+            }
+          }
+        ])
+      },
+      {
+        type: "group",
+        id: "Variable/column",
+        isOpen: false,
+        selectableDimensions: filterOutUndefined([
+          {
+            type: "text",
+            id: "column-title",
+            name: "Title",
+            value: this.tableStyle.colorColumn?.title,
+            setDimensionValue: (stratumId, value) => {
+              this.getTableColumnTraits(stratumId)?.setTrait(
+                stratumId,
+                "title",
+                value
+              );
+            }
+          },
+          {
+            type: "text",
+            id: "column-units",
+            name: "Units",
+            value: this.tableStyle.colorColumn?.units,
+            setDimensionValue: (stratumId, value) => {
+              this.getTableColumnTraits(stratumId)?.setTrait(
+                stratumId,
+                "units",
+                value
+              );
+            }
+          }
+        ])
+      }
+    ];
+  }
+
   @computed get selectableDimensions(): SelectableDimensionWorkflowGroup[] {
     return filterOutUndefined([
       this.tableStyleSelectableDim,
@@ -991,7 +1145,10 @@ export default class TableStylingWorkflow
       this.showAdvancedOptions &&
       this.tableStyle.colorColumn?.type === TableColumnType.region
         ? this.advancedRegionMappingDimensions
-        : undefined
+        : undefined,
+
+      // Show advanced table options
+      ...(this.showAdvancedOptions ? this.advancedTableDimensions : [])
     ]);
   }
 
