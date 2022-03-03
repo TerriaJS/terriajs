@@ -148,8 +148,8 @@ export default class TableColorStyleTraits extends ModelTraits {
   @primitiveTrait({
     name: "Color Palette",
     description: `The name of a [ColorBrewer](http://colorbrewer2.org/) palette to use when mapping values to colors. This property is ignored if \`Bin Colors\` is defined and has enough colors for all bins, or if \`Enum Colors\` is defined. The default value depends on the type of the \`Color Column\` and on the data. Scalar columns that cross zero will use the diverging purple-to-orange palette \`PuOr\`. Scala columns that do not cross zero will use the sequential Red palette \`Reds\`. All other scenarios will use the 21 color \`HighContrast\` palette.
-      D3 color schemes are also supported (https://github.com/d3/d3-scale-chromatic) - but without \`scheme\` or \`interpolate\` string (for example - to use \`interpolateViridis\` - set \`colorPalete = Viridis\`).
-      This is case seensitive.
+      D3 color schemes are also supported (https://github.com/d3/d3-scale-chromatic) - but without \`scheme\` or \`interpolate\` string (for example - to use \`interpolateViridis\` - set \`colorPalette = Viridis\`).
+      This is case sensitive.
       `,
     type: "string"
   })
@@ -158,11 +158,10 @@ export default class TableColorStyleTraits extends ModelTraits {
   @primitiveTrait({
     name: "Legend Ticks",
     description:
-      "The number of tick marks (in addition to the top and bottom) to show on the " +
-      "legend when the `Color Bin Method` is set to `none` and `Color Bins` is not defined.",
+      "The number of tick marks (in addition to the top and bottom) to show on the legend for Continuous color scales",
     type: "number"
   })
-  legendTicks?: number;
+  legendTicks: number = 7;
 
   @objectTrait({
     name: "Legend",
@@ -176,7 +175,7 @@ export default class TableColorStyleTraits extends ModelTraits {
   @primitiveTrait({
     name: "Z-score filter",
     description:
-      "Treat values outside of specifed z-score as outliers, and therefore do not include in color scale. This value is magnitude of z-score - it will apply to positive and negative z-scores. For example a value of `2` will treat all values that are 2 or more standard deviations from the mean as outliers. This must be defined for it to be enabled. This will be ignored if `minimumValue` or `maximumValue` have been set",
+      "Treat values outside of specified z-score as outliers, and therefore do not include in color scale. This value is magnitude of z-score - it will apply to positive and negative z-scores. For example a value of `2` will treat all values that are 2 or more standard deviations from the mean as outliers. This must be defined for it to be enabled. This will be ignored if `minimumValue` or `maximumValue` have been set",
     type: "number"
   })
   zScoreFilter?: number;
@@ -191,7 +190,7 @@ export default class TableColorStyleTraits extends ModelTraits {
   @primitiveTrait({
     name: "Range filter",
     description:
-      "This is applied after the `zScoreFilter`. It is used to effectively 'disable' the zScoreFilter if it doesn't cut at least the specified percange of the range of values (for both minimum and maximum value). For exmaple if `rangeFilter = 0.2`, then the zScoreFilter will only be effective if it cuts at least 20% of the range of values from the minimum and maximum value",
+      "This is applied after the `zScoreFilter`. It is used to effectively 'disable' the zScoreFilter if it doesn't cut at least the specified percentage of the range of values (for both minimum and maximum value). For example if `rangeFilter = 0.2`, then the zScoreFilter will only be effective if it cuts at least 20% of the range of values from the minimum and maximum value",
     type: "number"
   })
   rangeFilter: number = 0.3;
