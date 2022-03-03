@@ -35,6 +35,10 @@ export default class VectorStylingWorkflow
     };
   }
 
+  get menu() {
+    return this.tableStylingWorkflow.menu;
+  }
+
   @computed get pointSelectableDimension(): SelectableDimensionWorkflowGroup {
     return {
       type: "group",
