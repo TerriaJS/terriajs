@@ -85,6 +85,8 @@ import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
 import { ExportData } from "./ExportableMixin";
 import TableMixin from "./TableMixin";
 
+export const FEATURE_ID_PROP = "_id_";
+
 const SIMPLE_STYLE_KEYS = [
   "marker-size",
   "marker-color",
@@ -415,7 +417,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           this.terria.configParameters.proj4ServiceBaseUrl
         );
 
-        // Add feature index to "_id_" feature property
+        // Add feature index to FEATURE_ID_PROP ("_id_") feature property
         // This is used to refer to each feature in TableMixin (as row ID)
 
         // Also check for how many features have simply-style properties
@@ -426,7 +428,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             geoJsonWgs84.features[i].properties = {};
           }
           const properties = geoJsonWgs84.features[i].properties!;
-          properties["_id_"] = i;
+          properties[FEATURE_ID_PROP] = i;
 
           if (useMvt && SIMPLE_STYLE_KEYS.find(key => properties[key])) {
             numFeaturesWithSimpleStyle++;
@@ -523,7 +525,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       let currentTimeRows: number[] | undefined;
 
       // If time varying, get row indices which match
-      // This is used to filter feature["_id_"]
+      // This is used to filter feature[FEATURE_ID_PROP]
       if (
         this.currentTimeAsJulianDate &&
         this.activeTableStyle.timeIntervals &&
@@ -554,7 +556,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         this.disableTableStyle
           ? defaultColor
           : (z: number, f?: ProtomapsFeature) => {
-              const rowId = f?.props["_id_"];
+              const rowId = f?.props[FEATURE_ID_PROP];
               if (typeof rowId === "number") {
                 const col = colorMap
                   .mapValueToColor(rows?.[rowId])
@@ -596,7 +598,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               return (
                 feature?.geomType === GeomType.Polygon &&
                 (!currentTimeRows ||
-                  currentTimeRows.includes(feature?.props["_id_"]))
+                  currentTimeRows.includes(feature?.props[FEATURE_ID_PROP]))
               );
             }
           },
@@ -614,7 +616,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
                   return (
                     feature?.geomType === GeomType.Polygon &&
                     (!currentTimeRows ||
-                      currentTimeRows.includes(feature?.props["_id_"]))
+                      currentTimeRows.includes(feature?.props[FEATURE_ID_PROP]))
                   );
                 }
               }
@@ -635,7 +637,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
                   return (
                     feature?.geomType === GeomType.Line &&
                     (!currentTimeRows ||
-                      currentTimeRows.includes(feature?.props["_id_"]))
+                      currentTimeRows.includes(feature?.props[FEATURE_ID_PROP]))
                   );
                 }
               }
@@ -658,7 +660,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               return (
                 feature?.geomType === GeomType.Point &&
                 (!currentTimeRows ||
-                  currentTimeRows.includes(feature?.props["_id_"]))
+                  currentTimeRows.includes(feature?.props[FEATURE_ID_PROP]))
               );
             }
           }
@@ -1088,8 +1090,20 @@ export function toFeatureCollection(
 ): FeatureCollectionWithCrs | undefined {
   if (isFeatureCollection(json)) return json; // It's already a feature collection, do nothing
 
-  if (isFeature(json))
+  if (isFeature(json)) {
+    // Move CRS data from Feature to FeatureCollection
+    if ("crs" in json && isJsonObject((json as any).crs)) {
+      const crs = (json as any).crs;
+      delete (json as any).crs;
+
+      const fc = featureCollection([json]) as FeatureCollectionWithCrs;
+      fc.crs = crs;
+      return fc;
+    }
+
     return featureCollection([json]) as FeatureCollectionWithCrs;
+  }
+
   if (isGeometries(json))
     return featureCollection([feature(json)]) as FeatureCollectionWithCrs;
   if (Array.isArray(json) && json.every(item => isFeature(item))) {
