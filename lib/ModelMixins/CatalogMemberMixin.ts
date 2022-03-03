@@ -180,10 +180,20 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
             );
             const value = dim.options.find(o => o.id === selectedId)?.value;
             if (isDefined(value)) {
-              updateModelFromJson(this, stratumId, value).raiseError(
+              const result = updateModelFromJson(this, stratumId, value);
+              result.raiseError(
                 this.terria,
                 `Failed to update catalog item ${getName(this)}`
               );
+              if (
+                !result.error &&
+                this.modelDimensionCallLoadMapItems &&
+                MappableMixin.isMixedInto(this)
+              ) {
+                this.loadMapItems().then(loadMapItemsResult => {
+                  loadMapItemsResult.raiseError(this.terria);
+                });
+              }
             }
           }
         })) ?? []
