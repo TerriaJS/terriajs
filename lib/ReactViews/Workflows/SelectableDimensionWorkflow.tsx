@@ -7,7 +7,7 @@ import { filterSelectableDimensions } from "../../Models/SelectableDimensions/Se
 import ViewState from "../../ReactViewModels/ViewState";
 import WorkflowPanel from "../../Styled/WorkflowPanel";
 import { Container } from "../Compare/Compare";
-import { Panel, PanelBody } from "../Compare/Panel";
+import { Panel, PanelBody, PanelMenu } from "../Compare/Panel";
 import { DimensionSelector } from "../Workbench/Controls/DimensionSelectorSection";
 import WorkbenchItemControls, {
   hideAllControls
@@ -34,7 +34,16 @@ const SelectableDimensionWorkflow: React.FC<PropsType> = observer(
         footer={terria.selectableDimensionWorkflow.footer}
       >
         <Container>
-          <Panel title={getName(terria.selectableDimensionWorkflow.item)}>
+          <Panel
+            title={getName(terria.selectableDimensionWorkflow.item)}
+            menuComponent={
+              terria.selectableDimensionWorkflow.menu ? (
+                <PanelMenu {...terria.selectableDimensionWorkflow.menu} />
+              ) : (
+                undefined
+              )
+            }
+          >
             <PanelBody>
               <WorkbenchItemControls
                 item={terria.selectableDimensionWorkflow.item}

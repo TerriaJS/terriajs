@@ -130,7 +130,7 @@ const Content = styled.div`
   color: ${p => p.theme.textLight};
 `;
 
-type PanelMenuProps = {
+export type PanelMenuProps = {
   options: {
     text: string;
     onSelect: React.MouseEventHandler<HTMLButtonElement>;
@@ -159,7 +159,7 @@ export const PanelMenu: React.FC<PanelMenuProps> = ({ options }) => {
     onSelect: React.MouseEventHandler<HTMLButtonElement>,
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
-    // If onSelect decides to stop event propogation,
+    // If onSelect decides to stop event propagation,
     // clickAnywhereToCloseMenu() will not work. So we close the menu before
     // calling onSelect.
     setIsOpen(false);
