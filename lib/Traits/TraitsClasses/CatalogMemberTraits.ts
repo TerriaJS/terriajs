@@ -227,6 +227,14 @@ export default class CatalogMemberTraits extends ModelTraits {
   @primitiveTrait({
     type: "boolean",
     name: "Disable about data",
+    description:
+      "On modelDimensions change (option selection) - call loadMapItems if Mappable."
+  })
+  modelDimensionCallLoadMapItems: boolean = false;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Disable about data",
     description: "Disables the 'About Data' button in the workbench."
   })
   disableAboutData: boolean = false;
