@@ -1,7 +1,7 @@
-import { SelectableDimensionWorkflowGroup } from "./SelectableDimensions";
-import { BaseModel } from "../Definition/Model";
-import { IconProps } from "../../Styled/Icon";
 import { PanelMenuProps } from "../../ReactViews/Compare/Panel";
+import { IconProps } from "../../Styled/Icon";
+import { BaseModel } from "../Definition/Model";
+import { SelectableDimensionWorkflowGroup } from "./SelectableDimensions";
 
 export default interface SelectableDimensionWorkflow {
   readonly type: string;
