@@ -378,8 +378,8 @@
     "playStory": "Història",
     "expand": "Expandir",
     "collapse": "Reduir",
-    "prev": "Ant",
-    "next": "Prox",
+    "prev": "Anterior",
+    "next": "Següent",
     "restart": "Reinicia"
   },
   "satelliteGuidance": {
