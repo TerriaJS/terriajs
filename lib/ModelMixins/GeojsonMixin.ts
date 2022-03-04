@@ -150,12 +150,7 @@ class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
           north: geojsonBbox[3]
         });
       } catch (e) {
-        const terriaError = new TerriaError({
-          message: "Failed to create `rectangle` for GeoJSON",
-          originalError: e as Error,
-          severity: TerriaErrorSeverity.Warning
-        });
-        return undefined;
+        TerriaError.from(e, "Failed to create `rectangle` for GeoJSON").log();
       }
     }
   }
