@@ -75,9 +75,8 @@ class WebMapServiceCatalogItem
   static defaultParameters = {
     transparent: true,
     format: "image/png",
-    exceptions: "application/vnd.ogc.se_xml",
-    styles: "",
-    tiled: true
+    exceptions: "XML",
+    styles: ""
   };
 
   static readonly type = "wms";
