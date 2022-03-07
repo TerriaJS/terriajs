@@ -6,6 +6,7 @@ Change Log
 * Ignores duplicate model ids in members array in `updateModelFromJson`
 * Add support for `crs` property in GeoJSON `Feature`
 * Add feature highlighting for Protomaps vector tiles
+* Add back props `localDataTypes` and `remoteDataTypes` to the component `MyData` for customizing list of types shown in file upload modal.
 * [The next improvement]
 
 #### 8.1.23
