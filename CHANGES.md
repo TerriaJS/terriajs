@@ -6,6 +6,7 @@ Change Log
 * Ignores duplicate model ids in members array in `updateModelFromJson`
 * Add support for `crs` property in GeoJSON `Feature`
 * Add feature highlighting for Protomaps vector tiles
+* Update WMS `defaultParameters` to match version `1.3.0` (changed `exception=XML` and removed `tiled=true`)
 * [The next improvement]
 
 #### 8.1.23
