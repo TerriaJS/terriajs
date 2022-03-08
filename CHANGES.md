@@ -1,12 +1,25 @@
 Change Log
 ==========
 
-#### next release (8.1.23)
+#### next release (8.1.24)
 
+* Ignores duplicate model ids in members array in `updateModelFromJson`
+* Add support for `crs` property in GeoJSON `Feature`
+* Add feature highlighting for Protomaps vector tiles
 * ArcGisFeatureServerCatalogItem can now load more than the maximum feature limit set by the server by making multiple requests, and uses GeojsonMixin
 * [The next improvement]
 
+#### 8.1.23
+
+- **Breaking changes**:
+  * `IDEAL ZOOM` can be customised by providing `lookAt` or `camera` for `idealZoom` in `MappableTraits`. The `lookAt` takes precedence of `camera` if both exist. The values for `camera` can be easily obtained from property `initialCamera` by calling shared link api .
+* Fixed crash caused by ArcGisMapServerCatalogItem layer missing legend.
+* Refactored StoryPanel and made it be collapsible
+* Added animation.ts as a utility function to handle animation end changes (instead of using timeout)
+* Fixed a bug where `buildShareLink` serialised the feature highlight model & geometry. Picked features are still serialised and geometry is reloaded on accessing the share link.
+
 #### 8.1.22
+
 * Added play story button in mobile view when there is an active story
 * `IDEAL ZOOM` can be customised by providing `idealZoom` property in `MappableTraits`.
 * Fix `AddData` options
