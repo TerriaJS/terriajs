@@ -8,11 +8,15 @@ import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMater
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
+import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
+import PolygonGraphics from "terriajs-cesium/Source/DataSources/PolygonGraphics";
 import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
+import PolylineGraphics from "terriajs-cesium/Source/DataSources/PolylineGraphics";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
+import makeRealPromise from "../../../Core/makeRealPromise";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import { networkRequestError } from "../../../Core/TerriaError";
 import featureDataToGeoJson from "../../../Map/featureDataToGeoJson";
@@ -214,10 +218,13 @@ class FeatureServerStratum extends LoadableStratum(
   @computed
   get shortReport(): string | undefined {
     // Show notice if reached
-    if (this._esriJson?.exceededTransferLimit) {
+    if (
+      this._item.readyData?.features !== undefined &&
+      this._item.readyData!.features.length >= this._item.maxFeatures
+    ) {
       return i18next.t(
         "models.arcGisFeatureServerCatalogItem.reachedMaxFeatureLimit",
-        this
+        this._item
       );
     }
     return undefined;
@@ -451,21 +458,6 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
     );
   }
 
-  @computed
-  get shortReport(): string | undefined {
-    // Show notice if feature limit is reached
-    if (
-      this.readyData?.features !== undefined &&
-      this.readyData!.features.length >= this.maxFeatures
-    ) {
-      return i18next.t(
-        "models.arcGisFeatureServerCatalogItem.reachedMaxFeatureLimit",
-        this
-      );
-    }
-    return undefined;
-  }
-
   protected async loadGeoJsonDataSource(
     geoJson: FeatureCollectionWithCrs
   ): Promise<GeoJsonDataSource> {
@@ -477,6 +469,7 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
       featureServerData === undefined ||
       featureServerData.drawingInfo === undefined
     ) {
+      // Use GeoJSONMixin styles
       return dataSource;
     }
     const renderer = featureServerData!.drawingInfo!.renderer;
@@ -534,7 +527,8 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
 
   /**
    * Constructs the url for a request to a feature server
-   * @param resultOffset Allows for pagination of results. See https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-layer-.htm
+   * @param resultOffset Allows for pagination of results.
+   *  See https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-layer-.htm
    */
   buildEsriJsonUrl(resultOffset?: number) {
     const url = cleanUrl(this.url || "0d");
@@ -552,19 +546,23 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
       });
     }
 
+    // We used to make a call to a different ArcGIS API endpoint
+    // (https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-.htm) which took a
+    // `layerdef` parameter, which is more or less equivalent to `where`. To avoid breaking old catalog items, we need
+    // to use `layerDef` if `where` hasn't been set
+    const where = this.where === "1=1" ? this.layerDef : this.where;
+
     const uri = new URI(url)
       .segment("query")
       .addQuery("f", "json")
-      .addQuery("where", "1=1")
+      .addQuery("where", where)
       .addQuery("outFields", "*")
-      .addQuery("layerDefs", `{"${layerId}": "${this.layerDef}"}`)
       .addQuery("outSR", "4326");
 
     if (resultOffset !== undefined) {
       // Pagination specific parameters
       uri
         .addQuery("resultRecordCount", this.featuresPerRequest)
-        .addQuery("orderByFields", "OBJECTID")
         .addQuery("resultOffset", resultOffset);
     }
 
@@ -656,7 +654,8 @@ function updateEntityWithEsriStyle(
   // TODO: tweek the svg support
   if (symbol.type === "esriPMS") {
     // Replace a general Cesium Point with a billboard
-    if (entity.point && symbol.imageData) {
+    entity.point = entity.point ?? new PointGraphics();
+    if (symbol.imageData) {
       entity.billboard = new BillboardGraphics({
         image: new ConstantProperty(
           proxyCatalogItemUrl(
@@ -691,7 +690,8 @@ function updateEntityWithEsriStyle(
   } else if (symbol.type === "esriSMS") {
     // Update the styling of the Cesium Point
     // TODO extend support for cross, diamond, square, x, triangle
-    if (entity.point && symbol.color) {
+    entity.point = entity.point ?? new PointGraphics();
+    if (symbol.color) {
       entity.point.color = new ConstantProperty(
         convertEsriColorToCesiumColor(symbol.color)
       );
@@ -710,65 +710,62 @@ function updateEntityWithEsriStyle(
     }
   } else if (symbol.type === "esriSLS") {
     /* Update the styling of the Cesium Polyline */
-    if (entity.polyline) {
-      if (isDefined(symbol.width)) {
-        entity.polyline.width = new ConstantProperty(
-          convertEsriPointSizeToPixels(symbol.width)
-        );
-      }
-      const color = symbol.color ? symbol.color : defaultColor;
-      /*
+    entity.polyline = entity.polyline ?? new PolylineGraphics();
+    if (isDefined(symbol.width)) {
+      entity.polyline.width = new ConstantProperty(
+        convertEsriPointSizeToPixels(symbol.width)
+      );
+    }
+    const color = symbol.color ? symbol.color : defaultColor;
+    /*
         For line containing dashes PolylineDashMaterialProperty is used.
         Definition is done using the line patterns converted from hex to decimal dashPattern.
         Source for some of the line patterns is https://www.opengl.org.ru/docs/pg/0204.html, others are created manually
       */
-      esriPolylineStyle(entity, color, <supportedLineStyle>symbol.style);
-    }
+    esriPolylineStyle(entity, color, <supportedLineStyle>symbol.style);
   } else if (symbol.type === "esriSFS") {
     // Update the styling of the Cesium Polygon
-    if (entity.polygon) {
-      const color = symbol.color ? symbol.color : defaultFillColor;
+    entity.polygon = entity.polygon ?? new PolygonGraphics();
+    const color = symbol.color ? symbol.color : defaultFillColor;
 
-      // feature picking doesn't work when the polygon interior is transparent, so
-      // use an almost-transparent color instead
-      if (color[3] === 0) {
-        color[3] = 1;
-      }
+    // feature picking doesn't work when the polygon interior is transparent, so
+    // use an almost-transparent color instead
+    if (color[3] === 0) {
+      color[3] = 1;
+    }
+    entity.polygon.material = new ColorMaterialProperty(
+      new ConstantProperty(convertEsriColorToCesiumColor(color))
+    );
+
+    if (
+      symbol.style === "esriSFSNull" &&
+      symbol.outline &&
+      symbol.outline.style === "esriSLSNull"
+    ) {
+      entity.polygon.show = new ConstantProperty(false);
+    } else {
       entity.polygon.material = new ColorMaterialProperty(
         new ConstantProperty(convertEsriColorToCesiumColor(color))
       );
-
-      if (
-        symbol.style === "esriSFSNull" &&
-        symbol.outline &&
-        symbol.outline.style === "esriSLSNull"
-      ) {
-        entity.polygon.show = new ConstantProperty(false);
-      } else {
-        entity.polygon.material = new ColorMaterialProperty(
-          new ConstantProperty(convertEsriColorToCesiumColor(color))
-        );
-      }
-      if (symbol.outline) {
-        const outlineColor = symbol.outline.color
-          ? symbol.outline.color
-          : defaultOutlineColor;
-        /* It can actually happen that entity has both polygon and polyline defined at same time,
+    }
+    if (symbol.outline) {
+      const outlineColor = symbol.outline.color
+        ? symbol.outline.color
+        : defaultOutlineColor;
+      /* It can actually happen that entity has both polygon and polyline defined at same time,
             check the implementation of GeoJsonCatalogItem for details. */
-        entity.polygon.outlineColor = new ColorMaterialProperty(
-          new ConstantProperty(convertEsriColorToCesiumColor(outlineColor))
-        );
-        entity.polygon.outlineWidth = new ConstantProperty(
-          convertEsriPointSizeToPixels(symbol.outline.width)
-        );
-        if (entity.polyline) {
-          esriPolylineStyle(entity, outlineColor, symbol.outline.style);
-          entity.polyline.width = new ConstantProperty(
-            convertEsriPointSizeToPixels(symbol.outline.width)
-          );
-          entity.polygon.outline = entity.polyline.material;
-        }
-      }
+      entity.polygon.outlineColor = new ColorMaterialProperty(
+        new ConstantProperty(convertEsriColorToCesiumColor(outlineColor))
+      );
+      entity.polygon.outlineWidth = new ConstantProperty(
+        convertEsriPointSizeToPixels(symbol.outline.width)
+      );
+      entity.polyline = entity.polyline ?? new PolylineGraphics();
+      esriPolylineStyle(entity, outlineColor, symbol.outline.style);
+      entity.polyline.width = new ConstantProperty(
+        convertEsriPointSizeToPixels(symbol.outline.width)
+      );
+      entity.polygon.outline = entity.polyline.material;
     }
   }
 }

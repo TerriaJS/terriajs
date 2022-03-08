@@ -33,9 +33,17 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
     type: "string",
     name: "layerDef",
     description:
-      "The 'layerDef' string to pass to the server when requesting geometry."
+      "DEPRECATED, use `where` instead. The 'layerDef' string to pass to the server when requesting geometry."
   })
   layerDef: string = "1=1";
+
+  @primitiveTrait({
+    type: "string",
+    name: "Where clause",
+    description:
+      "The 'where' string to pass to the server when requesting geometry."
+  })
+  where: string = "1=1";
 
   @primitiveTrait({
     type: "number",
