@@ -8,7 +8,7 @@ import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTime
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import isReadOnlyArray from "../../../Core/isReadOnlyArray";
-import { JsonObject } from "../../../Core/Json";
+import { isJsonArray, JsonObject } from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";
 import { terriaTheme } from "../../../ReactViews/StandardUserInterface/StandardTheme";
 import {
@@ -84,6 +84,15 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       model as WebMapServiceCatalogItem,
       this.capabilities
     ) as this;
+  }
+
+  @computed get useWmsVersion130() {
+    if (
+      this.catalogItem.url?.toLowerCase().includes("version=1.1.0") ||
+      this.catalogItem.url?.toLowerCase().includes("version=1.1.1")
+    ) {
+      return false;
+    }
   }
 
   @computed get metadataUrls() {
@@ -189,9 +198,13 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
         );
         legendUri
           .setQuery("service", "WMS")
-          .setQuery("version", "1.3.0")
+          .setQuery(
+            "version",
+            this.catalogItem.useWmsVersion130 ? "1.3.0" : "1.1.1"
+          )
           .setQuery("request", "GetLegendGraphic")
           .setQuery("format", "image/png")
+          .setQuery("sld_version", "1.1.0")
           .setQuery("layer", layer);
 
         // From OGC — about style property for GetLegendGraphic request:
@@ -791,6 +804,18 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
 
     // Return first default time
     return defaultTimes[0];
+  }
+
+  @computed get getFeatureInfoFormat() {
+    const formats = this.capabilities.json.Capability?.Request?.GetFeatureInfo
+      ?.Format;
+    if (isJsonArray(formats)) {
+      if (formats.includes("application/json")) return "application/json";
+      if (formats.includes("text/html")) return "text/html";
+      if (formats.includes("application/vnd.ogc.gml"))
+        return "application/vnd.ogc.gml";
+      if (formats.includes("text/plain")) return "text/plain";
+    }
   }
 
   @computed get linkedWcsParameters() {

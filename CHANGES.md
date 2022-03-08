@@ -6,7 +6,9 @@ Change Log
 * Ignores duplicate model ids in members array in `updateModelFromJson`
 * Add support for `crs` property in GeoJSON `Feature`
 * Add feature highlighting for Protomaps vector tiles
-* Update WMS `defaultParameters` to match version `1.3.0` (changed `exception=XML` and removed `tiled=true`)
+* Improve WMS 1.1.1 support
+  * Added `useWmsVersion130` trait - Use WMS version 1.3.0. True by default (unless `url` has `"version=1.1.1"` or `"version=1.1.0"`), if false, then WMS version 1.1.1 will be used.
+  * Added `getFeatureInfoFormat` trait - Format parameter to pass to GetFeatureInfo requests (as `info_format` query parameter). Defaults to "application/json", "application/vnd.ogc.gml", "text/html" or "text/plain" - depending on GetCapabilities response
 * [The next improvement]
 
 #### 8.1.23

@@ -297,7 +297,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     type: "number",
     name: "Color scale minimum",
     description:
-      "The minumum of the color scale range. Because COLORSCALERANGE is a non-standard property supported by ncWMS servers, this property is ignored unless WebMapServiceCatalogItem's supportsColorScaleRange is true. WebMapServiceCatalogItem's colorScaleMaximum must be set as well."
+      "The minimum of the color scale range. Because COLORSCALERANGE is a non-standard property supported by ncWMS servers, this property is ignored unless WebMapServiceCatalogItem's supportsColorScaleRange is true. WebMapServiceCatalogItem's colorScaleMaximum must be set as well."
   })
   colorScaleMinimum: number = -50;
 
@@ -316,4 +316,20 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       'The maximum number of "feature infos" that can be displayed in feature info panel.'
   })
   maximumShownFeatureInfos?: number;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Use WMS version 1.3.0",
+    description:
+      'Use WMS version 1.3.0. True by default (unless `url` has `"version=1.1.1"` or `"version=1.1.0"`), if false, then WMS version 1.1.1 will be used.'
+  })
+  useWmsVersion130: boolean = true;
+
+  @primitiveTrait({
+    type: "string",
+    name: "GetFeatureInfo format",
+    description:
+      'Format parameter to pass to GetFeatureInfo requests (as `info_format` query parameter). Defaults to "application/json", "application/vnd.ogc.gml", "text/html" or "text/plain" - depending on GetCapabilities response'
+  })
+  getFeatureInfoFormat?: string;
 }

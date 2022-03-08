@@ -33,14 +33,46 @@ import WebMapServiceCatalogItemTraits, {
 } from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
+import LoadableStratum from "../../Definition/LoadableStratum";
+import { BaseModel } from "../../Definition/Model";
+import StratumOrder from "../../Definition/StratumOrder";
 import SelectableDimensions, {
   SelectableDimension,
   SelectableDimensionSelect
 } from "../../SelectableDimensions";
+import Terria from "../../Terria";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import WebMapServiceCapabilities from "./WebMapServiceCapabilities";
 import WebMapServiceCapabilitiesStratum from "./WebMapServiceCapabilitiesStratum";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
+
+/** This LoadableStratum is responsible for setting WMS version based on CatalogItem.url */
+export class WebMapServiceUrlStratum extends LoadableStratum(
+  WebMapServiceCatalogItemTraits
+) {
+  static stratumName = "wms-url-stratum";
+  constructor(readonly catalogItem: WebMapServiceCatalogItem) {
+    super();
+  }
+
+  duplicateLoadableStratum(model: BaseModel): this {
+    return new WebMapServiceUrlStratum(
+      model as WebMapServiceCatalogItem
+    ) as this;
+  }
+
+  @computed get useWmsVersion130() {
+    if (
+      this.catalogItem.url?.toLowerCase().includes("version=1.1.0") ||
+      this.catalogItem.url?.toLowerCase().includes("version=1.1.1")
+    ) {
+      return false;
+    }
+  }
+}
+
+StratumOrder.addLoadStratum(WebMapServiceUrlStratum.stratumName);
+
 class WebMapServiceCatalogItem
   extends TileErrorHandlerMixin(
     ExportWebCoverageServiceMixin(
@@ -72,14 +104,36 @@ class WebMapServiceCatalogItem
 
   _webMapServiceCatalogGroup: undefined | WebMapServiceCatalogGroup = undefined;
 
-  static defaultParameters = {
+  /** Default WMS parameters for version=1.3.0 */
+  static defaultParameters130 = {
     transparent: true,
     format: "image/png",
     exceptions: "XML",
     styles: ""
   };
 
+  /** Default WMS parameters for version=1.1.1 */
+  static defaultParameters111 = {
+    transparent: true,
+    format: "image/png",
+    exceptions: "application/vnd.ogc.se_xml",
+    styles: "",
+    tiled: true
+  };
+
   static readonly type = "wms";
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined
+  ) {
+    super(id, terria, sourceReference);
+    this.strata.set(
+      WebMapServiceUrlStratum.stratumName,
+      new WebMapServiceUrlStratum(this)
+    );
+  }
 
   get type() {
     return WebMapServiceCatalogItem.type;
@@ -169,7 +223,7 @@ class WebMapServiceCatalogItem
         .clone()
         .setSearch({
           service: "WMS",
-          version: "1.3.0",
+          version: this.useWmsVersion130 ? "1.3.0" : "1.1.1",
           request: "GetCapabilities"
         })
         .toString();
@@ -373,7 +427,9 @@ class WebMapServiceCatalogItem
         : {};
 
       const parameters: { [key: string]: any } = {
-        ...WebMapServiceCatalogItem.defaultParameters,
+        ...(this.useWmsVersion130
+          ? WebMapServiceCatalogItem.defaultParameters130
+          : WebMapServiceCatalogItem.defaultParameters111),
         ...this.parameters,
         ...dimensionParameters
       };
@@ -428,6 +484,7 @@ class WebMapServiceCatalogItem
         layers: lyrs.length > 0 ? lyrs.join(",") : "",
         parameters,
         getFeatureInfoParameters: {
+          info_format: this.getFeatureInfoFormat,
           ...this.parameters,
           ...dimensionParameters,
           feature_count:
