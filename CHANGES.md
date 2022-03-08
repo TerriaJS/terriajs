@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.25)
 
+* Fixed parameter names of WPS catalog functions.
 * [The next improvement]
 
 

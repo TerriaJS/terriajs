@@ -330,7 +330,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
     it("works for a simple input", function() {
       const parameter = wps.convertInputToParameter(wps, {
         Identifier: "geometry_id",
-        Name: "Geometry ID",
+        Title: "Geometry ID",
         Abstract: "ID of the input",
         LiteralData: { AnyValue: {} },
         minOccurs: 1
