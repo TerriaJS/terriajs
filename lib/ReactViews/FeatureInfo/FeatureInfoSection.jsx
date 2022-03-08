@@ -825,12 +825,12 @@ function getTimeSeriesChartContext(catalogItem, feature, getChartDetails) {
     CustomComponent.isRegistered("chart")
   ) {
     const chartDetails = getChartDetails();
-    const { title, csvData } = chartDetails;
     const distinguishingId = catalogItem.dataViewId;
     const featureId = defined(distinguishingId)
       ? distinguishingId + "--" + feature.id
       : feature.id;
     if (chartDetails) {
+      const { title, csvData } = chartDetails;
       const result = {
         ...chartDetails,
         id: featureId?.replace(/\"/g, ""),
