@@ -643,7 +643,7 @@ function mustacheFormatNumberFunction() {
  *     ...
  *   }
  * }
- * 
+ *
  * E.g. {{#terria.partialByName}}{{value}}{{/terria.partialByName}}
      "featureInfoTemplate": {
         "template": "{{Pixel Value}} dwellings in {{#terria.partialByName}}{{feature.data.layerId}}{{/terria.partialByName}} radius.",
@@ -837,9 +837,8 @@ function getTimeSeriesChartContext(catalogItem, feature, getChartDetails) {
         data: csvData?.replace(/\\n/g, "\\n")
       };
       const idAttr = 'id="' + result.id + '" ';
-      const sourceAttr = 'sources="1"';
       const titleAttr = title ? `title="${title}"` : "";
-      result.chart = `<chart ${idAttr} ${sourceAttr} ${titleAttr}>${result.data}</chart>`;
+      result.chart = `<chart ${idAttr} ${titleAttr}>${result.data}</chart>`;
       return result;
     }
   }

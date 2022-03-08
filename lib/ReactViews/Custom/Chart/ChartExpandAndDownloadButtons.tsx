@@ -197,6 +197,7 @@ const ExpandAndDownloadButtons = function(props: {
       </button>
       {props.downloadUrl && (
         <a
+          download
           className={classNames(Styles.btnSmall, Styles.aDownload)}
           href={props.downloadUrl}
         >
