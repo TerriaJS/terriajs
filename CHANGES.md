@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.25)
 
+* Fix broken download link for feature info panel charts when no download urls are specified.
 * Fixed parameter names of WPS catalog functions.
 * [The next improvement]
 
