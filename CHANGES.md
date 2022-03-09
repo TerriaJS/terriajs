@@ -5,6 +5,9 @@ Change Log
 
 * Fix broken download link for feature info panel charts when no download urls are specified.
 * Fixed parameter names of WPS catalog functions.
+* Added experimental routing system. There may be breaking changes to this system in subsequent patch releases until it's stable. The routes currently include:
+  * `/story/:share-id` ➡ loads share JSON from a URL `${configParameters.storyRouteUrlPrefix}${appName}/:share-id` e.g. `https://example.com/stories/TerriaJS%20App/my-story` (must support CORS, at the moment there is no support for proxying)
+  * `/catalog/:id` ➡ opens the data catalogue to the specified member (you should set ids manually in your catalog to use this feature)
 * [The next improvement]
 
 
