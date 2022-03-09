@@ -326,6 +326,15 @@ interface Analytics {
 }
 
 interface TerriaOptions {
+  /**
+   * Override detecting base href from document.baseURI.
+   * Used in specs to support routes within Karma spec automation framework
+   */
+  appBaseHref?: string;
+  /**
+   * Base url where TerriaJS resources can be found.
+   * Normally "build/TerriaJS/" in any TerriaMap and "./" in specs
+   */
   baseUrl?: string;
   analytics?: Analytics;
 }
@@ -354,6 +363,9 @@ export default class Terria {
   /** Map from id -> share keys */
   readonly modelIdShareKeysMap = observable.map<string, string[]>();
 
+  /** Base URL for the Terria app. Used for SPA routes */
+  readonly appBaseHref: string = document.baseURI;
+  /** Base URL to Terria resources */
   readonly baseUrl: string = "build/TerriaJS/";
 
   readonly tileLoadProgressEvent = new CesiumEvent();
@@ -571,6 +583,12 @@ export default class Terria {
   errorService: ErrorServiceProvider = new StubErrorServiceProvider();
 
   constructor(options: TerriaOptions = {}) {
+    if (options.appBaseHref) {
+      this.appBaseHref = new URL(
+        options.appBaseHref,
+        document.baseURI
+      ).toString();
+    }
     if (options.baseUrl) {
       if (options.baseUrl.lastIndexOf("/") !== options.baseUrl.length - 1) {
         this.baseUrl = options.baseUrl + "/";
@@ -1014,19 +1032,20 @@ export default class Terria {
           .hash("")
       );
 
-      // /catalog/ and /story/ routes
-
-      if (!document.baseURI.endsWith("/"))
+      if (!this.appBaseHref.endsWith("/")) {
         console.warn(
-          `Terria expected document.baseURI to end with a "/" but baseURI is "${document.baseURI}". Routes may not work as intended`
+          `Terria expected appBaseHref to end with a "/" but appBaseHref is "${this.appBaseHref}". Routes may not work as intended. To fix this, try setting the "--baseHref" parameter to a URL with a trailing slash while building your map, or constructing the Terria object with an appropriate appBaseHref (with trailing slash).`
         );
-      if (newUrl.startsWith(document.baseURI)) {
+      }
+
+      // /catalog/ and /story/ routes
+      if (newUrl.startsWith(this.appBaseHref)) {
         const pageUrl = new URL(newUrl);
         // Find relative path from baseURI to documentURI excluding query and hash
         // then split into url segments
         // e.g. "http://ci.terria.io/main/story/1#map=2d" -> ["story", "1"]
         const segments = (pageUrl.origin + pageUrl.pathname)
-          .slice(document.baseURI.length)
+          .slice(this.appBaseHref.length)
           .split("/");
         if (
           segments.length === 2 &&
@@ -1041,7 +1060,7 @@ export default class Terria {
             }
           });
           const replaceUrl = new URL(newUrl);
-          replaceUrl.pathname = new URL(document.baseURI).pathname;
+          replaceUrl.pathname = new URL(this.appBaseHref).pathname;
           history.replaceState({}, "", replaceUrl.href);
         } else if (
           segments.length === 2 &&

@@ -62,6 +62,7 @@ describe("Terria", function() {
 
   beforeEach(function() {
     terria = new Terria({
+      appBaseHref: "/",
       baseUrl: "./"
     });
   });
@@ -483,13 +484,6 @@ describe("Terria", function() {
         });
       });
       it("sets playStory to 1", async function() {
-        console.log("Testing story routes my-story");
-        console.log(
-          `Setting URL to "${new URL(
-            "story/my-story",
-            document.baseURI
-          ).toString()}"`
-        );
         await terria.updateApplicationUrl(
           new URL("story/my-story", document.baseURI).toString()
         );
