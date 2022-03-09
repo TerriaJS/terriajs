@@ -287,6 +287,11 @@ interface ConfigParameters {
    * Configurable discalimer that shows up in print view
    */
   printDisclaimer?: { url: string; text: string };
+
+  /**
+   * Prefix to which ${appName}/${story-id} is added to fetch JSON for stories when using /story/${story-id} routes. Should end in /
+   */
+  storyRouteUrlPrefix?: string;
 }
 
 interface StartOptions {
@@ -463,7 +468,8 @@ export default class Terria {
       },
       { text: "map.extraCreditLinks.disclaimer", url: "about.html#disclaimer" }
     ],
-    printDisclaimer: undefined
+    printDisclaimer: undefined,
+    storyRouteUrlPrefix: undefined
   };
 
   @observable
@@ -1040,13 +1046,24 @@ export default class Terria {
         } else if (
           segments.length === 2 &&
           segments[0] === "story" &&
-          segments[1].length > 0
+          segments[1].length > 0 &&
+          isDefined(this.configParameters.storyRouteUrlPrefix)
         ) {
+          let storyJson;
+          try {
+            storyJson = await loadJson(
+              `${this.configParameters.storyRouteUrlPrefix}${encodeURIComponent(
+                this.appName
+              )}/${segments[1]}`
+            );
+          } catch (e) {
+            throw TerriaError.from(e, {
+              message: `Failed to fetch story \`"${this.appName}/${segments[1]}"\``
+            });
+          }
           await interpretStartData(
             this,
-            await loadJson(
-              `https://tile-test.terria.io/stories/${this.appName}/${segments[1]}`
-            ),
+            storyJson,
             `Start data from story \`"${this.appName}/${segments[1]}"\``
           );
           this.userProperties.set("playStory", "1");
