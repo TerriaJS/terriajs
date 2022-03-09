@@ -80,11 +80,12 @@ describe("ArcGisFeatureServerCatalogItem", function() {
       } else if (originalUrl.match("Water_Network_Multi/FeatureServer")) {
         // We're getting this feature service in multiple requests, so we need to return different data on subsequent
         // calls
-        if (originalUrl.includes("layer") && multiCallCount === 1) {
-          url = url.replace("layer.json", "layerB.json");
-        }
-        if (originalUrl.includes("layer")) {
+        console.log("multicall count", multiCallCount, originalUrl);
+        if (url.includes("layer")) {
           multiCallCount++;
+        }
+        if (url.includes("layer") && multiCallCount > 1) {
+          url = url.replace("layer.json", "layerB.json");
         }
         url = url.replace(/FeatureServer\/2\/?\?.*/i, "2.json");
         args[0] = "test/ArcGisFeatureServer/Water_Network_Multi/" + url;
