@@ -1,4 +1,4 @@
-import { action, runInAction } from "mobx";
+import { action, runInAction, toJS } from "mobx";
 import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
@@ -23,7 +23,7 @@ import Cesium from "../../lib/Models/Cesium";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import { BaseModel } from "../../lib/Models/Definition/Model";
 import Feature from "../../lib/Models/Feature";
-import {
+import InitSource, {
   isInitData,
   isInitDataPromise,
   isInitUrl
@@ -475,6 +475,34 @@ describe("Terria", function() {
       );
       expect(newGroup.isOpen).toBe(true);
       expect(newGroup.members).toEqual(group.members);
+    });
+
+    describe("using story route", function() {
+      beforeEach(async function() {
+        terria.updateParameters({
+          storyRouteUrlPrefix: "test/stories/"
+        });
+      });
+      it("sets playStory to 1", async function() {
+        await terria.updateApplicationUrl(
+          new URL("story/my-story", document.baseURI).toString()
+        );
+        expect(terria.userProperties.get("playStory")).toBe("1");
+      });
+      it("correctly adds the story share as a datasource", async function() {
+        await terria.updateApplicationUrl(
+          new URL("story/my-story", document.baseURI).toString()
+        );
+        expect(terria.initSources.length).toBe(1);
+        expect(terria.initSources[0].name).toMatch(/my-story/);
+        if (!isInitData(terria.initSources[0]))
+          throw new Error("Expected initSource to be InitData from my-story");
+
+        expect(toJS(terria.initSources[0].data)).toEqual(
+          (await (await fetch("test/stories/TerriaJS%20App/my-story")).json())
+            .initSources[0]
+        );
+      });
     });
   });
 
