@@ -68,7 +68,7 @@ describe("Terria", function() {
   });
 
   describe("terria refresh catalog members from magda", function() {
-    it("refreshes group aspect with given URL", async function(done) {
+    it("refreshes group aspect with given URL", async function() {
       function verifyGroups(groupAspect: any, groupNum: number) {
         const ids = groupAspect.members.map((member: any) => member.id);
         expect(terria.catalog.group.uniqueId).toEqual("/");
@@ -78,39 +78,23 @@ describe("Terria", function() {
         ids.forEach((id: string) => {
           const model = terria.getModelById(MagdaReference, id);
           if (!model) {
-            throw `no record id. ID = ${id}`;
+            throw new Error(`no record id. ID = ${id}`);
           }
           expect(terria.modelIds).toContain(id);
           expect(model.recordId).toEqual(id);
         });
       }
 
-      await terria
-        .start({
-          configUrl: "test/Magda/map-config-dereferenced.json",
-          i18nOptions
-        })
-        .then(function() {
-          const groupAspect = mapConfigDereferencedJson.aspects["group"];
-          verifyGroups(groupAspect, 3);
-          done();
-        })
-        .catch(error => {
-          done.fail(error);
-        });
+      await terria.start({
+        configUrl: "test/Magda/map-config-dereferenced.json",
+        i18nOptions
+      });
+      verifyGroups(mapConfigDereferencedJson.aspects["group"], 3);
 
-      await terria
-        .refreshCatalogMembersFromMagda(
-          "test/Magda/map-config-dereferenced-new.json"
-        )
-        .then(function() {
-          const groupAspect = mapConfigDereferencedNewJson.aspects["group"];
-          verifyGroups(groupAspect, 2);
-          done();
-        })
-        .catch(error => {
-          done.fail(error);
-        });
+      await terria.refreshCatalogMembersFromMagda(
+        "test/Magda/map-config-dereferenced-new.json"
+      );
+      verifyGroups(mapConfigDereferencedNewJson.aspects["group"], 2);
     });
   });
 
