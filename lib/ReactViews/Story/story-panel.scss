@@ -7,7 +7,7 @@
   width: 100%;
   padding-left: $padding * 2;
   padding-right: $padding * 2;
-  bottom: 100px;
+  bottom: 80px;
   z-index: 9;
   box-sizing: border-box;
   pointer-events: none;
@@ -20,10 +20,6 @@
   &.is-hidden {
     display: none;
   }
-}
-
-.isPushedUp {
-  bottom: 350px;
 }
 
 .isCentered {
@@ -42,10 +38,9 @@
   opacity: 0;
   @include transition(all 0.3s);
   pointer-events: auto;
-  display: flex;
   opacity: 0;
   width: 100%;
-  min-height: 100px;
+  min-height: 2em;
   max-width: 1200px;
   background-color: #ffffff;
   color: $text-dark;
@@ -54,6 +49,7 @@
   margin: 0 auto;
   border-radius: 2px;
   box-shadow: 0 0 15px 6px rgba(100, 100, 100, 0.3);
+  padding: $padding;
 
   .left {
     border-right: 1px solid $field-border;
@@ -75,51 +71,15 @@
   display: flex;
   max-width: 100%;
   overflow: hidden;
-  padding: $padding;
   border-bottom: 1px solid $field-border;
   padding: 0;
   h3 {
-    margin: $padding;
+    margin: 0;
     font-size: 1.2rem;
     color: $dark;
     @media (max-width: $sm) {
       flex-grow: 2;
     }
-  }
-}
-
-.body {
-  padding: $padding * 1.5 $padding;
-  color: $dark;
-  font-size: 1rem;
-  max-height: 100px;
-  @media (min-height: 700px) {
-    max-height: 200px;
-  }
-  @media (min-height: 900px) {
-    max-height: 400px;
-  }
-  overflow-y: auto;
-  img {
-    max-width: 100%;
-  }
-  * {
-    max-width: 100%;
-    /* These are technically the same, but use both */
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-
-    -ms-word-break: break-all;
-    /* This is the dangerous one in WebKit, as it breaks things wherever */
-    word-break: break-all;
-    /* Instead use this non-standard one: */
-    word-break: break-word;
-
-    /* Adds a hyphen where the word breaks, if supported (No Blink) */
-    -ms-hyphens: auto;
-    -moz-hyphens: auto;
-    -webkit-hyphens: auto;
-    hyphens: auto;
   }
 }
 
@@ -149,16 +109,6 @@
     height: 15px;
   }
 }
-.exitBtn {
-  border-left: 1px solid $field-border;
-}
-
-.locationBtn {
-  border-right: 1px solid $field-border;
-  svg {
-    width: 18px;
-  }
-}
 
 .exitBtn,
 .locationBtn {
@@ -170,7 +120,6 @@
   &:hover {
     @media (min-width: $sm) {
       border: 0px;
-      border-bottom: 1px solid $field-border;
     }
   }
 }
@@ -192,25 +141,7 @@
     height: 10px;
   }
 }
-
-.navBtnMobile {
-  display: flex;
-  width: 100%;
-  bottom: -25px;
-  position: absolute;
-}
-.mobileNavBtn {
-  composes: btn from "../../Sass/common/_buttons.scss";
-  background: #ffffff;
-  color: $text-dark;
-  padding: 2px 8px;
-  border-right: 1px solid #dddddd;
-  border-top: 1px solid #dddddd;
-  &.isActive {
-    background: $color-primary;
-    color: #ffffff;
-  }
-}
+// styling for the "this map contains a story" notification
 :global {
   .story.tjs-notification-window__wrapper {
     @media (min-width: $md) {
@@ -222,12 +153,11 @@
       border: 1px solid rgba(#ffffff, 0.1);
       text-align: center;
     }
-    h3 {
-    }
     .tjs-notification-window__footer {
       display: flex;
       border-top: 1px solid rgba(#ffffff, 0.8);
       button {
+        color: #ffffff;
         background-color: transparent;
         font-weight: bold;
         &:first-of-type {

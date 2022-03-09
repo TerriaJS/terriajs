@@ -1,12 +1,6 @@
-import {
-  Feature as GeoJSONFeature,
-  MultiPolygon,
-  Position
-} from "@turf/helpers";
 import { action, observable, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
@@ -23,6 +17,7 @@ import LatLonHeight from "../Core/LatLonHeight";
 import featureDataToGeoJson from "../Map/featureDataToGeoJson";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import { ProviderCoordsMap } from "../Map/PickedFeatures";
+import ProtomapsImageryProvider from "../Map/ProtomapsImageryProvider";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import MouseCoords from "../ReactViewModels/MouseCoords";
@@ -42,7 +37,7 @@ export default abstract class GlobeOrMap {
   abstract readonly terria: Terria;
   abstract readonly canShowSplitter: boolean;
 
-  protected static _featureHighlightID = "___$FeatureHighlight&__";
+  public static featureHighlightID = "___$FeatureHighlight&__";
   protected static _featureHighlightName = "TerriaJS Feature Highlight Marker";
 
   private _removeHighlightCallback?: () => Promise<void> | void;
@@ -205,7 +200,7 @@ export default abstract class GlobeOrMap {
   }
 
   abstract _addVectorTileHighlight(
-    imageryProvider: MapboxVectorTileImageryProvider,
+    imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
     rectangle: Rectangle
   ): () => void;
 
@@ -306,6 +301,8 @@ export default abstract class GlobeOrMap {
       }
 
       if (!hasGeometry) {
+        let vectorTileHighlightCreated = false;
+        // Feature from MapboxVectorTileImageryProvider
         if (
           feature.imageryLayer &&
           feature.imageryLayer.imageryProvider instanceof
@@ -322,7 +319,28 @@ export default abstract class GlobeOrMap {
               feature.imageryLayer.imageryProvider.rectangle
             );
           }
-        } else {
+          vectorTileHighlightCreated = true;
+        }
+        // Feature from ProtomapsImageryProvider (replacement for MapboxVectorTileImageryProvider)
+        else if (
+          feature.imageryLayer &&
+          feature.imageryLayer.imageryProvider instanceof
+            ProtomapsImageryProvider
+        ) {
+          const highlightImageryProvider = feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
+            feature
+          );
+          if (highlightImageryProvider)
+            this._removeHighlightCallback = this.terria.currentViewer._addVectorTileHighlight(
+              highlightImageryProvider,
+              feature.imageryLayer.imageryProvider.rectangle
+            );
+          vectorTileHighlightCreated = true;
+        }
+
+        // No vector tile highlight was created so try to convert feature to GeoJSON
+        // This flag is necessary to check as it is possible for a feature to use ProtomapsImageryProvider and also have GeoJson data - but maybe failed to createHighlightImageryProvider
+        if (!vectorTileHighlightCreated) {
           const geoJson = featureDataToGeoJson(feature.data);
 
           // Don't show points; the targeting cursor is sufficient.
@@ -333,11 +351,11 @@ export default abstract class GlobeOrMap {
 
             let catalogItem = this.terria.getModelById(
               GeoJsonCatalogItem,
-              GlobeOrMap._featureHighlightID
+              GlobeOrMap.featureHighlightID
             );
             if (catalogItem === undefined) {
               catalogItem = new GeoJsonCatalogItem(
-                GlobeOrMap._featureHighlightID,
+                GlobeOrMap.featureHighlightID,
                 this.terria
               );
               catalogItem.setTrait(

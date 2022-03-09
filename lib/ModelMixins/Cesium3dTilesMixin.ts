@@ -10,6 +10,7 @@ import {
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
+import Color from "terriajs-cesium/Source/Core/Color";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
 import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
@@ -17,13 +18,10 @@ import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
-import Color from "terriajs-cesium/Source/Core/Color";
 import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
-import ClippingPlane from "terriajs-cesium/Source/Scene/ClippingPlane";
-import ClippingPlaneCollection from "terriajs-cesium/Source/Scene/ClippingPlaneCollection";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import { isJsonObject, JsonObject } from "../Core/Json";
@@ -33,18 +31,18 @@ import TerriaError from "../Core/TerriaError";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
+import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
+import StratumOrder from "../Models/Definition/StratumOrder";
 import Feature from "../Models/Feature";
-import { SelectableDimension } from "../Models/SelectableDimensions";
 import Cesium3DTilesCatalogItemTraits from "../Traits/TraitsClasses/Cesium3DTilesCatalogItemTraits";
 import Cesium3dTilesTraits, {
   OptionsTraits
 } from "../Traits/TraitsClasses/Cesium3dTilesTraits";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
+import ClippingMixin from "./ClippingMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
-import LoadableStratum from "../Models/Definition/LoadableStratum";
-import StratumOrder from "../Models/Definition/StratumOrder";
 
 class Cesium3dTilesStratum extends LoadableStratum(Cesium3dTilesTraits) {
   duplicateLoadableStratum(model: BaseModel): this {
@@ -85,8 +83,8 @@ class ObservableCesium3DTileset extends Cesium3DTileset {
 function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
   Base: T
 ) {
-  abstract class Cesium3dTilesMixin extends ShadowMixin(
-    MappableMixin(CatalogMemberMixin(Base))
+  abstract class Cesium3dTilesMixin extends ClippingMixin(
+    ShadowMixin(MappableMixin(CatalogMemberMixin(Base)))
   ) {
     protected tileset?: ObservableCesium3DTileset;
 
@@ -100,6 +98,22 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
     // Just a variable to save the original tileset.root.transform if it exists
     @observable
     private originalRootTransform: Matrix4 = Matrix4.IDENTITY.clone();
+
+    // An observable tracker for tileset.ready
+    @observable
+    isTilesetReady: boolean = false;
+
+    clippingPlanesOriginMatrix(): Matrix4 {
+      if (this.tileset && this.isTilesetReady) {
+        // clippingPlanesOriginMatrix is private.
+        // We need it to find the position where cesium centers the clipping plane for the tileset.
+        // See if we can find another way to get it.
+        if ((this.tileset as any).clippingPlanesOriginMatrix) {
+          return (this.tileset as any).clippingPlanesOriginMatrix.clone();
+        }
+      }
+      return Matrix4.IDENTITY.clone();
+    }
 
     protected async forceLoadMapItems() {
       try {
@@ -155,6 +169,11 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       });
 
       tileset._catalogItem = this;
+      runLater(
+        action(() => {
+          this.isTilesetReady = tileset.ready;
+        })
+      );
       if (!tileset.destroyed) {
         this.tileset = tileset;
       }
@@ -165,6 +184,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       // the root transform and transformation traits in mapItems.
       makeRealPromise(tileset.readyPromise).then(
         action(() => {
+          this.isTilesetReady = tileset.ready;
           if (tileset.root !== undefined) {
             this.originalRootTransform = tileset.root.transform.clone();
             tileset.root.transform = Matrix4.IDENTITY.clone();
@@ -242,12 +262,6 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       this.tileset.shadows = this.cesiumShadows;
       this.tileset.show = this.show;
 
-      if (isDefined(this.cesiumTileClippingPlaneCollection)) {
-        this.tileset.clippingPlanes = toJS(
-          this.cesiumTileClippingPlaneCollection
-        );
-      }
-
       const key = this
         .colorBlendMode as keyof typeof Cesium3DTileColorBlendMode;
       const colorBlendMode = Cesium3DTileColorBlendMode[key];
@@ -267,11 +281,13 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
         tilesetBaseSse * this.terria.baseMaximumScreenSpaceError;
 
       this.tileset.modelMatrix = this.modelMatrix;
-      return [this.tileset];
-    }
 
-    @computed get selectableDimensions(): SelectableDimension[] {
-      return [...super.selectableDimensions, this.shadowDimension];
+      this.tileset.clippingPlanes = toJS(this.clippingPlaneCollection)!;
+      this.clippingMapItems.forEach(mapItem => {
+        mapItem.show = this.show;
+      });
+
+      return [this.tileset, ...this.clippingMapItems];
     }
 
     @computed
@@ -359,56 +375,6 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       if (showExpression.length > 0) {
         return showExpression;
       }
-    }
-
-    @computed get cesiumTileClippingPlaneCollection() {
-      if (!isDefined(this.clippingPlanes)) {
-        return;
-      }
-
-      if (this.clippingPlanes.planes.length == 0) {
-        return;
-      }
-
-      const {
-        planes,
-        enabled = true,
-        unionClippingRegions = false,
-        edgeColor,
-        edgeWidth,
-        modelMatrix
-      } = this.clippingPlanes;
-
-      const planesMapped = planes.map((plane: any) => {
-        return new ClippingPlane(
-          Cartesian3.fromArray(plane.normal || []),
-          plane.distance
-        );
-      });
-
-      let options = {
-        planes: planesMapped,
-        enabled,
-        unionClippingRegions
-      };
-
-      if (edgeColor && edgeColor.length > 0) {
-        options = Object.assign(options, {
-          edgeColor: Color.fromCssColorString(edgeColor) || Color.WHITE
-        });
-      }
-
-      if (edgeWidth && edgeWidth > 0) {
-        options = Object.assign(options, { edgeWidth: edgeWidth });
-      }
-
-      if (modelMatrix && modelMatrix.length > 0) {
-        const array = clone(toJS(modelMatrix));
-        options = Object.assign(options, {
-          modelMatrix: Matrix4.fromArray(array) || Matrix4.IDENTITY
-        });
-      }
-      return new ClippingPlaneCollection(options);
     }
 
     @computed get cesiumTileStyle() {
