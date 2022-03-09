@@ -118,9 +118,9 @@ export default class Legend extends React.Component<{
             className={Styles.imageAnchor}
             target="_blank"
             rel="noreferrer noopener"
+            css={{ backgroundColor: legend.backgroundColor }}
           >
             <img
-              css={{ backgroundColor: legend.backgroundColor }}
               src={proxiedUrl}
               // Set maxWidth to 100% if no scaling required (otherwise - see onImageLoad)
               style={{
