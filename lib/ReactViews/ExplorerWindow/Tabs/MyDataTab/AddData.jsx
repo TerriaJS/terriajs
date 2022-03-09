@@ -31,13 +31,20 @@ const AddData = createReactClass({
     viewState: PropTypes.object,
     resetTab: PropTypes.func,
     activeTab: PropTypes.string,
+    // localDataTypes & remoteDataTypes specifies the file types to show in dropdowns for local and remote data uploads.
+    // These default to the lists defined in getDataType.ts
+    // Some external components use these props to customize the types shown.
+    localDataTypes: PropTypes.arrayOf(PropTypes.object),
+    remoteDataTypes: PropTypes.arrayOf(PropTypes.object),
     onFileAddFinished: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired
   },
 
   getInitialState() {
-    const remoteDataTypes = getDataType().remoteDataType;
-    const localDataTypes = getDataType().localDataType;
+    const remoteDataTypes =
+      this.props.remoteDataTypes ?? getDataType().remoteDataType;
+    const localDataTypes =
+      this.props.localDataTypes ?? getDataType().localDataType;
 
     return {
       remoteDataTypes,

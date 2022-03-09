@@ -72,5 +72,10 @@ describe("CsvChartCustomComponent", function() {
         expect(csvCatalogItem.columns[2].title).toBe("Temperature");
       }
     });
+
+    it("can create a download url from csv text passed as chart body", function() {
+      const url = component.constructDownloadUrlFromBody("a,b\n1,2\n3,4");
+      expect(url.startsWith("blob:")).toBeTruthy();
+    });
   });
 });

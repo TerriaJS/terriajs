@@ -1,7 +1,14 @@
 Change Log
 ==========
 
-#### next release (8.1.24)
+#### next release (8.1.25)
+
+* Fix broken download link for feature info panel charts when no download urls are specified.
+* Fixed parameter names of WPS catalog functions.
+* [The next improvement]
+
+
+#### 8.1.24 - 2022-03-08
 
 * Ignores duplicate model ids in members array in `updateModelFromJson`
 * Add support for `crs` property in GeoJSON `Feature`
@@ -11,6 +18,7 @@ Change Log
   * Added `getFeatureInfoFormat` trait - Format parameter to pass to GetFeatureInfo requests (as `info_format` query parameter). Defaults to "application/json", "application/vnd.ogc.gml", "text/html" or "text/plain" - depending on GetCapabilities response
 * Add `legendBackgroundColor` to `LegendOwnerTraits` and `backgroundColor` to `LegendTraits`
 * [The next improvement]
+* Add back props `localDataTypes` and `remoteDataTypes` to the component `MyData` for customizing list of types shown in file upload modal.
 
 #### 8.1.23
 
