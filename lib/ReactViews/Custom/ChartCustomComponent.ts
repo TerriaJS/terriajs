@@ -203,6 +203,18 @@ export default abstract class ChartCustomComponent<
     sourceReference: BaseModel | undefined
   ) => Promise<CatalogItemType | undefined> = undefined;
 
+  /**
+   * Construct a download URL from the chart body text.
+   * This URL will be used to present a download link when other download
+   * options are not specified for the chart.
+   *
+   * See {@CsvChartCustomComponent} for an example implementation.
+   *
+   * @param body The body string.
+   * @return URL to be passed as `href` for the download link.
+   */
+  protected constructDownloadUrlFromBody?: (body: string) => string;
+
   private processChart(
     context: ProcessNodeContext,
     node: DomElement,
@@ -228,6 +240,15 @@ export default abstract class ChartCustomComponent<
       typeof child === "string" ? child : undefined;
     const chartElements = [];
     this.chartItemId = this.chartItemId ?? createGuid();
+
+    // If downloads not specified but we have a body string, convert it to a downloadable data URI.
+    if (
+      attrs.downloads === undefined &&
+      body &&
+      this.constructDownloadUrlFromBody !== undefined
+    ) {
+      attrs.downloads = [this.constructDownloadUrlFromBody?.(body)];
+    }
 
     if (!attrs.hideButtons) {
       // Build expand/download buttons

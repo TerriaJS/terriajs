@@ -14,6 +14,7 @@ const Toast: React.FC<ToastProps> = ({ children }) => {
 
 const Container = styled.div`
   position: fixed;
+  z-index: 99999;
   bottom: 80px; //on mobile make it appear above play story button
   left: 35%;
   @media (min-width: ${props => props.theme.sm}px) {
