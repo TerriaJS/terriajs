@@ -324,7 +324,7 @@ describe("Terria", function() {
       let viewState: ViewState;
 
       beforeEach(function() {
-        newTerria = new Terria({ baseUrl: "./" });
+        newTerria = new Terria({ appBaseHref: "/", baseUrl: "./" });
         viewState = new ViewState({
           terria: terria,
           catalogSearchProvider: null,
@@ -484,6 +484,7 @@ describe("Terria", function() {
 
     describe("using story route", function() {
       beforeEach(async function() {
+        // These specs must run with a Terria constructed with "appBaseHref": "/"
         terria.updateParameters({
           storyRouteUrlPrefix: "test/stories/"
         });
