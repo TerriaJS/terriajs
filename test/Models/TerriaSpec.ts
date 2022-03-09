@@ -319,157 +319,167 @@ describe("Terria", function() {
   });
 
   describe("updateApplicationUrl", function() {
-    let newTerria: Terria;
-    let viewState: ViewState;
+    describe("test via serialise & load round-trip", function() {
+      let newTerria: Terria;
+      let viewState: ViewState;
 
-    beforeEach(function() {
-      newTerria = new Terria({ baseUrl: "./" });
-      viewState = new ViewState({
-        terria: terria,
-        catalogSearchProvider: null,
-        locationSearchProviders: []
+      beforeEach(function() {
+        newTerria = new Terria({ baseUrl: "./" });
+        viewState = new ViewState({
+          terria: terria,
+          catalogSearchProvider: null,
+          locationSearchProviders: []
+        });
+
+        UrlToCatalogMemberMapping.register(
+          s => true,
+          WebMapServiceCatalogItem.type,
+          true
+        );
+
+        terria.catalog.userAddedDataGroup.addMembersFromJson(
+          CommonStrata.user,
+          [
+            {
+              id: "itemABC",
+              name: "abc",
+              type: "wms",
+              url: "test/WMS/single_metadata_url.xml"
+            },
+            {
+              id: "groupABC",
+              name: "xyz",
+              type: "wms-group",
+              url: "test/WMS/single_metadata_url.xml"
+            }
+          ]
+        );
+
+        terria.catalog.group.addMembersFromJson(CommonStrata.user, [
+          {
+            id: "itemDEF",
+            name: "def",
+            type: "wms",
+            url: "test/WMS/single_metadata_url.xml"
+          }
+        ]);
       });
 
-      UrlToCatalogMemberMapping.register(
-        s => true,
-        WebMapServiceCatalogItem.type,
-        true
-      );
+      it("initializes user added data group with shared items", async function() {
+        expect(newTerria.catalog.userAddedDataGroup.members).not.toContain(
+          "itemABC"
+        );
+        expect(newTerria.catalog.userAddedDataGroup.members).not.toContain(
+          "groupABC"
+        );
 
-      terria.catalog.userAddedDataGroup.addMembersFromJson(CommonStrata.user, [
-        {
-          id: "itemABC",
-          name: "abc",
-          type: "wms",
-          url: "test/WMS/single_metadata_url.xml"
-        },
-        {
-          id: "groupABC",
-          name: "xyz",
-          type: "wms-group",
-          url: "test/WMS/single_metadata_url.xml"
-        }
-      ]);
-
-      terria.catalog.group.addMembersFromJson(CommonStrata.user, [
-        {
-          id: "itemDEF",
-          name: "def",
-          type: "wms",
-          url: "test/WMS/single_metadata_url.xml"
-        }
-      ]);
-    });
-
-    it("initializes user added data group with shared items", async function() {
-      expect(newTerria.catalog.userAddedDataGroup.members).not.toContain(
-        "itemABC"
-      );
-      expect(newTerria.catalog.userAddedDataGroup.members).not.toContain(
-        "groupABC"
-      );
-
-      const shareLink = buildShareLink(terria, viewState);
-      await newTerria.updateApplicationUrl(shareLink);
-      await newTerria.loadInitSources();
-      expect(newTerria.catalog.userAddedDataGroup.members).toContain("itemABC");
-      expect(newTerria.catalog.userAddedDataGroup.members).toContain(
-        "groupABC"
-      );
-    });
-
-    it("initializes user added data group with shared UrlReference items", async function() {
-      terria.catalog.userAddedDataGroup.addMembersFromJson(CommonStrata.user, [
-        {
-          id: "url_test",
-          name: "foo",
-          type: "url-reference",
-          url: "test/WMS/single_metadata_url.xml"
-        }
-      ]);
-
-      const shareLink = buildShareLink(terria, viewState);
-      await newTerria.updateApplicationUrl(shareLink);
-      await newTerria.loadInitSources();
-      expect(newTerria.catalog.userAddedDataGroup.members).toContain(
-        "url_test"
-      );
-      const urlRef = newTerria.getModelById(BaseModel, "url_test");
-      expect(urlRef).toBeDefined();
-      expect(urlRef instanceof UrlReference).toBe(true);
-
-      if (urlRef instanceof UrlReference) {
-        await urlRef.loadReference();
-        expect(urlRef.target).toBeDefined();
-      }
-    });
-
-    it("initializes workbench with shared workbench items", async function() {
-      const model1 = <WebMapServiceCatalogItem>(
-        terria.getModelById(BaseModel, "itemABC")
-      );
-      const model2 = <WebMapServiceCatalogItem>(
-        terria.getModelById(BaseModel, "itemDEF")
-      );
-      terria.workbench.add(model1);
-      terria.workbench.add(model2);
-      expect(terria.workbench.itemIds).toContain("itemABC");
-      expect(terria.workbench.itemIds).toContain("itemDEF");
-      expect(newTerria.workbench.itemIds).toEqual([]);
-
-      const shareLink = buildShareLink(terria, viewState);
-      await newTerria.updateApplicationUrl(shareLink);
-      await newTerria.loadInitSources();
-      expect(newTerria.workbench.itemIds).toEqual(terria.workbench.itemIds);
-    });
-
-    it("initializes splitter correctly", async function() {
-      const model1 = <WebMapServiceCatalogItem>(
-        terria.getModelById(BaseModel, "itemABC")
-      );
-      terria.workbench.add(model1);
-
-      runInAction(() => {
-        terria.showSplitter = true;
-        terria.splitPosition = 0.7;
-        model1.setTrait(
-          CommonStrata.user,
-          "splitDirection",
-          ImagerySplitDirection.RIGHT
+        const shareLink = buildShareLink(terria, viewState);
+        await newTerria.updateApplicationUrl(shareLink);
+        await newTerria.loadInitSources();
+        expect(newTerria.catalog.userAddedDataGroup.members).toContain(
+          "itemABC"
+        );
+        expect(newTerria.catalog.userAddedDataGroup.members).toContain(
+          "groupABC"
         );
       });
 
-      const shareLink = buildShareLink(terria, viewState);
-      await newTerria.updateApplicationUrl(shareLink);
-      await newTerria.loadInitSources();
-      expect(newTerria.showSplitter).toEqual(true);
-      expect(newTerria.splitPosition).toEqual(0.7);
-      expect(newTerria.workbench.itemIds).toEqual(["itemABC"]);
+      it("initializes user added data group with shared UrlReference items", async function() {
+        terria.catalog.userAddedDataGroup.addMembersFromJson(
+          CommonStrata.user,
+          [
+            {
+              id: "url_test",
+              name: "foo",
+              type: "url-reference",
+              url: "test/WMS/single_metadata_url.xml"
+            }
+          ]
+        );
 
-      const newModel1 = <WebMapServiceCatalogItem>(
-        newTerria.getModelById(BaseModel, "itemABC")
-      );
-      expect(newModel1).toBeDefined();
-      expect(newModel1.splitDirection).toEqual(
-        <any>ImagerySplitDirection.RIGHT
-      );
-    });
+        const shareLink = buildShareLink(terria, viewState);
+        await newTerria.updateApplicationUrl(shareLink);
+        await newTerria.loadInitSources();
+        expect(newTerria.catalog.userAddedDataGroup.members).toContain(
+          "url_test"
+        );
+        const urlRef = newTerria.getModelById(BaseModel, "url_test");
+        expect(urlRef).toBeDefined();
+        expect(urlRef instanceof UrlReference).toBe(true);
 
-    it("opens and loads members of shared open groups", async function() {
-      const group = <WebMapServiceCatalogGroup>(
-        terria.getModelById(BaseModel, "groupABC")
-      );
-      await viewState.viewCatalogMember(group);
-      expect(group.isOpen).toBe(true);
-      expect(group.members.length).toBeGreaterThan(0);
-      const shareLink = buildShareLink(terria, viewState);
-      await newTerria.updateApplicationUrl(shareLink);
-      await newTerria.loadInitSources();
-      const newGroup = <WebMapServiceCatalogGroup>(
-        newTerria.getModelById(BaseModel, "groupABC")
-      );
-      expect(newGroup.isOpen).toBe(true);
-      expect(newGroup.members).toEqual(group.members);
+        if (urlRef instanceof UrlReference) {
+          await urlRef.loadReference();
+          expect(urlRef.target).toBeDefined();
+        }
+      });
+
+      it("initializes workbench with shared workbench items", async function() {
+        const model1 = <WebMapServiceCatalogItem>(
+          terria.getModelById(BaseModel, "itemABC")
+        );
+        const model2 = <WebMapServiceCatalogItem>(
+          terria.getModelById(BaseModel, "itemDEF")
+        );
+        terria.workbench.add(model1);
+        terria.workbench.add(model2);
+        expect(terria.workbench.itemIds).toContain("itemABC");
+        expect(terria.workbench.itemIds).toContain("itemDEF");
+        expect(newTerria.workbench.itemIds).toEqual([]);
+
+        const shareLink = buildShareLink(terria, viewState);
+        await newTerria.updateApplicationUrl(shareLink);
+        await newTerria.loadInitSources();
+        expect(newTerria.workbench.itemIds).toEqual(terria.workbench.itemIds);
+      });
+
+      it("initializes splitter correctly", async function() {
+        const model1 = <WebMapServiceCatalogItem>(
+          terria.getModelById(BaseModel, "itemABC")
+        );
+        terria.workbench.add(model1);
+
+        runInAction(() => {
+          terria.showSplitter = true;
+          terria.splitPosition = 0.7;
+          model1.setTrait(
+            CommonStrata.user,
+            "splitDirection",
+            ImagerySplitDirection.RIGHT
+          );
+        });
+
+        const shareLink = buildShareLink(terria, viewState);
+        await newTerria.updateApplicationUrl(shareLink);
+        await newTerria.loadInitSources();
+        expect(newTerria.showSplitter).toEqual(true);
+        expect(newTerria.splitPosition).toEqual(0.7);
+        expect(newTerria.workbench.itemIds).toEqual(["itemABC"]);
+
+        const newModel1 = <WebMapServiceCatalogItem>(
+          newTerria.getModelById(BaseModel, "itemABC")
+        );
+        expect(newModel1).toBeDefined();
+        expect(newModel1.splitDirection).toEqual(
+          <any>ImagerySplitDirection.RIGHT
+        );
+      });
+
+      it("opens and loads members of shared open groups", async function() {
+        const group = <WebMapServiceCatalogGroup>(
+          terria.getModelById(BaseModel, "groupABC")
+        );
+        await viewState.viewCatalogMember(group);
+        expect(group.isOpen).toBe(true);
+        expect(group.members.length).toBeGreaterThan(0);
+        const shareLink = buildShareLink(terria, viewState);
+        await newTerria.updateApplicationUrl(shareLink);
+        await newTerria.loadInitSources();
+        const newGroup = <WebMapServiceCatalogGroup>(
+          newTerria.getModelById(BaseModel, "groupABC")
+        );
+        expect(newGroup.isOpen).toBe(true);
+        expect(newGroup.members).toEqual(group.members);
+      });
     });
 
     describe("using story route", function() {
