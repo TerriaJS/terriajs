@@ -1018,7 +1018,7 @@ export default class Terria {
 
       if (!document.baseURI.endsWith("/"))
         console.warn(
-          "Terria expected document.baseURI to end with a '/'. Routes may not work as intended"
+          `Terria expected document.baseURI to end with a "/" but baseURI is "${document.baseURI}". Routes may not work as intended`
         );
       if (newUrl.startsWith(document.baseURI)) {
         const pageUrl = new URL(newUrl);
