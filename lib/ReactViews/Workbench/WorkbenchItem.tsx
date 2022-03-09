@@ -120,7 +120,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
                       css={`
                         overflow-wrap: anywhere;
                       `}
-                      textProps={{ medium: true }}
+                      textProps={{ medium: true, fullWidth: true }}
                     >
                       <TextSpan medium>{item.name}</TextSpan>
                     </Checkbox>
