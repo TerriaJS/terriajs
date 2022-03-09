@@ -38,10 +38,7 @@ describe("Legend", function() {
           // @ts-ignore
           const testRenderer = TestRenderer.create(<Legend item={wmsItem} />);
 
-          const legends = testRenderer.root.findAllByProps({
-            src:
-              "http://localhost:3002/test/WMS/single_style_legend_url.xml?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&sld_version=1.1.0&layer=single_period"
-          });
+          const legends = testRenderer.root.findAllByType("img");
           expect(legends.length).toEqual(1);
         })
         .then(done);
