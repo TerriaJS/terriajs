@@ -137,6 +137,23 @@ export class WebMapServiceAvailableLayerDimensionsTraits extends ModelTraits {
   })
   dimensions?: WebMapServiceAvailableDimensionTraits[];
 }
+export class GetFeatureInfoFormat extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "Type",
+    description:
+      "The type of response to expect from a GetFeatureInfo request.  Valid values are 'json', 'xml', 'html', or 'text'."
+  })
+  type?: "json" | "xml" | "html" | "text" | undefined;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Format",
+    description:
+      "The info format to request from the WMS server.  This is usually a MIME type such as 'application/json' or text/xml'.  If this parameter is not specified, the provider will request 'json' using 'application/json', 'xml' using 'text/xml', 'html' using 'text/html', and 'text' using 'text/plain'."
+  })
+  format?: string;
+}
 
 @traitClass({
   description: `Creates a single item in the catalog from one or many WMS layers.
@@ -325,11 +342,11 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   })
   useWmsVersion130: boolean = true;
 
-  @primitiveTrait({
-    type: "string",
+  @objectTrait({
+    type: GetFeatureInfoFormat,
     name: "GetFeatureInfo format",
     description:
-      'Format parameter to pass to GetFeatureInfo requests (as `info_format` query parameter). Defaults to "application/json", "application/vnd.ogc.gml", "text/html" or "text/plain" - depending on GetCapabilities response'
+      'Format parameter to pass to GetFeatureInfo requests. Defaults to "application/json", "application/vnd.ogc.gml", "text/html" or "text/plain" - depending on GetCapabilities response'
   })
-  getFeatureInfoFormat?: string;
+  getFeatureInfoFormat?: GetFeatureInfoFormat;
 }

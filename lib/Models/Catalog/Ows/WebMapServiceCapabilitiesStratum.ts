@@ -8,7 +8,7 @@ import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTime
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import isReadOnlyArray from "../../../Core/isReadOnlyArray";
-import { isJsonArray, JsonObject } from "../../../Core/Json";
+import { isJsonArray, isJsonString, JsonObject } from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";
 import { terriaTheme } from "../../../ReactViews/StandardUserInterface/StandardTheme";
 import {
@@ -22,6 +22,7 @@ import {
 import LegendTraits from "../../../Traits/TraitsClasses/LegendTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import WebMapServiceCatalogItemTraits, {
+  GetFeatureInfoFormat,
   SUPPORTED_CRS_3857,
   SUPPORTED_CRS_4326,
   WebMapServiceAvailableLayerDimensionsTraits,
@@ -84,15 +85,6 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       model as WebMapServiceCatalogItem,
       this.capabilities
     ) as this;
-  }
-
-  @computed get useWmsVersion130() {
-    if (
-      this.catalogItem.url?.toLowerCase().includes("version=1.1.0") ||
-      this.catalogItem.url?.toLowerCase().includes("version=1.1.1")
-    ) {
-      return false;
-    }
   }
 
   @computed get metadataUrls() {
@@ -806,21 +798,37 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     return defaultTimes[0];
   }
 
-  @computed get getFeatureInfoFormat() {
-    const formats = this.capabilities.json.Capability?.Request?.GetFeatureInfo
-      ?.Format;
-    if (isJsonArray(formats)) {
-      if (formats.includes("application/json")) return "application/json";
-      if (formats.includes("text/html")) return "text/html";
-      if (formats.includes("application/vnd.ogc.gml"))
-        return "application/vnd.ogc.gml";
-      if (formats.includes("text/plain")) return "text/plain";
-    }
+  /** Prioritize format of GetFeatureInfo:
+   * - JSON
+   * - HTML
+   * - GML
+   * - Plain text
+   */
+  @computed get getFeatureInfoFormat():
+    | StratumFromTraits<GetFeatureInfoFormat>
+    | undefined {
+    const formats: string | string[] | undefined = this.capabilities.json
+      ?.Capability?.Request?.GetFeatureInfo?.Format;
+
+    const formatsArray = isJsonArray(formats)
+      ? formats
+      : isJsonString(formats)
+      ? [formats]
+      : [];
+
+    if (formatsArray.includes("application/json"))
+      return { format: "application/json", type: "json" };
+    if (formatsArray.includes("text/html"))
+      return { format: "text/html", type: "html" };
+    if (formatsArray.includes("application/vnd.ogc.gml"))
+      return { format: "application/vnd.ogc.gml", type: "xml" };
+    if (formatsArray.includes("text/plain"))
+      return { format: "text/plain", type: "text" };
   }
 
   @computed get linkedWcsParameters() {
     // Get outputCrs
-    // Note: this will be overriden by `WebCoverageServiceDescribeCoverageStratum` if a better outputCrs is found
+    // Note: this will be overridden by `WebCoverageServiceDescribeCoverageStratum` if a better outputCrs is found
     let outputCrs = this.availableCrs[0];
 
     // Unless it is Web Mercator of course - that would be stupid

@@ -13,6 +13,7 @@ import combine from "terriajs-cesium/Source/Core/combine";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
+import GetFeatureInfoFormat from "terriajs-cesium/Source/Scene/GetFeatureInfoFormat";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import URI from "urijs";
 import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
@@ -482,10 +483,6 @@ class WebMapServiceCatalogItem
 
       Object.assign(parameters, diffModeParameters);
 
-      if (isDefined(this.getFeatureInfoFormat)) {
-        getFeatureInfoParameters.info_format = this.getFeatureInfoFormat;
-      }
-
       // Remove problematic query parameters from URL - these are handled by the parameters objects
       const queryParametersToRemove = [
         "request",
@@ -539,6 +536,15 @@ class WebMapServiceCatalogItem
         maximumLevel: this.getMaximumLevel(true),
         credit: this.attribution
       };
+
+      if (isDefined(this.getFeatureInfoFormat?.type)) {
+        imageryOptions.getFeatureInfoFormats = [
+          new GetFeatureInfoFormat(
+            this.getFeatureInfoFormat.type,
+            this.getFeatureInfoFormat.format
+          )
+        ];
+      }
 
       if (
         imageryOptions.maximumLevel !== undefined &&
