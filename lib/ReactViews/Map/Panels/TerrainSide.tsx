@@ -119,7 +119,9 @@ export const TerrainSide: React.FC<ITerrainSideProps> = observer(
               `}
               {...props.buttonProps}
             >
-              <TextSpan styledFontSize={"10px"}>{t(side)}</TextSpan>
+              <TextSpan textLight small>
+                {t(side)}
+              </TextSpan>
             </RawButton>
           ))}
         </Box>
