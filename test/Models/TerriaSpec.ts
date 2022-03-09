@@ -4,7 +4,6 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import hashEntity from "../../lib/Core/hashEntity";
-import JsonValue, { JsonObject } from "../../lib/Core/Json";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import Result from "../../lib/Core/Result";
 import TerriaError from "../../lib/Core/TerriaError";
@@ -23,7 +22,7 @@ import Cesium from "../../lib/Models/Cesium";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import { BaseModel } from "../../lib/Models/Definition/Model";
 import Feature from "../../lib/Models/Feature";
-import InitSource, {
+import {
   isInitData,
   isInitDataPromise,
   isInitUrl
