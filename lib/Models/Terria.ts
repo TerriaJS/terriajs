@@ -1020,8 +1020,8 @@ export default class Terria {
         console.warn(
           "Terria expected document.baseURI to end with a '/'. Routes may not work as intended"
         );
-      if (document.documentURI.startsWith(document.baseURI)) {
-        const pageUrl = new URL(document.documentURI);
+      if (newUrl.startsWith(document.baseURI)) {
+        const pageUrl = new URL(newUrl);
         // Find relative path from baseURI to documentURI excluding query and hash
         // then split into url segments
         // e.g. "http://ci.terria.io/main/story/1#map=2d" -> ["story", "1"]
@@ -1040,7 +1040,7 @@ export default class Terria {
               previewedItemId: decodeURIComponent(segments[1])
             }
           });
-          const replaceUrl = new URL(document.documentURI);
+          const replaceUrl = new URL(newUrl);
           replaceUrl.pathname = new URL(document.baseURI).pathname;
           history.replaceState({}, "", replaceUrl.href);
         } else if (
@@ -1066,7 +1066,7 @@ export default class Terria {
             storyJson,
             `Start data from story \`"${this.appName}/${segments[1]}"\``
           );
-          this.userProperties.set("playStory", "1");
+          runInAction(() => this.userProperties.set("playStory", "1"));
         }
       }
     } catch (e) {
