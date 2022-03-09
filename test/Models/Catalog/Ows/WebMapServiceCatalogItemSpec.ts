@@ -1,5 +1,6 @@
 import { autorun, runInAction } from "mobx";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
@@ -18,6 +19,22 @@ describe("WebMapServiceCatalogItem", function() {
       wms.getCapabilitiesUrl &&
         wms.getCapabilitiesUrl.indexOf(wms.url || "undefined") === 0
     ).toBe(true);
+
+    expect(wms.useWmsVersion130).toBeTruthy();
+  });
+
+  it("derives getCapabilitiesUrl from url - for WMS 1.1.1", function() {
+    const terria = new Terria();
+    const wms = new WebMapServiceCatalogItem("test", terria);
+    wms.setTrait(
+      "definition",
+      "url",
+      "http://www.bom.gov.au/cgi-bin/ws/gis/ncc/cdio/wxs?service=WMS&version=1.1.1&request=GetCapabilities"
+    );
+    expect(wms.getCapabilitiesUrl).toBeDefined();
+    expect(wms.url).toBeDefined();
+
+    expect(wms.useWmsVersion130).toBeFalsy();
   });
 
   it("loads", function() {
@@ -31,6 +48,17 @@ describe("WebMapServiceCatalogItem", function() {
         "layers",
         "mobile-black-spot-programme:funded-base-stations-group"
       );
+    });
+    return wms.loadMapItems();
+  });
+
+  it("loads - for WMS 1.1.1", function() {
+    expect().nothing();
+    const terria = new Terria();
+    const wms = new WebMapServiceCatalogItem("test", terria);
+    runInAction(() => {
+      wms.setTrait("definition", "url", "test/WMS/wms_1_1_1.xml");
+      wms.setTrait("definition", "useWmsVersion130", false);
     });
     return wms.loadMapItems();
   });
@@ -94,7 +122,7 @@ describe("WebMapServiceCatalogItem", function() {
     }
   });
 
-  it("correctly contstructs ImageryProvider", async function() {
+  it("correctly constructs ImageryProvider", async function() {
     let wms: WebMapServiceCatalogItem;
     const terria = new Terria();
     wms = new WebMapServiceCatalogItem("test", terria);
@@ -121,6 +149,94 @@ describe("WebMapServiceCatalogItem", function() {
         expect(mapItems[0].imageryProvider.url).toBe(
           "test/WMS/single_metadata_url.xml"
         );
+
+        const tileProviderResource: Resource = (mapItems[0]
+          .imageryProvider as any)._tileProvider._resource;
+
+        expect(tileProviderResource.queryParameters.version).toBe("1.3.0");
+        expect(tileProviderResource.queryParameters.crs).toBe("EPSG:3857");
+        expect(tileProviderResource.queryParameters.exceptions).toBe("XML");
+        expect(tileProviderResource.queryParameters.service).toBe("WMS");
+        expect(tileProviderResource.queryParameters.request).toBe("GetMap");
+        expect(tileProviderResource.queryParameters.transparent).toBeTruthy();
+        expect(tileProviderResource.queryParameters.format).toBe("image/png");
+
+        const getFeatureInfoResource: Resource = (mapItems[0]
+          .imageryProvider as any)._pickFeaturesResource;
+
+        expect(getFeatureInfoResource.queryParameters.version).toBe("1.3.0");
+        expect(getFeatureInfoResource.queryParameters.crs).toBe("EPSG:3857");
+        expect(getFeatureInfoResource.queryParameters.exceptions).toBe("XML");
+        expect(getFeatureInfoResource.queryParameters.service).toBe("WMS");
+        expect(getFeatureInfoResource.queryParameters.request).toBe(
+          "GetFeatureInfo"
+        );
+        expect(getFeatureInfoResource.queryParameters.feature_count).toBe(
+          terria.configParameters.defaultMaximumShownFeatureInfos + 1
+        );
+
+        expect(mapItems[0].imageryProvider.tileHeight).toBe(256);
+        expect(mapItems[0].imageryProvider.tileWidth).toBe(256);
+      }
+    } finally {
+      cleanup();
+    }
+  });
+
+  it("correctly constructs ImageryProvider - for WMS 1.1.1", async function() {
+    expect().nothing();
+    const terria = new Terria();
+    const wms = new WebMapServiceCatalogItem("test", terria);
+    runInAction(() => {
+      wms.setTrait("definition", "url", "test/WMS/wms_1_1_1.xml");
+      wms.setTrait("definition", "useWmsVersion130", false);
+      wms.setTrait("definition", "layers", "GA_Topo_10M");
+    });
+    let mapItems: ImageryParts[] = [];
+    const cleanup = autorun(() => {
+      mapItems = wms.mapItems.slice();
+    });
+    try {
+      await wms.loadMetadata();
+      expect(mapItems.length).toBe(1);
+      expect(mapItems[0].alpha).toBeCloseTo(0.8);
+      expect(
+        mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider
+      ).toBeTruthy();
+      if (mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider) {
+        expect(mapItems[0].imageryProvider.url).toBe("test/WMS/wms_1_1_1.xml");
+
+        const tileProviderResource: Resource = (mapItems[0]
+          .imageryProvider as any)._tileProvider._resource;
+
+        expect(tileProviderResource.queryParameters.version).toBe("1.1.1");
+        expect(tileProviderResource.queryParameters.srs).toBe("EPSG:4326");
+        expect(tileProviderResource.queryParameters.exceptions).toBe(
+          "application/vnd.ogc.se_xml"
+        );
+        expect(tileProviderResource.queryParameters.service).toBe("WMS");
+        expect(tileProviderResource.queryParameters.request).toBe("GetMap");
+        expect(tileProviderResource.queryParameters.format).toBe("image/png");
+        expect(tileProviderResource.queryParameters.tiled).toBeTruthy();
+        expect(tileProviderResource.queryParameters.transparent).toBeTruthy();
+
+        const getFeatureInfoResource: Resource = (mapItems[0]
+          .imageryProvider as any)._pickFeaturesResource;
+
+        expect(getFeatureInfoResource.queryParameters.version).toBe("1.1.1");
+        expect(getFeatureInfoResource.queryParameters.srs).toBe("EPSG:4326");
+        expect(getFeatureInfoResource.queryParameters.exceptions).toBe(
+          "application/vnd.ogc.se_xml"
+        );
+        expect(getFeatureInfoResource.queryParameters.service).toBe("WMS");
+
+        expect(getFeatureInfoResource.queryParameters.request).toBe(
+          "GetFeatureInfo"
+        );
+        expect(getFeatureInfoResource.queryParameters.feature_count).toBe(
+          terria.configParameters.defaultMaximumShownFeatureInfos + 1
+        );
+
         expect(mapItems[0].imageryProvider.tileHeight).toBe(256);
         expect(mapItems[0].imageryProvider.tileWidth).toBe(256);
       }

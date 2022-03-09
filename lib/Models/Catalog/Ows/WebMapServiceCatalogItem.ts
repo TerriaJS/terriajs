@@ -109,7 +109,13 @@ class WebMapServiceCatalogItem
     transparent: true,
     format: "image/png",
     exceptions: "XML",
-    styles: ""
+    styles: "",
+    version: "1.3.0"
+  };
+
+  static defaultGetFeatureParameters130 = {
+    exceptions: "XML",
+    version: "1.3.0"
   };
 
   /** Default WMS parameters for version=1.1.1 */
@@ -118,7 +124,13 @@ class WebMapServiceCatalogItem
     format: "image/png",
     exceptions: "application/vnd.ogc.se_xml",
     styles: "",
-    tiled: true
+    tiled: true,
+    version: "1.1.1"
+  };
+
+  static defaultGetFeatureParameters111 = {
+    exceptions: "application/vnd.ogc.se_xml",
+    version: "1.1.1"
   };
 
   static readonly type = "wms";
@@ -417,15 +429,12 @@ class WebMapServiceCatalogItem
 
       // Set dimensionParameters
       const dimensionParameters = formatDimensionsForOws(this.dimensions);
-
       if (time !== undefined) {
         dimensionParameters.time = time;
       }
 
-      const diffModeParameters = this.isShowingDiff
-        ? this.diffModeParameters
-        : {};
-
+      // Construct parameters objects
+      // We use slightly different parameters for GetMap and GetFeatureInfo requests
       const parameters: { [key: string]: any } = {
         ...(this.useWmsVersion130
           ? WebMapServiceCatalogItem.defaultParameters130
@@ -434,8 +443,32 @@ class WebMapServiceCatalogItem
         ...dimensionParameters
       };
 
+      const getFeatureInfoParameters: { [key: string]: any } = {
+        ...(this.useWmsVersion130
+          ? WebMapServiceCatalogItem.defaultGetFeatureParameters130
+          : WebMapServiceCatalogItem.defaultGetFeatureParameters111),
+        feature_count:
+          1 +
+          (this.maximumShownFeatureInfos ??
+            this.terria.configParameters.defaultMaximumShownFeatureInfos),
+        ...this.parameters,
+        ...dimensionParameters
+      };
+
+      const diffModeParameters = this.isShowingDiff
+        ? this.diffModeParameters
+        : {};
+
+      // Set CRS for WMS 1.3.0
+      // Set SRS for WMS 1.1.1
       if (this.crs) {
-        parameters.crs = this.crs;
+        if (this.useWmsVersion130) {
+          parameters.crs = this.crs;
+          getFeatureInfoParameters.crs = this.crs;
+        } else {
+          parameters.srs = this.crs;
+          getFeatureInfoParameters.srs = this.crs;
+        }
       }
 
       if (this.supportsColorScaleRange) {
@@ -444,11 +477,16 @@ class WebMapServiceCatalogItem
 
       if (isDefined(this.styles)) {
         parameters.styles = this.styles;
+        getFeatureInfoParameters.styles = this.styles;
       }
+
       Object.assign(parameters, diffModeParameters);
 
-      const maximumLevel = this.getMaximumLevel(true);
+      if (isDefined(this.getFeatureInfoFormat)) {
+        getFeatureInfoParameters.info_format = this.getFeatureInfoFormat;
+      }
 
+      // Remove problematic query parameters from URL - these are handled by the parameters objects
       const queryParametersToRemove = [
         "request",
         "service",
@@ -457,46 +495,47 @@ class WebMapServiceCatalogItem
         "width",
         "height",
         "bbox",
-        "layers"
+        "layers",
+        "styles",
+        "version",
+        "format",
+        "srs"
       ];
 
       const baseUrl = queryParametersToRemove.reduce(
-        (url, parameter) => url.removeQuery(parameter),
+        (url, parameter) =>
+          url
+            .removeQuery(parameter)
+            .removeQuery(parameter.toUpperCase())
+            .removeQuery(parameter.toLowerCase()),
         new URI(this.url)
       );
 
-      const gcStratum:
-        | WebMapServiceCapabilitiesStratum
-        | undefined = this.strata.get(
+      // Validate layers
+      // We will only request layers if they exists in GetCapabilities
+      const capabilities = (this.strata.get(
         GetCapabilitiesMixin.getCapabilitiesStratumName
-      ) as WebMapServiceCapabilitiesStratum;
+      ) as WebMapServiceCapabilitiesStratum | undefined)?.capabilities;
 
-      let lyrs: string[] = [];
-      if (this.layers && gcStratum !== undefined) {
+      let validatedLayers: string[] = [];
+      if (this.layers && capabilities) {
         this.layersArray.forEach(function(lyr) {
-          const gcLayer = gcStratum.capabilities.findLayer(lyr);
-          if (gcLayer !== undefined && gcLayer.Name) lyrs.push(gcLayer.Name);
+          const gcLayer = capabilities.findLayer(lyr);
+          if (gcLayer !== undefined && gcLayer.Name)
+            validatedLayers.push(gcLayer.Name);
         });
       }
 
+      // Finally, create WebMapServiceImageryProvider with options
       const imageryOptions: WebMapServiceImageryProvider.ConstructorOptions = {
         url: proxyCatalogItemUrl(this, baseUrl.toString()),
-        layers: lyrs.length > 0 ? lyrs.join(",") : "",
+        layers: validatedLayers.length > 0 ? validatedLayers.join(",") : "",
         parameters,
-        getFeatureInfoParameters: {
-          info_format: this.getFeatureInfoFormat,
-          ...this.parameters,
-          ...dimensionParameters,
-          feature_count:
-            1 +
-            (this.maximumShownFeatureInfos ??
-              this.terria.configParameters.defaultMaximumShownFeatureInfos),
-          styles: this.styles === undefined ? "" : this.styles
-        },
+        getFeatureInfoParameters,
         tileWidth: this.tileWidth,
         tileHeight: this.tileHeight,
         tilingScheme: this.tilingScheme,
-        maximumLevel,
+        maximumLevel: this.getMaximumLevel(true),
         credit: this.attribution
       };
 
