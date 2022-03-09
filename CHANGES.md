@@ -10,7 +10,7 @@ Change Log
   * Added `getFeatureInfoFormat` trait - Format parameter to pass to GetFeatureInfo requests. Defaults to "application/json", "application/vnd.ogc.gml", "text/html" or "text/plain" - depending on GetCapabilities response
 * Add `legendBackgroundColor` to `LegendOwnerTraits` and `backgroundColor` to `LegendTraits`
 * Filter `"styles","version","format","srs","crs"` conflicting query parameters from WMS `url`
-* WMS `tileWidth`, `tileHeight` and `crs`/`srs` will use value in `url` if it is defined
+* WMS `styles`, `tileWidth`, `tileHeight` and `crs`/`srs` will use value in `url` if it is defined (similar to existing behavior with `layers`)
 * [The next improvement]
 
 #### 8.1.24 - 2022-03-08

@@ -425,6 +425,13 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
    * This is because, to request a "default" legend we need GetLegendGraphics
    **/
   @computed get styles() {
+    if (this.catalogItem.uri !== undefined) {
+      // Try to extract a styles from the URL
+      const query: any = this.catalogItem.uri.query(true) ?? {};
+      if (isDefined(query.styles ?? query.STYLES))
+        return query.styles ?? query.STYLES;
+    }
+
     if (!this.catalogItem.supportsGetLegendGraphic) {
       return this.catalogItem.availableStyles
         .map(layer => {
