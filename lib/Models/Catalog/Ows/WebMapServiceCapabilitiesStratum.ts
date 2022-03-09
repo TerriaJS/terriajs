@@ -112,8 +112,8 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
 
     if (this.catalogItem.uri !== undefined) {
       // Try to extract a layer from the URL
-      const query: any = this.catalogItem.uri.query(true);
-      layers = query.layers;
+      const query: any = this.catalogItem.uri.query(true) ?? {};
+      layers = query.layers ?? query.LAYERS;
     }
 
     if (layers === undefined) {
@@ -124,6 +124,22 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     }
 
     return layers;
+  }
+
+  @computed get tileWidth() {
+    const queryParams: any = this.catalogItem.uri?.query(true) ?? {};
+
+    if (isDefined(queryParams.width ?? queryParams.WIDTH)) {
+      return parseInt(queryParams.width ?? queryParams.WIDTH, 10);
+    }
+  }
+
+  @computed get tileHeight() {
+    const queryParams: any = this.catalogItem.uri?.query(true) ?? {};
+
+    if (isDefined(queryParams.height ?? queryParams.HEIGHT)) {
+      return parseInt(queryParams.height ?? queryParams.HEIGHT, 10);
+    }
   }
 
   /**
@@ -286,6 +302,13 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   @computed get crs() {
     // Note order is important here, the first one found will be used
     const supportedCrs = [...SUPPORTED_CRS_3857, ...SUPPORTED_CRS_4326];
+
+    // First check to see if URL has CRS or SRS
+    const queryParams: any = this.catalogItem.uri?.query(true) ?? {};
+    const urlCrs =
+      queryParams.crs ?? queryParams.CRS ?? queryParams.srs ?? queryParams.SRS;
+
+    if (urlCrs && supportedCrs.includes(urlCrs)) return urlCrs;
 
     // If nothing is supported, ask for EPSG:3857, and hope for the best.
     return (
