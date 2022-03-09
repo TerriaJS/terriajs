@@ -69,28 +69,23 @@ describe("Terria", function() {
 
   describe("terria refresh catalog members from magda", function() {
     it("refreshes group aspect with given URL", async function(done) {
-      // Use its own terria instance to avoid interfering with other tests.
-      const theTerria = new Terria({
-        baseUrl: "./"
-      });
-
       function verifyGroups(groupAspect: any, groupNum: number) {
         const ids = groupAspect.members.map((member: any) => member.id);
-        expect(theTerria.catalog.group.uniqueId).toEqual("/");
+        expect(terria.catalog.group.uniqueId).toEqual("/");
         // ensure user added data co-exists with dereferenced magda members
-        expect(theTerria.catalog.group.members.length).toEqual(groupNum);
-        expect(theTerria.catalog.userAddedDataGroup).toBeDefined();
+        expect(terria.catalog.group.members.length).toEqual(groupNum);
+        expect(terria.catalog.userAddedDataGroup).toBeDefined();
         ids.forEach((id: string) => {
-          const model = theTerria.getModelById(MagdaReference, id);
+          const model = terria.getModelById(MagdaReference, id);
           if (!model) {
             throw `no record id. ID = ${id}`;
           }
-          expect(theTerria.modelIds).toContain(id);
+          expect(terria.modelIds).toContain(id);
           expect(model.recordId).toEqual(id);
         });
       }
 
-      await theTerria
+      await terria
         .start({
           configUrl: "test/Magda/map-config-dereferenced.json",
           i18nOptions
@@ -104,7 +99,7 @@ describe("Terria", function() {
           done.fail(error);
         });
 
-      await theTerria
+      await terria
         .refreshCatalogMembersFromMagda(
           "test/Magda/map-config-dereferenced-new.json"
         )
