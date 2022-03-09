@@ -340,6 +340,35 @@ describe("WebMapServiceCatalogItem", function() {
     }
   });
 
+  it("uses GetFeatureInfo from GetCapabilities", async function() {
+    expect().nothing();
+    const terria = new Terria();
+    const wms = new WebMapServiceCatalogItem("test", terria);
+    runInAction(() => {
+      wms.setTrait("definition", "url", "test/WMS/wms_crs.xml");
+      wms.setTrait("definition", "layers", "ls8_nbart_geomedian_annual");
+    });
+
+    await wms.loadMetadata();
+    expect(wms.getFeatureInfoFormat.type).toBe("json");
+    expect(wms.getFeatureInfoFormat.format).toBe("application/json");
+  });
+
+  it("uses GetFeatureInfo from GetCapabilities - WMS 1.1.1", async function() {
+    expect().nothing();
+    const terria = new Terria();
+    const wms = new WebMapServiceCatalogItem("test", terria);
+    runInAction(() => {
+      wms.setTrait("definition", "url", "test/WMS/wms_1_1_1.xml");
+      wms.setTrait("definition", "useWmsVersion130", false);
+      wms.setTrait("definition", "layers", "GA_Topo_10M");
+    });
+
+    await wms.loadMetadata();
+    expect(wms.getFeatureInfoFormat.type).toBe("xml");
+    expect(wms.getFeatureInfoFormat.format).toBe("application/vnd.ogc.gml");
+  });
+
   it("uses default time", function(done) {
     const terria = new Terria();
     const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);

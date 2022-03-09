@@ -803,6 +803,8 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
    * - HTML
    * - GML
    * - Plain text
+   *
+   * If no matching format can be found in GetCapabilities, then Cesium will use defaults (see `WebMapServiceImageryProvider.DefaultGetFeatureInfoFormats`)
    */
   @computed get getFeatureInfoFormat():
     | StratumFromTraits<GetFeatureInfoFormat>
