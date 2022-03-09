@@ -9,6 +9,7 @@ Change Log
   * Added `useWmsVersion130` trait - Use WMS version 1.3.0. True by default (unless `url` has `"version=1.1.1"` or `"version=1.1.0"`), if false, then WMS version 1.1.1 will be used.
   * Added `getFeatureInfoFormat` trait - Format parameter to pass to GetFeatureInfo requests (as `info_format` query parameter). Defaults to "application/json", "application/vnd.ogc.gml", "text/html" or "text/plain" - depending on GetCapabilities response
 * Add `legendBackgroundColor` to `LegendOwnerTraits` and `backgroundColor` to `LegendTraits`
+* Filter `"styles","version","format","srs","crs"` conflicting query parameters from WMS `url`
 * [The next improvement]
 
 #### 8.1.24 - 2022-03-08

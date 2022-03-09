@@ -499,7 +499,8 @@ class WebMapServiceCatalogItem
         "styles",
         "version",
         "format",
-        "srs"
+        "srs",
+        "crs"
       ];
 
       const baseUrl = queryParametersToRemove.reduce(
