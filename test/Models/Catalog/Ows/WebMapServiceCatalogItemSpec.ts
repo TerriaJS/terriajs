@@ -1,11 +1,12 @@
 import { autorun, runInAction } from "mobx";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
+import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 
 describe("WebMapServiceCatalogItem", function() {
   it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specified", function() {
@@ -18,6 +19,22 @@ describe("WebMapServiceCatalogItem", function() {
       wms.getCapabilitiesUrl &&
         wms.getCapabilitiesUrl.indexOf(wms.url || "undefined") === 0
     ).toBe(true);
+
+    expect(wms.useWmsVersion130).toBeTruthy();
+  });
+
+  it("derives getCapabilitiesUrl from url - for WMS 1.1.1", function() {
+    const terria = new Terria();
+    const wms = new WebMapServiceCatalogItem("test", terria);
+    wms.setTrait(
+      "definition",
+      "url",
+      "http://www.bom.gov.au/cgi-bin/ws/gis/ncc/cdio/wxs?service=WMS&version=1.1.1&request=GetCapabilities"
+    );
+    expect(wms.getCapabilitiesUrl).toBeDefined();
+    expect(wms.url).toBeDefined();
+
+    expect(wms.useWmsVersion130).toBeFalsy();
   });
 
   it("loads", function() {
@@ -26,11 +43,18 @@ describe("WebMapServiceCatalogItem", function() {
     const wms = new WebMapServiceCatalogItem("test", terria);
     runInAction(() => {
       wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
-      wms.setTrait(
-        "definition",
-        "layers",
-        "mobile-black-spot-programme:funded-base-stations-group"
-      );
+      wms.setTrait("definition", "layers", "single_period");
+    });
+    return wms.loadMapItems();
+  });
+
+  it("loads - for WMS 1.1.1", function() {
+    expect().nothing();
+    const terria = new Terria();
+    const wms = new WebMapServiceCatalogItem("test", terria);
+    runInAction(() => {
+      wms.setTrait("definition", "url", "test/WMS/wms_1_1_1.xml");
+      wms.setTrait("definition", "useWmsVersion130", false);
     });
     return wms.loadMapItems();
   });
@@ -94,17 +118,13 @@ describe("WebMapServiceCatalogItem", function() {
     }
   });
 
-  it("correctly contstructs ImageryProvider", async function() {
+  it("correctly constructs ImageryProvider", async function() {
     let wms: WebMapServiceCatalogItem;
     const terria = new Terria();
     wms = new WebMapServiceCatalogItem("test", terria);
     runInAction(() => {
       wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
-      wms.setTrait(
-        "definition",
-        "layers",
-        "mobile-black-spot-programme:funded-base-stations-group"
-      );
+      wms.setTrait("definition", "layers", "single_period");
     });
     let mapItems: ImageryParts[] = [];
     const cleanup = autorun(() => {
@@ -121,6 +141,94 @@ describe("WebMapServiceCatalogItem", function() {
         expect(mapItems[0].imageryProvider.url).toBe(
           "test/WMS/single_metadata_url.xml"
         );
+
+        const tileProviderResource: Resource = (mapItems[0]
+          .imageryProvider as any)._tileProvider._resource;
+
+        expect(tileProviderResource.queryParameters.version).toBe("1.3.0");
+        expect(tileProviderResource.queryParameters.crs).toBe("EPSG:3857");
+        expect(tileProviderResource.queryParameters.exceptions).toBe("XML");
+        expect(tileProviderResource.queryParameters.service).toBe("WMS");
+        expect(tileProviderResource.queryParameters.request).toBe("GetMap");
+        expect(tileProviderResource.queryParameters.transparent).toBeTruthy();
+        expect(tileProviderResource.queryParameters.format).toBe("image/png");
+
+        const getFeatureInfoResource: Resource = (mapItems[0]
+          .imageryProvider as any)._pickFeaturesResource;
+
+        expect(getFeatureInfoResource.queryParameters.version).toBe("1.3.0");
+        expect(getFeatureInfoResource.queryParameters.crs).toBe("EPSG:3857");
+        expect(getFeatureInfoResource.queryParameters.exceptions).toBe("XML");
+        expect(getFeatureInfoResource.queryParameters.service).toBe("WMS");
+        expect(getFeatureInfoResource.queryParameters.request).toBe(
+          "GetFeatureInfo"
+        );
+        expect(getFeatureInfoResource.queryParameters.feature_count).toBe(
+          terria.configParameters.defaultMaximumShownFeatureInfos + 1
+        );
+
+        expect(mapItems[0].imageryProvider.tileHeight).toBe(256);
+        expect(mapItems[0].imageryProvider.tileWidth).toBe(256);
+      }
+    } finally {
+      cleanup();
+    }
+  });
+
+  it("correctly constructs ImageryProvider - for WMS 1.1.1", async function() {
+    expect().nothing();
+    const terria = new Terria();
+    const wms = new WebMapServiceCatalogItem("test", terria);
+    runInAction(() => {
+      wms.setTrait("definition", "url", "test/WMS/wms_1_1_1.xml");
+      wms.setTrait("definition", "useWmsVersion130", false);
+      wms.setTrait("definition", "layers", "IDZ10004");
+    });
+    let mapItems: ImageryParts[] = [];
+    const cleanup = autorun(() => {
+      mapItems = wms.mapItems.slice();
+    });
+    try {
+      await wms.loadMetadata();
+      expect(mapItems.length).toBe(1);
+      expect(mapItems[0].alpha).toBeCloseTo(0.8);
+      expect(
+        mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider
+      ).toBeTruthy();
+      if (mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider) {
+        expect(mapItems[0].imageryProvider.url).toBe("test/WMS/wms_1_1_1.xml");
+
+        const tileProviderResource: Resource = (mapItems[0]
+          .imageryProvider as any)._tileProvider._resource;
+
+        expect(tileProviderResource.queryParameters.version).toBe("1.1.1");
+        expect(tileProviderResource.queryParameters.srs).toBe("EPSG:4326");
+        expect(tileProviderResource.queryParameters.exceptions).toBe(
+          "application/vnd.ogc.se_xml"
+        );
+        expect(tileProviderResource.queryParameters.service).toBe("WMS");
+        expect(tileProviderResource.queryParameters.request).toBe("GetMap");
+        expect(tileProviderResource.queryParameters.format).toBe("image/png");
+        expect(tileProviderResource.queryParameters.tiled).toBeTruthy();
+        expect(tileProviderResource.queryParameters.transparent).toBeTruthy();
+
+        const getFeatureInfoResource: Resource = (mapItems[0]
+          .imageryProvider as any)._pickFeaturesResource;
+
+        expect(getFeatureInfoResource.queryParameters.version).toBe("1.1.1");
+        expect(getFeatureInfoResource.queryParameters.srs).toBe("EPSG:4326");
+        expect(getFeatureInfoResource.queryParameters.exceptions).toBe(
+          "application/vnd.ogc.se_xml"
+        );
+        expect(getFeatureInfoResource.queryParameters.service).toBe("WMS");
+
+        expect(getFeatureInfoResource.queryParameters.request).toBe(
+          "GetFeatureInfo"
+        );
+        expect(getFeatureInfoResource.queryParameters.feature_count).toBe(
+          terria.configParameters.defaultMaximumShownFeatureInfos + 1
+        );
+
         expect(mapItems[0].imageryProvider.tileHeight).toBe(256);
         expect(mapItems[0].imageryProvider.tileWidth).toBe(256);
       }
@@ -198,11 +306,7 @@ describe("WebMapServiceCatalogItem", function() {
     wms = new WebMapServiceCatalogItem("test", terria);
     runInAction(() => {
       wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
-      wms.setTrait(
-        "definition",
-        "layers",
-        "mobile-black-spot-programme:funded-base-stations-group"
-      );
+      wms.setTrait("definition", "layers", "single_period");
       wms.setTrait("definition", "tileWidth", 512);
       wms.setTrait("definition", "tileHeight", 512);
     });
@@ -222,6 +326,90 @@ describe("WebMapServiceCatalogItem", function() {
     } finally {
       cleanup();
     }
+  });
+
+  it("uses query parameters from URL - no parameters", async function() {
+    let wms: WebMapServiceCatalogItem;
+    const terria = new Terria();
+    wms = new WebMapServiceCatalogItem("test", terria);
+    runInAction(() => {
+      wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
+    });
+
+    await wms.loadMetadata();
+
+    expect(wms.tileHeight).toBe(256);
+    expect(wms.tileWidth).toBe(256);
+    expect(wms.layers).toBe("single_period");
+    expect(wms.styles).toBeUndefined();
+    expect(wms.useWmsVersion130).toBeTruthy();
+    expect(wms.crs).toBe("EPSG:3857");
+  });
+
+  it("uses query parameters from URL - with parameters", async function() {
+    let wms: WebMapServiceCatalogItem;
+    const terria = new Terria();
+    wms = new WebMapServiceCatalogItem("test", terria);
+    runInAction(() => {
+      wms.setTrait(
+        "definition",
+        "url",
+        "test/WMS/single_metadata_url.xml?&styles=jet&version=1.1.1&crs=EPSG%3A4326&service=WMS&request=GetCapabilities&layers=single_period&width=512&height=512"
+      );
+    });
+
+    await wms.loadMetadata();
+
+    expect(wms.tileHeight).toBe(512);
+    expect(wms.tileWidth).toBe(512);
+    expect(wms.layers).toBe("single_period");
+    expect(wms.styles).toBe("jet");
+    expect(wms.useWmsVersion130).toBeFalsy();
+    expect(wms.crs).toBe("EPSG:4326");
+  });
+
+  it("invalid/valid layers", async function() {
+    let wms: WebMapServiceCatalogItem;
+    const terria = new Terria();
+    wms = new WebMapServiceCatalogItem("test", terria);
+    runInAction(() => {
+      wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
+      wms.setTrait("definition", "layers", "invalidLayer,single_period");
+    });
+
+    await wms.loadMetadata();
+
+    expect(wms.invalidLayers).toEqual(["invalidLayer"]);
+    expect(wms.validLayers).toEqual(["single_period"]);
+  });
+
+  it("uses GetFeatureInfo from GetCapabilities", async function() {
+    expect().nothing();
+    const terria = new Terria();
+    const wms = new WebMapServiceCatalogItem("test", terria);
+    runInAction(() => {
+      wms.setTrait("definition", "url", "test/WMS/wms_crs.xml");
+      wms.setTrait("definition", "layers", "ls8_nbart_geomedian_annual");
+    });
+
+    await wms.loadMetadata();
+    expect(wms.getFeatureInfoFormat.type).toBe("json");
+    expect(wms.getFeatureInfoFormat.format).toBe("application/json");
+  });
+
+  it("uses GetFeatureInfo from GetCapabilities - WMS 1.1.1", async function() {
+    expect().nothing();
+    const terria = new Terria();
+    const wms = new WebMapServiceCatalogItem("test", terria);
+    runInAction(() => {
+      wms.setTrait("definition", "url", "test/WMS/wms_1_1_1.xml");
+      wms.setTrait("definition", "useWmsVersion130", false);
+      wms.setTrait("definition", "layers", "GA_Topo_10M");
+    });
+
+    await wms.loadMetadata();
+    expect(wms.getFeatureInfoFormat.type).toBe("xml");
+    expect(wms.getFeatureInfoFormat.format).toBe("application/vnd.ogc.gml");
   });
 
   it("uses default time", function(done) {
@@ -394,7 +582,7 @@ describe("WebMapServiceCatalogItem", function() {
 
     expect(wmsItem.legends.length).toBe(1);
     expect(wmsItem.legends[0].url).toBe(
-      "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A"
+      "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&sld_version=1.1.0&layer=A"
     );
 
     runInAction(() =>
@@ -431,9 +619,9 @@ describe("WebMapServiceCatalogItem", function() {
         // Match for fontColour = 0xffffff || 0xfff
         expect(
           wmsItem.legends[0].url ===
-            "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&LEGEND_OPTIONS=fontName%3ACourier%3BfontStyle%3Abold%3BfontSize%3A12%3BforceLabels%3Aon%3BfontAntiAliasing%3Atrue%3BlabelMargin%3A5%3BfontColor%3A0xffffff%3Bdpi%3A182&transparent=true" ||
+            "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&sld_version=1.1.0&layer=A&LEGEND_OPTIONS=fontName%3ACourier%3BfontStyle%3Abold%3BfontSize%3A12%3BforceLabels%3Aon%3BfontAntiAliasing%3Atrue%3BlabelMargin%3A5%3BfontColor%3A0xffffff%3Bdpi%3A182&transparent=true" ||
             wmsItem.legends[0].url ===
-              "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&LEGEND_OPTIONS=fontName%3ACourier%3BfontStyle%3Abold%3BfontSize%3A12%3BforceLabels%3Aon%3BfontAntiAliasing%3Atrue%3BlabelMargin%3A5%3BfontColor%3A0xfff%3Bdpi%3A182&transparent=true"
+              "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&sld_version=1.1.0&layer=A&LEGEND_OPTIONS=fontName%3ACourier%3BfontStyle%3Abold%3BfontSize%3A12%3BforceLabels%3Aon%3BfontAntiAliasing%3Atrue%3BlabelMargin%3A5%3BfontColor%3A0xfff%3Bdpi%3A182&transparent=true"
         ).toBeTruthy();
       })
       .then(done)
@@ -464,7 +652,7 @@ describe("WebMapServiceCatalogItem", function() {
       .then(function() {
         expect(wmsItem.legends.length).toBe(1);
         expect(wmsItem.legends[0].url).toBe(
-          "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&style=no-legend"
+          "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&sld_version=1.1.0&layer=A&style=no-legend"
         );
       })
       .then(done)
@@ -501,7 +689,7 @@ describe("WebMapServiceCatalogItem", function() {
         expect(wmsItem.isThredds).toBeTruthy();
         expect(wmsItem.legends.length).toBe(1);
         expect(wmsItem.legends[0].url).toBe(
-          "http://geoport-dev.whoi.edu/thredds/wms/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&colorscalerange=0%2C1"
+          "http://geoport-dev.whoi.edu/thredds/wms/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&sld_version=1.1.0&layer=A&colorscalerange=0%2C1"
         );
       })
       .then(done)
