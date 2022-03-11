@@ -14,9 +14,9 @@ Change Log
 * WMS `styles`, `tileWidth`, `tileHeight` and `crs`/`srs` will use value in `url` if it is defined (similar to existing behavior with `layers`)
 * WMS will now show warning if invalid `layers` (eg if the specified `layers` don't exist in `GetCapabilities`)
 * ArcGisFeatureServerCatalogItem can now load more than the maximum feature limit set by the server by making multiple requests, and uses GeojsonMixin
-* Modify "Ideal zoom" for cesium `DataSource` - if `boundingSphere.radius` is 0 - use 100m instead.
 * Avoid creating duplication in categories in ArcGisPortalCatalogGroup.
 * Fix `CatalogMemberMixin.hasDescription` null bug
+* `TableStyle` now calculates `rectangle` for point based styles
 * [The next improvement]
 
 #### 8.1.24 - 2022-03-08
