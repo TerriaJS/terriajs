@@ -16,6 +16,7 @@ Change Log
 * ArcGisFeatureServerCatalogItem can now load more than the maximum feature limit set by the server by making multiple requests, and uses GeojsonMixin
 * Avoid creating duplication in categories in ArcGisPortalCatalogGroup.
 * Fix `CatalogMemberMixin.hasDescription` null bug
+* `TableStyle` now calculates `rectangle` for point based styles
 * [The next improvement]
 
 #### 8.1.24 - 2022-03-08
