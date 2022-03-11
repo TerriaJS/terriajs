@@ -5,8 +5,17 @@ Change Log
 
 * Fix broken download link for feature info panel charts when no download urls are specified.
 * Fixed parameter names of WPS catalog functions.
+* Improve WMS 1.1.1 support
+  * Added `useWmsVersion130` trait - Use WMS version 1.3.0. True by default (unless `url` has `"version=1.1.1"` or `"version=1.1.0"`), if false, then WMS version 1.1.1 will be used.
+  * Added `getFeatureInfoFormat` trait - Format parameter to pass to GetFeatureInfo requests. Defaults to "application/json", "application/vnd.ogc.gml", "text/html" or "text/plain" - depending on GetCapabilities response
+* Add `legendBackgroundColor` to `LegendOwnerTraits` and `backgroundColor` to `LegendTraits`
+* Add `sld_version=1.1.0` to `GetLegendGraphics` requests 
+* Filter `"styles","version","format","srs","crs"` conflicting query parameters from WMS `url`
+* WMS `styles`, `tileWidth`, `tileHeight` and `crs`/`srs` will use value in `url` if it is defined (similar to existing behavior with `layers`)
+* WMS will now show warning if invalid `layers` (eg if the specified `layers` don't exist in `GetCapabilities`)
 * ArcGisFeatureServerCatalogItem can now load more than the maximum feature limit set by the server by making multiple requests, and uses GeojsonMixin
 * Modify "Ideal zoom" for cesium `DataSource` - if `boundingSphere.radius` is 0 - use 100m instead.
+* Avoid creating duplication in categories in ArcGisPortalCatalogGroup.
 * Fix `CatalogMemberMixin.hasDescription` null bug
 * [The next improvement]
 
