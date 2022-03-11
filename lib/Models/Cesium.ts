@@ -1555,12 +1555,7 @@ function zoomToDataSource(
               // cesium calculate an appropriate zoom distance. For the rest
               // use the radius as the zoom distance because the offset
               // distance cesium calculates for large models is often too far away.
-              // But, if radius is 0, set to 100m so we aren't underground
-              boundingSphere.radius < 100
-                ? boundingSphere.radius === 0
-                  ? 100
-                  : undefined
-                : boundingSphere.radius
+              boundingSphere.radius < 100 ? undefined : boundingSphere.radius
             )
           }
         );
