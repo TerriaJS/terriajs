@@ -515,6 +515,7 @@ export default class Terria {
   @observable terrainSplitDirection: ImagerySplitDirection =
     ImagerySplitDirection.NONE;
 
+  @observable isWorkflowPanelActive = false;
   @observable depthTestAgainstTerrainEnabled = false;
 
   @observable stories: any[] = [];

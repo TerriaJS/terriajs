@@ -35,7 +35,7 @@ import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
 import DragDropNotification from "./../DragDropNotification";
 import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
-import StoryPanel from "./../Story/StoryPanel.jsx";
+import StoryPanel from "./../Story/StoryPanel/StoryPanel";
 import MapColumn from "./MapColumn";
 import processCustomElements from "./processCustomElements";
 import Styles from "./standard-user-interface.scss";
@@ -470,6 +470,14 @@ const StandardUserInterface = observer(
               )}
             <Disclaimer viewState={this.props.viewState} />
           </div>
+          {this.props.viewState.printWindow && (
+            <PrintView
+              window={this.props.viewState.printWindow}
+              terria={terria}
+              viewState={this.props.viewState}
+              closeCallback={() => this.props.viewState.setPrintWindow(null)}
+            />
+          )}
         </ThemeProvider>
       );
     }

@@ -135,4 +135,5 @@ const ColorScaleRangeSection = createReactClass({
     );
   }
 });
-module.exports = withTranslation()(ColorScaleRangeSection);
+
+export default withTranslation()(ColorScaleRangeSection);

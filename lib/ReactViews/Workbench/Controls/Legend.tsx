@@ -6,12 +6,11 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import proxyCatalogItemUrl from "../../../Models/Catalog/proxyCatalogItemUrl";
 import hasTraits from "../../../Models/Definition/hasTraits";
-import Model from "../../../Models/Definition/Model";
+import Model, { BaseModel } from "../../../Models/Definition/Model";
 import Button from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../../Styled/Icon";
 import LegendOwnerTraits from "../../../Traits/TraitsClasses/LegendOwnerTraits";
@@ -43,7 +42,7 @@ function checkMimeType(legend: Model<LegendTraits>) {
 
 @observer
 export default class Legend extends React.Component<{
-  item: CatalogMemberMixin.Instance;
+  item: BaseModel;
   forPrint?: boolean;
 }> {
   static defaultProps = {

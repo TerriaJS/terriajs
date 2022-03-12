@@ -21,6 +21,10 @@ export type PanelProps = {
   onToggle?: (isOpen: boolean) => boolean | void;
 };
 
+export const Container = styled.div`
+  padding-bottom: 4em;
+`;
+
 /**
  * A generic panel component for left, right, context items etc.
  */

@@ -29,7 +29,9 @@ import SelectableDimensions, {
   SelectableDimensionEnum,
   SelectableDimensionGroup,
   SelectableDimensionNumeric,
-  SelectableDimensionText
+  SelectableDimensionText,
+  DEFAULT_PLACEMENT,
+  MAX_SELECTABLE_DIMENSION_OPTIONS
 } from "../../../Models/SelectableDimensions/SelectableDimensions";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
@@ -48,28 +50,15 @@ interface PropsType extends WithTranslation {
 
 @observer
 class DimensionSelectorSection extends React.Component<PropsType> {
-  @action
-  setDimensionValue(dimension: SelectableDimension, value: string) {
-    dimension.setDimensionValue(CommonStrata.user, value);
-  }
-
   render() {
     const item = this.props.item;
     if (!SelectableDimensions.is(item)) {
       return null;
     }
 
-    // Filter out dimensions with only 1 option (unless they have 1 option and allow undefined - which is 2 total options)
-    const selectableDimensions = item.selectableDimensions?.filter(dim =>
-      // Filter by placement if defined, otherwise use default placement
-      dim.placement
-        ? dim.placement === this.props.placement
-        : this.props.placement === DEFAULT_PLACEMENT &&
-          !dim.disable &&
-          isDefined(dim.options) &&
-          dim.options.length < MAX_SELECTABLE_DIMENSION_OPTIONS &&
-          dim.options.length + (dim.allowUndefined ? 1 : 0) > 1
-    );
+    const selectableDimensions = filterSelectableDimensions(
+      this.props.placement
+    )(item.selectableDimensions);
 
     if (!isDefined(selectableDimensions) || selectableDimensions.length === 0) {
       return null;

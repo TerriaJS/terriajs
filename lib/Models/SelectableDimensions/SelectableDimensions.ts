@@ -50,6 +50,7 @@ export type SelectableDimensionType =
   | "numeric"
   | "text"
   | "checkbox"
+  | "checkbox-group"
   | "group"
   | "button"
   | "color";
@@ -88,6 +89,18 @@ export interface SelectableDimensionCheckbox
   extends SelectableDimensionBase<"true" | "false">,
     EnumDimension {
   type: "checkbox";
+}
+
+export interface SelectableDimensionCheckboxGroup
+  extends SelectableDimensionBase<"true" | "false">,
+    EnumDimension {
+  type: "checkbox-group";
+
+  // We don't allow nested groups for now to keep the UI simple
+  readonly selectableDimensions: Exclude<
+    SelectableDimension,
+    SelectableDimensionGroup | SelectableDimensionCheckboxGroup
+  >[];
 }
 
 export interface SelectableDimensionButton
@@ -148,6 +161,7 @@ export interface SelectableDimensionWorkflowGroup
 export type SelectableDimension =
   | SelectableDimensionEnum
   | SelectableDimensionCheckbox
+  | SelectableDimensionCheckboxGroup
   | SelectableDimensionGroup
   | SelectableDimensionNumeric
   | SelectableDimensionText

@@ -6,8 +6,7 @@ import { getName } from "../../ModelMixins/CatalogMemberMixin";
 import { filterSelectableDimensions } from "../../Models/SelectableDimensions/SelectableDimensions";
 import ViewState from "../../ReactViewModels/ViewState";
 import WorkflowPanel from "../../Styled/WorkflowPanel";
-import { Container } from "../Compare/Compare";
-import { Panel, PanelBody, PanelMenu } from "../Compare/Panel";
+import { Container, Panel, PanelBody, PanelMenu } from "../Compare/Panel";
 import { DimensionSelector } from "../Workbench/Controls/DimensionSelectorSection";
 import WorkbenchItemControls, {
   hideAllControls

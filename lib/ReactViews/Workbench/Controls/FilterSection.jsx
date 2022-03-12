@@ -56,4 +56,5 @@ const FilterSection = observer(
     }
   })
 );
-module.exports = FilterSection;
+
+export default FilterSection;
