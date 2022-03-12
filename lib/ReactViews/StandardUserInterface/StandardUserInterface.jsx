@@ -9,7 +9,6 @@ import { withTranslation } from "react-i18next";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
 import arrayContains from "../../Core/arrayContains";
-import LazyCompare from "../Compare/LazyCompare";
 import SelectableDimensionWorkflow from "../Workflows/SelectableDimensionWorkflow";
 import Disclaimer from "../Disclaimer";
 import DragDropFile from "../DragDropFile";
@@ -268,9 +267,6 @@ const StandardUserInterface = observer(
           />
           <Medium>
             <SelectableDimensionWorkflow viewState={this.props.viewState} />
-          </Medium>
-          <Medium>
-            <LazyCompare viewState={this.props.viewState} />
           </Medium>
           <div className={Styles.storyWrapper}>
             <If condition={!this.props.viewState.disclaimerVisible}>

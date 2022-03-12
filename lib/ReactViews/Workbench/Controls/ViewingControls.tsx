@@ -3,8 +3,10 @@ import { observer } from "mobx-react";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import styled from "styled-components";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import {
   Category,
   DataSourceAction
@@ -13,17 +15,17 @@ import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
 import getPath from "../../../Core/getPath";
 import isDefined from "../../../Core/isDefined";
 import { isJsonObject } from "../../../Core/Json";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
+import CatalogMemberMixin, {
+  getName
+} from "../../../ModelMixins/CatalogMemberMixin";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import ExportableMixin from "../../../ModelMixins/ExportableMixin";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
 import TimeVarying from "../../../ModelMixins/TimeVarying";
 import CameraView from "../../../Models/CameraView";
-import {
-  createCompareConfig,
-  isComparableItem
-} from "../../../Models/Comparable";
+import addUserCatalogMember from "../../../Models/Catalog/addUserCatalogMember";
+import SplitItemReference from "../../../Models/Catalog/CatalogReferences/SplitItemReference";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import hasTraits from "../../../Models/Definition/hasTraits";
 import { BaseModel } from "../../../Models/Definition/Model";
@@ -34,7 +36,7 @@ import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../../Styled/Icon";
-import MappableTraits from "../../../Traits/TraitsClasses/MappableTraits";
+import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
 import { exportData } from "../../Preview/ExportData";
 import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
 import WorkbenchButton from "../WorkbenchButton";
@@ -211,22 +213,54 @@ class ViewingControls extends React.Component<
     });
   }
 
-  compareItem() {
-    runInAction(() => {
-      const terria = this.props.viewState.terria;
-      terria.compareConfig = createCompareConfig({
-        showCompare: true,
-        leftPanelItemId: this.props.item.uniqueId,
-        isUserTriggered: true
+  splitItem() {
+    const { t } = this.props;
+    const item = this.props.item;
+    const terria = item.terria;
+
+    const splitRef = new SplitItemReference(createGuid(), terria);
+    runInAction(async () => {
+      if (!hasTraits(item, SplitterTraits, "splitDirection")) return;
+
+      if (item.splitDirection === ImagerySplitDirection.NONE) {
+        item.setTrait(
+          CommonStrata.user,
+          "splitDirection",
+          ImagerySplitDirection.RIGHT
+        );
+      }
+
+      splitRef.setTrait(CommonStrata.user, "splitSourceItemId", item.uniqueId);
+      terria.addModel(splitRef);
+      terria.showSplitter = true;
+
+      await splitRef.loadReference();
+      runInAction(() => {
+        const target = splitRef.target;
+        if (target) {
+          target.setTrait(
+            CommonStrata.user,
+            "name",
+            t("splitterTool.workbench.copyName", {
+              name: getName(item)
+            })
+          );
+
+          // Set a direction opposite to the original item
+          target.setTrait(
+            CommonStrata.user,
+            "splitDirection",
+            item.splitDirection === ImagerySplitDirection.LEFT
+              ? ImagerySplitDirection.RIGHT
+              : ImagerySplitDirection.LEFT
+          );
+        }
       });
 
-      // Disable all other workbench items before launching compare workflow.
-      terria.workbench.items.forEach(
-        item =>
-          item !== this.props.item &&
-          hasTraits(item, MappableTraits, "show") &&
-          item.setTrait(CommonStrata.user, "show", false)
-      );
+      // Add it to terria.catalog, which is required so the new item can be shared.
+      addUserCatalogMember(terria, splitRef, {
+        open: false
+      });
     });
   }
 
@@ -295,12 +329,11 @@ class ViewingControls extends React.Component<
 
   renderViewingControlsMenu() {
     const { t, item, viewState } = this.props;
-    const canCompareItem =
+    const canSplit =
       !item.terria.configParameters.disableSplitter &&
-      item.terria.currentViewer.canShowSplitter &&
-      isComparableItem(item) &&
-      !item.disableSplitter &&
-      defined(item.splitDirection);
+      hasTraits(item, SplitterTraits, "splitDirection") &&
+      defined(item.splitDirection) &&
+      item.terria.currentViewer.canShowSplitter;
 
     return (
       <ul>
@@ -319,10 +352,10 @@ class ViewingControls extends React.Component<
               </li>
             ))
           : null}
-        {canCompareItem ? (
+        {canSplit ? (
           <li key={"workbench.splitItem"}>
             <ViewingControlMenuButton
-              onClick={this.compareItem.bind(this)}
+              onClick={this.splitItem.bind(this)}
               title={t("workbench.splitItemTitle")}
             >
               <BoxViewingControl>
