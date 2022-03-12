@@ -1,6 +1,6 @@
+import classNames from "classnames";
 import React from "react";
 import styled from "styled-components";
-import classNames from "classnames";
 
 // Icon
 export const GLYPHS = {
@@ -55,14 +55,12 @@ export const GLYPHS = {
   opened: require("../../wwwroot/images/icons/opened.svg"),
   pause: require("../../wwwroot/images/icons/pause.svg"),
   play: require("../../wwwroot/images/icons/play.svg"),
-  playStory: require("../../wwwroot/images/icons/play-story.svg"),
   radioOff: require("../../wwwroot/images/icons/radio-off.svg"),
   radioOn: require("../../wwwroot/images/icons/radio-on.svg"),
   refresh: require("../../wwwroot/images/icons/refresh.svg"),
   remove: require("../../wwwroot/images/icons/remove.svg"),
   right: require("../../wwwroot/images/icons/right.svg"),
   right2: require("../../wwwroot/images/icons/right2.svg"),
-  revert: require("../../wwwroot/images/icons/revert.svg"),
   search: require("../../wwwroot/images/icons/search.svg"),
   selected: require("../../wwwroot/images/icons/selected.svg"),
   settings: require("../../wwwroot/images/icons/settings.svg"),
@@ -109,11 +107,9 @@ export const GLYPHS = {
   compare: require("../../wwwroot/images/icons/compare.svg"),
   lifesaver: require("../../wwwroot/images/icons/help-2.svg"),
   geolocationThick: require("../../wwwroot/images/icons/location-thick.svg"),
-  minus: require("../../wwwroot/images/icons/minus.svg"),
-  plus: require("../../wwwroot/images/icons/plus.svg"),
-  zoomIn: require("../../wwwroot/images/icons/zoom-in.svg"),
-  zoomOut: require("../../wwwroot/images/icons/zoom-out.svg"),
-  zoomReset: require("../../wwwroot/images/icons/zoom-reset.svg"),
+  minusThick: require("../../wwwroot/images/icons/zoom-minus.svg"),
+  plusThick: require("../../wwwroot/images/icons/zoom-plus.svg"),
+  refreshThick: require("../../wwwroot/images/icons/zoom-refresh.svg"),
   satellite: require("../../wwwroot/images/icons/satellite.svg"),
   mapDataActive: require("../../wwwroot/images/icons/map-data-active.svg"),
   mapDataInactive: require("../../wwwroot/images/icons/map-data-inactive.svg"),
@@ -129,11 +125,16 @@ export const GLYPHS = {
   minimize: require("../../wwwroot/images/icons/minimize.svg"),
   maximize: require("../../wwwroot/images/icons/maximize.svg"),
   closeTool: require("../../wwwroot/images/icons/close-tool.svg"),
-  moreItems: require("../../wwwroot/images/icons/more-items.svg"),
-  info: require("../../wwwroot/images/icons/info.svg")
+  leftSmall: require("../../wwwroot/images/icons/left-small.svg"),
+  rightSmall: require("../../wwwroot/images/icons/right-small.svg"),
+  compareLeftPanel: require("../../wwwroot/images/icons/compare-left-panel.svg"),
+  compareRightPanel: require("../../wwwroot/images/icons/compare-right-panel.svg"),
+  compareBothPanels: require("../../wwwroot/images/icons/compare-both-panels.svg"),
+  closeCircle: require("../../wwwroot/images/icons/close-circle.svg"),
+  moreItems: require("../../wwwroot/images/icons/more-items.svg")
 };
 
-interface IconProps {
+export interface IconProps {
   glyph: { id: string };
   style?: any;
   className?: string;

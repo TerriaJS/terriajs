@@ -10,11 +10,7 @@ import { Ref } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import addedByUser from "../Core/addedByUser";
-import {
-  Category,
-  HelpAction,
-  StoryAction
-} from "../Core/AnalyticEvents/analyticEvents";
+import { Category, HelpAction } from "../Core/AnalyticEvents/analyticEvents";
 import Result from "../Core/Result";
 import triggerResize from "../Core/triggerResize";
 import PickedFeatures from "../Map/PickedFeatures";
@@ -27,7 +23,6 @@ import { BaseModel } from "../Models/Definition/Model";
 import getAncestors from "../Models/getAncestors";
 import Terria from "../Models/Terria";
 import { SATELLITE_HELP_PROMPT_KEY } from "../ReactViews/HelpScreens/SatelliteHelpPrompt";
-import { animationDuration } from "../ReactViews/StandardUserInterface/StandardUserInterface";
 import {
   defaultTourPoints,
   RelativePosition,
@@ -81,8 +76,12 @@ export default class ViewState {
   @observable mobileMenuVisible: boolean = false;
   @observable explorerPanelAnimating: boolean = false;
   @observable topElement: string = "FeatureInfo";
+  // Map for storing react portal containers created by <PortalContainer> component.
+  @observable portals: Map<string, HTMLElement | null> = new Map();
   @observable lastUploadedFiles: any[] = [];
   @observable storyBuilderShown: boolean = false;
+  // Tracks whether the compare workflow was opened by the user or restored from share
+  @observable isCompareUserTriggered: boolean = false;
 
   // Flesh out later
   @observable showHelpMenu: boolean = false;
@@ -100,9 +99,6 @@ export default class ViewState {
   @observable selectedTrainerItem: string = "";
   @observable currentTrainerItemIndex: number = 0;
   @observable currentTrainerStepIndex: number = 0;
-
-  @observable printWindow: Window | null = null;
-
   @action
   setSelectedTrainerItem(trainerItem: string) {
     this.selectedTrainerItem = trainerItem;
@@ -553,25 +549,13 @@ export default class ViewState {
     openAddData = true
   ): Promise<Result<void>> {
     try {
-      // Get referenced target first.
-      if (ReferenceMixin.isMixedInto(item)) {
-        (await item.loadReference()).throwIfError();
-        if (item.target) {
-          return this.viewCatalogMember(item.target);
-        } else {
-          return Result.error(`Could not view catalog member ${getName(item)}`);
-        }
-      }
-      const theItem: BaseModel =
-        ReferenceMixin.isMixedInto(item) && item.target ? item.target : item;
-
       // Set preview item
-      runInAction(() => (this._previewedItem = theItem));
+      runInAction(() => (this._previewedItem = item));
 
       // Open "Add Data"
       if (openAddData) {
-        if (addedByUser(theItem)) {
-          runInAction(() => (this.userDataPreviewedItem = theItem));
+        if (addedByUser(item)) {
+          runInAction(() => (this.userDataPreviewedItem = item));
 
           this.openUserData();
         } else {
@@ -587,21 +571,32 @@ export default class ViewState {
           });
         }
 
-        // mobile switch to now vewing if not viewing a group
-        if (!GroupMixin.isMixedInto(theItem)) {
+        // mobile switch to nowvewing if not viewing a group
+        if (!GroupMixin.isMixedInto(item)) {
           this.switchMobileView(this.mobileViewOptions.preview);
         }
       }
 
-      if (GroupMixin.isMixedInto(theItem)) {
-        theItem.setTrait(stratum, "isOpen", isOpen);
-        if (theItem.isOpen) {
-          (await theItem.loadMembers()).throwIfError();
+      // Load preview item
+      if (ReferenceMixin.isMixedInto(item)) {
+        (await item.loadReference()).throwIfError();
+
+        // call viewCatalogMember on reference.target
+        if (item.target) {
+          return await this.viewCatalogMember(item.target, isOpen, stratum);
         }
-      } else if (MappableMixin.isMixedInto(theItem))
-        (await theItem.loadMapItems()).throwIfError();
-      else if (CatalogMemberMixin.isMixedInto(theItem))
-        (await theItem.loadMetadata()).throwIfError();
+        return Result.error(`Failed to resolve reference for ${getName(item)}`);
+      }
+
+      if (GroupMixin.isMixedInto(item)) {
+        item.setTrait(stratum, "isOpen", isOpen);
+        if (item.isOpen) {
+          (await item.loadMembers()).throwIfError();
+        }
+      } else if (MappableMixin.isMixedInto(item))
+        (await item.loadMapItems()).throwIfError();
+      else if (CatalogMemberMixin.isMixedInto(item))
+        (await item.loadMetadata()).throwIfError();
     } catch (e) {
       return Result.error(e, `Could not view catalog member ${getName(item)}`);
     }
@@ -714,31 +709,10 @@ export default class ViewState {
     this.currentTool = undefined;
   }
 
-  @action setPrintWindow(window: Window | null) {
-    if (this.printWindow) {
-      this.printWindow.close();
-    }
-    this.printWindow = window;
-  }
-
   @action
   toggleMobileMenu() {
     this.setTopElement("mobileMenu");
     this.mobileMenuVisible = !this.mobileMenuVisible;
-  }
-
-  @action
-  runStories() {
-    this.storyBuilderShown = false;
-    this.storyShown = true;
-
-    setTimeout(function() {
-      triggerResize();
-    }, animationDuration || 1);
-
-    this.terria.currentViewer.notifyRepaintRequired();
-
-    this.terria.analytics?.logEvent(Category.story, StoryAction.runStory);
   }
 
   @computed

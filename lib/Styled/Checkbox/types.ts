@@ -1,4 +1,3 @@
-import { TFunctionResult } from "i18next";
 import React from "react";
 import { ITextProps } from "../Text";
 
@@ -43,6 +42,10 @@ export type ICheckboxProps = {
 
   textProps?: ITextProps;
 
+  /**
+   * Accepting className lets allows the Checbox component to be extended using
+   * styled components.
+   */
   className?: string;
 };
 

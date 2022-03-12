@@ -5,9 +5,12 @@ import "mutationobserver-shim";
 
 import TerriaViewerWrapper from "../Map/TerriaViewerWrapper";
 import DistanceLegend from "../Map/Legend/DistanceLegend";
+// import FeedbackButton from "../Feedback/FeedbackButton";
 import LocationBar from "../Map/Legend/LocationBar";
 import MapNavigation from "../Map/Navigation/MapNavigation";
 import MenuBar from "../Map/MenuBar";
+import MapDataCount from "../BottomDock/MapDataCount";
+// import defined from "terriajs-cesium/Source/Core/defined";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import BottomDock from "../BottomDock/BottomDock";
 import classNames from "classnames";
@@ -17,8 +20,6 @@ import Loader from "../Loader";
 import Styles from "./map-column.scss";
 import { observer } from "mobx-react";
 import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
-
-import BottomLeftBar from "../Map/BottomLeftBar/BottomLeftBar";
 
 const isIE = FeatureDetection.isInternetExplorer();
 const chromeVersion = FeatureDetection.chromeVersion();
@@ -146,9 +147,12 @@ const MapColumn = observer(
                 />
               </div>
               <If condition={!this.props.viewState.hideMapUi}>
-                <BottomLeftBar
+                <MapDataCount
                   terria={this.props.terria}
                   viewState={this.props.viewState}
+                  elementConfig={this.props.terria.elements.get(
+                    "map-data-count"
+                  )}
                 />
                 <SlideUpFadeIn isVisible={this.props.viewState.isMapZooming}>
                   <Toast>
@@ -226,6 +230,7 @@ const MapColumn = observer(
                   terria={this.props.terria}
                   viewState={this.props.viewState}
                   domElementRef={this.addBottomDock}
+                  elementConfig={this.props.terria.elements.get("bottom-dock")}
                 />
               </div>
             </div>

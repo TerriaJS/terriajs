@@ -201,7 +201,6 @@
     "printTitle": "Print Map",
     "printExplanation": "Open a printable version of this map.",
     "printButton": "Print",
-    "downloadMap": "Download map (png)",
     "printViewButton": "Show Print View",
     "creatingPrintView": "Creating print view...",
     "btnAdvanced": "Advanced options",
@@ -296,7 +295,7 @@
   "helpPanel": {
     "btnText": "Help",
     "menuPaneTitle": "We're here to help",
-    "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [{{supportEmail}}]({{supportEmail}})",
+    "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)",
     "promptMessage": "Find the Tour, how-to videos & other help content here",
     "dismissText": "Got it, thanks!",
     "takeTour": "Take the tour",
@@ -366,8 +365,6 @@
     "view": "View",
     "editStory": "edit",
     "edit": "Edit",
-    "expand": "Expand",
-    "collapse": "Collapse",
     "recaptureStory": "re-capture",
     "recapture": "Recapture",
     "deleteStory": "delete",
@@ -381,7 +378,6 @@
     "removeStoryDialog": "Are you sure you wish to delete '<1>{{storyName}}</1>'?",
     "preview": "preview stories",
     "play": "Play",
-    "playStory": "Story",
     "captureSceneTitle": "capture current scene",
     "captureScene": "Capture Scene",
     "editor": {
@@ -394,12 +390,9 @@
     "locationBtn": "center scene",
     "exitBtn": "exit story",
     "previousBtn": "go to previous scene",
-    "prev": "Prev",
     "untitled": "untitled scene",
     "navBtn": "go to story {{title}}",
     "nextBtn": "go to next scene",
-    "next": "Next",
-    "restart": "Restart",
     "navBtnMobile": "go to story {{title}}",
     "promptHtml1": "<0>You can view and create stories at any time by clicking here.</0>",
     "promptHtml2": "<0><0>INTRODUCING</0><1>Data Stories</1><2>Create and share interactive stories directly from your map.</2></0>",
@@ -556,7 +549,6 @@
     "searchItemTitle": "Search"
   },
   "dateTime": {
-    "selectorLabel": "Time:",
     "back": "Go back",
     "previous": "Previous time",
     "selectTime": "Select a time",
@@ -631,8 +623,7 @@
     "remove": "Remove",
     "add": "Add",
     "trash": "Remove from catalogue",
-    "removeFromMap": "Remove from map",
-    "preview": "Preview"
+    "removeFromMap": "Remove from map"
   },
   "chart": {
     "sectionLabel": "Charts",
@@ -716,7 +707,6 @@
       "carto": "Carto",
       "gltf": "GLTF",
       "shp": "Shapefile (zip)",
-      "socrata-group": "Socrata Server",
       "other": "Other (use conversion service)"
     },
     "printWindow": {
@@ -866,7 +856,7 @@
       "missingUrlMessage": "Could not load the ArcGis FeatureServer endpoint because the catalog item does not have a `url`.",
       "invalidServiceTitle": "Invalid ArcGIS Feature Service layer",
       "invalidServiceMessage": "An error occurred while invoking the ArcGIS Feature Service.  The server's response does not appear to be a valid Feature Service layer.",
-      "reachedMaxFeatureLimit": "Warning: This layer has reached the FeatureService feature limit ({{maxFeatures}})."
+      "reachedMaxFeatureLimit": "Warning: This layer has reached the FeatureService feature limit."
     },
     "arcGisMapServerCatalogGroup": {
       "name": "ArcGIS Map Server Group",
@@ -892,9 +882,8 @@
       "name": "Bing Maps"
     },
     "wcs": {
-      "asyncResultLoadingMetadata": "WCS loading:\n{{name}} service at {{timestamp}}.\n\n*Loading metadata (`DescribeCoverage`)*",
       "asyncResultDescription": "This is the result of exporting data from {{name}} service at {{timestamp}} with the input parameters below.",
-      "asyncPendingDescription": "WCS loading:\n{{name}} service at {{timestamp}}.\n\n*Downloading coverage*",
+      "asyncPendingDescription": "WCS loading:<br/>{{name}} service at {{timestamp}}.",
       "exportFailedTitle": "Data export failed",
       "exportFailedMessage": "The Web Coverage Service failed",
       "exportFailedMessageII": "The Web Coverage Service failed: {{error}}"
@@ -1308,11 +1297,8 @@
       "bulkGeocoderErrorMessage": "Unable to map addresses to lat-long coordinates, as an error occurred while retrieving address coordinates. Please check your internet connection or try again later.",
       "legendZFilterLabel": "Extreme values",
       "legendNullLabel": "(No value)",
-      "styleDisabledLabel": "Disable style",
       "zFilterEnabled": "Extreme values hidden (click to show)",
-      "zFilterDisabled": "Extreme values detected (click to hide)",
-      "timeDimensionEnabled": "Time enabled (click to disable)",
-      "timeDimensionDisabled": "Time disabled (click to enable)"
+      "zFilterDisabled": "Extreme values detected (click to hide)"
     },
     "terrainCatalog": {
       "notSupportedErrorTitle": "Not supported in 2D",
@@ -1517,19 +1503,6 @@
         "both": "Cast and Receive"
       }
     },
-    "clippingBox": {
-      "groupName": "Clipping Box",
-      "clipModel": "Clip model",
-      "showClippingBox": "Show clipping box",
-      "keepBoxAboveGround": "Above ground only",
-      "clipDirection": {
-        "name": "Clip direction",
-        "options": {
-          "inside": "Clip inside the box",
-          "outside": "Clip outside the box"
-        }
-      }
-    },
     "commonModelErrors": {
       "3dTypeIn2dMode": "**Note:** This dataset can not be displayed in the 2D viewer. Switch to one of the 3D map modes."
     },
@@ -1606,7 +1579,41 @@
   "toast": {
     "mapIsZooming": "Loading ideal zoom..."
   },
-  "printView": {
-    "loading": "Creating print view..."
+  "compare": {
+    "title": "Compare",
+    "done": "Done",
+    "leftPanel": "Left panel",
+    "rightPanel": "Right panel",
+    "entireMap": {
+      "title": "Entire map",
+      "emptyText": "Add new data to show across the entire map via the dotted menu above."
+    },
+    "entireMapMenu": {
+      "browse": "Browse map data",
+      "sendAllToFront": "Send all to front",
+      "sendAllToBack": "Send all to back",
+      "hideAll": "Hide all"
+    },
+    "info": "Compare spatial datasets from your workbench side-by-side on the map.",
+    "dataset": {
+      "label": "Dataset",
+      "selectOne": "Select one"
+    },
+    "dimensionSelector": {
+      "undefinedLabel": "Not specified"
+    },
+    "dateButton": {
+      "left": "Left",
+      "right": "Right",
+      "select": "Select a date"
+    },
+    "dateLocationFilter": {
+      "filter": "Filter date by location",
+      "loading": "Loading filter...",
+      "cancel": "Cancel",
+      "location": "Now showing available imagery for {{latitude}}, {{longitude}}",
+      "mouseTooltipTitle": "Select location",
+      "mouseTooltipMessage": "Right click to cancel"
+    }
   }
 }
