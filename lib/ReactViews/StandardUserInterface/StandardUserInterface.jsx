@@ -34,7 +34,7 @@ import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
 import DragDropNotification from "./../DragDropNotification";
 import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
-import StoryPanel from "./../Story/StoryPanel";
+import StoryPanel from "./../Story/StoryPanel/StoryPanel";
 import MapColumn from "./MapColumn";
 import processCustomElements from "./processCustomElements";
 import Styles from "./standard-user-interface.scss";
