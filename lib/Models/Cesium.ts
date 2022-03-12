@@ -54,6 +54,7 @@ import CesiumRenderLoopPauser from "../Map/CesiumRenderLoopPauser";
 import CesiumSelectionIndicator from "../Map/CesiumSelectionIndicator";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import PickedFeatures, { ProviderCoordsMap } from "../Map/PickedFeatures";
+import ProtomapsImageryProvider from "../Map/ProtomapsImageryProvider";
 import MappableMixin, {
   ImageryParts,
   isCesium3DTileset,
@@ -691,8 +692,17 @@ export default class Cesium extends GlobeOrMap {
         return Promise.resolve(target.readyPromise).then(() => {
           if (this._lastZoomTarget === target) {
             return flyToBoundingSpherePromise(camera, target.boundingSphere, {
-              // By passing range=0, cesium calculates an appropriate zoom distance
-              offset: new HeadingPitchRange(0, -0.5, 0),
+              offset: new HeadingPitchRange(
+                0,
+                -0.5,
+                // To avoid getting too close to models less than 100m radius, let
+                // cesium calculate an appropriate zoom distance. For the rest
+                // use the radius as the zoom distance because the offset
+                // distance cesium calculates for large models is often too far away.
+                target.boundingSphere.radius < 100
+                  ? undefined
+                  : target.boundingSphere.radius
+              ),
               duration: flightDurationSeconds
             });
           }
@@ -1469,7 +1479,7 @@ export default class Cesium extends GlobeOrMap {
   }
 
   _addVectorTileHighlight(
-    imageryProvider: MapboxVectorTileImageryProvider,
+    imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
     rectangle: Rectangle
   ): () => void {
     const result = new ImageryLayer(imageryProvider, {
@@ -1533,8 +1543,15 @@ function zoomToDataSource(
           boundingSphere,
           {
             duration: flightDurationSeconds,
-            // By passing range=0, cesium calculates an appropriate zoom distance
-            offset: new HeadingPitchRange(0, -0.5, 0)
+            offset: new HeadingPitchRange(
+              0,
+              -0.5,
+              // To avoid getting too close to models less than 100m radius, let
+              // cesium calculate an appropriate zoom distance. For the rest
+              // use the radius as the zoom distance because the offset
+              // distance cesium calculates for large models is often too far away.
+              boundingSphere.radius < 100 ? undefined : boundingSphere.radius
+            )
           }
         );
         cesium.scene.camera.lookAtTransform(Matrix4.IDENTITY);

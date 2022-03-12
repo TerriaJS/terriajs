@@ -1,7 +1,8 @@
-import { action, computed, runInAction } from "mobx";
+import { action, computed, isObservableArray, runInAction } from "mobx";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
+import { isJsonString } from "../Core/Json";
 import Result from "../Core/Result";
 import hasTraits from "../Models/Definition/hasTraits";
 import Model, { BaseModel } from "../Models/Definition/Model";
@@ -94,6 +95,11 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
     }
 
     @computed
+    get name(): string | undefined {
+      return super.name || this.uniqueId;
+    }
+
+    @computed
     get nameInCatalog(): string | undefined {
       return super.nameInCatalog || this.name;
     }
@@ -114,8 +120,8 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
     @computed
     get hasDescription(): boolean {
       return (
-        (this.description !== undefined && this.description.length > 0) ||
-        (this.info !== undefined &&
+        (isJsonString(this.description) && this.description.length > 0) ||
+        (isObservableArray(this.info) &&
           this.info.some(info => descriptionRegex.test(info.name || "")))
       );
     }

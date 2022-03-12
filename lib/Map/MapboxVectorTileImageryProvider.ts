@@ -53,6 +53,7 @@ interface MapboxVectorTileImageryProviderOptions {
   credit?: Credit | string;
 }
 
+/** Note this has been deprecated in favour of ProtomapsImageryProvider */
 export default class MapboxVectorTileImageryProvider
   implements ImageryProviderWithGridLayerSupport {
   private readonly _uriTemplate: uri.URITemplate;

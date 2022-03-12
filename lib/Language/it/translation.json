@@ -563,7 +563,14 @@
       "unsupportedCharactersTitle": "Caratteri non validi nelle colonne di latitudine e longitudine",
       "unsupportedCharactersMessage": "Impossibile interpretare la coppia di latitudine e longitudine {{longitude}}, {{latitude}}",
       "bulkGeocoderInfoMessage": "Il CSV contiene degli indirizzi, ma {{number}} non può essere localizzato sulla mappa: ",
-      "bulkGeocoderErrorMessage": "Impossibile mappare gli indirizzi alle coordinate lat-long, poiché si è verificato un errore durante il recupero delle coordinate dell'indirizzo. Controlla la tua connessione internet o riprova più tardi."
+      "bulkGeocoderErrorMessage": "Impossibile mappare gli indirizzi alle coordinate lat-long, poiché si è verificato un errore durante il recupero delle coordinate dell'indirizzo. Controlla la tua connessione internet o riprova più tardi.",
+      "legendZFilterLabel": "Valori estremi",
+      "zFilterDisabled": "Valori estremi visualizzati (clicca per nascondere)",
+      "legendNullLabel": "(Nessun valore)",
+      "zFilterEnabled": "Valori estremi nascosti (clicca per mostrare)",
+      "timeDimensionEnabled": "Tempo attivato (cliccare per disattivare)",
+      "styleDisabledLabel": "Disattivare lo stile",
+      "timeDimensionDisabled": "Tempo disabilitato (clicca per abilitare)"
     },
     "sdmxCatalogItem": {
       "viewBy": {
@@ -887,9 +894,10 @@
     "wcs": {
       "exportFailedTitle": "Esportazione dati non riuscita",
       "exportFailedMessage": "Il Web Coverage Service non è riuscito",
-      "asyncPendingDescription": "Caricamento WCS:<br/>{{name}} servizio a {{timestamp}}.",
+      "asyncPendingDescription": "Caricamento WCS:\n{{name}} servizio a {{timestamp}}.\n\n*Copertura di scarico*",
       "exportFailedMessageII": "Il servizio di copertura web è fallito: {{error}}",
-      "asyncResultDescription": "Questo è il risultato dell'esportazione dei dati dal servizio {{name}} a {{timestamp}} con i parametri di input qui sotto."
+      "asyncResultDescription": "Questo è il risultato dell'esportazione dei dati dal servizio {{name}} a {{timestamp}} con i parametri di input qui sotto.",
+      "asyncResultLoadingMetadata": "Caricamento WCS:\n{{name}} servizio a {{timestamp}}.\n\n*Caricamento dei metadati (`DescribeCoverage`)*"
     },
     "scaleDatasetNotVisible": {
       "scaleZoomIn": "Il dataset non è disponibile in questa scala, ingrandisci per vederlo",
@@ -1175,7 +1183,8 @@
     "removeFromMap": "Rimuovi dalla mappa",
     "trash": "Rimuovi questo catalogo",
     "loading": "In caricamento...",
-    "privateIndicatorTitle": "Set di dati privato"
+    "privateIndicatorTitle": "Set di dati privato",
+    "preview": "Anteprima"
   },
   "loader": {
     "loadingMessage": "Caricamento"
@@ -1224,7 +1233,8 @@
     "selectTime": "Seleziona un tempo",
     "back": "Torna indietro",
     "outOfRange": "Attualmente fuori portata.",
-    "availableTimeChart": "Mostra gli orari disponibili sul grafico"
+    "availableTimeChart": "Mostra gli orari disponibili sul grafico",
+    "selectorLabel": "Tempo:"
   },
   "workbench": {
     "removeAll": "Rimuovi Tutto",
@@ -1564,7 +1574,7 @@
     "mapUserGuide": "Guida all'uso della mappa",
     "takeTour": "Fai il tour",
     "promptMessage": "Trova il Tour, i video come fare e altri contenuti di aiuto qui",
-    "menuPaneBody": "Trova consigli utili su come usare TerriaJS controllando le guide qui sotto o contattando il team a [info@terria.io](mailto:info@terria.io)"
+    "menuPaneBody": "Trova consigli utili su come usare TerriaJS controllando le guide qui sotto o contattando il team a [{{supportEmail}}]({{supportEmail}})"
   },
   "term": {
     "missingContent": "contenuto mancante"

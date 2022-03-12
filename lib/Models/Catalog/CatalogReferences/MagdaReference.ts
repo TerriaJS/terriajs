@@ -54,6 +54,13 @@ export default class MagdaReference extends AccessControlMixin(
       }
     }),
     createStratumInstance(MagdaDistributionFormatTraits, {
+      id: "WMS-GROUP",
+      formatRegex: "^wms-group$",
+      definition: {
+        type: "wms-group"
+      }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
       id: "EsriMapServer",
       formatRegex: "^esri (mapserver|map server|rest|tiled map service)$",
       urlRegex: "MapServer",
@@ -167,6 +174,7 @@ export default class MagdaReference extends AccessControlMixin(
 
     const magdaUri = this.uri;
     const override = toJS(this.override);
+    const addOrOverrideAspects = toJS(this.addOrOverrideAspects);
     const distributionFormats = this.preparedDistributionFormats;
 
     // `runLater` is needed due to no actions in `AsyncLoader` computed promise (See AsyncLoader.ts)
@@ -179,7 +187,8 @@ export default class MagdaReference extends AccessControlMixin(
         this.uniqueId,
         existingRecord,
         override,
-        previousTarget
+        previousTarget,
+        addOrOverrideAspects
       );
 
       if (target !== undefined) {
@@ -200,6 +209,7 @@ export default class MagdaReference extends AccessControlMixin(
         magdaReferenceHeaders: this.terria.configParameters
           .magdaReferenceHeaders
       });
+
       return MagdaReference.createMemberFromRecord(
         this.terria,
         this,
@@ -208,12 +218,27 @@ export default class MagdaReference extends AccessControlMixin(
         this.uniqueId,
         record,
         override,
-        previousTarget
+        previousTarget,
+        addOrOverrideAspects
       );
     });
   }
 
-  private static createMemberFromRecord(
+  private static overrideRecordAspects(
+    record: JsonObject | undefined,
+    override: JsonObject | undefined
+  ) {
+    if (record && override && isJsonObject(override.aspects)) {
+      if (isJsonObject(record.aspects)) {
+        for (let key in override.aspects)
+          record.aspects[key] = override.aspects[key];
+      } else {
+        record.aspects = override.aspects;
+      }
+    }
+  }
+
+  static createMemberFromRecord(
     terria: Terria,
     sourceReference: BaseModel | undefined,
     distributionFormats: readonly PreparedDistributionFormat[],
@@ -221,11 +246,14 @@ export default class MagdaReference extends AccessControlMixin(
     id: string | undefined,
     record: JsonObject | undefined,
     override: JsonObject | undefined,
-    previousTarget: BaseModel | undefined
+    previousTarget: BaseModel | undefined,
+    addOrOverrideAspects: JsonObject | undefined = undefined
   ): BaseModel | undefined {
     if (record === undefined) {
       return undefined;
     }
+
+    this.overrideRecordAspects(record, addOrOverrideAspects);
 
     const aspects = record.aspects;
     if (!isJsonObject(aspects)) {

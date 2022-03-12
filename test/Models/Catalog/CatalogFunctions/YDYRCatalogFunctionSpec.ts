@@ -52,7 +52,6 @@ describe("YDYRCatalogFunction", function() {
     ).andCallFunction(req => {
       if (logCounter < 1) {
         req.respondWith({ responseText: `"Some Log ${logCounter}"` });
-        console.log(`"Some Log ${logCounter}"`);
 
         logCounter++;
       } else {
@@ -78,6 +77,7 @@ describe("YDYRCatalogFunction", function() {
     csv = new CsvCatalogItem("test", terria, undefined);
 
     csv.setTrait(CommonStrata.user, "csvString", lga11Csv);
+    await csv.loadRegionProviderList();
     await csv.loadMapItems();
     addUserCatalogMember(terria, csv, { enable: true });
 

@@ -4,6 +4,7 @@ import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import runLater from "../../../Core/runLater";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -15,18 +16,17 @@ import {
 import SocrataCatalogGroupTraits, {
   FacetFilterTraits
 } from "../../../Traits/TraitsClasses/SocrataCatalogGroupTraits";
-import CatalogGroup from "../CatalogGroup";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import CsvCatalogItem from "../CatalogItems/CsvCatalogItem";
-import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import SocrataMapViewCatalogItem from "../CatalogItems/SocrataMapViewCatalogItem";
 import StratumOrder from "../../Definition/StratumOrder";
-import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
+import CatalogGroup from "../CatalogGroup";
+import CsvCatalogItem from "../CatalogItems/CsvCatalogItem";
+import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
+import SocrataMapViewCatalogItem from "../CatalogItems/SocrataMapViewCatalogItem";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 export interface Facet {
   facet: string;
@@ -310,6 +310,12 @@ export class SocrataCatalogStratum extends LoadableStratum(
 
     const stratum = CommonStrata.underride;
 
+    // Add share key for old ID which included parents ID
+    this.catalogGroup.terria.addShareKey(
+      resultId,
+      `${this.catalogGroup.uniqueId}/${result.resource.id}`
+    );
+
     let resultModel:
       | CsvCatalogItem
       | GeoJsonCatalogItem
@@ -432,7 +438,12 @@ export class SocrataCatalogStratum extends LoadableStratum(
   }
 
   getResultId(result: Result) {
-    return `${this.catalogGroup.uniqueId}/${result.resource.id}`;
+    // Use Socrata server hostname for datasets, so we don't create multiple across facets
+    return `${
+      this.catalogGroup.url
+        ? URI(this.catalogGroup.url ?? "").hostname()
+        : this.catalogGroup.uniqueId
+    }/${result.resource.id}`;
   }
 }
 

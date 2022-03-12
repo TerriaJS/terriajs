@@ -38,6 +38,7 @@ import PickedFeatures, {
   ProviderCoords,
   ProviderCoordsMap
 } from "../Map/PickedFeatures";
+import ProtomapsImageryProvider from "../Map/ProtomapsImageryProvider";
 import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
 import MappableMixin, {
   ImageryParts,
@@ -613,8 +614,8 @@ export default class Leaflet extends GlobeOrMap {
   private _pickFeatures(
     latlng: L.LatLng,
     tileCoordinates?: any,
-    existingFeatures?: Entity[],
-    ignoreSplitter?: boolean
+    existingFeatures?: Feature[],
+    ignoreSplitter: boolean = false
   ) {
     if (isDefined(this._pickedFeatures)) {
       // Picking is already in progress.
@@ -1044,7 +1045,7 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   _addVectorTileHighlight(
-    imageryProvider: MapboxVectorTileImageryProvider,
+    imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
     rectangle: Rectangle
   ): () => void {
     const map = this.map;

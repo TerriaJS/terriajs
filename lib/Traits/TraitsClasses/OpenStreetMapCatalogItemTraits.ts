@@ -1,9 +1,10 @@
-import CatalogMemberTraits from "./CatalogMemberTraits";
-import LayerOrderingTraits from "./LayerOrderingTraits";
-import MappableTraits from "./MappableTraits";
-import mixTraits from "../mixTraits";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import CatalogMemberTraits from "./CatalogMemberTraits";
+import LayerOrderingTraits from "./LayerOrderingTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
+import MappableTraits from "./MappableTraits";
 import RasterLayerTraits from "./RasterLayerTraits";
 import UrlTraits from "./UrlTraits";
 
@@ -12,7 +13,8 @@ export default class OpenStreetMapCatalogItemTraits extends mixTraits(
   LayerOrderingTraits,
   UrlTraits,
   MappableTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  LegendOwnerTraits
 ) {
   @primitiveTrait({
     name: "File extension",

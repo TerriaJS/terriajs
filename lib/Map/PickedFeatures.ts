@@ -1,10 +1,8 @@
 import { observable } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import Feature from "../Models/Feature";
-import { ImageryParts } from "../ModelMixins/MappableMixin";
+import MappableMixin, { ImageryParts } from "../ModelMixins/MappableMixin";
 import { BaseModel } from "../Models/Definition/Model";
-import MappableMixin from "../ModelMixins/MappableMixin";
+import Feature from "../Models/Feature";
 
 export type ProviderCoords = { x: number; y: number; level: number };
 export type ProviderCoordsMap = { [url: string]: ProviderCoords };
@@ -47,7 +45,7 @@ export default class PickedFeatures {
    * Gets or sets the array of picked features.  The array is observable and may be updated up until the point that
    * {@see PickedFeatures#allFeaturesAvailablePromise} resolves.
    */
-  @observable features: Entity[] = [];
+  @observable features: Feature[] = [];
 
   /**
    * Gets or sets a message describing an error that occurred while picking features.

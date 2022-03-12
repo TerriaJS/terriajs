@@ -68,6 +68,7 @@ interface MapServer {
 
 interface SpatialReference {
   wkid?: number;
+  latestWkid?: number;
 }
 
 interface Extent {
@@ -98,7 +99,7 @@ interface Legend {
 }
 
 interface Legends {
-  layers?: { layerId: number; layerName: string; legend: Legend[] }[];
+  layers?: { layerId: number; layerName: string; legend?: Legend[] }[];
 }
 
 class MapServerStratum extends LoadableStratum(
@@ -180,18 +181,15 @@ class MapServerStratum extends LoadableStratum(
     let layers: Layer[] | undefined;
 
     // Use the slightly more basic layer metadata
-    if (
-      isDefined(layersMetadataResponse) &&
-      isDefined(serviceMetadata.layers)
-    ) {
+    if (isDefined(serviceMetadata.layers)) {
       layers = serviceMetadata.layers;
-    } else {
-      if (isDefined(layersMetadataResponse.layers)) {
-        layers = layersMetadataResponse.layers;
-        // If layersMetadata is only a single layer -> shove into an array
-      } else if (isDefined(layersMetadataResponse.id)) {
-        layers = [layersMetadataResponse];
-      }
+    }
+
+    if (isDefined(layersMetadataResponse?.layers)) {
+      layers = layersMetadataResponse.layers;
+      // If layersMetadata is only a single layer -> shove into an array
+    } else if (isDefined(layersMetadataResponse?.id)) {
+      layers = [layersMetadataResponse];
     }
 
     if (!isDefined(layers) || layers.length === 0) {
@@ -339,7 +337,7 @@ class MapServerStratum extends LoadableStratum(
         return;
       }
 
-      l.legend.forEach(leg => {
+      l.legend?.forEach(leg => {
         const title = replaceUnderscores(
           leg.label !== "" ? leg.label : l.layerName
         );
@@ -607,15 +605,15 @@ function updateBbox(extent: Extent, rectangle: RectangleExtent) {
 }
 
 function getRectangleFromLayer(extent: Extent, rectangle: RectangleExtent) {
-  if (
-    isDefined(extent) &&
-    extent.spatialReference &&
-    extent.spatialReference.wkid
-  ) {
-    const wkid = "EPSG:" + extent.spatialReference.wkid;
-    if (extent.spatialReference.wkid === 4326) {
+  const wkidCode =
+    extent?.spatialReference?.latestWkid ?? extent?.spatialReference?.wkid;
+
+  if (isDefined(extent) && isDefined(wkidCode)) {
+    if (wkidCode === 4326) {
       return updateBbox(extent, rectangle);
     }
+
+    const wkid = "EPSG:" + wkidCode;
 
     if (!isDefined((proj4definitions as any)[wkid])) {
       return;

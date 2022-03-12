@@ -7,6 +7,7 @@ import createStratumInstance from "../../lib/Models/Definition/createStratumInst
 import DimensionTraits, {
   DimensionOptionTraits
 } from "../../lib/Traits/TraitsClasses/DimensionTraits";
+import { SelectableDimensionSelect } from "../../lib/Models/SelectableDimensions";
 
 describe("CatalogMemberMixin", function() {
   describe(" - infoWithoutSources", function() {
@@ -154,21 +155,26 @@ describe("CatalogMemberMixin", function() {
       expect(wmsItem.styles).toBe("init-style");
       expect(wmsItem.layers).toBe("init-layers");
 
-      const modelDimension = wmsItem.selectableDimensions.find(
+      const result = wmsItem.selectableDimensions.find(
         dim => dim.id === "modelDimensions"
       );
 
-      modelDimension?.setDimensionValue(CommonStrata.user, "styles-test");
+      expect(result).toBeDefined();
+      expect(result?.type === undefined);
+
+      const modelDimension = result as SelectableDimensionSelect;
+
+      modelDimension.setDimensionValue(CommonStrata.user, "styles-test");
 
       expect(wmsItem.styles).toBe("test");
       expect(wmsItem.layers).toBe("init-layers");
 
-      modelDimension?.setDimensionValue(CommonStrata.user, "styles-test2");
+      modelDimension.setDimensionValue(CommonStrata.user, "styles-test2");
 
       expect(wmsItem.styles).toBe("test2");
       expect(wmsItem.layers).toBe("init-layers");
 
-      modelDimension?.setDimensionValue(CommonStrata.user, "layers-test");
+      modelDimension.setDimensionValue(CommonStrata.user, "layers-test");
 
       expect(wmsItem.styles).toBe("test2");
       expect(wmsItem.layers).toBe("test");

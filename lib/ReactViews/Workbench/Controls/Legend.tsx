@@ -6,14 +6,16 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
+import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
 import proxyCatalogItemUrl from "../../../Models/Catalog/proxyCatalogItemUrl";
+import hasTraits from "../../../Models/Definition/hasTraits";
 import Model, { BaseModel } from "../../../Models/Definition/Model";
+import LegendOwnerTraits from "../../../Traits/TraitsClasses/LegendOwnerTraits";
 import LegendTraits, {
   LegendItemTraits
 } from "../../../Traits/TraitsClasses/LegendTraits";
 import Styles from "./legend.scss";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 
 /* A lookup map for displayable mime types */
 const DISPLAYABLE_MIME_TYPES = [
@@ -115,6 +117,7 @@ export default class Legend extends React.Component<{
             className={Styles.imageAnchor}
             target="_blank"
             rel="noreferrer noopener"
+            css={{ backgroundColor: legend.backgroundColor }}
           >
             <img
               src={proxiedUrl}
@@ -151,7 +154,7 @@ export default class Legend extends React.Component<{
     if (isDefined(legend.items) && legend.items.length > 0) {
       return (
         <li key={i} className={Styles.generatedLegend}>
-          <table>
+          <table css={{ backgroundColor: legend.backgroundColor }}>
             <tbody>{legend.items.map(this.renderLegendItem.bind(this))}</tbody>
           </table>
         </li>
@@ -252,8 +255,20 @@ export default class Legend extends React.Component<{
 
   render() {
     if (
-      !CatalogMemberMixin.isMixedInto(this.props.item) ||
-      this.props.item.hideLegendInWorkbench ||
+      (!hasTraits(this.props.item, LegendOwnerTraits, "legends") ||
+        !hasTraits(
+          this.props.item,
+          LegendOwnerTraits,
+          "hideLegendInWorkbench"
+        )) &&
+      !TableMixin.isMixedInto(this.props.item)
+    ) {
+      return null;
+    }
+
+    if (
+      (hasTraits(this.props.item, LegendOwnerTraits, "hideLegendInWorkbench") &&
+        this.props.item.hideLegendInWorkbench) ||
       (MinMaxLevelMixin.isMixedInto(this.props.item) &&
         this.props.item.scaleWorkbenchInfo)
     )
@@ -262,22 +277,36 @@ export default class Legend extends React.Component<{
     if (
       isDefined(this.props.item.legends) &&
       this.props.item.legends.length > 0
-    )
+    ) {
+      const backgroundColor = hasTraits(
+        this.props.item,
+        LegendOwnerTraits,
+        "legendBackgroundColor"
+      )
+        ? this.props.item.legendBackgroundColor
+        : undefined;
+
       return (
         <ul className={Styles.legend}>
-          <div className={Styles.legendInner}>
-            {this.props.item.legends.map((legend, i) => (
-              <React.Fragment key={i}>
-                {isDefined(legend.title) ? (
-                  <h3 className={Styles.legendTitle}>{legend.title}</h3>
-                ) : null}
+          <div
+            className={Styles.legendInner}
+            css={{ " li": { backgroundColor } }}
+          >
+            {(this.props.item.legends as Model<LegendTraits>[]).map(
+              (legend, i: number) => (
+                <React.Fragment key={i}>
+                  {isDefined(legend.title) ? (
+                    <h3 className={Styles.legendTitle}>{legend.title}</h3>
+                  ) : null}
 
-                {this.renderLegend.bind(this)(legend, i)}
-              </React.Fragment>
-            ))}
+                  {this.renderLegend.bind(this)(legend, i)}
+                </React.Fragment>
+              )
+            )}
           </div>
         </ul>
       );
+    }
 
     return null;
   }

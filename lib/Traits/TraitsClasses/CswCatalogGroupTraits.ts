@@ -8,6 +8,7 @@ import ModelTraits from "../ModelTraits";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import UrlTraits from "./UrlTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 
 export type QueryPropertyName =
   | "identifier"
@@ -45,7 +46,8 @@ export default class CswCatalogGroupTraits extends mixTraits(
   GetCapabilitiesTraits,
   GroupTraits,
   UrlTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  LegendOwnerTraits
 ) {
   @primitiveTrait({
     type: "boolean",
