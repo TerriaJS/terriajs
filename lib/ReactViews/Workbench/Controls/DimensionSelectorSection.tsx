@@ -29,9 +29,7 @@ import SelectableDimensions, {
   SelectableDimensionEnum,
   SelectableDimensionGroup,
   SelectableDimensionNumeric,
-  SelectableDimensionText,
-  DEFAULT_PLACEMENT,
-  MAX_SELECTABLE_DIMENSION_OPTIONS
+  SelectableDimensionText
 } from "../../../Models/SelectableDimensions/SelectableDimensions";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
@@ -66,7 +64,6 @@ class DimensionSelectorSection extends React.Component<PropsType> {
 
     return (
       <Box displayInlineBlock fullWidth>
-        <Spacing bottom={2} />
         {selectableDimensions.map((dim, i) => (
           <DimensionSelector
             key={`${item.uniqueId}-${dim.id}-fragment`}

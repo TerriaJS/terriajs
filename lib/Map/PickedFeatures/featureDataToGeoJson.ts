@@ -3,6 +3,7 @@
 import Point from "@mapbox/point-geometry";
 import {
   Feature as GeoJsonFeature,
+  featureCollection,
   Geometry as GeoJsonGeometry,
   Position
 } from "@turf/helpers";
@@ -23,7 +24,8 @@ import JsonValue, { isJsonObject } from "../../Core/Json";
 import {
   FeatureCollectionWithCrs,
   GeoJsonCrs,
-  toFeatureCollection
+  isFeature,
+  isFeatureCollection
 } from "../../ModelMixins/GeojsonMixin";
 import computeRingWindingOrder from "../Vector/computeRingWindingOrder";
 
@@ -67,7 +69,8 @@ featureDataToGeoJson.supportedFormats = [
 ];
 
 function convertGeoJson(featureData: JsonValue) {
-  return toFeatureCollection(featureData);
+  if (isFeatureCollection(featureData)) return featureData;
+  if (isFeature(featureData)) return featureCollection([featureData]);
 }
 
 function convertEsri(featureData: JsonValue) {
