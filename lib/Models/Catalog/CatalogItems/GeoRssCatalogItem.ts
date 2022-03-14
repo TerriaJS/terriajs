@@ -13,7 +13,9 @@ import {
   geoRssAtomToGeoJson
 } from "../../../Map/geoRssConvertor";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import GeoJsonMixin, { FeatureCollectionWithCrs } from "../../../ModelMixins/GeojsonMixin";
+import GeoJsonMixin, {
+  FeatureCollectionWithCrs
+} from "../../../ModelMixins/GeojsonMixin";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import GeoRssCatalogItemTraits from "../../../Traits/TraitsClasses/GeoRssCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
@@ -173,25 +175,25 @@ export default class GeoRssCatalogItem extends GeoJsonMixin(
     return json;
   }
 
-  protected async forceLoadGeojsonData(): Promise<any>{
+  protected async forceLoadGeojsonData(): Promise<any> {
     let data: Document | undefined;
     if (isDefined(this.geoRssString)) {
       const parser = new DOMParser();
       data = parser.parseFromString(this.geoRssString, "text/xml");
-    } else if(isDefined(this._georssFile)){
+    } else if (isDefined(this._georssFile)) {
       data = await readXml(this._georssFile);
-    } else if(isDefined(this.url)){
+    } else if (isDefined(this.url)) {
       data = await loadXML(proxyCatalogItemUrl(this, this.url));
     }
 
-    if(!data){
+    if (!data) {
       throw networkRequestError({
         sender: this,
         title: i18next.t("models.georss.errorLoadingTitle"),
         message: i18next.t("models.georss.errorLoadingMessage", {
           appName: this.terria.appName
         })
-      })
+      });
     }
 
     return this.parseGeorss(data);
