@@ -245,7 +245,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
 
     return filterOutUndefined([
       this.catalogItem.timeFieldName,
-      // If aggregating time - avergage color field
+      // If aggregating time - average color field
       this.aggregateTime
         ? `avg(${this.catalogItem.colorFieldName}) as ${this.catalogItem.colorFieldName}`
         : this.catalogItem.colorFieldName,
@@ -273,7 +273,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     }
   }
 
-  // Set reigon column type
+  // Set region column type
   @computed get regionColumn() {
     if (this.catalogItem.regionFieldName) {
       return createStratumInstance(TableColumnTraits, {
@@ -402,7 +402,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     const row = (title: string, value: string) =>
       `<tr><td style="vertical-align: middle">${title}</td><td>${value}</td></tr>`;
 
-    // Add fields (exepct for geo_* fields)
+    // Add fields (except for geo_* fields)
     template += this.dataset.fields
       ?.filter(
         field => field.type !== "geo_point_2d" && field.type !== "geo_shape"
@@ -504,7 +504,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     return lastDate.toString();
   }
 
-  /** Get fields with useful infomation (for visualisation). Eg numbers, text, not IDs, not region... */
+  /** Get fields with useful information (for visualisation). Eg numbers, text, not IDs, not region... */
   @computed get usefulFields() {
     return (
       this.dataset.fields?.filter(
@@ -522,13 +522,13 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     );
   }
 
-  /** Convert usefulFields to a Dimenion (which gets turned into a SelectableDimension in OpenDataSoftCatalogItem).
+  /** Convert usefulFields to a Dimension (which gets turned into a SelectableDimension in OpenDataSoftCatalogItem).
    * This means we can chose which field to "select" when downloading data.
    */
   @computed get availableFields() {
     if (!this.selectAllFields)
       return createStratumInstance(DimensionTraits, {
-        id: "available-fieds",
+        id: "available-fields",
         name: "Fields",
         selectedId: this.catalogItem.colorFieldName,
         options: this.usefulFields.map(f => ({

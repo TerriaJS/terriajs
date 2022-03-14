@@ -36,6 +36,7 @@ import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
 import { exportData } from "../../Preview/ExportData";
 import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
 import WorkbenchButton from "../WorkbenchButton";
+import CameraView from "../../../Models/CameraView";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -128,13 +129,70 @@ const ViewingControls = observer(
         const viewer = this.props.viewState.terria.currentViewer;
         const item = this.props.item;
         let zoomToView = item;
+        function vectorToJson(vector) {
+          if (
+            typeof vector?.x === "number" &&
+            typeof vector?.y === "number" &&
+            typeof vector?.z === "number"
+          ) {
+            return {
+              x: vector.x,
+              y: vector.y,
+              z: vector.z
+            };
+          } else {
+            return undefined;
+          }
+        }
+
+        // camera is likely used more often than lookAt.
+        const theWest = item?.idealZoom?.camera?.west;
+        const theEast = item?.idealZoom?.camera?.east;
+        const theNorth = item?.idealZoom?.camera?.north;
+        const theSouth = item?.idealZoom?.camera?.south;
+
         if (
+          item.idealZoom?.lookAt?.targetLongitude &&
+          item.idealZoom?.lookAt?.targetLatitude &&
+          item.idealZoom?.lookAt?.range >= 0
+        ) {
+          // No value checking here. Improper values can lead to unexpected results.
+          const lookAt = {
+            targetLongitude: item.idealZoom.lookAt.targetLongitude,
+            targetLatitude: item.idealZoom.lookAt.targetLatitude,
+            targetHeight: item.idealZoom.lookAt.targetHeight,
+            heading: item.idealZoom.lookAt.heading,
+            pitch: item.idealZoom.lookAt.pitch,
+            range: item.idealZoom.lookAt.range
+          };
+
+          // In the case of 2D viewer, it zooms to rectangle area approximated by the camera view parameters.
+          zoomToView = CameraView.fromJson({ lookAt: lookAt });
+        } else if (theWest && theEast && theNorth && theSouth) {
+          const thePosition = vectorToJson(item?.idealZoom?.camera?.position);
+          const theDirection = vectorToJson(item?.idealZoom?.camera?.direction);
+          const theUp = vectorToJson(item?.idealZoom?.camera?.up);
+
+          // No value checking here. Improper values can lead to unexpected results.
+          const camera = {
+            west: theWest,
+            east: theEast,
+            north: theNorth,
+            south: theSouth,
+            position: thePosition,
+            direction: theDirection,
+            up: theUp
+          };
+
+          zoomToView = CameraView.fromJson(camera);
+        } else if (
           item.rectangle !== undefined &&
           item.rectangle.east - item.rectangle.west >= 360
         ) {
           zoomToView = this.props.viewState.terria.mainViewer.homeCamera;
           console.log("Extent is wider than world so using homeCamera.");
         }
+
         this.setState({ isMapZoomingToCatalogItem: true });
         viewer.zoomTo(zoomToView).finally(() => {
           this.setState({ isMapZoomingToCatalogItem: false });

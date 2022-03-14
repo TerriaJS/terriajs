@@ -14,6 +14,14 @@ export default class LegendOwnerTraits extends ModelTraits {
   legends?: LegendTraits[];
 
   @primitiveTrait({
+    type: "string",
+    name: "Legend background color",
+    description:
+      "Apply background color to all legends. This can be useful if legends are transparent and clash with Terria colours"
+  })
+  legendBackgroundColor?: string;
+
+  @primitiveTrait({
     type: "boolean",
     name: "Hide legend in workbench",
     description:

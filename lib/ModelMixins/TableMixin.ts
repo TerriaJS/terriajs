@@ -673,7 +673,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     @computed
     get legends(): Model<LegendTraits>[] {
-      if (this.dataColumnMajor?.length === 0 || this.mapItems.length > 0) {
+      // Only return legends if we have rows in dataColumnMajor and mapItems to show
+      if (this.dataColumnMajor?.length !== 0 && this.mapItems.length > 0) {
         const colorLegend = this.activeTableStyle.colorTraits.legend;
         return filterOutUndefined([colorLegend]);
       } else {

@@ -21,9 +21,11 @@ import Notification from "../Notification/Notification";
 import ProgressBar from "../Map/ProgressBar";
 import SidePanel from "../SidePanel/SidePanel";
 import processCustomElements from "./processCustomElements";
-import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
-import StoryPanel from "./../Story/StoryPanel.jsx";
-import StoryBuilder from "./../Story/StoryBuilder.jsx";
+import FullScreenButton from "./../SidePanel/FullScreenButton";
+import StoryPanel from "../Story/StoryPanel/StoryPanel";
+import StoryBuilder from "./../Story/StoryBuilder";
+
+import PrintView from "../../ReactViews/Map/Panels/SharePanel/Print/PrintView";
 
 import withFallback from "../HOCs/withFallback";
 import TourPortal from "../Tour/TourPortal";
@@ -118,7 +120,7 @@ const GlobalTerriaStyles = createGlobalStyle`
     }
   `}
 `;
-const animationDuration = 250;
+export const animationDuration = 250;
 /** blah */
 const StandardUserInterface = observer(
   createReactClass({
@@ -474,6 +476,14 @@ const StandardUserInterface = observer(
               )}
             <Disclaimer viewState={this.props.viewState} />
           </div>
+          {this.props.viewState.printWindow && (
+            <PrintView
+              window={this.props.viewState.printWindow}
+              terria={terria}
+              viewState={this.props.viewState}
+              closeCallback={() => this.props.viewState.setPrintWindow(null)}
+            />
+          )}
         </ThemeProvider>
       );
     }

@@ -22,6 +22,10 @@ import TableTimeStyleTraits from "../Traits/TraitsClasses/TableTimeStyleTraits";
 import TableColorMap from "./TableColorMap";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
+import { BBox } from "@turf/helpers";
+import { isJsonNumber } from "../Core/Json";
+import createStratumInstance from "../Models/Definition/createStratumInstance";
+import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 
 const DEFAULT_FINAL_DURATION_SECONDS = 3600 * 24 - 1; // one day less a second, if there is only one date.
 
@@ -31,7 +35,7 @@ const DEFAULT_FINAL_DURATION_SECONDS = 3600 * 24 - 1; // one day less a second, 
 export default class TableStyle {
   /**
    *
-   * @param tableModel TableMixin catalog memeber
+   * @param tableModel TableMixin catalog member
    * @param styleNumber Index of column in tablemodel (if undefined, then default style will be used)
    */
   constructor(
@@ -143,6 +147,58 @@ export default class TableStyle {
   @computed
   get timeTraits(): Model<TableTimeStyleTraits> {
     return this.styleTraits.time;
+  }
+
+  /** Compute rectangle for point (lat/long) based table styles */
+  @computed get rectangle() {
+    if (this.isPoints()) {
+      const bounds: BBox = [Infinity, Infinity, -Infinity, -Infinity];
+
+      if (this.longitudeColumn && this.latitudeColumn) {
+        for (let i = 0; i < this.longitudeColumn.values.length; i++) {
+          const long = this.longitudeColumn.valuesAsNumbers.values[i];
+          const lat = this.latitudeColumn.valuesAsNumbers.values[i];
+          if (isJsonNumber(long) && isJsonNumber(lat)) {
+            if (bounds[0] > long) {
+              bounds[0] = long;
+            }
+            if (bounds[1] > lat) {
+              bounds[1] = lat;
+            }
+            if (bounds[2] < long) {
+              bounds[2] = long;
+            }
+            if (bounds[3] < lat) {
+              bounds[3] = lat;
+            }
+          }
+        }
+      }
+
+      // If bbox has no width or height - add crude buffer of .2 degrees
+      if (bounds[0] === bounds[2]) {
+        bounds[0] -= 0.1;
+        bounds[2] += 0.1;
+      }
+
+      if (bounds[1] === bounds[3]) {
+        bounds[1] -= 0.1;
+        bounds[3] += 0.1;
+      }
+
+      if (
+        bounds[0] !== Infinity &&
+        bounds[1] !== Infinity &&
+        bounds[2] !== -Infinity &&
+        bounds[3] !== -Infinity
+      )
+        return {
+          west: bounds[0],
+          south: bounds[1],
+          east: bounds[2],
+          north: bounds[3]
+        };
+    }
   }
 
   /**
