@@ -43,12 +43,7 @@ function EmptyWorkbench(props) {
     <Text large textLight>
       {/* Hardcoded top to 150px for now for very very small screens
           TODO: make it not hardcoded */}
-      <Box
-        column
-        fullWidth
-        justifySpaceBetween
-        
-      >
+      <Box column fullWidth justifySpaceBetween>
         <Box centered column>
           <ResponsiveSpacing />
           <Text large color={props.theme.textLightDimmed}>
