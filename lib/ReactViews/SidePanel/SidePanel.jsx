@@ -47,7 +47,7 @@ function EmptyWorkbench(props) {
         column
         fullWidth
         justifySpaceBetween
-        styledHeight={"calc(100vh - 150px)"}
+        
       >
         <Box centered column>
           <ResponsiveSpacing />
