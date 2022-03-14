@@ -8,7 +8,7 @@ import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTime
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import isReadOnlyArray from "../../../Core/isReadOnlyArray";
-import { JsonObject } from "../../../Core/Json";
+import { isJsonArray, isJsonString, JsonObject } from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";
 import { terriaTheme } from "../../../ReactViews/StandardUserInterface/StandardTheme";
 import {
@@ -22,6 +22,7 @@ import {
 import LegendTraits from "../../../Traits/TraitsClasses/LegendTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import WebMapServiceCatalogItemTraits, {
+  GetFeatureInfoFormat,
   SUPPORTED_CRS_3857,
   SUPPORTED_CRS_4326,
   WebMapServiceAvailableLayerDimensionsTraits,
@@ -111,8 +112,8 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
 
     if (this.catalogItem.uri !== undefined) {
       // Try to extract a layer from the URL
-      const query: any = this.catalogItem.uri.query(true);
-      layers = query.layers;
+      const query: any = this.catalogItem.uri.query(true) ?? {};
+      layers = query.layers ?? query.LAYERS;
     }
 
     if (layers === undefined) {
@@ -123,6 +124,22 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     }
 
     return layers;
+  }
+
+  @computed get tileWidth() {
+    const queryParams: any = this.catalogItem.uri?.query(true) ?? {};
+
+    if (isDefined(queryParams.width ?? queryParams.WIDTH)) {
+      return parseInt(queryParams.width ?? queryParams.WIDTH, 10);
+    }
+  }
+
+  @computed get tileHeight() {
+    const queryParams: any = this.catalogItem.uri?.query(true) ?? {};
+
+    if (isDefined(queryParams.height ?? queryParams.HEIGHT)) {
+      return parseInt(queryParams.height ?? queryParams.HEIGHT, 10);
+    }
   }
 
   /**
@@ -189,9 +206,13 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
         );
         legendUri
           .setQuery("service", "WMS")
-          .setQuery("version", "1.3.0")
+          .setQuery(
+            "version",
+            this.catalogItem.useWmsVersion130 ? "1.3.0" : "1.1.1"
+          )
           .setQuery("request", "GetLegendGraphic")
           .setQuery("format", "image/png")
+          .setQuery("sld_version", "1.1.0")
           .setQuery("layer", layer);
 
         // From OGC — about style property for GetLegendGraphic request:
@@ -281,6 +302,13 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   @computed get crs() {
     // Note order is important here, the first one found will be used
     const supportedCrs = [...SUPPORTED_CRS_3857, ...SUPPORTED_CRS_4326];
+
+    // First check to see if URL has CRS or SRS
+    const queryParams: any = this.catalogItem.uri?.query(true) ?? {};
+    const urlCrs =
+      queryParams.crs ?? queryParams.CRS ?? queryParams.srs ?? queryParams.SRS;
+
+    if (urlCrs && supportedCrs.includes(urlCrs)) return urlCrs;
 
     // If nothing is supported, ask for EPSG:3857, and hope for the best.
     return (
@@ -397,6 +425,13 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
    * This is because, to request a "default" legend we need GetLegendGraphics
    **/
   @computed get styles() {
+    if (this.catalogItem.uri !== undefined) {
+      // Try to extract a styles from the URL
+      const query: any = this.catalogItem.uri.query(true) ?? {};
+      if (isDefined(query.styles ?? query.STYLES))
+        return query.styles ?? query.STYLES;
+    }
+
     if (!this.catalogItem.supportsGetLegendGraphic) {
       return this.catalogItem.availableStyles
         .map(layer => {
@@ -793,9 +828,39 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     return defaultTimes[0];
   }
 
+  /** Prioritize format of GetFeatureInfo:
+   * - JSON
+   * - HTML
+   * - GML
+   * - Plain text
+   *
+   * If no matching format can be found in GetCapabilities, then Cesium will use defaults (see `WebMapServiceImageryProvider.DefaultGetFeatureInfoFormats`)
+   */
+  @computed get getFeatureInfoFormat():
+    | StratumFromTraits<GetFeatureInfoFormat>
+    | undefined {
+    const formats: string | string[] | undefined = this.capabilities.json
+      ?.Capability?.Request?.GetFeatureInfo?.Format;
+
+    const formatsArray = isJsonArray(formats)
+      ? formats
+      : isJsonString(formats)
+      ? [formats]
+      : [];
+
+    if (formatsArray.includes("application/json"))
+      return { format: "application/json", type: "json" };
+    if (formatsArray.includes("text/html"))
+      return { format: "text/html", type: "html" };
+    if (formatsArray.includes("application/vnd.ogc.gml"))
+      return { format: "application/vnd.ogc.gml", type: "xml" };
+    if (formatsArray.includes("text/plain"))
+      return { format: "text/plain", type: "text" };
+  }
+
   @computed get linkedWcsParameters() {
     // Get outputCrs
-    // Note: this will be overriden by `WebCoverageServiceDescribeCoverageStratum` if a better outputCrs is found
+    // Note: this will be overridden by `WebCoverageServiceDescribeCoverageStratum` if a better outputCrs is found
     let outputCrs = this.availableCrs[0];
 
     // Unless it is Web Mercator of course - that would be stupid

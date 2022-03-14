@@ -175,7 +175,8 @@ export class ArcGisPortalStratum extends LoadableStratum(
         const categories = new Map();
 
         portalItemsServerResponse.results.forEach(function(item) {
-          item.categories.forEach(function(category: string, index: number) {
+          item.categories.forEach(function(rawCategory: string, index: number) {
+            const category = rawCategory.trim();
             if (index === 0) {
               item.groupId = category;
             }
