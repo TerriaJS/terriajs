@@ -5,8 +5,10 @@ Change Log
 
 * Fix broken download link for feature info panel charts when no download urls are specified.
 * Fixed parameter names of WPS catalog functions.
+* Hook up `beforeViewerChanged` and `afterViewerChanged` events so they are
+  triggered on viewer change. They are raised only on change between 2D and 3D
+  viewer mode.
 * [The next improvement]
-
 
 #### 8.1.24 - 2022-03-08
 
