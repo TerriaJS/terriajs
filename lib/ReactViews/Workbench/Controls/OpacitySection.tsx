@@ -48,7 +48,7 @@ class OpacitySection extends React.Component<IProps> {
     }
     return (
       <>
-        <Spacing bottom={3} />
+        <Spacing bottom={2} />
         <Box verticalCenter>
           <StyledLabel small htmlFor="opacity">
             {t("workbench.opacity", {

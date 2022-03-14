@@ -5,11 +5,12 @@ import React from "react";
 //@ts-ignore
 import { sortable } from "react-anything-sortable";
 import { WithTranslation, withTranslation } from "react-i18next";
-import styled, { DefaultTheme } from "styled-components";
+import styled, { DefaultTheme, withTheme } from "styled-components";
 import getPath from "../../Core/getPath";
-import isDefined from "../../Core/isDefined";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
+import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
 import CommonStrata from "../../Models/Definition/CommonStrata";
+import { DEFAULT_PLACEMENT } from "../../Models/SelectableDimensions";
 import ViewState from "../../ReactViewModels/ViewState";
 import Box, { BoxSpan } from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
@@ -24,7 +25,6 @@ import ChartItemSelector from "./Controls/ChartItemSelector";
 import ColorScaleRangeSection from "./Controls/ColorScaleRangeSection";
 import DateTimeSelectorSection from "./Controls/DateTimeSelectorSection";
 import DimensionSelectorSection from "./Controls/DimensionSelectorSection";
-import DisplayAsPercentSection from "./Controls/DisplayAsPercentSection";
 import FilterSection from "./Controls/FilterSection";
 import LeftRightSection from "./Controls/LeftRightSection";
 import Legend from "./Controls/Legend";
@@ -34,8 +34,6 @@ import { ScaleWorkbenchInfo } from "./Controls/ScaleWorkbenchInfo";
 import ShortReport from "./Controls/ShortReport";
 import TimerSection from "./Controls/TimerSection";
 import ViewingControls from "./Controls/ViewingControls";
-import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
-import { DEFAULT_PLACEMENT } from "../../Models/SelectableDimensions";
 
 interface IProps extends WithTranslation {
   theme: DefaultTheme;
@@ -84,7 +82,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
 
     return (
       <StyledLi style={this.props.style} className={this.props.className}>
-        <Box fullWidth justifySpaceBetween padded>
+        <Box fullWidth justifySpaceBetween padded styledHeight="38px">
           <Box fullWidth>
             <Box left fullWidth paddedHorizontally centered>
               <DraggableBox
@@ -166,7 +164,12 @@ class WorkbenchItemRaw extends React.Component<IProps> {
         </Box>
         {item.isOpenInWorkbench && (
           <>
-            <Spacing bottom={1} />
+            <Spacing
+              bottom={2}
+              css={`
+                border-top: 1px solid ${this.props.theme.dark};
+              `}
+            />
             <Box column paddedHorizontally={2}>
               <ViewingControls item={item} viewState={this.props.viewState} />
               <OpacitySection item={item} />
@@ -214,9 +217,9 @@ const DraggableBox = styled(Box)`
 const StyledLi = styled(Li)`
   background: ${p => p.theme.darkWithOverlay};
   color: ${p => p.theme.textLight};
-  border-radius: 2px;
+  border-radius: 4px;
   margin-bottom: 5px;
   width: 100%;
 `;
 
-export default sortable(withTranslation()(WorkbenchItemRaw));
+export default sortable(withTranslation()(withTheme(WorkbenchItemRaw)));

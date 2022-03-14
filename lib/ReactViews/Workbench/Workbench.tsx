@@ -64,8 +64,9 @@ class Workbench extends React.Component<IProps> {
           <RawButton
             onClick={this.removeAll}
             css={`
+              display: flex;
+              align-items: center;
               padding: 0 5px;
-              margin-right: 15px;
               svg {
                 vertical-align: middle;
                 padding-right: 4px;
@@ -86,6 +87,8 @@ class Workbench extends React.Component<IProps> {
             <RawButton
               onClick={this.expandAll}
               css={`
+                display: flex;
+                align-items: center;
                 padding-left: 5px;
               `}
             >
@@ -97,6 +100,8 @@ class Workbench extends React.Component<IProps> {
             <RawButton
               onClick={this.collapseAll}
               css={`
+                display: flex;
+                align-items: center;
                 padding-left: 5px;
               `}
             >
