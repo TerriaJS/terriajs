@@ -864,7 +864,7 @@
       "missingUrlTitle": "Nelze načíst FeatureServer",
       "missingUrlMessage": "Nelze načíst koncový bod ArcGis FeatureServer, protože položka katalogu nemá `url`.",
       "invalidServiceTitle": "Neplatná vrstva služby ArcGIS Feature Service",
-      "reachedMaxFeatureLimit": "Varování: Tato vrstva dosáhla limitu funkce FeatureService.",
+      "reachedMaxFeatureLimit": "Varování: Tato vrstva dosáhla limitu funkcí WFS ({{maxFeatures}}).",
       "copyrightText": "Copyright Text",
       "name": "Esri ArcGIS FeatureServer",
       "invalidServiceMessage": "Při volání služby ArcGIS Feature Service došlo k chybě.  Odpověď serveru se nezdá být platnou vrstvou Feature Service."
