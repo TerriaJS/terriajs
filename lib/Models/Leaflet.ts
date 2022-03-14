@@ -55,6 +55,7 @@ import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
+import FeatureInfoMixin from "../ModelMixins/FeatureInfoMixin";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
@@ -605,12 +606,14 @@ export default class Leaflet extends GlobeOrMap {
     const catalogItem = (entity as any)._catalogItem;
 
     if (
+      FeatureInfoMixin.isMixedInto(catalogItem) &&
       typeof catalogItem.getFeaturesFromPickResult === "function" &&
       this.terria.allowFeatureInfoRequests
     ) {
       const result = catalogItem.getFeaturesFromPickResult.bind(catalogItem)(
         undefined,
-        entity
+        entity,
+        (this._pickedFeatures?.features.length || 0) < catalogItem.maxRequests
       );
       if (result && isDefined(this._pickedFeatures)) {
         if (Array.isArray(result)) {
@@ -622,10 +625,13 @@ export default class Leaflet extends GlobeOrMap {
     } else if (isDefined(this._pickedFeatures)) {
       const feature = Feature.fromEntityCollectionOrEntity(entity);
       this._pickedFeatures.features.push(feature);
-
-      if (isDefined(entity) && entity.position) {
-        this._pickedFeatures.pickPosition = (<any>entity.position)._value;
-      }
+    }
+    if (
+      isDefined(this._pickedFeatures) &&
+      isDefined(entity) &&
+      entity.position
+    ) {
+      this._pickedFeatures.pickPosition = (<any>entity.position)._value;
     }
   }
 

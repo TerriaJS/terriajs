@@ -593,7 +593,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         protomapsData = this._imageryProvider.source;
       }
 
-      return new ProtomapsImageryProvider({
+      let provider = new ProtomapsImageryProvider({
         terria: this.terria,
         data: protomapsData,
         // Create paintRules from `stylesWithDefaults` (which applies defaults ontop of StyleTraits)
@@ -679,6 +679,9 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         ]),
         labelRules: []
       });
+
+      provider = this.wrapImageryPickFeatures(provider);
+      return provider;
     }
 
     private async loadCzmlDataSource(
