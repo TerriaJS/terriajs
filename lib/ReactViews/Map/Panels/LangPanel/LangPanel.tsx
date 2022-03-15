@@ -19,7 +19,8 @@ type Props = {
 
 export default (props: Props) => {
   const { t, i18n } = useTranslation();
-
+  document.body.dir = i18n.dir();
+  window.location.reload();
   if (!props.terria.configParameters.languageConfiguration?.languages) {
     return null;
   }
