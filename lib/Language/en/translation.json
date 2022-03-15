@@ -971,7 +971,7 @@
       "unsupportedTypeTitle": "Unknown type",
       "unsupportedTypeMessage": "Could not create unknown model type {{type}}.",
       "unsupportedFileTypeTitle": "Unsupported file type",
-      "unsupportedFileTypeMessage": "This file format is not supported by {{appName}}. Supported file formats include: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>",
+      "unsupportedFileTypeMessage": "This file format is not supported by {{appName}}. Supported file formats include: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li><li>Shapefile (.zip)</li></ul>",
       "unsupportedFileTypeMessageII": "This file format is not supported by {{appName}}. Directly supported file formats include: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>  File formats supported through the online conversion service include: <ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>Possibly other {{linkII}}</li></ul>",
       "getConfirmationMessage": "This file is not directly supported by {{appName}}.\n\nDo you want to try uploading it to the {{appName}} conversion service? This may work for small, zipped Esri Shapefiles or MapInfo TAB files.",
       "readyToUpload": "Ready to upload your file to the {{appName}} conversion service?",
