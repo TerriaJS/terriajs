@@ -59,7 +59,10 @@ import { isJsonObject } from "../Core/Json";
 import { isJson } from "../Core/loadBlob";
 import makeRealPromise from "../Core/makeRealPromise";
 import StandardCssColors from "../Core/StandardCssColors";
-import TerriaError, { networkRequestError } from "../Core/TerriaError";
+import TerriaError, {
+  networkRequestError,
+  TerriaErrorSeverity
+} from "../Core/TerriaError";
 import ProtomapsImageryProvider, {
   GeojsonSource,
   GEOJSON_SOURCE_LAYER_NAME,
@@ -138,13 +141,17 @@ class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
   @computed
   get rectangle() {
     if (this._item._readyData) {
-      const geojsonBbox = bbox(this._item._readyData);
-      return createStratumInstance(RectangleTraits, {
-        west: geojsonBbox[0],
-        south: geojsonBbox[1],
-        east: geojsonBbox[2],
-        north: geojsonBbox[3]
-      });
+      try {
+        const geojsonBbox = bbox(this._item._readyData);
+        return createStratumInstance(RectangleTraits, {
+          west: geojsonBbox[0],
+          south: geojsonBbox[1],
+          east: geojsonBbox[2],
+          north: geojsonBbox[3]
+        });
+      } catch (e) {
+        TerriaError.from(e, "Failed to create `rectangle` for GeoJSON").log();
+      }
     }
   }
 
@@ -375,7 +382,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
      * Errors can be thrown here.
      */
     protected abstract forceLoadGeojsonData(): Promise<
-      FeatureCollectionWithCrs
+      FeatureCollectionWithCrs | undefined
     >;
 
     /** GeojsonMixin has 3 rendering modes:
@@ -396,6 +403,9 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
       try {
         geoJson = await this.forceLoadGeojsonData();
+        if (geoJson === undefined) {
+          return;
+        }
 
         const geoJsonWgs84 = await reprojectToGeographic(
           geoJson,
@@ -769,7 +779,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return toJS(options);
     }
 
-    private async loadGeoJsonDataSource(
+    protected async loadGeoJsonDataSource(
       geoJson: FeatureCollectionWithCrs
     ): Promise<GeoJsonDataSource> {
       /* Style information is applied as follows, in decreasing priority:

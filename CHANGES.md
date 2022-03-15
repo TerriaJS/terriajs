@@ -8,8 +8,20 @@ Change Log
 * Added experimental routing system - there may be breaking changes to this system in subsequent patch releases for a short time. The routes currently include:
   * `/story/:share-id` ➡ loads share JSON from a URL `${configParameters.storyRouteUrlPrefix}${appName}/:share-id` e.g. `https://example.com/stories/TerriaJS%20App/my-story` (must support CORS, at the moment there is no support for proxying)
   * `/catalog/:id` ➡ opens the data catalogue to the specified member (you should set ids manually in your catalog to use this feature)
+* Improve WMS 1.1.1 support
+  * Added `useWmsVersion130` trait - Use WMS version 1.3.0. True by default (unless `url` has `"version=1.1.1"` or `"version=1.1.0"`), if false, then WMS version 1.1.1 will be used.
+  * Added `getFeatureInfoFormat` trait - Format parameter to pass to GetFeatureInfo requests. Defaults to "application/json", "application/vnd.ogc.gml", "text/html" or "text/plain" - depending on GetCapabilities response
+* Add `legendBackgroundColor` to `LegendOwnerTraits` and `backgroundColor` to `LegendTraits`
+* Add `sld_version=1.1.0` to `GetLegendGraphics` requests 
+* Filter `"styles","version","format","srs","crs"` conflicting query parameters from WMS `url`
+* WMS `styles`, `tileWidth`, `tileHeight` and `crs`/`srs` will use value in `url` if it is defined (similar to existing behavior with `layers`)
+* WMS will now show warning if invalid `layers` (eg if the specified `layers` don't exist in `GetCapabilities`)
+* ArcGisFeatureServerCatalogItem can now load more than the maximum feature limit set by the server by making multiple requests, and uses GeojsonMixin
+* Avoid creating duplication in categories in ArcGisPortalCatalogGroup.
+* Fix `CatalogMemberMixin.hasDescription` null bug
+* `TableStyle` now calculates `rectangle` for point based styles
+* Removed references to conversion service which is no longer used in version >=8.0.0.
 * [The next improvement]
-
 
 #### 8.1.24 - 2022-03-08
 

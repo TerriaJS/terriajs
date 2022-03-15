@@ -38,9 +38,8 @@ It is usually a good idea to run another web server, such as [nginx](https://ngi
 
 1. It serves up the static HTML, JavaScript, and CSS that make up the application.
 2. It includes a simple service at `/proxy` that allows TerriaJS to access geospatial data servers that don't support [CORS](../connecting-to-data/cross-origin-resource-sharing.md).  If this service is not available, TerriaJS won't be able to access any datasets that are on other servers and that don't support CORS.
-3. It includes another service at `/convert` that uses [GDAL](http://www.gdal.org/) and OGR to transform otherwise unsupported geospatial vector data (e.g. shapefiles) to GeoJSON for display by the TerriaJS client.  If this service is not available, these data formats will not be supported.  However, all the [formats that TerriaJS supports directly](../connecting-to-data/catalog-items.md) will work just fine.
-4. When configured correctly, it persists blobs of JSON for use in the sharing feature.  If this service is not available, the JSON can be stored in the share URL, instead.  However, this makes for some extremely long URLs.
-5. If configured with `singlePageRouting` options it will serve up index.html for unmatched paths to allow for client side routes to be configured.
+3. When configured correctly, it persists blobs of JSON for use in the sharing feature.  If this service is not available, the JSON can be stored in the share URL, instead.  However, this makes for some extremely long URLs.
+4. If configured with `singlePageRouting` options it will serve up index.html for unmatched paths to allow for client side routes to be configured.
 
 If these limitations are acceptable, you can run your TerriaMap on virtually any web server by simply copying the TerriaMap `wwwroot` onto the server!
 

@@ -32,8 +32,7 @@ export default async function addUserFiles(
         terria,
         viewState,
         file,
-        dataType.value,
-        true
+        dataType.value
       );
       return addUserCatalogMember(terria, item);
     } catch (e) {
