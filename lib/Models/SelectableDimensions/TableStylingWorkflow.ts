@@ -190,11 +190,13 @@ export default class TableStylingWorkflow
         }
       } else if (DIVERGING_SCALES.includes(colorPaletteWithDefault)) {
         this.colorSchemeType = "diverging-continuous";
-        this.getTableStyleTraits(CommonStrata.user)?.color.setTrait(
-          CommonStrata.user,
-          "colorPalette",
-          DEFAULT_DIVERGING
-        );
+        if (!colorPalette) {
+          this.getTableStyleTraits(CommonStrata.user)?.color.setTrait(
+            CommonStrata.user,
+            "colorPalette",
+            DEFAULT_DIVERGING
+          );
+        }
       }
     } else if (colorMap instanceof DiscreteColorMap) {
       {
@@ -214,11 +216,13 @@ export default class TableStylingWorkflow
           }
         } else if (DIVERGING_SCALES.includes(colorPaletteWithDefault)) {
           this.colorSchemeType = "diverging-discrete";
-          this.getTableStyleTraits(CommonStrata.user)?.color.setTrait(
-            CommonStrata.user,
-            "colorPalette",
-            DEFAULT_DIVERGING
-          );
+          if (!colorPalette) {
+            this.getTableStyleTraits(CommonStrata.user)?.color.setTrait(
+              CommonStrata.user,
+              "colorPalette",
+              DEFAULT_DIVERGING
+            );
+          }
         }
       }
     } else if (
