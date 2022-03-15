@@ -9,7 +9,6 @@ import LegendOwnerTraits from "./LegendOwnerTraits";
 
 export default class GltfCatalogItemTraits extends mixTraits(
   AutoRefreshingTraits,
-  LegendOwnerTraits,
   PlaceEditorTraits,
   GltfTraits
 ) {}
