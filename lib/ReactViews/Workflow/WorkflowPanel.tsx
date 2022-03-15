@@ -3,12 +3,12 @@ import { observer } from "mobx-react";
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import ViewState from "../../ReactViewModels/ViewState";
-import { PanelButton } from "./Panel";
-import Portal from "../StandardUserInterface/Portal";
 import Button from "../../Styled/Button";
 import { IconProps, StyledIcon } from "../../Styled/Icon";
 import { addTerriaScrollbarStyles } from "../../Styled/mixins";
 import Text from "../../Styled/Text";
+import Portal from "../StandardUserInterface/Portal";
+import { PanelButton } from "./Panel";
 
 export const WorkflowPanelPortalId = "workflow-panel-portal";
 
@@ -24,6 +24,7 @@ type PropsType = {
   };
 };
 
+/** Wraps component in Portal, adds TitleBar, ErrorBoundary and Footer (PanelButton) */
 const WorkflowPanel: React.FC<PropsType> = observer(props => {
   const viewState = props.viewState;
 
@@ -86,7 +87,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
   render() {
     return this.state.hasError ? (
       <Error>
-        An error occured when running the workflow. Please try re-loading the
+        An error occurred when running the workflow. Please try re-loading the
         app if the error persists.
       </Error>
     ) : (
@@ -139,6 +140,7 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 0;
+  padding-bottom: 4em;
   ${addTerriaScrollbarStyles()}
 `;
 

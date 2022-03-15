@@ -16,7 +16,6 @@ import UrlMixin from "../../../ModelMixins/UrlMixin";
 import GltfCatalogItemTraits from "../../../Traits/TraitsClasses/GltfCatalogItemTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
-import { SelectableDimension } from "../../SelectableDimensions/SelectableDimensions";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure

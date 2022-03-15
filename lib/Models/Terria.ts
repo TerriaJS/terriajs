@@ -482,6 +482,9 @@ export default class Terria {
   @observable
   mapInteractionModeStack: MapInteractionMode[] = [];
 
+  @observable isWorkflowPanelActive = false;
+
+  /** Gets or sets the active SelectableDimensionWorkflow, if defined, then the workflow will be displayed using `WorkflowPanel` */
   @observable
   selectableDimensionWorkflow?: SelectableDimensionWorkflow;
 
@@ -515,7 +518,6 @@ export default class Terria {
   @observable terrainSplitDirection: ImagerySplitDirection =
     ImagerySplitDirection.NONE;
 
-  @observable isWorkflowPanelActive = false;
   @observable depthTestAgainstTerrainEnabled = false;
 
   @observable stories: any[] = [];

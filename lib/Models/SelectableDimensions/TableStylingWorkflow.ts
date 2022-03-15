@@ -18,7 +18,7 @@ import TableMixin from "../../ModelMixins/TableMixin";
 import {
   QualitativeColorSchemeOptionRenderer,
   QuantitativeColorSchemeOptionRenderer
-} from "../../ReactViews/Workflow/OptionRenderers/ColorSchemeOptionRenderer";
+} from "../../ReactViews/SelectableDimensions/ColorSchemeOptionRenderer";
 import Icon from "../../Styled/Icon";
 import {
   DEFAULT_DIVERGING,
@@ -37,10 +37,11 @@ import ViewingControls from "../ViewingControls";
 import {
   SelectableDimensionGroup,
   SelectableDimensionNumeric,
-  SelectableDimensionWorkflowGroup,
   SelectableDimensionText
 } from "./SelectableDimensions";
-import SelectableDimensionWorkflow from "./SelectableDimensionWorkflow";
+import SelectableDimensionWorkflow, {
+  SelectableDimensionWorkflowGroup
+} from "./SelectableDimensionWorkflow";
 import VectorStylingWorkflow from "./VectorStylingWorkflow";
 
 /** The ColorSchemeType is used to change which SelectableDimensions are shown.
@@ -68,6 +69,7 @@ export const ADVANCED_TABLE_COLUMN_TYPES = [
   TableColumnType.time
 ];
 
+/** SelectableDimensionWorkflow to set styling options for TableMixin models */
 export default class TableStylingWorkflow
   implements SelectableDimensionWorkflow {
   static type = "table-styling";
@@ -404,6 +406,11 @@ export default class TableStylingWorkflow
    * - Show "Data type (advanced)" select. This allow user to change column type */
   @observable showAdvancedOptions: boolean = false;
 
+  /** Table Style dimensions:
+   * - Dataset (Table models in workbench)
+   * - Variable (Table style in model)
+   * - TableColumn type (advanced only)
+   */
   @computed get tableStyleSelectableDim(): SelectableDimensionWorkflowGroup {
     return {
       type: "group",
@@ -507,6 +514,7 @@ export default class TableStylingWorkflow
     };
   }
 
+  /** List of color schemes available for given `colorSchemeType` */
   @computed get colorSchemesForType() {
     const type = this.colorSchemeType;
     if (!isDefined(type)) return [];
@@ -521,6 +529,11 @@ export default class TableStylingWorkflow
     return [];
   }
 
+  /** Color scheme dimensions:
+   * - Type (see `this.colorSchemeType`)
+   * - Color scheme (see `this.colorSchemesForType`)
+   * - Number of bins (for discrete)
+   */
   @computed get colorSchemeSelectableDim(): SelectableDimensionWorkflowGroup {
     return {
       type: "group",
@@ -674,6 +687,10 @@ export default class TableStylingWorkflow
     };
   }
 
+  /** Display range dimensions:
+   * - Minimum value
+   * - Maximum value
+   */
   @computed get displayRangeSelectableDim(): SelectableDimensionWorkflowGroup {
     return {
       type: "group",
@@ -791,6 +808,7 @@ export default class TableStylingWorkflow
     };
   }
 
+  /** Groups to show enum "bins" with colors and value */
   @computed get enumColorsSelectableDim(): SelectableDimensionWorkflowGroup {
     return {
       type: "group",
@@ -908,6 +926,11 @@ export default class TableStylingWorkflow
     };
   }
 
+  /** Misc table style color dimensions:
+   * - Region color
+   * - Null color
+   * - Outlier color
+   */
   @computed get additionalColorDimensions(): SelectableDimensionGroup {
     return {
       type: "group",
@@ -965,6 +988,8 @@ export default class TableStylingWorkflow
     };
   }
 
+  /** Advanced region mapping - pulled from TableMixin.regionColumnDimensions and TableMixin.regionProviderDimensions
+   */
   @computed
   get advancedRegionMappingDimensions(): SelectableDimensionWorkflowGroup {
     return {
@@ -978,6 +1003,16 @@ export default class TableStylingWorkflow
     };
   }
 
+  /** Advanced table dimensions:
+   * - Legend title
+   * - Legend ticks
+   * - Legend item titles
+   * - Show disable style option
+   * - Show disable time option
+   * - Enable manual region mapping
+   * - Table Column Title
+   * - Table Column Units
+   */
   @computed
   get advancedTableDimensions(): SelectableDimensionWorkflowGroup[] {
     return [
@@ -1116,6 +1151,7 @@ export default class TableStylingWorkflow
     ];
   }
 
+  /** All of the dimensions! */
   @computed get selectableDimensions(): SelectableDimensionWorkflowGroup[] {
     return filterOutUndefined([
       this.tableStyleSelectableDim,
@@ -1206,6 +1242,7 @@ export default class TableStylingWorkflow
     );
   }
 
+  /** Set enum value and color for specific index in `enumColors` array */
   setEnumColorTrait(
     stratumId: string,
     index: number,

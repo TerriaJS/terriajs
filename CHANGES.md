@@ -17,6 +17,43 @@ Change Log
 * Avoid creating duplication in categories in ArcGisPortalCatalogGroup.
 * Fix `CatalogMemberMixin.hasDescription` null bug
 * `TableStyle` now calculates `rectangle` for point based styles
+* Increase `ForkTsCheckerWebpackPlugin` memoryLimit to 4GB
+* Add `renderInline` option to markdownToHtml/React + TSify files
+* Organise `lib/Map` into folder structure
+* Add `modelDimensionCallLoadMapItems` trait to `CatalogMemberTraits` - if `true` then `loadMapItems()` will be called when dimension values are changed.
+* Add `featureCounts` to `GeoJsonMixin` - this tracks number of GeoJSON Features by type
+* Add `polygon-stroke`, `polyline-stroke` and `marker-stroke` to GeoJSON `StyleTraits` - these are only applied to geojson-vt features (not Cesium Primitives)
+* TableMixin manual region mapping dimensions are now in a `SelectableDimensionGroup`
+* Fix misc font/color styles
+* Create reusable `StyledTextArea` component
+* `Collapsible` improvements:
+  * Add `"checkbox"` `btnStyle`
+  * `onToggle` can now stop event propagation
+  * `title` now supports custom markdown
+* Add `rightIcon` and `textLight` props to `Button`
+* New `addTerriaScrollbarStyles` scss mixin
+* `TableAutomaticStylesStratum` now creates `styles` for every column - but will hide columns depending on `TableColumnType`
+* `TableAutomaticStylesStratum.numberFormatOptions` is now `TableStyle.numberFormatOptions`
+* Implement `TableColorStyleTraits.legendTicks` - this will determine number of ticks for `ContinuousColorMap` legends
+* `DiscreteColorMap` will now use `minimumValue`/`maximumValue` to calculate bins
+* `SelectableDimensions` improvements
+  * Add `color`, `text`, `numeric` and `button` types
+  * Add `onToggle` function to `SelectableDimensionGroup`
+  * `Group` and `CheckboxGroup` now share the same UI and use `Collapsible`
+  * `enum` (previously `select`) now uses `react-select` component
+  * `color` uses `react-color` component
+  * `DimensionSelectorSection` / `DimensionSelector*` are now named the same as the model - eg `SelectableDimension`
+* Create `Portal`, `PortalContainer`,`SidePanelContainer` and `WorkflowPanelContainer`. There are used by `WorkflowPanel`.
+* Create `WorkflowPanel` - a basic building block for creating Workflows that sit on top of the workbench
+  * It has three reusable components, `Panel`, `PanelButton`, `PanelMenu`
+* Create `selectableDimensionWorkflow` - This uses `WorkflowPanel` to show `SelectableDimensions` in a separate side panel.
+  * `TableStylingWorkflow` - set styling options for TableMixin models
+  * `VectorStylingWorkflow` - this extends `TableStylingWorkflow` - used to set styling options for GeoJsonMixin models (for Protomaps/geojson-vt only)
+* Create `viewingControls` concept. This can be used to add menu items to workbench items menu (eg "Remove", "Export", ...)
+  * TSXify `ViewingControls`
+* Add temporary `legendButton` property - this is used to show a "Custom" button above the Legend if custom styling has been applied
+  * This uses new `TableStyle.isCustom` property
+* Move workbench item controls from `WorkbenchItem.jsx` `WorkbenchItemControls.tsx`
 * [The next improvement]
 
 #### 8.1.24 - 2022-03-08

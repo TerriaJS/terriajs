@@ -186,6 +186,8 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
                 this.terria,
                 `Failed to update catalog item ${getName(this)}`
               );
+
+              // If no error and modelDimensionCallLoadMapItems is true, then call loadMapItems
               if (
                 !result.error &&
                 this.modelDimensionCallLoadMapItems &&

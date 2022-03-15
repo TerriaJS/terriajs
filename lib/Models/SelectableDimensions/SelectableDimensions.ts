@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import isDefined from "../../Core/isDefined";
+
 /** `Dimension` (and child interfaces - eg `EnumDimension`, `NumericalDimension`, ...) are Trait/JSON friendly interfaces. They are used as base to the `SelectableDimension` interfaces.
  *
  * This is useful because it means we can directly use Traits to create SelectableDimensions - for example see `EnumDimensionTraits` in `lib/Traits/TraitsClasses/DimensionTraits.ts`
@@ -79,6 +80,7 @@ export interface SelectableDimensionEnum
   extends SelectableDimensionBase<string>,
     EnumDimension {
   type?: undefined | "select";
+  /** Render ReactNodes for each option - instead of plain label */
   optionRenderer?: OptionRenderer;
 }
 
@@ -87,13 +89,14 @@ export const MAX_SELECTABLE_DIMENSION_OPTIONS = 1000;
 
 export interface SelectableDimensionCheckbox
   extends SelectableDimensionBase<"true" | "false">,
-    EnumDimension {
+    EnumDimension<"true" | "false"> {
   type: "checkbox";
 }
 
 export interface SelectableDimensionCheckboxGroup
   extends SelectableDimensionBase<"true" | "false">,
-    EnumDimension {
+    Omit<SelectableDimensionGroup, "type">,
+    EnumDimension<"true" | "false"> {
   type: "checkbox-group";
 
   // We don't allow nested groups for now to keep the UI simple
@@ -146,16 +149,6 @@ export interface SelectableDimensionGroup
     SelectableDimension,
     SelectableDimensionGroup
   >[];
-}
-
-/** This is essentially the same as `SelectableDimensionGroup`, but allows two levels of nested `SelectableDimensionGroup`, instead of one */
-export interface SelectableDimensionWorkflowGroup
-  extends Omit<SelectableDimensionGroup, "selectableDimensions"> {
-  /** Group is **open** by default */
-  isOpen?: boolean;
-
-  // Here we allow two levels of nested groups
-  readonly selectableDimensions: SelectableDimension[];
 }
 
 export type SelectableDimension =

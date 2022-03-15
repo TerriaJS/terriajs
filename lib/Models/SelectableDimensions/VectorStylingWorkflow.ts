@@ -2,10 +2,15 @@ import { computed, action } from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import GeoJsonMixin, { parseMarkerSize } from "../../ModelMixins/GeojsonMixin";
 import Icon from "../../Styled/Icon";
-import { SelectableDimensionWorkflowGroup } from "./SelectableDimensions";
-import SelectableDimensionWorkflow from "./SelectableDimensionWorkflow";
+import SelectableDimensionWorkflow, {
+  SelectableDimensionWorkflowGroup
+} from "./SelectableDimensionWorkflow";
 import TableStylingWorkflow from "./TableStylingWorkflow";
 import CommonStrata from "../Definition/CommonStrata";
+
+/** SelectableDimensionWorkflow to set styling options for GeoJson models (only Protomaps/geojson-vt).
+ * This also includes all dimensions from TableStylingWorkflow
+ */
 
 export default class VectorStylingWorkflow
   implements SelectableDimensionWorkflow {
@@ -39,6 +44,11 @@ export default class VectorStylingWorkflow
     return this.tableStylingWorkflow.menu;
   }
 
+  /** Point dimensions:
+   * - Marker size
+   * - Marker stroke color
+   * - Marker stroke width
+   */
   @computed get pointSelectableDimension(): SelectableDimensionWorkflowGroup {
     return {
       type: "group",
@@ -82,6 +92,9 @@ export default class VectorStylingWorkflow
     };
   }
 
+  /** Line dimensions:
+   * - Stroke width
+   */
   @computed get lineSelectableDimension(): SelectableDimensionWorkflowGroup {
     return {
       type: "group",
@@ -102,6 +115,10 @@ export default class VectorStylingWorkflow
     };
   }
 
+  /** Polygon dimensions:
+   * - Stroke color
+   * - Stroke width
+   */
   @computed get polygonSelectableDimension(): SelectableDimensionWorkflowGroup {
     return {
       type: "group",
@@ -133,6 +150,10 @@ export default class VectorStylingWorkflow
     };
   }
 
+  /** All dimensions:
+   * - Include all dimensions from TableStylingWorkflow
+   * - Include point, line and polygon dimensions if those features exist in the item
+   */
   @computed get selectableDimensions(): SelectableDimensionWorkflowGroup[] {
     return filterOutUndefined([
       ...this.tableStylingWorkflow.selectableDimensions,

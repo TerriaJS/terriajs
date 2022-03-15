@@ -9,7 +9,7 @@ import WebMapServiceCatalogItemTraits from "../../../Traits/TraitsClasses/WebMap
 import ChartItemSelector from "./ChartItemSelector";
 import ColorScaleRangeSection from "./ColorScaleRangeSection";
 import DateTimeSelectorSection from "./DateTimeSelectorSection";
-import DimensionSelectorSection from "./DimensionSelectorSection";
+import DimensionSelectorSection from "./SelectableDimensionSection";
 import FilterSection from "./FilterSection";
 import Legend from "./Legend";
 import OpacitySection from "./OpacitySection";
@@ -73,6 +73,7 @@ export const hideAllControls: Complete<WorkbenchControls> = {
 
 const WorkbenchItemControls: React.FC<WorkbenchItemControlsProps> = observer(
   ({ item, viewState, controls: controlsWithoutDefaults }) => {
+    // Apply controls from props on top of defaultControls
     const controls = { ...defaultControls, ...controlsWithoutDefaults };
 
     return (

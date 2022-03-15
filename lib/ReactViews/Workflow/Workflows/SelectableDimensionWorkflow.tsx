@@ -5,17 +5,22 @@ import { useTranslation } from "react-i18next";
 import { getName } from "../../../ModelMixins/CatalogMemberMixin";
 import { filterSelectableDimensions } from "../../../Models/SelectableDimensions/SelectableDimensions";
 import ViewState from "../../../ReactViewModels/ViewState";
-import WorkflowPanel from "../WorkflowPanel";
-import { Container, Panel, PanelBody, PanelMenu } from "../Panel";
-import { DimensionSelector } from "../../Workbench/Controls/DimensionSelectorSection";
+import SelectableDimension from "../../SelectableDimensions/SelectableDimension";
 import WorkbenchItemControls, {
   hideAllControls
 } from "../../Workbench/Controls/WorkbenchItemControls";
+import { Panel } from "../Panel";
+import { PanelMenu } from "../PanelMenu";
+import WorkflowPanel from "../WorkflowPanel";
 
 export type PropsType = {
   viewState: ViewState;
 };
 
+/** Two main components:
+ * - Title panel with `title`, item `WorkbenchItemControls` and menu
+ * - Panel for each top-level selectable dimension
+ */
 const SelectableDimensionWorkflow: React.FC<PropsType> = observer(
   ({ viewState }: PropsType) => {
     const terria = viewState.terria;
@@ -32,55 +37,51 @@ const SelectableDimensionWorkflow: React.FC<PropsType> = observer(
         })}
         footer={terria.selectableDimensionWorkflow.footer}
       >
-        <Container>
-          <Panel
-            title={getName(terria.selectableDimensionWorkflow.item)}
-            menuComponent={
-              terria.selectableDimensionWorkflow.menu ? (
-                <PanelMenu {...terria.selectableDimensionWorkflow.menu} />
-              ) : (
-                undefined
-              )
-            }
-          >
-            <PanelBody>
-              <WorkbenchItemControls
-                item={terria.selectableDimensionWorkflow.item}
-                viewState={viewState}
-                controls={{
-                  ...hideAllControls,
-                  opacity: true,
-                  timer: true,
-                  dateTime: true,
-                  shortReport: true
-                }}
-              />
-            </PanelBody>
-          </Panel>
-          {terria.selectableDimensionWorkflow.selectableDimensions.map(
-            (groupDim, i) => (
-              <Panel
-                title={groupDim.name ?? groupDim.id}
-                key={groupDim.name ?? groupDim.id}
-                isOpen={groupDim.isOpen ?? true}
-                onToggle={groupDim.onToggle}
-                collapsible={true}
-              >
-                <PanelBody>
-                  {filterSelectableDimensions()(
-                    groupDim.selectableDimensions
-                  ).map(childDim => (
-                    <DimensionSelector
-                      key={`${terria.selectableDimensionWorkflow?.item.uniqueId}-${childDim.id}-fragment`}
-                      id={`${terria.selectableDimensionWorkflow?.item.uniqueId}-${childDim.id}`}
-                      dim={childDim}
-                    />
-                  ))}
-                </PanelBody>
-              </Panel>
+        {/* Render first panel with `title`, item `WorkbenchItemControls` and menu */}
+        <Panel
+          title={getName(terria.selectableDimensionWorkflow.item)}
+          menuComponent={
+            terria.selectableDimensionWorkflow.menu ? (
+              <PanelMenu {...terria.selectableDimensionWorkflow.menu} />
+            ) : (
+              undefined
             )
-          )}
-        </Container>
+          }
+        >
+          <WorkbenchItemControls
+            item={terria.selectableDimensionWorkflow.item}
+            viewState={viewState}
+            controls={{
+              ...hideAllControls,
+              opacity: true,
+              timer: true,
+              dateTime: true,
+              shortReport: true
+            }}
+          />
+        </Panel>
+        {/* Render Panel for each top-level selectable dimension */}
+        {terria.selectableDimensionWorkflow.selectableDimensions.map(
+          (groupDim, i) => (
+            <Panel
+              title={groupDim.name ?? groupDim.id}
+              key={groupDim.name ?? groupDim.id}
+              isOpen={groupDim.isOpen ?? true}
+              onToggle={groupDim.onToggle}
+              collapsible={true}
+            >
+              {filterSelectableDimensions()(groupDim.selectableDimensions).map(
+                childDim => (
+                  <SelectableDimension
+                    key={`${terria.selectableDimensionWorkflow?.item.uniqueId}-${childDim.id}-fragment`}
+                    id={`${terria.selectableDimensionWorkflow?.item.uniqueId}-${childDim.id}`}
+                    dim={childDim}
+                  />
+                )
+              )}
+            </Panel>
+          )
+        )}
       </WorkflowPanel>
     ) : null;
   }

@@ -12,6 +12,7 @@ export interface IButtonProps {
   fullHeight?: boolean;
   styledWidth?: string;
   activeStyles?: boolean;
+  textLight?: boolean;
 }
 
 interface IStyledButtonProps extends IButtonProps {
@@ -155,6 +156,8 @@ export const RawButton = styled.button<IButtonProps>`
   ${props => props.fullWidth && `width: 100%;`}
   ${props => props.fullHeight && `height: 100%;`}
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
+
+  ${props => (props.textLight ? `color: ${props.theme.textLight}` : ``)}
 `;
 
 interface ButtonProps extends IStyledButtonProps {

@@ -59,10 +59,7 @@ import { isJsonObject } from "../Core/Json";
 import { isJson } from "../Core/loadBlob";
 import makeRealPromise from "../Core/makeRealPromise";
 import StandardCssColors from "../Core/StandardCssColors";
-import TerriaError, {
-  networkRequestError,
-  TerriaErrorSeverity
-} from "../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../Core/TerriaError";
 import ProtomapsImageryProvider, {
   GeojsonSource,
   GEOJSON_SOURCE_LAYER_NAME,
