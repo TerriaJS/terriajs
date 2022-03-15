@@ -33,6 +33,14 @@
   @include transform-origin(50%, top);
 }
 
+.dropdown-inner {
+  [dir="rtl"] & {
+    width: $share-panel-width;
+    @include transform-origin(50%, top);
+    right: -300px !important;
+  }
+}
+
 .btn--catalogShare {
   font-size: $font-size-data-preview;
   background: transparent;
