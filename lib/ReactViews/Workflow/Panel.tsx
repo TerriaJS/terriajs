@@ -84,7 +84,7 @@ export const PanelButton: React.FC<{ onClick: () => void; title: string }> = ({
 
 const Wrapper = styled.div`
   background-color: ${p => p.theme.darkWithOverlay};
-  margin: 10px 5px;
+  margin: 10px 5px 0px 5px;
   border-radius: 5px;
   border: 1px solid rgba(255, 255, 255, 0.15);
 `;

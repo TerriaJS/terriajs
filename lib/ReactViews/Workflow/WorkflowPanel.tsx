@@ -105,6 +105,7 @@ const Container = styled.div`
   height: 100vh;
   max-width: ${p => p.theme.workflowPanelWidth}px;
   box-sizing: border-box;
+  padding: 0 0 5px;
 `;
 
 const TitleBar = styled.div`
