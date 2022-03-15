@@ -8,10 +8,7 @@ import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 
 export default class GltfCatalogItemTraits extends mixTraits(
-  UrlTraits,
-  MappableTraits,
   AutoRefreshingTraits,
-  CatalogMemberTraits,
   LegendOwnerTraits,
   PlaceEditorTraits,
   GltfTraits
