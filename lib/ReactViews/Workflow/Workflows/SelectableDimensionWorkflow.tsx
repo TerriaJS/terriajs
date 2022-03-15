@@ -2,15 +2,15 @@ import { action } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { getName } from "../../ModelMixins/CatalogMemberMixin";
-import { filterSelectableDimensions } from "../../Models/SelectableDimensions/SelectableDimensions";
-import ViewState from "../../ReactViewModels/ViewState";
-import WorkflowPanel from "../../Styled/WorkflowPanel";
-import { Container, Panel, PanelBody, PanelMenu } from "../Compare/Panel";
-import { DimensionSelector } from "../Workbench/Controls/DimensionSelectorSection";
+import { getName } from "../../../ModelMixins/CatalogMemberMixin";
+import { filterSelectableDimensions } from "../../../Models/SelectableDimensions/SelectableDimensions";
+import ViewState from "../../../ReactViewModels/ViewState";
+import WorkflowPanel from "../WorkflowPanel";
+import { Container, Panel, PanelBody, PanelMenu } from "../Panel";
+import { DimensionSelector } from "../../Workbench/Controls/DimensionSelectorSection";
 import WorkbenchItemControls, {
   hideAllControls
-} from "../Workbench/Controls/WorkbenchItemControls";
+} from "../../Workbench/Controls/WorkbenchItemControls";
 
 export type PropsType = {
   viewState: ViewState;

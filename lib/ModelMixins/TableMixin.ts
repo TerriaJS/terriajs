@@ -22,7 +22,8 @@ import Model from "../Models/Definition/Model";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
   SelectableDimension,
-  SelectableDimensionEnum
+  SelectableDimensionEnum,
+  SelectableDimensionGroup
 } from "../Models/SelectableDimensions/SelectableDimensions";
 import TableStylingWorkflow from "../Models/SelectableDimensions/TableStylingWorkflow";
 import ViewingControls, { ViewingControl } from "../Models/ViewingControls";
@@ -468,10 +469,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         this.timeDisableDimension,
         ...super.selectableDimensions,
         this.enableManualRegionMapping
-          ? this.regionColumnDimensions
-          : undefined,
-        this.enableManualRegionMapping
-          ? this.regionProviderDimensions
+          ? this.regionMappingDimensions
           : undefined,
         this.styleDimensions,
         this.outlierFilterDimension
@@ -565,7 +563,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      * {@link TableTraits#enableManualRegionMapping} must be enabled.
      */
     @computed
-    get regionColumnDimensions(): SelectableDimension | undefined {
+    get regionColumnDimensions(): SelectableDimensionEnum | undefined {
       if (!Array.isArray(this.regionProviderList?.regionProviders)) {
         return;
       }
@@ -586,6 +584,17 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         ) => {
           this.defaultStyle.setTrait(stratumId, "regionColumn", regionCol);
         }
+      };
+    }
+
+    @computed get regionMappingDimensions(): SelectableDimensionGroup {
+      return {
+        id: "Manual Region Mapping",
+        type: "group",
+        selectableDimensions: filterOutUndefined([
+          this.regionColumnDimensions,
+          this.regionProviderDimensions
+        ])
       };
     }
 

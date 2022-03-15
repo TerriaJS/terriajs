@@ -1,5 +1,6 @@
 import { observer } from "mobx-react";
 import React from "react";
+import { Complete } from "../../../Core/TypeModifiers";
 import hasTraits from "../../../Models/Definition/hasTraits";
 import { BaseModel } from "../../../Models/Definition/Model";
 import { DEFAULT_PLACEMENT } from "../../../Models/SelectableDimensions/SelectableDimensions";
@@ -17,7 +18,6 @@ import { ScaleWorkbenchInfo } from "./ScaleWorkbenchInfo";
 import ShortReport from "./ShortReport";
 import TimerSection from "./TimerSection";
 import ViewingControls from "./ViewingControls";
-import { Complete } from "../../../Core/TypeModifiers";
 
 type WorkbenchControls = {
   viewingControls?: boolean;

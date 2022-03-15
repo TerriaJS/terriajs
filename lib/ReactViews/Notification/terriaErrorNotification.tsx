@@ -93,7 +93,7 @@ export const terriaErrorNotification = (error: TerriaError) => (
       : [error.originalError];
   }
 
-  // We only show FeedbankLink if the error message doesn't include the <feedbacklink> custom component (so we don't get duplicates)
+  // We only show FeedbackLink if the error message doesn't include the <feedbacklink> custom component (so we don't get duplicates)
   const includesFeedbackLink = error.highestImportanceError.message.includes(
     `<${FeedbackLinkCustomComponent.componentName}`
   );

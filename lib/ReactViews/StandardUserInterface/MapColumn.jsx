@@ -1,25 +1,22 @@
-import React from "react";
+import classNames from "classnames";
 import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
+import { observer } from "mobx-react";
 import "mutationobserver-shim";
-
-import TerriaViewerWrapper from "../Map/TerriaViewerWrapper";
-import DistanceLegend from "../Map/Legend/DistanceLegend";
-// import FeedbackButton from "../Feedback/FeedbackButton";
-import LocationBar from "../Map/Legend/LocationBar";
-import MapNavigation from "../Map/Navigation/MapNavigation";
-import MenuBar from "../Map/MenuBar";
-import MapDataCount from "../BottomDock/MapDataCount";
-// import defined from "terriajs-cesium/Source/Core/defined";
+import PropTypes from "prop-types";
+import React from "react";
+import { withTranslation } from "react-i18next";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import BottomDock from "../BottomDock/BottomDock";
-import classNames from "classnames";
-import { withTranslation } from "react-i18next";
-import Toast from "./Toast";
 import Loader from "../Loader";
-import Styles from "./map-column.scss";
-import { observer } from "mobx-react";
+import BottomLeftBar from "../Map/BottomLeftBar/BottomLeftBar";
+import DistanceLegend from "../Map/Legend/DistanceLegend";
+import LocationBar from "../Map/Legend/LocationBar";
+import MenuBar from "../Map/MenuBar";
+import MapNavigation from "../Map/Navigation/MapNavigation";
+import TerriaViewerWrapper from "../Map/TerriaViewerWrapper";
 import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
+import Styles from "./map-column.scss";
+import Toast from "./Toast";
 
 const isIE = FeatureDetection.isInternetExplorer();
 const chromeVersion = FeatureDetection.chromeVersion();
@@ -147,12 +144,9 @@ const MapColumn = observer(
                 />
               </div>
               <If condition={!this.props.viewState.hideMapUi}>
-                <MapDataCount
+                <BottomLeftBar
                   terria={this.props.terria}
                   viewState={this.props.viewState}
-                  elementConfig={this.props.terria.elements.get(
-                    "map-data-count"
-                  )}
                 />
                 <SlideUpFadeIn isVisible={this.props.viewState.isMapZooming}>
                   <Toast>

@@ -1,8 +1,8 @@
 import React from "react";
 import TestRenderer, { act, ReactTestRenderer } from "react-test-renderer";
-import Terria from "../../lib/Models/Terria";
-import ViewState from "../../lib/ReactViewModels/ViewState";
-import WorkflowPanel from "../../lib/Styled/WorkflowPanel";
+import Terria from "../../../lib/Models/Terria";
+import ViewState from "../../../lib/ReactViewModels/ViewState";
+import WorkflowPanel from "../../../lib/ReactViews/Workflow/WorkflowPanel";
 
 describe("WorkflowPanel", function() {
   let terria: Terria;

@@ -2,15 +2,15 @@ import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import ViewState from "../ReactViewModels/ViewState";
-import { Title as PanelTitle, PanelButton } from "../ReactViews/Compare/Panel";
-import Portal from "../ReactViews/StandardUserInterface/Portal";
-import Button, { RawButton } from "./Button";
-import { IconProps, StyledIcon } from "./Icon";
-import { addTerriaScrollbarStyles } from "./mixins";
-import Text from "./Text";
+import ViewState from "../../ReactViewModels/ViewState";
+import { PanelButton } from "./Panel";
+import Portal from "../StandardUserInterface/Portal";
+import Button from "../../Styled/Button";
+import { IconProps, StyledIcon } from "../../Styled/Icon";
+import { addTerriaScrollbarStyles } from "../../Styled/mixins";
+import Text from "../../Styled/Text";
 
-export const WorkflowPanelPortalId = "worfklow-panel-portal";
+export const WorkflowPanelPortalId = "workflow-panel-portal";
 
 type PropsType = {
   viewState: ViewState;

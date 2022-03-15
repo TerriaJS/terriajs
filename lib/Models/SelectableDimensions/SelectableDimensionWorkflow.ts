@@ -1,4 +1,4 @@
-import { PanelMenuProps } from "../../ReactViews/Compare/Panel";
+import { PanelMenuProps } from "../../ReactViews/Workflow/Panel";
 import { IconProps } from "../../Styled/Icon";
 import { BaseModel } from "../Definition/Model";
 import { SelectableDimensionWorkflowGroup } from "./SelectableDimensions";

@@ -132,6 +132,10 @@ export const RawButton = styled.button<IButtonProps>`
   border: 0;
   background-color: transparent;
 
+  &:hover {
+    cursor: pointer;
+  }
+
   ${props =>
     props.activeStyles &&
     `

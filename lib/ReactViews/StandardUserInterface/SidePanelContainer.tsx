@@ -27,7 +27,7 @@ const SidePanelContainer = styled.div.attrs<PropsType>(({ viewState }) => ({
   /* slide in/out animation */
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  visibility: ${p => (p.show ? "visibile" : "hidden")};
+  visibility: ${p => (p.show ? "visible" : "hidden")};
   opacity: ${p => (p.show ? 1 : 0)};
   margin-left: ${p => (p.show ? "0px" : `-${p.theme.workbenchWidth}px`)};
 `;

@@ -41,7 +41,6 @@ import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import SelectableDimensions, {
-  SelectableDimension,
   SelectableDimensionEnum
 } from "../../SelectableDimensions/SelectableDimensions";
 import Terria from "../../Terria";

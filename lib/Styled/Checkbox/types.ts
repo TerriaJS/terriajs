@@ -43,7 +43,7 @@ export type ICheckboxProps = {
   textProps?: ITextProps;
 
   /**
-   * Accepting className lets allows the Checbox component to be extended using
+   * Accepting className lets allows the Checkbox component to be extended using
    * styled components.
    */
   className?: string;

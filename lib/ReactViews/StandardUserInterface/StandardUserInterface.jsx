@@ -9,7 +9,6 @@ import { withTranslation } from "react-i18next";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
 import arrayContains from "../../Core/arrayContains";
-import SelectableDimensionWorkflow from "../Workflows/SelectableDimensionWorkflow";
 import Disclaimer from "../Disclaimer";
 import DragDropFile from "../DragDropFile";
 import ExplorerWindow from "../ExplorerWindow/ExplorerWindow";
@@ -31,15 +30,16 @@ import SidePanel from "../SidePanel/SidePanel";
 import Tool from "../Tools/Tool";
 import TourPortal from "../Tour/TourPortal";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
+import SelectableDimensionWorkflow from "../Workflow/Workflows/SelectableDimensionWorkflow";
 import DragDropNotification from "./../DragDropNotification";
 import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 import StoryPanel from "./../Story/StoryPanel/StoryPanel";
 import MapColumn from "./MapColumn";
 import processCustomElements from "./processCustomElements";
+import SidePanelContainer from "./SidePanelContainer";
 import Styles from "./standard-user-interface.scss";
 import { terriaTheme } from "./StandardTheme";
-import SidePanelContainer from "./SidePanelContainer";
 import WorkflowPanelContainer from "./WorkflowPanelContainer";
 
 export const showStoryPrompt = (viewState, terria) => {
@@ -49,7 +49,9 @@ export const showStoryPrompt = (viewState, terria) => {
     viewState.toggleFeaturePrompt("story", true);
 };
 const GlobalTerriaStyles = createGlobalStyle`
-  ${p => p.theme.fontImports ?? ""}
+  body {
+    font-family: ${p => p.theme.fontBase}
+  }
 
   // Theme-ify sass classes until they are removed
 
@@ -117,7 +119,7 @@ const GlobalTerriaStyles = createGlobalStyle`
     }
   `}
 `;
-const animationDuration = 250;
+export const animationDuration = 250;
 /** blah */
 const StandardUserInterface = observer(
   createReactClass({

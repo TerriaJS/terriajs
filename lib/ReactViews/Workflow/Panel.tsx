@@ -75,7 +75,12 @@ export const PanelButton: React.FC<{ onClick: () => void; title: string }> = ({
   title
 }) => (
   <Wrapper>
-    <CollapsibleTitleBar onClick={onClick} fullWidth isOpen={false}>
+    <CollapsibleTitleBar
+      onClick={onClick}
+      fullWidth
+      isOpen={false}
+      activeStyles
+    >
       <Title css={{ textAlign: "center" }}>{title}</Title>
     </CollapsibleTitleBar>
   </Wrapper>

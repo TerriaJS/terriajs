@@ -527,7 +527,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   @computed get availableFields() {
     if (!this.selectAllFields)
       return createStratumInstance(EnumDimensionTraits, {
-        id: "available-fieds",
+        id: "available-fields",
         name: "Fields",
         selectedId: this.catalogItem.colorFieldName,
         options: this.usefulFields.map(f => ({

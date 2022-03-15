@@ -14,7 +14,6 @@ import {
 import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
 import getPath from "../../../Core/getPath";
 import isDefined from "../../../Core/isDefined";
-import { isJsonObject } from "../../../Core/Json";
 import CatalogMemberMixin, {
   getName
 } from "../../../ModelMixins/CatalogMemberMixin";
@@ -28,7 +27,7 @@ import addUserCatalogMember from "../../../Models/Catalog/addUserCatalogMember";
 import SplitItemReference from "../../../Models/Catalog/CatalogReferences/SplitItemReference";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import hasTraits from "../../../Models/Definition/hasTraits";
-import { BaseModel } from "../../../Models/Definition/Model";
+import Model, { BaseModel } from "../../../Models/Definition/Model";
 import getAncestors from "../../../Models/getAncestors";
 import { default as ViewingControlsModel } from "../../../Models/ViewingControls";
 import ViewState from "../../../ReactViewModels/ViewState";
@@ -36,6 +35,7 @@ import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../../Styled/Icon";
+import { VectorTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
 import { exportData } from "../../Preview/ExportData";
 import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
@@ -140,9 +140,8 @@ class ViewingControls extends React.Component<
     if (!MappableMixin.isMixedInto(item)) return;
 
     let zoomToView: CameraView | Rectangle | MappableMixin.Instance = item;
-    function vectorToJson(vector: unknown) {
+    function vectorToJson(vector: Model<VectorTraits>) {
       if (
-        isJsonObject(vector) &&
         typeof vector?.x === "number" &&
         typeof vector?.y === "number" &&
         typeof vector?.z === "number"
@@ -166,8 +165,7 @@ class ViewingControls extends React.Component<
     if (
       isDefined(item.idealZoom?.lookAt?.targetLongitude) &&
       isDefined(item.idealZoom?.lookAt?.targetLatitude) &&
-      isDefined(item.idealZoom?.lookAt?.range) &&
-      item.idealZoom?.lookAt?.range >= 0
+      (item.idealZoom?.lookAt?.range ?? 0) >= 0
     ) {
       // No value checking here. Improper values can lead to unexpected results.
       const lookAt = {

@@ -1,5 +1,3 @@
-"use strict";
-
 import i18next from "i18next";
 import { debounce } from "lodash-es";
 import { action, runInAction } from "mobx";
@@ -25,11 +23,13 @@ import SelectableDimensions, {
   SelectableDimension,
   SelectableDimensionButton,
   SelectableDimensionCheckbox,
+  SelectableDimensionCheckboxGroup,
   SelectableDimensionColor,
   SelectableDimensionEnum,
   SelectableDimensionGroup,
   SelectableDimensionNumeric,
-  SelectableDimensionText
+  SelectableDimensionText,
+  isCheckboxGroup
 } from "../../../Models/SelectableDimensions/SelectableDimensions";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
@@ -98,7 +98,9 @@ export const DimensionSelector: React.FC<{
       ) : null}
       {isCheckbox(dim) && <DimensionSelectorCheckbox id={id} dim={dim} />}
       {isEnum(dim) && <DimensionSelectorSelect id={id} dim={dim} />}
-      {isGroup(dim) && <DimensionSelectorGroup id={id} dim={dim} />}
+      {(isGroup(dim) || isCheckboxGroup(dim)) && (
+        <DimensionSelectorGroup id={id} dim={dim} />
+      )}
       {isNumeric(dim) && <DimensionSelectorNumeric id={id} dim={dim} />}
       {isText(dim) && <DimensionSelectorText id={id} dim={dim} />}
       {isButton(dim) && <DimensionSelectorButton id={id} dim={dim} />}
@@ -180,32 +182,46 @@ export const DimensionSelectorCheckbox: React.FC<{
 };
 
 /**
- * Component to render a SelectableDimensionGroup.
+ * Component to render a SelectableDimensionGroup or DimensionSelectorCheckboxGroup.
  */
 export const DimensionSelectorGroup: React.FC<{
   id: string;
-  dim: SelectableDimensionGroup;
+  dim: SelectableDimensionGroup | SelectableDimensionCheckboxGroup;
 }> = ({ id, dim }) => {
   return (
     <Collapsible
-      title={dim.name ?? dim.id ?? ""}
-      btnRight
+      title={
+        dim.type === "group"
+          ? dim.name ?? dim.id ?? ""
+          : dim.options?.find(opt => opt.id === dim.selectedId)?.name ??
+            (dim.selectedId === "true" ? "Enabled" : "Disabled")
+      }
       bodyBoxProps={{
         displayInlineBlock: true,
         fullWidth: true
       }}
-      bodyTextProps={{ medium: true }}
-      isOpen={dim.isOpen}
-      onToggle={dim.onToggle}
+      bodyTextProps={{ large: true }}
+      isOpen={dim.type === "group" ? dim.isOpen : dim.selectedId === "true"}
+      onToggle={
+        dim.type === "group"
+          ? dim.onToggle
+          : isOpen =>
+              dim.setDimensionValue(
+                CommonStrata.user,
+                isOpen ? "true" : "false"
+              )
+      }
+      btnStyle={dim.type === "checkbox-group" ? "checkbox" : undefined}
+      btnRight={dim.type === "group"}
     >
-      {/* recursively render nested dimensions */}
-      {filterSelectableDimensions()(dim.selectableDimensions).map(nestedDim => (
-        <DimensionSelector
-          id={`${id}-${nestedDim.id}`}
-          dim={nestedDim}
-          key={`${id}-${nestedDim.id}`}
-        />
-      ))}
+      <Box displayInlineBlock fullWidth styledPadding="5px 0 0 20px">
+        {/* recursively render nested dimensions */}
+        {filterSelectableDimensions(dim.placement)(
+          dim.selectableDimensions
+        ).map(nestedDim => (
+          <DimensionSelector id={`${id}-${nestedDim.id}`} dim={nestedDim} />
+        ))}
+      </Box>
     </Collapsible>
   );
 };

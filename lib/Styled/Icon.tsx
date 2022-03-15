@@ -55,7 +55,6 @@ export const GLYPHS = {
   opened: require("../../wwwroot/images/icons/opened.svg"),
   pause: require("../../wwwroot/images/icons/pause.svg"),
   play: require("../../wwwroot/images/icons/play.svg"),
-
   playStory: require("../../wwwroot/images/icons/play-story.svg"),
   radioOff: require("../../wwwroot/images/icons/radio-off.svg"),
   radioOn: require("../../wwwroot/images/icons/radio-on.svg"),
@@ -63,7 +62,6 @@ export const GLYPHS = {
   remove: require("../../wwwroot/images/icons/remove.svg"),
   right: require("../../wwwroot/images/icons/right.svg"),
   right2: require("../../wwwroot/images/icons/right2.svg"),
-
   revert: require("../../wwwroot/images/icons/revert.svg"),
   search: require("../../wwwroot/images/icons/search.svg"),
   selected: require("../../wwwroot/images/icons/selected.svg"),
@@ -160,7 +158,7 @@ export const Icon: React.FC<IconProps> = (props: IconProps) => {
   );
 };
 
-interface IStyledIconProps {
+export interface IStyledIconProps {
   displayInline?: boolean;
   styledWidth?: string;
   styledHeight?: string;

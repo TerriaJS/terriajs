@@ -1,12 +1,12 @@
 "use strict";
 
 import { observer } from "mobx-react";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Box, { IBoxProps } from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
+import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import { SpacingSpan } from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
-import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import { parseCustomMarkdownToReactWithOptions } from "../parseCustomMarkdownToReact";
 
 interface CollapsibleIconProps {
@@ -18,7 +18,7 @@ interface CollapsibleIconProps {
   /**
    * caret is default style
    */
-  btnStyle?: "plus" | "caret";
+  btnStyle?: "plus" | "caret" | "checkbox";
 }
 
 interface CollapsibleProps extends CollapsibleIconProps {
@@ -35,22 +35,34 @@ interface CollapsibleProps extends CollapsibleIconProps {
   bodyTextProps?: any;
 }
 
-export const CollapseIcon: React.FC<CollapsibleIconProps> = props => (
-  <StyledIcon
-    displayInline
-    styledWidth={"8px"}
-    light={props.light ?? true}
-    glyph={
-      props.btnStyle === "plus"
-        ? props.isOpen
-          ? GLYPHS.minus
-          : GLYPHS.plus
-        : GLYPHS.opened
-    }
-    opacity={props.isOpen ? 1 : 0.4}
-    rotation={props.isOpen ? 0 : -90}
-  />
-);
+export const CollapseIcon: React.FC<CollapsibleIconProps> = props => {
+  let glyph = GLYPHS.opened;
+  let glyphWidth = 8;
+  let glyphRotation = 0;
+  let glyphOpacity = 1;
+
+  if (props.btnStyle === "plus") {
+    glyph = props.isOpen ? GLYPHS.minus : GLYPHS.plus;
+    glyphOpacity = props.isOpen ? 1 : 0.4;
+  } else if (props.btnStyle === "checkbox") {
+    glyph = props.isOpen ? GLYPHS.checkboxOn : GLYPHS.checkboxOff;
+    glyphWidth = 13;
+  } else {
+    glyphRotation = props.isOpen ? 0 : -90;
+    glyphOpacity = props.isOpen ? 1 : 0.4;
+  }
+
+  return (
+    <StyledIcon
+      displayInline
+      styledWidth={`${glyphWidth}px`}
+      light={props.light ?? true}
+      glyph={glyph}
+      opacity={glyphOpacity}
+      rotation={glyphRotation}
+    />
+  );
+};
 
 const Collapsible: React.FC<CollapsibleProps> = observer(props => {
   const [isOpen, setIsOpen] = useState<boolean | undefined>();
@@ -75,9 +87,10 @@ const Collapsible: React.FC<CollapsibleProps> = observer(props => {
         `}
         aria-expanded={isOpen}
         aria-controls={`${props.title}`}
+        activeStyles
       >
         {!props.btnRight && <CollapseIcon {...props} isOpen={isOpen} />}
-        {!props.btnRight && <SpacingSpan right={2} />}
+        {!props.btnRight && <SpacingSpan right={1} />}
         <TextSpan
           textLight={props.light ?? true}
           bold
@@ -88,7 +101,7 @@ const Collapsible: React.FC<CollapsibleProps> = observer(props => {
             inline: true
           })}
         </TextSpan>
-        {props.btnRight && <SpacingSpan right={2} />}
+        {props.btnRight && <SpacingSpan right={1} />}
         {props.btnRight && <CollapseIcon {...props} isOpen={isOpen} />}
       </RawButton>
       {isOpen ? (

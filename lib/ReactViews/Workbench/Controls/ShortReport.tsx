@@ -32,7 +32,7 @@ export default class ShortReport extends React.Component<{
         /**
          * Ensure short report order is reflected by all strata up to this point
          * & replicate all onto user stratum so that toggling doesn't re-order
-         * reports - a stopgap for the lack of consistent behaviour surrounding
+         * reports - a stopgap for the lack of consistent behavior surrounding
          * removals / re-ordering of objectArrayTraits
          */
         shortReportSections.forEach(report =>

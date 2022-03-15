@@ -18,7 +18,7 @@ import TableMixin from "../../ModelMixins/TableMixin";
 import {
   QualitativeColorSchemeOptionRenderer,
   QuantitativeColorSchemeOptionRenderer
-} from "../../ReactViews/Workflows/OptionRenderers/ColorSchemeOptionRenderer";
+} from "../../ReactViews/Workflow/OptionRenderers/ColorSchemeOptionRenderer";
 import Icon from "../../Styled/Icon";
 import {
   DEFAULT_DIVERGING,

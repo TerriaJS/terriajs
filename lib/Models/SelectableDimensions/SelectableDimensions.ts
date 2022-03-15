@@ -168,10 +168,6 @@ export type SelectableDimension =
   | SelectableDimensionButton
   | SelectableDimensionColor;
 
-export const isCheckbox = (
-  dim: SelectableDimension
-): dim is SelectableDimensionCheckbox => dim.type === "checkbox";
-
 export const isEnum = (
   dim: SelectableDimension
 ): dim is SelectableDimensionEnum =>
@@ -197,6 +193,14 @@ export const isText = (
 export const isButton = (
   dim: SelectableDimension
 ): dim is SelectableDimensionButton => dim.type === "button";
+
+export const isCheckbox = (
+  dim: SelectableDimension
+): dim is SelectableDimensionCheckbox => dim.type === "checkbox";
+
+export const isCheckboxGroup = (
+  dim: SelectableDimension
+): dim is SelectableDimensionCheckboxGroup => dim.type === "checkbox-group";
 
 export const isColor = (
   dim: SelectableDimension

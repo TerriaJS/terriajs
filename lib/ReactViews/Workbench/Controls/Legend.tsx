@@ -294,7 +294,8 @@ export default class Legend extends React.Component<{
             className={Styles.legendInner}
             css={{ position: "relative", " li": { backgroundColor } }}
           >
-            {TableMixin.isMixedInto(this.props.item) &&
+            {// Show temporary "legend button" - if custom styling has been applied
+            TableMixin.isMixedInto(this.props.item) &&
             this.props.item.legendButton ? (
               <Button
                 primary

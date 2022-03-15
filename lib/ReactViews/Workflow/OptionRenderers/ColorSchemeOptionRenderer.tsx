@@ -1,9 +1,8 @@
-import { OptionRenderer } from "../../../Models/SelectableDimensions/SelectableDimensions";
 import { lab, rgb } from "d3-color";
 import * as d3Scale from "d3-scale-chromatic";
-
 import React from "react";
 import StandardCssColors from "../../../Core/StandardCssColors";
+import { OptionRenderer } from "../../../Models/SelectableDimensions/SelectableDimensions";
 
 /* The ramp and swatches functions are adapted from https://observablehq.com/@d3/color-schemes?collection=@d3/d3-scale-chromatic
  *
