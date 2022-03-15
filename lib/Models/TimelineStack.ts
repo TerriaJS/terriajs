@@ -26,10 +26,12 @@ export default class TimelineStack {
   @observable
   defaultTimeVarying: TimeVarying | undefined;
 
-  private _disposeClockAutorun: IReactionDisposer;
+  private _disposeClockAutorun: IReactionDisposer | undefined;
   private _disposeTickSubscription: CesiumEvent.RemoveCallback | undefined;
 
-  constructor(readonly clock: Clock) {
+  constructor(readonly clock: Clock) {}
+
+  activate() {
     // Keep the Cesium clock in sync with the top layer's clock.
     this._disposeClockAutorun = autorun(() => {
       const topLayer = this.top;
@@ -74,7 +76,7 @@ export default class TimelineStack {
     });
   }
 
-  destroy() {
+  deactivate() {
     if (this._disposeClockAutorun) {
       this._disposeClockAutorun();
     }
