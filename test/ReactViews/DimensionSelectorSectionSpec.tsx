@@ -10,15 +10,14 @@ import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import CreateModel from "../../lib/Models/Definition/CreateModel";
 import SelectableDimensions, {
   DEFAULT_PLACEMENT,
-  SelectableDimension
+  SelectableDimension as SelectableDimensionModel
 } from "../../lib/Models/SelectableDimensions/SelectableDimensions";
 import Terria from "../../lib/Models/Terria";
+import { SelectableDimensionGroup } from "../../lib/ReactViews/SelectableDimensions/Group";
+import SelectableDimension from "../../lib/ReactViews/SelectableDimensions/SelectableDimension";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
-import DimensionSelectorSection, {
-  DimensionSelectorGroup
-} from "../../lib/ReactViews/Workbench/Controls/SelectableDimensionSection";
+import SelectableDimensionSection from "../../lib/ReactViews/Workbench/Controls/SelectableDimensionSection";
 import Checkbox from "../../lib/Styled/Checkbox";
-import Select from "../../lib/Styled/Select";
 import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 
 export default class TestCatalogItem
@@ -29,7 +28,7 @@ export default class TestCatalogItem
     return "test";
   }
 
-  selectableDimensions: SelectableDimension[] = [
+  selectableDimensions: SelectableDimensionModel[] = [
     {
       id: "some-id",
       name: "Some name",
@@ -94,7 +93,7 @@ describe("DimensionSelectorSection", function() {
 
     const section = TestRenderer.create(
       <ThemeProvider theme={terriaTheme}>
-        <DimensionSelectorSection
+        <SelectableDimensionSection
           item={mockItem}
           placement={DEFAULT_PLACEMENT}
         />
@@ -137,7 +136,7 @@ describe("DimensionSelectorSection", function() {
       .then(function() {
         const section = TestRenderer.create(
           <ThemeProvider theme={terriaTheme}>
-            <DimensionSelectorSection
+            <SelectableDimensionSection
               item={wmsItem}
               placement={DEFAULT_PLACEMENT}
             />
@@ -197,21 +196,18 @@ describe("DimensionSelectorSection", function() {
 
     const section = TestRenderer.create(
       <ThemeProvider theme={terriaTheme}>
-        <DimensionSelectorSection
+        <SelectableDimensionSection
           item={csvItem}
           placement={DEFAULT_PLACEMENT}
         />
       </ThemeProvider>
     );
 
-    // Note: there will only be 2 selects: one for region column and one for region mapping.
-    // The activeStyle select is hidden as there is only one option
-    const selects = section.root.findAllByType(ReactSelect);
-    expect(selects.length).toBe(2);
+    const groups = section.root.findAllByType(SelectableDimensionGroup);
+    expect(groups.length).toBe(1);
 
-    if (selects.length < 2) {
-      done.fail("Not enough select objects");
-    }
+    console.log(groups[0].props);
+    expect(groups[0].props.dim.id).toBe(csvItem.selectableDimensions[0].id);
 
     done();
 
@@ -278,38 +274,6 @@ describe("DimensionSelectorSection", function() {
         }
       ];
     });
-
-    // it("renders the checkbox group correctly", function() {
-    //   const section = TestRenderer.create(
-    //     <ThemeProvider theme={terriaTheme}>
-    //       <DimensionSelectorSection
-    //         item={mockItem}
-    //         placement={DEFAULT_PLACEMENT}
-    //       />
-    //     </ThemeProvider>
-    //   );
-
-    //   const checkboxGroup = section.root.findByType(
-    //     DimensionSelectorCheckboxGroup
-    //   );
-    //   expect(checkboxGroup.props.dimension.type).toEqual("checkbox-group");
-    // });
-
-    // it("renders all the group children excluding the disabled ones", function() {
-    //   const section = TestRenderer.create(
-    //     <ThemeProvider theme={terriaTheme}>
-    //       <DimensionSelectorSection
-    //         item={mockItem}
-    //         placement={DEFAULT_PLACEMENT}
-    //       />
-    //     </ThemeProvider>
-    //   );
-    //   const selects = section.root.findAllByType(Select);
-    //   const checkboxes = section.root.findAllByType(Checkbox);
-    //   expect(selects.length).toEqual(1);
-    //   // first checkbox is the group checkbox
-    //   expect(checkboxes.slice(1).length).toEqual(1);
-    // });
   });
 
   describe("when given a SelectableDimensionGroup", function() {
@@ -366,31 +330,42 @@ describe("DimensionSelectorSection", function() {
     it("renders the group", function() {
       const section = TestRenderer.create(
         <ThemeProvider theme={terriaTheme}>
-          <DimensionSelectorSection
+          <SelectableDimensionSection
             item={mockItem}
             placement={DEFAULT_PLACEMENT}
           />
         </ThemeProvider>
       );
 
-      const group = section.root.findByType(DimensionSelectorGroup);
+      const group = section.root.findByType(SelectableDimensionGroup);
       expect(group.props.dim.type).toEqual("group");
     });
 
-    it("renders all the group children excluding the disabled ones", function() {
+    it("renders all the group children", function() {
       const section = TestRenderer.create(
         <ThemeProvider theme={terriaTheme}>
-          <DimensionSelectorSection
+          <SelectableDimensionSection
             item={mockItem}
             placement={DEFAULT_PLACEMENT}
           />
         </ThemeProvider>
       );
 
-      const selects = section.root.findAllByType(Select);
-      const checkboxes = section.root.findAllByType(Checkbox);
-      expect(selects.length).toEqual(1);
-      expect(checkboxes.length).toEqual(1);
+      expect(section.root.findAllByType(SelectableDimension).length).toBe(1);
+
+      const group = section.root.findByType(SelectableDimensionGroup);
+      expect(group.props.dim.type).toEqual("group");
+
+      const collapsible = group.children[0];
+
+      if (typeof collapsible === "string") throw "Invalid collapsible";
+
+      const button = collapsible.children[0];
+
+      if (typeof button === "string") throw "Invalid button";
+      button.props.onClick();
+
+      expect(section.root.findAllByType(SelectableDimension).length).toBe(3);
     });
   });
 });
