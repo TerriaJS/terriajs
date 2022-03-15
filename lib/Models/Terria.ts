@@ -125,10 +125,6 @@ interface ConfigParameters {
    */
   regionMappingDefinitionsUrl: string;
   /**
-   * URL of OGR2OGR conversion service (part of TerriaJS-Server).
-   */
-  conversionServiceBaseUrl?: string;
-  /**
    * URL of Proj4 projection lookup service (part of TerriaJS-Server).
    */
   proj4ServiceBaseUrl?: string;
@@ -406,7 +402,6 @@ export default class Terria {
     defaultMaximumShownFeatureInfos: 100,
     catalogIndexUrl: undefined,
     regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
-    conversionServiceBaseUrl: "convert/",
     proj4ServiceBaseUrl: "proj4def/",
     corsProxyBaseUrl: "proxy/",
     proxyableDomainsUrl: "proxyabledomains/", // deprecated, will be determined from serverconfig

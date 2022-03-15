@@ -17,6 +17,7 @@ Change Log
 * Avoid creating duplication in categories in ArcGisPortalCatalogGroup.
 * Fix `CatalogMemberMixin.hasDescription` null bug
 * `TableStyle` now calculates `rectangle` for point based styles
+* Removed references to conversion service which is no longer used in version >=8.0.0.
 * [The next improvement]
 
 #### 8.1.24 - 2022-03-08
