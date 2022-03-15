@@ -16,6 +16,10 @@ export const SelectableDimensionGroup: React.FC<{
   id: string;
   dim: SelectableDimensionGroupModel | SelectableDimensionCheckboxGroupModel;
 }> = ({ id, dim }) => {
+  const childDims = filterSelectableDimensions(dim.placement)(
+    dim.selectableDimensions
+  );
+  if (childDims.length === 0) return null;
   return (
     <Collapsible
       title={
@@ -44,9 +48,7 @@ export const SelectableDimensionGroup: React.FC<{
     >
       <Box displayInlineBlock fullWidth styledPadding="5px 0 0 20px">
         {/* recursively render nested dimensions */}
-        {filterSelectableDimensions(dim.placement)(
-          dim.selectableDimensions
-        ).map(nestedDim => (
+        {childDims.map(nestedDim => (
           <SelectableDimension id={`${id}-${nestedDim.id}`} dim={nestedDim} />
         ))}
       </Box>

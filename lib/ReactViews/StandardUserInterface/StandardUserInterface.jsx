@@ -30,7 +30,7 @@ import SidePanel from "../SidePanel/SidePanel";
 import Tool from "../Tools/Tool";
 import TourPortal from "../Tour/TourPortal";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
-import SelectableDimensionWorkflow from "../Workflow/Workflows/SelectableDimensionWorkflow";
+import SelectableDimensionWorkflow from "../Workflow/SelectableDimensionWorkflow";
 import DragDropNotification from "./../DragDropNotification";
 import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";

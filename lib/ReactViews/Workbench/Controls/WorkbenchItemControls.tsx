@@ -9,12 +9,13 @@ import WebMapServiceCatalogItemTraits from "../../../Traits/TraitsClasses/WebMap
 import ChartItemSelector from "./ChartItemSelector";
 import ColorScaleRangeSection from "./ColorScaleRangeSection";
 import DateTimeSelectorSection from "./DateTimeSelectorSection";
-import DimensionSelectorSection from "./SelectableDimensionSection";
 import FilterSection from "./FilterSection";
+import LeftRightSection from "./LeftRightSection";
 import Legend from "./Legend";
 import OpacitySection from "./OpacitySection";
 import SatelliteImageryTimeFilterSection from "./SatelliteImageryTimeFilterSection";
 import { ScaleWorkbenchInfo } from "./ScaleWorkbenchInfo";
+import DimensionSelectorSection from "./SelectableDimensionSection";
 import ShortReport from "./ShortReport";
 import TimerSection from "./TimerSection";
 import ViewingControls from "./ViewingControls";
@@ -23,6 +24,7 @@ type WorkbenchControls = {
   viewingControls?: boolean;
   opacity?: boolean;
   scaleWorkbench?: boolean;
+  splitter?: boolean;
   timer?: boolean;
   chartItems?: boolean;
   filter?: boolean;
@@ -45,6 +47,7 @@ export const defaultControls: Complete<WorkbenchControls> = {
   viewingControls: true,
   opacity: true,
   scaleWorkbench: true,
+  splitter: true,
   timer: true,
   chartItems: true,
   filter: true,
@@ -60,6 +63,7 @@ export const hideAllControls: Complete<WorkbenchControls> = {
   viewingControls: false,
   opacity: false,
   scaleWorkbench: false,
+  splitter: false,
   timer: false,
   chartItems: false,
   filter: false,
@@ -84,6 +88,7 @@ const WorkbenchItemControls: React.FC<WorkbenchItemControlsProps> = observer(
         {controls?.opacity ? <OpacitySection item={item} /> : null}
         {controls?.scaleWorkbench ? <ScaleWorkbenchInfo item={item} /> : null}
         {controls?.timer ? <TimerSection item={item} /> : null}
+        {controls?.splitter ? <LeftRightSection item={item} /> : null}
         {controls?.chartItems ? <ChartItemSelector item={item} /> : null}
         {controls?.filter ? <FilterSection item={item} /> : null}
         {controls?.dateTime ? <DateTimeSelectorSection item={item} /> : null}

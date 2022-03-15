@@ -330,6 +330,8 @@ class ViewingControls extends React.Component<
     const canSplit =
       !item.terria.configParameters.disableSplitter &&
       hasTraits(item, SplitterTraits, "splitDirection") &&
+      hasTraits(item, SplitterTraits, "disableSplitter") &&
+      !item.disableSplitter &&
       defined(item.splitDirection) &&
       item.terria.currentViewer.canShowSplitter;
 
