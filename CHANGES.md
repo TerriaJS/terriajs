@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.26)
 
+* New `GltfMixin`, which `GltfCatalogItem` now uses.
 * [The next improvement]
 
 #### 8.1.25 - 2022-03-16
@@ -21,8 +22,6 @@ Change Log
 * Avoid creating duplication in categories in ArcGisPortalCatalogGroup.
 * Fix `CatalogMemberMixin.hasDescription` null bug
 * `TableStyle` now calculates `rectangle` for point based styles
-* New `GltfMixin`, which `GltfCatalogItem` now uses.
-* [The next improvement]
 * Fixed error installing dependencies by changing dependency "pell" to use github protocol rather than unencrypted Git protocol, which is no longer supported by GitHub as of 2022-03-15.
 
 #### 8.1.24 - 2022-03-08
