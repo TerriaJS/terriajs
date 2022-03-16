@@ -7,7 +7,9 @@ import {
   Geometries,
   Geometry,
   GeometryCollection,
+  MultiPolygon,
   Point,
+  Polygon,
   Properties
 } from "@turf/helpers";
 import i18next from "i18next";
@@ -55,7 +57,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import formatPropertyValue from "../Core/formatPropertyValue";
 import hashFromString from "../Core/hashFromString";
 import isDefined from "../Core/isDefined";
-import { isJsonObject } from "../Core/Json";
+import { isJsonObject, JsonObject } from "../Core/Json";
 import { isJson } from "../Core/loadBlob";
 import makeRealPromise from "../Core/makeRealPromise";
 import StandardCssColors from "../Core/StandardCssColors";
@@ -398,6 +400,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     protected async forceLoadMapItems(): Promise<void> {
       let useMvt = this.useMvt;
       const czmlTemplate = this.czmlTemplate;
+      const filterByProperties = this.filterByProperties;
 
       let geoJson: FeatureCollectionWithCrs | undefined;
 
@@ -418,11 +421,28 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         // Also check for how many features have simply-style properties
         let numFeaturesWithSimpleStyle = 0;
 
-        for (let i = 0; i < geoJsonWgs84.features.length; i++) {
-          if (!geoJsonWgs84.features[i].properties) {
-            geoJsonWgs84.features[i].properties = {};
+        const features = geoJsonWgs84.features;
+        // If filtering features - Clear all features and re add them if props match filterByProperties
+        if (filterByProperties) geoJsonWgs84.features = [];
+
+        for (let i = 0; i < features.length; i++) {
+          const feature = features[i];
+          if (!feature.properties) {
+            feature.properties = {};
           }
-          const properties = geoJsonWgs84.features[i].properties!;
+
+          // Filter features by `featureFilterByProps` trait if defined
+          if (filterByProperties) {
+            if (
+              Object.entries(filterByProperties).every(
+                ([key, value]) => feature.properties![key] === value
+              )
+            )
+              geoJsonWgs84.features.push(feature);
+            else continue;
+          }
+
+          const properties = feature.properties!;
           properties[FEATURE_ID_PROP] = i;
 
           if (useMvt && SIMPLE_STYLE_KEYS.find(key => properties[key])) {
@@ -677,30 +697,76 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         }
       ];
 
-      // Create a czml packet for each geoJson Point feature
-      // Set czml position (cartographicDegrees) to point coordinates
+      // Create a czml packet for each geoJson Point/Polygon feature
+      // For point: set czml position (CartographicDegrees) to point coordinates
+      // For polygon: set czml positions array (CartographicDegreesListValue) for the `polygon` property
+
       // Set czml properties to feature properties
       for (let i = 0; i < geoJson.features.length; i++) {
         const feature = geoJson.features[i];
-        if (feature !== null && feature.geometry?.type === "Point") {
-          const point = feature.geometry as Point;
+        if (feature === null || feature.geometry.type === "Line") {
+          continue;
+        }
+
+        if (feature.geometry?.type === "Point") {
           const czml = clone(czmlTemplate ?? {}, true);
+
+          const point = feature.geometry as Point;
           const coords = point.coordinates;
+
+          // Add height = 0 if no height provided
           if (coords.length === 2) {
             coords[2] = 0;
           }
+
           czml.position = {
             cartographicDegrees: point.coordinates
           };
 
-          if (feature.properties !== null) {
+          czml.properties = Object.assign(
+            czml.properties ?? {},
+            stringifyFeatureProperties(feature.properties ?? {})
+          );
+          rootCzml.push(czml);
+        } else if (
+          feature.geometry?.type === "Polygon" ||
+          (feature.geometry?.type === "MultiPolygon" && czmlTemplate?.polygon)
+        ) {
+          const czml = clone(czmlTemplate ?? {}, true);
+
+          // To handle both Polygon and MultiPolygon - transform Polygon coords into MultiPolygon coords
+          const multiPolygonGeom =
+            feature.geometry?.type === "Polygon"
+              ? [(feature.geometry as Polygon).coordinates]
+              : (feature.geometry as MultiPolygon).coordinates;
+
+          // Loop through Polygons in MultiPolygon
+          for (let j = 0; j < multiPolygonGeom.length; j++) {
+            const geom = multiPolygonGeom[j];
+            const positions: number[] = [];
+            const holes: number[][] = [];
+
+            geom[0].forEach(coords => {
+              positions.push(coords[0], coords[1], coords[2] ?? 0);
+            });
+
+            geom.forEach((ring, idx) => {
+              if (idx === 0) return;
+
+              holes.push(
+                ...ring.map(coords => [coords[0], coords[1], coords[2] ?? 0])
+              );
+            });
+
+            czml.polygon.positions = { cartographicDegrees: positions };
+            czml.polygon.holes = { cartographicDegrees: holes };
+
             czml.properties = Object.assign(
               czml.properties ?? {},
-              feature.properties
+              stringifyFeatureProperties(feature.properties ?? {})
             );
+            rootCzml.push(czml);
           }
-
-          rootCzml.push(czml);
         }
       }
 
@@ -1472,4 +1538,22 @@ function parseMarkerSize(sizeString?: string): number | undefined {
     return sizes[sizeString];
   }
   return parseInt(sizeString, 10); // SimpleStyle doesn't allow 'marker-size: 20', but people will do it.
+}
+
+function stringifyFeatureProperties(featureProps: JsonObject | undefined) {
+  return Object.keys(featureProps ?? {}).reduce<{
+    [key: string]: string;
+  }>((properties, key) => {
+    const featureProp = featureProps![key];
+    if (typeof featureProp === "string") {
+      properties[key] = featureProp;
+    } else if (
+      isDefined(featureProp) &&
+      featureProp !== null &&
+      typeof featureProp.toString === "function"
+    )
+      properties[key] = featureProp.toString();
+
+    return properties;
+  }, {});
 }
