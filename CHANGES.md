@@ -4,6 +4,9 @@ Change Log
 #### next release (8.1.26)
 
 * New `GltfMixin`, which `GltfCatalogItem` now uses.
+* Hook up `beforeViewerChanged` and `afterViewerChanged` events so they are
+  triggered on viewer change. They are raised only on change between 2D and 3D
+  viewer mode.
 * [The next improvement]
 
 #### 8.1.25 - 2022-03-16
