@@ -8,6 +8,9 @@ Change Log
   triggered on viewer change. They are raised only on change between 2D and 3D
   viewer mode.
 * Removed references to conversion service which is no longer used in version >=8.0.0.
+* Added experimental routing system - there may be breaking changes to this system in subsequent patch releases for a short time. The routes currently include:
+  * `/story/:share-id` ➡ loads share JSON from a URL `${configParameters.storyRouteUrlPrefix}:share-id` (`configParameters.storyRouteUrlPrefix` must have a trailing slash)
+  * `/catalog/:id` ➡ opens the data catalogue to the specified member
 * [The next improvement]
 
 #### 8.1.25 - 2022-03-16

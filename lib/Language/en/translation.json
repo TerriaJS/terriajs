@@ -970,7 +970,7 @@
       "unsupportedTypeTitle": "Unknown type",
       "unsupportedTypeMessage": "Could not create unknown model type {{type}}.",
       "unsupportedFileTypeTitle": "Unsupported file type",
-      "unsupportedFileTypeMessage": "This file format is not supported by {{appName}}. Supported file formats include: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>",
+      "unsupportedFileTypeMessage": "This file format is not supported by {{appName}}. Supported file formats include: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li><li>Shapefile (.zip)</li></ul>",
       "upload": "Upload",
       "mustHaveType": "Each item must have a type.",
       "compositesError": "Composites cannot include composite items.",
