@@ -4,7 +4,7 @@ Date: 2022-03-15
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -18,4 +18,8 @@ While the `OgrCatalogItem` that calls the conversion service has never been port
 
 ## Decision
 
-We will not support calling the terriajs-server conversion service from the TerriaJS library in any >=8.0.0 release. The conversion service endpoint will be dropped from a future major version release of terriajs-server.
+We will not support calling the terriajs-server conversion service from the TerriaJS library in any >=8.0.0 release. 
+
+## Consequences
+
+All conversion service code, UI strings and docs have been removed from the terriajs library. The conversion service endpoint will be dropped from a future major version release of terriajs-server.
