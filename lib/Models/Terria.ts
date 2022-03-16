@@ -1,6 +1,14 @@
 import { Share } from "catalog-converter";
 import i18next from "i18next";
-import { action, computed, observable, runInAction, toJS, when } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  reaction,
+  runInAction,
+  toJS,
+  when
+} from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
