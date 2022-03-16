@@ -1,7 +1,19 @@
 Change Log
 ==========
 
-#### next release (8.1.25)
+#### next release (8.1.26)
+
+* New `GltfMixin`, which `GltfCatalogItem` now uses.
+* Hook up `beforeViewerChanged` and `afterViewerChanged` events so they are
+  triggered on viewer change. They are raised only on change between 2D and 3D
+  viewer mode.
+* Removed references to conversion service which is no longer used in version >=8.0.0.
+* Added experimental routing system - there may be breaking changes to this system in subsequent patch releases for a short time. The routes currently include:
+  * `/story/:share-id` ➡ loads share JSON from a URL `${configParameters.storyRouteUrlPrefix}:share-id` (`configParameters.storyRouteUrlPrefix` must have a trailing slash)
+  * `/catalog/:id` ➡ opens the data catalogue to the specified member
+* [The next improvement]
+
+#### 8.1.25 - 2022-03-16
 
 * Fix broken download link for feature info panel charts when no download urls are specified.
 * Fixed parameter names of WPS catalog functions.
@@ -17,7 +29,7 @@ Change Log
 * Avoid creating duplication in categories in ArcGisPortalCatalogGroup.
 * Fix `CatalogMemberMixin.hasDescription` null bug
 * `TableStyle` now calculates `rectangle` for point based styles
-* [The next improvement]
+* Fixed error installing dependencies by changing dependency "pell" to use github protocol rather than unencrypted Git protocol, which is no longer supported by GitHub as of 2022-03-15.
 
 #### 8.1.24 - 2022-03-08
 

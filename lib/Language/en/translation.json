@@ -718,8 +718,7 @@
       "carto": "Carto",
       "gltf": "GLTF",
       "shp": "Shapefile (zip)",
-      "socrata-group": "Socrata Server",
-      "other": "Other (use conversion service)"
+      "socrata-group": "Socrata Server"
     },
     "printWindow": {
       "errorTitle": "Error printing",
@@ -973,13 +972,8 @@
       "unsupportedTypeTitle": "Unknown type",
       "unsupportedTypeMessage": "Could not create unknown model type {{type}}.",
       "unsupportedFileTypeTitle": "Unsupported file type",
-      "unsupportedFileTypeMessage": "This file format is not supported by {{appName}}. Supported file formats include: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>",
-      "unsupportedFileTypeMessageII": "This file format is not supported by {{appName}}. Directly supported file formats include: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>  File formats supported through the online conversion service include: <ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>Possibly other {{linkII}}</li></ul>",
-      "getConfirmationMessage": "This file is not directly supported by {{appName}}.\n\nDo you want to try uploading it to the {{appName}} conversion service? This may work for small, zipped Esri Shapefiles or MapInfo TAB files.",
-      "readyToUpload": "Ready to upload your file to the {{appName}} conversion service?",
+      "unsupportedFileTypeMessage": "This file format is not supported by {{appName}}. Supported file formats include: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li><li>Shapefile (.zip)</li></ul>",
       "upload": "Upload",
-      "cancel": "Cancel",
-      "useConversion": "Use conversion service?",
       "mustHaveType": "Each item must have a type.",
       "compositesError": "Composites cannot include composite items.",
       "convertErrorTitle": "Could not upgrade catalog to V8",
@@ -1157,23 +1151,6 @@
       "availableStreamsHeadingFeatureInfo": "Available Streams",
       "noStreamsMessageFeatureInfo": "No streams at this location.",
       "missingSenapsBaseUrl": "Senaps base url not provided. Have you logged in?"
-    },
-    "ogr": {
-      "name": "Unknown / Converted to GeoJSON",
-      "dataSourceErrorMessage": "This data source does not have any details available.",
-      "serviceErrorMessage": "This service does not have any details available.",
-      "legacyBrowserTitle": "Legacy browser not supported",
-      "legacyBrowserMessage": "Sorry, your web browser does not support the \"FormData\" type, which is required by the '{{appName}}' conversion service.  We recommend you upgrade to the latest version of {{chrome}}, {{firefox}}, {{safari}} or {{internetExplorer}}.",
-      "internetExplorer": "Internet Explorer 11",
-      "chrome": "Google Chrome",
-      "firefox": "Mozilla Firefox",
-      "safari": "Apple Safari",
-      "unsupportedFileTzpe": "Unsupported file type",
-      "loadError": "The file size is greater than the {{maxConversionSizeMB}} MB limit of the {{appName}} conversion service",
-      "invalidFile": "This may indicate that the file is invalid or that it is not supported by the {{appName}} conversion service.",
-      "errorConvertingToGeoJsonTitle": "Error converting file to GeoJson",
-      "errorConvertingToGeoJsonMessage": "An error occurred while attempting to convert this file to GeoJson. ",
-      "emailUs": "If you would like assistance or further information, please email us at {{email}}"
     },
     "openStreetMap": {
       "name": "Open Street Map"

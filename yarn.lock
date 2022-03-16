@@ -10825,9 +10825,9 @@ pbkdf2@^3.0.3:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-"pell@git://github.com/TerriaJS/pell#master":
+"pell@github:TerriaJS/pell#master":
   version "1.0.6"
-  resolved "git://github.com/TerriaJS/pell#7cd23a55cdfd130fedf3679433991bb7d958fc42"
+  resolved "https://codeload.github.com/TerriaJS/pell/tar.gz/7cd23a55cdfd130fedf3679433991bb7d958fc42"
 
 pend@~1.2.0:
   version "1.2.0"
