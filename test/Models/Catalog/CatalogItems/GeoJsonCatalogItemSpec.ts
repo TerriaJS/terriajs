@@ -442,6 +442,32 @@ describe("GeoJsonCatalogItemSpec", () => {
       });
     });
 
+    describe("Support for filterByProperties", () => {
+      it("Filters correct features", async () => {
+        geojson.setTrait(
+          CommonStrata.user,
+          "url",
+          "test/GeoJSON/time-based.geojson"
+        );
+        geojson.setTrait(CommonStrata.user, "filterByProperties", {
+          year: 2019
+        });
+        await geojson.loadMapItems();
+        expect(geojson.mapItems.length).toEqual(1);
+        const entities = (geojson.mapItems[0] as GeoJsonDataSource).entities
+          .values;
+        expect(entities.length).toEqual(1);
+
+        const entity1 = entities[0];
+        console.log(
+          entity1.properties?.getValue(terria.timelineClock.currentTime).year
+        );
+        expect(
+          entity1.properties?.getValue(terria.timelineClock.currentTime).year
+        ).toBe(2019);
+      });
+    });
+
     describe("Support for geojson with extruded heights", () => {
       it("Sets polygon height properties correctly", async () => {
         geojson.setTrait(
@@ -532,8 +558,8 @@ describe("GeoJsonCatalogItemSpec", () => {
       geojson = new GeoJsonCatalogItem("test-geojson", terria);
     });
 
-    describe("Support for czml templating", () => {
-      it("Sets polygon height properties correctly", async () => {
+    describe("Support for czml templates", () => {
+      it("supports points", async () => {
         geojson.setTrait(
           CommonStrata.user,
           "url",
@@ -568,24 +594,56 @@ describe("GeoJsonCatalogItemSpec", () => {
         const entity1 = entities[0];
         expect(
           entity1.cylinder?.length?.getValue(terria.timelineClock.currentTime)
-        ).toBe(10);
+        ).toBe("10");
         expect(
           entity1.cylinder?.bottomRadius?.getValue(
             terria.timelineClock.currentTime
           )
-        ).toBe(10);
+        ).toBe("10");
         expect(entity1.properties?.someOtherProp?.getValue()).toBe("what");
 
         const entity2 = entities[1];
         expect(
           entity2.cylinder?.length?.getValue(terria.timelineClock.currentTime)
-        ).toBe(20);
+        ).toBe("20");
         expect(
           entity2.cylinder?.bottomRadius?.getValue(
             terria.timelineClock.currentTime
           )
-        ).toBe(5);
+        ).toBe("5");
         expect(entity2.properties?.someOtherProp?.getValue()).toBe("ok");
+      });
+
+      it("supports polygons", async () => {
+        geojson.setTrait(
+          CommonStrata.user,
+          "url",
+          "test/GeoJSON/polygon.geojson"
+        );
+        geojson.setTrait(CommonStrata.user, "czmlTemplate", {
+          polygon: {
+            height: 10,
+            material: {
+              solidColor: {
+                color: {
+                  rgba: [0, 200, 0, 20]
+                }
+              }
+            }
+          }
+        });
+        await geojson.loadMapItems();
+
+        const entities = (geojson.mapItems[0] as GeoJsonDataSource).entities
+          .values;
+        expect(entities.length).toEqual(1);
+
+        const entity1 = entities[0];
+        expect(
+          entity1.polygon?.height?.getValue(terria.timelineClock.currentTime)
+        ).toBe(10);
+        expect(entity1.properties?.foo?.getValue()).toBe("hi");
+        expect(entity1.properties?.bar?.getValue()).toBe("bye");
       });
     });
   });
