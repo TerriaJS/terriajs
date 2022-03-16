@@ -1,0 +1,305 @@
+{
+  "id": 2,
+  "objectIdFieldName": "objectid",
+  "globalIdFieldName": "",
+  "geometryType": "esriGeometryPoint",
+  "spatialReference": {
+    "wkt": "PROJCS[\"NAD_1983_HARN_StatePlane_Illinois_East_FIPS_1201\",GEOGCS[\"GCS_North_American_1983_HARN\",DATUM[\"D_North_American_1983_HARN\",SPHEROID[\"GRS_1980\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"False_Easting\",984250.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",-88.33333333333333],PARAMETER[\"Scale_Factor\",0.999975],PARAMETER[\"Latitude_Of_Origin\",36.66666666666666],UNIT[\"Foot_US\",0.3048006096012192]]"
+  },
+  "hasM": false,
+  "fields": [
+    {
+      "name": "objectid",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+    },
+    {
+      "name": "pointtype",
+      "alias": "Point Type",
+      "type": "esriFieldTypeString",
+      "length": 60
+    },
+    {
+      "name": "installdate",
+      "alias": "Install Date",
+      "type": "esriFieldTypeDate",
+      "length": 8
+    },
+    {
+      "name": "abandate",
+      "alias": "Abandoned Date",
+      "type": "esriFieldTypeDate",
+      "length": 8
+    },
+    {
+      "name": "material",
+      "alias": "Material",
+      "type": "esriFieldTypeString",
+      "length": 20
+    },
+    {
+      "name": "diameter",
+      "alias": "Diameter",
+      "type": "esriFieldTypeDouble"
+    },
+    {
+      "name": "facilityid",
+      "alias": "Facility Identifier",
+      "type": "esriFieldTypeString",
+      "length": 20
+    },
+    {
+      "name": "lastupdate",
+      "alias": "Last Update Date",
+      "type": "esriFieldTypeDate",
+      "length": 8
+    },
+    {
+      "name": "lasteditor",
+      "alias": "Last Editor",
+      "type": "esriFieldTypeString",
+      "length": 50
+    },
+    {
+      "name": "enabled",
+      "alias": "Enabled",
+      "type": "esriFieldTypeSmallInteger"
+    }
+  ],
+  "features": [
+    {
+      "geometry": {
+        "x": -8141605.133928327,
+        "y": 418955.9554289505
+      },
+      "attributes": {
+        "objectid": 5607,
+        "pointtype": "wTestStation",
+        "installdate": null,
+        "abandate": null,
+        "material": null,
+        "diameter": null,
+        "facilityid": null,
+        "lastupdate": null,
+        "lasteditor": null,
+        "enabled": null
+      }
+    },
+    {
+      "geometry": {
+        "x": -8141603.934127577,
+        "y": 418924.41316919774
+      },
+      "attributes": {
+        "objectid": 5608,
+        "pointtype": "wTestStation",
+        "installdate": null,
+        "abandate": null,
+        "material": null,
+        "diameter": null,
+        "facilityid": null,
+        "lastupdate": null,
+        "lasteditor": null,
+        "enabled": null
+      }
+    },
+    {
+      "geometry": {
+        "x": -598086.0290675722,
+        "y": -1705679.04004322
+      },
+      "attributes": {
+        "objectid": 6008,
+        "pointtype": "wTestStation",
+        "installdate": null,
+        "abandate": null,
+        "material": null,
+        "diameter": null,
+        "facilityid": null,
+        "lastupdate": null,
+        "lasteditor": null,
+        "enabled": null
+      }
+    },
+    {
+      "geometry": {
+        "x": -5354920.789329158,
+        "y": 5640890.476105951
+      },
+      "attributes": {
+        "objectid": 5604,
+        "pointtype": "wTestStation",
+        "installdate": null,
+        "abandate": null,
+        "material": null,
+        "diameter": null,
+        "facilityid": null,
+        "lastupdate": null,
+        "lasteditor": null,
+        "enabled": null
+      }
+    },
+    {
+      "geometry": {
+        "x": -7838014.858236076,
+        "y": 2981756.0453696996
+      },
+      "attributes": {
+        "objectid": 6005,
+        "pointtype": "wTestStation",
+        "installdate": null,
+        "abandate": null,
+        "material": null,
+        "diameter": null,
+        "facilityid": null,
+        "lastupdate": null,
+        "lasteditor": null,
+        "enabled": null
+      }
+    },
+    {
+      "geometry": {
+        "x": -7889180.643699577,
+        "y": 369328.2377554476
+      },
+      "attributes": {
+        "objectid": 7204,
+        "pointtype": "wPump",
+        "installdate": null,
+        "abandate": null,
+        "material": null,
+        "diameter": null,
+        "facilityid": null,
+        "lastupdate": null,
+        "lasteditor": null,
+        "enabled": null
+      }
+    },
+    {
+      "geometry": {
+        "x": -6942510.991438992,
+        "y": 5003293.910750449
+      },
+      "attributes": {
+        "objectid": 5606,
+        "pointtype": "wTestStation",
+        "installdate": null,
+        "abandate": null,
+        "material": null,
+        "diameter": null,
+        "facilityid": null,
+        "lastupdate": null,
+        "lasteditor": null,
+        "enabled": null
+      }
+    },
+    {
+      "geometry": {
+        "x": 6587694.559316266,
+        "y": -11904554.560558476
+      },
+      "attributes": {
+        "objectid": 6804,
+        "pointtype": "wTestStation",
+        "installdate": null,
+        "abandate": null,
+        "material": null,
+        "diameter": null,
+        "facilityid": null,
+        "lastupdate": null,
+        "lasteditor": null,
+        "enabled": null
+      }
+    },
+    {
+      "geometry": {
+        "x": -6942539.446434576,
+        "y": 5003228.708781116
+      },
+      "attributes": {
+        "objectid": 5605,
+        "pointtype": "wTestStation",
+        "installdate": null,
+        "abandate": null,
+        "material": null,
+        "diameter": null,
+        "facilityid": null,
+        "lastupdate": null,
+        "lasteditor": null,
+        "enabled": null
+      }
+    },
+    {
+      "geometry": {
+        "x": -7837735.552364243,
+        "y": 2981623.903901696
+      },
+      "attributes": {
+        "objectid": 6006,
+        "pointtype": "wSamplingStation",
+        "installdate": null,
+        "abandate": null,
+        "material": null,
+        "diameter": null,
+        "facilityid": null,
+        "lastupdate": null,
+        "lasteditor": null,
+        "enabled": null
+      }
+    },
+    {
+      "geometry": {
+        "x": -7838098.130707327,
+        "y": 2982056.7905031145
+      },
+      "attributes": {
+        "objectid": 6004,
+        "pointtype": "wTestStation",
+        "installdate": null,
+        "abandate": null,
+        "material": null,
+        "diameter": null,
+        "facilityid": null,
+        "lastupdate": null,
+        "lasteditor": null,
+        "enabled": null
+      }
+    },
+    {
+      "geometry": {
+        "x": -6834170.346244076,
+        "y": 1419941.6775348634
+      },
+      "attributes": {
+        "objectid": 6007,
+        "pointtype": "wTestStation",
+        "installdate": null,
+        "abandate": null,
+        "material": null,
+        "diameter": null,
+        "facilityid": null,
+        "lastupdate": null,
+        "lasteditor": null,
+        "enabled": null
+      }
+    },
+    {
+      "geometry": {
+        "x": 7452473.306133267,
+        "y": -12057068.956644557
+      },
+      "attributes": {
+        "objectid": 6404,
+        "pointtype": "wTestStation",
+        "installdate": null,
+        "abandate": null,
+        "material": null,
+        "diameter": null,
+        "facilityid": null,
+        "lastupdate": null,
+        "lasteditor": null,
+        "enabled": null
+      }
+    }
+  ]
+}

@@ -1,14 +1,31 @@
 Change Log
 ==========
 
-#### next release (8.1.25)
+#### next release (8.1.26)
 
-* Fix broken download link for feature info panel charts when no download urls are specified.
-* Fixed parameter names of WPS catalog functions.
+* New `GltfMixin`, which `GltfCatalogItem` now uses.
 * Hook up `beforeViewerChanged` and `afterViewerChanged` events so they are
   triggered on viewer change. They are raised only on change between 2D and 3D
   viewer mode.
 * [The next improvement]
+
+#### 8.1.25 - 2022-03-16
+
+* Fix broken download link for feature info panel charts when no download urls are specified.
+* Fixed parameter names of WPS catalog functions.
+* Improve WMS 1.1.1 support
+  * Added `useWmsVersion130` trait - Use WMS version 1.3.0. True by default (unless `url` has `"version=1.1.1"` or `"version=1.1.0"`), if false, then WMS version 1.1.1 will be used.
+  * Added `getFeatureInfoFormat` trait - Format parameter to pass to GetFeatureInfo requests. Defaults to "application/json", "application/vnd.ogc.gml", "text/html" or "text/plain" - depending on GetCapabilities response
+* Add `legendBackgroundColor` to `LegendOwnerTraits` and `backgroundColor` to `LegendTraits`
+* Add `sld_version=1.1.0` to `GetLegendGraphics` requests 
+* Filter `"styles","version","format","srs","crs"` conflicting query parameters from WMS `url`
+* WMS `styles`, `tileWidth`, `tileHeight` and `crs`/`srs` will use value in `url` if it is defined (similar to existing behavior with `layers`)
+* WMS will now show warning if invalid `layers` (eg if the specified `layers` don't exist in `GetCapabilities`)
+* ArcGisFeatureServerCatalogItem can now load more than the maximum feature limit set by the server by making multiple requests, and uses GeojsonMixin
+* Avoid creating duplication in categories in ArcGisPortalCatalogGroup.
+* Fix `CatalogMemberMixin.hasDescription` null bug
+* `TableStyle` now calculates `rectangle` for point based styles
+* Fixed error installing dependencies by changing dependency "pell" to use github protocol rather than unencrypted Git protocol, which is no longer supported by GitHub as of 2022-03-15.
 
 #### 8.1.24 - 2022-03-08
 

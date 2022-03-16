@@ -118,6 +118,7 @@ export default class Legend extends React.Component<{
             className={Styles.imageAnchor}
             target="_blank"
             rel="noreferrer noopener"
+            css={{ backgroundColor: legend.backgroundColor }}
           >
             <img
               src={proxiedUrl}
@@ -154,7 +155,7 @@ export default class Legend extends React.Component<{
     if (isDefined(legend.items) && legend.items.length > 0) {
       return (
         <li key={i} className={Styles.generatedLegend}>
-          <table>
+          <table css={{ backgroundColor: legend.backgroundColor }}>
             <tbody>{legend.items.map(this.renderLegendItem.bind(this))}</tbody>
           </table>
         </li>
@@ -277,10 +278,21 @@ export default class Legend extends React.Component<{
     if (
       isDefined(this.props.item.legends) &&
       this.props.item.legends.length > 0
-    )
+    ) {
+      const backgroundColor = hasTraits(
+        this.props.item,
+        LegendOwnerTraits,
+        "legendBackgroundColor"
+      )
+        ? this.props.item.legendBackgroundColor
+        : undefined;
+
       return (
         <ul className={Styles.legend}>
-          <div className={Styles.legendInner}>
+          <div
+            className={Styles.legendInner}
+            css={{ " li": { backgroundColor } }}
+          >
             {(this.props.item.legends as Model<LegendTraits>[]).map(
               (legend, i: number) => (
                 <React.Fragment key={i}>
@@ -295,6 +307,7 @@ export default class Legend extends React.Component<{
           </div>
         </ul>
       );
+    }
 
     return null;
   }
