@@ -13,6 +13,7 @@ Change Log
   * `/catalog/:id` ➡ opens the data catalogue to the specified member
 * Add `GeoJsonTraits.filterByProperties` - this can be used to filter GeoJSON features by properties
 * Add GeoJSON `czmlTemplate` support for `Polygon/MultiPolygon`
+* Add custom `heightOffset` property to `czmlTemplate`
 * [The next improvement]
 
 #### 8.1.25 - 2022-03-16

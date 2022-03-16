@@ -57,7 +57,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import formatPropertyValue from "../Core/formatPropertyValue";
 import hashFromString from "../Core/hashFromString";
 import isDefined from "../Core/isDefined";
-import { isJsonObject, JsonObject } from "../Core/Json";
+import { isJsonObject, JsonObject, isJsonNumber } from "../Core/Json";
 import { isJson } from "../Core/loadBlob";
 import makeRealPromise from "../Core/makeRealPromise";
 import StandardCssColors from "../Core/StandardCssColors";
@@ -719,6 +719,10 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             coords[2] = 0;
           }
 
+          if (isJsonNumber(this.czmlTemplate?.heightOffset)) {
+            coords[2] += this.czmlTemplate!.heightOffset;
+          }
+
           czml.position = {
             cartographicDegrees: point.coordinates
           };
@@ -747,14 +751,24 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             const holes: number[][] = [];
 
             geom[0].forEach(coords => {
-              positions.push(coords[0], coords[1], coords[2] ?? 0);
+              if (isJsonNumber(this.czmlTemplate?.heightOffset)) {
+                coords[2] = (coords[2] ?? 0) + this.czmlTemplate!.heightOffset;
+              }
+              positions.push(coords[0], coords[1], coords[2]);
             });
 
             geom.forEach((ring, idx) => {
               if (idx === 0) return;
 
               holes.push(
-                ...ring.map(coords => [coords[0], coords[1], coords[2] ?? 0])
+                ...ring.map(coords => {
+                  if (isJsonNumber(this.czmlTemplate?.heightOffset)) {
+                    coords[2] =
+                      (coords[2] ?? 0) + this.czmlTemplate!.heightOffset;
+                  }
+
+                  return [coords[0], coords[1], coords[2]];
+                })
               );
             });
 

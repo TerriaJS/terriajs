@@ -149,7 +149,10 @@ export class GeoJsonTraits extends mixTraits(
       }
       \`\`\`
 
-      For more info see Cesium's CZML docs https://github.com/AnalyticalGraphicsInc/czml-writer/wiki/CZML-Guide`
+    For more info see Cesium's CZML docs https://github.com/AnalyticalGraphicsInc/czml-writer/wiki/CZML-Guide
+
+    The following custom properties are supported:
+    - \`heightOffset: number\` to offset height values (in m)`
   })
   czmlTemplate?: JsonObject;
 }
