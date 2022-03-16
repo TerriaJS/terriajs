@@ -215,7 +215,8 @@
     "convertNotificationMessage": "Este link de compartilhamento é baseado em uma versão mais antiga do TerriaJS - o software que alimenta este mapa da web. Embora os melhores esforços sejam feitos para preservar o link, você pode encontrar problemas ao visualizar os dados.\n\nSe você for um usuário do link de compartilhamento, clique em OK para fazer a mensagem de aviso desaparecer e continuar acessando os dados.",
     "convertNotificationHelp": "Se você criou o link de compartilhamento, verifique o menu Ajuda para ver dicas sobre como atualizá-lo.",
     "convertNotificationFeedback": "Para perguntas ou comentários, clique aqui.",
-    "convertNotificationWarningsTitle": "Detalhes técnicos"
+    "convertNotificationWarningsTitle": "Detalhes técnicos",
+    "downloadMap": "Download mapa (png)"
   },
   "addData": {
     "done": "Ok",
@@ -339,7 +340,8 @@
     "promptHtml2": "<0> <0> APRESENTANDO </0> <1> Histórias de dados </1> <2> Crie e compartilhe histórias interativas diretamente de seu mapa. </2> </0>",
     "story": "História",
     "storyEditor": "Editor de Histórias",
-    "exitBtn": "Encerrar História"
+    "exitBtn": "Encerrar História",
+    "playStory": "História"
   },
   "settingPanel": {
     "mapView": "Visualização do mapa",
@@ -662,7 +664,8 @@
       "opendatasoft-group": "Portal Opendatasoft",
       "json": "JSON",
       "gltf": "GLTF",
-      "other": "Outro (usar serviço de conversão)"
+      "other": "Outro (usar serviço de conversão)",
+      "socrata-group": "Servidor Socrata"
     },
     "printWindow": {
       "onbeforeprint": "onbeforeprint",
@@ -1584,5 +1587,8 @@
   },
   "toast": {
     "mapIsZooming": "Carregando zoom ideal ..."
+  },
+  "printView": {
+    "loading": "Criando visualização de impressão ..."
   }
 }
