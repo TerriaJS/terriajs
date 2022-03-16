@@ -88,7 +88,7 @@ Specifies various options for configuring TerriaJS:
 |feedbackPostamble|no|**string**|feedback.feedbackPostamble|Text showing at the bottom of feedback form, supports the internationalization using the translation key.|
 |feedbackMinLength|no|**number**|0|Minimum length of feedback comment.| 
 |`theme`|no|**any**|`{}`|An object used to override theme properties - for example `{"logoHeight": "70px"}`.|
-|`storyRouteUrlPrefix`|no|**string**|undefined|(Experimental) Prefix to which `${appName}/${story-id}` is added to fetch JSON for stories when using `/story/${story-id}` routes. Should end in /|
+|`storyRouteUrlPrefix`|no|**string**|undefined|(Experimental) Prefix to which `:story-id` is added to fetch JSON for stories when using `/story/:story-id` routes. Should end in /|
 
 
 ### MagdaReferenceHeaders

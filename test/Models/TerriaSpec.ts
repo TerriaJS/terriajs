@@ -469,8 +469,9 @@ describe("Terria", function() {
     describe("using story route", function() {
       beforeEach(async function() {
         // These specs must run with a Terria constructed with "appBaseHref": "/"
+        // to make the specs work with Karma runner
         terria.updateParameters({
-          storyRouteUrlPrefix: "test/stories/"
+          storyRouteUrlPrefix: "test/stories/TerriaJS%20App/"
         });
       });
       it("sets playStory to 1", async function() {

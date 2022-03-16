@@ -285,7 +285,7 @@ interface ConfigParameters {
   printDisclaimer?: { url: string; text: string };
 
   /**
-   * Prefix to which ${appName}/${story-id} is added to fetch JSON for stories when using /story/${story-id} routes. Should end in /
+   * Prefix to which `:story-id` is added to fetch JSON for stories when using /story/:story-id routes. Should end in /
    */
   storyRouteUrlPrefix?: string;
 }
@@ -1066,9 +1066,7 @@ export default class Terria {
           let storyJson;
           try {
             storyJson = await loadJson(
-              `${this.configParameters.storyRouteUrlPrefix}${encodeURIComponent(
-                this.appName
-              )}/${segments[1]}`
+              `${this.configParameters.storyRouteUrlPrefix}${segments[1]}`
             );
           } catch (e) {
             throw TerriaError.from(e, {
