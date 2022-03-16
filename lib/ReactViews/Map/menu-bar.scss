@@ -19,7 +19,12 @@
 }
 .menu-bar--workbenchClosed {
   // transition-delay: 0.25s; // temporary disable delays for splitter lag w/o resizing on transitionend
-  margin-left: 165px;
+  margin-left: 160px;
+}
+.menu-bar--workbenchClosed {
+  [dir="rtl"] & {
+    margin-right: 150px;
+  }
 }
 .menu {
   composes: list-reset from "../../Sass/common/_base.scss";

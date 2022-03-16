@@ -1608,5 +1608,9 @@
   },
   "printView": {
     "loading": "Creating print view..."
+  },
+  "translate": {
+    "text": "العربية",
+    "title": "تغيير اللغة"
   }
 }
