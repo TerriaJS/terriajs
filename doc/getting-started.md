@@ -33,10 +33,6 @@ TerriaJS can be built and run on almost any macOS, Linux, or Windows system.  Th
 * [npm](https://www.npmjs.com/) v6.0 or later.  npm is usually installed automatically alongside the above.  You can check your npm version by running `npm --version`.
 * [yarn](https://yarnpkg.com/) v1.19.0 or later. This can be installed using `npm install -g yarn@^1.19.0`
 
-The following components are optional:
-
-* [GDAL](http://www.gdal.org/) - Used for the conversion service that transforms Esri Shapefiles and other more obscure formats into GeoJSON for display in TerriaJS.  This is _not_ required for formats that TerriaJS supports directly, including KML, GeoJSON, etc.
-
 ### Cloning TerriaMap
 
 The latest version of TerriaMap is on [GitHub](https://github.com), and the preferred way to get it is by using `git`:

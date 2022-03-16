@@ -7,6 +7,7 @@ Change Log
 * Hook up `beforeViewerChanged` and `afterViewerChanged` events so they are
   triggered on viewer change. They are raised only on change between 2D and 3D
   viewer mode.
+* Removed references to conversion service which is no longer used in version >=8.0.0.
 * [The next improvement]
 
 #### 8.1.25 - 2022-03-16
