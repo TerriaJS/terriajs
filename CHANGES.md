@@ -11,6 +11,7 @@ Change Log
 * Added experimental routing system - there may be breaking changes to this system in subsequent patch releases for a short time. The routes currently include:
   * `/story/:share-id` ➡ loads share JSON from a URL `${configParameters.storyRouteUrlPrefix}:share-id` (`configParameters.storyRouteUrlPrefix` must have a trailing slash)
   * `/catalog/:id` ➡ opens the data catalogue to the specified member
+* Change button cursor to pointer
 * [The next improvement]
 
 #### 8.1.25 - 2022-03-16
