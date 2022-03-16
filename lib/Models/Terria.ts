@@ -1035,6 +1035,15 @@ export default class Terria {
 
       // /catalog/ and /story/ routes
       if (newUrl.startsWith(this.appBaseHref)) {
+        function checkSegments(urlSegments: string[], customRoute: string) {
+          // Accept /${customRoute}/:some-id/ or /${customRoute}/:some-id
+          return (
+            ((urlSegments.length === 3 && urlSegments[2] === "") ||
+              urlSegments.length === 2) &&
+            urlSegments[0] === customRoute &&
+            urlSegments[1].length > 0
+          );
+        }
         const pageUrl = new URL(newUrl);
         // Find relative path from baseURI to documentURI excluding query and hash
         // then split into url segments
@@ -1042,11 +1051,7 @@ export default class Terria {
         const segments = (pageUrl.origin + pageUrl.pathname)
           .slice(this.appBaseHref.length)
           .split("/");
-        if (
-          segments.length === 2 &&
-          segments[0] === "catalog" &&
-          segments[1].length > 0
-        ) {
+        if (checkSegments(segments, "catalog")) {
           this.initSources.push({
             name: `Go to ${pageUrl.pathname}`,
             errorSeverity: TerriaErrorSeverity.Error,
@@ -1058,9 +1063,7 @@ export default class Terria {
           replaceUrl.pathname = new URL(this.appBaseHref).pathname;
           history.replaceState({}, "", replaceUrl.href);
         } else if (
-          segments.length === 2 &&
-          segments[0] === "story" &&
-          segments[1].length > 0 &&
+          checkSegments(segments, "story") &&
           isDefined(this.configParameters.storyRouteUrlPrefix)
         ) {
           let storyJson;

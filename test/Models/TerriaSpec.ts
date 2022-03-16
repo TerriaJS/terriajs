@@ -494,6 +494,20 @@ describe("Terria", function() {
             .initSources[0]
         );
       });
+      it("correctly adds the story share as a datasource when there's a trailing slash on story url", async function() {
+        await terria.updateApplicationUrl(
+          new URL("story/my-story/", document.baseURI).toString()
+        );
+        expect(terria.initSources.length).toBe(1);
+        expect(terria.initSources[0].name).toMatch(/my-story/);
+        if (!isInitData(terria.initSources[0]))
+          throw new Error("Expected initSource to be InitData from my-story");
+
+        expect(toJS(terria.initSources[0].data)).toEqual(
+          (await (await fetch("test/stories/TerriaJS%20App/my-story")).json())
+            .initSources[0]
+        );
+      });
     });
   });
 
