@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.26)
 
+* New `GltfMixin`, which `GltfCatalogItem` now uses.
 * [The next improvement]
 
 #### 8.1.25 - 2022-03-16
