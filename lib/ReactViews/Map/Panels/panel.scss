@@ -65,6 +65,12 @@
     color: $text-light;
   }
 }
+.inner {
+  [dir="rtl"] & {
+    right: 0;
+    text-align: right;
+  }
+}
 .inner-close-btn {
   composes: btn from "../../../Sass/common/_buttons.scss";
   position: absolute;

@@ -107,6 +107,13 @@
   }
 }
 
+.group-right {
+  [dir="rtl"] & {
+    right: unset;
+    left: 0;
+  }
+}
+
 .formSearchData {
   width: 90%;
   margin: auto;
