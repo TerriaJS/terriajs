@@ -38,14 +38,15 @@ export interface LanguageConfiguration {
   changeLanguageOnStartWhen: string[];
 }
 const defaultLanguageConfiguration = {
-  enabled: false,
+  enabled: true,
   debug: false,
   react: {
     useSuspense: false
   },
   languages: {
-    en: "english",
-    ar: "arabic"
+    en: "English",
+    fr: "french",
+    ar: "العربية"
   },
   fallbackLanguage: "en",
   changeLanguageOnStartWhen: [
