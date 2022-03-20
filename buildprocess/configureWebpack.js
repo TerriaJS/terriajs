@@ -195,10 +195,10 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
     });
 
     // Don't let Cesium's `crunch.js` see require - only the AMD version is relevant.
-    config.module.rules.push({
-        test: require.resolve('terriajs-cesium/Source/ThirdParty/crunch'),
-        loader: 'imports-loader?require=>false'
-    });
+    // config.module.rules.push({
+    //     test: require.resolve('terriajs-cesium/Source/ThirdParty/crunch'),
+    //     loader: 'imports-loader?require=>false'
+    // });
 
     config.module.rules.push({
         test: /\.(png|jpg|svg|gif)$/,
