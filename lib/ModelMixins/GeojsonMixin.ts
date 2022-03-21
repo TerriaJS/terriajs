@@ -761,14 +761,16 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               if (idx === 0) return;
 
               holes.push(
-                ...ring.map(coords => {
+                ring.reduce<number[]>((acc, current) => {
                   if (isJsonNumber(this.czmlTemplate?.heightOffset)) {
-                    coords[2] =
-                      (coords[2] ?? 0) + this.czmlTemplate!.heightOffset;
+                    current[2] =
+                      (current[2] ?? 0) + this.czmlTemplate!.heightOffset;
                   }
 
-                  return [coords[0], coords[1], coords[2]];
-                })
+                  acc.push(current[0], current[1], current[2]);
+
+                  return acc;
+                }, [])
               );
             });
 
