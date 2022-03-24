@@ -5,7 +5,7 @@ import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
-import measureElement from "../../ReactViews/HOCs/measureElement";
+import measureElement from "../HOCs/measureElement";
 import ChartPanel from "../Custom/Chart/ChartPanel";
 import Styles from "./bottom-dock.scss";
 import ChartDisclaimer from "./ChartDisclaimer";

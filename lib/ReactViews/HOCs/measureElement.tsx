@@ -1,9 +1,15 @@
 import React from "react";
 import debounce from "lodash-es/debounce";
+import Constructor from "../../Core/Constructor";
 
-const getDisplayName = WrappedComponent => {
+const getDisplayName = (WrappedComponent: any) => {
   return WrappedComponent.displayName || WrappedComponent.name || "Component";
 };
+
+interface State {
+  width: number;
+  height: number;
+}
 
 /*
     HOC to check component width & supply updated widths as a prop (stored interally via state)
@@ -24,14 +30,24 @@ const getDisplayName = WrappedComponent => {
     ref={this.refToMeasure}>
     ```
 */
-const measureElement = (WrappedComponent, verbose = true) => {
-  class MeasureElement extends React.Component {
-    constructor() {
-      super();
+const measureElement = function<P>(
+  WrappedComponent: React.ComponentType<P>,
+  verbose = true
+): Constructor<React.Component<
+  Omit<P, "heightFromMeasureElementHOC" | "widthFromMeasureElementHOC">
+>> {
+  class MeasureElement extends React.Component<P, State> {
+    wrappedComponent: React.RefObject<{
+      refToMeasure: any;
+    }>;
+    checkAndUpdateSizingWithDebounce: () => void;
+
+    constructor(props: P) {
+      super(props);
       this.wrappedComponent = React.createRef();
       this.state = {
-        width: null,
-        height: null
+        width: 0,
+        height: 0
       };
       this.checkAndUpdateSizing = this.checkAndUpdateSizing.bind(this);
       this.checkAndUpdateSizingWithDebounce = debounce(
@@ -104,7 +120,7 @@ const measureElement = (WrappedComponent, verbose = true) => {
       );
     }
   }
-  MeasureElement.displayName = `MeasureElement(${getDisplayName(
+  (MeasureElement as any).displayName = `MeasureElement(${getDisplayName(
     WrappedComponent
   )})`;
   return MeasureElement;
