@@ -449,6 +449,9 @@ const FormWrapper = styled(Box).attrs(props => ({
   @media (min-width: ${props => props.theme.sm}px) {
     bottom: 75px;
     right: 20px;
+    [dir="rtl"] & {
+      right: 1550px;
+    }
     //max-height: 60vh;
   }
   @media (max-width: ${props => props.theme.sm}px) {
