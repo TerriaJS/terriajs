@@ -101,16 +101,12 @@
   position: absolute;
   right: 0;
   z-index: 1;
-
-  > * {
-    display: inline-block;
-  }
-}
-
-.group-right {
   [dir="rtl"] & {
     right: unset;
     left: 0;
+  }
+  > * {
+    display: inline-block;
   }
 }
 

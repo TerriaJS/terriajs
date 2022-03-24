@@ -23,10 +23,8 @@
     left: -9999px;
     height: 0;
     width: 0;
-  }
-}
-.mobile-nav {
-  [dir="rtl"] & {
-    right: 0;
+    [dir="rtl"] & {
+      right: unset;
+    }
   }
 }

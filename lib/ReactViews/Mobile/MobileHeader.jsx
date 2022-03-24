@@ -142,7 +142,6 @@ const MobileHeader = observer(
 
     render() {
       const searchState = this.props.viewState.searchState;
-      const isRTL = this.props.viewState.isRTL;
       const { t } = this.props;
       const nowViewingLength =
         this.props.terria.workbench.items !== undefined
@@ -168,8 +167,11 @@ const MobileHeader = observer(
                 <Box
                   position="absolute"
                   css={`
-                    left: 5px;
-                    ${isRTL ? "left: 230" : "right: 5"}px;
+                    right: 270px;
+                    [dir="rtl"] & {
+                      left: 270px;
+                      right: 0px;
+                    }
                   `}
                 >
                   <HamburgerButton
