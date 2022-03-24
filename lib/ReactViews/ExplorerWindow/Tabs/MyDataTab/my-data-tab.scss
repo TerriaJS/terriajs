@@ -147,7 +147,10 @@
   padding: 3px 10px;
   border: 1px solid #ddd;
   // color: $color-primary;
-
+  [dir="rtl"] & {
+    right: 40px;
+    left: unset;
+  }
   &:hover,
   &:focus {
     // border: 1px solid $color-primary;
@@ -159,6 +162,11 @@
     display: inline-block;
     vertical-align: baseline;
     margin-right: 8px;
+    [dir="rtl"] & {
+      margin-left: 8px;
+      margin-right: unset;
+      transform: rotate(180deg);
+    }
     // fill: $color-primary;
   }
 }

@@ -9,6 +9,9 @@
   margin: 3vh auto;
   text-align: left;
   padding-top: 10vh;
+  [dir="rtl"] & {
+    text-align: right;
+  }
 }
 .tab-panel {
   text-align: left;
