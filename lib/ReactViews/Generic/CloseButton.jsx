@@ -17,6 +17,12 @@ const StyledCloseButton = styled(RawButton)`
     top: 15px;
     right:15px;
     `}
+  ${p =>
+    p.topLeft &&
+    `
+    top: 15px;
+    left: 15px;
+  `}
   svg {
     // fill: ${p => p.color || p.theme.darkWithOverlay};
     fill: ${p => p.color};
