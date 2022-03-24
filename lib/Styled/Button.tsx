@@ -7,14 +7,14 @@ const Icon = styled.span`
   margin-right: 8px;
 `;
 
-interface IButtonProps {
+export interface IButtonProps {
   fullWidth?: boolean;
   fullHeight?: boolean;
   styledWidth?: string;
   activeStyles?: boolean;
 }
 
-interface IStyledButtonProps extends IButtonProps {
+export interface IStyledButtonProps extends IButtonProps {
   shortMinHeight?: boolean;
   styledMinWidth?: string;
   marginLeft?: number;
@@ -152,7 +152,7 @@ export const RawButton = styled.button<IButtonProps>`
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
 `;
 
-interface ButtonProps extends IStyledButtonProps {
+export interface ButtonProps extends IStyledButtonProps {
   renderIcon?: () => React.ReactChild;
   iconProps?: any;
   textProps?: any;

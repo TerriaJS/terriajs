@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import IElementConfig from "../../Models/IElementConfig";
 
-interface WithControlledVisibilityProps {
+export interface WithControlledVisibilityProps {
   elementConfig: IElementConfig | undefined;
 }
 

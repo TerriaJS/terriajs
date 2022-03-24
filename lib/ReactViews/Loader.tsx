@@ -5,15 +5,16 @@ import Box from "../Styled/Box";
 import { TextSpan } from "../Styled/Text";
 import AnimatedSpinnerIcon from "../Styled/AnimatedSpinnerIcon";
 
-interface PropsType extends WithTranslation {
+export interface LoaderPropsType extends WithTranslation {
   message?: string;
   boxProps?: any;
   textProps?: any;
   t: TFunction;
   [spread: string]: any;
 }
-const Loader: React.FC<PropsType> = (props: PropsType) => {
-  const { message, t, boxProps, textProps, ...rest }: PropsType = props;
+
+const Loader: React.FC<LoaderPropsType> = (props: LoaderPropsType) => {
+  const { message, t, boxProps, textProps, ...rest }: LoaderPropsType = props;
   return (
     <Box fullWidth centered {...boxProps}>
       <AnimatedSpinnerIcon styledWidth={"15px"} css={"margin: 5px"} {...rest} />

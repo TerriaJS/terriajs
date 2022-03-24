@@ -133,7 +133,7 @@ export const GLYPHS = {
   info: require("../../wwwroot/images/icons/info.svg")
 };
 
-interface IconProps {
+export interface IconProps {
   glyph: { id: string };
   style?: any;
   className?: string;
@@ -152,7 +152,7 @@ export const Icon: React.FC<IconProps> = (props: IconProps) => {
   );
 };
 
-interface IStyledIconProps {
+export interface IStyledIconProps {
   displayInline?: boolean;
   styledWidth?: string;
   styledHeight?: string;

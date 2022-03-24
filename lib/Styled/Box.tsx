@@ -17,7 +17,7 @@ interface Column {
   col12?: boolean;
 }
 
-interface IBoxPropsBase {
+export interface IBoxPropsBase {
   position?: "relative" | "absolute" | "static";
   topRight?: boolean;
   displayInlineBlock?: boolean;
@@ -67,7 +67,7 @@ interface IBoxPropsBase {
   as?: React.ElementType | keyof JSX.IntrinsicElements;
 }
 
-type IBoxProps = IBoxPropsBase & OneKeyFrom<Column>;
+export type IBoxProps = IBoxPropsBase & OneKeyFrom<Column>;
 
 export const Box = styled.div<IBoxProps>`
   display: flex;

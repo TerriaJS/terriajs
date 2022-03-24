@@ -1,6 +1,5 @@
 import styled from "styled-components";
-
-import { StyledIcon, GLYPHS } from "./Icon";
+import { GLYPHS, StyledIcon } from "./Icon";
 
 const AnimatedSpinnerIcon = styled(StyledIcon).attrs({
   glyph: GLYPHS.loader
