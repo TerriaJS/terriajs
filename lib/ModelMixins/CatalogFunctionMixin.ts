@@ -27,7 +27,7 @@ function CatalogFunctionMixin<T extends Constructor<BaseType>>(Base: T) {
      *
      * Other job traits can be set in this function, as long as they aren't related to function parameters - for example the `url` and `processIdentier` trait for WPS are copied from the WPSCatalogFunction.
      */
-    abstract createJob(id: string): Promise<CatalogFunctionJobMixin>;
+    abstract createJob(id: string): Promise<CatalogFunctionJobMixin.Instance>;
 
     /**
      * Submit job:

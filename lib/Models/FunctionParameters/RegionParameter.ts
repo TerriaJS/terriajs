@@ -13,7 +13,10 @@ export default class RegionParameter extends FunctionParameter {
   readonly type = "region";
   readonly regionProvider: RegionTypeParameter;
 
-  constructor(catalogFunction: CatalogFunctionMixin, options: Options) {
+  constructor(
+    catalogFunction: CatalogFunctionMixin.Instance,
+    options: Options
+  ) {
     super(catalogFunction, options);
     this.regionProvider = options.regionProvider;
   }

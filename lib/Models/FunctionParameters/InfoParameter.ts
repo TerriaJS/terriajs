@@ -20,7 +20,10 @@ export default class InfoParameter extends FunctionParameter<string> {
   @observable _value: string | undefined;
   _errorMessage = false;
 
-  constructor(catalogFunction: CatalogFunctionMixin, options: Options) {
+  constructor(
+    catalogFunction: CatalogFunctionMixin.Instance,
+    options: Options
+  ) {
     super(catalogFunction, options);
 
     if (isDefined(options.value)) {

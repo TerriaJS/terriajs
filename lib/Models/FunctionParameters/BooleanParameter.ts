@@ -34,7 +34,10 @@ export default class BooleanParameter extends FunctionParameter<boolean>
     );
   }
 
-  constructor(catalogFunction: CatalogFunctionMixin, options: Options) {
+  constructor(
+    catalogFunction: CatalogFunctionMixin.Instance,
+    options: Options
+  ) {
     super(catalogFunction, options);
     this.trueName = options.trueName;
     this.trueDescription = options.trueDescription;

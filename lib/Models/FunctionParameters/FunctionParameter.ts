@@ -23,7 +23,7 @@ export default abstract class FunctionParameter<
   readonly isRequired: boolean;
 
   constructor(
-    protected readonly catalogFunction: CatalogFunctionMixin,
+    protected readonly catalogFunction: CatalogFunctionMixin.Instance,
     options: Options
   ) {
     this.id = options.id;

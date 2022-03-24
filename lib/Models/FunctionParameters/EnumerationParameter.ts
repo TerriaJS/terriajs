@@ -18,7 +18,10 @@ export default class EnumerationParameter extends FunctionParameter<string> {
   @observable
   readonly options: DimensionOption[];
 
-  constructor(catalogFunction: CatalogFunctionMixin, options: Options) {
+  constructor(
+    catalogFunction: CatalogFunctionMixin.Instance,
+    options: Options
+  ) {
     super(catalogFunction, options);
     this.options = options.options;
 

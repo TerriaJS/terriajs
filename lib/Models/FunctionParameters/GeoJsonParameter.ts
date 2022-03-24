@@ -47,7 +47,10 @@ export default class GeoJsonParameter
 
   readonly regionParameter: RegionParameter;
 
-  constructor(catalogFunction: CatalogFunctionMixin, options: Options) {
+  constructor(
+    catalogFunction: CatalogFunctionMixin.Instance,
+    options: Options
+  ) {
     super(catalogFunction, options);
     this.regionParameter = options.regionParameter;
   }
