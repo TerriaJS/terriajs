@@ -4,3 +4,18 @@
 .dropdown-inner {
   width: $setting-panel;
 }
+.panel__caret .InnerPanel__caret {
+  [dir="rtl"] & {
+    right: 0px !important;
+  }
+}
+.dropdown-inner {
+  [dir="rtl"] & {
+    right: -200px !important;
+  }
+  @media (max-width: $sm) {
+    [dir="rtl"] & {
+      right: 95px !important;
+    }
+  }
+}

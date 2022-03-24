@@ -39,6 +39,11 @@
     @include transform-origin(50%, top);
     right: -350px !important;
   }
+  @media (max-width: $sm) {
+    [dir="rtl"] & {
+      right: 0px !important;
+    }
+  }
 }
 
 .btn--catalogShare {
