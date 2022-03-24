@@ -10,7 +10,7 @@ export default class ResultPendingCatalogItem extends CatalogMemberMixin(
 
   loadPromise: Promise<any> = Promise.resolve();
 
-  protected forceLoadMetadata() {
+  forceLoadMetadata() {
     return this.loadPromise;
   }
 }

@@ -90,9 +90,7 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
       return false;
     }
 
-    private _mapItemsLoader = new AsyncLoader(
-      this.forceLoadMapItems.bind(this)
-    );
+    _mapItemsLoader = new AsyncLoader(this.forceLoadMapItems.bind(this));
 
     get loadMapItemsResult() {
       return this._mapItemsLoader.result;
@@ -151,7 +149,7 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      *
      * {@see AsyncLoader}
      */
-    protected abstract async forceLoadMapItems(): Promise<void>;
+    abstract async forceLoadMapItems(): Promise<void>;
 
     /**
      * Array of MapItems to show on the map/chart when Catalog Member is shown

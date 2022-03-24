@@ -15,7 +15,7 @@ export default class IonImageryCatalogItem extends MappableMixin(
     return IonImageryCatalogItem.type;
   }
 
-  protected forceLoadMapItems(): Promise<void> {
+  forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
 

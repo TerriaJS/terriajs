@@ -188,11 +188,11 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     return columnMajorTable;
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 
-  protected async forceLoadTableData(): Promise<string[][] | undefined> {
+  async forceLoadTableData(): Promise<string[][] | undefined> {
     return this.loadDataFromApis()
       .then(() => {
         runInAction(() => {

@@ -227,7 +227,7 @@ export default class ArcGisFeatureServerCatalogGroup extends UrlMixin(
     return i18next.t("models.arcGisFeatureServerCatalogGroup.name");
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  forceLoadMetadata(): Promise<void> {
     return FeatureServerStratum.load(this).then(stratum => {
       runInAction(() => {
         this.strata.set(FeatureServerStratum.stratumName, stratum);
@@ -235,7 +235,7 @@ export default class ArcGisFeatureServerCatalogGroup extends UrlMixin(
     });
   }
 
-  protected async forceLoadMembers() {
+  async forceLoadMembers() {
     const featureServerStratum = <FeatureServerStratum | undefined>(
       this.strata.get(FeatureServerStratum.stratumName)
     );

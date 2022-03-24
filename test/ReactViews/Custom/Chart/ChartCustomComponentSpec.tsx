@@ -128,7 +128,7 @@ class TestCatalogItem extends ChartableMixin(
   get mapItems() {
     return [];
   }
-  protected forceLoadMapItems(): Promise<void> {
+  forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
   get chartItems() {

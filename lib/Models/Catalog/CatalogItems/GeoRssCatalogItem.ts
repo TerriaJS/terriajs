@@ -190,7 +190,7 @@ export default class GeoRssCatalogItem extends MappableMixin(
     return i18next.t("models.georss.name");
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  forceLoadMetadata(): Promise<void> {
     return GeoRssStratum.load(this).then(stratum => {
       runInAction(() => {
         this.strata.set(GeoRssStratum.stratumName, stratum);
@@ -198,7 +198,7 @@ export default class GeoRssCatalogItem extends MappableMixin(
     });
   }
 
-  protected async forceLoadMapItems() {
+  async forceLoadMapItems() {
     if (isDefined(this.geoJsonItem)) {
       return (await this.geoJsonItem.loadMapItems()).throwIfError();
     }

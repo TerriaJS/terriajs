@@ -32,9 +32,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       return;
     }
 
-    private _metadataLoader = new AsyncLoader(
-      this.forceLoadMetadata.bind(this)
-    );
+    _metadataLoader = new AsyncLoader(this.forceLoadMetadata.bind(this));
 
     get loadMetadataResult() {
       return this._metadataLoader.result;
@@ -83,7 +81,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
      *
      * {@see AsyncLoader}
      */
-    protected async forceLoadMetadata() {}
+    async forceLoadMetadata() {}
 
     get hasCatalogMemberMixin() {
       return true;

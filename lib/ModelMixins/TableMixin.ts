@@ -67,7 +67,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     // Always use the getter and setter for this
     @observable
-    protected _dataColumnMajor: string[][] | undefined;
+    _dataColumnMajor: string[][] | undefined;
 
     /**
      * The list of region providers to be used with this table.
@@ -121,7 +121,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       if (this.dataColumnMajor === undefined) {
         return [];
       }
-      return this.dataColumnMajor.map((_, i) => this.getTableColumn(i));
+      return this.dataColumnMajor.map((_, i) => this._getTableColumn(i));
     }
 
     /**
@@ -133,7 +133,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       if (this.styles === undefined) {
         return [];
       }
-      return this.styles.map((_, i) => this.getTableStyle(i));
+      return this.styles.map((_, i) => this._getTableStyle(i));
     }
 
     /**
@@ -204,7 +204,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return isDefined(this.dataColumnMajor);
     }
 
-    protected async _exportData(): Promise<ExportData | undefined> {
+    async _exportData(): Promise<ExportData | undefined> {
       if (isDefined(this.dataColumnMajor)) {
         // I am assuming all columns have the same length -> so use first column
         let csvString = this.dataColumnMajor[0]
@@ -279,7 +279,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           this.activeTableStyle.colorMap instanceof ConstantColorMap) ||
         numPoints > numRegions
       ) {
-        const pointsDataSource = this.createLongitudeLatitudeDataSource(
+        const pointsDataSource = this._createLongitudeLatitudeDataSource(
           this.activeTableStyle
         );
 
@@ -320,7 +320,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     @computed get regionMappedImageryProvider() {
-      return this.createRegionMappedImageryProvider({
+      return this._createRegionMappedImageryProvider({
         style: this.activeTableStyle,
         currentTime: this.currentDiscreteJulianDate
       });
@@ -346,7 +346,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      *
      */
     @computed
-    private get tableChartItems(): ChartItem[] {
+    get _tableChartItems(): ChartItem[] {
       const style = this.activeTableStyle;
       if (style === undefined || !style.isChart()) {
         return [];
@@ -435,7 +435,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         this.activeTableStyle.isRegions() && this.discreteTimes?.length
           ? this.momentChart
           : undefined,
-        ...this.tableChartItems
+        ...this._tableChartItems
       ]);
     }
 
@@ -690,7 +690,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return this.tableColumns.find(column => column.name === name);
     }
 
-    protected async forceLoadMapItems() {
+    async forceLoadMapItems() {
       try {
         const dataColumnMajor = await this.forceLoadTableData();
 
@@ -726,7 +726,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      *
      * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
      */
-    protected abstract forceLoadTableData(): Promise<string[][] | undefined>;
+    abstract forceLoadTableData(): Promise<string[][] | undefined>;
 
     async loadRegionProviderList() {
       if (isDefined(this.regionProviderList)) return;
@@ -767,7 +767,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       this.dataColumnMajor = appended;
     }
 
-    private readonly createLongitudeLatitudeDataSource = createTransformer(
+    readonly _createLongitudeLatitudeDataSource = createTransformer(
       (style: TableStyle): DataSource | undefined => {
         if (!style.isPoints()) {
           return undefined;
@@ -794,7 +794,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       }
     );
 
-    private readonly createRegionMappedImageryProvider = createTransformer(
+    readonly _createRegionMappedImageryProvider = createTransformer(
       (input: {
         style: TableStyle;
         currentTime: JulianDate | undefined;
@@ -802,14 +802,14 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         createRegionMappedImageryProvider(input.style, input.currentTime)
     );
 
-    private readonly getTableColumn: ITransformer<
+    readonly _getTableColumn: ITransformer<
       number,
       TableColumn
     > = createTransformer((index: number) => {
       return new TableColumn(this, index);
     });
 
-    private readonly getTableStyle: ITransformer<
+    readonly _getTableStyle: ITransformer<
       number,
       TableStyle
     > = createTransformer((index: number) => {

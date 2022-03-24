@@ -92,7 +92,7 @@ function TimeFilterMixin<T extends Constructor<Model<TimeFilterTraits>>>(
     }
 
     @computed
-    private get imageryUrls() {
+    get _imageryUrls() {
       if (!MappableMixin.isMixedInto(this)) return [];
       return filterOutUndefined(
         this.mapItems.map(
@@ -163,7 +163,7 @@ function TimeFilterMixin<T extends Constructor<Model<TimeFilterTraits>>>(
 
       const position = feature.position.getValue(this.currentTimeAsJulianDate);
       const cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
-      const featureImageryUrl = this.imageryUrls.find(
+      const featureImageryUrl = this._imageryUrls.find(
         url => providerCoords[url]
       );
       const tileCoords = featureImageryUrl && providerCoords[featureImageryUrl];

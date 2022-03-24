@@ -327,10 +327,10 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     return "sos";
   }
 
-  protected async forceLoadMetadata() {}
+  async forceLoadMetadata() {}
 
   @action
-  protected async forceLoadTableData() {
+  async forceLoadTableData() {
     if (this.showAsChart === true) {
       return this.loadChartData();
     } else {

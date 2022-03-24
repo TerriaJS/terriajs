@@ -75,7 +75,7 @@ export default class CsvCatalogItem extends TableMixin(
     return super.cacheDuration || "1d";
   }
 
-  protected async _exportData() {
+  async _exportData() {
     if (isDefined(this._csvFile)) {
       return {
         name: (this.name || this.uniqueId)!,
@@ -142,7 +142,7 @@ export default class CsvCatalogItem extends TableMixin(
     });
   }
 
-  protected forceLoadTableData(): Promise<string[][]> {
+  forceLoadTableData(): Promise<string[][]> {
     if (this.csvString !== undefined) {
       return Csv.parseString(
         this.csvString,

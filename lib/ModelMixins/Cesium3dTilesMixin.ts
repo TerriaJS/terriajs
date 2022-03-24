@@ -87,7 +87,11 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
   abstract class Cesium3dTilesMixin extends ClippingMixin(
     ShadowMixin(MappableMixin(CatalogMemberMixin(Base)))
   ) {
-    protected tileset?: ObservableCesium3DTileset;
+    get tileset() {
+      return this._tileset;
+    }
+
+    _tileset?: ObservableCesium3DTileset;
 
     constructor(...args: any[]) {
       super(...args);
@@ -98,7 +102,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
 
     // Just a variable to save the original tileset.root.transform if it exists
     @observable
-    private originalRootTransform: Matrix4 = Matrix4.IDENTITY.clone();
+    _originalRootTransform: Matrix4 = Matrix4.IDENTITY.clone();
 
     // An observable tracker for tileset.ready
     @observable
@@ -116,9 +120,9 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       return Matrix4.IDENTITY.clone();
     }
 
-    protected async forceLoadMapItems() {
+    async forceLoadMapItems() {
       try {
-        this.loadTileset();
+        this._loadTileset();
         if (this.tileset) {
           const tileset = await makeRealPromise<Cesium3DTileset>(
             this.tileset.readyPromise
@@ -142,20 +146,20 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       }
     }
 
-    private loadTileset() {
+    _loadTileset() {
       if (!isDefined(this.url) && !isDefined(this.ionAssetId)) {
         throw `\`url\` and \`ionAssetId\` are not defined for ${getName(this)}`;
       }
 
       let resource = undefined;
       if (isDefined(this.ionAssetId)) {
-        resource = this.createResourceFromIonId(
+        resource = this._createResourceFromIonId(
           this.ionAssetId,
           this.ionAccessToken,
           this.ionServer
         );
       } else if (isDefined(this.url)) {
-        resource = this.createResourceFromUrl(
+        resource = this._createResourceFromUrl(
           proxyCatalogItemUrl(this, this.url)
         );
       }
@@ -176,7 +180,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
         })
       );
       if (!tileset.destroyed) {
-        this.tileset = tileset;
+        this._tileset = tileset;
       }
 
       // Save the original root tile transform and set its value to an identity
@@ -187,7 +191,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
         action(() => {
           this.isTilesetReady = tileset.ready;
           if (tileset.root !== undefined) {
-            this.originalRootTransform = tileset.root.transform.clone();
+            this._originalRootTransform = tileset.root.transform.clone();
             tileset.root.transform = Matrix4.IDENTITY.clone();
           }
         })
@@ -198,7 +202,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
      * Computes a new model matrix by combining the given matrix with the
      * origin, rotation & scale trait values
      */
-    private computeModelMatrixFromTransformationTraits(modelMatrix: Matrix4) {
+    _computeModelMatrixFromTransformationTraits(modelMatrix: Matrix4) {
       let scale = Matrix4.getScale(modelMatrix, new Cartesian3());
       let position = Matrix4.getTranslation(modelMatrix, new Cartesian3());
       let orientation = Quaternion.fromRotationMatrix(
@@ -243,8 +247,8 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
      */
     @computed
     get modelMatrix(): Matrix4 {
-      const modelMatrixFromTraits = this.computeModelMatrixFromTransformationTraits(
-        this.originalRootTransform
+      const modelMatrixFromTraits = this._computeModelMatrixFromTransformationTraits(
+        this._originalRootTransform
       );
       return modelMatrixFromTraits;
     }
@@ -309,7 +313,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       return options;
     }
 
-    private createResourceFromUrl(url: Resource | string) {
+    _createResourceFromUrl(url: Resource | string) {
       if (!isDefined(url)) {
         return;
       }
@@ -324,7 +328,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       return resource;
     }
 
-    private async createResourceFromIonId(
+    async _createResourceFromIonId(
       ionAssetId: number | undefined,
       ionAccessToken: string | undefined,
       ionServer: string | undefined

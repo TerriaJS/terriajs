@@ -27,12 +27,12 @@ function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
     implements ReferenceInterface {
     /** A "weak" reference has a target which doesn't include the `sourceReference` property.
      * This means the reference is treated more like a shortcut to the target. So share links, for example, will use the target instead of sourceReference. */
-    protected readonly weakReference: boolean = false;
+    readonly weakReference: boolean = false;
 
     @observable
-    private _target: BaseModel | undefined;
+    _target: BaseModel | undefined;
 
-    private _referenceLoader = new AsyncLoader(() => {
+    _referenceLoader = new AsyncLoader(() => {
       const previousTarget = untracked(() => this._target);
       return this.forceLoadReference(previousTarget).then(target => {
         if (!target) {
@@ -117,7 +117,7 @@ function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
      *
      * {@see AsyncLoader}
      */
-    protected abstract forceLoadReference(
+    abstract forceLoadReference(
       previousTarget: BaseModel | undefined
     ): Promise<BaseModel | undefined>;
 

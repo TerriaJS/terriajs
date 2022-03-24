@@ -132,7 +132,7 @@ export default class UserDrawing extends MappableMixin(
     });
   }
 
-  protected forceLoadMapItems(): Promise<void> {
+  forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
 

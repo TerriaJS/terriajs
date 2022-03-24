@@ -11,7 +11,6 @@ import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import Constructor from "../Core/Constructor";
 import CommonStrata from "../Models/Definition/CommonStrata";
-import CreateModel from "../Models/Definition/CreateModel";
 import Model from "../Models/Definition/Model";
 import GltfTraits from "../Traits/TraitsClasses/GltfTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
@@ -28,7 +27,7 @@ type GltfModel = Model<GltfTraits>;
 
 function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
   class GltfMixin extends ShadowMixin(
-    UrlMixin(CatalogMemberMixin(MappableMixin(CreateModel(GltfTraits))))
+    UrlMixin(CatalogMemberMixin(MappableMixin(Base)))
   ) {
     @observable hasLocalData = false;
 
@@ -37,7 +36,7 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
     }
 
     @computed
-    private get cesiumUpAxis() {
+    get _cesiumUpAxis() {
       if (this.upAxis === undefined) {
         return Axis.Y;
       }
@@ -45,7 +44,7 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
     }
 
     @computed
-    private get cesiumForwardAxis() {
+    get _cesiumForwardAxis() {
       if (this.forwardAxis === undefined) {
         return Axis.Z;
       }
@@ -53,7 +52,7 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
     }
 
     @computed
-    private get cesiumHeightReference() {
+    get _cesiumHeightReference() {
       const heightReference: HeightReference =
         // @ts-ignore
         HeightReference[this.heightReference] || HeightReference.NONE;
@@ -61,7 +60,7 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
     }
 
     @computed
-    private get cesiumPosition(): Cartesian3 {
+    get _cesiumPosition(): Cartesian3 {
       if (
         this.origin !== undefined &&
         this.origin.longitude !== undefined &&
@@ -82,7 +81,7 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
      * Returns the orientation of the model in the ECEF frame
      */
     @computed
-    private get orientation(): Quaternion {
+    get _orientation(): Quaternion {
       const { heading, pitch, roll } = this.rotation;
       const hpr = HeadingPitchRoll.fromDegrees(
         heading ?? 0,
@@ -90,13 +89,13 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
         roll ?? 0
       );
       const orientation = Transforms.headingPitchRollQuaternion(
-        this.cesiumPosition,
+        this._cesiumPosition,
         hpr
       );
       return orientation;
     }
 
-    protected forceLoadMetadata(): Promise<void> {
+    forceLoadMetadata(): Promise<void> {
       return Promise.resolve();
     }
 
@@ -108,40 +107,40 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
     }
 
     @computed
-    private get model() {
+    get _model() {
       if (this.url === undefined) {
         return undefined;
       }
       const options = {
         uri: new ConstantProperty(this.url),
-        upAxis: new ConstantProperty(this.cesiumUpAxis),
-        forwardAxis: new ConstantProperty(this.cesiumForwardAxis),
+        upAxis: new ConstantProperty(this._cesiumUpAxis),
+        forwardAxis: new ConstantProperty(this._cesiumForwardAxis),
         scale: new ConstantProperty(this.scale !== undefined ? this.scale : 1),
         shadows: new ConstantProperty(this.cesiumShadows),
-        heightReference: new ConstantProperty(this.cesiumHeightReference)
+        heightReference: new ConstantProperty(this._cesiumHeightReference)
       };
       return new ModelGraphics(options);
     }
 
-    protected forceLoadMapItems(): Promise<void> {
+    forceLoadMapItems(): Promise<void> {
       return Promise.resolve();
     }
 
     @computed
     get mapItems() {
-      if (this.model === undefined) {
+      if (this._model === undefined) {
         return [];
       }
 
-      this.model.show = new ConstantProperty(this.show);
+      this._model.show = new ConstantProperty(this.show);
       const dataSource: CustomDataSource = new CustomDataSource(
         this.name || "glTF model"
       );
       dataSource.entities.add(
         new Entity({
-          position: new ConstantPositionProperty(this.cesiumPosition),
-          orientation: new ConstantProperty(this.orientation),
-          model: this.model
+          position: new ConstantPositionProperty(this._cesiumPosition),
+          orientation: new ConstantProperty(this._orientation),
+          model: this._model
         })
       );
       return [dataSource];

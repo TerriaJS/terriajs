@@ -379,7 +379,7 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
     return i18next.t("models.arcGisFeatureServerCatalogItem.name");
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async forceLoadMetadata(): Promise<void> {
     if (this.strata.get(FeatureServerStratum.stratumName) === undefined) {
       const stratum = await FeatureServerStratum.load(this);
       runInAction(() => {
@@ -388,7 +388,7 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
     }
   }
 
-  protected async forceLoadGeojsonData(): Promise<
+  async forceLoadGeojsonData(): Promise<
     FeatureCollectionWithCrs<Geometry | GeometryCollection, Properties>
   > {
     const getEsriLayerJson = async (resultOffset?: number) =>
@@ -458,7 +458,7 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
     );
   }
 
-  protected async loadGeoJsonDataSource(
+  async loadGeoJsonDataSource(
     geoJson: FeatureCollectionWithCrs
   ): Promise<GeoJsonDataSource> {
     const dataSource = await super.loadGeoJsonDataSource(geoJson);

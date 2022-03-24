@@ -42,7 +42,7 @@ class TestCatalogItem extends TileErrorHandlerMixin(
     };
   }
 
-  protected forceLoadMapItems(): Promise<void> {
+  forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
 

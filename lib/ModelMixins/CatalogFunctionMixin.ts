@@ -1,20 +1,17 @@
 import { runInAction, toJS } from "mobx";
-import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
 import CommonStrata from "../Models/Definition/CommonStrata";
-import FunctionParameter from "../Models/FunctionParameters/FunctionParameter";
 import Model from "../Models/Definition/Model";
+import FunctionParameter from "../Models/FunctionParameters/FunctionParameter";
 import CatalogFunctionTraits from "../Traits/TraitsClasses/CatalogFunctionTraits";
 import CatalogFunctionJobMixin from "./CatalogFunctionJobMixin";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 
-type CatalogFunctionMixin = Model<CatalogFunctionTraits>;
+type BaseType = Model<CatalogFunctionTraits>;
 
-function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
-  Base: T
-) {
+function CatalogFunctionMixin<T extends Constructor<BaseType>>(Base: T) {
   abstract class CatalogFunctionMixin extends CatalogMemberMixin(Base) {
     /**
      * Function parameters are rendered as ParameterEditors, their values directly map to the `parameters` trait. When a FunctionParameter value is modified, it will automatically update `parameters` trait.
@@ -30,7 +27,7 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
      *
      * Other job traits can be set in this function, as long as they aren't related to function parameters - for example the `url` and `processIdentier` trait for WPS are copied from the WPSCatalogFunction.
      */
-    protected abstract createJob(id: string): Promise<CatalogFunctionJobMixin>;
+    abstract createJob(id: string): Promise<CatalogFunctionJobMixin>;
 
     /**
      * Submit job:

@@ -344,7 +344,7 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(
     return WebMapServiceCatalogGroup.type;
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async forceLoadMetadata(): Promise<void> {
     let getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
     );
@@ -359,7 +359,7 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(
     }
   }
 
-  protected async forceLoadMembers(): Promise<void> {
+  async forceLoadMembers(): Promise<void> {
     let getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
     );
@@ -368,7 +368,7 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(
     }
   }
 
-  protected get defaultGetCapabilitiesUrl(): string | undefined {
+  get defaultGetCapabilitiesUrl(): string | undefined {
     if (this.uri) {
       return this.uri
         .clone()

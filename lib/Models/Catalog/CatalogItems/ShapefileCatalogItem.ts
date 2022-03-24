@@ -47,7 +47,7 @@ class ShapefileCatalogItem extends GeoJsonMixin(
     return isDefined(this._file);
   }
 
-  protected async forceLoadGeojsonData() {
+  async forceLoadGeojsonData() {
     // ShapefileCatalogItem._file
     if (this._file) {
       return await parseShapefile(this._file);

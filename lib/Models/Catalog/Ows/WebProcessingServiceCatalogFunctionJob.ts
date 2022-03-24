@@ -380,7 +380,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     return [];
   }
 
-  protected async forceLoadMetadata() {
+  async forceLoadMetadata() {
     await super.forceLoadMetadata();
     const stratum = await WpsLoadableStratum.load(this);
     runInAction(() => {
@@ -388,7 +388,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     });
   }
 
-  protected async forceLoadMapItems(): Promise<void> {
+  async forceLoadMapItems(): Promise<void> {
     if (isDefined(this.geoJsonItem)) {
       const geoJsonItem = this.geoJsonItem;
       (await geoJsonItem.loadMapItems()).throwIfError();

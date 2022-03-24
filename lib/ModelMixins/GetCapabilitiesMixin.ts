@@ -10,7 +10,7 @@ function GetCapabilitiesMixin<T extends Constructor<CapabilitiesModel>>(
   Base: T
 ) {
   abstract class GetCapabilitiesMixin extends Base {
-    protected abstract get defaultGetCapabilitiesUrl(): string | undefined;
+    abstract get defaultGetCapabilitiesUrl(): string | undefined;
 
     @computed
     get getCapabilitiesUrl(): string | undefined {

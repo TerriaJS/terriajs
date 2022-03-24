@@ -17,8 +17,8 @@ export default function AutoRefreshingMixin<
   T extends Constructor<AutoRefreshing>
 >(Base: T) {
   abstract class AutoRefreshingMixin extends MappableMixin(Base) {
-    private autoRefreshDisposer: IReactionDisposer | undefined;
-    private autorunRefreshEnableDisposer: IReactionDisposer | undefined;
+    _autoRefreshDisposer: IReactionDisposer | undefined;
+    _autorunRefreshEnableDisposer: IReactionDisposer | undefined;
 
     /** Return the interval in seconds to poll for updates. */
     abstract get refreshInterval(): number | undefined;
@@ -29,26 +29,26 @@ export default function AutoRefreshingMixin<
     constructor(...args: any[]) {
       super(...args);
       // We should only poll when our map items have consumers
-      onBecomeObserved(this, "mapItems", this.startAutoRefresh.bind(this));
-      onBecomeUnobserved(this, "mapItems", this.stopAutoRefresh.bind(this));
+      onBecomeObserved(this, "mapItems", this._startAutoRefresh.bind(this));
+      onBecomeUnobserved(this, "mapItems", this._stopAutoRefresh.bind(this));
     }
 
-    private startAutoRefresh() {
-      if (!this.autorunRefreshEnableDisposer) {
+    _startAutoRefresh() {
+      if (!this._autorunRefreshEnableDisposer) {
         // Toggle autorefresh when `refreshEnabled` trait changes
-        this.autorunRefreshEnableDisposer = reaction(
+        this._autorunRefreshEnableDisposer = reaction(
           () => this.refreshEnabled,
           () => {
             if (this.refreshEnabled) {
-              this.startAutoRefresh();
+              this._startAutoRefresh();
             } else {
-              this.stopAutoRefresh();
+              this._stopAutoRefresh();
             }
           }
         );
       }
-      if (!this.autoRefreshDisposer && this.refreshEnabled) {
-        this.autoRefreshDisposer = reaction(
+      if (!this._autoRefreshDisposer && this.refreshEnabled) {
+        this._autoRefreshDisposer = reaction(
           () => this._pollingTimer,
           () => {
             if (this.show) this.refreshData();
@@ -57,19 +57,19 @@ export default function AutoRefreshingMixin<
       }
     }
 
-    private stopAutoRefresh() {
-      if (this.autorunRefreshEnableDisposer) {
-        this.autorunRefreshEnableDisposer();
-        this.autorunRefreshEnableDisposer = undefined;
+    _stopAutoRefresh() {
+      if (this._autorunRefreshEnableDisposer) {
+        this._autorunRefreshEnableDisposer();
+        this._autorunRefreshEnableDisposer = undefined;
       }
-      if (this.autoRefreshDisposer) {
-        this.autoRefreshDisposer();
-        this.autoRefreshDisposer = undefined;
+      if (this._autoRefreshDisposer) {
+        this._autoRefreshDisposer();
+        this._autoRefreshDisposer = undefined;
       }
     }
 
     @computed
-    private get _pollingTimer(): number | undefined {
+    get _pollingTimer(): number | undefined {
       if (this.refreshInterval !== undefined) {
         return now(this.refreshInterval * 1000);
       } else {

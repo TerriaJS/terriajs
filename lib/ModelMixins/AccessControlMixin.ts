@@ -9,7 +9,8 @@ function AccessControlMixin<T extends Constructor<AccessControlModel>>(
   Base: T
 ) {
   class Klass extends Base {
-    @observable private _accessType: string | undefined;
+    @observable
+    _accessType: string | undefined;
 
     get hasAccessControlMixin() {
       return true;

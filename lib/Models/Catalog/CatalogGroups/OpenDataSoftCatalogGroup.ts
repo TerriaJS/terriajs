@@ -257,7 +257,7 @@ export default class OpenDataSoftCatalogGroup extends UrlMixin(
     return OpenDataSoftCatalogGroup.type;
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async forceLoadMetadata(): Promise<void> {
     if (!this.strata.has(OpenDataSoftCatalogStratum.stratumName)) {
       const stratum = await OpenDataSoftCatalogStratum.load(this);
       runInAction(() => {
@@ -266,7 +266,7 @@ export default class OpenDataSoftCatalogGroup extends UrlMixin(
     }
   }
 
-  protected async forceLoadMembers() {
+  async forceLoadMembers() {
     const opendatasoftServerStratum = <OpenDataSoftCatalogStratum | undefined>(
       this.strata.get(OpenDataSoftCatalogStratum.stratumName)
     );

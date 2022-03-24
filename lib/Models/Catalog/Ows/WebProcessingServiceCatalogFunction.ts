@@ -78,7 +78,7 @@ export type WpsInputData = {
 
 type ParameterConverter = {
   inputToParameter: (
-    catalogFunction: CatalogFunctionMixin,
+    catalogFunction: CatalogFunctionMixin.Instance,
     input: Input,
     options: FunctionParameterOptions
   ) => FunctionParameter | undefined;
@@ -246,7 +246,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     });
   }
 
-  protected async createJob(id: string) {
+  async createJob(id: string) {
     const job = new WebProcessingServiceCatalogFunctionJob(id, this.terria);
 
     let dataInputs = filterOutUndefined(
@@ -284,7 +284,10 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     return job;
   }
 
-  convertInputToParameter(catalogFunction: CatalogFunctionMixin, input: Input) {
+  convertInputToParameter(
+    catalogFunction: CatalogFunctionMixin.Instance,
+    input: Input
+  ) {
     if (!isDefined(input.Identifier)) {
       return;
     }
@@ -328,7 +331,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
 
 const LiteralDataConverter = {
   inputToParameter: function(
-    catalogFunction: CatalogFunctionMixin,
+    catalogFunction: CatalogFunctionMixin.Instance,
     input: Input,
     options: FunctionParameterOptions
   ) {
@@ -365,7 +368,7 @@ const LiteralDataConverter = {
 
 const DateTimeConverter = {
   inputToParameter: function(
-    catalogFunction: CatalogFunctionMixin,
+    catalogFunction: CatalogFunctionMixin.Instance,
     input: Input,
     options: FunctionParameterOptions
   ) {
@@ -406,7 +409,7 @@ const PolygonConverter = simpleGeoJsonDataConverter(
 
 const RectangleConverter = {
   inputToParameter: function(
-    catalogFunction: CatalogFunctionMixin,
+    catalogFunction: CatalogFunctionMixin.Instance,
     input: Input,
     options: FunctionParameterOptions
   ) {
@@ -495,7 +498,7 @@ const RectangleConverter = {
 
 const GeoJsonGeometryConverter = {
   inputToParameter: function(
-    catalogFunction: CatalogFunctionMixin,
+    catalogFunction: CatalogFunctionMixin.Instance,
     input: Input,
     options: FunctionParameterOptions
   ) {
@@ -546,7 +549,7 @@ const GeoJsonGeometryConverter = {
 function simpleGeoJsonDataConverter(schemaType: string, klass: any) {
   return {
     inputToParameter: function(
-      catalogFunction: CatalogFunctionMixin,
+      catalogFunction: CatalogFunctionMixin.Instance,
       input: Input,
       options: FunctionParameterOptions
     ) {

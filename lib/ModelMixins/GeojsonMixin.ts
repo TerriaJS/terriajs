@@ -176,13 +176,13 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     UrlMixin(CatalogMemberMixin(Base))
   ) {
     @observable
-    private _dataSource: CzmlDataSource | GeoJsonDataSource | undefined;
+    _dataSource: CzmlDataSource | GeoJsonDataSource | undefined;
 
     /** This is only public so that it can be accessed in GeoJsonStratum, treat it as private */
     @observable
     _imageryProvider: ProtomapsImageryProvider | undefined;
 
-    private tableStyleReactionDisposer: IReactionDisposer | undefined;
+    _tableStyleReactionDisposer: IReactionDisposer | undefined;
 
     /** Geojson FeatureCollection in WGS84 */
     @observable.ref _readyData?: FeatureCollectionWithCrs;
@@ -214,19 +214,19 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       onBecomeObserved(
         this,
         "mapItems",
-        this.startTableStyleReaction.bind(this)
+        this._startTableStyleReaction.bind(this)
       );
       onBecomeUnobserved(
         this,
         "mapItems",
-        this.stopTableStyleReaction.bind(this)
+        this._stopTableStyleReaction.bind(this)
       );
     }
 
-    private startTableStyleReaction() {
-      if (!this.tableStyleReactionDisposer) {
+    _startTableStyleReaction() {
+      if (!this._tableStyleReactionDisposer) {
         // Update protomaps imagery provider if activeTableStyle changes
-        this.tableStyleReactionDisposer = reaction(
+        this._tableStyleReactionDisposer = reaction(
           () => [
             this.useMvt,
             this.readyData,
@@ -239,7 +239,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           () => {
             if (this._imageryProvider && this.readyData && this.useMvt) {
               runInAction(() => {
-                this._imageryProvider = this.createProtomapsImageryProvider(
+                this._imageryProvider = this._createProtomapsImageryProvider(
                   this.readyData!
                 );
               });
@@ -251,10 +251,10 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       }
     }
 
-    private stopTableStyleReaction() {
-      if (this.tableStyleReactionDisposer) {
-        this.tableStyleReactionDisposer();
-        this.tableStyleReactionDisposer = undefined;
+    _stopTableStyleReaction() {
+      if (this._tableStyleReactionDisposer) {
+        this._tableStyleReactionDisposer();
+        this._tableStyleReactionDisposer = undefined;
       }
     }
 
@@ -289,7 +289,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return isDefined(this.readyData);
     }
 
-    protected async _exportData(): Promise<ExportData | undefined> {
+    async _exportData(): Promise<ExportData | undefined> {
       if (isDefined(this.readyData)) {
         let name = this.name || this.uniqueId || "data.geojson";
         if (!isJson(name)) {
@@ -381,7 +381,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
      *
      * Errors can be thrown here.
      */
-    protected abstract forceLoadGeojsonData(): Promise<
+    abstract forceLoadGeojsonData(): Promise<
       FeatureCollectionWithCrs | undefined
     >;
 
@@ -395,7 +395,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
      *    - Using `timeProperty` or `heightProperty` or `perPropertyStyles` or simple-style `marker-symbol`
      *    - More than 50% of GeoJSON features have simply-style properties
      */
-    protected async forceLoadMapItems(): Promise<void> {
+    async forceLoadMapItems(): Promise<void> {
       let useMvt = this.useMvt;
       const czmlTemplate = this.czmlTemplate;
 
@@ -446,14 +446,14 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         });
 
         if (isDefined(czmlTemplate)) {
-          const dataSource = await this.loadCzmlDataSource(geoJsonWgs84);
+          const dataSource = await this._loadCzmlDataSource(geoJsonWgs84);
           runInAction(() => {
             this._dataSource = dataSource;
             this._imageryProvider = undefined;
           });
         } else if (useMvt) {
           runInAction(() => {
-            this._imageryProvider = this.createProtomapsImageryProvider(
+            this._imageryProvider = this._createProtomapsImageryProvider(
               geoJsonWgs84
             );
             this._dataSource = undefined;
@@ -476,7 +476,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     }
 
     @action
-    private addPerPropertyStyleToGeoJson(fc: FeatureCollectionWithCrs) {
+    _addPerPropertyStyleToGeoJson(fc: FeatureCollectionWithCrs) {
       for (let i = 0; i < fc.features.length; i++) {
         const featureProperties = fc.features[i].properties;
         if (featureProperties === null) {
@@ -516,7 +516,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     }
 
     @action
-    private createProtomapsImageryProvider(geoJson: FeatureCollectionWithCrs) {
+    _createProtomapsImageryProvider(geoJson: FeatureCollectionWithCrs) {
       let currentTimeRows: number[] | undefined;
 
       // If time varying, get row indices which match
@@ -664,7 +664,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       });
     }
 
-    private async loadCzmlDataSource(
+    async _loadCzmlDataSource(
       geoJson: FeatureCollectionWithCrs
     ): Promise<CzmlDataSource> {
       const czmlTemplate = runInAction(() => toJS(this.czmlTemplate));
@@ -779,7 +779,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return toJS(options);
     }
 
-    protected async loadGeoJsonDataSource(
+    async loadGeoJsonDataSource(
       geoJson: FeatureCollectionWithCrs
     ): Promise<GeoJsonDataSource> {
       /* Style information is applied as follows, in decreasing priority:
@@ -790,7 +790,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             See https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0
       */
 
-      this.addPerPropertyStyleToGeoJson(geoJson);
+      this._addPerPropertyStyleToGeoJson(geoJson);
 
       const now = JulianDate.now();
 

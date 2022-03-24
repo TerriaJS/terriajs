@@ -417,7 +417,7 @@ export default class CkanCatalogGroup extends UrlMixin(
     return "1d";
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async forceLoadMetadata(): Promise<void> {
     const ckanServerStratum = <CkanServerStratum | undefined>(
       this.strata.get(CkanServerStratum.stratumName)
     );
@@ -430,7 +430,7 @@ export default class CkanCatalogGroup extends UrlMixin(
     }
   }
 
-  protected async forceLoadMembers() {
+  async forceLoadMembers() {
     const ckanServerStratum = <CkanServerStratum | undefined>(
       this.strata.get(CkanServerStratum.stratumName)
     );

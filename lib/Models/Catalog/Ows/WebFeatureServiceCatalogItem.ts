@@ -264,7 +264,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
     return WebFeatureServiceCatalogItem.type;
   }
 
-  protected get defaultGetCapabilitiesUrl(): string | undefined {
+  get defaultGetCapabilitiesUrl(): string | undefined {
     if (this.uri) {
       return this.uri
         .clone()
@@ -288,7 +288,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
     });
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async forceLoadMetadata(): Promise<void> {
     if (
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
       undefined
@@ -300,7 +300,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
     });
   }
 
-  protected async forceLoadGeojsonData(): Promise<FeatureCollectionWithCrs> {
+  async forceLoadGeojsonData(): Promise<FeatureCollectionWithCrs> {
     const getCapabilitiesStratum:
       | GetCapabilitiesStratum
       | undefined = this.strata.get(

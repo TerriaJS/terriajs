@@ -890,7 +890,7 @@ describe("FeatureInfoSection", function() {
 
     /*
     // v8 version does not support this feature at the moment. See https://github.com/TerriaJS/terriajs/issues/5685
-     
+
     it("can access the current time", function() {
       const template = "<div class='rrrr'>Time: {{terria.currentTime}}</div>";
       catalogItem._discreteTimes = ["2017-11-23", "2018-01-03"];
@@ -1163,7 +1163,7 @@ class TestModel extends MappableMixin(
   get mapItems(): MapItem[] {
     throw new Error("Method not implemented.");
   }
-  protected forceLoadMapItems(): Promise<void> {
+  forceLoadMapItems(): Promise<void> {
     throw new Error("Method not implemented.");
   }
 

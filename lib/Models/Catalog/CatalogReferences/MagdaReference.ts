@@ -165,7 +165,7 @@ export default class MagdaReference extends AccessControlMixin(
     return access || super.accessType;
   }
 
-  protected async forceLoadReference(
+  async forceLoadReference(
     previousTarget: BaseModel | undefined
   ): Promise<BaseModel | undefined> {
     const existingRecord = this.magdaRecord

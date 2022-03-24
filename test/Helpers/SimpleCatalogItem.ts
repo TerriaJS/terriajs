@@ -7,7 +7,7 @@ import UrlTraits from "../../lib/Traits/TraitsClasses/UrlTraits";
 export default class SimpleCatalogItem extends MappableMixin(
   CreateModel(mixTraits(UrlTraits, MappableTraits))
 ) {
-  protected forceLoadMapItems(): Promise<void> {
+  forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
   mapItems: MapItem[] = [];

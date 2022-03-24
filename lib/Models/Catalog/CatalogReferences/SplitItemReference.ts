@@ -21,7 +21,7 @@ export default class SplitItemReference extends ReferenceMixin(
     return SplitItemReference.type;
   }
 
-  protected async forceLoadReference(
+  async forceLoadReference(
     previousTarget: BaseModel | undefined
   ): Promise<BaseModel | undefined> {
     if (this.splitSourceItemId === undefined || this.uniqueId === undefined) {

@@ -187,12 +187,12 @@ function ExportWebCoverageServiceMixin<
   T extends Constructor<Model<ExportWebCoverageServiceTraits>>
 >(Base: T) {
   abstract class ExportWebCoverageServiceMixin extends ExportableMixin(Base) {
-    private _wcsCapabilitiesLoader = new AsyncLoader(
-      this.loadWcsCapabilities.bind(this)
+    _wcsCapabilitiesLoader = new AsyncLoader(
+      this._loadWcsCapabilities.bind(this)
     );
 
-    private _wcsDescribeCoverageLoader = new AsyncLoader(
-      this.loadWcsDescribeCoverage.bind(this)
+    _wcsDescribeCoverageLoader = new AsyncLoader(
+      this._loadWcsDescribeCoverage.bind(this)
     );
 
     @computed
@@ -218,7 +218,7 @@ function ExportWebCoverageServiceMixin<
       });
     }
 
-    private async loadWcsCapabilities() {
+    async _loadWcsCapabilities() {
       const capabilities = await WebCoverageServiceCapabilitiesStratum.load(
         this
       );
@@ -230,7 +230,7 @@ function ExportWebCoverageServiceMixin<
         )
       );
     }
-    private async loadWcsDescribeCoverage() {
+    async _loadWcsDescribeCoverage() {
       const describeCoverage = await WebCoverageServiceDescribeCoverageStratum.load(
         this
       );

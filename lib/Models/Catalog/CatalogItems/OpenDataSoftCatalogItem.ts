@@ -605,7 +605,7 @@ export default class OpenDataSoftCatalogItem
     return feature;
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async forceLoadMetadata(): Promise<void> {
     if (!this.strata.has(OpenDataSoftDatasetStratum.stratumName)) {
       const stratum = await OpenDataSoftDatasetStratum.load(this);
       runInAction(() => {
@@ -620,7 +620,7 @@ export default class OpenDataSoftCatalogItem
     });
   }
 
-  protected async forceLoadTableData() {
+  async forceLoadTableData() {
     if (!this.datasetId || !this.url) return [];
 
     let data: string[][] = [];

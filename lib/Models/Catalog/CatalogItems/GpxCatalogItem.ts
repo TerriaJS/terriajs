@@ -45,7 +45,7 @@ class GpxCatalogItem extends GeoJsonMixin(
     return toGeoJSON.gpx(dom);
   }
 
-  protected async forceLoadGeojsonData(): Promise<FeatureCollectionWithCrs> {
+  async forceLoadGeojsonData(): Promise<FeatureCollectionWithCrs> {
     let data: string | undefined;
     if (isDefined(this.gpxString)) {
       data = this.gpxString;
@@ -68,7 +68,7 @@ class GpxCatalogItem extends GeoJsonMixin(
     return this.loadGpxText(data);
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 

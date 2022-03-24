@@ -19,7 +19,7 @@ naturalSort.insensitive = true;
 
 function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
   abstract class Klass extends Base implements Group {
-    private _memberLoader = new AsyncLoader(this.forceLoadMembers.bind(this));
+    _memberLoader = new AsyncLoader(this.forceLoadMembers.bind(this));
 
     get isGroup() {
       return true;
@@ -160,7 +160,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      *
      * {@see AsyncLoader}
      */
-    protected abstract async forceLoadMembers(): Promise<void>;
+    abstract async forceLoadMembers(): Promise<void>;
 
     @action
     toggleOpen(stratumId: string) {
