@@ -43,7 +43,10 @@ function CatalogFunctionMixin<T extends Constructor<BaseType>>(Base: T) {
         const newJob = await this.createJob(`${this.uniqueId}-${timestamp}`);
 
         if (!CatalogFunctionJobMixin.isMixedInto(newJob)) {
-          throw `Error creating job catalog item - ${newJob.type} is not a valid jobType`;
+          // Why do we need this check if createJob is defined as always returning CatalogFunctionJobMixin?
+          throw `Error creating job catalog item - ${
+            (newJob as any).type
+          } is not a valid jobType`;
         }
 
         // Give default name if needed
