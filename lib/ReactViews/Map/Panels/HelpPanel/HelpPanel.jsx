@@ -43,6 +43,7 @@ class HelpPanel extends React.Component {
 
   render() {
     const { t } = this.props;
+    const isRTL = this.props.viewState.isRTL;
     const helpItems = this.props.terria.configParameters.helpContent;
     const isExpanded = this.props.viewState.helpPanelExpanded;
     const isAnimatingOpen = this.state.isAnimatingOpen;
@@ -58,12 +59,17 @@ class HelpPanel extends React.Component {
           z-index: ${this.props.viewState.topElement === "HelpPanel"
             ? 99999
             : 110};
-          transition: right 0.25s;
+          transition: ${isRTL ? "left" : "right"} 0.25s;
           transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-          right: ${isAnimatingOpen ? -320 : isExpanded ? 490 : 0}px;
+          ${!isRTL && {
+            left: `${isAnimatingOpen ? -320 : isExpanded ? 700 : 1190}px;`
+          }};
+          ${isRTL && {
+            right: `${isAnimatingOpen ? 0 : isExpanded ? 490 : -320}px;`
+          }};
         `}
       >
-        <Box position="absolute" paddedRatio={3} topRight>
+        <Box position="absolute" paddedRatio={3} topRight topLeft={isRTL}>
           <RawButton onClick={() => this.props.viewState.hideHelpPanel()}>
             <StyledIcon
               styledWidth={"16px"}
@@ -79,7 +85,7 @@ class HelpPanel extends React.Component {
           paddedVertically={17}
           displayInlineBlock
           css={`
-            direction: ltr;
+            direction: ${isRTL ? "rtl" : "ltr"};
             min-width: 295px;
             padding-bottom: 0px;
           `}

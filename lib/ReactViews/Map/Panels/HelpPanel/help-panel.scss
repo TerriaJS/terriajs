@@ -41,6 +41,10 @@
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   &.isVisible {
     right: 0;
+    [dir="rtl"] & {
+      left: 320px;
+      right: unset;
+    }
   }
   &.shiftedToRight {
     right: -490px;
