@@ -110,6 +110,12 @@
     bottom: 0;
     // debugger
     // background: rgba(#ffcc00, 0.5);
+    [dir="rtl"] & {
+      left: 90px;
+      top: 70px;
+      right: 350px;
+      bottom: 30px;
+    }
   }
 
   & > div {
