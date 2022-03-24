@@ -64,7 +64,7 @@ const DEFAULT_HIGHLIGHT_COLOR = "#ff3f00";
 interface Cesium3DTilesCatalogItemIface
   extends InstanceType<ReturnType<typeof Cesium3dTilesMixin>> {}
 
-class ObservableCesium3DTileset extends Cesium3DTileset {
+export class ObservableCesium3DTileset extends Cesium3DTileset {
   _catalogItem?: Cesium3DTilesCatalogItemIface;
   @observable destroyed = false;
 
