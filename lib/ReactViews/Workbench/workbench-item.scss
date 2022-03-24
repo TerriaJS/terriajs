@@ -19,6 +19,9 @@ $workbench-margin: $padding-small;
     @media (min-width: $sm) {
       .btn--toggle {
         padding-left: 8px;
+        [dir="rtl"] & {
+          padding-right: 8px;
+        }
       }
     }
   }
@@ -84,6 +87,10 @@ $workbench-margin: $padding-small;
   float: left;
   font-size: 140%;
   margin-right: 5px;
+  [dir="rtl"] & {
+    float: right;
+    margin-left: 5px;
+  }
   svg {
     height: 18px;
     width: 18px;

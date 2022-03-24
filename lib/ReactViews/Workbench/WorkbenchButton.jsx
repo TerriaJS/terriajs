@@ -23,6 +23,9 @@ const StyledWorkbenchButton = styled(RawButton)`
   padding: 0 10px;
   flex-grow: 1;
   margin-right: 10px;
+  [dir="rtl"] & {
+    margin-left: 10px;
+  }
 
   height: 32px;
   min-width: 32px;
