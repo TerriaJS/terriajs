@@ -939,7 +939,7 @@
       "unsupportedTypeTitle": "Tipus desconegut",
       "unsupportedTypeMessage": "No s'ha pogut crear el tipus {{type}} de model desconegut.",
       "unsupportedFileTypeTitle": "Tipus d'arxiu no compatible",
-      "unsupportedFileTypeMessage": "Aquest format d'arxiu no és compatible amb {{appName}}. Els formats d'arxiu admesos inclouen: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (en {{link}})</li></ul>",
+      "unsupportedFileTypeMessage": "Aquest format de fitxer no és compatible amb {{appName}}. Els formats de fitxer admesos inclouen: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (a {{link}})</li><li>Shapefile (.zip)</li></ul>",
       "getConfirmationMessage": "Aquest arxiu no és compatible directament amb {{appName}}.\n\nVoleu provar de pujar-lo al servei de conversió {{appName}}? Això pot funcionar per a arxius Esri Shapefile petits i comprimits o arxius MapInfo TAB.",
       "readyToUpload": "Estàs preparat per enviar el teu arxiu al servei de conversió {{appName}}?",
       "upload": "Pujar",
