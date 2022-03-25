@@ -16,6 +16,7 @@ import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import URI from "urijs";
 import loadArrayBuffer from "../../../Core/loadArrayBuffer";
 import TerriaError from "../../../Core/TerriaError";
@@ -286,7 +287,8 @@ export default class GtfsCatalogItem extends MappableMixin(
       distanceDisplayCondition: new ConstantProperty({
         near: 0.0,
         far: this.model.maximumDistance
-      })
+      }),
+      shadows: ShadowMode.DISABLED
     };
 
     return new ModelGraphics(options);
