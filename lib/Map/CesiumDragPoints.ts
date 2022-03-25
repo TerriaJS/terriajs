@@ -1,0 +1,179 @@
+import defined from "terriajs-cesium/Source/Core/defined";
+import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
+import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
+import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import Scene from "terriajs-cesium/Source/Scene/Scene";
+import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
+import Terria from "../Models/Terria";
+
+/**
+ * Callback for when a point is moved.
+ * @callback PointMovedCallback
+ * @param {CustomDataSource} customDataSource Contains all point entities that user has selected so far
+ */
+
+/**
+ * For letting user drag existing points in Cesium ViewerModes only.
+ *
+ * @alias CesiumDragPoints
+ * @constructor
+ *
+ * @param {Terria} terria The Terria instance.
+ * @param {PointMovedCallback} pointMovedCallback A function that is called when a point is moved.
+ */
+class CesiumDragPoints {
+  private _terria: Terria;
+  private _setUp: boolean;
+  type: string;
+
+  /**
+   * Callback that occurs when point is moved. Function takes a CustomDataSource which is a list of PointEntities.
+   */
+  private _pointMovedCallback: (points: CustomDataSource) => void;
+
+  /**
+   * List of entities that can be dragged, which is populated with user-created points only.
+   */
+  private _draggableObjects: CustomDataSource;
+
+  /**
+   * Whether user is currently dragging point.
+   */
+  private _dragInProgress: boolean;
+
+  /**
+   * For determining whether a drag has just occurred, to avoid deleting a point at the end of the drag
+   */
+  dragCount: number;
+  private _scene?: Scene;
+  private _viewer?: CesiumWidget;
+  private _mouseHandler?: ScreenSpaceEventHandler;
+  private _originalPosition: any;
+  private _entityDragged?: Entity;
+
+  constructor(
+    terria: Terria,
+    pointMovedCallback: (points: CustomDataSource) => void
+  ) {
+    this._terria = terria;
+    this._setUp = false;
+    this.type = "Cesium";
+
+    this._pointMovedCallback = pointMovedCallback;
+    this._draggableObjects = new CustomDataSource();
+    this._dragInProgress = false;
+    this.dragCount = 0;
+  }
+
+  /**
+   * Set up the drag point helper so that attempting to drag a point will move
+   * the point.
+   */
+  setUp() {
+    if (this._setUp) {
+      return;
+    }
+    if (this._terria.cesium === undefined) {
+      // Test context or something has gone *so* badly wrong
+      return;
+    }
+    this._scene = this._terria.cesium.scene;
+    this._viewer = this._terria.cesium.cesiumWidget;
+    this._mouseHandler = new ScreenSpaceEventHandler(this._scene.canvas);
+
+    var that = this;
+
+    // Mousedown event. This is called for all mousedown events, not just mousedown on entity events like the Leaflet
+    // equivalent.
+    this._mouseHandler.setInputAction(function(click) {
+      if (
+        !defined(that._draggableObjects.entities) ||
+        that._draggableObjects.entities.values.length === 0
+      ) {
+        return;
+      }
+      var pickedObject = that._scene!.pick(click.position);
+      that._originalPosition = click.position;
+      if (defined(pickedObject)) {
+        var pickedEntity = pickedObject.id;
+        var draggedEntity = that._draggableObjects.entities.values.filter(
+          function(dragObjEntity) {
+            return dragObjEntity.id === pickedEntity.id;
+          }
+        )[0];
+        if (draggedEntity) {
+          that._dragInProgress = true;
+          that._entityDragged = draggedEntity;
+          that._setCameraMotion(false);
+        }
+      }
+    }, ScreenSpaceEventType.LEFT_DOWN);
+
+    // Mouse move event.
+    this._mouseHandler.setInputAction(function(move) {
+      if (!that._dragInProgress) {
+        return;
+      }
+      that.dragCount = that.dragCount + 1;
+      var cartesian = that._viewer!.camera.pickEllipsoid(
+        move.endPosition,
+        that._scene!.globe.ellipsoid
+      );
+      that._entityDragged!.position = cartesian as any;
+      for (var i = 0; i < that._draggableObjects.entities.values.length; i++) {
+        if (
+          that._draggableObjects.entities.values[i].id ===
+          that._entityDragged!.id
+        ) {
+          that._draggableObjects.entities.values[i].position = cartesian as any;
+        }
+      }
+    }, ScreenSpaceEventType.MOUSE_MOVE);
+
+    // Mouse release event.
+    this._mouseHandler.setInputAction(function(mouseUp) {
+      if (that._dragInProgress && mouseUp.position !== that._originalPosition) {
+        that._pointMovedCallback(that._draggableObjects);
+      }
+      that._dragInProgress = false;
+      that._setCameraMotion(true);
+    }, ScreenSpaceEventType.LEFT_UP);
+
+    this._setUp = true;
+  }
+
+  /**
+   * Update the list of draggable objects with a new list of entities that are
+   * able to be dragged. We are only interested in entities that the user has
+   * drawn.
+   */
+  updateDraggableObjects(entities: CustomDataSource) {
+    this._draggableObjects = entities;
+  }
+
+  /**
+   * A clean up function to call when destroying the object.
+   */
+  destroy() {
+    if (defined(this._mouseHandler)) {
+      this._mouseHandler?.destroy();
+      this._setUp = false;
+    }
+  }
+
+  /**
+   * Enable or disable camera motion, so that the user can drag a point rather than dragging the map.
+   */
+  _setCameraMotion(state: boolean) {
+    if (this._scene) {
+      this._scene.screenSpaceCameraController.enableRotate = state;
+      this._scene.screenSpaceCameraController.enableZoom = state;
+      this._scene.screenSpaceCameraController.enableLook = state;
+      this._scene.screenSpaceCameraController.enableTilt = state;
+      this._scene.screenSpaceCameraController.enableTranslate = state;
+    }
+  }
+}
+
+export default CesiumDragPoints;
