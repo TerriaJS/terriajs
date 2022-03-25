@@ -340,7 +340,8 @@ export default class GtfsCatalogItem extends MappableMixin(
     };
 
     if (this.apiKey !== undefined) {
-      headers.Authorization = `apikey ${this.apiKey}`;
+      // headers.Authorization = `apikey ${this.apiKey}`;
+      headers["Ocp-Apim-Subscription-Key"] = this.apiKey;
     }
 
     if (this.url !== null && this.url !== undefined) {
