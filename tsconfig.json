@@ -12,13 +12,33 @@
         "allowSyntheticDefaultImports": true,
         "outDir": "ts-out",
         "resolveJsonModule": true,
+        "declaration": true,
+        "emitDeclarationOnly": true,
         "typeRoots": ["./lib/ThirdParty/**/*.d.ts"],
         "types": ["terriajs-cesium"]
     },
     "include": [
         "./lib/**/*",
         "./test/**/*",
-        "./buildprocess/generateDocs.ts",
-        "./buildprocess/**/*",
+        "./buildprocess/**/*.ts"
+    ],
+    "exclude": [
+      // These files currently produce error TS9006 (which appears to be fixed
+      // in TS4.1) when compiling with emit declaration.  Check if we need them
+      // and either convert to .ts or delete.
+      "./lib/Map/AddressGeocoder.js",
+      "./lib/Map/BulkAddressGeocoderResult.js",
+      "./lib/Map/GnafAddressGeocoder.js",
+      "./lib/Models/GnafApi.js",
+      "./test/Models/GnafApiSpec.js",
+      "./lib/ViewModels/GnafSearchProviderViewModel.js",
+      "./test/ViewModels/GnafSearchProviderSpec.js",
+      "./lib/ViewModels/GazetteerSearchProviderViewModel.js",
+      "./lib/Models/FunctionParameters/RegionDataParameter.js",
+      "./lib/ReactViews/HelpScreens/*",
+      "./lib/ReactViewModels/HelpViewState.js",
+      "./lib/ReactViewModels/HelpScreen.js.js",
+      "./lib/ReactViewModels/HelpSequence.js",
+      "./lib/ReactViewModels/HelpSequences.js",
     ]
 }
