@@ -15,6 +15,7 @@ import {
   Category,
   HelpAction
 } from "../../../../Core/AnalyticEvents/analyticEvents";
+import i18next from "i18next";
 
 export const HELP_PANEL_ID = "help";
 
@@ -43,7 +44,7 @@ class HelpPanel extends React.Component {
 
   render() {
     const { t } = this.props;
-    const isRTL = this.props.viewState.isRTL;
+    const isRTL = i18next.dir() === "rtl";
     const helpItems = this.props.terria.configParameters.helpContent;
     const isExpanded = this.props.viewState.helpPanelExpanded;
     const isAnimatingOpen = this.state.isAnimatingOpen;
@@ -61,15 +62,23 @@ class HelpPanel extends React.Component {
             : 110};
           transition: ${isRTL ? "left" : "right"} 0.25s;
           transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-          ${!isRTL && {
+          ${isRTL && {
             left: `${isAnimatingOpen ? -320 : isExpanded ? 1110 : 1600}px;`
           }};
-          ${isRTL && {
-            right: `${isAnimatingOpen ? 0 : isExpanded ? 490 : -320}px;`
+          ${!isRTL && {
+            right: `${isAnimatingOpen ? -320 : isExpanded ? 490 : 0}px;`
           }};
         `}
       >
-        <Box position="absolute" paddedRatio={3} topRight topLeft={isRTL}>
+        <Box
+          position="absolute"
+          paddedRatio={3}
+          topRight
+          topLeft={isRTL}
+          css={`
+            flex-direction: ${isRTL && "row-reverse"};
+          `}
+        >
           <RawButton onClick={() => this.props.viewState.hideHelpPanel()}>
             <StyledIcon
               styledWidth={"16px"}
@@ -90,7 +99,14 @@ class HelpPanel extends React.Component {
             padding-bottom: 0px;
           `}
         >
-          <Text extraBold heading textDark>
+          <Text
+            extraBold
+            heading
+            textDark
+            css={`
+              direction: ${isRTL ? "rtl" : "ltr"};
+            `}
+          >
             {t("helpPanel.menuPaneTitle")}
           </Text>
           <Spacing bottom={4} />
