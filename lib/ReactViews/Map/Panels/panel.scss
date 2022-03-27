@@ -34,6 +34,9 @@
   [dir="rtl"] & {
     right: 0;
     text-align: right;
+    @media (max-width: $sm) {
+      width: 384px;
+    }
   }
   @media (min-width: $sm) {
     position: absolute;
@@ -42,6 +45,10 @@
     bottom: auto;
     left: auto;
     margin: 14px 0 0 0;
+  }
+
+  @media (max-width: $sm) {
+    width: 384px !important;
   }
 
   &.is-open {
@@ -94,8 +101,10 @@
   [dir="rtl"] & {
     left: $padding-small;
     right: unset;
+    left: 10px;
   }
 }
+
 .inner-close-btn--for-modal {
   top: 15px;
   right: 15px;
