@@ -79,3 +79,10 @@
     }
   }
 }
+
+.tjs-my-data-tab__tab-list__item,
+.svg {
+  [dir="rtl"] & {
+    padding: 10px;
+  }
+}

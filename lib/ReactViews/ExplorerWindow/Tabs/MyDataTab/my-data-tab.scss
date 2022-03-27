@@ -64,6 +64,9 @@
       fill: $color-primary;
       padding-right: $padding-small;
       vertical-align: middle;
+      [dir="rtl"] & {
+        padding: 10px;
+      }
     }
   }
 
