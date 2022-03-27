@@ -37,6 +37,7 @@ import { exportData } from "../../Preview/ExportData";
 import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
 import WorkbenchButton from "../WorkbenchButton";
 import CameraView from "../../../Models/CameraView";
+import i18next from "i18next";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -456,12 +457,14 @@ const ViewingControls = observer(
       const item = this.props.item;
       const { t } = this.props;
       const showMenu = item.uniqueId === viewState.workbenchWithOpenControls;
+      const isRTL = i18next.dir() === "rtl";
       return (
         <Box>
           <ul
             css={`
               list-style: none;
               padding-left: 0;
+              ${isRTL && { paddingRight: 0 }};
               margin: 0;
               width: 100%;
               position: relative;
