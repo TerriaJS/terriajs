@@ -691,6 +691,51 @@
             "description": "ABS approximations of suburbs (2016)",
             "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SSC_2016_AUST_SSC_NAME16.json"
         },
+        "LGA_2021": {
+          "layerName": "LGA_2021",
+          "server": "https://tile-test.terria.io/LGA_2021-v1/{z}/{x}/{y}.pbf",
+          "serverType": "MVT",
+          "serverMaxNativeZoom": 12,
+          "serverMinZoom": 0,
+          "serverMaxZoom": 28,
+          "regionIdsFile": "build/TerriaJS/data/regionids/region_map-LGA_2021_LGA_2021.json",
+          "regionProp": "LGA_CODE21",
+          "nameProp": "LGA_NAME21",
+          "aliases": [
+            "lga_code_2021",
+            "lga_code_2020",
+            "lga_code",
+            "lga"
+          ],
+          "description": "Local Government Areas 2021 (ABS)",
+          "bbox": [
+            96.81,
+            -43.75,
+            168,
+            -9.14
+          ]
+        },
+        "LGA_2019": {
+          "layerName": "LGA_2019",
+          "server": "https://tile-test.terria.io/LGA_2019-v1/{z}/{x}/{y}.pbf",
+          "serverType": "MVT",
+          "serverMaxNativeZoom": 12,
+          "serverMinZoom": 0,
+          "serverMaxZoom": 28,
+          "regionIdsFile": "build/TerriaJS/data/regionids/region_map-LGA_2019_LGA_2019.json",
+          "regionProp": "LGA_CODE19",
+          "nameProp": "LGA_NAME19",
+          "aliases": [
+            "lga_code_2019"
+          ],
+          "description": "Local Government Areas 2019 (ABS)",
+          "bbox": [
+            96.81,
+            -43.75,
+            168,
+            -9.14
+          ]
+        },
         "LGA_2018": {
             "layerName": "LGA_2018_AUST",
             "server": "https://vector-tiles.terria.io/LGA_2018_AUST/{z}/{x}/{y}.pbf",
@@ -707,9 +752,7 @@
             "regionProp": "LGA_CODE18",
             "nameProp": "LGA_NAME18",
             "aliases": [
-                "lga_code_2018",
-                "lga_code",
-                "lga"
+                "lga_code_2018"
             ],
             "description": "Local Government Areas 2018 (ABS)",
             "regionIdsFile": "build/TerriaJS/data/regionids/region_map-LGA_2018_AUST_LGA_CODE18.json"
