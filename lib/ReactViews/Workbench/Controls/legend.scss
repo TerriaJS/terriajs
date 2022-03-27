@@ -30,9 +30,6 @@
     display: inline-block;
   }
   padding: $padding 0 0 0;
-  [dir="rtl"] & {
-    padding: $padding 165px 0 0;
-  }
 }
 
 .legend__legendBoxImg {

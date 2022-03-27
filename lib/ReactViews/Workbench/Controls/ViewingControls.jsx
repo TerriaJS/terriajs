@@ -526,7 +526,7 @@ const ViewingControls = observer(
               css={`
                 position: absolute;
                 z-index: 100;
-                right: 0;
+                right: 165px;
                 top: 0;
                 top: 32px;
                 top: 42px;
