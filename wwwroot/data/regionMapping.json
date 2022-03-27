@@ -1764,7 +1764,9 @@
                 "ste_code_2016",
                 "ste_code_2017",
                 "ste_code_2018",
-                "ste_code_2019"
+                "ste_code_2019",
+                "ste_code_2020",
+                "ste_code_2021"
             ],
             "nameProp": "STE_NAME16",
             "description": "States and Territories 2016 (ABS)",
@@ -2299,7 +2301,8 @@
             "aliases": [
                 "state",
                 "ste_name",
-                "ste_name_2016"
+                "ste_name_2016",
+                "ste_name_2021"
             ],
             "nameProp": "STE_NAME16",
             "description": "States and Territories 2016 (ABS)",
