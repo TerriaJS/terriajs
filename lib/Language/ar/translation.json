@@ -587,7 +587,7 @@
   "preview": {
     "doesNotContainGeospatialData": "لا يحتوي هذا الملف على بيانات جغرافية مكانية.",
     "selectToPreview": "<0> حدد مجموعة بيانات لمشاهدة معاينة </0> <1> - أو - </ 1> <2> انتقل إلى الخريطة </ 2>",
-    "loading": "معاينة التحميل ...",
+    "loading": "جاري التحميل ...",
     "preview": "معاينة {{appName}}",
     "previewItemErrorTitle": "تعذر معاينة عنصر الكتالوج.",
     "previewItemErrorMessage": "حدث خطأ أثناء تحميل عنصر الكتالوج.",
