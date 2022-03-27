@@ -12,6 +12,11 @@ Change Log
   * `/story/:share-id` ➡ loads share JSON from a URL `${configParameters.storyRouteUrlPrefix}:share-id` (`configParameters.storyRouteUrlPrefix` must have a trailing slash)
   * `/catalog/:id` ➡ opens the data catalogue to the specified member
 * Fixed a bug where Cesium3DTilePointFeature info is not shown when being clicked.
+* Added ASGS 2021 regions to region mapping:
+  * SA1-4 (e.g. sa3_code_2021)
+  * GCCSA
+  * STE & AUS (aliased to existing 2011/2016 data due to no change in geometry, names & codes)
+* Added LGA regions from 2019 & 2021 to region mapping - only usable by lga code
 * [The next improvement]
 
 #### 8.1.25 - 2022-03-16
