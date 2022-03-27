@@ -1667,8 +1667,6 @@
             ],
             "regionProp": "GCC_CODE16",
             "aliases": [
-                "gccsa",
-                "gccsa_code",
                 "gccsa_code_2016"
             ],
             "nameProp": "GCC_NAME16",
@@ -1691,12 +1689,56 @@
             ],
             "regionProp": "GCC_NAME16",
             "aliases": [
-                "gccsa_name",
                 "gccsa_name_2016"
             ],
             "nameProp": "GCC_NAME16",
             "description": "Greater capital city statistical areas 2016 (ABS)",
             "regionIdsFile": "build/TerriaJS/data/regionids/region_map-GCCSA_2016_AUST_GCC_NAME16.json"
+        },
+        "GCCSA_2021": {
+          "layerName": "GCCSA_2021",
+          "server": "https://tile-test.terria.io/GCCSA_2021-v1/{z}/{x}/{y}.pbf",
+          "serverType": "MVT",
+          "serverMaxNativeZoom": 12,
+          "serverMinZoom": 0,
+          "serverMaxZoom": 28,
+          "regionIdsFile": "build/TerriaJS/data/regionids/region_map-GCCSA_2021_GCCSA_2021.json",
+          "regionProp": "GCC_CODE21",
+          "nameProp": "GCC_NAME21",
+          "aliases": [
+            "gccsa_code_2021",
+            "gccsa_code",
+            "gccsa"
+          ],
+          "description": "Greater capital city statistical areas 2021 (ABS)",
+          "bbox": [
+            96.81,
+            -43.75,
+            168,
+            -9.14
+          ]
+        },
+        "GCCSA_NAME_2021": {
+          "layerName": "GCCSA_2021",
+          "server": "https://tile-test.terria.io/GCCSA_2021-v1/{z}/{x}/{y}.pbf",
+          "serverType": "MVT",
+          "serverMaxNativeZoom": 12,
+          "serverMinZoom": 0,
+          "serverMaxZoom": 28,
+          "regionIdsFile": "build/TerriaJS/data/regionids/region_map-GCCSA_NAME_2021_GCCSA_2021.json",
+          "regionProp": "GCC_NAME21",
+          "nameProp": "GCC_NAME21",
+          "aliases": [
+            "gccsa_name_2021",
+            "gccsa_name"
+          ],
+          "description": "Greater capital city statistical areas 2021 (ABS)",
+          "bbox": [
+            96.81,
+            -43.75,
+            168,
+            -9.14
+          ]
         },
         "SUA": {
             "layerName": "FID_SUA_2011_AUST",
