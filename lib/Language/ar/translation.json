@@ -161,7 +161,7 @@
       "content": "## View controls\n\nهنا يمكنك تغيير عرض الخريطة. يمكنك تغيير اتجاه العرض الخاص بك باستخدام الحلقة الخارجية ، ويمكنك إمالة زاوية الكاميرا باستخدام الحلقة الداخلية. انقر نقرًا مزدوجًا لإعادة تعيين العرض."
     },
     "mapNavigationSplitterIcon": {
-      "content": "## Compare\n\nميزة قوية لـ Terria هي القدرة على مقارنة مجموعات البيانات باستخدام طريقة عرض الشاشة المنقسمة. بالنسبة لمجموعات البيانات التي تحتوي على مكون متسلسل زمني ، مثل صور القمر الصناعي ، يمكنك مقارنة التواريخ إلى الوراء والأمام في الوقت المناسب من خلال النقر على منتقي / محدد التاريخ."
+      "content": "## Compare\n\nميزة قوية لـ تريا هي القدرة على مقارنة مجموعات البيانات باستخدام طريقة عرض الشاشة المنقسمة. بالنسبة لمجموعات البيانات التي تحتوي على مكون متسلسل زمني ، مثل صور القمر الصناعي ، يمكنك مقارنة التواريخ إلى الوراء والأمام في الوقت المناسب من خلال النقر على منتقي / محدد التاريخ."
     }
   },
   "measure": {
@@ -382,7 +382,7 @@
       "title": "الجدول الزمني",
       "alwaysShowLabel": "اضغط لبدء عرض المخطط الزمني فقط عند وجود مجموعات بيانات متغيرة بمرور الوقت على طاولة العمل",
       "hideLabel": "اضغط لبدء عرض المخطط الزمني دائمًا ، حتى في حالة عدم وجود مجموعات بيانات متغيرة بمرور الوقت على طاولة العمل",
-      "alwaysShow": "تظهر دائما"
+      "alwaysShow": "اظهر دائما"
     },
     "terrain": {
       "hideUnderground": "تخفي التضاريس معالم تحت الأرض",
@@ -412,7 +412,7 @@
   "helpPanel": {
     "btnText": "مساعدة",
     "menuPaneTitle": "نحن هنا للمساعدة",
-    "menuPaneBody": "اعثر على نصائح مفيدة حول كيفية استخدام TerriaJS إما عن طريق التحقق من الأدلة أدناه أو عن طريق الاتصال بالفريق على [{{supportEmail}}]({{supportEmail}})",
+    "menuPaneBody": "اعثر على نصائح مفيدة حول كيفية استخدام تيرريا إما عن طريق التحقق من الأدلة أدناه أو عن طريق الاتصال بالفريق على [{{supportEmail}}]({{supportEmail}})",
     "promptMessage": "ابحث عن الجولة ومقاطع الفيديو الإرشادية ومحتويات المساعدة الأخرى هنا",
     "dismissText": "حسنًا ، شكرًا!",
     "takeTour": "قم بالجولة",
@@ -548,19 +548,19 @@
     "searchPlaceholderWhole": "ابحث في الكتالوج بالكامل",
     "searchPlaceholder": "ابحث في الكتالوج",
     "localAdd": "أضف الملف المحلي",
-    "localFileType": "<0>Step 1:</0> Select file type (optional)",
-    "localFile": "<0>Step 2:</0> Select file",
+    "localFileType": "<0> الخطوة 1: </0> حدد نوع الملف (اختياري)",
+    "localFile": "<0> الخطوة 2: </0> حدد ملفًا",
     "webAdd": "أضف بيانات الويب",
-    "webFileType": "<0>Step 1:</0> Select file type (optional)",
-    "webFile": "<0>Step 2:</0> Enter the URL of the data file or web service",
+    "webFileType": "<0> الخطوة 1: </0> حدد نوع الملف (اختياري)",
+    "webFile": "<0> الخطوة 2: </0> أدخل عنوان URL لملف البيانات أو خدمة الويب",
     "urlInputBtn": "اضف",
     "browse": "تصفح...",
     "localTitle": "أضف البيانات المحلية",
     "webTitle": "أضف بيانات الويب",
     "dragDrop": "السحب والإفلات",
-    "infoText": "<0>Drag and drop a file here to view it locally on the map</0><1>(it won’t be saved or uploaded to the internet)</1>",
+    "infoText": "<0> اسحب الملف وأفلته هنا لعرضه محليًا على الخريطة </0> <1> (لن يتم حفظه أو تحميله على الإنترنت) </ 1>",
     "back": "ارجع",
-    "note": "<0>Note: </0>Data added in this way is not saved or made visible to others."
+    "note": "<0> ملاحظة: </0> البيانات المضافة بهذه الطريقة لا يتم حفظها أو جعلها مرئية للآخرين."
   },
   "search": {
     "resultsLabel": "نتائج البحث",
@@ -611,8 +611,8 @@
     "name": "وصف",
     "dataLocal": "هذا الملف موجود فقط في متصفحك. لمشاركتها ، يجب تحميلها على خادم ويب عام.",
     "dataNotLocal": "يرجى الاتصال بموفر هذه البيانات للحصول على مزيد من المعلومات ، بما في ذلك معلومات حول حقوق الاستخدام والقيود.",
-    "wms": "This is a <1>WMS service</1>, which generates map images on request. It can be used in GIS software with this URL:",
-    "wfs": "This is a <1>WFS service</1>, which transfers raw spatial data on request. It can be used in GIS software with this URL:",
+    "wms": "هذه <1> خدمة WMS </1> ، والتي تنشئ صورًا للخرائط عند الطلب. يمكن استخدامه في برنامج GIS مع عنوان URL هذا:",
+    "wfs": "هذه <1> خدمة WFS </1> ، والتي تنقل البيانات المكانية الأولية عند الطلب. يمكن استخدامه في برنامج GIS مع عنوان URL هذا:",
     "layerName": "اسم الطبقة",
     "typeName": "أكتب اسم",
     "metadataUrls": "روابط البيانات الوصفية",
@@ -675,11 +675,11 @@
     "useTimeline": "استخدم الجدول الزمني",
     "availableTimeChart": "عرض الأوقات المتاحة على الرسم البياني",
     "timeline": {
-      "textCell": "Name of the dataset whose time range is shown",
-      "gotoStart": "Go to beginning",
-      "togglePlay": "Play",
-      "playSlower": "Play Slower",
-      "playFaster": "Play Faster"
+      "textCell": "اسم مجموعة البيانات التي يظهر نطاقها الزمني",
+      "gotoStart": "اذهب إلى البداية",
+      "togglePlay": "تشغيل",
+      "playSlower": "تشغيل ابطء",
+      "playFaster": "تشغيل اسرع"
     }
   },
   "satellite": {
@@ -717,7 +717,7 @@
     "copy": "انسح"
   },
   "dragDrop": {
-    "text": "<0>Drag & Drop</0><1>Your data anywhere to view on the map<1>",
+    "text": "<0> سحب وإفلات </0> <1> بياناتك في أي مكان لعرضها على الخريطة <1>",
     "not": "<0>bbbb</0>"
   },
   "loader": {
@@ -830,12 +830,12 @@
       "other": "Other (use conversion service)"
     },
     "printWindow": {
-      "errorTitle": "Error printing",
-      "errorMessage": "Printing did not start within 10 seconds. Maybe this web browser does not support printing?",
-      "printMediaStart": "print media start",
-      "printMediaEnd": "print media end",
-      "onbeforeprint": "onbeforeprint",
-      "onafterprint": "onafterprint"
+      "errorTitle": "خطأ في الطباعة",
+      "errorMessage": "لم تبدأ الطباعة في غضون 10 ثوانٍ. ربما متصفح الويب هذا لا يدعم الطباعة؟",
+      "printMediaStart": "بدء وسائط الطباعة",
+      "printMediaEnd": "نهاية وسائط الطباعة",
+      "onbeforeprint": "قبل الطباعة",
+      "onafterprint": "بعد الطباعة"
     },
     "consoleAnalytics": {
       "started": "ConsoleAnalytics was started.",
@@ -843,26 +843,26 @@
       "logStartedWithGAParameters": "ConsoleAnalytics was started but a `googleAnalyticsKey` or `googleAnalyticsOptions` key was observed on `userParameters`"
     },
     "googleAnalytics": {
-      "log": "Google Analytics tracking is disabled because terria.configParameters.googleAnalyticsKey is not specified",
+      "log": "تم تعطيل تتبع تحليلات جوجل لأنه لم يتم تحديد terria.configParameters.googleAnalyticsKey",
       "logEnabledOnDevelopment": "Google Analytics was initialised in a `development` environment"
     },
     "readText": {
-      "fileRequired": "file is require"
+      "fileRequired": "الملف يتطلب"
     },
     "readXml": {
-      "xmlError": "The file does not contain valid XML."
+      "xmlError": "الملف لا يحتوي على XML صالح."
     },
     "serverConfig": {
-      "failedToGet": "Failed to get server config from {{serverConfigUrl}}. This means services such as proxy, convert and URL shortening may not work."
+      "failedToGet": "فشل الحصول على تهيئة الخادم من {{serverConfigUrl}}. هذا يعني أن خدمات مثل الوكيل والتحويل وتقصير عناوين URL قد لا تعمل."
     },
     "terriaError": {
-      "defaultTitle": "An error occurred",
-      "defaultMessage": "Unknown error",
-      "defaultCombineTitle": "Multiple errors occurred",
-      "defaultCombineMessage": "Details of the errors are below",
-      "networkRequestTitle": "A network request error occurred",
-      "networkRequestMessage": "Data may not be available or display correctly due to data custodian's service outage. Please try reloading the map, accessing the data at a later stage, or selecting a different dataset. <feedbacklink feedback-message='If the problem persists, please submit feedback here.' email-message='If the problem persists, please report to {{email}}'/>",
-      "networkRequestMessageDetailed": "This may indicate one of the following:\n\n* The server hostname could not be resolved\n* The server did not respond to the request - or is temporarily unavailable\n* The server denied [Cross-Origin Resource Sharing (CORS)](https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/) access to this URL\n* There is a problem with your internet connection\n\nIf you entered the link manually, please verify that the link is correct."
+      "defaultTitle": "حدث خطأ",
+      "defaultMessage": "خطأ غير معروف",
+      "defaultCombineTitle": "حدثت أخطاء متعددة",
+      "defaultCombineMessage": "تفاصيل الأخطاء أدناه",
+      "networkRequestTitle": "حدث خطأ في طلب الشبكة",
+      "networkRequestMessage": "قد لا تكون البيانات متاحة أو يتم عرضها بشكل صحيح بسبب انقطاع خدمة أمين حفظ البيانات. يرجى محاولة إعادة تحميل الخريطة أو الوصول إلى البيانات في مرحلة لاحقة أو تحديد مجموعة بيانات مختلفة. <feedbacklink feedback-message = \"إذا استمرت المشكلة ، فيرجى إرسال التعليقات هنا.\" email-message = 'إذا استمرت المشكلة ، يرجى إبلاغ {{email}}' />",
+      "networkRequestMessageDetailed": "قد يشير هذا إلى واحد مما يلي:\n\n* لا يمكن حل اسم مضيف الخادم\n* لم يستجب الخادم للطلب - أو أنه غير متاح مؤقتًا\n* رفض الخادم وصول [مشاركة الموارد عبر المصدر (CORS)] (https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/) إلى عنوان URL هذا\n* هناك مشكلة في الاتصال بالإنترنت\n\nإذا قمت بإدخال الرابط يدويًا ، فيرجى التحقق من صحة الرابط."
     }
   },
   "map": {
@@ -876,7 +876,7 @@
       "unusalTilingScheme": "لا يمكن عرض مجموعة البيانات هذه على الخريطة ثنائية الأبعاد لأنها تستخدم مخطط تقسيم غير معتاد غير مدعوم."
     },
     "computeRingWindingOrder": {
-      "devError": "Expected points of type {x:number, y:number}"
+      "devError": "النقاط المتوقعة من النوع {x: number، y: number}"
     },
     "displayVariablesConcept": {
       "defaultName": "Display Variable"
@@ -898,37 +898,37 @@
       "containsUnsupportedFeatureType": "GeoRSS with W3C geometry contains unsupported feature type: {{type}}"
     },
     "gnafAddressGeocoder": {
-      "noAddresses": "This tableStructure has no addresses!",
-      "noAddresses2": "Even though the tableStructure reports it has an address column, it has no addresses",
-      "suburb": "Suburb",
-      "state": "State",
-      "postcode": "Postcode",
-      "matchedAddresses": "Matched Address",
-      "lon": "Lon",
-      "lat": "Lat",
-      "score": "Score",
+      "noAddresses": "هذا الجدول لا يحتوي الهيكل على عناوين!",
+      "noAddresses2": "على الرغم من أن الجدول tableStructure يشير إلى أنه يحتوي على عمود عنوان ، إلا أنه لا يحتوي على عناوين",
+      "suburb": "ضاحية",
+      "state": "حالة",
+      "postcode": "الرمز البريدي",
+      "matchedAddresses": "العنوان المتطابق",
+      "lon": "طول",
+      "lat": "عرض",
+      "score": "نتيجة",
       "poBox": "po box",
-      "postOfficeBox": "post office box"
+      "postOfficeBox": "صندوق البريد"
     },
     "imageryProviderHooks": {
-      "devError": "No context for image recoloring."
+      "devError": "لا يوجد سياق لإعادة تلوين الصورة."
     },
     "mapboxVectorTileImageryProvider": {
-      "requireLayerName": "MapboxVectorTileImageryProvider requires a layer name passed as options.layerName",
-      "requireStyles": "MapboxVectorTileImageryProvider requires a styling function passed as options.styleFunc",
-      "moreThanFourTiles": "The imagery provider's rectangle and minimumLevel indicate that there are {{tileCount}} tiles at the minimum level. Imagery providers with more than four tiles at the minimum level are not supported.",
-      "maxLevelError": "Maximum level too high for data set"
+      "requireLayerName": "يتطلب MapboxVectorTileImageryProvider تمرير اسم طبقة كخيارات",
+      "requireStyles": "يتطلب MapboxVectorTileImageryProvider تمرير وظيفة تصميم كخيارات",
+      "moreThanFourTiles": "يشير مستطيل موفر الصور والمستوى الأدنى إلى أن هناك {{tileCount}} بلاطات في المستوى الأدنى. لا يتم دعم موفري الصور الذين لديهم أكثر من أربعة مربعات في المستوى الأدنى.",
+      "maxLevelError": "المستوى الأقصى مرتفع جدًا لمجموعة البيانات"
     },
     "regionProvider": {
-      "csvRegionMappingTitle": "CSV region mapping",
-      "csvRegionMappingMessageZeroFound": "Zero region names found for region type {{regionType}}",
-      "csvRegionMappingMessageZeroBoundariesFound": "Zero region boundaries found for region {{regionName}}",
-      "csvRegionMappingMessageLoadError": "Couldn't load region boundaries for region {{regionName}} {{exception}}"
+      "csvRegionMappingTitle": "تعيين منطقة CSV",
+      "csvRegionMappingMessageZeroFound": "لم يتم العثور على أسماء مناطق لنوع المنطقة {{regionType}}",
+      "csvRegionMappingMessageZeroBoundariesFound": "تم العثور على حدود منطقة صفرية للمنطقة {{regionName}}",
+      "csvRegionMappingMessageLoadError": "تعذر تحميل حدود المنطقة للمنطقة {{regionName}} {{exception}}"
     },
     "extraCreditLinks": {
-      "dataAttribution": "Data attribution",
-      "disclaimer": "Disclaimer",
-      "basemap": "Basemap"
+      "dataAttribution": "إسناد البيانات",
+      "disclaimer": "تنازل",
+      "basemap": "الخريطة الأساسية"
     }
   },
   "models": {
@@ -1384,51 +1384,51 @@
       "tags": "العلامات"
     },
     "spatialDetailing": {
-      "name": "Spatial Detailing",
-      "description": "Predicts the characteristics of fine-grained regions by learning and exploiting correlations of coarse-grained data with Census characteristics.",
-      "regionTypeToPredictName": "Region Type to Predict",
-      "regionTypeToPredictDescription": "The type of region for which to predict characteristics.",
-      "coarseDataRegionTypeName": "Coarse Data Region Type",
-      "coarseDataRegionTypeDescription": "The type of region with which the coarse-grained input characteristics are associated.",
-      "aggregationName": "Aggregation",
-      "aggregationDescription": "Specifies how coarse region values were aggregated.  True if the value is the mean of the values across the region, or False if the value is the sum of the values across the region.",
-      "aggregationTrueName": "Mean Aggregation",
-      "aggregationTrueDescription": "Coarse region values are the mean of samples in the region.  For example, average household income.",
-      "aggregationFalseName": "Sum Aggregation",
-      "aggregationFalseDescription": "Coarse region values are the sum of samples in the region.  For example, total population.",
-      "characteristicToPredictName": "Characteristic to Predict",
-      "characteristicToPredictDescription": "The characteristic to predict for each region.",
-      "spatialDetailingOf": "Spatial detailing of {{of}} at {{at}}",
-      "wrongNumberOfElements": "The list of values and the list of region codes do not contain the same number of elements"
+      "name": "تفصيل مكاني",
+      "description": "يتنبأ بخصائص المناطق الدقيقة من خلال التعلم واستغلال علاقات الترابط بين البيانات الحبيبية الخشنة مع خصائص التعداد.",
+      "regionTypeToPredictName": "نوع المنطقة المراد توقعها",
+      "regionTypeToPredictDescription": "نوع المنطقة المراد التنبؤ بخصائصها.",
+      "coarseDataRegionTypeName": "نوع منطقة البيانات التقريبية",
+      "coarseDataRegionTypeDescription": "نوع المنطقة التي ترتبط بها خصائص الإدخال الخشنة الحبيبات.",
+      "aggregationName": "تجميع",
+      "aggregationDescription": "يحدد كيفية تجميع قيم المنطقة الخشنة. صواب إذا كانت القيمة هي متوسط القيم عبر المنطقة ، أو خطأ إذا كانت القيمة هي مجموع القيم عبر المنطقة.",
+      "aggregationTrueName": "متوسط التجميع",
+      "aggregationTrueDescription": "قيم المنطقة الخشنة هي متوسط العينات في المنطقة. على سبيل المثال ، متوسط دخل الأسرة.",
+      "aggregationFalseName": "تجميع المجموع",
+      "aggregationFalseDescription": "قيم المنطقة الخشنة هي مجموع العينات في المنطقة. على سبيل المثال ، إجمالي عدد السكان.",
+      "characteristicToPredictName": "خاصية التنبؤ",
+      "characteristicToPredictDescription": "خاصية التنبؤ لكل منطقة.",
+      "spatialDetailingOf": "التفاصيل المكانية لـ {{of}} في {{at}}",
+      "wrongNumberOfElements": "لا تحتوي قائمة القيم وقائمة رموز المنطقة على نفس عدد العناصر"
     },
     "tableData": {
-      "noData": "No data to show",
-      "unsupportedCharactersTitle": "Invalid characters in latitude and longitude columns",
-      "unsupportedCharactersMessage": "Could not interpret latitude and longitude pair {{longitude}}, {{latitude}}",
-      "bulkGeocoderInfoTitle": "Bulk Geocoder Information",
-      "bulkGeocoderInfoMessage": "The CSV contains addresses, but {{number}} can't be located on the map: ",
-      "bulkGeocoderInfo2Message": "{{nullAddresses}} addresses are missing from the CSV.",
-      "bulkGeocoderErrorTitle": "Bulk Geocoder Error",
-      "bulkGeocoderErrorMessage": "Unable to map addresses to lat-long coordinates, as an error occurred while retrieving address coordinates. Please check your internet connection or try again later.",
-      "legendZFilterLabel": "Extreme values",
-      "legendNullLabel": "(No value)",
-      "styleDisabledLabel": "Disable style",
-      "zFilterEnabled": "Extreme values hidden (click to show)",
-      "zFilterDisabled": "Extreme values detected (click to hide)",
-      "timeDimensionEnabled": "Time enabled (click to disable)",
-      "timeDimensionDisabled": "Time disabled (click to enable)"
+      "noData": "لا توجد بيانات للعرض",
+      "unsupportedCharactersTitle": "أحرف غير صالحة في أعمدة خطوط الطول والعرض",
+      "unsupportedCharactersMessage": "تعذر تفسير زوج خطوط الطول والعرض {{longitude}} ، {{خط العرض}}",
+      "bulkGeocoderInfoTitle": "معلومات عن المكود الجغرافي",
+      "bulkGeocoderInfoMessage": "يحتوي ملف CSV على عناوين ، ولكن لا يمكن وضع {{number}} على الخريطة: ",
+      "bulkGeocoderInfo2Message": "عناوين {{nullAddresses}} مفقودة من ملف CSV.",
+      "bulkGeocoderErrorTitle": "خطأ مجمع جغرافي",
+      "bulkGeocoderErrorMessage": "تعذر تعيين العناوين إلى إحداثيات خطوط العرض ، حيث حدث خطأ أثناء استرداد إحداثيات العنوان. يرجى التحقق من اتصالك بالإنترنت أو المحاولة مرة أخرى لاحقًا.",
+      "legendZFilterLabel": "القيم المتطرفة",
+      "legendNullLabel": "(لا قيمة)",
+      "styleDisabledLabel": "نمط تعطيل",
+      "zFilterEnabled": "القيم المتطرفة مخفية (انقر للعرض)",
+      "zFilterDisabled": "تم الكشف عن قيم قصوى (انقر للإخفاء)",
+      "timeDimensionEnabled": "الوقت ممكّن (انقر للتعطيل)",
+      "timeDimensionDisabled": "الوقت معطل (انقر للتمكين)"
     },
     "terrainCatalog": {
       "notSupportedErrorTitle": "غير مدعوم في 2D",
       "notSupportedErrorMessage": "لا يمكن عرض {{name}} في العرض ثنائي الأبعاد. قم بالتبديل إلى ثلاثي الأبعاد وحاول مرة أخرى"
     },
     "terria": {
-      "loadConfigErrorTitle": "فشل تحميل تهيئة خريطة Terria",
+      "loadConfigErrorTitle": "فشل تحميل تهيئة خريطة تريا",
       "proxyableDomainsDeprecation": "لم يعد \"proxyableDomainsUrl\" مدعومًا في الإصدار 8",
       "initErrorTitle": "فشل تهيئة الخدمات",
       "initErrorMessage": "حدثت مشكلة في خادم Terraria. قد يتسبب هذا في عدم توفر بعض الطبقات أو عدم توفر خدمة التحويل.",
       "urlLoadErrorTitle": "مشكلة في تحميل URL",
-      "urlLoadErrorMessage": "حدثت مشكلة أثناء تهيئة Terria بمعلمات URL.",
+      "urlLoadErrorMessage": "حدثت مشكلة أثناء تهيئة تريا بمعلمات URL.",
       "loadModelErrorMessage": "حدث خطأ أثناء تحميل النموذج '{{model}} `.",
       "loadingMagdaInitSourceErrorTitle": "خطأ في تحميل مصدر تهيئة Magda",
       "loadingMagdaInitSourceErrorMessage": "حدث خطأ أثناء تحميل معلومات التهيئة من سجل Magda '{{url}} `.",
@@ -1447,7 +1447,7 @@
       "buttonTitleConfirm": "أنا موافق"
     },
     "terriaJSONcatalog": {
-      "name": "وظيفة كتالوج Terria JSON",
+      "name": "وظيفة كتالوج تريا JSON",
       "misconfiguredErrorTitle": "تم تكوين ملف init بشكل خاطئ",
       "misconfiguredErrorMessage": "لم يتم تكوين الخدمة لـ TerriaJsonCatalogFunction HTTP 202.",
       "misconfiguredError2Message": "تكوين HTTP 202 {{url}} غير موجود استجابة {{xhr}}",
@@ -1472,7 +1472,7 @@
       "name": "خادم خريطة قالب URL"
     },
     "userDrawing": {
-      "devError": "مثيل Terria مطلوب.",
+      "devError": "مثيل تريا مطلوب.",
       "messageHeader": "ارسم على الخريطة",
       "pointEntities": "نقاط",
       "otherEntities": "الخطوط والمضلعات",
