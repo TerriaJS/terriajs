@@ -55,14 +55,14 @@ class HelpPanel extends React.Component {
         fullHeight
         onClick={() => this.props.viewState.setTopElement("HelpPanel")}
         css={`
-          position: fixed;
+          position: absolute;
           z-index: ${this.props.viewState.topElement === "HelpPanel"
             ? 99999
             : 110};
           transition: ${isRTL ? "left" : "right"} 0.25s;
           transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
           ${!isRTL && {
-            left: `${isAnimatingOpen ? -320 : isExpanded ? 700 : 1190}px;`
+            left: `${isAnimatingOpen ? -320 : isExpanded ? 1110 : 1600}px;`
           }};
           ${isRTL && {
             right: `${isAnimatingOpen ? 0 : isExpanded ? 490 : -320}px;`
