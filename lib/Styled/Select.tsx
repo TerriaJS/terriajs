@@ -30,7 +30,6 @@ import styled, { useTheme } from "styled-components";
 const Box: any = require("./Box").default;
 import { GLYPHS, StyledIcon } from "./Icon";
 import i18next from "i18next";
-import { unset } from "lodash-es";
 
 const StyledSelect = styled.select<SelectProps>`
   -moz-appearance: none;
