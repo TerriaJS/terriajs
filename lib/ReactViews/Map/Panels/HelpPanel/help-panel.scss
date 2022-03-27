@@ -15,6 +15,10 @@
 
   &.isVisible {
     right: 0px;
+    [dir="rtl"] & {
+      left: 320px;
+      right: unset;
+    }
   }
   &.isHidden {
     right: -320px;
