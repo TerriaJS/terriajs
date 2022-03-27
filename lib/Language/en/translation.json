@@ -1355,6 +1355,7 @@
       "btnDone": "Done",
       "clickToAddFirstPoint": "Click to add a point",
       "clickToAddAnotherPoint": "Click to add another point",
+      "clickToRedrawRectangle": "Click another point to redraw the rectangle",
       "anotherPoint": "Another Point",
       "userPolygon": "User polygon"
     },
