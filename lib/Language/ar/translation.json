@@ -499,8 +499,14 @@
     "play": "لعب",
     "playStory": "قصة",
     "captureSceneTitle": "التقاط المشهد الحالي",
+    "editor": {
+      "placeholder": "أدخل عنوان هنا",
+      "cancelBtn": "الغاء",
+      "cancelEditing": "الغاء",
+      "saveBtn": "حفظ",
+      "saveStory": "حفظ"
+    },
     "captureScene": "التقاط المشهد",
-    "editor": "يحرر",
     "locationBtn": "مشهد المركز",
     "exitBtn": "قصة الخروج",
     "previousBtn": "انتقل إلى المشهد السابق",
@@ -511,8 +517,8 @@
     "next": "التالي",
     "restart": "اعادة تشغيل",
     "navBtnMobile": "اذهب إلى القصة {{title}}",
-    "promptHtml1": "<0>You can view and create stories at any time by clicking here.</0>",
-    "promptHtml2": "<0><0>INTRODUCING</0><1>Data Stories</1><2>Create and share interactive stories directly from your map.</2></0>",
+    "promptHtml1": "<0> يمكنك عرض القصص وإنشاؤها في أي وقت من خلال النقر هنا. </0>",
+    "promptHtml2": "<0> <0> تقديم </0> <1> قصص البيانات </ 1> <2> إنشاء قصص تفاعلية ومشاركتها مباشرة من خريطتك. </ 2> </0>",
     "story": "قصة",
     "dismissText": "حسنًا ، شكرًا!",
     "mobileViewStory": "مشاهدة القصص {{storiesLength}}",
@@ -522,7 +528,7 @@
     "loadSceneErrorMessage": "حدث خطأ أثناء تحميل البيانات لمشهد القصة: `` {{title}} `."
   },
   "satelliteGuidance": {
-    "menuTitle": "You can access map guides at any time by looking in the <2>help menu</2>.",
+    "menuTitle": "يمكنك الوصول إلى أدلة الخرائط في أي وقت من خلال النظر في <2> قائمة المساعدة </ 2>.",
     "dismissText": "حسنًا ، شكرًا!",
     "titleI": "صور القمر الصناعي: كيف يمكنني…؟",
     "bodyI": "دليل سريع للغاية للحصول على أقصى استفادة من صور القمر الصناعي التاريخية.",
@@ -566,7 +572,7 @@
     "resultsLabel": "نتائج البحث",
     "done": "تم",
     "data": "بيانات",
-    "searchInDataCatalog": "Search <1>'{{locationSearchText}}'</1> في كتالوج البيانات",
+    "searchInDataCatalog": "بحث <1>'{{locationSearchText}}'</1> في كتالوج البيانات",
     "search": "بحث '{{searchText}}' في كتالوج البيانات",
     "viewLess": "عرض أقل {{name}} النتائج",
     "viewMore": "عرض المزيد {{name}} النتائج",
@@ -580,7 +586,7 @@
   },
   "preview": {
     "doesNotContainGeospatialData": "لا يحتوي هذا الملف على بيانات جغرافية مكانية.",
-    "selectToPreview": "<0>Select a dataset to see a preview </0><1>- OR -</1><2>Go to the map</2>",
+    "selectToPreview": "<0> حدد مجموعة بيانات لمشاهدة معاينة </0> <1> - أو - </ 1> <2> انتقل إلى الخريطة </ 2>",
     "loading": "معاينة التحميل ...",
     "preview": "معاينة {{appName}}",
     "previewItemErrorTitle": "تعذر معاينة عنصر الكتالوج.",
