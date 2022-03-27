@@ -100,7 +100,7 @@
         },
         "SA1_2021": {
           "layerName": "SA1_2021",
-          "server": "https://tile-test.terria.io/SA1_2021-v1/{z}/{x}/{y}.pbf",
+          "server": "https://tiles.terria.io/SA1_2021/{z}/{x}/{y}.pbf",
           "serverType": "MVT",
           "serverMaxNativeZoom": 12,
           "serverMinZoom": 0,
@@ -219,7 +219,7 @@
         },
         "SA4_2021": {
           "layerName": "SA4_2021",
-          "server": "https://tile-test.terria.io/SA4_2021-v1/{z}/{x}/{y}.pbf",
+          "server": "https://tiles.terria.io/SA4_2021/{z}/{x}/{y}.pbf",
           "serverType": "MVT",
           "serverMaxNativeZoom": 12,
           "serverMinZoom": 0,
@@ -243,7 +243,7 @@
         },
         "SA4_NAME_2021": {
           "layerName": "SA4_2021",
-          "server": "https://tile-test.terria.io/SA4_2021-v1/{z}/{x}/{y}.pbf",
+          "server": "https://tiles.terria.io/SA4_2021/{z}/{x}/{y}.pbf",
           "serverType": "MVT",
           "serverMaxNativeZoom": 12,
           "serverMinZoom": 0,
@@ -361,7 +361,7 @@
         },
         "SA3_2021": {
           "layerName": "SA3_2021",
-          "server": "https://tile-test.terria.io/SA3_2021-v1/{z}/{x}/{y}.pbf",
+          "server": "https://tiles.terria.io/SA3_2021/{z}/{x}/{y}.pbf",
           "serverType": "MVT",
           "serverMaxNativeZoom": 12,
           "serverMinZoom": 0,
@@ -385,7 +385,7 @@
         },
         "SA3_NAME_2021": {
           "layerName": "SA3_2021",
-          "server": "https://tile-test.terria.io/SA3_2021-v1/{z}/{x}/{y}.pbf",
+          "server": "https://tiles.terria.io/SA3_2021/{z}/{x}/{y}.pbf",
           "serverType": "MVT",
           "serverMaxNativeZoom": 12,
           "serverMinZoom": 0,
@@ -550,7 +550,7 @@
         },
         "SA2_2021": {
           "layerName": "SA2_2021",
-          "server": "https://tile-test.terria.io/SA2_2021-v1/{z}/{x}/{y}.pbf",
+          "server": "https://tiles.terria.io/SA2_2021/{z}/{x}/{y}.pbf",
           "serverType": "MVT",
           "serverMaxNativeZoom": 12,
           "serverMinZoom": 0,
@@ -574,7 +574,7 @@
         },
         "SA2_NAME_2021": {
           "layerName": "SA2_2021",
-          "server": "https://tile-test.terria.io/SA2_2021-v1/{z}/{x}/{y}.pbf",
+          "server": "https://tiles.terria.io/SA2_2021/{z}/{x}/{y}.pbf",
           "serverType": "MVT",
           "serverMaxNativeZoom": 12,
           "serverMinZoom": 0,
@@ -693,7 +693,7 @@
         },
         "LGA_2021": {
           "layerName": "LGA_2021",
-          "server": "https://tile-test.terria.io/LGA_2021-v1/{z}/{x}/{y}.pbf",
+          "server": "https://tiles.terria.io/LGA_2021/{z}/{x}/{y}.pbf",
           "serverType": "MVT",
           "serverMaxNativeZoom": 12,
           "serverMinZoom": 0,
@@ -717,7 +717,7 @@
         },
         "LGA_2019": {
           "layerName": "LGA_2019",
-          "server": "https://tile-test.terria.io/LGA_2019-v1/{z}/{x}/{y}.pbf",
+          "server": "https://tiles.terria.io/LGA_2019/{z}/{x}/{y}.pbf",
           "serverType": "MVT",
           "serverMaxNativeZoom": 12,
           "serverMinZoom": 0,
@@ -1697,7 +1697,7 @@
         },
         "GCCSA_2021": {
           "layerName": "GCCSA_2021",
-          "server": "https://tile-test.terria.io/GCCSA_2021-v1/{z}/{x}/{y}.pbf",
+          "server": "https://tiles.terria.io/GCCSA_2021/{z}/{x}/{y}.pbf",
           "serverType": "MVT",
           "serverMaxNativeZoom": 12,
           "serverMinZoom": 0,
@@ -1720,7 +1720,7 @@
         },
         "GCCSA_NAME_2021": {
           "layerName": "GCCSA_2021",
-          "server": "https://tile-test.terria.io/GCCSA_2021-v1/{z}/{x}/{y}.pbf",
+          "server": "https://tiles.terria.io/GCCSA_2021/{z}/{x}/{y}.pbf",
           "serverType": "MVT",
           "serverMaxNativeZoom": 12,
           "serverMinZoom": 0,
