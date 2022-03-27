@@ -458,6 +458,9 @@
   .leaflet-touch .leaflet-control-layers,
   .leaflet-touch .leaflet-bar {
     box-shadow: none;
+    [dir="rtl"] & {
+      left: 1350px !important;
+    }
   }
   .leaflet-touch .leaflet-control-layers,
   .leaflet-touch .leaflet-bar {
