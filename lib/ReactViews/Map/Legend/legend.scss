@@ -30,6 +30,12 @@ $distance-bg: rgba($dark, 0.9);
   }
 }
 
+.baseLegend {
+  [dir="rtl"] & {
+    float: right;
+  }
+}
+
 .locationBar,
 .distanceLegend {
   composes: baseLegend;

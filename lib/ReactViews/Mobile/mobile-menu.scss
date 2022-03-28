@@ -23,5 +23,8 @@
     left: -9999px;
     height: 0;
     width: 0;
+    [dir="rtl"] & {
+      right: unset;
+    }
   }
 }

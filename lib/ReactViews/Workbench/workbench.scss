@@ -20,4 +20,7 @@
   margin-left: 20px;
   overflow: hidden;
   text-overflow: ellipsis;
+  [dir="rtl"] & {
+    margin-right: 20px;
+  }
 }

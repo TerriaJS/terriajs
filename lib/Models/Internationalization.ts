@@ -4,6 +4,7 @@ import { initReactI18next } from "react-i18next";
 import HttpApi from "i18next-http-backend";
 import translationEN from "../Language/en/translation.json";
 import translationFR from "../Language/fr/translation.json";
+import translationAR from "../Language/ar/translation.json";
 
 export interface I18nBackendOptions {
   /**
@@ -37,13 +38,15 @@ export interface LanguageConfiguration {
   changeLanguageOnStartWhen: string[];
 }
 const defaultLanguageConfiguration = {
-  enabled: false,
+  enabled: true,
   debug: false,
   react: {
     useSuspense: false
   },
   languages: {
-    en: "english"
+    en: "English",
+    fr: "french",
+    ar: "العربية"
   },
   fallbackLanguage: "en",
   changeLanguageOnStartWhen: [
@@ -127,6 +130,9 @@ class Internationalization {
           },
           fr: {
             translation: translationFR
+          },
+          ar: {
+            translation: translationAR
           }
         },
 

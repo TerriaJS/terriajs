@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Box from "./Box";
 
 interface IButtonAsLabelProps {
+  rtl?: boolean;
   light?: boolean;
 }
 
@@ -10,7 +11,8 @@ const ButtonAsLabel = styled(Box).attrs({
   centered: true,
   styledMinHeight: "32px"
 })<IButtonAsLabelProps>`
-  border-radius: 0 16px 16px 0;
+  border-radius: ${({ rtl }) =>
+    (!rtl && "0 16px 16px 0;") || (rtl && "16px 0 0 16px;")};
   ${props =>
     props.light &&
     `

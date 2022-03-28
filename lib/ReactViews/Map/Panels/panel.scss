@@ -31,7 +31,13 @@
   top: $mobile-header-height;
   left: 0;
   margin: 14px 5px 5px 5px;
-
+  [dir="rtl"] & {
+    right: 0;
+    text-align: right;
+    @media (max-width: $sm) {
+      width: 384px;
+    }
+  }
   @media (min-width: $sm) {
     position: absolute;
     right: $padding * 2;
@@ -39,6 +45,10 @@
     bottom: auto;
     left: auto;
     margin: 14px 0 0 0;
+  }
+
+  @media (max-width: $sm) {
+    width: 384px !important;
   }
 
   &.is-open {
@@ -65,6 +75,7 @@
     color: $text-light;
   }
 }
+
 .inner-close-btn {
   composes: btn from "../../../Sass/common/_buttons.scss";
   position: absolute;
@@ -86,6 +97,14 @@
     width: 10px;
   }
 }
+.inner-close-btn {
+  [dir="rtl"] & {
+    left: $padding-small;
+    right: unset;
+    left: 10px;
+  }
+}
+
 .inner-close-btn--for-modal {
   top: 15px;
   right: 15px;
