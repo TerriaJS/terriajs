@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### 8.1.26-RC - 2022-03-28
+
+* Enable Arabic language while updating all **ar** translation file.
+* Update component styles with RTL concepts accordingly.
+
 #### next release (8.1.25)
 
 * Fix broken download link for feature info panel charts when no download urls are specified.
