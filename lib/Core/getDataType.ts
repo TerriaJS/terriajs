@@ -98,10 +98,6 @@ export default function() {
         value: "socrata-group",
         name: i18next.t("core.dataType.socrata-group")
       }
-      // {
-      //   value: "other",
-      //   name: i18next.t("core.dataType.other")
-      // }
     ],
     localDataType: [
       {
@@ -143,10 +139,6 @@ export default function() {
         name: i18next.t("core.dataType.geoRss"),
         extensions: ["xml"]
       },
-      // {
-      //   value: "other",
-      //   name: i18next.t("core.dataType.other")
-      // }
       {
         value: "gltf",
         name: i18next.t("core.dataType.gltf"),

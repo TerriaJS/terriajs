@@ -47,7 +47,6 @@ Specifies various options for configuring TerriaJS:
 |`defaultMaximumShownFeatureInfos`|no|**number**|`100`|The maximum number of "feature info" boxes that can be displayed when clicking a point.|
 |`regionMappingDefinitionsUrl`|yes|**string**|`"build/TerriaJS/data/regionMapping.json"`|URL of the JSON file that defines region mapping for CSV files. This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
 |`catalogIndexUrl`|no|**string**||URL of the JSON file that contains index of catalog. See [CatalogIndex](#catalogindex)|
-|`conversionServiceBaseUrl`|no|**string**|`"convert/"`|URL of OGR2OGR conversion service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
 |`proj4ServiceBaseUrl`|no|**string**|`"proj4def/"`|URL of Proj4 projection lookup service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
 |`corsProxyBaseUrl`|no|**string**|`"proxy/"`|URL of CORS proxy service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
 |`proxyableDomainsUrl`|no|**string**|`"proxyabledomains/"`|Deprecated, will be determined from serverconfig.|
@@ -89,6 +88,7 @@ Specifies various options for configuring TerriaJS:
 |feedbackPostamble|no|**string**|feedback.feedbackPostamble|Text showing at the bottom of feedback form, supports the internationalization using the translation key.|
 |feedbackMinLength|no|**number**|0|Minimum length of feedback comment.| 
 |`theme`|no|**any**|`{}`|An object used to override theme properties - for example `{"logoHeight": "70px"}`.|
+|`storyRouteUrlPrefix`|no|**string**|undefined|(Experimental) Prefix to which `:story-id` is added to fetch JSON for stories when using `/story/:story-id` routes. Should end in /|
 
 
 ### MagdaReferenceHeaders
