@@ -122,7 +122,17 @@ export const SearchBox = createReactClass({
 
   render() {
     const clearButton = (
-      <Box position="absolute" topRight fullHeight styledWidth={"40px"}>
+      <Box
+        position="absolute"
+        topRight
+        fullHeight
+        styledWidth={"40px"}
+        css={`
+          [dir="rtl"] & {
+            right: 320px !important;
+          }
+        `}
+      >
         {/* The type="button" here stops the browser from assuming the close button is the submit button */}
         <RawButton
           type="button"

@@ -15,6 +15,9 @@ export {
 export function getOffsetsFromTourPoint(tourPoint: TourPoint) {
   // Offsets
   const offsetTop = isDefined(tourPoint?.offsetTop) ? tourPoint.offsetTop : 15;
+  const offsetRight = isDefined(tourPoint?.offsetRight)
+    ? tourPoint.offsetRight
+    : 0;
   const offsetLeft = isDefined(tourPoint?.offsetLeft)
     ? tourPoint.offsetLeft
     : 0;
@@ -25,6 +28,9 @@ export function getOffsetsFromTourPoint(tourPoint: TourPoint) {
   const caretOffsetTop = isDefined(tourPoint?.caretOffsetTop)
     ? tourPoint.caretOffsetTop
     : -3;
+  const caretOffsetRight = isDefined(tourPoint?.caretOffsetRight)
+    ? tourPoint.caretOffsetRight
+    : 20;
   const caretOffsetLeft = isDefined(tourPoint?.caretOffsetLeft)
     ? tourPoint.caretOffsetLeft
     : 20;
@@ -33,24 +39,32 @@ export function getOffsetsFromTourPoint(tourPoint: TourPoint) {
   const indicatorOffsetTop = isDefined(tourPoint?.indicatorOffsetTop)
     ? tourPoint.indicatorOffsetTop
     : -20;
+  const indicatorOffsetRight = isDefined(tourPoint?.indicatorOffsetRight)
+    ? tourPoint.indicatorOffsetRight
+    : 3;
   const indicatorOffsetLeft = isDefined(tourPoint?.indicatorOffsetLeft)
     ? tourPoint.indicatorOffsetLeft
     : 3;
   return {
     offsetTop,
     offsetLeft,
+    offsetRight,
     caretOffsetTop,
     caretOffsetLeft,
+    caretOffsetRight,
     indicatorOffsetTop,
-    indicatorOffsetLeft
+    indicatorOffsetLeft,
+    indicatorOffsetRight
   };
 }
 
 interface HelpScreen {
   rectangle: DOMRect;
   positionLeft: number;
+  positionRight: number;
   positionTop: number;
   offsetLeft?: number;
+  offsetRight?: number;
   offsetTop?: number;
 }
 
@@ -77,6 +91,32 @@ export function calculateLeftPosition(helpScreen: HelpScreen) {
 
   leftPosition += helpScreen.offsetLeft || 0;
   return leftPosition;
+}
+
+/**
+ * Work out the screen pixel value for left positioning based on helpScreen parameters.
+ * @private
+ */
+export function calculateRightPosition(helpScreen: HelpScreen) {
+  const screenRect = helpScreen.rectangle;
+  if (!screenRect) {
+    console.log("no rectangle in helpScreen");
+    return 0;
+  }
+  let rightPosition = 0;
+  if (helpScreen.positionRight === RelativePosition.RECT_RIGHT) {
+    rightPosition = screenRect.right;
+  } else if (helpScreen.positionRight === RelativePosition.RECT_LEFT) {
+    rightPosition = screenRect.left;
+  } else if (helpScreen.positionRight === RelativePosition.RECT_TOP) {
+    rightPosition = screenRect.top;
+  } else if (helpScreen.positionRight === RelativePosition.RECT_BOTTOM) {
+    rightPosition = screenRect.bottom;
+  }
+
+  rightPosition -= helpScreen.offsetRight || 0;
+  rightPosition -= screenRect.left || 0;
+  return rightPosition;
 }
 
 /**

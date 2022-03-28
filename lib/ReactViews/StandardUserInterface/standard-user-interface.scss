@@ -110,6 +110,12 @@
     bottom: 0;
     // debugger
     // background: rgba(#ffcc00, 0.5);
+    [dir="rtl"] & {
+      left: 90px;
+      top: 70px;
+      right: 350px;
+      bottom: 30px;
+    }
   }
 
   & > div {
@@ -173,6 +179,17 @@
 }
 .showWorkbenchButtonisNotVisible {
   transition-delay: 0s;
+}
+.showWorkbenchButtonisVisible {
+  [dir="rtl"] & {
+    right: 16px;
+    left: unset;
+  }
+}
+.showWorkbenchButtonisNotVisible {
+  [dir="rtl"] & {
+    transform: translateX(200px);
+  }
 }
 
 @media (min-width: $sm) {

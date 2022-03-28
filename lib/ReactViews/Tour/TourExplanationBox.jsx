@@ -14,8 +14,12 @@ export const TourExplanationBox = styled(Box)`
 
   min-height: 136px;
   border-radius: 4px;
-
   box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.12), 0 10px 20px 0 rgba(0, 0, 0, 0.05);
+  .bjkYji {
+    [dir="rtl"] & {
+      left: 15px !important;
+      right: unset !important;
+    }
 
   // extend parseCustomMarkdownToReact() to inject our <Text /> with relevant props to cut down on # of styles?
   // Force styling from markdown?

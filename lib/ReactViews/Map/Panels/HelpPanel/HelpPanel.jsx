@@ -15,6 +15,7 @@ import {
   Category,
   HelpAction
 } from "../../../../Core/AnalyticEvents/analyticEvents";
+import i18next from "i18next";
 
 export const HELP_PANEL_ID = "help";
 
@@ -43,6 +44,7 @@ class HelpPanel extends React.Component {
 
   render() {
     const { t } = this.props;
+    const isRTL = i18next.dir() === "rtl";
     const helpItems = this.props.terria.configParameters.helpContent;
     const isExpanded = this.props.viewState.helpPanelExpanded;
     const isAnimatingOpen = this.state.isAnimatingOpen;
@@ -54,16 +56,29 @@ class HelpPanel extends React.Component {
         fullHeight
         onClick={() => this.props.viewState.setTopElement("HelpPanel")}
         css={`
-          position: fixed;
+          position: absolute;
           z-index: ${this.props.viewState.topElement === "HelpPanel"
             ? 99999
             : 110};
-          transition: right 0.25s;
+          transition: ${isRTL ? "left" : "right"} 0.25s;
           transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-          right: ${isAnimatingOpen ? -320 : isExpanded ? 490 : 0}px;
+          ${isRTL && {
+            left: `${isAnimatingOpen ? -320 : isExpanded ? 1110 : 1600}px;`
+          }};
+          ${!isRTL && {
+            right: `${isAnimatingOpen ? -320 : isExpanded ? 490 : 0}px;`
+          }};
         `}
       >
-        <Box position="absolute" paddedRatio={3} topRight>
+        <Box
+          position="absolute"
+          paddedRatio={3}
+          topRight
+          topLeft={isRTL}
+          css={`
+            flex-direction: ${isRTL && "row-reverse"};
+          `}
+        >
           <RawButton onClick={() => this.props.viewState.hideHelpPanel()}>
             <StyledIcon
               styledWidth={"16px"}
@@ -79,12 +94,19 @@ class HelpPanel extends React.Component {
           paddedVertically={17}
           displayInlineBlock
           css={`
-            direction: ltr;
+            direction: ${isRTL ? "rtl" : "ltr"};
             min-width: 295px;
             padding-bottom: 0px;
           `}
         >
-          <Text extraBold heading textDark>
+          <Text
+            extraBold
+            heading
+            textDark
+            css={`
+              direction: ${isRTL ? "rtl" : "ltr"};
+            `}
+          >
             {t("helpPanel.menuPaneTitle")}
           </Text>
           <Spacing bottom={4} />

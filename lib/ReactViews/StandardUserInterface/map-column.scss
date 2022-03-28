@@ -61,6 +61,12 @@
   z-index: 1;
 }
 
+.location-distance {
+  [dir="rtl"] & {
+    right: 1000px;
+  }
+}
+
 .feedback-button-wrapper {
   @media (min-width: $sm) {
     bottom: 100px;

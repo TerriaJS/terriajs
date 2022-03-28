@@ -17,9 +17,23 @@
   justify-content: space-between;
   flex-flow: wrap;
 }
+.menu-bar {
+  [dir="rtl"] & {
+    margin-right: 50px;
+    margin-left: unset;
+    right: 0;
+    left: $padding;
+  }
+}
 .menu-bar--workbenchClosed {
   // transition-delay: 0.25s; // temporary disable delays for splitter lag w/o resizing on transitionend
-  margin-left: 165px;
+  margin-left: 160px;
+}
+.menu-bar--workbenchClosed {
+  [dir="rtl"] & {
+    margin-right: 165px;
+    margin-left: unset;
+  }
 }
 .menu {
   composes: list-reset from "../../Sass/common/_base.scss";
@@ -30,6 +44,12 @@
 
   /* Align About button with compass */
   // margin-right: 7px;
+}
+
+.menu {
+  [dir="rtl"] & {
+    padding: 0;
+  }
 }
 
 .menu-item {

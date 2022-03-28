@@ -15,6 +15,17 @@
   left: 350px;
   top: $map-button-top;
 }
+.minifiedFullscreenBtnWrapper {
+  [dir="rtl"] & {
+    transform: rotate(180deg);
+  }
+}
+.minifiedFullscreenBtnWrapper {
+  [dir="rtl"] & {
+    right: 350px;
+    left: unset;
+  }
+}
 .trainerBarVisible {
   top: $map-button-top + $trainer-height;
 }
