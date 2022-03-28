@@ -101,7 +101,10 @@
   position: absolute;
   right: 0;
   z-index: 1;
-
+  [dir="rtl"] & {
+    right: unset;
+    left: 0;
+  }
   > * {
     display: inline-block;
   }

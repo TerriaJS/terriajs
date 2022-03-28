@@ -1,5 +1,6 @@
 "use strict";
 import React, { useRef, useState } from "react";
+import i18next from "i18next";
 import styled, { useTheme } from "styled-components";
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
@@ -104,6 +105,7 @@ interface IMapIconButtonProps extends IStyledMapIconButtonProps {
 }
 
 function MapIconButton(props: IMapIconButtonProps) {
+  const isRTL = i18next.dir() == "rtl";
   const [isExpanded, setExpanded] = useState(false);
   const {
     children,
@@ -137,8 +139,8 @@ function MapIconButton(props: IMapIconButtonProps) {
       primary={primary}
       splitter={splitter}
       inverted={inverted}
-      roundLeft={roundLeft}
-      roundRight={roundRight}
+      roundLeft={isRTL ? roundRight : roundLeft}
+      roundRight={isRTL ? roundLeft : roundRight}
       disabled={disabled}
       type="button"
       title={title}
@@ -221,7 +223,7 @@ function MapIconButton(props: IMapIconButtonProps) {
             `
               position:absolute;
               top:0;
-              right:0;
+              ${isRTL ? `left: 0;` : `right: 0;`}
               ${isExpanded && `z-index:10;`}
             `
           }

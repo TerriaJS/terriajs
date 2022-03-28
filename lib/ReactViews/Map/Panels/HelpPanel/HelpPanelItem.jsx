@@ -37,8 +37,11 @@ class HelpPanelItem extends React.Component {
     const title = useTranslationIfExists(this.props.content.title);
     const paneMode = this.props.content.paneMode;
     const opensInPanel = paneMode !== "externalLink";
+    const isRTL = this.props.viewState.isRTL;
     const iconGlyph = opensInPanel
-      ? Icon.GLYPHS.right
+      ? isRTL
+        ? Icon.GLYPHS.left
+        : Icon.GLYPHS.right
       : Icon.GLYPHS.externalLink;
     return (
       <div>
@@ -117,6 +120,11 @@ const MenuItemText = styled(Text).attrs({
   padding-right: 25px;
   padding-left: 5px;
   text-align: left;
+  [dir="rtl"] & {
+    padding-right: 5px;
+    padding-left: 25px;
+    text-align: right;
+  }
 `;
 
 export default withTranslation()(withTheme(HelpPanelItem));

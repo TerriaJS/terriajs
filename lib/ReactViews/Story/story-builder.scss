@@ -17,6 +17,10 @@
   &.isHidden {
     visibility: hidden;
     margin-right: -400px;
+    [dir="rtl"] & {
+      margin-right: unset;
+      margin-left: -400px;
+    }
   }
   & .actions {
     padding: $padding;
@@ -142,6 +146,10 @@
     position: absolute;
     left: $padding;
     top: 8px;
+    [dir="rtl"] & {
+      right: $padding;
+      left: 0;
+    }
   }
 }
 

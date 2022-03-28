@@ -42,6 +42,9 @@
   padding: 3px;
   width: 27px;
   margin-left: 3px;
+  [dir="rtl"] & {
+    margin-right: 3px;
+  }
 }
 
 .btn--close-feature,
@@ -66,6 +69,10 @@
   position: absolute;
   right: 8px;
   top: 8px;
+  [dir="rtl"] & {
+    left: 8px;
+    right: unset;
+  }
   svg {
     width: 15px;
     height: 26px;
@@ -101,6 +108,9 @@
   composes: btn from "../../Sass/common/_buttons.scss";
   vertical-align: bottom;
   margin-left: 5px;
+  [dir="rtl"] & {
+    margin-right: 5px;
+  }
 
   &:hover {
     svg {

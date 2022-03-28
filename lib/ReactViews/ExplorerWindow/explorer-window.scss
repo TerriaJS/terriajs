@@ -16,10 +16,18 @@
   bottom: 0;
   right: 0;
   left: 0;
+  [dir="rtl"] & {
+    padding-right: $padding * 2;
+    padding-left: 80px;
+  }
 
   @media (min-width: $md) {
     padding-left: 30px + $work-bench-width;
     padding-right: 30px;
+    [dir="rtl"] & {
+      padding-right: 30px + $work-bench-width;
+      padding-left: 30px;
+    }
   }
 }
 
@@ -41,6 +49,9 @@
   &.is-mounted {
     opacity: 1;
     @include transform(none);
+    [dir="rtl"] & {
+      right: 0px;
+    }
   }
   a {
     @include link($modal-bg);

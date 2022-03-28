@@ -26,9 +26,11 @@ import { useWindowSize } from "../Hooks/useWindowSize";
 import { useTranslationIfExists } from "./../../Language/languageHelpers";
 import {
   calculateLeftPosition,
+  calculateRightPosition,
   calculateTopPosition,
   getOffsetsFromTourPoint
 } from "./tour-helpers.ts";
+import i18next from "i18next";
 import TourExplanationBox, {
   TourExplanationBoxZIndex
 } from "./TourExplanationBox.jsx";
@@ -67,10 +69,13 @@ TourProgress.propTypes = {
 export const TourExplanation = ({
   topStyle,
   leftStyle,
+  rightStyle,
   caretOffsetTop,
   caretOffsetLeft,
+  caretOffsetRight,
   indicatorOffsetTop,
   indicatorOffsetLeft,
+  indicatorOffsetRight,
   setTourIndex,
   onTourIndicatorClick,
   onPrevious,
@@ -84,6 +89,7 @@ export const TourExplanation = ({
   children
 }) => {
   const { t } = useTranslation();
+  const isRTL = i18next.dir() === "rtl";
   const theme = useTheme();
   if (!active) {
     // Tour explanation requires the various positioning even if only just
@@ -92,25 +98,44 @@ export const TourExplanation = ({
     return (
       <Box
         position="absolute"
-        style={{
-          zIndex: TourExplanationBoxZIndex - 1,
-          top: topStyle,
-          left: leftStyle
-        }}
+        style={
+          (!isRTL && {
+            zIndex: TourExplanationBoxZIndex - 1,
+            top: topStyle,
+            left: leftStyle
+          }) ||
+          (isRTL && {
+            zIndex: TourExplanationBoxZIndex - 1,
+            top: topStyle,
+            right: rightStyle
+          })
+        }
       >
         <Box
           position="absolute"
-          style={{
-            top: `${caretOffsetTop}px`,
-            left: `${caretOffsetLeft}px`
-          }}
+          style={
+            (!isRTL && {
+              top: `${caretOffsetTop}px`,
+              left: `${caretOffsetLeft}px`
+            }) ||
+            (isRTL && {
+              top: `${caretOffsetTop}px`,
+              right: `${caretOffsetRight}px`
+            })
+          }
         >
           <TourIndicator
             onClick={onTourIndicatorClick}
-            style={{
-              top: `${indicatorOffsetTop}px`,
-              left: `${indicatorOffsetLeft}px`
-            }}
+            style={
+              (!isRTL && {
+                top: `${indicatorOffsetTop}px`,
+                left: `${indicatorOffsetLeft}px`
+              }) ||
+              (isRTL && {
+                top: `${indicatorOffsetTop}px`,
+                right: `${indicatorOffsetRight}px`
+              })
+            }
           />
         </Box>
       </Box>
@@ -120,22 +145,35 @@ export const TourExplanation = ({
     <TourExplanationBox
       paddedRatio={3}
       column
-      style={{
-        top: topStyle,
-        left: leftStyle
-      }}
+      style={
+        (!isRTL && {
+          top: topStyle,
+          left: leftStyle
+        }) ||
+        (isRTL && {
+          top: topStyle,
+          right: rightStyle
+        })
+      }
     >
       <CloseButton
         color={theme.darkWithOverlay}
-        topRight
+        topRight={!isRTL}
+        topLeft={isRTL}
         onClick={() => onSkip?.()}
       />
       <Spacing bottom={2} />
       <Caret
-        style={{
-          top: `${caretOffsetTop}px`,
-          left: `${caretOffsetLeft}px`
-        }}
+        style={
+          (!isRTL && {
+            top: `${caretOffsetTop}px`,
+            left: `${caretOffsetLeft}px`
+          }) ||
+          (isRTL && {
+            top: `${caretOffsetTop}px`,
+            right: `${caretOffsetRight}px`
+          })
+        }
       />
       <Text light medium textDarker>
         <Text light medium noFontSize textDarker>
@@ -178,8 +216,10 @@ TourExplanation.propTypes = {
   maxSteps: PropTypes.number.isRequired,
   caretOffsetTop: PropTypes.number,
   caretOffsetLeft: PropTypes.number,
+  caretOffsetRight: PropTypes.number,
   indicatorOffsetTop: PropTypes.number,
   indicatorOffsetLeft: PropTypes.number,
+  indicatorOffsetRight: PropTypes.number,
   setTourIndex: PropTypes.func.isRequired,
   onTourIndicatorClick: PropTypes.func.isRequired,
   onPrevious: PropTypes.func.isRequired,
@@ -187,6 +227,7 @@ TourExplanation.propTypes = {
   onSkip: PropTypes.func.isRequired,
   topStyle: PropTypes.string,
   leftStyle: PropTypes.string,
+  rightStyle: PropTypes.string,
   isFirstTourPoint: PropTypes.bool.isRequired,
   isLastTourPoint: PropTypes.bool.isRequired,
   active: PropTypes.bool
@@ -218,10 +259,13 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
         const {
           offsetTop,
           offsetLeft,
+          offsetRight,
           caretOffsetTop,
           caretOffsetLeft,
+          caretOffsetRight,
           indicatorOffsetTop,
-          indicatorOffsetLeft
+          indicatorOffsetLeft,
+          indicatorOffsetRight
         } = getOffsetsFromTourPoint(tourPoint);
 
         // To match old HelpScreenWindow / HelpOverlay API
@@ -229,13 +273,17 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
           rectangle: currentRectangle,
           positionTop:
             tourPoint?.positionTop || viewState.relativePosition.RECT_BOTTOM,
+          positionRight:
+            tourPoint?.positionRight || viewState.relativePosition.RECT_RIGHT,
           positionLeft:
             tourPoint?.positionLeft || viewState.relativePosition.RECT_LEFT,
           offsetTop: offsetTop,
-          offsetLeft: offsetLeft
+          offsetLeft: offsetLeft,
+          offsetRight: offsetRight
         };
 
         const positionLeft = calculateLeftPosition(currentScreen);
+        const positionRight = calculateRightPosition(currentScreen);
         const positionTop = calculateTopPosition(currentScreen);
 
         const currentTourIndex = viewState.currentTourIndex;
@@ -257,10 +305,13 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
             isLastTourPoint={index === tourPoints.length - 1}
             topStyle={`${positionTop}px`}
             leftStyle={`${positionLeft}px`}
+            rightStyle={`${positionRight}px`}
             caretOffsetTop={caretOffsetTop}
             caretOffsetLeft={caretOffsetLeft}
+            caretOffsetRight={caretOffsetRight}
             indicatorOffsetTop={indicatorOffsetTop}
             indicatorOffsetLeft={indicatorOffsetLeft}
+            indicatorOffsetRight={indicatorOffsetRight}
           >
             {parseCustomMarkdownToReactWithOptions(
               useTranslationIfExists(tourPoint?.content),
@@ -278,6 +329,7 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
 
 export const TourPreface = ({ viewState }) => {
   const { t } = useTranslation();
+  const isRTL = viewState.isRTL;
   const theme = useTheme();
   return (
     <>
@@ -291,15 +343,22 @@ export const TourPreface = ({ viewState }) => {
         longer
         paddedRatio={4}
         column
-        style={{
-          right: 25,
-          bottom: 45
-        }}
+        style={
+          (!isRTL && {
+            right: 25,
+            bottom: 45
+          }) ||
+          (isRTL && {
+            left: 25,
+            bottom: 45
+          })
+        }
       >
         <CloseButton
           color={theme.darkWithOverlay}
           // color={"green"}
-          topRight
+          topRight={!isRTL}
+          topLeft={isRTL}
           onClick={() => viewState.closeTour()}
         />
         <Spacing bottom={2} />

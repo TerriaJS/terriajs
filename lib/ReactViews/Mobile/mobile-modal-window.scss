@@ -48,6 +48,11 @@
   float: right;
   padding: $padding;
 }
+.done-button {
+  [dir="rtl"] & {
+    float: left;
+  }
+}
 
 .back-button {
   composes: button;
@@ -66,6 +71,11 @@
     }
   }
 }
+.back-button {
+  [dir="rtl"] & {
+    float: right;
+  }
+}
 
 .icon-back {
   height: 18px;
@@ -73,6 +83,12 @@
   margin: 6px;
   fill: #ffffff;
   stroke: #ffffff;
+}
+
+.icon-back {
+  [dir="rtl"] & {
+    transform: rotate(180deg);
+  }
 }
 
 .data-catalog {

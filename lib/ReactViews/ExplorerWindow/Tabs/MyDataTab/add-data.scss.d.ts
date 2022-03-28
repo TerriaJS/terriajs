@@ -5,11 +5,14 @@ interface CssExports {
   'dropdown__list': string;
   'inner': string;
   'label': string;
+  'svg': string;
   'tab-panel': string;
   'tab-panels': string;
   'tabHeading': string;
   'tabPanel': string;
   'tabPanels': string;
+  'tjs-my-data-tab__tab-list__item': string;
+  'tjsMyDataTabTabListItem': string;
   'url-input': string;
   'url-input__btn': string;
   'url-input__text-box': string;

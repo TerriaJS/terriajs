@@ -5,6 +5,9 @@ import { TextSpan } from "./Text";
 
 const Icon = styled.span`
   margin-right: 8px;
+  [dir="rtl"] & {
+    margin-left: 8px;
+  }
 `;
 
 interface IButtonProps {

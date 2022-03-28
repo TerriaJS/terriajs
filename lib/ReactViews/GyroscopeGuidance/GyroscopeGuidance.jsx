@@ -159,6 +159,12 @@ export default function GyroscopeGuidance(props) {
           onClick={e => e.preventDefault()}
           css={`
             position: relative;
+            .tjs-panel__caret,
+            .tjs-sc-InnerPanel__caret {
+              [dir="rtl"] & {
+                left: 3px !important;
+              }
+            }
           `}
         >
           <CleanDropdownPanel
@@ -176,6 +182,9 @@ export default function GyroscopeGuidance(props) {
               .tjs-sc-InnerPanel,
               .tjs-sc-InnerPanel__caret {
                 background: ${p => p.theme.textBlack};
+              }
+              [dir="rtl"] & {
+                right: -265px !important;
               }
             `}
             refForCaret={controlsMapIcon}

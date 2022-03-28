@@ -19,9 +19,35 @@ interface Props {
 const BottomLeftContainer = styled(Box)`
   position: absolute;
   bottom: 40px;
+  .Text-sc-rjn2f3-0,
+  .icon,
+  .Icon__StyledIcon-sc-1827453-0,
+  .czeVVz .gicHRI {
+    [dir="rtl"] & {
+      transform: rotate(180deg) !important;
+    }
+  }
+  [dir="rtl"] & {
+    left: unset;
+    right: 0px;
+    transform: rotate(180deg);
+  }
 
   @media (max-width: ${props => props.theme.mobile}px) {
     bottom: 35px;
+    .Text-sc-rjn2f3-0,
+    .icon,
+    .Icon__StyledIcon-sc-1827453-0,
+    .czeVVz .gicHRI {
+      [dir="rtl"] & {
+        transform: rotate(180deg) !important;
+      }
+    }
+    [dir="rtl"] & {
+      left: unset;
+      right: 0px;
+      transform: rotate(180deg);
+    }
   }
 `;
 const shouldShowPlayStoryButton = (props: Props) =>

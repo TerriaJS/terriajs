@@ -413,6 +413,10 @@ class Compass extends React.Component<PropTypes, IStateTypes> {
                 ${(p: any) => p.theme.verticalAlign("absolute")}
                 direction: rtl;
                 right: 55px;
+                [dir="rtl"] & {
+                  left: 55px;
+                  right: unset;
+                }
               `}
             >
               <GyroscopeGuidance

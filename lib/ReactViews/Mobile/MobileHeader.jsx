@@ -167,7 +167,11 @@ const MobileHeader = observer(
                 <Box
                   position="absolute"
                   css={`
-                    left: 5px;
+                    right: 270px;
+                    [dir="rtl"] & {
+                      left: 270px;
+                      right: 0px;
+                    }
                   `}
                 >
                   <HamburgerButton

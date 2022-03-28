@@ -16,6 +16,10 @@
     padding-left: 30px + $work-bench-width;
     bottom: 90px;
     padding-right: 50px;
+    [dir="rtl"] & {
+      padding-left: 50px;
+      padding-right: 30px + $work-bench-width;
+    }
   }
   &.is-hidden {
     display: none;
@@ -27,6 +31,9 @@
   // when changing to full screen, the story panel should move to center slower
   // than side panel slide in/out
   transition-delay: 0.5s;
+  [dir="rtl"] & {
+    padding-right: 20px;
+  }
 }
 
 .story-container {
@@ -53,9 +60,17 @@
 
   .left {
     border-right: 1px solid $field-border;
+    [dir="rtl"] & {
+      border-right: unset;
+      border-left: 1px solid $field-border;
+    }
   }
   .right {
     border-left: 1px solid $field-border;
+    [dir="rtl"] & {
+      border-left: unset;
+      border-right: 1px solid $field-border;
+    }
   }
 }
 
@@ -146,6 +161,10 @@
   .story.tjs-notification-window__wrapper {
     @media (min-width: $md) {
       left: $work-bench-width;
+      [dir="rtl"] & {
+        right: $work-bench-width;
+        left: unset;
+      }
     }
     .tjs-notification-window__notification {
       // background-color: $color-primary;

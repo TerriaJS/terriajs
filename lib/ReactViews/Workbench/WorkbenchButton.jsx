@@ -23,6 +23,10 @@ const StyledWorkbenchButton = styled(RawButton)`
   padding: 0 10px;
   flex-grow: 1;
   margin-right: 10px;
+  [dir="rtl"] & {
+  margin-right: 10px;
+  margin-left: 8px;
+  }
 
   height: 32px;
   min-width: 32px;
@@ -31,6 +35,7 @@ const StyledWorkbenchButton = styled(RawButton)`
   svg {
     height: 16px;
     width: 16px;
+    padding: 5px;
     margin: 0 auto;
     ${props => !props.iconOnly && `margin-right: 8px;`};
     vertical-align: middle;

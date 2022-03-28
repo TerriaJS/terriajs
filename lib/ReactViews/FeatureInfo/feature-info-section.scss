@@ -20,6 +20,10 @@
   margin: 0;
   border: none;
   text-align: left;
+  [dir="rtl"] & {
+    margin-left: 30px;
+    text-align: right;
+  }
   span {
     display: block;
     font-weight: 300;
@@ -33,6 +37,11 @@
     position: absolute;
     top: 15px;
     right: 10px;
+    [dir="rtl"] & {
+      left: 10px;
+      float: left;
+      right: unset;
+    }
   }
 }
 
@@ -76,4 +85,8 @@
   margin-bottom: 13px;
   margin-right: 1px;
   margin-top: 10px;
+  [dir="rtl"] & {
+    margin-left: 1px;
+    float: left;
+  }
 }

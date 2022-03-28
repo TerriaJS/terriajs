@@ -43,10 +43,16 @@ const StyledMapNavigation = styled.div<StyledMapNavigationProps>`
   right: 5px;
   z-index: 1;
   bottom: 25px;
+  [dir="rtl"] & {
+    left: 5px;
+  }
   @media (min-width: ${props => props.theme.sm}px) {
     top: 80px;
     bottom: 50px;
     right: 16px;
+    [dir="rtl"] & {
+      left: 16px;
+    }
   }
   @media (max-width: ${props => props.theme.mobile}px) {
     & > div {
