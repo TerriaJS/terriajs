@@ -14,6 +14,7 @@ Change Log
 * Add `GeoJsonTraits.filterByProperties` - this can be used to filter GeoJSON features by properties
 * Add GeoJSON `czmlTemplate` support for `Polygon/MultiPolygon`
 * Add custom `heightOffset` property to `czmlTemplate`
+* Fixed a bug where Cesium3DTilePointFeature info is not shown when being clicked.
 * [The next improvement]
 
 #### 8.1.25 - 2022-03-16
