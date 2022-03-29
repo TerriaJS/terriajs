@@ -17,6 +17,8 @@ Change Log
 * Fixed a bug where Cesium3DTilePointFeature info is not shown when being clicked.
 * Added optional `onDrawingComplete` callback to `UserDrawing` to receive drawn points or rectangle when the drawing is complete.
 * Fixed a bug in `BoxDrawing` where the box can be below ground after initialization even when setting `keepBoxAboveGround` to true.
+* Fix `viewCatalogMember` bug - where `_previewItem` was being set too late.
+* Improve error message in `DataPreview` for references.
 * [The next improvement]
 
 #### 8.1.25 - 2022-03-16
