@@ -674,7 +674,7 @@ export default class MagdaReference extends AccessControlMixin(
       true
     );
 
-    updateModelFromJson(result, CommonStrata.underride, underride, true);
+    updateModelFromJson(result, CommonStrata.definition, underride, true);
 
     if (override) {
       updateModelFromJson(result, CommonStrata.override, override, true);

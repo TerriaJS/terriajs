@@ -1,4 +1,4 @@
-import { observable, runInAction, untracked, computed } from "mobx";
+import { computed, observable, runInAction, untracked } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
@@ -6,6 +6,7 @@ import Result from "../Core/Result";
 import Model, { BaseModel, ModelInterface } from "../Models/Definition/Model";
 import ReferenceTraits from "../Traits/TraitsClasses/ReferenceTraits";
 import { getName } from "./CatalogMemberMixin";
+import { applyItemProperties } from "./GroupMixin";
 
 interface ReferenceInterface extends ModelInterface<ReferenceTraits> {
   readonly isLoadingReference: boolean;
@@ -102,9 +103,34 @@ function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
      * {@see AsyncLoader}
      */
     async loadReference(forceReload: boolean = false): Promise<Result<void>> {
-      return (await this._referenceLoader.load(forceReload)).clone(
+      const result = (await this._referenceLoader.load(forceReload)).clone(
         `Failed to load reference \`${getName(this)}\``
       );
+
+      runInAction(() => {
+        if (!result.error && this.target) {
+          applyItemProperties(this.target, this.itemProperties);
+          // Set itemPropertiesByType
+          applyItemProperties(
+            this.target,
+            this.itemPropertiesByType.find(
+              itemProps =>
+                itemProps.type && itemProps.type === this.target!.type
+            )?.itemProperties
+          );
+
+          // Set itemPropertiesById
+          applyItemProperties(
+            this.target,
+            this.itemPropertiesById.find(
+              itemProps =>
+                itemProps.id && itemProps.id === this.target!.uniqueId
+            )?.itemProperties
+          );
+        }
+      });
+
+      return result;
     }
 
     /**

@@ -5,9 +5,10 @@ import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
-import { isJsonNumber, isJsonString } from "../Core/Json";
+import { isJsonNumber, isJsonString, JsonObject } from "../Core/Json";
 import Result from "../Core/Result";
 import Group from "../Models/Catalog/Group";
+import CommonStrata from "../Models/Definition/CommonStrata";
 import hasTraits from "../Models/Definition/hasTraits";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import ModelReference from "../Traits/ModelReference";
@@ -138,6 +139,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
 
         this.refreshKnownContainerUniqueIds(this.uniqueId);
         this.addShareKeysToMembers();
+        this.addItemPropertiesToMembers();
       } catch (e) {
         return Result.error(e, `Failed to load group \`${getName(this)}\``);
       }
@@ -151,6 +153,8 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      * by this function resolves, the list of members in `GroupMixin#members`
      * and `GroupMixin#memberModels` should be complete, but the individual
      * members will not necessarily be loaded themselves.
+     *
+     * If creating new models (eg WebMapServiceCatalogGroup), use `CommonStrata.definition` for trait values.
      *
      * It is guaranteed that `loadMetadata` has finished before this is called.
      *
@@ -173,6 +177,54 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       this.memberModels.forEach((model: BaseModel) => {
         if (model.knownContainerUniqueIds.indexOf(uniqueId) < 0) {
           model.knownContainerUniqueIds.push(uniqueId);
+        }
+      });
+    }
+
+    @action
+    addItemPropertiesToMembers(): void {
+      this.memberModels.forEach((model: BaseModel) => {
+        // Set itemProperties (for non GroupMixin members)
+        if (
+          this.itemProperties !== undefined &&
+          !GroupMixin.isMixedInto(model)
+        ) {
+          applyItemProperties(model, this.itemProperties);
+        }
+
+        // Set itemPropertiesByType
+        applyItemProperties(
+          model,
+          this.itemPropertiesByType.find(
+            itemProps => itemProps.type && itemProps.type === model.type
+          )?.itemProperties
+        );
+
+        // Set itemPropertiesById
+        applyItemProperties(
+          model,
+          this.itemPropertiesById.find(
+            itemProps => itemProps.id && itemProps.id === model.uniqueId
+          )?.itemProperties
+        );
+
+        // If member is a Group -> copy over itemProperties
+        if (GroupMixin.isMixedInto(model)) {
+          model.setTrait(
+            CommonStrata.underride,
+            "itemProperties",
+            this.itemProperties
+          );
+          model.setTrait(
+            CommonStrata.underride,
+            "itemPropertiesByType",
+            this.traits.itemPropertiesByType.toJson(this.itemPropertiesByType)
+          );
+          model.setTrait(
+            CommonStrata.underride,
+            "itemPropertiesById",
+            this.traits.itemPropertiesById.toJson(this.itemPropertiesById)
+          );
         }
       });
     }
@@ -347,3 +399,13 @@ namespace GroupMixin {
 }
 
 export default GroupMixin;
+
+export function applyItemProperties(
+  model: BaseModel,
+  itemProperties: JsonObject | undefined
+) {
+  if (!itemProperties) return;
+  Object.keys(itemProperties).map((k: any) =>
+    model.setTrait(CommonStrata.underride, k, itemProperties[k])
+  );
+}
