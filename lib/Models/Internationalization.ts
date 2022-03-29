@@ -2,8 +2,6 @@ import i18next, { ReactOptions } from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
 import HttpApi from "i18next-http-backend";
-import translationEN from "../Language/en/translation.json";
-import translationFR from "../Language/fr/translation.json";
 
 export interface I18nBackendOptions {
   /**
@@ -62,7 +60,8 @@ class Internationalization {
      * as `languageConfiguration` can be serialised, but `i18nOptions` may have
      * some functions that are passed in from a TerriaMap
      */
-    i18StartOptions: I18nStartOptions | undefined
+    i18StartOptions: I18nStartOptions | undefined,
+    terriajsResourcesBaseUrl: string
   ): void {
     const languageConfig = Object.assign(
       defaultLanguageConfiguration,
@@ -121,18 +120,13 @@ class Internationalization {
         defaultNS: "languageOverrides",
         fallbackNS: "translation",
 
-        resources: {
-          en: {
-            translation: translationEN
-          },
-          fr: {
-            translation: translationFR
-          }
-        },
-
         backend: Object.assign(
           {
-            loadPath: "/languages/{{lng}}/{{ns}}.json",
+            loadPath: function loadPath(lngs: string[], namespaces: string[]) {
+              return namespaces[0] === "translation"
+                ? `${terriajsResourcesBaseUrl}languages/{{lng}}/{{ns}}.json`
+                : "languages/{{lng}}/{{ns}}.json";
+            },
             crossDomain: false
           },
           { ...i18StartOptions?.backend }
