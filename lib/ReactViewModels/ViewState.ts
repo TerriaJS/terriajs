@@ -552,6 +552,9 @@ export default class ViewState {
     stratum: string = CommonStrata.user,
     openAddData = true
   ): Promise<Result<void>> {
+    // Set preview item before loading - so we can see loading indicator and errors in DataPreview panel.
+    runInAction(() => (this._previewedItem = item));
+
     try {
       // Get referenced target first.
       if (ReferenceMixin.isMixedInto(item)) {
@@ -564,9 +567,6 @@ export default class ViewState {
       }
       const theItem: BaseModel =
         ReferenceMixin.isMixedInto(item) && item.target ? item.target : item;
-
-      // Set preview item
-      runInAction(() => (this._previewedItem = theItem));
 
       // Open "Add Data"
       if (openAddData) {
