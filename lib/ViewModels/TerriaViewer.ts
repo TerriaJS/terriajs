@@ -1,23 +1,25 @@
+import { isEqual } from "lodash-es";
 import {
   action,
   computed,
   IComputedValue,
   IObservableValue,
+  IReactionDisposer,
   observable,
-  untracked,
-  runInAction
+  reaction,
+  runInAction,
+  untracked
 } from "mobx";
 import { fromPromise, FULFILLED } from "mobx-utils";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import CameraView from "../Models/CameraView";
 import GlobeOrMap from "../Models/GlobeOrMap";
 import NoViewer from "../Models/NoViewer";
 import Terria from "../Models/Terria";
 import ViewerMode from "../Models/ViewerMode";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import TerriaError from "../Core/TerriaError";
 
 // A class that deals with initialising, destroying and switching between viewers
 // Each map-view should have it's own TerriaViewer
@@ -81,8 +83,18 @@ export default class TerriaViewer {
   @observable
   disableInteraction: boolean = false;
 
-  @observable
-  homeCamera: CameraView = new CameraView(Rectangle.MAX_VALUE);
+  _homeCamera: CameraView = new CameraView(Rectangle.MAX_VALUE);
+
+  @computed
+  get homeCamera() {
+    return this._homeCamera;
+  }
+  set homeCamera(cameraView: CameraView) {
+    if (isEqual(this._homeCamera.rectangle, Rectangle.MAX_VALUE)) {
+      this.currentViewer.zoomTo(cameraView, 0.0);
+    }
+    this._homeCamera = cameraView;
+  }
 
   @observable
   mapContainer: string | HTMLElement | undefined;
@@ -93,13 +105,21 @@ export default class TerriaViewer {
    */
   @observable scale: number = 1;
 
-  // TODO: hook these up
   readonly beforeViewerChanged = new CesiumEvent();
   readonly afterViewerChanged = new CesiumEvent();
 
   constructor(terria: Terria, items: IComputedValue<MappableMixin.Instance[]>) {
     this.terria = terria;
     this.items = items;
+
+    if (!this.viewerChangeTracker) {
+      this.viewerChangeTracker = reaction(
+        () => this.currentViewer,
+        () => {
+          this.afterViewerChanged.raiseEvent();
+        }
+      );
+    }
   }
 
   get attached(): boolean {
@@ -107,6 +127,8 @@ export default class TerriaViewer {
   }
 
   private _lastViewer: GlobeOrMap | undefined;
+
+  viewerChangeTracker: IReactionDisposer | undefined = undefined;
 
   @computed({
     keepAlive: true
@@ -137,6 +159,7 @@ export default class TerriaViewer {
     console.log(`Creating a viewer: ${newViewer.type}`);
     this._lastViewer = newViewer;
     newViewer.zoomTo(currentView || untracked(() => this.homeCamera), 0.0);
+
     return newViewer;
   }
 
@@ -201,6 +224,7 @@ export default class TerriaViewer {
   private destroyCurrentViewer() {
     let currentView: CameraView | undefined;
     if (this._lastViewer !== undefined) {
+      this.beforeViewerChanged.raiseEvent();
       console.log(`Destroying viewer: ${this._lastViewer.type}`);
       currentView = this._lastViewer.getCurrentCameraView();
       this._lastViewer.destroy();

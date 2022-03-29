@@ -33,10 +33,6 @@ TerriaJS can be built and run on almost any macOS, Linux, or Windows system.  Th
 * [npm](https://www.npmjs.com/) v6.0 or later.  npm is usually installed automatically alongside the above.  You can check your npm version by running `npm --version`.
 * [yarn](https://yarnpkg.com/) v1.19.0 or later. This can be installed using `npm install -g yarn@^1.19.0`
 
-The following components are optional:
-
-* [GDAL](http://www.gdal.org/) - Used for the conversion service that transforms Esri Shapefiles and other more obscure formats into GeoJSON for display in TerriaJS.  This is _not_ required for formats that TerriaJS supports directly, including KML, GeoJSON, etc.
-
 ### Cloning TerriaMap
 
 The latest version of TerriaMap is on [GitHub](https://github.com), and the preferred way to get it is by using `git`:
@@ -88,11 +84,6 @@ yarn gulp watch
 ```
 
 `yarn gulp` simply runs `gulp`, so you can use that directly if you prefer (run `npm install -g gulp-cli` to install it globally).
-
-_If any of the above fail with an error that includes `Allocation failed - JavaScript heap out of memory` (see e.g. [the stack trace in this issue](https://github.com/TerriaJS/TerriaMap/issues/374)) run the task again after setting a higher Node.js allocation limit:_
-```bash
-export NODE_OPTIONS=--max_old_space_size=8192
-```
 
 The full set of `gulp` tasks can be found on the [Development Environment](contributing/development-environment.md#terriamap-gulp-tasks) page.
 
