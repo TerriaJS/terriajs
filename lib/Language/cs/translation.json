@@ -516,7 +516,7 @@
     "dataServiceDetails": "Podrobnosti o datové službě",
     "dataCustodian": "Správce dat",
     "dataNotLocal": "Další informace, včetně informací o právech a omezeních používání, získáte u poskytovatele těchto údajů.",
-    "downloadNotSupported": "Váš prohlížeč bohužel nepodporuje funkce potřebné ke stažení těchto dat jako souboru. Ke stažení těchto dat použijte prohlížeč Chrome, Firefox nebo Safari."
+    "downloadNotSupported": "Váš prohlížeč bohužel nepodporuje funkce potřebné ke stažení těchto dat jako souboru. Pro stažení těchto dat použijte prosím $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge) nebo $t(browsers.safari)."
   },
   "workbench": {
     "colorScaleRangeTitle": "Nesprávný rozsah barevné škály",
@@ -661,8 +661,8 @@
     "chrome": "Google Chrome",
     "webGLNotSupportedTitle": "WebGL není podporováno",
     "webGLNotSupportedOrSlowTitle": "WebGL není podporováno nebo je příliš pomalé",
-    "slowWebGLAvailableMessageII": "{{appName}} funguje nejlépe s webovým prohlížečem, který podporuje {{webGL}}, včetně nejnovějších verzí {{chrome}}, {{firefox}}, {{safari}}. a {{internetExplorer}}. Zdá se, že váš webový prohlížeč nepodporuje WebGL, takže se vám zobrazí omezené, pouze 2D zobrazení.",
-    "webGLNotSupportedOrSlowMessage": "Váš webový prohlížeč nemůže zobrazit mapu ve 3D, protože buď nepodporuje WebGL, nebo protože váš webový prohlížeč oznámil, že WebGL bude extrémně pomalý. Vyzkoušejte prosím jiný webový prohlížeč, například nejnovější verzi {{chrome}}, {{firefox}}, {{safari}}, {{internetExplorer}}. V některých případech bude možná nutné aktualizovat ovladač grafické karty, nebo operační systém počítače, abyste mohli zobrazit 3D zobrazení v {{appName}}.",
+    "slowWebGLAvailableMessageII": "{{appName}} funguje nejlépe s webovým prohlížečem, který podporuje {{webGL}}, včetně nejnovějších verzí $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge) a $t(browsers.safari). Zdá se, že váš webový prohlížeč nepodporuje WebGL, takže se zobrazí omezené, pouze 2D zobrazení.",
+    "webGLNotSupportedOrSlowMessage": "Váš webový prohlížeč nemůže zobrazit mapu ve 3D, protože buď nepodporuje WebGL, nebo protože váš webový prohlížeč oznámil, že WebGL bude extrémně pomalý. Zkuste prosím použít jiný webový prohlížeč, například nejnovější verzi $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge) nebo $t(browsers.safari). V některých případech může být nutné aktualizovat video ovladač počítače nebo operační systém, abyste mohli v {{appName}} zobrazit 3D zobrazení.",
     "slowWebGLAvailableMessage": "Váš webový prohlížeč hlásí, že má problémy s výkonem při zobrazování {{appName}} ve 3D, takže se zobrazí pouze 2D zobrazení. Pro plné 3D zobrazení zkuste použít jiný webový prohlížeč, aktualizovat ovladače grafické karty, nebo použít lepší operační systém.",
     "firefox": "Mozilla Firefox",
     "safari": "Apple Safari"
@@ -689,7 +689,7 @@
     "chartData": "Data grafu",
     "dataUri": {
       "errorTitle": "Prohlížeč nepodporuje stahování dat",
-      "errorMessage": "Prohlížeče společnosti Microsoft (včetně všech verzí prohlížečů Internet Explorer a Edge) bohužel nepodporují funkci uri potřebnou ke stažení dat jako souboru. Chcete-li stáhnout data, zkopírujte následující uri do jiného prohlížeče, například Chrome, Firefox nebo Safari: Uri: {{href}}"
+      "errorMessage": "Prohlížeče společnosti Microsoft (včetně všech verzí prohlížečů Internet Explorer a Edge) bohužel nepodporují funkci uri potřebnou ke stažení dat jako souboru. Chcete-li stáhnout data, zkopírujte následující uri do jiného prohlížeče, například $t(browsers.chrome), $t(browsers.firefox) nebo $t(browsers.safari): {{href}}"
     },
     "dataType": {
       "auto": "Automatická detekce (doporučeno)",
@@ -1042,7 +1042,7 @@
       "name": "GeoJSON",
       "errorLoadingTitle": "Chyba při načítání GeoJSON",
       "errorLoadingMessage": "Při načítání souboru GeoJSON došlo k chybě.  To může znamenat, že soubor je neplatný nebo že není podporován.",
-      "unsupportedBrowserMessage": "Je nám líto, ale váš webový prohlížeč nepodporuje rozhraní API souborů, které {{appName}} vyžaduje pro načtení této datové sady.  Upgradujte prosím svůj webový prohlížeč.  Pro nejlepší zážitek doporučujeme nejnovější verze {{chrome}} nebo {{firefox}} nebo {{internetExplorer}}.",
+      "unsupportedBrowserMessage": "Je nám líto, ale váš webový prohlížeč nepodporuje rozhraní API souborů, které {{název aplikace}} vyžaduje pro načtení této datové sady.  Upgradujte prosím svůj webový prohlížeč.  Pro nejlepší zážitek doporučujeme nejnovější verze $t(browsers.chrome) nebo $t(browsers.firefox) nebo $t(browsers.edge) nebo $t(browsers.safari).",
       "unsupportedBrowserTitle": "Nepodporovaný webový prohlížeč",
       "internetExplorer": "Internet Explorer 11",
       "unableToLoadItemMessage": "Položku katalogu GeoJSON nelze načíst, protože nebyla nakonfigurována s vlastnostmi `url`, `geoJsonData` nebo `geoJsonString`.",
@@ -1193,7 +1193,7 @@
       "noDataForRegion": "Pro vybranou oblast nejsou k dispozici žádná data.",
       "noDataForDate": "Pro vybrané datum nejsou k dispozici žádná data.",
       "outdatedBrowserTitle": "Zastaralý webový prohlížeč",
-      "outdatedBrowserMessage": "Používáte velmi starý webový prohlížeč, který nedokáže zobrazit datové sady \"mapované na regiony\", jako je tato.  Co nejdříve přejděte na nejnovější verzi prohlížeče Google Chrome, Mozilla Firefox, Microsoft Edge, Microsoft Internet Explorer 11 nebo Apple Safari.",
+      "outdatedBrowserMessage": "Používáte velmi starý webový prohlížeč, který nedokáže zobrazit datové sady \"mapované na regiony\", jako je tato.  Co nejdříve prosím přejděte na nejnovější verzi $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge) nebo $t(browsers.safari).",
       "invalidServerTypeMessage": "Očekávaný typ serveru byl \"WMS\" nebo \"vector\", ale je \"{{serverType}}\"",
       "notRecognisedText": "nerozeznáno"
     },
@@ -1335,7 +1335,8 @@
       "btnDone": "Hotovo",
       "anotherPoint": "Další bod",
       "line": "Čára",
-      "firstPoint": "První bod"
+      "firstPoint": "První bod",
+      "clickToRedrawRectangle": "Kliknutím na jiný bod překreslíte obdélník"
     },
     "webFeatureServiceCatalogGroup": {
       "groupNotAvailableTitle": "Skupina není k dispozici",
@@ -1611,5 +1612,11 @@
   "toast": {
     "mapIsZooming": "Načítání ideálního zvětšení..."
   },
-  "emptyWorkbenchMessage": "<0><0>Vaše pracovní plocha je prázdná</0><1><strong>Kliknutím na '$t(addData.addDataBtnText) výše můžete </strong></1><2><0>Procházet katalog dat </0><1>Nahrát vlastní data do mapy</1></2><3><0></0><strong>TIP.</strong><2>Všechny vaše aktivní datové sady budou uvedeny zde</2></3></0>"
+  "emptyWorkbenchMessage": "<0><0>Vaše pracovní plocha je prázdná</0><1><strong>Kliknutím na '$t(addData.addDataBtnText) výše můžete </strong></1><2><0>Procházet katalog dat </0><1>Nahrát vlastní data do mapy</1></2><3><0></0><strong>TIP.</strong><2>Všechny vaše aktivní datové sady budou uvedeny zde</2></3></0>",
+  "browsers": {
+    "chrome": "Google Chrome",
+    "firefox": "Mozilla Firefox",
+    "edge": "Microsoft Edge",
+    "safari": "Apple Safari"
+  }
 }
