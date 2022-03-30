@@ -32,32 +32,30 @@ function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
     @observable
     private _target: BaseModel | undefined;
 
-    private _referenceLoader = new AsyncLoader(() => {
+    private _referenceLoader = new AsyncLoader(async () => {
       const previousTarget = untracked(() => this._target);
-      return this.forceLoadReference(previousTarget).then(target => {
-        if (!target) {
-          throw new DeveloperError("Failed to create reference");
-        }
+      const target = await this.forceLoadReference(previousTarget);
 
-        if (target?.uniqueId !== this.uniqueId) {
-          throw new DeveloperError(
-            "The model returned by `forceLoadReference` must be constructed with its `uniqueId` set to the same value as the Reference model."
-          );
-        }
-        if (!this.weakReference && target?.sourceReference !== this) {
-          throw new DeveloperError(
-            "The model returned by `forceLoadReference` must be constructed with its `sourceReference` set to the Reference model."
-          );
-        }
-
-        if (this.weakReference && target?.sourceReference) {
-          throw new DeveloperError(
-            'This is a "weak" reference, so the model returned by `forceLoadReference` must not have a `sourceReference` set.'
-          );
-        }
-        runInAction(() => {
-          this._target = target;
-        });
+      if (!target) {
+        throw new DeveloperError("Failed to create reference");
+      }
+      if (target?.uniqueId !== this.uniqueId) {
+        throw new DeveloperError(
+          "The model returned by `forceLoadReference` must be constructed with its `uniqueId` set to the same value as the Reference model."
+        );
+      }
+      if (!this.weakReference && target?.sourceReference !== this) {
+        throw new DeveloperError(
+          "The model returned by `forceLoadReference` must be constructed with its `sourceReference` set to the Reference model."
+        );
+      }
+      if (this.weakReference && target?.sourceReference) {
+        throw new DeveloperError(
+          'This is a "weak" reference, so the model returned by `forceLoadReference` must not have a `sourceReference` set.'
+        );
+      }
+      runInAction(() => {
+        this._target = target;
       });
     });
 

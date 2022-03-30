@@ -617,4 +617,57 @@ describe("UserDrawing", function() {
 
     expect(userDrawing.mapItems.length).toBe(1);
   });
+
+  it("calls onDrawingComplete with the drawn points or rectangle", function() {
+    let completedPoints: Cartesian3[] | undefined;
+    let completedRectangle: Rectangle | undefined;
+    const userDrawing = new UserDrawing({
+      terria,
+      allowPolygon: false,
+      drawRectangle: true,
+      onDrawingComplete: ({ points, rectangle }) => {
+        completedPoints = points;
+        completedRectangle = rectangle;
+      }
+    });
+    userDrawing.enterDrawMode();
+    const pickedFeatures = new PickedFeatures();
+
+    // First point
+    // Points around Parliament house
+    const pt1Position = new Cartographic(
+      CesiumMath.toRadians(149.121),
+      CesiumMath.toRadians(-35.309),
+      CesiumMath.toRadians(0)
+    );
+    const pt1CartesianPosition = Ellipsoid.WGS84.cartographicToCartesian(
+      pt1Position
+    );
+    pickedFeatures.pickPosition = pt1CartesianPosition;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
+
+    // Second point
+    const pt2Position = new Cartographic(
+      CesiumMath.toRadians(149.124),
+      CesiumMath.toRadians(-35.311),
+      CesiumMath.toRadians(0)
+    );
+    const pt2CartesianPosition = Ellipsoid.WGS84.cartographicToCartesian(
+      pt2Position
+    );
+    pickedFeatures.pickPosition = pt2CartesianPosition;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
+
+    // Check onDrawingComplete was called when we end the drawing.
+    userDrawing.terria.mapInteractionModeStack[0].onCancel?.();
+    expect(completedPoints).toBeDefined();
+    if (completedPoints) {
+      expect(completedPoints.length).toEqual(2);
+    }
+    expect(completedRectangle).toBeDefined();
+  });
 });
