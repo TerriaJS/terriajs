@@ -20,7 +20,7 @@ export const CollapseBtn = ({
       onClick={onClick}
     >
       {isCollapsed ? (
-        <StoryIcon styledWidth={"24px"} glyph={Icon.GLYPHS.info} />
+        <StoryIcon styledWidth={"20px"} glyph={Icon.GLYPHS.info} />
       ) : (
         <StoryIcon styledWidth={"12px"} glyph={Icon.GLYPHS.arrowDown} />
       )}
@@ -38,8 +38,11 @@ export const ExitBtn = ({ onClick }: BtnProp) => {
         glyph={Icon.GLYPHS.close}
         css={`
           border-radius: 50%;
-          border: 3px solid ${theme.textDark};
-          padding: 3px;
+          border: 2px solid ${theme.textDark};
+          padding: 2px;
+          &:hover {
+            border-color: ${theme.colorPrimary};
+          }
         `}
       />
     </RawButton>
@@ -49,4 +52,8 @@ export const ExitBtn = ({ onClick }: BtnProp) => {
 export const StoryIcon = styled(StyledIcon).attrs(props => ({
   fillColor: props.theme.textDark,
   opacity: 0.5
-}))``;
+}))`
+  &:hover {
+    fill: ${p => p.theme.colorPrimary};
+  }
+`;
