@@ -11,7 +11,15 @@ Change Log
 * Added experimental routing system - there may be breaking changes to this system in subsequent patch releases for a short time. The routes currently include:
   * `/story/:share-id` ➡ loads share JSON from a URL `${configParameters.storyRouteUrlPrefix}:share-id` (`configParameters.storyRouteUrlPrefix` must have a trailing slash)
   * `/catalog/:id` ➡ opens the data catalogue to the specified member
+* Change button cursor to pointer
+* Add `GeoJsonTraits.filterByProperties` - this can be used to filter GeoJSON features by properties
+* Add GeoJSON `czmlTemplate` support for `Polygon/MultiPolygon`
+* Add custom `heightOffset` property to `czmlTemplate`
 * Fixed a bug where Cesium3DTilePointFeature info is not shown when being clicked.
+* Added optional `onDrawingComplete` callback to `UserDrawing` to receive drawn points or rectangle when the drawing is complete.
+* Fixed a bug in `BoxDrawing` where the box can be below ground after initialization even when setting `keepBoxAboveGround` to true.
+* Fix `viewCatalogMember` bug - where `_previewItem` was being set too late.
+* Improve error message in `DataPreview` for references.
 * [The next improvement]
 
 #### 8.1.25 - 2022-03-16
