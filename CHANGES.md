@@ -20,6 +20,8 @@ Change Log
 * Fixed a bug in `BoxDrawing` where the box can be below ground after initialization even when setting `keepBoxAboveGround` to true.
 * Fix `viewCatalogMember` bug - where `_previewItem` was being set too late.
 * Improve error message in `DataPreview` for references.
+* Fix alignment of elements in story panel and move some styling from scss to styled components
+* Click on the stories button opens a story builder (button on the left from story number)
 * [The next improvement]
 
 #### 8.1.25 - 2022-03-16
