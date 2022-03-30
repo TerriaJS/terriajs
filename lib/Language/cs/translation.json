@@ -979,7 +979,7 @@
       "catalogMemberMustHaveType": "Člen katalogu musí mít typ.",
       "serviceErrorMessage": "U této služby nejsou k dispozici žádné podrobnosti.",
       "unsupportedFileTypeMessageII": "Tento formát souboru aplikace {{appName}} nepodporuje. Mezi přímo podporované formáty souborů patří: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (v {{link}})</li></ul > Formáty souborů podporované prostřednictvím služby online převodu zahrnují: <ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>Případně další {{linkII}}</li></ul>",
-      "unsupportedFileTypeMessage": "Tento formát souboru aplikace {{appName}} nepodporuje. Mezi podporované formáty souborů patří: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (v {{link}})</li></ul>",
+      "unsupportedFileTypeMessage": "Tento formát souboru aplikace {{appName}} nepodporuje. Mezi podporované formáty souborů patří: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (v {{link}})</li><li>Shapefile (.zip)</li></ul>",
       "compositesError": "Kompozity nemohou obsahovat složené položky.",
       "mustHaveType": "Každá položka musí mít typ.",
       "convertErrorMessage": "Tento katalogový soubor je založen na starší verzi softwaru TerriaJS, který pohání tuto webovou mapu. Při pokusu o aktualizaci katalogových dat pro {{url}} došlo k chybě."
