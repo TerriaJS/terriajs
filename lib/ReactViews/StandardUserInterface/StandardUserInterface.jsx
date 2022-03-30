@@ -109,6 +109,9 @@ const GlobalTerriaStyles = createGlobalStyle`
     color: ${p => p.theme.colorPrimary};
   }
 
+  button {
+    cursor: pointer;
+  }
 
   ${props =>
     props.experimentalFeatures &&
