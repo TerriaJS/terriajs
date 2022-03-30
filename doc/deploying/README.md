@@ -16,3 +16,7 @@ Using a TerriaMap in other applications:
 * [Using as a CKAN Previewer](using-as-a-ckan-previewer.md): Use TerriaJS as a previewer for geospatial data in a [CKAN](http://ckan.org/) site.
 * [Controlling with URL Parameters](controlling-with-url-parameters.md): Control a TerriaJS application by passing it URL parameters.  This is powerful because it enables another site to launch or embed a customized map with little or no code to write.
 * [Controlling in an &lt;iframe&gt; or Popup](controlling-in-an-iframe-or-popup.md): Embed a TerriaJS application in iframe or pop it up in a separate window, and control it by posting it cross-window messages.
+
+Special deployment configurations:
+
+* [Running TerriaMap through a reverse proxy](running-through-reverse-proxy.md): How to configure Terria to work correctly when running through a reverse proxy that performs path rewriting to prefix a path to URLs. E.g. hosting a map to be accessed at http://example.com/my/terriamap/

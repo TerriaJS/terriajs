@@ -1,6 +1,6 @@
-const i18next = require("i18next").default;
+import i18next from "i18next";
 
-module.exports = function() {
+export default function() {
   return {
     remoteDataType: [
       {
@@ -98,10 +98,6 @@ module.exports = function() {
         value: "socrata-group",
         name: i18next.t("core.dataType.socrata-group")
       }
-      // {
-      //   value: "other",
-      //   name: i18next.t("core.dataType.other")
-      // }
     ],
     localDataType: [
       {
@@ -143,10 +139,6 @@ module.exports = function() {
         name: i18next.t("core.dataType.geoRss"),
         extensions: ["xml"]
       },
-      // {
-      //   value: "other",
-      //   name: i18next.t("core.dataType.other")
-      // }
       {
         value: "gltf",
         name: i18next.t("core.dataType.gltf"),
@@ -159,4 +151,4 @@ module.exports = function() {
       }
     ]
   };
-};
+}

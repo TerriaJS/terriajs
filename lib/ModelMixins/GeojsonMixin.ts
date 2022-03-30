@@ -7,7 +7,9 @@ import {
   Geometries,
   Geometry,
   GeometryCollection,
+  MultiPolygon,
   Point,
+  Polygon,
   Properties
 } from "@turf/helpers";
 import i18next from "i18next";
@@ -55,11 +57,14 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import formatPropertyValue from "../Core/formatPropertyValue";
 import hashFromString from "../Core/hashFromString";
 import isDefined from "../Core/isDefined";
-import { isJsonObject } from "../Core/Json";
+import { isJsonObject, JsonObject, isJsonNumber } from "../Core/Json";
 import { isJson } from "../Core/loadBlob";
 import makeRealPromise from "../Core/makeRealPromise";
 import StandardCssColors from "../Core/StandardCssColors";
-import TerriaError, { networkRequestError } from "../Core/TerriaError";
+import TerriaError, {
+  networkRequestError,
+  TerriaErrorSeverity
+} from "../Core/TerriaError";
 import ProtomapsImageryProvider, {
   GeojsonSource,
   GEOJSON_SOURCE_LAYER_NAME,
@@ -81,6 +86,8 @@ import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
 import { ExportData } from "./ExportableMixin";
 import TableMixin from "./TableMixin";
+
+export const FEATURE_ID_PROP = "_id_";
 
 const SIMPLE_STYLE_KEYS = [
   "marker-size",
@@ -136,13 +143,17 @@ class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
   @computed
   get rectangle() {
     if (this._item._readyData) {
-      const geojsonBbox = bbox(this._item._readyData);
-      return createStratumInstance(RectangleTraits, {
-        west: geojsonBbox[0],
-        south: geojsonBbox[1],
-        east: geojsonBbox[2],
-        north: geojsonBbox[3]
-      });
+      try {
+        const geojsonBbox = bbox(this._item._readyData);
+        return createStratumInstance(RectangleTraits, {
+          west: geojsonBbox[0],
+          south: geojsonBbox[1],
+          east: geojsonBbox[2],
+          north: geojsonBbox[3]
+        });
+      } catch (e) {
+        TerriaError.from(e, "Failed to create `rectangle` for GeoJSON").log();
+      }
     }
   }
 
@@ -373,7 +384,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
      * Errors can be thrown here.
      */
     protected abstract forceLoadGeojsonData(): Promise<
-      FeatureCollectionWithCrs
+      FeatureCollectionWithCrs | undefined
     >;
 
     /** GeojsonMixin has 3 rendering modes:
@@ -389,29 +400,50 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     protected async forceLoadMapItems(): Promise<void> {
       let useMvt = this.useMvt;
       const czmlTemplate = this.czmlTemplate;
+      const filterByProperties = this.filterByProperties;
 
       let geoJson: FeatureCollectionWithCrs | undefined;
 
       try {
         geoJson = await this.forceLoadGeojsonData();
+        if (geoJson === undefined) {
+          return;
+        }
 
         const geoJsonWgs84 = await reprojectToGeographic(
           geoJson,
           this.terria.configParameters.proj4ServiceBaseUrl
         );
 
-        // Add feature index to "_id_" feature property
+        // Add feature index to FEATURE_ID_PROP ("_id_") feature property
         // This is used to refer to each feature in TableMixin (as row ID)
 
         // Also check for how many features have simply-style properties
         let numFeaturesWithSimpleStyle = 0;
 
-        for (let i = 0; i < geoJsonWgs84.features.length; i++) {
-          if (!geoJsonWgs84.features[i].properties) {
-            geoJsonWgs84.features[i].properties = {};
+        const features = geoJsonWgs84.features;
+        // If filtering features - Clear all features and re add them if props match filterByProperties
+        if (filterByProperties) geoJsonWgs84.features = [];
+
+        for (let i = 0; i < features.length; i++) {
+          const feature = features[i];
+          if (!feature.properties) {
+            feature.properties = {};
           }
-          const properties = geoJsonWgs84.features[i].properties!;
-          properties["_id_"] = i;
+
+          // Filter features by `featureFilterByProps` trait if defined
+          if (filterByProperties) {
+            if (
+              Object.entries(filterByProperties).every(
+                ([key, value]) => feature.properties![key] === value
+              )
+            )
+              geoJsonWgs84.features.push(feature);
+            else continue;
+          }
+
+          const properties = feature.properties!;
+          properties[FEATURE_ID_PROP] = i;
 
           if (useMvt && SIMPLE_STYLE_KEYS.find(key => properties[key])) {
             numFeaturesWithSimpleStyle++;
@@ -508,7 +540,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       let currentTimeRows: number[] | undefined;
 
       // If time varying, get row indices which match
-      // This is used to filter feature["_id_"]
+      // This is used to filter feature[FEATURE_ID_PROP]
       if (
         this.currentTimeAsJulianDate &&
         this.activeTableStyle.timeIntervals &&
@@ -539,7 +571,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         this.disableTableStyle
           ? defaultColor
           : (z: number, f?: ProtomapsFeature) => {
-              const rowId = f?.props["_id_"];
+              const rowId = f?.props[FEATURE_ID_PROP];
               if (typeof rowId === "number") {
                 const col = colorMap
                   .mapValueToColor(rows?.[rowId])
@@ -581,7 +613,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               return (
                 feature?.geomType === GeomType.Polygon &&
                 (!currentTimeRows ||
-                  currentTimeRows.includes(feature?.props["_id_"]))
+                  currentTimeRows.includes(feature?.props[FEATURE_ID_PROP]))
               );
             }
           },
@@ -599,7 +631,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
                   return (
                     feature?.geomType === GeomType.Polygon &&
                     (!currentTimeRows ||
-                      currentTimeRows.includes(feature?.props["_id_"]))
+                      currentTimeRows.includes(feature?.props[FEATURE_ID_PROP]))
                   );
                 }
               }
@@ -620,7 +652,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
                   return (
                     feature?.geomType === GeomType.Line &&
                     (!currentTimeRows ||
-                      currentTimeRows.includes(feature?.props["_id_"]))
+                      currentTimeRows.includes(feature?.props[FEATURE_ID_PROP]))
                   );
                 }
               }
@@ -643,7 +675,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               return (
                 feature?.geomType === GeomType.Point &&
                 (!currentTimeRows ||
-                  currentTimeRows.includes(feature?.props["_id_"]))
+                  currentTimeRows.includes(feature?.props[FEATURE_ID_PROP]))
               );
             }
           }
@@ -665,30 +697,92 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         }
       ];
 
-      // Create a czml packet for each geoJson Point feature
-      // Set czml position (cartographicDegrees) to point coordinates
+      // Create a czml packet for each geoJson Point/Polygon feature
+      // For point: set czml position (CartographicDegrees) to point coordinates
+      // For polygon: set czml positions array (CartographicDegreesListValue) for the `polygon` property
+
       // Set czml properties to feature properties
       for (let i = 0; i < geoJson.features.length; i++) {
         const feature = geoJson.features[i];
-        if (feature !== null && feature.geometry?.type === "Point") {
-          const point = feature.geometry as Point;
+        if (feature === null || feature.geometry.type === "Line") {
+          continue;
+        }
+
+        if (feature.geometry?.type === "Point") {
           const czml = clone(czmlTemplate ?? {}, true);
+
+          const point = feature.geometry as Point;
           const coords = point.coordinates;
+
+          // Add height = 0 if no height provided
           if (coords.length === 2) {
             coords[2] = 0;
           }
+
+          if (isJsonNumber(this.czmlTemplate?.heightOffset)) {
+            coords[2] += this.czmlTemplate!.heightOffset;
+          }
+
           czml.position = {
             cartographicDegrees: point.coordinates
           };
 
-          if (feature.properties !== null) {
+          czml.properties = Object.assign(
+            czml.properties ?? {},
+            stringifyFeatureProperties(feature.properties ?? {})
+          );
+          rootCzml.push(czml);
+        } else if (
+          feature.geometry?.type === "Polygon" ||
+          (feature.geometry?.type === "MultiPolygon" && czmlTemplate?.polygon)
+        ) {
+          const czml = clone(czmlTemplate ?? {}, true);
+
+          // To handle both Polygon and MultiPolygon - transform Polygon coords into MultiPolygon coords
+          const multiPolygonGeom =
+            feature.geometry?.type === "Polygon"
+              ? [(feature.geometry as Polygon).coordinates]
+              : (feature.geometry as MultiPolygon).coordinates;
+
+          // Loop through Polygons in MultiPolygon
+          for (let j = 0; j < multiPolygonGeom.length; j++) {
+            const geom = multiPolygonGeom[j];
+            const positions: number[] = [];
+            const holes: number[][] = [];
+
+            geom[0].forEach(coords => {
+              if (isJsonNumber(this.czmlTemplate?.heightOffset)) {
+                coords[2] = (coords[2] ?? 0) + this.czmlTemplate!.heightOffset;
+              }
+              positions.push(coords[0], coords[1], coords[2]);
+            });
+
+            geom.forEach((ring, idx) => {
+              if (idx === 0) return;
+
+              holes.push(
+                ring.reduce<number[]>((acc, current) => {
+                  if (isJsonNumber(this.czmlTemplate?.heightOffset)) {
+                    current[2] =
+                      (current[2] ?? 0) + this.czmlTemplate!.heightOffset;
+                  }
+
+                  acc.push(current[0], current[1], current[2]);
+
+                  return acc;
+                }, [])
+              );
+            });
+
+            czml.polygon.positions = { cartographicDegrees: positions };
+            czml.polygon.holes = { cartographicDegrees: holes };
+
             czml.properties = Object.assign(
               czml.properties ?? {},
-              feature.properties
+              stringifyFeatureProperties(feature.properties ?? {})
             );
+            rootCzml.push(czml);
           }
-
-          rootCzml.push(czml);
         }
       }
 
@@ -767,7 +861,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return toJS(options);
     }
 
-    private async loadGeoJsonDataSource(
+    protected async loadGeoJsonDataSource(
       geoJson: FeatureCollectionWithCrs
     ): Promise<GeoJsonDataSource> {
       /* Style information is applied as follows, in decreasing priority:
@@ -1073,8 +1167,20 @@ export function toFeatureCollection(
 ): FeatureCollectionWithCrs | undefined {
   if (isFeatureCollection(json)) return json; // It's already a feature collection, do nothing
 
-  if (isFeature(json))
+  if (isFeature(json)) {
+    // Move CRS data from Feature to FeatureCollection
+    if ("crs" in json && isJsonObject((json as any).crs)) {
+      const crs = (json as any).crs;
+      delete (json as any).crs;
+
+      const fc = featureCollection([json]) as FeatureCollectionWithCrs;
+      fc.crs = crs;
+      return fc;
+    }
+
     return featureCollection([json]) as FeatureCollectionWithCrs;
+  }
+
   if (isGeometries(json))
     return featureCollection([feature(json)]) as FeatureCollectionWithCrs;
   if (Array.isArray(json) && json.every(item => isFeature(item))) {
@@ -1448,4 +1554,22 @@ function parseMarkerSize(sizeString?: string): number | undefined {
     return sizes[sizeString];
   }
   return parseInt(sizeString, 10); // SimpleStyle doesn't allow 'marker-size: 20', but people will do it.
+}
+
+function stringifyFeatureProperties(featureProps: JsonObject | undefined) {
+  return Object.keys(featureProps ?? {}).reduce<{
+    [key: string]: string;
+  }>((properties, key) => {
+    const featureProp = featureProps![key];
+    if (typeof featureProp === "string") {
+      properties[key] = featureProp;
+    } else if (
+      isDefined(featureProp) &&
+      featureProp !== null &&
+      typeof featureProp.toString === "function"
+    )
+      properties[key] = featureProp.toString();
+
+    return properties;
+  }, {});
 }
