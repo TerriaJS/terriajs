@@ -15,7 +15,6 @@ import {
   Category,
   HelpAction
 } from "../../../../Core/AnalyticEvents/analyticEvents";
-import i18next from "i18next";
 
 export const HELP_PANEL_ID = "help";
 
@@ -43,8 +42,8 @@ class HelpPanel extends React.Component {
   }
 
   render() {
-    const { t } = this.props;
-    const isRTL = i18next.dir() === "rtl";
+    const { i18n, t } = this.props;
+    const isRtl = i18n.dir() === "rtl";
     const helpItems = this.props.terria.configParameters.helpContent;
     const isExpanded = this.props.viewState.helpPanelExpanded;
     const isAnimatingOpen = this.state.isAnimatingOpen;
@@ -60,23 +59,22 @@ class HelpPanel extends React.Component {
           z-index: ${this.props.viewState.topElement === "HelpPanel"
             ? 99999
             : 110};
-          transition: ${isRTL ? "left" : "right"} 0.25s;
+          transition: ${isRtl ? "left" : "right"} 0.25s;
           transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-          ${isRTL && {
-            left: `${isAnimatingOpen ? -320 : isExpanded ? 1110 : 1600}px;`
-          }};
-          ${!isRTL && {
-            right: `${isAnimatingOpen ? -320 : isExpanded ? 490 : 0}px;`
-          }};
+          ${isRtl
+            ? {
+                left: `${isAnimatingOpen ? -320 : isExpanded ? 1110 : 1600}px;`
+              }
+            : { right: `${isAnimatingOpen ? -320 : isExpanded ? 490 : 0}px;` }}
         `}
       >
         <Box
           position="absolute"
           paddedRatio={3}
           topRight
-          topLeft={isRTL}
+          topLeft={isRtl}
           css={`
-            flex-direction: ${isRTL && "row-reverse"};
+            flex-direction: ${isRtl && "row-reverse"};
           `}
         >
           <RawButton onClick={() => this.props.viewState.hideHelpPanel()}>
@@ -94,7 +92,7 @@ class HelpPanel extends React.Component {
           paddedVertically={17}
           displayInlineBlock
           css={`
-            direction: ${isRTL ? "rtl" : "ltr"};
+            direction: ${isRtl ? "rtl" : "ltr"};
             min-width: 295px;
             padding-bottom: 0px;
           `}
@@ -104,7 +102,7 @@ class HelpPanel extends React.Component {
             heading
             textDark
             css={`
-              direction: ${isRTL ? "rtl" : "ltr"};
+              direction: ${isRtl ? "rtl" : "ltr"};
             `}
           >
             {t("helpPanel.menuPaneTitle")}
