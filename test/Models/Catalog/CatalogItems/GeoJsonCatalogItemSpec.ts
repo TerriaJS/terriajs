@@ -14,10 +14,10 @@ import {
 import { JsonObject } from "../../../../lib/Core/Json";
 import loadJson from "../../../../lib/Core/loadJson";
 import loadText from "../../../../lib/Core/loadText";
-import ContinuousColorMap from "../../../../lib/Map/ContinuousColorMap";
+import ContinuousColorMap from "../../../../lib/Map/ColorMap/ContinuousColorMap";
 import ProtomapsImageryProvider, {
   GEOJSON_SOURCE_LAYER_NAME
-} from "../../../../lib/Map/ProtomapsImageryProvider";
+} from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
 import {
   FEATURE_ID_PROP,
   getColor

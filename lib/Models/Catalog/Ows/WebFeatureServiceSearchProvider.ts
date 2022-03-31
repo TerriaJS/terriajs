@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { runInAction } from "mobx";
 import URI from "urijs";
-import zoomRectangleFromPoint from "../../../Map/zoomRectangleFromPoint";
+import zoomRectangleFromPoint from "../../../Map/Vector/zoomRectangleFromPoint";
 import xml2json from "../../../ThirdParty/xml2json";
 import SearchProvider from "../../SearchProviders/SearchProvider";
 import SearchProviderResults from "../../SearchProviders/SearchProviderResults";

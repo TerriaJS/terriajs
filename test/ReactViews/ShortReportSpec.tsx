@@ -1,4 +1,8 @@
-import { create, ReactTestInstance } from "react-test-renderer";
+import {
+  create,
+  ReactTestInstance,
+  ReactTestRenderer
+} from "react-test-renderer";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import { ThemeProvider } from "styled-components";
@@ -6,9 +10,10 @@ import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/Standard
 import ShortReport from "../../lib/ReactViews/Workbench/Controls/ShortReport";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import Collapsible from "../../lib/ReactViews/Custom/Collapsible/Collapsible";
 
 describe("ShortReport", function() {
-  let testRenderer: any;
+  let testRenderer: ReactTestRenderer | undefined;
   let terria: Terria;
   let wmsItem: WebMapServiceCatalogItem;
 
@@ -42,18 +47,27 @@ describe("ShortReport", function() {
         );
       });
 
+      if (!testRenderer) throw "Invalid testRenderer";
+
       const reports = testRenderer.root.findAll((node: ReactTestInstance) =>
         node.children.some((child: any) => child.match?.("Report Name"))
       );
       expect(reports.length).toEqual(2);
 
-      const expandedReports = testRenderer.root.findAll(
-        (node: ReactTestInstance) =>
-          node.children.some((child: any) =>
-            child.match?.("Some content which is showing")
-          )
-      );
-      expect(expandedReports.length).toEqual(1);
+      // Test that collapsible components have been created with correct props
+      expect(
+        testRenderer.root.findAllByProps({
+          title: "Report Name 1",
+          isOpen: true
+        }).length
+      ).toBe(1);
+
+      expect(
+        testRenderer.root.findAllByProps({
+          title: "Report Name 2",
+          isOpen: false
+        }).length
+      ).toBe(1);
     });
   });
 });

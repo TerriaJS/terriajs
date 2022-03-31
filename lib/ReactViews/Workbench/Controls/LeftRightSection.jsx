@@ -116,4 +116,4 @@ const LeftRightSection = observer(
   })
 );
 
-module.exports = withTranslation()(LeftRightSection);
+export default withTranslation()(LeftRightSection);

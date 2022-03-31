@@ -225,7 +225,7 @@ describe("Ideal Zoom", function() {
     expect(theCameraView.up).toBe(undefined);
   });
 
-  it("should custimise camera view if the given camera parameters are complete.", async function() {
+  it("should customise camera view if the given camera parameters are complete.", async function() {
     const cameraValues = {
       west: 143.85665964592238,
       south: -37.5588985189224,

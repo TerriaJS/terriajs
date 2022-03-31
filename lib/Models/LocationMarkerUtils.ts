@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import markerIcon from "./markerIcon";
-import prettifyCoordinates from "../Map/prettifyCoordinates";
+import prettifyCoordinates from "../Map/Vector/prettifyCoordinates";
 import CommonStrata from "./Definition/CommonStrata";
 import CzmlCatalogItem from "./Catalog/CatalogItems/CzmlCatalogItem";
 import Terria from "./Terria";

@@ -25,21 +25,21 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import LatLonHeight from "../Core/LatLonHeight";
 import runLater from "../Core/runLater";
+import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
+import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
 import ImageryProviderLeafletGridLayer, {
   isImageryProviderGridLayer as supportsImageryProviderGridLayer
-} from "../Map/ImageryProviderLeafletGridLayer";
-import ImageryProviderLeafletTileLayer from "../Map/ImageryProviderLeafletTileLayer";
-import LeafletDataSourceDisplay from "../Map/LeafletDataSourceDisplay";
-import LeafletScene from "../Map/LeafletScene";
-import LeafletSelectionIndicator from "../Map/LeafletSelectionIndicator";
-import LeafletVisualizer from "../Map/LeafletVisualizer";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
+} from "../Map/Leaflet/ImageryProviderLeafletGridLayer";
+import ImageryProviderLeafletTileLayer from "../Map/Leaflet/ImageryProviderLeafletTileLayer";
+import LeafletDataSourceDisplay from "../Map/Leaflet/LeafletDataSourceDisplay";
+import LeafletScene from "../Map/Leaflet/LeafletScene";
+import LeafletSelectionIndicator from "../Map/Leaflet/LeafletSelectionIndicator";
+import LeafletVisualizer from "../Map/Leaflet/LeafletVisualizer";
 import PickedFeatures, {
   ProviderCoords,
   ProviderCoordsMap
-} from "../Map/PickedFeatures";
-import ProtomapsImageryProvider from "../Map/ProtomapsImageryProvider";
-import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
+} from "../Map/PickedFeatures/PickedFeatures";
+import rectangleToLatLngBounds from "../Map/Vector/rectangleToLatLngBounds";
 import MappableMixin, {
   ImageryParts,
   MapItem

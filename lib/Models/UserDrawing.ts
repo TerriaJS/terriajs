@@ -22,7 +22,7 @@ import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PolylineGlowMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineGlowMaterialProperty";
 import isDefined from "../Core/isDefined";
-import DragPoints from "../Map/DragPoints";
+import DragPoints from "../Map/DragPoints/DragPoints";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import ViewState from "../ReactViewModels/ViewState";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";

@@ -6,12 +6,13 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import proxyCatalogItemUrl from "../../../Models/Catalog/proxyCatalogItemUrl";
 import hasTraits from "../../../Models/Definition/hasTraits";
-import Model from "../../../Models/Definition/Model";
+import Model, { BaseModel } from "../../../Models/Definition/Model";
+import Button from "../../../Styled/Button";
+import Icon, { StyledIcon } from "../../../Styled/Icon";
 import LegendOwnerTraits from "../../../Traits/TraitsClasses/LegendOwnerTraits";
 import LegendTraits, {
   LegendItemTraits
@@ -41,7 +42,7 @@ function checkMimeType(legend: Model<LegendTraits>) {
 
 @observer
 export default class Legend extends React.Component<{
-  item: CatalogMemberMixin.Instance;
+  item: BaseModel;
   forPrint?: boolean;
 }> {
   static defaultProps = {
@@ -291,8 +292,32 @@ export default class Legend extends React.Component<{
         <ul className={Styles.legend}>
           <div
             className={Styles.legendInner}
-            css={{ " li": { backgroundColor } }}
+            css={{ position: "relative", " li": { backgroundColor } }}
           >
+            {// Show temporary "legend button" - if custom styling has been applied
+            TableMixin.isMixedInto(this.props.item) &&
+            this.props.item.legendButton ? (
+              <Button
+                primary
+                shortMinHeight
+                css={{ position: "absolute", top: 10, right: 0 }}
+                renderIcon={() => (
+                  <StyledIcon
+                    light={true}
+                    glyph={Icon.GLYPHS.menuDotted}
+                    styledWidth="12px"
+                  />
+                )}
+                rightIcon
+                iconProps={{ css: { marginRight: 0, marginLeft: 4 } }}
+                onClick={this.props.item.legendButton.onClick.bind(
+                  this.props.item
+                )}
+              >
+                {this.props.item.legendButton.title}
+              </Button>
+            ) : null}
+
             {(this.props.item.legends as Model<LegendTraits>[]).map(
               (legend, i: number) => (
                 <React.Fragment key={i}>
