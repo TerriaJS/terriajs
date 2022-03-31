@@ -73,7 +73,6 @@ export const ADVANCED_TABLE_COLUMN_TYPES = [
 export default class TableStylingWorkflow
   implements SelectableDimensionWorkflow {
   static type = "table-styling";
-  readonly type = TableStylingWorkflow.type;
 
   /** This is used to simplify SelectableDimensions available to the user.
    * For example - if equal to `diverging-continuous` - then only Diverging continuous color scales will be presented as options

@@ -31,7 +31,7 @@ Change Log
 * Increase `ForkTsCheckerWebpackPlugin` memoryLimit to 4GB
 * Add `renderInline` option to markdownToHtml/React + TSify files
 * Organise `lib/Map` into folder structure
-* Add `modelDimensionCallLoadMapItems` trait to `CatalogMemberTraits` - if `true` then `loadMapItems()` will be called when dimension values are changed.
+* When `modelDimensions` are changed, `loadMapItems()` is automatically called
 * Add `featureCounts` to `GeoJsonMixin` - this tracks number of GeoJSON Features by type
 * Add `polygon-stroke`, `polyline-stroke` and `marker-stroke` to GeoJSON `StyleTraits` - these are only applied to geojson-vt features (not Cesium Primitives)
 * TableMixin manual region mapping dimensions are now in a `SelectableDimensionGroup`

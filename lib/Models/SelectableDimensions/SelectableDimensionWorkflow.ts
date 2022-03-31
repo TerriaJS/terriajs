@@ -13,7 +13,6 @@ import {
  * See `lib/ReactViews/Workflow/Workflows/SelectableDimension/SelectableDimensionWorkflow.tsx` for more info and usage
  */
 export default interface SelectableDimensionWorkflow {
-  readonly type: string;
   /** Human readable name - used as title */
   name: string;
   icon: IconProps["glyph"];

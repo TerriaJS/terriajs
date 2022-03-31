@@ -187,12 +187,8 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
                 `Failed to update catalog item ${getName(this)}`
               );
 
-              // If no error and modelDimensionCallLoadMapItems is true, then call loadMapItems
-              if (
-                !result.error &&
-                this.modelDimensionCallLoadMapItems &&
-                MappableMixin.isMixedInto(this)
-              ) {
+              // If no error then call loadMapItems
+              if (!result.error && MappableMixin.isMixedInto(this)) {
                 this.loadMapItems().then(loadMapItemsResult => {
                   loadMapItemsResult.raiseError(this.terria);
                 });

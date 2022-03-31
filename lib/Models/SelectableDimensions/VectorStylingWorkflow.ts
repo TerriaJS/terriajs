@@ -15,7 +15,6 @@ import CommonStrata from "../Definition/CommonStrata";
 export default class VectorStylingWorkflow
   implements SelectableDimensionWorkflow {
   static type = "vector-styling";
-  readonly type = VectorStylingWorkflow.type;
   readonly tableStylingWorkflow: TableStylingWorkflow;
 
   constructor(readonly item: GeoJsonMixin.Instance) {
