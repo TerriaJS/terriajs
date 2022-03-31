@@ -15,7 +15,7 @@ import { observer } from "mobx-react";
 
 import withControlledVisibility from "../../ReactViews/HOCs/withControlledVisibility";
 import HelpButton from "./HelpButton/HelpButton";
-
+import AuthPanel from "./Panels/AuthPanel";
 const StyledMenuBar = styled.div`
   pointer-events: none;
   ${p =>
@@ -66,6 +66,9 @@ const MenuBar = observer(props => {
       </section>
       <section className={classNames(Styles.flex)}>
         <ul className={classNames(Styles.menu)}>
+          <li className={Styles.menuItem}>
+            <AuthPanel terria={props.terria} />
+          </li>
           <li className={Styles.menuItem}>
             <SettingPanel terria={props.terria} viewState={props.viewState} />
           </li>

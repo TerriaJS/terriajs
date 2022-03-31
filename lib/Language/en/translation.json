@@ -1585,5 +1585,9 @@
   },
   "printView": {
     "loading": "Creating print view..."
+  },
+  "login": {
+    "loginFailed": "Login Failed!",
+    "errorMessage": "PLease check your authentication config variables"
   }
 }
