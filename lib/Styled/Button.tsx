@@ -130,6 +130,7 @@ export const RawButton = styled.button<IButtonProps>`
   padding: 0;
   border: 0;
   background-color: transparent;
+  cursor: pointer;
 
   ${props =>
     props.activeStyles &&

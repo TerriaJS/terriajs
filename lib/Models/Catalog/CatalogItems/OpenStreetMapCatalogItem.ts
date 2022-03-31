@@ -47,7 +47,10 @@ export default class OpenStreetMapCatalogItem extends MappableMixin(
       url: cleanAndProxyUrl(this, this.templateUrl),
       subdomains: this.subdomains.slice(),
       credit: this.attribution,
-      maximumLevel: this.maximumLevel
+      maximumLevel: this.maximumLevel ?? 25,
+      minimumLevel: this.minimumLevel,
+      tileHeight: this.tileHeight,
+      tileWidth: this.tileWidth
     });
   }
 

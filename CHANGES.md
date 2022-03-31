@@ -11,6 +11,8 @@ Change Log
 * Added experimental routing system - there may be breaking changes to this system in subsequent patch releases for a short time. The routes currently include:
   * `/story/:share-id` ➡ loads share JSON from a URL `${configParameters.storyRouteUrlPrefix}:share-id` (`configParameters.storyRouteUrlPrefix` must have a trailing slash)
   * `/catalog/:id` ➡ opens the data catalogue to the specified member
+* Fixed a polyline position update bug in `LeafletVisualizer`. Polylines with time varying position will now correctly animate in leaflet mode.
+* Change button cursor to pointer
 * Add `GeoJsonTraits.filterByProperties` - this can be used to filter GeoJSON features by properties
 * Add GeoJSON `czmlTemplate` support for `Polygon/MultiPolygon`
 * Add custom `heightOffset` property to `czmlTemplate`
@@ -20,6 +22,16 @@ Change Log
 * Add `itemProperties`, `itemPropertiesByType` and `itemPropertiesById` to `GroupTraits` and `ReferenceTraits`.
   * Properties set `underride` strata
 * All dynamic groups (eg `WebMapServiceCatalogGroup`) will create members and set `definition` strata (instead of `underride`)
+* Fix `viewCatalogMember` bug - where `_previewItem` was being set too late.
+* Improve error message in `DataPreview` for references.
+* Fix alignment of elements in story panel and move some styling from scss to styled components
+* Click on the stories button opens a story builder (button on the left from story number)
+* Added ASGS 2021 regions to region mapping:
+  * SA1-4 (e.g. sa3_code_2021)
+  * GCCSA
+  * STE & AUS (aliased to existing 2011/2016 data due to no change in geometry, names & codes)
+* Added LGA regions from 2019 & 2021 to region mapping - only usable by lga code
+* Add `UrlTempalteImageryCatalogItem`, rename `RasterLayerTraits` to `ImageryProviderTraits` and add some properties.
 * [The next improvement]
 
 #### 8.1.25 - 2022-03-16

@@ -18,6 +18,11 @@ import { animateEnd } from "../../../Core/animation";
 import TitleBar from "./TitleBar";
 import FooterBar from "./StoryFooterBar";
 import StoryBody from "./StoryBody";
+import Box from "../../../Styled/Box";
+import Hr from "../../../Styled/Hr";
+import { DefaultTheme, withTheme } from "styled-components";
+import { onStoryButtonClick } from "../../Map/StoryButton/StoryButton";
+import { exit } from "../../Transitions/FadeIn/fade-in.scss";
 
 /**
  *
@@ -72,6 +77,7 @@ export async function activateStory(scene: Story, terria: Terria) {
 interface Props extends WithTranslation {
   terria: Terria;
   viewState: ViewState;
+  theme: DefaultTheme;
 }
 
 interface State {
@@ -196,46 +202,90 @@ class StoryPanel extends React.Component<Props, State> {
         onSwipedLeft={() => this.goToNextStory()}
         onSwipedRight={() => this.goToPrevStory()}
       >
-        <div
+        <Box
           className={classNames(
-            Styles.fullPanel,
-            {
-              [Styles.isHidden]: !this.props.viewState.storyShown,
-              [Styles.isCentered]: this.props.viewState.isMapFullScreen
-            },
             this.props.viewState.topElement === "StoryPanel"
               ? "top-element"
               : ""
           )}
+          centered
+          fullWidth
+          paddedHorizontally={4}
+          position="absolute"
           onClick={() => this.onClickContainer()}
+          css={`
+            transition: padding, 0.2s;
+            bottom: 80px;
+            pointer-events: none;
+            ${!this.props.viewState.storyShown && "display: none;"}
+            @media (min-width: 992px) {
+              ${this.props.viewState.isMapFullScreen &&
+                `
+                transition-delay: 0.5s;
+              `}
+              ${!this.props.viewState.isMapFullScreen &&
+                `
+                padding-left: calc(30px + ${this.props.theme.workbenchWidth}px);
+                padding-right: 50px;
+              `}
+              bottom: 90px;
+            }
+          `}
         >
-          <div
+          <Box
+            column
+            rounded
             className={classNames(Styles.storyContainer, {
               [Styles.isMounted]: this.state.inView
             })}
             key={story.id}
             ref={this.slideRef as React.RefObject<HTMLDivElement>}
+            css={`
+              @media (min-width: 992px) {
+                max-width: 60vw;
+              }
+            `}
           >
-            <TitleBar
-              title={story.title}
-              isCollapsed={this.state.isCollapsed}
-              collapseHandler={() => this.toggleCollapse()}
-              closeHandler={() => this.exitStory()}
-            />
-            <StoryBody isCollapsed={this.state.isCollapsed} story={story} />
-            <FooterBar
-              goPrev={() => this.goToPrevStory()}
-              goNext={() => this.goToNextStory()}
-              jumpToStory={(index: number) => this.navigateStory(index)}
-              zoomTo={() => this.onCenterScene(story)}
-              currentHumanIndex={this.props.viewState.currentStoryId + 1}
-              totalStories={stories.length}
-            />
-          </div>
-        </div>
+            <Box paddedHorizontally={3} paddedVertically={2.4} column>
+              <TitleBar
+                title={story.title}
+                isCollapsed={this.state.isCollapsed}
+                collapseHandler={() => this.toggleCollapse()}
+                closeHandler={() => this.exitStory()}
+              />
+              <StoryBody isCollapsed={this.state.isCollapsed} story={story} />
+            </Box>
+            <Hr
+              fullWidth
+              size={1}
+              borderBottomColor={this.props.theme.greyLighter}
+            ></Hr>
+            <Box paddedHorizontally={3} fullWidth>
+              <FooterBar
+                goPrev={() => this.goToPrevStory()}
+                goNext={() => this.goToNextStory()}
+                jumpToStory={(index: number) => this.navigateStory(index)}
+                zoomTo={() => this.onCenterScene(story)}
+                currentHumanIndex={this.props.viewState.currentStoryId + 1}
+                totalStories={stories.length}
+                listStories={() => {
+                  runInAction(() => {
+                    this.props.viewState.storyShown = false;
+                  });
+                  onStoryButtonClick({
+                    terria: this.props.terria,
+                    theme: this.props.theme,
+                    viewState: this.props.viewState,
+                    animationDuration: 250
+                  })();
+                }}
+              />
+            </Box>
+          </Box>
+        </Box>
       </Swipeable>
     );
   }
 }
 
-export default withTranslation()(StoryPanel);
+export default withTranslation()(withTheme(StoryPanel));

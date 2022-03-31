@@ -552,8 +552,11 @@ export default class ViewState {
     stratum: string = CommonStrata.user,
     openAddData = true
   ): Promise<Result<void>> {
+    // Set preview item before loading - so we can see loading indicator and errors in DataPreview panel.
+    runInAction(() => (this._previewedItem = item));
+
     try {
-      // Get referenced target first.
+      // If item is a Reference - recursively load and call viewCatalogMember on the target
       if (ReferenceMixin.isMixedInto(item)) {
         (await item.loadReference()).throwIfError();
         if (item.target) {
@@ -562,16 +565,11 @@ export default class ViewState {
           return Result.error(`Could not view catalog member ${getName(item)}`);
         }
       }
-      const theItem: BaseModel =
-        ReferenceMixin.isMixedInto(item) && item.target ? item.target : item;
-
-      // Set preview item
-      runInAction(() => (this._previewedItem = theItem));
 
       // Open "Add Data"
       if (openAddData) {
-        if (addedByUser(theItem)) {
-          runInAction(() => (this.userDataPreviewedItem = theItem));
+        if (addedByUser(item)) {
+          runInAction(() => (this.userDataPreviewedItem = item));
 
           this.openUserData();
         } else {
@@ -587,21 +585,21 @@ export default class ViewState {
           });
         }
 
-        // mobile switch to now vewing if not viewing a group
-        if (!GroupMixin.isMixedInto(theItem)) {
+        // mobile switch to now viewing if not viewing a group
+        if (!GroupMixin.isMixedInto(item)) {
           this.switchMobileView(this.mobileViewOptions.preview);
         }
       }
 
-      if (GroupMixin.isMixedInto(theItem)) {
-        theItem.setTrait(stratum, "isOpen", isOpen);
-        if (theItem.isOpen) {
-          (await theItem.loadMembers()).throwIfError();
+      if (GroupMixin.isMixedInto(item)) {
+        item.setTrait(stratum, "isOpen", isOpen);
+        if (item.isOpen) {
+          (await item.loadMembers()).throwIfError();
         }
-      } else if (MappableMixin.isMixedInto(theItem))
-        (await theItem.loadMapItems()).throwIfError();
-      else if (CatalogMemberMixin.isMixedInto(theItem))
-        (await theItem.loadMetadata()).throwIfError();
+      } else if (MappableMixin.isMixedInto(item))
+        (await item.loadMapItems()).throwIfError();
+      else if (CatalogMemberMixin.isMixedInto(item))
+        (await item.loadMetadata()).throwIfError();
     } catch (e) {
       return Result.error(e, `Could not view catalog member ${getName(item)}`);
     }
