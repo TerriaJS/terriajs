@@ -150,6 +150,24 @@ function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
             this.traits.itemPropertiesById.toJson(this.itemPropertiesById)
           );
         }
+        // Duplication is needed here due to TS 3* issues :(
+        else if (GroupMixin.isMixedInto(this.target)) {
+          this.target.setTrait(
+            CommonStrata.underride,
+            "itemProperties",
+            this.itemProperties
+          );
+          this.target.setTrait(
+            CommonStrata.underride,
+            "itemPropertiesByType",
+            this.traits.itemPropertiesByType.toJson(this.itemPropertiesByType)
+          );
+          this.target.setTrait(
+            CommonStrata.underride,
+            "itemPropertiesById",
+            this.traits.itemPropertiesById.toJson(this.itemPropertiesById)
+          );
+        }
       });
 
       return result;
