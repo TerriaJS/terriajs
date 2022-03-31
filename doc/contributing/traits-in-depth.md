@@ -56,16 +56,16 @@ These should only be used in Trait definitions.
 
 ### Definition `underride`
 
-`underride` values can be used to "override" the `default` stratum values - but not `definition` values. It can be thought of setting a new "default" value for a `Trait` - as `definition` stratum shouldn't be changed.
+`underride` values can be used to "override" the `default` stratum values - but not `definition` values. It can be thought of setting a new "default" value for a `Trait` - as `default` stratum shouldn't be changed.
 
 Some example usages of `underride`
 
-- Copying `itemPropertiesById`, `itemPropertiesByType`, `itemProperties`, to nested groups or nested references - that is, when a group or reference is loaded, if there are nested groups or nested references.
+- Copying `itemPropertiesById`, `itemPropertiesByType`, `itemProperties`, to nested groups or nested references - that is, when a group or reference is loaded, if there are nested groups or nested reference - they will get the parent `itemProperties*` set in their `underride` stratum
 - Setting `isExperiencingIssues = true` for models which have configuration issues
 
 ### Definition `definition`
 
-Values provided when a model is created
+Values provided when a model is created. This takes higher priority than `defaults` and `underride`.
 
 #### Use case 1 - Init file
 
@@ -92,12 +92,12 @@ Values for models created programmatically by dynamic groups - for example `WebM
 
 ### Definition `override`
 
-`override` values can be used to "override" the `definition` stratum values and lower level strata (that isn't a result of a user interaction).
+`override` values can be used to "override" the `definition` stratum values (and lower level strata).
 
 Some use cases:
 
 - To override invalid `definition` values
-- Apply `itemProperties`
+- Apply `itemProperties` to a model
 
 ### User `user`
 
@@ -111,7 +111,7 @@ Loadable strata sit between the `defaults` and `definition` strata. It represent
 
 This includes `layers`, `styles`, `legends`, ...
 
-This means that we aren't required define all this configuration in `definition` manually (eg init files) - as sensible values can be computed based on `GetCapabilities`. But, as Loadable strata sites below `definition`, we can "override" these values by setting values in `definition`.
+This means that we aren't required define all this configuration manually in `definition` (eg init files) - as sensible values can be computed based on `GetCapabilities`. But, as Loadable strata sites below `definition`, we can "override" these values by setting values in `definition`.
 
 It is important to note that there are many Loadable strata - and models can have multiple.
 
