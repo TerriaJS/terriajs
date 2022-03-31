@@ -569,8 +569,10 @@ class WebMapServiceCatalogItem
         tileWidth: this.tileWidth,
         tileHeight: this.tileHeight,
         tilingScheme: this.tilingScheme,
-        maximumLevel: this.getMaximumLevel(true),
-        credit: this.attribution
+        maximumLevel: this.getMaximumLevel(true) ?? this.maximumLevel,
+        minimumLevel: this.minimumLevel,
+        credit: this.attribution,
+        enablePickFeatures: this.allowFeaturePicking
       };
 
       if (isDefined(this.getFeatureInfoFormat?.type)) {

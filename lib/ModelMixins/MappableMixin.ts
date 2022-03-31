@@ -18,7 +18,6 @@ export type MapItem =
   | Cesium3DTileset
   | TerrainProvider;
 
-// Shouldn't this be a class?
 export interface ImageryParts {
   alpha: number;
   clippingRectangle: Rectangle | undefined;

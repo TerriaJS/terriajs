@@ -65,6 +65,7 @@ Change Log
 * Add temporary `legendButton` property - this is used to show a "Custom" button above the Legend if custom styling has been applied
   * This uses new `TableStyle.isCustom` property
 * Move workbench item controls from `WorkbenchItem.jsx` `WorkbenchItemControls.tsx`
+* Add `UrlTempalteImageryCatalogItem`, rename `RasterLayerTraits` to `ImageryProviderTraits` and add some properties.
 * [The next improvement]
 
 #### 8.1.25 - 2022-03-16

@@ -12,7 +12,7 @@ import Terria from "../../lib/Models/Terria";
 import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
 import mixTraits from "../../lib/Traits/mixTraits";
-import RasterLayerTraits from "../../lib/Traits/TraitsClasses/RasterLayerTraits";
+import ImageryProviderTraits from "../../lib/Traits/TraitsClasses/ImageryProviderTraits";
 import UrlTraits from "../../lib/Traits/TraitsClasses/UrlTraits";
 
 class TestCatalogItem extends TileErrorHandlerMixin(
@@ -20,7 +20,7 @@ class TestCatalogItem extends TileErrorHandlerMixin(
     CreateModel(
       mixTraits(
         UrlTraits,
-        RasterLayerTraits,
+        ImageryProviderTraits,
         MappableTraits,
         CatalogMemberTraits
       )

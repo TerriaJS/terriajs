@@ -318,9 +318,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         imageryProvider: this.regionMappedImageryProvider,
         alpha: this.opacity,
         show: this.show,
-        clippingRectangle: this.clipToRectangle
-          ? this.cesiumRectangle
-          : undefined
+        clippingRectangle: this.cesiumRectangle
       };
     }
 

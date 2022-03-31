@@ -45,7 +45,7 @@ import MappableMixin, {
   MapItem
 } from "../ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
-import RasterLayerTraits from "../Traits/TraitsClasses/RasterLayerTraits";
+import ImageryProviderTraits from "../Traits/TraitsClasses/ImageryProviderTraits";
 import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
@@ -373,7 +373,7 @@ export default class Leaflet extends GlobeOrMap {
       );
 
       const allImagery = allImageryMapItems.map(({ item, parts }) => {
-        if (hasTraits(item, RasterLayerTraits, "leafletUpdateInterval")) {
+        if (hasTraits(item, ImageryProviderTraits, "leafletUpdateInterval")) {
           (parts.imageryProvider as any)._leafletUpdateInterval =
             item.leafletUpdateInterval;
         }

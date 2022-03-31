@@ -38,7 +38,7 @@ export class TileErrorHandlingTraits extends ModelTraits {
   ignoreUnknownTileErrors?: boolean;
 }
 
-export default class RasterLayerTraits extends mixTraits(
+export default class ImageryProviderTraits extends mixTraits(
   OpacityTraits,
   SplitterTraits
 ) {
@@ -72,4 +72,42 @@ However, it may also cause features to be cut off in some cases, such as if a se
 For example, if a point feature on the edge of the extent is drawn as a circle with a radius of 5 pixels, half of that circle will be cut off.`
   })
   clipToRectangle: boolean = true;
+
+  @primitiveTrait({
+    name: "Minimum Level",
+    description:
+      "The minimum level-of-detail supported by the imagery provider. Take care when specifying this that the number of tiles at the minimum level is small, such as four or less. A larger number is likely to result in rendering problems",
+    type: "number"
+  })
+  minimumLevel?: number;
+
+  @primitiveTrait({
+    name: "Maximum Level",
+    description:
+      "The maximum level-of-detail supported by the imagery provider, or undefined if there is no limit",
+    type: "number"
+  })
+  maximumLevel?: number;
+
+  @primitiveTrait({
+    name: "Allow feature picking",
+    type: "boolean",
+    description:
+      "Indicates whether features in this catalog item can be selected by clicking them on the map."
+  })
+  allowFeaturePicking = true;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Tile width (in pixels)",
+    description: "Tile width in pixels. Default value is 256 pixels"
+  })
+  tileWidth: number = 256;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Tile height (in pixels)",
+    description: "Tile height in pixels. Default value is 256 pixels"
+  })
+  tileHeight: number = 256;
 }
