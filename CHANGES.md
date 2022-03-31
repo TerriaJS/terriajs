@@ -11,6 +11,7 @@ Change Log
 * Added experimental routing system - there may be breaking changes to this system in subsequent patch releases for a short time. The routes currently include:
   * `/story/:share-id` ➡ loads share JSON from a URL `${configParameters.storyRouteUrlPrefix}:share-id` (`configParameters.storyRouteUrlPrefix` must have a trailing slash)
   * `/catalog/:id` ➡ opens the data catalogue to the specified member
+* Fixed a polyline position update bug in `LeafletVisualizer`. Polylines with time varying position will now correctly animate in leaflet mode.
 * Change button cursor to pointer
 * Add `GeoJsonTraits.filterByProperties` - this can be used to filter GeoJSON features by properties
 * Add GeoJSON `czmlTemplate` support for `Polygon/MultiPolygon`

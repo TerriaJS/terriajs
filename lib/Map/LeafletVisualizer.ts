@@ -1008,7 +1008,7 @@ class LeafletGeomVisualizer {
       let bPosChange = latlngs.length !== curLatLngs.length;
       for (let i = 0; i < curLatLngs.length && !bPosChange; i++) {
         const latlng = curLatLngs[i];
-        if (latlng instanceof L.LatLng && latlng.equals(latlngs[i])) {
+        if (latlng instanceof L.LatLng && !latlng.equals(latlngs[i])) {
           bPosChange = true;
         }
       }
