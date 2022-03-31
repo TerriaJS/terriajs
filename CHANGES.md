@@ -3,6 +3,8 @@ Change Log
 
 #### next release (8.1.26)
 
+* **Breaking changes**
+  * All dynamic groups (eg `WebMapServiceCatalogGroup`) will create members and set `definition` strata (instead of `underride`)
 * New `GltfMixin`, which `GltfCatalogItem` now uses.
 * Hook up `beforeViewerChanged` and `afterViewerChanged` events so they are
   triggered on viewer change. They are raised only on change between 2D and 3D
@@ -23,7 +25,6 @@ Change Log
   * Properties set `override` strata
   * If a parent group has `itemProperties`, `itemPropertiesByType` or `itemPropertiesById` - then child groups will have these values copied to `underride` when the parent group is loaded
   * Similarly with references.
-* All dynamic groups (eg `WebMapServiceCatalogGroup`) will create members and set `definition` strata (instead of `underride`)
 * Fix `viewCatalogMember` bug - where `_previewItem` was being set too late.
 * Improve error message in `DataPreview` for references.
 * Fix alignment of elements in story panel and move some styling from scss to styled components
