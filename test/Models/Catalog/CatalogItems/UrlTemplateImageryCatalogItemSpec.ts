@@ -2,57 +2,68 @@ import { configure, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
-import CartoMapCatalogItem, {
-  CartoLoadableStratum
-} from "../../../../lib/Models/Catalog/CatalogItems/CartoMapCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
+import UrlTemplateImageryCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/UrlTemplateImageryCatalogItem";
 
 configure({
   enforceActions: "observed",
   computedRequiresReaction: true
 });
 
-describe("CartoMapCatalogItem", function() {
-  let item: CartoMapCatalogItem;
+describe("UrlTemplateImageryCatalogItem", function() {
+  let item: UrlTemplateImageryCatalogItem;
 
   beforeEach(function() {
-    item = new CartoMapCatalogItem("test", new Terria());
+    item = new UrlTemplateImageryCatalogItem("test", new Terria());
+    runInAction(() => item.setTrait("definition", "url", "some-url"));
   });
 
   it("has a type", function() {
-    expect(CartoMapCatalogItem.type).toBe("carto");
+    expect(UrlTemplateImageryCatalogItem.type).toBe(
+      UrlTemplateImageryCatalogItem.type
+    );
   });
 
-  describe("when tileUrl has been set", function() {
-    beforeEach(function() {
-      const tileUrl = "abc";
-      item.strata.set(
-        CartoLoadableStratum.stratumName,
-        new CartoLoadableStratum(item, tileUrl, [])
-      );
-    });
-
+  describe("when url has been set", function() {
     it("should create an imageryProvider with correct properties", function() {
-      const stratum = <CartoLoadableStratum>item.strata.get("cartoLoadable");
-
       expect(
         item.imageryProvider instanceof UrlTemplateImageryProvider
       ).toBeTruthy();
 
       runInAction(() => {
         item.setTrait("definition", "attribution", "foo bar baz");
+        item.setTrait("definition", "maximumLevel", 5);
+        item.setTrait("definition", "minimumLevel", 1);
+        item.setTrait("definition", "tileHeight", 200);
+        item.setTrait("definition", "tileWidth", 200);
+        item.setTrait(
+          "definition",
+          "pickFeaturesUrl",
+          "some-feature-picking-url"
+        );
+        item.setTrait("definition", "allowFeaturePicking", false);
       });
 
       const imageryProvider = item.imageryProvider;
       expect(imageryProvider).toBeDefined();
       if (imageryProvider !== undefined) {
-        expect(imageryProvider.url).toEqual(<string>stratum.tileUrl);
+        expect(imageryProvider.url).toEqual(item.url ?? "");
         expect(imageryProvider.credit.html).toEqual(<string>item.attribution);
-        expect(imageryProvider.minimumLevel).toEqual(0);
-        expect(imageryProvider.maximumLevel).toEqual(25);
-        expect((<any>imageryProvider)._subdomains).toEqual(
-          stratum.tileSubdomains
+        expect(imageryProvider.minimumLevel).toEqual(
+          item.minimumLevel ?? Infinity
         );
+        expect(imageryProvider.maximumLevel).toEqual(
+          item.maximumLevel ?? Infinity
+        );
+        expect(imageryProvider.tileHeight).toEqual(item.tileHeight ?? Infinity);
+        expect(imageryProvider.tileWidth).toEqual(item.tileWidth ?? Infinity);
+        expect(imageryProvider.pickFeaturesUrl).toEqual(
+          item.pickFeaturesUrl ?? ""
+        );
+        expect(imageryProvider.enablePickFeatures).toEqual(
+          item.allowFeaturePicking
+        );
+        expect((<any>imageryProvider)._subdomains).toEqual(item.subdomains);
       }
     });
 

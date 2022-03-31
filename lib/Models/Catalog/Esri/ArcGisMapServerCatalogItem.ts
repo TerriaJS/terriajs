@@ -477,6 +477,8 @@ export default class ArcGisMapServerCatalogItem extends MappableMixin(
         layers: layers,
         tilingScheme: new WebMercatorTilingScheme(),
         maximumLevel: maximumLevel,
+        tileHeight: this.tileHeight,
+        tileWidth: this.tileWidth,
         parameters: params,
         enablePickFeatures: this.allowFeaturePicking,
         usePreCachedTilesIfAvailable: !dynamicRequired,

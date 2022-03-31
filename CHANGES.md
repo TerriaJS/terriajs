@@ -26,6 +26,7 @@ Change Log
   * GCCSA
   * STE & AUS (aliased to existing 2011/2016 data due to no change in geometry, names & codes)
 * Added LGA regions from 2019 & 2021 to region mapping - only usable by lga code
+* Add `UrlTempalteImageryCatalogItem`, rename `RasterLayerTraits` to `ImageryProviderTraits` and add some properties.
 * [The next improvement]
 
 #### 8.1.25 - 2022-03-16
