@@ -1,6 +1,14 @@
 import { Share } from "catalog-converter";
 import i18next from "i18next";
-import { action, computed, observable, runInAction, toJS, when } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  reaction,
+  runInAction,
+  toJS,
+  when
+} from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
@@ -34,6 +42,7 @@ import JsonValue, {
   JsonObject
 } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
+import loadJson from "../Core/loadJson";
 import loadJson5 from "../Core/loadJson5";
 import Result from "../Core/Result";
 import ServerConfig from "../Core/ServerConfig";
@@ -125,10 +134,6 @@ interface ConfigParameters {
    * URL of the JSON file that defines region mapping for CSV files.
    */
   regionMappingDefinitionsUrl: string;
-  /**
-   * URL of OGR2OGR conversion service (part of TerriaJS-Server).
-   */
-  conversionServiceBaseUrl?: string;
   /**
    * URL of Proj4 projection lookup service (part of TerriaJS-Server).
    */
@@ -287,6 +292,11 @@ interface ConfigParameters {
    * Configurable discalimer that shows up in print view
    */
   printDisclaimer?: { url: string; text: string };
+
+  /**
+   * Prefix to which `:story-id` is added to fetch JSON for stories when using /story/:story-id routes. Should end in /
+   */
+  storyRouteUrlPrefix?: string;
 }
 
 interface StartOptions {
@@ -321,6 +331,15 @@ interface Analytics {
 }
 
 interface TerriaOptions {
+  /**
+   * Override detecting base href from document.baseURI.
+   * Used in specs to support routes within Karma spec automation framework
+   */
+  appBaseHref?: string;
+  /**
+   * Base url where TerriaJS resources can be found.
+   * Normally "build/TerriaJS/" in any TerriaMap and "./" in specs
+   */
   baseUrl?: string;
   analytics?: Analytics;
 }
@@ -349,6 +368,9 @@ export default class Terria {
   /** Map from id -> share keys */
   readonly modelIdShareKeysMap = observable.map<string, string[]>();
 
+  /** Base URL for the Terria app. Used for SPA routes */
+  readonly appBaseHref: string = document.baseURI;
+  /** Base URL to Terria resources */
   readonly baseUrl: string = "build/TerriaJS/";
 
   readonly tileLoadProgressEvent = new CesiumEvent();
@@ -407,7 +429,6 @@ export default class Terria {
     defaultMaximumShownFeatureInfos: 100,
     catalogIndexUrl: undefined,
     regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
-    conversionServiceBaseUrl: "convert/",
     proj4ServiceBaseUrl: "proj4def/",
     corsProxyBaseUrl: "proxy/",
     proxyableDomainsUrl: "proxyabledomains/", // deprecated, will be determined from serverconfig
@@ -463,7 +484,8 @@ export default class Terria {
       },
       { text: "map.extraCreditLinks.disclaimer", url: "about.html#disclaimer" }
     ],
-    printDisclaimer: undefined
+    printDisclaimer: undefined,
+    storyRouteUrlPrefix: undefined
   };
 
   @observable
@@ -571,6 +593,12 @@ export default class Terria {
   errorService: ErrorServiceProvider = new StubErrorServiceProvider();
 
   constructor(options: TerriaOptions = {}) {
+    if (options.appBaseHref) {
+      this.appBaseHref = new URL(
+        options.appBaseHref,
+        document.baseURI
+      ).toString();
+    }
     if (options.baseUrl) {
       if (options.baseUrl.lastIndexOf("/") !== options.baseUrl.length - 1) {
         this.baseUrl = options.baseUrl + "/";
@@ -1013,6 +1041,64 @@ export default class Terria {
           .query("")
           .hash("")
       );
+
+      if (!this.appBaseHref.endsWith("/")) {
+        console.warn(
+          `Terria expected appBaseHref to end with a "/" but appBaseHref is "${this.appBaseHref}". Routes may not work as intended. To fix this, try setting the "--baseHref" parameter to a URL with a trailing slash while building your map, or constructing the Terria object with an appropriate appBaseHref (with trailing slash).`
+        );
+      }
+
+      // /catalog/ and /story/ routes
+      if (newUrl.startsWith(this.appBaseHref)) {
+        function checkSegments(urlSegments: string[], customRoute: string) {
+          // Accept /${customRoute}/:some-id/ or /${customRoute}/:some-id
+          return (
+            ((urlSegments.length === 3 && urlSegments[2] === "") ||
+              urlSegments.length === 2) &&
+            urlSegments[0] === customRoute &&
+            urlSegments[1].length > 0
+          );
+        }
+        const pageUrl = new URL(newUrl);
+        // Find relative path from baseURI to documentURI excluding query and hash
+        // then split into url segments
+        // e.g. "http://ci.terria.io/main/story/1#map=2d" -> ["story", "1"]
+        const segments = (pageUrl.origin + pageUrl.pathname)
+          .slice(this.appBaseHref.length)
+          .split("/");
+        if (checkSegments(segments, "catalog")) {
+          this.initSources.push({
+            name: `Go to ${pageUrl.pathname}`,
+            errorSeverity: TerriaErrorSeverity.Error,
+            data: {
+              previewedItemId: decodeURIComponent(segments[1])
+            }
+          });
+          const replaceUrl = new URL(newUrl);
+          replaceUrl.pathname = new URL(this.appBaseHref).pathname;
+          history.replaceState({}, "", replaceUrl.href);
+        } else if (
+          checkSegments(segments, "story") &&
+          isDefined(this.configParameters.storyRouteUrlPrefix)
+        ) {
+          let storyJson;
+          try {
+            storyJson = await loadJson(
+              `${this.configParameters.storyRouteUrlPrefix}${segments[1]}`
+            );
+          } catch (e) {
+            throw TerriaError.from(e, {
+              message: `Failed to fetch story \`"${this.appName}/${segments[1]}"\``
+            });
+          }
+          await interpretStartData(
+            this,
+            storyJson,
+            `Start data from story \`"${this.appName}/${segments[1]}"\``
+          );
+          runInAction(() => this.userProperties.set("playStory", "1"));
+        }
+      }
     } catch (e) {
       this.raiseErrorToUser(e);
     }

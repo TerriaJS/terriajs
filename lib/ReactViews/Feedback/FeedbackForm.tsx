@@ -191,7 +191,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
           >
             {t("feedback.title")}
           </Text>
-          <RawButton onClick={this.onDismiss}>
+          <RawButton onClick={this.onDismiss} title={t("feedback.close")}>
             <StyledIcon styledWidth={"15px"} light glyph={GLYPHS.close} />
           </RawButton>
         </Box>

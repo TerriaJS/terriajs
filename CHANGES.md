@@ -1,22 +1,33 @@
 Change Log
 ==========
 
-#### next release (8.1.25)
+#### next release (8.1.26)
 
-* Fix broken download link for feature info panel charts when no download urls are specified.
-* Fixed parameter names of WPS catalog functions.
-* Improve WMS 1.1.1 support
-  * Added `useWmsVersion130` trait - Use WMS version 1.3.0. True by default (unless `url` has `"version=1.1.1"` or `"version=1.1.0"`), if false, then WMS version 1.1.1 will be used.
-  * Added `getFeatureInfoFormat` trait - Format parameter to pass to GetFeatureInfo requests. Defaults to "application/json", "application/vnd.ogc.gml", "text/html" or "text/plain" - depending on GetCapabilities response
-* Add `legendBackgroundColor` to `LegendOwnerTraits` and `backgroundColor` to `LegendTraits`
-* Add `sld_version=1.1.0` to `GetLegendGraphics` requests 
-* Filter `"styles","version","format","srs","crs"` conflicting query parameters from WMS `url`
-* WMS `styles`, `tileWidth`, `tileHeight` and `crs`/`srs` will use value in `url` if it is defined (similar to existing behavior with `layers`)
-* WMS will now show warning if invalid `layers` (eg if the specified `layers` don't exist in `GetCapabilities`)
-* ArcGisFeatureServerCatalogItem can now load more than the maximum feature limit set by the server by making multiple requests, and uses GeojsonMixin
-* Avoid creating duplication in categories in ArcGisPortalCatalogGroup.
-* Fix `CatalogMemberMixin.hasDescription` null bug
-* `TableStyle` now calculates `rectangle` for point based styles
+* New `GltfMixin`, which `GltfCatalogItem` now uses.
+* Hook up `beforeViewerChanged` and `afterViewerChanged` events so they are
+  triggered on viewer change. They are raised only on change between 2D and 3D
+  viewer mode.
+* Removed references to conversion service which is no longer used in version >=8.0.0.
+* Added experimental routing system - there may be breaking changes to this system in subsequent patch releases for a short time. The routes currently include:
+  * `/story/:share-id` ➡ loads share JSON from a URL `${configParameters.storyRouteUrlPrefix}:share-id` (`configParameters.storyRouteUrlPrefix` must have a trailing slash)
+  * `/catalog/:id` ➡ opens the data catalogue to the specified member
+* Fixed a polyline position update bug in `LeafletVisualizer`. Polylines with time varying position will now correctly animate in leaflet mode.
+* Change button cursor to pointer
+* Add `GeoJsonTraits.filterByProperties` - this can be used to filter GeoJSON features by properties
+* Add GeoJSON `czmlTemplate` support for `Polygon/MultiPolygon`
+* Add custom `heightOffset` property to `czmlTemplate`
+* Fixed a bug where Cesium3DTilePointFeature info is not shown when being clicked.
+* Added optional `onDrawingComplete` callback to `UserDrawing` to receive drawn points or rectangle when the drawing is complete.
+* Fixed a bug in `BoxDrawing` where the box can be below ground after initialization even when setting `keepBoxAboveGround` to true.
+* Fix `viewCatalogMember` bug - where `_previewItem` was being set too late.
+* Improve error message in `DataPreview` for references.
+* Fix alignment of elements in story panel and move some styling from scss to styled components
+* Click on the stories button opens a story builder (button on the left from story number)
+* Added ASGS 2021 regions to region mapping:
+  * SA1-4 (e.g. sa3_code_2021)
+  * GCCSA
+  * STE & AUS (aliased to existing 2011/2016 data due to no change in geometry, names & codes)
+* Added LGA regions from 2019 & 2021 to region mapping - only usable by lga code
 * Increase `ForkTsCheckerWebpackPlugin` memoryLimit to 4GB
 * Add `renderInline` option to markdownToHtml/React + TSify files
 * Organise `lib/Map` into folder structure
@@ -55,6 +66,24 @@ Change Log
   * This uses new `TableStyle.isCustom` property
 * Move workbench item controls from `WorkbenchItem.jsx` `WorkbenchItemControls.tsx`
 * [The next improvement]
+
+#### 8.1.25 - 2022-03-16
+
+* Fix broken download link for feature info panel charts when no download urls are specified.
+* Fixed parameter names of WPS catalog functions.
+* Improve WMS 1.1.1 support
+  * Added `useWmsVersion130` trait - Use WMS version 1.3.0. True by default (unless `url` has `"version=1.1.1"` or `"version=1.1.0"`), if false, then WMS version 1.1.1 will be used.
+  * Added `getFeatureInfoFormat` trait - Format parameter to pass to GetFeatureInfo requests. Defaults to "application/json", "application/vnd.ogc.gml", "text/html" or "text/plain" - depending on GetCapabilities response
+* Add `legendBackgroundColor` to `LegendOwnerTraits` and `backgroundColor` to `LegendTraits`
+* Add `sld_version=1.1.0` to `GetLegendGraphics` requests 
+* Filter `"styles","version","format","srs","crs"` conflicting query parameters from WMS `url`
+* WMS `styles`, `tileWidth`, `tileHeight` and `crs`/`srs` will use value in `url` if it is defined (similar to existing behavior with `layers`)
+* WMS will now show warning if invalid `layers` (eg if the specified `layers` don't exist in `GetCapabilities`)
+* ArcGisFeatureServerCatalogItem can now load more than the maximum feature limit set by the server by making multiple requests, and uses GeojsonMixin
+* Avoid creating duplication in categories in ArcGisPortalCatalogGroup.
+* Fix `CatalogMemberMixin.hasDescription` null bug
+* `TableStyle` now calculates `rectangle` for point based styles
+* Fixed error installing dependencies by changing dependency "pell" to use github protocol rather than unencrypted Git protocol, which is no longer supported by GitHub as of 2022-03-15.
 
 #### 8.1.24 - 2022-03-08
 

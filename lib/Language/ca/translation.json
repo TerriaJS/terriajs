@@ -311,7 +311,7 @@
     "clickMap": "Feu clic al mapa per obtenir més informació sobre una ubicació",
     "noDataAvailable": "No hi ha dades disponibles aquí - proveu una altra ubicació.",
     "siteData": "Dades del lloc",
-    "latLon": "Lat / Lon ",
+    "latLon": "Lat/Lon ",
     "btnCloseFeature": "Tanca el tauler de dades",
     "locationMarker": "Marcador d'ubicació"
   },
@@ -374,7 +374,13 @@
     "captureScene": "Captura l'escena",
     "promptHtml1": "<0>Podeu veure i crear històries en qualsevol moment fent clic aquí.</0>",
     "loadSceneErrorTitle": "Error carregant Story Scene",
-    "captureSceneTitle": "captura l'escena actual"
+    "captureSceneTitle": "captura l'escena actual",
+    "playStory": "Història",
+    "expand": "Expandir",
+    "collapse": "Reduir",
+    "prev": "Anterior",
+    "next": "Següent",
+    "restart": "Reinicia"
   },
   "satelliteGuidance": {
     "menuTitle": "Podeu accedir a les guies de mapes en qualsevol moment consultant el <2>menú d'ajuda</2>.",
@@ -681,7 +687,8 @@
       "carto": "Carto",
       "gltf": "GLTF",
       "shp": "Shapefile (zip)",
-      "other": "Altres (utilitza el servei de conversió)"
+      "other": "Altres (utilitza el servei de conversió)",
+      "socrata-group": "Servidor Socrata"
     },
     "printWindow": {
       "errorTitle": "Error d'impressió",
@@ -832,7 +839,7 @@
       "missingUrlTitle": "No es pot carregar FeatureServer",
       "missingUrlMessage": "No s'ha pogut carregar el punt d'accés de l'ArcGis FeatureServer perquè l'element del catàleg no té una \"url\".",
       "invalidServiceTitle": "Capa invàlida de l'ArcGIS Feature Service",
-      "reachedMaxFeatureLimit": "Avís: aquesta capa ha assolit el límit de funcions FeatureService."
+      "reachedMaxFeatureLimit": "Avís: aquesta capa ha assolit el límit de funcions WFS ({{maxFeatures}})."
     },
     "arcGisFeatureServerCatalogGroup": {
       "invalidServiceMessage": "Error en invocar l'ArcGIS Feature Service. La resposta del servidor no sembla ser un document del servei de funcions vàlid.",
@@ -932,7 +939,7 @@
       "unsupportedTypeTitle": "Tipus desconegut",
       "unsupportedTypeMessage": "No s'ha pogut crear el tipus {{type}} de model desconegut.",
       "unsupportedFileTypeTitle": "Tipus d'arxiu no compatible",
-      "unsupportedFileTypeMessage": "Aquest format d'arxiu no és compatible amb {{appName}}. Els formats d'arxiu admesos inclouen: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (en {{link}})</li></ul>",
+      "unsupportedFileTypeMessage": "Aquest format de fitxer no és compatible amb {{appName}}. Els formats de fitxer admesos inclouen: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (a {{link}})</li><li>Shapefile (.zip)</li></ul>",
       "getConfirmationMessage": "Aquest arxiu no és compatible directament amb {{appName}}.\n\nVoleu provar de pujar-lo al servei de conversió {{appName}}? Això pot funcionar per a arxius Esri Shapefile petits i comprimits o arxius MapInfo TAB.",
       "readyToUpload": "Estàs preparat per enviar el teu arxiu al servei de conversió {{appName}}?",
       "upload": "Pujar",
@@ -1516,6 +1523,19 @@
     },
     "commonModelErrors": {
       "3dTypeIn2dMode": "**Nota:** aquest conjunt de dades no es pot mostrar al visualitzador 2D. Canvia a un dels modes de mapa 3D."
+    },
+    "clippingBox": {
+      "clipDirection": {
+        "options": {
+          "outside": "Clip fora de la caixa",
+          "inside": "Clip dins de la caixa"
+        },
+        "name": "Direcció del clip"
+      },
+      "groupName": "Caixa de retalls",
+      "clipModel": "Model de clip",
+      "showClippingBox": "Mostra el quadre de retall",
+      "keepBoxAboveGround": "Només sobre terra"
     }
   },
   "deltaTool": {
@@ -1587,6 +1607,6 @@
     "title": "Missatge"
   },
   "printView": {
-    "loading": "Preparant vista d'impressió..."
+    "loading": "S'està creant la vista d'impressió..."
   }
 }
