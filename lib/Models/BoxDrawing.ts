@@ -238,6 +238,7 @@ export default class BoxDrawing {
 
     this.setTransform(transform);
     this.drawBox();
+    this.setBoxAboveGround();
 
     onBecomeObserved(this, "dataSource", () => this.startInteractions());
     onBecomeUnobserved(this, "dataSource", () => this.stopInteractions());
