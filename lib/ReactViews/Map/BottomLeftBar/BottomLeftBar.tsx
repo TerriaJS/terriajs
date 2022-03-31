@@ -19,10 +19,7 @@ interface Props {
 const BottomLeftContainer = styled(Box)`
   position: absolute;
   bottom: 40px;
-  .Text-sc-rjn2f3-0,
-  .icon,
-  .Icon__StyledIcon-sc-1827453-0,
-  .czeVVz .gicHRI {
+  div {
     [dir="rtl"] & {
       transform: rotate(180deg) !important;
     }
@@ -35,10 +32,7 @@ const BottomLeftContainer = styled(Box)`
 
   @media (max-width: ${props => props.theme.mobile}px) {
     bottom: 35px;
-    .Text-sc-rjn2f3-0,
-    .icon,
-    .Icon__StyledIcon-sc-1827453-0,
-    .czeVVz .gicHRI {
+    div {
       [dir="rtl"] & {
         transform: rotate(180deg) !important;
       }
