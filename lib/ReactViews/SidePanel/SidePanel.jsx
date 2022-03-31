@@ -8,13 +8,12 @@ import Icon, { StyledIcon } from "../../Styled/Icon";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import Workbench from "../Workbench/Workbench";
 import FullScreenButton from "./FullScreenButton";
-
 import { useRefForTerria } from "../Hooks/useRefForTerria";
-
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
 import Button from "../../Styled/Button";
+import { ExplorerWindowElementName } from "../ExplorerWindow/ExplorerWindow";
 
 const BoxHelpfulHints = styled(Box)``;
 
@@ -140,13 +139,13 @@ const SidePanel = observer(
 
     onAddDataClicked(e) {
       e.stopPropagation();
-      this.props.viewState.setTopElement("AddData");
+      this.props.viewState.setTopElement(ExplorerWindowElementName);
       this.props.viewState.openAddData();
     },
 
     onAddLocalDataClicked(e) {
       e.stopPropagation();
-      this.props.viewState.setTopElement("AddData");
+      this.props.viewState.setTopElement(ExplorerWindowElementName);
       this.props.viewState.openUserData();
     },
     render() {

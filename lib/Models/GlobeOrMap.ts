@@ -14,10 +14,10 @@ import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFe
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import isDefined from "../Core/isDefined";
 import LatLonHeight from "../Core/LatLonHeight";
-import featureDataToGeoJson from "../Map/featureDataToGeoJson";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import { ProviderCoordsMap } from "../Map/PickedFeatures";
-import ProtomapsImageryProvider from "../Map/ProtomapsImageryProvider";
+import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
+import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
+import featureDataToGeoJson from "../Map/PickedFeatures/featureDataToGeoJson";
+import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import MouseCoords from "../ReactViewModels/MouseCoords";

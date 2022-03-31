@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import loadText from "../../../../lib/Core/loadText";
-import ProtomapsImageryProvider from "../../../../lib/Map/ProtomapsImageryProvider";
+import ProtomapsImageryProvider from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
 import GpxCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GpxCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../../lib/Models/Terria";

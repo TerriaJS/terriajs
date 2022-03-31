@@ -7,7 +7,10 @@ import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import LatLonHeight from "../Core/LatLonHeight";
 import runLater from "../Core/runLater";
-import { ProviderCoords, ProviderCoordsMap } from "../Map/PickedFeatures";
+import {
+  ProviderCoords,
+  ProviderCoordsMap
+} from "../Map/PickedFeatures/PickedFeatures";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import Model from "../Models/Definition/Model";

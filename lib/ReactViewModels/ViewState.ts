@@ -8,7 +8,6 @@ import {
 } from "mobx";
 import { Ref } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import addedByUser from "../Core/addedByUser";
 import {
   Category,
@@ -17,7 +16,7 @@ import {
 } from "../Core/AnalyticEvents/analyticEvents";
 import Result from "../Core/Result";
 import triggerResize from "../Core/triggerResize";
-import PickedFeatures from "../Map/PickedFeatures";
+import PickedFeatures from "../Map/PickedFeatures/PickedFeatures";
 import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
@@ -81,6 +80,8 @@ export default class ViewState {
   @observable mobileMenuVisible: boolean = false;
   @observable explorerPanelAnimating: boolean = false;
   @observable topElement: string = "FeatureInfo";
+  // Map for storing react portal containers created by <PortalContainer> component.
+  @observable portals: Map<string, HTMLElement | null> = new Map();
   @observable lastUploadedFiles: any[] = [];
   @observable storyBuilderShown: boolean = false;
 
@@ -776,7 +777,9 @@ export default class ViewState {
 
 interface Tool {
   toolName: string;
-  getToolComponent: () => React.ComponentType | Promise<React.ComponentType>;
+  getToolComponent: () =>
+    | React.ComponentType<any>
+    | Promise<React.ComponentType<any>>;
 
   showCloseButton: boolean;
   params?: any;

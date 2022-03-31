@@ -16,11 +16,10 @@ import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
-import makeRealPromise from "../../../Core/makeRealPromise";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import { networkRequestError } from "../../../Core/TerriaError";
-import featureDataToGeoJson from "../../../Map/featureDataToGeoJson";
-import proj4definitions from "../../../Map/Proj4Definitions";
+import featureDataToGeoJson from "../../../Map/PickedFeatures/featureDataToGeoJson";
+import proj4definitions from "../../../Map/Vector/Proj4Definitions";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GeoJsonMixin, {
   FeatureCollectionWithCrs

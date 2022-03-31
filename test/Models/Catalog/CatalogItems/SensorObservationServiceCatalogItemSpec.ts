@@ -4,6 +4,7 @@ import SensorObservationServiceCatalogItem from "../../../../lib/Models/Catalog/
 import Terria from "../../../../lib/Models/Terria";
 import SimpleCatalogItem from "../../../Helpers/SimpleCatalogItem";
 import TableAutomaticStylesStratum from "../../../../lib/Table/TableAutomaticStylesStratum";
+import { isEnum } from "../../../../lib/Models/SelectableDimensions/SelectableDimensions";
 
 const GetFeatureOfInterestResponse = require("raw-loader!../../../../wwwroot/test/sos/GetFeatureOfInterestResponse.xml");
 const EmptyGetFeatureOfInterestResponse = require("raw-loader!../../../../wwwroot/test/sos/GetFeatureOfInterestResponse_NoMembers.xml");
@@ -218,7 +219,11 @@ describe("SensorObservationServiceCatalogItem", function() {
         const procedureSelector = item.selectableDimensions.find(
           s => s.name === "Frequency"
         );
-        expect(procedureSelector).toBeDefined();
+        expect(procedureSelector && isEnum(procedureSelector)).toBeTruthy();
+
+        if (!procedureSelector || !isEnum(procedureSelector))
+          throw "Invalid procedureSelector";
+
         if (procedureSelector) {
           expect(procedureSelector.options?.length).toEqual(4);
         }
