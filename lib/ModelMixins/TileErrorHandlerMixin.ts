@@ -15,12 +15,12 @@ import CompositeCatalogItem from "../Models/Catalog/CatalogItems/CompositeCatalo
 import Model from "../Models/Definition/Model";
 import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
-import RasterLayerTraits from "../Traits/TraitsClasses/RasterLayerTraits";
+import ImageryProviderTraits from "../Traits/TraitsClasses/ImageryProviderTraits";
 import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
 import MappableMixin from "./MappableMixin";
 
 type ModelType = Model<
-  MappableTraits & RasterLayerTraits & CatalogMemberTraits
+  MappableTraits & ImageryProviderTraits & CatalogMemberTraits
 > &
   MappableMixin.Instance;
 

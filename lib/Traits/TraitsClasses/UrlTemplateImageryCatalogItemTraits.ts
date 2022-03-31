@@ -8,7 +8,7 @@ import MappableTraits from "./MappableTraits";
 import ImageryProviderTraits from "./ImageryProviderTraits";
 import UrlTraits from "./UrlTraits";
 
-export default class OpenStreetMapCatalogItemTraits extends mixTraits(
+export default class UrlTemplateImageryCatalogItemTraits extends mixTraits(
   ImageryProviderTraits,
   LayerOrderingTraits,
   UrlTraits,
@@ -17,16 +17,17 @@ export default class OpenStreetMapCatalogItemTraits extends mixTraits(
   LegendOwnerTraits
 ) {
   @primitiveTrait({
-    name: "File extension",
-    description: "The file extension used to retrieve Open Street Map data",
-    type: "string"
+    type: "string",
+    name: "Pick features URL",
+    description:
+      "URL template to use to use to pick features. See URL template to use to use to pick features for list of keywords. "
   })
-  fileExtension = "png";
+  pickFeaturesUrl?: string;
 
   @primitiveArrayTrait({
     name: "Subdomains",
     description:
-      "Array of subdomains, one of which will be prepended to each tile URL. This is useful for overcoming browser limit on the number of simultaneous requests per host.",
+      "Array of subdomains, one of which will be prepended to each tile URL. This is useful for overcoming browser limit on the number of simultaneous requests per host. Subdomains will be substituted for ${s} keyword",
     type: "string"
   })
   subdomains: string[] = [];
