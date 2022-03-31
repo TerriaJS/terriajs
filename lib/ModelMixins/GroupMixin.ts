@@ -185,10 +185,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
     addItemPropertiesToMembers(): void {
       this.memberModels.forEach((model: BaseModel) => {
         // Set itemProperties (for non GroupMixin members)
-        if (
-          this.itemProperties !== undefined &&
-          !GroupMixin.isMixedInto(model)
-        ) {
+        if (!GroupMixin.isMixedInto(model)) {
           applyItemProperties(model, this.itemProperties);
         }
 

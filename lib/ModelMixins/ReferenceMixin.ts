@@ -7,7 +7,7 @@ import CommonStrata from "../Models/Definition/CommonStrata";
 import Model, { BaseModel, ModelInterface } from "../Models/Definition/Model";
 import ReferenceTraits from "../Traits/TraitsClasses/ReferenceTraits";
 import { getName } from "./CatalogMemberMixin";
-import { applyItemProperties } from "./GroupMixin";
+import GroupMixin, { applyItemProperties } from "./GroupMixin";
 
 interface ReferenceInterface extends ModelInterface<ReferenceTraits> {
   readonly isLoadingReference: boolean;
@@ -108,7 +108,11 @@ function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
 
       runInAction(() => {
         if (!result.error && this.target) {
-          applyItemProperties(this.target, this.itemProperties);
+          // Set itemProperties (for non GroupMixin members)
+          if (!GroupMixin.isMixedInto(this.target)) {
+            applyItemProperties(this.target, this.itemProperties);
+          }
+
           // Set itemPropertiesByType
           applyItemProperties(
             this.target,
