@@ -23,6 +23,7 @@ Change Log
 * Fixed a bug in `BoxDrawing` where the box can be below ground after initialization even when setting `keepBoxAboveGround` to true.
 * Add `itemProperties`, `itemPropertiesByType` and `itemPropertiesById` to `GroupTraits` and `ReferenceTraits`.
   * Properties set `override` strata
+  * Item properties will be set in the following order (highest to lowest priority) `itemPropertiesById`, `itemPropertiesByType`, `itemProperties`.
   * If a parent group has `itemProperties`, `itemPropertiesByType` or `itemPropertiesById` - then child groups will have these values copied to `underride` when the parent group is loaded
   * Similarly with references.
 * Fix `viewCatalogMember` bug - where `_previewItem` was being set too late.
