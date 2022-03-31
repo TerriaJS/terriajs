@@ -208,7 +208,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
           )?.itemProperties
         );
 
-        // If member is a Group -> copy over itemProperties
+        // If member is a Group -> copy over itemProperties to underride stratum
         if (GroupMixin.isMixedInto(model)) {
           model.setTrait(
             CommonStrata.underride,
@@ -400,12 +400,14 @@ namespace GroupMixin {
 
 export default GroupMixin;
 
+/** Applies itemProperties object to a model - this will set traits in override stratum
+ */
 export function applyItemProperties(
   model: BaseModel,
   itemProperties: JsonObject | undefined
 ) {
   if (!itemProperties) return;
   Object.keys(itemProperties).map((k: any) =>
-    model.setTrait(CommonStrata.underride, k, itemProperties[k])
+    model.setTrait(CommonStrata.override, k, itemProperties[k])
   );
 }

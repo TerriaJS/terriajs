@@ -20,7 +20,9 @@ Change Log
 * Added optional `onDrawingComplete` callback to `UserDrawing` to receive drawn points or rectangle when the drawing is complete.
 * Fixed a bug in `BoxDrawing` where the box can be below ground after initialization even when setting `keepBoxAboveGround` to true.
 * Add `itemProperties`, `itemPropertiesByType` and `itemPropertiesById` to `GroupTraits` and `ReferenceTraits`.
-  * Properties set `underride` strata
+  * Properties set `override` strata
+  * If a parent group has `itemProperties`, `itemPropertiesByType` or `itemPropertiesById` - then child groups will have these values copied to `underride` when the parent group is loaded
+  * Similarly with references.
 * All dynamic groups (eg `WebMapServiceCatalogGroup`) will create members and set `definition` strata (instead of `underride`)
 * Fix `viewCatalogMember` bug - where `_previewItem` was being set too late.
 * Improve error message in `DataPreview` for references.

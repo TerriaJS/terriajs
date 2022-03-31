@@ -3,6 +3,7 @@ import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import Result from "../Core/Result";
+import CommonStrata from "../Models/Definition/CommonStrata";
 import Model, { BaseModel, ModelInterface } from "../Models/Definition/Model";
 import ReferenceTraits from "../Traits/TraitsClasses/ReferenceTraits";
 import { getName } from "./CatalogMemberMixin";
@@ -124,6 +125,25 @@ function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
               itemProps =>
                 itemProps.id && itemProps.id === this.target!.uniqueId
             )?.itemProperties
+          );
+        }
+
+        // If member is a Reference -> copy over itemProperties to underride stratum
+        if (ReferenceMixin.isMixedInto(this.target)) {
+          this.target.setTrait(
+            CommonStrata.underride,
+            "itemProperties",
+            this.itemProperties
+          );
+          this.target.setTrait(
+            CommonStrata.underride,
+            "itemPropertiesByType",
+            this.traits.itemPropertiesByType.toJson(this.itemPropertiesByType)
+          );
+          this.target.setTrait(
+            CommonStrata.underride,
+            "itemPropertiesById",
+            this.traits.itemPropertiesById.toJson(this.itemPropertiesById)
           );
         }
       });

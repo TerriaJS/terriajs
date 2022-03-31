@@ -260,7 +260,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     );
     model.setTrait(CommonStrata.definition, "layers", layer.Name);
 
-    // if user defined following properties on th group level we should pass them to all group members
+    // if user defined following properties on the group level we should pass them to all group members
     model.setTrait(
       CommonStrata.definition,
       "hideSource",

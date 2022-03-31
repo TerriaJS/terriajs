@@ -55,7 +55,7 @@ createInheritedCkanSharedTraitsStratum.stratumName =
   "ckanItemReferenceInheritedPropertiesStratum";
 
 // This can't be definition stratum, as then it will sit on top of underride/definition/override
-// CkanServerStratum.createMemberFromDataset will use `underride`
+// CkanServerStratum.createMemberFromDataset will use `definition`
 StratumOrder.addLoadStratum(createInheritedCkanSharedTraitsStratum.stratumName);
 
 export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {

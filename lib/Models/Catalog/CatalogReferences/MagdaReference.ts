@@ -633,7 +633,7 @@ export default class MagdaReference extends AccessControlMixin(
       }
     }
 
-    const underride: any = {
+    const definition: any = {
       url: url,
       info: [],
       ...format.definition
@@ -642,11 +642,11 @@ export default class MagdaReference extends AccessControlMixin(
     if (
       isJsonObject(datasetDcat) &&
       isJsonString(datasetDcat.description) &&
-      !underride.info.find(
+      !definition.info.find(
         (section: any) => section.name === "Dataset Description"
       )
     ) {
-      underride.info.push({
+      definition.info.push({
         name: "Dataset Description",
         content: datasetDcat.description
       });
@@ -655,11 +655,11 @@ export default class MagdaReference extends AccessControlMixin(
     if (
       isJsonObject(distributionDcat) &&
       isJsonString(distributionDcat.description) &&
-      !underride.info.find(
+      !definition.info.find(
         (section: any) => section.name === "Distribution Description"
       )
     ) {
-      underride.info.push({
+      definition.info.push({
         name: "Distribution Description",
         content: distributionDcat.description
       });
@@ -674,7 +674,7 @@ export default class MagdaReference extends AccessControlMixin(
       true
     );
 
-    updateModelFromJson(result, CommonStrata.definition, underride, true);
+    updateModelFromJson(result, CommonStrata.definition, definition, true);
 
     if (override) {
       updateModelFromJson(result, CommonStrata.override, override, true);
