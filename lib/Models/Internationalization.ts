@@ -36,6 +36,18 @@ export interface LanguageConfiguration {
   fallbackLanguage: string;
   changeLanguageOnStartWhen: string[];
 }
+
+export interface AuthConfiguration {
+  clientId: string;
+  clientSecret: string;
+  authorizationUrl: string;
+  logoutUrl: string;
+  redirectUri: string;
+  responseType: string;
+  loginText: string;
+  logoutText: string;
+  isCrossOrigin: boolean; // true  If your redirect URL is on a server with a different domain to your frontend
+}
 const defaultLanguageConfiguration = {
   enabled: false,
   debug: false,

@@ -100,7 +100,8 @@ import InitSource, {
 } from "./InitSource";
 import Internationalization, {
   I18nStartOptions,
-  LanguageConfiguration
+  LanguageConfiguration,
+  AuthConfiguration
 } from "./Internationalization";
 import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
@@ -296,6 +297,16 @@ interface ConfigParameters {
    * Prefix to which `:story-id` is added to fetch JSON for stories when using /story/:story-id routes. Should end in /
    */
   storyRouteUrlPrefix?: string;
+
+  /**
+   * Whether the login is enabled. If false login function button won't be available.
+   */
+  loginEnabled?: boolean;
+
+  /**
+   * Authentication Configuration that is used to authenticate with data provider website.
+   */
+  AuthConfiguration?: AuthConfiguration;
 }
 
 interface StartOptions {
@@ -484,7 +495,9 @@ export default class Terria {
       { text: "map.extraCreditLinks.disclaimer", url: "about.html#disclaimer" }
     ],
     printDisclaimer: undefined,
-    storyRouteUrlPrefix: undefined
+    storyRouteUrlPrefix: undefined,
+    AuthConfiguration: undefined,
+    loginEnabled: undefined
   };
 
   @observable
@@ -734,7 +747,7 @@ export default class Terria {
     type: Class<T>,
     id: string
   ): T | undefined {
-    let model = this.getModelById(type, id);
+    const model = this.getModelById(type, id);
     if (model) {
       return model;
     } else {
@@ -1747,7 +1760,7 @@ export default class Terria {
   @action
   async loadPickedFeatures(pickedFeatures: JsonObject): Promise<void> {
     let vectorFeatures: Entity[] = [];
-    let featureIndex: Record<number, Entity[] | undefined> = {};
+    const featureIndex: Record<number, Entity[] | undefined> = {};
 
     if (Array.isArray(pickedFeatures.entities)) {
       // Build index of terria features by a hash of their properties.
