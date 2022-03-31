@@ -21,6 +21,11 @@ Change Log
 * Fixed a bug in `BoxDrawing` where the box can be below ground after initialization even when setting `keepBoxAboveGround` to true.
 * Fix `viewCatalogMember` bug - where `_previewItem` was being set too late.
 * Improve error message in `DataPreview` for references.
+* * Added ASGS 2021 regions to region mapping:
+  * SA1-4 (e.g. sa3_code_2021)
+  * GCCSA
+  * STE & AUS (aliased to existing 2011/2016 data due to no change in geometry, names & codes)
+* Added LGA regions from 2019 & 2021 to region mapping - only usable by lga code
 * [The next improvement]
 
 #### 8.1.25 - 2022-03-16
