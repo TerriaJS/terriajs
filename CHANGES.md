@@ -20,6 +20,7 @@ Change Log
 * Fixed a bug in `BoxDrawing` where the box can be below ground after initialization even when setting `keepBoxAboveGround` to true.
 * Fix `viewCatalogMember` bug - where `_previewItem` was being set too late.
 * Improve error message in `DataPreview` for references.
+* Fixed a polyline position update bug in `LeafletVisualizer`. Polylines with time varying position will now correctly animate in leaflet mode.
 * [The next improvement]
 
 #### 8.1.25 - 2022-03-16
