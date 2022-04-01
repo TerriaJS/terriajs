@@ -1,5 +1,8 @@
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import ViewState from "../ReactViewModels/ViewState";
 import { IconProps } from "../Styled/Icon";
+import { remove } from "lodash-es";
+import { runInAction } from "mobx";
 
 /** This model represents an item in the ViewingControls menu for a given catalog member in the workbench. (This menu has "Remove", "Export", "Compare", ...).
  * See `lib/ReactViews/Workbench/Controls/ViewingControls.tsx` for more info and usage

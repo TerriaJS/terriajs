@@ -25,6 +25,7 @@ import CommonStrata from "../Models/Definition/CommonStrata";
 import { BaseModel } from "../Models/Definition/Model";
 import getAncestors from "../Models/getAncestors";
 import Terria from "../Models/Terria";
+import { ViewingControl } from "../Models/ViewingControls";
 import { SATELLITE_HELP_PROMPT_KEY } from "../ReactViews/HelpScreens/SatelliteHelpPrompt";
 import { animationDuration } from "../ReactViews/StandardUserInterface/StandardUserInterface";
 import {
@@ -103,6 +104,18 @@ export default class ViewState {
   @observable currentTrainerStepIndex: number = 0;
 
   @observable printWindow: Window | null = null;
+
+  /**
+   * A global list of functions that generate a {@link ViewingControl} option
+   * for the given catalog item instance.  This is useful for plugins to extend
+   * the viewing control menu across catalog items.
+   *
+   * Use {@link ViewingControlsMenu.addMenuOption} instead of updating directly.
+   */
+  @observable
+  readonly globalViewingControlOptions: ((
+    item: CatalogMemberMixin.Instance
+  ) => ViewingControl | undefined)[] = [];
 
   @action
   setSelectedTrainerItem(trainerItem: string) {
