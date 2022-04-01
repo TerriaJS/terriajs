@@ -1,7 +1,12 @@
 import i18next from "i18next";
 import defaults from "lodash-es/defaults";
 import isDefined from "../../Core/isDefined";
-import { isJsonObject, isJsonString, isJsonStringArray } from "../../Core/Json";
+import {
+  isJsonObject,
+  isJsonString,
+  isJsonStringArray,
+  JsonObject
+} from "../../Core/Json";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
 import GroupMixin from "../../ModelMixins/GroupMixin";
@@ -12,6 +17,7 @@ import CommonStrata from "./CommonStrata";
 import { BaseModel } from "./Model";
 import ModelFactory from "./ModelFactory";
 import updateModelFromJson from "./updateModelFromJson";
+import { ModelJson } from "../InitSource";
 
 export interface UpsertModelFromJsonOptions {
   addModelToTerria?: boolean;
@@ -37,7 +43,7 @@ export default function upsertModelFromJson(
   terria: Terria,
   parentId: string,
   stratumName: string,
-  json: unknown,
+  json: ModelJson,
   options: UpsertModelFromJsonOptions = {}
 ): Result<BaseModel | undefined> {
   if (!isJsonObject(json)) {

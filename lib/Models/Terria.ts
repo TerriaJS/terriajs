@@ -93,10 +93,11 @@ import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import IElementConfig from "./IElementConfig";
 import InitSource, {
-  isInitData,
-  isInitDataPromise,
-  isInitOptions,
-  isInitUrl
+  isInitFromData,
+  isInitFromDataPromise,
+  isInitFromOptions,
+  isInitFromUrl,
+  InitSourceData
 } from "./InitSource";
 import Internationalization, {
   I18nStartOptions,
@@ -342,14 +343,6 @@ interface TerriaOptions {
    */
   baseUrl?: string;
   analytics?: Analytics;
-}
-
-interface ApplyInitDataOptions {
-  initData: JsonObject;
-  replaceStratum?: boolean;
-  // When feature picking state is missing from the initData, unset the state only if this flag is true
-  // This is for eg, set to true when switching through story slides.
-  canUnsetFeaturePickingState?: boolean;
 }
 
 interface HomeCameraInit {
@@ -1123,11 +1116,14 @@ export default class Terria {
 
   protected async forceLoadInitSources(): Promise<void> {
     const loadInitSource = createTransformer(
-      async (initSource: InitSource): Promise<JsonObject | undefined> => {
-        let jsonValue: JsonValue | undefined;
-        if (isInitUrl(initSource)) {
+      async (initSource: InitSource): Promise<InitSourceData | undefined> => {
+        let initSourceData: InitSourceData | undefined;
+        if (isInitFromUrl(initSource)) {
           try {
-            jsonValue = await loadJson5(initSource.initUrl);
+            const json = await loadJson5(initSource.initUrl);
+            if (isJsonObject(json, false)) {
+              initSourceData = json;
+            }
           } catch (e) {
             throw TerriaError.from(e, {
               message: {
@@ -1136,25 +1132,25 @@ export default class Terria {
               }
             });
           }
-        } else if (isInitOptions(initSource)) {
+        } else if (isInitFromOptions(initSource)) {
           let error: unknown;
           for (const option of initSource.options) {
             try {
-              jsonValue = await loadInitSource(option);
-              if (jsonValue !== undefined) break;
+              initSourceData = await loadInitSource(option);
+              if (initSourceData !== undefined) break;
             } catch (err) {
               error = err;
             }
           }
-          if (jsonValue === undefined && error !== undefined) throw error;
-        } else if (isInitData(initSource)) {
-          jsonValue = initSource.data;
-        } else if (isInitDataPromise(initSource)) {
-          jsonValue = (await initSource.data).throwIfError()?.data;
+          if (initSourceData === undefined && error !== undefined) throw error;
+        } else if (isInitFromData(initSource)) {
+          initSourceData = initSource.data;
+        } else if (isInitFromDataPromise(initSource)) {
+          initSourceData = (await initSource.data).throwIfError()?.data;
         }
 
-        if (jsonValue && isJsonObject(jsonValue)) {
-          return jsonValue;
+        if (initSourceData && isJsonObject(initSourceData)) {
+          return initSourceData;
         }
         return undefined;
       }
@@ -1349,7 +1345,11 @@ export default class Terria {
     // If we're replacing the stratum and the existing model is already
     // dereferenced, we need to replace the dereferenced stratum, too,
     // even if there's no trace of it in the load data.
-    let dereferenced = thisModelStratumData.dereferenced;
+    let dereferenced: JsonObject | undefined = isJsonObject(
+      thisModelStratumData.dereferenced
+    )
+      ? thisModelStratumData.dereferenced
+      : undefined;
     if (
       loadedModel &&
       replaceStratum &&
@@ -1457,7 +1457,13 @@ export default class Terria {
     initData,
     replaceStratum = false,
     canUnsetFeaturePickingState = false
-  }: ApplyInitDataOptions): Promise<void> {
+  }: {
+    initData: InitSourceData;
+    replaceStratum?: boolean;
+    // When feature picking state is missing from the initData, unset the state only if this flag is true
+    // This is for eg, set to true when switching through story slides.
+    canUnsetFeaturePickingState?: boolean;
+  }): Promise<void> {
     const errors: TerriaError[] = [];
 
     initData = toJS(initData);

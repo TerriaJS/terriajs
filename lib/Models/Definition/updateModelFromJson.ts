@@ -5,11 +5,12 @@ import TerriaError from "../../Core/TerriaError";
 import createStratumInstance from "./createStratumInstance";
 import { BaseModel } from "./Model";
 import { uniq } from "lodash-es";
+import { ModelJson } from "../InitSource";
 
 export default function updateModelFromJson(
   model: BaseModel,
   stratumName: string,
-  json: any,
+  json: ModelJson,
   replaceStratum: boolean = false
 ): Result<undefined> {
   const traits = model.traits;
