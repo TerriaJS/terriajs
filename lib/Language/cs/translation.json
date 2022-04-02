@@ -1042,7 +1042,7 @@
       "name": "GeoJSON",
       "errorLoadingTitle": "Chyba při načítání GeoJSON",
       "errorLoadingMessage": "Při načítání souboru GeoJSON došlo k chybě.  To může znamenat, že soubor je neplatný nebo že není podporován.",
-      "unsupportedBrowserMessage": "Je nám líto, ale váš webový prohlížeč nepodporuje rozhraní API souborů, které {{název aplikace}} vyžaduje pro načtení této datové sady.  Upgradujte prosím svůj webový prohlížeč.  Pro nejlepší zážitek doporučujeme nejnovější verze $t(browsers.chrome) nebo $t(browsers.firefox) nebo $t(browsers.edge) nebo $t(browsers.safari).",
+      "unsupportedBrowserMessage": "Je nám líto, ale váš webový prohlížeč nepodporuje rozhraní API souborů, které {{appName}} vyžaduje pro načtení této datové sady.  Upgradujte prosím svůj webový prohlížeč.  Pro nejlepší zážitek doporučujeme nejnovější verze $t(browsers.chrome) nebo $t(browsers.firefox) nebo $t(browsers.edge) nebo $t(browsers.safari).",
       "unsupportedBrowserTitle": "Nepodporovaný webový prohlížeč",
       "internetExplorer": "Internet Explorer 11",
       "unableToLoadItemMessage": "Položku katalogu GeoJSON nelze načíst, protože nebyla nakonfigurována s vlastnostmi `url`, `geoJsonData` nebo `geoJsonString`.",
@@ -1618,5 +1618,42 @@
     "firefox": "Mozilla Firefox",
     "edge": "Microsoft Edge",
     "safari": "Apple Safari"
+  },
+  "compare": {
+    "title": "Porovnat",
+    "rightPanel": "Pravý panel",
+    "entireMap": {
+      "title": "Celá mapa",
+      "emptyText": "Pomocí tečkovaného menu výše můžete přidat nová data, která se zobrazí na celé mapě."
+    },
+    "entireMapMenu": {
+      "browse": "Procházet mapová data",
+      "sendAllToBack": "Odeslat vše do pozadí",
+      "hideAll": "Skrýt vše",
+      "sendAllToFront": "Odeslat vše do popředí"
+    },
+    "dataset": {
+      "label": "Datová sada",
+      "selectOne": "Vybrat jeden"
+    },
+    "dimensionSelector": {
+      "undefinedLabel": "Neuvedeno"
+    },
+    "dateLocationFilter": {
+      "filter": "Filtrovat datum podle místa",
+      "loading": "Načítání filtru...",
+      "cancel": "Zrušit",
+      "location": "Nyní zobrazuje dostupné snímky pro {{latitude}}, {{longitude}}",
+      "mouseTooltipTitle": "Zvolte místo",
+      "mouseTooltipMessage": "Kliknutím pravým tlačítkem myši zrušíte"
+    },
+    "leftPanel": "Levý panel",
+    "done": "Hotovo",
+    "dateButton": {
+      "left": "Vlevo",
+      "right": "Vpravo",
+      "select": "Vyberte datum"
+    },
+    "info": "Porovnejte na mapě vedle sebe soubory prostorových dat z pracovní plochy."
   }
 }
