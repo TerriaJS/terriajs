@@ -4,6 +4,7 @@ import Styles from "./panel.scss";
 import TerriaError from "../../../Core/TerriaError";
 import i18next from "i18next";
 import Cookies from "universal-cookie";
+import Icon, { StyledIcon } from "../../../Styled/Icon";
 
 export default function AuthPanel(props) {
   const cookies = new Cookies();
@@ -66,7 +67,14 @@ export default function AuthPanel(props) {
   if (!loginEnabled) {
     return null;
   }
-
+  const btnContent = () => {
+    return (
+      <div>
+        <StyledIcon light styledWidth="15px" glyph={Icon.GLYPHS.user} />
+        <span>{AuthConfiguration.loginText}</span>
+      </div>
+    );
+  };
   return (
     <Choose>
       <When condition={!loggedIn}>
@@ -78,14 +86,18 @@ export default function AuthPanel(props) {
             responseType={AuthConfiguration.responseType}
             onSuccess={onLoginSuccess}
             onFailure={onLoginFailure}
-            buttonText={AuthConfiguration.loginText}
+            buttonText={btnContent()}
             className={props.className ? props.className : Styles.button}
           />
         </div>
       </When>
       <Otherwise>
-        <button className={Styles.button} onClick={() => handleLogout()}>
-          {AuthConfiguration.logoutText}
+        <button
+          className={props.className ? props.className : Styles.button}
+          onClick={() => handleLogout()}
+        >
+          <StyledIcon light styledWidth="15px" glyph={Icon.GLYPHS.user} />
+          <span>{AuthConfiguration.logoutText}</span>
         </button>
       </Otherwise>
     </Choose>
