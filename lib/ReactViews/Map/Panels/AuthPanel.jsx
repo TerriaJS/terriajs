@@ -70,16 +70,18 @@ export default function AuthPanel(props) {
   return (
     <Choose>
       <When condition={!loggedIn}>
-        <OAuth2Login
-          authorizationUrl={AuthConfiguration.authorizationUrl}
-          clientId={AuthConfiguration.clientId}
-          redirectUri={AuthConfiguration.redirectUri}
-          responseType={AuthConfiguration.responseType}
-          onSuccess={onLoginSuccess}
-          onFailure={onLoginFailure}
-          buttonText={AuthConfiguration.loginText}
-          className={Styles.button}
-        />
+        <div>
+          <OAuth2Login
+            authorizationUrl={AuthConfiguration.authorizationUrl}
+            clientId={AuthConfiguration.clientId}
+            redirectUri={AuthConfiguration.redirectUri}
+            responseType={AuthConfiguration.responseType}
+            onSuccess={onLoginSuccess}
+            onFailure={onLoginFailure}
+            buttonText={AuthConfiguration.loginText}
+            className={props.className ? props.className : Styles.button}
+          />
+        </div>
       </When>
       <Otherwise>
         <button className={Styles.button} onClick={() => handleLogout()}>

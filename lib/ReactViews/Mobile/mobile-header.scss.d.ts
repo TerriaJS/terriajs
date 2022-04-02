@@ -3,9 +3,11 @@
 interface CssExports {
   'btn': string;
   'btn-add': string;
+  'btn-login': string;
   'btn-now-viewing': string;
   'btn-search': string;
   'btnAdd': string;
+  'btnLogin': string;
   'btnNowViewing': string;
   'btnSearch': string;
   'doubleDigit': string;

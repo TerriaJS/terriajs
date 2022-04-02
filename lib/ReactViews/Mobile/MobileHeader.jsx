@@ -15,6 +15,7 @@ import Branding from "../SidePanel/Branding";
 import Styles from "./mobile-header.scss";
 import MobileMenu from "./MobileMenu";
 import MobileModalWindow from "./MobileModalWindow";
+import AuthPanel from "../Map/Panels/AuthPanel";
 
 const MobileHeader = observer(
   createReactClass({
@@ -194,6 +195,12 @@ const MobileHeader = observer(
                     background-color: ${p => p.theme.dark};
                   `}
                 >
+                  <div>
+                    <AuthPanel
+                      terria={this.props.terria}
+                      className={Styles.btnLogin}
+                    ></AuthPanel>
+                  </div>
                   <button
                     type="button"
                     className={Styles.btnAdd}

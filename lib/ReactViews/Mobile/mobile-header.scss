@@ -52,6 +52,25 @@
   }
 }
 
+.btn-login {
+  composes: btn;
+
+  position: relative;
+  margin: 0 $padding-small;
+  padding: $padding $padding $padding $padding * 3;
+  width: auto;
+  text-align: right;
+  font-size: 0.95rem;
+  border-radius: 4px;
+
+  svg {
+    position: absolute;
+    top: $padding + 2;
+    left: $padding/2;
+    fill: #ffffff;
+  }
+}
+
 .btn-search {
   composes: btn;
   margin: 0 $padding-small;
