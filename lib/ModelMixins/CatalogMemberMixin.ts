@@ -9,7 +9,8 @@ import Model, { BaseModel } from "../Models/Definition/Model";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
   SelectableDimension
-} from "../Models/SelectableDimensions";
+} from "../Models/SelectableDimensions/SelectableDimensions";
+import ViewingControls, { ViewingControl } from "../Models/ViewingControls";
 import CatalogMemberReferenceTraits from "../Traits/TraitsClasses/CatalogMemberReferenceTraits";
 import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
 import AccessControlMixin from "./AccessControlMixin";
@@ -21,7 +22,7 @@ type CatalogMember = Model<CatalogMemberTraits>;
 
 function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
   abstract class CatalogMemberMixin extends AccessControlMixin(Base)
-    implements SelectableDimensions {
+    implements SelectableDimensions, ViewingControls {
     abstract get type(): string;
 
     // The names of items in the CatalogMember's info array that contain details of the source of this CatalogMember's data.
@@ -180,14 +181,26 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
             );
             const value = dim.options.find(o => o.id === selectedId)?.value;
             if (isDefined(value)) {
-              updateModelFromJson(this, stratumId, value).raiseError(
+              const result = updateModelFromJson(this, stratumId, value);
+              result.raiseError(
                 this.terria,
                 `Failed to update catalog item ${getName(this)}`
               );
+
+              // If no error then call loadMapItems
+              if (!result.error && MappableMixin.isMixedInto(this)) {
+                this.loadMapItems().then(loadMapItemsResult => {
+                  loadMapItemsResult.raiseError(this.terria);
+                });
+              }
             }
           }
         })) ?? []
       );
+    }
+
+    @computed get viewingControls(): ViewingControl[] {
+      return [];
     }
 
     dispose() {

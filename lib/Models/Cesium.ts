@@ -50,11 +50,13 @@ import LatLonHeight from "../Core/LatLonHeight";
 import makeRealPromise from "../Core/makeRealPromise";
 import pollToPromise from "../Core/pollToPromise";
 import waitForDataSourceToLoad from "../Core/waitForDataSourceToLoad";
-import CesiumRenderLoopPauser from "../Map/CesiumRenderLoopPauser";
-import CesiumSelectionIndicator from "../Map/CesiumSelectionIndicator";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import PickedFeatures, { ProviderCoordsMap } from "../Map/PickedFeatures";
-import ProtomapsImageryProvider from "../Map/ProtomapsImageryProvider";
+import CesiumRenderLoopPauser from "../Map/Cesium/CesiumRenderLoopPauser";
+import CesiumSelectionIndicator from "../Map/Cesium/CesiumSelectionIndicator";
+import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
+import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
+import PickedFeatures, {
+  ProviderCoordsMap
+} from "../Map/PickedFeatures/PickedFeatures";
 import MappableMixin, {
   ImageryParts,
   isCesium3DTileset,

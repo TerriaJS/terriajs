@@ -41,9 +41,8 @@ import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import SelectableDimensions, {
-  SelectableDimension,
-  SelectableDimensionSelect
-} from "../../SelectableDimensions";
+  SelectableDimensionEnum
+} from "../../SelectableDimensions/SelectableDimensions";
 import Terria from "../../Terria";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import WebMapServiceCapabilities from "./WebMapServiceCapabilities";
@@ -570,8 +569,10 @@ class WebMapServiceCatalogItem
         tileWidth: this.tileWidth,
         tileHeight: this.tileHeight,
         tilingScheme: this.tilingScheme,
-        maximumLevel: this.getMaximumLevel(true),
-        credit: this.attribution
+        maximumLevel: this.getMaximumLevel(true) ?? this.maximumLevel,
+        minimumLevel: this.minimumLevel,
+        credit: this.attribution,
+        enablePickFeatures: this.allowFeaturePicking
       };
 
       if (isDefined(this.getFeatureInfoFormat?.type)) {
@@ -597,7 +598,7 @@ class WebMapServiceCatalogItem
   );
 
   @computed
-  get styleSelectableDimensions(): SelectableDimensionSelect[] {
+  get styleSelectableDimensions(): SelectableDimensionEnum[] {
     return this.availableStyles.map((layer, layerIndex) => {
       let name = "Styles";
 
@@ -637,7 +638,11 @@ class WebMapServiceCatalogItem
         id: `${this.uniqueId}-${layer.layerName}-styles`,
         options,
         selectedId,
-        setDimensionValue: (stratumId: string, newStyle: string) => {
+        setDimensionValue: (
+          stratumId: string,
+          newStyle: string | undefined
+        ) => {
+          if (!newStyle) return;
           runInAction(() => {
             const styles = this.styleSelectableDimensions.map(
               style => style.selectedId || ""
@@ -660,8 +665,8 @@ class WebMapServiceCatalogItem
   }
 
   @computed
-  get wmsDimensionSelectableDimensions(): SelectableDimension[] {
-    const dimensions: SelectableDimension[] = [];
+  get wmsDimensionSelectableDimensions(): SelectableDimensionEnum[] {
+    const dimensions: SelectableDimensionEnum[] = [];
 
     // For each layer -> For each dimension
     this.availableDimensions.forEach(layer => {
@@ -700,7 +705,10 @@ class WebMapServiceCatalogItem
             dim.default ||
             dim.values[0],
 
-          setDimensionValue: (stratumId: string, newDimension: string) => {
+          setDimensionValue: (
+            stratumId: string,
+            newDimension: string | undefined
+          ) => {
             let newDimensions: any = {};
 
             newDimensions[dim.name!] = newDimension;

@@ -30,7 +30,8 @@ export default class MapboxMapCatalogItem extends CatalogMemberMixin(
       mapId,
       accessToken,
       credit: this.attribution,
-      maximumLevel: this.maximumLevel,
+      maximumLevel: this.maximumLevel ?? 25,
+      minimumLevel: this.minimumLevel,
       format: this.format
     });
     return imageryProvider;
