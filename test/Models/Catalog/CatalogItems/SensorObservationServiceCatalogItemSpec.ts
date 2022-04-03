@@ -92,7 +92,7 @@ describe("SensorObservationServiceCatalogItem", function() {
   describe("features table", function() {
     beforeEach(function() {
       jasmine.Ajax.stubRequest(
-        "https://sos.example.com",
+        "https://sos.example.com/",
         /\<sos:GetFeatureOfInterest/
       ).andReturn({ responseText: GetFeatureOfInterestResponse });
     });
@@ -100,8 +100,8 @@ describe("SensorObservationServiceCatalogItem", function() {
     describe("when loading", function() {
       it("makes a GetFeatureOfInterest request", async function() {
         await item.loadMapItems();
-        const req = jasmine.Ajax.requests.filter("https://sos.example.com")[0];
-        expect(req.url).toBe("https://sos.example.com");
+        const req = jasmine.Ajax.requests.filter("https://sos.example.com/")[0];
+        expect(req.url).toBe("https://sos.example.com/");
         expect(req.method).toBe("POST");
         expect(req.data()).toContain("sos:GetFeatureOfInterest");
         expect(req.data()).toContain("/foiRetrieval/");
@@ -130,7 +130,7 @@ describe("SensorObservationServiceCatalogItem", function() {
 
       it("throws an error if features is empty", async function() {
         jasmine.Ajax.stubRequest(
-          "https://sos.example.com",
+          "https://sos.example.com/",
           /\<sos:GetFeatureOfInterest/
         ).andReturn({ responseText: EmptyGetFeatureOfInterestResponse });
         let ex = (await item.loadMapItems()).error;
@@ -229,11 +229,11 @@ describe("SensorObservationServiceCatalogItem", function() {
   describe("observations table", function() {
     beforeEach(function() {
       jasmine.Ajax.stubRequest(
-        "https://sos.example.com",
+        "https://sos.example.com/",
         /\<sos:GetObservation[\s\S]*Yearly/
       ).andReturn({ responseText: GetObservationResponseYearly });
       jasmine.Ajax.stubRequest(
-        "https://sos.example.com",
+        "https://sos.example.com/",
         /\<sos:GetObservation[\s\S]*Daily/
       ).andReturn({ responseText: GetObservationResponseDaily });
       item.setTrait(CommonStrata.user, "showAsChart", true);
@@ -250,7 +250,7 @@ describe("SensorObservationServiceCatalogItem", function() {
       it("makes a GetObservation request", async function() {
         await runInAction(() => item.loadMapItems());
         const req = jasmine.Ajax.requests.mostRecent();
-        expect(req.url).toBe("https://sos.example.com");
+        expect(req.url).toBe("https://sos.example.com/");
         expect(req.method).toBe("POST");
         expect(req.data()).toContain("sos:GetObservation");
         expect(req.data()).toContain("/core/");
