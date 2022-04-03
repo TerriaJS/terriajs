@@ -1,7 +1,7 @@
 "use strict";
 import React, { useRef, useState } from "react";
-import i18next from "i18next";
 import styled, { useTheme } from "styled-components";
+import { useTranslation } from "react-i18next";
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 import { TextSpan } from "../../Styled/Text";
@@ -105,7 +105,8 @@ interface IMapIconButtonProps extends IStyledMapIconButtonProps {
 }
 
 function MapIconButton(props: IMapIconButtonProps) {
-  const isRTL = i18next.dir() == "rtl";
+  const { i18n } = useTranslation();
+  const isRtl = i18n.dir() == "rtl";
   const [isExpanded, setExpanded] = useState(false);
   const {
     children,
@@ -139,8 +140,8 @@ function MapIconButton(props: IMapIconButtonProps) {
       primary={primary}
       splitter={splitter}
       inverted={inverted}
-      roundLeft={isRTL ? roundRight : roundLeft}
-      roundRight={isRTL ? roundLeft : roundRight}
+      roundLeft={isRtl ? roundRight : roundLeft}
+      roundRight={isRtl ? roundLeft : roundRight}
       disabled={disabled}
       type="button"
       title={title}
@@ -223,7 +224,7 @@ function MapIconButton(props: IMapIconButtonProps) {
             `
               position:absolute;
               top:0;
-              ${isRTL ? `left: 0;` : `right: 0;`}
+              ${isRtl ? `left: 0;` : `right: 0;`}
               ${isExpanded && `z-index:10;`}
             `
           }

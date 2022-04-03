@@ -29,7 +29,6 @@ import React from "react";
 import styled, { useTheme } from "styled-components";
 const Box: any = require("./Box").default;
 import { GLYPHS, StyledIcon } from "./Icon";
-import i18next from "i18next";
 
 const StyledSelect = styled.select<SelectProps>`
   -moz-appearance: none;
@@ -63,14 +62,16 @@ const StyledSelect = styled.select<SelectProps>`
 const ArrowPositioning = styled.div`
   ${props => props.theme.verticalAlign("absolute")}
   right: 10px;
-  ${i18next.dir() === "rtl" && { right: "unset", left: "10px" }}
+  [dir="rtl"] & {
+    left: 10px;
+    right: unset;
+  }
   // Stops presentational icon preventing select activation via mouse
   pointer-events: none;
 `;
 
 const LeftIconPositioning = styled.div`
   ${props => props.theme.verticalAlign("absolute")}
-
   // Stops presentational icon preventing select activation via mouse
   pointer-events: none;
 `;

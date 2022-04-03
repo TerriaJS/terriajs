@@ -88,8 +88,8 @@ export const TourExplanation = ({
   isLastTourPoint,
   children
 }) => {
-  const { t } = useTranslation();
-  const isRTL = i18next.dir() === "rtl";
+  const { i18n, t } = useTranslation();
+  const isRtl = i18n.dir() === "rtl";
   const theme = useTheme();
   if (!active) {
     // Tour explanation requires the various positioning even if only just
@@ -99,42 +99,45 @@ export const TourExplanation = ({
       <Box
         position="absolute"
         style={
-          (!isRTL && {
-            zIndex: TourExplanationBoxZIndex - 1,
-            top: topStyle,
-            left: leftStyle
-          }) ||
-          (isRTL && {
-            zIndex: TourExplanationBoxZIndex - 1,
-            top: topStyle,
-            right: rightStyle
-          })
+          isRtl
+            ? {
+                zIndex: TourExplanationBoxZIndex - 1,
+                top: topStyle,
+                right: rightStyle
+              }
+            : {
+                zIndex: TourExplanationBoxZIndex - 1,
+                top: topStyle,
+                left: leftStyle
+              }
         }
       >
         <Box
           position="absolute"
           style={
-            (!isRTL && {
-              top: `${caretOffsetTop}px`,
-              left: `${caretOffsetLeft}px`
-            }) ||
-            (isRTL && {
-              top: `${caretOffsetTop}px`,
-              right: `${caretOffsetRight}px`
-            })
+            isRtl
+              ? {
+                  top: `${caretOffsetTop}px`,
+                  right: `${caretOffsetRight}px`
+                }
+              : {
+                  top: `${caretOffsetTop}px`,
+                  left: `${caretOffsetLeft}px`
+                }
           }
         >
           <TourIndicator
             onClick={onTourIndicatorClick}
             style={
-              (!isRTL && {
-                top: `${indicatorOffsetTop}px`,
-                left: `${indicatorOffsetLeft}px`
-              }) ||
-              (isRTL && {
-                top: `${indicatorOffsetTop}px`,
-                right: `${indicatorOffsetRight}px`
-              })
+              isRtl
+                ? {
+                    top: `${indicatorOffsetTop}px`,
+                    right: `${indicatorOffsetRight}px`
+                  }
+                : {
+                    top: `${indicatorOffsetTop}px`,
+                    left: `${indicatorOffsetLeft}px`
+                  }
             }
           />
         </Box>
@@ -146,33 +149,35 @@ export const TourExplanation = ({
       paddedRatio={3}
       column
       style={
-        (!isRTL && {
-          top: topStyle,
-          left: leftStyle
-        }) ||
-        (isRTL && {
-          top: topStyle,
-          right: rightStyle
-        })
+        isRtl
+          ? {
+              top: topStyle,
+              right: rightStyle
+            }
+          : {
+              top: topStyle,
+              left: leftStyle
+            }
       }
     >
       <CloseButton
         color={theme.darkWithOverlay}
-        topRight={!isRTL}
-        topLeft={isRTL}
+        topRight={!isRtl}
+        topLeft={isRtl}
         onClick={() => onSkip?.()}
       />
       <Spacing bottom={2} />
       <Caret
         style={
-          (!isRTL && {
-            top: `${caretOffsetTop}px`,
-            left: `${caretOffsetLeft}px`
-          }) ||
-          (isRTL && {
-            top: `${caretOffsetTop}px`,
-            right: `${caretOffsetRight}px`
-          })
+          isRtl
+            ? {
+                top: `${caretOffsetTop}px`,
+                right: `${caretOffsetRight}px`
+              }
+            : {
+                top: `${caretOffsetTop}px`,
+                left: `${caretOffsetLeft}px`
+              }
         }
       />
       <Text light medium textDarker>
@@ -329,7 +334,7 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
 
 export const TourPreface = ({ viewState }) => {
   const { t } = useTranslation();
-  const isRTL = viewState.isRTL;
+  const isRtl = viewState.isRtl;
   const theme = useTheme();
   return (
     <>
@@ -344,21 +349,22 @@ export const TourPreface = ({ viewState }) => {
         paddedRatio={4}
         column
         style={
-          (!isRTL && {
-            right: 25,
-            bottom: 45
-          }) ||
-          (isRTL && {
-            left: 25,
-            bottom: 45
-          })
+          isRtl
+            ? {
+                left: 25,
+                bottom: 45
+              }
+            : {
+                right: 25,
+                bottom: 45
+              }
         }
       >
         <CloseButton
           color={theme.darkWithOverlay}
           // color={"green"}
-          topRight={!isRTL}
-          topLeft={isRTL}
+          topRight={!isRtl}
+          topLeft={isRtl}
           onClick={() => viewState.closeTour()}
         />
         <Spacing bottom={2} />
