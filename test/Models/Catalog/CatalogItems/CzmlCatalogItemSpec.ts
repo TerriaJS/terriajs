@@ -100,7 +100,7 @@ describe("CzmlCatalogItem", function() {
     });
 
     it("sets stopTime", function() {
-      expect(czml.stopTime).toBe("2012-08-04T17:04:54.9962196Z");
+      expect(czml.stopTime).toBe("2012-08-04T17:04:54.996219574019051Z");
     });
 
     it("sets multiplier", function() {
