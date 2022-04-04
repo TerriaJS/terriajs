@@ -1,4 +1,4 @@
-import { action, computed } from "mobx";
+import { action, computed, runInAction } from "mobx";
 import clone from "terriajs-cesium/Source/Core/clone";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import AsyncLoader from "../Core/AsyncLoader";
@@ -9,10 +9,11 @@ import { isJsonNumber, isJsonString, JsonObject } from "../Core/Json";
 import Result from "../Core/Result";
 import Group from "../Models/Catalog/Group";
 import CommonStrata from "../Models/Definition/CommonStrata";
-import hasTraits from "../Models/Definition/hasTraits";
+import hasTraits, { HasTrait } from "../Models/Definition/hasTraits";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import ModelReference from "../Traits/ModelReference";
 import GroupTraits from "../Traits/TraitsClasses/GroupTraits";
+import { ItemPropertiesTraits } from "../Traits/TraitsClasses/ItemPropertiesTraits";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
 
 const naturalSort = require("javascript-natural-sort");
@@ -184,45 +185,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
     @action
     addItemPropertiesToMembers(): void {
       this.memberModels.forEach((model: BaseModel) => {
-        // Set itemProperties (for non GroupMixin members)
-        if (!GroupMixin.isMixedInto(model)) {
-          applyItemProperties(model, this.itemProperties);
-        }
-
-        // Set itemPropertiesByType
-        applyItemProperties(
-          model,
-          this.itemPropertiesByType.find(
-            itemProps => itemProps.type && itemProps.type === model.type
-          )?.itemProperties
-        );
-
-        // Set itemPropertiesById
-        applyItemProperties(
-          model,
-          this.itemPropertiesById.find(
-            itemProps => itemProps.id && itemProps.id === model.uniqueId
-          )?.itemProperties
-        );
-
-        // If member is a Group -> copy over itemProperties to underride stratum
-        if (GroupMixin.isMixedInto(model)) {
-          model.setTrait(
-            CommonStrata.underride,
-            "itemProperties",
-            this.itemProperties
-          );
-          model.setTrait(
-            CommonStrata.underride,
-            "itemPropertiesByType",
-            this.traits.itemPropertiesByType.toJson(this.itemPropertiesByType)
-          );
-          model.setTrait(
-            CommonStrata.underride,
-            "itemPropertiesById",
-            this.traits.itemPropertiesById.toJson(this.itemPropertiesById)
-          );
-        }
+        applyItemProperties(this, model);
       });
     }
 
@@ -397,9 +360,7 @@ namespace GroupMixin {
 
 export default GroupMixin;
 
-/** Applies itemProperties object to a model - this will set traits in override stratum
- */
-export function applyItemProperties(
+function setItemPropertyTraits(
   model: BaseModel,
   itemProperties: JsonObject | undefined
 ) {
@@ -407,4 +368,61 @@ export function applyItemProperties(
   Object.keys(itemProperties).map((k: any) =>
     model.setTrait(CommonStrata.override, k, itemProperties[k])
   );
+}
+
+/** Applies itemProperties object to a model - this will set traits in override stratum.
+ * Also copy ItemPropertiesTraits to target if it supports them
+ */
+
+export function applyItemProperties(
+  model: HasTrait<ItemPropertiesTraits, "itemProperties"> &
+    HasTrait<ItemPropertiesTraits, "itemPropertiesByType"> &
+    HasTrait<ItemPropertiesTraits, "itemPropertiesByIds">,
+  target: BaseModel
+) {
+  runInAction(() => {
+    if (!target.uniqueId) return;
+
+    // Apply itemProperties to non GroupMixin targets
+    if (!GroupMixin.isMixedInto(target))
+      setItemPropertyTraits(target, model.itemProperties);
+
+    // Apply itemPropertiesByType
+    setItemPropertyTraits(
+      target,
+      model.itemPropertiesByType.find(
+        itemProps => itemProps.type && itemProps.type === target.type
+      )?.itemProperties
+    );
+
+    // Apply itemPropertiesByIds
+    model.itemPropertiesByIds.forEach(itemPropsById => {
+      if (itemPropsById.ids.includes(target.uniqueId!)) {
+        setItemPropertyTraits(target, itemPropsById.itemProperties);
+      }
+    });
+
+    // Copy over ItemPropertiesTraits from model, if target has them
+    // For example GroupMixin and ReferenceMixin
+    if (hasTraits(target, ItemPropertiesTraits, "itemProperties"))
+      target.setTrait(
+        CommonStrata.underride,
+        "itemProperties",
+        model.itemProperties
+      );
+
+    if (hasTraits(target, ItemPropertiesTraits, "itemPropertiesByType"))
+      target.setTrait(
+        CommonStrata.underride,
+        "itemPropertiesByType",
+        model.itemPropertiesByType
+      );
+
+    if (hasTraits(target, ItemPropertiesTraits, "itemPropertiesByIds"))
+      target.setTrait(
+        CommonStrata.underride,
+        "itemPropertiesByIds",
+        model.itemPropertiesByIds
+      );
+  });
 }

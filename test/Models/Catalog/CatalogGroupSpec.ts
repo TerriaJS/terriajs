@@ -4,10 +4,10 @@ import GeoJsonCatalogItem from "../../../lib/Models/Catalog/CatalogItems/GeoJson
 import StubCatalogItem from "../../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
 import CatalogMemberFactory from "../../../lib/Models/Catalog/CatalogMemberFactory";
 import { getUniqueStubName } from "../../../lib/Models/Catalog/createStubCatalogItem";
+import WebMapServiceCatalogItem from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import upsertModelFromJson from "../../../lib/Models/Definition/upsertModelFromJson";
 import Terria from "../../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 
 describe("CatalogGroup", function() {
   let terria: Terria, json: any, catalogGroup: CatalogGroup;
@@ -304,7 +304,7 @@ describe("CatalogGroup", function() {
     ).toEqual(["AC", "ab", "2", "10", "1", "aCC"]);
   });
 
-  it("supports itemProperties, itemPropertiesByType and itemPropertiesById", async function() {
+  it("supports itemProperties, itemPropertiesByType and itemPropertiesByIds", async function() {
     json = {
       type: "group",
       id: "grandmama",
@@ -317,9 +317,12 @@ describe("CatalogGroup", function() {
           itemProperties: { url: "some geojson url (by type)" }
         }
       ],
-      itemPropertiesById: [
-        { id: "wms-1", itemProperties: { url: "some WMS url" } },
-        { id: "geojson-1", itemProperties: { url: "some geojson url (by ID)" } }
+      itemPropertiesByIds: [
+        { ids: ["wms-1"], itemProperties: { url: "some WMS url" } },
+        {
+          ids: ["geojson-1"],
+          itemProperties: { url: "some geojson url (by ID)" }
+        }
       ],
       members: [
         {

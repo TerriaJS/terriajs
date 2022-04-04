@@ -60,7 +60,7 @@ These should only be used in Trait definitions.
 
 Some example usages of `underride`
 
-- Copying `itemPropertiesById`, `itemPropertiesByType`, `itemProperties`, to nested groups or nested references - that is, when a group or reference is loaded, if there are nested groups or nested reference - they will get the parent `itemProperties*` set in their `underride` stratum
+- Copying `itemPropertiesByIds`, `itemPropertiesByType`, `itemProperties`, to nested groups or nested references - that is, when a group or reference is loaded, if there are nested groups or nested reference - they will get the parent `itemProperties*` set in their `underride` stratum
 - Setting `isExperiencingIssues = true` for models which have configuration issues
 
 ### Definition `definition`

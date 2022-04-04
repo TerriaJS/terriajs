@@ -1,6 +1,7 @@
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
+import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import ModelTraits from "../ModelTraits";
 
@@ -22,13 +23,12 @@ export class ItemPropertiesByTypeTraits extends ModelTraits {
 }
 
 export class ItemPropertiesByIdTraits extends ModelTraits {
-  @primitiveTrait({
-    name: "ID of model",
-    description:
-      "The ID of model to apply `itemProperties` to. This must be defined.",
+  @primitiveArrayTrait({
+    name: "IDs of models",
+    description: "The IDs of models to apply `itemProperties` to.",
     type: "string"
   })
-  id?: string;
+  ids?: string[] = [];
 
   @anyTrait({
     name: "Item Properties",
@@ -42,8 +42,8 @@ export class ItemPropertiesTraits extends ModelTraits {
   @anyTrait({
     name: "Item Properties",
     description:
-      "Sets traits on group member items (note - will **not** set traits to sub-groups). This applies to all nested group members (eg members in sub-groups). Also see `itemPropertiesByType` and `itemPropertiesById`.\n\n" +
-      "Item properties will be set in the following order (highest to lowest priority) `itemPropertiesById`, `itemPropertiesByType`, `itemProperties`."
+      "Sets traits on group member items (note - will **not** set traits to sub-groups). This applies to all nested group members (eg members in sub-groups). Also see `itemPropertiesByType` and `itemPropertiesByIds`.\n\n" +
+      "Item properties will be set in the following order (highest to lowest priority) `itemPropertiesByIds`, `itemPropertiesByType`, `itemProperties`."
   })
   itemProperties?: JsonObject;
 
@@ -51,7 +51,7 @@ export class ItemPropertiesTraits extends ModelTraits {
     name: "Item properties by type",
     description:
       "Sets traits on group member items by model `type` (eg `csv` or `geojson`). This applies to all nested group members (eg members in sub-groups). Only one `itemProperties` can be specified per `type`.\n\n" +
-      "Item properties will be set in the following order (highest to lowest priority) `itemPropertiesById`, `itemPropertiesByType`, `itemProperties`.",
+      "Item properties will be set in the following order (highest to lowest priority) `itemPropertiesByIds`, `itemPropertiesByType`, `itemProperties`.",
     type: ItemPropertiesByTypeTraits,
     idProperty: "type"
   })
@@ -61,9 +61,9 @@ export class ItemPropertiesTraits extends ModelTraits {
     name: "Item properties by type",
     description:
       "Sets traits on group member items by model `ID`. This applies to all nested group members (eg members in sub-groups). Only one `itemProperties` can be specified per `id`.\n\n" +
-      "Item properties will be set in the following order (highest to lowest priority) `itemPropertiesById`, `itemPropertiesByType`, `itemProperties`.",
+      "Item properties will be set in the following order (highest to lowest priority) `itemPropertiesByIds`, `itemPropertiesByType`, `itemProperties`.",
     type: ItemPropertiesByIdTraits,
-    idProperty: "id"
+    idProperty: "index"
   })
-  itemPropertiesById: ItemPropertiesByIdTraits[] = [];
+  itemPropertiesByIds: ItemPropertiesByIdTraits[] = [];
 }

@@ -46,7 +46,7 @@ describe("TerriaReference", function() {
     expect(target instanceof WebMapServiceCatalogItem).toBe(true);
   });
 
-  it("supports itemProperties, itemPropertiesByType and itemPropertiesById", async function() {
+  it("supports itemProperties, itemPropertiesByType and itemPropertiesByIds", async function() {
     const ref = new TerriaReference("test", new Terria());
     ref.setTrait(CommonStrata.user, "url", "test/init/wms-v8.json");
     ref.setTrait(CommonStrata.user, "itemProperties", {
@@ -59,15 +59,9 @@ describe("TerriaReference", function() {
         itemProperties: { name: "some group name" }
       }
     ]);
-    ref.setTrait(CommonStrata.user, "itemPropertiesById", [
-      { id: "Chuj4y", itemProperties: { name: "some WMS name (byID)" } }
+    ref.setTrait(CommonStrata.user, "itemPropertiesByIds", [
+      { ids: ["Chuj4y"], itemProperties: { name: "some WMS name (byID)" } }
     ]);
-
-    console.log(ref);
-
-    console.log(ref.itemProperties);
-    console.log(ref.itemPropertiesByType);
-    console.log(ref.itemPropertiesById);
 
     await ref.loadReference();
 
@@ -75,10 +69,6 @@ describe("TerriaReference", function() {
     expect(target).toBeDefined();
     expect(target instanceof CatalogGroup).toBe(true);
     expect(target.name).toBe("some group name");
-
-    console.log(target.itemProperties);
-    console.log(target.itemPropertiesByType);
-    console.log(target.itemPropertiesById);
 
     await target.loadMembers();
 

@@ -21,10 +21,10 @@ Change Log
 * Fixed a bug where Cesium3DTilePointFeature info is not shown when being clicked.
 * Added optional `onDrawingComplete` callback to `UserDrawing` to receive drawn points or rectangle when the drawing is complete.
 * Fixed a bug in `BoxDrawing` where the box can be below ground after initialization even when setting `keepBoxAboveGround` to true.
-* Add `itemProperties`, `itemPropertiesByType` and `itemPropertiesById` to `GroupTraits` and `ReferenceTraits`.
+* Add `itemProperties`, `itemPropertiesByType` and `itemPropertiesByIds` to `GroupTraits` and `ReferenceTraits`.
   * Properties set `override` strata
-  * Item properties will be set in the following order (highest to lowest priority) `itemPropertiesById`, `itemPropertiesByType`, `itemProperties`.
-  * If a parent group has `itemProperties`, `itemPropertiesByType` or `itemPropertiesById` - then child groups will have these values copied to `underride` when the parent group is loaded
+  * Item properties will be set in the following order (highest to lowest priority) `itemPropertiesByIds`, `itemPropertiesByType`, `itemProperties`.
+  * If a parent group has `itemProperties`, `itemPropertiesByType` or `itemPropertiesByIds` - then child groups will have these values copied to `underride` when the parent group is loaded
   * Similarly with references.
 * Fix `viewCatalogMember` bug - where `_previewItem` was being set too late.
 * Improve error message in `DataPreview` for references.

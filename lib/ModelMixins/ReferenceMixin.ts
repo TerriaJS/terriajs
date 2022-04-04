@@ -3,11 +3,10 @@ import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import Result from "../Core/Result";
-import CommonStrata from "../Models/Definition/CommonStrata";
 import Model, { BaseModel, ModelInterface } from "../Models/Definition/Model";
 import ReferenceTraits from "../Traits/TraitsClasses/ReferenceTraits";
 import { getName } from "./CatalogMemberMixin";
-import GroupMixin, { applyItemProperties } from "./GroupMixin";
+import { applyItemProperties } from "./GroupMixin";
 
 interface ReferenceInterface extends ModelInterface<ReferenceTraits> {
   readonly isLoadingReference: boolean;
@@ -106,69 +105,9 @@ function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
         `Failed to load reference \`${getName(this)}\``
       );
 
-      runInAction(() => {
-        if (!result.error && this.target) {
-          // Set itemProperties (for non GroupMixin members)
-          if (!GroupMixin.isMixedInto(this.target)) {
-            applyItemProperties(this.target, this.itemProperties);
-          }
-
-          // Set itemPropertiesByType
-          applyItemProperties(
-            this.target,
-            this.itemPropertiesByType.find(
-              itemProps =>
-                itemProps.type && itemProps.type === this.target!.type
-            )?.itemProperties
-          );
-
-          // Set itemPropertiesById
-          applyItemProperties(
-            this.target,
-            this.itemPropertiesById.find(
-              itemProps =>
-                itemProps.id && itemProps.id === this.target!.uniqueId
-            )?.itemProperties
-          );
-        }
-
-        // If member is a Reference -> copy over itemProperties to underride stratum
-        if (ReferenceMixin.isMixedInto(this.target)) {
-          this.target.setTrait(
-            CommonStrata.underride,
-            "itemProperties",
-            this.itemProperties
-          );
-          this.target.setTrait(
-            CommonStrata.underride,
-            "itemPropertiesByType",
-            this.traits.itemPropertiesByType.toJson(this.itemPropertiesByType)
-          );
-          this.target.setTrait(
-            CommonStrata.underride,
-            "itemPropertiesById",
-            this.traits.itemPropertiesById.toJson(this.itemPropertiesById)
-          );
-        }
-        // Duplication is needed here due to TS 3* issues :(
-        else if (GroupMixin.isMixedInto(this.target)) {
-          this.target.setTrait(
-            CommonStrata.underride,
-            "itemProperties",
-            this.itemProperties
-          );
-          this.target.setTrait(
-            CommonStrata.underride,
-            "itemPropertiesByType",
-            this.traits.itemPropertiesByType.toJson(this.itemPropertiesByType)
-          );
-          this.target.setTrait(
-            CommonStrata.underride,
-            "itemPropertiesById",
-            this.traits.itemPropertiesById.toJson(this.itemPropertiesById)
-          );
-        }
-      });
+      if (!result.error && this.target) {
+        applyItemProperties(this, this.target);
+      }
 
       return result;
     }
