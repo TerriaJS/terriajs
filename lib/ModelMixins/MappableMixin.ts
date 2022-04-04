@@ -10,7 +10,6 @@ import Result from "../Core/Result";
 import Model from "../Models/Definition/Model";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
-import TableMixin from "./TableMixin";
 
 // Unfortunately Cesium does not declare a single interface that represents a primitive,
 // but here is what primitives have in common:
@@ -26,7 +25,6 @@ export type MapItem =
   | AbstractPrimitive
   | TerrainProvider;
 
-// Shouldn't this be a class?
 export interface ImageryParts {
   alpha: number;
   clippingRectangle: Rectangle | undefined;

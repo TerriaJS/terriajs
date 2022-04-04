@@ -1,9 +1,10 @@
 import { ReactChild } from "react";
+import { isComponentOfType } from "react-shallow-testutils";
 import ChartableMixin from "../../../../lib/ModelMixins/ChartableMixin";
-import CreateModel from "../../../../lib/Models/Definition/CreateModel";
-import Feature from "../../../../lib/Models/Feature";
-import { BaseModel } from "../../../../lib/Models/Definition/Model";
 import StubCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
+import CreateModel from "../../../../lib/Models/Definition/CreateModel";
+import { BaseModel } from "../../../../lib/Models/Definition/Model";
+import Feature from "../../../../lib/Models/Feature";
 import Terria from "../../../../lib/Models/Terria";
 import ChartExpandAndDownloadButtons from "../../../../lib/ReactViews/Custom/Chart/ChartExpandAndDownloadButtons";
 import Chart from "../../../../lib/ReactViews/Custom/Chart/FeatureInfoPanelChart";
@@ -14,12 +15,9 @@ import {
   DomElement,
   ProcessNodeContext
 } from "../../../../lib/ReactViews/Custom/CustomComponent";
-import UrlTraits from "../../../../lib/Traits/TraitsClasses/UrlTraits";
 import mixTraits from "../../../../lib/Traits/mixTraits";
 import MappableTraits from "../../../../lib/Traits/TraitsClasses/MappableTraits";
-
-const isComponentOfType: any = require("react-shallow-testutils")
-  .isComponentOfType;
+import UrlTraits from "../../../../lib/Traits/TraitsClasses/UrlTraits";
 
 describe("ChartCustomComponent", function() {
   let terria: Terria;

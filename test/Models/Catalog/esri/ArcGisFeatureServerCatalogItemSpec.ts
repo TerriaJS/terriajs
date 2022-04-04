@@ -38,8 +38,14 @@ describe("ArcGisFeatureServerCatalogItem", function() {
 
   const featureServerUrlStyleLines =
     "http://example.com/arcgis/rest/services/styles/FeatureServer/0";
+
+  const featureServerUrlMulti =
+    "http://example.com/arcgis/rest/services/Water_Network_Multi/FeatureServer/2";
+
   let terria: Terria;
   let item: ArcGisFeatureServerCatalogItem;
+
+  let xhrSpy: jasmine.Spy;
 
   beforeEach(function() {
     terria = new Terria({
@@ -47,34 +53,42 @@ describe("ArcGisFeatureServerCatalogItem", function() {
     });
     item = new ArcGisFeatureServerCatalogItem("test", terria);
 
+    let multiCallCount = 0;
+
     const realLoadWithXhr = loadWithXhr.load;
     // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
-    spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
+    // NOTE: When writing tests for this catalog item, you will always need to specify a `maxFeatures` trait or ensure
+    // that once all feature data has been requested, the mock server below returns 0 features.
+    xhrSpy = spyOn(loadWithXhr, "load").and.callFake((...args: any[]) => {
       let url = args[0];
-      if (url.match("Water_Network/FeatureServer")) {
-        url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
-        url = url.replace(
-          /FeatureServer\/query\?f=json&layerDefs=%7B2%3A%22.*%22%7D$/i,
-          "layerDefs.json"
-        );
+      const originalUrl = url;
+      url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
+      url = url.replace(
+        /FeatureServer\/[0-9]+\/query\?f=json.*$/i,
+        "layer.json"
+      );
+
+      if (originalUrl.match("Water_Network/FeatureServer")) {
         url = url.replace(/FeatureServer\/2\/?\?.*/i, "2.json");
         args[0] = "test/ArcGisFeatureServer/Water_Network/" + url;
-      } else if (url.match("Parks/FeatureServer")) {
-        url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
-        url = url.replace(
-          /FeatureServer\/query\?f=json&layerDefs=%7B3%3A%22.*%22%7D$/i,
-          "layerDefs.json"
-        );
+      } else if (originalUrl.match("Parks/FeatureServer")) {
         url = url.replace(/FeatureServer\/3\/?\?.*/i, "3.json");
         args[0] = "test/ArcGisFeatureServer/Parks/" + url;
-      } else if (url.match("styles/FeatureServer")) {
-        url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
-        url = url.replace(
-          /FeatureServer\/query\?f=json&layerDefs=%7B0%3A%22.*%22%7D$/i,
-          "layerDefs.json"
-        );
+      } else if (originalUrl.match("styles/FeatureServer")) {
         url = url.replace(/FeatureServer\/0\/?\?.*/i, "lines.json");
         args[0] = "test/ArcGisFeatureServer/styles/" + url;
+      } else if (originalUrl.match("Water_Network_Multi/FeatureServer")) {
+        // We're getting this feature service in multiple requests, so we need to return different data on subsequent
+        // calls
+        console.log("multicall count", multiCallCount, originalUrl);
+        if (url.includes("layer")) {
+          multiCallCount++;
+        }
+        if (url.includes("layer") && multiCallCount > 1) {
+          url = url.replace("layer.json", "layerB.json");
+        }
+        url = url.replace(/FeatureServer\/2\/?\?.*/i, "2.json");
+        args[0] = "test/ArcGisFeatureServer/Water_Network_Multi/" + url;
       }
 
       return realLoadWithXhr(...args);
@@ -86,10 +100,6 @@ describe("ArcGisFeatureServerCatalogItem", function() {
     expect(item.typeName).toBe(
       i18next.t("models.arcGisFeatureServerCatalogItem.name")
     );
-  });
-
-  it("supports zooming to extent", function() {
-    expect(item.disableZoomTo).toBeFalsy();
   });
 
   it("supports show info", function() {
@@ -112,6 +122,10 @@ describe("ArcGisFeatureServerCatalogItem", function() {
         expect(item.rectangle.east).toEqual(179.999987937519);
         expect(item.rectangle.north).toEqual(81.29054454173075);
       }
+    });
+
+    it("supports zooming to extent", async function() {
+      expect(item.disableZoomTo).toBeFalsy();
     });
 
     it("defines info", function() {
@@ -137,21 +151,39 @@ describe("ArcGisFeatureServerCatalogItem", function() {
     it("properly loads a single layer", async function() {
       runInAction(() => {
         item.setTrait(CommonStrata.definition, "url", featureServerUrl);
+        item.setTrait(CommonStrata.definition, "maxFeatures", 20);
       });
 
       await item.loadMapItems();
 
-      expect(item.geoJsonItem).toBeDefined();
-      if (isDefined(item.geoJsonItem)) {
-        const geoJsonData = item.geoJsonItem.geoJsonData;
-        expect(geoJsonData).toBeDefined();
-        if (isDefined(geoJsonData)) {
-          expect(geoJsonData.type).toEqual("FeatureCollection");
+      expect(item.mapItems.length).toEqual(1);
+      const dataSource = item.mapItems[0];
+      expect(dataSource instanceof GeoJsonDataSource).toBeTruthy();
+      expect((dataSource as GeoJsonDataSource).entities.values.length).toEqual(
+        13
+      );
 
-          const features = <JsonArray>geoJsonData.features;
-          expect(features.length).toEqual(13);
-        }
-      }
+      // 1 call for metadata, and 1 call for features
+      expect(xhrSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it("properly loads a single layer with multiple requests", async function() {
+      runInAction(() => {
+        item.setTrait(CommonStrata.definition, "url", featureServerUrlMulti);
+        item.setTrait(CommonStrata.definition, "featuresPerRequest", 10);
+      });
+
+      await item.loadMapItems();
+
+      expect(item.mapItems.length).toEqual(1);
+      const dataSource = item.mapItems[0];
+      expect(dataSource instanceof GeoJsonDataSource).toBeTruthy();
+      expect((dataSource as GeoJsonDataSource).entities.values.length).toEqual(
+        13
+      );
+
+      // 1 call for metadata, and 2 calls for features
+      expect(xhrSpy).toHaveBeenCalledTimes(3);
     });
   });
 
@@ -159,6 +191,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
     it("correctly uses symbol.outline.color to style polyline.", async function() {
       runInAction(() => {
         item.setTrait(CommonStrata.definition, "url", featureServerUrl2);
+        item.setTrait(CommonStrata.definition, "maxFeatures", 20);
       });
 
       await item.loadMetadata();
@@ -237,19 +270,16 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           "url",
           featureServerUrlStyleLines
         );
+        item.setTrait(CommonStrata.definition, "maxFeatures", 20);
       });
       await item.loadMapItems();
 
-      expect(item.geoJsonItem).toBeDefined();
-      if (isDefined(item.geoJsonItem)) {
-        const geoJsonData = item.geoJsonItem.geoJsonData;
-        expect(geoJsonData).toBeDefined();
-        if (isDefined(geoJsonData)) {
-          expect(geoJsonData.type).toEqual("FeatureCollection");
-          const features = <JsonArray>geoJsonData.features;
-          expect(features.length).toEqual(13);
-        }
-      }
+      expect(item.mapItems.length).toEqual(1);
+      const dataSource = item.mapItems[0];
+      expect(dataSource instanceof GeoJsonDataSource).toBeTruthy();
+      expect((dataSource as GeoJsonDataSource).entities.values.length).toEqual(
+        13
+      );
     });
 
     it("properly styles features", async function() {
@@ -259,10 +289,10 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           "url",
           featureServerUrlStyleLines
         );
+        item.setTrait(CommonStrata.definition, "maxFeatures", 20);
       });
       await item.loadMapItems();
 
-      expect(item.geoJsonItem).toBeDefined();
       expect(item.mapItems).toBeDefined();
       expect(item.mapItems.length).toEqual(1);
 

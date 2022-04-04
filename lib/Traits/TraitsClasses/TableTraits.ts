@@ -1,15 +1,13 @@
-import CatalogMemberTraits from "./CatalogMemberTraits";
-import ChartPointOnMapTraits from "./ChartPointOnMapTraits";
-import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
-import ExportableTraits from "./ExportableTraits";
-import LayerOrderingTraits from "./LayerOrderingTraits";
-import MappableTraits from "./MappableTraits";
-import mixTraits from "../mixTraits";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
-import RasterLayerTraits from "./RasterLayerTraits";
+import mixTraits from "../mixTraits";
+import ChartPointOnMapTraits from "./ChartPointOnMapTraits";
+import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
+import ExportableTraits from "./ExportableTraits";
+import LayerOrderingTraits from "./LayerOrderingTraits";
+import OpacityTraits from "./OpacityTraits";
 import SplitterTraits from "./SplitterTraits";
 import TableColumnTraits from "./TableColumnTraits";
 import TableStyleTraits from "./TableStyleTraits";
@@ -18,23 +16,22 @@ export default class TableTraits extends mixTraits(
   DiscretelyTimeVaryingTraits,
   ExportableTraits,
   LayerOrderingTraits,
-  CatalogMemberTraits,
-  MappableTraits,
-  RasterLayerTraits,
-  ChartPointOnMapTraits,
-  CatalogMemberTraits
+  OpacityTraits,
+  SplitterTraits,
+  ChartPointOnMapTraits
 ) {
+  // Not implemented in v8
   @primitiveTrait({
     name: "Show Warning for Unmatched Regions",
     description:
       "True to show a warning when some of the region IDs in the CSV file could not be matched to a region. False to silently ignore unmatched regions.",
     type: "boolean"
   })
-  showUnmatchedRegionsWarning: boolean = true;
+  showUnmatchedRegionsWarning: boolean | undefined = true;
 
   @objectArrayTrait({
     name: "Columns",
-    description: "Options for individual columns in the CSV.",
+    description: "Options for individual columns/variables.",
     type: TableColumnTraits,
     idProperty: "name"
   })
@@ -42,7 +39,7 @@ export default class TableTraits extends mixTraits(
 
   @objectTrait({
     name: "Default Column",
-    description: "The default settings to use for all columns",
+    description: "The default settings to use for all columns/variables",
     type: TableColumnTraits
   })
   defaultColumn?: TableColumnTraits;
@@ -59,7 +56,7 @@ export default class TableTraits extends mixTraits(
   @objectTrait({
     name: "Default Style",
     description:
-      "The default style to apply when visualizing any column in this CSV.",
+      "The default style to apply when visualizing any column/variable.",
     type: TableStyleTraits
   })
   defaultStyle?: TableStyleTraits;
@@ -74,15 +71,30 @@ export default class TableTraits extends mixTraits(
   @primitiveTrait({
     name: "Enable manual region mapping",
     description:
-      "If enabled, there will be controls to set region column and region type.",
+      "If enabled, there will be controls to set region column/variable and region type.",
     type: "boolean"
   })
-  enableManualRegionMapping?: boolean;
+  enableManualRegionMapping?: boolean | undefined;
+
+  @primitiveTrait({
+    name: "Show disable styling option",
+    description:
+      "If enabled, there will be an option in styleDimension to disable styling.",
+    type: "boolean"
+  })
+  showDisableStyleOption?: boolean | undefined;
+
+  @primitiveTrait({
+    name: "Show disable time",
+    description: "If enabled, there will be an checkbox to disable time.",
+    type: "boolean"
+  })
+  showDisableTimeOption?: boolean | undefined;
 
   @primitiveArrayTrait({
     name: "Column titles",
     description:
-      "An optional array of column titles that override the individual `TableColumnTraits.title` setting.",
+      "An optional array of column/variable titles that override the individual `TableColumnTraits.title` setting.",
     type: "string"
   })
   columnTitles: string[] = [];
@@ -90,7 +102,7 @@ export default class TableTraits extends mixTraits(
   @primitiveArrayTrait({
     name: "Column units",
     description:
-      "An optional array of column units that override the individual `TableColumnTraits.unit` setting.",
+      "An optional array of column/variable units that override the individual `TableColumnTraits.unit` setting.",
     type: "string"
   })
   columnUnits: string[] = [];

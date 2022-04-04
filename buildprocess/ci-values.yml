@@ -38,6 +38,9 @@ terriamap:
             userAgent: TerriaBot (TerriaJS Feedback)
             issuesUrl: https://api.github.com/repos/TerriaJS/demo-feedback/issues
             accessToken: secret
+        singlePageRouting:
+            resolvePathRelativeToWwwroot: "/index.html"
+            resolveUnmatchedPathsWithIndexHtml: true
     clientConfig:
         initializationUrls:
         - simple

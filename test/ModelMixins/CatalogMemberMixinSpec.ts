@@ -1,10 +1,14 @@
-import { runInAction, IReactionDisposer, reaction } from "mobx";
-import Terria from "../../lib/Models/Terria";
+import { IReactionDisposer, reaction, runInAction } from "mobx";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
-import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
-import DimensionTraits, {
+import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
+import {
+  SelectableDimensionEnum,
+  isEnum
+} from "../../lib/Models/SelectableDimensions/SelectableDimensions";
+import Terria from "../../lib/Models/Terria";
+import EnumDimensionTraits, {
   DimensionOptionTraits
 } from "../../lib/Traits/TraitsClasses/DimensionTraits";
 
@@ -132,7 +136,7 @@ describe("CatalogMemberMixin", function() {
       wmsItem.setTrait(CommonStrata.definition, "styles", "init-style");
       wmsItem.setTrait(CommonStrata.definition, "layers", "init-layers");
       wmsItem.setTrait(CommonStrata.user, "modelDimensions", [
-        createStratumInstance(DimensionTraits, {
+        createStratumInstance(EnumDimensionTraits, {
           id: "modelDimensions",
           options: [
             createStratumInstance(DimensionOptionTraits, {
@@ -154,21 +158,29 @@ describe("CatalogMemberMixin", function() {
       expect(wmsItem.styles).toBe("init-style");
       expect(wmsItem.layers).toBe("init-layers");
 
-      const modelDimension = wmsItem.selectableDimensions.find(
+      const result = wmsItem.selectableDimensions.find(
         dim => dim.id === "modelDimensions"
       );
+
+      expect(result).toBeDefined();
+      expect(result?.type === undefined);
+
+      const modelDimension = result;
+
+      if (!modelDimension || !isEnum(modelDimension))
+        throw "Couldn't find modelDimensions";
 
       modelDimension?.setDimensionValue(CommonStrata.user, "styles-test");
 
       expect(wmsItem.styles).toBe("test");
       expect(wmsItem.layers).toBe("init-layers");
 
-      modelDimension?.setDimensionValue(CommonStrata.user, "styles-test2");
+      modelDimension.setDimensionValue(CommonStrata.user, "styles-test2");
 
       expect(wmsItem.styles).toBe("test2");
       expect(wmsItem.layers).toBe("init-layers");
 
-      modelDimension?.setDimensionValue(CommonStrata.user, "layers-test");
+      modelDimension.setDimensionValue(CommonStrata.user, "layers-test");
 
       expect(wmsItem.styles).toBe("test2");
       expect(wmsItem.layers).toBe("test");

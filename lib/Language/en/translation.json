@@ -10,6 +10,12 @@
     "cancel": "Cancel",
     "confirm": "Confirm"
   },
+  "browsers": {
+    "chrome": "Google Chrome",
+    "firefox": "Mozilla Firefox",
+    "edge": "Microsoft Edge",
+    "safari": "Apple Safari"
+  },
   "trainer": {
     "expandTrainer": "Show more step detail",
     "collapseTrainer": "Hide step detail",
@@ -23,9 +29,7 @@
       "close": "Maybe later",
       "start": "Start tour"
     },
-    "end": "End tour",
     "finish": "Finish",
-    "previous": "Previous",
     "locationSearchInput": {
       "content": "## Location search\n\nEnter a locality or address to easily locate a point of interest on the map."
     },
@@ -177,8 +181,7 @@
       "back": "Go back",
       "previousDateTitle": "Previous date",
       "nextDateTitle": "Next date",
-      "dateButtonTitle": "Select a date",
-      "dateOutOfRange": "Currently out of range"
+      "dateButtonTitle": "Select a date"
     }
   },
   "legend": {
@@ -200,9 +203,8 @@
     "generatingUrl": "Generating share URL...",
     "printTitle": "Print Map",
     "printExplanation": "Open a printable version of this map.",
-    "printButton": "Print",
+    "downloadMap": "Download map (png)",
     "printViewButton": "Show Print View",
-    "creatingPrintView": "Creating print view...",
     "btnAdvanced": "Advanced options",
     "embedTitle": "To embed, copy this code to embed this map into an HTML page:",
     "shortenUsingService": "Shorten the share URL using a web service",
@@ -238,7 +240,6 @@
     "btnTitle": "Advanced toolbox"
   },
   "settingPanel": {
-    "none": "(None)",
     "viewerModeLabels": {
       "CesiumTerrain": "3D Terrain",
       "CesiumEllipsoid": "3D Smooth",
@@ -285,7 +286,6 @@
     "email": "Email address (optional)<br/><em>We can't follow up without it!</em>",
     "commentQuestion": "Comment or question",
     "shareWithDevelopers": "Share my map view with {{appName}} developers",
-    "captionText": "This helps us to troubleshoot issues by letting us see what you're seeing",
     "cancel": "Cancel",
     "sending": "Sending...",
     "send": "Send",
@@ -295,11 +295,10 @@
   "helpPanel": {
     "btnText": "Help",
     "menuPaneTitle": "We're here to help",
-    "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)",
+    "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [{{supportEmail}}]({{supportEmail}})",
     "promptMessage": "Find the Tour, how-to videos & other help content here",
     "dismissText": "Got it, thanks!",
-    "takeTour": "Take the tour",
-    "mapUserGuide": "Map user guide"
+    "takeTour": "Take the tour"
   },
   "helpMenu": {
     "btnText": "Help",
@@ -360,24 +359,25 @@
     "gettingStartedTitle": "Getting started",
     "badgeBarLabel": "Scenes",
     "share": "Share",
-    "shareTitle": "share stories",
     "viewStory": "view",
     "view": "View",
     "editStory": "edit",
     "edit": "Edit",
+    "expand": "Expand",
+    "collapse": "Collapse",
     "recaptureStory": "re-capture",
     "recapture": "Recapture",
     "deleteStory": "delete",
     "delete": "Delete",
     "untitledScene": "untitled scene",
     "doesNotExist": "Story does not exist",
-    "message": "<2>This is your story editor</2><1>Create and share interactive stories directly from your map<1><0><0></0>Getting Started </0></1></1>",
     "removeAllStories": "Remove All",
     "removeAllStoriesDialog": "Are you sure you wish to delete {{ count }} scene?",
     "removeAllStoriesDialog_plural": "Are you sure you wish to delete {{ count }} scenes?",
     "removeStoryDialog": "Are you sure you wish to delete '<1>{{storyName}}</1>'?",
     "preview": "preview stories",
     "play": "Play",
+    "playStory": "Story",
     "captureSceneTitle": "capture current scene",
     "captureScene": "Capture Scene",
     "editor": {
@@ -390,9 +390,12 @@
     "locationBtn": "center scene",
     "exitBtn": "exit story",
     "previousBtn": "go to previous scene",
+    "prev": "Prev",
     "untitled": "untitled scene",
     "navBtn": "go to story {{title}}",
     "nextBtn": "go to next scene",
+    "next": "Next",
+    "restart": "Restart",
     "navBtnMobile": "go to story {{title}}",
     "promptHtml1": "<0>You can view and create stories at any time by clicking here.</0>",
     "promptHtml2": "<0><0>INTRODUCING</0><1>Data Stories</1><2>Create and share interactive stories directly from your map.</2></0>",
@@ -502,7 +505,7 @@
     "dataUrl": "Data Links",
     "useLinkBelow": "Use the link below to download the data. See the {{link}} for more information on customising URL query parameters.",
     "downloadInFormat": "Download the currently selected data in {{format}} format",
-    "downloadNotSupported": "Unfortunately your browser does not support the functionality needed to download this data as a file. Please use Chrome, Firefox or Safari to download this data.",
+    "downloadNotSupported": "Unfortunately your browser does not support the functionality needed to download this data as a file. Please use $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), or $t(browsers.safari) to download this data.",
     "useTheLinkToDownload": "Use the link below to download the data directly.",
     "downloadData": "Download Data",
     "dataSourceDetails": "Data Source Details",
@@ -549,6 +552,7 @@
     "searchItemTitle": "Search"
   },
   "dateTime": {
+    "selectorLabel": "Time:",
     "back": "Go back",
     "previous": "Previous time",
     "selectTime": "Select a time",
@@ -623,7 +627,8 @@
     "remove": "Remove",
     "add": "Add",
     "trash": "Remove from catalogue",
-    "removeFromMap": "Remove from map"
+    "removeFromMap": "Remove from map",
+    "preview": "Preview"
   },
   "chart": {
     "sectionLabel": "Charts",
@@ -648,14 +653,10 @@
   "terriaViewer": {
     "slowWebGLAvailableTitle": "Poor WebGL performance",
     "slowWebGLAvailableMessage": "Your web browser reports that it has performance issues displaying {{appName}} in 3D, so you will see a limited, 2D-only experience. For the full 3D experience, please try using a different web browser, upgrading your video drivers, or upgrading your operating system.",
-    "slowWebGLAvailableMessageII": "{{appName}}  works best with a web browser that supports {{webGL}} including the latest versions of {{chrome}}, {{firefox}}, {{safari}} , and {{internetExplorer}}. Your web browser does not appear to support WebGL, so you will see a limited, 2D-only experience.",
-    "internetExplorer": "Internet Explorer 11",
-    "chrome": "Google Chrome",
-    "firefox": "Mozilla Firefox",
-    "safari": "Apple Safari",
+    "slowWebGLAvailableMessageII": "{{appName}}  works best with a web browser that supports {{webGL}} including the latest versions of $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), and $t(browsers.safari). Your web browser does not appear to support WebGL, so you will see a limited, 2D-only experience.",
     "webGLNotSupportedTitle": "WebGL not supported",
     "webGLNotSupportedOrSlowTitle": "WebGL not supported or too slow",
-    "webGLNotSupportedOrSlowMessage": "Your web browser cannot display the map in 3D, either because it does not support WebGL or because your web browser has reported that WebGL will be extremely slow. Please try a different web browser, such as the latest version of {{chrome}}, {{firefox}}, {{safari}}, {{internetExplorer}}.In some cases, you may need to upgrade your computer's video driver or operating system in order to get the 3D view in {{appName}}."
+    "webGLNotSupportedOrSlowMessage": "Your web browser cannot display the map in 3D, either because it does not support WebGL or because your web browser has reported that WebGL will be extremely slow. Please try a different web browser, such as the latest version of $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), or $t(browsers.safari). In some cases, you may need to upgrade your computer's video driver or operating system in order to get the 3D view in {{appName}}."
   },
   "analytics": {
     "selectLocation": "Select Location",
@@ -682,7 +683,7 @@
     "chartData": "Chart Data",
     "dataUri": {
       "errorTitle": "Browser Does Not Support Data Download",
-      "errorMessage": "Unfortunately Microsoft browsers (including all versions of Internet Explorer and Edge) do not support the data uri functionality needed to download data as a file. To download, copy the following uri into another browser such as Chrome, Firefox or Safari: {{href}}"
+      "errorMessage": "Unfortunately Microsoft browsers (including all versions of Internet Explorer and Edge) do not support the data uri functionality needed to download data as a file. To download, copy the following uri into another browser such as $t(browsers.chrome), $t(browsers.firefox), or $t(browsers.safari): {{href}}"
     },
     "dataType": {
       "auto": "Auto-detect (recommended)",
@@ -707,7 +708,7 @@
       "carto": "Carto",
       "gltf": "GLTF",
       "shp": "Shapefile (zip)",
-      "other": "Other (use conversion service)"
+      "socrata-group": "Socrata Server"
     },
     "printWindow": {
       "errorTitle": "Error printing",
@@ -816,11 +817,7 @@
       "addingDataErrorTitle": "Data could not be added",
       "addingDataErrorMessage": "The specified data could not be added because it is invalid or does not have the expected format.",
       "fileApiNotSupportedTitle": "File API not supported",
-      "fileApiNotSupportedMessage": "Sorry, your web browser does not support the File API, which {{appName}} requires in order to add data from a file on your system.  Please upgrade your web browser.  For the best experience, we recommend the latest version of {{chrome}}, {{firefox}} or {{edge}}.",
-      "internetExplorer": "Internet Explorer 11",
-      "edge": "Microsoft Edge",
-      "chrome": "Google Chrome",
-      "firefox": "Mozilla Firefox"
+      "fileApiNotSupportedMessage": "Sorry, your web browser does not support the File API, which {{appName}} requires in order to add data from a file on your system.  Please upgrade your web browser.  For the best experience, we recommend the latest version of {{chrome}}, {{firefox}} or {{edge}}."
     },
     "arcGisService": {
       "name": "ArcGIS Service Group",
@@ -856,7 +853,7 @@
       "missingUrlMessage": "Could not load the ArcGis FeatureServer endpoint because the catalog item does not have a `url`.",
       "invalidServiceTitle": "Invalid ArcGIS Feature Service layer",
       "invalidServiceMessage": "An error occurred while invoking the ArcGIS Feature Service.  The server's response does not appear to be a valid Feature Service layer.",
-      "reachedMaxFeatureLimit": "Warning: This layer has reached the FeatureService feature limit."
+      "reachedMaxFeatureLimit": "Warning: This layer has reached the FeatureService feature limit ({{maxFeatures}})."
     },
     "arcGisMapServerCatalogGroup": {
       "name": "ArcGIS Map Server Group",
@@ -882,8 +879,9 @@
       "name": "Bing Maps"
     },
     "wcs": {
+      "asyncResultLoadingMetadata": "WCS loading:\n{{name}} service at {{timestamp}}.\n\n*Loading metadata (`DescribeCoverage`)*",
       "asyncResultDescription": "This is the result of exporting data from {{name}} service at {{timestamp}} with the input parameters below.",
-      "asyncPendingDescription": "WCS loading:<br/>{{name}} service at {{timestamp}}.",
+      "asyncPendingDescription": "WCS loading:\n{{name}} service at {{timestamp}}.\n\n*Downloading coverage*",
       "exportFailedTitle": "Data export failed",
       "exportFailedMessage": "The Web Coverage Service failed",
       "exportFailedMessageII": "The Web Coverage Service failed: {{error}}"
@@ -960,13 +958,8 @@
       "unsupportedTypeTitle": "Unknown type",
       "unsupportedTypeMessage": "Could not create unknown model type {{type}}.",
       "unsupportedFileTypeTitle": "Unsupported file type",
-      "unsupportedFileTypeMessage": "This file format is not supported by {{appName}}. Supported file formats include: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>",
-      "unsupportedFileTypeMessageII": "This file format is not supported by {{appName}}. Directly supported file formats include: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>  File formats supported through the online conversion service include: <ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>Possibly other {{linkII}}</li></ul>",
-      "getConfirmationMessage": "This file is not directly supported by {{appName}}.\n\nDo you want to try uploading it to the {{appName}} conversion service? This may work for small, zipped Esri Shapefiles or MapInfo TAB files.",
-      "readyToUpload": "Ready to upload your file to the {{appName}} conversion service?",
+      "unsupportedFileTypeMessage": "This file format is not supported by {{appName}}. Supported file formats include: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li><li>Shapefile (.zip)</li></ul>",
       "upload": "Upload",
-      "cancel": "Cancel",
-      "useConversion": "Use conversion service?",
       "mustHaveType": "Each item must have a type.",
       "compositesError": "Composites cannot include composite items.",
       "convertErrorTitle": "Could not upgrade catalog to V8",
@@ -1031,10 +1024,7 @@
       "unableToLoadItemTitle": "No GeoJSON available",
       "unableToLoadItemMessage": "The GeoJSON catalog item cannot be loaded because it was not configured with a `url`, `geoJsonData`, or `geoJsonString` property.",
       "unsupportedBrowserTitle": "Unsupported web browser",
-      "unsupportedBrowserMessage": "Sorry, your web browser does not support the File API, which {{appName}} requires in order to load this dataset.  Please upgrade your web browser.  For the best experience, we recommend the latest versions of {{chrome}} or {{firefox}} or {{internetExplorer}}.",
-      "internetExplorer": "Internet Explorer 11",
-      "chrome": "Google Chrome",
-      "firefox": "Mozilla Firefox"
+      "unsupportedBrowserMessage": "Sorry, your web browser does not support the File API, which {{appName}} requires in order to load this dataset.  Please upgrade your web browser.  For the best experience, we recommend the latest versions of $t(browsers.chrome) or $t(browsers.firefox) or $t(browsers.edge) or $t(browsers.safari)."
     },
     "shapefile": {
       "name": "Shapefile"
@@ -1145,23 +1135,6 @@
       "noStreamsMessageFeatureInfo": "No streams at this location.",
       "missingSenapsBaseUrl": "Senaps base url not provided. Have you logged in?"
     },
-    "ogr": {
-      "name": "Unknown / Converted to GeoJSON",
-      "dataSourceErrorMessage": "This data source does not have any details available.",
-      "serviceErrorMessage": "This service does not have any details available.",
-      "legacyBrowserTitle": "Legacy browser not supported",
-      "legacyBrowserMessage": "Sorry, your web browser does not support the \"FormData\" type, which is required by the '{{appName}}' conversion service.  We recommend you upgrade to the latest version of {{chrome}}, {{firefox}}, {{safari}} or {{internetExplorer}}.",
-      "internetExplorer": "Internet Explorer 11",
-      "chrome": "Google Chrome",
-      "firefox": "Mozilla Firefox",
-      "safari": "Apple Safari",
-      "unsupportedFileTzpe": "Unsupported file type",
-      "loadError": "The file size is greater than the {{maxConversionSizeMB}} MB limit of the {{appName}} conversion service",
-      "invalidFile": "This may indicate that the file is invalid or that it is not supported by the {{appName}} conversion service.",
-      "errorConvertingToGeoJsonTitle": "Error converting file to GeoJson",
-      "errorConvertingToGeoJsonMessage": "An error occurred while attempting to convert this file to GeoJson. ",
-      "emailUs": "If you would like assistance or further information, please email us at {{email}}"
-    },
     "openStreetMap": {
       "name": "Open Street Map"
     },
@@ -1190,7 +1163,7 @@
       "noDataForDate": "No data for the selected date.",
       "noDataForRegion": "No data for the selected region.",
       "outdatedBrowserTitle": "Outdated Web Browser",
-      "outdatedBrowserMessage": "You are using a very old web browser that cannot display \"region mapped\" datasets such as this one.  Please upgrade to the latest version of Google Chrome, Mozilla Firefox, Microsoft Edge, Microsoft Internet Explorer 11, or Apple Safari as soon as possible.",
+      "outdatedBrowserMessage": "You are using a very old web browser that cannot display \"region mapped\" datasets such as this one.  Please upgrade to the latest version of $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), or $t(browsers.safari) as soon as possible.",
       "invalidServerTypeTitle": "Invalid serverType {{serverType}} in regionMapping.json",
       "invalidServerTypeMessage": "Expected serverType to be \"WMS\" or \"vector\" but got \"{{serverType}}\"",
       "notRecognised": "These region names were {{notRecognisedText}} ",
@@ -1297,8 +1270,11 @@
       "bulkGeocoderErrorMessage": "Unable to map addresses to lat-long coordinates, as an error occurred while retrieving address coordinates. Please check your internet connection or try again later.",
       "legendZFilterLabel": "Extreme values",
       "legendNullLabel": "(No value)",
+      "styleDisabledLabel": "Disable style",
       "zFilterEnabled": "Extreme values hidden (click to show)",
-      "zFilterDisabled": "Extreme values detected (click to hide)"
+      "zFilterDisabled": "Extreme values detected (click to hide)",
+      "timeDimensionEnabled": "Time enabled (click to disable)",
+      "timeDimensionDisabled": "Time disabled (click to enable)"
     },
     "terrainCatalog": {
       "notSupportedErrorTitle": "Not supported in 2D",
@@ -1364,6 +1340,7 @@
       "btnDone": "Done",
       "clickToAddFirstPoint": "Click to add a point",
       "clickToAddAnotherPoint": "Click to add another point",
+      "clickToRedrawRectangle": "Click another point to redraw the rectangle",
       "anotherPoint": "Another Point",
       "userPolygon": "User polygon"
     },
@@ -1503,6 +1480,19 @@
         "both": "Cast and Receive"
       }
     },
+    "clippingBox": {
+      "groupName": "Clipping Box",
+      "clipModel": "Clip model",
+      "showClippingBox": "Show clipping box",
+      "keepBoxAboveGround": "Above ground only",
+      "clipDirection": {
+        "name": "Clip direction",
+        "options": {
+          "inside": "Clip inside the box",
+          "outside": "Clip outside the box"
+        }
+      }
+    },
     "commonModelErrors": {
       "3dTypeIn2dMode": "**Note:** This dataset can not be displayed in the 2D viewer. Switch to one of the 3D map modes."
     },
@@ -1578,5 +1568,45 @@
   },
   "toast": {
     "mapIsZooming": "Loading ideal zoom..."
+  },
+  "printView": {
+    "loading": "Creating print view..."
+  },
+  "compare": {
+    "title": "Compare",
+    "done": "Done",
+    "leftPanel": "Left panel",
+    "rightPanel": "Right panel",
+    "entireMap": {
+      "title": "Entire map",
+      "emptyText": "Add new data to show across the entire map via the dotted menu above."
+    },
+    "entireMapMenu": {
+      "browse": "Browse map data",
+      "sendAllToFront": "Send all to front",
+      "sendAllToBack": "Send all to back",
+      "hideAll": "Hide all"
+    },
+    "info": "Compare spatial datasets from your workbench side-by-side on the map.",
+    "dataset": {
+      "label": "Dataset",
+      "selectOne": "Select one"
+    },
+    "dimensionSelector": {
+      "undefinedLabel": "Not specified"
+    },
+    "dateButton": {
+      "left": "Left",
+      "right": "Right",
+      "select": "Select a date"
+    },
+    "dateLocationFilter": {
+      "filter": "Filter date by location",
+      "loading": "Loading filter...",
+      "cancel": "Cancel",
+      "location": "Now showing available imagery for {{latitude}}, {{longitude}}",
+      "mouseTooltipTitle": "Select location",
+      "mouseTooltipMessage": "Right click to cancel"
+    }
   }
 }

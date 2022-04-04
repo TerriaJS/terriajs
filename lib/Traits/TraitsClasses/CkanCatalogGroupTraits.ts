@@ -5,12 +5,14 @@ import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import CkanSharedTraits from "./CkanSharedTraits";
 import GroupTraits from "./GroupTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 import UrlTraits from "./UrlTraits";
 
 export default class CkanCatalogGroupTraits extends mixTraits(
   GroupTraits,
   UrlTraits,
   CatalogMemberTraits,
+  LegendOwnerTraits,
   CkanSharedTraits
 ) {
   @anyTrait({

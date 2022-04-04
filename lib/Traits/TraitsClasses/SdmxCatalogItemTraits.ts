@@ -1,5 +1,5 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import DimensionTraits from "./DimensionTraits";
+import EnumDimensionTraits from "./DimensionTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import MappableTraits from "./MappableTraits";
@@ -9,8 +9,9 @@ import primitiveTrait from "../Decorators/primitiveTrait";
 import SdmxCommonTraits from "./SdmxCommonTraits";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 
-export class SdmxDimensionTraits extends mixTraits(DimensionTraits) {
+export class SdmxDimensionTraits extends mixTraits(EnumDimensionTraits) {
   @primitiveTrait({
     type: "string",
     name: "Position",
@@ -26,7 +27,8 @@ export default class SdmxCatalogItemTraits extends mixTraits(
   DiscretelyTimeVaryingTraits,
   FeatureInfoTraits,
   TableTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  LegendOwnerTraits
 ) {
   @primitiveTrait({
     type: "string",

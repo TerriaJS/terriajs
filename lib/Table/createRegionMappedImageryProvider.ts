@@ -6,7 +6,7 @@ import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import isDefined from "../Core/isDefined";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
+import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
 import getChartDetailsFn from "./getChartDetailsFn";
 import TableStyle from "./TableStyle";
 
@@ -24,7 +24,7 @@ export default function createRegionMappedImageryProvider(
     return undefined;
   }
 
-  const baseMapContrastColor = "white"; //this.terria.baseMapContrastColor;
+  const baseMapContrastColor = style.tableModel.terria.baseMapContrastColor;
 
   const colorColumn = style.colorColumn;
   const valueFunction =
@@ -69,7 +69,7 @@ export default function createRegionMappedImageryProvider(
 
       return {
         fillStyle: color.toCssColorString(),
-        strokeStyle: baseMapContrastColor,
+        strokeStyle: value !== null ? baseMapContrastColor : "transparent",
         lineWidth: 1,
         lineJoin: "miter"
       };

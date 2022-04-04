@@ -28,7 +28,7 @@ export default class SplitItemReference extends ReferenceMixin(
       return;
     }
 
-    let sourceItem = this.terria.getModelById(
+    let sourceItem = this.terria.getModelByIdOrShareKey(
       BaseModel,
       this.splitSourceItemId
     );

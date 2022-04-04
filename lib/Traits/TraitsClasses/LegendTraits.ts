@@ -117,7 +117,7 @@ export default class LegendTraits extends ModelTraits {
     type: "number",
     name: "Scaling",
     description:
-      "Scaling of the legend. For example, a high DPI legend may have scaling = `0.5`, so it will be scaled doown 50%"
+      "Scaling of the legend. For example, a high DPI legend may have scaling = `0.5`, so it will be scaled down 50%"
   })
   imageScaling?: number = 1;
 
@@ -135,4 +135,12 @@ export default class LegendTraits extends ModelTraits {
     idProperty: "index"
   })
   items?: LegendItemTraits[];
+
+  @primitiveTrait({
+    type: "string",
+    name: "Background color",
+    description:
+      "Apply background color to entire legend. This can be useful if legend is transparent and clashes with Terria colours. This will override `legendBackgroundColor`."
+  })
+  backgroundColor?: string;
 }

@@ -26,7 +26,7 @@ import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import { BaseModel } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import { SelectableDimension } from "../../SelectableDimensions";
+import { SelectableDimension } from "../../SelectableDimensions/SelectableDimensions";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
@@ -104,7 +104,11 @@ class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
         }),
         pointSize: createStratumInstance(TablePointSizeStyleTraits, {
           pointSizeColumn: p.identifier
-        })
+        }),
+        // table style is hidden by default when the table uses only 1 color (https://github.com/TerriaJS/terriajs/blob/bbe8a11ae9bf6c0eb78c52d7b5c9b260d5ddc8cf/lib/Table/TableStyle.ts#L82)
+        // force hidden to false so that the frequency and procedure selector will always be shown
+        // Ideally we should rewrite frequency & procedure selector using selectable dimensions and stop using styles to display them.
+        hidden: false
       });
     });
   }
@@ -592,7 +596,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
       get selectedId(): string | undefined {
         return item.selectedObservableId;
       },
-      setDimensionValue(stratumId: string, observableId: string) {
+      setDimensionValue(stratumId: string, observableId: string | undefined) {
         item.setTrait(stratumId, "selectedObservableId", observableId);
       }
     };

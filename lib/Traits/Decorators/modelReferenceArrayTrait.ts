@@ -80,7 +80,7 @@ export class ModelReferenceArrayTrait extends Trait {
     model: BaseModel,
     stratumName: string,
     jsonValue: any
-  ): Result<ReadonlyArray<ModelReference> | undefined> {
+  ): Result<ReadonlyArray<string> | undefined> {
     // TODO: support removals
 
     if (!Array.isArray(jsonValue)) {

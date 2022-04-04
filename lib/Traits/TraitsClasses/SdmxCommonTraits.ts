@@ -1,11 +1,12 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import DimensionTraits from "./DimensionTraits";
+import EnumDimensionTraits from "./DimensionTraits";
 import GroupTraits from "./GroupTraits";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import UrlTraits from "./UrlTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 
 export class ReplaceStringTraits extends ModelTraits {
   @primitiveTrait({
@@ -43,7 +44,7 @@ export type ModelOverrideType =
  *
  * Then regionTypeReplacements are applied (which can replace regionType with a different regionType - using [{find:string, replace:string}] pattern)
  */
-export class ModelOverrideTraits extends mixTraits(DimensionTraits) {
+export class ModelOverrideTraits extends mixTraits(EnumDimensionTraits) {
   @primitiveTrait({
     type: "string",
     name: "ID",
@@ -85,6 +86,7 @@ export class ModelOverrideTraits extends mixTraits(DimensionTraits) {
 export default class SdmxCommonTraits extends mixTraits(
   UrlTraits,
   CatalogMemberTraits,
+  LegendOwnerTraits,
   GroupTraits
 ) {
   @objectArrayTrait({

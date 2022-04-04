@@ -7,12 +7,11 @@ import PropTypes from "prop-types";
 import React from "react";
 import { Trans, withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
-import printWindow from "../../../../Core/printWindow";
 import Clipboard from "../../../Clipboard";
 import Icon from "../../../../Styled/Icon";
 import Loader from "../../../Loader";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
-import Input from "../../../Styled/Input/Input.jsx";
+import Input from "../../../../Styled/Input";
 import DropdownStyles from "../panel.scss";
 import {
   buildShareLink,
@@ -20,13 +19,14 @@ import {
   canShorten,
   isShareable
 } from "./BuildShareLink";
-import PrintView from "./PrintView";
 import Styles from "./share-panel.scss";
 import StorySharePanel from "./StorySharePanel";
 import {
   Category,
   ShareAction
 } from "../../../../Core/AnalyticEvents/analyticEvents";
+
+import { downloadImg } from "./Print/PrintView";
 
 const SharePanel = observer(
   createReactClass({
@@ -61,8 +61,7 @@ const SharePanel = observer(
           this.props.shortenUrls &&
           this.props.terria.getLocalProperty("shortenShareUrls"),
         shareUrl: "",
-        creatingPrintView: false,
-        creatingDownload: false
+        isDownloading: false
       };
     },
 
@@ -205,65 +204,6 @@ const SharePanel = observer(
         if (this.props.catalogShare || this.props.storyShare) {
           this.props.viewState.shareModalIsVisible = true;
         }
-      }
-    },
-
-    print() {
-      this.createPrintView(true, true);
-    },
-
-    showPrintView() {
-      this.createPrintView(false, false);
-    },
-
-    createPrintView(hidden, printAutomatically) {
-      this.setState({
-        creatingPrintView: true
-      });
-
-      let iframe;
-      if (hidden) {
-        iframe = document.createElement("iframe");
-        document.body.appendChild(iframe);
-      }
-
-      PrintView.create({
-        terria: this.props.terria,
-        viewState: this.props.viewState,
-        printWindow: iframe ? iframe.contentWindow : undefined,
-        readyCallback: windowToPrint => {
-          if (printAutomatically) {
-            printWindow(windowToPrint)
-              .then(null, e => {
-                // If the print promise rejects, raise an error
-                this.props.terria.raiseErrorToUser(e);
-              })
-              .then(() => {
-                // whether there was an error or not, clean up
-                if (iframe) {
-                  document.body.removeChild(iframe);
-                }
-                if (hidden) {
-                  this.setState({
-                    creatingPrintView: false
-                  });
-                }
-              });
-          }
-        },
-        closeCallback: windowToPrint => {
-          if (hidden) {
-            this.setState({
-              creatingPrintView: false
-            });
-          }
-        }
-      });
-
-      if (!hidden) {
-        this.setState({
-          creatingPrintView: false
-        });
       }
     },
 
@@ -453,23 +393,34 @@ const SharePanel = observer(
             <div>
               <button
                 className={Styles.printButton}
-                onClick={this.print}
-                disabled={this.state.creatingPrintView}
+                disabled={this.state.isDownloading}
+                onClick={() => {
+                  this.setState({
+                    isDownloading: true
+                  });
+                  this.props.terria.currentViewer
+                    .captureScreenshot()
+                    .then(dataString => {
+                      downloadImg(dataString);
+                    })
+                    .finally(() =>
+                      this.setState({
+                        isDownloading: false
+                      })
+                    );
+                }}
               >
-                {t("share.printButton")}
+                {t("share.downloadMap")}
               </button>
               <button
                 className={Styles.printButton}
-                onClick={this.showPrintView}
-                disabled={this.state.creatingPrintView}
+                onClick={() => {
+                  const newWindow = window.open();
+                  this.props.viewState.setPrintWindow(newWindow);
+                }}
               >
                 {t("share.printViewButton")}
               </button>
-              <div className={Styles.printViewLoader}>
-                {this.state.creatingPrintView && (
-                  <Loader message={t("share.creatingPrintView")} />
-                )}
-              </div>
             </div>
           </div>
           <div
@@ -532,7 +483,6 @@ const SharePanel = observer(
           key={format.name}
           className={Styles.formatButton}
           onClick={this.download}
-          disabled={this.state.creatingDownload}
         >
           {format.name}
         </button>

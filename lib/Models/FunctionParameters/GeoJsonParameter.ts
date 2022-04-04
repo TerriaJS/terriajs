@@ -1,4 +1,4 @@
-import { Feature } from "geojson";
+import { Feature } from "@turf/helpers";
 import { computed, observable } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import { JsonObject } from "../../Core/Json";
@@ -6,11 +6,11 @@ import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import FunctionParameter, {
   Options as FunctionParameterOptions
 } from "./FunctionParameter";
+import LineParameter from "./LineParameter";
 import PointParameter, { CartographicPoint } from "./PointParameter";
 import PolygonParameter, { PolygonCoordinates } from "./PolygonParameter";
 import RegionParameter from "./RegionParameter";
 import SelectAPolygonParameter from "./SelectAPolygonParameter";
-import LineParameter from "./LineParameter";
 
 export interface GeoJsonFunctionParameter {
   geoJsonFeature: Feature | Feature[] | undefined;

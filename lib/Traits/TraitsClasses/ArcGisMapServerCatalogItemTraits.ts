@@ -6,19 +6,21 @@ import CatalogMemberTraits from "./CatalogMemberTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
-import RasterLayerTraits from "./RasterLayerTraits";
-import UrlTraits from "./UrlTraits";
 import { MinMaxLevelTraits } from "./MinMaxLevelTraits";
+import ImageryProviderTraits from "./ImageryProviderTraits";
+import UrlTraits from "./UrlTraits";
 
 export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
   MappableTraits,
   FeatureInfoTraits,
-  RasterLayerTraits,
+  ImageryProviderTraits,
   LayerOrderingTraits,
   MappableTraits,
   UrlTraits,
   CatalogMemberTraits,
+  LegendOwnerTraits,
   DiscretelyTimeVaryingTraits,
   MinMaxLevelTraits
 ) {
@@ -44,14 +46,6 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
       "Additional parameters to pass to the MapServer when requesting images."
   })
   parameters?: JsonObject;
-
-  @primitiveTrait({
-    name: "Allow feature picking",
-    type: "boolean",
-    description:
-      "Indicates whether features in this catalog item can be selected by clicking them on the map."
-  })
-  allowFeaturePicking = true;
 
   @primitiveTrait({
     name: "Token URL",

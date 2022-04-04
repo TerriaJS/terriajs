@@ -4,7 +4,7 @@ import DiffableMixin from "../../lib/ModelMixins/DiffableMixin";
 import TimeFilterMixin from "../../lib/ModelMixins/TimeFilterMixin";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import CreateModel from "../../lib/Models/Definition/CreateModel";
-import { SelectableDimensionSelect } from "../../lib/Models/SelectableDimensions";
+import { SelectableDimensionEnum } from "../../lib/Models/SelectableDimensions/SelectableDimensions";
 import Terria from "../../lib/Models/Terria";
 import mixTraits from "../../lib/Traits/mixTraits";
 import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
@@ -57,9 +57,7 @@ class TestDiffableItem extends DiffableMixin(
     )
   )
 ) {
-  styleSelectableDimensions:
-    | SelectableDimensionSelect[]
-    | undefined = undefined;
+  styleSelectableDimensions: SelectableDimensionEnum[] | undefined = undefined;
 
   get canDiffImages() {
     return true;

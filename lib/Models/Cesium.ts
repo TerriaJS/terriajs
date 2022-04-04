@@ -50,10 +50,13 @@ import LatLonHeight from "../Core/LatLonHeight";
 import makeRealPromise from "../Core/makeRealPromise";
 import pollToPromise from "../Core/pollToPromise";
 import waitForDataSourceToLoad from "../Core/waitForDataSourceToLoad";
-import CesiumRenderLoopPauser from "../Map/CesiumRenderLoopPauser";
-import CesiumSelectionIndicator from "../Map/CesiumSelectionIndicator";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import PickedFeatures, { ProviderCoordsMap } from "../Map/PickedFeatures";
+import CesiumRenderLoopPauser from "../Map/Cesium/CesiumRenderLoopPauser";
+import CesiumSelectionIndicator from "../Map/Cesium/CesiumSelectionIndicator";
+import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
+import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
+import PickedFeatures, {
+  ProviderCoordsMap
+} from "../Map/PickedFeatures/PickedFeatures";
 import MappableMixin, {
   ImageryParts,
   isPrimitive,
@@ -65,9 +68,9 @@ import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
 import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
+import hasTraits from "./Definition/hasTraits";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
-import hasTraits from "./Definition/hasTraits";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
 
@@ -115,6 +118,7 @@ export default class Cesium extends GlobeOrMap {
   private readonly _disposeWorkbenchMapItemsSubscription: () => void;
   private readonly _disposeTerrainReaction: () => void;
   private readonly _disposeSplitterReaction: () => void;
+  private readonly _disposeResolutionReaction: () => void;
 
   private _createImageryLayer: (
     ip: ImageryProvider,
@@ -432,7 +436,7 @@ export default class Cesium extends GlobeOrMap {
     });
     this._disposeSplitterReaction = this._reactToSplitterChanges();
 
-    autorun(() => {
+    this._disposeResolutionReaction = autorun(() => {
       (this.cesiumWidget as any).useBrowserRecommendedResolution = !this.terria
         .useNativeResolution;
       this.cesiumWidget.scene.globe.maximumScreenSpaceError = this.terria.baseMaximumScreenSpaceError;
@@ -499,6 +503,7 @@ export default class Cesium extends GlobeOrMap {
     this.dataSourceDisplay.destroy();
 
     this._disposeTerrainReaction();
+    this._disposeResolutionReaction();
 
     this._disposeSelectedFeatureSubscription();
     this._disposeSplitterReaction();
@@ -532,13 +537,13 @@ export default class Cesium extends GlobeOrMap {
       //       That way the supported types of map items is extensible.
       const allDataSources = this._allMapItems.filter(isDataSource);
 
-      // Remove deleted data sources
       let dataSources = this.dataSources;
-      for (let i = 0; i < dataSources.length; i++) {
+      // Remove deleted data sources
+      // Iterate backwards because we're removing items.
+      for (let i = dataSources.length - 1; i >= 0; i--) {
         const d = dataSources.get(i);
         if (allDataSources.indexOf(d) === -1) {
           dataSources.remove(d);
-          --i;
         }
       }
 
@@ -561,11 +566,11 @@ export default class Cesium extends GlobeOrMap {
         .filter(isDefined);
 
       // Delete imagery layers that are no longer in the model
-      for (let i = 0; i < this.scene.imageryLayers.length; i++) {
+      // Iterate backwards because we're removing items.
+      for (let i = this.scene.imageryLayers.length - 1; i >= 0; i--) {
         const imageryLayer = this.scene.imageryLayers.get(i);
         if (allImageryParts.indexOf(imageryLayer) === -1) {
           this.scene.imageryLayers.remove(imageryLayer);
-          --i;
         }
       }
       // Iterate backwards so that adding multiple layers adds them in increasing cesium index order
@@ -595,7 +600,8 @@ export default class Cesium extends GlobeOrMap {
 
       // Remove deleted primitives
       const primitives = this.scene.primitives;
-      for (let i = 0; i < this.scene.primitives.length; i++) {
+      // Iterate backwards because we're removing items.
+      for (let i = this.scene.primitives.length - 1; i >= 0; i--) {
         const prim = primitives.get(i);
         if (isPrimitive(prim) && allPrimitives.indexOf(prim) === -1) {
           this.scene.primitives.remove(prim);
@@ -686,8 +692,17 @@ export default class Cesium extends GlobeOrMap {
         return Promise.resolve(target.readyPromise).then(() => {
           if (this._lastZoomTarget === target) {
             return flyToBoundingSpherePromise(camera, target.boundingSphere, {
-              // By passing range=0, cesium calculates an appropriate zoom distance
-              offset: new HeadingPitchRange(0, -0.5, 0),
+              offset: new HeadingPitchRange(
+                0,
+                -0.5,
+                // To avoid getting too close to models less than 100m radius, let
+                // cesium calculate an appropriate zoom distance. For the rest
+                // use the radius as the zoom distance because the offset
+                // distance cesium calculates for large models is often too far away.
+                target.boundingSphere.radius < 100
+                  ? undefined
+                  : target.boundingSphere.radius
+              ),
               duration: flightDurationSeconds
             });
           }
@@ -1469,7 +1484,7 @@ export default class Cesium extends GlobeOrMap {
   }
 
   _addVectorTileHighlight(
-    imageryProvider: MapboxVectorTileImageryProvider,
+    imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
     rectangle: Rectangle
   ): () => void {
     const result = new ImageryLayer(imageryProvider, {
@@ -1533,8 +1548,15 @@ function zoomToDataSource(
           boundingSphere,
           {
             duration: flightDurationSeconds,
-            // By passing range=0, cesium calculates an appropriate zoom distance
-            offset: new HeadingPitchRange(0, -0.5, 0)
+            offset: new HeadingPitchRange(
+              0,
+              -0.5,
+              // To avoid getting too close to models less than 100m radius, let
+              // cesium calculate an appropriate zoom distance. For the rest
+              // use the radius as the zoom distance because the offset
+              // distance cesium calculates for large models is often too far away.
+              boundingSphere.radius < 100 ? undefined : boundingSphere.radius
+            )
           }
         );
         cesium.scene.camera.lookAtTransform(Matrix4.IDENTITY);

@@ -5,7 +5,7 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import URI from "urijs";
 import { USER_ADDED_CATEGORY_ID } from "../../../../../lib/Core/addedByUser";
 import loadBlob from "../../../../../lib/Core/loadBlob";
-import PickedFeatures from "../../../../../lib/Map/PickedFeatures";
+import PickedFeatures from "../../../../../lib/Map/PickedFeatures/PickedFeatures";
 import addUserCatalogMember from "../../../../../lib/Models/Catalog/addUserCatalogMember";
 import CommonStrata from "../../../../../lib/Models/Definition/CommonStrata";
 import Feature from "../../../../../lib/Models/Feature";
@@ -239,7 +239,7 @@ describe("BuildShareLink", function() {
           83234.52,
           952313.73
         );
-        terria.pickedFeatures.features.push(new Entity());
+        terria.pickedFeatures.features.push(new Feature({}));
         const shareLink = buildShareLink(terria, viewState);
         const params = decodeAndParseStartHash(shareLink);
         const initSources = flattenInitSources(params.initSources);
@@ -263,7 +263,7 @@ describe("BuildShareLink", function() {
           "https://foo": { x: 123, y: 456, level: 7 },
           "https://bar": { x: 42, y: 42, level: 4 }
         };
-        terria.pickedFeatures.features.push(new Entity());
+        terria.pickedFeatures.features.push(new Feature({}));
         const shareLink = buildShareLink(terria, viewState);
         const params = decodeAndParseStartHash(shareLink);
         const initSources = flattenInitSources(params.initSources);
@@ -306,10 +306,10 @@ describe("BuildShareLink", function() {
           952313.73
         );
         terria.pickedFeatures.features.push(
-          new Entity({ name: "testFeature1" })
+          new Feature({ name: "testFeature1" })
         );
         terria.pickedFeatures.features.push(
-          new Entity({ name: "testFeature2" })
+          new Feature({ name: "testFeature2" })
         );
         const shareLink = buildShareLink(terria, viewState);
         const params = decodeAndParseStartHash(shareLink);
