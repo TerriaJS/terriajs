@@ -1,6 +1,6 @@
 import ViewState from "../ReactViewModels/ViewState";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import { ViewingControl } from "./ViewingControls";
+import { ViewingControl } from "../Models/ViewingControls";
 import { runInAction } from "mobx";
 import { remove } from "lodash-es";
 
