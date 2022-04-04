@@ -121,7 +121,7 @@ class ViewingControls extends React.Component<
 
   hideMenu() {
     runInAction(() => {
-      this.props.viewState.workbenchWithOpenControls = undefined;
+      this.props.viewState.workbenchItemWithOpenControls = undefined;
     });
   }
 
@@ -355,13 +355,12 @@ class ViewingControls extends React.Component<
         }
       )
     );
-
     // Item specific viewing controls
     const itemViewingControls: ViewingControl[] = item.viewingControls;
 
     // Collate list, unique by id and sorted by name
     const viewingControls = sortBy(
-      uniqBy([...globalViewingControls, ...itemViewingControls], "id"),
+      uniqBy([...itemViewingControls, ...globalViewingControls], "id"),
       "name"
     );
     return viewingControls;
@@ -478,7 +477,7 @@ class ViewingControls extends React.Component<
     const viewState = this.props.viewState;
     const item = this.props.item;
     const { t } = this.props;
-    const showMenu = item.uniqueId === viewState.workbenchWithOpenControls;
+    const showMenu = item.uniqueId === viewState.workbenchItemWithOpenControls;
     return (
       <Box>
         <ul
@@ -534,10 +533,10 @@ class ViewingControls extends React.Component<
             onClick={e => {
               e.stopPropagation();
               runInAction(() => {
-                if (viewState.workbenchWithOpenControls === item.uniqueId) {
-                  viewState.workbenchWithOpenControls = undefined;
+                if (viewState.workbenchItemWithOpenControls === item.uniqueId) {
+                  viewState.workbenchItemWithOpenControls = undefined;
                 } else {
-                  viewState.workbenchWithOpenControls = item.uniqueId;
+                  viewState.workbenchItemWithOpenControls = item.uniqueId;
                 }
               });
             }}
