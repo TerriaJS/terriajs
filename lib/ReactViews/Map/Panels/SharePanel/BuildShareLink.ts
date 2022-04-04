@@ -1,12 +1,13 @@
 "use strict";
 
-import { runInAction } from "mobx";
+import { runInAction, toJS } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import URI from "urijs";
 import hashEntity from "../../../../Core/hashEntity";
 import isDefined from "../../../../Core/isDefined";
-import { isJsonArray } from "../../../../Core/Json";
+import { isJsonArray, isJsonString } from "../../../../Core/Json";
+import TerriaError from "../../../../Core/TerriaError";
 import ReferenceMixin from "../../../../ModelMixins/ReferenceMixin";
 import CommonStrata from "../../../../Models/Definition/CommonStrata";
 import { BaseModel } from "../../../../Models/Definition/Model";
@@ -21,11 +22,37 @@ import {
 import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
 
-const CatalogMember = {}; // TODO
-
-const userPropWhiteList = ["hideExplorerPanel", "activeTabId"];
+/** User properties (generated from URL hash parameters) to add to share link URL in PRODUCTION environment.
+ * If in Dev, we add all user properties.
+ */
+const userPropsToShare = ["hideExplorerPanel", "activeTabId"];
 
 export const SHARE_VERSION = "8.0.0";
+
+/** Create base share link URL - with `hashParameters` applied on top.
+ * This will copy over some `userProperties` - see `userPropsToShare`
+ */
+function buildBaseShareUrl(
+  terria: Terria,
+  hashParams: { [key: string]: string }
+) {
+  const uri = new URI(window.location).fragment("").search("");
+
+  if (terria.developmentEnv) {
+    uri.addSearch(toJS(terria.userProperties));
+  } else {
+    userPropsToShare.forEach(key =>
+      uri.addSearch({ [key]: terria.userProperties.get(key) })
+    );
+  }
+
+  uri.addSearch(hashParams);
+
+  return uri
+    .fragment(uri.query())
+    .query("")
+    .toString();
+}
 
 /**
  * Builds a share link that reflects the state of the passed Terria instance.
@@ -38,20 +65,39 @@ export const SHARE_VERSION = "8.0.0";
  */
 export function buildShareLink(
   terria: Terria,
-  viewState: ViewState,
+  viewState?: ViewState,
   options = { includeStories: true }
 ) {
-  const uri = new URI(window.location).fragment("").search({
+  return buildBaseShareUrl(terria, {
     start: JSON.stringify(getShareData(terria, viewState, options))
   });
+}
 
-  userPropWhiteList.forEach(key =>
-    uri.addSearch({ key: terria.userProperties.get(key) })
+/**
+ * Like {@link buildShareLink}, but shortens the result using {@link Terria#urlShortener}.
+ *
+ * @returns {Promise<String>} A promise that will return the shortened url when complete.
+ */
+export async function buildShortShareLink(
+  terria: Terria,
+  viewState?: ViewState,
+  options = { includeStories: true }
+) {
+  if (!isDefined(terria.shareDataService))
+    throw TerriaError.from(
+      "Could not generate share token - `shareDataService` is `undefined`"
+    );
+
+  const token = await terria.shareDataService?.getShareToken(
+    getShareData(terria, viewState, options)
   );
-  return uri
-    .fragment(uri.query())
-    .query("")
-    .toString(); // replace ? with #
+
+  if (isJsonString(token)) {
+    return buildBaseShareUrl(terria, {
+      share: token
+    });
+  }
+  throw TerriaError.from("Could not generate share token");
 }
 
 /**
@@ -62,7 +108,7 @@ export function buildShareLink(
  */
 export function getShareData(
   terria: Terria,
-  viewState: ViewState,
+  viewState?: ViewState,
   options = { includeStories: true }
 ) {
   return runInAction(() => {
@@ -221,32 +267,13 @@ export function canShorten(terria: Terria) {
 }
 
 /**
- * Like {@link buildShareLink}, but shortens the result using {@link Terria#urlShortener}.
- *
- * @returns {Promise<String>} A promise that will return the shortened url when complete.
- */
-export function buildShortShareLink(
-  terria: Terria,
-  viewState: ViewState,
-  options = { includeStories: true }
-) {
-  const urlFromToken = (token: string) =>
-    new URI(window.location).fragment("share=" + token).toString();
-  if (isDefined(terria.shareDataService)) {
-    return terria.shareDataService
-      ?.getShareToken(getShareData(terria, viewState, options))
-      .then(urlFromToken);
-  }
-}
-
-/**
  * Adds the details of the current view to the init sources.
  * @private
  */
 function addViewSettings(
   terria: Terria,
-  viewState: ViewState,
-  initSource: InitSourceData
+  viewState?: ViewState,
+  initSource: InitSourceData = {}
 ) {
   const viewer = terria.mainViewer;
 

@@ -1,25 +1,21 @@
-import React, { useRef, useState } from "react";
+import DOMPurify from "dompurify";
+import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
+import { StyleSheetManager, ThemeProvider } from "styled-components";
 import Terria from "../../../../../Models/Terria";
 import ViewState from "../../../../../ReactViewModels/ViewState";
-
-import DOMPurify from "dompurify";
-
-import DistanceLegend from "../../../Legend/DistanceLegend";
 import { terriaTheme } from "../../../../StandardUserInterface/StandardTheme";
-import { StyleSheetManager, ThemeProvider } from "styled-components";
-
-import { useEffect } from "react";
-import PrintViewMap from "./PrintViewMap";
-import PrintWorkbench from "./PrintWorkbench";
-import PrintDatasets from "./PrintDatasets";
+import DistanceLegend from "../../../Legend/DistanceLegend";
 import {
   buildShareLink,
   buildShortShareLink,
   canShorten
 } from "../BuildShareLink";
+import PrintDatasets from "./PrintDatasets";
 import PrintSource from "./PrintSource";
 import PrintViewButtons from "./PrintViewButtons";
+import PrintViewMap from "./PrintViewMap";
+import PrintWorkbench from "./PrintWorkbench";
 
 const PRINT_MAP_WIDTH = 1000;
 
@@ -152,7 +148,15 @@ const PrintView = (props: Props) => {
     canShorten(props.terria)
       ? buildShortShareLink(props.terria, props.viewState, {
           includeStories: false
-        }).then(setShareLink)
+        })
+          ?.then(url => {
+            setShareLink(url);
+          })
+          ?.catch(() =>
+            buildShareLink(props.terria, props.viewState, {
+              includeStories: false
+            })
+          )
       : setShareLink(
           buildShareLink(props.terria, props.viewState, {
             includeStories: false

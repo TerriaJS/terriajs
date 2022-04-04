@@ -1,14 +1,6 @@
 import { Share } from "catalog-converter";
 import i18next from "i18next";
-import {
-  action,
-  computed,
-  observable,
-  reaction,
-  runInAction,
-  toJS,
-  when
-} from "mobx";
+import { action, computed, observable, runInAction, toJS, when } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
@@ -32,7 +24,7 @@ import GoogleAnalytics from "../Core/GoogleAnalytics";
 import hashEntity from "../Core/hashEntity";
 import instanceOf from "../Core/instanceOf";
 import isDefined from "../Core/isDefined";
-import JsonValue, {
+import {
   isJsonArray,
   isJsonBoolean,
   isJsonNumber,
@@ -93,11 +85,11 @@ import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import IElementConfig from "./IElementConfig";
 import InitSource, {
+  InitSourceData,
   isInitFromData,
   isInitFromDataPromise,
   isInitFromOptions,
-  isInitFromUrl,
-  InitSourceData
+  isInitFromUrl
 } from "./InitSource";
 import Internationalization, {
   I18nStartOptions,
@@ -576,7 +568,7 @@ export default class Terria {
 
   readonly notificationState: NotificationState = new NotificationState();
 
-  private readonly developmentEnv = process?.env?.NODE_ENV === "development";
+  readonly developmentEnv = process?.env?.NODE_ENV === "development";
 
   /**
    * An error service instance. The instance can be configured by setting the
@@ -1975,13 +1967,11 @@ async function interpretHash(
       hashProperties.share
     );
 
-    if (shareProps) {
-      await interpretStartData(
-        terria,
-        shareProps,
-        `Start data from sharelink \`"${hashProperties.share}"\``
-      );
-    }
+    await interpretStartData(
+      terria,
+      shareProps,
+      `Start data from sharelink \`"${hashProperties.share}"\``
+    );
   }
 }
 
