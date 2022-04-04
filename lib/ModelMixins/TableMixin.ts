@@ -25,8 +25,9 @@ import SelectableDimensions, {
   SelectableDimensionEnum,
   SelectableDimensionGroup
 } from "../Models/SelectableDimensions/SelectableDimensions";
-import TableStylingWorkflow from "../Models/SelectableDimensions/TableStylingWorkflow";
+import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
 import ViewingControls, { ViewingControl } from "../Models/ViewingControls";
+import SelectableDimensionWorkflow from "../Models/Workflows/SelectableDimensionWorkflow";
 import Icon from "../Styled/Icon";
 import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
@@ -449,11 +450,11 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           ? {
               id: TableStylingWorkflow.type,
               name: "Edit Style",
-              onClick: action(
-                viewState =>
-                  (viewState.terria.selectableDimensionWorkflow = new TableStylingWorkflow(
-                    this
-                  ))
+              onClick: action(viewState =>
+                SelectableDimensionWorkflow.runWorkflow(
+                  viewState,
+                  new TableStylingWorkflow(this)
+                )
               ),
               icon: { glyph: Icon.GLYPHS.layers }
             }
@@ -725,8 +726,9 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         ? {
             title: "Custom",
             onClick: action(() => {
-              this.terria.selectableDimensionWorkflow = new TableStylingWorkflow(
-                this
+              SelectableDimensionWorkflow.runWorkflow(
+                this.terria,
+                new TableStylingWorkflow(this)
               );
             })
           }

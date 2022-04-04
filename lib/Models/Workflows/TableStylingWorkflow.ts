@@ -34,15 +34,15 @@ import { EnumColorTraits } from "../../Traits/TraitsClasses/TableColorStyleTrait
 import CommonStrata from "../Definition/CommonStrata";
 import ModelPropertiesFromTraits from "../Definition/ModelPropertiesFromTraits";
 import ViewingControls from "../ViewingControls";
+import SelectableDimensionWorkflow, {
+  SelectableDimensionWorkflowGroup
+} from "../Workflows/SelectableDimensionWorkflow";
+import VectorStylingWorkflow from "../Workflows/VectorStylingWorkflow";
 import {
   SelectableDimensionGroup,
   SelectableDimensionNumeric,
   SelectableDimensionText
-} from "./SelectableDimensions";
-import SelectableDimensionWorkflow, {
-  SelectableDimensionWorkflowGroup
-} from "./SelectableDimensionWorkflow";
-import VectorStylingWorkflow from "./VectorStylingWorkflow";
+} from "../SelectableDimensions/SelectableDimensions";
 
 /** The ColorSchemeType is used to change which SelectableDimensions are shown.
  * It is basically the "mode" of the TableStylingWorkflow
