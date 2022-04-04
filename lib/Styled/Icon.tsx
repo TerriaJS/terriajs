@@ -139,8 +139,12 @@ export const GLYPHS = {
   closeCircle: require("../../wwwroot/images/icons/close-circle.svg")
 };
 
+export interface IconGlyph {
+  id: string;
+}
+
 export interface IconProps {
-  glyph: { id: string };
+  glyph: IconGlyph;
   style?: any;
   className?: string;
   rotation?: number;
