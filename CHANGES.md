@@ -75,6 +75,11 @@ Change Log
 * Add `UrlTempalteImageryCatalogItem`, rename `RasterLayerTraits` to `ImageryProviderTraits` and add some properties.
 * Change NaturalEarth II basemap to use `url-template-imagery`
 * Remove Gnaf API related files as the service was terminated.
+* TSify `BuildShareLink`, `InitSourceData` and `ShareData`.
+* Add `HasLocalData` interface - which has `hasLocalData` property to implement
+* Add `ModelJson` interface - which provides loose type hints for Model JSON
+* Add `settings` object to `InitSourceData` - provides `baseMaximumScreenSpaceError, useNativeResolution, alwaysShowTimeline, baseMapId, terrainSplitDirection` - these properties are now saved in share links/stories.
+* Move `setAlwaysShowTimeline` logic from `SettingsPanel` to `TimelineStack.ts`
 * [The next improvement]
 
 #### 8.1.25 - 2022-03-16
