@@ -1,7 +1,11 @@
 Change Log
 ==========
 
-#### next release (8.1.26)
+#### next release (8.1.27)
+
+* [The next improvement]
+
+#### 8.1.26 - 2022-04-05
 
 * **Breaking changes**
   * All dynamic groups (eg `WebMapServiceCatalogGroup`) will create members and set `definition` strata (instead of `underride`)
