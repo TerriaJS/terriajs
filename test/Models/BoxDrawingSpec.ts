@@ -2,6 +2,11 @@ import { computed } from "mobx";
 import Cesium from "../../lib/Models/Cesium";
 import Terria from "../../lib/Models/Terria";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
+import BoxDrawing from "../../lib/Models/BoxDrawing";
+import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
+import TranslationRotationScale from "terriajs-cesium/Source/Core/TranslationRotationScale";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 
 describe("BoxDrawing", function() {
   let terria: Terria;
@@ -20,6 +25,25 @@ describe("BoxDrawing", function() {
     document.body.appendChild(container);
 
     cesium = new Cesium(terriaViewer, container);
+  });
+
+  describe("BoxDrawing creation", function() {
+    it("can be created from a transformation matrix", function() {
+      const boxDrawing = BoxDrawing.fromTransform(cesium, Matrix4.IDENTITY);
+      expect(boxDrawing).toBeDefined();
+    });
+
+    it("can be created from translation, rotation, scale object", function() {
+      const boxDrawing = BoxDrawing.fromTranslationRotationScale(
+        cesium,
+        new TranslationRotationScale(
+          Cartesian3.ZERO,
+          Quaternion.IDENTITY,
+          Cartesian3.ZERO
+        )
+      );
+      expect(boxDrawing).toBeDefined();
+    });
   });
 
   describe("the dataSource", function() {

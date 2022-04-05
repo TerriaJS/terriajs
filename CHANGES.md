@@ -73,6 +73,11 @@ Change Log
   * This uses new `TableStyle.isCustom` property
 * Move workbench item controls from `WorkbenchItem.jsx` `WorkbenchItemControls.tsx`
 * Add `UrlTempalteImageryCatalogItem`, rename `RasterLayerTraits` to `ImageryProviderTraits` and add some properties.
+* Added `ViewingControlsMenu` for making catalog wide extensions to viewing controls options.
+* Added `MapToolbar`, a simpler API for adding buttons to the map navigation menu for the most common uses cases.
+* Added `BoxDrawing` creation methods `fromTransform` and `fromTranslationRotationScale`.
+* Fixed a bug where `zoom` hangs for catalog items with trait named `position`.
+* Moved workflows to `Models/Workflows` and added helper method `runWorkflow` to invoke a workflow.
 * Change NaturalEarth II basemap to use `url-template-imagery`
 * Remove Gnaf API related files as the service was terminated.
 * [The next improvement]

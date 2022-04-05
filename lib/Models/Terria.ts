@@ -1,14 +1,6 @@
 import { Share } from "catalog-converter";
 import i18next from "i18next";
-import {
-  action,
-  computed,
-  observable,
-  reaction,
-  runInAction,
-  toJS,
-  when
-} from "mobx";
+import { action, computed, observable, runInAction, toJS, when } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
@@ -105,11 +97,11 @@ import Internationalization, {
 import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
-import SelectableDimensionWorkflow from "./SelectableDimensions/SelectableDimensionWorkflow";
 import ShareDataService from "./ShareDataService";
 import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
+import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
 
 // import overrides from "../Overrides/defaults.jsx";
 
