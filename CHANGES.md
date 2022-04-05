@@ -84,7 +84,6 @@ Change Log
 * Moved workflows to `Models/Workflows` and added helper method `runWorkflow` to invoke a workflow.
 * Change NaturalEarth II basemap to use `url-template-imagery`
 * Remove Gnaf API related files as the service was terminated.
-* [The next improvement]
 
 #### 8.1.25 - 2022-03-16
 
