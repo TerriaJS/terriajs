@@ -159,9 +159,7 @@ export default class ViewState {
   }
 
   /**
-   * ID of the workbench item which currently has an open ViewingControls menu.
-   *
-   * @private
+   * ID of the workbench item whose ViewingControls menu is currently open.
    */
   @observable
   workbenchItemWithOpenControls: string | undefined = undefined;
