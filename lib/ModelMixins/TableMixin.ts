@@ -27,7 +27,7 @@ import SelectableDimensions, {
 } from "../Models/SelectableDimensions/SelectableDimensions";
 import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
 import ViewingControls, { ViewingControl } from "../Models/ViewingControls";
-import SelectableDimensionWorkflow from "../Models/Workflows/SelectableDimensionWorkflow";
+import * as SelectableDimensionWorkflow from "../Models/Workflows/SelectableDimensionWorkflow";
 import Icon from "../Styled/Icon";
 import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";

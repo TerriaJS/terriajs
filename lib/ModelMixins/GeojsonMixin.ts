@@ -77,7 +77,7 @@ import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
 import { ViewingControl } from "../Models/ViewingControls";
-import SelectableDimensionWorkflow from "../Models/Workflows/SelectableDimensionWorkflow";
+import * as SelectableDimensionWorkflow from "../Models/Workflows/SelectableDimensionWorkflow";
 import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
 import VectorStylingWorkflow from "../Models/Workflows/VectorStylingWorkflow";
 import Icon from "../Styled/Icon";

@@ -1,5 +1,5 @@
 import SelectableDimensionWorkflow, {
-  SelectableDimensionWorkflowGroup
+  runWorkflow
 } from "../../../lib/Models/Workflows/SelectableDimensionWorkflow";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import Terria from "../../../lib/Models/Terria";
@@ -40,7 +40,7 @@ describe("SelectableDimensionWorkflow", function() {
       ]
     };
     expect(terria.selectableDimensionWorkflow).toBeUndefined();
-    SelectableDimensionWorkflow.runWorkflow(viewState, setSizeWorkflow);
+    runWorkflow(viewState, setSizeWorkflow);
     expect(terria.selectableDimensionWorkflow?.name).toBe(setSizeWorkflow.name);
   });
 });
