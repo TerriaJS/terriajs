@@ -7,7 +7,6 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import ChartableMixin from "../../../ModelMixins/ChartableMixin";
 import hasTraits from "../../../Models/Definition/hasTraits";
-import raiseErrorOnRejectedPromise from "../../../Models/raiseErrorOnRejectedPromise";
 import Terria from "../../../Models/Terria";
 import Icon from "../../../Styled/Icon";
 import UrlTraits from "../../../Traits/TraitsClasses/UrlTraits";
