@@ -386,9 +386,9 @@ export default class CkanItemReference extends UrlMixin(
     previousTarget = model;
     await this.setCkanStrata(model);
 
-    const defintionStratum = this.strata.get(CommonStrata.definition);
-    if (defintionStratum) {
-      model.strata.set(CommonStrata.definition, defintionStratum);
+    const definitionStratum = this.strata.get(CommonStrata.definition);
+    if (definitionStratum) {
+      model.strata.set(CommonStrata.definition, definitionStratum);
       model.setTrait(CommonStrata.definition, "url", undefined);
     }
 
@@ -407,20 +407,6 @@ export default class CkanItemReference extends UrlMixin(
         model.setTrait(CommonStrata.definition, "layers", layers);
       }
     }
-
-    // Tried to make this sequence an updateModelFromJson but wouldn't work?
-    // updateModelFromJson(model, CommonStrata.override, {itemProperties: this.itemProperties})
-
-    // Also tried this other approach which works from the CkanCatalogGroup
-    // this.setItemProperties(model, this.itemProperties)
-    if (this.itemProperties !== undefined) {
-      const ipKeys = Object.keys(this.itemProperties);
-      ipKeys.forEach(p => {
-        // @ts-ignore
-        model.setTrait(CommonStrata.override, p, this.itemProperties[p]);
-      });
-    }
-
     return model;
   }
 }

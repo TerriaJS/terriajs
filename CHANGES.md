@@ -3,6 +3,8 @@ Change Log
 
 #### next release (8.1.26)
 
+* **Breaking changes**
+  * All dynamic groups (eg `WebMapServiceCatalogGroup`) will create members and set `definition` strata (instead of `underride`)
 * New `GltfMixin`, which `GltfCatalogItem` now uses.
 * Hook up `beforeViewerChanged` and `afterViewerChanged` events so they are
   triggered on viewer change. They are raised only on change between 2D and 3D
@@ -19,6 +21,11 @@ Change Log
 * Fixed a bug where Cesium3DTilePointFeature info is not shown when being clicked.
 * Added optional `onDrawingComplete` callback to `UserDrawing` to receive drawn points or rectangle when the drawing is complete.
 * Fixed a bug in `BoxDrawing` where the box can be below ground after initialization even when setting `keepBoxAboveGround` to true.
+* Add `itemProperties`, `itemPropertiesByType` and `itemPropertiesByIds` to `GroupTraits` and `ReferenceTraits`.
+  * Properties set `override` strata
+  * Item properties will be set in the following order (highest to lowest priority) `itemPropertiesByIds`, `itemPropertiesByType`, `itemProperties`.
+  * If a parent group has `itemProperties`, `itemPropertiesByType` or `itemPropertiesByIds` - then child groups will have these values copied to `underride` when the parent group is loaded
+  * Similarly with references.
 * Fix `viewCatalogMember` bug - where `_previewItem` was being set too late.
 * Improve error message in `DataPreview` for references.
 * Fix alignment of elements in story panel and move some styling from scss to styled components
@@ -71,6 +78,8 @@ Change Log
 * Added `BoxDrawing` creation methods `fromTransform` and `fromTranslationRotationScale`.
 * Fixed a bug where `zoom` hangs for catalog items with trait named `position`.
 * Moved workflows to `Models/Workflows` and added helper method `runWorkflow` to invoke a workflow.
+* Change NaturalEarth II basemap to use `url-template-imagery`
+* Remove Gnaf API related files as the service was terminated.
 * [The next improvement]
 
 #### 8.1.25 - 2022-03-16

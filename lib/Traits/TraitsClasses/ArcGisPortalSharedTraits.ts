@@ -5,13 +5,6 @@ import ArcGisPortalItemFormatTraits from "./ArcGisPortalItemFormatTraits";
 import mixTraits from "../mixTraits";
 
 export default class ArcGisPortalSharedTraits extends mixTraits() {
-  @anyTrait({
-    name: "Item Properties",
-    description:
-      "An object of properties that will be set on the item created from the CKAN resource."
-  })
-  itemProperties?: JsonObject;
-
   @objectArrayTrait({
     name: "Supported Formats",
     description:
