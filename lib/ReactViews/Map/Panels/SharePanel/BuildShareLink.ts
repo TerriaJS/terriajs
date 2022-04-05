@@ -1,5 +1,6 @@
 "use strict";
 
+import { uniq } from "lodash-es";
 import { runInAction, toJS } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
@@ -16,8 +17,8 @@ import HasLocalData from "../../../../Models/HasLocalData";
 import {
   InitSourceData,
   InitSourcePickedFeatures,
-  ViewModeJson,
-  ShareInitSourceData
+  ShareInitSourceData,
+  ViewModeJson
 } from "../../../../Models/InitSource";
 import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
@@ -234,8 +235,10 @@ function addModelStratum(
   const members = toJS(models[id].members);
 
   if (Array.isArray(members)) {
-    models[id].members = models[id].members?.filter(member =>
-      typeof member === "string" ? isShareable(terria)(member) : false
+    models[id].members = uniq(
+      models[id].members?.filter(member =>
+        typeof member === "string" ? isShareable(terria)(member) : false
+      )
     );
   }
 
