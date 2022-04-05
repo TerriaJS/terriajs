@@ -10,7 +10,7 @@ import {
 import Mustache from "mustache";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
-import { JsonObject } from "../../../Core/Json";
+import { JsonObject, isJsonObject } from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";
 import CatalogFunctionJobMixin from "../../../ModelMixins/CatalogFunctionJobMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -345,10 +345,8 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     );
 
     // Create geojson catalog item for input features
-    const geojsonFeatures: JsonObject = runInAction(() =>
-      this.traits.geojsonFeatures.toJson(geojsonFeatures)
-    );
-    if (isDefined(geojsonFeatures)) {
+    const geojsonFeatures = runInAction(() => this.geojsonFeatures);
+    if (isJsonObject(geojsonFeatures, false)) {
       runInAction(() => {
         this.geoJsonItem = new GeoJsonCatalogItem(createGuid(), this.terria);
         updateModelFromJson(this.geoJsonItem, CommonStrata.user, {
