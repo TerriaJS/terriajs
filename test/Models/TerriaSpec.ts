@@ -1241,7 +1241,8 @@ describe("Terria", function() {
             useNativeResolution: true,
             alwaysShowTimeline: true,
             baseMapId: "basemap-natural-earth-II",
-            terrainSplitDirection: -1
+            terrainSplitDirection: -1,
+            depthTestAgainstTerrainEnabled: true
           }
         }
       });
@@ -1258,6 +1259,7 @@ describe("Terria", function() {
       );
 
       expect(terria.terrainSplitDirection).toBe(ImagerySplitDirection.LEFT);
+      expect(terria.depthTestAgainstTerrainEnabled).toBeTruthy();
     });
   });
 

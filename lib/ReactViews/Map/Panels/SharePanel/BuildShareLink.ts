@@ -308,7 +308,8 @@ function addViewSettings(
     useNativeResolution: terria.useNativeResolution,
     alwaysShowTimeline: terria.timelineStack.alwaysShowingTimeline,
     baseMapId: viewer.baseMap?.uniqueId,
-    terrainSplitDirection: terria.terrainSplitDirection
+    terrainSplitDirection: terria.terrainSplitDirection,
+    depthTestAgainstTerrainEnabled: terria.depthTestAgainstTerrainEnabled
   };
 
   if (isDefined(viewState)) {

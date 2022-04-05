@@ -1549,6 +1549,10 @@ export default class Terria {
       if (isJsonNumber(initData.settings.terrainSplitDirection)) {
         this.terrainSplitDirection = initData.settings.terrainSplitDirection;
       }
+      if (isJsonBoolean(initData.settings.depthTestAgainstTerrainEnabled)) {
+        this.depthTestAgainstTerrainEnabled =
+          initData.settings.depthTestAgainstTerrainEnabled;
+      }
     }
 
     // Copy but don't yet load the workbench.

@@ -70,6 +70,7 @@ export interface InitSourceData {
     /** This is used to save basemap for shares/stories. Please use `InitSource.baseMaps.defaultBaseMapId` instead. */
     baseMapId?: string;
     terrainSplitDirection?: number;
+    depthTestAgainstTerrainEnabled?: boolean;
   };
 }
 
