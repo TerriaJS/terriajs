@@ -1141,10 +1141,7 @@ export default class Terria {
           initSourceData = (await initSource.data).throwIfError()?.data;
         }
 
-        if (initSourceData && isJsonObject(initSourceData)) {
-          return initSourceData;
-        }
-        return undefined;
+        return initSourceData;
       }
     );
 
@@ -1565,7 +1562,7 @@ export default class Terria {
 
     // NOTE: after this Promise, this function is no longer an `@action`
     const models = initData.models;
-    if (isJsonObject(models)) {
+    if (isJsonObject(models, false)) {
       await Promise.all(
         Object.keys(models).map(async modelId => {
           (
@@ -2016,7 +2013,7 @@ async function interpretStartData(
 ) {
   const containsStory = (initSource: InitSourceData) =>
     Array.isArray(initSource.stories) && initSource.stories.length;
-  if (isJsonObject(startData)) {
+  if (isJsonObject(startData, false)) {
     // Convert startData to v8 if necessary
     let startDataV8: ShareInitSourceData | null;
 
@@ -2056,7 +2053,7 @@ async function interpretStartData(
             ...startDataV8!.initSources.map((initSource: unknown) => {
               return {
                 name,
-                data: isJsonObject(initSource) ? initSource : {},
+                data: isJsonObject(initSource, false) ? initSource : {},
                 errorSeverity
               };
             })

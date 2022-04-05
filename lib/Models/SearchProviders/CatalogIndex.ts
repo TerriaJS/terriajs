@@ -112,7 +112,7 @@ export default class CatalogIndex {
 
       for (let idx = 0; idx < indexModels.length; idx++) {
         const [id, model] = indexModels[idx];
-        if (!isJsonObject(model)) return;
+        if (!isJsonObject(model, false)) return;
         const reference = new CatalogIndexReference(id, this.terria);
 
         updateModelFromJson(reference, CommonStrata.definition, model);

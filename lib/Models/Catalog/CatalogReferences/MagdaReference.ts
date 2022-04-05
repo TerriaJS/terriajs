@@ -419,8 +419,8 @@ export default class MagdaReference extends AccessControlMixin(
         );
         let shareKeys;
         if (
-          isJsonObject(member.aspects) &&
-          isJsonObject(member.aspects.terria) &&
+          isJsonObject(member.aspects, false) &&
+          isJsonObject(member.aspects.terria, false) &&
           Array.isArray(member.aspects.terria.shareKeys)
         ) {
           shareKeys = member.aspects.terria.shareKeys.filter(isJsonString);
@@ -436,8 +436,8 @@ export default class MagdaReference extends AccessControlMixin(
           ref.setTrait(CommonStrata.definition, "recordId", memberId);
 
           if (
-            isJsonObject(member.aspects) &&
-            isJsonObject(member.aspects.group)
+            isJsonObject(member.aspects, false) &&
+            isJsonObject(member.aspects.group, false)
           ) {
             // This is most likely a group.
             ref.setTrait(CommonStrata.definition, "isGroup", true);
@@ -449,9 +449,9 @@ export default class MagdaReference extends AccessControlMixin(
 
           // Use the name from the terria aspect if there is one.
           if (
-            isJsonObject(member.aspects) &&
-            isJsonObject(member.aspects.terria) &&
-            isJsonObject(member.aspects.terria.definition) &&
+            isJsonObject(member.aspects, false) &&
+            isJsonObject(member.aspects.terria, false) &&
+            isJsonObject(member.aspects.terria.definition, false) &&
             isJsonString(member.aspects.terria.definition.name)
           ) {
             ref.setTrait(
@@ -497,7 +497,7 @@ export default class MagdaReference extends AccessControlMixin(
       }
     }
 
-    if (isJsonObject(aspects.terria)) {
+    if (isJsonObject(aspects.terria, false)) {
       const terriaAspect = aspects.terria;
       Object.keys(terriaAspect).forEach(key => {
         const terriaStratum = terriaAspect[key];
@@ -505,7 +505,7 @@ export default class MagdaReference extends AccessControlMixin(
           key === "id" ||
           key === "type" ||
           key === "shareKeys" ||
-          !isJsonObject(terriaStratum)
+          !isJsonObject(terriaStratum, false)
         ) {
           return;
         }
@@ -566,7 +566,7 @@ export default class MagdaReference extends AccessControlMixin(
         key === "id" ||
         key === "type" ||
         key === "shareKeys" ||
-        !isJsonObject(terriaStratum)
+        !isJsonObject(terriaStratum, false)
       ) {
         return;
       }

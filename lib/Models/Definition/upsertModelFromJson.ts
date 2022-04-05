@@ -46,7 +46,7 @@ export default function upsertModelFromJson(
   json: ModelJson,
   options: UpsertModelFromJsonOptions = {}
 ): Result<BaseModel | undefined> {
-  if (!isJsonObject(json)) {
+  if (!isJsonObject(json, false)) {
     return Result.error("Failed to upsert model - invalid JSON");
   }
   const errors: TerriaError[] = [];
