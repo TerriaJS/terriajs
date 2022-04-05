@@ -232,20 +232,16 @@ export class MapServerStratum extends LoadableStratum(
     }
 
     // Replace the stratum inherited from the parent group.
-    const stratum = CommonStrata.underride;
+    model.strata.delete(CommonStrata.definition);
 
-    model.strata.delete(stratum);
-
-    model.setTrait(stratum, "name", replaceUnderscores(layer.name));
+    model.setTrait(
+      CommonStrata.definition,
+      "name",
+      replaceUnderscores(layer.name)
+    );
 
     var uri = new URI(this._catalogGroup.url).segment(layer.id + ""); // Convert layer id to string as segment(0) means sthg different.
-    model.setTrait(stratum, "url", uri.toString());
-
-    if (this._catalogGroup.itemProperties !== undefined) {
-      Object.keys(this._catalogGroup.itemProperties).map((k: any) =>
-        model.setTrait(stratum, k, this._catalogGroup.itemProperties![k])
-      );
-    }
+    model.setTrait(CommonStrata.definition, "url", uri.toString());
   }
 }
 

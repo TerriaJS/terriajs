@@ -55,7 +55,7 @@ createInheritedCkanSharedTraitsStratum.stratumName =
   "ckanItemReferenceInheritedPropertiesStratum";
 
 // This can't be definition stratum, as then it will sit on top of underride/definition/override
-// CkanServerStratum.createMemberFromDataset will use `underride`
+// CkanServerStratum.createMemberFromDataset will use `definition`
 StratumOrder.addLoadStratum(createInheritedCkanSharedTraitsStratum.stratumName);
 
 export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
@@ -166,6 +166,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     return this._ckanResponse.result.results;
   }
 
+  @action
   protected getFilteredDatasets(): CkanDataset[] {
     if (this.datasets.length === 0) return [];
     if (this._catalogGroup.excludeMembers !== undefined) {
@@ -175,6 +176,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     return this.datasets;
   }
 
+  @action
   protected getGroups(): CatalogGroup[] {
     if (this._catalogGroup.groupBy === "none") return [];
     let groups: CatalogGroup[] = [];
@@ -200,6 +202,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     return groups;
   }
 
+  @action
   protected getFilteredGroups(): CatalogGroup[] {
     if (this.groups.length === 0) return [];
     if (this._catalogGroup.excludeMembers !== undefined) {
@@ -377,6 +380,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     }
   }
 
+  @action
   getItemId(ckanDataset: CkanDataset, resource: CkanResource) {
     return `${this._catalogGroup.uniqueId}/${ckanDataset.id}/${resource.id}`;
   }
