@@ -78,7 +78,7 @@ Change Log
 * TSify `BuildShareLink`, `InitSourceData` and `ShareData`.
 * Add `HasLocalData` interface - which has `hasLocalData` property to implement
 * Add `ModelJson` interface - which provides loose type hints for Model JSON
-* Add `settings` object to `InitSourceData` - provides `baseMaximumScreenSpaceError, useNativeResolution, alwaysShowTimeline, baseMapId, terrainSplitDirection` - these properties are now saved in share links/stories.
+* Add `settings` object to `InitSourceData` - provides `baseMaximumScreenSpaceError, useNativeResolution, alwaysShowTimeline, baseMapId, terrainSplitDirection, depthTestAgainstTerrainEnabled` - these properties are now saved in share links/stories.
 * Move `setAlwaysShowTimeline` logic from `SettingsPanel` to `TimelineStack.ts`
 * [The next improvement]
 
