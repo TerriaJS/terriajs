@@ -4,13 +4,13 @@
  * ViewingControls menu is the 3-dot menu that every item in the workbench gets.
  */
 
-import ViewState from "../ReactViewModels/ViewState";
+import { remove } from "lodash-es";
+import { runInAction } from "mobx";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import { Optional } from "../Core/TypeModifiers";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import { ViewingControl } from "../Models/ViewingControls";
-import { runInAction } from "mobx";
-import { remove } from "lodash-es";
-import { Optional } from "../Core/types";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import ViewState from "../ReactViewModels/ViewState";
 
 export type ViewingControlGenerateFunction = (
   item: CatalogMemberMixin.Instance
