@@ -1228,6 +1228,37 @@ describe("Terria", function() {
       expect(terria.mainViewer.viewerOptions.useTerrain).toBe(false);
       expect(getLocalPropertySpy).toHaveBeenCalledWith("viewermode");
     });
+
+    it("uses `settings` in initsource", async () => {
+      const setBaseMapSpy = spyOn(terria.mainViewer, "setBaseMap");
+
+      await terria.start({ configUrl: "" });
+
+      terria.applyInitData({
+        initData: {
+          settings: {
+            baseMaximumScreenSpaceError: 1,
+            useNativeResolution: true,
+            alwaysShowTimeline: true,
+            baseMapId: "basemap-natural-earth-II",
+            terrainSplitDirection: -1
+          }
+        }
+      });
+
+      await terria.loadInitSources();
+
+      expect(terria.baseMaximumScreenSpaceError).toBe(1);
+      expect(terria.useNativeResolution).toBeTruthy;
+      expect(terria.timelineStack.alwaysShowingTimeline).toBeTruthy();
+      expect(setBaseMapSpy).toHaveBeenCalledWith(
+        terria.baseMapsModel.baseMapItems.find(
+          item => item.item.uniqueId === "basemap-natural-earth-II"
+        )?.item
+      );
+
+      expect(terria.terrainSplitDirection).toBe(ImagerySplitDirection.LEFT);
+    });
   });
 
   describe("basemaps", function() {
