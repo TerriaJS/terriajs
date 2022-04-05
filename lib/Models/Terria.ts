@@ -1,4 +1,3 @@
-import { Share } from "catalog-converter";
 import i18next from "i18next";
 import { action, computed, observable, runInAction, toJS, when } from "mobx";
 import { createTransformer } from "mobx-utils";
@@ -25,10 +24,10 @@ import hashEntity from "../Core/hashEntity";
 import instanceOf from "../Core/instanceOf";
 import isDefined from "../Core/isDefined";
 import {
-  isJsonArray,
   isJsonBoolean,
   isJsonNumber,
   isJsonObject,
+  isJsonObjectArray,
   isJsonString,
   JsonArray,
   JsonObject
@@ -89,7 +88,8 @@ import InitSource, {
   isInitFromData,
   isInitFromDataPromise,
   isInitFromOptions,
-  isInitFromUrl
+  isInitFromUrl,
+  ShareInitSourceData
 } from "./InitSource";
 import Internationalization, {
   I18nStartOptions,
@@ -405,7 +405,7 @@ export default class Terria {
   /**
    * Gets the stack of layers active on the timeline.
    */
-  readonly timelineStack = new TimelineStack(this.timelineClock);
+  readonly timelineStack = new TimelineStack(this, this.timelineClock);
 
   @observable
   readonly configParameters: Complete<ConfigParameters> = {
@@ -748,7 +748,7 @@ export default class Terria {
   /**
    * Initialize errorService from config parameters.
    */
-  setupErrorServiceProvider(errorService: any) {
+  setupErrorServiceProvider(errorService: ErrorServiceOptions) {
     initializeErrorServiceProvider(errorService)
       .then(errorService => {
         this.errorService = errorService;
@@ -1470,12 +1470,14 @@ export default class Terria {
       this.corsProxy.corsDomains.push(...(<string[]>initData.corsDomains));
     }
 
+    // Add catalog members
     if (initData.catalog !== undefined) {
       this.catalog.group
         .addMembersFromJson(stratumId, initData.catalog)
         .pushErrorTo(errors);
     }
 
+    // Show/hide elements in mapNavigationModel
     if (isJsonObject(initData.elements)) {
       this.elements.merge(initData.elements);
       // we don't want to go through all elements unless they are added.
@@ -1492,10 +1494,12 @@ export default class Terria {
       }
     }
 
+    // Add stories
     if (Array.isArray(initData.stories)) {
       this.stories = initData.stories;
     }
 
+    // Add map settings
     if (isJsonString(initData.viewerMode)) {
       const viewerMode = initData.viewerMode.toLowerCase();
       if (isViewerMode(viewerMode)) setViewerMode(viewerMode, this.mainViewer);
@@ -1504,7 +1508,7 @@ export default class Terria {
     if (isJsonObject(initData.baseMaps)) {
       this.baseMapsModel
         .loadFromJson(CommonStrata.definition, initData.baseMaps)
-        .pushErrorTo(errors);
+        .pushErrorTo(errors, "Failed to load basemaps");
     }
 
     if (isJsonObject(initData.homeCamera)) {
@@ -1522,6 +1526,32 @@ export default class Terria {
 
     if (isJsonNumber(initData.splitPosition)) {
       this.splitPosition = initData.splitPosition;
+    }
+
+    if (isJsonObject(initData.settings)) {
+      if (isJsonNumber(initData.settings.baseMaximumScreenSpaceError)) {
+        this.setBaseMaximumScreenSpaceError(
+          initData.settings.baseMaximumScreenSpaceError
+        );
+      }
+      if (isJsonBoolean(initData.settings.useNativeResolution)) {
+        this.setUseNativeResolution(initData.settings.useNativeResolution);
+      }
+      if (isJsonBoolean(initData.settings.alwaysShowTimeline)) {
+        this.timelineStack.setAlwaysShowTimeline(
+          initData.settings.alwaysShowTimeline
+        );
+      }
+      if (isJsonString(initData.settings.baseMapId)) {
+        this.mainViewer.setBaseMap(
+          this.baseMapsModel.baseMapItems.find(
+            item => item.item.uniqueId === initData.settings!.baseMapId
+          )?.item
+        );
+      }
+      if (isJsonNumber(initData.settings.terrainSplitDirection)) {
+        this.terrainSplitDirection = initData.settings.terrainSplitDirection;
+      }
     }
 
     // Copy but don't yet load the workbench.
@@ -1984,11 +2014,11 @@ async function interpretStartData(
   errorSeverity?: TerriaErrorSeverity,
   showConversionWarning = true
 ) {
-  const containsStory = (initSource: any) =>
+  const containsStory = (initSource: InitSourceData) =>
     Array.isArray(initSource.stories) && initSource.stories.length;
   if (isJsonObject(startData)) {
-    // Convert startData to v8 if neccessary
-    let startDataV8: Share | null;
+    // Convert startData to v8 if necessary
+    let startDataV8: ShareInitSourceData | null;
 
     try {
       if (
@@ -2014,7 +2044,7 @@ async function interpretStartData(
           version: isJsonString(startData.version)
             ? startData.version
             : SHARE_VERSION,
-          initSources: isJsonArray(startData.initSources)
+          initSources: isJsonObjectArray(startData.initSources)
             ? startData.initSources
             : []
         };
@@ -2023,10 +2053,10 @@ async function interpretStartData(
       if (startDataV8 !== null && Array.isArray(startDataV8.initSources)) {
         runInAction(() => {
           terria.initSources.push(
-            ...startDataV8!.initSources.map((initSource: any) => {
+            ...startDataV8!.initSources.map((initSource: unknown) => {
               return {
                 name,
-                data: initSource,
+                data: isJsonObject(initSource) ? initSource : {},
                 errorSeverity
               };
             })

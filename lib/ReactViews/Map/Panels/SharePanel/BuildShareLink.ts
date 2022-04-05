@@ -6,7 +6,6 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import URI from "urijs";
 import hashEntity from "../../../../Core/hashEntity";
 import isDefined from "../../../../Core/isDefined";
-import { isJsonArray, isJsonString } from "../../../../Core/Json";
 import TerriaError from "../../../../Core/TerriaError";
 import ReferenceMixin from "../../../../ModelMixins/ReferenceMixin";
 import CommonStrata from "../../../../Models/Definition/CommonStrata";
@@ -17,7 +16,8 @@ import HasLocalData from "../../../../Models/HasLocalData";
 import {
   InitSourceData,
   InitSourcePickedFeatures,
-  ViewModeJson
+  ViewModeJson,
+  ShareInitSourceData
 } from "../../../../Models/InitSource";
 import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
@@ -92,7 +92,7 @@ export async function buildShortShareLink(
     getShareData(terria, viewState, options)
   );
 
-  if (isJsonString(token)) {
+  if (typeof token === "string") {
     return buildBaseShareUrl(terria, {
       share: token
     });
@@ -110,18 +110,17 @@ export function getShareData(
   terria: Terria,
   viewState?: ViewState,
   options = { includeStories: true }
-) {
+): ShareInitSourceData {
   return runInAction(() => {
     const { includeStories } = options;
     const initSource: InitSourceData = {};
-    const initSources = [initSource]; // includeStories ? terria.initSources.slice() : [];
+    const initSources = [initSource];
 
     addStratum(terria, CommonStrata.user, initSource);
     addWorkbench(terria, initSource);
     addTimelineItems(terria, initSource);
     addViewSettings(terria, viewState, initSource);
     addFeaturePicking(terria, initSource);
-    addBaseMaps(terria, initSource);
     if (includeStories) {
       // info that are not needed in scene share data
       addStories(terria, initSource);
@@ -174,8 +173,6 @@ function addStratum(
       });
   });
 }
-
-function addBaseMaps(terria: Terria, initSource: InitSourceData) {}
 
 function addWorkbench(terria: Terria, initSource: InitSourceData) {
   initSource.workbench = terria.workbench.itemIds.filter(isShareable(terria));
@@ -234,8 +231,12 @@ function addModelStratum(
     models[id].knownContainerUniqueIds = model.knownContainerUniqueIds.slice();
   }
 
-  if (isJsonArray(models[id].members)) {
-    models[id].members = models[id].members?.filter(isShareable(terria));
+  const members = toJS(models[id].members);
+
+  if (Array.isArray(members)) {
+    models[id].members = models[id].members?.filter(member =>
+      typeof member === "string" ? isShareable(terria)(member) : false
+    );
   }
 
   models[id].type = model.type;
@@ -297,18 +298,18 @@ function addViewSettings(
     .getCurrentCameraView()
     .toJson();
   initSource.homeCamera = terria.mainViewer.homeCamera.toJson();
-  initSource.baseMaps = {};
-  if (viewer.baseMap !== undefined) {
-    initSource.baseMaps.defaultBaseMapId = viewer.baseMap.uniqueId;
-  }
-  if (terria.baseMapsModel.previewBaseMapId !== undefined) {
-    initSource.baseMaps.previewBaseMapId =
-      terria.baseMapsModel.previewBaseMapId;
-  }
   initSource.viewerMode = viewerMode;
-  // initSource.currentTime = time;
+
   initSource.showSplitter = terria.showSplitter;
   initSource.splitPosition = terria.splitPosition;
+
+  initSource.settings = {
+    baseMaximumScreenSpaceError: terria.baseMaximumScreenSpaceError,
+    useNativeResolution: terria.useNativeResolution,
+    alwaysShowTimeline: terria.timelineStack.alwaysShowingTimeline,
+    baseMapId: viewer.baseMap?.uniqueId,
+    terrainSplitDirection: terria.terrainSplitDirection
+  };
 
   if (isDefined(viewState)) {
     const itemIdToUse = viewState.viewingUserData()

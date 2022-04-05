@@ -146,7 +146,7 @@ describe("BuildShareLink", function() {
         const initSources = flattenInitSources(params.initSources);
 
         expect(model.uniqueId).toBeDefined();
-        expect(isShareable(terria)(model.uniqueId)).toBe(true);
+        expect(isShareable(terria)(model.uniqueId ?? "")).toBe(true);
         expect(initSources.models[USER_ADDED_CATEGORY_ID].members).toContain(
           model.uniqueId
         );

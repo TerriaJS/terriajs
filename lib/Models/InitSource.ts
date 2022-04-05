@@ -2,6 +2,7 @@ import { JsonObject } from "../Core/Json";
 import Result from "../Core/Result";
 import { TerriaErrorSeverity } from "../Core/TerriaError";
 import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
+import { BaseMapsJson } from "./BaseMaps/BaseMapsModel";
 import IElementConfig from "./IElementConfig";
 
 export interface InitSourcePickedFeatures {
@@ -23,23 +24,35 @@ export interface InitSourcePickedFeatures {
 
 export type ViewModeJson = "3d" | "3dSmooth" | "2d";
 
+/** Provides loose type hints for ModelJson */
 export interface ModelJson extends JsonObject {
   localId?: string;
   name?: string;
   id?: string;
   type?: string;
   shareKeys?: string[];
-  members?: string[];
+  members?: (string | JsonObject)[];
+}
+
+export interface StoryData {
+  title: string;
+  text: string;
+  id: string;
+  shareData: ShareInitSourceData;
+}
+export interface ShareInitSourceData {
+  version: string;
+  initSources: InitSourceData[];
 }
 
 export interface InitSourceData {
   stratum?: string;
   corsDomains?: string[];
-  catalog?: JsonObject;
+  catalog?: JsonObject[];
   elements?: Map<string, IElementConfig>;
-  stories?: JsonObject[];
+  stories?: StoryData[];
   viewerMode?: ViewModeJson;
-  baseMaps?: JsonObject;
+  baseMaps?: BaseMapsJson;
   homeCamera?: JsonObject;
   initialCamera?: JsonObject;
   showSplitter?: boolean;
@@ -49,7 +62,17 @@ export interface InitSourceData {
   models?: { [key: string]: ModelJson };
   previewedItemId?: string;
   pickedFeatures?: InitSourcePickedFeatures;
+  /** These settings will override localStorage persistent settings. They are used for shares/stories */
+  settings?: {
+    baseMaximumScreenSpaceError?: number;
+    useNativeResolution?: boolean;
+    alwaysShowTimeline?: boolean;
+    /** This is used to save basemap for shares/stories. Please use `InitSource.baseMaps.defaultBaseMapId` instead. */
+    baseMapId?: string;
+    terrainSplitDirection?: number;
+  };
 }
+
 /**
  * An absolute or relative URL.
  */
@@ -61,9 +84,9 @@ interface InitSourceFromData {
   data: InitSourceData;
 }
 
-type InitSourceFromDataPromise = {
+interface InitSourceFromDataPromise {
   data: Promise<Result<InitSourceFromData | undefined>>;
-};
+}
 
 interface InitSourceFromOptions {
   options: InitSource[];
