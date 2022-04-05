@@ -1,7 +1,11 @@
 Change Log
 ==========
 
-#### next release (8.1.26)
+#### next release (8.1.27)
+
+* [The next improvement]
+
+#### 8.1.26 - 2022-04-05
 
 * **Breaking changes**
   * All dynamic groups (eg `WebMapServiceCatalogGroup`) will create members and set `definition` strata (instead of `underride`)
@@ -80,7 +84,6 @@ Change Log
 * Moved workflows to `Models/Workflows` and added helper method `runWorkflow` to invoke a workflow.
 * Change NaturalEarth II basemap to use `url-template-imagery`
 * Remove Gnaf API related files as the service was terminated.
-* [The next improvement]
 
 #### 8.1.25 - 2022-03-16
 
