@@ -2,7 +2,7 @@ import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import Icon from "../../lib/Styled/Icon";
-import { ViewingControlsMenu } from "../../lib/ViewModels/ViewingControlsMenu";
+import * as ViewingControlsMenu from "../../lib/ViewModels/ViewingControlsMenu";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 
 describe("ViewingControlsMenu", function() {

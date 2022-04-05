@@ -83,107 +83,105 @@ interface BaseButtonOptions {
  */
 export type ButtonMapMode = "2d" | "3d" | "any";
 
-export namespace MapToolbar {
-  /**
-   * Add a simple clickable button to the map toolbar. This button is useful for performing some action when the user clicks on it.
-   *
-   * @param viewState - The {@link ViewState} instance
-   * @param options - Options for the simple clickable button
-   * @returns A simple button instance with a method to remove the button from the toolbar.
-   *
-   * @example
-   * ```ts
-   *   const locationButton = MapToolbar.addButton(viewState, {
-   *     text: "My location",
-   *     tooltip: "Mark your current location on the map",
-   *     icon: Icon.GLYPH.location,
-   *     onClick: () => {
-   *       // code to show marker
-   *     }
-   *   })
-   *   // and later
-   *   locationButton.removeButton();
-   * ```
-   */
-  export function addButton(
-    viewState: ViewState,
-    options: SimpleButtonOptions
-  ): SimpleButton {
-    const terria = viewState.terria;
-    const id = createGuid();
-    const { icon, mapMode, onClick } = options;
-    const controller = new SimpleButtonController(terria, {
-      icon,
-      mapMode,
-      onClick
-    });
+/**
+ * Add a simple clickable button to the map toolbar. This button is useful for performing some action when the user clicks on it.
+ *
+ * @param viewState - The {@link ViewState} instance
+ * @param options - Options for the simple clickable button
+ * @returns A simple button instance with a method to remove the button from the toolbar.
+ *
+ * @example
+ * ```ts
+ *   const locationButton = MapToolbar.addButton(viewState, {
+ *     text: "My location",
+ *     tooltip: "Mark your current location on the map",
+ *     icon: Icon.GLYPH.location,
+ *     onClick: () => {
+ *       // code to show marker
+ *     }
+ *   })
+ *   // and later
+ *   locationButton.removeButton();
+ * ```
+ */
+export function addButton(
+  viewState: ViewState,
+  options: SimpleButtonOptions
+): SimpleButton {
+  const terria = viewState.terria;
+  const id = createGuid();
+  const { icon, mapMode, onClick } = options;
+  const controller = new SimpleButtonController(terria, {
+    icon,
+    mapMode,
+    onClick
+  });
 
-    terria.mapNavigationModel.addItem({
-      id,
-      name: options.text,
-      title: options.tooltip,
-      location: options.position ?? "TOP",
-      order: options.order ?? terria.mapNavigationModel.items.length,
-      controller
-    });
+  terria.mapNavigationModel.addItem({
+    id,
+    name: options.text,
+    title: options.tooltip,
+    location: options.position ?? "TOP",
+    order: options.order ?? terria.mapNavigationModel.items.length,
+    controller
+  });
 
-    return {
-      removeButton: () => terria.mapNavigationModel.remove(id)
-    };
-  }
+  return {
+    removeButton: () => terria.mapNavigationModel.remove(id)
+  };
+}
 
-  /**
-   * Add a mode button to the map toolbar. This button is useful for launching tools that have an open and close mode.
-   *
-   * @param viewState - The {@link ViewState} instance
-   * @param options - Options for the simple mode button
-   * @returns A mode button instance with a method to remove the button from the toolbar.
-   *
-   * @example
-   * ```ts
-   *   const pedestrianButton = MapToolbar.addModeButton(viewState, {
-   *     text: "Pedestrian mode",
-   *     tooltip: "Use keyboard navigation to walk and fly around the map",
-   *     icon: Icon.GLYPH.pedestrian,
-   *     onUserEnterMode: () => {
-   *       // code to put the map in pedestrian mode
-   *     },
-   *     onUserCloseMode: () => {
-   *       // code to run when user closes the mode by toggling the button
-   *     }
-   *   })
-   *   // and later, to close the mode from some other part of the UI
-   *   pedestrianButton.closeMode();
-   * ```
-   */
-  export function addModeButton(
-    viewState: ViewState,
-    options: ModeButtonOptions
-  ): ModeButton {
-    const terria = viewState.terria;
-    const id = createGuid();
-    const { icon, mapMode, onUserEnterMode, onUserCloseMode } = options;
-    const controller = new ModalButtonController(terria, {
-      icon,
-      mapMode,
-      onUserEnterMode,
-      onUserCloseMode
-    });
+/**
+ * Add a mode button to the map toolbar. This button is useful for launching tools that have an open and close mode.
+ *
+ * @param viewState - The {@link ViewState} instance
+ * @param options - Options for the simple mode button
+ * @returns A mode button instance with a method to remove the button from the toolbar.
+ *
+ * @example
+ * ```ts
+ *   const pedestrianButton = MapToolbar.addModeButton(viewState, {
+ *     text: "Pedestrian mode",
+ *     tooltip: "Use keyboard navigation to walk and fly around the map",
+ *     icon: Icon.GLYPH.pedestrian,
+ *     onUserEnterMode: () => {
+ *       // code to put the map in pedestrian mode
+ *     },
+ *     onUserCloseMode: () => {
+ *       // code to run when user closes the mode by toggling the button
+ *     }
+ *   })
+ *   // and later, to close the mode from some other part of the UI
+ *   pedestrianButton.closeMode();
+ * ```
+ */
+export function addModeButton(
+  viewState: ViewState,
+  options: ModeButtonOptions
+): ModeButton {
+  const terria = viewState.terria;
+  const id = createGuid();
+  const { icon, mapMode, onUserEnterMode, onUserCloseMode } = options;
+  const controller = new ModalButtonController(terria, {
+    icon,
+    mapMode,
+    onUserEnterMode,
+    onUserCloseMode
+  });
 
-    terria.mapNavigationModel.addItem({
-      id,
-      name: options.text,
-      title: options.tooltip,
-      location: options.position ?? "TOP",
-      order: options.order ?? terria.mapNavigationModel.items.length,
-      controller
-    });
+  terria.mapNavigationModel.addItem({
+    id,
+    name: options.text,
+    title: options.tooltip,
+    location: options.position ?? "TOP",
+    order: options.order ?? terria.mapNavigationModel.items.length,
+    controller
+  });
 
-    return {
-      removeButton: () => terria.mapNavigationModel.remove(id),
-      closeMode: () => controller.closeMode()
-    };
-  }
+  return {
+    removeButton: () => terria.mapNavigationModel.remove(id),
+    closeMode: () => controller.closeMode()
+  };
 }
 
 interface SimpleButtonControllerOptions {

@@ -110,7 +110,7 @@ export default class ViewState {
    * for the given catalog item instance.  This is useful for plugins to extend
    * the viewing control menu across catalog items.
    *
-   * Use {@link ViewingControlsMenu.addMenuOption} instead of updating directly.
+   * Use {@link ViewingControlsMenu.addMenuItem} instead of updating directly.
    */
   @observable
   readonly globalViewingControlOptions: ((

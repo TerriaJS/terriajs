@@ -4,7 +4,7 @@ import ViewingControls from "../../../../lib/ReactViews/Workbench/Controls/Viewi
 import Terria from "../../../../lib/Models/Terria";
 import ViewState from "../../../../lib/ReactViewModels/ViewState";
 import SimpleCatalogItem from "../../../Helpers/SimpleCatalogItem";
-import { ViewingControlsMenu } from "../../../../lib/ViewModels/ViewingControlsMenu";
+import * as ViewingControlsMenu from "../../../../lib/ViewModels/ViewingControlsMenu";
 import Icon from "../../../../lib/Styled/Icon";
 import { runInAction } from "mobx";
 
@@ -21,7 +21,7 @@ describe("ViewingControls", function() {
     });
   });
 
-  it("shows viewing controls add through `viewState.globalViewingControls`", function() {
+  it("shows viewing controls added through `viewState.globalViewingControls`", function() {
     const simpleItem = new SimpleCatalogItem("simple", terria);
     runInAction(() => {
       // Open the ViewingControls menu for this item
