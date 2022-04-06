@@ -32,7 +32,8 @@ import CkanItemReference, {
   CkanResourceWithFormat,
   getSupportedFormats,
   PreparedSupportedFormat,
-  prepareSupportedFormat
+  prepareSupportedFormat,
+  getCkanItemName
 } from "./CkanItemReference";
 
 export function createInheritedCkanSharedTraitsStratum(
@@ -367,6 +368,9 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
 
         item.setCkanStrata(item);
         item.terria.addModel(item);
+
+        const name = getCkanItemName(item);
+        if (name) item.setTrait(CommonStrata.definition, "name", name);
 
         if (this._catalogGroup.groupBy === "organization") {
           const groupId = ckanDataset.organization
