@@ -15,9 +15,12 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
+import ColorBlendMode from "terriajs-cesium/Source/Scene/ColorBlendMode";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import URI from "urijs";
+import isDefined from "../../../Core/isDefined";
+import { JsonObject } from "../../../Core/Json";
 import loadArrayBuffer from "../../../Core/loadArrayBuffer";
 import TerriaError from "../../../Core/TerriaError";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
@@ -164,8 +167,31 @@ export default class GtfsCatalogItem extends MappableMixin(
         data.sourceId
       );
 
-      if (!entity.model && this._model) {
-        entity.model = this._model;
+      if (!entity.model) {
+        if (this._coloredModels) {
+          const gtfsEntity: FeedEntity = data.featureInfo?.get("entity");
+          const value = jsonPathLike(
+            gtfsEntity as JsonObject,
+            this.model.colorModelsByProperty.property!
+          );
+          if (value !== undefined) {
+            let breakLoop = false;
+            this.model.colorModelsByProperty.colorGroups.forEach(
+              (colorGroup, i) => {
+                if (breakLoop || colorGroup.regExp === undefined) return;
+                if (new RegExp(colorGroup.regExp).test(value)) {
+                  entity.model = this._coloredModels![i];
+                  breakLoop = true;
+                }
+              }
+            );
+            entity.point = undefined;
+          } else {
+            entity.model = this._model;
+          }
+        } else if (this._model) {
+          entity.model = this._model;
+        }
       }
 
       if (
@@ -280,18 +306,42 @@ export default class GtfsCatalogItem extends MappableMixin(
       uri: new ConstantProperty(this.model.url),
       upAxis: new ConstantProperty(this._cesiumUpAxis),
       forwardAxis: new ConstantProperty(this._cesiumForwardAxis),
-      scale: new ConstantProperty(
-        this.model.scale !== undefined ? this.model.scale : 1
-      ),
+      scale: new ConstantProperty(this.model.scale ?? 1),
       heightReference: new ConstantProperty(HeightReference.RELATIVE_TO_GROUND),
       distanceDisplayCondition: new ConstantProperty({
         near: 0.0,
         far: this.model.maximumDistance
       }),
+      maximumScale: new ConstantProperty(this.model.maximumScale),
+      minimumPixelSize: new ConstantProperty(this.model.minimumPixelSize ?? 0),
       shadows: ShadowMode.DISABLED
     };
 
     return new ModelGraphics(options);
+  }
+
+  @computed
+  private get _coloredModels() {
+    const colorGroups = this.model?.colorModelsByProperty?.colorGroups;
+    const model = this._model;
+    if (
+      !isDefined(model) ||
+      !isDefined(this.model?.colorModelsByProperty?.property) ||
+      !isDefined(colorGroups) ||
+      colorGroups.length === 0
+    ) {
+      return undefined;
+    }
+    return colorGroups.map(({ color }) => {
+      const coloredModel = model.clone();
+      coloredModel.color = new ConstantProperty(
+        Color.fromCssColorString(color ?? "white")
+      );
+      coloredModel.colorBlendMode = new ConstantProperty(
+        ColorBlendMode.REPLACE
+      );
+      return coloredModel;
+    });
   }
 
   constructor(
@@ -477,4 +527,20 @@ function updateBbox(lat: number, lon: number, rectangle: RectangleExtent) {
   if (lat < rectangle.south) rectangle.south = lat;
   if (lon > rectangle.east) rectangle.east = lon;
   if (lat > rectangle.north) rectangle.north = lat;
+}
+
+/**
+ *
+ * @param data Object
+ * @param path Path in period-separated form. E.g. vehicle.position.compass
+ * @returns The value at the path inside data
+ */
+function jsonPathLike(data: JsonObject, path: string): any {
+  if (data === undefined) return undefined;
+  const index = path.indexOf(".");
+  if (index === -1) return data[path];
+  return jsonPathLike(
+    data[path.slice(0, index)] as JsonObject,
+    path.slice(index + 1)
+  );
 }
