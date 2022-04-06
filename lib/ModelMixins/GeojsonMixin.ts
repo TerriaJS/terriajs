@@ -437,6 +437,11 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
         for (let i = 0; i < features.length; i++) {
           const feature = features[i];
+
+          // Ignore features without geometry or type
+          if (!isJsonObject(feature.geometry, false) || !feature.geometry.type)
+            continue;
+
           if (!feature.properties) {
             feature.properties = {};
           }
