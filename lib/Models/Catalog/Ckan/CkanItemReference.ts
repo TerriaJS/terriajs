@@ -401,10 +401,13 @@ export default class CkanItemReference extends UrlMixin(
       // Mixing ?? and || because for params we don't want to use empty string params if there are non-empty string parameters
       const layers =
         this._ckanResource?.wms_layer ??
-        (params?.LAYERS || params?.layers || params?.typeName);
+        (params?.LAYERS ||
+          params?.layers ||
+          params?.typeName ||
+          this._ckanResource?.name);
 
       if (layers) {
-        model.setTrait(CommonStrata.definition, "layers", layers);
+        model.setTrait(CommonStrata.definition, "layers", decodeURI(layers));
       }
     }
     return model;
