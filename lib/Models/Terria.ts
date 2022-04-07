@@ -98,11 +98,11 @@ import Internationalization, {
 import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
-import SelectableDimensionWorkflow from "./SelectableDimensions/SelectableDimensionWorkflow";
 import ShareDataService from "./ShareDataService";
 import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
+import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
 
 // import overrides from "../Overrides/defaults.jsx";
 

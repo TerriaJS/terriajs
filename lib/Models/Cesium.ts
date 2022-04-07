@@ -709,7 +709,7 @@ export default class Cesium extends GlobeOrMap {
             });
           }
         });
-      } else if (target.position !== undefined) {
+      } else if (target.position instanceof Cartesian3) {
         // target is a CameraView or an Entity
         return flyToPromise(camera, {
           duration: flightDurationSeconds,

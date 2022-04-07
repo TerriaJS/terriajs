@@ -1,7 +1,21 @@
 Change Log
 ==========
 
-#### next release (8.1.26)
+#### next release (8.1.27)
+
+* Use CKAN Dataset `name` property for WMS `layers` as last resort.
+* Set CKAN Group will now set CKAN Item `name` in `definition` stratum.
+* Ignore GeoJSON Features with no geometry.
+* Fix feedback link styling.
+* Improve `CatalogIndexReference` error messages.
+* TSify `BuildShareLink`, `InitSourceData` and `ShareData`.
+* Add `HasLocalData` interface - which has `hasLocalData` property to implement
+* Add `ModelJson` interface - which provides loose type hints for Model JSON
+* Add `settings` object to `InitSourceData` - provides `baseMaximumScreenSpaceError, useNativeResolution, alwaysShowTimeline, baseMapId, terrainSplitDirection, depthTestAgainstTerrainEnabled` - these properties are now saved in share links/stories.
+* Move `setAlwaysShowTimeline` logic from `SettingsPanel` to `TimelineStack.ts`
+* [The next improvement]
+
+#### 8.1.26 - 2022-04-05
 
 * **Breaking changes**
   * All dynamic groups (eg `WebMapServiceCatalogGroup`) will create members and set `definition` strata (instead of `underride`)
@@ -73,14 +87,13 @@ Change Log
   * This uses new `TableStyle.isCustom` property
 * Move workbench item controls from `WorkbenchItem.jsx` `WorkbenchItemControls.tsx`
 * Add `UrlTempalteImageryCatalogItem`, rename `RasterLayerTraits` to `ImageryProviderTraits` and add some properties.
+* Added `ViewingControlsMenu` for making catalog wide extensions to viewing controls options.
+* Added `MapToolbar`, a simpler API for adding buttons to the map navigation menu for the most common uses cases.
+* Added `BoxDrawing` creation methods `fromTransform` and `fromTranslationRotationScale`.
+* Fixed a bug where `zoom` hangs for catalog items with trait named `position`.
+* Moved workflows to `Models/Workflows` and added helper method `runWorkflow` to invoke a workflow.
 * Change NaturalEarth II basemap to use `url-template-imagery`
 * Remove Gnaf API related files as the service was terminated.
-* TSify `BuildShareLink`, `InitSourceData` and `ShareData`.
-* Add `HasLocalData` interface - which has `hasLocalData` property to implement
-* Add `ModelJson` interface - which provides loose type hints for Model JSON
-* Add `settings` object to `InitSourceData` - provides `baseMaximumScreenSpaceError, useNativeResolution, alwaysShowTimeline, baseMapId, terrainSplitDirection, depthTestAgainstTerrainEnabled` - these properties are now saved in share links/stories.
-* Move `setAlwaysShowTimeline` logic from `SettingsPanel` to `TimelineStack.ts`
-* [The next improvement]
 
 #### 8.1.25 - 2022-03-16
 

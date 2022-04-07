@@ -57,7 +57,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import formatPropertyValue from "../Core/formatPropertyValue";
 import hashFromString from "../Core/hashFromString";
 import isDefined from "../Core/isDefined";
-import { isJsonObject, JsonObject, isJsonNumber } from "../Core/Json";
+import { isJsonNumber, isJsonObject, JsonObject } from "../Core/Json";
 import { isJson } from "../Core/loadBlob";
 import makeRealPromise from "../Core/makeRealPromise";
 import StandardCssColors from "../Core/StandardCssColors";
@@ -76,9 +76,10 @@ import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
-import TableStylingWorkflow from "../Models/SelectableDimensions/TableStylingWorkflow";
-import VectorStylingWorkflow from "../Models/SelectableDimensions/VectorStylingWorkflow";
 import { ViewingControl } from "../Models/ViewingControls";
+import * as SelectableDimensionWorkflow from "../Models/Workflows/SelectableDimensionWorkflow";
+import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
+import VectorStylingWorkflow from "../Models/Workflows/VectorStylingWorkflow";
 import Icon from "../Styled/Icon";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
@@ -436,6 +437,11 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
         for (let i = 0; i < features.length; i++) {
           const feature = features[i];
+
+          // Ignore features without geometry or type
+          if (!isJsonObject(feature.geometry, false) || !feature.geometry.type)
+            continue;
+
           if (!feature.properties) {
             feature.properties = {};
           }
@@ -1175,8 +1181,9 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               name: "Edit Style",
               onClick: viewState => {
                 runInAction(() => {
-                  viewState.terria.selectableDimensionWorkflow = new VectorStylingWorkflow(
-                    this
+                  SelectableDimensionWorkflow.runWorkflow(
+                    viewState,
+                    new VectorStylingWorkflow(this)
                   );
                 });
               },
@@ -1195,8 +1202,9 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         ? {
             title: "Custom",
             onClick: action(() => {
-              this.terria.selectableDimensionWorkflow = new VectorStylingWorkflow(
-                this
+              SelectableDimensionWorkflow.runWorkflow(
+                this.terria,
+                new VectorStylingWorkflow(this)
               );
             })
           }

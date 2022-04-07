@@ -86,7 +86,7 @@ export default class CatalogIndex {
        *    - "strict" = index whole words
        *  - resolution property = score resolution
        *
-       * Note: beacuse we have set `worker: true`, we must use async calls
+       * Note: because we have set `worker: true`, we must use async calls
        */
       this._searchIndex = new Document({
         worker: true,
