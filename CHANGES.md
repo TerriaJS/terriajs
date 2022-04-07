@@ -8,6 +8,7 @@ Change Log
 * Ignore GeoJSON Features with no geometry.
 * Fix feedback link styling.
 * Improve `CatalogIndexReference` error messages.
+* Fix selectable dimensions passing reactive objects and arrays to updateModelFromJson (which could cause problems with array detection).
 * [The next improvement]
 
 #### 8.1.26 - 2022-04-05
