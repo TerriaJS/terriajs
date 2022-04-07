@@ -391,9 +391,10 @@ export default class GtfsCatalogItem extends MappableMixin(
       "Cache-Control": "no-cache"
     };
 
-    if (this.apiKey !== undefined) {
-      // headers.Authorization = `apikey ${this.apiKey}`;
-      headers["Ocp-Apim-Subscription-Key"] = this.apiKey;
+    if (this.headers !== undefined) {
+      this.headers.forEach(({ name, value }) => {
+        if (name !== undefined && value !== undefined) headers[name] = value;
+      });
     }
 
     if (this.url !== null && this.url !== undefined) {
