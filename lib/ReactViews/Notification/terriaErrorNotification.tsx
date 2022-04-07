@@ -57,6 +57,7 @@ const TerriaErrorBox = (props: {
             margin: 5px 0px;
           }
         `}
+        textLight
       >
         {parseCustomMarkdownToReact(props.error.message, {
           viewState: props.viewState,
@@ -105,7 +106,12 @@ export const terriaErrorNotification = (error: TerriaError) => (
           p {
             margin: 5px 0px;
           }
+          // Fix feedback button color
+          button {
+            color: ${(p: any) => p.theme.textLight};
+          }
         `}
+        textLight
       >
         {parseCustomMarkdownToReact(error.highestImportanceError.message, {
           viewState: viewState,

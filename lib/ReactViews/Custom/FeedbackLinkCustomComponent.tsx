@@ -33,7 +33,7 @@ export const FeedbackLink = (props: {
         text-align: left;
       `}
     >
-      <Text bold textLight>
+      <Text bold>
         {parseCustomMarkdownToReact(
           props.feedbackMessage
             ? props.feedbackMessage
