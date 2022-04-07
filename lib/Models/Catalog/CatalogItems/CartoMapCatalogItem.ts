@@ -156,10 +156,12 @@ export default class CartoMapCatalogItem extends MappableMixin(
 
     return new UrlTemplateImageryProvider({
       url: proxyCatalogItemUrl(this, stratum.tileUrl),
-      maximumLevel: this.maximumLevel,
-      minimumLevel: this.minimumLevel,
+      maximumLevel: this.maximumLevel ?? 25,
+      minimumLevel: this.minimumLevel ?? 0,
       credit: this.attribution,
-      subdomains: subdomains
+      subdomains: subdomains,
+      tileHeight: this.tileHeight,
+      tileWidth: this.tileWidth
     });
   }
 }

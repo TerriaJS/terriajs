@@ -127,30 +127,7 @@ export class CkanDatasetStratum extends LoadableStratum(
   }
 
   @computed get name() {
-    if (this.ckanResource === undefined) return undefined;
-    if (this.ckanItemReference.useResourceName) return this.ckanResource.name;
-    // via @steve9164
-    /** Switched the order [check `useCombinationNameWhereMultipleResources`
-     * first ] that these are checked so the default is checked last. Otherwise
-     * setting useCombinationNameWhereMultipleResources without setting
-     * useDatasetNameAndFormatWhereMultipleResources to false doesn't do
-     * anything */
-    if (this.ckanDataset) {
-      if (
-        this.ckanItemReference.useCombinationNameWhereMultipleResources &&
-        this.ckanDataset.resources.length > 1
-      ) {
-        return this.ckanDataset.title + " - " + this.ckanResource.name;
-      }
-      if (
-        this.ckanItemReference.useDatasetNameAndFormatWhereMultipleResources &&
-        this.ckanDataset.resources.length > 1
-      ) {
-        return this.ckanDataset.title + " - " + this.ckanResource.format;
-      }
-      return this.ckanDataset.title;
-    }
-    return this.ckanResource.name;
+    return getCkanItemName(this.ckanItemReference);
   }
 
   @computed get rectangle() {
@@ -386,9 +363,9 @@ export default class CkanItemReference extends UrlMixin(
     previousTarget = model;
     await this.setCkanStrata(model);
 
-    const defintionStratum = this.strata.get(CommonStrata.definition);
-    if (defintionStratum) {
-      model.strata.set(CommonStrata.definition, defintionStratum);
+    const definitionStratum = this.strata.get(CommonStrata.definition);
+    if (definitionStratum) {
+      model.strata.set(CommonStrata.definition, definitionStratum);
       model.setTrait(CommonStrata.definition, "url", undefined);
     }
 
@@ -401,26 +378,15 @@ export default class CkanItemReference extends UrlMixin(
       // Mixing ?? and || because for params we don't want to use empty string params if there are non-empty string parameters
       const layers =
         this._ckanResource?.wms_layer ??
-        (params?.LAYERS || params?.layers || params?.typeName);
+        (params?.LAYERS ||
+          params?.layers ||
+          params?.typeName ||
+          this._ckanResource?.name);
 
       if (layers) {
-        model.setTrait(CommonStrata.definition, "layers", layers);
+        model.setTrait(CommonStrata.definition, "layers", decodeURI(layers));
       }
     }
-
-    // Tried to make this sequence an updateModelFromJson but wouldn't work?
-    // updateModelFromJson(model, CommonStrata.override, {itemProperties: this.itemProperties})
-
-    // Also tried this other approach which works from the CkanCatalogGroup
-    // this.setItemProperties(model, this.itemProperties)
-    if (this.itemProperties !== undefined) {
-      const ipKeys = Object.keys(this.itemProperties);
-      ipKeys.forEach(p => {
-        // @ts-ignore
-        model.setTrait(CommonStrata.override, p, this.itemProperties[p]);
-      });
-    }
-
     return model;
   }
 }
@@ -561,4 +527,32 @@ export function resourceIsSupported(
   }
 
   return match;
+}
+
+export function getCkanItemName(item: CkanItemReference) {
+  if (!item._ckanResource) return;
+
+  if (item.useResourceName) return item._ckanResource.name;
+  // via @steve9164
+  /** Switched the order [check `useCombinationNameWhereMultipleResources`
+   * first ] that these are checked so the default is checked last. Otherwise
+   * setting useCombinationNameWhereMultipleResources without setting
+   * useDatasetNameAndFormatWhereMultipleResources to false doesn't do
+   * anything */
+  if (item._ckanDataset) {
+    if (
+      item.useCombinationNameWhereMultipleResources &&
+      item._ckanDataset.resources.length > 1
+    ) {
+      return item._ckanDataset.title + " - " + item._ckanResource.name;
+    }
+    if (
+      item.useDatasetNameAndFormatWhereMultipleResources &&
+      item._ckanDataset.resources.length > 1
+    ) {
+      return item._ckanDataset.title + " - " + item._ckanResource.format;
+    }
+    return item._ckanDataset.title;
+  }
+  return item._ckanResource.name;
 }

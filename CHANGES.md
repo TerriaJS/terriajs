@@ -1,11 +1,144 @@
 Change Log
 ==========
 
-#### next release (8.1.20)
+#### next release (8.1.27)
 
+* Use CKAN Dataset `name` property for WMS `layers` as last resort.
+* Set CKAN Group will now set CKAN Item `name` in `definition` stratum.
+* Ignore GeoJSON Features with no geometry.
+* Fix feedback link styling.
+* Improve `CatalogIndexReference` error messages.
 * [The next improvement]
 
-#### 8.1.19
+#### 8.1.26 - 2022-04-05
+
+* **Breaking changes**
+  * All dynamic groups (eg `WebMapServiceCatalogGroup`) will create members and set `definition` strata (instead of `underride`)
+* New `GltfMixin`, which `GltfCatalogItem` now uses.
+* Hook up `beforeViewerChanged` and `afterViewerChanged` events so they are
+  triggered on viewer change. They are raised only on change between 2D and 3D
+  viewer mode.
+* Removed references to conversion service which is no longer used in version >=8.0.0.
+* Added experimental routing system - there may be breaking changes to this system in subsequent patch releases for a short time. The routes currently include:
+  * `/story/:share-id` ➡ loads share JSON from a URL `${configParameters.storyRouteUrlPrefix}:share-id` (`configParameters.storyRouteUrlPrefix` must have a trailing slash)
+  * `/catalog/:id` ➡ opens the data catalogue to the specified member
+* Fixed a polyline position update bug in `LeafletVisualizer`. Polylines with time varying position will now correctly animate in leaflet mode.
+* Change button cursor to pointer
+* Add `GeoJsonTraits.filterByProperties` - this can be used to filter GeoJSON features by properties
+* Add GeoJSON `czmlTemplate` support for `Polygon/MultiPolygon`
+* Add custom `heightOffset` property to `czmlTemplate`
+* Fixed a bug where Cesium3DTilePointFeature info is not shown when being clicked.
+* Added optional `onDrawingComplete` callback to `UserDrawing` to receive drawn points or rectangle when the drawing is complete.
+* Fixed a bug in `BoxDrawing` where the box can be below ground after initialization even when setting `keepBoxAboveGround` to true.
+* Add `itemProperties`, `itemPropertiesByType` and `itemPropertiesByIds` to `GroupTraits` and `ReferenceTraits`.
+  * Properties set `override` strata
+  * Item properties will be set in the following order (highest to lowest priority) `itemPropertiesByIds`, `itemPropertiesByType`, `itemProperties`.
+  * If a parent group has `itemProperties`, `itemPropertiesByType` or `itemPropertiesByIds` - then child groups will have these values copied to `underride` when the parent group is loaded
+  * Similarly with references.
+* Fix `viewCatalogMember` bug - where `_previewItem` was being set too late.
+* Improve error message in `DataPreview` for references.
+* Fix alignment of elements in story panel and move some styling from scss to styled components
+* Click on the stories button opens a story builder (button on the left from story number)
+* Added ASGS 2021 regions to region mapping:
+  * SA1-4 (e.g. sa3_code_2021)
+  * GCCSA
+  * STE & AUS (aliased to existing 2011/2016 data due to no change in geometry, names & codes)
+* Added LGA regions from 2019 & 2021 to region mapping - only usable by lga code
+* Increase `ForkTsCheckerWebpackPlugin` memoryLimit to 4GB
+* Add `renderInline` option to markdownToHtml/React + TSify files
+* Organise `lib/Map` into folder structure
+* When `modelDimensions` are changed, `loadMapItems()` is automatically called
+* Add `featureCounts` to `GeoJsonMixin` - this tracks number of GeoJSON Features by type
+* Add `polygon-stroke`, `polyline-stroke` and `marker-stroke` to GeoJSON `StyleTraits` - these are only applied to geojson-vt features (not Cesium Primitives)
+* TableMixin manual region mapping dimensions are now in a `SelectableDimensionGroup`
+* Fix misc font/color styles
+* Create reusable `StyledTextArea` component
+* `Collapsible` improvements:
+  * Add `"checkbox"` `btnStyle`
+  * `onToggle` can now stop event propagation
+  * `title` now supports custom markdown
+* Add `rightIcon` and `textLight` props to `Button`
+* New `addTerriaScrollbarStyles` scss mixin
+* `TableAutomaticStylesStratum` now creates `styles` for every column - but will hide columns depending on `TableColumnType`
+* `TableAutomaticStylesStratum.numberFormatOptions` is now `TableStyle.numberFormatOptions`
+* Implement `TableColorStyleTraits.legendTicks` - this will determine number of ticks for `ContinuousColorMap` legends
+* `DiscreteColorMap` will now use `minimumValue`/`maximumValue` to calculate bins
+* `SelectableDimensions` improvements
+  * Add `color`, `text`, `numeric` and `button` types
+  * Add `onToggle` function to `SelectableDimensionGroup`
+  * `Group` and `CheckboxGroup` now share the same UI and use `Collapsible`
+  * `enum` (previously `select`) now uses `react-select` component
+  * `color` uses `react-color` component
+  * `DimensionSelectorSection` / `DimensionSelector*` are now named the same as the model - eg `SelectableDimension`
+* Create `Portal`, `PortalContainer`,`SidePanelContainer` and `WorkflowPanelContainer`. There are used by `WorkflowPanel`.
+* Create `WorkflowPanel` - a basic building block for creating Workflows that sit on top of the workbench
+  * It has three reusable components, `Panel`, `PanelButton`, `PanelMenu`
+* Create `selectableDimensionWorkflow` - This uses `WorkflowPanel` to show `SelectableDimensions` in a separate side panel.
+  * `TableStylingWorkflow` - set styling options for TableMixin models
+  * `VectorStylingWorkflow` - this extends `TableStylingWorkflow` - used to set styling options for GeoJsonMixin models (for Protomaps/geojson-vt only)
+* Create `viewingControls` concept. This can be used to add menu items to workbench items menu (eg "Remove", "Export", ...)
+  * TSXify `ViewingControls`
+* Add temporary `legendButton` property - this is used to show a "Custom" button above the Legend if custom styling has been applied
+  * This uses new `TableStyle.isCustom` property
+* Move workbench item controls from `WorkbenchItem.jsx` `WorkbenchItemControls.tsx`
+* Add `UrlTempalteImageryCatalogItem`, rename `RasterLayerTraits` to `ImageryProviderTraits` and add some properties.
+* Added `ViewingControlsMenu` for making catalog wide extensions to viewing controls options.
+* Added `MapToolbar`, a simpler API for adding buttons to the map navigation menu for the most common uses cases.
+* Added `BoxDrawing` creation methods `fromTransform` and `fromTranslationRotationScale`.
+* Fixed a bug where `zoom` hangs for catalog items with trait named `position`.
+* Moved workflows to `Models/Workflows` and added helper method `runWorkflow` to invoke a workflow.
+* Change NaturalEarth II basemap to use `url-template-imagery`
+* Remove Gnaf API related files as the service was terminated.
+
+#### 8.1.25 - 2022-03-16
+
+* Fix broken download link for feature info panel charts when no download urls are specified.
+* Fixed parameter names of WPS catalog functions.
+* Improve WMS 1.1.1 support
+  * Added `useWmsVersion130` trait - Use WMS version 1.3.0. True by default (unless `url` has `"version=1.1.1"` or `"version=1.1.0"`), if false, then WMS version 1.1.1 will be used.
+  * Added `getFeatureInfoFormat` trait - Format parameter to pass to GetFeatureInfo requests. Defaults to "application/json", "application/vnd.ogc.gml", "text/html" or "text/plain" - depending on GetCapabilities response
+* Add `legendBackgroundColor` to `LegendOwnerTraits` and `backgroundColor` to `LegendTraits`
+* Add `sld_version=1.1.0` to `GetLegendGraphics` requests 
+* Filter `"styles","version","format","srs","crs"` conflicting query parameters from WMS `url`
+* WMS `styles`, `tileWidth`, `tileHeight` and `crs`/`srs` will use value in `url` if it is defined (similar to existing behavior with `layers`)
+* WMS will now show warning if invalid `layers` (eg if the specified `layers` don't exist in `GetCapabilities`)
+* ArcGisFeatureServerCatalogItem can now load more than the maximum feature limit set by the server by making multiple requests, and uses GeojsonMixin
+* Avoid creating duplication in categories in ArcGisPortalCatalogGroup.
+* Fix `CatalogMemberMixin.hasDescription` null bug
+* `TableStyle` now calculates `rectangle` for point based styles
+* Fixed error installing dependencies by changing dependency "pell" to use github protocol rather than unencrypted Git protocol, which is no longer supported by GitHub as of 2022-03-15.
+
+#### 8.1.24 - 2022-03-08
+
+* Ignores duplicate model ids in members array in `updateModelFromJson`
+* Add support for `crs` property in GeoJSON `Feature`
+* Add feature highlighting for Protomaps vector tiles
+* Add back props `localDataTypes` and `remoteDataTypes` to the component `MyData` for customizing list of types shown in file upload modal.
+
+#### 8.1.23 - 2022-02-28
+
+- **Breaking changes**:
+  * `IDEAL ZOOM` can be customised by providing `lookAt` or `camera` for `idealZoom` in `MappableTraits`. The `lookAt` takes precedence of `camera` if both exist. The values for `camera` can be easily obtained from property `initialCamera` by calling shared link api .
+* Fixed crash caused by ArcGisMapServerCatalogItem layer missing legend.
+* Refactored StoryPanel and made it be collapsible
+* Added animation.ts as a utility function to handle animation end changes (instead of using timeout)
+* Fixed a bug where `buildShareLink` serialised the feature highlight model & geometry. Picked features are still serialised and geometry is reloaded on accessing the share link.
+
+#### 8.1.22 - 2022-02-18
+
+* Added play story button in mobile view when there is an active story
+* `IDEAL ZOOM` can be customised by providing `idealZoom` property in `MappableTraits`.
+* Fix `AddData` options
+
+#### 8.1.21 - 2022-02-08
+
+* Fixed bug where WMS layer would crash terria if it had no styles, introduced in 8.1.14
+
+#### 8.1.20 - 2022-02-04
+
+* Fixed whitescreen on Print View in release/production builds
+
+#### 8.1.19 - 2022-01-25
 
 * Add WMS support for `TIME=current`
 * Only show `TableMixin.legends` if we have rows in dataColumnMajor and mapItems to show
@@ -14,7 +147,7 @@ Change Log
 * Added new print preview page that opens up in a new window
 * TSXified PrintView
 
-#### 8.1.18
+#### 8.1.18 - 2022-01-21
 
 * Add missing default Legend to `TableAutomaticStylesStratum.defaultStyle`
 * Fix a bug in CompositeCatalogItem that causes share URLs to become extremely long.
@@ -23,7 +156,7 @@ Change Log
 * Remove `theme.fontImports` from `GlobalTerriaStyles` - it is now handled in `TerriaMap/index.js`
 * Add check to `featureDataToGeoJson.getEsriFeature` to make sure geometry exists
 
-#### 8.1.17
+#### 8.1.17 - 2022-01-12
 
 - **Breaking changes**:
   * Minimum node version is now 12 after upgrading node-sass dependency
@@ -40,11 +173,11 @@ Change Log
 * Remove SOS defaults legend workaround
 * Update NodeJS version to 14 in `npm-publish` GitHub action
 
-#### 8.1.16
+#### 8.1.16 - 2021-12-23
 
 * Added region mapping support for Commonwealth Electoral Divisions as at 2 August 2021 (AEC) as com_elb_name_2021.
 
-#### 8.1.15
+#### 8.1.15 - 2021-12-22
 
 * Fix sharelink bug, and make `isJson*` type checks more rigorous
 * Remove `uniqueId` from `CatalogMemberMixin.nameInCatalog` and add it as fallback to `CatalogMemberMixin.name`
@@ -71,7 +204,7 @@ Change Log
 * Fix `GeoJsonCatalogItem.legends`
 * Add `isOpen` to `TerriaReferenceTraits`
 
-#### 8.1.14
+#### 8.1.14 - 2021-12-13
 
 - **Breaking changes**:
   * `Result.throwIfUndefined()` will now only throw if `result.value` is undefined - regardless of `result.error`
@@ -91,7 +224,7 @@ Change Log
 * Fix `WebMapServiceCatalogItem.styles` if `supportsGetLegendGraphics = false`. This means that if a WMS server doesn't support `GetLegendGraphics` requests, the first style will be set as the default style.
 
 
-#### 8.1.13
+#### 8.1.13 - 2021-12-03
 
 * Paramerterised the support email on the help panel to use the support email in config
 * Refactored `TableColumn get type()` to move logic into `guessColumnTypeFromValues()`
@@ -123,7 +256,7 @@ Change Log
 * Add `uniqueId` as fallback to `nameInCatalog`
 * Remove duplicated items from `OpenDataSoftGroup` and `SocrataGroup`
 
-#### 8.1.12
+#### 8.1.12 - 2021-11-18
 
 * Bigger zoom control icons.
 * Modified "ideal zoom" to zoom closer to tilesets and datasources.
@@ -155,22 +288,22 @@ Change Log
 * Fix CKAN ArcGisFeatureService resources
 * ArcGisFeatureServer will now set `outSR=4326` so we don't need to reproject client-side
 
-#### 8.1.11
+#### 8.1.11 - 2021-11-15
 
 * Fix `SettingsPanel` type issue
 
-#### 8.1.10
+#### 8.1.10 - 2021-11-15
 
 * Fix `CswCatalogGroup` XML types
 * Added `MAINCODE` aliases for all ABS Statistical Area regions that were missing them.
 * Fixed `superGet` replacement in webpack builds with babel versions `7.16.0` and above.
 
-#### 8.1.9
+#### 8.1.9 - 2021-11-01
 
 * TSify workbench splitter control and fix broken styling.
 * Fix app crash when opening AR tool.
 
-#### 8.1.8
+#### 8.1.8 - 2021-10-29
 
 * Tsified `SettingPanel`
 * Moved `setViewerMode` function from `Terria` class to `ViewerMode`
@@ -191,13 +324,13 @@ Change Log
 * Fix app crash when previewing a nested reference in the catalog (eg when viewing an indexed search result where the result is a reference).
 * Ported feaure from v7 to set WMS layers property from the value of `LAYERS`, `layers` or `typeName` from query string of CKAN resource URL.
 
-#### 8.1.4
+#### 8.1.4 - 2021-10-15
 
 * Make flex-search usage (for `CatalogIndex`) web-worker based
 * Add `completeKnownContainerUniqueIds` to `Model` class - This will recursively travese tree of knownContainerUniqueIds models to return full list of dependencies
 * Add all models from `completeKnownContainerUniqueIds` to shareData.models (even if they are empty)
 
-#### 8.1.3
+#### 8.1.3 - 2021-10-14
 
 * Reimplement map viewer url param
 * Added `terriaError.importance` property. This can be set to adjust which error messages are presented to the user.
@@ -222,7 +355,7 @@ Change Log
 * Fix `ContinuousColorMap` `Legend` issue due to funky JS precision
 * Fix mobx computed cycle in `CkanDatasetStratum` which was making error messages for failed loading of CKAN items worse.
 
-#### 8.1.2
+#### 8.1.2 - 2021-10-01
 
 * Removed duplicate Help icon and tooltip from the map navigation menu at the bottom as it is now shown in the top menu.
 * Fixed a bug where the app shows a scrollbar in some instances.
@@ -230,7 +363,7 @@ Change Log
 * Modified `TerriaReference` to retain its name when expanded. Previously, when the reference is expanded, it will assume the name of the group or item of the target.
 * Proxy `catalogIndex.url`
 
-#### 8.1.1
+#### 8.1.1 - 2021-09-30
 
 - **Breaking changes:**
   * `blacklist` has been renamed to `excludeMembers` for `ArcGisPortalCatalogGroup` and `CkanCatalogGroup`.
@@ -313,7 +446,7 @@ Change Log
 * The glyph style used for chart points can now be customized.
 * Chart tooltip and legend bar can now fit more legends gracefully.
 
-#### 8.1.0
+#### 8.1.0 - 2021-09-08
 
 - **Breaking changes:**
   * Overhaul of map navigation: items no longer added inside UserInterface using <Nav> jsx.
@@ -328,7 +461,7 @@ Change Log
 * Fixed a bug in Difference tool where difference image was showing with zero opacity in some situations.
 * Fixed `CzmlCatalogItem` to react correctly to input data changes.
 
-#### 8.0.1
+#### 8.0.1 - 2021-09-06
 
 * Added `catalog-converter` support for v7 `#start` data.
 * add french Help button translation
@@ -340,7 +473,7 @@ Change Log
 * Fixed story reset button.
 * Moved help button to the top menu
 
-#### 8.0.0
+#### 8.0.0 - 2021-08-13
 
 - **Breaking changes**:
   - Require `translate#` in front of translatable content id in `config.json` (i.e. `helpContent`).

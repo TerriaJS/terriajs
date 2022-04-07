@@ -6,12 +6,13 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import proxyCatalogItemUrl from "../../../Models/Catalog/proxyCatalogItemUrl";
 import hasTraits from "../../../Models/Definition/hasTraits";
-import Model from "../../../Models/Definition/Model";
+import Model, { BaseModel } from "../../../Models/Definition/Model";
+import Button from "../../../Styled/Button";
+import Icon, { StyledIcon } from "../../../Styled/Icon";
 import LegendOwnerTraits from "../../../Traits/TraitsClasses/LegendOwnerTraits";
 import LegendTraits, {
   LegendItemTraits
@@ -41,7 +42,7 @@ function checkMimeType(legend: Model<LegendTraits>) {
 
 @observer
 export default class Legend extends React.Component<{
-  item: CatalogMemberMixin.Instance;
+  item: BaseModel;
   forPrint?: boolean;
 }> {
   static defaultProps = {
@@ -118,6 +119,7 @@ export default class Legend extends React.Component<{
             className={Styles.imageAnchor}
             target="_blank"
             rel="noreferrer noopener"
+            css={{ backgroundColor: legend.backgroundColor }}
           >
             <img
               src={proxiedUrl}
@@ -154,7 +156,7 @@ export default class Legend extends React.Component<{
     if (isDefined(legend.items) && legend.items.length > 0) {
       return (
         <li key={i} className={Styles.generatedLegend}>
-          <table>
+          <table css={{ backgroundColor: legend.backgroundColor }}>
             <tbody>{legend.items.map(this.renderLegendItem.bind(this))}</tbody>
           </table>
         </li>
@@ -277,10 +279,45 @@ export default class Legend extends React.Component<{
     if (
       isDefined(this.props.item.legends) &&
       this.props.item.legends.length > 0
-    )
+    ) {
+      const backgroundColor = hasTraits(
+        this.props.item,
+        LegendOwnerTraits,
+        "legendBackgroundColor"
+      )
+        ? this.props.item.legendBackgroundColor
+        : undefined;
+
       return (
         <ul className={Styles.legend}>
-          <div className={Styles.legendInner}>
+          <div
+            className={Styles.legendInner}
+            css={{ position: "relative", " li": { backgroundColor } }}
+          >
+            {// Show temporary "legend button" - if custom styling has been applied
+            TableMixin.isMixedInto(this.props.item) &&
+            this.props.item.legendButton ? (
+              <Button
+                primary
+                shortMinHeight
+                css={{ position: "absolute", top: 10, right: 0 }}
+                renderIcon={() => (
+                  <StyledIcon
+                    light={true}
+                    glyph={Icon.GLYPHS.menuDotted}
+                    styledWidth="12px"
+                  />
+                )}
+                rightIcon
+                iconProps={{ css: { marginRight: 0, marginLeft: 4 } }}
+                onClick={this.props.item.legendButton.onClick.bind(
+                  this.props.item
+                )}
+              >
+                {this.props.item.legendButton.title}
+              </Button>
+            ) : null}
+
             {(this.props.item.legends as Model<LegendTraits>[]).map(
               (legend, i: number) => (
                 <React.Fragment key={i}>
@@ -295,6 +332,7 @@ export default class Legend extends React.Component<{
           </div>
         </ul>
       );
+    }
 
     return null;
   }

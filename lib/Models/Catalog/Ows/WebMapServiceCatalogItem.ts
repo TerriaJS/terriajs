@@ -13,12 +13,16 @@ import combine from "terriajs-cesium/Source/Core/combine";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
+import GetFeatureInfoFormat from "terriajs-cesium/Source/Scene/GetFeatureInfoFormat";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import URI from "urijs";
 import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
+import TerriaError from "../../../Core/TerriaError";
+import CatalogMemberMixin, {
+  getName
+} from "../../../ModelMixins/CatalogMemberMixin";
 import ChartableMixin from "../../../ModelMixins/ChartableMixin";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import ExportWebCoverageServiceMixin from "../../../ModelMixins/ExportWebCoverageServiceMixin";
@@ -33,14 +37,45 @@ import WebMapServiceCatalogItemTraits, {
 } from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
+import LoadableStratum from "../../Definition/LoadableStratum";
+import { BaseModel } from "../../Definition/Model";
+import StratumOrder from "../../Definition/StratumOrder";
 import SelectableDimensions, {
-  SelectableDimension,
-  SelectableDimensionSelect
-} from "../../SelectableDimensions";
+  SelectableDimensionEnum
+} from "../../SelectableDimensions/SelectableDimensions";
+import Terria from "../../Terria";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import WebMapServiceCapabilities from "./WebMapServiceCapabilities";
 import WebMapServiceCapabilitiesStratum from "./WebMapServiceCapabilitiesStratum";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
+
+/** This LoadableStratum is responsible for setting WMS version based on CatalogItem.url */
+export class WebMapServiceUrlStratum extends LoadableStratum(
+  WebMapServiceCatalogItemTraits
+) {
+  static stratumName = "wms-url-stratum";
+  constructor(readonly catalogItem: WebMapServiceCatalogItem) {
+    super();
+  }
+
+  duplicateLoadableStratum(model: BaseModel): this {
+    return new WebMapServiceUrlStratum(
+      model as WebMapServiceCatalogItem
+    ) as this;
+  }
+
+  @computed get useWmsVersion130() {
+    if (
+      this.catalogItem.url?.toLowerCase().includes("version=1.1.0") ||
+      this.catalogItem.url?.toLowerCase().includes("version=1.1.1")
+    ) {
+      return false;
+    }
+  }
+}
+
+StratumOrder.addLoadStratum(WebMapServiceUrlStratum.stratumName);
+
 class WebMapServiceCatalogItem
   extends TileErrorHandlerMixin(
     ExportWebCoverageServiceMixin(
@@ -72,15 +107,48 @@ class WebMapServiceCatalogItem
 
   _webMapServiceCatalogGroup: undefined | WebMapServiceCatalogGroup = undefined;
 
-  static defaultParameters = {
+  /** Default WMS parameters for version=1.3.0 */
+  static defaultParameters130 = {
+    transparent: true,
+    format: "image/png",
+    exceptions: "XML",
+    styles: "",
+    version: "1.3.0"
+  };
+
+  static defaultGetFeatureParameters130 = {
+    exceptions: "XML",
+    version: "1.3.0"
+  };
+
+  /** Default WMS parameters for version=1.1.1 */
+  static defaultParameters111 = {
     transparent: true,
     format: "image/png",
     exceptions: "application/vnd.ogc.se_xml",
     styles: "",
-    tiled: true
+    tiled: true,
+    version: "1.1.1"
+  };
+
+  static defaultGetFeatureParameters111 = {
+    exceptions: "application/vnd.ogc.se_xml",
+    version: "1.1.1"
   };
 
   static readonly type = "wms";
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined
+  ) {
+    super(id, terria, sourceReference);
+    this.strata.set(
+      WebMapServiceUrlStratum.stratumName,
+      new WebMapServiceUrlStratum(this)
+    );
+  }
 
   get type() {
     return WebMapServiceCatalogItem.type;
@@ -117,7 +185,17 @@ class WebMapServiceCatalogItem
     });
   }
 
-  protected async forceLoadMapItems(): Promise<void> {}
+  protected async forceLoadMapItems(): Promise<void> {
+    if (this.invalidLayers.length > 0)
+      throw new TerriaError({
+        sender: this,
+        title: i18next.t("models.webMapServiceCatalogItem.noLayerFoundTitle"),
+        message: i18next.t(
+          "models.webMapServiceCatalogItem.noLayerFoundMessage",
+          { name: getName(this), layers: this.invalidLayers.join(", ") }
+        )
+      });
+  }
 
   protected async forceLoadMetadata(): Promise<void> {
     if (
@@ -149,6 +227,42 @@ class WebMapServiceCatalogItem
     }
   }
 
+  /** LAYERS which are valid (i.e. exist in GetCapabilities).
+   * These can be fetched from the server (eg GetMap request)
+   */
+  @computed get validLayers() {
+    const gcStratum:
+      | WebMapServiceCapabilitiesStratum
+      | undefined = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as WebMapServiceCapabilitiesStratum;
+
+    if (gcStratum)
+      return this.layersArray
+        .map(layer => gcStratum.capabilities.findLayer(layer)?.Name)
+        .filter(isDefined);
+
+    return [];
+  }
+
+  /** LAYERS which are **INVALID** - they do **not** exist in GetCapabilities
+   * These layers can **not** be fetched the server (eg GetMap request)
+   */
+  @computed get invalidLayers() {
+    const gcStratum:
+      | WebMapServiceCapabilitiesStratum
+      | undefined = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as WebMapServiceCapabilitiesStratum;
+
+    if (gcStratum)
+      return this.layersArray.filter(
+        layer => !isDefined(gcStratum.capabilities.findLayer(layer)?.Name)
+      );
+
+    return [];
+  }
+
   @computed
   get stylesArray(): ReadonlyArray<string> {
     return this.styles?.split(",") ?? [];
@@ -170,7 +284,7 @@ class WebMapServiceCatalogItem
         .clone()
         .setSearch({
           service: "WMS",
-          version: "1.3.0",
+          version: this.useWmsVersion130 ? "1.3.0" : "1.1.1",
           request: "GetCapabilities"
         })
         .toString();
@@ -238,6 +352,10 @@ class WebMapServiceCatalogItem
 
   @computed
   get mapItems() {
+    // Don't return anything if there are invalid layers
+    // See forceLoadMapItems for error message
+    if (this.invalidLayers.length > 0) return [];
+
     if (this.isShowingDiff === true) {
       return this._diffImageryParts ? [this._diffImageryParts] : [];
     }
@@ -364,23 +482,46 @@ class WebMapServiceCatalogItem
 
       // Set dimensionParameters
       const dimensionParameters = formatDimensionsForOws(this.dimensions);
-
       if (time !== undefined) {
         dimensionParameters.time = time;
       }
+
+      // Construct parameters objects
+      // We use slightly different parameters for GetMap and GetFeatureInfo requests
+      const parameters: { [key: string]: any } = {
+        ...(this.useWmsVersion130
+          ? WebMapServiceCatalogItem.defaultParameters130
+          : WebMapServiceCatalogItem.defaultParameters111),
+        ...this.parameters,
+        ...dimensionParameters
+      };
+
+      const getFeatureInfoParameters: { [key: string]: any } = {
+        ...(this.useWmsVersion130
+          ? WebMapServiceCatalogItem.defaultGetFeatureParameters130
+          : WebMapServiceCatalogItem.defaultGetFeatureParameters111),
+        feature_count:
+          1 +
+          (this.maximumShownFeatureInfos ??
+            this.terria.configParameters.defaultMaximumShownFeatureInfos),
+        ...this.parameters,
+        ...dimensionParameters
+      };
 
       const diffModeParameters = this.isShowingDiff
         ? this.diffModeParameters
         : {};
 
-      const parameters: { [key: string]: any } = {
-        ...WebMapServiceCatalogItem.defaultParameters,
-        ...this.parameters,
-        ...dimensionParameters
-      };
-
+      // Set CRS for WMS 1.3.0
+      // Set SRS for WMS 1.1.1
       if (this.crs) {
-        parameters.crs = this.crs;
+        if (this.useWmsVersion130) {
+          parameters.crs = this.crs;
+          getFeatureInfoParameters.crs = this.crs;
+        } else {
+          parameters.srs = this.crs;
+          getFeatureInfoParameters.srs = this.crs;
+        }
       }
 
       if (this.supportsColorScaleRange) {
@@ -389,11 +530,12 @@ class WebMapServiceCatalogItem
 
       if (isDefined(this.styles)) {
         parameters.styles = this.styles;
+        getFeatureInfoParameters.styles = this.styles;
       }
+
       Object.assign(parameters, diffModeParameters);
 
-      const maximumLevel = this.getMaximumLevel(true);
-
+      // Remove problematic query parameters from URL - these are handled by the parameters objects
       const queryParametersToRemove = [
         "request",
         "service",
@@ -402,47 +544,45 @@ class WebMapServiceCatalogItem
         "width",
         "height",
         "bbox",
-        "layers"
+        "layers",
+        "styles",
+        "version",
+        "format",
+        "srs",
+        "crs"
       ];
 
       const baseUrl = queryParametersToRemove.reduce(
-        (url, parameter) => url.removeQuery(parameter),
+        (url, parameter) =>
+          url
+            .removeQuery(parameter)
+            .removeQuery(parameter.toUpperCase())
+            .removeQuery(parameter.toLowerCase()),
         new URI(this.url)
       );
 
-      const gcStratum:
-        | WebMapServiceCapabilitiesStratum
-        | undefined = this.strata.get(
-        GetCapabilitiesMixin.getCapabilitiesStratumName
-      ) as WebMapServiceCapabilitiesStratum;
-
-      let lyrs: string[] = [];
-      if (this.layers && gcStratum !== undefined) {
-        this.layersArray.forEach(function(lyr) {
-          const gcLayer = gcStratum.capabilities.findLayer(lyr);
-          if (gcLayer !== undefined && gcLayer.Name) lyrs.push(gcLayer.Name);
-        });
-      }
-
       const imageryOptions: WebMapServiceImageryProvider.ConstructorOptions = {
         url: proxyCatalogItemUrl(this, baseUrl.toString()),
-        layers: lyrs.length > 0 ? lyrs.join(",") : "",
+        layers: this.validLayers.length > 0 ? this.validLayers.join(",") : "",
         parameters,
-        getFeatureInfoParameters: {
-          ...this.parameters,
-          ...dimensionParameters,
-          feature_count:
-            1 +
-            (this.maximumShownFeatureInfos ??
-              this.terria.configParameters.defaultMaximumShownFeatureInfos),
-          styles: this.styles === undefined ? "" : this.styles
-        },
+        getFeatureInfoParameters,
         tileWidth: this.tileWidth,
         tileHeight: this.tileHeight,
         tilingScheme: this.tilingScheme,
-        maximumLevel,
-        credit: this.attribution
+        maximumLevel: this.getMaximumLevel(true) ?? this.maximumLevel,
+        minimumLevel: this.minimumLevel,
+        credit: this.attribution,
+        enablePickFeatures: this.allowFeaturePicking
       };
+
+      if (isDefined(this.getFeatureInfoFormat?.type)) {
+        imageryOptions.getFeatureInfoFormats = [
+          new GetFeatureInfoFormat(
+            this.getFeatureInfoFormat.type,
+            this.getFeatureInfoFormat.format
+          )
+        ];
+      }
 
       if (
         imageryOptions.maximumLevel !== undefined &&
@@ -458,7 +598,7 @@ class WebMapServiceCatalogItem
   );
 
   @computed
-  get styleSelectableDimensions(): SelectableDimensionSelect[] {
+  get styleSelectableDimensions(): SelectableDimensionEnum[] {
     return this.availableStyles.map((layer, layerIndex) => {
       let name = "Styles";
 
@@ -498,7 +638,11 @@ class WebMapServiceCatalogItem
         id: `${this.uniqueId}-${layer.layerName}-styles`,
         options,
         selectedId,
-        setDimensionValue: (stratumId: string, newStyle: string) => {
+        setDimensionValue: (
+          stratumId: string,
+          newStyle: string | undefined
+        ) => {
+          if (!newStyle) return;
           runInAction(() => {
             const styles = this.styleSelectableDimensions.map(
               style => style.selectedId || ""
@@ -521,8 +665,8 @@ class WebMapServiceCatalogItem
   }
 
   @computed
-  get wmsDimensionSelectableDimensions(): SelectableDimension[] {
-    const dimensions: SelectableDimension[] = [];
+  get wmsDimensionSelectableDimensions(): SelectableDimensionEnum[] {
+    const dimensions: SelectableDimensionEnum[] = [];
 
     // For each layer -> For each dimension
     this.availableDimensions.forEach(layer => {
@@ -561,7 +705,10 @@ class WebMapServiceCatalogItem
             dim.default ||
             dim.values[0],
 
-          setDimensionValue: (stratumId: string, newDimension: string) => {
+          setDimensionValue: (
+            stratumId: string,
+            newDimension: string | undefined
+          ) => {
             let newDimensions: any = {};
 
             newDimensions[dim.name!] = newDimension;

@@ -54,3 +54,18 @@ export type Complete<T> = {
     ? T[P]
     : T[P] | undefined;
 };
+
+/**
+ * Makes the specified properties of T optional.
+ *
+ * @example
+ * ```ts
+ *   // Both "id" and "name" becomes optional in the resulting type
+ *   Optional<Button, "id" | "name">
+ * ``
+ */
+export type Optional<T extends object, K extends keyof T = keyof T> = Omit<
+  T,
+  K
+> &
+  Partial<Pick<T, K>>;

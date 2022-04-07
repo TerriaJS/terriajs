@@ -5,13 +5,14 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
-import ConstantColorMap from "../Map/ConstantColorMap";
-import ConstantPointSizeMap from "../Map/ConstantPointSizeMap";
-import DiscreteColorMap from "../Map/DiscreteColorMap";
-import EnumColorMap from "../Map/EnumColorMap";
-import PointSizeMap from "../Map/PointSizeMap";
-import ScalePointSizeMap from "../Map/ScalePointSizeMap";
+import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
+import DiscreteColorMap from "../Map/ColorMap/DiscreteColorMap";
+import EnumColorMap from "../Map/ColorMap/EnumColorMap";
+import ConstantPointSizeMap from "../Map/SizeMap/ConstantPointSizeMap";
+import PointSizeMap from "../Map/SizeMap/PointSizeMap";
+import ScalePointSizeMap from "../Map/SizeMap/ScalePointSizeMap";
 import TableMixin from "../ModelMixins/TableMixin";
+import CommonStrata from "../Models/Definition/CommonStrata";
 import createCombinedModel from "../Models/Definition/createCombinedModel";
 import Model from "../Models/Definition/Model";
 import TableChartStyleTraits from "../Traits/TraitsClasses/TableChartStyleTraits";
@@ -22,6 +23,10 @@ import TableTimeStyleTraits from "../Traits/TraitsClasses/TableTimeStyleTraits";
 import TableColorMap from "./TableColorMap";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
+import { BBox } from "@turf/helpers";
+import { isJsonNumber } from "../Core/Json";
+import createStratumInstance from "../Models/Definition/createStratumInstance";
+import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 
 const DEFAULT_FINAL_DURATION_SECONDS = 3600 * 24 - 1; // one day less a second, if there is only one date.
 
@@ -31,8 +36,8 @@ const DEFAULT_FINAL_DURATION_SECONDS = 3600 * 24 - 1; // one day less a second, 
 export default class TableStyle {
   /**
    *
-   * @param tableModel TableMixin catalog memeber
-   * @param styleNumber Index of column in tablemodel (if undefined, then default style will be used)
+   * @param tableModel TableMixin catalog member
+   * @param styleNumber Index of styleTraits in tableModel (if undefined, then default style will be used)
    */
   constructor(
     readonly tableModel: TableMixin.Instance,
@@ -109,6 +114,25 @@ export default class TableStyle {
     }
   }
 
+  /** Is style "custom" - that is - has the style been created/modified by the user (either directly, or indirectly through a share link).
+   */
+  @computed get isCustom() {
+    const userStrata = this.colorTraits.strata.get(CommonStrata.user);
+    if (!userStrata) return false;
+
+    return (
+      (userStrata.binColors ?? [])?.length > 0 ||
+      (userStrata.binMaximums ?? [])?.length > 0 ||
+      (userStrata.enumColors ?? [])?.length > 0 ||
+      isDefined(userStrata.numberOfBins) ||
+      isDefined(userStrata.minimumValue) ||
+      isDefined(userStrata.maximumValue) ||
+      isDefined(userStrata.regionColor) ||
+      isDefined(userStrata.nullColor) ||
+      isDefined(userStrata.outlierColor)
+    );
+  }
+
   /**
    * Gets the {@link TableColorStyleTraits} from the {@link #styleTraits}.
    * Returns a default instance of no color traits are specified explicitly.
@@ -143,6 +167,58 @@ export default class TableStyle {
   @computed
   get timeTraits(): Model<TableTimeStyleTraits> {
     return this.styleTraits.time;
+  }
+
+  /** Compute rectangle for point (lat/long) based table styles */
+  @computed get rectangle() {
+    if (this.isPoints()) {
+      const bounds: BBox = [Infinity, Infinity, -Infinity, -Infinity];
+
+      if (this.longitudeColumn && this.latitudeColumn) {
+        for (let i = 0; i < this.longitudeColumn.values.length; i++) {
+          const long = this.longitudeColumn.valuesAsNumbers.values[i];
+          const lat = this.latitudeColumn.valuesAsNumbers.values[i];
+          if (isJsonNumber(long) && isJsonNumber(lat)) {
+            if (bounds[0] > long) {
+              bounds[0] = long;
+            }
+            if (bounds[1] > lat) {
+              bounds[1] = lat;
+            }
+            if (bounds[2] < long) {
+              bounds[2] = long;
+            }
+            if (bounds[3] < lat) {
+              bounds[3] = lat;
+            }
+          }
+        }
+      }
+
+      // If bbox has no width or height - add crude buffer of .2 degrees
+      if (bounds[0] === bounds[2]) {
+        bounds[0] -= 0.1;
+        bounds[2] += 0.1;
+      }
+
+      if (bounds[1] === bounds[3]) {
+        bounds[1] -= 0.1;
+        bounds[3] += 0.1;
+      }
+
+      if (
+        bounds[0] !== Infinity &&
+        bounds[1] !== Infinity &&
+        bounds[2] !== -Infinity &&
+        bounds[3] !== -Infinity
+      )
+        return {
+          west: bounds[0],
+          south: bounds[1],
+          east: bounds[2],
+          north: bounds[3]
+        };
+    }
   }
 
   /**
@@ -514,6 +590,50 @@ export default class TableStyle {
         // Filter out bad IDs
         .filter(value => value[0] !== "")
     );
+  }
+
+  @computed get numberFormatOptions(): Intl.NumberFormatOptions | undefined {
+    const colorColumn = this.colorColumn;
+    if (colorColumn?.traits?.format)
+      return colorColumn?.traits?.format as Intl.NumberFormatOptions;
+
+    let min =
+      this.tableColorMap.minimumValue ?? colorColumn?.valuesAsNumbers.minimum;
+    let max =
+      this.tableColorMap.maximumValue ?? colorColumn?.valuesAsNumbers.maximum;
+
+    if (
+      colorColumn &&
+      colorColumn.type === TableColumnType.scalar &&
+      isDefined(min) &&
+      isDefined(max)
+    ) {
+      if (max - min === 0) return;
+
+      // We want to show fraction digits depending on how small difference is between min and max.
+      // This also takes into consideration the defualt number of legend items - 7
+      // So we add an extra digit
+      // For example:
+      // - if difference is 10 - we wnat to show one fraction digit
+      // - if difference is 1 - we want to show two fraction digits
+      // - if difference is 0.1 - we want to show three fraction digits
+
+      // log_10(20/x) achieves this (where x is difference between min and max)
+      // https://www.wolframalpha.com/input/?i=log_10%2820%2Fx%29
+      // We use 20 here instead of 10 to give us a more convervative value (that is, we may show an extra fraction digit even if it is not needed)
+      // So when x >= 20 - we will not show any fraction digits
+
+      // Clamp values between 0 and 5
+      let fractionDigits = Math.max(
+        0,
+        Math.min(5, Math.ceil(Math.log10(20 / Math.abs(max - min))))
+      );
+
+      return {
+        maximumFractionDigits: fractionDigits,
+        minimumFractionDigits: fractionDigits
+      };
+    }
   }
 
   /**

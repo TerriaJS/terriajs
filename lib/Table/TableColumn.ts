@@ -5,7 +5,7 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import runLater from "../Core/runLater";
-import RegionProvider from "../Map/RegionProvider";
+import RegionProvider from "../Map/Region/RegionProvider";
 import TableMixin from "../ModelMixins/TableMixin";
 import createCombinedModel from "../Models/Definition/createCombinedModel";
 import Model from "../Models/Definition/Model";

@@ -5,7 +5,7 @@ import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
-import Reproject from "../../../Map/Reproject";
+import Reproject from "../../../Map/Vector/Reproject";
 import CatalogFunctionMixin from "../../../ModelMixins/CatalogFunctionMixin";
 import XmlRequestMixin from "../../../ModelMixins/XmlRequestMixin";
 import xml2json from "../../../ThirdParty/xml2json";
@@ -57,7 +57,7 @@ type BoundingBoxData = {
 
 type Input = {
   Identifier?: string;
-  Name?: string;
+  Title?: string;
   Abstract?: string;
   LiteralData?: LiteralData;
   ComplexData?: ComplexData;
@@ -295,7 +295,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
       const converter = parameterConverters[i];
       const parameter = converter.inputToParameter(catalogFunction, input, {
         id: input.Identifier,
-        name: input.Name,
+        name: input.Title,
         description: input.Abstract,
         isRequired
       });

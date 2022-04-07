@@ -13,7 +13,7 @@ import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
-import proj4definitions from "../../../Map/Proj4Definitions";
+import proj4definitions from "../../../Map/Vector/Proj4Definitions";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
 import MappableMixin, {
@@ -99,7 +99,7 @@ interface Legend {
 }
 
 interface Legends {
-  layers?: { layerId: number; layerName: string; legend: Legend[] }[];
+  layers?: { layerId: number; layerName: string; legend?: Legend[] }[];
 }
 
 class MapServerStratum extends LoadableStratum(
@@ -337,7 +337,7 @@ class MapServerStratum extends LoadableStratum(
         return;
       }
 
-      l.legend.forEach(leg => {
+      l.legend?.forEach(leg => {
         const title = replaceUnderscores(
           leg.label !== "" ? leg.label : l.layerName
         );
@@ -477,6 +477,8 @@ export default class ArcGisMapServerCatalogItem extends MappableMixin(
         layers: layers,
         tilingScheme: new WebMercatorTilingScheme(),
         maximumLevel: maximumLevel,
+        tileHeight: this.tileHeight,
+        tileWidth: this.tileWidth,
         parameters: params,
         enablePickFeatures: this.allowFeaturePicking,
         usePreCachedTilesIfAvailable: !dynamicRequired,

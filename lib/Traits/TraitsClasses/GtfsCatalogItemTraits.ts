@@ -8,7 +8,7 @@ import GtfsModelTraits from "./GtfsModelTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
-import RasterLayerTraits from "./RasterLayerTraits";
+import OpacityTraits from "./OpacityTraits";
 import ScaleByDistanceTraits from "./ScaleByDistanceTraits";
 import UrlTraits from "./UrlTraits";
 
@@ -17,7 +17,7 @@ export default class GtfsCatalogItemTraits extends mixTraits(
   CatalogMemberTraits,
   LegendOwnerTraits,
   MappableTraits,
-  RasterLayerTraits,
+  OpacityTraits,
   LayerOrderingTraits,
   AutoRefreshingTraits,
   FeatureInfoTraits

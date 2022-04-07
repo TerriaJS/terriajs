@@ -16,7 +16,6 @@ export enum SearchAction {
   bing = "Bing",
   catalog = "Catalog",
   gazetteer = "Gazetteer",
-  gnaf = "gnaf",
   nominatim = "nominatim"
 }
 
@@ -50,6 +49,7 @@ export enum DataSourceAction {
   removeFromCatalogue = "Remove from catalogue",
   addFromPreviewButton = "Add from preview button",
   removeFromPreviewButton = "Remove from preview button",
+  removeFromWorkbench = "Remove from workbench",
   removeAllFromWorkbench = "Remove all from workbench"
 }
 

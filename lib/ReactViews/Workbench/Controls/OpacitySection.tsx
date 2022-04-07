@@ -5,14 +5,14 @@ import { observer } from "mobx-react";
 import Slider from "rc-slider";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import hasTraits from "../../../Models/Definition/hasTraits";
+import { BaseModel } from "../../../Models/Definition/Model";
 import OpacityTraits from "../../../Traits/TraitsClasses/OpacityTraits";
 import Styles from "./opacity-section.scss";
 
 interface OpacitySectionProps extends WithTranslation {
-  item: CatalogMemberMixin.Instance;
+  item: BaseModel;
 }
 
 @observer

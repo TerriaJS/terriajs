@@ -14,15 +14,19 @@ import {
 import { JsonObject } from "../../../../lib/Core/Json";
 import loadJson from "../../../../lib/Core/loadJson";
 import loadText from "../../../../lib/Core/loadText";
-import ContinuousColorMap from "../../../../lib/Map/ContinuousColorMap";
+import ContinuousColorMap from "../../../../lib/Map/ColorMap/ContinuousColorMap";
 import ProtomapsImageryProvider, {
   GEOJSON_SOURCE_LAYER_NAME
-} from "../../../../lib/Map/ProtomapsImageryProvider";
-import { getColor } from "../../../../lib/ModelMixins/GeojsonMixin";
+} from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
+import {
+  FEATURE_ID_PROP,
+  getColor
+} from "../../../../lib/ModelMixins/GeojsonMixin";
 import GeoJsonCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import SplitItemReference from "../../../../lib/Models/Catalog/CatalogReferences/SplitItemReference";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
+import Feature from "../../../../lib/Models/Feature";
 import Terria from "../../../../lib/Models/Terria";
 
 describe("GeoJsonCatalogItemSpec", () => {
@@ -438,6 +442,32 @@ describe("GeoJsonCatalogItemSpec", () => {
       });
     });
 
+    describe("Support for filterByProperties", () => {
+      it("Filters correct features", async () => {
+        geojson.setTrait(
+          CommonStrata.user,
+          "url",
+          "test/GeoJSON/time-based.geojson"
+        );
+        geojson.setTrait(CommonStrata.user, "filterByProperties", {
+          year: 2019
+        });
+        await geojson.loadMapItems();
+        expect(geojson.mapItems.length).toEqual(1);
+        const entities = (geojson.mapItems[0] as GeoJsonDataSource).entities
+          .values;
+        expect(entities.length).toEqual(1);
+
+        const entity1 = entities[0];
+        console.log(
+          entity1.properties?.getValue(terria.timelineClock.currentTime).year
+        );
+        expect(
+          entity1.properties?.getValue(terria.timelineClock.currentTime).year
+        ).toBe(2019);
+      });
+    });
+
     describe("Support for geojson with extruded heights", () => {
       it("Sets polygon height properties correctly", async () => {
         geojson.setTrait(
@@ -528,8 +558,8 @@ describe("GeoJsonCatalogItemSpec", () => {
       geojson = new GeoJsonCatalogItem("test-geojson", terria);
     });
 
-    describe("Support for czml templating", () => {
-      it("Sets polygon height properties correctly", async () => {
+    describe("Support for czml templates", () => {
+      it("supports points", async () => {
         geojson.setTrait(
           CommonStrata.user,
           "url",
@@ -564,24 +594,56 @@ describe("GeoJsonCatalogItemSpec", () => {
         const entity1 = entities[0];
         expect(
           entity1.cylinder?.length?.getValue(terria.timelineClock.currentTime)
-        ).toBe(10);
+        ).toBe("10");
         expect(
           entity1.cylinder?.bottomRadius?.getValue(
             terria.timelineClock.currentTime
           )
-        ).toBe(10);
+        ).toBe("10");
         expect(entity1.properties?.someOtherProp?.getValue()).toBe("what");
 
         const entity2 = entities[1];
         expect(
           entity2.cylinder?.length?.getValue(terria.timelineClock.currentTime)
-        ).toBe(20);
+        ).toBe("20");
         expect(
           entity2.cylinder?.bottomRadius?.getValue(
             terria.timelineClock.currentTime
           )
-        ).toBe(5);
+        ).toBe("5");
         expect(entity2.properties?.someOtherProp?.getValue()).toBe("ok");
+      });
+
+      it("supports polygons", async () => {
+        geojson.setTrait(
+          CommonStrata.user,
+          "url",
+          "test/GeoJSON/polygon.geojson"
+        );
+        geojson.setTrait(CommonStrata.user, "czmlTemplate", {
+          polygon: {
+            height: 10,
+            material: {
+              solidColor: {
+                color: {
+                  rgba: [0, 200, 0, 20]
+                }
+              }
+            }
+          }
+        });
+        await geojson.loadMapItems();
+
+        const entities = (geojson.mapItems[0] as GeoJsonDataSource).entities
+          .values;
+        expect(entities.length).toEqual(1);
+
+        const entity1 = entities[0];
+        expect(
+          entity1.polygon?.height?.getValue(terria.timelineClock.currentTime)
+        ).toBe(10);
+        expect(entity1.properties?.foo?.getValue()).toBe("hi");
+        expect(entity1.properties?.bar?.getValue()).toBe("bye");
       });
     });
   });
@@ -927,6 +989,214 @@ describe("GeoJsonCatalogItemSpec", () => {
       expect(
         (await (split.target as GeoJsonCatalogItem).loadMapItems()).error
       ).toBeUndefined();
+    });
+  });
+
+  describe("geojson handles reprojection", function() {
+    let terria: Terria;
+    let geojson: GeoJsonCatalogItem;
+
+    beforeEach(async function() {
+      terria = new Terria({
+        baseUrl: "./"
+      });
+      geojson = new GeoJsonCatalogItem("test-geojson", terria);
+    });
+
+    it("feature collection", async function() {
+      geojson.setTrait(
+        CommonStrata.user,
+        "geoJsonString",
+        `{
+          "type": "FeatureCollection",
+          "features": [
+            {
+              "type": "Feature",
+              "id": "DigitalEarthAustraliaWaterbodies_v2.323183",
+              "geometry": {
+                "type": "MultiPolygon",
+                "coordinates": [
+                  [
+                    [
+                      [
+                        16344453.39652363,
+                        -5168812.43146947
+                      ],
+                      [
+                        16344531.47850556,
+                        -5168802.80795983
+                      ],
+                      [
+                        16344545.13149061,
+                        -5168926.64661882
+                      ],
+                      [
+                        16344506.09019498,
+                        -5168931.45855288
+                      ],
+                      [
+                        16344510.64113426,
+                        -5168972.73862808
+                      ],
+                      [
+                        16344471.59970792,
+                        -5168977.55049352
+                      ],
+                      [
+                        16344453.39652363,
+                        -5168812.43146947
+                      ]
+                    ]
+                  ]
+                ]
+              }
+            }
+          ],
+          "crs": {
+            "type": "name",
+            "properties": {
+              "name": "urn:ogc:def:crs:EPSG::3857"
+            }
+          }
+        }`
+      );
+      await geojson.loadMapItems();
+      expect(geojson.readyData).toEqual({
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            id: "DigitalEarthAustraliaWaterbodies_v2.323183",
+            geometry: {
+              type: "MultiPolygon",
+              coordinates: [
+                [
+                  [
+                    [146.82472296676403, -42.05226984176366],
+                    [146.82542438914183, -42.0522056500624],
+                    [146.8255470359933, -42.053031686178954],
+                    [146.8251963220675, -42.05306378281588],
+                    [146.82523720385066, -42.053339129144845],
+                    [146.8248864887507, -42.05337122516867],
+                    [146.82472296676403, -42.05226984176366]
+                  ]
+                ]
+              ]
+            },
+            properties: { _id_: 0 }
+          }
+        ],
+        crs: { type: "EPSG", properties: { code: "4326" } }
+      } as any);
+    });
+
+    it("feature", async function() {
+      geojson.setTrait(
+        CommonStrata.user,
+        "geoJsonString",
+        `{
+          "type": "Feature",
+          "id": "DigitalEarthAustraliaWaterbodies_v2.308678",
+          "geometry": {
+              "type": "MultiPolygon",
+              "coordinates": [
+                  [
+                      [
+                          [
+                              16465357.77780054,
+                              -4492530.25036082
+                          ],
+                          [
+                              16465432.27212674,
+                              -4492520.79949369
+                          ],
+                          [
+                              16465441.59842631,
+                              -4492596.29102978
+                          ],
+                          [
+                              16465367.10371601,
+                              -4492605.74203159
+                          ],
+                          [
+                              16465357.77780054,
+                              -4492530.25036082
+                          ]
+                      ]
+                  ]
+              ]
+          },
+          "crs": {
+              "type": "name",
+              "properties": {
+                  "name": "urn:ogc:def:crs:EPSG::3857"
+              }
+          }
+      }`
+      );
+      await geojson.loadMapItems();
+      expect(geojson.readyData).toEqual({
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            id: "DigitalEarthAustraliaWaterbodies_v2.308678",
+            geometry: {
+              type: "MultiPolygon",
+              coordinates: [
+                [
+                  [
+                    [147.91082550294465, -37.38230684638059],
+                    [147.9114946968627, -37.382239385753564],
+                    [147.91157847643717, -37.38277824533993],
+                    [147.9109092790687, -37.382845706443504],
+                    [147.91082550294465, -37.38230684638059]
+                  ]
+                ]
+              ]
+            },
+            properties: { _id_: 0 }
+          }
+        ],
+        crs: { type: "EPSG", properties: { code: "4326" } }
+      });
+    });
+  });
+
+  describe("pick features", function() {
+    let terria: Terria;
+    let geojson: GeoJsonCatalogItem;
+
+    beforeEach(async function() {
+      terria = new Terria({
+        baseUrl: "./"
+      });
+      geojson = new GeoJsonCatalogItem("test-geojson", terria);
+    });
+
+    it("ProtomapsImageryProvider.createHighlightImageryProvider", async function() {
+      geojson.setTrait(
+        CommonStrata.definition,
+        "geoJsonString",
+        `{"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[145.5908203125,-40.17887331434695],[143.349609375,-42.08191667830631],[146.35986328124997,-44.040218713142124],[149.08447265625,-42.859859815062784],[148.55712890625,-41.36031866306708],[145.5908203125,-40.17887331434695]]]}},{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[75.9375,51.069016659603896],[59.94140624999999,39.095962936305476],[79.453125,42.032974332441405],[80.15625,46.800059446787316],[75.673828125,51.45400691005982],[75.9375,51.069016659603896]]]}}]}`
+      );
+
+      (await geojson.loadMapItems()).throwIfError();
+
+      const imagery = geojson.mapItems[0];
+
+      if ("imageryProvider" in imagery) {
+        const highlight = imagery.imageryProvider.createHighlightImageryProvider(
+          new Feature({ properties: { [FEATURE_ID_PROP]: "0" } })
+        );
+        expect(highlight).toBeDefined();
+
+        expect(highlight?.paintRules[0].dataLayer).toBe(
+          GEOJSON_SOURCE_LAYER_NAME
+        );
+      } else {
+        throw "Invalid geojson.mapItems";
+      }
     });
   });
 });

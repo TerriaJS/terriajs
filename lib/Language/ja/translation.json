@@ -156,7 +156,8 @@
     "gettingStartedTitle": "開始する",
     "gettingStarted": "開始する",
     "panelBody": "地図を使ってストーリーを作成し、共有することができます",
-    "panelTitle": "ストーリーエディタ"
+    "panelTitle": "ストーリーエディタ",
+    "playStory": "ストーリー"
   },
   "diffTool": {
     "instructions": {
@@ -235,7 +236,8 @@
     "add": "追加",
     "remove": "削除",
     "loading": "読み込み中...",
-    "privateIndicatorTitle": "プライベートデータセット"
+    "privateIndicatorTitle": "プライベートデータセット",
+    "preview": "プレビュー"
   },
   "dataCatalog": {
     "groupEmpty": "このグループは空です",
@@ -503,7 +505,8 @@
     "localDataNote": "<0><0>注意：</0></0><1>以下のデータはローカルからのデータを含むため共有できません。これらのデータを共有するには、データをウェブサーバーにアップロードして<2>URLを使用して追加してください</2></1>",
     "shortLinkError": "短縮リンクが作成できませんでした。インターネット接続を確認してやり直してください。",
     "shortLinkShortening": "短縮リンクを作成しています...",
-    "browserPrint": "より良い印刷結果を得るには、ブラウザの印刷機能ではなく{{appName}}の印刷ボタンを使用してください。"
+    "browserPrint": "より良い印刷結果を得るには、ブラウザの印刷機能ではなく{{appName}}の印刷ボタンを使用してください。",
+    "downloadMap": "地図をダウンロード (png)"
   },
   "legend": {
     "elev": "標高",
@@ -623,7 +626,8 @@
       "geoRss": "GeoRSS",
       "geojson": "GeoJSON",
       "opendatasoft-group": "Opendatasoftポータル",
-      "sdmx-group": "SDMX-JSON"
+      "sdmx-group": "SDMX-JSON",
+      "socrata-group": "Socrata サーバー"
     },
     "dataUri": {
       "errorMessage": "残念ながら、Microsoftのブラウザ（全てのバージョンのInternet ExplorerとEdge）では、データをファイルとしてダウンロードするのに必要となるdata URI機能がサポートされていません。ダウンロードするには、次のURLをChrome、Firefox、Safariなど別のブラウザにコピーしてください。{{href}}",
@@ -741,7 +745,8 @@
     "next": "次の日時",
     "availableTimeChart": "利用可能な時刻を図上に表示する",
     "useTimeline": "タイムラインを使用",
-    "back": "戻る"
+    "back": "戻る",
+    "selectorLabel": "時間:"
   },
   "models": {
     "arcGisFeatureServerCatalogItem": {
@@ -845,8 +850,9 @@
       "exportFailedMessageII": "Web Coverage Serviceが失敗しました：{{error}}",
       "exportFailedMessage": "Web Coverage Serviceが失敗しました",
       "exportFailedTitle": "データのエクスポートに失敗しました",
-      "asyncPendingDescription": "WCSを読み込んでいます<br/>{{timestamp}}における{{name}}サービス。",
-      "asyncResultDescription": "以下の入力パラメータによる、{{timestamp}}における{{name}}からのデータのエクスポート結果です。"
+      "asyncPendingDescription": "WCS 読み込み中:\n{{name}} service at {{timestamp}}.\n\n*カバレッジをダウンロード中*",
+      "asyncResultDescription": "以下の入力パラメータによる、{{timestamp}}における{{name}}からのデータのエクスポート結果です。",
+      "asyncResultLoadingMetadata": "WCS 読み込み中:\n{{name}} service at {{timestamp}}.\n\n*メタデータ読み込み中 (`DescribeCoverage`)*"
     },
     "bing": {
       "name": "Bingマップ"
@@ -892,7 +898,7 @@
       "missingUrlTitle": "GetCapabilities を読めませんでした",
       "missingDataMessage": "WFS データセット '{{name}}' は何もデータを返しません。{{line}}{{line}}カタログが正しく設定されていないかサーバーのアドレスが変わったかもしれません。",
       "missingDataTitle": "見つからないデータ",
-      "noLayerFoundMessage": "WFS データセット'{{name}}' には '{{typeNames}}' に該当するレイヤがありません。 {{suggested}} {{line}}{{line}}カタログファイルが正しく設定されていないか、WFSサーバーが変更されたと思われます。{",
+      "noLayerFoundMessage": "WFS データセット'{{name}}' には '{{typeNames}}' に該当するレイヤがありません。 {{suggested}} {{line}}{{line}}カタログファイルが正しく設定されていないか、WFSサーバーが変更されたと思われます。",
       "noLayerFoundTitle": "レイヤがありません",
       "getCapabilitiesUrl": "GetCapabilities URL",
       "serviceContact": "サービスに関する連絡先",
@@ -984,7 +990,7 @@
       "checkCORSDomain": "CSW サーバ上でGetDomainを実行できませんでした。",
       "checkCORS": "CSW サーバー上で GetRecords を実行できません。",
       "checkCORSRecords": "この CWS サーバーでGetRecords を実行できません。",
-      "errorLoadingRecordsMessage": "CSW で GetRecords を読み込み中に無効なレスポンスが返ってきました。",
+      "errorLoadingRecordsMessage": "CSW で GetRecords を読み込み中に無効なレスポンスが返ってきました",
       "notUseableMessage": "CSWサーバーでGetDomainを呼び出した際に無効な反応が戻ってきました。"
     },
     "csv": {
@@ -1067,7 +1073,7 @@
       "couldNotLoadTitle": "JSONを読み込めません",
       "errorLoadingTitle": "GeoJSON読み込みエラー",
       "name": "GeoJSON",
-      "couldNotLoadMessage": "与えられたリンクからJSONデータを読み込むことができませんでした。",
+      "couldNotLoadMessage": "与えられたリンクからJSONデータを読み込むことができませんでした。CORS",
       "unsupportedBrowserMessage": "お使いのウェブブラウザは{{appName}}がファイルからデータを読み込む上で必要となるFile APIをサポートしていません。ブラウザをアップグレードしてください。最適な体験のためには、{{chrome}}、{{firefox}}または{{internetExplorer}}の最新版をお使いになることをおすすめします。",
       "errorLoadingMessage": "GeoJSONファイルの読み込み中にエラーが発生しました。このファイル形式は無効またはサポートされていない可能性があります。",
       "errorParsingMessage": "与えられたデータをJSONとしてパーズできませんでした。このファイルは無効またはサポートされていない可能性があります。"
@@ -1356,7 +1362,10 @@
       "legendNullLabel": "(値無し)",
       "legendZFilterLabel": "異常な値",
       "zFilterEnabled": "異常な値は表示していません (クリックして表示)",
-      "zFilterDisabled": "異常値が見つかりました (クリックして非表示)"
+      "zFilterDisabled": "異常値が見つかりました (クリックして非表示)",
+      "timeDimensionEnabled": "時間を有効 (クリックで無効)",
+      "styleDisabledLabel": "スタイルを無効",
+      "timeDimensionDisabled": "時間を無効 (クリックで有効)"
     },
     "terriaJSONcatalog": {
       "serviceResponseErrorMessage": "TerriaJsonCatalogFunction JSON を受け取るはずでしたが、{{xhr}} を受け取りました",
@@ -1468,6 +1477,19 @@
     },
     "terria-reference": {
       "failedToLoadTarget": "外部カタログからの読み込み失敗"
+    },
+    "clippingBox": {
+      "clipModel": "クリップ方法の選択",
+      "keepBoxAboveGround": "地面より上のみ",
+      "clipDirection": {
+        "name": "クリップ方法の選択",
+        "options": {
+          "outside": "ボックス外をクリップ",
+          "inside": "ボックス内をクリップ"
+        }
+      },
+      "showClippingBox": "クリップボックスを表示",
+      "groupName": "クリップボックス"
     }
   },
   "map": {
@@ -1602,5 +1624,8 @@
   "mapNavigation": {
     "additionalTools": "追加のツール",
     "additionalToolsTitle": "追加ツールを開く"
+  },
+  "printView": {
+    "loading": "印刷ビューを作成..."
   }
 }

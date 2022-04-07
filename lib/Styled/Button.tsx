@@ -3,15 +3,16 @@ import styled from "styled-components";
 import { BoxSpan } from "./Box";
 import { TextSpan } from "./Text";
 
-const Icon = styled.span`
-  margin-right: 8px;
+const Icon = styled.span<{ rightIcon?: boolean }>`
+  ${p => (p.rightIcon ? `margin-left: 8px` : `margin-right: 8px`)};
 `;
 
-interface IButtonProps {
+export interface IButtonProps {
   fullWidth?: boolean;
   fullHeight?: boolean;
   styledWidth?: string;
   activeStyles?: boolean;
+  textLight?: boolean;
 }
 
 interface IStyledButtonProps extends IButtonProps {
@@ -28,6 +29,7 @@ interface IStyledButtonProps extends IButtonProps {
   denyButton?: boolean;
   warning?: boolean;
   splitter?: boolean;
+  textLight?: boolean;
   transparentBg?: boolean;
   disabled?: boolean;
   [key: string]: any;
@@ -130,6 +132,11 @@ export const RawButton = styled.button<IButtonProps>`
   padding: 0;
   border: 0;
   background-color: transparent;
+  cursor: pointer;
+
+  &:hover {
+    cursor: pointer;
+  }
 
   ${props =>
     props.activeStyles &&
@@ -150,11 +157,14 @@ export const RawButton = styled.button<IButtonProps>`
   ${props => props.fullWidth && `width: 100%;`}
   ${props => props.fullHeight && `height: 100%;`}
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
+
+  ${props => (props.textLight ? `color: ${props.theme.textLight}` : ``)}
 `;
 
 interface ButtonProps extends IStyledButtonProps {
   renderIcon?: () => React.ReactChild;
   iconProps?: any;
+  rightIcon?: boolean;
   textProps?: any;
   children?: React.ReactChildren;
   buttonRef?: React.Ref<HTMLButtonElement>;
@@ -171,11 +181,26 @@ export const Button = (
     primary,
     secondary,
     warning,
+    textLight,
     iconProps,
     textProps,
     buttonRef,
     ...rest
   } = props;
+
+  const IconComponent =
+    props.renderIcon && typeof props.renderIcon === "function"
+      ? () => (
+          <Icon
+            css={iconProps && iconProps.css}
+            rightIcon={props.rightIcon}
+            {...iconProps}
+          >
+            {props!.renderIcon!()}
+          </Icon>
+        )
+      : undefined;
+
   return (
     <StyledButton
       ref={buttonRef}
@@ -185,20 +210,17 @@ export const Button = (
       {...rest}
     >
       <BoxSpan centered>
-        {props.renderIcon && typeof props.renderIcon === "function" && (
-          <Icon css={iconProps && iconProps.css} {...iconProps}>
-            {props.renderIcon()}
-          </Icon>
-        )}
+        {!props.rightIcon && IconComponent?.()}
         {props.children && (
           <TextSpan
-            white={primary || secondary || warning}
+            white={primary || secondary || warning || textLight}
             medium={secondary}
             {...textProps}
           >
             {props.children}
           </TextSpan>
         )}
+        {props.rightIcon && IconComponent?.()}
       </BoxSpan>
     </StyledButton>
   );

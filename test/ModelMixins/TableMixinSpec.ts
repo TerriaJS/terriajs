@@ -81,6 +81,13 @@ describe("TableMixin", function() {
       }
     });
 
+    it("calculates rectangle", async function() {
+      expect(item.rectangle.north).toEqual(-20);
+      expect(item.rectangle.south).toEqual(-37);
+      expect(item.rectangle.east).toEqual(155);
+      expect(item.rectangle.west).toEqual(115);
+    });
+
     describe("the entities", function() {
       it("has availability defined over the correct span", function() {
         expect(
@@ -435,7 +442,7 @@ describe("TableMixin", function() {
 
       await item.loadMapItems();
 
-      expect(item.regionProviderList?.regionProviders.length).toBe(103);
+      expect(item.regionProviderList?.regionProviders.length).toBe(114);
     });
   });
 
