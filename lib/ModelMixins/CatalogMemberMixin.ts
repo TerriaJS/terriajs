@@ -1,4 +1,4 @@
-import { action, computed, isObservableArray, runInAction } from "mobx";
+import { action, computed, isObservableArray, runInAction, toJS } from "mobx";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
@@ -181,7 +181,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
             );
             const value = dim.options.find(o => o.id === selectedId)?.value;
             if (isDefined(value)) {
-              const result = updateModelFromJson(this, stratumId, value);
+              const result = updateModelFromJson(this, stratumId, toJS(value));
               result.raiseError(
                 this.terria,
                 `Failed to update catalog item ${getName(this)}`
