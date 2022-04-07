@@ -137,7 +137,7 @@ export function getShareData(
 /**
  * Serialise all model data from a given stratum except feature highlight
  * and serialise all ancestors of any models serialised
- * @param {import("../../../../Models/Terria").default} terria
+ * @param {Terria} terria
  * @param {CommonStrata} stratumId
  * @param {Object} initSource
  */
