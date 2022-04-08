@@ -1,14 +1,17 @@
 Change Log
 ==========
 
-#### next release (8.1.27)
+#### next release (8.1.28)
+
+* [The next improvement]
+
+#### 8.1.27
 
 * Use CKAN Dataset `name` property for WMS `layers` as last resort.
 * Set CKAN Group will now set CKAN Item `name` in `definition` stratum.
 * Ignore GeoJSON Features with no geometry.
 * Fix feedback link styling.
 * Improve `CatalogIndexReference` error messages.
-* [The next improvement]
 
 #### 8.1.26 - 2022-04-05
 
