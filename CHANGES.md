@@ -5,7 +5,7 @@ Change Log
 
 * [The next improvement]
 
-#### 8.1.27
+#### 8.1.27 - 2022-04-08
 
 * Use CKAN Dataset `name` property for WMS `layers` as last resort.
 * Set CKAN Group will now set CKAN Item `name` in `definition` stratum.
