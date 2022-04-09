@@ -85,7 +85,7 @@ interface IProps {
   iconOnly?: boolean;
   title?: string;
   iconElement(): any;
-  onClick?: () => void;
+  onClick?: (e?: any) => void;
 }
 
 const WorkbenchButton: React.FC<IProps> = (props: IProps) => {

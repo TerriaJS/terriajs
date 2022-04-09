@@ -68,7 +68,7 @@ interface IBoxPropsBase {
   as?: React.ElementType | keyof JSX.IntrinsicElements;
 }
 
-type IBoxProps = IBoxPropsBase & OneKeyFrom<Column>;
+export type IBoxProps = IBoxPropsBase & OneKeyFrom<Column>;
 
 export const Box = styled.div<IBoxProps>`
   display: flex;

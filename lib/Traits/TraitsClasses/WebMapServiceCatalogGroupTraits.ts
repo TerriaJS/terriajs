@@ -25,12 +25,6 @@ export default class WebMapServiceCatalogGroupTraits extends mixTraits(
   })
   flatten?: boolean;
 
-  @anyTrait({
-    name: "Item Properties",
-    description: "Sets traits on child WebMapServiceCatalogItem's"
-  })
-  itemProperties?: JsonObject;
-
   @objectTrait({
     name: "Per layer WebCoverageService",
     description:

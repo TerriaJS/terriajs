@@ -125,9 +125,36 @@ type InteractionState =
   | { is: "picked"; entity: Entity & Interactable }
   | { is: "hovering"; entity: Entity & Interactable };
 
+type OnChangeParams = {
+  /**
+   * The modelMatrix of the box
+   */
+  modelMatrix: Matrix4;
+
+  /**
+   * The translation rotation scale of the box
+   */
+  translationRotationScale: TranslationRotationScale;
+
+  /**
+   * True if the change is finished or false if it is ongoing
+   */
+  isFinished: boolean;
+};
+
 type BoxDrawingOptions = {
+  /**
+   * When true, prevents the box from going underground. Note that we only use
+   * the center of the bottom face to detect if the box is underground. For
+   * large boxes, this center point can be above ground while the corners are
+   * underground.
+   */
   keepBoxAboveGround?: boolean;
-  onChange?: (params: { modelMatrix: Matrix4; isFinished: boolean }) => void;
+
+  /**
+   * A callback method to call when box parameters change.
+   */
+  onChange?: (params: OnChangeParams) => void;
 };
 
 // The 6 box sides defined as planes in local coordinate space.
@@ -211,16 +238,13 @@ export default class BoxDrawing {
   // Scale points on the box defined as cesium entities with additional properties
   private readonly scalePoints: ScalePoint[] = [];
 
-  private heightUpdateInProgress: boolean = false;
   private isHeightUpdateInProgress: boolean = false;
   private terrainHeightEstimate: number = 0;
 
   /**
-   * @param cesium A Cesium instance
-   * @param transform A transformation that positions the box in the world.
-   * @param onChange An optional event notifier callback that is called when the box is transformed.
+   * A private constructor. Use {@link BoxDrawing.fromTransform} or {@link BoxDrawing.fromTranslationRotationScale} to create instances.
    */
-  constructor(
+  private constructor(
     readonly cesium: Cesium,
     transform: Matrix4,
     readonly options: BoxDrawingOptions
@@ -238,9 +262,55 @@ export default class BoxDrawing {
 
     this.setTransform(transform);
     this.drawBox();
+    this.setBoxAboveGround();
 
     onBecomeObserved(this, "dataSource", () => this.startInteractions());
     onBecomeUnobserved(this, "dataSource", () => this.stopInteractions());
+  }
+
+  /**
+   * Construct `BoxDrawing` from a transformation matrix.
+   *
+   * @param cesium - A Cesium instance
+   * @param transform - A transformation that positions the box in the world.
+   * @param options - {@link BoxDrawingOptions}
+   * @returns A `BoxDrawing` instance
+   */
+  static fromTransform(
+    cesium: Cesium,
+    transform: Matrix4,
+    options?: BoxDrawingOptions
+  ): BoxDrawing {
+    return new BoxDrawing(cesium, transform, options ?? {});
+  }
+
+  /**
+   * Construct `BoxDrawing` from a {@link TranslationRotationScale} object.
+   *
+   * @param cesium - A Cesium instance
+   * @param trs - Translation, rotation and scale of the object.
+   * @param options - {@link BoxDrawingOptions}
+   * @returns A `BoxDrawing` instance
+   */
+  static fromTranslationRotationScale(
+    cesium: Cesium,
+    trs: TranslationRotationScale,
+    options?: BoxDrawingOptions
+  ): BoxDrawing {
+    const boxDrawing = new BoxDrawing(
+      cesium,
+      Matrix4.fromTranslationRotationScale(trs),
+      options ?? {}
+    );
+
+    return boxDrawing;
+  }
+
+  public setTranslationRotationScale(trs: TranslationRotationScale) {
+    Cartesian3.clone(trs.translation, this.trs.translation);
+    Quaternion.clone(trs.rotation, this.trs.rotation);
+    Cartesian3.clone(trs.scale, this.trs.scale);
+    this.updateBox();
   }
 
   /**
@@ -408,7 +478,6 @@ export default class BoxDrawing {
    */
   private updateBox() {
     Matrix4.fromTranslationRotationScale(this.trs, this.modelMatrix);
-
     this.dataSource.entities.values.forEach(entity => {
       if (isUpdatable(entity)) entity.update();
     });
@@ -768,7 +837,8 @@ export default class BoxDrawing {
       this.updateBox();
       this.options.onChange?.({
         isFinished: false,
-        modelMatrix: this.modelMatrix
+        modelMatrix: this.modelMatrix,
+        translationRotationScale: this.trs
       });
     };
 
@@ -806,6 +876,7 @@ export default class BoxDrawing {
       setCanvasCursor(scene, "auto");
       this.options.onChange?.({
         modelMatrix: this.modelMatrix,
+        translationRotationScale: this.trs,
         isFinished: true
       });
     };
@@ -905,7 +976,8 @@ export default class BoxDrawing {
         setCanvasCursor(scene, "auto");
         this.options.onChange?.({
           isFinished: true,
-          modelMatrix: this.modelMatrix
+          modelMatrix: this.modelMatrix,
+          translationRotationScale: this.trs
         });
       }
     };
@@ -935,7 +1007,8 @@ export default class BoxDrawing {
       this.updateEntitiesOnOrientationChange();
       this.options.onChange?.({
         isFinished: false,
-        modelMatrix: this.modelMatrix
+        modelMatrix: this.modelMatrix,
+        translationRotationScale: this.trs
       });
     };
 
@@ -1025,6 +1098,7 @@ export default class BoxDrawing {
       unHighlightScalePoint();
       this.options.onChange?.({
         modelMatrix: this.modelMatrix,
+        translationRotationScale: this.trs,
         isFinished: true
       });
       setCanvasCursor(scene, "auto");
@@ -1149,7 +1223,8 @@ export default class BoxDrawing {
       this.updateBox();
       this.options.onChange?.({
         isFinished: false,
-        modelMatrix: this.modelMatrix
+        modelMatrix: this.modelMatrix,
+        translationRotationScale: this.trs
       });
     };
 

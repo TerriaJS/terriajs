@@ -6,7 +6,7 @@ import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import isDefined from "../Core/isDefined";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
+import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
 import getChartDetailsFn from "./getChartDetailsFn";
 import TableStyle from "./TableStyle";
 

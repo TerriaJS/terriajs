@@ -3,8 +3,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-const parseCustomHtmlToReact = require("../Custom/parseCustomHtmlToReact")
-  .default;
 import Styles from "./map-interaction-window.scss";
 import classNames from "classnames";
 import { observer } from "mobx-react";
@@ -13,6 +11,7 @@ import { observable, Lambda, reaction } from "mobx";
 import isDefined from "../../Core/isDefined";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
+import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 
 const MapInteractionWindowWrapper = styled.div<{ isDiffTool: boolean }>`
   ${props =>

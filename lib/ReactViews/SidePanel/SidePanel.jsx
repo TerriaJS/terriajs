@@ -9,6 +9,7 @@ import Button from "../../Styled/Button";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
+import { ExplorerWindowElementName } from "../ExplorerWindow/ExplorerWindow";
 import { useRefForTerria } from "../Hooks/useRefForTerria";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import Workbench from "../Workbench/Workbench";
@@ -132,13 +133,13 @@ const SidePanel = observer(
 
     onAddDataClicked(e) {
       e.stopPropagation();
-      this.props.viewState.setTopElement("AddData");
+      this.props.viewState.setTopElement(ExplorerWindowElementName);
       this.props.viewState.openAddData();
     },
 
     onAddLocalDataClicked(e) {
       e.stopPropagation();
-      this.props.viewState.setTopElement("AddData");
+      this.props.viewState.setTopElement(ExplorerWindowElementName);
       this.props.viewState.openUserData();
     },
     render() {

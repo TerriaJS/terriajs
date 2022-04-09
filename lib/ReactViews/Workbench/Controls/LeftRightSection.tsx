@@ -1,7 +1,7 @@
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { useTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
 import defined from "terriajs-cesium/Source/Core/defined";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
@@ -117,6 +117,4 @@ const LeftRightSection: React.FC<ILeftRightSection> = observer(
   }
 );
 
-LeftRightSection.displayName = "LeftRightSection";
-
-export default LeftRightSection;
+export default withTranslation()(LeftRightSection);

@@ -16,8 +16,9 @@ import CreateModel from "../../Definition/CreateModel";
 import { BaseModel } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import SelectableDimensions, {
-  SelectableDimension
-} from "../../SelectableDimensions";
+  SelectableDimension,
+  filterEnums
+} from "../../SelectableDimensions/SelectableDimensions";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
 import { SdmxJsonDataflowStratum } from "./SdmxJsonDataflowStratum";
@@ -80,7 +81,10 @@ export default class SdmxJsonCatalogItem
         disable:
           dim.disable ||
           this.columns.find(col => col.name === dim.id)?.type === "region",
-        setDimensionValue: async (stratumId: string, value: string) => {
+        setDimensionValue: async (
+          stratumId: string,
+          value: string | undefined
+        ) => {
           let dimensionTraits = this.dimensions?.find(
             sdmxDim => sdmxDim.id === dim.id
           );
@@ -102,9 +106,7 @@ export default class SdmxJsonCatalogItem
       ...super.selectableDimensions.filter(
         d => d.id !== this.styleDimensions?.id
       ),
-      ...this.sdmxSelectableDimensions,
-      this.regionColumnDimensions,
-      this.regionProviderDimensions
+      ...this.sdmxSelectableDimensions
     ]);
   }
 
@@ -179,7 +181,7 @@ export default class SdmxJsonCatalogItem
             message: i18next.t(
               "models.sdmxCatalogItem.noResultsWithDimensions",
               {
-                dimensions: this.selectableDimensions
+                dimensions: filterEnums(this.selectableDimensions)
                   .filter(dim => !dim.disable && dim.options?.length !== 1)
                   .map(
                     dim =>

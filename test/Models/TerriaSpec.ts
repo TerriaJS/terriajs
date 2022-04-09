@@ -7,7 +7,7 @@ import hashEntity from "../../lib/Core/hashEntity";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import Result from "../../lib/Core/Result";
 import TerriaError from "../../lib/Core/TerriaError";
-import PickedFeatures from "../../lib/Map/PickedFeatures";
+import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
 import CameraView from "../../lib/Models/CameraView";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import MagdaReference from "../../lib/Models/Catalog/CatalogReferences/MagdaReference";

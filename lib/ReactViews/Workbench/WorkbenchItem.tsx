@@ -10,7 +10,6 @@ import getPath from "../../Core/getPath";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
 import CommonStrata from "../../Models/Definition/CommonStrata";
-import { DEFAULT_PLACEMENT } from "../../Models/SelectableDimensions";
 import ViewState from "../../ReactViewModels/ViewState";
 import Box, { BoxSpan } from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
@@ -21,19 +20,7 @@ import Spacing from "../../Styled/Spacing";
 import { TextSpan } from "../../Styled/Text";
 import Loader from "../Loader";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
-import ChartItemSelector from "./Controls/ChartItemSelector";
-import ColorScaleRangeSection from "./Controls/ColorScaleRangeSection";
-import DateTimeSelectorSection from "./Controls/DateTimeSelectorSection";
-import DimensionSelectorSection from "./Controls/DimensionSelectorSection";
-import FilterSection from "./Controls/FilterSection";
-import LeftRightSection from "./Controls/LeftRightSection";
-import Legend from "./Controls/Legend";
-import OpacitySection from "./Controls/OpacitySection";
-import SatelliteImageryTimeFilterSection from "./Controls/SatelliteImageryTimeFilterSection";
-import { ScaleWorkbenchInfo } from "./Controls/ScaleWorkbenchInfo";
-import ShortReport from "./Controls/ShortReport";
-import TimerSection from "./Controls/TimerSection";
-import ViewingControls from "./Controls/ViewingControls";
+import WorkbenchItemControls from "./Controls/WorkbenchItemControls";
 
 interface IProps extends WithTranslation {
   theme: DefaultTheme;
@@ -171,31 +158,10 @@ class WorkbenchItemRaw extends React.Component<IProps> {
               `}
             />
             <Box column paddedHorizontally={2}>
-              <ViewingControls item={item} viewState={this.props.viewState} />
-              <OpacitySection item={item} />
-              <ScaleWorkbenchInfo item={item} />
-              <LeftRightSection item={item} />
-              <TimerSection item={item} />
-              <ChartItemSelector item={item} />
-              <FilterSection item={item} />
-              <DateTimeSelectorSection item={item} />
-              <SatelliteImageryTimeFilterSection item={item} />
-              <DimensionSelectorSection
-                item={item}
-                placement={DEFAULT_PLACEMENT}
+              <WorkbenchItemControls
+                item={this.props.item}
+                viewState={this.props.viewState}
               />
-              <ColorScaleRangeSection
-                item={item}
-                minValue={item.colorScaleMinimum}
-                maxValue={item.colorScaleMaximum}
-              />
-              {item.shortReport ||
-              (item.shortReportSections &&
-                item.shortReportSections.length > 0) ? (
-                <ShortReport item={item} />
-              ) : null}
-              <Legend item={item} />
-              <DimensionSelectorSection item={item} placement={"belowLegend"} />
               {isLoading ? (
                 <Box paddedVertically>
                   <Loader light />

@@ -82,10 +82,10 @@ export function defaultBaseMaps(terria: Terria): any[] {
     item: {
       id: "basemap-natural-earth-II",
       name: "Natural Earth II",
-      type: "wms",
+      type: "url-template-imagery",
       url:
-        "http://geoserver.nationalmap.nicta.com.au/imagery/natural-earth-ii/wms",
-      layers: "NE2_HR_LC_SR_W_DR",
+        "https://storage.googleapis.com/terria-datasets-public/basemaps/natural-earth-tiles/{z}/{x}/{reverseY}.png",
+      maximumLevel: 7,
       opacity: 1.0
     },
     image: "build/TerriaJS/images/natural-earth.png",

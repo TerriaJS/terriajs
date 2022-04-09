@@ -1,5 +1,3 @@
-"use strict";
-
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
@@ -135,4 +133,5 @@ const ColorScaleRangeSection = createReactClass({
     );
   }
 });
+
 export default withTranslation()(ColorScaleRangeSection);

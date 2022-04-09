@@ -20,6 +20,7 @@ import Resource from "terriajs-cesium/Source/Core/Resource";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
+import Cesium3DTilePointFeature from "terriajs-cesium/Source/Scene/Cesium3DTilePointFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
 import Constructor from "../Core/Constructor";
@@ -425,7 +426,10 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       _screenPosition: Cartesian2 | undefined,
       pickResult: any
     ) {
-      if (pickResult instanceof Cesium3DTileFeature) {
+      if (
+        pickResult instanceof Cesium3DTileFeature ||
+        pickResult instanceof Cesium3DTilePointFeature
+      ) {
         const properties: { [name: string]: unknown } = {};
         pickResult.getPropertyNames().forEach(name => {
           properties[name] = pickResult.getProperty(name);

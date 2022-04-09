@@ -10,7 +10,6 @@ import { createGlobalStyle, ThemeProvider } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
 import arrayContains from "../../Core/arrayContains";
 import PrintView from "../../ReactViews/Map/Panels/SharePanel/Print/PrintView";
-import Box from "../../Styled/Box";
 import Disclaimer from "../Disclaimer";
 import DragDropFile from "../DragDropFile";
 import ExplorerWindow from "../ExplorerWindow/ExplorerWindow";
@@ -29,17 +28,20 @@ import MapInteractionWindow from "../Notification/MapInteractionWindow";
 import Notification from "../Notification/Notification";
 import Branding from "../SidePanel/Branding";
 import SidePanel from "../SidePanel/SidePanel";
-import StoryPanel from "../Story/StoryPanel/StoryPanel";
 import Tool from "../Tools/Tool";
 import TourPortal from "../Tour/TourPortal";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
+import SelectableDimensionWorkflow from "../Workflow/SelectableDimensionWorkflow";
 import DragDropNotification from "./../DragDropNotification";
-import FullScreenButton from "./../SidePanel/FullScreenButton";
-import StoryBuilder from "./../Story/StoryBuilder";
+import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
+import StoryBuilder from "./../Story/StoryBuilder.jsx";
+import StoryPanel from "./../Story/StoryPanel/StoryPanel";
 import MapColumn from "./MapColumn";
 import processCustomElements from "./processCustomElements";
+import SidePanelContainer from "./SidePanelContainer";
 import Styles from "./standard-user-interface.scss";
 import { terriaTheme } from "./StandardTheme";
+import WorkflowPanelContainer from "./WorkflowPanelContainer";
 
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
@@ -48,6 +50,10 @@ export const showStoryPrompt = (viewState, terria) => {
     viewState.toggleFeaturePrompt("story", true);
 };
 const GlobalTerriaStyles = createGlobalStyle`
+  body {
+    font-family: ${p => p.theme.fontBase}
+  }
+
   // Theme-ify sass classes until they are removed
 
   // We override the primary, secondary, map and share buttons here as they
@@ -265,6 +271,9 @@ const StandardUserInterface = observer(
             terria={terria}
             viewState={this.props.viewState}
           />
+          <Medium>
+            <SelectableDimensionWorkflow viewState={this.props.viewState} />
+          </Medium>
           <div className={Styles.storyWrapper}>
             <If condition={!this.props.viewState.disclaimerVisible}>
               <WelcomeMessage viewState={this.props.viewState} />
@@ -298,44 +307,37 @@ const StandardUserInterface = observer(
                       />
                     </Small>
                     <Medium>
-                      <Box
-                        column
-                        className={classNames(
-                          Styles.sidePanel,
-                          this.props.viewState.topElement === "SidePanel"
-                            ? "top-element"
-                            : "",
-                          {
-                            [Styles.sidePanelHide]: this.props.viewState
-                              .isMapFullScreen
+                      <>
+                        <WorkflowPanelContainer
+                          viewState={this.props.viewState}
+                          show={this.props.terria.isWorkflowPanelActive}
+                        />
+                        <SidePanelContainer
+                          viewState={this.props.viewState}
+                          tabIndex={0}
+                          show={
+                            this.props.viewState.isMapFullScreen === false &&
+                            this.props.terria.isWorkflowPanelActive === false
                           }
-                        )}
-                        tabIndex={0}
-                        onClick={action(() => {
-                          this.props.viewState.topElement = "SidePanel";
-                        })}
-                        // TODO: debounce/batch
-                        onTransitionEnd={() =>
-                          this.props.viewState.triggerResizeEvent()
-                        }
-                      >
-                        <Branding
-                          terria={terria}
-                          viewState={this.props.viewState}
-                          version={this.props.version}
-                        />
-                        <FullScreenButton
-                          terria={this.props.terria}
-                          viewState={this.props.viewState}
-                          minified={true}
-                          animationDuration={250}
-                          btnText={t("addData.btnHide")}
-                        />
-                        <SidePanel
-                          terria={terria}
-                          viewState={this.props.viewState}
-                        />
-                      </Box>
+                        >
+                          <FullScreenButton
+                            terria={this.props.terria}
+                            viewState={this.props.viewState}
+                            minified={true}
+                            animationDuration={250}
+                            btnText={t("addData.btnHide")}
+                          />
+                          <Branding
+                            terria={terria}
+                            viewState={this.props.viewState}
+                            version={this.props.version}
+                          />
+                          <SidePanel
+                            terria={terria}
+                            viewState={this.props.viewState}
+                          />
+                        </SidePanelContainer>
+                      </>
                     </Medium>
                   </If>
                   <Medium>
@@ -394,7 +396,6 @@ const StandardUserInterface = observer(
                   </section>
                 </div>
               </div>
-
               <If condition={!this.props.viewState.hideMapUi}>
                 <Medium>
                   <TrainerBar
@@ -403,7 +404,6 @@ const StandardUserInterface = observer(
                   />
                 </Medium>
               </If>
-
               <Medium>
                 {/* I think this does what the previous boolean condition does, but without the console error */}
                 <If condition={this.props.viewState.isToolOpen}>
@@ -424,7 +424,6 @@ const StandardUserInterface = observer(
                 terria={terria}
                 viewState={this.props.viewState}
               />
-
               <If
                 condition={
                   !customElements.feedback.length &&
@@ -435,7 +434,6 @@ const StandardUserInterface = observer(
               >
                 <FeedbackForm viewState={this.props.viewState} />
               </If>
-
               <div
                 className={classNames(
                   Styles.featureInfo,

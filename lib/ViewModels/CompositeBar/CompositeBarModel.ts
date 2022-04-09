@@ -2,7 +2,7 @@ import { action, computed, observable } from "mobx";
 import isDefined from "../../Core/isDefined";
 import { CompositeBarItemController } from "./CompositeBarItemController";
 
-export type ScreenSize = "small" | "medium";
+export type ScreenSize = "small" | "medium" | "any";
 
 export enum CompositeOrientation {
   HORIZONTAL,
@@ -23,7 +23,7 @@ export interface ICompositeBarItem<
   id: string;
   name: string;
   title?: string;
-  screenSize: ScreenSize | undefined;
+  screenSize?: ScreenSize;
   order: number;
   controller: ItemController;
 }
