@@ -8,21 +8,22 @@ class WelcomeMessageVideoTraits extends ModelTraits {
     type: "string",
     description: "Title of the video."
   })
-  title!: string;
+  title: string = "Getting started with the map";
 
   @primitiveTrait({
     name: "Url",
     type: "string",
     description: "Url of the video."
   })
-  url!: string;
+  url: string = "https://www.youtube-nocookie.com/embed/FjSxaviSLhc";
 
   @primitiveTrait({
     name: "Placeholder image",
     type: "string",
     description: "Placeholder image"
   })
-  placeholderImage!: string;
+  placeholderImage: string =
+    "https://img.youtube.com/vi/FjSxaviSLhc/maxresdefault.jpg";
 }
 
 export class WelcomeMessageTraits extends ModelTraits {
@@ -38,9 +39,5 @@ export class WelcomeMessageTraits extends ModelTraits {
     type: WelcomeMessageVideoTraits,
     description: "Video to show in welcome message."
   })
-  video?: WelcomeMessageVideoTraits = {
-    title: "Getting started with the map",
-    url: "https://www.youtube-nocookie.com/embed/FjSxaviSLhc",
-    placeholderImage: "https://img.youtube.com/vi/FjSxaviSLhc/maxresdefault.jpg"
-  };
+  video?: WelcomeMessageVideoTraits;
 }

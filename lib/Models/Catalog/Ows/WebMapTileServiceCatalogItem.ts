@@ -537,13 +537,15 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
       style: this.style,
       tileMatrixSetID: tileMatrixSet.id,
       tileMatrixLabels: tileMatrixSet.labels,
-      minimumLevel: tileMatrixSet.minLevel,
-      maximumLevel: tileMatrixSet.maxLevel,
-      tileWidth: tileMatrixSet.tileWidth,
-      tileHeight: tileMatrixSet.tileHeight,
+      minimumLevel: this.minimumLevel ?? tileMatrixSet.minLevel,
+      maximumLevel: this.maximumLevel ?? tileMatrixSet.maxLevel,
+      tileWidth: this.tileWidth ?? tileMatrixSet.tileWidth,
+      tileHeight:
+        this.tileHeight ?? this.minimumLevel ?? tileMatrixSet.tileHeight,
       tilingScheme: new WebMercatorTilingScheme(),
       format,
-      credit: this.attribution
+      credit: this.attribution,
+      enablePickFeatures: this.allowFeaturePicking
     });
     return imageryProvider;
   }

@@ -17,3 +17,6 @@ package-lock.json
 *.swp
 dist
 .history/
+
+# Catalog index generation files
+catalog-index*.json

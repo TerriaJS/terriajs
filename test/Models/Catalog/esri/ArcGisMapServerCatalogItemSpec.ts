@@ -260,17 +260,26 @@ describe("ArcGisMapServerCatalogItem", function() {
 
     it("defines a rectangle", function() {
       expect(item.rectangle).toBeDefined();
-      expect(item.rectangle.west).toEqual(100.14442693296783);
-      expect(item.rectangle.south).toEqual(-49.98407725285527);
-      expect(item.rectangle.east).toEqual(169.16154003177758);
-      expect(item.rectangle.north).toEqual(-2.3882536190571813);
+      expect(item.rectangle.west).toEqual(97.90759300700006);
+      expect(item.rectangle.south).toEqual(-54.25906877199998);
+      expect(item.rectangle.east).toEqual(167.2820957260001);
+      expect(item.rectangle.north).toEqual(0.9835908000000587);
     });
 
     it("defines info", function() {
-      expect(item.info.map(({ name }) => name)).toEqual([
-        i18next.t("models.arcGisMapServerCatalogItem.dataDescription"),
-        i18next.t("models.arcGisMapServerCatalogItem.serviceDescription"),
-        i18next.t("models.arcGisMapServerCatalogItem.copyrightText")
+      expect(item.info.map(({ name, content }) => [name, content])).toEqual([
+        [
+          i18next.t("models.arcGisMapServerCatalogItem.dataDescription"),
+          "This is a customised layer to show the user of the web map service where the 250K data labels are not appropriate to use past between these scales (National Scale to 1:300,000 Scale)."
+        ],
+        [
+          i18next.t("models.arcGisMapServerCatalogItem.serviceDescription"),
+          "This service has been created specifically for display in the National Map and the symbology displayed may not suit other mapping applications. The AusHydro dataset represents the Australia's surface hydrology at a national scale. It includes natural and man-made geographic features such as: watercourse areas, swamps, reservoirs, canals, etc. This product presents hydrology polygon, point and line features which topologically connect and forms a complete flow path network for the entire continent of Australia. The GEODATA 250K data are best suited to graphical applications. These data may vary greatly in quality depending on the method of capture and digitising specifications in place at the time of capture. These features include the culture, drainage, hydrography, waterbodies and marine themes. Some datasets reflects the increasing data from scale to scale. The data is sourced from Geoscience Australia 250K Topographic data and AusHydro_V_2_0 data."
+        ],
+        [
+          i18next.t("models.arcGisMapServerCatalogItem.copyrightText"),
+          "Geoscience Australia"
+        ]
       ]);
     });
 

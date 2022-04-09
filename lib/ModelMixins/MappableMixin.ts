@@ -11,7 +11,6 @@ import Result from "../Core/Result";
 import Model from "../Models/Definition/Model";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
-import TableMixin from "./TableMixin";
 
 export type MapItem =
   | ImageryParts
@@ -19,7 +18,6 @@ export type MapItem =
   | Cesium3DTileset
   | TerrainProvider;
 
-// Shouldn't this be a class?
 export interface ImageryParts {
   alpha: number;
   clippingRectangle: Rectangle | undefined;

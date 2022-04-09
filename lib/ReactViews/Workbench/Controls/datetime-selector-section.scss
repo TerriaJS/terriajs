@@ -67,6 +67,7 @@
 
 .currentDate {
   composes: btn from "../../../Sass/common/_buttons.scss";
+  color: $text-light;
   left: 30px;
   position: absolute;
   right: 30px;

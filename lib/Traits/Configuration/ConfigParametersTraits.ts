@@ -30,6 +30,22 @@ export class ExtraCreditLinksTraits extends ModelTraits {
   text!: string;
 }
 
+export class PrintDisclaimerTraits extends ModelTraits {
+  @primitiveTrait({
+    name: "Url",
+    type: "string",
+    description: "."
+  })
+  url!: string;
+
+  @primitiveTrait({
+    name: "Text",
+    type: "string",
+    description: ""
+  })
+  text!: string;
+}
+
 export class ConfigParametersTraits extends ModelTraits {
   @primitiveTrait({
     name: "App name",
@@ -69,13 +85,6 @@ export class ConfigParametersTraits extends ModelTraits {
   })
   regionMappingDefinitionsUrl: string =
     "build/TerriaJS/data/regionMapping.json";
-
-  @primitiveTrait({
-    name: "Conversion service base url",
-    type: "string",
-    description: "URL of OGR2OGR conversion service (part of TerriaJS-Server)."
-  })
-  conversionServiceBaseUrl: string = "convert/";
 
   @primitiveTrait({
     name: "Proj4 service base url",
@@ -242,14 +251,6 @@ export class ConfigParametersTraits extends ModelTraits {
   disablePedestrianMode: boolean = false;
 
   @primitiveTrait({
-    name: "Enable geojson MVT",
-    type: "boolean",
-    description:
-      "Feature flag for experimental Geojson-Mapbox vector tiles. If falsy, all GeoJsonMixin items will render cesium primitives. If truthy, geojson-vt will be used to tile GeoJson into Mapbox vector-tiles."
-  })
-  enableGeojsonMvt: boolean = false;
-
-  @primitiveTrait({
     name: "Experimental features",
     type: "boolean",
     description: "True to enable experimental features."
@@ -298,9 +299,9 @@ export class ConfigParametersTraits extends ModelTraits {
   globalDisclaimer: any;
 
   @objectTrait({
-    name: "Show welcome message",
+    name: "Welcome message",
     type: WelcomeMessageTraits,
-    description: "True to display welcome message on startup."
+    description: "Welcome message definition."
   })
   welcomeMessage: WelcomeMessageTraits = new WelcomeMessageTraits();
 
@@ -384,4 +385,19 @@ export class ConfigParametersTraits extends ModelTraits {
     },
     { text: "map.extraCreditLinks.disclaimer", url: "about.html#disclaimer" }
   ];
+
+  @objectTrait({
+    name: "Print disclaimer",
+    type: FeedbackTraits,
+    description: "Feedback configuration"
+  })
+  printDisclaimer?: PrintDisclaimerTraits;
+
+  @primitiveTrait({
+    name: "Story route url prefix",
+    type: "string",
+    description:
+      "Prefix to which `:story-id` is added to fetch JSON for stories when using /story/:story-id routes. Should end in /"
+  })
+  storyRouteUrlPrefix?: string;
 }

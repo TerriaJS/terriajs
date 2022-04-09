@@ -1,8 +1,8 @@
 import { configure, reaction } from "mobx";
-import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
-import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
-import Terria from "../../../../lib/Models/Terria";
 import YDYRCatalogFunctionJob from "../../../../lib/Models/Catalog/CatalogFunctions/YDYRCatalogFunctionJob";
+import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
+import Terria from "../../../../lib/Models/Terria";
 import "../../../SpecHelpers";
 
 // For more tests see - test\Models\YDYRCatalogFunctionSpec.ts
@@ -12,11 +12,11 @@ const regionMapping = JSON.stringify(
 );
 
 const sa4regionCodes = JSON.stringify(
-  "../../../../wwwroot/data/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json"
+  require("../../../../wwwroot/data/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json")
 );
 
 const lga2011RegionCodes = JSON.stringify(
-  "../../../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_LGA_CODE11.json"
+  require("../../../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_LGA_CODE11.json")
 );
 
 configure({
@@ -46,7 +46,6 @@ describe("YDYRCatalogFunctionJob", function() {
     ).andCallFunction(req => {
       if (logCounter < 1) {
         req.respondWith({ responseText: `"Some Log ${logCounter}"` });
-        console.log(`"Some Log ${logCounter}"`);
 
         logCounter++;
       } else {

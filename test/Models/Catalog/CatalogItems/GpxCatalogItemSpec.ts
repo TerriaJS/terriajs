@@ -1,8 +1,8 @@
 import i18next from "i18next";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import loadText from "../../../../lib/Core/loadText";
-import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
+import ProtomapsImageryProvider from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
 import GpxCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GpxCatalogItem";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../../lib/Models/Terria";
 
 describe("GpxCatalogItem", function() {
@@ -19,40 +19,44 @@ describe("GpxCatalogItem", function() {
     expect(item.typeName).toBe(i18next.t("models.gpx.name"));
   });
 
-  it("supports zooming to extent", function() {
+  it("supports zooming to extent", async function() {
+    item.setTrait(CommonStrata.definition, "url", "test/gpx/example.gpx");
+    await item.loadMapItems();
     expect(item.disableZoomTo).toBeFalsy();
   });
 
-  it("supports show info", function() {
+  it("supports show info", async function() {
+    item.setTrait(CommonStrata.definition, "url", "test/gpx/example.gpx");
+    await item.loadMapItems();
     expect(item.disableAboutData).toBeFalsy();
   });
 
-  it("can load a GPX file by URL", function(done) {
+  it("can load a GPX file by URL", async () => {
     item.setTrait(CommonStrata.definition, "url", "test/gpx/example.gpx");
-    item
-      .loadMapItems()
-      .then(function() {
-        expect(item.mapItems.length).toEqual(1);
-        const mapItem = item.mapItems[0];
-        const entities = (<DataSource>mapItem).entities.values;
-        expect(entities.length).toEqual(2);
-      })
-      .then(done);
+    await item.loadMapItems();
+    expect(item.mapItems.length).toEqual(1);
+    const mapItem = item.mapItems[0];
+    expect(
+      "imageryProvider" in mapItem &&
+        mapItem.imageryProvider instanceof ProtomapsImageryProvider
+    ).toBeTruthy();
+
+    expect(item.readyData?.features.length).toEqual(2);
   });
 
-  it("can load a GPX file by string", function(done) {
-    loadText("test/gpx/example.gpx").then(function(s: string) {
-      item.setTrait(CommonStrata.definition, "gpxString", s);
-      item
-        .loadMapItems()
-        .then(function() {
-          expect(item.mapItems.length).toEqual(1);
+  it("can load a GPX file by string", async () => {
+    const string = await loadText("test/gpx/example.gpx");
+    item.setTrait(CommonStrata.definition, "gpxString", string);
+    await item.loadMapItems();
 
-          const mapItem = item.mapItems[0];
-          const entities = (<DataSource>mapItem).entities.values;
-          expect(entities.length).toEqual(2);
-        })
-        .then(done);
-    });
+    expect(item.mapItems.length).toEqual(1);
+
+    const mapItem = item.mapItems[0];
+    expect(
+      "imageryProvider" in mapItem &&
+        mapItem.imageryProvider instanceof ProtomapsImageryProvider
+    ).toBeTruthy();
+
+    expect(item.readyData?.features.length).toEqual(2);
   });
 });

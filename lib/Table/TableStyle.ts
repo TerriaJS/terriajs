@@ -5,13 +5,14 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
-import ConstantColorMap from "../Map/ConstantColorMap";
-import ConstantPointSizeMap from "../Map/ConstantPointSizeMap";
-import DiscreteColorMap from "../Map/DiscreteColorMap";
-import EnumColorMap from "../Map/EnumColorMap";
-import PointSizeMap from "../Map/PointSizeMap";
-import ScalePointSizeMap from "../Map/ScalePointSizeMap";
+import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
+import DiscreteColorMap from "../Map/ColorMap/DiscreteColorMap";
+import EnumColorMap from "../Map/ColorMap/EnumColorMap";
+import ConstantPointSizeMap from "../Map/SizeMap/ConstantPointSizeMap";
+import PointSizeMap from "../Map/SizeMap/PointSizeMap";
+import ScalePointSizeMap from "../Map/SizeMap/ScalePointSizeMap";
 import TableMixin from "../ModelMixins/TableMixin";
+import CommonStrata from "../Models/Definition/CommonStrata";
 import createCombinedModel from "../Models/Definition/createCombinedModel";
 import Model from "../Models/Definition/Model";
 import TableChartStyleTraits from "../Traits/TraitsClasses/TableChartStyleTraits";
@@ -22,6 +23,10 @@ import TableTimeStyleTraits from "../Traits/TraitsClasses/TableTimeStyleTraits";
 import TableColorMap from "./TableColorMap";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
+import { BBox } from "@turf/helpers";
+import { isJsonNumber } from "../Core/Json";
+import createStratumInstance from "../Models/Definition/createStratumInstance";
+import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 
 const DEFAULT_FINAL_DURATION_SECONDS = 3600 * 24 - 1; // one day less a second, if there is only one date.
 
@@ -29,13 +34,15 @@ const DEFAULT_FINAL_DURATION_SECONDS = 3600 * 24 - 1; // one day less a second, 
  * A style controlling how tabular data is displayed.
  */
 export default class TableStyle {
-  readonly styleNumber: number;
-  readonly tableModel: TableMixin.Instance;
-
-  constructor(tableModel: TableMixin.Instance, styleNumber: number) {
-    this.styleNumber = styleNumber;
-    this.tableModel = tableModel;
-  }
+  /**
+   *
+   * @param tableModel TableMixin catalog member
+   * @param styleNumber Index of styleTraits in tableModel (if undefined, then default style will be used)
+   */
+  constructor(
+    readonly tableModel: TableMixin.Instance,
+    readonly styleNumber?: number | undefined
+  ) {}
 
   /** Is style ready to be used.
    * This will be false if any of dependent columns are not ready
@@ -72,7 +79,7 @@ export default class TableStyle {
     );
   }
 
-  /** Hide style from "Display Variable" selector if number of colors (EnumColorMap or DiscreteColorMapw) is less than 2. As a ColorMap with a single color isn't super useful. */
+  /** Hide style from "Display Variable" selector if number of colors (EnumColorMap or DiscreteColorMap) is less than 2. As a ColorMap with a single color isn't super useful. */
   @computed
   get hidden() {
     if (isDefined(this.styleTraits.hidden)) return this.styleTraits.hidden;
@@ -94,7 +101,7 @@ export default class TableStyle {
   @computed
   get styleTraits(): Model<TableStyleTraits> {
     if (
-      this.styleNumber >= 0 &&
+      isDefined(this.styleNumber) &&
       this.styleNumber < this.tableModel.styles.length
     ) {
       const result = createCombinedModel(
@@ -105,6 +112,25 @@ export default class TableStyle {
     } else {
       return this.tableModel.defaultStyle;
     }
+  }
+
+  /** Is style "custom" - that is - has the style been created/modified by the user (either directly, or indirectly through a share link).
+   */
+  @computed get isCustom() {
+    const userStrata = this.colorTraits.strata.get(CommonStrata.user);
+    if (!userStrata) return false;
+
+    return (
+      (userStrata.binColors ?? [])?.length > 0 ||
+      (userStrata.binMaximums ?? [])?.length > 0 ||
+      (userStrata.enumColors ?? [])?.length > 0 ||
+      isDefined(userStrata.numberOfBins) ||
+      isDefined(userStrata.minimumValue) ||
+      isDefined(userStrata.maximumValue) ||
+      isDefined(userStrata.regionColor) ||
+      isDefined(userStrata.nullColor) ||
+      isDefined(userStrata.outlierColor)
+    );
   }
 
   /**
@@ -141,6 +167,58 @@ export default class TableStyle {
   @computed
   get timeTraits(): Model<TableTimeStyleTraits> {
     return this.styleTraits.time;
+  }
+
+  /** Compute rectangle for point (lat/long) based table styles */
+  @computed get rectangle() {
+    if (this.isPoints()) {
+      const bounds: BBox = [Infinity, Infinity, -Infinity, -Infinity];
+
+      if (this.longitudeColumn && this.latitudeColumn) {
+        for (let i = 0; i < this.longitudeColumn.values.length; i++) {
+          const long = this.longitudeColumn.valuesAsNumbers.values[i];
+          const lat = this.latitudeColumn.valuesAsNumbers.values[i];
+          if (isJsonNumber(long) && isJsonNumber(lat)) {
+            if (bounds[0] > long) {
+              bounds[0] = long;
+            }
+            if (bounds[1] > lat) {
+              bounds[1] = lat;
+            }
+            if (bounds[2] < long) {
+              bounds[2] = long;
+            }
+            if (bounds[3] < lat) {
+              bounds[3] = lat;
+            }
+          }
+        }
+      }
+
+      // If bbox has no width or height - add crude buffer of .2 degrees
+      if (bounds[0] === bounds[2]) {
+        bounds[0] -= 0.1;
+        bounds[2] += 0.1;
+      }
+
+      if (bounds[1] === bounds[3]) {
+        bounds[1] -= 0.1;
+        bounds[3] += 0.1;
+      }
+
+      if (
+        bounds[0] !== Infinity &&
+        bounds[1] !== Infinity &&
+        bounds[2] !== -Infinity &&
+        bounds[3] !== -Infinity
+      )
+        return {
+          west: bounds[0],
+          south: bounds[1],
+          east: bounds[2],
+          north: bounds[3]
+        };
+    }
   }
 
   /**
@@ -328,21 +406,26 @@ export default class TableStyle {
     }
 
     const lastDate = timeColumn.valuesAsJulianDates.maximum;
-    const intervals = timeColumn.valuesAsJulianDates.values.map((date, i) => {
-      if (!date) {
-        return null;
-      }
 
-      const startDate = this.startJulianDates?.[i] ?? date;
-      const finishDate = this.finishJulianDates?.[i] ?? undefined;
+    const intervals: (TimeInterval | null)[] = new Array(
+      timeColumn.valuesAsJulianDates.values.length
+    ).fill(null);
 
-      return new TimeInterval({
+    for (let i = 0; i < timeColumn.valuesAsJulianDates.values.length; i++) {
+      const date = timeColumn.valuesAsJulianDates.values[i];
+
+      const startDate = this.startJulianDates?.[i];
+      const finishDate = this.finishJulianDates?.[i];
+
+      if (!date || !startDate || !finishDate) continue;
+
+      intervals[i] = new TimeInterval({
         start: startDate,
         stop: finishDate,
         isStopIncluded: JulianDate.equals(finishDate, lastDate),
         data: date
       });
-    });
+    }
     return intervals;
   }
 
@@ -379,23 +462,38 @@ export default class TableStyle {
 
     const firstDate = timeColumn.valuesAsJulianDates.minimum;
 
-    if (!this.timeTraits.spreadStartTime || !firstDate)
-      return timeColumn.valuesAsJulianDates.values;
+    if (!firstDate) return [];
 
-    const startDates = timeColumn.valuesAsJulianDates.values.slice();
+    // Create a new array which will be filled by rowGroups (this will exclude dates which don't have rowGroup (eg invalid regions))
+    const filteredStartDates: (JulianDate | null)[] = new Array(
+      timeColumn.valuesAsJulianDates.values.length
+    ).fill(null);
 
-    this.rowGroups.forEach(([groupId, rowIds]) => {
-      // Find row ID with earliest date in this rowGroup
-      const firstRowId = rowIds
-        .filter(id => startDates[id])
-        .sort((idA, idB) =>
-          JulianDate.compare(startDates[idA]!, startDates[idB]!)
-        )[0];
-      // Set it to earliest date in the entire column
-      if (isDefined(firstRowId)) startDates[firstRowId] = firstDate;
-    });
+    for (let i = 0; i < this.rowGroups.length; i++) {
+      const rowIds = this.rowGroups[i][1];
 
-    return startDates;
+      // Copy over valid rows
+      for (let j = 0; j < rowIds.length; j++) {
+        filteredStartDates[rowIds[j]] =
+          timeColumn.valuesAsJulianDates.values[rowIds[j]];
+      }
+
+      if (this.timeTraits.spreadStartTime) {
+        // Find row ID with earliest date in this rowGroup
+        const firstRowId = rowIds
+          .filter(id => filteredStartDates[id])
+          .sort((idA, idB) =>
+            JulianDate.compare(
+              filteredStartDates[idA]!,
+              filteredStartDates[idB]!
+            )
+          )[0];
+        // Set it to earliest date in the entire column
+        if (isDefined(firstRowId)) filteredStartDates[firstRowId] = firstDate;
+      }
+    }
+
+    return filteredStartDates;
   }
 
   /**
@@ -413,21 +511,25 @@ export default class TableStyle {
     }
 
     const startDates = timeColumn.valuesAsJulianDates.values;
+    const finishDates: (JulianDate | null)[] = new Array(
+      startDates.length
+    ).fill(null);
 
     // If displayDuration trait is set, use that to set finish date
     if (this.timeTraits.displayDuration !== undefined) {
-      return startDates.map(date =>
-        date
-          ? JulianDate.addMinutes(
-              date,
-              this.timeTraits.displayDuration!,
-              new JulianDate()
-            )
-          : null
-      );
-    }
+      for (let i = 0; i < startDates.length; i++) {
+        const date = startDates[i];
+        if (date) {
+          finishDates[i] = JulianDate.addMinutes(
+            date,
+            this.timeTraits.displayDuration!,
+            new JulianDate()
+          );
+        }
+      }
 
-    const finishDates: (JulianDate | null)[] = [];
+      return finishDates;
+    }
 
     // Otherwise estimate a final duration value to calculate the end date for groups
     // that have only one row. Fallback to a global default if an estimate
@@ -446,9 +548,9 @@ export default class TableStyle {
         startDatesForGroup,
         finalDuration
       );
-      finishDatesForGroup.forEach((date, i) => {
-        finishDates[rowIds[i]] = date;
-      });
+      for (let j = 0; j < finishDatesForGroup.length; j++) {
+        finishDates[rowIds[j]] = finishDatesForGroup[j];
+      }
     }
 
     return finishDates;
@@ -490,6 +592,50 @@ export default class TableStyle {
     );
   }
 
+  @computed get numberFormatOptions(): Intl.NumberFormatOptions | undefined {
+    const colorColumn = this.colorColumn;
+    if (colorColumn?.traits?.format)
+      return colorColumn?.traits?.format as Intl.NumberFormatOptions;
+
+    let min =
+      this.tableColorMap.minimumValue ?? colorColumn?.valuesAsNumbers.minimum;
+    let max =
+      this.tableColorMap.maximumValue ?? colorColumn?.valuesAsNumbers.maximum;
+
+    if (
+      colorColumn &&
+      colorColumn.type === TableColumnType.scalar &&
+      isDefined(min) &&
+      isDefined(max)
+    ) {
+      if (max - min === 0) return;
+
+      // We want to show fraction digits depending on how small difference is between min and max.
+      // This also takes into consideration the defualt number of legend items - 7
+      // So we add an extra digit
+      // For example:
+      // - if difference is 10 - we wnat to show one fraction digit
+      // - if difference is 1 - we want to show two fraction digits
+      // - if difference is 0.1 - we want to show three fraction digits
+
+      // log_10(20/x) achieves this (where x is difference between min and max)
+      // https://www.wolframalpha.com/input/?i=log_10%2820%2Fx%29
+      // We use 20 here instead of 10 to give us a more convervative value (that is, we may show an extra fraction digit even if it is not needed)
+      // So when x >= 20 - we will not show any fraction digits
+
+      // Clamp values between 0 and 5
+      let fractionDigits = Math.max(
+        0,
+        Math.min(5, Math.ceil(Math.log10(20 / Math.abs(max - min))))
+      );
+
+      return {
+        maximumFractionDigits: fractionDigits,
+        minimumFractionDigits: fractionDigits
+      };
+    }
+  }
+
   /**
    * Computes an and end date for each given start date. The end date for a
    * given start date is the next higher date in the input. To compute the end
@@ -513,9 +659,14 @@ export default class TableStyle {
         ? this.timeColumn.valuesAsJulianDates.maximum
         : sortedStartDates[sortedStartDates.length - 1];
 
-    return startDates.map(date => {
+    const finishDates: (JulianDate | null)[] = new Array(
+      startDates.length
+    ).fill(null);
+
+    for (let i = 0; i < startDates.length; i++) {
+      const date = startDates[i];
       if (!date) {
-        return null;
+        continue;
       }
 
       const nextDateIndex = binarySearch(
@@ -525,15 +676,17 @@ export default class TableStyle {
       );
       const nextDate = sortedStartDates[nextDateIndex + 1];
       if (nextDate) {
-        return nextDate;
+        finishDates[i] = nextDate;
       } else {
         // This is the last date in the row, so calculate a final date
         const finalDurationSeconds =
           estimateFinalDurationSeconds(sortedStartDates) ||
           defaultFinalDurationSeconds;
-        return addSecondsToDate(lastDate, finalDurationSeconds);
+        finishDates[i] = addSecondsToDate(lastDate, finalDurationSeconds);
       }
-    });
+    }
+
+    return finishDates;
   }
 
   private resolveColumn(name: string | undefined): TableColumn | undefined {

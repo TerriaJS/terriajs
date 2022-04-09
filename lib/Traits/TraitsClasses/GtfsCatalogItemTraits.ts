@@ -1,21 +1,23 @@
+import objectTrait from "../Decorators/objectTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
 import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import GtfsModelTraits from "./GtfsModelTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
-import mixTraits from "../mixTraits";
-import objectTrait from "../Decorators/objectTrait";
-import primitiveTrait from "../Decorators/primitiveTrait";
-import RasterLayerTraits from "./RasterLayerTraits";
+import OpacityTraits from "./OpacityTraits";
 import ScaleByDistanceTraits from "./ScaleByDistanceTraits";
 import UrlTraits from "./UrlTraits";
 
 export default class GtfsCatalogItemTraits extends mixTraits(
   UrlTraits,
   CatalogMemberTraits,
+  LegendOwnerTraits,
   MappableTraits,
-  RasterLayerTraits,
+  OpacityTraits,
   LayerOrderingTraits,
   AutoRefreshingTraits,
   FeatureInfoTraits

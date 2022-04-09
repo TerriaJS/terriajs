@@ -1,4 +1,4 @@
-import isDefined from "../Core/isDefined";
+import { runInAction } from "mobx";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 
 enum ViewerMode {
@@ -34,16 +34,18 @@ export function setViewerMode(
   viewerMode: keyof typeof MapViewers,
   viewer: TerriaViewer
 ): void {
-  if (viewerMode === "3d" || viewerMode === "3dsmooth") {
-    viewer.viewerMode = ViewerMode.Cesium;
-    viewer.viewerOptions.useTerrain = viewerMode === "3d";
-  } else if (viewerMode === "2d") {
-    viewer.viewerMode = ViewerMode.Leaflet;
-  } else {
-    console.error(
-      `Trying to select ViewerMode ${viewerMode} that doesn't exist`
-    );
-  }
+  runInAction(() => {
+    if (viewerMode === "3d" || viewerMode === "3dsmooth") {
+      viewer.viewerMode = ViewerMode.Cesium;
+      viewer.viewerOptions.useTerrain = viewerMode === "3d";
+    } else if (viewerMode === "2d") {
+      viewer.viewerMode = ViewerMode.Leaflet;
+    } else {
+      console.error(
+        `Trying to select ViewerMode ${viewerMode} that doesn't exist`
+      );
+    }
+  });
 }
 
 export default ViewerMode;

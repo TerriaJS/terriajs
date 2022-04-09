@@ -48,7 +48,7 @@ export default class CatalogIndexReference extends ReferenceMixin(
       ...flatten(
         filterOutUndefined(
           model.memberKnownContainerUniqueIds.map(parentId => {
-            const parent = this.terria.catalogIndex?.models?.get(parentId);
+            const parent = model.terria.catalogIndex?.models?.get(parentId);
             if (parent) {
               return findContainers(parent);
             }
@@ -94,11 +94,15 @@ export default class CatalogIndexReference extends ReferenceMixin(
       return member;
     }
 
+    const parentErrorMessage = new TerriaError({
+      title: `Failed to find dataset "${this.name ?? this.uniqueId}"`,
+      message: {
+        key: "core.terriaError.networkRequestMessage"
+      },
+      importance: 1
+    });
+
     // No member exists - throw error
-    throw TerriaError.combine(
-      errors,
-      `Failed to find member ${this.name ?? this.uniqueId}`
-    ) ??
-      TerriaError.from(`Failed to find member ${this.name ?? this.uniqueId}`);
+    throw TerriaError.combine(errors, parentErrorMessage) ?? parentErrorMessage;
   }
 }

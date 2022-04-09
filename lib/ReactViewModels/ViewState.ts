@@ -8,12 +8,15 @@ import {
 } from "mobx";
 import { Ref } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import addedByUser from "../Core/addedByUser";
-import { Category, HelpAction } from "../Core/AnalyticEvents/analyticEvents";
+import {
+  Category,
+  HelpAction,
+  StoryAction
+} from "../Core/AnalyticEvents/analyticEvents";
 import Result from "../Core/Result";
 import triggerResize from "../Core/triggerResize";
-import PickedFeatures from "../Map/PickedFeatures";
+import PickedFeatures from "../Map/PickedFeatures/PickedFeatures";
 import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
@@ -22,7 +25,9 @@ import CommonStrata from "../Models/Definition/CommonStrata";
 import { BaseModel } from "../Models/Definition/Model";
 import getAncestors from "../Models/getAncestors";
 import Terria from "../Models/Terria";
+import { ViewingControl } from "../Models/ViewingControls";
 import { SATELLITE_HELP_PROMPT_KEY } from "../ReactViews/HelpScreens/SatelliteHelpPrompt";
+import { animationDuration } from "../ReactViews/StandardUserInterface/StandardUserInterface";
 import {
   defaultTourPoints,
   RelativePosition,
@@ -76,6 +81,8 @@ export default class ViewState {
   @observable mobileMenuVisible: boolean = false;
   @observable explorerPanelAnimating: boolean = false;
   @observable topElement: string = "FeatureInfo";
+  // Map for storing react portal containers created by <PortalContainer> component.
+  @observable portals: Map<string, HTMLElement | null> = new Map();
   @observable lastUploadedFiles: any[] = [];
   @observable storyBuilderShown: boolean = false;
 
@@ -95,6 +102,21 @@ export default class ViewState {
   @observable selectedTrainerItem: string = "";
   @observable currentTrainerItemIndex: number = 0;
   @observable currentTrainerStepIndex: number = 0;
+
+  @observable printWindow: Window | null = null;
+
+  /**
+   * A global list of functions that generate a {@link ViewingControl} option
+   * for the given catalog item instance.  This is useful for plugins to extend
+   * the viewing control menu across catalog items.
+   *
+   * Use {@link ViewingControlsMenu.addMenuItem} instead of updating directly.
+   */
+  @observable
+  readonly globalViewingControlOptions: ((
+    item: CatalogMemberMixin.Instance
+  ) => ViewingControl | undefined)[] = [];
+
   @action
   setSelectedTrainerItem(trainerItem: string) {
     this.selectedTrainerItem = trainerItem;
@@ -136,7 +158,11 @@ export default class ViewState {
     }
   }
 
-  @observable workbenchWithOpenControls: string | undefined = undefined;
+  /**
+   * ID of the workbench item whose ViewingControls menu is currently open.
+   */
+  @observable
+  workbenchItemWithOpenControls: string | undefined = undefined;
 
   errorProvider: any | null = null;
 
@@ -544,9 +570,19 @@ export default class ViewState {
     stratum: string = CommonStrata.user,
     openAddData = true
   ): Promise<Result<void>> {
+    // Set preview item before loading - so we can see loading indicator and errors in DataPreview panel.
+    runInAction(() => (this._previewedItem = item));
+
     try {
-      // Set preview item
-      runInAction(() => (this._previewedItem = item));
+      // If item is a Reference - recursively load and call viewCatalogMember on the target
+      if (ReferenceMixin.isMixedInto(item)) {
+        (await item.loadReference()).throwIfError();
+        if (item.target) {
+          return this.viewCatalogMember(item.target);
+        } else {
+          return Result.error(`Could not view catalog member ${getName(item)}`);
+        }
+      }
 
       // Open "Add Data"
       if (openAddData) {
@@ -567,21 +603,10 @@ export default class ViewState {
           });
         }
 
-        // mobile switch to nowvewing if not viewing a group
+        // mobile switch to now viewing if not viewing a group
         if (!GroupMixin.isMixedInto(item)) {
           this.switchMobileView(this.mobileViewOptions.preview);
         }
-      }
-
-      // Load preview item
-      if (ReferenceMixin.isMixedInto(item)) {
-        (await item.loadReference()).throwIfError();
-
-        // call viewCatalogMember on reference.target
-        if (item.target) {
-          return await this.viewCatalogMember(item.target, isOpen, stratum);
-        }
-        return Result.error(`Failed to resolve reference for ${getName(item)}`);
       }
 
       if (GroupMixin.isMixedInto(item)) {
@@ -705,10 +730,31 @@ export default class ViewState {
     this.currentTool = undefined;
   }
 
+  @action setPrintWindow(window: Window | null) {
+    if (this.printWindow) {
+      this.printWindow.close();
+    }
+    this.printWindow = window;
+  }
+
   @action
   toggleMobileMenu() {
     this.setTopElement("mobileMenu");
     this.mobileMenuVisible = !this.mobileMenuVisible;
+  }
+
+  @action
+  runStories() {
+    this.storyBuilderShown = false;
+    this.storyShown = true;
+
+    setTimeout(function() {
+      triggerResize();
+    }, animationDuration || 1);
+
+    this.terria.currentViewer.notifyRepaintRequired();
+
+    this.terria.analytics?.logEvent(Category.story, StoryAction.runStory);
   }
 
   @computed
@@ -748,7 +794,9 @@ export default class ViewState {
 
 interface Tool {
   toolName: string;
-  getToolComponent: () => React.ComponentType | Promise<React.ComponentType>;
+  getToolComponent: () =>
+    | React.ComponentType<any>
+    | Promise<React.ComponentType<any>>;
 
   showCloseButton: boolean;
   params?: any;

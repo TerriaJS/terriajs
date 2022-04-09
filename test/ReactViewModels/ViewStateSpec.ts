@@ -2,6 +2,9 @@ import { runInAction } from "mobx";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
+import TerriaReference from "../../lib/Models/Catalog/CatalogReferences/TerriaReference";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import CatalogIndexReference from "../../lib/Models/Catalog/CatalogReferences/CatalogIndexReference";
 
 describe("ViewState", function() {
   let terria: Terria;
@@ -13,6 +16,30 @@ describe("ViewState", function() {
       terria,
       catalogSearchProvider: undefined,
       locationSearchProviders: []
+    });
+  });
+
+  describe("viewCatalogMember", function() {
+    it("handle nested references", async function() {
+      // Test nested reference
+      // CatalogIndexReference -> TerriaReference -> CatalogGroup
+      terria = new Terria();
+
+      const terriaReference = new TerriaReference("test", terria);
+      terriaReference.setTrait(
+        CommonStrata.user,
+        "url",
+        "test/init/wms-v8.json"
+      );
+      terriaReference.setTrait(CommonStrata.user, "isGroup", true);
+      terria.addModel(terriaReference);
+
+      const catalogIndexReference = new CatalogIndexReference("test", terria);
+
+      await viewState.viewCatalogMember(catalogIndexReference);
+
+      expect(viewState.previewedItem).toBeDefined();
+      expect(viewState.previewedItem?.type).toBe("group");
     });
   });
 

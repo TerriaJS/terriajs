@@ -25,26 +25,27 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import LatLonHeight from "../Core/LatLonHeight";
 import runLater from "../Core/runLater";
+import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
+import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
 import ImageryProviderLeafletGridLayer, {
   isImageryProviderGridLayer as supportsImageryProviderGridLayer
-} from "../Map/ImageryProviderLeafletGridLayer";
-import ImageryProviderLeafletTileLayer from "../Map/ImageryProviderLeafletTileLayer";
-import LeafletDataSourceDisplay from "../Map/LeafletDataSourceDisplay";
-import LeafletScene from "../Map/LeafletScene";
-import LeafletSelectionIndicator from "../Map/LeafletSelectionIndicator";
-import LeafletVisualizer from "../Map/LeafletVisualizer";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
+} from "../Map/Leaflet/ImageryProviderLeafletGridLayer";
+import ImageryProviderLeafletTileLayer from "../Map/Leaflet/ImageryProviderLeafletTileLayer";
+import LeafletDataSourceDisplay from "../Map/Leaflet/LeafletDataSourceDisplay";
+import LeafletScene from "../Map/Leaflet/LeafletScene";
+import LeafletSelectionIndicator from "../Map/Leaflet/LeafletSelectionIndicator";
+import LeafletVisualizer from "../Map/Leaflet/LeafletVisualizer";
 import PickedFeatures, {
   ProviderCoords,
   ProviderCoordsMap
-} from "../Map/PickedFeatures";
-import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
+} from "../Map/PickedFeatures/PickedFeatures";
+import rectangleToLatLngBounds from "../Map/Vector/rectangleToLatLngBounds";
 import MappableMixin, {
   ImageryParts,
   MapItem
 } from "../ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
-import RasterLayerTraits from "../Traits/TraitsClasses/RasterLayerTraits";
+import ImageryProviderTraits from "../Traits/TraitsClasses/ImageryProviderTraits";
 import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
@@ -372,7 +373,7 @@ export default class Leaflet extends GlobeOrMap {
       );
 
       const allImagery = allImageryMapItems.map(({ item, parts }) => {
-        if (hasTraits(item, RasterLayerTraits, "leafletUpdateInterval")) {
+        if (hasTraits(item, ImageryProviderTraits, "leafletUpdateInterval")) {
           (parts.imageryProvider as any)._leafletUpdateInterval =
             item.leafletUpdateInterval;
         }
@@ -613,7 +614,7 @@ export default class Leaflet extends GlobeOrMap {
   private _pickFeatures(
     latlng: L.LatLng,
     tileCoordinates?: any,
-    existingFeatures?: Entity[],
+    existingFeatures?: Feature[],
     ignoreSplitter: boolean = false
   ) {
     if (isDefined(this._pickedFeatures)) {
@@ -1038,7 +1039,7 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   _addVectorTileHighlight(
-    imageryProvider: MapboxVectorTileImageryProvider,
+    imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
     rectangle: Rectangle
   ): () => void {
     const map = this.map;

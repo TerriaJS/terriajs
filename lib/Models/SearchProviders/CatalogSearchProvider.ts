@@ -1,4 +1,5 @@
 import { autorun, computed, observable, runInAction } from "mobx";
+import { fromPromise } from "mobx-utils";
 import {
   Category,
   SearchAction
@@ -115,20 +116,36 @@ export default class CatalogSearchProvider extends SearchProvider {
   }
 
   @computed get resultsAreReferences() {
-    return isDefined(this.terria.catalogIndex);
+    return (
+      isDefined(this.terria.catalogIndex?.loadPromise) &&
+      fromPromise(this.terria.catalogIndex!.loadPromise).state === "fulfilled"
+    );
   }
 
   protected async doSearch(
     searchText: string,
     searchResults: SearchProviderResults
   ): Promise<void> {
-    this.isSearching = true;
+    runInAction(() => (this.isSearching = true));
+
     searchResults.results.length = 0;
     searchResults.message = undefined;
 
     if (searchText === undefined || /^\s*$/.test(searchText)) {
-      this.isSearching = false;
+      runInAction(() => (this.isSearching = false));
       return Promise.resolve();
+    }
+
+    // Load catalogIndex if needed
+    if (this.terria.catalogIndex && !this.terria.catalogIndex.loadPromise) {
+      try {
+        await this.terria.catalogIndex.load();
+      } catch (e) {
+        this.terria.raiseErrorToUser(
+          e,
+          "Failed to load catalog index. Searching may be slow/inaccurate"
+        );
+      }
     }
 
     this.terria.analytics?.logEvent(
@@ -139,8 +156,8 @@ export default class CatalogSearchProvider extends SearchProvider {
     const resultMap: ResultMap = new Map();
 
     try {
-      if (this.terria.catalogIndex) {
-        const results = await this.terria.catalogIndex?.search(searchText);
+      if (this.terria.catalogIndex?.searchIndex) {
+        const results = await this.terria.catalogIndex.search(searchText);
         runInAction(() => (searchResults.results = results));
       } else {
         await loadAndSearchCatalogRecursively(

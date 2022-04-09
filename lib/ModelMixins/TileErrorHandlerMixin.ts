@@ -9,18 +9,18 @@ import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import Constructor from "../Core/Constructor";
 import TerriaError from "../Core/TerriaError";
-import getUrlForImageryTile from "../Map/getUrlForImageryTile";
+import getUrlForImageryTile from "../Map/ImageryProvider/getUrlForImageryTile";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import CompositeCatalogItem from "../Models/Catalog/CatalogItems/CompositeCatalogItem";
 import Model from "../Models/Definition/Model";
 import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
-import RasterLayerTraits from "../Traits/TraitsClasses/RasterLayerTraits";
+import ImageryProviderTraits from "../Traits/TraitsClasses/ImageryProviderTraits";
 import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
 import MappableMixin from "./MappableMixin";
 
 type ModelType = Model<
-  MappableTraits & RasterLayerTraits & CatalogMemberTraits
+  MappableTraits & ImageryProviderTraits & CatalogMemberTraits
 > &
   MappableMixin.Instance;
 

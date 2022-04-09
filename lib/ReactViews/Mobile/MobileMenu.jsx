@@ -9,10 +9,8 @@ import classNames from "classnames";
 import MobileMenuItem from "./MobileMenuItem";
 import SettingPanel from "../Map/Panels/SettingPanel";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel";
-import Terria from "../../Models/Terria";
+// import HelpMenuPanelBasic from "../HelpScreens/HelpMenuPanelBasic";
 import { withTranslation } from "react-i18next";
-
-import ViewState from "../../ReactViewModels/ViewState";
 
 import Styles from "./mobile-menu.scss";
 import { runInAction } from "mobx";
@@ -27,9 +25,9 @@ const MobileMenu = observer(
     propTypes: {
       menuItems: PropTypes.arrayOf(PropTypes.element),
       menuLeftItems: PropTypes.arrayOf(PropTypes.element),
-      viewState: PropTypes.instanceOf(ViewState).isRequired,
+      viewState: PropTypes.object.isRequired,
       showFeedback: PropTypes.bool,
-      terria: PropTypes.instanceOf(Terria).isRequired,
+      terria: PropTypes.object.isRequired,
       i18n: PropTypes.object,
       allBaseMaps: PropTypes.array.isRequired,
       t: PropTypes.func.isRequired
@@ -67,11 +65,7 @@ const MobileMenu = observer(
     },
 
     runStories() {
-      runInAction(() => {
-        this.props.viewState.storyBuilderShown = false;
-        this.props.viewState.storyShown = true;
-        this.props.viewState.mobileMenuVisible = false;
-      });
+      this.props.viewState.runStories();
     },
 
     dismissSatelliteGuidanceAction() {

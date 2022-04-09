@@ -9,6 +9,7 @@ import Button, { RawButton } from "../../Styled/Button";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import Spacing from "../../Styled/Spacing";
 import Text, { TextSpan } from "../../Styled/Text";
+import { ExplorerWindowElementName } from "../ExplorerWindow/ExplorerWindow";
 import { useKeyPress } from "../Hooks/useKeyPress.js";
 import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
 import { TourPortalDisplayName } from "../Tour/TourPortal";
@@ -86,7 +87,7 @@ class WelcomeMessage extends React.Component {
   }
 }
 
-export const WelcomeMessagePure = props => {
+export const WelcomeMessagePure = observer(props => {
   const { showWelcomeMessage, setShowWelcomeMessage, viewState } = props;
   const { t } = useTranslation();
   // This is required so we can do nested animations
@@ -133,7 +134,7 @@ export const WelcomeMessagePure = props => {
           if (shouldExploreData) {
             setShouldExploreData(false);
             viewState.openAddData();
-            viewState.setTopElement("AddData");
+            viewState.setTopElement(ExplorerWindowElementName);
           }
           if (shouldOpenHelp) {
             setShouldOpenHelp(false);
@@ -339,7 +340,7 @@ export const WelcomeMessagePure = props => {
       </WelcomeModalWrapper>
     </FadeIn>
   );
-};
+});
 
 WelcomeMessagePure.propTypes = {
   showWelcomeMessage: PropTypes.bool.isRequired,

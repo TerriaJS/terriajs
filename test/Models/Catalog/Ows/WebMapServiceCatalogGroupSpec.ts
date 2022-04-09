@@ -1,10 +1,14 @@
+import i18next from "i18next";
+import { runInAction } from "mobx";
+import CatalogMemberMixin from "../../../../lib/ModelMixins/CatalogMemberMixin";
+import GroupMixin from "../../../../lib/ModelMixins/GroupMixin";
 import WebMapServiceCatalogGroup from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
-import { runInAction } from "mobx";
+import createStratumInstance from "../../../../lib/Models/Definition/createStratumInstance";
 import Terria from "../../../../lib/Models/Terria";
-import i18next from "i18next";
-import GroupMixin from "../../../../lib/ModelMixins/GroupMixin";
-import CatalogMemberMixin from "../../../../lib/ModelMixins/CatalogMemberMixin";
+import ExportWebCoverageServiceTraits, {
+  WebCoverageServiceParameterTraits
+} from "../../../../lib/Traits/TraitsClasses/ExportWebCoverageServiceTraits";
 
 describe("WebMapServiceCatalogGroup", function() {
   let terria: Terria;
@@ -149,6 +153,37 @@ describe("WebMapServiceCatalogGroup", function() {
       expect(
         GroupMixin.isMixedInto(thirdGroup) && thirdGroup.members.length
       ).toEqual(1);
+    });
+  });
+
+  describe("perLayerLinkedWcs", function() {
+    beforeEach(async function() {
+      runInAction(() => {
+        wms.setTrait("definition", "url", "test/WMS/wms_nested_groups.xml");
+        wms.setTrait(
+          "definition",
+          "perLayerLinkedWcs",
+          createStratumInstance(ExportWebCoverageServiceTraits, {
+            linkedWcsUrl: "some-url",
+            linkedWcsParameters: createStratumInstance(
+              WebCoverageServiceParameterTraits,
+              { outputFormat: "some-output-format" }
+            )
+          })
+        );
+      });
+      await wms.loadMembers();
+    });
+
+    it("sets traits correctly", async function() {
+      const wmsItem = (wms.memberModels[0] as WebMapServiceCatalogGroup)
+        .memberModels[0] as WebMapServiceCatalogItem;
+
+      expect(wmsItem.linkedWcsUrl).toEqual("some-url");
+      expect(wmsItem.linkedWcsCoverage).toEqual("ls8_nbart_geomedian_annual");
+      expect(wmsItem.linkedWcsParameters.outputFormat).toEqual(
+        "some-output-format"
+      );
     });
   });
 });

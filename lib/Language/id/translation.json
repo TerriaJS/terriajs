@@ -5,7 +5,7 @@
     "panelBody": "Buat dan bagikan cerita interaktif langsung dari peta Anda",
     "panelTitle": "Penyunting Cerita",
     "storyEditor": "Penyunting Cerita",
-    "dismissText": "Mengerti, terima kasih",
+    "dismissText": "Mengerti, terima kasih!",
     "story": "Cerita",
     "promptHtml1": "<0>Anda dapat melihat dan membuat cerita kapan saja dengan mengklik di sini.</0>",
     "navBtnMobile": "pergi ke cerita {{title}}",
@@ -32,14 +32,24 @@
     "recapture": "Menangkap kembali",
     "promptHtml2": "<0><0>MEMPERKENALKAN</0><1>Cerita Data</1><2>Buat dan bagikan cerita interaktif langsung dari peta Anda.</2></0>",
     "exitBtn": "keluar cerita",
-    "view": "Tampilan"
+    "view": "Tampilan",
+    "untitledScene": "scene tanpa judul",
+    "untitled": "scene tanpa judul",
+    "previousBtn": "ke scene sebelumnya",
+    "recaptureStory": "Tangkap kembali",
+    "removeAllStoriesDialog": "Ada yakin ingin menghapus {{ count }} scene?",
+    "preview": "pratinjau stories",
+    "nextBtn": "ke scene selanjutnya",
+    "mobileViewStory": "Lihat Cerita {{storiesLength}}",
+    "badgeBarLabel": "Scene"
   },
   "welcomeMessage": {
     "dismissText": "Tutup pesan dan jangan tampilkan ini lagi",
     "exploreDataBtnText": "Jelajahi data peta",
     "helpBtnText": "Saya butuh sedikit bantuan",
     "tourBtnText": "Ikuti turnya",
-    "title": "Mari kita mulai"
+    "title": "Mari kita mulai",
+    "searchBtnText": "Cari lokasi"
   },
   "featureInfo": {
     "clickMap": "Klik peta untuk mengetahui lebih banyak tentang sebuah lokasi",
@@ -52,7 +62,16 @@
     "noDataAvailable": "Tak ada data yang tersedia di sini - coba lokasi lain.",
     "download": "Unduh Tabel ini",
     "satelliteSuggestionBtn": "Tampilkan {{catalogItemName}} di lokasi ini",
-    "panelHeading": "Informasi Fitur"
+    "panelHeading": "Informasi Fitur",
+    "catalogItem": {
+      "moreThanMax": "Lebih dari {{maximum}} {{catalogItemName}} fitur ditemukan.",
+      "featuresFound": "{{featCount}} {catalogItemName} fitur ditemukan.",
+      "featureInfoShown": "Yang pertama {{maximum}} ditunjukkan di bawah ini."
+    },
+    "userSelection": "Seleksi Pengguna",
+    "locationMarker": "Penanda Lokasi",
+    "showRawData": "Tampilkan Data Mentah",
+    "showCuratedData": "Tampilkan Data yang dikurasi"
   },
   "sui": {
     "notifications": {
@@ -60,7 +79,9 @@
       "confirmText": "Ya",
       "message": "Apakah Anda ingin melihatnya sekarang?",
       "title": "Peta ini mengandung sebuah cerita"
-    }
+    },
+    "showWorkbench": "Tampilkan Workbench",
+    "hideWorkbench": "Sembunyikan Workbench"
   },
   "helpMenu": {
     "next": "BERIKUTNYA",
@@ -69,17 +90,20 @@
     "helpMenuOpenWelcome": "Tunjukkan pesan selamat datang",
     "helpMenuHeader": "Apa yang ingin Anda lakukan?",
     "btnTitle": "dapatkan bantuan",
-    "btnText": "Bantuan"
+    "btnText": "Bantuan",
+    "helpMenuSatelliteGuideTitle": "Lihat panduan gambar satelit"
   },
   "helpPanel": {
     "takeTour": "Ikuti turnya",
     "dismissText": "Mengerti, terima kasih!",
     "promptMessage": "Temukan Tur, video petunjuk & konten bantuan lainnya di sini",
-    "menuPaneBody": "Cari tip berguna tentang bagaimana cara menggunakan TerriaJS dengan mengecek panduan berikut atau dengan menghubungi tim di [info@terria.io](mailto:info@terria.io)",
-    "menuPaneTitle": "Kami di sini untuk membantu"
+    "menuPaneBody": "Cari tip berguna tentang bagaimana cara menggunakan TerriaJS dengan mengecek panduan berikut atau dengan menghubungi tim di [{{supportEmail}}]({{supportEmail}})",
+    "menuPaneTitle": "Kami di sini untuk membantu",
+    "btnText": "Bantuan",
+    "mapUserGuide": "Panduan pengguna peta"
   },
   "feedback": {
-    "minLength": "Panjang minimum dari masukan komentar adalah {{minLength}}",
+    "minLength": "Panjang minimum dari komentar adalah {{minLength}}",
     "feedbackBtnText": "Berikan Masukan",
     "send": "Kirim",
     "sending": "Mengirim...",
@@ -169,6 +193,9 @@
       "close": "Mungkin nanti",
       "content": "Tidak yakin di mana untuk mulai? Ikuti tur singkat dari fitur-fitur utama dari perangkat lunak kami, dan belajar tentang beberapa fungsi utama untuk membantumu.",
       "title": "Ikuti turnya"
+    },
+    "locationSearchInput": {
+      "content": "## Pencarian lokasi\n\nMasukkan lokasi atau alamat untuk memudahkan menemukan point of interest di peta."
     }
   },
   "trainer": {
@@ -285,7 +312,14 @@
     "numericParameter": {
       "maximum": "Maksimum",
       "minimum": "Minimum"
-    }
+    },
+    "actions": {
+      "showMatchingOnly": "Hanya tampilkan yang cocok",
+      "highlightAll": "Sorot semua"
+    },
+    "resetBtnText": "Hapus input",
+    "loading": "Memuat parameter pencarian",
+    "resultsCount": "{{count}} cocok"
   },
   "deltaTool": {
     "cancelBtn": "Batal",
@@ -303,7 +337,8 @@
   "satelliteGuidance": {
     "dismissText": "Mengerti, terima kasih!",
     "nextI": "Lihat panduan",
-    "prevI": "Tidak, terima kasih"
+    "prevI": "Tidak, terima kasih",
+    "titleIII": "Memuat gambar bersejarah"
   },
   "models": {
     "socrataServer": {
@@ -559,33 +594,69 @@
   },
   "satellite": {
     "newLocation": "Lokasi baru",
-    "removeFilter": "Hapus filter"
+    "removeFilter": "Hapus filter",
+    "filterByLocation": "Saring menurut lokasi"
   },
   "dateTime": {
     "timeline": {
-      "togglePlay": "Putar"
-    }
+      "togglePlay": "Putar",
+      "gotoStart": "Ke awal"
+    },
+    "selectorLabel": "Waktu:",
+    "previous": "Waktu sebelumnya",
+    "selectTime": "Pilih waktu",
+    "outOfRange": "Saat ini di luar jangkauan.",
+    "useTimeline": "Gunakan timeline",
+    "availableTimeChart": "Tampilkan waktu yang tersedia pada bagan",
+    "back": "Kembali"
   },
   "workbench": {
     "removeAll": "Hapus semua",
     "removeFromMap": "Hapus",
     "exportData": "Ekspor",
     "rangeMin": "Minimum:",
-    "rangeMax": "Maksimum:"
+    "rangeMax": "Maksimum:",
+    "showMoreActionsTitle": "Tunjukkan tindakan lainnya",
+    "previewItemTitle": "Tentang data ini",
+    "previewItem": "Tentang Data",
+    "colorScaleRange": "Rentang Skala Warna",
+    "opacity": "Opasitas: {{opacity}} %",
+    "expandAll": "Bentangkan Semua",
+    "toggleVisibility": "Tampilkan/sembunyikan data",
+    "searchItem": "Pencarian",
+    "searchItemTitle": "Pencarian",
+    "colorScaleRangeTitle": "Rentang skala warna tidak valid",
+    "colorScaleRangeMin": "Nilai minimum harus berupa angka.",
+    "colorScaleRangeMax": "Nilai maksimum harus berupa angka.",
+    "splitItem": "Bandingkan",
+    "collapseAll": "Tutup Semua",
+    "diffImage": "Perbedaan",
+    "exportDataTitle": "Ekspor data peta",
+    "label": "Set data"
   },
   "preview": {
     "disclaimer": "Sangkalan",
     "updateFrequency": "Frekuensi Pembaruan",
     "created": "Dibuat",
     "contact": "Kontak",
-    "author": "Penulis",
+    "author": "Pembuat",
     "datasetDescription": "Keterangan Dataset",
     "dataDescription": "Keterangan Data",
     "addToMap": "Tambahkan ke peta",
-    "removeFromMap": "Hapus dari peta"
+    "removeFromMap": "Hapus dari peta",
+    "modified": "Diubah",
+    "preview": "{{appName}} pratinjau",
+    "fees": "Biaya",
+    "serviceDescription": "Keterangan Layanan",
+    "resourceDescription": "Keterangan Sumberdaya",
+    "licence": "Lisensi",
+    "accessConstraints": "Batasan Akses",
+    "dataCustodian": "Kustodian Data"
   },
   "mobile": {
-    "toggleNavigation": "Toggle Navigasi"
+    "toggleNavigation": "Toggle Navigasi",
+    "addDataBtnText": "Data",
+    "doneBtnText": "Selesai"
   },
   "addData": {
     "dragDrop": "Tarik dan Jatuhkan",
@@ -594,7 +665,20 @@
     "webFileType": "<0>Langkah 1:</0> Pilih jenis berkas (opsional)",
     "myData": "Data Saya",
     "done": "Selesai",
-    "btnHide": "Sembunyikan"
+    "btnHide": "Sembunyikan",
+    "webAdd": "tambah data web",
+    "load": "Muat data lokal/web",
+    "localFileType": "<0>Langkah 1:</0> Pilih jenis berkas (opsional)",
+    "localFile": "<0>Langkah 2:</0> Pilih file",
+    "browse": "Telusuri...",
+    "localTitle": "Tambah Data Lokal",
+    "webTitle": "Tambah Data Web",
+    "addDataBtnText": "Jelajahi data peta",
+    "closeDataPanel": "Tutup panel data",
+    "localAdd": "Tambah file lokal",
+    "dataCatalogue": "Katalog Data",
+    "searchPlaceholderWhole": "Cari semua katalog",
+    "searchPlaceholder": "Cari katalog"
   },
   "notification": {
     "title": "Pesan"
@@ -641,13 +725,22 @@
     "success": "Disalin ke papan klip"
   },
   "description": {
-    "dataUrl": "URL Data",
-    "name": "Keterangan"
+    "dataUrl": "Tautan Data",
+    "name": "Keterangan",
+    "layerName": "Nama layer",
+    "typeName": "Nama tipe",
+    "metadataUrls": "Tautan Metadata",
+    "downloadData": "Unduh Data",
+    "dataSourceDetails": "Rincian Sumber Data",
+    "dataServiceDetails": "Rincian Layanan Data",
+    "dataCustodian": "Kustodian Data"
   },
   "search": {
     "data": "Data",
     "done": "Selesai",
-    "resultsLabel": "Hasil Pencarian"
+    "resultsLabel": "Hasil Pencarian",
+    "placeholder": "Cari lokasi",
+    "searchCatalogue": "Cari katalog"
   },
   "mapNavigation": {
     "additionalToolsTitle": "Buka alat tambahan",
@@ -661,5 +754,9 @@
       "title": "Kontrol"
     },
     "toolButtonTitle": "Mode pejalan kaki"
+  },
+  "indexedItemSearchProvider": {
+    "errorParsingIndexRoot": "Kesalahan saat mengurai file indexRoot: {{indexRootUrl}}.",
+    "missingOptionIndexRootUrl": "Opsi `indexRootUrl` tidak ada dalam konfigurasi pencarian item."
   }
 }

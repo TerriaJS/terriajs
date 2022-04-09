@@ -1,23 +1,29 @@
+import { Geometry, GeometryCollection, Properties } from "@turf/helpers";
 import i18next from "i18next";
 import { computed, runInAction } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
+import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
+import PolygonGraphics from "terriajs-cesium/Source/DataSources/PolygonGraphics";
 import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
+import PolylineGraphics from "terriajs-cesium/Source/DataSources/PolylineGraphics";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
-import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
-import featureDataToGeoJson from "../../../Map/featureDataToGeoJson";
-import proj4definitions from "../../../Map/Proj4Definitions";
+import { networkRequestError } from "../../../Core/TerriaError";
+import featureDataToGeoJson from "../../../Map/PickedFeatures/featureDataToGeoJson";
+import proj4definitions from "../../../Map/Vector/Proj4Definitions";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import MappableMixin from "../../../ModelMixins/MappableMixin";
+import GeoJsonMixin, {
+  FeatureCollectionWithCrs
+} from "../../../ModelMixins/GeojsonMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import ArcGisFeatureServerCatalogItemTraits from "../../../Traits/TraitsClasses/ArcGisFeatureServerCatalogItemTraits";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
@@ -25,17 +31,14 @@ import LegendTraits, {
   LegendItemTraits
 } from "../../../Traits/TraitsClasses/LegendTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
-import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
-import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { getLineStyleCesium } from "./esriLineStyle";
-import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 
 const proj4 = require("proj4").default;
 
@@ -150,6 +153,9 @@ interface FeatureServer {
   drawingInfo?: DrawingInfo;
   extent?: Extent;
   maxScale?: number;
+  advancedQueryCapabilities?: {
+    supportsPagination: boolean;
+  };
 }
 
 interface SpatialReference {
@@ -172,9 +178,8 @@ class FeatureServerStratum extends LoadableStratum(
 
   constructor(
     private readonly _item: ArcGisFeatureServerCatalogItem,
-    private readonly _geoJsonItem: GeoJsonCatalogItem,
-    private readonly _featureServer: FeatureServer,
-    private _esriJson: any
+    private readonly _featureServer?: FeatureServer,
+    private _esriJson?: any
   ) {
     super();
   }
@@ -182,101 +187,73 @@ class FeatureServerStratum extends LoadableStratum(
   duplicateLoadableStratum(newModel: BaseModel): this {
     return new FeatureServerStratum(
       newModel as ArcGisFeatureServerCatalogItem,
-      this._geoJsonItem,
-      this._featureServer,
       this._esriJson
     ) as this;
   }
 
-  get featureServerData(): FeatureServer {
+  @computed
+  get featureServerData(): FeatureServer | undefined {
     return this._featureServer;
   }
 
-  get geoJsonItem(): GeoJsonCatalogItem {
-    return this._geoJsonItem;
+  static async load(
+    item: ArcGisFeatureServerCatalogItem
+  ): Promise<FeatureServerStratum> {
+    if (item.url === undefined) {
+      new FeatureServerStratum(item, undefined, undefined);
+    }
+    const metaUrl = buildMetadataUrl(item);
+    const featureServer = await loadJson(metaUrl);
+
+    const stratum = new FeatureServerStratum(item, featureServer, undefined);
+
+    return stratum;
   }
 
-  static async load(item: ArcGisFeatureServerCatalogItem) {
-    if (!isDefined(item.url) || !isDefined(item.uri)) {
-      return Promise.reject(
-        new TerriaError({
-          title: i18next.t(
-            "models.arcGisFeatureServerCatalogItem.missingUrlTitle"
-          ),
-          message: i18next.t(
-            "models.arcGisFeatureServerCatalogItem.missingUrlMessage"
-          )
-        })
-      );
-    }
-
-    const geoJsonItem = new GeoJsonCatalogItem(createGuid(), item.terria);
-    geoJsonItem.setTrait(
-      CommonStrata.definition,
-      "clampToGround",
-      item.clampToGround
-    );
-    geoJsonItem.setTrait(
-      CommonStrata.definition,
-      "attribution",
-      item.attribution
-    );
-    geoJsonItem.setTrait(
-      CommonStrata.definition,
-      "forceCesiumPrimitives",
-      true
-    );
-    let tempEsriJson: any = null;
-    const esriJson = await loadGeoJson(item);
-    const geoJsonData = featureDataToGeoJson(esriJson.layers[0]);
-    geoJsonItem.setTrait(CommonStrata.definition, "geoJsonData", geoJsonData);
-
-    (await geoJsonItem.loadMetadata()).throwIfError();
-    const featureServer = await loadMetadata(item);
-
-    const stratum = new FeatureServerStratum(
-      item,
-      geoJsonItem,
-      featureServer,
-      tempEsriJson
-    );
-    return stratum;
+  @computed get forceCesiumPrimitives(): boolean {
+    return this._item.useStyleInformationFromService;
   }
 
   @computed
   get shortReport(): string | undefined {
     // Show notice if reached
-    if (this._esriJson?.exceededTransferLimit) {
+    if (
+      this._item.readyData?.features !== undefined &&
+      this._item.readyData!.features.length >= this._item.maxFeatures
+    ) {
       return i18next.t(
         "models.arcGisFeatureServerCatalogItem.reachedMaxFeatureLimit",
-        this
+        this._item
       );
     }
     return undefined;
   }
 
   @computed get maximumScale(): number | undefined {
-    return this._featureServer.maxScale;
+    return this._featureServer?.maxScale;
   }
 
   @computed get name(): string | undefined {
-    if (this._featureServer.name && this._featureServer.name.length > 0) {
+    if (
+      this._featureServer?.name !== undefined &&
+      this._featureServer.name.length > 0
+    ) {
       return replaceUnderscores(this._featureServer.name);
     }
   }
 
   @computed get dataCustodian(): string | undefined {
     if (
-      this._featureServer.documentInfo &&
-      this._featureServer.documentInfo.Author &&
-      this._featureServer.documentInfo.Author.length > 0
+      this._featureServer?.documentInfo &&
+      this._featureServer?.documentInfo.Author &&
+      this._featureServer?.documentInfo.Author.length > 0
     ) {
       return this._featureServer.documentInfo.Author;
     }
   }
 
   @computed get rectangle(): StratumFromTraits<RectangleTraits> | undefined {
-    const extent = this._featureServer.extent;
+    const extent = this._featureServer?.extent;
     const wkidCode =
       extent?.spatialReference?.latestWkid ?? extent?.spatialReference?.wkid;
 
@@ -310,19 +287,30 @@ class FeatureServerStratum extends LoadableStratum(
     return [
       createStratumInstance(InfoSectionTraits, {
         name: i18next.t("models.arcGisMapServerCatalogItem.dataDescription"),
-        content: this._featureServer.description
+        content: this._featureServer?.description
       }),
       createStratumInstance(InfoSectionTraits, {
         name: i18next.t("models.arcGisMapServerCatalogItem.copyrightText"),
-        content: this._featureServer.copyrightText
+        content: this._featureServer?.copyrightText
       })
     ];
+  }
+
+  @computed get supportsPagination(): boolean {
+    if (
+      this._featureServer === undefined ||
+      this._featureServer.advancedQueryCapabilities === undefined
+    ) {
+      return false;
+    }
+
+    return !!this._featureServer.advancedQueryCapabilities.supportsPagination;
   }
 
   @computed get legends(): StratumFromTraits<LegendTraits>[] | undefined {
     if (
       !this._item.useStyleInformationFromService ||
-      !this._featureServer.drawingInfo
+      !this._featureServer?.drawingInfo
     ) {
       return undefined;
     }
@@ -375,7 +363,7 @@ class FeatureServerStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(FeatureServerStratum.stratumName);
 
-export default class ArcGisFeatureServerCatalogItem extends MappableMixin(
+export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
   UrlMixin(
     CatalogMemberMixin(CreateModel(ArcGisFeatureServerCatalogItemTraits))
   )
@@ -390,85 +378,143 @@ export default class ArcGisFeatureServerCatalogItem extends MappableMixin(
     return i18next.t("models.arcGisFeatureServerCatalogItem.name");
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return FeatureServerStratum.load(this).then(stratum => {
+  protected async forceLoadMetadata(): Promise<void> {
+    if (this.strata.get(FeatureServerStratum.stratumName) === undefined) {
+      const stratum = await FeatureServerStratum.load(this);
       runInAction(() => {
         this.strata.set(FeatureServerStratum.stratumName, stratum);
       });
-    });
+    }
   }
 
-  protected async forceLoadMapItems() {
-    const that = this;
-    if (isDefined(that.geoJsonItem)) {
-      (await that.geoJsonItem.loadMapItems()).throwIfError();
-      const featureServerData = that.featureServerData;
+  protected async forceLoadGeojsonData(): Promise<
+    FeatureCollectionWithCrs<Geometry | GeometryCollection, Properties>
+  > {
+    const getEsriLayerJson = async (resultOffset?: number) =>
+      await loadJson(this.buildEsriJsonUrl(resultOffset));
+
+    if (!this.supportsPagination) {
+      // Make a single request without pagination
+      return (
+        featureDataToGeoJson(await getEsriLayerJson()) ?? {
+          type: "FeatureCollection",
+          features: []
+        }
+      );
+    }
+
+    // Esri Feature Servers have a maximum limit to how many features they'll return at once, so for a service with many
+    // features, we have to make multiple requests. We can't figure out how many features we need to request ahead of
+    // time (there's an API for it but it times out for services with thousands of features), so we just keep trying
+    // until we run out of features or hit the limit
+    const featuresPerRequest = this.featuresPerRequest;
+    const maxFeatures = this.maxFeatures;
+    let combinedEsriLayerJson = await getEsriLayerJson(0);
+
+    const mapObjectIds = (features: any) =>
+      features.map(
+        (feature: any) =>
+          feature.attributes.OBJECTID ?? feature.attributes.objectid
+      );
+    const seenIDs: Set<string> = new Set(
+      mapObjectIds(combinedEsriLayerJson.features)
+    );
+
+    let currentOffset = 0;
+    let exceededTransferLimit = combinedEsriLayerJson.exceededTransferLimit;
+    while (
+      combinedEsriLayerJson.features.length <= maxFeatures &&
+      exceededTransferLimit === true
+    ) {
+      currentOffset += featuresPerRequest;
+      const newEsriLayerJson = await getEsriLayerJson(currentOffset);
       if (
-        that.useStyleInformationFromService &&
-        featureServerData &&
-        featureServerData.drawingInfo
+        newEsriLayerJson.features === undefined ||
+        newEsriLayerJson.features.length === 0
       ) {
-        const renderer = featureServerData.drawingInfo.renderer;
-        const rendererType = renderer.type;
-        that.mapItems.forEach(mapItem => {
-          if (!(mapItem instanceof GeoJsonDataSource)) return;
-          const entities = mapItem.entities;
-          entities.suspendEvents();
+        break;
+      }
 
-          // A 'simple' renderer only applies a single style to all features
-          if (rendererType === "simple") {
-            const simpleRenderer = <SimpleRenderer>renderer;
-            const symbol = simpleRenderer.symbol;
-            if (symbol) {
-              entities.values.forEach(function(entity) {
-                updateEntityWithEsriStyle(entity, symbol, that);
-              });
-            }
+      const newIds: string[] = mapObjectIds(newEsriLayerJson.features);
 
-            // For a 'uniqueValue' renderer symbology gets applied via feature properties.
-          } else if (renderer.type === "uniqueValue") {
-            const uniqueValueRenderer = <UniqueValueRenderer>renderer;
-            const rendererObj = setupUniqueValueRenderer(uniqueValueRenderer);
-            entities.values.forEach(function(entity) {
-              const symbol = getUniqueValueSymbol(
-                entity,
-                uniqueValueRenderer,
-                rendererObj
-              );
-              if (symbol) {
-                updateEntityWithEsriStyle(entity, symbol, that);
-              }
-            });
+      if (newIds.every((id: string) => seenIDs.has(id))) {
+        // We're getting data that we've received already, assume have everything we need and stop fetching
+        break;
+      }
 
-            // For a 'classBreaks' renderer symbology gets applied via classes or ranges of data.
-          } else if (renderer.type === "classBreaks") {
-            const classBreaksRenderer = <ClassBreaksRenderer>renderer;
-            entities.values.forEach(function(entity) {
-              const symbol = getClassBreaksSymbol(entity, classBreaksRenderer);
-              if (symbol) {
-                updateEntityWithEsriStyle(entity, symbol, that);
-              }
-            });
-          }
+      newIds.forEach(id => seenIDs.add(id));
+      combinedEsriLayerJson.features = combinedEsriLayerJson.features.concat(
+        newEsriLayerJson.features
+      );
+      exceededTransferLimit = newEsriLayerJson.exceededTransferLimit;
+    }
 
-          entities.resumeEvents();
+    return (
+      featureDataToGeoJson(combinedEsriLayerJson) ?? {
+        type: "FeatureCollection",
+        features: []
+      }
+    );
+  }
+
+  protected async loadGeoJsonDataSource(
+    geoJson: FeatureCollectionWithCrs
+  ): Promise<GeoJsonDataSource> {
+    const dataSource = await super.loadGeoJsonDataSource(geoJson);
+
+    const featureServerData = this.featureServerData;
+    if (
+      !this.useStyleInformationFromService ||
+      featureServerData === undefined ||
+      featureServerData.drawingInfo === undefined
+    ) {
+      // Use GeoJSONMixin styles
+      return dataSource;
+    }
+    const renderer = featureServerData!.drawingInfo!.renderer;
+    const rendererType = renderer.type;
+
+    const entities = dataSource.entities;
+    entities.suspendEvents();
+
+    // A 'simple' renderer only applies a single style to all features
+    if (rendererType === "simple") {
+      const simpleRenderer = <SimpleRenderer>renderer;
+      const symbol = simpleRenderer.symbol;
+      if (symbol) {
+        entities.values.forEach(entity => {
+          updateEntityWithEsriStyle(entity, symbol, this);
         });
       }
-    }
-  }
 
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    }
-    return "1d";
-  }
+      // For a 'uniqueValue' renderer symbology gets applied via feature properties.
+    } else if (renderer.type === "uniqueValue") {
+      const uniqueValueRenderer = <UniqueValueRenderer>renderer;
+      const rendererObj = setupUniqueValueRenderer(uniqueValueRenderer);
+      entities.values.forEach(entity => {
+        const symbol = getUniqueValueSymbol(
+          entity,
+          uniqueValueRenderer,
+          rendererObj
+        );
+        if (symbol) {
+          updateEntityWithEsriStyle(entity, symbol, this);
+        }
+      });
 
-  @computed get geoJsonItem(): GeoJsonCatalogItem | undefined {
-    const stratum = <FeatureServerStratum>(
-      this.strata.get(FeatureServerStratum.stratumName)
-    );
-    return isDefined(stratum) ? stratum.geoJsonItem : undefined;
+      // For a 'classBreaks' renderer symbology gets applied via classes or ranges of data.
+    } else if (renderer.type === "classBreaks") {
+      const classBreaksRenderer = <ClassBreaksRenderer>renderer;
+      entities.values.forEach(entity => {
+        const symbol = getClassBreaksSymbol(entity, classBreaksRenderer);
+        if (symbol) {
+          updateEntityWithEsriStyle(entity, symbol, this);
+        }
+      });
+    }
+
+    entities.resumeEvents();
+    return dataSource;
   }
 
   @computed get featureServerData(): FeatureServer | undefined {
@@ -478,14 +524,48 @@ export default class ArcGisFeatureServerCatalogItem extends MappableMixin(
     return isDefined(stratum) ? stratum.featureServerData : undefined;
   }
 
-  @computed get mapItems() {
-    if (isDefined(this.geoJsonItem)) {
-      return this.geoJsonItem.mapItems.map(mapItem => {
-        mapItem.show = this.show;
-        return mapItem;
+  /**
+   * Constructs the url for a request to a feature server
+   * @param resultOffset Allows for pagination of results.
+   *  See https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-layer-.htm
+   */
+  buildEsriJsonUrl(resultOffset?: number) {
+    const url = cleanUrl(this.url || "0d");
+    const urlComponents = splitLayerIdFromPath(url);
+    const layerId = urlComponents.layerId;
+
+    if (!isDefined(layerId)) {
+      throw networkRequestError({
+        title: i18next.t(
+          "models.arcGisFeatureServerCatalogItem.invalidServiceTitle"
+        ),
+        message: i18next.t(
+          "models.arcGisFeatureServerCatalogItem.invalidServiceMessage"
+        )
       });
     }
-    return [];
+
+    // We used to make a call to a different ArcGIS API endpoint
+    // (https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-.htm) which took a
+    // `layerdef` parameter, which is more or less equivalent to `where`. To avoid breaking old catalog items, we need
+    // to use `layerDef` if `where` hasn't been set
+    const where = this.where === "1=1" ? this.layerDef : this.where;
+
+    const uri = new URI(url)
+      .segment("query")
+      .addQuery("f", "json")
+      .addQuery("where", where)
+      .addQuery("outFields", "*")
+      .addQuery("outSR", "4326");
+
+    if (resultOffset !== undefined) {
+      // Pagination specific parameters
+      uri
+        .addQuery("resultRecordCount", this.featuresPerRequest)
+        .addQuery("resultOffset", resultOffset);
+    }
+
+    return proxyCatalogItemUrl(this, uri.toString());
   }
 }
 
@@ -573,7 +653,8 @@ function updateEntityWithEsriStyle(
   // TODO: tweek the svg support
   if (symbol.type === "esriPMS") {
     // Replace a general Cesium Point with a billboard
-    if (entity.point && symbol.imageData) {
+    entity.point = entity.point ?? new PointGraphics();
+    if (symbol.imageData) {
       entity.billboard = new BillboardGraphics({
         image: new ConstantProperty(
           proxyCatalogItemUrl(
@@ -608,7 +689,8 @@ function updateEntityWithEsriStyle(
   } else if (symbol.type === "esriSMS") {
     // Update the styling of the Cesium Point
     // TODO extend support for cross, diamond, square, x, triangle
-    if (entity.point && symbol.color) {
+    entity.point = entity.point ?? new PointGraphics();
+    if (symbol.color) {
       entity.point.color = new ConstantProperty(
         convertEsriColorToCesiumColor(symbol.color)
       );
@@ -627,65 +709,62 @@ function updateEntityWithEsriStyle(
     }
   } else if (symbol.type === "esriSLS") {
     /* Update the styling of the Cesium Polyline */
-    if (entity.polyline) {
-      if (isDefined(symbol.width)) {
-        entity.polyline.width = new ConstantProperty(
-          convertEsriPointSizeToPixels(symbol.width)
-        );
-      }
-      const color = symbol.color ? symbol.color : defaultColor;
-      /*
+    entity.polyline = entity.polyline ?? new PolylineGraphics();
+    if (isDefined(symbol.width)) {
+      entity.polyline.width = new ConstantProperty(
+        convertEsriPointSizeToPixels(symbol.width)
+      );
+    }
+    const color = symbol.color ? symbol.color : defaultColor;
+    /*
         For line containing dashes PolylineDashMaterialProperty is used.
         Definition is done using the line patterns converted from hex to decimal dashPattern.
         Source for some of the line patterns is https://www.opengl.org.ru/docs/pg/0204.html, others are created manually
       */
-      esriPolylineStyle(entity, color, <supportedLineStyle>symbol.style);
-    }
+    esriPolylineStyle(entity, color, <supportedLineStyle>symbol.style);
   } else if (symbol.type === "esriSFS") {
     // Update the styling of the Cesium Polygon
-    if (entity.polygon) {
-      const color = symbol.color ? symbol.color : defaultFillColor;
+    entity.polygon = entity.polygon ?? new PolygonGraphics();
+    const color = symbol.color ? symbol.color : defaultFillColor;
 
-      // feature picking doesn't work when the polygon interior is transparent, so
-      // use an almost-transparent color instead
-      if (color[3] === 0) {
-        color[3] = 1;
-      }
+    // feature picking doesn't work when the polygon interior is transparent, so
+    // use an almost-transparent color instead
+    if (color[3] === 0) {
+      color[3] = 1;
+    }
+    entity.polygon.material = new ColorMaterialProperty(
+      new ConstantProperty(convertEsriColorToCesiumColor(color))
+    );
+
+    if (
+      symbol.style === "esriSFSNull" &&
+      symbol.outline &&
+      symbol.outline.style === "esriSLSNull"
+    ) {
+      entity.polygon.show = new ConstantProperty(false);
+    } else {
       entity.polygon.material = new ColorMaterialProperty(
         new ConstantProperty(convertEsriColorToCesiumColor(color))
       );
-
-      if (
-        symbol.style === "esriSFSNull" &&
-        symbol.outline &&
-        symbol.outline.style === "esriSLSNull"
-      ) {
-        entity.polygon.show = new ConstantProperty(false);
-      } else {
-        entity.polygon.material = new ColorMaterialProperty(
-          new ConstantProperty(convertEsriColorToCesiumColor(color))
-        );
-      }
-      if (symbol.outline) {
-        const outlineColor = symbol.outline.color
-          ? symbol.outline.color
-          : defaultOutlineColor;
-        /* It can actually happen that entity has both polygon and polyline defined at same time,
+    }
+    if (symbol.outline) {
+      const outlineColor = symbol.outline.color
+        ? symbol.outline.color
+        : defaultOutlineColor;
+      /* It can actually happen that entity has both polygon and polyline defined at same time,
             check the implementation of GeoJsonCatalogItem for details. */
-        entity.polygon.outlineColor = new ColorMaterialProperty(
-          new ConstantProperty(convertEsriColorToCesiumColor(outlineColor))
-        );
-        entity.polygon.outlineWidth = new ConstantProperty(
-          convertEsriPointSizeToPixels(symbol.outline.width)
-        );
-        if (entity.polyline) {
-          esriPolylineStyle(entity, outlineColor, symbol.outline.style);
-          entity.polyline.width = new ConstantProperty(
-            convertEsriPointSizeToPixels(symbol.outline.width)
-          );
-          entity.polygon.outline = entity.polyline.material;
-        }
-      }
+      entity.polygon.outlineColor = new ColorMaterialProperty(
+        new ConstantProperty(convertEsriColorToCesiumColor(outlineColor))
+      );
+      entity.polygon.outlineWidth = new ConstantProperty(
+        convertEsriPointSizeToPixels(symbol.outline.width)
+      );
+      entity.polyline = entity.polyline ?? new PolylineGraphics();
+      esriPolylineStyle(entity, outlineColor, symbol.outline.style);
+      entity.polyline.width = new ConstantProperty(
+        convertEsriPointSizeToPixels(symbol.outline.width)
+      );
+      entity.polygon.outline = entity.polyline.material;
     }
   }
 }
@@ -734,50 +813,10 @@ export function convertEsriPointSizeToPixels(pointSize: number) {
   return (pointSize * 4) / 3;
 }
 
-function loadGeoJson(catalogItem: ArcGisFeatureServerCatalogItem) {
-  return loadJson(buildGeoJsonUrl(catalogItem)).then(function(json) {
-    return json;
-  });
-}
-
-function loadMetadata(catalogItem: ArcGisFeatureServerCatalogItem) {
-  const metaUrl = buildMetadataUrl(catalogItem);
-  return loadJson(metaUrl).then(function(json) {
-    return json;
-  });
-}
-
 function buildMetadataUrl(catalogItem: ArcGisFeatureServerCatalogItem) {
   return proxyCatalogItemUrl(
     catalogItem,
     new URI(catalogItem.url).addQuery("f", "json").toString()
-  );
-}
-
-function buildGeoJsonUrl(catalogItem: ArcGisFeatureServerCatalogItem) {
-  const url = cleanUrl(catalogItem.url || "0d");
-  const urlComponents = splitLayerIdFromPath(url);
-  const layerId = urlComponents.layerId;
-
-  if (!isDefined(layerId)) {
-    throw networkRequestError({
-      title: i18next.t(
-        "models.arcGisFeatureServerCatalogItem.invalidServiceTitle"
-      ),
-      message: i18next.t(
-        "models.arcGisFeatureServerCatalogItem.invalidServiceMessage"
-      )
-    });
-  }
-
-  return proxyCatalogItemUrl(
-    catalogItem,
-    new URI(urlComponents.urlWithoutLayerId)
-      .segment("query")
-      .addQuery("f", "json")
-      .addQuery("layerDefs", "{" + layerId + ':"' + catalogItem.layerDef + '"}')
-      .addQuery("outSR", "4326")
-      .toString()
   );
 }
 

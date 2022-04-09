@@ -9,6 +9,7 @@ import FeatureInfoTraits from "./FeatureInfoTraits";
 import StyleTraits from "./StyleTraits";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 
 export class PerPropertyGeoJsonStyleTraits extends ModelTraits {
   @anyTrait({
@@ -36,6 +37,7 @@ export class PerPropertyGeoJsonStyleTraits extends ModelTraits {
 }
 
 export class GeoJsonTraits extends mixTraits(
+  LegendOwnerTraits,
   TableTraits,
   FeatureInfoTraits,
   UrlTraits
@@ -61,7 +63,7 @@ export class GeoJsonTraits extends mixTraits(
     type: "boolean",
     name: "Disable table style",
     description:
-      "If true, all table styling will be disabled. This only applies to geojson-vt/protomaps (see `terria.configParameters.enableGeojsonMvt` and `forceCesiumPrimitives`). It disabled, `style` rules will be used instead"
+      "If true, all table styling will be disabled. This only applies to geojson-vt/protomaps (see `forceCesiumPrimitives`). It disabled, `style` rules will be used instead"
   })
   disableTableStyle: boolean = false;
 
@@ -77,9 +79,16 @@ export class GeoJsonTraits extends mixTraits(
     type: "boolean",
     name: "Force cesium primitives",
     description:
-      "Force rendering GeoJSON features as Cesium primitives. This will be true if you are using `perPropertyStyles`, `timeProperty`, `heightProperty` or `czmlTemplate`. If undefined, it will look at terria.configParameters.enableGeojsonMvt"
+      "Force rendering GeoJSON features as Cesium primitives. This will be true if you are using `perPropertyStyles`, `timeProperty`, `heightProperty` or `czmlTemplate`. If undefined, geojson-vt/protomaps will be used"
   })
   forceCesiumPrimitives?: boolean;
+
+  @anyTrait({
+    name: "Feature filter (by properties)",
+    description:
+      "Filter GeoJSON features by properties. If the properties of a feature match `filterByProperties`, then show that feature. All other features are hidden"
+  })
+  filterByProperties?: JsonObject;
 
   @objectArrayTrait({
     name: "Per property styles",
@@ -108,7 +117,13 @@ export class GeoJsonTraits extends mixTraits(
 
   @anyTrait({
     name: "CZML template",
-    description: `CZML template to be used to replace each GeoJSON **Point** feature. Feature coordinates and properties will automatically be applied to CZML packet, so they can be used as references. If this is defined, \`clampToGround\`, \`style\`, \`perPropertyStyles\`, \`timeProperty\` and \`heightProperty\` will be ignored.
+    description: `CZML template to be used to replace each GeoJSON **Point** and **Polygon/MultiPolygon** feature. Feature coordinates and properties will automatically be applied to CZML packet, so they can be used as references.
+
+    Polygon/MultiPolygon features only support the \`polygon\` CZML packet.
+
+    Point features support all packets except ones which require a \`PositionsList\` (eg \`polygon\`, \`polyline\`, ...)
+
+    If this is defined, \`clampToGround\`, \`style\`, \`perPropertyStyles\`, \`timeProperty\` and \`heightProperty\` will be ignored.
 
     For example - this will render a cylinder for every point (and use the length and radius feature properties)
       \`\`\`json
@@ -132,7 +147,12 @@ export class GeoJsonTraits extends mixTraits(
           }
         }
       }
-      \`\`\``
+      \`\`\`
+
+    For more info see Cesium's CZML docs https://github.com/AnalyticalGraphicsInc/czml-writer/wiki/CZML-Guide
+
+    The following custom properties are supported:
+    - \`heightOffset: number\` to offset height values (in m)`
   })
   czmlTemplate?: JsonObject;
 }

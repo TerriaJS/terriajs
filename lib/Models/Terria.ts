@@ -24,6 +24,7 @@ import hashEntity from "../Core/hashEntity";
 import instanceOf from "../Core/instanceOf";
 import isDefined from "../Core/isDefined";
 import JsonValue, {
+  isJsonArray,
   isJsonBoolean,
   isJsonNumber,
   isJsonObject,
@@ -32,6 +33,7 @@ import JsonValue, {
   JsonObject
 } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
+import loadJson from "../Core/loadJson";
 import loadJson5 from "../Core/loadJson5";
 import Result from "../Core/Result";
 import ServerConfig from "../Core/ServerConfig";
@@ -43,13 +45,14 @@ import { getUriWithoutPath } from "../Core/uriHelpers";
 import PickedFeatures, {
   featureBelongsToCatalogItem,
   isProviderCoordsMap
-} from "../Map/PickedFeatures";
+} from "../Map/PickedFeatures/PickedFeatures";
 import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import NotificationState from "../ReactViewModels/NotificationState";
+import { SHARE_VERSION } from "../ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
 import { ConfigParametersTraits } from "../Traits/Configuration/ConfigParametersTraits";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
@@ -90,7 +93,7 @@ import ShareDataService from "./ShareDataService";
 import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
-
+import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
 interface StartOptions {
   configUrl: string;
   configUrlHeaders?: {
@@ -123,6 +126,15 @@ interface Analytics {
 }
 
 interface TerriaOptions {
+  /**
+   * Override detecting base href from document.baseURI.
+   * Used in specs to support routes within Karma spec automation framework
+   */
+  appBaseHref?: string;
+  /**
+   * Base url where TerriaJS resources can be found.
+   * Normally "build/TerriaJS/" in any TerriaMap and "./" in specs
+   */
   baseUrl?: string;
   analytics?: Analytics;
 }
@@ -151,6 +163,9 @@ export default class Terria {
   /** Map from id -> share keys */
   readonly modelIdShareKeysMap = observable.map<string, string[]>();
 
+  /** Base URL for the Terria app. Used for SPA routes */
+  readonly appBaseHref: string = document.baseURI;
+  /** Base URL to Terria resources */
   readonly baseUrl: string = "build/TerriaJS/";
 
   readonly tileLoadProgressEvent = new CesiumEvent();
@@ -218,7 +233,22 @@ export default class Terria {
   @observable
   mapInteractionModeStack: MapInteractionMode[] = [];
 
-  baseMapContrastColor: string = "#ffffff";
+  @observable isWorkflowPanelActive = false;
+
+  /** Gets or sets the active SelectableDimensionWorkflow, if defined, then the workflow will be displayed using `WorkflowPanel` */
+  @observable
+  selectableDimensionWorkflow?: SelectableDimensionWorkflow;
+
+  @computed
+  get baseMapContrastColor() {
+    return (
+      this.baseMapsModel.baseMapItems.find(
+        basemap =>
+          isDefined(basemap.item?.uniqueId) &&
+          basemap.item?.uniqueId === this.mainViewer.baseMap?.uniqueId
+      )?.contrastColor ?? "#ffffff"
+    );
+  }
 
   @observable
   readonly userProperties = new Map<string, any>();
@@ -296,6 +326,12 @@ export default class Terria {
   errorService: ErrorServiceProvider = new StubErrorServiceProvider();
 
   constructor(options: TerriaOptions = {}) {
+    if (options.appBaseHref) {
+      this.appBaseHref = new URL(
+        options.appBaseHref,
+        document.baseURI
+      ).toString();
+    }
     if (options.baseUrl) {
       if (options.baseUrl.lastIndexOf("/") !== options.baseUrl.length - 1) {
         this.baseUrl = options.baseUrl + "/";
@@ -340,7 +376,7 @@ export default class Terria {
         terriaError.toNotification()
       );
 
-    console.log(terriaError.toError());
+    terriaError.log();
   }
 
   @computed
@@ -624,6 +660,17 @@ export default class Terria {
       this.shareDataService.init(this.serverConfig.config);
     }
 
+    // Create catalog index if catalogIndexUrl is set
+    // Note: this isn't loaded now, it is loaded in first CatalogSearchProvider.doSearch()
+    runInAction(() => {
+      if (this.configParameters.catalogIndexUrl && !this.catalogIndex) {
+        this.catalogIndex = new CatalogIndex(
+          this,
+          this.configParameters.catalogIndexUrl
+        );
+      }
+    });
+
     this.baseMapsModel
       .initializeDefaultBaseMaps()
       .catchError(error =>
@@ -725,7 +772,7 @@ export default class Terria {
   }
 
   async updateFromStartData(
-    startData: any,
+    startData: unknown,
     /** Name for startData initSources - this is only used for debugging purposes */
     name: string = "Application start data",
     /** Error severity to use for loading startData init sources - default will be `TerriaErrorSeverity.Error` */
@@ -755,6 +802,64 @@ export default class Terria {
           .query("")
           .hash("")
       );
+
+      if (!this.appBaseHref.endsWith("/")) {
+        console.warn(
+          `Terria expected appBaseHref to end with a "/" but appBaseHref is "${this.appBaseHref}". Routes may not work as intended. To fix this, try setting the "--baseHref" parameter to a URL with a trailing slash while building your map, or constructing the Terria object with an appropriate appBaseHref (with trailing slash).`
+        );
+      }
+
+      // /catalog/ and /story/ routes
+      if (newUrl.startsWith(this.appBaseHref)) {
+        function checkSegments(urlSegments: string[], customRoute: string) {
+          // Accept /${customRoute}/:some-id/ or /${customRoute}/:some-id
+          return (
+            ((urlSegments.length === 3 && urlSegments[2] === "") ||
+              urlSegments.length === 2) &&
+            urlSegments[0] === customRoute &&
+            urlSegments[1].length > 0
+          );
+        }
+        const pageUrl = new URL(newUrl);
+        // Find relative path from baseURI to documentURI excluding query and hash
+        // then split into url segments
+        // e.g. "http://ci.terria.io/main/story/1#map=2d" -> ["story", "1"]
+        const segments = (pageUrl.origin + pageUrl.pathname)
+          .slice(this.appBaseHref.length)
+          .split("/");
+        if (checkSegments(segments, "catalog")) {
+          this.initSources.push({
+            name: `Go to ${pageUrl.pathname}`,
+            errorSeverity: TerriaErrorSeverity.Error,
+            data: {
+              previewedItemId: decodeURIComponent(segments[1])
+            }
+          });
+          const replaceUrl = new URL(newUrl);
+          replaceUrl.pathname = new URL(this.appBaseHref).pathname;
+          history.replaceState({}, "", replaceUrl.href);
+        } else if (
+          checkSegments(segments, "story") &&
+          isDefined(this.configParameters.storyRouteUrlPrefix)
+        ) {
+          let storyJson;
+          try {
+            storyJson = await loadJson(
+              `${this.configParameters.storyRouteUrlPrefix}${segments[1]}`
+            );
+          } catch (e) {
+            throw TerriaError.from(e, {
+              message: `Failed to fetch story \`"${this.appName}/${segments[1]}"\``
+            });
+          }
+          await interpretStartData(
+            this,
+            storyJson,
+            `Start data from story \`"${this.appName}/${segments[1]}"\``
+          );
+          runInAction(() => this.userProperties.set("playStory", "1"));
+        }
+      }
     } catch (e) {
       this.raiseErrorToUser(e);
     }
@@ -791,7 +896,7 @@ export default class Terria {
             });
           }
         } else if (isInitOptions(initSource)) {
-          let error: any;
+          let error: unknown;
           for (const option of initSource.options) {
             try {
               jsonValue = await loadInitSource(option);
@@ -868,16 +973,6 @@ export default class Terria {
       }
     });
 
-    // Load catalog index if catalogIndexUrl is set and it hasn't been loaded yet
-    runInAction(() => {
-      if (this.configParameters.catalogIndexUrl && !this.catalogIndex) {
-        this.catalogIndex = new CatalogIndex(
-          this,
-          this.configParameters.catalogIndexUrl
-        );
-      }
-    });
-
     if (errors.length > 0) {
       // Note - this will get wrapped up in a Result object because it is called in AsyncLoader
       throw TerriaError.combine(errors, {
@@ -946,6 +1041,30 @@ export default class Terria {
       );
     }
 
+    // See if model exists by ID of sharekey
+    // Change modelId to more up-to-date ID if necessary
+    const model = this.getModelByIdOrShareKey(BaseModel, modelId);
+    // If no model exists, try to find it through Terria model sharekeys or CatalogIndex sharekeys
+    if (isDefined(model?.uniqueId)) {
+      modelId = model!.uniqueId;
+    } else if (this.catalogIndex) {
+      try {
+        await this.catalogIndex.load();
+      } catch (e) {
+        errors.push(
+          TerriaError.from(
+            e,
+            `Failed to load CatalogIndex while loading model stratum \`${modelId}\``
+          )
+        );
+      }
+      const indexModel = this.catalogIndex.getModelByIdOrShareKey(modelId);
+      if (indexModel) {
+        (await indexModel.loadReference()).pushErrorTo(errors);
+        modelId = indexModel.uniqueId ?? modelId;
+      }
+    }
+
     // If this model is a `SplitItemReference` we must load the source item first
     const splitSourceId = cleanStratumData.splitSourceItemId;
     if (
@@ -964,6 +1083,7 @@ export default class Terria {
         `Failed to load SplitItemReference ${splitSourceId}`
       );
     }
+
     const loadedModel = upsertModelFromJson(
       CatalogMemberFactory,
       this,
@@ -974,8 +1094,7 @@ export default class Terria {
         id: modelId
       },
       {
-        replaceStratum,
-        matchByShareKey: true
+        replaceStratum
       }
     ).pushErrorTo(errors);
 
@@ -1625,7 +1744,7 @@ async function interpretHash(
 
 async function interpretStartData(
   terria: Terria,
-  startData: any,
+  startData: unknown,
   /** Name for startData initSources - this is only used for debugging purposes */
   name: string,
   /** Error severity to use for loading startData init sources - if not set, TerriaError will be propagated normally */
@@ -1634,7 +1753,7 @@ async function interpretStartData(
 ) {
   const containsStory = (initSource: any) =>
     Array.isArray(initSource.stories) && initSource.stories.length;
-  if (isDefined(startData) && startData !== {}) {
+  if (isJsonObject(startData)) {
     // Convert startData to v8 if neccessary
     let startDataV8: Share | null;
 
@@ -1657,7 +1776,15 @@ async function interpretStartData(
         }
         startDataV8 = result.result;
       } else {
-        startDataV8 = startData;
+        startDataV8 = {
+          ...startData,
+          version: isJsonString(startData.version)
+            ? startData.version
+            : SHARE_VERSION,
+          initSources: isJsonArray(startData.initSources)
+            ? startData.initSources
+            : []
+        };
       }
 
       if (startDataV8 !== null && Array.isArray(startDataV8.initSources)) {
@@ -1672,7 +1799,7 @@ async function interpretStartData(
             })
           );
         });
-        if (startData.initSources.some(containsStory)) {
+        if (startDataV8.initSources.some(containsStory)) {
           terria.configParameters.welcomeMessage.setTrait(
             CommonStrata.override,
             "show",

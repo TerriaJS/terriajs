@@ -3,12 +3,12 @@ import objectTrait from "../Decorators/objectTrait";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
-import CatalogMemberTraits from "./CatalogMemberTraits";
 import ChartPointOnMapTraits from "./ChartPointOnMapTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import ExportableTraits from "./ExportableTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
-import RasterLayerTraits from "./RasterLayerTraits";
+import OpacityTraits from "./OpacityTraits";
+import SplitterTraits from "./SplitterTraits";
 import TableColumnTraits from "./TableColumnTraits";
 import TableStyleTraits from "./TableStyleTraits";
 
@@ -16,7 +16,8 @@ export default class TableTraits extends mixTraits(
   DiscretelyTimeVaryingTraits,
   ExportableTraits,
   LayerOrderingTraits,
-  RasterLayerTraits,
+  OpacityTraits,
+  SplitterTraits,
   ChartPointOnMapTraits
 ) {
   // Not implemented in v8
@@ -74,6 +75,21 @@ export default class TableTraits extends mixTraits(
     type: "boolean"
   })
   enableManualRegionMapping?: boolean | undefined;
+
+  @primitiveTrait({
+    name: "Show disable styling option",
+    description:
+      "If enabled, there will be an option in styleDimension to disable styling.",
+    type: "boolean"
+  })
+  showDisableStyleOption?: boolean | undefined;
+
+  @primitiveTrait({
+    name: "Show disable time",
+    description: "If enabled, there will be an checkbox to disable time.",
+    type: "boolean"
+  })
+  showDisableTimeOption?: boolean | undefined;
 
   @primitiveArrayTrait({
     name: "Column titles",

@@ -4,6 +4,7 @@ import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import runLater from "../../../Core/runLater";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -15,18 +16,17 @@ import {
 import SocrataCatalogGroupTraits, {
   FacetFilterTraits
 } from "../../../Traits/TraitsClasses/SocrataCatalogGroupTraits";
-import CatalogGroup from "../CatalogGroup";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import CsvCatalogItem from "../CatalogItems/CsvCatalogItem";
-import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import SocrataMapViewCatalogItem from "../CatalogItems/SocrataMapViewCatalogItem";
 import StratumOrder from "../../Definition/StratumOrder";
-import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
+import CatalogGroup from "../CatalogGroup";
+import CsvCatalogItem from "../CatalogItems/CsvCatalogItem";
+import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
+import SocrataMapViewCatalogItem from "../CatalogItems/SocrataMapViewCatalogItem";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 export interface Facet {
   facet: string;
@@ -250,10 +250,9 @@ export class SocrataCatalogStratum extends LoadableStratum(
     }
 
     // Replace the stratum inherited from the parent group.
-    const stratum = CommonStrata.underride;
-    facetGroup.strata.delete(stratum);
+    facetGroup.strata.delete(CommonStrata.definition);
 
-    facetGroup.setTrait(stratum, "name", facet.facet);
+    facetGroup.setTrait(CommonStrata.definition, "name", facet.facet);
 
     // Create child groups for Facet values
     facet.values.forEach(facetValue => {
@@ -273,27 +272,30 @@ export class SocrataCatalogStratum extends LoadableStratum(
       }
 
       // Replace the stratum inherited from the parent group.
-      const stratum = CommonStrata.underride;
-      facetValueGroup.strata.delete(stratum);
+      facetValueGroup.strata.delete(CommonStrata.definition);
 
       facetValueGroup.setTrait(
-        stratum,
+        CommonStrata.definition,
         "name",
         `${facetValue.value}${
           facetValue.count ? ` (${facetValue.count ?? 0})` : ""
         }`
       );
 
-      facetValueGroup.setTrait(stratum, "url", this.catalogGroup.url);
+      facetValueGroup.setTrait(
+        CommonStrata.definition,
+        "url",
+        this.catalogGroup.url
+      );
 
-      facetValueGroup.setTrait(stratum, "facetFilters", [
+      facetValueGroup.setTrait(CommonStrata.definition, "facetFilters", [
         createStratumInstance(FacetFilterTraits, {
           name: facet.facet,
           value: facetValue.value
         })
       ]);
 
-      facetGroup!.add(CommonStrata.underride, facetValueGroup);
+      facetGroup!.add(CommonStrata.definition, facetValueGroup);
     });
   }
 
@@ -308,7 +310,11 @@ export class SocrataCatalogStratum extends LoadableStratum(
   createItemFromResult(result: Result) {
     const resultId = this.getResultId(result);
 
-    const stratum = CommonStrata.underride;
+    // Add share key for old ID which included parents ID
+    this.catalogGroup.terria.addShareKey(
+      resultId,
+      `${this.catalogGroup.uniqueId}/${result.resource.id}`
+    );
 
     let resultModel:
       | CsvCatalogItem
@@ -317,7 +323,7 @@ export class SocrataCatalogStratum extends LoadableStratum(
       | undefined;
 
     // If dataset resource
-    // - If has geometery - create GeoJSONCatalogItem
+    // - If has geometry - create GeoJSONCatalogItem
     // - Otherwise - create CsvCatalogItem
     if (result.resource.type === "dataset") {
       if (
@@ -347,10 +353,10 @@ export class SocrataCatalogStratum extends LoadableStratum(
         }
 
         // Replace the stratum inherited from the parent group.
-        resultModel.strata.delete(stratum);
+        resultModel.strata.delete(CommonStrata.definition);
 
         resultModel.setTrait(
-          stratum,
+          CommonStrata.definition,
           "url",
           `${this.catalogGroup.url}/resource/${result.resource.id}.geojson?$limit=10000`
         );
@@ -369,10 +375,10 @@ export class SocrataCatalogStratum extends LoadableStratum(
         }
 
         // Replace the stratum inherited from the parent group.
-        resultModel.strata.delete(stratum);
+        resultModel.strata.delete(CommonStrata.definition);
 
         resultModel.setTrait(
-          stratum,
+          CommonStrata.definition,
           "url",
           `${this.catalogGroup.url}/resource/${result.resource.id}.csv?$limit=10000`
         );
@@ -393,17 +399,37 @@ export class SocrataCatalogStratum extends LoadableStratum(
       }
 
       // Replace the stratum inherited from the parent group.
-      resultModel.strata.delete(stratum);
+      resultModel.strata.delete(CommonStrata.definition);
 
-      resultModel.setTrait(stratum, "url", this.catalogGroup.url);
-      resultModel.setTrait(stratum, "resourceId", result.resource.id);
+      resultModel.setTrait(
+        CommonStrata.definition,
+        "url",
+        this.catalogGroup.url
+      );
+      resultModel.setTrait(
+        CommonStrata.definition,
+        "resourceId",
+        result.resource.id
+      );
     }
 
     if (resultModel) {
-      resultModel.setTrait(stratum, "name", result.resource.name);
-      resultModel.setTrait(stratum, "description", result.resource.description);
-      resultModel.setTrait(stratum, "attribution", result.resource.attribution);
-      resultModel.setTrait(stratum, "info", [
+      resultModel.setTrait(
+        CommonStrata.definition,
+        "name",
+        result.resource.name
+      );
+      resultModel.setTrait(
+        CommonStrata.definition,
+        "description",
+        result.resource.description
+      );
+      resultModel.setTrait(
+        CommonStrata.definition,
+        "attribution",
+        result.resource.attribution
+      );
+      resultModel.setTrait(CommonStrata.definition, "info", [
         createStratumInstance(InfoSectionTraits, {
           name: i18next.t("models.socrataServer.licence"),
           content: result.metadata.license
@@ -418,7 +444,7 @@ export class SocrataCatalogStratum extends LoadableStratum(
         })
       ]);
 
-      resultModel.setTrait(stratum, "metadataUrls", [
+      resultModel.setTrait(CommonStrata.definition, "metadataUrls", [
         createStratumInstance(MetadataUrlTraits, {
           title: i18next.t("models.openDataSoft.viewDatasetPage"),
           url: result.permalink
@@ -432,7 +458,12 @@ export class SocrataCatalogStratum extends LoadableStratum(
   }
 
   getResultId(result: Result) {
-    return `${this.catalogGroup.uniqueId}/${result.resource.id}`;
+    // Use Socrata server hostname for datasets, so we don't create multiple across facets
+    return `${
+      this.catalogGroup.url
+        ? URI(this.catalogGroup.url ?? "").hostname()
+        : this.catalogGroup.uniqueId
+    }/${result.resource.id}`;
   }
 }
 

@@ -47,7 +47,6 @@ Specifies various options for configuring TerriaJS:
 |`defaultMaximumShownFeatureInfos`|no|**number**|`100`|The maximum number of "feature info" boxes that can be displayed when clicking a point.|
 |`regionMappingDefinitionsUrl`|yes|**string**|`"build/TerriaJS/data/regionMapping.json"`|URL of the JSON file that defines region mapping for CSV files. This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
 |`catalogIndexUrl`|no|**string**||URL of the JSON file that contains index of catalog. See [CatalogIndex](#catalogindex)|
-|`conversionServiceBaseUrl`|no|**string**|`"convert/"`|URL of OGR2OGR conversion service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
 |`proj4ServiceBaseUrl`|no|**string**|`"proj4def/"`|URL of Proj4 projection lookup service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
 |`corsProxyBaseUrl`|no|**string**|`"proxy/"`|URL of CORS proxy service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
 |`proxyableDomainsUrl`|no|**string**|`"proxyabledomains/"`|Deprecated, will be determined from serverconfig.|
@@ -68,7 +67,6 @@ Specifies various options for configuring TerriaJS:
 |`brandBar`|no|**[BrandBar](#brandbar)|`new BrandBarTraits()`|Branding bar configuration|
 |`disableMyLocation`|no|**boolean**|undefined|True to disable the "Centre map at your current location" button.|
 |`disableSplitter`|no|**boolean**|undefined|True to disable the use of the splitter control.|
-|`enableGeojsonMvt`|no|**boolean**|false|Feature flag for experimental Geojson-Mapbox vector tiles. If falsy, all `GeoJsonMixin` models will render cesium primitives. If truthy, [`geojson-vt`](https://github.com/mapbox/geojson-vt) will be used to tile GeoJson into Mapbox vector-tiles.|
 |`experimentalFeatures`|no|**boolean**|undefined||
 |`magdaReferenceHeaders`|no|**[MagdaReferenceHeaders](#magdareferenceheaders)**|undefined|
 |`locationSearchBoundingBox`|no|**number**|undefined|
@@ -85,6 +83,7 @@ Specifies various options for configuring TerriaJS:
 |`openAddData`|no|**boolean**|`false`|Whether to open the add data explorer panel on load.|
 |`feedback`|no|**[Feedback](#feedback)**||Feedback configuration.|
 |`theme`|no|**any**|`{}`|An object used to override theme properties - for example `{"logoHeight": "70px"}`.|
+|`storyRouteUrlPrefix`|no|**string**|undefined|(Experimental) Prefix to which `:story-id` is added to fetch JSON for stories when using `/story/:story-id` routes. Should end in /|
 
 
 ### MagdaReferenceHeaders
@@ -225,12 +224,16 @@ To generate the catalog index:
   - `config-url` is URL to client-side-config file
   - `base-url` is URL to terriajs-server (this is used to load `server-config` and to proxy requests)
   - For example `node .\build\generateCatalogIndex.js http://localhost:3001/config.json http://localhost:3001`
-- This will output two files
+
+- This will output three files
   - `catalog-index.json`
   - `catalog-index-errors.json` with any error messages which occurred while loading catalog members
-- Set `catalogIndexUrl` config parameter
+  - `catalog-index-errors-stack.json` with errors stack
+- Set `catalogIndexUrl` config parameter to URL to `catalog-index.json`
 
 This file will have to be re-generated manually every time the catalog structure changes - for example:
 
 - if items are renamed, or moved
 - dynamic groups are updated (for example, WMS server publishes new layers)
+
+For more details see [/buildprocess/generateCatalogIndex.ts](/buildprocess/generateCatalogIndex.ts)

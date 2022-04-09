@@ -15,8 +15,7 @@ export default function createCatalogItemFromFileOrUrl(
   terria: Terria,
   viewState: ViewState,
   fileOrUrl: File | string,
-  dataType?: string,
-  confirmConversion: boolean = false
+  dataType?: string
 ): Promise<BaseModel | undefined> {
   dataType = isDefined(dataType) ? dataType : "auto";
 
@@ -32,28 +31,21 @@ export default function createCatalogItemFromFileOrUrl(
   if (dataType === "auto") {
     return createUrlReferenceFromUrl(name, terria, isUrl).then(newItem => {
       if (!isDefined(newItem)) {
-        return tryConversionService(name, terria, viewState, confirmConversion);
-      } else {
-        // It's a file or service we support directly
-        // In some cases (web services), the item will already have been loaded by this point.
-        return loadItem(newItem, fileOrUrl);
+        terria.raiseErrorToUser(
+          new TerriaError({
+            title: i18next.t("models.catalog.unsupportedFileTypeTitle"),
+            message: i18next.t("models.catalog.unsupportedFileTypeMessage", {
+              appName: terria.appName,
+              link:
+                '<a href="https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au">csv-geo-au format</a>'
+            })
+          })
+        );
+        return undefined;
       }
-    });
-  } else if (dataType === "other") {
-    // user explicitly chose "Other (use conversion service)"
-    return getConfirmation(
-      viewState,
-      confirmConversion,
-      "Ready to upload your file to the " +
-        terria.appName +
-        " conversion service?"
-    ).then(confirmed => {
-      return confirmed
-        ? loadItem(
-            createCatalogMember(terria, { type: "ogr", name }),
-            fileOrUrl
-          )
-        : Promise.resolve(undefined);
+      // It's a file or service we support directly
+      // In some cases (web services), the item will already have been loaded by this point.
+      return loadItem(newItem, fileOrUrl);
     });
   } else {
     // User has provided a type, so we go with that.
@@ -77,85 +69,6 @@ function createCatalogMember(
     {}
   ).throwIfUndefined({
     message: `Failed to create catalog member from JSON: ${json.name}`
-  });
-}
-
-function tryConversionService(
-  name: string,
-  terria: Terria,
-  viewState: ViewState,
-  confirmConversion: boolean
-) {
-  if (!terria.configParameters.conversionServiceBaseUrl) {
-    // Don't allow conversion service. Duplicated in OgrCatalogItem.js
-    terria.raiseErrorToUser(
-      new TerriaError({
-        title: i18next.t("models.catalog.unsupportedFileTypeTitle"),
-        message: i18next.t("models.catalog.unsupportedFileTypeMessage", {
-          appName: terria.appName,
-          link:
-            '<a href="https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au">csv-geo-au format</a>'
-        })
-      })
-    );
-    return undefined;
-  } else if (
-    name.match(/\.(jpg|jpeg|pdf|xlsx|xls|tif|tiff|png|txt|doc|docx|xml|json)$/)
-  ) {
-    terria.raiseErrorToUser(
-      new TerriaError({
-        title: i18next.t("models.catalog.unsupportedFileTypeTitle"),
-        message: i18next.t("models.catalog.unsupportedFileTypeMessageII", {
-          appName: terria.appName,
-          link:
-            '<a href="https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au">csv-geo-au format</a>',
-          linkII:
-            '<a href="http://www.gdal.org/ogr_formats.html">OGR Vector Formats</a>'
-        })
-      })
-    );
-    return undefined;
-  }
-  return getConfirmation(
-    viewState,
-    confirmConversion,
-    i18next.t("models.catalog.getConfirmationMessage", {
-      appName: terria.appName
-    })
-  ).then(confirmed => {
-    return undefined;
-    // TODO
-    // return confirmed
-    //     ? loadItem(new OgrCatalogItem(terria), name, fileOrUrl)
-    //     : undefined;
-  });
-}
-
-/* Returns a promise that returns true if user confirms, or false if they abort. */
-function getConfirmation(
-  viewState: ViewState,
-  confirmConversion: boolean,
-  message: string
-) {
-  if (!confirmConversion) {
-    return Promise.resolve(true);
-  }
-
-  return new Promise(resolve => {
-    runInAction(() => {
-      viewState.terria.notificationState.addNotificationToQueue({
-        confirmText: i18next.t("models.catalog.upload"),
-        denyText: i18next.t("models.catalog.cancel"),
-        title: i18next.t("models.catalog.useConversion"),
-        message: message,
-        confirmAction: function() {
-          resolve(true);
-        },
-        denyAction: function() {
-          resolve(false);
-        }
-      });
-    });
   });
 }
 
