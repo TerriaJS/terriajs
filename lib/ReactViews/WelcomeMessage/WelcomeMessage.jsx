@@ -87,7 +87,7 @@ class WelcomeMessage extends React.Component {
   }
 }
 
-export const WelcomeMessagePure = observer(props => {
+export const WelcomeMessagePure = props => {
   const { showWelcomeMessage, setShowWelcomeMessage, viewState } = props;
   const { t } = useTranslation();
   // This is required so we can do nested animations
@@ -340,7 +340,7 @@ export const WelcomeMessagePure = observer(props => {
       </WelcomeModalWrapper>
     </FadeIn>
   );
-});
+};
 
 WelcomeMessagePure.propTypes = {
   showWelcomeMessage: PropTypes.bool.isRequired,
