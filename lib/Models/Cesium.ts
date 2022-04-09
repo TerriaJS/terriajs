@@ -211,7 +211,7 @@ export default class Cesium extends GlobeOrMap {
     // The terrain server is not responding at the moment.  You can still use all the features of '+that.terria.appName+' \
     // but there will be no terrain detail in 3D mode.  We\'re sorry for the inconvenience.  Please try \
     // again later and the terrain server should be responding as expected.  If the issue persists, please contact \
-    // us via email at '+that.terria.supportEmail+'.'
+    // us via email at '+that.terria.configParameters.supportEmail+'.'
     //                 });
     //                 that.TerrainMessageViewed = true;
     //             }

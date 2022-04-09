@@ -6,6 +6,7 @@ import ViewState from "../../lib/ReactViewModels/ViewState";
 import { runInAction } from "mobx";
 const Disclaimer: any = require("../../lib/ReactViews/Disclaimer").default;
 import Box from "../../lib/Styled/Box";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 
 describe("Disclaimer", function() {
   let terria: Terria;
@@ -60,7 +61,11 @@ describe("Disclaimer", function() {
   describe("with disclaimerVisible set to false", function() {
     it("does not render", function() {
       runInAction(() => {
-        terria.configParameters.globalDisclaimer = undefined;
+        terria.configParameters.setTrait(
+          CommonStrata.user,
+          "globalDisclaimer",
+          undefined
+        );
         viewState.disclaimerVisible = false;
       });
       act(() => {

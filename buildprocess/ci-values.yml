@@ -49,19 +49,14 @@ terriamap:
             cesiumIonAccessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxZDY5MDE1YS0yNGFlLTQ1MzctYWNkNy0wNDQ1YWNiNTM5MDIiLCJpZCI6Mjk5Miwic2NvcGVzIjpbImFzciIsImdjIl0sImlhdCI6MTUzODAzMzgyNn0.a2uTotdiHUo8FiHsO4MVNZ1KT5pOF0rb7CFdwbRAsOo"
             useCesiumIonBingImagery: true
             googleAnalyticsKey:
-            disclaimer:
-                text: "Disclaimer: This map must not be used for navigation or precise spatial analysis"
-                url: "https://terria.io"
-            developerAttribution:
-                text: "Terria"
-                link: "https://terria.io"
             appName: "TerriaJS Continuous Integration"
-            brandBarElements: ["", "<a target=\"_blank\" href=\"http://terria.io\"><img src=\"images/terria_logo.png\" height=\"52\" title=\"Version: {{version}}\" /></a>", ""]
+            brandBar:
+                elements: ["", "<a target=\"_blank\" href=\"http://terria.io\"><img src=\"images/terria_logo.png\" height=\"52\" title=\"Version: {{version}}\" /></a>", ""]
             supportEmail: "info@terria.io"
-            mobileDefaultViewerMode: "2d"
             experimentalFeatures: true
-            feedbackUrl: "feedback"
-            helpContent:
+            feedback: 
+                url: "feedback"
+            helpItems:
                 -
                   title: "Getting started with the map"
                   itemName: gettingstarted

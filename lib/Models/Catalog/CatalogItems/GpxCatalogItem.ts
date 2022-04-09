@@ -13,6 +13,7 @@ import UrlMixin from "../../../ModelMixins/UrlMixin";
 import GpxCatalogItemTraits from "../../../Traits/TraitsClasses/GpxCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 
 const toGeoJSON = require("@mapbox/togeojson");
 

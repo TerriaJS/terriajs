@@ -1,12 +1,14 @@
+import { runInAction } from "mobx";
 import Terria from "../Terria";
 
 export function defaultBaseMaps(terria: Terria): any[] {
   const baseMaps: any[] = [];
+  const bingMapsKey = runInAction(() => terria.configParameters.bingMapsKey);
+  const useCesiumIonBingImagery = runInAction(
+    () => terria.configParameters.useCesiumIonBingImagery
+  );
 
-  if (
-    terria.configParameters.bingMapsKey &&
-    !terria.configParameters.useCesiumIonBingImagery
-  ) {
+  if (bingMapsKey && !useCesiumIonBingImagery) {
     baseMaps.push({
       item: {
         id: "basemap-bing-aerial-with-labels",
@@ -41,7 +43,7 @@ export function defaultBaseMaps(terria: Terria): any[] {
       image: "build/TerriaJS/images/bing-maps-roads.png",
       contrastColor: "#000000"
     });
-  } else if (terria.configParameters.useCesiumIonBingImagery === true) {
+  } else if (useCesiumIonBingImagery === true) {
     baseMaps.push({
       item: {
         id: "basemap-bing-aerial-with-labels",

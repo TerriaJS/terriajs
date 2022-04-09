@@ -49,7 +49,7 @@ describe("TrainerBar", function() {
           regionMappingDefinitionsUrl: "",
           initFragmentPaths: [],
           storyEnabled: false,
-          helpContent: [TestHelpContent as any]
+          helpItems: [TestHelpContent as any]
         });
         viewState.setTrainerBarVisible(false);
       });
@@ -76,7 +76,7 @@ describe("TrainerBar", function() {
           regionMappingDefinitionsUrl: "",
           initFragmentPaths: [],
           storyEnabled: false,
-          helpContent: [TestHelpContent as any]
+          helpItems: [TestHelpContent as any]
         });
         viewState.setTrainerBarVisible(true);
       });

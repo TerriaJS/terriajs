@@ -266,7 +266,7 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
               useTranslationIfExists(tourPoint?.content),
               {
                 injectTermsAsTooltips: true,
-                tooltipTerms: viewState.terria.configParameters.helpContentTerms
+                tooltipTerms: viewState.terria.configParameters.helpTerms
               }
             )}
           </TourExplanation>

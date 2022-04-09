@@ -325,6 +325,17 @@ Change Log
   * Replace `CompositeBarItemController` `visible` setter with `setVisible` function
 * Use `yarn` in CI scripts (and upgrade node to v14)
 * Fix app crash when previewing a nested reference in the catalog (eg when viewing an indexed search result where the result is a reference).
+* Converted terria ConfigParameters to model based approach.
+  * Some config parameters are depreacted (there is a basic conversion from old parameters to new ones):
+    * `showWelcomeMessage` and `welcomeMessageVideo` are now parameters on object `welcomeMessage` as `show` and `video`
+    * `helpContent` is now `helpItems`
+    * `helpContentTerms` are now `helpTerms`
+    * `feedbackPreamble` and `feedbackMinLength` are now parameters on object `feedback` as `preamble` and `minLength`
+    * `brandBarElements`, `brandBarSmallElements`, `displayOneBrand` are now parameters on object `brandBar` as `elements`, `smallElements`, `displayOneBrand`
+    * `googleUrlShortenerKey` is deprecated and not used anymore
+    * `disclaimer` is deprecated and not used anymore
+  * Removed deprecated configParameters from docs.
+* [The next improvement]
 * Ported feaure from v7 to set WMS layers property from the value of `LAYERS`, `layers` or `typeName` from query string of CKAN resource URL.
 
 #### 8.1.4 - 2021-10-15

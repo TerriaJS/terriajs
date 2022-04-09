@@ -12,6 +12,7 @@ import HelpVideoPanel from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/H
 import Text from "../../../../../lib/Styled/Text";
 import StyledHtml from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/StyledHtml";
 import { runInAction } from "mobx";
+import CommonStrata from "../../../../../lib/Models/Definition/CommonStrata";
 
 describe("HelpPanel", function() {
   let terria: Terria;
@@ -45,14 +46,15 @@ describe("HelpPanel", function() {
     });
   });
 
-  describe("with no text, videos and images in helpContent", function() {
+  describe("with no text, videos and images in helpItems", function() {
     beforeEach(() => {
       runInAction(() => {
-        terria.configParameters.helpContent = [
+        terria.configParameters.setTrait(CommonStrata.user, "helpItems", [
+          //@ts-ignore
           {
             itemName: "test"
           }
-        ];
+        ]);
       });
       act(() => {
         testRenderer = create(
@@ -91,10 +93,11 @@ describe("HelpPanel", function() {
     });
   });
 
-  describe("with text, video and image in helpContent", function() {
+  describe("with text, video and image in helpItems", function() {
     beforeEach(() => {
       runInAction(() => {
-        terria.configParameters.helpContent = [
+        terria.configParameters.setTrait(CommonStrata.user, "helpItems", [
+          //@ts-ignore
           {
             itemName: "test",
             markdownText:
@@ -103,7 +106,7 @@ describe("HelpPanel", function() {
             placeholderImage:
               "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
           }
-        ];
+        ]);
       });
       act(() => {
         testRenderer = create(

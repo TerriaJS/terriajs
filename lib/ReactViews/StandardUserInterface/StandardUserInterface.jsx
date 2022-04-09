@@ -2,6 +2,7 @@ import classNames from "classnames";
 import createReactClass from "create-react-class";
 import "inobounce";
 import { action, runInAction } from "mobx";
+// import Variables from "../../Sass/common/variables";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -20,6 +21,7 @@ import withFallback from "../HOCs/withFallback";
 import ExperimentalFeatures from "../Map/ExperimentalFeatures";
 import CollapsedNavigation from "../Map/Navigation/Items/OverflowNavigationItem";
 import HelpPanel from "../Map/Panels/HelpPanel/HelpPanel";
+import PrintView from "../Map/Panels/SharePanel/Print/PrintView";
 import ProgressBar from "../Map/ProgressBar";
 import TrainerBar from "../Map/TrainerBar/TrainerBar";
 import MobileHeader from "../Mobile/MobileHeader";
@@ -179,9 +181,11 @@ const StandardUserInterface = observer(
       window.addEventListener("resize", this.resizeListener, false);
 
       this.resizeListener();
-
+      const storyEnabled = runInAction(
+        () => this.props.terria.configParameters.storyEnabled
+      );
       if (
-        this.props.terria.configParameters.storyEnabled &&
+        storyEnabled &&
         this.props.terria.stories &&
         this.props.terria.stories.length &&
         !this.props.viewState.storyShown

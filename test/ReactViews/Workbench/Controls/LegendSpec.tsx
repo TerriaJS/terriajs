@@ -7,6 +7,7 @@ import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatal
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import Legend from "../../../../lib/ReactViews/Workbench/Controls/Legend";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import { getShallowRenderedOutput } from "../../MoreShallowTools";
 
 describe("Legend", function() {
@@ -16,8 +17,11 @@ describe("Legend", function() {
     terria = new Terria({
       baseUrl: "./"
     });
-    terria.configParameters.regionMappingDefinitionsUrl =
-      "./data/regionMapping.json";
+    terria.configParameters.setTrait(
+      CommonStrata.user,
+      "regionMappingDefinitionsUrl",
+      "./data/regionMapping.json"
+    );
   });
 
   describe(" - with image", function() {

@@ -64,9 +64,7 @@ Specifies various options for configuring TerriaJS:
 |`useCesiumIonBingImagery`|no|**boolean**|`true`|True to use Bing Maps from Cesium ion (Cesium World Imagery). By default, Ion will be used, unless the `bingMapsKey` property is specified, in which case that will be used instead. To disable the Bing Maps layers entirely, set this property to false and set `bingMapsKey` to null.|
 |`bingMapsKey`|no|**string**|undefined|A [Bing Maps API key](https://msdn.microsoft.com/en-us/library/ff428642.aspx) used for requesting Bing Maps base maps and using the Bing Maps geocoder for searching. It is your responsibility to request a key and comply with all terms and conditions.|
 |`hideTerriaLogo`|no|**boolean**|`false`|
-|`brandBarElements`|no|**string[]**|undefined|An array of strings of HTML that fill up the top left logo space (see `brandBarSmallElements` or `displayOneBrand` for small screens).|
-|`brandBarSmallElements`|no|**string[]**|undefined|An array of strings of HTML that fill up the top left logo space - used for small screens.|
-|`displayOneBrand`|no|**number**|`0`|Index of which `brandBarElements` to show for mobile header. This will only be used if `brandBarSmallElements` is undefined.|
+|`brandBar`|no|**[BrandBar](#brandbar)|`new BrandBarTraits()`|Branding bar configuration|
 |`disableMyLocation`|no|**boolean**|undefined|True to disable the "Centre map at your current location" button.|
 |`disableSplitter`|no|**boolean**|undefined|True to disable the use of the splitter control.|
 |`experimentalFeatures`|no|**boolean**|undefined||
@@ -75,18 +73,15 @@ Specifies various options for configuring TerriaJS:
 |`googleAnalyticsKey`|no|**string**|undefined|A Google API key for [Google Analytics](https://analytics.google.com).  If specified, TerriaJS will send various events about how it's used to Google Analytics.|
 |`errorService`|no|**[ErrorServiceOptions](#errorserviceoptions)**|undefined|Optional configuration for the remote error logging service that Terria should log errors to.|
 |`globalDisclaimer`|no|**any**|undefined||
-|`showWelcomeMessage`|no|**boolean**|`false`|True to display welcome message on startup.|
-|`welcomeMessageVideo`|no|**any**||Video to show in welcome message.|
+|`welcomeMessage`|no|**[WelcomeMessage](#welcomemessage)**|`false`||
 |`showInAppGuides`|no|**boolean**|`false`|True to display in-app guides.|
-|`helpContent`|no|**[HelpContentItem](#helpcontentitem)**|`[]`|The content to be displayed in the help panel.|
-|`helpContentTerms`|no|**[Term](#term)**|||
+|`helpItems`|no|**[HelpItem](#helpitem)**|`[]`|The content to be displayed in the help panel.|
+|`helpTerms`|no|**[Term](#term)**|||
 |`languageConfiguration`|no|**[LanguageConfiguration](#languageconfiguration)**|undefined|Language configuration of TerriaJS.|
 |`customRequestSchedulerLimits`|no|**[RequestScheduler](https://cesium.com/docs/cesiumjs-ref-doc/RequestScheduler.html#.requestsByServer)**|undefined|Custom concurrent request limits for domains in Cesium's RequestScheduler.|
 |`persistViewerMode`|no|**boolean**|`true`|Whether to load persisted viewer mode from local storage.|
 |`openAddData`|no|**boolean**|`false`|Whether to open the add data explorer panel on load.|
-|feedbackPreamble|no|**string**|feedback.feedbackPreamble|Text showing at the top of feedback form, supports the internationalization using the translation key.|
-|feedbackPostamble|no|**string**|feedback.feedbackPostamble|Text showing at the bottom of feedback form, supports the internationalization using the translation key.|
-|feedbackMinLength|no|**number**|0|Minimum length of feedback comment.| 
+|`feedback`|no|**[Feedback](#feedback)**||Feedback configuration.|
 |`theme`|no|**any**|`{}`|An object used to override theme properties - for example `{"logoHeight": "70px"}`.|
 |`storyRouteUrlPrefix`|no|**string**|undefined|(Experimental) Prefix to which `:story-id` is added to fetch JSON for stories when using `/story/:story-id` routes. Should end in /|
 
@@ -95,7 +90,32 @@ Specifies various options for configuring TerriaJS:
 
 ***
 
-### HelpContentItem
+### BrandBar
+Branding bar configuration
+
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|`elements`|no|**string[]**|undefined|An array of strings of HTML that fill up the top left logo space (see `smallElements` or `displayOneBrand` for small screens).|
+|`smallElements`|no|**string[]**|undefined|An array of strings of HTML that fill up the top left logo space - used for small screens.|
+|`displayOneBrand`|no|**number**|`0`|Index of which `elements` to show for mobile header. This will only be used if `smallElements` is undefined.|
+
+### WelcomeMessage
+Welcome message configuration
+
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|`show`|yes|**boolean**|false|True to display welcome message on startup.|
+|`video`|yes|**[WelcomeMessageVideo](#welcomemessagevideo) to show in welcome message.|
+
+#### WelcomeMessageVideo
+
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|`title`|yes|**string**|undefined|Title of the video|
+|`url`|yes|**string**|undefined|Url of the video|
+|`placeholderImage`|yes|**string**|undefined|Placeholder image.|
+
+### HelpItem
 Configuration of items to appear in the search bar
 
 |Name|Required|Type|Default|Description|
@@ -104,10 +124,11 @@ Configuration of items to appear in the search bar
 |`title`|no|**string**|undefined|Title of the help item|
 |`videoUrl`|no|**string**|undefined|The video to show on the top of help item.|
 |`placeholderImage`|no|**string**|undefined|Placeholder image for the video.|
-|`paneMode`|no|**enum["videoAndContent","slider","trainer"]**|`"videoAndContent"`|
+|`paneMode`|no|**enum["videoAndContent","slider","trainer", "externalLink"]**|`"videoAndContent"`|
 |`trainerItems`|no|**[TrainerItem[]](#traineritem)**|undefined|List of the trainer steps|
 |`markdownText`|no|**string**|undefined|The content of the help item, can use Markdown syntax.|
 |`icon`|no|**string**|undefined|Icon to show next to the itemName.|
+|`url|no|**string**|undefined|External url for the help content item.|
 
 #### TrainerItem
 
@@ -148,7 +169,16 @@ Configuration of items to appear in the search bar
 
 ***
 
+### Feedback
+
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|`preamble`|no|**string**|`translate#feedback.feedbackPreamble`|Text showing at the top of feedback form, supports the internationalization using the translation key.|
+|`postamble`|no|**string**|`undefined`|Text showing at the bottom of feedback form, supports the internationalization using the translation key.|
+|`minLength`|no|**number**|0|Minimum length of feedback comment.|
+
 ### ErrorServiceOptions
+
 |Name|Required|Type|Default|Description|
 |----|--------|----|-------|-----------|
 |provider|yes|**string**|`undefined`|A string identifying the error service provider to use. Currently only `rollbar` is supported.|

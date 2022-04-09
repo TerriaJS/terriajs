@@ -2,16 +2,21 @@
 
 import classNames from "classnames";
 import createReactClass from "create-react-class";
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { Trans, withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
-import Clipboard from "../../../Clipboard";
+import {
+  Category,
+  ShareAction
+} from "../../../../Core/AnalyticEvents/analyticEvents";
 import Icon from "../../../../Styled/Icon";
+import Input from "../../../../Styled/Input";
+import Clipboard from "../../../Clipboard";
 import Loader from "../../../Loader";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
-import Input from "../../../../Styled/Input";
 import DropdownStyles from "../panel.scss";
 import {
   buildShareLink,
@@ -19,14 +24,9 @@ import {
   canShorten,
   isShareable
 } from "./BuildShareLink";
+import { downloadImg } from "./Print/PrintView";
 import Styles from "./share-panel.scss";
 import StorySharePanel from "./StorySharePanel";
-import {
-  Category,
-  ShareAction
-} from "../../../../Core/AnalyticEvents/analyticEvents";
-
-import { downloadImg } from "./Print/PrintView";
 
 const SharePanel = observer(
   createReactClass({
@@ -66,7 +66,10 @@ const SharePanel = observer(
     },
 
     componentDidMount() {
-      if (this.props.terria.configParameters.interceptBrowserPrint) {
+      const interceptBrowserPrint = runInAction(
+        () => this.props.terria.configParameters.interceptBrowserPrint
+      );
+      if (interceptBrowserPrint) {
         window.addEventListener("beforeprint", this.beforeBrowserPrint, false);
         window.addEventListener("afterprint", this.afterBrowserPrint, false);
 

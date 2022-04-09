@@ -206,7 +206,12 @@ const MapColumn = observer(
                 </For>
               </If>
             </div>
-            <If condition={this.props.terria.configParameters.printDisclaimer}>
+            <If
+              condition={
+                this.props.terria.configParameters.printDisclaimer?.url &&
+                this.props.terria.configParameters.printDisclaimer?.text
+              }
+            >
               <div className={classNames(Styles.mapCell, "print")}>
                 <a
                   className={Styles.printDisclaimer}

@@ -1,20 +1,20 @@
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
-import { runInAction } from "mobx";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
-import Icon, { StyledIcon } from "../../../../Styled/Icon";
-import Spacing from "../../../../Styled/Spacing";
-import Text from "../../../../Styled/Text";
-import Box from "../../../../Styled/Box";
-import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToReact";
-import HelpPanelItem from "./HelpPanelItem";
-import Button, { RawButton } from "../../../../Styled/Button";
 import {
   Category,
   HelpAction
 } from "../../../../Core/AnalyticEvents/analyticEvents";
+import Box from "../../../../Styled/Box";
+import Button, { RawButton } from "../../../../Styled/Button";
+import Icon, { StyledIcon } from "../../../../Styled/Icon";
+import Spacing from "../../../../Styled/Spacing";
+import Text from "../../../../Styled/Text";
+import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToReact";
+import HelpPanelItem from "./HelpPanelItem";
 
 export const HELP_PANEL_ID = "help";
 
@@ -43,7 +43,9 @@ class HelpPanel extends React.Component {
 
   render() {
     const { t } = this.props;
-    const helpItems = this.props.terria.configParameters.helpContent;
+    const helpItems = runInAction(
+      () => this.props.terria.configParameters.helpItems
+    );
     const isExpanded = this.props.viewState.helpPanelExpanded;
     const isAnimatingOpen = this.state.isAnimatingOpen;
     return (

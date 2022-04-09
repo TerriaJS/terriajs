@@ -11,14 +11,14 @@ const DEFAULT_BRANDING =
 
 export default observer(
   (props: { terria: Terria; viewState: ViewState; version?: string }) => {
-    // Set brandingHtmlElements to brandBarElements or default Terria branding as default
-    let brandingHtmlElements = props.terria.configParameters
-      .brandBarElements ?? [DEFAULT_BRANDING];
+    // Set brandingHtmlElements to brandBar.elements or default Terria branding as default
+    let brandingHtmlElements = props.terria.configParameters.brandBar
+      .elements ?? [DEFAULT_BRANDING];
 
     if (props.viewState.useSmallScreenInterface) {
       const brandBarSmallElements =
-        props.terria.configParameters.brandBarSmallElements;
-      const displayOne = props.terria.configParameters.displayOneBrand;
+        props.terria.configParameters.brandBar.smallElements;
+      const displayOne = props.terria.configParameters.brandBar.displayOneBrand;
 
       // Use brandBarSmallElements if it exists
       if (brandBarSmallElements) brandingHtmlElements = brandBarSmallElements;

@@ -1,12 +1,6 @@
-type TranslationKey = string;
+import { TermTraits } from "../Traits/Configuration/TermTraits";
 
-export interface Term {
-  term: string;
-  content: string;
-  aliases?: string[] | TranslationKey;
-}
-
-export const defaultTerms: Term[] = [
+export const defaultTerms: TermTraits[] = [
   {
     term: "dataset",
     // if we are properly consistent with copy, the split-word version of

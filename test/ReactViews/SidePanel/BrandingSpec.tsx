@@ -5,6 +5,7 @@ import ViewState from "../../../lib/ReactViewModels/ViewState";
 import Icon from "../../../lib/Styled/Icon";
 import MapIconButton from "../../../lib/ReactViews/MapIconButton/MapIconButton";
 import Branding from "../../../lib/ReactViews/SidePanel/Branding";
+import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 // import Branding from "../../../lib/ReactViews/SidePanel/Branding";
 
 describe("Branding", function() {
@@ -22,17 +23,23 @@ describe("Branding", function() {
   });
 
   it("renders without issues", function() {
-    terria.configParameters.brandBarElements = ["<a href='blah'>a thing</a>"];
+    terria.configParameters.brandBar.setTrait(CommonStrata.user, "elements", [
+      "<a href='blah'>a thing</a>"
+    ]);
     rendered = TestRenderer.create(
       <Branding terria={terria} viewState={viewState} />
     );
     expect(rendered.root.findByType("a")).toBeDefined();
   });
   it("renders when provided displayOne inside of index", function() {
-    terria.configParameters.brandBarElements = [
+    terria.configParameters.brandBar.setTrait(CommonStrata.user, "elements", [
       "<details><summary>a thing</summary></details>"
-    ];
-    terria.configParameters.displayOneBrand = 0;
+    ]);
+    terria.configParameters.brandBar.setTrait(
+      CommonStrata.user,
+      "displayOneBrand",
+      0
+    );
     rendered = TestRenderer.create(
       <Branding terria={terria} viewState={viewState} />
     );
@@ -42,11 +49,15 @@ describe("Branding", function() {
     }).toThrow();
   });
   it("renders when provided displayOne inside of index, but targetting empty string", function() {
-    terria.configParameters.brandBarElements = [
+    terria.configParameters.brandBar.setTrait(CommonStrata.user, "elements", [
       "",
       "<progress>progress is a html element!</progress>"
-    ];
-    terria.configParameters.displayOneBrand = 0;
+    ]);
+    terria.configParameters.brandBar.setTrait(
+      CommonStrata.user,
+      "displayOneBrand",
+      0
+    );
     rendered = TestRenderer.create(
       <Branding terria={terria} viewState={viewState} />
     );
@@ -56,11 +67,15 @@ describe("Branding", function() {
     }).toThrow();
   });
   it("renders when provided displayOne outside of index", function() {
-    terria.configParameters.brandBarElements = [
+    terria.configParameters.brandBar.setTrait(CommonStrata.user, "elements", [
       "",
       "<meter>meter is a html element!</meter>"
-    ];
-    terria.configParameters.displayOneBrand = 5;
+    ]);
+    terria.configParameters.brandBar.setTrait(
+      CommonStrata.user,
+      "displayOneBrand",
+      5
+    );
     rendered = TestRenderer.create(
       <Branding terria={terria} viewState={viewState} />
     );
@@ -69,34 +84,42 @@ describe("Branding", function() {
       rendered.root.findByType("progress");
     }).toThrow();
   });
-  it("renders brandBarElements when provided brandBarSmallElements", function() {
-    terria.configParameters.brandBarElements = [
+  it("renders brandBar.elements when provided brandBar.smallElements", function() {
+    terria.configParameters.brandBar.setTrait(CommonStrata.user, "elements", [
       "",
       "<meter>meter is a html element!</meter>"
-    ];
-
-    terria.configParameters.brandBarSmallElements = [
-      "<small>small is a html element!</small>",
-      "<a>a is a html element!</a>"
-    ];
-    terria.configParameters.displayOneBrand = 1;
+    ]);
+    terria.configParameters.brandBar.setTrait(
+      CommonStrata.user,
+      "smallElements",
+      ["<small>small is a html element!</small>", "<a>a is a html element!</a>"]
+    );
+    terria.configParameters.brandBar.setTrait(
+      CommonStrata.user,
+      "displayOneBrand",
+      1
+    );
     rendered = TestRenderer.create(
       <Branding terria={terria} viewState={viewState} />
     );
     expect(rendered.root.findByType("meter")).toBeDefined();
   });
 
-  it("renders when provided brandBarSmallElements and ignores displayOneBrand", function() {
-    terria.configParameters.brandBarElements = [
+  it("renders when provided brandBar.smallElements and ignores displayOneBrand", function() {
+    terria.configParameters.brandBar.setTrait(CommonStrata.user, "elements", [
       "",
       "<meter>meter is a html element!</meter>"
-    ];
-
-    terria.configParameters.brandBarSmallElements = [
-      "<small>small is a html element!</small>",
-      "<a>a is a html element!</a>"
-    ];
-    terria.configParameters.displayOneBrand = 1;
+    ]);
+    terria.configParameters.brandBar.setTrait(
+      CommonStrata.user,
+      "smallElements",
+      ["<small>small is a html element!</small>", "<a>a is a html element!</a>"]
+    );
+    terria.configParameters.brandBar.setTrait(
+      CommonStrata.user,
+      "displayOneBrand",
+      1
+    );
     viewState.useSmallScreenInterface = true;
     rendered = TestRenderer.create(
       <Branding terria={terria} viewState={viewState} />

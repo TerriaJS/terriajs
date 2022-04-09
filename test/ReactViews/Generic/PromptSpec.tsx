@@ -7,6 +7,7 @@ import { runInAction } from "mobx";
 const Prompt: any = require("../../../lib/ReactViews/Generic/Prompt").default;
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import Caret from "../../../lib/ReactViews/Generic/Caret";
+import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 
 describe("HelpPrompt", function() {
   let terria: Terria;
@@ -27,14 +28,18 @@ describe("HelpPrompt", function() {
   describe("with basic props, when welcome message is enabled on startup", function() {
     it("does not render when welcome message is visible", function() {
       runInAction(() => {
-        terria.configParameters.showWelcomeMessage = true;
+        terria.configParameters.welcomeMessage.setTrait(
+          CommonStrata.user,
+          "show",
+          true
+        );
         viewState.showWelcomeMessage = true;
       });
       act(() => {
         testRenderer = create(
           <Prompt
             isVisible={
-              terria.configParameters.showWelcomeMessage &&
+              terria.configParameters.welcomeMessage.show &&
               !viewState.showWelcomeMessage
             }
             theme={terriaTheme}
@@ -47,14 +52,18 @@ describe("HelpPrompt", function() {
 
     it("renders when welcome message is not visible", function() {
       runInAction(() => {
-        terria.configParameters.showWelcomeMessage = true;
+        terria.configParameters.welcomeMessage.setTrait(
+          CommonStrata.user,
+          "show",
+          true
+        );
         viewState.showWelcomeMessage = false;
       });
       act(() => {
         testRenderer = create(
           <Prompt
             isVisible={
-              terria.configParameters.showWelcomeMessage &&
+              terria.configParameters.welcomeMessage.show &&
               !viewState.showWelcomeMessage
             }
             theme={terriaTheme}
@@ -69,13 +78,17 @@ describe("HelpPrompt", function() {
   describe("when welcome message is disabled on startup", function() {
     it("does not render", function() {
       runInAction(() => {
-        terria.configParameters.showWelcomeMessage = false;
+        terria.configParameters.welcomeMessage.setTrait(
+          CommonStrata.user,
+          "show",
+          false
+        );
       });
       act(() => {
         testRenderer = create(
           <Prompt
             isVisible={
-              terria.configParameters.showWelcomeMessage &&
+              terria.configParameters.welcomeMessage.show &&
               !viewState.showWelcomeMessage
             }
             theme={terriaTheme}

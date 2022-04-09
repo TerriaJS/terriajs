@@ -46,9 +46,9 @@ export const FeedbackLink = (props: {
     <>
       {parseCustomMarkdownToReact(
         props.emailMessage
-          ? `${props.emailMessage} ${props.viewState.terria.supportEmail}`
+          ? `${props.emailMessage} ${props.viewState.terria.configParameters.supportEmail}`
           : i18next.t("models.raiseError.notificationFeedbackEmail", {
-              email: props.viewState.terria.supportEmail
+              email: props.viewState.terria.configParameters.supportEmail
             })
       )}
     </>

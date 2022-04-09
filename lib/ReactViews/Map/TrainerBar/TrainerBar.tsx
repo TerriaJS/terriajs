@@ -1,24 +1,25 @@
-import i18next, { TFunction } from "i18next";
+import { TFunction } from "i18next";
 import { observer } from "mobx-react";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
+import Model from "../../../Models/Definition/Model";
+import StratumFromTraits from "../../../Models/Definition/StratumFromTraits";
 import Terria from "../../../Models/Terria";
-import {
-  HelpContentItem,
-  PaneMode,
-  StepItem,
-  TrainerItem
-} from "../../../ReactViewModels/defaultHelpContent";
 import ViewState from "../../../ReactViewModels/ViewState";
-import Select from "../../../Styled/Select";
-import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
-import measureElement from "../../HOCs/measureElement";
-import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
-import Text from "../../../Styled/Text";
 import Box from "../../../Styled/Box";
 import Button, { RawButton } from "../../../Styled/Button";
+import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
+import Select from "../../../Styled/Select";
 import Spacing from "../../../Styled/Spacing";
+import Text from "../../../Styled/Text";
+import {
+  HelpItemTraits,
+  PaneMode,
+  StepItemTraits,
+  TrainerItemTraits
+} from "../../../Traits/Configuration/HelpItemTraits";
+import measureElement from "../../HOCs/measureElement";
 import { useTranslationIfExists } from "./../../../Language/languageHelpers";
 
 const StyledHtml: any = require("../../Map/Panels/HelpPanel/StyledHtml")
@@ -36,12 +37,12 @@ const BoxTrainerExpandedSteps = styled(Box)``;
 
 const getSelectedTrainerFromHelpContent = (
   viewState: ViewState,
-  helpContent: HelpContentItem[]
+  helpItems: readonly StratumFromTraits<HelpItemTraits>[]
 ) => {
   const selected = viewState.selectedTrainerItem;
-  const found = helpContent.find(item => item.itemName === selected);
+  const found = helpItems.find(item => item.itemName === selected);
   // Try and find the item that we selected, otherwise find the first trainer pane
-  return found || helpContent.find(item => item.paneMode === PaneMode.trainer);
+  return found || helpItems.find(item => item.paneMode === PaneMode.trainer);
 };
 
 // Ripped from StyledHtml.jsx
@@ -67,7 +68,7 @@ const StepText = styled(Text).attrs({})`
 `;
 
 const renderStep = (
-  step: StepItem,
+  step: Model<StepItemTraits>,
   number: number,
   viewState: ViewState,
   options: {
@@ -112,10 +113,10 @@ const renderStep = (
 };
 
 const renderOrderedStepList = function(
-  steps: StepItem[],
+  steps: Model<StepItemTraits[]>,
   viewState: ViewState
 ) {
-  return steps.map((step: StepItem, index: number) => (
+  return steps.map((step, index) => (
     <React.Fragment key={index}>
       {renderStep(step, index + 1, viewState)}
       {index + 1 !== steps.length && <Spacing bottom={3} />}
@@ -125,10 +126,10 @@ const renderOrderedStepList = function(
 
 interface StepAccordionProps {
   viewState: ViewState;
-  selectedTrainerSteps: StepItem[];
+  selectedTrainerSteps: Model<StepItemTraits[]>;
   t: TFunction;
   theme: DefaultTheme;
-  selectedTrainer: TrainerItem;
+  selectedTrainer: Model<TrainerItemTraits>;
   isShowingAllSteps: boolean;
   setIsShowingAllSteps: (bool: boolean) => void;
   isExpanded: boolean;
@@ -303,17 +304,18 @@ interface TrainerBarProps extends WithTranslation {
 
 export const TrainerBar = observer((props: TrainerBarProps) => {
   const { t, terria, theme, viewState } = props;
-  const { helpContent } = terria.configParameters;
+  const { helpItems } = terria.configParameters;
 
   // All these null guards are because we are rendering based on nested
-  // map-owner defined (helpContent)content which could be malformed
-  if (!viewState.trainerBarVisible || !helpContent) {
+  // map-owner defined (helpItems)content which could be malformed
+  if (!viewState.trainerBarVisible || !helpItems) {
     return null;
   }
 
   const selectedTrainer = getSelectedTrainerFromHelpContent(
     viewState,
-    helpContent
+    //@ts-ignore
+    helpItems
   );
   const selectedTrainerItems = selectedTrainer?.trainerItems;
 

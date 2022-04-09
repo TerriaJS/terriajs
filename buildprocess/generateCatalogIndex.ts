@@ -13,6 +13,7 @@ import MappableMixin from "../lib/ModelMixins/MappableMixin";
 import ReferenceMixin from "../lib/ModelMixins/ReferenceMixin";
 import CatalogGroup from "../lib/Models/Catalog/CatalogGroup";
 import registerCatalogMembers from "../lib/Models/Catalog/registerCatalogMembers";
+import CommonStrata from "../lib/Models/Definition/CommonStrata";
 import hasTraits from "../lib/Models/Definition/hasTraits";
 import { BaseModel } from "../lib/Models/Definition/Model";
 import { CatalogIndexFile } from "../lib/Models/SearchProviders/CatalogIndex";
@@ -268,8 +269,16 @@ export default async function generateCatalogIndex(
   registerCatalogMembers();
 
   try {
-    terria.configParameters.serverConfigUrl = `${baseUrl}serverconfig`;
-    terria.configParameters.corsProxyBaseUrl = `${baseUrl}proxy/`;
+    terria.configParameters.setTrait(
+      CommonStrata.user,
+      "serverConfigUrl",
+      `${baseUrl}serverconfig`
+    );
+    terria.configParameters.setTrait(
+      CommonStrata.user,
+      "corsProxyBaseUrl",
+      `${baseUrl}proxy/`
+    );
     await terria.start({ configUrl });
 
     await terria.loadInitSources();

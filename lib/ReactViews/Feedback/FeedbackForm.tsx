@@ -77,7 +77,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
     window.addEventListener("keydown", this.escKeyListener, true);
     this.setState({
       commentIsValid:
-        this.props.viewState.terria.configParameters.feedbackMinLength === 0
+        this.props.viewState.terria.configParameters.feedback.minLength === 0
     });
   }
 
@@ -114,7 +114,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
     });
     if (
       this.state.comment.replace(/\s+/g, " ").length >=
-      this.props.viewState.terria.configParameters.feedbackMinLength!
+      this.props.viewState.terria.configParameters.feedback.minLength
     ) {
       this.setState({
         commentIsValid: true
@@ -137,7 +137,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
 
     if (
       this.state.comment.length >=
-      this.props.viewState.terria.configParameters.feedbackMinLength!
+      this.props.viewState.terria.configParameters.feedback.minLength
     ) {
       this.state.isSending = true;
       sendFeedback({
@@ -167,12 +167,14 @@ class FeedbackForm extends React.Component<IProps, IState> {
   render() {
     const { t, viewState, theme } = this.props;
     const preamble = parseCustomMarkdownToReact(
-      useTranslationIfExists(viewState.terria.configParameters.feedbackPreamble)
+      useTranslationIfExists(
+        viewState.terria.configParameters.feedback.preamble
+      )
     );
-    const postamble = viewState.terria.configParameters.feedbackPostamble
+    const postamble = viewState.terria.configParameters.feedback.postamble
       ? parseCustomMarkdownToReact(
           useTranslationIfExists(
-            viewState.terria.configParameters.feedbackPostamble
+            viewState.terria.configParameters.feedback.postamble
           )
         )
       : undefined;
@@ -263,7 +265,8 @@ class FeedbackForm extends React.Component<IProps, IState> {
             {!this.state.commentIsValid && (
               <WarningText>
                 {t("feedback.minLength", {
-                  minLength: viewState.terria.configParameters.feedbackMinLength
+                  minLength:
+                    viewState.terria.configParameters.feedback.minLength
                 })}
               </WarningText>
             )}
@@ -302,7 +305,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
               styledMinWidth={"80px"}
               disabled={
                 this.state.comment.length <
-                  viewState.terria.configParameters.feedbackMinLength! ||
+                  viewState.terria.configParameters.feedback.minLength ||
                 this.state.isSending
               }
             >
@@ -376,32 +379,34 @@ interface StyledLabelProps {
   spacingBottom?: boolean;
 }
 
-const StyledLabel: React.FC<StyledLabelProps> = (props: StyledLabelProps) => {
-  const { viewState, label, textProps } = props;
-  const id = useUID();
-  const childrenWithId = React.Children.map(props.children, child => {
-    // checking isValidElement is the safe way and avoids a typescript error too
-    if (React.isValidElement(child)) {
-      return React.cloneElement(child, { id: id });
-    }
-    return child;
-  });
-
-  return (
-    <Box column>
-      {label && (
-        <Text as={"label"} htmlFor={id} css={"p {margin: 0;}"} {...textProps}>
-          {parseCustomMarkdownToReactWithOptions(`${label}:`, {
-            injectTermsAsTooltips: true,
-            tooltipTerms: viewState.terria.configParameters.helpContentTerms
-          })}
-        </Text>
-      )}
-      {childrenWithId}
-      {props.spacingBottom && <Spacing bottom={2} />}
-    </Box>
-  );
-};
+const StyledLabel: React.FC<StyledLabelProps> = observer(
+  (props: StyledLabelProps) => {
+    const { viewState, label, textProps } = props;
+    const id = useUID();
+    const childrenWithId = React.Children.map(props.children, child => {
+      // checking isValidElement is the safe way and avoids a typescript error too
+      if (React.isValidElement(child)) {
+        return React.cloneElement(child, { id: id });
+      }
+      return child;
+    });
+    const terms: any = viewState.terria.configParameters.helpTerms;
+    return (
+      <Box column>
+        {label && (
+          <Text as={"label"} htmlFor={id} css={"p {margin: 0;}"} {...textProps}>
+            {parseCustomMarkdownToReactWithOptions(`${label}:`, {
+              injectTermsAsTooltips: true,
+              tooltipTerms: terms
+            })}
+          </Text>
+        )}
+        {childrenWithId}
+        {props.spacingBottom && <Spacing bottom={2} />}
+      </Box>
+    );
+  }
+);
 
 const Form = styled(Box).attrs({
   overflowY: "auto",
