@@ -1,5 +1,6 @@
 import React from "react";
 import TestRenderer, { act, ReactTestRenderer } from "react-test-renderer";
+import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import WorkflowPanel from "../../../lib/ReactViews/Workflow/WorkflowPanel";
@@ -13,8 +14,12 @@ describe("WorkflowPanel", function() {
     terria = new Terria({
       baseUrl: "./"
     });
-    terria.configParameters.regionMappingDefinitionsUrl =
-      "./data/regionMapping.json";
+    terria.configParameters.setTrait(
+      CommonStrata.override,
+      "regionMappingDefinitionsUrl",
+      "./data/regionMapping.json"
+    );
+
     viewState = new ViewState({
       terria,
       catalogSearchProvider: undefined,
