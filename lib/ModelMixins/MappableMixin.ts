@@ -13,7 +13,7 @@ import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
 
 // Unfortunately Cesium does not declare a single interface that represents a primitive,
 // but here is what primitives have in common:
-interface AbstractPrimitive {
+export interface AbstractPrimitive {
   show: boolean;
   destroy(): void;
   isDestroyed(): boolean;
@@ -40,7 +40,7 @@ export namespace ImageryParts {
 }
 
 export function isPrimitive(mapItem: MapItem): mapItem is AbstractPrimitive {
-  return "destroy" in mapItem;
+  return "isDestroyed" in mapItem;
 }
 
 export function isTerrainProvider(
