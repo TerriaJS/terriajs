@@ -103,7 +103,7 @@ export async function buildShortShareLink(
 
 /**
  * Returns just the JSON that defines the current view.
- * @param  {import("../../../../Models/Terria").default} terria The Terria object.
+ * @param  {Terria} terria The Terria object.
  * @param  {ViewState} [viewState] Current viewState.
  * @return {Object}
  */
