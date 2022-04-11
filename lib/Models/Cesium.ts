@@ -532,6 +532,7 @@ export default class Cesium extends GlobeOrMap {
   }
 
   private observeModelLayer() {
+    let prevMapItems: MapItem[] = [];
     return autorun(() => {
       // TODO: Look up the type in a map and call the associated function.
       //       That way the supported types of map items is extensible.
@@ -597,16 +598,15 @@ export default class Cesium extends GlobeOrMap {
       }
 
       const allPrimitives = this._allMapItems.filter(isPrimitive);
+      const prevPrimitives = prevMapItems.filter(isPrimitive);
+      const primitives = this.scene.primitives;
 
       // Remove deleted primitives
-      const primitives = this.scene.primitives;
-      // Iterate backwards because we're removing items.
-      for (let i = this.scene.primitives.length - 1; i >= 0; i--) {
-        const prim = primitives.get(i);
-        if (isPrimitive(prim) && allPrimitives.indexOf(prim) === -1) {
-          this.scene.primitives.remove(prim);
+      prevPrimitives.forEach(primitive => {
+        if (!allPrimitives.includes(primitive)) {
+          primitives.remove(primitive);
         }
-      }
+      });
 
       // Add new primitives
       allPrimitives.forEach(primitive => {
@@ -615,6 +615,7 @@ export default class Cesium extends GlobeOrMap {
         }
       });
 
+      prevMapItems = this._allMapItems;
       this.notifyRepaintRequired();
     });
   }
