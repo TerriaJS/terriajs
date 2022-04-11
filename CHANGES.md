@@ -1,7 +1,11 @@
 Change Log
 ==========
 
-#### next release (8.1.27)
+#### next release (8.1.28)
+
+* [The next improvement]
+
+#### 8.1.27 - 2022-04-08
 
 * **Breaking changes:**
   * Multiple changes to `GtfsCatalogItem`:
