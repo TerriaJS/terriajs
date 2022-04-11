@@ -1,3 +1,4 @@
+import { get as _get } from "lodash-es";
 import { computed, IReactionDisposer, observable, runInAction } from "mobx";
 import { createTransformer, ITransformer } from "mobx-utils";
 import Pbf from "pbf";
@@ -20,7 +21,6 @@ import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
-import { JsonObject } from "../../../Core/Json";
 import loadArrayBuffer from "../../../Core/loadArrayBuffer";
 import TerriaError from "../../../Core/TerriaError";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
@@ -170,8 +170,8 @@ export default class GtfsCatalogItem extends MappableMixin(
       if (!entity.model) {
         if (this._coloredModels) {
           const gtfsEntity: FeedEntity = data.featureInfo?.get("entity");
-          const value = jsonPathLike(
-            gtfsEntity as JsonObject,
+          const value = _get(
+            gtfsEntity,
             this.model.colorModelsByProperty.property!
           );
           if (value !== undefined) {
@@ -525,20 +525,4 @@ function updateBbox(lat: number, lon: number, rectangle: RectangleExtent) {
   if (lat < rectangle.south) rectangle.south = lat;
   if (lon > rectangle.east) rectangle.east = lon;
   if (lat > rectangle.north) rectangle.north = lat;
-}
-
-/**
- *
- * @param data Object
- * @param path Path in period-separated form. E.g. vehicle.position.compass
- * @returns The value at the path inside data
- */
-function jsonPathLike(data: JsonObject, path: string): any {
-  if (data === undefined) return undefined;
-  const index = path.indexOf(".");
-  if (index === -1) return data[path];
-  return jsonPathLike(
-    data[path.slice(0, index)] as JsonObject,
-    path.slice(index + 1)
-  );
 }
