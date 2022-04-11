@@ -3,21 +3,21 @@ Change Log
 
 #### next release (8.1.28)
 
-* [The next improvement]
-
-#### 8.1.27 - 2022-04-08
-
 * **Breaking changes:**
   * Multiple changes to `GtfsCatalogItem`:
     * Removed `apiKey` in favour of more general `headers`
     * Removed unused `bearingDirectionProperty` & `compassDirectionProperty`
+* Added `colorModelsByProperty` to `GtfsCatalogItem` which will colour 1 model differently for different vehichles based on properties matched by regular expression. E.g. colour a vehicle model by which train line the vehicle is travelling on.
+* Fixed a bug where cross-origin billboard images threw errors in Leaflet mode when trying to recolour the image.
+* [The next improvement]
+
+#### 8.1.27 - 2022-04-08
+
 * Use CKAN Dataset `name` property for WMS `layers` as last resort.
 * Set CKAN Group will now set CKAN Item `name` in `definition` stratum.
 * Ignore GeoJSON Features with no geometry.
 * Fix feedback link styling.
 * Improve `CatalogIndexReference` error messages.
-* Added `colorModelsByProperty` to `GtfsCatalogItem` which will colour 1 model differently for different vehichles based on properties matched by regular expression. E.g. colour a vehicle model by which train line the vehicle is travelling on.
-* [The next improvement]
 
 #### 8.1.26 - 2022-04-05
 
