@@ -175,16 +175,14 @@ export default class GtfsCatalogItem extends MappableMixin(
             this.model.colorModelsByProperty.property!
           );
           if (value !== undefined) {
-            let breakLoop = false;
-            this.model.colorModelsByProperty.colorGroups.forEach(
-              (colorGroup, i) => {
-                if (breakLoop || colorGroup.regExp === undefined) return;
-                if (new RegExp(colorGroup.regExp).test(value)) {
-                  entity.model = this._coloredModels![i];
-                  breakLoop = true;
-                }
-              }
+            const index = this.model.colorModelsByProperty.colorGroups.findIndex(
+              colorGroup =>
+                colorGroup.regExp !== undefined &&
+                new RegExp(colorGroup.regExp).test(value)
             );
+            if (index !== -1) {
+              entity.model = this._coloredModels[index];
+            }
             entity.point = undefined;
           } else {
             entity.model = this._model;
@@ -337,9 +335,8 @@ export default class GtfsCatalogItem extends MappableMixin(
       coloredModel.color = new ConstantProperty(
         Color.fromCssColorString(color ?? "white")
       );
-      coloredModel.colorBlendMode = new ConstantProperty(
-        ColorBlendMode.REPLACE
-      );
+      coloredModel.colorBlendMode = new ConstantProperty(ColorBlendMode.MIX);
+      coloredModel.colorBlendAmount = new ConstantProperty(0.7);
       return coloredModel;
     });
   }
