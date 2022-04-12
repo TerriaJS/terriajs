@@ -68,6 +68,7 @@ Change Log
 * Add `UrlTempalteImageryCatalogItem`, rename `RasterLayerTraits` to `ImageryProviderTraits` and add some properties.
 * Change NaturalEarth II basemap to use `url-template-imagery`
 * Remove Gnaf API related files as the service was terminated.
+* `mapItems` can now return arbitrary Cesium primitives.
 * [The next improvement]
 
 #### 8.1.25 - 2022-03-16
@@ -302,8 +303,6 @@ Change Log
   * Replace `CompositeBarItemController` `visible` setter with `setVisible` function
 * Use `yarn` in CI scripts (and upgrade node to v14)
 * Fix app crash when previewing a nested reference in the catalog (eg when viewing an indexed search result where the result is a reference).
-* `mapItems` can now return arbitrary Cesium primitives.
-* [The next improvement]
 * Ported feaure from v7 to set WMS layers property from the value of `LAYERS`, `layers` or `typeName` from query string of CKAN resource URL.
 
 #### 8.1.4 - 2021-10-15
