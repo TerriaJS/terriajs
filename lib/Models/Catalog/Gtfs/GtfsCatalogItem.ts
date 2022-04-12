@@ -19,7 +19,6 @@ import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 import ColorBlendMode from "terriajs-cesium/Source/Scene/ColorBlendMode";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
-import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadArrayBuffer from "../../../Core/loadArrayBuffer";
 import TerriaError from "../../../Core/TerriaError";
@@ -454,9 +453,7 @@ export default class GtfsCatalogItem extends MappableMixin(
 
     if (this.image !== undefined && this.image !== null) {
       billboard = new BillboardGraphics({
-        image: new ConstantProperty(
-          new URI(this.image).absoluteTo(this.terria.baseUrl).toString()
-        ),
+        image: new ConstantProperty(this.image),
         heightReference: new ConstantProperty(
           HeightReference.RELATIVE_TO_GROUND
         ),

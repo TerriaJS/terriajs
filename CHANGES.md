@@ -1,12 +1,13 @@
 Change Log
 ==========
 
-#### next release (8.1.28)
+#### next release (8.2.0)
 
 * **Breaking changes:**
   * Multiple changes to `GtfsCatalogItem`:
     * Removed `apiKey` in favour of more general `headers`
     * Removed unused `bearingDirectionProperty` & `compassDirectionProperty`
+    * `image` is no longer resolved relative to the TerriaJS asset folder. This will allow using relative URLs for assets that aren't inside the TerriaJS asset folder. Any relative `image` urls should now have "build/TerriaJS/" prepended (the value of `terria.baseUrl`).
 * Added `colorModelsByProperty` to `GtfsCatalogItem` which will colour 1 model differently for different vehichles based on properties matched by regular expression. E.g. colour a vehicle model by which train line the vehicle is travelling on.
 * Fixed a bug where cross-origin billboard images threw errors in Leaflet mode when trying to recolour the image.
 * [The next improvement]
