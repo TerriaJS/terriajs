@@ -8,9 +8,12 @@ Change Log
     * Removed `apiKey` in favour of more general `headers`
     * Removed unused `bearingDirectionProperty` & `compassDirectionProperty`
     * `image` is no longer resolved relative to the TerriaJS asset folder. This will allow using relative URLs for assets that aren't inside the TerriaJS asset folder. Any relative `image` urls should now have "build/TerriaJS/" prepended (the value of `terria.baseUrl`).
+  * Changed translation resolution. Now the "translation" namespace loads only from `${terria.baseUrl}/languages/*/translation.json` (TerriaJS assets) and "languageOverrides" loads from `languages/{{lng}}/languageOverrides.json` (a TerriaMap's assets)
 * Added `colorModelsByProperty` to `GtfsCatalogItem` which will colour 1 model differently for different vehichles based on properties matched by regular expression. E.g. colour a vehicle model by which train line the vehicle is travelling on.
 * Fixed a bug where cross-origin billboard images threw errors in Leaflet mode when trying to recolour the image.
 * Changed rounding of the numbers of the countdown timer in the workbench UI for items that use polling. The timer wil now show 00:00 for at most 500ms (instead of a full second). This means that for timers that are a multiple of 1000ms the timer will now show 00:01 for the last second before polling, instead of 00:00.
+* Removed EN & FR translation files from bundle. All translation files are now loaded on demand.
+* Moved translation files from `lib/Language/*/translation.json` to `wwwroot/languages/*/translation.json`.
 * [The next improvement]
 
 #### 8.1.27 - 2022-04-08
