@@ -1,5 +1,6 @@
 import { Document } from "flexsearch";
 import { action, observable, runInAction } from "mobx";
+import { isJsonObject } from "../../Core/Json";
 import loadBlob, { isZip, parseZipJsonBlob } from "../../Core/loadBlob";
 import loadJson from "../../Core/loadJson";
 import CatalogIndexReferenceTraits from "../../Traits/TraitsClasses/CatalogIndexReferenceTraits";
@@ -111,7 +112,9 @@ export default class CatalogIndex {
 
       for (let idx = 0; idx < indexModels.length; idx++) {
         const [id, model] = indexModels[idx];
+        if (!isJsonObject(model, false)) return;
         const reference = new CatalogIndexReference(id, this.terria);
+
         updateModelFromJson(reference, CommonStrata.definition, model);
 
         if (model.shareKeys) {

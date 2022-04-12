@@ -23,9 +23,9 @@ import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import { BaseModel } from "../../lib/Models/Definition/Model";
 import Feature from "../../lib/Models/Feature";
 import {
-  isInitData,
-  isInitDataPromise,
-  isInitUrl
+  isInitFromData,
+  isInitFromDataPromise,
+  isInitFromUrl
 } from "../../lib/Models/InitSource";
 import Terria from "../../lib/Models/Terria";
 import ViewerMode from "../../lib/Models/ViewerMode";
@@ -180,8 +180,8 @@ describe("Terria", function() {
           })
           .then(function() {
             expect(terria.initSources.length).toEqual(1);
-            expect(isInitUrl(terria.initSources[0])).toEqual(true);
-            if (isInitUrl(terria.initSources[0])) {
+            expect(isInitFromUrl(terria.initSources[0])).toEqual(true);
+            if (isInitFromUrl(terria.initSources[0])) {
               expect(terria.initSources[0].initUrl).toEqual(
                 mapConfigBasicJson.aspects["terria-config"]
                   .initializationUrls[0]
@@ -218,10 +218,10 @@ describe("Terria", function() {
         });
 
         expect(terria.initSources.length).toBe(1);
-        expect(isInitDataPromise(terria.initSources[0])).toBeTruthy(
+        expect(isInitFromDataPromise(terria.initSources[0])).toBeTruthy(
           "Expected initSources[0] to be an InitDataPromise"
         );
-        if (isInitDataPromise(terria.initSources[0])) {
+        if (isInitFromDataPromise(terria.initSources[0])) {
           const data = await terria.initSources[0].data;
           // JSON parse & stringify to avoid a problem where I think catalog-converter
           //  can return {"id": undefined} instead of no "id"
@@ -259,7 +259,7 @@ describe("Terria", function() {
 
         /** Ensure inlined data catalog from init sources */
         expect(terria.initSources.length).toEqual(1);
-        if (isInitData(terria.initSources[0])) {
+        if (isInitFromData(terria.initSources[0])) {
           expect(terria.initSources[0].data.catalog).toEqual(
             inlineInit.catalog
           );
@@ -486,7 +486,7 @@ describe("Terria", function() {
         );
         expect(terria.initSources.length).toBe(1);
         expect(terria.initSources[0].name).toMatch(/my-story/);
-        if (!isInitData(terria.initSources[0]))
+        if (!isInitFromData(terria.initSources[0]))
           throw new Error("Expected initSource to be InitData from my-story");
 
         expect(toJS(terria.initSources[0].data)).toEqual(
@@ -500,7 +500,7 @@ describe("Terria", function() {
         );
         expect(terria.initSources.length).toBe(1);
         expect(terria.initSources[0].name).toMatch(/my-story/);
-        if (!isInitData(terria.initSources[0]))
+        if (!isInitFromData(terria.initSources[0]))
           throw new Error("Expected initSource to be InitData from my-story");
 
         expect(toJS(terria.initSources[0].data)).toEqual(
@@ -1227,6 +1227,39 @@ describe("Terria", function() {
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Cesium);
       expect(terria.mainViewer.viewerOptions.useTerrain).toBe(false);
       expect(getLocalPropertySpy).toHaveBeenCalledWith("viewermode");
+    });
+
+    it("uses `settings` in initsource", async () => {
+      const setBaseMapSpy = spyOn(terria.mainViewer, "setBaseMap");
+
+      await terria.start({ configUrl: "" });
+
+      terria.applyInitData({
+        initData: {
+          settings: {
+            baseMaximumScreenSpaceError: 1,
+            useNativeResolution: true,
+            alwaysShowTimeline: true,
+            baseMapId: "basemap-natural-earth-II",
+            terrainSplitDirection: -1,
+            depthTestAgainstTerrainEnabled: true
+          }
+        }
+      });
+
+      await terria.loadInitSources();
+
+      expect(terria.baseMaximumScreenSpaceError).toBe(1);
+      expect(terria.useNativeResolution).toBeTruthy;
+      expect(terria.timelineStack.alwaysShowingTimeline).toBeTruthy();
+      expect(setBaseMapSpy).toHaveBeenCalledWith(
+        terria.baseMapsModel.baseMapItems.find(
+          item => item.item.uniqueId === "basemap-natural-earth-II"
+        )?.item
+      );
+
+      expect(terria.terrainSplitDirection).toBe(ImagerySplitDirection.LEFT);
+      expect(terria.depthTestAgainstTerrainEnabled).toBeTruthy();
     });
   });
 

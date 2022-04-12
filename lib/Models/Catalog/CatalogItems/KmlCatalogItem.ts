@@ -13,18 +13,21 @@ import Property from "terriajs-cesium/Source/DataSources/Property";
 import isDefined from "../../../Core/isDefined";
 import readXml from "../../../Core/readXml";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
-import MappableMixin from "../../../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import KmlCatalogItemTraits from "../../../Traits/TraitsClasses/KmlCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
+import HasLocalData from "../../HasLocalData";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 const kmzRegex = /\.kmz$/i;
 
-class KmlCatalogItem extends MappableMixin(
-  UrlMixin(CatalogMemberMixin(CreateModel(KmlCatalogItemTraits)))
-) {
+class KmlCatalogItem
+  extends MappableMixin(
+    UrlMixin(CatalogMemberMixin(CreateModel(KmlCatalogItemTraits)))
+  )
+  implements HasLocalData {
   static readonly type = "kml";
   get type() {
     return KmlCatalogItem.type;
