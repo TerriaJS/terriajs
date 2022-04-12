@@ -1,7 +1,11 @@
 Change Log
 ==========
 
-#### next release (8.2.0)
+#### next release (8.2.1)
+
+* [The next improvement]
+
+#### 8.2.0 - 2022-04-12
 
 * **Breaking changes:**
   * Multiple changes to `GtfsCatalogItem`:
@@ -16,7 +20,6 @@ Change Log
 * Added `ModelJson` interface - which provides loose type hints for Model JSON.
 * Added `settings` object to `InitSourceData` - provides `baseMaximumScreenSpaceError, useNativeResolution, alwaysShowTimeline, baseMapId, terrainSplitDirection, depthTestAgainstTerrainEnabled` - these properties are now saved in share links/stories.
 * Moved `setAlwaysShowTimeline` logic from `SettingsPanel` to `TimelineStack.ts`.
-* [The next improvement]
 
 #### 8.1.27 - 2022-04-08
 
