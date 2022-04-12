@@ -34,7 +34,7 @@ const TimerSection = observer(
 
     getCountdownDuration() {
       // How many seconds until our next update?
-      return Math.floor(
+      return Math.round(
         (this.props.item.nextScheduledUpdateTime.getTime() -
           new Date().getTime()) /
           1000
