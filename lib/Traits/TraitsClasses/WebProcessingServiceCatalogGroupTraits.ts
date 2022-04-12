@@ -13,10 +13,4 @@ export default class WebProcessingServiceCatalogGroupTraits extends mixTraits(
   GetCapabilitiesTraits,
   CatalogMemberTraits,
   LegendOwnerTraits
-) {
-  @anyTrait({
-    name: "Item Properties",
-    description: "Properties to be set for each member of this WPS group"
-  })
-  itemProperties?: JsonObject;
-}
+) {}

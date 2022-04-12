@@ -7,9 +7,9 @@ import Intersections2D from "terriajs-cesium/Source/Core/Intersections2D";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import isDefined from "../Core/isDefined";
-import JSEarthGravityModel1996 from "../Map/EarthGravityModel1996";
-import prettifyCoordinates from "../Map/prettifyCoordinates";
-import prettifyProjection from "../Map/prettifyProjection";
+import JSEarthGravityModel1996 from "../Map/Vector/EarthGravityModel1996";
+import prettifyCoordinates from "../Map/Vector/prettifyCoordinates";
+import prettifyProjection from "../Map/Vector/prettifyProjection";
 import Terria from "../Models/Terria";
 
 // TypeScript 3.6.3 can't tell JSEarthGravityModel1996 is a class and reports

@@ -57,20 +57,17 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import formatPropertyValue from "../Core/formatPropertyValue";
 import hashFromString from "../Core/hashFromString";
 import isDefined from "../Core/isDefined";
-import { isJsonObject, JsonObject, isJsonNumber } from "../Core/Json";
+import { isJsonNumber, isJsonObject, JsonObject } from "../Core/Json";
 import { isJson } from "../Core/loadBlob";
 import makeRealPromise from "../Core/makeRealPromise";
 import StandardCssColors from "../Core/StandardCssColors";
-import TerriaError, {
-  networkRequestError,
-  TerriaErrorSeverity
-} from "../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../Core/TerriaError";
 import ProtomapsImageryProvider, {
   GeojsonSource,
   GEOJSON_SOURCE_LAYER_NAME,
   ProtomapsData
-} from "../Map/ProtomapsImageryProvider";
-import Reproject from "../Map/Reproject";
+} from "../Map/ImageryProvider/ProtomapsImageryProvider";
+import Reproject from "../Map/Vector/Reproject";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
@@ -79,6 +76,11 @@ import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
+import { ViewingControl } from "../Models/ViewingControls";
+import * as SelectableDimensionWorkflow from "../Models/Workflows/SelectableDimensionWorkflow";
+import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
+import VectorStylingWorkflow from "../Models/Workflows/VectorStylingWorkflow";
+import Icon from "../Styled/Icon";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
 import LegendTraits from "../Traits/TraitsClasses/LegendTraits";
@@ -188,6 +190,13 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
     /** Geojson FeatureCollection in WGS84 */
     @observable.ref _readyData?: FeatureCollectionWithCrs;
+
+    /** Number of features in _readyData FeatureCollection */
+    @observable featureCounts: {
+      point: number;
+      line: number;
+      polygon: number;
+    } = { point: 0, line: 0, polygon: 0 };
 
     constructor(...args: any[]) {
       super(...args);
@@ -420,6 +429,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
         // Also check for how many features have simply-style properties
         let numFeaturesWithSimpleStyle = 0;
+        const featureCounts = { point: 0, line: 0, polygon: 0 };
 
         const features = geoJsonWgs84.features;
         // If filtering features - Clear all features and re add them if props match filterByProperties
@@ -427,6 +437,11 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
         for (let i = 0; i < features.length; i++) {
           const feature = features[i];
+
+          // Ignore features without geometry or type
+          if (!isJsonObject(feature.geometry, false) || !feature.geometry.type)
+            continue;
+
           if (!feature.properties) {
             feature.properties = {};
           }
@@ -445,10 +460,29 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           const properties = feature.properties!;
           properties[FEATURE_ID_PROP] = i;
 
+          if (
+            feature.geometry.type === "Point" ||
+            feature.geometry.type === "MultiPoint"
+          ) {
+            featureCounts.point++;
+          } else if (
+            feature.geometry.type === "LineString" ||
+            feature.geometry.type === "MultiLineString"
+          ) {
+            featureCounts.line++;
+          } else if (
+            feature.geometry.type === "Polygon" ||
+            feature.geometry.type === "MultiPolygon"
+          ) {
+            featureCounts.polygon++;
+          }
+
           if (useMvt && SIMPLE_STYLE_KEYS.find(key => properties[key])) {
             numFeaturesWithSimpleStyle++;
           }
         }
+
+        runInAction(() => (this.featureCounts = featureCounts));
 
         // If more than 50% of features have simple style properties - disable table styling
         if (numFeaturesWithSimpleStyle / geoJsonWgs84.features.length >= 0.5) {
@@ -666,7 +700,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
                 this.stylesWithDefaults.markerColor.toCssColorString()
               ),
               width: this.stylesWithDefaults.markerStrokeWidth,
-              stroke: this.stylesWithDefaults.stroke.toCssColorString(),
+              stroke: this.stylesWithDefaults.markerStroke.toCssColorString(),
               opacity: this.stylesWithDefaults.markerOpacity
             }),
             minzoom: 0,
@@ -792,9 +826,10 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     @computed
     get stylesWithDefaults() {
       const defaults = {
-        markerSize: 20,
+        markerSize: 24,
         markerColor: getRandomCssColor(this.name ?? ""),
         stroke: getColor(this.terria.baseMapContrastColor),
+        markerStroke: getColor(this.terria.baseMapContrastColor),
         polygonStroke: getColor(this.terria.baseMapContrastColor),
         polylineStroke: getRandomCssColor(this.name ?? ""),
         markerStrokeWidth: 1,
@@ -819,12 +854,20 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           defaults.markerColor
         ),
         stroke: defaultColor(this.style.stroke, defaults.stroke),
-        polygonStroke: defaultColor(this.style.stroke, defaults.polygonStroke),
-        polylineStroke: defaultColor(
-          this.style.stroke,
-          defaults.polylineStroke
+        polygonStroke: defaultColor(
+          this.style["polygon-stroke"] ?? this.style.stroke,
+          defaults.polygonStroke
         ),
         // Note these specific stroke widths are only used for geojson-vt
+
+        polylineStroke: defaultColor(
+          this.style["polyline-stroke"] ?? this.style.stroke,
+          defaults.polylineStroke
+        ),
+        markerStroke: defaultColor(
+          this.style["marker-stroke"] ?? this.style.stroke,
+          defaults.markerStroke
+        ),
         markerStrokeWidth:
           this.style["marker-stroke-width"] ??
           this.style["stroke-width"] ??
@@ -850,6 +893,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         options.stroke.alpha = this.style["stroke-opacity"];
         options.polygonStroke.alpha = this.style["stroke-opacity"];
         options.polylineStroke.alpha = this.style["stroke-opacity"];
+        options.markerStroke.alpha = this.style["stroke-opacity"];
       }
 
       if (isDefined(this.style["fill-opacity"])) {
@@ -1123,6 +1167,48 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
      */
     async forceLoadTableData() {
       return undefined;
+    }
+
+    @computed get viewingControls(): ViewingControl[] {
+      return this.useMvt && this.activeStyle // Note we want falsy here for activeStyle ("" is equivalent to undefined)
+        ? [
+            // We replace the TableStylingWorkflow with VectorStylingWorkflow
+            ...super.viewingControls.filter(
+              v => v.id !== TableStylingWorkflow.type
+            ),
+            {
+              id: VectorStylingWorkflow.type,
+              name: "Edit Style",
+              onClick: viewState => {
+                runInAction(() => {
+                  SelectableDimensionWorkflow.runWorkflow(
+                    viewState,
+                    new VectorStylingWorkflow(this)
+                  );
+                });
+              },
+              icon: { glyph: Icon.GLYPHS.layers }
+            }
+          ]
+        : [];
+    }
+
+    /** This is a temporary button which shows in the Legend in the Workbench, if custom styling has been applied. */
+    @computed get legendButton() {
+      // Show the button if TableMixin.legendButton is showing - or we have values in style User stratum
+      return super.legendButton ||
+        filterOutUndefined(Object.values(this.style.strata.get("user") ?? {}))
+          .length > 0
+        ? {
+            title: "Custom",
+            onClick: action(() => {
+              SelectableDimensionWorkflow.runWorkflow(
+                this.terria,
+                new VectorStylingWorkflow(this)
+              );
+            })
+          }
+        : undefined;
     }
   }
   return GeoJsonMixin;
@@ -1539,7 +1625,7 @@ export function getColor(color: String | string | Color): Color {
   }
 }
 
-function parseMarkerSize(sizeString?: string): number | undefined {
+export function parseMarkerSize(sizeString?: string): number | undefined {
   const sizes: { [name: string]: number } = {
     small: 24,
     medium: 48,

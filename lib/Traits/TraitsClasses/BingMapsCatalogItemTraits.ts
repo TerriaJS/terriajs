@@ -5,11 +5,11 @@ import CatalogMemberTraits from "./CatalogMemberTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
-import RasterLayerTraits from "./RasterLayerTraits";
+import ImageryProviderTraits from "./ImageryProviderTraits";
 
 export default class BingMapsCatalogItemTraits extends mixTraits(
   LayerOrderingTraits,
-  RasterLayerTraits,
+  ImageryProviderTraits,
   MappableTraits,
   CatalogMemberTraits,
   LegendOwnerTraits

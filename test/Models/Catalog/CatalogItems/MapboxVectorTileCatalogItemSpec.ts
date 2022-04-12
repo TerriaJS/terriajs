@@ -1,6 +1,6 @@
 import { action } from "mobx";
 import { LineSymbolizer, PolygonSymbolizer } from "terriajs-protomaps";
-import ProtomapsImageryProvider from "../../../../lib/Map/ProtomapsImageryProvider";
+import ProtomapsImageryProvider from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import MapboxVectorTileCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/MapboxVectorTileCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";

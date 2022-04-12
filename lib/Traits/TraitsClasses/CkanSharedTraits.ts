@@ -7,13 +7,6 @@ import CkanResourceFormatTraits from "./CkanResourceFormatTraits";
 import ReferenceTraits from "./ReferenceTraits";
 
 export default class CkanSharedTraits extends mixTraits(ReferenceTraits) {
-  @anyTrait({
-    name: "Item Properties",
-    description:
-      "An object of properties that will be set on the item created from the CKAN resource."
-  })
-  itemProperties?: JsonObject;
-
   @primitiveTrait({
     type: "boolean",
     name: "Use resource name",

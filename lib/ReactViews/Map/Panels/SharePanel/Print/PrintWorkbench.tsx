@@ -1,19 +1,18 @@
 import React from "react";
-import Workbench from "../../../../../Models/Workbench";
-
-import CatalogMemeberMixin, {
+import CatalogMemberMixin, {
   getName
 } from "../../../../../ModelMixins/CatalogMemberMixin";
+import DiscretelyTimeVaryingMixin from "../../../../../ModelMixins/DiscretelyTimeVaryingMixin";
 import MappableMixin from "../../../../../ModelMixins/MappableMixin";
 import { BaseModel } from "../../../../../Models/Definition/Model";
-import DiscretelyTimeVaryingMixin from "../../../../../ModelMixins/DiscretelyTimeVaryingMixin";
-import Legend from "../../../../Workbench/Controls/Legend";
 import SelectableDimensions, {
   DEFAULT_PLACEMENT,
   filterSelectableDimensions,
-  findSelectedValueName
-} from "../../../../../Models/SelectableDimensions";
-import CatalogMemberMixin from "../../../../../ModelMixins/CatalogMemberMixin";
+  findSelectedValueName,
+  isGroup
+} from "../../../../../Models/SelectableDimensions/SelectableDimensions";
+import Workbench from "../../../../../Models/Workbench";
+import Legend from "../../../../Workbench/Controls/Legend";
 
 interface Props {
   workbench: Workbench;
@@ -23,11 +22,13 @@ const renderDisplayVariables = (catalogItem: BaseModel) => {
   if (SelectableDimensions.is(catalogItem)) {
     return filterSelectableDimensions(DEFAULT_PLACEMENT)(
       catalogItem.selectableDimensions
-    ).map((dim, key) => (
-      <div key={key}>
-        {dim.name}: {findSelectedValueName(dim)}
-      </div>
-    ));
+    ).map((dim, key) =>
+      !isGroup(dim) ? (
+        <div key={key}>
+          {dim.name}: {findSelectedValueName(dim)}
+        </div>
+      ) : null
+    );
   }
   return null;
 };

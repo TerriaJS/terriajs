@@ -1,14 +1,6 @@
 import { Share } from "catalog-converter";
 import i18next from "i18next";
-import {
-  action,
-  computed,
-  observable,
-  reaction,
-  runInAction,
-  toJS,
-  when
-} from "mobx";
+import { action, computed, observable, runInAction, toJS, when } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
@@ -55,7 +47,7 @@ import { getUriWithoutPath } from "../Core/uriHelpers";
 import PickedFeatures, {
   featureBelongsToCatalogItem,
   isProviderCoordsMap
-} from "../Map/PickedFeatures";
+} from "../Map/PickedFeatures/PickedFeatures";
 import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
@@ -109,6 +101,7 @@ import ShareDataService from "./ShareDataService";
 import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
+import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
 
 // import overrides from "../Overrides/defaults.jsx";
 
@@ -502,6 +495,12 @@ export default class Terria {
    */
   @observable
   mapInteractionModeStack: MapInteractionMode[] = [];
+
+  @observable isWorkflowPanelActive = false;
+
+  /** Gets or sets the active SelectableDimensionWorkflow, if defined, then the workflow will be displayed using `WorkflowPanel` */
+  @observable
+  selectableDimensionWorkflow?: SelectableDimensionWorkflow;
 
   @computed
   get baseMapContrastColor() {

@@ -1,12 +1,12 @@
+import i18next from "i18next";
 import { computed, runInAction } from "mobx";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Definition/Model";
 import SelectableDimensions, {
   SelectableDimension
-} from "../Models/SelectableDimensions";
-import ShadowTraits, { Shadows } from "../Traits/TraitsClasses/ShadowTraits";
-import i18next from "i18next";
+} from "../Models/SelectableDimensions/SelectableDimensions";
+import ShadowTraits from "../Traits/TraitsClasses/ShadowTraits";
 
 type BaseType = Model<ShadowTraits> & SelectableDimensions;
 
@@ -47,8 +47,13 @@ function ShadowMixin<T extends Constructor<BaseType>>(Base: T) {
           ],
           selectedId: this.shadows,
           disable: !this.showShadowUi,
-          setDimensionValue: (strata: string, shadow: Shadows) =>
-            runInAction(() => this.setTrait(strata, "shadows", shadow))
+          setDimensionValue: (strata: string, shadow: string | undefined) =>
+            shadow === "CAST" ||
+            shadow === "RECEIVE" ||
+            shadow === "BOTH" ||
+            shadow === "NONE"
+              ? runInAction(() => this.setTrait(strata, "shadows", shadow))
+              : null
         }
       ];
     }

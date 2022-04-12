@@ -30,8 +30,8 @@ export class DomainSpecTraits extends ModelTraits {
   domainPropertyName?: string;
   @primitiveTrait({
     type: "string",
-    name: "Hierarchy Seperator",
-    description: "Hierarchy Seperator."
+    name: "Hierarchy Separator",
+    description: "Hierarchy Separator."
   })
   hierarchySeparator?: string;
   @primitiveTrait({
@@ -56,12 +56,6 @@ export default class CswCatalogGroupTraits extends mixTraits(
       "True to flatten the layers into a single list; false to use the layer hierarchy."
   })
   flatten?: boolean = false;
-
-  @anyTrait({
-    name: "Item Properties",
-    description: "Sets traits on records"
-  })
-  itemProperties?: JsonObject;
 
   @objectTrait({
     type: DomainSpecTraits,

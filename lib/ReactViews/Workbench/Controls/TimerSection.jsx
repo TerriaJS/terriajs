@@ -1,9 +1,6 @@
-"use strict";
-
 import React from "react";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
-
 import createReactClass from "create-react-class";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Timer from "../../Generic/Timer/Timer";
@@ -37,7 +34,7 @@ const TimerSection = observer(
 
     getCountdownDuration() {
       // How many seconds until our next update?
-      return Math.floor(
+      return Math.round(
         (this.props.item.nextScheduledUpdateTime.getTime() -
           new Date().getTime()) /
           1000
@@ -140,4 +137,4 @@ const TimerSection = observer(
   })
 );
 
-module.exports = withTranslation()(TimerSection);
+export default withTranslation()(TimerSection);
