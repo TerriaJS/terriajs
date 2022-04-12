@@ -1,19 +1,22 @@
 Change Log
 ==========
 
-#### next release (8.1.27)
+#### next release (8.1.28)
 
-* Use CKAN Dataset `name` property for WMS `layers` as last resort.
-* Set CKAN Group will now set CKAN Item `name` in `definition` stratum.
-* Ignore GeoJSON Features with no geometry.
-* Fix feedback link styling.
-* Improve `CatalogIndexReference` error messages.
 * TSify `BuildShareLink`, `InitSourceData` and `ShareData`.
 * Add `HasLocalData` interface - which has `hasLocalData` property to implement
 * Add `ModelJson` interface - which provides loose type hints for Model JSON
 * Add `settings` object to `InitSourceData` - provides `baseMaximumScreenSpaceError, useNativeResolution, alwaysShowTimeline, baseMapId, terrainSplitDirection, depthTestAgainstTerrainEnabled` - these properties are now saved in share links/stories.
 * Move `setAlwaysShowTimeline` logic from `SettingsPanel` to `TimelineStack.ts`
 * [The next improvement]
+
+#### 8.1.27 - 2022-04-08
+
+* Use CKAN Dataset `name` property for WMS `layers` as last resort.
+* Set CKAN Group will now set CKAN Item `name` in `definition` stratum.
+* Ignore GeoJSON Features with no geometry.
+* Fix feedback link styling.
+* Improve `CatalogIndexReference` error messages.
 
 #### 8.1.26 - 2022-04-05
 
