@@ -117,6 +117,7 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
 
     if (isJsonObject(rest))
       updateModelFromJson(this, stratumId, rest).pushErrorTo(errors);
+    else errors.push(TerriaError.from("Invalid JSON object"));
 
     return new Result(
       undefined,

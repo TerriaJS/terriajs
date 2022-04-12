@@ -36,7 +36,7 @@ export default function sendFeedback(options: {
     : Promise.resolve("Not shared");
 
   return shareLinkPromise
-    ?.then(shareLink => {
+    .then(shareLink => {
       const feedbackData: Record<string, string | undefined> = {
         title: options.title,
         name: options.name,
