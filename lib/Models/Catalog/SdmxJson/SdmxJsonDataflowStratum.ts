@@ -33,7 +33,10 @@ import Model, { BaseModel } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import { MAX_SELECTABLE_DIMENSION_OPTIONS } from "../../SelectableDimensions";
+import {
+  MAX_SELECTABLE_DIMENSION_OPTIONS,
+  filterEnums
+} from "../../SelectableDimensions/SelectableDimensions";
 import SdmxJsonCatalogItem from "./SdmxJsonCatalogItem";
 import { loadSdmxJsonStructure, parseSdmxUrn } from "./SdmxJsonServerStratum";
 import {
@@ -779,7 +782,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     template += row(regionType?.description, `{{${regionType?.nameProp}}}`);
 
     // Get other dimension values
-    template += this.catalogItem.sdmxSelectableDimensions
+    template += filterEnums(this.catalogItem.sdmxSelectableDimensions)
       ?.filter(d => (d.name || d.id) && !d.disable && d.selectedId)
       .map(d => {
         const selectedOption = d.options?.find(o => o.id === d.selectedId);

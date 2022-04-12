@@ -8,7 +8,7 @@ import Cesium3DTile from "terriajs-cesium/Source/Scene/Cesium3DTile";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import makeRealPromise from "../../../Core/makeRealPromise";
-import PickedFeatures from "../../../Map/PickedFeatures";
+import PickedFeatures from "../../../Map/PickedFeatures/PickedFeatures";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import Cesium3dTilesMixin from "../../../ModelMixins/Cesium3dTilesMixin";
 import FeatureInfoMixin from "../../../ModelMixins/FeatureInfoMixin";

@@ -11,13 +11,18 @@ import Spacing from "../../../Styled/Spacing";
 import Text from "../../../Styled/Text";
 import Collapsible from "../../Custom/Collapsible/Collapsible";
 import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
+import { BaseModel } from "../../../Models/Definition/Model";
 
 @observer
 export default class ShortReport extends React.Component<{
-  item: CatalogMemberMixin.Instance;
+  item: BaseModel;
 }> {
-  clickShortReport(reportName: string | undefined, isOpen: boolean) {
-    const shortReportSections = this.props.item.shortReportSections;
+  clickShortReport(
+    item: CatalogMemberMixin.Instance,
+    reportName: string | undefined,
+    isOpen: boolean
+  ) {
+    const shortReportSections = item.shortReportSections;
     const clickedReport = shortReportSections.find(
       report => report.name === reportName
     );
@@ -27,7 +32,7 @@ export default class ShortReport extends React.Component<{
         /**
          * Ensure short report order is reflected by all strata up to this point
          * & replicate all onto user stratum so that toggling doesn't re-order
-         * reports - a stopgap for the lack of consistent behaviour surrounding
+         * reports - a stopgap for the lack of consistent behavior surrounding
          * removals / re-ordering of objectArrayTraits
          */
         shortReportSections.forEach(report =>
@@ -40,13 +45,16 @@ export default class ShortReport extends React.Component<{
   }
 
   render() {
-    const shortReportSections = this.props.item?.shortReportSections?.filter(
-      r => isDefined(r.name)
+    if (!CatalogMemberMixin.isMixedInto(this.props.item)) return null;
+
+    const item = this.props.item;
+
+    const shortReportSections = item.shortReportSections?.filter(r =>
+      isDefined(r.name)
     );
 
     if (
-      (!isDefined(this.props.item.shortReport) ||
-        this.props.item.shortReport === "") &&
+      (!isDefined(item.shortReport) || item.shortReport === "") &&
       (!isDefined(shortReportSections) || shortReportSections.length === 0)
     ) {
       return null;
@@ -55,10 +63,10 @@ export default class ShortReport extends React.Component<{
     return (
       <Box fullWidth displayInlineBlock padded>
         {/* Show shortReport */}
-        {isDefined(this.props.item.shortReport) && (
+        {isDefined(item.shortReport) && (
           <Text textLight medium>
-            {parseCustomMarkdownToReact(this.props.item.shortReport, {
-              catalogItem: this.props.item
+            {parseCustomMarkdownToReact(item.shortReport, {
+              catalogItem: item
             })}
           </Text>
         )}
@@ -71,12 +79,10 @@ export default class ShortReport extends React.Component<{
               <Collapsible
                 title={r.name!}
                 isOpen={r.show}
-                onToggle={show =>
-                  this.clickShortReport.bind(this, r.name, show)()
-                }
+                onToggle={show => this.clickShortReport(item, r.name, show)}
               >
                 {parseCustomMarkdownToReact(r.content!, {
-                  catalogItem: this.props.item
+                  catalogItem: item
                 })}
               </Collapsible>
               {i < shortReportSections.length - 1 && <Spacing bottom={2} />}

@@ -59,7 +59,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     /**
      * Gets the uniqueIds of models that are known to contain this one.
      * This is important because strata sometimes flow from container to
-     * containee, so the properties of this model may not be complete
+     * container, so the properties of this model may not be complete
      * if the container isn't loaded yet. It's also important for locating
      * this model in a hierarchical catalog.
      */
@@ -161,7 +161,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     }
 
     /** Return full list of knownContainerUniqueIds.
-     * This will recursively travese tree of knownContainerUniqueIds models to return full list of dependencies
+     * This will recursively traverse tree of knownContainerUniqueIds models to return full list of dependencies
      */
     @computed
     get completeKnownContainerUniqueIds(): string[] {

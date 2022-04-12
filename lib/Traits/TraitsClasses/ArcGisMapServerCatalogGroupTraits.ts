@@ -11,10 +11,4 @@ export default class ArcGisMapServerCatalogGroupTraits extends mixTraits(
   UrlTraits,
   CatalogMemberTraits,
   LegendOwnerTraits
-) {
-  @anyTrait({
-    name: "Item Properties",
-    description: "Sets traits on child ArcGisMapServerCatalogItem's"
-  })
-  itemProperties?: JsonObject;
-}
+) {}

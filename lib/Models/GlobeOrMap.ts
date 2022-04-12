@@ -14,17 +14,16 @@ import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFe
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import isDefined from "../Core/isDefined";
 import LatLonHeight from "../Core/LatLonHeight";
-import featureDataToGeoJson from "../Map/featureDataToGeoJson";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import { ProviderCoordsMap } from "../Map/PickedFeatures";
-import ProtomapsImageryProvider from "../Map/ProtomapsImageryProvider";
+import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
+import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
+import featureDataToGeoJson from "../Map/PickedFeatures/featureDataToGeoJson";
+import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import MouseCoords from "../ReactViewModels/MouseCoords";
 import StyleTraits from "../Traits/TraitsClasses/StyleTraits";
 import CameraView from "./CameraView";
 import Cesium3DTilesCatalogItem from "./Catalog/CatalogItems/Cesium3DTilesCatalogItem";
-import GeoJsonCatalogItem from "./Catalog/CatalogItems/GeoJsonCatalogItem";
 import CommonStrata from "./Definition/CommonStrata";
 import createStratumInstance from "./Definition/createStratumInstance";
 import Feature from "./Feature";
@@ -210,6 +209,11 @@ export default abstract class GlobeOrMap {
       this._removeHighlightCallback = undefined;
       this._highlightPromise = undefined;
     }
+
+    // Lazy import here to avoid cyclic dependencies.
+    const { default: GeoJsonCatalogItem } = await import(
+      "./Catalog/CatalogItems/GeoJsonCatalogItem"
+    );
 
     if (isDefined(feature)) {
       let hasGeometry = false;

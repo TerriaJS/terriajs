@@ -68,8 +68,6 @@
             ],
             "regionProp": "SA1_MAIN16",
             "aliases": [
-                "sa1",
-                "sa1_code",
                 "sa1_code_2016",
                 "sa1_maincode_2016"
             ],
@@ -99,6 +97,30 @@
             "nameProp": "SA1_7DIG16",
             "description": "Statistical Area Level 1 2016 (ABS)",
             "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SA1_2016_AUST_SA1_7DIG16.json"
+        },
+        "SA1_2021": {
+          "layerName": "SA1_2021",
+          "server": "https://tiles.terria.io/SA1_2021/{z}/{x}/{y}.pbf",
+          "serverType": "MVT",
+          "serverMaxNativeZoom": 12,
+          "serverMinZoom": 0,
+          "serverMaxZoom": 28,
+          "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SA1_2021_SA1_2021.json",
+          "regionProp": "SA1_CODE21",
+          "nameProp": "SA1_CODE21",
+          "aliases": [
+            "sa1_code_2021",
+            "sa1_maincode_2021",
+            "sa1",
+            "sa1_code"
+          ],
+          "description": "Statistical Area Level 1 2021 (ABS)",
+          "bbox": [
+            96.81,
+            -43.75,
+            168,
+            -9.14
+          ]
         },
         "SA4_2011": {
             "layerName": "FID_SA4_2011_AUST",
@@ -166,8 +188,6 @@
             ],
             "regionProp": "SA4_CODE16",
             "aliases": [
-                "sa4",
-                "sa4_code",
                 "sa4_maincode_2016",
                 "sa4_code_2016"
             ],
@@ -191,12 +211,57 @@
             ],
             "regionProp": "SA4_NAME16",
             "aliases": [
-                "sa4_name",
                 "sa4_name_2016"
             ],
             "nameProp": "SA4_NAME16",
             "description": "Statistical Area Level 4 2016 (ABS)",
             "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SA4_2016_AUST_SA4_NAME16.json"
+        },
+        "SA4_2021": {
+          "layerName": "SA4_2021",
+          "server": "https://tiles.terria.io/SA4_2021/{z}/{x}/{y}.pbf",
+          "serverType": "MVT",
+          "serverMaxNativeZoom": 12,
+          "serverMinZoom": 0,
+          "serverMaxZoom": 28,
+          "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SA4_2021_SA4_2021.json",
+          "regionProp": "SA4_CODE21",
+          "nameProp": "SA4_NAME21",
+          "aliases": [
+            "sa4_code_2021",
+            "sa4_maincode_2021",
+            "sa4",
+            "sa4_code"
+          ],
+          "description": "Statistical Area Level 4 2021 (ABS)",
+          "bbox": [
+            96.81,
+            -43.75,
+            168,
+            -9.14
+          ]
+        },
+        "SA4_NAME_2021": {
+          "layerName": "SA4_2021",
+          "server": "https://tiles.terria.io/SA4_2021/{z}/{x}/{y}.pbf",
+          "serverType": "MVT",
+          "serverMaxNativeZoom": 12,
+          "serverMinZoom": 0,
+          "serverMaxZoom": 28,
+          "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SA4_NAME_2021_SA4_2021.json",
+          "regionProp": "SA4_NAME21",
+          "nameProp": "SA4_NAME21",
+          "aliases": [
+            "sa4_name_2021",
+            "sa4_name"
+          ],
+          "description": "Statistical Area Level 4 2021 (ABS)",
+          "bbox": [
+            96.81,
+            -43.75,
+            168,
+            -9.14
+          ]
         },
         "SA3_2011": {
             "layerName": "FID_SA3_2011_AUST",
@@ -265,8 +330,6 @@
             ],
             "regionProp": "SA3_CODE16",
             "aliases": [
-                "sa3",
-                "sa3_code",
                 "sa3_code_2016",
                 "sa3_maincode_2016"
             ],
@@ -290,12 +353,57 @@
             ],
             "regionProp": "SA3_NAME16",
             "aliases": [
-                "sa3_name",
                 "sa3_name_2016"
             ],
             "nameProp": "SA3_NAME16",
             "description": "Statistical Area Level 3 2016 (ABS)",
             "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SA3_2016_AUST_SA3_NAME16.json"
+        },
+        "SA3_2021": {
+          "layerName": "SA3_2021",
+          "server": "https://tiles.terria.io/SA3_2021/{z}/{x}/{y}.pbf",
+          "serverType": "MVT",
+          "serverMaxNativeZoom": 12,
+          "serverMinZoom": 0,
+          "serverMaxZoom": 28,
+          "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SA3_2021_SA3_2021.json",
+          "regionProp": "SA3_CODE21",
+          "nameProp": "SA3_NAME21",
+          "aliases": [
+            "sa3_code_2021",
+            "sa3_maincode_2021",
+            "sa3",
+            "sa3_code"
+          ],
+          "description": "Statistical Area Level 3 2021 (ABS)",
+          "bbox": [
+            96.81,
+            -43.75,
+            168,
+            -9.14
+          ]
+        },
+        "SA3_NAME_2021": {
+          "layerName": "SA3_2021",
+          "server": "https://tiles.terria.io/SA3_2021/{z}/{x}/{y}.pbf",
+          "serverType": "MVT",
+          "serverMaxNativeZoom": 12,
+          "serverMinZoom": 0,
+          "serverMaxZoom": 28,
+          "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SA3_NAME_2021_SA3_2021.json",
+          "regionProp": "SA3_NAME21",
+          "nameProp": "SA3_NAME21",
+          "aliases": [
+            "sa3_name_2021",
+            "sa3_name"
+          ],
+          "description": "Statistical Area Level 3 2021 (ABS)",
+          "bbox": [
+            96.81,
+            -43.75,
+            168,
+            -9.14
+          ]
         },
         "SA2_2011": {
             "layerName": "FID_SA2_2011_AUST",
@@ -388,8 +496,6 @@
             ],
             "regionProp": "SA2_MAIN16",
             "aliases": [
-                "sa2",
-                "sa2_code",
                 "sa2_code_2016",
                 "sa2_maincode_2016"
             ],
@@ -436,12 +542,57 @@
             ],
             "regionProp": "SA2_NAME16",
             "aliases": [
-                "sa2_name",
                 "sa2_name_2016"
             ],
             "nameProp": "SA2_NAME16",
             "description": "Statistical Area Level 2 2016 (ABS)",
             "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SA2_2016_AUST_SA2_NAME16.json"
+        },
+        "SA2_2021": {
+          "layerName": "SA2_2021",
+          "server": "https://tiles.terria.io/SA2_2021/{z}/{x}/{y}.pbf",
+          "serverType": "MVT",
+          "serverMaxNativeZoom": 12,
+          "serverMinZoom": 0,
+          "serverMaxZoom": 28,
+          "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SA2_2021_SA2_2021.json",
+          "regionProp": "SA2_CODE21",
+          "nameProp": "SA2_NAME21",
+          "aliases": [
+            "sa2_code_2021",
+            "sa2_maincode_2021",
+            "sa2",
+            "sa2_code"
+          ],
+          "description": "Statistical Area Level 2 2021 (ABS)",
+          "bbox": [
+            96.81,
+            -43.75,
+            168,
+            -9.14
+          ]
+        },
+        "SA2_NAME_2021": {
+          "layerName": "SA2_2021",
+          "server": "https://tiles.terria.io/SA2_2021/{z}/{x}/{y}.pbf",
+          "serverType": "MVT",
+          "serverMaxNativeZoom": 12,
+          "serverMinZoom": 0,
+          "serverMaxZoom": 28,
+          "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SA2_NAME_2021_SA2_2021.json",
+          "regionProp": "SA2_NAME21",
+          "nameProp": "SA2_NAME21",
+          "aliases": [
+            "sa2_name_2021",
+            "sa2_name"
+          ],
+          "description": "Statistical Area Level 2 2021 (ABS)",
+          "bbox": [
+            96.81,
+            -43.75,
+            168,
+            -9.14
+          ]
         },
         "SSC": {
             "layerName": "FID_SSC_2011_AUST",
@@ -540,6 +691,51 @@
             "description": "ABS approximations of suburbs (2016)",
             "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SSC_2016_AUST_SSC_NAME16.json"
         },
+        "LGA_2021": {
+          "layerName": "LGA_2021",
+          "server": "https://tiles.terria.io/LGA_2021/{z}/{x}/{y}.pbf",
+          "serverType": "MVT",
+          "serverMaxNativeZoom": 12,
+          "serverMinZoom": 0,
+          "serverMaxZoom": 28,
+          "regionIdsFile": "build/TerriaJS/data/regionids/region_map-LGA_2021_LGA_2021.json",
+          "regionProp": "LGA_CODE21",
+          "nameProp": "LGA_NAME21",
+          "aliases": [
+            "lga_code_2021",
+            "lga_code_2020",
+            "lga_code",
+            "lga"
+          ],
+          "description": "Local Government Areas 2021 (ABS)",
+          "bbox": [
+            96.81,
+            -43.75,
+            168,
+            -9.14
+          ]
+        },
+        "LGA_2019": {
+          "layerName": "LGA_2019",
+          "server": "https://tiles.terria.io/LGA_2019/{z}/{x}/{y}.pbf",
+          "serverType": "MVT",
+          "serverMaxNativeZoom": 12,
+          "serverMinZoom": 0,
+          "serverMaxZoom": 28,
+          "regionIdsFile": "build/TerriaJS/data/regionids/region_map-LGA_2019_LGA_2019.json",
+          "regionProp": "LGA_CODE19",
+          "nameProp": "LGA_NAME19",
+          "aliases": [
+            "lga_code_2019"
+          ],
+          "description": "Local Government Areas 2019 (ABS)",
+          "bbox": [
+            96.81,
+            -43.75,
+            168,
+            -9.14
+          ]
+        },
         "LGA_2018": {
             "layerName": "LGA_2018_AUST",
             "server": "https://vector-tiles.terria.io/LGA_2018_AUST/{z}/{x}/{y}.pbf",
@@ -556,9 +752,7 @@
             "regionProp": "LGA_CODE18",
             "nameProp": "LGA_NAME18",
             "aliases": [
-                "lga_code_2018",
-                "lga_code",
-                "lga"
+                "lga_code_2018"
             ],
             "description": "Local Government Areas 2018 (ABS)",
             "regionIdsFile": "build/TerriaJS/data/regionids/region_map-LGA_2018_AUST_LGA_CODE18.json"
@@ -1473,8 +1667,6 @@
             ],
             "regionProp": "GCC_CODE16",
             "aliases": [
-                "gccsa",
-                "gccsa_code",
                 "gccsa_code_2016"
             ],
             "nameProp": "GCC_NAME16",
@@ -1497,12 +1689,56 @@
             ],
             "regionProp": "GCC_NAME16",
             "aliases": [
-                "gccsa_name",
                 "gccsa_name_2016"
             ],
             "nameProp": "GCC_NAME16",
             "description": "Greater capital city statistical areas 2016 (ABS)",
             "regionIdsFile": "build/TerriaJS/data/regionids/region_map-GCCSA_2016_AUST_GCC_NAME16.json"
+        },
+        "GCCSA_2021": {
+          "layerName": "GCCSA_2021",
+          "server": "https://tiles.terria.io/GCCSA_2021/{z}/{x}/{y}.pbf",
+          "serverType": "MVT",
+          "serverMaxNativeZoom": 12,
+          "serverMinZoom": 0,
+          "serverMaxZoom": 28,
+          "regionIdsFile": "build/TerriaJS/data/regionids/region_map-GCCSA_2021_GCCSA_2021.json",
+          "regionProp": "GCC_CODE21",
+          "nameProp": "GCC_NAME21",
+          "aliases": [
+            "gccsa_code_2021",
+            "gccsa_code",
+            "gccsa"
+          ],
+          "description": "Greater capital city statistical areas 2021 (ABS)",
+          "bbox": [
+            96.81,
+            -43.75,
+            168,
+            -9.14
+          ]
+        },
+        "GCCSA_NAME_2021": {
+          "layerName": "GCCSA_2021",
+          "server": "https://tiles.terria.io/GCCSA_2021/{z}/{x}/{y}.pbf",
+          "serverType": "MVT",
+          "serverMaxNativeZoom": 12,
+          "serverMinZoom": 0,
+          "serverMaxZoom": 28,
+          "regionIdsFile": "build/TerriaJS/data/regionids/region_map-GCCSA_NAME_2021_GCCSA_2021.json",
+          "regionProp": "GCC_NAME21",
+          "nameProp": "GCC_NAME21",
+          "aliases": [
+            "gccsa_name_2021",
+            "gccsa_name"
+          ],
+          "description": "Greater capital city statistical areas 2021 (ABS)",
+          "bbox": [
+            96.81,
+            -43.75,
+            168,
+            -9.14
+          ]
         },
         "SUA": {
             "layerName": "FID_SUA_2011_AUST",
@@ -1613,7 +1849,9 @@
                 "ste_code_2016",
                 "ste_code_2017",
                 "ste_code_2018",
-                "ste_code_2019"
+                "ste_code_2019",
+                "ste_code_2020",
+                "ste_code_2021"
             ],
             "nameProp": "STE_NAME16",
             "description": "States and Territories 2016 (ABS)",
@@ -2148,7 +2386,8 @@
             "aliases": [
                 "state",
                 "ste_name",
-                "ste_name_2016"
+                "ste_name_2016",
+                "ste_name_2021"
             ],
             "nameProp": "STE_NAME16",
             "description": "States and Territories 2016 (ABS)",
@@ -2421,7 +2660,10 @@
                 "aus_code_2016",
                 "aus_code_2017",
                 "aus_code_2018",
-                "aus_code_2019"
+                "aus_code_2019",
+                "aus_code_2020",
+                "aus_code_2021",
+                "aus_code_2022"
             ],
             "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_AUS_2011_AUST_AUS_CODE.json",
             "serverType": "MVT",

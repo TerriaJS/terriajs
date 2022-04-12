@@ -17,7 +17,7 @@ import LegendOwnerTraits from "./LegendOwnerTraits";
 import LegendTraits from "./LegendTraits";
 import MappableTraits from "./MappableTraits";
 import { MinMaxLevelTraits } from "./MinMaxLevelTraits";
-import RasterLayerTraits from "./RasterLayerTraits";
+import ImageryProviderTraits from "./ImageryProviderTraits";
 import UrlTraits from "./UrlTraits";
 
 export const SUPPORTED_CRS_3857 = ["EPSG:3857", "EPSG:900913"];
@@ -172,7 +172,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,
   LayerOrderingTraits,
   GetCapabilitiesTraits,
-  RasterLayerTraits,
+  ImageryProviderTraits,
   UrlTraits,
   MappableTraits,
   CatalogMemberTraits,
@@ -232,22 +232,6 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "Additional parameters to pass to the MapServer when requesting images. Style parameters are stored as CSV in `styles`, dimension parameters are stored in `dimensions`."
   })
   parameters?: JsonObject;
-
-  @primitiveTrait({
-    type: "number",
-    name: "Tile width (in pixels)",
-    description:
-      "Tile width in pixels. This will be added to `GetMap` requests for map tiles using the `width` parameter. Default value is 256 pixels"
-  })
-  tileWidth: number = 256;
-
-  @primitiveTrait({
-    type: "number",
-    name: "Tile height (in pixels)",
-    description:
-      "Tile height in pixels. This will be added to `GetMap` requests for map tiles using the `height` parameter. Default value is 256 pixels"
-  })
-  tileHeight: number = 256;
 
   @primitiveTrait({
     type: "number",

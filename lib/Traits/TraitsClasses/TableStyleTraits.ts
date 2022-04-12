@@ -25,14 +25,6 @@ export default class TableStyleTraits extends ModelTraits {
   title?: string | null;
 
   @primitiveTrait({
-    name: "Legend Title",
-    description:
-      "The title to show on the legend. If not specified, `Title` is used.",
-    type: "string"
-  })
-  legendTitle?: string;
-
-  @primitiveTrait({
     name: "Region Column",
     description: "The column to use for region mapping.",
     type: "string",
