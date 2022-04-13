@@ -5,7 +5,7 @@ Change Log
 
 * [The next improvement]
 
-#### 8.2.1 - 2022-04-12
+#### 8.2.1 - 2022-04-13
 
 * Fixed selectable-dimension checkbox group rendering bug where the group is hidden when it has empty children.
 
