@@ -15,7 +15,7 @@ var ANOTHER_SEARCH_TERM = "papayas";
 var RECTANGLE = Rectangle.fromDegrees(1, 2, 3, 4);
 
 describe("GnafApi", function() {
-  var gnafApi, loadDeferredFirst, loadDeferredSecond, corsProxy;
+  var gnafApi, loadDeferredFirst, corsProxy;
 
   beforeEach(function() {
     jasmine.addMatchers(CustomMatchers);
@@ -24,9 +24,7 @@ describe("GnafApi", function() {
     const firstPromise = new Promise((resolve, reject) => {
       loadDeferredFirst = { resolve, reject };
     });
-    const secondPromise = new Promise((resolve, reject) => {
-      loadDeferredSecond = { resolve, reject };
-    });
+    const secondPromise = new Promise((resolve, reject) => {});
 
     spyOn(loadWithXhr, "load").and.callFake(function(
       url,
