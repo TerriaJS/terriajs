@@ -76,7 +76,7 @@ const CountDatasets = createReactClass({
                     path.slice()
                   )
                 )
-                .otherwise(
+                .catch(
                   reportLoadError.bind(undefined, item, stats, path.slice())
                 )
             );
@@ -92,7 +92,7 @@ const CountDatasets = createReactClass({
         }
       }
 
-      return when.all(promises);
+      return Promise.all(promises);
     }
 
     function recurseAndUpdateTotals(item, stats, childStats, path) {

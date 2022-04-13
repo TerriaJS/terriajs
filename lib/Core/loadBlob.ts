@@ -1,7 +1,6 @@
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import JsonValue from "./Json";
 import loadJson from "./loadJson";
-import makeRealPromise from "./makeRealPromise";
 import URI from "urijs";
 
 const zip = require("terriajs-cesium/Source/ThirdParty/zip").default;
@@ -12,18 +11,14 @@ export default function loadBlob(
   body?: any
 ): Promise<Blob> {
   if (body !== undefined) {
-    return makeRealPromise(
-      Resource.post({
-        url: urlOrResource,
-        headers: headers,
-        data: JSON.stringify(body),
-        responseType: "blob"
-      })
-    );
+    return Resource.post({
+      url: urlOrResource,
+      headers: headers,
+      data: JSON.stringify(body),
+      responseType: "blob"
+    })!;
   } else {
-    return makeRealPromise(
-      Resource.fetchBlob({ url: urlOrResource, headers: headers })
-    );
+    return Resource.fetchBlob({ url: urlOrResource, headers: headers })!;
   }
 }
 

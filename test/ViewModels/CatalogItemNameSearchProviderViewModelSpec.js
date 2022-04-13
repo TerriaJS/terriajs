@@ -37,7 +37,7 @@ describe("CatalogItemNameSearchProviderViewModel", function() {
         expect(searchProvider.searchResults[0].name).toBe("Thing to find");
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("finds catalog groups in a case-insensitive manner", function(done) {
@@ -54,7 +54,7 @@ describe("CatalogItemNameSearchProviderViewModel", function() {
         expect(searchProvider.searchResults[0].name).toBe("Group to find");
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("does not find catalog items if they do not match", function(done) {
@@ -70,7 +70,7 @@ describe("CatalogItemNameSearchProviderViewModel", function() {
         expect(searchProvider.searchResults.length).toBe(0);
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("finds items in asynchronously-loaded groups", function(done) {
@@ -97,7 +97,7 @@ describe("CatalogItemNameSearchProviderViewModel", function() {
         expect(searchProvider.searchResults[0].name).toBe("Thing to find");
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("finds results of a certain type in a case-insensitive manner", function(done) {
@@ -118,7 +118,7 @@ describe("CatalogItemNameSearchProviderViewModel", function() {
         expect(searchProvider.searchResults[0].name).toBe("WMS item to find");
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("finds results not of a certain type in a case-insensitive manner", function(done) {
@@ -141,7 +141,7 @@ describe("CatalogItemNameSearchProviderViewModel", function() {
         );
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("finds results having a certain url", function(done) {
@@ -166,7 +166,7 @@ describe("CatalogItemNameSearchProviderViewModel", function() {
         );
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("finds results that do not have a certain url", function(done) {
@@ -191,7 +191,7 @@ describe("CatalogItemNameSearchProviderViewModel", function() {
         );
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("stops searching after the specified number of items", function(done) {
@@ -225,7 +225,7 @@ describe("CatalogItemNameSearchProviderViewModel", function() {
         expect(searchProvider.searchResults.length).toBe(maxResults);
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("combines duplicate search entries of the same item in different groups", function(done) {
@@ -250,7 +250,7 @@ describe("CatalogItemNameSearchProviderViewModel", function() {
         );
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("does not combine different items with the same item name", function(done) {
@@ -274,6 +274,6 @@ describe("CatalogItemNameSearchProviderViewModel", function() {
         expect(searchProvider.searchResults[1].name).toBe("Thing to find");
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 });

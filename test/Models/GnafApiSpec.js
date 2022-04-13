@@ -1,6 +1,5 @@
 "use strict";
 
-var when = require("terriajs-cesium/Source/ThirdParty/when").default;
 var Rectangle = require("terriajs-cesium/Source/Core/Rectangle").default;
 var loadWithXhr = require("../../lib/Core/loadWithXhr");
 
@@ -22,8 +21,12 @@ describe("GnafApi", function() {
     jasmine.addMatchers(CustomMatchers);
     var loadDeferredCount = 1;
 
-    loadDeferredFirst = when.defer();
-    loadDeferredSecond = when.defer();
+    const firstPromise = new Promise((resolve, reject) => {
+      loadDeferredFirst = { resolve, reject };
+    });
+    const secondPromise = new Promise((resolve, reject) => {
+      loadDeferredSecond = { resolve, reject };
+    });
 
     spyOn(loadWithXhr, "load").and.callFake(function(
       url,
@@ -34,9 +37,9 @@ describe("GnafApi", function() {
       deferred
     ) {
       if (loadDeferredCount === 1) {
-        deferred.resolve(loadDeferredFirst);
+        deferred.resolve(firstPromise);
       } else {
-        deferred.resolve(loadDeferredSecond);
+        deferred.resolve(secondPromise);
       }
       loadDeferredCount++;
     });
@@ -113,7 +116,7 @@ describe("GnafApi", function() {
         expect(hit2.localityVariantNames).toEqual([]);
       })
       .then(done)
-      .otherwise(fail);
+      .catch(fail);
   });
 
   it("should pass an XHR error back to its promise", function(done) {
@@ -123,11 +126,11 @@ describe("GnafApi", function() {
 
     geoCodeCall
       .then(fail)
-      .otherwise(function(error) {
+      .catch(function(error) {
         expect(error.message).toBe("too bad");
       })
       .then(done)
-      .otherwise(fail);
+      .catch(fail);
   });
 
   it("should split array into batches properly", function() {
@@ -185,7 +188,7 @@ describe("GnafApi", function() {
         expect(hit2.numberLast).toBeUndefined();
       })
       .then(done)
-      .otherwise(fail);
+      .catch(fail);
   });
 
   describe("location", function() {

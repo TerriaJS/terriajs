@@ -18,8 +18,7 @@ import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceC
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
-import when from "terriajs-cesium/Source/ThirdParty/when";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import html2canvas from "terriajs-html2canvas";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
@@ -773,7 +772,7 @@ export default class Leaflet extends GlobeOrMap {
             if (
               !(
                 layerDirection === pickedSide ||
-                layerDirection === ImagerySplitDirection.NONE
+                layerDirection === SplitDirection.NONE
               )
             ) {
               return allFeatures;
@@ -840,7 +839,7 @@ export default class Leaflet extends GlobeOrMap {
                 layer.splitDirection = splitDirection;
                 layer.splitPosition = splitPosition;
               } else {
-                layer.splitDirection = ImagerySplitDirection.NONE;
+                layer.splitDirection = SplitDirection.NONE;
                 layer.splitPosition = splitPosition;
               }
             })
@@ -1022,16 +1021,13 @@ export default class Leaflet extends GlobeOrMap {
         });
       }
 
-      return new Promise<string>((resolve, reject) => {
-        // wrap old-style when promise with new standard library promise
-        when(promise)
-          .then((canvas: HTMLCanvasElement) => {
-            resolve(canvas.toDataURL("image/png"));
-          })
-          .always(() => {
-            this._attributionControl.addTo(this.map);
-          });
-      });
+      return promise
+        .then((canvas: HTMLCanvasElement) => {
+          return canvas.toDataURL("image/png");
+        })
+        .finally(() => {
+          this._attributionControl.addTo(this.map);
+        });
     } catch (e) {
       this._attributionControl.addTo(this.map);
       return Promise.reject(e);

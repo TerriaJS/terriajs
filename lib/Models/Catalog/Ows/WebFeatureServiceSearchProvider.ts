@@ -9,7 +9,6 @@ import SearchResult from "../../SearchProviders/SearchResult";
 import Terria from "../../Terria";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import Resource from "terriajs-cesium/Source/Core/Resource";
-import makeRealPromise from "../../../Core/makeRealPromise";
 
 export interface WebFeatureServiceSearchProviderOptions {
   /** Base url for the service */
@@ -68,9 +67,9 @@ export default class WebFeatureServiceSearchProvider extends SearchProvider {
   getXml(): Promise<XMLDocument> {
     const resource = new Resource({ url: this._wfsServiceUrl.toString() });
     this._waitingForResults = true;
-    const xmlPromise = resource.fetchXML();
+    const xmlPromise = resource.fetchXML()!;
     this.cancelRequest = resource.request.cancelFunction;
-    return makeRealPromise<XMLDocument>(xmlPromise).finally(() => {
+    return xmlPromise.finally(() => {
       this._waitingForResults = false;
     });
   }

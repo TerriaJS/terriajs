@@ -365,7 +365,7 @@ describe("GeoJsonCatalogItemSpec", () => {
             .then(function() {
               done.fail("Load should not succeed.");
             })
-            .otherwise(function(e) {
+            .catch(function(e) {
               expect(e instanceof TerriaError).toBe(true);
               done();
             });

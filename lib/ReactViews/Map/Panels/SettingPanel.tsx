@@ -5,7 +5,7 @@ import Slider from "rc-slider";
 import React, { ChangeEvent, ComponentProps, MouseEvent } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import Cesium from "../../../Models/Cesium";
 import DefaultTimelineModel from "../../../Models/DefaultTimelineModel";
 import Terria from "../../../Models/Terria";
@@ -105,15 +105,15 @@ class SettingPanel extends React.Component<PropTypes> {
 
     switch (side) {
       case sides.left:
-        this.props.terria.terrainSplitDirection = ImagerySplitDirection.LEFT;
+        this.props.terria.terrainSplitDirection = SplitDirection.LEFT;
         this.props.terria.showSplitter = true;
         break;
       case sides.right:
-        this.props.terria.terrainSplitDirection = ImagerySplitDirection.RIGHT;
+        this.props.terria.terrainSplitDirection = SplitDirection.RIGHT;
         this.props.terria.showSplitter = true;
         break;
       case sides.both:
-        this.props.terria.terrainSplitDirection = ImagerySplitDirection.NONE;
+        this.props.terria.terrainSplitDirection = SplitDirection.NONE;
         break;
     }
 
@@ -207,10 +207,10 @@ class SettingPanel extends React.Component<PropTypes> {
     let currentSide = sides.both;
     if (supportsSide) {
       switch (this.props.terria.terrainSplitDirection) {
-        case ImagerySplitDirection.LEFT:
+        case SplitDirection.LEFT:
           currentSide = sides.left;
           break;
-        case ImagerySplitDirection.RIGHT:
+        case SplitDirection.RIGHT:
           currentSide = sides.right;
           break;
       }

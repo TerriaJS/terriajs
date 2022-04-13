@@ -1,5 +1,3 @@
-var when = require("terriajs-cesium/Source/ThirdParty/when").default;
-
 var Terria = require("../../lib/Models/Terria");
 var GnafSearchProviderViewModel = require("../../lib/ViewModels/GnafSearchProviderViewModel");
 var knockout = require("terriajs-cesium/Source/ThirdParty/knockout").default;
@@ -21,10 +19,16 @@ describe("GnafSearchProvider", function() {
       zoomTo: jasmine.createSpy("zoomTo")
     };
 
-    geoCodeDeferred = when.defer();
+    geoCodeDeferred = {};
+    geoCodeDeferred.promise = new Promise((resolve, reject) => {
+      geoCodeDeferred.resolve = resolve;
+      geoCodeDeferred.reject = reject;
+    });
 
     gnafApi = {
-      geoCode: jasmine.createSpy("geoCode").and.returnValue(geoCodeDeferred)
+      geoCode: jasmine
+        .createSpy("geoCode")
+        .and.returnValue(geoCodeDeferred.promise)
     };
 
     searchProvider = new GnafSearchProviderViewModel({

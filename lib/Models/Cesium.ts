@@ -37,7 +37,7 @@ import Camera from "terriajs-cesium/Source/Scene/Camera";
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
 import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
@@ -47,7 +47,6 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
 import LatLonHeight from "../Core/LatLonHeight";
-import makeRealPromise from "../Core/makeRealPromise";
 import pollToPromise from "../Core/pollToPromise";
 import waitForDataSourceToLoad from "../Core/waitForDataSourceToLoad";
 import CesiumRenderLoopPauser from "../Map/Cesium/CesiumRenderLoopPauser";
@@ -428,7 +427,7 @@ export default class Cesium extends GlobeOrMap {
       this.scene.globe.terrainProvider = this._terrainProvider;
       this.scene.globe.splitDirection = this.terria.showSplitter
         ? this.terria.terrainSplitDirection
-        : ImagerySplitDirection.NONE;
+        : SplitDirection.NONE;
       this.scene.globe.depthTestAgainstTerrain = this.terria.depthTestAgainstTerrainEnabled;
       if (this.scene.skyAtmosphere) {
         this.scene.skyAtmosphere.splitDirection = this.scene.globe.splitDirection;
@@ -651,9 +650,9 @@ export default class Cesium extends GlobeOrMap {
         // Perform an elevation query at the centre of the rectangle
         let terrainSample: Cartographic;
         try {
-          [terrainSample] = await makeRealPromise<Cartographic[]>(
-            sampleTerrain(terrainProvider, level, [center])
-          );
+          [terrainSample] = await sampleTerrain(terrainProvider, level, [
+            center
+          ]);
         } catch {
           // if the request fails just use center with height=0
           terrainSample = center;
@@ -777,7 +776,7 @@ export default class Cesium extends GlobeOrMap {
             if (showSplitter) {
               layer.splitDirection = splitDirection;
             } else {
-              layer.splitDirection = ImagerySplitDirection.NONE;
+              layer.splitDirection = SplitDirection.NONE;
             }
           });
         }
@@ -1361,7 +1360,7 @@ export default class Cesium extends GlobeOrMap {
                     .splitDirection;
                   return (
                     splitDirection === pickedSide ||
-                    splitDirection === ImagerySplitDirection.NONE
+                    splitDirection === SplitDirection.NONE
                   );
                 });
               }

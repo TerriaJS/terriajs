@@ -13,7 +13,6 @@ import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import { isLatLonHeight } from "../Core/LatLonHeight";
-import makeRealPromise from "../Core/makeRealPromise";
 import TerriaError from "../Core/TerriaError";
 import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
 import RegionProviderList from "../Map/Region/RegionProviderList";
@@ -784,11 +783,9 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
       const regionProviderList:
         | RegionProviderList
-        | undefined = await makeRealPromise(
-        RegionProviderList.fromUrl(
-          this.terria.configParameters.regionMappingDefinitionsUrl,
-          this.terria.corsProxy
-        )
+        | undefined = await RegionProviderList.fromUrl(
+        this.terria.configParameters.regionMappingDefinitionsUrl,
+        this.terria.corsProxy
       );
       runInAction(() => (this.regionProviderList = regionProviderList));
     }

@@ -59,7 +59,6 @@ import hashFromString from "../Core/hashFromString";
 import isDefined from "../Core/isDefined";
 import { isJsonObject, JsonObject, isJsonNumber } from "../Core/Json";
 import { isJson } from "../Core/loadBlob";
-import makeRealPromise from "../Core/makeRealPromise";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError, { networkRequestError } from "../Core/TerriaError";
 import ProtomapsImageryProvider, {
@@ -916,9 +915,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
       const styles = runInAction(() => this.stylesWithDefaults);
 
-      const dataSource = await makeRealPromise<GeoJsonDataSource>(
-        GeoJsonDataSource.load(geoJson, styles)
-      );
+      const dataSource = await GeoJsonDataSource.load(geoJson, styles);
       const entities = dataSource.entities;
       for (let i = 0; i < entities.values.length; ++i) {
         const entity = entities.values[i];
@@ -1340,9 +1337,7 @@ async function reprojectToGeographic(
   }
 
   const needsReprojection = proj4ServiceBaseUrl
-    ? await makeRealPromise<boolean>(
-        Reproject.checkProjection(proj4ServiceBaseUrl, code)
-      )
+    ? await Reproject.checkProjection(proj4ServiceBaseUrl, code)
     : false;
 
   if (needsReprojection) {

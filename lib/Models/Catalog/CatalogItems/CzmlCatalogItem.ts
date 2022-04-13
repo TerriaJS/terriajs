@@ -4,7 +4,6 @@ import Clock from "terriajs-cesium/Source/Core/Clock";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CzmlDataSource from "terriajs-cesium/Source/DataSources/CzmlDataSource";
 import isDefined from "../../../Core/isDefined";
-import makeRealPromise from "../../../Core/makeRealPromise";
 import readJson from "../../../Core/readJson";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
@@ -110,11 +109,9 @@ export default class CzmlCatalogItem
       });
     }
 
-    return makeRealPromise<CzmlDataSource>(
-      CzmlDataSource.load(loadableData, {
-        credit: attribution
-      })
-    )
+    return CzmlDataSource.load(loadableData, {
+      credit: attribution
+    })
       .then(
         action(czmlDataSource => {
           this._dataSource = czmlDataSource;

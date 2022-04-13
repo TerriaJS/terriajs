@@ -2,7 +2,7 @@ import { action, runInAction, toJS } from "mobx";
 import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import hashEntity from "../../lib/Core/hashEntity";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import Result from "../../lib/Core/Result";
@@ -428,7 +428,7 @@ describe("Terria", function() {
           model1.setTrait(
             CommonStrata.user,
             "splitDirection",
-            ImagerySplitDirection.RIGHT
+            SplitDirection.RIGHT
           );
         });
 
@@ -443,9 +443,7 @@ describe("Terria", function() {
           newTerria.getModelById(BaseModel, "itemABC")
         );
         expect(newModel1).toBeDefined();
-        expect(newModel1.splitDirection).toEqual(
-          <any>ImagerySplitDirection.RIGHT
-        );
+        expect(newModel1.splitDirection).toEqual(<any>SplitDirection.RIGHT);
       });
 
       it("opens and loads members of shared open groups", async function() {
@@ -938,9 +936,9 @@ describe("Terria", function() {
   //             expect(terria.checkNowViewingForTimeWms()).toEqual(true);
   //           })
   //           .then(done)
-  //           .otherwise(done.fail);
+  //           .catch(done.fail);
   //       })
-  //       .otherwise(done.fail);
+  //       .catch(done.fail);
   //   });
 
   describe("applyInitData", function() {

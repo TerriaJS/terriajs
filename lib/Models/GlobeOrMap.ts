@@ -11,7 +11,7 @@ import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/Constan
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import isDefined from "../Core/isDefined";
 import LatLonHeight from "../Core/LatLonHeight";
 import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
@@ -185,7 +185,7 @@ export default abstract class GlobeOrMap {
    */
   protected _getSplitterSideForScreenPosition(
     position: Cartesian2 | Cartesian3
-  ): ImagerySplitDirection | undefined {
+  ): SplitDirection | undefined {
     const container = this.terria.currentViewer.getContainer();
     if (!isDefined(container)) {
       return;
@@ -193,9 +193,9 @@ export default abstract class GlobeOrMap {
 
     const splitterX = container.clientWidth * this.terria.splitPosition;
     if (position.x <= splitterX) {
-      return ImagerySplitDirection.LEFT;
+      return SplitDirection.LEFT;
     } else {
-      return ImagerySplitDirection.RIGHT;
+      return SplitDirection.RIGHT;
     }
   }
 
