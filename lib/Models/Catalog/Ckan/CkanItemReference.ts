@@ -114,17 +114,7 @@ export class CkanDatasetStratum extends LoadableStratum(
   }
 
   @computed get url() {
-    if (this.ckanResource === undefined) return undefined;
-    if (this.ckanItemReference._supportedFormat !== undefined) {
-      if (
-        (this.ckanItemReference._supportedFormat.definition ?? {}).type ===
-          "wms" &&
-        this.ckanResource.wms_api_url
-      ) {
-        return this.ckanResource.wms_api_url;
-      }
-    }
-    return this.ckanResource.url;
+    return getCkanItemResourceUrl(this.ckanItemReference);
   }
 
   @computed get name() {
@@ -396,18 +386,15 @@ export default class CkanItemReference extends UrlMixin(
     previousTarget = model;
     await this.setCkanStrata(model);
 
-    const definitionStratum = this.strata.get(CommonStrata.definition);
-    if (definitionStratum) {
-      model.strata.set(CommonStrata.definition, definitionStratum);
-      model.setTrait(CommonStrata.definition, "url", undefined);
-    }
+    model.setTrait(CommonStrata.definition, "name", this.name);
+
     return model;
   }
 
   @computed get wmsLayers() {
-    const params:
-      | Record<string, string | undefined>
-      | undefined = this.uri?.search(true);
+    const params: Record<string, string | undefined> | undefined = new URI(
+      getCkanItemResourceUrl(this)
+    )?.search(true);
 
     // Mixing ?? and || because for params we don't want to use empty string params if there are non-empty string parameters
     return (
@@ -581,4 +568,17 @@ export function getCkanItemName(item: CkanItemReference) {
     return item._ckanDataset.title;
   }
   return item._ckanResource.name;
+}
+
+function getCkanItemResourceUrl(item: CkanItemReference) {
+  if (item._ckanResource === undefined) return undefined;
+  if (item._supportedFormat !== undefined) {
+    if (
+      (item._supportedFormat.definition ?? {}).type === "wms" &&
+      item._ckanResource.wms_api_url
+    ) {
+      return item._ckanResource.wms_api_url;
+    }
+  }
+  return item._ckanResource.url;
 }

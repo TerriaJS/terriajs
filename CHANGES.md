@@ -3,6 +3,9 @@ Change Log
 
 #### next release (8.2.2)
 
+* **Breaking changes:**
+  * `CkanItemReference` no longer copies `default` stratum to target - please use `itemProperties` instead.
+
 * **Revert** Use CKAN Dataset `name` property for WMS `layers` as last resort.
 * Add support for `WebMapServiceCatalogGroup` to `CkanItemReference` - this will be used instead of `WebMapServiceCatalogItem` if WMS `layers` can't be identified from CKAN resource metadata.
 * Ignore WMS `Layers` with duplicate `Name` properties
