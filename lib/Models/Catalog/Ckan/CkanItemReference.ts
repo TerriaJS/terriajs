@@ -22,18 +22,19 @@ import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
 import CatalogMemberFactory from "../CatalogMemberFactory";
+import WebMapServiceCatalogGroup from "../Ows/WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "../Ows/WebMapServiceCatalogItem";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import CkanCatalogGroup, {
   createInheritedCkanSharedTraitsStratum
 } from "./CkanCatalogGroup";
+import CkanDefaultFormatsStratum from "./CkanDefaultFormatsStratum";
 import {
   CkanDataset,
   CkanDatasetServerResponse,
   CkanResource,
   CkanResourceServerResponse
 } from "./CkanDefinitions";
-import CkanDefaultFormatsStratum from "./CkanDefaultFormatsStratum";
 
 export class CkanDatasetStratum extends LoadableStratum(
   CkanItemReferenceTraits
@@ -246,6 +247,16 @@ export class CkanDatasetStratum extends LoadableStratum(
     );
     return outArray;
   }
+
+  /** Set isGroup = true if this turns into WMS Group (See CkanItemReference.forceLoadReference for more info) */
+  @computed get isGroup() {
+    if (
+      this.ckanItemReference._supportedFormat?.definition?.type ===
+        WebMapServiceCatalogItem.type &&
+      !this.ckanItemReference.wmsLayers
+    )
+      return true;
+  }
 }
 
 StratumOrder.addLoadStratum(CkanDatasetStratum.stratumName);
@@ -352,12 +363,34 @@ export default class CkanItemReference extends UrlMixin(
 
     if (typeof type !== "string") return undefined;
 
-    const model = CatalogMemberFactory.create(
-      type,
-      this.uniqueId,
-      this.terria,
-      this
-    );
+    let model: BaseModel | undefined;
+
+    // Special case for WMS
+    // Check for `layers` before creating model
+    // If WMS layers have been found - create WebMapServiceCatalogItem
+    // If no WMS layers are found - create WebMapServiceCatalogGroup
+    if (type === WebMapServiceCatalogItem.type) {
+      // If WMS layers have been found
+      if (this.wmsLayers) {
+        model = new WebMapServiceCatalogItem(this.uniqueId, this.terria, this);
+        model.setTrait(
+          CommonStrata.definition,
+          "layers",
+          decodeURI(this.wmsLayers)
+        );
+      }
+      // if no WMS layers are found
+      else {
+        model = new WebMapServiceCatalogGroup(this.uniqueId, this.terria, this);
+      }
+    } else {
+      model = CatalogMemberFactory.create(
+        type,
+        this.uniqueId,
+        this.terria,
+        this
+      );
+    }
 
     if (model === undefined) return;
     previousTarget = model;
@@ -368,26 +401,19 @@ export default class CkanItemReference extends UrlMixin(
       model.strata.set(CommonStrata.definition, definitionStratum);
       model.setTrait(CommonStrata.definition, "url", undefined);
     }
-
-    // Overrides for specific catalog types
-    if (model instanceof WebMapServiceCatalogItem) {
-      const params:
-        | Record<string, string | undefined>
-        | undefined = model.uri?.search(true);
-
-      // Mixing ?? and || because for params we don't want to use empty string params if there are non-empty string parameters
-      const layers =
-        this._ckanResource?.wms_layer ??
-        (params?.LAYERS ||
-          params?.layers ||
-          params?.typeName ||
-          this._ckanResource?.name);
-
-      if (layers) {
-        model.setTrait(CommonStrata.definition, "layers", decodeURI(layers));
-      }
-    }
     return model;
+  }
+
+  @computed get wmsLayers() {
+    const params:
+      | Record<string, string | undefined>
+      | undefined = this.uri?.search(true);
+
+    // Mixing ?? and || because for params we don't want to use empty string params if there are non-empty string parameters
+    return (
+      this._ckanResource?.wms_layer ??
+      (params?.LAYERS || params?.layers || params?.typeName)
+    );
   }
 }
 

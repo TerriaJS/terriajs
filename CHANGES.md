@@ -3,6 +3,8 @@ Change Log
 
 #### next release (8.2.2)
 
+* Add support for `WebMapServiceCatalogGroup` to `CkanItemReference` - this will be used instead of `WebMapServiceCatalogItem` if WMS `layers` can't be identified from CKAN resource metadata.
+* Ignore WMS `Layers` with duplicate `Name` properties
 * [The next improvement]
 
 #### 8.2.1 - 2022-04-13
