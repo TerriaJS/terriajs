@@ -55,7 +55,7 @@ export const defaultTourPoints = [
     caretOffsetLeft: TOUR_WIDTH - 25,
     caretOffsetRight: TOUR_WIDTH - 25,
     offsetLeft: -TOUR_WIDTH - 30,
-    offsetRight: -TOUR_WIDTH - 705,
+    offsetRight: -TOUR_WIDTH - 850,
     positionLeft: RelativePosition.RECT_RIGHT,
     positionRight: RelativePosition.RECT_LEFT,
     content: "translate#tour.menuBarMapSettingsButton.content"
