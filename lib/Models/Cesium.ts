@@ -5,6 +5,7 @@ import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import createWorldTerrain from "terriajs-cesium/Source/Core/createWorldTerrain";
@@ -769,14 +770,14 @@ export default class Cesium extends GlobeOrMap {
           MappableMixin.isMixedInto(item) &&
           hasTraits(item, SplitterTraits, "splitDirection")
         ) {
-          const layers = this.getImageryLayersForItem(item);
+          const splittableItems = this.getSplittableMapItems(item);
           const splitDirection = item.splitDirection;
 
-          layers.forEach(layer => {
+          splittableItems.forEach(splittableItem => {
             if (showSplitter) {
-              layer.splitDirection = splitDirection;
+              splittableItem.splitDirection = splitDirection;
             } else {
-              layer.splitDirection = SplitDirection.NONE;
+              splittableItem.splitDirection = SplitDirection.NONE;
             }
           });
         }
@@ -1381,12 +1382,17 @@ export default class Cesium extends GlobeOrMap {
     return result;
   }
 
-  getImageryLayersForItem(item: MappableMixin.Instance): ImageryLayer[] {
+  getSplittableMapItems(
+    item: MappableMixin.Instance
+  ): (ImageryLayer | Cesium3DTileset)[] {
     return filterOutUndefined(
       item.mapItems.map(m => {
         if (ImageryParts.is(m)) {
           return this._makeImageryLayerFromParts(m, item) as ImageryLayer;
+        } else if (isCesium3DTileset(m)) {
+          return m;
         }
+        return undefined;
       })
     );
   }
