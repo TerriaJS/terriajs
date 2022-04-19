@@ -66,6 +66,7 @@ Change Log
   * This uses new `TableStyle.isCustom` property
 * Move workbench item controls from `WorkbenchItem.jsx` `WorkbenchItemControls.tsx`
 * Add `UrlTempalteImageryCatalogItem`, rename `RasterLayerTraits` to `ImageryProviderTraits` and add some properties.
+* Added support for using Compare / Split Screen mode with Cesium 3D Tiles.
 * [The next improvement]
 
 #### 8.1.25 - 2022-03-16
