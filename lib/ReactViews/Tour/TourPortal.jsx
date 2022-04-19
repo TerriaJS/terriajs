@@ -333,8 +333,8 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
 });
 
 export const TourPreface = ({ viewState }) => {
-  const { t } = useTranslation();
-  const isRtl = viewState.isRtl;
+  const { i18n, t } = useTranslation();
+  const isRtl = i18n.dir() === "rtl";
   const theme = useTheme();
   return (
     <>
