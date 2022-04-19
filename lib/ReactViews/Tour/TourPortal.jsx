@@ -30,7 +30,6 @@ import {
   calculateTopPosition,
   getOffsetsFromTourPoint
 } from "./tour-helpers.ts";
-import i18next from "i18next";
 import TourExplanationBox, {
   TourExplanationBoxZIndex
 } from "./TourExplanationBox.jsx";
