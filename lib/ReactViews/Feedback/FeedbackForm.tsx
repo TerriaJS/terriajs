@@ -1,4 +1,3 @@
-import { TFunction } from "i18next";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React, { useEffect, useRef } from "react";
@@ -22,7 +21,6 @@ import { useTranslationIfExists } from "./../../Language/languageHelpers";
 interface IProps extends WithTranslation {
   theme: DefaultTheme;
   viewState: ViewState;
-  t: TFunction;
 }
 
 interface IState {
