@@ -62,4 +62,4 @@ const ExplorerWindow = observer(
   })
 );
 
-module.exports = ExplorerWindow;
+export default ExplorerWindow;
