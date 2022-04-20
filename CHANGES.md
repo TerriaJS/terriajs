@@ -1,9 +1,13 @@
 Change Log
 ==========
 
-#### next release (8.2.2)
+#### next release (8.2.3)
 
 * [The next improvement]
+
+#### 8.2.2 - 2022-04-19
+
+* Fixed a whitescreen with PrintView.
 
 #### 8.2.1 - 2022-04-13
 
