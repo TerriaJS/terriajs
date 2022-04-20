@@ -1,9 +1,30 @@
 import React from "react";
 import debounce from "lodash-es/debounce";
 
-const getDisplayName = WrappedComponent => {
+const getDisplayName = <P extends React.ComponentProps<any>>(
+  WrappedComponent: React.ComponentClass<P>
+) => {
   return WrappedComponent.displayName || WrappedComponent.name || "Component";
 };
+
+export interface MeasureElement {
+  heightFromMeasureElementHOC: number | null;
+  widthFromMeasureElementHOC: number | null;
+}
+
+interface MeasureElementComponent<P>
+  extends React.Component<P & MeasureElement> {
+  refToMeasure: React.RefObject<HTMLElement> | HTMLElement | null;
+}
+
+interface MeasureElementClass<P> {
+  new (props: P & MeasureElement, context?: any): MeasureElementComponent<P>;
+}
+
+interface IState {
+  height: number | null;
+  width: number | null;
+}
 
 /*
     HOC to check component width & supply updated widths as a prop (stored interally via state)
@@ -24,11 +45,16 @@ const getDisplayName = WrappedComponent => {
     ref={this.refToMeasure}>
     ```
 */
-const measureElement = (WrappedComponent, verbose = true) => {
-  class MeasureElement extends React.Component {
-    constructor() {
-      super();
-      this.wrappedComponent = React.createRef();
+const measureElement = <P extends React.ComponentProps<any>>(
+  WrappedComponent: MeasureElementClass<P>,
+  verbose = true
+) => {
+  class MeasureElement extends React.Component<P, IState> {
+    wrappedComponent = React.createRef<InstanceType<typeof WrappedComponent>>();
+    checkAndUpdateSizingWithDebounce: () => void;
+    static displayName = `MeasureElement(${getDisplayName(WrappedComponent)})`;
+    constructor(props: P) {
+      super(props);
       this.state = {
         width: null,
         height: null
@@ -58,15 +84,16 @@ const measureElement = (WrappedComponent, verbose = true) => {
       }
       const refToUse = this.wrappedComponent.current.refToMeasure;
       const widthFromRef = refToUse
-        ? refToUse.current
-          ? refToUse.current.clientWidth
+        ? "current" in refToUse
+          ? refToUse.current?.clientWidth
           : refToUse.clientWidth
         : undefined;
       const heightFromRef = refToUse
-        ? refToUse.current
-          ? refToUse.current.clientHeight
+        ? "current" in refToUse
+          ? refToUse.current?.clientHeight
           : refToUse.clientHeight
         : undefined;
+
       const newWidth = widthFromRef || 0;
       const newHeight = heightFromRef || 0;
       if (verbose) {
