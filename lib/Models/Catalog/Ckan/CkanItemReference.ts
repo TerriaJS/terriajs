@@ -3,6 +3,7 @@ import { action, computed, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
+import { isJsonString } from "../../../Core/Json";
 import loadJson from "../../../Core/loadJson";
 import ReferenceMixin from "../../../ModelMixins/ReferenceMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -396,8 +397,20 @@ export default class CkanItemReference extends UrlMixin(
       getCkanItemResourceUrl(this)
     )?.search(true);
 
+    const layersFromItemProperties =
+      this.itemPropertiesByIds?.find(
+        itemProps => this.uniqueId && itemProps.ids.includes(this.uniqueId)
+      )?.itemProperties?.layers ??
+      this.itemPropertiesByType?.find(
+        itemProps => itemProps.type === WebMapServiceCatalogItem.type
+      )?.itemProperties?.layers ??
+      this.itemProperties?.layers;
+
     // Mixing ?? and || because for params we don't want to use empty string params if there are non-empty string parameters
     return (
+      (isJsonString(layersFromItemProperties)
+        ? layersFromItemProperties
+        : undefined) ??
       this._ckanResource?.wms_layer ??
       (params?.LAYERS || params?.layers || params?.typeName)
     );
