@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.2.3)
 
+* Fix selectable dimensions passing reactive objects and arrays to updateModelFromJson (which could cause problems with array detection).
 * [The next improvement]
 
 #### 8.2.2 - 2022-04-19
