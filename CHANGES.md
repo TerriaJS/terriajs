@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.2.3)
 
+* Add Mustache template support to `modelDimensions` for string properties in `option.value` (with the catalog member as context)
 * [The next improvement]
 
 #### 8.2.2 - 2022-04-19
