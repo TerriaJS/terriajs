@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.2.4)
 
+* Add `czmlTemplate` support for `[Multi]LineString` GeoJSON features.
 * [The next improvement]
 
 #### 8.2.3 - 2022-04-22

@@ -10,7 +10,9 @@ import {
   MultiPolygon,
   Point,
   Polygon,
-  Properties
+  Properties,
+  LineString,
+  MultiLineString
 } from "@turf/helpers";
 import i18next from "i18next";
 import {
@@ -810,6 +812,60 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
             czml.polygon.positions = { cartographicDegrees: positions };
             czml.polygon.holes = { cartographicDegrees: holes };
+
+            czml.properties = Object.assign(
+              czml.properties ?? {},
+              stringifyFeatureProperties(feature.properties ?? {})
+            );
+            rootCzml.push(czml);
+          }
+        } else if (
+          feature.geometry?.type === "LineString" ||
+          feature.geometry?.type === "MultiLineString"
+        ) {
+          const czml = clone(czmlTemplate ?? {}, true);
+
+          // To handle both LineString and MultiLineString - transform LineString coords into MultiLineString coords
+          const multiLineGeom =
+            feature.geometry?.type === "LineString"
+              ? [(feature.geometry as LineString).coordinates]
+              : (feature.geometry as MultiLineString).coordinates;
+
+          // Loop through Lines in MultiLineString
+          for (let j = 0; j < multiLineGeom.length; j++) {
+            const geom = multiLineGeom[j];
+            const positions: number[] = [];
+
+            geom.forEach(coords => {
+              if (isJsonNumber(this.czmlTemplate?.heightOffset)) {
+                coords[2] = (coords[2] ?? 0) + this.czmlTemplate!.heightOffset;
+              }
+              positions.push(coords[0], coords[1], coords[2]);
+            });
+
+            if (czml.polylineVolume) {
+              czml.polylineVolume.positions = {
+                cartographicDegrees: positions
+              };
+            }
+
+            if (czml.wall) {
+              czml.wall.positions = {
+                cartographicDegrees: positions
+              };
+            }
+
+            if (czml.polyline) {
+              czml.polyline.positions = {
+                cartographicDegrees: positions
+              };
+            }
+
+            if (czml.corridor) {
+              czml.corridor.positions = {
+                cartographicDegrees: positions
+              };
+            }
 
             czml.properties = Object.assign(
               czml.properties ?? {},
