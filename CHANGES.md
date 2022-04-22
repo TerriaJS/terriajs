@@ -1,15 +1,42 @@
 Change Log
 ==========
 
-#### next release (8.1.27)
+#### next release (8.2.3)
+
+* Fix selectable dimensions passing reactive objects and arrays to updateModelFromJson (which could cause problems with array detection).
+* [The next improvement]
+
+#### 8.2.2 - 2022-04-19
+
+* Fixed a whitescreen with PrintView.
+
+#### 8.2.1 - 2022-04-13
+
+* Fixed selectable-dimension checkbox group rendering bug where the group is hidden when it has empty children.
+
+#### 8.2.0 - 2022-04-12
+
+* **Breaking changes:**
+  * Multiple changes to `GtfsCatalogItem`:
+    * Removed `apiKey` in favour of more general `headers`
+    * Removed unused `bearingDirectionProperty` & `compassDirectionProperty`
+    * `image` is no longer resolved relative to the TerriaJS asset folder. This will allow using relative URLs for assets that aren't inside the TerriaJS asset folder. Any relative `image` urls should now have "build/TerriaJS/" prepended (the value of `terria.baseUrl`).
+* Added `colorModelsByProperty` to `GtfsCatalogItem` which will colour 1 model differently for different vehichles based on properties matched by regular expression. E.g. colour a vehicle model by which train line the vehicle is travelling on.
+* Fixed a bug where cross-origin billboard images threw errors in Leaflet mode when trying to recolour the image.
+* Changed rounding of the numbers of the countdown timer in the workbench UI for items that use polling. The timer wil now show 00:00 for at most 500ms (instead of a full second). This means that for timers that are a multiple of 1000ms the timer will now show 00:01 for the last second before polling, instead of 00:00.
+* TSified `BuildShareLink`, `InitSourceData` and `ShareData`.
+* Added `HasLocalData` interface - which has `hasLocalData` property to implement.
+* Added `ModelJson` interface - which provides loose type hints for Model JSON.
+* Added `settings` object to `InitSourceData` - provides `baseMaximumScreenSpaceError, useNativeResolution, alwaysShowTimeline, baseMapId, terrainSplitDirection, depthTestAgainstTerrainEnabled` - these properties are now saved in share links/stories.
+* Moved `setAlwaysShowTimeline` logic from `SettingsPanel` to `TimelineStack.ts`.
+
+#### 8.1.27 - 2022-04-08
 
 * Use CKAN Dataset `name` property for WMS `layers` as last resort.
 * Set CKAN Group will now set CKAN Item `name` in `definition` stratum.
 * Ignore GeoJSON Features with no geometry.
 * Fix feedback link styling.
 * Improve `CatalogIndexReference` error messages.
-* Fix selectable dimensions passing reactive objects and arrays to updateModelFromJson (which could cause problems with array detection).
-* [The next improvement]
 
 #### 8.1.26 - 2022-04-05
 

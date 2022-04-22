@@ -24,6 +24,7 @@ export abstract class BaseModel {
   };
   abstract get TraitsClass(): TraitsConstructor<ModelTraits>;
   abstract get knownContainerUniqueIds(): string[];
+  abstract get completeKnownContainerUniqueIds(): string[];
   abstract get strata(): Map<string, StratumFromTraits<ModelTraits>>;
 
   constructor(
@@ -75,6 +76,7 @@ export interface ModelInterface<T extends ModelTraits> {
   readonly terria: Terria;
   readonly uniqueId: string | undefined;
   readonly knownContainerUniqueIds: string[];
+  readonly completeKnownContainerUniqueIds: string[];
 
   /**
    * The model whose {@link ReferenceMixin} references this model.

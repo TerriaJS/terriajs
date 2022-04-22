@@ -10,7 +10,8 @@ import {
   assertObject,
   assertString,
   assertNumber,
-  assertArray
+  assertArray,
+  isJsonObjectArray
 } from "../../lib/Core/Json";
 import Terria from "../../lib/Models/Terria";
 
@@ -192,6 +193,27 @@ describe("Json", function() {
     expect(isJsonNumberArray(new Terria())).toBeFalsy();
 
     expect(isJsonNumberArray([3, 1, [3, 4]])).toBeFalsy();
+  });
+
+  it("isJsonObjectArray", function() {
+    expect(isJsonObjectArray(null)).toBeFalsy();
+    expect(isJsonObjectArray(1)).toBeFalsy();
+    expect(isJsonObjectArray("stringy")).toBeFalsy();
+    expect(isJsonObjectArray(false)).toBeFalsy();
+    expect(isJsonObjectArray([3, 234])).toBeFalsy();
+    expect(isJsonObjectArray(["JsonValues", 8])).toBeFalsy();
+    expect(isJsonObjectArray([{ some: "json object" }, 8])).toBeFalsy();
+    expect(
+      isJsonObjectArray([
+        { some: "json object" },
+        { another: { json: "object" } }
+      ])
+    ).toBeTruthy();
+
+    expect(isJsonObjectArray(() => {})).toBeFalsy();
+    expect(isJsonObjectArray(new Terria())).toBeFalsy();
+
+    expect(isJsonObjectArray([3, 1, [3, 4]])).toBeFalsy();
   });
 
   it("assertObject", function() {

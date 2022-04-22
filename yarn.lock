@@ -1122,6 +1122,11 @@
   resolved "https://registry.yarnpkg.com/@iadvize-oss/opaque-type/-/opaque-type-1.1.1.tgz#61f791c665d8a2b65f707f1b243b028590f41880"
   integrity sha512-qECMHjm28g6YadUSMXjJUZuMErfJI52VmXJtxnJTnPTSbgvGblrwmGVY8lNIsYLahTDsd3iZmBBdCpPF6wLAFg==
 
+"@icons/material@^0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@icons/material/-/material-0.2.4.tgz#e90c9f71768b3736e76d7dd6783fc6c2afa88bc8"
+  integrity sha512-QPcGmICAPbGLGb6F/yNf/KzKqvFx8z5qx3D1yFqVAjoFmXK35EgyW+cJ57Te3CNsmzblwtzakLGFqHPqrfb4Tw==
+
 "@mapbox/geojson-merge@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@mapbox/geojson-merge/-/geojson-merge-1.1.1.tgz#0848e09ae0e44eeb6ea2f7943f54c76fc2a561ed"
@@ -1434,6 +1439,11 @@
   resolved "https://registry.yarnpkg.com/@types/d3-color/-/d3-color-1.4.2.tgz#944f281d04a0f06e134ea96adbb68303515b2784"
   integrity sha512-fYtiVLBYy7VQX+Kx7wU/uOIkGQn8aAEY8oWMoyja3N4dLd8Yf6XgSIR/4yWvMuveNOH5VShnqCgRqqh/UNanBA==
 
+"@types/d3-color@^3.0.0":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@types/d3-color/-/d3-color-3.0.2.tgz#53f2d6325f66ee79afd707c05ac849e8ae0edbb0"
+  integrity sha512-WVx6zBiz4sWlboCy7TCgjeyHpNjMsoF36yaagny1uXfbadc9f+5BeBf7U+lRmQqY3EHbGQpP8UdW8AC+cywSwQ==
+
 "@types/d3-interpolate@^1.3.1":
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/@types/d3-interpolate/-/d3-interpolate-1.4.2.tgz#88902a205f682773a517612299a44699285eed7b"
@@ -1657,6 +1667,14 @@
   resolved "https://registry.yarnpkg.com/@types/rbush/-/rbush-3.0.0.tgz#b6887d99b159e87ae23cd14eceff34f139842aa6"
   integrity sha512-W3ue/GYWXBOpkRm0VSoifrP3HV0Ni47aVJWvXyWMcbtpBy/l/K/smBRiJ+fI8f7shXRjZBiux+iJzYbh7VmcZg==
 
+"@types/react-color@^3.0.6":
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/@types/react-color/-/react-color-3.0.6.tgz#602fed023802b2424e7cd6ff3594ccd3d5055f9a"
+  integrity sha512-OzPIO5AyRmLA7PlOyISlgabpYUa3En74LP8mTMa0veCA719SvYQov4WLMsHvCgXP+L+KI9yGhYnqZafVGG0P4w==
+  dependencies:
+    "@types/react" "*"
+    "@types/reactcss" "*"
+
 "@types/react-dom@*", "@types/react-dom@^17.0.2":
   version "17.0.11"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-17.0.11.tgz#e1eadc3c5e86bdb5f7684e00274ae228e7bcc466"
@@ -1695,6 +1713,13 @@
     "@types/prop-types" "*"
     "@types/scheduler" "*"
     csstype "^3.0.2"
+
+"@types/reactcss@*":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@types/reactcss/-/reactcss-1.2.6.tgz#133c1e7e896f2726370d1d5a26bf06a30a038bcc"
+  integrity sha512-qaIzpCuXNWomGR1Xq8SCFTtF4v8V27Y6f+b9+bzHiv087MylI/nTCqqdChNeWS7tslgROmYB7yeiruWX7WnqNg==
+  dependencies:
+    "@types/react" "*"
 
 "@types/responselike@*", "@types/responselike@^1.0.0":
   version "1.0.0"
@@ -4633,6 +4658,11 @@ d3-color@1:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/d3-color/-/d3-color-2.0.0.tgz#8d625cab42ed9b8f601a1760a389f7ea9189d62e"
   integrity sha512-SPXi0TSKPD4g9tw0NMZFnR95XVgUZiBH+uUTqQuDu1OsE2zomHU7ho0FISciaPvosimixwHFl3WHLGabv6dDgQ==
+
+d3-color@^3.0.1:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/d3-color/-/d3-color-3.1.0.tgz#395b2833dfac71507f12ac2f7af23bf819de24e2"
+  integrity sha512-zg/chbXyeBtMQ1LbD/WSoW2DpC3I0mpmPdW+ynRTj/x2DAWYrIY7qeZIHidozwV24m4iavr15lNwIwLxRmOxhA==
 
 d3-dispatch@1, d3-dispatch@^1.0.5:
   version "1.0.6"
@@ -9108,7 +9138,7 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
-lodash-es@^4.17.11:
+lodash-es@^4.17.11, lodash-es@^4.17.15:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.21.tgz#43e626c46e6591b7750beb2b50117390c609e3ee"
   integrity sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==
@@ -9218,7 +9248,7 @@ lodash.zip@^4.2.0:
   resolved "https://registry.yarnpkg.com/lodash.zip/-/lodash.zip-4.2.0.tgz#ec6662e4896408ed4ab6c542a3990b72cc080020"
   integrity sha1-7GZi5IlkCO1KtsVCo5kLcswIACA=
 
-lodash@^4.0.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.6.1, lodash@^4.8.0, lodash@~4.17.10:
+lodash@^4.0.0, lodash@^4.0.1, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.6.1, lodash@^4.8.0, lodash@~4.17.10:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -9430,6 +9460,11 @@ matchmediaquery@^0.3.0:
   integrity sha512-Hlk20WQHRIm9EE9luN1kjRjYXAQToHOIAHPJn9buxBwuhfTHoKUcX+lXBbxc85DVQfXYbEQ4HcwQdd128E3qHQ==
   dependencies:
     css-mediaquery "^0.1.2"
+
+material-colors@^1.2.1:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/material-colors/-/material-colors-1.2.6.tgz#6d1958871126992ceecc72f4bcc4d8f010865f46"
+  integrity sha512-6qE4B9deFBIa9YSpOc9O0Sgc43zTeVYbgDT5veRKSlB2+ZuHNoVVxA1L/ckMUayV9Ay9y7Z/SZCLcGteW9i7bg==
 
 math-expression-evaluator@^1.2.14, math-expression-evaluator@^1.3.7:
   version "1.3.8"
@@ -11594,6 +11629,19 @@ react-anything-sortable@^1.5.2:
     create-react-class "^15.5.2"
     prop-types "^15.5.8"
 
+react-color@^2.19.3:
+  version "2.19.3"
+  resolved "https://registry.yarnpkg.com/react-color/-/react-color-2.19.3.tgz#ec6c6b4568312a3c6a18420ab0472e146aa5683d"
+  integrity sha512-LEeGE/ZzNLIsFWa1TMe8y5VYqr7bibneWmvJwm1pCn/eNmrabWDh659JSPn9BuaMpEfU83WTOJfnCcjDZwNQTA==
+  dependencies:
+    "@icons/material" "^0.2.4"
+    lodash "^4.17.15"
+    lodash-es "^4.17.15"
+    material-colors "^1.2.1"
+    prop-types "^15.5.10"
+    reactcss "^1.2.0"
+    tinycolor2 "^1.4.1"
+
 react-datepicker@0.53.0:
   version "0.53.0"
   resolved "https://registry.yarnpkg.com/react-datepicker/-/react-datepicker-0.53.0.tgz#1a621cb8b76ad1a85ee72052f80b578db5e64301"
@@ -11734,6 +11782,13 @@ react@^16.3.2:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
+
+reactcss@^1.2.0:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/reactcss/-/reactcss-1.2.3.tgz#c00013875e557b1cf0dfd9a368a1c3dab3b548dd"
+  integrity sha512-KiwVUcFu1RErkI97ywr8nvx8dNOpT03rbnma0SSalTYjkrPYaEajR4a/MRt6DZ46K6arDRbWMNHF+xH7G7n/8A==
+  dependencies:
+    lodash "^4.0.1"
 
 read-pkg-up@^1.0.1:
   version "1.0.1"
@@ -13664,7 +13719,7 @@ terriajs-protomaps@1.14.0-prerelease:
     protosprites "0.2.0"
     rbush "^3.0.1"
 
-terriajs-server@^3.3.3:
+terriajs-server@^3.3.4:
   version "3.3.4"
   resolved "https://registry.yarnpkg.com/terriajs-server/-/terriajs-server-3.3.4.tgz#60522821bdd9c31f8857fd258530552bd29b2417"
   integrity sha512-SgCcR1yPOhwUayoA7RgkumlVY6Q56cwXtKTM49LxEf+cbq4x7Ab5O0sRhnY72GE2oAByT6yFYlcECGWAQqKp+A==
@@ -13808,6 +13863,11 @@ tiny-emitter@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/tiny-emitter/-/tiny-emitter-2.1.0.tgz#1d1a56edfc51c43e863cbb5382a72330e3555423"
   integrity sha512-NB6Dk1A9xgQPMoGqC5CVXn123gWyte215ONT5Pp5a0yt4nlEoO1ZWeCwpncaekPHXO60i47ihFnZPiRPjRMq4Q==
+
+tinycolor2@^1.4.1:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.4.2.tgz#3f6a4d1071ad07676d7fa472e1fac40a719d8803"
+  integrity sha512-vJhccZPs965sV/L2sU4oRQVAos0pQXwsvTLkWYdqJ+a8Q5kPFzJTuOFwy7UniPli44NKQGAglksjvOcpo95aZA==
 
 tinyqueue@^2.0.3:
   version "2.0.3"
