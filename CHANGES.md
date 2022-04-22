@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.2.3)
 
+* Fix `CatalogIndex` types
 * [The next improvement]
 
 #### 8.2.2 - 2022-04-19
