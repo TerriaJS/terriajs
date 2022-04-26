@@ -32,7 +32,7 @@ import {
   View,
   Zxy,
   ZxySource
-} from "terriajs-protomaps";
+} from "protomaps";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
 import {
@@ -43,6 +43,7 @@ import {
 import { default as CesiumFeature } from "../../Models/Feature";
 import Terria from "../../Models/Terria";
 import { ImageryProviderWithGridLayerSupport } from "../Leaflet/ImageryProviderLeafletGridLayer";
+import TerriaError from "../../Core/TerriaError";
 
 const geojsonvt = require("geojson-vt").default;
 
@@ -372,8 +373,15 @@ export default class ProtomapsImageryProvider
       this.source = new GeojsonSource(this.data);
     }
 
+    const labelersCanvasContext = document
+      .createElement("canvas")
+      .getContext("2d");
+
+    if (!labelersCanvasContext)
+      throw TerriaError.from("Failed to create labelersCanvasContext");
+
     this.labelers = new Labelers(
-      document.createElement("canvas").getContext("2d"),
+      labelersCanvasContext,
       this.labelRules,
       16,
       () => undefined
@@ -429,7 +437,9 @@ export default class ProtomapsImageryProvider
 
     if (!tile) return;
 
-    this.labelers.add(tile);
+    const tileMap = new Map<string, PreparedTile[]>().set("", [tile]);
+
+    this.labelers.add(coords.z, tileMap);
 
     let labelData = this.labelers.getIndex(tile.z);
 
@@ -447,7 +457,17 @@ export default class ProtomapsImageryProvider
     ctx.clearRect(0, 0, 256, 256);
 
     if (labelData)
-      painter(ctx, [tile], labelData, this.paintRules, bbox, origin, false, "");
+      painter(
+        ctx,
+        coords.z,
+        tileMap,
+        labelData,
+        this.paintRules,
+        bbox,
+        origin,
+        false,
+        ""
+      );
   }
 
   async pickFeatures(

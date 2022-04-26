@@ -51,7 +51,7 @@ import {
   GeomType,
   LineSymbolizer,
   PolygonSymbolizer
-} from "terriajs-protomaps";
+} from "protomaps";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import formatPropertyValue from "../Core/formatPropertyValue";
@@ -647,7 +647,10 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               return (
                 feature?.geomType === GeomType.Polygon &&
                 (!currentTimeRows ||
-                  currentTimeRows.includes(feature?.props[FEATURE_ID_PROP]))
+                  (isJsonNumber(feature?.props[FEATURE_ID_PROP]) &&
+                    currentTimeRows.includes(
+                      feature?.props[FEATURE_ID_PROP] as number
+                    )))
               );
             }
           },
@@ -665,7 +668,10 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
                   return (
                     feature?.geomType === GeomType.Polygon &&
                     (!currentTimeRows ||
-                      currentTimeRows.includes(feature?.props[FEATURE_ID_PROP]))
+                      (isJsonNumber(feature?.props[FEATURE_ID_PROP]) &&
+                        currentTimeRows.includes(
+                          feature?.props[FEATURE_ID_PROP] as number
+                        )))
                   );
                 }
               }
@@ -686,7 +692,10 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
                   return (
                     feature?.geomType === GeomType.Line &&
                     (!currentTimeRows ||
-                      currentTimeRows.includes(feature?.props[FEATURE_ID_PROP]))
+                      (isJsonNumber(feature?.props[FEATURE_ID_PROP]) &&
+                        currentTimeRows.includes(
+                          feature?.props[FEATURE_ID_PROP] as number
+                        )))
                   );
                 }
               }
@@ -709,7 +718,10 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               return (
                 feature?.geomType === GeomType.Point &&
                 (!currentTimeRows ||
-                  currentTimeRows.includes(feature?.props[FEATURE_ID_PROP]))
+                  (isJsonNumber(feature?.props[FEATURE_ID_PROP]) &&
+                    currentTimeRows.includes(
+                      feature?.props[FEATURE_ID_PROP] as number
+                    )))
               );
             }
           }

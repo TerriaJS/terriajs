@@ -10,7 +10,7 @@ import {
   GeomType,
   LineSymbolizer,
   PolygonSymbolizer
-} from "terriajs-protomaps";
+} from "protomaps";
 import { JsonObject } from "../../../../lib/Core/Json";
 import loadJson from "../../../../lib/Core/loadJson";
 import loadText from "../../../../lib/Core/loadText";
