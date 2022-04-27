@@ -5,6 +5,7 @@ Change Log
 
 * Update protomaps to `1.19.0` - now using offical version.
 * Fix Table/VectorStylingWorkflow for datasets with no columns/properties to visualise
+* Improve default `activeStyle` in `TableMixin` - if no `scalar` style is found then find first style with enum, text and finally region.
 * [The next improvement]
 
 #### 8.2.3 - 2022-04-22

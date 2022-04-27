@@ -146,9 +146,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      * Gets the {@link TableStyleTraits#id} of the currently-active style.
      * Note that this is a trait so there is no guarantee that a style
      * with this ID actually exists. If no active style is explicitly
-     * specified, the ID of the first style with a scalar color column is used.
-     * If there is no such style the id of the first style of the {@link #styles}
-     * is used.
+     * specified, return first style with a scalar color column (if none is found then find first style with enum, text and then region)
+     *
      */
     @computed
     get activeStyle(): string | undefined {
@@ -156,16 +155,29 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       if (value !== undefined) {
         return value;
       } else if (this.styles && this.styles.length > 0) {
-        // Find and return a style with scalar color column if it exists,
-        // otherwise just return the first available style id.
-        const styleWithScalarColorColumn = this.styles.find(s => {
-          const colName = s.color.colorColumn;
-          return (
-            colName &&
-            this.findColumnByName(colName)?.type === TableColumnType.scalar
-          );
-        });
-        return styleWithScalarColorColumn?.id || this.styles[0].id;
+        // Find default active style in this order:
+        // - First scalar style
+        // - First enum style
+        // - First text style
+        // - First region style
+
+        const types = [
+          TableColumnType.scalar,
+          TableColumnType.enum,
+          TableColumnType.text,
+          TableColumnType.region
+        ];
+
+        const firstStyleOfEachType = types.map(
+          columnType =>
+            this.styles.find(
+              s =>
+                s.color.colorColumn &&
+                this.findColumnByName(s.color.colorColumn)?.type === columnType
+            )?.id
+        );
+
+        return filterOutUndefined(firstStyleOfEachType)[0];
       }
       return undefined;
     }
@@ -447,16 +459,16 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return filterOutUndefined([
         ...super.viewingControls,
         {
-              id: TableStylingWorkflow.type,
-              name: "Edit Style",
-              onClick: action(viewState =>
-                SelectableDimensionWorkflow.runWorkflow(
-                  viewState,
-                  new TableStylingWorkflow(this)
-                )
-              ),
-              icon: { glyph: Icon.GLYPHS.layers }
-            }
+          id: TableStylingWorkflow.type,
+          name: "Edit Style",
+          onClick: action(viewState =>
+            SelectableDimensionWorkflow.runWorkflow(
+              viewState,
+              new TableStylingWorkflow(this)
+            )
+          ),
+          icon: { glyph: Icon.GLYPHS.layers }
+        }
       ]);
     }
 
