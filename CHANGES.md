@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.2.4)
 
+* Added a check for disableExport in ChartPanelDownloadButton.jsx. Prevents download button rendering.
 * [The next improvement]
 
 #### 8.2.3 - 2022-04-22
