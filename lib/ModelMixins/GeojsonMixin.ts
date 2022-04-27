@@ -1182,7 +1182,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     }
 
     @computed get viewingControls(): ViewingControl[] {
-      return this.useMvt && this.activeStyle // Note we want falsy here for activeStyle ("" is equivalent to undefined)
+      return this.useMvt
         ? [
             // We replace the TableStylingWorkflow with VectorStylingWorkflow
             ...super.viewingControls.filter(

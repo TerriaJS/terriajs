@@ -938,7 +938,8 @@ export default class TableStylingWorkflow
     return {
       type: "group",
       id: "Additional colors",
-      isOpen: false,
+      // Open group by default is no activeStyle is selected
+      isOpen: !this.item.activeStyle,
       selectableDimensions: filterOutUndefined([
         this.tableStyle.colorColumn?.type === TableColumnType.region
           ? {
@@ -1158,7 +1159,9 @@ export default class TableStylingWorkflow
   @computed get selectableDimensions(): SelectableDimensionWorkflowGroup[] {
     return filterOutUndefined([
       this.tableStyleSelectableDim,
-      this.colorSchemeSelectableDim,
+
+      // Only show color scheme selection if activeStyle exists
+      this.item.activeStyle ? this.colorSchemeSelectableDim : undefined,
 
       // If we are in continuous realm:
       // - Display range
@@ -1272,12 +1275,16 @@ export default class TableStylingWorkflow
     return this.item.activeTableStyle;
   }
 
-  /** Get `TableStyleTraits` for the active table style (so we can call `setTraits`) */
+  /** Get `TableStyleTraits` for the active table style (so we can call `setTraits`).
+   * If no style is selected - set `defaultStyle`
+   */
   getTableStyleTraits(stratumId: string, id: string = this.tableStyle.id) {
-    return (
-      this.item.styles?.find(style => style.id === id) ??
-      this.item.addObject(stratumId, "styles", id)
-    );
+    return this.item.styles?.find(style => style.id === id) ??
+      this.item.addObject(stratumId, "styles", id) ??
+      // Only return defaultStyle if style ID is nullish
+      !id
+      ? this.item.defaultStyle
+      : undefined;
   }
 
   /** Get `TableColumnTraits` for the active table style `colorColumn` (so we can call `setTraits`) */

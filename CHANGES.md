@@ -4,6 +4,7 @@ Change Log
 #### next release (8.2.4)
 
 * Update protomaps to `1.19.0` - now using offical version.
+* Fix Table/VectorStylingWorkflow for datasets with no columns/properties to visualise
 * [The next improvement]
 
 #### 8.2.3 - 2022-04-22
