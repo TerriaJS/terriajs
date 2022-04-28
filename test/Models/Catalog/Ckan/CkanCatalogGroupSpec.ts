@@ -8,10 +8,11 @@ import CkanCatalogGroup, {
   CkanServerStratum
 } from "../../../../lib/Models/Catalog/Ckan/CkanCatalogGroup";
 import CkanItemReference from "../../../../lib/Models/Catalog/Ckan/CkanItemReference";
-import Terria from "../../../../lib/Models/Terria";
+import WebMapServiceCatalogGroup from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
-import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
+import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
+import Terria from "../../../../lib/Models/Terria";
 
 configure({
   enforceActions: "observed",
@@ -495,6 +496,77 @@ describe("CkanCatalogGroup", function() {
         "4e221b55-1702-4f3a-8066-c7dd13bc4cd7"
       );
       expect(items[1]._ckanResource?.format).toBe("GeoJSON");
+    });
+  });
+
+  describe("allowEntireWmsServers", () => {
+    beforeEach(async function() {
+      runInAction(() => {
+        ckanCatalogGroup.setTrait(
+          "definition",
+          "url",
+          "test/CKAN/search-result.json"
+        );
+
+        updateModelFromJson(ckanCatalogGroup, CommonStrata.definition, {
+          supportedResourceFormats: [
+            {
+              id: "Kml",
+              formatRegex: "somethingIncorrect"
+            },
+            {
+              id: "GeoJson",
+              formatRegex: "somethingIncorrect"
+            },
+            {
+              id: "Shapefile",
+              formatRegex: "somethingIncorrect"
+            }
+          ]
+        });
+      });
+    });
+
+    it("allowEntireWmsServers = true", async function() {
+      updateModelFromJson(ckanCatalogGroup, CommonStrata.definition, {
+        allowEntireWmsServers: true
+      });
+
+      await ckanCatalogGroup.loadMembers();
+      ckanServerStratum = <CkanServerStratum>(
+        ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
+      );
+
+      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+
+      expect(group1.memberModels.length).toBe(2);
+
+      const items = group1.memberModels as CkanItemReference[];
+
+      expect(items[1].name).toBe("Groundwater SDL Resource Units");
+      expect(items[1]._ckanResource?.id).toBe(
+        "1dae2cfe-345b-4320-bf0c-4da0de061dc5"
+      );
+      expect(items[1]._ckanResource?.format).toBe("WMS");
+
+      await items[1].loadReference();
+
+      expect(items[1].target instanceof WebMapServiceCatalogGroup).toBeTruthy();
+    });
+
+    it("allowEntireWmsServers = false", async function() {
+      updateModelFromJson(ckanCatalogGroup, CommonStrata.definition, {
+        allowEntireWmsServers: false
+      });
+
+      await ckanCatalogGroup.loadMembers();
+      ckanServerStratum = <CkanServerStratum>(
+        ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
+      );
+
+      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+
+      expect(group1).toBeUndefined();
     });
   });
 });

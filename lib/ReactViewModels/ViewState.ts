@@ -379,10 +379,10 @@ export default class ViewState {
         // if /#hideWorkbench=1 exists in url onload, show stories directly
         // any show/hide workbench will not automatically show story
         if (!defined(this.storyShown)) {
-          // why only checkk config params here? because terria.stories are not
+          // why only check config params here? because terria.stories are not
           // set at the moment, and that property will be checked in rendering
           // Here are all are checking are: is terria story enabled in this app?
-          // if so we should show it when app first laod, if workbench is hiddne
+          // if so we should show it when app first load, if workbench is hidden
           this.storyShown = terria.configParameters.storyEnabled;
         }
       }

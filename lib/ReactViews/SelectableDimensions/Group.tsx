@@ -3,7 +3,8 @@ import CommonStrata from "../../Models/Definition/CommonStrata";
 import {
   filterSelectableDimensions,
   SelectableDimensionCheckboxGroup as SelectableDimensionCheckboxGroupModel,
-  SelectableDimensionGroup as SelectableDimensionGroupModel
+  SelectableDimensionGroup as SelectableDimensionGroupModel,
+  isGroup
 } from "../../Models/SelectableDimensions/SelectableDimensions";
 import Box from "../../Styled/Box";
 import Collapsible from "../Custom/Collapsible/Collapsible";
@@ -19,7 +20,9 @@ export const SelectableDimensionGroup: React.FC<{
   const childDims = filterSelectableDimensions(dim.placement)(
     dim.selectableDimensions
   );
-  if (childDims.length === 0) return null;
+  // Hide static groups with empty children.
+  // We still show checkbox groups with empty children as they are stateful.
+  if (isGroup(dim) && childDims.length === 0) return null;
   return (
     <Collapsible
       title={

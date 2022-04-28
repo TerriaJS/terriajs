@@ -1,7 +1,29 @@
 Change Log
 ==========
 
-#### next release (8.2.0)
+#### next release (8.2.4)
+
+* [The next improvement]
+
+#### 8.2.3 - 2022-04-22
+
+* **Breaking changes:**
+  * `CkanItemReference` no longer copies `default` stratum to target - please use `itemProperties` instead.
+* **Revert** Use CKAN Dataset `name` property for WMS `layers` as last resort.
+* Add support for `WebMapServiceCatalogGroup` to `CkanItemReference` - this will be used instead of `WebMapServiceCatalogItem` if WMS `layers` can't be identified from CKAN resource metadata.
+  * Add `allowEntireWmsServers` to `CkanCatalogGroupTraits` - defaults to `true`
+* Ignore WMS `Layers` with duplicate `Name` properties
+* Fix selectable dimensions passing reactive objects and arrays to updateModelFromJson (which could cause problems with array detection).
+
+#### 8.2.2 - 2022-04-19
+
+* Fixed a whitescreen with PrintView.
+
+#### 8.2.1 - 2022-04-13
+
+* Fixed selectable-dimension checkbox group rendering bug where the group is hidden when it has empty children.
+
+#### 8.2.0 - 2022-04-12
 
 * **Breaking changes:**
   * Multiple changes to `GtfsCatalogItem`:
@@ -15,6 +37,11 @@ Change Log
 * Removed EN & FR translation files from bundle. All translation files are now loaded on demand.
 * Moved translation files from `lib/Language/*/translation.json` to `wwwroot/languages/*/translation.json`.
 * [The next improvement]
+* TSified `BuildShareLink`, `InitSourceData` and `ShareData`.
+* Added `HasLocalData` interface - which has `hasLocalData` property to implement.
+* Added `ModelJson` interface - which provides loose type hints for Model JSON.
+* Added `settings` object to `InitSourceData` - provides `baseMaximumScreenSpaceError, useNativeResolution, alwaysShowTimeline, baseMapId, terrainSplitDirection, depthTestAgainstTerrainEnabled` - these properties are now saved in share links/stories.
+* Moved `setAlwaysShowTimeline` logic from `SettingsPanel` to `TimelineStack.ts`.
 
 #### 8.1.27 - 2022-04-08
 
