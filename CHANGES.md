@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.2.4)
 
+* ProgressBar colour now depends on baseMapContrastColor - improves visibility on light map backgrounds
 * [The next improvement]
 
 #### 8.2.3 - 2022-04-22
