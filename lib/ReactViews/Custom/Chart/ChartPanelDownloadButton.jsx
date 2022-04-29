@@ -63,8 +63,13 @@ const ChartPanelDownloadButton = createReactClass({
     );
   },
 
+  isExportDisabled() {
+    // Check if any of the chartable items have disableExport set to true
+    return this.props.chartableItems.some(obj => obj.disableExport === true);
+  },
+
   async download() {
-    if (!this.isDownloadSupported()) {
+    if (!this.isDownloadSupported() || this.isExportDisabled()) {
       return;
     }
 
@@ -104,7 +109,7 @@ const ChartPanelDownloadButton = createReactClass({
   },
 
   render() {
-    if (!this.isDownloadSupported()) {
+    if (!this.isDownloadSupported() || this.isExportDisabled()) {
       return null;
     }
 
