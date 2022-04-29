@@ -1,6 +1,6 @@
 import { Document } from "flexsearch";
 import { action, observable, runInAction } from "mobx";
-import { isJsonObject } from "../../Core/Json";
+import { isJsonObject, isJsonString, isJsonStringArray } from "../../Core/Json";
 import loadBlob, { isZip, parseZipJsonBlob } from "../../Core/loadBlob";
 import loadJson from "../../Core/loadJson";
 import CatalogIndexReferenceTraits from "../../Traits/TraitsClasses/CatalogIndexReferenceTraits";
@@ -11,7 +11,7 @@ import Terria from "../Terria";
 import SearchResult from "./SearchResult";
 
 export interface CatalogIndexFile {
-  [id: string]: CatalogIndexReferenceTraits;
+  [id: string]: Partial<CatalogIndexReferenceTraits>;
 }
 
 export interface ModelIndex {
@@ -117,7 +117,7 @@ export default class CatalogIndex {
 
         updateModelFromJson(reference, CommonStrata.definition, model);
 
-        if (model.shareKeys) {
+        if (isJsonStringArray(model.shareKeys)) {
           model.shareKeys.map(s => this.shareKeysMap.set(s, id));
         }
         // Add model to CatalogIndexReference map
@@ -127,8 +127,10 @@ export default class CatalogIndex {
         promises.push(
           this._searchIndex.addAsync(id, {
             id,
-            name: model.name ?? "",
-            description: model.description ?? ""
+            name: isJsonString(model.name) ? model.name : "",
+            description: isJsonString(model.description)
+              ? model.description
+              : ""
           })
         );
       }
