@@ -122,8 +122,13 @@ class Internationalization {
 
         backend: Object.assign(
           {
-            loadPath: function loadPath(lngs: string[], namespaces: string[]) {
-              return namespaces[0] === "translation"
+            // Loads translation files from either a TerriaMap's languages assets or from TerriaJS' assets
+            // Always load "translation" namespace from TerriaJS assets, and load "languageOverrides" namespace from the TerriaMap
+            loadPath: function loadPath(
+              [_lng]: string[],
+              [namespace]: string[]
+            ) {
+              return namespace === "translation"
                 ? `${terriajsResourcesBaseUrl}languages/{{lng}}/{{ns}}.json`
                 : "languages/{{lng}}/{{ns}}.json";
             },
