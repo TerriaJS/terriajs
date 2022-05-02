@@ -8,6 +8,7 @@ import React from "react";
 import { Trans, withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Clipboard from "../../../Clipboard";
+import ExcludeStoryOption from "../../../ExcludeStoryOption";
 import Icon from "../../../../Styled/Icon";
 import Loader from "../../../Loader";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
@@ -147,7 +148,9 @@ const SharePanel = observer(
           placeholder: t("share.shortLinkShortening")
         });
 
-        buildShortShareLink(this.props.terria, this.props.viewState)
+        buildShortShareLink(this.props.terria, this.props.viewState, {
+          // includeStories: false
+        })
           .then(shareUrl => this.setState({ shareUrl }))
           .catch(() => {
             this.setUnshortenedUrl();
@@ -162,7 +165,9 @@ const SharePanel = observer(
 
     setUnshortenedUrl() {
       this.setState({
-        shareUrl: buildShareLink(this.props.terria, this.props.viewState)
+        shareUrl: buildShareLink(this.props.terria, this.props.viewState, {
+          // includeStories: false
+        })
       });
     },
 
@@ -327,8 +332,10 @@ const SharePanel = observer(
                   )
                 }
               />
+              <ExcludeStoryOption isChecked={false} />
               {this.renderWarning()}
             </div>
+            <div></div>
           </Otherwise>
         </Choose>
       );
@@ -383,6 +390,7 @@ const SharePanel = observer(
                 )
               }
             />
+            <ExcludeStoryOption isChecked={false} />
             {this.renderWarning()}
           </div>
           <div className={DropdownStyles.section}>
