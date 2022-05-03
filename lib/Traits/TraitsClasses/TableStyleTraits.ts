@@ -1,11 +1,13 @@
+import StratumFromTraits from "../../Models/Definition/StratumFromTraits";
+import objectTrait from "../Decorators/objectTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import ModelTraits from "../ModelTraits";
 import TableChartStyleTraits from "./TableChartStyleTraits";
 import TableColorStyleTraits from "./TableColorStyleTraits";
 import TablePointSizeStyleTraits from "./TablePointSizeStyleTraits";
+import TablePointStyleTraits from "./TablePointStyleTraits";
 import TableTimeStyleTraits from "./TableTimeStyleTraits";
-import ModelTraits from "../ModelTraits";
-import objectTrait from "../Decorators/objectTrait";
-import primitiveTrait from "../Decorators/primitiveTrait";
-import StratumFromTraits from "../../Models/Definition/StratumFromTraits";
+import TableOutlineStyleTraits from "./TableOutlineStyleTraits";
 
 export default class TableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -54,6 +56,22 @@ export default class TableStyleTraits extends ModelTraits {
     type: TableColorStyleTraits
   })
   color?: TableColorStyleTraits;
+
+  @objectTrait({
+    name: "Color",
+    description:
+      "Options for controlling the symbolization. This excludes color (see TableColorStyleTraits) and pointSize (see TablePointSizeStyleTraits).",
+    type: TablePointStyleTraits
+  })
+  point?: TablePointStyleTraits;
+
+  @objectTrait({
+    name: "Color",
+    description:
+      "Options for controlling the symbolization. This excludes color (see TableColorStyleTraits) and pointSize (see TablePointSizeStyleTraits).",
+    type: TableOutlineStyleTraits
+  })
+  outline?: TableOutlineStyleTraits;
 
   @objectTrait({
     name: "Point Size",

@@ -1,3 +1,4 @@
+import { BBox } from "@turf/helpers";
 import groupBy from "lodash-es/groupBy";
 import { computed } from "mobx";
 import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
@@ -5,6 +6,7 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
+import { isJsonNumber } from "../Core/Json";
 import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
 import DiscreteColorMap from "../Map/ColorMap/DiscreteColorMap";
 import EnumColorMap from "../Map/ColorMap/EnumColorMap";
@@ -17,16 +19,15 @@ import createCombinedModel from "../Models/Definition/createCombinedModel";
 import Model from "../Models/Definition/Model";
 import TableChartStyleTraits from "../Traits/TraitsClasses/TableChartStyleTraits";
 import TableColorStyleTraits from "../Traits/TraitsClasses/TableColorStyleTraits";
+import TableOutlineStyleTraits from "../Traits/TraitsClasses/TableOutlineStyleTraits";
 import TablePointSizeStyleTraits from "../Traits/TraitsClasses/TablePointSizeStyleTraits";
+import TablePointStyleTraits from "../Traits/TraitsClasses/TablePointStyleTraits";
 import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
 import TableTimeStyleTraits from "../Traits/TraitsClasses/TableTimeStyleTraits";
 import TableColorMap from "./TableColorMap";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
-import { BBox } from "@turf/helpers";
-import { isJsonNumber } from "../Core/Json";
-import createStratumInstance from "../Models/Definition/createStratumInstance";
-import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
+import TableStyleMap from "./TableStyleMap";
 
 const DEFAULT_FINAL_DURATION_SECONDS = 3600 * 24 - 1; // one day less a second, if there is only one date.
 
@@ -140,6 +141,14 @@ export default class TableStyle {
   @computed
   get colorTraits(): Model<TableColorStyleTraits> {
     return this.styleTraits.color;
+  }
+
+  @computed get pointTraits(): Model<TablePointStyleTraits> {
+    return this.styleTraits.point;
+  }
+
+  @computed get outlineTraits(): Model<TableOutlineStyleTraits> {
+    return this.styleTraits.outline;
   }
 
   /**
@@ -295,6 +304,22 @@ export default class TableStyle {
   }
 
   /**
+   * Gets the symbol column for this style, if any.
+   */
+  @computed
+  get pointStyleColumn(): TableColumn | undefined {
+    return this.resolveColumn(this.pointTraits.column);
+  }
+
+  /**
+   * Gets the symbol column for this style, if any.
+   */
+  @computed
+  get outlineStyleColumn(): TableColumn | undefined {
+    return this.resolveColumn(this.outlineTraits.column);
+  }
+
+  /**
    * Gets the scale column for this style, if any.
    */
   @computed
@@ -368,6 +393,14 @@ export default class TableStyle {
 
   @computed get colorMap() {
     return this.tableColorMap.colorMap;
+  }
+
+  @computed get pointStyleMap() {
+    return new TableStyleMap(this.pointStyleColumn, this.pointTraits);
+  }
+
+  @computed get outlineStyleMap() {
+    return new TableStyleMap(this.outlineStyleColumn, this.outlineTraits);
   }
 
   @computed

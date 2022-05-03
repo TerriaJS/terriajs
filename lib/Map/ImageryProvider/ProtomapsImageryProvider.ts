@@ -604,15 +604,15 @@ export default class ProtomapsImageryProvider
     return [];
   }
 
-  private duplicate(options?: Partial<Options>) {
+  private clone(options?: Partial<Options>) {
     let data = options?.data;
 
-    // To duplicate data/source, we want to minimize any unnecessary processing
+    // To clone data/source, we want to minimize any unnecessary processing
     if (!data) {
       // These can be passed straight in without processing
       if (typeof this.data === "string" || this.data instanceof PmtilesSource) {
         data = this.data;
-        // We can't just duplicate ZxySource objects, so just pass in URL
+        // We can't just clone ZxySource objects, so just pass in URL
       } else if (this.data instanceof ZxySource) {
         data = this.data.url;
         // If GeojsonSource was passed into data, create new one and copy over tileIndex
@@ -646,7 +646,7 @@ export default class ProtomapsImageryProvider
     });
   }
 
-  /** Duplicates ImageryProvider, and sets paintRules to highlight picked features */
+  /** Clones ImageryProvider, and sets paintRules to highlight picked features */
   @action
   createHighlightImageryProvider(
     feature: CesiumFeature
@@ -667,7 +667,7 @@ export default class ProtomapsImageryProvider
     const featureId = feature.properties?.[featureProp]?.getValue();
 
     if (isDefined(featureId) && isDefined(layerName)) {
-      return this.duplicate({
+      return this.clone({
         labelRules: [],
         paintRules: [
           {

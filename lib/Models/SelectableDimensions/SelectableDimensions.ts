@@ -151,6 +151,11 @@ export interface SelectableDimensionGroup
   >[];
 }
 
+export type FlatSelectableDimension = Exclude<
+  SelectableDimension,
+  SelectableDimensionGroup
+>;
+
 export type SelectableDimension =
   | SelectableDimensionEnum
   | SelectableDimensionCheckbox
