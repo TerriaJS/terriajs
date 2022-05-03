@@ -8,7 +8,7 @@ import React from "react";
 import { Trans, withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Clipboard from "../../../Clipboard";
-import ExcludeStoryOption from "../../../ExcludeStoryOption";
+import IncludeStoryOption from "../../../IncludeStoryOption";
 import Icon from "../../../../Styled/Icon";
 import Loader from "../../../Loader";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
@@ -28,6 +28,7 @@ import {
 } from "../../../../Core/AnalyticEvents/analyticEvents";
 
 import { downloadImg } from "./Print/PrintView";
+import { reaction } from "mobx";
 
 const SharePanel = observer(
   createReactClass({
@@ -92,6 +93,15 @@ const SharePanel = observer(
           this.print();
         };
       }
+
+      // Listen to the includeStoryInShare property of viewState, generate the share URL again if this changes
+      // This allows the share URL to be updated when users change the 'Include Story in Share?'checkbox in the SharePanel comnponent.
+      this.updateShareUrlWhenStoryOptionChanged = reaction(
+        () => this.props.viewState.includeStoryInShare,
+        () => {
+          this.updateForShortening();
+        }
+      );
     },
 
     componentWillUnmount() {
@@ -104,6 +114,9 @@ const SharePanel = observer(
       if (this._oldPrint) {
         window.print = this._oldPrint;
       }
+
+      // Cleanup reaction
+      this.updateShareUrlWhenStoryOptionChanged();
     },
 
     beforeBrowserPrint() {
@@ -148,9 +161,7 @@ const SharePanel = observer(
           placeholder: t("share.shortLinkShortening")
         });
 
-        buildShortShareLink(this.props.terria, this.props.viewState, {
-          // includeStories: false
-        })
+        buildShortShareLink(this.props.terria, this.props.viewState)
           .then(shareUrl => this.setState({ shareUrl }))
           .catch(() => {
             this.setUnshortenedUrl();
@@ -165,9 +176,7 @@ const SharePanel = observer(
 
     setUnshortenedUrl() {
       this.setState({
-        shareUrl: buildShareLink(this.props.terria, this.props.viewState, {
-          // includeStories: false
-        })
+        shareUrl: buildShareLink(this.props.terria, this.props.viewState)
       });
     },
 
@@ -332,7 +341,7 @@ const SharePanel = observer(
                   )
                 }
               />
-              <ExcludeStoryOption isChecked={false} />
+              <IncludeStoryOption viewState={this.props.viewState} />
               {this.renderWarning()}
             </div>
             <div></div>
@@ -390,7 +399,7 @@ const SharePanel = observer(
                 )
               }
             />
-            <ExcludeStoryOption isChecked={false} />
+            <IncludeStoryOption viewState={this.props.viewState} />
             {this.renderWarning()}
           </div>
           <div className={DropdownStyles.section}>

@@ -67,7 +67,7 @@ function buildBaseShareUrl(
 export function buildShareLink(
   terria: Terria,
   viewState?: ViewState,
-  options = { includeStories: true }
+  options = { includeStories: viewState?.includeStoryInShare ?? false }
 ) {
   return buildBaseShareUrl(terria, {
     start: JSON.stringify(getShareData(terria, viewState, options))
@@ -82,7 +82,7 @@ export function buildShareLink(
 export async function buildShortShareLink(
   terria: Terria,
   viewState?: ViewState,
-  options = { includeStories: true }
+  options = { includeStories: viewState?.includeStoryInShare ?? false }
 ) {
   if (!isDefined(terria.shareDataService))
     throw TerriaError.from(
@@ -110,7 +110,7 @@ export async function buildShortShareLink(
 export function getShareData(
   terria: Terria,
   viewState?: ViewState,
-  options = { includeStories: true }
+  options = { includeStories: viewState?.includeStoryInShare ?? true }
 ): ShareInitSourceData {
   return runInAction(() => {
     const { includeStories } = options;
