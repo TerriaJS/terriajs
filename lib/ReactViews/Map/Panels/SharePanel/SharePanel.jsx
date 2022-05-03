@@ -8,7 +8,7 @@ import React from "react";
 import { Trans, withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Clipboard from "../../../Clipboard";
-import IncludeStoryOption from "../../../IncludeStoryOption";
+import IncludeStoryOption from "./IncludeStoryOption";
 import Icon from "../../../../Styled/Icon";
 import Loader from "../../../Loader";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
@@ -320,6 +320,8 @@ const SharePanel = observer(
 
     renderContentForStoryShare() {
       const { t, terria } = this.props;
+      // Set viewState to include story in share, as we will not render the checkbox
+      this.props.viewState.setIncludeStoryInShare(true);
       return (
         <Choose>
           <When condition={this.state.shareUrl === ""}>
@@ -341,8 +343,6 @@ const SharePanel = observer(
                   )
                 }
               />
-              <IncludeStoryOption viewState={this.props.viewState} />
-              {this.renderWarning()}
             </div>
             <div></div>
           </Otherwise>

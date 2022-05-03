@@ -1,10 +1,11 @@
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import Checkbox from "../Styled/Checkbox";
-import { TextSpan } from "../Styled/Text";
+import Checkbox from "../../../../Styled/Checkbox";
+import { TextSpan } from "../../../../Styled/Text";
 import React from "react";
-import ViewState from "../ReactViewModels/ViewState";
+import ViewState from "../../../../ReactViewModels/ViewState";
 import { observer } from "mobx-react";
+import Styles from "./share-panel.scss";
 
 interface IncludeStoryOptionProps {
   viewState: ViewState;
@@ -29,6 +30,7 @@ const IncludeStoryOption: React.FC<IncludeStoryOptionProps> = observer(
           title="Include Story in Share"
           isChecked={isChecked}
           onChange={onChangeHandler}
+          className={Styles.checkbox}
         >
           <TextSpan>{t("includeStory.message")}</TextSpan>
         </Checkbox>
