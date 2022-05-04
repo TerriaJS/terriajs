@@ -8,6 +8,7 @@ export function getMakiIcon(
   height: number,
   width: number
 ) {
+  if (id === "point") id = "circle";
   const svgId = `${id}.svg`;
   const iconSvgs = icons.iconGroups[0].svgs as any;
   if (svgId in iconSvgs) {

@@ -115,6 +115,11 @@ export interface ModelInterface<T extends ModelTraits> {
     trait: Key,
     objectId: string
   ): Model<ArrayElementTypes<T>[Key]> | undefined;
+
+  pushObject<Key extends keyof ArrayElementTypes<T>>(
+    stratumId: string,
+    trait: Key
+  ): Model<ArrayElementTypes<T>[Key]> | undefined;
 }
 
 type Model<T extends ModelTraits> = ModelInterface<T> &

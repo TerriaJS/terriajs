@@ -12,6 +12,7 @@ import ConstantColorMap from "../../Map/ColorMap/ConstantColorMap";
 import ContinuousColorMap from "../../Map/ColorMap/ContinuousColorMap";
 import DiscreteColorMap from "../../Map/ColorMap/DiscreteColorMap";
 import EnumColorMap from "../../Map/ColorMap/EnumColorMap";
+import { getMakiIcon } from "../../Map/Icons/Maki/MakiIcons";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../../ModelMixins/TableMixin";
 import {
@@ -29,31 +30,28 @@ import {
   SEQUENTIAL_SCALES
 } from "../../Table/TableColorMap";
 import TableColumnType from "../../Table/TableColumnType";
+import { StyleMapType } from "../../Table/TableStyleMap";
 import { EnumColorTraits } from "../../Traits/TraitsClasses/TableColorStyleTraits";
+import {
+  EnumPointSymbolTraits,
+  PointSymbolTraits
+} from "../../Traits/TraitsClasses/TablePointStyleTraits";
 import CommonStrata from "../Definition/CommonStrata";
+import createStratumInstance from "../Definition/createStratumInstance";
+import Model from "../Definition/Model";
 import ModelPropertiesFromTraits from "../Definition/ModelPropertiesFromTraits";
 import {
+  FlatSelectableDimension,
   SelectableDimension,
+  SelectableDimensionColor,
   SelectableDimensionGroup,
   SelectableDimensionNumeric,
-  SelectableDimensionText,
-  SelectableDimensionColor,
-  FlatSelectableDimension
+  SelectableDimensionText
 } from "../SelectableDimensions/SelectableDimensions";
 import ViewingControls from "../ViewingControls";
 import SelectableDimensionWorkflow, {
   SelectableDimensionWorkflowGroup
 } from "../Workflows/SelectableDimensionWorkflow";
-import {
-  PointSymbolTraits,
-  EnumPointSymbolTraits
-} from "../../Traits/TraitsClasses/TablePointStyleTraits";
-import Model from "../Definition/Model";
-import { StyleMapType } from "../../Table/TableStyleMap";
-import StratumFromTraits from "../Definition/StratumFromTraits";
-import { ObjectArrayTrait } from "../../Traits/Decorators/objectArrayTrait";
-import StratumOrder from "../Definition/StratumOrder";
-import createStratumInstance from "../Definition/createStratumInstance";
 
 /** The ColorSchemeType is used to change which SelectableDimensions are shown.
  * It is basically the "mode" of the TableStylingWorkflow
@@ -1305,10 +1303,16 @@ export default class TableStylingWorkflow
             const dims: SelectableDimensionGroup = {
               type: "group",
               id: `marker-enum-${idx}`,
-              name: `Some marker ${idx}`,
-
-              // `<div><div style="margin-bottom: -4px; width:20px; height:20px; display:inline-block; background-color:${enumPoint.color ??
-              //   "#aaa"} ;"></div> ${enumPoint.value}</div>`,
+              name: `<div><img width ="${enumPoint.width}px" height="${
+                enumPoint.height
+              }px" style="margin-bottom: -4px" src="${getMakiIcon(
+                enumPoint.marker,
+                "#fff",
+                1,
+                "#000",
+                enumPoint.height,
+                enumPoint.width
+              ) ?? enumPoint.marker}"></img> ${enumPoint.value}</div>`,
               isOpen: this.openBinIndex === idx,
               onToggle: open => {
                 if (open && this.openBinIndex !== idx) {
@@ -1412,7 +1416,7 @@ export default class TableStylingWorkflow
             id: `enum-add`,
             value: "Add Color",
             setDimensionValue: stratumId => {
-              const firstValue = this.tableStyle.colorColumn?.uniqueValues.values.find(
+              const firstValue = this.tableStyle.pointStyleColumn?.uniqueValues.values.find(
                 value =>
                   !this.tableStyle.pointTraits.enum.find(
                     col => col.value === value
@@ -1420,14 +1424,9 @@ export default class TableStylingWorkflow
               );
               if (!isDefined(firstValue)) return;
 
-              const idsInCorrectOrder = (this.tableStyle.pointTraits.traits
-                .enum as ObjectArrayTrait<any>).getIdsAcrossStrata(
-                this.tableStyle.pointTraits.strata,
-                true
-              );
-
-              console.log(idsInCorrectOrder);
-              // TODO
+              pointTraits
+                .pushObject(stratumId, "enum")
+                ?.setTrait(stratumId, "value", firstValue);
             }
           }
         : undefined
@@ -1513,19 +1512,6 @@ export default class TableStylingWorkflow
       "binMaximums",
       binMaximums
     );
-  }
-
-  addArrayTrait(
-    stratumId: string,
-    index: number,
-    value: EnumPointSymbolTraits | null
-  ) {
-    const test = this.getTableStyleTraits(stratumId);
-    const indices = new Set<number>();
-    test?.point.strata.forEach(stratum =>
-      stratum.enum?.forEach((e, idx) => indices.add(idx))
-    );
-    const nextIndex = Math.max(...Array.from(indices));
   }
 
   /** Set enum value and color for specific index in `enumColors` array */

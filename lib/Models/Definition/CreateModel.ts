@@ -160,6 +160,44 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
       );
     }
 
+    pushObject<Key extends keyof ArrayElementTypes<Traits>>(
+      stratumId: string,
+      traitId: Key
+    ): ModelType<ArrayElementTypes<Traits>[Key]> | undefined {
+      const trait = this.traits[traitId as string] as ObjectArrayTrait<
+        ArrayElementTypes<Traits>[Key]
+      >;
+      const nestedTraitsClass = trait.type;
+      const newStratum = createStratumInstance(nestedTraitsClass);
+
+      const stratum: any = this.getOrCreateStratum(stratumId);
+      let array = stratum[traitId];
+      if (array === undefined) {
+        stratum[traitId] = [];
+        array = stratum[traitId];
+      }
+
+      let maxIndex = 0;
+      this.strata.forEach(s =>
+        (s[traitId] as Array<unknown> | undefined)?.forEach(
+          (e, idx) => (maxIndex = idx > maxIndex ? idx : maxIndex)
+        )
+      );
+
+      // We need to make sure that the array in this stratum is as long as in every
+      for (let i = array.length; i <= maxIndex; i++) {
+        array[i] = createStratumInstance(nestedTraitsClass);
+      }
+
+      array[maxIndex + 1] = newStratum;
+
+      // Return newly created model
+      const models: readonly ModelType<ArrayElementTypes<Traits>[Key]>[] = (<
+        any
+      >this)[traitId];
+      return models[models.length - 1];
+    }
+
     /** Return full list of knownContainerUniqueIds.
      * This will recursively traverse tree of knownContainerUniqueIds models to return full list of dependencies
      */
