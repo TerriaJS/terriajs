@@ -436,14 +436,24 @@ export default class ViewState {
 
     this._previewedItemIdSubscription = reaction(
       () => this.terria.previewedItemId,
-      (previewedItemId: string | undefined) => {
+      async (previewedItemId: string | undefined) => {
         if (previewedItemId === undefined) {
           return;
         }
 
-        const model = this.terria.getModelById(BaseModel, previewedItemId);
-        if (model !== undefined) {
+        try {
+          const result = await this.terria.getModelByIdShareKeyOrCatalogIndex(
+            previewedItemId
+          );
+          result.throwIfError();
+          const model = result.throwIfUndefined({
+            message: `\`terria.getModelByIdShareKeyOrCatalogIndex\` couldn't find model \`${previewedItemId}\``
+          });
           this.viewCatalogMember(model);
+        } catch (e) {
+          terria.raiseErrorToUser(e, {
+            message: `Couldn't preview model \`${previewedItemId}\``
+          });
         }
       }
     );

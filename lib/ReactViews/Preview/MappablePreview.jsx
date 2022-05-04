@@ -9,6 +9,7 @@ import MappableMixin from "../../ModelMixins/MappableMixin";
 import toggleItemOnMapFromCatalog, {
   Op as ToggleOnMapOp
 } from "../DataCatalog/toggleItemOnMapFromCatalog";
+import ErrorBoundary from "../ErrorBoundary/ErrorBoundary";
 import measureElement from "../HOCs/measureElement";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 import DataPreviewMap from "./DataPreviewMap";
@@ -72,14 +73,16 @@ class MappablePreview extends React.Component {
             !catalogItem.disablePreview
           }
         >
-          <DataPreviewMap
-            terria={this.props.terria}
-            previewed={catalogItem}
-            showMap={
-              !this.props.viewState.explorerPanelAnimating ||
-              this.props.viewState.useSmallScreenInterface
-            }
-          />
+          <ErrorBoundary terria={this.props.terria}>
+            <DataPreviewMap
+              terria={this.props.terria}
+              previewed={catalogItem}
+              showMap={
+                !this.props.viewState.explorerPanelAnimating ||
+                this.props.viewState.useSmallScreenInterface
+              }
+            />
+          </ErrorBoundary>
         </If>
         <button
           type="button"

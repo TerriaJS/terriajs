@@ -141,6 +141,7 @@
     "react-color": "^2.19.3",
     "react-datepicker": "0.53.0",
     "react-dom": "^16.3.2",
+    "react-helmet": "^6.1.0",
     "react-i18next": "^11.2.1",
     "react-responsive": "^5.0.0",
     "react-select": "^3.1.1",
