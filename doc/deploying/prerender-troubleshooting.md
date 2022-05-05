@@ -3,9 +3,18 @@ TerriaMap prerenders pages through puppeteer.
 It should JustWork on MacOS. Linux will require some extra deps. Some more general troubleshooting at:
 https://github.com/puppeteer/puppeteer/blob/master/docs/troubleshooting.md
 
-## headless: false
+## Debugging with Remote Debugging or headless: false
 
-When debugging try turning on `headless: false` to launch Chrome in a window to see rendering. You will probably have to increase the timeout from 5000 to at least 20000.
+Try adding a remote debugging port to the `Renderer` arguments and inspect instances of chromium as they are spawned in chrome:inspect (in Google Chrome) or edge:inspect (in Edge).
+
+```js
+renderer: new Renderer({
+  args: ["--remote-debugging-port=9222"]
+  ...
+})
+```
+
+Otherwise you can try turning on `headless: false` to launch Chrome in a window to see rendering. You will probably have to increase the timeout from 5000 to at least 20000.
 
 ## WSL
 > You'll need to tell PrerenderSPAPlugin to pass an `executablePath` down to puppeteer.
