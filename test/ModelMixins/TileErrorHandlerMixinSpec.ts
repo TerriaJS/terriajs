@@ -232,7 +232,8 @@ describe("TileErrorHandlerMixin", function() {
         await onTileLoadError(item, error);
       } catch {}
       expect(Resource.fetchImage).toHaveBeenCalledTimes(
-        item.tileRetryOptions.retries || 0
+        ("retries" in item.tileRetryOptions && item.tileRetryOptions.retries) ||
+          0
       );
       expect(item.tileFailures).toBe(1);
     });
