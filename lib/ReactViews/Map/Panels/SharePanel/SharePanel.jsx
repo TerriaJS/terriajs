@@ -160,8 +160,10 @@ const SharePanel = observer(
         this.setState({
           placeholder: t("share.shortLinkShortening")
         });
-
-        buildShortShareLink(this.props.terria, this.props.viewState)
+        buildShortShareLink(this.props.terria, this.props.viewState, {
+          includeStories:
+            this.props.storyShare || this.props.viewState.includeStoryInShare
+        })
           .then(shareUrl => this.setState({ shareUrl }))
           .catch(() => {
             this.setUnshortenedUrl();
@@ -176,7 +178,10 @@ const SharePanel = observer(
 
     setUnshortenedUrl() {
       this.setState({
-        shareUrl: buildShareLink(this.props.terria, this.props.viewState)
+        shareUrl: buildShareLink(this.props.terria, this.props.viewState, {
+          includeStories:
+            this.props.storyShare || this.props.viewState.includeStoryInShare
+        })
       });
     },
 
