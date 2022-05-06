@@ -45,9 +45,12 @@ const DataPreview = observer(
 
     componentDidMount() {
       const timeoutMs = 10000;
-      setTimeout(prerenderEnd, timeoutMs);
-      // Reactive to props change (in case previewed doesn't immediately get set to the correct item)
-      when(this.itemLoaded, { timeout: timeoutMs }).then(prerenderEnd);
+      // Reactive to props change (in case previewed doesn't immediately get set to
+      //  the correct item). Call prerenderEnd on either item load or timeout.
+      when(this.itemLoaded, { timeout: timeoutMs }).then(
+        prerenderEnd,
+        prerenderEnd
+      );
     },
 
     itemLoaded() {
