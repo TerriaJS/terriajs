@@ -71,7 +71,8 @@ const DataPreview = observer(
         chartData = previewed.chartData();
       }
 
-      const appBaseUrl = this.props.terria.appBaseHref;
+      // Intended for pre-rendering, so best to set as part of webpack build
+      const appCanonicalUrl = process.env.TJS_APP_CANONICAL_URL;
       const pathForCanonical = `catalog/${encodeURIComponent(
         previewed?.uniqueId
       )}`;
@@ -87,10 +88,10 @@ const DataPreview = observer(
                 name="description"
                 content={getMetaDescriptionSummary(previewed)}
               />
-              <If condition={appBaseUrl && pathForCanonical}>
+              <If condition={appCanonicalUrl && pathForCanonical}>
                 <link
                   rel="canonical"
-                  href={`${appBaseUrl}${pathForCanonical}`}
+                  href={`${appCanonicalUrl}${pathForCanonical}`}
                 />
               </If>
             </Helmet>
