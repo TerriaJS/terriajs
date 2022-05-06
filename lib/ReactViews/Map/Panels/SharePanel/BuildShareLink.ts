@@ -67,7 +67,7 @@ function buildBaseShareUrl(
 export function buildShareLink(
   terria: Terria,
   viewState?: ViewState,
-  options = { includeStories: viewState?.includeStoryInShare ?? false }
+  options = { includeStories: false }
 ) {
   return buildBaseShareUrl(terria, {
     start: JSON.stringify(getShareData(terria, viewState, options))
@@ -82,7 +82,7 @@ export function buildShareLink(
 export async function buildShortShareLink(
   terria: Terria,
   viewState?: ViewState,
-  options = { includeStories: viewState?.includeStoryInShare ?? false }
+  options = { includeStories: false }
 ) {
   if (!isDefined(terria.shareDataService))
     throw TerriaError.from(

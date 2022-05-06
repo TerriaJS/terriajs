@@ -320,8 +320,7 @@ const SharePanel = observer(
 
     renderContentForStoryShare() {
       const { t, terria } = this.props;
-      // Set viewState to include story in share, as we will not render the checkbox
-      this.props.viewState.setIncludeStoryInShare(true);
+
       return (
         <Choose>
           <When condition={this.state.shareUrl === ""}>
