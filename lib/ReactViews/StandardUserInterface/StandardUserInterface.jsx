@@ -5,6 +5,7 @@ import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import { Helmet } from "react-helmet";
 import { withTranslation } from "react-i18next";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
@@ -262,6 +263,10 @@ const StandardUserInterface = observer(
               this.props.terria.configParameters.experimentalFeatures
             }
           />
+          <Helmet>
+            <title>{this.props.terria.appName}</title>
+            <meta name="description" content="A web map built on Terria Map" />
+          </Helmet>
           <TourPortal viewState={this.props.viewState} />
           <CollapsedNavigation viewState={this.props.viewState} />
           <SatelliteHelpPrompt viewState={this.props.viewState} />

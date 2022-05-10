@@ -2,10 +2,10 @@ name: npm-publish
 on:
   push:
     branches:
-      - main
+      - recreate-prerendering
 
 env:
-  NPM_TAG: latest
+  NPM_TAG: prerender
 
 jobs:
   publish:

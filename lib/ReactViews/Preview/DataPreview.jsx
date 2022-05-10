@@ -1,20 +1,27 @@
 "use strict";
 // import Chart from "../Custom/Chart/Chart";
 import createReactClass from "create-react-class";
-import { runInAction } from "mobx";
+import { runInAction, when } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import { Helmet } from "react-helmet";
 import { Trans, withTranslation } from "react-i18next";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
 import InvokeFunction from "../Analytics/InvokeFunction";
 import Loader from "../Loader";
 import Styles from "./data-preview.scss";
-import Description from "./Description";
+import Description, { getMetaDescriptionSummary } from "./Description";
 import GroupPreview from "./GroupPreview";
 import MappablePreview from "./MappablePreview";
 import WarningBox from "./WarningBox";
+
+const prerenderEnd = () => {
+  if (document && document.dispatchEvent) {
+    document.dispatchEvent(new Event("prerender-end"));
+  }
+};
 
 /**
  * Data preview section, for the preview map see DataPreviewMap
@@ -36,6 +43,20 @@ const DataPreview = observer(
       });
     },
 
+    componentDidMount() {
+      const timeoutMs = 10000;
+      // Reactive to props change (in case previewed doesn't immediately get set to
+      //  the correct item). Call prerenderEnd on either item load or timeout.
+      when(this.itemLoaded, { timeout: timeoutMs }).then(
+        prerenderEnd,
+        prerenderEnd
+      );
+    },
+
+    itemLoaded() {
+      return Boolean(this.props.previewed && !this.props.previewed.isLoading);
+    },
+
     render() {
       const { t } = this.props;
       let previewed = this.props.previewed;
@@ -53,8 +74,31 @@ const DataPreview = observer(
         chartData = previewed.chartData();
       }
 
+      // Intended for pre-rendering, so best to set as part of webpack build
+      const appCanonicalUrl = process.env.TJS_APP_CANONICAL_URL;
+      const pathForCanonical = `catalog/${encodeURIComponent(
+        previewed?.uniqueId
+      )}`;
+
       return (
         <div className={Styles.preview}>
+          <If condition={previewed}>
+            <Helmet>
+              <title>
+                {previewed.name} - {this.props.terria.appName}
+              </title>
+              <meta
+                name="description"
+                content={getMetaDescriptionSummary(previewed)}
+              />
+              <If condition={appCanonicalUrl && pathForCanonical}>
+                <link
+                  rel="canonical"
+                  href={`${appCanonicalUrl}${pathForCanonical}`}
+                />
+              </If>
+            </Helmet>
+          </If>
           <Choose>
             <When condition={previewed && previewed.isLoadingMetadata}>
               <div className={Styles.previewInner}>

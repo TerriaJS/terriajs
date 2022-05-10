@@ -14,6 +14,25 @@ import Styles from "./mappable-preview.scss";
 import MetadataTable from "./MetadataTable";
 import WarningBox from "./WarningBox";
 
+export const getMetaDescriptionSummary = catalogItem => {
+  const rawDescription =
+    catalogItem.description ||
+    catalogItem.info?.find(section => section.name === "Data Description")
+      ?.content;
+  const rawCustodian = catalogItem.info?.find(
+    section => section.name === "Data Custodian"
+  )?.content;
+
+  const description = rawDescription ? `${rawDescription} ` : "";
+  const custodian = rawCustodian ? `- ${rawCustodian} ` : "";
+  const type = catalogItem.typeName
+    ? `- a ${catalogItem.typeName} catalog item `
+    : "";
+  const source = catalogItem.url ? `sourced from "${catalogItem.url}" ` : "";
+  // Don't need local data info as it won't exist from the server for prerendering
+  return `${description}${custodian}${type}${source}`;
+};
+
 /**
  * CatalogItem description.
  */
