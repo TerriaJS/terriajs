@@ -4,8 +4,6 @@ import { useTranslation } from "react-i18next";
 import ViewState from "../../ReactViewModels/ViewState";
 import Styles from "./explorer-window.scss";
 
-let animationId = 0;
-
 const SLIDE_DURATION = 300;
 
 interface IProps {
@@ -20,43 +18,37 @@ interface IProps {
 
 const ModalPopup: React.FC<IProps> = props => {
   const { t } = useTranslation();
-  const [visible, setVisible] = useState(false);
-  const [slidIn, setSlidIn] = useState(false);
+  const [inTransition, setInTransition] = useState(false);
   const animationTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  function slideIn(id: number) {
+  function slideIn() {
     props.onStartAnimatingIn?.();
-    setVisible(true);
+    setInTransition(true);
     animationTimeout.current = setTimeout(() => {
-      console.log(`Finished animating slide in for ${id}`);
-      setSlidIn(true);
+      setInTransition(false);
       setTimeout(() => {
         props.onDoneAnimatingIn?.();
       }, SLIDE_DURATION);
     });
   }
 
-  function slideOut(id: number) {
-    setSlidIn(false);
+  function slideOut() {
+    setInTransition(true);
     animationTimeout.current = setTimeout(() => {
-      console.log(`Setting visible to false from ${id}`);
-      setVisible(false);
+      setInTransition(false);
     }, SLIDE_DURATION);
   }
 
   useEffect(() => {
-    console.log(
-      `Reacting to visibility change ${animationId}. isVisible = ${props.isVisible}`
-    );
-    // Clear previous timeout. Because of the pattern of state setting
-    //  in slideIn and slideOut there is no state that needs to be corrected
+    // Clear previous timeout
     if (animationTimeout.current !== null) {
       clearTimeout(animationTimeout.current);
+      animationTimeout.current = null;
     }
     if (props.isVisible) {
-      slideIn(animationId++);
+      slideIn();
     } else {
-      slideOut(animationId++);
+      slideOut();
     }
   }, [props.isVisible]);
 
@@ -70,7 +62,11 @@ const ModalPopup: React.FC<IProps> = props => {
     window.addEventListener("keydown", escKeyListener, true);
   });
 
-  return visible ? (
+  // Render explorer panel when explorer panel should be visible
+  //  or when sliding out (animation)
+  const renderUi = props.isVisible || inTransition;
+
+  return renderUi ? (
     <div
       className={classNames(
         Styles.modalWrapper,
@@ -88,7 +84,7 @@ const ModalPopup: React.FC<IProps> = props => {
       <div
         id="explorer-panel"
         className={classNames(Styles.explorerPanel, {
-          [Styles.isMounted]: slidIn
+          [Styles.isMounted]: props.isVisible && !inTransition
         })}
         aria-labelledby="modalTitle"
         aria-describedby="modalDescription"
