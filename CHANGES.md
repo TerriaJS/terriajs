@@ -6,7 +6,8 @@ Change Log
 * Add Mustache template support to `modelDimensions` for string properties in `option.value` (with the catalog member as context)
 * Added a check for disableExport in ChartPanelDownloadButton.jsx. Prevents download button rendering.
 * Fix `CatalogIndex` types
-* Moved code for trying to match an id to an item in the catalogue by share keys followed by a catalog index (if present) to a function `terria.getModelByIdShareKeyOrCatalogIndex`
+* Moved code for retrieving a model by id, share key or CatalogIndex to a new function `terria.getModelByIdShareKeyOrCatalogIndex`.
+* Updated handling of `previewedItemId` to use new function `terria.getModelByIdShareKeyOrCatalogIndex`. This will now use CatalogIndex if the `previewedItemId` cannot be found in models or model share keys.
 * [The next improvement]
 
 #### 8.2.3 - 2022-04-22
