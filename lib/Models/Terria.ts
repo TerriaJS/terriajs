@@ -1296,7 +1296,7 @@ export default class Terria {
 
     const model = (
       await this.getModelByIdShareKeyOrCatalogIndex(modelId)
-    ).throwIfError();
+    ).pushErrorTo(errors);
     if (model?.uniqueId !== undefined) {
       // Update modelId from model sharekeys or CatalogIndex sharekeys
       modelId = model.uniqueId;
