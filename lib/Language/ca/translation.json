@@ -1615,5 +1615,42 @@
     "firefox": "Mozilla Firefox",
     "edge": "Microsoft Edge",
     "safari": "Apple Safari"
+  },
+  "compare": {
+    "done": "Fet",
+    "title": "Compara",
+    "entireMapMenu": {
+      "sendAllToBack": "Envia-ho tot al fons",
+      "hideAll": "Amaga-ho tot",
+      "browse": "Navega per les dades del mapa",
+      "sendAllToFront": "Envia-ho tot al davant"
+    },
+    "entireMap": {
+      "emptyText": "Afegiu dades noves per mostrar-les a tot el mapa mitjançant el menú de punts de dalt.",
+      "title": "Mapa sencer"
+    },
+    "info": "Compareu conjunts de dades espacials del vostre banc de treball de costat amb el mapa.",
+    "dimensionSelector": {
+      "undefinedLabel": "Sense especificar"
+    },
+    "dateButton": {
+      "left": "Esquerra",
+      "right": "Dreta",
+      "select": "Escull una data"
+    },
+    "leftPanel": "Panell esquerre",
+    "rightPanel": "Panell dret",
+    "dataset": {
+      "label": "Conjunt de dades",
+      "selectOne": "Escolliu-ne un"
+    },
+    "dateLocationFilter": {
+      "filter": "Filtra la data per ubicació",
+      "loading": "S'està carregant el filtre...",
+      "cancel": "Cancel·lar",
+      "location": "Es mostren les imatges disponibles per a {{latitude}}, {{longitude}}",
+      "mouseTooltipTitle": "Seleccioneu la ubicació",
+      "mouseTooltipMessage": "Botó dret per cancel·lar"
+    }
   }
 }

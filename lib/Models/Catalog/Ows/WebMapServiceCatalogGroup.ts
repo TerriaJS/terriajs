@@ -195,7 +195,17 @@ class GetCapabilitiesStratum extends LoadableStratum(
       let model: CatalogGroup;
       if (existingModel === undefined) {
         model = new CatalogGroup(layerId, this.catalogGroup.terria);
-        this.catalogGroup.terria.addModel(model, this.getLayerShareKeys(layer));
+        try {
+          // Sometimes WMS Layers have duplicate names
+          // At the moment we ignore duplicate layers
+          this.catalogGroup.terria.addModel(
+            model,
+            this.getLayerShareKeys(layer)
+          );
+        } catch (e) {
+          TerriaError.from(e, "Failed to add CatalogGroup").log();
+          return;
+        }
       } else {
         model = existingModel;
       }
@@ -237,7 +247,14 @@ class GetCapabilitiesStratum extends LoadableStratum(
     if (existingModel === undefined) {
       model = new WebMapServiceCatalogItem(layerId, this.catalogGroup.terria);
 
-      this.catalogGroup.terria.addModel(model, this.getLayerShareKeys(layer));
+      try {
+        // Sometimes WMS Layers have duplicate names
+        // At the moment we ignore duplicate layers
+        this.catalogGroup.terria.addModel(model, this.getLayerShareKeys(layer));
+      } catch (e) {
+        TerriaError.from(e, "Failed to add WebMapServiceCatalogItem").log();
+        return;
+      }
     } else {
       model = existingModel;
     }
