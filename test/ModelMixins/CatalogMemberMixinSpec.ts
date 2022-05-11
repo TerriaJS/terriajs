@@ -149,7 +149,7 @@ describe("CatalogMemberMixin", function() {
             }),
             createStratumInstance(DimensionOptionTraits, {
               id: "layers-test",
-              value: { layers: "test" }
+              value: { layers: "{{modelDimensions.0.selectedId}}" }
             })
           ]
         })
@@ -183,7 +183,7 @@ describe("CatalogMemberMixin", function() {
       modelDimension.setDimensionValue(CommonStrata.user, "layers-test");
 
       expect(wmsItem.styles).toBe("test2");
-      expect(wmsItem.layers).toBe("test");
+      expect(wmsItem.layers).toBe("layers-test");
     });
   });
 });

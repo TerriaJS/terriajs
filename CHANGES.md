@@ -2,6 +2,8 @@ Change Log
 ==========
 
 #### next release (8.2.4)
+
+* Add Mustache template support to `modelDimensions` for string properties in `option.value` (with the catalog member as context)
 * Added a check for disableExport in ChartPanelDownloadButton.jsx. Prevents download button rendering.
 * Fix `CatalogIndex` types
 * [The next improvement]
