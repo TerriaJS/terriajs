@@ -446,13 +446,11 @@ export default class ViewState {
             previewedItemId
           );
           result.throwIfError();
-          const model = result.throwIfUndefined({
-            message: `\`terria.getModelByIdShareKeyOrCatalogIndex\` couldn't find model \`${previewedItemId}\``
-          });
+          const model = result.throwIfUndefined();
           this.viewCatalogMember(model);
         } catch (e) {
           terria.raiseErrorToUser(e, {
-            message: `Couldn't preview model \`${previewedItemId}\``
+            message: `Couldn't find model \`${previewedItemId}\` for preview`
           });
         }
       }
