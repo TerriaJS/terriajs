@@ -1,10 +1,22 @@
 Change Log
 ==========
 
-#### next release (8.2.3)
+#### next release (8.2.4)
 
 * Add Mustache template support to `modelDimensions` for string properties in `option.value` (with the catalog member as context)
+* Added a check for disableExport in ChartPanelDownloadButton.jsx. Prevents download button rendering.
+* Fix `CatalogIndex` types
 * [The next improvement]
+
+#### 8.2.3 - 2022-04-22
+
+* **Breaking changes:**
+  * `CkanItemReference` no longer copies `default` stratum to target - please use `itemProperties` instead.
+* **Revert** Use CKAN Dataset `name` property for WMS `layers` as last resort.
+* Add support for `WebMapServiceCatalogGroup` to `CkanItemReference` - this will be used instead of `WebMapServiceCatalogItem` if WMS `layers` can't be identified from CKAN resource metadata.
+  * Add `allowEntireWmsServers` to `CkanCatalogGroupTraits` - defaults to `true`
+* Ignore WMS `Layers` with duplicate `Name` properties
+* Fix selectable dimensions passing reactive objects and arrays to updateModelFromJson (which could cause problems with array detection).
 
 #### 8.2.2 - 2022-04-19
 

@@ -1,0 +1,28 @@
+{
+  "help": "https://data.gov.au/api/3/action/help_show?name=resource_show",
+  "success": true,
+  "result": {
+    "cache_last_updated": null,
+    "package_id": "95d9e550-8b36-4273-8df7-2b76c140e73a",
+    "webstore_last_updated": null,
+    "datastore_active": false,
+    "id": "205ef0d1-521b-4e3c-a26c-4e49e00f1a05",
+    "size": null,
+    "state": "active",
+    "hash": "",
+    "description": "View the data in this dataset online via an online map",
+    "format": "wms",
+    "last_modified": "2015-08-25T08:04:40.677513",
+    "url_type": null,
+    "mimetype": null,
+    "cache_url": null,
+    "name": "Taxation statistics 2011-12 - Preview this Dataset (WMS)",
+    "created": "2014-07-15T07:55:50.273031",
+    "url": "http://data.gov.au/geoserver/taxation-statistics-2011-12/wms?request=GetCapabilities",
+    "webstore_url": null,
+    "mimetype_inner": null,
+    "position": 98,
+    "revision_id": "95382692-1cc9-423e-8f2b-678d807ca059",
+    "resource_type": null
+  }
+}

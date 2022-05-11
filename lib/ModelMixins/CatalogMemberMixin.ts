@@ -1,4 +1,4 @@
-import { action, computed, isObservableArray, runInAction } from "mobx";
+import { action, computed, isObservableArray, runInAction, toJS } from "mobx";
 import Mustache from "mustache";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
@@ -185,8 +185,9 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
               const result = updateModelFromJson(
                 this,
                 stratumId,
-                mustacheNestedJsonObject(value, this)
+                mustacheNestedJsonObject(toJS(value), this)
               );
+
               result.raiseError(
                 this.terria,
                 `Failed to update catalog item ${getName(this)}`
@@ -241,6 +242,7 @@ export const getName = action((model: BaseModel | undefined) => {
   );
 });
 
+/** Recursively apply mustache template to all nested string properties in a JSON Object */
 function mustacheNestedJsonObject(obj: JsonObject, view: any) {
   return Object.entries(obj).reduce<JsonObject>((acc, [key, value]) => {
     if (isJsonString(value)) {
