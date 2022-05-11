@@ -21,6 +21,7 @@ export interface EnumDimension<T = string> extends Dimension {
   readonly options?: readonly EnumDimensionOption<T>[];
   readonly selectedId?: T;
   readonly allowUndefined?: boolean;
+  readonly allowCustomInput?: boolean;
   readonly undefinedLabel?: string;
 }
 

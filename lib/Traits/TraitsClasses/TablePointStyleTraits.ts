@@ -1,11 +1,10 @@
-import { BinStyle, EnumStyle } from "../../Table/TableStyleMap";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
-import StratumFromTraits from "../../Models/Definition/StratumFromTraits";
+import { BinStyleTraits, EnumStyleTraits } from "./TableStyleTraits";
 
 export class PointSymbolTraits extends ModelTraits {
   @primitiveTrait({
@@ -44,31 +43,15 @@ export class PointSymbolTraits extends ModelTraits {
   width: number = 24;
 }
 
-export class EnumPointSymbolTraits extends mixTraits(PointSymbolTraits)
-  implements EnumStyle {
-  @primitiveTrait({
-    name: "Value",
-    description: "The enumerated value to map to a color.",
-    type: "string",
-    isNullable: true
-  })
-  value?: string | null;
+export class EnumPointSymbolTraits extends mixTraits(
+  PointSymbolTraits,
+  EnumStyleTraits
+) {}
 
-  static isRemoval(style: StratumFromTraits<EnumPointSymbolTraits>) {
-    return style.value === null;
-  }
-}
-
-export class BinPointSymbolTraits extends mixTraits(PointSymbolTraits)
-  implements BinStyle {
-  @primitiveTrait({
-    name: "Value",
-    description: "The enumerated value to map to a color.",
-    type: "number",
-    isNullable: true
-  })
-  maxValue?: number | null;
-}
+export class BinPointSymbolTraits extends mixTraits(
+  PointSymbolTraits,
+  BinStyleTraits
+) {}
 
 export default class TablePointStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -86,7 +69,7 @@ export default class TablePointStyleTraits extends ModelTraits {
     type: EnumPointSymbolTraits,
     idProperty: "index"
   })
-  enum?: EnumPointSymbolTraits[];
+  enum: EnumPointSymbolTraits[] = [];
 
   @objectArrayTrait({
     name: "Enum Colors",
@@ -96,7 +79,7 @@ export default class TablePointStyleTraits extends ModelTraits {
     type: BinPointSymbolTraits,
     idProperty: "index"
   })
-  bin?: BinPointSymbolTraits[];
+  bin: BinPointSymbolTraits[] = [];
 
   @objectTrait({
     name: "Enum Colors",

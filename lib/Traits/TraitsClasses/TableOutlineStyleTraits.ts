@@ -1,9 +1,9 @@
-import { BinStyle, EnumStyle } from "../../Table/TableStyleMap";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
+import { BinStyleTraits, EnumStyleTraits } from "./TableStyleTraits";
 
 export class OutlineSymbolTraits extends ModelTraits {
   @primitiveTrait({
@@ -28,25 +28,15 @@ export class OutlineSymbolTraits extends ModelTraits {
   width: number = 1;
 }
 
-export class EnumOutlineSymbolTraits extends mixTraits(OutlineSymbolTraits)
-  implements EnumStyle {
-  @primitiveTrait({
-    name: "Value",
-    description: "The enumerated value to map to a color.",
-    type: "string"
-  })
-  value?: string;
-}
+export class EnumOutlineSymbolTraits extends mixTraits(
+  OutlineSymbolTraits,
+  EnumStyleTraits
+) {}
 
-export class BinOutlineSymbolTraits extends mixTraits(OutlineSymbolTraits)
-  implements BinStyle {
-  @primitiveTrait({
-    name: "Value",
-    description: "The enumerated value to map to a color.",
-    type: "number"
-  })
-  maxValue?: number;
-}
+export class BinOutlineSymbolTraits extends mixTraits(
+  OutlineSymbolTraits,
+  BinStyleTraits
+) {}
 
 export default class TableOutlineStyleTraits extends ModelTraits {
   @primitiveTrait({

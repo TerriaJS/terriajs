@@ -4,7 +4,8 @@ import {
   IReactionDisposer,
   observable,
   reaction,
-  runInAction
+  runInAction,
+  ObservableMap
 } from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
@@ -12,13 +13,14 @@ import ConstantColorMap from "../../Map/ColorMap/ConstantColorMap";
 import ContinuousColorMap from "../../Map/ColorMap/ContinuousColorMap";
 import DiscreteColorMap from "../../Map/ColorMap/DiscreteColorMap";
 import EnumColorMap from "../../Map/ColorMap/EnumColorMap";
-import { getMakiIcon } from "../../Map/Icons/Maki/MakiIcons";
+import { allIcons, getMakiIcon } from "../../Map/Icons/Maki/MakiIcons";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../../ModelMixins/TableMixin";
 import {
   QualitativeColorSchemeOptionRenderer,
   QuantitativeColorSchemeOptionRenderer
 } from "../../ReactViews/SelectableDimensions/ColorSchemeOptionRenderer";
+import { MarkerOptionRenderer } from "../../ReactViews/SelectableDimensions/MarkerOptionRenderer";
 import Icon from "../../Styled/Icon";
 import {
   DEFAULT_DIVERGING,
@@ -29,8 +31,9 @@ import {
   SEQUENTIAL_CONTINUOUS_SCALES,
   SEQUENTIAL_SCALES
 } from "../../Table/TableColorMap";
+import TableColumn from "../../Table/TableColumn";
 import TableColumnType from "../../Table/TableColumnType";
-import { StyleMapType } from "../../Table/TableStyleMap";
+import TableStyleMap, { StyleMapType } from "../../Table/TableStyleMap";
 import { EnumColorTraits } from "../../Traits/TraitsClasses/TableColorStyleTraits";
 import {
   EnumPointSymbolTraits,
@@ -46,12 +49,17 @@ import {
   SelectableDimensionColor,
   SelectableDimensionGroup,
   SelectableDimensionNumeric,
-  SelectableDimensionText
+  SelectableDimensionText,
+  SelectableDimensionButton
 } from "../SelectableDimensions/SelectableDimensions";
 import ViewingControls from "../ViewingControls";
 import SelectableDimensionWorkflow, {
   SelectableDimensionWorkflowGroup
 } from "../Workflows/SelectableDimensionWorkflow";
+import {
+  EnumStyleTraits,
+  BinStyleTraits
+} from "../../Traits/TraitsClasses/TableStyleTraits";
 
 /** The ColorSchemeType is used to change which SelectableDimensions are shown.
  * It is basically the "mode" of the TableStylingWorkflow
@@ -88,8 +96,20 @@ export default class TableStylingWorkflow
    * See setColorSchemeTypeFromPalette and setColorSchemeType for how this is set. */
   @observable colorSchemeType: ColorSchemeType | undefined;
 
-  @observable pointSchemeType: StyleMapType | undefined;
-  @observable outlineSchemeType: StyleMapType | undefined;
+  @observable
+  private readonly styleSchemeType = new ObservableMap<
+    string,
+    StyleMapType | undefined
+  >();
+
+  /** Which bin is currently open in `binMaximumsSelectableDims` or `enumColorsSelectableDim`.
+   * This is used in `SelectableDimensionGroup.onToggle` and `SelectableDimensionGroup.isOpen` to make the groups act like an accordion - so only one bin can be edited at any given time.
+   */
+  @observable
+  private readonly openBinIndex = new ObservableMap<
+    string,
+    number | undefined
+  >();
 
   private activeStyleDisposer: IReactionDisposer;
 
@@ -265,7 +285,7 @@ export default class TableStylingWorkflow
     this.item.setTrait(stratumId, "activeStyle", this.tableStyle.id);
 
     // Hide any open bin
-    this.openBinIndex = undefined;
+    this.openBinIndex.clear();
 
     // Here we use item.activeTableStyle.colorTraits.colorPalette instead of this.colorPalette because we only want this to be defined, if the trait is defined - we don't care about defaultColorPaletteName
     const colorPalette = this.tableStyle.colorTraits.colorPalette;
@@ -704,12 +724,6 @@ export default class TableStylingWorkflow
     ]);
   }
 
-  /** Which bin is currently open in `binMaximumsSelectableDims` or `enumColorsSelectableDim`.
-   * This is used in `SelectableDimensionGroup.onToggle` and `SelectableDimensionGroup.isOpen` to make the groups act like an accordion - so only one bin can be edited at any given time.
-   */
-  @observable
-  private openBinIndex: number | undefined;
-
   /** Group to show bins with color, start/stop numbers.
    */
   @computed get binSelectableDims(): SelectableDimension[] {
@@ -785,10 +799,10 @@ export default class TableStylingWorkflow
                   ? this.minimumValueSelectableDim.value
                   : this.tableStyle.tableColorMap.binMaximums[idx - 1]
               } to ${bin}</div>`,
-              isOpen: this.openBinIndex === idx,
+              isOpen: this.openBinIndex.get("colorBin") === idx,
               onToggle: open => {
-                if (open && this.openBinIndex !== idx) {
-                  runInAction(() => (this.openBinIndex = idx));
+                if (open && this.openBinIndex.get("colorBin") !== idx) {
+                  runInAction(() => this.openBinIndex.set("colorBin", idx));
                   return true;
                 }
               },
@@ -838,12 +852,12 @@ export default class TableStylingWorkflow
                     if (isDefined(value)) binMaximums[idx] = value;
                     this.setBinMaximums(stratumId, binMaximums);
                   }
-                },
-                this.outlierColorDimension
+                }
               ]
             } as SelectableDimensionGroup)
         )
-        .reverse() // Reverse array of bins to match Legend (descending order)
+        .reverse(), // Reverse array of bins to match Legend (descending order)
+      this.outlierColorDimension
     ];
   }
 
@@ -857,10 +871,10 @@ export default class TableStylingWorkflow
           id: `enum-${idx}-start`,
           name: `<div><div style="margin-bottom: -4px; width:20px; height:20px; display:inline-block; background-color:${enumCol.color ??
             "#aaa"} ;"></div> ${enumCol.value}</div>`,
-          isOpen: this.openBinIndex === idx,
+          isOpen: this.openBinIndex.get("colorEnum") === idx,
           onToggle: open => {
-            if (open && this.openBinIndex !== idx) {
-              runInAction(() => (this.openBinIndex = idx));
+            if (open && this.openBinIndex.get("colorEnum") !== idx) {
+              runInAction(() => this.openBinIndex.set("colorEnum", idx));
               return true;
             }
           },
@@ -906,7 +920,6 @@ export default class TableStylingWorkflow
                 this.colorSchemeType = "custom-qualitative";
                 // Remove element by clearing `value`
                 this.setEnumColorTrait(stratumId, idx, undefined, undefined);
-                this.openBinIndex = undefined;
               }
             }
           ]
@@ -952,8 +965,10 @@ export default class TableStylingWorkflow
                 unusedColor ?? "#000000"
               );
 
-              this.openBinIndex =
-                this.tableStyle.tableColorMap.enumColors.length - 1;
+              this.openBinIndex.set(
+                "colorEnum",
+                this.tableStyle.tableColorMap.enumColors.length - 1
+              );
             }
           }
         : undefined
@@ -964,7 +979,7 @@ export default class TableStylingWorkflow
     return {
       type: "color",
       id: `null-col`,
-      name: `Null color`,
+      name: `Default color`,
       value: this.tableStyle.colorTraits.nullColor,
       allowUndefined: true,
       setDimensionValue: (stratumId, value) => {
@@ -1025,6 +1040,82 @@ export default class TableStylingWorkflow
             }
           : undefined
       ])
+    };
+  }
+
+  @computed get pointSizeDimensions(): SelectableDimensionGroup {
+    return {
+      type: "group",
+      id: "Point size",
+      isOpen: false,
+      selectableDimensions: [
+        {
+          type: "select",
+          id: `point-size-column`,
+          name: `Variable`,
+          selectedId: this.tableStyle.pointSizeTraits.pointSizeColumn,
+          options: this.item.tableColumns
+            .filter(col => col.type === TableColumnType.scalar)
+            .map(col => ({
+              id: col.name,
+              name: col.title
+            })),
+          allowUndefined: true,
+          setDimensionValue: (stratumId, value) => {
+            this.getTableStyleTraits(stratumId)?.pointSize.setTrait(
+              stratumId,
+              "pointSizeColumn",
+              value
+            );
+          }
+        },
+        ...((this.tableStyle.pointSizeColumn
+          ? [
+              {
+                type: "numeric",
+                id: "point-size-null",
+                name: "Default size",
+                min: 0,
+                value: this.tableStyle.pointSizeTraits.nullSize,
+                setDimensionValue: (stratumId, value) => {
+                  this.getTableStyleTraits(stratumId)?.pointSize.setTrait(
+                    stratumId,
+                    "nullSize",
+                    value
+                  );
+                }
+              },
+              {
+                type: "numeric",
+                id: "point-sizes-factor",
+                name: "Size factor",
+                min: 0,
+                value: this.tableStyle.pointSizeTraits.sizeFactor,
+                setDimensionValue: (stratumId, value) => {
+                  this.getTableStyleTraits(stratumId)?.pointSize.setTrait(
+                    stratumId,
+                    "sizeFactor",
+                    value
+                  );
+                }
+              },
+              {
+                type: "numeric",
+                id: "point-size-offset",
+                name: "Size offset",
+                min: 0,
+                value: this.tableStyle.pointSizeTraits.sizeOffset,
+                setDimensionValue: (stratumId, value) => {
+                  this.getTableStyleTraits(stratumId)?.pointSize.setTrait(
+                    stratumId,
+                    "sizeOffset",
+                    value
+                  );
+                }
+              }
+            ]
+          : []) as SelectableDimensionNumeric[])
+      ]
     };
   }
 
@@ -1191,17 +1282,43 @@ export default class TableStylingWorkflow
     ];
   }
 
+  getMarkerPreview(point: Model<PointSymbolTraits>, label: string) {
+    return `<div><img width ="${point.width}px" height="${
+      point.height
+    }px" style="margin-bottom: -4px" src="${getMakiIcon(
+      point.marker,
+      "#fff",
+      1,
+      "#000",
+      point.height,
+      point.width
+    ) ?? point.marker}"></img> ${label}</div>`;
+  }
+
   getMarkerDims(
     id: string,
     pointTraits: Model<PointSymbolTraits>,
     defaultPointTraits: Model<PointSymbolTraits> | undefined
   ): FlatSelectableDimension[] {
     return [
+      // {
+      //   type: "text",
+      //   id: `${id}-marker`,
+      //   name: "Marker",
+      //   value: pointTraits.marker ?? defaultPointTraits?.marker,
+      //   setDimensionValue: (stratumId, value) => {
+      //     pointTraits.setTrait(stratumId, "marker", value);
+      //   }
+      // },
       {
-        type: "text",
+        type: "select",
         id: `${id}-marker`,
         name: "Marker",
-        value: pointTraits.marker ?? defaultPointTraits?.marker,
+        selectedId: pointTraits.marker ?? defaultPointTraits?.marker,
+        options: allIcons.map(icon => ({
+          id: icon
+        })),
+        optionRenderer: MarkerOptionRenderer,
         setDimensionValue: (stratumId, value) => {
           pointTraits.setTrait(stratumId, "marker", value);
         }
@@ -1236,28 +1353,43 @@ export default class TableStylingWorkflow
     ];
   }
 
-  @computed get markerDims(): SelectableDimension[] {
-    const defaultPointTraits = this.item.defaultStyle.point;
-    const pointTraits = this.item.styles[this.tableStyle.styleNumber ?? -1]
-      ?.point;
-
-    if (!isDefined(pointTraits)) return [];
+  getStyleDims<
+    T extends Model<{
+      enum: EnumStyleTraits[];
+      bin: BinStyleTraits[];
+      column?: string;
+    }>
+  >(
+    key: string,
+    traits: T,
+    combinedTraits: T,
+    column: TableColumn | undefined,
+    tableStyleMap: TableStyleMap<unknown>,
+    styleDims: {
+      null: { dims: FlatSelectableDimension[]; label: string };
+      bin: { dims: FlatSelectableDimension[]; label: string }[];
+      enum: { dims: FlatSelectableDimension[]; label: string }[];
+      addBinLabel: string;
+      addEnumLabel: string;
+    }
+  ): SelectableDimension[] {
+    if (!isDefined(traits)) return [];
     return filterOutUndefined([
       {
         type: "select",
         id: "table-style",
         name: "Variable",
-        selectedId: this.tableStyle.pointStyleColumn?.name,
+        selectedId: column?.name,
         allowUndefined: true,
         options: this.item.tableColumns.map(col => ({
           id: col.name,
           name: col.title
         })),
         setDimensionValue: (stratumId, value) => {
-          pointTraits.setTrait(stratumId, "column", value);
+          traits.setTrait(stratumId, "column", value);
         }
       },
-      this.tableStyle.pointStyleColumn
+      column
         ? {
             type: "select",
             id: "Type",
@@ -1269,168 +1401,245 @@ export default class TableStylingWorkflow
               { id: "enum", name: "Qualitative" }
             ],
             selectedId:
-              this.pointSchemeType ??
-              this.tableStyle.pointStyleMap.styleMap.type,
+              this.styleSchemeType.get(key) ?? tableStyleMap.styleMap.type,
             setDimensionValue: (stratumId, id) => {
-              if (id !== this.tableStyle.pointStyleMap.styleMap.type) {
+              if (id !== tableStyleMap.styleMap.type) {
                 if (id !== "bin") {
-                  pointTraits.setTrait(stratumId, "bin", []);
+                  traits.setTrait(
+                    stratumId,
+                    "bin",
+                    combinedTraits.bin.map(() =>
+                      createStratumInstance(BinStyleTraits, { maxValue: null })
+                    )
+                  );
                 }
                 if (id !== "enum") {
-                  pointTraits.setTrait(stratumId, "enum", []);
+                  traits.setTrait(
+                    stratumId,
+                    "enum",
+                    combinedTraits.enum.map(() =>
+                      createStratumInstance(EnumStyleTraits, { value: null })
+                    )
+                  );
                 }
               }
 
               if (id === "bin" || id === "enum" || id === "constant")
-                this.pointSchemeType = id;
+                this.styleSchemeType.set(key, id);
             }
           }
         : undefined,
-      {
-        type: "group",
-        id: "marker-null",
-        name: "Null marker",
-        isOpen: false,
-        selectableDimensions: this.getMarkerDims(
-          "marker-null",
-          pointTraits.null,
-          defaultPointTraits.null
-        )
-      },
-      ...(this.pointSchemeType ?? this.tableStyle.pointStyleMap.styleMap.type
-        ? pointTraits.enum.map((enumPoint, idx) => {
-            if (!enumPoint.value) return;
-            const dims: SelectableDimensionGroup = {
-              type: "group",
-              id: `marker-enum-${idx}`,
-              name: `<div><img width ="${enumPoint.width}px" height="${
-                enumPoint.height
-              }px" style="margin-bottom: -4px" src="${getMakiIcon(
-                enumPoint.marker,
-                "#fff",
-                1,
-                "#000",
-                enumPoint.height,
-                enumPoint.width
-              ) ?? enumPoint.marker}"></img> ${enumPoint.value}</div>`,
-              isOpen: this.openBinIndex === idx,
-              onToggle: open => {
-                if (open && this.openBinIndex !== idx) {
-                  runInAction(() => (this.openBinIndex = idx));
-                  return true;
-                }
-              },
-              selectableDimensions: [
-                ...this.getMarkerDims(
-                  `marker-enum-${idx}`,
-                  enumPoint,
-                  defaultPointTraits.enum[idx]
-                ),
-                {
-                  type: "select",
-                  id: `marker-enum-${idx}-value`,
-                  name: "Value",
-                  selectedId: enumPoint.value,
-                  // Find unique column values which don't already have an enumCol
-                  // We prepend the current enumCol.value
-                  options: [
-                    { id: enumPoint.value },
-                    ...(this.tableStyle.pointStyleColumn?.uniqueValues.values
-                      ?.filter(
-                        value =>
-                          !this.tableStyle.pointTraits.enum.find(
-                            enumCol => enumCol.value === value
-                          )
-                      )
-                      .map(id => ({ id })) ?? [])
-                  ],
-                  setDimensionValue: (stratumId, value) => {
-                    enumPoint.setTrait(stratumId, "value", value);
-                  }
-                },
-                {
-                  type: "button",
-                  id: `marker-enum-${idx}-remove`,
-                  value: "Remove",
-                  setDimensionValue: stratumId => {
-                    enumPoint.setTrait(stratumId, "value", null);
-                  }
-                }
-              ]
-            };
-            return dims;
-          })
-        : [
-            ...pointTraits.bin.map((binPoint, idx) => {
-              if (!isDefined(binPoint.maxValue)) return;
+
+      ...(column &&
+      (this.styleSchemeType.get(key) ?? tableStyleMap.styleMap.type) === "enum"
+        ? [
+            ...traits.enum?.map((enumPoint, idx) => {
+              if (!enumPoint.value) return;
               const dims: SelectableDimensionGroup = {
                 type: "group",
-                id: `marker-bin-${idx}`,
-                name: `Some marker ${idx}`,
-
-                // `<div><div style="margin-bottom: -4px; width:20px; height:20px; display:inline-block; background-color:${enumPoint.color ??
-                //   "#aaa"} ;"></div> ${enumPoint.value}</div>`,
-                isOpen: this.openBinIndex === idx,
+                id: `${key}-enum-${idx}`,
+                name: styleDims.enum[idx].label,
+                isOpen: this.openBinIndex.get(key) === idx,
                 onToggle: open => {
-                  if (open && this.openBinIndex !== idx) {
-                    runInAction(() => (this.openBinIndex = idx));
+                  if (open && this.openBinIndex.get(key) !== idx) {
+                    runInAction(() => this.openBinIndex.set(key, idx));
                     return true;
                   }
                 },
                 selectableDimensions: [
-                  ...this.getMarkerDims(
-                    `marker-bin-${idx}`,
-                    binPoint,
-                    defaultPointTraits.bin[idx]
-                  ),
                   {
-                    type: "numeric",
-                    id: `marker-bin-${idx}-value`,
-                    name: "Max value",
-                    value: binPoint.maxValue ?? undefined,
+                    type: "select",
+                    id: `${key}-enum-${idx}-value`,
+                    name: "Value",
+                    selectedId: enumPoint.value,
+                    // Find unique column values which don't already have an enumCol
+                    // We prepend the current enumCol.value
+                    options: [
+                      { id: enumPoint.value },
+                      ...(column?.uniqueValues.values
+                        ?.filter(
+                          value =>
+                            !combinedTraits.enum.find(
+                              enumCol => enumCol.value === value
+                            )
+                        )
+                        .map(id => ({ id })) ?? [])
+                    ],
                     setDimensionValue: (stratumId, value) => {
-                      binPoint.setTrait(stratumId, "maxValue", value);
+                      enumPoint.setTrait(stratumId, "value", value);
                     }
                   },
+                  ...styleDims.enum[idx].dims,
+
                   {
                     type: "button",
-                    id: `marker-bin-${idx}-remove`,
+                    id: `${key}-enum-${idx}-remove`,
                     value: "Remove",
                     setDimensionValue: stratumId => {
-                      binPoint.setTrait(stratumId, "maxValue", null);
+                      enumPoint.setTrait(stratumId, "value", null);
                     }
                   }
                 ]
               };
               return dims;
-            })
-          ]),
+            }),
+            // Are there more colors to add (are there more unique values in the column than enumCols)
+            // Create "Add" to user can add more
+            combinedTraits.enum?.filter(col => col.value).length <
+            column?.uniqueValues.values.length
+              ? ({
+                  type: "button",
+                  id: `${key}-enum-add`,
+                  value: styleDims.addEnumLabel,
+                  setDimensionValue: stratumId => {
+                    const firstValue = column?.uniqueValues.values.find(
+                      value =>
+                        !combinedTraits.enum?.find(col => col.value === value)
+                    );
+                    if (!isDefined(firstValue)) return;
 
-      // Are there more colors to add (are there more unique values in the column than enumCols)
-      // Create "Add" to user can add more
-      this.tableStyle.pointStyleColumn &&
-      this.tableStyle.pointTraits.enum.filter(col => col.value).length <
-        this.tableStyle.pointStyleColumn?.uniqueValues.values.length
-        ? {
-            type: "button",
-            id: `enum-add`,
-            value: "Add Color",
-            setDimensionValue: stratumId => {
-              const firstValue = this.tableStyle.pointStyleColumn?.uniqueValues.values.find(
-                value =>
-                  !this.tableStyle.pointTraits.enum.find(
-                    col => col.value === value
-                  )
-              );
-              if (!isDefined(firstValue)) return;
+                    traits
+                      .pushObject(stratumId, "enum")
+                      ?.setTrait(stratumId, "value", firstValue);
+                  }
+                } as SelectableDimensionButton)
+              : undefined
+          ]
+        : []),
 
-              pointTraits
-                .pushObject(stratumId, "enum")
-                ?.setTrait(stratumId, "value", firstValue);
-            }
-          }
-        : undefined
+      ...(column &&
+      (this.styleSchemeType.get(key) ?? tableStyleMap.styleMap.type) === "bin"
+        ? [
+            ...traits.bin.map((binPoint, idx) => {
+              if (!isDefined(binPoint.maxValue)) return;
+              const dims: SelectableDimensionGroup = {
+                type: "group",
+                id: `${key}-bin-${idx}`,
+                name: styleDims.bin[idx].label,
+                isOpen: this.openBinIndex.get(key) === idx,
+                onToggle: open => {
+                  if (open && this.openBinIndex.get(key) !== idx) {
+                    runInAction(() => this.openBinIndex.set(key, idx));
+                    return true;
+                  }
+                },
+                selectableDimensions: filterOutUndefined([
+                  idx > 0
+                    ? {
+                        type: "numeric",
+                        id: `${key}-bin-${idx}-start`,
+                        name: "Start",
+                        value: traits.bin[idx - 1].maxValue ?? undefined,
+                        setDimensionValue: (stratumId, value) => {
+                          traits.bin[idx - 1].setTrait(
+                            stratumId,
+                            "maxValue",
+                            value
+                          );
+                        }
+                      }
+                    : undefined,
+                  {
+                    type: "numeric",
+                    id: `${key}-bin-${idx}-stop`,
+                    name: "Stop",
+                    value: binPoint.maxValue ?? undefined,
+                    setDimensionValue: (stratumId, value) => {
+                      binPoint.setTrait(stratumId, "maxValue", value);
+                    }
+                  },
+                  ...styleDims.bin[idx].dims,
+                  {
+                    type: "button",
+                    id: `${key}-bin-${idx}-remove`,
+                    value: "Remove",
+                    setDimensionValue: stratumId => {
+                      binPoint.setTrait(stratumId, "maxValue", null);
+                    }
+                  }
+                ])
+              };
+              return dims;
+            }),
+            {
+              type: "button",
+              id: `${key}-bin-add`,
+              value: styleDims.addBinLabel,
+              setDimensionValue: stratumId => {
+                traits.pushObject(stratumId, "bin");
+              }
+            } as SelectableDimensionButton
+          ]
+        : []),
+
+      {
+        type: "group",
+        id: `${key}-null`,
+        name: styleDims.null.label,
+        isOpen: false,
+        selectableDimensions: styleDims.null.dims
+      }
     ]);
+  }
+
+  @computed get markerDims(): SelectableDimension[] {
+    const pointTraits = this.item.styles[this.tableStyle.styleNumber ?? -1]
+      ?.point;
+
+    return this.getStyleDims(
+      "marker",
+      pointTraits,
+      this.tableStyle.pointTraits,
+      this.tableStyle.pointStyleColumn,
+      this.tableStyle.pointStyleMap,
+      {
+        null: {
+          dims: this.getMarkerDims(
+            "marker-null",
+            pointTraits.null,
+            this.tableStyle.pointTraits.null
+          ),
+          label: this.getMarkerPreview(
+            this.tableStyle.pointTraits.null,
+            "Default marker"
+          )
+        },
+        bin: this.tableStyle.pointTraits.bin.map((bin, idx) => ({
+          dims: this.getMarkerDims(
+            `marker-bin-${idx}`,
+            bin,
+            this.tableStyle.pointTraits.bin[idx]
+          ),
+          label: this.getMarkerPreview(
+            this.tableStyle.pointTraits.bin[idx],
+            !isDefined(bin.maxValue ?? undefined)
+              ? "No value"
+              : `${
+                  idx > 0 &&
+                  isDefined(
+                    this.tableStyle.pointTraits.bin[idx - 1].maxValue ??
+                      undefined
+                  )
+                    ? `${this.tableStyle.pointTraits.bin[idx - 1].maxValue} to `
+                    : ""
+                }${bin.maxValue}`
+          )
+        })),
+        enum: this.tableStyle.pointTraits.enum.map((enumPoint, idx) => ({
+          dims: this.getMarkerDims(
+            `marker-enum-${idx}`,
+            enumPoint,
+            this.tableStyle.pointTraits.enum[idx]
+          ),
+          label: this.getMarkerPreview(
+            this.tableStyle.pointTraits.enum[idx],
+            enumPoint.value ?? ""
+          )
+        })),
+        addBinLabel: "Add marker bin",
+        addEnumLabel: "Add marker for value"
+      }
+    );
   }
 
   /** All of the dimensions! */
@@ -1451,6 +1660,7 @@ export default class TableStylingWorkflow
 
       // Show advanced table options
       ...(this.showAdvancedOptions ? this.advancedTableDimensions : []),
+      this.pointSizeDimensions,
 
       {
         type: "group",
