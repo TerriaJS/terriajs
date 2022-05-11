@@ -177,7 +177,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
         array = stratum[traitId];
       }
 
-      let maxIndex = 0;
+      let maxIndex = -1;
       this.strata.forEach(s =>
         (s[traitId] as Array<unknown> | undefined)?.forEach(
           (e, idx) => (maxIndex = idx > maxIndex ? idx : maxIndex)

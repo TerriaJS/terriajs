@@ -2,6 +2,15 @@ import { computed } from "mobx";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
 
+export interface TableStyleMapModel<T = unknown> {
+  mapType: StyleMapType | undefined;
+  column: string | undefined;
+
+  enum: Readonly<(EnumStyle & T)[]>;
+  bin: Readonly<(BinStyle & T)[]>;
+  null: T;
+}
+
 export interface BinStyle {
   maxValue?: number | null;
 }
@@ -9,7 +18,7 @@ export interface EnumStyle {
   value?: string | null;
 }
 
-export type StyleMapType = "enum" | "bin" | "constant";
+export type StyleMapType = "continuous" | "enum" | "bin" | "constant";
 
 export interface EnumStyleMap<T> {
   type: "enum";
@@ -29,11 +38,7 @@ export interface ConstantStyleMap<T> {
 export default class TableStyleMap<T> {
   constructor(
     readonly column: TableColumn | undefined,
-    readonly traits: {
-      enum: Readonly<(EnumStyle & T)[]>;
-      bin: Readonly<(BinStyle & T)[]>;
-      null: T;
-    }
+    readonly traits: TableStyleMapModel<T>
   ) {}
 
   /**
@@ -43,6 +48,7 @@ export default class TableStyleMap<T> {
   get styleMap(): EnumStyleMap<T> | BinStyleMap<T> | ConstantStyleMap<T> {
     // If column type is `scalar` and binStyles
     if (
+      (this.traits.mapType === "bin" || !this.traits.mapType) &&
       this.column?.type === TableColumnType.scalar &&
       this.traits.bin &&
       this.traits.bin.length > 0
@@ -67,7 +73,12 @@ export default class TableStyleMap<T> {
           return this.traits.bin?.[i] ?? this.traits.null;
         }
       };
-    } else if (this.column && this.traits.enum && this.traits.enum.length > 0) {
+    } else if (
+      (this.traits.mapType === "enum" || !this.traits.mapType) &&
+      this.column &&
+      this.traits.enum &&
+      this.traits.enum.length > 0
+    ) {
       return {
         type: "enum",
         mapValueToStyle: rowId =>

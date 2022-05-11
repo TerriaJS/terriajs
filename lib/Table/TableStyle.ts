@@ -68,7 +68,12 @@ export default class TableStyle {
    */
   @computed
   get id(): string {
-    return this.styleTraits.id || "Style" + this.styleNumber;
+    return (
+      this.styleTraits.id ??
+      (isDefined(this.styleNumber)
+        ? "Style" + this.styleNumber
+        : "Default Style")
+    );
   }
 
   @computed

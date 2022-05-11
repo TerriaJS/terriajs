@@ -1,9 +1,15 @@
+import StratumFromTraits from "../../Models/Definition/StratumFromTraits";
+import { TableStyleMapModel } from "../../Table/TableStyleMap";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
-import { BinStyleTraits, EnumStyleTraits } from "./TableStyleTraits";
+import {
+  BinStyleTraits,
+  EnumStyleTraits,
+  TableStyleMapTraits
+} from "./TablePointStyleTraits";
 
 export class OutlineSymbolTraits extends ModelTraits {
   @primitiveTrait({
@@ -31,21 +37,24 @@ export class OutlineSymbolTraits extends ModelTraits {
 export class EnumOutlineSymbolTraits extends mixTraits(
   OutlineSymbolTraits,
   EnumStyleTraits
-) {}
+) {
+  static isRemoval(style: StratumFromTraits<EnumStyleTraits>) {
+    return style.value === null;
+  }
+}
 
 export class BinOutlineSymbolTraits extends mixTraits(
   OutlineSymbolTraits,
   BinStyleTraits
-) {}
+) {
+  static isRemoval(style: StratumFromTraits<BinStyleTraits>) {
+    return style.maxValue === null;
+  }
+}
 
-export default class TableOutlineStyleTraits extends ModelTraits {
-  @primitiveTrait({
-    name: "Color Column",
-    description: "The column to use to color points or regions.",
-    type: "string"
-  })
-  column?: string;
-
+export default class TableOutlineStyleTraits
+  extends mixTraits(TableStyleMapTraits)
+  implements TableStyleMapModel<OutlineSymbolTraits> {
   @objectArrayTrait({
     name: "Enum Colors",
     description:
@@ -54,7 +63,7 @@ export default class TableOutlineStyleTraits extends ModelTraits {
     type: EnumOutlineSymbolTraits,
     idProperty: "value"
   })
-  enum?: EnumOutlineSymbolTraits[];
+  enum: EnumOutlineSymbolTraits[] = [];
 
   @objectArrayTrait({
     name: "Enum Colors",
@@ -64,7 +73,7 @@ export default class TableOutlineStyleTraits extends ModelTraits {
     type: BinOutlineSymbolTraits,
     idProperty: "index"
   })
-  bin?: BinOutlineSymbolTraits[];
+  bin: BinOutlineSymbolTraits[] = [];
 
   @objectTrait({
     name: "Enum Colors",
@@ -73,14 +82,5 @@ export default class TableOutlineStyleTraits extends ModelTraits {
       "if the `Color Column` type is not `enum`.",
     type: OutlineSymbolTraits
   })
-  null?: OutlineSymbolTraits;
-
-  // @objectTrait({
-  //   name: "Legend",
-  //   description:
-  //     "The legend to show with this style. If not specified, a suitable " +
-  //     "is created automatically from the other parameters.",
-  //   type: LegendTraits
-  // })
-  // legend?: LegendTraits;
+  null: OutlineSymbolTraits = new OutlineSymbolTraits();
 }

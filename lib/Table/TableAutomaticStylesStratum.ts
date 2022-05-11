@@ -155,7 +155,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
         column.type !== TableColumnType.enum
     );
 
-    return this.catalogItem.tableColumns.map((column, i) =>
+    const columnStyles = this.catalogItem.tableColumns.map((column, i) =>
       createStratumInstance(TableStyleTraits, {
         id: column.name,
         color: createStratumInstance(TableColorStyleTraits, {
@@ -171,6 +171,20 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
           (column.type !== TableColumnType.region || !showRegionStyles)
       })
     );
+
+    return [
+      ...columnStyles,
+
+      // Create "User Style" traits for legend
+      // This style is used by `TableStylingWorkflow` if no other styles are available
+      createStratumInstance(TableStyleTraits, {
+        id: "User Style",
+        color: createStratumInstance(TableColorStyleTraits, {
+          legend: this._createLegendForColorStyle(columnStyles.length)
+        }),
+        hidden: true
+      })
+    ];
   }
 
   @computed

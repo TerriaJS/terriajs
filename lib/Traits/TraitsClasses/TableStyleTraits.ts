@@ -9,33 +9,6 @@ import TablePointStyleTraits from "./TablePointStyleTraits";
 import TableTimeStyleTraits from "./TableTimeStyleTraits";
 import TableOutlineStyleTraits from "./TableOutlineStyleTraits";
 
-export class BinStyleTraits extends ModelTraits {
-  @primitiveTrait({
-    name: "Value",
-    description: "The enumerated value to map to a color.",
-    type: "number",
-    isNullable: true
-  })
-  maxValue?: number | null;
-
-  static isRemoval(style: StratumFromTraits<BinStyleTraits>) {
-    return style.maxValue === null;
-  }
-}
-export class EnumStyleTraits extends ModelTraits {
-  @primitiveTrait({
-    name: "Value",
-    description: "The enumerated value to map to a color.",
-    type: "string",
-    isNullable: true
-  })
-  value?: string | null;
-
-  static isRemoval(style: StratumFromTraits<EnumStyleTraits>) {
-    return style.value === null;
-  }
-}
-
 export default class TableStyleTraits extends ModelTraits {
   @primitiveTrait({
     name: "ID",
