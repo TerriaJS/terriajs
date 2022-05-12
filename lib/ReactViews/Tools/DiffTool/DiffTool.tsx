@@ -119,6 +119,7 @@ class DiffTool extends React.Component<PropsType> {
     viewState.setIsMapFullScreen(true);
     this.sourceItem.setTrait(CommonStrata.user, "show", false);
     terria.mapNavigationModel.show(CLOSE_TOOL_ID);
+    terria.elements.set("timeline", { visible: false });
     const closeTool = terria.mapNavigationModel.findItem(CLOSE_TOOL_ID);
     if (closeTool) {
       closeTool.controller.activate();
@@ -136,6 +137,7 @@ class DiffTool extends React.Component<PropsType> {
     viewState.setIsMapFullScreen(originalSettings.isMapFullScreen);
     this.sourceItem.setTrait(CommonStrata.user, "show", true);
     terria.mapNavigationModel.hide(CLOSE_TOOL_ID);
+    terria.elements.set("timeline", { visible: true });
     const closeTool = terria.mapNavigationModel.findItem(CLOSE_TOOL_ID);
     if (closeTool) {
       closeTool.controller.deactivate();
