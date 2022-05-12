@@ -142,17 +142,30 @@ export default class TerriaViewer {
     const currentView = untracked(() => this.destroyCurrentViewer());
 
     let newViewer: GlobeOrMap;
-    if (this.attached && this.viewerMode === ViewerMode.Leaflet) {
-      const LeafletOrNoViewer = this._getLeafletIfLoaded();
-      newViewer = untracked(
-        () => new LeafletOrNoViewer(this, this.mapContainer!)
+    try {
+      if (this.attached && this.viewerMode === ViewerMode.Leaflet) {
+        const LeafletOrNoViewer = this._getLeafletIfLoaded();
+        newViewer = untracked(
+          () => new LeafletOrNoViewer(this, this.mapContainer!)
+        );
+      } else if (this.attached && this.viewerMode === ViewerMode.Cesium) {
+        const CesiumOrNoViewer = this._getCesiumIfLoaded();
+        newViewer = untracked(
+          () => new CesiumOrNoViewer(this, this.mapContainer!)
+        );
+      } else {
+        newViewer = untracked(() => new NoViewer(this));
+      }
+    } catch (error) {
+      setTimeout(() => {
+        this.terria.raiseErrorToUser(error);
+      }, 0);
+      setTimeout(
+        action(() => {
+          this.viewerMode = ViewerMode.Leaflet;
+        }),
+        0
       );
-    } else if (this.attached && this.viewerMode === ViewerMode.Cesium) {
-      const CesiumOrNoViewer = this._getCesiumIfLoaded();
-      newViewer = untracked(
-        () => new CesiumOrNoViewer(this, this.mapContainer!)
-      );
-    } else {
       newViewer = untracked(() => new NoViewer(this));
     }
 
