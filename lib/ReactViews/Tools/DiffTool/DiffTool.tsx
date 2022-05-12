@@ -730,7 +730,7 @@ class Main extends React.Component<MainPropsType> {
                 onDateSet={() => this.showItem(this.props.rightItem)}
               />
             </Box>,
-            document.getElementById("TJS-BottomDockPortalForTool")!
+            document.getElementById("TJS-BottomDockLastPortal")!
           )}
       </Text>
     );
