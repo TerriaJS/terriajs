@@ -1,9 +1,14 @@
 import React from "react";
 import debounce from "lodash-es/debounce";
 
-const getDisplayName = WrappedComponent => {
-  return WrappedComponent.displayName || WrappedComponent.name || "Component";
-};
+type Measurements =
+  | "widthFromMeasureElementHOC"
+  | "heightFromMeasureElementHOC";
+
+interface MeasureElementState {
+  width: number | null;
+  height: number | null;
+}
 
 /*
     HOC to check component width & supply updated widths as a prop (stored interally via state)
@@ -24,10 +29,22 @@ const getDisplayName = WrappedComponent => {
     ref={this.refToMeasure}>
     ```
 */
-const measureElement = (WrappedComponent, verbose = true) => {
-  class MeasureElement extends React.Component {
-    constructor() {
-      super();
+function measureElement<WrappedComponentProps extends object>(
+  WrappedComponent: React.ComponentType<WrappedComponentProps>,
+  verbose = true
+): React.ComponentType<Omit<WrappedComponentProps, Measurements>> {
+  type MeasureElementProps = Omit<WrappedComponentProps, Measurements>;
+  class MeasureElement extends React.Component<
+    MeasureElementProps,
+    MeasureElementState
+  > {
+    static displayName = `MeasureElement(${getDisplayName(WrappedComponent)})`;
+
+    wrappedComponent: React.RefObject<any>;
+    checkAndUpdateSizingWithDebounce: any;
+
+    constructor(props: MeasureElementProps) {
+      super(props);
       this.wrappedComponent = React.createRef();
       this.state = {
         width: null,
@@ -39,19 +56,23 @@ const measureElement = (WrappedComponent, verbose = true) => {
         200
       );
     }
+
     componentDidMount() {
       window.addEventListener("resize", this.checkAndUpdateSizingWithDebounce);
       this.checkAndUpdateSizing();
     }
+
     componentDidUpdate() {
       this.checkAndUpdateSizing();
     }
+
     componentWillUnmount() {
       window.removeEventListener(
         "resize",
         this.checkAndUpdateSizingWithDebounce
       );
     }
+
     checkAndUpdateSizing() {
       if (!this.wrappedComponent.current) {
         return;
@@ -93,10 +114,12 @@ const measureElement = (WrappedComponent, verbose = true) => {
         }
       }
     }
+
     render() {
+      const props = this.props as WrappedComponentProps;
       return (
         <WrappedComponent
-          {...this.props}
+          {...props}
           ref={this.wrappedComponent}
           widthFromMeasureElementHOC={this.state.width}
           heightFromMeasureElementHOC={this.state.height}
@@ -104,10 +127,11 @@ const measureElement = (WrappedComponent, verbose = true) => {
       );
     }
   }
-  MeasureElement.displayName = `MeasureElement(${getDisplayName(
-    WrappedComponent
-  )})`;
   return MeasureElement;
+}
+
+const getDisplayName = (WrappedComponent: any) => {
+  return WrappedComponent.displayName || WrappedComponent.name || "Component";
 };
 
 export default measureElement;
