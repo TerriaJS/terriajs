@@ -251,10 +251,10 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             this.currentTimeAsJulianDate,
             this.activeTableStyle.timeIntervals,
             this.activeTableStyle,
-            this.activeTableStyle.colorTraits,
-            this.activeTableStyle.pointSizeTraits,
-            this.activeTableStyle.pointTraits,
-            this.activeTableStyle.outlineTraits.null,
+            this.activeTableStyle.colorMap,
+            this.activeTableStyle.pointSizeMap,
+            this.activeTableStyle.pointStyleMap,
+            this.activeTableStyle.outlineStyleMap,
             this.stylesWithDefaults
           ],
           () => {

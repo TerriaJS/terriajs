@@ -401,11 +401,17 @@ export default class TableStyle {
   }
 
   @computed get pointStyleMap() {
-    return new TableStyleMap(this.pointStyleColumn, this.pointTraits);
+    return new TableStyleMap(
+      this.pointStyleColumn,
+      this.styleTraits.traits.point.toJson(this.pointTraits)
+    );
   }
 
   @computed get outlineStyleMap() {
-    return new TableStyleMap(this.outlineStyleColumn, this.outlineTraits);
+    return new TableStyleMap(
+      this.outlineStyleColumn,
+      this.styleTraits.traits.outline.toJson(this.outlineTraits)
+    );
   }
 
   @computed
