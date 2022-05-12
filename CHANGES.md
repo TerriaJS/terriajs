@@ -8,6 +8,7 @@ Change Log
 * Fix `CatalogIndex` types
 * Fix bug that broke the `DiffTool` preventing it from opening. 
 * TSify `BottomDock` and `measureElement` components.
+* Fixed bug that broke Cesium when WebGL was not available. Reverts to Leaflet. 
 * [The next improvement]
 
 #### 8.2.3 - 2022-04-22
