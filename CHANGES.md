@@ -7,6 +7,8 @@ Change Log
 * Added a check for disableExport in ChartPanelDownloadButton.jsx. Prevents download button rendering.
 * Fix `CatalogIndex` types
 * TSXified `StandardUserInterface` and some other components. If your TerriaMap imports `StandardUserInterface.jsx` remove the `.jsx` extension so webpack can find the new `.tsx` file.
+* Fix bug that broke the `DiffTool` preventing it from opening. 
+* TSify `BottomDock` and `measureElement` components.
 * [The next improvement]
 
 #### 8.2.3 - 2022-04-22
