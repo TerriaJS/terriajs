@@ -131,9 +131,6 @@ const measureElement = <P extends React.ComponentProps<any>>(
       );
     }
   }
-  MeasureElement.displayName = `MeasureElement(${getDisplayName(
-    WrappedComponent
-  )})`;
   return MeasureElement;
 };
 
