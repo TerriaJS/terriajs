@@ -6,6 +6,12 @@ Change Log
 * Update protomaps to `1.19.0` - now using offical version.
 * Fix Table/VectorStylingWorkflow for datasets with no columns/properties to visualise
 * Improve default `activeStyle` in `TableMixin` - if no `scalar` style is found then find first style with enum, text and finally region.
+* Add Mustache template support to `modelDimensions` for string properties in `option.value` (with the catalog member as context)
+* Added a check for disableExport in ChartPanelDownloadButton.jsx. Prevents download button rendering.
+* Fix `CatalogIndex` types
+* Fix bug that broke the `DiffTool` preventing it from opening. 
+* TSify `BottomDock` and `measureElement` components.
+* Fixed a bug in `GltfMixin` which resulted in some traits missing from `GltfCatalogItem` and broke tools like the scene editor.
 * [The next improvement]
 
 #### 8.2.3 - 2022-04-22
