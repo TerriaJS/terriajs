@@ -316,57 +316,6 @@ class FeatureServerStratum extends LoadableStratum(
     return !!this._featureServer.advancedQueryCapabilities.supportsPagination;
   }
 
-  @computed get legends(): StratumFromTraits<LegendTraits>[] | undefined {
-    if (
-      !this._item.useStyleInformationFromService ||
-      !this._featureServer?.drawingInfo
-    ) {
-      return undefined;
-    }
-    const renderer = this._featureServer.drawingInfo.renderer;
-    const rendererType = renderer.type;
-    let infos: SimpleRenderer[] | UniqueValueInfo[] | ClassBreakInfo[];
-
-    if (rendererType === "uniqueValue") {
-      infos = (<UniqueValueRenderer>renderer).uniqueValueInfos;
-    } else if (rendererType === "classBreaks") {
-      infos = (<ClassBreaksRenderer>renderer).classBreakInfos;
-    } else if (rendererType === "simple") {
-      infos = [<SimpleRenderer>renderer];
-    } else {
-      return undefined;
-    }
-
-    const items: StratumFromTraits<LegendItemTraits>[] = [];
-
-    infos.forEach(info => {
-      const label = replaceUnderscores(info.label);
-      const symbol = info.symbol;
-      if (!symbol || symbol.style === "esriSLSNull") {
-        return;
-      }
-      const color = symbol.color;
-      const imageUrl = symbol.imageData
-        ? proxyCatalogItemUrl(
-            this._item,
-            `data:${symbol.contentType};base64,${symbol.imageData}`
-          )
-        : undefined;
-      const outlineColor = symbol.outline?.color;
-      items.push(
-        createStratumInstance(LegendItemTraits, {
-          title: label,
-          imageUrl,
-          color: convertEsriColorToCesiumColor(color)?.toCssColorString(),
-          outlineColor: convertEsriColorToCesiumColor(
-            outlineColor
-          )?.toCssColorString()
-        })
-      );
-    });
-    return [createStratumInstance(LegendTraits, { items })];
-  }
-
   @computed get activeStyle() {
     return "ESRI";
   }
@@ -384,7 +333,7 @@ class FeatureServerStratum extends LoadableStratum(
 
       if (!symbol) return [];
 
-      const symbolStyle = esriSymbolToTableStyle(symbol);
+      const symbolStyle = esriSymbolToTableStyle(symbol, simpleRenderer.label);
       return [
         createStratumInstance(TableStyleTraits, {
           id: "ESRI",
@@ -404,9 +353,9 @@ class FeatureServerStratum extends LoadableStratum(
     } else if (rendererType === "uniqueValue") {
       const uniqueValueRenderer = <UniqueValueRenderer>renderer;
 
-      const symbolStyles = uniqueValueRenderer.uniqueValueInfos.map(v =>
-        esriSymbolToTableStyle(v.symbol)
-      );
+      const symbolStyles = uniqueValueRenderer.uniqueValueInfos.map(v => {
+        return esriSymbolToTableStyle(v.symbol, v.label);
+      });
 
       const defaultSymbolStyle = esriSymbolToTableStyle(
         uniqueValueRenderer.defaultSymbol
@@ -454,6 +403,7 @@ class FeatureServerStratum extends LoadableStratum(
                 ...symbolStyles[i].outline
               })
             ),
+
             null: defaultSymbolStyle.outline
           })
         })
@@ -462,7 +412,7 @@ class FeatureServerStratum extends LoadableStratum(
       const classBreaksRenderer = <ClassBreaksRenderer>renderer;
 
       const symbolStyles = classBreaksRenderer.classBreakInfos.map(c =>
-        esriSymbolToTableStyle(c.symbol)
+        esriSymbolToTableStyle(c.symbol, c.label)
       );
 
       const defaultSymbolStyle = esriSymbolToTableStyle(
@@ -789,7 +739,10 @@ function cleanUrl(url: string): string {
   return uri.toString();
 }
 
-function esriSymbolToTableStyle(symbol?: Symbol | null) {
+function esriSymbolToTableStyle(
+  symbol?: Symbol | null,
+  label?: string | undefined
+) {
   if (!symbol) return {};
   return {
     // For esriPMS - just use white color
@@ -813,7 +766,8 @@ function esriSymbolToTableStyle(symbol?: Symbol | null) {
         convertEsriPointSizeToPixels(symbol.size) ??
         convertEsriPointSizeToPixels(symbol.width),
       rotation: symbol.angle,
-      pixelOffset: [symbol.xoffset ?? 0, symbol.yoffset ?? 0]
+      pixelOffset: [symbol.xoffset ?? 0, symbol.yoffset ?? 0],
+      legendTitle: label || undefined
     }),
     outline:
       symbol.outline?.style !== "esriSLSNull"
@@ -825,7 +779,8 @@ function esriSymbolToTableStyle(symbol?: Symbol | null) {
             width:
               symbol.type === "esriSLS"
                 ? convertEsriPointSizeToPixels(symbol.width)
-                : convertEsriPointSizeToPixels(symbol.outline?.width)
+                : convertEsriPointSizeToPixels(symbol.outline?.width),
+            legendTitle: label || undefined
           })
         : undefined
   };

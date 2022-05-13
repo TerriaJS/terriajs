@@ -85,7 +85,6 @@ import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import TableStyle from "../Table/TableStyle";
 import { isConstantStyleMap } from "../Table/TableStyleMap";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
-import LegendTraits from "../Traits/TraitsClasses/LegendTraits";
 import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import StyleTraits from "../Traits/TraitsClasses/StyleTraits";
 import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
@@ -253,8 +252,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             this.activeTableStyle,
             this.activeTableStyle.colorMap,
             this.activeTableStyle.pointSizeMap,
-            this.activeTableStyle.pointStyleMap,
-            this.activeTableStyle.outlineStyleMap,
+            this.activeTableStyle.pointStyleMap.traitValues,
+            this.activeTableStyle.outlineStyleMap.traitValues,
             this.stylesWithDefaults
           ],
           () => {
@@ -331,22 +330,6 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     @computed
     get disableSplitter() {
       return !this._imageryProvider;
-    }
-
-    /** Special case for legends.
-     * Because TableMixin does not have LegendTraits, but GeoJsonMixin does, we need to check to see if traits have been defined.
-     * If so, they will override TableMixin legends
-     */
-    @computed
-    get legends(): Model<LegendTraits>[] {
-      const legendTraits = this.traits.legends.getValue(this) as
-        | Model<LegendTraits>
-        | undefined;
-      if (Array.isArray(legendTraits) && legendTraits.length > 0) {
-        return legendTraits;
-      }
-
-      return super.legends;
     }
 
     @computed get mapItems() {

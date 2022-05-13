@@ -8,6 +8,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import { isJsonNumber } from "../Core/Json";
 import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
+import ContinuousColorMap from "../Map/ColorMap/ContinuousColorMap";
 import DiscreteColorMap from "../Map/ColorMap/DiscreteColorMap";
 import EnumColorMap from "../Map/ColorMap/EnumColorMap";
 import ConstantPointSizeMap from "../Map/SizeMap/ConstantPointSizeMap";
@@ -19,15 +20,19 @@ import createCombinedModel from "../Models/Definition/createCombinedModel";
 import Model from "../Models/Definition/Model";
 import TableChartStyleTraits from "../Traits/TraitsClasses/TableChartStyleTraits";
 import TableColorStyleTraits from "../Traits/TraitsClasses/TableColorStyleTraits";
-import TableOutlineStyleTraits from "../Traits/TraitsClasses/TableOutlineStyleTraits";
+import TableOutlineStyleTraits, {
+  OutlineSymbolTraits
+} from "../Traits/TraitsClasses/TableOutlineStyleTraits";
 import TablePointSizeStyleTraits from "../Traits/TraitsClasses/TablePointSizeStyleTraits";
-import TablePointStyleTraits from "../Traits/TraitsClasses/TablePointStyleTraits";
+import TablePointStyleTraits, {
+  PointSymbolTraits
+} from "../Traits/TraitsClasses/TablePointStyleTraits";
 import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
 import TableTimeStyleTraits from "../Traits/TraitsClasses/TableTimeStyleTraits";
 import TableColorMap from "./TableColorMap";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
-import TableStyleMap from "./TableStyleMap";
+import TableStyleMap, { StyleMapType } from "./TableStyleMap";
 
 const DEFAULT_FINAL_DURATION_SECONDS = 3600 * 24 - 1; // one day less a second, if there is only one date.
 
@@ -309,22 +314,6 @@ export default class TableStyle {
   }
 
   /**
-   * Gets the symbol column for this style, if any.
-   */
-  @computed
-  get pointStyleColumn(): TableColumn | undefined {
-    return this.resolveColumn(this.pointTraits.column);
-  }
-
-  /**
-   * Gets the symbol column for this style, if any.
-   */
-  @computed
-  get outlineStyleColumn(): TableColumn | undefined {
-    return this.resolveColumn(this.outlineTraits.column);
-  }
-
-  /**
    * Gets the scale column for this style, if any.
    */
   @computed
@@ -400,17 +389,29 @@ export default class TableStyle {
     return this.tableColorMap.colorMap;
   }
 
+  @computed get colorMapType(): StyleMapType {
+    return this.tableColorMap.colorMap instanceof DiscreteColorMap
+      ? "bin"
+      : this.tableColorMap.colorMap instanceof ContinuousColorMap
+      ? "continuous"
+      : this.tableColorMap.colorMap instanceof EnumColorMap
+      ? "enum"
+      : "constant";
+  }
+
   @computed get pointStyleMap() {
-    return new TableStyleMap(
-      this.pointStyleColumn,
-      this.styleTraits.traits.point.toJson(this.pointTraits)
+    return new TableStyleMap<PointSymbolTraits>(
+      this.tableModel,
+      this.styleTraits,
+      "point"
     );
   }
 
   @computed get outlineStyleMap() {
-    return new TableStyleMap(
-      this.outlineStyleColumn,
-      this.styleTraits.traits.outline.toJson(this.outlineTraits)
+    return new TableStyleMap<OutlineSymbolTraits>(
+      this.tableModel,
+      this.styleTraits,
+      "outline"
     );
   }
 
@@ -733,7 +734,7 @@ export default class TableStyle {
     return finishDates;
   }
 
-  private resolveColumn(name: string | undefined): TableColumn | undefined {
+  resolveColumn(name: string | undefined): TableColumn | undefined {
     if (name === undefined) {
       return undefined;
     }

@@ -51,7 +51,16 @@ export class TableStyleMapTraits extends ModelTraits {
   column: string | undefined = undefined;
 }
 
-export class PointSymbolTraits extends ModelTraits {
+export class TableStyleMapSymbolTraits extends ModelTraits {
+  @primitiveTrait({
+    name: "Value",
+    description: "The enumerated value to map to a color.",
+    type: "string"
+  })
+  legendTitle?: string;
+}
+
+export class PointSymbolTraits extends mixTraits(TableStyleMapSymbolTraits) {
   @primitiveTrait({
     name: "Value",
     description: "The enumerated value to map to a color.",

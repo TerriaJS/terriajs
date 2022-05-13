@@ -186,11 +186,12 @@ export default class TableColorMap {
 
     // If column type is `enum` or `region` - use EnumColorMap
     else if (
-      (colorTraits.mapType === "enum" && colorColumn) ||
-      (colorColumn &&
-        (colorColumn.type === TableColumnType.enum ||
+      colorColumn &&
+      (!colorTraits.mapType ||
+        colorTraits.mapType === "enum" ||
+        ((colorColumn.type === TableColumnType.enum ||
           colorColumn.type === TableColumnType.region) &&
-        this.enumColors.length > 0)
+          this.enumColors.length > 0))
     ) {
       return new EnumColorMap({
         enumColors: filterOutUndefined(

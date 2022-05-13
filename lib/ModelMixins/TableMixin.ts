@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, observable, runInAction, trace } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import { createTransformer, ITransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -25,17 +25,17 @@ import SelectableDimensions, {
   SelectableDimensionEnum,
   SelectableDimensionGroup
 } from "../Models/SelectableDimensions/SelectableDimensions";
-import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
 import ViewingControls, { ViewingControl } from "../Models/ViewingControls";
 import * as SelectableDimensionWorkflow from "../Models/Workflows/SelectableDimensionWorkflow";
+import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
 import Icon from "../Styled/Icon";
 import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
 import createRegionMappedImageryProvider from "../Table/createRegionMappedImageryProvider";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
+import { TableAutomaticLegendStratum } from "../Table/TableLegendStratum";
 import TableStyle from "../Table/TableStyle";
-import LegendTraits from "../Traits/TraitsClasses/LegendTraits";
 import TableTraits from "../Traits/TraitsClasses/TableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import ChartableMixin, {
@@ -65,6 +65,16 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       super(...args);
 
       this.defaultTableStyle = new TableStyle(this);
+      if (
+        this.strata.get(TableAutomaticLegendStratum.stratumName) === undefined
+      ) {
+        runInAction(() => {
+          this.strata.set(
+            TableAutomaticLegendStratum.stratumName,
+            TableAutomaticLegendStratum.load(this)
+          );
+        });
+      }
     }
 
     get hasTableMixin() {
@@ -717,17 +727,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         []
       );
       return times;
-    }
-
-    @computed
-    get legends(): Model<LegendTraits>[] {
-      // Only return legends if we have rows in dataColumnMajor and mapItems to show
-      if (this.dataColumnMajor?.length !== 0 && this.mapItems.length > 0) {
-        const colorLegend = this.activeTableStyle.colorTraits.legend;
-        return filterOutUndefined([colorLegend]);
-      } else {
-        return [];
-      }
     }
 
     /** This is a temporary button which shows in the Legend in the Workbench, if custom styling has been applied. */

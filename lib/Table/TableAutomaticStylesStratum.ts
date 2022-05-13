@@ -1,21 +1,11 @@
-import i18next from "i18next";
 import { uniq } from "lodash-es";
 import { computed } from "mobx";
-import { createTransformer } from "mobx-utils";
 import isDefined from "../Core/isDefined";
-import { JsonObject } from "../Core/Json";
-import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
-import ContinuousColorMap from "../Map/ColorMap/ContinuousColorMap";
-import DiscreteColorMap from "../Map/ColorMap/DiscreteColorMap";
-import EnumColorMap from "../Map/ColorMap/EnumColorMap";
 import TableMixin from "../ModelMixins/TableMixin";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import { BaseModel } from "../Models/Definition/Model";
 import StratumFromTraits from "../Models/Definition/StratumFromTraits";
-import LegendTraits, {
-  LegendItemTraits
-} from "../Traits/TraitsClasses/LegendTraits";
 import TableChartStyleTraits, {
   TableChartLineStyleTraits
 } from "../Traits/TraitsClasses/TableChartStyleTraits";
@@ -25,7 +15,6 @@ import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
 import TableTimeStyleTraits from "../Traits/TraitsClasses/TableTimeStyleTraits";
 import TableTraits from "../Traits/TraitsClasses/TableTraits";
 import TableColumnType from "./TableColumnType";
-import TableStyle from "./TableStyle";
 
 const DEFAULT_ID_COLUMN = "id";
 
@@ -95,9 +84,6 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
         time: createStratumInstance(TableTimeStyleTraits, {
           timeColumn: timeColumn?.name,
           idColumns: idColumn && [idColumn.name]
-        }),
-        color: createStratumInstance(TableColorStyleTraits, {
-          legend: this._createLegendForColorStyle(-1)
         })
       });
     }
@@ -109,11 +95,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
 
     // Can't do much with this dataset.
     // Just add default legend
-    return createStratumInstance(TableStyleTraits, {
-      color: createStratumInstance(TableColorStyleTraits, {
-        legend: this._createLegendForColorStyle(-1)
-      })
-    });
+    return createStratumInstance(TableStyleTraits, {});
   }
 
   @computed
@@ -130,9 +112,6 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
 
     if (scalarColumns.length >= (hasTime ? 1 : 2)) {
       return createStratumInstance(TableStyleTraits, {
-        color: createStratumInstance(TableColorStyleTraits, {
-          legend: this._createLegendForColorStyle(-1)
-        }),
         chart: createStratumInstance(TableChartStyleTraits, {
           xAxisColumn: hasTime ? timeColumns[0].name : scalarColumns[0].name,
           lines: scalarColumns.slice(hasTime ? 0 : 1).map((column, i) =>
@@ -159,8 +138,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
       createStratumInstance(TableStyleTraits, {
         id: column.name,
         color: createStratumInstance(TableColorStyleTraits, {
-          colorColumn: column.name,
-          legend: this._createLegendForColorStyle(i)
+          colorColumn: column.name
         }),
         pointSize: createStratumInstance(TablePointSizeStyleTraits, {
           pointSizeColumn: column.name
@@ -179,9 +157,6 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
       // This style is used by `TableStylingWorkflow` if no other styles are available
       createStratumInstance(TableStyleTraits, {
         id: "User Style",
-        color: createStratumInstance(TableColorStyleTraits, {
-          legend: this._createLegendForColorStyle(columnStyles.length)
-        }),
         hidden: true
       })
     ];
@@ -244,246 +219,5 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
     if (this.catalogItem.activeTableStyle.timeColumn) {
       return `${this.catalogItem.activeTableStyle.timeColumn.title}: `;
     }
-  }
-
-  private readonly _createLegendForColorStyle = createTransformer(
-    (i: number) => {
-      return new ColorStyleLegend(this.catalogItem, i);
-    }
-  );
-}
-
-export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
-  /**
-   *
-   * @param catalogItem
-   * @param index index of column in catalogItem (if -1 or undefined, then default style will be used)
-   */
-  constructor(
-    readonly catalogItem: TableCatalogItem,
-    readonly index?: number | undefined
-  ) {
-    super();
-  }
-
-  duplicateLoadableStratum(newModel: BaseModel): this {
-    return new ColorStyleLegend(
-      newModel as TableCatalogItem,
-      this.index
-    ) as this;
-  }
-
-  @computed get tableStyle() {
-    if (
-      isDefined(this.index) &&
-      this.index !== -1 &&
-      this.index < this.catalogItem.tableStyles.length
-    )
-      return this.catalogItem.tableStyles[this.index];
-
-    return this.catalogItem.defaultTableStyle;
-  }
-
-  /** Add column title as legend title if showing a Discrete or Enum ColorMap */
-  @computed get title() {
-    if (
-      this.tableStyle.colorMap instanceof ContinuousColorMap ||
-      this.tableStyle.colorMap instanceof DiscreteColorMap ||
-      this.tableStyle.colorMap instanceof EnumColorMap
-    )
-      return this.tableStyle.title;
-  }
-
-  @computed
-  get items(): StratumFromTraits<LegendItemTraits>[] {
-    let items: StratumFromTraits<LegendItemTraits>[] = [];
-
-    const colorMap = this.tableStyle.colorMap;
-    if (colorMap instanceof DiscreteColorMap) {
-      items = this._createLegendItemsFromDiscreteColorMap(
-        this.tableStyle,
-        colorMap
-      );
-    } else if (colorMap instanceof ContinuousColorMap) {
-      items = this._createLegendItemsFromContinuousColorMap(
-        this.tableStyle,
-        colorMap
-      );
-    } else if (colorMap instanceof EnumColorMap) {
-      items = this._createLegendItemsFromEnumColorMap(
-        this.tableStyle,
-        colorMap
-      );
-    } else if (colorMap instanceof ConstantColorMap) {
-      items = this._createLegendItemsFromConstantColorMap(
-        this.tableStyle,
-        colorMap
-      );
-    }
-
-    return items;
-  }
-
-  private _createLegendItemsFromContinuousColorMap(
-    style: TableStyle,
-    colorMap: ContinuousColorMap
-  ): StratumFromTraits<LegendItemTraits>[] {
-    const colorColumn = style.colorColumn;
-
-    const nullBin =
-      colorColumn &&
-      colorColumn.valuesAsNumbers.numberOfValidNumbers <
-        colorColumn.valuesAsNumbers.values.length
-        ? [
-            createStratumInstance(LegendItemTraits, {
-              color: style.colorTraits.nullColor || "rgba(0, 0, 0, 0)",
-              addSpacingAbove: true,
-              title:
-                style.colorTraits.nullLabel ||
-                i18next.t("models.tableData.legendNullLabel")
-            })
-          ]
-        : [];
-
-    const outlierBin = style.tableColorMap.outlierColor
-      ? [
-          createStratumInstance(LegendItemTraits, {
-            color: style.tableColorMap.outlierColor.toCssColorString(),
-            addSpacingAbove: true,
-            title:
-              style.colorTraits.outlierLabel ||
-              i18next.t("models.tableData.legendZFilterLabel")
-          })
-        ]
-      : [];
-
-    return new Array(this.tableStyle.colorTraits.legendTicks)
-      .fill(0)
-      .map((_, i) => {
-        // Use maxValue for last value so we don't get funky JS precision
-        const value =
-          i === this.tableStyle.colorTraits.legendTicks - 1
-            ? colorMap.maxValue
-            : colorMap.minValue +
-              (colorMap.maxValue - colorMap.minValue) *
-                (i / (this.tableStyle.colorTraits.legendTicks - 1));
-        return createStratumInstance(LegendItemTraits, {
-          color: colorMap.mapValueToColor(value).toCssColorString(),
-          title: this._formatValue(value, this.tableStyle.numberFormatOptions)
-        });
-      })
-      .reverse()
-      .concat(nullBin, outlierBin);
-  }
-
-  private _createLegendItemsFromDiscreteColorMap(
-    style: TableStyle,
-    colorMap: DiscreteColorMap
-  ): StratumFromTraits<LegendItemTraits>[] {
-    const colorColumn = style.colorColumn;
-    const minimum =
-      colorColumn && colorColumn.valuesAsNumbers.minimum !== undefined
-        ? colorColumn.valuesAsNumbers.minimum
-        : 0.0;
-
-    const nullBin =
-      colorColumn &&
-      colorColumn.valuesAsNumbers.numberOfValidNumbers <
-        colorColumn.valuesAsNumbers.values.length
-        ? [
-            createStratumInstance(LegendItemTraits, {
-              color: style.colorTraits.nullColor || "rgba(0, 0, 0, 0)",
-              addSpacingAbove: true,
-              title: style.colorTraits.nullLabel || "(No value)"
-            })
-          ]
-        : [];
-
-    return colorMap.maximums
-      .map((maximum, i) => {
-        const isBottom = i === 0;
-        const formattedMin = isBottom
-          ? this._formatValue(minimum, this.tableStyle.numberFormatOptions)
-          : this._formatValue(
-              colorMap.maximums[i - 1],
-              this.tableStyle.numberFormatOptions
-            );
-        const formattedMax = this._formatValue(
-          maximum,
-          this.tableStyle.numberFormatOptions
-        );
-        return createStratumInstance(LegendItemTraits, {
-          color: colorMap.colors[i].toCssColorString(),
-          title: `${formattedMin} to ${formattedMax}`
-          // titleBelow: isBottom ? minimum.toString() : undefined, // TODO: format value
-          // titleAbove: maximum.toString() // TODO: format value
-        });
-      })
-      .reverse()
-      .concat(nullBin);
-  }
-
-  private _createLegendItemsFromEnumColorMap(
-    style: TableStyle,
-    colorMap: EnumColorMap
-  ): StratumFromTraits<LegendItemTraits>[] {
-    const colorColumn = style.colorColumn;
-    // Show null bin if data has null values - or if EnumColorMap doesn't have enough colors to show all values
-    const nullBin =
-      colorColumn &&
-      (colorColumn.uniqueValues.numberOfNulls > 0 ||
-        colorColumn.uniqueValues.values.length > colorMap.values.length)
-        ? [
-            createStratumInstance(LegendItemTraits, {
-              color: style.colorTraits.nullColor || "rgba(0, 0, 0, 0)",
-              addSpacingAbove: true,
-              title: style.colorTraits.nullLabel || "(No value)"
-            })
-          ]
-        : [];
-
-    // Aggregate colours (don't show multiple legend items for the same colour)
-    const colorMapValues = colorMap.values.reduce<{
-      [color: string]: string[];
-    }>((prev, current, i) => {
-      const cssCol = colorMap.colors[i].toCssColorString();
-      if (isDefined(prev[cssCol])) {
-        prev[cssCol].push(current);
-      } else {
-        prev[cssCol] = [current];
-      }
-      return prev;
-    }, {});
-
-    return Object.entries(colorMapValues)
-      .map(([color, multipleTitles]) =>
-        createStratumInstance(LegendItemTraits, {
-          multipleTitles,
-          color
-        })
-      )
-      .concat(nullBin);
-  }
-
-  private _createLegendItemsFromConstantColorMap(
-    style: TableStyle,
-    colorMap: ConstantColorMap
-  ): StratumFromTraits<LegendItemTraits>[] {
-    return [
-      createStratumInstance(LegendItemTraits, {
-        color: colorMap.color.toCssColorString(),
-        title: colorMap.title
-      })
-    ];
-  }
-
-  private _formatValue(
-    value: number,
-    format: Intl.NumberFormatOptions | JsonObject | undefined
-  ): string {
-    return (format?.maximumFractionDigits
-      ? value
-      : Math.round(value)
-    ).toLocaleString(undefined, format);
   }
 }

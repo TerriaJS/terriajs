@@ -4,14 +4,14 @@ import objectArrayTrait from "../Decorators/objectArrayTrait";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
-import ModelTraits from "../ModelTraits";
 import {
   BinStyleTraits,
   EnumStyleTraits,
+  TableStyleMapSymbolTraits,
   TableStyleMapTraits
 } from "./TablePointStyleTraits";
 
-export class OutlineSymbolTraits extends ModelTraits {
+export class OutlineSymbolTraits extends mixTraits(TableStyleMapSymbolTraits) {
   @primitiveTrait({
     name: "Value",
     description: "The enumerated value to map to a color.",

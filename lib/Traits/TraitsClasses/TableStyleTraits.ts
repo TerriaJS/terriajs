@@ -4,10 +4,10 @@ import primitiveTrait from "../Decorators/primitiveTrait";
 import ModelTraits from "../ModelTraits";
 import TableChartStyleTraits from "./TableChartStyleTraits";
 import TableColorStyleTraits from "./TableColorStyleTraits";
+import TableOutlineStyleTraits from "./TableOutlineStyleTraits";
 import TablePointSizeStyleTraits from "./TablePointSizeStyleTraits";
 import TablePointStyleTraits from "./TablePointStyleTraits";
 import TableTimeStyleTraits from "./TableTimeStyleTraits";
-import TableOutlineStyleTraits from "./TableOutlineStyleTraits";
 
 export default class TableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -63,7 +63,7 @@ export default class TableStyleTraits extends ModelTraits {
       "Options for controlling the symbolization. This excludes color (see TableColorStyleTraits) and pointSize (see TablePointSizeStyleTraits).",
     type: TablePointStyleTraits
   })
-  point?: TablePointStyleTraits;
+  point: TablePointStyleTraits = new TablePointStyleTraits();
 
   @objectTrait({
     name: "Color",
@@ -71,7 +71,7 @@ export default class TableStyleTraits extends ModelTraits {
       "Options for controlling the symbolization. This excludes color (see TableColorStyleTraits) and pointSize (see TablePointSizeStyleTraits).",
     type: TableOutlineStyleTraits
   })
-  outline?: TableOutlineStyleTraits;
+  outline: TableOutlineStyleTraits = new TableOutlineStyleTraits();
 
   @objectTrait({
     name: "Point Size",

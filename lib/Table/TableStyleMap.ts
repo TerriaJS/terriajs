@@ -1,8 +1,18 @@
 import { computed } from "mobx";
-import TableColumn from "./TableColumn";
+import { PickProperties } from "../Core/TypeConditionals";
+import { NotUndefined } from "../Core/TypeModifiers";
+import TableMixin from "../ModelMixins/TableMixin";
+import Model from "../Models/Definition/Model";
+import {
+  BinStyleTraits,
+  EnumStyleTraits,
+  TableStyleMapSymbolTraits,
+  TableStyleMapTraits
+} from "../Traits/TraitsClasses/TablePointStyleTraits";
+import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
 import TableColumnType from "./TableColumnType";
 
-export interface TableStyleMapModel<T = unknown> {
+export interface TableStyleMapModel<T extends TableStyleMapSymbolTraits> {
   mapType: StyleMapType | undefined;
   column: string | undefined;
 
@@ -35,11 +45,41 @@ export interface ConstantStyleMap<T> {
   style: T;
 }
 
-export default class TableStyleMap<T> {
+export default class TableStyleMap<T extends TableStyleMapSymbolTraits> {
   constructor(
-    readonly column: TableColumn | undefined,
-    readonly traits: TableStyleMapModel<T>
+    readonly tableModel: TableMixin.Instance,
+    readonly styleTraits: Model<TableStyleTraits>,
+    readonly key: NotUndefined<
+      keyof PickProperties<TableStyleTraits, TableStyleMapModel<T>>
+    >
   ) {}
+
+  @computed get commonTraits() {
+    return this.styleTraits[this.key] as Model<
+      {
+        enum: EnumStyleTraits[];
+        bin: BinStyleTraits[];
+      } & TableStyleMapTraits
+    >;
+  }
+
+  @computed get traits() {
+    return this.styleTraits[this.key];
+  }
+
+  @computed get traitValues() {
+    return this.styleTraits.traits[this.key].toJson(
+      this.traits
+    ) as TableStyleMapModel<T>;
+  }
+
+  @computed get column() {
+    return this.traitValues.column
+      ? this.tableModel.tableColumns.find(
+          column => column.name === this.traitValues.column
+        )
+      : undefined;
+  }
 
   /**
    *
@@ -48,20 +88,20 @@ export default class TableStyleMap<T> {
   get styleMap(): EnumStyleMap<T> | BinStyleMap<T> | ConstantStyleMap<T> {
     // If column type is `scalar` and binStyles
     if (
-      (this.traits.mapType === "bin" || !this.traits.mapType) &&
+      (this.traitValues.mapType === "bin" || !this.traitValues.mapType) &&
       this.column?.type === TableColumnType.scalar &&
-      this.traits.bin &&
-      this.traits.bin.length > 0
+      this.traitValues.bin &&
+      this.traitValues.bin.length > 0
     ) {
       return {
         type: "bin",
         mapValueToStyle: rowId => {
           const value = this.column?.valuesForType[rowId];
           if (typeof value !== "number") {
-            return this.traits.null;
+            return this.traitValues.null;
           }
 
-          const binStyles = this.traits.bin ?? [];
+          const binStyles = this.traitValues.bin ?? [];
           let i;
           for (
             i = 0;
@@ -70,30 +110,30 @@ export default class TableStyleMap<T> {
             ++i
           ) {}
 
-          return this.traits.bin?.[i] ?? this.traits.null;
+          return this.traitValues.bin?.[i] ?? this.traitValues.null;
         }
       };
     } else if (
-      (this.traits.mapType === "enum" || !this.traits.mapType) &&
+      (this.traitValues.mapType === "enum" || !this.traitValues.mapType) &&
       this.column &&
-      this.traits.enum &&
-      this.traits.enum.length > 0
+      this.traitValues.enum &&
+      this.traitValues.enum.length > 0
     ) {
       return {
         type: "enum",
         mapValueToStyle: rowId =>
-          this.traits.enum!.find(
+          this.traitValues.enum!.find(
             enumStyle =>
               enumStyle.value !== null &&
               enumStyle.value === this.column?.values[rowId]
-          ) ?? this.traits.null
+          ) ?? this.traitValues.null
       };
     }
 
     // Return default settings
     return {
       type: "constant",
-      style: this.traits.null
+      style: this.traitValues.null
     };
   }
 }

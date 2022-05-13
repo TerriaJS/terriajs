@@ -107,3 +107,11 @@ export type AllowsUndefined<T> = T | undefined extends T ? true : false;
  * Resolves to `true` if a type can have the value `null`; otherwise, false.
  */
 export type AllowsNull<T> = T | null extends T ? true : false;
+
+// From ts-essentials
+export declare type PickProperties<T, P> = Pick<
+  T,
+  {
+    [K in keyof T]: T[K] extends P ? K : never;
+  }[keyof T]
+>;
