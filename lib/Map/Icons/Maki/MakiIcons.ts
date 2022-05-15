@@ -4,7 +4,8 @@ export const allIcons = Object.keys(
   icons.iconGroups[0].svgs as any
 ).map((iconId: string) => iconId.replace(".svg", ""));
 
-export function isMakiIcon(id: string) {
+export function isMakiIcon(id: string | undefined) {
+  if (!id) return;
   const svgId = `${id}.svg`;
   const iconSvgs = icons.iconGroups[0].svgs as any;
   return svgId in iconSvgs;

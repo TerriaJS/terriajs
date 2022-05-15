@@ -1,6 +1,6 @@
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Color from "terriajs-cesium/Source/Core/Color";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
@@ -10,10 +10,9 @@ import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import { JsonObject } from "../Core/Json";
-import { getMakiIcon } from "../Map/Icons/Maki/MakiIcons";
+import { getFeatureStyle } from "./getFeatureStyle";
 import TableColumn from "./TableColumn";
 import TableStyle from "./TableStyle";
-import { isConstantStyleMap } from "./TableStyleMap";
 
 export default function createLongitudeLatitudeFeaturePerRow(
   style: TableStyle,
@@ -35,37 +34,15 @@ export default function createLongitudeLatitudeFeaturePerRow(
       if (longitude === null || latitude === null) {
         return;
       }
-      const colorValue =
-        style.colorMap.mapValueToColor(
-          style.colorColumn?.valuesForType[rowId]
-        ) ?? null;
 
-      const pointSize =
-        style.pointSizeColumn !== undefined
-          ? style.pointSizeMap.mapValueToPointSize(
-              style.pointSizeColumn.valueFunctionForType(rowId)
-            )
-          : undefined;
-
-      const pointStyle = isConstantStyleMap(style.pointStyleMap.styleMap)
-        ? style.pointStyleMap.styleMap.style
-        : style.pointStyleMap.styleMap.mapValueToStyle(rowId);
-      const outlineStyle = isConstantStyleMap(style.outlineStyleMap.styleMap)
-        ? style.outlineStyleMap.styleMap.style
-        : style.outlineStyleMap.styleMap.mapValueToStyle(rowId);
-
-      const outlineColorValue = Color.fromCssColorString(
-        outlineStyle.color ?? style.tableModel.terria.baseMapContrastColor
-      );
-
-      const makiIcon = getMakiIcon(
-        pointStyle.marker ?? "",
-        colorValue.toCssColorString(),
-        outlineStyle.width,
-        outlineColorValue.toCssColorString(),
-        pointSize ?? pointStyle.height,
-        pointSize ?? pointStyle.width
-      );
+      const {
+        pointStyle,
+        color,
+        pointSize,
+        outlineStyle,
+        outlineColor,
+        makiIcon
+      } = getFeatureStyle(style, rowId);
 
       const feature = new Entity({
         position: new ConstantPositionProperty(
@@ -74,10 +51,10 @@ export default function createLongitudeLatitudeFeaturePerRow(
         point:
           pointStyle.marker === "point"
             ? new PointGraphics({
-                color: colorValue,
+                color: color,
                 pixelSize: pointSize ?? pointStyle.height ?? pointStyle.width,
                 outlineWidth: outlineStyle.width,
-                outlineColor: outlineColorValue,
+                outlineColor: outlineColor,
                 heightReference: HeightReference.CLAMP_TO_GROUND
               })
             : undefined,
@@ -85,8 +62,8 @@ export default function createLongitudeLatitudeFeaturePerRow(
           pointStyle.marker !== "point"
             ? new BillboardGraphics({
                 image: makiIcon ?? pointStyle.marker,
-                color: !makiIcon ? colorValue : undefined,
-                rotation: pointStyle.rotation,
+                color: !makiIcon ? color : undefined,
+                rotation: CesiumMath.toRadians(pointStyle.rotation ?? 0),
                 pixelOffset: new Cartesian2(
                   pointStyle.pixelOffset?.[0],
                   pointStyle.pixelOffset?.[1]

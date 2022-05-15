@@ -6,6 +6,7 @@ import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
+import { Complete } from "../../Core/TypeModifiers";
 
 export class BinStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -66,14 +67,14 @@ export class PointSymbolTraits extends mixTraits(TableStyleMapSymbolTraits) {
     description: "The enumerated value to map to a color.",
     type: "string"
   })
-  marker: string = "point";
+  marker?: string = "point";
 
   @primitiveTrait({
     name: "Color",
     description: "The CSS color to use for the enumerated value.",
     type: "number"
   })
-  rotation: number = 0;
+  rotation?: number;
 
   @primitiveArrayTrait({
     name: "Color",
@@ -87,14 +88,14 @@ export class PointSymbolTraits extends mixTraits(TableStyleMapSymbolTraits) {
     description: "The CSS color to use for the enumerated value.",
     type: "number"
   })
-  height: number = 24;
+  height?: number = 24;
 
   @primitiveTrait({
     name: "Color",
     description: "The CSS color to use for the enumerated value.",
     type: "number"
   })
-  width: number = 24;
+  width?: number = 24;
 }
 
 export class EnumPointSymbolTraits extends mixTraits(

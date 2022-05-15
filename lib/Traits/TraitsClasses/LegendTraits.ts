@@ -90,6 +90,13 @@ export class LegendItemTraits extends ModelTraits {
   marker?: string;
 
   @primitiveTrait({
+    name: "Rotation",
+    description: "The degrees to rotate legend item.",
+    type: "number"
+  })
+  rotation: number = 0;
+
+  @primitiveTrait({
     name: "Add Spacing Above",
     description:
       "True to add a bit of extra spacing above this item in order to separate it visually from the rest of the legend.",

@@ -19,6 +19,7 @@ import TableColorStyleTraits, {
 } from "../Traits/TraitsClasses/TableColorStyleTraits";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
+import { StyleMapType } from "./TableStyleMap";
 
 const getColorForId = createColorForIdTransformer();
 const DEFAULT_COLOR = "yellow";
@@ -104,6 +105,16 @@ export default class TableColorMap {
     readonly colorTraits: Model<TableColorStyleTraits>
   ) {}
 
+  @computed get type(): StyleMapType {
+    return this.colorMap instanceof DiscreteColorMap
+      ? "bin"
+      : this.colorMap instanceof ContinuousColorMap
+      ? "continuous"
+      : this.colorMap instanceof EnumColorMap
+      ? "enum"
+      : "constant";
+  }
+
   /**
    * Gets an object used to map values in {@link #colorColumn} to colors
    * for this style.
@@ -187,11 +198,11 @@ export default class TableColorMap {
     // If column type is `enum` or `region` - use EnumColorMap
     else if (
       colorColumn &&
-      (!colorTraits.mapType ||
-        colorTraits.mapType === "enum" ||
-        ((colorColumn.type === TableColumnType.enum ||
+      ((!colorTraits.mapType &&
+        (colorColumn.type === TableColumnType.enum ||
           colorColumn.type === TableColumnType.region) &&
-          this.enumColors.length > 0))
+        this.enumColors.length > 0) ||
+        colorTraits.mapType === "enum")
     ) {
       return new EnumColorMap({
         enumColors: filterOutUndefined(

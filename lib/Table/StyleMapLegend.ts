@@ -101,7 +101,10 @@ export class StyleMapLegend<
         );
         return createStratumInstance(
           LegendItemTraits,
-          this.getPreview(bin, `${formattedMin} to ${formattedMax}`)
+          this.getPreview(
+            { ...this.styleMap.traitValues.null, ...bin },
+            `${formattedMin} to ${formattedMax}`
+          )
         );
       })
       .reverse()
@@ -136,7 +139,7 @@ export class StyleMapLegend<
         createStratumInstance(
           LegendItemTraits,
           this.getPreview(
-            enumPoint,
+            { ...this.styleMap.traitValues.null, ...enumPoint },
             enumPoint.legendTitle ?? enumPoint.value ?? "No value"
           )
         )

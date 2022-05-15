@@ -41,6 +41,7 @@ export class TableAutomaticLegendStratum extends LoadableStratum(
       this._item,
       this._item.activeTableStyle.pointStyleMap,
       (point, defaultLabel) => ({
+        rotation: point.rotation,
         marker: isMakiIcon(point.marker) ? point.marker : undefined,
         imageUrl: isMakiIcon(point.marker) ? undefined : point.marker,
         imageHeight: 24,
@@ -72,7 +73,7 @@ export class TableAutomaticLegendStratum extends LoadableStratum(
 
   @computed get mergedLegend() {
     const mergableStyleTypes = [
-      this._item.activeTableStyle.colorMapType,
+      this._item.activeTableStyle.tableColorMap.type,
       this._item.activeTableStyle.pointStyleMap.styleMap.type,
       this._item.activeTableStyle.outlineStyleMap.styleMap.type
     ];

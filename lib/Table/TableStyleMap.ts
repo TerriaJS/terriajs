@@ -110,7 +110,10 @@ export default class TableStyleMap<T extends TableStyleMapSymbolTraits> {
             ++i
           ) {}
 
-          return this.traitValues.bin?.[i] ?? this.traitValues.null;
+          return {
+            ...this.traitValues.null,
+            ...(this.traitValues.bin?.[i] ?? {})
+          };
         }
       };
     } else if (
@@ -121,12 +124,15 @@ export default class TableStyleMap<T extends TableStyleMapSymbolTraits> {
     ) {
       return {
         type: "enum",
-        mapValueToStyle: rowId =>
-          this.traitValues.enum!.find(
+        mapValueToStyle: rowId => {
+          const style = this.traitValues.enum!.find(
             enumStyle =>
               enumStyle.value !== null &&
               enumStyle.value === this.column?.values[rowId]
-          ) ?? this.traitValues.null
+          );
+
+          return { ...this.traitValues.null, ...(style ?? {}) };
+        }
       };
     }
 

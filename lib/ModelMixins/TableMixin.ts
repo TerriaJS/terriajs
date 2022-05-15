@@ -260,11 +260,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     @computed
-    get disableSplitter() {
-      return !isDefined(this.activeTableStyle.regionColumn);
-    }
-
-    @computed
     get disableZoomTo() {
       // Disable zoom if only showing imagery parts  (eg region mapping) and no rectangle is defined
       if (

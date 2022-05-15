@@ -22,16 +22,9 @@ export class OutlineSymbolTraits extends mixTraits(TableStyleMapSymbolTraits) {
   @primitiveTrait({
     name: "Value",
     description: "The enumerated value to map to a color.",
-    type: "string"
-  })
-  style: "solid" | "dash" = "solid";
-
-  @primitiveTrait({
-    name: "Value",
-    description: "The enumerated value to map to a color.",
     type: "number"
   })
-  width: number = 1;
+  width?: number = 1;
 }
 
 export class EnumOutlineSymbolTraits extends mixTraits(
@@ -82,5 +75,5 @@ export default class TableOutlineStyleTraits
       "if the `Color Column` type is not `enum`.",
     type: OutlineSymbolTraits
   })
-  null: OutlineSymbolTraits = new OutlineSymbolTraits();
+  null = new OutlineSymbolTraits();
 }

@@ -31,7 +31,6 @@ import {
   LineSymbolizer,
   PolygonSymbolizer
 } from "protomaps";
-import { DataSource } from "terriajs-cesium";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -46,6 +45,7 @@ import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMater
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import CzmlDataSource from "terriajs-cesium/Source/DataSources/CzmlDataSource";
+import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollection";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
@@ -89,6 +89,7 @@ import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import StyleTraits from "../Traits/TraitsClasses/StyleTraits";
 import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
 import { ExportData } from "./ExportableMixin";
+import { isDataSource } from "./MappableMixin";
 import TableMixin from "./TableMixin";
 
 export const FEATURE_ID_PROP = "_id_";
@@ -166,8 +167,15 @@ class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
   }
 
   @computed
+  get disableSplitter() {
+    // Disable splitter if mapItems has any datasources
+    return this._item.mapItems.find(isDataSource) ? true : undefined;
+  }
+
+  @computed
   get disableOpacityControl() {
-    return !this._item._imageryProvider;
+    // Disable opacity if mapItems has any datasources
+    return this._item.mapItems.find(isDataSource) ? true : undefined;
   }
 
   get showDisableStyleOption() {
@@ -325,11 +333,6 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         sender: this,
         message: "No data available to download."
       });
-    }
-
-    @computed
-    get disableSplitter() {
-      return !this._imageryProvider;
     }
 
     @computed get mapItems() {
@@ -647,10 +650,12 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
       const getOutlineWidthValue = (z: number, f?: ProtomapsFeature) => {
         const rowId = f?.props[FEATURE_ID_PROP];
-        return isConstantStyleMap(outlineStyleMap)
-          ? outlineStyleMap.style.width
-          : outlineStyleMap.mapValueToStyle(isJsonNumber(rowId) ? rowId : -1)
-              .width;
+        return (
+          (isConstantStyleMap(outlineStyleMap)
+            ? outlineStyleMap.style.width
+            : outlineStyleMap.mapValueToStyle(isJsonNumber(rowId) ? rowId : -1)
+                .width) ?? this.stylesWithDefaults.polygonStrokeWidth
+        );
       };
 
       const getOutlineColorValue = (z: number, f?: ProtomapsFeature) => {

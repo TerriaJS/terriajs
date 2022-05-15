@@ -153,14 +153,6 @@ export default class TableStyle {
     return this.styleTraits.color;
   }
 
-  @computed get pointTraits(): Model<TablePointStyleTraits> {
-    return this.styleTraits.point;
-  }
-
-  @computed get outlineTraits(): Model<TableOutlineStyleTraits> {
-    return this.styleTraits.outline;
-  }
-
   /**
    * Gets the {@link TableScaleStyleTraits} from the {@link #styleTraits}.
    * Returns a default instance of no scale traits are specified explicitly.
@@ -318,7 +310,8 @@ export default class TableStyle {
    */
   @computed
   get pointSizeColumn(): TableColumn | undefined {
-    return this.resolveColumn(this.pointSizeTraits.pointSizeColumn);
+    const col = this.resolveColumn(this.pointSizeTraits.pointSizeColumn);
+    if (col?.type === TableColumnType.scalar) return col;
   }
 
   /**
@@ -387,16 +380,6 @@ export default class TableStyle {
 
   @computed get colorMap() {
     return this.tableColorMap.colorMap;
-  }
-
-  @computed get colorMapType(): StyleMapType {
-    return this.tableColorMap.colorMap instanceof DiscreteColorMap
-      ? "bin"
-      : this.tableColorMap.colorMap instanceof ContinuousColorMap
-      ? "continuous"
-      : this.tableColorMap.colorMap instanceof EnumColorMap
-      ? "enum"
-      : "constant";
   }
 
   @computed get pointStyleMap() {

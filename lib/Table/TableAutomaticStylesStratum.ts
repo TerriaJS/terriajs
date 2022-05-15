@@ -43,10 +43,17 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   @computed
   get disableOpacityControl() {
     // disable opacity control for point tables - or if no mapItems
-    return (
-      this.catalogItem.activeTableStyle.isPoints() ||
+    return this.catalogItem.activeTableStyle.isPoints() ||
       this.catalogItem.mapItems.length === 0
-    );
+      ? true
+      : undefined;
+  }
+
+  @computed
+  get disableSplitter() {
+    return !isDefined(this.catalogItem.activeTableStyle.regionColumn)
+      ? true
+      : undefined;
   }
 
   @computed

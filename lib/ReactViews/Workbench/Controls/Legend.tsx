@@ -195,7 +195,14 @@ export default class Legend extends React.Component<{
     // Chrome and Firefox let you override this, but not IE and Edge. So...
     if (this.props.forPrint) {
       if (imageUrl) {
-        boxContents = <img width="20px" height="16px" src={imageUrl} />;
+        boxContents = (
+          <img
+            width="20px"
+            height="16px"
+            src={imageUrl}
+            style={{ transform: `rotate(${legendItem.rotation}deg)` }}
+          />
+        );
       } else {
         boxContents = <>&#9632;</>;
         boxStyle = {
@@ -208,6 +215,7 @@ export default class Legend extends React.Component<{
     } else {
       if (imageUrl || legendItem.marker) {
         boxStyle = {
+          transform: `rotate(${legendItem.rotation}deg)`,
           backgroundImage: `url(${imageUrl})`,
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",

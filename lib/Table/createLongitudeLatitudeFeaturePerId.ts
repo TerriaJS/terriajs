@@ -1,9 +1,13 @@
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Packable from "terriajs-cesium/Source/Core/Packable";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
+import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
@@ -15,6 +19,7 @@ import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import Feature from "../Models/Feature";
 import { getRowValues } from "./createLongitudeLatitudeFeaturePerRow";
 import getChartDetailsFn from "./getChartDetailsFn";
+import { getFeatureStyle } from "./getFeatureStyle";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
 import TableStyle from "./TableStyle";
@@ -39,71 +44,112 @@ export default function createLongitudeLatitudeFeaturePerId(
   return features;
 }
 
+function createProperty(type: Packable, interpolate: boolean) {
+  return interpolate
+    ? new SampledProperty(type)
+    : new TimeIntervalCollectionProperty();
+}
+
 function createFeature(
   featureId: string,
   rowIds: number[],
   style: RequiredTableStyle
 ): Entity {
-  const isSampled = style.timeTraits.isSampled;
-  const tableHasScalarColumn = style.tableModel.tableColumns.find(
+  const isSampled = !!style.timeTraits.isSampled;
+  const tableHasScalarColumn = !!style.tableModel.tableColumns.find(
     col => col.type === TableColumnType.scalar
   );
-  const shouldInterpolateColorAndSize = isSampled && tableHasScalarColumn;
-  const position = isSampled
+  const interpolate = isSampled && tableHasScalarColumn;
+
+  const positionProperty = isSampled
     ? new SampledPositionProperty()
     : new TimeIntervalCollectionPositionProperty();
-  const color = shouldInterpolateColorAndSize
-    ? new SampledProperty(Color)
-    : new TimeIntervalCollectionProperty();
-  const pointSize = shouldInterpolateColorAndSize
-    ? new SampledProperty(Number)
-    : new TimeIntervalCollectionProperty();
+
+  const colorProperty = createProperty(Color, interpolate);
+
+  const outlineColorProperty = createProperty(Color, interpolate);
+  const outlineWidthProperty = createProperty(Number, interpolate);
+
+  const pointSizeProperty = createProperty(Number, interpolate);
+  const pointRotationProperty = createProperty(Number, interpolate);
+  const pointPixelOffsetProperty = createProperty(Cartesian2, interpolate);
+  const pointHeightProperty = createProperty(Number, interpolate);
+  const pointWidthProperty = createProperty(Number, interpolate);
+  const pointMarkerProperty = new TimeIntervalCollectionProperty();
+
   const properties = new TimeIntervalCollectionProperty();
   const description = new TimeIntervalCollectionProperty();
-  const outlineColor = Color.fromCssColorString(
-    "black" //this.terria.baseMapContrastColor;
-  );
 
   const longitudes = style.longitudeColumn.valuesAsNumbers.values;
   const latitudes = style.latitudeColumn.valuesAsNumbers.values;
   const timeIntervals = style.timeIntervals;
-  const colorMap = style.colorMap;
-  const pointSizeMap = style.pointSizeMap;
-  const colorColumn = style.colorColumn;
-  const colorValueFunction =
-    colorColumn !== undefined ? colorColumn.valueFunctionForType : () => null;
-  const pointSizeColumn = style.pointSizeColumn;
-  const pointSizeValueFunction =
-    pointSizeColumn !== undefined
-      ? pointSizeColumn.valueFunctionForType
-      : () => null;
 
   const availability = new TimeIntervalCollection();
   const tableColumns = style.tableModel.tableColumns;
+
+  /** use `PointGraphics` or `BillboardGraphics`. This wil be false if any pointTraits.marker !== "point", as then we use images as billboards */
+  let usePointGraphics = true;
 
   rowIds.forEach(rowId => {
     const longitude = longitudes[rowId];
     const latitude = latitudes[rowId];
     const interval = timeIntervals[rowId];
-    const colorValue = colorValueFunction(rowId);
-    const pointSizeValue = pointSizeValueFunction(rowId);
 
     if (longitude === null || latitude === null || !interval) {
       return;
     }
 
     addSampleOrInterval(
-      position,
+      positionProperty,
       Cartesian3.fromDegrees(longitude, latitude, 0.0),
       interval
     );
 
-    addSampleOrInterval(color, colorMap.mapValueToColor(colorValue), interval);
-    addSampleOrInterval(
+    const {
+      pointStyle,
+      color,
       pointSize,
-      pointSizeMap.mapValueToPointSize(pointSizeValue),
+      outlineStyle,
+      outlineColor,
+      makiIcon,
+      isMakiIcon
+    } = getFeatureStyle(style, rowId);
+
+    // Only add color property for non maki icons - as we color maki icons directly (see `getMakiIcon()`)
+    addSampleOrInterval(
+      colorProperty,
+      !isMakiIcon ? color : Color.WHITE,
       interval
     );
+    addSampleOrInterval(pointSizeProperty, pointSize, interval);
+    addSampleOrInterval(outlineColorProperty, outlineColor, interval);
+    addSampleOrInterval(outlineWidthProperty, outlineStyle.width, interval);
+    addSampleOrInterval(
+      pointRotationProperty,
+      CesiumMath.toRadians(pointStyle.rotation ?? 0),
+      interval
+    );
+    addSampleOrInterval(
+      pointPixelOffsetProperty,
+      new Cartesian2(
+        pointStyle.pixelOffset?.[0] ?? 0,
+        pointStyle.pixelOffset?.[1] ?? 0
+      ),
+      interval
+    );
+    addSampleOrInterval(pointHeightProperty, pointStyle.height, interval);
+    addSampleOrInterval(pointWidthProperty, pointStyle.width, interval);
+
+    if (isMakiIcon) {
+      usePointGraphics = false;
+    }
+
+    addSampleOrInterval(
+      pointMarkerProperty,
+      makiIcon ?? pointStyle.marker,
+      interval
+    );
+
     addSampleOrInterval(
       properties,
       {
@@ -121,15 +167,28 @@ function createFeature(
 
   const show = calculateShow(availability);
   const feature = new Feature({
-    position,
-    point: new PointGraphics({
-      color: <any>color,
-      outlineColor,
-      pixelSize: <any>pointSize,
-      show: <any>show,
-      outlineWidth: 1,
-      heightReference: HeightReference.CLAMP_TO_GROUND
-    }),
+    position: positionProperty,
+    point: usePointGraphics
+      ? new PointGraphics({
+          color: colorProperty,
+          outlineColor: outlineColorProperty,
+          pixelSize: pointSizeProperty,
+          show: show,
+          outlineWidth: outlineWidthProperty,
+          heightReference: HeightReference.CLAMP_TO_GROUND
+        })
+      : undefined,
+    billboard: !usePointGraphics
+      ? new BillboardGraphics({
+          image: pointMarkerProperty,
+          color: colorProperty,
+          rotation: pointRotationProperty,
+          pixelOffset: pointPixelOffsetProperty,
+          heightReference: HeightReference.CLAMP_TO_GROUND,
+          show
+        })
+      : undefined,
+
     availability
   });
 
