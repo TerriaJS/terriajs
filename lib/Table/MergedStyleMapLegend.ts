@@ -14,7 +14,10 @@ export class MergedStyleMapLegend extends LoadableStratum(LegendTraits) {
    * @param catalogItem
    * @param index index of column in catalogItem (if -1 or undefined, then default style will be used)
    */
-  constructor(readonly legends: StratumFromTraits<LegendTraits>[]) {
+  constructor(
+    readonly legends: StratumFromTraits<LegendTraits>[],
+    readonly legendItemOverrides: Partial<LegendItemTraits> = {}
+  ) {
     super();
   }
 
@@ -37,10 +40,16 @@ export class MergedStyleMapLegend extends LoadableStratum(LegendTraits) {
         );
         const existingItem = items[existingItemIndex];
         if (!existingItem) {
-          items.push(createStratumInstance(LegendItemTraits, currentItem));
+          items.push(
+            createStratumInstance(LegendItemTraits, {
+              ...this.legendItemOverrides,
+              ...currentItem
+            })
+          );
         } else {
           console.log(currentItem);
           items[existingItemIndex] = {
+            ...this.legendItemOverrides,
             ...existingItem,
             ...Object.entries(currentItem).reduce<Partial<LegendItemTraits>>(
               (acc, [key, value]) => {

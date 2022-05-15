@@ -23,7 +23,11 @@ export class StyleMapLegend<
   constructor(
     readonly catalogItem: TableMixin.Instance,
     readonly styleMap: TableStyleMap<T>,
-    readonly getPreview: (style: T, title?: string) => Partial<LegendItemTraits>
+    readonly getPreview: (
+      style: T,
+      title?: string
+    ) => Partial<LegendItemTraits>,
+    readonly legendItemOverrides: Partial<LegendItemTraits> = {}
   ) {
     super();
   }
@@ -32,7 +36,8 @@ export class StyleMapLegend<
     return new StyleMapLegend(
       newModel as TableMixin.Instance,
       this.styleMap,
-      this.getPreview
+      this.getPreview,
+      this.legendItemOverrides
     ) as this;
   }
 
@@ -55,9 +60,9 @@ export class StyleMapLegend<
     let items: StratumFromTraits<LegendItemTraits>[] = [];
 
     if (this.styleMap.styleMap.type === "bin") {
-      items = this._createLegendItemsFromBinPointStyleMap();
+      items = this._createLegendItemsFromBinStyleMap();
     } else if (this.styleMap.styleMap.type === "enum") {
-      items = this._createLegendItemsFromEnumPointStyleMap();
+      items = this._createLegendItemsFromEnumStyleMap();
     } else {
       items = this._createLegendItemsFromConstantColorMap();
     }
@@ -65,7 +70,7 @@ export class StyleMapLegend<
     return items;
   }
 
-  private _createLegendItemsFromBinPointStyleMap(): StratumFromTraits<
+  private _createLegendItemsFromBinStyleMap(): StratumFromTraits<
     LegendItemTraits
   >[] {
     const column = this.styleMap.column;
@@ -80,6 +85,7 @@ export class StyleMapLegend<
         column.valuesAsNumbers.values.length
         ? [
             createStratumInstance(LegendItemTraits, {
+              ...this.legendItemOverrides,
               ...this.getPreview(this.styleMap.traitValues.null, "(No value)"),
               addSpacingAbove: true
             })
@@ -99,19 +105,19 @@ export class StyleMapLegend<
           bin.maxValue,
           this.tableStyle.numberFormatOptions
         );
-        return createStratumInstance(
-          LegendItemTraits,
-          this.getPreview(
+        return createStratumInstance(LegendItemTraits, {
+          ...this.legendItemOverrides,
+          ...this.getPreview(
             { ...this.styleMap.traitValues.null, ...bin },
             `${formattedMin} to ${formattedMax}`
           )
-        );
+        });
       })
       .reverse()
       .concat(nullBin);
   }
 
-  private _createLegendItemsFromEnumPointStyleMap(): StratumFromTraits<
+  private _createLegendItemsFromEnumStyleMap(): StratumFromTraits<
     LegendItemTraits
   >[] {
     const column = this.styleMap.column;
@@ -127,10 +133,10 @@ export class StyleMapLegend<
             )
         ))
         ? [
-            createStratumInstance(
-              LegendItemTraits,
-              this.getPreview(this.styleMap.traitValues.null, "(No value)")
-            )
+            createStratumInstance(LegendItemTraits, {
+              ...this.legendItemOverrides,
+              ...this.getPreview(this.styleMap.traitValues.null, "(No value)")
+            })
           ]
         : [];
 
@@ -139,7 +145,11 @@ export class StyleMapLegend<
         createStratumInstance(
           LegendItemTraits,
           this.getPreview(
-            { ...this.styleMap.traitValues.null, ...enumPoint },
+            {
+              ...this.legendItemOverrides,
+              ...this.styleMap.traitValues.null,
+              ...enumPoint
+            },
             enumPoint.legendTitle ?? enumPoint.value ?? "No value"
           )
         )
@@ -151,13 +161,13 @@ export class StyleMapLegend<
     LegendItemTraits
   >[] {
     return [
-      createStratumInstance(
-        LegendItemTraits,
-        this.getPreview(
+      createStratumInstance(LegendItemTraits, {
+        ...this.legendItemOverrides,
+        ...this.getPreview(
           this.styleMap.traitValues.null,
           this.catalogItem.name ?? this.catalogItem.uniqueId ?? "(No value)"
         )
-      )
+      })
     ];
   }
 

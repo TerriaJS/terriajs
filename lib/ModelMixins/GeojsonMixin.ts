@@ -336,10 +336,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     }
 
     @computed get mapItems() {
-      if (
-        this.isLoadingMapItems ||
-        (!isDefined(this._dataSource) && !isDefined(this._imageryProvider))
-      ) {
+      if (this.isLoadingMapItems) {
         return [];
       }
       this._dataSource ? (this._dataSource.show = this.show) : null;
@@ -613,6 +610,10 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
     @action
     private createProtomapsImageryProvider(geoJson: FeatureCollectionWithCrs) {
+      // Don't need protomaps unless we have lines and polygons to show
+      // Points are handled by this.createPoints()
+      if (this.featureCounts.line + this.featureCounts.polygon === 0) return;
+
       let currentTimeRows: number[] | undefined;
 
       // If time varying, get row indices which match

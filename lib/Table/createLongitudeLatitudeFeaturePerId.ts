@@ -121,7 +121,11 @@ function createFeature(
       !isMakiIcon ? color : Color.WHITE,
       interval
     );
-    addSampleOrInterval(pointSizeProperty, pointSize, interval);
+    addSampleOrInterval(
+      pointSizeProperty,
+      pointSize ?? pointStyle.height ?? pointStyle.width,
+      interval
+    );
     addSampleOrInterval(outlineColorProperty, outlineColor, interval);
     addSampleOrInterval(outlineWidthProperty, outlineStyle.width, interval);
     addSampleOrInterval(
@@ -137,8 +141,16 @@ function createFeature(
       ),
       interval
     );
-    addSampleOrInterval(pointHeightProperty, pointStyle.height, interval);
-    addSampleOrInterval(pointWidthProperty, pointStyle.width, interval);
+    addSampleOrInterval(
+      pointHeightProperty,
+      pointSize ?? pointStyle.height,
+      interval
+    );
+    addSampleOrInterval(
+      pointWidthProperty,
+      pointSize ?? pointStyle.width,
+      interval
+    );
 
     if (isMakiIcon) {
       usePointGraphics = false;
@@ -181,6 +193,8 @@ function createFeature(
     billboard: !usePointGraphics
       ? new BillboardGraphics({
           image: pointMarkerProperty,
+          height: pointHeightProperty,
+          width: pointWidthProperty,
           color: colorProperty,
           rotation: pointRotationProperty,
           pixelOffset: pointPixelOffsetProperty,

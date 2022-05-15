@@ -22,7 +22,10 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
    * @param catalogItem
    * @param index index of column in catalogItem (if -1 or undefined, then default style will be used)
    */
-  constructor(readonly catalogItem: TableMixin.Instance) {
+  constructor(
+    readonly catalogItem: TableMixin.Instance,
+    readonly legendItemOverrides: Partial<LegendItemTraits> = {}
+  ) {
     super();
   }
 
@@ -52,22 +55,26 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     if (colorMap instanceof DiscreteColorMap) {
       items = this._createLegendItemsFromDiscreteColorMap(
         this.tableStyle,
-        colorMap
+        colorMap,
+        this.legendItemOverrides
       );
     } else if (colorMap instanceof ContinuousColorMap) {
       items = this._createLegendItemsFromContinuousColorMap(
         this.tableStyle,
-        colorMap
+        colorMap,
+        this.legendItemOverrides
       );
     } else if (colorMap instanceof EnumColorMap) {
       items = this._createLegendItemsFromEnumColorMap(
         this.tableStyle,
-        colorMap
+        colorMap,
+        this.legendItemOverrides
       );
     } else if (colorMap instanceof ConstantColorMap) {
       items = this._createLegendItemsFromConstantColorMap(
         this.tableStyle,
-        colorMap
+        colorMap,
+        this.legendItemOverrides
       );
     }
 
@@ -76,7 +83,8 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
 
   private _createLegendItemsFromContinuousColorMap(
     style: TableStyle,
-    colorMap: ContinuousColorMap
+    colorMap: ContinuousColorMap,
+    legendItemOverrides: Partial<LegendItemTraits>
   ): StratumFromTraits<LegendItemTraits>[] {
     const colorColumn = style.colorColumn;
 
@@ -86,6 +94,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
         colorColumn.valuesAsNumbers.values.length
         ? [
             createStratumInstance(LegendItemTraits, {
+              ...legendItemOverrides,
               color: style.colorTraits.nullColor || "rgba(0, 0, 0, 0)",
               addSpacingAbove: true,
               title:
@@ -98,6 +107,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     const outlierBin = style.tableColorMap.outlierColor
       ? [
           createStratumInstance(LegendItemTraits, {
+            ...legendItemOverrides,
             color: style.tableColorMap.outlierColor.toCssColorString(),
             addSpacingAbove: true,
             title:
@@ -118,6 +128,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
               (colorMap.maxValue - colorMap.minValue) *
                 (i / (this.tableStyle.colorTraits.legendTicks - 1));
         return createStratumInstance(LegendItemTraits, {
+          ...legendItemOverrides,
           color: colorMap.mapValueToColor(value).toCssColorString(),
           title: this._formatValue(value, this.tableStyle.numberFormatOptions)
         });
@@ -128,7 +139,8 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
 
   private _createLegendItemsFromDiscreteColorMap(
     style: TableStyle,
-    colorMap: DiscreteColorMap
+    colorMap: DiscreteColorMap,
+    legendItemOverrides: Partial<LegendItemTraits>
   ): StratumFromTraits<LegendItemTraits>[] {
     const colorColumn = style.colorColumn;
     const minimum =
@@ -142,6 +154,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
         colorColumn.valuesAsNumbers.values.length
         ? [
             createStratumInstance(LegendItemTraits, {
+              ...legendItemOverrides,
               color: style.colorTraits.nullColor || "rgba(0, 0, 0, 0)",
               addSpacingAbove: true,
               title: style.colorTraits.nullLabel || "(No value)"
@@ -163,6 +176,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
           this.tableStyle.numberFormatOptions
         );
         return createStratumInstance(LegendItemTraits, {
+          ...legendItemOverrides,
           color: colorMap.colors[i].toCssColorString(),
           title: `${formattedMin} to ${formattedMax}`
           // titleBelow: isBottom ? minimum.toString() : undefined, // TODO: format value
@@ -175,7 +189,8 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
 
   private _createLegendItemsFromEnumColorMap(
     style: TableStyle,
-    colorMap: EnumColorMap
+    colorMap: EnumColorMap,
+    legendItemOverrides: Partial<LegendItemTraits>
   ): StratumFromTraits<LegendItemTraits>[] {
     const colorColumn = style.colorColumn;
     // Show null bin if data has null values - or if EnumColorMap doesn't have enough colors to show all values
@@ -185,6 +200,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
         colorColumn.uniqueValues.values.length > colorMap.values.length)
         ? [
             createStratumInstance(LegendItemTraits, {
+              ...legendItemOverrides,
               color: style.colorTraits.nullColor || "rgba(0, 0, 0, 0)",
               addSpacingAbove: true,
               title: style.colorTraits.nullLabel || "(No value)"
@@ -209,10 +225,12 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
       .map(([color, multipleTitles]) =>
         multipleTitles.length > 1
           ? createStratumInstance(LegendItemTraits, {
+              ...legendItemOverrides,
               multipleTitles,
               color
             })
           : createStratumInstance(LegendItemTraits, {
+              ...legendItemOverrides,
               title: multipleTitles[0],
               color
             })
@@ -223,10 +241,12 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
 
   private _createLegendItemsFromConstantColorMap(
     style: TableStyle,
-    colorMap: ConstantColorMap
+    colorMap: ConstantColorMap,
+    legendItemOverrides: Partial<LegendItemTraits>
   ): StratumFromTraits<LegendItemTraits>[] {
     return [
       createStratumInstance(LegendItemTraits, {
+        ...legendItemOverrides,
         color: colorMap.color.toCssColorString(),
         title: colorMap.title
       })

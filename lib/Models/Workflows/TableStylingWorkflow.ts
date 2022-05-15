@@ -9,6 +9,7 @@ import {
 } from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
+import TerriaError from "../../Core/TerriaError";
 import ConstantColorMap from "../../Map/ColorMap/ConstantColorMap";
 import ContinuousColorMap from "../../Map/ColorMap/ContinuousColorMap";
 import DiscreteColorMap from "../../Map/ColorMap/DiscreteColorMap";
@@ -143,9 +144,20 @@ export default class TableStylingWorkflow
           ? {
               text: "Copy user stratum to clipboard",
               onSelect: () => {
-                navigator.clipboard.writeText(
-                  JSON.stringify(this.item.strata.get(CommonStrata.user))
+                const stratum = JSON.stringify(
+                  this.item.strata.get(CommonStrata.user)
                 );
+                try {
+                  navigator.clipboard.writeText(
+                    JSON.stringify(this.item.strata.get(CommonStrata.user))
+                  );
+                } catch (e) {
+                  TerriaError.from(e).raiseError(
+                    this.item.terria,
+                    "Failed to copy to clipboard. User stratum has been printed to console"
+                  );
+                  console.log(stratum);
+                }
               },
               disable: !this.showAdvancedOptions
             }
@@ -330,6 +342,11 @@ export default class TableStylingWorkflow
           3
         );
       }
+
+      // If no user stratum - reset bin maximums
+      if (!this.tableStyle.colorTraits.strata.get(stratumId)?.binMaximums) {
+        this.resetBinMaximums(stratumId);
+      }
     }
     // **Continuous color maps**
     else if (id === "sequential-continuous" || id === "diverging-continuous") {
@@ -462,7 +479,13 @@ export default class TableStylingWorkflow
    * - TableColumn type (advanced only)
    */
   @computed get tableStyleSelectableDim(): SelectableDimensionWorkflowGroup {
-    const showPointStyles = this.item.mapItems.find(isDataSource);
+    const showPointStyles = !!this.item.mapItems.find(
+      d => isDataSource(d) && d.entities.values.length > 0
+    );
+    const showPointSize =
+      showPointStyles &&
+      (this.tableStyle.pointSizeColumn ||
+        this.item.tableColumns.find(t => t.type === TableColumnType.scalar));
     return {
       type: "group",
       id: "Data",
@@ -549,11 +572,11 @@ export default class TableStylingWorkflow
             {
               type: "select",
               id: "table-style-type",
-              name: "Symbolisation",
+              name: "Symbology",
               selectedId: this.styleType,
               options: filterOutUndefined([
                 { id: "fill", name: "Fill Color" },
-                showPointStyles
+                showPointSize
                   ? { id: "point-size", name: "Point Size" }
                   : undefined,
                 showPointStyles
@@ -712,7 +735,7 @@ export default class TableStylingWorkflow
                   value
                 );
 
-                this.clearBinMaximums(stratumId);
+                this.resetBinMaximums(stratumId);
               }
             }
           : undefined
@@ -1467,72 +1490,6 @@ export default class TableStylingWorkflow
             id: "Bin styles",
             isOpen: true,
             selectableDimensions: filterOutUndefined([
-              ...traits.bin.map((bin, idx) => {
-                const dims: SelectableDimensionGroup = {
-                  type: "group",
-                  id: `${key}-bin-${idx}`,
-                  name: getPreview(
-                    tableStyleMap.traitValues.bin[idx],
-                    tableStyleMap.traitValues.null,
-                    !isDefined(bin.maxValue ?? undefined)
-                      ? "No value"
-                      : `${
-                          idx > 0 &&
-                          isDefined(traits.bin[idx - 1].maxValue ?? undefined)
-                            ? `${traits.bin[idx - 1].maxValue} to `
-                            : ""
-                        }${bin.maxValue}`
-                  ),
-
-                  isOpen: this.openBinIndex.get(key) === idx,
-                  onToggle: open => {
-                    if (open && this.openBinIndex.get(key) !== idx) {
-                      runInAction(() => this.openBinIndex.set(key, idx));
-                      return true;
-                    }
-                  },
-                  selectableDimensions: filterOutUndefined([
-                    idx > 0
-                      ? {
-                          type: "numeric",
-                          id: `${key}-bin-${idx}-start`,
-                          name: "Start",
-                          value: traits.bin[idx - 1].maxValue ?? undefined,
-                          setDimensionValue: (stratumId, value) => {
-                            traits.bin[idx - 1].setTrait(
-                              stratumId,
-                              "maxValue",
-                              value
-                            );
-                          }
-                        }
-                      : undefined,
-                    {
-                      type: "numeric",
-                      id: `${key}-bin-${idx}-stop`,
-                      name: "Stop",
-                      value: bin.maxValue ?? undefined,
-                      setDimensionValue: (stratumId, value) => {
-                        bin.setTrait(stratumId, "maxValue", value);
-                      }
-                    },
-                    ...getDims(
-                      `${key}-bin-${idx}`,
-                      tableStyleMap.traits.bin[idx] as any,
-                      tableStyleMap.traitValues.null
-                    ),
-                    {
-                      type: "button",
-                      id: `${key}-bin-${idx}-remove`,
-                      value: "Remove",
-                      setDimensionValue: stratumId => {
-                        bin.setTrait(stratumId, "maxValue", null);
-                      }
-                    }
-                  ])
-                };
-                return dims;
-              }),
               {
                 type: "button",
                 id: `${key}-bin-add`,
@@ -1541,7 +1498,75 @@ export default class TableStylingWorkflow
                   traits.pushObject(stratumId, "bin");
                   this.openBinIndex.set(key, traits.bin.length - 1);
                 }
-              } as SelectableDimensionButton
+              } as SelectableDimensionButton,
+              ...traits.bin
+                .map((bin, idx) => {
+                  const dims: SelectableDimensionGroup = {
+                    type: "group",
+                    id: `${key}-bin-${idx}`,
+                    name: getPreview(
+                      tableStyleMap.traitValues.bin[idx],
+                      tableStyleMap.traitValues.null,
+                      !isDefined(bin.maxValue ?? undefined)
+                        ? "No value"
+                        : `${
+                            idx > 0 &&
+                            isDefined(traits.bin[idx - 1].maxValue ?? undefined)
+                              ? `${traits.bin[idx - 1].maxValue} to `
+                              : ""
+                          }${bin.maxValue}`
+                    ),
+
+                    isOpen: this.openBinIndex.get(key) === idx,
+                    onToggle: open => {
+                      if (open && this.openBinIndex.get(key) !== idx) {
+                        runInAction(() => this.openBinIndex.set(key, idx));
+                        return true;
+                      }
+                    },
+                    selectableDimensions: filterOutUndefined([
+                      idx > 0
+                        ? {
+                            type: "numeric",
+                            id: `${key}-bin-${idx}-start`,
+                            name: "Start",
+                            value: traits.bin[idx - 1].maxValue ?? undefined,
+                            setDimensionValue: (stratumId, value) => {
+                              traits.bin[idx - 1].setTrait(
+                                stratumId,
+                                "maxValue",
+                                value
+                              );
+                            }
+                          }
+                        : undefined,
+                      {
+                        type: "numeric",
+                        id: `${key}-bin-${idx}-stop`,
+                        name: "Stop",
+                        value: bin.maxValue ?? undefined,
+                        setDimensionValue: (stratumId, value) => {
+                          bin.setTrait(stratumId, "maxValue", value);
+                        }
+                      },
+                      ...getDims(
+                        `${key}-bin-${idx}`,
+                        tableStyleMap.traits.bin[idx] as any,
+                        tableStyleMap.traitValues.null
+                      ),
+                      {
+                        type: "button",
+                        id: `${key}-bin-${idx}-remove`,
+                        value: "Remove",
+                        setDimensionValue: stratumId => {
+                          bin.setTrait(stratumId, "maxValue", null);
+                        }
+                      }
+                    ])
+                  };
+                  return dims;
+                })
+                .reverse() // Reverse to match legend order
             ])
           }
         : undefined,
@@ -1572,15 +1597,15 @@ export default class TableStylingWorkflow
             type: "select",
             id: `${id}-marker`,
             name: "Marker",
-            selectedId: pointTraits.marker ?? nullValues.marker,
+            selectedId: (pointTraits.marker ?? nullValues.marker) || "point",
             allowUndefined: true,
             allowCustomInput: true,
-            options: allIcons.map(icon => ({
+            options: [...allIcons, "point"].map(icon => ({
               id: icon
             })),
             optionRenderer: MarkerOptionRenderer,
             setDimensionValue: (stratumId, value) => {
-              pointTraits.setTrait(stratumId, "marker", value);
+              pointTraits.setTrait(stratumId, "marker", value || "point");
             }
           },
           {
@@ -1734,7 +1759,7 @@ export default class TableStylingWorkflow
   /** Clear binMaximums (which will automatically generate new ones based on numberOfBins, minimumValue and maximumValue).
    * Then set them have a sensible precision (otherwise there will be way too many digits).
    * This will also clear `minimumValue` and `maximumValue` */
-  clearBinMaximums(stratumId: string) {
+  resetBinMaximums(stratumId: string) {
     this.getTableStyleTraits(stratumId)?.color.setTrait(
       stratumId,
       "minimumValue",

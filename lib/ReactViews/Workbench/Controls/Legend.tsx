@@ -167,10 +167,6 @@ export default class Legend extends React.Component<{
   }
 
   renderLegendItem(legendItem: Model<LegendItemTraits>, i: number) {
-    let boxStyle: any = {
-      border: legendItem.addSpacingAbove ? "1px solid black" : undefined
-    };
-
     let imageUrl = legendItem.imageUrl;
 
     if (legendItem.marker) {
@@ -184,6 +180,11 @@ export default class Legend extends React.Component<{
           legendItem.imageWidth
         ) ?? legendItem.marker;
     }
+
+    let boxStyle: any = {
+      border:
+        !imageUrl && legendItem.addSpacingAbove ? "1px solid black" : undefined
+    };
 
     if (!imageUrl && legendItem.outlineColor) {
       boxStyle.border = `${legendItem.outlineWidth}px solid ${legendItem.outlineColor}`;
@@ -200,7 +201,7 @@ export default class Legend extends React.Component<{
             width="20px"
             height="16px"
             src={imageUrl}
-            style={{ transform: `rotate(${legendItem.rotation}deg)` }}
+            style={{ transform: `rotate(${legendItem.rotation ?? 0}deg)` }}
           />
         );
       } else {
