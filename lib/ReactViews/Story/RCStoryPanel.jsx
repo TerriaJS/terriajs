@@ -216,6 +216,11 @@ const RCStoryPanel = createReactClass({
     const story = stories[this.props.viewState.currentStoryId];
     const scenario = this.props.viewState.currentScenario || 0;
 
+    // find the first page with the section
+    function findFirstPageOfSection(section = "") {
+      return stories.findIndex(story => story.section === section);
+    }
+
     return (
       <React.Fragment>
         <Swipeable
@@ -246,7 +251,81 @@ const RCStoryPanel = createReactClass({
               >
                 <Icon width={20} glyph={Icon.GLYPHS.close} />
               </button>
+              <br />
+              {/* Sections buttons for story panel*/}
+              <div className="flex flex-wrap gap-2 mb-3">
+                <div
+                  onClick={() =>
+                    this.navigateStory(findFirstPageOfSection("INTRODUCTION"))
+                  }
+                  className={`btn btn-xs rounded-none border-0 text-black bg-red-100    ${story.section ===
+                    "INTRODUCTION" && "bg-red-400"}          hover:bg-red-400`}
+                >
+                  Scope
+                </div>
+                <div
+                  onClick={() =>
+                    this.navigateStory(findFirstPageOfSection("CONNECTION"))
+                  }
+                  className={`btn btn-xs rounded-none border-0 text-black bg-blue-100   ${story.section ===
+                    "CONNECTION" && "bg-blue-400"}           hover:bg-blue-400`}
+                >
+                  Connections
+                </div>
+                <div
+                  onClick={() =>
+                    this.navigateStory(findFirstPageOfSection("CLIMATE_EVENT"))
+                  }
+                  className={`btn btn-xs rounded-none border-0 text-black bg-purple-100 ${story.section ===
+                    "CLIMATE_EVENT" &&
+                    "bg-purple-400"}      hover:bg-purple-400`}
+                >
+                  Climate scenarios
+                </div>
+                <div
+                  onClick={() =>
+                    this.navigateStory(findFirstPageOfSection("LOCAL_IMPACT"))
+                  }
+                  className={`btn btn-xs rounded-none border-0 text-black bg-green-100  ${story.section ===
+                    "LOCAL_IMPACT" &&
+                    "bg-green-400"}        hover:bg-green-400`}
+                >
+                  Local Impact
+                </div>
+                <div
+                  onClick={() =>
+                    this.navigateStory(
+                      findFirstPageOfSection("CONNECTION_IMPACT")
+                    )
+                  }
+                  className={`btn btn-xs rounded-none border-0 text-black bg-orange-100 ${story.section ===
+                    "CONNECTION_IMPACT" &&
+                    "bg-orange-400"}  hover:bg-orange-400`}
+                >
+                  Conenctions Impact
+                </div>
+                <div
+                  onClick={() =>
+                    this.navigateStory(findFirstPageOfSection("EU_IMPACT"))
+                  }
+                  className={`btn btn-xs rounded-none border-0 text-black bg-amber-100  ${story.section ===
+                    "EU_IMPACT" &&
+                    "bg-amber-400"}           hover:bg-amber-400`}
+                >
+                  EU impacts
+                </div>
+                <div
+                  onClick={() =>
+                    this.navigateStory(findFirstPageOfSection("GLOBAL_IMPACT"))
+                  }
+                  className={`btn btn-xs rounded-none border-0 text-black bg-lime-100   ${story.section ===
+                    "GLOBAL_IMPACT" && "bg-lime-400"}        hover:bg-lime-400`}
+                >
+                  Global Impact
+                </div>
+              </div>
             </div>
+
             <div>
               {typeof story.text === "object" && (
                 <RCScenarioTabs
