@@ -291,12 +291,12 @@ const StandardUserInterface = createReactClass({
                       viewState.topElement = "SidePanel";
                     }}
                   >
-                    <div style={{ textAlign: "end" }}>
-                      <Link to="/">Home</Link> |
-                      <Link to="/builder">Builder</Link> |
+                    <div className="fixed top-[300px] left-2 flex flex-col gap-2 left-10 bg-black bg-opacity-40 p-3 text-sm rounded text-gray-300">
+                      <div className="text-gray-200 italic">Dev mode</div>
+                      <Link to="/">Home</Link>
+                      <Link to="/builder">Builder</Link>
                       <Link to="/users">Users</Link>
                     </div>
-                    <hr />
 
                     <Switch>
                       <Route exact path="/">
