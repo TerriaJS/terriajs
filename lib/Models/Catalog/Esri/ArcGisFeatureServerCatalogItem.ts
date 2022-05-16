@@ -2,10 +2,6 @@ import { Geometry, GeometryCollection, Properties } from "@turf/helpers";
 import i18next from "i18next";
 import { computed, runInAction } from "mobx";
 import Color from "terriajs-cesium/Source/Core/Color";
-import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
-import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
@@ -20,9 +16,6 @@ import GeoJsonMixin, {
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import ArcGisFeatureServerCatalogItemTraits from "../../../Traits/TraitsClasses/ArcGisFeatureServerCatalogItemTraits";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
-import LegendTraits, {
-  LegendItemTraits
-} from "../../../Traits/TraitsClasses/LegendTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import TableColorStyleTraits, {
   EnumColorTraits
@@ -46,7 +39,6 @@ import { BaseModel } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import { getLineStyleCesium } from "./esriLineStyle";
 
 const proj4 = require("proj4").default;
 
@@ -88,10 +80,6 @@ export type supportedLineStyle =
   | "esriSLSShortDashDotDot"
   | "esriSLSShortDot"
   | "esriSLSNull";
-
-const defaultColor = [255, 255, 255, 255];
-const defaultFillColor = [255, 255, 255, 1];
-const defaultOutlineColor = [0, 0, 0, 255];
 
 // See actual Symbol at https://developers.arcgis.com/web-map-specification/objects/symbol/
 interface Symbol {
@@ -218,10 +206,6 @@ class FeatureServerStratum extends LoadableStratum(
 
     return stratum;
   }
-
-  // @computed get forceCesiumPrimitives(): boolean {
-  //   return this._item.useStyleInformationFromService;
-  // }
 
   @computed
   get shortReport(): string | undefined {
@@ -615,92 +599,16 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
   }
 }
 
-// function getUniqueValueSymbol(
-//   entity: Entity,
-//   uniqueValueRenderer: UniqueValueRenderer,
-//   rendererObj: UniqueValueRendererObject
-// ): Symbol | null {
-//   if (!entity.properties) {
-//     return uniqueValueRenderer.defaultSymbol;
-//   }
-
-//   let entityUniqueValue = entity.properties[
-//     uniqueValueRenderer.field1
-//   ].getValue();
-
-//   // accumulate values if there is more than one field defined
-//   if (uniqueValueRenderer.fieldDelimiter && uniqueValueRenderer.field2) {
-//     const val2 = entity.properties[uniqueValueRenderer.field2].getValue();
-
-//     if (val2) {
-//       entityUniqueValue += uniqueValueRenderer.fieldDelimiter + val2;
-
-//       if (uniqueValueRenderer.field3) {
-//         const val3 = entity.properties[uniqueValueRenderer.field3].getValue();
-
-//         if (val3) {
-//           entityUniqueValue += uniqueValueRenderer.fieldDelimiter + val3;
-//         }
-//       }
-//     }
-//   }
-
-//   const uniqueValueInfo = rendererObj[entityUniqueValue];
-
-//   if (uniqueValueInfo && uniqueValueInfo.symbol) {
-//     return uniqueValueInfo.symbol;
-//   } else {
-//     return uniqueValueRenderer.defaultSymbol;
-//   }
-// }
-
 export function convertEsriColorToCesiumColor(
-  esriColor?: number[] | undefined
+  esriColor?: null | number[] | undefined
 ): Color | undefined {
-  if (!isDefined(esriColor)) return;
+  if (!esriColor) return;
   return Color.fromBytes(
     esriColor[0],
     esriColor[1],
     esriColor[2],
     esriColor[3]
   );
-}
-
-function esriPolylineStyle(
-  entity: Entity,
-  color: number[],
-  style?: supportedLineStyle
-): void {
-  if (entity.polyline) {
-    if (style) {
-      const patternValue = getLineStyleCesium(style);
-      if (patternValue) {
-        entity.polyline.material = new PolylineDashMaterialProperty({
-          color: convertEsriColorToCesiumColor(color),
-          dashPattern: new ConstantProperty(patternValue)
-        });
-      } else if (style === "esriSLSSolid") {
-        // it is simple line just define color
-        entity.polyline.material = new ColorMaterialProperty(
-          convertEsriColorToCesiumColor(color)
-        );
-      } else if (style === "esriSLSDash") {
-        // default PolylineDashMaterialProperty is dashed line ` -` (0x00FF)
-        entity.polyline.material = new PolylineDashMaterialProperty({
-          color: convertEsriColorToCesiumColor(color)
-        });
-      }
-    } else {
-      // we don't know how to handle style make it default
-      entity.polyline.material = new ColorMaterialProperty(
-        convertEsriColorToCesiumColor(color)
-      );
-    }
-
-    if (style === "esriSLSNull") {
-      entity.polyline.show = new ConstantProperty(false);
-    }
-  }
 }
 
 // ESRI uses points for styling while cesium uses pixels
