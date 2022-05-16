@@ -55,17 +55,9 @@ export class GeoJsonTraits extends mixTraits(
     type: StyleTraits,
     name: "Style",
     description:
-      "Styling rules that follow [simplestyle-spec](https://github.com/mapbox/simplestyle-spec). This will only be used for Cesium Primitives **OR** MVT and `disableTableStyle = true`."
+      "Styling rules that follow [simplestyle-spec](https://github.com/mapbox/simplestyle-spec). If defined, then `forceCesiumPrimitives` will be true. For styling MVT/protomaps - see `TableStyleTraits`"
   })
   style?: StyleTraits;
-
-  @primitiveTrait({
-    type: "boolean",
-    name: "Disable table style",
-    description:
-      "If true, all table styling will be disabled. This only applies to geojson-vt/protomaps (see `forceCesiumPrimitives`). It disabled, `style` rules will be used instead"
-  })
-  disableTableStyle: boolean = false;
 
   @primitiveTrait({
     type: "boolean",

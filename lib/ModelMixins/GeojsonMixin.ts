@@ -253,7 +253,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         // Update protomaps imagery provider if activeTableStyle changes
         this.tableStyleReactionDisposer = reaction(
           () => [
-            this.useMvt,
+            this.useTableStylingAndProtomaps,
             this.readyData,
             this.currentTimeAsJulianDate,
             this.activeTableStyle.timeIntervals,
@@ -265,7 +265,11 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             this.stylesWithDefaults
           ],
           () => {
-            if (this._imageryProvider && this.readyData && this.useMvt) {
+            if (
+              this._imageryProvider &&
+              this.readyData &&
+              this.useTableStylingAndProtomaps
+            ) {
               runInAction(() => {
                 this._imageryProvider = this.createProtomapsImageryProvider(
                   this.readyData!
@@ -340,9 +344,11 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         return [];
       }
       this._dataSource ? (this._dataSource.show = this.show) : null;
-      const points = this.useMvt
+      let points = this.useTableStylingAndProtomaps
         ? this.createPoints(this.activeTableStyle)
         : undefined;
+
+      points = points?.entities.values.length === 0 ? undefined : points;
 
       points ? (points.show = this.show) : null;
       return filterOutUndefined([
@@ -363,7 +369,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
      * For more info see GeoJsonMixin.forceLoadMapItems
      */
     @computed
-    get useMvt() {
+    get useTableStylingAndProtomaps() {
       return (
         !this.forceCesiumPrimitives &&
         !isDefined(this.czmlTemplate) &&
@@ -407,7 +413,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
      *    - More than 50% of GeoJSON features have simply-style properties
      */
     protected async forceLoadMapItems(): Promise<void> {
-      let useMvt = this.useMvt;
+      let useTableStylingAndProtomaps = this.useTableStylingAndProtomaps;
       const czmlTemplate = this.czmlTemplate;
       const filterByProperties = this.filterByProperties;
 
@@ -477,7 +483,10 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             featureCounts.polygon++;
           }
 
-          if (useMvt && SIMPLE_STYLE_KEYS.find(key => properties[key])) {
+          if (
+            useTableStylingAndProtomaps &&
+            SIMPLE_STYLE_KEYS.find(key => properties[key])
+          ) {
             numFeaturesWithSimpleStyle++;
           }
         }
@@ -492,7 +501,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               "forceCesiumPrimitives",
               true
             );
-            useMvt = this.useMvt;
+            useTableStylingAndProtomaps = this.useTableStylingAndProtomaps;
           });
         }
         runInAction(() => {
@@ -505,7 +514,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             this._dataSource = dataSource;
             this._imageryProvider = undefined;
           });
-        } else if (useMvt) {
+        } else if (useTableStylingAndProtomaps) {
           runInAction(() => {
             this._imageryProvider = this.createProtomapsImageryProvider(
               geoJsonWgs84
@@ -692,9 +701,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new PolygonSymbolizer({
-              fill: this.disableTableStyle
-                ? this.stylesWithDefaults.fill.toCssColorString()
-                : getColorValue
+              fill: getColorValue
             }),
             minzoom: 0,
             maxzoom: Infinity,
@@ -710,17 +717,13 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             }
           },
           // Polygon stroke (hide if 0)
-          !this.disableTableStyle ||
+
           this.stylesWithDefaults.polygonStrokeWidth !== 0
             ? {
                 dataLayer: GEOJSON_SOURCE_LAYER_NAME,
                 symbolizer: new LineSymbolizer({
-                  color: this.disableTableStyle
-                    ? this.stylesWithDefaults.polygonStroke.toCssColorString()
-                    : getOutlineColorValue,
-                  width: this.disableTableStyle
-                    ? this.stylesWithDefaults.polygonStrokeWidth
-                    : getOutlineWidthValue
+                  color: getOutlineColorValue,
+                  width: getOutlineWidthValue
                 }),
                 minzoom: 0,
                 maxzoom: Infinity,
@@ -737,17 +740,13 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               }
             : undefined,
           // Line stroke (hide if 0)
-          !this.disableTableStyle ||
+
           this.stylesWithDefaults.polylineStrokeWidth !== 0
             ? {
                 dataLayer: GEOJSON_SOURCE_LAYER_NAME,
                 symbolizer: new LineSymbolizer({
-                  color: this.disableTableStyle
-                    ? this.stylesWithDefaults.polylineStroke.toCssColorString()
-                    : getColorValue,
-                  width: this.disableTableStyle
-                    ? this.stylesWithDefaults.polylineStrokeWidth
-                    : getOutlineWidthValue
+                  color: getColorValue,
+                  width: getOutlineWidthValue
                 }),
                 minzoom: 0,
                 maxzoom: Infinity,
@@ -1134,7 +1133,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       }
 
       // If we are using mvt (mapbox vector tiles / protomaps imagery provider) return TableMixin.discreteTimes
-      if (this.useMvt && !this.disableTableStyle) return super.discreteTimes;
+      if (this.useTableStylingAndProtomaps) return super.discreteTimes;
 
       // If using timeProperty - get discrete times from that
       if (this.timeProperty) {
@@ -1168,7 +1167,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
      */
     @computed
     get dataColumnMajor() {
-      if (!this.readyData || !this.useMvt || this.disableTableStyle) return [];
+      if (!this.readyData || !this.useTableStylingAndProtomaps) return [];
 
       // Map from property name (column name) to column index
       const colMap = new Map<string, number>();
@@ -1221,9 +1220,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return undefined;
     }
 
-    /** Only show TableStylingWorkflow if useMvt and not disableTableStyle */
     @computed get viewingControls(): ViewingControl[] {
-      return !this.useMvt || this.disableTableStyle
+      return !this.useTableStylingAndProtomaps
         ? super.viewingControls.filter(v => v.id !== TableStylingWorkflow.type)
         : super.viewingControls;
     }
