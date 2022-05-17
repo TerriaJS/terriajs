@@ -156,9 +156,18 @@ export default class Leaflet extends GlobeOrMap {
 
     this.scene = new LeafletScene(this.map);
 
-    this._attributionControl = L.control.attribution({
+    const attributionProps: L.Control.AttributionOptions = {
       position: "bottomleft"
-    });
+    };
+
+    if (
+      isDefined(this.terria.configParameters.leafletAttributionPrefix) &&
+      this.terria.configParameters.leafletAttributionPrefix !== null
+    ) {
+      attributionProps.prefix = this.terria.configParameters.leafletAttributionPrefix;
+    }
+
+    this._attributionControl = L.control.attribution(attributionProps);
     this.map.addControl(this._attributionControl);
 
     // this.map.screenSpaceEventHandler = {

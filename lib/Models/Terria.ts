@@ -276,6 +276,9 @@ interface ConfigParameters {
    */
   feedbackMinLength?: number;
 
+  /** If null, then Leaflet's default attribution will be used */
+  leafletAttributionPrefix: null | string | undefined;
+
   /**
    * Extra links to show in the credit line at the bottom of the map (currently only the Cesium map).
    */
@@ -461,6 +464,8 @@ export default class Terria {
     feedbackPreamble: "translate#feedback.feedbackPreamble",
     feedbackPostamble: undefined,
     feedbackMinLength: 0,
+    leafletAttributionPrefix:
+      '<a href="https://leafletjs.com" title="A JavaScript library for interactive maps">Leaflet</a>',
     extraCreditLinks: [
       // Default credit links (shown at the bottom of the Cesium map)
       {
@@ -1583,6 +1588,8 @@ export default class Terria {
 
     runInAction(() => {
       if (isJsonString(initData.previewedItemId)) {
+        console.log(`OMG preview ${initData.previewedItemId}`);
+        console.log(initData);
         this._previewedItemId = initData.previewedItemId;
       }
     });
