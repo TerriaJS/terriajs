@@ -1,41 +1,31 @@
-import React from "react";
+import classNames from "classnames";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import classNames from "classnames";
-import ObserveModelMixin from "../ObserveModelMixin";
+import React from "react";
+import { withTranslation } from "react-i18next";
+import { Swipeable } from "react-swipeable";
+import defined from "terriajs-cesium/Source/Core/defined";
+import when from "terriajs-cesium/Source/ThirdParty/when";
+import { objectParamsToURL, RCChangeUrlParams } from "../../Models/Receipt";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import { Medium } from "../Generic/Responsive";
 import Icon from "../Icon.jsx";
-import { Swipeable } from "react-swipeable";
-import when from "terriajs-cesium/Source/ThirdParty/when";
-import defined from "terriajs-cesium/Source/Core/defined";
-import Styles from "./story-panel.scss";
-import { withTranslation } from "react-i18next";
-import { objectParamsToURL, RCChangeUrlParams } from "../../Models/Receipt";
+import ObserveModelMixin from "../ObserveModelMixin";
 import Tooltip from "../RCTooltip/RCTooltip";
 import RCScenarioTabs from "../Story/RCScenarioTabs";
-export function activateStory(story, terria, scenario) {
-  if (story.shareData) {
-    let initSources;
-    if (Array.isArray(story.shareData.initSources)) {
-      initSources = story.shareData.initSources;
-    } else {
-      if (scenario === undefined) {
-        // TODO: specify/determine default scenario
-        initSources =
-          story.shareData.initSources[
-            Object.keys(story.shareData.initSources)[0]
-          ];
-      } else {
-        initSources = story.shareData.initSources[scenario];
-      }
-    }
+import Styles from "./story-panel.scss";
+
+export function activateStory(story, terria, scenarioIndex = 0) {
+  if (story.mapScenarios && story.mapScenarios[scenarioIndex]) {
+    const initSources = story.mapScenarios[scenarioIndex].initSources;
 
     const promises = initSources.map(initSource =>
       terria.addInitSource(initSource, true)
     );
     when.all(promises).then(() => {
-      const nowViewingPaths = story.shareData.initSources.reduce((p, c) => {
+      const nowViewingPaths = story.mapScenarios[
+        scenarioIndex
+      ].initSources.reduce((p, c) => {
         if (c.sharedCatalogMembers) {
           return p.concat(Object.keys(c.sharedCatalogMembers));
         }
@@ -100,14 +90,36 @@ const RCStoryPanel = createReactClass({
       }
     };
 
+    this.changeScenarioListener = e => {
+      this.props.viewState.currentScenario = e.detail.scenarioID;
+
+      const story = this.props.viewState.currentStoryId
+        ? this.props.terria.stories[this.props.viewState.currentStoryId]
+        : this.props.terria.stories[0];
+      activateStory(
+        story,
+        this.props.terria,
+        this.props.viewState.currentScenario
+      );
+
+      this.setState({ state: this.state });
+    };
+
     window.addEventListener("keydown", this.escKeyListener, true);
+    window.document.addEventListener(
+      "changeScenario",
+      this.changeScenarioListener,
+      false
+    );
   },
+
   componentDidUpdate() {
     // Make hotspots visible when zoomed in
     const stories = this.props.terria.stories || [];
     const story = stories[this.props.viewState.currentStoryId];
-    this.props.terria.updateFromStartData(story.shareData);
+    this.props.terria.updateFromStartData(story.mapScenarios);
   },
+
   slideIn() {
     this.slideInTimer = setTimeout(() => {
       this.setState({
@@ -164,8 +176,8 @@ const RCStoryPanel = createReactClass({
   },
 
   onCenterScene(story) {
-    if (story.shareData) {
-      this.props.terria.updateFromStartData(story.shareData);
+    if (story.mapScenarios) {
+      this.props.terria.updateFromStartData(story.mapScenarios);
     }
   },
 
@@ -247,14 +259,7 @@ const RCStoryPanel = createReactClass({
                 <Icon width={20} glyph={Icon.GLYPHS.close} />
               </button>
             </div>
-            <div>
-              {typeof story.text === "object" && (
-                <RCScenarioTabs
-                  story={story}
-                  onScenarioChange={this.scenarioChanged}
-                />
-              )}
-            </div>
+            <div />
             <div className={Styles.RCSummaryCard}>
               <div
                 className={classNames(Styles.storyContainer, {

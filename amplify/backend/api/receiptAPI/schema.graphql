@@ -39,11 +39,8 @@ type Page
   id: ID!
   title: String!
   section: Section!
-  camera: String!
-  baseMapName: String!
-  currentTime: TerriaTime
-  viewer_mode_3d: Boolean!
-  scenarios: [PageContent!]
+  content: String!
+  mapScenarios: [MapScenario!]
 }
 
 type Author {
@@ -52,10 +49,13 @@ type Author {
   affiliation: String
 }
 
-type PageContent {
+type MapScenario {
   id: ID!
-  ssp: SSP!
-  content: String!
+  name: String!
+  camera: String!
+  baseMapName: String!
+  currentTime: TerriaTime
+  viewer_mode_3d: Boolean!
   split_map: Boolean!
   enabled_catalog_items: [CatalogItem!]
   split_catalog_items: SplitCatalog
