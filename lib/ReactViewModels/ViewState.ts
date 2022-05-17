@@ -307,10 +307,10 @@ export default class ViewState {
   @observable feedbackFormIsVisible: boolean = false;
 
   /**
-   * Gets or sets a value indicating whether the catalog's model share panel
+   * Gets or sets a value indicating whether the catalog's modal share panel
    * is currently visible.
    */
-  @observable shareModelIsVisible: boolean = false;
+  @observable shareModalIsVisible: boolean = false;
 
   /**
    * The currently open tool
