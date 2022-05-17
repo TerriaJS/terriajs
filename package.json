@@ -163,6 +163,7 @@
     "terriajs-cesium": "1.81.3",
     "terriajs-html2canvas": "1.0.0-alpha.12-terriajs-1",
     "thredds-catalog-crawler": "0.0.5",
+    "ts-essentials": "^5.0.0",
     "ts-loader": "^5.3.3",
     "ts-node": "^5.0.1",
     "typescript": "^3.9.2",

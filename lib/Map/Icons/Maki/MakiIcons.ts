@@ -11,6 +11,7 @@ export function isMakiIcon(id: string | undefined) {
   return svgId in iconSvgs;
 }
 
+/** Get SVG string for maki icon */
 export function getMakiIcon(
   id: string | undefined,
   color: string,

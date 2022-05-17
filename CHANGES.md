@@ -14,6 +14,30 @@ Change Log
 * TSify `BottomDock` and `measureElement` components.
 * Fixed a bug in `GltfMixin` which resulted in some traits missing from `GltfCatalogItem` and broke tools like the scene editor.
 * Re-add missing `helpPanel.mapUserGuide` translation string
+
+
+* Add `raiseError` convenience method to `TerriaError`
+* Improve `filterOutUndefined` types
+* Add [Maki icons](https://labs.mapbox.com/maki-icons/) - these can be used in `TablePointStyleTraits`. For example `marker = "hospital"`
+* Rename `ProtomapsImageryProvider.duplicate()` to `ProtomapsImageryProvider.clone()`.
+* Add [`ts-essentials` library](https://github.com/ts-essentials/ts-essentials) - "a set of high-quality, useful TypeScript types that make writing type-safe code easier"
+* `GeojsonMixin` improvements
+  * `uveMvt` is now `useTableStylingAndProtomaps`
+  * If `useTableStylingAndProtomaps` is true, then protomaps is used for Line and Polygon features, and `TableMixin` is used for Point features (see `createLongitudeLatitudeFeaturePerRow()`)
+  * `GeoJsonTraits.style` is now only supported by Cesium primitives (if defined, then `useTableStylingAndProtomaps` will be false). Instead you can use `TableStyleTraits`
+* `TableMixin` improvements
+  * Add new `TableStyleMap` model, this is used to support `enum`, `bin` and `null` styles for the following:
+    * `TablePointStyleTraits` - this supports markers (URLs or Maki icons) and rotation, width, height and pixelOffset.
+    * Add `TableOutlineStyleTraits` - this supports color and width.
+  * Legends are now handled by `TableAutomaticLegendStratum`
+  * Legends will be merged across `TableStyleMaps` and `TableColorMap` - for example, marker icons will be shown in legend with correct colors. See `MergedStyleMapLegend`
+  * Default `activeStyle` is now picked by finding the first column of type `scalar`, and then the first column of type `enum`, then `text` and then finally `region`.
+* `ArcGisFeatureServiceCatalogItem` now uses Table styling and `protomaps`
+* Add `pushObject` to `BaseModel`. This method pushes a new object to an Array Trait (similar to `addObject`). The object will be placed at the end of the array (across all strata). This method takes `isRemoved` into account. This method can be used to add objects to `objectArrayTraits` which have `idProperty="index"` and support removals.
+* Add `allowCustomInput` property to `SelectableDimensionGroup` - if true then `react-select` will allow custom user input.
+* `TableStylingWorkflow` improvements
+  * Better handling of swapping between different color scheme types (eg enum or bin)
+  * Add point, outline and point-size traits
 * [The next improvement]
 
 #### 8.2.3 - 2022-04-22

@@ -1,5 +1,5 @@
 import { computed } from "mobx";
-import { PickProperties } from "../Core/TypeConditionals";
+import { PickProperties } from "ts-essentials";
 import { NotUndefined } from "../Core/TypeModifiers";
 import TableMixin from "../ModelMixins/TableMixin";
 import Model from "../Models/Definition/Model";
@@ -8,7 +8,7 @@ import {
   EnumStyleTraits,
   TableStyleMapSymbolTraits,
   TableStyleMapTraits
-} from "../Traits/TraitsClasses/TablePointStyleTraits";
+} from "../Traits/TraitsClasses/TableStyleMapTraits";
 import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
 import TableColumnType from "./TableColumnType";
 
@@ -54,6 +54,7 @@ export default class TableStyleMap<T extends TableStyleMapSymbolTraits> {
     >
   ) {}
 
+  /** Get traits for TableStyleMapSymbolTraits */
   @computed get commonTraits() {
     return this.styleTraits[this.key] as Model<
       {
@@ -63,10 +64,12 @@ export default class TableStyleMap<T extends TableStyleMapSymbolTraits> {
     >;
   }
 
+  /** Get all traits (this includes TableStyleMapTraits and specific SymbolTraits) */
   @computed get traits() {
     return this.styleTraits[this.key];
   }
 
+  /** Get all trait values for this TableStyleMapModel */
   @computed get traitValues() {
     return this.styleTraits.traits[this.key].toJson(
       this.traits

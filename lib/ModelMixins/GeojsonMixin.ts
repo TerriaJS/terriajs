@@ -257,12 +257,10 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             this.readyData,
             this.currentTimeAsJulianDate,
             this.activeTableStyle.timeIntervals,
-            this.activeTableStyle,
             this.activeTableStyle.colorMap,
             this.activeTableStyle.pointSizeMap,
             this.activeTableStyle.pointStyleMap.traitValues,
-            this.activeTableStyle.outlineStyleMap.traitValues,
-            this.stylesWithDefaults
+            this.activeTableStyle.outlineStyleMap.traitValues
           ],
           () => {
             if (
@@ -373,6 +371,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return (
         !this.forceCesiumPrimitives &&
         !isDefined(this.czmlTemplate) &&
+        // Table styling doesn't support the old GeoJson StyleTraits
         Object.keys(this.style.traits).every(
           styleTrait => !isDefined(this.style[styleTrait as keyof StyleTraits])
         ) &&
@@ -577,12 +576,13 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       }
     }
 
+    // Create point features using TableMixin.createLongitudeLatitudeFeaturePerRow
+    // Used with table styling
+    // Line and Polygon features are handled by Protomaps
     private readonly createPoints = createTransformer((style: TableStyle):
       | DataSource
       | undefined => {
       if (!this.readyData) return;
-
-      console.log("createPoints");
 
       const latitudes: (number | null)[] = [];
       const longitudes: (number | null)[] = [];
@@ -872,7 +872,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return CzmlDataSource.load(rootCzml);
     }
 
-    /** Applies default values on top of GeoJson StyleTraits. This is only used for Cesium Primitives OR MVT if `disableTableStyling` is true */
+    /** Applies default values on top of GeoJson StyleTraits. This is only used for Cesium Primitives.*/
     @computed
     get stylesWithDefaults() {
       const defaults = {

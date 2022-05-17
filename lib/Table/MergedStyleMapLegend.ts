@@ -8,12 +8,8 @@ import LegendTraits, {
   LegendItemTraits
 } from "../Traits/TraitsClasses/LegendTraits";
 
+/** Merge all legend items in legends - by legend.title */
 export class MergedStyleMapLegend extends LoadableStratum(LegendTraits) {
-  /**
-   *
-   * @param catalogItem
-   * @param index index of column in catalogItem (if -1 or undefined, then default style will be used)
-   */
   constructor(
     readonly legends: StratumFromTraits<LegendTraits>[],
     readonly legendItemOverrides: Partial<LegendItemTraits> = {}
@@ -33,6 +29,7 @@ export class MergedStyleMapLegend extends LoadableStratum(LegendTraits) {
   get items(): StratumFromTraits<LegendItemTraits>[] {
     let items: StratumFromTraits<LegendItemTraits>[] = [];
 
+    // Merge all Legend items by title
     this.legends.forEach(legend => {
       legend.items?.forEach(currentItem => {
         const existingItemIndex = items.findIndex(
@@ -47,7 +44,6 @@ export class MergedStyleMapLegend extends LoadableStratum(LegendTraits) {
             })
           );
         } else {
-          console.log(currentItem);
           items[existingItemIndex] = {
             ...this.legendItemOverrides,
             ...existingItem,

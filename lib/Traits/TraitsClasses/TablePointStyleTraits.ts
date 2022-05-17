@@ -1,64 +1,15 @@
-import StratumFromTraits from "../../Models/Definition/StratumFromTraits";
-import { StyleMapType, TableStyleMapModel } from "../../Table/TableStyleMap";
+import { TableStyleMapModel } from "../../Table/TableStyleMap";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
-import ModelTraits from "../ModelTraits";
-
-export class BinStyleTraits extends ModelTraits {
-  @primitiveTrait({
-    name: "Value",
-    description: "The enumerated value to map to a color.",
-    type: "number",
-    isNullable: true
-  })
-  maxValue?: number | null;
-
-  static isRemoval(style: StratumFromTraits<BinStyleTraits>) {
-    return style.maxValue === null;
-  }
-}
-export class EnumStyleTraits extends ModelTraits {
-  @primitiveTrait({
-    name: "Value",
-    description: "The enumerated value to map to a color.",
-    type: "string",
-    isNullable: true
-  })
-  value?: string | null;
-
-  static isRemoval(style: StratumFromTraits<EnumStyleTraits>) {
-    return style.value === null;
-  }
-}
-
-export class TableStyleMapTraits extends ModelTraits {
-  @primitiveTrait({
-    name: "Style map type",
-    description:
-      'The type of style map. Valid values are "continuous", "enum", "bin", "constant"',
-    type: "string"
-  })
-  mapType: StyleMapType | undefined = undefined;
-
-  @primitiveTrait({
-    name: "Color Column",
-    description: "The column to use for styling.",
-    type: "string"
-  })
-  column: string | undefined = undefined;
-}
-
-export class TableStyleMapSymbolTraits extends ModelTraits {
-  @primitiveTrait({
-    name: "Value",
-    description: "The enumerated value to map to a color.",
-    type: "string"
-  })
-  legendTitle?: string;
-}
+import {
+  BinStyleTraits,
+  EnumStyleTraits,
+  TableStyleMapSymbolTraits,
+  TableStyleMapTraits
+} from "./TableStyleMapTraits";
 
 export class PointSymbolTraits extends mixTraits(TableStyleMapSymbolTraits) {
   @primitiveTrait({
@@ -101,18 +52,14 @@ export class EnumPointSymbolTraits extends mixTraits(
   PointSymbolTraits,
   EnumStyleTraits
 ) {
-  static isRemoval(style: StratumFromTraits<EnumStyleTraits>) {
-    return style.value === null;
-  }
+  static isRemoval = EnumStyleTraits.isRemoval;
 }
 
 export class BinPointSymbolTraits extends mixTraits(
   PointSymbolTraits,
   BinStyleTraits
 ) {
-  static isRemoval(style: StratumFromTraits<BinStyleTraits>) {
-    return style.maxValue === null;
-  }
+  static isRemoval = BinStyleTraits.isRemoval;
 }
 
 export default class TablePointStyleTraits

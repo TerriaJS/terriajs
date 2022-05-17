@@ -9,17 +9,12 @@ import StratumFromTraits from "../Models/Definition/StratumFromTraits";
 import LegendTraits, {
   LegendItemTraits
 } from "../Traits/TraitsClasses/LegendTraits";
-import { TableStyleMapSymbolTraits } from "../Traits/TraitsClasses/TablePointStyleTraits";
+import { TableStyleMapSymbolTraits } from "../Traits/TraitsClasses/TableStyleMapTraits";
 import TableStyleMap from "./TableStyleMap";
 
 export class StyleMapLegend<
   T extends TableStyleMapSymbolTraits
 > extends LoadableStratum(LegendTraits) {
-  /**
-   *
-   * @param catalogItem
-   * @param index index of column in catalogItem (if -1 or undefined, then default style will be used)
-   */
   constructor(
     readonly catalogItem: TableMixin.Instance,
     readonly styleMap: TableStyleMap<T>,

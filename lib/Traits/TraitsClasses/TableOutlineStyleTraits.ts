@@ -5,11 +5,11 @@ import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import {
-  BinStyleTraits,
-  EnumStyleTraits,
   TableStyleMapSymbolTraits,
+  EnumStyleTraits,
+  BinStyleTraits,
   TableStyleMapTraits
-} from "./TablePointStyleTraits";
+} from "./TableStyleMapTraits";
 
 export class OutlineSymbolTraits extends mixTraits(TableStyleMapSymbolTraits) {
   @primitiveTrait({

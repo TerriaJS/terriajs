@@ -6,16 +6,6 @@ import { Feature } from "@turf/helpers";
 import i18next from "i18next";
 import { cloneDeep } from "lodash-es";
 import { action, observable, runInAction } from "mobx";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import Credit from "terriajs-cesium/Source/Core/Credit";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import when from "terriajs-cesium/Source/ThirdParty/when";
 import {
   Bbox,
   Feature as ProtomapsFeature,
@@ -33,8 +23,19 @@ import {
   Zxy,
   ZxySource
 } from "protomaps";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import Credit from "terriajs-cesium/Source/Core/Credit";
+import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import when from "terriajs-cesium/Source/ThirdParty/when";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
+import TerriaError from "../../Core/TerriaError";
 import {
   FeatureCollectionWithCrs,
   FEATURE_ID_PROP as GEOJSON_FEATURE_ID_PROP,
@@ -43,7 +44,6 @@ import {
 import { default as CesiumFeature } from "../../Models/Feature";
 import Terria from "../../Models/Terria";
 import { ImageryProviderWithGridLayerSupport } from "../Leaflet/ImageryProviderLeafletGridLayer";
-import TerriaError from "../../Core/TerriaError";
 
 const geojsonvt = require("geojson-vt").default;
 
