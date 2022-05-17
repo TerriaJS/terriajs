@@ -276,8 +276,8 @@ interface ConfigParameters {
    */
   feedbackMinLength?: number;
 
-  /** If null, then Leaflet's default attribution will be used */
-  leafletAttributionPrefix: null | string | undefined;
+  /** If undefined, then Leaflet's default attribution will be used */
+  leafletAttributionPrefix?: string;
 
   /**
    * Extra links to show in the credit line at the bottom of the map (currently only the Cesium map).

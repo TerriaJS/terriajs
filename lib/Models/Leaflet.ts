@@ -160,10 +160,7 @@ export default class Leaflet extends GlobeOrMap {
       position: "bottomleft"
     };
 
-    if (
-      isDefined(this.terria.configParameters.leafletAttributionPrefix) &&
-      this.terria.configParameters.leafletAttributionPrefix !== null
-    ) {
+    if (isDefined(this.terria.configParameters.leafletAttributionPrefix)) {
       attributionProps.prefix = this.terria.configParameters.leafletAttributionPrefix;
     }
 
