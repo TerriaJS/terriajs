@@ -464,8 +464,7 @@ export default class Terria {
     feedbackPreamble: "translate#feedback.feedbackPreamble",
     feedbackPostamble: undefined,
     feedbackMinLength: 0,
-    leafletAttributionPrefix:
-      '<a href="https://leafletjs.com" title="A JavaScript library for interactive maps">Leaflet</a>',
+    leafletAttributionPrefix: undefined,
     extraCreditLinks: [
       // Default credit links (shown at the bottom of the Cesium map)
       {
@@ -1588,8 +1587,6 @@ export default class Terria {
 
     runInAction(() => {
       if (isJsonString(initData.previewedItemId)) {
-        console.log(`OMG preview ${initData.previewedItemId}`);
-        console.log(initData);
         this._previewedItemId = initData.previewedItemId;
       }
     });
