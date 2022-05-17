@@ -10,6 +10,7 @@ Change Log
 * TSify `BottomDock` and `measureElement` components.
 * Fixed a bug in `GltfMixin` which resulted in some traits missing from `GltfCatalogItem` and broke tools like the scene editor.
 * Leaflet attribution can be set through `config.leafletAttributionPrefix`. The default value is `'<a href="https://leafletjs.com" title="A JavaScript library for interactive maps">Leaflet</a>'`. To use Leaflet's default (which includes Ukraine flag) - set `leafletAttributionPrefix:null`. To hide Leaflet attribution - set `leafletAttributionPrefix:""`
+* Re-add missing `helpPanel.mapUserGuide` translation string
 * [The next improvement]
 
 #### 8.2.3 - 2022-04-22
