@@ -1,3 +1,4 @@
+
 AWSTemplateFormatVersion: 2010-09-09
 
 Parameters:
@@ -8,202 +9,230 @@ Parameters:
   unauthRoleArn:
     Type: String
 
-  
-  
-  
+
+
+
   functionreceipt09937347CustomMessageArn:
     Type: String
     Default: functionreceipt09937347CustomMessageArn
-  
+
   functionreceipt09937347CustomMessageName:
     Type: String
     Default: functionreceipt09937347CustomMessageName
-  
-  
-  
+
+
+
   functionreceipt09937347PostConfirmationArn:
     Type: String
     Default: functionreceipt09937347PostConfirmationArn
-  
+
   functionreceipt09937347PostConfirmationName:
     Type: String
     Default: functionreceipt09937347PostConfirmationName
-  
-  
-  
 
-    
+
+
+
+
   identityPoolName:
     Type: String
-  
-            
-  
+
+
+
   allowUnauthenticatedIdentities:
     Type: String
-            
+
   resourceNameTruncated:
     Type: String
-  
-            
+
+
   userPoolName:
     Type: String
-  
-            
-        
+
+
+
   autoVerifiedAttributes:
     Type: CommaDelimitedList
-      
+
   mfaConfiguration:
     Type: String
-  
-            
-        
+
+
+
   mfaTypes:
     Type: CommaDelimitedList
-      
+
   smsAuthenticationMessage:
     Type: String
-  
-            
+
+
   smsVerificationMessage:
     Type: String
-  
-            
+
+
   emailVerificationSubject:
     Type: String
-  
-            
+
+
   emailVerificationMessage:
     Type: String
-  
-            
-  
+
+
+
   defaultPasswordPolicy:
     Type: String
-            
-    
+
+
   passwordPolicyMinLength:
     Type: Number
-          
-        
+
+
   passwordPolicyCharacters:
     Type: CommaDelimitedList
-      
-        
+
+
   requiredAttributes:
     Type: CommaDelimitedList
-      
-  
+
+
+  aliasAttributes:
+    Type: CommaDelimitedList
+
+
   userpoolClientGenerateSecret:
     Type: String
-            
-    
+
+
   userpoolClientRefreshTokenValidity:
     Type: Number
-          
-        
+
+
   userpoolClientWriteAttributes:
     Type: CommaDelimitedList
-      
-        
+
+
   userpoolClientReadAttributes:
     Type: CommaDelimitedList
-      
+
   userpoolClientLambdaRole:
     Type: String
-  
-            
-  
+
+
+
   userpoolClientSetAttributes:
     Type: String
-            
+
   sharedId:
     Type: String
-  
-            
+
+
   resourceName:
     Type: String
-  
-            
+
+
   authSelections:
     Type: String
-  
-            
-            
-            
+
+
+
+
   useDefault:
     Type: String
-  
-            
-  
+
+
+
   hostedUI:
     Type: String
-            
-        
+
+
   usernameAttributes:
     Type: CommaDelimitedList
-      
+
   triggers:
     Type: String
-  
-            
+
+
   hostedUIDomainName:
     Type: String
-  
-            
-        
+
+
+
   authProvidersUserPool:
     Type: CommaDelimitedList
-      
+
   hostedUIProviderMeta:
     Type: String
-  
-            
-        
+
+
+
   userPoolGroupList:
     Type: CommaDelimitedList
-      
+
   serviceName:
     Type: String
-  
-            
+
+
   verificationBucketName:
     Type: String
-  
-            
-  
+
+
+
   usernameCaseSensitive:
     Type: String
-            
-      
+
+
   parentStack:
     Type: String
-        
-        
+
+
   permissions:
     Type: CommaDelimitedList
-      
-        
+
+
   dependsOn:
     Type: CommaDelimitedList
-      
+
   hostedUIProviderCreds:
     Type: String
-  
-            
+
+
+
+  thirdPartyAuth:
+    Type: String
+
+
+  authProviders:
+    Type: CommaDelimitedList
+
+
+  userPoolGroups:
+    Type: String
+
+
+  adminQueries:
+    Type: String
+
   oAuthMetadata:
     Type: String
-  
-            
-            
+
+
+
+  authTriggerConnections:
+    Type: String
+
+
+
+  breakCircularDependency:
+    Type: String
+
 Conditions:
   ShouldNotCreateEnvResources: !Equals [ !Ref env, NONE ]
-  
+
   ShouldOutputAppClientSecrets: !Equals [!Ref userpoolClientGenerateSecret, true ]
-  
+
 
 Resources:
-  
+
   CustomMessageConfirmationBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: "Retain"
@@ -224,8 +253,8 @@ Resources:
             AllowedOrigins:
               - "*"
             MaxAge: 3000
-  
-  
+
+
   # BEGIN SNS ROLE RESOURCE
   SNSRole:
   # Created to allow the UserPool SMS Config to publish via the Simple Notification Service during MFA Process
@@ -263,47 +292,35 @@ Resources:
     UpdateReplacePolicy: Retain
     Properties:
       UserPoolName: !If [ShouldNotCreateEnvResources, !Ref userPoolName, !Join ['',[!Ref userPoolName, '-', !Ref env]]]
-      
-      
+
+
       UsernameConfiguration:
         CaseSensitive: false
-      
+
       Schema:
-        
+
         -
           Name: email
           Required: true
           Mutable: true
-        
+
         -
           Name: name
           Required: true
           Mutable: true
-        
-      
-      
-      LambdaConfig:
-        
-        
-          CustomMessage: !Ref functionreceipt09937347CustomMessageArn
-        
-        
-        
-        
-          PostConfirmation: !Ref functionreceipt09937347PostConfirmationArn
-        
-        
-        
-        
-        
-      
-      
-      AutoVerifiedAttributes: !Ref autoVerifiedAttributes
-      
-      
+
+
+
+
+      AutoVerifiedAttributes:
+
+        - email
+
+
+
       EmailVerificationMessage: !Ref emailVerificationMessage
       EmailVerificationSubject: !Ref emailVerificationSubject
-      
+
       Policies:
         PasswordPolicy:
           MinimumLength: !Ref passwordPolicyMinLength
@@ -311,47 +328,17 @@ Resources:
           RequireNumbers: false
           RequireSymbols: false
           RequireUppercase: false
-      
+
       UsernameAttributes: !Ref usernameAttributes
-      
+
+
       MfaConfiguration: !Ref mfaConfiguration
       SmsVerificationMessage: !Ref smsVerificationMessage
       SmsAuthenticationMessage: !Ref smsAuthenticationMessage
       SmsConfiguration:
         SnsCallerArn: !GetAtt SNSRole.Arn
         ExternalId: receip09937347_role_external_id
-    
-  
-  
-  
-  UserPoolCustomMessageLambdaInvokePermission:
-    Type: "AWS::Lambda::Permission"
-    DependsOn: UserPool
-    Properties:
-      Action: "lambda:invokeFunction"
-      Principal: "cognito-idp.amazonaws.com"
-      FunctionName: !Ref functionreceipt09937347CustomMessageName
-      SourceArn: !GetAtt UserPool.Arn
-  
-  
-  
-  
-  UserPoolPostConfirmationLambdaInvokePermission:
-    Type: "AWS::Lambda::Permission"
-    DependsOn: UserPool
-    Properties:
-      Action: "lambda:invokeFunction"
-      Principal: "cognito-idp.amazonaws.com"
-      FunctionName: !Ref functionreceipt09937347PostConfirmationName
-      SourceArn: !GetAtt UserPool.Arn
-  
-  
-  
-  
-  
-  # Updating lambda role with permissions to Cognito
-  
-  
+
   receipt09937347PostConfirmationAddToGroupCognito:
     Type: AWS::IAM::Policy
     Properties:
@@ -361,36 +348,22 @@ Resources:
         Statement:
           - Effect: Allow
             Action:
-            
               - cognito-idp:AdminAddUserToGroup
-            
               - cognito-idp:GetGroup
-            
               - cognito-idp:CreateGroup
-            
-            
-            
             Resource: !GetAtt
-            
               - UserPool
-            
               - Arn
-            
-            
-            
-
       Roles:
         - !Join ['',["receipt09937347PostConfirmation", '-', !Ref env]]
-  
-  
-  
+
   UserPoolClientWeb:
   # Created provide application access to user pool
   # Depends on UserPool for ID reference
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
       ClientName: receip09937347_app_clientWeb
-      
+
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity
       UserPoolId: !Ref UserPool
     DependsOn: UserPool
@@ -400,7 +373,7 @@ Resources:
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
       ClientName: receip09937347_app_client
-      
+
       GenerateSecret: !Ref userpoolClientGenerateSecret
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity
       UserPoolId: !Ref UserPool
@@ -453,7 +426,7 @@ Resources:
             - '};'
       Handler: index.handler
       Runtime: nodejs12.x
-      Timeout: '300'
+      Timeout: 300
       Role: !GetAtt
         - UserPoolClientRole
         - Arn
@@ -507,7 +480,7 @@ Resources:
       clientId: !Ref UserPoolClient
       userpoolId: !Ref UserPool
     DependsOn: UserPoolClientLogPolicy
-  
+
   HostedUICustomResource:
     Type: 'AWS::Lambda::Function'
     Properties:
@@ -579,7 +552,7 @@ Resources:
 
       Handler: index.handler
       Runtime: nodejs12.x
-      Timeout: '300'
+      Timeout: 300
       Role: !GetAtt
         - UserPoolClientRole
         - Arn
@@ -630,9 +603,9 @@ Resources:
       userPoolId: !Ref UserPool
       hostedUIDomainName: !If [ShouldNotCreateEnvResources, !Ref hostedUIDomainName, !Join ['-',[!Ref hostedUIDomainName, !Ref env]]]
     DependsOn: HostedUICustomResourceLogPolicy
-  
 
-  
+
+
   HostedUIProvidersCustomResource:
     Type: 'AWS::Lambda::Function'
     Properties:
@@ -660,24 +633,44 @@ Resources:
             - '   let providerCredsIndex = hostedUIProviderCreds.findIndex((provider) => provider.ProviderName === providerName);'
             - '   let providerCreds = hostedUIProviderCreds[providerCredsIndex];'
             - '   let requestParams = {'
-            - '    ProviderDetails: {'
-            - '     ''client_id'': providerCreds.client_id,'
-            - '     ''client_secret'': providerCreds.client_secret,'
-            - '     ''authorize_scopes'': providerMeta.authorize_scopes'
-            - '    },'
             - '    ProviderName: providerMeta.ProviderName,'
             - '    UserPoolId: userPoolId,'
-            - '    AttributeMapping: providerMeta.AttributeMapping'
+            - '    AttributeMapping: providerMeta.AttributeMapping,'
             - '   };'
+            - '   if (providerMeta.ProviderName === ''SignInWithApple'') {'
+            - '     if (providerCreds.client_id && providerCreds.team_id && providerCreds.key_id && providerCreds.private_key) {'
+            - '      requestParams.ProviderDetails = {'
+            - '       ''client_id'': providerCreds.client_id,'
+            - '       ''team_id'': providerCreds.team_id,'
+            - '       ''key_id'': providerCreds.key_id,'
+            - '       ''private_key'': providerCreds.private_key,'
+            - '       ''authorize_scopes'': providerMeta.authorize_scopes,'
+            - '      };'
+            - '     } else {'
+            - '       requestParams = null;'
+            - '     }'
+            - '   } else {'
+            - '    requestParams.ProviderDetails = {'
+            - '     ''client_id'': providerCreds.client_id,'
+            - '     ''client_secret'': providerCreds.client_secret,'
+            - '     ''authorize_scopes'': providerMeta.authorize_scopes,'
+            - '    };'
+            - '   }'
             - '   return requestParams;'
             - '  };'
             - '  let createIdentityProvider = (providerName) => {'
             - '   let requestParams = getRequestParams(providerName);'
+            - '   if (!requestParams) {'
+            - '     return Promise.resolve();'
+            - '   }'
             - '   requestParams.ProviderType = requestParams.ProviderName;'
             - '   return identity.createIdentityProvider(requestParams).promise();'
             - '  };'
             - '  let updateIdentityProvider = (providerName) => {'
             - '   let requestParams = getRequestParams(providerName);'
+            - '   if (!requestParams) {'
+            - '     return Promise.resolve();'
+            - '   }'
             - '   return identity.updateIdentityProvider(requestParams).promise();'
             - '  };'
             - '  let deleteIdentityProvider = (providerName) => {'
@@ -711,7 +704,7 @@ Resources:
 
       Handler: index.handler
       Runtime: nodejs12.x
-      Timeout: '300'
+      Timeout: 300
       Role: !GetAtt
         - UserPoolClientRole
         - Arn
@@ -762,8 +755,8 @@ Resources:
       hostedUIProviderMeta: !Ref hostedUIProviderMeta
       hostedUIProviderCreds: !Ref hostedUIProviderCreds
     DependsOn: HostedUIProvidersCustomResourceLogPolicy
-  
-  
+
+
   OAuthCustomResource:
     Type: 'AWS::Lambda::Function'
     Properties:
@@ -810,7 +803,7 @@ Resources:
 
       Handler: index.handler
       Runtime: nodejs12.x
-      Timeout: '300'
+      Timeout: 300
       Role: !GetAtt
         - UserPoolClientRole
         - Arn
@@ -860,19 +853,19 @@ Resources:
       webClientId: !Ref 'UserPoolClientWeb'
       nativeClientId: !Ref 'UserPoolClient'
     DependsOn: OAuthCustomResourceLogPolicy
-  
 
-  
-    
+
+
+
   # BEGIN IDENTITY POOL RESOURCES
-  
+
 
   IdentityPool:
   # Always created
     Type: AWS::Cognito::IdentityPool
     Properties:
       IdentityPoolName: !If [ShouldNotCreateEnvResources, 'receipt09937347_identitypool_09937347', !Join ['',['receipt09937347_identitypool_09937347', '__', !Ref env]]]
-      
+
       CognitoIdentityProviders:
         - ClientId:  !Ref UserPoolClient
           ProviderName: !Sub
@@ -882,12 +875,12 @@ Resources:
           ProviderName: !Sub
             - cognito-idp.${region}.amazonaws.com/${client}
             - { region: !Ref "AWS::Region",  client: !Ref UserPool}
-            
+
       AllowUnauthenticatedIdentities: !Ref allowUnauthenticatedIdentities
-      
-    
+
+
     DependsOn: UserPoolClientInputs
-    
+
 
   IdentityPoolRoleMap:
   # Created to map Auth and Unauth roles to the identity pool
@@ -899,28 +892,31 @@ Resources:
           unauthenticated: !Ref unauthRoleArn
           authenticated: !Ref authRoleArn
     DependsOn: IdentityPool
-  
+
 
 Outputs :
-  
+
   IdentityPoolId:
     Value: !Ref 'IdentityPool'
     Description:  Id for the identity pool
   IdentityPoolName:
     Value: !GetAtt IdentityPool.Name
-  
-  
+
+
   HostedUIDomain:
     Value: !If [ShouldNotCreateEnvResources, !Ref hostedUIDomainName, !Join ['-',[!Ref hostedUIDomainName, !Ref env]]]
-  
-  
+
+
   OAuthMetadata:
     Value: !Ref oAuthMetadata
-  
-  
+
+
   UserPoolId:
     Value: !Ref 'UserPool'
     Description:  Id for the user pool
+  UserPoolArn:
+    Value: !GetAtt UserPool.Arn
+    Description:  Arn for the user pool
   UserPoolName:
     Value: !Ref userPoolName
   AppClientIDWeb:
@@ -932,10 +928,11 @@ Outputs :
   AppClientSecret:
     Value: !GetAtt UserPoolClientInputs.appSecret
     Condition: ShouldOutputAppClientSecrets
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
+

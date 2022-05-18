@@ -29,25 +29,20 @@ export const getStory = /* GraphQL */ `
         alt
       }
       pages {
-        id
-        title
-        section
-        camera
-        baseMapName
-        currentTime {
-          dayNumber
-          secondsOfDay
-        }
-        viewer_mode_3d
-        scenarios {
+        items {
           id
-          ssp
-          content
-          split_map
+          storyID
+          title
+          section
+          camera
+          baseMapName
+          viewer_mode_3d
+          pageNr
+          createdAt
+          updatedAt
+          owner
         }
-        createdAt
-        updatedAt
-        owner
+        nextToken
       }
       microstories {
         id
@@ -75,15 +70,7 @@ export const getStory = /* GraphQL */ `
           alt
         }
         pages {
-          id
-          title
-          section
-          camera
-          baseMapName
-          viewer_mode_3d
-          createdAt
-          updatedAt
-          owner
+          nextToken
         }
         microstories {
           id
@@ -141,15 +128,7 @@ export const listStorys = /* GraphQL */ `
           alt
         }
         pages {
-          id
-          title
-          section
-          camera
-          baseMapName
-          viewer_mode_3d
-          createdAt
-          updatedAt
-          owner
+          nextToken
         }
         microstories {
           id
@@ -175,6 +154,7 @@ export const getPage = /* GraphQL */ `
   query GetPage($id: ID!) {
     getPage(id: $id) {
       id
+      storyID
       title
       section
       camera
@@ -189,11 +169,9 @@ export const getPage = /* GraphQL */ `
         ssp
         content
         split_map
-        enabled_catalog_items {
-          id
-          json
-        }
+        enabled_catalog_items
       }
+      pageNr
       createdAt
       updatedAt
       owner
@@ -209,6 +187,7 @@ export const listPages = /* GraphQL */ `
     listPages(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        storyID
         title
         section
         camera
@@ -223,7 +202,9 @@ export const listPages = /* GraphQL */ `
           ssp
           content
           split_map
+          enabled_catalog_items
         }
+        pageNr
         createdAt
         updatedAt
         owner

@@ -17,8 +17,10 @@ import RCBuilder from "../RCBuilder/RCBuilder";
 import RCLogin from "../RCLogin/RCLogin";
 import SidePanelSectorTabs from "../RCSectorPanel/SidePanelSectorTabs";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage.jsx";
+import ExplorerWindow from "./../ExplorerWindow/ExplorerWindow.jsx";
 import MapNavigation from "./../Map/MapNavigation.jsx";
 import RCMenuBar from "./../Map/RCMenuBar.jsx";
+//import MenuBar from "./../Map/MenuBar.jsx";
 import MobileHeader from "./../Mobile/MobileHeader.jsx";
 import MapInteractionWindow from "./../Notification/MapInteractionWindow.jsx";
 import Notification from "./../Notification/Notification.jsx";
@@ -231,6 +233,23 @@ const StandardUserInterface = createReactClass({
                   </div>
                 </Small>
                 <Medium>
+                  <div
+                    className={classNames(
+                      Styles.sidePanel,
+                      viewState.topElement === "SidePanel" ? "top-element" : "",
+                      {
+                        [Styles.sidePanelHide]: !viewState.doShowSidePanel
+                      }
+                    )}
+                    tabIndex={0}
+                    onClick={() => {
+                      viewState.topElement = "SidePanel";
+                    }}
+                  >
+                    <SidePanel terria={terria} viewState={viewState} />
+                  </div>
+                </Medium>
+                <Medium>
                   <section className={Styles.map}>
                     <ProgressBar terria={terria} />
                     <MapColumn
@@ -238,6 +257,24 @@ const StandardUserInterface = createReactClass({
                       viewState={viewState}
                       customFeedbacks={customElements.feedback}
                     />
+                    <main>
+                      <ExplorerWindow
+                        terria={terria}
+                        viewState={this.props.viewState}
+                      />
+                      {/* <If
+                        condition={
+                          this.props.terria.configParameters.experimentalFeatures &&
+                          !this.props.viewState.hideMapUi()
+                        }
+                      >
+                        <ExperimentalFeatures
+                          terria={terria}
+                          viewState={this.props.viewState}
+                          experimentalItems={customElements.experimentalMenu}
+                        />
+                      </If> */}
+                    </main>
                   </section>
                 </Medium>
                 <Medium>
@@ -254,12 +291,12 @@ const StandardUserInterface = createReactClass({
                       viewState.topElement = "SidePanel";
                     }}
                   >
-                    <div style={{ textAlign: "end" }}>
-                      <Link to="/">Home</Link> |
-                      <Link to="/builder">Builder</Link> |
+                    <div className="fixed top-[300px] left-2 flex flex-col gap-2 left-10 bg-black bg-opacity-40 p-3 text-sm rounded text-gray-300">
+                      <div className="text-gray-200 italic">Dev mode</div>
+                      <Link to="/">Home</Link>
+                      <Link to="/builder">Builder</Link>
                       <Link to="/users">Users</Link>
                     </div>
-                    <hr />
 
                     <Switch>
                       <Route exact path="/">
@@ -300,7 +337,6 @@ const StandardUserInterface = createReactClass({
                     {/*{showStoryPanel ? (*/}
                     {/*  <RCStoryPanel terria={terria} viewState={viewState} />*/}
                     {/*) : null}*/}
-                    <SidePanel terria={terria} viewState={viewState} />
                   </div>
                 </Medium>
               </If>

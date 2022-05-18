@@ -13,9 +13,9 @@ const RCSectorSelection = props => {
   } = props;
 
   return (
-    <div>
+    <div className={Styles.group}>
       <div className={Styles.container}>
-        <label>Sectors</label>
+        <label className={Styles.topLabel}>Sectors</label>
         <label style={{ color: "red" }}>{sectorRequiredMessage}</label>
       </div>
       <div className={Styles.tabsContainer}>
@@ -26,17 +26,13 @@ const RCSectorSelection = props => {
                 <label>
                   <input
                     type="checkbox"
-                    value={sector.title}
+                    value={sector.id}
+                    checked={selectedSectors.includes(sector.id)}
                     onChange={onSectorSelected}
                   />
                   <Icon
                     glyph={
-                      selectedSectors.includes(
-                        sector.title
-                          .split(" ")
-                          .join("_")
-                          .toUpperCase()
-                      )
+                      selectedSectors.includes(sector.id)
                         ? sector.iconHover
                         : sector.icon
                     }

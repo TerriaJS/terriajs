@@ -97,7 +97,9 @@ const GLYPHS = {
 
   info: require("../../wwwroot/images/icons/receipt/info.svg"),
   back: require("../../wwwroot/images/icons/receipt/backTo.svg"),
-  roundedPlay: require("../../wwwroot/images/icons/receipt/rounded-play.svg")
+  roundedPlay: require("../../wwwroot/images/icons/receipt/rounded-play.svg"),
+  edit: require("../../wwwroot/images/icons/receipt/editPage.svg"),
+  reorder: require("../../wwwroot/images/icons/receipt/reorder.svg")
 };
 
 const Icon = createReactClass({

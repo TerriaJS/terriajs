@@ -32,6 +32,9 @@ const FullScreenButton = createReactClass({
   toggleFullScreen() {
     this.props.viewState.isMapFullScreen = !this.props.viewState
       .isMapFullScreen;
+    if (!this.props.viewState.isMapFullScreen) {
+      this.props.viewState.doShowSidePanel = false;
+    }
 
     this.props.terria.currentViewer.notifyRepaintRequired();
 

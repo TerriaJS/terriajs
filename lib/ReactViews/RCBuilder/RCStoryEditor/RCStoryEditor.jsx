@@ -1,39 +1,33 @@
 import { AmplifyS3Image } from "@aws-amplify/ui-react";
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import PropTypes from "prop-types";
-import { default as React, useEffect, useRef, useState } from "react";
+import { default as React, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { Link, useParams } from "react-router-dom";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
+import { useHistory, useParams, withRouter } from "react-router-dom";
 import { v5 as uuidv5 } from "uuid";
 import { updateStory } from "../../../../api/graphql/mutations";
 import { getStory } from "../../../../api/graphql/queries";
 import sectors from "../../../Data/Sectors.js";
+import RCHotspotSelector from "../RCHotspotSelector/RCHotspotSelector";
+import RCPageList from "../RCPageList/RCPageList";
 import RCSectorSelection from "./RCSectorSelection/RCSectorSelection";
 import Styles from "./RCStoryEditor.scss";
-
 function RCStoryEditor(props) {
   const [story, setStory] = useState(null);
+  const [storyPages, setStoryPages] = useState([]);
   const [title, setTitle] = useState("");
   const [shortDescription, setShortDescription] = useState("");
-  const [listenForHotspot, setListenForHotspot] = useState(false);
   const [selectedSectors, setSelectedSectors] = useState([]);
   const [hotspotPoint, setHotspotPoint] = useState(null);
-  const [selectHotspotSubscription, setSelectHotspotSubscription] = useState(
-    null
-  );
   const [images, setImages] = useState([]);
   const [message, setMessage] = useState("");
   const [sectorRequiredMessage, setSectorRequiredMessage] = useState("*");
+  const history = useHistory();
+  const viewState = props.viewState;
 
   // get the story id from url
   const { id } = useParams();
-  // store the reference for state
-  const stateRef = useRef();
-  stateRef.current = listenForHotspot;
 
-  let pointval = {};
   const [files, setFiles] = useState([]);
 
   // Fetch story details with id
@@ -47,35 +41,11 @@ function RCStoryEditor(props) {
         setSelectedSectors(data.sectors);
         setHotspotPoint(data.hotspotlocation);
         setImages([data.image]);
+        setStoryPages(data.pages.items);
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
-  }, []);
-  // Listen for picked features/position
-  useEffect(() => {
-    const { terria } = props.viewState;
-    setSelectHotspotSubscription(
-      knockout.getObservable(terria, "pickedFeatures").subscribe(() => {
-        let isListening = stateRef.current;
-        if (isListening) {
-          // Convert position to cartographic
-          const point = Cartographic.fromCartesian(
-            terria.pickedFeatures.pickPosition
-          );
-          setHotspotPoint({
-            latitude: (point.latitude / Math.PI) * 180,
-            longitude: (point.longitude / Math.PI) * 180
-          });
-          setListenForHotspot(false);
-        }
-      })
-    );
-    return () => {
-      if (selectHotspotSubscription !== null) {
-        selectHotspotSubscription.dispose();
-      }
-    };
   }, []);
 
   useEffect(
@@ -93,7 +63,9 @@ function RCStoryEditor(props) {
       )
     );
   };
-
+  const updateStoryPages = pages => {
+    setStoryPages(pages);
+  };
   const { getRootProps, getInputProps } = useDropzone({
     accept: "image/*",
     onDrop: onDrop,
@@ -115,10 +87,7 @@ function RCStoryEditor(props) {
     setShortDescription(event.target.value);
   };
   const onSectorChanged = event => {
-    const sector = event.target.value
-      .split(" ")
-      .join("_")
-      .toUpperCase();
+    const sector = event.target.value;
     // check if the check box is checked or unchecked
     if (event.target.checked) {
       // add the  value of the checkbox to selectedSectors array
@@ -131,79 +100,81 @@ function RCStoryEditor(props) {
     }
   };
 
-  const onSave = async () => {
+  const onSave = () => {
     if (selectedSectors.length <= 0) {
       setSectorRequiredMessage("Select at least 1 sector");
     } else {
-      // If a new image is supplied we push it to s3 and
-      // update the references here
-      let image = story.image || {};
-      if (files.length > 0) {
-        const file = files[0];
-
-        const fileExt = file.name.split(".").pop();
-        const imageid = uuidv5(file.name, story.id);
-
-        try {
-          // remove the old image
-          Storage.remove(image.id);
-        } catch (error) {
-          // An error here means it does not exist?
-          console.debug("Error removing old file: ", error);
-        }
-
-        try {
-          // upload new image
-          const result = await Storage.put(
-            `story-${story.id}/${imageid}.${fileExt}`,
-            file
-          );
-
-          image.id = result.key;
-          image.url = await Storage.get(result.key);
-
-          setImages([image]);
-          setFiles([]);
-        } catch (error) {
-          setMessage("Error uploading file: ", error);
-        }
-      }
-
-      const storyDetails = {
-        id: story.id,
-        title: title,
-        shortDescription: shortDescription,
-        sectors: selectedSectors,
-        hotspotlocation: hotspotPoint,
-        image: image
-      };
-      API.graphql({
-        query: updateStory,
-        variables: { input: storyDetails }
-      }).then(response => {
-        if (response.data.updateStory) {
-          setMessage("Story details saved successfully!");
-        } else {
-          setMessage("Error", response.errors[0].message);
-        }
-      });
+      saveStory();
     }
   };
 
-  const hotspotText = hotspotPoint
-    ? `${Number(hotspotPoint.latitude).toFixed(4)}, ${Number(
-        hotspotPoint.longitude
-      ).toFixed(4)}`
-    : "none set";
+  const saveStory = async () => {
+    // If a new image is supplied we push it to s3 and
+    // update the references here
+    const image = story.image || {};
+    if (files.length > 0) {
+      const file = files[0];
+
+      const fileExt = file.name.split(".").pop();
+      const imageid = uuidv5(file.name, story.id);
+
+      try {
+        // remove the old image
+        Storage.remove(image.id);
+      } catch (error) {
+        // An error here means it does not exist?
+        console.debug("Error removing old file: ", error);
+      }
+
+      try {
+        // upload new image
+        const result = await Storage.put(
+          `story-${story.id}/${imageid}.${fileExt}`,
+          file
+        );
+
+        image.id = result.key;
+        image.url = await Storage.get(result.key);
+
+        setImages([image]);
+        setFiles([]);
+      } catch (error) {
+        setMessage("Error uploading file: ", error);
+      }
+    }
+
+    const storyDetails = {
+      id: story.id,
+      title: title,
+      shortDescription: shortDescription,
+      sectors: selectedSectors,
+      hotspotlocation: hotspotPoint,
+      image: image
+      // TODO: pages: pages
+    };
+    return API.graphql({
+      query: updateStory,
+      variables: { input: storyDetails }
+    }).then(response => {
+      if (response.data.updateStory) {
+        setMessage("Story details saved successfully!");
+      } else {
+        setMessage("Error", response.errors[0].message);
+      }
+    });
+  };
 
   return (
     <div className={Styles.RCStoryEditor}>
-      <h3>
-        Edit your story
-        <Link to="/builder" className={Styles.backButton}>
+      <div className={Styles.container}>
+        <h3>Edit your story</h3>
+        <button
+          className={Styles.RCButton}
+          onClick={() => history.push("/builder")}
+        >
           Back
-        </Link>
-      </h3>
+        </button>
+      </div>
       <form className={Styles.RCStoryCard}>
         <div className={Styles.group}>
           <input
@@ -234,32 +205,12 @@ function RCStoryEditor(props) {
           sectorRequiredMessage={sectorRequiredMessage}
         />
 
-        <div className={Styles.RCStoryEditor}>
-          <label>Hotspot</label>
-          {!listenForHotspot && (
-            <div className={Styles.container}>
-              <label>Set at: {hotspotText}</label>
-              <button
-                type="button"
-                className={Styles.RCButton}
-                onClick={() => setListenForHotspot(true)}
-              >
-                Select hotspot
-              </button>
-            </div>
-          )}
-          {listenForHotspot && (
-            <div>
-              <label>Click on map to set the hotspot position</label>&nbsp;
-              <button
-                onClick={() => setListenForHotspot(false)}
-                className={Styles.RCButton}
-              >
-                Cancel
-              </button>
-            </div>
-          )}
-        </div>
+        <RCHotspotSelector
+          hotspotPoint={hotspotPoint}
+          setHotspotPoint={setHotspotPoint}
+          viewState={viewState}
+        />
+
         <div className={Styles.group}>
           <label className={Styles.topLabel}>Image</label>
           {images.map(image => {
@@ -279,6 +230,11 @@ function RCStoryEditor(props) {
             <aside className={Styles.thumbsContainer}>{thumbs}</aside>
           </section>
         </div>
+
+        <div className={Styles.group}>
+          <RCPageList pages={storyPages} updatePages={updateStoryPages} />
+        </div>
+
         <div className={Styles.container}>
           <button className={Styles.RCButton} onClick={onSave}>
             Save
@@ -293,4 +249,4 @@ function RCStoryEditor(props) {
 RCStoryEditor.propTypes = {
   viewState: PropTypes.object
 };
-export default RCStoryEditor;
+export default withRouter(RCStoryEditor);

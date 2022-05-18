@@ -147,7 +147,7 @@ const SettingPanel = createReactClass({
       <MenuPanel
         theme={dropdownTheme}
         btnTitle={t("settingPanel.btnTitle")}
-        btnText={t("settingPanel.btnText")}
+        btnText={"Edit map settings"}
         viewState={this.props.viewState}
         smallScreen={this.props.viewState.useSmallScreenInterface}
       >

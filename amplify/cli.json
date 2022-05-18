@@ -13,7 +13,8 @@
     },
     "auth": {
       "enablecaseinsensitivity": true,
-      "useinclusiveterminology": true
+      "useinclusiveterminology": true,
+      "breakCircularDependency": true
     },
     "codegen": {
       "useappsyncmodelgenplugin": true,

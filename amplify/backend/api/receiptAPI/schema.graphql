@@ -16,16 +16,17 @@ type Story
   shortDescription: String!
   description: String!
   hotspotlocation: Coordinates!
-  sectors: [Sector!]!
+  sectors: [String!]!
   catalog: [CatalogItem]
   image: Image
-  pages: [Page]
+  pages: [Page] @connection(keyName: "pageByStory", fields: ["id"])
   microstories: [Story]
   state: State!
 }
 
 type Page
   @model
+  @key(name: "pageByStory", fields: ["storyID", "pageNr"])
   @auth(
     rules: [
       {
@@ -37,10 +38,20 @@ type Page
     ]
   ) {
   id: ID!
+  storyID: ID!
   title: String!
   section: Section!
+<<<<<<< HEAD
   content: String!
   mapScenarios: [MapScenario!]
+=======
+  camera: String!
+  baseMapName: String!
+  currentTime: TerriaTime
+  viewer_mode_3d: Boolean!
+  scenarios: [PageContent!]
+  pageNr: Int!
+>>>>>>> receipt
 }
 
 type Author {
@@ -57,7 +68,7 @@ type MapScenario {
   currentTime: TerriaTime
   viewer_mode_3d: Boolean!
   split_map: Boolean!
-  enabled_catalog_items: [CatalogItem!]
+  enabled_catalog_items: [String!]
   split_catalog_items: SplitCatalog
 }
 
@@ -71,14 +82,6 @@ type Image {
   url: String!
   caption: String
   alt: String
-}
-
-enum Sector {
-  AGRICULTURE
-  MANUFACTURING
-  COASTAL_INFRASTRUCTURE
-  INTERNATIONAL_COOPERATION
-  FINANCE
 }
 
 type SplitCatalog {
