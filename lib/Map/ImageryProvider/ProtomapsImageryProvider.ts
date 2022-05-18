@@ -17,6 +17,7 @@ import {
   PmtilesSource,
   PreparedTile,
   Rule as PaintRule,
+  TileCache,
   TileSource,
   View,
   Zxy,
@@ -43,10 +44,6 @@ import {
 import { default as CesiumFeature } from "../../Models/Feature";
 import Terria from "../../Models/Terria";
 import { ImageryProviderWithGridLayerSupport } from "../Leaflet/ImageryProviderLeafletGridLayer";
-
-// Keep this here until protomaps types issue is sorted
-// Error: node_modules/protomaps/dist/tilecache.d.ts(37,8): error TS2709: Cannot use namespace 'PMTiles' as a type.
-const { TileCache } = require("protomaps");
 
 const geojsonvt = require("geojson-vt").default;
 
