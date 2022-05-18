@@ -664,7 +664,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           (isConstantStyleMap(outlineStyleMap)
             ? outlineStyleMap.style.width
             : outlineStyleMap.mapValueToStyle(isJsonNumber(rowId) ? rowId : -1)
-                .width) ?? this.stylesWithDefaults.polygonStrokeWidth
+                .width) ?? this.defaultStyles.polygonStrokeWidth
         );
       };
 
@@ -677,6 +677,12 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
                 .color) ?? this.terria.baseMapContrastColor
         );
       };
+
+      // Filter features by time if applicable
+      const showFeature = (z: number, f?: ProtomapsFeature) =>
+        !currentTimeRows ||
+        (isJsonNumber(f?.props[FEATURE_ID_PROP]) &&
+          currentTimeRows.includes(f?.props[FEATURE_ID_PROP] as number));
 
       let protomapsData: ProtomapsData = Object.assign({}, geoJson, {
         features: geoJson.features.filter(f => f.geometry.type !== "Point")
@@ -695,8 +701,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return new ProtomapsImageryProvider({
         terria: this.terria,
         data: protomapsData,
-        // Create paintRules from `stylesWithDefaults` (which applies defaults on top of StyleTraits)
-        paintRules: filterOutUndefined([
+        paintRules: [
           // Polygon fill
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
@@ -708,61 +713,41 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             filter: (zoom, feature) => {
               return (
                 feature?.geomType === GeomType.Polygon &&
-                (!currentTimeRows ||
-                  (isJsonNumber(feature?.props[FEATURE_ID_PROP]) &&
-                    currentTimeRows.includes(
-                      feature?.props[FEATURE_ID_PROP] as number
-                    )))
+                showFeature(zoom, feature)
               );
             }
           },
-          // Polygon stroke (hide if 0)
-
-          this.stylesWithDefaults.polygonStrokeWidth !== 0
-            ? {
-                dataLayer: GEOJSON_SOURCE_LAYER_NAME,
-                symbolizer: new LineSymbolizer({
-                  color: getOutlineColorValue,
-                  width: getOutlineWidthValue
-                }),
-                minzoom: 0,
-                maxzoom: Infinity,
-                filter: (zoom, feature) => {
-                  return (
-                    feature?.geomType === GeomType.Polygon &&
-                    (!currentTimeRows ||
-                      (isJsonNumber(feature?.props[FEATURE_ID_PROP]) &&
-                        currentTimeRows.includes(
-                          feature?.props[FEATURE_ID_PROP] as number
-                        )))
-                  );
-                }
-              }
-            : undefined,
-          // Line stroke (hide if 0)
-
-          this.stylesWithDefaults.polylineStrokeWidth !== 0
-            ? {
-                dataLayer: GEOJSON_SOURCE_LAYER_NAME,
-                symbolizer: new LineSymbolizer({
-                  color: getColorValue,
-                  width: getOutlineWidthValue
-                }),
-                minzoom: 0,
-                maxzoom: Infinity,
-                filter: (zoom, feature) => {
-                  return (
-                    feature?.geomType === GeomType.Line &&
-                    (!currentTimeRows ||
-                      (isJsonNumber(feature?.props[FEATURE_ID_PROP]) &&
-                        currentTimeRows.includes(
-                          feature?.props[FEATURE_ID_PROP] as number
-                        )))
-                  );
-                }
-              }
-            : undefined
-        ]),
+          {
+            dataLayer: GEOJSON_SOURCE_LAYER_NAME,
+            symbolizer: new LineSymbolizer({
+              color: getOutlineColorValue,
+              width: getOutlineWidthValue
+            }),
+            minzoom: 0,
+            maxzoom: Infinity,
+            filter: (zoom, feature) => {
+              return (
+                feature?.geomType === GeomType.Polygon &&
+                showFeature(zoom, feature)
+              );
+            }
+          },
+          {
+            dataLayer: GEOJSON_SOURCE_LAYER_NAME,
+            symbolizer: new LineSymbolizer({
+              color: getColorValue,
+              width: getOutlineWidthValue
+            }),
+            minzoom: 0,
+            maxzoom: Infinity,
+            filter: (zoom, feature) => {
+              return (
+                feature?.geomType === GeomType.Line &&
+                showFeature(zoom, feature)
+              );
+            }
+          }
+        ],
         labelRules: []
       });
     }
@@ -872,10 +857,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return CzmlDataSource.load(rootCzml);
     }
 
-    /** Applies default values on top of GeoJson StyleTraits. This is only used for Cesium Primitives.*/
-    @computed
-    get stylesWithDefaults() {
-      const defaults = {
+    @computed get defaultStyles() {
+      return {
         markerSize: 24,
         markerColor: getRandomCssColor(this.name ?? ""),
         stroke: getColor(this.terria.baseMapContrastColor),
@@ -888,7 +871,11 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         fill: getRandomCssColor((this.name ?? "") + " fill"),
         fillAlpha: 0.75
       };
+    }
 
+    /** Applies default values on top of GeoJson StyleTraits. This is only used for Cesium Primitives.*/
+    @computed
+    get stylesWithDefaults() {
       const defaultColor = (
         colString: string | undefined,
         defaultColor: Color
@@ -897,42 +884,43 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       const options = {
         describe: describeWithoutUnderscores,
         markerSize:
-          parseMarkerSize(this.style["marker-size"]) ?? defaults.markerSize,
+          parseMarkerSize(this.style["marker-size"]) ??
+          this.defaultStyles.markerSize,
         markerSymbol: this.style["marker-symbol"], // and undefined if none
         markerColor: defaultColor(
           this.style["marker-color"],
-          defaults.markerColor
+          this.defaultStyles.markerColor
         ),
-        stroke: defaultColor(this.style.stroke, defaults.stroke),
+        stroke: defaultColor(this.style.stroke, this.defaultStyles.stroke),
         polygonStroke: defaultColor(
           this.style["polygon-stroke"] ?? this.style.stroke,
-          defaults.polygonStroke
+          this.defaultStyles.polygonStroke
         ),
         // Note these specific stroke widths are only used for geojson-vt
 
         polylineStroke: defaultColor(
           this.style["polyline-stroke"] ?? this.style.stroke,
-          defaults.polylineStroke
+          this.defaultStyles.polylineStroke
         ),
         markerStroke: defaultColor(
           this.style["marker-stroke"] ?? this.style.stroke,
-          defaults.markerStroke
+          this.defaultStyles.markerStroke
         ),
         markerStrokeWidth:
           this.style["marker-stroke-width"] ??
           this.style["stroke-width"] ??
-          defaults.markerStrokeWidth,
+          this.defaultStyles.markerStrokeWidth,
         polylineStrokeWidth:
           this.style["polyline-stroke-width"] ??
           this.style["stroke-width"] ??
-          defaults.polylineStrokeWidth,
+          this.defaultStyles.polylineStrokeWidth,
         polygonStrokeWidth:
           this.style["polygon-stroke-width"] ??
           this.style["stroke-width"] ??
-          defaults.polygonStrokeWidth,
+          this.defaultStyles.polygonStrokeWidth,
 
         markerOpacity: this.style["marker-opacity"], // not in SimpleStyle spec or supported by Cesium but see below
-        fill: defaultColor(this.style.fill, defaults.fill),
+        fill: defaultColor(this.style.fill, this.defaultStyles.fill),
         clampToGround: this.clampToGround,
         markerUrl: this.style["marker-url"] // not in SimpleStyle spec but gives an alternate to maki marker symbols
           ? proxyCatalogItemUrl(this, this.style["marker-url"])
@@ -950,7 +938,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       if (isDefined(this.style["fill-opacity"])) {
         options.fill.alpha = this.style["fill-opacity"];
       } else {
-        options.fill.alpha = defaults.fillAlpha;
+        options.fill.alpha = this.defaultStyles.fillAlpha;
       }
 
       return toJS(options);

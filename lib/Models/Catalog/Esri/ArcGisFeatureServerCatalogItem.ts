@@ -46,7 +46,7 @@ interface DocumentInfo {
   Author?: string;
 }
 
-type esriStyleTypes =
+type EsriStyleTypes =
   | "esriPMS" // simple picture style
   | "esriSMS" // simple marker style
   | "esriSLS" // simple line style
@@ -54,12 +54,12 @@ type esriStyleTypes =
 
 //as defined https://developers.arcgis.com/web-map-specification/objects/esriSLS_symbol/
 
-type supportedFillStyle =
+type SupportedFillStyle =
   | "esriSFSSolid" // fill line with color
   | "esriSFSNull"; // no fill
 
 // as defined https://developers.arcgis.com/web-map-specification/objects/esriSMS_symbol/
-type supportedSimpleMarkerStyle =
+type SupportedSimpleMarkerStyle =
   | "esriSMSCircle"
   | "esriSMSCross"
   | "esriSMSDiamond"
@@ -67,7 +67,8 @@ type supportedSimpleMarkerStyle =
   | "esriSMSTriangle"
   | "esriSMSX";
 
-export type supportedLineStyle =
+/** Terria only supports solid lines at the moment*/
+export type SupportedLineStyle =
   | "esriSLSSolid" // solid line
   | "esriSLSDash" // dashes (-----)
   | "esriSLSDashDot" // line (-.-.-)
@@ -93,16 +94,16 @@ interface Symbol {
   height?: number;
   angle?: number;
   size?: number;
-  type: esriStyleTypes;
+  type: EsriStyleTypes;
   url?: string;
-  style?: supportedSimpleMarkerStyle | supportedLineStyle | supportedFillStyle;
+  style?: SupportedSimpleMarkerStyle | SupportedLineStyle | SupportedFillStyle;
 }
 
 interface Outline {
-  type: esriStyleTypes;
+  type: EsriStyleTypes;
   color: number[];
   width: number;
-  style?: supportedLineStyle;
+  style?: SupportedLineStyle;
 }
 
 interface Renderer {
@@ -124,6 +125,9 @@ interface UniqueValueInfo extends SimpleRenderer {
   value: string;
 }
 
+/** Terria only supports `field1`, not multiple fields (`field2` or `field3`).
+ * See https://developers.arcgis.com/web-map-specification/objects/uniqueValueRenderer/
+ */
 interface UniqueValueRenderer extends Renderer {
   field1: string;
   field2?: string;
@@ -349,6 +353,12 @@ class FeatureServerStratum extends LoadableStratum(
       const includeColor = !!uniqueValueRenderer.uniqueValueInfos.find(
         u => u.symbol?.type !== "esriPMS"
       );
+
+      if (uniqueValueRenderer.field2 || uniqueValueRenderer.field3) {
+        console.log(
+          `WARNING: Terria only supports ArcGisFeatureService UniqueValueRenderers with a single field (\`field1\`), not multiple fields (\`field2\` or \`field3\`)`
+        );
+      }
 
       return [
         createStratumInstance(TableStyleTraits, {
@@ -654,17 +664,17 @@ function esriSymbolToTableStyle(
   if (!symbol) return {};
   return {
     // For esriPMS - just use white color
+    // This is so marker icons aren't colored by default
     color:
       symbol.type === "esriPMS"
         ? "#FFFFFF"
         : convertEsriColorToCesiumColor(symbol.color)?.toCssColorString(),
     pointSize: createStratumInstance(TablePointSizeStyleTraits, {}),
     point: createStratumInstance(PointSymbolTraits, {
-      // We only support "point" marker for "esriSMS"
       marker:
         symbol.type === "esriPMS"
           ? `data:${symbol.contentType};base64,${symbol.imageData}`
-          : "point",
+          : convertEsriMarkerToMaki(symbol.style),
       // symbol.size is used by "esriSMS"
       // height and width is used by "esriPMS"
       height:
@@ -692,4 +702,24 @@ function esriSymbolToTableStyle(
           })
         : undefined
   };
+}
+
+function convertEsriMarkerToMaki(
+  esri: SupportedSimpleMarkerStyle | string | undefined
+): string {
+  switch (esri) {
+    case "esriSMSCross":
+      return "hospital";
+    case "esriSMSDiamond":
+      return "diamond";
+    case "esriSMSSquare":
+      return "square";
+    case "esriSMSTriangle":
+      return "triangle";
+    case "esriSMSX":
+      return "cross";
+    case "esriSMSCircle":
+    default:
+      return "point";
+  }
 }

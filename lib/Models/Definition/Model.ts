@@ -1,10 +1,10 @@
+import { ModelId } from "../../Traits/ModelReference";
 import ModelTraits from "../../Traits/ModelTraits";
 import Trait from "../../Traits/Trait";
 import TraitsConstructor from "../../Traits/TraitsConstructor";
+import Terria from "../Terria";
 import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
 import StratumFromTraits from "./StratumFromTraits";
-import Terria from "../Terria";
-import { ModelId } from "../../Traits/ModelReference";
 
 export interface ModelConstructor<T> {
   new (
@@ -104,6 +104,9 @@ export interface ModelInterface<T extends ModelTraits> {
 
   /**
    * Adds a new object to an {@link objectArrayTrait}.
+   *
+   * If no `objectId` is provided, the object will be placed at the end of the array (across all strata). This will take `isRemoval` and `idProperty="index"`into account.
+   *
    * @param stratumId The ID of the stratum in which to add the object.
    * @param trait The name of the {@link objectArrayTrait} property.
    * @param objectId The ID of the new object.
@@ -112,23 +115,7 @@ export interface ModelInterface<T extends ModelTraits> {
   addObject<Key extends keyof ArrayElementTypes<T>>(
     stratumId: string,
     trait: Key,
-    objectId: string
-  ): Model<ArrayElementTypes<T>[Key]> | undefined;
-
-  /**
-   * Pushes a new object to an {@link objectArrayTrait}.
-   * @param stratumId The ID of the stratum in which to add the object.
-   * @param trait The name of the {@link objectArrayTrait} property.
-   * @returns The new object.
-   *
-   * The object will be placed at the end of the array (across all strata.
-   * This method takes `isRemoved` into account.
-   *
-   * This method can be used to add objects to `objectArrayTraits` which have `idProperty="index"` and support removals.
-   */
-  pushObject<Key extends keyof ArrayElementTypes<T>>(
-    stratumId: string,
-    trait: Key
+    objectId?: string | undefined
   ): Model<ArrayElementTypes<T>[Key]> | undefined;
 }
 

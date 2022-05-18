@@ -47,6 +47,14 @@ class OuterTraits extends ModelTraits {
   })
   inner?: InnerTraits[];
 
+  @objectArrayTrait({
+    type: InnerTraits,
+    name: "Inner by index",
+    description: "Inner by index",
+    idProperty: "index"
+  })
+  innerByIndex?: InnerTraits[];
+
   @primitiveTrait({
     type: "string",
     name: "Other",
@@ -293,6 +301,25 @@ describe("objectArrayTrait", function() {
     expect(model.inner[0].baz).toBe(true);
   });
 
+  it("handles idProperty = index", function() {
+    const terria = new Terria();
+    const model = new TestModel("test", terria);
+
+    // Create new object and set removal
+    model
+      .addObject("definition", "innerByIndex")
+      ?.setTrait("definition", "bar", 42);
+
+    model.addObject("user", "innerByIndex")?.setTrait("user", "foo", "user");
+
+    expect(model.innerByIndex.length).toBe(1);
+    expect(model.innerByIndex[0].foo).toBe("user");
+    expect(model.innerByIndex[0].bar).toBe(4);
+    expect(model.innerByIndex[0].baz).toBe(true);
+
+    console.log(model);
+  });
+
   it("updates to reflect new strata added after evaluation (with no merge)", function() {
     const terria = new Terria();
     const model = new TestModelNoMerge("test", terria);
@@ -315,6 +342,4 @@ describe("objectArrayTrait", function() {
     expect(model.inner[0].bar).toBe(4);
     expect(model.inner[0].baz).toBe(true);
   });
-
-  OuterTraitsNoMerge;
 });

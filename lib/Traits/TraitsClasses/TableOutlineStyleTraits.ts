@@ -1,13 +1,12 @@
-import StratumFromTraits from "../../Models/Definition/StratumFromTraits";
 import { TableStyleMapModel } from "../../Table/TableStyleMap";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import {
-  TableStyleMapSymbolTraits,
-  EnumStyleTraits,
   BinStyleTraits,
+  EnumStyleTraits,
+  TableStyleMapSymbolTraits,
   TableStyleMapTraits
 } from "./TableStyleMapTraits";
 
@@ -31,18 +30,14 @@ export class EnumOutlineSymbolTraits extends mixTraits(
   OutlineSymbolTraits,
   EnumStyleTraits
 ) {
-  static isRemoval(style: StratumFromTraits<EnumStyleTraits>) {
-    return style.value === null;
-  }
+  static isRemoval = EnumStyleTraits.isRemoval;
 }
 
 export class BinOutlineSymbolTraits extends mixTraits(
   OutlineSymbolTraits,
   BinStyleTraits
 ) {
-  static isRemoval(style: StratumFromTraits<BinStyleTraits>) {
-    return style.maxValue === null;
-  }
+  static isRemoval = BinStyleTraits.isRemoval;
 }
 
 export default class TableOutlineStyleTraits

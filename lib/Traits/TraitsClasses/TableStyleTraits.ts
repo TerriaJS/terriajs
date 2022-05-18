@@ -76,7 +76,7 @@ export default class TableStyleTraits extends ModelTraits {
   @objectTrait({
     name: "Point Size",
     description:
-      "Options for controlling the size of points. This property is ignored for regions.",
+      "Options for controlling the size of points. This property is ignored for regions. This will override TablePointStyleTraits marker width/height if `pointSize.column` can be resolved to scalar column",
     type: TablePointSizeStyleTraits
   })
   pointSize?: TablePointSizeStyleTraits;

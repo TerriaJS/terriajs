@@ -1,6 +1,7 @@
 import { action, computed, observable, runInAction, toJS } from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import flatten from "../../Core/flatten";
+import isDefined from "../../Core/isDefined";
 import { getObjectId } from "../../Traits/ArrayNestedStrataMap";
 import { ObjectArrayTrait } from "../../Traits/Decorators/objectArrayTrait";
 import { ModelId } from "../../Traits/ModelReference";
@@ -134,35 +135,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     addObject<Key extends keyof ArrayElementTypes<Traits>>(
       stratumId: string,
       traitId: Key,
-      objectId: string
-    ): ModelType<ArrayElementTypes<Traits>[Key]> | undefined {
-      const trait = this.traits[traitId as string] as ObjectArrayTrait<
-        ArrayElementTypes<Traits>[Key]
-      >;
-      const nestedTraitsClass = trait.type;
-      const newStratum = createStratumInstance(nestedTraitsClass);
-      (<any>newStratum)[trait.idProperty] = objectId;
-
-      const stratum: any = this.getOrCreateStratum(stratumId);
-      let array = stratum[traitId];
-      if (array === undefined) {
-        stratum[traitId] = [];
-        array = stratum[traitId];
-      }
-
-      array.push(newStratum);
-
-      const models: readonly ModelType<ArrayElementTypes<Traits>[Key]>[] = (<
-        any
-      >this)[traitId];
-      return models.find(
-        (o: any, i: number) => getObjectId(trait.idProperty, o, i) === objectId
-      );
-    }
-
-    pushObject<Key extends keyof ArrayElementTypes<Traits>>(
-      stratumId: string,
-      traitId: Key
+      objectId?: string | undefined
     ): ModelType<ArrayElementTypes<Traits>[Key]> | undefined {
       const trait = this.traits[traitId as string] as ObjectArrayTrait<
         ArrayElementTypes<Traits>[Key]
@@ -177,25 +150,42 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
         array = stratum[traitId];
       }
 
-      let maxIndex = -1;
-      this.strata.forEach(s =>
-        (s[traitId] as Array<unknown> | undefined)?.forEach(
-          (e, idx) => (maxIndex = idx > maxIndex ? idx : maxIndex)
-        )
-      );
+      // If objectID is provided, set idProperty and then return new object
+      if (isDefined(objectId)) {
+        (<any>newStratum)[trait.idProperty] = objectId;
+        array.push(newStratum);
 
-      // We need to make sure that the array in this stratum is as long as in every
-      for (let i = array.length; i <= maxIndex; i++) {
-        array[i] = createStratumInstance(nestedTraitsClass);
+        const models: readonly ModelType<ArrayElementTypes<Traits>[Key]>[] = (<
+          any
+        >this)[traitId];
+        return models.find(
+          (o: any, i: number) =>
+            getObjectId(trait.idProperty, o, i) === objectId
+        );
       }
+      // If no objectID is provided, we create a new object the end of the array (across all strata)
+      // This method `isRemoval` and `idProperty="index"` into account.
+      else {
+        let maxIndex = -1;
+        this.strata.forEach(s =>
+          (s[traitId] as Array<unknown> | undefined)?.forEach(
+            (e, idx) => (maxIndex = idx > maxIndex ? idx : maxIndex)
+          )
+        );
 
-      array[maxIndex + 1] = newStratum;
+        // We need to make sure that the array in this stratum is as long as in every
+        for (let i = array.length; i <= maxIndex; i++) {
+          array[i] = createStratumInstance(nestedTraitsClass);
+        }
 
-      // Return newly created model
-      const models: readonly ModelType<ArrayElementTypes<Traits>[Key]>[] = (<
-        any
-      >this)[traitId];
-      return models[models.length - 1];
+        array[maxIndex + 1] = newStratum;
+
+        // Return newly created model
+        const models: readonly ModelType<ArrayElementTypes<Traits>[Key]>[] = (<
+          any
+        >this)[traitId];
+        return models[models.length - 1];
+      }
     }
 
     /** Return full list of knownContainerUniqueIds.

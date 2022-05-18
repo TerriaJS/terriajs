@@ -1,5 +1,6 @@
 import { runInAction } from "mobx";
 import { GeomType, LineSymbolizer, PolygonSymbolizer } from "protomaps";
+import { CustomDataSource } from "terriajs-cesium";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
@@ -17,6 +18,7 @@ import {
   FEATURE_ID_PROP,
   getColor
 } from "../../../../lib/ModelMixins/GeojsonMixin";
+import { isDataSource } from "../../../../lib/ModelMixins/MappableMixin";
 import GeoJsonCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import SplitItemReference from "../../../../lib/Models/Catalog/CatalogReferences/SplitItemReference";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
@@ -643,7 +645,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     });
   });
 
-  describe("- with geojson-vt and protomaps", function() {
+  describe("- tablestyling - with geojson-vt and protomaps", function() {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
@@ -735,6 +737,41 @@ describe("GeoJsonCatalogItemSpec", () => {
           })
         ).toBe(col);
       });
+    });
+
+    it("Creates table features for points", async () => {
+      geojson.setTrait(
+        CommonStrata.user,
+        "url",
+        "test/GeoJSON/bike_racks.geojson"
+      );
+
+      await geojson.loadMapItems();
+
+      const mapItem = geojson.mapItems[0] as CustomDataSource;
+
+      expect(isDataSource(mapItem)).toBeTruthy();
+
+      expect(geojson.activeStyle).toBe("number_of_");
+      expect(geojson.activeTableStyle.colorColumn?.name).toBe("number_of_");
+      expect(geojson.activeTableStyle.tableColorMap.minimumValue).toBe(0);
+      expect(geojson.activeTableStyle.tableColorMap.maximumValue).toBe(20);
+      expect(
+        geojson.activeTableStyle.tableColorMap.colorMap instanceof
+          ContinuousColorMap
+      ).toBeTruthy();
+
+      // Test some colors
+      expect(
+        mapItem.entities.values[10].point?.color
+          ?.getValue(terria.timelineClock.currentTime)
+          ?.toCssColorString()
+      ).toBe("rgb(254,227,214)");
+      expect(
+        mapItem.entities.values[20].point?.color
+          ?.getValue(terria.timelineClock.currentTime)
+          ?.toCssColorString()
+      ).toBe("rgb(103,0,13)");
     });
 
     it("Supports LegendOwnerTraits to override TableMixin.legends", async () => {

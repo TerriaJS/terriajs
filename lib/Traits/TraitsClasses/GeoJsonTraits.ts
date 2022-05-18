@@ -6,10 +6,10 @@ import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 import StyleTraits from "./StyleTraits";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
-import LegendOwnerTraits from "./LegendOwnerTraits";
 
 export class PerPropertyGeoJsonStyleTraits extends ModelTraits {
   @anyTrait({
@@ -71,7 +71,7 @@ export class GeoJsonTraits extends mixTraits(
     type: "boolean",
     name: "Force cesium primitives",
     description:
-      "Force rendering GeoJSON features as Cesium primitives. This will be true if you are using `perPropertyStyles`, `timeProperty`, `heightProperty` or `czmlTemplate`. If undefined, geojson-vt/protomaps will be used"
+      "Force rendering GeoJSON features as Cesium primitives. This will be true if you are using `style`, `perPropertyStyles`, `timeProperty`, `heightProperty` or `czmlTemplate`. If undefined, geojson-vt/protomaps will be used"
   })
   forceCesiumPrimitives?: boolean;
 

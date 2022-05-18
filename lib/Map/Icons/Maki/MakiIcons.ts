@@ -24,6 +24,7 @@ export function getMakiIcon(
   const svgId = `${id}.svg`;
   const iconSvgs = icons.iconGroups[0].svgs as any;
   if (svgId in iconSvgs) {
+    // Values are adapted from https://labs.mapbox.com/maki-icons/editor/
     const path = iconSvgs[svgId].pathData[0].d;
     const totalHeight = height + 4 + strokeWidth * 2;
     const totalWidth = width + 4 + strokeWidth * 2;

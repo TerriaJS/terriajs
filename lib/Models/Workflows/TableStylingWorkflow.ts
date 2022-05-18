@@ -1473,7 +1473,7 @@ export default class TableStylingWorkflow
                       if (!isDefined(firstValue)) return;
 
                       traits
-                        .pushObject(stratumId, "enum")
+                        .addObject(stratumId, "enum")
                         ?.setTrait(stratumId, "value", firstValue);
 
                       this.openBinIndex.set(key, traits.enum.length - 1);
@@ -1495,7 +1495,7 @@ export default class TableStylingWorkflow
                 id: `${key}-bin-add`,
                 value: "Add style bin",
                 setDimensionValue: stratumId => {
-                  traits.pushObject(stratumId, "bin");
+                  traits.addObject(stratumId, "bin");
                   this.openBinIndex.set(key, traits.bin.length - 1);
                 }
               } as SelectableDimensionButton,
