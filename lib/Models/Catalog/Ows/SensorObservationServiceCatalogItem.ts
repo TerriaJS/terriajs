@@ -90,6 +90,10 @@ class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
     return new SosAutomaticStylesStratum(newModel) as this;
   }
 
+  @computed get activeStyle() {
+    return this.catalogItem.procedures[0].identifier;
+  }
+
   @computed
   get styles(): StratumFromTraits<TableStyleTraits>[] {
     return this.catalogItem.procedures.map(p => {
