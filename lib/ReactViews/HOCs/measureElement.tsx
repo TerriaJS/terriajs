@@ -7,18 +7,20 @@ const getDisplayName = <P extends React.ComponentProps<any>>(
   return WrappedComponent.displayName || WrappedComponent.name || "Component";
 };
 
-export interface MeasureElement {
+export interface MeasureElementProps {
   heightFromMeasureElementHOC: number | null;
   widthFromMeasureElementHOC: number | null;
 }
 
 interface MeasureElementComponent<P>
-  extends React.Component<P & MeasureElement> {
+  extends React.Component<P & MeasureElementProps> {
   refToMeasure: React.RefObject<HTMLElement> | HTMLElement | null;
 }
 
 interface MeasureElementClass<P> {
-  new (props: P & MeasureElement, context?: any): MeasureElementComponent<P>;
+  new (props: P & MeasureElementProps, context?: any): MeasureElementComponent<
+    P
+  >;
 }
 
 interface IState {

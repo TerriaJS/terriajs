@@ -21,7 +21,7 @@ import Button, { RawButton } from "../../Styled/Button";
 import Spacing from "../../Styled/Spacing";
 import Text, { TextSpan } from "../../Styled/Text";
 import BadgeBar from "../BadgeBar";
-import measureElement, { MeasureElement } from "../HOCs/measureElement";
+import measureElement, { MeasureElementProps } from "../HOCs/measureElement";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
 import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
@@ -62,7 +62,7 @@ interface IState {
 
 @observer
 class StoryBuilder extends React.Component<
-  IProps & MeasureElement & WithTranslation,
+  IProps & MeasureElementProps & WithTranslation,
   IState
 > {
   storiesWrapperRef = React.createRef<HTMLElement>();
@@ -71,7 +71,7 @@ class StoryBuilder extends React.Component<
 
   clearRecaptureSuccessTimeout?: () => void;
 
-  constructor(props: IProps & MeasureElement & WithTranslation) {
+  constructor(props: IProps & MeasureElementProps & WithTranslation) {
     super(props);
     this.state = {
       editingMode: false,
