@@ -11,6 +11,7 @@ Change Log
 * TSify `BottomDock` and `measureElement` components.
 * Fixed a bug in `GltfMixin` which resulted in some traits missing from `GltfCatalogItem` and broke tools like the scene editor.
 * Re-add missing `helpPanel.mapUserGuide` translation string
+* Fix `sortMembersBy` for child `Groups` and `References`
 * [The next improvement]
 
 #### 8.2.3 - 2022-04-22
