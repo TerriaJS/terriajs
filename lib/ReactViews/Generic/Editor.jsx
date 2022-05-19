@@ -5,63 +5,48 @@ import PropTypes from "prop-types";
 // Import TinyMCE
 import tinymce from "tinymce/tinymce";
 
-// A theme is also required
-// import "/build/TerriaJS/third_party/tinymce/themes/silver/theme";
-
-// Any plugins you want to use has to be imported
-// import "/build/TerriaJS/thirdParty/tinymce/plugins/image";
-// import "/build/TerriaJS/thirdParty/tinymce/plugins/link";
-
 export default function TinyEditor(props) {
   const editorRef = useRef(null);
-  // const log = () => {
-  //   if (editorRef.current) {
-  //     console.log(editorRef.current.getContent());
-  //   }
-  // };
 
-  tinymce.baseURL = `${props.terria.baseUrl}third_party/tinymce`; // trailing slash important
-  // Initialize the app
-  tinymce.init({
-    selector: "#tiny",
-    theme: "silver",
-    plugins: ["image", "link"]
-  });
+  // Themes and plugins for tinyMCE are in wwwroot folder
+  tinymce.baseURL = `${props.terria.baseUrl}third_party/tinymce`;
 
   return (
     <Editor
-      // apiKey="trlne9rssajd8xhy0b50ht6kqzioaqhm5l5t2vcucfx1drol"
       onInit={(evt, editor) => (editorRef.current = editor)}
       value={props.html}
       onEditorChange={props.onChange}
       init={{
-        height: 500,
+        height: 300,
         menubar: false,
+        branding: false,
+        statusbar: false,
         plugins: [
-          "advlist",
-          "autolink",
-          "lists",
-          // "link",
+          // "advlist",
+          // "autolink",
+          // "lists",
+          "link",
           "image",
-          "charmap",
-          "preview",
-          "anchor",
-          "searchreplace",
-          "visualblocks",
-          "code",
-          "fullscreen",
-          "insertdatetime",
+          // "charmap",
+          // "preview",
+          // "anchor",
+          // "searchreplace",
+          // "visualblocks",
+          // "code",
+          // "fullscreen",
+          // "insertdatetime",
           "media",
-          "table",
-          "code",
-          "help",
-          "wordcount"
+          "table"
+          // "help",
+          // "wordcount"
         ],
         toolbar:
-          "undo redo | image | " +
-          "bold italic forecolor | alignleft aligncenter " +
-          "alignright alignjustify | bullist numlist outdent indent | " +
-          "removeformat | help",
+          "bold italic forecolor |" +
+          " bullist numlist table |" +
+          "image media link |" +
+          "alignleft aligncenter alignright alignjustify | undo redo | removeformat |" +
+          "blocks",
+
         content_style:
           "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }"
       }}
