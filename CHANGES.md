@@ -6,6 +6,8 @@ Change Log
 * Add Mustache template support to `modelDimensions` for string properties in `option.value` (with the catalog member as context)
 * Added a check for disableExport in ChartPanelDownloadButton.jsx. Prevents download button rendering.
 * Fix `CatalogIndex` types
+* Moved code for retrieving a model by id, share key or CatalogIndex to a new function `terria.getModelByIdShareKeyOrCatalogIndex`.
+* Updated handling of `previewedItemId` to use new function `terria.getModelByIdShareKeyOrCatalogIndex`. This will now use CatalogIndex if the `previewedItemId` cannot be found in models or model share keys.
 * Fixed a race condition inside ModalPopup that caused the explorer panel (data catalogue) to be stuck hidden until refresh.
 * Fix bug that broke the `DiffTool` preventing it from opening. 
 * TSify `BottomDock` and `measureElement` components.
