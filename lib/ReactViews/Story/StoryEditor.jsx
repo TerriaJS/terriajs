@@ -177,10 +177,12 @@ class StoryEditor extends React.Component {
           <div className={Styles.body}>
             <Editor
               html={this.state.text}
-              onChange={(event, editor) => {
+              onChange={(newValue, editor) => {
+                // this.setState({ newValue }); // Should be this but not working so must get text from editor object
                 const text = editor.getBody().innerHTML;
                 this.setState({ text });
               }}
+              terria={this.props.terria}
             />
           </div>
         </div>
@@ -205,7 +207,8 @@ StoryEditor.propTypes = {
   removeStory: PropTypes.func,
   saveStory: PropTypes.func,
   exitEditingMode: PropTypes.func,
-  t: PropTypes.func.isRequired
+  t: PropTypes.func.isRequired,
+  terria: PropTypes.object
 };
 
 StoryEditor.defaultProps = { story: { title: "", text: "", id: undefined } };

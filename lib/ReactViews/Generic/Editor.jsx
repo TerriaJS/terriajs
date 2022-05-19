@@ -2,6 +2,16 @@ import React, { useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import PropTypes from "prop-types";
 
+// Import TinyMCE
+import tinymce from "tinymce/tinymce";
+
+// A theme is also required
+// import "/build/TerriaJS/third_party/tinymce/themes/silver/theme";
+
+// Any plugins you want to use has to be imported
+// import "/build/TerriaJS/thirdParty/tinymce/plugins/image";
+// import "/build/TerriaJS/thirdParty/tinymce/plugins/link";
+
 export default function TinyEditor(props) {
   const editorRef = useRef(null);
   // const log = () => {
@@ -10,12 +20,20 @@ export default function TinyEditor(props) {
   //   }
   // };
 
+  tinymce.baseURL = `${props.terria.baseUrl}third_party/tinymce`; // trailing slash important
+  // Initialize the app
+  tinymce.init({
+    selector: "#tiny",
+    theme: "silver",
+    plugins: ["image", "link"]
+  });
+
   return (
     <Editor
-      apiKey="trlne9rssajd8xhy0b50ht6kqzioaqhm5l5t2vcucfx1drol"
+      // apiKey="trlne9rssajd8xhy0b50ht6kqzioaqhm5l5t2vcucfx1drol"
       onInit={(evt, editor) => (editorRef.current = editor)}
-      initialValue={props.html}
-      onChange={props.onChange}
+      value={props.html}
+      onEditorChange={props.onChange}
       init={{
         height: 500,
         menubar: false,
@@ -23,7 +41,7 @@ export default function TinyEditor(props) {
           "advlist",
           "autolink",
           "lists",
-          "link",
+          // "link",
           "image",
           "charmap",
           "preview",
@@ -40,7 +58,7 @@ export default function TinyEditor(props) {
           "wordcount"
         ],
         toolbar:
-          "undo redo | blocks | " +
+          "undo redo | image | " +
           "bold italic forecolor | alignleft aligncenter " +
           "alignright alignjustify | bullist numlist outdent indent | " +
           "removeformat | help",
@@ -54,7 +72,8 @@ export default function TinyEditor(props) {
 TinyEditor.propTypes = {
   html: PropTypes.string,
   onChange: PropTypes.func.isRequired,
-  actions: PropTypes.array
+  actions: PropTypes.array,
+  terria: PropTypes.object
 };
 
 // import React from "react";
