@@ -103,31 +103,31 @@ class StoryEditor extends React.Component {
   }
 
   onKeyDown(event) {
-    // if (event.keyCode === 27) {
-    //   this.cancelEditing();
-    // }
-    // if (event.keyCode === 13) {
-    //   this.keys.enter = true;
-    // }
-    // if (event.keyCode === 17) {
-    //   this.keys.ctrl = true;
-    // }
+    if (event.keyCode === 27) {
+      this.cancelEditing();
+    }
+    if (event.keyCode === 13) {
+      this.keys.enter = true;
+    }
+    if (event.keyCode === 17) {
+      this.keys.ctrl = true;
+    }
   }
 
   onKeyUp(event) {
-    // if (
-    //   (event.keyCode === 13 || event.keyCode === 17) &&
-    //   this.keys.enter &&
-    //   this.keys.ctrl
-    // ) {
-    //   this.saveStory();
-    // }
-    // if (event.keyCode === 13) {
-    //   this.keys.enter = false;
-    // }
-    // if (event.keyCode === 17) {
-    //   this.keys.ctrl = false;
-    // }
+    if (
+      (event.keyCode === 13 || event.keyCode === 17) &&
+      this.keys.enter &&
+      this.keys.ctrl
+    ) {
+      this.saveStory();
+    }
+    if (event.keyCode === 13) {
+      this.keys.enter = false;
+    }
+    if (event.keyCode === 17) {
+      this.keys.ctrl = false;
+    }
   }
 
   handleChange(value) {
