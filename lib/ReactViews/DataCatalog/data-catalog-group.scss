@@ -39,6 +39,9 @@
   font-weight: bold;
   line-height: normal;
   position: relative;
+  [dir="rtl"] & {
+    direction: ltr;
+  }
 
   svg {
     display: inline-block;

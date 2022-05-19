@@ -30,7 +30,6 @@ import {
   calculateTopPosition,
   getOffsetsFromTourPoint
 } from "./tour-helpers.ts";
-import i18next from "i18next";
 import TourExplanationBox, {
   TourExplanationBoxZIndex
 } from "./TourExplanationBox.jsx";
@@ -333,8 +332,8 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
 });
 
 export const TourPreface = ({ viewState }) => {
-  const { t } = useTranslation();
-  const isRtl = viewState.isRtl;
+  const { i18n, t } = useTranslation();
+  const isRtl = i18n.dir() === "rtl";
   const theme = useTheme();
   return (
     <>
