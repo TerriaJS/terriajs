@@ -13,7 +13,6 @@ import { JsonObject } from "../Core/Json";
 import { getFeatureStyle } from "./getFeatureStyle";
 import TableColumn from "./TableColumn";
 import TableStyle from "./TableStyle";
-import { head } from "fetch-mock";
 
 export default function createLongitudeLatitudeFeaturePerRow(
   style: TableStyle,
