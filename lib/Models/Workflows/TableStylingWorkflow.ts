@@ -1460,8 +1460,10 @@ export default class TableStylingWorkflow
               }),
               // Are there more colors to add (are there more unique values in the column than enumCols)
               // Create "Add" to user can add more
-              traits.enum?.filter(col => col.value).length <
-              tableStyleMap.column?.uniqueValues.values.length
+
+              tableStyleMap.column?.uniqueValues.values.filter(
+                v => !traits.enum?.find(col => col.value === v)
+              ).length > 0
                 ? ({
                     type: "button",
                     id: `${key}-enum-add`,
