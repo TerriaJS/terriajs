@@ -14,8 +14,6 @@ Change Log
 * TSify `BottomDock` and `measureElement` components.
 * Fixed a bug in `GltfMixin` which resulted in some traits missing from `GltfCatalogItem` and broke tools like the scene editor.
 * Re-add missing `helpPanel.mapUserGuide` translation string
-
-
 * Add `raiseError` convenience method to `TerriaError`
 * Improve `filterOutUndefined` types
 * Add [Maki icons](https://labs.mapbox.com/maki-icons/) - these can be used in `TablePointStyleTraits`. For example `marker = "hospital"`
@@ -33,7 +31,7 @@ Change Log
   * Legends will be merged across `TableStyleMaps` and `TableColorMap` - for example, marker icons will be shown in legend with correct colors. See `MergedStyleMapLegend`
   * Default `activeStyle` is now picked by finding the first column of type `scalar`, and then the first column of type `enum`, then `text` and then finally `region`.
 * `ArcGisFeatureServiceCatalogItem` now uses Table styling and `protomaps`
-* Add `pushObject` to `BaseModel`. This method pushes a new object to an Array Trait (similar to `addObject`). The object will be placed at the end of the array (across all strata). This method takes `isRemoved` into account. This method can be used to add objects to `objectArrayTraits` which have `idProperty="index"` and support removals.
+* Adapted `BaseModel.addObject` to handle adding objects to `ArrayTraits` with `idProperty="index"` and `isRemoval`. The new object will be placed at the end of the array (across all strata).
 * Add `allowCustomInput` property to `SelectableDimensionGroup` - if true then `react-select` will allow custom user input.
 * `TableStylingWorkflow` improvements
   * Better handling of swapping between different color scheme types (eg enum or bin)
