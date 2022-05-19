@@ -13,6 +13,7 @@ import { JsonObject } from "../Core/Json";
 import { getFeatureStyle } from "./getFeatureStyle";
 import TableColumn from "./TableColumn";
 import TableStyle from "./TableStyle";
+import { head } from "fetch-mock";
 
 export default function createLongitudeLatitudeFeaturePerRow(
   style: TableStyle,
@@ -63,6 +64,8 @@ export default function createLongitudeLatitudeFeaturePerRow(
             ? new BillboardGraphics({
                 image: makiIcon ?? pointStyle.marker,
                 color: !makiIcon ? color : undefined,
+                width: pointStyle.width,
+                height: pointStyle.height,
                 rotation: CesiumMath.toRadians(
                   360 - (pointStyle.rotation ?? 0)
                 ),

@@ -220,6 +220,7 @@ export default class Legend extends React.Component<{
           backgroundImage: `url(${imageUrl})`,
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
+          backgroundSize: "24px",
           width: `${legendItem.imageWidth}px`,
           ...boxStyle
         };
