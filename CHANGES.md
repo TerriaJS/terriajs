@@ -6,12 +6,14 @@ Change Log
 * Add Mustache template support to `modelDimensions` for string properties in `option.value` (with the catalog member as context)
 * Added a check for disableExport in ChartPanelDownloadButton.jsx. Prevents download button rendering.
 * Fix `CatalogIndex` types
-* TSXified `StandardUserInterface` and some other components. If your TerriaMap imports `StandardUserInterface.jsx` remove the `.jsx` extension so webpack can find the new `.tsx` file.
+* Moved code for retrieving a model by id, share key or CatalogIndex to a new function `terria.getModelByIdShareKeyOrCatalogIndex`.
+* Updated handling of `previewedItemId` to use new function `terria.getModelByIdShareKeyOrCatalogIndex`. This will now use CatalogIndex if the `previewedItemId` cannot be found in models or model share keys.
 * Fixed a race condition inside ModalPopup that caused the explorer panel (data catalogue) to be stuck hidden until refresh.
 * Fix bug that broke the `DiffTool` preventing it from opening. 
 * TSify `BottomDock` and `measureElement` components.
 * Fixed a bug in `GltfMixin` which resulted in some traits missing from `GltfCatalogItem` and broke tools like the scene editor.
 * Re-add missing `helpPanel.mapUserGuide` translation string
+* TSXified `StandardUserInterface` and some other components. If your TerriaMap imports `StandardUserInterface.jsx` remove the `.jsx` extension so webpack can find the new `.tsx` file.
 * [The next improvement]
 
 #### 8.2.3 - 2022-04-22

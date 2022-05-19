@@ -738,6 +738,36 @@ export default class Terria {
     }
   }
 
+  async getModelByIdShareKeyOrCatalogIndex(
+    id: string
+  ): Promise<Result<BaseModel | undefined>> {
+    try {
+      // See if model exists by ID of sharekey
+      const model = this.getModelByIdOrShareKey(BaseModel, id);
+      // If no model exists, try to find it through Terria model sharekeys or CatalogIndex sharekeys
+      if (model?.uniqueId !== undefined) {
+        return new Result(model);
+      } else if (this.catalogIndex) {
+        try {
+          await this.catalogIndex.load();
+        } catch (e) {
+          throw TerriaError.from(
+            e,
+            `Failed to load CatalogIndex while trying to load model \`${id}\``
+          );
+        }
+        const indexModel = this.catalogIndex.getModelByIdOrShareKey(id);
+        if (indexModel) {
+          (await indexModel.loadReference()).throwIfError();
+          return new Result(indexModel.target);
+        }
+      }
+    } catch (e) {
+      return Result.error(e);
+    }
+    return new Result(undefined);
+  }
+
   @action
   addShareKey(id: string, shareKey: string) {
     if (id === shareKey || this.shareKeysMap.has(shareKey)) return;
@@ -1265,28 +1295,12 @@ export default class Terria {
       );
     }
 
-    // See if model exists by ID of sharekey
-    // Change modelId to more up-to-date ID if necessary
-    const model = this.getModelByIdOrShareKey(BaseModel, modelId);
-    // If no model exists, try to find it through Terria model sharekeys or CatalogIndex sharekeys
-    if (isDefined(model?.uniqueId)) {
-      modelId = model!.uniqueId;
-    } else if (this.catalogIndex) {
-      try {
-        await this.catalogIndex.load();
-      } catch (e) {
-        errors.push(
-          TerriaError.from(
-            e,
-            `Failed to load CatalogIndex while loading model stratum \`${modelId}\``
-          )
-        );
-      }
-      const indexModel = this.catalogIndex.getModelByIdOrShareKey(modelId);
-      if (indexModel) {
-        (await indexModel.loadReference()).pushErrorTo(errors);
-        modelId = indexModel.uniqueId ?? modelId;
-      }
+    const model = (
+      await this.getModelByIdShareKeyOrCatalogIndex(modelId)
+    ).pushErrorTo(errors);
+    if (model?.uniqueId !== undefined) {
+      // Update modelId from model sharekeys or CatalogIndex sharekeys
+      modelId = model.uniqueId;
     }
 
     // If this model is a `SplitItemReference` we must load the source item first
