@@ -63,7 +63,9 @@ export default function createLongitudeLatitudeFeaturePerRow(
             ? new BillboardGraphics({
                 image: makiIcon ?? pointStyle.marker,
                 color: !makiIcon ? color : undefined,
-                rotation: CesiumMath.toRadians(pointStyle.rotation ?? 0),
+                rotation: CesiumMath.toRadians(
+                  360 - (pointStyle.rotation ?? 0)
+                ),
                 pixelOffset: new Cartesian2(
                   pointStyle.pixelOffset?.[0],
                   pointStyle.pixelOffset?.[1]

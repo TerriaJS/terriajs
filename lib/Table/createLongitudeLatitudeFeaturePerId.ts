@@ -130,7 +130,7 @@ function createFeature(
     addSampleOrInterval(outlineWidthProperty, outlineStyle.width, interval);
     addSampleOrInterval(
       pointRotationProperty,
-      CesiumMath.toRadians(pointStyle.rotation ?? 0),
+      CesiumMath.toRadians(360 - (pointStyle.rotation ?? 0)),
       interval
     );
     addSampleOrInterval(
