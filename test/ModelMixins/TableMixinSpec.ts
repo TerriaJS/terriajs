@@ -770,7 +770,7 @@ describe("TableMixin", function() {
           marker: "hospital",
           height: 30,
           width: 15,
-          rotation: (45 / 360) * (2 * Math.PI)
+          rotation: ((360 - 45) / 360) * (2 * Math.PI)
         },
         {
           fillColor: "rgb(0,255,255)",
@@ -779,7 +779,7 @@ describe("TableMixin", function() {
           marker: "cross",
           height: 10,
           width: 5,
-          rotation: 0
+          rotation: 2 * Math.PI
         },
         {
           fillColor: "rgb(0,255,255)",
@@ -788,7 +788,7 @@ describe("TableMixin", function() {
           marker: "circle",
           height: 20,
           width: 10,
-          rotation: 0
+          rotation: 2 * Math.PI
         },
         {
           fillColor: "rgb(0,255,255)",
@@ -797,7 +797,7 @@ describe("TableMixin", function() {
           marker: "circle",
           height: 20,
           width: 10,
-          rotation: 0
+          rotation: 2 * Math.PI
         },
         {
           fillColor: "rgb(0,255,255)",
@@ -806,7 +806,7 @@ describe("TableMixin", function() {
           marker: "cross",
           height: 10,
           width: 5,
-          rotation: 0
+          rotation: 2 * Math.PI
         }
       ];
 
