@@ -1,7 +1,9 @@
+/* eslint-disable camelcase */
 import React, { useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import PropTypes from "prop-types";
-import tinymce from "tinymce"; //must import despite being unused
+// eslint-disable-next-line no-unused-vars
+import tinymce from "tinymce"; // must import despite being unused
 
 /* Required TinyMCE components */
 import "tinymce/icons/default";
