@@ -276,6 +276,9 @@ interface ConfigParameters {
    */
   feedbackMinLength?: number;
 
+  /** If undefined, then Leaflet's default attribution will be used */
+  leafletAttributionPrefix?: string;
+
   /**
    * Extra links to show in the credit line at the bottom of the map (currently only the Cesium map).
    */
@@ -461,6 +464,7 @@ export default class Terria {
     feedbackPreamble: "translate#feedback.feedbackPreamble",
     feedbackPostamble: undefined,
     feedbackMinLength: 0,
+    leafletAttributionPrefix: undefined,
     extraCreditLinks: [
       // Default credit links (shown at the bottom of the Cesium map)
       {
