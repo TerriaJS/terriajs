@@ -1,13 +1,21 @@
 import React, { useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import PropTypes from "prop-types";
-import tinymce from "tinymce/tinymce";
 
+/* Required TinyMCE components */
+import "tinymce/icons/default";
+import "tinymce/themes/silver";
+import "tinymce/models/dom";
+/* Import a skin (can be a custom skin instead of the default) */
+import "!!style-loader!css-loader?sourceMap!tinymce/skins/ui/oxide/skin.css";
+/* Import TinyMCE plugins */
+import "tinymce/plugins/media";
+import "tinymce/plugins/image";
+import "tinymce/plugins/link";
+import "tinymce/plugins/lists";
+import "tinymce/plugins/table";
 export default function TinyEditor(props) {
   const editorRef = useRef(null);
-
-  // Themes and plugins for tinyMCE are in wwwroot folder
-  tinymce.baseURL = `${props.terria.baseUrl}third_party/tinymce`;
 
   return (
     <Editor
@@ -16,7 +24,7 @@ export default function TinyEditor(props) {
       onEditorChange={props.onChange}
       init={{
         height: 300,
-        skin: "terria1", // To create a new custom skin go to https://skin.tiny.cloud/t5/
+        skin: false,
         menubar: false,
         branding: false,
         statusbar: false,
@@ -27,7 +35,8 @@ export default function TinyEditor(props) {
           "image media link |" +
           "undo redo | removeformat",
         content_style:
-          "body { font-family:Helvetica,Arial,sans-serif; font-size:14px;}"
+          "body { font-family:Helvetica,Arial,sans-serif; font-size:14px;}",
+        content_css: false
       }}
     />
   );
