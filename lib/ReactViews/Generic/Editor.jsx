@@ -24,7 +24,7 @@ export default function TinyEditor(props) {
       value={props.html}
       onEditorChange={props.onChange}
       init={{
-        height: 300,
+        height: 400,
         skin: false,
         menubar: false,
         branding: false,

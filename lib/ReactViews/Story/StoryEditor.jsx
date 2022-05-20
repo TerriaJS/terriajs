@@ -1,10 +1,10 @@
-import React from "react";
+import React, { Suspense } from "react";
 import PropTypes from "prop-types";
-import Editor from "../Generic/Editor.jsx";
 import classNames from "classnames";
 import Styles from "./story-editor.scss";
 import { withTranslation } from "react-i18next";
 
+const Editor = React.lazy(() => import("../Generic/Editor.jsx"));
 class StoryEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -175,15 +175,17 @@ class StoryEditor extends React.Component {
             </button>
           </div>
           <div className={Styles.body}>
-            <Editor
-              html={this.state.text}
-              onChange={(newValue, editor) => {
-                // this.setState({ newValue }); // Should be this but not working so must get text from editor object
-                const text = editor.getBody().innerHTML;
-                this.setState({ text });
-              }}
-              terria={this.props.terria}
-            />
+            <Suspense fallback={<div>Loading...</div>}>
+              <Editor
+                html={this.state.text}
+                onChange={(newValue, editor) => {
+                  // this.setState({ newValue }); // Should be this but not working so must get text from editor object
+                  const text = editor.getBody().innerHTML;
+                  this.setState({ text });
+                }}
+                terria={this.props.terria}
+              />
+            </Suspense>
           </div>
         </div>
       </div>
