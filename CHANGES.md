@@ -9,6 +9,7 @@ Change Log
 * Fix bug that broke the `DiffTool` preventing it from opening. 
 * TSify `BottomDock` and `measureElement` components.
 * Fixed a bug in `GltfMixin` which resulted in some traits missing from `GltfCatalogItem` and broke tools like the scene editor.
+* Replace Pell WYSIWYG editor library with TinyMCE, allows richer editing of Stories in the Story Builder
 * [The next improvement]
 
 #### 8.2.3 - 2022-04-22
