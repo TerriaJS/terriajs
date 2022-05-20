@@ -1,8 +1,6 @@
 import React, { useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import PropTypes from "prop-types";
-
-// Import TinyMCE
 import tinymce from "tinymce/tinymce";
 
 export default function TinyEditor(props) {
@@ -18,37 +16,18 @@ export default function TinyEditor(props) {
       onEditorChange={props.onChange}
       init={{
         height: 300,
+        skin: "terria1", // To create a new custom skin go to https://skin.tiny.cloud/t5/
         menubar: false,
         branding: false,
         statusbar: false,
-        plugins: [
-          // "advlist",
-          // "autolink",
-          // "lists",
-          "link",
-          "image",
-          // "charmap",
-          // "preview",
-          // "anchor",
-          // "searchreplace",
-          // "visualblocks",
-          // "code",
-          // "fullscreen",
-          // "insertdatetime",
-          "media",
-          "table"
-          // "help",
-          // "wordcount"
-        ],
+        plugins: ["link", "image", "media", "table", "lists"],
         toolbar:
-          "bold italic forecolor |" +
+          "blocks | bold italic forecolor | align |" +
           " bullist numlist table |" +
           "image media link |" +
-          "alignleft aligncenter alignright alignjustify | undo redo | removeformat |" +
-          "blocks",
-
+          "undo redo | removeformat",
         content_style:
-          "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }"
+          "body { font-family:Helvetica,Arial,sans-serif; font-size:14px;}"
       }}
     />
   );
@@ -60,58 +39,3 @@ TinyEditor.propTypes = {
   actions: PropTypes.array,
   terria: PropTypes.object
 };
-
-// import React from "react";
-// import { init, exec } from "pell";
-// import PropTypes from "prop-types";
-
-// export default class Editor extends React.PureComponent {
-//   constructor(props) {
-//     super(props);
-//   }
-
-//   componentDidMount() {
-//     this.editor = init({
-//       element: this.node,
-//       onChange: this.props.onChange,
-//       actions: this.props.actions
-//     });
-//     this.editor.content.innerHTML = this.props.html;
-//   }
-
-//   componentWillUnmount() {
-//     this.editor = undefined;
-//   }
-//   render() {
-//     return <div ref={node => (this.node = node)} />;
-//   }
-// }
-
-// Editor.propTypes = {
-//   html: PropTypes.string,
-//   onChange: PropTypes.func.isRequired,
-//   actions: PropTypes.array
-// };
-
-// Editor.defaultProps = {
-//   actions: [
-//     "bold",
-//     "italic",
-//     "underline",
-//     "heading1",
-//     "heading2",
-//     "olist",
-//     "ulist",
-//     "image",
-//     {
-//       name: "link",
-//       result: () => {
-//         /* eslint-disable-next-line no-alert */
-//         const url = window.prompt("Enter the link URL", "http://");
-//         if (url) {
-//           exec("createLink", url);
-//         }
-//       }
-//     }
-//   ]
-// };
