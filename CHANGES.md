@@ -14,6 +14,7 @@ Change Log
 * Fixed a bug in `GltfMixin` which resulted in some traits missing from `GltfCatalogItem` and broke tools like the scene editor.
 * Leaflet attribution can be set through `config.leafletAttributionPrefix`. Attribution HTML string to show on Leaflet maps. Will use Leaflet's default if undefined. To hide Leaflet attribution - set `leafletAttributionPrefix:""`
 * Re-add missing `helpPanel.mapUserGuide` translation string
+* Fix `sortMembersBy` for child `Groups` and `References`
 * [The next improvement]
 
 #### 8.2.3 - 2022-04-22
