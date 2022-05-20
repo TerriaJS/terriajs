@@ -342,11 +342,11 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
             ]
         });
 
-        // config.module.loaders.push({
-        //     include: [path.resolve(fontAwesomeDir, 'css'), path.resolve(reactMdeDir, 'lib', 'styles', 'css')],
-        //     test: /\.css$/,
-        //     loaders: ['style-loader', 'css-loader']
-        // });
+        config.module.loaders.push({
+            include: [path.resolve(fontAwesomeDir, 'css'), path.resolve(reactMdeDir, 'lib', 'styles', 'css')],
+            test: /\.css$/,
+            loaders: ['style-loader', 'css-loader']
+        });
 
         // config.module.loaders.push({
         //     include: path.resolve(fontAwesomeDir, 'fonts'),
