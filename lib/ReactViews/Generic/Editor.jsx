@@ -4,7 +4,6 @@ import { Editor } from "@tinymce/tinymce-react";
 import PropTypes from "prop-types";
 // eslint-disable-next-line no-unused-vars
 import tinymce from "tinymce"; // must import despite being unused
-
 /* Required TinyMCE components */
 import "tinymce/icons/default";
 import "tinymce/themes/silver";
@@ -17,6 +16,7 @@ import "tinymce/plugins/image";
 import "tinymce/plugins/link";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/table";
+
 export default function TinyEditor(props) {
   const editorRef = useRef(null);
 

@@ -4,6 +4,7 @@ import classNames from "classnames";
 import Styles from "./story-editor.scss";
 import { withTranslation } from "react-i18next";
 
+// Lazy load the Editor component as the tinyMCE library is large
 const Editor = React.lazy(() => import("../Generic/Editor.jsx"));
 class StoryEditor extends React.Component {
   constructor(props) {
