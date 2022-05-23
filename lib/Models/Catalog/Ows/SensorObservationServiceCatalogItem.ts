@@ -9,27 +9,24 @@ import loadWithXhr from "../../../Core/loadWithXhr";
 import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
-import TableAutomaticStylesStratum, {
-  ColorStyleLegend
-} from "../../../Table/TableAutomaticStylesStratum";
+import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStratum";
 import TableColumnType from "../../../Table/TableColumnType";
 import xml2json from "../../../ThirdParty/xml2json";
 import SensorObservationServiceCatalogItemTraits from "../../../Traits/TraitsClasses/SensorObservationCatalogItemTraits";
 import TableChartStyleTraits, {
   TableChartLineStyleTraits
 } from "../../../Traits/TraitsClasses/TableChartStyleTraits";
-import TableColorStyleTraits from "../../../Traits/TraitsClasses/TableColorStyleTraits";
 import TablePointSizeStyleTraits from "../../../Traits/TraitsClasses/TablePointSizeStyleTraits";
 import TableStyleTraits from "../../../Traits/TraitsClasses/TableStyleTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import { SelectableDimension } from "../../SelectableDimensions/SelectableDimensions";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
+import { SelectableDimension } from "../../SelectableDimensions/SelectableDimensions";
 import Terria from "../../Terria";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 interface GetFeatureOfInterestResponse {
   featureMember?: FeatureMember[] | FeatureMember;
@@ -93,15 +90,16 @@ class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
     return new SosAutomaticStylesStratum(newModel) as this;
   }
 
+  @computed get activeStyle() {
+    return this.catalogItem.procedures[0].identifier;
+  }
+
   @computed
   get styles(): StratumFromTraits<TableStyleTraits>[] {
     return this.catalogItem.procedures.map(p => {
       return createStratumInstance(TableStyleTraits, {
         id: p.identifier,
         title: p.title,
-        color: createStratumInstance(TableColorStyleTraits, {
-          legend: new ColorStyleLegend(this.catalogItem, 0)
-        }),
         pointSize: createStratumInstance(TablePointSizeStyleTraits, {
           pointSizeColumn: p.identifier
         }),
