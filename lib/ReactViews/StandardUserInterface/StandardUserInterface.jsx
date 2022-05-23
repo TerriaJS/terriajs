@@ -31,6 +31,9 @@ import SidePanel from "./../SidePanel/SidePanel.jsx";
 import RCStoryPanel from "./../Story/RCStoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 import ToolPanel from "./../ToolPanel.jsx";
+
+import Legend from "../Workbench/Controls/Legend";
+
 // import FeatureInfoPanel from "../FeatureInfo/FeatureInfoPanel.jsx";
 import MapColumn from "./MapColumn.jsx";
 import processCustomElements from "./processCustomElements";
@@ -291,11 +294,21 @@ const StandardUserInterface = createReactClass({
                       viewState.topElement = "SidePanel";
                     }}
                   >
-                    <div className="fixed top-[300px] left-2 flex flex-col gap-2 left-10 bg-black bg-opacity-40 p-3 text-sm rounded text-gray-300">
+                    <div className="fixed top-[200px] left-2 flex flex-col gap-2 left-10 bg-black bg-opacity-40 p-3 text-sm rounded text-gray-300">
                       <div className="text-gray-200 italic">Dev mode</div>
                       <Link to="/">Home</Link>
                       <Link to="/builder">Builder</Link>
                       <Link to="/users">Users</Link>
+                    </div>
+
+                    <div className="fixed bottom-24 left-2 text-black">
+                      <div className="flex">
+                        {terria.nowViewing.items
+                          .filter(item => item.isShown)
+                          .map(item => (
+                            <Legend item={item} />
+                          ))}
+                      </div>
                     </div>
 
                     <Switch>

@@ -5,7 +5,6 @@
   composes: list-reset from "../../../Sass/common/_base.scss";
   font-family: $font-mono;
   font-size: $font-size-small;
-
   li {
     display: block;
   }
@@ -29,7 +28,7 @@
 
 .legend--svg {
   text {
-    fill: #fff;
+    fill: #000;
   }
   :global .tick-mark {
     stroke: #fff;
@@ -39,7 +38,7 @@
     display: block;
     :global rect.background {
       width: 100%;
-      fill: rgba(#fff, 0.15);
+      fill: rgba(#fff, 0.5);
     }
   }
 }
