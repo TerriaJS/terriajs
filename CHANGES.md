@@ -1,7 +1,11 @@
 Change Log
 ==========
 
-#### next release (8.2.4)
+#### next release (8.2.5)
+
+* [The next improvement]
+
+#### 8.2.4 - 2022-05-23
 
 * Update protomaps to `1.19.0` - now using offical version.
 * Fix Table/VectorStylingWorkflow for datasets with no columns/properties to visualise
@@ -40,7 +44,6 @@ Change Log
 * `TableStylingWorkflow` improvements
   * Better handling of swapping between different color scheme types (eg enum or bin)
   * Add point, outline and point-size traits
-* [The next improvement]
 
 #### 8.2.3 - 2022-04-22
 
