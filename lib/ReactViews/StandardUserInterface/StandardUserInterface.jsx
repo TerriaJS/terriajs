@@ -11,7 +11,7 @@ import arrayContains from "../../Core/arrayContains";
 import { RCChangeUrlParams } from "../../Models/Receipt";
 import { Medium, Small } from "../Generic/Responsive";
 import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
-import InternetExplorerOverlay from "../InternetExplorerOverlay/InternetExplorerOverlay.jsx";
+// import InternetExplorerOverlay from "../InternetExplorerOverlay/InternetExplorerOverlay.jsx";
 import ProgressBar from "../Map/ProgressBar.jsx";
 import RCBuilder from "../RCBuilder/RCBuilder";
 import RCLogin from "../RCLogin/RCLogin";
@@ -176,7 +176,7 @@ const StandardUserInterface = createReactClass({
 
     return (
       <div className={Styles.storyWrapper}>
-        <InternetExplorerOverlay viewState={this.props.viewState} />
+        {/*<InternetExplorerOverlay viewState={this.props.viewState} />*/}
         <WelcomeMessage viewState={viewState} />
         <div
           className={classNames(Styles.uiRoot, {
@@ -305,8 +305,8 @@ const StandardUserInterface = createReactClass({
                       <div className="flex">
                         {terria.nowViewing.items
                           .filter(item => item.isShown)
-                          .map(item => (
-                            <Legend item={item} />
+                          .map((item, i) => (
+                            <Legend item={item} key={i} />
                           ))}
                       </div>
                     </div>
