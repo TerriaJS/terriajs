@@ -9,11 +9,15 @@ Change Log
 * Add Mustache template support to `modelDimensions` for string properties in `option.value` (with the catalog member as context)
 * Added a check for disableExport in ChartPanelDownloadButton.jsx. Prevents download button rendering.
 * Fix `CatalogIndex` types
+* Moved code for retrieving a model by id, share key or CatalogIndex to a new function `terria.getModelByIdShareKeyOrCatalogIndex`.
+* Updated handling of `previewedItemId` to use new function `terria.getModelByIdShareKeyOrCatalogIndex`. This will now use CatalogIndex if the `previewedItemId` cannot be found in models or model share keys.
 * Fixed a race condition inside ModalPopup that caused the explorer panel (data catalogue) to be stuck hidden until refresh.
 * Fix bug that broke the `DiffTool` preventing it from opening. 
 * TSify `BottomDock` and `measureElement` components.
 * Fixed a bug in `GltfMixin` which resulted in some traits missing from `GltfCatalogItem` and broke tools like the scene editor.
+* Leaflet attribution can be set through `config.leafletAttributionPrefix`. Attribution HTML string to show on Leaflet maps. Will use Leaflet's default if undefined. To hide Leaflet attribution - set `leafletAttributionPrefix:""`
 * Re-add missing `helpPanel.mapUserGuide` translation string
+* Fix `sortMembersBy` for child `Groups` and `References`
 * Add `raiseError` convenience method to `TerriaError`
 * Improve `filterOutUndefined` types
 * Add [Maki icons](https://labs.mapbox.com/maki-icons/) - these can be used in `TablePointStyleTraits`. For example `marker = "hospital"`
