@@ -381,10 +381,31 @@ const RCStoryPanel = createReactClass({
                           onClick={() => this.navigateStory(i)}
                         >
                           <Icon
+                            style={{ fill: "currentColor" }}
+                            className={`opacity-40 hover:opacity-100 ${i ===
+                              this.props.viewState.currentStoryId &&
+                              "opacity-100"}
+                            ${
+                              story.section === "INTRODUCTION"
+                                ? "text-red-600"
+                                : story.section === "CONNECTION"
+                                ? "text-blue-600"
+                                : story.section === "CLIMATE_EVENT"
+                                ? "text-purple-600"
+                                : story.section === "LOCAL_IMPACT"
+                                ? "text-green-600"
+                                : story.section === "CONNECTION_IMPACT"
+                                ? "text-orange-600"
+                                : story.section === "EU_IMPACT"
+                                ? "text-amber-600"
+                                : story.section === "GLOBAL_IMPACT" &&
+                                  "text-lime-600"
+                            }
+                            `}
                             glyph={
                               i === this.props.viewState.currentStoryId
                                 ? Icon.GLYPHS.circleFull
-                                : Icon.GLYPHS.circleEmpty
+                                : Icon.GLYPHS.circleFull
                             }
                           />
                         </button>
