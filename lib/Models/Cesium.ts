@@ -50,6 +50,7 @@ import isDefined from "../Core/isDefined";
 import LatLonHeight from "../Core/LatLonHeight";
 import makeRealPromise from "../Core/makeRealPromise";
 import pollToPromise from "../Core/pollToPromise";
+import TerriaError from "../Core/TerriaError";
 import waitForDataSourceToLoad from "../Core/waitForDataSourceToLoad";
 import CesiumRenderLoopPauser from "../Map/Cesium/CesiumRenderLoopPauser";
 import CesiumSelectionIndicator from "../Map/Cesium/CesiumSelectionIndicator";
@@ -93,7 +94,6 @@ interface EventListenerRemover {
   requestUrl: string;
   removeFn: Event.RemoveCallback;
 }
-
 export default class Cesium extends GlobeOrMap {
   readonly type = "Cesium";
   readonly terria: Terria;
@@ -165,7 +165,9 @@ export default class Cesium extends GlobeOrMap {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=976173
     const firefoxBugOptions = (<any>FeatureDetection).isFirefox()
       ? {
-          contextOptions: { webgl: { preserveDrawingBuffer: true } }
+          contextOptions: {
+            webgl: { preserveDrawingBuffer: true }
+          }
         }
       : undefined;
 
@@ -613,9 +615,11 @@ export default class Cesium extends GlobeOrMap {
           isCesium3DTileset(prim) &&
           allCesium3DTilesets.indexOf(prim) === -1
         ) {
-          this._3dTilesetEventListeners[i].removeFn(); // Remove the loadProgress event listener
-          this._3dTilesetEventListeners.splice(i, 1); // Remove the reference to the remover function from our array
-          this._updateTilesLoadingCount(0); // TODO: This is a bit hacky, really we need to track the contibutions of all sources to the progress bar to do properly...
+          try {
+            this._3dTilesetEventListeners[i].removeFn(); // Remove the loadProgress event listener
+            this._3dTilesetEventListeners.splice(i, 1); // Remove the reference to the remover function from our array
+            this._updateTilesLoadingCount(0); // TODO: This is a bit hacky, really we need to track the contibutions of all sources to the progress bar to do properly...
+          } catch (e) {}
           this.scene.primitives.remove(prim);
         }
       }
