@@ -1,6 +1,7 @@
 import i18next from "i18next";
 import { autorun, computed, runInAction } from "mobx";
 import { computedFn } from "mobx-utils";
+import { Event } from "terriajs-cesium";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -88,6 +89,11 @@ var southeastCartographicScratch = new Cartographic();
 var northeastCartographicScratch = new Cartographic();
 var northwestCartographicScratch = new Cartographic();
 
+interface EventListenerRemover {
+  requestUrl: string;
+  removeFn: Event.RemoveCallback;
+}
+
 export default class Cesium extends GlobeOrMap {
   readonly type = "Cesium";
   readonly terria: Terria;
@@ -99,6 +105,7 @@ export default class Cesium extends GlobeOrMap {
   readonly pauser: CesiumRenderLoopPauser;
   readonly canShowSplitter = true;
   private readonly _eventHelper: EventHelper;
+  private _3dTilesetEventListeners: EventListenerRemover[] = []; // Array to hold references to event listeners so that we can remove them
   private _pauseMapInteractionCount = 0;
   private _lastZoomTarget:
     | CameraView
@@ -606,6 +613,9 @@ export default class Cesium extends GlobeOrMap {
           isCesium3DTileset(prim) &&
           allCesium3DTilesets.indexOf(prim) === -1
         ) {
+          this._3dTilesetEventListeners[i].removeFn(); // Remove the loadProgress event listener
+          this._3dTilesetEventListeners.splice(i, 1); // Remove the reference to the remover function from our array
+          this._updateTilesLoadingCount(0); // TODO: This is a bit hacky, really we need to track the contibutions of all sources to the progress bar to do properly...
           this.scene.primitives.remove(prim);
         }
       }
@@ -614,6 +624,23 @@ export default class Cesium extends GlobeOrMap {
       allCesium3DTilesets.forEach(tileset => {
         if (!primitives.contains(tileset)) {
           primitives.add(tileset);
+          // Add event listener for loadProgress to feed into progress bar on UI
+          const listener = tileset.loadProgress.addEventListener(
+            (
+              numberOfPendingRequests: number,
+              numberOfTilesProcessing: number
+            ) => {
+              // Push the pending requests and processing jobs to the progress bar
+              this._updateTilesLoadingCount(
+                numberOfPendingRequests + numberOfTilesProcessing
+              );
+            }
+          );
+          // Push listener remover function to an array to remove later
+          this._3dTilesetEventListeners.push({
+            requestUrl: tileset.resource.request.url,
+            removeFn: listener
+          });
         }
       });
 
