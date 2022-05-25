@@ -12,6 +12,10 @@ import Terria from "../Models/Terria";
 import ViewState from "../ReactViewModels/ViewState";
 import Styles from "./drag-drop-file.scss";
 import Result from "../Core/Result";
+import {
+  Category,
+  DataSourceAction
+} from "../Core/AnalyticEvents/analyticEvents";
 
 interface PropsType extends WithTranslation {
   terria: Terria;
@@ -27,6 +31,13 @@ class DragDropFile extends React.Component<PropsType> {
     e.stopPropagation();
 
     const props = this.props;
+
+    // Log event to analytics
+    this.props.terria.analytics?.logEvent(
+      Category.dataSource,
+      DataSourceAction.addFromDragAndDrop,
+      e.dataTransfer.files[0].name // Only report on the name of the first file dropped... TODO: is this the intended behaviour?
+    );
 
     try {
       const addedCatalogItems: BaseModel[] | undefined = await addUserFiles(
