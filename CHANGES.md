@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.2.5)
 
+* Fixed bug where `new Terria()` constructror would try to access `document` and throw an error when running in NodeJS.
 * [The next improvement]
 
 #### 8.2.4 - 2022-05-23
