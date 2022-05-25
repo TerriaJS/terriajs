@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import Styles from "./story-editor.scss";
 import { withTranslation } from "react-i18next";
+import tinymce from "tinymce";
 
 // Lazy load the Editor component as the tinyMCE library is large
 const Editor = React.lazy(() => import("../Generic/Editor.jsx"));
@@ -137,6 +138,7 @@ class StoryEditor extends React.Component {
 
   renderPopupEditor() {
     const { t } = this.props;
+    const maxHeight = "200px"; // TODO: where to put this to reduce coupling?
     return (
       <div
         onKeyDown={this.onKeyDown}
@@ -180,7 +182,11 @@ class StoryEditor extends React.Component {
               <Editor
                 html={this.state.text}
                 onChange={(newValue, editor) => {
-                  // this.setState({ newValue }); // Should be this but not working so must get text from editor object
+                  // TODO: This makes StoryEditor tightly coupled to Editor. How to reduce coupling?
+                  tinymce.activeEditor.dom.setStyles(
+                    tinymce.activeEditor.dom.select("img"),
+                    { "max-height": `${maxHeight}` }
+                  );
                   const text = editor.getBody().innerHTML;
                   this.setState({ text });
                 }}
