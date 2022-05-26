@@ -29,6 +29,12 @@ const ProgressBar = createReactClass({
       this.setProgress
     );
 
+    // Also listen for indeterminate data source loading events
+    this.eventHelper.add(
+      this.props.terria.indeterminateTileLoadProgressEvent,
+      this.setMode
+    );
+
     // TODO - is this actually needed now? load events always get called when
     // changing viewer. if still reuqired,
     // clear progress when new viewer observed, rather than mounting to a 'current viewer'
@@ -49,22 +55,41 @@ const ProgressBar = createReactClass({
     });
   },
 
+  setMode(loading) {
+    this.setState({ loading: loading });
+  },
+
   componentWillUnmount() {
     this.eventHelper.removeAll();
   },
 
+  /**
+   * Conditionally render two different progress bars superimposed,
+   * one for the base globe where the progress bar shows actual progress,
+   * and one for sources where load progress is indeterminate including 3DTilesets where the progress bar is animated.
+   */
   render() {
     const width = this.state.percentage + "%";
     const visibility = this.state.percentage < 100 ? "visible" : "hidden";
     const complete = this.state.percentage === 100;
+    const visIndeterminate = this.state.loading ? "visible" : "hidden";
 
     return (
-      <div
-        className={classNames(Styles.progressBar, {
-          [Styles.complete]: complete
-        })}
-        style={{ visibility, width }}
-      />
+      <>
+        <div
+          className={classNames(Styles.progressBarDeterminate, {
+            [Styles.complete]: complete
+          })}
+          style={{ visibility, width }}
+        />
+
+        <div
+          className={Styles.progressBarIndeterminate}
+          style={{ visibility: visIndeterminate }}
+        >
+          <div className={Styles.progressBarValue}></div>
+        </div>
+      </>
     );
   }
 });

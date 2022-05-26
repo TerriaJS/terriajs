@@ -92,7 +92,7 @@ var northwestCartographicScratch = new Cartographic();
 
 interface EventListenerRemover {
   requestUrl: string;
-  removeFn: Event.RemoveCallback;
+  removeFns: Event.RemoveCallback[];
 }
 export default class Cesium extends GlobeOrMap {
   readonly type = "Cesium";
@@ -105,7 +105,7 @@ export default class Cesium extends GlobeOrMap {
   readonly pauser: CesiumRenderLoopPauser;
   readonly canShowSplitter = true;
   private readonly _eventHelper: EventHelper;
-  private _3dTilesetEventListeners: EventListenerRemover[] = []; // Array to hold references to event listeners so that we can remove them
+  private _3dTilesetEventListeners: EventListenerRemover[] = []; // eventListener reference storage
   private _pauseMapInteractionCount = 0;
   private _lastZoomTarget:
     | CameraView
@@ -616,9 +616,13 @@ export default class Cesium extends GlobeOrMap {
           allCesium3DTilesets.indexOf(prim) === -1
         ) {
           try {
-            this._3dTilesetEventListeners[i].removeFn(); // Remove the loadProgress event listener
-            this._3dTilesetEventListeners.splice(i, 1); // Remove the reference to the remover function from our array
-            this._updateTilesLoadingCount(0); // TODO: This is a bit hacky, really we need to track the contibutions of all sources to the progress bar to do properly...
+            // Remove all event listeners from the tileset by running stored remover functions
+            const fnArray = this._3dTilesetEventListeners[i].removeFns;
+            for (let j = 0; j < fnArray.length; j++) {
+              fnArray[j](); // run the function
+            }
+            this._3dTilesetEventListeners.splice(i, 1); // Remove the item for this tileset from our eventListener reference storage array
+            this._updateTilesLoadingIndeterminate(false); // reset progress bar loading state to false. Any new tile loading event will restart it to account for multiple currently loading 3DTilesets.
           } catch (e) {}
           this.scene.primitives.remove(prim);
         }
@@ -628,22 +632,22 @@ export default class Cesium extends GlobeOrMap {
       allCesium3DTilesets.forEach(tileset => {
         if (!primitives.contains(tileset)) {
           primitives.add(tileset);
-          // Add event listener for loadProgress to feed into progress bar on UI
-          const listener = tileset.loadProgress.addEventListener(
-            (
-              numberOfPendingRequests: number,
-              numberOfTilesProcessing: number
-            ) => {
-              // Push the pending requests and processing jobs to the progress bar
-              this._updateTilesLoadingCount(
-                numberOfPendingRequests + numberOfTilesProcessing
-              );
+          // Add event listener for loading of new tiles for 3Dtileset datasources. These events are frequently emitted.
+          const startingListener = tileset.tileLoad.addEventListener(() => {
+            this._updateTilesLoadingIndeterminate(true);
+          });
+
+          //Add event listener for when tiles finished loading for current view. Infrequent.
+          const finishedListener = tileset.allTilesLoaded.addEventListener(
+            () => {
+              this._updateTilesLoadingIndeterminate(false);
             }
           );
-          // Push listener remover function to an array to remove later
+
+          // Push new item to eventListener reference storage
           this._3dTilesetEventListeners.push({
             requestUrl: tileset.resource.request.url,
-            removeFn: listener
+            removeFns: [startingListener, finishedListener]
           });
         }
       });
