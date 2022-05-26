@@ -34,8 +34,8 @@ describe("GpxCatalogItem", function() {
   it("can load a GPX file by URL", async () => {
     item.setTrait(CommonStrata.definition, "url", "test/gpx/example.gpx");
     await item.loadMapItems();
-    expect(item.mapItems.length).toEqual(1);
-    const mapItem = item.mapItems[0];
+    expect(item.mapItems.length).toEqual(2);
+    const mapItem = item.mapItems[1];
     expect(
       "imageryProvider" in mapItem &&
         mapItem.imageryProvider instanceof ProtomapsImageryProvider
@@ -49,9 +49,9 @@ describe("GpxCatalogItem", function() {
     item.setTrait(CommonStrata.definition, "gpxString", string);
     await item.loadMapItems();
 
-    expect(item.mapItems.length).toEqual(1);
+    expect(item.mapItems.length).toEqual(2);
 
-    const mapItem = item.mapItems[0];
+    const mapItem = item.mapItems[1];
     expect(
       "imageryProvider" in mapItem &&
         mapItem.imageryProvider instanceof ProtomapsImageryProvider

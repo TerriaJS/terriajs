@@ -1,5 +1,6 @@
 import { VectorTileFeature } from "@mapbox/vector-tile";
 import { action } from "mobx";
+import Color from "terriajs-cesium/Source/Core/Color";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
@@ -9,6 +10,7 @@ import isDefined from "../Core/isDefined";
 import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
 import getChartDetailsFn from "./getChartDetailsFn";
 import TableStyle from "./TableStyle";
+import { isConstantStyleMap } from "./TableStyleMap";
 
 export default function createRegionMappedImageryProvider(
   style: TableStyle,
@@ -24,13 +26,12 @@ export default function createRegionMappedImageryProvider(
     return undefined;
   }
 
-  const baseMapContrastColor = style.tableModel.terria.baseMapContrastColor;
-
   const colorColumn = style.colorColumn;
   const valueFunction =
     colorColumn !== undefined ? colorColumn.valueFunctionForType : () => null;
   const colorMap = style.colorMap;
   const valuesAsRegions = regionColumn.valuesAsRegions;
+  const outlineStyleMap = style.outlineStyleMap.styleMap;
 
   let currentTimeRows: number[] | undefined;
 
@@ -67,10 +68,19 @@ export default function createRegionMappedImageryProvider(
         return undefined;
       }
 
+      const outlineStyle = isConstantStyleMap(outlineStyleMap)
+        ? outlineStyleMap.style
+        : outlineStyleMap.mapValueToStyle(rowNumber ?? -1);
+
+      const outlineColorValue = Color.fromCssColorString(
+        outlineStyle.color ?? style.tableModel.terria.baseMapContrastColor
+      );
+
       return {
         fillStyle: color.toCssColorString(),
-        strokeStyle: value !== null ? baseMapContrastColor : "transparent",
-        lineWidth: 1,
+        strokeStyle:
+          value !== null ? outlineColorValue.toCssColorString() : "transparent",
+        lineWidth: outlineStyle.width ?? 1,
         lineJoin: "miter"
       };
     },

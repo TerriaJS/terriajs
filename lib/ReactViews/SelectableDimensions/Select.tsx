@@ -2,6 +2,7 @@ import i18next from "i18next";
 import { runInAction } from "mobx";
 import React from "react";
 import ReactSelect from "react-select";
+import ReactSelectCreatable from "react-select/creatable";
 import { useTheme } from "styled-components";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import { SelectableDimensionEnum as SelectableDimensionEnumModel } from "../../Models/SelectableDimensions/SelectableDimensions";
@@ -34,7 +35,32 @@ export const SelectableDimensionEnum: React.FC<{
     options = [undefinedOption, ...options];
   }
 
-  return (
+  return dim.allowCustomInput ? (
+    <ReactSelectCreatable
+      css={`
+        color: ${theme.dark};
+      `}
+      options={options}
+      value={selectedOption}
+      onChange={evt => {
+        runInAction(() =>
+          dim.setDimensionValue(CommonStrata.user, evt?.value ?? "")
+        );
+      }}
+      isClearable={dim.allowUndefined}
+      formatOptionLabel={dim.optionRenderer}
+      theme={selectTheme => ({
+        ...selectTheme,
+        colors: {
+          ...selectTheme.colors,
+          primary25: theme.greyLighter,
+          primary50: theme.colorPrimary,
+          primary75: theme.colorPrimary,
+          primary: theme.colorPrimary
+        }
+      })}
+    />
+  ) : (
     <ReactSelect
       css={`
         color: ${theme.dark};
@@ -47,7 +73,6 @@ export const SelectableDimensionEnum: React.FC<{
         );
       }}
       isClearable={dim.allowUndefined}
-      isSearchable={!dim.optionRenderer}
       formatOptionLabel={dim.optionRenderer}
       theme={selectTheme => ({
         ...selectTheme,
