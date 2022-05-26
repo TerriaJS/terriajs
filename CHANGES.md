@@ -45,6 +45,8 @@ Change Log
 * `TableStylingWorkflow` improvements
   * Better handling of swapping between different color scheme types (eg enum or bin)
   * Add point, outline and point-size traits
+* ProgressBar colour now depends on baseMapContrastColor - improves visibility on light map backgrounds
+* [The next improvement]
 
 #### 8.2.3 - 2022-04-22
 
