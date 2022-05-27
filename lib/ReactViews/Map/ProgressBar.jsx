@@ -71,15 +71,15 @@ const ProgressBar = observer(
     },
 
     /**
-     * Conditionally render two different progress bars superimposed,
-     * one for the base globe where the progress bar shows actual progress,
-     * and one for sources where load progress is indeterminate including 3DTilesets where the progress bar is animated.
+     * Progress bar is influced by two loading states:
+     * The base globe where the progress bar shows actual progress,
+     * Sources where load progress is indeterminate including 3DTilesets where the progress bar is animated.
      */
     render() {
-      const width = this.state.percentage + "%";
-      const visibility = this.state.percentage < 100 ? "visible" : "hidden";
-      const complete = this.state.percentage === 100;
-      const visIndeterminate = this.state.loading ? "visible" : "hidden";
+      const determinateProgress = this.state.percentage + "%";
+      const indeterminateStillLoading = this.state.loading;
+      const allComplete = this.state.percentage === 100 && !this.state.loading;
+
       // use the baseMapContrastColor to ensure progress bar is visible on light backgrounds. If contrast color is white, use it. If its black, use the primary color of the current theme.
       const backgroundColor =
         this.props.terria.baseMapContrastColor === "#ffffff"
@@ -87,24 +87,16 @@ const ProgressBar = observer(
           : this.props.theme.colorPrimary;
 
       return (
-        <>
-          <div
-            className={classNames(Styles.progressBarDeterminate, {
-              [Styles.complete]: complete
-            })}
-            style={{ visibility, width, backgroundColor }}
-          />
-
-          <div
-            className={Styles.progressBarIndeterminate}
-            style={{ visibility: visIndeterminate }}
-          >
-            <div
-              className={Styles.progressBarValue}
-              style={{ backgroundColor }}
-            ></div>
-          </div>
-        </>
+        <div
+          className={classNames(Styles.progressBar, {
+            [Styles.complete]: allComplete,
+            [Styles.indeterminateBarAnimated]: indeterminateStillLoading
+          })}
+          style={{
+            width: indeterminateStillLoading ? "100%" : determinateProgress,
+            backgroundColor
+          }}
+        />
       );
     }
   })

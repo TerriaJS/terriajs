@@ -2,13 +2,11 @@
 // Please do not change this file!
 interface CssExports {
   'complete': string;
+  'indeterminate-bar-animated': string;
   'indeterminateAnimation': string;
-  'progress-bar-determinate': string;
-  'progress-bar-indeterminate': string;
-  'progress-bar-value': string;
-  'progressBarDeterminate': string;
-  'progressBarIndeterminate': string;
-  'progressBarValue': string;
+  'indeterminateBarAnimated': string;
+  'progress-bar': string;
+  'progressBar': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;
