@@ -3,7 +3,6 @@
   position: absolute;
   top: 0;
   left: 0;
-  // background: rgba(255, 255, 255, 0.8);
   height: 5px;
   overflow: hidden;
   transition: opacity 200ms linear, width 200ms linear, visibility 400ms linear;
@@ -15,7 +14,6 @@
 
 .indeterminate-bar-animated {
   width: 100%;
-  // background-color: white;
   animation: indeterminateAnimation 1.2s infinite linear;
   transform-origin: 0% 50%;
 }
