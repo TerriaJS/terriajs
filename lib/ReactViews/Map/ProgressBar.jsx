@@ -8,13 +8,15 @@ import classNames from "classnames";
 import { observer } from "mobx-react";
 
 import Styles from "./progress-bar.scss";
+import { withTheme } from "styled-components";
 
 // The map navigation region
 const ProgressBar = observer(
   createReactClass({
     displayName: "ProgressBar",
     propTypes: {
-      terria: PropTypes.object.isRequired
+      terria: PropTypes.object.isRequired,
+      theme: PropTypes.object.isRequired
     },
 
     getInitialState() {
@@ -78,9 +80,11 @@ const ProgressBar = observer(
       const visibility = this.state.percentage < 100 ? "visible" : "hidden";
       const complete = this.state.percentage === 100;
       const visIndeterminate = this.state.loading ? "visible" : "hidden";
-      // use the baseMapContrastColor to ensure progress bar is visible on light backgrounds
+      // use the baseMapContrastColor to ensure progress bar is visible on light backgrounds. If contrast color is white, use it. If its black, use the primary color of the current theme.
       const backgroundColor =
-        this.props.terria.baseMapContrastColor ?? "#ffffff";
+        this.props.terria.baseMapContrastColor === "#ffffff"
+          ? "#ffffff"
+          : this.props.theme.colorPrimary;
 
       return (
         <>
@@ -105,4 +109,4 @@ const ProgressBar = observer(
     }
   })
 );
-module.exports = ProgressBar;
+module.exports = withTheme(ProgressBar);
