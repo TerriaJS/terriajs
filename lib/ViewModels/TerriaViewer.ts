@@ -157,12 +157,18 @@ export default class TerriaViewer {
         newViewer = untracked(() => new NoViewer(this));
       }
     } catch (error) {
-      setTimeout(() => {
-        this.terria.raiseErrorToUser(error);
-      }, 0);
+      // Switch viewerMode inside computed. Could change viewers to
+      //  guarantee no throw in constructor and instead have a `start()`
+      //  method that can throw. Then call that `start()` method inside
+      //  a reaction (reaction would also deal with viewer fallback).
+      // Using this approach might remove the need for `untracked`
       setTimeout(
         action(() => {
-          this.viewerMode = ViewerMode.Leaflet;
+          this.terria.raiseErrorToUser(error);
+          this.viewerMode =
+            this.viewerMode === ViewerMode.Cesium
+              ? ViewerMode.Leaflet
+              : undefined;
         }),
         0
       );
