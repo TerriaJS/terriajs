@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.2.5)
 
+* Fixed bug that broke Cesium when WebGL was not available. Reverts to Leaflet.
 * [The next improvement]
 
 #### 8.2.4 - 2022-05-23
