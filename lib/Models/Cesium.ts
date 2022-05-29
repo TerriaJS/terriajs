@@ -170,7 +170,6 @@ export default class Cesium extends GlobeOrMap {
       );
       this.scene = this.cesiumWidget.scene;
     } catch (error) {
-      //console.log("Chasing error: ", error);
       throw TerriaError.from(error, {
         message: {
           key: "terriaViewer.slowWebGLAvailableMessageII",
