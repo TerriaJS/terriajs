@@ -10,7 +10,7 @@ import {
   LineSymbolizer,
   PolygonSymbolizer,
   Rule as PaintRule
-} from "terriajs-protomaps";
+} from "protomaps";
 import isDefined from "../../../Core/isDefined";
 import { JsonObject } from "../../../Core/Json";
 import loadJson from "../../../Core/loadJson";

@@ -21,6 +21,7 @@ export interface EnumDimension<T = string> extends Dimension {
   readonly options?: readonly EnumDimensionOption<T>[];
   readonly selectedId?: T;
   readonly allowUndefined?: boolean;
+  readonly allowCustomInput?: boolean;
   readonly undefinedLabel?: string;
 }
 
@@ -150,6 +151,11 @@ export interface SelectableDimensionGroup
     SelectableDimensionGroup
   >[];
 }
+
+export type FlatSelectableDimension = Exclude<
+  SelectableDimension,
+  SelectableDimensionGroup
+>;
 
 export type SelectableDimension =
   | SelectableDimensionEnum
