@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.2.5)
 
+* Fixed bug that broke Cesium when WebGL was not available. Reverts to Leaflet.
 * [The next improvement]
 
 #### 8.2.4 - 2022-05-23
@@ -18,8 +19,6 @@ Change Log
 * Fixed a race condition inside ModalPopup that caused the explorer panel (data catalogue) to be stuck hidden until refresh.
 * Fix bug that broke the `DiffTool` preventing it from opening. 
 * TSify `BottomDock` and `measureElement` components.
-* Fixed bug that broke Cesium when WebGL was not available. Reverts to Leaflet. 
-* [The next improvement]
 * Fixed a bug in `GltfMixin` which resulted in some traits missing from `GltfCatalogItem` and broke tools like the scene editor.
 * Leaflet attribution can be set through `config.leafletAttributionPrefix`. Attribution HTML string to show on Leaflet maps. Will use Leaflet's default if undefined. To hide Leaflet attribution - set `leafletAttributionPrefix:""`
 * Re-add missing `helpPanel.mapUserGuide` translation string
