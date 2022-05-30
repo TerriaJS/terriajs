@@ -1,5 +1,5 @@
 import { VectorTileFeature } from "@mapbox/vector-tile";
-import { action } from "mobx";
+import { action, runInAction } from "mobx";
 import Color from "terriajs-cesium/Source/Core/Color";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
@@ -73,7 +73,8 @@ export default function createRegionMappedImageryProvider(
         : outlineStyleMap.mapValueToStyle(rowNumber ?? -1);
 
       const outlineColorValue = Color.fromCssColorString(
-        outlineStyle.color ?? style.tableModel.terria.baseMapContrastColor
+        outlineStyle.color ??
+          runInAction(() => style.tableModel.terria.baseMapContrastColor)
       );
 
       return {

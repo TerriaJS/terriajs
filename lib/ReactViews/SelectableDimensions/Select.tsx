@@ -1,5 +1,6 @@
 import i18next from "i18next";
 import { runInAction } from "mobx";
+import { observer } from "mobx-react";
 import React from "react";
 import ReactSelect from "react-select";
 import ReactSelectCreatable from "react-select/creatable";
@@ -10,7 +11,7 @@ import { SelectableDimensionEnum as SelectableDimensionEnumModel } from "../../M
 export const SelectableDimensionEnum: React.FC<{
   id: string;
   dim: SelectableDimensionEnumModel;
-}> = ({ id, dim }) => {
+}> = observer(({ id, dim }) => {
   const theme = useTheme();
 
   const undefinedOption = {
@@ -86,4 +87,4 @@ export const SelectableDimensionEnum: React.FC<{
       })}
     />
   );
-};
+});
