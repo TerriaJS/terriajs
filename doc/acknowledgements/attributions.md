@@ -1876,7 +1876,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: @types/arcgis-rest-api, @types/cacheable-request, @types/d3-array, @types/d3-axis, @types/d3-color, @types/d3-interpolate, @types/d3-path, @types/d3-scale, @types/d3-scale-chromatic, @types/d3-selection, @types/d3-shape, @types/d3-time, @types/d3-transition, @types/dompurify, @types/flexsearch, @types/geojson, @types/glob, @types/http-cache-semantics, @types/jasmine, @types/jasmine-ajax, @types/json-schema, @types/keyv, @types/leaflet, @types/lodash, @types/lodash-es, @types/math-expression-evaluator, @types/minimatch, @types/minimist, @types/node, @types/node-fetch, @types/normalize-package-data, @types/prop-types, @types/puppeteer, @types/puppeteer-core, @types/react, @types/react-dom, @types/react-select, @types/react-test-renderer, @types/react-transition-group, @types/retry, @types/scheduler, @types/shpjs, @types/styled-components, @types/trusted-types, @types/yauzl. A copy of the source code may be downloaded from https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/arcgis-rest-api), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/cacheable-request), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-array), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-axis), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-color), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-interpolate), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-path), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-scale), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-scale-chromatic), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-selection), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-shape), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-time), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-transition), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/dompurify), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/flexsearch), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/geojson), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/glob), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/http-cache-semantics), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/jasmine), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/jasmine-ajax), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/json-schema), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/keyv), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/leaflet), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/lodash), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/lodash-es), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/math-expression-evaluator), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/minimatch), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/minimist), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/node), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/node-fetch), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/normalize-package-data), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/prop-types), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/puppeteer), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/puppeteer-core), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react-dom), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react-select), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react-test-renderer), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react-transition-group), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/retry), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/scheduler), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/shpjs), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/styled-components), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/trusted-types), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/yauzl). This software contains the following license and notice below:
+The following software may be included in this product: @types/arcgis-rest-api, @types/cacheable-request, @types/css-font-loading-module, @types/d3-array, @types/d3-axis, @types/d3-color, @types/d3-interpolate, @types/d3-path, @types/d3-scale, @types/d3-scale-chromatic, @types/d3-selection, @types/d3-shape, @types/d3-time, @types/d3-transition, @types/dompurify, @types/flexsearch, @types/geojson, @types/glob, @types/http-cache-semantics, @types/jasmine, @types/jasmine-ajax, @types/json-schema, @types/keyv, @types/leaflet, @types/lodash, @types/lodash-es, @types/math-expression-evaluator, @types/minimatch, @types/minimist, @types/node, @types/node-fetch, @types/normalize-package-data, @types/prop-types, @types/puppeteer, @types/puppeteer-core, @types/react, @types/react-color, @types/react-dom, @types/react-select, @types/react-test-renderer, @types/react-transition-group, @types/reactcss, @types/retry, @types/scheduler, @types/shpjs, @types/styled-components, @types/trusted-types, @types/yauzl. A copy of the source code may be downloaded from https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/arcgis-rest-api), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/cacheable-request), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/css-font-loading-module), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-array), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-axis), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-color), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-interpolate), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-path), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-scale), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-scale-chromatic), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-selection), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-shape), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-time), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-transition), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/dompurify), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/flexsearch), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/geojson), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/glob), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/http-cache-semantics), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/jasmine), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/jasmine-ajax), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/json-schema), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/keyv), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/leaflet), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/lodash), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/lodash-es), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/math-expression-evaluator), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/minimatch), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/minimist), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/node), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/node-fetch), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/normalize-package-data), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/prop-types), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/puppeteer), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/puppeteer-core), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react-color), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react-dom), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react-select), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react-test-renderer), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react-transition-group), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/reactcss), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/retry), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/scheduler), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/shpjs), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/styled-components), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/trusted-types), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/yauzl). This software contains the following license and notice below:
 
 MIT License
 
@@ -8505,6 +8505,24 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-----
+
+The following software may be included in this product: d3-color. A copy of the source code may be downloaded from https://github.com/d3/d3-color.git. This software contains the following license and notice below:
+
+Copyright 2010-2022 Mike Bostock
+
+Permission to use, copy, modify, and/or distribute this software for any purpose
+with or without fee is hereby granted, provided that the above copyright notice
+and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+THIS SOFTWARE.
 
 -----
 
@@ -16649,29 +16667,32 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 The following software may be included in this product: leaflet. A copy of the source code may be downloaded from git://github.com/Leaflet/Leaflet.git. This software contains the following license and notice below:
 
-Copyright (c) 2010-2019, Vladimir Agafonkin
+BSD 2-Clause License
+
+Copyright (c) 2010-2022, Vladimir Agafonkin
 Copyright (c) 2010-2011, CloudMade
 All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification, are
-permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
-   1. Redistributions of source code must retain the above copyright notice, this list of
-      conditions and the following disclaimer.
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
 
-   2. Redistributions in binary form must reproduce the above copyright notice, this list
-      of conditions and the following disclaimer in the documentation and/or other materials
-      provided with the distribution.
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -----
 
@@ -17538,6 +17559,18 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+-----
+
+The following software may be included in this product: material-colors. A copy of the source code may be downloaded from https://github.com/shuhei/material-colors.git. This software contains the following license and notice below:
+
+ISC License
+
+Copyright 2014 Shuhei Kagawa
+
+Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----
 
@@ -20588,6 +20621,26 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
+The following software may be included in this product: potpack. A copy of the source code may be downloaded from git+https://github.com/mapbox/potpack.git. This software contains the following license and notice below:
+
+ISC License
+
+Copyright (c) 2018, Mapbox
+
+Permission to use, copy, modify, and/or distribute this software for any purpose
+with or without fee is hereby granted, provided that the above copyright notice
+and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+THIS SOFTWARE.
+
+-----
+
 The following software may be included in this product: prettier. A copy of the source code may be downloaded from https://github.com/prettier/prettier.git. This software contains the following license and notice below:
 
 Copyright © James Long and contributors
@@ -20805,7 +20858,7 @@ THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: protosprites, terriajs-protomaps. A copy of the source code may be downloaded from git+https://github.com/protomaps/protosprites.git (protosprites), git://github.com/nf-s/protomaps.js.git (terriajs-protomaps). This software contains the following license and notice below:
+The following software may be included in this product: protomaps. A copy of the source code may be downloaded from git://github.com/protomaps/protomaps.js.git. This software contains the following license and notice below:
 
 Copyright 2021 Protomaps LLC
 
@@ -21513,6 +21566,32 @@ The following software may be included in this product: react-anything-sortable.
 The MIT License (MIT)
 
 Copyright (c) 2014 Sen Yang
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+-----
+
+The following software may be included in this product: react-color, reactcss. A copy of the source code may be downloaded from git+https://github.com/casesandberg/react-color.git (react-color), https://github.com/casesandberg/reactcss (reactcss). This software contains the following license and notice below:
+
+The MIT License (MIT)
+
+Copyright (c) 2015 Case Sandberg
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25934,6 +26013,31 @@ SOFTWARE.
 
 -----
 
+The following software may be included in this product: tinycolor2. A copy of the source code may be downloaded from https://github.com/bgrins/TinyColor.git. This software contains the following license and notice below:
+
+Copyright (c), Brian Grinstead, http://briangrinstead.com
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+-----
+
 The following software may be included in this product: tinyqueue. A copy of the source code may be downloaded from https://github.com/mourner/tinyqueue.git. This software contains the following license and notice below:
 
 ISC License
@@ -26179,6 +26283,32 @@ This project is free software released under the MIT/X11 license:
 http://www.opensource.org/licenses/mit-license.php 
 
 Copyright 2010 James Halliday (mail@substack.net)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+-----
+
+The following software may be included in this product: ts-essentials. A copy of the source code may be downloaded from git@github.com:krzkaczor/ts-essentials.git. This software contains the following license and notice below:
+
+The MIT License
+
+Copyright (c) 2018-2019 Chris Kaczor (github.com/krzkaczor)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
