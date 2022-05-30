@@ -7,6 +7,8 @@ Change Log
 * Fixed bug where `new Terria()` constructror would try to access `document` and throw an error when running in NodeJS.
 * Add WPS support for `Date` (additional to existing `DateTime`) and support for `ComplexData` `Date`/`DateTime` WPS Inputs.
 * TSXified `StandardUserInterface` and some other components. If your TerriaMap imports `StandardUserInterface.jsx` remove the `.jsx` extension so webpack can find the new `.tsx` file.
+* Added progress of 3DTiles data source loading to Progress Bar.
+* ProgressBar colour now depends on baseMapContrastColor - improves visibility on light map backgrounds.
 * [The next improvement]
 
 #### 8.2.4 - 2022-05-23
@@ -26,7 +28,6 @@ Change Log
 * Leaflet attribution can be set through `config.leafletAttributionPrefix`. Attribution HTML string to show on Leaflet maps. Will use Leaflet's default if undefined. To hide Leaflet attribution - set `leafletAttributionPrefix:""`
 * Re-add missing `helpPanel.mapUserGuide` translation string
 * Fix `sortMembersBy` for child `Groups` and `References`
-* Add progress of 3DTiles data source loading to Progress Bar
 * Add `raiseError` convenience method to `TerriaError`
 * Improve `filterOutUndefined` types
 * Add [Maki icons](https://labs.mapbox.com/maki-icons/) - these can be used in `TablePointStyleTraits`. For example `marker = "hospital"`
@@ -49,8 +50,6 @@ Change Log
 * `TableStylingWorkflow` improvements
   * Better handling of swapping between different color scheme types (eg enum or bin)
   * Add point, outline and point-size traits
-* ProgressBar colour now depends on baseMapContrastColor - improves visibility on light map backgrounds
-* [The next improvement]
 
 #### 8.2.3 - 2022-04-22
 
