@@ -3,6 +3,10 @@ Change Log
 
 #### next release (8.2.5)
 
+* Fixed bug that broke Cesium when WebGL was not available. Reverts to Leaflet.
+* Fixed bug where `new Terria()` constructror would try to access `document` and throw an error when running in NodeJS.
+* Add WPS support for `Date` (additional to existing `DateTime`) and support for `ComplexData` `Date`/`DateTime` WPS Inputs.
+* TSXified `StandardUserInterface` and some other components. If your TerriaMap imports `StandardUserInterface.jsx` remove the `.jsx` extension so webpack can find the new `.tsx` file.
 * [The next improvement]
 
 #### 8.2.4 - 2022-05-23

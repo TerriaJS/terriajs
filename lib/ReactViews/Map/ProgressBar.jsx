@@ -101,4 +101,5 @@ const ProgressBar = observer(
     }
   })
 );
-module.exports = withTheme(ProgressBar);
+
+export default withTheme(ProgressBar);
