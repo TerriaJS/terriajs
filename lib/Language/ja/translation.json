@@ -658,8 +658,8 @@
       "log": "Google Analytics によるトラッキングは無効になっています。 terria.configParameters.googleAnalyticsKey が設定されていません"
     },
     "consoleAnalytics": {
-      "logStartedWithGAParameters": "ConsoleAnalyticsを開始しましたが `googleAnalyticsKey` または`googleAnalyticsOptions` キーが `userParameters`で観察されます",
-      "startedNoLogToConsole": "ConsoleAnalyticsを開始しましたが `userParameters.logToConsole` が定義されていないか、falseに設定されています。",
+      "logStartedWithGAParameters": "ConsoleAnalyticsを開始しましたが `googleAnalyticsKey` または`googleAnalyticsOptions` キーが `configParameters`で観察されます",
+      "startedNoLogToConsole": "ConsoleAnalyticsを開始しましたが `configParameters.logToConsole` が定義されていないか、falseに設定されています。",
       "started": "ConsoleAnalyticsを開始しました。"
     },
     "errors": {

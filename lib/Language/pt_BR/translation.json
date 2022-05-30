@@ -676,9 +676,9 @@
       "printMediaEnd": "fim da mídia impressa"
     },
     "consoleAnalytics": {
-      "logStartedWithGAParameters": "ConsoleAnalytics foi iniciado, mas uma chave `googleAnalyticsKey` ou` googleAnalyticsOptions` foi observada em `userParameters`",
+      "logStartedWithGAParameters": "ConsoleAnalytics foi iniciado, mas uma chave `googleAnalyticsKey` ou` googleAnalyticsOptions` foi observada em `configParameters`",
       "started": "O ConsoleAnalytics foi iniciado.",
-      "startedNoLogToConsole": "O ConsoleAnalytics foi iniciado, porém `userParameters.logToConsole` não foi definido ou configurado como falso."
+      "startedNoLogToConsole": "O ConsoleAnalytics foi iniciado, porém `configParameters.logToConsole` não foi definido ou configurado como falso."
     },
     "dataUri": {
       "errorMessage": "Infelizmente, os navegadores da Microsoft (incluindo todas as versões do Internet Explorer e Edge) não oferecem suporte à funcionalidade de uri de dados necessária para baixar dados como um arquivo. Para fazer o download, copie o seguinte uri em outro navegador, como Chrome, Firefox ou Safari: {{href}}",

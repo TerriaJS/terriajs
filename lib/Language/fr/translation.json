@@ -1200,8 +1200,8 @@
       "log": "Le suivi de Google Analytics est désactivé car terria.configParameters.googleAnalyticsKey n'est pas spécifié"
     },
     "consoleAnalytics": {
-      "logStartedWithGAParameters": "ConsoleAnalytics a été démarré mais une clé `googleAnalyticsKey` ou `googleAnalyticsOptions` a été observée sur `userParameters`",
-      "startedNoLogToConsole": "ConsoleAnalytics a été démarré, mais `userParameters.logToConsole` n'a pas été défini ou défini sur false.",
+      "logStartedWithGAParameters": "ConsoleAnalytics a été démarré mais une clé `googleAnalyticsKey` ou `googleAnalyticsOptions` a été observée sur `configParameters`",
+      "startedNoLogToConsole": "ConsoleAnalytics a été démarré, mais `configParameters.logToConsole` n'a pas été défini ou défini sur false.",
       "started": "ConsoleAnalytics a été démarré."
     },
     "printWindow": {

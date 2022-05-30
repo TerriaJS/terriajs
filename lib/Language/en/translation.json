@@ -721,8 +721,8 @@
     },
     "consoleAnalytics": {
       "started": "ConsoleAnalytics was started.",
-      "startedNoLogToConsole": "ConsoleAnalytics was started, however `userParameters.logToConsole` was not defined or set to false.",
-      "logStartedWithGAParameters": "ConsoleAnalytics was started but a `googleAnalyticsKey` or `googleAnalyticsOptions` key was observed on `userParameters`"
+      "startedNoLogToConsole": "ConsoleAnalytics was started, however `configParameters.logToConsole` was not defined or set to false.",
+      "logStartedWithGAParameters": "ConsoleAnalytics was started but a `googleAnalyticsKey` or `googleAnalyticsOptions` key was observed on `configParameters`"
     },
     "googleAnalytics": {
       "log": "Google Analytics tracking is disabled because terria.configParameters.googleAnalyticsKey is not specified",

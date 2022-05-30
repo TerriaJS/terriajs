@@ -700,8 +700,8 @@
     },
     "consoleAnalytics": {
       "started": "Ha engegat ConsoleAnalytics.",
-      "startedNoLogToConsole": "S'ha iniciat ConsoleAnalytics, però `userParameters.logToConsole` no s'ha definit ni s'ha establert com a fals.",
-      "logStartedWithGAParameters": "ConsoleAnalytics va engegar, però hi ha una clau \"googleAnalyticsKey\" o \"googleAnalyticsOptions\" a \"userParameters\""
+      "startedNoLogToConsole": "S'ha iniciat ConsoleAnalytics, però `configParameters.logToConsole` no s'ha definit ni s'ha establert com a fals.",
+      "logStartedWithGAParameters": "ConsoleAnalytics va engegar, però hi ha una clau \"googleAnalyticsKey\" o \"googleAnalyticsOptions\" a \"configParameters\""
     },
     "googleAnalytics": {
       "log": "El seguiment de Google Analytics està desactivat perquè no s'ha especificat terria.configParameters.googleAnalyticsKey",

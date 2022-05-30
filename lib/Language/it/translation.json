@@ -1026,8 +1026,8 @@
     },
     "consoleAnalytics": {
       "started": "ConsoleAnalytics è stato avviato.",
-      "logStartedWithGAParameters": "ConsoleAnalytics è stato avviato ma una chiave `googleAnalyticsKey` o `googleAnalyticsOptions` è stata osservata su `userParameters`",
-      "startedNoLogToConsole": "ConsoleAnalytics è stato avviato, tuttavia `userParameters.logToConsole` non era definito o impostato su false."
+      "logStartedWithGAParameters": "ConsoleAnalytics è stato avviato ma una chiave `googleAnalyticsKey` o `googleAnalyticsOptions` è stata osservata su `configParameters`",
+      "startedNoLogToConsole": "ConsoleAnalytics è stato avviato, tuttavia `configParameters.logToConsole` non era definito o impostato su false."
     },
     "dataUri": {
       "errorMessage": "Sfortunatamente i browser Microsoft (comprese tutte le versioni di Internet Explorer e Edge) non supportano la funzionalità uri dei dati necessaria per scaricare i dati come file. Per scaricare, copia il seguente uri in un altro browser come Chrome, Firefox o Safari: {{href}}",
