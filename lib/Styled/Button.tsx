@@ -161,7 +161,7 @@ export const RawButton = styled.button<IButtonProps>`
   ${props => (props.textLight ? `color: ${props.theme.textLight}` : ``)}
 `;
 
-interface ButtonProps extends IStyledButtonProps {
+type ButtonProps = {
   renderIcon?: () => React.ReactChild;
   iconProps?: any;
   rightIcon?: boolean;
@@ -169,14 +169,10 @@ interface ButtonProps extends IStyledButtonProps {
   children?: React.ReactChildren;
   buttonRef?: React.Ref<HTMLButtonElement>;
   title?: string;
-  onClick?: (e: any) => void;
-}
+} & React.ComponentPropsWithoutRef<typeof StyledButton>;
 
 // Icon and props-children-mandatory-text-wrapping is a mess here so it's all very WIP
-export const Button = (
-  props: ButtonProps,
-  ref: React.Ref<HTMLButtonElement>
-) => {
+export const Button: React.FC<ButtonProps> = props => {
   const {
     primary,
     secondary,
@@ -226,9 +222,6 @@ export const Button = (
   );
 };
 
-const ButtonWithRef = (
-  props: ButtonProps,
-  ref: React.Ref<HTMLButtonElement>
-) => <Button {...props} buttonRef={ref} />;
-
-export default React.forwardRef(ButtonWithRef);
+export default React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (props, ref) => <Button {...props} buttonRef={ref} />
+);

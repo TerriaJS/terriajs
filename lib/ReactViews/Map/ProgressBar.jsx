@@ -68,4 +68,4 @@ const ProgressBar = createReactClass({
     );
   }
 });
-module.exports = ProgressBar;
+export default ProgressBar;
