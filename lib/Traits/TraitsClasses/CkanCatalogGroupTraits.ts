@@ -54,4 +54,11 @@ export default class CkanCatalogGroupTraits extends mixTraits(
       If the value is a blank string or undefined, these items will be left at the top level, not grouped.`
   })
   ungroupedTitle: string = "No group";
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Allow entire WMS Servers",
+    description: `True to allow entire WMS servers (that is, WMS resources without a clearly-defined layer) to be added to the catalog; otherwise, false.`
+  })
+  allowEntireWmsServers: boolean = true;
 }

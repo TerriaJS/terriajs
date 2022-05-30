@@ -25,17 +25,17 @@ import SelectableDimensions, {
   SelectableDimensionEnum,
   SelectableDimensionGroup
 } from "../Models/SelectableDimensions/SelectableDimensions";
-import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
 import ViewingControls, { ViewingControl } from "../Models/ViewingControls";
 import * as SelectableDimensionWorkflow from "../Models/Workflows/SelectableDimensionWorkflow";
+import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
 import Icon from "../Styled/Icon";
 import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
 import createRegionMappedImageryProvider from "../Table/createRegionMappedImageryProvider";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
+import { TableAutomaticLegendStratum } from "../Table/TableLegendStratum";
 import TableStyle from "../Table/TableStyle";
-import LegendTraits from "../Traits/TraitsClasses/LegendTraits";
 import TableTraits from "../Traits/TraitsClasses/TableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import ChartableMixin, {
@@ -65,6 +65,16 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       super(...args);
 
       this.defaultTableStyle = new TableStyle(this);
+      if (
+        this.strata.get(TableAutomaticLegendStratum.stratumName) === undefined
+      ) {
+        runInAction(() => {
+          this.strata.set(
+            TableAutomaticLegendStratum.stratumName,
+            TableAutomaticLegendStratum.load(this)
+          );
+        });
+      }
     }
 
     get hasTableMixin() {
@@ -146,9 +156,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      * Gets the {@link TableStyleTraits#id} of the currently-active style.
      * Note that this is a trait so there is no guarantee that a style
      * with this ID actually exists. If no active style is explicitly
-     * specified, the ID of the first style with a scalar color column is used.
-     * If there is no such style the id of the first style of the {@link #styles}
-     * is used.
+     * specified, return first style with a scalar color column (if none is found then find first style with enum, text and then region)
+     *
      */
     @computed
     get activeStyle(): string | undefined {
@@ -156,16 +165,29 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       if (value !== undefined) {
         return value;
       } else if (this.styles && this.styles.length > 0) {
-        // Find and return a style with scalar color column if it exists,
-        // otherwise just return the first available style id.
-        const styleWithScalarColorColumn = this.styles.find(s => {
-          const colName = s.color.colorColumn;
-          return (
-            colName &&
-            this.findColumnByName(colName)?.type === TableColumnType.scalar
-          );
-        });
-        return styleWithScalarColorColumn?.id || this.styles[0].id;
+        // Find default active style in this order:
+        // - First scalar style
+        // - First enum style
+        // - First text style
+        // - First region style
+
+        const types = [
+          TableColumnType.scalar,
+          TableColumnType.enum,
+          TableColumnType.text,
+          TableColumnType.region
+        ];
+
+        const firstStyleOfEachType = types.map(
+          columnType =>
+            this.styles.find(
+              s =>
+                s.color.colorColumn &&
+                this.findColumnByName(s.color.colorColumn)?.type === columnType
+            )?.id
+        );
+
+        return filterOutUndefined(firstStyleOfEachType)[0];
       }
       return undefined;
     }
@@ -235,11 +257,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         sender: this,
         message: "No data available to download."
       });
-    }
-
-    @computed
-    get disableSplitter() {
-      return !isDefined(this.activeTableStyle.regionColumn);
     }
 
     @computed
@@ -446,19 +463,17 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     @computed get viewingControls(): ViewingControl[] {
       return filterOutUndefined([
         ...super.viewingControls,
-        this.activeStyle // Note we want falsy here for activeStyle ("" is equivalent to undefined)
-          ? {
-              id: TableStylingWorkflow.type,
-              name: "Edit Style",
-              onClick: action(viewState =>
-                SelectableDimensionWorkflow.runWorkflow(
-                  viewState,
-                  new TableStylingWorkflow(this)
-                )
-              ),
-              icon: { glyph: Icon.GLYPHS.layers }
-            }
-          : undefined
+        {
+          id: TableStylingWorkflow.type,
+          name: "Edit Style",
+          onClick: action(viewState =>
+            SelectableDimensionWorkflow.runWorkflow(
+              viewState,
+              new TableStylingWorkflow(this)
+            )
+          ),
+          icon: { glyph: Icon.GLYPHS.layers }
+        }
       ]);
     }
 
@@ -707,17 +722,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         []
       );
       return times;
-    }
-
-    @computed
-    get legends(): Model<LegendTraits>[] {
-      // Only return legends if we have rows in dataColumnMajor and mapItems to show
-      if (this.dataColumnMajor?.length !== 0 && this.mapItems.length > 0) {
-        const colorLegend = this.activeTableStyle.colorTraits.legend;
-        return filterOutUndefined([colorLegend]);
-      } else {
-        return [];
-      }
     }
 
     /** This is a temporary button which shows in the Legend in the Workbench, if custom styling has been applied. */

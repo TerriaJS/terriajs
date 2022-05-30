@@ -1,3 +1,4 @@
+import { BBox } from "@turf/helpers";
 import groupBy from "lodash-es/groupBy";
 import { computed } from "mobx";
 import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
@@ -5,6 +6,7 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
+import { isJsonNumber } from "../Core/Json";
 import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
 import DiscreteColorMap from "../Map/ColorMap/DiscreteColorMap";
 import EnumColorMap from "../Map/ColorMap/EnumColorMap";
@@ -17,16 +19,15 @@ import createCombinedModel from "../Models/Definition/createCombinedModel";
 import Model from "../Models/Definition/Model";
 import TableChartStyleTraits from "../Traits/TraitsClasses/TableChartStyleTraits";
 import TableColorStyleTraits from "../Traits/TraitsClasses/TableColorStyleTraits";
+import { OutlineSymbolTraits } from "../Traits/TraitsClasses/TableOutlineStyleTraits";
 import TablePointSizeStyleTraits from "../Traits/TraitsClasses/TablePointSizeStyleTraits";
+import { PointSymbolTraits } from "../Traits/TraitsClasses/TablePointStyleTraits";
 import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
 import TableTimeStyleTraits from "../Traits/TraitsClasses/TableTimeStyleTraits";
 import TableColorMap from "./TableColorMap";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
-import { BBox } from "@turf/helpers";
-import { isJsonNumber } from "../Core/Json";
-import createStratumInstance from "../Models/Definition/createStratumInstance";
-import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
+import TableStyleMap from "./TableStyleMap";
 
 const DEFAULT_FINAL_DURATION_SECONDS = 3600 * 24 - 1; // one day less a second, if there is only one date.
 
@@ -67,7 +68,12 @@ export default class TableStyle {
    */
   @computed
   get id(): string {
-    return this.styleTraits.id || "Style" + this.styleNumber;
+    return (
+      this.styleTraits.id ??
+      (isDefined(this.styleNumber)
+        ? "Style" + this.styleNumber
+        : "Default Style")
+    );
   }
 
   @computed
@@ -299,7 +305,8 @@ export default class TableStyle {
    */
   @computed
   get pointSizeColumn(): TableColumn | undefined {
-    return this.resolveColumn(this.pointSizeTraits.pointSizeColumn);
+    const col = this.resolveColumn(this.pointSizeTraits.pointSizeColumn);
+    if (col?.type === TableColumnType.scalar) return col;
   }
 
   /**
@@ -368,6 +375,22 @@ export default class TableStyle {
 
   @computed get colorMap() {
     return this.tableColorMap.colorMap;
+  }
+
+  @computed get pointStyleMap() {
+    return new TableStyleMap<PointSymbolTraits>(
+      this.tableModel,
+      this.styleTraits,
+      "point"
+    );
+  }
+
+  @computed get outlineStyleMap() {
+    return new TableStyleMap<OutlineSymbolTraits>(
+      this.tableModel,
+      this.styleTraits,
+      "outline"
+    );
   }
 
   @computed
@@ -611,16 +634,16 @@ export default class TableStyle {
       if (max - min === 0) return;
 
       // We want to show fraction digits depending on how small difference is between min and max.
-      // This also takes into consideration the defualt number of legend items - 7
+      // This also takes into consideration the default number of legend items - 7
       // So we add an extra digit
       // For example:
-      // - if difference is 10 - we wnat to show one fraction digit
+      // - if difference is 10 - we want to show one fraction digit
       // - if difference is 1 - we want to show two fraction digits
       // - if difference is 0.1 - we want to show three fraction digits
 
       // log_10(20/x) achieves this (where x is difference between min and max)
       // https://www.wolframalpha.com/input/?i=log_10%2820%2Fx%29
-      // We use 20 here instead of 10 to give us a more convervative value (that is, we may show an extra fraction digit even if it is not needed)
+      // We use 20 here instead of 10 to give us a more conservative value (that is, we may show an extra fraction digit even if it is not needed)
       // So when x >= 20 - we will not show any fraction digits
 
       // Clamp values between 0 and 5
@@ -689,7 +712,7 @@ export default class TableStyle {
     return finishDates;
   }
 
-  private resolveColumn(name: string | undefined): TableColumn | undefined {
+  resolveColumn(name: string | undefined): TableColumn | undefined {
     if (name === undefined) {
       return undefined;
     }

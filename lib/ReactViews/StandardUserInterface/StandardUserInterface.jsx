@@ -20,6 +20,7 @@ import withFallback from "../HOCs/withFallback";
 import ExperimentalFeatures from "../Map/ExperimentalFeatures";
 import CollapsedNavigation from "../Map/Navigation/Items/OverflowNavigationItem";
 import HelpPanel from "../Map/Panels/HelpPanel/HelpPanel";
+import PrintView from "../Map/Panels/SharePanel/Print/PrintView";
 import ProgressBar from "../Map/ProgressBar";
 import TrainerBar from "../Map/TrainerBar/TrainerBar";
 import MobileHeader from "../Mobile/MobileHeader";
@@ -261,15 +262,9 @@ const StandardUserInterface = observer(
               this.props.terria.configParameters.experimentalFeatures
             }
           />
-          <TourPortal terria={terria} viewState={this.props.viewState} />
-          <CollapsedNavigation
-            terria={terria}
-            viewState={this.props.viewState}
-          />
-          <SatelliteHelpPrompt
-            terria={terria}
-            viewState={this.props.viewState}
-          />
+          <TourPortal viewState={this.props.viewState} />
+          <CollapsedNavigation viewState={this.props.viewState} />
+          <SatelliteHelpPrompt viewState={this.props.viewState} />
           <Medium>
             <SelectableDimensionWorkflow viewState={this.props.viewState} />
           </Medium>
@@ -278,9 +273,7 @@ const StandardUserInterface = observer(
               <WelcomeMessage viewState={this.props.viewState} />
             </If>
             <div
-              className={classNames(Styles.uiRoot, {
-                [Styles.withStoryBuilder]: showStoryBuilder
-              })}
+              className={Styles.uiRoot}
               css={`
                 ${this.props.viewState.disclaimerVisible &&
                   `filter: blur(10px);`}

@@ -220,7 +220,7 @@ export default class CatalogMemberTraits extends ModelTraits {
     idProperty: "id",
     name: "Model dimensions",
     description:
-      "This provides ability to set model JSON through SelectableDimensions (a dropdown)."
+      "This provides ability to set model JSON through SelectableDimensions (a dropdown). When an option is selected, the `value` property will be used to call `updateModelFromJson()`. All string properties support Mustache templates (with the catalog member as context)"
   })
   modelDimensions?: EnumDimensionTraits[];
 

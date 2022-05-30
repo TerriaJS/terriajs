@@ -1,3 +1,4 @@
+import { StyleMapType } from "../../Table/TableStyleMap";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
@@ -22,6 +23,14 @@ export class EnumColorTraits extends ModelTraits {
 }
 
 export default class TableColorStyleTraits extends ModelTraits {
+  @primitiveTrait({
+    name: "Style map type",
+    description:
+      'The type of style map. Valid values are "continuous", "enum", "bin", "constant"',
+    type: "string"
+  })
+  mapType: StyleMapType | undefined = undefined;
+
   @primitiveTrait({
     name: "Color Column",
     description: "The column to use to color points or regions.",

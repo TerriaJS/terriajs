@@ -249,11 +249,11 @@ function esriSpatialReferenceToCrs(
 
 /** Very very basic type test for EsriFeatureSet */
 function isEsriFeatureSet(obj: any): obj is FeatureSet {
-  return isJsonObject(obj) && Array.isArray(obj.features);
+  return isJsonObject(obj, false) && Array.isArray(obj.features);
 }
 
 function isEsriFeature(obj: any): obj is ArcGisFeature {
-  return isJsonObject(obj) && isJsonObject(obj.geometry);
+  return isJsonObject(obj, false) && isJsonObject(obj.geometry, false);
 }
 
 function hasEsriGeometryType(
