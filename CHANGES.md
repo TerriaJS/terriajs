@@ -5,6 +5,7 @@ Change Log
 
 * Fixed bug that broke Cesium when WebGL was not available. Reverts to Leaflet.
 * Fixed bug where `new Terria()` constructror would try to access `document` and throw an error when running in NodeJS.
+* TSXified `StandardUserInterface` and some other components. If your TerriaMap imports `StandardUserInterface.jsx` remove the `.jsx` extension so webpack can find the new `.tsx` file.
 * [The next improvement]
 
 #### 8.2.4 - 2022-05-23

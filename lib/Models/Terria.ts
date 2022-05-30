@@ -89,7 +89,8 @@ import InitSource, {
   isInitFromDataPromise,
   isInitFromOptions,
   isInitFromUrl,
-  ShareInitSourceData
+  ShareInitSourceData,
+  StoryData
 } from "./InitSource";
 import Internationalization, {
   I18nStartOptions,
@@ -532,7 +533,7 @@ export default class Terria {
 
   @observable depthTestAgainstTerrainEnabled = false;
 
-  @observable stories: any[] = [];
+  @observable stories: StoryData[] = [];
 
   /**
    * Gets or sets the ID of the catalog member that is currently being
