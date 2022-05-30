@@ -509,6 +509,7 @@ export default class Cesium extends GlobeOrMap {
     this.pauser.destroy();
     this.stopObserving();
     this._eventHelper.removeAll();
+    this._updateTilesLoadingIndeterminate(false); // reset progress bar loading state to false for any data sources with indeterminate progress e.g. 3DTilesets.
     this.dataSourceDisplay.destroy();
 
     this._disposeTerrainReaction();
@@ -633,12 +634,23 @@ export default class Cesium extends GlobeOrMap {
         if (!primitives.contains(tileset)) {
           primitives.add(tileset);
           // Add event listener for loading of new tiles for 3Dtileset datasources. These events are frequently emitted.
-          const startingListener = tileset.tileLoad.addEventListener(() => {
-            this._updateTilesLoadingIndeterminate(true);
-          });
+          // TODO: add this with EventHelper so that it gets automatically removed when Cesium is destroyed
+
+          const startingListener = this._eventHelper.add(
+            tileset.tileLoad,
+            () => {
+              this._updateTilesLoadingIndeterminate(true);
+            }
+          );
+
+          // const startingListener = tileset.tileLoad.addEventListener(() => {
+          //   this._updateTilesLoadingIndeterminate(true);
+          // });
 
           //Add event listener for when tiles finished loading for current view. Infrequent.
-          const finishedListener = tileset.allTilesLoaded.addEventListener(
+          // TODO: add this with EventHelper so that it gets automatically removed when Cesium is destroyed
+          const finishedListener = this._eventHelper.add(
+            tileset.allTilesLoaded,
             () => {
               this._updateTilesLoadingIndeterminate(false);
             }
