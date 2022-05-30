@@ -1,10 +1,10 @@
+import { ModelId } from "../../Traits/ModelReference";
 import ModelTraits from "../../Traits/ModelTraits";
 import Trait from "../../Traits/Trait";
 import TraitsConstructor from "../../Traits/TraitsConstructor";
+import Terria from "../Terria";
 import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
 import StratumFromTraits from "./StratumFromTraits";
-import Terria from "../Terria";
-import { ModelId } from "../../Traits/ModelReference";
 
 export interface ModelConstructor<T> {
   new (
@@ -104,16 +104,18 @@ export interface ModelInterface<T extends ModelTraits> {
 
   /**
    * Adds a new object to an {@link objectArrayTrait}.
+   *
+   * If no `objectId` is provided, the object will be placed at the end of the array (across all strata). This will take `isRemoval` and `idProperty="index"`into account.
+   *
    * @param stratumId The ID of the stratum in which to add the object.
    * @param trait The name of the {@link objectArrayTrait} property.
    * @param objectId The ID of the new object.
-   * @returns The new object, or undefined if the object still does not exist
-   *          because a stratum above the specified one has removed it.
+   * @returns The new object, or undefined if the object still does not exist because a stratum above the specified one has removed it.
    */
   addObject<Key extends keyof ArrayElementTypes<T>>(
     stratumId: string,
     trait: Key,
-    objectId: string
+    objectId?: string | undefined
   ): Model<ArrayElementTypes<T>[Key]> | undefined;
 }
 

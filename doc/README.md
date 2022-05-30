@@ -20,7 +20,7 @@ Partially updated docs:
 * [Deploying](deploying/README.md): Deploy a TerriaJS application in simple and advanced scenarios.
 * [Contributing](contributing/README.md): Add new features to TerriaJS, be part of the TerriaJS development team, set up a development environment, write tests, and perform code reviews.
 
-Looking for help using a TerriaJS-based site? Try the [NationalMap user documentation](http://nationalmap.gov.au/help/help.html).
+Looking for help using a TerriaJS-based site? Try the [Terria Platforms User Guide](https://userguide.terria.io/).
 
 This documentation is maintained at [github.com/TerriaJS/TerriaJS/tree/main/doc](https://github.com/TerriaJS/TerriaJS/tree/main/doc).
 

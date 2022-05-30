@@ -124,7 +124,8 @@
       "left": "Kiri"
     },
     "timeline": {
-      "alwaysShow": "Selalu tampilkan"
+      "alwaysShow": "Selalu tampilkan",
+      "title": "Linimasa"
     },
     "performanceLabel": "Performa",
     "qualityLabel": "Kualitas",
@@ -196,6 +197,15 @@
     },
     "locationSearchInput": {
       "content": "## Pencarian lokasi\n\nMasukkan lokasi atau alamat untuk memudahkan menemukan point of interest di peta."
+    },
+    "menuBarMapSettingsButton": {
+      "content": "## Pengaturan Peta\n\nSesuaikan pengaturan peta seperti peta dasar, Medan 2D/3D, dan kualitas gambar peta untuk meningkatkan kinerja."
+    },
+    "sidePanelUploadButton": {
+      "content": "## Unggah Data\n\nAnda dapat mengunggah data Anda ke peta untuk melihatnya bersama kumpulan data lainnya. Unggah file atau tautan ke kumpulan data online atau layanan data yang ada. Format data yang didukung termasuk CSV, GeoJSON, KML, GPX dan CZML."
+    },
+    "exploreMapDataButton": {
+      "content": "##Jelaja peta\n\nJelajah katalog data yang tersedia dan tambahkan ke peta di sini. Anda dapat menambahkan beberapa kumpulan data sekaligus, dan Anda akan melihatnya tercantum di bawah di meja kerja."
     }
   },
   "trainer": {
@@ -235,7 +245,8 @@
     },
     "locationPicker": {
       "nextMessages": {
-        "title": "Anda telah memilih lokasi {{latitude}} {{longitude}}"
+        "title": "Anda telah memilih lokasi {{latitude}} {{longitude}}",
+        "beforePick": "Ketuk titik lain untuk mengubah pilihan"
       }
     },
     "locationDisplay": {
@@ -758,5 +769,11 @@
   "indexedItemSearchProvider": {
     "errorParsingIndexRoot": "Kesalahan saat mengurai file indexRoot: {{indexRootUrl}}.",
     "missingOptionIndexRootUrl": "Opsi `indexRootUrl` tidak ada dalam konfigurasi pencarian item."
+  },
+  "browsers": {
+    "chrome": "Google Chrome",
+    "firefox": "Mozilla Firefox",
+    "edge": "Microsoft Edge",
+    "safari": ""
   }
 }

@@ -19,6 +19,7 @@ import TableColorStyleTraits, {
 } from "../Traits/TraitsClasses/TableColorStyleTraits";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
+import { StyleMapType } from "./TableStyleMap";
 
 const getColorForId = createColorForIdTransformer();
 const DEFAULT_COLOR = "yellow";
@@ -104,6 +105,16 @@ export default class TableColorMap {
     readonly colorTraits: Model<TableColorStyleTraits>
   ) {}
 
+  @computed get type(): StyleMapType {
+    return this.colorMap instanceof DiscreteColorMap
+      ? "bin"
+      : this.colorMap instanceof ContinuousColorMap
+      ? "continuous"
+      : this.colorMap instanceof EnumColorMap
+      ? "enum"
+      : "constant";
+  }
+
   /**
    * Gets an object used to map values in {@link #colorColumn} to colors
    * for this style.
@@ -125,9 +136,15 @@ export default class TableColorMap {
     const colorTraits = this.colorTraits;
 
     // If column type is `scalar` - use DiscreteColorMap or ContinuousColorMap
-    if (colorColumn && colorColumn.type === TableColumnType.scalar) {
+    if (
+      (!colorTraits.mapType ||
+        colorTraits.mapType === "continuous" ||
+        colorTraits.mapType === "bin") &&
+      colorColumn &&
+      colorColumn.type === TableColumnType.scalar
+    ) {
       // If column type is `scalar` and we have binMaximums - use DiscreteColorMap
-      if (this.binMaximums.length > 0) {
+      if (colorTraits.mapType !== "continuous" && this.binMaximums.length > 0) {
         return new DiscreteColorMap({
           bins: this.binColors.map((color, i) => {
             return {
@@ -142,6 +159,7 @@ export default class TableColorMap {
 
       // If column type is `scalar` and we have a valid minValue and maxValue - use ContinuousColorMap
       if (
+        colorTraits.mapType !== "bin" &&
         isDefined(this.minimumValue) &&
         isDefined(this.maximumValue) &&
         this.minimumValue < this.maximumValue
@@ -177,12 +195,14 @@ export default class TableColorMap {
       // If no useful ColorMap could be found for the scalar column - we will create a ConstantColorMap at the end of the function
     }
 
-    // If column type is `enum` or `region` - and we have enough binColors to represent uniqueValues - use EnumColorMap
+    // If column type is `enum` or `region` - use EnumColorMap
     else if (
       colorColumn &&
-      (colorColumn.type === TableColumnType.enum ||
-        colorColumn.type === TableColumnType.region) &&
-      this.enumColors.length > 0
+      ((!colorTraits.mapType &&
+        (colorColumn.type === TableColumnType.enum ||
+          colorColumn.type === TableColumnType.region) &&
+        this.enumColors.length > 0) ||
+        colorTraits.mapType === "enum")
     ) {
       return new EnumColorMap({
         enumColors: filterOutUndefined(

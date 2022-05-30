@@ -277,6 +277,9 @@ interface ConfigParameters {
    */
   feedbackMinLength?: number;
 
+  /** If undefined, then Leaflet's default attribution will be used */
+  leafletAttributionPrefix?: string;
+
   /**
    * Extra links to show in the credit line at the bottom of the map (currently only the Cesium map).
    */
@@ -355,7 +358,8 @@ export default class Terria {
   readonly modelIdShareKeysMap = observable.map<string, string[]>();
 
   /** Base URL for the Terria app. Used for SPA routes */
-  readonly appBaseHref: string = document.baseURI;
+  readonly appBaseHref: string =
+    typeof document !== "undefined" ? document.baseURI : "/";
   /** Base URL to Terria resources */
   readonly baseUrl: string = "build/TerriaJS/";
 
@@ -462,6 +466,7 @@ export default class Terria {
     feedbackPreamble: "translate#feedback.feedbackPreamble",
     feedbackPostamble: undefined,
     feedbackMinLength: 0,
+    leafletAttributionPrefix: undefined,
     extraCreditLinks: [
       // Default credit links (shown at the bottom of the Cesium map)
       {
@@ -582,7 +587,7 @@ export default class Terria {
     if (options.appBaseHref) {
       this.appBaseHref = new URL(
         options.appBaseHref,
-        document.baseURI
+        typeof document !== "undefined" ? document.baseURI : "/"
       ).toString();
     }
     if (options.baseUrl) {
