@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.2.5)
 
+* Add Google Analytics event for drag and drop of files onto map.
 * [The next improvement]
 
 #### 8.2.4 - 2022-05-23
