@@ -46,11 +46,7 @@ const EmptyWorkbench: React.FC<EmptyWorkbenchProps> = props => {
   const { t } = useTranslation();
   return (
     <Text large textLight>
-      <Box
-        column
-        fullWidth
-        justifySpaceBetween
-      >
+      <Box column fullWidth justifySpaceBetween>
         <Box centered column>
           <ResponsiveSpacing />
           <Text large color={props.theme.textLightDimmed}>

@@ -13,7 +13,7 @@ const SidePanelContainer = styled.div.attrs<PropsType>(({ viewState }) => ({
     viewState.topElement = "SidePanel";
   }),
   onTransitionEnd: () => viewState.triggerResizeEvent()
-})) <PropsType>`
+}))<PropsType>`
   display: flex;
   flex-direction: column;
   position: relative;
