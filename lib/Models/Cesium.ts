@@ -625,10 +625,9 @@ export default class Cesium extends GlobeOrMap {
       // Remove deleted primitives
       prevPrimitives.forEach((primitive, i) => {
         if (!allPrimitives.includes(primitive)) {
-          const prim = primitives.get(i);
           if (
-            isCesium3DTileset(prim) &&
-            allCesium3DTilesets.indexOf(prim) === -1
+            isCesium3DTileset(primitive) &&
+            allCesium3DTilesets.indexOf(primitive) === -1
           ) {
             try {
               // Remove all event listeners from any Cesium3DTilesets by running stored remover functions
