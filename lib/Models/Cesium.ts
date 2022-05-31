@@ -625,8 +625,6 @@ export default class Cesium extends GlobeOrMap {
       // Remove deleted primitives
       prevPrimitives.forEach((primitive, i) => {
         if (!allPrimitives.includes(primitive)) {
-          primitives.remove(primitive);
-
           const prim = primitives.get(i);
           if (
             isCesium3DTileset(prim) &&
@@ -642,6 +640,7 @@ export default class Cesium extends GlobeOrMap {
               this._updateTilesLoadingIndeterminate(false); // reset progress bar loading state to false. Any new tile loading event will restart it to account for multiple currently loading 3DTilesets.
             } catch (e) {}
           }
+          primitives.remove(primitive);
         }
       });
 
