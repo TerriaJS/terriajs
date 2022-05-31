@@ -1,15 +1,16 @@
+import { uniq } from "lodash-es";
 import { isObservableArray, runInAction } from "mobx";
 import isDefined from "../../Core/isDefined";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
+import { ModelJson } from "../InitSource";
 import createStratumInstance from "./createStratumInstance";
 import { BaseModel } from "./Model";
-import { uniq } from "lodash-es";
 
 export default function updateModelFromJson(
   model: BaseModel,
   stratumName: string,
-  json: any,
+  json: ModelJson,
   replaceStratum: boolean = false
 ): Result<undefined> {
   const traits = model.traits;

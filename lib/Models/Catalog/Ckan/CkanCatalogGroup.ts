@@ -21,6 +21,7 @@ import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
 import CatalogGroup from "../CatalogGroup";
+import WebMapServiceCatalogItem from "../Ows/WebMapServiceCatalogItem";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import CkanDefaultFormatsStratum from "./CkanDefaultFormatsStratum";
 import {
@@ -30,10 +31,10 @@ import {
 } from "./CkanDefinitions";
 import CkanItemReference, {
   CkanResourceWithFormat,
+  getCkanItemName,
   getSupportedFormats,
   PreparedSupportedFormat,
-  prepareSupportedFormat,
-  getCkanItemName
+  prepareSupportedFormat
 } from "./CkanItemReference";
 
 export function createInheritedCkanSharedTraitsStratum(
@@ -367,6 +368,16 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
         item.setSupportedFormat(format);
 
         item.setCkanStrata(item);
+
+        // If Item is WMS-group and allowEntireWmsServers === false, then stop here
+        if (
+          format.definition?.type === WebMapServiceCatalogItem.type &&
+          !item.wmsLayers &&
+          !this._catalogGroup.allowEntireWmsServers
+        ) {
+          return;
+        }
+
         item.terria.addModel(item);
 
         const name = getCkanItemName(item);

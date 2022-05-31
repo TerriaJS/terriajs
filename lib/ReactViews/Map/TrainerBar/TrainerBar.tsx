@@ -13,7 +13,7 @@ import {
 import ViewState from "../../../ReactViewModels/ViewState";
 import Select from "../../../Styled/Select";
 import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
-import measureElement from "../../HOCs/measureElement";
+import measureElement, { MeasureElementProps } from "../../HOCs/measureElement";
 import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Text, { TextSpan } from "../../../Styled/Text";
 import Box from "../../../Styled/Box";
@@ -133,7 +133,6 @@ interface StepAccordionProps {
   setIsShowingAllSteps: (bool: boolean) => void;
   isExpanded: boolean;
   setIsExpanded: (bool: boolean) => void;
-  heightFromMeasureElementHOC: number | null;
 }
 interface StepAccordionState {
   isExpanded: boolean;
@@ -141,7 +140,7 @@ interface StepAccordionState {
 
 // Originally written as a SFC but measureElement only supports class components at the moment
 class StepAccordionRaw extends React.Component<
-  StepAccordionProps,
+  StepAccordionProps & MeasureElementProps,
   StepAccordionState
 > {
   refToMeasure: any;

@@ -2,6 +2,7 @@ import React from "react";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import {
   filterSelectableDimensions,
+  isGroup,
   SelectableDimensionCheckboxGroup as SelectableDimensionCheckboxGroupModel,
   SelectableDimensionGroup as SelectableDimensionGroupModel
 } from "../../Models/SelectableDimensions/SelectableDimensions";
@@ -19,7 +20,9 @@ export const SelectableDimensionGroup: React.FC<{
   const childDims = filterSelectableDimensions(dim.placement)(
     dim.selectableDimensions
   );
-  if (childDims.length === 0) return null;
+  // Hide static groups with empty children.
+  // We still show checkbox groups with empty children as they are stateful.
+  if (isGroup(dim) && childDims.length === 0) return null;
   return (
     <Collapsible
       title={
@@ -49,7 +52,11 @@ export const SelectableDimensionGroup: React.FC<{
       <Box displayInlineBlock fullWidth styledPadding="5px 0 0 20px">
         {/* recursively render nested dimensions */}
         {childDims.map(nestedDim => (
-          <SelectableDimension id={`${id}-${nestedDim.id}`} dim={nestedDim} />
+          <SelectableDimension
+            id={`${id}-${nestedDim.id}`}
+            dim={nestedDim}
+            key={`${id}-${nestedDim.id}`}
+          />
         ))}
       </Box>
     </Collapsible>

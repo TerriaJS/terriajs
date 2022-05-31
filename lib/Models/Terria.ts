@@ -1,4 +1,3 @@
-import { Share } from "catalog-converter";
 import i18next from "i18next";
 import { action, computed, observable, runInAction, toJS, when } from "mobx";
 import { createTransformer } from "mobx-utils";
@@ -24,11 +23,11 @@ import GoogleAnalytics from "../Core/GoogleAnalytics";
 import hashEntity from "../Core/hashEntity";
 import instanceOf from "../Core/instanceOf";
 import isDefined from "../Core/isDefined";
-import JsonValue, {
-  isJsonArray,
+import {
   isJsonBoolean,
   isJsonNumber,
   isJsonObject,
+  isJsonObjectArray,
   isJsonString,
   JsonArray,
   JsonObject
@@ -85,10 +84,13 @@ import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import IElementConfig from "./IElementConfig";
 import InitSource, {
-  isInitData,
-  isInitDataPromise,
-  isInitOptions,
-  isInitUrl
+  InitSourceData,
+  isInitFromData,
+  isInitFromDataPromise,
+  isInitFromOptions,
+  isInitFromUrl,
+  ShareInitSourceData,
+  StoryData
 } from "./InitSource";
 import Internationalization, {
   I18nStartOptions,
@@ -275,6 +277,9 @@ interface ConfigParameters {
    */
   feedbackMinLength?: number;
 
+  /** If undefined, then Leaflet's default attribution will be used */
+  leafletAttributionPrefix?: string;
+
   /**
    * Extra links to show in the credit line at the bottom of the map (currently only the Cesium map).
    */
@@ -336,14 +341,6 @@ interface TerriaOptions {
   analytics?: Analytics;
 }
 
-interface ApplyInitDataOptions {
-  initData: JsonObject;
-  replaceStratum?: boolean;
-  // When feature picking state is missing from the initData, unset the state only if this flag is true
-  // This is for eg, set to true when switching through story slides.
-  canUnsetFeaturePickingState?: boolean;
-}
-
 interface HomeCameraInit {
   [key: string]: HomeCameraInit[keyof HomeCameraInit];
   north: number;
@@ -361,7 +358,8 @@ export default class Terria {
   readonly modelIdShareKeysMap = observable.map<string, string[]>();
 
   /** Base URL for the Terria app. Used for SPA routes */
-  readonly appBaseHref: string = document.baseURI;
+  readonly appBaseHref: string =
+    typeof document !== "undefined" ? document.baseURI : "/";
   /** Base URL to Terria resources */
   readonly baseUrl: string = "build/TerriaJS/";
 
@@ -412,7 +410,7 @@ export default class Terria {
   /**
    * Gets the stack of layers active on the timeline.
    */
-  readonly timelineStack = new TimelineStack(this.timelineClock);
+  readonly timelineStack = new TimelineStack(this, this.timelineClock);
 
   @observable
   readonly configParameters: Complete<ConfigParameters> = {
@@ -468,6 +466,7 @@ export default class Terria {
     feedbackPreamble: "translate#feedback.feedbackPreamble",
     feedbackPostamble: undefined,
     feedbackMinLength: 0,
+    leafletAttributionPrefix: undefined,
     extraCreditLinks: [
       // Default credit links (shown at the bottom of the Cesium map)
       {
@@ -534,7 +533,7 @@ export default class Terria {
 
   @observable depthTestAgainstTerrainEnabled = false;
 
-  @observable stories: any[] = [];
+  @observable stories: StoryData[] = [];
 
   /**
    * Gets or sets the ID of the catalog member that is currently being
@@ -575,7 +574,7 @@ export default class Terria {
 
   readonly notificationState: NotificationState = new NotificationState();
 
-  private readonly developmentEnv = process?.env?.NODE_ENV === "development";
+  readonly developmentEnv = process?.env?.NODE_ENV === "development";
 
   /**
    * An error service instance. The instance can be configured by setting the
@@ -588,7 +587,7 @@ export default class Terria {
     if (options.appBaseHref) {
       this.appBaseHref = new URL(
         options.appBaseHref,
-        document.baseURI
+        typeof document !== "undefined" ? document.baseURI : "/"
       ).toString();
     }
     if (options.baseUrl) {
@@ -744,6 +743,36 @@ export default class Terria {
     }
   }
 
+  async getModelByIdShareKeyOrCatalogIndex(
+    id: string
+  ): Promise<Result<BaseModel | undefined>> {
+    try {
+      // See if model exists by ID of sharekey
+      const model = this.getModelByIdOrShareKey(BaseModel, id);
+      // If no model exists, try to find it through Terria model sharekeys or CatalogIndex sharekeys
+      if (model?.uniqueId !== undefined) {
+        return new Result(model);
+      } else if (this.catalogIndex) {
+        try {
+          await this.catalogIndex.load();
+        } catch (e) {
+          throw TerriaError.from(
+            e,
+            `Failed to load CatalogIndex while trying to load model \`${id}\``
+          );
+        }
+        const indexModel = this.catalogIndex.getModelByIdOrShareKey(id);
+        if (indexModel) {
+          (await indexModel.loadReference()).throwIfError();
+          return new Result(indexModel.target);
+        }
+      }
+    } catch (e) {
+      return Result.error(e);
+    }
+    return new Result(undefined);
+  }
+
   @action
   addShareKey(id: string, shareKey: string) {
     if (id === shareKey || this.shareKeysMap.has(shareKey)) return;
@@ -755,7 +784,7 @@ export default class Terria {
   /**
    * Initialize errorService from config parameters.
    */
-  setupErrorServiceProvider(errorService: any) {
+  setupErrorServiceProvider(errorService: ErrorServiceOptions) {
     initializeErrorServiceProvider(errorService)
       .then(errorService => {
         this.errorService = errorService;
@@ -1115,11 +1144,14 @@ export default class Terria {
 
   protected async forceLoadInitSources(): Promise<void> {
     const loadInitSource = createTransformer(
-      async (initSource: InitSource): Promise<JsonObject | undefined> => {
-        let jsonValue: JsonValue | undefined;
-        if (isInitUrl(initSource)) {
+      async (initSource: InitSource): Promise<InitSourceData | undefined> => {
+        let initSourceData: InitSourceData | undefined;
+        if (isInitFromUrl(initSource)) {
           try {
-            jsonValue = await loadJson5(initSource.initUrl);
+            const json = await loadJson5(initSource.initUrl);
+            if (isJsonObject(json, false)) {
+              initSourceData = json;
+            }
           } catch (e) {
             throw TerriaError.from(e, {
               message: {
@@ -1128,27 +1160,24 @@ export default class Terria {
               }
             });
           }
-        } else if (isInitOptions(initSource)) {
+        } else if (isInitFromOptions(initSource)) {
           let error: unknown;
           for (const option of initSource.options) {
             try {
-              jsonValue = await loadInitSource(option);
-              if (jsonValue !== undefined) break;
+              initSourceData = await loadInitSource(option);
+              if (initSourceData !== undefined) break;
             } catch (err) {
               error = err;
             }
           }
-          if (jsonValue === undefined && error !== undefined) throw error;
-        } else if (isInitData(initSource)) {
-          jsonValue = initSource.data;
-        } else if (isInitDataPromise(initSource)) {
-          jsonValue = (await initSource.data).throwIfError()?.data;
+          if (initSourceData === undefined && error !== undefined) throw error;
+        } else if (isInitFromData(initSource)) {
+          initSourceData = initSource.data;
+        } else if (isInitFromDataPromise(initSource)) {
+          initSourceData = (await initSource.data).throwIfError()?.data;
         }
 
-        if (jsonValue && isJsonObject(jsonValue)) {
-          return jsonValue;
-        }
-        return undefined;
+        return initSourceData;
       }
     );
 
@@ -1273,28 +1302,12 @@ export default class Terria {
       );
     }
 
-    // See if model exists by ID of sharekey
-    // Change modelId to more up-to-date ID if necessary
-    const model = this.getModelByIdOrShareKey(BaseModel, modelId);
-    // If no model exists, try to find it through Terria model sharekeys or CatalogIndex sharekeys
-    if (isDefined(model?.uniqueId)) {
-      modelId = model!.uniqueId;
-    } else if (this.catalogIndex) {
-      try {
-        await this.catalogIndex.load();
-      } catch (e) {
-        errors.push(
-          TerriaError.from(
-            e,
-            `Failed to load CatalogIndex while loading model stratum \`${modelId}\``
-          )
-        );
-      }
-      const indexModel = this.catalogIndex.getModelByIdOrShareKey(modelId);
-      if (indexModel) {
-        (await indexModel.loadReference()).pushErrorTo(errors);
-        modelId = indexModel.uniqueId ?? modelId;
-      }
+    const model = (
+      await this.getModelByIdShareKeyOrCatalogIndex(modelId)
+    ).pushErrorTo(errors);
+    if (model?.uniqueId !== undefined) {
+      // Update modelId from model sharekeys or CatalogIndex sharekeys
+      modelId = model.uniqueId;
     }
 
     // If this model is a `SplitItemReference` we must load the source item first
@@ -1343,7 +1356,11 @@ export default class Terria {
     // If we're replacing the stratum and the existing model is already
     // dereferenced, we need to replace the dereferenced stratum, too,
     // even if there's no trace of it in the load data.
-    let dereferenced = thisModelStratumData.dereferenced;
+    let dereferenced: JsonObject | undefined = isJsonObject(
+      thisModelStratumData.dereferenced
+    )
+      ? thisModelStratumData.dereferenced
+      : undefined;
     if (
       loadedModel &&
       replaceStratum &&
@@ -1451,7 +1468,13 @@ export default class Terria {
     initData,
     replaceStratum = false,
     canUnsetFeaturePickingState = false
-  }: ApplyInitDataOptions): Promise<void> {
+  }: {
+    initData: InitSourceData;
+    replaceStratum?: boolean;
+    // When feature picking state is missing from the initData, unset the state only if this flag is true
+    // This is for eg, set to true when switching through story slides.
+    canUnsetFeaturePickingState?: boolean;
+  }): Promise<void> {
     const errors: TerriaError[] = [];
 
     initData = toJS(initData);
@@ -1466,12 +1489,14 @@ export default class Terria {
       this.corsProxy.corsDomains.push(...(<string[]>initData.corsDomains));
     }
 
+    // Add catalog members
     if (initData.catalog !== undefined) {
       this.catalog.group
         .addMembersFromJson(stratumId, initData.catalog)
         .pushErrorTo(errors);
     }
 
+    // Show/hide elements in mapNavigationModel
     if (isJsonObject(initData.elements)) {
       this.elements.merge(initData.elements);
       // we don't want to go through all elements unless they are added.
@@ -1488,10 +1513,12 @@ export default class Terria {
       }
     }
 
+    // Add stories
     if (Array.isArray(initData.stories)) {
       this.stories = initData.stories;
     }
 
+    // Add map settings
     if (isJsonString(initData.viewerMode)) {
       const viewerMode = initData.viewerMode.toLowerCase();
       if (isViewerMode(viewerMode)) setViewerMode(viewerMode, this.mainViewer);
@@ -1500,7 +1527,7 @@ export default class Terria {
     if (isJsonObject(initData.baseMaps)) {
       this.baseMapsModel
         .loadFromJson(CommonStrata.definition, initData.baseMaps)
-        .pushErrorTo(errors);
+        .pushErrorTo(errors, "Failed to load basemaps");
     }
 
     if (isJsonObject(initData.homeCamera)) {
@@ -1520,6 +1547,36 @@ export default class Terria {
       this.splitPosition = initData.splitPosition;
     }
 
+    if (isJsonObject(initData.settings)) {
+      if (isJsonNumber(initData.settings.baseMaximumScreenSpaceError)) {
+        this.setBaseMaximumScreenSpaceError(
+          initData.settings.baseMaximumScreenSpaceError
+        );
+      }
+      if (isJsonBoolean(initData.settings.useNativeResolution)) {
+        this.setUseNativeResolution(initData.settings.useNativeResolution);
+      }
+      if (isJsonBoolean(initData.settings.alwaysShowTimeline)) {
+        this.timelineStack.setAlwaysShowTimeline(
+          initData.settings.alwaysShowTimeline
+        );
+      }
+      if (isJsonString(initData.settings.baseMapId)) {
+        this.mainViewer.setBaseMap(
+          this.baseMapsModel.baseMapItems.find(
+            item => item.item.uniqueId === initData.settings!.baseMapId
+          )?.item
+        );
+      }
+      if (isJsonNumber(initData.settings.terrainSplitDirection)) {
+        this.terrainSplitDirection = initData.settings.terrainSplitDirection;
+      }
+      if (isJsonBoolean(initData.settings.depthTestAgainstTerrainEnabled)) {
+        this.depthTestAgainstTerrainEnabled =
+          initData.settings.depthTestAgainstTerrainEnabled;
+      }
+    }
+
     // Copy but don't yet load the workbench.
     const workbench = Array.isArray(initData.workbench)
       ? initData.workbench.slice()
@@ -1531,7 +1588,7 @@ export default class Terria {
 
     // NOTE: after this Promise, this function is no longer an `@action`
     const models = initData.models;
-    if (isJsonObject(models)) {
+    if (isJsonObject(models, false)) {
       await Promise.all(
         Object.keys(models).map(async modelId => {
           (
@@ -1963,13 +2020,11 @@ async function interpretHash(
       hashProperties.share
     );
 
-    if (shareProps) {
-      await interpretStartData(
-        terria,
-        shareProps,
-        `Start data from sharelink \`"${hashProperties.share}"\``
-      );
-    }
+    await interpretStartData(
+      terria,
+      shareProps,
+      `Start data from sharelink \`"${hashProperties.share}"\``
+    );
   }
 }
 
@@ -1982,11 +2037,11 @@ async function interpretStartData(
   errorSeverity?: TerriaErrorSeverity,
   showConversionWarning = true
 ) {
-  const containsStory = (initSource: any) =>
+  const containsStory = (initSource: InitSourceData) =>
     Array.isArray(initSource.stories) && initSource.stories.length;
-  if (isJsonObject(startData)) {
-    // Convert startData to v8 if neccessary
-    let startDataV8: Share | null;
+  if (isJsonObject(startData, false)) {
+    // Convert startData to v8 if necessary
+    let startDataV8: ShareInitSourceData | null;
 
     try {
       if (
@@ -2012,7 +2067,7 @@ async function interpretStartData(
           version: isJsonString(startData.version)
             ? startData.version
             : SHARE_VERSION,
-          initSources: isJsonArray(startData.initSources)
+          initSources: isJsonObjectArray(startData.initSources)
             ? startData.initSources
             : []
         };
@@ -2021,10 +2076,10 @@ async function interpretStartData(
       if (startDataV8 !== null && Array.isArray(startDataV8.initSources)) {
         runInAction(() => {
           terria.initSources.push(
-            ...startDataV8!.initSources.map((initSource: any) => {
+            ...startDataV8!.initSources.map((initSource: unknown) => {
               return {
                 name,
-                data: initSource,
+                data: isJsonObject(initSource, false) ? initSource : {},
                 errorSeverity
               };
             })
