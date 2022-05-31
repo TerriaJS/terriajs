@@ -631,7 +631,7 @@ export default class Cesium extends GlobeOrMap {
             allCesium3DTilesets.indexOf(prim) === -1
           ) {
             try {
-              // Remove all event listeners from the tileset by running stored remover functions
+              // Remove all event listeners from any Cesium3DTilesets by running stored remover functions
               const fnArray = this._3dTilesetEventListeners[i].removeFns;
               for (let j = 0; j < fnArray.length; j++) {
                 fnArray[j](); // run the function
