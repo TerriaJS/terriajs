@@ -16,7 +16,7 @@ export default class ContinuousColorMap extends ColorMap {
   readonly outlierColor: Readonly<Color> | undefined;
   readonly minValue: number;
   readonly maxValue: number;
-  readonly isDivering: boolean;
+  readonly isDiverging: boolean;
 
   private readonly colorMapMinValue: number;
   private readonly colorMapMaxValue: number;
@@ -37,12 +37,12 @@ export default class ContinuousColorMap extends ColorMap {
     this.outlierColor = options.outlierColor;
     this.minValue = options.minValue;
     this.maxValue = options.maxValue;
-    this.isDivering = options.isDiverging;
+    this.isDiverging = options.isDiverging;
 
-    // If color scale is divering
+    // If color scale is diverging
     // We want Math.abs(minValue) === Math.abs(maxValue)
     // This is so the neutral color in the middle of the color map (usually white) is at 0
-    if (this.isDivering) {
+    if (this.isDiverging) {
       this.colorMapMinValue = this.minValue;
       this.colorMapMaxValue = this.maxValue;
       if (-this.colorMapMinValue > this.colorMapMaxValue) {
