@@ -39,6 +39,27 @@
           ]
         }
       ]
+    },
+    "buildStaticStory": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "storage",
+          "resourceName": "storycontent",
+          "attributes": [
+            "BucketName"
+          ]
+        },
+        {
+          "category": "api",
+          "resourceName": "receiptAPI",
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ]
+        }
+      ]
     }
   },
   "auth": {

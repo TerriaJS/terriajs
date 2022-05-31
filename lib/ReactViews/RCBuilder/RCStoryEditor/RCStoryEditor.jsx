@@ -164,6 +164,20 @@ function RCStoryEditor(props) {
     });
   };
 
+  const onPublish = async () => {
+    console.log("publishing");
+    const response = await fetch(
+      "https://vyx4jioz3grqloqlvhirjbmfw40ichyd.lambda-url.eu-central-1.on.aws",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          story: story.id
+        })
+      }
+    );
+    console.log(response);
+  };
+
   return (
     <div className={Styles.RCStoryEditor}>
       <div className={Styles.container}>
@@ -238,6 +252,9 @@ function RCStoryEditor(props) {
         <div className={Styles.container}>
           <button className={Styles.RCButton} onClick={onSave}>
             Save
+          </button>
+          <button className={Styles.RCButton} onClick={onPublish}>
+            Publish
           </button>
           <label>{message}</label>
         </div>

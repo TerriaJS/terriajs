@@ -1,0 +1,17 @@
+{
+  "lambdaLayers": [],
+  "permissions": {
+    "storage": {
+      "storycontent": [
+        "create",
+        "update"
+      ],
+      "Story:@model(appsync)": [
+        "read"
+      ],
+      "Page:@model(appsync)": [
+        "read"
+      ]
+    }
+  }
+}
