@@ -1,4 +1,3 @@
-import { Cartesian3 } from "terriajs-cesium";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";

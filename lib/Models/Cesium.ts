@@ -49,6 +49,7 @@ import isDefined from "../Core/isDefined";
 import LatLonHeight from "../Core/LatLonHeight";
 import makeRealPromise from "../Core/makeRealPromise";
 import pollToPromise from "../Core/pollToPromise";
+import TerriaError from "../Core/TerriaError";
 import waitForDataSourceToLoad from "../Core/waitForDataSourceToLoad";
 import CesiumRenderLoopPauser from "../Map/Cesium/CesiumRenderLoopPauser";
 import CesiumSelectionIndicator from "../Map/Cesium/CesiumSelectionIndicator";
@@ -162,11 +163,20 @@ export default class Cesium extends GlobeOrMap {
         }
       : undefined;
 
-    this.cesiumWidget = new CesiumWidget(
-      container,
-      Object.assign({}, options, firefoxBugOptions)
-    );
-    this.scene = this.cesiumWidget.scene;
+    try {
+      this.cesiumWidget = new CesiumWidget(
+        container,
+        Object.assign({}, options, firefoxBugOptions)
+      );
+      this.scene = this.cesiumWidget.scene;
+    } catch (error) {
+      throw TerriaError.from(error, {
+        message: {
+          key: "terriaViewer.slowWebGLAvailableMessageII",
+          parameters: { appName: this.terria.appName, webGL: "WebGL" }
+        }
+      });
+    }
 
     //new Cesium3DTilesInspector(document.getElementsByClassName("cesium-widget").item(0), this.scene);
 
@@ -708,7 +718,7 @@ export default class Cesium extends GlobeOrMap {
             });
           }
         });
-      } else if (target.position !== undefined) {
+      } else if (target.position instanceof Cartesian3) {
         // target is a CameraView or an Entity
         return flyToPromise(camera, {
           duration: flightDurationSeconds,

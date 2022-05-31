@@ -1,8 +1,9 @@
-import { action, computed, isObservableArray, runInAction } from "mobx";
+import { action, computed, isObservableArray, runInAction, toJS } from "mobx";
+import Mustache from "mustache";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
-import { isJsonString } from "../Core/Json";
+import { isJsonObject, isJsonString, JsonObject } from "../Core/Json";
 import Result from "../Core/Result";
 import hasTraits from "../Models/Definition/hasTraits";
 import Model, { BaseModel } from "../Models/Definition/Model";
@@ -181,7 +182,12 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
             );
             const value = dim.options.find(o => o.id === selectedId)?.value;
             if (isDefined(value)) {
-              const result = updateModelFromJson(this, stratumId, value);
+              const result = updateModelFromJson(
+                this,
+                stratumId,
+                mustacheNestedJsonObject(toJS(value), this)
+              );
+
               result.raiseError(
                 this.terria,
                 `Failed to update catalog item ${getName(this)}`
@@ -235,3 +241,17 @@ export const getName = action((model: BaseModel | undefined) => {
     "Unknown model"
   );
 });
+
+/** Recursively apply mustache template to all nested string properties in a JSON Object */
+function mustacheNestedJsonObject(obj: JsonObject, view: any) {
+  return Object.entries(obj).reduce<JsonObject>((acc, [key, value]) => {
+    if (isJsonString(value)) {
+      acc[key] = Mustache.render(value, view);
+    } else if (isJsonObject(value, false)) {
+      acc[key] = mustacheNestedJsonObject(value, view);
+    } else {
+      acc[key] = value;
+    }
+    return acc;
+  }, {});
+}

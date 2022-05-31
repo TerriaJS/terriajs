@@ -4,6 +4,7 @@ import GeoJsonCatalogItem from "../../../lib/Models/Catalog/CatalogItems/GeoJson
 import StubCatalogItem from "../../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
 import CatalogMemberFactory from "../../../lib/Models/Catalog/CatalogMemberFactory";
 import { getUniqueStubName } from "../../../lib/Models/Catalog/createStubCatalogItem";
+import WebMapServiceCatalogItem from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import upsertModelFromJson from "../../../lib/Models/Definition/upsertModelFromJson";
 import Terria from "../../../lib/Models/Terria";
@@ -166,7 +167,7 @@ describe("CatalogGroup", function() {
     }
   });
 
-  it("removes blacklisted items/groups from memberModels", function() {
+  it("removes excluded items/groups from memberModels", function() {
     json = {
       type: "group",
       id: "grandmama",
@@ -277,29 +278,114 @@ describe("CatalogGroup", function() {
         type: "group",
         name: "ab",
         description: "b"
-      }
+      },
+      { type: "terria-reference", name: "A reference" }
     ]);
 
-    expect(
-      item.memberModels.map(member =>
-        CatalogMemberMixin.isMixedInto(member) ? member.name : ""
-      )
-    ).toEqual(["1", "aCC", "10", "2", "AC", "ab"]);
+    expect(item.memberModels.map(member => (member as any).name)).toEqual([
+      "1",
+      "aCC",
+      "10",
+      "2",
+      "AC",
+      "ab",
+      "A reference"
+    ]);
 
     item.setTrait(CommonStrata.user, "sortMembersBy", "name");
 
-    expect(
-      item.memberModels.map(member =>
-        CatalogMemberMixin.isMixedInto(member) ? member.name : ""
-      )
-    ).toEqual(["1", "2", "10", "ab", "AC", "aCC"]);
+    expect(item.memberModels.map(member => (member as any).name)).toEqual([
+      "1",
+      "2",
+      "10",
+      "A reference",
+      "ab",
+      "AC",
+      "aCC"
+    ]);
 
     item.setTrait(CommonStrata.user, "sortMembersBy", "description");
 
-    expect(
-      item.memberModels.map(member =>
-        CatalogMemberMixin.isMixedInto(member) ? member.name : ""
-      )
-    ).toEqual(["AC", "ab", "2", "10", "1", "aCC"]);
+    expect(item.memberModels.map(member => (member as any).name)).toEqual([
+      "AC",
+      "ab",
+      "2",
+      "10",
+      "1",
+      "aCC",
+      "A reference"
+    ]);
+  });
+
+  it("supports itemProperties, itemPropertiesByType and itemPropertiesByIds", async function() {
+    json = {
+      type: "group",
+      id: "grandmama",
+      name: "Test Group",
+      itemProperties: { name: "some other name" },
+      itemPropertiesByType: [
+        { type: "wms", itemProperties: { name: "some WMS name" } },
+        {
+          type: "geojson",
+          itemProperties: { url: "some geojson url (by type)" }
+        }
+      ],
+      itemPropertiesByIds: [
+        { ids: ["wms-1"], itemProperties: { url: "some WMS url" } },
+        {
+          ids: ["geojson-1"],
+          itemProperties: { url: "some geojson url (by ID)" }
+        }
+      ],
+      members: [
+        {
+          type: "group",
+          id: "parent1",
+          name: "Parent 1",
+          members: [
+            { type: "wms", id: "wms-1", name: "wms definition name" },
+            {
+              type: "geojson",
+              id: "geojson-1",
+              name: "geojson definition name"
+            }
+          ]
+        }
+      ]
+    };
+    upsertModelFromJson(
+      CatalogMemberFactory,
+      terria,
+      "",
+      "definition",
+      json,
+      {}
+    ).throwIfUndefined();
+
+    const item = <CatalogGroup>terria.getModelById(CatalogGroup, "grandmama");
+
+    await item.loadMembers();
+
+    const parent1 = <CatalogGroup>terria.getModelById(CatalogGroup, "parent1");
+
+    expect(parent1).toBeDefined();
+    expect(parent1.itemProperties).toEqual({ name: "some other name" });
+    expect(parent1.name).toBe("Parent 1");
+
+    await parent1.loadMembers();
+
+    const geojsonItem = <GeoJsonCatalogItem>(
+      terria.getModelById(GeoJsonCatalogItem, "geojson-1")
+    );
+
+    expect(geojsonItem.name).toBe("some other name");
+    expect(geojsonItem.url).toBe("some geojson url (by ID)");
+
+    const wmsItem = <WebMapServiceCatalogItem>(
+      terria.getModelById(WebMapServiceCatalogItem, "wms-1")
+    );
+
+    expect(wmsItem.name).toBe("some WMS name");
+    expect(wmsItem.url).toBe("some WMS url");
   });
 });

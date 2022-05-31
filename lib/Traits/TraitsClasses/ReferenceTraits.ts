@@ -1,7 +1,7 @@
-import ModelTraits from "../ModelTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
-
-export default class ReferenceTraits extends ModelTraits {
+import mixTraits from "../mixTraits";
+import { ItemPropertiesTraits } from "./ItemPropertiesTraits";
+export default class ReferenceTraits extends mixTraits(ItemPropertiesTraits) {
   @primitiveTrait({
     type: "boolean",
     name: "Is catalog item open in workbench",
