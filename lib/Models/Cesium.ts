@@ -1,6 +1,7 @@
 import i18next from "i18next";
 import { autorun, computed, runInAction } from "mobx";
 import { computedFn } from "mobx-utils";
+import { Event } from "terriajs-cesium";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -61,6 +62,7 @@ import PickedFeatures, {
 import MappableMixin, {
   ImageryParts,
   isPrimitive,
+  isCesium3DTileset,
   isDataSource,
   isTerrainProvider,
   MapItem
@@ -89,6 +91,10 @@ var southeastCartographicScratch = new Cartographic();
 var northeastCartographicScratch = new Cartographic();
 var northwestCartographicScratch = new Cartographic();
 
+interface EventListenerRemover {
+  requestUrl: string;
+  removeFns: Event.RemoveCallback[];
+}
 export default class Cesium extends GlobeOrMap {
   readonly type = "Cesium";
   readonly terria: Terria;
@@ -100,6 +106,7 @@ export default class Cesium extends GlobeOrMap {
   readonly pauser: CesiumRenderLoopPauser;
   readonly canShowSplitter = true;
   private readonly _eventHelper: EventHelper;
+  private _3dTilesetEventListeners: EventListenerRemover[] = []; // eventListener reference storage
   private _pauseMapInteractionCount = 0;
   private _lastZoomTarget:
     | CameraView
@@ -159,7 +166,9 @@ export default class Cesium extends GlobeOrMap {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=976173
     const firefoxBugOptions = (<any>FeatureDetection).isFirefox()
       ? {
-          contextOptions: { webgl: { preserveDrawingBuffer: true } }
+          contextOptions: {
+            webgl: { preserveDrawingBuffer: true }
+          }
         }
       : undefined;
 
@@ -510,6 +519,7 @@ export default class Cesium extends GlobeOrMap {
     this.pauser.destroy();
     this.stopObserving();
     this._eventHelper.removeAll();
+    this._updateTilesLoadingIndeterminate(false); // reset progress bar loading state to false for any data sources with indeterminate progress e.g. 3DTilesets.
     this.dataSourceDisplay.destroy();
 
     this._disposeTerrainReaction();
@@ -607,14 +617,31 @@ export default class Cesium extends GlobeOrMap {
         }
       }
 
+      const allCesium3DTilesets = this._allMapItems.filter(isCesium3DTileset);
       const allPrimitives = this._allMapItems.filter(isPrimitive);
       const prevPrimitives = prevMapItems.filter(isPrimitive);
       const primitives = this.scene.primitives;
 
       // Remove deleted primitives
-      prevPrimitives.forEach(primitive => {
+      prevPrimitives.forEach((primitive, i) => {
         if (!allPrimitives.includes(primitive)) {
           primitives.remove(primitive);
+
+          const prim = primitives.get(i);
+          if (
+            isCesium3DTileset(prim) &&
+            allCesium3DTilesets.indexOf(prim) === -1
+          ) {
+            try {
+              // Remove all event listeners from the tileset by running stored remover functions
+              const fnArray = this._3dTilesetEventListeners[i].removeFns;
+              for (let j = 0; j < fnArray.length; j++) {
+                fnArray[j](); // run the function
+              }
+              this._3dTilesetEventListeners.splice(i, 1); // Remove the item for this tileset from our eventListener reference storage array
+              this._updateTilesLoadingIndeterminate(false); // reset progress bar loading state to false. Any new tile loading event will restart it to account for multiple currently loading 3DTilesets.
+            } catch (e) {}
+          }
         }
       });
 
@@ -622,9 +649,30 @@ export default class Cesium extends GlobeOrMap {
       allPrimitives.forEach(primitive => {
         if (!primitives.contains(primitive)) {
           primitives.add(primitive);
+          if (isCesium3DTileset(primitive)) {
+            const startingListener = this._eventHelper.add(
+              primitive.tileLoad,
+              () => {
+                this._updateTilesLoadingIndeterminate(true);
+              }
+            );
+
+            //Add event listener for when tiles finished loading for current view. Infrequent.
+            const finishedListener = this._eventHelper.add(
+              primitive.allTilesLoaded,
+              () => {
+                this._updateTilesLoadingIndeterminate(false);
+              }
+            );
+
+            // Push new item to eventListener reference storage
+            this._3dTilesetEventListeners.push({
+              requestUrl: primitive.resource.request.url,
+              removeFns: [startingListener, finishedListener]
+            });
+          }
         }
       });
-
       prevMapItems = this._allMapItems;
       this.notifyRepaintRequired();
     });

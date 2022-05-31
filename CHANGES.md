@@ -9,6 +9,8 @@ Change Log
 * TSXified `StandardUserInterface` and some other components. If your TerriaMap imports `StandardUserInterface.jsx` remove the `.jsx` extension so webpack can find the new `.tsx` file.
 * Fix use of `baseMapContrastColor` in region mapping/protomaps and remove `MAX_SELECTABLE_DIMENSION_OPTIONS`
 * `mapItems` can now return arbitrary Cesium primitives.
+* Added progress of 3DTiles data source loading to Progress Bar.
+* ProgressBar colour now depends on baseMapContrastColor - improves visibility on light map backgrounds.
 * [The next improvement]
 
 #### 8.2.4 - 2022-05-23
