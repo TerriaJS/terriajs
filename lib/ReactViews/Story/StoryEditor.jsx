@@ -183,9 +183,10 @@ class StoryEditor extends React.Component {
                 html={this.state.text}
                 onChange={(newValue, editor) => {
                   // TODO: This makes StoryEditor tightly coupled to Editor. How to reduce coupling?
+                  // TODO: also this squashes the image! The width is not automatically changed to match height.
                   tinymce.activeEditor.dom.setStyles(
                     tinymce.activeEditor.dom.select("img"),
-                    { "max-height": `${maxHeight}` }
+                    { "max-height": `${maxHeight}`, width: "auto" }
                   );
                   const text = editor.getBody().innerHTML;
                   this.setState({ text });
