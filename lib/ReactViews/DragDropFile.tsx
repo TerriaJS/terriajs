@@ -32,12 +32,14 @@ class DragDropFile extends React.Component<PropsType> {
 
     const props = this.props;
 
-    // Log event to analytics
-    this.props.terria.analytics?.logEvent(
-      Category.dataSource,
-      DataSourceAction.addFromDragAndDrop,
-      e.dataTransfer.files[0].name // Only report on the name of the first file dropped... TODO: is this the intended behaviour?
-    );
+    for (let i = 0; i < e.dataTransfer.files.length; i++) {
+      // Log event to analytics for each file dropped (sometimes multiple files dropped in one DragEvent)
+      this.props.terria.analytics?.logEvent(
+        Category.dataSource,
+        DataSourceAction.addFromDragAndDrop,
+        `File Type: ${e.dataTransfer.files[i].type}, File Size(B): ${e.dataTransfer.files[i].size}`
+      );
+    }
 
     try {
       const addedCatalogItems: BaseModel[] | undefined = await addUserFiles(
