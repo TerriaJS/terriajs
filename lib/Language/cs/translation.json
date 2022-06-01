@@ -749,7 +749,7 @@
     },
     "consoleAnalytics": {
       "started": "ConsoleAnalytics byl spuštěn.",
-      "startedNoLogToConsole": "Nástroj ConsoleAnalytics byl spuštěn, ale položka `configParameters.logToConsole` nebyla definována nebo byla nastavena na hodnotu false.",
+      "startedNoenableConsoleAnalytics": "Nástroj ConsoleAnalytics byl spuštěn, ale položka `configParameters.enableConsoleAnalytics` nebyla definována nebo byla nastavena na hodnotu false.",
       "logStartedWithGAParameters": "Nástroj ConsoleAnalytics byl spuštěn, ale v položce `configParameters` byl pozorován klíč `googleAnalyticsKey` nebo `googleAnalyticsOptions`"
     },
     "serverConfig": {

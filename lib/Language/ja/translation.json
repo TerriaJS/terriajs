@@ -659,7 +659,7 @@
     },
     "consoleAnalytics": {
       "logStartedWithGAParameters": "ConsoleAnalyticsを開始しましたが `googleAnalyticsKey` または`googleAnalyticsOptions` キーが `configParameters`で観察されます",
-      "startedNoLogToConsole": "ConsoleAnalyticsを開始しましたが `configParameters.logToConsole` が定義されていないか、falseに設定されています。",
+      "startedNoenableConsoleAnalytics": "ConsoleAnalyticsを開始しましたが `configParameters.enableConsoleAnalytics` が定義されていないか、falseに設定されています。",
       "started": "ConsoleAnalyticsを開始しました。"
     },
     "errors": {

@@ -614,7 +614,7 @@
     },
     "consoleAnalytics": {
       "started": "ConsoleAnalytics 已启动。",
-      "startedNoLogToConsole": "ConsoleAnalytics 已启动，但未定义“configParameters.logToConsole”或未设置为 false。",
+      "startedNoenableConsoleAnalytics": "ConsoleAnalytics 已启动，但未定义“configParameters.enableConsoleAnalytics”或未设置为 false。",
       "logStartedWithGAParameters": "ConsoleAnalytics 已启动，但在 `configParameters` 上显示为 `googleAnalyticsKey` 或 `googleAnalyticsOptions` 键"
     },
     "readText": {

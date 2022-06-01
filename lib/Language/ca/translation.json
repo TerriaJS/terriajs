@@ -700,7 +700,7 @@
     },
     "consoleAnalytics": {
       "started": "Ha engegat ConsoleAnalytics.",
-      "startedNoLogToConsole": "S'ha iniciat ConsoleAnalytics, però `configParameters.logToConsole` no s'ha definit ni s'ha establert com a fals.",
+      "startedNoenableConsoleAnalytics": "S'ha iniciat ConsoleAnalytics, però `configParameters.enableConsoleAnalytics` no s'ha definit ni s'ha establert com a fals.",
       "logStartedWithGAParameters": "ConsoleAnalytics va engegar, però hi ha una clau \"googleAnalyticsKey\" o \"googleAnalyticsOptions\" a \"configParameters\""
     },
     "googleAnalytics": {
