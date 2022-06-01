@@ -9,13 +9,17 @@ import "tinymce/icons/default";
 import "tinymce/themes/silver";
 import "tinymce/models/dom";
 /* Import a skin (can be a custom skin instead of the default) */
-import "!!style-loader!css-loader?sourceMap!tinymce/skins/ui/oxide/skin.css";
+import "!!style-loader!css-loader?sourceMap!tinymce/skins/ui/oxide/skin.min.css";
 /* Import TinyMCE plugins */
 import "tinymce/plugins/media";
 import "tinymce/plugins/image";
 import "tinymce/plugins/link";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/table";
+
+// Extra css to enable proper behaviour of tinymce, including image resize handles
+import contentCss from "!!raw-loader!tinymce/skins/content/default/content.min.css";
+import contentUiCss from "!!raw-loader!tinymce/skins/ui/oxide/content.min.css";
 
 export default function TinyEditor(props) {
   const editorRef = useRef(null);
@@ -37,9 +41,8 @@ export default function TinyEditor(props) {
           " bullist numlist table |" +
           "image media link |" +
           "undo redo | removeformat",
-        content_style:
-          "body { font-family:Helvetica,Arial,sans-serif; font-size:14px;}",
         content_css: false,
+        content_style: [contentCss, contentUiCss].join("\n"),
         image_dimensions: false
       }}
     />
