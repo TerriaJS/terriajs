@@ -148,4 +148,5 @@ class DragDropFile extends React.Component<PropsType> {
     );
   }
 }
-module.exports = withTranslation()(DragDropFile);
+
+export default withTranslation()(DragDropFile);

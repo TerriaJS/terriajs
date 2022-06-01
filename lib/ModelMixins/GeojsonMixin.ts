@@ -674,7 +674,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           (isConstantStyleMap(outlineStyleMap)
             ? outlineStyleMap.style.color
             : outlineStyleMap.mapValueToStyle(isJsonNumber(rowId) ? rowId : -1)
-                .color) ?? this.terria.baseMapContrastColor
+                .color) ?? runInAction(() => this.terria.baseMapContrastColor)
         );
       };
 

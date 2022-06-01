@@ -3,7 +3,6 @@ import { computed, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
-import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
@@ -12,10 +11,18 @@ import Model from "../Models/Definition/Model";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
 
+// Unfortunately Cesium does not declare a single interface that represents a primitive,
+// but here is what primitives have in common:
+export interface AbstractPrimitive {
+  show: boolean;
+  destroy(): void;
+  isDestroyed(): boolean;
+}
+
 export type MapItem =
   | ImageryParts
   | DataSource
-  | Cesium3DTileset
+  | AbstractPrimitive
   | TerrainProvider;
 
 export interface ImageryParts {
@@ -32,10 +39,8 @@ export namespace ImageryParts {
   }
 }
 
-export function isCesium3DTileset(
-  mapItem: MapItem
-): mapItem is Cesium3DTileset {
-  return "allTilesLoaded" in mapItem;
+export function isPrimitive(mapItem: MapItem): mapItem is AbstractPrimitive {
+  return "isDestroyed" in mapItem;
 }
 
 export function isTerrainProvider(

@@ -89,7 +89,8 @@ import InitSource, {
   isInitFromDataPromise,
   isInitFromOptions,
   isInitFromUrl,
-  ShareInitSourceData
+  ShareInitSourceData,
+  StoryData
 } from "./InitSource";
 import Internationalization, {
   I18nStartOptions,
@@ -367,7 +368,8 @@ export default class Terria {
   readonly modelIdShareKeysMap = observable.map<string, string[]>();
 
   /** Base URL for the Terria app. Used for SPA routes */
-  readonly appBaseHref: string = document.baseURI;
+  readonly appBaseHref: string =
+    typeof document !== "undefined" ? document.baseURI : "/";
   /** Base URL to Terria resources */
   readonly baseUrl: string = "build/TerriaJS/";
 
@@ -543,7 +545,7 @@ export default class Terria {
 
   @observable depthTestAgainstTerrainEnabled = false;
 
-  @observable stories: any[] = [];
+  @observable stories: StoryData[] = [];
 
   /**
    * Gets or sets the ID of the catalog member that is currently being
@@ -597,7 +599,7 @@ export default class Terria {
     if (options.appBaseHref) {
       this.appBaseHref = new URL(
         options.appBaseHref,
-        document.baseURI
+        typeof document !== "undefined" ? document.baseURI : "/"
       ).toString();
     }
     if (options.baseUrl) {

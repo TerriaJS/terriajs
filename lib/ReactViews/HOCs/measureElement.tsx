@@ -1,13 +1,31 @@
 import React from "react";
 import debounce from "lodash-es/debounce";
 
-type Measurements =
-  | "widthFromMeasureElementHOC"
-  | "heightFromMeasureElementHOC";
+const getDisplayName = <P extends React.ComponentProps<any>>(
+  WrappedComponent: React.ComponentClass<P>
+) => {
+  return WrappedComponent.displayName || WrappedComponent.name || "Component";
+};
 
-interface MeasureElementState {
-  width: number | null;
+export interface MeasureElementProps {
+  heightFromMeasureElementHOC: number | null;
+  widthFromMeasureElementHOC: number | null;
+}
+
+interface MeasureElementComponent<P>
+  extends React.Component<P & MeasureElementProps> {
+  refToMeasure: React.RefObject<HTMLElement> | HTMLElement | null;
+}
+
+interface MeasureElementClass<P> {
+  new (props: P & MeasureElementProps, context?: any): MeasureElementComponent<
+    P
+  >;
+}
+
+interface IState {
   height: number | null;
+  width: number | null;
 }
 
 /*
@@ -29,23 +47,16 @@ interface MeasureElementState {
     ref={this.refToMeasure}>
     ```
 */
-function measureElement<WrappedComponentProps extends object>(
-  WrappedComponent: React.ComponentType<WrappedComponentProps>,
+const measureElement = <P extends React.ComponentProps<any>>(
+  WrappedComponent: MeasureElementClass<P>,
   verbose = true
-): React.ComponentType<Omit<WrappedComponentProps, Measurements>> {
-  type MeasureElementProps = Omit<WrappedComponentProps, Measurements>;
-  class MeasureElement extends React.Component<
-    MeasureElementProps,
-    MeasureElementState
-  > {
+) => {
+  class MeasureElement extends React.Component<P, IState> {
+    wrappedComponent = React.createRef<InstanceType<typeof WrappedComponent>>();
+    checkAndUpdateSizingWithDebounce: () => void;
     static displayName = `MeasureElement(${getDisplayName(WrappedComponent)})`;
-
-    wrappedComponent: React.RefObject<any>;
-    checkAndUpdateSizingWithDebounce: any;
-
-    constructor(props: MeasureElementProps) {
+    constructor(props: P) {
       super(props);
-      this.wrappedComponent = React.createRef();
       this.state = {
         width: null,
         height: null
@@ -56,38 +67,35 @@ function measureElement<WrappedComponentProps extends object>(
         200
       );
     }
-
     componentDidMount() {
       window.addEventListener("resize", this.checkAndUpdateSizingWithDebounce);
       this.checkAndUpdateSizing();
     }
-
     componentDidUpdate() {
       this.checkAndUpdateSizing();
     }
-
     componentWillUnmount() {
       window.removeEventListener(
         "resize",
         this.checkAndUpdateSizingWithDebounce
       );
     }
-
     checkAndUpdateSizing() {
       if (!this.wrappedComponent.current) {
         return;
       }
       const refToUse = this.wrappedComponent.current.refToMeasure;
       const widthFromRef = refToUse
-        ? refToUse.current
-          ? refToUse.current.clientWidth
+        ? "current" in refToUse
+          ? refToUse.current?.clientWidth
           : refToUse.clientWidth
         : undefined;
       const heightFromRef = refToUse
-        ? refToUse.current
-          ? refToUse.current.clientHeight
+        ? "current" in refToUse
+          ? refToUse.current?.clientHeight
           : refToUse.clientHeight
         : undefined;
+
       const newWidth = widthFromRef || 0;
       const newHeight = heightFromRef || 0;
       if (verbose) {
@@ -114,12 +122,10 @@ function measureElement<WrappedComponentProps extends object>(
         }
       }
     }
-
     render() {
-      const props = this.props as WrappedComponentProps;
       return (
         <WrappedComponent
-          {...props}
+          {...this.props}
           ref={this.wrappedComponent}
           widthFromMeasureElementHOC={this.state.width}
           heightFromMeasureElementHOC={this.state.height}
@@ -128,10 +134,6 @@ function measureElement<WrappedComponentProps extends object>(
     }
   }
   return MeasureElement;
-}
-
-const getDisplayName = (WrappedComponent: any) => {
-  return WrappedComponent.displayName || WrappedComponent.name || "Component";
 };
 
 export default measureElement;

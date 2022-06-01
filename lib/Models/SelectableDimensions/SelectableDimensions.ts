@@ -85,9 +85,6 @@ export interface SelectableDimensionEnum
   optionRenderer?: OptionRenderer;
 }
 
-/** Maximum number of options for a `SelectableDimension` */
-export const MAX_SELECTABLE_DIMENSION_OPTIONS = 1000;
-
 export interface SelectableDimensionCheckbox
   extends SelectableDimensionBase<"true" | "false">,
     EnumDimension<"true" | "false"> {
@@ -215,11 +212,7 @@ const isEnabled = (dim: SelectableDimension) => !dim.disable;
 /** Filter out dimensions with only 1 option (unless they have 1 option and allow undefined - which is 2 total options) */
 const enumHasValidOptions = (dim: EnumDimension) => {
   const minLength = dim.allowUndefined ? 1 : 2;
-  return (
-    isDefined(dim.options) &&
-    dim.options.length >= minLength &&
-    dim.options.length < MAX_SELECTABLE_DIMENSION_OPTIONS
-  );
+  return isDefined(dim.options) && dim.options.length >= minLength;
 };
 
 /** Filter with SelectableDimension should be shown for a given placement.
