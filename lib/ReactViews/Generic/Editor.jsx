@@ -26,7 +26,7 @@ export default function TinyEditor(props) {
       value={props.html}
       onEditorChange={props.onChange}
       init={{
-        height: 400,
+        height: 450,
         skin: false,
         menubar: false,
         branding: false,
@@ -39,7 +39,8 @@ export default function TinyEditor(props) {
           "undo redo | removeformat",
         content_style:
           "body { font-family:Helvetica,Arial,sans-serif; font-size:14px;}",
-        content_css: false
+        content_css: false,
+        image_dimensions: false
       }}
     />
   );

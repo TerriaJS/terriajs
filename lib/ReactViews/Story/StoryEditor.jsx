@@ -138,7 +138,7 @@ class StoryEditor extends React.Component {
 
   renderPopupEditor() {
     const { t } = this.props;
-    const maxHeight = "200px"; // TODO: where to put this to reduce coupling?
+    const maxImageHeight = "350px"; // TODO: where to put this to reduce coupling?
     return (
       <div
         onKeyDown={this.onKeyDown}
@@ -183,10 +183,9 @@ class StoryEditor extends React.Component {
                 html={this.state.text}
                 onChange={(newValue, editor) => {
                   // TODO: This makes StoryEditor tightly coupled to Editor. How to reduce coupling?
-                  // TODO: also this squashes the image! The width is not automatically changed to match height.
                   tinymce.activeEditor.dom.setStyles(
                     tinymce.activeEditor.dom.select("img"),
-                    { "max-height": `${maxHeight}`, width: "auto" }
+                    { "max-height": `${maxImageHeight}`, width: "auto" }
                   );
                   const text = editor.getBody().innerHTML;
                   this.setState({ text });
