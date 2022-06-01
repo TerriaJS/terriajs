@@ -21,7 +21,11 @@ import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import MouseCoords from "../ReactViewModels/MouseCoords";
-import StyleTraits from "../Traits/TraitsClasses/StyleTraits";
+import TableColorStyleTraits from "../Traits/TraitsClasses/TableColorStyleTraits";
+import TableOutlineStyleTraits, {
+  OutlineSymbolTraits
+} from "../Traits/TraitsClasses/TableOutlineStyleTraits";
+import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
 import CameraView from "./CameraView";
 import Cesium3DTilesCatalogItem from "./Catalog/CatalogItems/Cesium3DTilesCatalogItem";
 import CommonStrata from "./Definition/CommonStrata";
@@ -375,15 +379,20 @@ export default abstract class GlobeOrMap {
               "geoJsonData",
               <any>geoJson
             );
-            catalogItem.setTrait(CommonStrata.user, "disableTableStyle", true);
+
             catalogItem.setTrait(
               CommonStrata.user,
-              "style",
-              createStratumInstance(StyleTraits, {
-                "stroke-width": 4,
-                stroke: this.terria.baseMapContrastColor,
-                "fill-opacity": 0,
-                "marker-color": this.terria.baseMapContrastColor
+              "defaultStyle",
+              createStratumInstance(TableStyleTraits, {
+                outline: createStratumInstance(TableOutlineStyleTraits, {
+                  null: createStratumInstance(OutlineSymbolTraits, {
+                    width: 4,
+                    color: this.terria.baseMapContrastColor
+                  })
+                }),
+                color: createStratumInstance(TableColorStyleTraits, {
+                  nullColor: "rgba(0,0,0,0)"
+                })
               })
             );
 

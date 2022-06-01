@@ -307,10 +307,10 @@ export default class ViewState {
   @observable feedbackFormIsVisible: boolean = false;
 
   /**
-   * Gets or sets a value indicating whether the catalog's model share panel
+   * Gets or sets a value indicating whether the catalog's modal share panel
    * is currently visible.
    */
-  @observable shareModelIsVisible: boolean = false;
+  @observable shareModalIsVisible: boolean = false;
 
   /**
    * The currently open tool
@@ -436,14 +436,22 @@ export default class ViewState {
 
     this._previewedItemIdSubscription = reaction(
       () => this.terria.previewedItemId,
-      (previewedItemId: string | undefined) => {
+      async (previewedItemId: string | undefined) => {
         if (previewedItemId === undefined) {
           return;
         }
 
-        const model = this.terria.getModelById(BaseModel, previewedItemId);
-        if (model !== undefined) {
+        try {
+          const result = await this.terria.getModelByIdShareKeyOrCatalogIndex(
+            previewedItemId
+          );
+          result.throwIfError();
+          const model = result.throwIfUndefined();
           this.viewCatalogMember(model);
+        } catch (e) {
+          terria.raiseErrorToUser(e, {
+            message: `Couldn't find model \`${previewedItemId}\` for preview`
+          });
         }
       }
     );

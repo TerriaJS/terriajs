@@ -1,16 +1,57 @@
 Change Log
 ==========
 
-#### next release (8.2.4)
+#### next release (8.2.5)
 
+* Fixed bug that broke Cesium when WebGL was not available. Reverts to Leaflet.
+* Fixed bug where `new Terria()` constructror would try to access `document` and throw an error when running in NodeJS.
+* Add WPS support for `Date` (additional to existing `DateTime`) and support for `ComplexData` `Date`/`DateTime` WPS Inputs.
+* TSXified `StandardUserInterface` and some other components. If your TerriaMap imports `StandardUserInterface.jsx` remove the `.jsx` extension so webpack can find the new `.tsx` file.
+* Fix use of `baseMapContrastColor` in region mapping/protomaps and remove `MAX_SELECTABLE_DIMENSION_OPTIONS`
+* `mapItems` can now return arbitrary Cesium primitives.
+* [The next improvement]
+
+#### 8.2.4 - 2022-05-23
+
+* Update protomaps to `1.19.0` - now using offical version.
+* Fix Table/VectorStylingWorkflow for datasets with no columns/properties to visualise
+* Improve default `activeStyle` in `TableMixin` - if no `scalar` style is found then find first style with enum, text and finally region.
 * Add Mustache template support to `modelDimensions` for string properties in `option.value` (with the catalog member as context)
 * Added a check for disableExport in ChartPanelDownloadButton.jsx. Prevents download button rendering.
 * Fix `CatalogIndex` types
+* Moved code for retrieving a model by id, share key or CatalogIndex to a new function `terria.getModelByIdShareKeyOrCatalogIndex`.
+* Updated handling of `previewedItemId` to use new function `terria.getModelByIdShareKeyOrCatalogIndex`. This will now use CatalogIndex if the `previewedItemId` cannot be found in models or model share keys.
+* Fixed a race condition inside ModalPopup that caused the explorer panel (data catalogue) to be stuck hidden until refresh.
 * Fix bug that broke the `DiffTool` preventing it from opening. 
 * TSify `BottomDock` and `measureElement` components.
 * Fixed a bug in `GltfMixin` which resulted in some traits missing from `GltfCatalogItem` and broke tools like the scene editor.
 * Replace Pell WYSIWYG editor library with TinyMCE, allows richer editing of Stories in the Story Builder
 * [The next improvement]
+* Leaflet attribution can be set through `config.leafletAttributionPrefix`. Attribution HTML string to show on Leaflet maps. Will use Leaflet's default if undefined. To hide Leaflet attribution - set `leafletAttributionPrefix:""`
+* Re-add missing `helpPanel.mapUserGuide` translation string
+* Fix `sortMembersBy` for child `Groups` and `References`
+* Add `raiseError` convenience method to `TerriaError`
+* Improve `filterOutUndefined` types
+* Add [Maki icons](https://labs.mapbox.com/maki-icons/) - these can be used in `TablePointStyleTraits`. For example `marker = "hospital"`
+* Rename `ProtomapsImageryProvider.duplicate()` to `ProtomapsImageryProvider.clone()`.
+* Add [`ts-essentials` library](https://github.com/ts-essentials/ts-essentials) - "a set of high-quality, useful TypeScript types that make writing type-safe code easier"
+* `GeojsonMixin` improvements
+  * `uveMvt` is now `useTableStylingAndProtomaps`
+  * If `useTableStylingAndProtomaps` is true, then protomaps is used for Line and Polygon features, and `TableMixin` is used for Point features (see `createLongitudeLatitudeFeaturePerRow()`)
+  * `GeoJsonTraits.style` is now only supported by Cesium primitives (if defined, then `useTableStylingAndProtomaps` will be false). Instead you can use `TableStyleTraits`
+* `TableMixin` improvements
+  * Add new `TableStyleMap` model, this is used to support `enum`, `bin` and `null` styles for the following:
+    * `TablePointStyleTraits` - this supports markers (URLs or Maki icons) and rotation, width, height and pixelOffset.
+    * Add `TableOutlineStyleTraits` - this supports color and width.
+  * Legends are now handled by `TableAutomaticLegendStratum`
+  * Legends will be merged across `TableStyleMaps` and `TableColorMap` - for example, marker icons will be shown in legend with correct colors. See `MergedStyleMapLegend`
+  * Default `activeStyle` is now picked by finding the first column of type `scalar`, and then the first column of type `enum`, then `text` and then finally `region`.
+* `ArcGisFeatureServiceCatalogItem` now uses Table styling and `protomaps`
+* Adapted `BaseModel.addObject` to handle adding objects to `ArrayTraits` with `idProperty="index"` and `isRemoval`. The new object will be placed at the end of the array (across all strata).
+* Add `allowCustomInput` property to `SelectableDimensionGroup` - if true then `react-select` will allow custom user input.
+* `TableStylingWorkflow` improvements
+  * Better handling of swapping between different color scheme types (eg enum or bin)
+  * Add point, outline and point-size traits
 
 #### 8.2.3 - 2022-04-22
 

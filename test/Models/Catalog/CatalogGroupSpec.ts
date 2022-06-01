@@ -278,30 +278,43 @@ describe("CatalogGroup", function() {
         type: "group",
         name: "ab",
         description: "b"
-      }
+      },
+      { type: "terria-reference", name: "A reference" }
     ]);
 
-    expect(
-      item.memberModels.map(member =>
-        CatalogMemberMixin.isMixedInto(member) ? member.name : ""
-      )
-    ).toEqual(["1", "aCC", "10", "2", "AC", "ab"]);
+    expect(item.memberModels.map(member => (member as any).name)).toEqual([
+      "1",
+      "aCC",
+      "10",
+      "2",
+      "AC",
+      "ab",
+      "A reference"
+    ]);
 
     item.setTrait(CommonStrata.user, "sortMembersBy", "name");
 
-    expect(
-      item.memberModels.map(member =>
-        CatalogMemberMixin.isMixedInto(member) ? member.name : ""
-      )
-    ).toEqual(["1", "2", "10", "ab", "AC", "aCC"]);
+    expect(item.memberModels.map(member => (member as any).name)).toEqual([
+      "1",
+      "2",
+      "10",
+      "A reference",
+      "ab",
+      "AC",
+      "aCC"
+    ]);
 
     item.setTrait(CommonStrata.user, "sortMembersBy", "description");
 
-    expect(
-      item.memberModels.map(member =>
-        CatalogMemberMixin.isMixedInto(member) ? member.name : ""
-      )
-    ).toEqual(["AC", "ab", "2", "10", "1", "aCC"]);
+    expect(item.memberModels.map(member => (member as any).name)).toEqual([
+      "AC",
+      "ab",
+      "2",
+      "10",
+      "1",
+      "aCC",
+      "A reference"
+    ]);
   });
 
   it("supports itemProperties, itemPropertiesByType and itemPropertiesByIds", async function() {

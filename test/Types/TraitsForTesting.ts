@@ -4,6 +4,20 @@ import objectArrayTrait from "../../lib/Traits/Decorators/objectArrayTrait";
 import ModelTraits from "../../lib/Traits/ModelTraits";
 import { JsonObject } from "../../lib/Core/Json";
 
+export class TraitsWithRemoval extends ModelTraits {
+  @primitiveTrait({
+    name: "someValue",
+    description: "Description",
+    type: "string",
+    isNullable: true
+  })
+  someValue?: null | string | undefined = "praise the model layer";
+
+  static isRemoval(model: TraitsWithRemoval) {
+    return model.someValue === null;
+  }
+}
+
 export class NestedTraits extends ModelTraits {
   @primitiveTrait({
     name: "WithDefault",
@@ -92,6 +106,14 @@ export default class TraitsForTesting extends ModelTraits {
     idProperty: "withDefault"
   })
   nestedArrayWithoutDefault?: NestedTraits[];
+
+  @objectArrayTrait({
+    name: "NestedArrayWithoutIdProperty",
+    description: "Description",
+    type: TraitsWithRemoval,
+    idProperty: "index"
+  })
+  nestedArrayWithoutIdProperty?: TraitsWithRemoval[];
 
   // TODO: Add trait decorator for unknown object
   unknownObject?: JsonObject;

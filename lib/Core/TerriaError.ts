@@ -3,6 +3,7 @@
 import i18next from "i18next";
 import { observable } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
+import Terria from "../Models/Terria";
 import { Notification } from "../ReactViewModels/NotificationState";
 import { terriaErrorNotification } from "../ReactViews/Notification/terriaErrorNotification";
 import filterOutUndefined from "./filterOutUndefined";
@@ -462,9 +463,17 @@ export default class TerriaError {
     const nestedMessage = buildNested(this, 1);
     return `${this.title}: ${this.highestImportanceError.message}\n${nestedMessage}`;
   }
+
+  raiseError(
+    terria: Terria,
+    errorOverrides?: TerriaErrorOverrides,
+    forceRaiseToUser?: boolean
+  ) {
+    terria.raiseErrorToUser(this, errorOverrides, forceRaiseToUser);
+  }
 }
 
-/** Wrap up network requets error with user-friendly message */
+/** Wrap up network request error with user-friendly message */
 export function networkRequestError(error: TerriaError | TerriaErrorOptions) {
   // Combine network error with "networkRequestMessageDetailed" - this contains extra info about what could cause network error
   return TerriaError.combine(

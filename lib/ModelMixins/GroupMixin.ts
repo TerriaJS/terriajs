@@ -15,6 +15,7 @@ import ModelReference from "../Traits/ModelReference";
 import GroupTraits from "../Traits/TraitsClasses/GroupTraits";
 import { ItemPropertiesTraits } from "../Traits/TraitsClasses/ItemPropertiesTraits";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
+import ReferenceMixin from "./ReferenceMixin";
 
 const naturalSort = require("javascript-natural-sort");
 naturalSort.insensitive = true;
@@ -95,16 +96,8 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       // If not, then the model will be placed at the end of the array
       if (isDefined(this.sortMembersBy)) {
         return models.sort((a, b) => {
-          const aValue =
-            CatalogMemberMixin.isMixedInto(a) &&
-            hasTraits(a, a.TraitsClass, this.sortMembersBy as any)
-              ? a[this.sortMembersBy!]
-              : Infinity;
-          const bValue =
-            CatalogMemberMixin.isMixedInto(b) &&
-            hasTraits(b, b.TraitsClass, this.sortMembersBy as any)
-              ? b[this.sortMembersBy!]
-              : Infinity;
+          const aValue = getSortProperty(a, this.sortMembersBy!);
+          const bValue = getSortProperty(b, this.sortMembersBy!);
           return naturalSort(
             isJsonString(aValue) || isJsonNumber(aValue) ? aValue : Infinity,
             isJsonString(bValue) || isJsonNumber(bValue) ? bValue : Infinity
@@ -359,6 +352,17 @@ namespace GroupMixin {
 }
 
 export default GroupMixin;
+
+function getSortProperty(model: BaseModel, prop: string) {
+  return (CatalogMemberMixin.isMixedInto(model) &&
+    hasTraits(model, model.TraitsClass, prop as any)) ||
+    (GroupMixin.isMixedInto(model) &&
+      hasTraits(model, model.TraitsClass, prop as any)) ||
+    (ReferenceMixin.isMixedInto(model) &&
+      hasTraits(model, model.TraitsClass, prop as any))
+    ? model[prop!]
+    : undefined;
+}
 
 function setItemPropertyTraits(
   model: BaseModel,
