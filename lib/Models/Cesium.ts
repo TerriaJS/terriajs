@@ -809,7 +809,9 @@ export default class Cesium extends GlobeOrMap {
 
     const centerOfScreen = new Cartesian2(width / 2.0, height / 2.0);
     const pickRay = scene.camera.getPickRay(centerOfScreen);
-    const center = scene.globe.pick(pickRay, scene);
+    const center = isDefined(pickRay)
+      ? scene.globe.pick(pickRay, scene)
+      : undefined;
 
     if (!center) {
       // TODO: binary search to find the horizon point and use that as the center.
@@ -1006,16 +1008,19 @@ export default class Cesium extends GlobeOrMap {
    */
   pickFromScreenPosition(screenPosition: Cartesian2, ignoreSplitter: boolean) {
     const pickRay = this.scene.camera.getPickRay(screenPosition);
-    const pickPosition = this.scene.globe.pick(pickRay, this.scene);
+    const pickPosition = isDefined(pickRay)
+      ? this.scene.globe.pick(pickRay, this.scene)
+      : undefined;
     const pickPositionCartographic =
       pickPosition && Ellipsoid.WGS84.cartesianToCartographic(pickPosition);
 
     const vectorFeatures = this.pickVectorFeatures(screenPosition);
 
     const providerCoords = this._attachProviderCoordHooks();
-    var pickRasterPromise = this.terria.allowFeatureInfoRequests
-      ? this.scene.imageryLayers.pickImageryLayerFeatures(pickRay, this.scene)
-      : undefined;
+    var pickRasterPromise =
+      this.terria.allowFeatureInfoRequests && isDefined(pickRay)
+        ? this.scene.imageryLayers.pickImageryLayerFeatures(pickRay, this.scene)
+        : undefined;
 
     const result = this._buildPickedFeatures(
       providerCoords,
