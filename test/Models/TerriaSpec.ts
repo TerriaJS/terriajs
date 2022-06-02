@@ -1256,7 +1256,7 @@ describe("Terria", function() {
         )?.item
       );
 
-      expect(terria.terrainSplitDirection).toBe(ImagerySplitDirection.LEFT);
+      expect(terria.terrainSplitDirection).toBe(SplitDirection.LEFT);
       expect(terria.depthTestAgainstTerrainEnabled).toBeTruthy();
     });
   });

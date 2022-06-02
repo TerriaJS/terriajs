@@ -765,7 +765,7 @@ export default class Cesium extends GlobeOrMap {
   _reactToSplitterChanges() {
     const disposeSplitPositionChange = autorun(() => {
       if (this.scene) {
-        this.scene.imagerySplitPosition = this.terria.splitPosition;
+        this.scene.splitPosition = this.terria.splitPosition;
         this.notifyRepaintRequired();
       }
     });
