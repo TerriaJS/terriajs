@@ -6,6 +6,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
+import { getMakiIcon } from "../../../Map/Icons/Maki/MakiIcons";
 import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import proxyCatalogItemUrl from "../../../Models/Catalog/proxyCatalogItemUrl";
@@ -166,11 +167,27 @@ export default class Legend extends React.Component<{
   }
 
   renderLegendItem(legendItem: Model<LegendItemTraits>, i: number) {
+    let imageUrl = legendItem.imageUrl;
+
+    if (legendItem.marker) {
+      imageUrl =
+        getMakiIcon(
+          legendItem.marker,
+          legendItem.color ?? "#fff",
+          legendItem.outlineWidth ?? 1,
+          legendItem.outlineColor ?? "#000",
+          legendItem.imageHeight,
+          legendItem.imageWidth
+        ) ?? legendItem.marker;
+    }
+
     let boxStyle: any = {
-      border: legendItem.addSpacingAbove ? "1px solid black" : undefined
+      border:
+        !imageUrl && legendItem.addSpacingAbove ? "1px solid black" : undefined
     };
-    if (legendItem.outlineColor) {
-      boxStyle.border = `1px solid ${legendItem.outlineColor}`;
+
+    if (!imageUrl && legendItem.outlineColor) {
+      boxStyle.border = `${legendItem.outlineWidth}px solid ${legendItem.outlineColor}`;
     }
 
     let boxContents = <></>;
@@ -178,9 +195,14 @@ export default class Legend extends React.Component<{
     // Browsers don't print background colors by default, so we render things a little differently.
     // Chrome and Firefox let you override this, but not IE and Edge. So...
     if (this.props.forPrint) {
-      if (legendItem.imageUrl) {
+      if (imageUrl) {
         boxContents = (
-          <img width="20px" height="16px" src={legendItem.imageUrl} />
+          <img
+            width="20px"
+            height="16px"
+            src={imageUrl}
+            style={{ transform: `rotate(${legendItem.rotation ?? 0}deg)` }}
+          />
         );
       } else {
         boxContents = <>&#9632;</>;
@@ -192,17 +214,19 @@ export default class Legend extends React.Component<{
         };
       }
     } else {
-      if (legendItem.imageUrl) {
+      if (imageUrl || legendItem.marker) {
         boxStyle = {
-          backgroundImage: `url(${legendItem.imageUrl})`,
+          transform: `rotate(${legendItem.rotation}deg)`,
+          backgroundImage: `url(${imageUrl})`,
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
+          backgroundSize: "24px",
           width: `${legendItem.imageWidth}px`,
           ...boxStyle
         };
       } else {
         boxStyle = {
-          border: `1px solid ${legendItem.outlineColor}`,
+          border: `${legendItem.outlineWidth}px solid ${legendItem.outlineColor}`,
           backgroundColor: legendItem.color,
           minWidth: "20px"
         };

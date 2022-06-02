@@ -16,7 +16,6 @@ export enum SearchAction {
   bing = "Bing",
   catalog = "Catalog",
   gazetteer = "Gazetteer",
-  gnaf = "gnaf",
   nominatim = "nominatim"
 }
 

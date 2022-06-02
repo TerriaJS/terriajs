@@ -6,15 +6,6 @@ import { Feature } from "@turf/helpers";
 import i18next from "i18next";
 import { cloneDeep } from "lodash-es";
 import { action, observable, runInAction } from "mobx";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import Credit from "terriajs-cesium/Source/Core/Credit";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import {
   Bbox,
   Feature as ProtomapsFeature,
@@ -31,9 +22,20 @@ import {
   View,
   Zxy,
   ZxySource
-} from "terriajs-protomaps";
+} from "protomaps";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import Credit from "terriajs-cesium/Source/Core/Credit";
+import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import when from "terriajs-cesium/Source/ThirdParty/when";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
+import TerriaError from "../../Core/TerriaError";
 import {
   FeatureCollectionWithCrs,
   FEATURE_ID_PROP as GEOJSON_FEATURE_ID_PROP,
@@ -371,8 +373,15 @@ export default class ProtomapsImageryProvider
       this.source = new GeojsonSource(this.data);
     }
 
+    const labelersCanvasContext = document
+      .createElement("canvas")
+      .getContext("2d");
+
+    if (!labelersCanvasContext)
+      throw TerriaError.from("Failed to create labelersCanvasContext");
+
     this.labelers = new Labelers(
-      document.createElement("canvas").getContext("2d"),
+      labelersCanvasContext,
       this.labelRules,
       16,
       () => undefined
@@ -428,7 +437,9 @@ export default class ProtomapsImageryProvider
 
     if (!tile) return;
 
-    this.labelers.add(tile);
+    const tileMap = new Map<string, PreparedTile[]>().set("", [tile]);
+
+    this.labelers.add(coords.z, tileMap);
 
     let labelData = this.labelers.getIndex(tile.z);
 
@@ -446,7 +457,17 @@ export default class ProtomapsImageryProvider
     ctx.clearRect(0, 0, 256, 256);
 
     if (labelData)
-      painter(ctx, [tile], labelData, this.paintRules, bbox, origin, false, "");
+      painter(
+        ctx,
+        coords.z,
+        tileMap,
+        labelData,
+        this.paintRules,
+        bbox,
+        origin,
+        false,
+        ""
+      );
   }
 
   async pickFeatures(
@@ -583,15 +604,15 @@ export default class ProtomapsImageryProvider
     return [];
   }
 
-  private duplicate(options?: Partial<Options>) {
+  private clone(options?: Partial<Options>) {
     let data = options?.data;
 
-    // To duplicate data/source, we want to minimize any unnecessary processing
+    // To clone data/source, we want to minimize any unnecessary processing
     if (!data) {
       // These can be passed straight in without processing
       if (typeof this.data === "string" || this.data instanceof PmtilesSource) {
         data = this.data;
-        // We can't just duplicate ZxySource objects, so just pass in URL
+        // We can't just clone ZxySource objects, so just pass in URL
       } else if (this.data instanceof ZxySource) {
         data = this.data.url;
         // If GeojsonSource was passed into data, create new one and copy over tileIndex
@@ -625,7 +646,7 @@ export default class ProtomapsImageryProvider
     });
   }
 
-  /** Duplicates ImageryProvider, and sets paintRules to highlight picked features */
+  /** Clones ImageryProvider, and sets paintRules to highlight picked features */
   @action
   createHighlightImageryProvider(
     feature: CesiumFeature
@@ -646,7 +667,7 @@ export default class ProtomapsImageryProvider
     const featureId = feature.properties?.[featureProp]?.getValue();
 
     if (isDefined(featureId) && isDefined(layerName)) {
-      return this.duplicate({
+      return this.clone({
         labelRules: [],
         paintRules: [
           {

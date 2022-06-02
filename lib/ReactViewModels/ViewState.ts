@@ -25,6 +25,7 @@ import CommonStrata from "../Models/Definition/CommonStrata";
 import { BaseModel } from "../Models/Definition/Model";
 import getAncestors from "../Models/getAncestors";
 import Terria from "../Models/Terria";
+import { ViewingControl } from "../Models/ViewingControls";
 import { SATELLITE_HELP_PROMPT_KEY } from "../ReactViews/HelpScreens/SatelliteHelpPrompt";
 import { animationDuration } from "../ReactViews/StandardUserInterface/StandardUserInterface";
 import {
@@ -104,6 +105,18 @@ export default class ViewState {
 
   @observable printWindow: Window | null = null;
 
+  /**
+   * A global list of functions that generate a {@link ViewingControl} option
+   * for the given catalog item instance.  This is useful for plugins to extend
+   * the viewing control menu across catalog items.
+   *
+   * Use {@link ViewingControlsMenu.addMenuItem} instead of updating directly.
+   */
+  @observable
+  readonly globalViewingControlOptions: ((
+    item: CatalogMemberMixin.Instance
+  ) => ViewingControl | undefined)[] = [];
+
   @action
   setSelectedTrainerItem(trainerItem: string) {
     this.selectedTrainerItem = trainerItem;
@@ -145,7 +158,11 @@ export default class ViewState {
     }
   }
 
-  @observable workbenchWithOpenControls: string | undefined = undefined;
+  /**
+   * ID of the workbench item whose ViewingControls menu is currently open.
+   */
+  @observable
+  workbenchItemWithOpenControls: string | undefined = undefined;
 
   errorProvider: any | null = null;
 
@@ -290,10 +307,10 @@ export default class ViewState {
   @observable feedbackFormIsVisible: boolean = false;
 
   /**
-   * Gets or sets a value indicating whether the catalog's model share panel
+   * Gets or sets a value indicating whether the catalog's modal share panel
    * is currently visible.
    */
-  @observable shareModelIsVisible: boolean = false;
+  @observable shareModalIsVisible: boolean = false;
 
   /**
    * The currently open tool
@@ -362,10 +379,10 @@ export default class ViewState {
         // if /#hideWorkbench=1 exists in url onload, show stories directly
         // any show/hide workbench will not automatically show story
         if (!defined(this.storyShown)) {
-          // why only checkk config params here? because terria.stories are not
+          // why only check config params here? because terria.stories are not
           // set at the moment, and that property will be checked in rendering
           // Here are all are checking are: is terria story enabled in this app?
-          // if so we should show it when app first laod, if workbench is hiddne
+          // if so we should show it when app first load, if workbench is hidden
           this.storyShown = terria.configParameters.storyEnabled;
         }
       }
@@ -419,14 +436,22 @@ export default class ViewState {
 
     this._previewedItemIdSubscription = reaction(
       () => this.terria.previewedItemId,
-      (previewedItemId: string | undefined) => {
+      async (previewedItemId: string | undefined) => {
         if (previewedItemId === undefined) {
           return;
         }
 
-        const model = this.terria.getModelById(BaseModel, previewedItemId);
-        if (model !== undefined) {
+        try {
+          const result = await this.terria.getModelByIdShareKeyOrCatalogIndex(
+            previewedItemId
+          );
+          result.throwIfError();
+          const model = result.throwIfUndefined();
           this.viewCatalogMember(model);
+        } catch (e) {
+          terria.raiseErrorToUser(e, {
+            message: `Couldn't find model \`${previewedItemId}\` for preview`
+          });
         }
       }
     );

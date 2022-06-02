@@ -476,7 +476,7 @@
     "metadataUrls": "Enllaços de metadades",
     "dataUrl": "Enllaços de dades",
     "useLinkBelow": "Utilitzeu l'enllaç següent per descarregar les dades. Consulteu {{link}} per obtenir més informació sobre com personalitzar els paràmetres de consulta de la URL.",
-    "downloadNotSupported": "Malauradament el vostre navegador no admet la funcionalitat necessària per descarregar aquestes dades com un arxiu. Feu servir Chrome, Firefox o Safari per baixar aquestes dades.",
+    "downloadNotSupported": "Malauradament el vostre navegador no admet la funcionalitat necessària per descarregar aquestes dades com un arxiu. Feu servir $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), o $t(browsers.safari) per baixar aquestes dades.",
     "downloadData": "Descarregar Dades",
     "dataSourceDetails": "Detalls de la font de dades",
     "dataServiceDetails": "Detalls del servei de dades",
@@ -626,7 +626,7 @@
     "searchErrorOccurred": "S'ha produït un error durant la cerca. Comprova la teva connexió a Internet o torna-ho a provar més tard."
   },
   "terriaViewer": {
-    "slowWebGLAvailableMessageII": "{{appName}} funciona millor amb un navegador web que admeti {{webGL}}, incloses les darreres versions de {{chrome}}, {{firefox}}, {{safari}} i {{internetExplorer}}. Sembla que el vostre navegador web no admet WebGL, de manera que veureu una experiència limitada només en 2D.",
+    "slowWebGLAvailableMessageII": "{{appName}} funciona millor amb un navegador web que admeti {{webGL}}, incloses les darreres versions de $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), i $t(browsers.safari). Sembla que el vostre navegador web no admet WebGL, de manera que veureu una experiència limitada només en 2D.",
     "internetExplorer": "Internet Explorer 11",
     "chrome": "Google Chrome",
     "firefox": "Mozilla Firefox",
@@ -635,7 +635,7 @@
     "slowWebGLAvailableTitle": "Baix rendiment de WebGL",
     "slowWebGLAvailableMessage": "El vostre navegador web informa que té problemes de rendiment en mostrar {{appName}} en 3D, de manera que veureu una experiència limitada només en 2D. Per gaudir de l'experiència 3D completa, proveu d'utilitzar un navegador web diferent, actualitzeu els controladors de vídeo o actualitzeu el sistema operatiu.",
     "safari": "Apple Safari",
-    "webGLNotSupportedOrSlowMessage": "El vostre navegador web no pot mostrar el mapa en 3D, ja sigui perquè no és compatible amb WebGL o perquè el vostre navegador web ha informat que WebGL serà extremadament lent. Proveu un navegador web diferent, com ara la versió més recent de {{chrome}}, {{firefox}}, {{safari}}, {{internetExplorer}}. En alguns casos és possible que hàgiu d'actualitzar el controlador de vídeo de l'ordinador o el sistema operatiu per mostrar la vista 3D a {{appName}}."
+    "webGLNotSupportedOrSlowMessage": "El vostre navegador web no pot mostrar el mapa en 3D, ja sigui perquè no és compatible amb WebGL o perquè el vostre navegador web ha informat que WebGL serà extremadament lent. Proveu un navegador web diferent, com ara la versió més recent de $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), o $t(browsers.safari). En alguns casos és possible que hàgiu d'actualitzar el controlador de vídeo de l'ordinador o el sistema operatiu per mostrar la vista 3D a {{appName}}."
   },
   "analytics": {
     "selectLocation": "Seleccioneu Ubicació",
@@ -662,7 +662,7 @@
     "chartData": "Dades del gràfic",
     "dataUri": {
       "errorTitle": "El navegador no admet la descàrrega de dades",
-      "errorMessage": "Malauradament els navegadors de Microsoft (incloses totes les versions d'Internet Explorer i Edge) no admeten la funcionalitat d'uri de dades necessària per descarregar dades com un arxiu. Per baixar-lo copieu l'uri següent a un altre navegador, com ara Chrome, Firefox o Safari: {{href}}"
+      "errorMessage": "Malauradament els navegadors de Microsoft (incloses totes les versions d'Internet Explorer i Edge) no admeten la funcionalitat d'uri de dades necessària per descarregar dades com un arxiu. Per baixar-lo copieu l'uri següent a un altre navegador, com ara $t(browsers.chrome), $t(browsers.firefox), o $t(browsers.safari): {{href}}"
     },
     "dataType": {
       "auto": "Detecció automàtica (recomanat)",
@@ -939,7 +939,7 @@
       "unsupportedTypeTitle": "Tipus desconegut",
       "unsupportedTypeMessage": "No s'ha pogut crear el tipus {{type}} de model desconegut.",
       "unsupportedFileTypeTitle": "Tipus d'arxiu no compatible",
-      "unsupportedFileTypeMessage": "Aquest format de fitxer no és compatible amb {{appName}}. Els formats de fitxer admesos inclouen: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (a {{link}})</li><li>Shapefile (.zip)</li></ul>",
+      "unsupportedFileTypeMessage": "Aquest format d'arxiu no és compatible amb {{appName}}. Els formats d'arxiu admesos inclouen:<ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li><li>Shapefile (.zip)</li></ul>",
       "getConfirmationMessage": "Aquest arxiu no és compatible directament amb {{appName}}.\n\nVoleu provar de pujar-lo al servei de conversió {{appName}}? Això pot funcionar per a arxius Esri Shapefile petits i comprimits o arxius MapInfo TAB.",
       "readyToUpload": "Estàs preparat per enviar el teu arxiu al servei de conversió {{appName}}?",
       "upload": "Pujar",
@@ -1042,7 +1042,7 @@
       "unableToLoadItemTitle": "Cap GeoJSON disponible",
       "unableToLoadItemMessage": "L'element del catàleg GeoJSON no es pot carregar perquè no s'ha configurat amb una propietat \"url\", \"geoJsonData\" o \"geoJsonString\".",
       "unsupportedBrowserTitle": "Navegador web no compatible",
-      "unsupportedBrowserMessage": "Ho sentim, el vostre navegador web no admet l'API d'arxius, que {{appName}} requereix per carregar aquest conjunt de dades. Actualitzeu el vostre navegador web. Per obtenir la millor experiència, recomanem les darreres versions de {{chrome}} o {{firefox}} o {{internetExplorer}}.",
+      "unsupportedBrowserMessage": "Ho sentim, el vostre navegador web no admet l'API d'arxius, que {{appName}} requereix per carregar aquest conjunt de dades. Actualitzeu el vostre navegador web. Per obtenir la millor experiència, recomanem les darreres versions de $t(browsers.chrome) o $t(browsers.firefox) o $t(browsers.edge) o $t(browsers.safari).",
       "internetExplorer": "Internet Explorer 11",
       "chrome": "Google Chrome",
       "firefox": "Mozilla Firefox"
@@ -1173,7 +1173,7 @@
       "placesLike": "Llocs com {{regionName}}"
     },
     "regionMapping": {
-      "outdatedBrowserMessage": "Esteu utilitzant un navegador web molt antic que no pot mostrar conjunts de dades \"cartografiats per regió\" com aquest. Actualitzeu a la darrera versió de Google Chrome, Mozilla Firefox, Microsoft Edge, Microsoft Internet Explorer 11 o Apple Safari tan aviat com sigui possible.",
+      "outdatedBrowserMessage": "Esteu utilitzant un navegador web molt antic que no pot mostrar conjunts de dades \"cartografiats per regió\" com aquest. Actualitzeu a la darrera versió de $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), o $t(browsers.safari) tan aviat com sigui possible.",
       "noDataForDate": "No hi ha dades per a la data seleccionada.",
       "noDataForRegion": "No hi ha dades per a la regió seleccionada.",
       "outdatedBrowserTitle": "Navegador web obsolet",
@@ -1379,7 +1379,8 @@
       "clickToAddAnotherPoint": "Feu clic per afegir un altre punt",
       "anotherPoint": "Una altre punt",
       "userPolygon": "Polígon de l'usuari",
-      "clickToAddFirstPoint": "Fet clic per afegir un punt"
+      "clickToAddFirstPoint": "Fet clic per afegir un punt",
+      "clickToRedrawRectangle": "Feu clic a un altre punt per tornar a dibuixar el rectangle"
     },
     "webFeatureServiceCatalogGroup": {
       "wfsServer": "Servidor Web Feature Service (WFS)",
@@ -1608,5 +1609,48 @@
   },
   "printView": {
     "loading": "S'està creant la vista d'impressió..."
+  },
+  "browsers": {
+    "chrome": "Google Chrome",
+    "firefox": "Mozilla Firefox",
+    "edge": "Microsoft Edge",
+    "safari": "Apple Safari"
+  },
+  "compare": {
+    "done": "Fet",
+    "title": "Compara",
+    "entireMapMenu": {
+      "sendAllToBack": "Envia-ho tot al fons",
+      "hideAll": "Amaga-ho tot",
+      "browse": "Navega per les dades del mapa",
+      "sendAllToFront": "Envia-ho tot al davant"
+    },
+    "entireMap": {
+      "emptyText": "Afegiu dades noves per mostrar-les a tot el mapa mitjançant el menú de punts de dalt.",
+      "title": "Mapa sencer"
+    },
+    "info": "Compareu conjunts de dades espacials del vostre banc de treball de costat amb el mapa.",
+    "dimensionSelector": {
+      "undefinedLabel": "Sense especificar"
+    },
+    "dateButton": {
+      "left": "Esquerra",
+      "right": "Dreta",
+      "select": "Escull una data"
+    },
+    "leftPanel": "Panell esquerre",
+    "rightPanel": "Panell dret",
+    "dataset": {
+      "label": "Conjunt de dades",
+      "selectOne": "Escolliu-ne un"
+    },
+    "dateLocationFilter": {
+      "filter": "Filtra la data per ubicació",
+      "loading": "S'està carregant el filtre...",
+      "cancel": "Cancel·lar",
+      "location": "Es mostren les imatges disponibles per a {{latitude}}, {{longitude}}",
+      "mouseTooltipTitle": "Seleccioneu la ubicació",
+      "mouseTooltipMessage": "Botó dret per cancel·lar"
+    }
   }
 }

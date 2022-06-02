@@ -6,8 +6,9 @@ import React, { ChangeEvent, ComponentProps, MouseEvent } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
 import Cesium from "../../../Models/Cesium";
-import DefaultTimelineModel from "../../../Models/DefaultTimelineModel";
+import { BaseModel } from "../../../Models/Definition/Model";
 import Terria from "../../../Models/Terria";
 import ViewerMode, {
   MapViewers,
@@ -58,8 +59,10 @@ class SettingPanel extends React.Component<PropTypes> {
       : "(None)";
   }
 
-  selectBaseMap(baseMap: any, event: MouseEvent<HTMLButtonElement>) {
+  selectBaseMap(baseMap: BaseModel, event: MouseEvent<HTMLButtonElement>) {
     event.stopPropagation();
+    if (!MappableMixin.isMixedInto(baseMap)) return;
+
     this.props.terria.mainViewer.setBaseMap(baseMap);
     // this.props.terria.baseMapContrastColor = baseMap.contrastColor;
 
@@ -217,13 +220,8 @@ class SettingPanel extends React.Component<PropTypes> {
     }
 
     const timelineStack = this.props.terria.timelineStack;
-    const alwaysShowTimeline =
-      timelineStack.defaultTimeVarying !== undefined &&
-      timelineStack.defaultTimeVarying.startTimeAsJulianDate !== undefined &&
-      timelineStack.defaultTimeVarying.stopTimeAsJulianDate !== undefined &&
-      timelineStack.defaultTimeVarying.currentTimeAsJulianDate !== undefined;
 
-    const alwaysShowTimelineLabel = alwaysShowTimeline
+    const alwaysShowTimelineLabel = timelineStack.alwaysShowingTimeline
       ? t("settingPanel.timeline.alwaysShowLabel")
       : t("settingPanel.timeline.hideLabel");
 
@@ -344,19 +342,12 @@ class SettingPanel extends React.Component<PropTypes> {
               <Checkbox
                 textProps={{ small: true }}
                 id="alwaysShowTimeline"
-                isChecked={alwaysShowTimeline}
+                isChecked={timelineStack.alwaysShowingTimeline}
                 title={alwaysShowTimelineLabel}
                 onChange={() => {
-                  runInAction(() => {
-                    if (alwaysShowTimeline) {
-                      this.props.terria.timelineStack.defaultTimeVarying = undefined;
-                    } else {
-                      this.props.terria.timelineStack.defaultTimeVarying = new DefaultTimelineModel(
-                        "defaultTimeVarying",
-                        this.props.terria
-                      );
-                    }
-                  });
+                  timelineStack.setAlwaysShowTimeline(
+                    !timelineStack.alwaysShowingTimeline
+                  );
                 }}
               >
                 <TextSpan>{t("settingPanel.timeline.alwaysShow")}</TextSpan>

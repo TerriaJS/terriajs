@@ -139,8 +139,12 @@ export const GLYPHS = {
   closeCircle: require("../../wwwroot/images/icons/close-circle.svg")
 };
 
+export interface IconGlyph {
+  id: string;
+}
+
 export interface IconProps {
-  glyph: { id: string };
+  glyph: IconGlyph;
   style?: any;
   className?: string;
   rotation?: number;
@@ -153,7 +157,7 @@ export const Icon: React.FC<IconProps> = (props: IconProps) => {
       style={props.style}
       transform={`rotate(${props.rotation ?? 0})`}
     >
-      <use xlinkHref={"#" + props.glyph.id} />
+      <use xlinkHref={"#" + props.glyph?.id} />
     </svg>
   );
 };

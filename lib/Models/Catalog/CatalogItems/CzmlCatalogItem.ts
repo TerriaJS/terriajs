@@ -16,6 +16,7 @@ import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
+import HasLocalData from "../../HasLocalData";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 /**
@@ -70,7 +71,7 @@ export default class CzmlCatalogItem
       UrlMixin(CatalogMemberMixin(CreateModel(CzmlCatalogItemTraits)))
     )
   )
-  implements TimeVarying {
+  implements TimeVarying, HasLocalData {
   static readonly type = "czml";
   get type() {
     return CzmlCatalogItem.type;

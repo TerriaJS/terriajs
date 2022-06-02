@@ -600,8 +600,7 @@
             "size": null,
             "state": "active",
             "url": "https://data.gov.au/geoserver/groundwater-sdl-resource-units/wms?request=GetCapabilities",
-            "url_type": null,
-            "wms_layer": "ckan_66e3efa7_fb5c_4bd7_9478_74adb6277955"
+            "url_type": null
           },
           {
             "cache_last_updated": null,
