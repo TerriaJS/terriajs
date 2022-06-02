@@ -200,7 +200,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
     config.module.rules.push({
         test: /\.(png|jpg|svg|gif)$/,
         include: [
-            path.resolve(terriaJSBasePath),
+            path.resolve(terriaJSBasePath + path.sep),
             path.resolve(cesiumDir)
         ],
         exclude: [
