@@ -1,5 +1,5 @@
 import { action } from "mobx";
-import { LineSymbolizer, PolygonSymbolizer } from "terriajs-protomaps";
+import { LineSymbolizer, PolygonSymbolizer } from "protomaps";
 import ProtomapsImageryProvider from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import MapboxVectorTileCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/MapboxVectorTileCatalogItem";

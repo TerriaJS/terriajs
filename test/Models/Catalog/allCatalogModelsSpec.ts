@@ -30,12 +30,11 @@ describe("All Catalog models", () => {
     );
   });
 
-  it("Have LegendOwnerTraits, unless they use TableMixin or ReferenceMixin, or are explicitly excluded", () => {
+  it("Have LegendOwnerTraits, unless they use ReferenceMixin, or are explicitly excluded", () => {
     // Intended to prevent newly created CatalogItems from accidentally forgetting to include LegendOwnerTraits
     models
       .filter(
         ([modelName, model]) =>
-          !TableMixin.isMixedInto(model) &&
           !ReferenceMixin.isMixedInto(model) &&
           !["stub", "group", "cesium-terrain"].includes(modelName)
       )
@@ -46,14 +45,11 @@ describe("All Catalog models", () => {
       });
   });
 
-  it("Don't have a `legends` or `legend` property unless they have LegendOwnerTraits or use TableMixin", () => {
+  it("Don't have a `legends` or `legend` property unless they have LegendOwnerTraits", () => {
     // The only correct way to provide a legend is through legendOwnerTraits.
-    // Unless you're using TableMixin, which is a very naughty boy and implements legends differently.
     models
       .filter(
-        ([modelName, model]) =>
-          !TableMixin.isMixedInto(model) &&
-          !hasTraits(model, LegendOwnerTraits, "legends")
+        ([modelName, model]) => !hasTraits(model, LegendOwnerTraits, "legends")
       )
       .forEach(([modelName, model]) => {
         expect((model as any).legends).toBeUndefined(

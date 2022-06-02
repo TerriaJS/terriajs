@@ -200,50 +200,54 @@ function ClippingMixin<T extends Constructor<BaseType>>(
         this._clippingBoxDrawing.setTransform(boxTransform);
         this._clippingBoxDrawing.keepBoxAboveGround = this.clippingBox.keepBoxAboveGround;
       } else {
-        this._clippingBoxDrawing = new BoxDrawing(cesium, boxTransform, {
-          keepBoxAboveGround: this.clippingBox.keepBoxAboveGround,
-          onChange: action(({ modelMatrix, isFinished }) => {
-            Matrix4.multiply(
-              this.inverseClippingPlanesOriginMatrix,
-              modelMatrix,
-              this.clippingPlaneModelMatrix
-            );
-            if (isFinished) {
-              const position = Matrix4.getTranslation(
+        this._clippingBoxDrawing = BoxDrawing.fromTransform(
+          cesium,
+          boxTransform,
+          {
+            keepBoxAboveGround: this.clippingBox.keepBoxAboveGround,
+            onChange: action(({ modelMatrix, isFinished }) => {
+              Matrix4.multiply(
+                this.inverseClippingPlanesOriginMatrix,
                 modelMatrix,
-                new Cartesian3()
+                this.clippingPlaneModelMatrix
               );
-              LatLonHeightTraits.setFromCartesian(
-                this.clippingBox.position,
-                CommonStrata.user,
-                position
-              );
-              const dimensions = Matrix4.getScale(
-                modelMatrix,
-                new Cartesian3()
-              );
-              updateModelFromJson(
-                this.clippingBox.dimensions,
-                CommonStrata.user,
-                {
-                  length: dimensions.x,
-                  width: dimensions.y,
-                  height: dimensions.z
-                }
-              );
+              if (isFinished) {
+                const position = Matrix4.getTranslation(
+                  modelMatrix,
+                  new Cartesian3()
+                );
+                LatLonHeightTraits.setFromCartesian(
+                  this.clippingBox.position,
+                  CommonStrata.user,
+                  position
+                );
+                const dimensions = Matrix4.getScale(
+                  modelMatrix,
+                  new Cartesian3()
+                );
+                updateModelFromJson(
+                  this.clippingBox.dimensions,
+                  CommonStrata.user,
+                  {
+                    length: dimensions.x,
+                    width: dimensions.y,
+                    height: dimensions.z
+                  }
+                );
 
-              const rotationMatrix = Matrix3.getRotation(
-                Matrix4.getMatrix3(modelMatrix, new Matrix3()),
-                new Matrix3()
-              );
-              HeadingPitchRollTraits.setFromRotationMatrix(
-                this.clippingBox.rotation,
-                CommonStrata.user,
-                rotationMatrix
-              );
-            }
-          })
-        });
+                const rotationMatrix = Matrix3.getRotation(
+                  Matrix4.getMatrix3(modelMatrix, new Matrix3()),
+                  new Matrix3()
+                );
+                HeadingPitchRollTraits.setFromRotationMatrix(
+                  this.clippingBox.rotation,
+                  CommonStrata.user,
+                  rotationMatrix
+                );
+              }
+            })
+          }
+        );
       }
       return this._clippingBoxDrawing;
     }

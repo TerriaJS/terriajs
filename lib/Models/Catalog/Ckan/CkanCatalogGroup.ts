@@ -21,6 +21,7 @@ import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
 import CatalogGroup from "../CatalogGroup";
+import WebMapServiceCatalogItem from "../Ows/WebMapServiceCatalogItem";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import CkanDefaultFormatsStratum from "./CkanDefaultFormatsStratum";
 import {
@@ -30,6 +31,7 @@ import {
 } from "./CkanDefinitions";
 import CkanItemReference, {
   CkanResourceWithFormat,
+  getCkanItemName,
   getSupportedFormats,
   PreparedSupportedFormat,
   prepareSupportedFormat
@@ -55,7 +57,7 @@ createInheritedCkanSharedTraitsStratum.stratumName =
   "ckanItemReferenceInheritedPropertiesStratum";
 
 // This can't be definition stratum, as then it will sit on top of underride/definition/override
-// CkanServerStratum.createMemberFromDataset will use `underride`
+// CkanServerStratum.createMemberFromDataset will use `definition`
 StratumOrder.addLoadStratum(createInheritedCkanSharedTraitsStratum.stratumName);
 
 export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
@@ -166,6 +168,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     return this._ckanResponse.result.results;
   }
 
+  @action
   protected getFilteredDatasets(): CkanDataset[] {
     if (this.datasets.length === 0) return [];
     if (this._catalogGroup.excludeMembers !== undefined) {
@@ -175,6 +178,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     return this.datasets;
   }
 
+  @action
   protected getGroups(): CatalogGroup[] {
     if (this._catalogGroup.groupBy === "none") return [];
     let groups: CatalogGroup[] = [];
@@ -200,6 +204,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     return groups;
   }
 
+  @action
   protected getFilteredGroups(): CatalogGroup[] {
     if (this.groups.length === 0) return [];
     if (this._catalogGroup.excludeMembers !== undefined) {
@@ -363,7 +368,20 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
         item.setSupportedFormat(format);
 
         item.setCkanStrata(item);
+
+        // If Item is WMS-group and allowEntireWmsServers === false, then stop here
+        if (
+          format.definition?.type === WebMapServiceCatalogItem.type &&
+          !item.wmsLayers &&
+          !this._catalogGroup.allowEntireWmsServers
+        ) {
+          return;
+        }
+
         item.terria.addModel(item);
+
+        const name = getCkanItemName(item);
+        if (name) item.setTrait(CommonStrata.definition, "name", name);
 
         if (this._catalogGroup.groupBy === "organization") {
           const groupId = ckanDataset.organization
@@ -377,6 +395,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     }
   }
 
+  @action
   getItemId(ckanDataset: CkanDataset, resource: CkanResource) {
     return `${this._catalogGroup.uniqueId}/${ckanDataset.id}/${resource.id}`;
   }
