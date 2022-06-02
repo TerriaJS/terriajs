@@ -16,6 +16,7 @@ import "tinymce/plugins/image";
 import "tinymce/plugins/link";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/table";
+import "tinymce/plugins/autolink";
 
 // Extra css to enable proper behaviour of tinymce, including image resize handles
 import contentCss from "!!raw-loader!tinymce/skins/content/default/content.min.css";
@@ -35,7 +36,7 @@ export default function TinyEditor(props) {
         menubar: false,
         branding: false,
         statusbar: false,
-        plugins: ["link", "image", "media", "table", "lists"],
+        plugins: ["link", "image", "media", "table", "lists", "autolink"],
         toolbar:
           "blocks | bold italic forecolor | align |" +
           " bullist numlist table |" +
