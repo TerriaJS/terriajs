@@ -200,7 +200,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
     config.module.rules.push({
         test: /\.(png|jpg|svg|gif)$/,
         include: [
-            path.resolve(terriaJSBasePath + path.sep),
+            path.resolve(terriaJSBasePath) + path.sep,
             path.resolve(cesiumDir)
         ],
         exclude: [
@@ -295,7 +295,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
 
     if (hot && !disableStyleLoader) {
         config.module.rules.push({
-            include: path.resolve(terriaJSBasePath),
+            include: path.resolve(terriaJSBasePath) + path.sep,
             test: /\.scss$/,
             use: [
                 require.resolve('style-loader'),
