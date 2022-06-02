@@ -10,6 +10,7 @@ Change Log
 * Fix use of `baseMapContrastColor` in region mapping/protomaps and remove `MAX_SELECTABLE_DIMENSION_OPTIONS`
 * `mapItems` can now return arbitrary Cesium primitives.
 * Update `terriajs-cesium` to `1.91.0`
+* Update `terriajs-cesium` to `1.92.0`
 * [The next improvement]
 
 #### 8.2.4 - 2022-05-23
