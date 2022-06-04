@@ -4,7 +4,6 @@ var clone = require("terriajs-cesium/Source/Core/clone").default;
 var Color = require("terriajs-cesium/Source/Core/Color").default;
 var JulianDate = require("terriajs-cesium/Source/Core/JulianDate").default;
 var Rectangle = require("terriajs-cesium/Source/Core/Rectangle").default;
-var when = require("terriajs-cesium/Source/ThirdParty/when").default;
 
 var CatalogItem = require("../../lib/Models/CatalogItem");
 var CsvCatalogItem = require("../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem");
@@ -141,7 +140,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         expect(csvItem.dataSource.tableStructure).toBeDefined();
         expect(csvItem.dataSource.tableStructure.columns.length).toEqual(5);
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -154,7 +153,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         expect(csvItem.legendUrl.mimeType).toBeDefined();
         expect(csvItem.legendUrl.url).toBeDefined();
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -167,7 +166,7 @@ describe("CsvCatalogItem with lat and lon", function() {
           true
         );
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -180,7 +179,7 @@ describe("CsvCatalogItem with lat and lon", function() {
           true
         );
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -198,7 +197,7 @@ describe("CsvCatalogItem with lat and lon", function() {
           csvItem.dataSource.tableStructure.columnsByType[VarType.LAT][0].name
         ).toEqual("lat");
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -212,7 +211,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         );
         expect(csvItem.legendUrl).toBeDefined();
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -228,7 +227,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         expect(tableStructure.columns[2].values[0]).toEqual(1000);
         expect(tableStructure.columns[2].values[1]).toBeCloseTo(234567.89, 2);
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -245,7 +244,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         expect(latColumn.minimumValue).toBeLessThan(-30);
         expect(lonColumn.minimumValue).toBeGreaterThan(150);
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -258,7 +257,7 @@ describe("CsvCatalogItem with lat and lon", function() {
           "enum"
         );
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -274,7 +273,7 @@ describe("CsvCatalogItem with lat and lon", function() {
           "val"
         );
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -288,7 +287,7 @@ describe("CsvCatalogItem with lat and lon", function() {
       .then(function() {
         expect(csvItem.dataSource.tableStructure.activeItems.length).toEqual(0);
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -303,7 +302,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         expect(featureColor(csvItem, 0)).toEqual(featureColor(csvItem, 4));
         expect(featureColor(csvItem, 1)).toEqual(featureColor(csvItem, 3));
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -318,7 +317,7 @@ describe("CsvCatalogItem with lat and lon", function() {
           csvItem.dataSource.tableStructure.columns[0].values.length
         ).toEqual(5);
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -357,7 +356,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         );
         expect(durationInSeconds).toBe(24 * 3600); // 24 hours
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -386,7 +385,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         );
         expect(durationInSeconds).toEqual(sevenDaysInMinutes * 60);
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -424,7 +423,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         );
         expect(durationInSeconds).toBe(24 * 3600); // 24 hours
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -472,7 +471,7 @@ describe("CsvCatalogItem with lat and lon", function() {
           )
         ).toBe(true);
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -485,7 +484,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         var features = csvItem.dataSource.entities.values;
         expect(features.length).toEqual(13); // There are 13 rows in the file.
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -498,7 +497,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         var features = csvItem.dataSource.entities.values;
         expect(features.length).toEqual(13); // There are 13 rows in the file.
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -513,7 +512,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         expect(csvItem.clock).toBeUndefined();
         expect(source.clock).toBeUndefined();
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -530,7 +529,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         expect(csvItem.clock).toBeUndefined();
         expect(source.clock).toBeUndefined();
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -543,7 +542,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         var source = csvItem.dataSource;
         expect(source.tableStructure.activeTimeColumn.name).toEqual("year");
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -556,7 +555,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         var source = csvItem.dataSource;
         expect(source.tableStructure.activeTimeColumn.name).toEqual("year");
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -583,7 +582,7 @@ describe("CsvCatalogItem with lat and lon", function() {
           JulianDate.fromIso8601("2015-08-06T01:00Z")
         );
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -598,7 +597,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         expect(desc(0)).toContain("hello");
         expect(desc(1)).toContain("boots");
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -616,7 +615,7 @@ describe("CsvCatalogItem with lat and lon", function() {
           "<td>Vals</td><td[^>]*>-</td>"
         );
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -653,7 +652,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         expect(maxPix).toEqual(csvItem._maxPix * 2);
         expect(minPix).toEqual(csvItem._minPix * 2);
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -665,7 +664,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         expect(csvItem.tableStructure.columns[0].values.length).toEqual(5);
         expect(csvItem.dataSource.entities.values.length).toEqual(4); // one line is missing longitude.
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -676,7 +675,7 @@ describe("CsvCatalogItem with lat and lon", function() {
       .then(function() {
         expect(csvItem.dataSource.entities.values.length).toBeGreaterThan(1);
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -691,7 +690,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         expect(valueColumn.values[1]).toEqual(null);
         expect(valueColumn.values[2]).toEqual(0);
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -706,7 +705,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         expect(valueColumn.values[1]).toEqual(0);
         expect(valueColumn.values[2]).toEqual(0);
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -720,7 +719,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         expect(valueColumn.values[1]).toEqual(null);
         expect(valueColumn.values[2]).toEqual(0);
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -732,7 +731,7 @@ describe("CsvCatalogItem with lat and lon", function() {
       .then(function() {
         expect(featureColor(csvItem, 1)).not.toEqual(featureColor(csvItem, 2));
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -751,7 +750,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         // null values do not lead to coloring getting out of sync with values.
         expect(featureColor(csvItem, 2)).not.toEqual(nullColor);
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -767,7 +766,7 @@ describe("CsvCatalogItem with lat and lon", function() {
       .then(function() {
         expect(featureColor(csvItem, 1)).not.toEqual(nullColor);
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -783,7 +782,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         expect(url).not.toContain("unicorns");
         expect(url).toContain("guinea pigs");
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -797,7 +796,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         expect(csvItem.legendUrl.url).not.toContain("other values");
         expect(csvItem.legendUrl.url).toContain("turtles");
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -813,7 +812,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         expect(url).toContain("cats");
         expect(url).toContain("dogs");
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -831,7 +830,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         expect(url).toContain("10 values");
         expect(url).not.toContain("dogs");
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -849,7 +848,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         expect(url).not.toContain("values");
         expect(url).toContain("dogs");
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -895,7 +894,7 @@ describe("CsvCatalogItem with lat and lon", function() {
           expect(maxPix).toEqual(csvItem._maxPix * 2);
           expect(minPix).toEqual(csvItem._minPix * 2);
         })
-        .otherwise(fail)
+        .catch(fail)
         .then(done);
     });
 
@@ -916,7 +915,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         .then(function() {
           expect(featureColor(csvItem, 1)).toEqual(nullColor);
         })
-        .otherwise(fail)
+        .catch(fail)
         .then(done);
     });
 
@@ -939,7 +938,7 @@ describe("CsvCatalogItem with lat and lon", function() {
           expect(csvItem.tableStructure.columns[2].name).toEqual("Temperature");
           expect(featureColor(csvItem, 1)).toEqual(nullColor);
         })
-        .otherwise(fail)
+        .catch(fail)
         .then(done);
     });
 
@@ -959,7 +958,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         .then(function() {
           expect(featureColor(csvItem, 1)).toEqual(nullColor);
         })
-        .otherwise(fail)
+        .catch(fail)
         .then(done);
     });
 
@@ -978,7 +977,7 @@ describe("CsvCatalogItem with lat and lon", function() {
         .then(function() {
           expect(csvItem.tableStructure.columns[2].type).toEqual(VarType.ENUM);
         })
-        .otherwise(fail)
+        .catch(fail)
         .then(done);
     });
   });
@@ -1016,7 +1015,7 @@ describe("CsvCatalogItem with region mapping", function() {
 
     // loadAndStubTextResources(done, [
     //     terria.configParameters.regionMappingDefinitionsUrl
-    // ]).then(done).otherwise(done.fail);
+    // ]).then(done).catch(done.fail);
   });
 
   it("does not think a lat-lon csv has regions", function(done) {
@@ -1026,7 +1025,7 @@ describe("CsvCatalogItem with region mapping", function() {
       .then(function() {
         expect(csvItem.regionMapping).toBeUndefined();
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1037,7 +1036,7 @@ describe("CsvCatalogItem with region mapping", function() {
       .then(function() {
         expect(csvItem.regionMapping).toBeUndefined();
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1053,7 +1052,7 @@ describe("CsvCatalogItem with region mapping", function() {
         expect(regionDetail.regionProvider.regionType).toEqual("LGA");
         expect(csvItem.legendUrl).toBeDefined();
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1075,7 +1074,7 @@ describe("CsvCatalogItem with region mapping", function() {
         expect(recolorFunction(indexOfThisRegion)[0]).toBeDefined(); // Test that at least one rgba component is defined.
         expect(recolorFunction(indexOfThisRegion)).not.toEqual([0, 0, 0, 0]); // And that the color is not all zeros.
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1120,7 +1119,7 @@ describe("CsvCatalogItem with region mapping", function() {
           0
         ]); // And that the color is not all zeros.
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1140,7 +1139,7 @@ describe("CsvCatalogItem with region mapping", function() {
       .then(function() {
         expect(csvItem.regionMapping.regionDetails).toBeDefined();
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1160,7 +1159,7 @@ describe("CsvCatalogItem with region mapping", function() {
       .then(function() {
         expect(csvItem.regionMapping).not.toBeDefined();
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1192,7 +1191,7 @@ describe("CsvCatalogItem with region mapping", function() {
           "other territories"
         ]);
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1205,8 +1204,8 @@ describe("CsvCatalogItem with region mapping", function() {
   //             expect(regionDetails).toBeDefined();
   //             // There is no "rowPropertiesByCode" method any more.
   //             expect(csvItem.rowPropertiesByCode(209).value).toBe('correct');
-  //         }).otherwise(fail);
-  //     }).otherwise(fail).then(done);
+  //         }).catch(fail);
+  //     }).catch(fail).then(done);
   // });
 
   it("respects tableStyle color ramping for regions", function(done) {
@@ -1246,7 +1245,7 @@ describe("CsvCatalogItem with region mapping", function() {
         ]);
         expect(csvItem.legendUrl).toBeDefined();
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1268,7 +1267,7 @@ describe("CsvCatalogItem with region mapping", function() {
           csvItem.tableStructure.columnsByType[VarType.REGION][0].name
         ).toBe("postcode");
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1282,7 +1281,7 @@ describe("CsvCatalogItem with region mapping", function() {
         expect(csvItem.tableStructure.activeItems[0].name).toBe("enum");
         expect(csvItem.legendUrl).toBeDefined();
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1295,7 +1294,7 @@ describe("CsvCatalogItem with region mapping", function() {
         expect(regionDetails).toBeDefined();
         expect(csvItem.legendUrl).toBeDefined();
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1313,7 +1312,7 @@ describe("CsvCatalogItem with region mapping", function() {
         csvItem.isEnabled = true;
         expect(csvItem.legendUrl).toBeDefined();
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1326,7 +1325,7 @@ describe("CsvCatalogItem with region mapping", function() {
         expect(regionDetails).toBeDefined();
         expect(csvItem.tableStructure.activeItems[0].name).toEqual("val1");
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1344,7 +1343,7 @@ describe("CsvCatalogItem with region mapping", function() {
         expect(regionDetail.disambigColumnName).toEqual("State");
         // The following test is much more rigorous.
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1382,7 +1381,7 @@ describe("CsvCatalogItem with region mapping", function() {
         expect(recolorFunction(regionNames.indexOf("3124"))).not.toBeDefined();
         expect(csvItem.legendUrl).toBeDefined();
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1420,7 +1419,7 @@ describe("CsvCatalogItem with region mapping", function() {
         expect(recolorFunction(regionNames.indexOf("3124"))).not.toBeDefined();
         expect(csvItem.legendUrl).toBeDefined();
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1459,7 +1458,7 @@ describe("CsvCatalogItem with region mapping", function() {
         expect(recolorFunction(regionNames.indexOf("3123"))).not.toBeDefined();
         expect(recolorFunction(regionNames.indexOf("3124"))).not.toBeDefined();
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1475,7 +1474,7 @@ describe("CsvCatalogItem with region mapping", function() {
         expect(url).not.toContain("unicorns");
         expect(url).toContain("guinea pigs");
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1491,7 +1490,7 @@ describe("CsvCatalogItem with region mapping", function() {
         expect(url).toContain("cats");
         expect(url).toContain("dogs");
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1509,7 +1508,7 @@ describe("CsvCatalogItem with region mapping", function() {
         expect(url).toContain("10 values");
         expect(url).not.toContain("dogs");
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1527,7 +1526,7 @@ describe("CsvCatalogItem with region mapping", function() {
         expect(url).not.toContain("values");
         expect(url).toContain("dogs");
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1539,14 +1538,14 @@ describe("CsvCatalogItem with region mapping", function() {
         var url = encodeURIComponent(JSON.stringify(csvItem.serializeToJson()));
         expect(url.length).toBeLessThan(2000);
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
   //describe('when data is partially unmatchable', function() {
   //    beforeEach(function(done) {
   //        spyOn(terria.error, 'raiseEvent');
-  //        csvItem.updateFromJson({data: 'Postcode,value\n2000,1\n9999,2'}).otherwise(fail);
+  //        csvItem.updateFromJson({data: 'Postcode,value\n2000,1\n9999,2'}).catch(fail);
   //        csvItem.load().then(done);
   //    });
   //
@@ -1631,7 +1630,7 @@ describe("CsvCatalogItem with region mapping", function() {
             expect(description).toContain("42.42");
             expect(description).toContain("the universe");
           })
-          .otherwise(fail)
+          .catch(fail)
           .then(done);
       });
     });
@@ -1705,7 +1704,7 @@ describe("CsvCatalogItem with region mapping", function() {
             expect(description).toContain("42.42");
             expect(description).toContain("the universe");
           })
-          .otherwise(fail)
+          .catch(fail)
           .then(done);
       });
     });
@@ -1831,7 +1830,7 @@ describe("CsvCatalogItem with region mapping", function() {
             expect(description).toContain("Wellington");
             expect(description).toContain("Sydney");
           })
-          .otherwise(fail)
+          .catch(fail)
           .then(done);
       });
     });
@@ -1895,7 +1894,7 @@ describe("CsvCatalogItem with region mapping", function() {
             expect(description).not.toContain("alpha");
             expect(description).not.toContain("beta");
           })
-          .otherwise(fail)
+          .catch(fail)
           .then(done);
       });
     });
@@ -1926,7 +1925,7 @@ describe("CsvCatalogItem with no geo using default bundled regionMapping", funct
         expect(csvItem.tableStructure.allowMultiple).toBe(true);
         expect(csvItem.tableStructure.items.length).toBe(2);
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1961,7 +1960,7 @@ describe("CsvCatalogItem with no geo using default bundled regionMapping", funct
         expect(csvItem.tableStructure.items.length).toEqual(2);
         expect(csvItem.tableStructure.activeItems.length).toEqual(0);
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -1992,7 +1991,7 @@ describe("CsvCatalogItem with no geo using default bundled regionMapping", funct
         expect(csvItem.tableStructure.items.length).toEqual(2);
         expect(csvItem.tableStructure.name).toBe("");
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 
@@ -2007,7 +2006,7 @@ describe("CsvCatalogItem with no geo using default bundled regionMapping", funct
         ).toEqual(0);
         expect(csvItem.tableStructure.items.length).toBe(3);
       })
-      .otherwise(fail)
+      .catch(fail)
       .then(done);
   });
 });
@@ -2187,7 +2186,7 @@ describe("CsvCatalogItem & chart sharing", function() {
           expect(json.columns).toBeUndefined();
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
     it("toggles the selected dataVariable in tablestructure from updateFromJson (e.g. story-transitions)", function(done) {
       csvItem
@@ -2217,7 +2216,7 @@ describe("CsvCatalogItem & chart sharing", function() {
           expect(csvItem.concepts[0].activeItems[0].name).toEqual("name");
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
   });
   describe("serialization around tableStyle & tableStructures for non-geo time series csvs", function() {
@@ -2391,7 +2390,7 @@ describe("CsvCatalogItem & chart sharing", function() {
           );
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
 
     it("initialises and shares the correct 'no variables selected' state", function(done) {
@@ -2450,7 +2449,7 @@ describe("CsvCatalogItem & chart sharing", function() {
           expect(serialized.tableStyle.columns[2].active).toBe(false);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
     it("initialises the correct 'second variable is selected' state & shares newly toggled state", function(done) {
       columns = {
@@ -2515,7 +2514,7 @@ describe("CsvCatalogItem & chart sharing", function() {
           expect(serialized.tableStyle.columns[2].active).toBe(true);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
   });
   describe("load behaviour around SensorObservationServiceCatalogItem generated csvs", function() {
@@ -2554,14 +2553,14 @@ describe("CsvCatalogItem & chart sharing", function() {
           }
         })
         .then(function() {
-          csvItem.data = when.resolve(tableStructure);
+          csvItem.data = Promise.resolve(tableStructure);
         })
         .then(csvItem.load.bind(csvItem))
         .then(function() {
           expect(csvItem.tableStructure).toEqual(tableStructure);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
     it("does not load when we haven't defined how to load it via the csv's `data` property", function(done) {
       csvItem
@@ -2581,7 +2580,7 @@ describe("CsvCatalogItem & chart sharing", function() {
           expect(csvItem.tableStructure).toBeUndefined();
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
   });
 });

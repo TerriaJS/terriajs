@@ -32,7 +32,6 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import when from "terriajs-cesium/Source/ThirdParty/when";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";
@@ -278,7 +277,7 @@ export default class ProtomapsImageryProvider
   readonly defaultMagnificationFilter = undefined as any;
   readonly defaultMinificationFilter = undefined as any;
   readonly proxy = <any>undefined;
-  readonly readyPromise = when(true);
+  readonly readyPromise = Promise.resolve(true);
   readonly tileDiscardPolicy = <any>undefined;
 
   // Protomaps properties
