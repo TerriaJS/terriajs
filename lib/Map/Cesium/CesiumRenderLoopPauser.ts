@@ -131,10 +131,10 @@ export default class CesiumRenderLoopPauser {
       headers: any,
       deferred: any,
       overrideMimeType: any,
-      preferText: any,
-      timeout: any
+      timeout: any,
+      returnType: any
     ) => {
-      deferred.promise.always(this._boundNotifyRepaintRequired);
+      deferred.promise.finally(this._boundNotifyRepaintRequired);
       return this._originalLoadWithXhr(
         url,
         responseType,
@@ -143,8 +143,8 @@ export default class CesiumRenderLoopPauser {
         headers,
         deferred,
         overrideMimeType,
-        preferText,
-        timeout
+        timeout,
+        returnType
       );
     };
 

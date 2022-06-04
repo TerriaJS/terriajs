@@ -2,7 +2,7 @@ import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import styled from "styled-components";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import Cesium from "../../Models/Cesium";
 import Terria from "../../Models/Terria";
 import ViewerMode from "../../Models/ViewerMode";
@@ -36,15 +36,15 @@ class WorkbenchSplitScreen extends React.Component<PropsType> {
       runInAction(() => {
         switch (side) {
           case "Left":
-            terria.terrainSplitDirection = ImagerySplitDirection.LEFT;
+            terria.terrainSplitDirection = SplitDirection.LEFT;
             terria.showSplitter = true;
             break;
           case "Right":
-            terria.terrainSplitDirection = ImagerySplitDirection.RIGHT;
+            terria.terrainSplitDirection = SplitDirection.RIGHT;
             terria.showSplitter = true;
             break;
           case "Both":
-            terria.terrainSplitDirection = ImagerySplitDirection.NONE;
+            terria.terrainSplitDirection = SplitDirection.NONE;
             break;
         }
 
@@ -72,10 +72,10 @@ class WorkbenchSplitScreen extends React.Component<PropsType> {
     let currentSide = "Both";
     if (supportsSide) {
       switch (terria.terrainSplitDirection) {
-        case ImagerySplitDirection.LEFT:
+        case SplitDirection.LEFT:
           currentSide = "Left";
           break;
-        case ImagerySplitDirection.RIGHT:
+        case SplitDirection.RIGHT:
           currentSide = "Right";
           break;
       }

@@ -30,7 +30,7 @@ describeIfSupported("KmlCatalogItem", function() {
         expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("use provided dataUrl", function(done) {
@@ -43,7 +43,7 @@ describeIfSupported("KmlCatalogItem", function() {
         expect(kml.dataUrl).toBe("test/test.html");
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("have default dataUrl and dataUrlType", function() {
@@ -64,7 +64,7 @@ describeIfSupported("KmlCatalogItem", function() {
           expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
   });
 
@@ -78,7 +78,7 @@ describeIfSupported("KmlCatalogItem", function() {
           expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
   });
 
@@ -92,7 +92,7 @@ describeIfSupported("KmlCatalogItem", function() {
           expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
   });
 
@@ -104,7 +104,7 @@ describeIfSupported("KmlCatalogItem", function() {
         expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("can load a KMZ file by provided Blob", function(done) {
@@ -117,7 +117,7 @@ describeIfSupported("KmlCatalogItem", function() {
           expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
   });
 
@@ -129,7 +129,7 @@ describeIfSupported("KmlCatalogItem", function() {
         .then(function() {
           done.fail("Load should not succeed.");
         })
-        .otherwise(function(e) {
+        .catch(function(e) {
           expect(e instanceof TerriaError).toBe(true);
           done();
         });
@@ -145,7 +145,7 @@ describeIfSupported("KmlCatalogItem", function() {
           .then(function() {
             done.fail("Load should not succeed.");
           })
-          .otherwise(function(e) {
+          .catch(function(e) {
             expect(e instanceof TerriaError).toBe(true);
             done();
           });
@@ -162,7 +162,7 @@ describeIfSupported("KmlCatalogItem", function() {
           .then(function() {
             done.fail("Load should not succeed.");
           })
-          .otherwise(function(e) {
+          .catch(function(e) {
             expect(e instanceof TerriaError).toBe(true);
             done();
           });
