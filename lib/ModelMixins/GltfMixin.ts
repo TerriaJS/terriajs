@@ -11,8 +11,8 @@ import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import Constructor from "../Core/Constructor";
 import CommonStrata from "../Models/Definition/CommonStrata";
-import CreateModel from "../Models/Definition/CreateModel";
 import Model from "../Models/Definition/Model";
+import HasLocalData from "../Models/HasLocalData";
 import GltfTraits from "../Traits/TraitsClasses/GltfTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import MappableMixin from "./MappableMixin";
@@ -27,9 +27,9 @@ const Axis: Axis = require("terriajs-cesium/Source/Scene/Axis").default;
 type GltfModel = Model<GltfTraits>;
 
 function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
-  class GltfMixin extends ShadowMixin(
-    UrlMixin(CatalogMemberMixin(MappableMixin(CreateModel(GltfTraits))))
-  ) {
+  class GltfMixin
+    extends ShadowMixin(UrlMixin(CatalogMemberMixin(MappableMixin(Base))))
+    implements HasLocalData {
     @observable hasLocalData = false;
 
     get hasGltfMixin() {

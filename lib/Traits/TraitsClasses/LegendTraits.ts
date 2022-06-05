@@ -1,7 +1,7 @@
-import primitiveTrait from "../Decorators/primitiveTrait";
-import ModelTraits from "../ModelTraits";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import ModelTraits from "../ModelTraits";
 
 export class LegendItemTraits extends ModelTraits {
   @primitiveTrait({
@@ -60,6 +60,13 @@ export class LegendItemTraits extends ModelTraits {
   })
   outlineColor?: string;
 
+  @primitiveTrait({
+    name: "Outline Width",
+    description: "The width of outline in pixels",
+    type: "number"
+  })
+  outlineWidth?: number;
+
   @primitiveArrayTrait({
     name: "Multiple Colors",
     description:
@@ -74,6 +81,20 @@ export class LegendItemTraits extends ModelTraits {
     type: "string"
   })
   imageUrl?: string;
+
+  @primitiveTrait({
+    name: "Marker",
+    description: 'Maki marker ID to display with this item (eg "circle").',
+    type: "string"
+  })
+  marker?: string;
+
+  @primitiveTrait({
+    name: "Rotation",
+    description: "The degrees to rotate legend item.",
+    type: "number"
+  })
+  rotation: number = 0;
 
   @primitiveTrait({
     name: "Add Spacing Above",

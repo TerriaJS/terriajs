@@ -1,4 +1,5 @@
-import { action, runInAction } from "mobx";
+import { sortBy, uniqBy } from "lodash";
+import { action, computed, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
@@ -11,9 +12,11 @@ import {
   Category,
   DataSourceAction
 } from "../../../Core/AnalyticEvents/analyticEvents";
+import filterOutUndefined from "../../../Core/filterOutUndefined";
 import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
 import getPath from "../../../Core/getPath";
 import isDefined from "../../../Core/isDefined";
+import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin, {
   getName
 } from "../../../ModelMixins/CatalogMemberMixin";
@@ -29,7 +32,10 @@ import CommonStrata from "../../../Models/Definition/CommonStrata";
 import hasTraits from "../../../Models/Definition/hasTraits";
 import Model, { BaseModel } from "../../../Models/Definition/Model";
 import getAncestors from "../../../Models/getAncestors";
-import { default as ViewingControlsModel } from "../../../Models/ViewingControls";
+import {
+  default as ViewingControlsModel,
+  ViewingControl
+} from "../../../Models/ViewingControls";
 import ViewState from "../../../ReactViewModels/ViewState";
 import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
 import Box from "../../../Styled/Box";
@@ -115,7 +121,7 @@ class ViewingControls extends React.Component<
 
   hideMenu() {
     runInAction(() => {
-      this.props.viewState.workbenchWithOpenControls = undefined;
+      this.props.viewState.workbenchItemWithOpenControls = undefined;
     });
   }
 
@@ -263,9 +269,6 @@ class ViewingControls extends React.Component<
   }
 
   openDiffTool() {
-    // Disable timeline
-    // Should we do this? Difference is quite a specific use case
-    this.props.item.terria.timelineStack.removeAll();
     this.props.viewState.openTool({
       toolName: "Difference",
       getToolComponent: () =>
@@ -325,6 +328,41 @@ class ViewingControls extends React.Component<
     });
   }
 
+  /**
+   * Return a list of viewing controls collated from global and item specific settings.
+   */
+  @computed
+  get viewingControls(): ViewingControl[] {
+    const item = this.props.item;
+    const viewState = this.props.viewState;
+    if (!CatalogMemberMixin.isMixedInto(item)) {
+      return [];
+    }
+
+    // Global viewing controls (usually defined by plugins).
+    const globalViewingControls = filterOutUndefined(
+      viewState.globalViewingControlOptions.map(
+        generateViewingControlForItem => {
+          try {
+            return generateViewingControlForItem(item);
+          } catch (err) {
+            TerriaError.from(err).log();
+            return undefined;
+          }
+        }
+      )
+    );
+    // Item specific viewing controls
+    const itemViewingControls: ViewingControl[] = item.viewingControls;
+
+    // Collate list, unique by id and sorted by name
+    const viewingControls = sortBy(
+      uniqBy([...itemViewingControls, ...globalViewingControls], "id"),
+      "name"
+    );
+    return viewingControls;
+  }
+
   renderViewingControlsMenu() {
     const { t, item, viewState } = this.props;
     const canSplit =
@@ -335,23 +373,29 @@ class ViewingControls extends React.Component<
       defined(item.splitDirection) &&
       item.terria.currentViewer.canShowSplitter;
 
+    const handleOnClick = (viewingControl: ViewingControl) => {
+      try {
+        viewingControl.onClick(this.props.viewState);
+      } catch (err) {
+        viewState.terria.raiseErrorToUser(TerriaError.from(err));
+      }
+    };
+
     return (
       <ul>
-        {ViewingControlsModel.is(item)
-          ? item.viewingControls.map(viewingControl => (
-              <li key={viewingControl.id}>
-                <ViewingControlMenuButton
-                  onClick={() => viewingControl.onClick(this.props.viewState)}
-                  title={viewingControl.iconTitle}
-                >
-                  <BoxViewingControl>
-                    <StyledIcon {...viewingControl.icon} />
-                    <span>{viewingControl.name}</span>
-                  </BoxViewingControl>
-                </ViewingControlMenuButton>
-              </li>
-            ))
-          : null}
+        {this.viewingControls.map(viewingControl => (
+          <li key={viewingControl.id}>
+            <ViewingControlMenuButton
+              onClick={() => handleOnClick(viewingControl)}
+              title={viewingControl.iconTitle}
+            >
+              <BoxViewingControl>
+                <StyledIcon {...viewingControl.icon} />
+                <span>{viewingControl.name}</span>
+              </BoxViewingControl>
+            </ViewingControlMenuButton>
+          </li>
+        ))}
         {canSplit ? (
           <li key={"workbench.splitItem"}>
             <ViewingControlMenuButton
@@ -430,7 +474,7 @@ class ViewingControls extends React.Component<
     const viewState = this.props.viewState;
     const item = this.props.item;
     const { t } = this.props;
-    const showMenu = item.uniqueId === viewState.workbenchWithOpenControls;
+    const showMenu = item.uniqueId === viewState.workbenchItemWithOpenControls;
     return (
       <Box>
         <ul
@@ -486,10 +530,10 @@ class ViewingControls extends React.Component<
             onClick={e => {
               e.stopPropagation();
               runInAction(() => {
-                if (viewState.workbenchWithOpenControls === item.uniqueId) {
-                  viewState.workbenchWithOpenControls = undefined;
+                if (viewState.workbenchItemWithOpenControls === item.uniqueId) {
+                  viewState.workbenchItemWithOpenControls = undefined;
                 } else {
-                  viewState.workbenchWithOpenControls = item.uniqueId;
+                  viewState.workbenchItemWithOpenControls = item.uniqueId;
                 }
               });
             }}

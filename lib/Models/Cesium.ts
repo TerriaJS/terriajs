@@ -49,6 +49,7 @@ import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
 import LatLonHeight from "../Core/LatLonHeight";
 import pollToPromise from "../Core/pollToPromise";
+import TerriaError from "../Core/TerriaError";
 import waitForDataSourceToLoad from "../Core/waitForDataSourceToLoad";
 import CesiumRenderLoopPauser from "../Map/Cesium/CesiumRenderLoopPauser";
 import CesiumSelectionIndicator from "../Map/Cesium/CesiumSelectionIndicator";
@@ -59,7 +60,7 @@ import PickedFeatures, {
 } from "../Map/PickedFeatures/PickedFeatures";
 import MappableMixin, {
   ImageryParts,
-  isCesium3DTileset,
+  isPrimitive,
   isDataSource,
   isTerrainProvider,
   MapItem
@@ -162,11 +163,20 @@ export default class Cesium extends GlobeOrMap {
         }
       : undefined;
 
-    this.cesiumWidget = new CesiumWidget(
-      container,
-      Object.assign({}, options, firefoxBugOptions)
-    );
-    this.scene = this.cesiumWidget.scene;
+    try {
+      this.cesiumWidget = new CesiumWidget(
+        container,
+        Object.assign({}, options, firefoxBugOptions)
+      );
+      this.scene = this.cesiumWidget.scene;
+    } catch (error) {
+      throw TerriaError.from(error, {
+        message: {
+          key: "terriaViewer.slowWebGLAvailableMessageII",
+          parameters: { appName: this.terria.appName, webGL: "WebGL" }
+        }
+      });
+    }
 
     //new Cesium3DTilesInspector(document.getElementsByClassName("cesium-widget").item(0), this.scene);
 
@@ -532,6 +542,7 @@ export default class Cesium extends GlobeOrMap {
   }
 
   private observeModelLayer() {
+    let prevMapItems: MapItem[] = [];
     return autorun(() => {
       // TODO: Look up the type in a map and call the associated function.
       //       That way the supported types of map items is extensible.
@@ -596,27 +607,25 @@ export default class Cesium extends GlobeOrMap {
         }
       }
 
-      const allCesium3DTilesets = this._allMapItems.filter(isCesium3DTileset);
-      // Remove deleted tilesets
+      const allPrimitives = this._allMapItems.filter(isPrimitive);
+      const prevPrimitives = prevMapItems.filter(isPrimitive);
       const primitives = this.scene.primitives;
-      // Iterate backwards because we're removing items.
-      for (let i = this.scene.primitives.length - 1; i >= 0; i--) {
-        const prim = primitives.get(i);
-        if (
-          isCesium3DTileset(prim) &&
-          allCesium3DTilesets.indexOf(prim) === -1
-        ) {
-          this.scene.primitives.remove(prim);
-        }
-      }
 
-      // Add new tilesets
-      allCesium3DTilesets.forEach(tileset => {
-        if (!primitives.contains(tileset)) {
-          primitives.add(tileset);
+      // Remove deleted primitives
+      prevPrimitives.forEach(primitive => {
+        if (!allPrimitives.includes(primitive)) {
+          primitives.remove(primitive);
         }
       });
 
+      // Add new primitives
+      allPrimitives.forEach(primitive => {
+        if (!primitives.contains(primitive)) {
+          primitives.add(primitive);
+        }
+      });
+
+      prevMapItems = this._allMapItems;
       this.notifyRepaintRequired();
     });
   }
@@ -709,7 +718,7 @@ export default class Cesium extends GlobeOrMap {
             });
           }
         });
-      } else if (target.position !== undefined) {
+      } else if (target.position instanceof Cartesian3) {
         // target is a CameraView or an Entity
         return flyToPromise(camera, {
           duration: flightDurationSeconds,
@@ -757,7 +766,7 @@ export default class Cesium extends GlobeOrMap {
   _reactToSplitterChanges() {
     const disposeSplitPositionChange = autorun(() => {
       if (this.scene) {
-        this.scene.imagerySplitPosition = this.terria.splitPosition;
+        this.scene.splitPosition = this.terria.splitPosition;
         this.notifyRepaintRequired();
       }
     });

@@ -60,6 +60,15 @@ export function isJsonArray(
   );
 }
 
+export function isJsonObjectArray(
+  value: unknown | undefined,
+  deep = true
+): value is JsonArray<JsonObject> {
+  return (
+    Array.isArray(value) && value.every(child => isJsonObject(child, deep))
+  );
+}
+
 export function isJsonStringArray(
   value: unknown | undefined
 ): value is JsonArray<string> {

@@ -12,12 +12,13 @@ import GeoJsonMixin, {
 } from "../../../ModelMixins/GeojsonMixin";
 import GeoJsonCatalogItemTraits from "../../../Traits/TraitsClasses/GeoJsonCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
+import HasLocalData from "../../HasLocalData";
 import Terria from "../../Terria";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
-class GeoJsonCatalogItem extends GeoJsonMixin(
-  CreateModel(GeoJsonCatalogItemTraits)
-) {
+class GeoJsonCatalogItem
+  extends GeoJsonMixin(CreateModel(GeoJsonCatalogItemTraits))
+  implements HasLocalData {
   static readonly type = "geojson";
   get type() {
     return GeoJsonCatalogItem.type;

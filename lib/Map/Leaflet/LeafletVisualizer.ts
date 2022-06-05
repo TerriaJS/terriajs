@@ -399,7 +399,6 @@ class LeafletGeomVisualizer {
       return;
     }
 
-    const cart = Ellipsoid.WGS84.cartesianToCartographic(position);
     const latlng = positionToLatLng(position, bounds);
     const image: any = getValue(markerGraphics.image, time);
     const height: number | undefined = getValue(markerGraphics.height, time);
@@ -473,6 +472,7 @@ class LeafletGeomVisualizer {
     }
 
     if (redrawIcon) {
+      const recolorNeeded = !color.equals(defaultColor);
       const drawBillboard = function(
         image: HTMLImageElement,
         dataurl: string | undefined
@@ -487,7 +487,7 @@ class LeafletGeomVisualizer {
         const yOff = (h / 2) * (1 + verticalOrigin) - pixelOffset.y;
         iconOptions.iconAnchor = [xOff, yOff];
 
-        if (!color.equals(defaultColor)) {
+        if (recolorNeeded) {
           iconOptions.iconUrl = recolorBillboard(image, color);
         }
         marker.setIcon(L.icon(iconOptions));
@@ -498,6 +498,9 @@ class LeafletGeomVisualizer {
       };
       if (isDefined(imageUrl)) {
         img.src = imageUrl;
+        if (recolorNeeded) {
+          img.crossOrigin = "anonymous";
+        }
       }
     }
   }

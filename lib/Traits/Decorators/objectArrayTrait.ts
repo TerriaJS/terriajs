@@ -129,7 +129,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
     // For example:
     // - In "definition" stratum, we set the objectArray to: [{item:"one", value:"a"}, {item:"two", value:"b"}]
     // - The in "user" stratum, we remove the {item:"two", value:"b"} element
-    // - Then the corrent model will only have {item:"one", value:"a"}
+    // - Then the correct model will only have {item:"one", value:"a"}
 
     // For more info see objectArrayTraitSpec.ts # allows strata to remove elements
 

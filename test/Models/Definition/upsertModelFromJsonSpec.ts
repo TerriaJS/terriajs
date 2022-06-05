@@ -47,7 +47,7 @@ describe("upsertModelFromJson", function() {
           type: "wms",
           localId:
             "mobile-black-spot-programme:funded-base-stations-round4-group",
-          name: "Override"
+          name: "This will be overridden by GetCapabilites"
         }
       ]
     };
@@ -86,7 +86,7 @@ describe("upsertModelFromJson", function() {
     );
     expect(group.memberModels.length).toBe(1);
     expect(group.memberModels[0]).toBe(item);
-    expect(item.name).toBe("Override");
+    expect(item.name).toBe("This will be overridden by GetCapabilites");
     expect(item.layers).toBeUndefined();
     expect(item.isGeoServer).toBe(
       false,
@@ -112,7 +112,7 @@ describe("upsertModelFromJson", function() {
 
     expect(group.memberModels.length).toBeGreaterThan(1);
     expect(group.memberModels.indexOf(item)).toBeGreaterThanOrEqual(0);
-    expect(item.name).toBe("Override");
+    expect(item.name).toBe("Funded Base Stations with Ineligible Areas");
     expect(item.layers).toBe(
       "mobile-black-spot-programme:funded-base-stations-round4-group"
     );
