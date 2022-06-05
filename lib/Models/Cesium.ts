@@ -5,7 +5,6 @@ import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import createWorldTerrain from "terriajs-cesium/Source/Core/createWorldTerrain";
@@ -35,13 +34,14 @@ import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceC
 import DataSourceDisplay from "terriajs-cesium/Source/DataSources/DataSourceDisplay";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import Camera from "terriajs-cesium/Source/Scene/Camera";
+import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
 import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
 import getElement from "terriajs-cesium/Source/Widgets/getElement";
 import filterOutUndefined from "../Core/filterOutUndefined";
@@ -60,8 +60,9 @@ import PickedFeatures, {
 } from "../Map/PickedFeatures/PickedFeatures";
 import MappableMixin, {
   ImageryParts,
-  isPrimitive,
+  isCesium3DTileset,
   isDataSource,
+  isPrimitive,
   isTerrainProvider,
   MapItem
 } from "../ModelMixins/MappableMixin";

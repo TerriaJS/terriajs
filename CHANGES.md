@@ -11,6 +11,7 @@ Change Log
 * `mapItems` can now return arbitrary Cesium primitives.
 * Update `terriajs-cesium` to `1.91.0`.
 * Update `terriajs-cesium` to `1.92.0`.
+* Added support for using Compare / Split Screen mode with Cesium 3D Tiles.
 * [The next improvement]
 
 #### 8.2.4 - 2022-05-23
@@ -167,8 +168,6 @@ Change Log
   * This uses new `TableStyle.isCustom` property
 * Move workbench item controls from `WorkbenchItem.jsx` `WorkbenchItemControls.tsx`
 * Add `UrlTempalteImageryCatalogItem`, rename `RasterLayerTraits` to `ImageryProviderTraits` and add some properties.
-* Added support for using Compare / Split Screen mode with Cesium 3D Tiles.
-* [The next improvement]
 * Added `ViewingControlsMenu` for making catalog wide extensions to viewing controls options.
 * Added `MapToolbar`, a simpler API for adding buttons to the map navigation menu for the most common uses cases.
 * Added `BoxDrawing` creation methods `fromTransform` and `fromTranslationRotationScale`.
