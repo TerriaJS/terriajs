@@ -433,46 +433,6 @@ export default class TableStylingWorkflow
    * - Show "Data type (advanced)" select. This allow user to change column type */
   @observable showAdvancedOptions: boolean = false;
 
-  @computed get datasetSelectableDim(): SelectableDimension {
-    return {
-      type: "select",
-      id: "dataset",
-      name: "Dataset",
-      selectedId: this.item.uniqueId,
-
-      // Find all workbench items which have TableStylingWorkflow
-      options: this.item.terria.workbench.items
-        .filter(
-          item =>
-            ViewingControls.is(item) &&
-            item.viewingControls.find(
-              control => control.id === TableStylingWorkflow.type
-            )
-        )
-        .map(item => ({
-          id: item.uniqueId,
-          name: getName(item)
-        })),
-      setDimensionValue: (stratumId, value) => {
-        const item = this.item.terria.workbench.items.find(
-          i => i.uniqueId === value
-        );
-        if (item && TableMixin.isMixedInto(item)) {
-          // Trigger new TableStylingWorkflow
-          if (
-            item.viewingControls.find(
-              control => control.id === TableStylingWorkflow.type
-            )
-          ) {
-            item.terria.selectableDimensionWorkflow = new TableStylingWorkflow(
-              item
-            );
-          }
-        }
-      }
-    };
-  }
-
   /** Table Style dimensions:
    * - Dataset (Table models in workbench)
    * - Variable (Table style in model)
@@ -486,115 +446,93 @@ export default class TableStylingWorkflow
       showPointStyles &&
       (this.tableStyle.pointSizeColumn ||
         this.item.tableColumns.find(t => t.type === TableColumnType.scalar));
+
     return {
       type: "group",
       id: "Data",
-      selectableDimensions: this.showAdvancedOptions
-        ? [
-            this.datasetSelectableDim,
-            {
-              type: "select",
-              id: "table-style-id",
-              name: "Style",
-              selectedId: this.tableStyle.id,
-              options: this.item.tableStyles.map(style => ({
-                id: style.id,
-                name: style.title
-              })),
-              setDimensionValue: (stratumId, value) => {
-                this.item.setTrait(stratumId, "activeStyle", value);
-                // Note - the activeStyle reaction in TableStylingWorkflow.constructor handles all side effects
-                // The reaction will call this.setColorSchemeTypeFromPalette()
-              }
-            },
-            {
-              type: "select",
-              id: "table-color-col",
-              name: "Color column",
-              selectedId: this.tableStyle.colorColumn?.name,
-              options: this.item.tableColumns.map(col => ({
-                id: col.name,
-                name: col.title
-              })),
-              setDimensionValue: (stratumId, value) => {
-                this.getTableStyleTraits(stratumId)?.color.setTrait(
-                  stratumId,
-                  "colorColumn",
-                  value
-                );
-              }
-            },
-            {
-              type: "select",
-              id: "data-type",
-              name: "Color column type (advanced)",
-              options: Object.keys(TableColumnType)
-                .filter(type => type.length > 1)
-                .map(colType => ({ id: colType })),
-              selectedId: isDefined(this.tableStyle.colorColumn?.type)
-                ? TableColumnType[this.tableStyle.colorColumn!.type]
-                : undefined,
-              setDimensionValue: (stratumId, id) => {
-                this.getTableColumnTraits(stratumId)?.setTrait(
-                  stratumId,
-                  "type",
-                  id
-                );
-                this.setColorSchemeTypeFromPalette();
-              }
-            }
-          ]
-        : [
-            this.datasetSelectableDim,
+      selectableDimensions: filterOutUndefined([
+        {
+          type: "select",
+          id: "dataset",
+          name: "Dataset",
+          selectedId: this.item.uniqueId,
 
-            {
-              type: "select",
-              id: "table-style",
-              name: "Style",
-              selectedId: this.tableStyle.id,
-              options: this.item.tableColumns
-                // Filter out empty columns
-                .filter(
-                  col =>
-                    col.uniqueValues.values.length > 0 &&
-                    !ADVANCED_TABLE_COLUMN_TYPES.includes(col.type)
+          // Find all workbench items which have TableStylingWorkflow
+          options: this.item.terria.workbench.items
+            .filter(
+              item =>
+                ViewingControls.is(item) &&
+                item.viewingControls.find(
+                  control => control.id === TableStylingWorkflow.type
                 )
-                .map(col => ({
-                  id: col.name,
-                  name: col.title
-                })),
-              setDimensionValue: (stratumId, value) => {
-                this.item.setTrait(stratumId, "activeStyle", value);
-                // Note - the activeStyle reaction in TableStylingWorkflow.constructor handles all side effects
-                // The reaction will call this.setColorSchemeTypeFromPalette()
-              }
-            },
-            {
-              type: "select",
-              id: "table-style-type",
-              name: "Symbology",
-              selectedId: this.styleType,
-              options: filterOutUndefined([
-                { id: "fill", name: "Fill Color" },
-                showPointSize
-                  ? { id: "point-size", name: "Point Size" }
-                  : undefined,
-                showPointStyles
-                  ? { id: "point", name: "Point/Marker Style" }
-                  : undefined,
-                { id: "outline", name: "Outline Color" }
-              ]),
-              setDimensionValue: (stratumId, value) => {
-                if (
-                  value === "fill" ||
-                  value === "point-size" ||
-                  value === "point" ||
-                  value === "outline"
+            )
+            .map(item => ({
+              id: item.uniqueId,
+              name: getName(item)
+            })),
+          setDimensionValue: (stratumId, value) => {
+            const item = this.item.terria.workbench.items.find(
+              i => i.uniqueId === value
+            );
+            if (item && TableMixin.isMixedInto(item)) {
+              // Trigger new TableStylingWorkflow
+              if (
+                item.viewingControls.find(
+                  control => control.id === TableStylingWorkflow.type
                 )
-                  this.styleType = value;
+              ) {
+                item.terria.selectableDimensionWorkflow = new TableStylingWorkflow(
+                  item
+                );
               }
             }
-          ]
+          }
+        },
+        {
+          type: "select",
+          id: "table-style",
+          name: "Style",
+          selectedId: this.tableStyle.id,
+          options: this.item.tableStyles.map(style => ({
+            id: style.id,
+            name: style.title
+          })),
+          allowCustomInput: true,
+          setDimensionValue: (stratumId, value) => {
+            if (!this.item.tableStyles.find(style => style.id === value)) {
+              this.getTableStyleTraits(stratumId, value);
+            }
+            this.item.setTrait(stratumId, "activeStyle", value);
+            // Note - the activeStyle reaction in TableStylingWorkflow.constructor handles all side effects
+            // The reaction will call this.setColorSchemeTypeFromPalette()
+          }
+        },
+        {
+          type: "select",
+          id: "table-style-type",
+          name: "Symbology",
+          selectedId: this.styleType,
+          options: filterOutUndefined([
+            { id: "fill", name: "Fill color" },
+            showPointSize
+              ? { id: "point-size", name: "Point size" }
+              : undefined,
+            showPointStyles
+              ? { id: "point", name: "Point/Marker style" }
+              : undefined,
+            { id: "outline", name: "Outline color" }
+          ]),
+          setDimensionValue: (stratumId, value) => {
+            if (
+              value === "fill" ||
+              value === "point-size" ||
+              value === "point" ||
+              value === "outline"
+            )
+              this.styleType = value;
+          }
+        }
+      ])
     };
   }
 
@@ -623,6 +561,49 @@ export default class TableStylingWorkflow
       type: "group",
       id: "Fill Color",
       selectableDimensions: filterOutUndefined([
+        // Show "Variable" selector to pick colorColumn if tableStyle ID is different from colorColumn ID
+
+        this.tableStyle.id !== this.tableStyle.colorColumn?.name ||
+        this.showAdvancedOptions
+          ? {
+              type: "select",
+              id: "table-color-col",
+              name: "Variable",
+              selectedId: this.tableStyle.colorColumn?.name,
+              options: this.item.tableColumns.map(col => ({
+                id: col.name,
+                name: col.title
+              })),
+              setDimensionValue: (stratumId, value) => {
+                this.getTableStyleTraits(stratumId)?.color.setTrait(
+                  stratumId,
+                  "colorColumn",
+                  value
+                );
+              }
+            }
+          : undefined,
+        this.showAdvancedOptions
+          ? {
+              type: "select",
+              id: "data-type",
+              name: "Column type (advanced)",
+              options: Object.keys(TableColumnType)
+                .filter(type => type.length > 1)
+                .map(colType => ({ id: colType })),
+              selectedId: isDefined(this.tableStyle.colorColumn?.type)
+                ? TableColumnType[this.tableStyle.colorColumn!.type]
+                : undefined,
+              setDimensionValue: (stratumId, id) => {
+                this.getTableColumnTraits(stratumId)?.setTrait(
+                  stratumId,
+                  "type",
+                  id
+                );
+                this.setColorSchemeTypeFromPalette();
+              }
+            }
+          : undefined,
         this.tableStyle.colorColumn
           ? {
               type: "select",
@@ -1195,6 +1176,8 @@ export default class TableStylingWorkflow
    * - Legend title
    * - Legend ticks
    * - Legend item titles
+   * - Show style in workbench
+   * - Style title
    * - Show disable style option
    * - Show disable time option
    * - Enable manual region mapping
@@ -1256,9 +1239,99 @@ export default class TableStylingWorkflow
       },
       {
         type: "group",
+        id: "Style options",
+        isOpen: false,
+        selectableDimensions: filterOutUndefined([
+          {
+            type: "text",
+            id: "style-title",
+            name: "Title",
+            value: this.tableStyle.title,
+            setDimensionValue: (stratumId, value) => {
+              this.getTableStyleTraits(stratumId)?.setTrait(
+                stratumId,
+                "title",
+                value
+              );
+            }
+          },
+          {
+            type: "checkbox",
+            id: "table-style-enabled",
+            name: "Show style in Workbench",
+            options: [
+              { id: "true", name: "Style showing" },
+              { id: "false", name: "Style hidden" }
+            ],
+            selectedId: this.tableStyle.hidden ? "false" : "true",
+            setDimensionValue: (stratumId, value) => {
+              this.getTableStyleTraits(stratumId)?.setTrait(
+                stratumId,
+                "hidden",
+                value === "false"
+              );
+            }
+          },
+          {
+            type: "select",
+            id: "table-style",
+            name: "Longitude column",
+            selectedId: this.tableStyle.longitudeColumn?.name,
+            allowUndefined: true,
+            options: this.item.tableColumns.map(col => ({
+              id: col.name,
+              name: col.title
+            })),
+            setDimensionValue: (stratumId, value) => {
+              this.getTableStyleTraits(stratumId)?.setTrait(
+                stratumId,
+                "longitudeColumn",
+                value
+              );
+            }
+          },
+          {
+            type: "select",
+            id: "table-style",
+            name: "Latitude column",
+            selectedId: this.tableStyle.latitudeColumn?.name,
+            allowUndefined: true,
+            options: this.item.tableColumns.map(col => ({
+              id: col.name,
+              name: col.title
+            })),
+            setDimensionValue: (stratumId, value) => {
+              this.getTableStyleTraits(stratumId)?.setTrait(
+                stratumId,
+                "latitudeColumn",
+                value
+              );
+            }
+          }
+        ])
+      },
+      {
+        type: "group",
         id: "Table",
         isOpen: false,
         selectableDimensions: filterOutUndefined([
+          {
+            type: "checkbox",
+            id: "table-style-enabled",
+            name: "Show style in Workbench",
+            options: [
+              { id: "true", name: "Style showing" },
+              { id: "false", name: "Style hidden" }
+            ],
+            selectedId: this.item.activeTableStyle.hidden ? "false" : "true",
+            setDimensionValue: (stratumId, value) => {
+              this.getTableStyleTraits(stratumId)?.setTrait(
+                stratumId,
+                "hidden",
+                value === "false"
+              );
+            }
+          },
           {
             type: "checkbox",
             id: "showDisableStyleOption",
@@ -1598,7 +1671,8 @@ export default class TableStylingWorkflow
           {
             type: "select",
             id: `${id}-marker`,
-            name: "Marker",
+            name:
+              '<terriatooltip title="Marker">Marker supports URL and base64 of any supported image format (eg PNG, SVG)</terriatooltip>',
             selectedId: (pointTraits.marker ?? nullValues.marker) || "point",
             allowUndefined: true,
             allowCustomInput: true,

@@ -123,19 +123,23 @@ export default class TableStyle {
   /** Is style "custom" - that is - has the style been created/modified by the user (either directly, or indirectly through a share link).
    */
   @computed get isCustom() {
-    const userStrata = this.colorTraits.strata.get(CommonStrata.user);
-    if (!userStrata) return false;
+    const colorTraits = this.colorTraits.strata.get(CommonStrata.user);
+    const pointSizeTraits = this.pointSizeTraits.strata.get(CommonStrata.user);
+    const styleTraits = this.styleTraits.strata.get(CommonStrata.user);
 
     return (
-      (userStrata.binColors ?? [])?.length > 0 ||
-      (userStrata.binMaximums ?? [])?.length > 0 ||
-      (userStrata.enumColors ?? [])?.length > 0 ||
-      isDefined(userStrata.numberOfBins) ||
-      isDefined(userStrata.minimumValue) ||
-      isDefined(userStrata.maximumValue) ||
-      isDefined(userStrata.regionColor) ||
-      isDefined(userStrata.nullColor) ||
-      isDefined(userStrata.outlierColor)
+      (colorTraits?.binColors ?? [])?.length > 0 ||
+      (colorTraits?.binMaximums ?? [])?.length > 0 ||
+      (colorTraits?.enumColors ?? [])?.length > 0 ||
+      isDefined(colorTraits?.numberOfBins) ||
+      isDefined(colorTraits?.minimumValue) ||
+      isDefined(colorTraits?.maximumValue) ||
+      isDefined(colorTraits?.regionColor) ||
+      isDefined(colorTraits?.nullColor) ||
+      isDefined(colorTraits?.outlierColor) ||
+      pointSizeTraits ||
+      styleTraits?.point ||
+      styleTraits?.outline
     );
   }
 
