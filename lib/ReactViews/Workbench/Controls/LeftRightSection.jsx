@@ -9,7 +9,7 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import styled from "styled-components";
 import defined from "terriajs-cesium/Source/Core/defined";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import hasTraits from "../../../Models/Definition/hasTraits";
 import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
@@ -44,7 +44,7 @@ const LeftRightSection = observer(
         this.props.item.setTrait(
           CommonStrata.user,
           "splitDirection",
-          ImagerySplitDirection.LEFT
+          SplitDirection.LEFT
         );
       });
     },
@@ -54,7 +54,7 @@ const LeftRightSection = observer(
         this.props.item.setTrait(
           CommonStrata.user,
           "splitDirection",
-          ImagerySplitDirection.NONE
+          SplitDirection.NONE
         );
       });
     },
@@ -64,7 +64,7 @@ const LeftRightSection = observer(
         this.props.item.setTrait(
           CommonStrata.user,
           "splitDirection",
-          ImagerySplitDirection.RIGHT
+          SplitDirection.RIGHT
         );
       });
     },
@@ -88,7 +88,7 @@ const LeftRightSection = observer(
             onClick={this.goLeft}
             className={classNames(Styles.goLeft)}
             title={t("splitterTool.workbench.goleftTitle")}
-            isActive={splitDirection === ImagerySplitDirection.LEFT}
+            isActive={splitDirection === SplitDirection.LEFT}
           >
             {t("splitterTool.workbench.goleft")}
           </LeftRightButton>
@@ -97,7 +97,7 @@ const LeftRightSection = observer(
             onClick={this.goBoth}
             className={classNames(Styles.goBoth)}
             title={t("splitterTool.workbench.bothTitle")}
-            isActive={splitDirection === ImagerySplitDirection.NONE}
+            isActive={splitDirection === SplitDirection.NONE}
           >
             {t("splitterTool.workbench.both")}
           </LeftRightButton>
@@ -106,7 +106,7 @@ const LeftRightSection = observer(
             onClick={this.goRight}
             className={classNames(Styles.goRight)}
             title={t("splitterTool.workbench.gorightTitle")}
-            isActive={splitDirection === ImagerySplitDirection.RIGHT}
+            isActive={splitDirection === SplitDirection.RIGHT}
           >
             {t("splitterTool.workbench.goright")}
           </LeftRightButton>

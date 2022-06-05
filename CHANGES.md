@@ -7,8 +7,10 @@ Change Log
 * Fixed bug where `new Terria()` constructror would try to access `document` and throw an error when running in NodeJS.
 * Add WPS support for `Date` (additional to existing `DateTime`) and support for `ComplexData` `Date`/`DateTime` WPS Inputs.
 * TSXified `StandardUserInterface` and some other components. If your TerriaMap imports `StandardUserInterface.jsx` remove the `.jsx` extension so webpack can find the new `.tsx` file.
-* Fix use of `baseMapContrastColor` in region mapping/protomaps and remove `MAX_SELECTABLE_DIMENSION_OPTIONS`
+* Fix use of `baseMapContrastColor` in region mapping/protomaps and remove `MAX_SELECTABLE_DIMENSION_OPTIONS`.
 * `mapItems` can now return arbitrary Cesium primitives.
+* Update `terriajs-cesium` to `1.91.0`.
+* Update `terriajs-cesium` to `1.92.0`.
 * [The next improvement]
 
 #### 8.2.4 - 2022-05-23

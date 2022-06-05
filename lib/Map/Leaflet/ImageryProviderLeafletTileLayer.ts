@@ -11,7 +11,7 @@ import TileProviderError from "terriajs-cesium/Source/Core/TileProviderError";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import isDefined from "../../Core/isDefined";
 import pollToPromise from "../../Core/pollToPromise";
 import Leaflet from "../../Models/Leaflet";
@@ -45,7 +45,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
   private _previousCredits: Credit[] = [];
   private _leafletUpdateInterval: number;
 
-  @observable splitDirection = ImagerySplitDirection.NONE;
+  @observable splitDirection = SplitDirection.NONE;
   @observable splitPosition: number = 0.5;
 
   constructor(
@@ -95,10 +95,10 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
         return;
       }
 
-      if (this.splitDirection === ImagerySplitDirection.LEFT) {
+      if (this.splitDirection === SplitDirection.LEFT) {
         const { left: clipLeft } = this._clipsForSplitter;
         container.style.clip = clipLeft;
-      } else if (this.splitDirection === ImagerySplitDirection.RIGHT) {
+      } else if (this.splitDirection === SplitDirection.RIGHT) {
         const { right: clipRight } = this._clipsForSplitter;
         container.style.clip = clipRight;
       } else {
@@ -156,7 +156,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
           .then(function() {
             doRequest();
           })
-          .otherwise((e: unknown) => {
+          .catch((e: unknown) => {
             // The tile has failed irrecoverably, so invoke Leaflet's standard
             // tile error handler.
             (<any>L.TileLayer).prototype._tileOnError.call(this, done, tile, e);
@@ -424,7 +424,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     level: number,
     longitudeRadians: number,
     latitudeRadians: number
-  ): Promise<ImageryLayerFeatureInfo> {
+  ): Promise<ImageryLayerFeatureInfo | ImageryLayerFeatureInfo[] | undefined> {
     return pollToPromise(() => {
       return this.imageryProvider.ready;
     }).then(() => {
