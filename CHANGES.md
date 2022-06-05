@@ -11,6 +11,7 @@ Change Log
 * `mapItems` can now return arbitrary Cesium primitives.
 * Update `terriajs-cesium` to `1.91.0`.
 * Update `terriajs-cesium` to `1.92.0`.
+* Replace Pell WYSIWYG editor library with TinyMCE, allows richer editing of Stories in the Story Builder
 * [The next improvement]
 
 #### 8.2.4 - 2022-05-23
@@ -27,8 +28,6 @@ Change Log
 * Fix bug that broke the `DiffTool` preventing it from opening. 
 * TSify `BottomDock` and `measureElement` components.
 * Fixed a bug in `GltfMixin` which resulted in some traits missing from `GltfCatalogItem` and broke tools like the scene editor.
-* Replace Pell WYSIWYG editor library with TinyMCE, allows richer editing of Stories in the Story Builder
-* [The next improvement]
 * Leaflet attribution can be set through `config.leafletAttributionPrefix`. Attribution HTML string to show on Leaflet maps. Will use Leaflet's default if undefined. To hide Leaflet attribution - set `leafletAttributionPrefix:""`
 * Re-add missing `helpPanel.mapUserGuide` translation string
 * Fix `sortMembersBy` for child `Groups` and `References`
