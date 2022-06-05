@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { action, runInAction } from "mobx";
-import retry from "retry";
+import retry, { WrapOptions } from "retry";
 import formatError from "terriajs-cesium/Source/Core/formatError";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Resource from "terriajs-cesium/Source/Core/Resource";
@@ -32,7 +32,7 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
     tileFailures = 0;
     private readonly tileRetriesByMap: Map<string, number> = new Map();
 
-    tileRetryOptions: retry.OperationOptions = {
+    tileRetryOptions: WrapOptions = {
       retries: 8,
       minTimeout: 200,
       randomize: true
