@@ -15,6 +15,7 @@ import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
 import PlaceEditorTraits from "./PlaceEditorTraits";
 import ShadowTraits from "./ShadowTraits";
+import SplitterTraits from "./SplitterTraits";
 import TransformationTraits from "./TransformationTraits";
 import UrlTraits from "./UrlTraits";
 
@@ -114,7 +115,8 @@ export default class Cesium3DTilesTraits extends mixTraits(
   OpacityTraits,
   LegendOwnerTraits,
   ShadowTraits,
-  ClippingPlanesTraits
+  ClippingPlanesTraits,
+  SplitterTraits
 ) {
   @primitiveTrait({
     type: "number",

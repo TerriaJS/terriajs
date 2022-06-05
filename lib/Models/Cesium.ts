@@ -34,13 +34,14 @@ import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceC
 import DataSourceDisplay from "terriajs-cesium/Source/DataSources/DataSourceDisplay";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import Camera from "terriajs-cesium/Source/Scene/Camera";
+import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
 import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
 import getElement from "terriajs-cesium/Source/Widgets/getElement";
 import filterOutUndefined from "../Core/filterOutUndefined";
@@ -59,8 +60,9 @@ import PickedFeatures, {
 } from "../Map/PickedFeatures/PickedFeatures";
 import MappableMixin, {
   ImageryParts,
-  isPrimitive,
+  isCesium3DTileset,
   isDataSource,
+  isPrimitive,
   isTerrainProvider,
   MapItem
 } from "../ModelMixins/MappableMixin";
@@ -778,14 +780,14 @@ export default class Cesium extends GlobeOrMap {
           MappableMixin.isMixedInto(item) &&
           hasTraits(item, SplitterTraits, "splitDirection")
         ) {
-          const layers = this.getImageryLayersForItem(item);
+          const splittableItems = this.getSplittableMapItems(item);
           const splitDirection = item.splitDirection;
 
-          layers.forEach(layer => {
+          splittableItems.forEach(splittableItem => {
             if (showSplitter) {
-              layer.splitDirection = splitDirection;
+              splittableItem.splitDirection = splitDirection;
             } else {
-              layer.splitDirection = SplitDirection.NONE;
+              splittableItem.splitDirection = SplitDirection.NONE;
             }
           });
         }
@@ -1390,12 +1392,17 @@ export default class Cesium extends GlobeOrMap {
     return result;
   }
 
-  getImageryLayersForItem(item: MappableMixin.Instance): ImageryLayer[] {
+  getSplittableMapItems(
+    item: MappableMixin.Instance
+  ): (ImageryLayer | Cesium3DTileset)[] {
     return filterOutUndefined(
       item.mapItems.map(m => {
         if (ImageryParts.is(m)) {
           return this._makeImageryLayerFromParts(m, item) as ImageryLayer;
+        } else if (isCesium3DTileset(m)) {
+          return m;
         }
+        return undefined;
       })
     );
   }
