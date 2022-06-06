@@ -104,7 +104,7 @@ export default class ViewState {
   @observable currentTrainerStepIndex: number = 0;
 
   @observable printWindow: Window | null = null;
-  @observable includeStoryInShare: boolean = false;
+  @observable includeStoryInShare: boolean = true;
 
   /**
    * A global list of functions that generate a {@link ViewingControl} option

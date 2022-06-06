@@ -403,7 +403,6 @@ const SharePanel = observer(
                 )
               }
             />
-            <IncludeStoryOption viewState={this.props.viewState} />
             {this.renderWarning()}
           </div>
           <div className={DropdownStyles.section}>
@@ -492,6 +491,8 @@ const SharePanel = observer(
                   </button>
                 </div>
               </If>
+              <hr />
+              <IncludeStoryOption viewState={this.props.viewState} />
             </If>
           </div>
         </div>

@@ -31,9 +31,8 @@ const IncludeStoryOption: React.FC<IncludeStoryOptionProps> = observer(
           isChecked={isChecked}
           onChange={onChangeHandler}
           className={Styles.checkbox}
-        >
-          <TextSpan>{t("includeStory.message")}</TextSpan>
-        </Checkbox>
+        ></Checkbox>
+        <p className={Styles.paragraph}>{t("includeStory.message")}</p>
       </IncludeStoryOptionDiv>
     );
   }
