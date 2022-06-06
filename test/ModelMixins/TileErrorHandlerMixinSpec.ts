@@ -82,7 +82,7 @@ describe("TileErrorHandlerMixin", function() {
     return new Promise((resolve, reject) => {
       const retry: { then?: any; otherwise: any } = error.retry as any;
       if (retry && retry.then) {
-        retry.then(resolve).otherwise(reject);
+        retry.then(resolve).catch(reject);
       } else {
         resolve();
       }

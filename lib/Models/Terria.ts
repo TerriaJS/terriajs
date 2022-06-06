@@ -10,7 +10,7 @@ import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import URI from "urijs";
 import { Category, LaunchAction } from "../Core/AnalyticEvents/analyticEvents";
 import AsyncLoader from "../Core/AsyncLoader";
@@ -529,8 +529,7 @@ export default class Terria {
   @observable showSplitter = false;
   @observable splitPosition = 0.5;
   @observable splitPositionVertical = 0.5;
-  @observable terrainSplitDirection: ImagerySplitDirection =
-    ImagerySplitDirection.NONE;
+  @observable terrainSplitDirection: SplitDirection = SplitDirection.NONE;
 
   @observable depthTestAgainstTerrainEnabled = false;
 

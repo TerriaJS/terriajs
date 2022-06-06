@@ -35,20 +35,20 @@ import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceC
 import DataSourceDisplay from "terriajs-cesium/Source/DataSources/DataSourceDisplay";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import Camera from "terriajs-cesium/Source/Scene/Camera";
+import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
 import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
 import getElement from "terriajs-cesium/Source/Widgets/getElement";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
 import LatLonHeight from "../Core/LatLonHeight";
-import makeRealPromise from "../Core/makeRealPromise";
 import pollToPromise from "../Core/pollToPromise";
 import TerriaError from "../Core/TerriaError";
 import waitForDataSourceToLoad from "../Core/waitForDataSourceToLoad";
@@ -64,6 +64,7 @@ import MappableMixin, {
   isPrimitive,
   isCesium3DTileset,
   isDataSource,
+  isPrimitive,
   isTerrainProvider,
   MapItem
 } from "../ModelMixins/MappableMixin";
@@ -447,7 +448,7 @@ export default class Cesium extends GlobeOrMap {
       this.scene.globe.terrainProvider = this._terrainProvider;
       this.scene.globe.splitDirection = this.terria.showSplitter
         ? this.terria.terrainSplitDirection
-        : ImagerySplitDirection.NONE;
+        : SplitDirection.NONE;
       this.scene.globe.depthTestAgainstTerrain = this.terria.depthTestAgainstTerrainEnabled;
       if (this.scene.skyAtmosphere) {
         this.scene.skyAtmosphere.splitDirection = this.scene.globe.splitDirection;
@@ -706,9 +707,9 @@ export default class Cesium extends GlobeOrMap {
         // Perform an elevation query at the centre of the rectangle
         let terrainSample: Cartographic;
         try {
-          [terrainSample] = await makeRealPromise<Cartographic[]>(
-            sampleTerrain(terrainProvider, level, [center])
-          );
+          [terrainSample] = await sampleTerrain(terrainProvider, level, [
+            center
+          ]);
         } catch {
           // if the request fails just use center with height=0
           terrainSample = center;
@@ -812,7 +813,7 @@ export default class Cesium extends GlobeOrMap {
   _reactToSplitterChanges() {
     const disposeSplitPositionChange = autorun(() => {
       if (this.scene) {
-        this.scene.imagerySplitPosition = this.terria.splitPosition;
+        this.scene.splitPosition = this.terria.splitPosition;
         this.notifyRepaintRequired();
       }
     });
@@ -825,14 +826,14 @@ export default class Cesium extends GlobeOrMap {
           MappableMixin.isMixedInto(item) &&
           hasTraits(item, SplitterTraits, "splitDirection")
         ) {
-          const layers = this.getImageryLayersForItem(item);
+          const splittableItems = this.getSplittableMapItems(item);
           const splitDirection = item.splitDirection;
 
-          layers.forEach(layer => {
+          splittableItems.forEach(splittableItem => {
             if (showSplitter) {
-              layer.splitDirection = splitDirection;
+              splittableItem.splitDirection = splitDirection;
             } else {
-              layer.splitDirection = ImagerySplitDirection.NONE;
+              splittableItem.splitDirection = SplitDirection.NONE;
             }
           });
         }
@@ -855,7 +856,9 @@ export default class Cesium extends GlobeOrMap {
 
     const centerOfScreen = new Cartesian2(width / 2.0, height / 2.0);
     const pickRay = scene.camera.getPickRay(centerOfScreen);
-    const center = scene.globe.pick(pickRay, scene);
+    const center = isDefined(pickRay)
+      ? scene.globe.pick(pickRay, scene)
+      : undefined;
 
     if (!center) {
       // TODO: binary search to find the horizon point and use that as the center.
@@ -1052,16 +1055,19 @@ export default class Cesium extends GlobeOrMap {
    */
   pickFromScreenPosition(screenPosition: Cartesian2, ignoreSplitter: boolean) {
     const pickRay = this.scene.camera.getPickRay(screenPosition);
-    const pickPosition = this.scene.globe.pick(pickRay, this.scene);
+    const pickPosition = isDefined(pickRay)
+      ? this.scene.globe.pick(pickRay, this.scene)
+      : undefined;
     const pickPositionCartographic =
       pickPosition && Ellipsoid.WGS84.cartesianToCartographic(pickPosition);
 
     const vectorFeatures = this.pickVectorFeatures(screenPosition);
 
     const providerCoords = this._attachProviderCoordHooks();
-    var pickRasterPromise = this.terria.allowFeatureInfoRequests
-      ? this.scene.imageryLayers.pickImageryLayerFeatures(pickRay, this.scene)
-      : undefined;
+    var pickRasterPromise =
+      this.terria.allowFeatureInfoRequests && isDefined(pickRay)
+        ? this.scene.imageryLayers.pickImageryLayerFeatures(pickRay, this.scene)
+        : undefined;
 
     const result = this._buildPickedFeatures(
       providerCoords,
@@ -1411,7 +1417,7 @@ export default class Cesium extends GlobeOrMap {
                     .splitDirection;
                   return (
                     splitDirection === pickedSide ||
-                    splitDirection === ImagerySplitDirection.NONE
+                    splitDirection === SplitDirection.NONE
                   );
                 });
               }
@@ -1432,12 +1438,17 @@ export default class Cesium extends GlobeOrMap {
     return result;
   }
 
-  getImageryLayersForItem(item: MappableMixin.Instance): ImageryLayer[] {
+  getSplittableMapItems(
+    item: MappableMixin.Instance
+  ): (ImageryLayer | Cesium3DTileset)[] {
     return filterOutUndefined(
       item.mapItems.map(m => {
         if (ImageryParts.is(m)) {
           return this._makeImageryLayerFromParts(m, item) as ImageryLayer;
+        } else if (isCesium3DTileset(m)) {
+          return m;
         }
+        return undefined;
       })
     );
   }
