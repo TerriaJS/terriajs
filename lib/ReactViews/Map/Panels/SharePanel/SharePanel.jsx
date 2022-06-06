@@ -473,7 +473,7 @@ const SharePanel = observer(
                   <Checkbox
                     textProps={{ small: true }}
                     id="shortenUrl"
-                    isChecked={this.shouldShorten ?? false}
+                    isChecked={this.shouldShorten() ?? false}
                     onChange={this.onShortenClicked}
                     className={Styles.checkbox}
                   ></Checkbox>
