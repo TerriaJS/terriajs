@@ -28,11 +28,11 @@ const IncludeStoryOption: React.FC<IncludeStoryOptionProps> = observer(
           textProps={{ small: true }}
           id="includeStory"
           title="Include Story in Share"
-          isChecked={isChecked}
+          isChecked={isChecked ?? false}
           onChange={onChangeHandler}
           className={Styles.checkbox}
         ></Checkbox>
-        <TextSpan>{t("includeStory.message")}</TextSpan>
+        <p>{t("includeStory.message")}</p>
       </IncludeStoryOptionDiv>
     );
   }

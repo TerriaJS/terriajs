@@ -474,11 +474,11 @@ const SharePanel = observer(
                   <Checkbox
                     textProps={{ small: true }}
                     id="shortenUrl"
-                    isChecked={this.shouldShorten}
+                    isChecked={this.shouldShorten ?? false}
                     onChange={this.onShortenClicked}
                     className={Styles.checkbox}
                   ></Checkbox>
-                  <TextSpan>{t("share.shortenUsingService")}</TextSpan>
+                  <p>{t("share.shortenUsingService")}</p>
                 </div>
               </If>
               <IncludeStoryOption viewState={this.props.viewState} />
