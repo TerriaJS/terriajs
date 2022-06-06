@@ -30,6 +30,7 @@ import Axis from "terriajs-cesium/Source/Scene/Axis";
 import ColorBlendMode from "terriajs-cesium/Source/Scene/ColorBlendMode";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
+import isDefined from "../Core/isDefined";
 import Cesium from "./Cesium";
 
 export type ChangeEvent = {
@@ -1418,6 +1419,10 @@ export function screenToGlobePosition(
   result: Cartesian3
 ): Cartesian3 | undefined {
   const pickRay = scene.camera.getPickRay(position, scratchPickRay);
+  if (!isDefined(pickRay)) {
+    return undefined;
+  }
+
   const globePosition = scene.globe.pick(pickRay, scene, result);
   return globePosition;
 }

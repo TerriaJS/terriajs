@@ -91,7 +91,7 @@ class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
   }
 
   @computed get activeStyle() {
-    return this.catalogItem.procedures[0].identifier;
+    return this.catalogItem.procedures[0]?.identifier;
   }
 
   @computed

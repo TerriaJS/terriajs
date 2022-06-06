@@ -105,4 +105,4 @@ const FullScreenButton = observer(
     }
   })
 );
-module.exports = withTranslation()(withControlledVisibility(FullScreenButton));
+export default withTranslation()(withControlledVisibility(FullScreenButton));

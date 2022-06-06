@@ -3,7 +3,6 @@
 var CompositeCatalogItem = require("../../lib/Models/Catalog/CatalogItems/CompositeCatalogItem");
 var TerrainCatalogItem = require("../../lib/Models/TerrainCatalogItem");
 var Terria = require("../../lib/Models/Terria");
-var when = require("terriajs-cesium/Source/ThirdParty/when").default;
 
 describe("TerrainCatalogItem", function() {
   var terria;
@@ -28,12 +27,13 @@ describe("TerrainCatalogItem", function() {
 
     item.isEnabled = true;
 
-    when(item.load())
+    item
+      .load()
       .then(function() {
         expect(terria.cesium.scene.terrainProvider).toBe(fakeTerrainProvider);
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("restores previous terrainProvider when disabled", function(done) {
@@ -49,7 +49,8 @@ describe("TerrainCatalogItem", function() {
 
     item.isEnabled = true;
 
-    when(item.load())
+    item
+      .load()
       .then(function() {
         expect(terria.cesium.scene.terrainProvider).toBe(fakeTerrainProvider);
 
@@ -59,7 +60,7 @@ describe("TerrainCatalogItem", function() {
         );
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("hides other terrainProvider catalog items when enabled", function(done) {
@@ -73,17 +74,18 @@ describe("TerrainCatalogItem", function() {
     spyOn(enabledItem, "_createTerrainProvider").and.returnValue({});
     enabledItem.isEnabled = true;
 
-    when(enabledItem.load())
+    enabledItem
+      .load()
       .then(function() {
         spyOn(item, "_createTerrainProvider").and.returnValue({});
         item.isEnabled = true;
 
-        return when(item.load()).then(function() {
+        return item.load().then(function() {
           expect(enabledItem.isShown).toBe(false);
         });
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("hides CompositeCatalogItem containing terrain when enabled", function(done) {
@@ -100,17 +102,18 @@ describe("TerrainCatalogItem", function() {
 
     composite.isEnabled = true;
 
-    when(composite.load())
+    composite
+      .load()
       .then(function() {
         spyOn(item, "_createTerrainProvider").and.returnValue({});
         item.isEnabled = true;
 
-        return when(item.load()).then(function() {
+        return item.load().then(function() {
           expect(composite.isShown).toBe(false);
         });
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("throws when shown in 2D", function(done) {
@@ -120,7 +123,8 @@ describe("TerrainCatalogItem", function() {
 
     item.isEnabled = true;
 
-    when(item.load())
+    item
+      .load()
       .then(function() {
         expect(terria.raiseErrorToUser).toHaveBeenCalled();
         expect(item.isShown).toBe(false);
@@ -128,6 +132,6 @@ describe("TerrainCatalogItem", function() {
         expect(terria.raiseErrorToUser.calls.count()).toBe(2);
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 });

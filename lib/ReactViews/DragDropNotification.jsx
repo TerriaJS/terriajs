@@ -93,4 +93,4 @@ class DragDropNotification extends React.Component {
   }
 }
 
-module.exports = DragDropNotification;
+export default DragDropNotification;

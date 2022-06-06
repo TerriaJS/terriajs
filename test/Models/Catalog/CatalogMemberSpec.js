@@ -2,7 +2,6 @@
 
 var CatalogMember = require("../../lib/Models/CatalogMember");
 var Terria = require("../../../lib/Models/Terria");
-var when = require("terriajs-cesium/Source/ThirdParty/when").default;
 
 describe("CatalogMember", function() {
   var terria;
@@ -19,7 +18,7 @@ describe("CatalogMember", function() {
     beforeEach(function() {
       spyOn(terria, "disclaimerListener");
       member._load = function() {
-        return when.resolve(); // make the implementation-specific _load method return instantly, it's not on trial here.
+        return Promise.resolve(); // make the implementation-specific _load method return instantly, it's not on trial here.
       };
     });
 
@@ -30,19 +29,19 @@ describe("CatalogMember", function() {
           expect(member.isLoading).toBe(false);
           done();
         })
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
 
     it("returns a promise that allows otherwise to be chained", function(done) {
       member._load = function() {
-        return when.reject();
+        return Promise.reject();
       };
       expect(true).toBe(true); // stop it whinging about no expectations.
 
       member
         .load()
         .then(done.fail)
-        .otherwise(done);
+        .catch(done);
     });
 
     it("returns the same promise for subsequent calls", function() {
@@ -158,7 +157,7 @@ describe("CatalogMember", function() {
           expect(member.info[1].content).toBe("Another value");
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
   });
 });

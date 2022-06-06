@@ -37,7 +37,6 @@ const SharePanel = observer(
     propTypes: {
       terria: PropTypes.object,
       userPropWhiteList: PropTypes.array,
-      advancedIsOpen: PropTypes.bool,
       shortenUrls: PropTypes.bool,
       storyShare: PropTypes.bool,
       catalogShare: PropTypes.bool,
@@ -49,21 +48,15 @@ const SharePanel = observer(
       t: PropTypes.func.isRequired
     },
 
-    getDefaultProps() {
-      return {
-        advancedIsOpen: false,
-        shortenUrls: false
-      };
-    },
-
     getInitialState() {
       return {
         isOpen: false,
         shortenUrls:
-          this.props.shortenUrls &&
+          !!this.props.shortenUrls &&
           this.props.terria.getLocalProperty("shortenShareUrls"),
         shareUrl: "",
-        isDownloading: false
+        isDownloading: false,
+        advancedIsOpen: false
       };
     },
 

@@ -10,7 +10,7 @@ import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import URI from "urijs";
 import { Category, LaunchAction } from "../Core/AnalyticEvents/analyticEvents";
 import AsyncLoader from "../Core/AsyncLoader";
@@ -89,7 +89,8 @@ import InitSource, {
   isInitFromDataPromise,
   isInitFromOptions,
   isInitFromUrl,
-  ShareInitSourceData
+  ShareInitSourceData,
+  StoryData
 } from "./InitSource";
 import Internationalization, {
   I18nStartOptions,
@@ -357,7 +358,8 @@ export default class Terria {
   readonly modelIdShareKeysMap = observable.map<string, string[]>();
 
   /** Base URL for the Terria app. Used for SPA routes */
-  readonly appBaseHref: string = document.baseURI;
+  readonly appBaseHref: string =
+    typeof document !== "undefined" ? document.baseURI : "/";
   /** Base URL to Terria resources */
   readonly baseUrl: string = "build/TerriaJS/";
 
@@ -526,12 +528,11 @@ export default class Terria {
   @observable showSplitter = false;
   @observable splitPosition = 0.5;
   @observable splitPositionVertical = 0.5;
-  @observable terrainSplitDirection: ImagerySplitDirection =
-    ImagerySplitDirection.NONE;
+  @observable terrainSplitDirection: SplitDirection = SplitDirection.NONE;
 
   @observable depthTestAgainstTerrainEnabled = false;
 
-  @observable stories: any[] = [];
+  @observable stories: StoryData[] = [];
 
   /**
    * Gets or sets the ID of the catalog member that is currently being
@@ -585,7 +586,7 @@ export default class Terria {
     if (options.appBaseHref) {
       this.appBaseHref = new URL(
         options.appBaseHref,
-        document.baseURI
+        typeof document !== "undefined" ? document.baseURI : "/"
       ).toString();
     }
     if (options.baseUrl) {

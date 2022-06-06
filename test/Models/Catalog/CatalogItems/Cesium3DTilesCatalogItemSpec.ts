@@ -81,7 +81,7 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
 
   describe("cesiumTileStyle", function() {
     let style: any;
-    beforeEach(function() {
+    beforeEach(async function() {
       runInAction(() =>
         item.setTrait("definition", "style", {
           color: "vec4(${Height})",
@@ -104,25 +104,30 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
       expect(style.color._expression).toBe("vec4(${Height})");
     });
 
-    it("reflects changes to the catalog item's opacity in its style", function() {
+    it("reflects changes to the catalog item's opacity in its style", async function() {
       item.setTrait("definition", "style", {
         color: "#ff0000"
       });
 
       item.setTrait("user", "opacity", 0.5);
-      expect((item.cesiumTileStyle as any).color._expression).toBe(
-        "color('#ff0000', ${opacity})"
-      );
+
+      style = item.cesiumTileStyle;
+      await item.loadMapItems();
+
+      expect(style.color._expression).toBe("color('#ff0000', ${opacity})");
     });
 
     describe("when filters are specified", function() {
-      it("adds the filters to the style", function() {
+      it("adds the filters to the style", async function() {
         runInAction(() =>
           item.setTrait("definition", "filters", [
             createStratumLevelFilter(-2, 11, 5, 8)
           ])
         );
+
         style = item.cesiumTileStyle;
+        await item.loadMapItems();
+
         expect(style.show._expression).toBe(item.showExpressionFromFilters);
       });
     });
