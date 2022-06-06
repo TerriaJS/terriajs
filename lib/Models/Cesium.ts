@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { autorun, computed, runInAction } from "mobx";
 import { computedFn } from "mobx-utils";
-import { Event } from "terriajs-cesium";
+ import Event from "terriajs-cesium/Source/Core/Event ";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
