@@ -9,7 +9,9 @@ import "tinymce/icons/default";
 import "tinymce/themes/silver";
 import "tinymce/models/dom";
 /* Import a skin (can be a custom skin instead of the default) */
-import "!!style-loader!css-loader?sourceMap!tinymce/skins/ui/oxide/skin.min.css";
+// import "!!style-loader!css-loader?sourceMap!tinymce/skins/ui/oxide/skin.min.css";
+import "!!style-loader!css-loader?sourceMap!./editor.skin.min.css"; // Custom borderless skin
+
 /* Import TinyMCE plugins */
 import "tinymce/plugins/media";
 import "tinymce/plugins/image";
