@@ -25,6 +25,8 @@ interface CssExports {
   'formatButton': string;
   'img--share': string;
   'imgShare': string;
+  'include-story-option': string;
+  'includeStoryOption': string;
   'link': string;
   'link-wrapper': string;
   'linkWrapper': string;

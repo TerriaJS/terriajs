@@ -29,6 +29,8 @@ import {
 
 import { downloadImg } from "./Print/PrintView";
 import { reaction } from "mobx";
+import Checkbox from "../../../../Styled/Checkbox";
+import { TextSpan } from "../../../../Styled/Text";
 
 const SharePanel = observer(
   createReactClass({
@@ -468,23 +470,17 @@ const SharePanel = observer(
                 />
               </div>
               <If condition={this.isUrlShortenable()}>
-                <div
-                  className={classNames(
-                    DropdownStyles.section,
-                    Styles.shortenUrl
-                  )}
-                >
-                  <button onClick={this.onShortenClicked}>
-                    {this.shouldShorten() ? (
-                      <Icon glyph={Icon.GLYPHS.checkboxOn} />
-                    ) : (
-                      <Icon glyph={Icon.GLYPHS.checkboxOff} />
-                    )}
-                    {t("share.shortenUsingService")}
-                  </button>
+                <div className={Styles.shortenUrl}>
+                  <Checkbox
+                    textProps={{ small: true }}
+                    id="shortenUrl"
+                    isChecked={this.shouldShorten}
+                    onChange={this.onShortenClicked}
+                    className={Styles.checkbox}
+                  ></Checkbox>
+                  <TextSpan>{t("share.shortenUsingService")}</TextSpan>
                 </div>
               </If>
-              <hr />
               <IncludeStoryOption viewState={this.props.viewState} />
             </If>
           </div>

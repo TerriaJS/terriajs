@@ -23,7 +23,7 @@ const IncludeStoryOption: React.FC<IncludeStoryOptionProps> = observer(
     const isChecked = props.viewState.includeStoryInShare ?? false;
 
     return (
-      <IncludeStoryOptionDiv>
+      <IncludeStoryOptionDiv className={Styles.includeStoryOption}>
         <Checkbox
           textProps={{ small: true }}
           id="includeStory"
@@ -32,7 +32,7 @@ const IncludeStoryOption: React.FC<IncludeStoryOptionProps> = observer(
           onChange={onChangeHandler}
           className={Styles.checkbox}
         ></Checkbox>
-        <p className={Styles.paragraph}>{t("includeStory.message")}</p>
+        <TextSpan>{t("includeStory.message")}</TextSpan>
       </IncludeStoryOptionDiv>
     );
   }
