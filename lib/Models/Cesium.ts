@@ -91,10 +91,6 @@ var southeastCartographicScratch = new Cartographic();
 var northeastCartographicScratch = new Cartographic();
 var northwestCartographicScratch = new Cartographic();
 
-interface EventListenerRemover {
-  requestUrl: string;
-  removeFns: Event.RemoveCallback[];
-}
 export default class Cesium extends GlobeOrMap {
   readonly type = "Cesium";
   readonly terria: Terria;
@@ -106,10 +102,9 @@ export default class Cesium extends GlobeOrMap {
   readonly pauser: CesiumRenderLoopPauser;
   readonly canShowSplitter = true;
   private readonly _eventHelper: EventHelper;
-  // private _3dTilesetEventListeners: EventListenerRemover[] = []; // eventListener reference storage
   private _3dTilesetEventListeners = new Map<
     Cesium3DTileset,
-    EventListenerRemover
+    Event.RemoveCallback[]
   >(); // eventListener reference storage
   private _pauseMapInteractionCount = 0;
   private _lastZoomTarget:
@@ -631,10 +626,10 @@ export default class Cesium extends GlobeOrMap {
         if (!allPrimitives.includes(primitive)) {
           if (isCesium3DTileset(primitive)) {
             // Remove all event listeners from any Cesium3DTilesets by running stored remover functions
-            const fnArray = this._3dTilesetEventListeners.get(primitive)
-              ?.removeFns;
-
-            fnArray?.forEach(fn => fn()); // Run the remover functions
+            const fnArray = this._3dTilesetEventListeners.get(primitive);
+            try {
+              fnArray?.forEach(fn => fn()); // Run the remover functions
+            } catch (error) {}
 
             this._3dTilesetEventListeners.delete(primitive); // Remove the item for this tileset from our eventListener reference storage array
             this._updateTilesLoadingIndeterminate(false); // reset progress bar loading state to false. Any new tile loading event will restart it to account for multiple currently loading 3DTilesets.
@@ -651,24 +646,20 @@ export default class Cesium extends GlobeOrMap {
           if (isCesium3DTileset(primitive)) {
             const startingListener = this._eventHelper.add(
               primitive.tileLoad,
-              () => {
-                this._updateTilesLoadingIndeterminate(true);
-              }
+              () => this._updateTilesLoadingIndeterminate(true)
             );
 
             //Add event listener for when tiles finished loading for current view. Infrequent.
             const finishedListener = this._eventHelper.add(
               primitive.allTilesLoaded,
-              () => {
-                this._updateTilesLoadingIndeterminate(false);
-              }
+              () => this._updateTilesLoadingIndeterminate(false)
             );
 
             // Push new item to eventListener reference storage
-            this._3dTilesetEventListeners.set(primitive, {
-              requestUrl: primitive.resource.request.url,
-              removeFns: [startingListener, finishedListener]
-            });
+            this._3dTilesetEventListeners.set(primitive, [
+              startingListener,
+              finishedListener
+            ]);
           }
         }
       });
