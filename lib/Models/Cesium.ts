@@ -625,6 +625,7 @@ export default class Cesium extends GlobeOrMap {
       // Remove deleted primitives
       prevPrimitives.forEach((primitive, i) => {
         if (!allPrimitives.includes(primitive)) {
+          primitives.remove(primitive);
           if (
             isCesium3DTileset(primitive) &&
             allCesium3DTilesets.indexOf(primitive) === -1
@@ -639,7 +640,6 @@ export default class Cesium extends GlobeOrMap {
               this._updateTilesLoadingIndeterminate(false); // reset progress bar loading state to false. Any new tile loading event will restart it to account for multiple currently loading 3DTilesets.
             } catch (e) {}
           }
-          primitives.remove(primitive);
         }
       });
 
@@ -647,6 +647,7 @@ export default class Cesium extends GlobeOrMap {
       allPrimitives.forEach(primitive => {
         if (!primitives.contains(primitive)) {
           primitives.add(primitive);
+
           if (isCesium3DTileset(primitive)) {
             const startingListener = this._eventHelper.add(
               primitive.tileLoad,
@@ -664,10 +665,14 @@ export default class Cesium extends GlobeOrMap {
             );
 
             // Push new item to eventListener reference storage
-            this._3dTilesetEventListeners.push({
-              requestUrl: primitive.resource.request.url,
-              removeFns: [startingListener, finishedListener]
-            });
+            try {
+              this._3dTilesetEventListeners.push({
+                requestUrl: primitive.resource.request.url,
+                removeFns: [startingListener, finishedListener]
+              });
+            } catch (e) {
+              // TODO: add sensible error message
+            }
           }
         }
       });
