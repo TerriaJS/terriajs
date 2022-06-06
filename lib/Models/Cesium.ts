@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { autorun, computed, runInAction } from "mobx";
 import { computedFn } from "mobx-utils";
- import Event from "terriajs-cesium/Source/Core/Event ";
+import Event from "terriajs-cesium/Source/Core/Event";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -106,7 +106,11 @@ export default class Cesium extends GlobeOrMap {
   readonly pauser: CesiumRenderLoopPauser;
   readonly canShowSplitter = true;
   private readonly _eventHelper: EventHelper;
-  private _3dTilesetEventListeners: EventListenerRemover[] = []; // eventListener reference storage
+  // private _3dTilesetEventListeners: EventListenerRemover[] = []; // eventListener reference storage
+  private _3dTilesetEventListeners = new Map<
+    Cesium3DTileset,
+    EventListenerRemover
+  >(); // eventListener reference storage
   private _pauseMapInteractionCount = 0;
   private _lastZoomTarget:
     | CameraView
@@ -623,23 +627,19 @@ export default class Cesium extends GlobeOrMap {
       const primitives = this.scene.primitives;
 
       // Remove deleted primitives
-      prevPrimitives.forEach((primitive, i) => {
+      prevPrimitives.forEach(primitive => {
         if (!allPrimitives.includes(primitive)) {
-          primitives.remove(primitive);
-          if (
-            isCesium3DTileset(primitive) &&
-            allCesium3DTilesets.indexOf(primitive) === -1
-          ) {
-            try {
-              // Remove all event listeners from any Cesium3DTilesets by running stored remover functions
-              const fnArray = this._3dTilesetEventListeners[i].removeFns;
-              for (let j = 0; j < fnArray.length; j++) {
-                fnArray[j](); // run the function
-              }
-              this._3dTilesetEventListeners.splice(i, 1); // Remove the item for this tileset from our eventListener reference storage array
-              this._updateTilesLoadingIndeterminate(false); // reset progress bar loading state to false. Any new tile loading event will restart it to account for multiple currently loading 3DTilesets.
-            } catch (e) {}
+          if (isCesium3DTileset(primitive)) {
+            // Remove all event listeners from any Cesium3DTilesets by running stored remover functions
+            const fnArray = this._3dTilesetEventListeners.get(primitive)
+              ?.removeFns;
+
+            fnArray?.forEach(fn => fn()); // Run the remover functions
+
+            this._3dTilesetEventListeners.delete(primitive); // Remove the item for this tileset from our eventListener reference storage array
+            this._updateTilesLoadingIndeterminate(false); // reset progress bar loading state to false. Any new tile loading event will restart it to account for multiple currently loading 3DTilesets.
           }
+          primitives.remove(primitive);
         }
       });
 
@@ -665,14 +665,10 @@ export default class Cesium extends GlobeOrMap {
             );
 
             // Push new item to eventListener reference storage
-            try {
-              this._3dTilesetEventListeners.push({
-                requestUrl: primitive.resource.request.url,
-                removeFns: [startingListener, finishedListener]
-              });
-            } catch (e) {
-              // TODO: add sensible error message
-            }
+            this._3dTilesetEventListeners.set(primitive, {
+              requestUrl: primitive.resource.request.url,
+              removeFns: [startingListener, finishedListener]
+            });
           }
         }
       });
