@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import Checkbox from "../../../../Styled/Checkbox";
-import { TextSpan } from "../../../../Styled/Text";
 import React from "react";
 import ViewState from "../../../../ReactViewModels/ViewState";
 import { observer } from "mobx-react";

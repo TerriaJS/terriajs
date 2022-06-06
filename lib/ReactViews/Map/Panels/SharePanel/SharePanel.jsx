@@ -30,7 +30,6 @@ import {
 import { downloadImg } from "./Print/PrintView";
 import { reaction } from "mobx";
 import Checkbox from "../../../../Styled/Checkbox";
-import { TextSpan } from "../../../../Styled/Text";
 
 const SharePanel = observer(
   createReactClass({
