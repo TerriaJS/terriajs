@@ -64,7 +64,6 @@ import MappableMixin, {
   isPrimitive,
   isCesium3DTileset,
   isDataSource,
-  isPrimitive,
   isTerrainProvider,
   MapItem
 } from "../ModelMixins/MappableMixin";
