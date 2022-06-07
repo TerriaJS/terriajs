@@ -341,8 +341,8 @@ const SharePanel = observer(
                   )
                 }
               />
+              {this.renderWarning()}
             </div>
-            <div></div>
           </Otherwise>
         </Choose>
       );
