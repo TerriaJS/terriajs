@@ -1,11 +1,11 @@
 Change Log
 ==========
 
-#### next release (8.2.5)
+#### next release (8.2.6)
 
 * [The next improvement]
 
-#### 8.2.4 - 2022-06-07
+#### 8.2.5 - 2022-06-07
 
 * Add Google Analytics event for drag and drop of files onto map.
 * Allow users to choose whether Story is included in Share
