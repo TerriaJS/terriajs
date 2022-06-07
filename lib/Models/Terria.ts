@@ -533,6 +533,7 @@ export default class Terria {
   @observable depthTestAgainstTerrainEnabled = false;
 
   @observable stories: StoryData[] = [];
+  @observable storiesInitialized: boolean = false;
 
   /**
    * Gets or sets the ID of the catalog member that is currently being
@@ -1513,6 +1514,7 @@ export default class Terria {
     // Add stories
     if (Array.isArray(initData.stories)) {
       this.stories = initData.stories;
+      this.storiesInitialized = true;
     }
 
     // Add map settings
