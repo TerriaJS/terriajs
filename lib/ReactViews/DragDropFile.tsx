@@ -34,10 +34,14 @@ class DragDropFile extends React.Component<PropsType> {
 
     for (let i = 0; i < e.dataTransfer.files.length; i++) {
       // Log event to analytics for each file dropped (sometimes multiple files dropped in one DragEvent)
+      const fileType =
+        e.dataTransfer.files[i].type ||
+        e.dataTransfer.files[i].name.split(".").pop(); // use file extension if type property is empty
+
       this.props.terria.analytics?.logEvent(
         Category.dataSource,
         DataSourceAction.addFromDragAndDrop,
-        `File Type: ${e.dataTransfer.files[i].type}, File Size(B): ${e.dataTransfer.files[i].size}`
+        `File Type: ${fileType}, File Size(B): ${e.dataTransfer.files[i].size}`
       );
     }
 
