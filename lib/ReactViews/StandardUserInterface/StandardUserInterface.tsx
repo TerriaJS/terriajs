@@ -161,7 +161,12 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
     useEffect(() => {
       window.addEventListener("resize", resizeListener, false);
       resizeListener();
+      return () => {
+        window.removeEventListener("resize", resizeListener, false);
+      };
+    }, []);
 
+    useEffect(() => {
       if (
         props.terria.configParameters.storyEnabled &&
         props.terria.stories &&
@@ -183,11 +188,7 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
           width: 300
         });
       }
-
-      return () => {
-        window.removeEventListener("resize", resizeListener, false);
-      };
-    }, []);
+    }, [props.terria.storyPromptShown]);
 
     // Merge theme in order of highest priority: themeOverrides props -> theme config parameter -> default terriaTheme
     const mergedTheme = combine(
