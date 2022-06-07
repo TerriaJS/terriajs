@@ -50,7 +50,8 @@ export enum DataSourceAction {
   addFromPreviewButton = "Add from preview button",
   removeFromPreviewButton = "Remove from preview button",
   removeFromWorkbench = "Remove from workbench",
-  removeAllFromWorkbench = "Remove all from workbench"
+  removeAllFromWorkbench = "Remove all from workbench",
+  addFromDragAndDrop = "Add from Drag and Drop"
 }
 
 export enum DatatabAction {

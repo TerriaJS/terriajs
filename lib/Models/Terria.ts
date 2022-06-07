@@ -294,6 +294,16 @@ interface ConfigParameters {
    * Prefix to which `:story-id` is added to fetch JSON for stories when using /story/:story-id routes. Should end in /
    */
   storyRouteUrlPrefix?: string;
+
+  /**
+   * For Console Analytics
+   */
+  enableConsoleAnalytics?: boolean;
+
+  /**
+   * Options for Google Analytics
+   */
+  googleAnalyticsOptions?: unknown;
 }
 
 interface StartOptions {
@@ -313,8 +323,8 @@ interface StartOptions {
 
 interface Analytics {
   start: (
-    userParameters: Partial<{
-      logToConsole: boolean;
+    configParameters: Partial<{
+      enableConsoleAnalytics: boolean;
       googleAnalyticsKey: any;
       googleAnalyticsOptions: any;
     }>
@@ -477,7 +487,9 @@ export default class Terria {
       { text: "map.extraCreditLinks.disclaimer", url: "about.html#disclaimer" }
     ],
     printDisclaimer: undefined,
-    storyRouteUrlPrefix: undefined
+    storyRouteUrlPrefix: undefined,
+    enableConsoleAnalytics: undefined,
+    googleAnalyticsOptions: undefined
   };
 
   @observable
