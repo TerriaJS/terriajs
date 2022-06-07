@@ -12,6 +12,9 @@ Change Log
 * `mapItems` can now return arbitrary Cesium primitives.
 * Update `terriajs-cesium` to `1.91.0`.
 * Update `terriajs-cesium` to `1.92.0`.
+* Replace Pell WYSIWYG editor library with TinyMCE, allows richer editing of Stories in the Story Builder
+* Added support for using Compare / Split Screen mode with Cesium 3D Tiles.
+* Fix `BottomDock.handleClick` binding
 * [The next improvement]
 
 #### 8.2.4 - 2022-05-23
