@@ -48,7 +48,7 @@ import WorkflowPanelContainer from "./WorkflowPanelContainer";
 
 const GlobalTerriaStyles = createGlobalStyle`
   body {
-    font-family: ${p => p.theme.fontBase}
+    font-family: ${p => p.theme.fontBase};
 
     *:focus {
       outline: 3px solid #C390F9;

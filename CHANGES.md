@@ -21,6 +21,8 @@ Change Log
 * Fix `BottomDock.handleClick` binding
 * Use the theme base font to style story share panel.
 * Fix problem with Story Prompt not showing
+* Fix global body style (font and focus purple)
+* Add `color:inherit` to `Button`
 * [The next improvement]
 
 #### 8.2.4 - 2022-05-23
