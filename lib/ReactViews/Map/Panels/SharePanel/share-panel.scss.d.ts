@@ -13,6 +13,7 @@ interface CssExports {
   'catalog-share-inner': string;
   'catalogShare': string;
   'catalogShareInner': string;
+  'checkbox': string;
   'clipboard-for-catalog-share': string;
   'clipboard-for-story-share': string;
   'clipboardForCatalogShare': string;
@@ -24,6 +25,8 @@ interface CssExports {
   'formatButton': string;
   'img--share': string;
   'imgShare': string;
+  'include-story-option': string;
+  'includeStoryOption': string;
   'link': string;
   'link-wrapper': string;
   'linkWrapper': string;
