@@ -603,6 +603,9 @@
     "shareExplanation": "Anyone with this URL will be able to access this map.",
     "copy": "Copy"
   },
+  "includeStory": {
+    "message": "Include Story in Share?"
+  },
   "dragDrop": {
     "text": "<0>Drag & Drop</0><1>Your data anywhere to view on the map<1>",
     "not": "<0>bbbb</0>"
