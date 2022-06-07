@@ -533,7 +533,7 @@ export default class Terria {
   @observable depthTestAgainstTerrainEnabled = false;
 
   @observable stories: StoryData[] = [];
-  @observable storyPromptShown: number = 0;
+  @observable storyPromptShown: number = 0; // Story Prompt modal will be rendered when this property changes. See StandardUserInterface, section regarding sui.notifications. Ideally move this to ViewState.
 
   /**
    * Gets or sets the ID of the catalog member that is currently being
