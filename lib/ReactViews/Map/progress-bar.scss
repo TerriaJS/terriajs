@@ -3,28 +3,29 @@
   position: absolute;
   top: 0;
   left: 0;
-  background: rgba(255, 255, 255, 0.8);
   height: 5px;
+  overflow: hidden;
   transition: opacity 200ms linear, width 200ms linear, visibility 400ms linear;
 }
 
 .complete {
-  animation-duration: 400ms;
-  animation-name: complete;
+  visibility: hidden;
 }
 
-@keyframes complete {
-  from {
-    opacity: 1;
-  }
+.indeterminate-bar-animated {
+  width: 100%;
+  animation: indeterminateAnimation 1.2s infinite linear;
+  transform-origin: 0% 50%;
+}
 
-  50% {
-    width: 100%;
-    opacity: 1;
+@keyframes indeterminateAnimation {
+  0% {
+    transform: translateX(0) scaleX(0);
   }
-
-  to {
-    opacity: 0;
-    width: 100%;
+  40% {
+    transform: translateX(0) scaleX(0.4);
+  }
+  100% {
+    transform: translateX(100%) scaleX(0.5);
   }
 }

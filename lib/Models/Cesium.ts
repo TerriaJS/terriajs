@@ -1,6 +1,7 @@
 import i18next from "i18next";
 import { autorun, computed, runInAction } from "mobx";
 import { computedFn } from "mobx-utils";
+import Event from "terriajs-cesium/Source/Core/Event";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -60,9 +61,9 @@ import PickedFeatures, {
 } from "../Map/PickedFeatures/PickedFeatures";
 import MappableMixin, {
   ImageryParts,
+  isPrimitive,
   isCesium3DTileset,
   isDataSource,
-  isPrimitive,
   isTerrainProvider,
   MapItem
 } from "../ModelMixins/MappableMixin";
@@ -101,6 +102,10 @@ export default class Cesium extends GlobeOrMap {
   readonly pauser: CesiumRenderLoopPauser;
   readonly canShowSplitter = true;
   private readonly _eventHelper: EventHelper;
+  private _3dTilesetEventListeners = new Map<
+    Cesium3DTileset,
+    Event.RemoveCallback[]
+  >(); // eventListener reference storage
   private _pauseMapInteractionCount = 0;
   private _lastZoomTarget:
     | CameraView
@@ -160,7 +165,9 @@ export default class Cesium extends GlobeOrMap {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=976173
     const firefoxBugOptions = (<any>FeatureDetection).isFirefox()
       ? {
-          contextOptions: { webgl: { preserveDrawingBuffer: true } }
+          contextOptions: {
+            webgl: { preserveDrawingBuffer: true }
+          }
         }
       : undefined;
 
@@ -511,6 +518,7 @@ export default class Cesium extends GlobeOrMap {
     this.pauser.destroy();
     this.stopObserving();
     this._eventHelper.removeAll();
+    this._updateTilesLoadingIndeterminate(false); // reset progress bar loading state to false for any data sources with indeterminate progress e.g. 3DTilesets.
     this.dataSourceDisplay.destroy();
 
     this._disposeTerrainReaction();
@@ -615,6 +623,16 @@ export default class Cesium extends GlobeOrMap {
       // Remove deleted primitives
       prevPrimitives.forEach(primitive => {
         if (!allPrimitives.includes(primitive)) {
+          if (isCesium3DTileset(primitive)) {
+            // Remove all event listeners from any Cesium3DTilesets by running stored remover functions
+            const fnArray = this._3dTilesetEventListeners.get(primitive);
+            try {
+              fnArray?.forEach(fn => fn()); // Run the remover functions
+            } catch (error) {}
+
+            this._3dTilesetEventListeners.delete(primitive); // Remove the item for this tileset from our eventListener reference storage array
+            this._updateTilesLoadingIndeterminate(false); // reset progress bar loading state to false. Any new tile loading event will restart it to account for multiple currently loading 3DTilesets.
+          }
           primitives.remove(primitive);
         }
       });
@@ -623,9 +641,27 @@ export default class Cesium extends GlobeOrMap {
       allPrimitives.forEach(primitive => {
         if (!primitives.contains(primitive)) {
           primitives.add(primitive);
+
+          if (isCesium3DTileset(primitive)) {
+            const startingListener = this._eventHelper.add(
+              primitive.tileLoad,
+              () => this._updateTilesLoadingIndeterminate(true)
+            );
+
+            //Add event listener for when tiles finished loading for current view. Infrequent.
+            const finishedListener = this._eventHelper.add(
+              primitive.allTilesLoaded,
+              () => this._updateTilesLoadingIndeterminate(false)
+            );
+
+            // Push new item to eventListener reference storage
+            this._3dTilesetEventListeners.set(primitive, [
+              startingListener,
+              finishedListener
+            ]);
+          }
         }
       });
-
       prevMapItems = this._allMapItems;
       this.notifyRepaintRequired();
     });
