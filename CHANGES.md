@@ -15,6 +15,7 @@ Change Log
 * Replace Pell WYSIWYG editor library with TinyMCE, allows richer editing of Stories in the Story Builder
 * Added support for using Compare / Split Screen mode with Cesium 3D Tiles.
 * Fix `BottomDock.handleClick` binding
+* Fix problem with Story Prompt not showing
 * [The next improvement]
 
 #### 8.2.4 - 2022-05-23
