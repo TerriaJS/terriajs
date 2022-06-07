@@ -181,6 +181,13 @@ export default abstract class GlobeOrMap {
   }
 
   /**
+   * Adds loading progress (boolean) for 3DTileset layers where total tiles is not known
+   */
+  protected _updateTilesLoadingIndeterminate(loading: boolean): void {
+    this.terria.indeterminateTileLoadProgressEvent.raiseEvent(loading);
+  }
+
+  /**
    * Returns the side of the splitter the `position` lies on.
    *
    * @param The screen position.

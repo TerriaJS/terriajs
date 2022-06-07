@@ -10,11 +10,14 @@ Change Log
 * TSXified `StandardUserInterface` and some other components. If your TerriaMap imports `StandardUserInterface.jsx` remove the `.jsx` extension so webpack can find the new `.tsx` file.
 * Fix use of `baseMapContrastColor` in region mapping/protomaps and remove `MAX_SELECTABLE_DIMENSION_OPTIONS`.
 * `mapItems` can now return arbitrary Cesium primitives.
+* Added progress of 3DTiles data source loading to Progress Bar.
+* ProgressBar colour now depends on baseMapContrastColor - improves visibility on light map backgrounds.
 * Update `terriajs-cesium` to `1.91.0`.
 * Update `terriajs-cesium` to `1.92.0`.
 * Replace Pell WYSIWYG editor library with TinyMCE, allows richer editing of Stories in the Story Builder
 * Added support for using Compare / Split Screen mode with Cesium 3D Tiles.
 * Fix `BottomDock.handleClick` binding
+* Use the theme base font to style story share panel.
 * Fix problem with Story Prompt not showing
 * [The next improvement]
 
