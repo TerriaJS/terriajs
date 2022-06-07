@@ -616,7 +616,6 @@ export default class Cesium extends GlobeOrMap {
         }
       }
 
-      const allCesium3DTilesets = this._allMapItems.filter(isCesium3DTileset);
       const allPrimitives = this._allMapItems.filter(isPrimitive);
       const prevPrimitives = prevMapItems.filter(isPrimitive);
       const primitives = this.scene.primitives;
