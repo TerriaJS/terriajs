@@ -158,6 +158,7 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
       props.viewState.useSmallScreenInterface = shouldUseMobileInterface;
     });
 
+    //TODO: Changes here
     useEffect(() => {
       window.addEventListener("resize", resizeListener, false);
       resizeListener();
@@ -187,7 +188,7 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
       return () => {
         window.removeEventListener("resize", resizeListener, false);
       };
-    }, []);
+    }, [props.terria.storiesInitialized]);
 
     // Merge theme in order of highest priority: themeOverrides props -> theme config parameter -> default terriaTheme
     const mergedTheme = combine(
