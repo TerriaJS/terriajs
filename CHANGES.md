@@ -3,6 +3,9 @@ Change Log
 
 #### next release (8.2.5)
 
+* [The next improvement]
+
+#### 8.2.4 - 2022-06-07
 
 * Add Google Analytics event for drag and drop of files onto map.
 * Allow users to choose whether Story is included in Share
@@ -14,7 +17,6 @@ Change Log
 * `mapItems` can now return arbitrary Cesium primitives.
 * Added progress of 3DTiles data source loading to Progress Bar.
 * ProgressBar colour now depends on baseMapContrastColor - improves visibility on light map backgrounds.
-* Update `terriajs-cesium` to `1.91.0`.
 * Update `terriajs-cesium` to `1.92.0`.
 * Replace Pell WYSIWYG editor library with TinyMCE, allows richer editing of Stories in the Story Builder
 * Added support for using Compare / Split Screen mode with Cesium 3D Tiles.
@@ -23,7 +25,6 @@ Change Log
 * Fix problem with Story Prompt not showing
 * Fix global body style (font and focus purple)
 * Add `color:inherit` to `Button`
-* [The next improvement]
 
 #### 8.2.4 - 2022-05-23
 
