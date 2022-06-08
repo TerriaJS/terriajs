@@ -23,6 +23,7 @@ interface CssExports {
   'explanation': string;
   'format-button': string;
   'formatButton': string;
+  'getShareSaveHelpButton': string;
   'img--share': string;
   'imgShare': string;
   'include-story-option': string;

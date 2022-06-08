@@ -30,6 +30,7 @@ import {
 import { downloadImg } from "./Print/PrintView";
 import { reaction } from "mobx";
 import Checkbox from "../../../../Styled/Checkbox";
+import { RawButton } from "../../../../Styled/Button";
 
 const SharePanel = observer(
   createReactClass({
@@ -378,7 +379,7 @@ const SharePanel = observer(
     },
 
     renderContentWithPrintAndEmbed() {
-      const { t, terria } = this.props;
+      const { t, terria, viewState } = this.props;
       const iframeCode = this.state.shareUrl.length
         ? `<iframe style="width: 720px; height: 600px; border: none;" src="${this.state.shareUrl}" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>`
         : "";
@@ -397,6 +398,19 @@ const SharePanel = observer(
                 )
               }
             />
+            <RawButton
+              type="button"
+              onClick={evt => {
+                evt.preventDefault();
+                evt.stopPropagation();
+                viewState.showHelpPanel();
+                viewState.selectHelpMenuItem("storymigration"); // TODO: Change this to the correct help subitem
+                viewState.terria.notificationState.dismissCurrentNotification();
+              }}
+              className={Styles.getShareSaveHelpButton}
+            >
+              {t("share.getShareSaveHelpMessage")}
+            </RawButton>
             {this.renderWarning()}
           </div>
           <div className={DropdownStyles.section}>
