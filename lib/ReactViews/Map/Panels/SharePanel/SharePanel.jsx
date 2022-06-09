@@ -30,7 +30,8 @@ import {
 import { downloadImg } from "./Print/PrintView";
 import { reaction } from "mobx";
 import Checkbox from "../../../../Styled/Checkbox";
-import { RawButton } from "../../../../Styled/Button";
+// import { RawButton } from "../../../../Styled/Button";
+import Text from "../../../../Styled/Text";
 
 const SharePanel = observer(
   createReactClass({
@@ -398,21 +399,30 @@ const SharePanel = observer(
                 )
               }
             />
-            <RawButton
-              type="button"
+            <Text
+              medium
+              textLight
+              isLink
               onClick={evt => {
                 evt.preventDefault();
                 evt.stopPropagation();
                 viewState.showHelpPanel();
                 viewState.selectHelpMenuItem("storymigration"); // TODO: Change this to the correct help subitem
-                viewState.terria.notificationState.dismissCurrentNotification();
+                // viewState.terria.notificationState.dismissCurrentNotification();
               }}
-              className={Styles.getShareSaveHelpButton}
             >
-              {t("share.getShareSaveHelpMessage")}
-            </RawButton>
+              <span
+                className={classNames(
+                  Styles.explanation,
+                  Styles.getShareSaveHelpText
+                )}
+              >
+                {t("share.getShareSaveHelpMessage")}
+              </span>
+            </Text>
             {this.renderWarning()}
           </div>
+
           <div className={DropdownStyles.section}>
             <div>{t("share.printTitle")}</div>
             <div className={Styles.explanation}>

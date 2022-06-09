@@ -220,7 +220,8 @@
     "convertNotificationFeedback": "For questions or feedback, click here.",
     "convertNotificationWarningsTitle": "Technical details",
     "convertErrorTitle": "Could not upgrade share link to V8",
-    "convertErrorMessage": "This share link is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the share data."
+    "convertErrorMessage": "This share link is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the share data.",
+    "getShareSaveHelpMessage": "How to Bookmark Sharelinks"
   },
   "countDatasets": {
     "btnText": "Start",

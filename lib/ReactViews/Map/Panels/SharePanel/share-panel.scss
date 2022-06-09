@@ -187,8 +187,9 @@
   }
 }
 
-.getShareSaveHelpButton {
+.getShareSaveHelpText {
   font-style: italic;
-  text-align: end;
-  color: $color-primary;
+  float: right;
+  cursor: help;
+  padding-right: 0.1em;
 }
