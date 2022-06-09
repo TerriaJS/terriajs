@@ -396,17 +396,31 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
         style.defines = Object.assign(style.defines, { opacity });
       }
 
+      // Rewrite color expression to also use the models opacity setting
       if (!isDefined(style.color)) {
-        // Some tilesets (eg. point clouds) have a ${COLOR} variable which stores the current color of a feature, so if
-        // we have that, we should use it, and only change the opacity.
-        // We have to do it component-wise because... well, I'm not entirely sure, but when I did it non-component-wise
-        // I started getting weird type errors when the shaders compiled. If you enjoy debugging dynamically generated
-        // shaders in the browser in the service of a marginal improvement to code brevity, this one's for you!
+        // Some tilesets (eg. point clouds) have a ${COLOR} variable which
+        // stores the current color of a feature, so if we have that, we should
+        // use it, and only change the opacity.  We have to do it
+        // component-wise because `undefined` is mapped to a large float value
+        // (czm_infinity) in glsl in Cesium and so can only be compared with
+        // another float value.
+        //
+        // There is also a subtle bug which prevents us from using an
+        // expression in the alpha part of the rgba().  eg, using the
+        // expression '${COLOR}.a === undefined ? ${opacity} : ${COLOR}.a * ${opacity}'
+        // to generate an opacity value will cause Cesium to generate wrong
+        // translucency values making the tileset translucent even when the
+        // computed opacity is 1.0. It also makes the whole of the point cloud
+        // appear white when zoomed out to some distance.  So for now, the only
+        // solution is to discard the opacity from the tileset and only use the
+        // value from the opacity trait.
         style.color =
-          "rgba((${COLOR}.r === undefined ? 1 : ${COLOR}.r) * 255, " +
-          "(${COLOR}.g === undefined ? 1 : ${COLOR}.g) * 255, " +
-          "(${COLOR}.b === undefined ? 1 : ${COLOR}.b) * 255, " +
-          "${COLOR}.a === undefined ? ${opacity} : ${COLOR}.a * ${opacity})";
+          "(rgba(" +
+          "(${COLOR}.r === undefined ? 1 : ${COLOR}.r) * 255," +
+          "(${COLOR}.g === undefined ? 1 : ${COLOR}.g) * 255," +
+          "(${COLOR}.b === undefined ? 1 : ${COLOR}.b) * 255," +
+          "${opacity}" +
+          "))";
       } else if (typeof style.color == "string") {
         // Check if the color specified is just a css color
         const cssColor = Color.fromCssColorString(style.color);
