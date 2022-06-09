@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.2.6)
 
+* Fixed default 3d-tiles styling to add a workaround for a Cesium bug which resulted in wrong translucency value for point clouds.
 * [The next improvement]
 
 #### 8.2.5 - 2022-06-07
