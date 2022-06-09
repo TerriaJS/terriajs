@@ -26,7 +26,6 @@ import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import { isJsonObject, JsonObject } from "../Core/Json";
-import makeRealPromise from "../Core/makeRealPromise";
 import runLater from "../Core/runLater";
 import TerriaError from "../Core/TerriaError";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
@@ -120,9 +119,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       try {
         this.loadTileset();
         if (this.tileset) {
-          const tileset = await makeRealPromise<Cesium3DTileset>(
-            this.tileset.readyPromise
-          );
+          const tileset = await this.tileset.readyPromise;
           if (
             tileset.extras !== undefined &&
             tileset.extras.style !== undefined
@@ -183,7 +180,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       // matrix This lets us control the whole model transformation using just
       // tileset.modelMatrix We later derive a tilset.modelMatrix by combining
       // the root transform and transformation traits in mapItems.
-      makeRealPromise(tileset.readyPromise).then(
+      tileset.readyPromise.then(
         action(() => {
           this.isTilesetReady = tileset.ready;
           if (tileset.root !== undefined) {

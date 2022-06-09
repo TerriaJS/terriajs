@@ -158,7 +158,8 @@ export const RawButton = styled.button<IButtonProps>`
   ${props => props.fullHeight && `height: 100%;`}
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
 
-  ${props => (props.textLight ? `color: ${props.theme.textLight}` : ``)}
+  ${props =>
+    props.textLight ? `color: ${props.theme.textLight}` : `color: inherit`}
 `;
 
 type ButtonProps = {

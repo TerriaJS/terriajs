@@ -82,7 +82,7 @@ describe("TileErrorHandlerMixin", function() {
     return new Promise((resolve, reject) => {
       const retry: { then?: any; otherwise: any } = error.retry as any;
       if (retry && retry.then) {
-        retry.then(resolve).otherwise(reject);
+        retry.then(resolve).catch(reject);
       } else {
         resolve();
       }
@@ -232,7 +232,9 @@ describe("TileErrorHandlerMixin", function() {
         await onTileLoadError(item, error);
       } catch {}
       expect(Resource.fetchImage).toHaveBeenCalledTimes(
-        item.tileRetryOptions.retries || 0
+        !Array.isArray(item.tileRetryOptions)
+          ? item.tileRetryOptions.retries ?? 0
+          : 0
       );
       expect(item.tileFailures).toBe(1);
     });
