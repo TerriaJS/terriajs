@@ -1,22 +1,27 @@
-"use strict";
-
-import classNames from "classnames";
-import createReactClass from "create-react-class";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import PropTypes from "prop-types";
 import React from "react";
-import { withTranslation } from "react-i18next";
+import { useTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
 import defined from "terriajs-cesium/Source/Core/defined";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import hasTraits from "../../../Models/Definition/hasTraits";
+import Model from "../../../Models/Definition/Model";
+import Box from "../../../Styled/Box";
+import { RawButton } from "../../../Styled/Button";
+import Spacing from "../../../Styled/Spacing";
 import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
-import Styles from "./left-right-section.scss";
 
-const LeftRightButton = styled.button`
+interface ILeftRightButton {
+  isActive: boolean;
+}
+
+const LeftRightButton = styled(RawButton).attrs({ fullWidth: true })<
+  ILeftRightButton
+>`
   text-align: center;
+  padding: 5px;
   color: ${p => p.theme.textLight};
   background-color: ${p => p.theme.dark};
   ${p =>
@@ -30,63 +35,53 @@ const LeftRightButton = styled.button`
   }
 `;
 
-const LeftRightSection = observer(
-  createReactClass({
-    displayName: "LeftRightSection",
+interface ILeftRightSection {
+  item: Model<SplitterTraits>;
+}
 
-    propTypes: {
-      item: PropTypes.object.isRequired,
-      t: PropTypes.func.isRequired
-    },
-
-    goLeft() {
+const LeftRightSection: React.FC<ILeftRightSection> = observer(
+  ({ item }: ILeftRightSection) => {
+    const goLeft = () => {
       runInAction(() => {
-        this.props.item.setTrait(
-          CommonStrata.user,
-          "splitDirection",
-          SplitDirection.LEFT
-        );
+        item.setTrait(CommonStrata.user, "splitDirection", SplitDirection.LEFT);
       });
-    },
+    };
 
-    goBoth() {
+    const goBoth = () => {
       runInAction(() => {
-        this.props.item.setTrait(
-          CommonStrata.user,
-          "splitDirection",
-          SplitDirection.NONE
-        );
+        item.setTrait(CommonStrata.user, "splitDirection", SplitDirection.NONE);
       });
-    },
+    };
 
-    goRight() {
+    const goRight = () => {
       runInAction(() => {
-        this.props.item.setTrait(
+        item.setTrait(
           CommonStrata.user,
           "splitDirection",
           SplitDirection.RIGHT
         );
       });
-    },
+    };
 
-    render() {
-      const item = this.props.item;
-      const splitDirection = item.splitDirection;
-      const { t } = this.props;
-      if (
-        !hasTraits(item, SplitterTraits, "splitDirection") ||
-        item.disableSplitter ||
-        !defined(splitDirection) ||
-        !item.terria.showSplitter
-      ) {
-        return null;
-      }
-      return (
-        <div className={Styles.leftRightSection}>
+    const { t } = useTranslation();
+    const splitDirection = item.splitDirection;
+
+    if (
+      !hasTraits(item, SplitterTraits, "splitDirection") ||
+      item.disableSplitter ||
+      !defined(splitDirection) ||
+      !item.terria.showSplitter
+    ) {
+      return null;
+    }
+
+    return (
+      <>
+        <Spacing bottom={3} />
+        <Box>
           <LeftRightButton
             type="button"
-            onClick={this.goLeft}
-            className={classNames(Styles.goLeft)}
+            onClick={goLeft}
             title={t("splitterTool.workbench.goleftTitle")}
             isActive={splitDirection === SplitDirection.LEFT}
           >
@@ -94,8 +89,7 @@ const LeftRightSection = observer(
           </LeftRightButton>
           <LeftRightButton
             type="button"
-            onClick={this.goBoth}
-            className={classNames(Styles.goBoth)}
+            onClick={goBoth}
             title={t("splitterTool.workbench.bothTitle")}
             isActive={splitDirection === SplitDirection.NONE}
           >
@@ -103,17 +97,16 @@ const LeftRightSection = observer(
           </LeftRightButton>
           <LeftRightButton
             type="button"
-            onClick={this.goRight}
-            className={classNames(Styles.goRight)}
+            onClick={goRight}
             title={t("splitterTool.workbench.gorightTitle")}
             isActive={splitDirection === SplitDirection.RIGHT}
           >
             {t("splitterTool.workbench.goright")}
           </LeftRightButton>
-        </div>
-      );
-    }
-  })
+        </Box>
+      </>
+    );
+  }
 );
 
 export default withTranslation()(LeftRightSection);
