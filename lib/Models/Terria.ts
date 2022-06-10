@@ -914,7 +914,8 @@ export default class Terria {
       if (!options.i18nOptions?.skipInit) {
         Internationalization.initLanguage(
           this.configParameters.languageConfiguration,
-          options.i18nOptions
+          options.i18nOptions,
+          this.baseUrl
         );
       }
     }

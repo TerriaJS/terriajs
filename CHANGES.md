@@ -3,6 +3,10 @@ Change Log
 
 #### next release (8.2.6)
 
+* **Breaking changes:**
+  * Changed translation resolution. Now the "translation" namespace loads only from `${terria.baseUrl}/languages/{{lng}}/translation.json` (TerriaJS assets) and "languageOverrides" loads from `languages/{{lng}}/languageOverrides.json` (a TerriaMap's assets)
+* Removed EN & FR translation files from bundle. All translation files are now loaded on demand.
+* Moved translation files from `lib/Language/*/translation.json` to `wwwroot/languages/*/translation.json`.
 * Fixed default 3d-tiles styling to add a workaround for a Cesium bug which resulted in wrong translucency value for point clouds.
 * Remove Pell dependency, now replaced with TinyMCE (WYSIWYG editor library).
 * Fix `includes` path for `url-loader` rule so that it doesn't incorrectly match package names with `terriajs` as prefix.
