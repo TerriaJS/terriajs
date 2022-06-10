@@ -13,7 +13,7 @@ import filterOutUndefined from "../../Core/filterOutUndefined";
 import flatten from "../../Core/flatten";
 import isDefined from "../../Core/isDefined";
 import Result from "../../Core/Result";
-import featureDataToGeoJson from "../../Map/featureDataToGeoJson";
+import featureDataToGeoJson from "../../Map/PickedFeatures/featureDataToGeoJson";
 import { FeatureCollectionWithCrs } from "../../ModelMixins/GeojsonMixin";
 import GeoJsonCatalogItem from "../../Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import CommonStrata from "../../Models/Definition/CommonStrata";

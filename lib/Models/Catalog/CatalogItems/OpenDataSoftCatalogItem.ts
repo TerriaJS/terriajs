@@ -16,7 +16,7 @@ import TableMixin from "../../../ModelMixins/TableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStratum";
 import { MetadataUrlTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
-import DimensionTraits from "../../../Traits/TraitsClasses/DimensionTraits";
+import EnumDimensionTraits from "../../../Traits/TraitsClasses/DimensionTraits";
 import { FeatureInfoTemplateTraits } from "../../../Traits/TraitsClasses/FeatureInfoTraits";
 import OpenDataSoftCatalogItemTraits from "../../../Traits/TraitsClasses/OpenDataSoftCatalogItemTraits";
 import TableColumnTraits from "../../../Traits/TraitsClasses/TableColumnTraits";
@@ -30,7 +30,7 @@ import StratumOrder from "../../Definition/StratumOrder";
 import Feature from "../../Feature";
 import SelectableDimensions, {
   SelectableDimension
-} from "../../SelectableDimensions";
+} from "../../SelectableDimensions/SelectableDimensions";
 import Terria from "../../Terria";
 import {
   isValidDataset,
@@ -527,7 +527,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
    */
   @computed get availableFields() {
     if (!this.selectAllFields)
-      return createStratumInstance(DimensionTraits, {
+      return createStratumInstance(EnumDimensionTraits, {
         id: "available-fields",
         name: "Fields",
         selectedId: this.catalogItem.colorFieldName,
@@ -716,7 +716,10 @@ export default class OpenDataSoftCatalogItem
         name: this.availableFields.name,
         selectedId: this.availableFields.selectedId,
         options: this.availableFields.options,
-        setDimensionValue: async (strataId: string, selectedId: string) => {
+        setDimensionValue: async (
+          strataId: string,
+          selectedId: string | undefined
+        ) => {
           this.setTrait(strataId, "colorFieldName", selectedId);
           (await this.loadMapItems()).throwIfError();
         }

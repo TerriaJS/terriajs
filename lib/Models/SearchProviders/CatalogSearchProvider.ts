@@ -126,12 +126,13 @@ export default class CatalogSearchProvider extends SearchProvider {
     searchText: string,
     searchResults: SearchProviderResults
   ): Promise<void> {
-    this.isSearching = true;
+    runInAction(() => (this.isSearching = true));
+
     searchResults.results.length = 0;
     searchResults.message = undefined;
 
     if (searchText === undefined || /^\s*$/.test(searchText)) {
-      this.isSearching = false;
+      runInAction(() => (this.isSearching = false));
       return Promise.resolve();
     }
 

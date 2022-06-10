@@ -106,8 +106,7 @@ const AddData = createReactClass({
         this.props.terria,
         this.props.viewState,
         this.state.remoteUrl,
-        this.state.remoteDataType.value,
-        true
+        this.state.remoteDataType.value
       );
     } else {
       try {

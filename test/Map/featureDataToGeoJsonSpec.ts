@@ -1,6 +1,6 @@
 "use strict";
 
-import featureDataToGeoJson from "../../lib/Map/featureDataToGeoJson";
+import featureDataToGeoJson from "../../lib/Map/PickedFeatures/featureDataToGeoJson";
 
 describe("featureDataToGeoJson", function() {
   describe("Esri polygon", function() {

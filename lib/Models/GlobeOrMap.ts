@@ -11,20 +11,23 @@ import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/Constan
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import isDefined from "../Core/isDefined";
 import LatLonHeight from "../Core/LatLonHeight";
-import featureDataToGeoJson from "../Map/featureDataToGeoJson";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import { ProviderCoordsMap } from "../Map/PickedFeatures";
-import ProtomapsImageryProvider from "../Map/ProtomapsImageryProvider";
+import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
+import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
+import featureDataToGeoJson from "../Map/PickedFeatures/featureDataToGeoJson";
+import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import MouseCoords from "../ReactViewModels/MouseCoords";
-import StyleTraits from "../Traits/TraitsClasses/StyleTraits";
+import TableColorStyleTraits from "../Traits/TraitsClasses/TableColorStyleTraits";
+import TableOutlineStyleTraits, {
+  OutlineSymbolTraits
+} from "../Traits/TraitsClasses/TableOutlineStyleTraits";
+import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
 import CameraView from "./CameraView";
 import Cesium3DTilesCatalogItem from "./Catalog/CatalogItems/Cesium3DTilesCatalogItem";
-import GeoJsonCatalogItem from "./Catalog/CatalogItems/GeoJsonCatalogItem";
 import CommonStrata from "./Definition/CommonStrata";
 import createStratumInstance from "./Definition/createStratumInstance";
 import Feature from "./Feature";
@@ -178,6 +181,13 @@ export default abstract class GlobeOrMap {
   }
 
   /**
+   * Adds loading progress (boolean) for 3DTileset layers where total tiles is not known
+   */
+  protected _updateTilesLoadingIndeterminate(loading: boolean): void {
+    this.terria.indeterminateTileLoadProgressEvent.raiseEvent(loading);
+  }
+
+  /**
    * Returns the side of the splitter the `position` lies on.
    *
    * @param The screen position.
@@ -185,7 +195,7 @@ export default abstract class GlobeOrMap {
    */
   protected _getSplitterSideForScreenPosition(
     position: Cartesian2 | Cartesian3
-  ): ImagerySplitDirection | undefined {
+  ): SplitDirection | undefined {
     const container = this.terria.currentViewer.getContainer();
     if (!isDefined(container)) {
       return;
@@ -193,9 +203,9 @@ export default abstract class GlobeOrMap {
 
     const splitterX = container.clientWidth * this.terria.splitPosition;
     if (position.x <= splitterX) {
-      return ImagerySplitDirection.LEFT;
+      return SplitDirection.LEFT;
     } else {
-      return ImagerySplitDirection.RIGHT;
+      return SplitDirection.RIGHT;
     }
   }
 
@@ -210,6 +220,11 @@ export default abstract class GlobeOrMap {
       this._removeHighlightCallback = undefined;
       this._highlightPromise = undefined;
     }
+
+    // Lazy import here to avoid cyclic dependencies.
+    const { default: GeoJsonCatalogItem } = await import(
+      "./Catalog/CatalogItems/GeoJsonCatalogItem"
+    );
 
     if (isDefined(feature)) {
       let hasGeometry = false;
@@ -371,15 +386,20 @@ export default abstract class GlobeOrMap {
               "geoJsonData",
               <any>geoJson
             );
-            catalogItem.setTrait(CommonStrata.user, "disableTableStyle", true);
+
             catalogItem.setTrait(
               CommonStrata.user,
-              "style",
-              createStratumInstance(StyleTraits, {
-                "stroke-width": 4,
-                stroke: this.terria.baseMapContrastColor,
-                "fill-opacity": 0,
-                "marker-color": this.terria.baseMapContrastColor
+              "defaultStyle",
+              createStratumInstance(TableStyleTraits, {
+                outline: createStratumInstance(TableOutlineStyleTraits, {
+                  null: createStratumInstance(OutlineSymbolTraits, {
+                    width: 4,
+                    color: this.terria.baseMapContrastColor
+                  })
+                }),
+                color: createStratumInstance(TableColorStyleTraits, {
+                  nullColor: "rgba(0,0,0,0)"
+                })
               })
             );
 

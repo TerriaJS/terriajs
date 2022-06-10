@@ -12,12 +12,13 @@ import GeoJsonMixin, {
 } from "../../../ModelMixins/GeojsonMixin";
 import GeoJsonCatalogItemTraits from "../../../Traits/TraitsClasses/GeoJsonCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
+import HasLocalData from "../../HasLocalData";
 import Terria from "../../Terria";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
-class GeoJsonCatalogItem extends GeoJsonMixin(
-  CreateModel(GeoJsonCatalogItemTraits)
-) {
+class GeoJsonCatalogItem
+  extends GeoJsonMixin(CreateModel(GeoJsonCatalogItemTraits))
+  implements HasLocalData {
   static readonly type = "geojson";
   get type() {
     return GeoJsonCatalogItem.type;
@@ -128,15 +129,15 @@ export function fileApiNotSupportedError(terria: Terria) {
       appName: terria.appName,
       chrome:
         '<a href="http://www.google.com/chrome" target="_blank">' +
-        i18next.t("models.userData.chrome") +
+        i18next.t("browsers.chrome") +
         "</a>",
       firefox:
         '<a href="http://www.mozilla.org/firefox" target="_blank">' +
-        i18next.t("models.userData.firefox") +
+        i18next.t("browsers.firefox") +
         "</a>",
       edge:
         '<a href="http://www.microsoft.com/edge" target="_blank">' +
-        i18next.t("models.userData.edge") +
+        i18next.t("browsers.edge") +
         "</a>"
     })
   });

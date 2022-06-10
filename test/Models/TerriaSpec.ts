@@ -1,14 +1,13 @@
-import { action, runInAction } from "mobx";
+import { action, runInAction, toJS } from "mobx";
 import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import hashEntity from "../../lib/Core/hashEntity";
-import JsonValue, { JsonObject } from "../../lib/Core/Json";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import Result from "../../lib/Core/Result";
 import TerriaError from "../../lib/Core/TerriaError";
-import PickedFeatures from "../../lib/Map/PickedFeatures";
+import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
 import CameraView from "../../lib/Models/CameraView";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import MagdaReference from "../../lib/Models/Catalog/CatalogReferences/MagdaReference";
@@ -24,9 +23,9 @@ import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import { BaseModel } from "../../lib/Models/Definition/Model";
 import Feature from "../../lib/Models/Feature";
 import {
-  isInitData,
-  isInitDataPromise,
-  isInitUrl
+  isInitFromData,
+  isInitFromDataPromise,
+  isInitFromUrl
 } from "../../lib/Models/InitSource";
 import Terria from "../../lib/Models/Terria";
 import ViewerMode from "../../lib/Models/ViewerMode";
@@ -63,59 +62,39 @@ describe("Terria", function() {
 
   beforeEach(function() {
     terria = new Terria({
+      appBaseHref: "/",
       baseUrl: "./"
     });
   });
 
   describe("terria refresh catalog members from magda", function() {
-    it("refreshes group aspect with given URL", async function(done) {
-      // Use its own terria instance to avoid interfering with other tests.
-      const theTerria = new Terria({
-        baseUrl: "./"
-      });
-
+    it("refreshes group aspect with given URL", async function() {
       function verifyGroups(groupAspect: any, groupNum: number) {
         const ids = groupAspect.members.map((member: any) => member.id);
-        expect(theTerria.catalog.group.uniqueId).toEqual("/");
+        expect(terria.catalog.group.uniqueId).toEqual("/");
         // ensure user added data co-exists with dereferenced magda members
-        expect(theTerria.catalog.group.members.length).toEqual(groupNum);
-        expect(theTerria.catalog.userAddedDataGroup).toBeDefined();
+        expect(terria.catalog.group.members.length).toEqual(groupNum);
+        expect(terria.catalog.userAddedDataGroup).toBeDefined();
         ids.forEach((id: string) => {
-          const model = theTerria.getModelById(MagdaReference, id);
+          const model = terria.getModelById(MagdaReference, id);
           if (!model) {
-            throw `no record id. ID = ${id}`;
+            throw new Error(`no record id. ID = ${id}`);
           }
-          expect(theTerria.modelIds).toContain(id);
+          expect(terria.modelIds).toContain(id);
           expect(model.recordId).toEqual(id);
         });
       }
 
-      await theTerria
-        .start({
-          configUrl: "test/Magda/map-config-dereferenced.json",
-          i18nOptions
-        })
-        .then(function() {
-          const groupAspect = mapConfigDereferencedJson.aspects["group"];
-          verifyGroups(groupAspect, 3);
-          done();
-        })
-        .catch(error => {
-          done.fail(error);
-        });
+      await terria.start({
+        configUrl: "test/Magda/map-config-dereferenced.json",
+        i18nOptions
+      });
+      verifyGroups(mapConfigDereferencedJson.aspects["group"], 3);
 
-      await theTerria
-        .refreshCatalogMembersFromMagda(
-          "test/Magda/map-config-dereferenced-new.json"
-        )
-        .then(function() {
-          const groupAspect = mapConfigDereferencedNewJson.aspects["group"];
-          verifyGroups(groupAspect, 2);
-          done();
-        })
-        .catch(error => {
-          done.fail(error);
-        });
+      await terria.refreshCatalogMembersFromMagda(
+        "test/Magda/map-config-dereferenced-new.json"
+      );
+      verifyGroups(mapConfigDereferencedNewJson.aspects["group"], 2);
     });
   });
 
@@ -201,8 +180,8 @@ describe("Terria", function() {
           })
           .then(function() {
             expect(terria.initSources.length).toEqual(1);
-            expect(isInitUrl(terria.initSources[0])).toEqual(true);
-            if (isInitUrl(terria.initSources[0])) {
+            expect(isInitFromUrl(terria.initSources[0])).toEqual(true);
+            if (isInitFromUrl(terria.initSources[0])) {
               expect(terria.initSources[0].initUrl).toEqual(
                 mapConfigBasicJson.aspects["terria-config"]
                   .initializationUrls[0]
@@ -239,10 +218,10 @@ describe("Terria", function() {
         });
 
         expect(terria.initSources.length).toBe(1);
-        expect(isInitDataPromise(terria.initSources[0])).toBeTruthy(
+        expect(isInitFromDataPromise(terria.initSources[0])).toBeTruthy(
           "Expected initSources[0] to be an InitDataPromise"
         );
-        if (isInitDataPromise(terria.initSources[0])) {
+        if (isInitFromDataPromise(terria.initSources[0])) {
           const data = await terria.initSources[0].data;
           // JSON parse & stringify to avoid a problem where I think catalog-converter
           //  can return {"id": undefined} instead of no "id"
@@ -280,7 +259,7 @@ describe("Terria", function() {
 
         /** Ensure inlined data catalog from init sources */
         expect(terria.initSources.length).toEqual(1);
-        if (isInitData(terria.initSources[0])) {
+        if (isInitFromData(terria.initSources[0])) {
           expect(terria.initSources[0].data.catalog).toEqual(
             inlineInit.catalog
           );
@@ -324,157 +303,209 @@ describe("Terria", function() {
   });
 
   describe("updateApplicationUrl", function() {
-    let newTerria: Terria;
-    let viewState: ViewState;
+    describe("test via serialise & load round-trip", function() {
+      let newTerria: Terria;
+      let viewState: ViewState;
 
-    beforeEach(function() {
-      newTerria = new Terria({ baseUrl: "./" });
-      viewState = new ViewState({
-        terria: terria,
-        catalogSearchProvider: null,
-        locationSearchProviders: []
+      beforeEach(function() {
+        newTerria = new Terria({ appBaseHref: "/", baseUrl: "./" });
+        viewState = new ViewState({
+          terria: terria,
+          catalogSearchProvider: null,
+          locationSearchProviders: []
+        });
+
+        UrlToCatalogMemberMapping.register(
+          s => true,
+          WebMapServiceCatalogItem.type,
+          true
+        );
+
+        terria.catalog.userAddedDataGroup.addMembersFromJson(
+          CommonStrata.user,
+          [
+            {
+              id: "itemABC",
+              name: "abc",
+              type: "wms",
+              url: "test/WMS/single_metadata_url.xml"
+            },
+            {
+              id: "groupABC",
+              name: "xyz",
+              type: "wms-group",
+              url: "test/WMS/single_metadata_url.xml"
+            }
+          ]
+        );
+
+        terria.catalog.group.addMembersFromJson(CommonStrata.user, [
+          {
+            id: "itemDEF",
+            name: "def",
+            type: "wms",
+            url: "test/WMS/single_metadata_url.xml"
+          }
+        ]);
       });
 
-      UrlToCatalogMemberMapping.register(
-        s => true,
-        WebMapServiceCatalogItem.type,
-        true
-      );
+      it("initializes user added data group with shared items", async function() {
+        expect(newTerria.catalog.userAddedDataGroup.members).not.toContain(
+          "itemABC"
+        );
+        expect(newTerria.catalog.userAddedDataGroup.members).not.toContain(
+          "groupABC"
+        );
 
-      terria.catalog.userAddedDataGroup.addMembersFromJson(CommonStrata.user, [
-        {
-          id: "itemABC",
-          name: "abc",
-          type: "wms",
-          url: "test/WMS/single_metadata_url.xml"
-        },
-        {
-          id: "groupABC",
-          name: "xyz",
-          type: "wms-group",
-          url: "test/WMS/single_metadata_url.xml"
-        }
-      ]);
-
-      terria.catalog.group.addMembersFromJson(CommonStrata.user, [
-        {
-          id: "itemDEF",
-          name: "def",
-          type: "wms",
-          url: "test/WMS/single_metadata_url.xml"
-        }
-      ]);
-    });
-
-    it("initializes user added data group with shared items", async function() {
-      expect(newTerria.catalog.userAddedDataGroup.members).not.toContain(
-        "itemABC"
-      );
-      expect(newTerria.catalog.userAddedDataGroup.members).not.toContain(
-        "groupABC"
-      );
-
-      const shareLink = buildShareLink(terria, viewState);
-      await newTerria.updateApplicationUrl(shareLink);
-      await newTerria.loadInitSources();
-      expect(newTerria.catalog.userAddedDataGroup.members).toContain("itemABC");
-      expect(newTerria.catalog.userAddedDataGroup.members).toContain(
-        "groupABC"
-      );
-    });
-
-    it("initializes user added data group with shared UrlReference items", async function() {
-      terria.catalog.userAddedDataGroup.addMembersFromJson(CommonStrata.user, [
-        {
-          id: "url_test",
-          name: "foo",
-          type: "url-reference",
-          url: "test/WMS/single_metadata_url.xml"
-        }
-      ]);
-
-      const shareLink = buildShareLink(terria, viewState);
-      await newTerria.updateApplicationUrl(shareLink);
-      await newTerria.loadInitSources();
-      expect(newTerria.catalog.userAddedDataGroup.members).toContain(
-        "url_test"
-      );
-      const urlRef = newTerria.getModelById(BaseModel, "url_test");
-      expect(urlRef).toBeDefined();
-      expect(urlRef instanceof UrlReference).toBe(true);
-
-      if (urlRef instanceof UrlReference) {
-        await urlRef.loadReference();
-        expect(urlRef.target).toBeDefined();
-      }
-    });
-
-    it("initializes workbench with shared workbench items", async function() {
-      const model1 = <WebMapServiceCatalogItem>(
-        terria.getModelById(BaseModel, "itemABC")
-      );
-      const model2 = <WebMapServiceCatalogItem>(
-        terria.getModelById(BaseModel, "itemDEF")
-      );
-      terria.workbench.add(model1);
-      terria.workbench.add(model2);
-      expect(terria.workbench.itemIds).toContain("itemABC");
-      expect(terria.workbench.itemIds).toContain("itemDEF");
-      expect(newTerria.workbench.itemIds).toEqual([]);
-
-      const shareLink = buildShareLink(terria, viewState);
-      await newTerria.updateApplicationUrl(shareLink);
-      await newTerria.loadInitSources();
-      expect(newTerria.workbench.itemIds).toEqual(terria.workbench.itemIds);
-    });
-
-    it("initializes splitter correctly", async function() {
-      const model1 = <WebMapServiceCatalogItem>(
-        terria.getModelById(BaseModel, "itemABC")
-      );
-      terria.workbench.add(model1);
-
-      runInAction(() => {
-        terria.showSplitter = true;
-        terria.splitPosition = 0.7;
-        model1.setTrait(
-          CommonStrata.user,
-          "splitDirection",
-          ImagerySplitDirection.RIGHT
+        const shareLink = buildShareLink(terria, viewState);
+        await newTerria.updateApplicationUrl(shareLink);
+        await newTerria.loadInitSources();
+        expect(newTerria.catalog.userAddedDataGroup.members).toContain(
+          "itemABC"
+        );
+        expect(newTerria.catalog.userAddedDataGroup.members).toContain(
+          "groupABC"
         );
       });
 
-      const shareLink = buildShareLink(terria, viewState);
-      await newTerria.updateApplicationUrl(shareLink);
-      await newTerria.loadInitSources();
-      expect(newTerria.showSplitter).toEqual(true);
-      expect(newTerria.splitPosition).toEqual(0.7);
-      expect(newTerria.workbench.itemIds).toEqual(["itemABC"]);
+      it("initializes user added data group with shared UrlReference items", async function() {
+        terria.catalog.userAddedDataGroup.addMembersFromJson(
+          CommonStrata.user,
+          [
+            {
+              id: "url_test",
+              name: "foo",
+              type: "url-reference",
+              url: "test/WMS/single_metadata_url.xml"
+            }
+          ]
+        );
 
-      const newModel1 = <WebMapServiceCatalogItem>(
-        newTerria.getModelById(BaseModel, "itemABC")
-      );
-      expect(newModel1).toBeDefined();
-      expect(newModel1.splitDirection).toEqual(
-        <any>ImagerySplitDirection.RIGHT
-      );
+        const shareLink = buildShareLink(terria, viewState);
+        await newTerria.updateApplicationUrl(shareLink);
+        await newTerria.loadInitSources();
+        expect(newTerria.catalog.userAddedDataGroup.members).toContain(
+          "url_test"
+        );
+        const urlRef = newTerria.getModelById(BaseModel, "url_test");
+        expect(urlRef).toBeDefined();
+        expect(urlRef instanceof UrlReference).toBe(true);
+
+        if (urlRef instanceof UrlReference) {
+          await urlRef.loadReference();
+          expect(urlRef.target).toBeDefined();
+        }
+      });
+
+      it("initializes workbench with shared workbench items", async function() {
+        const model1 = <WebMapServiceCatalogItem>(
+          terria.getModelById(BaseModel, "itemABC")
+        );
+        const model2 = <WebMapServiceCatalogItem>(
+          terria.getModelById(BaseModel, "itemDEF")
+        );
+        terria.workbench.add(model1);
+        terria.workbench.add(model2);
+        expect(terria.workbench.itemIds).toContain("itemABC");
+        expect(terria.workbench.itemIds).toContain("itemDEF");
+        expect(newTerria.workbench.itemIds).toEqual([]);
+
+        const shareLink = buildShareLink(terria, viewState);
+        await newTerria.updateApplicationUrl(shareLink);
+        await newTerria.loadInitSources();
+        expect(newTerria.workbench.itemIds).toEqual(terria.workbench.itemIds);
+      });
+
+      it("initializes splitter correctly", async function() {
+        const model1 = <WebMapServiceCatalogItem>(
+          terria.getModelById(BaseModel, "itemABC")
+        );
+        terria.workbench.add(model1);
+
+        runInAction(() => {
+          terria.showSplitter = true;
+          terria.splitPosition = 0.7;
+          model1.setTrait(
+            CommonStrata.user,
+            "splitDirection",
+            SplitDirection.RIGHT
+          );
+        });
+
+        const shareLink = buildShareLink(terria, viewState);
+        await newTerria.updateApplicationUrl(shareLink);
+        await newTerria.loadInitSources();
+        expect(newTerria.showSplitter).toEqual(true);
+        expect(newTerria.splitPosition).toEqual(0.7);
+        expect(newTerria.workbench.itemIds).toEqual(["itemABC"]);
+
+        const newModel1 = <WebMapServiceCatalogItem>(
+          newTerria.getModelById(BaseModel, "itemABC")
+        );
+        expect(newModel1).toBeDefined();
+        expect(newModel1.splitDirection).toEqual(<any>SplitDirection.RIGHT);
+      });
+
+      it("opens and loads members of shared open groups", async function() {
+        const group = <WebMapServiceCatalogGroup>(
+          terria.getModelById(BaseModel, "groupABC")
+        );
+        await viewState.viewCatalogMember(group);
+        expect(group.isOpen).toBe(true);
+        expect(group.members.length).toBeGreaterThan(0);
+        const shareLink = buildShareLink(terria, viewState);
+        await newTerria.updateApplicationUrl(shareLink);
+        await newTerria.loadInitSources();
+        const newGroup = <WebMapServiceCatalogGroup>(
+          newTerria.getModelById(BaseModel, "groupABC")
+        );
+        expect(newGroup.isOpen).toBe(true);
+        expect(newGroup.members).toEqual(group.members);
+      });
     });
 
-    it("opens and loads members of shared open groups", async function() {
-      const group = <WebMapServiceCatalogGroup>(
-        terria.getModelById(BaseModel, "groupABC")
-      );
-      await viewState.viewCatalogMember(group);
-      expect(group.isOpen).toBe(true);
-      expect(group.members.length).toBeGreaterThan(0);
-      const shareLink = buildShareLink(terria, viewState);
-      await newTerria.updateApplicationUrl(shareLink);
-      await newTerria.loadInitSources();
-      const newGroup = <WebMapServiceCatalogGroup>(
-        newTerria.getModelById(BaseModel, "groupABC")
-      );
-      expect(newGroup.isOpen).toBe(true);
-      expect(newGroup.members).toEqual(group.members);
+    describe("using story route", function() {
+      beforeEach(async function() {
+        // These specs must run with a Terria constructed with "appBaseHref": "/"
+        // to make the specs work with Karma runner
+        terria.updateParameters({
+          storyRouteUrlPrefix: "test/stories/TerriaJS%20App/"
+        });
+      });
+      it("sets playStory to 1", async function() {
+        await terria.updateApplicationUrl(
+          new URL("story/my-story", document.baseURI).toString()
+        );
+        expect(terria.userProperties.get("playStory")).toBe("1");
+      });
+      it("correctly adds the story share as a datasource", async function() {
+        await terria.updateApplicationUrl(
+          new URL("story/my-story", document.baseURI).toString()
+        );
+        expect(terria.initSources.length).toBe(1);
+        expect(terria.initSources[0].name).toMatch(/my-story/);
+        if (!isInitFromData(terria.initSources[0]))
+          throw new Error("Expected initSource to be InitData from my-story");
+
+        expect(toJS(terria.initSources[0].data)).toEqual(
+          (await (await fetch("test/stories/TerriaJS%20App/my-story")).json())
+            .initSources[0]
+        );
+      });
+      it("correctly adds the story share as a datasource when there's a trailing slash on story url", async function() {
+        await terria.updateApplicationUrl(
+          new URL("story/my-story/", document.baseURI).toString()
+        );
+        expect(terria.initSources.length).toBe(1);
+        expect(terria.initSources[0].name).toMatch(/my-story/);
+        if (!isInitFromData(terria.initSources[0]))
+          throw new Error("Expected initSource to be InitData from my-story");
+
+        expect(toJS(terria.initSources[0].data)).toEqual(
+          (await (await fetch("test/stories/TerriaJS%20App/my-story")).json())
+            .initSources[0]
+        );
+      });
     });
   });
 
@@ -905,9 +936,9 @@ describe("Terria", function() {
   //             expect(terria.checkNowViewingForTimeWms()).toEqual(true);
   //           })
   //           .then(done)
-  //           .otherwise(done.fail);
+  //           .catch(done.fail);
   //       })
-  //       .otherwise(done.fail);
+  //       .catch(done.fail);
   //   });
 
   describe("applyInitData", function() {
@@ -1194,6 +1225,39 @@ describe("Terria", function() {
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Cesium);
       expect(terria.mainViewer.viewerOptions.useTerrain).toBe(false);
       expect(getLocalPropertySpy).toHaveBeenCalledWith("viewermode");
+    });
+
+    it("uses `settings` in initsource", async () => {
+      const setBaseMapSpy = spyOn(terria.mainViewer, "setBaseMap");
+
+      await terria.start({ configUrl: "" });
+
+      terria.applyInitData({
+        initData: {
+          settings: {
+            baseMaximumScreenSpaceError: 1,
+            useNativeResolution: true,
+            alwaysShowTimeline: true,
+            baseMapId: "basemap-natural-earth-II",
+            terrainSplitDirection: -1,
+            depthTestAgainstTerrainEnabled: true
+          }
+        }
+      });
+
+      await terria.loadInitSources();
+
+      expect(terria.baseMaximumScreenSpaceError).toBe(1);
+      expect(terria.useNativeResolution).toBeTruthy;
+      expect(terria.timelineStack.alwaysShowingTimeline).toBeTruthy();
+      expect(setBaseMapSpy).toHaveBeenCalledWith(
+        terria.baseMapsModel.baseMapItems.find(
+          item => item.item.uniqueId === "basemap-natural-earth-II"
+        )?.item
+      );
+
+      expect(terria.terrainSplitDirection).toBe(SplitDirection.LEFT);
+      expect(terria.depthTestAgainstTerrainEnabled).toBeTruthy();
     });
   });
 

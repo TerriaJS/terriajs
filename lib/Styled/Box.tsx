@@ -60,6 +60,7 @@ interface IBoxPropsBase {
   wordBreak?: WordBreak;
   overflow?: Overflow;
   overflowY?: Overflow;
+  overflowX?: Overflow;
   ref?: Ref<any>;
   scroll?: boolean;
   style?: any;
@@ -67,7 +68,7 @@ interface IBoxPropsBase {
   as?: React.ElementType | keyof JSX.IntrinsicElements;
 }
 
-type IBoxProps = IBoxPropsBase & OneKeyFrom<Column>;
+export type IBoxProps = IBoxPropsBase & OneKeyFrom<Column>;
 
 export const Box = styled.div<IBoxProps>`
   display: flex;
@@ -175,7 +176,7 @@ export const Box = styled.div<IBoxProps>`
   ${props => props.styledPadding && `padding: ${props.styledPadding};`}
 
   ${props => props.styledMargin && `margin: ${props.styledMargin};`}
-
+  
   ${props =>
     props.backgroundImage &&
     `
@@ -206,6 +207,11 @@ export const Box = styled.div<IBoxProps>`
     `
       overflow-y: ${props.overflowY};
     `}
+    ${props =>
+      props.overflowX &&
+      `
+        overflow-x: ${props.overflowX};
+      `}
   ${props =>
     props.gap &&
     `

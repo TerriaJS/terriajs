@@ -7,11 +7,11 @@ import isDefined from "../Core/isDefined";
 import runLater from "../Core/runLater";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError from "../Core/TerriaError";
-import ColorMap from "../Map/ColorMap";
-import ConstantColorMap from "../Map/ConstantColorMap";
-import ContinuousColorMap from "../Map/ContinuousColorMap";
-import DiscreteColorMap from "../Map/DiscreteColorMap";
-import EnumColorMap from "../Map/EnumColorMap";
+import ColorMap from "../Map/ColorMap/ColorMap";
+import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
+import ContinuousColorMap from "../Map/ColorMap/ContinuousColorMap";
+import DiscreteColorMap from "../Map/ColorMap/DiscreteColorMap";
+import EnumColorMap from "../Map/ColorMap/EnumColorMap";
 import Model from "../Models/Definition/Model";
 import ModelPropertiesFromTraits from "../Models/Definition/ModelPropertiesFromTraits";
 import TableColorStyleTraits, {
@@ -19,9 +19,83 @@ import TableColorStyleTraits, {
 } from "../Traits/TraitsClasses/TableColorStyleTraits";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
+import { StyleMapType } from "./TableStyleMap";
 
 const getColorForId = createColorForIdTransformer();
 const DEFAULT_COLOR = "yellow";
+
+/** Diverging scales (can be used for continuous and discrete).
+ * Discrete scales support a size n ranging from 3 to 11
+ */
+export const DIVERGING_SCALES = [
+  "BrBG",
+  "PRGn",
+  "PiYG",
+  "PuOr",
+  "RdBu",
+  "RdGy",
+  "RdYlBu",
+  "RdYlGn",
+  "Spectral"
+];
+
+export const DEFAULT_DIVERGING = "PuOr";
+
+/** Sequential scales D3 color scales (can be used for continuous and discrete).
+ * Discrete scales support a size n ranging from 3 to 9
+ */
+export const SEQUENTIAL_SCALES = [
+  "Blues",
+  "Greens",
+  "Greys",
+  "Oranges",
+  "Purples",
+  "Reds",
+  "BuGn",
+  "BuPu",
+  "GnBu",
+  "OrRd",
+  "PuBuGn",
+  "PuBu",
+  "PuRd",
+  "RdPu",
+  "YlGnBu",
+  "YlGn",
+  "YlOrBr",
+  "YlOrRd"
+];
+
+export const DEFAULT_SEQUENTIAL = "Reds";
+
+/** Sequential continuous D3 color scales (continuous only - not discrete) */
+export const SEQUENTIAL_CONTINUOUS_SCALES = [
+  "Turbo",
+  "Viridis",
+  "Inferno",
+  "Magma",
+  "Plasma",
+  "Cividis",
+  "Warm",
+  "Cool",
+  "CubehelixDefault"
+];
+
+export const QUALITATIVE_SCALES = [
+  // Note HighContrast is custom - see StandardCssColors.highContrast
+  "HighContrast",
+  "Category10",
+  "Accent",
+  "Dark2",
+  "Paired",
+  "Pastel1",
+  "Pastel2",
+  "Set1",
+  "Set2",
+  "Set3",
+  "Tableau10"
+];
+
+export const DEFAULT_QUALITATIVE = "HighContrast";
 
 export default class TableColorMap {
   constructor(
@@ -30,6 +104,16 @@ export default class TableColorMap {
     readonly colorColumn: TableColumn | undefined,
     readonly colorTraits: Model<TableColorStyleTraits>
   ) {}
+
+  @computed get type(): StyleMapType {
+    return this.colorMap instanceof DiscreteColorMap
+      ? "bin"
+      : this.colorMap instanceof ContinuousColorMap
+      ? "continuous"
+      : this.colorMap instanceof EnumColorMap
+      ? "enum"
+      : "constant";
+  }
 
   /**
    * Gets an object used to map values in {@link #colorColumn} to colors
@@ -52,13 +136,19 @@ export default class TableColorMap {
     const colorTraits = this.colorTraits;
 
     // If column type is `scalar` - use DiscreteColorMap or ContinuousColorMap
-    if (colorColumn && colorColumn.type === TableColumnType.scalar) {
+    if (
+      (!colorTraits.mapType ||
+        colorTraits.mapType === "continuous" ||
+        colorTraits.mapType === "bin") &&
+      colorColumn &&
+      colorColumn.type === TableColumnType.scalar
+    ) {
       // If column type is `scalar` and we have binMaximums - use DiscreteColorMap
-      if (this.binMaximums.length > 0) {
+      if (colorTraits.mapType !== "continuous" && this.binMaximums.length > 0) {
         return new DiscreteColorMap({
           bins: this.binColors.map((color, i) => {
             return {
-              color: color,
+              color: Color.fromCssColorString(color),
               maximum: this.binMaximums[i],
               includeMinimumInThisBin: false
             };
@@ -69,6 +159,7 @@ export default class TableColorMap {
 
       // If column type is `scalar` and we have a valid minValue and maxValue - use ContinuousColorMap
       if (
+        colorTraits.mapType !== "bin" &&
         isDefined(this.minimumValue) &&
         isDefined(this.maximumValue) &&
         this.minimumValue < this.maximumValue
@@ -104,12 +195,14 @@ export default class TableColorMap {
       // If no useful ColorMap could be found for the scalar column - we will create a ConstantColorMap at the end of the function
     }
 
-    // If column type is `enum` or `region` - and we have enough binColors to represent uniqueValues - use EnumColorMap
+    // If column type is `enum` or `region` - use EnumColorMap
     else if (
       colorColumn &&
-      (colorColumn.type === TableColumnType.enum ||
-        colorColumn.type === TableColumnType.region) &&
-      colorColumn.uniqueValues.values.length <= this.enumColors.length
+      ((!colorTraits.mapType &&
+        (colorColumn.type === TableColumnType.enum ||
+          colorColumn.type === TableColumnType.region) &&
+        this.enumColors.length > 0) ||
+        colorTraits.mapType === "enum")
     ) {
       return new EnumColorMap({
         enumColors: filterOutUndefined(
@@ -170,7 +263,7 @@ export default class TableColorMap {
    * Bin colors used to represent `scalar` TableColumns in a DiscreteColorMap
    */
   @computed
-  get binColors(): readonly Readonly<Color>[] {
+  get binColors(): readonly Readonly<string>[] {
     const numberOfBins = this.binMaximums.length;
 
     // Pick a color for every bin.
@@ -178,16 +271,12 @@ export default class TableColorMap {
 
     let colorScale = this.colorScaleCategorical(this.binMaximums.length);
 
-    const result: Color[] = [];
+    const result: string[] = [];
     for (let i = 0; i < numberOfBins; ++i) {
       if (i < binColors.length) {
-        result.push(
-          Color.fromCssColorString(binColors[i]) ?? Color.TRANSPARENT
-        );
+        result.push(binColors[i] ?? Color.TRANSPARENT.toCssHexString());
       } else {
-        result.push(
-          Color.fromCssColorString(colorScale[i % colorScale.length])
-        );
+        result.push(colorScale[i % colorScale.length]);
       }
     }
     return result;
@@ -208,31 +297,27 @@ export default class TableColorMap {
     if (binMaximums !== undefined) {
       if (
         colorColumn.type === TableColumnType.scalar &&
-        colorColumn.valuesAsNumbers.maximum !== undefined &&
+        this.maximumValue !== undefined &&
         (binMaximums.length === 0 ||
-          colorColumn.valuesAsNumbers.maximum >
-            binMaximums[binMaximums.length - 1])
+          this.maximumValue > binMaximums[binMaximums.length - 1])
       ) {
-        // Add an extra bin to accomodate the maximum value of the dataset.
-        return binMaximums.concat([colorColumn.valuesAsNumbers.maximum]);
+        // Add an extra bin to accommodate the maximum value of the dataset.
+        return binMaximums.concat([this.maximumValue]);
       }
       return binMaximums;
     } else if (this.colorTraits.numberOfBins === 0) {
       return [];
     } else {
       // TODO: compute maximums according to ckmeans, quantile, etc.
-      const asNumbers = colorColumn.valuesAsNumbers;
-      const min = asNumbers.minimum;
-      const max = asNumbers.maximum;
-      if (min === undefined || max === undefined) {
+      if (this.minimumValue === undefined || this.maximumValue === undefined) {
         return [];
       }
       const numberOfBins =
         colorColumn.uniqueValues.values.length < this.colorTraits.numberOfBins
           ? colorColumn.uniqueValues.values.length
           : this.colorTraits.numberOfBins;
-      let next = min;
-      const step = (max - min) / numberOfBins;
+      let next = this.minimumValue;
+      const step = (this.maximumValue - this.minimumValue) / numberOfBins;
 
       const result: number[] = [];
       for (let i = 0; i < numberOfBins - 1; ++i) {
@@ -240,7 +325,7 @@ export default class TableColorMap {
         result.push(next);
       }
 
-      result.push(max);
+      result.push(this.maximumValue);
 
       return result;
     }
@@ -248,6 +333,7 @@ export default class TableColorMap {
 
   /**
    * Enum bin colors used to represent `enum` or `region` TableColumns in a EnumColorMap
+   * If no enumColor traits are provided, then try to create colors from uniqueValues
    */
   @computed
   get enumColors(): readonly ModelPropertiesFromTraits<EnumColorTraits>[] {
@@ -260,17 +346,19 @@ export default class TableColorMap {
       return [];
     }
 
-    // Create a color for each unique value
+    // No enumColors traits provided - so create a color for each unique value
     const uniqueValues = colorColumn.uniqueValues.values;
 
     let colorScale = this.colorScaleCategorical(uniqueValues.length);
 
-    return colorScale.map((color, i) => {
-      return {
-        value: uniqueValues[i],
-        color
-      };
-    });
+    return colorScale
+      .map((color, i) => {
+        return {
+          value: uniqueValues[i],
+          color
+        };
+      })
+      .filter(color => isDefined(color.value));
   }
 
   /** This color is used to color values outside minimumValue and maximumValue - it is only used for ContinuousColorMaps
@@ -319,20 +407,12 @@ export default class TableColorMap {
       [
         // If colorPalette is undefined, defaultColorPaletteName will return a diverging color scale
         undefined,
-        "BrBG",
-        "PRGn",
-        "PiYG",
-        "PuOr",
-        "RdBu",
-        "RdGy",
-        "RdYlBu",
-        "RdYlGn",
-        "Spectral"
+        ...DIVERGING_SCALES
       ].includes(this.colorTraits.colorPalette)
     );
   }
 
-  /** Get default colorPalete name.
+  /** Get default colorPalette name.
    * Follows https://github.com/d3/d3-scale-chromatic#api-reference
    * If Enum or Region - use custom HighContrast (See StandardCssColors.highContrast)
    * If scalar and not diverging - use Reds palette
@@ -342,12 +422,12 @@ export default class TableColorMap {
    * If they are not, Terria will crash
    */
   @computed
-  get defaultColorPaletteName(): "Turbo" | "HighContrast" | "PuOr" | "Reds" {
+  get defaultColorPaletteName() {
     const colorColumn = this.colorColumn;
 
     if (colorColumn === undefined) {
-      // This shouldn't get used - as if there is no colorColumn - there is nothing to visualise!
-      return "Turbo";
+      // This shouldn't get used - as if there is no colorColumn - there is nothing to visualize!
+      return DEFAULT_SEQUENTIAL;
     }
 
     if (
@@ -355,23 +435,23 @@ export default class TableColorMap {
       colorColumn.type === TableColumnType.region
     ) {
       // Enumerated values, so use a large, high contrast palette.
-      return "HighContrast";
+      return DEFAULT_QUALITATIVE;
     } else if (colorColumn.type === TableColumnType.scalar) {
       const valuesAsNumbers = colorColumn.valuesAsNumbers;
       if (valuesAsNumbers !== undefined && this.isDiverging) {
         // Values cross zero, so use a diverging palette
-        return "PuOr";
+        return DEFAULT_DIVERGING;
       } else {
         // Values do not cross zero so use a sequential palette.
-        return "Reds";
+        return DEFAULT_SEQUENTIAL;
       }
     }
 
-    return "Reds";
+    return DEFAULT_SEQUENTIAL;
   }
 
   /** Minimum value - with filters if applicable
-   * This will only apply to ContinuousColorMaps
+   * This will apply to ContinuousColorMaps and DiscreteColorMaps
    */
   @computed
   get minimumValue() {
@@ -385,7 +465,7 @@ export default class TableColorMap {
   }
 
   /** Maximum value - with filters if applicable
-   * This will only apply to ContinuousColorMaps
+   * This will apply to ContinuousColorMaps and DiscreteColorMaps
    */
   @computed
   get maximumValue() {
@@ -439,7 +519,7 @@ export default class TableColorMap {
    * - `colorTraits.zScoreFilter` to be defined,
    * - colorTraits.minimumValue and colorTraits.maximumValue to be UNDEFINED
    *
-   * This will treat values outside of specifed z-score as outliers, and therefore will not include in color scale. This value is magnitude of z-score - it will apply to positive and negative z-scores. For example a value of `2` will treat all values that are 2 or more standard deviations from the mean as outliers.
+   * This will treat values outside of specified z-score as outliers, and therefore will not include in color scale. This value is magnitude of z-score - it will apply to positive and negative z-scores. For example a value of `2` will treat all values that are 2 or more standard deviations from the mean as outliers.
    * This will only apply to ContinuousColorMaps
    * */
 
@@ -528,7 +608,7 @@ export default class TableColorMap {
     // d3 continuous color schemes are represented as a function which map a value [0,1] to a color]
     let colorScale: ((value: number) => string) | undefined;
 
-    // If colorPalete trait is defined - try to resolve it
+    // If colorPalette trait is defined - try to resolve it
     if (isDefined(this.colorTraits.colorPalette)) {
       colorScale = (d3Scale as any)[
         `interpolate${this.colorTraits.colorPalette}`
@@ -557,16 +637,16 @@ export default class TableColorMap {
     // d3 categorical color schemes are represented as either:
     // Two dimensional arrays
     //   - First array represents number of bins in the given color scale (eg 3 = [#ff0000, #ffaa00, #ffff00])
-    //   - Second aray contains color values
+    //   - Second array contains color values
     // One dimensional array
     //   - Just an array of color values
     //   - For example schemeCategory10 (https://github.com/d3/d3-scale-chromatic#schemeCategory10) is a fixed color scheme with 10 values
 
     let colorScaleScheme: any;
 
-    // If colorPalete trait is defined - try to resolve it
+    // If colorPalette trait is defined - try to resolve it
     if (isDefined(this.colorTraits.colorPalette)) {
-      // "HighContrast" is a custom additonal palette
+      // "HighContrast" is a custom additional palette
       if (this.colorTraits.colorPalette === "HighContrast") {
         colorScaleScheme = StandardCssColors.highContrast;
       } else {
@@ -619,7 +699,7 @@ export default class TableColorMap {
           new TerriaError({
             title: "Invalid colorPalette",
             message: `Column ${this.colorColumn?.name} has an invalid color palette - \`"${this.colorTraits.colorPalette}"\`.
-            Will use default color palete \`"${this.defaultColorPaletteName}"\` instead`
+            Will use default color palette \`"${this.defaultColorPaletteName}"\` instead`
           })
         )
       );

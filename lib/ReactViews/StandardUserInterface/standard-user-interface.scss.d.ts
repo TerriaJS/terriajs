@@ -11,7 +11,6 @@ interface CssExports {
   'showWorkbenchButtonisNotVisible': string;
   'showWorkbenchButtonisVisible': string;
   'sidePanel': string;
-  'sidePanelHide': string;
   'story-wrapper': string;
   'storyWrapper': string;
   'ui': string;

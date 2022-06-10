@@ -4,8 +4,9 @@ import styled, { useTheme } from "styled-components";
 import { constVoid } from "../../../Core/types";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
-import Icon, { StyledIcon } from "../../../Styled/Icon";
-import { LocationBtn } from "./StoryButtons";
+import Icon from "../../../Styled/Icon";
+import { StoryIcon } from "./StoryButtons";
+import Text from "../../../Styled/Text";
 
 interface FooterBarProps {
   goPrev: constVoid;
@@ -14,19 +15,22 @@ interface FooterBarProps {
   zoomTo: constVoid;
   currentHumanIndex: number;
   totalStories: number;
+  listStories: () => void;
 }
 
-const FooterContainer = styled(Box)`
-  border-top: 1px solid ${p => p.theme.greyLighter};
+const FooterButton = styled(RawButton)`
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  gap: 5px;
 `;
 
 const NavigationButton = styled(RawButton)`
-  padding: 15px;
-  cursor: pointer;
-`;
-
-const StoryCount = styled.div`
-  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  padding: 15px 0;
+  gap: 10px;
 `;
 
 const FooterBar = ({
@@ -35,47 +39,60 @@ const FooterBar = ({
   jumpToStory,
   zoomTo,
   currentHumanIndex,
-  totalStories
+  totalStories,
+  listStories
 }: FooterBarProps) => {
   const isEnd = currentHumanIndex === totalStories;
   const { t } = useTranslation();
   const theme = useTheme();
 
   return (
-    <FooterContainer>
+    <>
       <Box flex={1}>
         {totalStories > 1 && (
           <NavigationButton disabled={currentHumanIndex == 1} onClick={goPrev}>
-            <StyledIcon
+            <StoryIcon
               displayInline
               styledWidth="15px"
               fillColor={theme.grey}
               glyph={Icon.GLYPHS.left}
-            />{" "}
-            {t("story.prev")}
+            />
+            <Text medium>{t("story.prev")}</Text>
           </NavigationButton>
         )}
       </Box>
 
       <Box flex={1} centered>
-        <StyledIcon
-          displayInline
-          styledWidth="15px"
-          glyph={Icon.GLYPHS.menu}
-          fillColor={theme.grey}
-        />
-        <StoryCount>
-          {currentHumanIndex} / {totalStories}
-        </StoryCount>
-        <LocationBtn onClick={zoomTo} />
+        <FooterButton onClick={listStories}>
+          <StoryIcon
+            displayInline
+            styledWidth="15px"
+            glyph={Icon.GLYPHS.menu}
+            fillColor={theme.grey}
+          />
+        </FooterButton>
+        <Box paddedRatio={3}>
+          <Text>
+            {currentHumanIndex} / {totalStories}
+          </Text>
+        </Box>
+
+        <FooterButton onClick={zoomTo} title={t("story.locationBtn")}>
+          <StoryIcon styledWidth={"16px"} glyph={Icon.GLYPHS.location} />
+        </FooterButton>
       </Box>
       <Box flex={1} right>
         {totalStories > 1 && (
-          <NavigationButton onClick={isEnd ? () => jumpToStory(0) : goNext}>
+          <NavigationButton
+            css={`
+              justify-content: flex-end;
+            `}
+            onClick={isEnd ? () => jumpToStory(0) : goNext}
+          >
             {isEnd ? (
               <>
-                {t("story.restart")}{" "}
-                <StyledIcon
+                <Text>{t("story.restart")}</Text>
+                <StoryIcon
                   displayInline
                   styledWidth="15px"
                   glyph={Icon.GLYPHS.revert}
@@ -84,8 +101,8 @@ const FooterBar = ({
               </>
             ) : (
               <>
-                {t("story.next")}{" "}
-                <StyledIcon
+                <Text medium>{t("story.next")}</Text>
+                <StoryIcon
                   displayInline
                   styledWidth="15px"
                   glyph={Icon.GLYPHS.right}
@@ -96,7 +113,7 @@ const FooterBar = ({
           </NavigationButton>
         )}
       </Box>
-    </FooterContainer>
+    </>
   );
 };
 

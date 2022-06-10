@@ -4,13 +4,12 @@ import readJson from "../../Core/readJson";
 import TerriaError from "../../Core/TerriaError";
 import TimeVarying from "../../ModelMixins/TimeVarying";
 import ViewState from "../../ReactViewModels/ViewState";
-import addUserCatalogMember from "./addUserCatalogMember";
 import CommonStrata from "../Definition/CommonStrata";
-import createCatalogItemFromFileOrUrl from "./createCatalogItemFromFileOrUrl";
 import { BaseModel } from "../Definition/Model";
-import raiseErrorOnRejectedPromise from "../raiseErrorOnRejectedPromise";
-import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
 import Terria from "../Terria";
+import addUserCatalogMember from "./addUserCatalogMember";
+import createCatalogItemFromFileOrUrl from "./createCatalogItemFromFileOrUrl";
+import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
 
 interface FileType {
   value: string;
@@ -32,8 +31,7 @@ export default async function addUserFiles(
         terria,
         viewState,
         file,
-        dataType.value,
-        true
+        dataType.value
       );
       return addUserCatalogMember(terria, item);
     } catch (e) {
@@ -80,8 +78,11 @@ export default async function addUserFiles(
           return loadCatalogItemFromFile(file);
         }
       });
-      loadPromise = raiseErrorOnRejectedPromise(terria, promise);
-      promises.push(loadPromise);
+      loadPromise = promise.catch(e => {
+        terria.raiseErrorToUser(e);
+        return undefined;
+      });
+      promises.push();
     } else {
       loadPromise = loadCatalogItemFromFile(file);
       promises.push(loadPromise);

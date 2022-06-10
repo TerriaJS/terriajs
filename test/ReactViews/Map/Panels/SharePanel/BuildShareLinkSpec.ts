@@ -2,17 +2,20 @@ import { action, runInAction } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import URI from "urijs";
 import { USER_ADDED_CATEGORY_ID } from "../../../../../lib/Core/addedByUser";
 import loadBlob from "../../../../../lib/Core/loadBlob";
-import PickedFeatures from "../../../../../lib/Map/PickedFeatures";
+import PickedFeatures from "../../../../../lib/Map/PickedFeatures/PickedFeatures";
 import addUserCatalogMember from "../../../../../lib/Models/Catalog/addUserCatalogMember";
-import CommonStrata from "../../../../../lib/Models/Definition/CommonStrata";
-import Feature from "../../../../../lib/Models/Feature";
 import GeoJsonCatalogItem from "../../../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
-import { BaseModel } from "../../../../../lib/Models/Definition/Model";
-import Terria from "../../../../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import CommonStrata from "../../../../../lib/Models/Definition/CommonStrata";
+import { BaseModel } from "../../../../../lib/Models/Definition/Model";
+import Feature from "../../../../../lib/Models/Feature";
+import { InitSourceData } from "../../../../../lib/Models/InitSource";
+import Terria from "../../../../../lib/Models/Terria";
+import { setViewerMode } from "../../../../../lib/Models/ViewerMode";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
 import {
   buildShareLink,
@@ -45,22 +48,12 @@ const decodeAndParseStartHash = (url: string) => {
   }
 };
 
-interface FlattenedInitSources {
-  [key: string]: FlattenedInitSources[keyof FlattenedInitSources];
-  previewedItemId: string | undefined;
-  models: any;
-  workbench: any;
-  pickedFeatures: any;
-}
-
-const flattenInitSources = (initSources: any[]): FlattenedInitSources =>
-  initSources.reduce((acc: FlattenedInitSources, initSource: any) => {
-    Object.keys(initSource).forEach(key => {
-      acc[key] = initSource[key];
-    });
-
-    return acc;
-  }, {});
+const flattenInitSources = (initSources: InitSourceData[]): InitSourceData =>
+  initSources.reduce(
+    (acc: InitSourceData, initSource: InitSourceData) =>
+      Object.assign(acc, initSource),
+    {}
+  );
 
 describe("BuildShareLink", function() {
   it("should generate a url with default catalog related flags missing/undefined", function() {
@@ -92,7 +85,7 @@ describe("BuildShareLink", function() {
           const initSources = flattenInitSources(params.initSources);
 
           expect(
-            initSources.models[USER_ADDED_CATEGORY_ID].members
+            initSources.models?.[USER_ADDED_CATEGORY_ID].members
           ).not.toContain(model.uniqueId);
 
           done();
@@ -146,8 +139,8 @@ describe("BuildShareLink", function() {
         const initSources = flattenInitSources(params.initSources);
 
         expect(model.uniqueId).toBeDefined();
-        expect(isShareable(terria)(model.uniqueId)).toBe(true);
-        expect(initSources.models[USER_ADDED_CATEGORY_ID].members).toContain(
+        expect(isShareable(terria)(model.uniqueId ?? "")).toBe(true);
+        expect(initSources.models?.[USER_ADDED_CATEGORY_ID].members).toContain(
           model.uniqueId
         );
 
@@ -243,10 +236,10 @@ describe("BuildShareLink", function() {
         const shareLink = buildShareLink(terria, viewState);
         const params = decodeAndParseStartHash(shareLink);
         const initSources = flattenInitSources(params.initSources);
-        const pickCoords = initSources.pickedFeatures.pickCoords;
-        expect(pickCoords.lat.toFixed(2)).toEqual("84.93");
-        expect(pickCoords.lng.toFixed(2)).toEqual("77.91");
-        expect(pickCoords.height.toFixed(2)).toEqual("-5400810.41");
+        const pickCoords = initSources.pickedFeatures?.pickCoords;
+        expect(pickCoords?.lat.toFixed(2)).toEqual("84.93");
+        expect(pickCoords?.lng.toFixed(2)).toEqual("77.91");
+        expect(pickCoords?.height.toFixed(2)).toEqual("-5400810.41");
       })
     );
 
@@ -267,7 +260,7 @@ describe("BuildShareLink", function() {
         const shareLink = buildShareLink(terria, viewState);
         const params = decodeAndParseStartHash(shareLink);
         const initSources = flattenInitSources(params.initSources);
-        const providerCoords = initSources.pickedFeatures.providerCoords;
+        const providerCoords = initSources.pickedFeatures?.providerCoords;
         expect(providerCoords).toEqual({
           "https://foo": { x: 123, y: 456, level: 7 },
           "https://bar": { x: 42, y: 42, level: 4 }
@@ -290,9 +283,9 @@ describe("BuildShareLink", function() {
         const shareLink = buildShareLink(terria, viewState);
         const params = decodeAndParseStartHash(shareLink);
         const initSources = flattenInitSources(params.initSources);
-        const current = initSources.pickedFeatures.current;
-        expect(current.name).toEqual("testFeature");
-        expect(current.hash).toBeDefined();
+        const current = initSources.pickedFeatures?.current;
+        expect(current?.name).toEqual("testFeature");
+        expect(current?.hash).toBeDefined();
       })
     );
 
@@ -314,12 +307,50 @@ describe("BuildShareLink", function() {
         const shareLink = buildShareLink(terria, viewState);
         const params = decodeAndParseStartHash(shareLink);
         const initSources = flattenInitSources(params.initSources);
-        const entities = initSources.pickedFeatures.entities;
-        expect(entities[0].name).toEqual("testFeature1");
-        expect(entities[0].hash).toBeDefined();
-        expect(entities[1].name).toEqual("testFeature2");
-        expect(entities[1].hash).toBeDefined();
+        const entities = initSources.pickedFeatures?.entities;
+        expect(entities?.[0].name).toEqual("testFeature1");
+        expect(entities?.[0].hash).toBeDefined();
+        expect(entities?.[1].name).toEqual("testFeature2");
+        expect(entities?.[1].hash).toBeDefined();
       })
     );
+  });
+
+  describe("map settings", function() {
+    it("serialises correctly", async function() {
+      const testBaseMap = new GeoJsonCatalogItem(
+        "test-basemap",
+        terria,
+        undefined
+      );
+      testBaseMap.setTrait(
+        CommonStrata.definition,
+        "geoJsonString",
+        `{"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[145.5908203125,-40.17887331434695],[143.349609375,-42.08191667830631],[146.35986328124997,-44.040218713142124],[149.08447265625,-42.859859815062784],[148.55712890625,-41.36031866306708],[145.5908203125,-40.17887331434695]]]}},{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[75.9375,51.069016659603896],[59.94140624999999,39.095962936305476],[79.453125,42.032974332441405],[80.15625,46.800059446787316],[75.673828125,51.45400691005982],[75.9375,51.069016659603896]]]}}]}`
+      );
+
+      terria.setBaseMaximumScreenSpaceError(1);
+      terria.setUseNativeResolution(true);
+      setViewerMode("2d", terria.mainViewer);
+      terria.timelineStack.setAlwaysShowTimeline(true);
+      await terria.mainViewer.setBaseMap(testBaseMap);
+      terria.terrainSplitDirection = SplitDirection.LEFT;
+      terria.depthTestAgainstTerrainEnabled = true;
+
+      const shareLink = buildShareLink(terria, viewState);
+      const params = decodeAndParseStartHash(shareLink);
+      const initSources = flattenInitSources(params.initSources);
+
+      expect(initSources.viewerMode).toBe("2d");
+
+      expect(initSources.settings).toEqual({
+        baseMaximumScreenSpaceError: 1,
+        useNativeResolution: true,
+        alwaysShowTimeline: true,
+        baseMapId: "test-basemap",
+        terrainSplitDirection: -1,
+        depthTestAgainstTerrainEnabled: true
+      });
+    });
   });
 });

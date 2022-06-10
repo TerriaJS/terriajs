@@ -7,8 +7,7 @@ import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrain
 import Cesium3DTile from "terriajs-cesium/Source/Scene/Cesium3DTile";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
-import makeRealPromise from "../../../Core/makeRealPromise";
-import PickedFeatures from "../../../Map/PickedFeatures";
+import PickedFeatures from "../../../Map/PickedFeatures/PickedFeatures";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import Cesium3dTilesMixin from "../../../ModelMixins/Cesium3dTilesMixin";
 import FeatureInfoMixin from "../../../ModelMixins/FeatureInfoMixin";
@@ -216,9 +215,11 @@ export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
       longitudeDegrees,
       latitudeDegrees
     );
-    const [terrainCartographic] = await makeRealPromise<Cartographic[]>(
-      sampleTerrainMostDetailed(scene.terrainProvider, [cartographic])
-    ).catch(() => [cartographic]);
+    const [
+      terrainCartographic
+    ] = await sampleTerrainMostDetailed(scene.terrainProvider, [
+      cartographic
+    ]).catch(() => [cartographic]);
 
     if (featureHeight < 20) {
       // for small features we show a top-down view so that it is visible even

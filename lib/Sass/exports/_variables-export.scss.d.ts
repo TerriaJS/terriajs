@@ -54,6 +54,7 @@ interface CssExports {
   'trainerHeight': string;
   'turquoiseBlue': string;
   'workbenchWidth': string;
+  'workflowPanelWidth': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

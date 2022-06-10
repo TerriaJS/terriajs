@@ -184,7 +184,12 @@ class ZoomControl extends React.Component<PropTypes> {
     const { t, theme } = this.props;
     return (
       <StyledZoomControl>
-        <Ul>
+        <Ul
+          column
+          css={`
+            padding: 0;
+          `}
+        >
           <Li>
             <RawButton
               type="button"

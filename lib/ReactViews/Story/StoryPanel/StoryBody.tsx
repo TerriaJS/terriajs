@@ -2,8 +2,13 @@ import React from "react";
 import { Story } from "../Story";
 import parseCustomHtmlToReact from "../../Custom/parseCustomHtmlToReact";
 import styled from "styled-components";
+import Box from "../../../Styled/Box";
+import Text from "../../../Styled/Text";
 
-const StoryContainer = styled.div<{ isCollapsed: boolean }>`
+const StoryContainer = styled(Box).attrs((props: { isCollapsed: boolean }) => ({
+  paddedVertically: props.isCollapsed ? 0 : 2
+}))<{ isCollapsed: boolean }>`
+  padding-top: 0;
   max-height: ${props => (props.isCollapsed ? 0 : "100px")};
   @media (min-height: 700px) {
     max-height: ${props => (props.isCollapsed ? 0 : "200px")};
@@ -12,7 +17,6 @@ const StoryContainer = styled.div<{ isCollapsed: boolean }>`
     max-height: ${props => (props.isCollapsed ? 0 : "400px")};
   }
 
-  padding: ${props => (props.isCollapsed ? 0 : "10px 15px")};
   transition: max-height 0.2s, padding 0.2s;
   overflow-y: auto;
 
@@ -46,9 +50,22 @@ const StoryBody = ({
   isCollapsed: boolean;
   story: Story;
 }) => (
-  <StoryContainer isCollapsed={isCollapsed}>
-    {story.text && parseCustomHtmlToReact(story.text)}
-  </StoryContainer>
+  <>
+    {story.text && story.text !== "" ? (
+      <StoryContainer isCollapsed={isCollapsed} column>
+        <Text
+          css={`
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+          `}
+          medium
+        >
+          {parseCustomHtmlToReact(story.text)}
+        </Text>
+      </StoryContainer>
+    ) : null}
+  </>
 );
 
 export default StoryBody;

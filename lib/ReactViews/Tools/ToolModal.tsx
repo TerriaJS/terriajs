@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
 import ViewState from "../../ReactViewModels/ViewState";
-import Box from "../../Styled/Box";
+import Box, { BoxSpan } from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
@@ -37,13 +37,13 @@ export const Frame: React.FC<FrameProps> = observer(props => {
           <Spacing right={4} />
           {/* collapse button */}
           <RawButton onClick={() => setShowChildren(!showChildren)}>
-            <Box paddedRatio={1} centered>
+            <BoxSpan paddedRatio={1} centered>
               <StyledIcon
                 styledWidth="12px"
                 light
                 glyph={showChildren ? GLYPHS.opened : GLYPHS.closed}
               />
-            </Box>
+            </BoxSpan>
           </RawButton>
         </Box>
       </Toggle>

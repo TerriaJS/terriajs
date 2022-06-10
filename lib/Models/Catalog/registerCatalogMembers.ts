@@ -27,6 +27,7 @@ import SenapsLocationsCatalogItem from "./CatalogItems/SenapsLocationsCatalogIte
 import ShapefileCatalogItem from "./CatalogItems/ShapefileCatalogItem";
 import SocrataMapViewCatalogItem from "./CatalogItems/SocrataMapViewCatalogItem";
 import StubCatalogItem from "./CatalogItems/StubCatalogItem";
+import UrlTemplateImageryCatalogItem from "./CatalogItems/UrlTemplateImageryCatalogItem";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import CatalogIndexReference from "./CatalogReferences/CatalogIndexReference";
 import MagdaReference from "./CatalogReferences/MagdaReference";
@@ -218,6 +219,10 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(
     CatalogIndexReference.type,
     CatalogIndexReference
+  );
+  CatalogMemberFactory.register(
+    UrlTemplateImageryCatalogItem.type,
+    UrlTemplateImageryCatalogItem
   );
 
   UrlToCatalogMemberMapping.register(

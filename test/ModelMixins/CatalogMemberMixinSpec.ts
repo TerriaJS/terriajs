@@ -1,13 +1,16 @@
-import { runInAction, IReactionDisposer, reaction } from "mobx";
-import Terria from "../../lib/Models/Terria";
+import { IReactionDisposer, reaction, runInAction } from "mobx";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
-import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
-import DimensionTraits, {
+import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
+import {
+  SelectableDimensionEnum,
+  isEnum
+} from "../../lib/Models/SelectableDimensions/SelectableDimensions";
+import Terria from "../../lib/Models/Terria";
+import EnumDimensionTraits, {
   DimensionOptionTraits
 } from "../../lib/Traits/TraitsClasses/DimensionTraits";
-import { SelectableDimensionSelect } from "../../lib/Models/SelectableDimensions";
 
 describe("CatalogMemberMixin", function() {
   describe(" - infoWithoutSources", function() {
@@ -133,7 +136,7 @@ describe("CatalogMemberMixin", function() {
       wmsItem.setTrait(CommonStrata.definition, "styles", "init-style");
       wmsItem.setTrait(CommonStrata.definition, "layers", "init-layers");
       wmsItem.setTrait(CommonStrata.user, "modelDimensions", [
-        createStratumInstance(DimensionTraits, {
+        createStratumInstance(EnumDimensionTraits, {
           id: "modelDimensions",
           options: [
             createStratumInstance(DimensionOptionTraits, {
@@ -146,7 +149,7 @@ describe("CatalogMemberMixin", function() {
             }),
             createStratumInstance(DimensionOptionTraits, {
               id: "layers-test",
-              value: { layers: "test" }
+              value: { layers: "{{modelDimensions.0.selectedId}}" }
             })
           ]
         })
@@ -162,9 +165,12 @@ describe("CatalogMemberMixin", function() {
       expect(result).toBeDefined();
       expect(result?.type === undefined);
 
-      const modelDimension = result as SelectableDimensionSelect;
+      const modelDimension = result;
 
-      modelDimension.setDimensionValue(CommonStrata.user, "styles-test");
+      if (!modelDimension || !isEnum(modelDimension))
+        throw "Couldn't find modelDimensions";
+
+      modelDimension?.setDimensionValue(CommonStrata.user, "styles-test");
 
       expect(wmsItem.styles).toBe("test");
       expect(wmsItem.layers).toBe("init-layers");
@@ -177,7 +183,7 @@ describe("CatalogMemberMixin", function() {
       modelDimension.setDimensionValue(CommonStrata.user, "layers-test");
 
       expect(wmsItem.styles).toBe("test2");
-      expect(wmsItem.layers).toBe("test");
+      expect(wmsItem.layers).toBe("layers-test");
     });
   });
 });

@@ -8,10 +8,11 @@ import React from "react";
 import { Trans, withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Clipboard from "../../../Clipboard";
+import IncludeStoryOption from "./IncludeStoryOption";
 import Icon from "../../../../Styled/Icon";
 import Loader from "../../../Loader";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
-import Input from "../../../Styled/Input/Input.jsx";
+import Input from "../../../../Styled/Input";
 import DropdownStyles from "../panel.scss";
 import {
   buildShareLink,
@@ -27,6 +28,8 @@ import {
 } from "../../../../Core/AnalyticEvents/analyticEvents";
 
 import { downloadImg } from "./Print/PrintView";
+import { reaction } from "mobx";
+import Checkbox from "../../../../Styled/Checkbox";
 
 const SharePanel = observer(
   createReactClass({
@@ -35,7 +38,6 @@ const SharePanel = observer(
     propTypes: {
       terria: PropTypes.object,
       userPropWhiteList: PropTypes.array,
-      advancedIsOpen: PropTypes.bool,
       shortenUrls: PropTypes.bool,
       storyShare: PropTypes.bool,
       catalogShare: PropTypes.bool,
@@ -47,21 +49,15 @@ const SharePanel = observer(
       t: PropTypes.func.isRequired
     },
 
-    getDefaultProps() {
-      return {
-        advancedIsOpen: false,
-        shortenUrls: false
-      };
-    },
-
     getInitialState() {
       return {
         isOpen: false,
         shortenUrls:
-          this.props.shortenUrls &&
+          !!this.props.shortenUrls &&
           this.props.terria.getLocalProperty("shortenShareUrls"),
         shareUrl: "",
-        isDownloading: false
+        isDownloading: false,
+        advancedIsOpen: false
       };
     },
 
@@ -91,6 +87,15 @@ const SharePanel = observer(
           this.print();
         };
       }
+
+      // Listen to the includeStoryInShare property of viewState, generate the share URL again if this changes
+      // This allows the share URL to be updated when users change the 'Include Story in Share?'checkbox in the SharePanel comnponent.
+      this.updateShareUrlWhenStoryOptionChanged = reaction(
+        () => this.props.viewState.includeStoryInShare,
+        () => {
+          this.updateForShortening();
+        }
+      );
     },
 
     componentWillUnmount() {
@@ -103,6 +108,9 @@ const SharePanel = observer(
       if (this._oldPrint) {
         window.print = this._oldPrint;
       }
+
+      // Cleanup reaction
+      this.updateShareUrlWhenStoryOptionChanged();
     },
 
     beforeBrowserPrint() {
@@ -146,8 +154,10 @@ const SharePanel = observer(
         this.setState({
           placeholder: t("share.shortLinkShortening")
         });
-
-        buildShortShareLink(this.props.terria, this.props.viewState)
+        buildShortShareLink(this.props.terria, this.props.viewState, {
+          includeStories:
+            this.props.storyShare || this.props.viewState.includeStoryInShare
+        })
           .then(shareUrl => this.setState({ shareUrl }))
           .catch(() => {
             this.setUnshortenedUrl();
@@ -162,7 +172,10 @@ const SharePanel = observer(
 
     setUnshortenedUrl() {
       this.setState({
-        shareUrl: buildShareLink(this.props.terria, this.props.viewState)
+        shareUrl: buildShareLink(this.props.terria, this.props.viewState, {
+          includeStories:
+            this.props.storyShare || this.props.viewState.includeStoryInShare
+        })
       });
     },
 
@@ -306,6 +319,7 @@ const SharePanel = observer(
 
     renderContentForStoryShare() {
       const { t, terria } = this.props;
+
       return (
         <Choose>
           <When condition={this.state.shareUrl === ""}>
@@ -455,22 +469,18 @@ const SharePanel = observer(
                 />
               </div>
               <If condition={this.isUrlShortenable()}>
-                <div
-                  className={classNames(
-                    DropdownStyles.section,
-                    Styles.shortenUrl
-                  )}
-                >
-                  <button onClick={this.onShortenClicked}>
-                    {this.shouldShorten() ? (
-                      <Icon glyph={Icon.GLYPHS.checkboxOn} />
-                    ) : (
-                      <Icon glyph={Icon.GLYPHS.checkboxOff} />
-                    )}
-                    {t("share.shortenUsingService")}
-                  </button>
+                <div className={Styles.shortenUrl}>
+                  <Checkbox
+                    textProps={{ small: true }}
+                    id="shortenUrl"
+                    isChecked={this.shouldShorten() ?? false}
+                    onChange={this.onShortenClicked}
+                    className={Styles.checkbox}
+                  ></Checkbox>
+                  <p>{t("share.shortenUsingService")}</p>
                 </div>
               </If>
+              <IncludeStoryOption viewState={this.props.viewState} />
             </If>
           </div>
         </div>
