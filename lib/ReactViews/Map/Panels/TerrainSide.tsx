@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "styled-components";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import Terria from "../../../Models/Terria";
 import ViewerMode from "../../../Models/ViewerMode";
 import Box from "../../../Styled/Box";
@@ -25,7 +25,7 @@ interface ITerrainSideProps {
   activeColor: string;
 }
 
-export const TerrainSide: React.FC<ITerrainSideProps> = observer(
+const TerrainSide: React.FC<ITerrainSideProps> = observer(
   (props: ITerrainSideProps) => {
     const { t } = useTranslation();
     const theme = useTheme();
@@ -37,15 +37,15 @@ export const TerrainSide: React.FC<ITerrainSideProps> = observer(
       runInAction(() => {
         switch (side) {
           case sides.left:
-            terria.terrainSplitDirection = ImagerySplitDirection.LEFT;
+            terria.terrainSplitDirection = SplitDirection.LEFT;
             terria.showSplitter = true;
             break;
           case sides.right:
-            terria.terrainSplitDirection = ImagerySplitDirection.RIGHT;
+            terria.terrainSplitDirection = SplitDirection.RIGHT;
             terria.showSplitter = true;
             break;
           case sides.both:
-            terria.terrainSplitDirection = ImagerySplitDirection.NONE;
+            terria.terrainSplitDirection = SplitDirection.NONE;
             break;
         }
 
@@ -77,10 +77,10 @@ export const TerrainSide: React.FC<ITerrainSideProps> = observer(
     let currentSide = sides.both;
     if (isCesiumWithTerrain) {
       switch (terria.terrainSplitDirection) {
-        case ImagerySplitDirection.LEFT:
+        case SplitDirection.LEFT:
           currentSide = sides.left;
           break;
-        case ImagerySplitDirection.RIGHT:
+        case SplitDirection.RIGHT:
           currentSide = sides.right;
           break;
       }
@@ -145,3 +145,5 @@ export const TerrainSide: React.FC<ITerrainSideProps> = observer(
 TerrainSide.defaultProps = {
   spaced: true
 };
+
+export default TerrainSide;
