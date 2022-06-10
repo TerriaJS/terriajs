@@ -36,7 +36,7 @@ describe("GeoRssCatalogItem", function() {
           expect(item.dataSource.entities.values.length).toBeGreaterThan(0);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
     it("load point rss", function(done) {
       item.url = "test/GeoRSS/rss2/point.xml";
@@ -46,7 +46,7 @@ describe("GeoRssCatalogItem", function() {
           expect(item.dataSource.entities.values.length).toEqual(1);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
     it("load line rss", function(done) {
       item.url = "test/GeoRSS/rss2/line.xml";
@@ -56,7 +56,7 @@ describe("GeoRssCatalogItem", function() {
           expect(item.dataSource.entities.values.length).toEqual(1);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
     it("load polygon rss", function(done) {
       item.url = "test/GeoRSS/rss2/polygon.xml";
@@ -66,7 +66,7 @@ describe("GeoRssCatalogItem", function() {
           expect(item.dataSource.entities.values.length).toEqual(1);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
     it("load box rss", function(done) {
       item.url = "test/GeoRSS/rss2/box.xml";
@@ -76,7 +76,7 @@ describe("GeoRssCatalogItem", function() {
           expect(item.dataSource.entities.values.length).toEqual(1);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
     it("load GML point rss", function(done) {
       item.url = "test/GeoRSS/rss2/gmlPoint.xml";
@@ -86,7 +86,7 @@ describe("GeoRssCatalogItem", function() {
           expect(item.dataSource.entities.values.length).toEqual(1);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
     it("load GML lineString rss", function(done) {
       item.url = "test/GeoRSS/rss2/gmlLineString.xml";
@@ -96,7 +96,7 @@ describe("GeoRssCatalogItem", function() {
           expect(item.dataSource.entities.values.length).toEqual(1);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
     it("load GML polygon rss", function(done) {
       item.url = "test/GeoRSS/rss2/gmlPolygon.xml";
@@ -106,7 +106,7 @@ describe("GeoRssCatalogItem", function() {
           expect(item.dataSource.entities.values.length).toEqual(1);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
     it("load W3C point rss", function(done) {
       item.url = "test/GeoRSS/rss2/w3cPoint.xml";
@@ -116,7 +116,7 @@ describe("GeoRssCatalogItem", function() {
           expect(item.dataSource.entities.values.length).toEqual(1);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
     it("load combined geometry rss", function(done) {
       item.url = "test/GeoRSS/rss2/combineGeometry.xml";
@@ -126,7 +126,7 @@ describe("GeoRssCatalogItem", function() {
           expect(item.dataSource.entities.values.length).toEqual(8);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
   });
   describe("atom feed", function() {
@@ -138,7 +138,7 @@ describe("GeoRssCatalogItem", function() {
           expect(item.dataSource.entities.values.length).toBeGreaterThan(0);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
     it("load point feed", function(done) {
       item.url = "test/GeoRSS/atom/point.xml";
@@ -148,7 +148,7 @@ describe("GeoRssCatalogItem", function() {
           expect(item.dataSource.entities.values.length).toEqual(1);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
     it("load line feed", function(done) {
       item.url = "test/GeoRSS/atom/line.xml";
@@ -158,7 +158,7 @@ describe("GeoRssCatalogItem", function() {
           expect(item.dataSource.entities.values.length).toEqual(1);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
     it("load polygon feed", function(done) {
       item.url = "test/GeoRSS/atom/polygon.xml";
@@ -168,7 +168,7 @@ describe("GeoRssCatalogItem", function() {
           expect(item.dataSource.entities.values.length).toEqual(1);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
     it("load box feed", function(done) {
       item.url = "test/GeoRSS/atom/box.xml";
@@ -178,7 +178,7 @@ describe("GeoRssCatalogItem", function() {
           expect(item.dataSource.entities.values.length).toEqual(1);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
     it("load GML point feed", function(done) {
       item.url = "test/GeoRSS/atom/gmlPoint.xml";
@@ -188,7 +188,7 @@ describe("GeoRssCatalogItem", function() {
           expect(item.dataSource.entities.values.length).toEqual(1);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
     it("load GML lineString feed", function(done) {
       item.url = "test/GeoRSS/atom/gmlLineString.xml";
@@ -198,7 +198,7 @@ describe("GeoRssCatalogItem", function() {
           expect(item.dataSource.entities.values.length).toEqual(1);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
     it("load GML polygon feed", function(done) {
       item.url = "test/GeoRSS/atom/gmlPolygon.xml";
@@ -208,7 +208,7 @@ describe("GeoRssCatalogItem", function() {
           expect(item.dataSource.entities.values.length).toEqual(1);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
     it("load W3C point feed", function(done) {
       item.url = "test/GeoRSS/atom/w3cPoint.xml";
@@ -218,7 +218,7 @@ describe("GeoRssCatalogItem", function() {
           expect(item.dataSource.entities.values.length).toEqual(1);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
     it("load combined geometry feed", function(done) {
       item.url = "test/GeoRSS/atom/combineGeometry.xml";
@@ -228,7 +228,7 @@ describe("GeoRssCatalogItem", function() {
           expect(item.dataSource.entities.values.length).toEqual(8);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
   });
 
@@ -240,7 +240,7 @@ describe("GeoRssCatalogItem", function() {
         expect(item.name).toEqual("GeoRSS feed sample");
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("name is defined", function(done) {
@@ -251,6 +251,6 @@ describe("GeoRssCatalogItem", function() {
         expect(item.name).toEqual("geoRssWithoutName.xml");
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 });

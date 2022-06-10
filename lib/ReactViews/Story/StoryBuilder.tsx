@@ -503,6 +503,7 @@ class StoryBuilder extends React.Component<
             exitEditingMode={() => this.setState({ editingMode: false })}
             story={this.state.currentStory}
             saveStory={this.onSave}
+            terria={this.props.terria}
           />
         )}
       </Panel>

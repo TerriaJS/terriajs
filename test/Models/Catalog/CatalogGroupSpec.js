@@ -72,7 +72,7 @@ describe("CatalogGroup", function() {
         expect(group.items[2].name).toBe("10 Thing");
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("sorts correctly when there is a number at the end", function(done) {
@@ -104,7 +104,7 @@ describe("CatalogGroup", function() {
         expect(group.items[2].name).toBe("Thing 10");
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("sorts correctly when nameInCatalog is provided", function(done) {
@@ -137,7 +137,7 @@ describe("CatalogGroup", function() {
         expect(group.items[2].name).toBe("2");
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("sorts items correctly when there is a number in the middle", function(done) {
@@ -169,7 +169,7 @@ describe("CatalogGroup", function() {
         expect(group.items[2].name).toBe("Thing 10 Yay");
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("sorts numbered items after unnumbered items", function(done) {
@@ -195,7 +195,7 @@ describe("CatalogGroup", function() {
         expect(group.items[1].name).toBe("Thing 1");
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("sorts numbers before letters", function(done) {
@@ -233,7 +233,7 @@ describe("CatalogGroup", function() {
         expect(group.items[3].name).toBe("A");
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("does not sort on load if preserveOrder is true", function(done) {
@@ -607,7 +607,7 @@ describe("CatalogGroup", function() {
             idCatalogItem2
           );
         })
-        .otherwise(fail)
+        .catch(fail)
         .then(done);
     });
 
@@ -640,7 +640,7 @@ describe("CatalogGroup", function() {
           expect(noIdCatalogItem.uniqueId).toBe("Root Group/A (1)");
           expect(idCatalogItem.uniqueId).toBe("uniqueId (1)");
         })
-        .otherwise(fail)
+        .catch(fail)
         .then(done);
     });
   });

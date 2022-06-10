@@ -1,6 +1,5 @@
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import URI from "urijs";
-import when from "terriajs-cesium/Source/ThirdParty/when";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 
 function getUrlForImageryTile(
@@ -30,7 +29,7 @@ function getUrlForImageryTile(
             .toString();
         }
       }
-      return when();
+      return undefined;
     };
 
     imageryProvider.requestImage(x, y, level);

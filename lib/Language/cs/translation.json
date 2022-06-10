@@ -749,8 +749,8 @@
     },
     "consoleAnalytics": {
       "started": "ConsoleAnalytics byl spuštěn.",
-      "startedNoLogToConsole": "Nástroj ConsoleAnalytics byl spuštěn, ale položka `userParameters.logToConsole` nebyla definována nebo byla nastavena na hodnotu false.",
-      "logStartedWithGAParameters": "Nástroj ConsoleAnalytics byl spuštěn, ale v položce `userParameters` byl pozorován klíč `googleAnalyticsKey` nebo `googleAnalyticsOptions`"
+      "startedNoenableConsoleAnalytics": "Nástroj ConsoleAnalytics byl spuštěn, ale položka `configParameters.enableConsoleAnalytics` nebyla definována nebo byla nastavena na hodnotu false.",
+      "logStartedWithGAParameters": "Nástroj ConsoleAnalytics byl spuštěn, ale v položce `configParameters` byl pozorován klíč `googleAnalyticsKey` nebo `googleAnalyticsOptions`"
     },
     "serverConfig": {
       "failedToGet": "Nepodařilo se získat konfiguraci serveru z {{serverConfigUrl}}. To znamená, že služby jako proxy, konverze a zkracování URL nemusí fungovat."
