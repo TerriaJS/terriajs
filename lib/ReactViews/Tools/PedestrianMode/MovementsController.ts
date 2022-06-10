@@ -13,7 +13,6 @@ import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEven
 import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
-import makeRealPromise from "../../../Core/makeRealPromise";
 import Cesium from "../../../Models/Cesium";
 
 type Movement =
@@ -488,11 +487,9 @@ async function sampleTerrainHeight(
   const terrainProvider = scene.terrainProvider;
   if (terrainProvider instanceof EllipsoidTerrainProvider) return 0;
 
-  const [sample] = await makeRealPromise<Cartographic[]>(
-    sampleTerrainMostDetailed(terrainProvider, [
-      Cartographic.fromCartesian(position, scene.globe.ellipsoid, sampleScratch)
-    ])
-  );
+  const [sample] = await sampleTerrainMostDetailed(terrainProvider, [
+    Cartographic.fromCartesian(position, scene.globe.ellipsoid, sampleScratch)
+  ]);
   return sample.height;
 }
 

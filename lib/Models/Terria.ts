@@ -10,7 +10,7 @@ import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import URI from "urijs";
 import { Category, LaunchAction } from "../Core/AnalyticEvents/analyticEvents";
 import AsyncLoader from "../Core/AsyncLoader";
@@ -294,6 +294,16 @@ interface ConfigParameters {
    * Prefix to which `:story-id` is added to fetch JSON for stories when using /story/:story-id routes. Should end in /
    */
   storyRouteUrlPrefix?: string;
+
+  /**
+   * For Console Analytics
+   */
+  enableConsoleAnalytics?: boolean;
+
+  /**
+   * Options for Google Analytics
+   */
+  googleAnalyticsOptions?: unknown;
 }
 
 interface StartOptions {
@@ -313,8 +323,8 @@ interface StartOptions {
 
 interface Analytics {
   start: (
-    userParameters: Partial<{
-      logToConsole: boolean;
+    configParameters: Partial<{
+      enableConsoleAnalytics: boolean;
       googleAnalyticsKey: any;
       googleAnalyticsOptions: any;
     }>
@@ -364,6 +374,7 @@ export default class Terria {
   readonly baseUrl: string = "build/TerriaJS/";
 
   readonly tileLoadProgressEvent = new CesiumEvent();
+  readonly indeterminateTileLoadProgressEvent = new CesiumEvent();
   readonly workbench = new Workbench();
   readonly overlays = new Workbench();
   readonly catalog = new Catalog(this);
@@ -476,7 +487,9 @@ export default class Terria {
       { text: "map.extraCreditLinks.disclaimer", url: "about.html#disclaimer" }
     ],
     printDisclaimer: undefined,
-    storyRouteUrlPrefix: undefined
+    storyRouteUrlPrefix: undefined,
+    enableConsoleAnalytics: undefined,
+    googleAnalyticsOptions: undefined
   };
 
   @observable
@@ -528,12 +541,12 @@ export default class Terria {
   @observable showSplitter = false;
   @observable splitPosition = 0.5;
   @observable splitPositionVertical = 0.5;
-  @observable terrainSplitDirection: ImagerySplitDirection =
-    ImagerySplitDirection.NONE;
+  @observable terrainSplitDirection: SplitDirection = SplitDirection.NONE;
 
   @observable depthTestAgainstTerrainEnabled = false;
 
   @observable stories: StoryData[] = [];
+  @observable storyPromptShown: number = 0; // Story Prompt modal will be rendered when this property changes. See StandardUserInterface, section regarding sui.notifications. Ideally move this to ViewState.
 
   /**
    * Gets or sets the ID of the catalog member that is currently being
@@ -1220,7 +1233,9 @@ export default class Terria {
               severity: initSource?.errorSeverity,
               message: {
                 key: "models.terria.loadingInitSourceError2Message",
-                parameters: { loadSource: initSource!.name ?? "Unknown source" }
+                parameters: {
+                  loadSource: initSource!.name ?? "Unknown source"
+                }
               }
             })
           );
@@ -1515,6 +1530,7 @@ export default class Terria {
     // Add stories
     if (Array.isArray(initData.stories)) {
       this.stories = initData.stories;
+      this.storyPromptShown++;
     }
 
     // Add map settings

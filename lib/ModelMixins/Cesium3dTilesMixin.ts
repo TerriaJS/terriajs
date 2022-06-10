@@ -26,7 +26,6 @@ import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import { isJsonObject, JsonObject } from "../Core/Json";
-import makeRealPromise from "../Core/makeRealPromise";
 import runLater from "../Core/runLater";
 import TerriaError from "../Core/TerriaError";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
@@ -120,9 +119,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       try {
         this.loadTileset();
         if (this.tileset) {
-          const tileset = await makeRealPromise<Cesium3DTileset>(
-            this.tileset.readyPromise
-          );
+          const tileset = await this.tileset.readyPromise;
           if (
             tileset.extras !== undefined &&
             tileset.extras.style !== undefined
@@ -183,7 +180,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       // matrix This lets us control the whole model transformation using just
       // tileset.modelMatrix We later derive a tilset.modelMatrix by combining
       // the root transform and transformation traits in mapItems.
-      makeRealPromise(tileset.readyPromise).then(
+      tileset.readyPromise.then(
         action(() => {
           this.isTilesetReady = tileset.ready;
           if (tileset.root !== undefined) {
@@ -396,17 +393,31 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
         style.defines = Object.assign(style.defines, { opacity });
       }
 
+      // Rewrite color expression to also use the models opacity setting
       if (!isDefined(style.color)) {
-        // Some tilesets (eg. point clouds) have a ${COLOR} variable which stores the current color of a feature, so if
-        // we have that, we should use it, and only change the opacity.
-        // We have to do it component-wise because... well, I'm not entirely sure, but when I did it non-component-wise
-        // I started getting weird type errors when the shaders compiled. If you enjoy debugging dynamically generated
-        // shaders in the browser in the service of a marginal improvement to code brevity, this one's for you!
+        // Some tilesets (eg. point clouds) have a ${COLOR} variable which
+        // stores the current color of a feature, so if we have that, we should
+        // use it, and only change the opacity.  We have to do it
+        // component-wise because `undefined` is mapped to a large float value
+        // (czm_infinity) in glsl in Cesium and so can only be compared with
+        // another float value.
+        //
+        // There is also a subtle bug which prevents us from using an
+        // expression in the alpha part of the rgba().  eg, using the
+        // expression '${COLOR}.a === undefined ? ${opacity} : ${COLOR}.a * ${opacity}'
+        // to generate an opacity value will cause Cesium to generate wrong
+        // translucency values making the tileset translucent even when the
+        // computed opacity is 1.0. It also makes the whole of the point cloud
+        // appear white when zoomed out to some distance.  So for now, the only
+        // solution is to discard the opacity from the tileset and only use the
+        // value from the opacity trait.
         style.color =
-          "rgba((${COLOR}.r === undefined ? 1 : ${COLOR}.r) * 255, " +
-          "(${COLOR}.g === undefined ? 1 : ${COLOR}.g) * 255, " +
-          "(${COLOR}.b === undefined ? 1 : ${COLOR}.b) * 255, " +
-          "${COLOR}.a === undefined ? ${opacity} : ${COLOR}.a * ${opacity})";
+          "(rgba(" +
+          "(${COLOR}.r === undefined ? 1 : ${COLOR}.r) * 255," +
+          "(${COLOR}.g === undefined ? 1 : ${COLOR}.g) * 255," +
+          "(${COLOR}.b === undefined ? 1 : ${COLOR}.b) * 255," +
+          "${opacity}" +
+          "))";
       } else if (typeof style.color == "string") {
         // Check if the color specified is just a css color
         const cssColor = Color.fromCssColorString(style.color);
@@ -583,7 +594,9 @@ export default Cesium3dTilesMixin;
 
 function normalizeShowExpression(
   show: any
-): { conditions: [string, boolean][] } {
+): {
+  conditions: [string, boolean][];
+} {
   let conditions;
   if (Array.isArray(show?.conditions?.slice())) {
     conditions = [...show.conditions];
@@ -597,7 +610,10 @@ function normalizeShowExpression(
 
 function normalizeColorExpression(
   expr: any
-): { expression?: string; conditions: [string, string][] } {
+): {
+  expression?: string;
+  conditions: [string, string][];
+} {
   const normalized: { expression?: string; conditions: [string, string][] } = {
     conditions: []
   };

@@ -12,7 +12,7 @@ import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import LatLonHeight from "../../../Core/LatLonHeight";
@@ -81,8 +81,8 @@ class DiffTool extends React.Component<PropsType> {
   async createSplitterItems() {
     try {
       const [leftItem, rightItem] = await Promise.all([
-        createSplitItem(this.sourceItem, ImagerySplitDirection.LEFT),
-        createSplitItem(this.sourceItem, ImagerySplitDirection.RIGHT)
+        createSplitItem(this.sourceItem, SplitDirection.LEFT),
+        createSplitItem(this.sourceItem, SplitDirection.RIGHT)
       ]);
       runInAction(() => {
         this.leftItem = leftItem;
@@ -410,12 +410,12 @@ class Main extends React.Component<MainPropsType> {
     this.props.leftItem.setTrait(
       CommonStrata.user,
       "splitDirection",
-      ImagerySplitDirection.LEFT
+      SplitDirection.LEFT
     );
     this.props.rightItem.setTrait(
       CommonStrata.user,
       "splitDirection",
-      ImagerySplitDirection.RIGHT
+      SplitDirection.RIGHT
     );
   }
 
@@ -780,19 +780,19 @@ const DiffAccordion: React.FC<DiffAccordionProps> = props => {
             but visible should be inline with rest of box */}
         <Box centered css={"margin-right:-5px;"}>
           <RawButton onClick={() => viewState.closeTool()}>
-            <Text textLight small semiBold uppercase>
+            <TextSpan textLight small semiBold uppercase>
               {t("diffTool.exit")}
-            </Text>
+            </TextSpan>
           </RawButton>
           <Spacing right={4} />
           <RawButton onClick={() => setShowChildren(!showChildren)}>
-            <Box paddedRatio={1} centered>
+            <BoxSpan paddedRatio={1} centered>
               <StyledIcon
                 styledWidth="12px"
                 light
                 glyph={showChildren ? GLYPHS.opened : GLYPHS.closed}
               />
-            </Box>
+            </BoxSpan>
           </RawButton>
         </Box>
       </DiffAccordionToggle>
@@ -957,7 +957,7 @@ const LegendImage = function(props: any) {
 
 async function createSplitItem(
   sourceItem: DiffableItem,
-  splitDirection: ImagerySplitDirection
+  splitDirection: SplitDirection
 ): Promise<DiffableItem> {
   const terria = sourceItem.terria;
   const ref = new SplitItemReference(createGuid(), terria);

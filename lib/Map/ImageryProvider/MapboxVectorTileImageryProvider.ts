@@ -17,7 +17,6 @@ import WindingOrder from "terriajs-cesium/Source/Core/WindingOrder";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import TileDiscardPolicy from "terriajs-cesium/Source/Scene/TileDiscardPolicy";
-import when from "terriajs-cesium/Source/ThirdParty/when";
 import URITemplate from "urijs/src/URITemplate";
 import isDefined from "../../Core/isDefined";
 import loadArrayBuffer from "../../Core/loadArrayBuffer";
@@ -229,7 +228,7 @@ export default class MapboxVectorTileImageryProvider
   }
 
   get readyPromise(): Promise<boolean> {
-    return when(true);
+    return Promise.resolve(true);
   }
 
   get tileDiscardPolicy(): TileDiscardPolicy {
