@@ -1,13 +1,6 @@
 @import "~terriajs-variables";
 @import "../../Sass/common/mixins";
 
-:global {
-  .pell-button {
-    &:focus {
-      outline: 1px solid $color-primary;
-    }
-  }
-}
 .popupEditor {
   &.is-mounted {
     opacity: 1;
@@ -22,7 +15,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 999999;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   justify-content: center;

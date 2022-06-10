@@ -604,6 +604,9 @@
     "shareExplanation": "Anyone with this URL will be able to access this map.",
     "copy": "Copy"
   },
+  "includeStory": {
+    "message": "Include Story in Share?"
+  },
   "dragDrop": {
     "text": "<0>Drag & Drop</0><1>Your data anywhere to view on the map<1>",
     "not": "<0>bbbb</0>"
@@ -723,8 +726,8 @@
     },
     "consoleAnalytics": {
       "started": "ConsoleAnalytics was started.",
-      "startedNoLogToConsole": "ConsoleAnalytics was started, however `userParameters.logToConsole` was not defined or set to false.",
-      "logStartedWithGAParameters": "ConsoleAnalytics was started but a `googleAnalyticsKey` or `googleAnalyticsOptions` key was observed on `userParameters`"
+      "startedNoenableConsoleAnalytics": "ConsoleAnalytics was started, however `configParameters.enableConsoleAnalytics` was not defined or set to false.",
+      "logStartedWithGAParameters": "ConsoleAnalytics was started but a `googleAnalyticsKey` or `googleAnalyticsOptions` key was observed on `configParameters`"
     },
     "googleAnalytics": {
       "log": "Google Analytics tracking is disabled because terria.configParameters.googleAnalyticsKey is not specified",

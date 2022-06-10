@@ -6,7 +6,6 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import makeRealPromise from "../../lib/Core/makeRealPromise";
 import pollToPromise from "../../lib/Core/pollToPromise";
 import supportsWebGL from "../../lib/Core/supportsWebGL";
 import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
@@ -24,11 +23,9 @@ describeIfSupported("UserDrawing that requires WebGL", function() {
     terria.mainViewer.attach(container);
 
     const userDrawing = new UserDrawing({ terria });
-    makeRealPromise(
-      pollToPromise(() => {
-        return userDrawing.terria.cesium !== undefined;
-      })
-    )
+    pollToPromise(() => {
+      return userDrawing.terria.cesium !== undefined;
+    })
       .then(() => {
         const cesium = userDrawing.terria.cesium;
         expect(cesium).toBeDefined();

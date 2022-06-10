@@ -51,7 +51,7 @@ class BottomDock extends React.Component<PropsType> {
           }
         }}
         tabIndex={0}
-        onClick={this.handleClick}
+        onClick={this.handleClick.bind(this)}
         css={`
           background: ${(p: any) => p.theme.dark};
         `}

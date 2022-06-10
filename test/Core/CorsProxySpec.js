@@ -1,14 +1,17 @@
 "use strict";
 
 var CorsProxy = require("../../lib/Core/CorsProxy");
-var when = require("when");
 
 describe("CorsProxy", function() {
   var corsProxy, loadDeferred, loadJson;
   var originalPageIsHttps, originalAlwaysUseProxy;
 
   beforeEach(function() {
-    loadDeferred = when.defer();
+    loadDeferred = {};
+    loadDeferred.promise = new Promise((resolve, reject) => {
+      loadDeferred.resolve = resolve;
+      loadDeferred.reject = reject;
+    });
     loadJson = jasmine
       .createSpy("loadJson")
       .and.returnValue(loadDeferred.promise);

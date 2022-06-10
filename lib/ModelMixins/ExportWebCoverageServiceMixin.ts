@@ -28,8 +28,6 @@ import { getName } from "./CatalogMemberMixin";
 import ExportableMixin from "./ExportableMixin";
 import filterOutUndefined from "../Core/filterOutUndefined";
 
-const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf").default;
-
 type Coverage = {
   CoverageId: string;
   CoverageSubtype: string;
@@ -376,15 +374,25 @@ function ExportWebCoverageServiceMixin<
     ): Promise<{ name: string; file: Blob }> {
       // Create pending workbench item
       const now = new Date();
-      const timestamp = sprintf(
-        "%04d-%02d-%02dT%02d:%02d:%02d",
-        now.getFullYear(),
-        now.getMonth() + 1,
-        now.getDate(),
-        now.getHours(),
-        now.getMinutes(),
-        now.getSeconds()
-      );
+
+      const timestamp = `${now
+        .getFullYear()
+        .toString()
+        .padStart(4, "0")}-${(now.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}-${now
+        .getDate()
+        .toString()
+        .padStart(2, "0")}T${now
+        .getHours()
+        .toString()
+        .padStart(2, "0")}:${now
+        .getMinutes()
+        .toString()
+        .padStart(2, "0")}:${now
+        .getSeconds()
+        .toString()
+        .padStart(2, "0")}`;
 
       const pendingWorkbenchItem = new ResultPendingCatalogItem(
         `WCS: ${getName(this)} ${timestamp}`,

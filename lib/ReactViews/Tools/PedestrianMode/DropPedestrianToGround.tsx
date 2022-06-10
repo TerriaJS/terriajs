@@ -9,6 +9,7 @@ import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrain
 import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
 import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
+import isDefined from "../../../Core/isDefined";
 import Cesium from "../../../Models/Cesium";
 import MouseTooltip from "./MouseTooltip";
 
@@ -37,7 +38,9 @@ const DropPedestrianToGround: React.FC<DropPedestrianToGroundProps> = props => {
     }) => {
       // Convert mouse position to a point on the globe.
       const pickRay = scene.camera.getPickRay(mousePosition);
-      const pickPosition = scene.globe.pick(pickRay, scene);
+      const pickPosition = isDefined(pickRay)
+        ? scene.globe.pick(pickRay, scene)
+        : undefined;
       if (!pickPosition) return;
 
       setShowMouseTooltip(false);

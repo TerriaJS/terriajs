@@ -7,7 +7,7 @@ import styled from "styled-components";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import {
   Category,
   DataSourceAction
@@ -227,11 +227,11 @@ class ViewingControls extends React.Component<
     runInAction(async () => {
       if (!hasTraits(item, SplitterTraits, "splitDirection")) return;
 
-      if (item.splitDirection === ImagerySplitDirection.NONE) {
+      if (item.splitDirection === SplitDirection.NONE) {
         item.setTrait(
           CommonStrata.user,
           "splitDirection",
-          ImagerySplitDirection.RIGHT
+          SplitDirection.RIGHT
         );
       }
 
@@ -255,9 +255,9 @@ class ViewingControls extends React.Component<
           target.setTrait(
             CommonStrata.user,
             "splitDirection",
-            item.splitDirection === ImagerySplitDirection.LEFT
-              ? ImagerySplitDirection.RIGHT
-              : ImagerySplitDirection.LEFT
+            item.splitDirection === SplitDirection.LEFT
+              ? SplitDirection.RIGHT
+              : SplitDirection.LEFT
           );
         }
       });
