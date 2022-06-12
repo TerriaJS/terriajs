@@ -17,6 +17,7 @@ import isDefined from "../../Core/isDefined";
 declare module "terriajs-cesium/Source/Scene/Scene" {
   export default interface Scene {
     tweens: TweenCollection;
+    frameState: any;
   }
 }
 

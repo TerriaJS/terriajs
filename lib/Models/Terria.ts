@@ -55,6 +55,7 @@ import TimeVarying from "../ModelMixins/TimeVarying";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
 import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
 import NotificationState from "../ReactViewModels/NotificationState";
+import { ICredit } from "../ReactViews/Credits/Credit.type";
 import { SHARE_VERSION } from "../ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
@@ -283,7 +284,7 @@ interface ConfigParameters {
   /**
    * Extra links to show in the credit line at the bottom of the map (currently only the Cesium map).
    */
-  extraCreditLinks?: { url: string; text: string }[];
+  extraCreditLinks?: ICredit[];
 
   /**
    * Configurable discalimer that shows up in print view

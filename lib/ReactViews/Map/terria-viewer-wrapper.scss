@@ -35,13 +35,17 @@
       background: linear-gradient(180deg, #000000 0%, #000000 100%);
       height: 30px;
       width: 100%;
-      // @extend %sm-show;
-      display: table-row;
+      max-height: 30px;
+      display: flex;
+      align-items: center;
+      gap: $padding-small;
 
       div {
         // For some reasons the div and a elements have style attribute display:inline
         // attached by default...
-        display: table-cell !important;
+        display: flex !important;
+        align-items: center;
+        gap: $padding-small;
 
         img {
           height: 24px;
@@ -50,20 +54,16 @@
       }
 
       a {
-        // text-decoration: none;
-        // color: $color-primary;
-
         // I refuse to make this text-light without underlining it
         text-decoration: underline;
         color: $text-light;
-        display: table-cell !important;
-        vertical-align: middle;
-        padding: $padding-mini $padding-small;
-      }
+        display: flex !important;
+        align-items: center;
 
-      .cesium-credit-logoContainer::after {
-        content: "";
-        display: table-cell;
+        cursor: pointer;
+        &.cesium-credit-expand-link {
+          display: none !important;
+        }
       }
     }
 
@@ -88,7 +88,10 @@
       }
 
       .leaflet-control-attribution {
+        display: flex;
+        gap: $padding-small;
         line-height: 30px;
+        max-height: 30px;
         background: none;
         color: rgba(#fff, 0.8);
         #terriaLogoWrapper {

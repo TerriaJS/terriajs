@@ -2,6 +2,8 @@ import i18next from "i18next";
 import { autorun, computed, runInAction } from "mobx";
 import { computedFn } from "mobx-utils";
 import Event from "terriajs-cesium/Source/Core/Event";
+import React from "react";
+import ReactDOM from "react-dom";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -36,6 +38,7 @@ import DataSourceDisplay from "terriajs-cesium/Source/DataSources/DataSourceDisp
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import Camera from "terriajs-cesium/Source/Scene/Camera";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
+import CreditDisplay from "terriajs-cesium/Source/Scene/CreditDisplay";
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
@@ -68,6 +71,7 @@ import MappableMixin, {
   MapItem
 } from "../ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
+import { CesiumCredits } from "../ReactViews/Credits/Cesium/CesiumCredits";
 import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
@@ -236,47 +240,52 @@ export default class Cesium extends GlobeOrMap {
     //         }
     //     });
 
-    if (isDefined(this._extraCredits.terria)) {
-      const containerElement = getElement(container);
-      const creditsElement =
-        containerElement &&
-        (containerElement.getElementsByClassName(
-          "cesium-widget-credits"
-        )[0] as HTMLElement);
-      const logoContainer =
-        creditsElement &&
-        (creditsElement.getElementsByClassName(
-          "cesium-credit-logoContainer"
-        )[0] as HTMLElement);
-      const expandLink =
-        creditsElement &&
-        creditsElement.getElementsByClassName("cesium-credit-expand-link") &&
-        (creditsElement.getElementsByClassName(
-          "cesium-credit-expand-link"
-        )[0] as HTMLElement);
-      if (creditsElement && logoContainer) {
-        creditsElement.insertBefore(
-          this._extraCredits.terria?.element,
-          logoContainer
-        );
+    const containerElement = getElement(container);
+    const creditsElement =
+      containerElement &&
+      (containerElement.getElementsByClassName(
+        "cesium-widget-credits"
+      )[0] as HTMLElement);
+    const logoContainer =
+      creditsElement &&
+      (creditsElement.getElementsByClassName(
+        "cesium-credit-logoContainer"
+      )[0] as HTMLElement);
+    const expandLink =
+      creditsElement &&
+      creditsElement.getElementsByClassName("cesium-credit-expand-link") &&
+      (creditsElement.getElementsByClassName(
+        "cesium-credit-expand-link"
+      )[0] as HTMLElement);
+
+    if (expandLink) {
+      // hide default expand link, it will be rendered as react component
+      expandLink.style.display = "none !important";
+      expandLink.innerText = "";
+
+      const domElement = document.createElement("div");
+      const creditDisplay: CreditDisplay = this.scene.frameState.creditDisplay;
+      const element = React.createElement(CesiumCredits, {
+        hideTerriaLogo: !!this.terria.configParameters.hideTerriaLogo,
+        cesiumLogoElement: logoContainer,
+        credits: this.terria.configParameters.extraCreditLinks?.slice(),
+        //@ts-expect-error - showLightbox is a private method
+        expandDataCredits: creditDisplay.showLightbox.bind(creditDisplay)
+      });
+
+      ReactDOM.render(element, domElement);
+      const child = domElement.firstElementChild;
+      if (child) {
+        creditsElement?.appendChild(child);
       }
-      if (expandLink) {
-        this.terria.configParameters.extraCreditLinks
-          ?.slice()
-          .reverse()
-          .forEach(({ url, text }) => {
-            // Create a link and insert it after the logo node
-            // Defaults to the given text if no translation is provided
-            const translatedText = i18next.t(text);
-            const a = document.createElement("a");
-            a.href = url;
-            a.target = "_blank";
-            a.rel = "noopener noreferrer";
-            a.innerText = translatedText;
-            logoContainer?.insertAdjacentElement("afterend", a);
-          });
-        expandLink.innerText = i18next.t("map.extraCreditLinks.basemap");
-      }
+
+      const creditDisplayOldDestroy = creditDisplay.destroy;
+      creditDisplay.destroy = () => {
+        try {
+          creditDisplayOldDestroy();
+        } catch (err) {}
+        if (child) creditsElement?.removeChild(child);
+      };
     }
 
     this.scene.globe.depthTestAgainstTerrain = false;
@@ -1006,31 +1015,6 @@ export default class Cesium extends GlobeOrMap {
       };
     }
     return { terrain: new EllipsoidTerrainProvider() };
-  }
-
-  // WIP working out how to deal with credits
-  // This function isn't used anywhere yet
-  @computed
-  get _extraCredits() {
-    const credits: { cesium?: Credit; terria?: Credit } = {};
-    // Disabling this for now as it doesn't seem to be used anywhere but
-    // results in mapItems being computed twice for all workbench items when
-    // cesium map is loaded. This happens because the reference to
-    // _extraCredits is from within the constructor for Cesium which itself is
-    // called inside an untracked() call in TerriaViewer.
-    // if (this._terrainWithCredits.credit) {
-    //   credits.cesium =  this._terrainWithCredits.credit;
-    //}
-    if (!this.terria.configParameters.hideTerriaLogo) {
-      const logo = require("../../wwwroot/images/terria-watermark.svg");
-      credits.terria = new Credit(
-        '<a href="https://terria.io/" target="_blank" rel="noopener noreferrer"><img src="' +
-          logo +
-          '" title="Built with Terria"/></a>',
-        true
-      );
-    }
-    return credits;
   }
 
   @computed

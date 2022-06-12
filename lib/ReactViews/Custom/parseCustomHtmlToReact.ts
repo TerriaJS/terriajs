@@ -31,7 +31,7 @@ const shouldProcessEveryNodeExceptWhiteSpace = function(node: DomElement) {
 
 let keyIndex = 0;
 
-const ExternalLinkIcon = styled(StyledIcon).attrs({
+export const ExternalLinkIcon = styled(StyledIcon).attrs({
   glyph: Icon.GLYPHS.externalLink,
   styledWidth: "10px",
   styledHeight: "10px",

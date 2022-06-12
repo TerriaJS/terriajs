@@ -23,6 +23,9 @@ Change Log
 * Add help button for bookmarking sharelinks to SharePanel (if that help item exists in config)
 * Added `beforeRestoreAppState` hook for call to `Terria.start()` which gets called before state is restored from share data.
 * Made `order` optional for `ICompositeBarItem`.
+* Implement Leaflet credits as a react component, so it is easier to maintain them. Leaflet view now show terria extra credits.
+* Implement Cesium credits as a react component, so it is easier to maintain them.
+* Fixed translation of Leaflet and Cesium credits.
 * [The next improvement]
 
 #### 8.2.5 - 2022-06-07
