@@ -1,9 +1,13 @@
 import i18next from "i18next";
-import { autorun, computed, runInAction } from "mobx";
+import {
+  autorun,
+  computed,
+  runInAction,
+  observable,
+  IObservableArray
+} from "mobx";
 import { computedFn } from "mobx-utils";
-import Event from "terriajs-cesium/Source/Core/Event";
-import React from "react";
-import ReactDOM from "react-dom";
+import AssociativeArray from "terriajs-cesium/Source/Core/AssociativeArray";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -17,6 +21,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import destroyObject from "terriajs-cesium/Source/Core/destroyObject";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
+import Event from "terriajs-cesium/Source/Core/Event";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import HeadingPitchRange from "terriajs-cesium/Source/Core/HeadingPitchRange";
@@ -64,14 +69,13 @@ import PickedFeatures, {
 } from "../Map/PickedFeatures/PickedFeatures";
 import MappableMixin, {
   ImageryParts,
-  isPrimitive,
   isCesium3DTileset,
   isDataSource,
+  isPrimitive,
   isTerrainProvider,
   MapItem
 } from "../ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
-import { CesiumCredits } from "../ReactViews/Credits/Cesium/CesiumCredits";
 import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
@@ -117,6 +121,8 @@ export default class Cesium extends GlobeOrMap {
     | DataSource
     | MappableMixin.Instance
     | /*TODO Cesium.Cesium3DTileset*/ any;
+
+  private cesiumDataAttributions: IObservableArray<string> = observable([]);
 
   // When true, feature picking is paused. This is useful for temporarily
   // disabling feature picking when some other interaction mode wants to take
@@ -240,66 +246,9 @@ export default class Cesium extends GlobeOrMap {
     //         }
     //     });
 
-    const containerElement = getElement(container);
-    const creditsElement =
-      containerElement &&
-      (containerElement.getElementsByClassName(
-        "cesium-widget-credits"
-      )[0] as HTMLElement);
-    const logoContainer =
-      creditsElement &&
-      (creditsElement.getElementsByClassName(
-        "cesium-credit-logoContainer"
-      )[0] as HTMLElement);
-    const expandLink =
-      creditsElement &&
-      creditsElement.getElementsByClassName("cesium-credit-expand-link") &&
-      (creditsElement.getElementsByClassName(
-        "cesium-credit-expand-link"
-      )[0] as HTMLElement);
-
-    if (expandLink) {
-      // hide default expand link, it will be rendered as react component
-      expandLink.style.display = "none !important";
-      expandLink.innerText = "";
-
-      const domElement = document.createElement("div");
-      const creditDisplay: CreditDisplay = this.scene.frameState.creditDisplay;
-      const element = React.createElement(CesiumCredits, {
-        hideTerriaLogo: !!this.terria.configParameters.hideTerriaLogo,
-        cesiumLogoElement: logoContainer,
-        credits: this.terria.configParameters.extraCreditLinks?.slice(),
-        //@ts-expect-error - showLightbox is a private method
-        expandDataCredits: creditDisplay.showLightbox.bind(creditDisplay)
-      });
-
-      ReactDOM.render(element, domElement);
-      const child = domElement.firstElementChild;
-      if (child) {
-        creditsElement?.appendChild(child);
-      }
-
-      const creditDisplayOldDestroy = creditDisplay.destroy;
-      creditDisplay.destroy = () => {
-        try {
-          creditDisplayOldDestroy();
-        } catch (err) {}
-        if (child) creditsElement?.removeChild(child);
-      };
-    }
+    this.updateCredits(container);
 
     this.scene.globe.depthTestAgainstTerrain = false;
-
-    // var d = this._getDisclaimer();
-    // if (d) {
-    //     scene.frameState.creditDisplay.addDefaultCredit(d);
-    // }
-
-    // if (defined(this._developerAttribution)) {
-    //     scene.frameState.creditDisplay.addDefaultCredit(createCredit(this._developerAttribution.text, this._developerAttribution.link));
-    // }
-
-    // scene.frameState.creditDisplay.addDefaultCredit(new Credit('<a href="http://cesiumjs.org" target="_blank" rel="noopener noreferrer">CESIUM</a>'));
 
     const inputHandler = this.cesiumWidget.screenSpaceEventHandler;
 
@@ -470,6 +419,83 @@ export default class Cesium extends GlobeOrMap {
     });
   }
 
+  private updateCredits(container: string | HTMLElement) {
+    const containerElement = getElement(container);
+    const creditsElement =
+      containerElement &&
+      (containerElement.getElementsByClassName(
+        "cesium-widget-credits"
+      )[0] as HTMLElement);
+    const logoContainer =
+      creditsElement &&
+      (creditsElement.getElementsByClassName(
+        "cesium-credit-logoContainer"
+      )[0] as HTMLElement);
+    const expandLink =
+      creditsElement &&
+      creditsElement.getElementsByClassName("cesium-credit-expand-link") &&
+      (creditsElement.getElementsByClassName(
+        "cesium-credit-expand-link"
+      )[0] as HTMLElement);
+
+    if (creditsElement) {
+      if (logoContainer) creditsElement?.removeChild(logoContainer);
+      if (expandLink) creditsElement?.removeChild(expandLink);
+    }
+
+    const creditDisplay: CreditDisplay & {
+      _currentFrameCredits: {
+        lightboxCredits: AssociativeArray;
+      };
+    } = this.scene.frameState.creditDisplay;
+    const creditDisplayOldDestroy = creditDisplay.destroy;
+    creditDisplay.destroy = () => {
+      try {
+        creditDisplayOldDestroy();
+      } catch (err) {}
+    };
+
+    const creditDisplayOldEndFrame = creditDisplay.endFrame;
+
+    creditDisplay.endFrame = () => {
+      creditDisplayOldEndFrame.bind(creditDisplay)();
+
+      runInAction(() => {
+        const creditDisplayElements: { credit: Credit; count: number }[] =
+          creditDisplay._currentFrameCredits.lightboxCredits.values;
+
+        const credits = creditDisplayElements
+          .sort((credit1, credit2) => {
+            return credit2.count - credit1.count;
+          })
+          .map(({ credit }) => credit.html);
+
+        if (this.arrayEquals(credits, this.cesiumDataAttributions.toJS()))
+          return;
+        // first remove ones that are not on the map anymore
+        for (const attribution of this.cesiumDataAttributions.toJS()) {
+          if (!credits.includes(attribution)) {
+            this.cesiumDataAttributions.remove(attribution);
+          }
+        }
+        for (const [index, credit] of credits.entries()) {
+          const attributionIndex = this.cesiumDataAttributions.indexOf(credit);
+
+          if (attributionIndex === index) {
+            continue;
+          } else if (attributionIndex === -1) {
+            this.cesiumDataAttributions.splice(index, 0, credit);
+          } else {
+            this.cesiumDataAttributions.move(attributionIndex, index);
+          }
+        }
+      });
+    };
+  }
+  arrayEquals(a: string[], b: string[]) {
+    return a.length === b.length && a.every((val, index) => val === b[index]);
+  }
+
   getContainer() {
     return this.cesiumWidget.container;
   }
@@ -537,6 +563,11 @@ export default class Cesium extends GlobeOrMap {
     this._disposeSplitterReaction();
     this.cesiumWidget.destroy();
     destroyObject(this);
+  }
+
+  @computed
+  get attributions() {
+    return this.cesiumDataAttributions;
   }
 
   private get _allMappables() {
