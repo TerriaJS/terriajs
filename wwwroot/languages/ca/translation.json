@@ -524,7 +524,8 @@
     "searchItem": "Cerca",
     "searchItemTitle": "Cerca",
     "colorScaleRangeMinSmallerThanMax": "El valor mínim de l'escala de colors ha de ser inferior al valor màxim.",
-    "rangeMax": "Màxim:"
+    "rangeMax": "Màxim:",
+    "splitScreenMode": "MODE PANTALLA PARTIDA"
   },
   "dateTime": {
     "selectorLabel": "Temps:",
@@ -611,7 +612,8 @@
     "expand": "Expandir",
     "download": "Descarregar",
     "loading": "Carregant les dades del gràfic...",
-    "noData": "No s'ha trobat cap dada per fer gràfics."
+    "noData": "No s'ha trobat cap dada per fer gràfics.",
+    "showItemInChart": "Mostra {{value}} al gràfic"
   },
   "viewModels": {
     "searchNoLocations": "Ho sentim, cap ubicació coincideix amb la teva cerca.",
@@ -1652,5 +1654,8 @@
       "mouseTooltipTitle": "Seleccioneu la ubicació",
       "mouseTooltipMessage": "Botó dret per cancel·lar"
     }
+  },
+  "includeStory": {
+    "message": "Inclou la història a Share?"
   }
 }
