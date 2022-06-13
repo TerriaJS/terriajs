@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import L, { GridLayer } from "leaflet";
-import { action, autorun, observable, runInAction } from "mobx";
+import { action, autorun, observable, runInAction, computed } from "mobx";
 import { computedFn } from "mobx-utils";
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -72,7 +72,7 @@ export default class Leaflet extends GlobeOrMap {
   readonly dataSources: DataSourceCollection = new DataSourceCollection();
   readonly dataSourceDisplay: LeafletDataSourceDisplay;
   readonly canShowSplitter = true;
-  private readonly _attributionControl: L.Control.Attribution;
+  private readonly _attributionControl: LeafletAttribution;
   private readonly _leafletVisualizer: LeafletVisualizer;
   private readonly _eventHelper: EventHelper;
   private readonly _selectionIndicator: LeafletSelectionIndicator;
@@ -232,6 +232,15 @@ export default class Leaflet extends GlobeOrMap {
     });
 
     this._initProgressEvent();
+  }
+
+  get attributionPrefix() {
+    return this._attributionControl.prefix;
+  }
+
+  @computed
+  get attributions() {
+    return this._attributionControl.dataAttributions;
   }
 
   /**

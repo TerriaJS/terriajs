@@ -3,7 +3,7 @@ import "inobounce";
 import { action } from "mobx";
 import { observer } from "mobx-react";
 import React, { useEffect, useRef } from "react";
-import { useTranslation, withTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import {
   createGlobalStyle,
   DefaultTheme,
@@ -11,7 +11,9 @@ import {
 } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
 import arrayContains from "../../Core/arrayContains";
+import { DataAttributionContextProvider } from "../../ReactContexts/DataAttributionContext";
 import ViewState from "../../ReactViewModels/ViewState";
+import { MapCredits } from "../Credits";
 import Disclaimer from "../Disclaimer";
 import DragDropFile from "../DragDropFile";
 import DragDropNotification from "../DragDropNotification";
@@ -314,29 +316,37 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
                 </Medium>
 
                 <section className={Styles.map}>
-                  <ProgressBar terria={terria} />
-                  <MapColumn
-                    terria={terria}
-                    viewState={props.viewState}
-                    customFeedbacks={customElements.feedback}
-                    customElements={customElements}
-                    allBaseMaps={allBaseMaps}
-                    animationDuration={animationDuration}
-                  />
-                  <main>
-                    <ExplorerWindow
+                  <DataAttributionContextProvider>
+                    <ProgressBar terria={terria} />
+                    <MapColumn
                       terria={terria}
                       viewState={props.viewState}
+                      customFeedbacks={customElements.feedback}
+                      customElements={customElements}
+                      allBaseMaps={allBaseMaps}
+                      animationDuration={animationDuration}
                     />
-                    {props.terria.configParameters.experimentalFeatures &&
-                      !props.viewState.hideMapUi && (
-                        <ExperimentalFeatures
-                          terria={terria}
-                          viewState={props.viewState}
-                          experimentalItems={customElements.experimentalMenu}
-                        />
-                      )}
-                  </main>
+                    <MapCredits
+                      hideTerriaLogo={!!terria.configParameters.hideTerriaLogo}
+                      credits={terria.configParameters.extraCreditLinks?.slice()}
+                      currentViewer={terria.mainViewer.currentViewer}
+                    />
+                    <div id="map-data-attribution"></div>
+                    <main>
+                      <ExplorerWindow
+                        terria={terria}
+                        viewState={props.viewState}
+                      />
+                      {props.terria.configParameters.experimentalFeatures &&
+                        !props.viewState.hideMapUi && (
+                          <ExperimentalFeatures
+                            terria={terria}
+                            viewState={props.viewState}
+                            experimentalItems={customElements.experimentalMenu}
+                          />
+                        )}
+                    </main>
+                  </DataAttributionContextProvider>
                 </section>
               </div>
             </div>

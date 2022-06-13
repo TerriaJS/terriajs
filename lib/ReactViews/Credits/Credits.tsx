@@ -1,9 +1,15 @@
 import React, { FC } from "react";
 import { Credit } from "./Credit";
 import { ICreditsProps } from "./Credits.props";
+import { useTheme } from "styled-components";
 
 export const Spacer = () => {
-  return <span aria-hidden="true">|</span>;
+  const theme = useTheme();
+  return (
+    <span aria-hidden="true" css={{ color: theme.textLight }}>
+      |
+    </span>
+  );
 };
 
 export const Credits: FC<ICreditsProps> = ({ credits }) => {

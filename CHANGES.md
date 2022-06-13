@@ -25,6 +25,7 @@ Change Log
 * Made `order` optional for `ICompositeBarItem`.
 * Implement Leaflet credits as a react component, so it is easier to maintain them. Leaflet view now show terria extra credits.
 * Implement Cesium credits as a react component, so it is easier to maintain them.
+* Implement data attribution modal for map data attributions/credits. Used by both Leaflet and Cesium viewers.
 * Fixed translation of Leaflet and Cesium credits.
 * [The next improvement]
 
