@@ -5,6 +5,8 @@ Change Log
 
 * Fixed default 3d-tiles styling to add a workaround for a Cesium bug which resulted in wrong translucency value for point clouds.
 * Remove Pell dependency, now replaced with TinyMCE (WYSIWYG editor library).
+* Added `beforeRestoreAppState` hook for call to `Terria.start()` which gets called before state is restored from share data.
+* Made `order` optional for `ICompositeBarItem`.
 * [The next improvement]
 
 #### 8.2.5 - 2022-06-07
