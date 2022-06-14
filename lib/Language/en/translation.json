@@ -605,7 +605,7 @@
     "copy": "Copy"
   },
   "includeStory": {
-    "message": "Include Story in Share?"
+    "message": "Include Story in Share"
   },
   "dragDrop": {
     "text": "<0>Drag & Drop</0><1>Your data anywhere to view on the map<1>",

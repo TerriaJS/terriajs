@@ -407,22 +407,21 @@ const SharePanel = observer(
                 evt.preventDefault();
                 evt.stopPropagation();
                 viewState.showHelpPanel();
-                viewState.selectHelpMenuItem("storymigration"); // TODO: Change this to the correct help subitem
-                // viewState.terria.notificationState.dismissCurrentNotification();
+                viewState.selectHelpMenuItem("bookmarkHelp"); // THIS LINE
               }}
             >
-              <span
+              <div
                 className={classNames(
                   Styles.explanation,
                   Styles.getShareSaveHelpText
                 )}
               >
                 {t("share.getShareSaveHelpMessage")}
-              </span>
+              </div>
             </Text>
             {this.renderWarning()}
           </div>
-
+          <hr className={Styles.thin} />
           <div className={DropdownStyles.section}>
             <div>{t("share.printTitle")}</div>
             <div className={Styles.explanation}>
@@ -461,6 +460,7 @@ const SharePanel = observer(
               </button>
             </div>
           </div>
+          <hr className={Styles.thin} />
           <div
             className={classNames(DropdownStyles.section, Styles.shortenUrl)}
           >

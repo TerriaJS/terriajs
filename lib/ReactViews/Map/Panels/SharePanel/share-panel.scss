@@ -59,11 +59,12 @@
 }
 
 .btn--wrapper {
-  text-align: right;
+  text-align: left;
 }
 
 .btn--advanced {
   outline: 0;
+  padding: 0em;
 }
 
 .img--share {
@@ -188,8 +189,13 @@
 }
 
 .getShareSaveHelpText {
-  font-style: italic;
-  float: right;
+  text-decoration: underline;
+  padding-top: 0.8em;
   cursor: help;
-  padding-right: 0.1em;
+}
+
+hr.thin {
+  border: 0;
+  height: 0;
+  border-top: 0.5px solid rgba(255, 255, 255, 0.3);
 }
