@@ -300,6 +300,35 @@ describe("Terria", function() {
           });
       });
     });
+
+    fit("calls `beforeRestoreAppState` before restoring app state from share data", async function() {
+      terria = new Terria({
+        appBaseHref: "/",
+        baseUrl: "./"
+      });
+
+      const restoreAppState = spyOn(
+        terria,
+        "restoreAppState" as any
+      ).and.callThrough();
+
+      const beforeRestoreAppState = jasmine
+        .createSpy("beforeRestoreAppState")
+        // It should also handle errors when calling beforeRestoreAppState
+        .and.returnValue(Promise.reject("some error"));
+
+      expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Cesium);
+      await terria.start({
+        configUrl: "",
+        applicationUrl: {
+          href: "http://test.com/#map=2d"
+        } as Location,
+        beforeRestoreAppState
+      });
+
+      expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
+      expect(beforeRestoreAppState).toHaveBeenCalledBefore(restoreAppState);
+    });
   });
 
   describe("updateApplicationUrl", function() {
@@ -1387,6 +1416,7 @@ describe("Terria", function() {
       expect(terria.selectedFeature?.name).toBe("foo");
     });
   });
+
   it("customRequestSchedulerLimits sets RequestScheduler limits for domains", async function() {
     const configUrl = `data:application/json;base64,${btoa(
       JSON.stringify({

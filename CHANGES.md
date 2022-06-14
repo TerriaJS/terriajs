@@ -21,6 +21,8 @@ Change Log
 * Remove Pell dependency, now replaced with TinyMCE (WYSIWYG editor library).
 * Fix `includes` path for `url-loader` rule so that it doesn't incorrectly match package names with `terriajs` as prefix.
 * Add help button for bookmarking sharelinks to SharePanel (if that help item exists in config)
+* Added `beforeRestoreAppState` hook for call to `Terria.start()` which gets called before state is restored from share data.
+* Made `order` optional for `ICompositeBarItem`.
 * [The next improvement]
 
 #### 8.2.5 - 2022-06-07

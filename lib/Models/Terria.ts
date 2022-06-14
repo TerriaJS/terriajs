@@ -319,6 +319,13 @@ interface StartOptions {
    * some functions that are passed in from a TerriaMap
    *  */
   i18nOptions?: I18nStartOptions;
+
+  /**
+   * Hook to run before restoring app state from the share URL. This is for
+   * example used in terriamap/index.js for loading plugins before restoring
+   * app state.
+   */
+  beforeRestoreAppState?: () => Promise<void> | void;
 }
 
 interface Analytics {
@@ -955,6 +962,18 @@ export default class Terria {
         )
       );
 
+    if (typeof options.beforeRestoreAppState === "function") {
+      try {
+        await options.beforeRestoreAppState();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    await this.restoreAppState(options);
+  }
+
+  private async restoreAppState(options: StartOptions) {
     if (options.applicationUrl) {
       (await this.updateApplicationUrl(options.applicationUrl.href)).raiseError(
         this
