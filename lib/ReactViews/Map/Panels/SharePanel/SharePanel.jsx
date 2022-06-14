@@ -399,26 +399,33 @@ const SharePanel = observer(
                 )
               }
             />
-            <Text
-              medium
-              textLight
-              isLink
-              onClick={evt => {
-                evt.preventDefault();
-                evt.stopPropagation();
-                viewState.showHelpPanel();
-                viewState.selectHelpMenuItem("bookmarkHelp"); // THIS LINE
-              }}
+            {/* Following code block dependent on existence of "bookmarkHelp" Help Menu Item */}
+            <If
+              condition={this.props.terria.configParameters.helpContent.some(
+                e => e.itemName === "bookmarkHelp"
+              )}
             >
-              <div
-                className={classNames(
-                  Styles.explanation,
-                  Styles.getShareSaveHelpText
-                )}
+              <Text
+                medium
+                textLight
+                isLink
+                onClick={evt => {
+                  evt.preventDefault();
+                  evt.stopPropagation();
+                  viewState.showHelpPanel();
+                  viewState.selectHelpMenuItem("bookmarkHelp"); // THIS LINE
+                }}
               >
-                {t("share.getShareSaveHelpMessage")}
-              </div>
-            </Text>
+                <div
+                  className={classNames(
+                    Styles.explanation,
+                    Styles.getShareSaveHelpText
+                  )}
+                >
+                  {t("share.getShareSaveHelpMessage")}
+                </div>
+              </Text>
+            </If>
             {this.renderWarning()}
           </div>
           <hr className={Styles.thin} />
