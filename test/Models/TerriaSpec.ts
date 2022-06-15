@@ -301,7 +301,7 @@ describe("Terria", function() {
       });
     });
 
-    fit("calls `beforeRestoreAppState` before restoring app state from share data", async function() {
+    it("calls `beforeRestoreAppState` before restoring app state from share data", async function() {
       terria = new Terria({
         appBaseHref: "/",
         baseUrl: "./"
