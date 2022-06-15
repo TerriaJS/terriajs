@@ -227,4 +227,8 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
       return `${this.catalogItem.activeTableStyle.timeColumn.title}: `;
     }
   }
+
+  @computed get showInChartPanel() {
+    return this.catalogItem.show;
+  }
 }

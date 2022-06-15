@@ -51,7 +51,7 @@ import { ImageryParts } from "./MappableMixin";
 function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
   abstract class TableMixin
     extends ExportableMixin(
-      ChartableMixin(DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base)))
+      DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base))
     )
     implements SelectableDimensions, ViewingControls {
     /**
@@ -742,8 +742,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return this.tableColumns.find(column => column.type === type);
     }
 
-    findColumnByName(name: string): TableColumn | undefined {
-      return this.tableColumns.find(column => column.name === name);
+    findColumnByName(name: string | undefined): TableColumn | undefined {
+      return isDefined(name)
+        ? this.tableColumns.find(column => column.name === name)
+        : undefined;
     }
 
     protected async forceLoadMapItems() {

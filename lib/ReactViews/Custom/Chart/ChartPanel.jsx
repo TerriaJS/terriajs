@@ -13,7 +13,7 @@ import Icon from "../../../Styled/Icon";
 import Loader from "../../Loader";
 import Chart from "./BottomDockChart";
 import Styles from "./chart-panel.scss";
-import ChartPanelDownloadButton from "./ChartPanelDownloadButton";
+import { ChartPanelDownloadButton } from "./ChartPanelDownloadButton";
 
 const height = 300;
 
