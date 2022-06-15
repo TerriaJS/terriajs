@@ -311,7 +311,8 @@ export default class ViewState {
    * Gets or sets a value indicating whether the catalog's modal share panel
    * is currently visible.
    */
-  @observable shareModalIsVisible: boolean = false;
+  @observable shareModalIsVisible: boolean = false; // Small share modal inside StoryEditor
+  @observable retainSharePanel: boolean = false;
 
   /**
    * The currently open tool
@@ -656,6 +657,14 @@ export default class ViewState {
   @action
   hideHelpPanel() {
     this.showHelpMenu = false;
+    setTimeout(() => {
+      this.setRetainSharePanel(false);
+    }, 500); // TODO: this is a bit hacky, but need to re-enable closing of share panel when loses focus.
+  }
+
+  @action
+  setRetainSharePanel(retain: boolean) {
+    this.retainSharePanel = retain;
   }
 
   @action

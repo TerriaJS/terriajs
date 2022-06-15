@@ -16,6 +16,8 @@ const InnerPanel = createReactClass({
      * panel to close.
      */
     doNotCloseFlag: PropTypes.string,
+    /** Disable closing on loss of focus and only allow with close button */
+    disableCloseOnFocusLoss: PropTypes.boolean,
     /** Will be called when the panel has finished hiding */
     onDismissed: PropTypes.func,
     /** Animate as modal instead of dropdown */
@@ -88,7 +90,10 @@ const InnerPanel = createReactClass({
 
   close(e) {
     // Only close if this wasn't a click on an open/close button.
-    if (!this.props.doNotCloseFlag || !e[this.props.doNotCloseFlag]) {
+    if (
+      (!this.props.doNotCloseFlag || !e[this.props.doNotCloseFlag]) &&
+      !this.props.disableCloseOnFocusLoss
+    ) {
       this.forceClose();
     }
   },

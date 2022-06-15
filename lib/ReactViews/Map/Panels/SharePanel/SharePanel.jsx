@@ -412,6 +412,7 @@ const SharePanel = observer(
                 onClick={evt => {
                   evt.preventDefault();
                   evt.stopPropagation();
+                  viewState.setRetainSharePanel(true);
                   viewState.showHelpPanel();
                   viewState.selectHelpMenuItem("bookmarkHelp"); // THIS LINE
                 }}
@@ -589,6 +590,7 @@ const SharePanel = observer(
             if (catalogShare) this.props.viewState.shareModalIsVisible = false;
           }}
           onUserClick={this.props.onUserClick}
+          disableCloseOnFocusLoss={this.props.viewState.retainSharePanel}
         >
           <If condition={this.state.isOpen}>{this.renderContent()}</If>
         </MenuPanel>
