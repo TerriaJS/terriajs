@@ -1,11 +1,10 @@
 "use strict";
 import React from "react";
-import PropTypes from "prop-types";
 import styled from "styled-components";
-
 import Box from "../../Styled/Box";
+import { SpacingSpan } from "./../../Styled/Spacing";
+import { TextSpan } from "../../Styled/Text";
 import { RawButton } from "../../Styled/Button";
-import Text from "../../Styled/Text";
 
 // only spans are valid html for buttons (even though divs work)
 const ButtonWrapper = styled(Box).attrs({
@@ -15,14 +14,18 @@ const ButtonWrapper = styled(Box).attrs({
   justify-content: center;
   align-items: center;
 `;
+
+interface IStyledWorkbenchButton {
+  primary?: boolean;
+  inverted?: boolean;
+}
+
 // styles half ripped from nav.scss
-const StyledWorkbenchButton = styled(RawButton)`
+const StyledWorkbenchButton = styled(RawButton)<IStyledWorkbenchButton>`
   border-radius: 3px;
   background: ${props => props.theme.dark};
   color: ${props => props.theme.textLight};
-  padding: 0 10px;
   flex-grow: 1;
-  margin-right: 10px;
 
   height: 32px;
   min-width: 32px;
@@ -31,9 +34,6 @@ const StyledWorkbenchButton = styled(RawButton)`
   svg {
     height: 16px;
     width: 16px;
-    margin: 0 auto;
-    ${props => !props.iconOnly && `margin-right: 8px;`};
-    vertical-align: middle;
     fill: ${props => props.theme.textLight};
   }
 
@@ -76,25 +76,23 @@ const StyledWorkbenchButton = styled(RawButton)`
     }
   `}
 `;
-WorkbenchButton.propTypes = {
-  className: PropTypes.string,
-  children: PropTypes.any,
-  primary: PropTypes.bool,
-  disabled: PropTypes.bool,
-  inverted: PropTypes.bool,
-  iconOnly: PropTypes.bool,
-  title: PropTypes.string,
-  iconElement: PropTypes.func.isRequired,
-  onClick: PropTypes.func,
-  handleClick: PropTypes.func
-};
 
-function WorkbenchButton(props) {
+interface IProps {
+  children?: any;
+  primary?: boolean;
+  disabled?: boolean;
+  inverted?: boolean;
+  iconOnly?: boolean;
+  title?: string;
+  iconElement(): any;
+  onClick?: (e?: any) => void;
+}
+
+const WorkbenchButton: React.FC<IProps> = (props: IProps) => {
   const { children, title, primary, inverted, disabled, iconOnly } = props;
 
   return (
     <StyledWorkbenchButton
-      className={props.className}
       primary={primary}
       disabled={disabled}
       iconOnly={iconOnly}
@@ -102,34 +100,29 @@ function WorkbenchButton(props) {
       type="button"
       title={title}
       onClick={props.onClick}
+      {...props}
     >
       <ButtonWrapper>
         {/* only spans are valid html for buttons (even though divs work) */}
-        {props.iconElement && (
-          <span
-            css={`
-              display: block;
-            `}
-          >
-            {props.iconElement()}
-          </span>
-        )}
+        {props.iconElement && props.iconElement()}
         {children && (
-          <Text
-            as="span"
-            noWrap
-            small
-            css={`
-              display: block;
-              text-transform: uppercase;
-              letter-spacing: 0.08px;
-            `}
-          >
-            {children}
-          </Text>
+          <>
+            <SpacingSpan right={1}></SpacingSpan>
+            <TextSpan
+              noWrap
+              small
+              css={`
+                display: block;
+                text-transform: uppercase;
+                letter-spacing: 0.08px;
+              `}
+            >
+              {children}
+            </TextSpan>
+          </>
         )}
       </ButtonWrapper>
     </StyledWorkbenchButton>
   );
-}
+};
 export default WorkbenchButton;

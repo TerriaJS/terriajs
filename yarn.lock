@@ -1296,6 +1296,14 @@
   dependencies:
     defer-to-connect "^2.0.0"
 
+"@tinymce/tinymce-react@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@tinymce/tinymce-react/-/tinymce-react-4.1.0.tgz#e2a5e289dc1af03837365bebe969b1a722bf6d99"
+  integrity sha512-7qXheXhyY9a8mY5tXQUz3BFq+Z4TQ7zd/OIaKasbVzojkjCw3VWdwFhHOEcwmDDprepgQwECsYqe3AGOtehfFg==
+  dependencies:
+    prop-types "^15.6.2"
+    tinymce "^6.0.0 || ^5.5.1"
+
 "@tootallnate/once@1":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
@@ -1671,6 +1679,21 @@
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/rbush/-/rbush-3.0.0.tgz#b6887d99b159e87ae23cd14eceff34f139842aa6"
   integrity sha512-W3ue/GYWXBOpkRm0VSoifrP3HV0Ni47aVJWvXyWMcbtpBy/l/K/smBRiJ+fI8f7shXRjZBiux+iJzYbh7VmcZg==
+
+"@types/rc-slider@^8.6.6":
+  version "8.6.6"
+  resolved "https://registry.yarnpkg.com/@types/rc-slider/-/rc-slider-8.6.6.tgz#961ccfd0b8c632a9d8cdcc28b54d6be4781c419f"
+  integrity sha512-2Q3vwKrSm3PbgiMNwzxMkOaMtcAGi0xQ8WPeVKoabk1vNYHiVR44DMC3mr9jC2lhbxCBgGBJWF9sBhmnSDQ8Bg==
+  dependencies:
+    "@types/rc-tooltip" "*"
+    "@types/react" "*"
+
+"@types/rc-tooltip@*":
+  version "3.7.6"
+  resolved "https://registry.yarnpkg.com/@types/rc-tooltip/-/rc-tooltip-3.7.6.tgz#d3833b3f3e494ab14e4a95158f9f6b321042c97a"
+  integrity sha512-Otouf6HW49RSwtTa3EBdp0+BZoOQy3KDTEcVgLdZEgcYp4HB5nP6N3S6bTUkPtq3H5KmYBzEOaiq0SNMB/MY2g==
+  dependencies:
+    "@types/react" "*"
 
 "@types/react-color@^3.0.6":
   version "3.0.6"
@@ -10865,10 +10888,6 @@ pbkdf2@^3.0.3:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-"pell@github:TerriaJS/pell#master":
-  version "1.0.6"
-  resolved "https://codeload.github.com/TerriaJS/pell/tar.gz/7cd23a55cdfd130fedf3679433991bb7d958fc42"
-
 pend@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/pend/-/pend-1.2.0.tgz#7a57eb550a6783f9115331fcf4663d5c8e007a50"
@@ -13699,10 +13718,10 @@ temp-path@^1.0.0:
   resolved "https://registry.yarnpkg.com/temp-path/-/temp-path-1.0.0.tgz#24b1543973ab442896d9ad367dd9cbdbfafe918b"
   integrity sha1-JLFUOXOrRCiW2a02fdnL2/r+kYs=
 
-terriajs-cesium@1.81.3:
-  version "1.81.3"
-  resolved "https://registry.yarnpkg.com/terriajs-cesium/-/terriajs-cesium-1.81.3.tgz#97bb3de03dc531e3125548cb053c4cb86d2dd39a"
-  integrity sha512-jDEWXwWYnIdFlMePPnunsd3+Qbo205iNJSerU5lH/0nHOl5af4l1a8u8KTbHzatXFz9HAg8Q6nCsFLpjiZ6Klg==
+terriajs-cesium@1.92.0-tile-error-provider-fix-2:
+  version "1.92.0-tile-error-provider-fix-2"
+  resolved "https://registry.yarnpkg.com/terriajs-cesium/-/terriajs-cesium-1.92.0-tile-error-provider-fix-2.tgz#f9cce39dd3bd18622ac8a44a20873fb0e9ebb103"
+  integrity sha512-0fDVJ9lzSRcz04xh2WjbV9vID7ZfEpFyw7j86uTW38AwAiUq642On/qdeK/1MP1aGdvNN15eevb4tjmWhdvgrw==
   dependencies:
     dompurify "^2.0.7"
 
@@ -13873,6 +13892,11 @@ tinycolor2@^1.4.1:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.4.2.tgz#3f6a4d1071ad07676d7fa472e1fac40a719d8803"
   integrity sha512-vJhccZPs965sV/L2sU4oRQVAos0pQXwsvTLkWYdqJ+a8Q5kPFzJTuOFwy7UniPli44NKQGAglksjvOcpo95aZA==
+
+"tinymce@^6.0.0 || ^5.5.1":
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/tinymce/-/tinymce-6.0.3.tgz#993db09afa473a764ad8b594cdaf744b2c7e2e74"
+  integrity sha512-4cu80kWF7nRGhviE10poZtjTkl3jNL+lycilCMfdm3KU5V7FtiQQrKbEo6GInXT05RY78Ha/NFP0gOBELcSpfg==
 
 tinyqueue@^2.0.3:
   version "2.0.3"

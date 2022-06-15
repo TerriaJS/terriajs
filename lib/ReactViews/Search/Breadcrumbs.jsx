@@ -5,7 +5,7 @@ import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
 import Box from "../../Styled/Box";
 import { getParentGroups } from "../../Core/getPath";
-import Text from "../../Styled/Text";
+import Text, { TextSpan } from "../../Styled/Text";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import Spacing from "../../Styled/Spacing";
 import { RawButton } from "../../Styled/Button";
@@ -84,9 +84,9 @@ class Breadcrumbs extends React.Component {
                       this.openInCatalog(ancestors.slice(i, i + 1))
                     }
                   >
-                    <Text small textDark>
+                    <TextSpan small textDark>
                       {parent}
-                    </Text>
+                    </TextSpan>
                   </RawButtonAndUnderline>
                 </When>
                 {/* The remainder are just '..' to prevent/minimise overflowing */}
