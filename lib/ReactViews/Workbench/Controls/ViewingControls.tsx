@@ -41,6 +41,7 @@ import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../../Styled/Icon";
+import Ul from "../../../Styled/List";
 import { VectorTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
 import { exportData } from "../../Preview/ExportData";
@@ -477,7 +478,7 @@ class ViewingControls extends React.Component<
     const showMenu = item.uniqueId === viewState.workbenchItemWithOpenControls;
     return (
       <Box>
-        <ul
+        <Ul
           css={`
             list-style: none;
             padding-left: 0;
@@ -496,6 +497,7 @@ class ViewingControls extends React.Component<
               margin-right: 0;
             }
           `}
+          gap={2}
         >
           <WorkbenchButton
             onClick={this.zoomTo.bind(this)}
@@ -541,7 +543,7 @@ class ViewingControls extends React.Component<
             iconOnly
             iconElement={() => <Icon glyph={Icon.GLYPHS.menuDotted} />}
           />
-        </ul>
+        </Ul>
         {showMenu && (
           <Box
             css={`

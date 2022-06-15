@@ -551,7 +551,8 @@
       "undefinedLabel": "Not specified"
     },
     "searchItem": "Search",
-    "searchItemTitle": "Search"
+    "searchItemTitle": "Search",
+    "splitScreenMode": "SPLIT SCREEN MODE"
   },
   "dateTime": {
     "selectorLabel": "Time:",
@@ -640,6 +641,7 @@
     "closePanel": "Close Panel",
     "expand": "Expand",
     "download": "Download",
+    "showItemInChart": "Show {{value}} in chart",
     "loading": "Loading chart data...",
     "noData": "No chartable data found."
   },

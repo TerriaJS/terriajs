@@ -268,6 +268,13 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
                             props.terria.isWorkflowPanelActive === false
                           }
                         >
+                          <FullScreenButton
+                            terria={terria}
+                            viewState={props.viewState}
+                            minified={true}
+                            animationDuration={250}
+                            btnText={t("addData.btnHide")}
+                          />
                           <Branding
                             terria={terria}
                             viewState={props.viewState}
