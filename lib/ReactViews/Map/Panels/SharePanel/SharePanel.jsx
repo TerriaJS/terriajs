@@ -30,7 +30,6 @@ import {
 import { downloadImg } from "./Print/PrintView";
 import { reaction } from "mobx";
 import Checkbox from "../../../../Styled/Checkbox";
-// import { RawButton } from "../../../../Styled/Button";
 import Text from "../../../../Styled/Text";
 
 const SharePanel = observer(
@@ -414,7 +413,7 @@ const SharePanel = observer(
                   evt.stopPropagation();
                   viewState.setRetainSharePanel(true);
                   viewState.showHelpPanel();
-                  viewState.selectHelpMenuItem("bookmarkHelp"); // THIS LINE
+                  viewState.selectHelpMenuItem("bookmarkHelp");
                 }}
               >
                 <div
@@ -429,7 +428,7 @@ const SharePanel = observer(
             </If>
             {this.renderWarning()}
           </div>
-          <hr className={Styles.thin} />
+          <hr className={Styles.thinLineDivider} />
           <div className={DropdownStyles.section}>
             <div>{t("share.printTitle")}</div>
             <div className={Styles.explanation}>
@@ -468,7 +467,7 @@ const SharePanel = observer(
               </button>
             </div>
           </div>
-          <hr className={Styles.thin} />
+          <hr className={Styles.thinLineDivider} />
           <div
             className={classNames(DropdownStyles.section, Styles.shortenUrl)}
           >

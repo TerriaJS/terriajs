@@ -44,7 +44,8 @@ interface CssExports {
   'story-share-inner': string;
   'storyShare': string;
   'storyShareInner': string;
-  'thin': string;
+  'thin-line-divider': string;
+  'thinLineDivider': string;
   'warning': string;
   'warning-link': string;
   'warningLink': string;
