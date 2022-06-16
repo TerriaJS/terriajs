@@ -109,7 +109,11 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
 
     @computed
     private get model() {
-      if (this.url === undefined) {
+      if (
+        this.url === undefined ||
+        !this.loadMapItemsResult ||
+        this.loadMapItemsResult.error
+      ) {
         return undefined;
       }
       const options = {

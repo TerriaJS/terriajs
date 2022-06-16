@@ -5,6 +5,7 @@ import OpenDataSoftCatalogGroup from "./CatalogGroups/OpenDataSoftCatalogGroup";
 import SocrataCatalogGroup from "./CatalogGroups/SocrataCatalogGroup";
 import ThreddsCatalogGroup from "./CatalogGroups/ThreddsCatalogGroup";
 import { ApiTableCatalogItem } from "./CatalogItems/ApiTableCatalogItem";
+import AssImpCatalogItem from "./CatalogItems/AssImpCatalogItem";
 import BingMapsCatalogItem from "./CatalogItems/BingMapsCatalogItem";
 import CartoMapCatalogItem from "./CatalogItems/CartoMapCatalogItem";
 import Cesium3DTilesCatalogItem from "./CatalogItems/Cesium3DTilesCatalogItem";
@@ -224,6 +225,7 @@ export default function registerCatalogMembers() {
     UrlTemplateImageryCatalogItem.type,
     UrlTemplateImageryCatalogItem
   );
+  CatalogMemberFactory.register(AssImpCatalogItem.type, AssImpCatalogItem);
 
   UrlToCatalogMemberMapping.register(
     matchesExtension("csv"),
