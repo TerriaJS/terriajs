@@ -23,9 +23,7 @@ export function activateStory(story, terria, scenarioIndex = 0) {
       terria.addInitSource(initSource, true)
     );
     when.all(promises).then(() => {
-      const nowViewingPaths = story.mapScenarios[
-        scenarioIndex
-      ].initSources.reduce((p, c) => {
+      const nowViewingPaths = initSources.reduce((p, c) => {
         if (c.sharedCatalogMembers) {
           return p.concat(Object.keys(c.sharedCatalogMembers));
         }
@@ -96,6 +94,7 @@ const RCStoryPanel = createReactClass({
       const story = this.props.viewState.currentStoryId
         ? this.props.terria.stories[this.props.viewState.currentStoryId]
         : this.props.terria.stories[0];
+
       activateStory(
         story,
         this.props.terria,
@@ -168,11 +167,8 @@ const RCStoryPanel = createReactClass({
   // This is in StoryPanel and StoryBuilder
   activateStory(_story) {
     const story = _story ? _story : this.props.terria.stories[0];
-    activateStory(
-      story,
-      this.props.terria,
-      this.props.viewState.currentScenario
-    );
+
+    activateStory(story, this.props.terria);
   },
 
   onCenterScene(story) {
@@ -218,6 +214,7 @@ const RCStoryPanel = createReactClass({
   scenarioChanged(scenarioId) {
     //TODO: use some kind of identifier for scenario
     this.props.viewState.currentScenario = scenarioId.toString();
+
     this.activateStory(this.props.viewState.currentStoryId);
     this.setState({ state: this.state });
   },
