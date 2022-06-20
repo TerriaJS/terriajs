@@ -555,7 +555,8 @@
     "searchItemTitle": "Hledat",
     "addItemErrorTitle": "Katalogovou položku nelze přidat do pracovního plochy.",
     "previewItem": "O datech",
-    "expandAll": "Rozbalit vše"
+    "expandAll": "Rozbalit vše",
+    "splitScreenMode": "REŽIM DĚLENÉ OBRAZOVKY"
   },
   "dateTime": {
     "selectorLabel": "Čas:",
@@ -641,7 +642,8 @@
     "expand": "Rozbalit",
     "download": "Stáhnout",
     "loading": "Načítání dat grafu...",
-    "noData": "Nenalezeny žádné údaje, které by bylo možné zobrazit v tabulce."
+    "noData": "Nenalezeny žádné údaje, které by bylo možné zobrazit v tabulce.",
+    "showItemInChart": "Zobrazit {{value}} v tabulce"
   },
   "viewModels": {
     "searchNoLocations": "Je nám líto, vašemu vyhledávacímu dotazu neodpovídají žádná místa.",
@@ -1655,5 +1657,8 @@
       "select": "Vyberte datum"
     },
     "info": "Porovnejte na mapě vedle sebe soubory prostorových dat z pracovní plochy."
+  },
+  "includeStory": {
+    "message": "Zahrnout příběh do sdílení?"
   }
 }
