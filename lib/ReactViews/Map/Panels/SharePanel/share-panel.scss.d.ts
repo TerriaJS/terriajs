@@ -23,6 +23,7 @@ interface CssExports {
   'explanation': string;
   'format-button': string;
   'formatButton': string;
+  'getShareSaveHelpText': string;
   'img--share': string;
   'imgShare': string;
   'include-story-option': string;
@@ -43,6 +44,8 @@ interface CssExports {
   'story-share-inner': string;
   'storyShare': string;
   'storyShareInner': string;
+  'thin-line-divider': string;
+  'thinLineDivider': string;
   'warning': string;
   'warning-link': string;
   'warningLink': string;
