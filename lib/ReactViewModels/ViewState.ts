@@ -312,7 +312,12 @@ export default class ViewState {
    * is currently visible.
    */
   @observable shareModalIsVisible: boolean = false; // Small share modal inside StoryEditor
-  @observable retainSharePanel: boolean = false;
+
+  /**
+   * Used to indicate that the Share Panel should stay open even if it loses focus.
+   * This is used when clicking a help link in the Share Panel - The Help Panel will open, and when it is closed, the Share Panel should still be visible for the user to continue their task.
+   */
+  @observable retainSharePanel: boolean = false; // The large share panel accessed via Share/Print button
 
   /**
    * The currently open tool
@@ -649,6 +654,18 @@ export default class ViewState {
   }
 
   @action
+  openHelpPanelItemFromSharePanel(
+    evt: React.MouseEvent<HTMLDivElement>,
+    itemName: string
+  ) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    this.setRetainSharePanel(true);
+    this.showHelpPanel();
+    this.selectHelpMenuItem(itemName);
+  }
+
+  @action
   selectHelpMenuItem(key: string) {
     this.selectedHelpMenuItem = key;
     this.helpPanelExpanded = true;
@@ -657,9 +674,6 @@ export default class ViewState {
   @action
   hideHelpPanel() {
     this.showHelpMenu = false;
-    setTimeout(() => {
-      this.setRetainSharePanel(false);
-    }, 500); // TODO: this is a bit hacky, but need to re-enable closing of share panel when loses focus.
   }
 
   @action
