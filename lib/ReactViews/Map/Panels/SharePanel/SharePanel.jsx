@@ -383,6 +383,7 @@ const SharePanel = observer(
       const iframeCode = this.state.shareUrl.length
         ? `<iframe style="width: 720px; height: 600px; border: none;" src="${this.state.shareUrl}" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>`
         : "";
+      const bookMarkHelpItemName = "bookmarkHelp";
 
       return (
         <div>
@@ -399,22 +400,19 @@ const SharePanel = observer(
               }
             />
             {/* Following code block dependent on existence of "bookmarkHelp" Help Menu Item */}
-            <If
-              condition={this.props.terria.configParameters.helpContent.some(
-                e => e.itemName === "bookmarkHelp"
-              )}
-            >
+            {this.props.terria.configParameters.helpContent.some(
+              e => e.itemName === bookMarkHelpItemName
+            ) && (
               <Text
                 medium
                 textLight
                 isLink
-                onClick={evt => {
-                  evt.preventDefault();
-                  evt.stopPropagation();
-                  viewState.setRetainSharePanel(true);
-                  viewState.showHelpPanel();
-                  viewState.selectHelpMenuItem("bookmarkHelp");
-                }}
+                onClick={evt =>
+                  viewState.openHelpPanelItemFromSharePanel(
+                    evt,
+                    bookMarkHelpItemName
+                  )
+                }
               >
                 <div
                   className={classNames(
@@ -425,7 +423,8 @@ const SharePanel = observer(
                   {t("share.getShareSaveHelpMessage")}
                 </div>
               </Text>
-            </If>
+            )}
+
             {this.renderWarning()}
           </div>
           <hr className={Styles.thinLineDivider} />
