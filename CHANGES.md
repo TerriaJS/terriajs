@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.2.7)
 
+* Add region map info and move "No Data" message to `InfoSections` in `TableAutomaticStylesStratum`
 * [The next improvement]
 
 #### 8.2.6 - 2022-06-17
