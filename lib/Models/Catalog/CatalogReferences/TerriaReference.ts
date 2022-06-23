@@ -108,7 +108,7 @@ export default class TerriaReference extends UrlMixin(
           targetJson
         ).catchError(error => {
           target.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
-          console.log(error.toError());
+          error.log();
         });
         return target;
       }
