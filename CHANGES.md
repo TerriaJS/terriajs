@@ -5,6 +5,7 @@ Change Log
 
 * Fix `WorkbenchItem` title height
 * Add region map info and move "No Data" message to `InfoSections` in `TableAutomaticStylesStratum`
+* Fix missing `TableColorStyleTraits.legend` values in `ColorStyleLegend`
 * Fix `DateTimeSelectorSection.changeDateTime()` binding.
 * [The next improvement]
 
