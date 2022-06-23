@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.2.7)
 
+* Fix `WorkbenchItem` title height
 * Add region map info and move "No Data" message to `InfoSections` in `TableAutomaticStylesStratum`
 * [The next improvement]
 
