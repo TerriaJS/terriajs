@@ -489,10 +489,10 @@ function findVariableForAliases(varNames: string[], aliases: string[]) {
 
   // Now try without whitespace, hyphens and underscores
   for (let j = 0; j < aliases.length; j++) {
-    const aliasNoWhiteSpace = aliases[j].replace(/[-_\s]/, "");
+    const aliasNoWhiteSpace = aliases[j].replace(/[-_\s]/g, "");
     const re = new RegExp("^" + aliasNoWhiteSpace + "$", "i");
     for (let i = 0; i < varNames.length; i++) {
-      const varNameNoWhiteSpace = varNames[i].replace(/[-_\s]/, "");
+      const varNameNoWhiteSpace = varNames[i].replace(/[-_\s]/g, "");
       if (re.test(varNameNoWhiteSpace)) {
         return varNames[i];
       }
