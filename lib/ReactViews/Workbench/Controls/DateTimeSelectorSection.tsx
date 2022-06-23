@@ -34,6 +34,7 @@ class DateTimeSelectorSection extends React.Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props);
+    this.changeDateTime = this.changeDateTime.bind(this);
     this.onTimelineButtonClicked = this.onTimelineButtonClicked.bind(this);
     this.onShowOnChartButtonClicked = this.onShowOnChartButtonClicked.bind(
       this

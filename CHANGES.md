@@ -5,6 +5,7 @@ Change Log
 
 * Fix `WorkbenchItem` title height
 * Add region map info and move "No Data" message to `InfoSections` in `TableAutomaticStylesStratum`
+* Fix `DateTimeSelectorSection.changeDateTime()` binding.
 * [The next improvement]
 
 #### 8.2.6 - 2022-06-17
