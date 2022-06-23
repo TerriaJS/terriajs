@@ -219,7 +219,8 @@
     "shortLinkError": "Při pokusu o zkrácení adresy URL došlo k chybě.  Zkontrolujte prosím své internetové připojení a zkuste to znovu.",
     "shortLinkShortening": "Zkracování...",
     "downloadMap": "Stáhnout mapu (png)",
-    "convertNotificationMessage": "Tento odkaz na sdílení je založen na starší verzi softwaru TerriaJS, který pohání tuto webovou mapu. Přestože se snažíme odkaz zachovat, můžete se setkat s problémy při vizualizaci dat.  \n\nPokud jste uživatelem sdíleného odkazu, klikněte na tlačítko OK, aby varovná zpráva zmizela, a pokračujte v přístupu k datům."
+    "convertNotificationMessage": "Tento odkaz na sdílení je založen na starší verzi softwaru TerriaJS, který pohání tuto webovou mapu. Přestože se snažíme odkaz zachovat, můžete se setkat s problémy při vizualizaci dat.  \n\nPokud jste uživatelem sdíleného odkazu, klikněte na tlačítko OK, aby varovná zpráva zmizela, a pokračujte v přístupu k datům.",
+    "getShareSaveHelpMessage": "Jak přidat do záložek sdílené odkazy"
   },
   "countDatasets": {
     "btnText": "Spustit",
@@ -1659,6 +1660,6 @@
     "info": "Porovnejte na mapě vedle sebe soubory prostorových dat z pracovní plochy."
   },
   "includeStory": {
-    "message": "Zahrnout příběh do sdílení?"
+    "message": "Zahrnout příběh do sdílení"
   }
 }
