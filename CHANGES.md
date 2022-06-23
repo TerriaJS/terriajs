@@ -3,6 +3,8 @@ Change Log
 
 #### next release (8.2.7)
 
+* Improve TerriaReference error logging
+* Fix handling GeoJSON if features have null geometry
 * [The next improvement]
 
 #### 8.2.6 - 2022-06-17
