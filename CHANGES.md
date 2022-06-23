@@ -7,6 +7,7 @@ Change Log
 * Add region map info and move "No Data" message to `InfoSections` in `TableAutomaticStylesStratum`
 * Fix missing `TableColorStyleTraits.legend` values in `ColorStyleLegend`
 * Fix `DateTimeSelectorSection.changeDateTime()` binding.
+* `RegionProvider.find*Variable` functions now try to match with and without whitespace (spaces, hyphens and underscores)
 * [The next improvement]
 
 #### 8.2.6 - 2022-06-17
