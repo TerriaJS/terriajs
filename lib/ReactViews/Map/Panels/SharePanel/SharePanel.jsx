@@ -30,6 +30,7 @@ import {
 import { downloadImg } from "./Print/PrintView";
 import { reaction } from "mobx";
 import Checkbox from "../../../../Styled/Checkbox";
+import Text from "../../../../Styled/Text";
 
 const SharePanel = observer(
   createReactClass({
@@ -378,10 +379,11 @@ const SharePanel = observer(
     },
 
     renderContentWithPrintAndEmbed() {
-      const { t, terria } = this.props;
+      const { t, terria, viewState } = this.props;
       const iframeCode = this.state.shareUrl.length
         ? `<iframe style="width: 720px; height: 600px; border: none;" src="${this.state.shareUrl}" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>`
         : "";
+      const bookMarkHelpItemName = "bookmarkHelp";
 
       return (
         <div>
@@ -397,8 +399,35 @@ const SharePanel = observer(
                 )
               }
             />
+            {/* Following code block dependent on existence of "bookmarkHelp" Help Menu Item */}
+            {this.props.terria.configParameters.helpContent.some(
+              e => e.itemName === bookMarkHelpItemName
+            ) && (
+              <Text
+                medium
+                textLight
+                isLink
+                onClick={evt =>
+                  viewState.openHelpPanelItemFromSharePanel(
+                    evt,
+                    bookMarkHelpItemName
+                  )
+                }
+              >
+                <div
+                  className={classNames(
+                    Styles.explanation,
+                    Styles.getShareSaveHelpText
+                  )}
+                >
+                  {t("share.getShareSaveHelpMessage")}
+                </div>
+              </Text>
+            )}
+
             {this.renderWarning()}
           </div>
+          <hr className={Styles.thinLineDivider} />
           <div className={DropdownStyles.section}>
             <div>{t("share.printTitle")}</div>
             <div className={Styles.explanation}>
@@ -437,6 +466,7 @@ const SharePanel = observer(
               </button>
             </div>
           </div>
+          <hr className={Styles.thinLineDivider} />
           <div
             className={classNames(DropdownStyles.section, Styles.shortenUrl)}
           >
@@ -558,6 +588,7 @@ const SharePanel = observer(
             if (catalogShare) this.props.viewState.shareModalIsVisible = false;
           }}
           onUserClick={this.props.onUserClick}
+          disableCloseOnFocusLoss={this.props.viewState.retainSharePanel}
         >
           <If condition={this.state.isOpen}>{this.renderContent()}</If>
         </MenuPanel>

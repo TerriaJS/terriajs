@@ -127,6 +127,7 @@ const DropdownPanel = createReactClass({
             theme={this.props.theme}
             caretOffset={this.state.caretOffset}
             dropdownOffset={this.state.dropdownOffset}
+            disableCloseOnFocusLoss={this.props.disableCloseOnFocusLoss}
           >
             {this.props.children}
           </InnerPanel>

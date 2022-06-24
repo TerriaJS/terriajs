@@ -1,7 +1,11 @@
 Change Log
 ==========
 
-#### next release (8.2.6)
+#### next release (8.2.7)
+
+* [The next improvement]
+
+#### 8.2.6 - 2022-06-17
 
 * **Breaking changes:**
   * Changed translation resolution. Now the "translation" namespace loads only from `${terria.baseUrl}/languages/{{lng}}/translation.json` (TerriaJS assets) and "languageOverrides" loads from `languages/{{lng}}/languageOverrides.json` (a TerriaMap's assets)
@@ -14,6 +18,7 @@ Change Log
 * `ChartPanelDownloadButton` will now only export columns which are visible in chart
 * Cleanup `Mixin` and `Traits` inheritance
 * Wrap the following components in `observer` - `ChartItem`, `LineChart`, (chart) `Legends`, `ChartPanelDownloadButton`
+* Add help button for bookmarking sharelinks to SharePanel (if that help item exists in config)
 * [The next improvement]
 
 #### 8.2.5 - 2022-06-07
