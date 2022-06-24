@@ -97,6 +97,14 @@ export default function() {
       {
         value: "socrata-group",
         name: i18next.t("core.dataType.socrata-group")
+      },
+      {
+        value: "gltf",
+        name: i18next.t("core.dataType.gltf")
+      },
+      {
+        value: "assimp",
+        name: i18next.t("core.dataType.assimp-remote")
       }
     ],
     localDataType: [
@@ -148,6 +156,13 @@ export default function() {
         value: "shp",
         name: i18next.t("core.dataType.shp"),
         extensions: ["zip"]
+      },
+      {
+        value: "assimp",
+        name: i18next.t("core.dataType.assimp-local")
+
+        // Assimp full list of formats https://github.com/assimp/assimp/blob/master/doc/Fileformats.md
+        // extensions: ["zip", "dae", "zae", "obj", "dxf", "blend"]
       }
     ]
   };

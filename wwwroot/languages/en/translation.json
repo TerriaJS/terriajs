@@ -715,7 +715,9 @@
       "carto": "Carto",
       "gltf": "GLTF",
       "shp": "Shapefile (zip)",
-      "socrata-group": "Socrata Server"
+      "socrata-group": "Socrata Server",
+      "assimp-local": "3D file converter (zip) (experimental)",
+      "assimp-remote": "3D file converter (experimental)"
     },
     "printWindow": {
       "errorTitle": "Error printing",
