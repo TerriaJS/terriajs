@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { ExternalLinkIcon } from "../Custom/parseCustomHtmlToReact";
 import { ICredit } from "./Credit.type";
-import { Spacer } from "./Credits";
+import { Spacer } from "./Spacer";
 
 export const Credit: FC<{
   credit: ICredit;

@@ -110,6 +110,9 @@ export default abstract class GlobeOrMap {
 
   abstract notifyRepaintRequired(): void;
 
+  /**
+   * List of the attributions (credits) for data currently displayed on map.
+   */
   @computed
   get attributions(): string[] {
     return [];

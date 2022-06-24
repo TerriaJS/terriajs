@@ -10,7 +10,11 @@ import Text from "../../../Styled/Text";
 import parseCustomHtmlToReact from "../../Custom/parseCustomHtmlToReact";
 import CloseButton from "../../Generic/CloseButton";
 import { PrefaceBox } from "../../Generic/PrefaceBox";
-import { IDataAttributionModalProps } from "./DataAttibutionModal.props";
+
+interface IDataAttributionModalProps {
+  closeModal: () => void;
+  attributions?: string[];
+}
 
 const DataAttributionBox = styled(Box).attrs({
   position: "absolute",
@@ -23,7 +27,7 @@ const DataAttributionBox = styled(Box).attrs({
   scroll: true,
   column: true
 })`
-  z-index: 99999;
+  z-index: 99989;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -59,7 +63,7 @@ export const DataAttributionModal: FC<IDataAttributionModalProps> = observer(
           role="presentation"
           aria-hidden="true"
           pseudoBg
-          css={{ top: 0, left: 0, zIndex: 99999 }}
+          css={{ top: 0, left: 0, zIndex: 99989 }}
         ></PrefaceBox>
         <DataAttributionBox>
           <CloseButton color="#red" topRight onClick={closeModal} />
