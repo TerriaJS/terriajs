@@ -59,11 +59,12 @@
 }
 
 .btn--wrapper {
-  text-align: right;
+  text-align: left;
 }
 
 .btn--advanced {
   outline: 0;
+  padding: 0em;
 }
 
 .img--share {
@@ -185,4 +186,16 @@
     width: 10px;
     box-sizing: content-box;
   }
+}
+
+.getShareSaveHelpText {
+  text-decoration: underline;
+  padding-top: 0.8em;
+  cursor: help;
+}
+
+hr.thin-line-divider {
+  border: 0;
+  height: 0;
+  border-top: 0.5px solid rgba(255, 255, 255, 0.15);
 }
