@@ -30,8 +30,7 @@ export function isZip(uri: string) {
   return /(\.zip\b)/i.test(uri);
 }
 
-/** Parse zipped blob into JsonValue */
-export function parseZipJsonBlob(blob: Blob): Promise<JsonValue> {
+export function getZipReader(blob: Blob): any {
   const zWorkerPakoUrl = require("file-loader!terriajs-cesium/Source/ThirdParty/Workers/z-worker-pako.js");
   const inflateUrl = require("file-loader!terriajs-cesium/Source/ThirdParty/Workers/pako_inflate.min.js");
   const deflateUrl = require("file-loader!terriajs-cesium/Source/ThirdParty/Workers/pako_deflate.min.js");
@@ -55,7 +54,12 @@ export function parseZipJsonBlob(blob: Blob): Promise<JsonValue> {
     }
   });
 
-  const reader = new zip.ZipReader(new zip.BlobReader(blob));
+  return new zip.ZipReader(new zip.BlobReader(blob));
+}
+
+/** Parse zipped blob into JsonValue */
+export function parseZipJsonBlob(blob: Blob): Promise<JsonValue> {
+  const reader = getZipReader(blob);
 
   return reader.getEntries().then(function(entries: any) {
     for (let i = 0; i < entries.length; i++) {
@@ -70,4 +74,20 @@ export function parseZipJsonBlob(blob: Blob): Promise<JsonValue> {
     }
     return undefined;
   });
+}
+
+/** Parse zip Blob and return array of files (as UInt8Array) */
+export async function parseZipArrayBuffers(
+  blob: Blob
+): Promise<{ fileName: string; data: Uint8Array }[]> {
+  const reader = getZipReader(blob);
+
+  const entries = await reader.getEntries();
+
+  return await Promise.all(
+    entries.map(async (entry: any) => {
+      const data = await entry.getData(new zip.Uint8ArrayWriter());
+      return { fileName: entry.filename, data };
+    })
+  );
 }
