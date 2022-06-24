@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx";
+import { computed } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
@@ -10,14 +10,11 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import Constructor from "../Core/Constructor";
-import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
-import HasLocalData from "../Models/HasLocalData";
 import GltfTraits from "../Traits/TraitsClasses/GltfTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
-import UrlMixin from "./UrlMixin";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
@@ -27,11 +24,9 @@ const Axis: Axis = require("terriajs-cesium/Source/Scene/Axis").default;
 type GltfModel = Model<GltfTraits>;
 
 function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
-  class GltfMixin
-    extends ShadowMixin(UrlMixin(CatalogMemberMixin(MappableMixin(Base))))
-    implements HasLocalData {
-    @observable hasLocalData = false;
-
+  abstract class GltfMixin extends ShadowMixin(
+    CatalogMemberMixin(MappableMixin(Base))
+  ) {
     get hasGltfMixin() {
       return true;
     }
@@ -96,28 +91,15 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
       return orientation;
     }
 
-    protected forceLoadMetadata(): Promise<void> {
-      return Promise.resolve();
-    }
-
-    @action
-    setFileInput(file: File | Blob) {
-      const dataUrl = URL.createObjectURL(file);
-      this.setTrait(CommonStrata.user, "url", dataUrl);
-      this.hasLocalData = true;
-    }
+    protected abstract get gltfModelUrl(): string | undefined;
 
     @computed
     private get model() {
-      if (
-        this.url === undefined ||
-        !this.loadMapItemsResult ||
-        this.loadMapItemsResult.error
-      ) {
+      if (this.gltfModelUrl === undefined) {
         return undefined;
       }
       const options = {
-        uri: new ConstantProperty(this.url),
+        uri: new ConstantProperty(this.gltfModelUrl),
         upAxis: new ConstantProperty(this.cesiumUpAxis),
         forwardAxis: new ConstantProperty(this.cesiumForwardAxis),
         scale: new ConstantProperty(this.scale !== undefined ? this.scale : 1),
@@ -125,6 +107,10 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
         heightReference: new ConstantProperty(this.cesiumHeightReference)
       };
       return new ModelGraphics(options);
+    }
+
+    protected forceLoadMetadata(): Promise<void> {
+      return Promise.resolve();
     }
 
     protected forceLoadMapItems(): Promise<void> {
