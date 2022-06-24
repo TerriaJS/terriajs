@@ -3,6 +3,10 @@ Change Log
 
 #### next release (8.2.7)
 
+* Implement Leaflet credits as a react component, so it is easier to maintain them. Leaflet view now show terria extra credits.
+* Implement Cesium credits as a react component, so it is easier to maintain them.
+* Implement data attribution modal for map data attributions/credits. Used by both Leaflet and Cesium viewers.
+* Fixed translation of Leaflet and Cesium credits.
 * [The next improvement]
 
 #### 8.2.6 - 2022-06-17
@@ -14,10 +18,6 @@ Change Log
 * Fixed default 3d-tiles styling to add a workaround for a Cesium bug which resulted in wrong translucency value for point clouds.
 * Remove Pell dependency, now replaced with TinyMCE (WYSIWYG editor library).
 * Fix `includes` path for `url-loader` rule so that it doesn't incorrectly match package names with `terriajs` as prefix.
-* Implement Leaflet credits as a react component, so it is easier to maintain them. Leaflet view now show terria extra credits.
-* Implement Cesium credits as a react component, so it is easier to maintain them.
-* Implement data attribution modal for map data attributions/credits. Used by both Leaflet and Cesium viewers.
-* Fixed translation of Leaflet and Cesium credits.
 * Add help button for bookmarking sharelinks to SharePanel (if that help item exists in config)
 * [The next improvement]
 
