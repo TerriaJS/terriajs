@@ -1,16 +1,10 @@
 import React, { FC } from "react";
 import { Credit } from "./Credit";
-import { ICreditsProps } from "./Credits.props";
-import { useTheme } from "styled-components";
+import { ICredit } from "./Credit.type";
 
-export const Spacer = () => {
-  const theme = useTheme();
-  return (
-    <span aria-hidden="true" css={{ color: theme.textLight }}>
-      |
-    </span>
-  );
-};
+interface ICreditsProps {
+  credits?: ICredit[];
+}
 
 export const Credits: FC<ICreditsProps> = ({ credits }) => {
   if (!credits || credits.length === 0) {

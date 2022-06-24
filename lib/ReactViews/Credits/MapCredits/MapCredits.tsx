@@ -2,13 +2,21 @@ import { reaction } from "mobx";
 import { observer } from "mobx-react";
 import React, { FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import GlobeOrMap from "../../../Models/GlobeOrMap";
 import { useDataAttributionContext } from "../../../ReactContexts/DataAttributionContext";
-import { Credits, Spacer } from "../Credits";
+import { ICredit } from "../Credit.type";
+import { Credits } from "../Credits";
 import { CreditsContainer } from "../CreditsContainer";
 import { DataAttributionModal } from "../DataAttribution/DataAttributionModal";
+import { Spacer } from "../Spacer";
 import { TerriaLogo } from "../TerriaLogo";
 import { MapCreditLogo } from "./MapCreditLogo";
-import { IMapCreditsProps } from "./MapCredits.props";
+
+interface IMapCreditsProps {
+  hideTerriaLogo: boolean;
+  credits?: ICredit[];
+  currentViewer: GlobeOrMap;
+}
 
 export const MapCredits: FC<IMapCreditsProps> = observer(
   ({ currentViewer, hideTerriaLogo, credits }) => {

@@ -444,7 +444,7 @@ export default class Cesium extends GlobeOrMap {
     }
 
     const creditDisplay: CreditDisplay & {
-      _currentFrameCredits: {
+      _currentFrameCredits?: {
         lightboxCredits: AssociativeArray;
       };
     } = this.scene.frameState.creditDisplay;
@@ -461,9 +461,12 @@ export default class Cesium extends GlobeOrMap {
       creditDisplayOldEndFrame.bind(creditDisplay)();
 
       runInAction(() => {
-        const creditDisplayElements: { credit: Credit; count: number }[] =
-          creditDisplay._currentFrameCredits.lightboxCredits.values;
+        const creditDisplayElements: {
+          credit: Credit;
+          count: number;
+        }[] = creditDisplay._currentFrameCredits!.lightboxCredits.values;
 
+        // sort credits by count (number of times they are added to map)
         const credits = creditDisplayElements
           .sort((credit1, credit2) => {
             return credit2.count - credit1.count;
@@ -478,20 +481,25 @@ export default class Cesium extends GlobeOrMap {
             this.cesiumDataAttributions.remove(attribution);
           }
         }
+        // then go through all credits and add them or update their position
         for (const [index, credit] of credits.entries()) {
           const attributionIndex = this.cesiumDataAttributions.indexOf(credit);
 
           if (attributionIndex === index) {
+            // it is already on correct position in the list
             continue;
           } else if (attributionIndex === -1) {
+            // it is not on the list yet so we add it to the list
             this.cesiumDataAttributions.splice(index, 0, credit);
           } else {
+            // it is on the list but not in the right place so we move it
             this.cesiumDataAttributions.move(attributionIndex, index);
           }
         }
       });
     };
   }
+
   arrayEquals(a: string[], b: string[]) {
     return a.length === b.length && a.every((val, index) => val === b[index]);
   }

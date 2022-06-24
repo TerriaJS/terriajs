@@ -1,8 +1,12 @@
 import React, { FC } from "react";
 import CreditDisplay from "terriajs-cesium/Source/Scene/CreditDisplay";
+import GlobeOrMap from "../../../Models/GlobeOrMap";
 import Leaflet from "../../../Models/Leaflet";
 import parseCustomHtmlToReact from "../../Custom/parseCustomHtmlToReact";
-import { IMapCreditLogoProps } from "./MapCreditLogo.props";
+
+interface IMapCreditLogoProps {
+  currentViewer: GlobeOrMap;
+}
 
 export const MapCreditLogo: FC<IMapCreditLogoProps> = ({ currentViewer }) => {
   if (currentViewer.type === "Leaflet") {
