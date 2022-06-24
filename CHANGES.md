@@ -9,6 +9,10 @@ Change Log
 * Wrap the following components in `observer` - `ChartItem`, `LineChart`, (chart) `Legends`, `ChartPanelDownloadButton`
 * Improve TerriaReference error logging
 * Fix handling GeoJSON if features have null geometry
+* Implement Leaflet credits as a react component, so it is easier to maintain them. Leaflet view now show terria extra credits.
+* Implement Cesium credits as a react component, so it is easier to maintain them.
+* Implement data attribution modal for map data attributions/credits. Used by both Leaflet and Cesium viewers.
+* Fixed translation of Leaflet and Cesium credits.
 * [The next improvement]
 
 #### 8.2.6 - 2022-06-17
@@ -27,6 +31,7 @@ Change Log
 * Implement Cesium credits as a react component, so it is easier to maintain them.
 * Implement data attribution modal for map data attributions/credits. Used by both Leaflet and Cesium viewers.
 * Fixed translation of Leaflet and Cesium credits.
+* Add help button for bookmarking sharelinks to SharePanel (if that help item exists in config)
 * [The next improvement]
 
 #### 8.2.5 - 2022-06-07
