@@ -399,9 +399,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
             this.getAttributionWithConceptOrCodelist(override.id!) ??
             this.getDimensionWithConceptOrCodelist(override.id!);
 
-          const column = dimOrAttr?.id
-            ? this.catalogItem.findColumnByName(dimOrAttr.id)
-            : undefined;
+          const column = this.catalogItem.findColumnByName(dimOrAttr?.id);
 
           if (column?.uniqueValues.values.length === 1) {
             // If this column has a codelist, use it to format the value
