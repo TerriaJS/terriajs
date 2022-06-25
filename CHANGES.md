@@ -3,6 +3,10 @@ Change Log
 
 #### next release (8.2.7)
 
+* TSXify `ChartPanelDownloadButton`
+* `ChartPanelDownloadButton` will now only export columns which are visible in chart
+* Cleanup `Mixin` and `Traits` inheritance
+* Wrap the following components in `observer` - `ChartItem`, `LineChart`, (chart) `Legends`, `ChartPanelDownloadButton`
 * Improve TerriaReference error logging
 * Fix handling GeoJSON if features have null geometry
 * [The next improvement]
