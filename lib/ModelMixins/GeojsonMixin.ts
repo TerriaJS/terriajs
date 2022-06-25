@@ -435,9 +435,9 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         let numFeaturesWithSimpleStyle = 0;
         const featureCounts = { point: 0, line: 0, polygon: 0 };
 
+        // We will re-add features depending if filterByProperties - or geometry is invalid
         const features = geoJsonWgs84.features;
-        // If filtering features - Clear all features and re add them if props match filterByProperties
-        if (filterByProperties) geoJsonWgs84.features = [];
+        geoJsonWgs84.features = [];
 
         for (let i = 0; i < features.length; i++) {
           const feature = features[i];
@@ -451,15 +451,16 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           }
 
           // Filter features by `featureFilterByProps` trait if defined
-          if (filterByProperties) {
-            if (
-              Object.entries(filterByProperties).every(
-                ([key, value]) => feature.properties![key] === value
-              )
+          if (
+            filterByProperties &&
+            !Object.entries(filterByProperties).every(
+              ([key, value]) => feature.properties![key] === value
             )
-              geoJsonWgs84.features.push(feature);
-            else continue;
+          ) {
+            continue;
           }
+
+          geoJsonWgs84.features.push(feature);
 
           const properties = feature.properties!;
           properties[FEATURE_ID_PROP] = i;
