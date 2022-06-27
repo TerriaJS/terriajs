@@ -7,6 +7,12 @@ Change Log
 * Add experimental client-side 3D file conversion using [`assimpjs`](https://github.com/kovacsv/assimpjs) ([emscripten](https://emscripten.org) interface for the [assimp](https://github.com/assimp/assimp) library)
   * This supports `zip` files through add local/remote data
   * Supports over 40 formats - including Collada, obj, Blender, DXF - [full list](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md)
+* TSXify `ChartPanelDownloadButton`
+* `ChartPanelDownloadButton` will now only export columns which are visible in chart
+* Cleanup `Mixin` and `Traits` inheritance
+* Wrap the following components in `observer` - `ChartItem`, `LineChart`, (chart) `Legends`, `ChartPanelDownloadButton`
+* Improve TerriaReference error logging
+* Fix handling GeoJSON if features have null geometry
 * [The next improvement]
 
 #### 8.2.6 - 2022-06-17

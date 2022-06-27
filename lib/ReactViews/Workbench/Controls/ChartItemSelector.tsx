@@ -21,40 +21,42 @@ interface IChartItemSelector {
   item: BaseModel;
 }
 
-export const ChartItem: React.FC<IChartItem> = ({ chartItem }: IChartItem) => {
-  const { t } = useTranslation();
-  const lineColor = chartItem.isSelectedInWorkbench
-    ? chartItem.getColor()
-    : "#fff";
+export const ChartItem: React.FC<IChartItem> = observer(
+  ({ chartItem }: IChartItem) => {
+    const { t } = useTranslation();
+    const lineColor = chartItem.isSelectedInWorkbench
+      ? chartItem.getColor()
+      : "#fff";
 
-  const toggleActive = () => {
-    const catalogItem = chartItem.item;
-    runInAction(() => {
-      const shouldSelect = !chartItem.isSelectedInWorkbench;
-      chartItem.updateIsSelectedInWorkbench(shouldSelect);
-      if (shouldSelect) {
-        unselectChartItemsWithXAxisNotMatching(
-          catalogItem.terria.workbench.items,
-          chartItem.xAxis
-        );
-      }
-    });
-  };
+    const toggleActive = () => {
+      const catalogItem = chartItem.item;
+      runInAction(() => {
+        const shouldSelect = !chartItem.isSelectedInWorkbench;
+        chartItem.updateIsSelectedInWorkbench(shouldSelect);
+        if (shouldSelect) {
+          unselectChartItemsWithXAxisNotMatching(
+            catalogItem.terria.workbench.items,
+            chartItem.xAxis
+          );
+        }
+      });
+    };
 
-  return (
-    <Checkbox
-      id="depthTestAgainstTerrain"
-      isChecked={chartItem.isSelectedInWorkbench}
-      title={t("chart.showItemInChart", { value: chartItem.name })}
-      onChange={toggleActive}
-      css={`
-        color: ${lineColor};
-      `}
-    >
-      <TextSpan>{chartItem.name}</TextSpan>
-    </Checkbox>
-  );
-};
+    return (
+      <Checkbox
+        id="depthTestAgainstTerrain"
+        isChecked={chartItem.isSelectedInWorkbench}
+        title={t("chart.showItemInChart", { value: chartItem.name })}
+        onChange={toggleActive}
+        css={`
+          color: ${lineColor};
+        `}
+      >
+        <TextSpan>{chartItem.name}</TextSpan>
+      </Checkbox>
+    );
+  }
+);
 
 const ChartItemSelector: React.FC<IChartItemSelector> = observer(
   ({ item }: IChartItemSelector) => {

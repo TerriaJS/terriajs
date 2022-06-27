@@ -5,19 +5,16 @@ import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
+import ImageryProviderTraits from "./ImageryProviderTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
-import MappableTraits from "./MappableTraits";
 import { MinMaxLevelTraits } from "./MinMaxLevelTraits";
-import ImageryProviderTraits from "./ImageryProviderTraits";
 import UrlTraits from "./UrlTraits";
 
 export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
-  MappableTraits,
   FeatureInfoTraits,
   ImageryProviderTraits,
   LayerOrderingTraits,
-  MappableTraits,
   UrlTraits,
   CatalogMemberTraits,
   LegendOwnerTraits,
