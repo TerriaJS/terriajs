@@ -30,7 +30,8 @@ export function isZip(uri: string) {
   return /(\.zip\b)/i.test(uri);
 }
 
-export function getZipReader(blob: Blob): any {
+/** Get zipjs ZipReader for given Blob */
+function getZipReader(blob: Blob): any {
   const zWorkerPakoUrl = require("file-loader!terriajs-cesium/Source/ThirdParty/Workers/z-worker-pako.js");
   const inflateUrl = require("file-loader!terriajs-cesium/Source/ThirdParty/Workers/pako_inflate.min.js");
   const deflateUrl = require("file-loader!terriajs-cesium/Source/ThirdParty/Workers/pako_deflate.min.js");

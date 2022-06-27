@@ -294,6 +294,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
       })
   );
 
+  // Copy assimpjs.wasm file - this is used by AssImpCatalogItem (see AssImpCatalogItem.forceLoadMapItems())
   config.plugins.push(
     new CopyPlugin({
       patterns: [
