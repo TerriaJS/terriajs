@@ -34,6 +34,14 @@ interface IProps extends WithTranslation {
   setWrapperState({}: any): void;
 }
 
+const WorkbenchItemTitle = styled(TextSpan)`
+  -webkit-line-clamp: 2;
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+`;
+
 @observer
 class WorkbenchItemRaw extends React.Component<IProps> {
   static displayName = "WorkbenchItem";
@@ -69,7 +77,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
 
     return (
       <StyledLi style={this.props.style} className={this.props.className}>
-        <Box fullWidth justifySpaceBetween padded styledHeight="38px">
+        <Box fullWidth justifySpaceBetween padded styledMinHeight="38px">
           <Box fullWidth>
             <Box left fullWidth paddedHorizontally centered>
               <DraggableBox
@@ -107,11 +115,13 @@ class WorkbenchItemRaw extends React.Component<IProps> {
                       `}
                       textProps={{ medium: true, fullWidth: true }}
                     >
-                      <TextSpan medium>{item.name}</TextSpan>
+                      <WorkbenchItemTitle medium>
+                        {item.name}
+                      </WorkbenchItemTitle>
                     </Checkbox>
                   </Box>
                 ) : (
-                  <TextSpan
+                  <WorkbenchItemTitle
                     medium
                     textLight
                     css={`
@@ -119,7 +129,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
                     `}
                   >
                     {item.name}
-                  </TextSpan>
+                  </WorkbenchItemTitle>
                 )}
               </DraggableBox>
             </Box>
