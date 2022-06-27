@@ -9,7 +9,7 @@ import {
 } from "../../../../Core/AnalyticEvents/analyticEvents";
 import Icon, { StyledIcon } from "../../../../Styled/Icon";
 import Text from "../../../../Styled/Text";
-import { useTranslationIfExists } from "./../../../../Language/languageHelpers";
+import { applyTranslationIfExists } from "./../../../../Language/languageHelpers";
 import HelpVideoPanel from "./HelpVideoPanel";
 
 @observer
@@ -49,7 +49,7 @@ class HelpPanelItem extends React.Component {
     // nonexistant icon.
     const title =
       this.props.content.title &&
-      useTranslationIfExists(this.props.content.title, i18n);
+      applyTranslationIfExists(this.props.content.title, i18n);
     const paneMode = this.props.content.paneMode;
     const opensInPanel = paneMode !== "externalLink";
     const iconGlyph = opensInPanel
@@ -92,11 +92,14 @@ class HelpPanelItem extends React.Component {
             markdownContent={this.props.content.markdownText}
             videoUrl={
               this.props.content.videoUrl &&
-              useTranslationIfExists(this.props.content.videoUrl, i18n)
+              applyTranslationIfExists(this.props.content.videoUrl, i18n)
             }
             placeholderImage={
               this.props.content.videoUrl &&
-              useTranslationIfExists(this.props.content.placeholderImage, i18n)
+              applyTranslationIfExists(
+                this.props.content.placeholderImage,
+                i18n
+              )
             }
           />
         )}

@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { useTranslationIfExists } from "../Language/languageHelpers";
+import { applyTranslationIfExists } from "../Language/languageHelpers";
 import { Term } from "../ReactViewModels/defaultTerms";
 
 const findFirstTerm = (
@@ -15,7 +15,10 @@ const findFirstTerm = (
   terms.forEach((_, term) => {
     const foundIndex = text
       .toLowerCase()
-      .indexOf(useTranslationIfExists(term, i18next).toLowerCase(), fromIndex);
+      .indexOf(
+        applyTranslationIfExists(term, i18next).toLowerCase(),
+        fromIndex
+      );
     if (
       foundIndex !== -1 &&
       (foundIndex < termIndex ||
@@ -76,7 +79,7 @@ const injectTerms = (string: string, termDictionary: Term[]): string => {
 
     termDictionary.forEach((item: any) =>
       tooltipTerms.set(
-        useTranslationIfExists(item.term, i18next).toLowerCase(),
+        applyTranslationIfExists(item.term, i18next).toLowerCase(),
         item
       )
     );
@@ -132,7 +135,7 @@ const injectTerms = (string: string, termDictionary: Term[]): string => {
       const currentText = string;
       const termObj = tooltipTerms.get(termToReplace.toLowerCase());
       const description = termObj
-        ? useTranslationIfExists(termObj.content, i18next)
+        ? applyTranslationIfExists(termObj.content, i18next)
         : i18next.t("term.missingContent");
       // const injectedLink = `**${termToReplace}**`;
       const injectedLink = `<terriatooltip title="${termToReplace}">${description}</terriatooltip>`;

@@ -8,7 +8,7 @@ import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import styled from "styled-components";
 
-import { useTranslationIfExists } from "../../../../Language/languageHelpers";
+import { applyTranslationIfExists } from "../../../../Language/languageHelpers";
 import { parseCustomMarkdownToReactWithOptions } from "../../../Custom/parseCustomMarkdownToReact";
 
 const Numbers = styled(Text)`
@@ -61,7 +61,7 @@ export class StyledHtmlRaw extends React.Component {
     const { viewState, injectTooltips, i18n } = this.props;
     const styledTextProps = this.props.styledTextProps || {};
 
-    const markdownToParse = useTranslationIfExists(this.props.markdown, i18n);
+    const markdownToParse = applyTranslationIfExists(this.props.markdown, i18n);
 
     const parsed = parseCustomMarkdownToReactWithOptions(markdownToParse, {
       injectTermsAsTooltips: injectTooltips,

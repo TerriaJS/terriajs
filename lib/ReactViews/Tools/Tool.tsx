@@ -3,7 +3,7 @@ import { computed } from "mobx";
 import React, { Suspense, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import TerriaError from "../../Core/TerriaError";
-import { useTranslationIfExists } from "../../Language/languageHelpers";
+import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import Terria from "../../Models/Terria";
 import ViewerMode from "../../Models/ViewerMode";
 import ViewState from "../../ReactViewModels/ViewState";
@@ -75,11 +75,11 @@ export class ToolButtonController extends MapNavigationItemController {
   }
 
   // This getter is not called anywhere.
-  // It should not be using useTranslationIfExists anyway, so commenting out for now.
+  // It should not be using applyTranslationIfExists anyway, so commenting out for now.
   // @computed
   // get title() {
   //   const buttonState = this.active ? "open" : "closed";
-  //   return useTranslationIfExists(`tool.button.${buttonState}`, {
+  //   return applyTranslationIfExists(`tool.button.${buttonState}`, {
   //     toolName: this.name,
   //     toolNameLowerCase: this.name.toLowerCase()
   //   });

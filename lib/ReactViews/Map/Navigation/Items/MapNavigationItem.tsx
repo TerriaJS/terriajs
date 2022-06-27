@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import styled from "styled-components";
-import { useTranslationIfExists } from "../../../../Language/languageHelpers";
+import { applyTranslationIfExists } from "../../../../Language/languageHelpers";
 import Terria from "../../../../Models/Terria";
 import Box from "../../../../Styled/Box";
 import Icon, { GLYPHS } from "../../../../Styled/Icon";
@@ -39,7 +39,7 @@ class MapNavigationItem extends React.Component<PropTypes> {
           expandInPlace={expandInPlace === undefined ? true : expandInPlace}
           noExpand={item.noExpand}
           iconElement={() => <Icon glyph={item.controller.glyph} />}
-          title={useTranslationIfExists(item.title || item.name, i18n)}
+          title={applyTranslationIfExists(item.title || item.name, i18n)}
           onClick={() => {
             item.controller.handleClick();
           }}
@@ -49,7 +49,7 @@ class MapNavigationItem extends React.Component<PropTypes> {
             closeTool ? () => <Icon glyph={GLYPHS.closeTool} /> : undefined
           }
         >
-          {useTranslationIfExists(item.name, i18n)}
+          {applyTranslationIfExists(item.name, i18n)}
         </MapIconButton>
       </Control>
     );

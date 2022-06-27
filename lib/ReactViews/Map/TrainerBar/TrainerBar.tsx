@@ -18,7 +18,7 @@ import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Select from "../../../Styled/Select";
 import Spacing from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
-import { useTranslationIfExists } from "./../../../Language/languageHelpers";
+import { applyTranslationIfExists } from "./../../../Language/languageHelpers";
 
 const StyledHtml: any = require("../../Map/Panels/HelpPanel/StyledHtml")
   .default;
@@ -91,7 +91,7 @@ const renderStep = (
         <Translation>
           {(t, { i18n }) => (
             <Text textLight extraExtraLarge semiBold>
-              {useTranslationIfExists(step.title, i18n)}
+              {applyTranslationIfExists(step.title, i18n)}
             </Text>
           )}
         </Translation>
@@ -386,7 +386,7 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
           >
             {selectedTrainerItems.map((item, index) => (
               <option key={item.title} value={index}>
-                {useTranslationIfExists(item.title, i18n)}
+                {applyTranslationIfExists(item.title, i18n)}
               </option>
             ))}
           </Select>

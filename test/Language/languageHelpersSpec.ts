@@ -1,10 +1,10 @@
 import i18next, { i18n } from "i18next";
 import {
   TRANSLATE_KEY_PREFIX,
-  useTranslationIfExists
+  applyTranslationIfExists
 } from "../../lib/Language/languageHelpers";
 
-describe("useTranslationIfExists", function() {
+describe("applyTranslationIfExists", function() {
   let i18n: i18n;
   const translationKey = "testKey";
 
@@ -24,12 +24,12 @@ describe("useTranslationIfExists", function() {
   });
 
   it("returns an unprefixed string without changing it", function() {
-    expect(useTranslationIfExists(translationKey, i18n)).toBe(translationKey);
+    expect(applyTranslationIfExists(translationKey, i18n)).toBe(translationKey);
   });
 
   it("returns a translation of a prefixed string", function() {
     expect(
-      useTranslationIfExists(TRANSLATE_KEY_PREFIX + translationKey, i18n)
+      applyTranslationIfExists(TRANSLATE_KEY_PREFIX + translationKey, i18n)
     ).toBe("testString");
   });
 });

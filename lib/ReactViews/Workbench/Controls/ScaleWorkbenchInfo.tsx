@@ -2,7 +2,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import { BaseModel } from "../../../Models/Definition/Model";
 import Text from "../../../Styled/Text";
-import { useTranslationIfExists } from "../../../Language/languageHelpers";
+import { applyTranslationIfExists } from "../../../Language/languageHelpers";
 import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
 import { Spacing } from "../../../Styled/Spacing";
 import { useTranslation } from "react-i18next";
@@ -19,7 +19,7 @@ export const ScaleWorkbenchInfo: React.FC<IScaleWorkbenchInfoProps> = observer(
     return (
       <>
         <Spacing bottom={2} />
-        <Text>{useTranslationIfExists(item.scaleWorkbenchInfo, i18n)}</Text>
+        <Text>{applyTranslationIfExists(item.scaleWorkbenchInfo, i18n)}</Text>
       </>
     );
   }
