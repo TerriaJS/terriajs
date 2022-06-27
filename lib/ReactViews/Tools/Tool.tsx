@@ -69,17 +69,21 @@ export class ToolButtonController extends MapNavigationItemController {
     return ViewerMode.Cesium;
   }
 
+  // translate this toolName in the calling function. Not currently used.
   get name() {
-    return useTranslationIfExists(this.props.toolName);
+    return this.props.toolName;
   }
-  @computed
-  get title() {
-    const buttonState = this.active ? "open" : "closed";
-    return useTranslationIfExists(`tool.button.${buttonState}`, {
-      toolName: this.name,
-      toolNameLowerCase: this.name.toLowerCase()
-    });
-  }
+
+  // This getter is not called anywhere.
+  // It should not be using useTranslationIfExists anyway, so commenting out for now.
+  // @computed
+  // get title() {
+  //   const buttonState = this.active ? "open" : "closed";
+  //   return useTranslationIfExists(`tool.button.${buttonState}`, {
+  //     toolName: this.name,
+  //     toolNameLowerCase: this.name.toLowerCase()
+  //   });
+  // }
 
   @computed
   get active() {

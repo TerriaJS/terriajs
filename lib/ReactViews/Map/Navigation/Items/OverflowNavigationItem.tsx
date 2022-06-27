@@ -85,7 +85,7 @@ const CollapsedNavigationPanel: React.FC<PropTypes> = observer(
   (props: PropTypes) => {
     const { viewState } = props;
     const theme = useTheme();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     let items = props.items;
     return (
       <CollapsedNavigationBox column>
@@ -102,7 +102,7 @@ const CollapsedNavigationPanel: React.FC<PropTypes> = observer(
           {items.map(item => (
             <NavigationButton
               key={item.id}
-              title={useTranslationIfExists(item.name)}
+              title={useTranslationIfExists(item.name, i18n)}
               onClick={() => {
                 if (!item.controller.disabled) {
                   viewState.closeCollapsedNavigation();

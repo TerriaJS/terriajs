@@ -408,7 +408,7 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
           }
           selectedTrainer={selectedTrainerItem}
           theme={theme}
-          t={t}
+          // t={t}
         />
         <Spacing right={4} />
 

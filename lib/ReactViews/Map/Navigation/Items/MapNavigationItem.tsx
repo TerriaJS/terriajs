@@ -1,5 +1,7 @@
+import { i18n } from "i18next";
 import { observer } from "mobx-react";
 import React from "react";
+import { withTranslation } from "react-i18next";
 import styled from "styled-components";
 import { useTranslationIfExists } from "../../../../Language/languageHelpers";
 import Terria from "../../../../Models/Terria";
@@ -13,16 +15,17 @@ interface PropTypes {
   terria: Terria;
   closeTool?: boolean;
   expandInPlace?: boolean;
+  i18n: i18n;
 }
 
 @observer
-export class MapNavigationItem extends React.Component<PropTypes> {
+class MapNavigationItem extends React.Component<PropTypes> {
   constructor(props: PropTypes) {
     super(props);
   }
 
   render() {
-    const { closeTool = true, item, expandInPlace } = this.props;
+    const { closeTool = true, item, expandInPlace, i18n } = this.props;
     if (item.render)
       return (
         <Control key={item.id} ref={item.controller.itemRef}>
@@ -36,7 +39,7 @@ export class MapNavigationItem extends React.Component<PropTypes> {
           expandInPlace={expandInPlace === undefined ? true : expandInPlace}
           noExpand={item.noExpand}
           iconElement={() => <Icon glyph={item.controller.glyph} />}
-          title={useTranslationIfExists(item.title || item.name)}
+          title={useTranslationIfExists(item.title || item.name, i18n)}
           onClick={() => {
             item.controller.handleClick();
           }}
@@ -46,7 +49,7 @@ export class MapNavigationItem extends React.Component<PropTypes> {
             closeTool ? () => <Icon glyph={GLYPHS.closeTool} /> : undefined
           }
         >
-          {useTranslationIfExists(item.name)}
+          {useTranslationIfExists(item.name, i18n)}
         </MapIconButton>
       </Control>
     );
@@ -69,3 +72,5 @@ export const Control = styled(Box).attrs({
   }
   text-align: center;
 `;
+
+export default withTranslation()(MapNavigationItem);
