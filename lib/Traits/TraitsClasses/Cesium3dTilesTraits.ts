@@ -1,20 +1,23 @@
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
-import CatalogMemberTraits from "./CatalogMemberTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
-import MappableTraits from "./MappableTraits";
-import ShadowTraits from "./ShadowTraits";
-import mixTraits from "../mixTraits";
-import ModelTraits from "../ModelTraits";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import objectTrait from "../Decorators/objectTrait";
-import primitiveTrait from "../Decorators/primitiveTrait";
-import UrlTraits from "./UrlTraits";
-import TransformationTraits from "./TransformationTraits";
-import PlaceEditorTraits from "./PlaceEditorTraits";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import ModelTraits from "../ModelTraits";
+import OpacityTraits from "./OpacityTraits";
+import CatalogMemberTraits from "./CatalogMemberTraits";
 import ClippingPlanesTraits from "./ClippingPlanesTraits";
+import FeatureInfoTraits from "./FeatureInfoTraits";
 import HighlightColorTraits from "./HighlightColorTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
+import MappableTraits from "./MappableTraits";
+import PlaceEditorTraits from "./PlaceEditorTraits";
+import ShadowTraits from "./ShadowTraits";
+import SplitterTraits from "./SplitterTraits";
+import TransformationTraits from "./TransformationTraits";
+import UrlTraits from "./UrlTraits";
 
 export class FilterTraits extends ModelTraits {
   @primitiveTrait({
@@ -109,7 +112,11 @@ export default class Cesium3DTilesTraits extends mixTraits(
   UrlTraits,
   CatalogMemberTraits,
   ShadowTraits,
-  ClippingPlanesTraits
+  OpacityTraits,
+  LegendOwnerTraits,
+  ShadowTraits,
+  ClippingPlanesTraits,
+  SplitterTraits
 ) {
   @primitiveTrait({
     type: "number",

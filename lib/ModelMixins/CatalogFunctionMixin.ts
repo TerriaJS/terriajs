@@ -3,9 +3,9 @@ import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
-import CommonStrata from "../Models/CommonStrata";
+import CommonStrata from "../Models/Definition/CommonStrata";
 import FunctionParameter from "../Models/FunctionParameters/FunctionParameter";
-import Model from "../Models/Model";
+import Model from "../Models/Definition/Model";
 import CatalogFunctionTraits from "../Traits/TraitsClasses/CatalogFunctionTraits";
 import CatalogFunctionJobMixin from "./CatalogFunctionJobMixin";
 import CatalogMemberMixin from "./CatalogMemberMixin";
@@ -60,34 +60,18 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
 
         newJob.setTrait(CommonStrata.user, "parameters", toJS(this.parameters));
 
-        await newJob.loadMetadata();
+        (await newJob.loadMetadata()).throwIfError();
 
         this.terria.addModel(newJob);
         this.terria.catalog.userAddedDataGroup.add(CommonStrata.user, newJob);
-        this.terria.workbench.add(newJob);
+        this.terria.workbench.add(newJob).then(r => r.raiseError(this.terria));
 
         await newJob.invoke();
 
         return newJob;
       } catch (error) {
-        // Try to get meaningful error message
-        if (error instanceof TerriaError) {
-          throw error;
-        }
-
-        let message = error;
-
-        if (typeof message !== "string") {
-          if (
-            message instanceof RequestErrorEvent &&
-            typeof message.response?.detail === "string"
-          )
-            message = message.response.detail;
-        }
-
-        throw new TerriaError({
-          title: `Error submitting \`${this.typeName}\` job`,
-          message
+        throw TerriaError.from(error, {
+          title: `Error submitting \`${this.typeName}\` job`
         });
       }
     }

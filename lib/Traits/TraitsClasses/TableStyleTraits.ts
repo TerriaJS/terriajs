@@ -1,11 +1,13 @@
-import TableChartStyleTraits from "./TableChartStyleTraits";
-import TableColorStyleTraits from "./TableColorStyleTraits";
-import TablePointSizeStyleTraits from "./TablePointSizeStyleTraits";
-import TableTimeStyleTraits from "./TableTimeStyleTraits";
-import ModelTraits from "../ModelTraits";
+import StratumFromTraits from "../../Models/Definition/StratumFromTraits";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
-import StratumFromTraits from "../../Models/StratumFromTraits";
+import ModelTraits from "../ModelTraits";
+import TableChartStyleTraits from "./TableChartStyleTraits";
+import TableColorStyleTraits from "./TableColorStyleTraits";
+import TableOutlineStyleTraits from "./TableOutlineStyleTraits";
+import TablePointSizeStyleTraits from "./TablePointSizeStyleTraits";
+import TablePointStyleTraits from "./TablePointStyleTraits";
+import TableTimeStyleTraits from "./TableTimeStyleTraits";
 
 export default class TableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -25,19 +27,12 @@ export default class TableStyleTraits extends ModelTraits {
   title?: string | null;
 
   @primitiveTrait({
-    name: "Legend Title",
-    description:
-      "The title to show on the legend. If not specified, `Title` is used.",
-    type: "string"
-  })
-  legendTitle?: string;
-
-  @primitiveTrait({
     name: "Region Column",
     description: "The column to use for region mapping.",
-    type: "string"
+    type: "string",
+    isNullable: true
   })
-  regionColumn?: string;
+  regionColumn?: string | null;
 
   @primitiveTrait({
     name: "Latitude Column",
@@ -63,9 +58,25 @@ export default class TableStyleTraits extends ModelTraits {
   color?: TableColorStyleTraits;
 
   @objectTrait({
+    name: "Color",
+    description:
+      "Options for controlling the symbolization. This excludes color (see TableColorStyleTraits) and pointSize (see TablePointSizeStyleTraits).",
+    type: TablePointStyleTraits
+  })
+  point: TablePointStyleTraits = new TablePointStyleTraits();
+
+  @objectTrait({
+    name: "Color",
+    description:
+      "Options for controlling the symbolization. This excludes color (see TableColorStyleTraits) and pointSize (see TablePointSizeStyleTraits).",
+    type: TableOutlineStyleTraits
+  })
+  outline: TableOutlineStyleTraits = new TableOutlineStyleTraits();
+
+  @objectTrait({
     name: "Point Size",
     description:
-      "Options for controlling the size of points. This property is ignored for regions.",
+      "Options for controlling the size of points. This property is ignored for regions. This will override TablePointStyleTraits marker width/height if `pointSize.column` can be resolved to scalar column",
     type: TablePointSizeStyleTraits
   })
   pointSize?: TablePointSizeStyleTraits;

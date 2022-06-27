@@ -13,12 +13,15 @@ var md = new MarkdownIt({
 
 var htmlRegex = /^\s*<[^>]+>/;
 
-interface MarkdownOptions {
+export interface MarkdownOptions {
   // requires tooltipTerms as well
   injectTermsAsTooltips?: boolean;
 
   // requires injectTermsAsTooltips as well
   tooltipTerms?: Term[];
+
+  /** Single line rendering, without paragraph wrap */
+  inline?: boolean;
 }
 
 /**
@@ -31,8 +34,8 @@ interface MarkdownOptions {
  */
 function markdownToHtml(
   markdownString: string,
-  allowUnsafeHtml: boolean,
-  domPurifyOptions: Object,
+  allowUnsafeHtml: boolean = false,
+  domPurifyOptions: Object = {},
   markdownOptions: MarkdownOptions = {}
 ) {
   if (!defined(markdownString) || markdownString.length === 0) {
@@ -57,7 +60,9 @@ function markdownToHtml(
       stringToParse = injectTerms(stringToParse, markdownOptions.tooltipTerms);
     }
 
-    unsafeHtml = md.render(stringToParse);
+    unsafeHtml = markdownOptions.inline
+      ? md.renderInline(stringToParse)
+      : md.render(stringToParse);
   }
   if (allowUnsafeHtml) {
     return unsafeHtml;

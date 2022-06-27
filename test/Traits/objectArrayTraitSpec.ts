@@ -1,10 +1,10 @@
 import { configure } from "mobx";
-import CreateModel from "../../lib/Models/CreateModel";
-import createStratumInstance from "../../lib/Models/createStratumInstance";
+import CreateModel from "../../lib/Models/Definition/CreateModel";
+import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import Terria from "../../lib/Models/Terria";
-import ModelTraits from "../../lib/Traits/ModelTraits";
 import objectArrayTrait from "../../lib/Traits/Decorators/objectArrayTrait";
 import primitiveTrait from "../../lib/Traits/Decorators/primitiveTrait";
+import ModelTraits from "../../lib/Traits/ModelTraits";
 
 configure({
   enforceActions: true,
@@ -46,6 +46,14 @@ class OuterTraits extends ModelTraits {
     idProperty: "foo"
   })
   inner?: InnerTraits[];
+
+  @objectArrayTrait({
+    type: InnerTraits,
+    name: "Inner by index",
+    description: "Inner by index",
+    idProperty: "index"
+  })
+  innerByIndex?: InnerTraits[];
 
   @primitiveTrait({
     type: "string",
@@ -293,6 +301,51 @@ describe("objectArrayTrait", function() {
     expect(model.inner[0].baz).toBe(true);
   });
 
+  it("handles idProperty = index", function() {
+    const terria = new Terria();
+    const model = new TestModel("test", terria);
+
+    // Create new object and set removal
+    const firstObject = model.addObject("definition", "innerByIndex");
+
+    firstObject?.setTrait("definition", "foo", "definition");
+    firstObject?.setTrait("user", "bar", 10);
+    expect(model.innerByIndex.length).toBe(1);
+    expect(model.innerByIndex[0].foo).toBe("definition");
+
+    // Remove first object by setting bar = 42
+    firstObject?.setTrait("user", "bar", 42);
+
+    expect(model.innerByIndex.length).toBe(0);
+
+    // Add new object to user
+    const secondObject = model.addObject("user", "innerByIndex");
+    secondObject?.setTrait("user", "foo", "user");
+    secondObject?.setTrait("user", "bar", 10);
+
+    expect(model.innerByIndex.length).toBe(1);
+    expect(model.innerByIndex[0].foo).toBe("user");
+
+    // Add new object to definition
+    const thirdObject = model.addObject("definition", "innerByIndex");
+    thirdObject?.setTrait("user", "foo", "definition");
+    thirdObject?.setTrait("user", "bar", 10);
+
+    expect(model.innerByIndex.length).toBe(2);
+    expect(model.innerByIndex[0].foo).toBe("user");
+    expect(model.innerByIndex[1].foo).toBe("definition");
+
+    // Add new object to user
+    const fourthObject = model.addObject("user", "innerByIndex");
+    fourthObject?.setTrait("user", "foo", "user2");
+    fourthObject?.setTrait("user", "bar", 20);
+
+    expect(model.innerByIndex.length).toBe(3);
+    expect(model.innerByIndex[0].foo).toBe("user");
+    expect(model.innerByIndex[1].foo).toBe("definition");
+    expect(model.innerByIndex[2].foo).toBe("user2");
+  });
+
   it("updates to reflect new strata added after evaluation (with no merge)", function() {
     const terria = new Terria();
     const model = new TestModelNoMerge("test", terria);
@@ -315,6 +368,4 @@ describe("objectArrayTrait", function() {
     expect(model.inner[0].bar).toBe(4);
     expect(model.inner[0].baz).toBe(true);
   });
-
-  OuterTraitsNoMerge;
 });

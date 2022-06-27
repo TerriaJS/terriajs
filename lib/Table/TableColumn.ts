@@ -4,30 +4,28 @@ import { computed } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
-import JSRegionProvider from "../Map/RegionProvider";
-import JSRegionProviderList from "../Map/RegionProviderList";
-import { applyReplacements } from "../Map/RegionProviderTs";
-import createCombinedModel from "../Models/createCombinedModel";
-import Model from "../Models/Model";
+import runLater from "../Core/runLater";
+import RegionProvider from "../Map/Region/RegionProvider";
+import TableMixin from "../ModelMixins/TableMixin";
+import createCombinedModel from "../Models/Definition/createCombinedModel";
+import Model from "../Models/Definition/Model";
 import TableColumnTraits, {
   THIS_COLUMN_EXPRESSION_TOKEN
 } from "../Traits/TraitsClasses/TableColumnTraits";
-import TableTraits from "../Traits/TraitsClasses/TableTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
 const naturalSort = require("javascript-natural-sort");
 naturalSort.insensitive = true;
 
-// TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
-//   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
-// This is a dodgy workaround.
-class RegionProviderList extends JSRegionProviderList {}
-class RegionProvider extends JSRegionProvider {}
-
-interface TableModel extends Model<TableTraits> {
-  readonly dataColumnMajor: string[][] | undefined;
-  readonly regionProviderList: RegionProviderList | undefined;
-  readonly tableColumns: readonly TableColumn[];
-}
+type TypeHintSet = {
+  /** RegEx to match column name */
+  hint: RegExp;
+  /** TableColumnType to use if match is found */
+  type: TableColumnType;
+  /** Only match for columns which have `guessColumnTypeFromValues() === typeFromValues`.
+   * If undefined, it will accept all types
+   */
+  typeFromValues?: TableColumnType;
+}[];
 
 export interface ColumnValuesAsNumbers {
   readonly values: ReadonlyArray<number | null>;
@@ -46,13 +44,13 @@ export interface ColumnValuesAsDates {
 }
 
 export interface ColumnValuesAsRegions {
-  readonly regionIds: ReadonlyArray<string | null>;
-  readonly uniqueRegionIds: ReadonlyArray<string>;
+  readonly regionIds: ReadonlyArray<number | null>;
+  readonly uniqueRegionIds: ReadonlyArray<number>;
   readonly numberOfValidRegions: number;
   readonly numberOfNonRegions: number;
   readonly numberOfRegionsWithMultipleRows: number;
   readonly regionIdToRowNumbersMap: ReadonlyMap<
-    string,
+    string | number,
     number | readonly number[]
   >;
 }
@@ -80,9 +78,9 @@ export interface UniqueColumnValues {
  */
 export default class TableColumn {
   readonly columnNumber: number;
-  readonly tableModel: TableModel;
+  readonly tableModel: TableMixin.Instance;
 
-  constructor(tableModel: TableModel, columnNumber: number) {
+  constructor(tableModel: TableMixin.Instance, columnNumber: number) {
     this.columnNumber = columnNumber;
     this.tableModel = tableModel;
   }
@@ -521,10 +519,10 @@ export default class TableColumn {
   @computed
   get valuesAsRegions(): ColumnValuesAsRegions {
     const values = this.values;
-    const map = new Map<string, number | number[]>();
+    const map = new Map<number, number | number[]>();
 
     const regionType = this.regionType;
-    if (regionType === undefined) {
+    if (!isDefined(regionType) || !regionType.loaded) {
       // No regions.
       return {
         numberOfValidRegions: 0,
@@ -536,30 +534,34 @@ export default class TableColumn {
       };
     }
 
-    const regionIds: (string | null)[] = [];
-    const uniqueRegionIds = new Set<string>();
+    const regionIds: (number | null)[] = [];
+    const uniqueRegionIds = new Set<number>();
     let numberOfValidRegions = 0;
     let numberOfNonRegions = 0;
     let numberOfRegionsWithMultipleRows = 0;
 
     for (let i = 0; i < values.length; ++i) {
       const value = values[i];
-      const regionId: string | null = this.findMatchingRegion(
-        regionType,
-        value
-      );
-      regionIds.push(regionId);
-      if (regionId !== null) uniqueRegionIds.add(regionId);
 
-      if (regionId !== null) {
+      let regionIndex: number | null = this.regionType!.findRegionIndex(
+        value,
+        this.regionDisambiguationColumn?.values?.[i]
+      );
+
+      regionIndex = regionIndex === -1 ? null : regionIndex;
+
+      regionIds.push(regionIndex);
+      if (regionIndex !== null) uniqueRegionIds.add(regionIndex);
+
+      if (regionIndex !== null) {
         ++numberOfValidRegions;
 
-        const rows = map.get(regionId);
+        const rows = map.get(regionIndex);
         if (rows === undefined) {
-          map.set(regionId, i);
+          map.set(regionIndex, i);
         } else if (typeof rows === "number") {
           numberOfRegionsWithMultipleRows++;
-          map.set(regionId, [rows, i]);
+          map.set(regionIndex, [rows, i]);
         } else {
           rows.push(i);
         }
@@ -576,18 +578,6 @@ export default class TableColumn {
       numberOfNonRegions: numberOfNonRegions,
       numberOfRegionsWithMultipleRows: numberOfRegionsWithMultipleRows
     };
-  }
-
-  findMatchingRegion(
-    regionType: RegionProvider,
-    rowValue: string
-  ): string | null {
-    // TODO: validate that the rowValue is actually a valid region, if possible.
-    // TODO: implement serverReplacements and disambigDataReplacements replacements
-
-    return rowValue.length > 0
-      ? applyReplacements(regionType, rowValue, "dataReplacements") ?? null
-      : null;
   }
 
   /**
@@ -613,7 +603,16 @@ export default class TableColumn {
     return (
       this.tableModel.columnTitles[this.columnNumber] ??
       this.traits.title ??
+      // If no title set, use `name` and:
+      // - un-camel case
+      // - remove underscores
+      // - capitalise
       this.name
+        .replace(/[A-Z][a-z]/g, letter => ` ${letter.toLowerCase()}`)
+        .replace(/_/g, " ")
+        .trim()
+        .toLowerCase()
+        .replace(/(^\w|\s\w)/g, m => m.toUpperCase())
     );
   }
 
@@ -654,52 +653,23 @@ export default class TableColumn {
   get type(): TableColumnType {
     // Use the explicit column type, if any.
     let type: TableColumnType | undefined;
-    if (this.traits.type !== undefined) {
+    if (
+      this.traits.type !== undefined &&
+      stringToTableColumnType(this.traits.type)
+    ) {
       type = stringToTableColumnType(this.traits.type);
     }
 
-    if (type === undefined && this.regionType !== undefined) {
-      type = TableColumnType.region;
+    if (type) {
+      return type;
+    } else if (this.regionType !== undefined) {
+      return TableColumnType.region;
     }
 
-    if (type === undefined) {
-      type = this.guessColumnTypeFromName(this.name);
-    }
-
-    if (type === undefined) {
-      // No hints from the name, so this column is: a scalar (number), an
-      // enumeration, or arbitrary text (e.g. a description).
-
-      // We'll treat it as a scalar if _most_ of values can be successfully
-      // parsed as numbers, i.e. the number of successful parsings is ~10x
-      // the number of failed parsings. Note that replacements with null
-      // or zero are counted as neither failed nor successful.
-
-      if (
-        // We need at least one value
-        this.valuesAsNumbers.numberOfValidNumbers >= 1 &&
-        this.valuesAsNumbers.numberOfNonNumbers <=
-          Math.ceil(this.valuesAsNumbers.numberOfValidNumbers * 0.1)
-      ) {
-        type = TableColumnType.scalar;
-      } else {
-        // Lots of strings that can't be parsed as numbers.
-        // If there are relatively few different values, treat it as an enumeration.
-        // If there are heaps of different values, treat it as just ordinary
-        // free-form text.
-        const uniqueValues = this.uniqueValues.values;
-        if (
-          uniqueValues.length <= 7 ||
-          uniqueValues.length < this.values.length / 10
-        ) {
-          type = TableColumnType.enum;
-        } else {
-          type = TableColumnType.text;
-        }
-      }
-    }
-
-    return type;
+    return (
+      this.guessColumnTypeFromName(this.name) ??
+      this.guessColumnTypeFromValues()
+    );
   }
 
   @computed
@@ -713,8 +683,17 @@ export default class TableColumn {
     }
   }
 
+  /** Is column ready to be used.
+   * This will be false if regionType is not loaded
+   */
+  @computed
+  get ready() {
+    return !isDefined(this.regionType) || this.regionType.loaded;
+  }
+
   @computed
   get regionType(): RegionProvider | undefined {
+    let regionProvider: RegionProvider | undefined;
     const regions = this.tableModel.regionProviderList;
     if (regions === undefined) {
       return undefined;
@@ -723,17 +702,28 @@ export default class TableColumn {
     const regionType = this.traits.regionType;
     if (regionType !== undefined) {
       // Explicit region type specified, we just need to resolve it.
-      return regions.getRegionProvider(regionType);
+      regionProvider = regions.getRegionProvider(regionType);
     }
 
-    // No region type specified, so match the column name against the region
-    // aliases.
-    const details = regions.getRegionDetails([this.name], undefined, undefined);
-    if (details.length > 0) {
-      return details[0].regionProvider;
+    if (!isDefined(regionProvider)) {
+      // No region type specified, so match the column name against the region
+      // aliases.
+      const details = regions.getRegionDetails(
+        [this.name],
+        undefined,
+        undefined
+      );
+      if (details.length > 0) {
+        regionProvider = details[0].regionProvider;
+      }
     }
 
-    return undefined;
+    // Load region IDs for region type
+    // Note: loadRegionIDs is called in TableMixin.forceLoadMapItems()
+    // So this will only load region IDs if style/regionType changes after initial loadMapItems
+    runLater(() => regionProvider?.loadRegionIDs());
+
+    return regionProvider;
   }
 
   @computed
@@ -752,7 +742,7 @@ export default class TableColumn {
 
     // See if the region provider likes any of the table's other columns for
     // disambiguation.
-    const disambigName = (<any>this.regionType).findDisambigVariable(
+    const disambigName = this.regionType.findDisambigVariable(
       this.tableModel.tableColumns.map(column => column.name)
     );
     if (disambigName === undefined) {
@@ -785,6 +775,17 @@ export default class TableColumn {
     };
   }
 
+  /** Gets value as a type appropriate for the column {@link #type}. For
+   * example, if {@link #type} is {@link TableColumnType#scalar}, the values
+   * will be number or null. */
+  @computed get valuesForType() {
+    if (this.type === TableColumnType.scalar) {
+      return this.valuesAsNumbers.values;
+    }
+
+    return this.values;
+  }
+
   @computed
   get scaledValueFunctionForType(): (rowIndex: number) => number | null {
     if (this.type === TableColumnType.scalar) {
@@ -814,20 +815,84 @@ export default class TableColumn {
     return nullFunction;
   }
 
+  private guessColumnTypeFromValues(): TableColumnType {
+    let type: TableColumnType | undefined;
+
+    // We'll treat it as a scalar if _most_ of values can be successfully
+    // parsed as numbers, i.e. the number of successful parsings is ~10x
+    // the number of failed parsings. Note that replacements with null
+    // or zero are counted as neither failed nor successful.
+
+    // We need more than 1 number to create a `scalar` column
+    if (
+      this.valuesAsNumbers.numberOfValidNumbers > 1 &&
+      this.valuesAsNumbers.numberOfNonNumbers <=
+        Math.ceil(this.valuesAsNumbers.numberOfValidNumbers * 0.1)
+    ) {
+      type = TableColumnType.scalar;
+    } else {
+      // Lots of strings that can't be parsed as numbers.
+      // If there are relatively few different values, treat it as an enumeration.
+      // If there are heaps of different values, treat it as just ordinary
+      // free-form text.
+      const uniqueValues = this.uniqueValues.values;
+      if (
+        // We need more than 1 unique value (including nulls)
+        (this.uniqueValues.numberOfNulls ? 1 : 0) + uniqueValues.length > 1 &&
+        (uniqueValues.length <= 7 ||
+          // The number of unique values is less than 12% of total number of values
+          // Or, each value in the column exists 8.33 times on average
+          uniqueValues.length < this.values.length * 0.12)
+      ) {
+        type = TableColumnType.enum;
+      } else {
+        type = TableColumnType.text;
+      }
+    }
+    return type;
+  }
+
   private guessColumnTypeFromName(name: string): TableColumnType | undefined {
-    const typeHintSet = [
+    const typeHintSet: TypeHintSet = [
       { hint: /^(lon|long|longitude|lng)$/i, type: TableColumnType.longitude },
       { hint: /^(lat|latitude)$/i, type: TableColumnType.latitude },
-      { hint: /^(address|addr)$/i, type: TableColumnType.address },
+      // Hide easting column if scalar
       {
-        hint: /^(.*[_ ])?(depth|height|elevation|altitude)$/i,
-        type: TableColumnType.height
+        hint: /^(easting|eastings)$/i,
+        type: TableColumnType.hidden,
+        typeFromValues: TableColumnType.scalar
       },
+      // Hide northing column if scalar
+      {
+        hint: /^(northing|northings)$/i,
+        type: TableColumnType.hidden,
+        typeFromValues: TableColumnType.scalar
+      },
+      // Hide ID columns if they are scalar
+      {
+        hint: /^(_id_|id|fid|objectid)$/i,
+        type: TableColumnType.hidden,
+        typeFromValues: TableColumnType.scalar
+      },
+      { hint: /^(address|addr)$/i, type: TableColumnType.address },
+      // Disable until we actually do something with the height data
+      // {
+      //   hint: /^(.*[_ ])?(depth|height|elevation|altitude)$/i,
+      //   type: TableColumnType.height
+      // },
       { hint: /^(.*[_ ])?(time|date)/i, type: TableColumnType.time }, // Quite general, eg. matches "Start date (AEST)".
       { hint: /^(year)$/i, type: TableColumnType.time } // Match "year" only, not "Final year" or "0-4 years".
     ];
 
-    const match = typeHintSet.find(hint => hint.hint.test(name));
+    const match = typeHintSet.find(hint => {
+      if (hint.hint.test(name)) {
+        if (hint.typeFromValues) {
+          return hint.typeFromValues === this.guessColumnTypeFromValues();
+        }
+        return true;
+      }
+      return false;
+    });
     if (match !== undefined) {
       return match.type;
     }

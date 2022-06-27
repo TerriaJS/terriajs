@@ -1,8 +1,8 @@
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
 import DiscretelyTimeVaryingTraits from "../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
-import CommonStrata from "./CommonStrata";
-import CreateModel from "./CreateModel";
+import CommonStrata from "./Definition/CommonStrata";
+import CreateModel from "./Definition/CreateModel";
 import Terria from "./Terria";
 
 export default class DefaultTimelineModel extends DiscretelyTimeVaryingMixin(
@@ -22,6 +22,12 @@ export default class DefaultTimelineModel extends DiscretelyTimeVaryingMixin(
       "stopTime",
       JulianDate.toIso8601(JulianDate.addHours(now, 12, new JulianDate()))
     );
+  }
+
+  protected async forceLoadMapItems() {}
+
+  get mapItems() {
+    return [];
   }
 
   get discreteTimes() {

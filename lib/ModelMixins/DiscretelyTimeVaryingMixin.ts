@@ -7,13 +7,14 @@ import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
-import { calculateDomain, ChartItem } from "../ModelMixins/ChartableMixin";
-import CommonStrata from "../Models/CommonStrata";
-import Model from "../Models/Model";
+import ChartableMixin, {
+  calculateDomain,
+  ChartItem
+} from "../ModelMixins/ChartableMixin";
+import CommonStrata from "../Models/Definition/CommonStrata";
+import Model from "../Models/Definition/Model";
 import DiscretelyTimeVaryingTraits from "../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import TimeVarying from "./TimeVarying";
-
-type DiscretelyTimeVarying = Model<DiscretelyTimeVaryingTraits>;
 
 export interface AsJulian {
   time: JulianDate;
@@ -26,9 +27,9 @@ export interface DiscreteTimeAsJS {
 }
 
 function DiscretelyTimeVaryingMixin<
-  T extends Constructor<DiscretelyTimeVarying>
+  T extends Constructor<Model<DiscretelyTimeVaryingTraits>>
 >(Base: T) {
-  abstract class DiscretelyTimeVaryingMixin extends Base
+  abstract class DiscretelyTimeVaryingMixin extends ChartableMixin(Base)
     implements TimeVarying {
     get hasDiscreteTimes() {
       return true;
@@ -38,7 +39,7 @@ function DiscretelyTimeVaryingMixin<
     @computed
     get currentTime(): string | undefined {
       const time = super.currentTime;
-      if (time === undefined) {
+      if (time === undefined || time === null) {
         if (this.initialTimeSource === "now") {
           return JulianDate.toIso8601(JulianDate.now());
         } else if (this.initialTimeSource === "start") {
@@ -79,7 +80,7 @@ function DiscretelyTimeVaryingMixin<
     @computed
     get objectifiedDates(): ObjectifiedDates {
       if (!isDefined(this.discreteTimesAsSortedJulianDates)) {
-        return { indice: [], dates: [] };
+        return { index: [], dates: [] };
       }
 
       const jsDates = this.discreteTimesAsSortedJulianDates.map(julianDate =>
@@ -338,6 +339,7 @@ function DiscretelyTimeVaryingMixin<
         categoryName: this.name,
         key: `key${this.uniqueId}-${this.name}`,
         type: this.chartType || "momentLines",
+        glyphStyle: this.chartGlyphStyle,
         xAxis: { scale: "time" },
         points,
         domain: { ...calculateDomain(points), y: [0, 1] },
@@ -385,16 +387,26 @@ namespace DiscretelyTimeVaryingMixin {
 export default DiscretelyTimeVaryingMixin;
 
 function toJulianDate(time: string | undefined): JulianDate | undefined {
-  if (time === undefined) {
+  if (time === undefined || time === null) {
     return undefined;
   }
-  return JulianDate.fromIso8601(time);
+  // JS's data parser produces some bizarre dates from bad strings without complaint, so we need to do some basic validation
+  if (time.includes("NaN")) {
+    return undefined;
+  }
+  const julianDate = JulianDate.fromIso8601(time);
+
+  // Don't return an invalid JulianDate
+  if (julianDate.secondsOfDay === NaN || julianDate.dayNumber === NaN)
+    return undefined;
+
+  return julianDate;
 }
 
 type DatesObject<T> = {
   [key: number]: T;
   dates: Date[];
-  indice: number[];
+  index: number[];
 };
 export type ObjectifiedDates = DatesObject<ObjectifiedYears>;
 export type ObjectifiedYears = DatesObject<ObjectifiedMonths>;
@@ -409,7 +421,7 @@ export type ObjectifiedHours = DatesObject<Date[]>;
  *   whose values are objects whose keys are days, whose values are arrays of all the datetimes on that day.
  */
 function objectifyDates(dates: Date[]): ObjectifiedDates {
-  let result: ObjectifiedDates = { indice: [], dates };
+  let result: ObjectifiedDates = { index: [], dates };
 
   for (let i = 0; i < dates.length; i++) {
     let date = dates[i];
@@ -421,32 +433,32 @@ function objectifyDates(dates: Date[]): ObjectifiedDates {
 
     // ObjectifiedDates
     if (!result[century]) {
-      result[century] = { indice: [], dates: [] };
-      result.indice.push(century);
+      result[century] = { index: [], dates: [] };
+      result.index.push(century);
     }
 
     result[century].dates.push(date);
 
     // ObjectifiedYears
     if (!result[century][year]) {
-      result[century][year] = { indice: [], dates: [] };
-      result[century].indice.push(year);
+      result[century][year] = { index: [], dates: [] };
+      result[century].index.push(year);
     }
 
     result[century][year].dates.push(date);
 
     // ObjectifiedMonths
     if (!result[century][year][month]) {
-      result[century][year][month] = { indice: [], dates: [] };
-      result[century][year].indice.push(month);
+      result[century][year][month] = { index: [], dates: [] };
+      result[century][year].index.push(month);
     }
 
     result[century][year][month].dates.push(date);
 
     // ObjectifiedDays
     if (!result[century][year][month][day]) {
-      result[century][year][month][day] = { indice: [], dates: [] };
-      result[century][year][month].indice.push(day);
+      result[century][year][month][day] = { index: [], dates: [] };
+      result[century][year][month].index.push(day);
     }
 
     result[century][year][month][day].dates.push(date);
@@ -454,7 +466,7 @@ function objectifyDates(dates: Date[]): ObjectifiedDates {
     // ObjectifiedHours
     if (!result[century][year][month][day][hour]) {
       result[century][year][month][day][hour] = [];
-      result[century][year][month][day].indice.push(hour);
+      result[century][year][month][day].index.push(hour);
     }
 
     result[century][year][month][day][hour].push(date);

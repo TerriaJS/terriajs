@@ -11,7 +11,7 @@ import Spacing from "../../Styled/Spacing";
 import MapIconButton from "../MapIconButton/MapIconButton";
 // import MenuPanel from "../StandardUserInterface/customizable/MenuPanel";
 import CleanDropdownPanel from "../CleanDropdownPanel/CleanDropdownPanel";
-import { COMPASS_LOCAL_PROPERTY_KEY } from "../Map/Navigation/Compass";
+import { COMPASS_LOCAL_PROPERTY_KEY } from "../Map/Navigation/Items/Compass";
 
 GyroscopeGuidance.propTypes = {
   viewState: PropTypes.object.isRequired,
@@ -116,9 +116,9 @@ function GyroscopeGuidancePanel(props) {
         <Text>{t("compass.guidance.ctrlDragDescription")}</Text>
         <Spacing bottom={4} />
         <RawButton onClick={props.onClose}>
-          <Text displayBlock primary isLink>
+          <TextSpan displayBlock primary isLink>
             {t("compass.guidance.dismissText")}
-          </Text>
+          </TextSpan>
         </RawButton>
       </Text>
     </Box>

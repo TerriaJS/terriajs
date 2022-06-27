@@ -1,32 +1,52 @@
+import objectArrayTrait from "../Decorators/objectArrayTrait";
+import objectTrait from "../Decorators/objectTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import ModelTraits from "../ModelTraits";
 import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import GtfsModelTraits from "./GtfsModelTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
-import mixTraits from "../mixTraits";
-import objectTrait from "../Decorators/objectTrait";
-import primitiveTrait from "../Decorators/primitiveTrait";
-import RasterLayerTraits from "./RasterLayerTraits";
+import OpacityTraits from "./OpacityTraits";
 import ScaleByDistanceTraits from "./ScaleByDistanceTraits";
 import UrlTraits from "./UrlTraits";
+
+export class HeadersTraits extends ModelTraits {
+  @primitiveTrait({
+    name: "Name",
+    description: "The header name",
+    type: "string"
+  })
+  name?: string;
+
+  @primitiveTrait({
+    name: "Value",
+    description: "The header value",
+    type: "string"
+  })
+  value?: string;
+}
 
 export default class GtfsCatalogItemTraits extends mixTraits(
   UrlTraits,
   CatalogMemberTraits,
+  LegendOwnerTraits,
   MappableTraits,
-  RasterLayerTraits,
+  OpacityTraits,
   LayerOrderingTraits,
   AutoRefreshingTraits,
   FeatureInfoTraits
 ) {
-  @primitiveTrait({
-    name: "GTFS API key",
-    description:
-      "The key that should be used when querying the GTFS API service",
-    type: "string"
+  @objectArrayTrait({
+    name: "Headers",
+    description: "Extra headers to attach to queries to the GTFS endpoint",
+    type: HeadersTraits,
+    idProperty: "name"
   })
-  apiKey?: string;
+  headers?: HeadersTraits[];
 
   @primitiveTrait({
     name: "Image url",

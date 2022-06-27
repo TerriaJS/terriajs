@@ -21,7 +21,6 @@ export default observer(
       member: PropTypes.object.isRequired,
       viewState: PropTypes.object.isRequired,
       manageIsOpenLocally: PropTypes.bool,
-      overrideState: PropTypes.string,
       onActionButtonClicked: PropTypes.func,
       removable: PropTypes.bool,
       terria: PropTypes.object,
@@ -30,12 +29,12 @@ export default observer(
 
     render() {
       const member =
-        ReferenceMixin.is(this.props.member) &&
-        this.props.member.target !== undefined
-          ? this.props.member.target
+        ReferenceMixin.isMixedInto(this.props.member) &&
+        this.props.member.nestedTarget !== undefined
+          ? this.props.member.nestedTarget
           : this.props.member;
 
-      if (ReferenceMixin.is(member)) {
+      if (ReferenceMixin.isMixedInto(member)) {
         return (
           <DataCatalogReference
             reference={member}
@@ -51,7 +50,6 @@ export default observer(
             group={member}
             viewState={this.props.viewState}
             manageIsOpenLocally={this.props.manageIsOpenLocally}
-            overrideState={this.props.overrideState}
             onActionButtonClicked={this.props.onActionButtonClicked}
             removable={this.props.removable}
             terria={this.props.terria}
@@ -63,7 +61,6 @@ export default observer(
           <DataCatalogItem
             item={member}
             viewState={this.props.viewState}
-            overrideState={this.props.overrideState}
             onActionButtonClicked={this.props.onActionButtonClicked}
             removable={this.props.removable}
             terria={this.props.terria}

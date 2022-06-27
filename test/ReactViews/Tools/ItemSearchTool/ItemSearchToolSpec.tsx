@@ -7,12 +7,12 @@ import {
   ReactTestRenderer
 } from "react-test-renderer";
 import { assertObject } from "../../../../lib/Core/Json";
-import CommonStrata from "../../../../lib/Models/CommonStrata";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import ItemSearchProvider, {
   ItemSearchParameter,
   ItemSearchResult
-} from "../../../../lib/Models/ItemSearchProvider";
-import { registerItemSearchProvider } from "../../../../lib/Models/ItemSearchProviders";
+} from "../../../../lib/Models/ItemSearchProviders/ItemSearchProvider";
+import { registerItemSearchProvider } from "../../../../lib/Models/ItemSearchProviders/ItemSearchProviders";
 import Terria from "../../../../lib/Models/Terria";
 import ViewState from "../../../../lib/ReactViewModels/ViewState";
 import ErrorComponent from "../../../../lib/ReactViews/Tools/ItemSearchTool/ErrorComponent";
@@ -70,8 +70,11 @@ describe("ItemSearchTool", function() {
       parameters: []
     });
     const provider = item.createItemSearchProvider();
-    assertObject(provider);
-    itemSearchProvider = provider;
+    if (provider) {
+      itemSearchProvider = provider;
+    } else {
+      throw new Error("item.createItemSearchProvider returned undefined");
+    }
   });
 
   it("can be rendered", function() {

@@ -5,6 +5,7 @@ import ModelTraits from "../ModelTraits";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import UrlTraits from "./UrlTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 
 export class RefineTraits extends ModelTraits {
   @primitiveTrait({
@@ -25,6 +26,7 @@ export class RefineTraits extends ModelTraits {
 export default class OpenDataSoftCatalogGroupTraits extends mixTraits(
   UrlTraits,
   CatalogMemberTraits,
+  LegendOwnerTraits,
   GroupTraits
 ) {
   @primitiveTrait({

@@ -1,7 +1,7 @@
-import primitiveTrait from "../Decorators/primitiveTrait";
-import ModelTraits from "../ModelTraits";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import ModelTraits from "../ModelTraits";
 
 export class LegendItemTraits extends ModelTraits {
   @primitiveTrait({
@@ -60,6 +60,13 @@ export class LegendItemTraits extends ModelTraits {
   })
   outlineColor?: string;
 
+  @primitiveTrait({
+    name: "Outline Width",
+    description: "The width of outline in pixels",
+    type: "number"
+  })
+  outlineWidth?: number;
+
   @primitiveArrayTrait({
     name: "Multiple Colors",
     description:
@@ -74,6 +81,20 @@ export class LegendItemTraits extends ModelTraits {
     type: "string"
   })
   imageUrl?: string;
+
+  @primitiveTrait({
+    name: "Marker",
+    description: 'Maki marker ID to display with this item (eg "circle").',
+    type: "string"
+  })
+  marker?: string;
+
+  @primitiveTrait({
+    name: "Rotation",
+    description: "The degrees to rotate legend item.",
+    type: "number"
+  })
+  rotation: number = 0;
 
   @primitiveTrait({
     name: "Add Spacing Above",
@@ -117,7 +138,7 @@ export default class LegendTraits extends ModelTraits {
     type: "number",
     name: "Scaling",
     description:
-      "Scaling of the legend. For example, a high DPI legend may have scaling = `0.5`, so it will be scaled doown 50%"
+      "Scaling of the legend. For example, a high DPI legend may have scaling = `0.5`, so it will be scaled down 50%"
   })
   imageScaling?: number = 1;
 
@@ -135,4 +156,12 @@ export default class LegendTraits extends ModelTraits {
     idProperty: "index"
   })
   items?: LegendItemTraits[];
+
+  @primitiveTrait({
+    type: "string",
+    name: "Background color",
+    description:
+      "Apply background color to entire legend. This can be useful if legend is transparent and clashes with Terria colours. This will override `legendBackgroundColor`."
+  })
+  backgroundColor?: string;
 }

@@ -4,7 +4,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import FeatureInfoCatalogItem from "./FeatureInfoCatalogItem";
-import { featureBelongsToCatalogItem } from "../../Map/PickedFeatures.ts";
+import { featureBelongsToCatalogItem } from "../../Map/PickedFeatures/PickedFeatures.ts";
 import DragWrapper from "../DragWrapper";
 import Loader from "../Loader";
 import React from "react";
@@ -18,7 +18,7 @@ import {
   removeMarker,
   isMarkerVisible
 } from "../../Models/LocationMarkerUtils";
-import prettifyCoordinates from "../../Map/prettifyCoordinates";
+import prettifyCoordinates from "../../Map/Vector/prettifyCoordinates";
 import i18next from "i18next";
 import Styles from "./feature-info-panel.scss";
 import classNames from "classnames";
@@ -443,7 +443,7 @@ function getFeaturesGroupedByCatalogItems(terria) {
   return { catalogItems, featureCatalogItemPairs };
 }
 
-function determineCatalogItem(workbench, feature) {
+export function determineCatalogItem(workbench, feature) {
   // If the feature is a marker return a fake item
   if (feature.entityCollection && feature.entityCollection.owner) {
     const dataSource = feature.entityCollection.owner;
@@ -458,9 +458,24 @@ function determineCatalogItem(workbench, feature) {
     return feature._catalogItem;
   }
 
-  return workbench.items.find(item =>
-    featureBelongsToCatalogItem(feature, item)
-  );
+  // Expand child members of composite catalog items.
+  // This ensures features from each child model are treated as belonging to
+  // that child model, not the parent composite model.
+  const items = workbench.items.map(recurseIntoMembers).reduce(flatten, []);
+  return items.find(item => featureBelongsToCatalogItem(feature, item));
+}
+
+function recurseIntoMembers(catalogItem) {
+  const { memberModels } = catalogItem;
+  if (memberModels) {
+    return memberModels.map(recurseIntoMembers).reduce(flatten, []);
+  }
+  return [catalogItem];
+}
+
+function flatten(acc, cur) {
+  acc.push(...cur);
+  return acc;
 }
 
 /**

@@ -1,4 +1,4 @@
-import { runInAction } from "mobx";
+import { action, runInAction } from "mobx";
 import React, { ReactElement } from "react";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
@@ -7,12 +7,14 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import LatLonHeight from "../../Core/LatLonHeight";
-import CommonStrata from "../../Models/CommonStrata";
-import createStratumInstance from "../../Models/createStratumInstance";
+import { getName } from "../../ModelMixins/CatalogMemberMixin";
+import ChartableMixin from "../../ModelMixins/ChartableMixin";
+import SplitItemReference from "../../Models/Catalog/CatalogReferences/SplitItemReference";
+import CommonStrata from "../../Models/Definition/CommonStrata";
+import createStratumInstance from "../../Models/Definition/createStratumInstance";
+import hasTraits from "../../Models/Definition/hasTraits";
+import { BaseModel } from "../../Models/Definition/Model";
 import Feature from "../../Models/Feature";
-import hasTraits from "../../Models/hasTraits";
-import { BaseModel } from "../../Models/Model";
-import SplitItemReference from "../../Models/SplitItemReference";
 import ChartPointOnMapTraits from "../../Traits/TraitsClasses/ChartPointOnMapTraits";
 import DiscretelyTimeVaryingTraits from "../../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import LatLonHeightTraits from "../../Traits/TraitsClasses/LatLonHeightTraits";
@@ -23,7 +25,6 @@ import CustomComponent, {
   DomElement,
   ProcessNodeContext
 } from "./CustomComponent";
-import ChartableMixin from "../../ModelMixins/ChartableMixin";
 
 export interface ChartCustomComponentAttributes {
   /**  The title of the chart.  If not supplied, defaults to the name of the context-supplied feature, if available, or else simply "Chart". */
@@ -118,6 +119,8 @@ export interface ChartCustomComponentAttributes {
 export default abstract class ChartCustomComponent<
   CatalogItemType extends ChartableMixin.Instance
 > extends CustomComponent {
+  protected chartItemId?: string;
+
   get attributes(): Array<string> {
     return [
       "src",
@@ -183,7 +186,7 @@ export default abstract class ChartCustomComponent<
     id: string | undefined,
     context: ProcessNodeContext,
     sourceReference: BaseModel | undefined
-  ): CatalogItemType;
+  ): CatalogItemType | undefined;
 
   /**
    * For some catalog types, for the chart item to be shareable, it needs to be
@@ -200,13 +203,30 @@ export default abstract class ChartCustomComponent<
     sourceReference: BaseModel | undefined
   ) => Promise<CatalogItemType | undefined> = undefined;
 
+  /**
+   * Construct a download URL from the chart body text.
+   * This URL will be used to present a download link when other download
+   * options are not specified for the chart.
+   *
+   * See {@CsvChartCustomComponent} for an example implementation.
+   *
+   * @param body The body string.
+   * @return URL to be passed as `href` for the download link.
+   */
+  protected constructDownloadUrlFromBody?: (body: string) => string;
+
   private processChart(
     context: ProcessNodeContext,
     node: DomElement,
     children: ReactElement[],
     index: number
   ): ReactElement | undefined {
-    if (node.attribs === undefined) {
+    if (
+      node.attribs === undefined ||
+      !context.terria ||
+      !context.feature ||
+      !context.catalogItem
+    ) {
       return undefined;
     }
 
@@ -219,35 +239,58 @@ export default abstract class ChartCustomComponent<
     const body: string | undefined =
       typeof child === "string" ? child : undefined;
     const chartElements = [];
+    this.chartItemId = this.chartItemId ?? createGuid();
+
+    // If downloads not specified but we have a body string, convert it to a downloadable data URI.
+    if (
+      attrs.downloads === undefined &&
+      body &&
+      this.constructDownloadUrlFromBody !== undefined
+    ) {
+      attrs.downloads = [this.constructDownloadUrlFromBody?.(body)];
+    }
+
     if (!attrs.hideButtons) {
       // Build expand/download buttons
       const sourceItems = (attrs.downloads || attrs.sources || [""]).map(
         (source: string, i: number) => {
-          const id = `${context.catalogItem.uniqueId}:${source}`;
+          // When expanding a chart for this item and there is already an
+          // expanded chart for the item, there are 2 possibilities.
+          // 1. Remove it an show the new chart
+          // 2. Show the new chart alongside the existing chart
+          //
+          // If title & source names for the two expanded charts are the same then
+          // we only show the latest one, otherwise we show both.
+          // To do this we make the id dependant on the parentId, title & source.
+          const id = `${context.catalogItem!.uniqueId}:${
+            attrs.title
+          }:${source}`;
 
           const itemOrPromise = this.constructShareableCatalogItem
             ? this.constructShareableCatalogItem(id, context, undefined)
             : this.constructCatalogItem(id, context, undefined);
 
-          return Promise.resolve(itemOrPromise).then(item => {
-            if (item) {
-              this.setTraitsFromParent(item, context.catalogItem);
-              this.setTraitsFromAttrs(item, attrs, i);
-              body && this.setTraitsFromBody?.(item, body);
+          return Promise.resolve(itemOrPromise).then(
+            action(item => {
+              if (item) {
+                this.setTraitsFromParent(item, context.catalogItem!);
+                this.setTraitsFromAttrs(item, attrs, i);
+                body && this.setTraitsFromBody?.(item, body);
 
-              if (
-                featurePosition &&
-                hasTraits(item, ChartPointOnMapTraits, "chartPointOnMap")
-              ) {
-                item.setTrait(
-                  CommonStrata.user,
-                  "chartPointOnMap",
-                  createStratumInstance(LatLonHeightTraits, featurePosition)
-                );
+                if (
+                  featurePosition &&
+                  hasTraits(item, ChartPointOnMapTraits, "chartPointOnMap")
+                ) {
+                  item.setTrait(
+                    CommonStrata.user,
+                    "chartPointOnMap",
+                    createStratumInstance(LatLonHeightTraits, featurePosition)
+                  );
+                }
               }
-            }
-            return item;
-          });
+              return item;
+            })
+          );
         }
       );
 
@@ -266,25 +309,32 @@ export default abstract class ChartCustomComponent<
     }
 
     // Build chart item to show in the info panel
-    const chartItem = this.constructCatalogItem(undefined, context, undefined);
-    runInAction(() => {
-      this.setTraitsFromParent(chartItem, context.catalogItem);
-      this.setTraitsFromAttrs(chartItem, attrs, 0);
-      body && this.setTraitsFromBody?.(chartItem, body);
-    });
-
-    chartElements.push(
-      React.createElement(Chart, {
-        key: "chart",
-        terria: context.terria,
-        item: chartItem,
-        xAxisLabel: attrs.previewXLabel,
-        height: 110
-        // styling: attrs.styling,
-        // highlightX: attrs.highlightX,
-        // transitionDuration: 300
-      })
+    const chartItem = this.constructCatalogItem(
+      this.chartItemId,
+      context,
+      undefined
     );
+
+    if (chartItem) {
+      runInAction(() => {
+        this.setTraitsFromParent(chartItem, context.catalogItem!);
+        this.setTraitsFromAttrs(chartItem, attrs, 0);
+        body && this.setTraitsFromBody?.(chartItem, body);
+      });
+
+      chartElements.push(
+        React.createElement(Chart, {
+          key: "chart",
+          terria: context.terria,
+          item: chartItem,
+          xAxisLabel: attrs.previewXLabel,
+          height: 110
+          // styling: attrs.styling,
+          // highlightX: attrs.highlightX,
+          // transitionDuration: 300
+        })
+      );
+    }
 
     return React.createElement(
       "div",
@@ -486,7 +536,10 @@ export default abstract class ChartCustomComponent<
     const terria = sourceItem.terria;
     const ref = new SplitItemReference(createGuid(), terria);
     ref.setTrait(CommonStrata.user, "splitSourceItemId", sourceItem.uniqueId);
-    await ref.loadReference();
+    (await ref.loadReference()).raiseError(
+      terria,
+      `Failed to create SplitItemReference for ${getName(sourceItem)}`
+    );
     if (ref.target) {
       terria.addModel(ref);
       return ref.target as CatalogItemType;
@@ -539,8 +592,8 @@ function getInsertedTitle(node: DomElement) {
   }
 }
 
-function getFeaturePosition(feature: Feature): LatLonHeight | undefined {
-  const cartesian = feature.position?.getValue(JulianDate.now());
+function getFeaturePosition(feature?: Feature): LatLonHeight | undefined {
+  const cartesian = feature?.position?.getValue(JulianDate.now());
   if (cartesian) {
     const carto = Ellipsoid.WGS84.cartesianToCartographic(cartesian);
     return {

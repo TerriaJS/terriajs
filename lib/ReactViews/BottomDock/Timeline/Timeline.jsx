@@ -1,20 +1,18 @@
 import createReactClass from "create-react-class";
 import dateFormat from "dateformat";
-import React from "react";
-import PropTypes from "prop-types";
 import { observer } from "mobx-react";
-
+import PropTypes from "prop-types";
+import React from "react";
+import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-
-import TimelineControls from "./TimelineControls";
+import CommonStrata from "../../../Models/Definition/CommonStrata";
+import withControlledVisibility from "../../HOCs/withControlledVisibility";
 import CesiumTimeline from "./CesiumTimeline";
-import DateTimePicker from "./DateTimePicker";
 import { formatDateTime } from "./DateFormats";
-import { withTranslation } from "react-i18next";
-
+import DateTimePicker from "./DateTimePicker";
 import Styles from "./timeline.scss";
-import CommonStrata from "../../../Models/CommonStrata";
+import TimelineControls from "./TimelineControls";
 
 export const Timeline = observer(
   createReactClass({
@@ -32,14 +30,12 @@ export const Timeline = observer(
       };
     },
 
-    /* eslint-disable-next-line camelcase */
-    UNSAFE_componentWillMount() {
-      this.resizeListener = () => this.timeline && this.timeline.resize();
-      window.addEventListener("resize", this.resizeListener, false);
+    componentDidMount() {
+      this.props.terria.timelineStack.activate();
     },
 
     componentWillUnmount() {
-      window.removeEventListener("resize", this.resizeListener);
+      this.props.terria.timelineStack.deactivate();
     },
 
     changeDateTime(time) {
@@ -139,4 +135,4 @@ export const Timeline = observer(
   })
 );
 
-export default withTranslation()(Timeline);
+export default withControlledVisibility(withTranslation()(Timeline));

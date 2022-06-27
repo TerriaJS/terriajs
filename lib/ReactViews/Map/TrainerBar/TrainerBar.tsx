@@ -13,11 +13,11 @@ import {
 import ViewState from "../../../ReactViewModels/ViewState";
 import Box from "../../../Styled/Box";
 import Button, { RawButton } from "../../../Styled/Button";
+import measureElement, { MeasureElementProps } from "../../HOCs/measureElement";
 import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Select from "../../../Styled/Select";
 import Spacing from "../../../Styled/Spacing";
-import Text from "../../../Styled/Text";
-import measureElement from "../../HOCs/measureElement";
+import Text, { TextSpan } from "../../../Styled/Text";
 import { useTranslationIfExists } from "./../../../Language/languageHelpers";
 
 const StyledHtml: any = require("../../Map/Panels/HelpPanel/StyledHtml")
@@ -129,13 +129,13 @@ const renderOrderedStepList = function(
 interface StepAccordionProps {
   viewState: ViewState;
   selectedTrainerSteps: StepItem[];
+  t: TFunction;
   theme: DefaultTheme;
   selectedTrainer: TrainerItem;
   isShowingAllSteps: boolean;
   setIsShowingAllSteps: (bool: boolean) => void;
   isExpanded: boolean;
   setIsExpanded: (bool: boolean) => void;
-  heightFromMeasureElementHOC: number | null;
 }
 interface StepAccordionState {
   isExpanded: boolean;
@@ -143,7 +143,7 @@ interface StepAccordionState {
 
 // Originally written as a SFC but measureElement only supports class components at the moment
 class StepAccordionRaw extends React.Component<
-  StepAccordionProps & WithTranslation,
+  StepAccordionProps & MeasureElementProps & WithTranslation,
   StepAccordionState
 > {
   refToMeasure: any;
@@ -223,11 +223,11 @@ class StepAccordionRaw extends React.Component<
                           : t("trainer.showAllSteps")
                       }
                     >
-                      <Text medium primary isLink textAlignLeft>
+                      <TextSpan medium primary isLink textAlignLeft>
                         {isShowingAllSteps
                           ? t("trainer.hideAllSteps")
                           : t("trainer.showAllSteps")}
-                      </Text>
+                      </TextSpan>
                     </RawButton>
                   </>
                 )

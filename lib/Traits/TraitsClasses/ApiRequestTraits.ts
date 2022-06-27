@@ -1,7 +1,8 @@
 import anyTrait from "../Decorators/anyTrait";
-import ModelTraits from "../ModelTraits";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import ModelTraits from "../ModelTraits";
 import UrlTraits from "./UrlTraits";
 
 export class QueryParamTraits extends ModelTraits {
@@ -25,7 +26,8 @@ export class QueryParamTraits extends ModelTraits {
   value?: string;
 }
 
-export default class ApiRequestTraits extends UrlTraits {
+/** Not all traits here will be supported by all catalog items that use them */
+export default class ApiRequestTraits extends mixTraits(UrlTraits) {
   @objectArrayTrait({
     name: "Query parameters",
     type: QueryParamTraits,
@@ -56,4 +58,11 @@ export default class ApiRequestTraits extends UrlTraits {
     description: "Send the request data as form data instead of a JSON body."
   })
   postRequestDataAsFormData?: boolean = false;
+
+  @primitiveTrait({
+    name: "Response data path",
+    type: "string",
+    description: "Path to relevent data in JSON response."
+  })
+  responseDataPath?: string;
 }

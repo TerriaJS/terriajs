@@ -6,8 +6,7 @@ import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import ChartableMixin from "../../../ModelMixins/ChartableMixin";
-import hasTraits from "../../../Models/hasTraits";
-import raiseErrorOnRejectedPromise from "../../../Models/raiseErrorOnRejectedPromise";
+import hasTraits from "../../../Models/Definition/hasTraits";
 import Terria from "../../../Models/Terria";
 import Icon from "../../../Styled/Icon";
 import UrlTraits from "../../../Traits/TraitsClasses/UrlTraits";
@@ -48,32 +47,30 @@ class ChartExpandAndDownloadButtons extends React.Component<PropsType> {
    */
   private expandItem(sourceIndex: number) {
     const terria = this.props.terria;
-    raiseErrorOnRejectedPromise(
-      terria,
-      runInAction(() => {
-        const sourceItems = this.sourceItems;
-        const itemToExpand = sourceItems[sourceIndex];
-        const workbench = terria.workbench;
-        if (!itemToExpand) {
-          return;
-        }
 
-        // We want to show only one source item at a time, so remove any
-        // existing source items from the workbench
-        sourceItems.forEach(sourceItem => {
-          workbench.items.forEach(workbenchItem => {
-            if (sourceItem.uniqueId === workbenchItem.uniqueId) {
-              workbench.remove(workbenchItem);
-            }
-          });
+    runInAction(async () => {
+      const sourceItems = this.sourceItems;
+      const itemToExpand = sourceItems[sourceIndex];
+      const workbench = terria.workbench;
+      if (!itemToExpand) {
+        return;
+      }
+
+      // We want to show only one source item at a time, so remove any
+      // existing source items from the workbench
+      sourceItems.forEach(sourceItem => {
+        workbench.items.forEach(workbenchItem => {
+          if (sourceItem.uniqueId === workbenchItem.uniqueId) {
+            workbench.remove(workbenchItem);
+          }
         });
+      });
 
-        try {
-          terria.addModel(itemToExpand);
-        } catch {}
-        return workbench.add(itemToExpand);
-      })
-    );
+      try {
+        terria.addModel(itemToExpand);
+      } catch {}
+      (await workbench.add(itemToExpand)).raiseError(terria, undefined, true);
+    });
   }
 
   resolveSourceItems() {
@@ -199,6 +196,7 @@ const ExpandAndDownloadButtons = function(props: {
       </button>
       {props.downloadUrl && (
         <a
+          download
           className={classNames(Styles.btnSmall, Styles.aDownload)}
           href={props.downloadUrl}
         >

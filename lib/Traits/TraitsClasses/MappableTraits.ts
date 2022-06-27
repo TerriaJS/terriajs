@@ -1,8 +1,8 @@
-import AttributionTraits from "./AttributionTraits";
-import mixTraits from "../mixTraits";
-import ModelTraits from "../ModelTraits";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import ModelTraits from "../ModelTraits";
+import AttributionTraits from "./AttributionTraits";
 
 export class RectangleTraits extends ModelTraits {
   @primitiveTrait({
@@ -34,6 +34,117 @@ export class RectangleTraits extends ModelTraits {
   north?: number;
 }
 
+export class LookAtTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "number",
+    name: "Target longitude",
+    description: "Target longitude on the WGS84 ellipsoid in degrees"
+  })
+  targetLongitude?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Target latitude",
+    description: "Target latitude on the WGS84 ellipsoid in degrees"
+  })
+  targetLatitude?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Target height",
+    description:
+      "Target height in meters. Treat it as camera height. A positive value is above the WGS84 ellipsoid. Default to 100 meters."
+  })
+  targetHeight?: number = 100;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Heading",
+    description:
+      "Heading in degrees. Treat it as camera bearing. North is 0. A positive value rotates clockwise, negative anti-clockwise. Default to 0."
+  })
+  heading?: number = 0;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Pitch",
+    description:
+      "Pitch in degrees. Treat it as camera pitch. A positive value is to look down, negative up. Default to 45."
+  })
+  pitch?: number = 45;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Range",
+    description:
+      "The range in meters. It is the distance between the target position and camera position projected onto the local plane. Not negative and default to 500."
+  })
+  range?: number = 500;
+}
+export class VectorTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "number",
+    name: "x",
+    description: "X component of vector in the Earth-centered Fixed frame."
+  })
+  x?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "y",
+    description: "Y component of vector in the Earth-centered Fixed frame."
+  })
+  y?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "z",
+    description: "Z component of vector in the Earth-centered Fixed frame."
+  })
+  z?: number;
+}
+export class CameraTraits extends RectangleTraits {
+  @objectTrait({
+    type: VectorTraits,
+    name: "position",
+    description:
+      "Position of the camera in the Earth-centered Fixed frame in meters."
+  })
+  position?: VectorTraits;
+
+  @objectTrait({
+    type: VectorTraits,
+    name: "direction",
+    description:
+      "The look direction of the camera in the Earth-centered Fixed frame."
+  })
+  direction?: VectorTraits;
+
+  @objectTrait({
+    type: VectorTraits,
+    name: "up",
+    description:
+      "The up vector direction of the camera in the Earth-centered Fixed frame."
+  })
+  up?: VectorTraits;
+}
+
+export class IdealZoomTraits extends ModelTraits {
+  @objectTrait({
+    type: LookAtTraits,
+    name: "Look at",
+    description: "Parameters for camera to look at a target."
+  })
+  lookAt?: LookAtTraits;
+
+  @objectTrait({
+    type: CameraTraits,
+    name: "Camera",
+    description:
+      "Use camera position, direction and up if fully defined. Otherwise use rectangle if fully defined."
+  })
+  camera?: CameraTraits;
+}
 export class InitialMessageTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
@@ -96,6 +207,13 @@ export default class MappableTraits extends mixTraits(AttributionTraits) {
   })
   rectangle?: RectangleTraits;
 
+  @objectTrait({
+    type: IdealZoomTraits,
+    name: "Ideal zoom",
+    description: "Override default ideal zoom if the given values are valid."
+  })
+  idealZoom?: IdealZoomTraits;
+
   @primitiveTrait({
     type: "boolean",
     name: "Disable Preview",
@@ -111,6 +229,14 @@ export default class MappableTraits extends mixTraits(AttributionTraits) {
       "Disables the zoom to (aka 'Ideal Zoom') button in the workbench."
   })
   disableZoomTo: boolean = false;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Zoom on enable",
+    description:
+      "Zoom to dataset when added to workbench. Doesn't work if `disableZoomTo` is true."
+  })
+  zoomOnAddToWorkbench: boolean = false;
 
   @primitiveTrait({
     type: "boolean",

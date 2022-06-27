@@ -38,6 +38,9 @@ terriamap:
             userAgent: TerriaBot (TerriaJS Feedback)
             issuesUrl: https://api.github.com/repos/TerriaJS/demo-feedback/issues
             accessToken: secret
+        singlePageRouting:
+            resolvePathRelativeToWwwroot: "/index.html"
+            resolveUnmatchedPathsWithIndexHtml: true
     clientConfig:
         initializationUrls:
         - simple
@@ -58,6 +61,20 @@ terriamap:
             mobileDefaultViewerMode: "2d"
             experimentalFeatures: true
             feedbackUrl: "feedback"
+            languageConfiguration:
+                enabled: true
+                languages:
+                    en: English
+                    ca: "Català"
+                    cs: "Čeština"
+                    ja: "日本語"
+                    pt_BR: "Português do Brasil"
+                    it: "Italiano"
+                    fr: "Français"
+                    km: "ខ្មែរ"
+                    zh_Hans: "中文"
+                    nb_NO: "Bokmål"
+                    id: "Bahasa Indonesia"
             helpContent:
                 -
                   title: "Getting started with the map"

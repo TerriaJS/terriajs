@@ -59,11 +59,12 @@
 }
 
 .btn--wrapper {
-  text-align: right;
+  text-align: left;
 }
 
 .btn--advanced {
   outline: 0;
+  padding: 0em;
 }
 
 .img--share {
@@ -144,10 +145,6 @@
   margin: 2px;
 }
 
-.print-view-loader {
-  fill: $text-light;
-}
-
 .warning {
   margin: $padding 0;
   border-radius: $radius-small;
@@ -165,4 +162,40 @@
     text-decoration: underline;
     cursor: pointer;
   }
+}
+
+.checkbox {
+  padding: 0.5em;
+  float: left;
+}
+
+.include-story-option {
+  padding-right: 0;
+  button {
+    text-align: left;
+    border: 0px;
+    background: transparent;
+    outline: 0;
+    padding-right: 0;
+  }
+  svg {
+    display: inline-block;
+    padding: 0 5px;
+    fill: #fff;
+    height: 10px;
+    width: 10px;
+    box-sizing: content-box;
+  }
+}
+
+.getShareSaveHelpText {
+  text-decoration: underline;
+  padding-top: 0.8em;
+  cursor: help;
+}
+
+hr.thin-line-divider {
+  border: 0;
+  height: 0;
+  border-top: 0.5px solid rgba(255, 255, 255, 0.15);
 }

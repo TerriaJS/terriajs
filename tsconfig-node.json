@@ -2,7 +2,7 @@
 // Build with ./node_modules/.bin/tsc -p tsconfig-models.json
 {
   "compilerOptions": {
-      "target": "es2018",
+      "target": "es2019",
       "experimentalDecorators": true,
       "module": "esNext",
       "moduleResolution": "node",
@@ -26,6 +26,7 @@
           "mapbox__geojson-merge",
           "mapbox__point-geometry",
           "mapbox__vector-tile",
+          "pmtiles",
           "terriajs-html2canvas",
           "urijs",
           "styled-components", // eventually it will be required anyway for SSR.

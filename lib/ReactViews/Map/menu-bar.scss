@@ -26,7 +26,7 @@
   composes: clearfix from "../../Sass/common/_base.scss";
   composes: sm-show from "../../Sass/common/_base.scss";
 
-  margin-bottom: 5px;
+  margin: 0 $padding-small $padding-small $padding-small;
 
   /* Align About button with compass */
   // margin-right: 7px;
@@ -76,29 +76,6 @@
 
 .flex {
   composes: flex from "../../Sass/common/_base.scss";
-}
-
-.langPanel {
-  margin-left: $padding;
-}
-
-.storyBtn {
-  composes: btn from "../../Sass/common/_buttons.scss";
-  composes: btn--map from "../../Sass/common/_buttons.scss";
-
-  // &[aria-expanded="true"] {
-  //   background: $color-primary;
-  //   svg {
-  //     fill: #ffffff;
-  //   }
-  // }
-
-  &:hover,
-  &:focus {
-    svg {
-      fill: #ffffff;
-    }
-  }
 }
 
 .langBtn {

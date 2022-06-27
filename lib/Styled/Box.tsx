@@ -1,6 +1,6 @@
 import { Ref } from "react";
-import styled, { css } from "styled-components";
-import { Overflow, WordBreak, WhiteSpace, OneKeyFrom } from "./Styled.types";
+import styled from "styled-components";
+import { OneKeyFrom, Overflow, WhiteSpace, WordBreak } from "./Styled.types";
 
 interface Column {
   col1?: boolean;
@@ -42,7 +42,7 @@ interface IBoxPropsBase {
   alignItemsFlexEnd?: boolean;
   rightSelf?: boolean;
   column?: boolean;
-  wrap?: boolean;
+  flexWrap?: boolean;
   whiteSpace?: WhiteSpace;
   flex?: any;
   flexShrinkZero?: boolean;
@@ -54,18 +54,21 @@ interface IBoxPropsBase {
   paddedHorizontally?: number | boolean;
   paddedVertically?: number | boolean;
   styledPadding?: string;
+  styledMargin?: string;
   backgroundImage?: any;
   backgroundBlackOverlay?: number;
   wordBreak?: WordBreak;
   overflow?: Overflow;
   overflowY?: Overflow;
+  overflowX?: Overflow;
   ref?: Ref<any>;
   scroll?: boolean;
   style?: any;
+  gap?: number | boolean;
   as?: React.ElementType | keyof JSX.IntrinsicElements;
 }
 
-type IBoxProps = IBoxPropsBase & OneKeyFrom<Column>;
+export type IBoxProps = IBoxPropsBase & OneKeyFrom<Column>;
 
 export const Box = styled.div<IBoxProps>`
   display: flex;
@@ -133,7 +136,7 @@ export const Box = styled.div<IBoxProps>`
   ${props => props.rightSelf && `align-self: flex-end;`}
 
   ${props => props.column && `flex-direction: column;`}
-  ${props => props.wrap && `flex-wrap: wrap;`}
+  ${props => props.flexWrap && `flex-wrap: wrap;`}
 
   ${props => props.flex && `flex: ${props.flex};`}
   ${props => props.flexShrinkZero && `flex-shrink: 0;`}
@@ -172,6 +175,8 @@ export const Box = styled.div<IBoxProps>`
     `}
   ${props => props.styledPadding && `padding: ${props.styledPadding};`}
 
+  ${props => props.styledMargin && `margin: ${props.styledMargin};`}
+  
   ${props =>
     props.backgroundImage &&
     `
@@ -202,6 +207,16 @@ export const Box = styled.div<IBoxProps>`
     `
       overflow-y: ${props.overflowY};
     `}
+    ${props =>
+      props.overflowX &&
+      `
+        overflow-x: ${props.overflowX};
+      `}
+  ${props =>
+    props.gap &&
+    `
+    gap: ${5 * (props.gap === true ? 1 : props.gap)}px;;
+  `}
 
   ${props =>
     props.scroll &&

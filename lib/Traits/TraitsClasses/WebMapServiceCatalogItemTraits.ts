@@ -6,16 +6,18 @@ import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
+import { traitClass } from "../Trait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import DiffableTraits from "./DiffableTraits";
-import ExportableTraits from "./ExportableTraits";
+import ExportWebCoverageServiceTraits from "./ExportWebCoverageServiceTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 import LegendTraits from "./LegendTraits";
 import MappableTraits from "./MappableTraits";
-import RasterLayerTraits from "./RasterLayerTraits";
-import TimeFilterTraits from "./TimeFilterTraits";
+import { MinMaxLevelTraits } from "./MinMaxLevelTraits";
+import ImageryProviderTraits from "./ImageryProviderTraits";
 import UrlTraits from "./UrlTraits";
 
 export const SUPPORTED_CRS_3857 = ["EPSG:3857", "EPSG:900913"];
@@ -135,29 +137,47 @@ export class WebMapServiceAvailableLayerDimensionsTraits extends ModelTraits {
   })
   dimensions?: WebMapServiceAvailableDimensionTraits[];
 }
+export class GetFeatureInfoFormat extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "Type",
+    description:
+      "The type of response to expect from a GetFeatureInfo request.  Valid values are 'json', 'xml', 'html', or 'text'."
+  })
+  type?: "json" | "xml" | "html" | "text" | undefined;
 
-/**
- * Creates a single item in the catalog from one or many WMS layers.<br/>
- * <strong>Note:</strong> <i>To present all layers in an available WMS as individual items in the catalog use the \`WebMapServiceCatalogGroup\`.</i>
- * @example
- * {
- *   "type": "wms",
- *   "name": "Mangrove Cover",
- *   "url": "https://ows.services.dea.ga.gov.au",
- *   "layers": "mangrove_cover_v2_0_2"
- * }
- */
+  @primitiveTrait({
+    type: "string",
+    name: "Format",
+    description:
+      "The info format to request from the WMS server.  This is usually a MIME type such as 'application/json' or text/xml'.  If this parameter is not specified, the provider will request 'json' using 'application/json', 'xml' using 'text/xml', 'html' using 'text/html', and 'text' using 'text/plain'."
+  })
+  format?: string;
+}
+
+@traitClass({
+  description: `Creates a single item in the catalog from one or many WMS layers.
+
+<strong>Note:</strong> <i>To present all layers in an available WMS as individual items in the catalog use the \`WebMapServiceCatalogGroup\`.</i>`,
+  example: {
+    type: "wms",
+    name: "Mangrove Cover",
+    url: "https://ows.services.dea.ga.gov.au",
+    layers: "mangrove_cover_v2_0_2"
+  }
+})
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
-  ExportableTraits,
+  ExportWebCoverageServiceTraits,
   DiffableTraits,
   FeatureInfoTraits,
   LayerOrderingTraits,
-  TimeFilterTraits,
   GetCapabilitiesTraits,
-  RasterLayerTraits,
+  ImageryProviderTraits,
   UrlTraits,
   MappableTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  LegendOwnerTraits,
+  MinMaxLevelTraits
 ) {
   @primitiveTrait({
     type: "string",
@@ -215,42 +235,6 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
 
   @primitiveTrait({
     type: "number",
-    name: "Tile width (in pixels)",
-    description:
-      "Tile width in pixels. This will be added to `GetMap` requests for map tiles using the `width` parameter. Default value is 256 pixels"
-  })
-  tileWidth: number = 256;
-
-  @primitiveTrait({
-    type: "number",
-    name: "Tile height (in pixels)",
-    description:
-      "Tile height in pixels. This will be added to `GetMap` requests for map tiles using the `height` parameter. Default value is 256 pixels"
-  })
-  tileHeight: number = 256;
-
-  @primitiveTrait({
-    type: "number",
-    name: "Minimum Scale Denominator",
-    description:
-      "The denominator of the largest scale (smallest denominator) for which tiles should be requested. " +
-      "For example, if this value is 1000, then tiles representing a scale larger than 1:1000 (i.e. " +
-      "numerically smaller denominator, when zooming in closer) will not be requested.  Instead, tiles of " +
-      "the largest-available scale, as specified by this property, will be used and will simply get " +
-      "blurier as the user zooms in closer."
-  })
-  minScaleDenominator?: number;
-
-  @primitiveTrait({
-    type: "boolean",
-    name: "Hide Layer After Minimum Scale Denominator",
-    description:
-      "True to hide tiles when the `Minimum Scale Denominator` is exceeded. If false, we can zoom in arbitrarily close to the (increasingly blurry) layer."
-  })
-  hideLayerAfterMinScaleDenominator: boolean = false;
-
-  @primitiveTrait({
-    type: "number",
     name: "Maximum Refresh Intervals",
     description:
       "The maximum number of discrete times that can be created by a single " +
@@ -267,30 +251,14 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   disableDimensionSelectors = false;
 
   @primitiveTrait({
-    type: "string",
-    name: "Linked WCS URL",
-    description:
-      "Gets or sets the URL of a WCS that enables clip-and-ship for this WMS item."
-  })
-  linkedWcsUrl?: string;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Linked WCS Coverage Name",
-    description:
-      "Gets or sets the coverage name for linked WCS for clip-and-ship."
-  })
-  linkedWcsCoverage?: string;
-
-  @primitiveTrait({
-    type: "string",
+    type: "boolean",
     name: "Is GeoServer",
     description: "True if this WMS is a GeoServer; otherwise, false."
   })
   isGeoServer: boolean = false;
 
   @primitiveTrait({
-    type: "string",
+    type: "boolean",
     name: "Is Esri",
     description: "True if this WMS is from Esri; otherwise, false."
   })
@@ -330,7 +298,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     type: "number",
     name: "Color scale minimum",
     description:
-      "The minumum of the color scale range. Because COLORSCALERANGE is a non-standard property supported by ncWMS servers, this property is ignored unless WebMapServiceCatalogItem's supportsColorScaleRange is true. WebMapServiceCatalogItem's colorScaleMaximum must be set as well."
+      "The minimum of the color scale range. Because COLORSCALERANGE is a non-standard property supported by ncWMS servers, this property is ignored unless WebMapServiceCatalogItem's supportsColorScaleRange is true. WebMapServiceCatalogItem's colorScaleMaximum must be set as well."
   })
   colorScaleMinimum: number = -50;
 
@@ -349,4 +317,20 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       'The maximum number of "feature infos" that can be displayed in feature info panel.'
   })
   maximumShownFeatureInfos?: number;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Use WMS version 1.3.0",
+    description:
+      'Use WMS version 1.3.0. True by default (unless `url` has `"version=1.1.1"` or `"version=1.1.0"`), if false, then WMS version 1.1.1 will be used.'
+  })
+  useWmsVersion130: boolean = true;
+
+  @objectTrait({
+    type: GetFeatureInfoFormat,
+    name: "GetFeatureInfo format",
+    description:
+      'Format parameter to pass to GetFeatureInfo requests. Defaults to "application/json", "application/vnd.ogc.gml", "text/html" or "text/plain" - depending on GetCapabilities response'
+  })
+  getFeatureInfoFormat?: GetFeatureInfoFormat;
 }

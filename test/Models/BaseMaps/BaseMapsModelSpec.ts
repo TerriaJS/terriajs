@@ -1,5 +1,5 @@
 import { BaseMapsModel } from "../../../lib/Models/BaseMaps/BaseMapsModel";
-import CommonStrata from "../../../lib/Models/CommonStrata";
+import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../lib/Models/Terria";
 const baseMapPositron = {
   item: {

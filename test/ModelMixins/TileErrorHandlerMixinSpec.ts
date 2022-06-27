@@ -6,13 +6,13 @@ import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import MappableMixin, { MapItem } from "../../lib/ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../../lib/ModelMixins/TileErrorHandlerMixin";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import CreateModel from "../../lib/Models/CreateModel";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import CreateModel from "../../lib/Models/Definition/CreateModel";
 import Terria from "../../lib/Models/Terria";
 import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
 import mixTraits from "../../lib/Traits/mixTraits";
-import RasterLayerTraits from "../../lib/Traits/TraitsClasses/RasterLayerTraits";
+import ImageryProviderTraits from "../../lib/Traits/TraitsClasses/ImageryProviderTraits";
 import UrlTraits from "../../lib/Traits/TraitsClasses/UrlTraits";
 
 class TestCatalogItem extends TileErrorHandlerMixin(
@@ -20,7 +20,7 @@ class TestCatalogItem extends TileErrorHandlerMixin(
     CreateModel(
       mixTraits(
         UrlTraits,
-        RasterLayerTraits,
+        ImageryProviderTraits,
         MappableTraits,
         CatalogMemberTraits
       )
@@ -82,7 +82,7 @@ describe("TileErrorHandlerMixin", function() {
     return new Promise((resolve, reject) => {
       const retry: { then?: any; otherwise: any } = error.retry as any;
       if (retry && retry.then) {
-        retry.then(resolve).otherwise(reject);
+        retry.then(resolve).catch(reject);
       } else {
         resolve();
       }
@@ -232,7 +232,9 @@ describe("TileErrorHandlerMixin", function() {
         await onTileLoadError(item, error);
       } catch {}
       expect(Resource.fetchImage).toHaveBeenCalledTimes(
-        item.tileRetryOptions.retries || 0
+        !Array.isArray(item.tileRetryOptions)
+          ? item.tileRetryOptions.retries ?? 0
+          : 0
       );
       expect(item.tileFailures).toBe(1);
     });

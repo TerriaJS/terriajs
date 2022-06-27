@@ -5,20 +5,21 @@ import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
+import ImageryProviderTraits from "./ImageryProviderTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
-import MappableTraits from "./MappableTraits";
-import RasterLayerTraits from "./RasterLayerTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
+import { MinMaxLevelTraits } from "./MinMaxLevelTraits";
 import UrlTraits from "./UrlTraits";
 
 export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
-  MappableTraits,
   FeatureInfoTraits,
-  RasterLayerTraits,
+  ImageryProviderTraits,
   LayerOrderingTraits,
-  MappableTraits,
   UrlTraits,
   CatalogMemberTraits,
-  DiscretelyTimeVaryingTraits
+  LegendOwnerTraits,
+  DiscretelyTimeVaryingTraits,
+  MinMaxLevelTraits
 ) {
   @primitiveTrait({
     type: "string",
@@ -42,30 +43,6 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
       "Additional parameters to pass to the MapServer when requesting images."
   })
   parameters?: JsonObject;
-
-  @primitiveTrait({
-    name: "Allow feature picking",
-    type: "boolean",
-    description:
-      "Indicates whether features in this catalog item can be selected by clicking them on the map."
-  })
-  allowFeaturePicking = true;
-
-  @primitiveTrait({
-    name: "Maximum scale before showing a message",
-    description:
-      "The denominator of the largest scale (smallest denominator) beyond which to show a message explaining that no further zoom levels are available, at the request",
-    type: "number"
-  })
-  maximumScaleBeforeMessage?: number;
-
-  @primitiveTrait({
-    name: "Show tiles after message",
-    description:
-      "Value indicating whether to continue showing tiles when the `maximumScaleBeforeMessage` is exceeded.",
-    type: "boolean"
-  })
-  showTilesAfterMessage = true;
 
   @primitiveTrait({
     name: "Token URL",

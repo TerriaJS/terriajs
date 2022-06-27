@@ -16,6 +16,7 @@ nav:
       - Initialization Files: customizing/initialization-files.md
       - Server-side Config: customizing/server-side-config.md
       - Skinning: customizing/skinning.md
+      - Translation guide: customizing/translation-guide.md
   - Connecting to Data:
       - Overview: connecting-to-data/README.md
       - Cross-Origin Resource Sharing: connecting-to-data/cross-origin-resource-sharing.md
@@ -48,7 +49,9 @@ nav:
       - Setting up Saucelabs: contributing/setting-up-saucelabs.md
       - Problems and Solutions: contributing/problems-and-solutions.md
       - New model layer documentation: contributing/model-layer.md
+      - Traits in depth: contributing/traits-in-depth.md
       - Frontend style guide: contributing/frontend-style-guide.md
       - Version 8 migration guide: contributing/migration-guide.md
+      - Development translation guide: contributing/translation-guide-dev.md
   - Acknowledgements:
       - Attributions: acknowledgements/attributions.md

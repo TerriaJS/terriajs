@@ -1,13 +1,17 @@
 import { runInAction } from "mobx";
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
-import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
-import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
-import MagdaReference from "../../lib/Models/MagdaReference";
+import CatalogGroup from "../../lib/Models/Catalog/CatalogGroup";
+import CatalogMemberFactory from "../../lib/Models/Catalog/CatalogMemberFactory";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
+import GeoJsonCatalogItem from "../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
+import MagdaReference from "../../lib/Models/Catalog/CatalogReferences/MagdaReference";
 import Terria from "../../lib/Models/Terria";
-import StubCatalogItem from "../../lib/Models/StubCatalogItem";
-import { BaseModel } from "../../lib/Models/Model";
+import StubCatalogItem from "../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
+import { BaseModel } from "../../lib/Models/Definition/Model";
+import WebMapServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
+import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
+import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson";
+import ModelFactory from "../../lib/Models/Definition/ModelFactory";
 
 describe("MagdaReference", function() {
   const recordGroupWithOneCsv = {
@@ -314,5 +318,85 @@ describe("MagdaReference", function() {
     expect(unknown.name).toBe("item with no type and definition");
     expect(unknown.type).toBe("magda");
     expect(unknown.target).toBeUndefined();
+  });
+
+  it("can add record aspects by override", function(done) {
+    const theMagdaItemId = "a magda item id";
+    const theRecordName = "Test Record";
+    const theRecordId = "test-record-id";
+    const theType = "wms-group";
+    const theDataUrl = "https://some.wms.service";
+    const theCatalogItemName = "a catalogue item from magda portal";
+
+    // The aspects in this record will be ignored.
+    const theRecord = {
+      id: theRecordId,
+      name: theRecordName,
+      aspects: {
+        "dataset-format": {
+          format: "WMS",
+          confidenceLevel: 0.7
+        },
+        "dcat-distribution-strings": {
+          downloadURL:
+            "http://geofabric.bom.gov.au/simplefeatures/ows?service=WMS&request=GetCapabilities",
+          format: "WMS",
+          issued: "2020-04-21T05:26:45Z",
+          license: "Creative Commons Attribution",
+          title: "WMS - Geofabric"
+        }
+      }
+    };
+
+    // The aspects will be added to the record and used.
+    const theOverriddenAspects = {
+      aspects: {
+        terria: {
+          type: theType,
+          definition: {
+            name: theCatalogItemName,
+            url: theDataUrl
+          },
+          id: theMagdaItemId
+        }
+      }
+    };
+
+    // Simulate a catalog item of magda type.
+    const theCatalogItem = {
+      id: theMagdaItemId,
+      name: theCatalogItemName,
+      recordId: theRecordId,
+      url: "https://a.magda.portal", // ok not being used in the test
+      addOrOverrideAspects: theOverriddenAspects,
+      type: "magda" // ok not being used in the test
+    };
+    const terria = new Terria();
+    const referenceModel = new MagdaReference(undefined, terria);
+    updateModelFromJson(referenceModel, CommonStrata.user, theCatalogItem);
+
+    const catalogItem = MagdaReference.createMemberFromRecord(
+      terria,
+      referenceModel,
+      [],
+      undefined,
+      referenceModel.recordId,
+      theRecord,
+      undefined,
+      undefined,
+      referenceModel.addOrOverrideAspects
+    );
+
+    expect(catalogItem).toBeDefined();
+    expect(catalogItem!.type).toBe(theType);
+    expect((catalogItem as WebMapServiceCatalogGroup).isGroup).toBe(true);
+    expect(
+      (catalogItem as WebMapServiceCatalogGroup).getCapabilitiesUrl
+    ).toContain(theDataUrl);
+    expect((catalogItem as WebMapServiceCatalogGroup).nameInCatalog).toBe(
+      theCatalogItemName
+    );
+    expect(catalogItem!.uniqueId).toBe(theRecordId);
+    done();
   });
 });

@@ -1,12 +1,12 @@
 import i18next from "i18next";
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
-import DimensionTraits from "./DimensionTraits";
-import LegendTraits from "./LegendTraits";
-import ModelTraits from "../ModelTraits";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import ModelTraits from "../ModelTraits";
+import EnumDimensionTraits from "./DimensionTraits";
 
 export class MetadataUrlTraits extends ModelTraits {
   @primitiveTrait({
@@ -22,6 +22,23 @@ export class MetadataUrlTraits extends ModelTraits {
     description: "Title used for metadata URL button."
   })
   title?: string;
+}
+
+export class DataUrlTraits extends mixTraits(MetadataUrlTraits) {
+  @primitiveTrait({
+    type: "string",
+    name: "Type",
+    description: `Type of data URL. This value will be used to provide context or instruction on how to use the data URL. For example \`wcs\` will provide a link to WCS docs.
+    Current supported values are:
+    - \`wfs\` = A Web Feature Service (WFS) base URL
+    - \`wcs\` = A Web Coverage Service (WCS) base URL
+    - \`wfs-complete\` = A complete, ready-to-use link to download features from a WCS server
+    -  \`wcs-complete\` = A complete, ready-to-use link to download features from a WFS server
+    -  \`direct\` = Direct URL to dataset (this is the default if no \`type\` is specified)
+    -  \`none\` = Hide data URL
+    `
+  })
+  type?: "wfs" | "wcs" | "wfs-complete" | "wcs-complete" | "direct" | "none";
 }
 
 export class InfoSectionTraits extends ModelTraits {
@@ -118,7 +135,7 @@ export default class CatalogMemberTraits extends ModelTraits {
   @primitiveArrayTrait({
     type: "string",
     name: "InfoSectionOrder",
-    description: `An array of section titles definining the display order of info sections. If this property is not defined, {@link DataPreviewSections}'s DEFAULT_SECTION_ORDER is used`
+    description: `An array of section titles defining the display order of info sections. If this property is not defined, {@link DataPreviewSections}'s DEFAULT_SECTION_ORDER is used`
   })
   infoSectionOrder?: string[] = [
     i18next.t("preview.disclaimer"),
@@ -168,23 +185,6 @@ export default class CatalogMemberTraits extends ModelTraits {
 
   @primitiveTrait({
     type: "boolean",
-    name: "Hide legend in workbench",
-    description:
-      "Whether the legend is hidden in the workbench for this catalog member."
-  })
-  hideLegendInWorkbench: boolean = false;
-
-  @objectArrayTrait({
-    name: "Legend URLs",
-    description: "The legends to display on the workbench.",
-    type: LegendTraits,
-    idProperty: "index",
-    merge: false
-  })
-  legends?: LegendTraits[];
-
-  @primitiveTrait({
-    type: "boolean",
     name: "Hide source in explorer window",
     description:
       "Indicates that the source of this data should be hidden from the UI (obviously this isn't super-secure as you can just look at the network requests)."
@@ -199,6 +199,14 @@ export default class CatalogMemberTraits extends ModelTraits {
   })
   metadataUrls?: MetadataUrlTraits[];
 
+  @objectArrayTrait({
+    type: DataUrlTraits,
+    name: "Data URLs",
+    description: "Data URLs to show in data catalog.",
+    idProperty: "index"
+  })
+  dataUrls?: DataUrlTraits[];
+
   @primitiveTrait({
     name: "Data Custodian",
     type: "string",
@@ -208,13 +216,13 @@ export default class CatalogMemberTraits extends ModelTraits {
   dataCustodian?: string;
 
   @objectArrayTrait({
-    type: DimensionTraits,
+    type: EnumDimensionTraits,
     idProperty: "id",
     name: "Model dimensions",
     description:
-      "This provides ability to set model JSON through SelectableDimensions (a dropdown)."
+      "This provides ability to set model JSON through SelectableDimensions (a dropdown). When an option is selected, the `value` property will be used to call `updateModelFromJson()`. All string properties support Mustache templates (with the catalog member as context)"
   })
-  modelDimensions?: DimensionTraits[];
+  modelDimensions?: EnumDimensionTraits[];
 
   @primitiveTrait({
     type: "boolean",

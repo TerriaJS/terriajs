@@ -6,8 +6,7 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import addedByUser from "../../Core/addedByUser";
 import getPath from "../../Core/getPath";
-import openGroup from "../../Models/openGroup";
-import removeUserAddedData from "../../Models/removeUserAddedData";
+import removeUserAddedData from "../../Models/Catalog/removeUserAddedData";
 import CatalogGroup from "./CatalogGroup";
 import DataCatalogMember from "./DataCatalogMember";
 
@@ -21,7 +20,6 @@ const DataCatalogGroup = observer(
       /** Overrides whether to get the open state of the group from the group model or manage it internally */
       manageIsOpenLocally: PropTypes.bool,
       userData: PropTypes.bool,
-      overrideState: PropTypes.string,
       onActionButtonClicked: PropTypes.func,
       removable: PropTypes.bool,
       terria: PropTypes.object,
@@ -43,12 +41,6 @@ const DataCatalogGroup = observer(
       };
     },
 
-    toggleStateIsOpen() {
-      this.setState({
-        isOpen: !this.state.isOpen
-      });
-    },
-
     isOpen() {
       if (this.props.manageIsOpenLocally) {
         return this.state.isOpen;
@@ -56,18 +48,16 @@ const DataCatalogGroup = observer(
       return this.props.group.isOpen;
     },
 
-    toggleOpen() {
+    async clickGroup() {
       if (this.props.manageIsOpenLocally) {
-        this.toggleStateIsOpen();
-      } else {
-        openGroup(this.props.group, !this.props.group.isOpen);
+        this.setState({
+          isOpen: !this.state.isOpen
+        });
       }
-    },
-
-    clickGroup() {
-      this.toggleOpen();
-      this.props.group.loadMembers();
-      this.props.viewState.viewCatalogMember(this.props.group);
+      this.props.viewState.viewCatalogMember(
+        this.props.group,
+        !this.props.group.isOpen
+      );
     },
 
     isSelected() {
@@ -135,7 +125,6 @@ const DataCatalogGroup = observer(
                 viewState={this.props.viewState}
                 userData={this.props.userData}
                 overrideOpen={this.props.manageIsOpenLocally}
-                overrideState={this.props.overrideState}
                 onActionButtonClicked={this.props.onActionButtonClicked}
               />
             </For>

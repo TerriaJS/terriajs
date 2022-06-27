@@ -49,7 +49,7 @@ Search provider configuration:
 `search: SearchableItemTraits`
   - `providerType: "indexed"`
     - Required
-    - A string identifying the search provider in the [ItemSearchProviders](../../../lib/Models/ItemSearchProviders.ts) registry. This should be `"indexed"` for `IndexedItemSearchProvider`.
+    - A string identifying the search provider in the [ItemSearchProviders](../../../lib/Models/ItemSearchProviders/ItemSearchProviders.ts) registry. This should be `"indexed"` for `IndexedItemSearchProvider`.
   - `providerOptions: any`
     - Required
     - Options for the indexed item search provider

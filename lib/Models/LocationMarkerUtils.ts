@@ -1,10 +1,9 @@
 import i18next from "i18next";
 import markerIcon from "./markerIcon";
-import prettifyCoordinates from "../Map/prettifyCoordinates";
-import CommonStrata from "./CommonStrata";
-import CzmlCatalogItem from "./CzmlCatalogItem";
+import prettifyCoordinates from "../Map/Vector/prettifyCoordinates";
+import CommonStrata from "./Definition/CommonStrata";
+import CzmlCatalogItem from "./Catalog/CatalogItems/CzmlCatalogItem";
 import Terria from "./Terria";
-import raiseErrorOnRejectedPromise from "./raiseErrorOnRejectedPromise";
 import LatLonHeight from "../Core/LatLonHeight";
 import { toJS } from "mobx";
 
@@ -76,8 +75,6 @@ export function addMarker(
     terria.addModel(catalogItem);
   }
   catalogItem.setTrait(CommonStrata.user, "czmlData", [document, marker]);
-
-  raiseErrorOnRejectedPromise(catalogItem.loadMapItems());
 
   terria.overlays.add(catalogItem);
 

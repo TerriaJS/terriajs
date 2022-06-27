@@ -1,10 +1,10 @@
 import { computed } from "mobx";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
-import createStubCatalogItem from "../../Models/createStubCatalogItem";
-import { BaseModel } from "../../Models/Model";
-import ModelFactory from "../../Models/ModelFactory";
-import upsertModelFromJson from "../../Models/upsertModelFromJson";
+import createStubCatalogItem from "../../Models/Catalog/createStubCatalogItem";
+import { BaseModel } from "../../Models/Definition/Model";
+import ModelFactory from "../../Models/Definition/ModelFactory";
+import upsertModelFromJson from "../../Models/Definition/upsertModelFromJson";
 import Trait, { TraitOptions } from "../Trait";
 
 export interface ModelTraitOptions extends TraitOptions {
@@ -20,7 +20,8 @@ export default function modelReferenceTrait<T>(options: ModelTraitOptions) {
     }
     constructor.traits[propertyKey] = new ModelReferenceTrait(
       propertyKey,
-      options
+      options,
+      constructor
     );
   };
 }
@@ -30,8 +31,8 @@ export class ModelReferenceTrait extends Trait {
   private readonly factory: ModelFactory | undefined;
   private readonly modelParentId: string | undefined;
 
-  constructor(id: string, options: ModelTraitOptions) {
-    super(id, options);
+  constructor(id: string, options: ModelTraitOptions, parent: any) {
+    super(id, options, parent);
     this.factory = options.factory;
     this.modelParentId = options.modelParentId;
   }
@@ -91,7 +92,7 @@ export class ModelReferenceTrait extends Trait {
       );
     }
 
-    return Result.return(
+    return new Result(
       result,
       TerriaError.combine(
         errors,

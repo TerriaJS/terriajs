@@ -1,9 +1,10 @@
 import { ReactChild } from "react";
+import { isComponentOfType } from "react-shallow-testutils";
 import ChartableMixin from "../../../../lib/ModelMixins/ChartableMixin";
-import CreateModel from "../../../../lib/Models/CreateModel";
+import StubCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
+import CreateModel from "../../../../lib/Models/Definition/CreateModel";
+import { BaseModel } from "../../../../lib/Models/Definition/Model";
 import Feature from "../../../../lib/Models/Feature";
-import { BaseModel } from "../../../../lib/Models/Model";
-import StubCatalogItem from "../../../../lib/Models/StubCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import ChartExpandAndDownloadButtons from "../../../../lib/ReactViews/Custom/Chart/ChartExpandAndDownloadButtons";
 import Chart from "../../../../lib/ReactViews/Custom/Chart/FeatureInfoPanelChart";
@@ -14,12 +15,9 @@ import {
   DomElement,
   ProcessNodeContext
 } from "../../../../lib/ReactViews/Custom/CustomComponent";
-import UrlTraits from "../../../../lib/Traits/TraitsClasses/UrlTraits";
 import mixTraits from "../../../../lib/Traits/mixTraits";
 import MappableTraits from "../../../../lib/Traits/TraitsClasses/MappableTraits";
-
-const isComponentOfType: any = require("react-shallow-testutils")
-  .isComponentOfType;
+import UrlTraits from "../../../../lib/Traits/TraitsClasses/UrlTraits";
 
 describe("ChartCustomComponent", function() {
   let terria: Terria;
@@ -72,19 +70,29 @@ describe("ChartCustomComponent", function() {
     const component = new TestComponentWithShareableChartItem();
     const context: ProcessNodeContext = {
       terria: terria,
-      catalogItem: new StubCatalogItem(undefined, terria, undefined),
+      catalogItem: new StubCatalogItem("parent", terria, undefined),
       feature: new Feature({})
     };
     const node: DomElement = {
       name: component.name,
       attribs: {
+        title: "Foo",
         data: '[["x","y","z"],[1,10,3],[2,15,9],[3,8,12],[5,25,4]]',
         sources: "a, b"
       }
     };
-    spyOn(component, "constructShareableCatalogItem").and.callThrough();
+    const spy = spyOn(
+      component,
+      "constructShareableCatalogItem"
+    ).and.callThrough();
     component.processNode(context, node, [], 0);
     expect(component.constructShareableCatalogItem).toHaveBeenCalledTimes(2);
+    // Make sure the id is dependent on parent, title & source name
+    expect(component.constructShareableCatalogItem).toHaveBeenCalledWith(
+      "parent:Foo:a",
+      jasmine.any(Object),
+      undefined
+    );
   });
 });
 
@@ -98,10 +106,12 @@ class TestChartCustomComponent extends ChartCustomComponent<
     id: string | undefined,
     context: ProcessNodeContext,
     sourceReference:
-      | import("../../../../lib/Models/Model").BaseModel
+      | import("../../../../lib/Models/Definition/Model").BaseModel
       | undefined
-  ): TestCatalogItem {
-    return new TestCatalogItem(id, context.terria, undefined);
+  ) {
+    return context.terria
+      ? new TestCatalogItem(id, context.terria, undefined)
+      : undefined;
   }
   protected setTraitsFromAttrs(
     item: TestCatalogItem,

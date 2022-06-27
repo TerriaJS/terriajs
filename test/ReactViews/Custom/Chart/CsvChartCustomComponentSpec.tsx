@@ -1,6 +1,6 @@
-import CsvCatalogItem from "../../../../lib/Models/CsvCatalogItem";
+import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import Feature from "../../../../lib/Models/Feature";
-import StubCatalogItem from "../../../../lib/Models/StubCatalogItem";
+import StubCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import CsvChartCustomComponent from "../../../../lib/ReactViews/Custom/CsvChartCustomComponent";
 import {
@@ -71,6 +71,11 @@ describe("CsvChartCustomComponent", function() {
         expect(csvCatalogItem.columns[1].title).toBe("Speed");
         expect(csvCatalogItem.columns[2].title).toBe("Temperature");
       }
+    });
+
+    it("can create a download url from csv text passed as chart body", function() {
+      const url = component.constructDownloadUrlFromBody("a,b\n1,2\n3,4");
+      expect(url.startsWith("blob:")).toBeTruthy();
     });
   });
 });

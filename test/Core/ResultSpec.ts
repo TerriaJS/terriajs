@@ -20,7 +20,7 @@ describe("Result", function() {
     ).toBe("what");
     expect(caughtError).toBeFalsy();
 
-    const result2 = Result.return("what");
+    const result2 = new Result("what");
 
     expect(result2.ignoreError()).toBe("what");
     expect(result2.throwIfError()).toBe("what");
@@ -44,7 +44,7 @@ describe("Result", function() {
 
     expect(result.ignoreError()).toBe("what");
     expect(result.throwIfError).toThrow();
-    expect(result.throwIfUndefined).toThrow();
+    expect(result.throwIfUndefined()).toBe("what");
     expect(result.error?.message).toBe("some error");
 
     let caughtError = false;
@@ -55,9 +55,9 @@ describe("Result", function() {
     ).toBe("what");
     expect(caughtError).toBeTruthy();
 
-    const result2 = Result.return("what", { message: "some error" });
+    const result2 = new Result(undefined, { message: "some error" });
 
-    expect(result2.ignoreError()).toBe("what");
+    expect(result2.ignoreError()).toBe(undefined);
     expect(result2.throwIfError).toThrow();
     expect(result2.throwIfUndefined).toThrow();
     expect(result2.error?.message).toBe("some error");
@@ -67,7 +67,7 @@ describe("Result", function() {
       result2.catchError(() => {
         caughtError2 = true;
       })
-    ).toBe("what");
+    ).toBe(undefined);
     expect(caughtError2).toBeTruthy();
   });
 });

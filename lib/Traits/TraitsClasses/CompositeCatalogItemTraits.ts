@@ -1,13 +1,15 @@
-import mixTraits from "../mixTraits";
-import CatalogMemberTraits from "./CatalogMemberTraits";
-import MappableTraits from "./MappableTraits";
+import CatalogMemberFactory from "../../Models/Catalog/CatalogMemberFactory";
 import modelReferenceArrayTrait from "../Decorators/modelReferenceArrayTrait";
-import CatalogMemberFactory from "../../Models/CatalogMemberFactory";
+import mixTraits from "../mixTraits";
 import ModelReference from "../ModelReference";
+import CatalogMemberTraits from "./CatalogMemberTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
+import MappableTraits from "./MappableTraits";
 
 export default class CompositeCatalogItemTraits extends mixTraits(
   MappableTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  LegendOwnerTraits
 ) {
   @modelReferenceArrayTrait({
     name: "Members",

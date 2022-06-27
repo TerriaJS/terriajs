@@ -8,7 +8,6 @@ import { withTranslation } from "react-i18next";
 import styled from "styled-components";
 import defined from "terriajs-cesium/Source/Core/defined";
 import MappableMixin from "../../ModelMixins/MappableMixin";
-import openGroup from "../../Models/openGroup";
 import Styles from "./tabs.scss";
 import DataCatalogTab from "./Tabs/DataCatalogTab";
 import MyDataTab from "./Tabs/MyDataTab/MyDataTab";
@@ -24,13 +23,15 @@ const Tabs = observer(
       t: PropTypes.func.isRequired
     },
 
-    onFileAddFinished(files) {
+    async onFileAddFinished(files) {
       const file = files.find(f => MappableMixin.isMixedInto(f));
       if (file) {
-        file
-          .loadMapItems()
-          .then(() => this.props.terria.currentViewer.zoomTo(file, 1));
-        this.props.viewState.viewCatalogMember(file);
+        const result = await this.props.viewState.viewCatalogMember(file);
+        if (result.error) {
+          result.raiseError(this.props.terria);
+        } else {
+          this.props.terria.currentViewer.zoomTo(file, 1);
+        }
       }
       this.props.viewState.myDataIsUploadView = false;
     },
@@ -97,7 +98,7 @@ const Tabs = observer(
       }
     },
 
-    activateTab(category, idInCategory) {
+    async activateTab(category, idInCategory) {
       runInAction(() => {
         this.props.viewState.activeTabCategory = category;
         if (this.props.terria.configParameters.tabbedCatalog) {
@@ -108,10 +109,7 @@ const Tabs = observer(
             )[0];
             // If member was found and member can be opened, open it (causes CkanCatalogGroups to fetch etc.)
             if (defined(member)) {
-              // Open if it's a group or reference that hasn't already been loaded
-              // Otherwise nothing happens
-              openGroup(member);
-              this.props.viewState.previewedItem = member;
+              this.props.viewState.viewCatalogMember(member);
             }
           }
         }
@@ -200,4 +198,4 @@ const ButtonTab = styled.button`
   `}
 `;
 
-module.exports = withTranslation()(Tabs);
+export default withTranslation()(Tabs);

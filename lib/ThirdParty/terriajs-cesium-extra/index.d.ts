@@ -1,5 +1,3 @@
-declare module "terriajs-cesium/Source/ThirdParty/when";
-
 declare module "terriajs-cesium/Source/Scene/TweenCollection" {
   export default class TweenCollection {
     get length(): number;

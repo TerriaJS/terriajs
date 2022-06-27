@@ -8,7 +8,7 @@ import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
 import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
 import Styles from "./legend.scss";
 import { observer, disposeOnUnmount } from "mobx-react";
-import { autorun } from "mobx";
+import { autorun, runInAction } from "mobx";
 
 const geodesic = new EllipsoidGeodesic();
 
@@ -49,8 +49,8 @@ const distances = [
 
 @observer
 class DistanceLegend extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       distanceLabel: undefined,
       barWidth: 0
@@ -58,7 +58,9 @@ class DistanceLegend extends React.Component {
   }
   static displayName = "DistanceLegend";
   static propTypes = {
-    terria: PropTypes.object
+    terria: PropTypes.object,
+    scale: PropTypes.number,
+    isPrintMode: PropTypes.bool
   };
 
   /* eslint-disable-next-line camelcase */
@@ -67,7 +69,6 @@ class DistanceLegend extends React.Component {
     this.removeUpdateSubscription = undefined;
 
     this._lastLegendUpdate = undefined;
-
     this.viewerSubscriptions.push(
       this.props.terria.mainViewer.beforeViewerChanged.addEventListener(() => {
         if (defined(this.removeUpdateSubscription)) {
@@ -93,6 +94,10 @@ class DistanceLegend extends React.Component {
       const scene = this.props.terria.cesium.scene;
       this.removeUpdateSubscription = scene.postRender.addEventListener(() => {
         this.updateDistanceLegendCesium(scene);
+        if (this.props.isPrintMode) {
+          this.removeUpdateSubscription();
+          this.removeUpdateSubscription = null;
+        }
       });
     } else if (defined(this.props.terria.leaflet)) {
       const map = this.props.terria.leaflet.map;
@@ -100,14 +105,15 @@ class DistanceLegend extends React.Component {
       const potentialChangeCallback = function potentialChangeCallback() {
         that.updateDistanceLegendLeaflet(map);
       };
+      if (!this.props.isPrintMode) {
+        that.removeUpdateSubscription = function() {
+          map.off("zoomend", potentialChangeCallback);
+          map.off("moveend", potentialChangeCallback);
+        };
 
-      that.removeUpdateSubscription = function() {
-        map.off("zoomend", potentialChangeCallback);
-        map.off("moveend", potentialChangeCallback);
-      };
-
-      map.on("zoomend", potentialChangeCallback);
-      map.on("moveend", potentialChangeCallback);
+        map.on("zoomend", potentialChangeCallback);
+        map.on("moveend", potentialChangeCallback);
+      }
 
       that.updateDistanceLegendLeaflet(map);
     }
@@ -153,6 +159,7 @@ class DistanceLegend extends React.Component {
 
     geodesic.setEndPoints(leftCartographic, rightCartographic);
     const pixelDistance = geodesic.surfaceDistance;
+    runInAction(() => (this.props.terria.mainViewer.scale = pixelDistance));
 
     // Find the first distance that makes the scale bar less than 100 pixels.
     const maxBarWidth = 100;
@@ -172,7 +179,7 @@ class DistanceLegend extends React.Component {
       }
 
       this.setState({
-        barWidth: (distance / pixelDistance) | 0,
+        barWidth: ((distance / pixelDistance) * this.props.scale) | 0,
         distanceLabel: label
       });
     } else {
@@ -190,11 +197,13 @@ class DistanceLegend extends React.Component {
       .containerPointToLatLng([0, halfHeight])
       .distanceTo(map.containerPointToLatLng([maxPixelWidth, halfHeight]));
 
+    runInAction(() => (this.props.terria.mainViewer.scale = maxMeters / 100));
+
     const meters = L.control.scale()._getRoundNum(maxMeters);
     const label = meters < 1000 ? meters + " m" : meters / 1000 + " km";
 
     this.setState({
-      barWidth: (meters / maxMeters) * maxPixelWidth,
+      barWidth: (meters / maxMeters) * maxPixelWidth * this.props.scale,
       distanceLabel: label
     });
   }
@@ -216,4 +225,9 @@ class DistanceLegend extends React.Component {
     return distanceLabel;
   }
 }
-module.exports = DistanceLegend;
+DistanceLegend.defaultProps = {
+  scale: 1,
+  isPrintMode: false
+};
+
+export default DistanceLegend;

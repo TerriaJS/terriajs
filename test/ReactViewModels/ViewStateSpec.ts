@@ -1,8 +1,10 @@
 import { runInAction } from "mobx";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
-import RollbarErrorProvider from "../../lib/Models/RollbarErrorProvider";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
+import TerriaReference from "../../lib/Models/Catalog/CatalogReferences/TerriaReference";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import CatalogIndexReference from "../../lib/Models/Catalog/CatalogReferences/CatalogIndexReference";
 
 describe("ViewState", function() {
   let terria: Terria;
@@ -17,10 +19,34 @@ describe("ViewState", function() {
     });
   });
 
+  describe("viewCatalogMember", function() {
+    it("handle nested references", async function() {
+      // Test nested reference
+      // CatalogIndexReference -> TerriaReference -> CatalogGroup
+      terria = new Terria();
+
+      const terriaReference = new TerriaReference("test", terria);
+      terriaReference.setTrait(
+        CommonStrata.user,
+        "url",
+        "test/init/wms-v8.json"
+      );
+      terriaReference.setTrait(CommonStrata.user, "isGroup", true);
+      terria.addModel(terriaReference);
+
+      const catalogIndexReference = new CatalogIndexReference("test", terria);
+
+      await viewState.viewCatalogMember(catalogIndexReference);
+
+      expect(viewState.previewedItem).toBeDefined();
+      expect(viewState.previewedItem?.type).toBe("group");
+    });
+  });
+
   describe("removeModelReferences", function() {
-    it("unsets the previewedItem if it matches the model", function() {
+    it("unsets the previewedItem if it matches the model", async function() {
       const item = new SimpleCatalogItem("testId", terria);
-      viewState.previewedItem = item;
+      await viewState.viewCatalogMember(item);
       viewState.removeModelReferences(item);
       expect(viewState.previewedItem).toBeUndefined();
     });
@@ -36,15 +62,6 @@ describe("ViewState", function() {
   describe("error provider", function() {
     it("creates an empty error provider by default", function() {
       expect(viewState.errorProvider).toBeNull();
-    });
-
-    it("can create an error provider with rollbar", function() {
-      terria.configParameters.rollbarAccessToken = "123";
-      viewState.errorProvider = new RollbarErrorProvider({
-        terria: viewState.terria
-      });
-      expect(viewState.errorProvider).toBeDefined();
-      expect(viewState.errorProvider.errorProvider).toBeDefined();
     });
   });
 

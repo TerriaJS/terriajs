@@ -109,7 +109,13 @@ export const FeatureInfoSection = observer(
           value
         })
       );
+
+      // Add entire feature object
+      propertyData.feature = this.props.feature;
+
+      const partials = this.props.template?.partials ?? {};
       propertyData.terria = {
+        partialByName: mustacheRenderPartialByName(partials, propertyData),
         formatNumber: mustacheFormatNumberFunction,
         formatDateTime: mustacheFormatDateTime,
         urlEncodeComponent: mustacheURLEncodeTextComponent,
@@ -629,6 +635,40 @@ function mustacheFormatNumberFunction() {
 }
 
 /**
+ * Returns a function that replaces value in Mustache templates, using this syntax:
+ * {
+ *   "template": {{#terria.partialByName}}{{value}}{{/terria.partialByName}}.
+ *   "partials": {
+ *     "value1": "replacement1",
+ *     ...
+ *   }
+ * }
+ *
+ * E.g. {{#terria.partialByName}}{{value}}{{/terria.partialByName}}
+     "featureInfoTemplate": {
+        "template": "{{Pixel Value}} dwellings in {{#terria.partialByName}}{{feature.data.layerId}}{{/terria.partialByName}} radius.",
+        "partials": {
+          "0": "100m",
+          "1": "500m",
+          "2": "1km",
+          "3": "2km"
+        }
+      }
+ * @private
+ */
+function mustacheRenderPartialByName(partials, templateData) {
+  return () => {
+    return mustacheJsonSubOptions((value, options) => {
+      if (partials && typeof partials[value] === "string") {
+        return Mustache.render(partials[value], templateData);
+      } else {
+        return Mustache.render(value, templateData);
+      }
+    });
+  };
+}
+
+/**
  * Formats the date according to the date format string.
  * If the date expression can't be parsed using Date.parse() it will be returned unmodified.
  *
@@ -785,21 +825,20 @@ function getTimeSeriesChartContext(catalogItem, feature, getChartDetails) {
     CustomComponent.isRegistered("chart")
   ) {
     const chartDetails = getChartDetails();
-    const { title, csvData } = chartDetails;
     const distinguishingId = catalogItem.dataViewId;
     const featureId = defined(distinguishingId)
       ? distinguishingId + "--" + feature.id
       : feature.id;
     if (chartDetails) {
+      const { title, csvData } = chartDetails;
       const result = {
         ...chartDetails,
         id: featureId?.replace(/\"/g, ""),
         data: csvData?.replace(/\\n/g, "\\n")
       };
       const idAttr = 'id="' + result.id + '" ';
-      const sourceAttr = 'sources="1"';
       const titleAttr = title ? `title="${title}"` : "";
-      result.chart = `<chart ${idAttr} ${sourceAttr} ${titleAttr}>${result.data}</chart>`;
+      result.chart = `<chart ${idAttr} ${titleAttr}>${result.data}</chart>`;
       return result;
     }
   }

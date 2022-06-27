@@ -14,6 +14,7 @@ import Styles from "./data-preview.scss";
 import Description from "./Description";
 import GroupPreview from "./GroupPreview";
 import MappablePreview from "./MappablePreview";
+import WarningBox from "./WarningBox";
 
 /**
  * Data preview section, for the preview map see DataPreviewMap
@@ -38,12 +39,13 @@ const DataPreview = observer(
     render() {
       const { t } = this.props;
       let previewed = this.props.previewed;
-      if (previewed !== undefined && ReferenceMixin.is(previewed)) {
-        if (previewed.target === undefined) {
+      if (previewed !== undefined && ReferenceMixin.isMixedInto(previewed)) {
+        // We are loading the nested target because we could be dealing with a nested reference here
+        if (previewed.nestedTarget === undefined) {
           // Reference is not available yet.
           return this.renderUnloadedReference();
         }
-        previewed = previewed.target;
+        previewed = previewed.nestedTarget;
       }
 
       let chartData;
@@ -54,6 +56,12 @@ const DataPreview = observer(
       return (
         <div className={Styles.preview}>
           <Choose>
+            <When condition={previewed && previewed.isLoadingMetadata}>
+              <div className={Styles.previewInner}>
+                <h3 className={Styles.h3}>{previewed.name}</h3>
+                <Loader />
+              </div>
+            </When>
             <When condition={previewed && previewed.isMappable}>
               <div className={Styles.previewInner}>
                 <MappablePreview
@@ -126,13 +134,24 @@ const DataPreview = observer(
           <div className={Styles.previewInner}>
             {isLoading && <Loader />}
             {!isLoading && !hasTarget && (
-              <div className={Styles.placeholder}>
-                <h2>Unable to resolve reference</h2>
-                <p>
-                  This reference could not be resolved because it is invalid or
-                  because it points to something that cannot be visualised.
-                </p>
-              </div>
+              <>
+                <div className={Styles.placeholder}>
+                  <h2>Unable to resolve reference</h2>
+                  {!this.props.previewed.loadReferenceResult?.error ? (
+                    <p>
+                      This reference could not be resolved because it is invalid
+                      or because it points to something that cannot be
+                      visualised.
+                    </p>
+                  ) : null}
+                </div>
+                {this.props.previewed.loadReferenceResult?.error ? (
+                  <WarningBox
+                    error={this.props.previewed.loadReferenceResult?.error}
+                    viewState={this.props.viewState}
+                  />
+                ) : null}
+              </>
             )}
           </div>
         </div>

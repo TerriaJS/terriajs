@@ -1,0 +1,127 @@
+{
+  "version": "8.0.0",
+  "initSources": [
+    {
+      "stratum": "user",
+      "models": {
+        "__User-Added_Data__": {
+          "isOpen": true,
+          "members": [
+            "/https://gist.githubusercontent.com/steve9164/c517308cf52638e1ff3a2992e5aec3d1/raw/b53d846db4e870dca1681332db40962689aa7c35/point.geojson",
+            "/https://gist.githubusercontent.com/steve9164/c517308cf52638e1ff3a2992e5aec3d1/raw/b53d846db4e870dca1681332db40962689aa7c35/point.geojson"
+          ],
+          "knownContainerUniqueIds": [
+            "/"
+          ],
+          "type": "group"
+        },
+        "/https://gist.githubusercontent.com/steve9164/c517308cf52638e1ff3a2992e5aec3d1/raw/b53d846db4e870dca1681332db40962689aa7c35/point.geojson": {
+          "url": "https://gist.githubusercontent.com/steve9164/c517308cf52638e1ff3a2992e5aec3d1/raw/b53d846db4e870dca1681332db40962689aa7c35/point.geojson",
+          "dereferenced": {
+            "url": "https://gist.githubusercontent.com/steve9164/c517308cf52638e1ff3a2992e5aec3d1/raw/b53d846db4e870dca1681332db40962689aa7c35/point.geojson"
+          },
+          "knownContainerUniqueIds": [
+            "__User-Added_Data__"
+          ],
+          "type": "url-reference"
+        },
+        "/": {
+          "type": "group"
+        }
+      },
+      "workbench": [],
+      "timeline": [],
+      "initialCamera": {
+        "west": 151.06492996215823,
+        "south": -33.84434631225147,
+        "east": 151.1054849624634,
+        "north": -33.82072923353272
+      },
+      "homeCamera": {
+        "west": 109,
+        "south": -45,
+        "east": 158,
+        "north": -8
+      },
+      "baseMaps": {
+        "defaultBaseMapId": "basemap-positron"
+      },
+      "viewerMode": "2d",
+      "currentTime": {
+        "dayNumber": 2459648,
+        "secondsOfDay": 9372.995
+      },
+      "showSplitter": false,
+      "splitPosition": 0.4999,
+      "stories": [
+        {
+          "title": "scene 1",
+          "text": "",
+          "id": "f9351ef6-68ca-4b3e-a123-7134c78b46c7",
+          "shareData": {
+            "version": "8.0.0",
+            "initSources": [
+              {
+                "stratum": "user",
+                "models": {
+                  "__User-Added_Data__": {
+                    "isOpen": true,
+                    "members": [
+                      "/https://gist.githubusercontent.com/steve9164/c517308cf52638e1ff3a2992e5aec3d1/raw/b53d846db4e870dca1681332db40962689aa7c35/point.geojson",
+                      "/https://gist.githubusercontent.com/steve9164/c517308cf52638e1ff3a2992e5aec3d1/raw/b53d846db4e870dca1681332db40962689aa7c35/point.geojson"
+                    ],
+                    "knownContainerUniqueIds": [
+                      "/"
+                    ],
+                    "type": "group"
+                  },
+                  "/https://gist.githubusercontent.com/steve9164/c517308cf52638e1ff3a2992e5aec3d1/raw/b53d846db4e870dca1681332db40962689aa7c35/point.geojson": {
+                    "url": "https://gist.githubusercontent.com/steve9164/c517308cf52638e1ff3a2992e5aec3d1/raw/b53d846db4e870dca1681332db40962689aa7c35/point.geojson",
+                    "dereferenced": {
+                      "url": "https://gist.githubusercontent.com/steve9164/c517308cf52638e1ff3a2992e5aec3d1/raw/b53d846db4e870dca1681332db40962689aa7c35/point.geojson"
+                    },
+                    "knownContainerUniqueIds": [
+                      "__User-Added_Data__"
+                    ],
+                    "type": "url-reference"
+                  },
+                  "/": {
+                    "type": "group"
+                  }
+                },
+                "workbench": [
+                  "/https://gist.githubusercontent.com/steve9164/c517308cf52638e1ff3a2992e5aec3d1/raw/b53d846db4e870dca1681332db40962689aa7c35/point.geojson"
+                ],
+                "timeline": [
+                  "/https://gist.githubusercontent.com/steve9164/c517308cf52638e1ff3a2992e5aec3d1/raw/b53d846db4e870dca1681332db40962689aa7c35/point.geojson"
+                ],
+                "initialCamera": {
+                  "west": 151.06492996215823,
+                  "south": -33.84434631225147,
+                  "east": 151.1054849624634,
+                  "north": -33.82072923353272
+                },
+                "homeCamera": {
+                  "west": 109,
+                  "south": -45,
+                  "east": 158,
+                  "north": -8
+                },
+                "baseMaps": {
+                  "defaultBaseMapId": "basemap-positron"
+                },
+                "viewerMode": "2d",
+                "currentTime": {
+                  "dayNumber": 2459648,
+                  "secondsOfDay": 9372.995
+                },
+                "showSplitter": false,
+                "splitPosition": 0.4999
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

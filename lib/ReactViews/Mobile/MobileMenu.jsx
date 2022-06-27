@@ -10,14 +10,13 @@ import MobileMenuItem from "./MobileMenuItem";
 import SettingPanel from "../Map/Panels/SettingPanel";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel";
 // import HelpMenuPanelBasic from "../HelpScreens/HelpMenuPanelBasic";
-import Terria from "../../Models/Terria";
 import { withTranslation } from "react-i18next";
-
-import ViewState from "../../ReactViewModels/ViewState";
 
 import Styles from "./mobile-menu.scss";
 import { runInAction } from "mobx";
 import LangPanel from "../Map/Panels/LangPanel/LangPanel";
+import { useTranslationIfExists } from "../../Language/languageHelpers";
+import { Category, HelpAction } from "../../Core/AnalyticEvents/analyticEvents";
 
 const MobileMenu = observer(
   createReactClass({
@@ -26,9 +25,9 @@ const MobileMenu = observer(
     propTypes: {
       menuItems: PropTypes.arrayOf(PropTypes.element),
       menuLeftItems: PropTypes.arrayOf(PropTypes.element),
-      viewState: PropTypes.instanceOf(ViewState).isRequired,
+      viewState: PropTypes.object.isRequired,
       showFeedback: PropTypes.bool,
-      terria: PropTypes.instanceOf(Terria).isRequired,
+      terria: PropTypes.object.isRequired,
       i18n: PropTypes.object,
       allBaseMaps: PropTypes.array.isRequired,
       t: PropTypes.func.isRequired
@@ -66,15 +65,37 @@ const MobileMenu = observer(
     },
 
     runStories() {
-      runInAction(() => {
-        this.props.viewState.storyBuilderShown = false;
-        this.props.viewState.storyShown = true;
-        this.props.viewState.mobileMenuVisible = false;
-      });
+      this.props.viewState.runStories();
     },
 
     dismissSatelliteGuidanceAction() {
       this.props.viewState.toggleFeaturePrompt("mapGuidesLocation", true, true);
+    },
+
+    /**
+     * If the help configuration defines an item named `mapuserguide`, this
+     * method returns props for showing it in the mobile menu.
+     */
+    mapUserGuide() {
+      const helpItems = this.props.terria.configParameters.helpContent;
+      const mapUserGuideItem = helpItems?.find(
+        ({ itemName }) => itemName === "mapuserguide"
+      );
+      if (!mapUserGuideItem) {
+        return undefined;
+      }
+      const title = useTranslationIfExists(mapUserGuideItem.title);
+      return {
+        href: mapUserGuideItem.url,
+        caption: title,
+        onClick: () => {
+          this.props.terria.analytics?.logEvent(
+            Category.help,
+            HelpAction.itemSelected,
+            title
+          );
+        }
+      };
     },
 
     render() {
@@ -83,6 +104,9 @@ const MobileMenu = observer(
         this.props.terria.configParameters.storyEnabled &&
         defined(this.props.terria.stories) &&
         this.props.terria.stories.length > 0;
+
+      const mapUserGuide = this.mapUserGuide();
+
       // return this.props.viewState.mobileMenuVisible ? (
       return (
         <div>
@@ -122,6 +146,7 @@ const MobileMenu = observer(
                 {menuItem}
               </div>
             </For>
+            {mapUserGuide && <MobileMenuItem {...mapUserGuide} />}
             <If condition={this.props.showFeedback}>
               <MobileMenuItem
                 onClick={this.onFeedbackFormClick}

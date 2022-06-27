@@ -1,4 +1,4 @@
-import CatalogMemberFactory from "../../Models/CatalogMemberFactory";
+import CatalogMemberFactory from "../../Models/Catalog/CatalogMemberFactory";
 import modelReferenceTrait from "../Decorators/modelReferenceTrait";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
@@ -14,11 +14,19 @@ export class BaseMapTraits extends ModelTraits {
   })
   image?: string;
 
+  @primitiveTrait({
+    type: "string",
+    name: "Contrast color",
+    description:
+      "Color which should be used to contrast with basemap (eg for region mapping feature borders)"
+  })
+  contrastColor?: string = "#ffffff";
+
   @modelReferenceTrait({
     factory: CatalogMemberFactory,
     name: "Base map item",
     description:
-      'Catalog item defition to be used for the base map. It is also possible to reference an existing catalog item using its id (i.e. `"//Surface Geology"`).'
+      'Catalog item definition to be used for the base map. It is also possible to reference an existing catalog item using its id (i.e. `"//Surface Geology"`).'
   })
   item?: ModelReference;
 }

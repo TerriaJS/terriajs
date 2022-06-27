@@ -1,6 +1,7 @@
 import { action, computed } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import isDefined from "../../Core/isDefined";
+import { isJsonObject, JsonObject } from "../../Core/Json";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
 import ModelReference from "../../Traits/ModelReference";
@@ -8,50 +9,61 @@ import {
   BaseMapsTraits,
   BaseMapTraits
 } from "../../Traits/TraitsClasses/BaseMapTraits";
-import BingMapsCatalogItem from "../BingMapsCatalogItem";
-import CommonStrata from "../CommonStrata";
-import CreateModel from "../CreateModel";
-import { BaseModel } from "../Model";
+import BingMapsCatalogItem from "../Catalog/CatalogItems/BingMapsCatalogItem";
+import CommonStrata from "../Definition/CommonStrata";
+import CreateModel from "../Definition/CreateModel";
+import { BaseModel } from "../Definition/Model";
+import ModelPropertiesFromTraits from "../Definition/ModelPropertiesFromTraits";
+import updateModelFromJson from "../Definition/updateModelFromJson";
 import Terria from "../Terria";
-import updateModelFromJson from "../updateModelFromJson";
-import filterOutUndefined from "./../../Core/filterOutUndefined";
 import { defaultBaseMaps } from "./defaultBaseMaps";
+import MappableMixin from "../../ModelMixins/MappableMixin";
 
 export class BaseMapModel extends CreateModel(BaseMapTraits) {}
+
+export type BaseMapJson = Partial<
+  Omit<ModelPropertiesFromTraits<BaseMapTraits>, "item"> & {
+    item: JsonObject | string;
+  }
+>;
+export type BaseMapsJson = Partial<
+  Omit<ModelPropertiesFromTraits<BaseMapsTraits>, "items"> & {
+    items: BaseMapJson[];
+  }
+>;
+
+export interface BaseMapItem {
+  image?: string;
+  contrastColor?: string;
+  item: MappableMixin.Instance;
+}
 
 export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
   /**
    * List of the basemaps to show in setting panel
    */
   @computed
-  get baseMapItems() {
-    return filterOutUndefined(
-      this.filterBaseMapItems().map(({ item, image }) =>
-        !item || ModelReference.isRemoved(item)
-          ? undefined
-          : {
-              image: image,
-              item: this.terria.getModelById(BaseModel, item)
-            }
-      )
-    );
-  }
+  get baseMapItems(): BaseMapItem[] {
+    const enabledBaseMaps: BaseMapItem[] = [];
 
-  private filterBaseMapItems() {
-    const items = this.items;
-    const baseMaps: BaseMapModel[] = [];
-    if (!this.enabledBaseMaps) {
-      return this.items;
-    }
-
-    for (const id of this.enabledBaseMaps) {
-      const baseMap = items?.find(baseMap => baseMap.item === id);
-      if (baseMap?.item && !ModelReference.isRemoved(baseMap.item)) {
-        baseMaps.push(baseMap);
+    this.items.forEach(baseMapItem => {
+      if (
+        baseMapItem.item &&
+        !ModelReference.isRemoved(baseMapItem.item) &&
+        (!this.enabledBaseMaps ||
+          this.enabledBaseMaps.includes(baseMapItem.item))
+      ) {
+        const itemModel = this.terria.getModelById(BaseModel, baseMapItem.item);
+        if (MappableMixin.isMixedInto(itemModel))
+          enabledBaseMaps.push({
+            image: baseMapItem.image,
+            contrastColor: baseMapItem.contrastColor,
+            item: itemModel
+          });
       }
-    }
+    });
 
-    return baseMaps;
+    return enabledBaseMaps;
   }
 
   // Can't do this in constructor since {@link CatalogMemberFactory} doesn't
@@ -84,34 +96,30 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
   }
 
   @action
-  loadFromJson(stratumId: CommonStrata, newBaseMaps: any): Result {
+  loadFromJson(stratumId: CommonStrata, newBaseMaps: BaseMapsJson): Result {
     const errors: TerriaError[] = [];
     const { items, ...rest } = newBaseMaps;
     if (items !== undefined) {
       const { items: itemsTrait } = this.traits;
       const newItemsIds = itemsTrait.fromJson(this, stratumId, items);
-      newItemsIds
-        .catchError(error => {
-          errors.push(error);
-        })
-        ?.forEach((member: BaseMapModel) => {
-          const existingItem = this.items.find(
-            baseMap => baseMap.item === member.item
-          );
-          if (existingItem) {
-            // object array trait doesn't automatically update model item
-            existingItem.setTrait(stratumId, "image", member.image);
-          } else {
-            this.add(stratumId, member);
-          }
-        });
+      newItemsIds.pushErrorTo(errors)?.forEach((member: BaseMapModel) => {
+        const existingItem = this.items.find(
+          baseMap => baseMap.item === member.item
+        );
+        if (existingItem) {
+          // object array trait doesn't automatically update model item
+          existingItem.setTrait(stratumId, "image", member.image);
+        } else {
+          this.add(stratumId, member);
+        }
+      });
     }
 
-    updateModelFromJson(this, stratumId, rest).catchError(error => {
-      errors.push(error);
-    });
+    if (isJsonObject(rest))
+      updateModelFromJson(this, stratumId, rest).pushErrorTo(errors);
+    else errors.push(TerriaError.from("Invalid JSON object"));
 
-    return Result.return(
+    return new Result(
       undefined,
       TerriaError.combine(
         errors,
