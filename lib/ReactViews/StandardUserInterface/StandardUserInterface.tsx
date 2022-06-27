@@ -11,7 +11,6 @@ import {
 } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
 import arrayContains from "../../Core/arrayContains";
-import { DataAttributionContextProvider } from "../../ReactContexts/DataAttributionContext";
 import ViewState from "../../ReactViewModels/ViewState";
 import { MapCredits } from "../Credits";
 import Disclaimer from "../Disclaimer";
@@ -316,37 +315,35 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
                 </Medium>
 
                 <section className={Styles.map}>
-                  <DataAttributionContextProvider>
-                    <ProgressBar terria={terria} />
-                    <MapColumn
+                  <ProgressBar terria={terria} />
+                  <MapColumn
+                    terria={terria}
+                    viewState={props.viewState}
+                    customFeedbacks={customElements.feedback}
+                    customElements={customElements}
+                    allBaseMaps={allBaseMaps}
+                    animationDuration={animationDuration}
+                  />
+                  <MapCredits
+                    hideTerriaLogo={!!terria.configParameters.hideTerriaLogo}
+                    credits={terria.configParameters.extraCreditLinks?.slice()}
+                    currentViewer={terria.mainViewer.currentViewer}
+                  />
+                  <div id="map-data-attribution"></div>
+                  <main>
+                    <ExplorerWindow
                       terria={terria}
                       viewState={props.viewState}
-                      customFeedbacks={customElements.feedback}
-                      customElements={customElements}
-                      allBaseMaps={allBaseMaps}
-                      animationDuration={animationDuration}
                     />
-                    <MapCredits
-                      hideTerriaLogo={!!terria.configParameters.hideTerriaLogo}
-                      credits={terria.configParameters.extraCreditLinks?.slice()}
-                      currentViewer={terria.mainViewer.currentViewer}
-                    />
-                    <div id="map-data-attribution"></div>
-                    <main>
-                      <ExplorerWindow
-                        terria={terria}
-                        viewState={props.viewState}
-                      />
-                      {props.terria.configParameters.experimentalFeatures &&
-                        !props.viewState.hideMapUi && (
-                          <ExperimentalFeatures
-                            terria={terria}
-                            viewState={props.viewState}
-                            experimentalItems={customElements.experimentalMenu}
-                          />
-                        )}
-                    </main>
-                  </DataAttributionContextProvider>
+                    {props.terria.configParameters.experimentalFeatures &&
+                      !props.viewState.hideMapUi && (
+                        <ExperimentalFeatures
+                          terria={terria}
+                          viewState={props.viewState}
+                          experimentalItems={customElements.experimentalMenu}
+                        />
+                      )}
+                  </main>
                 </section>
               </div>
             </div>
