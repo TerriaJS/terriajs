@@ -1,9 +1,8 @@
 import { reaction } from "mobx";
 import { observer } from "mobx-react";
-import React, { FC, useEffect } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import GlobeOrMap from "../../../Models/GlobeOrMap";
-import { useDataAttributionContext } from "../../../ReactContexts/DataAttributionContext";
 import { ICredit } from "../Credit.type";
 import { Credits } from "../Credits";
 import { CreditsContainer } from "../CreditsContainer";
@@ -21,11 +20,15 @@ interface IMapCreditsProps {
 export const MapCredits: FC<IMapCreditsProps> = observer(
   ({ currentViewer, hideTerriaLogo, credits }) => {
     const { t } = useTranslation();
-    const {
-      dataAttributionVisible,
-      showDataAttribution,
-      hideDataAttribution
-    } = useDataAttributionContext();
+    const [dataAttributionVisible, setDataAttributionVisible] = useState(false);
+
+    const showDataAttribution = useCallback(() => {
+      setDataAttributionVisible(true);
+    }, [setDataAttributionVisible]);
+
+    const hideDataAttribution = useCallback(() => {
+      setDataAttributionVisible(false);
+    }, [setDataAttributionVisible]);
 
     useEffect(() => {
       return reaction(
