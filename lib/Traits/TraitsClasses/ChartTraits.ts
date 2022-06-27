@@ -1,11 +1,12 @@
 import { ChartItemType } from "../../ModelMixins/ChartableMixin";
 import Glyphs, { GlyphStyle } from "../../ReactViews/Custom/Chart/Glyphs";
 import primitiveTrait from "../Decorators/primitiveTrait";
-import ModelTraits from "../ModelTraits";
+import mixTraits from "../mixTraits";
+import MappableTraits from "./MappableTraits";
 
 const availableChartGlyphStyles = Object.keys(Glyphs).join(", ");
 
-export default class ChartTraits extends ModelTraits {
+export default class ChartTraits extends mixTraits(MappableTraits) {
   @primitiveTrait({
     type: "string",
     name: "Chart type",

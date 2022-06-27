@@ -51,7 +51,7 @@ import { ImageryParts } from "./MappableMixin";
 function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
   abstract class TableMixin
     extends ExportableMixin(
-      ChartableMixin(DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base)))
+      DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base))
     )
     implements SelectableDimensions, ViewingControls {
     /**
@@ -181,7 +181,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           columnType =>
             this.styles.find(
               s =>
-                s.color.colorColumn &&
                 this.findColumnByName(s.color.colorColumn)?.type === columnType
             )?.id
         );
@@ -218,11 +217,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     get yColumns(): TableColumn[] {
       const lines = this.activeTableStyle.chartTraits.lines;
       return filterOutUndefined(
-        lines.map(line =>
-          line.yAxisColumn === undefined
-            ? undefined
-            : this.findColumnByName(line.yAxisColumn)
-        )
+        lines.map(line => this.findColumnByName(line.yAxisColumn))
       );
     }
 
@@ -390,9 +385,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
       return filterOutUndefined(
         lines.map(line => {
-          const yColumn = line.yAxisColumn
-            ? this.findColumnByName(line.yAxisColumn)
-            : undefined;
+          const yColumn = this.findColumnByName(line.yAxisColumn);
           if (yColumn === undefined) {
             return undefined;
           }
@@ -742,8 +735,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return this.tableColumns.find(column => column.type === type);
     }
 
-    findColumnByName(name: string): TableColumn | undefined {
-      return this.tableColumns.find(column => column.name === name);
+    findColumnByName(name: string | undefined): TableColumn | undefined {
+      return isDefined(name)
+        ? this.tableColumns.find(column => column.name === name)
+        : undefined;
     }
 
     protected async forceLoadMapItems() {

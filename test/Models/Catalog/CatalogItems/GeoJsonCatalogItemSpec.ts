@@ -40,6 +40,45 @@ describe("GeoJsonCatalogItemSpec", () => {
     });
 
     describe("GeoJsonCatalogItem", function() {
+      it("handles features with null geom", async () => {
+        geojson.setTrait(CommonStrata.user, "geoJsonData", {
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              properties: {
+                LGA_CODE19: "19499",
+                LGA_NAME19: "No usual address (NSW)",
+                STE_CODE16: "1",
+                STE_NAME16: "New South Wales",
+                AREASQKM19: 0.0
+              },
+              geometry: null
+            },
+            {
+              type: "Feature",
+              properties: {},
+              geometry: {
+                type: "Polygon",
+                coordinates: [
+                  [
+                    [144.80667114257812, -32.96258644191746],
+                    [145.008544921875, -33.19273094190691],
+                    [145.557861328125, -32.659031913817685],
+                    [145.04287719726562, -32.375322284319346],
+                    [144.7998046875, -32.96719522935591],
+                    [144.80667114257812, -32.96258644191746]
+                  ]
+                ]
+              }
+            }
+          ]
+        });
+
+        await geojson.loadMapItems();
+        expect(geojson.readyData?.features.length).toBe(1);
+      });
+
       it("reloads when the URL is changed", async function() {
         geojson.setTrait(
           CommonStrata.user,
