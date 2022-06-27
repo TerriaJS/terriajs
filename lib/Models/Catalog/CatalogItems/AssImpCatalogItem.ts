@@ -3,7 +3,9 @@ import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import loadArrayBuffer from "../../../Core/loadArrayBuffer";
 import loadBlob, { isZip, parseZipArrayBuffers } from "../../../Core/loadBlob";
+import TerriaError from "../../../Core/TerriaError";
 import GltfMixin from "../../../ModelMixins/GltfMixin";
+import { GlTf } from "../../../ThirdParty/GlTf";
 import AssImpCatalogItemTraits from "../../../Traits/TraitsClasses/AssImpCatalogItemTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
@@ -46,14 +48,31 @@ export default class AssImpCatalogItem
 
     // TODO: revokeObjectURL() for all created objects
 
-    /** Maps filenames to absolute URLs
-     * This is used to substitute paths in GLTF (eg .bin files or image/texture paths)
-     * - All local data (eg files converted through assimp - or locally uploaded zip file) use `createObjectURL` to get URL to local blob
+    /** Maps paths to absolute URLs
+     * This is used to substitute paths in GlTf (eg buffer or image/texture paths)
+     * - All local data (eg files output from assimp - or locally uploaded zip file) - use `createObjectURL` to get URL to local blob
      * - All remote data will use absolute URLs
+     *
+     * For example
+     * - **Remote data** - explicitly defined in `this.url` or `this.urls`
+     *    - URL "http://localhost:3001/some-dir/some-file.jpg" (as defined in `url` or `urls`)
+     *    - path in GlTf = "some-file.jpg"
+     *    - So we replace gltf.images[i].uri "some-file.jpg" with "http://localhost:3001/some-dir/some-file.jpg" (using `dataUrls`)
+     * - **Remote data** - implicitly references in 3D file
+     *    - URL "http://localhost:3001/some-dir/some-collada-file.dae" (as defined in `url` or `urls`)
+     *    - This Collada file internally references "some-file.jpg"
+     *    - `baseUrl` is equal to "http://localhost:3001/some-dir/"
+     *    - So we replace gltf.images[i].uri "some-file.jpg" with "http://localhost:3001/some-dir/some-file.jpg" (this is done post conversion to GlTf)
+     * - **Local data** - from zip file
+     *    - Upload zip file with "some-file.jpg"
+     *    - Create local blob URL "blob:http://localhost:3001/some-blob-uuid"
+     *    - So we replace gltf.images[i].uri "some-file.jpg" with "blob:http://localhost:3001/some-blob-uuid" (using `dataUrls`)
      */
     const dataUrls: Map<string, string> = new Map();
 
-    /** List of files to input into `assimpjs` */
+    /** List of files to input into `assimpjs`
+     * This will be populated with all files downloaded using `url` or `urls` - and all files from downloaded/uploaded zip files
+     */
     const files: {
       name: string;
       arrayBuffer: ArrayBuffer;
@@ -61,7 +80,7 @@ export default class AssImpCatalogItem
 
     await Promise.all(
       urls.map(async url => {
-        // Treat all URLs as zip if they have been uploaded
+        // **Local data** - treat all URLs as zip if they have been uploaded
         if (isZip(url) || this.hasLocalData) {
           const blob = await loadBlob(url);
           const zipFiles = await parseZipArrayBuffers(blob);
@@ -77,7 +96,9 @@ export default class AssImpCatalogItem
             // Push filename -> local data blob URI
             dataUrls.set(zipFile.fileName, dataUrl);
           });
-        } else {
+        }
+        // **Remote data** - explicitly defined in `url` or `urls`
+        else {
           const arrayBuffer = await loadArrayBuffer(url);
           const uri = new URI(url);
           const name = uri.filename();
@@ -92,116 +113,132 @@ export default class AssImpCatalogItem
       })
     );
 
+    // Init assimpjs
     const assimpjs = (await import("assimpjs")).default;
     const ajs = await assimpjs();
 
-    // Create new file list object, and add the files
+    // Create assimpjs FileList object, and add the files
     let fileList = new ajs.FileList();
     for (let i = 0; i < files.length; i++) {
       fileList.AddFile(files[i].name, new Uint8Array(files[i].arrayBuffer));
     }
 
-    // Convert files to GLTF 2
+    // Convert files to GlTf 2
     let result = ajs.ConvertFileList(fileList, "gltf2");
 
     const fileCount = result.FileCount();
 
     if (!result.IsSuccess() || fileCount == 0) {
-      throw result.GetErrorCode();
+      throw TerriaError.from(result.GetErrorCode(), {
+        title: "Failed to convert files to GlTf"
+      });
     }
 
+    /** This is used so we only set `this.gltfModelUrl` after process has finished */
     let gltfModelUrl: string | undefined;
 
-    // Go through files backward - as `gltf` file is first, followed by dependencies (eg .bin)
-    // We may need to correct paths in GLTF file, as dependencies are stored in browser - we need to use local blob object URL
+    // Go through files backward - as GlTf file is first (i==0), followed by dependencies (eg buffers, textures)
+    // As we may need to correct paths in GlTf file. Dependencies are stored in browser - so we need to use local blob object URL before processing GlTf file
     for (let i = fileCount - 1; i >= 0; i--) {
       const file = result.GetFile(i);
       const path = file.GetPath();
 
       let arrayBuffer: ArrayBuffer = file.GetContent();
 
-      // i === 0 is GLTF file
+      // i === 0 is GlTf file
       // So we parse the file into JSON and edit paths for buffers, images, ...
       if (i === 0) {
         const file = new File([arrayBuffer], path);
 
-        const gltfJson = JSON.parse(await file.text());
+        const gltfJson = JSON.parse(await file.text()) as GlTf;
 
         // Replace buffer file URIs
-        gltfJson.buffers?.forEach((buffer: any) => {
+        // Buffer files are generated by Assimp - so we just replace the path with local Blob URL
+        gltfJson.buffers?.forEach(buffer => {
+          if (!buffer.uri) return;
+
           const newUri = dataUrls.get(buffer.uri);
-          console.log(`replacing buffer ${buffer.uri} with ${newUri}`);
+          console.log(
+            `replacing GlTf buffer path \`${buffer.uri}\` with \`${newUri}\``
+          );
           buffer.uri = newUri;
         });
 
-        /** For some reason Cesium ignores textures if the KHR_materials_pbrSpecularGlossiness material extension is used.
-         *
-         * So if we have images, we go through all materials and delete the extension
-         */
-        if (gltfJson.images && gltfJson.images.length > 0) {
-          gltfJson.materials?.forEach((material: any) => {
-            if (material.extensions.KHR_materials_pbrSpecularGlossiness)
-              material.extensions.KHR_materials_pbrSpecularGlossiness = undefined;
-          });
-        }
-
-        // Replace buffer file URIs
-        gltfJson.images?.forEach((image: any) => {
-          let newUrl: string = image.uri;
+        // Replace image file URIs
+        // Image files are external to Assimp - so we do a bit more wrangling:
+        // - Replace back slashes with forward slash
+        // - Remove leading "./" or "//"
+        // - See dataUrls for info on URL transformation
+        gltfJson.images?.forEach(image => {
+          if (!image.uri) return;
 
           // Replace back slashes with forward slash
-          newUrl = newUrl.replace(/\\/g, "/");
+          let newUrl = image.uri.replace(/\\/g, "/");
           // Remove start "./" or "//" from uri
           if (newUrl.startsWith("//") || newUrl.startsWith("./")) {
             newUrl = newUrl.slice(2);
           }
 
-          // Try to replace image uri with
-          // dataUrl - if image matches url
-          // or absolute url to baseUrl
-
+          // Do we have substitute URL in dataUrls (see dataUrls for more info)
+          // This covers:
+          // - Remote data - explicitly defined in `url` or `urls`
+          // - Local data - from zip file
           if (dataUrls.has(newUrl)) {
             newUrl = dataUrls.get(newUrl)!;
-          } else if (baseUrl) {
-            // and resolve URI to baseUrl
-            image.uri = new URI(newUrl.replace(/\\/g, "/"))
-              .absoluteTo(baseUrl)
-              .toString();
+          }
+          // No substitute URL - so resolve URL to baseUrl (if defined)
+          // This covers:
+          // - Remote data - implicitly defined in 3D file
+          else if (baseUrl) {
+            image.uri = new URI(newUrl).absoluteTo(baseUrl).toString();
           }
 
           if (newUrl !== image.uri) {
-            console.log(`replacing image ${newUrl} with ${image.uri}`);
+            console.log(
+              `replacing GlTf image path \`${image.uri}\` with \`${newUrl}\``
+            );
             image.uri = newUrl;
           }
         });
 
-        // Turn GLTF back into array buffer
+        // TODO: Replace KHR_techniques_webgl extension shader URIs?
+        // https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Archived/KHR_techniques_webgl/README.md#shader
+
+        /** For some reason Cesium ignores textures if the KHR_materials_pbrSpecularGlossiness material extension is used and model has no normals.
+         *
+         * Here's the code that shades based on the diffuseTexture when that extension is in use: https://github.com/TerriaJS/cesium/blob/terriajs/Source/Scene/processPbrMaterials.js#L797
+         * And it's inside this conditional: https://github.com/TerriaJS/cesium/blob/terriajs/Source/Scene/processPbrMaterials.js#L771
+         *
+         * For the moment - if we have images, we go through all materials and delete the extension
+         */
+        if (gltfJson.images && gltfJson.images.length > 0) {
+          gltfJson.materials?.forEach(material => {
+            if (material.extensions?.KHR_materials_pbrSpecularGlossiness)
+              material.extensions.KHR_materials_pbrSpecularGlossiness = undefined;
+          });
+        }
+
+        // Turn GlTf back into array buffer - this overwrites existing GlTf
         arrayBuffer = Buffer.from(JSON.stringify(gltfJson));
       }
 
       // Convert assimp output file to blob and create object URL
       const blob = new Blob([arrayBuffer]);
       const dataUrl = URL.createObjectURL(blob);
+      // Add map from filePath to local blob URL
+      // This will be used to substitute paths when processing GlTf file
       dataUrls.set(path, dataUrl);
 
+      // GlTf file
       if (i === 0) {
         gltfModelUrl = dataUrl;
       }
 
       // Debug - download files
-
-      FileSaver.saveAs(blob, path);
+      if (this.debugDownloadGltf) FileSaver.saveAs(blob, path);
     }
 
-    // Debug - place in Hobart and scale up
-
     runInAction(() => {
-      this.setTrait("user", "scale", 100);
-      this.setTrait("user", "origin", {
-        latitude: -42.8826,
-        longitude: 147.3257,
-        height: 100
-      });
       this.gltfModelUrl = gltfModelUrl;
     });
   }
