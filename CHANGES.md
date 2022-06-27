@@ -9,6 +9,7 @@ Change Log
 * Wrap the following components in `observer` - `ChartItem`, `LineChart`, (chart) `Legends`, `ChartPanelDownloadButton`
 * Improve TerriaReference error logging
 * Fix handling GeoJSON if features have null geometry
+* Limit workbench item title to 2 lines and show overflow: ellipsis after.
 * [The next improvement]
 
 #### 8.2.6 - 2022-06-17
