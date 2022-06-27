@@ -1,10 +1,11 @@
 import i18next from "i18next";
+import { isEqual } from "lodash-es";
 import {
   autorun,
   computed,
-  runInAction,
+  IObservableArray,
   observable,
-  IObservableArray
+  runInAction
 } from "mobx";
 import { computedFn } from "mobx-utils";
 import AssociativeArray from "terriajs-cesium/Source/Core/AssociativeArray";
@@ -473,14 +474,17 @@ export default class Cesium extends GlobeOrMap {
           })
           .map(({ credit }) => credit.html);
 
-        if (this.arrayEquals(credits, this.cesiumDataAttributions.toJS()))
-          return;
+        if (isEqual(credits, this.cesiumDataAttributions.toJS())) return;
+
         // first remove ones that are not on the map anymore
-        for (const attribution of this.cesiumDataAttributions.toJS()) {
+        // Iterate backwards because we're removing items.
+        for (let i = this.cesiumDataAttributions.length - 1; i >= 0; i--) {
+          const attribution = this.cesiumDataAttributions[i];
           if (!credits.includes(attribution)) {
             this.cesiumDataAttributions.remove(attribution);
           }
         }
+
         // then go through all credits and add them or update their position
         for (const [index, credit] of credits.entries()) {
           const attributionIndex = this.cesiumDataAttributions.indexOf(credit);
@@ -498,10 +502,6 @@ export default class Cesium extends GlobeOrMap {
         }
       });
     };
-  }
-
-  arrayEquals(a: string[], b: string[]) {
-    return a.length === b.length && a.every((val, index) => val === b[index]);
   }
 
   getContainer() {
