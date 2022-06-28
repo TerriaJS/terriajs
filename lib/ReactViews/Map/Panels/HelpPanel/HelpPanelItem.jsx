@@ -95,7 +95,7 @@ class HelpPanelItem extends React.Component {
               applyTranslationIfExists(this.props.content.videoUrl, i18n)
             }
             placeholderImage={
-              this.props.content.videoUrl &&
+              this.props.content.placeholderImage &&
               applyTranslationIfExists(
                 this.props.content.placeholderImage,
                 i18n
