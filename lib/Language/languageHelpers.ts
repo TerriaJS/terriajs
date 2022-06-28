@@ -16,7 +16,7 @@ export const TRANSLATE_KEY_PREFIX = "translate#";
 export function applyTranslationIfExists(
   keyOrString: string,
   i18n: i18n,
-  options?: any
+  options?: { [key: string]: string }
 ) {
   if (keyOrString.indexOf(TRANSLATE_KEY_PREFIX) === 0) {
     const translationKey = keyOrString.substr(TRANSLATE_KEY_PREFIX.length);

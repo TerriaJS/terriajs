@@ -13,12 +13,10 @@ const findFirstTerm = (
   let ignore = false;
 
   terms.forEach((_, term) => {
-    const foundIndex = text
-      .toLowerCase()
-      .indexOf(
-        applyTranslationIfExists(term, i18next).toLowerCase(),
-        fromIndex
-      );
+    const foundIndex = text.toLowerCase().indexOf(
+      applyTranslationIfExists(term, i18next).toLowerCase(), // TODO: remove use of global i18next, and use i18n from react-i18next instead
+      fromIndex
+    );
     if (
       foundIndex !== -1 &&
       (foundIndex < termIndex ||
