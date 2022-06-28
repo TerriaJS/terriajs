@@ -253,6 +253,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
       ];
     }
     return [];
+  }
 
   @computed get showInChartPanel() {
     return this.catalogItem.show;
