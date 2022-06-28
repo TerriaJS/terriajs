@@ -19,6 +19,8 @@ Change Log
 * Moved translation files from `lib/Language/*/translation.json` to `wwwroot/languages/*/translation.json`.
 * Fixed default 3d-tiles styling to add a workaround for a Cesium bug which resulted in wrong translucency value for point clouds.
 * Remove Pell dependency, now replaced with TinyMCE (WYSIWYG editor library).
+* Added `beforeRestoreAppState` hook for call to `Terria.start()` which gets called before state is restored from share data.
+* Made `order` optional for `ICompositeBarItem`.
 * Fix `includes` path for `url-loader` rule so that it doesn't incorrectly match package names with `terriajs` as prefix.
 * Add help button for bookmarking sharelinks to SharePanel (if that help item exists in config)
 * [The next improvement]
