@@ -69,7 +69,7 @@ export class ToolButtonController extends MapNavigationItemController {
     return ViewerMode.Cesium;
   }
 
-  // translate this toolName in the calling function. Not currently used.
+  // TODO: The intention was for this to be translated in the getter. This is now removed as it was an incorrect use of useTranslationIfExists()
   get name() {
     return this.props.toolName;
   }
