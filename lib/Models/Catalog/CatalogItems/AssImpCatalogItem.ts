@@ -190,7 +190,7 @@ export default class AssImpCatalogItem
           // This covers:
           // - Remote data - implicitly defined in 3D file
           else if (baseUrl) {
-            image.uri = new URI(newUrl).absoluteTo(baseUrl).toString();
+            newUrl = new URI(newUrl).absoluteTo(baseUrl).toString();
           }
 
           if (newUrl !== image.uri) {
