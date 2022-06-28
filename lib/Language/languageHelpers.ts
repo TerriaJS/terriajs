@@ -13,11 +13,15 @@ export const TRANSLATE_KEY_PREFIX = "translate#";
  * @param keyOrString Either a prefixed translation key or a string
  * @param i18n An i18next instance
  */
-export function applyTranslationIfExists(keyOrString: string, i18n: i18n) {
+export function applyTranslationIfExists(
+  keyOrString: string,
+  i18n: i18n,
+  options?: any
+) {
   if (keyOrString.indexOf(TRANSLATE_KEY_PREFIX) === 0) {
     const translationKey = keyOrString.substr(TRANSLATE_KEY_PREFIX.length);
     return i18n.exists(translationKey)
-      ? i18n.t(translationKey)
+      ? i18n.t(translationKey, options)
       : translationKey;
   } else {
     return keyOrString;

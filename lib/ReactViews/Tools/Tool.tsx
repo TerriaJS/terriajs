@@ -1,4 +1,4 @@
-import { WithT } from "i18next";
+import i18next, { WithT } from "i18next";
 import { computed } from "mobx";
 import React, { Suspense, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -74,16 +74,12 @@ export class ToolButtonController extends MapNavigationItemController {
     return this.props.toolName;
   }
 
-  // This getter is not called anywhere.
-  // It should not be using applyTranslationIfExists anyway, so commenting out for now.
-  // @computed
-  // get title() {
-  //   const buttonState = this.active ? "open" : "closed";
-  //   return applyTranslationIfExists(`tool.button.${buttonState}`, {
-  //     toolName: this.name,
-  //     toolNameLowerCase: this.name.toLowerCase()
-  //   });
-  // }
+  // TODO: The intention was for this to be translated in the getter. This is now removed as it was an incorrect use of useTranslationIfExists()
+  @computed
+  get title() {
+    const buttonState = this.active ? "open" : "closed";
+    return `tool.button.${buttonState}`;
+  }
 
   @computed
   get active() {
