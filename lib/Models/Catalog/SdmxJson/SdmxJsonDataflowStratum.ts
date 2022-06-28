@@ -522,11 +522,12 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           // Note this will override previous regionType
           if (modelOverride?.type === "region") {
             // Use selectedId of first dimension with one
-            regionType = this.catalogItem.matchRegionType(
-              this.getDimensionsWithOverrideType("region-type").find(d =>
-                isDefined(d.selectedId)
-              )?.selectedId ?? regionType
-            );
+            regionType =
+              this.catalogItem.matchRegionType(
+                this.getDimensionsWithOverrideType("region-type").find(d =>
+                  isDefined(d.selectedId)
+                )?.selectedId
+              ) ?? regionType;
           }
 
           // Try to find valid region type from:
