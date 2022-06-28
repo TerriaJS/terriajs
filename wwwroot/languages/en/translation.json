@@ -818,7 +818,8 @@
     "extraCreditLinks": {
       "dataAttribution": "Data attribution",
       "disclaimer": "Disclaimer",
-      "basemap": "Basemap"
+      "basemap": "Basemap",
+      "dataProvider": "Data provided by:"
     }
   },
   "models": {

@@ -9,6 +9,10 @@ Change Log
 * Add experimental client-side 3D file conversion using [`assimpjs`](https://github.com/kovacsv/assimpjs) ([emscripten](https://emscripten.org) interface for the [assimp](https://github.com/assimp/assimp) library)
   * This supports `zip` files through add local/remote data
   * Supports over 40 formats - including Collada, obj, Blender, DXF - [full list](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md)
+* Implement Leaflet credits as a react component, so it is easier to maintain them. Leaflet view now show terria extra credits.
+* Implement Cesium credits as a react component, so it is easier to maintain them.
+* Implement data attribution modal for map data attributions/credits. Used by both Leaflet and Cesium viewers.
+* Fixed translation of Leaflet and Cesium credits.
 * TSXify `ChartPanelDownloadButton`
 * `ChartPanelDownloadButton` will now only export columns which are visible in chart
 * Cleanup `Mixin` and `Traits` inheritance
@@ -25,6 +29,8 @@ Change Log
 * Moved translation files from `lib/Language/*/translation.json` to `wwwroot/languages/*/translation.json`.
 * Fixed default 3d-tiles styling to add a workaround for a Cesium bug which resulted in wrong translucency value for point clouds.
 * Remove Pell dependency, now replaced with TinyMCE (WYSIWYG editor library).
+* Added `beforeRestoreAppState` hook for call to `Terria.start()` which gets called before state is restored from share data.
+* Made `order` optional for `ICompositeBarItem`.
 * Fix `includes` path for `url-loader` rule so that it doesn't incorrectly match package names with `terriajs` as prefix.
 * Add help button for bookmarking sharelinks to SharePanel (if that help item exists in config)
 * [The next improvement]

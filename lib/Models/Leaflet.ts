@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import L, { GridLayer } from "leaflet";
-import { action, autorun, observable, runInAction } from "mobx";
+import { action, autorun, observable, runInAction, computed } from "mobx";
 import { computedFn } from "mobx-utils";
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -53,6 +53,7 @@ import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
+import { LeafletAttribution } from "./LeafletAttribution";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
@@ -71,7 +72,7 @@ export default class Leaflet extends GlobeOrMap {
   readonly dataSources: DataSourceCollection = new DataSourceCollection();
   readonly dataSourceDisplay: LeafletDataSourceDisplay;
   readonly canShowSplitter = true;
-  private readonly _attributionControl: L.Control.Attribution;
+  private readonly _attributionControl: LeafletAttribution;
   private readonly _leafletVisualizer: LeafletVisualizer;
   private readonly _eventHelper: EventHelper;
   private readonly _selectionIndicator: LeafletSelectionIndicator;
@@ -155,38 +156,11 @@ export default class Leaflet extends GlobeOrMap {
 
     this.scene = new LeafletScene(this.map);
 
-    const attributionProps: L.Control.AttributionOptions = {
-      position: "bottomleft"
-    };
-
-    if (isDefined(this.terria.configParameters.leafletAttributionPrefix)) {
-      attributionProps.prefix = this.terria.configParameters.leafletAttributionPrefix;
-    }
-
-    this._attributionControl = L.control.attribution(attributionProps);
+    this._attributionControl = new LeafletAttribution(this.terria);
     this.map.addControl(this._attributionControl);
-
-    // this.map.screenSpaceEventHandler = {
-    //     setInputAction : function() {},
-    //     remoteInputAction : function() {}
-    // };
 
     this._leafletVisualizer = new LeafletVisualizer();
     this._selectionIndicator = new LeafletSelectionIndicator(this);
-
-    // const terriaLogo = this.terriaViewer.defaultTerriaCredit ? this.terriaViewer.defaultTerriaCredit.html : '';
-
-    // const creditParts = [
-    //     this._getDisclaimer(),
-    //     this._developerAttribution && createCredit(this._developerAttribution.text, this._developerAttribution.link),
-    //     new Credit('<a target="_blank" href="http://leafletjs.com/">Leaflet</a>')
-    // ];
-
-    // this.attributionControl.setPrefix(terriaLogo + creditParts.filter(part => defined(part)).map(credit => credit.html).join(' | '));
-
-    // map.on("boxzoomend", function(e) {
-    //     console.log(e.boxZoomBounds);
-    // });
 
     this.dataSourceDisplay = new LeafletDataSourceDisplay({
       scene: this.scene,
@@ -258,6 +232,15 @@ export default class Leaflet extends GlobeOrMap {
     });
 
     this._initProgressEvent();
+  }
+
+  get attributionPrefix() {
+    return this._attributionControl.prefix;
+  }
+
+  @computed
+  get attributions() {
+    return this._attributionControl.dataAttributions;
   }
 
   /**
