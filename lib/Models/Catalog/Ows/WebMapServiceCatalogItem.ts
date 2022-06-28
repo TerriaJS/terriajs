@@ -80,12 +80,10 @@ class WebMapServiceCatalogItem
   extends TileErrorHandlerMixin(
     ExportWebCoverageServiceMixin(
       DiffableMixin(
-        ChartableMixin(
-          MinMaxLevelMixin(
-            GetCapabilitiesMixin(
-              UrlMixin(
-                CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
-              )
+        MinMaxLevelMixin(
+          GetCapabilitiesMixin(
+            UrlMixin(
+              CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
             )
           )
         )

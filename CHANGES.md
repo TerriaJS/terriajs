@@ -9,6 +9,12 @@ Change Log
 * Fix `DateTimeSelectorSection.changeDateTime()` binding.
 * `RegionProvider.find*Variable` functions now try to match with and without whitespace (spaces, hyphens and underscores)
 * Clean up `regionMapping.json` descriptions
+* TSXify `ChartPanelDownloadButton`
+* `ChartPanelDownloadButton` will now only export columns which are visible in chart
+* Cleanup `Mixin` and `Traits` inheritance
+* Wrap the following components in `observer` - `ChartItem`, `LineChart`, (chart) `Legends`, `ChartPanelDownloadButton`
+* Improve TerriaReference error logging
+* Fix handling GeoJSON if features have null geometry
 * [The next improvement]
 
 #### 8.2.6 - 2022-06-17
@@ -20,6 +26,8 @@ Change Log
 * Fixed default 3d-tiles styling to add a workaround for a Cesium bug which resulted in wrong translucency value for point clouds.
 * Remove Pell dependency, now replaced with TinyMCE (WYSIWYG editor library).
 * Fix `includes` path for `url-loader` rule so that it doesn't incorrectly match package names with `terriajs` as prefix.
+* Add help button for bookmarking sharelinks to SharePanel (if that help item exists in config)
+* [The next improvement]
 
 #### 8.2.5 - 2022-06-07
 

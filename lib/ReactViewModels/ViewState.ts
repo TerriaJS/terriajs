@@ -311,7 +311,13 @@ export default class ViewState {
    * Gets or sets a value indicating whether the catalog's modal share panel
    * is currently visible.
    */
-  @observable shareModalIsVisible: boolean = false;
+  @observable shareModalIsVisible: boolean = false; // Small share modal inside StoryEditor
+
+  /**
+   * Used to indicate that the Share Panel should stay open even if it loses focus.
+   * This is used when clicking a help link in the Share Panel - The Help Panel will open, and when it is closed, the Share Panel should still be visible for the user to continue their task.
+   */
+  @observable retainSharePanel: boolean = false; // The large share panel accessed via Share/Print button
 
   /**
    * The currently open tool
@@ -648,6 +654,18 @@ export default class ViewState {
   }
 
   @action
+  openHelpPanelItemFromSharePanel(
+    evt: React.MouseEvent<HTMLDivElement>,
+    itemName: string
+  ) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    this.setRetainSharePanel(true);
+    this.showHelpPanel();
+    this.selectHelpMenuItem(itemName);
+  }
+
+  @action
   selectHelpMenuItem(key: string) {
     this.selectedHelpMenuItem = key;
     this.helpPanelExpanded = true;
@@ -656,6 +674,11 @@ export default class ViewState {
   @action
   hideHelpPanel() {
     this.showHelpMenu = false;
+  }
+
+  @action
+  setRetainSharePanel(retain: boolean) {
+    this.retainSharePanel = retain;
   }
 
   @action
