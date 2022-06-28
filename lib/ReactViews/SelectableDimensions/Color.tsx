@@ -90,7 +90,7 @@ export const SelectableDimensionColor: React.FC<{
         <div
           css={{
             position: "absolute",
-            zIndex: "2"
+            zIndex: 2
           }}
         >
           <div
