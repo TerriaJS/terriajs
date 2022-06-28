@@ -1,4 +1,4 @@
-import { action, observable, runInAction } from "mobx";
+import { action, observable, runInAction, computed } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -110,6 +110,13 @@ export default abstract class GlobeOrMap {
 
   abstract notifyRepaintRequired(): void;
 
+  /**
+   * List of the attributions (credits) for data currently displayed on map.
+   */
+  @computed
+  get attributions(): string[] {
+    return [];
+  }
   /**
    * Picks features based off a latitude, longitude and (optionally) height.
    * @param latLngHeight The position on the earth to pick.

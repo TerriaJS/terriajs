@@ -9,6 +9,7 @@ import {
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import EasingFunction from "terriajs-cesium/Source/Core/EasingFunction";
+import CreditDisplay from "terriajs-cesium/Source/Scene/CreditDisplay";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
 import TweenCollection from "terriajs-cesium/Source/Scene/TweenCollection";
@@ -17,6 +18,9 @@ import isDefined from "../../Core/isDefined";
 declare module "terriajs-cesium/Source/Scene/Scene" {
   export default interface Scene {
     tweens: TweenCollection;
+    frameState: {
+      creditDisplay: CreditDisplay;
+    };
   }
 }
 
