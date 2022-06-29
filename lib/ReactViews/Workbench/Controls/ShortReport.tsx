@@ -71,20 +71,31 @@ export default class ShortReport extends React.Component<{
           </Text>
         )}
 
-        {/* Show shortReportSections */}
+        {/** Show shortReportSections
+         * use `Collapsible` if `content` is defined, otherwise just use `name`
+         */}
         {shortReportSections
-          .filter(r => r.content && r.name)
+          .filter(r => r.name)
           .map((r, i) => (
             <React.Fragment key={r.name}>
-              <Collapsible
-                title={r.name!}
-                isOpen={r.show}
-                onToggle={show => this.clickShortReport(item, r.name, show)}
-              >
-                {parseCustomMarkdownToReact(r.content!, {
-                  catalogItem: item
-                })}
-              </Collapsible>
+              {r.content ? (
+                <Collapsible
+                  title={r.name!}
+                  isOpen={r.show}
+                  onToggle={show => this.clickShortReport(item, r.name, show)}
+                >
+                  {parseCustomMarkdownToReact(r.content!, {
+                    catalogItem: item
+                  })}
+                </Collapsible>
+              ) : (
+                <Text textLight medium>
+                  {parseCustomMarkdownToReact(r.name!, {
+                    catalogItem: item
+                  })}
+                </Text>
+              )}
+
               {i < shortReportSections.length - 1 && <Spacing bottom={2} />}
             </React.Fragment>
           ))}

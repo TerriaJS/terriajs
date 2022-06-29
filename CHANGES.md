@@ -2,6 +2,13 @@ Change Log
 ==========
 
 #### next release (8.2.7)
+
+* Fix `WorkbenchItem` title height
+* Add region map info and move "No Data" message to `InfoSections` in `TableAutomaticStylesStratum`
+* Fix missing `TableColorStyleTraits.legend` values in `ColorStyleLegend`
+* Fix `DateTimeSelectorSection.changeDateTime()` binding.
+* `RegionProvider.find*Variable` functions now try to match with and without whitespace (spaces, hyphens and underscores)
+* Clean up `regionMapping.json` descriptions
 * Implement Leaflet credits as a react component, so it is easier to maintain them. Leaflet view now show terria extra credits.
 * Implement Cesium credits as a react component, so it is easier to maintain them.
 * Implement data attribution modal for map data attributions/credits. Used by both Leaflet and Cesium viewers.
