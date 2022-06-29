@@ -408,7 +408,6 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
           }
           selectedTrainer={selectedTrainerItem}
           theme={theme}
-          // t={t}  // TODO: Can this be safely removed?
         />
         <Spacing right={4} />
 

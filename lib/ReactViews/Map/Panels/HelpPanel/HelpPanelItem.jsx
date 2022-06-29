@@ -31,17 +31,7 @@ class HelpPanelItem extends React.Component {
 
   render() {
     const { i18n } = this.props;
-    // const { icon } = this.props.content;
-    // const MenuIconWrapper = styled(Box).attrs({
-    //   centered: true
-    // })`
-    //   flex-shrink: 0;
-    //   width: 64px;
-    //   height: 64px;
-    //   display: table-cell;
-    //   vertical-align: middle;
-    //   padding-left: 25px;
-    // `;
+
     const itemSelected =
       this.props.viewState.selectedHelpMenuItem === this.props.content.itemName;
 
