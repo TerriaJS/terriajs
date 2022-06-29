@@ -1,4 +1,5 @@
 import { i18n } from "i18next";
+import { isJsonObject, isJsonString, JsonObject } from "../Core/Json";
 
 export const TRANSLATE_KEY_PREFIX = "translate#";
 
@@ -14,16 +15,21 @@ export const TRANSLATE_KEY_PREFIX = "translate#";
  * @param i18n An i18next instance
  */
 export function applyTranslationIfExists(
-  keyOrString: string,
+  keyOrString: unknown,
   i18n: i18n,
   options?: { [key: string]: string }
-) {
-  if (keyOrString.indexOf(TRANSLATE_KEY_PREFIX) === 0) {
-    const translationKey = keyOrString.substr(TRANSLATE_KEY_PREFIX.length);
-    return i18n.exists(translationKey)
-      ? i18n.t(translationKey, options)
-      : translationKey;
-  } else {
-    return keyOrString;
+): string {
+  // keyOrString could be undefined in some cases even if we type it as string
+  if (isJsonString(keyOrString)) {
+    if (keyOrString.indexOf(TRANSLATE_KEY_PREFIX) === 0) {
+      const translationKey = keyOrString.substr(TRANSLATE_KEY_PREFIX.length);
+      return i18n.exists(translationKey)
+        ? i18n.t(translationKey, options)
+        : translationKey;
+    } else {
+      return keyOrString;
+    }
   }
+  // Return an empty string if keyOrString was undefined. All functions that call this require a string to be returned
+  return "";
 }
