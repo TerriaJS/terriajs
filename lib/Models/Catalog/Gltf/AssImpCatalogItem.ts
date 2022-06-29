@@ -5,7 +5,7 @@ import loadArrayBuffer from "../../../Core/loadArrayBuffer";
 import loadBlob, { isZip, parseZipArrayBuffers } from "../../../Core/loadBlob";
 import TerriaError from "../../../Core/TerriaError";
 import GltfMixin from "../../../ModelMixins/GltfMixin";
-import { GlTf } from "../../../ThirdParty/GlTf";
+import { GlTf } from "./GLTF";
 import AssImpCatalogItemTraits from "../../../Traits/TraitsClasses/AssImpCatalogItemTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";

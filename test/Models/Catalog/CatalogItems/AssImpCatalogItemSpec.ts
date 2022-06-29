@@ -1,10 +1,10 @@
 import loadBlob from "../../../../lib/Core/loadBlob";
 import MappableMixin from "../../../../lib/ModelMixins/MappableMixin";
-import AssImpCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/AssImpCatalogItem";
+import AssImpCatalogItem from "../../../../lib/Models/Catalog/Gltf/AssImpCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 import Terria from "../../../../lib/Models/Terria";
-import { GlTf } from "../../../../lib/ThirdParty/GlTf";
+import { GlTf } from "../../../../lib/Models/Catalog/Gltf/GLTF";
 
 describe("AssImpCatalogItem", function() {
   let model: AssImpCatalogItem;
