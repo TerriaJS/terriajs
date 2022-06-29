@@ -34,13 +34,6 @@ Change Log
 * Made `order` optional for `ICompositeBarItem`.
 * Fix `includes` path for `url-loader` rule so that it doesn't incorrectly match package names with `terriajs` as prefix.
 * Add help button for bookmarking sharelinks to SharePanel (if that help item exists in config)
-* Added `beforeRestoreAppState` hook for call to `Terria.start()` which gets called before state is restored from share data.
-* Made `order` optional for `ICompositeBarItem`.
-* Implement Leaflet credits as a react component, so it is easier to maintain them. Leaflet view now show terria extra credits.
-* Implement Cesium credits as a react component, so it is easier to maintain them.
-* Implement data attribution modal for map data attributions/credits. Used by both Leaflet and Cesium viewers.
-* Fixed translation of Leaflet and Cesium credits.
-* Add help button for bookmarking sharelinks to SharePanel (if that help item exists in config)
 * [The next improvement]
 
 #### 8.2.5 - 2022-06-07
