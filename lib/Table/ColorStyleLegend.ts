@@ -38,6 +38,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
   }
 
   // Keep these here until we deprecate LegendTraits in TableColorStyleTraits
+  // See https://github.com/TerriaJS/terriajs/issues/6356
   @computed get oldLegendTraits() {
     return this.tableStyle.colorTraits.legend;
   }
