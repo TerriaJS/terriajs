@@ -219,7 +219,8 @@
     "shortLinkError": "Při pokusu o zkrácení adresy URL došlo k chybě.  Zkontrolujte prosím své internetové připojení a zkuste to znovu.",
     "shortLinkShortening": "Zkracování...",
     "downloadMap": "Stáhnout mapu (png)",
-    "convertNotificationMessage": "Tento odkaz na sdílení je založen na starší verzi softwaru TerriaJS, který pohání tuto webovou mapu. Přestože se snažíme odkaz zachovat, můžete se setkat s problémy při vizualizaci dat.  \n\nPokud jste uživatelem sdíleného odkazu, klikněte na tlačítko OK, aby varovná zpráva zmizela, a pokračujte v přístupu k datům."
+    "convertNotificationMessage": "Tento odkaz na sdílení je založen na starší verzi softwaru TerriaJS, který pohání tuto webovou mapu. Přestože se snažíme odkaz zachovat, můžete se setkat s problémy při vizualizaci dat.  \n\nPokud jste uživatelem sdíleného odkazu, klikněte na tlačítko OK, aby varovná zpráva zmizela, a pokračujte v přístupu k datům.",
+    "getShareSaveHelpMessage": "Jak přidat do záložek sdílené odkazy"
   },
   "countDatasets": {
     "btnText": "Spustit",
@@ -555,7 +556,8 @@
     "searchItemTitle": "Hledat",
     "addItemErrorTitle": "Katalogovou položku nelze přidat do pracovního plochy.",
     "previewItem": "O datech",
-    "expandAll": "Rozbalit vše"
+    "expandAll": "Rozbalit vše",
+    "splitScreenMode": "REŽIM DĚLENÉ OBRAZOVKY"
   },
   "dateTime": {
     "selectorLabel": "Čas:",
@@ -641,7 +643,8 @@
     "expand": "Rozbalit",
     "download": "Stáhnout",
     "loading": "Načítání dat grafu...",
-    "noData": "Nenalezeny žádné údaje, které by bylo možné zobrazit v tabulce."
+    "noData": "Nenalezeny žádné údaje, které by bylo možné zobrazit v tabulce.",
+    "showItemInChart": "Zobrazit {{value}} v tabulce"
   },
   "viewModels": {
     "searchNoLocations": "Je nám líto, vašemu vyhledávacímu dotazu neodpovídají žádná místa.",
@@ -1655,5 +1658,8 @@
       "select": "Vyberte datum"
     },
     "info": "Porovnejte na mapě vedle sebe soubory prostorových dat z pracovní plochy."
+  },
+  "includeStory": {
+    "message": "Zahrnout příběh do sdílení"
   }
 }
