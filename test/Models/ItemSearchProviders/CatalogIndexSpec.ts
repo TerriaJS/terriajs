@@ -1,6 +1,7 @@
 import CatalogIndexReference from "../../../lib/Models/Catalog/CatalogReferences/CatalogIndexReference";
 import CatalogIndex from "../../../lib/Models/SearchProviders/CatalogIndex";
 import Terria from "../../../lib/Models/Terria";
+import { applyInitData } from "../../../lib/Models/InitData";
 
 describe("CatalogIndex", function() {
   let terria: Terria;
@@ -35,7 +36,7 @@ describe("CatalogIndex", function() {
       })
     });
 
-    await terria.applyInitData({
+    await applyInitData(terria, {
       initData: {
         catalog: [
           {
@@ -207,7 +208,7 @@ describe("CatalogIndex - with shareKeys", function() {
       })
     });
 
-    await terria.applyInitData({
+    await applyInitData(terria, {
       initData: {
         catalog: [
           {

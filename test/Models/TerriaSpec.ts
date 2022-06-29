@@ -22,6 +22,7 @@ import Cesium from "../../lib/Models/Cesium";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import { BaseModel } from "../../lib/Models/Definition/Model";
 import Feature from "../../lib/Models/Feature";
+import { applyInitData } from "../../lib/Models/InitData";
 import {
   isInitFromData,
   isInitFromDataPromise,
@@ -299,35 +300,6 @@ describe("Terria", function() {
             done.fail(error);
           });
       });
-    });
-
-    it("calls `beforeRestoreAppState` before restoring app state from share data", async function() {
-      terria = new Terria({
-        appBaseHref: "/",
-        baseUrl: "./"
-      });
-
-      const restoreAppState = spyOn(
-        terria,
-        "restoreAppState" as any
-      ).and.callThrough();
-
-      const beforeRestoreAppState = jasmine
-        .createSpy("beforeRestoreAppState")
-        // It should also handle errors when calling beforeRestoreAppState
-        .and.returnValue(Promise.reject("some error"));
-
-      expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Cesium);
-      await terria.start({
-        configUrl: "",
-        applicationUrl: {
-          href: "http://test.com/#map=2d"
-        } as Location,
-        beforeRestoreAppState
-      });
-
-      expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
-      expect(beforeRestoreAppState).toHaveBeenCalledBefore(restoreAppState);
     });
   });
 
@@ -975,7 +947,7 @@ describe("Terria", function() {
       it("unsets the feature picking state if `canUnsetFeaturePickingState` is `true`", async function() {
         terria.pickedFeatures = new PickedFeatures();
         terria.selectedFeature = new Entity({ name: "selected" }) as Feature;
-        await terria.applyInitData({
+        await applyInitData(terria, {
           initData: {},
           canUnsetFeaturePickingState: true
         });
@@ -986,7 +958,7 @@ describe("Terria", function() {
       it("otherwise, should not unset feature picking state", async function() {
         terria.pickedFeatures = new PickedFeatures();
         terria.selectedFeature = new Entity({ name: "selected" }) as Feature;
-        await terria.applyInitData({
+        await applyInitData(terria, {
           initData: {}
         });
         expect(terria.pickedFeatures).toBeDefined();
@@ -1106,7 +1078,7 @@ describe("Terria", function() {
       });
 
       it("when a workbench item is a simple map server group", async function() {
-        await terria.applyInitData({
+        await applyInitData(terria, {
           initData: {
             catalog: [mapServerGroupModel],
             workbench: ["a-test-server-group"]
@@ -1117,7 +1089,7 @@ describe("Terria", function() {
       });
 
       it("when a workbench item is a referenced map server group", async function() {
-        await terria.applyInitData({
+        await applyInitData(terria, {
           initData: {
             catalog: [magdaRecordDerefencedToFeatureServerGroup],
             workbench: ["a-test-magda-record"]
@@ -1128,7 +1100,7 @@ describe("Terria", function() {
       });
 
       it("when a workbench item is a referenced wms", async function() {
-        await terria.applyInitData({
+        await applyInitData(terria, {
           initData: {
             catalog: [magdaRecordDerefencedToWms],
             workbench: ["another-test-magda-record"]
@@ -1139,7 +1111,7 @@ describe("Terria", function() {
       });
 
       it("when the workbench has more than one items", async function() {
-        await terria.applyInitData({
+        await applyInitData(terria, {
           initData: {
             catalog: [
               mapServerGroupModel,
@@ -1161,7 +1133,7 @@ describe("Terria", function() {
       });
 
       it("when the workbench has an unknown item", async function() {
-        await terria.applyInitData({
+        await applyInitData(terria, {
           initData: {
             catalog: [
               mapServerGroupModel,
@@ -1186,7 +1158,7 @@ describe("Terria", function() {
       it("when a workbench item has errors", async function() {
         let error: TerriaError | undefined = undefined;
         try {
-          await terria.applyInitData({
+          await applyInitData(terria, {
             initData: {
               catalog: [
                 mapServerModelWithError,
@@ -1261,7 +1233,7 @@ describe("Terria", function() {
 
       await terria.start({ configUrl: "" });
 
-      terria.applyInitData({
+      applyInitData(terria, {
         initData: {
           settings: {
             baseMaximumScreenSpaceError: 1,
@@ -1293,7 +1265,7 @@ describe("Terria", function() {
   describe("basemaps", function() {
     it("when no base maps are specified load defaultBaseMaps", async function() {
       await terria.start({ configUrl: "" });
-      terria.applyInitData({
+      applyInitData(terria, {
         initData: {}
       });
       await terria.loadInitSources();
@@ -1306,7 +1278,7 @@ describe("Terria", function() {
 
     it("propperly loads base maps", async function() {
       await terria.start({ configUrl: "" });
-      terria.applyInitData({
+      applyInitData(terria, {
         initData: {
           baseMaps: {
             items: [

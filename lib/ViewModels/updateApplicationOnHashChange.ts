@@ -17,7 +17,6 @@ export default function(terria: Terria, window: Window) {
         (
           await terria.updateApplicationUrl(window.location.toString())
         ).throwIfError();
-        (await terria.loadInitSources()).throwIfError();
       } catch (e) {
         terria.raiseErrorToUser(e);
       }
