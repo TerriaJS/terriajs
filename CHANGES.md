@@ -19,6 +19,7 @@ Change Log
 * Wrap the following components in `observer` - `ChartItem`, `LineChart`, (chart) `Legends`, `ChartPanelDownloadButton`
 * Improve TerriaReference error logging
 * Fix handling GeoJSON if features have null geometry
+* Allow IFC files to be added to a map from local or web data (Requires non-open source plugin) 
 * [The next improvement]
 
 #### 8.2.6 - 2022-06-17
