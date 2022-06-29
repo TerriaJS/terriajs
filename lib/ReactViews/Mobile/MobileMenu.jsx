@@ -84,7 +84,10 @@ const MobileMenu = observer(
       if (!mapUserGuideItem) {
         return undefined;
       }
-      const title = applyTranslationIfExists(mapUserGuideItem.title);
+      const title = applyTranslationIfExists(
+        mapUserGuideItem.title,
+        this.props.i18n
+      );
       return {
         href: mapUserGuideItem.url,
         caption: title,

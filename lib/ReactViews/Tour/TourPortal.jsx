@@ -193,6 +193,7 @@ TourExplanation.propTypes = {
 };
 
 const TourGrouping = observer(({ viewState, tourPoints }) => {
+  const { i18n } = useTranslation();
   const currentTourPoint = tourPoints[viewState.currentTourIndex];
   const currentTourPointRef = viewState.appRefs.get(
     currentTourPoint?.appRefName
@@ -263,7 +264,7 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
             indicatorOffsetLeft={indicatorOffsetLeft}
           >
             {parseCustomMarkdownToReactWithOptions(
-              applyTranslationIfExists(tourPoint?.content),
+              applyTranslationIfExists(tourPoint?.content, i18n),
               {
                 injectTermsAsTooltips: true,
                 tooltipTerms: viewState.terria.configParameters.helpContentTerms
