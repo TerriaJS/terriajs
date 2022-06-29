@@ -44,12 +44,11 @@ import NotificationState from "../ReactViewModels/NotificationState";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import MapNavigationModel from "../ViewModels/MapNavigation/MapNavigationModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
+import updateApplicationOnHashChange from "../ViewModels/updateApplicationOnHashChange";
+import updateApplicationOnMessageFromParentWindow from "../ViewModels/updateApplicationOnMessageFromParentWindow";
 import { BaseMapsModel } from "./BaseMaps/BaseMapsModel";
 import CameraView from "./CameraView";
 import Catalog from "./Catalog/Catalog";
-import CatalogGroup from "./Catalog/CatalogGroup";
-import MagdaReference from "./Catalog/CatalogReferences/MagdaReference";
-import CommonStrata from "./Definition/CommonStrata";
 import hasTraits from "./Definition/hasTraits";
 import { BaseModel } from "./Definition/Model";
 import {
@@ -63,34 +62,30 @@ import GlobeOrMap from "./GlobeOrMap";
 import IElementConfig from "./IElementConfig";
 import { applyInitData } from "./InitData";
 import InitSource, {
+  addInitSourcesFromConfig,
   addInitSourcesFromUrl,
   InitSourceData,
-  addInitSourcesFromStartData,
   isInitFromData,
   isInitFromDataPromise,
   isInitFromOptions,
   isInitFromUrl,
-  StoryData,
-  addInitSourcesFromConfig
+  StoryData
 } from "./InitSource";
 import Internationalization from "./Internationalization";
 import MapInteractionMode from "./MapInteractionMode";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
 import ShareDataService from "./ShareDataService";
+import {
+  Analytics,
+  ConfigParameters,
+  HomeCameraInit,
+  StartOptions,
+  TerriaOptions
+} from "./TerriaConfig";
 import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
-import {
-  Analytics,
-  ConfigParameters,
-  TerriaOptions,
-  StartOptions,
-  TerriaConfig,
-  HomeCameraInit
-} from "./TerriaConfig";
-import updateApplicationOnHashChange from "../ViewModels/updateApplicationOnHashChange";
-import updateApplicationOnMessageFromParentWindow from "../ViewModels/updateApplicationOnMessageFromParentWindow";
 
 export default class Terria {
   private readonly models = observable.map<string, BaseModel>();
@@ -569,22 +564,34 @@ export default class Terria {
     // - Add InitSources from config JSON (eg initializationUrls)
     // -
     try {
-      const config = await loadJson5(
+      let terriaConfig = await loadJson5(
         options.configUrl,
         options.configUrlHeaders
       );
 
-      // If it's a magda config, we only load magda config and parameters should never be a property on the direct
-      // config aspect (it would be under the `terria-config` aspect)
-      if (isJsonObject(config) && config.aspects) {
-        await this.loadMagdaConfig(options.configUrl, config, baseUri);
+      // TODO: Move Magda config stuff out
+      // If config is from Magda - use "terria-config" aspect as terriaConfig
+      if (isJsonObject(terriaConfig) && isJsonObject(terriaConfig.aspects)) {
+        // Also add "terria-init" aspect as InitSource
+        if (isJsonObject(terriaConfig.aspects["terria-init"])) {
+          this.initSources.push({
+            name: `Magda map-config aspect terria-init`,
+            errorSeverity: TerriaErrorSeverity.Error,
+            data: terriaConfig.aspects["terria-init"]
+          });
+        }
+
+        terriaConfig = terriaConfig.aspects["terria-config"];
       }
 
-      // If it's TerriaConfig,
       runInAction(() => {
-        if (isJsonObject(config) && isJsonObject(config.parameters)) {
-          this.updateParameters(config.parameters);
-          addInitSourcesFromConfig(this, baseUri, config);
+        // If config is Terria config JSON
+        if (isJsonObject(terriaConfig)) {
+          if (isJsonObject(terriaConfig.parameters)) {
+            this.updateParameters(terriaConfig.parameters);
+          }
+
+          addInitSourcesFromConfig(this, baseUri, terriaConfig);
         }
       });
     } catch (error) {
@@ -603,7 +610,7 @@ export default class Terria {
 
     // Init Internationalization
     if (!options.i18nOptions?.skipInit) {
-      Internationalization.initLanguage(
+      await Internationalization.initLanguage(
         this.configParameters.languageConfiguration,
         options.i18nOptions,
         this.baseUrl
@@ -758,11 +765,6 @@ export default class Terria {
     this._initSourceLoader.dispose();
   }
 
-  /** Adds InitSources from URL and then load **all** InitSources */
-  async updateApplicationUrl(newUrl: string) {
-    return await this.loadInitSources();
-  }
-
   @action
   updateParameters(parameters: ConfigParameters | JsonObject): void {
     Object.entries(parameters).forEach(([key, value]) => {
@@ -885,109 +887,58 @@ export default class Terria {
     }
   }
 
-  /**
-   * This method can be used to refresh magda based catalogue configuration. Useful if the catalogue
-   * has items that are only available to authorised users.
-   *
-   * @param magdaCatalogConfigUrl URL of magda based catalogue configuration
-   * @param config Optional. If present, use this magda based catalogue config instead of reloading.
-   * @param configUrlHeaders  Optional. If present, the headers are added to above URL request.
-   */
-  async refreshCatalogMembersFromMagda(
-    magdaCatalogConfigUrl: string,
-    config?: any,
-    configUrlHeaders?: { [key: string]: string }
-  ) {
-    const theConfig = config
-      ? config
-      : await loadJson5(magdaCatalogConfigUrl, configUrlHeaders);
+  // /**
+  //  * This method can be used to refresh magda based catalogue configuration. Useful if the catalogue
+  //  * has items that are only available to authorised users.
+  //  *
+  //  * @param magdaCatalogConfigUrl URL of magda based catalogue configuration
+  //  * @param config Optional. If present, use this magda based catalogue config instead of reloading.
+  //  * @param configUrlHeaders  Optional. If present, the headers are added to above URL request.
+  //  */
+  // async refreshCatalogMembersFromMagda(
+  //   magdaCatalogConfigUrl: string,
+  //   config?: any,
+  //   configUrlHeaders?: { [key: string]: string }
+  // ) {
+  //   const theConfig = config
+  //     ? config
+  //     : await loadJson5(magdaCatalogConfigUrl, configUrlHeaders);
 
-    // force config (root group) id to be `/`
-    const id = "/";
-    this.removeModelReferences(this.catalog.group);
+  //   // force config (root group) id to be `/`
+  //   const id = "/";
+  //   this.removeModelReferences(this.catalog.group);
 
-    let existingReference = this.getModelById(MagdaReference, id);
-    if (existingReference === undefined) {
-      existingReference = new MagdaReference(id, this);
-      // Add model with terria aspects shareKeys
-      this.addModel(existingReference, theConfig.aspects?.terria?.shareKeys);
-    }
+  //   let existingReference = this.getModelById(MagdaReference, id);
+  //   if (existingReference === undefined) {
+  //     existingReference = new MagdaReference(id, this);
+  //     // Add model with terria aspects shareKeys
+  //     this.addModel(existingReference, theConfig.aspects?.terria?.shareKeys);
+  //   }
 
-    const reference = existingReference;
+  //   const reference = existingReference;
 
-    const magdaRoot = new URI(magdaCatalogConfigUrl)
-      .path("")
-      .query("")
-      .toString();
+  //   const magdaRoot = new URI(magdaCatalogConfigUrl)
+  //     .path("")
+  //     .query("")
+  //     .toString();
 
-    reference.setTrait(CommonStrata.definition, "url", magdaRoot);
-    reference.setTrait(CommonStrata.definition, "recordId", id);
-    reference.setTrait(
-      CommonStrata.definition,
-      "magdaRecord",
-      theConfig as JsonObject
-    );
-    (await reference.loadReference(true)).raiseError(
-      this,
-      `Failed to load MagdaReference for record ${id}`
-    );
-    if (reference.target instanceof CatalogGroup) {
-      runInAction(() => {
-        this.catalog.group = <CatalogGroup>reference.target;
-      });
-    }
-  }
-
-  private async loadMagdaConfig(
-    configUrl: string,
-    config: any,
-    baseUri: uri.URI
-  ) {
-    const aspects = config.aspects;
-    const terriaConfig = aspects["terria-config"] as TerriaConfig;
-
-    if (terriaConfig.parameters) {
-      this.updateParameters(terriaConfig.parameters);
-    }
-
-    const initObj = aspects["terria-init"];
-    if (isJsonObject(initObj)) {
-      const { catalog, ...initObjWithoutCatalog } = initObj;
-      /** Load the init data without the catalog yet, as we'll push the catalog
-       * source up as an init source later */
-      try {
-        await applyInitData(this, {
-          initData: initObjWithoutCatalog
-        });
-      } catch (e) {
-        this.raiseErrorToUser(e, {
-          title: { key: "models.terria.loadingMagdaInitSourceErrorMessage" },
-          message: {
-            key: "models.terria.loadingMagdaInitSourceErrorMessage",
-            parameters: { url: configUrl }
-          }
-        });
-      }
-    }
-
-    if (aspects.group && aspects.group.members) {
-      await this.refreshCatalogMembersFromMagda(configUrl, config);
-    }
-
-    addInitSourcesFromConfig(this, baseUri, terriaConfig);
-
-    /** Load up rest of terria catalog if one is inlined in terria-init */
-    if (config.aspects?.["terria-init"]) {
-      const { catalog, ...rest } = initObj;
-      this.initSources.push({
-        name: `Magda map-config aspect terria-init from ${configUrl}`,
-        errorSeverity: TerriaErrorSeverity.Error,
-        data: {
-          catalog: catalog
-        }
-      });
-    }
-  }
+  //   reference.setTrait(CommonStrata.definition, "url", magdaRoot);
+  //   reference.setTrait(CommonStrata.definition, "recordId", id);
+  //   reference.setTrait(
+  //     CommonStrata.definition,
+  //     "magdaRecord",
+  //     theConfig as JsonObject
+  //   );
+  //   (await reference.loadReference(true)).raiseError(
+  //     this,
+  //     `Failed to load MagdaReference for record ${id}`
+  //   );
+  //   if (reference.target instanceof CatalogGroup) {
+  //     runInAction(() => {
+  //       this.catalog.group = <CatalogGroup>reference.target;
+  //     });
+  //   }
+  // }
 
   @action
   async loadPickedFeatures(pickedFeatures: JsonObject): Promise<void> {

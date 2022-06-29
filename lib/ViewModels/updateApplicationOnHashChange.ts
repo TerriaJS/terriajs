@@ -1,6 +1,7 @@
 "use strict";
 
 import Terria from "../Models/Terria";
+import { addInitSourcesFromUrl } from "../Models/InitSource";
 
 /**
  * Updates the  {@link Terria} when the window's 'hashchange' event is raised.  This allows new init files and
@@ -14,9 +15,8 @@ export default function(terria: Terria, window: Window) {
     "hashchange",
     async function() {
       try {
-        (
-          await terria.updateApplicationUrl(window.location.toString())
-        ).throwIfError();
+        await addInitSourcesFromUrl(terria, window.location.toString());
+        (await terria.loadInitSources()).throwIfError();
       } catch (e) {
         terria.raiseErrorToUser(e);
       }

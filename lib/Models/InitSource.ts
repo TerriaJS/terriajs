@@ -1,6 +1,7 @@
 import i18next from "i18next";
 import { runInAction } from "mobx";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
+import URI from "urijs";
 import isDefined from "../Core/isDefined";
 import {
   isJsonObject,

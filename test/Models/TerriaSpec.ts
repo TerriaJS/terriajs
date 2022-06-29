@@ -26,7 +26,8 @@ import { applyInitData } from "../../lib/Models/InitData";
 import {
   isInitFromData,
   isInitFromDataPromise,
-  isInitFromUrl
+  isInitFromUrl,
+  addInitSourcesFromUrl
 } from "../../lib/Models/InitSource";
 import Terria from "../../lib/Models/Terria";
 import ViewerMode from "../../lib/Models/ViewerMode";
@@ -303,7 +304,7 @@ describe("Terria", function() {
     });
   });
 
-  describe("updateApplicationUrl", function() {
+  describe("addInitSourcesFromUrl", function() {
     describe("test via serialise & load round-trip", function() {
       let newTerria: Terria;
       let viewState: ViewState;
@@ -359,7 +360,7 @@ describe("Terria", function() {
         );
 
         const shareLink = buildShareLink(terria, viewState);
-        await newTerria.updateApplicationUrl(shareLink);
+        await addInitSourcesFromUrl(newTerria, shareLink);
         await newTerria.loadInitSources();
         expect(newTerria.catalog.userAddedDataGroup.members).toContain(
           "itemABC"
@@ -383,7 +384,7 @@ describe("Terria", function() {
         );
 
         const shareLink = buildShareLink(terria, viewState);
-        await newTerria.updateApplicationUrl(shareLink);
+        await addInitSourcesFromUrl(newTerria, shareLink);
         await newTerria.loadInitSources();
         expect(newTerria.catalog.userAddedDataGroup.members).toContain(
           "url_test"
@@ -412,7 +413,7 @@ describe("Terria", function() {
         expect(newTerria.workbench.itemIds).toEqual([]);
 
         const shareLink = buildShareLink(terria, viewState);
-        await newTerria.updateApplicationUrl(shareLink);
+        await addInitSourcesFromUrl(newTerria, shareLink);
         await newTerria.loadInitSources();
         expect(newTerria.workbench.itemIds).toEqual(terria.workbench.itemIds);
       });
@@ -434,7 +435,7 @@ describe("Terria", function() {
         });
 
         const shareLink = buildShareLink(terria, viewState);
-        await newTerria.updateApplicationUrl(shareLink);
+        await addInitSourcesFromUrl(newTerria, shareLink);
         await newTerria.loadInitSources();
         expect(newTerria.showSplitter).toEqual(true);
         expect(newTerria.splitPosition).toEqual(0.7);
@@ -455,7 +456,7 @@ describe("Terria", function() {
         expect(group.isOpen).toBe(true);
         expect(group.members.length).toBeGreaterThan(0);
         const shareLink = buildShareLink(terria, viewState);
-        await newTerria.updateApplicationUrl(shareLink);
+        await addInitSourcesFromUrl(newTerria, shareLink);
         await newTerria.loadInitSources();
         const newGroup = <WebMapServiceCatalogGroup>(
           newTerria.getModelById(BaseModel, "groupABC")
@@ -474,13 +475,15 @@ describe("Terria", function() {
         });
       });
       it("sets playStory to 1", async function() {
-        await terria.updateApplicationUrl(
+        await addInitSourcesFromUrl(
+          terria,
           new URL("story/my-story", document.baseURI).toString()
         );
         expect(terria.userProperties.get("playStory")).toBe("1");
       });
       it("correctly adds the story share as a datasource", async function() {
-        await terria.updateApplicationUrl(
+        await addInitSourcesFromUrl(
+          terria,
           new URL("story/my-story", document.baseURI).toString()
         );
         expect(terria.initSources.length).toBe(1);
@@ -494,7 +497,8 @@ describe("Terria", function() {
         );
       });
       it("correctly adds the story share as a datasource when there's a trailing slash on story url", async function() {
-        await terria.updateApplicationUrl(
+        await addInitSourcesFromUrl(
+          terria,
           new URL("story/my-story/", document.baseURI).toString()
         );
         expect(terria.initSources.length).toBe(1);
@@ -582,7 +586,7 @@ describe("Terria", function() {
         expect(csv).toBeDefined("Can't find csv item in source terria");
         csv?.setTrait(CommonStrata.user, "opacity", 0.5);
         const shareLink = buildShareLink(terria, viewState);
-        await newTerria.updateApplicationUrl(shareLink);
+        await addInitSourcesFromUrl(newTerria, shareLink);
         await newTerria.loadInitSources();
 
         const newCsv = newTerria.getModelById(
@@ -605,7 +609,7 @@ describe("Terria", function() {
         terria.workbench.add(csv);
         terria.timelineStack.addToTop(csv);
         const shareLink = buildShareLink(terria, viewState);
-        await newTerria.updateApplicationUrl(shareLink);
+        await addInitSourcesFromUrl(newTerria, shareLink);
         await newTerria.loadInitSources();
 
         const newCsv = newTerria.getModelById(
@@ -748,7 +752,7 @@ describe("Terria", function() {
         if (newGroupRef === undefined) return;
         await newGroupRef.loadReference();
 
-        await newTerria.updateApplicationUrl(shareLink);
+        await addInitSourcesFromUrl(newTerria, shareLink);
         await newTerria.loadInitSources();
 
         // Why does this return a CSV item (when above hack isn't added)? It returns a brand new csv item without data or URL
@@ -810,7 +814,7 @@ describe("Terria", function() {
         if (newGroupRef === undefined) return;
         await newGroupRef.loadReference();
 
-        await newTerria.updateApplicationUrl(shareLink);
+        await addInitSourcesFromUrl(newTerria, shareLink);
         await newTerria.loadInitSources();
 
         // Why does this return a CSV item (when above hack isn't added)? It returns a brand new csv item without data or URL
@@ -1196,7 +1200,7 @@ describe("Terria", function() {
         href: "http://test.com/#map=2d"
       };
       await terria.start({ configUrl: "", applicationUrl: location });
-      await terria.loadPersistedMapSettings();
+
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
       expect(getLocalPropertySpy).not.toHaveBeenCalledWith("viewermode");
     });
@@ -1207,7 +1211,7 @@ describe("Terria", function() {
         "getLocalProperty"
       ).and.returnValue("2d");
       await terria.start({ configUrl: "" });
-      await terria.loadPersistedMapSettings();
+
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
       expect(getLocalPropertySpy).toHaveBeenCalledWith("viewermode");
     });
@@ -1222,7 +1226,7 @@ describe("Terria", function() {
         href: "http://test.com/#map=4d"
       };
       await terria.start({ configUrl: "", applicationUrl: location });
-      await terria.loadPersistedMapSettings();
+
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Cesium);
       expect(terria.mainViewer.viewerOptions.useTerrain).toBe(false);
       expect(getLocalPropertySpy).toHaveBeenCalledWith("viewermode");
