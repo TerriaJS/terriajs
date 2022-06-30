@@ -527,15 +527,15 @@ export default class Terria {
   }
 
   /** Main Terria initialization function:
-   * 1. Set `ignoreErrors` userProperty from hash parameters (All other hashProperties are set in InitSource.addInitSourcesFromUrl())
-   * 2. In DEV environment only: override configUrl from hash parameter
-   * 3. Load Terria config (using configUrl or options.getConfig)
-   *     - This will create InitSources and update configParameters
-   * 4. Init services which don't depend on serverConfig - Error service, internationalization, analytics, catalog index
-   * 5. Load serverConfig
-   * 6. Init services which depend on serverConfig - Share data service, Cors proxy
+   * 1. Set `ignoreErrors` `userProperty` from hash parameters (All other parameters are set in `InitSource.addInitSourcesFromUrl()`)
+   * 2. In DEV environment only: override `configUrl` from hash parameter
+   * 3. Load Terria config (using `configUrl` or `options.getConfig`)
+   *     - This will create `InitSources` and update `configParameters`
+   * 4. Init services which don't depend on `serverConfig` - Error service, internationalization, analytics, catalog index
+   * 5. Load `serverConfig`
+   * 6. Init services which depend on `serverConfig` - Share data service, Cors proxy
    * 7. Init default basemaps
-   * 8. Create InitSources from options.applicationUrl
+   * 8. Create `InitSources` from `options.applicationUrl`
    * 9. Load persisted map settings
    */
   async start(options: StartOptions) {
