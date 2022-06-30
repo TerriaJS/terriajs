@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
-import { useTranslationIfExists } from "../../../../Language/languageHelpers";
+import { applyTranslationIfExists } from "../../../../Language/languageHelpers";
 import ViewState from "../../../../ReactViewModels/ViewState";
 import Box, { BoxSpan } from "../../../../Styled/Box";
 import { StyledIcon } from "../../../../Styled/Icon";
@@ -85,7 +85,7 @@ const CollapsedNavigationPanel: React.FC<PropTypes> = observer(
   (props: PropTypes) => {
     const { viewState } = props;
     const theme = useTheme();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     let items = props.items;
     return (
       <CollapsedNavigationBox column>
@@ -102,7 +102,7 @@ const CollapsedNavigationPanel: React.FC<PropTypes> = observer(
           {items.map(item => (
             <NavigationButton
               key={item.id}
-              title={useTranslationIfExists(item.name)}
+              title={applyTranslationIfExists(item.name, i18n)}
               onClick={() => {
                 if (!item.controller.disabled) {
                   viewState.closeCollapsedNavigation();

@@ -1,7 +1,18 @@
 Change Log
 ==========
 
-#### next release (8.2.7)
+#### next release (8.2.8)
+
+* Await Internationalisation initialisation in `Terria.start`
+* `UserDrawing.messageHeader` can now also be `() => string`
+* TSify `updateApplicationOnMessageFromParentWindow`
+* `updateApplicationOnHashChange` and `updateApplicationOnMessageFromParentWindow` are now called in `Terria.start`
+  * Added `disableUpdateApplicationOnHashChange` and `disableUpdateApplicationOnMessageFromParentWindow` to `StartOptions`
+* Added `getConfig` to Terria `StartOptions` - this can be used to override fetching of Terria config through `StartOptions.configUrl`
+* `Terria.start` will now await Internationalization init
+* [The next improvement]
+
+#### 8.2.7 - 2022-06-30
 
 * Fix `WorkbenchItem` title height
 * Add region map info and move "No Data" message to `InfoSections` in `TableAutomaticStylesStratum`
@@ -19,11 +30,12 @@ Change Log
 * Wrap the following components in `observer` - `ChartItem`, `LineChart`, (chart) `Legends`, `ChartPanelDownloadButton`
 * Improve TerriaReference error logging
 * Fix handling GeoJSON if features have null geometry
-* TSify `updateApplicationOnMessageFromParentWindow`
-* `updateApplicationOnHashChange` and `updateApplicationOnMessageFromParentWindow` are now called in `Terria.start`
-  * Added `disableUpdateApplicationOnHashChange` and `disableUpdateApplicationOnMessageFromParentWindow` to `StartOptions`
-* Added `getConfig` to Terria `StartOptions` - this can be used to override fetching of Terria config through `StartOptions.configUrl`
-* `Terria.start` will now await Internationalization init
+* Fix bug where map tools names appear as translation strings
+* Allow IFC files to be added to a map from local or web data (Requires non-open source plugin) 
+* Rename `useTranslationIfExists` to `applyTranslationIfExists` so it doesn't look like a React hook.
+* Added a required parameter i18n to `applyTranslationIfExists` to avoid having stale translated strings when the language changes.
+* Fix `StoryBuilder` remove all text color
+* Fix `FeatureInfoPanel` `Loader` color
 * [The next improvement]
 
 #### 8.2.6 - 2022-06-17
