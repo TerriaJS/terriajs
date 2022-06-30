@@ -7,6 +7,7 @@ import {
   Category,
   HelpAction
 } from "../../../../Core/AnalyticEvents/analyticEvents";
+import { isJsonString } from "../../../../Core/Json";
 import Icon, { StyledIcon } from "../../../../Styled/Icon";
 import Text from "../../../../Styled/Text";
 import { applyTranslationIfExists } from "./../../../../Language/languageHelpers";
@@ -37,9 +38,9 @@ class HelpPanelItem extends React.Component {
 
     // `content.icon` is user defined and can possibly force the UI to lookup a
     // nonexistant icon.
-    const title =
-      this.props.content.title &&
-      applyTranslationIfExists(this.props.content.title, i18n);
+    const title = isJsonString(this.props.content.title)
+      ? applyTranslationIfExists(this.props.content.title, i18n)
+      : "";
     const paneMode = this.props.content.paneMode;
     const opensInPanel = paneMode !== "externalLink";
     const iconGlyph = opensInPanel
@@ -81,15 +82,17 @@ class HelpPanelItem extends React.Component {
             paneMode={this.props.content.paneMode}
             markdownContent={this.props.content.markdownText}
             videoUrl={
-              this.props.content.videoUrl &&
-              applyTranslationIfExists(this.props.content.videoUrl, i18n)
+              isJsonString(this.props.content.videoUrl)
+                ? applyTranslationIfExists(this.props.content.videoUrl, i18n)
+                : ""
             }
             placeholderImage={
-              this.props.content.placeholderImage &&
-              applyTranslationIfExists(
-                this.props.content.placeholderImage,
-                i18n
-              )
+              isJsonString(this.props.content.placeholderImage)
+                ? applyTranslationIfExists(
+                    this.props.content.placeholderImage,
+                    i18n
+                  )
+                : ""
             }
           />
         )}
