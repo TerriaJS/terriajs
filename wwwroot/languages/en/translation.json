@@ -713,9 +713,10 @@
       "gpx": "GPX",
       "json": "JSON",
       "carto": "Carto",
-      "gltf": "GLTF",
+      "gltf": "glTF",
       "shp": "Shapefile (zip)",
-      "socrata-group": "Socrata Server"
+      "socrata-group": "Socrata Server",
+      "ifc": "IFC"
     },
     "printWindow": {
       "errorTitle": "Error printing",
