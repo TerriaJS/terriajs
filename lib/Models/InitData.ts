@@ -1,4 +1,4 @@
-import { runInAction, toJS, when } from "mobx";
+import { runInAction, toJS, when, action } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 import isDefined from "../Core/isDefined";
@@ -29,244 +29,251 @@ import NoViewer from "./NoViewer";
 import Terria from "./Terria";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 
-export async function applyInitData(
-  terria: Terria,
-  {
-    initData,
-    replaceStratum = false,
-    canUnsetFeaturePickingState = false
-  }: {
-    initData: InitSourceData;
-    replaceStratum?: boolean;
-    // When feature picking state is missing from the initData, unset the state only if terria flag is true
-    // This is for eg, set to true when switching through story slides.
-    canUnsetFeaturePickingState?: boolean;
-  }
-): Promise<void> {
-  const errors: TerriaError[] = [];
+export const applyInitData = action(
+  async (
+    terria: Terria,
+    {
+      initData,
+      replaceStratum = false,
+      canUnsetFeaturePickingState = false
+    }: {
+      initData: InitSourceData;
+      replaceStratum?: boolean;
+      // When feature picking state is missing from the initData, unset the state only if terria flag is true
+      // This is for eg, set to true when switching through story slides.
+      canUnsetFeaturePickingState?: boolean;
+    }
+  ) => {
+    const errors: TerriaError[] = [];
 
-  initData = toJS(initData);
+    initData = toJS(initData);
 
-  const stratumId =
-    typeof initData.stratum === "string"
-      ? initData.stratum
-      : CommonStrata.definition;
+    const stratumId =
+      typeof initData.stratum === "string"
+        ? initData.stratum
+        : CommonStrata.definition;
 
-  // Extract the list of CORS-ready domains.
-  if (Array.isArray(initData.corsDomains)) {
-    terria.corsProxy.corsDomains.push(...(<string[]>initData.corsDomains));
-  }
+    // Extract the list of CORS-ready domains.
+    if (Array.isArray(initData.corsDomains)) {
+      terria.corsProxy.corsDomains.push(...(<string[]>initData.corsDomains));
+    }
 
-  // Add catalog members
-  if (initData.catalog !== undefined) {
-    terria.catalog.group
-      .addMembersFromJson(stratumId, initData.catalog)
-      .pushErrorTo(errors);
-  }
+    // Add catalog members
+    if (initData.catalog !== undefined) {
+      terria.catalog.group
+        .addMembersFromJson(stratumId, initData.catalog)
+        .pushErrorTo(errors);
+    }
 
-  // Show/hide elements in mapNavigationModel
-  if (isJsonObject(initData.elements)) {
-    terria.elements.merge(initData.elements);
-    // we don't want to go through all elements unless they are added.
-    if (terria.mapNavigationModel.items.length > 0) {
-      terria.elements.forEach((element, key) => {
-        if (isDefined(element.visible)) {
-          if (element.visible) {
-            terria.mapNavigationModel.show(key);
-          } else {
-            terria.mapNavigationModel.hide(key);
+    // Show/hide elements in mapNavigationModel
+    if (isJsonObject(initData.elements)) {
+      terria.elements.merge(initData.elements);
+      // we don't want to go through all elements unless they are added.
+      if (terria.mapNavigationModel.items.length > 0) {
+        terria.elements.forEach((element, key) => {
+          if (isDefined(element.visible)) {
+            if (element.visible) {
+              terria.mapNavigationModel.show(key);
+            } else {
+              terria.mapNavigationModel.hide(key);
+            }
           }
-        }
-      });
-    }
-  }
-
-  // Add stories
-  if (Array.isArray(initData.stories)) {
-    terria.stories = initData.stories;
-    terria.storyPromptShown++;
-  }
-
-  // Add map settings
-  if (isJsonString(initData.viewerMode)) {
-    const viewerMode = initData.viewerMode.toLowerCase();
-    if (isViewerMode(viewerMode)) setViewerMode(viewerMode, terria.mainViewer);
-  }
-
-  if (isJsonObject(initData.baseMaps)) {
-    terria.baseMapsModel
-      .loadFromJson(CommonStrata.definition, initData.baseMaps)
-      .pushErrorTo(errors, "Failed to load basemaps");
-  }
-
-  if (isJsonObject(initData.homeCamera)) {
-    terria.loadHomeCamera(initData.homeCamera);
-  }
-
-  if (isJsonObject(initData.initialCamera)) {
-    const initialCamera = CameraView.fromJson(initData.initialCamera);
-    terria.currentViewer.zoomTo(initialCamera, 2.0);
-  }
-
-  if (isJsonBoolean(initData.showSplitter)) {
-    terria.showSplitter = initData.showSplitter;
-  }
-
-  if (isJsonNumber(initData.splitPosition)) {
-    terria.splitPosition = initData.splitPosition;
-  }
-
-  if (isJsonObject(initData.settings)) {
-    if (isJsonNumber(initData.settings.baseMaximumScreenSpaceError)) {
-      terria.setBaseMaximumScreenSpaceError(
-        initData.settings.baseMaximumScreenSpaceError
-      );
-    }
-    if (isJsonBoolean(initData.settings.useNativeResolution)) {
-      terria.setUseNativeResolution(initData.settings.useNativeResolution);
-    }
-    if (isJsonBoolean(initData.settings.alwaysShowTimeline)) {
-      terria.timelineStack.setAlwaysShowTimeline(
-        initData.settings.alwaysShowTimeline
-      );
-    }
-    if (isJsonString(initData.settings.baseMapId)) {
-      terria.mainViewer.setBaseMap(
-        terria.baseMapsModel.baseMapItems.find(
-          item => item.item.uniqueId === initData.settings!.baseMapId
-        )?.item
-      );
-    }
-    if (isJsonNumber(initData.settings.terrainSplitDirection)) {
-      terria.terrainSplitDirection = initData.settings.terrainSplitDirection;
-    }
-    if (isJsonBoolean(initData.settings.depthTestAgainstTerrainEnabled)) {
-      terria.depthTestAgainstTerrainEnabled =
-        initData.settings.depthTestAgainstTerrainEnabled;
-    }
-  }
-
-  // Copy but don't yet load the workbench.
-  const workbench = Array.isArray(initData.workbench)
-    ? initData.workbench.slice()
-    : [];
-
-  const timeline = Array.isArray(initData.timeline)
-    ? initData.timeline.slice()
-    : [];
-
-  // NOTE: after terria Promise, terria function is no longer an `@action`
-  const models = initData.models;
-  if (isJsonObject(models, false)) {
-    await Promise.all(
-      Object.keys(models).map(async modelId => {
-        (
-          await loadModelStratum(
-            terria,
-            modelId,
-            stratumId,
-            models,
-            replaceStratum
-          )
-        ).pushErrorTo(errors);
-      })
-    );
-  }
-
-  runInAction(() => {
-    if (isJsonString(initData.previewedItemId)) {
-      terria.previewedItemId = initData.previewedItemId;
-    }
-  });
-
-  // Set the new contents of the workbench.
-  const newItemsRaw = filterOutUndefined(
-    workbench.map(modelId => {
-      if (typeof modelId !== "string") {
-        errors.push(
-          new TerriaError({
-            sender: terria,
-            title: "Invalid model ID in workbench",
-            message: "A model ID in the workbench list is not a string."
-          })
-        );
-      } else {
-        return terria.getModelByIdOrShareKey(BaseModel, modelId);
+        });
       }
-    })
-  );
-
-  const newItems: BaseModel[] = [];
-
-  // Maintain the model order in the workbench.
-  while (true) {
-    const model = newItemsRaw.shift();
-    if (model) {
-      await pushAndLoadMapItems(model, newItems, errors);
-    } else {
-      break;
     }
-  }
 
-  runInAction(() => (terria.workbench.items = newItems));
+    // Add stories
+    if (Array.isArray(initData.stories)) {
+      terria.stories = initData.stories;
+      terria.storyPromptShown++;
+    }
 
-  // For ids that don't correspond to models resolve an id by share keys
-  const timelineWithShareKeysResolved = new Set(
-    filterOutUndefined(
-      timeline.map(modelId => {
+    // Add map settings
+    if (isJsonString(initData.viewerMode)) {
+      const viewerMode = initData.viewerMode.toLowerCase();
+      if (isViewerMode(viewerMode))
+        setViewerMode(viewerMode, terria.mainViewer);
+    }
+
+    if (isJsonObject(initData.baseMaps)) {
+      terria.baseMapsModel
+        .loadFromJson(CommonStrata.definition, initData.baseMaps)
+        .pushErrorTo(errors, "Failed to load basemaps");
+    }
+
+    if (isJsonObject(initData.homeCamera)) {
+      terria.loadHomeCamera(initData.homeCamera);
+    }
+
+    if (isJsonObject(initData.initialCamera)) {
+      const initialCamera = CameraView.fromJson(initData.initialCamera);
+      terria.currentViewer.zoomTo(initialCamera, 2.0);
+    }
+
+    if (isJsonBoolean(initData.showSplitter)) {
+      terria.showSplitter = initData.showSplitter;
+    }
+
+    if (isJsonNumber(initData.splitPosition)) {
+      terria.splitPosition = initData.splitPosition;
+    }
+
+    if (isJsonObject(initData.settings)) {
+      if (isJsonNumber(initData.settings.baseMaximumScreenSpaceError)) {
+        terria.setBaseMaximumScreenSpaceError(
+          initData.settings.baseMaximumScreenSpaceError
+        );
+      }
+      if (isJsonBoolean(initData.settings.useNativeResolution)) {
+        terria.setUseNativeResolution(initData.settings.useNativeResolution);
+      }
+      if (isJsonBoolean(initData.settings.alwaysShowTimeline)) {
+        terria.timelineStack.setAlwaysShowTimeline(
+          initData.settings.alwaysShowTimeline
+        );
+      }
+      if (isJsonString(initData.settings.baseMapId)) {
+        terria.mainViewer.setBaseMap(
+          terria.baseMapsModel.baseMapItems.find(
+            item => item.item.uniqueId === initData.settings!.baseMapId
+          )?.item
+        );
+      }
+      if (isJsonNumber(initData.settings.terrainSplitDirection)) {
+        terria.terrainSplitDirection = initData.settings.terrainSplitDirection;
+      }
+      if (isJsonBoolean(initData.settings.depthTestAgainstTerrainEnabled)) {
+        terria.depthTestAgainstTerrainEnabled =
+          initData.settings.depthTestAgainstTerrainEnabled;
+      }
+    }
+
+    // Copy but don't yet load the workbench.
+    const workbench = Array.isArray(initData.workbench)
+      ? initData.workbench.slice()
+      : [];
+
+    const timeline = Array.isArray(initData.timeline)
+      ? initData.timeline.slice()
+      : [];
+
+    // NOTE: after terria Promise, function is no longer an `@action`
+    const models = initData.models;
+    if (isJsonObject(models, false)) {
+      await Promise.all(
+        Object.keys(models).map(async modelId => {
+          (
+            await loadModelStratum(
+              terria,
+              modelId,
+              stratumId,
+              models,
+              replaceStratum
+            )
+          ).pushErrorTo(errors);
+        })
+      );
+    }
+
+    runInAction(() => {
+      if (isJsonString(initData.previewedItemId)) {
+        terria.previewedItemId = initData.previewedItemId;
+      }
+    });
+
+    // Set the new contents of the workbench.
+    const newItemsRaw = filterOutUndefined(
+      workbench.map(modelId => {
         if (typeof modelId !== "string") {
           errors.push(
             new TerriaError({
               sender: terria,
-              title: "Invalid model ID in timeline",
-              message: "A model ID in the timneline list is not a string."
+              title: "Invalid model ID in workbench",
+              message: "A model ID in the workbench list is not a string."
             })
           );
         } else {
-          if (terria.getModelById(BaseModel, modelId) !== undefined) {
-            return modelId;
-          } else {
-            return terria.getModelIdByShareKey(modelId);
-          }
+          return terria.getModelByIdOrShareKey(BaseModel, modelId);
         }
       })
-    )
-  );
+    );
 
-  // TODO: the timelineStack should be populated from the `timeline` property,
-  // not from the workbench.
-  runInAction(
-    () =>
-      (terria.timelineStack.items = terria.workbench.items
-        .filter(item => {
-          return (
-            item.uniqueId && timelineWithShareKeysResolved.has(item.uniqueId)
-          );
-          // && TODO: what is a good way to test if an item is of type TimeVarying.
+    // Add all "raw" items to the workbench - so we can see them loading
+    runInAction(() => (terria.workbench.items = newItemsRaw));
+
+    const newItems: BaseModel[] = [];
+
+    // Maintain the model order in the workbench.
+    while (true) {
+      const model = newItemsRaw.shift();
+      if (model) {
+        await pushAndLoadMapItems(model, newItems, errors);
+      } else {
+        break;
+      }
+    }
+
+    // Overwrite "raw" items with items that successfully loaded
+    runInAction(() => (terria.workbench.items = newItems));
+
+    // For ids that don't correspond to models resolve an id by share keys
+    const timelineWithShareKeysResolved = new Set(
+      filterOutUndefined(
+        timeline.map(modelId => {
+          if (typeof modelId !== "string") {
+            errors.push(
+              new TerriaError({
+                sender: terria,
+                title: "Invalid model ID in timeline",
+                message: "A model ID in the timneline list is not a string."
+              })
+            );
+          } else {
+            if (terria.getModelById(BaseModel, modelId) !== undefined) {
+              return modelId;
+            } else {
+              return terria.getModelIdByShareKey(modelId);
+            }
+          }
         })
-        .map(item => <TimeVarying>item))
-  );
+      )
+    );
 
-  if (isJsonObject(initData.pickedFeatures)) {
-    when(() => !(terria.currentViewer instanceof NoViewer)).then(() => {
-      if (isJsonObject(initData.pickedFeatures)) {
-        loadPickedFeaturesFromJson(terria, initData.pickedFeatures);
-      }
-    });
-  } else if (canUnsetFeaturePickingState) {
-    runInAction(() => {
-      terria.pickedFeatures = undefined;
-      terria.selectedFeature = undefined;
-    });
+    // TODO: the timelineStack should be populated from the `timeline` property,
+    // not from the workbench.
+    runInAction(
+      () =>
+        (terria.timelineStack.items = terria.workbench.items
+          .filter(item => {
+            return (
+              item.uniqueId && timelineWithShareKeysResolved.has(item.uniqueId)
+            );
+            // && TODO: what is a good way to test if an item is of type TimeVarying.
+          })
+          .map(item => <TimeVarying>item))
+    );
+
+    if (isJsonObject(initData.pickedFeatures)) {
+      when(() => !(terria.currentViewer instanceof NoViewer)).then(() => {
+        if (isJsonObject(initData.pickedFeatures)) {
+          loadPickedFeaturesFromJson(terria, initData.pickedFeatures);
+        }
+      });
+    } else if (canUnsetFeaturePickingState) {
+      runInAction(() => {
+        terria.pickedFeatures = undefined;
+        terria.selectedFeature = undefined;
+      });
+    }
+
+    if (errors.length > 0)
+      throw TerriaError.combine(errors, {
+        message: {
+          key: "models.terria.loadingInitSourceErrorTitle"
+        }
+      });
   }
-
-  if (errors.length > 0)
-    throw TerriaError.combine(errors, {
-      message: {
-        key: "models.terria.loadingInitSourceErrorTitle"
-      }
-    });
-}
+);
 
 async function loadModelStratum(
   terria: Terria,
