@@ -84,7 +84,7 @@ class HelpPanelItem extends React.Component {
             videoUrl={
               isJsonString(this.props.content.videoUrl)
                 ? applyTranslationIfExists(this.props.content.videoUrl, i18n)
-                : ""
+                : undefined
             }
             placeholderImage={
               isJsonString(this.props.content.placeholderImage)
@@ -92,7 +92,7 @@ class HelpPanelItem extends React.Component {
                     this.props.content.placeholderImage,
                     i18n
                   )
-                : ""
+                : undefined
             }
           />
         )}

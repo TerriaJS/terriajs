@@ -25,6 +25,8 @@ Change Log
 * Fix handling GeoJSON if features have null geometry
 * Fix bug where map tools names appear as translation strings
 * Allow IFC files to be added to a map from local or web data (Requires non-open source plugin) 
+* Rename `useTranslationIfExists` to `applyTranslationIfExists` so it doesn't look like a React hook.
+* Added a required parameter i18n to `applyTranslationIfExists` to avoid having stale translated strings when the language changes.
 * Fix `StoryBuilder` remove all text color
 * Fix `FeatureInfoPanel` `Loader` color
 * [The next improvement]
