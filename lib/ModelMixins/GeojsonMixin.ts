@@ -598,11 +598,10 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         else if (isMultiPoint(feature)) {
           latitudes.push(feature.geometry.coordinates[0][1]);
           longitudes.push(feature.geometry.coordinates[0][0]);
+        } else {
+          latitudes.push(null);
+          longitudes.push(null);
         }
-
-        latitudes.push(null);
-        longitudes.push(null);
-        continue;
       }
 
       const dataSource = new CustomDataSource(this.name || "Table");
