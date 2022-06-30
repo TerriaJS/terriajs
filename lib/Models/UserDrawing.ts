@@ -169,7 +169,7 @@ export default class UserDrawing extends MappableMixin(
       : [this.pointEntities, this.otherEntities];
   }
 
-  @computed get svgPoint() {
+  get svgPoint() {
     /**
      * SVG element for point drawn when user clicks.
      * http://stackoverflow.com/questions/24869733/how-to-draw-custom-dynamic-billboards-in-cesium-js
