@@ -688,10 +688,11 @@
       "gpx": "GPX",
       "json": "JSON",
       "carto": "Carto",
-      "gltf": "GLTF",
+      "gltf": "gLTF",
       "shp": "Shapefile (zip)",
       "other": "Altres (utilitza el servei de conversió)",
-      "socrata-group": "Servidor Socrata"
+      "socrata-group": "Servidor Socrata",
+      "ifc": "IFC"
     },
     "printWindow": {
       "errorTitle": "Error d'impressió",
