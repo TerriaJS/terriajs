@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.2.8)
 
+* Await Internationalisation initialisation in `Terria.start`
 * [The next improvement]
 
 #### 8.2.7 - 2022-06-30
