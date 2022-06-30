@@ -8,9 +8,6 @@ Change Log
 * Fix feature highliting for `Line`, `MultiLine` and `MultiPoint`
 * [The next improvement]
 
-
-* [The next improvement]
-
 #### 8.2.7 - 2022-06-30
 
 * Fix `WorkbenchItem` title height
