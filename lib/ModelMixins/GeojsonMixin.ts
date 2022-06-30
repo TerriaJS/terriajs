@@ -440,6 +440,9 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         const features = geoJsonWgs84.features;
         geoJsonWgs84.features = [];
 
+        /** Table styling is disabled for MultiPoint features */
+        let multiPointFeatures = false;
+
         for (let i = 0; i < features.length; i++) {
           const feature = features[i];
 
@@ -471,6 +474,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             feature.geometry.type === "MultiPoint"
           ) {
             featureCounts.point++;
+            if (feature.geometry.type === "MultiPoint")
+              multiPointFeatures = true;
           } else if (
             feature.geometry.type === "LineString" ||
             feature.geometry.type === "MultiLineString"
@@ -493,8 +498,13 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
         runInAction(() => (this.featureCounts = featureCounts));
 
+        // Disable TableStyling for the following:
+        // If MultiPoint features exist
         // If more than 50% of features have simple style properties - disable table styling
-        if (numFeaturesWithSimpleStyle / geoJsonWgs84.features.length >= 0.5) {
+        if (
+          multiPointFeatures ||
+          numFeaturesWithSimpleStyle / geoJsonWgs84.features.length >= 0.5
+        ) {
           runInAction(() => {
             this.setTrait(
               CommonStrata.underride,
@@ -590,18 +600,13 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
       for (let i = 0; i < this.readyData.features.length; i++) {
         const feature = this.readyData.features[i];
-        if (isPoint(feature)) {
-          latitudes.push(feature.geometry.coordinates[1]);
-          longitudes.push(feature.geometry.coordinates[0]);
-        }
-        // TODO: add proper multi point support
-        else if (isMultiPoint(feature)) {
-          latitudes.push(feature.geometry.coordinates[0][1]);
-          longitudes.push(feature.geometry.coordinates[0][0]);
-        } else {
+        if (!isPoint(feature)) {
           latitudes.push(null);
           longitudes.push(null);
+          continue;
         }
+        latitudes.push(feature.geometry.coordinates[1]);
+        longitudes.push(feature.geometry.coordinates[0]);
       }
 
       const dataSource = new CustomDataSource(this.name || "Table");
