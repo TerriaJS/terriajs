@@ -9,7 +9,6 @@ import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import URI from "urijs";
 import { Category, LaunchAction } from "../Core/AnalyticEvents/analyticEvents";
@@ -19,11 +18,9 @@ import ConsoleAnalytics from "../Core/ConsoleAnalytics";
 import CorsProxy from "../Core/CorsProxy";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import GoogleAnalytics from "../Core/GoogleAnalytics";
-import hashEntity from "../Core/hashEntity";
 import instanceOf from "../Core/instanceOf";
 import isDefined from "../Core/isDefined";
-import { isJsonObject, JsonObject } from "../Core/Json";
-import { isLatLonHeight } from "../Core/LatLonHeight";
+import JsonValue, { isJsonObject, JsonObject } from "../Core/Json";
 import loadJson5 from "../Core/loadJson5";
 import Result from "../Core/Result";
 import ServerConfig from "../Core/ServerConfig";
@@ -34,14 +31,12 @@ import TerriaError, {
 import { Complete } from "../Core/TypeModifiers";
 import { getUriWithoutPath } from "../Core/uriHelpers";
 import PickedFeatures, {
-  featureBelongsToCatalogItem,
-  isProviderCoordsMap
+  featureBelongsToCatalogItem
 } from "../Map/PickedFeatures/PickedFeatures";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import { defaultTerms } from "../ReactViewModels/defaultTerms";
 import NotificationState from "../ReactViewModels/NotificationState";
-import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import MapNavigationModel from "../ViewModels/MapNavigation/MapNavigationModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import updateApplicationOnHashChange from "../ViewModels/updateApplicationOnHashChange";
@@ -49,7 +44,6 @@ import updateApplicationOnMessageFromParentWindow from "../ViewModels/updateAppl
 import { BaseMapsModel } from "./BaseMaps/BaseMapsModel";
 import CameraView from "./CameraView";
 import Catalog from "./Catalog/Catalog";
-import hasTraits from "./Definition/hasTraits";
 import { BaseModel } from "./Definition/Model";
 import {
   ErrorServiceOptions,
@@ -359,7 +353,7 @@ export default class Terria {
   ) {
     const terriaError = TerriaError.from(error, overrides);
 
-    // Set shouldRaiseToUser true if forceRaiseToUser agrument is true
+    // Set shouldRaiseToUser true if forceRaiseToUser argument is true
     if (forceRaiseToUser) terriaError.overrideRaiseToUser = true;
 
     // Log error to error service
@@ -532,15 +526,20 @@ export default class Terria {
       });
   }
 
-  /** Main Terria initalization function:
+  /** Main Terria initialization function:
    * 1. Set `ignoreErrors` userProperty from hash parameters (All other hashProperties are set in InitSource.addInitSourcesFromUrl())
-   * 2.
+   * 2. In DEV environment only: override configUrl from hash parameter
+   * 3. Load Terria config (using configUrl or options.getConfig)
+   *     - This will create InitSources and update configParameters
+   * 4. Init services which don't depend on serverConfig - Error service, internationalization, analytics, catalog index
+   * 5. Load serverConfig
+   * 6. Init services which depend on serverConfig - Share data service, Cors proxy
+   * 7. Init default basemaps
+   * 8. Create InitSources from options.applicationUrl
+   * 9. Load persisted map settings
    */
   async start(options: StartOptions) {
-    // Some hashProperties need to be set before anything else happens - only the following are used:
-    // - ignoreErrors
-    // - configUrl
-    //
+    // `ignoreErrors` and `configUrl` hashProperties need to be set before anything else happens
     const hashProperties = queryToObject(new URI(window.location).fragment());
 
     if (isDefined(hashProperties["ignoreErrors"])) {
@@ -558,34 +557,19 @@ export default class Terria {
 
     const baseUri = new URI(options.configUrl).filename("");
 
-    // Load TerriaConfig
-    // -
-    // - update this.configParameters
-    // - Add InitSources from config JSON (eg initializationUrls)
-    // -
+    // Load TerriaConfig - create InitSources and update configParameters
     try {
-      let terriaConfig = await loadJson5(
-        options.configUrl,
-        options.configUrlHeaders
-      );
-
-      // TODO: Move Magda config stuff out
-      // If config is from Magda - use "terria-config" aspect as terriaConfig
-      if (isJsonObject(terriaConfig) && isJsonObject(terriaConfig.aspects)) {
-        // Also add "terria-init" aspect as InitSource
-        if (isJsonObject(terriaConfig.aspects["terria-init"])) {
-          this.initSources.push({
-            name: `Magda map-config aspect terria-init`,
-            errorSeverity: TerriaErrorSeverity.Error,
-            data: terriaConfig.aspects["terria-init"]
-          });
-        }
-
-        terriaConfig = terriaConfig.aspects["terria-config"];
+      let terriaConfig: JsonValue | undefined;
+      if (options.getConfig) {
+        terriaConfig = await options.getConfig();
+      } else {
+        terriaConfig = await loadJson5(
+          options.configUrl,
+          options.configUrlHeaders
+        );
       }
 
       runInAction(() => {
-        // If config is Terria config JSON
         if (isJsonObject(terriaConfig)) {
           if (isJsonObject(terriaConfig.parameters)) {
             this.updateParameters(terriaConfig.parameters);
@@ -636,6 +620,15 @@ export default class Terria {
       launchUrlForAnalytics
     );
 
+    // Init catalog index if catalogIndexUrl is set
+    // Note: this isn't loaded now, it is loaded in first CatalogSearchProvider.doSearch()
+    if (this.configParameters.catalogIndexUrl && !this.catalogIndex) {
+      this.catalogIndex = new CatalogIndex(
+        this,
+        this.configParameters.catalogIndexUrl
+      );
+    }
+
     // Load server config
     this.serverConfig = new ServerConfig();
     const serverConfig = await this.serverConfig.init(
@@ -658,15 +651,6 @@ export default class Terria {
       this.shareDataService.init(this.serverConfig.config);
     }
 
-    // Init catalog index if catalogIndexUrl is set
-    // Note: this isn't loaded now, it is loaded in first CatalogSearchProvider.doSearch()
-    if (this.configParameters.catalogIndexUrl && !this.catalogIndex) {
-      this.catalogIndex = new CatalogIndex(
-        this,
-        this.configParameters.catalogIndexUrl
-      );
-    }
-
     // Init Basemaps
     this.baseMapsModel
       .initializeDefaultBaseMaps()
@@ -676,7 +660,7 @@ export default class Terria {
         )
       );
 
-    // Create init sources from URL
+    // Create init sources from application url
     if (options.applicationUrl?.href) {
       try {
         await addInitSourcesFromUrl(this, options.applicationUrl?.href);
@@ -685,14 +669,16 @@ export default class Terria {
       }
     }
 
+    // Load persisted map settings - this should be done after adding InitSources from TerriaConfig and from URL
     this.loadPersistedMapSettings();
 
     // Automatically update Terria (load new catalogs, etc.) when the hash part of the URL changes.
-    updateApplicationOnHashChange(this, window);
-    updateApplicationOnMessageFromParentWindow(this, window);
+    if (!options.disableUpdateApplicationOnHashChange)
+      updateApplicationOnHashChange(this, window);
+    if (!options.disableUpdateApplicationOnMessageFromParentWindow)
+      updateApplicationOnMessageFromParentWindow(this, window);
   }
 
-  /** Load persisted map settings, this should be called after `addInitSourcesFromUrl`*/
   private loadPersistedMapSettings(): void {
     const persistViewerMode = this.configParameters.persistViewerMode;
     const hashViewerMode = this.userProperties.get("map");
@@ -755,7 +741,7 @@ export default class Terria {
   }
 
   /**
-   * Asynchronously loads init sources
+   * Asynchronously loads init sources. This function should not be called internally in the `Terria` object. We want to encourage explicit usage to minimise number of times it is called
    */
   loadInitSources() {
     return this._initSourceLoader.load();
@@ -765,6 +751,7 @@ export default class Terria {
     this._initSourceLoader.dispose();
   }
 
+  /** Update configParameters from JsonObject */
   @action
   updateParameters(parameters: ConfigParameters | JsonObject): void {
     Object.entries(parameters).forEach(([key, value]) => {
@@ -885,144 +872,6 @@ export default class Terria {
         }
       });
     }
-  }
-
-  // /**
-  //  * This method can be used to refresh magda based catalogue configuration. Useful if the catalogue
-  //  * has items that are only available to authorised users.
-  //  *
-  //  * @param magdaCatalogConfigUrl URL of magda based catalogue configuration
-  //  * @param config Optional. If present, use this magda based catalogue config instead of reloading.
-  //  * @param configUrlHeaders  Optional. If present, the headers are added to above URL request.
-  //  */
-  // async refreshCatalogMembersFromMagda(
-  //   magdaCatalogConfigUrl: string,
-  //   config?: any,
-  //   configUrlHeaders?: { [key: string]: string }
-  // ) {
-  //   const theConfig = config
-  //     ? config
-  //     : await loadJson5(magdaCatalogConfigUrl, configUrlHeaders);
-
-  //   // force config (root group) id to be `/`
-  //   const id = "/";
-  //   this.removeModelReferences(this.catalog.group);
-
-  //   let existingReference = this.getModelById(MagdaReference, id);
-  //   if (existingReference === undefined) {
-  //     existingReference = new MagdaReference(id, this);
-  //     // Add model with terria aspects shareKeys
-  //     this.addModel(existingReference, theConfig.aspects?.terria?.shareKeys);
-  //   }
-
-  //   const reference = existingReference;
-
-  //   const magdaRoot = new URI(magdaCatalogConfigUrl)
-  //     .path("")
-  //     .query("")
-  //     .toString();
-
-  //   reference.setTrait(CommonStrata.definition, "url", magdaRoot);
-  //   reference.setTrait(CommonStrata.definition, "recordId", id);
-  //   reference.setTrait(
-  //     CommonStrata.definition,
-  //     "magdaRecord",
-  //     theConfig as JsonObject
-  //   );
-  //   (await reference.loadReference(true)).raiseError(
-  //     this,
-  //     `Failed to load MagdaReference for record ${id}`
-  //   );
-  //   if (reference.target instanceof CatalogGroup) {
-  //     runInAction(() => {
-  //       this.catalog.group = <CatalogGroup>reference.target;
-  //     });
-  //   }
-  // }
-
-  @action
-  async loadPickedFeatures(pickedFeatures: JsonObject): Promise<void> {
-    let vectorFeatures: Entity[] = [];
-    let featureIndex: Record<number, Entity[] | undefined> = {};
-
-    if (Array.isArray(pickedFeatures.entities)) {
-      // Build index of terria features by a hash of their properties.
-      const relevantItems = this.workbench.items.filter(
-        item =>
-          hasTraits(item, MappableTraits, "show") &&
-          item.show &&
-          MappableMixin.isMixedInto(item)
-      ) as MappableMixin.Instance[];
-
-      relevantItems.forEach(item => {
-        const entities: Entity[] = item.mapItems
-          .filter(isDataSource)
-          .reduce((arr: Entity[], ds) => arr.concat(ds.entities.values), []);
-
-        entities.forEach(entity => {
-          const hash = hashEntity(entity, this.timelineClock);
-          const feature = Feature.fromEntityCollectionOrEntity(entity);
-          featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
-        });
-      });
-
-      // Go through the features we've got from terria match them up to the id/name info we got from the
-      // share link, filtering out any without a match.
-      vectorFeatures = filterOutUndefined(
-        pickedFeatures.entities.map(e => {
-          if (isJsonObject(e) && typeof e.hash === "number") {
-            const features = featureIndex[e.hash] || [];
-            const match = features.find(f => f.name === e.name);
-            return match;
-          }
-        })
-      );
-    }
-
-    // Set the current pick location, if we have a valid coord
-    const maybeCoords: any = pickedFeatures.pickCoords;
-    const pickCoords = {
-      latitude: maybeCoords?.lat,
-      longitude: maybeCoords?.lng,
-      height: maybeCoords?.height
-    };
-    if (
-      isLatLonHeight(pickCoords) &&
-      isProviderCoordsMap(pickedFeatures.providerCoords)
-    ) {
-      this.currentViewer.pickFromLocation(
-        pickCoords,
-        pickedFeatures.providerCoords,
-        vectorFeatures as Feature[]
-      );
-    }
-
-    if (this.pickedFeatures?.allFeaturesAvailablePromise) {
-      // When feature picking is done, set the selected feature
-      await this.pickedFeatures?.allFeaturesAvailablePromise;
-    }
-
-    runInAction(() => {
-      this.pickedFeatures?.features.forEach((entity: Entity) => {
-        const hash = hashEntity(entity, this.timelineClock);
-        const feature = entity;
-        featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
-      });
-
-      const current = pickedFeatures.current;
-      if (
-        isJsonObject(current) &&
-        typeof current.hash === "number" &&
-        typeof current.name === "string"
-      ) {
-        const selectedFeature = (featureIndex[current.hash] || []).find(
-          feature => feature.name === current.name
-        );
-        if (selectedFeature) {
-          this.selectedFeature = selectedFeature as Feature;
-        }
-      }
-    });
   }
 
   @action

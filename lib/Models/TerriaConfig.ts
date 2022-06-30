@@ -1,3 +1,4 @@
+import JsonValue from "../Core/Json";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
 import { Term } from "../ReactViewModels/defaultTerms";
 import { ICredit } from "../ReactViews/Credits";
@@ -219,6 +220,9 @@ export interface StartOptions {
   configUrlHeaders?: {
     [key: string]: string;
   };
+  /** Override getConfigUrl, this function will be used to get TerriaConfig */
+  getConfig?: () => Promise<JsonValue>;
+  /** Set to undefined if you don't want the user to be able to control catalog loading via the URL */
   applicationUrl?: Location;
   shareDataService?: ShareDataService;
   /**
@@ -227,6 +231,8 @@ export interface StartOptions {
    * some functions that are passed in from a TerriaMap
    *  */
   i18nOptions?: I18nStartOptions;
+  disableUpdateApplicationOnHashChange?: boolean;
+  disableUpdateApplicationOnMessageFromParentWindow?: boolean;
 }
 
 export interface Analytics {

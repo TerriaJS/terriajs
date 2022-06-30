@@ -19,6 +19,11 @@ Change Log
 * Wrap the following components in `observer` - `ChartItem`, `LineChart`, (chart) `Legends`, `ChartPanelDownloadButton`
 * Improve TerriaReference error logging
 * Fix handling GeoJSON if features have null geometry
+* TSify `updateApplicationOnMessageFromParentWindow`
+* `updateApplicationOnHashChange` and `updateApplicationOnMessageFromParentWindow` are now called in `Terria.start`
+  * Added `disableUpdateApplicationOnHashChange` and `disableUpdateApplicationOnMessageFromParentWindow` to `StartOptions`
+* Added `getConfig` to Terria `StartOptions` - this can be used to override fetching of Terria config through `StartOptions.configUrl`
+* `Terria.start` will now await Internationalization init
 * [The next improvement]
 
 #### 8.2.6 - 2022-06-17

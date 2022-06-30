@@ -11,6 +11,7 @@ import {
 } from "../Core/Json";
 import Result from "../Core/Result";
 import TerriaError, { TerriaErrorSeverity } from "../Core/TerriaError";
+import { loadPickedFeaturesFromJson } from "../Map/PickedFeatures/PickedFeatures";
 import { getName } from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
@@ -249,7 +250,7 @@ export async function applyInitData(
   if (isJsonObject(initData.pickedFeatures)) {
     when(() => !(terria.currentViewer instanceof NoViewer)).then(() => {
       if (isJsonObject(initData.pickedFeatures)) {
-        terria.loadPickedFeatures(initData.pickedFeatures);
+        loadPickedFeaturesFromJson(terria, initData.pickedFeatures);
       }
     });
   } else if (canUnsetFeaturePickingState) {

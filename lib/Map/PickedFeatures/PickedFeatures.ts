@@ -1,8 +1,19 @@
-import { observable } from "mobx";
+import { observable, runInAction, action } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import MappableMixin, { ImageryParts } from "../../ModelMixins/MappableMixin";
+import MappableMixin, {
+  ImageryParts,
+  isDataSource
+} from "../../ModelMixins/MappableMixin";
 import { BaseModel } from "../../Models/Definition/Model";
 import Feature from "../../Models/Feature";
+import { JsonObject, isJsonObject } from "../../Core/Json";
+import MappableTraits from "../../Traits/TraitsClasses/MappableTraits";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import hasTraits from "../../Models/Definition/hasTraits";
+import hashEntity from "../../Core/hashEntity";
+import filterOutUndefined from "../../Core/filterOutUndefined";
+import { isLatLonHeight } from "../../Core/LatLonHeight";
+import Terria from "../../Models/Terria";
 
 export type ProviderCoords = { x: number; y: number; level: number };
 export type ProviderCoordsMap = { [url: string]: ProviderCoords };
@@ -85,3 +96,89 @@ export function featureBelongsToCatalogItem(
 
   return match;
 }
+
+export const loadPickedFeaturesFromJson = action(
+  async (terria: Terria, pickedFeatures: JsonObject): Promise<void> => {
+    let vectorFeatures: Entity[] = [];
+    let featureIndex: Record<number, Entity[] | undefined> = {};
+
+    if (Array.isArray(pickedFeatures.entities)) {
+      // Build index of terria features by a hash of their properties.
+      const relevantItems = terria.workbench.items.filter(
+        item =>
+          hasTraits(item, MappableTraits, "show") &&
+          item.show &&
+          MappableMixin.isMixedInto(item)
+      ) as MappableMixin.Instance[];
+
+      relevantItems.forEach(item => {
+        const entities: Entity[] = item.mapItems
+          .filter(isDataSource)
+          .reduce((arr: Entity[], ds) => arr.concat(ds.entities.values), []);
+
+        entities.forEach(entity => {
+          const hash = hashEntity(entity, terria.timelineClock);
+          const feature = Feature.fromEntityCollectionOrEntity(entity);
+          featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
+        });
+      });
+
+      // Go through the features we've got from terria match them up to the id/name info we got from the
+      // share link, filtering out any without a match.
+      vectorFeatures = filterOutUndefined(
+        pickedFeatures.entities.map(e => {
+          if (isJsonObject(e) && typeof e.hash === "number") {
+            const features = featureIndex[e.hash] || [];
+            const match = features.find(f => f.name === e.name);
+            return match;
+          }
+        })
+      );
+    }
+
+    // Set the current pick location, if we have a valid coord
+    const maybeCoords: any = pickedFeatures.pickCoords;
+    const pickCoords = {
+      latitude: maybeCoords?.lat,
+      longitude: maybeCoords?.lng,
+      height: maybeCoords?.height
+    };
+    if (
+      isLatLonHeight(pickCoords) &&
+      isProviderCoordsMap(pickedFeatures.providerCoords)
+    ) {
+      terria.currentViewer.pickFromLocation(
+        pickCoords,
+        pickedFeatures.providerCoords,
+        vectorFeatures as Feature[]
+      );
+    }
+
+    if (terria.pickedFeatures?.allFeaturesAvailablePromise) {
+      // When feature picking is done, set the selected feature
+      await terria.pickedFeatures?.allFeaturesAvailablePromise;
+    }
+
+    runInAction(() => {
+      terria.pickedFeatures?.features.forEach((entity: Entity) => {
+        const hash = hashEntity(entity, terria.timelineClock);
+        const feature = entity;
+        featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
+      });
+
+      const current = pickedFeatures.current;
+      if (
+        isJsonObject(current) &&
+        typeof current.hash === "number" &&
+        typeof current.name === "string"
+      ) {
+        const selectedFeature = (featureIndex[current.hash] || []).find(
+          feature => feature.name === current.name
+        );
+        if (selectedFeature) {
+          terria.selectedFeature = selectedFeature as Feature;
+        }
+      }
+    });
+  }
+);
