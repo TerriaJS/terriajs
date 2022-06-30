@@ -23,6 +23,8 @@ Change Log
 * Allow IFC files to be added to a map from local or web data (Requires non-open source plugin) 
 * Rename `useTranslationIfExists` to `applyTranslationIfExists` so it doesn't look like a React hook.
 * Added a required parameter i18n to `applyTranslationIfExists` to avoid having stale translated strings when the language changes.
+* Fix `StoryBuilder` remove all text color
+* Fix `FeatureInfoPanel` `Loader` color
 * [The next improvement]
 
 #### 8.2.6 - 2022-06-17
