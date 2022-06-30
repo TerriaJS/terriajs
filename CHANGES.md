@@ -3,6 +3,8 @@ Change Log
 
 #### next release (8.2.8)
 
+* Await Internationalisation initialisation in `Terria.start`
+* `UserDrawing.messageHeader` can now also be `() => string`
 * [The next improvement]
 
 #### 8.2.7 - 2022-06-30
