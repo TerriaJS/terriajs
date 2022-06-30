@@ -9,6 +9,8 @@ Change Log
 * [The next improvement]
 
 
+* [The next improvement]
+
 #### 8.2.7 - 2022-06-30
 
 * Fix `WorkbenchItem` title height
