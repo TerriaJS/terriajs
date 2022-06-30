@@ -1,11 +1,13 @@
 "use strict";
 import i18next from "i18next";
-import { action, observable } from "mobx";
+import { action } from "mobx";
 import React from "react";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
+import EllipsoidTangentPlane from "terriajs-cesium/Source/Core/EllipsoidTangentPlane";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import PolygonGeometryLibrary from "terriajs-cesium/Source/Core/PolygonGeometryLibrary";
 import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
 import VertexFormat from "terriajs-cesium/Source/Core/VertexFormat";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
@@ -15,35 +17,29 @@ import ViewerMode from "../../../../Models/ViewerMode";
 import { GLYPHS } from "../../../../Styled/Icon";
 import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
 
-const EllipsoidTangentPlane = require("terriajs-cesium/Source/Core/EllipsoidTangentPlane");
-const PolygonGeometryLibrary = require("terriajs-cesium/Source/Core/PolygonGeometryLibrary");
-
-interface PropTypes {
+interface MeasureToolOptions {
   terria: Terria;
-
   onClose(): void;
 }
 
 export default class MeasureTool extends MapNavigationItemController {
   static id = "measure-tool";
   static displayName = "MeasureTool";
-  readonly terria: Terria;
-  @observable
-  totalDistanceMetres: number = 0;
-  @observable
-  totalAreaMetresSquared: number = 0;
-  @observable
-  userDrawing: UserDrawing;
+
+  private readonly terria: Terria;
+  private totalDistanceMetres: number = 0;
+  private totalAreaMetresSquared: number = 0;
+  private userDrawing: UserDrawing;
+
   onClose: () => void;
   itemRef: React.RefObject<HTMLDivElement> = React.createRef();
 
-  constructor(props: PropTypes) {
+  constructor(props: MeasureToolOptions) {
     super();
-    const t = i18next.t.bind(i18next);
     this.terria = props.terria;
     this.userDrawing = new UserDrawing({
       terria: props.terria,
-      messageHeader: i18next.t("measure.measureTool"),
+      messageHeader: () => i18next.t("measure.measureTool"),
       allowPolygon: false,
       onPointClicked: this.onPointClicked,
       onPointMoved: this.onPointMoved,
