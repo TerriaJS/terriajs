@@ -1,7 +1,11 @@
 Change Log
 ==========
 
-#### next release (8.2.7)
+#### next release (8.2.8)
+
+* [The next improvement]
+
+#### 8.2.7 - 2022-06-30
 
 * Fix `WorkbenchItem` title height
 * Add region map info and move "No Data" message to `InfoSections` in `TableAutomaticStylesStratum`
@@ -21,7 +25,6 @@ Change Log
 * Fix handling GeoJSON if features have null geometry
 * Fix bug where map tools names appear as translation strings
 * Allow IFC files to be added to a map from local or web data (Requires non-open source plugin) 
-* [The next improvement]
 
 #### 8.2.6 - 2022-06-17
 
