@@ -6,7 +6,7 @@ GITHUB_BRANCH=${GITHUB_REF##*/}
 
 # Don't run for greenkeeper branches; there are too many!
 if [[ $GITHUB_BRANCH =~ ^greenkeeper/ ]]; then
-    exit 0
+  exit 0
 fi
 
 # A version of the branch name that can be used as a DNS name once we prepend and append some stuff.
@@ -21,7 +21,7 @@ npm install -g yarn@^1.19.0
 
 # Clone and build TerriaMap, using this version of TerriaJS
 TERRIAJS_COMMIT_HASH=$(git rev-parse HEAD)
-git clone -b main https://github.com/TerriaJS/TerriaMap.git
+git clone -b update-terria-load https://github.com/TerriaJS/TerriaMap.git
 cd TerriaMap
 TERRIAMAP_COMMIT_HASH=$(git rev-parse HEAD)
 sed -i -e 's@"terriajs": ".*"@"terriajs": "'$GITHUB_REPOSITORY'#'${GITHUB_BRANCH}'"@g' package.json
