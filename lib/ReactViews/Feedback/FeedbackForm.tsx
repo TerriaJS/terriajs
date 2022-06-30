@@ -16,7 +16,7 @@ import Text from "../../Styled/Text";
 import parseCustomMarkdownToReact, {
   parseCustomMarkdownToReactWithOptions
 } from "../Custom/parseCustomMarkdownToReact";
-import { useTranslationIfExists } from "./../../Language/languageHelpers";
+import { applyTranslationIfExists } from "./../../Language/languageHelpers";
 
 interface IProps extends WithTranslation {
   theme: DefaultTheme;
@@ -163,14 +163,19 @@ class FeedbackForm extends React.Component<IProps, IState> {
   }
 
   render() {
-    const { t, viewState, theme } = this.props;
+    const { t, i18n, viewState, theme } = this.props;
     const preamble = parseCustomMarkdownToReact(
-      useTranslationIfExists(viewState.terria.configParameters.feedbackPreamble)
+      applyTranslationIfExists(
+        viewState.terria.configParameters.feedbackPreamble ||
+          "translate#feedback.feedbackPreamble",
+        i18n
+      )
     );
     const postamble = viewState.terria.configParameters.feedbackPostamble
       ? parseCustomMarkdownToReact(
-          useTranslationIfExists(
-            viewState.terria.configParameters.feedbackPostamble
+          applyTranslationIfExists(
+            viewState.terria.configParameters.feedbackPostamble,
+            i18n
           )
         )
       : undefined;
