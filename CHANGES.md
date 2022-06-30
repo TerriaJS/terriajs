@@ -23,6 +23,9 @@ Change Log
 * Allow IFC files to be added to a map from local or web data (Requires non-open source plugin) 
 * Fix `StoryBuilder` remove all text color
 * Fix `FeatureInfoPanel` `Loader` color
+* Add limited support for GeoJSON `MultiPoint` features - only the first point is added
+* Add `GeoJsonTraits.useOutlineColorForLineFeatures` - If enabled, `TableOutlineStyleTraits` will be used to color Line Features, otherwise `TableColorStyleTraits` will be used.
+* Fix feature highliting for `Line`, `MultiLine` and `MultiPoint`
 * [The next improvement]
 
 #### 8.2.6 - 2022-06-17

@@ -10,7 +10,8 @@ import {
   MultiPolygon,
   Point,
   Polygon,
-  Properties
+  Properties,
+  MultiPoint
 } from "@turf/helpers";
 import i18next from "i18next";
 import {
@@ -589,13 +590,19 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
       for (let i = 0; i < this.readyData.features.length; i++) {
         const feature = this.readyData.features[i];
-        if (!isPoint(feature)) {
-          latitudes.push(null);
-          longitudes.push(null);
-          continue;
+        if (isPoint(feature)) {
+          latitudes.push(feature.geometry.coordinates[1]);
+          longitudes.push(feature.geometry.coordinates[0]);
         }
-        latitudes.push(feature.geometry.coordinates[1]);
-        longitudes.push(feature.geometry.coordinates[0]);
+        // TODO: add proper multi point support
+        else if (isMultiPoint(feature)) {
+          latitudes.push(feature.geometry.coordinates[0][1]);
+          longitudes.push(feature.geometry.coordinates[0][0]);
+        }
+
+        latitudes.push(null);
+        longitudes.push(null);
+        continue;
       }
 
       const dataSource = new CustomDataSource(this.name || "Table");
@@ -649,6 +656,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       const rows = this.activeTableStyle.colorColumn?.valuesForType;
       const colorMap = this.activeTableStyle.colorMap;
       const outlineStyleMap = this.activeTableStyle.outlineStyleMap.styleMap;
+      const useOutlineColorForLineFeatures = this
+        .useOutlineColorForLineFeatures;
 
       // Style function
       const getColorValue = (z: number, f?: ProtomapsFeature) => {
@@ -717,6 +726,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               );
             }
           },
+          // Polygon outline
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new LineSymbolizer({
@@ -732,10 +742,15 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               );
             }
           },
+          // Line features
+          // Note - line color will use TableColorStyleTraits by default.
+          // If useOutlineColorForLineFeatures is true, then line color will use TableOutlineStyle traits
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new LineSymbolizer({
-              color: getColorValue,
+              color: useOutlineColorForLineFeatures
+                ? getOutlineColorValue
+                : getColorValue,
               width: getOutlineWidthValue
             }),
             minzoom: 0,
@@ -1239,6 +1254,14 @@ export function isFeature(json: any): json is Feature {
 export function isPoint(json: any): json is Feature<Point> {
   return (
     json.type === "Feature" && json.geometry && json.geometry.type === "Point"
+  );
+}
+
+export function isMultiPoint(json: any): json is Feature<MultiPoint> {
+  return (
+    json.type === "Feature" &&
+    json.geometry &&
+    json.geometry.type === "MultiPoint"
   );
 }
 

@@ -51,6 +51,14 @@ export class GeoJsonTraits extends mixTraits(
   })
   enableManualRegionMapping: false = false;
 
+  @primitiveTrait({
+    name: "Use outline color for line features",
+    description:
+      "If enabled, TableOutlineStyleTraits will be used to color Line Features, otherwise TableColorStyleTraits will be used.",
+    type: "boolean"
+  })
+  useOutlineColorForLineFeatures?: boolean;
+
   @objectTrait({
     type: StyleTraits,
     name: "Style",
