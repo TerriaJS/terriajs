@@ -345,6 +345,7 @@ class StoryBuilder extends React.Component<
           <RawButton
             type="button"
             onClick={this.toggleRemoveDialog}
+            textLight
             className={Styles.removeButton}
           >
             <Icon glyph={Icon.GLYPHS.remove} /> {t("story.removeAllStories")}
