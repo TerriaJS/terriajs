@@ -1,6 +1,5 @@
 "use strict";
 import i18next from "i18next";
-import { action } from "mobx";
 import React from "react";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -41,10 +40,10 @@ export default class MeasureTool extends MapNavigationItemController {
       terria: props.terria,
       messageHeader: () => i18next.t("measure.measureTool"),
       allowPolygon: false,
-      onPointClicked: this.onPointClicked,
-      onPointMoved: this.onPointMoved,
-      onCleanUp: this.onCleanUp,
-      onMakeDialogMessage: this.onMakeDialogMessage
+      onPointClicked: this.onPointClicked.bind(this),
+      onPointMoved: this.onPointMoved.bind(this),
+      onCleanUp: this.onCleanUp.bind(this),
+      onMakeDialogMessage: this.onMakeDialogMessage.bind(this)
     });
     this.onClose = props.onClose;
   }
@@ -84,7 +83,6 @@ export default class MeasureTool extends MapNavigationItemController {
     return numberStr;
   }
 
-  @action
   updateDistance(pointEntities: CustomDataSource) {
     this.totalDistanceMetres = 0;
     if (pointEntities.entities.values.length < 1) {
@@ -118,7 +116,6 @@ export default class MeasureTool extends MapNavigationItemController {
     }
   }
 
-  @action
   updateArea(pointEntities: CustomDataSource) {
     this.totalAreaMetresSquared = 0;
     if (!this.userDrawing.closeLoop) {
@@ -209,20 +206,17 @@ export default class MeasureTool extends MapNavigationItemController {
     return geodesic.surfaceDistance;
   }
 
-  @action.bound
   onCleanUp() {
     this.totalDistanceMetres = 0;
     this.totalAreaMetresSquared = 0;
     super.deactivate();
   }
 
-  @action.bound
   onPointClicked(pointEntities: CustomDataSource) {
     this.updateDistance(pointEntities);
     this.updateArea(pointEntities);
   }
 
-  @action.bound
   onPointMoved(pointEntities: CustomDataSource) {
     // This is no different to clicking a point.
     this.onPointClicked(pointEntities);
