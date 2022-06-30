@@ -3,6 +3,8 @@ Change Log
 
 #### next release (8.2.8)
 
+* Improve Split/compare error handling
+* Fix `itemProperties` split bug
 * [The next improvement]
 
 #### 8.2.7 - 2022-06-30

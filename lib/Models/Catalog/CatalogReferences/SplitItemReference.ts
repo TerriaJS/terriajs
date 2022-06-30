@@ -1,4 +1,7 @@
+import i18next from "i18next";
 import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
+import TerriaError from "../../../Core/TerriaError";
+import { getName } from "../../../ModelMixins/CatalogMemberMixin";
 import ReferenceMixin from "../../../ModelMixins/ReferenceMixin";
 import SplitItemReferenceTraits from "../../../Traits/TraitsClasses/SplitItemReferenceTraits";
 import CreateModel from "../../Definition/CreateModel";
@@ -25,7 +28,10 @@ export default class SplitItemReference extends ReferenceMixin(
     previousTarget: BaseModel | undefined
   ): Promise<BaseModel | undefined> {
     if (this.splitSourceItemId === undefined || this.uniqueId === undefined) {
-      return;
+      throw new TerriaError({
+        title: i18next.t("splitterTool.errorTitle"),
+        message: "`splitSourceItemId` and `uniqueId` must be defined"
+      });
     }
 
     let sourceItem = this.terria.getModelByIdOrShareKey(
@@ -33,12 +39,29 @@ export default class SplitItemReference extends ReferenceMixin(
       this.splitSourceItemId
     );
     if (sourceItem === undefined) {
-      return;
+      throw new TerriaError({
+        title: i18next.t("splitterTool.errorTitle"),
+        message: i18next.t("splitterTool.modelNotFoundErrorMessage", {
+          id: this.splitSourceItemId
+        }),
+        importance: 1
+      });
     }
 
-    // Ensure the target we create is a concrete item
-    sourceItem = getDereferencedIfExists(sourceItem);
-    const target = sourceItem.duplicateModel(this.uniqueId, this);
-    return target;
+    try {
+      // Ensure the target we create is a concrete item
+      sourceItem = getDereferencedIfExists(sourceItem);
+      return sourceItem.duplicateModel(this.uniqueId, this);
+    } catch (e) {
+      throw TerriaError.from(e, {
+        title: i18next.t("splitterTool.errorTitle", {
+          name: getName(sourceItem)
+        }),
+        message: i18next.t("splitterTool.duplicateModelErrorMessage", {
+          name: getName(sourceItem)
+        }),
+        importance: 1
+      });
+    }
   }
 }
