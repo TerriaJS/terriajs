@@ -163,6 +163,12 @@ export default function() {
 
         // Assimp full list of formats https://github.com/assimp/assimp/blob/master/doc/Fileformats.md
         // extensions: ["zip", "dae", "zae", "obj", "dxf", "blend"]
+      },
+      {
+        // NOTE: will only work if non open-source terriajs-ifc plugin is added to the map
+        value: "ifc",
+        name: i18next.t("core.dataType.ifc"),
+        extensions: ["ifc"]
       }
     ]
   };

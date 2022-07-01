@@ -37,8 +37,28 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     return this.catalogItem.activeTableStyle;
   }
 
+  // Keep these here until we deprecate LegendTraits in TableColorStyleTraits
+  // See https://github.com/TerriaJS/terriajs/issues/6356
+  @computed get oldLegendTraits() {
+    return this.tableStyle.colorTraits.legend;
+  }
+
+  @computed get url() {
+    return this.oldLegendTraits.url;
+  }
+  @computed get imageScaling() {
+    return this.oldLegendTraits.imageScaling;
+  }
+  @computed get urlMimeType() {
+    return this.oldLegendTraits.urlMimeType;
+  }
+  @computed get backgroundColor() {
+    return this.oldLegendTraits.backgroundColor;
+  }
+
   /** Add column title as legend title if showing a Discrete or Enum ColorMap */
   @computed get title() {
+    if (this.oldLegendTraits.title) return this.oldLegendTraits.title;
     if (
       this.tableStyle.colorMap instanceof ContinuousColorMap ||
       this.tableStyle.colorMap instanceof DiscreteColorMap ||
@@ -49,6 +69,12 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
 
   @computed
   get items(): StratumFromTraits<LegendItemTraits>[] {
+    // This is a bit dodgy - but should be fine until we deprecate LegendTraits in TableColorStyleTraits
+    if (this.oldLegendTraits.items && this.oldLegendTraits.items.length > 0)
+      return this.oldLegendTraits.traits.items.toJson(
+        this.oldLegendTraits.items
+      );
+
     let items: StratumFromTraits<LegendItemTraits>[] = [];
 
     const colorMap = this.tableStyle.colorMap;

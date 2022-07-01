@@ -1,16 +1,16 @@
+import React from "react";
+import { act } from "react-dom/test-utils";
 import {
   create,
   ReactTestInstance,
   ReactTestRenderer
 } from "react-test-renderer";
-import React from "react";
-import { act } from "react-dom/test-utils";
 import { ThemeProvider } from "styled-components";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import Terria from "../../lib/Models/Terria";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import ShortReport from "../../lib/ReactViews/Workbench/Controls/ShortReport";
-import Terria from "../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
-import Collapsible from "../../lib/ReactViews/Custom/Collapsible/Collapsible";
+import Text from "../../lib/Styled/Text";
 
 describe("ShortReport", function() {
   let testRenderer: ReactTestRenderer | undefined;
@@ -33,6 +33,11 @@ describe("ShortReport", function() {
         name: "Report Name 2",
         content: "Some content which is hidden by default",
         show: false
+      },
+      {
+        name: "Report Name - with no content",
+        content: undefined,
+        show: undefined
       }
     ]);
   });
@@ -52,7 +57,7 @@ describe("ShortReport", function() {
       const reports = testRenderer.root.findAll((node: ReactTestInstance) =>
         node.children.some((child: any) => child.match?.("Report Name"))
       );
-      expect(reports.length).toEqual(2);
+      expect(reports.length).toEqual(3);
 
       // Test that collapsible components have been created with correct props
       expect(
@@ -68,6 +73,21 @@ describe("ShortReport", function() {
           isOpen: false
         }).length
       ).toBe(1);
+
+      // Expect no Collapsible component
+      expect(
+        testRenderer.root.findAllByProps({
+          title: "Report Name - with no content",
+          isOpen: true
+        }).length
+      ).toBe(0);
+
+      const boxes = testRenderer.root.findAllByType("p");
+      expect(
+        boxes.some(
+          box => box.props.children === "Report Name - with no content"
+        )
+      ).toBeTruthy();
     });
   });
 });

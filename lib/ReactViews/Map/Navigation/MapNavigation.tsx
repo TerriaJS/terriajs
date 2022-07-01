@@ -22,7 +22,7 @@ import MapNavigationModel, {
 } from "../../../ViewModels/MapNavigation/MapNavigationModel";
 import withControlledVisibility from "../../HOCs/withControlledVisibility";
 import MapIconButton from "../../MapIconButton/MapIconButton";
-import { Control, MapNavigationItem } from "./Items/MapNavigationItem";
+import MapNavigationItem, { Control } from "./Items/MapNavigationItem";
 import { registerMapNavigations } from "./registerMapNavigations";
 import { ScreenSize } from "../../../ViewModels/CompositeBar/CompositeBarModel";
 

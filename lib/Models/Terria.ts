@@ -920,7 +920,7 @@ export default class Terria {
       });
     } finally {
       if (!options.i18nOptions?.skipInit) {
-        Internationalization.initLanguage(
+        await Internationalization.initLanguage(
           this.configParameters.languageConfiguration,
           options.i18nOptions,
           this.baseUrl

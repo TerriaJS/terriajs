@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { uniq } from "lodash-es";
 import { computed } from "mobx";
 import isDefined from "../Core/isDefined";
@@ -6,6 +7,7 @@ import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import { BaseModel } from "../Models/Definition/Model";
 import StratumFromTraits from "../Models/Definition/StratumFromTraits";
+import { ShortReportTraits } from "../Traits/TraitsClasses/CatalogMemberTraits";
 import TableChartStyleTraits, {
   TableChartLineStyleTraits
 } from "../Traits/TraitsClasses/TableChartStyleTraits";
@@ -226,6 +228,31 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
     if (this.catalogItem.activeTableStyle.timeColumn) {
       return `${this.catalogItem.activeTableStyle.timeColumn.title}: `;
     }
+  }
+
+  @computed
+  get shortReport() {
+    return this.catalogItem.mapItems.length === 0 &&
+      this.catalogItem.chartItems.length === 0 &&
+      !this.catalogItem.isLoading
+      ? i18next.t("models.tableData.noData")
+      : undefined;
+  }
+
+  /** Show "Regions: xxx" short report for region-mapping */
+  @computed get shortReportSections() {
+    const regionCol = this.catalogItem.activeTableStyle.regionColumn;
+
+    const regionType = regionCol?.regionType;
+
+    if (regionType) {
+      return [
+        createStratumInstance(ShortReportTraits, {
+          name: `**Regions:** ${regionType.description}`
+        })
+      ];
+    }
+    return [];
   }
 
   @computed get showInChartPanel() {

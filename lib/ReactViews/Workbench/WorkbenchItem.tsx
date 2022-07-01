@@ -69,7 +69,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
 
     return (
       <StyledLi style={this.props.style} className={this.props.className}>
-        <Box fullWidth justifySpaceBetween padded styledHeight="38px">
+        <Box fullWidth justifySpaceBetween padded styledMinHeight="38px">
           <Box fullWidth>
             <Box left fullWidth paddedHorizontally centered>
               <DraggableBox

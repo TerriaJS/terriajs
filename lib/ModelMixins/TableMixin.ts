@@ -63,6 +63,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     constructor(...args: any[]) {
       super(...args);
 
+      // Create default TableStyle and set TableAutomaticLegendStratum
       this.defaultTableStyle = new TableStyle(this);
       if (
         this.strata.get(TableAutomaticLegendStratum.stratumName) === undefined
@@ -313,15 +314,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return [];
     }
 
-    @computed
-    get shortReport() {
-      return this.mapItems.length === 0 &&
-        this.chartItems.length === 0 &&
-        !this.isLoading
-        ? i18next.t("models.tableData.noData")
-        : super.shortReport;
-    }
-
     // regionMappedImageryParts and regionMappedImageryProvider are split up like this so that we aren't re-creating the imageryProvider if things like `opacity` and `show` change
     @computed get regionMappedImageryParts() {
       if (!this.regionMappedImageryProvider) return;
@@ -532,7 +524,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         options: this.regionProviderList!.regionProviders.map(
           regionProvider => {
             return {
-              name: regionProvider.regionType,
+              name: regionProvider.description,
               id: regionProvider.regionType
             };
           }

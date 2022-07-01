@@ -713,11 +713,12 @@
       "gpx": "GPX",
       "json": "JSON",
       "carto": "Carto",
-      "gltf": "GLTF",
+      "gltf": "glTF",
       "shp": "Shapefile (zip)",
       "socrata-group": "Socrata Server",
       "assimp-local": "3D file converter (zip) (experimental)",
-      "assimp-remote": "3D file converter (experimental)"
+      "assimp-remote": "3D file converter (experimental)",
+      "ifc": "IFC"
     },
     "printWindow": {
       "errorTitle": "Error printing",

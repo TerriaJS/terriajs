@@ -62,7 +62,7 @@ class Internationalization {
      */
     i18StartOptions: I18nStartOptions | undefined,
     terriajsResourcesBaseUrl: string
-  ): void {
+  ) {
     const languageConfig = Object.assign(
       defaultLanguageConfiguration,
       languageConfiguration
@@ -77,7 +77,7 @@ class Internationalization {
      * @param {Array} languageConfiguration.changeLanguageOnStartWhen
      */
 
-    i18next
+    return i18next
       .use(HttpApi)
       .use(LanguageDetector)
       .use(initReactI18next)
