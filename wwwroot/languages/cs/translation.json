@@ -717,8 +717,9 @@
       "shp": "Shapefile (zip)",
       "other": "Ostatní (použijte konverzní službu)",
       "open-street-map": "Open Street Map Server",
-      "gltf": "GLTF",
-      "socrata-group": "Socrata Server"
+      "gltf": "glTF",
+      "socrata-group": "Socrata Server",
+      "ifc": "IFC"
     },
     "printWindow": {
       "errorTitle": "Chyba tisku",
@@ -816,7 +817,8 @@
     "extraCreditLinks": {
       "dataAttribution": "Připsání dat",
       "disclaimer": "Odmítnutí odpovědnosti",
-      "basemap": "Základní mapa"
+      "basemap": "Základní mapa",
+      "dataProvider": "Data poskytl:"
     },
     "computeRingWindingOrder": {
       "devError": "Očekávané body typu {x:number, y:number}"
