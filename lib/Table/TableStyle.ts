@@ -45,11 +45,8 @@ export default class TableStyle {
     readonly styleNumber?: number | undefined
   ) {}
 
-  /** Is style ready to be used.
-   * This will be false if any of dependent columns are not ready
-   */
-  @computed
-  get ready() {
+  /** All TableColumns which are used by this TableStyle */
+  @computed get columnDependencies() {
     return filterOutUndefined([
       this.longitudeColumn,
       this.latitudeColumn,
@@ -59,8 +56,18 @@ export default class TableStyle {
       this.xAxisColumn,
       this.colorColumn,
       this.pointSizeColumn,
-      ...(this.idColumns ?? [])
-    ]).every(col => col.ready);
+      ...(this.idColumns ?? []),
+      this.pointStyleMap.column,
+      this.outlineStyleMap.column
+    ]);
+  }
+
+  /** Is style ready to be used.
+   * This will be false if any of dependent columns are not ready
+   */
+  @computed
+  get ready() {
+    return this.columnDependencies.every(col => col.ready);
   }
 
   /**
@@ -124,18 +131,18 @@ export default class TableStyle {
    */
   @computed get isCustom() {
     const userStrata = this.colorTraits.strata.get(CommonStrata.user);
-    if (!userStrata) return false;
 
     return (
-      (userStrata.binColors ?? [])?.length > 0 ||
-      (userStrata.binMaximums ?? [])?.length > 0 ||
-      (userStrata.enumColors ?? [])?.length > 0 ||
-      isDefined(userStrata.numberOfBins) ||
-      isDefined(userStrata.minimumValue) ||
-      isDefined(userStrata.maximumValue) ||
-      isDefined(userStrata.regionColor) ||
-      isDefined(userStrata.nullColor) ||
-      isDefined(userStrata.outlierColor)
+      (userStrata?.binColors ?? [])?.length > 0 ||
+      (userStrata?.binMaximums ?? [])?.length > 0 ||
+      (userStrata?.enumColors ?? [])?.length > 0 ||
+      isDefined(userStrata?.numberOfBins) ||
+      isDefined(userStrata?.minimumValue) ||
+      isDefined(userStrata?.maximumValue) ||
+      isDefined(userStrata?.regionColor) ||
+      isDefined(userStrata?.nullColor) ||
+      isDefined(userStrata?.outlierColor) ||
+      this.columnDependencies.some(col => col.isCustom)
     );
   }
 

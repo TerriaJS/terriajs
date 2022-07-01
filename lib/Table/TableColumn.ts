@@ -7,12 +7,14 @@ import isDefined from "../Core/isDefined";
 import runLater from "../Core/runLater";
 import RegionProvider from "../Map/Region/RegionProvider";
 import TableMixin from "../ModelMixins/TableMixin";
+import CommonStrata from "../Models/Definition/CommonStrata";
 import createCombinedModel from "../Models/Definition/createCombinedModel";
 import Model from "../Models/Definition/Model";
 import TableColumnTraits, {
   THIS_COLUMN_EXPRESSION_TOKEN
 } from "../Traits/TraitsClasses/TableColumnTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
+
 const naturalSort = require("javascript-natural-sort");
 naturalSort.insensitive = true;
 
@@ -897,6 +899,22 @@ export default class TableColumn {
       return match.type;
     }
     return undefined;
+  }
+
+  /** Is style "custom" - that is - has the style been created/modified by the user (either directly, or indirectly through a share link).
+   */
+  @computed get isCustom() {
+    const userStrata = this.traits.strata.get(CommonStrata.user);
+    if (!userStrata) return false;
+
+    return (
+      isDefined(userStrata.units) ||
+      isDefined(userStrata.title) ||
+      isDefined(userStrata.name) ||
+      isDefined(userStrata.regionType) ||
+      isDefined(userStrata.transformation) ||
+      isDefined(userStrata.type)
+    );
   }
 }
 

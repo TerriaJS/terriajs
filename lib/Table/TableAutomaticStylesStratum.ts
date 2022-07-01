@@ -245,7 +245,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
 
     const regionType = regionCol?.regionType;
 
-    if (regionType) {
+    if (regionType && this.catalogItem.showingRegions) {
       return [
         createStratumInstance(ShortReportTraits, {
           name: `**Regions:** ${regionType.description}`

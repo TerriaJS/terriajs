@@ -76,7 +76,8 @@ const ViewingControlMenuButton = styled(RawButton).attrs({
 
   border-radius: 0;
 
-  width: 114px;
+  width: 100%;
+  padding-right: 8px;
   // ensure we support long strings
   min-height: 32px;
   display: block;

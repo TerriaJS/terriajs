@@ -15,6 +15,7 @@ Change Log
 * Fix `WorkbenchItem` title height
 * Add region map info and move "No Data" message to `InfoSections` in `TableAutomaticStylesStratum`
 * Fix missing `TableColorStyleTraits.legend` values in `ColorStyleLegend`
+* Fix nested `SelectableDimension` placement filtering
 * Fix `DateTimeSelectorSection.changeDateTime()` binding.
 * `RegionProvider.find*Variable` functions now try to match with and without whitespace (spaces, hyphens and underscores)
 * Clean up `regionMapping.json` descriptions

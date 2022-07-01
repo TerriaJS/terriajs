@@ -10,6 +10,7 @@ import {
   TableStyleMapTraits
 } from "../Traits/TraitsClasses/TableStyleMapTraits";
 import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
+import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
 
 export interface TableStyleMapModel<T extends TableStyleMapSymbolTraits> {
@@ -76,7 +77,7 @@ export default class TableStyleMap<T extends TableStyleMapSymbolTraits> {
     ) as TableStyleMapModel<T>;
   }
 
-  @computed get column() {
+  @computed get column(): TableColumn | undefined {
     return this.traitValues.column
       ? this.tableModel.tableColumns.find(
           column => column.name === this.traitValues.column

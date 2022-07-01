@@ -7,11 +7,11 @@ import {
   Geometries,
   Geometry,
   GeometryCollection,
+  MultiPoint,
   MultiPolygon,
   Point,
   Polygon,
-  Properties,
-  MultiPoint
+  Properties
 } from "@turf/helpers";
 import i18next from "i18next";
 import {
@@ -73,12 +73,12 @@ import Reproject from "../Map/Vector/Reproject";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
-import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
 import { ViewingControl } from "../Models/ViewingControls";
+import RegionMappingWorkflow from "../Models/Workflows/RegionMappingWorkflow";
 import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
@@ -1236,9 +1236,17 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     }
 
     @computed get viewingControls(): ViewingControl[] {
-      return !this.useTableStylingAndProtomaps
-        ? super.viewingControls.filter(v => v.id !== TableStylingWorkflow.type)
-        : super.viewingControls;
+      return (
+        // Remove table styling workflow if not using table styling
+        (!this.useTableStylingAndProtomaps
+          ? super.viewingControls.filter(
+              v => v.id !== TableStylingWorkflow.type
+            )
+          : super.viewingControls
+        )
+          // Remove Region mapping workflow
+          .filter(v => v.id !== RegionMappingWorkflow.type)
+      );
     }
   }
   return GeoJsonMixin;
