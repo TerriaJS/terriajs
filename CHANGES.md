@@ -1,16 +1,6 @@
 Change Log
 ==========
 
-#### next release (8.2.7)
-
-* Consolidate `HasLocalData` interface
-* Add `GlTf` type definition (v2)
-* Add `gltfModelUrl` to `GltfMixin` - this must be implemented by Models which use `GltfMixin`
-* Add experimental client-side 3D file conversion using [`assimpjs`](https://github.com/kovacsv/assimpjs) ([emscripten](https://emscripten.org) interface for the [assimp](https://github.com/assimp/assimp) library)
-  * This supports `zip` files through add local/remote data
-  * Supports over 40 formats - including Collada, obj, Blender, DXF - [full list](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md)
-* Add `description` to `getDataType` - this will be displayed between Step 1 and Step 2
-
 #### next release (8.2.8)
 
 * Table styling is disabled if `MultiPoint` are in GeoJSON
@@ -18,6 +8,13 @@ Change Log
 * Fix feature highliting for `Line`, `MultiLine` and `MultiPoint`
 * Await Internationalisation initialisation in `Terria.start`
 * `UserDrawing.messageHeader` can now also be `() => string`
+* Consolidate `HasLocalData` interface
+* Add `GlTf` type definition (v2)
+* Add `gltfModelUrl` to `GltfMixin` - this must be implemented by Models which use `GltfMixin`
+* Add experimental client-side 3D file conversion using [`assimpjs`](https://github.com/kovacsv/assimpjs) ([emscripten](https://emscripten.org) interface for the [assimp](https://github.com/assimp/assimp) library)
+  * This supports `zip` files through add local/remote data
+  * Supports over 40 formats - including Collada, obj, Blender, DXF - [full list](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md)
+* Add `description` to `getDataType` - this will be displayed between Step 1 and Step 2
 * [The next improvement]
 
 #### 8.2.7 - 2022-06-30
