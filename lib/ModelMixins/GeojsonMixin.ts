@@ -730,7 +730,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new PolygonSymbolizer({
               fill: getColorValue,
-              stroke: getOutlineColorValue
+              stroke: getOutlineColorValue,
+              width: getOutlineWidthValue
             }),
             minzoom: 0,
             maxzoom: Infinity,
