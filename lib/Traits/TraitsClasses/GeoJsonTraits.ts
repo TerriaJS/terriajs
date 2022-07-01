@@ -51,6 +51,14 @@ export class GeoJsonTraits extends mixTraits(
   })
   enableManualRegionMapping: false = false;
 
+  @primitiveTrait({
+    name: "Use outline color for line features",
+    description:
+      "If enabled, TableOutlineStyleTraits will be used to color Line Features, otherwise TableColorStyleTraits will be used.",
+    type: "boolean"
+  })
+  useOutlineColorForLineFeatures?: boolean;
+
   @objectTrait({
     type: StyleTraits,
     name: "Style",
@@ -71,7 +79,7 @@ export class GeoJsonTraits extends mixTraits(
     type: "boolean",
     name: "Force cesium primitives",
     description:
-      "Force rendering GeoJSON features as Cesium primitives. This will be true if you are using `style`, `perPropertyStyles`, `timeProperty`, `heightProperty` or `czmlTemplate`. If undefined, geojson-vt/protomaps will be used"
+      "Force rendering GeoJSON features as Cesium primitives. This will be true if you are using `style`, `perPropertyStyles`, `timeProperty`, `heightProperty` or `czmlTemplate`. If undefined, geojson-vt/protomaps will be used. This will be set to true if simplestyle-spec properties are detected in over 50% of GeoJSON features, or if any MultiPoint features are found "
   })
   forceCesiumPrimitives?: boolean;
 
