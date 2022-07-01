@@ -6,7 +6,7 @@ import ModelTraits from "../ModelTraits";
 export class BinStyleTraits extends ModelTraits {
   @primitiveTrait({
     name: "Value",
-    description: "The enumerated value to map to a color.",
+    description: "The maximum value of the bin for a given style.",
     type: "number",
     isNullable: true
   })
@@ -19,7 +19,7 @@ export class BinStyleTraits extends ModelTraits {
 export class EnumStyleTraits extends ModelTraits {
   @primitiveTrait({
     name: "Value",
-    description: "The enumerated value to map to a color.",
+    description: "The enumerated value to map to a style.",
     type: "string",
     isNullable: true
   })
@@ -40,7 +40,7 @@ export class TableStyleMapTraits extends ModelTraits {
   mapType: StyleMapType | undefined = undefined;
 
   @primitiveTrait({
-    name: "Color Column",
+    name: "Column",
     description: "The column to use for styling.",
     type: "string"
   })

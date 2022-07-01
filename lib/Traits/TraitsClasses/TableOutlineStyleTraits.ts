@@ -12,15 +12,15 @@ import {
 
 export class OutlineSymbolTraits extends mixTraits(TableStyleMapSymbolTraits) {
   @primitiveTrait({
-    name: "Value",
-    description: "The enumerated value to map to a color.",
+    name: "Color",
+    description: "Outline color.",
     type: "string"
   })
   color?: string;
 
   @primitiveTrait({
-    name: "Value",
-    description: "The enumerated value to map to a color.",
+    name: "Width",
+    description: "Outline width (in pixels).",
     type: "number"
   })
   width?: number = 1;
@@ -45,9 +45,7 @@ export default class TableOutlineStyleTraits
   implements TableStyleMapModel<OutlineSymbolTraits> {
   @objectArrayTrait({
     name: "Enum Colors",
-    description:
-      "The colors to use for enumerated values. This property is ignored " +
-      "if the `Color Column` type is not `enum`.",
+    description: "The outline style to use for enumerated values.",
     type: EnumOutlineSymbolTraits,
     idProperty: "value"
   })
@@ -55,9 +53,7 @@ export default class TableOutlineStyleTraits
 
   @objectArrayTrait({
     name: "Enum Colors",
-    description:
-      "The colors to use for enumerated values. This property is ignored " +
-      "if the `Color Column` type is not `enum`.",
+    description: "The outline style to use for bin values.",
     type: BinOutlineSymbolTraits,
     idProperty: "index"
   })
@@ -65,9 +61,7 @@ export default class TableOutlineStyleTraits
 
   @objectTrait({
     name: "Enum Colors",
-    description:
-      "The colors to use for enumerated values. This property is ignored " +
-      "if the `Color Column` type is not `enum`.",
+    description: "The default outline style.",
     type: OutlineSymbolTraits
   })
   null = new OutlineSymbolTraits();

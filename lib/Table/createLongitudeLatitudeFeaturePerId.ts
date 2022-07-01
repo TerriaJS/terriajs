@@ -130,6 +130,7 @@ function createFeature(
     addSampleOrInterval(outlineWidthProperty, outlineStyle.width, interval);
     addSampleOrInterval(
       pointRotationProperty,
+      // Convert clockwise degrees to counter-clockwise radians
       CesiumMath.toRadians(360 - (pointStyle.rotation ?? 0)),
       interval
     );

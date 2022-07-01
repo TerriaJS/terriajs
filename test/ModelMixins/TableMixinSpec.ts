@@ -770,6 +770,7 @@ describe("TableMixin", function() {
           marker: "hospital",
           height: 30,
           width: 15,
+          // Convert to counter-clockwise radians
           rotation: ((360 - 45) / 360) * (2 * Math.PI)
         },
         {

@@ -66,6 +66,7 @@ export default function createLongitudeLatitudeFeaturePerRow(
                 width: pointStyle.width,
                 height: pointStyle.height,
                 rotation: CesiumMath.toRadians(
+                  // Convert clockwise degrees to counter-clockwise radians
                   360 - (pointStyle.rotation ?? 0)
                 ),
                 pixelOffset: new Cartesian2(
