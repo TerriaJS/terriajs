@@ -55,6 +55,7 @@ import TimeVarying from "../ModelMixins/TimeVarying";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
 import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
 import NotificationState from "../ReactViewModels/NotificationState";
+import { ICredit } from "../ReactViews/Credits";
 import { SHARE_VERSION } from "../ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
@@ -283,7 +284,7 @@ interface ConfigParameters {
   /**
    * Extra links to show in the credit line at the bottom of the map (currently only the Cesium map).
    */
-  extraCreditLinks?: { url: string; text: string }[];
+  extraCreditLinks?: ICredit[];
 
   /**
    * Configurable discalimer that shows up in print view
@@ -294,6 +295,16 @@ interface ConfigParameters {
    * Prefix to which `:story-id` is added to fetch JSON for stories when using /story/:story-id routes. Should end in /
    */
   storyRouteUrlPrefix?: string;
+
+  /**
+   * For Console Analytics
+   */
+  enableConsoleAnalytics?: boolean;
+
+  /**
+   * Options for Google Analytics
+   */
+  googleAnalyticsOptions?: unknown;
 }
 
 interface StartOptions {
@@ -309,12 +320,19 @@ interface StartOptions {
    * some functions that are passed in from a TerriaMap
    *  */
   i18nOptions?: I18nStartOptions;
+
+  /**
+   * Hook to run before restoring app state from the share URL. This is for
+   * example used in terriamap/index.js for loading plugins before restoring
+   * app state.
+   */
+  beforeRestoreAppState?: () => Promise<void> | void;
 }
 
 interface Analytics {
   start: (
-    userParameters: Partial<{
-      logToConsole: boolean;
+    configParameters: Partial<{
+      enableConsoleAnalytics: boolean;
       googleAnalyticsKey: any;
       googleAnalyticsOptions: any;
     }>
@@ -364,6 +382,7 @@ export default class Terria {
   readonly baseUrl: string = "build/TerriaJS/";
 
   readonly tileLoadProgressEvent = new CesiumEvent();
+  readonly indeterminateTileLoadProgressEvent = new CesiumEvent();
   readonly workbench = new Workbench();
   readonly overlays = new Workbench();
   readonly catalog = new Catalog(this);
@@ -476,7 +495,9 @@ export default class Terria {
       { text: "map.extraCreditLinks.disclaimer", url: "about.html#disclaimer" }
     ],
     printDisclaimer: undefined,
-    storyRouteUrlPrefix: undefined
+    storyRouteUrlPrefix: undefined,
+    enableConsoleAnalytics: undefined,
+    googleAnalyticsOptions: undefined
   };
 
   @observable
@@ -533,6 +554,7 @@ export default class Terria {
   @observable depthTestAgainstTerrainEnabled = false;
 
   @observable stories: StoryData[] = [];
+  @observable storyPromptShown: number = 0; // Story Prompt modal will be rendered when this property changes. See StandardUserInterface, section regarding sui.notifications. Ideally move this to ViewState.
 
   /**
    * Gets or sets the ID of the catalog member that is currently being
@@ -898,9 +920,10 @@ export default class Terria {
       });
     } finally {
       if (!options.i18nOptions?.skipInit) {
-        Internationalization.initLanguage(
+        await Internationalization.initLanguage(
           this.configParameters.languageConfiguration,
-          options.i18nOptions
+          options.i18nOptions,
+          this.baseUrl
         );
       }
     }
@@ -940,6 +963,18 @@ export default class Terria {
         )
       );
 
+    if (typeof options.beforeRestoreAppState === "function") {
+      try {
+        await options.beforeRestoreAppState();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    await this.restoreAppState(options);
+  }
+
+  private async restoreAppState(options: StartOptions) {
     if (options.applicationUrl) {
       (await this.updateApplicationUrl(options.applicationUrl.href)).raiseError(
         this
@@ -1218,7 +1253,9 @@ export default class Terria {
               severity: initSource?.errorSeverity,
               message: {
                 key: "models.terria.loadingInitSourceError2Message",
-                parameters: { loadSource: initSource!.name ?? "Unknown source" }
+                parameters: {
+                  loadSource: initSource!.name ?? "Unknown source"
+                }
               }
             })
           );
@@ -1513,6 +1550,7 @@ export default class Terria {
     // Add stories
     if (Array.isArray(initData.stories)) {
       this.stories = initData.stories;
+      this.storyPromptShown++;
     }
 
     // Add map settings

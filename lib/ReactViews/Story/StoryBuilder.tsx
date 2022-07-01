@@ -345,6 +345,7 @@ class StoryBuilder extends React.Component<
           <RawButton
             type="button"
             onClick={this.toggleRemoveDialog}
+            textLight
             className={Styles.removeButton}
           >
             <Icon glyph={Icon.GLYPHS.remove} /> {t("story.removeAllStories")}
@@ -503,6 +504,7 @@ class StoryBuilder extends React.Component<
             exitEditingMode={() => this.setState({ editingMode: false })}
             story={this.state.currentStory}
             saveStory={this.onSave}
+            terria={this.props.terria}
           />
         )}
       </Panel>

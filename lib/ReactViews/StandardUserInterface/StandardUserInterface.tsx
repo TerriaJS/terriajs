@@ -3,7 +3,7 @@ import "inobounce";
 import { action } from "mobx";
 import { observer } from "mobx-react";
 import React, { useEffect, useRef } from "react";
-import { useTranslation, withTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import {
   createGlobalStyle,
   DefaultTheme,
@@ -12,6 +12,7 @@ import {
 import combine from "terriajs-cesium/Source/Core/combine";
 import arrayContains from "../../Core/arrayContains";
 import ViewState from "../../ReactViewModels/ViewState";
+import { MapCredits } from "../Credits";
 import Disclaimer from "../Disclaimer";
 import DragDropFile from "../DragDropFile";
 import DragDropNotification from "../DragDropNotification";
@@ -48,7 +49,7 @@ import WorkflowPanelContainer from "./WorkflowPanelContainer";
 
 const GlobalTerriaStyles = createGlobalStyle`
   body {
-    font-family: ${p => p.theme.fontBase}
+    font-family: ${p => p.theme.fontBase};
 
     *:focus {
       outline: 3px solid #C390F9;
@@ -161,7 +162,12 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
     useEffect(() => {
       window.addEventListener("resize", resizeListener, false);
       resizeListener();
+      return () => {
+        window.removeEventListener("resize", resizeListener, false);
+      };
+    }, []);
 
+    useEffect(() => {
       if (
         props.terria.configParameters.storyEnabled &&
         props.terria.stories &&
@@ -183,11 +189,7 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
           width: 300
         });
       }
-
-      return () => {
-        window.removeEventListener("resize", resizeListener, false);
-      };
-    });
+    }, [props.terria.storyPromptShown]);
 
     // Merge theme in order of highest priority: themeOverrides props -> theme config parameter -> default terriaTheme
     const mergedTheme = combine(
@@ -267,6 +269,13 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
                             props.terria.isWorkflowPanelActive === false
                           }
                         >
+                          <FullScreenButton
+                            terria={terria}
+                            viewState={props.viewState}
+                            minified={true}
+                            animationDuration={250}
+                            btnText={t("addData.btnHide")}
+                          />
                           <Branding
                             terria={terria}
                             viewState={props.viewState}
@@ -315,6 +324,12 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
                     allBaseMaps={allBaseMaps}
                     animationDuration={animationDuration}
                   />
+                  <MapCredits
+                    hideTerriaLogo={!!terria.configParameters.hideTerriaLogo}
+                    credits={terria.configParameters.extraCreditLinks?.slice()}
+                    currentViewer={terria.mainViewer.currentViewer}
+                  />
+                  <div id="map-data-attribution"></div>
                   <main>
                     <ExplorerWindow
                       terria={terria}

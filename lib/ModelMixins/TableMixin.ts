@@ -51,7 +51,7 @@ import { ImageryParts } from "./MappableMixin";
 function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
   abstract class TableMixin
     extends ExportableMixin(
-      ChartableMixin(DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base)))
+      DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base))
     )
     implements SelectableDimensions, ViewingControls {
     /**
@@ -63,6 +63,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     constructor(...args: any[]) {
       super(...args);
 
+      // Create default TableStyle and set TableAutomaticLegendStratum
       this.defaultTableStyle = new TableStyle(this);
       if (
         this.strata.get(TableAutomaticLegendStratum.stratumName) === undefined
@@ -181,7 +182,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           columnType =>
             this.styles.find(
               s =>
-                s.color.colorColumn &&
                 this.findColumnByName(s.color.colorColumn)?.type === columnType
             )?.id
         );
@@ -218,11 +218,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     get yColumns(): TableColumn[] {
       const lines = this.activeTableStyle.chartTraits.lines;
       return filterOutUndefined(
-        lines.map(line =>
-          line.yAxisColumn === undefined
-            ? undefined
-            : this.findColumnByName(line.yAxisColumn)
-        )
+        lines.map(line => this.findColumnByName(line.yAxisColumn))
       );
     }
 
@@ -318,15 +314,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return [];
     }
 
-    @computed
-    get shortReport() {
-      return this.mapItems.length === 0 &&
-        this.chartItems.length === 0 &&
-        !this.isLoading
-        ? i18next.t("models.tableData.noData")
-        : super.shortReport;
-    }
-
     // regionMappedImageryParts and regionMappedImageryProvider are split up like this so that we aren't re-creating the imageryProvider if things like `opacity` and `show` change
     @computed get regionMappedImageryParts() {
       if (!this.regionMappedImageryProvider) return;
@@ -390,9 +377,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
       return filterOutUndefined(
         lines.map(line => {
-          const yColumn = line.yAxisColumn
-            ? this.findColumnByName(line.yAxisColumn)
-            : undefined;
+          const yColumn = this.findColumnByName(line.yAxisColumn);
           if (yColumn === undefined) {
             return undefined;
           }
@@ -539,7 +524,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         options: this.regionProviderList!.regionProviders.map(
           regionProvider => {
             return {
-              name: regionProvider.regionType,
+              name: regionProvider.description,
               id: regionProvider.regionType
             };
           }
@@ -742,8 +727,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return this.tableColumns.find(column => column.type === type);
     }
 
-    findColumnByName(name: string): TableColumn | undefined {
-      return this.tableColumns.find(column => column.name === name);
+    findColumnByName(name: string | undefined): TableColumn | undefined {
+      return isDefined(name)
+        ? this.tableColumns.find(column => column.name === name)
+        : undefined;
     }
 
     protected async forceLoadMapItems() {

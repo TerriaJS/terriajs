@@ -8,6 +8,7 @@ import React from "react";
 import { Trans, withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Clipboard from "../../../Clipboard";
+import IncludeStoryOption from "./IncludeStoryOption";
 import Icon from "../../../../Styled/Icon";
 import Loader from "../../../Loader";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
@@ -27,6 +28,9 @@ import {
 } from "../../../../Core/AnalyticEvents/analyticEvents";
 
 import { downloadImg } from "./Print/PrintView";
+import { reaction } from "mobx";
+import Checkbox from "../../../../Styled/Checkbox";
+import Text from "../../../../Styled/Text";
 
 const SharePanel = observer(
   createReactClass({
@@ -84,6 +88,15 @@ const SharePanel = observer(
           this.print();
         };
       }
+
+      // Listen to the includeStoryInShare property of viewState, generate the share URL again if this changes
+      // This allows the share URL to be updated when users change the 'Include Story in Share?'checkbox in the SharePanel comnponent.
+      this.updateShareUrlWhenStoryOptionChanged = reaction(
+        () => this.props.viewState.includeStoryInShare,
+        () => {
+          this.updateForShortening();
+        }
+      );
     },
 
     componentWillUnmount() {
@@ -96,6 +109,9 @@ const SharePanel = observer(
       if (this._oldPrint) {
         window.print = this._oldPrint;
       }
+
+      // Cleanup reaction
+      this.updateShareUrlWhenStoryOptionChanged();
     },
 
     beforeBrowserPrint() {
@@ -139,8 +155,10 @@ const SharePanel = observer(
         this.setState({
           placeholder: t("share.shortLinkShortening")
         });
-
-        buildShortShareLink(this.props.terria, this.props.viewState)
+        buildShortShareLink(this.props.terria, this.props.viewState, {
+          includeStories:
+            this.props.storyShare || this.props.viewState.includeStoryInShare
+        })
           .then(shareUrl => this.setState({ shareUrl }))
           .catch(() => {
             this.setUnshortenedUrl();
@@ -155,7 +173,10 @@ const SharePanel = observer(
 
     setUnshortenedUrl() {
       this.setState({
-        shareUrl: buildShareLink(this.props.terria, this.props.viewState)
+        shareUrl: buildShareLink(this.props.terria, this.props.viewState, {
+          includeStories:
+            this.props.storyShare || this.props.viewState.includeStoryInShare
+        })
       });
     },
 
@@ -299,6 +320,7 @@ const SharePanel = observer(
 
     renderContentForStoryShare() {
       const { t, terria } = this.props;
+
       return (
         <Choose>
           <When condition={this.state.shareUrl === ""}>
@@ -357,10 +379,11 @@ const SharePanel = observer(
     },
 
     renderContentWithPrintAndEmbed() {
-      const { t, terria } = this.props;
+      const { t, terria, viewState } = this.props;
       const iframeCode = this.state.shareUrl.length
         ? `<iframe style="width: 720px; height: 600px; border: none;" src="${this.state.shareUrl}" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>`
         : "";
+      const bookMarkHelpItemName = "bookmarkHelp";
 
       return (
         <div>
@@ -376,8 +399,35 @@ const SharePanel = observer(
                 )
               }
             />
+            {/* Following code block dependent on existence of "bookmarkHelp" Help Menu Item */}
+            {this.props.terria.configParameters.helpContent.some(
+              e => e.itemName === bookMarkHelpItemName
+            ) && (
+              <Text
+                medium
+                textLight
+                isLink
+                onClick={evt =>
+                  viewState.openHelpPanelItemFromSharePanel(
+                    evt,
+                    bookMarkHelpItemName
+                  )
+                }
+              >
+                <div
+                  className={classNames(
+                    Styles.explanation,
+                    Styles.getShareSaveHelpText
+                  )}
+                >
+                  {t("share.getShareSaveHelpMessage")}
+                </div>
+              </Text>
+            )}
+
             {this.renderWarning()}
           </div>
+          <hr className={Styles.thinLineDivider} />
           <div className={DropdownStyles.section}>
             <div>{t("share.printTitle")}</div>
             <div className={Styles.explanation}>
@@ -416,6 +466,7 @@ const SharePanel = observer(
               </button>
             </div>
           </div>
+          <hr className={Styles.thinLineDivider} />
           <div
             className={classNames(DropdownStyles.section, Styles.shortenUrl)}
           >
@@ -448,22 +499,18 @@ const SharePanel = observer(
                 />
               </div>
               <If condition={this.isUrlShortenable()}>
-                <div
-                  className={classNames(
-                    DropdownStyles.section,
-                    Styles.shortenUrl
-                  )}
-                >
-                  <button onClick={this.onShortenClicked}>
-                    {this.shouldShorten() ? (
-                      <Icon glyph={Icon.GLYPHS.checkboxOn} />
-                    ) : (
-                      <Icon glyph={Icon.GLYPHS.checkboxOff} />
-                    )}
-                    {t("share.shortenUsingService")}
-                  </button>
+                <div className={Styles.shortenUrl}>
+                  <Checkbox
+                    textProps={{ small: true }}
+                    id="shortenUrl"
+                    isChecked={this.shouldShorten() ?? false}
+                    onChange={this.onShortenClicked}
+                    className={Styles.checkbox}
+                  ></Checkbox>
+                  <p>{t("share.shortenUsingService")}</p>
                 </div>
               </If>
+              <IncludeStoryOption viewState={this.props.viewState} />
             </If>
           </div>
         </div>
@@ -541,6 +588,7 @@ const SharePanel = observer(
             if (catalogShare) this.props.viewState.shareModalIsVisible = false;
           }}
           onUserClick={this.props.onUserClick}
+          disableCloseOnFocusLoss={this.props.viewState.retainSharePanel}
         >
           <If condition={this.state.isOpen}>{this.renderContent()}</If>
         </MenuPanel>

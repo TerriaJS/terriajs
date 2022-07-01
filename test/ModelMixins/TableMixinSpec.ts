@@ -36,6 +36,9 @@ const regionIdsSte = JSON.stringify(
 const regionIdsLgaName = JSON.stringify(
   require("../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json")
 );
+const regionIdsLgaCode = JSON.stringify(
+  require("../../wwwroot/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json")
+);
 const regionIdsLgaNameStates = JSON.stringify(
   require("../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json")
 );
@@ -64,6 +67,10 @@ describe("TableMixin", function() {
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json"
     ).andReturn({ responseText: regionIdsLgaName });
+
+    jasmine.Ajax.stubRequest(
+      "build/TerriaJS/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json"
+    ).andReturn({ responseText: regionIdsLgaCode });
 
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json"
@@ -550,7 +557,19 @@ describe("TableMixin", function() {
       expect(ImageryParts.is(item.mapItems[0])).toBeTruthy();
     });
 
-    it("with default style (state)", async function() {
+    it("with state", async function() {
+      updateModelFromJson(item, CommonStrata.user, {
+        columns: [
+          {
+            name: "State",
+            regionType: "STE_NAME_2016"
+          }
+        ],
+        defaultStyle: {
+          regionColumn: "State"
+        }
+      });
+
       expect(item.activeTableStyle.regionColumn?.name).toBe("State");
       expect(item.activeTableStyle.regionColumn?.regionType?.regionType).toBe(
         "STE_NAME_2016"
@@ -590,6 +609,36 @@ describe("TableMixin", function() {
         item.activeTableStyle.regionColumn?.valuesAsRegions.uniqueRegionIds
           .length
       ).toBe(8);
+    });
+
+    it("matches column name with whitespace", async function() {
+      item.setTrait(
+        CommonStrata.user,
+        "csvString",
+        `lga code-_-2015,number
+        35740,1
+        36720,2
+        `
+      );
+
+      await item.loadMapItems();
+
+      expect(item.activeTableStyle.regionColumn?.name).toBe("lga code-_-2015");
+      expect(item.activeTableStyle.regionColumn?.regionType?.regionType).toBe(
+        "LGA_2015"
+      );
+    });
+
+    it("shows region shortReportSection", async function() {
+      const regionCol = item.activeTableStyle.regionColumn;
+
+      const regionType = regionCol?.regionType;
+
+      expect(regionType).toBeDefined();
+
+      expect(item.shortReportSections[0].name).toBe(
+        `**Regions:** ${regionType?.description}`
+      );
     });
   });
 

@@ -1,9 +1,12 @@
-import { WithT } from "i18next";
+import i18next, { WithT } from "i18next";
 import { computed } from "mobx";
 import React, { Suspense, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import TerriaError from "../../Core/TerriaError";
-import { useTranslationIfExists } from "../../Language/languageHelpers";
+import {
+  applyTranslationIfExists,
+  TRANSLATE_KEY_PREFIX
+} from "../../Language/languageHelpers";
 import Terria from "../../Models/Terria";
 import ViewerMode from "../../Models/ViewerMode";
 import ViewState from "../../ReactViewModels/ViewState";
@@ -70,15 +73,21 @@ export class ToolButtonController extends MapNavigationItemController {
   }
 
   get name() {
-    return useTranslationIfExists(this.props.toolName);
+    return applyTranslationIfExists(this.props.toolName, i18next);
   }
-  @computed
+
+  // TODO: do not use the global i18next instead get i18n from react-i18next
+  // @computed
   get title() {
     const buttonState = this.active ? "open" : "closed";
-    return useTranslationIfExists(`tool.button.${buttonState}`, {
-      toolName: this.name,
-      toolNameLowerCase: this.name.toLowerCase()
-    });
+    return applyTranslationIfExists(
+      `${TRANSLATE_KEY_PREFIX}tool.button.${buttonState}`,
+      i18next,
+      {
+        toolName: this.name,
+        toolNameLowerCase: this.name.toLowerCase()
+      }
+    );
   }
 
   @computed

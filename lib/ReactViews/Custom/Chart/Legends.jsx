@@ -6,7 +6,9 @@ import Glyphs from "./Glyphs";
 import { GlyphCircle } from "@visx/glyph";
 import { TextSpan } from "../../../Styled/Text";
 import styled from "styled-components";
+import { observer } from "mobx-react";
 
+@observer
 export default class Legends extends React.PureComponent {
   static propTypes = {
     chartItems: PropTypes.array.isRequired,

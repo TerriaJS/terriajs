@@ -477,6 +477,7 @@ export default class RegionProvider {
 }
 
 function findVariableForAliases(varNames: string[], aliases: string[]) {
+  // Try first with no transformation (but case-insensitive)
   for (let j = 0; j < aliases.length; j++) {
     const re = new RegExp("^" + aliases[j] + "$", "i");
     for (let i = 0; i < varNames.length; i++) {
@@ -485,5 +486,18 @@ function findVariableForAliases(varNames: string[], aliases: string[]) {
       }
     }
   }
+
+  // Now try without whitespace, hyphens and underscores
+  for (let j = 0; j < aliases.length; j++) {
+    const aliasNoWhiteSpace = aliases[j].replace(/[-_\s]/g, "");
+    const re = new RegExp("^" + aliasNoWhiteSpace + "$", "i");
+    for (let i = 0; i < varNames.length; i++) {
+      const varNameNoWhiteSpace = varNames[i].replace(/[-_\s]/g, "");
+      if (re.test(varNameNoWhiteSpace)) {
+        return varNames[i];
+      }
+    }
+  }
+
   return undefined;
 }

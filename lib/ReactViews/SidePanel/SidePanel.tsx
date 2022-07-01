@@ -46,14 +46,7 @@ const EmptyWorkbench: React.FC<EmptyWorkbenchProps> = props => {
   const { t } = useTranslation();
   return (
     <Text large textLight>
-      {/* Hardcoded top to 150px for now for very very small screens
-          TODO: make it not hardcoded */}
-      <Box
-        column
-        fullWidth
-        justifySpaceBetween
-        styledHeight={"calc(100vh - 150px)"}
-      >
+      <Box column fullWidth justifySpaceBetween>
         <Box centered column>
           <ResponsiveSpacing />
           <Text large color={props.theme.textLightDimmed}>
@@ -151,20 +144,13 @@ const SidePanel = observer<React.FC<SidePanelProps>>(
     const addData = t("addData.addDataBtnText");
     const uploadText = t("models.catalog.upload");
     return (
-      <div>
+      <Box column styledMinHeight={"0"} flex={1}>
         <div
           css={`
             padding: 0 5px;
             background: ${theme.dark};
           `}
         >
-          <FullScreenButton
-            terria={terria}
-            viewState={viewState}
-            minified={true}
-            animationDuration={250}
-            btnText={t("addData.btnHide")}
-          />
           <SearchBoxAndResults
             viewState={viewState}
             terria={terria}
@@ -197,7 +183,9 @@ const SidePanel = observer<React.FC<SidePanelProps>>(
           </Box>
           <Spacing bottom={1} />
         </div>
-        <div
+        <Box
+          styledMinHeight={"0"}
+          flex={1}
           css={`
             overflow: hidden;
           `}
@@ -207,8 +195,8 @@ const SidePanel = observer<React.FC<SidePanelProps>>(
           ) : (
             <EmptyWorkbench theme={theme} />
           )}
-        </div>
-      </div>
+        </Box>
+      </Box>
     );
   }
 );

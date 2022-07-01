@@ -2,8 +2,6 @@ import i18next, { ReactOptions } from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
 import HttpApi from "i18next-http-backend";
-import translationEN from "../Language/en/translation.json";
-import translationFR from "../Language/fr/translation.json";
 
 export interface I18nBackendOptions {
   /**
@@ -62,8 +60,9 @@ class Internationalization {
      * as `languageConfiguration` can be serialised, but `i18nOptions` may have
      * some functions that are passed in from a TerriaMap
      */
-    i18StartOptions: I18nStartOptions | undefined
-  ): void {
+    i18StartOptions: I18nStartOptions | undefined,
+    terriajsResourcesBaseUrl: string
+  ) {
     const languageConfig = Object.assign(
       defaultLanguageConfiguration,
       languageConfiguration
@@ -78,7 +77,7 @@ class Internationalization {
      * @param {Array} languageConfiguration.changeLanguageOnStartWhen
      */
 
-    i18next
+    return i18next
       .use(HttpApi)
       .use(LanguageDetector)
       .use(initReactI18next)
@@ -121,18 +120,18 @@ class Internationalization {
         defaultNS: "languageOverrides",
         fallbackNS: "translation",
 
-        resources: {
-          en: {
-            translation: translationEN
-          },
-          fr: {
-            translation: translationFR
-          }
-        },
-
         backend: Object.assign(
           {
-            loadPath: "/languages/{{lng}}/{{ns}}.json",
+            // Loads translation files from either a TerriaMap's languages assets or from TerriaJS' assets
+            // Always load "translation" namespace from TerriaJS assets, and load "languageOverrides" namespace from the TerriaMap
+            loadPath: function loadPath(
+              [_lng]: string[],
+              [namespace]: string[]
+            ) {
+              return namespace === "translation"
+                ? `${terriajsResourcesBaseUrl}languages/{{lng}}/{{ns}}.json`
+                : "languages/{{lng}}/{{ns}}.json";
+            },
             crossDomain: false
           },
           { ...i18StartOptions?.backend }
