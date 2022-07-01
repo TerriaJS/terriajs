@@ -9,6 +9,8 @@ Change Log
 * Add experimental client-side 3D file conversion using [`assimpjs`](https://github.com/kovacsv/assimpjs) ([emscripten](https://emscripten.org) interface for the [assimp](https://github.com/assimp/assimp) library)
   * This supports `zip` files through add local/remote data
   * Supports over 40 formats - including Collada, obj, Blender, DXF - [full list](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md)
+* Add `description` to `getDataType` - this will be displayed between Step 1 and Step 2
+
 #### next release (8.2.8)
 
 * Table styling is disabled if `MultiPoint` are in GeoJSON

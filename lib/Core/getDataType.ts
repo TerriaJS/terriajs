@@ -1,6 +1,23 @@
 import i18next from "i18next";
 
-export default function() {
+interface DataType {
+  value: string;
+  name: string;
+  description?: string;
+}
+
+interface RemoteDataType extends DataType {}
+
+interface LocalDataType extends DataType {
+  extensions?: string[];
+}
+
+interface GetDataTypes {
+  remoteDataType: RemoteDataType[];
+  localDataType: LocalDataType[];
+}
+
+export default function(): GetDataTypes {
   return {
     remoteDataType: [
       {
@@ -104,7 +121,8 @@ export default function() {
       },
       {
         value: "assimp",
-        name: i18next.t("core.dataType.assimp-remote")
+        name: i18next.t("core.dataType.assimp-remote"),
+        description: i18next.t("core.dataType.assimp-remote-description")
       }
     ],
     localDataType: [
@@ -159,7 +177,8 @@ export default function() {
       },
       {
         value: "assimp",
-        name: i18next.t("core.dataType.assimp-local")
+        name: i18next.t("core.dataType.assimp-local"),
+        description: i18next.t("core.dataType.assimp-local-description")
 
         // Assimp full list of formats https://github.com/assimp/assimp/blob/master/doc/Fileformats.md
         // extensions: ["zip", "dae", "zae", "obj", "dxf", "blend"]
