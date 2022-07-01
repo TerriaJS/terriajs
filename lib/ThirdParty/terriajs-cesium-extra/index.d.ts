@@ -40,6 +40,8 @@ declare module "terriajs-cesium/Source/Widgets/getElement" {
   ): HTMLElement | undefined;
 }
 
+declare module "terriajs-cesium/Source/Core/PolygonGeometryLibrary";
+
 declare interface Axis {
   X: number;
   Y: number;

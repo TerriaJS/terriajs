@@ -6,6 +6,8 @@ Change Log
 * Table styling is disabled if `MultiPoint` are in GeoJSON
 * Add `GeoJsonTraits.useOutlineColorForLineFeatures` - If enabled, `TableOutlineStyleTraits` will be used to color Line Features, otherwise `TableColorStyleTraits` will be used.
 * Fix feature highliting for `Line`, `MultiLine` and `MultiPoint`
+* Await Internationalisation initialisation in `Terria.start`
+* `UserDrawing.messageHeader` can now also be `() => string`
 * [The next improvement]
 
 #### 8.2.7 - 2022-06-30
