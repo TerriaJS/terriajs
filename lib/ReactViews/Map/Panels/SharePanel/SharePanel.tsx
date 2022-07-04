@@ -37,7 +37,7 @@ import { TFunction } from "i18next";
 const MenuPanel = MenuPanelAlias as any;
 const StorySharePanel = StorySharePanelAlias as any;
 
-interface PropsType extends WithTranslation {
+interface PropTypes extends WithTranslation {
   terria: Terria;
   shortenUrls?: boolean;
   storyShare: boolean;
@@ -52,34 +52,38 @@ interface PropsType extends WithTranslation {
 
 interface SharePanelState {
   isOpen: boolean;
-  shortenUrls: string | boolean | null;
+  // shortenUrls: string | boolean | null;
   shareUrl: string;
   isDownloading: boolean;
   advancedIsOpen: boolean;
   placeholder: string | undefined;
+  errorMessage: string | undefined;
 }
 
 @observer
-class SharePanel extends React.Component<PropsType> {
-  displayName = "SharePanel";
-
-  state: SharePanelState = {
-    isOpen: false,
-    shortenUrls:
-      !!this.props.shortenUrls &&
-      this.props.terria.getLocalProperty("shortenShareUrls"),
-    shareUrl: "",
-    isDownloading: false,
-    advancedIsOpen: false,
-    placeholder: undefined
-  };
-
-  // Declare missing properties. TODO: Should these be in the PropsType interface instead?
+class SharePanel extends React.Component<PropTypes, SharePanelState> {
+  static displayName = "SharePanel";
   private _unsubscribeFromPrintMediaChange!: () => void;
   _oldPrint!: (() => void) & (() => void);
   updateShareUrlWhenStoryOptionChanged: IReactionDisposer | undefined;
   _message!: HTMLDivElement | undefined;
   download: MouseEventHandler<HTMLButtonElement> | undefined;
+
+  constructor(props: PropTypes) {
+    super(props);
+
+    this.state = {
+      isOpen: false,
+      // shortenUrls:
+      //   !!this.props.shortenUrls &&
+      //   this.props.terria.getLocalProperty("shortenShareUrls"),
+      shareUrl: "",
+      isDownloading: false,
+      advancedIsOpen: false,
+      placeholder: undefined,
+      errorMessage: undefined
+    };
+  }
 
   componentDidMount() {
     if (this.props.terria.configParameters.interceptBrowserPrint) {
@@ -162,13 +166,14 @@ class SharePanel extends React.Component<PropsType> {
     return this.state.advancedIsOpen;
   }
 
-  toggleAdvancedOptions(e: React.MouseEvent<HTMLButtonElement>) {
+  toggleAdvancedOptions = (e: React.MouseEvent<HTMLButtonElement>) => {
     this.setState((prevState: SharePanelState) => ({
       advancedIsOpen: !prevState.advancedIsOpen
     }));
-  }
+  };
 
   updateForShortening() {
+    // TODO: Make sure that this.setState is accessible, may need to this.updateForShortening = this.updateForShortening.bind(this) or change to arrow function
     const { t } = this.props;
     this.setState({
       shareUrl: ""
@@ -195,6 +200,7 @@ class SharePanel extends React.Component<PropsType> {
   }
 
   setUnshortenedUrl() {
+    // TODO: Make sure that this.setState is accessible, may need to this.updateForShortening = this.updateForShortening.bind(this) or change to arrow function
     this.setState({
       shareUrl: buildShareLink(this.props.terria, this.props.viewState, {
         includeStories:
@@ -231,7 +237,7 @@ class SharePanel extends React.Component<PropsType> {
     this.forceUpdate();
   }
 
-  changeOpenState(open: boolean) {
+  changeOpenState = (open: boolean) => {
     this.setState({
       isOpen: open
     });
@@ -242,7 +248,7 @@ class SharePanel extends React.Component<PropsType> {
         this.props.viewState.shareModalIsVisible = true;
       }
     }
-  }
+  };
 
   getShareUrlInput(theme: string) {
     return (
@@ -282,6 +288,7 @@ class SharePanel extends React.Component<PropsType> {
   }
 
   onAddWebDataClicked() {
+    // TODO: Make sure that this.setState is accessible, may need to this.updateForShortening = this.updateForShortening.bind(this) or change to arrow function
     this.setState({
       isOpen: false
     });
