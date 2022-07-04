@@ -8,6 +8,7 @@ Change Log
 * Fix feature highliting for `Line`, `MultiLine` and `MultiPoint`
 * Await Internationalisation initialisation in `Terria.start`
 * `UserDrawing.messageHeader` can now also be `() => string`
+* Fix `showInChartPanel=true` by default for time-series region mapped data 
 * [The next improvement]
 
 #### 8.2.7 - 2022-06-30

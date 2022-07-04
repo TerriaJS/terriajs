@@ -256,6 +256,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   }
 
   @computed get showInChartPanel() {
-    return this.catalogItem.show;
+    // Show in chart panel by default if showing in workbench and not regions
+    return this.catalogItem.show && !this.catalogItem.showingRegions;
   }
 }
