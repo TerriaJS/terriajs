@@ -1,7 +1,11 @@
 Change Log
 ==========
 
-#### next release (8.2.8)
+#### next release (8.2.9)
+
+* [The next improvement]
+
+#### 8.2.8 - 2022-07-04
 
 * Improve Split/compare error handling
 * Fix `itemProperties` split bug
@@ -10,7 +14,6 @@ Change Log
 * Fix feature highliting for `Line`, `MultiLine` and `MultiPoint`
 * Await Internationalisation initialisation in `Terria.start`
 * `UserDrawing.messageHeader` can now also be `() => string`
-* [The next improvement]
 
 #### 8.2.7 - 2022-06-30
 
