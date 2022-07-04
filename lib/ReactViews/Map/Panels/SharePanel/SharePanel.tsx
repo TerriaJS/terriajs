@@ -71,6 +71,8 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
 
   constructor(props: PropTypes) {
     super(props);
+    // React components using ES6 classes no longer autobind this to non React methods (added after migrating from createReactClass)
+    this.changeOpenState = this.changeOpenState.bind(this);
 
     this.state = {
       isOpen: false,
@@ -237,7 +239,7 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
     this.forceUpdate();
   }
 
-  changeOpenState = (open: boolean) => {
+  changeOpenState(open: boolean) {
     this.setState({
       isOpen: open
     });
@@ -248,7 +250,7 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
         this.props.viewState.shareModalIsVisible = true;
       }
     }
-  };
+  }
 
   getShareUrlInput(theme: string) {
     return (
