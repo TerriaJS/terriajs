@@ -29,7 +29,7 @@ export default class SplitItemReference extends ReferenceMixin(
   ): Promise<BaseModel | undefined> {
     if (this.splitSourceItemId === undefined || this.uniqueId === undefined) {
       throw new TerriaError({
-        title: i18next.t("splitterTool.errorTitle"),
+        title: { key: "splitterTool.errorTitle" },
         message: "`splitSourceItemId` and `uniqueId` must be defined"
       });
     }
@@ -40,10 +40,13 @@ export default class SplitItemReference extends ReferenceMixin(
     );
     if (sourceItem === undefined) {
       throw new TerriaError({
-        title: i18next.t("splitterTool.errorTitle"),
-        message: i18next.t("splitterTool.modelNotFoundErrorMessage", {
-          id: this.splitSourceItemId
-        }),
+        title: { key: "splitterTool.errorTitle" },
+        message: {
+          key: "splitterTool.modelNotFoundErrorMessage",
+          parameters: {
+            id: this.splitSourceItemId
+          }
+        },
         importance: 1
       });
     }
@@ -54,12 +57,13 @@ export default class SplitItemReference extends ReferenceMixin(
       return sourceItem.duplicateModel(this.uniqueId, this);
     } catch (e) {
       throw TerriaError.from(e, {
-        title: i18next.t("splitterTool.errorTitle", {
-          name: getName(sourceItem)
-        }),
-        message: i18next.t("splitterTool.duplicateModelErrorMessage", {
-          name: getName(sourceItem)
-        }),
+        title: { key: "splitterTool.errorTitle" },
+        message: {
+          key: "splitterTool.duplicateModelErrorMessage",
+          parameters: {
+            name: getName(sourceItem)
+          }
+        },
         importance: 1
       });
     }
