@@ -146,7 +146,7 @@ If `{{Pixel Value}}` equals to `150` and `{{feature.data.layerId}}` to `2`, the 
 
 For features with time-varying table-based data structures (eg. CSV, SOS2, SDMX-JSON, if there is a time column), the feature info panel also includes a chart of the data over time, eg.
 
-<img src="../img/feature_info_with_time_series.png">
+<img src="./img/feature_info_with_time_series.png">
 
 You can place this chart in your template using `{{terria.timeSeries.chart}}`.  Alternatively, you can access the following component information:
 
