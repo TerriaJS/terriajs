@@ -1,5 +1,6 @@
 import i18next from "i18next";
 import { flow } from "mobx";
+import { CatalogMemberTraits } from "terriajs-plugin-api";
 import isDefined from "../../../Core/isDefined";
 import { isJsonObject, JsonObject } from "../../../Core/Json";
 import loadJson5 from "../../../Core/loadJson5";
@@ -7,9 +8,11 @@ import TerriaError from "../../../Core/TerriaError";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import ReferenceMixin from "../../../ModelMixins/ReferenceMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
+
 import TerriaReferenceTraits from "../../../Traits/TraitsClasses/TerriaReferenceTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
+import hasTraits from "../../Definition/hasTraits";
 import { BaseModel } from "../../Definition/Model";
 import updateModelFromJson from "../../Definition/updateModelFromJson";
 import CatalogMemberFactory from "../CatalogMemberFactory";
@@ -107,8 +110,20 @@ export default class TerriaReference extends UrlMixin(
           CommonStrata.definition,
           targetJson
         ).catchError(error => {
-          target.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
-          error.log();
+          if (
+            hasTraits(
+              target,
+              CatalogMemberTraits, // TODO: Which ModelTraits class should we check here?
+              "isExperiencingIssues"
+            )
+          ) {
+            target.setTrait(
+              CommonStrata.underride,
+              "isExperiencingIssues",
+              true
+            );
+            error.log();
+          }
         });
         return target;
       }

@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { ModelId } from "../../Traits/ModelReference";
 import ModelTraits from "../../Traits/ModelTraits";
 import Trait from "../../Traits/Trait";
@@ -18,6 +19,7 @@ export interface ModelConstructor<T> {
 }
 
 export abstract class BaseModel {
+  name?: ReactNode;
   abstract get type(): string;
   abstract get traits(): {
     [id: string]: Trait;

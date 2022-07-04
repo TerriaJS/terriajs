@@ -1,17 +1,15 @@
 "use strict";
 
 import classNames from "classnames";
-import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
-import * as PropTypes from "prop-types";
-import React, { MouseEventHandler } from "react";
+import React, { ChangeEvent, MouseEventHandler } from "react";
 import { Trans, WithTranslation, withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Clipboard from "../../../Clipboard";
 import IncludeStoryOption from "./IncludeStoryOption";
 import Icon from "../../../../Styled/Icon";
 import Loader from "../../../Loader";
-import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
+import MenuPanelAlias from "../../../StandardUserInterface/customizable/MenuPanel";
 import Input from "../../../../Styled/Input";
 import DropdownStyles from "../panel.scss";
 import {
@@ -21,30 +19,33 @@ import {
   isShareable
 } from "./BuildShareLink";
 import Styles from "./share-panel.scss";
-import StorySharePanel from "./StorySharePanel";
+import StorySharePanelAlias from "./StorySharePanel";
 import {
   Category,
   ShareAction
 } from "../../../../Core/AnalyticEvents/analyticEvents";
 
 import { downloadImg } from "./Print/PrintView";
-import { reaction } from "mobx";
+import { IReactionDisposer, reaction } from "mobx";
 import Checkbox from "../../../../Styled/Checkbox";
 import Text from "../../../../Styled/Text";
 import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
 import { TFunction } from "i18next";
 
+// Handle incorrect type checking
+const MenuPanel = MenuPanelAlias as any;
+const StorySharePanel = StorySharePanelAlias as any;
+
 interface PropsType extends WithTranslation {
   terria: Terria;
-  userPropWhiteList: any[];
-  shortenUrls: boolean;
+  shortenUrls?: boolean;
   storyShare: boolean;
-  catalogShare: boolean;
-  catalogShareWithoutText: boolean;
+  catalogShare?: boolean;
+  catalogShareWithoutText?: boolean;
   modalWidth: number;
   viewState: ViewState;
-  onUserClick(): any; // TODO: type correctly
+  onUserClick: () => void;
   btnDisabled: boolean;
   t: TFunction;
 }
@@ -58,8 +59,6 @@ interface SharePanelState {
   placeholder: string | undefined;
 }
 
-// const SharePanel = observer(
-//   createReactClass({
 @observer
 class SharePanel extends React.Component<PropsType> {
   displayName = "SharePanel";
@@ -75,10 +74,10 @@ class SharePanel extends React.Component<PropsType> {
     placeholder: undefined
   };
 
-  // Declare missing properties. TOSO: Should these be in the PropsType interface instead?
+  // Declare missing properties. TODO: Should these be in the PropsType interface instead?
   private _unsubscribeFromPrintMediaChange!: () => void;
   _oldPrint!: (() => void) & (() => void);
-  updateShareUrlWhenStoryOptionChanged: any;
+  updateShareUrlWhenStoryOptionChanged: IReactionDisposer | undefined;
   _message!: HTMLDivElement | undefined;
   download: MouseEventHandler<HTMLButtonElement> | undefined;
 
@@ -110,7 +109,7 @@ class SharePanel extends React.Component<PropsType> {
     }
 
     // Listen to the includeStoryInShare property of viewState, generate the share URL again if this changes
-    // This allows the share URL to be updated when users change the 'Include Story in Share?'checkbox in the SharePanel comnponent.
+    // This allows the share URL to be updated when users change the 'Include Story in Share?'checkbox in the SharePanel component.
     this.updateShareUrlWhenStoryOptionChanged = reaction(
       () => this.props.viewState.includeStoryInShare,
       () => {
@@ -134,7 +133,8 @@ class SharePanel extends React.Component<PropsType> {
     }
 
     // Cleanup reaction
-    this.updateShareUrlWhenStoryOptionChanged();
+    this.updateShareUrlWhenStoryOptionChanged &&
+      this.updateShareUrlWhenStoryOptionChanged();
   }
 
   beforeBrowserPrint() {
@@ -218,7 +218,7 @@ class SharePanel extends React.Component<PropsType> {
     );
   }
 
-  onShortenClicked(e) {
+  onShortenClicked(e: ChangeEvent<HTMLInputElement>) {
     if (this.shouldShorten()) {
       this.props.terria.setLocalProperty("shortenShareUrls", false);
     } else if (this.isUrlShortenable()) {
@@ -376,12 +376,10 @@ class SharePanel extends React.Component<PropsType> {
   renderContentForCatalogShare() {
     const { t, terria } = this.props;
     return (
-      // TODO: use ternary expression instead as above
-      <Choose>
-        <When condition={this.state.shareUrl === ""}>
+      <>
+        {this.state.shareUrl === "" ? (
           <Loader message={t("share.generatingUrl")} />
-        </When>
-        <Otherwise>
+        ) : (
           <div className={Styles.clipboardForCatalogShare}>
             <Clipboard
               theme="light"
@@ -398,8 +396,8 @@ class SharePanel extends React.Component<PropsType> {
             />
             {this.renderWarning()}
           </div>
-        </Otherwise>
-      </Choose>
+        )}
+      </>
     );
   }
 
@@ -416,6 +414,7 @@ class SharePanel extends React.Component<PropsType> {
           <Clipboard
             source={this.getShareUrlInput("dark")}
             id="share-url"
+            theme="light"
             onCopy={text =>
               terria.analytics?.logEvent(
                 Category.share,
@@ -425,7 +424,7 @@ class SharePanel extends React.Component<PropsType> {
             }
           />
           {/* Following code block dependent on existence of "bookmarkHelp" Help Menu Item */}
-          {this.props.terria.configParameters.helpContent.some(
+          {this.props.terria.configParameters.helpContent?.some(
             e => e.itemName === bookMarkHelpItemName
           ) && (
             <Text
@@ -507,56 +506,61 @@ class SharePanel extends React.Component<PropsType> {
               )}
             </button>
           </div>
-          <If condition={this.advancedIsOpen()}>
-            <div className={DropdownStyles.section}>
-              <p className={Styles.paragraph}>{t("share.embedTitle")}</p>
-              <Input
-                large
-                dark
-                className={Styles.field}
-                type="text"
-                readOnly
-                placeholder={this.state.placeholder}
-                value={iframeCode}
-                onClick={e => e.target.select()}
-              />
-            </div>
-            <If condition={this.isUrlShortenable()}>
-              <div className={Styles.shortenUrl}>
-                <Checkbox
-                  textProps={{ small: true }}
-                  id="shortenUrl"
-                  isChecked={this.shouldShorten() ?? false}
-                  onChange={this.onShortenClicked}
-                  className={Styles.checkbox}
-                ></Checkbox>
-                <p>{t("share.shortenUsingService")}</p>
+          {this.advancedIsOpen() && (
+            <>
+              <div className={DropdownStyles.section}>
+                <p className={Styles.paragraph}>{t("share.embedTitle")}</p>
+                <Input
+                  large
+                  dark
+                  // className={Styles.field}
+                  type="text"
+                  readOnly
+                  placeholder={this.state.placeholder}
+                  value={iframeCode}
+                  onClick={e => {
+                    const target = e.target as HTMLInputElement;
+                    return target.select();
+                  }}
+                />
               </div>
-            </If>
-            <IncludeStoryOption viewState={this.props.viewState} />
-          </If>
+              {this.isUrlShortenable() && (
+                <div className={Styles.shortenUrl}>
+                  <Checkbox
+                    textProps={{ small: true }}
+                    id="shortenUrl"
+                    isChecked={(this.shouldShorten() as boolean) ?? false}
+                    onChange={this.onShortenClicked}
+                    className={Styles.checkbox}
+                  ></Checkbox>
+                  <p>{t("share.shortenUsingService")}</p>
+                </div>
+              )}
+              <IncludeStoryOption viewState={this.props.viewState} />
+            </>
+          )}
         </div>
       </div>
     );
   }
 
-  renderDownloadFormatButton(format) {
-    return (
-      <button
-        key={format.name}
-        className={Styles.formatButton}
-        onClick={this.download}
-      >
-        {format.name}
-      </button>
-    );
-  }
+  // renderDownloadFormatButton(format) {
+  //   return (
+  //     <button
+  //       key={format.name}
+  //       className={Styles.formatButton}
+  //       onClick={this.download}
+  //     >
+  //       {format.name}
+  //     </button>
+  //   );
+  // }
 
   openWithUserClick() {
     if (this.props.onUserClick) {
       this.props.onUserClick();
     }
-    this.changeOpenState();
+    this.changeOpenState(true); // TODO: should this pass true?
     this.renderContentForStoryShare();
   }
 
@@ -571,7 +575,7 @@ class SharePanel extends React.Component<PropsType> {
     const dropdownTheme = {
       btn: classNames({
         [Styles.btnCatalogShare]: catalogShare,
-        [Styles.btnStoryShare]: storyShare,
+        // [Styles.btnStoryShare]: storyShare,
         [Styles.btnWithoutText]: catalogShareWithoutText
       }),
       outer: classNames(Styles.sharePanel, {
@@ -613,7 +617,7 @@ class SharePanel extends React.Component<PropsType> {
         onUserClick={this.props.onUserClick}
         disableCloseOnFocusLoss={this.props.viewState.retainSharePanel}
       >
-        <If condition={this.state.isOpen}>{this.renderContent()}</If>
+        {this.state.isOpen && this.renderContent()}
       </MenuPanel>
     ) : (
       <StorySharePanel
@@ -631,7 +635,7 @@ class SharePanel extends React.Component<PropsType> {
         }}
         onUserClick={this.props.onUserClick}
       >
-        <If condition={this.state.isOpen}>{this.renderContent()}</If>
+        {this.state.isOpen && this.renderContent()}
       </StorySharePanel>
     );
   }
