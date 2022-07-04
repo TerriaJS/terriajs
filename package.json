@@ -16,6 +16,10 @@
   "resolutions": {
     "colors": "1.4.0"
   },
+  "overrides": {
+    "cheerio": "1.0.0-rc.10",
+    "parse5-htmlparser2-tree-adapter": "^6.0.0"
+  },
   "dependencies": {
     "@babel/core": "^7.16.0",
     "@babel/parser": "^7.12.14",
