@@ -74,7 +74,10 @@
       "goright": "Dreta",
       "copyName": "{{name}} (còpia)",
       "goleft": "Esquerra"
-    }
+    },
+    "modelNotFoundErrorMessage": "No s'ha pogut trobar l'identificador del model `\"{{id}}\"`",
+    "errorTitle": "No s'ha pogut comparar l'element del catàleg.",
+    "duplicateModelErrorMessage": "S'ha produït un error en dividir l'element del catàleg `\"{{name}}\"`. És possible que aquest element del catàleg no admeti la funcionalitat de \"comparació\""
   },
   "zoomCotrol": {
     "zoomIn": "Zoom +",
