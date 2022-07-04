@@ -30,11 +30,11 @@ The template will replace all occurrences of `{{property}}` with the value of th
 
 The result is:
 
-<img src="../img/template.png">
+<img src="./img/template.png">
 
 instead of:
 
-<img src="../img/no_template.png">
+<img src="./img/no_template.png">
 
 You can provide a template to use for the name of the collapsible section (eg. to replace `RGB` in the example above), like so:
 
