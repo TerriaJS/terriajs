@@ -396,6 +396,12 @@ export default abstract class GlobeOrMap {
 
             catalogItem.setTrait(
               CommonStrata.user,
+              "useOutlineColorForLineFeatures",
+              true
+            );
+
+            catalogItem.setTrait(
+              CommonStrata.user,
               "defaultStyle",
               createStratumInstance(TableStyleTraits, {
                 outline: createStratumInstance(TableOutlineStyleTraits, {
