@@ -1,4 +1,3 @@
-import i18next from "i18next";
 import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
 import TerriaError from "../../../Core/TerriaError";
 import { getName } from "../../../ModelMixins/CatalogMemberMixin";
