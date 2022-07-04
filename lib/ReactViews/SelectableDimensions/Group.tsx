@@ -17,9 +17,8 @@ export const SelectableDimensionGroup: React.FC<{
   id: string;
   dim: SelectableDimensionGroupModel | SelectableDimensionCheckboxGroupModel;
 }> = ({ id, dim }) => {
-  const childDims = filterSelectableDimensions(dim.placement)(
-    dim.selectableDimensions
-  );
+  // Note we don't filter by placement here - as it happens top level in `SelectableDimensionSection.tsx`
+  const childDims = filterSelectableDimensions()(dim.selectableDimensions);
   // Hide static groups with empty children.
   // We still show checkbox groups with empty children as they are stateful.
   if (isGroup(dim) && childDims.length === 0) return null;

@@ -25,6 +25,7 @@ import SelectableDimensions, {
   SelectableDimensionGroup
 } from "../Models/SelectableDimensions/SelectableDimensions";
 import ViewingControls, { ViewingControl } from "../Models/ViewingControls";
+import RegionMappingWorkflow from "../Models/Workflows/RegionMappingWorkflow";
 import * as SelectableDimensionWorkflow from "../Models/Workflows/SelectableDimensionWorkflow";
 import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
 import Icon from "../Styled/Icon";
@@ -37,11 +38,7 @@ import { TableAutomaticLegendStratum } from "../Table/TableLegendStratum";
 import TableStyle from "../Table/TableStyle";
 import TableTraits from "../Traits/TraitsClasses/TableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
-import ChartableMixin, {
-  calculateDomain,
-  ChartAxis,
-  ChartItem
-} from "./ChartableMixin";
+import { calculateDomain, ChartAxis, ChartItem } from "./ChartableMixin";
 import DiscretelyTimeVaryingMixin, {
   DiscreteTimeAsJS
 } from "./DiscretelyTimeVaryingMixin";
@@ -268,6 +265,14 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return super.disableZoomTo;
     }
 
+    /** Is showing regions (instead of points) */
+    @computed get showingRegions() {
+      return (
+        this.regionMappedImageryParts &&
+        this.mapItems[0] === this.regionMappedImageryParts
+      );
+    }
+
     /**
      * Gets the items to show on the map.
      */
@@ -457,7 +462,22 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             )
           ),
           icon: { glyph: Icon.GLYPHS.layers }
-        }
+        },
+        // Only show RegionMappingWorkflow if enableManualRegionMapping = false.
+        // If enableManualRegionMapping is true, then region mapping selectabelDimensions are in workbench
+        !this.enableManualRegionMapping
+          ? {
+              id: RegionMappingWorkflow.type,
+              name: "Edit Regions",
+              onClick: action(viewState =>
+                SelectableDimensionWorkflow.runWorkflow(
+                  viewState,
+                  new RegionMappingWorkflow(this)
+                )
+              ),
+              icon: { glyph: Icon.GLYPHS.globe }
+            }
+          : undefined
       ]);
     }
 
@@ -575,6 +595,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             id: col.name
           };
         }),
+        allowUndefined: true,
         selectedId: this.activeTableStyle.regionColumn?.name,
         setDimensionValue: (
           stratumId: string,
@@ -716,7 +737,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             onClick: action(() => {
               SelectableDimensionWorkflow.runWorkflow(
                 this.terria,
-                new TableStylingWorkflow(this)
+                // If region column is custom - launch RegionMappingWorkflow
+                this.activeTableStyle.regionColumn?.isCustom
+                  ? new RegionMappingWorkflow(this)
+                  : new TableStylingWorkflow(this)
               );
             })
           }
