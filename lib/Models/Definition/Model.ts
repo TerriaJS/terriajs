@@ -19,7 +19,7 @@ export interface ModelConstructor<T> {
 }
 
 export abstract class BaseModel {
-  name?: ReactNode;
+  [name: string]: ReactNode; // For name property used in SharePanel.tsx
   abstract get type(): string;
   abstract get traits(): {
     [id: string]: Trait;
