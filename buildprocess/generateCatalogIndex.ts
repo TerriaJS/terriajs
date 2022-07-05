@@ -45,6 +45,8 @@ import patchNetworkRequests from "./patchNetworkRequests";
  *  - one load may not equal one request. some groups/references do not make network requests
 
  * @param basicAuth basic auth token to add to requests which include `baseUrl` (or `proxy/`)
+
+ * Example usage: node ./build/generateCatalogIndex.js http://localhost:3001/config.json http://localhost:3001/
  */
 export default async function generateCatalogIndex(
   configUrl: string,
