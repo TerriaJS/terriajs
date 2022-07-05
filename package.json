@@ -109,7 +109,7 @@
     "gulp": "^4.0.0",
     "hammerjs": "^2.0.6",
     "hoist-non-react-statics": "^3.3.2",
-    "html-to-react": "^1.4.5",
+    "html-to-react": "1.4.5",
     "i18next": "^19.9.0",
     "i18next-browser-languagedetector": "^4.0.1",
     "i18next-http-backend": "^1.1.1",

@@ -8,6 +8,8 @@ Change Log
 * Fix feature highliting for `Line`, `MultiLine` and `MultiPoint`
 * Await Internationalisation initialisation in `Terria.start`
 * `UserDrawing.messageHeader` can now also be `() => string`
+* Pin `html-to-react` to `1.4.5` due to ESM module in dependency (`parse5`) breaking webpack
+* Add step to `"Deploy TerriaMap"` action to save `yarn.lock` after `sync-dependencies` (for debug purposes)
 * [The next improvement]
 
 #### 8.2.7 - 2022-06-30
