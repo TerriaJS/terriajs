@@ -2,6 +2,7 @@ import { action, computed, observable, runInAction, toJS } from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import flatten from "../../Core/flatten";
 import isDefined from "../../Core/isDefined";
+import TerriaError from "../../Core/TerriaError";
 import { getObjectId } from "../../Traits/ArrayNestedStrataMap";
 import { ObjectArrayTrait } from "../../Traits/Decorators/objectArrayTrait";
 import { ModelId } from "../../Traits/ModelReference";
@@ -92,16 +93,29 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     }
 
     duplicateModel(newId: ModelId, sourceReference?: BaseModel): this {
-      const newModel = new (<any>this.constructor)(
-        newId,
-        this.terria,
-        sourceReference
-      );
+      let newModel: this;
+      try {
+        newModel = new (<any>this.constructor)(
+          newId,
+          this.terria,
+          sourceReference
+        );
+      } catch (e) {
+        throw TerriaError.from(`Failed to create model \`"${newId}"\``);
+      }
+
       this.strata.forEach((stratum, stratumId) => {
-        const newStratum = isLoadableStratum(stratum)
-          ? stratum.duplicateLoadableStratum(newModel)
-          : createStratumInstance(Traits, toJS(stratum));
-        newModel.strata.set(stratumId, newStratum);
+        try {
+          const newStratum = isLoadableStratum(stratum)
+            ? stratum.duplicateLoadableStratum(newModel)
+            : createStratumInstance(Traits, toJS(stratum));
+          newModel.strata.set(stratumId, newStratum);
+        } catch (e) {
+          throw TerriaError.from(e, {
+            message: `Failed to duplicate stratum \`${stratumId}\` for model \`${newId}\`.`,
+            importance: -1
+          });
+        }
       });
       return newModel;
     }
