@@ -1239,29 +1239,28 @@ export default class Terria {
       })
     );
 
-    // Apply all init sources
-    await Promise.all(
-      loadedInitSources.map(async initSource => {
-        if (!isDefined(initSource?.data)) return;
-        try {
-          await this.applyInitData({
-            initData: initSource!.data
-          });
-        } catch (e) {
-          errors.push(
-            TerriaError.from(e, {
-              severity: initSource?.errorSeverity,
-              message: {
-                key: "models.terria.loadingInitSourceError2Message",
-                parameters: {
-                  loadSource: initSource!.name ?? "Unknown source"
-                }
+    // Sequentially load all InitSources
+    for (let i = 0; i < loadedInitSources.length; i++) {
+      const initSource = loadedInitSources[i];
+      if (!isDefined(initSource?.data)) return;
+      try {
+        await this.applyInitData({
+          initData: initSource!.data
+        });
+      } catch (e) {
+        errors.push(
+          TerriaError.from(e, {
+            severity: initSource?.errorSeverity,
+            message: {
+              key: "models.terria.loadingInitSourceError2Message",
+              parameters: {
+                loadSource: initSource!.name ?? "Unknown source"
               }
-            })
-          );
-        }
-      })
-    );
+            }
+          })
+        );
+      }
+    }
 
     // Load basemap
     runInAction(() => {

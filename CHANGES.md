@@ -5,6 +5,7 @@ Change Log
 
 * Pin `html-to-react` to `1.4.5` due to ESM module in dependency (`parse5`) breaking webpack
 * Add step to `"Deploy TerriaMap"` action to save `yarn.lock` after `sync-dependencies` (for debug purposes)
+* Load all `InitSources` sequentially instead of asyncronosly
 * [The next improvement]
 
 #### 8.2.8 - 2022-07-04
