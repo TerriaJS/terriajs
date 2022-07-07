@@ -62,12 +62,12 @@ interface SharePanelState {
 
 @observer
 class SharePanel extends React.Component<PropTypes, SharePanelState> {
+  // TODO: should be in constructor or not?
   static displayName = "SharePanel";
   private _unsubscribeFromPrintMediaChange!: () => void;
-  _oldPrint!: (() => void) & (() => void);
+  private _oldPrint!: (() => void) & (() => void);
+  private _message: HTMLDivElement | undefined;
   updateShareUrlWhenStoryOptionChanged: IReactionDisposer | undefined;
-  _message!: HTMLDivElement | undefined;
-  download: MouseEventHandler<HTMLButtonElement> | undefined;
 
   constructor(props: PropTypes) {
     super(props);
@@ -76,6 +76,7 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
 
     this.state = {
       isOpen: false,
+      // TODO: I dont thins shortenUrls is being used... Check.
       // shortenUrls:
       //   !!this.props.shortenUrls &&
       //   this.props.terria.getLocalProperty("shortenShareUrls"),
@@ -331,7 +332,8 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
               {unshareableItems.map((item, i) => {
                 return (
                   <li key={i}>
-                    <strong>{item.name}</strong>
+                    {/* <strong>{item.name}</strong> */}
+                    {/* TODO: display item.name here. Is this code ever being used? Cant add .name to BaseModel without many ts errors */}
                   </li>
                 );
               })}
