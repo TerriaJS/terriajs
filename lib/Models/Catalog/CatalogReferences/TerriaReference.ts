@@ -110,20 +110,8 @@ export default class TerriaReference extends UrlMixin(
           CommonStrata.definition,
           targetJson
         ).catchError(error => {
-          if (
-            hasTraits(
-              target,
-              CatalogMemberTraits, // TODO: Which ModelTraits class should we check here?
-              "isExperiencingIssues"
-            )
-          ) {
-            target.setTrait(
-              CommonStrata.underride,
-              "isExperiencingIssues",
-              true
-            );
-            error.log();
-          }
+          target.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
+          error.log();
         });
         return target;
       }

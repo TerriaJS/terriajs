@@ -19,7 +19,7 @@ interface ClipboardProps {
   source: React.ReactElement;
   theme: "dark" | "light";
   rounded?: boolean;
-  text?: string;
+  // text?: string;
   onCopy?: (contents: string) => void;
 }
 
