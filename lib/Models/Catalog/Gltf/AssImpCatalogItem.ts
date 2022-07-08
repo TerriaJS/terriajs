@@ -11,8 +11,6 @@ import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import HasLocalData from "../../HasLocalData";
 
-const FileSaver = require("file-saver");
-
 export default class AssImpCatalogItem
   extends GltfMixin(CreateModel(AssImpCatalogItemTraits))
   implements HasLocalData {
@@ -233,9 +231,6 @@ export default class AssImpCatalogItem
       if (i === 0) {
         gltfModelUrl = dataUrl;
       }
-
-      // Debug - download files
-      if (this.debugDownloadGltf) FileSaver.saveAs(blob, path);
     }
 
     runInAction(() => {

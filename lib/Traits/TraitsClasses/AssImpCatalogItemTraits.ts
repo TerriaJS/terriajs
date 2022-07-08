@@ -19,11 +19,4 @@ export default class AssImpCatalogItemTraits extends mixTraits(
     description: `The base URL that paths in the 3D model (eg textures) are relative to`
   })
   baseUrl?: string;
-
-  @primitiveTrait({
-    type: "boolean",
-    name: "Debug download GLTF",
-    description: `If true, then GLTF output files will be automatically downloaded`
-  })
-  debugDownloadGltf?: boolean;
 }
