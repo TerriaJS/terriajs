@@ -2072,8 +2072,10 @@ async function interpretStartData(
   errorSeverity?: TerriaErrorSeverity,
   showConversionWarning = true
 ) {
-  const containsStory = (initSource: InitSourceData) =>
-    Array.isArray(initSource.stories) && initSource.stories.length;
+  const containsStory = (initSource: InitSourceData | string) =>
+    isJsonObject(initSource) &&
+    Array.isArray(initSource.stories) &&
+    initSource.stories.length;
   if (isJsonObject(startData, false)) {
     // Convert startData to v8 if necessary
     let startDataV8: ShareInitSourceData | null;
@@ -2102,22 +2104,32 @@ async function interpretStartData(
           version: isJsonString(startData.version)
             ? startData.version
             : SHARE_VERSION,
-          initSources: isJsonObjectArray(startData.initSources)
-            ? startData.initSources
+          initSources: Array.isArray(startData.initSources)
+            ? (startData.initSources.filter(
+                initSource =>
+                  isJsonString(initSource) || isJsonObject(initSource)
+              ) as (string | JsonObject)[])
             : []
         };
       }
 
       if (startDataV8 !== null && Array.isArray(startDataV8.initSources)) {
+        // Push startData to initSources array
         runInAction(() => {
           terria.initSources.push(
-            ...startDataV8!.initSources.map((initSource: unknown) => {
-              return {
-                name,
-                data: isJsonObject(initSource, false) ? initSource : {},
-                errorSeverity
-              };
-            })
+            ...startDataV8!.initSources.map(initSource =>
+              isJsonString(initSource)
+                ? {
+                    name,
+                    initUrl: initSource,
+                    errorSeverity
+                  }
+                : {
+                    name,
+                    data: initSource,
+                    errorSeverity
+                  }
+            )
           );
         });
         if (startDataV8.initSources.some(containsStory)) {

@@ -42,7 +42,7 @@ export interface StoryData {
 }
 export interface ShareInitSourceData {
   version: string;
-  initSources: InitSourceData[];
+  initSources: (InitSourceData | string)[];
 }
 
 export interface InitSourceData {
