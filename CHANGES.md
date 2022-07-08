@@ -1,8 +1,16 @@
 Change Log
 ==========
 
-#### next release (8.2.8)
+#### next release (8.2.9)
 
+* Pin `html-to-react` to `1.4.5` due to ESM module in dependency (`parse5`) breaking webpack
+* Add step to `"Deploy TerriaMap"` action to save `yarn.lock` after `sync-dependencies` (for debug purposes)
+* [The next improvement]
+
+#### 8.2.8 - 2022-07-04
+
+* Improve Split/compare error handling
+* Fix `itemProperties` split bug
 * Table styling is disabled if `MultiPoint` are in GeoJSON
 * Add `GeoJsonTraits.useOutlineColorForLineFeatures` - If enabled, `TableOutlineStyleTraits` will be used to color Line Features, otherwise `TableColorStyleTraits` will be used.
 * Fix feature highliting for `Line`, `MultiLine` and `MultiPoint`

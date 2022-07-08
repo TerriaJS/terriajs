@@ -66,6 +66,9 @@
     "centreMap": "Centre map at your current location"
   },
   "splitterTool": {
+    "errorTitle": "Failed to compare catalog item.",
+    "duplicateModelErrorMessage": "An error occurred while splitting the catalog item `\"{{name}}\"`. This catalog item may not support \"compare\" functionality",
+    "modelNotFoundErrorMessage": "Model ID `\"{{id}}\"` could not be found",
     "toggleSplitterToolTitle": "Compare",
     "toggleSplitterTool": "Enable side-by-side comparison between two different sets of data",
     "toggleSplitterToolDisabled": "Please disable other side-by-side comparison features in order to enable standard compare",
