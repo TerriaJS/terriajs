@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { computed } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
@@ -115,6 +116,14 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
 
     protected forceLoadMapItems(): Promise<void> {
       return Promise.resolve();
+    }
+
+    @computed
+    get shortReport(): string | undefined {
+      if (this.terria.currentViewer.type === "Leaflet") {
+        return i18next.t("models.commonModelErrors.3dTypeIn2dMode", this);
+      }
+      return super.shortReport;
     }
 
     @computed
