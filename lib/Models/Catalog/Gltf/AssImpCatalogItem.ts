@@ -71,7 +71,7 @@ export default class AssImpCatalogItem
     /** List of files to input into `assimpjs`
      * This will be populated with all files downloaded using `url` or `urls` - and all files from downloaded/uploaded zip files
      */
-    const files: {
+    const fileArrayBuffers: {
       name: string;
       arrayBuffer: ArrayBuffer;
     }[] = [];
@@ -83,7 +83,7 @@ export default class AssImpCatalogItem
           const blob = await loadBlob(url);
           const zipFiles = await parseZipArrayBuffers(blob);
           zipFiles.forEach(zipFile => {
-            files.push({
+            fileArrayBuffers.push({
               name: zipFile.fileName,
               arrayBuffer: zipFile.data
             });
@@ -100,7 +100,7 @@ export default class AssImpCatalogItem
           const arrayBuffer = await loadArrayBuffer(url);
           const uri = new URI(url);
           const name = uri.filename();
-          files.push({
+          fileArrayBuffers.push({
             name,
             arrayBuffer
           });
@@ -117,8 +117,11 @@ export default class AssImpCatalogItem
 
     // Create assimpjs FileList object, and add the files
     let fileList = new ajs.FileList();
-    for (let i = 0; i < files.length; i++) {
-      fileList.AddFile(files[i].name, new Uint8Array(files[i].arrayBuffer));
+    for (let i = 0; i < fileArrayBuffers.length; i++) {
+      fileList.AddFile(
+        fileArrayBuffers[i].name,
+        new Uint8Array(fileArrayBuffers[i].arrayBuffer)
+      );
     }
 
     // Convert files to GlTf 2
