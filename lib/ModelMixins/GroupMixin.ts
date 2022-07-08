@@ -381,7 +381,8 @@ function setItemPropertyTraits(
 export function applyItemProperties(
   model: HasTrait<ItemPropertiesTraits, "itemProperties"> &
     HasTrait<ItemPropertiesTraits, "itemPropertiesByType"> &
-    HasTrait<ItemPropertiesTraits, "itemPropertiesByIds">,
+    HasTrait<ItemPropertiesTraits, "itemPropertiesByIds"> &
+    BaseModel,
   target: BaseModel
 ) {
   runInAction(() => {
@@ -412,21 +413,21 @@ export function applyItemProperties(
       target.setTrait(
         CommonStrata.underride,
         "itemProperties",
-        model.itemProperties
+        model.traits.itemProperties.toJson(model.itemProperties)
       );
 
     if (hasTraits(target, ItemPropertiesTraits, "itemPropertiesByType"))
       target.setTrait(
         CommonStrata.underride,
         "itemPropertiesByType",
-        model.itemPropertiesByType
+        model.traits.itemPropertiesByType.toJson(model.itemPropertiesByType)
       );
 
     if (hasTraits(target, ItemPropertiesTraits, "itemPropertiesByIds"))
       target.setTrait(
         CommonStrata.underride,
         "itemPropertiesByIds",
-        model.itemPropertiesByIds
+        model.traits.itemPropertiesByIds.toJson(model.itemPropertiesByIds)
       );
   });
 }

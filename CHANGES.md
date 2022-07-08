@@ -1,11 +1,21 @@
 Change Log
 ==========
 
-#### next release (8.2.8)
+#### next release (8.2.9)
 
+* Pin `html-to-react` to `1.4.5` due to ESM module in dependency (`parse5`) breaking webpack
+* Add step to `"Deploy TerriaMap"` action to save `yarn.lock` after `sync-dependencies` (for debug purposes)
+* [The next improvement]
+
+#### 8.2.8 - 2022-07-04
+
+* Improve Split/compare error handling
+* Fix `itemProperties` split bug
+* Table styling is disabled if `MultiPoint` are in GeoJSON
+* Add `GeoJsonTraits.useOutlineColorForLineFeatures` - If enabled, `TableOutlineStyleTraits` will be used to color Line Features, otherwise `TableColorStyleTraits` will be used.
+* Fix feature highliting for `Line`, `MultiLine` and `MultiPoint`
 * Await Internationalisation initialisation in `Terria.start`
 * `UserDrawing.messageHeader` can now also be `() => string`
-* [The next improvement]
 
 #### 8.2.7 - 2022-06-30
 
@@ -31,7 +41,6 @@ Change Log
 * Added a required parameter i18n to `applyTranslationIfExists` to avoid having stale translated strings when the language changes.
 * Fix `StoryBuilder` remove all text color
 * Fix `FeatureInfoPanel` `Loader` color
-* [The next improvement]
 
 #### 8.2.6 - 2022-06-17
 
@@ -45,7 +54,6 @@ Change Log
 * Made `order` optional for `ICompositeBarItem`.
 * Fix `includes` path for `url-loader` rule so that it doesn't incorrectly match package names with `terriajs` as prefix.
 * Add help button for bookmarking sharelinks to SharePanel (if that help item exists in config)
-* [The next improvement]
 
 #### 8.2.5 - 2022-06-07
 
