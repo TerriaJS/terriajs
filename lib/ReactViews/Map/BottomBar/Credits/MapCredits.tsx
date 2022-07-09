@@ -42,7 +42,7 @@ export const MapCredits: FC<IMapCreditsProps> = observer(
           }
         }
       );
-    }, [currentViewer]);
+    }, [currentViewer, hideDataAttribution]);
 
     if (currentViewer.type === "none") {
       return <CreditsContainer />;

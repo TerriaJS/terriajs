@@ -17,6 +17,14 @@ import JsonValue, {
 } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
 
+function vectorToJson(vector: Readonly<Cartesian3>) {
+  return {
+    x: vector.x,
+    y: vector.y,
+    z: vector.z
+  };
+}
+
 /**
  * Holds a camera's view parameters, expressed as a rectangular extent and/or as a camera position, direction,
  * and up vector.
@@ -79,14 +87,6 @@ export default class CameraView {
     };
 
     if (this.position && this.direction && this.up) {
-      function vectorToJson(vector: Readonly<Cartesian3>) {
-        return {
-          x: vector.x,
-          y: vector.y,
-          z: vector.z
-        };
-      }
-
       result.position = vectorToJson(this.position);
       result.direction = vectorToJson(this.direction);
       result.up = vectorToJson(this.up);

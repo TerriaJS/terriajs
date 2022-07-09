@@ -32,7 +32,7 @@ type Props = {
     forceSetState: (bool?: boolean) => void;
   }) => React.ReactNode;
   /** Styles to apply to the  actual tooltip */
-  innerElementStyles?: Object;
+  innerElementStyles?: Record<string, unknown>;
   /** The tooltip content itself, as higher-order function that provides a function to dismiss the tooltip */
   children: (applyAriaId: boolean, dismiss: () => void) => React.ReactNode;
 };
@@ -188,7 +188,6 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
           css={`
             visibility: hidden;
             left: 50%;
-
             ${orientationAbove && `bottom: calc(100% + 10px);`}
             ${orientationBelow && `top: calc(100% + 10px);`}
           `}

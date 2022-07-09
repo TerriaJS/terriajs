@@ -1313,7 +1313,32 @@ export default class Cesium extends GlobeOrMap {
       ? this.pickImageryLayerFeatures(pickPositionCartographic, providerCoords)
       : [];
 
+<<<<<<< HEAD
     const pickedFeatures = this._buildPickedFeatures(
+=======
+    if (this.terria.allowFeatureInfoRequests) {
+      for (let i = this.scene.imageryLayers.length - 1; i >= 0; i--) {
+        const imageryLayer = this.scene.imageryLayers.get(i);
+        const imageryProvider = imageryLayer.imageryProvider;
+
+        if (hasUrl(imageryProvider) && providerCoords[imageryProvider.url]) {
+          const coords = providerCoords[imageryProvider.url];
+          promises.push(
+            imageryProvider.pickFeatures(
+              coords.x,
+              coords.y,
+              coords.level,
+              pickPositionCartographic.longitude,
+              pickPositionCartographic.latitude
+            )
+          );
+          imageryLayers.push(imageryLayer);
+        }
+      }
+    }
+
+    const result = this._buildPickedFeatures(
+>>>>>>> 4408e4aa1 (fix some list issues)
       providerCoords,
       pickPosition,
       existingFeatures,
@@ -1829,6 +1854,7 @@ function flyToBoundingSpherePromise(
   });
 }
 
+<<<<<<< HEAD
 function syncCesiumCreditsToAttributions(
   creditsElements: CreditDisplayElement[],
   dataAttributionsObservable: IObservableArray<string>
@@ -1870,4 +1896,8 @@ function syncCesiumCreditsToAttributions(
       );
     }
   }
+=======
+function hasUrl(o: any): o is { url: string } {
+  return typeof o?.url === "string";
+>>>>>>> 4408e4aa1 (fix some list issues)
 }
