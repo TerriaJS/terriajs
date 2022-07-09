@@ -33,7 +33,7 @@ export default class CatalogFunctionJobTraits extends mixTraits(
     description: "Downloaded results.",
     type: "boolean"
   })
-  downloadedResults: boolean = false;
+  downloadedResults = false;
 
   @primitiveTrait({
     name: "Refresh enabled",
@@ -41,7 +41,7 @@ export default class CatalogFunctionJobTraits extends mixTraits(
       "Toggle for enabling auto refresh. (This overrides Trait in AutoRefreshingTraits)",
     type: "boolean"
   })
-  refreshEnabled: boolean = false;
+  refreshEnabled = false;
 
   @primitiveTrait({
     name: "Refresh interval",

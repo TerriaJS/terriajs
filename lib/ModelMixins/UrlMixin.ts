@@ -30,7 +30,7 @@ function UrlMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 }
 
 namespace UrlMixin {
-  export interface Instance extends InstanceType<ReturnType<typeof UrlMixin>> {}
+  export type Instance = InstanceType<ReturnType<typeof UrlMixin>>;
   export function isMixedInto(model: any): model is Instance {
     return model && model.hasUrlMixin;
   }

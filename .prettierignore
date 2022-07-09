@@ -40,3 +40,10 @@ yarn.lock
 
 # Ignore some files
 doc/acknowledgements/attributions.md
+!wwwroot
+!wwwroot/test
+!wwwroot/test/Magda
+!wwwroot/test/Magda/shareKeys/**/
+!wwwroot/test/Magda/shareKeys/**/*.json
+!wwwroot/languages/**/*.json
+!wwwroot/languages/**/

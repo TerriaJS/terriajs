@@ -4,5 +4,5 @@ interface CssExports {
   'bottom-dock': string;
   'bottomDock': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

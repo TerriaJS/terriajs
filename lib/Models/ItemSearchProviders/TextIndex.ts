@@ -32,7 +32,7 @@ export default class TextIndex implements IndexBase<TextSearchQuery> {
    * @param indexRootUrl The URL of the index root directory.
    * @param _valueHint Ignored for TextIndex.
    */
-  async load(indexRootUrl: string, _valueHint: TextSearchQuery): Promise<void> {
+  async load(indexRootUrl: string): Promise<void> {
     if (this.miniSearchIndex) return;
     const promise = loadText(joinUrl(indexRootUrl, this.url))
       .then((text: string) => JSON.parse(text))
@@ -43,7 +43,9 @@ export default class TextIndex implements IndexBase<TextSearchQuery> {
         )
       );
     this.miniSearchIndex = promise;
-    return promise.then(() => {});
+    return promise.then(() => {
+      // no-op
+    });
   }
 
   /**

@@ -158,7 +158,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
    * - `parsedJsonStyle`
    */
   get paintRules(): PaintRule[] {
-    let rules: PaintRule[] = [];
+    const rules: PaintRule[] = [];
 
     if (this.layer) {
       if (this.fillColor) {

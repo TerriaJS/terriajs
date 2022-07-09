@@ -5,5 +5,5 @@ interface CssExports {
   'messageItem': string;
   'sections': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

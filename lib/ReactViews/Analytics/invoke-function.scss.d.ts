@@ -8,5 +8,5 @@ interface CssExports {
   'invoke-function': string;
   'invokeFunction': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

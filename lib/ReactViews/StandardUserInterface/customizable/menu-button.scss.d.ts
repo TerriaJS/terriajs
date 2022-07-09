@@ -4,5 +4,5 @@ interface CssExports {
   'btn--about-link': string;
   'btnAboutLink': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

@@ -12,5 +12,5 @@ interface CssExports {
   'modalOverlay': string;
   'modalWrapper': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

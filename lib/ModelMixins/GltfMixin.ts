@@ -212,8 +212,7 @@ function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 }
 
 namespace GltfMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof GltfMixin>> {}
+  export type Instance = InstanceType<ReturnType<typeof GltfMixin>>;
   export function isMixedInto(model: any): model is Instance {
     return model && model.hasGltfMixin;
   }

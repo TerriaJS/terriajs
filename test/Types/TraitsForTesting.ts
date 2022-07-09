@@ -24,7 +24,7 @@ export class NestedTraits extends ModelTraits {
     description: "Description",
     type: "number"
   })
-  withDefault: number = 10;
+  withDefault = 10;
 
   @primitiveTrait({
     name: "WithoutDefault",
@@ -61,7 +61,7 @@ export default class TraitsForTesting extends ModelTraits {
     description: "Description",
     type: "number"
   })
-  withDefault: number = 10;
+  withDefault = 10;
 
   @primitiveTrait({
     name: "WithoutDefault",

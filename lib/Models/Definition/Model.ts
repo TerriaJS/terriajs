@@ -42,7 +42,9 @@ export abstract class BaseModel {
     readonly sourceReference: BaseModel | undefined
   ) {}
 
-  dispose() {}
+  dispose() {
+    // no-op
+  }
 
   abstract duplicateModel(
     newId: ModelId,

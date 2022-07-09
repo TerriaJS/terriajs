@@ -112,11 +112,7 @@ export default class LeafletDataSourceDisplay {
    * By default, this function uses all standard visualizers.
    *
    */
-  static defaultVisualizersCallback(
-    _leafletScene: LeafletScene,
-    _entityCluster: EntityCluster,
-    _dataSource: DataSource
-  ) {
+  static defaultVisualizersCallback() {
     return [];
   }
 

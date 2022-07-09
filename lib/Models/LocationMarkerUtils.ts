@@ -1,11 +1,11 @@
 import i18next from "i18next";
-import markerIcon from "./markerIcon";
-import prettifyCoordinates from "../Map/Vector/prettifyCoordinates";
-import CommonStrata from "./Definition/CommonStrata";
-import CzmlCatalogItem from "./Catalog/CatalogItems/CzmlCatalogItem";
-import Terria from "./Terria";
-import LatLonHeight from "../Core/LatLonHeight";
 import { toJS } from "mobx";
+import LatLonHeight from "../Core/LatLonHeight";
+import prettifyCoordinates from "../Map/Vector/prettifyCoordinates";
+import CzmlCatalogItem from "./Catalog/CatalogItems/CzmlCatalogItem";
+import CommonStrata from "./Definition/CommonStrata";
+import markerIcon from "./markerIcon";
+import Terria from "./Terria";
 
 export const LOCATION_MARKER_DATA_SOURCE_NAME =
   "TerriaJS Location Marker Points";

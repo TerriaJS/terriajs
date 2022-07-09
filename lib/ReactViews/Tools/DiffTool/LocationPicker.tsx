@@ -37,7 +37,7 @@ export default class LocationPicker extends React.Component<PropsType> {
     const { terria, location, onPicking, onPicked } = this.props;
     this.pickMode = new MapInteractionMode({
       message: "",
-      messageAsNode: <div></div>,
+      messageAsNode: <div />,
       uiMode: UIMode.Difference
     });
     addInteractionModeToMap(terria, this.pickMode);

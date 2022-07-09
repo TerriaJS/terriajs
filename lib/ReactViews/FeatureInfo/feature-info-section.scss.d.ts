@@ -9,5 +9,5 @@ interface CssExports {
   'timeSeriesChart': string;
   'title': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

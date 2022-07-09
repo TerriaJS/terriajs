@@ -31,7 +31,7 @@ interface Props {
   closeMenu: () => void;
   parentRef: any;
 
-  //props for react-anything-sortable
+  // props for react-anything-sortable
   className: any;
   style: any;
   onMouseDown(): void;

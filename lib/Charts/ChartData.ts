@@ -1,4 +1,4 @@
-import { min as d3ArrayMin, max as d3ArrayMax } from "d3-array";
+import { max as d3ArrayMax, min as d3ArrayMin } from "d3-array";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 
 export interface ChartPoint {

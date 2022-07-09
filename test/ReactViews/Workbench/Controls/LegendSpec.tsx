@@ -1,4 +1,4 @@
-const findAllWithType = require("react-shallow-testutils").findAllWithType;
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 const findAllWithClass = require("react-shallow-testutils").findAllWithClass;
 
 import React from "react";

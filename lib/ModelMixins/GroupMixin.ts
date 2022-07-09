@@ -425,8 +425,7 @@ function GroupMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 }
 
 namespace GroupMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof GroupMixin>> {}
+  export type Instance = InstanceType<ReturnType<typeof GroupMixin>>;
   export function isMixedInto(model: any): model is Instance {
     return (
       model &&

@@ -7,7 +7,7 @@ export default class OpacityTraits extends ModelTraits {
     name: "Opacity",
     description: "The opacity of the item."
   })
-  opacity: number = 0.8;
+  opacity = 0.8;
 
   @primitiveTrait({
     type: "boolean",
@@ -15,5 +15,5 @@ export default class OpacityTraits extends ModelTraits {
     description:
       "When true, the user will be unable to change the opacity of the item"
   })
-  disableOpacityControl: boolean = false;
+  disableOpacityControl = false;
 }

@@ -38,7 +38,7 @@ export default function prettifyCoordinates(
   const prettyLongitude =
     Math.abs(longitude).toFixed(digits) + "°" + (longitude < 0.0 ? "W" : "E");
 
-  let prettyElevation = undefined;
+  let prettyElevation;
   if (height !== undefined) {
     prettyElevation =
       Math.round(height) +

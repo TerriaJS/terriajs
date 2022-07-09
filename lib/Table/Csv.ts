@@ -17,8 +17,8 @@ export default class Csv {
    */
   static parseString(
     csv: string,
-    columnMajor: boolean = false,
-    filterOutComments: boolean = false,
+    columnMajor = false,
+    filterOutComments = false,
     options: papaparse.ParseConfig = {}
   ): Promise<string[][]> {
     return new Promise<string[][]>((resolve, reject) => {
@@ -37,8 +37,8 @@ export default class Csv {
    */
   static parseFile(
     file: File,
-    columnMajor: boolean = false,
-    filterOutComments: boolean = false,
+    columnMajor = false,
+    filterOutComments = false,
     options: papaparse.ParseConfig = {}
   ): Promise<string[][]> {
     return new Promise<string[][]>((resolve, reject) => {
@@ -57,8 +57,8 @@ export default class Csv {
    */
   static parseUrl(
     url: string,
-    columnMajor: boolean = false,
-    filterOutComments: boolean = false,
+    columnMajor = false,
+    filterOutComments = false,
     options: papaparse.ParseConfig = {}
   ): Promise<string[][]> {
     return loadWithXhr({ url }).then((csv: any) => {
@@ -162,7 +162,7 @@ function getParseOptionsColumnMajor(
 }
 
 function cleanColumnNames(columnNames: string[]) {
-  for (var i = 0; i < columnNames.length; ++i) {
+  for (let i = 0; i < columnNames.length; ++i) {
     if (typeof columnNames[i] === "string") {
       columnNames[i] = columnNames[i].trim();
     }

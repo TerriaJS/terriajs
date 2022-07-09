@@ -34,7 +34,7 @@ export class WebCoverageServiceParameterTraits extends ModelTraits {
     name: "Output format",
     description: "File format of output (defaults to GeoTIFF)."
   })
-  outputFormat: string = "image/geotiff";
+  outputFormat = "image/geotiff";
 
   @objectArrayTrait({
     type: KeyValueTraits,

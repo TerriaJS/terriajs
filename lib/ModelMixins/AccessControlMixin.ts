@@ -91,8 +91,7 @@ function AccessControlMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 }
 
 namespace AccessControlMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof AccessControlMixin>> {}
+  export type Instance = InstanceType<ReturnType<typeof AccessControlMixin>>;
 
   export function isMixedInto(model: any): model is Instance {
     return model && model.hasAccessControlMixin;

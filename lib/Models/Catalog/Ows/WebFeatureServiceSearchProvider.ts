@@ -45,7 +45,7 @@ export default class WebFeatureServiceSearchProvider extends SearchProvider {
     | ((feature: any, searchText: string) => number)
     | undefined;
   cancelRequest?: () => void;
-  private _waitingForResults: boolean = false;
+  private _waitingForResults = false;
 
   constructor(options: WebFeatureServiceSearchProviderOptions) {
     super();
@@ -116,7 +116,7 @@ export default class WebFeatureServiceSearchProvider extends SearchProvider {
 
     return this.getXml()
       .then((xml: any) => {
-        let json: any = xml2json(xml);
+        const json: any = xml2json(xml);
         let features: any[];
         if (json === undefined) {
           results.message = i18next.t("viewModels.searchErrorOccurred");
@@ -207,8 +207,8 @@ function createZoomToFunction(
 ) {
   // Server does not return information of a bounding box, just a location.
   // bboxSize is used to expand a point
-  var bboxSize = 0.2;
-  var rectangle = zoomRectangleFromPoint(
+  const bboxSize = 0.2;
+  const rectangle = zoomRectangleFromPoint(
     location.latitude,
     location.longitude,
     bboxSize

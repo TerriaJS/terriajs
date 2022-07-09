@@ -29,7 +29,7 @@ export default class TimeVaryingTraits extends mixTraits(CatalogMemberTraits) {
       " This value is ignored if `Current Time` is specified.",
     type: "string"
   })
-  initialTimeSource: string = "now";
+  initialTimeSource = "now";
 
   @primitiveTrait({
     name: "Start Time",
@@ -61,7 +61,7 @@ export default class TimeVaryingTraits extends mixTraits(CatalogMemberTraits) {
       "True if time is currently paused for this dataset, or false if it is progressing.",
     type: "boolean"
   })
-  isPaused: boolean = true;
+  isPaused = true;
 
   @primitiveTrait({
     name: "Date Format",

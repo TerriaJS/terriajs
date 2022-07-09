@@ -221,7 +221,7 @@ class MappableTraits extends mixTraits(AttributionTraits) {
     description:
       "Disables the preview on the Add Data panel. This is useful when the preview will be very slow to load."
   })
-  disablePreview: boolean = false;
+  disablePreview = false;
 
   @primitiveTrait({
     type: "boolean",
@@ -229,7 +229,7 @@ class MappableTraits extends mixTraits(AttributionTraits) {
     description:
       "Disables the zoom to (aka 'Ideal Zoom') button in the workbench."
   })
-  disableZoomTo: boolean = false;
+  disableZoomTo = false;
 
   @primitiveTrait({
     type: "boolean",
@@ -237,7 +237,7 @@ class MappableTraits extends mixTraits(AttributionTraits) {
     description:
       "Zoom to dataset when added to workbench. Doesn't work if `disableZoomTo` is true."
   })
-  zoomOnAddToWorkbench: boolean = false;
+  zoomOnAddToWorkbench = false;
 
   @primitiveTrait({
     type: "boolean",
@@ -245,7 +245,7 @@ class MappableTraits extends mixTraits(AttributionTraits) {
     description:
       "Show or hide a workbench item. When show is false, a mappable item is removed from the map and a chartable item is removed from the chart panel."
   })
-  show: boolean = true;
+  show = true;
 
   @objectTrait({
     name: "Initial message",

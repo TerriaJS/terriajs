@@ -19,5 +19,5 @@ interface CssExports {
   'root': string;
   'trashGroup': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

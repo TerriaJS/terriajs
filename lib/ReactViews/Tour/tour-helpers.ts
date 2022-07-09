@@ -1,11 +1,10 @@
 // helpers for the app Tour in general
-import { TourPoint } from "../../ReactViewModels/defaultTourPoints";
 import isDefined from "../../Core/isDefined";
-
 import {
   RelativePosition,
-  TOUR_WIDTH
+  TourPoint
 } from "../../ReactViewModels/defaultTourPoints";
+
 export {
   RelativePosition,
   TOUR_WIDTH

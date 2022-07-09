@@ -2,7 +2,6 @@ import { computed, makeObservable } from "mobx";
 import isDefined from "../Core/isDefined";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
-import { BaseModel } from "../Models/Definition/Model";
 import StratumFromTraits from "../Models/Definition/StratumFromTraits";
 import LegendTraits, {
   LegendItemTraits
@@ -18,7 +17,7 @@ export class MergedStyleMapLegend extends LoadableStratum(LegendTraits) {
     makeObservable(this);
   }
 
-  duplicateLoadableStratum(newModel: BaseModel): this {
+  duplicateLoadableStratum(): this {
     return new MergedStyleMapLegend(this.legends) as this;
   }
 
@@ -28,7 +27,7 @@ export class MergedStyleMapLegend extends LoadableStratum(LegendTraits) {
 
   @computed
   get items(): StratumFromTraits<LegendItemTraits>[] {
-    let items: StratumFromTraits<LegendItemTraits>[] = [];
+    const items: StratumFromTraits<LegendItemTraits>[] = [];
 
     // Merge all Legend items by title
     this.legends.forEach((legend) => {

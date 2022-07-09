@@ -1,6 +1,6 @@
-import { BaseModel } from "../Models/Definition/Model";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
+import { BaseModel } from "../Models/Definition/Model";
 
 export default function getDereferencedIfExists(
   item: BaseModel | GroupMixin.Instance

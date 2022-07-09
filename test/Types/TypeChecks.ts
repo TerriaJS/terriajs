@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Equals,
   IsWritableArray,
@@ -7,8 +8,12 @@ import {
 } from "../../lib/Core/TypeConditionals";
 
 // Based on the approach described here: https://stackoverflow.com/a/49579497
-export function expectTrue<T extends true>() {}
-export function expectFalse<T extends false>() {}
+export function expectTrue<T extends true>() {
+  // no-op
+}
+export function expectFalse<T extends false>() {
+  // no-op
+}
 
 expectTrue<Equals<number, number>>();
 expectTrue<Equals<number | undefined, number | undefined>>();

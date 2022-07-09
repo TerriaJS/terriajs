@@ -15,5 +15,5 @@ export default class AutoRefreshingTraits extends mixTraits(MappableTraits) {
     description: "Toggle for enabling auto refresh.",
     type: "boolean"
   })
-  refreshEnabled: boolean = true;
+  refreshEnabled = true;
 }

@@ -5,5 +5,5 @@ interface CssExports {
   'dataCatalog': string;
   'label': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

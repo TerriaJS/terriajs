@@ -18,5 +18,5 @@ interface CssExports {
   'uiInner': string;
   'uiRoot': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

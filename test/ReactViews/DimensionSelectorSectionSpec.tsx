@@ -20,11 +20,15 @@ import SelectableDimensionSection from "../../lib/ReactViews/Workbench/Controls/
 import Checkbox from "../../lib/Styled/Checkbox";
 import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 
+const setDimensionValueMock = () => {
+  // no-op
+};
 export default class TestCatalogItem
   extends CatalogMemberMixin(CreateModel(CatalogMemberTraits))
   implements SelectableDimensions
 {
   static readonly type = "stub";
+
   get type() {
     return "test";
   }
@@ -43,7 +47,7 @@ export default class TestCatalogItem
       ],
       selectedId: "option-2",
       allowUndefined: true,
-      setDimensionValue: (stratumId: string, newStyle: string) => {}
+      setDimensionValue: setDimensionValueMock
     },
     {
       id: "some-id-2",
@@ -55,7 +59,7 @@ export default class TestCatalogItem
       ],
       selectedId: "option-3",
       allowUndefined: false,
-      setDimensionValue: (stratumId: string, newStyle: string) => {}
+      setDimensionValue: setDimensionValueMock
     },
     {
       id: "some-id-3",
@@ -67,7 +71,7 @@ export default class TestCatalogItem
       ],
       selectedId: "option-8",
       allowUndefined: false,
-      setDimensionValue: (stratumId: string, newStyle: string) => {},
+      setDimensionValue: setDimensionValueMock,
       disable: true
     },
     {
@@ -79,7 +83,7 @@ export default class TestCatalogItem
       ],
       selectedId: "false",
       type: "checkbox",
-      setDimensionValue: (stratumId, newStyle) => {}
+      setDimensionValue: setDimensionValueMock
     }
   ];
 }
@@ -239,7 +243,7 @@ describe("DimensionSelectorSection", function () {
               name: "false"
             }
           ],
-          setDimensionValue: () => {},
+          setDimensionValue: setDimensionValueMock,
           selectableDimensions: [
             {
               id: "checkbox-1",
@@ -250,7 +254,7 @@ describe("DimensionSelectorSection", function () {
                 { id: "true", name: "When checked" },
                 { id: "false", name: "When unchecked" }
               ],
-              setDimensionValue: () => {}
+              setDimensionValue: setDimensionValueMock
             },
             {
               id: "select-1",
@@ -261,7 +265,7 @@ describe("DimensionSelectorSection", function () {
                 { id: "option-1", name: "Option 1" },
                 { id: "option-2", name: "Option 2" }
               ],
-              setDimensionValue: () => {}
+              setDimensionValue: setDimensionValueMock
             },
             {
               disable: true,
@@ -273,7 +277,7 @@ describe("DimensionSelectorSection", function () {
                 { id: "option-3", name: "Option 3" },
                 { id: "option-4", name: "Option 4" }
               ],
-              setDimensionValue: () => {}
+              setDimensionValue: setDimensionValueMock
             }
           ]
         }
@@ -302,7 +306,7 @@ describe("DimensionSelectorSection", function () {
                 { id: "true", name: "When checked" },
                 { id: "false", name: "When unchecked" }
               ],
-              setDimensionValue: () => {}
+              setDimensionValue: setDimensionValueMock
             },
             {
               id: "select-1",
@@ -313,7 +317,7 @@ describe("DimensionSelectorSection", function () {
                 { id: "option-1", name: "Option 1" },
                 { id: "option-2", name: "Option 2" }
               ],
-              setDimensionValue: () => {}
+              setDimensionValue: setDimensionValueMock
             },
             {
               disable: true,
@@ -325,7 +329,7 @@ describe("DimensionSelectorSection", function () {
                 { id: "option-3", name: "Option 3" },
                 { id: "option-4", name: "Option 4" }
               ],
-              setDimensionValue: () => {}
+              setDimensionValue: setDimensionValueMock
             }
           ]
         }

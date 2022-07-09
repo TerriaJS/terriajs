@@ -4,5 +4,5 @@ interface CssExports {
   'no-results': string;
   'noResults': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

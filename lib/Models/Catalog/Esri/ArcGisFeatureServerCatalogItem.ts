@@ -84,7 +84,7 @@ export type SupportedLineStyle =
   | "esriSLSNull";
 
 // See actual Symbol at https://developers.arcgis.com/web-map-specification/objects/symbol/
-interface Symbol {
+interface ArcgisSymbol {
   contentType: string;
   color?: number[];
   outline?: Outline;
@@ -119,7 +119,7 @@ interface ClassBreakInfo extends SimpleRenderer {
 interface ClassBreaksRenderer extends Renderer {
   field: string;
   classBreakInfos: ClassBreakInfo[];
-  defaultSymbol: Symbol | null;
+  defaultSymbol: ArcgisSymbol | null;
 }
 
 interface UniqueValueInfo extends SimpleRenderer {
@@ -135,12 +135,12 @@ interface UniqueValueRenderer extends Renderer {
   field3?: string;
   fieldDelimiter?: string;
   uniqueValueInfos: UniqueValueInfo[];
-  defaultSymbol: Symbol | null;
+  defaultSymbol: ArcgisSymbol | null;
 }
 
 interface SimpleRenderer extends Renderer {
   label?: string;
-  symbol: Symbol | null;
+  symbol: ArcgisSymbol | null;
 }
 
 interface DrawingInfo {
@@ -514,7 +514,7 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
     // until we run out of features or hit the limit
     const featuresPerRequest = this.featuresPerRequest;
     const maxFeatures = this.maxFeatures;
-    let combinedEsriLayerJson = await getEsriLayerJson(0);
+    const combinedEsriLayerJson = await getEsriLayerJson(0);
 
     const mapObjectIds = (features: any) =>
       features.map(
@@ -663,7 +663,7 @@ function cleanUrl(url: string): string {
 }
 
 function esriSymbolToTableStyle(
-  symbol?: Symbol | null,
+  symbol?: ArcgisSymbol | null,
   label?: string | undefined
 ) {
   if (!symbol) return {};

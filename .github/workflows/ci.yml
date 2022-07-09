@@ -27,8 +27,11 @@ jobs:
       - name: Check formatting with prettier
         run: yarn prettier-check
 
+      - name: Check linting
+        run: yarn lint
+
       - name: Build TerriaJS tests
-        run: yarn gulp lint release -- --continue
+        run: yarn gulp release -- --continue
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 

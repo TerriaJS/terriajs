@@ -2,8 +2,8 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 
 export function scaleDenominatorToLevel(
   scaleDenominator: number | undefined,
-  min: boolean = true,
-  ows: boolean = true
+  min = true,
+  ows = true
 ): number | undefined {
   if (scaleDenominator == undefined || scaleDenominator <= 0.0) {
     return undefined;

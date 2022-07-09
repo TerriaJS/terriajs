@@ -1039,7 +1039,7 @@ function removeSplitItem(item: DiffableItem) {
 function doesFeatureBelongToItem(
   feature: TerriaFeature,
   item: DiffableItem
-): Boolean {
+): boolean {
   if (!MappableMixin.isMixedInto(item)) return false;
   const imageryProvider = feature.imageryLayer?.imageryProvider;
   if (imageryProvider === undefined) return false;

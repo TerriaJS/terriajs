@@ -23,9 +23,7 @@ export default class SplitItemReference extends ReferenceMixin(
     return SplitItemReference.type;
   }
 
-  protected async forceLoadReference(
-    previousTarget: BaseModel | undefined
-  ): Promise<BaseModel | undefined> {
+  protected async forceLoadReference(): Promise<BaseModel | undefined> {
     if (this.splitSourceItemId === undefined || this.uniqueId === undefined) {
       throw new TerriaError({
         title: { key: "splitterTool.errorTitle" },

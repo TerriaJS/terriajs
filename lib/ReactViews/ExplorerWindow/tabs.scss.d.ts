@@ -15,5 +15,5 @@ interface CssExports {
   'tabPanel': string;
   'tabs': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

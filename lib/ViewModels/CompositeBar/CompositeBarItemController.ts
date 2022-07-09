@@ -33,7 +33,7 @@ export abstract class CompositeBarItemController
    * @private
    */
   @observable
-  private _disabled: boolean = false;
+  private _disabled = false;
 
   /**
    * Gets the {@link this._disabled}
@@ -55,7 +55,7 @@ export abstract class CompositeBarItemController
    * @private
    */
   @observable
-  private _collapsed: boolean = false;
+  private _collapsed = false;
 
   /**
    * Gets the {@this._collapsed}
@@ -76,7 +76,7 @@ export abstract class CompositeBarItemController
    * @protected
    */
   @observable
-  protected _active: boolean = false;
+  protected _active = false;
 
   /**
    * Gets the {@link this._active}
@@ -90,7 +90,7 @@ export abstract class CompositeBarItemController
    * @private
    */
   @observable
-  private _pinned: boolean = false;
+  private _pinned = false;
 
   /**
    * Gets the {@link this._pinned}
@@ -111,7 +111,7 @@ export abstract class CompositeBarItemController
    * @private
    */
   @observable
-  private _visible: boolean = true;
+  private _visible = true;
 
   /**
    * Gets the {@link this._visible}

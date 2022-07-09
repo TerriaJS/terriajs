@@ -6,5 +6,5 @@ interface CssExports {
   'searchData': string;
   'searchField': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

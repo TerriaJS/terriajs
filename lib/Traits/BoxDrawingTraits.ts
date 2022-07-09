@@ -1,8 +1,8 @@
-import primitiveTrait from "./Decorators/primitiveTrait";
 import objectTrait from "./Decorators/objectTrait";
+import primitiveTrait from "./Decorators/primitiveTrait";
 import ModelTraits from "./ModelTraits";
-import LatLonHeightTraits from "./TraitsClasses/LatLonHeightTraits";
 import HeadingPitchRollTraits from "./TraitsClasses/HeadingPitchRollTraits";
+import LatLonHeightTraits from "./TraitsClasses/LatLonHeightTraits";
 
 export class CornerPointsStyleTraits extends ModelTraits {
   @primitiveTrait({

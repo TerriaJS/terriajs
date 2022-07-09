@@ -17,5 +17,5 @@ interface CssExports {
   'urlInputBtn': string;
   'urlInputTextBox': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

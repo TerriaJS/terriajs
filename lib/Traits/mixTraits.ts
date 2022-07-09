@@ -1,6 +1,6 @@
-import TraitsConstructor from "./TraitsConstructor";
-import ModelTraits from "./ModelTraits";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import ModelTraits from "./ModelTraits";
+import TraitsConstructor from "./TraitsConstructor";
 
 /**
  * Mixes together traits classes to produce a new traits class.

@@ -26,9 +26,7 @@ export default class CatalogIndexReference extends ReferenceMixin(
     return CatalogIndexReference.type;
   }
 
-  protected async forceLoadReference(
-    previousTarget: BaseModel | undefined
-  ): Promise<BaseModel | undefined> {
+  protected async forceLoadReference(): Promise<BaseModel | undefined> {
     if (this.uniqueId === undefined) {
       return;
     }

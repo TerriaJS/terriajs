@@ -642,9 +642,9 @@ export default class TableStyle {
     if (colorColumn?.traits?.format)
       return colorColumn?.traits?.format as Intl.NumberFormatOptions;
 
-    let min =
+    const min =
       this.tableColorMap.minimumValue ?? colorColumn?.valuesAsNumbers.minimum;
-    let max =
+    const max =
       this.tableColorMap.maximumValue ?? colorColumn?.valuesAsNumbers.maximum;
 
     if (
@@ -669,7 +669,7 @@ export default class TableStyle {
       // So when x >= 20 - we will not show any fraction digits
 
       // Clamp values between 0 and 5
-      let fractionDigits = Math.max(
+      const fractionDigits = Math.max(
         0,
         Math.min(5, Math.ceil(Math.log10(20 / Math.abs(max - min))))
       );

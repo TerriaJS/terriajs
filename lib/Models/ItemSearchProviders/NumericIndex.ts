@@ -38,10 +38,7 @@ export default class NumericIndex implements IndexBase<NumericSearchQuery> {
    * @param indexRootUrl   The URL of the index root directory
    * @param _valueHint     Ignored for NumericIndex.
    */
-  async load(
-    indexRootUrl: string,
-    _valueHint: NumericSearchQuery
-  ): Promise<void> {
+  async load(indexRootUrl: string): Promise<void> {
     if (this.idValuePairs) return;
     const indexUrl = joinUrl(indexRootUrl, this.url);
     const promise = loadCsv(indexUrl, {
@@ -49,7 +46,9 @@ export default class NumericIndex implements IndexBase<NumericSearchQuery> {
       header: true
     });
     this.idValuePairs = promise;
-    return promise.then(() => {});
+    return promise.then(() => {
+      // no-op
+    });
   }
 
   /**

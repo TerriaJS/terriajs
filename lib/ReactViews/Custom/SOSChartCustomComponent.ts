@@ -1,11 +1,11 @@
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import SensorObservationServiceCatalogItem from "../../Models/Catalog/Ows/SensorObservationServiceCatalogItem";
 import CommonStrata from "../../Models/Definition/CommonStrata";
-import { BaseModel } from "../../Models/Definition/Model";
 import ChartCustomComponent, {
   ChartCustomComponentAttributes
 } from "./ChartCustomComponent";
 import { ProcessNodeContext } from "./CustomComponent";
+
 interface SOSChartCustomComponentAttributes
   extends ChartCustomComponentAttributes {
   name?: string;
@@ -16,15 +16,14 @@ export default class SOSChartCustomComponent extends ChartCustomComponent<Sensor
   }
 
   get attributes() {
-    let attributes = super.attributes;
+    const attributes = super.attributes;
     attributes.push("name");
     return attributes;
   }
 
   protected constructCatalogItem(
     id: string | undefined,
-    context: ProcessNodeContext,
-    sourceReference: BaseModel | undefined
+    context: ProcessNodeContext
   ) {
     return context.catalogItem?.duplicateModel(createGuid()) as
       | SensorObservationServiceCatalogItem
@@ -33,8 +32,7 @@ export default class SOSChartCustomComponent extends ChartCustomComponent<Sensor
 
   constructShareableCatalogItem = async (
     id: string | undefined,
-    context: ProcessNodeContext,
-    sourceReference: BaseModel | undefined
+    context: ProcessNodeContext
   ) =>
     this.createItemReference(
       context.catalogItem as SensorObservationServiceCatalogItem

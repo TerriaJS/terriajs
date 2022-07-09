@@ -94,9 +94,9 @@ describe("ArcGisFeatureServerCatalogGroup", function () {
       expect(group.members).toBeDefined();
       expect(group.members.length).toBe(3);
 
-      let member0 = <ArcGisFeatureServerCatalogItem>group.memberModels[0];
-      let member1 = <ArcGisFeatureServerCatalogItem>group.memberModels[1];
-      let member2 = <ArcGisFeatureServerCatalogItem>group.memberModels[2];
+      const member0 = <ArcGisFeatureServerCatalogItem>group.memberModels[0];
+      const member1 = <ArcGisFeatureServerCatalogItem>group.memberModels[1];
+      const member2 = <ArcGisFeatureServerCatalogItem>group.memberModels[2];
 
       expect(member0.name).toBe("Ambulances");
       expect(member0.url).toBe(featureServerUrl + "/0");

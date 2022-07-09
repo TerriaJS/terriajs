@@ -34,7 +34,7 @@ export default class PickedFeatures {
   /**
    * Gets or sets a value indicating whether the list of picked features is still loading.
    */
-  @observable isLoading: boolean = true;
+  @observable isLoading = true;
 
   /**
    * Gets or sets the ground position that was picked, if any.

@@ -53,7 +53,9 @@ export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
   ): ItemSelectionDisposer {
     const tileset = this.tileset;
     if (tileset === undefined || results.length === 0) {
-      return () => {}; // empty disposer
+      return () => {
+        // empty disposer
+      };
     }
 
     const resultIds = new Set(results.map((r) => r.id));
@@ -121,7 +123,9 @@ export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
   ): ItemSelectionDisposer {
     const tileset = this.tileset;
     if (tileset === undefined || results.length == 0) {
-      return () => {}; // empty disposer
+      return () => {
+        // empty disposer
+      };
     }
 
     const resultIds = new Set(results.map((r) => r.id));
@@ -261,7 +265,10 @@ const openInfoPanelForFeature = action(
       new Cartesian2(),
       cesium3DTileFeature
     );
-    if (feature === undefined) return () => {}; // empty disposer
+    if (feature === undefined)
+      return () => {
+        // empty disposer
+      };
 
     const terria = item.terria;
     feature.properties?.removeProperty(excludePropertyFromPanel);

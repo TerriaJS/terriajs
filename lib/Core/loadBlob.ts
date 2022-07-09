@@ -1,7 +1,7 @@
 import Resource from "terriajs-cesium/Source/Core/Resource";
+import URI from "urijs";
 import JsonValue from "./Json";
 import loadJson from "./loadJson";
-import URI from "urijs";
 
 const zip = require("terriajs-cesium/Source/ThirdParty/zip").default;
 

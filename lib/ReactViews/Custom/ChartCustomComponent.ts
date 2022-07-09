@@ -164,7 +164,7 @@ export default abstract class ChartCustomComponent<
     if (this.isChart(node)) {
       return this.processChart(context, node, children, index);
     } else if (this.isFirstColumnOfChartRow(node)) {
-      return this.processFirstColumn(context, node, children, index);
+      return this.processFirstColumn();
     } else if (this.isSecondColumnOfChartRow(node)) {
       return this.processSecondColumn(context, node, children, index);
     }
@@ -407,12 +407,7 @@ export default abstract class ChartCustomComponent<
     );
   }
 
-  private processFirstColumn(
-    context: ProcessNodeContext,
-    node: DomElement,
-    children: ReactElement[],
-    index: number
-  ): ReactElement | undefined {
+  private processFirstColumn(): ReactElement | undefined {
     // Do not return a node.
     return undefined;
   }
@@ -549,7 +544,7 @@ export default abstract class ChartCustomComponent<
 
 function checkAllPropertyKeys(object: any, allowedKeys: string[]) {
   for (const key in object) {
-    if (object.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(object, key)) {
       if (allowedKeys.indexOf(key) === -1) {
         console.log("Unknown attribute " + key);
       }

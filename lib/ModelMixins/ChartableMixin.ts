@@ -82,8 +82,7 @@ function ChartableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 }
 
 namespace ChartableMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof ChartableMixin>> {}
+  export type Instance = InstanceType<ReturnType<typeof ChartableMixin>>;
   export function isMixedInto(model: any): model is Instance {
     return model && model.isChartable;
   }

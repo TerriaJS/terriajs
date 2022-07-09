@@ -25,11 +25,6 @@ import ArcGisMapServerCatalogGroup, {
   MapServerStratum
 } from "./ArcGisMapServerCatalogGroup";
 
-interface DocumentInfo {
-  Title?: string;
-  Author?: string;
-}
-
 interface Service {
   name: string;
   type: string;
@@ -68,8 +63,7 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
   static async load(
     catalogGroup: ArcGisCatalogGroup
   ): Promise<ArcGisServerStratum> {
-    var terria = catalogGroup.terria;
-    var uri = new URI(catalogGroup.url).addQuery("f", "json");
+    const uri = new URI(catalogGroup.url).addQuery("f", "json");
     return loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString()))
       .then((arcgisServer: ArcGisServer) => {
         // Is this really a ArcGisServer REST response?
@@ -169,7 +163,7 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
 
     model.setTrait(CommonStrata.definition, "name", replaceUnderscores(folder));
 
-    var uri = new URI(this._catalogGroup.url).segment(folder);
+    const uri = new URI(this._catalogGroup.url).segment(folder);
     model.setTrait(CommonStrata.definition, "url", uri.toString());
   }
 
@@ -230,7 +224,7 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
       replaceUnderscores(localName)
     );
 
-    var uri = new URI(this._catalogGroup.url)
+    const uri = new URI(this._catalogGroup.url)
       .segment(localName)
       .segment(service.type);
     model.setTrait(CommonStrata.definition, "url", uri.toString());
@@ -314,7 +308,7 @@ function removePathFromName(basePath: string, name: string) {
     return name;
   }
 
-  var index = name.indexOf(basePath);
+  const index = name.indexOf(basePath);
   if (index === 0) {
     return name.substring(basePath.length + 1);
   } else {
@@ -323,7 +317,7 @@ function removePathFromName(basePath: string, name: string) {
 }
 
 function getBasePath(catalogGroup: ArcGisCatalogGroup) {
-  var match = /rest\/services\/(.*)/i.exec(catalogGroup.url || "");
+  const match = /rest\/services\/(.*)/i.exec(catalogGroup.url || "");
   if (match && match.length > 1) {
     return match[1];
   } else {

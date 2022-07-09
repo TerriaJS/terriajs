@@ -13,5 +13,5 @@ interface CssExports {
   'previewInner': string;
   'preview__inner': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

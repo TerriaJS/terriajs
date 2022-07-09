@@ -1,5 +1,3 @@
-import { JsonObject } from "../../Core/Json";
-import anyTrait from "../Decorators/anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import GroupTraits from "./GroupTraits";
@@ -70,7 +68,7 @@ export default class CswCatalogGroupTraits extends mixTraits(
     description:
       "True to allow WMS resources to be added to the catalog; otherwise, false."
   })
-  includeWms: boolean = true;
+  includeWms = true;
 
   @primitiveTrait({
     type: "boolean",
@@ -78,7 +76,7 @@ export default class CswCatalogGroupTraits extends mixTraits(
     description:
       "True to allow KML resources to be added to the catalog; otherwise, false."
   })
-  includeKml: boolean = true;
+  includeKml = true;
 
   @primitiveTrait({
     type: "boolean",
@@ -86,7 +84,7 @@ export default class CswCatalogGroupTraits extends mixTraits(
     description:
       "True to allow CSV resources to be added to the catalog; otherwise, false."
   })
-  includeCsv: boolean = true;
+  includeCsv = true;
 
   @primitiveTrait({
     type: "boolean",
@@ -94,7 +92,7 @@ export default class CswCatalogGroupTraits extends mixTraits(
     description:
       "True to allow ESRI Map resources to be added to the catalog; otherwise, false."
   })
-  includeEsriMapServer: boolean = true;
+  includeEsriMapServer = true;
 
   @primitiveTrait({
     type: "boolean",
@@ -102,7 +100,7 @@ export default class CswCatalogGroupTraits extends mixTraits(
     description:
       "True to allow GeoJSON resources to be added to the catalog; otherwise, false"
   })
-  includeGeoJson: boolean = true;
+  includeGeoJson = true;
 
   @primitiveTrait({
     type: "string",

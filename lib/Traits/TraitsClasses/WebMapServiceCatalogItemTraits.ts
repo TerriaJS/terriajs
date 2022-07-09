@@ -239,7 +239,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "date range, when specified in the format time/time/periodicity. E.g. " +
       "`2015-04-27T16:15:00/2015-04-27T18:45:00/PT15M` has 11 times."
   })
-  maxRefreshIntervals: number = 1000;
+  maxRefreshIntervals = 1000;
 
   @primitiveTrait({
     type: "boolean",
@@ -253,28 +253,28 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     name: "Is GeoServer",
     description: "True if this WMS is a GeoServer; otherwise, false."
   })
-  isGeoServer: boolean = false;
+  isGeoServer = false;
 
   @primitiveTrait({
     type: "boolean",
     name: "Is Esri",
     description: "True if this WMS is from Esri; otherwise, false."
   })
-  isEsri: boolean = false;
+  isEsri = false;
 
   @primitiveTrait({
     type: "boolean",
     name: "Is Thredds",
     description: "True if this WMS is from a THREDDS server; otherwise, false."
   })
-  isThredds: boolean = false;
+  isThredds = false;
 
   @primitiveTrait({
     type: "boolean",
     name: "Is NcWMS",
     description: "True if this WMS supports NcWMS."
   })
-  isNcWMS: boolean = false;
+  isNcWMS = false;
 
   @primitiveTrait({
     type: "boolean",
@@ -282,7 +282,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     description:
       "Gets or sets whether this WMS server has been identified as supporting the COLORSCALERANGE parameter."
   })
-  supportsColorScaleRange: boolean = false;
+  supportsColorScaleRange = false;
 
   @primitiveTrait({
     type: "boolean",
@@ -290,7 +290,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     description:
       "Gets or sets whether this WMS server supports GetLegendGraphic requests."
   })
-  supportsGetLegendGraphic: boolean = false;
+  supportsGetLegendGraphic = false;
 
   @primitiveTrait({
     type: "boolean",
@@ -306,7 +306,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     description:
       "The minimum of the color scale range. Because COLORSCALERANGE is a non-standard property supported by ncWMS servers, this property is ignored unless WebMapServiceCatalogItem's supportsColorScaleRange is true. WebMapServiceCatalogItem's colorScaleMaximum must be set as well."
   })
-  colorScaleMinimum: number = -50;
+  colorScaleMinimum = -50;
 
   @primitiveTrait({
     type: "number",
@@ -314,7 +314,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     description:
       "The maximum of the color scale range. Because COLORSCALERANGE is a non-standard property supported by ncWMS servers, this property is ignored unless WebMapServiceCatalogItem's supportsColorScaleRange is true. WebMapServiceCatalogItem's colorScaleMinimum must be set as well."
   })
-  colorScaleMaximum: number = 50;
+  colorScaleMaximum = 50;
 
   @primitiveTrait({
     type: "boolean",
@@ -322,7 +322,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     description:
       'Use WMS version 1.3.0. True by default (unless `url` has `"version=1.1.1"` or `"version=1.1.0"`), if false, then WMS version 1.1.1 will be used.'
   })
-  useWmsVersion130: boolean = true;
+  useWmsVersion130 = true;
 
   @objectTrait({
     type: GetFeatureInfoFormat,

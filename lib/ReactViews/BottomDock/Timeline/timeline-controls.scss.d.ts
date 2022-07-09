@@ -7,5 +7,5 @@ interface CssExports {
   'timelineControl': string;
   'timeline__control': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

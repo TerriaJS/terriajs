@@ -9,5 +9,5 @@ interface CssExports {
   'title': string;
   'wrapper': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

@@ -119,7 +119,7 @@ export default class Workbench {
    * @param item The model to add.
    */
   @action
-  private insertItem(item: BaseModel, index: number = 0) {
+  private insertItem(item: BaseModel, index = 0) {
     if (this.contains(item)) {
       return;
     }

@@ -107,8 +107,7 @@ function DiffableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 }
 
 namespace DiffableMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof DiffableMixin>> {}
+  export type Instance = InstanceType<ReturnType<typeof DiffableMixin>>;
 
   export function isMixedInto(model: any): model is Instance {
     return model?.hasDiffableMixin;

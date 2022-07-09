@@ -5,7 +5,7 @@ export default class ConstantPointSizeMap extends PointSizeMap {
     super();
   }
 
-  mapValueToPointSize(value: string | number | null | undefined): number {
+  mapValueToPointSize(): number {
     return this.pointSize;
   }
 }

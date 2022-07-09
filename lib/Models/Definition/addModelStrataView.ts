@@ -19,6 +19,7 @@ export default function addModelStrataView<
 ): ModelPropertiesFromTraits<InstanceType<T>>;
 export default function addModelStrataView<
   T extends TraitsConstructor<ModelTraits>
+  // eslint-disable-next-line @typescript-eslint/ban-types
 >(model: Function, Traits: T): ModelPropertiesFromTraits<InstanceType<T>>;
 export default function addModelStrataView<
   T extends TraitsConstructor<ModelTraits>
