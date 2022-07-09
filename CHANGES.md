@@ -87,6 +87,8 @@ Change Log
 * Rename `FeatureInfoMixin` to `FeatureInfoUrlTemplateMixin`
 * Move `featureInfoTemplate` and `showStringIfPropertyValueIsNull` from `FeatureInfoTraits` to `MappableTraits` (all mappable catalog items)
 * Remove `FeatureInfoUrlTemplateTraits` from all models that don't use `FeatureInfoUrlTemplateMixin`
+* Upgrade prettier to version 2.7.1
+* [The next improvement]
 * Fix "Regions: xxx" short report showing for non region mapped items
 * Fix `showInChartPanel` default for mappable items
 
