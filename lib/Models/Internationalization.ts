@@ -82,6 +82,8 @@ class Internationalization {
       .use(LanguageDetector)
       .use(initReactI18next)
       .init({
+        // use i18next-json-v3 as weblate still doesn't support v4
+        compatibilityJSON: "v3",
         debug: languageConfig.debug,
         react: languageConfig.react,
         fallbackLng: languageConfig.fallbackLanguage,
@@ -148,16 +150,14 @@ class Internationalization {
 
           // cache user language on
           caches: ["localStorage"],
-          excludeCacheFor: ["cimode"], // languages to not persist (cookie, localStorage)
+          excludeCacheFor: ["cimode"] // languages to not persist (cookie, localStorage)
 
           // optional expire and domain for set cookie
           // cookieMinutes: 10,
           // cookieDomain: "myDomain",
-
-          // only detect languages that are in the whitelist
-          checkWhitelist: true
         },
         interpolation: {
+          skipOnVariables: false,
           escapeValue: false // not needed for react as it escapes by default and not needed in node
         }
       });

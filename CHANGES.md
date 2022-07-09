@@ -5,6 +5,8 @@ Change Log
 
 * Pin `html-to-react` to `1.4.5` due to ESM module in dependency (`parse5`) breaking webpack
 * Add step to `"Deploy TerriaMap"` action to save `yarn.lock` after `sync-dependencies` (for debug purposes)
+* Upgrade i18next to `v21`
+* Update `translation` to use new pluralization format (i18next JSON v4)
 * [The next improvement]
 
 #### 8.2.8 - 2022-07-04
