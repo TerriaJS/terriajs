@@ -4,7 +4,9 @@ Change Log
 #### next release (8.2.9)
 
 * Pin `html-to-react` to `1.4.5` due to ESM module in dependency (`parse5`) breaking webpack
-* Add step to `"Deploy TerriaMap"` action to save `yarn.lock` after `sync-dependencies` (for debug purposes)
+* Add step to `"Deploy TerriaMap"` action to save `yarn.lock` after
+  `sync-dependencies` (for debug purposes)
+* Upgrade `husky` to `^8.0.1`
 * [The next improvement]
 
 #### 8.2.8 - 2022-07-04

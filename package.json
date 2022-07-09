@@ -55,8 +55,8 @@
     "@types/mustache": "^0.8.32",
     "@types/papaparse": "^4.5.9",
     "@types/pbf": "^3.0.1",
-    "@types/rc-slider": "^8.6.6",
     "@types/rbush": "^3.0.0",
+    "@types/rc-slider": "^8.6.6",
     "@types/react": "^17.0.3",
     "@types/react-color": "^3.0.6",
     "@types/react-dom": "^17.0.2",
@@ -192,7 +192,7 @@
     "fs-extra": "^7.0.1",
     "generate-terriajs-schema": "^1.5.0",
     "glob-all": "^3.0.1",
-    "husky": "^2.7.0",
+    "husky": "^8.0.1",
     "istanbul-instrumenter-loader": "^3.0.1",
     "jasmine-ajax": "^4.0.0",
     "jasmine-core": "^2.9.1",
@@ -242,11 +242,6 @@
     "pretty-quick": "pretty-quick",
     "prettier-check": "prettier --check \"**/*\"",
     "build-for-node": "tsc -b tsconfig-node.json",
-    "prepare": "yarn build-for-node"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
-    }
+    "prepare": "yarn build-for-node && husky install"
   }
 }
