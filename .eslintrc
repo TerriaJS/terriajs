@@ -4,7 +4,8 @@
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
-    "plugin:jsx-control-statements/recommended"
+    "plugin:jsx-control-statements/recommended",
+    "prettier"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -112,7 +113,12 @@
         "eslint:recommended",
         "plugin:react/recommended",
         "plugin:react-hooks/recommended",
+<<<<<<< HEAD
         "plugin:jsx-control-statements/recommended",
+=======
+        "plugin:jsx-control-statements/recommended", 
+        "plugin:@typescript-eslint/eslint-recommended",
+>>>>>>> 651ac47d5 (add eslint-config-prettier)
         "plugin:@typescript-eslint/recommended"
       ],
       "parser": "@typescript-eslint/parser",
@@ -128,6 +134,7 @@
       },
       "plugins": [
         "react",
+        "react-hooks",
         "jsx-control-statements",
         "@typescript-eslint"
       ],
