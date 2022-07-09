@@ -834,7 +834,6 @@ const CloseDifferenceButton = styled(Button)`
   left: 50%;
   transform: translateX(-50%);
   top: 18px;
-
   padding: 0 20px;
 `;
 

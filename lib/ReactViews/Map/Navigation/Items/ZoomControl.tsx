@@ -181,7 +181,7 @@ class ZoomControl extends React.Component<PropTypes> {
   }
 
   render() {
-    const { t, theme } = this.props;
+    const { t } = this.props;
     return (
       <StyledZoomControl>
         <Ul
@@ -236,7 +236,6 @@ const StyledZoomControl = styled(Box).attrs(props => ({
     width: 20px;
     fill: ${props => props.theme.darkWithOverlay};
   }
-
   ${Li} {
     margin: 5px 0;
   }

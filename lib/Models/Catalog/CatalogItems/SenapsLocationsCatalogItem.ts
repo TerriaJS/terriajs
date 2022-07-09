@@ -65,6 +65,18 @@ interface LocationsData {
   };
 }
 
+function addStreamIds(f: SenapsFeature, index: number, streamData: any[]) {
+  const sd: SenapsStreamResponse = streamData[index];
+  if (sd.count === 0) {
+    f.properties.hasStreams = false;
+  } else if (sd._embedded !== undefined) {
+    f.properties.streamIds = sd._embedded.streams.map(
+      (s: SenapsStream) => s.id
+    );
+    f.properties.hasStreams = true;
+  }
+}
+
 export class SenapsLocationsStratum extends LoadableStratum(
   SenapsLocationsCatalogItemTraits
 ) {
@@ -106,18 +118,6 @@ export class SenapsLocationsStratum extends LoadableStratum(
       }
       const streamData = await Promise.all(streamPromises);
 
-      function addStreamIds(f: SenapsFeature, index: number) {
-        const sd: SenapsStreamResponse = streamData[index];
-        if (sd.count === 0) {
-          f.properties.hasStreams = false;
-        } else if (sd._embedded !== undefined) {
-          f.properties.streamIds = sd._embedded.streams.map(
-            (s: SenapsStream) => s.id
-          );
-          f.properties.hasStreams = true;
-        }
-      }
-
       const fc: SenapsFeatureCollection = {
         type: "FeatureCollection",
         features: locations.map((site: SenapsLocation, i: number) => {
@@ -132,7 +132,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
             },
             geometry: site.geojson
           };
-          addStreamIds(f, i);
+          addStreamIds(f, i, streamData);
           return f;
         })
       };

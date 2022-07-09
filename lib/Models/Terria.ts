@@ -1105,15 +1105,6 @@ export default class Terria {
 
       // /catalog/ and /story/ routes
       if (newUrl.startsWith(this.appBaseHref)) {
-        function checkSegments(urlSegments: string[], customRoute: string) {
-          // Accept /${customRoute}/:some-id/ or /${customRoute}/:some-id
-          return (
-            ((urlSegments.length === 3 && urlSegments[2] === "") ||
-              urlSegments.length === 2) &&
-            urlSegments[0] === customRoute &&
-            urlSegments[1].length > 0
-          );
-        }
         const pageUrl = new URL(newUrl);
         // Find relative path from baseURI to documentURI excluding query and hash
         // then split into url segments
@@ -2142,4 +2133,14 @@ function setCustomRequestSchedulerDomainLimits(
       RequestScheduler.requestsByServer[domain] = limit;
     });
   }
+}
+
+function checkSegments(urlSegments: string[], customRoute: string) {
+  // Accept /${customRoute}/:some-id/ or /${customRoute}/:some-id
+  return (
+    ((urlSegments.length === 3 && urlSegments[2] === "") ||
+      urlSegments.length === 2) &&
+    urlSegments[0] === customRoute &&
+    urlSegments[1].length > 0
+  );
 }

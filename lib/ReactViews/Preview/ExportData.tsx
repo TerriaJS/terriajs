@@ -5,7 +5,6 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import Styles from "./mappable-preview.scss";
 import { observer } from "mobx-react";
 
-import TerriaError from "../../Core/TerriaError";
 import isDefined from "../../Core/isDefined";
 import ExportableMixin from "../../ModelMixins/ExportableMixin";
 const FileSaver = require("file-saver");

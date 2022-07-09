@@ -8,7 +8,7 @@
  * You'll also see a few weird numbers - this is due to the port from the scss
  * styles, and will be leaving it as is for now
  */
-//
+
 import { TFunction } from "i18next";
 import { computed, runInAction, when } from "mobx";
 import React from "react";
@@ -251,7 +251,7 @@ class Compass extends React.Component<PropTypes, IStateTypes> {
     }
   }
 
-  handleDoubleClick(e: any) {
+  handleDoubleClick() {
     const scene = this.props.terria.cesium!.scene;
     const camera = scene.camera;
 
@@ -538,7 +538,7 @@ function rotate(
     // viewModel.props.terria.cesium.notifyRepaintRequired();
   };
 
-  viewModel.rotateMouseUpFunction = function(e) {
+  viewModel.rotateMouseUpFunction = function() {
     viewModel.isRotating = false;
     if (viewModel.rotateMouseMoveFunction) {
       document.removeEventListener(
@@ -626,7 +626,7 @@ function orbit(
     viewModel.orbitIsLook = false;
   }
 
-  viewModel.orbitAnimationFrameFunction = function(e: any) {
+  viewModel.orbitAnimationFrameFunction = function() {
     const timestamp = getTimestamp();
     const deltaT = timestamp - viewModel.orbitLastTimestamp;
     const rate = ((viewModel.state.orbitCursorOpacity - 0.5) * 2.5) / 1000;
@@ -689,7 +689,7 @@ function orbit(
     updateAngleAndOpacity(vector, compassRectangle.width);
   };
 
-  viewModel.orbitMouseUpFunction = function(e: any) {
+  viewModel.orbitMouseUpFunction = function() {
     // TODO: if mouse didn't move, reset view to looking down, north is up?
 
     viewModel.isOrbiting = false;

@@ -157,6 +157,8 @@
         "react/jsx-no-undef": ["error", { "allowGlobals": true }],
         "react/prop-types": "off",
 
+        "no-unused-vars": "off",
+
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-namespace": "off",

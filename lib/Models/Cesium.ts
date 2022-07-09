@@ -1133,10 +1133,6 @@ export default class Cesium extends GlobeOrMap {
         const imageryLayer = this.scene.imageryLayers.get(i);
         const imageryProvider = imageryLayer.imageryProvider;
 
-        function hasUrl(o: any): o is { url: string } {
-          return typeof o?.url === "string";
-        }
-
         if (hasUrl(imageryProvider) && providerCoords[imageryProvider.url]) {
           const coords = providerCoords[imageryProvider.url];
           promises.push(
@@ -1682,4 +1678,8 @@ function flyToBoundingSpherePromise(
       cancel
     });
   });
+}
+
+function hasUrl(o: any): o is { url: string } {
+  return typeof o?.url === "string";
 }

@@ -416,19 +416,16 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
 
   private async createCatalogItemFromJson(json: any) {
     let itemJson = json;
-    try {
-      if (
-        this.forceConvertResultsToV8 ||
-        // If startData.version has version 0.x.x - user catalog-converter to convert result
-        ("version" in itemJson &&
-          typeof itemJson.version === "string" &&
-          itemJson.version.startsWith("0"))
-      ) {
-        itemJson = await convertResultV7toV8(json);
-      }
-    } catch (e) {
-      throw e;
+    if (
+      this.forceConvertResultsToV8 ||
+      // If startData.version has version 0.x.x - user catalog-converter to convert result
+      ("version" in itemJson &&
+        typeof itemJson.version === "string" &&
+        itemJson.version.startsWith("0"))
+    ) {
+      itemJson = await convertResultV7toV8(json);
     }
+
     const catalogItem = upsertModelFromJson(
       CatalogMemberFactory,
       this.terria,
