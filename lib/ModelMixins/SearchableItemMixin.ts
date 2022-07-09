@@ -1,10 +1,10 @@
 import { action, computed } from "mobx";
 import Constructor from "../Core/Constructor";
+import Model from "../Models/Definition/Model";
 import ItemSearchProvider, {
   ItemSearchResult
 } from "../Models/ItemSearchProviders/ItemSearchProvider";
 import { ItemSearchProviders } from "../Models/ItemSearchProviders/ItemSearchProviders";
-import Model from "../Models/Definition/Model";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import SearchableItemTraits from "../Traits/TraitsClasses/SearchableItemTraits";
 
@@ -70,8 +70,7 @@ function SearchableItemMixin<T extends Constructor<MixinModel>>(Base: T) {
 }
 
 namespace SearchableItemMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof SearchableItemMixin>> {}
+  export type Instance = InstanceType<ReturnType<typeof SearchableItemMixin>>;
 
   export function isMixedInto(model: any): model is Instance {
     return model && model.hasSearchableItemMixin;

@@ -6,7 +6,6 @@ import {
   ReactTestInstance,
   ReactTestRenderer
 } from "react-test-renderer";
-import { assertObject } from "../../../../lib/Core/Json";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import ItemSearchProvider, {
   ItemSearchParameter,
@@ -190,6 +189,12 @@ function renderAndLoad(
 async function submitForm(root: ReactTestInstance): Promise<ReactTestInstance> {
   const searchForm = root.findByType("form");
   expect(searchForm).toBeDefined();
-  await act(() => searchForm.props.onSubmit({ preventDefault: () => {} }));
+  await act(() =>
+    searchForm.props.onSubmit({
+      preventDefault: () => {
+        // no-op
+      }
+    })
+  );
   return searchForm;
 }

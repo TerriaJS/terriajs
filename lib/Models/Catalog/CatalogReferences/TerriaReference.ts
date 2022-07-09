@@ -10,7 +10,6 @@ import UrlMixin from "../../../ModelMixins/UrlMixin";
 import TerriaReferenceTraits from "../../../Traits/TraitsClasses/TerriaReferenceTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
-import { BaseModel } from "../../Definition/Model";
 import updateModelFromJson from "../../Definition/updateModelFromJson";
 import CatalogMemberFactory from "../CatalogMemberFactory";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
@@ -37,10 +36,7 @@ export default class TerriaReference extends UrlMixin(
     return TerriaReference.type;
   }
 
-  protected forceLoadReference = flow(function*(
-    this: TerriaReference,
-    _previousTarget: BaseModel | undefined
-  ) {
+  protected forceLoadReference = flow(function*(this: TerriaReference) {
     if (this.url === undefined || this.uniqueId === undefined) {
       return undefined;
     }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { action, computed } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import DiffableMixin from "../../lib/ModelMixins/DiffableMixin";
@@ -41,7 +42,9 @@ describe("DiffableMixin", function() {
 class TestDiffableItem extends DiffableMixin(
   CreateModel(mixTraits(DiffableTraits, CatalogMemberTraits, SplitterTraits))
 ) {
-  protected async forceLoadMapItems() {}
+  protected async forceLoadMapItems() {
+    // no-op
+  }
   styleSelectableDimensions = [];
 
   get canDiffImages() {
@@ -56,9 +59,13 @@ class TestDiffableItem extends DiffableMixin(
     firstDate: JulianDate,
     secondDate: JulianDate,
     diffStyleId: string
-  ) {}
+  ) {
+    // no-op
+  }
 
-  clearDiffImage() {}
+  clearDiffImage() {
+    // no-op
+  }
 
   getLegendUrlForStyle(
     diffStyleId: string,

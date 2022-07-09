@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ReactChild } from "react";
 import { isComponentOfType } from "react-shallow-testutils";
 import ChartableMixin from "../../../../lib/ModelMixins/ChartableMixin";
@@ -63,8 +64,7 @@ describe("ChartCustomComponent", function() {
     const TestComponentWithShareableChartItem = class extends TestChartCustomComponent {
       constructShareableCatalogItem = (
         id: string | undefined,
-        context: ProcessNodeContext,
-        sourceReference: BaseModel | undefined
+        context: ProcessNodeContext
       ) => this.createItemReference(context.catalogItem as any);
     };
     const component = new TestComponentWithShareableChartItem();

@@ -115,5 +115,5 @@ export default class TableTraits extends mixTraits(
     description:
       "If two rows in the table are identical, only retain one copy. This could cause performance issues, and so should be used only when absolutely necessary."
   })
-  removeDuplicateRows: boolean = false;
+  removeDuplicateRows = false;
 }

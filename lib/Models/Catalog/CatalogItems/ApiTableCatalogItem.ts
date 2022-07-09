@@ -66,7 +66,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
   }
 
   @observable private apiResponses: any[] = [];
-  @observable private hasData: boolean = false;
+  @observable private hasData = false;
 
   constructor(id: string | undefined, terria: Terria) {
     super(id, terria);
@@ -126,7 +126,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
             row["value"] = value; // add the id to the row's data
             row[this.idKey!] = id;
             if (columnMajorData.has(id)) {
-              let currentRow = columnMajorData.get(id);
+              const currentRow = columnMajorData.get(id);
               columnMajorData.set(id, { currentRow, ...value });
             } else {
               columnMajorData.set(id, row);

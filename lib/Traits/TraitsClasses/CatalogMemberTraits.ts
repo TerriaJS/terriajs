@@ -158,7 +158,7 @@ export default class CatalogMemberTraits extends ModelTraits {
     name: "Is catalog item open in workbench",
     description: "Whether the item in the workbench open or collapsed."
   })
-  isOpenInWorkbench: boolean = true;
+  isOpenInWorkbench = true;
 
   @primitiveTrait({
     type: "string",
@@ -181,7 +181,7 @@ export default class CatalogMemberTraits extends ModelTraits {
     description:
       "Whether the catalog item is experiencing issues which may cause its data to be unavailable"
   })
-  isExperiencingIssues: boolean = false;
+  isExperiencingIssues = false;
 
   @primitiveTrait({
     type: "boolean",
@@ -189,7 +189,7 @@ export default class CatalogMemberTraits extends ModelTraits {
     description:
       "Indicates that the source of this data should be hidden from the UI (obviously this isn't super-secure as you can just look at the network requests)."
   })
-  hideSource: boolean = false;
+  hideSource = false;
 
   @objectArrayTrait({
     type: MetadataUrlTraits,
@@ -229,5 +229,5 @@ export default class CatalogMemberTraits extends ModelTraits {
     name: "Disable about data",
     description: "Disables the 'About Data' button in the workbench."
   })
-  disableAboutData: boolean = false;
+  disableAboutData = false;
 }

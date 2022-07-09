@@ -32,14 +32,20 @@ describe("SearchBox", function() {
     });
     const searchBoxWithProps = (
       <SearchBox
-        t={() => {}}
+        t={() => {
+          // no-op
+        }}
         terria={terria}
         viewState={viewState}
         onSearchTextChanged={(newVal: any) => {
           searchBoxValue = newVal;
         }}
-        onDoSearch={() => {}}
-        onFocus={() => {}}
+        onDoSearch={() => {
+          // no-op
+        }}
+        onFocus={() => {
+          // no-op
+        }}
         searchText={searchText}
         placeholder="placeholder"
         theme={terriaTheme}

@@ -66,6 +66,9 @@ describe("FeatureInfoSection", function() {
   let feature: any;
   let viewState: any;
   let catalogItem: TestModel;
+  const tMock = () => {
+    // no-op
+  };
 
   beforeEach(function() {
     terria = new Terria({
@@ -103,9 +106,9 @@ describe("FeatureInfoSection", function() {
     const section = (
       <FeatureInfoSection
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
-        t={() => {}}
+        t={tMock}
       />
     );
     const result = getShallowRenderedOutput(section);
@@ -123,9 +126,9 @@ describe("FeatureInfoSection", function() {
     const section = (
       <FeatureInfoSection
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
-        t={() => {}}
+        t={tMock}
       />
     );
     const result = getShallowRenderedOutput(section);
@@ -161,10 +164,10 @@ describe("FeatureInfoSection", function() {
     const section = (
       <FeatureInfoSection
         feature={feature}
-        isOpen={true}
+        isOpen
         catalogItem={catalogItem}
         viewState={viewState}
-        t={() => {}}
+        t={tMock}
       />
     );
     const result = getShallowRenderedOutput(section);
@@ -176,10 +179,10 @@ describe("FeatureInfoSection", function() {
     const section2 = (
       <FeatureInfoSection
         feature={feature}
-        isOpen={true}
+        isOpen
         catalogItem={catalogItem}
         viewState={viewState}
-        t={() => {}}
+        t={tMock}
       />
     );
     const result2 = getShallowRenderedOutput(section2);
@@ -195,9 +198,9 @@ describe("FeatureInfoSection", function() {
     const section = (
       <FeatureInfoSection
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
-        t={() => {}}
+        t={tMock}
       />
     );
     const result = getShallowRenderedOutput(section);
@@ -214,9 +217,9 @@ describe("FeatureInfoSection", function() {
     const section = (
       <FeatureInfoSection
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
-        t={() => {}}
+        t={tMock}
       />
     );
     const result = getShallowRenderedOutput(section);
@@ -234,9 +237,9 @@ describe("FeatureInfoSection", function() {
     const section = (
       <FeatureInfoSection
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
-        t={() => {}}
+        t={tMock}
       />
     );
     const result = getShallowRenderedOutput(section);
@@ -252,9 +255,9 @@ describe("FeatureInfoSection", function() {
     const section = (
       <FeatureInfoSection
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
-        t={() => {}}
+        t={tMock}
       />
     );
     const result = getShallowRenderedOutput(section);
@@ -276,9 +279,9 @@ describe("FeatureInfoSection", function() {
     const section = (
       <FeatureInfoSection
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
-        t={() => {}}
+        t={tMock}
       />
     );
     const result = getShallowRenderedOutput(section);
@@ -293,9 +296,9 @@ describe("FeatureInfoSection", function() {
     const section = (
       <FeatureInfoSection
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
-        t={() => {}}
+        t={tMock}
       />
     );
     const result = getShallowRenderedOutput(section);
@@ -319,9 +322,9 @@ describe("FeatureInfoSection", function() {
     const section = (
       <FeatureInfoSection
         feature={feature}
-        isOpen={true}
+        isOpen
         viewState={viewState}
-        t={() => {}}
+        t={tMock}
       />
     );
     const result = getShallowRenderedOutput(section);
@@ -338,10 +341,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -353,10 +356,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -370,10 +373,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -388,10 +391,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -411,10 +414,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -436,10 +439,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -463,10 +466,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -484,10 +487,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -505,10 +508,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -521,10 +524,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -552,10 +555,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -594,11 +597,11 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           catalogItem={catalogItem}
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -626,10 +629,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -642,10 +645,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -658,10 +661,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -675,10 +678,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -691,10 +694,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -707,10 +710,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -724,10 +727,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -744,10 +747,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -766,7 +769,7 @@ describe("FeatureInfoSection", function() {
           isOpen={false}
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -785,11 +788,11 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
           position={position}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -810,10 +813,10 @@ describe("FeatureInfoSection", function() {
       let section = (
         <FeatureInfoSection
           feature={feature} // feature.properties.name === "Kay";
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       let result = getShallowRenderedOutput(section);
@@ -824,10 +827,10 @@ describe("FeatureInfoSection", function() {
       section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       result = getShallowRenderedOutput(section);
@@ -848,10 +851,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature} // feature.properties.name === "Kay";
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -872,10 +875,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature} // feature.properties.name === "Kay";
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -925,7 +928,7 @@ describe("FeatureInfoSection", function() {
           template={template}
           viewState={viewState}
           catalogItem={catalogItem}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -978,10 +981,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -1005,7 +1008,7 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           t={i18next.t}
         />
@@ -1024,7 +1027,7 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={feature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           template={template}
           t={i18next.getFixedT("cimode")}
@@ -1041,8 +1044,6 @@ describe("FeatureInfoSection", function() {
   });
 
   describe("CZML templating", function() {
-    beforeEach(function() {});
-
     it("uses and completes a string-form featureInfoTemplate", async function() {
       // target = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>ABC</td></tr></tbody></table><br />
       //           <table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
@@ -1064,10 +1065,10 @@ describe("FeatureInfoSection", function() {
       const section = (
         <FeatureInfoSection
           feature={czmlFeature}
-          isOpen={true}
+          isOpen
           viewState={viewState}
           template={czmlItem.featureInfoTemplate}
-          t={() => {}}
+          t={tMock}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -1104,11 +1105,11 @@ describe("FeatureInfoSection", function() {
       let section = (
         <FeatureInfoSection
           feature={czmlFeature}
-          isOpen={true}
+          isOpen
           catalogItem={czmlItem}
           viewState={viewState}
           template={czmlItem.featureInfoTemplate}
-          t={() => {}}
+          t={tMock}
         />
       );
       let result = getShallowRenderedOutput(section);
@@ -1118,11 +1119,11 @@ describe("FeatureInfoSection", function() {
       section = (
         <FeatureInfoSection
           feature={czmlFeature}
-          isOpen={true}
+          isOpen
           catalogItem={czmlItem}
           viewState={viewState}
           template={czmlItem.featureInfoTemplate}
-          t={() => {}}
+          t={tMock}
         />
       );
       result = getShallowRenderedOutput(section);
@@ -1133,11 +1134,11 @@ describe("FeatureInfoSection", function() {
       section = (
         <FeatureInfoSection
           feature={czmlFeature}
-          isOpen={true}
+          isOpen
           catalogItem={czmlItem}
           viewState={viewState}
           template={czmlItem.featureInfoTemplate}
-          t={() => {}}
+          t={tMock}
         />
       );
       result = getShallowRenderedOutput(section);

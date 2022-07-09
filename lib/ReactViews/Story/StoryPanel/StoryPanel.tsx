@@ -259,7 +259,7 @@ class StoryPanel extends React.Component<Props, State> {
               fullWidth
               size={1}
               borderBottomColor={this.props.theme.greyLighter}
-            ></Hr>
+            />
             <Box paddedHorizontally={3} fullWidth>
               <FooterBar
                 goPrev={() => this.goToPrevStory()}

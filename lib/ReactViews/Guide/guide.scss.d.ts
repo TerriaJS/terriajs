@@ -19,5 +19,5 @@ interface CssExports {
   'inner-close-btn': string;
   'innerCloseBtn': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

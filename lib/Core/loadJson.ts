@@ -4,12 +4,12 @@ export default function loadJson(
   urlOrResource: any,
   headers?: any,
   body?: any,
-  asForm: boolean = false
+  asForm = false
 ): Promise<any> {
-  let responseType: XMLHttpRequestResponseType = "json";
+  const responseType: XMLHttpRequestResponseType = "json";
 
   let jsonPromise: Promise<any>;
-  let params: any = {
+  const params: any = {
     url: urlOrResource,
     headers: headers
   };

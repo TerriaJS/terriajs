@@ -1,15 +1,14 @@
 import i18next from "i18next";
-import { runInAction } from "mobx";
 import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";
-import ViewState from "../../ReactViewModels/ViewState";
-import CatalogMemberFactory from "./CatalogMemberFactory";
-import CommonStrata from "../Definition/CommonStrata";
-import createUrlReferenceFromUrl from "./CatalogReferences/createUrlReferenceFromUrl";
-import { BaseModel } from "../Definition/Model";
-import Terria from "../Terria";
-import upsertModelFromJson from "../Definition/upsertModelFromJson";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
+import ViewState from "../../ReactViewModels/ViewState";
+import CommonStrata from "../Definition/CommonStrata";
+import { BaseModel } from "../Definition/Model";
+import upsertModelFromJson from "../Definition/upsertModelFromJson";
+import Terria from "../Terria";
+import CatalogMemberFactory from "./CatalogMemberFactory";
+import createUrlReferenceFromUrl from "./CatalogReferences/createUrlReferenceFromUrl";
 
 export default function createCatalogItemFromFileOrUrl(
   terria: Terria,

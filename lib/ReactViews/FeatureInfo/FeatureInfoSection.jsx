@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-undef, react/no-string-refs */
 "use strict";
 
 import Mustache from "mustache";
@@ -475,6 +476,7 @@ function parseValues(properties) {
       ) {
         try {
           val = JSON.parse(val);
+          // eslint-disable-next-line no-empty
         } catch (e) {}
       }
       result[key] = val;
@@ -618,7 +620,7 @@ function mustacheJsonSubOptions(customProcessing) {
       return customProcessing(render(text));
     }
     // Allow {foo: 1} by converting it to {"foo": 1} for JSON.parse.
-    const quoteReg = /([{,])(\s*)([A-Za-z0-9_\-]+?)\s*:/g;
+    const quoteReg = /([{,])(\s*)([A-Za-z0-9_-]+?)\s*:/g;
     const jsonOptions = components[1].replace(quoteReg, '$1"$3":');
     const options = JSON.parse(jsonOptions);
     return customProcessing(render(components[2]), options);
@@ -833,7 +835,7 @@ function getTimeSeriesChartContext(catalogItem, feature, getChartDetails) {
       const { title, csvData } = chartDetails;
       const result = {
         ...chartDetails,
-        id: featureId?.replace(/\"/g, ""),
+        id: featureId?.replace(/"/g, ""),
         data: csvData?.replace(/\\n/g, "\\n")
       };
       const idAttr = 'id="' + result.id + '" ';

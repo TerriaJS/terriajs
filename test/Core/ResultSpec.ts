@@ -2,8 +2,6 @@ import TerriaError from "../../lib/Core/TerriaError";
 import Result from "../../lib/Core/Result";
 
 describe("Result", function() {
-  beforeEach(function() {});
-
   it("Can create Result without error", function() {
     const result = new Result("what");
 

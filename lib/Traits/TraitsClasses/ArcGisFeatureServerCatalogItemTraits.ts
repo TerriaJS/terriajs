@@ -19,7 +19,7 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
     description:
       "Whether the features in this service should be clamped to the terrain surface."
   })
-  clampToGround: boolean = true;
+  clampToGround = true;
 
   @primitiveTrait({
     type: "boolean",
@@ -27,7 +27,7 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
     description:
       "Whether to symbolise the data using the drawingInfo object available in the service endpoint."
   })
-  useStyleInformationFromService: boolean = true;
+  useStyleInformationFromService = true;
 
   @primitiveTrait({
     type: "string",
@@ -35,7 +35,7 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
     description:
       "DEPRECATED, use `where` instead. The 'layerDef' string to pass to the server when requesting geometry."
   })
-  layerDef: string = "1=1";
+  layerDef = "1=1";
 
   @primitiveTrait({
     type: "string",
@@ -43,7 +43,7 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
     description:
       "The 'where' string to pass to the server when requesting geometry."
   })
-  where: string = "1=1";
+  where = "1=1";
 
   @primitiveTrait({
     type: "number",
@@ -51,7 +51,7 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
     description:
       "The maximum number of features to be retrieved from the feature service."
   })
-  maxFeatures: number = 5000;
+  maxFeatures = 5000;
 
   @primitiveTrait({
     type: "number",
@@ -60,7 +60,7 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
       "The number of features to be retrieved from the feature service in each request. This should be equal to the " +
       "maxRecordCount specified by the server."
   })
-  featuresPerRequest: number = 1000;
+  featuresPerRequest = 1000;
 
   @primitiveTrait({
     type: "boolean",

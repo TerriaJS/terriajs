@@ -4,5 +4,5 @@ interface CssExports {
   'filter': string;
   'filters': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

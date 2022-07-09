@@ -12,5 +12,5 @@ interface CssExports {
   'toggleWorkbench': string;
   'trainerBarVisible': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

@@ -27,5 +27,5 @@ export default class LegendOwnerTraits extends ModelTraits {
     description:
       "Whether the legend is hidden in the workbench for this catalog member."
   })
-  hideLegendInWorkbench: boolean = false;
+  hideLegendInWorkbench = false;
 }

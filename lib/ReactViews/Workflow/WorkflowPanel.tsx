@@ -117,10 +117,6 @@ const TitleBar = styled.div`
   border-bottom: 1px solid ${p => p.theme.darkLighter};
 `;
 
-const FooterBar = styled(TitleBar)`
-  border: none;
-`;
-
 const Title = styled(Text).attrs({
   textLight: true,
   bold: true

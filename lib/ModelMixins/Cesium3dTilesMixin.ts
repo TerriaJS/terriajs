@@ -32,7 +32,7 @@ import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
-import Model, { BaseModel } from "../Models/Definition/Model";
+import Model from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
 import Feature from "../Models/Feature";
 import Cesium3DTilesCatalogItemTraits from "../Traits/TraitsClasses/Cesium3DTilesCatalogItemTraits";
@@ -45,7 +45,7 @@ import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
 
 class Cesium3dTilesStratum extends LoadableStratum(Cesium3dTilesTraits) {
-  duplicateLoadableStratum(model: BaseModel): this {
+  duplicateLoadableStratum(): this {
     return new Cesium3dTilesStratum() as this;
   }
 
@@ -60,8 +60,9 @@ StratumOrder.instance.addLoadStratum(Cesium3dTilesStratum.name);
 
 const DEFAULT_HIGHLIGHT_COLOR = "#ff3f00";
 
-interface Cesium3DTilesCatalogItemIface
-  extends InstanceType<ReturnType<typeof Cesium3dTilesMixin>> {}
+type Cesium3DTilesCatalogItemIface = InstanceType<
+  ReturnType<typeof Cesium3dTilesMixin>
+>;
 
 class ObservableCesium3DTileset extends Cesium3DTileset {
   _catalogItem?: Cesium3DTilesCatalogItemIface;
@@ -101,7 +102,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
 
     // An observable tracker for tileset.ready
     @observable
-    isTilesetReady: boolean = false;
+    isTilesetReady = false;
 
     clippingPlanesOriginMatrix(): Matrix4 {
       if (this.tileset && this.isTilesetReady) {
@@ -144,7 +145,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
         throw `\`url\` and \`ionAssetId\` are not defined for ${getName(this)}`;
       }
 
-      let resource = undefined;
+      let resource;
       if (isDefined(this.ionAssetId)) {
         resource = this.createResourceFromIonId(
           this.ionAssetId,
@@ -197,7 +198,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
      */
     private computeModelMatrixFromTransformationTraits(modelMatrix: Matrix4) {
       let scale = Matrix4.getScale(modelMatrix, new Cartesian3());
-      let position = Matrix4.getTranslation(modelMatrix, new Cartesian3());
+      const position = Matrix4.getTranslation(modelMatrix, new Cartesian3());
       let orientation = Quaternion.fromRotationMatrix(
         Matrix4.getMatrix3(modelMatrix, new Matrix3())
       );
@@ -330,7 +331,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
         return;
       }
 
-      let resource: IonResource | undefined = await IonResource.fromAssetId(
+      const resource: IonResource | undefined = await IonResource.fromAssetId(
         ionAssetId,
         {
           accessToken:

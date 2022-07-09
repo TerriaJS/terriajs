@@ -4,5 +4,5 @@ interface CssExports {
   'dropdown-inner': string;
   'dropdownInner': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

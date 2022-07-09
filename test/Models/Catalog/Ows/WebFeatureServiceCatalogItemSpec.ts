@@ -32,9 +32,8 @@ describe("WebFeatureServiceCatalogItem", function() {
   });
 
   it("updates description from a GetCapabilities", async function() {
-    let wfs: WebFeatureServiceCatalogItem;
     const terria = new Terria();
-    wfs = new WebFeatureServiceCatalogItem("test", terria);
+    const wfs = new WebFeatureServiceCatalogItem("test", terria);
     runInAction(() => {
       wfs.setTrait("definition", "url", "test/WFS/getCapabilities.xml");
       wfs.setTrait(
@@ -43,7 +42,7 @@ describe("WebFeatureServiceCatalogItem", function() {
         "marine:seabed_sediments_collection"
       );
     });
-    let description: String | undefined;
+    let description: string | undefined;
     const cleanup = autorun(() => {
       if (wfs.info !== undefined) {
         const descSection = wfs.info.find(

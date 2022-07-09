@@ -240,7 +240,7 @@ export default class CameraView {
     }
 
     Cartesian3.normalize(rightENU, rightENU);
-    var upENU = Cartesian3.cross(rightENU, directionENU, scratchUp);
+    const upENU = Cartesian3.cross(rightENU, directionENU, scratchUp);
     Cartesian3.normalize(upENU, upENU);
 
     const targetCartesian = Ellipsoid.WGS84.cartographicToCartesian(

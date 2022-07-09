@@ -236,15 +236,6 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
       undefined
     );
 
-    let regionColumnSplit = DATASETS.find(
-      d => d.title === this.parameters?.["Output Geography"]
-    )?.geographyName.split("_");
-    let regionColumn = "";
-
-    if (isDefined(regionColumnSplit) && regionColumnSplit!.length === 2) {
-      regionColumn = `${regionColumnSplit![0]}_code_${regionColumnSplit![1]}`;
-    }
-
     runInAction(() => {
       csvResult.setTrait(CommonStrata.user, "name", `${this.name} Results`);
       csvResult.setTrait(

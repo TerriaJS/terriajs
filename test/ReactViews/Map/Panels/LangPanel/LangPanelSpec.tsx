@@ -18,6 +18,7 @@ describe("LangPanel", function() {
       baseUrl: "./"
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     viewState = new ViewState({
       terria: terria,
       catalogSearchProvider: null,

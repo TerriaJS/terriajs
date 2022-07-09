@@ -15,10 +15,7 @@ const WorkflowPanelContainer: React.FC<PropsType> = ({ viewState, show }) => {
       show={show}
       onTransitionEnd={() => viewState.triggerResizeEvent()}
     >
-      <PortalContainer
-        viewState={viewState}
-        id={WorkflowPanelPortalId}
-      ></PortalContainer>
+      <PortalContainer viewState={viewState} id={WorkflowPanelPortalId} />
     </Container>
   );
 };

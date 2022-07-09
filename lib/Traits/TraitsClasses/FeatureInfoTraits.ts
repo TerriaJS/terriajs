@@ -10,7 +10,7 @@ class FeatureInfoFormatTraits extends ModelTraits {
     description:
       "To reduce the number of decimal places to a maximum of X digits."
   })
-  maximumFractionDigits: number = 20;
+  maximumFractionDigits = 20;
 
   @primitiveTrait({
     type: "number",
@@ -18,14 +18,14 @@ class FeatureInfoFormatTraits extends ModelTraits {
     description:
       "To increase the number of decimal places to a minimum of X digits."
   })
-  minimumFractionDigits: number = 0;
+  minimumFractionDigits = 0;
 
   @primitiveTrait({
     type: "boolean",
     name: "Use grouping",
     description: "To show thousands separators"
   })
-  useGrouping: boolean = true;
+  useGrouping = true;
 
   @primitiveTrait({
     type: "string",

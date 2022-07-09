@@ -32,3 +32,5 @@
 !wwwroot/test/Magda
 !wwwroot/test/Magda/shareKeys/**/
 !wwwroot/test/Magda/shareKeys/**/*.json
+!wwwroot/languages/**/*.json
+!wwwroot/languages/**/

@@ -49,7 +49,7 @@ export class WebMapTileServiceAvailableStyleTraits extends ModelTraits {
     name: "Is Default",
     description: "True if this Style is default; otherwise, false."
   })
-  isDefault: boolean = false;
+  isDefault = false;
 }
 
 export class WebMapTileServiceAvailableLayerStylesTraits extends ModelTraits {
@@ -84,7 +84,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     name: "Is GeoServer",
     description: "True if this WMS is a GeoServer; otherwise, false."
   })
-  isGeoServer: boolean = false;
+  isGeoServer = false;
 
   @primitiveTrait({
     type: "string",

@@ -28,8 +28,12 @@ describe("GyroscopeGuidance", function() {
       act(() => {
         testRenderer = create(
           <GyroscopeGuidance
-            handleHelp={() => {}}
-            onClose={() => {}}
+            handleHelp={() => {
+              // no-op
+            }}
+            onClose={() => {
+              // no-op
+            }}
             viewState={viewState}
           />
         );

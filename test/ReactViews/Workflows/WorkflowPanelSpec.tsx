@@ -31,7 +31,9 @@ describe("WorkflowPanel", function() {
           title="test"
           icon={{ id: "test-icon" }}
           closeButtonText="close"
-          onClose={() => {}}
+          onClose={() => {
+            // no-op
+          }}
         />
       );
     });
@@ -46,7 +48,9 @@ describe("WorkflowPanel", function() {
           title="test"
           icon={{ id: "test-icon" }}
           closeButtonText="close"
-          onClose={() => {}}
+          onClose={() => {
+            // no-op
+          }}
         />
       );
     });

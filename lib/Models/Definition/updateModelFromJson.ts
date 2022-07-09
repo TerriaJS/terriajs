@@ -11,7 +11,7 @@ export default function updateModelFromJson(
   model: BaseModel,
   stratumName: string,
   json: ModelJson,
-  replaceStratum: boolean = false
+  replaceStratum = false
 ): Result<undefined> {
   const traits = model.traits;
 

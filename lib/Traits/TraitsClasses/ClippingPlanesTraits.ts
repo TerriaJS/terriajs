@@ -1,11 +1,11 @@
-import ModelTraits from "../ModelTraits";
-import primitiveTrait from "../Decorators/primitiveTrait";
-import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
+import BoxDrawingTraits from "../BoxDrawingTraits";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import objectTrait from "../Decorators/objectTrait";
-import LatLonHeightTraits from "./LatLonHeightTraits";
-import BoxDrawingTraits, { CornerPointsStyleTraits } from "../BoxDrawingTraits";
+import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
+import ModelTraits from "../ModelTraits";
+import LatLonHeightTraits from "./LatLonHeightTraits";
 
 export class ClippingPlaneDefinitionTraits extends ModelTraits {
   @primitiveTrait({
@@ -14,7 +14,7 @@ export class ClippingPlaneDefinitionTraits extends ModelTraits {
     description:
       " The shortest distance from the origin to the plane. The sign of distance determines which side of the plane the origin is on. If distance is positive, the origin is in the half-space in the direction of the normal; if negative, the origin is in the half-space opposite to the normal; if zero, the plane passes through the origin."
   })
-  distance: number = 0;
+  distance = 0;
 
   @primitiveArrayTrait({
     name: "Normal Cartesian3",
@@ -30,7 +30,7 @@ export class ClippingPlaneCollectionTraits extends ModelTraits {
     name: "Enabled Clipping Plane",
     description: "Determines whether the clipping planes are active."
   })
-  enabled: boolean = true;
+  enabled = true;
 
   @primitiveTrait({
     type: "boolean",
@@ -38,7 +38,7 @@ export class ClippingPlaneCollectionTraits extends ModelTraits {
     description:
       "If true, a region will be clipped if it is on the outside of any plane in the collection. Otherwise, a region will only be clipped if it is on the outside of every plane."
   })
-  unionClippingRegions: boolean = false;
+  unionClippingRegions = false;
 
   @primitiveTrait({
     type: "number",
@@ -104,7 +104,7 @@ export class ClippingBoxTraits extends mixTraits(BoxDrawingTraits) {
     description:
       "Set false to completely disable clipping box feature for the item."
   })
-  enableFeature: boolean = true;
+  enableFeature = true;
 
   @primitiveTrait({
     type: "boolean",

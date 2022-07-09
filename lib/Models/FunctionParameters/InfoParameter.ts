@@ -46,7 +46,7 @@ export default class InfoParameter extends FunctionParameter<string> {
     this._value = v;
   }
 
-  clearValue(strataId: string) {
+  clearValue() {
     this._value = undefined;
   }
 }

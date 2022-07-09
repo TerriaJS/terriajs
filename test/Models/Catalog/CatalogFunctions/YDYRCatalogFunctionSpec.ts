@@ -92,7 +92,7 @@ describe("YDYRCatalogFunction", function() {
     });
 
     // A few reactions will happen, while setting default values for functionParameters
-    await new Promise((resolve, reject) => {
+    await new Promise(resolve => {
       reaction(
         () => ydyr.functionParameters,
         () => {
@@ -148,7 +148,9 @@ describe("YDYRCatalogFunction", function() {
       job = (await ydyr.submitJob()) as YDYRCatalogFunctionJob;
       dispose = reaction(
         () => job.mapItems,
-        () => {}
+        () => {
+          // no-op
+        }
       );
     });
     afterEach(() => {

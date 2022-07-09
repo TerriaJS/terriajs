@@ -15,6 +15,9 @@ describe("SearchBoxAndResults", function() {
   let viewState: ViewState;
 
   let testRenderer: any;
+  const tMock = () => {
+    //no-op
+  };
 
   beforeEach(function() {
     terria = new Terria({
@@ -42,7 +45,7 @@ describe("SearchBoxAndResults", function() {
       testRenderer = create(
         <ThemeProvider theme={terriaTheme}>
           <SearchBoxAndResults
-            t={() => {}}
+            t={tMock}
             terria={terria}
             viewState={viewState}
           />
@@ -69,7 +72,7 @@ describe("SearchBoxAndResults", function() {
       testRenderer = create(
         <ThemeProvider theme={terriaTheme}>
           <SearchBoxAndResults
-            t={() => {}}
+            t={tMock}
             terria={terria}
             viewState={viewState}
           />
@@ -95,7 +98,7 @@ describe("SearchBoxAndResults", function() {
       testRenderer = create(
         <ThemeProvider theme={terriaTheme}>
           <SearchBoxAndResults
-            t={() => {}}
+            t={tMock}
             terria={terria}
             viewState={viewState}
           />

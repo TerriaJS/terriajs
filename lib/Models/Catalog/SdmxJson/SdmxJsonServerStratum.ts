@@ -7,16 +7,14 @@ import flatten from "../../../Core/flatten";
 import isDefined from "../../../Core/isDefined";
 import { regexMatches } from "../../../Core/regexMatches";
 import TerriaError from "../../../Core/TerriaError";
-import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import ModelReference from "../../../Traits/ModelReference";
 import SdmxCatalogGroupTraits from "../../../Traits/TraitsClasses/SdmxCatalogGroupTraits";
-import CatalogGroup from "../CatalogGroup";
 import CommonStrata from "../../Definition/CommonStrata";
-import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
+import CatalogGroup from "../CatalogGroup";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import SdmxCatalogGroup from "./SdmxJsonCatalogGroup";
 import SdmxJsonCatalogItem from "./SdmxJsonCatalogItem";
 import {
@@ -47,7 +45,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     catalogGroup: SdmxCatalogGroup
   ): Promise<SdmxServerStratum> {
     // Load agency schemes (may be undefined)
-    let agencySchemes = (
+    const agencySchemes = (
       await loadSdmxJsonStructure(
         proxyCatalogItemUrl(catalogGroup, `${catalogGroup.url}/agencyscheme/`),
         true
@@ -55,7 +53,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     )?.data?.agencySchemes;
 
     // Load category schemes (may be undefined)
-    let categorySchemeResponse = await loadSdmxJsonStructure(
+    const categorySchemeResponse = await loadSdmxJsonStructure(
       proxyCatalogItemUrl(
         catalogGroup,
         `${catalogGroup.url}/categoryscheme?references=parentsandsiblings`
@@ -374,7 +372,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     id?: string
   ) {
     if (!isDefined(id)) return;
-    let resolvedCategoryScheme =
+    const resolvedCategoryScheme =
       typeof categoryScheme === "string"
         ? this.getCategoryScheme(categoryScheme)
         : categoryScheme;

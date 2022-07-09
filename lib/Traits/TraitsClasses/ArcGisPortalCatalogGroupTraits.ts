@@ -69,12 +69,12 @@ export default class ArcGisPortalCatalogGroupTraits extends mixTraits(
     description: `A title for the group holding all items that don't have a group in an ArcGIS Portal.
       If the value is a blank string or undefined, these items will be left at the top level, not grouped.`
   })
-  ungroupedTitle: string = "Ungrouped";
+  ungroupedTitle = "Ungrouped";
 
   @primitiveTrait({
     type: "boolean",
     name: "Hide empty groups",
     description: `If a group has no items don't display it in the catalog`
   })
-  hideEmptyGroups: boolean = true;
+  hideEmptyGroups = true;
 }

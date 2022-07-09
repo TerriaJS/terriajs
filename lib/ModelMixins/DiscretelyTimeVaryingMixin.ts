@@ -108,6 +108,7 @@ function DiscretelyTimeVaryingMixin<
               tag: dt.tag !== undefined ? dt.tag : dt.time
             });
           }
+          // eslint-disable-next-line no-empty
         } catch {}
       }
       asJulian.sort((a, b) => JulianDate.compare(a.time, b.time));
@@ -376,8 +377,9 @@ function DiscretelyTimeVaryingMixin<
 }
 
 namespace DiscretelyTimeVaryingMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof DiscretelyTimeVaryingMixin>> {}
+  export type Instance = InstanceType<
+    ReturnType<typeof DiscretelyTimeVaryingMixin>
+  >;
 
   export function isMixedInto(model: any): model is Instance {
     return model && model.hasDiscreteTimes;
@@ -397,7 +399,7 @@ function toJulianDate(time: string | undefined): JulianDate | undefined {
   const julianDate = JulianDate.fromIso8601(time);
 
   // Don't return an invalid JulianDate
-  if (julianDate.secondsOfDay === NaN || julianDate.dayNumber === NaN)
+  if (isNaN(julianDate.secondsOfDay) || isNaN(julianDate.dayNumber))
     return undefined;
 
   return julianDate;
@@ -421,15 +423,15 @@ export type ObjectifiedHours = DatesObject<Date[]>;
  *   whose values are objects whose keys are days, whose values are arrays of all the datetimes on that day.
  */
 function objectifyDates(dates: Date[]): ObjectifiedDates {
-  let result: ObjectifiedDates = { index: [], dates };
+  const result: ObjectifiedDates = { index: [], dates };
 
   for (let i = 0; i < dates.length; i++) {
-    let date = dates[i];
-    let year = date.getFullYear();
-    let century = Math.floor(year / 100);
-    let month = date.getMonth();
-    let day = date.getDate();
-    let hour = date.getHours();
+    const date = dates[i];
+    const year = date.getFullYear();
+    const century = Math.floor(year / 100);
+    const month = date.getMonth();
+    const day = date.getDate();
+    const hour = date.getHours();
 
     // ObjectifiedDates
     if (!result[century]) {

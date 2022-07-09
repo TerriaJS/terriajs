@@ -39,7 +39,7 @@ export const shareConvertNotification = (
   };
 
   return (
-    <React.Fragment>
+    <>
       <Text>
         {parseCustomMarkdownToReact(
           i18next.t("share.convertNotificationMessage")
@@ -77,27 +77,27 @@ export const shareConvertNotification = (
       <Spacing bottom={2} />
 
       <Collapsible
-        btnRight={true}
+        btnRight
         title={i18next.t("share.convertNotificationWarningsTitle")}
         titleTextProps={{ large: true }}
         bodyBoxProps={{ padded: true }}
       >
         {rootMessages && (
-          <React.Fragment>
+          <>
             <ul>
               {rootMessages.map(message => (
                 <li>{message}</li>
               ))}
             </ul>
             <Spacing bottom={1} />
-          </React.Fragment>
+          </>
         )}
 
         {Object.entries(messagesForPath).map(([path, messages]) => (
-          <React.Fragment>
+          <>
             <Spacing bottom={1} />
             <Collapsible
-              btnRight={true}
+              btnRight
               title={
                 path && path !== ""
                   ? path
@@ -110,9 +110,9 @@ export const shareConvertNotification = (
                 ))}
               </ul>
             </Collapsible>
-          </React.Fragment>
+          </>
         ))}
       </Collapsible>
-    </React.Fragment>
+    </>
   );
 };

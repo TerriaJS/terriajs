@@ -506,7 +506,7 @@ const SharePanel = observer(
                     isChecked={this.shouldShorten() ?? false}
                     onChange={this.onShortenClicked}
                     className={Styles.checkbox}
-                  ></Checkbox>
+                  />
                   <p>{t("share.shortenUsingService")}</p>
                 </div>
               </If>

@@ -1,7 +1,7 @@
-import Model from "../Models/Definition/Model";
-import Constructor from "../Core/Constructor";
-import ExportableTraits from "../Traits/TraitsClasses/ExportableTraits";
 import { computed } from "mobx";
+import Constructor from "../Core/Constructor";
+import Model from "../Models/Definition/Model";
+import ExportableTraits from "../Traits/TraitsClasses/ExportableTraits";
 
 export type ExportData = string | { name: string; file: Blob };
 
@@ -34,8 +34,7 @@ function ExportableMixin<T extends Constructor<Model<ExportableTraits>>>(
 }
 
 namespace ExportableMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof ExportableMixin>> {}
+  export type Instance = InstanceType<ReturnType<typeof ExportableMixin>>;
   export function isMixedInto(model: any): model is Instance {
     return model && "exportData" in model && "canExportData" in model;
   }

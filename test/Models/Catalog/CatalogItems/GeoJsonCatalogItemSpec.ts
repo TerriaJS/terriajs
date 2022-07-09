@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-loss-of-precision */
 import { runInAction } from "mobx";
 import { GeomType, LineSymbolizer, PolygonSymbolizer } from "protomaps";
 import { CustomDataSource } from "terriajs-cesium";

@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import L, { GridLayer } from "leaflet";
-import { action, autorun, observable, runInAction, computed } from "mobx";
+import { action, autorun, computed, observable, runInAction } from "mobx";
 import { computedFn } from "mobx-utils";
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -51,15 +51,9 @@ import CameraView from "./CameraView";
 import hasTraits from "./Definition/hasTraits";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
+import { LeafletAttribution } from "./LeafletAttribution";
 import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
-import { LeafletAttribution } from "./LeafletAttribution";
-
-// We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
-// and import doesn't allows us to do that, so instead we use require + type casting to ensure
-// we still maintain the type checking, without TS screaming with errors
-const FeatureDetection: FeatureDetection = require("terriajs-cesium/Source/Core/FeatureDetection")
-  .default;
 
 // This class is an observer. It probably won't contain any observables itself
 
@@ -76,7 +70,7 @@ export default class Leaflet extends GlobeOrMap {
   private readonly _leafletVisualizer: LeafletVisualizer;
   private readonly _eventHelper: EventHelper;
   private readonly _selectionIndicator: LeafletSelectionIndicator;
-  private _stopRequestAnimationFrame: boolean = false;
+  private _stopRequestAnimationFrame = false;
   private _cesiumReqAnimFrameId: number | undefined;
   private _pickedFeatures: PickedFeatures | undefined = undefined;
   private _pauseMapInteractionCount = 0;
@@ -248,7 +242,7 @@ export default class Leaflet extends GlobeOrMap {
    */
   private _initProgressEvent() {
     const onTileLoadChange = () => {
-      var tilesLoadingCount = 0;
+      let tilesLoadingCount = 0;
 
       this.map.eachLayer(function(layerOrGridlayer) {
         // _tiles is protected but our knockout-loading-logic accesses it here anyway
@@ -407,7 +401,7 @@ export default class Leaflet extends GlobeOrMap {
       const allDataSources = allMapItems.filter(isDataSource);
 
       // Remove deleted data sources
-      let dataSources = this.dataSources;
+      const dataSources = this.dataSources;
       for (let i = 0; i < dataSources.length; i++) {
         const d = dataSources.get(i);
         if (allDataSources.indexOf(d) === -1) {
@@ -434,7 +428,7 @@ export default class Leaflet extends GlobeOrMap {
 
   doZoomTo(
     target: CameraView | Rectangle | DataSource | MappableMixin.Instance | any,
-    flightDurationSeconds: number = 3.0
+    flightDurationSeconds = 3.0
   ): Promise<void> {
     if (!isDefined(target)) {
       return Promise.resolve();
@@ -603,7 +597,7 @@ export default class Leaflet extends GlobeOrMap {
     latlng: L.LatLng,
     tileCoordinates?: any,
     existingFeatures?: Feature[],
-    ignoreSplitter: boolean = false
+    ignoreSplitter = false
   ) {
     if (isDefined(this._pickedFeatures)) {
       // Picking is already in progress.
@@ -908,10 +902,10 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   getClipsForSplitter(): any {
-    let clipLeft: string = "";
-    let clipRight: string = "";
-    let clipPositionWithinMap: number = 0;
-    let clipX: number = 0;
+    let clipLeft = "";
+    let clipRight = "";
+    let clipPositionWithinMap = 0;
+    let clipX = 0;
     if (this.terria.showSplitter) {
       const map = this.map;
       const size = map.getSize();

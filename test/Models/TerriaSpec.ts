@@ -345,7 +345,7 @@ describe("Terria", function() {
         });
 
         UrlToCatalogMemberMapping.register(
-          s => true,
+          () => true,
           WebMapServiceCatalogItem.type,
           true
         );
@@ -902,7 +902,7 @@ describe("Terria", function() {
           ]);
           done();
         })
-        .catch(error => {
+        .catch(() => {
           done.fail();
         });
     });
@@ -1219,6 +1219,7 @@ describe("Terria", function() {
   describe("mapSettings", function() {
     it("properly interprets map hash parameter", async () => {
       const getLocalPropertySpy = spyOn(terria, "getLocalProperty");
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
       const location: Location = {
         href: "http://test.com/#map=2d"
@@ -1245,6 +1246,7 @@ describe("Terria", function() {
         terria,
         "getLocalProperty"
       ).and.returnValue("3dsmooth");
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
       const location: Location = {
         href: "http://test.com/#map=4d"

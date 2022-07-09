@@ -459,7 +459,7 @@ function formatOutputValue(title: string, value: string | undefined) {
   const values = value.split(",");
 
   return values.reduce(function(previousValue, currentValue) {
-    if (value.match(/[.\/](png|jpg|jpeg|gif|svg)/i)) {
+    if (value.match(/[./](png|jpg|jpeg|gif|svg)/i)) {
       return (
         previousValue +
         '<a href="' +

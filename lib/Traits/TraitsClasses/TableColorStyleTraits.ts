@@ -60,7 +60,7 @@ export default class TableColorStyleTraits extends ModelTraits {
       "The color to use when the styling the region, specified as a CSS color string.",
     type: "string"
   })
-  regionColor: string = "#02528d";
+  regionColor = "#02528d";
 
   @primitiveTrait({
     name: "Null Label",
@@ -116,7 +116,7 @@ export default class TableColorStyleTraits extends ModelTraits {
       "`Enum Colors` is specified for an `enum` column.",
     type: "number"
   })
-  numberOfBins: number = 0;
+  numberOfBins = 0;
 
   @primitiveArrayTrait({
     name: "Bin Maximums",
@@ -170,7 +170,7 @@ export default class TableColorStyleTraits extends ModelTraits {
       "The number of tick marks (in addition to the top and bottom) to show on the legend for Continuous color scales",
     type: "number"
   })
-  legendTicks: number = 7;
+  legendTicks = 7;
 
   @objectTrait({
     name: "Legend",
@@ -194,7 +194,7 @@ export default class TableColorStyleTraits extends ModelTraits {
     description: "True, if z-score filter is enabled.",
     type: "boolean"
   })
-  zScoreFilterEnabled: boolean = false;
+  zScoreFilterEnabled = false;
 
   @primitiveTrait({
     name: "Range filter",
@@ -202,5 +202,5 @@ export default class TableColorStyleTraits extends ModelTraits {
       "This is applied after the `zScoreFilter`. It is used to effectively 'disable' the zScoreFilter if it doesn't cut at least the specified percentage of the range of values (for both minimum and maximum value). For example if `rangeFilter = 0.2`, then the zScoreFilter will only be effective if it cuts at least 20% of the range of values from the minimum and maximum value",
     type: "number"
   })
-  rangeFilter: number = 0.3;
+  rangeFilter = 0.3;
 }

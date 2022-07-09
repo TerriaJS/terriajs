@@ -195,8 +195,7 @@ function TimeFilterMixin<T extends Constructor<Model<TimeFilterTraits>>>(
 }
 
 namespace TimeFilterMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof TimeFilterMixin>> {}
+  export type Instance = InstanceType<ReturnType<typeof TimeFilterMixin>>;
 
   export function isMixedInto(model: any): model is Instance {
     return model && model.hasTimeFilterMixin;

@@ -49,7 +49,7 @@ export class CkanDatasetStratum extends LoadableStratum(
     super();
   }
 
-  duplicateLoadableStratum(newModel: BaseModel): this {
+  duplicateLoadableStratum(): this {
     return new CkanDatasetStratum(
       this.ckanItemReference,
       this.ckanCatalogGroup
@@ -126,7 +126,7 @@ export class CkanDatasetStratum extends LoadableStratum(
     if (this.ckanDataset === undefined) return undefined;
     if (this.ckanDataset.extras !== undefined) {
       const out: number[] = [];
-      const bboxExtras = this.ckanDataset.extras.forEach(e => {
+      this.ckanDataset.extras.forEach(e => {
         if (e.key === "bbox-west-long") out[0] = parseFloat(e.value);
         if (e.key === "bbox-south-lat") out[1] = parseFloat(e.value);
         if (e.key === "bbox-north-lat") out[2] = parseFloat(e.value);
@@ -142,14 +142,14 @@ export class CkanDatasetStratum extends LoadableStratum(
       }
     }
     if (this.ckanDataset.geo_coverage !== undefined) {
-      var bboxString = this.ckanDataset.geo_coverage;
-      var parts = bboxString.split(",");
+      const bboxString = this.ckanDataset.geo_coverage;
+      const parts = bboxString.split(",");
       if (parts.length === 4) {
         return createStratumInstance(RectangleTraits, {
-          west: parseInt(parts[0]),
-          south: parseInt(parts[1]),
-          east: parseInt(parts[2]),
-          north: parseInt(parts[3])
+          west: parseInt(parts[0], 10),
+          south: parseInt(parts[1], 10),
+          east: parseInt(parts[2], 10),
+          north: parseInt(parts[3], 10)
         });
       }
     }
@@ -157,7 +157,7 @@ export class CkanDatasetStratum extends LoadableStratum(
       isDefined(this.ckanDataset.spatial) &&
       this.ckanDataset.spatial !== ""
     ) {
-      var gj = JSON.parse(this.ckanDataset.spatial);
+      const gj = JSON.parse(this.ckanDataset.spatial);
       if (gj.type === "Polygon" && gj.coordinates[0].length === 5) {
         return createStratumInstance(RectangleTraits, {
           west: gj.coordinates[0][0][0],
@@ -343,9 +343,7 @@ export default class CkanItemReference extends UrlMixin(
     );
   }
 
-  async forceLoadReference(
-    previousTarget: BaseModel | undefined
-  ): Promise<BaseModel | undefined> {
+  async forceLoadReference(): Promise<BaseModel | undefined> {
     await this.setCkanStrata(this);
 
     if (this._supportedFormat === undefined) return undefined;
@@ -384,7 +382,6 @@ export default class CkanItemReference extends UrlMixin(
     }
 
     if (model === undefined) return;
-    previousTarget = model;
     await this.setCkanStrata(model);
 
     model.setTrait(CommonStrata.definition, "name", this.name);
@@ -429,7 +426,7 @@ export interface PreparedSupportedFormat
 }
 
 async function loadCkanDataset(ckanItem: CkanItemReference) {
-  var uri = new URI(ckanItem.url)
+  const uri = new URI(ckanItem.url)
     .segment("api/3/action/package_show")
     .addQuery({ id: ckanItem.datasetId });
 
@@ -441,7 +438,7 @@ async function loadCkanDataset(ckanItem: CkanItemReference) {
 }
 
 async function loadCkanResource(ckanItem: CkanItemReference) {
-  var uri = new URI(ckanItem.url)
+  const uri = new URI(ckanItem.url)
     .segment("api/3/action/resource_show")
     .addQuery({ id: ckanItem.resourceId });
 
@@ -510,7 +507,6 @@ export function isResourceInSupportedFormats(
   formats: PreparedSupportedFormat[]
 ): PreparedSupportedFormat | undefined {
   if (resource === undefined) return undefined;
-  let matches: PreparedSupportedFormat[] = [];
   for (let i = 0; i < formats.length; ++i) {
     const format = formats[i];
     if (resourceIsSupported(resource, format)) return format;

@@ -27,7 +27,9 @@ describe("MovementsController", function() {
     cesium = terria.cesium!;
     controller = new MovementsController(
       cesium,
-      () => {},
+      () => {
+        // no-op
+      },
       PEDESTRIAN_HEIGHT,
       MAX_VERTICAL_LOOK_ANGLE
     );

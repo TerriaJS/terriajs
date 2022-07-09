@@ -49,23 +49,20 @@ const StoryBody = ({
 }: {
   isCollapsed: boolean;
   story: Story;
-}) => (
-  <>
-    {story.text && story.text !== "" ? (
-      <StoryContainer isCollapsed={isCollapsed} column>
-        <Text
-          css={`
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-          `}
-          medium
-        >
-          {parseCustomHtmlToReact(story.text)}
-        </Text>
-      </StoryContainer>
-    ) : null}
-  </>
-);
+}) =>
+  story.text && story.text !== "" ? (
+    <StoryContainer isCollapsed={isCollapsed} column>
+      <Text
+        css={`
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+        `}
+        medium
+      >
+        {parseCustomHtmlToReact(story.text)}
+      </Text>
+    </StoryContainer>
+  ) : null;
 
 export default StoryBody;

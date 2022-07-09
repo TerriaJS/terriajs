@@ -272,7 +272,7 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
                           <FullScreenButton
                             terria={terria}
                             viewState={props.viewState}
-                            minified={true}
+                            minified
                             animationDuration={250}
                             btnText={t("addData.btnHide")}
                           />
@@ -329,7 +329,7 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
                     credits={terria.configParameters.extraCreditLinks?.slice()}
                     currentViewer={terria.mainViewer.currentViewer}
                   />
-                  <div id="map-data-attribution"></div>
+                  <div id="map-data-attribution" />
                   <main>
                     <ExplorerWindow
                       terria={terria}

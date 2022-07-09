@@ -16,5 +16,5 @@ interface CssExports {
   'section-label': string;
   'sectionLabel': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

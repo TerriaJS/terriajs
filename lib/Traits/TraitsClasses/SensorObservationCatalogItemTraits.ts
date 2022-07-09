@@ -86,7 +86,7 @@ export default class SensorObservationCatalogItemTraits extends mixTraits(
     description:
       "Whether to include the list of procedures in GetFeatureOfInterest calls, so that only locations that support those procedures are returned. For some servers (such as BoM's Water Data Online), this causes the request to time out."
   })
-  filterByProcedures: boolean = true;
+  filterByProcedures = true;
 
   @objectArrayTrait({
     name: "Procedures",

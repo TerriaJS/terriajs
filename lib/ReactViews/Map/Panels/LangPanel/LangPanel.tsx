@@ -8,7 +8,7 @@ import Ul, { Li } from "../../../../Styled/List";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
 import Styles from "../../menu-bar.scss";
 
-const stripLangLocale = (lang: string = ""): string => lang.split("-")[0];
+const stripLangLocale = (lang = ""): string => lang.split("-")[0];
 
 type Props = {
   terria: Terria;
@@ -23,7 +23,7 @@ export default (props: Props) => {
   }
 
   return (
-    //@ts-ignore - not yet ready to tackle tsfying MenuPanel
+    // @ts-ignore - not yet ready to tackle tsfying MenuPanel
     <MenuPanel
       theme={{
         btn: Styles.langBtn,

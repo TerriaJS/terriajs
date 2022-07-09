@@ -3,7 +3,7 @@ import Result from "../../Core/Result";
 import { BaseModel } from "../../Models/Definition/Model";
 import Trait, { TraitOptions } from "../Trait";
 
-export interface AnyTraitOptions extends TraitOptions {}
+export type AnyTraitOptions = TraitOptions;
 
 export default function anyTrait(options: TraitOptions) {
   return function(target: any, propertyKey: string) {
@@ -27,7 +27,7 @@ export class AnyTrait extends Trait {
   }
 
   getValue(model: BaseModel): any {
-    for (let stratum of model.strataTopToBottom.values()) {
+    for (const stratum of model.strataTopToBottom.values()) {
       const stratumAny: any = stratum;
       if (stratumAny !== undefined && stratumAny[this.id] !== undefined) {
         return stratumAny[this.id];

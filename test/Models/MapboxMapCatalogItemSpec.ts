@@ -19,7 +19,8 @@ describe("MapboxMapCatalogItem", function() {
   });
 
   it("can be created", function() {
-    new MapboxMapCatalogItem("test", terria);
+    const test = new MapboxMapCatalogItem("test", terria);
+    expect(test).toBeDefined();
   });
 
   describe("mapItems", function() {

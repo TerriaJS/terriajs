@@ -1,10 +1,8 @@
 import { action, computed, observable, runInAction } from "mobx";
-import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
-import MappableMixin, { MapItem } from "./MappableMixin";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
@@ -15,6 +13,7 @@ import { InfoSectionTraits } from "../Traits/TraitsClasses/CatalogMemberTraits";
 import AutoRefreshingMixin from "./AutoRefreshingMixin";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import GroupMixin from "./GroupMixin";
+import MappableMixin, { MapItem } from "./MappableMixin";
 
 class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
   constructor(readonly catalogFunctionJob: CatalogFunctionJobMixin.Instance) {
@@ -250,7 +249,7 @@ function CatalogFunctionJobMixin<
     >;
 
     @action
-    protected setOnError(error: unknown, raiseToUser: boolean = true) {
+    protected setOnError(error: unknown, raiseToUser = true) {
       const terriaError = TerriaError.from(error, {
         title: "Job failed",
         message: `An error has occurred while executing \`${this.name}\` job`,
@@ -287,7 +286,9 @@ function CatalogFunctionJobMixin<
     get mapItems(): MapItem[] {
       return [];
     }
-    protected async forceLoadMapItems() {}
+    protected async forceLoadMapItems() {
+      // no-op
+    }
 
     protected async forceLoadMetadata() {
       if (this.jobStatus === "finished" && !this.downloadedResults) {
@@ -295,7 +296,9 @@ function CatalogFunctionJobMixin<
       }
     }
 
-    protected async forceLoadMembers() {}
+    protected async forceLoadMembers() {
+      // no-op
+    }
 
     get hasCatalogFunctionJobMixin() {
       return true;
@@ -307,8 +310,9 @@ function CatalogFunctionJobMixin<
 
 namespace CatalogFunctionJobMixin {
   StratumOrder.addLoadStratum(FunctionJobStratum.name);
-  export interface Instance
-    extends InstanceType<ReturnType<typeof CatalogFunctionJobMixin>> {}
+  export type Instance = InstanceType<
+    ReturnType<typeof CatalogFunctionJobMixin>
+  >;
   export function isMixedInto(model: any): model is Instance {
     return model && model.hasCatalogFunctionJobMixin;
   }

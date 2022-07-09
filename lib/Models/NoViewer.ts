@@ -1,17 +1,12 @@
 "use strict";
 
+import { observable } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import LatLonHeight from "../Core/LatLonHeight";
-import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
-import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
-import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
-import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
-import { observable } from "mobx";
 
 class NoViewer extends GlobeOrMap {
   readonly type = "none";
@@ -25,12 +20,11 @@ class NoViewer extends GlobeOrMap {
     this.terria = terriaViewer.terria;
   }
 
-  destroy() {}
+  destroy() {
+    // no-op
+  }
 
-  doZoomTo(
-    v: CameraView | Rectangle | MappableMixin.Instance,
-    t: any
-  ): Promise<void> {
+  doZoomTo(v: CameraView | Rectangle | MappableMixin.Instance): Promise<void> {
     if (v instanceof CameraView) {
       this._currentView = v;
     } else if (v instanceof Rectangle) {
@@ -39,13 +33,13 @@ class NoViewer extends GlobeOrMap {
     return Promise.resolve();
   }
 
-  notifyRepaintRequired() {}
+  notifyRepaintRequired() {
+    // no-op
+  }
 
-  pickFromLocation(
-    latLngHeight: LatLonHeight,
-    providerCoords: ProviderCoordsMap,
-    existingFeatures: Feature[]
-  ) {}
+  pickFromLocation() {
+    // no-op
+  }
 
   /**
    * Return features at a latitude, longitude and (optionally) height for the given imageryLayer
@@ -53,10 +47,9 @@ class NoViewer extends GlobeOrMap {
    * @param providerCoords A map of imagery provider urls to the tile coords used to get features for those imagery
    * @returns A flat array of all the features for the given tiles that are currently on the map
    */
-  getFeaturesAtLocation(
-    latLngHeight: LatLonHeight,
-    providerCoords: ProviderCoordsMap
-  ) {}
+  getFeaturesAtLocation() {
+    // no-op
+  }
 
   getCurrentCameraView(): CameraView {
     return this._currentView;
@@ -66,13 +59,16 @@ class NoViewer extends GlobeOrMap {
     return undefined;
   }
 
-  pauseMapInteraction() {}
-  resumeMapInteraction() {}
-  _addVectorTileHighlight(
-    imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
-    rectangle: Rectangle
-  ) {
-    return () => {};
+  pauseMapInteraction() {
+    // no-op
+  }
+  resumeMapInteraction() {
+    // no-op
+  }
+  _addVectorTileHighlight() {
+    return () => {
+      // no-op
+    };
   }
 }
 

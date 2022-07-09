@@ -16,7 +16,7 @@ export default class DiscretelyTimeVaryingTraits extends mixTraits(
       " * `previous` - the discrete time equal to or before the current continuous time is used.",
     type: "string"
   })
-  fromContinuous: string = "nearest";
+  fromContinuous = "nearest";
 
   @primitiveTrait({
     type: "boolean",

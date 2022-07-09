@@ -98,7 +98,9 @@ describe("YDYRCatalogFunctionJob", function() {
       terria.workbench.add(job);
       dispose = reaction(
         () => job.mapItems,
-        () => {}
+        () => {
+          // no-op
+        }
       );
     });
     afterEach(() => {

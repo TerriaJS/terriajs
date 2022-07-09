@@ -1,8 +1,6 @@
-import createReactClass from "create-react-class";
-import { runInAction, toJS, action } from "mobx";
-import { observer, useLocalStore } from "mobx-react";
-import PropTypes from "prop-types";
-import React, { useState, useRef } from "react";
+import { action, toJS } from "mobx";
+import { observer } from "mobx-react";
+import React from "react";
 import Sortable from "react-anything-sortable";
 import {
   Trans,
@@ -10,30 +8,29 @@ import {
   withTranslation,
   WithTranslation
 } from "react-i18next";
-import styled, { withTheme, DefaultTheme } from "styled-components";
+import styled, { DefaultTheme, withTheme } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import defined from "terriajs-cesium/Source/Core/defined";
-const dataStoriesImg = require("../../../wwwroot/images/data-stories-getting-started.jpg");
-import triggerResize from "../../Core/triggerResize";
-import Box from "../../Styled/Box";
-import Button, { RawButton } from "../../Styled/Button";
-import Spacing from "../../Styled/Spacing";
-import Text, { TextSpan } from "../../Styled/Text";
-import BadgeBar from "../BadgeBar";
-import measureElement, { MeasureElementProps } from "../HOCs/measureElement";
-import Icon, { StyledIcon } from "../../Styled/Icon";
-import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
-import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
-import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
-import Styles from "./story-builder.scss";
-import Story from "./Story";
-import StoryEditor from "./StoryEditor.jsx";
 import {
   Category,
   StoryAction
 } from "../../Core/AnalyticEvents/analyticEvents";
+import triggerResize from "../../Core/triggerResize";
 import ViewState from "../../ReactViewModels/ViewState";
+import Box from "../../Styled/Box";
+import Button, { RawButton } from "../../Styled/Button";
+import Icon, { StyledIcon } from "../../Styled/Icon";
+import Spacing from "../../Styled/Spacing";
+import Text, { TextSpan } from "../../Styled/Text";
+import BadgeBar from "../BadgeBar";
+import measureElement, { MeasureElementProps } from "../HOCs/measureElement";
+import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
+import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
+import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
+import Story from "./Story";
+import Styles from "./story-builder.scss";
+import StoryEditor from "./StoryEditor.jsx";
+const dataStoriesImg = require("../../../wwwroot/images/data-stories-getting-started.jpg");
 
 const STORY_VIDEO = "storyVideo";
 
@@ -280,7 +277,7 @@ class StoryBuilder extends React.Component<
         <CaptureScene
           disabled={this.state.isRemoving}
           onClickCapture={this.onClickCapture}
-        ></CaptureScene>
+        />
       </Box>
     );
   }
@@ -401,7 +398,7 @@ class StoryBuilder extends React.Component<
               <Sortable
                 onSort={this.onSort}
                 direction="vertical"
-                dynamic={true}
+                dynamic
                 css={`
                   position: static;
                   margin-right: 10px;
@@ -431,7 +428,7 @@ class StoryBuilder extends React.Component<
             <CaptureScene
               disabled={this.state.isRemoving}
               onClickCapture={this.onClickCapture}
-            ></CaptureScene>
+            />
           </Box>
           <Spacing bottom={2} />
         </Box>
@@ -484,7 +481,7 @@ class StoryBuilder extends React.Component<
             />
           </RawButton>
         </Box>
-        <Box centered={true} paddedHorizontally={2} displayInlineBlock>
+        <Box centered paddedHorizontally={2} displayInlineBlock>
           <Text bold extraExtraLarge textLight>
             {t("story.panelTitle")}
           </Text>

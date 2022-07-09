@@ -24,8 +24,8 @@ declare module "terriajs-cesium/Source/Scene/Scene" {
   }
 }
 
-var screenSpacePos = new Cartesian2();
-var offScreen = "-1000px";
+const screenSpacePos = new Cartesian2();
+const offScreen = "-1000px";
 
 export default class CesiumSelectionIndicator {
   /**
@@ -40,13 +40,13 @@ export default class CesiumSelectionIndicator {
    * @type {Boolean}
    */
   @observable
-  showSelection: boolean = true;
+  showSelection = true;
 
   @observable
-  transform: string = "";
+  transform = "";
 
   @observable
-  opacity: number = 1.0;
+  opacity = 1.0;
 
   readonly container: Element;
   readonly selectionIndicatorElement: HTMLDivElement;
@@ -61,7 +61,7 @@ export default class CesiumSelectionIndicator {
   private _cesium: import("../../Models/Cesium").default;
   private _tweens: any;
   private _selectionIndicatorTween: any;
-  private _selectionIndicatorIsAppearing: boolean = false;
+  private _selectionIndicatorIsAppearing = false;
   private _disposeAutorun: IReactionDisposer;
 
   constructor(cesium: import("../../Models/Cesium").default) {

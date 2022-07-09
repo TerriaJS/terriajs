@@ -41,7 +41,7 @@ export class ArcGisPortalItemStratum extends LoadableStratum(
     super();
   }
 
-  duplicateLoadableStratum(newModel: BaseModel): this {
+  duplicateLoadableStratum(): this {
     return new ArcGisPortalItemStratum(
       this.arcgisPortalItemReference,
       this.arcgisPortalCatalogGroup
@@ -307,9 +307,7 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
     });
   }
 
-  async forceLoadReference(
-    previousTarget: BaseModel | undefined
-  ): Promise<BaseModel | undefined> {
+  async forceLoadReference(): Promise<BaseModel | undefined> {
     // So when we first crawl we'll get this far
     await this.setArcgisStrata(this);
     // this.setSupportedFormatFromItem(this._arcgisItem);
@@ -350,7 +348,6 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
     );
 
     if (model === undefined) return;
-    previousTarget = model;
     await this.setArcgisStrata(model);
 
     const defintionStratum = this.strata.get(CommonStrata.definition);
@@ -372,11 +369,6 @@ interface ArcGisItemInfo {
   error?: JsonObject;
 }
 
-interface ArcGisItemWithFormat {
-  supportedFormat: PreparedSupportedFormat;
-  arcgisItem: ArcGisItem;
-}
-
 interface PreparedSupportedFormat {
   formatRegex: RegExp | undefined;
   urlRegex: RegExp | undefined;
@@ -384,7 +376,7 @@ interface PreparedSupportedFormat {
 }
 
 async function loadPortalItem(portalItem: ArcGisPortalItemReference) {
-  var uri = new URI(portalItem._portalRootUrl)
+  const uri = new URI(portalItem._portalRootUrl)
     .segment(`/sharing/rest/content/items/${portalItem.itemId}`)
     .addQuery({ f: "json" });
 
@@ -400,7 +392,7 @@ async function loadPortalItem(portalItem: ArcGisPortalItemReference) {
 async function loadAdditionalPortalInfo(portalItem: ArcGisPortalItemReference) {
   if (portalItem._arcgisItem === undefined) return undefined;
   const baseUrl = portalItem._portalRootUrl;
-  var uri = new URI(baseUrl)
+  const uri = new URI(baseUrl)
     .segment(`/sharing/rest/content/items/${portalItem._arcgisItem.id}/data`)
     .addQuery({ f: "json" });
 

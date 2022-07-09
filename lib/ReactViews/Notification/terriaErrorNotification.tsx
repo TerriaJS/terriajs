@@ -28,10 +28,7 @@ const ErrorsBox = (props: {
           key={idx}
         >
           {error instanceof TerriaError ? (
-            <TerriaErrorBox
-              error={error}
-              viewState={props.viewState}
-            ></TerriaErrorBox>
+            <TerriaErrorBox error={error} viewState={props.viewState} />
           ) : (
             // Show error.message (as well as error.stack) if error.stack is defined
             <div>
@@ -72,7 +69,7 @@ const TerriaErrorBox = (props: {
         <ErrorsBox
           errors={props.error.originalError}
           viewState={props.viewState}
-        ></ErrorsBox>
+        />
       ) : null}
     </>
   );
@@ -123,7 +120,7 @@ export const terriaErrorNotification = (error: TerriaError) => (
         <>
           <Spacing bottom={2} />
           <Collapsible
-            btnRight={true}
+            btnRight
             title={i18next.t("models.raiseError.developerDetails")}
             titleTextProps={{ large: true }}
             bodyBoxProps={{ padded: true }}
@@ -132,16 +129,11 @@ export const terriaErrorNotification = (error: TerriaError) => (
               runInAction(() => (error.showDetails = show));
             }}
           >
-            <ErrorsBox
-              errors={detailedErrors}
-              viewState={viewState}
-            ></ErrorsBox>
+            <ErrorsBox errors={detailedErrors} viewState={viewState} />
           </Collapsible>
         </>
       ) : null}
-      {!includesFeedbackLink ? (
-        <FeedbackLink viewState={viewState}></FeedbackLink>
-      ) : null}
+      {!includesFeedbackLink ? <FeedbackLink viewState={viewState} /> : null}
     </>
   );
 };

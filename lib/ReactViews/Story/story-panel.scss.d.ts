@@ -8,5 +8,5 @@ interface CssExports {
   'story-container': string;
   'storyContainer': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

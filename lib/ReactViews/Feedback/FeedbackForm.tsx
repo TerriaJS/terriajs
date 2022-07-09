@@ -124,7 +124,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
     }
   }
 
-  changeSendShareUrl(e: React.ChangeEvent<HTMLInputElement>) {
+  changeSendShareUrl() {
     this.setState((prevState: IState) => ({
       sendShareURL: !prevState.sendShareURL
     }));
@@ -137,7 +137,9 @@ class FeedbackForm extends React.Component<IProps, IState> {
       this.state.comment.length >=
       this.props.viewState.terria.configParameters.feedbackMinLength!
     ) {
-      this.state.isSending = true;
+      this.setState({
+        isSending: true
+      });
       sendFeedback({
         terria: this.props.viewState.terria,
         name: this.state.name,
@@ -219,7 +221,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
               value={this.state.name}
               onChange={this.updateName}
               autoComplete="off"
-            ></Input>
+            />
           </StyledLabel>
           <StyledLabel
             viewState={viewState}
@@ -240,7 +242,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
               value={this.state.email}
               onChange={this.updateEmail}
               autoComplete="off"
-            ></Input>
+            />
           </StyledLabel>
           <StyledLabel
             viewState={viewState}
@@ -362,12 +364,12 @@ const TextArea: React.FC<TextAreaProps> = (props: TextAreaProps) => {
       onChange={event => {
         textAreaRef.current!.style.setProperty("height", "auto");
 
-        if (props.onChange) {
-          props.onChange(event);
+        if (onChange) {
+          onChange(event);
         }
       }}
       invalidValue={!valueIsValid}
-    ></StyledTextArea>
+    />
   );
 };
 

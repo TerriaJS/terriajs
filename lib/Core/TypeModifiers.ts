@@ -1,4 +1,4 @@
-import { If, AllowsUndefined, AllowsNull } from "./TypeConditionals";
+import { AllowsNull, AllowsUndefined, If } from "./TypeConditionals";
 
 /**
  * Makes a target type `| undefined` if the source type is `| undefined`.

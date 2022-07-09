@@ -6,5 +6,5 @@ interface CssExports {
   'elapsedTime': string;
   'timer': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

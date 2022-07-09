@@ -22,7 +22,9 @@ describe("MapToolbar", function() {
       MapToolbar.addButton(viewState, {
         text: "Simple button",
         icon: Icon.GLYPHS.eye,
-        onClick: () => {}
+        onClick: () => {
+          // no-op
+        }
       });
       expect(terria.mapNavigationModel.items.length).toBe(1);
       expect(terria.mapNavigationModel.items[0].name).toBe("Simple button");
@@ -48,8 +50,12 @@ describe("MapToolbar", function() {
       MapToolbar.addModeButton(viewState, {
         text: "Mode button",
         icon: Icon.GLYPHS.pedestrian,
-        onUserEnterMode: () => {},
-        onUserCloseMode: () => {}
+        onUserEnterMode: () => {
+          // no-op
+        },
+        onUserCloseMode: () => {
+          // no-op
+        }
       });
       expect(terria.mapNavigationModel.items.length).toBe(1);
       expect(terria.mapNavigationModel.items[0].name).toBe("Mode button");
@@ -62,7 +68,9 @@ describe("MapToolbar", function() {
           text: "Mode button",
           icon: Icon.GLYPHS.pedestrian,
           onUserEnterMode: onUserEnterModeSpy,
-          onUserCloseMode: () => {}
+          onUserCloseMode: () => {
+            // no-op
+          }
         });
         const navItem = terria.mapNavigationModel.items[0];
         expect(navItem).toBeDefined();
@@ -79,7 +87,9 @@ describe("MapToolbar", function() {
           onUserEnterMode: () => {
             throw "onUserEnterMode error";
           },
-          onUserCloseMode: () => {}
+          onUserCloseMode: () => {
+            // no-op
+          }
         });
 
         const raiseErrorToUserSpy = spyOn(terria, "raiseErrorToUser");
@@ -97,7 +107,9 @@ describe("MapToolbar", function() {
         MapToolbar.addModeButton(viewState, {
           text: "Mode button",
           icon: Icon.GLYPHS.pedestrian,
-          onUserEnterMode: () => {},
+          onUserEnterMode: () => {
+            // no-op
+          },
           onUserCloseMode: onUserCloseModeSpy
         });
         const navItem = terria.mapNavigationModel.items[0];
@@ -112,7 +124,9 @@ describe("MapToolbar", function() {
         MapToolbar.addModeButton(viewState, {
           text: "Mode button",
           icon: Icon.GLYPHS.pedestrian,
-          onUserEnterMode: () => {},
+          onUserEnterMode: () => {
+            // no-op
+          },
           onUserCloseMode: () => {
             throw "onUserCloseMode error";
           }

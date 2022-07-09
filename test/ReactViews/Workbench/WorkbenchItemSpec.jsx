@@ -37,9 +37,15 @@ describe("WorkbenchItem", function() {
         terria={terria}
         viewState={viewState}
         item={item}
-        onTouchStart={() => {}}
-        onMouseDown={() => {}}
-        t={() => {}}
+        onTouchStart={() => {
+          // no-op
+        }}
+        onMouseDown={() => {
+          // no-op
+        }}
+        t={() => {
+          // no-op
+        }}
         className="pheature"
       />
     );

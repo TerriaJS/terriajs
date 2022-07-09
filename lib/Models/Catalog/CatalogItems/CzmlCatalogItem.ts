@@ -91,7 +91,7 @@ export default class CzmlCatalogItem
 
   protected forceLoadMapItems(): Promise<void> {
     const attribution = this.attribution;
-    let loadableData: any = undefined;
+    let loadableData: any;
     if (isDefined(this.czmlData)) {
       loadableData = toJS(this.czmlData);
     } else if (isDefined(this.czmlString)) {

@@ -14,6 +14,9 @@ describe("StandardUserInterface", function() {
   let terria;
   // let feature;
   let viewState;
+  const tMock = () => {
+    //no-op
+  };
 
   beforeEach(function() {
     terria = new Terria({
@@ -26,11 +29,7 @@ describe("StandardUserInterface", function() {
 
   it("has class story-wrapper", function() {
     const ui = (
-      <StandardUserInterface
-        terria={terria}
-        viewState={viewState}
-        t={() => {}}
-      />
+      <StandardUserInterface terria={terria} viewState={viewState} t={tMock} />
     );
     const result = getShallowRenderedOutput(ui);
     expect(result.props.className).toContain("story-wrapper");
@@ -39,11 +38,7 @@ describe("StandardUserInterface", function() {
   it("feature info panel has top-element class when it is the top element", function() {
     viewState.topElement = "FeatureInfo";
     const ui = (
-      <StandardUserInterface
-        terria={terria}
-        viewState={viewState}
-        t={() => {}}
-      />
+      <StandardUserInterface terria={terria} viewState={viewState} t={tMock} />
     );
     const result = getShallowRenderedOutput(ui);
     const featureInfo = findWithClass(
@@ -56,11 +51,7 @@ describe("StandardUserInterface", function() {
   it("side panel has top-element class when it is the top element", function() {
     viewState.topElement = "SidePanel";
     const ui = (
-      <StandardUserInterface
-        terria={terria}
-        viewState={viewState}
-        t={() => {}}
-      />
+      <StandardUserInterface terria={terria} viewState={viewState} t={tMock} />
     );
     const result = getShallowRenderedOutput(ui);
     const sidePanel = findWithClass(
@@ -73,11 +64,7 @@ describe("StandardUserInterface", function() {
   it("feature info panel does not have top-element class when it is not the top element", function() {
     viewState.topElement = "SidePanel";
     const ui = (
-      <StandardUserInterface
-        terria={terria}
-        viewState={viewState}
-        t={() => {}}
-      />
+      <StandardUserInterface terria={terria} viewState={viewState} t={tMock} />
     );
     const result = getShallowRenderedOutput(ui);
     const featureInfo = findWithClass(

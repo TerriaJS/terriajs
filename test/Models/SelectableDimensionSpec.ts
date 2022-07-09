@@ -1,4 +1,4 @@
-import SelectableDimensions, {
+import {
   DEFAULT_PLACEMENT,
   Placement,
   SelectableDimension,
@@ -16,7 +16,9 @@ describe("SelectableDimension", () => {
 
     it("should filter out selectable dimensions with no options", () => {
       const dimWithNoOptions: SelectableDimension = {
-        setDimensionValue: () => {}
+        setDimensionValue: () => {
+          // no-op
+        }
       };
       expect(filterDefaultPlacement([dimWithNoOptions]).length).toBe(0);
     });

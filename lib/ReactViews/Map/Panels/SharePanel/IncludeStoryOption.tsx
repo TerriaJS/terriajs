@@ -30,7 +30,7 @@ const IncludeStoryOption: React.FC<IncludeStoryOptionProps> = observer(
           isChecked={isChecked ?? false}
           onChange={onChangeHandler}
           className={Styles.checkbox}
-        ></Checkbox>
+        />
         <p>{t("includeStory.message")}</p>
       </IncludeStoryOptionDiv>
     );

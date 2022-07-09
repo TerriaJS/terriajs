@@ -1,10 +1,7 @@
-import React from "react";
-import { act } from "react-dom/test-utils";
-import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { ReactTestRenderer } from "react-test-renderer";
 import { ChartItem } from "../../../../lib/ModelMixins/ChartableMixin";
 import Terria from "../../../../lib/Models/Terria";
-import BottomDockChart from "../../../../lib/ReactViews/Custom/Chart/BottomDockChart";
-import PointOnMap from "../../../../lib/ReactViews/Custom/Chart/PointOnMap";
 
 describe("BottomDockChart", function() {
   let terria: Terria;
@@ -28,7 +25,9 @@ describe("BottomDockChart", function() {
         units: "time",
         isSelectedInWorkbench: true,
         showInChartPanel: true,
-        updateIsSelectedInWorkbench: () => {},
+        updateIsSelectedInWorkbench: () => {
+          // no-op
+        },
         getColor: () => "#fff",
         pointOnMap: { latitude: -33.8688, longitude: 151.2093 }
       } as ChartItem,
@@ -44,7 +43,9 @@ describe("BottomDockChart", function() {
         units: "time",
         isSelectedInWorkbench: true,
         showInChartPanel: true,
-        updateIsSelectedInWorkbench: () => {},
+        updateIsSelectedInWorkbench: () => {
+          // no-op
+        },
         getColor: () => "#fff",
         pointOnMap: { latitude: -37.814, longitude: 144.96332 }
       } as ChartItem

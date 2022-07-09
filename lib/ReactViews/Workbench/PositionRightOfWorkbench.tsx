@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import React from "react";
-import styled, { CSSObject } from "styled-components";
+import styled from "styled-components";
 import ViewState from "../../ReactViewModels/ViewState";
 
 type PositionRightOfWorkbenchProps = {

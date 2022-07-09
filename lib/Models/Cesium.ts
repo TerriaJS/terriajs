@@ -89,16 +89,16 @@ import UserDrawing from "./UserDrawing";
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
 // Intermediary
-var cartesian3Scratch = new Cartesian3();
-var enuToFixedScratch = new Matrix4();
-var southwestScratch = new Cartesian3();
-var southeastScratch = new Cartesian3();
-var northeastScratch = new Cartesian3();
-var northwestScratch = new Cartesian3();
-var southwestCartographicScratch = new Cartographic();
-var southeastCartographicScratch = new Cartographic();
-var northeastCartographicScratch = new Cartographic();
-var northwestCartographicScratch = new Cartographic();
+const cartesian3Scratch = new Cartesian3();
+const enuToFixedScratch = new Matrix4();
+const southwestScratch = new Cartesian3();
+const southeastScratch = new Cartesian3();
+const northeastScratch = new Cartesian3();
+const northwestScratch = new Cartesian3();
+const southwestCartographicScratch = new Cartographic();
+const southeastCartographicScratch = new Cartographic();
+const northeastCartographicScratch = new Cartographic();
+const northwestCartographicScratch = new Cartographic();
 
 export default class Cesium extends GlobeOrMap {
   readonly type = "Cesium";
@@ -453,6 +453,7 @@ export default class Cesium extends GlobeOrMap {
     creditDisplay.destroy = () => {
       try {
         creditDisplayOldDestroy();
+        // eslint-disable-next-line no-empty
       } catch (err) {}
     };
 
@@ -605,7 +606,7 @@ export default class Cesium extends GlobeOrMap {
       //       That way the supported types of map items is extensible.
       const allDataSources = this._allMapItems.filter(isDataSource);
 
-      let dataSources = this.dataSources;
+      const dataSources = this.dataSources;
       // Remove deleted data sources
       // Iterate backwards because we're removing items.
       for (let i = dataSources.length - 1; i >= 0; i--) {
@@ -676,6 +677,7 @@ export default class Cesium extends GlobeOrMap {
             const fnArray = this._3dTilesetEventListeners.get(primitive);
             try {
               fnArray?.forEach(fn => fn()); // Run the remover functions
+              // eslint-disable-next-line no-empty
             } catch (error) {}
 
             this._3dTilesetEventListeners.delete(primitive); // Remove the item for this tileset from our eventListener reference storage array
@@ -1077,7 +1079,7 @@ export default class Cesium extends GlobeOrMap {
     const vectorFeatures = this.pickVectorFeatures(screenPosition);
 
     const providerCoords = this._attachProviderCoordHooks();
-    var pickRasterPromise =
+    const pickRasterPromise =
       this.terria.allowFeatureInfoRequests && isDefined(pickRay)
         ? this.scene.imageryLayers.pickImageryLayerFeatures(pickRay, this.scene)
         : undefined;
@@ -1136,7 +1138,7 @@ export default class Cesium extends GlobeOrMap {
         }
 
         if (hasUrl(imageryProvider) && providerCoords[imageryProvider.url]) {
-          var coords = providerCoords[imageryProvider.url];
+          const coords = providerCoords[imageryProvider.url];
           promises.push(
             imageryProvider.pickFeatures(
               coords.x,
@@ -1201,10 +1203,10 @@ export default class Cesium extends GlobeOrMap {
     for (let i = this.scene.imageryLayers.length - 1; i >= 0; i--) {
       const imageryLayer = <ImageryLayer>this.scene.imageryLayers.get(i);
       const imageryProvider = imageryLayer.imageryProvider;
-      // @ts-ignore
+      // @ts-expect-error: url doesn't exist on type
       const imageryProviderUrl = imageryProvider.url;
       if (imageryProviderUrl && providerCoords[imageryProviderUrl]) {
-        var tileCoords = providerCoords[imageryProviderUrl];
+        const tileCoords = providerCoords[imageryProviderUrl];
         const pickPromise = imageryProvider.pickFeatures(
           tileCoords.x,
           tileCoords.y,
@@ -1565,8 +1567,7 @@ export default class Cesium extends GlobeOrMap {
   }
 
   _addVectorTileHighlight(
-    imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
-    rectangle: Rectangle
+    imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider
   ): () => void {
     const result = new ImageryLayer(imageryProvider, {
       show: true,
@@ -1581,7 +1582,7 @@ export default class Cesium extends GlobeOrMap {
   }
 }
 
-var boundingSphereScratch = new BoundingSphere();
+const boundingSphereScratch = new BoundingSphere();
 
 function zoomToDataSource(
   cesium: Cesium,
@@ -1596,11 +1597,11 @@ function zoomToDataSource(
         return false;
       }
 
-      var entities = target.entities.values;
+      const entities = target.entities.values;
 
-      var boundingSpheres = [];
-      for (var i = 0, len = entities.length; i < len; i++) {
-        var state = BoundingSphereState.PENDING;
+      const boundingSpheres = [];
+      for (let i = 0, len = entities.length; i < len; i++) {
+        let state = BoundingSphereState.PENDING;
         try {
           // TODO: missing Cesium type info
           state = (<any>dataSourceDisplay).getBoundingSphere(
@@ -1608,6 +1609,7 @@ function zoomToDataSource(
             false,
             boundingSphereScratch
           );
+          // eslint-disable-next-line no-empty
         } catch (e) {}
 
         if (state === BoundingSphereState.PENDING) {
@@ -1621,7 +1623,7 @@ function zoomToDataSource(
 
       // Test if boundingSpheres is empty to avoid zooming to nowhere
       if (boundingSpheres.length > 0 && _lastZoomTarget === target) {
-        var boundingSphere = BoundingSphere.fromBoundingSpheres(
+        const boundingSphere = BoundingSphere.fromBoundingSpheres(
           boundingSpheres
         );
         flyToPromise = flyToBoundingSpherePromise(

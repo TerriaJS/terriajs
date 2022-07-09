@@ -27,7 +27,6 @@ interface ExtendedLoadWithXhr {
 const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
 
 describe("CkanCatalogGroup", function() {
-  const ckanServerUrl = "http://data.gov.au";
   let terria: Terria;
   let ckanCatalogGroup: CkanCatalogGroup;
   let ckanServerStratum: CkanServerStratum;
@@ -96,8 +95,8 @@ describe("CkanCatalogGroup", function() {
     it("properly creates members", function() {
       expect(ckanCatalogGroup.members).toBeDefined();
       expect(ckanCatalogGroup.members.length).toBe(2);
-      let member0 = <CatalogGroup>ckanCatalogGroup.memberModels[0];
-      let member1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const member0 = <CatalogGroup>ckanCatalogGroup.memberModels[0];
+      const member1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
       expect(member0.name).toBe("Department of the Environment and Energy");
       expect(member1.name).toBe("Murray-Darling Basin Authority");
     });
@@ -109,17 +108,17 @@ describe("CkanCatalogGroup", function() {
           expect(ckanServerStratum.groups.length).toBe(3);
 
           // 3 groups are sorted by name
-          let group0 = <CatalogGroup>ckanServerStratum.groups[0];
+          const group0 = <CatalogGroup>ckanServerStratum.groups[0];
           expect(group0.name).toBe("Department of the Environment and Energy");
           // There is only 1 resource on the 1 dataset
           expect(group0.members.length).toBe(1);
 
-          let group1 = <CatalogGroup>ckanServerStratum.groups[1];
+          const group1 = <CatalogGroup>ckanServerStratum.groups[1];
           expect(group1.name).toBe("Murray-Darling Basin Authority");
           // There are 2 resources on the 2 datasets
           expect(group1.members.length).toBe(9);
 
-          let group2 = <CatalogGroup>ckanServerStratum.groups[2];
+          const group2 = <CatalogGroup>ckanServerStratum.groups[2];
           expect(group2.name).toBe(ckanCatalogGroup.ungroupedTitle);
           expect(group2.name).toBe("No group");
           expect(group2.members.length).toBe(0);
@@ -154,13 +153,13 @@ describe("CkanCatalogGroup", function() {
     it("properly creates members", function() {
       expect(ckanCatalogGroup.members).toBeDefined();
       expect(ckanCatalogGroup.members.length).toBe(3);
-      let member0 = <CatalogGroup>ckanCatalogGroup.memberModels[0];
+      const member0 = <CatalogGroup>ckanCatalogGroup.memberModels[0];
       expect(member0 instanceof CatalogGroup).toBeTruthy();
       expect(member0.name).toBe("Blah");
-      let member1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const member1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
       expect(member1 instanceof CatalogGroup).toBeTruthy();
       expect(member1.name).toBe("Environment");
-      let member2 = <CatalogGroup>ckanCatalogGroup.memberModels[2];
+      const member2 = <CatalogGroup>ckanCatalogGroup.memberModels[2];
       expect(member2 instanceof CatalogGroup).toBeTruthy();
       expect(member2.name).toBe("Science");
     });
@@ -206,7 +205,7 @@ describe("CkanCatalogGroup", function() {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
       expect(group1.memberModels.length).toBe(9);
 
       const items = group1.memberModels as CkanItemReference[];
@@ -235,7 +234,7 @@ describe("CkanCatalogGroup", function() {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
       expect(group1.memberModels.length).toBe(9);
 
       // These items include their Dataset name in their Resource name, so it's not the greatest demonstration
@@ -268,7 +267,7 @@ describe("CkanCatalogGroup", function() {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
       expect(group1.memberModels.length).toBe(9);
 
@@ -309,7 +308,7 @@ describe("CkanCatalogGroup", function() {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
       expect(group1.memberModels.length).toBe(7);
 
@@ -343,7 +342,7 @@ describe("CkanCatalogGroup", function() {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
       expect(group1.memberModels.length).toBe(7);
 
@@ -389,7 +388,7 @@ describe("CkanCatalogGroup", function() {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      let group0 = <CatalogGroup>ckanCatalogGroup.memberModels[0];
+      const group0 = <CatalogGroup>ckanCatalogGroup.memberModels[0];
 
       expect(group0.memberModels.length).toBe(2);
 
@@ -418,7 +417,7 @@ describe("CkanCatalogGroup", function() {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
       expect(group1.memberModels.length).toBe(8);
 
@@ -449,7 +448,7 @@ describe("CkanCatalogGroup", function() {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
       expect(group1.memberModels.length).toBe(9);
 
@@ -478,7 +477,7 @@ describe("CkanCatalogGroup", function() {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
       expect(group1.memberModels.length).toBe(2);
 
@@ -537,7 +536,7 @@ describe("CkanCatalogGroup", function() {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
       expect(group1.memberModels.length).toBe(2);
 
@@ -564,7 +563,7 @@ describe("CkanCatalogGroup", function() {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      const group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
       expect(group1).toBeUndefined();
     });

@@ -6,6 +6,7 @@ import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import URI from "urijs";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import loadBlob from "../Core/loadBlob";
 import loadXML from "../Core/loadXML";
@@ -26,7 +27,6 @@ import ExportWebCoverageServiceTraits, {
 } from "../Traits/TraitsClasses/ExportWebCoverageServiceTraits";
 import { getName } from "./CatalogMemberMixin";
 import ExportableMixin from "./ExportableMixin";
-import filterOutUndefined from "../Core/filterOutUndefined";
 
 type Coverage = {
   CoverageId: string;
@@ -288,7 +288,7 @@ function ExportWebCoverageServiceMixin<
     /** Generate WCS GetCoverage URL */
     getCoverageUrl(bbox: Rectangle): Result<string | undefined> {
       try {
-        let error: TerriaError | undefined = undefined;
+        let error: TerriaError | undefined;
 
         if (
           this.linkedWcsParameters.duplicateSubsetValues &&
@@ -400,7 +400,9 @@ function ExportWebCoverageServiceMixin<
       );
       try {
         runInAction(() => {
-          pendingWorkbenchItem.loadPromise = new Promise(() => {});
+          pendingWorkbenchItem.loadPromise = new Promise(() => {
+            // no-op
+          });
           pendingWorkbenchItem.loadMetadata();
 
           // Add WCS loading metadata message to shortReport
@@ -524,8 +526,9 @@ function ExportWebCoverageServiceMixin<
 }
 
 namespace ExportWebCoverageServiceMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof ExportWebCoverageServiceMixin>> {}
+  export type Instance = InstanceType<
+    ReturnType<typeof ExportWebCoverageServiceMixin>
+  >;
   export function isMixedInto(model: any): model is Instance {
     return (
       model &&

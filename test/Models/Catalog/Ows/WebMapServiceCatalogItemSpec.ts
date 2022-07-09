@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { autorun, runInAction } from "mobx";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import Resource from "terriajs-cesium/Source/Core/Resource";
@@ -88,14 +89,13 @@ describe("WebMapServiceCatalogItem", function() {
   });
 
   it("updates description from a GetCapabilities", async function() {
-    let wms: WebMapServiceCatalogItem;
     const terria = new Terria();
-    wms = new WebMapServiceCatalogItem("test", terria);
+    const wms = new WebMapServiceCatalogItem("test", terria);
     runInAction(() => {
       wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
       wms.setTrait("definition", "layers", "single_period");
     });
-    let description: String | undefined;
+    let description: string | undefined;
     const cleanup = autorun(() => {
       if (wms.info !== undefined) {
         const descSection = wms.info.find(
@@ -119,9 +119,8 @@ describe("WebMapServiceCatalogItem", function() {
   });
 
   it("correctly constructs ImageryProvider", async function() {
-    let wms: WebMapServiceCatalogItem;
     const terria = new Terria();
-    wms = new WebMapServiceCatalogItem("test", terria);
+    const wms = new WebMapServiceCatalogItem("test", terria);
     runInAction(() => {
       wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
       wms.setTrait("definition", "layers", "single_period");
@@ -238,9 +237,8 @@ describe("WebMapServiceCatalogItem", function() {
   });
 
   it("constructs correct ImageryProvider when layers trait provided Title", async function() {
-    let wms: WebMapServiceCatalogItem;
     const terria = new Terria();
-    wms = new WebMapServiceCatalogItem("test", terria);
+    const wms = new WebMapServiceCatalogItem("test", terria);
     runInAction(() => {
       wms.setTrait("definition", "url", "test/WMS/wms_nested_groups.xml");
       wms.setTrait(
@@ -301,9 +299,8 @@ describe("WebMapServiceCatalogItem", function() {
   });
 
   it("uses tileWidth and tileHeight", async function() {
-    let wms: WebMapServiceCatalogItem;
     const terria = new Terria();
-    wms = new WebMapServiceCatalogItem("test", terria);
+    const wms = new WebMapServiceCatalogItem("test", terria);
     runInAction(() => {
       wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
       wms.setTrait("definition", "layers", "single_period");
@@ -329,9 +326,8 @@ describe("WebMapServiceCatalogItem", function() {
   });
 
   it("uses query parameters from URL - no parameters", async function() {
-    let wms: WebMapServiceCatalogItem;
     const terria = new Terria();
-    wms = new WebMapServiceCatalogItem("test", terria);
+    const wms = new WebMapServiceCatalogItem("test", terria);
     runInAction(() => {
       wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
     });
@@ -347,9 +343,8 @@ describe("WebMapServiceCatalogItem", function() {
   });
 
   it("uses query parameters from URL - with parameters", async function() {
-    let wms: WebMapServiceCatalogItem;
     const terria = new Terria();
-    wms = new WebMapServiceCatalogItem("test", terria);
+    const wms = new WebMapServiceCatalogItem("test", terria);
     runInAction(() => {
       wms.setTrait(
         "definition",
@@ -369,9 +364,8 @@ describe("WebMapServiceCatalogItem", function() {
   });
 
   it("invalid/valid layers", async function() {
-    let wms: WebMapServiceCatalogItem;
     const terria = new Terria();
-    wms = new WebMapServiceCatalogItem("test", terria);
+    const wms = new WebMapServiceCatalogItem("test", terria);
     runInAction(() => {
       wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
       wms.setTrait("definition", "layers", "invalidLayer,single_period");

@@ -1,6 +1,5 @@
 import { parseCustomMarkdownToReactWithOptions } from "../../lib/ReactViews/Custom/parseCustomMarkdownToReact";
 import registerCustomComponentTypes from "../../lib/ReactViews/Custom/registerCustomComponentTypes";
-import Terria from "../../lib/Models/Terria";
 import { TooltipWithButtonLauncher } from "../../lib/ReactViews/Generic/TooltipWrapper";
 
 const isComponentOfType: any = require("react-shallow-testutils")
@@ -8,12 +7,7 @@ const isComponentOfType: any = require("react-shallow-testutils")
 const findAll: any = require("react-shallow-testutils").findAll;
 
 describe("parseCustomMarkdownToReactTs", function() {
-  let terria: Terria;
-
   beforeEach(function() {
-    terria = new Terria({
-      baseUrl: "./"
-    });
     registerCustomComponentTypes();
   });
   it("correctly parses tooltip terms", function() {
@@ -29,7 +23,7 @@ describe("parseCustomMarkdownToReactTs", function() {
       }
     );
 
-    var tooltip = findAll(result, (el: any) =>
+    const tooltip = findAll(result, (el: any) =>
       isComponentOfType(el, TooltipWithButtonLauncher)
     )[0];
     expect(tooltip).toBeDefined();
@@ -42,7 +36,7 @@ describe("parseCustomMarkdownToReactTs", function() {
       {}
     );
 
-    var tooltip = findAll(result, (el: any) =>
+    const tooltip = findAll(result, (el: any) =>
       isComponentOfType(el, TooltipWithButtonLauncher)
     );
     expect(tooltip.length).toEqual(0);

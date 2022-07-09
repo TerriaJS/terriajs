@@ -6,22 +6,22 @@ import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import runLater from "../../../Core/runLater";
-import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
+import { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
+import ModelReference from "../../../Traits/ModelReference";
 import ArcGisMapServerCatalogGroupTraits from "../../../Traits/TraitsClasses/ArcGisMapServerCatalogGroupTraits";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
-import ModelReference from "../../../Traits/ModelReference";
-import ArcGisCatalogGroup from "./ArcGisCatalogGroup";
-import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import ArcGisCatalogGroup from "./ArcGisCatalogGroup";
+import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
 
 interface DocumentInfo {
   Title?: string;
@@ -115,8 +115,7 @@ export class MapServerStratum extends LoadableStratum(
   static async load(
     catalogGroup: ArcGisMapServerCatalogGroup | ArcGisCatalogGroup
   ): Promise<MapServerStratum> {
-    var terria = catalogGroup.terria;
-    var uri = new URI(catalogGroup.url).addQuery("f", "json");
+    const uri = new URI(catalogGroup.url).addQuery("f", "json");
 
     return loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString()))
       .then((mapServer: MapServer) => {
@@ -240,7 +239,7 @@ export class MapServerStratum extends LoadableStratum(
       replaceUnderscores(layer.name)
     );
 
-    var uri = new URI(this._catalogGroup.url).segment(layer.id + ""); // Convert layer id to string as segment(0) means sthg different.
+    const uri = new URI(this._catalogGroup.url).segment(layer.id + ""); // Convert layer id to string as segment(0) means sthg different.
     model.setTrait(CommonStrata.definition, "url", uri.toString());
   }
 }

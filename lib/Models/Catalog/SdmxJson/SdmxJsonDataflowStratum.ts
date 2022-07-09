@@ -78,7 +78,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     catalogItem: SdmxJsonCatalogItem
   ): Promise<SdmxJsonDataflowStratum> {
     // Load dataflow (+ all related references)
-    let dataflowStructure: SdmxJsonStructureMessage = await loadSdmxJsonStructure(
+    const dataflowStructure: SdmxJsonStructureMessage = await loadSdmxJsonStructure(
       proxyCatalogItemUrl(
         catalogItem,
         `${catalogItem.baseUrl}/dataflow/${catalogItem.agencyId}/${catalogItem.dataflowId}?references=all`
@@ -151,7 +151,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       this.sdmxJsonDataflow?.dataflow.annotations
         ?.filter(a => a.type === "EXT_RESOURCE" && a.text)
         .map(annotation => {
-          let text = annotation.texts?.[i18next.language] ?? annotation.text!;
+          const text = annotation.texts?.[i18next.language] ?? annotation.text!;
           const title = text.includes("|") ? text.split("|")[0] : undefined;
           const url = text.includes("|") ? text.split("|")[1] : text;
           return createStratumInstance(MetadataUrlTraits, { title, url });
@@ -290,7 +290,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           let options: StratumFromTraits<DimensionOptionTraits>[] = [];
 
           // Get codes by merging allowedOptionIds with codelist
-          let filteredCodesList =
+          const filteredCodesList =
             (allowedOptionIds.size > 0
               ? codelist?.codes?.filter(code => allowedOptionIds.has(code.id!))
               : // If no allowedOptions were found -> return all codes
@@ -395,7 +395,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
         ?.filter(override => override.type === "unit-measure" && override.id)
         .map(override => {
           // Find dimension/attribute id with concept or codelist override
-          let dimOrAttr =
+          const dimOrAttr =
             this.getAttributionWithConceptOrCodelist(override.id!) ??
             this.getDimensionWithConceptOrCodelist(override.id!);
 
@@ -420,7 +420,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     ).find(dim => isDefined(dim.selectedId));
 
     // Try to get option label if it exists
-    let frequency =
+    const frequency =
       frequencyDim?.options.find(o => o.id === frequencyDim.selectedId)?.name ??
       frequencyDim?.id;
 
@@ -453,7 +453,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
         ?.filter(override => override.type === "unit-multiplier" && override.id)
         .map(override => {
           // Find dimension/attribute id with concept or codelist
-          let dimOrAttr =
+          const dimOrAttr =
             this.getAttributionWithConceptOrCodelist(override.id!) ??
             this.getDimensionWithConceptOrCodelist(override.id!);
 
@@ -817,7 +817,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     const conceptId = conceptUrn?.descendantIds?.[0];
 
     if (!isDefined(conceptId)) return;
-    let resolvedConceptScheme =
+    const resolvedConceptScheme =
       typeof conceptSchemeId === "string"
         ? this.getConceptScheme(conceptSchemeId)
         : conceptSchemeId;

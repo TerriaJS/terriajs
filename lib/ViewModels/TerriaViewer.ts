@@ -81,7 +81,7 @@ export default class TerriaViewer {
 
   // Disable all mouse (& keyboard) interaction
   @observable
-  disableInteraction: boolean = false;
+  disableInteraction = false;
 
   _homeCamera: CameraView = new CameraView(Rectangle.MAX_VALUE);
 
@@ -103,7 +103,7 @@ export default class TerriaViewer {
    * The distance between two pixels at the bottom center of the screen.
    * Set in lib/ReactViews/Map/Legend/DistanceLegend.jsx
    */
-  @observable scale: number = 1;
+  @observable scale = 1;
 
   readonly beforeViewerChanged = new CesiumEvent();
   readonly afterViewerChanged = new CesiumEvent();

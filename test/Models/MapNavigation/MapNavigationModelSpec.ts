@@ -1,12 +1,10 @@
 import Terria from "../../../lib/Models/Terria";
-import ViewState from "../../../lib/ReactViewModels/ViewState";
 import MapNavigationModel from "../../../lib/ViewModels/MapNavigation/MapNavigationModel";
 import { IMapNavigationItem } from "../../../lib/ViewModels/MapNavigation/MapNavigationModel";
 import { GenericMapNavigationItemController } from "../../../lib/ViewModels/MapNavigation/MapNavigationItemController";
 
 describe("MapNavigationModel", function() {
   let terria: Terria;
-  let viewState: ViewState;
   let item1: IMapNavigationItem;
   let item2: IMapNavigationItem;
   let item3: IMapNavigationItem;
@@ -17,11 +15,6 @@ describe("MapNavigationModel", function() {
   beforeEach(function() {
     terria = new Terria({
       baseUrl: "./"
-    });
-    viewState = new ViewState({
-      terria: terria,
-      catalogSearchProvider: null,
-      locationSearchProviders: []
     });
     item1 = {
       id: "item1",
@@ -107,11 +100,11 @@ describe("MapNavigationModel", function() {
     expect(mapNavigationModel.items.length).toEqual(5);
     expect(mapNavigationModel.pinnedItems.length).toEqual(1);
     expect(mapNavigationModel.visibleItems.length).toEqual(4);
-    let collapsedItems = mapNavigationModel.visibleItems.filter(
+    const collapsedItems = mapNavigationModel.visibleItems.filter(
       item => item.controller.collapsed
     );
     expect(collapsedItems.length).toEqual(2);
-    let itemsId = mapNavigationModel.items.map(item => item.id);
+    const itemsId = mapNavigationModel.items.map(item => item.id);
     expect(itemsId).toEqual(["item1", "item2", "item3", "item4", "item5"]);
   });
 
@@ -285,7 +278,7 @@ describe("MapNavigationModel", function() {
     expect(mapNavigationModel.items.length).toEqual(5);
     expect(mapNavigationModel.pinnedItems.length).toEqual(2);
     expect(mapNavigationModel.visibleItems.length).toEqual(4);
-    let collapsedItems = mapNavigationModel.visibleItems.filter(
+    const collapsedItems = mapNavigationModel.visibleItems.filter(
       item => item.controller.collapsed
     );
     expect(collapsedItems.length).toEqual(2);

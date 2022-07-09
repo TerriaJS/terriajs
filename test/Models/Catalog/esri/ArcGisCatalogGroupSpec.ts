@@ -1,17 +1,15 @@
+import i18next from "i18next";
 import { configure, runInAction } from "mobx";
 import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
-import Terria from "../../../../lib/Models/Terria";
 import ArcGisCatalogGroup from "../../../../lib/Models/Catalog/Esri/ArcGisCatalogGroup";
-import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
-import i18next from "i18next";
-import ArcGisMapServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
-import TerriaError from "../../../../lib/Core/TerriaError";
-import ArcGisMapServerCatalogGroup, {
-  MapServerStratum
-} from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogGroup";
 import ArcGisFeatureServerCatalogGroup, {
   FeatureServerStratum
 } from "../../../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogGroup";
+import ArcGisMapServerCatalogGroup, {
+  MapServerStratum
+} from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogGroup";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
+import Terria from "../../../../lib/Models/Terria";
 
 configure({
   enforceActions: "observed",
@@ -105,14 +103,14 @@ describe("ArcGisCatalogGroup", function() {
       expect(group.memberModels).toBeDefined();
       expect(group.memberModels.length).toBe(8);
 
-      let member0 = <ArcGisCatalogGroup>group.memberModels[0];
-      let member1 = <ArcGisCatalogGroup>group.memberModels[1];
-      let member2 = <ArcGisMapServerCatalogGroup>group.memberModels[2];
-      let member3 = <ArcGisMapServerCatalogGroup>group.memberModels[3];
-      let member4 = <ArcGisFeatureServerCatalogGroup>group.memberModels[4];
-      let member5 = <ArcGisMapServerCatalogGroup>group.memberModels[5];
-      let member6 = <ArcGisFeatureServerCatalogGroup>group.memberModels[6];
-      let member7 = <ArcGisMapServerCatalogGroup>group.memberModels[7];
+      const member0 = <ArcGisCatalogGroup>group.memberModels[0];
+      const member1 = <ArcGisCatalogGroup>group.memberModels[1];
+      const member2 = <ArcGisMapServerCatalogGroup>group.memberModels[2];
+      const member3 = <ArcGisMapServerCatalogGroup>group.memberModels[3];
+      const member4 = <ArcGisFeatureServerCatalogGroup>group.memberModels[4];
+      const member5 = <ArcGisMapServerCatalogGroup>group.memberModels[5];
+      const member6 = <ArcGisFeatureServerCatalogGroup>group.memberModels[6];
+      const member7 = <ArcGisMapServerCatalogGroup>group.memberModels[7];
 
       expect(member0 instanceof ArcGisCatalogGroup).toBeTruthy();
       expect(member0.name).toBe("AGP");

@@ -86,7 +86,7 @@ const Description = observer(
                   `}
                 >
                   <If condition={metadataUrl.title}>
-                    <Button primary={true}>{metadataUrl.title}</Button>
+                    <Button primary>{metadataUrl.title}</Button>
                   </If>
                   <If condition={!metadataUrl.title}>{metadataUrl.url}</If>
                 </a>
@@ -243,7 +243,7 @@ const Description = observer(
                     `}
                   >
                     <If condition={dataUrl.title}>
-                      <Button primary={true}>{dataUrl.title}</Button>
+                      <Button primary>{dataUrl.title}</Button>
                     </If>
                     <If condition={!dataUrl.title}>{dataUrl.url}</If>
                   </a>
@@ -263,7 +263,7 @@ const Description = observer(
                 <div className={Styles.metadata}>
                   <Collapsible
                     title={t("description.dataSourceDetails")}
-                    isInverse={true}
+                    isInverse
                   >
                     <MetadataTable
                       metadataItem={catalogItem.metadata.dataSourceMetadata}
@@ -280,7 +280,7 @@ const Description = observer(
                 <div className={Styles.metadata}>
                   <Collapsible
                     title={t("description.dataServiceDetails")}
-                    isInverse={true}
+                    isInverse
                   >
                     <MetadataTable
                       metadataItem={catalogItem.metadata.serviceMetadata}
@@ -290,9 +290,7 @@ const Description = observer(
               </If>
             </If>
           </If>
-          {!this.props.printView ? (
-            <ExportData item={catalogItem}></ExportData>
-          ) : null}
+          {!this.props.printView ? <ExportData item={catalogItem} /> : null}
         </div>
       );
     }

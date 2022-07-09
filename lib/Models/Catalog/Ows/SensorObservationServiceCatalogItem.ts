@@ -73,8 +73,8 @@ interface ObservationPoint {
 }
 
 interface MeasurementTimeValuePair {
-  time: Object | string;
-  value: Object | string;
+  time: object | string;
+  value: object | string;
 }
 
 StratumOrder.addLoadStratum(TableAutomaticStylesStratum.stratumName);
@@ -325,7 +325,9 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     return "sos";
   }
 
-  protected async forceLoadMetadata() {}
+  protected async forceLoadMetadata() {
+    // no-op
+  }
 
   @action
   protected async forceLoadTableData() {
@@ -462,8 +464,8 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
         if (!points) return;
         if (!Array.isArray(points)) points = [points];
 
-        var measurements = points.map(point => point.MeasurementTVP); // TVP = Time value pairs, I think.
-        var featureIdentifier =
+        const measurements = points.map(point => point.MeasurementTVP); // TVP = Time value pairs, I think.
+        const featureIdentifier =
           observation.featureOfInterest["xlink:href"] || "";
         datesCol.push(
           ...measurements.map(measurement =>
@@ -475,12 +477,12 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
             typeof measurement.value === "object" ? "" : measurement.value
           )
         );
-        identifiersCol.push(...measurements.map(_ => featureIdentifier));
+        identifiersCol.push(...measurements.map(() => featureIdentifier));
         proceduresCol.push(
-          ...measurements.map(_ => procedure.identifier || "")
+          ...measurements.map(() => procedure.identifier || "")
         );
         observedPropertiesCol.push(
-          ...measurements.map(_ => observableProperty.identifier || "")
+          ...measurements.map(() => observableProperty.identifier || "")
         );
       };
 
@@ -651,9 +653,9 @@ async function loadSoapBody(
     return;
   }
 
-  var json = xml2json(responseXml);
+  const json = xml2json(responseXml);
   if (json.Exception) {
-    var errorMessage = i18next.t(
+    let errorMessage = i18next.t(
       "models.sensorObservationService.unknownError"
     );
     if (json.Exception.ExceptionText) {
@@ -719,10 +721,11 @@ function addDurationToIso8601(
         scratchJulianDate
       );
       break;
-    case "y":
+    case "y": {
       const days = Math.round(duration * 365);
       julianDate = JulianDate.addDays(julianDate, days, scratchJulianDate);
       break;
+    }
     default:
       throw new DeveloperError(
         'Unknown duration type "' + durationString + '" (use s, h, d or y)'
@@ -741,7 +744,7 @@ function addDurationToIso8601(
  */
 function convertObjectToNameValueArray(parameters: any): NameValue[] {
   return Object.keys(parameters).reduce((result, key) => {
-    var values = parameters[key];
+    let values = parameters[key];
     if (!Array.isArray(values)) {
       values = [values];
     }

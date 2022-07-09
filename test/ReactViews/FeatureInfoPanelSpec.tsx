@@ -30,6 +30,9 @@ describe("FeatureInfoPanel", function() {
   let terria: Terria;
   // let feature;
   let viewState: ViewState;
+  const tMock = () => {
+    // no-op
+  };
 
   beforeEach(function() {
     terria = new Terria({
@@ -45,20 +48,20 @@ describe("FeatureInfoPanel", function() {
   it("has isVisible class when viewState.featureInfoPanelIsVisible is true", function() {
     viewState.featureInfoPanelIsVisible = true;
     const panel = (
-      <FeatureInfoPanel terria={terria} viewState={viewState} t={() => {}} />
+      <FeatureInfoPanel terria={terria} viewState={viewState} t={tMock} />
     );
     const result = getShallowRenderedOutput(panel);
     expect(result.props.children.props.className).toContain("is-visible");
   });
 
   it("displays loader while asychronously loading feature information", function() {
-    var pickedFeatures = new PickedFeatures();
+    const pickedFeatures = new PickedFeatures();
     pickedFeatures.allFeaturesAvailablePromise = Promise.resolve();
     runInAction(() => {
       terria.pickedFeatures = pickedFeatures;
     });
     const panel = (
-      <FeatureInfoPanel terria={terria} viewState={viewState} t={() => {}} />
+      <FeatureInfoPanel terria={terria} viewState={viewState} t={tMock} />
     );
     const result = getShallowRenderedOutput(panel);
     expect(findWithType(result, Loader)).toBeDefined();
@@ -67,7 +70,7 @@ describe("FeatureInfoPanel", function() {
   it("does not have isVisible class when viewState.featureInfoPanelIsVisible is false", function() {
     viewState.featureInfoPanelIsVisible = false;
     const panel = (
-      <FeatureInfoPanel terria={terria} viewState={viewState} t={() => {}} />
+      <FeatureInfoPanel terria={terria} viewState={viewState} t={tMock} />
     );
     const result = getShallowRenderedOutput(panel);
     expect(result.props.children.props.className).not.toContain("is-visible");

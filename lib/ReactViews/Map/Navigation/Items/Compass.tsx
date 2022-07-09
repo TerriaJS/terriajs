@@ -158,16 +158,16 @@ class Compass extends React.Component<PropTypes, IStateTypes> {
   orbitMouseUpFunction?: (this: Document, ev: MouseEvent) => any;
   rotateMouseMoveFunction?: (this: Document, ev: MouseEvent) => any;
   rotateMouseUpFunction?: (this: Document, ev: MouseEvent) => any;
-  isRotating: boolean = false;
-  rotateInitialCursorAngle: number = 0;
+  isRotating = false;
+  rotateInitialCursorAngle = 0;
   rotateFrame?: Matrix4;
-  rotateIsLook: boolean = false;
-  rotateInitialCameraAngle: number = 0;
-  rotateInitialCameraDistance: number = 0;
+  rotateIsLook = false;
+  rotateInitialCameraAngle = 0;
+  rotateInitialCameraDistance = 0;
   orbitFrame?: Matrix4;
-  orbitIsLook: boolean = false;
-  orbitLastTimestamp: number = 0;
-  isOrbiting: boolean = false;
+  orbitIsLook = false;
+  orbitLastTimestamp = 0;
+  isOrbiting = false;
   orbitAnimationFrameFunction?: any;
   showCompass?: boolean;
 
@@ -418,7 +418,7 @@ class Compass extends React.Component<PropTypes, IStateTypes> {
               `}
             >
               <GyroscopeGuidance
-                //@ts-ignore
+                // @ts-ignore
                 rightOffset="72px"
                 viewState={this.props.viewState}
                 // handleHelp={() => {

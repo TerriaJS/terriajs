@@ -244,9 +244,9 @@ const MobileHeader = observer(
                         onSearchTextChanged={this.changeLocationSearchText}
                         onDoSearch={this.searchLocations}
                         placeholder={t("search.placeholder")}
-                        alwaysShowClear={true}
+                        alwaysShowClear
                         onClear={this.closeLocationSearch}
-                        autoFocus={true}
+                        autoFocus
                       />
                     </When>
                     <When condition={searchState.showMobileCatalogSearch}>
@@ -256,7 +256,7 @@ const MobileHeader = observer(
                         onDoSearch={this.searchCatalog}
                         placeholder={t("search.searchCatalogue")}
                         onClear={this.closeCatalogSearch}
-                        autoFocus={true}
+                        autoFocus
                       />
                     </When>
                   </Choose>

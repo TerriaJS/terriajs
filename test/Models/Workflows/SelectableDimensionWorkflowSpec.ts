@@ -33,7 +33,9 @@ describe("SelectableDimensionWorkflow", function() {
             {
               type: "numeric",
               name: "Size (meters)",
-              setDimensionValue: () => {}
+              setDimensionValue: () => {
+                // no-op
+              }
             }
           ]
         }

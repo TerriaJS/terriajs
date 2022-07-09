@@ -8,5 +8,5 @@ interface CssExports {
   'progress-bar': string;
   'progressBar': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

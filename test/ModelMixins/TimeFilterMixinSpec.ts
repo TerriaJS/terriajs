@@ -3,8 +3,6 @@ import TimeFilterMixin from "../../lib/ModelMixins/TimeFilterMixin";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import CreateModel from "../../lib/Models/Definition/CreateModel";
 import Terria from "../../lib/Models/Terria";
-import DiscretelyTimeVaryingTraits from "../../lib/Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
-import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
 import mixTraits from "../../lib/Traits/mixTraits";
 import TimeFilterTraits from "../../lib/Traits/TraitsClasses/TimeFilterTraits";
 
@@ -36,7 +34,9 @@ describe("TimeFilterMixin", function() {
 class TestTimeFilterableItem extends TimeFilterMixin(
   CreateModel(mixTraits(TimeFilterTraits))
 ) {
-  protected async forceLoadMapItems(): Promise<void> {}
+  protected async forceLoadMapItems(): Promise<void> {
+    // no-op
+  }
   get discreteTimes() {
     return undefined;
   }

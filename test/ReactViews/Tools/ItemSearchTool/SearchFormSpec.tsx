@@ -7,11 +7,13 @@ import SearchForm, {
 } from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchForm";
 
 class TestItemSearchProvider extends ItemSearchProvider {
-  async initialize() {}
+  async initialize() {
+    // no-op
+  }
   async describeParameters() {
     return [];
   }
-  async search(values: Record<string, any>) {
+  async search() {
     return [
       {
         id: "1",
@@ -45,11 +47,15 @@ describe("SearchForm", function() {
       query: {}
     });
     const form = root.findByType("form");
-    form.props.onSubmit({ preventDefault: () => {} });
+    form.props.onSubmit({
+      preventDefault: () => {
+        // no-op
+      }
+    });
     // This is a bit hacky! Search is asynchronous, so we need to yield here for it to complete
     await timeout(1);
     expect(onResults).toHaveBeenCalled();
-    const [_, results] = onResults.calls.mostRecent().args;
+    const [, results] = onResults.calls.mostRecent().args;
     expect(results).toEqual(
       jasmine.arrayContaining([jasmine.objectContaining({ id: "1" })])
     );
@@ -63,6 +69,7 @@ function render(
   act(() => {
     rendered = create(<SearchForm {...props} />);
   });
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   return rendered;
 }

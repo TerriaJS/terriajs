@@ -6,7 +6,7 @@ import {
   reaction,
   runInAction
 } from "mobx";
-import { Ref } from "react";
+import React, { Ref } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../Core/addedByUser";
 import {
@@ -71,40 +71,40 @@ export default class ViewState {
     return this._previewedItem;
   }
   @observable userDataPreviewedItem: BaseModel | undefined;
-  @observable explorerPanelIsVisible: boolean = false;
+  @observable explorerPanelIsVisible = false;
   @observable activeTabCategory: string = DATA_CATALOG_NAME;
   @observable activeTabIdInCategory: string | undefined = undefined;
-  @observable isDraggingDroppingFile: boolean = false;
+  @observable isDraggingDroppingFile = false;
   @observable mobileView: string | null = null;
-  @observable isMapFullScreen: boolean = false;
-  @observable myDataIsUploadView: boolean = true;
-  @observable mobileMenuVisible: boolean = false;
-  @observable explorerPanelAnimating: boolean = false;
-  @observable topElement: string = "FeatureInfo";
+  @observable isMapFullScreen = false;
+  @observable myDataIsUploadView = true;
+  @observable mobileMenuVisible = false;
+  @observable explorerPanelAnimating = false;
+  @observable topElement = "FeatureInfo";
   // Map for storing react portal containers created by <PortalContainer> component.
   @observable portals: Map<string, HTMLElement | null> = new Map();
   @observable lastUploadedFiles: any[] = [];
-  @observable storyBuilderShown: boolean = false;
+  @observable storyBuilderShown = false;
 
   // Flesh out later
-  @observable showHelpMenu: boolean = false;
-  @observable showSatelliteGuidance: boolean = false;
-  @observable showWelcomeMessage: boolean = false;
-  @observable selectedHelpMenuItem: string = "";
-  @observable helpPanelExpanded: boolean = false;
+  @observable showHelpMenu = false;
+  @observable showSatelliteGuidance = false;
+  @observable showWelcomeMessage = false;
+  @observable selectedHelpMenuItem = "";
+  @observable helpPanelExpanded = false;
   @observable disclaimerSettings: any | undefined = undefined;
-  @observable disclaimerVisible: boolean = false;
-  @observable videoGuideVisible: string = "";
+  @observable disclaimerVisible = false;
+  @observable videoGuideVisible = "";
 
-  @observable trainerBarVisible: boolean = false;
-  @observable trainerBarExpanded: boolean = false;
-  @observable trainerBarShowingAllSteps: boolean = false;
-  @observable selectedTrainerItem: string = "";
-  @observable currentTrainerItemIndex: number = 0;
-  @observable currentTrainerStepIndex: number = 0;
+  @observable trainerBarVisible = false;
+  @observable trainerBarExpanded = false;
+  @observable trainerBarShowingAllSteps = false;
+  @observable selectedTrainerItem = "";
+  @observable currentTrainerItemIndex = 0;
+  @observable currentTrainerStepIndex = 0;
 
   @observable printWindow: Window | null = null;
-  @observable includeStoryInShare: boolean = true;
+  @observable includeStoryInShare = true;
 
   /**
    * A global list of functions that generate a {@link ViewingControl} option
@@ -151,7 +151,7 @@ export default class ViewState {
   /**
    * Bottom dock state & action
    */
-  @observable bottomDockHeight: number = 0;
+  @observable bottomDockHeight = 0;
   @action
   setBottomDockHeight(height: number) {
     if (this.bottomDockHeight !== height) {
@@ -173,7 +173,7 @@ export default class ViewState {
   // notification or 2. close a story
   @observable storyShown: boolean | null = null;
 
-  @observable currentStoryId: number = 0;
+  @observable currentStoryId = 0;
   @observable featurePrompts: any[] = [];
 
   /**
@@ -207,10 +207,10 @@ export default class ViewState {
    *  */
 
   @observable tourPoints: TourPoint[] = defaultTourPoints;
-  @observable showTour: boolean = false;
+  @observable showTour = false;
   @observable appRefs: Map<string, Ref<HTMLElement>> = new Map();
-  @observable currentTourIndex: number = -1;
-  @observable showCollapsedNavigation: boolean = false;
+  @observable currentTourIndex = -1;
+  @observable showCollapsedNavigation = false;
 
   get tourPointsWithValidRefs() {
     // should viewstate.ts reach into document? seems unavoidable if we want
@@ -280,44 +280,44 @@ export default class ViewState {
    * Gets or sets a value indicating whether the small screen (mobile) user interface should be used.
    * @type {Boolean}
    */
-  @observable useSmallScreenInterface: boolean = false;
+  @observable useSmallScreenInterface = false;
 
   /**
    * Gets or sets a value indicating whether the feature info panel is visible.
    * @type {Boolean}
    */
-  @observable featureInfoPanelIsVisible: boolean = false;
+  @observable featureInfoPanelIsVisible = false;
 
   /**
    * Gets or sets a value indicating whether the feature info panel is collapsed.
    * When it's collapsed, only the title bar is visible.
    * @type {Boolean}
    */
-  @observable featureInfoPanelIsCollapsed: boolean = false;
+  @observable featureInfoPanelIsCollapsed = false;
 
   /**
    * True if this is (or will be) the first time the user has added data to the map.
    * @type {Boolean}
    */
-  @observable firstTimeAddingData: boolean = true;
+  @observable firstTimeAddingData = true;
 
   /**
    * Gets or sets a value indicating whether the feedback form is visible.
    * @type {Boolean}
    */
-  @observable feedbackFormIsVisible: boolean = false;
+  @observable feedbackFormIsVisible = false;
 
   /**
    * Gets or sets a value indicating whether the catalog's modal share panel
    * is currently visible.
    */
-  @observable shareModalIsVisible: boolean = false; // Small share modal inside StoryEditor
+  @observable shareModalIsVisible = false; // Small share modal inside StoryEditor
 
   /**
    * Used to indicate that the Share Panel should stay open even if it loses focus.
    * This is used when clicking a help link in the Share Panel - The Help Panel will open, and when it is closed, the Share Panel should still be visible for the user to continue their task.
    */
-  @observable retainSharePanel: boolean = false; // The large share panel accessed via Share/Print button
+  @observable retainSharePanel = false; // The large share panel accessed via Share/Print button
 
   /**
    * The currently open tool
@@ -581,7 +581,7 @@ export default class ViewState {
    */
   async viewCatalogMember(
     item: BaseModel,
-    isOpen: boolean = true,
+    isOpen = true,
     stratum: string = CommonStrata.user,
     openAddData = true
   ): Promise<Result<void>> {
@@ -722,11 +722,7 @@ export default class ViewState {
   }
 
   @action
-  toggleFeaturePrompt(
-    feature: string,
-    state: boolean,
-    persistent: boolean = false
-  ) {
+  toggleFeaturePrompt(feature: string, state: boolean, persistent = false) {
     const featureIndexInPrompts = this.featurePrompts.indexOf(feature);
     if (
       state &&

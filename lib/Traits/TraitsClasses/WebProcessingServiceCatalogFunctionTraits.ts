@@ -44,5 +44,5 @@ export default class WebProcessingServiceCatalogFunctionTraits extends mixTraits
     description:
       "If true, then all results will be converted from v7 to v8. If false, then the `result.version` string will be checked to see if conversion is necessary."
   })
-  forceConvertResultsToV8: boolean = false;
+  forceConvertResultsToV8 = false;
 }

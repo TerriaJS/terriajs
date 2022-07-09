@@ -48,7 +48,7 @@ const animationTimeout = (
  */
 
 export const animateEnd = (element: Element | null) => {
-  let timeoutID: ReturnType<typeof setTimeout> | undefined = undefined;
+  const timeoutID: ReturnType<typeof setTimeout> | undefined = undefined;
   return Promise.race([
     transitionEnd(element),
     animationTimeout(timeoutID)

@@ -2,7 +2,7 @@ import { TFunction } from "i18next";
 import { action, computed } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-//@ts-ignore
+// @ts-ignore
 import { sortable } from "react-anything-sortable";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";

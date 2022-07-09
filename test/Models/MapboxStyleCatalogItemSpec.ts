@@ -20,7 +20,8 @@ describe("MapboxStyleCatalogItem", function() {
   });
 
   it("can be created", function() {
-    new MapboxStyleCatalogItem("test", terria);
+    const test = new MapboxStyleCatalogItem("test", terria);
+    expect(test).toBeDefined();
   });
 
   describe("mapItems ImageryPart", function() {

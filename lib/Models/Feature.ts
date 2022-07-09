@@ -1,8 +1,8 @@
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import { observable } from "mobx";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTilePointFeature from "terriajs-cesium/Source/Scene/Cesium3DTilePointFeature";
+import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 
 const customProperties = ["entityCollection", "properties", "data"];
 /**

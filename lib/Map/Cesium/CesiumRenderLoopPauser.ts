@@ -2,7 +2,6 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import destroyObject from "terriajs-cesium/Source/Core/destroyObject";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import TaskProcessor from "terriajs-cesium/Source/Core/TaskProcessor";
 import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
@@ -45,7 +44,7 @@ export default class CesiumRenderLoopPauser {
     );
 
     this._boundNotifyRepaintRequired = this.notifyRepaintRequired.bind(this);
-    var canvas = this.cesiumWidget.canvas;
+    const canvas = this.cesiumWidget.canvas;
     canvas.addEventListener(
       "mousemove",
       this._boundNotifyRepaintRequired,
@@ -156,7 +155,7 @@ export default class CesiumRenderLoopPauser {
       parameters,
       transferableObjects
     ) {
-      var result = that._originalScheduleTask.call(
+      const result = that._originalScheduleTask.call(
         this,
         parameters,
         transferableObjects
@@ -165,7 +164,7 @@ export default class CesiumRenderLoopPauser {
       if (!defined(this._originalWorkerMessageSinkRepaint)) {
         this._originalWorkerMessageSinkRepaint = this._worker.onmessage;
 
-        var taskProcessor = this;
+        const taskProcessor = this;
         this._worker.onmessage = function(event: any) {
           taskProcessor._originalWorkerMessageSinkRepaint(event);
 
@@ -282,7 +281,7 @@ export default class CesiumRenderLoopPauser {
     this.renderingIsPaused = false;
   }
 
-  private postRender(date: JulianDate) {
+  private postRender() {
     // We can safely stop rendering when:
     //  - the camera position hasn't changed in over a second,
     //  - there are no tiles waiting to load, and

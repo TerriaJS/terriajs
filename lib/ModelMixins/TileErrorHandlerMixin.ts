@@ -9,12 +9,12 @@ import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import Constructor from "../Core/Constructor";
 import TerriaError from "../Core/TerriaError";
 import getUrlForImageryTile from "../Map/ImageryProvider/getUrlForImageryTile";
-import CommonStrata from "../Models/Definition/CommonStrata";
 import CompositeCatalogItem from "../Models/Catalog/CatalogItems/CompositeCatalogItem";
+import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
 import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
-import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import ImageryProviderTraits from "../Traits/TraitsClasses/ImageryProviderTraits";
+import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
 import MappableMixin from "./MappableMixin";
 
@@ -368,8 +368,7 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
 }
 
 namespace TileErrorHandlerMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof TileErrorHandlerMixin>> {}
+  export type Instance = InstanceType<ReturnType<typeof TileErrorHandlerMixin>>;
 
   export function isMixedInto(model: any): model is Instance {
     return model?.hasTileErrorHandlerMixin;

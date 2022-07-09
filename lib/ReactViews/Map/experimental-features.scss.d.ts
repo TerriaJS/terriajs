@@ -5,5 +5,5 @@ interface CssExports {
   'experimental-features': string;
   'experimentalFeatures': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

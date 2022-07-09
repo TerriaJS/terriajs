@@ -24,7 +24,7 @@ export function loadAndSearchCatalogRecursively(
   searchTextLowercase: string,
   searchResults: SearchProviderResults,
   resultMap: ResultMap,
-  iteration: number = 0
+  iteration = 0
 ): Promise<void> {
   // checkTerriaAgainstResults(terria, searchResults)
   // don't go further than 10 deep, but also if we have references that never
@@ -105,8 +105,8 @@ export function loadAndSearchCatalogRecursively(
 
 export default class CatalogSearchProvider extends SearchProvider {
   readonly terria: Terria;
-  @observable isSearching: boolean = false;
-  @observable debounceDurationOnceLoaded: number = 300;
+  @observable isSearching = false;
+  @observable debounceDurationOnceLoaded = 300;
 
   constructor(options: CatalogSearchProviderOptions) {
     super();

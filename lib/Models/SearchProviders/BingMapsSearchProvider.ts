@@ -126,7 +126,7 @@ export default class BingMapsSearchProvider extends SearchProvider {
           return;
         }
 
-        var resourceSet = result.resourceSets[0];
+        const resourceSet = result.resourceSets[0];
         if (resourceSet.resources.length === 0) {
           searchResults.message = i18next.t("viewModels.searchNoLocations");
           return;

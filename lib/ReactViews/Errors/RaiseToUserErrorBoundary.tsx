@@ -1,5 +1,5 @@
 import React, { ErrorInfo } from "react";
-import TerriaError, { TerriaErrorOverrides } from "../../Core/TerriaError";
+import { TerriaErrorOverrides } from "../../Core/TerriaError";
 import ViewState from "../../ReactViewModels/ViewState";
 
 type PropsType = {
@@ -16,13 +16,13 @@ export default class RaiseToUserErrorBoundary extends React.Component<
 > {
   state = { hasError: false };
 
-  static getDerivedStateFromError(error: any) {
+  static getDerivedStateFromError() {
     return {
       hasError: true
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  componentDidCatch(error: Error) {
     this.props.viewState.terria.raiseErrorToUser(
       error,
       this.props.terriaErrorOptions

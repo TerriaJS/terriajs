@@ -20,6 +20,7 @@ try {
 
   window.addEventListener("test", null, options);
   window.removeEventListener("test", null, options);
+  // eslint-disable-next-line no-empty
 } catch (err) {}
 
 const notPassive = passiveSupported ? { passive: false } : false;

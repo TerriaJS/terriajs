@@ -154,7 +154,9 @@ describeIfSupported("Cesium Model", function() {
         )
         .reverse();
 
-    await runLater(() => {});
+    await runLater(() => {
+      // no-op
+    });
 
     // Test that we have added the correct items
     expect(dataSourceNames()).toEqual(["ds1", "ds2", "ds3"]);
@@ -162,7 +164,9 @@ describeIfSupported("Cesium Model", function() {
     expect(imageryProviderUrls()).toEqual(["img1", "img2", "img3"]);
 
     runInAction(() => items.splice(0, 2));
-    await runLater(() => {});
+    await runLater(() => {
+      // no-op
+    });
 
     // Test that we have removed the correct items
     expect(dataSourceNames()).toEqual(["ds3"]);
@@ -176,7 +180,9 @@ describeIfSupported("Cesium Model", function() {
  * items.
  */
 class MappablePrimitiveItem extends MappableMixin(CreateModel(MappableTraits)) {
-  async forceLoadMapItems() {}
+  async forceLoadMapItems() {
+    // no-op
+  }
 
   get mapItems() {
     return [

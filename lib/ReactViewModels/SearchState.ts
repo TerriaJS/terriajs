@@ -1,16 +1,16 @@
 // import CatalogItemNameSearchProviderViewModel from "../ViewModels/CatalogItemNameSearchProviderViewModel";
 import {
-  observable,
-  reaction,
-  IReactionDisposer,
+  action,
   computed,
-  action
+  IReactionDisposer,
+  observable,
+  reaction
 } from "mobx";
-import Terria from "../Models/Terria";
-import SearchProviderResults from "../Models/SearchProviders/SearchProviderResults";
-import SearchProvider from "../Models/SearchProviders/SearchProvider";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import CatalogSearchProvider from "../Models/SearchProviders/CatalogSearchProvider";
+import SearchProvider from "../Models/SearchProviders/SearchProvider";
+import SearchProviderResults from "../Models/SearchProviders/SearchProviderResults";
+import Terria from "../Models/Terria";
 
 interface SearchStateOptions {
   terria: Terria;
@@ -24,18 +24,18 @@ export default class SearchState {
 
   @observable locationSearchProviders: SearchProvider[];
 
-  @observable catalogSearchText: string = "";
-  @observable isWaitingToStartCatalogSearch: boolean = false;
+  @observable catalogSearchText = "";
+  @observable isWaitingToStartCatalogSearch = false;
 
-  @observable locationSearchText: string = "";
-  @observable isWaitingToStartLocationSearch: boolean = false;
+  @observable locationSearchText = "";
+  @observable isWaitingToStartLocationSearch = false;
 
-  @observable unifiedSearchText: string = "";
-  @observable isWaitingToStartUnifiedSearch: boolean = false;
+  @observable unifiedSearchText = "";
+  @observable isWaitingToStartUnifiedSearch = false;
 
-  @observable showLocationSearchResults: boolean = false;
-  @observable showMobileLocationSearch: boolean = false;
-  @observable showMobileCatalogSearch: boolean = false;
+  @observable showLocationSearchResults = false;
+  @observable showMobileLocationSearch = false;
+  @observable showMobileCatalogSearch = false;
 
   @observable locationSearchResults: SearchProviderResults[] = [];
   @observable catalogSearchResults: SearchProviderResults | undefined;

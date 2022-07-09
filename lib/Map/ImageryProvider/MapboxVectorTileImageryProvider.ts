@@ -235,7 +235,7 @@ export default class MapboxVectorTileImageryProvider
     return <any>undefined;
   }
 
-  getTileCredits(x: number, y: number, level: number): Credit[] {
+  getTileCredits(): Credit[] {
     return [];
   }
 

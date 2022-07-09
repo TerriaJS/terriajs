@@ -29,7 +29,7 @@ const PedestrianMode: React.FC<PedestrianModeProps> = observer(props => {
   const [view, setView] = useState<MiniMapView | undefined>();
 
   const onDropCancelled = () => viewState.closeTool();
-  //if viewer is not cesium close tool.
+  // if viewer is not cesium close tool.
   if (!(cesium instanceof Cesium)) {
     viewState.closeTool();
     return null;

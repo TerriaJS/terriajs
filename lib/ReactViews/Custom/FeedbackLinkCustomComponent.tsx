@@ -72,15 +72,15 @@ export default class FeedbackLinkCustomComponent extends CustomComponent {
     context: ProcessNodeContext,
     node: DomElement,
     children: ReactElement[]
-  ): ReactElement {
-    if (!context.viewState) return <></>;
+  ): ReactElement | undefined {
+    if (!context.viewState) return undefined;
 
     return (
       <FeedbackLink
         viewState={context.viewState}
         emailMessage={node.attribs?.["email-message"]}
         feedbackMessage={node.attribs?.["feedback-message"]}
-      ></FeedbackLink>
+      />
     );
   }
 }

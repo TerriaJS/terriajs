@@ -15,7 +15,6 @@ configure({
 describe("ThreddsCatalogGroup", function() {
   let terria: Terria;
   let threddsCatalogGroup: ThreddsCatalogGroup;
-  let threddsStratum: ThreddsStratum;
 
   beforeEach(async function() {
     terria = new Terria({
@@ -26,9 +25,7 @@ describe("ThreddsCatalogGroup", function() {
     threddsCatalogGroup.setTrait("definition", "url", url);
 
     await threddsCatalogGroup.loadMembers();
-    threddsStratum = <ThreddsStratum>(
-      threddsCatalogGroup.strata.get(ThreddsStratum.stratumName)
-    );
+    <ThreddsStratum>threddsCatalogGroup.strata.get(ThreddsStratum.stratumName);
   });
 
   it("has a type and typeName", function() {
@@ -41,20 +38,20 @@ describe("ThreddsCatalogGroup", function() {
   it("properly creates members ", async function() {
     expect(threddsCatalogGroup.members).toBeDefined();
     expect(threddsCatalogGroup.members.length).toBe(3);
-    let member0 = <CatalogGroup>threddsCatalogGroup.memberModels[0];
+    const member0 = <CatalogGroup>threddsCatalogGroup.memberModels[0];
 
     expect(member0.name).toBe("Some Catalog 1");
     expect(member0.type).toBe("thredds-group");
     await member0.loadMembers();
     expect(member0.members.length).toBe(1);
 
-    let member1 = <CatalogGroup>threddsCatalogGroup.memberModels[1];
+    const member1 = <CatalogGroup>threddsCatalogGroup.memberModels[1];
     expect(member1.name).toBe("Some Catalog 2");
     expect(member1.type).toBe("thredds-group");
     await member1.loadMembers();
     expect(member1.members.length).toBe(2);
 
-    let member2 = <WebMapServiceCatalogGroup>(
+    const member2 = <WebMapServiceCatalogGroup>(
       threddsCatalogGroup.memberModels[2]
     );
     expect(member2.name).toBe(

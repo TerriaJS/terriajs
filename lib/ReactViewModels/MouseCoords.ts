@@ -1,5 +1,5 @@
 import debounce from "lodash-es/debounce";
-import { observable, action, runInAction } from "mobx";
+import { action, observable, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";

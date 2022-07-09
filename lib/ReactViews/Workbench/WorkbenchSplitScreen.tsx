@@ -77,7 +77,7 @@ const WorkbenchSplitScreen: React.FC<IWorkbenchSplitScreenProps> = observer(
               `
               }}
               activeColor={theme.colorSecondary}
-            ></TerrainSide>
+            />
           </Box>
         </Box>
         <Spacing bottom={1} />

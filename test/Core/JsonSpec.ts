@@ -16,8 +16,9 @@ import {
 import Terria from "../../lib/Models/Terria";
 
 describe("Json", function() {
-  beforeEach(function() {});
-
+  const emptyFunctionMock = () => {
+    // no-op
+  };
   it("isJsonObject", function() {
     expect(isJsonObject(null)).toBeFalsy();
     expect(isJsonObject(1)).toBeFalsy();
@@ -27,17 +28,20 @@ describe("Json", function() {
       isJsonObject({ actually: "an Object", with: ["JsonValues", null] })
     ).toBeTruthy();
 
-    expect(isJsonObject(() => {})).toBeFalsy();
+    expect(isJsonObject(emptyFunctionMock)).toBeFalsy();
     expect(isJsonObject(new Terria())).toBeFalsy();
 
-    expect(isJsonObject({ prop: () => {} })).toBeFalsy();
+    expect(isJsonObject({ prop: emptyFunctionMock })).toBeFalsy();
     expect(
-      isJsonObject({ not: "an Object", with: ["JsonValues", () => {}] })
+      isJsonObject({
+        not: "an Object",
+        with: ["JsonValues", emptyFunctionMock]
+      })
     ).toBeFalsy();
     expect(
       isJsonObject({
         not: "an Object",
-        with: ["JsonValues", { function: () => {} }]
+        with: ["JsonValues", { function: emptyFunctionMock }]
       })
     ).toBeFalsy();
 
@@ -47,7 +51,7 @@ describe("Json", function() {
       isJsonObject(
         {
           not: "an Object",
-          with: ["JsonValues", { function: () => {} }]
+          with: ["JsonValues", { function: emptyFunctionMock }]
         },
         false
       )
@@ -64,7 +68,7 @@ describe("Json", function() {
       isJsonBoolean({ actually: "an Object", with: ["JsonValues", null] })
     ).toBeFalsy();
 
-    expect(isJsonBoolean(() => {})).toBeFalsy();
+    expect(isJsonBoolean(emptyFunctionMock)).toBeFalsy();
     expect(isJsonBoolean(new Terria())).toBeFalsy();
   });
 
@@ -78,7 +82,7 @@ describe("Json", function() {
       isJsonNumber({ actually: "an Object", with: ["JsonValues", null] })
     ).toBeFalsy();
 
-    expect(isJsonNumber(() => {})).toBeFalsy();
+    expect(isJsonNumber(emptyFunctionMock)).toBeFalsy();
     expect(isJsonNumber(new Terria())).toBeFalsy();
   });
 
@@ -92,7 +96,7 @@ describe("Json", function() {
       isJsonString({ actually: "an Object", with: ["JsonValues", null] })
     ).toBeFalsy();
 
-    expect(isJsonString(() => {})).toBeFalsy();
+    expect(isJsonString(emptyFunctionMock)).toBeFalsy();
     expect(isJsonString(new Terria())).toBeFalsy();
   });
 
@@ -106,16 +110,16 @@ describe("Json", function() {
       isJsonValue({ actually: "an Object", with: ["JsonValues", null] })
     ).toBeTruthy();
 
-    expect(isJsonValue(() => {})).toBeFalsy();
+    expect(isJsonValue(emptyFunctionMock)).toBeFalsy();
     expect(isJsonValue(new Terria())).toBeFalsy();
 
     expect(
-      isJsonValue({ not: "an Object", with: ["JsonValues", () => {}] })
+      isJsonValue({ not: "an Object", with: ["JsonValues", emptyFunctionMock] })
     ).toBeFalsy();
     expect(
       isJsonValue({
         not: "an Object",
-        with: ["JsonValues", { function: () => {} }]
+        with: ["JsonValues", { function: emptyFunctionMock }]
       })
     ).toBeFalsy();
 
@@ -125,7 +129,7 @@ describe("Json", function() {
       isJsonValue(
         {
           not: "an Object",
-          with: ["JsonValues", { function: () => {} }]
+          with: ["JsonValues", { function: emptyFunctionMock }]
         },
         false
       )
@@ -140,14 +144,14 @@ describe("Json", function() {
     expect(isJsonArray(false)).toBeFalsy();
     expect(isJsonArray(["JsonValues", null])).toBeTruthy();
 
-    expect(isJsonArray(() => {})).toBeFalsy();
+    expect(isJsonArray(emptyFunctionMock)).toBeFalsy();
     expect(isJsonArray(new Terria())).toBeFalsy();
 
     expect(
       isJsonArray([
         "JsonValues",
         null,
-        { not: "an Object", with: ["JsonValues", () => {}] }
+        { not: "an Object", with: ["JsonValues", emptyFunctionMock] }
       ])
     ).toBeFalsy();
 
@@ -158,7 +162,7 @@ describe("Json", function() {
         [
           "JsonValues",
           null,
-          { not: "an Object", with: ["JsonValues", () => {}] }
+          { not: "an Object", with: ["JsonValues", emptyFunctionMock] }
         ],
         false
       )
@@ -173,7 +177,7 @@ describe("Json", function() {
     expect(isJsonStringArray(false)).toBeFalsy();
     expect(isJsonStringArray(["JsonValues", 8])).toBeFalsy();
 
-    expect(isJsonStringArray(() => {})).toBeFalsy();
+    expect(isJsonStringArray(emptyFunctionMock)).toBeFalsy();
     expect(isJsonStringArray(new Terria())).toBeFalsy();
 
     expect(
@@ -189,7 +193,7 @@ describe("Json", function() {
     expect(isJsonNumberArray([3, 234])).toBeTruthy();
     expect(isJsonNumberArray(["JsonValues", 8])).toBeFalsy();
 
-    expect(isJsonNumberArray(() => {})).toBeFalsy();
+    expect(isJsonNumberArray(emptyFunctionMock)).toBeFalsy();
     expect(isJsonNumberArray(new Terria())).toBeFalsy();
 
     expect(isJsonNumberArray([3, 1, [3, 4]])).toBeFalsy();
@@ -210,7 +214,7 @@ describe("Json", function() {
       ])
     ).toBeTruthy();
 
-    expect(isJsonObjectArray(() => {})).toBeFalsy();
+    expect(isJsonObjectArray(emptyFunctionMock)).toBeFalsy();
     expect(isJsonObjectArray(new Terria())).toBeFalsy();
 
     expect(isJsonObjectArray([3, 1, [3, 4]])).toBeFalsy();
@@ -225,17 +229,20 @@ describe("Json", function() {
       assertObject({ actually: "an Object", with: ["JsonValues", null] })
     ).toBeTruthy();
 
-    expect(() => assertObject(() => {})).toThrow();
+    expect(() => assertObject(emptyFunctionMock)).toThrow();
     expect(() => assertObject(new Terria())).toThrow();
 
-    expect(() => assertObject({ prop: () => {} })).toThrow();
+    expect(() => assertObject({ prop: emptyFunctionMock })).toThrow();
     expect(() =>
-      assertObject({ not: "an Object", with: ["JsonValues", () => {}] })
+      assertObject({
+        not: "an Object",
+        with: ["JsonValues", emptyFunctionMock]
+      })
     ).toThrow();
     expect(() =>
       assertObject({
         not: "an Object",
-        with: ["JsonValues", { function: () => {} }]
+        with: ["JsonValues", { function: emptyFunctionMock }]
       })
     ).toThrow();
   });
@@ -248,17 +255,20 @@ describe("Json", function() {
       assertString({ actually: "an Object", with: ["JsonValues", null] })
     ).toThrow();
 
-    expect(() => assertString(() => {})).toThrow();
+    expect(() => assertString(emptyFunctionMock)).toThrow();
     expect(() => assertString(new Terria())).toThrow();
 
-    expect(() => assertString({ prop: () => {} })).toThrow();
+    expect(() => assertString({ prop: emptyFunctionMock })).toThrow();
     expect(() =>
-      assertString({ not: "an Object", with: ["JsonValues", () => {}] })
+      assertString({
+        not: "an Object",
+        with: ["JsonValues", emptyFunctionMock]
+      })
     ).toThrow();
     expect(() =>
       assertString({
         not: "an Object",
-        with: ["JsonValues", { function: () => {} }]
+        with: ["JsonValues", { function: emptyFunctionMock }]
       })
     ).toThrow();
   });
@@ -271,17 +281,20 @@ describe("Json", function() {
       assertNumber({ actually: "an Object", with: ["JsonValues", null] })
     ).toThrow();
 
-    expect(() => assertNumber(() => {})).toThrow();
+    expect(() => assertNumber(emptyFunctionMock)).toThrow();
     expect(() => assertNumber(new Terria())).toThrow();
 
-    expect(() => assertNumber({ prop: () => {} })).toThrow();
+    expect(() => assertNumber({ prop: emptyFunctionMock })).toThrow();
     expect(() =>
-      assertNumber({ not: "an Object", with: ["JsonValues", () => {}] })
+      assertNumber({
+        not: "an Object",
+        with: ["JsonValues", emptyFunctionMock]
+      })
     ).toThrow();
     expect(() =>
       assertNumber({
         not: "an Object",
-        with: ["JsonValues", { function: () => {} }]
+        with: ["JsonValues", { function: emptyFunctionMock }]
       })
     ).toThrow();
   });
@@ -294,17 +307,17 @@ describe("Json", function() {
       assertArray({ actually: "an Object", with: ["JsonValues", null] })
     ).toThrow();
 
-    expect(() => assertArray(() => {})).toThrow();
+    expect(() => assertArray(emptyFunctionMock)).toThrow();
     expect(() => assertArray(new Terria())).toThrow();
 
-    expect(() => assertArray({ prop: () => {} })).toThrow();
+    expect(() => assertArray({ prop: emptyFunctionMock })).toThrow();
     expect(() =>
-      assertArray({ not: "an Object", with: ["JsonValues", () => {}] })
+      assertArray({ not: "an Object", with: ["JsonValues", emptyFunctionMock] })
     ).toThrow();
     expect(() =>
       assertArray({
         not: "an Object",
-        with: ["JsonValues", { function: () => {} }]
+        with: ["JsonValues", { function: emptyFunctionMock }]
       })
     ).toThrow();
   });

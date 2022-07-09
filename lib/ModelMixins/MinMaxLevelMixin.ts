@@ -11,7 +11,7 @@ function MinMaxLevelMixin<T extends Constructor<Model<MinMaxLevelTraits>>>(
   Base: T
 ) {
   abstract class MinMaxLevelMixin extends Base {
-    @observable notVisible: boolean = false;
+    @observable notVisible = false;
 
     get supportsMinMaxLevel() {
       return true;
@@ -27,7 +27,7 @@ function MinMaxLevelMixin<T extends Constructor<Model<MinMaxLevelTraits>>>(
 
     protected updateRequestImage<T extends ImageryProvider>(
       imageryProvider: T,
-      ows: boolean = true
+      ows = true
     ) {
       const maximumLevel = this.getMaximumLevel(ows);
       const minimumLevel = this.getMinimumLevel(ows);
@@ -86,8 +86,7 @@ function MinMaxLevelMixin<T extends Constructor<Model<MinMaxLevelTraits>>>(
 }
 
 namespace MinMaxLevelMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof MinMaxLevelMixin>> {}
+  export type Instance = InstanceType<ReturnType<typeof MinMaxLevelMixin>>;
   export function isMixedInto(model: any): model is Instance {
     return model && model.supportsMinMaxLevel;
   }

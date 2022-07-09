@@ -1,7 +1,7 @@
+import createStratumInstance from "../Models/Definition/createStratumInstance";
+import StratumFromTraits from "../Models/Definition/StratumFromTraits";
 import ModelTraits from "./ModelTraits";
 import TraitsConstructor from "./TraitsConstructor";
-import StratumFromTraits from "../Models/Definition/StratumFromTraits";
-import createStratumInstance from "../Models/Definition/createStratumInstance";
 
 /**
  * A strata map where the strata are obtained from a sub-property of another
@@ -63,7 +63,7 @@ export default class NestedStrataMap<T extends ModelTraits>
     return this.entries();
   }
   *entries(): IterableIterator<[string, T]> {
-    for (let entry of this.parent.entries()) {
+    for (const entry of this.parent.entries()) {
       const parentValue: any = entry[1];
       const value = parentValue[this.parentProperty];
       if (value === undefined) {
@@ -74,12 +74,12 @@ export default class NestedStrataMap<T extends ModelTraits>
   }
   *keys(): IterableIterator<string> {
     // Only return keys that have a value.
-    for (let entry of this.entries()) {
+    for (const entry of this.entries()) {
       yield entry[0];
     }
   }
   *values(): IterableIterator<T> {
-    for (let entry of this.parent.entries()) {
+    for (const entry of this.parent.entries()) {
       const parentValue: any = entry[1];
       const value = parentValue[this.parentProperty];
       if (value === undefined) {

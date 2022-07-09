@@ -4,7 +4,6 @@ import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
 import Terria from "../../../../lib/Models/Terria";
 import Cesium3DTilesCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/Cesium3DTilesCatalogItem";
 
-// @ts-ignore
 import ViewingControls from "../../../../lib/ReactViews/Workbench/Controls/ViewingControls";
 import ViewState from "../../../../lib/ReactViewModels/ViewState";
 

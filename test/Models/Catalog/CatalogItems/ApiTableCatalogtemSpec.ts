@@ -31,8 +31,6 @@ describe("ApiTableCatalogItem", function() {
   });
 
   it("creates a table from api calls", async function() {
-    const valueApiIdx = 0;
-    const positionApiIdx = 1;
     runInAction(() => {
       updateModelFromJson(apiCatalogItem, CommonStrata.definition, {
         idKey: "id",
@@ -80,7 +78,7 @@ describe("ApiTableCatalogItem", function() {
     await apiCatalogItem.loadMapItems();
     const table = apiCatalogItem.dataColumnMajor;
     expect(table).toBeDefined();
-    let definedTable: string[][] = table!;
+    const definedTable: string[][] = table!;
     // count columns
     expect(definedTable.length).toBe(3); // value, latitude, longitude
     // count rows

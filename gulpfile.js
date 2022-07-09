@@ -46,20 +46,6 @@ gulp.task('make-schema', function() {
     });
 });
 
-gulp.task('lint', function(done) {
-    var runExternalModule = require('./buildprocess/runExternalModule');
-
-    runExternalModule('eslint/bin/eslint.js', [
-        'lib', 'test',
-        '--ext', '.jsx',
-        '--ext', '.js',
-        '--ignore-pattern', 'lib/ThirdParty',
-        '--max-warnings', '0'
-    ]);
-
-    done();
-});
-
 gulp.task('reference-guide', function(done) {
     var runExternalModule = require('./buildprocess/runExternalModule');
 
@@ -184,4 +170,4 @@ gulp.task('build', gulp.series('copy-cesium-assets', 'build-specs'));
 gulp.task('release', gulp.series('copy-cesium-assets', 'release-specs'));
 gulp.task('watch', gulp.series('copy-cesium-assets', 'watch-specs'));
 gulp.task('post-npm-install', gulp.series('copy-cesium-assets'));
-gulp.task('default', gulp.series('lint', 'build'));
+gulp.task('default', gulp.series('build'));

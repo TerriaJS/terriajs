@@ -19,7 +19,7 @@ export default class GeoRssCatalogItemTraits extends mixTraits(
     description:
       "Whether the features in this service should be clamped to the terrain surface."
   })
-  clampToGround: boolean = true;
+  clampToGround = true;
   @primitiveTrait({
     type: "string",
     name: "geoRssString",

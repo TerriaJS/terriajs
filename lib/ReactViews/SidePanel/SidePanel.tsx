@@ -12,7 +12,6 @@ import { ExplorerWindowElementName } from "../ExplorerWindow/ExplorerWindow";
 import { useRefForTerria } from "../Hooks/useRefForTerria";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import Workbench from "../Workbench/Workbench";
-import FullScreenButton from "./FullScreenButton";
 
 const BoxHelpfulHints = styled(Box)``;
 

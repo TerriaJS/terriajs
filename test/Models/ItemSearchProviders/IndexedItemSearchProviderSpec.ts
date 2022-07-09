@@ -52,7 +52,11 @@ describe("IndexedItemSearchProvider", function() {
 
   describe("construction", function() {
     it("can be constructed", function() {
-      new IndexedItemSearchProvider({ indexRootUrl: "indexRoot.json" }, []);
+      const test = new IndexedItemSearchProvider(
+        { indexRootUrl: "indexRoot.json" },
+        []
+      );
+      expect(test).toBeDefined();
     });
   });
 

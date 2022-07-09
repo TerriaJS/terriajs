@@ -1,11 +1,13 @@
-import { computed } from "mobx";
-import Leaflet from "../../lib/Models/Leaflet";
 import Terria from "../../lib/Models/Terria";
 import ViewerMode, { setViewerMode } from "../../lib/Models/ViewerMode";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 
-const mockBeforeViewerChanges = jasmine.createSpy("", () => {});
-const mockAfterViewerChanges = jasmine.createSpy("", () => {});
+const mockBeforeViewerChanges = jasmine.createSpy("", () => {
+  // no-op
+});
+const mockAfterViewerChanges = jasmine.createSpy("", () => {
+  // no-op
+});
 
 describe("TerriaViewer", function() {
   let terria: Terria;

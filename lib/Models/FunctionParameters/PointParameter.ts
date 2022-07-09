@@ -21,7 +21,7 @@ export default class PointParameter extends FunctionParameter<CartographicPoint>
    * Get feature as geojson for display on map.
    */
   static getGeoJsonFeature(value: CartographicPoint): Feature<Point> {
-    var coordinates = [
+    const coordinates = [
       CesiumMath.toDegrees(value.longitude),
       CesiumMath.toDegrees(value.latitude),
       value.height

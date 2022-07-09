@@ -17,12 +17,6 @@ import pollToPromise from "../../Core/pollToPromise";
 import Leaflet from "../../Models/Leaflet";
 import getUrlForImageryTile from "../ImageryProvider/getUrlForImageryTile";
 
-// We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
-// and import doesn't allows us to do that, so instead we use require + type casting to ensure
-// we still maintain the type checking, without TS screaming with errors
-const FeatureDetection: FeatureDetection = require("terriajs-cesium/Source/Core/FeatureDetection")
-  .default;
-
 const swScratch = new Cartographic();
 const neScratch = new Cartographic();
 const swTileCoordinatesScratch = new Cartesian2();
@@ -46,7 +40,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
   private _leafletUpdateInterval: number;
 
   @observable splitDirection = SplitDirection.NONE;
-  @observable splitPosition: number = 0.5;
+  @observable splitPosition = 0.5;
 
   constructor(
     private leaflet: Leaflet,
@@ -138,7 +132,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     };
   }
 
-  _tileOnError(_done: unknown, _tile: unknown, _e: unknown) {
+  _tileOnError() {
     // Do nothing, we'll handle tile errors separately.
   }
 
@@ -216,7 +210,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     return tilePoint.z - this._zSubtract;
   }
 
-  _update() {
+  _update(...args: any[]) {
     if (!this.imageryProvider.ready) {
       if (!this._delayedUpdate) {
         this._delayedUpdate = <any>setTimeout(() => {
@@ -290,7 +284,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     }
 
     if (this._usable) {
-      (<any>L.TileLayer).prototype._update.apply(this, arguments);
+      (<any>L.TileLayer).prototype._update.apply(this, args);
 
       this._updateAttribution();
     }

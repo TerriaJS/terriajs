@@ -1,5 +1,3 @@
-import URI from "urijs";
-
 export const getUriWithoutPath = (anyUri: uri.URI) => {
   if (!anyUri) {
     return undefined;

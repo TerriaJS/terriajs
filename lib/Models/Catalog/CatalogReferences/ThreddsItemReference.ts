@@ -8,7 +8,6 @@ import ThreddsCatalogGroup, {
   ThreddsDataset
 } from "../CatalogGroups/ThreddsCatalogGroup";
 import CatalogMemberFactory from "../CatalogMemberFactory";
-import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
@@ -29,7 +28,7 @@ export class ThreddsDatasetStratum extends LoadableStratum(
     super();
   }
 
-  duplicateLoadableStratum(newModel: BaseModel): this {
+  duplicateLoadableStratum(): this {
     return new ThreddsDatasetStratum(
       this.threddsItemReference,
       this.threddsDataset
@@ -109,9 +108,7 @@ export default class ThreddsItemReference extends UrlMixin(
     });
   }
 
-  async forceLoadReference(
-    previousTarget: BaseModel | undefined
-  ): Promise<BaseModel | undefined> {
+  async forceLoadReference(): Promise<BaseModel | undefined> {
     this.setThreddsStrata(this);
 
     const model = CatalogMemberFactory.create(
@@ -122,7 +119,6 @@ export default class ThreddsItemReference extends UrlMixin(
     );
     if (model === undefined) return;
     this.setThreddsStrata(model);
-    previousTarget = model;
     return model;
   }
 }

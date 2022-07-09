@@ -2,7 +2,6 @@ import CkanResourceFormatTraits from "../../../Traits/TraitsClasses/CkanResource
 import CkanSharedTraits from "../../../Traits/TraitsClasses/CkanSharedTraits";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 
 export default class CkanDefaultFormatsStratum extends LoadableStratum(
@@ -10,7 +9,7 @@ export default class CkanDefaultFormatsStratum extends LoadableStratum(
 ) {
   static stratumName = "ckanDefaultFormats";
 
-  duplicateLoadableStratum(newModel: BaseModel): this {
+  duplicateLoadableStratum(): this {
     return new CkanDefaultFormatsStratum() as this;
   }
 

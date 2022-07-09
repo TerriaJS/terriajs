@@ -1,3 +1,4 @@
+/* eslint-disable react/no-danger */
 "use strict";
 
 import React from "react";

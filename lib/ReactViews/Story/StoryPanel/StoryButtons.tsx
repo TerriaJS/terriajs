@@ -1,9 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
-import Button, { RawButton } from "../../../Styled/Button";
+import { RawButton } from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../../Styled/Icon";
-import Styles from "../story-panel.scss";
 
 interface BtnProp {
   onClick: () => void;

@@ -230,7 +230,7 @@ export default class MagdaReference extends AccessControlMixin(
   ) {
     if (record && override && isJsonObject(override.aspects)) {
       if (isJsonObject(record.aspects)) {
-        for (let key in override.aspects)
+        for (const key in override.aspects)
           record.aspects[key] = override.aspects[key];
       } else {
         record.aspects = override.aspects;
@@ -570,7 +570,7 @@ export default class MagdaReference extends AccessControlMixin(
       ) {
         return;
       }
-      updateModelFromJson(result, key, terriaStratum, true).catchError(error =>
+      updateModelFromJson(result, key, terriaStratum, true).catchError(() =>
         result.setTrait(CommonStrata.underride, "isExperiencingIssues", true)
       );
     });

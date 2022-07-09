@@ -23,7 +23,7 @@ export interface FeatureType {
 export function getRectangleFromLayer(
   layer: FeatureType
 ): StratumFromTraits<RectangleTraits> | undefined {
-  var bbox = layer.WGS84BoundingBox;
+  const bbox = layer.WGS84BoundingBox;
   if (bbox) {
     return {
       west: bbox.westBoundLongitude,
@@ -123,7 +123,7 @@ function getFeatureTypes(json: any): FeatureType[] {
 }
 
 function getOutputTypes(json: any): string[] | undefined {
-  let outputTypes = json.OperationsMetadata?.Operation?.find(
+  const outputTypes = json.OperationsMetadata?.Operation?.find(
     (op: any) => op.name === "GetFeature"
   )?.Parameter?.find((p: any) => p.name === "outputFormat")?.Value;
 

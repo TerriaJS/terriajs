@@ -15,5 +15,5 @@ export default class GetCapabilitiesTraits extends ModelTraits {
     name: "GetCapabilities Cache Duration",
     description: "The amount of time to cache GetCapabilities responses."
   })
-  getCapabilitiesCacheDuration: string = "1d";
+  getCapabilitiesCacheDuration = "1d";
 }

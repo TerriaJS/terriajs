@@ -141,10 +141,9 @@ const LocationSearchResults = observer(
               centered
               justifySpaceBetween
             >
-              <TextSpan
-                textDarker
-                uppercase
-              >{`${search.searchProvider.name} (${validResults?.length})`}</TextSpan>
+              <TextSpan textDarker uppercase>
+                {`${search.searchProvider.name} (${validResults?.length})`}
+              </TextSpan>
               <StyledIcon
                 styledWidth={"9px"}
                 glyph={isOpen ? Icon.GLYPHS.opened : Icon.GLYPHS.closed}

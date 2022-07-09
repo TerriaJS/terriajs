@@ -62,7 +62,7 @@ export function isDataSource(object: MapItem): object is DataSource {
 
 function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
   abstract class MappableMixin extends Base {
-    initialMessageShown: boolean = false;
+    initialMessageShown = false;
     get isMappable() {
       return true;
     }
@@ -198,8 +198,7 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
 }
 
 namespace MappableMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof MappableMixin>> {}
+  export type Instance = InstanceType<ReturnType<typeof MappableMixin>>;
   export function isMixedInto(model: any): model is Instance {
     return (
       model &&

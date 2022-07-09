@@ -260,7 +260,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
   @computed
   get capabilitiesLayer(): Readonly<WmtsLayer | undefined> {
-    let result = this.catalogItem.layer
+    const result = this.catalogItem.layer
       ? this.capabilities.findLayer(this.catalogItem.layer)
       : undefined;
     return result;
@@ -287,9 +287,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
     result.push({
       layerName: layer?.Identifier,
       styles: styles.map((style: CapabilitiesStyle) => {
-        let wmtsLegendUrl: WmtsCapabilitiesLegend | undefined = isReadOnlyArray(
-          style.LegendURL
-        )
+        const wmtsLegendUrl:
+          | WmtsCapabilitiesLegend
+          | undefined = isReadOnlyArray(style.LegendURL)
           ? style.LegendURL[0]
           : style.LegendURL;
         let legendUri, legendMimeType;
@@ -352,9 +352,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
         continue;
       }
 
-      var levelZeroTopLeftCorner = levelZeroMatrix.TopLeftCorner.split(" ");
-      var startX = parseFloat(levelZeroTopLeftCorner[0]);
-      var startY = parseFloat(levelZeroTopLeftCorner[1]);
+      const levelZeroTopLeftCorner = levelZeroMatrix.TopLeftCorner.split(" ");
+      const startX = parseFloat(levelZeroTopLeftCorner[0]);
+      const startY = parseFloat(levelZeroTopLeftCorner[1]);
       const rectangleInMeters = standardTilingScheme.rectangleToNativeRectangle(
         standardTilingScheme.rectangle
       );
@@ -491,7 +491,7 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
       return;
     }
 
-    let format: string = "image/png";
+    let format = "image/png";
     const formats = layer.Format;
     if (
       formats &&
@@ -577,18 +577,17 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     let tileMatrixSetLinks: TileMatrixSetLink[] = [];
     if (layer?.TileMatrixSetLink) {
       if (Array.isArray(layer?.TileMatrixSetLink)) {
-        tileMatrixSetLinks = [...layer?.TileMatrixSetLink];
+        tileMatrixSetLinks = [...layer.TileMatrixSetLink];
       } else {
         tileMatrixSetLinks = [layer.TileMatrixSetLink];
       }
     }
 
-    let tileMatrixSetId: string =
-      "urn:ogc:def:wkss:OGC:1.0:GoogleMapsCompatible";
-    let maxLevel: number = 0;
-    let minLevel: number = 0;
-    let tileWidth: number = 256;
-    let tileHeight: number = 256;
+    let tileMatrixSetId = "urn:ogc:def:wkss:OGC:1.0:GoogleMapsCompatible";
+    let maxLevel = 0;
+    let minLevel = 0;
+    let tileWidth = 256;
+    let tileHeight = 256;
     let tileMatrixSetLabels: string[] = [];
     for (let i = 0; i < tileMatrixSetLinks.length; i++) {
       const tileMatrixSet = tileMatrixSetLinks[i].TileMatrixSet;

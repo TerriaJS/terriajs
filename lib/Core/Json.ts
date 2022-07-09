@@ -9,6 +9,7 @@ type JsonValue =
 export interface JsonObject {
   [key: string]: JsonValue;
 }
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface JsonArray<T = JsonValue> extends Array<T> {}
 
 export default JsonValue;

@@ -1,5 +1,5 @@
-import { BaseModel } from "../Models/Definition/Model";
 import i18next from "i18next";
+import { BaseModel } from "../Models/Definition/Model";
 import isDefined from "./isDefined";
 export const USER_ADDED_CATEGORY_ID = "__User-Added_Data__";
 

@@ -85,7 +85,9 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
      *
      * {@see AsyncLoader}
      */
-    protected async forceLoadMetadata() {}
+    protected async forceLoadMetadata() {
+      // no-op
+    }
 
     get hasCatalogMemberMixin() {
       return true;
@@ -108,9 +110,9 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
 
     @computed
     get nameSortKey() {
-      var parts = (this.nameInCatalog || "").split(/(\d+)/);
+      const parts = (this.nameInCatalog || "").split(/(\d+)/);
       return parts.map(function(part) {
-        var parsed = parseInt(part, 10);
+        const parsed = parseInt(part, 10);
         if (parsed === parsed) {
           return parsed;
         } else {
@@ -221,8 +223,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
 const descriptionRegex = /description/i;
 
 namespace CatalogMemberMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof CatalogMemberMixin>> {}
+  export type Instance = InstanceType<ReturnType<typeof CatalogMemberMixin>>;
   export function isMixedInto(model: any): model is Instance {
     return model && model.hasCatalogMemberMixin;
   }

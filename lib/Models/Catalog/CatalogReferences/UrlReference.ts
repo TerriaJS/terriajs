@@ -32,9 +32,7 @@ export default class UrlReference extends UrlMixin(
     super(id, terria, sourceReference, strata);
   }
 
-  protected forceLoadReference(
-    previousTarget: BaseModel | undefined
-  ): Promise<BaseModel | undefined> {
+  protected forceLoadReference(): Promise<BaseModel | undefined> {
     if (this.url === undefined || this.uniqueId === undefined) {
       return Promise.resolve(undefined);
     }

@@ -18,5 +18,5 @@ export default class ShadowTraits extends ModelTraits {
     description:
       "Determines whether the shadow UI component will be shown on the workbench item"
   })
-  showShadowUi: boolean = true;
+  showShadowUi = true;
 }

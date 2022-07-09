@@ -34,11 +34,17 @@ describe("DateTimePicker", function() {
               : JulianDate.toDate(wmsItem.currentDiscreteJulianDate)
           }
           dates={wmsItem.objectifiedDates}
-          onChange={() => {}}
+          onChange={() => {
+            // no-op
+          }}
           openDirection="down"
-          isOpen={true}
-          onOpen={() => {}}
-          onClose={() => {}}
+          isOpen
+          onOpen={() => {
+            // no-op
+          }}
+          onClose={() => {
+            // no-op
+          }}
         />
       );
     });

@@ -49,7 +49,7 @@ describe("NewStuff", function() {
       );
     });
 
-    autorun(dispose => {
+    autorun(() => {
       console.log("Run: " + wms.memberModels.length);
       wms.memberModels.forEach(model => {
         if (CatalogMemberMixin.isMixedInto(model)) {

@@ -1,5 +1,5 @@
-import { IObservableArray, runInAction, observable } from "mobx";
 import L from "leaflet";
+import { IObservableArray, observable, runInAction } from "mobx";
 import Terria from "./Terria";
 
 export class LeafletAttribution extends L.Control.Attribution {

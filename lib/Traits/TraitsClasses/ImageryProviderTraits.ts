@@ -71,7 +71,7 @@ This property is true by default, leading to better performance and avoiding til
 However, it may also cause features to be cut off in some cases, such as if a server reports an extent that does not take into account that the representation of features sometimes require a larger spatial extent than the features themselves.
 For example, if a point feature on the edge of the extent is drawn as a circle with a radius of 5 pixels, half of that circle will be cut off.`
   })
-  clipToRectangle: boolean = true;
+  clipToRectangle = true;
 
   @primitiveTrait({
     name: "Minimum Level",
@@ -102,12 +102,12 @@ For example, if a point feature on the edge of the extent is drawn as a circle w
     name: "Tile width (in pixels)",
     description: "Tile width in pixels. Default value is 256 pixels"
   })
-  tileWidth: number = 256;
+  tileWidth = 256;
 
   @primitiveTrait({
     type: "number",
     name: "Tile height (in pixels)",
     description: "Tile height in pixels. Default value is 256 pixels"
   })
-  tileHeight: number = 256;
+  tileHeight = 256;
 }

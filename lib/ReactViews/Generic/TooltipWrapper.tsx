@@ -86,7 +86,7 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
     const rootElement = this.rootRef.current;
 
     // Why .firstChild? Because we can't attach a ref to a render prop unless whatever's passed in passes the ref through to its first dom element
-    const launcherElement = rootElement!?.firstChild!;
+    const launcherElement = rootElement?.firstChild!;
     if (!launcherElement || !tooltipTextElement) {
       return;
     }
@@ -130,7 +130,7 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
     return { x: adjustedX, y: adjustedY };
   };
 
-  forceSetState = (bool: boolean = true) => {
+  forceSetState = (bool = true) => {
     this.setState({
       open: bool
     });

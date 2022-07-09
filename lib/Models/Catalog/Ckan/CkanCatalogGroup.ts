@@ -107,14 +107,12 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
   static async load(
     catalogGroup: CkanCatalogGroup
   ): Promise<CkanServerStratum | undefined> {
-    var terria = catalogGroup.terria;
-
-    let ckanServerResponse: CkanServerResponse | undefined = undefined;
+    let ckanServerResponse: CkanServerResponse | undefined;
 
     // Each item in the array causes an independent request to the CKAN, and the results are concatenated
-    for (var i = 0; i < catalogGroup.filterQuery.length; ++i) {
+    for (let i = 0; i < catalogGroup.filterQuery.length; ++i) {
       const filterQuery = catalogGroup.filterQuery[i];
-      var uri = new URI(catalogGroup.url)
+      const uri = new URI(catalogGroup.url)
         .segment("api/3/action/package_search")
         .addQuery({ start: 0, rows: 1000, sort: "metadata_created asc" });
 
@@ -230,7 +228,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     dataset: CkanDataset,
     groupId: string
   ) {
-    let group:
+    const group:
       | CatalogGroup
       | undefined = this._catalogGroup.terria.getModelById(
       CatalogGroup,
@@ -271,7 +269,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     let filteredResources: CkanResourceWithFormat[] = [];
     // Track format IDS which multiple resources
     // As if they do, we will need to make sure that CkanItemReference uses resource name (instead of dataset name)
-    let formatsWithMultipleResources = new Set<string>();
+    const formatsWithMultipleResources = new Set<string>();
 
     if (this._catalogGroup.useSingleResource) {
       filteredResources = supportedResources[0] ? [supportedResources[0]] : [];
@@ -330,7 +328,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
       this._catalogGroup
     );
 
-    for (var i = 0; i < filteredResources.length; ++i) {
+    for (let i = 0; i < filteredResources.length; ++i) {
       const { resource, format } = filteredResources[i];
 
       const itemId = this.getItemId(ckanDataset, resource);

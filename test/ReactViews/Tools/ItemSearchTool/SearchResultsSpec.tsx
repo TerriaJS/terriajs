@@ -30,6 +30,7 @@ async function render(
   await act(() => {
     rendered = create(<SearchResults {...props} />);
   });
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   return rendered;
 }

@@ -1,7 +1,7 @@
 import i18next, { ReactOptions } from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
-import { initReactI18next } from "react-i18next";
 import HttpApi from "i18next-http-backend";
+import { initReactI18next } from "react-i18next";
 
 export interface I18nBackendOptions {
   /**
@@ -30,7 +30,7 @@ export interface LanguageConfiguration {
   enabled: boolean;
   debug: boolean;
   react: ReactOptions;
-  languages: Object;
+  languages: Record<string, string>;
   fallbackLanguage: string;
   changeLanguageOnStartWhen: string[];
 }

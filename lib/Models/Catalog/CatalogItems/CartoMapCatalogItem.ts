@@ -35,8 +35,7 @@ export class CartoLoadableStratum extends LoadableStratum(
   }
 
   static load(catalogItem: CartoMapCatalogItem): Promise<CartoLoadableStratum> {
-    let queryParameters: { auth_token?: string };
-    queryParameters = {};
+    const queryParameters: { auth_token?: string } = {};
     if (catalogItem.auth_token) {
       queryParameters.auth_token = catalogItem.auth_token;
     }

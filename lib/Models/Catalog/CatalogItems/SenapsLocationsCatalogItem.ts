@@ -94,7 +94,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
       const locations = locationsResponse._embedded.locations;
 
       const streamPromises = [];
-      for (var i = 0; i < locations.length; i++) {
+      for (let i = 0; i < locations.length; i++) {
         const location = locations[i];
         const locationId = location.id;
         const streamUrl = proxyCatalogItemUrl(
@@ -280,7 +280,7 @@ class SenapsLocationsCatalogItem extends MappableMixin(
         message: i18next.t("models.senaps.missingSenapsBaseUrl")
       });
     }
-    var uri = new URI(`${this.url}/locations`);
+    const uri = new URI(`${this.url}/locations`);
     if (this.locationIdFilter !== undefined) {
       uri.setSearch("id", this.locationIdFilter);
     }
@@ -296,7 +296,7 @@ class SenapsLocationsCatalogItem extends MappableMixin(
         message: i18next.t("models.senaps.missingSenapsBaseUrl")
       });
     }
-    var uri = new URI(`${this.url}/streams`);
+    const uri = new URI(`${this.url}/streams`);
     if (this.streamIdFilter !== undefined) {
       uri.setSearch("id", this.streamIdFilter);
     }

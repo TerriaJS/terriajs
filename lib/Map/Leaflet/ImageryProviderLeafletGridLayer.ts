@@ -1,4 +1,4 @@
-import L, { TileEvent } from "leaflet";
+import L from "leaflet";
 import { autorun, computed, IReactionDisposer, observable } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
@@ -31,7 +31,7 @@ export default class ImageryProviderLeafletGridLayer extends L.GridLayer {
   readonly _previousCredits: unknown[] = [];
 
   @observable splitDirection = SplitDirection.NONE;
-  @observable splitPosition: number = 0.5;
+  @observable splitPosition = 0.5;
 
   constructor(
     private leaflet: Leaflet,

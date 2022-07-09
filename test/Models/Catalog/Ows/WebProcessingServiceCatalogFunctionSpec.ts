@@ -92,7 +92,9 @@ describe("WebProcessingServiceCatalogFunction", function() {
     beforeEach(async function() {
       dispose = reaction(
         () => wps.parameters,
-        () => {}
+        () => {
+          // no-op
+        }
       );
       await wps.loadMetadata();
       runInAction(() => {
@@ -110,7 +112,9 @@ describe("WebProcessingServiceCatalogFunction", function() {
 
       disposeMapItems = reaction(
         () => job.mapItems,
-        () => {}
+        () => {
+          // no-op
+        }
       );
     });
 
@@ -145,7 +149,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
       let dispose: any;
       job = (await wps.submitJob()) as WebProcessingServiceCatalogFunctionJob;
 
-      await new Promise((resolve, reject) => {
+      await new Promise(resolve => {
         dispose = reaction(
           () => job.downloadedResults,
           () => {
@@ -203,7 +207,9 @@ describe("WebProcessingServiceCatalogFunction", function() {
 
       const dispose1 = reaction(
         () => job.mapItems,
-        () => {}
+        () => {
+          // no-op
+        }
       );
 
       expect(job.jobStatus).toBe("running");
@@ -211,7 +217,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
       let dispose2: any;
 
       // Wait for job to finish polling, then check if finished
-      await new Promise((resolve, reject) => {
+      await new Promise(resolve => {
         dispose2 = reaction(
           () => job.refreshEnabled,
           () => {
@@ -249,7 +255,9 @@ describe("WebProcessingServiceCatalogFunction", function() {
     beforeEach(async function() {
       dispose = reaction(
         () => wps.parameters,
-        () => {}
+        () => {
+          // no-op
+        }
       );
       await wps.loadMetadata();
       runInAction(() => {
@@ -282,13 +290,15 @@ describe("WebProcessingServiceCatalogFunction", function() {
 
       const dispose1 = reaction(
         () => job.mapItems,
-        () => {}
+        () => {
+          // no-op
+        }
       );
 
       let dispose2: any;
 
       // Wait for job to finish polling, then check if failed
-      await new Promise((resolve, reject) => {
+      await new Promise(resolve => {
         dispose2 = reaction(
           () => job.refreshEnabled,
           () => {

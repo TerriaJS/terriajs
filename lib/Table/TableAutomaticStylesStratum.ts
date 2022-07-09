@@ -20,8 +20,7 @@ import TableColumnType from "./TableColumnType";
 
 const DEFAULT_ID_COLUMN = "id";
 
-interface TableCatalogItem
-  extends InstanceType<ReturnType<typeof TableMixin>> {}
+type TableCatalogItem = InstanceType<ReturnType<typeof TableMixin>>;
 
 export default class TableAutomaticStylesStratum extends LoadableStratum(
   TableTraits
@@ -143,7 +142,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
         column.type !== TableColumnType.enum
     );
 
-    const columnStyles = this.catalogItem.tableColumns.map((column, i) =>
+    const columnStyles = this.catalogItem.tableColumns.map(column =>
       createStratumInstance(TableStyleTraits, {
         id: column.name,
         color: createStratumInstance(TableColorStyleTraits, {
@@ -196,9 +195,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
       i < this.catalogItem.activeTableStyle.rowGroups.length;
       i++
     ) {
-      const [rowGroupId, rowIds] = this.catalogItem.activeTableStyle.rowGroups[
-        i
-      ];
+      const [, rowIds] = this.catalogItem.activeTableStyle.rowGroups[i];
       // Check if there is only 1 unique date in this rowGroup
       const dates = rowIds
         .map(rowId =>

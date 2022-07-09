@@ -20,7 +20,7 @@ export default class GroupTraits extends mixTraits(ItemPropertiesTraits) {
       "True if this group is open and its contents are visible; otherwise, false.",
     type: "boolean"
   })
-  isOpen: boolean = false;
+  isOpen = false;
 
   @primitiveTrait({
     name: "Sort members by",

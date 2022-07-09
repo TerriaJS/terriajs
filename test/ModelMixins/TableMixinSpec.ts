@@ -172,7 +172,7 @@ describe("TableMixin", function() {
 
         const duplicateValue = 7;
         let occurrences = 0;
-        for (let entity of mapItem.entities.values) {
+        for (const entity of mapItem.entities.values) {
           const val = entity.properties?.value.getValue();
           if (val === duplicateValue) {
             occurrences++;

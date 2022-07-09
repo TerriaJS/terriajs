@@ -19,7 +19,9 @@ describe("MomentPointsChart", function() {
       { x: new Date("2020-05-30"), y: 0.5 }
     ],
     getColor: () => "red",
-    onClick: () => {}
+    onClick: () => {
+      // no-op
+    }
   };
 
   const scales = getScales(chartItem.points);

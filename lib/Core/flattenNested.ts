@@ -14,8 +14,8 @@ export default function flattenNested<T>(array: NestedArray<T>): T[] {
 }
 
 function flattenNestedLoop<T>(array: NestedArray<T>, result: T[]) {
-  for (var i = 0; i < array.length; i++) {
-    var value = array[i];
+  for (let i = 0; i < array.length; i++) {
+    const value = array[i];
     if (Array.isArray(value)) {
       flattenNestedLoop(value, result);
     } else {

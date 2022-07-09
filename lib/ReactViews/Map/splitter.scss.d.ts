@@ -6,5 +6,5 @@ interface CssExports {
   'dividerWrapper': string;
   'thumb': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

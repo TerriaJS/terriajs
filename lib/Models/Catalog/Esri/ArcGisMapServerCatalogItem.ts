@@ -1,10 +1,8 @@
 import i18next from "i18next";
 import uniqWith from "lodash-es/uniqWith";
 import { computed, runInAction } from "mobx";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import URI from "urijs";
 import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";
 import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
@@ -12,13 +10,12 @@ import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
+import { scaleDenominatorToLevel } from "../../../Core/scaleToDenominator";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import proj4definitions from "../../../Map/Vector/Proj4Definitions";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
-import MappableMixin, {
-  ImageryParts
-} from "../../../ModelMixins/MappableMixin";
+import { ImageryParts } from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import ArcGisMapServerCatalogItemTraits from "../../../Traits/TraitsClasses/ArcGisMapServerCatalogItemTraits";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
@@ -29,14 +26,13 @@ import LegendTraits, {
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import getToken from "../../getToken";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
+import getToken from "../../getToken";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import MinMaxLevelMixin from "./../../../ModelMixins/MinMaxLevelMixin";
-import { scaleDenominatorToLevel } from "../../../Core/scaleToDenominator";
 
 const proj4 = require("proj4").default;
 
@@ -173,7 +169,7 @@ class MapServerStratum extends LoadableStratum(
       });
     }
 
-    let layersMetadataResponse = await getJson(item, layersUri);
+    const layersMetadataResponse = await getJson(item, layersUri);
     const legendMetadata = await getJson(item, legendUri);
 
     // TODO: some error handling on these requests would be nice
@@ -572,10 +568,10 @@ async function getJson(item: ArcGisMapServerCatalogItem, uri: any) {
 /* Given a comma-separated string of layer names, returns the layer objects corresponding to them. */
 function findLayers(layers: Layer[], names: string | undefined) {
   function findLayer(layers: Layer[], id: string) {
-    var idLowerCase = id.toLowerCase();
-    var foundByName;
-    for (var i = 0; i < layers.length; ++i) {
-      var layer = layers[i];
+    const idLowerCase = id.toLowerCase();
+    let foundByName;
+    for (let i = 0; i < layers.length; ++i) {
+      const layer = layers[i];
       if (layer.id.toString() === id) {
         return layer;
       } else if (
@@ -654,7 +650,7 @@ function cleanAndProxyUrl(
 
 function cleanUrl(url: string) {
   // Strip off the search portion of the URL
-  var uri = new URI(url);
+  const uri = new URI(url);
   uri.search("");
   return uri.toString();
 }

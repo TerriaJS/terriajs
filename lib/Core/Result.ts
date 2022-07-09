@@ -1,11 +1,11 @@
+import Terria from "../Models/Terria";
 import isDefined from "./isDefined";
 import TerriaError, {
+  parseOverrides,
   TerriaErrorOptions,
-  TerriaErrorOverrides,
-  parseOverrides
+  TerriaErrorOverrides
 } from "./TerriaError";
 import { NotUndefined } from "./TypeModifiers";
-import Terria from "../Models/Terria";
 
 /**
  * The Result class is similar to Option type/object in Scala/Rust.

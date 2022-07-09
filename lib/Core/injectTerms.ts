@@ -73,7 +73,7 @@ const injectTerms = (string: string, termDictionary: Term[]): string => {
   let injectIndex = 0;
   const injectedBoldSet = new Set();
   while (1) {
-    let tooltipTerms = new Map<string, Term>();
+    const tooltipTerms = new Map<string, Term>();
 
     termDictionary.forEach((item: any) =>
       tooltipTerms.set(

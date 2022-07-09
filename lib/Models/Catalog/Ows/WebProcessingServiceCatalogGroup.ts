@@ -2,7 +2,6 @@ import i18next from "i18next";
 import { action, computed, runInAction } from "mobx";
 import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
-import { isJsonObject } from "../../../Core/Json";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import runLater from "../../../Core/runLater";
 import TerriaError from "../../../Core/TerriaError";
@@ -10,16 +9,16 @@ import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
-import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import ModelReference from "../../../Traits/ModelReference";
+import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import WebProcessingServiceCatalogGroupTraits from "../../../Traits/TraitsClasses/WebProcessingServiceCatalogGroupTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import WebProcessingServiceCapabilities, {
   Process
 } from "./WebProcessingServiceCapabilities";

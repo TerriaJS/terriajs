@@ -23,7 +23,6 @@ import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin, {
   getName
 } from "../../../ModelMixins/CatalogMemberMixin";
-import ChartableMixin from "../../../ModelMixins/ChartableMixin";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import ExportWebCoverageServiceMixin from "../../../ModelMixins/ExportWebCoverageServiceMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
@@ -629,7 +628,7 @@ class WebMapServiceCatalogItem
 
       // Try to set selectedId to value stored in `styles` trait for this `layerIndex`
       // The `styles` parameter is CSV, a style for each layer
-      let selectedId = this.styles?.split(",")?.[layerIndex];
+      const selectedId = this.styles?.split(",")?.[layerIndex];
 
       return {
         name,

@@ -14,7 +14,7 @@ export class StubCatalogItemTraits extends mixTraits(CatalogMemberTraits) {
     description:
       "Whether the catalog item is experiencing issues which may cause its data to be unavailable"
   })
-  isExperiencingIssues: boolean = true;
+  isExperiencingIssues = true;
 }
 
 export default class StubCatalogItem extends CatalogMemberMixin(

@@ -24,7 +24,7 @@ export class LegendItemTraits extends ModelTraits {
       "Maximum number of multiple titles to display next to this legend item. (Default is 10)",
     type: "string"
   })
-  maxMultipleTitlesShowed: number = 10;
+  maxMultipleTitlesShowed = 10;
 
   @primitiveTrait({
     name: "Title",
@@ -94,7 +94,7 @@ export class LegendItemTraits extends ModelTraits {
     description: "The degrees to rotate legend item.",
     type: "number"
   })
-  rotation: number = 0;
+  rotation = 0;
 
   @primitiveTrait({
     name: "Add Spacing Above",
@@ -109,14 +109,14 @@ export class LegendItemTraits extends ModelTraits {
     description: "The height of the legend image.",
     type: "number"
   })
-  imageHeight: number = 20;
+  imageHeight = 20;
 
   @primitiveTrait({
     name: "Legend Image Width",
     description: "The width of the legend image.",
     type: "number"
   })
-  imageWidth: number = 20;
+  imageWidth = 20;
 }
 
 export default class LegendTraits extends ModelTraits {

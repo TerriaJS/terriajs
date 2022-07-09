@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { css, DefaultTheme, useTheme } from "styled-components";
+import styled, { css } from "styled-components";
 import Box, { IBoxProps } from "./Box";
 
 export interface CommonProps {
@@ -122,10 +122,9 @@ export const StyledInput = styled.input<InputProps>`
 
 const Input: React.FC<InputProps> = (props: InputProps) => {
   const { boxProps, ...rest }: InputProps = props;
-  const theme: DefaultTheme = useTheme();
   return (
     <Box fullWidth {...boxProps}>
-      <StyledInput {...rest}></StyledInput>
+      <StyledInput {...rest} />
     </Box>
   );
 };

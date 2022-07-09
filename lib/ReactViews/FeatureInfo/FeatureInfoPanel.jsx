@@ -213,7 +213,7 @@ class FeatureInfoPanel extends React.Component {
       cartesianPosition
     );
     if (cartographic === undefined) {
-      return <></>;
+      return null;
     }
     const latitude = CesiumMath.toDegrees(cartographic.latitude);
     const longitude = CesiumMath.toDegrees(cartographic.longitude);

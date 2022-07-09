@@ -58,5 +58,5 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
       "The maximum number of discrete times that can be created by a single " +
       "date range when layer in time-enabled."
   })
-  maxRefreshIntervals: number = 1000;
+  maxRefreshIntervals = 1000;
 }

@@ -1,9 +1,6 @@
 import React from "react";
 import { act } from "react-dom/test-utils";
-import TestRenderer, {
-  ReactTestInstance,
-  ReactTestRenderer
-} from "react-test-renderer";
+import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
 import ChartableMixin, {
   ChartItem
 } from "../../../../lib/ModelMixins/ChartableMixin";
@@ -37,7 +34,9 @@ class SomeChartableItem extends ChartableMixin(
         units: "time",
         isSelectedInWorkbench: true,
         showInChartPanel: true,
-        updateIsSelectedInWorkbench: () => {},
+        updateIsSelectedInWorkbench: () => {
+          // no-op
+        },
         getColor: () => "#fff",
         pointOnMap: undefined
       } as ChartItem,
@@ -53,7 +52,9 @@ class SomeChartableItem extends ChartableMixin(
         units: "time",
         isSelectedInWorkbench: true,
         showInChartPanel: true,
-        updateIsSelectedInWorkbench: () => {},
+        updateIsSelectedInWorkbench: () => {
+          // no-op
+        },
         getColor: () => "#fff",
         pointOnMap: undefined
       } as ChartItem

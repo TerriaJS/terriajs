@@ -172,7 +172,7 @@ class DateTimePicker extends React.Component<PropsType> {
 
   private currentDateAutorunDisposer: IReactionDisposer | undefined;
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const datesObject = this.props.dates;
     let defaultCentury: number | undefined;
     let defaultYear: number | undefined;

@@ -15,7 +15,6 @@ const wmsNoLayerResource = require("../../../../wwwroot/test/CKAN/wms-no-layer-r
 describe("CkanItemReference", function() {
   let terria: Terria;
   let ckanItemReference: CkanItemReference;
-  let ckanDatasetStratum: CkanDatasetStratum;
   let ckanItemTarget: any;
 
   beforeEach(async function() {
@@ -75,7 +74,7 @@ describe("CkanItemReference", function() {
         );
       });
       (await ckanItemReference.loadReference()).throwIfError();
-      ckanDatasetStratum = <CkanDatasetStratum>(
+      <CkanDatasetStratum>(
         ckanItemReference.strata.get(CkanDatasetStratum.stratumName)
       );
       ckanItemTarget = ckanItemReference.target;
@@ -161,7 +160,7 @@ describe("CkanItemReference", function() {
         "tax-stats-wms-resource"
       );
       await ckanItemReference.loadReference();
-      ckanDatasetStratum = <CkanDatasetStratum>(
+      <CkanDatasetStratum>(
         ckanItemReference.strata.get(CkanDatasetStratum.stratumName)
       );
       ckanItemTarget = ckanItemReference.target;
@@ -191,7 +190,7 @@ describe("CkanItemReference", function() {
         "wms-no-layers-resource"
       );
       await ckanItemReference.loadReference();
-      ckanDatasetStratum = <CkanDatasetStratum>(
+      <CkanDatasetStratum>(
         ckanItemReference.strata.get(CkanDatasetStratum.stratumName)
       );
       ckanItemTarget = ckanItemReference.target;
@@ -229,7 +228,7 @@ describe("CkanItemReference", function() {
         );
       });
       await ckanItemReference.loadReference();
-      ckanDatasetStratum = <CkanDatasetStratum>(
+      <CkanDatasetStratum>(
         ckanItemReference.strata.get(CkanDatasetStratum.stratumName)
       );
       ckanItemTarget = ckanItemReference.target;

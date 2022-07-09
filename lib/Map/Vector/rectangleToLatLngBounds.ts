@@ -8,9 +8,9 @@ import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
  * @return {L.latLngBounds} The equivalent Leaflet latLngBounds.
  */
 export default function rectangleToLatLngBounds(rectangle: Rectangle) {
-  var west = CesiumMath.toDegrees(rectangle.west);
-  var south = CesiumMath.toDegrees(rectangle.south);
-  var east = CesiumMath.toDegrees(rectangle.east);
-  var north = CesiumMath.toDegrees(rectangle.north);
+  const west = CesiumMath.toDegrees(rectangle.west);
+  const south = CesiumMath.toDegrees(rectangle.south);
+  const east = CesiumMath.toDegrees(rectangle.east);
+  const north = CesiumMath.toDegrees(rectangle.north);
   return L.latLngBounds([south, west], [north, east]);
 }

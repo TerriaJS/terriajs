@@ -3,5 +3,5 @@
 interface CssExports {
   'noData': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

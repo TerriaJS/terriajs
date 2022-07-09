@@ -26,8 +26,8 @@ export default class MeasureTool extends MapNavigationItemController {
   static displayName = "MeasureTool";
 
   private readonly terria: Terria;
-  private totalDistanceMetres: number = 0;
-  private totalAreaMetresSquared: number = 0;
+  private totalDistanceMetres = 0;
+  private totalAreaMetresSquared = 0;
   private userDrawing: UserDrawing;
 
   onClose: () => void;

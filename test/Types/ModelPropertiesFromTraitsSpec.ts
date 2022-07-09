@@ -5,9 +5,8 @@ import {
   IsWritable,
   IsWritableArray
 } from "../../lib/Core/TypeConditionals";
-import Model from "../../lib/Models/Definition/Model";
 import ModelPropertiesFromTraits from "../../lib/Models/Definition/ModelPropertiesFromTraits";
-import TraitsForTesting, { NestedTraits } from "./TraitsForTesting";
+import TraitsForTesting from "./TraitsForTesting";
 import { expectFalse, expectTrue } from "./TypeChecks";
 
 type ModelProperties = ModelPropertiesFromTraits<TraitsForTesting>;

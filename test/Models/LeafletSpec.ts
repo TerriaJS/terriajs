@@ -1,6 +1,5 @@
 import L from "leaflet";
 import { computed } from "mobx";
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import Leaflet from "../../lib/Models/Leaflet";
@@ -49,11 +48,15 @@ describe("Leaflet Model", function() {
     // TODO: calling destroy on our mobx leaflet model results in a tile error
     try {
       leaflet.destroy();
-    } catch {}
+    } catch {
+      // no-op
+    }
     document.body.removeChild(container);
   });
 
-  function initLeaflet() {}
+  function initLeaflet() {
+    // no-op
+  }
 
   describe("should trigger a tileLoadProgressEvent", function() {
     ["tileloadstart", "tileload", "load"].forEach(function(event) {
@@ -121,9 +124,9 @@ describe("Leaflet Model", function() {
     });
 
     function changeTileLoadingCount(count: number) {
-      var tiles: any = {};
+      const tiles: any = {};
       // Add loading tiles
-      for (var i = 0; i < count; i++) {
+      for (let i = 0; i < count; i++) {
         tiles["tile " + i] = { loaded: undefined };
       }
       layers[0]._tiles = tiles;

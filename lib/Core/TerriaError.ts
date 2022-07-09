@@ -303,14 +303,7 @@ export default class TerriaError {
 
   /** Has any error in the error tree been raised to the user? */
   get raisedToUser() {
-    return this.flatten().find(error => error._raisedToUser) ? true : false;
-  }
-
-  /** Resolve error seveirty */
-  get resolvedSeverity() {
-    return typeof this.severity === "function"
-      ? this.severity()
-      : this.severity;
+    return !!this.flatten().find(error => error._raisedToUser);
   }
 
   /** Set raisedToUser value for **all** `TerriaErrors` in this tree. */
@@ -321,6 +314,13 @@ export default class TerriaError {
         err instanceof TerriaError ? (err.raisedToUser = r) : null
       );
     }
+  }
+
+  /** Resolve error seveirty */
+  get resolvedSeverity() {
+    return typeof this.severity === "function"
+      ? this.severity()
+      : this.severity;
   }
 
   /** Print error to console */

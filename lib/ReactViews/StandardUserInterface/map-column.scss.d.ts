@@ -25,5 +25,5 @@ interface CssExports {
   'with-time-series-controls': string;
   'withTimeSeriesControls': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

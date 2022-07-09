@@ -84,7 +84,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
     const removedIds = new Set<string>();
 
     // Find the unique objects and the strata that go into each.
-    for (let stratumId of strata.keys()) {
+    for (const stratumId of strata.keys()) {
       const stratum = strata.get(stratumId);
       const objectArray = stratum[this.id];
 

@@ -36,5 +36,5 @@ interface CssExports {
   'warning-text': string;
   'warningText': string;
 }
-declare var cssExports: CssExports;
+declare let cssExports: CssExports;
 export = cssExports;

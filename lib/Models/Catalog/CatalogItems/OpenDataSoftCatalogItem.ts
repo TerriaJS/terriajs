@@ -451,7 +451,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     // Group all time intervals for each row group (each Point feature)
     // This calculates the start/stop dates for each row group
     const groupIntervals = this.catalogItem.activeTableStyle.rowGroups.map(
-      ([id, rows]) => {
+      ([, rows]) => {
         let start: JulianDate | undefined;
         let stop: JulianDate | undefined;
 

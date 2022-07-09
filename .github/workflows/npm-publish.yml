@@ -50,7 +50,9 @@ jobs:
 
       - name: Lint and build terriajs
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
-        run: npx gulp lint release
+        run: |
+          yarn lint
+          npx gulp release
         env:
           NODE_OPTIONS: '--max_old_space_size=8192'
 

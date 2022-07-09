@@ -4,13 +4,21 @@ import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import runLater from "../../../Core/runLater";
-import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
+import { networkRequestError } from "../../../Core/TerriaError";
 import AccessControlMixin from "../../../ModelMixins/AccessControlMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
-import ArcGisPortalCatalogGroupTraits from "../../../Traits/TraitsClasses/ArcGisPortalCatalogGroupTraits";
 import ModelReference from "../../../Traits/ModelReference";
+import ArcGisPortalCatalogGroupTraits from "../../../Traits/TraitsClasses/ArcGisPortalCatalogGroupTraits";
+import CommonStrata from "../../Definition/CommonStrata";
+import CreateModel from "../../Definition/CreateModel";
+import LoadableStratum from "../../Definition/LoadableStratum";
+import { BaseModel } from "../../Definition/Model";
+import StratumOrder from "../../Definition/StratumOrder";
+import Terria from "../../Terria";
+import CatalogGroup from "../CatalogGroup";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import {
   ArcGisItem,
   ArcGisPortalGroup,
@@ -18,14 +26,6 @@ import {
   ArcGisPortalSearchResponse
 } from "./ArcGisPortalDefinitions";
 import ArcGisPortalItemReference from "./ArcGisPortalItemReference";
-import CatalogGroup from "../CatalogGroup";
-import CommonStrata from "../../Definition/CommonStrata";
-import CreateModel from "../../Definition/CreateModel";
-import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import StratumOrder from "../../Definition/StratumOrder";
-import Terria from "../../Terria";
 
 export class ArcGisPortalStratum extends LoadableStratum(
   ArcGisPortalCatalogGroupTraits
@@ -59,14 +59,8 @@ export class ArcGisPortalStratum extends LoadableStratum(
   static async load(
     catalogGroup: ArcGisPortalCatalogGroup
   ): Promise<ArcGisPortalStratum | undefined> {
-    var terria = catalogGroup.terria;
-
-    let portalGroupsServerResponse:
-      | ArcGisPortalGroupSearchResponse
-      | undefined = undefined;
-    let portalItemsServerResponse:
-      | ArcGisPortalSearchResponse
-      | undefined = undefined;
+    let portalGroupsServerResponse: ArcGisPortalGroupSearchResponse | undefined;
+    let portalItemsServerResponse: ArcGisPortalSearchResponse | undefined;
 
     // If we need to group by groups we use slightly different API's
     // that allow us to get the data more effectively
@@ -246,7 +240,7 @@ export class ArcGisPortalStratum extends LoadableStratum(
   private getGroups(): CatalogGroup[] {
     if (this._catalogGroup.groupBy === "none") return [];
 
-    let groups: CatalogGroup[] = [
+    const groups: CatalogGroup[] = [
       ...createUngroupedGroup(this),
       ...createGroupsByPortalGroups(this)
     ];
@@ -289,7 +283,7 @@ export class ArcGisPortalStratum extends LoadableStratum(
     dataset: ArcGisItem,
     groupId: string
   ) {
-    let group:
+    const group:
       | CatalogGroup
       | undefined = this._catalogGroup.terria.getModelById(
       CatalogGroup,

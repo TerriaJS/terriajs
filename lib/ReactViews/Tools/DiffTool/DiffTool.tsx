@@ -1031,7 +1031,7 @@ function removeSplitItem(item: DiffableItem) {
 function doesFeatureBelongToItem(
   feature: Feature,
   item: DiffableItem
-): Boolean {
+): boolean {
   if (!MappableMixin.isMixedInto(item)) return false;
   const imageryProvider = feature.imageryLayer?.imageryProvider;
   if (imageryProvider === undefined) return false;

@@ -6,7 +6,7 @@ import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import runLater from "../../../Core/runLater";
-import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
+import { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -119,8 +119,7 @@ export class FeatureServerStratum extends LoadableStratum(
   static async load(
     catalogGroup: ArcGisFeatureServerCatalogGroup | ArcGisCatalogGroup
   ): Promise<FeatureServerStratum> {
-    var terria = catalogGroup.terria;
-    var uri = new URI(catalogGroup.url).addQuery("f", "json");
+    const uri = new URI(catalogGroup.url).addQuery("f", "json");
 
     return loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString()))
       .then((featureServer: FeatureServer) => {
@@ -207,7 +206,7 @@ export class FeatureServerStratum extends LoadableStratum(
       replaceUnderscores(layer.name)
     );
 
-    var uri = new URI(this._catalogGroup.url).segment(layer.id + ""); // Convert layer id to string as segment(0) means sthg different.
+    const uri = new URI(this._catalogGroup.url).segment(layer.id + ""); // Convert layer id to string as segment(0) means sthg different.
     model.setTrait(CommonStrata.definition, "url", uri.toString());
   }
 }

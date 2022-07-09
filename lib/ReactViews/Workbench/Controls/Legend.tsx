@@ -32,7 +32,7 @@ const DISPLAYABLE_MIME_TYPES = [
   acc[mimeType] = true;
   return acc;
 }, {});
-const IMAGE_URL_REGEX = /[.\/](png|jpg|jpeg|gif|svg)/i;
+const IMAGE_URL_REGEX = /[./](png|jpg|jpeg|gif|svg)/i;
 
 function checkMimeType(legend: Model<LegendTraits>) {
   return (
@@ -75,14 +75,14 @@ export default class Legend extends React.Component<{
 
   renderLegend(legend: Model<LegendTraits>, i: number) {
     if (defined(legend.url)) {
-      return this.renderImageLegend(legend, i);
+      return this.renderImageLegend(legend);
     } else if (defined(legend.items)) {
       return this.renderGeneratedLegend(legend, i);
     }
     return null;
   }
 
-  renderImageLegend(legend: Model<LegendTraits>, i: number) {
+  renderImageLegend(legend: Model<LegendTraits>) {
     const isImage = checkMimeType(legend);
     // const insertDirectly = !!legend.safeSvgContent; // we only insert content we generated ourselves, not arbitrary SVG from init files.
 
@@ -190,7 +190,7 @@ export default class Legend extends React.Component<{
       boxStyle.border = `${legendItem.outlineWidth}px solid ${legendItem.outlineColor}`;
     }
 
-    let boxContents = <></>;
+    let boxContents: JSX.Element | null = null;
 
     // Browsers don't print background colors by default, so we render things a little differently.
     // Chrome and Firefox let you override this, but not IE and Edge. So...
@@ -327,7 +327,7 @@ export default class Legend extends React.Component<{
                 css={{ position: "absolute", top: 10, right: 0 }}
                 renderIcon={() => (
                   <StyledIcon
-                    light={true}
+                    light
                     glyph={Icon.GLYPHS.menuDotted}
                     styledWidth="12px"
                   />

@@ -48,7 +48,7 @@ const BottomLeftBar = (props: Props) => {
         <Box paddedHorizontally={2}>
           <MapIconButton
             title={t("story.playStory")}
-            neverCollapse={true}
+            neverCollapse
             iconElement={() => <Icon glyph={Icon.GLYPHS.playStory} />}
             onClick={() => props.viewState.runStories()}
             primary={!isNotificationActive}

@@ -1,8 +1,6 @@
 import TerriaError, { TerriaErrorSeverity } from "../../lib/Core/TerriaError";
 
 describe("TerriaError", function() {
-  beforeEach(function() {});
-
   it("Can create TerriaError", function() {
     const test = new TerriaError({ message: "some message" });
     expect(test.message).toBe("some message");
@@ -34,6 +32,7 @@ describe("TerriaError", function() {
   });
 
   it("Can create TerriaError from Object", function() {
+    // eslint-disable-next-line no-new-object
     const error = new Object("some stringy object");
     const test = TerriaError.from(error);
     expect(test.message).toBe("some stringy object");

@@ -20,7 +20,7 @@ export default class SearchResult {
   @observable clickAction: (() => void) | undefined;
   @observable catalogItem: BaseModel | undefined;
   @observable isOpen = false;
-  @observable type: string = "search_result";
+  @observable type = "search_result";
   @observable location: { longitude: number; latitude: number } | undefined;
 
   constructor(options: SearchResultOptions) {

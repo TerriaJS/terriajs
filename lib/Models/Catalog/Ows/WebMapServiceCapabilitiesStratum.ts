@@ -93,7 +93,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     Array.from(this.capabilitiesLayers.values()).forEach(layer => {
       if (!layer?.MetadataURL) return;
       Array.isArray(layer?.MetadataURL)
-        ? metadataUrls.push(...layer?.MetadataURL)
+        ? metadataUrls.push(...layer.MetadataURL)
         : metadataUrls.push(layer?.MetadataURL as MetadataURL);
     });
 
@@ -383,11 +383,11 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       result.push({
         layerName: layerName,
         styles: styles.map(style => {
-          var wmsLegendUrl = isReadOnlyArray(style.LegendURL)
+          const wmsLegendUrl = isReadOnlyArray(style.LegendURL)
             ? style.LegendURL[0]
             : style.LegendURL;
 
-          var legendUri, legendMimeType;
+          let legendUri, legendMimeType;
           if (
             wmsLegendUrl &&
             wmsLegendUrl.OnlineResource &&
@@ -735,7 +735,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   get discreteTimes(): { time: string; tag: string | undefined }[] | undefined {
     const result = [];
 
-    for (let layer of this.capabilitiesLayers.values()) {
+    for (const layer of this.capabilitiesLayers.values()) {
       if (!layer) {
         continue;
       }
@@ -800,7 +800,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   @computed get currentTime() {
     // Get default times for all layers
     const defaultTimes = filterOutUndefined(
-      Array.from(this.capabilitiesLayers).map(([layerName, layer]) => {
+      Array.from(this.capabilitiesLayers).map(([, layer]) => {
         if (!layer) return;
         const dimensions = this.capabilities.getInheritedValues(
           layer,
@@ -875,7 +875,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
 
     // This is used to flag subsets (dimensions) which have multiple values
     // Each element in this array represents the **actual** value used for a subset which has multiple values
-    let duplicateSubsetValues: StratumFromTraits<KeyValueTraits>[] = [];
+    const duplicateSubsetValues: StratumFromTraits<KeyValueTraits>[] = [];
 
     // Get dimensionSubsets
     const dimensionSubsets: { key: string; value: string }[] = [];

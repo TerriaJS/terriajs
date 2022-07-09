@@ -1,9 +1,7 @@
-import CatalogMemberMixin from "../../../lib/ModelMixins/CatalogMemberMixin";
 import CatalogGroup from "../../../lib/Models/Catalog/CatalogGroup";
 import GeoJsonCatalogItem from "../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import StubCatalogItem from "../../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
 import CatalogMemberFactory from "../../../lib/Models/Catalog/CatalogMemberFactory";
-import { getUniqueStubName } from "../../../lib/Models/Catalog/createStubCatalogItem";
 import WebMapServiceCatalogItem from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import upsertModelFromJson from "../../../lib/Models/Definition/upsertModelFromJson";
@@ -76,7 +74,6 @@ describe("CatalogGroup", function() {
 
     const item = <CatalogGroup>terria.getModelById(CatalogGroup, "mama");
     const child1 = <CatalogGroup>terria.getModelById(CatalogGroup, "child1");
-    const child2 = <CatalogGroup>terria.getModelById(CatalogGroup, "child2");
     expect(item).toBeDefined();
     expect(item.type).toBe("group");
     expect(item.members).toEqual(["child1", "child2", "child3"]);
@@ -140,7 +137,6 @@ describe("CatalogGroup", function() {
     expect(invalidType).toBeDefined();
     expect(noType).toBeDefined();
     expect(nothingness).toBeDefined();
-    const stubName = getUniqueStubName(terria);
     if (
       member0 !== undefined &&
       member1 !== undefined &&

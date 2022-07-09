@@ -239,8 +239,8 @@ export default class BoxDrawing {
   // Scale points on the box defined as cesium entities with additional properties
   private readonly scalePoints: ScalePoint[] = [];
 
-  private isHeightUpdateInProgress: boolean = false;
-  private terrainHeightEstimate: number = 0;
+  private isHeightUpdateInProgress = false;
+  private terrainHeightEstimate = 0;
 
   /**
    * A private constructor. Use {@link BoxDrawing.fromTransform} or {@link BoxDrawing.fromTranslationRotationScale} to create instances.

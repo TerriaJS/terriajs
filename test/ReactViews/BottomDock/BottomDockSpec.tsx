@@ -23,7 +23,7 @@ describe("BottomDock", function() {
   it("must create TJS-BottomDockFirstPortal", function() {
     act(() => {
       testRenderer = create(
-        // @ts-ignore - because measureElement is untyped
+        // @ts-expect-error: because measureElement is untyped
         <BottomDock terria={terria} viewState={viewState} />
       );
     });
@@ -36,7 +36,7 @@ describe("BottomDock", function() {
   it("must create TJS-BottomDockLastPortal", function() {
     act(() => {
       testRenderer = create(
-        // @ts-ignore - because measureElement is untyped
+        // @ts-expect-error: because measureElement is untyped
         <BottomDock terria={terria} viewState={viewState} />
       );
     });

@@ -1,6 +1,6 @@
+import { JsonObject } from "../Core/Json";
 import ModelTraits from "./ModelTraits";
 import Trait from "./Trait";
-import { JsonObject } from "../Core/Json";
 
 export default interface TraitsConstructor<T extends ModelTraits> {
   new (...args: any[]): T;

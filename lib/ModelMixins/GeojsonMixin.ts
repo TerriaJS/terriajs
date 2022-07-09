@@ -7,11 +7,11 @@ import {
   Geometries,
   Geometry,
   GeometryCollection,
+  MultiPoint,
   MultiPolygon,
   Point,
   Polygon,
-  Properties,
-  MultiPoint
+  Properties
 } from "@turf/helpers";
 import i18next from "i18next";
 import {
@@ -73,7 +73,6 @@ import Reproject from "../Map/Vector/Reproject";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
-import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
@@ -586,8 +585,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         });
 
         if (matchedStyles !== undefined) {
-          for (let matched of matchedStyles) {
-            for (let trait of Object.keys(matched.style.traits)) {
+          for (const matched of matchedStyles) {
+            for (const trait of Object.keys(matched.style.traits)) {
               featureProperties[trait] =
                 // @ts-ignore - TS can't tell that `trait` is of the correct index type for style
                 matched.style[trait] ?? featureProperties[trait];
@@ -622,7 +621,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       const dataSource = new CustomDataSource(this.name || "Table");
       dataSource.entities.suspendEvents();
 
-      let features: Entity[] = createLongitudeLatitudeFeaturePerRow(
+      const features: Entity[] = createLongitudeLatitudeFeaturePerRow(
         style,
         longitudes,
         latitudes
@@ -1245,8 +1244,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 }
 
 namespace GeoJsonMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof GeoJsonMixin>> {}
+  export type Instance = InstanceType<ReturnType<typeof GeoJsonMixin>>;
   export function isMixedInto(model: any): model is Instance {
     return model && model.isGeoJson;
   }
@@ -1441,8 +1439,8 @@ function filterValue(
   prop: string,
   func: (obj: any, prop: string) => void
 ) {
-  for (let p in obj) {
-    if (obj.hasOwnProperty(p) === false) {
+  for (const p in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, p) === false) {
       continue;
     } else if (p === prop) {
       if (func && typeof func === "function") {
@@ -1504,7 +1502,7 @@ function describeWithoutUnderscores(
 ): string {
   let html = "";
   for (let key in properties) {
-    if (properties.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(properties, key)) {
       if (key === nameProperty || simpleStyleIdentifiers.indexOf(key) !== -1) {
         continue;
       }
@@ -1659,7 +1657,7 @@ function isPolygonOnTerrain(polygon: PolygonGraphics, now: JulianDate) {
   return isClamped || (!hasPerPositionHeight && !hasPolygonHeight);
 }
 
-export function getColor(color: String | string | Color): Color {
+export function getColor(color: string | string | Color): Color {
   if (typeof color === "string" || color instanceof String) {
     return Color.fromCssColorString(color.toString()) ?? Color.GRAY;
   } else {

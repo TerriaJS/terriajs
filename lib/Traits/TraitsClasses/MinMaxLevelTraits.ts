@@ -31,7 +31,7 @@ export class MinMaxLevelTraits extends ModelTraits {
     description:
       "True to hide tiles when the `Minimum Scale Denominator` is exceeded. If false, we can zoom in arbitrarily close to the (increasingly blurry) layer."
   })
-  hideLayerAfterMinScaleDenominator: boolean = false;
+  hideLayerAfterMinScaleDenominator = false;
 
   @primitiveTrait({
     type: "string",

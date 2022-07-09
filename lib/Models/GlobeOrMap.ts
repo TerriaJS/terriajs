@@ -1,4 +1,4 @@
-import { action, observable, runInAction, computed } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -45,7 +45,7 @@ export default abstract class GlobeOrMap {
 
   private _removeHighlightCallback?: () => Promise<void> | void;
   private _highlightPromise: Promise<unknown> | undefined;
-  private _tilesLoadingCountMax: number = 0;
+  private _tilesLoadingCountMax = 0;
   protected supportsPolylinesOnTerrain?: boolean;
 
   // True if zoomTo() was called and the map is currently zooming to dataset
@@ -77,7 +77,7 @@ export default abstract class GlobeOrMap {
   @action
   zoomTo(
     target: CameraView | Rectangle | MappableMixin.Instance,
-    flightDurationSeconds: number = 3.0
+    flightDurationSeconds = 3.0
   ): Promise<void> {
     this.isMapZooming = true;
     const zoomId = createGuid();
@@ -423,16 +423,19 @@ export default abstract class GlobeOrMap {
               if (!isDefined(this._highlightPromise)) {
                 return;
               }
-              return this._highlightPromise
-                .then(() => {
-                  if (removeCallback !== this._removeHighlightCallback) {
-                    return;
-                  }
-                  if (isDefined(catalogItem)) {
-                    catalogItem.setTrait(CommonStrata.user, "show", false);
-                  }
-                })
-                .catch(function() {});
+              return (
+                this._highlightPromise
+                  .then(() => {
+                    if (removeCallback !== this._removeHighlightCallback) {
+                      return;
+                    }
+                    if (isDefined(catalogItem)) {
+                      catalogItem.setTrait(CommonStrata.user, "show", false);
+                    }
+                  })
+                  // eslint-disable-next-line @typescript-eslint/no-empty-function
+                  .catch(function() {})
+              );
             });
 
             (await catalogItem.loadMapItems()).logError(
