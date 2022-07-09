@@ -85,7 +85,10 @@
     },
     "toggleSplitterToolTitle": "Porovnat",
     "toggleSplitterTool": "Povolit porovnání dvou různých sad dat vedle sebe",
-    "toggleSplitterToolDisabled": "Chcete-li povolit standardní porovnávání, vypněte ostatní funkce porovnávání vedle sebe"
+    "toggleSplitterToolDisabled": "Chcete-li povolit standardní porovnávání, vypněte ostatní funkce porovnávání vedle sebe",
+    "errorTitle": "Nepodařilo se porovnat položku katalogu.",
+    "duplicateModelErrorMessage": "Při rozdělování položky katalogu `\"{{name}}\"` došlo k chybě. Tato položka katalogu nemusí podporovat funkci \"porovnat\"",
+    "modelNotFoundErrorMessage": "ID modelu `\"{{id}}\"` nebylo nalezeno"
   },
   "zoomCotrol": {
     "zoomIn": "Přiblížit",
