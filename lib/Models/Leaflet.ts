@@ -432,7 +432,7 @@ export default class Leaflet extends GlobeOrMap {
   ): Promise<void> {
     if (!isDefined(target)) {
       return Promise.resolve();
-      //throw new DeveloperError("target is required.");
+      // throw new DeveloperError("target is required.");
     }
     let bounds;
 

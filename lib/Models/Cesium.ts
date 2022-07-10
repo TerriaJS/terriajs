@@ -86,7 +86,7 @@ import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
 
-//import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
+// import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
 // Intermediary
 const cartesian3Scratch = new Cartesian3();
@@ -121,7 +121,7 @@ export default class Cesium extends GlobeOrMap {
     | Rectangle
     | DataSource
     | MappableMixin.Instance
-    | /*TODO Cesium.Cesium3DTileset*/ any;
+    | /* TODO Cesium.Cesium3DTileset*/ any;
 
   private cesiumDataAttributions: IObservableArray<string> = observable([]);
 
@@ -157,7 +157,7 @@ export default class Cesium extends GlobeOrMap {
       Ion.defaultAccessToken = this.terria.configParameters.cesiumIonAccessToken;
     }
 
-    //An arbitrary base64 encoded image used to populate the placeholder SingleTileImageryProvider
+    // An arbitrary base64 encoded image used to populate the placeholder SingleTileImageryProvider
     const img =
       "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA \
     AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO \
@@ -197,7 +197,7 @@ export default class Cesium extends GlobeOrMap {
       });
     }
 
-    //new Cesium3DTilesInspector(document.getElementsByClassName("cesium-widget").item(0), this.scene);
+    // new Cesium3DTilesInspector(document.getElementsByClassName("cesium-widget").item(0), this.scene);
 
     this.dataSourceDisplay = new DataSourceDisplay({
       scene: this.scene,
@@ -227,7 +227,7 @@ export default class Cesium extends GlobeOrMap {
 
     this.scene.imageryLayers.removeAll();
 
-    //catch Cesium terrain provider down and switch to Ellipsoid
+    // catch Cesium terrain provider down and switch to Ellipsoid
     //     terrainProvider.errorEvent.addEventListener(function(err) {
     //         console.log('Terrain provider error.  ', err.message);
     //         if (viewer.scene.terrainProvider instanceof CesiumTerrainProvider) {
@@ -698,7 +698,7 @@ export default class Cesium extends GlobeOrMap {
               () => this._updateTilesLoadingIndeterminate(true)
             );
 
-            //Add event listener for when tiles finished loading for current view. Infrequent.
+            // Add event listener for when tiles finished loading for current view. Infrequent.
             const finishedListener = this._eventHelper.add(
               primitive.allTilesLoaded,
               () => this._updateTilesLoadingIndeterminate(false)

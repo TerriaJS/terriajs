@@ -16,7 +16,7 @@ describe("SearchBoxAndResults", function() {
 
   let testRenderer: any;
   const tMock = () => {
-    //no-op
+    // no-op
   };
 
   beforeEach(function() {

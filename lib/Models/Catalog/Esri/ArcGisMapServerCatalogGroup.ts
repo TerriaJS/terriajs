@@ -188,7 +188,7 @@ export class MapServerStratum extends LoadableStratum(
       return;
     }
     const id = this._catalogGroup.uniqueId;
-    //if parent layer is not -1 then this is sublayer so we define its ID like that
+    // if parent layer is not -1 then this is sublayer so we define its ID like that
     const layerId =
       id +
       "/" +

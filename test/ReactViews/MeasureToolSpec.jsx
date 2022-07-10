@@ -20,7 +20,7 @@ const CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
 describe("MeasureTool-jsx", function() {
   let terria;
   const tMock = () => {
-    //no-op
+    // no-op
   };
 
   beforeEach(function() {

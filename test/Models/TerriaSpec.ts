@@ -1220,7 +1220,7 @@ describe("Terria", function() {
     it("properly interprets map hash parameter", async () => {
       const getLocalPropertySpy = spyOn(terria, "getLocalProperty");
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-ignore
+      // @ts-ignore
       const location: Location = {
         href: "http://test.com/#map=2d"
       };
@@ -1247,7 +1247,7 @@ describe("Terria", function() {
         "getLocalProperty"
       ).and.returnValue("3dsmooth");
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-ignore
+      // @ts-ignore
       const location: Location = {
         href: "http://test.com/#map=4d"
       };

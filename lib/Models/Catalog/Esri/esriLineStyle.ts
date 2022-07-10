@@ -3,15 +3,15 @@ const defaultDashArray = [4, 3];
 const esriLineStyleCesium: {
   [key: string]: number;
 } = {
-  esriSLSDot: 7, //"   -"
-  esriSLSDashDot: 2017, //"   ----   -"
+  esriSLSDot: 7, // "   -"
+  esriSLSDashDot: 2017, // "   ----   -"
   esriSLSDashDotDot: 16273, // '  --------   -   - '
   esriSLSLongDash: 2047, // '   --------'
   esriSLSLongDashDot: 4081, // '   --------   -'
-  esriSLSShortDash: 4095, //' ----'
-  esriSLSShortDot: 13107, //' ---- -'
-  esriSLSShortDashDot: 8179, //' ---- - -'
-  esriSLSShortDashDotDot: 16281 //' - - - -'
+  esriSLSShortDash: 4095, // ' ----'
+  esriSLSShortDot: 13107, // ' ---- -'
+  esriSLSShortDashDot: 8179, // ' ---- - -'
+  esriSLSShortDashDotDot: 16281 // ' - - - -'
 };
 
 const esriLineStyleLealet: {

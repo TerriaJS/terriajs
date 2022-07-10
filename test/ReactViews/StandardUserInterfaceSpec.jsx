@@ -15,7 +15,7 @@ describe("StandardUserInterface", function() {
   // let feature;
   let viewState;
   const tMock = () => {
-    //no-op
+    // no-op
   };
 
   beforeEach(function() {

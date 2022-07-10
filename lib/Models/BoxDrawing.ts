@@ -641,7 +641,7 @@ export default class BoxDrawing {
     localEdges.forEach(localEdge => {
       const edge = this.createEdge(localEdge);
       this.dataSource.entities.add(edge);
-      //this.edges.push(edge);
+      // this.edges.push(edge);
     });
   }
 

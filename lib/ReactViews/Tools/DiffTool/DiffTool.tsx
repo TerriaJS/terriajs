@@ -342,7 +342,7 @@ class Main extends React.Component<MainPropsType> {
   }
 
   @action.bound
-  onUserPickingLocation(pickingLocation: LatLonHeight) {
+  onUserPickingLocation() {
     this._isPickingNewLocation = true;
   }
 
@@ -351,7 +351,7 @@ class Main extends React.Component<MainPropsType> {
     pickedFeatures: PickedFeatures,
     pickedLocation: LatLonHeight
   ) {
-    const { leftItem, rightItem, t } = this.props;
+    const { leftItem, rightItem } = this.props;
     const feature = pickedFeatures.features.find(
       f =>
         doesFeatureBelongToItem(f as Feature, leftItem) ||
@@ -812,7 +812,9 @@ const DiffAccordionWrapper = styled(Box).attrs({
   min-height: 220px;
   // background: ${p => p.theme.dark};
   margin-left: ${props =>
-    props.isMapFullScreen ? 16 : parseInt(props.theme.workbenchWidth) + 40}px;
+    props.isMapFullScreen
+      ? 16
+      : parseInt(props.theme.workbenchWidth, 10) + 40}px;
   transition: margin-left 0.25s;
 `;
 

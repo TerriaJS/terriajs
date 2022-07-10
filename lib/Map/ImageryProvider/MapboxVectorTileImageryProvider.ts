@@ -102,7 +102,7 @@ export default class MapboxVectorTileImageryProvider
       : this._tilingScheme.rectangle;
     this._uniqueIdProp = options.uniqueIdProp;
     this._featureInfoFunc = options.featureInfoFunc;
-    //this._featurePicking = options.featurePicking;
+    // this._featurePicking = options.featurePicking;
 
     // Check the number of tiles at the minimum level.  If it's more than four,
     // throw an exception, because starting at the higher minimum

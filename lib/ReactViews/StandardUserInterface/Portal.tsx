@@ -10,7 +10,7 @@ export type PropsType = {
 
 const Portal: React.FC<PropsType> = observer(({ viewState, id, children }) => {
   const container = viewState.portals.get(id);
-  return container ? ReactDOM.createPortal(<>{children}</>, container) : null;
+  return container ? ReactDOM.createPortal(children, container) : null;
 });
 
 export default Portal;

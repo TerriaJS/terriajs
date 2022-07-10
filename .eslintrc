@@ -70,7 +70,7 @@
     "no-div-regex":  ["error"],
     "no-eval": ["error"],
     "no-extend-native": ["error"],
-    "no-fallthrough": 0,//
+    "no-fallthrough": 0,
     "no-floating-decimal": ["error"],
     "no-implied-eval": ["error"],
     "no-iterator": ["error"],
@@ -103,8 +103,10 @@
     }],
     "no-array-constructor": "error",
     "no-new-object": 1,
-    "no-unneeded-ternary": 1,    /* ECMAScript 6 */
-    "prefer-const": "error"
+    "no-unneeded-ternary": 1,    
+    
+    "prefer-const": "error",
+    "spaced-comment": "error"
   },
   "overrides": [
     {

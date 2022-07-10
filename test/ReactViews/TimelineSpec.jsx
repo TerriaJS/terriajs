@@ -17,7 +17,7 @@ describe("Timeline", function() {
     let terria;
     let catalogItem;
     const tMock = () => {
-      //no-op
+      // no-op
     };
 
     beforeEach(function() {

@@ -81,11 +81,11 @@ const defaultOutlineWidth = 1.0;
 const defaultPixelSize = 5.0;
 const defaultWidth = 5.0;
 
-//Single pixel black dot
+// Single pixel black dot
 const tmpImage =
   "data:image/gif;base64,R0lGODlhAQABAPAAAAAAAP///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==";
 
-//NOT IMPLEMENTED
+// NOT IMPLEMENTED
 // Path primitive - no need identified
 // Ellipse primitive - no need identified
 // Ellipsoid primitive - 3d prim - no plans for this
@@ -438,8 +438,8 @@ class LeafletGeomVisualizer {
       color: color.toCssColorString(),
       origUrl: imageUrl,
       scale: scale,
-      horizontalOrigin: horizontalOrigin, //value: left, center, right
-      verticalOrigin: verticalOrigin //value: bottom, center, top
+      horizontalOrigin: horizontalOrigin, // value: left, center, right
+      verticalOrigin: verticalOrigin // value: bottom, center, top
     };
 
     if (isDefined(height) || isDefined(width)) {
@@ -571,8 +571,8 @@ class LeafletGeomVisualizer {
       font: font,
       color: fillColor.toCssColorString(),
       scale: scale,
-      horizontalOrigin: horizontalOrigin, //value: left, center, right
-      verticalOrigin: verticalOrigin //value: bottom, center, top
+      horizontalOrigin: horizontalOrigin, // value: left, center, right
+      verticalOrigin: verticalOrigin // value: bottom, center, top
     };
 
     let redrawLabel = false;
@@ -1239,7 +1239,7 @@ function hierarchyToLatLngs(hierarchy: PolygonHierarchy) {
   }
 }
 
-//Recolor an image using 2d canvas
+// Recolor an image using 2d canvas
 function recolorBillboard(
   img: HTMLImageElement,
   color: Color
@@ -1258,7 +1258,7 @@ function recolorBillboard(
   const image = context.getImageData(0, 0, canvas.width, canvas.height);
   const normClr = [color.red, color.green, color.blue, color.alpha];
 
-  const length = image.data.length; //pixel count * 4
+  const length = image.data.length; // pixel count * 4
   for (let i = 0; i < length; i += 4) {
     for (let j = 0; j < 4; j++) {
       image.data[j + i] *= normClr[j];

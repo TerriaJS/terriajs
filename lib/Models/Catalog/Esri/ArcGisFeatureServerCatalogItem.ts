@@ -52,7 +52,7 @@ type EsriStyleTypes =
   | "esriSLS" // simple line style
   | "esriSFS"; // simple fill style
 
-//as defined https://developers.arcgis.com/web-map-specification/objects/esriSLS_symbol/
+// as defined https://developers.arcgis.com/web-map-specification/objects/esriSLS_symbol/
 
 type SupportedFillStyle =
   | "esriSFSSolid" // fill line with color

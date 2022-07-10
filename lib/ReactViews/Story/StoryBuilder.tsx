@@ -240,11 +240,7 @@ class StoryBuilder extends React.Component<
   }
 
   @action.bound
-  onSort(
-    sortedArray: StoryData[],
-    _currentDraggingSortData: any,
-    _currentDraggingIndex: any
-  ) {
+  onSort(sortedArray: StoryData[]) {
     this.props.terria.stories = sortedArray;
   }
 
@@ -257,8 +253,6 @@ class StoryBuilder extends React.Component<
     return (
       <Box column>
         <VideoGuide
-          /*
-          // @ts-ignore */
           viewState={this.props.viewState}
           videoLink={"https://www.youtube-nocookie.com/embed/fbiQawV8IYY"}
           background={dataStoriesImg}
@@ -325,7 +319,7 @@ class StoryBuilder extends React.Component<
     });
   }
 
-  renderStories(editingMode: boolean) {
+  renderStories() {
     const { t, i18n } = this.props;
     const stories = this.props.terria.stories || [];
     const storyName = this.state.storyToRemove
@@ -494,7 +488,7 @@ class StoryBuilder extends React.Component<
           {hasStories && this.renderPlayShare(hasStories)}
         </Box>
         <Spacing bottom={2} />
-        {hasStories && this.renderStories(this.state.editingMode)}
+        {hasStories && this.renderStories()}
         {this.state.editingMode && (
           <StoryEditor
             removeStory={this.removeStory}

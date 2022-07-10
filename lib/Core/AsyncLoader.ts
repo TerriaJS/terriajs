@@ -110,7 +110,7 @@ export default class AsyncLoader {
     if (newPromise !== this._promise) {
       if (this._promise) {
         // TODO - cancel old promise
-        //this._metadataPromise.cancel();
+        // this._metadataPromise.cancel();
       }
 
       this._promise = newPromise;
