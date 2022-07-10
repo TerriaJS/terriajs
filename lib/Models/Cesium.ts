@@ -92,7 +92,7 @@ import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
 import { setViewerMode } from "./ViewerMode";
 
-//import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
+// import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
 type CreditDisplayElement = {
   credit: Credit;
@@ -132,7 +132,7 @@ export default class Cesium extends GlobeOrMap {
     | Rectangle
     | DataSource
     | MappableMixin.Instance
-    | /*TODO Cesium.Cesium3DTileset*/ any;
+    | /* TODO Cesium.Cesium3DTileset*/ any;
 
   // Lightbox and on screen attributions from CreditDisplay
   private cesiumDataAttributions: IObservableArray<string> = observable([]);
@@ -175,7 +175,7 @@ export default class Cesium extends GlobeOrMap {
         this.terria.configParameters.cesiumIonAccessToken;
     }
 
-    //An arbitrary base64 encoded image used to populate the placeholder SingleTileImageryProvider
+    // An arbitrary base64 encoded image used to populate the placeholder SingleTileImageryProvider
     const img =
       "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA \
     AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO \
@@ -215,7 +215,7 @@ export default class Cesium extends GlobeOrMap {
       });
     }
 
-    //new Cesium3DTilesInspector(document.getElementsByClassName("cesium-widget").item(0), this.scene);
+    // new Cesium3DTilesInspector(document.getElementsByClassName("cesium-widget").item(0), this.scene);
 
     this.dataSourceDisplay = new DataSourceDisplay({
       scene: this.scene,
@@ -788,7 +788,7 @@ export default class Cesium extends GlobeOrMap {
               () => this._updateTilesLoadingIndeterminate(true)
             );
 
-            //Add event listener for when tiles finished loading for current view. Infrequent.
+            // Add event listener for when tiles finished loading for current view. Infrequent.
             const finishedListener = this._eventHelper.add(
               primitive.allTilesLoaded,
               () => this._updateTilesLoadingIndeterminate(false)
@@ -1313,32 +1313,7 @@ export default class Cesium extends GlobeOrMap {
       ? this.pickImageryLayerFeatures(pickPositionCartographic, providerCoords)
       : [];
 
-<<<<<<< HEAD
     const pickedFeatures = this._buildPickedFeatures(
-=======
-    if (this.terria.allowFeatureInfoRequests) {
-      for (let i = this.scene.imageryLayers.length - 1; i >= 0; i--) {
-        const imageryLayer = this.scene.imageryLayers.get(i);
-        const imageryProvider = imageryLayer.imageryProvider;
-
-        if (hasUrl(imageryProvider) && providerCoords[imageryProvider.url]) {
-          const coords = providerCoords[imageryProvider.url];
-          promises.push(
-            imageryProvider.pickFeatures(
-              coords.x,
-              coords.y,
-              coords.level,
-              pickPositionCartographic.longitude,
-              pickPositionCartographic.latitude
-            )
-          );
-          imageryLayers.push(imageryLayer);
-        }
-      }
-    }
-
-    const result = this._buildPickedFeatures(
->>>>>>> 4408e4aa1 (fix some list issues)
       providerCoords,
       pickPosition,
       existingFeatures,
@@ -1854,7 +1829,6 @@ function flyToBoundingSpherePromise(
   });
 }
 
-<<<<<<< HEAD
 function syncCesiumCreditsToAttributions(
   creditsElements: CreditDisplayElement[],
   dataAttributionsObservable: IObservableArray<string>
@@ -1896,8 +1870,4 @@ function syncCesiumCreditsToAttributions(
       );
     }
   }
-=======
-function hasUrl(o: any): o is { url: string } {
-  return typeof o?.url === "string";
->>>>>>> 4408e4aa1 (fix some list issues)
 }

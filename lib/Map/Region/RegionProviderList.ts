@@ -1,4 +1,4 @@
-/**********************************************************************************************
+/** ********************************************************************************************
 *  Region mapping support - turn CSVs into choropleths of regions like local government areas
 *  Implements most of https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au
 *  1. Look through all the column names in the CSV file until we find one that matches a defined region descriptor in

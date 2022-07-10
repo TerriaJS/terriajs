@@ -1525,7 +1525,7 @@ describe("CsvCatalogItem with region mapping", function () {
       .then(done);
   });
 
-  //describe('when data is partially unmatchable', function() {
+  // describe('when data is partially unmatchable', function() {
   //    beforeEach(function(done) {
   //        spyOn(terria.error, 'raiseEvent');
   //        csvItem.updateFromJson({data: 'Postcode,value\n2000,1\n9999,2'}).catch(fail);
@@ -1542,7 +1542,7 @@ describe("CsvCatalogItem with region mapping", function () {
   //        csvItem.isEnabled = true;
   //        expect(terria.raiseErrorToUser).not.toHaveBeenCalled();
   //    });
-  //});
+  // });
 
   describe("and feature picking", function () {
     var postcode3124 = {
@@ -1608,7 +1608,7 @@ describe("CsvCatalogItem with region mapping", function () {
           })
           .then(function (r) {
             expect(r[0].name).toEqual("3124");
-            var description = r[0].description; //.getValue(terria.clock.currentTime);
+            var description = r[0].description; // .getValue(terria.clock.currentTime);
             expect(description).toContain("42.42");
             expect(description).toContain("the universe");
           })
@@ -1681,7 +1681,7 @@ describe("CsvCatalogItem with region mapping", function () {
           })
           .then(function (r) {
             expect(r[0].name).toEqual("Boroondara (C)");
-            var description = r[0].description; //.getValue(terria.clock.currentTime);
+            var description = r[0].description; // .getValue(terria.clock.currentTime);
             expect(description).toContain("42.42");
             expect(description).toContain("the universe");
           })
@@ -1788,7 +1788,7 @@ describe("CsvCatalogItem with region mapping", function () {
           })
           .then(function (r) {
             expect(r[0].name).toEqual("Wellington (S)");
-            var description = r[0].description; //.getValue(terria.clock.currentTime);
+            var description = r[0].description; // .getValue(terria.clock.currentTime);
             expect(description).toContain("Wellington"); // leaving it open whether it should show server-side ID or provided value
             expect(description).toContain("Melbourne");
           })
@@ -1805,7 +1805,7 @@ describe("CsvCatalogItem with region mapping", function () {
           })
           .then(function (r) {
             expect(r[0].name).toEqual("Wellington (A)");
-            var description = r[0].description; //.getValue(terria.clock.currentTime);
+            var description = r[0].description; // .getValue(terria.clock.currentTime);
             expect(description).toContain("Wellington");
             expect(description).toContain("Sydney");
           })

@@ -353,7 +353,7 @@ class Main extends React.Component<MainPropsType> {
   }
 
   @action.bound
-  onUserPickingLocation(pickingLocation: LatLonHeight) {
+  onUserPickingLocation() {
     this._isPickingNewLocation = true;
   }
 
@@ -362,7 +362,7 @@ class Main extends React.Component<MainPropsType> {
     pickedFeatures: PickedFeatures,
     pickedLocation: LatLonHeight
   ) {
-    const { leftItem, rightItem, t } = this.props;
+    const { leftItem, rightItem } = this.props;
     const feature = pickedFeatures.features.find(
       (f) =>
         doesFeatureBelongToItem(f, leftItem) ||

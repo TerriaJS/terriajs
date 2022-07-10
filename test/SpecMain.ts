@@ -1,4 +1,4 @@
-/// <reference types="jasmine" />
+// / <reference types="jasmine" />
 import "../lib/Core/prerequisites";
 import "jasmine-ajax";
 import { configure, spy } from "mobx";

@@ -260,8 +260,6 @@ class StoryBuilder extends React.Component<
     return (
       <Box column>
         <VideoGuide
-          /*
-          // @ts-ignore */
           viewState={this.props.viewState}
           videoLink={
             this.props.viewState.terria.configParameters.storyVideo?.videoUrl ||
@@ -331,7 +329,7 @@ class StoryBuilder extends React.Component<
     });
   }
 
-  renderStories(editingMode: boolean) {
+  renderStories() {
     const { t, i18n } = this.props;
     const stories = this.props.viewState.terria.stories || [];
     const storyName = this.state.storyToRemove
@@ -500,7 +498,7 @@ class StoryBuilder extends React.Component<
           {hasStories && this.renderPlayShare(hasStories)}
         </Box>
         <Spacing bottom={2} />
-        {hasStories && this.renderStories(this.state.editingMode)}
+        {hasStories && this.renderStories()}
         {this.state.editingMode && (
           <StoryEditor
             removeStory={this.removeStory}
