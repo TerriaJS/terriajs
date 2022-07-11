@@ -87,7 +87,7 @@ interface State {
 
 @observer
 class StoryPanel extends React.Component<Props, State> {
-  escKeyListener: EventListener | undefined;
+  keydownListener: EventListener | undefined;
   slideRef: React.RefObject<HTMLElement>;
 
   constructor(props: Props) {
@@ -111,12 +111,24 @@ class StoryPanel extends React.Component<Props, State> {
 
     this.slideIn();
 
-    this.escKeyListener = (e: Event) => {
+    this.keydownListener = (e: Event) => {
+      // Use else if for keydown events so only first one is recognised in case of multiple key presses
       if ((e as KeyboardEvent).key === "Escape") {
         this.exitStory();
+      } else if (
+        (e as KeyboardEvent).key === "ArrowRight" ||
+        (e as KeyboardEvent).key === "ArrowDown"
+      ) {
+        this.goToNextStory();
+      } else if (
+        (e as KeyboardEvent).key === "ArrowLeft" ||
+        (e as KeyboardEvent).key === "ArrowUp"
+      ) {
+        this.goToPrevStory();
       }
     };
-    window.addEventListener("keydown", this.escKeyListener, true);
+
+    window.addEventListener("keydown", this.keydownListener, true);
   }
 
   slideIn() {
@@ -144,8 +156,8 @@ class StoryPanel extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    if (this.escKeyListener) {
-      window.removeEventListener("keydown", this.escKeyListener, false);
+    if (this.keydownListener) {
+      window.removeEventListener("keydown", this.keydownListener, false);
     }
   }
 
