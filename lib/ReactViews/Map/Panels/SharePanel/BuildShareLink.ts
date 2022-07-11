@@ -201,6 +201,7 @@ function addModelStratum(
   }
 
   const stratum = model.strata.get(stratumId);
+
   const dereferenced = ReferenceMixin.isMixedInto(model)
     ? model.target
     : undefined;
@@ -255,8 +256,12 @@ export function isShareable(terria: Terria) {
     const model = terria.getModelById(BaseModel, modelId);
     return (
       model &&
-      ((HasLocalData.is(model) && !model.hasLocalData) ||
-        !HasLocalData.is(model))
+      // If this is a Reference, and has .target defined, perform checks against model.target
+      (ReferenceMixin.isMixedInto(model) && model.target
+        ? (HasLocalData.is(model.target) && !model.target.hasLocalData) ||
+          !HasLocalData.is(model.target)
+        : (HasLocalData.is(model) && !model.hasLocalData) ||
+          !HasLocalData.is(model))
     );
   };
 }

@@ -32,6 +32,7 @@ import Text from "../../../../Styled/Text";
 import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
 import { TFunction } from "i18next";
+import CatalogMemberMixin from "../../../../ModelMixins/CatalogMemberMixin";
 
 // Handle incorrect type checking
 const MenuPanel = MenuPanelAlias as any;
@@ -329,14 +330,15 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
               </p>
             </Trans>
             <ul className={Styles.paragraph}>
-              {unshareableItems.map((item, i) => {
-                return (
-                  <li key={i}>
-                    {/* <strong>{item.name}</strong> */}
-                    {/* TODO: display item.name here. Is this code ever being used? Cant add .name to BaseModel without many ts errors */}
-                  </li>
-                );
-              })}
+              {unshareableItems
+                .filter(CatalogMemberMixin.isMixedInto)
+                .map((item: CatalogMemberMixin.Instance, i) => {
+                  return (
+                    <li key={i}>
+                      <strong>{item.name}</strong>
+                    </li>
+                  );
+                })}
             </ul>
           </div>
         )}
