@@ -8,6 +8,7 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import getPath from "../../Core/getPath";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
+import MappableMixin from "../../ModelMixins/MappableMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import ViewState from "../../ReactViewModels/ViewState";
@@ -24,7 +25,7 @@ import WorkbenchItemControls from "./Controls/WorkbenchItemControls";
 
 interface IProps extends WithTranslation {
   theme: DefaultTheme;
-  item: any;
+  item: CatalogMemberMixin.Instance;
   onMouseDown(): void;
   onTouchStart(): void;
   viewState: ViewState;
@@ -52,7 +53,12 @@ class WorkbenchItemRaw extends React.Component<IProps> {
 
   @action.bound
   toggleVisibility() {
-    this.props.item.setTrait(CommonStrata.user, "show", !this.props.item.show);
+    if (MappableMixin.isMixedInto(this.props.item))
+      this.props.item.setTrait(
+        CommonStrata.user,
+        "show",
+        !this.props.item.show
+      );
   }
 
   @computed
@@ -89,7 +95,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
                     </Box>
                   </BoxSpan>
                 )}
-                {true || item.supportsToggleShown ? (
+                {MappableMixin.isMixedInto(item) ? (
                   <Box
                     left
                     verticalCenter
