@@ -6,7 +6,6 @@ import React, { ChangeEvent, MouseEventHandler } from "react";
 import { Trans, WithTranslation, withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Clipboard from "../../../Clipboard";
-import IncludeStoryOption from "./IncludeStoryOption";
 import Icon from "../../../../Styled/Icon";
 import Loader from "../../../Loader";
 import MenuPanelAlias from "../../../StandardUserInterface/customizable/MenuPanel";
@@ -53,31 +52,31 @@ interface PropTypes extends WithTranslation {
 
 interface SharePanelState {
   isOpen: boolean;
-  // shortenUrls: string | boolean | null;
+  // shortenUrls: string | boolean | null;  // TODO: Not being used? Check.
   shareUrl: string;
   isDownloading: boolean;
   advancedIsOpen: boolean;
   placeholder: string | undefined;
   errorMessage: string | undefined;
+  includeStoryInShare: boolean;
 }
 
 @observer
 class SharePanel extends React.Component<PropTypes, SharePanelState> {
-  // TODO: should be in constructor or not?
   static displayName = "SharePanel";
   private _unsubscribeFromPrintMediaChange!: () => void;
   private _oldPrint!: (() => void) & (() => void);
   private _message: HTMLDivElement | undefined;
-  updateShareUrlWhenStoryOptionChanged: IReactionDisposer | undefined;
 
   constructor(props: PropTypes) {
     super(props);
     // React components using ES6 classes no longer autobind this to non React methods (added after migrating from createReactClass)
+    // TODO: Do other state modifying methods need to be bound like this too?
     this.changeOpenState = this.changeOpenState.bind(this);
 
     this.state = {
       isOpen: false,
-      // TODO: I dont thins shortenUrls is being used... Check.
+      // TODO: I dont this shortenUrls is being used... Check.
       // shortenUrls:
       //   !!this.props.shortenUrls &&
       //   this.props.terria.getLocalProperty("shortenShareUrls"),
@@ -85,7 +84,8 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
       isDownloading: false,
       advancedIsOpen: false,
       placeholder: undefined,
-      errorMessage: undefined
+      errorMessage: undefined,
+      includeStoryInShare: true // moved from viewState to local state
     };
   }
 
@@ -116,14 +116,16 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
       };
     }
 
+    // TODO: Remove after review:
+    // THIS MOVED TO onIncludeStoryInShareClicked() and is now implemented with a setState callback
     // Listen to the includeStoryInShare property of viewState, generate the share URL again if this changes
     // This allows the share URL to be updated when users change the 'Include Story in Share?'checkbox in the SharePanel component.
-    this.updateShareUrlWhenStoryOptionChanged = reaction(
-      () => this.props.viewState.includeStoryInShare,
-      () => {
-        this.updateForShortening();
-      }
-    );
+    // this.updateShareUrlWhenStoryOptionChanged = reaction(
+    //   () => this.state.includeStoryInShare,
+    //   () => {
+    //     this.updateForShortening();
+    //   }
+    // );
   }
   print() {
     throw new Error("Method not implemented.");
@@ -140,9 +142,10 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
       window.print = this._oldPrint;
     }
 
+    // TODO: Remove after review:
     // Cleanup reaction
-    this.updateShareUrlWhenStoryOptionChanged &&
-      this.updateShareUrlWhenStoryOptionChanged();
+    // this.updateShareUrlWhenStoryOptionChanged &&
+    //   this.updateShareUrlWhenStoryOptionChanged();
   }
 
   beforeBrowserPrint() {
@@ -188,8 +191,7 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
         placeholder: t("share.shortLinkShortening")
       });
       buildShortShareLink(this.props.terria, this.props.viewState, {
-        includeStories:
-          this.props.storyShare || this.props.viewState.includeStoryInShare
+        includeStories: this.props.storyShare || this.state.includeStoryInShare
       })
         .then(shareUrl => this.setState({ shareUrl }))
         .catch(() => {
@@ -207,8 +209,7 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
     // TODO: Make sure that this.setState is accessible, may need to this.updateForShortening = this.updateForShortening.bind(this) or change to arrow function
     this.setState({
       shareUrl: buildShareLink(this.props.terria, this.props.viewState, {
-        includeStories:
-          this.props.storyShare || this.props.viewState.includeStoryInShare
+        includeStories: this.props.storyShare || this.state.includeStoryInShare
       })
     });
   }
@@ -301,6 +302,12 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
 
   hasUserAddedData() {
     return this.props.terria.catalog.userAddedDataGroup.members.length > 0;
+  }
+
+  onIncludeStoryInShareClicked(event: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ includeStoryInShare: event.target.checked }, () => {
+      this.updateForShortening();
+    });
   }
 
   renderWarning() {
@@ -526,7 +533,6 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
                 <Input
                   large
                   dark
-                  // className={Styles.field}
                   type="text"
                   readOnly
                   placeholder={this.state.placeholder}
@@ -549,25 +555,24 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
                   <p>{t("share.shortenUsingService")}</p>
                 </div>
               )}
-              <IncludeStoryOption viewState={this.props.viewState} />
+              {/* Include Story in Share option */}
+              <div className={Styles.includeStoryOption}>
+                <Checkbox
+                  textProps={{ small: true }}
+                  id="includeStory"
+                  title="Include Story in Share"
+                  isChecked={this.state.includeStoryInShare}
+                  onChange={this.onIncludeStoryInShareClicked}
+                  className={Styles.checkbox}
+                ></Checkbox>
+                <p>{t("includeStory.message")}</p>
+              </div>
             </>
           )}
         </div>
       </div>
     );
   }
-
-  // renderDownloadFormatButton(format) {
-  //   return (
-  //     <button
-  //       key={format.name}
-  //       className={Styles.formatButton}
-  //       onClick={this.download}
-  //     >
-  //       {format.name}
-  //     </button>
-  //   );
-  // }
 
   openWithUserClick() {
     if (this.props.onUserClick) {
@@ -588,7 +593,6 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
     const dropdownTheme = {
       btn: classNames({
         [Styles.btnCatalogShare]: catalogShare,
-        // [Styles.btnStoryShare]: storyShare,
         [Styles.btnWithoutText]: catalogShareWithoutText
       }),
       outer: classNames(Styles.sharePanel, {
