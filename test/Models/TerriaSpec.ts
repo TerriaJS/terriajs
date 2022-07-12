@@ -332,6 +332,54 @@ describe("Terria", function() {
   });
 
   describe("updateApplicationUrl", function() {
+    it("processes #start correctly", async function() {
+      expect(terria.initSources.length).toEqual(0);
+
+      jasmine.Ajax.install();
+      // Fail all requests by default.
+      jasmine.Ajax.stubRequest(/.*/).andError({});
+
+      jasmine.Ajax.stubRequest("configUrl.json").andReturn({
+        responseText: JSON.stringify({})
+      });
+
+      await terria.start({
+        configUrl: `configUrl.json`,
+        i18nOptions
+      });
+
+      // Test #start with two init sources
+      // - one initURL = "http://something/init.json"
+      // - one initData which sets `splitPosition`
+      await terria.updateApplicationUrl(
+        "https://application.url/#start=" +
+          JSON.stringify({
+            version: "8.0.0",
+            initSources: ["http://something/init.json", { splitPosition: 0.3 }]
+          })
+      );
+
+      console.log(terria.initSources);
+
+      expect(terria.initSources.length).toEqual(2);
+
+      const urlInitSource = terria.initSources[0];
+      expect(isInitFromUrl(urlInitSource)).toBeTruthy();
+
+      if (!isInitFromUrl(urlInitSource)) throw "Init source is not from url";
+
+      expect(urlInitSource.initUrl).toBe("http://something/init.json");
+
+      const jsonInitSource = terria.initSources[1];
+      expect(isInitFromData(jsonInitSource)).toBeTruthy();
+
+      if (!isInitFromData(jsonInitSource)) throw "Init source is not from data";
+
+      expect(jsonInitSource.data.splitPosition).toBe(0.3);
+
+      jasmine.Ajax.uninstall();
+    });
+
     describe("test via serialise & load round-trip", function() {
       let newTerria: Terria;
       let viewState: ViewState;
