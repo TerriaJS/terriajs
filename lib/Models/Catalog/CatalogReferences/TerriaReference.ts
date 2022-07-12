@@ -7,7 +7,6 @@ import TerriaError from "../../../Core/TerriaError";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import ReferenceMixin from "../../../ModelMixins/ReferenceMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
-
 import TerriaReferenceTraits from "../../../Traits/TraitsClasses/TerriaReferenceTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
