@@ -71,8 +71,14 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
   constructor(props: PropTypes) {
     super(props);
     // React components using ES6 classes no longer autobind this to non React methods (added after migrating from createReactClass)
-    // TODO: Do other state modifying methods need to be bound like this too?
     this.changeOpenState = this.changeOpenState.bind(this);
+    this.onIncludeStoryInShareClicked = this.onIncludeStoryInShareClicked.bind(
+      this
+    );
+    this.onAddWebDataClicked = this.onAddWebDataClicked.bind(this);
+    this.onShortenClicked = this.onShortenClicked.bind(this);
+    this.afterBrowserPrint = this.afterBrowserPrint.bind(this);
+    this.beforeBrowserPrint = this.beforeBrowserPrint.bind(this);
 
     this.state = {
       isOpen: false,
