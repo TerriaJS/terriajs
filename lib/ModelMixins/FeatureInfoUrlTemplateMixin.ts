@@ -1,3 +1,4 @@
+import { action } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Resource from "terriajs-cesium/Source/Core/Resource";
@@ -5,18 +6,17 @@ import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
-import Feature from "../Models/Feature";
-import Model from "../Models/Definition/Model";
-import FeatureInfoTraits from "../Traits/TraitsClasses/FeatureInfoTraits";
-import { action } from "mobx";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
+import Model from "../Models/Definition/Model";
+import Feature from "../Models/Feature";
+import FeatureInfoUrlTemplateTraits from "../Traits/TraitsClasses/FeatureInfoTraits";
 
-type Target = Model<FeatureInfoTraits>;
+type Target = Model<FeatureInfoUrlTemplateTraits>;
 
-export default function FeatureInfoMixin<T extends Constructor<Target>>(
-  Base: T
-) {
-  abstract class FeatureInfoMixin extends Base {
+export default function FeatureInfoUrlTemplateMixin<
+  T extends Constructor<Target>
+>(Base: T) {
+  abstract class FeatureInfoUrlTemplateMixin extends Base {
     /**
      * Returns a {@link Feature} for the pick result.
      */
@@ -73,5 +73,5 @@ export default function FeatureInfoMixin<T extends Constructor<Target>>(
     }
   }
 
-  return FeatureInfoMixin;
+  return FeatureInfoUrlTemplateMixin;
 }

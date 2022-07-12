@@ -10,7 +10,7 @@ import flatten from "../../../Core/flatten";
 import isDefined from "../../../Core/isDefined";
 import { isJsonObject } from "../../../Core/Json";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import FeatureInfoMixin from "../../../ModelMixins/FeatureInfoMixin";
+import FeatureInfoUrlTemplateMixin from "../../../ModelMixins/FeatureInfoUrlTemplateMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStratum";
@@ -567,7 +567,7 @@ function getTimeField(dataset: Dataset) {
 StratumOrder.addLoadStratum(OpenDataSoftDatasetStratum.stratumName);
 
 export default class OpenDataSoftCatalogItem
-  extends FeatureInfoMixin(
+  extends FeatureInfoUrlTemplateMixin(
     TableMixin(
       UrlMixin(CatalogMemberMixin(CreateModel(OpenDataSoftCatalogItemTraits)))
     )

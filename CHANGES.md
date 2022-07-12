@@ -6,6 +6,9 @@ Change Log
 * Pin `html-to-react` to `1.4.5` due to ESM module in dependency (`parse5`) breaking webpack
 * Add step to `"Deploy TerriaMap"` action to save `yarn.lock` after `sync-dependencies` (for debug purposes)
 * Implement ability to navigate between scenes in StoryPanel using keyboard arrows
+* Rename `FeatureInfoMixin` to `FeatureInfoUrlTemplateMixin`
+* Move `featureInfoTemplate` and `showStringIfPropertyValueIsNull` from `FeatureInfoTraits` to `MappableTraits` (all mappable catalog items)
+* Remove `FeatureInfoUrlTemplateTraits` from all models that don't use `FeatureInfoUrlTemplateMixin`
 * [The next improvement]
 
 #### 8.2.8 - 2022-07-04

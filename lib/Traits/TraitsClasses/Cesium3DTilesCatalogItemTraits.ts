@@ -1,7 +1,7 @@
 import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import Cesium3DTilesTraits from "./Cesium3dTilesTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
+import FeatureInfoUrlTemplateTraits from "./FeatureInfoTraits";
 import MappableTraits from "./MappableTraits";
 import PlaceEditorTraits from "./PlaceEditorTraits";
 import SearchableItemTraits from "./SearchableItemTraits";
@@ -22,7 +22,7 @@ export default class Cesium3DTilesCatalogItemTraits extends mixTraits(
   SearchableItemTraits,
   PlaceEditorTraits,
   TransformationTraits,
-  FeatureInfoTraits,
+  FeatureInfoUrlTemplateTraits,
   MappableTraits,
   UrlTraits,
   CatalogMemberTraits,

@@ -1,13 +1,11 @@
-import mixTraits from "../mixTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
-import UrlTraits from "./UrlTraits";
-import MappableTraits from "./MappableTraits";
-import CatalogMemberTraits from "./CatalogMemberTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import CatalogMemberTraits from "./CatalogMemberTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
+import MappableTraits from "./MappableTraits";
+import UrlTraits from "./UrlTraits";
 
 export default class GeoRssCatalogItemTraits extends mixTraits(
-  FeatureInfoTraits,
   UrlTraits,
   MappableTraits,
   CatalogMemberTraits,
