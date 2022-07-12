@@ -29,6 +29,7 @@ import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
 import { TFunction } from "i18next";
 import { getName } from "../../../../ModelMixins/CatalogMemberMixin";
+import Box from "../../../../Styled/Box";
 
 const MenuPanel = require("../../../StandardUserInterface/customizable/MenuPanel")
   .default;
@@ -488,7 +489,9 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
           </div>
         </div>
         <hr className={Styles.thinLineDivider} />
-        <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
+        <div
+          className={classNames(DropdownStyles.section, Styles.advancedOption)}
+        >
           <div className={Styles.btnWrapper}>
             <button
               type="button"
@@ -505,8 +508,38 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
           </div>
           {this.advancedIsOpen() && (
             <>
+              <Box className={DropdownStyles.section}>
+                {this.isUrlShortenable() && (
+                  <div className={Styles.advancedOption}>
+                    <Checkbox
+                      textProps={{ small: true }}
+                      id="shortenUrl"
+                      isChecked={(this.shouldShorten() as boolean) ?? false}
+                      onChange={this.onShortenClicked}
+                      className={Styles.checkbox}
+                    >
+                      <TextSpan>{t("share.shortenUsingService")}</TextSpan>
+                    </Checkbox>
+                  </div>
+                )}
+                <div className={Styles.advancedOption}>
+                  <Checkbox
+                    textProps={{ small: true }}
+                    id="includeStory"
+                    title="Include Story in Share"
+                    isChecked={this.state.includeStoryInShare}
+                    onChange={this.onIncludeStoryInShareClicked}
+                    className={Styles.checkbox}
+                  >
+                    <TextSpan>{t("includeStory.message")}</TextSpan>
+                  </Checkbox>
+                </div>
+              </Box>
+              <hr className={Styles.thinLineDivider} />
               <div className={DropdownStyles.section}>
-                <p className={Styles.paragraph}>{t("share.embedTitle")}</p>
+                <TextSpan className={Styles.paragraph}>
+                  {t("share.embedTitle")}
+                </TextSpan>
                 <Input
                   large
                   dark
@@ -519,32 +552,6 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
                     return target.select();
                   }}
                 />
-              </div>
-              {this.isUrlShortenable() && (
-                <div className={Styles.shortenUrl}>
-                  <Checkbox
-                    textProps={{ small: true }}
-                    id="shortenUrl"
-                    isChecked={(this.shouldShorten() as boolean) ?? false}
-                    onChange={this.onShortenClicked}
-                    className={Styles.checkbox}
-                  >
-                    <TextSpan>{t("share.shortenUsingService")}</TextSpan>
-                  </Checkbox>
-                </div>
-              )}
-              {/* Include Story in Share option */}
-              <div className={Styles.includeStoryOption}>
-                <Checkbox
-                  textProps={{ small: true }}
-                  id="includeStory"
-                  title="Include Story in Share"
-                  isChecked={this.state.includeStoryInShare}
-                  onChange={this.onIncludeStoryInShareClicked}
-                  className={Styles.checkbox}
-                >
-                  <TextSpan>{t("includeStory.message")}</TextSpan>
-                </Checkbox>
               </div>
             </>
           )}
