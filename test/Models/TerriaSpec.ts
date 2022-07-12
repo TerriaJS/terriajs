@@ -33,6 +33,7 @@ import ViewState from "../../lib/ReactViewModels/ViewState";
 import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 import { defaultBaseMaps } from "./../../lib/Models/BaseMaps/defaultBaseMaps";
+import { exp } from "protomaps";
 
 const mapConfigBasicJson = require("../../wwwroot/test/Magda/map-config-basic.json");
 const mapConfigBasicString = JSON.stringify(mapConfigBasicJson);
@@ -139,6 +140,69 @@ describe("Terria", function() {
 
     afterEach(function() {
       jasmine.Ajax.uninstall();
+    });
+
+    it("applies initSources in correct order", async function() {
+      expect(terria.initSources.length).toEqual(0);
+      jasmine.Ajax.stubRequest("config.json").andReturn({
+        responseText: JSON.stringify({
+          initializationUrls: ["something"]
+        })
+      });
+
+      jasmine.Ajax.stubRequest("init/something.json").andReturn({
+        responseText: JSON.stringify({
+          workbench: ["test"],
+          catalog: [
+            { id: "test", type: "czml", url: "test.czml" },
+            { id: "test-2", type: "czml", url: "test-2.czml" }
+          ],
+          showSplitter: false,
+          splitPosition: 0.5
+        })
+      });
+
+      jasmine.Ajax.stubRequest(
+        "https://application.url/init/hash-init.json"
+      ).andReturn({
+        responseText: JSON.stringify({
+          // Override workbench in "init/something.json"
+          workbench: ["test-2"],
+          showSplitter: true
+        })
+      });
+
+      // This model is added to the workbench in "init/something.json" - which is loaded before "https://application.url/init/hash-init.json"
+      // So we add a long delay to make sure that `workbench` is overridden by `hash-init.json`
+      jasmine.Ajax.stubRequest("test.czml").andCallFunction(req => {
+        setTimeout(
+          () =>
+            req.respondWith({
+              contentType: "text/json",
+              responseText: JSON.stringify([{ id: "document", version: "1.0" }])
+            }),
+          500
+        );
+      });
+
+      // Note: no delay for "test-2.czml" - which is added to `workbench` by `hash-init.json
+      jasmine.Ajax.stubRequest("test-2.czml").andReturn({
+        responseText: JSON.stringify([{ id: "document", version: "1.0" }])
+      });
+
+      await terria.start({
+        configUrl: `config.json`,
+        i18nOptions
+      });
+
+      await terria.updateApplicationUrl("https://application.url/#hash-init");
+
+      expect(terria.initSources.length).toEqual(2);
+
+      expect(terria.showSplitter).toBe(true);
+      expect(terria.splitPosition).toBe(0.5);
+      expect(terria.workbench.items.length).toBe(1);
+      expect(terria.workbench.items[0].uniqueId).toBe("test-2");
     });
 
     describe("via loadMagdaConfig", function() {
