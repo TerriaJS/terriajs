@@ -7,6 +7,7 @@ Change Log
 * Add step to `"Deploy TerriaMap"` action to save `yarn.lock` after `sync-dependencies` (for debug purposes)
 * TSIfy `SharePanel` 
 * Move `includeStoryInShare` out of `ViewState` into local state
+* Implement ability to navigate between scenes in StoryPanel using keyboard arrows
 * [The next improvement]
 
 #### 8.2.8 - 2022-07-04
