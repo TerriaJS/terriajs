@@ -2,14 +2,14 @@
 
 import classNames from "classnames";
 import { observer } from "mobx-react";
-import React, { ChangeEvent, MouseEventHandler } from "react";
+import React, { ChangeEvent } from "react";
 import { Trans, WithTranslation, withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Clipboard from "../../../Clipboard";
 import Icon from "../../../../Styled/Icon";
 import Loader from "../../../Loader";
-import MenuPanelAlias from "../../../StandardUserInterface/customizable/MenuPanel";
 import Input from "../../../../Styled/Input";
+import { TextSpan } from "../../../../Styled/Text";
 import DropdownStyles from "../panel.scss";
 import {
   buildShareLink,
@@ -18,24 +18,21 @@ import {
   isShareable
 } from "./BuildShareLink";
 import Styles from "./share-panel.scss";
-import StorySharePanelAlias from "./StorySharePanel";
 import {
   Category,
   ShareAction
 } from "../../../../Core/AnalyticEvents/analyticEvents";
-
 import { downloadImg } from "./Print/PrintView";
-import { IReactionDisposer, reaction } from "mobx";
 import Checkbox from "../../../../Styled/Checkbox";
 import Text from "../../../../Styled/Text";
 import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
 import { TFunction } from "i18next";
-import CatalogMemberMixin from "../../../../ModelMixins/CatalogMemberMixin";
+import { getName } from "../../../../ModelMixins/CatalogMemberMixin";
 
-// Handle incorrect type checking
-const MenuPanel = MenuPanelAlias as any;
-const StorySharePanel = StorySharePanelAlias as any;
+const MenuPanel = require("../../../StandardUserInterface/customizable/MenuPanel")
+  .default;
+const StorySharePanel = require("./StorySharePanel").default;
 
 interface PropTypes extends WithTranslation {
   terria: Terria;
@@ -52,7 +49,6 @@ interface PropTypes extends WithTranslation {
 
 interface SharePanelState {
   isOpen: boolean;
-  // shortenUrls: string | boolean | null;  // TODO: Not being used? Check.
   shareUrl: string;
   isDownloading: boolean;
   advancedIsOpen: boolean;
@@ -64,13 +60,13 @@ interface SharePanelState {
 @observer
 class SharePanel extends React.Component<PropTypes, SharePanelState> {
   static displayName = "SharePanel";
-  private _unsubscribeFromPrintMediaChange!: () => void;
-  private _oldPrint!: (() => void) & (() => void);
+  private _unsubscribeFromPrintMediaChange?: () => void;
+  private _oldPrint?: () => void;
   private _message: HTMLDivElement | undefined;
 
   constructor(props: PropTypes) {
     super(props);
-    // React components using ES6 classes no longer autobind this to non React methods (added after migrating from createReactClass)
+    // React components using ES6 classes no longer autobind this to non React methods
     this.changeOpenState = this.changeOpenState.bind(this);
     this.onIncludeStoryInShareClicked = this.onIncludeStoryInShareClicked.bind(
       this
@@ -82,10 +78,6 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
 
     this.state = {
       isOpen: false,
-      // TODO: I dont this shortenUrls is being used... Check.
-      // shortenUrls:
-      //   !!this.props.shortenUrls &&
-      //   this.props.terria.getLocalProperty("shortenShareUrls"),
       shareUrl: "",
       isDownloading: false,
       advancedIsOpen: false,
@@ -121,17 +113,6 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
         this.print();
       };
     }
-
-    // TODO: Remove after review:
-    // THIS MOVED TO onIncludeStoryInShareClicked() and is now implemented with a setState callback
-    // Listen to the includeStoryInShare property of viewState, generate the share URL again if this changes
-    // This allows the share URL to be updated when users change the 'Include Story in Share?'checkbox in the SharePanel component.
-    // this.updateShareUrlWhenStoryOptionChanged = reaction(
-    //   () => this.state.includeStoryInShare,
-    //   () => {
-    //     this.updateForShortening();
-    //   }
-    // );
   }
   print() {
     throw new Error("Method not implemented.");
@@ -147,11 +128,6 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
     if (this._oldPrint) {
       window.print = this._oldPrint;
     }
-
-    // TODO: Remove after review:
-    // Cleanup reaction
-    // this.updateShareUrlWhenStoryOptionChanged &&
-    //   this.updateShareUrlWhenStoryOptionChanged();
   }
 
   beforeBrowserPrint() {
@@ -186,7 +162,6 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
   };
 
   updateForShortening() {
-    // TODO: Make sure that this.setState is accessible, may need to this.updateForShortening = this.updateForShortening.bind(this) or change to arrow function
     const { t } = this.props;
     this.setState({
       shareUrl: ""
@@ -212,7 +187,6 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
   }
 
   setUnshortenedUrl() {
-    // TODO: Make sure that this.setState is accessible, may need to this.updateForShortening = this.updateForShortening.bind(this) or change to arrow function
     this.setState({
       shareUrl: buildShareLink(this.props.terria, this.props.viewState, {
         includeStories: this.props.storyShare || this.state.includeStoryInShare
@@ -299,7 +273,6 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
   }
 
   onAddWebDataClicked() {
-    // TODO: Make sure that this.setState is accessible, may need to this.updateForShortening = this.updateForShortening.bind(this) or change to arrow function
     this.setState({
       isOpen: false
     });
@@ -343,15 +316,13 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
               </p>
             </Trans>
             <ul className={Styles.paragraph}>
-              {unshareableItems
-                .filter(CatalogMemberMixin.isMixedInto)
-                .map((item: CatalogMemberMixin.Instance, i) => {
-                  return (
-                    <li key={i}>
-                      <strong>{item.name}</strong>
-                    </li>
-                  );
-                })}
+              {unshareableItems.map((item, i) => {
+                return (
+                  <li key={i}>
+                    <strong>{getName(item)}</strong>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         )}
@@ -557,8 +528,9 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
                     isChecked={(this.shouldShorten() as boolean) ?? false}
                     onChange={this.onShortenClicked}
                     className={Styles.checkbox}
-                  ></Checkbox>
-                  <p>{t("share.shortenUsingService")}</p>
+                  >
+                    <TextSpan>{t("share.shortenUsingService")}</TextSpan>
+                  </Checkbox>
                 </div>
               )}
               {/* Include Story in Share option */}
@@ -570,8 +542,9 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
                   isChecked={this.state.includeStoryInShare}
                   onChange={this.onIncludeStoryInShareClicked}
                   className={Styles.checkbox}
-                ></Checkbox>
-                <p>{t("includeStory.message")}</p>
+                >
+                  <TextSpan>{t("includeStory.message")}</TextSpan>
+                </Checkbox>
               </div>
             </>
           )}
@@ -584,7 +557,7 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
     if (this.props.onUserClick) {
       this.props.onUserClick();
     }
-    this.changeOpenState(true); // TODO: should this pass true?
+    this.changeOpenState(true);
     this.renderContentForStoryShare();
   }
 
