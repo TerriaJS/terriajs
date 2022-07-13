@@ -190,7 +190,7 @@
     "zone": "ZONA",
     "e": "E",
     "n": "N",
-    "elev": "Elev"
+    "elev": "Alt."
   },
   "languagePanel": {
     "changeLanguage": "Canviar idioma"
