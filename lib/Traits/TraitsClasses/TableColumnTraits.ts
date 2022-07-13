@@ -24,6 +24,46 @@ export class ColumnTransformationTraits extends ModelTraits {
   dependencies?: string[];
 }
 
+export class ColumnFilterTraits extends ModelTraits {
+  @primitiveTrait({
+    name: "Enable filter",
+    description: "Enable column value filter.",
+    type: "boolean"
+  })
+  enable: boolean = false;
+
+  @primitiveTrait({
+    name: "Show filter in the workbench",
+    description:
+      "If true, then the column filter will be shown in the workbench. This will default to true if `enable` is true",
+    type: "boolean"
+  })
+  show?: boolean;
+
+  @primitiveArrayTrait({
+    name: "Filter values",
+    description: "Array of values used to filter rows.",
+    type: "string"
+  })
+  values?: string[];
+
+  @primitiveTrait({
+    name: "Allow multiple values to be filtered",
+    description:
+      "Defaults to true. If false, then only the first value in values array will be used",
+    type: "boolean"
+  })
+  allowMultipleValues?: boolean = false;
+
+  @primitiveTrait({
+    name: "Allow undefined",
+    description:
+      "Defaults to true. If false, and values is empty, then the first possible column value will be used",
+    type: "boolean"
+  })
+  allowUndefined?: boolean = false;
+}
+
 export default class TableColumnTraits extends ModelTraits {
   @primitiveTrait({
     name: "Name",
@@ -107,4 +147,11 @@ export default class TableColumnTraits extends ModelTraits {
       "and https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat"
   })
   format?: JsonObject;
+
+  @objectTrait({
+    name: "Filter",
+    type: ColumnFilterTraits,
+    description: "Column filter used to filter rows with specific values."
+  })
+  filter?: ColumnFilterTraits;
 }

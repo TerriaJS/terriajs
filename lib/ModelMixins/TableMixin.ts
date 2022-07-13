@@ -474,6 +474,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           ? this.regionMappingDimensions
           : undefined,
         this.styleDimensions,
+        this.filterDimensions,
         this.outlierFilterDimension
       ]);
     }
@@ -506,6 +507,74 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         setDimensionValue: (stratumId: string, styleId) => {
           this.setTrait(stratumId, "activeStyle", styleId);
         }
+      };
+    }
+
+    /**
+     * Takes {@link TableStyle}s and returns a SelectableDimension which can be rendered in a Select dropdown
+     */
+    @computed
+    get filterDimensions(): SelectableDimensionGroup | undefined {
+      return {
+        type: "group",
+        id: "filter",
+        name: "Filter",
+        selectableDimensions: this.tableColumns
+          .filter(
+            col =>
+              col.traits.filter.enable &&
+              (!isDefined(col.traits.filter.show) || col.traits.filter.show)
+          )
+          .map(col =>
+            // Use multi select if allowMultipleValues
+            // Otherwise use select
+            col.traits.filter.allowMultipleValues
+              ? {
+                  type: "select-multi",
+                  id: `filter-${col.name}`,
+                  name: col.title,
+                  options: col.uniqueValues.values.map(value => ({
+                    id: value
+                  })),
+                  selectedIds: col.traits.filter.values as string[],
+                  setDimensionValue: (stratumId: string, values: string[]) => {
+                    (
+                      this.columns?.find(
+                        colTraits => colTraits.name === col.name
+                      ) ?? this.addObject(stratumId, "columns", col.name)
+                    )?.filter.setTrait(stratumId, "values", values);
+                  }
+                }
+              : {
+                  type: "select",
+                  id: `filter-${col.name}`,
+                  name: col.title,
+                  options: col.uniqueValues.values.map(value => ({
+                    id: value
+                  })),
+                  allowUndefined: col.traits.filter.allowUndefined,
+                  selectedId:
+                    col.traits.filter.values?.[0] ??
+                    // If undefined is not allowed, set selected to the first column value
+                    (!col.traits.filter.allowUndefined
+                      ? col.uniqueValues.values[0]
+                      : undefined),
+                  setDimensionValue: (
+                    stratumId: string,
+                    value: string | undefined
+                  ) => {
+                    (
+                      this.columns?.find(
+                        colTraits => colTraits.name === col.name
+                      ) ?? this.addObject(stratumId, "columns", col.name)
+                    )?.filter.setTrait(
+                      stratumId,
+                      "values",
+                      value ? [value] : []
+                    );
+                  }
+                }
+          )
       };
     }
 
@@ -670,10 +739,50 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       };
     }
 
+    /** Array of row IDs
+     * This takes into account column filters.
+     */
     @computed
     get rowIds(): number[] {
       const nRows = (this.dataColumnMajor?.[0]?.length || 1) - 1;
-      const ids = [...new Array(nRows).keys()];
+      const ids: number[] = [];
+      for (let rowId = 0; rowId < nRows; rowId++) {
+        let include = true;
+
+        // Apply table column filters
+        for (let i = 0; i < this.tableColumns.length; i++) {
+          const column = this.tableColumns[i];
+          const filter = column.traits.filter;
+          const rowValue = column.values[rowId];
+
+          const filterValues = [...(filter.values ?? [])];
+          if (
+            filterValues.length === 0 &&
+            !filter.allowUndefined &&
+            isDefined(column.uniqueValues.values[0])
+          ) {
+            filterValues.push(column.uniqueValues.values[0]);
+          }
+          if (
+            filter &&
+            filter.enable &&
+            filter.values &&
+            filter.values.length > 0
+          ) {
+            if (filter.allowMultipleValues) {
+              if (!filter.values.some(v => v === rowValue)) {
+                include = false;
+                break;
+              }
+            } else if (filter.values[0] !== rowValue) {
+              include = false;
+              break;
+            }
+          }
+        }
+
+        if (include) ids.push(rowId);
+      }
       return ids;
     }
 
