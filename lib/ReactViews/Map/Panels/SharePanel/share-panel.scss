@@ -111,8 +111,9 @@
   margin-bottom: 10px;
 }
 
-.shorten-url {
+.advanced-option {
   padding-right: 0;
+  padding-top: 0.5em;
   button {
     text-align: left;
     border: 0px;
@@ -167,25 +168,6 @@
 .checkbox {
   padding: 0.5em;
   float: left;
-}
-
-.include-story-option {
-  padding-right: 0;
-  button {
-    text-align: left;
-    border: 0px;
-    background: transparent;
-    outline: 0;
-    padding-right: 0;
-  }
-  svg {
-    display: inline-block;
-    padding: 0 5px;
-    fill: #fff;
-    height: 10px;
-    width: 10px;
-    box-sizing: content-box;
-  }
 }
 
 .getShareSaveHelpText {

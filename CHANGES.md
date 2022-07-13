@@ -9,6 +9,8 @@ Change Log
 
 * Pin `html-to-react` to `1.4.5` due to ESM module in dependency (`parse5`) breaking webpack
 * Add step to `"Deploy TerriaMap"` action to save `yarn.lock` after `sync-dependencies` (for debug purposes)
+* TSIfy `SharePanel` 
+* Move `includeStoryInShare` out of `ViewState` into local state
 * Implement ability to navigate between scenes in StoryPanel using keyboard arrows
 * Fix "Regions: xxx" short report showing for non region mapped items
 * Fix `showInChartPanel` default for mappable items
