@@ -245,7 +245,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
 
     const regionType = regionCol?.regionType;
 
-    if (regionType) {
+    if (regionType && this.catalogItem.showingRegions) {
       return [
         createStratumInstance(ShortReportTraits, {
           name: `**Regions:** ${regionType.description}`
@@ -255,7 +255,12 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
     return [];
   }
 
+  /** Show chart by default - if not loading and no mappable items */
   @computed get showInChartPanel() {
-    return this.catalogItem.show;
+    return (
+      this.catalogItem.show &&
+      !this.catalogItem.isLoading &&
+      this.catalogItem.mapItems.length === 0
+    );
   }
 }
