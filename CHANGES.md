@@ -1,14 +1,17 @@
 Change Log
 ==========
 
-#### next release (8.2.9)
+#### next release (8.2.10)
+
+* [The next improvement]
+
+#### 8.2.9 - 2022-07-13
 
 * Pin `html-to-react` to `1.4.5` due to ESM module in dependency (`parse5`) breaking webpack
 * Add step to `"Deploy TerriaMap"` action to save `yarn.lock` after `sync-dependencies` (for debug purposes)
 * Implement ability to navigate between scenes in StoryPanel using keyboard arrows
 * Fix "Regions: xxx" short report showing for non region mapped items
 * Fix `showInChartPanel` default for mappable items
-* [The next improvement]
 
 #### 8.2.8 - 2022-07-04
 
