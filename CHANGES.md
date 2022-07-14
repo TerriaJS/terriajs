@@ -12,6 +12,8 @@ Change Log
   * Supports over 40 formats - including Collada, obj, Blender, DXF - [full list](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md)
 * Add `description` to `getDataType` - this will be displayed between Step 1 and Step 2
 * Add warning message to `GltfMixin` when showing in 2D mode (Leaflet)
+* Prevent looping when navigating between scenes in StoryPanel using keyboard arrows
+* Fix bug where StoryPanel keyboard navigation persists after closing StoryPanel
 * [The next improvement]
 
 #### 8.2.9 - 2022-07-13
