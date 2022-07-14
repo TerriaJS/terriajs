@@ -15,7 +15,6 @@ interface CssExports {
   'catalog-share-inner': string;
   'catalogShare': string;
   'catalogShareInner': string;
-  'checkbox': string;
   'clipboard-for-catalog-share': string;
   'clipboard-for-story-share': string;
   'clipboardForCatalogShare': string;
@@ -32,7 +31,6 @@ interface CssExports {
   'link-wrapper': string;
   'linkWrapper': string;
   'mobileHeader': string;
-  'paragraph': string;
   'print-button': string;
   'printButton': string;
   'share-panel': string;
@@ -44,9 +42,6 @@ interface CssExports {
   'storyShareInner': string;
   'thin-line-divider': string;
   'thinLineDivider': string;
-  'warning': string;
-  'warning-link': string;
-  'warningLink': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

@@ -87,11 +87,6 @@
   @include link($grey-lighter2);
 }
 
-.paragraph {
-  margin: $padding 0;
-  display: block;
-}
-
 .clipboard-for-catalog-share,
 .clipboard-for-story-share {
   margin: 15px;
@@ -144,30 +139,6 @@
   width: auto;
   display: inline;
   margin: 2px;
-}
-
-.warning {
-  margin: $padding 0;
-  border-radius: $radius-small;
-  background: #feb938;
-  color: #552800;
-  padding: $padding;
-
-  ul {
-    padding-top: $padding;
-    padding-inline-start: 0;
-    list-style: none;
-  }
-  .warning-link {
-    color: #552800;
-    text-decoration: underline;
-    cursor: pointer;
-  }
-}
-
-.checkbox {
-  padding: 0.5em;
-  float: left;
 }
 
 .getShareSaveHelpText {
