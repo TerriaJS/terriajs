@@ -104,7 +104,6 @@ export default class ViewState {
   @observable currentTrainerStepIndex: number = 0;
 
   @observable printWindow: Window | null = null;
-  @observable includeStoryInShare: boolean = true;
 
   /**
    * A global list of functions that generate a {@link ViewingControl} option
@@ -787,11 +786,6 @@ export default class ViewState {
     this.terria.currentViewer.notifyRepaintRequired();
 
     this.terria.analytics?.logEvent(Category.story, StoryAction.runStory);
-  }
-
-  @action
-  setIncludeStoryInShare(bool: boolean) {
-    this.includeStoryInShare = bool;
   }
 
   @computed
