@@ -12,6 +12,7 @@ Change Log
   * Supports over 40 formats - including Collada, obj, Blender, DXF - [full list](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md)
 * Add `description` to `getDataType` - this will be displayed between Step 1 and Step 2
 * Add warning message to `GltfMixin` when showing in 2D mode (Leaflet)
+* Upgrade `husky` to `^8.0.1`
 * [The next improvement]
 
 #### 8.2.9 - 2022-07-13
@@ -19,8 +20,6 @@ Change Log
 * Pin `html-to-react` to `1.4.5` due to ESM module in dependency (`parse5`) breaking webpack
 * Add step to `"Deploy TerriaMap"` action to save `yarn.lock` after
   `sync-dependencies` (for debug purposes)
-* Upgrade `husky` to `^8.0.1`
-* [The next improvement]
 * Add step to `"Deploy TerriaMap"` action to save `yarn.lock` after `sync-dependencies` (for debug purposes)
 * TSIfy `SharePanel` 
 * Move `includeStoryInShare` out of `ViewState` into local state
