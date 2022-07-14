@@ -18,8 +18,6 @@ Change Log
 #### 8.2.9 - 2022-07-13
 
 * Pin `html-to-react` to `1.4.5` due to ESM module in dependency (`parse5`) breaking webpack
-* Add step to `"Deploy TerriaMap"` action to save `yarn.lock` after
-  `sync-dependencies` (for debug purposes)
 * Add step to `"Deploy TerriaMap"` action to save `yarn.lock` after `sync-dependencies` (for debug purposes)
 * TSIfy `SharePanel` 
 * Move `includeStoryInShare` out of `ViewState` into local state
