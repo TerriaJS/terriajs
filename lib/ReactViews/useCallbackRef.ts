@@ -1,6 +1,5 @@
 import { MutableRefObject, useState } from "react";
 
-
 // taken from
 // https://github.com/theKashey/use-callback-ref/blob/master/src/useRef.ts
 
@@ -25,8 +24,8 @@ export function useCallbackRef<T>(
           ref.value = value;
           ref.callback(value, last);
         }
-      },
-    },
+      }
+    }
   }));
   // update callback
   ref.callback = callback;
