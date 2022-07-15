@@ -19,6 +19,7 @@ import Loader from "../../../../Loader";
 import { buildShareLink, buildShortShareLink } from "../BuildShareLink";
 import { ShareUrlClipboard } from "./clipboard/ShareUrlClipboard";
 import { ShareUrlWarning } from "./ShareUrlWarning";
+import Box from "../../../../../Styled/Box";
 
 interface IShareUrlProps {
   terria: Terria;
@@ -27,6 +28,7 @@ interface IShareUrlProps {
   shouldShorten: boolean;
   theme: "light" | "dark";
   inputTheme?: "light" | "dark";
+  rounded?: boolean;
   callback?: () => void;
 }
 
@@ -47,6 +49,7 @@ export const ShareUrl = forwardRef<
       children,
       theme,
       inputTheme,
+      rounded,
       callback
     },
     forwardRef
@@ -98,7 +101,9 @@ export const ShareUrl = forwardRef<
       <Loader message={t("share.generatingUrl")} />
     ) : (
       <>
-        <Explanation>{t("clipboard.shareExplanation")}</Explanation>
+        <Explanation textDark={theme === "light"}>
+          {t("clipboard.shareExplanation")}
+        </Explanation>
         <Spacing bottom={1} />
         <ShareUrlClipboard
           terria={terria}
@@ -106,6 +111,7 @@ export const ShareUrl = forwardRef<
           theme={theme}
           inputTheme={inputTheme}
           placeholder={placeholder}
+          rounded={!!rounded}
         />
         {children}
         <Spacing bottom={2} />

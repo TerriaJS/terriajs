@@ -11,6 +11,7 @@ interface IShareUrlClipboardProps {
   terria: Terria;
   theme: "dark" | "light";
   inputTheme?: "dark" | "light";
+  rounded: boolean;
   shareUrl: string;
   placeholder?: string;
 }
@@ -19,9 +20,9 @@ export const ShareUrlClipboard: FC<IShareUrlClipboardProps> = ({
   terria,
   theme = "light",
   inputTheme,
+  rounded,
   shareUrl,
-  placeholder,
-  ...args
+  placeholder
 }) => {
   return (
     <Clipboard
@@ -32,11 +33,13 @@ export const ShareUrlClipboard: FC<IShareUrlClipboardProps> = ({
           theme={inputTheme}
           shareUrl={shareUrl}
           placeholder={placeholder}
-          {...args}
+          css={`
+            ${rounded ? `border-radius:  32px 0 0 32px;` : ""}
+          `}
         />
       }
       id="share-url"
-      rounded
+      rounded={rounded}
       onCopy={text =>
         terria.analytics?.logEvent(Category.share, ShareAction.storyCopy, text)
       }

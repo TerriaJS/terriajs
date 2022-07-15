@@ -52,7 +52,7 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
       <Text medium>{t("clipboard.shareURL")}</Text>
       <Spacing bottom={1} />
       <ShareUrl
-        theme="light"
+        theme="dark"
         inputTheme="dark"
         terria={terria}
         viewState={viewState}

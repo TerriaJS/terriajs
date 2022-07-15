@@ -1,38 +1,18 @@
-"use strict";
-
 import classNames from "classnames";
+import { TFunction } from "i18next";
 import { observer } from "mobx-react";
-import React, { ChangeEvent } from "react";
-import { Trans, WithTranslation, withTranslation } from "react-i18next";
-import defined from "terriajs-cesium/Source/Core/defined";
-import Clipboard from "../../../Clipboard";
-import Icon from "../../../../Styled/Icon";
-import Loader from "../../../Loader";
-import Input from "../../../../Styled/Input";
-import { TextSpan } from "../../../../Styled/Text";
-import DropdownStyles from "../panel.scss";
-import {
-  buildShareLink,
-  buildShortShareLink,
-  canShorten,
-  isShareable
-} from "./BuildShareLink";
-import Styles from "./share-panel.scss";
-import {
-  Category,
-  ShareAction
-} from "../../../../Core/AnalyticEvents/analyticEvents";
-import { downloadImg } from "./Print/PrintView";
-import Checkbox from "../../../../Styled/Checkbox";
-import Text from "../../../../Styled/Text";
+import React from "react";
+import { WithTranslation, withTranslation } from "react-i18next";
+
 import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
-import { TFunction } from "i18next";
-import { getName } from "../../../../ModelMixins/CatalogMemberMixin";
-import Box from "../../../../Styled/Box";
-import { EmbedSection } from "./AdvancedOptions/Embed";
-import { ShareUrl } from "./ShareUrl/ShareUrl";
+
+import Styles from "./share-panel.scss";
 import { SharePanelContent } from "./SharePanelContent";
+import { ShareUrl } from "./ShareUrl";
+import Box from "../../../../Styled/Box";
+import Text from "../../../../Styled/Text";
+import Spacing from "../../../../Styled/Spacing";
 
 const MenuPanel = require("../../../StandardUserInterface/customizable/MenuPanel")
   .default;
@@ -86,26 +66,55 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
     });
   }
 
-  renderContentWithPrintAndEmbed() {
-    const { terria, viewState } = this.props;
-
-    return (
-      <SharePanelContent
-        terria={terria}
-        viewState={viewState}
-        closePanel={this.closePanel}
-      />
-    );
-  }
-
   renderContent() {
-    // if (this.props.catalogShare) {
-    //   return this.renderContentForCatalogShare();
-    // } else if (this.props.storyShare) {
-    //   return this.renderContentForStoryShare();
-    // } else {
-    return this.renderContentWithPrintAndEmbed();
-    // }
+    const { terria, viewState, t } = this.props;
+
+    if (this.props.catalogShare) {
+      return (
+        <Box fullWidth column paddedRatio={3}>
+          <Text medium textDark>
+            {t("clipboard.shareURL")}
+          </Text>
+          <Spacing bottom={1} />
+          <ShareUrl
+            terria={terria}
+            viewState={viewState}
+            includeStories={true}
+            shouldShorten={
+              !!terria.getLocalProperty("shortenShareUrls") ?? true
+            }
+            theme="light"
+            inputTheme="light"
+          />
+        </Box>
+      );
+    } else if (this.props.storyShare) {
+      return (
+        <Box fullWidth column paddedRatio={3}>
+          <Text medium>{t("clipboard.shareURL")}</Text>
+          <Spacing bottom={1} />
+          <ShareUrl
+            terria={terria}
+            viewState={viewState}
+            includeStories={true}
+            shouldShorten={
+              !!terria.getLocalProperty("shortenShareUrls") ?? true
+            }
+            theme="dark"
+            inputTheme="light"
+            rounded
+          />
+        </Box>
+      );
+    } else {
+      return (
+        <SharePanelContent
+          terria={terria}
+          viewState={viewState}
+          closePanel={this.closePanel}
+        />
+      );
+    }
   }
 
   render() {
