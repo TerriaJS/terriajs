@@ -9,7 +9,7 @@ import ViewState from "../../../../../ReactViewModels/ViewState";
 import Terria from "../../../../../Models/Terria";
 
 import Box from "../../../../../Styled/Box";
-import Ul from "../../../../../Styled/List";
+import Ul, { Li } from "../../../../../Styled/List";
 import Text from "../../../../../Styled/Text";
 
 import { isShareable } from "../BuildShareLink";
@@ -65,16 +65,20 @@ export const ShareUrlWarning: FC<IShareUrlWarningProps> = observer(
             <WarningLink onClick={addWebData}>add them using a url</WarningLink>
             .
           </Text>
-          <Ul>
-            {unshareableItems.map((item, i) => {
-              return (
-                <li key={i}>
-                  <strong>{getName(item)}</strong>
-                </li>
-              );
-            })}
-          </Ul>
         </Trans>
+        <Ul
+          css={`
+            padding: 0;
+          `}
+        >
+          {unshareableItems.map((item, i) => {
+            return (
+              <Li key={i}>
+                <strong>{getName(item)}</strong>
+              </Li>
+            );
+          })}
+        </Ul>
       </WarningBox>
     );
   }
