@@ -5,9 +5,7 @@ import { observer } from "mobx-react";
 import React, { ChangeEvent } from "react";
 import { Trans, WithTranslation, withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
-import Clipboard from "../../../Clipboard";
 import Icon from "../../../../Styled/Icon";
-import Loader from "../../../Loader";
 import Input from "../../../../Styled/Input";
 import { TextSpan } from "../../../../Styled/Text";
 import DropdownStyles from "../panel.scss";
@@ -18,18 +16,14 @@ import {
   isShareable
 } from "./BuildShareLink";
 import Styles from "./share-panel.scss";
-import {
-  Category,
-  ShareAction
-} from "../../../../Core/AnalyticEvents/analyticEvents";
 import { downloadImg } from "./Print/PrintView";
 import Checkbox from "../../../../Styled/Checkbox";
-import Text from "../../../../Styled/Text";
 import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
 import { TFunction } from "i18next";
 import { getName } from "../../../../ModelMixins/CatalogMemberMixin";
 import Box from "../../../../Styled/Box";
+import ShareUrlClipboard from "./ShareUrlClipboard";
 
 const MenuPanel = require("../../../StandardUserInterface/customizable/MenuPanel")
   .default;
@@ -229,48 +223,11 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
     });
 
     if (open) {
-      this.updateForShortening();
+      this.updateForShortening(); // TODO: how to pass this to ShareUrlClipboard?
       if (this.props.catalogShare || this.props.storyShare) {
         this.props.viewState.shareModalIsVisible = true;
       }
     }
-  }
-
-  getShareUrlInput(theme: string) {
-    return (
-      <Input
-        className={Styles.shareUrlfield}
-        light={theme === "light"}
-        dark={theme === "dark"}
-        large
-        type="text"
-        value={this.state.shareUrl}
-        placeholder={this.state.placeholder}
-        readOnly
-        onClick={e => e.currentTarget.select()}
-        id="share-url"
-      />
-    );
-  }
-
-  getShareUrlInputStory(theme: string) {
-    return (
-      <Input
-        className={Styles.shareUrlfield}
-        light={theme === "light"}
-        dark={theme === "dark"}
-        large
-        type="text"
-        value={this.state.shareUrl}
-        placeholder={this.state.placeholder}
-        readOnly
-        onClick={e => e.currentTarget.select()}
-        id="share-url"
-        css={`
-          border-radius: 32px 0 0 32px;
-        `}
-      />
-    );
   }
 
   onAddWebDataClicked() {
@@ -342,113 +299,61 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
   }
 
   renderContentForStoryShare() {
-    const { t, terria } = this.props;
+    const { t, terria, viewState } = this.props;
 
     return (
-      <>
-        {this.state.shareUrl === "" ? (
-          <Loader message={t("share.generatingUrl")} />
-        ) : (
-          <div className={Styles.clipboardForCatalogShare}>
-            <Clipboard
-              theme="dark"
-              text={this.state.shareUrl}
-              source={this.getShareUrlInputStory("light")}
-              id="share-url"
-              rounded
-              onCopy={text =>
-                terria.analytics?.logEvent(
-                  Category.share,
-                  ShareAction.storyCopy,
-                  text
-                )
-              }
-            />
-            {this.renderWarning()}
-          </div>
-        )}
-      </>
+      <div className={Styles.clipboardForCatalogShare}>
+        <ShareUrlClipboard
+          t={t}
+          terria={terria}
+          viewState={viewState}
+          shareUrl={this.state.shareUrl}
+          shareMode="storyShare"
+          placeholder={this.state.placeholder}
+        />
+        {this.renderWarning()}
+      </div>
     );
   }
 
   renderContentForCatalogShare() {
-    const { t, terria } = this.props;
+    const { t, terria, viewState } = this.props;
     return (
-      <>
-        {this.state.shareUrl === "" ? (
-          <Loader message={t("share.generatingUrl")} />
-        ) : (
-          <div className={Styles.clipboardForCatalogShare}>
-            <Clipboard
-              theme="light"
-              text={this.state.shareUrl}
-              source={this.getShareUrlInput("light")}
-              id="share-url"
-              onCopy={text =>
-                terria.analytics?.logEvent(
-                  Category.share,
-                  ShareAction.catalogCopy,
-                  text
-                )
-              }
-            />
-            {this.renderWarning()}
-          </div>
-        )}
-      </>
+      <div className={Styles.clipboardForCatalogShare}>
+        <ShareUrlClipboard
+          t={t}
+          terria={terria}
+          viewState={viewState}
+          shareUrl={this.state.shareUrl}
+          shareMode="catalogShare"
+          placeholder={this.state.placeholder}
+        />
+        {this.renderWarning()}
+      </div>
     );
   }
 
   renderContentWithPrintAndEmbed() {
     const { t, terria, viewState } = this.props;
+    // TODO: how to create iframeCode if we move shareUrl to ShareUrlClipboard?
     const iframeCode = this.state.shareUrl.length
       ? `<iframe style="width: 720px; height: 600px; border: none;" src="${this.state.shareUrl}" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>`
       : "";
-    const bookMarkHelpItemName = "bookmarkHelp";
 
     return (
       <div>
-        <div className={DropdownStyles.section}>
-          <Clipboard
-            source={this.getShareUrlInput("dark")}
-            id="share-url"
-            theme="light"
-            onCopy={text =>
-              terria.analytics?.logEvent(
-                Category.share,
-                ShareAction.shareCopy,
-                text
-              )
-            }
+        <div>
+          <ShareUrlClipboard
+            t={t}
+            terria={terria}
+            viewState={viewState}
+            shareUrl={this.state.shareUrl}
+            shareMode="printAndEmbedShare"
+            placeholder={this.state.placeholder}
           />
-          {/* Following code block dependent on existence of "bookmarkHelp" Help Menu Item */}
-          {this.props.terria.configParameters.helpContent?.some(
-            e => e.itemName === bookMarkHelpItemName
-          ) && (
-            <Text
-              medium
-              textLight
-              isLink
-              onClick={evt =>
-                viewState.openHelpPanelItemFromSharePanel(
-                  evt,
-                  bookMarkHelpItemName
-                )
-              }
-            >
-              <div
-                className={classNames(
-                  Styles.explanation,
-                  Styles.getShareSaveHelpText
-                )}
-              >
-                {t("share.getShareSaveHelpMessage")}
-              </div>
-            </Text>
-          )}
-
           {this.renderWarning()}
         </div>
+
         <hr className={Styles.thinLineDivider} />
         <div className={DropdownStyles.section}>
           <div>{t("share.printTitle")}</div>
