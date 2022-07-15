@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 
-import Input from "../../../../../../Styled/Input";
+import Input from "../../../../../Styled/Input";
 import { useTranslation } from "react-i18next";
 
 interface IStoryShareInput {

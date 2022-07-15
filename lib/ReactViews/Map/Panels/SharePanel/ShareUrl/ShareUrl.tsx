@@ -2,7 +2,6 @@ import React, {
   forwardRef,
   useEffect,
   useImperativeHandle,
-  useMemo,
   useState,
   PropsWithChildren
 } from "react";
@@ -14,12 +13,10 @@ import ViewState from "../../../../../ReactViewModels/ViewState";
 
 import Spacing from "../../../../../Styled/Spacing";
 import { TextSpan } from "../../../../../Styled/Text";
-import Loader from "../../../../Loader";
 
 import { buildShareLink, buildShortShareLink } from "../BuildShareLink";
-import { ShareUrlClipboard } from "./clipboard/ShareUrlClipboard";
+import { ShareUrlClipboard } from "./ShareUrlClipboard";
 import { ShareUrlWarning } from "./ShareUrlWarning";
-import Box from "../../../../../Styled/Box";
 
 interface IShareUrlProps {
   terria: Terria;
@@ -34,6 +31,7 @@ interface IShareUrlProps {
 
 export interface IShareUrlRef {
   url: string;
+  shorteningInProgress: boolean;
 }
 
 export const ShareUrl = forwardRef<
@@ -63,9 +61,10 @@ export const ShareUrl = forwardRef<
     useImperativeHandle(
       forwardRef,
       () => ({
-        url: shareUrl
+        url: shareUrl,
+        shorteningInProgress: shorteningInProgress
       }),
-      [forwardRef, shareUrl]
+      [forwardRef, shareUrl, shorteningInProgress]
     );
 
     const buildUnshortenderUrl = (
@@ -97,9 +96,7 @@ export const ShareUrl = forwardRef<
       }
     }, [terria, viewState, shouldShorten, includeStories]);
 
-    return shorteningInProgress ? (
-      <Loader message={t("share.generatingUrl")} />
-    ) : (
+    return (
       <>
         <Explanation textDark={theme === "light"}>
           {t("clipboard.shareExplanation")}
@@ -107,7 +104,7 @@ export const ShareUrl = forwardRef<
         <Spacing bottom={1} />
         <ShareUrlClipboard
           terria={terria}
-          shareUrl={shareUrl}
+          shareUrl={!shorteningInProgress ? shareUrl : ""}
           theme={theme}
           inputTheme={inputTheme}
           placeholder={placeholder}

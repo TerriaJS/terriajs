@@ -1,10 +1,9 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, MutableRefObject } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 
 import Box from "../../../../../Styled/Box";
 import { RawButton } from "../../../../../Styled/Button";
-import Hr from "../../../../../Styled/Hr";
 import { GLYPHS, StyledIcon } from "../../../../../Styled/Icon";
 import Spacing from "../../../../../Styled/Spacing";
 import { TextSpan } from "../../../../../Styled/Text";
@@ -21,7 +20,7 @@ interface IAdvancedOptionsProps {
   includeStoryInShare: boolean;
   includeStoryInShareOnChange: () => void;
   shouldShortenOnChange: () => void;
-  shareUrl?: any;
+  shareUrl: MutableRefObject<IShareUrlRef | null>;
 }
 
 export const AdvancedOptions: FC<IAdvancedOptionsProps> = ({
@@ -80,7 +79,7 @@ export const AdvancedOptions: FC<IAdvancedOptionsProps> = ({
               onChange={shouldShortenOnChange}
             />
             <Spacing bottom={2} />
-            <EmbedSection shareUrl={shareUrl.current?.url} />
+            <EmbedSection shareUrl={shareUrl?.current} />
           </Box>
         </>
       )}

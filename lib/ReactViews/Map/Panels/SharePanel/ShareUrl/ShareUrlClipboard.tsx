@@ -1,11 +1,11 @@
 import React, { FC } from "react";
-import Clipboard from "../../../../../Clipboard";
-import { ShareUrlInput } from "../input/ShareUrlInput";
-import Terria from "../../../../../../Models/Terria";
+import Clipboard from "../../../../Clipboard";
+import { ShareUrlInput } from "./ShareUrlInput";
+import Terria from "../../../../../Models/Terria";
 import {
   Category,
   ShareAction
-} from "../../../../../../Core/AnalyticEvents/analyticEvents";
+} from "../../../../../Core/AnalyticEvents/analyticEvents";
 
 interface IShareUrlClipboardProps {
   terria: Terria;

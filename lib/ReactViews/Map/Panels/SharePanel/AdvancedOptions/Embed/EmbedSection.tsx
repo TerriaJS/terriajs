@@ -6,9 +6,10 @@ import Box from "../../../../../../Styled/Box";
 import { TextSpan } from "../../../../../../Styled/Text";
 
 import { EmbedInput } from "./EmbedInput";
+import { IShareUrlRef } from "../../ShareUrl";
 
 interface IEmbedSectionProps {
-  shareUrl?: string;
+  shareUrl: IShareUrlRef | null;
 }
 
 export const EmbedSection: FC<IEmbedSectionProps> = ({ shareUrl }) => {
