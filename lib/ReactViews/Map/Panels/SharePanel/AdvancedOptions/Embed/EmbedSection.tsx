@@ -5,8 +5,8 @@ import styled from "styled-components";
 import Box from "../../../../../../Styled/Box";
 import { TextSpan } from "../../../../../../Styled/Text";
 
-import { EmbedInput } from "./EmbedInput";
 import { IShareUrlRef } from "../../ShareUrl";
+import Input from "../../../../../../Styled/Input";
 
 interface IEmbedSectionProps {
   shareUrl: IShareUrlRef | null;
@@ -14,11 +14,27 @@ interface IEmbedSectionProps {
 
 export const EmbedSection: FC<IEmbedSectionProps> = ({ shareUrl }) => {
   const { t } = useTranslation();
+  const iframeCode =
+    shareUrl?.url && shareUrl.url.length > 0
+      ? `<iframe style="width: 720px; height: 600px; border: none;" src="${shareUrl.url}" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>`
+      : "";
+
   return (
     <Box column>
       <TextSpan medium>{t("share.embedTitle")}</TextSpan>
       <Explanation>{t("share.embedDescription")}</Explanation>
-      <EmbedInput shareUrl={shareUrl} />
+      <Input
+        large
+        dark
+        type="text"
+        readOnly
+        placeholder={t("share.shortLinkShortening")}
+        value={!shareUrl?.shorteningInProgress ? iframeCode : ""}
+        onClick={e => {
+          const target = e.target as HTMLInputElement;
+          return target.select();
+        }}
+      />
     </Box>
   );
 };
