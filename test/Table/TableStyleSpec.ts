@@ -227,12 +227,12 @@ describe("TableStyle", function() {
 
       expect(colMap.mapValueToColor(30.0001).toCssHexString()).toBe(
         "#4d9221",
-        "30.0001 - which should be sixth bin (30,50]"
+        "30.0001 - which should be sixth bin (30,Infinity)"
       );
 
       expect(colMap.mapValueToColor(60).toCssHexString()).toBe(
         "#4d9221",
-        "60 - which should be last bin (30,50]"
+        "60 - which should be last bin (30,Infinity)"
       );
 
       // Uncomment when outlierColor support is added to DiscreteColorMap
