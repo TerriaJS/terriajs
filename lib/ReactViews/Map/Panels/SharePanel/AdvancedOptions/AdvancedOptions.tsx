@@ -8,10 +8,9 @@ import { GLYPHS, StyledIcon } from "../../../../../Styled/Icon";
 import Spacing from "../../../../../Styled/Spacing";
 import { TextSpan } from "../../../../../Styled/Text";
 import { StyledHr } from "../StyledHr";
+import Checkbox from "../../../../../Styled/Checkbox";
 
-import { IncludeStoryCheckbox } from "./IncludeStoryCheckbox";
-import { ShortenWithServiceCheckbox } from "./ShortenWithServiceCheckbox";
-import { EmbedSection } from "./Embed";
+import { EmbedSection } from "./EmbedSection";
 import { IShareUrlRef } from "../ShareUrl";
 
 interface IAdvancedOptionsProps {
@@ -68,16 +67,27 @@ export const AdvancedOptions: FC<IAdvancedOptionsProps> = ({
         <>
           <StyledHr />
           <Box column>
-            <IncludeStoryCheckbox
-              includeStory={includeStoryInShare}
+            {/* IncludeStoryCheckbox */}
+            <Checkbox
+              textProps={{ medium: true }}
+              id="includeStory"
+              title="Include Story in Share"
+              isChecked={includeStoryInShare}
               onChange={includeStoryInShareOnChange}
-            ></IncludeStoryCheckbox>
+            >
+              <TextSpan>{t("includeStory.message")}</TextSpan>
+            </Checkbox>
             <Spacing bottom={1} />
-            <ShortenWithServiceCheckbox
-              shouldShorten={shouldShorten}
-              canShorten={canShortenUrl}
+            {/* ShortenWithServiceCheckbox */}
+            <Checkbox
+              textProps={{ medium: true }}
+              id="shortenUrl"
+              isChecked={shouldShorten}
               onChange={shouldShortenOnChange}
-            />
+              isDisabled={!canShortenUrl}
+            >
+              <TextSpan>{t("share.shortenUsingService")}</TextSpan>
+            </Checkbox>
             <Spacing bottom={2} />
             <EmbedSection shareUrl={shareUrl?.current} />
           </Box>

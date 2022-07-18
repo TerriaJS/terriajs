@@ -2,11 +2,11 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 
-import Box from "../../../../../../Styled/Box";
-import { TextSpan } from "../../../../../../Styled/Text";
+import Box from "../../../../../Styled/Box";
+import { TextSpan } from "../../../../../Styled/Text";
+import Input from "../../../../../Styled/Input";
 
-import { IShareUrlRef } from "../../ShareUrl";
-import Input from "../../../../../../Styled/Input";
+import { IShareUrlRef } from "../ShareUrl";
 
 interface IEmbedSectionProps {
   shareUrl: IShareUrlRef | null;
