@@ -6,14 +6,14 @@ import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
 import Terria from "../../lib/Models/Terria";
+import LegendTraits, {
+  LegendItemTraits
+} from "../../lib/Traits/TraitsClasses/LegendTraits";
 import TableColorStyleTraits from "../../lib/Traits/TraitsClasses/TableColorStyleTraits";
 import TableColumnTraits, {
   ColumnTransformationTraits
 } from "../../lib/Traits/TraitsClasses/TableColumnTraits";
 import TableStyleTraits from "../../lib/Traits/TraitsClasses/TableStyleTraits";
-import LegendTraits, {
-  LegendItemTraits
-} from "../../lib/Traits/TraitsClasses/LegendTraits";
 
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")
@@ -147,6 +147,108 @@ describe("TableStyle", function() {
         "#a1d76a",
         "#4d9221"
       ]);
+
+      const colMap = activeStyle.colorMap as DiscreteColorMap;
+
+      expect(colMap.mapValueToColor(0).toCssHexString()).toBe(
+        "#c51b7d",
+        "0 - which should be first bin (-Infinity, 8]"
+      );
+
+      expect(colMap.mapValueToColor(7.9999).toCssHexString()).toBe(
+        "#c51b7d",
+        "7.9999 - which should be first bin (-Infinity, 8]"
+      );
+
+      expect(colMap.mapValueToColor(8).toCssHexString()).toBe(
+        "#c51b7d",
+        "8 - which should be first bin (-Infinity, 8]"
+      );
+
+      expect(colMap.mapValueToColor(8.0001).toCssHexString()).toBe(
+        "#e9a3c9",
+        "8.0001 - which should be second bin (8,10]"
+      );
+
+      expect(colMap.mapValueToColor(9.9999).toCssHexString()).toBe(
+        "#e9a3c9",
+        "9.9999 - which should be second bin (8,10]"
+      );
+
+      expect(colMap.mapValueToColor(10).toCssHexString()).toBe(
+        "#e9a3c9",
+        "10 - which should be second bin (8,10]"
+      );
+
+      expect(colMap.mapValueToColor(10.0001).toCssHexString()).toBe(
+        "#fde0ef",
+        "10.0001 - which should be third bin (10,15]"
+      );
+
+      expect(colMap.mapValueToColor(14.9999).toCssHexString()).toBe(
+        "#fde0ef",
+        "14.9999 - which should be third bin (10,15]"
+      );
+
+      expect(colMap.mapValueToColor(15).toCssHexString()).toBe(
+        "#fde0ef",
+        "15 - which should be third bin (10,15]"
+      );
+
+      expect(colMap.mapValueToColor(15.0001).toCssHexString()).toBe(
+        "#e6f5d0",
+        "15.0001 - which should be fourth bin (15,20]"
+      );
+
+      expect(colMap.mapValueToColor(19.9999).toCssHexString()).toBe(
+        "#e6f5d0",
+        "19.9999 - which should be fourth bin (15,20]"
+      );
+
+      expect(colMap.mapValueToColor(20).toCssHexString()).toBe(
+        "#e6f5d0",
+        "20 - which should be fourth bin (15,20]"
+      );
+
+      expect(colMap.mapValueToColor(20.0001).toCssHexString()).toBe(
+        "#a1d76a",
+        "20.0001 - which should be fifth bin (20,30]"
+      );
+
+      expect(colMap.mapValueToColor(29.9999).toCssHexString()).toBe(
+        "#a1d76a",
+        "29.9999 - which should be fifth bin (20,30]"
+      );
+
+      expect(colMap.mapValueToColor(30).toCssHexString()).toBe(
+        "#a1d76a",
+        "30 - which should be fifth bin (20,30]"
+      );
+
+      expect(colMap.mapValueToColor(30.0001).toCssHexString()).toBe(
+        "#4d9221",
+        "30.0001 - which should be sixth bin (30,50]"
+      );
+
+      expect(colMap.mapValueToColor(60).toCssHexString()).toBe(
+        "#4d9221",
+        "60 - which should be last bin (30,50]"
+      );
+
+      // Uncomment when outlierColor support is added to DiscreteColorMap
+
+      // runInAction(() =>
+      //   activeStyle.colorTraits.setTrait(
+      //     CommonStrata.user,
+      //     "outlierColor",
+      //     "#ff0000"
+      //   )
+      // );
+      //
+      // expect(colMap.mapValueToColor(60).toCssHexString()).toBe(
+      //   "#ff0000",
+      //   "60 - which should be last bin (as outlierColor is undefined)"
+      // );
     });
 
     it(" - uses ContinuousColorMap by default", async function() {
