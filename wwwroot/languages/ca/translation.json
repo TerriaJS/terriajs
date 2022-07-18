@@ -695,7 +695,11 @@
       "shp": "Shapefile (zip)",
       "other": "Altres (utilitza el servei de conversió)",
       "socrata-group": "Servidor Socrata",
-      "ifc": "IFC"
+      "ifc": "IFC",
+      "assimp-local": "Convertidor de fitxers 3D (zip) (experimental)",
+      "assimp-local-description": "**Avís:** el convertidor de fitxers 3D és experimental.\nConsulteu la llista de [formats admesos](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).\nEls fitxers s'han de comprimir.",
+      "assimp-remote": "Convertidor de fitxers 3D (experimental)",
+      "assimp-remote-description": "**Avís:** el convertidor de fitxers 3D és experimental.\nConsulteu la llista de [formats admesos](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).\nTambé s'admeten fitxers zip"
     },
     "printWindow": {
       "errorTitle": "Error d'impressió",
