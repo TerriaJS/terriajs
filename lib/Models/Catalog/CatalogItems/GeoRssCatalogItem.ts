@@ -22,6 +22,7 @@ import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
+import HasLocalData from "../../HasLocalData";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 enum GeoRssFormat {
@@ -47,11 +48,6 @@ interface Feed {
   link?: string[];
   copyright?: string;
   subtitle?: string;
-}
-
-interface ConvertedJson {
-  geoJsonData: any;
-  metadata: Feed;
 }
 
 class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
@@ -127,9 +123,11 @@ class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
 
 StratumOrder.addLoadStratum(GeoRssStratum.stratumName);
 
-export default class GeoRssCatalogItem extends GeoJsonMixin(
-  UrlMixin(CatalogMemberMixin(CreateModel(GeoRssCatalogItemTraits)))
-) {
+export default class GeoRssCatalogItem
+  extends GeoJsonMixin(
+    UrlMixin(CatalogMemberMixin(CreateModel(GeoRssCatalogItemTraits)))
+  )
+  implements HasLocalData {
   static readonly type = "georss";
   get type() {
     return GeoRssCatalogItem.type;

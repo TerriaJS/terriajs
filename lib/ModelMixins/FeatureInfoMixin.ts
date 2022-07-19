@@ -13,6 +13,7 @@ import Model from "../Models/Definition/Model";
 import Feature from "../Models/Feature";
 import { describeFromProperties } from "../ReactViews/FeatureInfo/FeatureInfoSection";
 import FeatureInfoTraits from "../Traits/TraitsClasses/FeatureInfoTraits";
+import TimeVarying from "./TimeVarying";
 
 type Target = Model<FeatureInfoTraits>;
 
@@ -67,10 +68,12 @@ function FeatureInfoMixin<T extends Constructor<Target>>(Base: T) {
               feature.description = new ConstantProperty(
                 describeFromProperties(
                   feature.properties,
-                  (feature._catalogItem as any)?.currentTimeAsJulianDate ||
-                    JulianDate.now(),
-                  (feature._catalogItem as any)
-                    ?.showStringIfPropertyValueIsNull ?? false
+                  (TimeVarying.is(this)
+                    ? this.currentTimeAsJulianDate
+                    : undefined) ?? JulianDate.now(),
+                  TimeVarying.is(this)
+                    ? this.showStringIfPropertyValueIsNull
+                    : false
                 )
               );
             } catch (e) {
@@ -115,7 +118,7 @@ function FeatureInfoMixin<T extends Constructor<Target>>(Base: T) {
             const feature = features[i];
             const resource = new Resource({
               url: proxyCatalogItemUrl(
-                this,
+                catalogItem,
                 catalogItem.featureInfoUrlTemplate,
                 "0d"
               ),
@@ -142,8 +145,12 @@ function FeatureInfoMixin<T extends Constructor<Target>>(Base: T) {
               // feature info template url
               feature.description = describeFromProperties(
                 feature.properties,
-                (this as any)?.currentTimeAsJulianDate || JulianDate.now(),
-                (this as any)?.showStringIfPropertyValueIsNull ?? false
+                (TimeVarying.is(catalogItem)
+                  ? catalogItem.currentTimeAsJulianDate
+                  : undefined) ?? JulianDate.now(),
+                TimeVarying.is(catalogItem)
+                  ? catalogItem.showStringIfPropertyValueIsNull
+                  : false
               );
             } catch (e) {
               if (!feature.properties) {
