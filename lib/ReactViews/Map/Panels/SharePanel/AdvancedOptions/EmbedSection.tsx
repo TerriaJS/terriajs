@@ -30,10 +30,7 @@ export const EmbedSection: FC<IEmbedSectionProps> = ({ shareUrl }) => {
         readOnly
         placeholder={t("share.shortLinkShortening")}
         value={!shareUrl?.shorteningInProgress ? iframeCode : ""}
-        onClick={e => {
-          const target = e.target as HTMLInputElement;
-          return target.select();
-        }}
+        onClick={e => e.currentTarget.select()}
       />
     </Box>
   );
