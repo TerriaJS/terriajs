@@ -62,7 +62,7 @@ export const Text = styled.div<ITextProps>`
 
   // Unsure about this one, as we don't have react-router / "actual links" at
   // the moment, no present way to distinguish external links, etc
-  ${props => props.isLink && `text-decoration: underline;`}
+  ${props => props.isLink && `text-decoration: underline; cursor: pointer;`}
 
   // TODO: themeify family
   font-family: ${props => props.theme.fontBase};
