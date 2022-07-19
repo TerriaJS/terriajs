@@ -118,11 +118,6 @@ export default function(): GetDataTypes {
       {
         value: "gltf",
         name: i18next.t("core.dataType.gltf")
-      },
-      {
-        value: "assimp",
-        name: i18next.t("core.dataType.assimp-remote"),
-        description: i18next.t("core.dataType.assimp-remote-description")
       }
     ],
     localDataType: [
@@ -174,14 +169,6 @@ export default function(): GetDataTypes {
         value: "shp",
         name: i18next.t("core.dataType.shp"),
         extensions: ["zip"]
-      },
-      {
-        value: "assimp",
-        name: i18next.t("core.dataType.assimp-local"),
-        description: i18next.t("core.dataType.assimp-local-description")
-
-        // Assimp full list of formats https://github.com/assimp/assimp/blob/master/doc/Fileformats.md
-        // extensions: ["zip", "dae", "zae", "obj", "dxf", "blend"]
       },
       {
         // NOTE: will only work if non open-source terriajs-ifc plugin is added to the map

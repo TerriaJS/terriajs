@@ -14,6 +14,7 @@ Change Log
 * Add warning message to `GltfMixin` when showing in 2D mode (Leaflet)
 * Prevent looping when navigating between scenes in StoryPanel using keyboard arrows
 * Fix bug where StoryPanel keyboard navigation persists after closing StoryPanel
+* Remove `AssimpCatalogItem` from `getDataType` ("Add data" options) - as it is useless without the scene editor
 * [The next improvement]
 
 #### 8.2.9 - 2022-07-13
