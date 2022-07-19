@@ -15,8 +15,13 @@ import Spacing from "../../../../../Styled/Spacing";
 import { TextSpan } from "../../../../../Styled/Text";
 
 import { buildShareLink, buildShortShareLink } from "../BuildShareLink";
-import { ShareUrlClipboard } from "./ShareUrlClipboard";
 import { ShareUrlWarning } from "./ShareUrlWarning";
+import Clipboard from "../../../../Clipboard";
+import Input from "../../../../../Styled/Input";
+import {
+  Category,
+  ShareAction
+} from "../../../../../Core/AnalyticEvents/analyticEvents";
 
 interface IShareUrlProps {
   terria: Terria;
@@ -102,13 +107,34 @@ export const ShareUrl = forwardRef<
           {t("clipboard.shareExplanation")}
         </Explanation>
         <Spacing bottom={1} />
-        <ShareUrlClipboard
-          terria={terria}
-          shareUrl={!shorteningInProgress ? shareUrl : ""}
+        <Clipboard
           theme={theme}
-          inputTheme={inputTheme}
-          placeholder={placeholder}
-          rounded={!!rounded}
+          text={shareUrl}
+          source={
+            <Input
+              light={inputTheme === "light"}
+              dark={inputTheme === "dark"}
+              large
+              type="text"
+              value={shareUrl}
+              placeholder={placeholder ?? t("share.shortLinkShortening")}
+              readOnly
+              onClick={e => e.currentTarget.select()}
+              css={`
+                ${rounded ? `border-radius:  32px 0 0 32px;` : ""}
+              `}
+              id="share-url"
+            />
+          }
+          id="share-url"
+          rounded={rounded}
+          onCopy={text =>
+            terria.analytics?.logEvent(
+              Category.share,
+              ShareAction.storyCopy,
+              text
+            )
+          }
         />
         {children}
         <Spacing bottom={2} />
