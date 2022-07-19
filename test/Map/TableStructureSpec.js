@@ -221,7 +221,7 @@ describe("TableStructure", function() {
     var tableStructure = TableStructure.fromJson(data);
     var rowObjects = tableStructure.toRowObjects();
     expect(rowObjects.length).toEqual(3);
-    // Scalar fields are converted to strings using formatNumberForLocale, but not lat/lon.
+    // Scalar fields are converted to strings using toLocaleString, but not lat/lon.
     // We could convert lat/lons too, if there's a reason to do it.
     expect(rowObjects[0]).toEqual({ lat: 1, y: "5.12345" });
     expect(rowObjects[1]).toEqual({ lat: 3, y: "8" });

@@ -1,6 +1,17 @@
 import TableStyle from "./TableStyle";
 
-export default function getChartDetailsFn(style: TableStyle, rowIds: number[]) {
+export interface ChartDetails {
+  title: string | undefined;
+  xName: string | undefined;
+  yName: string | undefined;
+  units: string[];
+  csvData: string;
+}
+
+export default function getChartDetailsFn(
+  style: TableStyle,
+  rowIds: number[]
+): () => ChartDetails | undefined {
   return () => {
     if (!style.timeColumn || !style.colorColumn || rowIds.length < 2)
       return undefined;

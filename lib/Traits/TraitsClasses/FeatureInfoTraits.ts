@@ -3,43 +3,20 @@ import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import anyTrait from "../Decorators/anyTrait";
 
-class FeatureInfoFormatTraits extends ModelTraits {
-  @primitiveTrait({
-    type: "number",
-    name: "Maximum Fraction Digits",
-    description:
-      "To reduce the number of decimal places to a maximum of X digits."
-  })
-  maximumFractionDigits: number = 20;
+export interface FeatureInfoFormat {
+  /** To reduce the number of decimal places to a maximum of X digits. */
+  maximumFractionDigits?: number;
 
-  @primitiveTrait({
-    type: "number",
-    name: "Minimum Fraction Digits",
-    description:
-      "To increase the number of decimal places to a minimum of X digits."
-  })
-  minimumFractionDigits: number = 0;
+  /** To increase the number of decimal places to a minimum of X digits. */
+  minimumFractionDigits?: number;
 
-  @primitiveTrait({
-    type: "boolean",
-    name: "Use grouping",
-    description: "To show thousands separators"
-  })
-  useGrouping: boolean = true;
+  /** To show thousands separators */
+  useGrouping?: boolean;
 
-  @primitiveTrait({
-    type: "string",
-    name: "Type",
-    description: "Set to 'datetime' if you want to format as a date time"
-  })
+  /** Set to 'datetime' if you want to format as a date time */
   type?: string;
 
-  @primitiveTrait({
-    type: "string",
-    name: "Datetime format",
-    description:
-      "A date format style using the npm dateformat package, e.g. 'dd-mm-yyyy HH:MM:ss' or 'isoDateTime'"
-  })
+  /** A date format style using the npm dateformat package, e.g. 'dd-mm-yyyy HH:MM:ss' or 'isoDateTime' */
   format?: string;
 }
 
@@ -64,13 +41,13 @@ export class FeatureInfoTemplateTraits extends ModelTraits {
     description:
       "An object, mapping partial names to a template string. Defines the partials used in Template."
   })
-  partials?: { [partial_name: string]: string };
+  partials?: Record<string, string>;
 
   @anyTrait({
     name: "Formats",
     description: "An object, mapping field names to formatting options."
   })
-  formats?: { [key_name: string]: FeatureInfoFormatTraits };
+  formats?: Record<string, FeatureInfoFormat>;
 }
 
 export default class FeatureInfoTraits extends ModelTraits {

@@ -6,7 +6,7 @@ import Cesium3DTilePointFeature from "terriajs-cesium/Source/Scene/Cesium3DTileP
 
 const customProperties = ["entityCollection", "properties", "data"];
 /**
- * A feature is just a Cesium Entity, with observable (ie. knockout-tracked) properties added for
+ * A feature is just a Cesium Entity, with observable properties added for
  * currentDescription and currentProperties. These are tracked so that the feature info updates as the clock time changes,
  * because the properties and description themselves do not change (they are functions of the time, whose values change).
  * Set these if needed from an event listener on the terria clock, eg.
@@ -53,6 +53,11 @@ export default class Feature extends Entity {
 
   _catalogItem?: unknown;
   _cesium3DTileFeature?: Cesium3DTileFeature | Cesium3DTilePointFeature;
+
+  /** If this feature was created by TableMixin - it will have row ID (or IDs)
+   * This is used to generate charts in FeatureInfoPanel
+   */
+  _tableRowId?: number | number[];
 
   constructor(options: any) {
     super(options);
