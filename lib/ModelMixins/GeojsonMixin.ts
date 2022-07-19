@@ -563,6 +563,9 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             this._imageryProvider = undefined;
           });
         }
+        this._dataSource?.entities.values.forEach(
+          entity => ((entity as any)._catalogItem = this)
+        );
       } catch (e) {
         throw networkRequestError(
           TerriaError.from(e, {
@@ -813,9 +816,6 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         }
       ];
 
-      // _catalogItem property is needed for some feature picking functions (eg FeatureInfoMixin)
-      (feature as any)._catalogItem = this;
-
       // Create a czml packet for each geoJson Point/Polygon feature
       // For point: set czml position (CartographicDegrees) to point coordinates
       // For polygon: set czml positions array (CartographicDegreesListValue) for the `polygon` property
@@ -1018,9 +1018,6 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         const entity = entities.values[i];
 
         const properties = entity.properties;
-
-        // _catalogItem property is needed for some feature picking functions (eg FeatureInfoMixin)
-        (entity as any)._catalogItem = this;
 
         // Time
         if (
