@@ -1,6 +1,5 @@
 import i18next from "i18next";
 import { runInAction } from "mobx";
-import DataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import ProtomapsImageryProvider from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
 import GeoRssCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoRssCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";

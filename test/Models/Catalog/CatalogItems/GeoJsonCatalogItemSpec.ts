@@ -1,7 +1,7 @@
 import { runInAction } from "mobx";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import { GeomType, LineSymbolizer, PolygonSymbolizer } from "protomaps";
 import { CustomDataSource } from "terriajs-cesium";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";

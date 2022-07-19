@@ -7,11 +7,11 @@ import {
   Geometries,
   Geometry,
   GeometryCollection,
+  MultiPoint,
   MultiPolygon,
   Point,
   Polygon,
-  Properties,
-  MultiPoint
+  Properties
 } from "@turf/helpers";
 import i18next from "i18next";
 import {
@@ -32,6 +32,7 @@ import {
   LineSymbolizer,
   PolygonSymbolizer
 } from "protomaps";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -73,7 +74,6 @@ import Reproject from "../Map/Vector/Reproject";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
-import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
@@ -87,13 +87,12 @@ import { isConstantStyleMap } from "../Table/TableStyleMap";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
 import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import StyleTraits from "../Traits/TraitsClasses/StyleTraits";
+import TerriaFeature from "./../Models/Feature";
 import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
 import { ExportData } from "./ExportableMixin";
+import FeatureInfoMixin from "./FeatureInfoMixin";
 import { isDataSource } from "./MappableMixin";
 import TableMixin from "./TableMixin";
-import FeatureInfoMixin from "./FeatureInfoMixin";
-import { Cartesian2 } from "terriajs-cesium";
-import TerriaFeature from "./../Models/Feature";
 
 export const FEATURE_ID_PROP = "_id_";
 
