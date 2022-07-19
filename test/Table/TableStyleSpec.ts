@@ -11,6 +11,9 @@ import TableColumnTraits, {
   ColumnTransformationTraits
 } from "../../lib/Traits/TraitsClasses/TableColumnTraits";
 import TableStyleTraits from "../../lib/Traits/TraitsClasses/TableStyleTraits";
+import LegendTraits, {
+  LegendItemTraits
+} from "../../lib/Traits/TraitsClasses/LegendTraits";
 
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")
@@ -477,6 +480,30 @@ describe("TableStyle", function() {
         expect(colorMap.maxValue).toBe(101);
         expect(colorMap.outlierColor).toBeUndefined();
       });
+    });
+
+    it(" - applied colorTraits on top of TableLegendStratum", async function() {
+      csvItem.setTrait("definition", "csvString", SedCsv);
+
+      csvItem.setTrait("definition", "styles", [
+        createStratumInstance(TableStyleTraits, {
+          id: "Value",
+          color: createStratumInstance(TableColorStyleTraits, {
+            numberOfBins: 7,
+            legend: createStratumInstance(LegendTraits, {
+              title: "Some other title",
+              items: [
+                createStratumInstance(LegendItemTraits, { color: "what" })
+              ]
+            })
+          })
+        })
+      ]);
+      await csvItem.loadMapItems();
+
+      expect(csvItem.legends[0].title).toBe("Some other title");
+      expect(csvItem.legends[0].items.length).toBe(1);
+      expect(csvItem.legends[0].items[0].color).toBe("what");
     });
   });
 

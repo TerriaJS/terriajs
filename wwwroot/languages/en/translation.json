@@ -66,6 +66,9 @@
     "centreMap": "Centre map at your current location"
   },
   "splitterTool": {
+    "errorTitle": "Failed to compare catalog item.",
+    "duplicateModelErrorMessage": "An error occurred while splitting the catalog item `\"{{name}}\"`. This catalog item may not support \"compare\" functionality",
+    "modelNotFoundErrorMessage": "Model ID `\"{{id}}\"` could not be found",
     "toggleSplitterToolTitle": "Compare",
     "toggleSplitterTool": "Enable side-by-side comparison between two different sets of data",
     "toggleSplitterToolDisabled": "Please disable other side-by-side comparison features in order to enable standard compare",
@@ -220,7 +223,8 @@
     "convertNotificationFeedback": "For questions or feedback, click here.",
     "convertNotificationWarningsTitle": "Technical details",
     "convertErrorTitle": "Could not upgrade share link to V8",
-    "convertErrorMessage": "This share link is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the share data."
+    "convertErrorMessage": "This share link is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the share data.",
+    "getShareSaveHelpMessage": "How to Bookmark Sharelinks"
   },
   "countDatasets": {
     "btnText": "Start",
@@ -605,7 +609,7 @@
     "copy": "Copy"
   },
   "includeStory": {
-    "message": "Include Story in Share?"
+    "message": "Include Story in Share"
   },
   "dragDrop": {
     "text": "<0>Drag & Drop</0><1>Your data anywhere to view on the map<1>",
@@ -712,9 +716,14 @@
       "gpx": "GPX",
       "json": "JSON",
       "carto": "Carto",
-      "gltf": "GLTF",
+      "gltf": "glTF",
       "shp": "Shapefile (zip)",
-      "socrata-group": "Socrata Server"
+      "socrata-group": "Socrata Server",
+      "assimp-local": "3D file converter (zip) (experimental)",
+      "assimp-local-description": "**Warning:** 3D file converter is experimental.  \nSee list of [supported formats](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nFiles must be zipped.",
+      "assimp-remote": "3D file converter (experimental)",
+      "assimp-remote-description": "**Warning:** 3D file converter is experimental.  \nSee list of [supported formats](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nZip files are also supported",
+      "ifc": "IFC"
     },
     "printWindow": {
       "errorTitle": "Error printing",
@@ -815,7 +824,8 @@
     "extraCreditLinks": {
       "dataAttribution": "Data attribution",
       "disclaimer": "Disclaimer",
-      "basemap": "Basemap"
+      "basemap": "Basemap",
+      "dataProvider": "Data provided by:"
     }
   },
   "models": {

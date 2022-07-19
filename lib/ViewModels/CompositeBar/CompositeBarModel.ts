@@ -24,7 +24,7 @@ export interface ICompositeBarItem<
   name: string;
   title?: string;
   screenSize?: ScreenSize;
-  order: number;
+  order?: number;
   controller: ItemController;
 }
 
@@ -117,7 +117,7 @@ export abstract class CompositeBarModel<
         while (
           index < this.items.length &&
           typeof this.items[index].order === "number" &&
-          this.items[index].order < item.order
+          (this.items[index].order as number) < item.order
         ) {
           index++;
         }

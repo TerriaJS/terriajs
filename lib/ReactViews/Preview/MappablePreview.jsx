@@ -10,7 +10,7 @@ import toggleItemOnMapFromCatalog, {
   Op as ToggleOnMapOp
 } from "../DataCatalog/toggleItemOnMapFromCatalog";
 import measureElement from "../HOCs/measureElement";
-import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
+import SharePanel from "../Map/Panels/SharePanel/SharePanel";
 import DataPreviewMap from "./DataPreviewMap";
 import Description from "./Description";
 import Styles from "./mappable-preview.scss";

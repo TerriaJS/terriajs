@@ -219,7 +219,8 @@
     "btnCatalogShareText": "Compartir",
     "convertNotificationMessage": "Aquest enllaç per compartir es basa en una versió anterior de TerriaJS, el programari que alimenta aquest mapa web. Tot i que es fan els millors esforços per preservar l'enllaç, és possible que tingueu problemes amb la visualització de les dades.\n\nSi sou usuari de l'enllaç per compartir, feu clic a D'acord per tal que el missatge d'advertència desaparegui i continueu accedint a les dades.",
     "convertErrorMessage": "Aquest enllaç per compartir es basa en una versió anterior de TerriaJS, el programari que alimenta aquest mapa web. S'ha produït un error en intentar actualitzar les dades compartides.",
-    "downloadMap": "Descarregar mapa (png)"
+    "downloadMap": "Descarregar mapa (png)",
+    "getShareSaveHelpMessage": "Com desar enllaços compartits"
   },
   "countDatasets": {
     "btnText": "Començar",
@@ -524,7 +525,8 @@
     "searchItem": "Cerca",
     "searchItemTitle": "Cerca",
     "colorScaleRangeMinSmallerThanMax": "El valor mínim de l'escala de colors ha de ser inferior al valor màxim.",
-    "rangeMax": "Màxim:"
+    "rangeMax": "Màxim:",
+    "splitScreenMode": "MODE PANTALLA PARTIDA"
   },
   "dateTime": {
     "selectorLabel": "Temps:",
@@ -611,7 +613,8 @@
     "expand": "Expandir",
     "download": "Descarregar",
     "loading": "Carregant les dades del gràfic...",
-    "noData": "No s'ha trobat cap dada per fer gràfics."
+    "noData": "No s'ha trobat cap dada per fer gràfics.",
+    "showItemInChart": "Mostra {{value}} al gràfic"
   },
   "viewModels": {
     "searchNoLocations": "Ho sentim, cap ubicació coincideix amb la teva cerca.",
@@ -789,7 +792,8 @@
     "extraCreditLinks": {
       "dataAttribution": "Atribució de dades",
       "disclaimer": "Exempció de responsabilitat",
-      "basemap": "Mapa base"
+      "basemap": "Mapa base",
+      "dataProvider": "Dades proporciondes per:"
     }
   },
   "helpPanel": {
@@ -1652,5 +1656,8 @@
       "mouseTooltipTitle": "Seleccioneu la ubicació",
       "mouseTooltipMessage": "Botó dret per cancel·lar"
     }
+  },
+  "includeStory": {
+    "message": "Inclou la història a Share"
   }
 }
