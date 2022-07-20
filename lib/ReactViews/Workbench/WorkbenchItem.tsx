@@ -34,14 +34,6 @@ interface IProps extends WithTranslation {
   setWrapperState({}: any): void;
 }
 
-const WorkbenchItemTitle = styled(TextSpan)`
-  -webkit-line-clamp: 2;
-  display: -webkit-box;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-`;
-
 @observer
 class WorkbenchItemRaw extends React.Component<IProps> {
   static displayName = "WorkbenchItem";
@@ -115,21 +107,27 @@ class WorkbenchItemRaw extends React.Component<IProps> {
                       `}
                       textProps={{ medium: true, fullWidth: true }}
                     >
-                      <WorkbenchItemTitle medium>
+                      <TextSpan
+                        medium
+                        maxLines={!item.isOpenInWorkbench ? 2 : false}
+                        title={item.name}
+                      >
                         {item.name}
-                      </WorkbenchItemTitle>
+                      </TextSpan>
                     </Checkbox>
                   </Box>
                 ) : (
-                  <WorkbenchItemTitle
+                  <TextSpan
                     medium
                     textLight
+                    maxLines={!item.isOpenInWorkbench ? 2 : false}
+                    title={item.name}
                     css={`
                       overflow-wrap: anywhere;
                     `}
                   >
                     {item.name}
-                  </WorkbenchItemTitle>
+                  </TextSpan>
                 )}
               </DraggableBox>
             </Box>
