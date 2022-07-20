@@ -74,7 +74,10 @@
       "goright": "Dreta",
       "copyName": "{{name}} (còpia)",
       "goleft": "Esquerra"
-    }
+    },
+    "modelNotFoundErrorMessage": "No s'ha pogut trobar l'identificador del model `\"{{id}}\"`",
+    "errorTitle": "No s'ha pogut comparar l'element del catàleg.",
+    "duplicateModelErrorMessage": "S'ha produït un error en dividir l'element del catàleg `\"{{name}}\"`. És possible que aquest element del catàleg no admeti la funcionalitat de \"comparació\""
   },
   "zoomCotrol": {
     "zoomIn": "Zoom +",
@@ -187,7 +190,7 @@
     "zone": "ZONA",
     "e": "E",
     "n": "N",
-    "elev": "Elev"
+    "elev": "Alt."
   },
   "languagePanel": {
     "changeLanguage": "Canviar idioma"
@@ -688,10 +691,15 @@
       "gpx": "GPX",
       "json": "JSON",
       "carto": "Carto",
-      "gltf": "GLTF",
+      "gltf": "gLTF",
       "shp": "Shapefile (zip)",
       "other": "Altres (utilitza el servei de conversió)",
-      "socrata-group": "Servidor Socrata"
+      "socrata-group": "Servidor Socrata",
+      "ifc": "IFC",
+      "assimp-local": "Convertidor de fitxers 3D (zip) (experimental)",
+      "assimp-local-description": "**Avís:** el convertidor de fitxers 3D és experimental.\nConsulteu la llista de [formats admesos](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).\nEls fitxers s'han de comprimir.",
+      "assimp-remote": "Convertidor de fitxers 3D (experimental)",
+      "assimp-remote-description": "**Avís:** el convertidor de fitxers 3D és experimental.\nConsulteu la llista de [formats admesos](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).\nTambé s'admeten fitxers zip"
     },
     "printWindow": {
       "errorTitle": "Error d'impressió",
