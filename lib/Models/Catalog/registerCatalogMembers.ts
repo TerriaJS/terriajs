@@ -14,7 +14,6 @@ import CsvCatalogItem from "./CatalogItems/CsvCatalogItem";
 import CzmlCatalogItem from "./CatalogItems/CzmlCatalogItem";
 import GeoJsonCatalogItem from "./CatalogItems/GeoJsonCatalogItem";
 import GeoRssCatalogItem from "./CatalogItems/GeoRssCatalogItem";
-import GltfCatalogItem from "./CatalogItems/GltfCatalogItem";
 import GpxCatalogItem from "./CatalogItems/GpxCatalogItem";
 import IonImageryCatalogItem from "./CatalogItems/IonImageryCatalogItem";
 import KmlCatalogItem from "./CatalogItems/KmlCatalogItem";
@@ -46,6 +45,8 @@ import ArcGisMapServerCatalogItem from "./Esri/ArcGisMapServerCatalogItem";
 import ArcGisPortalCatalogGroup from "./Esri/ArcGisPortalCatalogGroup";
 import ArcGisPortalItemReference from "./Esri/ArcGisPortalItemReference";
 import ArcGisTerrainCatalogItem from "./Esri/ArcGisTerrainCatalogItem";
+import AssImpCatalogItem from "./Gltf/AssImpCatalogItem";
+import GltfCatalogItem from "./Gltf/GltfCatalogItem";
 import GtfsCatalogItem from "./Gtfs/GtfsCatalogItem";
 import CswCatalogGroup from "./Ows/CswCatalogGroup";
 import SensorObservationServiceCatalogItem from "./Ows/SensorObservationServiceCatalogItem";
@@ -224,6 +225,7 @@ export default function registerCatalogMembers() {
     UrlTemplateImageryCatalogItem.type,
     UrlTemplateImageryCatalogItem
   );
+  CatalogMemberFactory.register(AssImpCatalogItem.type, AssImpCatalogItem);
 
   UrlToCatalogMemberMapping.register(
     matchesExtension("csv"),
