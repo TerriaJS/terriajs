@@ -265,7 +265,7 @@ export default class MappableTraits extends mixTraits(AttributionTraits) {
 
   @primitiveTrait({
     type: "string",
-    name: "Show string if property value is null",
+    name: "Show string if (feature info) property value is null",
     description:
       "If the value of a property is null or undefined, show the specified string as the value of the property. Otherwise, the property name will not be listed at all."
   })

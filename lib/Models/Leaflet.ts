@@ -40,7 +40,7 @@ import PickedFeatures, {
   ProviderCoordsMap
 } from "../Map/PickedFeatures/PickedFeatures";
 import rectangleToLatLngBounds from "../Map/Vector/rectangleToLatLngBounds";
-import FeatureInfoMixin from "../ModelMixins/FeatureInfoMixin";
+import FeatureInfoUrlTemplateMixin from "../ModelMixins/FeatureInfoUrlTemplateMixin";
 import MappableMixin, {
   ImageryParts,
   MapItem
@@ -594,7 +594,7 @@ export default class Leaflet extends GlobeOrMap {
     const catalogItem = (entity as any)._catalogItem;
 
     if (
-      FeatureInfoMixin.isMixedInto(catalogItem) &&
+      FeatureInfoUrlTemplateMixin.isMixedInto(catalogItem) &&
       typeof catalogItem.getFeaturesFromPickResult === "function" &&
       this.terria.allowFeatureInfoRequests
     ) {

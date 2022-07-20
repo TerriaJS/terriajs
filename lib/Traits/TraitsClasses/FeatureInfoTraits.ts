@@ -88,14 +88,6 @@ export default class FeatureInfoUrlTemplateTraits extends ModelTraits {
   featureInfoUrlTemplate?: string;
 
   @primitiveTrait({
-    type: "string",
-    name: "Show string if property value is null",
-    description:
-      "If the value of a property is null or undefined, show the specified string as the value of the property. Otherwise, the property name will not be listed at all."
-  })
-  showStringIfPropertyValueIsNull?: string;
-
-  @primitiveTrait({
     type: "number",
     name: "Max feature request",
     description:

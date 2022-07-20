@@ -13,6 +13,7 @@ import Model from "../Models/Definition/Model";
 import Feature from "../Models/Feature";
 import { describeFromProperties } from "../ReactViews/FeatureInfo/FeatureInfoSection";
 import FeatureInfoUrlTemplateTraits from "../Traits/TraitsClasses/FeatureInfoTraits";
+import MappableMixin from "./MappableMixin";
 import TimeVarying from "./TimeVarying";
 
 type Target = Model<FeatureInfoUrlTemplateTraits>;
@@ -71,7 +72,7 @@ function FeatureInfoUrlTemplateMixin<T extends Constructor<Target>>(Base: T) {
                   (TimeVarying.is(this)
                     ? this.currentTimeAsJulianDate
                     : undefined) ?? JulianDate.now(),
-                  TimeVarying.is(this)
+                  MappableMixin.isMixedInto(this)
                     ? this.showStringIfPropertyValueIsNull
                     : false
                 )
@@ -148,7 +149,7 @@ function FeatureInfoUrlTemplateMixin<T extends Constructor<Target>>(Base: T) {
                 (TimeVarying.is(catalogItem)
                   ? catalogItem.currentTimeAsJulianDate
                   : undefined) ?? JulianDate.now(),
-                TimeVarying.is(catalogItem)
+                MappableMixin.isMixedInto(catalogItem)
                   ? catalogItem.showStringIfPropertyValueIsNull
                   : false
               );
