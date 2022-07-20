@@ -22,6 +22,7 @@ import {
 } from "../../../../Models/InitSource";
 import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
+import getDereferencedIfExists from "../../../../Core/getDereferencedIfExists";
 
 /** User properties (generated from URL hash parameters) to add to share link URL in PRODUCTION environment.
  * If in Dev, we add all user properties.
@@ -201,6 +202,7 @@ function addModelStratum(
   }
 
   const stratum = model.strata.get(stratumId);
+
   const dereferenced = ReferenceMixin.isMixedInto(model)
     ? model.target
     : undefined;
@@ -253,10 +255,17 @@ function addModelStratum(
 export function isShareable(terria: Terria) {
   return function(modelId: string) {
     const model = terria.getModelById(BaseModel, modelId);
+
+    // If this is a Reference, then use the model.target, otherwise use the model
+    const dereferenced =
+      typeof model === undefined
+        ? model
+        : getDereferencedIfExists(terria.getModelById(BaseModel, modelId)!);
+
     return (
       model &&
-      ((HasLocalData.is(model) && !model.hasLocalData) ||
-        !HasLocalData.is(model))
+      ((HasLocalData.is(dereferenced) && !dereferenced.hasLocalData) ||
+        !HasLocalData.is(dereferenced))
     );
   };
 }
