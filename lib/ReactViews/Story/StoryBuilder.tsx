@@ -1,8 +1,6 @@
-import createReactClass from "create-react-class";
-import { runInAction, toJS, action } from "mobx";
-import { observer, useLocalStore } from "mobx-react";
-import PropTypes from "prop-types";
-import React, { useState, useRef } from "react";
+import { toJS, action } from "mobx";
+import { observer } from "mobx-react";
+import React from "react";
 import Sortable from "react-anything-sortable";
 import {
   Trans,
@@ -13,7 +11,6 @@ import {
 import styled, { withTheme, DefaultTheme } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import defined from "terriajs-cesium/Source/Core/defined";
 const dataStoriesImg = require("../../../wwwroot/images/data-stories-getting-started.jpg");
 import triggerResize from "../../Core/triggerResize";
 import Box from "../../Styled/Box";
@@ -25,7 +22,7 @@ import measureElement, { MeasureElementProps } from "../HOCs/measureElement";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
 import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
-import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
+import SharePanel from "../Map/Panels/SharePanel/SharePanel";
 import Styles from "./story-builder.scss";
 import Story from "./Story";
 import StoryEditor from "./StoryEditor.jsx";
@@ -345,6 +342,7 @@ class StoryBuilder extends React.Component<
           <RawButton
             type="button"
             onClick={this.toggleRemoveDialog}
+            textLight
             className={Styles.removeButton}
           >
             <Icon glyph={Icon.GLYPHS.remove} /> {t("story.removeAllStories")}

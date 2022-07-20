@@ -374,7 +374,7 @@ class FeatureInfoPanel extends React.Component {
                 }
               >
                 <li>
-                  <Loader />
+                  <Loader light />
                 </li>
               </When>
               <When

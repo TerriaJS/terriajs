@@ -293,7 +293,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       if (this.terria.currentViewer.type === "Leaflet") {
         return i18next.t("models.commonModelErrors.3dTypeIn2dMode", this);
       }
-      return undefined;
+      return super.shortReport;
     }
 
     @computed get optionsObj() {

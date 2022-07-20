@@ -28,3 +28,9 @@ jobs:
           SHARE_S3_SECRET_ACCESS_KEY: ${{ secrets.SHARE_S3_SECRET_ACCESS_KEY }}
           FEEDBACK_GITHUB_TOKEN: ${{ secrets.FEEDBACK_GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Upload new yarn.lock file (as it may change after `sync-dependencies`)
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: yarn.lock
+          path: yarn.lock

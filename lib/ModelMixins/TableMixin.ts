@@ -37,11 +37,7 @@ import { TableAutomaticLegendStratum } from "../Table/TableLegendStratum";
 import TableStyle from "../Table/TableStyle";
 import TableTraits from "../Traits/TraitsClasses/TableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
-import ChartableMixin, {
-  calculateDomain,
-  ChartAxis,
-  ChartItem
-} from "./ChartableMixin";
+import { calculateDomain, ChartAxis, ChartItem } from "./ChartableMixin";
 import DiscretelyTimeVaryingMixin, {
   DiscreteTimeAsJS
 } from "./DiscretelyTimeVaryingMixin";
@@ -63,6 +59,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     constructor(...args: any[]) {
       super(...args);
 
+      // Create default TableStyle and set TableAutomaticLegendStratum
       this.defaultTableStyle = new TableStyle(this);
       if (
         this.strata.get(TableAutomaticLegendStratum.stratumName) === undefined
@@ -267,6 +264,14 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return super.disableZoomTo;
     }
 
+    /** Is showing regions (instead of points) */
+    @computed get showingRegions() {
+      return (
+        this.regionMappedImageryParts &&
+        this.mapItems[0] === this.regionMappedImageryParts
+      );
+    }
+
     /**
      * Gets the items to show on the map.
      */
@@ -311,15 +316,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       if (this.regionMappedImageryParts) return [this.regionMappedImageryParts];
 
       return [];
-    }
-
-    @computed
-    get shortReport() {
-      return this.mapItems.length === 0 &&
-        this.chartItems.length === 0 &&
-        !this.isLoading
-        ? i18next.t("models.tableData.noData")
-        : super.shortReport;
     }
 
     // regionMappedImageryParts and regionMappedImageryProvider are split up like this so that we aren't re-creating the imageryProvider if things like `opacity` and `show` change
@@ -532,7 +528,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         options: this.regionProviderList!.regionProviders.map(
           regionProvider => {
             return {
-              name: regionProvider.regionType,
+              name: regionProvider.description,
               id: regionProvider.regionType
             };
           }

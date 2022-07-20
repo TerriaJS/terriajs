@@ -1,8 +1,9 @@
-var path = require('path');
-var StringReplacePlugin = require("string-replace-webpack-plugin");
-var ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-var ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
-var webpack = require('webpack');
+const path = require('path');
+const CopyPlugin = require("copy-webpack-plugin");
+const StringReplacePlugin = require("string-replace-webpack-plugin");
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
+const webpack = require('webpack');
 
 function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtractPlugin, disableStyleLoader) {
     const cesiumDir = path.dirname(require.resolve('terriajs-cesium/package.json'));
@@ -286,12 +287,21 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
         })
     );
     config.plugins.push(
-        new ForkTsCheckerNotifierWebpackPlugin({
-            excludeWarnings: true,
-            // probably don't need to know first check worked as well - disable it
-            skipFirstNotification: true
-        })
-    );
+      new ForkTsCheckerNotifierWebpackPlugin({
+          excludeWarnings: true,
+          // probably don't need to know first check worked as well - disable it
+          skipFirstNotification: true
+      })
+  );
+
+  // Copy assimpjs.wasm file - this is used by AssImpCatalogItem (see AssImpCatalogItem.forceLoadMapItems())
+  config.plugins.push(
+    new CopyPlugin({
+      patterns: [
+        { from: require.resolve('assimpjs/dist/assimpjs.wasm'), to: "assimpjs.wasm" }
+      ],
+    })
+  );
 
     if (hot && !disableStyleLoader) {
         config.module.rules.push({

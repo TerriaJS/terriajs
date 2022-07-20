@@ -1,8 +1,58 @@
 Change Log
 ==========
 
-#### next release (8.2.7)
+#### next release (8.2.10)
 
+* Consolidate `HasLocalData` interface
+* Add `GlTf` type definition (v2)
+* Add `gltfModelUrl` to `GltfMixin` - this must be implemented by Models which use `GltfMixin`
+* Moved `GltfCatalogItem` to `lib/Models/Catalog/Gltf/GltfCatalogItem.ts`
+* Add experimental client-side 3D file conversion using [`assimpjs`](https://github.com/kovacsv/assimpjs) ([emscripten](https://emscripten.org) interface for the [assimp](https://github.com/assimp/assimp) library)
+  * This supports `zip` files through add local/remote data
+  * Supports over 40 formats - including Collada, obj, Blender, DXF - [full list](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md)
+* Add `description` to `getDataType` - this will be displayed between Step 1 and Step 2
+* Add warning message to `GltfMixin` when showing in 2D mode (Leaflet)
+* Prevent looping when navigating between scenes in StoryPanel using keyboard arrows
+* Fix bug where StoryPanel keyboard navigation persists after closing StoryPanel
+* Fix select when clicking on multiple features in 2D (#5660)
+* Implemented support for `featureInfoUrlTemplate` on 2D vector features (#5660)
+* Implemented FeatureInfoMixin in GeojsonMixin (#5660)
+* `GpxCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
+* `GeoRssCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
+* [The next improvement]
+
+#### 8.2.9 - 2022-07-13
+
+* Pin `html-to-react` to `1.4.5` due to ESM module in dependency (`parse5`) breaking webpack
+* Add step to `"Deploy TerriaMap"` action to save `yarn.lock` after `sync-dependencies` (for debug purposes)
+* TSIfy `SharePanel` 
+* Move `includeStoryInShare` out of `ViewState` into local state
+* Implement ability to navigate between scenes in StoryPanel using keyboard arrows
+* Fix "Regions: xxx" short report showing for non region mapped items
+* Fix `showInChartPanel` default for mappable items
+
+#### 8.2.8 - 2022-07-04
+
+* Improve Split/compare error handling
+* Fix `itemProperties` split bug
+* Table styling is disabled if `MultiPoint` are in GeoJSON
+* Add `GeoJsonTraits.useOutlineColorForLineFeatures` - If enabled, `TableOutlineStyleTraits` will be used to color Line Features, otherwise `TableColorStyleTraits` will be used.
+* Fix feature highliting for `Line`, `MultiLine` and `MultiPoint`
+* Await Internationalisation initialisation in `Terria.start`
+* `UserDrawing.messageHeader` can now also be `() => string`
+
+#### 8.2.7 - 2022-06-30
+
+* Fix `WorkbenchItem` title height
+* Add region map info and move "No Data" message to `InfoSections` in `TableAutomaticStylesStratum`
+* Fix missing `TableColorStyleTraits.legend` values in `ColorStyleLegend`
+* Fix `DateTimeSelectorSection.changeDateTime()` binding.
+* `RegionProvider.find*Variable` functions now try to match with and without whitespace (spaces, hyphens and underscores)
+* Clean up `regionMapping.json` descriptions
+* Implement Leaflet credits as a react component, so it is easier to maintain them. Leaflet view now show terria extra credits.
+* Implement Cesium credits as a react component, so it is easier to maintain them.
+* Implement data attribution modal for map data attributions/credits. Used by both Leaflet and Cesium viewers.
+* Fixed translation of Leaflet and Cesium credits.
 * TSXify `ChartPanelDownloadButton`
 * `ChartPanelDownloadButton` will now only export columns which are visible in chart
 * Cleanup `Mixin` and `Traits` inheritance
@@ -11,6 +61,12 @@ Change Log
 * Fix handling GeoJSON if features have null geometry
 * Limit workbench item title to 2 lines and show overflow: ellipsis after.
 * [The next improvement]
+* Fix bug where map tools names appear as translation strings
+* Allow IFC files to be added to a map from local or web data (Requires non-open source plugin) 
+* Rename `useTranslationIfExists` to `applyTranslationIfExists` so it doesn't look like a React hook.
+* Added a required parameter i18n to `applyTranslationIfExists` to avoid having stale translated strings when the language changes.
+* Fix `StoryBuilder` remove all text color
+* Fix `FeatureInfoPanel` `Loader` color
 
 #### 8.2.6 - 2022-06-17
 
@@ -20,9 +76,10 @@ Change Log
 * Moved translation files from `lib/Language/*/translation.json` to `wwwroot/languages/*/translation.json`.
 * Fixed default 3d-tiles styling to add a workaround for a Cesium bug which resulted in wrong translucency value for point clouds.
 * Remove Pell dependency, now replaced with TinyMCE (WYSIWYG editor library).
+* Added `beforeRestoreAppState` hook for call to `Terria.start()` which gets called before state is restored from share data.
+* Made `order` optional for `ICompositeBarItem`.
 * Fix `includes` path for `url-loader` rule so that it doesn't incorrectly match package names with `terriajs` as prefix.
 * Add help button for bookmarking sharelinks to SharePanel (if that help item exists in config)
-* [The next improvement]
 
 #### 8.2.5 - 2022-06-07
 

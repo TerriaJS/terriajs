@@ -19,6 +19,7 @@ import Dropdown from "../../../Generic/Dropdown";
 import Loader from "../../../Loader";
 import Styles from "./add-data.scss";
 import FileInput from "./FileInput";
+import { parseCustomMarkdownToReactWithOptions } from "../../../Custom/parseCustomMarkdownToReact";
 
 /**
  * Add data panel in modal window -> My data tab
@@ -195,6 +196,11 @@ const AddData = createReactClass({
               matchWidth={true}
               theme={dropdownTheme}
             />
+            {this.state.localDataType?.description
+              ? parseCustomMarkdownToReactWithOptions(
+                  this.state.localDataType?.description
+                )
+              : null}
             <label className={Styles.label}>
               <Trans i18nKey="addData.localFile">
                 <strong>Step 2:</strong> Select file
@@ -222,6 +228,11 @@ const AddData = createReactClass({
               matchWidth={true}
               theme={dropdownTheme}
             />
+            {this.state.remoteDataType?.description
+              ? parseCustomMarkdownToReactWithOptions(
+                  this.state.remoteDataType?.description
+                )
+              : null}
             <label className={Styles.label}>
               <Trans i18nKey="addData.webFile">
                 <strong>Step 2:</strong> Enter the URL of the data file or web

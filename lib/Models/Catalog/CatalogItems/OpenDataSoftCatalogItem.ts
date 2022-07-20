@@ -5,6 +5,7 @@ import { computed, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import flatten from "../../../Core/flatten";
 import isDefined from "../../../Core/isDefined";
@@ -23,18 +24,18 @@ import TableStyleTraits from "../../../Traits/TraitsClasses/TableStyleTraits";
 import TableTimeStyleTraits from "../../../Traits/TraitsClasses/TableTimeStyleTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import Feature from "../../Feature";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
+import StratumOrder from "../../Definition/StratumOrder";
+import Feature from "../../Feature";
+import SelectableDimensions, {
+  SelectableDimension
+} from "../../SelectableDimensions/SelectableDimensions";
+import Terria from "../../Terria";
 import {
   isValidDataset,
   ValidDataset
 } from "../CatalogGroups/OpenDataSoftCatalogGroup";
-import SelectableDimensions, {
-  SelectableDimension
-} from "../../SelectableDimensions/SelectableDimensions";
-import StratumOrder from "../../Definition/StratumOrder";
-import Terria from "../../Terria";
 
 type PointTimeSeries = {
   samples?: number;
@@ -595,13 +596,18 @@ export default class OpenDataSoftCatalogItem
     _screenPosition: Cartesian2 | undefined,
     pickResult: any
   ) {
-    const feature = new Feature(pickResult?.id);
+    let feature: Feature | undefined;
+    if (pickResult instanceof Entity) {
+      feature = Feature.fromEntityCollectionOrEntity(pickResult);
+    } else {
+      feature = new Feature(pickResult?.id);
+    }
     // If feature is time-series, we have to make sure that recordId is set in feature.properties
     // Otherwise we won't be able to use featureInfoUrlTemplate in FeatureInfoMixin
     const recordId = pickResult?.id?.data?.getValue?.(
       this.terria.timelineClock.currentTime
     )?.[RECORD_ID_COL];
-    feature.properties?.addProperty(RECORD_ID_COL, recordId);
+    feature?.properties?.addProperty(RECORD_ID_COL, recordId);
     return feature;
   }
 
