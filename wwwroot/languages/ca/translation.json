@@ -304,7 +304,7 @@
     "satelliteSuggestionBtn": "Mostra {{catalogItemName}} en aquesta ubicació",
     "catalogItem": {
       "moreThanMax": "S'han trobat més de {{maximum}} {{catalogItemName}} elements.",
-      "featuresFound": "{{featCount}} {catalogItemName} elements trobats.",
+      "featuresFound": "{{featCount}} {{catalogItemName}} elements trobats.",
       "featureInfoShown": "Els primers {{maximum}} es mostren a continuació."
     },
     "download": "Descarrega aquesta Taula",
