@@ -53,7 +53,7 @@ Most of the other properties of each layer depend on the specific type.  See the
 
 ### Using an init file
 
-There are four ways to load a init file into a TerriaJS application:
+There are four ways to load an init file into a TerriaJS application:
 
 1. Store it in Terria Map's `wwwroot/init` directory, and refer to it in the `initializationUrls` section of the [`config.json`](../customizing/client-side-config.md) file. It is loaded automatically when you visit the webpage.  This is how `wwwroot/init/terria.json` is loaded in the default TerriaMap setup.
 2. Store it in Terria Maps's `wwwroot/init` directory, without adding it to config.json. Add the init file name (without `.json`) to the URL after `#`. For instance, `example.com/terria#mycatalog`. See [Controlling with URL Parameters](../deploying/controlling-with-url-parameters.md) for more information. This method is useful when developing a catalog that is not quite ready for public access, but it is helpful to show it to interested stakeholders.

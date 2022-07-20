@@ -21,8 +21,8 @@ Parameter      | Meaning
 `mode=preview`   | Operate in "preview mode", which mostly means not showing a warning if the screen is `small`  
 `share=`...      | Load a map view previously saved using the "Share" function with URL shortening.
 `start=`...      | Load a map view previously saved without URL shortening. The argument is a URL-encoded JSON structure defined using an internal format described below.
-`<initfile>`     | Load [init/catalog file](../customizing/initialization-files.md) as described below.
-`hideWelcomeMessage` | Forces the welcome message not to be displayed.
+`<initfile>`     | Load [init/catalog file](../customizing/initialization-files.md) as described below. This can be a URL to an init file -  or an "init fragment" (eg `simple` - which resolves to `init/simple.json`). See `initFragmentPaths` in [client side config parameters](../customizing/client-side-config.md#parameters) 
+`hideWelcomeMessage` | Forces the welcome message not to be displayed. 
 `ignoreErrors=1` | Ignore **all** error messages.
 `configUrl=`... | Overwrite Terria config URL in **dev environment only**.
 
@@ -38,7 +38,7 @@ Full Init file docs are [available here](../customizing/initialization-files.md)
 
 Full `ShareData` docs are [available here](../customizing/initialization-files.md#sharedata)
 
-The `start=` parameter essentially embeds an entire catalog file in the URL. The format is:
+The `start=` parameter essentially embeds an entire init/catalog file in the URL. The format is:
 
 ```
 {
