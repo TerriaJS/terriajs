@@ -1,10 +1,6 @@
-import ModelTraits from "../ModelTraits";
-import objectTrait from "../Decorators/objectTrait";
-import primitiveTrait from "../Decorators/primitiveTrait";
 import anyTrait from "../Decorators/anyTrait";
-import mixTraits from "../mixTraits";
-import CatalogMemberTraits from "./CatalogMemberTraits";
-import MappableTraits from "./MappableTraits";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import ModelTraits from "../ModelTraits";
 
 class FeatureInfoFormatTraits extends ModelTraits {
   @primitiveTrait({
@@ -90,4 +86,20 @@ export default class FeatureInfoUrlTemplateTraits extends ModelTraits {
       "A template URL string for fetching feature info. Template values of the form {x} will be replaced with corresponding property values from the picked feature."
   })
   featureInfoUrlTemplate?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Show string if property value is null",
+    description:
+      "If the value of a property is null or undefined, show the specified string as the value of the property. Otherwise, the property name will not be listed at all."
+  })
+  showStringIfPropertyValueIsNull?: string;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Max feature request",
+    description:
+      "Max number of feature info requests to send to API url. Keep this number small to avoid sending to many requests to server (default 10)."
+  })
+  maxRequests: number = 10;
 }
