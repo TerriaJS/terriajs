@@ -14,6 +14,11 @@ Change Log
 * Add warning message to `GltfMixin` when showing in 2D mode (Leaflet)
 * Prevent looping when navigating between scenes in StoryPanel using keyboard arrows
 * Fix bug where StoryPanel keyboard navigation persists after closing StoryPanel
+* Fix select when clicking on multiple features in 2D (#5660)
+* Implemented support for `featureInfoUrlTemplate` on 2D vector features (#5660)
+* Implemented FeatureInfoMixin in GeojsonMixin (#5660)
+* `GpxCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
+* `GeoRssCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
 * [The next improvement]
 
 #### 8.2.9 - 2022-07-13
