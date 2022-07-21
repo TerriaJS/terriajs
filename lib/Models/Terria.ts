@@ -126,9 +126,9 @@ interface ConfigParameters {
    */
   catalogIndexUrl?: string;
   /**
-   * URL of the JSON file that defines region mapping for CSV files.
+   * URL of the JSON file that defines region mapping for CSV files. First matching region will be used (in array order)
    */
-  regionMappingDefinitionsUrl: string;
+  regionMappingDefinitionsUrl: string | string[];
   /**
    * URL of Proj4 projection lookup service (part of TerriaJS-Server).
    */

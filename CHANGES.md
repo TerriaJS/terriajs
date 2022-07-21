@@ -21,6 +21,8 @@ Change Log
 * `GpxCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
 * `GeoRssCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
 * Limit workbench item title to 2 lines and show overflow: ellipsis after.
+* Add support for multiple URLs in `regionMappingDefinitionsUrl` - if provided then the first matching region will be used (in order of URLs)
+* `TableMixin.matchRegionProvider` now returns `RegionProvider` instead of `string` region type. (which exists at `regionProvider.regionType`)
 * [The next improvement]
 
 #### 8.2.9 - 2022-07-13
