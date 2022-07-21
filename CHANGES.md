@@ -19,6 +19,7 @@ Change Log
 * Implemented FeatureInfoMixin in GeojsonMixin (#5660)
 * `GpxCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
 * `GeoRssCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
+* Limit workbench item title to 2 lines and show overflow: ellipsis after.
 * [The next improvement]
 
 #### 8.2.9 - 2022-07-13
