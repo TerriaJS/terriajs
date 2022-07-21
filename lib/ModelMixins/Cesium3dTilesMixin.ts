@@ -300,6 +300,8 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       const options: any = {};
       if (isDefined(this.options)) {
         Object.keys(OptionsTraits.traits).forEach(name => {
+          console.log(`3dtiles Trait: ${name}`);
+          debugger;
           options[name] = (<any>this.options)[name];
         });
       }

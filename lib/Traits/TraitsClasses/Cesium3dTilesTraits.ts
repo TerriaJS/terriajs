@@ -101,6 +101,14 @@ export class OptionsTraits extends ModelTraits {
     description: "Point cloud shading parameters"
   })
   pointCloudShading?: PointCloudShadingTraits;
+
+  @primitiveTrait({
+    name: "Allow feature picking",
+    type: "boolean",
+    description:
+      "Indicates whether tiles in this catalog item can be selected by clicking them on the map. This will also enable / disable Feature Info"
+  })
+  allowFeaturePicking = true;
 }
 
 export default class Cesium3DTilesTraits extends mixTraits(
