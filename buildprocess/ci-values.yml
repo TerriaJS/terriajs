@@ -75,6 +75,7 @@ terriamap:
                     zh_Hans: "中文"
                     nb_NO: "Bokmål"
                     id: "Bahasa Indonesia"
+                    ar: "العربية"
             helpContent:
                 -
                   title: "Getting started with the map"

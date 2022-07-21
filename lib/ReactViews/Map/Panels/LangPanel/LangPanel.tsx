@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import Terria from "../../../../Models/Terria";
 import Box from "../../../../Styled/Box";
@@ -17,7 +17,16 @@ type Props = {
 
 export default (props: Props) => {
   const { t, i18n } = useTranslation();
-  document.body.dir = i18n.dir();
+  useEffect(() => {
+    const updateRtl = () => {
+      document.body.dir = i18n.dir();
+    };
+    updateRtl();
+    i18n.on("languageChanged", updateRtl);
+    return () => {
+      i18n.off("languageChanged", updateRtl);
+    };
+  }, [i18n]);
   if (!props.terria.configParameters.languageConfiguration?.languages) {
     return null;
   }

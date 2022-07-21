@@ -77,7 +77,7 @@ export const defaultTourPoints = [
     caretOffsetTop: 18,
     caretOffsetLeft: TOUR_WIDTH - 18,
     caretOffsetRight: TOUR_WIDTH - 18,
-    indicatorOffsetTop: 4,
+    indicatorOffsetTop: 6,
     indicatorOffsetLeft: 25,
     indicatorOffsetRight: 25,
     offsetTop: 0,

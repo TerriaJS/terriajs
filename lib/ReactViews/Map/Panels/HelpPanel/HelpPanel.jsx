@@ -26,7 +26,8 @@ class HelpPanel extends React.Component {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
     theme: PropTypes.object,
-    t: PropTypes.func.isRequired
+    t: PropTypes.func.isRequired,
+    i18n: PropTypes.object.isRequired
   };
 
   constructor(props) {
