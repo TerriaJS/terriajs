@@ -3,6 +3,8 @@ Change Log
 
 #### next release (8.2.10)
 
+* **Breaking changes:**
+  * **Minimum NodeJS version is now 14**
 * Consolidate `HasLocalData` interface
 * Add `GlTf` type definition (v2)
 * Add `gltfModelUrl` to `GltfMixin` - this must be implemented by Models which use `GltfMixin`
@@ -12,6 +14,7 @@ Change Log
   * Supports over 40 formats - including Collada, obj, Blender, DXF - [full list](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md)
 * Add `description` to `getDataType` - this will be displayed between Step 1 and Step 2
 * Add warning message to `GltfMixin` when showing in 2D mode (Leaflet)
+* Upgrade `husky` to `^8.0.1`
 * Prevent looping when navigating between scenes in StoryPanel using keyboard arrows
 * Fix bug where StoryPanel keyboard navigation persists after closing StoryPanel
 * Fix select when clicking on multiple features in 2D (#5660)
@@ -20,6 +23,7 @@ Change Log
 * `GpxCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
 * `GeoRssCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
 * Upgrade i18next to `v21`
+* Limit workbench item title to 2 lines and show overflow: ellipsis after.
 * [The next improvement]
 
 #### 8.2.9 - 2022-07-13
