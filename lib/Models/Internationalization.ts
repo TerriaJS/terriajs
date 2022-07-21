@@ -157,7 +157,6 @@ class Internationalization {
           // cookieDomain: "myDomain",
         },
         interpolation: {
-          skipOnVariables: false,
           escapeValue: false // not needed for react as it escapes by default and not needed in node
         }
       });
