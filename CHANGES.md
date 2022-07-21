@@ -19,14 +19,13 @@ Change Log
 * Implemented FeatureInfoMixin in GeojsonMixin (#5660)
 * `GpxCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
 * `GeoRssCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
+* Strongly type `item` in WorkbenchItem and remove `show` toggle for non `Mappable` items
 * [The next improvement]
 
 #### 8.2.9 - 2022-07-13
 
 * Pin `html-to-react` to `1.4.5` due to ESM module in dependency (`parse5`) breaking webpack
 * Add step to `"Deploy TerriaMap"` action to save `yarn.lock` after `sync-dependencies` (for debug purposes)
-* Strongly type `item` in WorkbenchItem and remove `show` toggle for non `Mappable` items
-* [The next improvement]
 * TSIfy `SharePanel` 
 * Move `includeStoryInShare` out of `ViewState` into local state
 * Implement ability to navigate between scenes in StoryPanel using keyboard arrows
