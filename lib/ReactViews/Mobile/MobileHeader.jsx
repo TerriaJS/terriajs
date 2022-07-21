@@ -15,6 +15,8 @@ import Branding from "../SidePanel/Branding";
 import Styles from "./mobile-header.scss";
 import MobileMenu from "./MobileMenu";
 import MobileModalWindow from "./MobileModalWindow";
+import { StyleSheetManager } from "styled-components";
+import stylisRtlPlugin from "stylis-plugin-rtl";
 
 const MobileHeader = observer(
   createReactClass({
@@ -28,7 +30,8 @@ const MobileHeader = observer(
       menuLeftItems: PropTypes.array,
       menuItems: PropTypes.array,
       theme: PropTypes.object,
-      t: PropTypes.func.isRequired
+      t: PropTypes.func.isRequired,
+      i18n: PropTypes.object.isRequired
     },
 
     getInitialState() {
@@ -142,150 +145,150 @@ const MobileHeader = observer(
 
     render() {
       const searchState = this.props.viewState.searchState;
-      const { t } = this.props;
+      const { t, i18n } = this.props;
       const nowViewingLength =
         this.props.terria.workbench.items !== undefined
           ? this.props.terria.workbench.items.length
           : 0;
 
       return (
-        <div className={Styles.ui}>
-          <Box
-            justifySpaceBetween
-            fullWidth
-            fullHeight
-            paddedRatio={1}
-            backgroundColor={this.props.theme.dark}
-          >
-            <Choose>
-              <When
-                condition={
-                  !searchState.showMobileLocationSearch &&
-                  !searchState.showMobileCatalogSearch
-                }
-              >
-                <Box
-                  position="absolute"
-                  css={`
-                    right: 270px;
-                    [dir="rtl"] & {
-                      left: 270px;
-                      right: 0px;
-                    }
-                  `}
+        <StyleSheetManager
+          stylisPlugins={i18n.dir() === "rtl" ? [stylisRtlPlugin] : []}
+        >
+          <div className={Styles.ui}>
+            <Box
+              justifySpaceBetween
+              fullWidth
+              fullHeight
+              paddedRatio={1}
+              backgroundColor={this.props.theme.dark}
+            >
+              <Choose>
+                <When
+                  condition={
+                    !searchState.showMobileLocationSearch &&
+                    !searchState.showMobileCatalogSearch
+                  }
                 >
-                  <HamburgerButton
-                    type="button"
-                    onClick={() => this.props.viewState.toggleMobileMenu()}
-                    title={t("mobile.toggleNavigation")}
+                  <Box
+                    position="absolute"
+                    css={`
+                      left: 5px;
+                    `}
                   >
-                    <StyledIcon
-                      light
-                      glyph={Icon.GLYPHS.menu}
-                      styledWidth="20px"
-                      styledHeight="20px"
+                    <HamburgerButton
+                      type="button"
+                      onClick={() => this.props.viewState.toggleMobileMenu()}
+                      title={t("mobile.toggleNavigation")}
+                    >
+                      <StyledIcon
+                        light
+                        glyph={Icon.GLYPHS.menu}
+                        styledWidth="20px"
+                        styledHeight="20px"
+                      />
+                    </HamburgerButton>
+                    <Branding
+                      terria={this.props.terria}
+                      viewState={this.props.viewState}
+                      version={this.props.version}
                     />
-                  </HamburgerButton>
-                  <Branding
-                    terria={this.props.terria}
-                    viewState={this.props.viewState}
-                    version={this.props.version}
-                  />
-                </Box>
-                <div
-                  className={Styles.groupRight}
-                  css={`
-                    background-color: ${p => p.theme.dark};
-                  `}
-                >
-                  <button
-                    type="button"
-                    className={Styles.btnAdd}
-                    onClick={this.onMobileDataCatalogClicked}
+                  </Box>
+                  <div
+                    className={Styles.groupRight}
+                    css={`
+                      background-color: ${p => p.theme.dark};
+                    `}
                   >
-                    {t("mobile.addDataBtnText")}
-                    <StyledIcon
-                      glyph={Icon.GLYPHS.increase}
-                      styledWidth="20px"
-                      styledHeight="20px"
-                    />
-                  </button>
-                  <If condition={nowViewingLength > 0}>
                     <button
                       type="button"
-                      className={Styles.btnNowViewing}
-                      onClick={this.onMobileNowViewingClicked}
+                      className={Styles.btnAdd}
+                      onClick={this.onMobileDataCatalogClicked}
                     >
-                      <Icon glyph={Icon.GLYPHS.eye} />
-                      <span
-                        className={classNames(Styles.nowViewingCount, {
-                          [Styles.doubleDigit]: nowViewingLength > 9
-                        })}
-                      >
-                        {nowViewingLength}
-                      </span>
+                      {t("mobile.addDataBtnText")}
+                      <StyledIcon
+                        glyph={Icon.GLYPHS.increase}
+                        styledWidth="20px"
+                        styledHeight="20px"
+                      />
                     </button>
-                  </If>
-                  <button
-                    className={Styles.btnSearch}
-                    type="button"
-                    onClick={this.showSearch}
-                  >
-                    <StyledIcon
-                      glyph={Icon.GLYPHS.search}
-                      styledWidth="20px"
-                      styledHeight="20px"
-                    />
-                  </button>
-                </div>
-              </When>
-              <Otherwise>
-                <div className={Styles.formSearchData}>
-                  <Choose>
-                    <When condition={searchState.showMobileLocationSearch}>
-                      <SearchBox
-                        searchText={searchState.locationSearchText}
-                        onSearchTextChanged={this.changeLocationSearchText}
-                        onDoSearch={this.searchLocations}
-                        placeholder={t("search.placeholder")}
-                        alwaysShowClear={true}
-                        onClear={this.closeLocationSearch}
-                        autoFocus={true}
+                    <If condition={nowViewingLength > 0}>
+                      <button
+                        type="button"
+                        className={Styles.btnNowViewing}
+                        onClick={this.onMobileNowViewingClicked}
+                      >
+                        <Icon glyph={Icon.GLYPHS.eye} />
+                        <span
+                          className={classNames(Styles.nowViewingCount, {
+                            [Styles.doubleDigit]: nowViewingLength > 9
+                          })}
+                        >
+                          {nowViewingLength}
+                        </span>
+                      </button>
+                    </If>
+                    <button
+                      className={Styles.btnSearch}
+                      type="button"
+                      onClick={this.showSearch}
+                    >
+                      <StyledIcon
+                        glyph={Icon.GLYPHS.search}
+                        styledWidth="20px"
+                        styledHeight="20px"
                       />
-                    </When>
-                    <When condition={searchState.showMobileCatalogSearch}>
-                      <SearchBox
-                        searchText={searchState.catalogSearchText}
-                        onSearchTextChanged={this.changeCatalogSearchText}
-                        onDoSearch={this.searchCatalog}
-                        placeholder={t("search.searchCatalogue")}
-                        onClear={this.closeCatalogSearch}
-                        autoFocus={true}
-                      />
-                    </When>
-                  </Choose>
-                </div>
-              </Otherwise>
-            </Choose>
-          </Box>
-          <MobileMenu
-            menuItems={this.props.menuItems}
-            menuLeftItems={this.props.menuLeftItems}
-            viewState={this.props.viewState}
-            allBaseMaps={this.props.allBaseMaps}
-            terria={this.props.terria}
-            showFeedback={!!this.props.terria.configParameters.feedbackUrl}
-          />
-          {/* Don't show mobile modal window if user is currently interacting
+                    </button>
+                  </div>
+                </When>
+                <Otherwise>
+                  <div className={Styles.formSearchData}>
+                    <Choose>
+                      <When condition={searchState.showMobileLocationSearch}>
+                        <SearchBox
+                          searchText={searchState.locationSearchText}
+                          onSearchTextChanged={this.changeLocationSearchText}
+                          onDoSearch={this.searchLocations}
+                          placeholder={t("search.placeholder")}
+                          alwaysShowClear={true}
+                          onClear={this.closeLocationSearch}
+                          autoFocus={true}
+                        />
+                      </When>
+                      <When condition={searchState.showMobileCatalogSearch}>
+                        <SearchBox
+                          searchText={searchState.catalogSearchText}
+                          onSearchTextChanged={this.changeCatalogSearchText}
+                          onDoSearch={this.searchCatalog}
+                          placeholder={t("search.searchCatalogue")}
+                          onClear={this.closeCatalogSearch}
+                          autoFocus={true}
+                        />
+                      </When>
+                    </Choose>
+                  </div>
+                </Otherwise>
+              </Choose>
+            </Box>
+            <MobileMenu
+              menuItems={this.props.menuItems}
+              menuLeftItems={this.props.menuLeftItems}
+              viewState={this.props.viewState}
+              allBaseMaps={this.props.allBaseMaps}
+              terria={this.props.terria}
+              showFeedback={!!this.props.terria.configParameters.feedbackUrl}
+            />
+            {/* Don't show mobile modal window if user is currently interacting
               with map - like picking a point or drawing shapes
            */}
-          {!this.props.viewState.isMapInteractionActive && (
-            <MobileModalWindow
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-            />
-          )}
-        </div>
+            {!this.props.viewState.isMapInteractionActive && (
+              <MobileModalWindow
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+              />
+            )}
+          </div>
+        </StyleSheetManager>
       );
     }
   })
