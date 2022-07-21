@@ -97,4 +97,12 @@ export default class FeatureInfoTraits extends ModelTraits {
       "If the value of a property is null or undefined, show the specified string as the value of the property. Otherwise, the property name will not be listed at all."
   })
   showStringIfPropertyValueIsNull?: string;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Max feature request",
+    description:
+      "Max number of feature info requests to send to API url. Keep this number small to avoid sending to many requests to server (default 10)."
+  })
+  maxRequests: number = 10;
 }
