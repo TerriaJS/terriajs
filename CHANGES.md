@@ -3,6 +3,8 @@ Change Log
 
 #### next release (8.2.10)
 
+* **Breaking changes:**
+  * **Minimum NodeJS version is now 14**
 * Consolidate `HasLocalData` interface
 * Add `GlTf` type definition (v2)
 * Add `gltfModelUrl` to `GltfMixin` - this must be implemented by Models which use `GltfMixin`
