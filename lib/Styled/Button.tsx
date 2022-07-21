@@ -4,7 +4,6 @@ import { BoxSpan } from "./Box";
 import { TextSpan } from "./Text";
 
 const Icon = styled.span<{ rightIcon?: boolean }>`
-  margin: 8px;
   ${p =>
     p.rightIcon
       ? `margin-left: 8px`
