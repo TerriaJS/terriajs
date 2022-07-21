@@ -7,9 +7,10 @@ import {
   Category,
   HelpAction
 } from "../../../../Core/AnalyticEvents/analyticEvents";
+import { isJsonString } from "../../../../Core/Json";
 import Icon, { StyledIcon } from "../../../../Styled/Icon";
 import Text from "../../../../Styled/Text";
-import { useTranslationIfExists } from "./../../../../Language/languageHelpers";
+import { applyTranslationIfExists } from "./../../../../Language/languageHelpers";
 import HelpVideoPanel from "./HelpVideoPanel";
 
 @observer
@@ -21,7 +22,8 @@ class HelpPanelItem extends React.Component {
     viewState: PropTypes.object.isRequired,
     content: PropTypes.object.isRequired,
     theme: PropTypes.object,
-    t: PropTypes.func.isRequired
+    t: PropTypes.func.isRequired,
+    i18n: PropTypes.object.isRequired
   };
 
   constructor(props) {
@@ -29,12 +31,16 @@ class HelpPanelItem extends React.Component {
   }
 
   render() {
+    const { i18n } = this.props;
+
     const itemSelected =
       this.props.viewState.selectedHelpMenuItem === this.props.content.itemName;
 
     // `content.icon` is user defined and can possibly force the UI to lookup a
     // nonexistant icon.
-    const title = useTranslationIfExists(this.props.content.title);
+    const title = isJsonString(this.props.content.title)
+      ? applyTranslationIfExists(this.props.content.title, i18n)
+      : "";
     const paneMode = this.props.content.paneMode;
     const opensInPanel = paneMode !== "externalLink";
     const isRTL = this.props.viewState.isRTL;
@@ -78,10 +84,19 @@ class HelpPanelItem extends React.Component {
             itemString={this.props.content.itemName}
             paneMode={this.props.content.paneMode}
             markdownContent={this.props.content.markdownText}
-            videoUrl={useTranslationIfExists(this.props.content.videoUrl)}
-            placeholderImage={useTranslationIfExists(
-              this.props.content.placeholderImage
-            )}
+            videoUrl={
+              isJsonString(this.props.content.videoUrl)
+                ? applyTranslationIfExists(this.props.content.videoUrl, i18n)
+                : undefined
+            }
+            placeholderImage={
+              isJsonString(this.props.content.placeholderImage)
+                ? applyTranslationIfExists(
+                    this.props.content.placeholderImage,
+                    i18n
+                  )
+                : undefined
+            }
           />
         )}
       </div>

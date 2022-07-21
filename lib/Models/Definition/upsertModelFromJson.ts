@@ -7,6 +7,7 @@ import TerriaError from "../../Core/TerriaError";
 import GroupMixin from "../../ModelMixins/GroupMixin";
 import StubCatalogItem from "../Catalog/CatalogItems/StubCatalogItem";
 import createStubCatalogItem from "../Catalog/createStubCatalogItem";
+import { ModelJson } from "../InitSource";
 import Terria from "../Terria";
 import CommonStrata from "./CommonStrata";
 import { BaseModel } from "./Model";
@@ -37,10 +38,10 @@ export default function upsertModelFromJson(
   terria: Terria,
   parentId: string,
   stratumName: string,
-  json: unknown,
+  json: ModelJson,
   options: UpsertModelFromJsonOptions = {}
 ): Result<BaseModel | undefined> {
-  if (!isJsonObject(json)) {
+  if (!isJsonObject(json, false)) {
     return Result.error("Failed to upsert model - invalid JSON");
   }
   const errors: TerriaError[] = [];

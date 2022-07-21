@@ -1,0 +1,904 @@
+{
+  "general": {
+    "prev": "上一个",
+    "next": "下一个",
+    "skip": "跳过",
+    "back": "返回",
+    "delete": "删除",
+    "cancel": "取消",
+    "confirm": "确认",
+    "close": "关闭",
+    "open": "打开"
+  },
+  "trainer": {
+    "expandTrainer": "显示更多步骤细节",
+    "collapseTrainer": "隐藏步骤细节",
+    "showAllSteps": "显示所有步骤",
+    "hideAllSteps": "隐藏所有步骤"
+  },
+  "tour": {
+    "finish": "完成",
+    "previous": "上一步",
+    "exploreMapDataButton": {
+      "content": "##浏览地图数据\n\n浏览数据目录并添加到地图。可同时添加多个数据集，工作台将列表显示数据集。"
+    },
+    "preface": {
+      "title": "使用指南",
+      "close": "稍后再说",
+      "start": "开始导览",
+      "content": "不确定从哪里开始吗？快速浏览本软件的主要特点，并了解一些关键功能，以帮助您顺利上手。"
+    },
+    "end": "结束导览",
+    "locationSearchInput": {
+      "content": "##位置搜索\n\n输入地点或地址以在地图上定位兴趣点。"
+    },
+    "sidePanelUploadButton": {
+      "content": "##上传数据\n\n上传数据并可与其他数据集叠加显示。上传文件或在线数据集、数据服务链接。支持CSV、GeoJSON、KML、GPX或CZML等数据格式。"
+    },
+    "menuBarMapSettingsButton": {
+      "content": "##地图设定\n\n自定义地图设定，例如你可以选择不同的底图、2D/3D 地形和地图图像质量，以增强浏览器访问性能。"
+    },
+    "menuBarStoryButton": {
+      "content": "## 地图故事\n\n地图故事允许您将上数据内容相关信息添加到数据集，使得数据和内容描述的事情更加生动。使用故事编辑器可创建您自己的数据故事，并在完成后通过“分享”面板进行分享。"
+    },
+    "mapNavigationCompassOuterRing": {
+      "content": "## 视图控制\n\n在视图控制中您可以更改地图的视角。您可以使用外环更改视图的方向，使用内环倾斜相机角度。双击可以重置视图。"
+    },
+    "mapNavigationSplitterIcon": {
+      "content": "## 分屏对比\n\nTerria 的一个强大功能是能够使用分屏视图比较数据集。对于具有时间序列组件的数据集，例如卫星图像，您可以通过单击日期选择器/选择器来前后比较不同日期产生的数据变化。"
+    }
+  },
+  "location": {
+    "location": "位置",
+    "myLocation": "我的位置",
+    "centreMap": "将当前定位显示到地图中心",
+    "errorGettingLocation": "获取位置时出错",
+    "browserCannotProvide": "您的浏览器无法获取定位信息。",
+    "originError": "当前浏览器只能通过https获取位置信息。可以使用{{secureUrl}}替换。"
+  },
+  "measure": {
+    "measureTool": "量测工具",
+    "measureDistance": "量取位置间距离",
+    "measureToolTitle": "线性量测"
+  },
+  "splitterTool": {
+    "toggleSplitterToolTitle": "比较",
+    "workbench": {
+      "goleftTitle": "显示到左侧",
+      "goleft": "左",
+      "bothTitle": "两侧皆显示",
+      "both": "两者",
+      "gorightTitle": "显示到右侧",
+      "goright": "右",
+      "copyName": "{{name}} (复制)"
+    },
+    "toggleSplitterTool": "在两组不同的数据之间进行并排比较",
+    "toggleSplitterToolDisabled": "请禁用其他并排比较功能以启用标准比较",
+    "title": "按下并拖动左键或者右键调整视角"
+  },
+  "concept": {
+    "inactive": {
+      "newText": "新条件",
+      "cancel": "取消"
+    },
+    "summary": {
+      "addMoreText": "添加条件",
+      "addFirstText": "添加新条件"
+    },
+    "active": {
+      "remove": "删除条件",
+      "edit": "编辑条件"
+    }
+  },
+  "catalogItem": {
+    "loading": "加载中...",
+    "remove": "移除",
+    "preview": "预览",
+    "add": "添加",
+    "trash": "从目录移除",
+    "removeFromMap": "从地图移除",
+    "privateIndicatorTitle": "私有数据集"
+  },
+  "analytics": {
+    "polygon": "面",
+    "point": "点 (纬度/经度)",
+    "existingPolygon": "现有面",
+    "clickToDrawLine": "点击画线",
+    "selectLocation": "选择位置",
+    "runAnalysis": "运行分析",
+    "selectPoint": "通过单击地图选择一个点。",
+    "enterValidCoords": "请输入有效坐标(例如 131.0361、-25.3450)。",
+    "clickToDrawPolygon": "点击绘制多边形",
+    "clickToDrawRectangle": "点击绘制矩形",
+    "selectedPolygon": "选定的多边形",
+    "regionName": "地区名称",
+    "selectExistingPolygon": "选择现有多边形",
+    "shiftToDrawRectangle": "按住 SHIFT 键并按住鼠标左键绘制一个矩形",
+    "nothingSelected": "未选择任何内容，请使用上面的按钮进行选择。"
+  },
+  "chart": {
+    "closePanel": "关闭面板",
+    "expand": "展开",
+    "download": "下载",
+    "sectionLabel": "图表",
+    "loading": "加载图表数据...",
+    "noData": "无数据可用于图表显示。"
+  },
+  "viewModels": {
+    "searchCatalogueItem": "目录项",
+    "searchAddresses": "地址",
+    "searchNoPlaceNames": "抱歉，没有官方地名符合您的搜索查询。",
+    "searchNoLocations": "抱歉，没有位置符合您的搜索查询。",
+    "searchPlaceNames": "官方地名",
+    "searchLocations": "位置",
+    "inMultipleLocations": "在多个地点，包括： ",
+    "searchErrorOccurred": "搜索时出错。 请检查您的互联网连接或稍后重试。",
+    "searchNoCatalogueItem": "抱歉，没有与您的搜索查询匹配的目录项。",
+    "inDataCatalogue": "在数据目录中"
+  },
+  "zoomCotrol": {
+    "zoomIn": "放大",
+    "zoomReset": "重置缩放",
+    "zoomOut": "缩小"
+  },
+  "compass": {
+    "guidance": {
+      "innerCircleTitle": "内圈",
+      "outerRingTitle": "外环",
+      "outerRingDescription": "拖动外环以圆周方式旋转可将地图视角旋转 360°。",
+      "innerCircleDescription1": "单击中心并缓慢向上、向下、向左或向右拖动可同时倾斜和旋转地图。",
+      "innerCircleDescription2": "双击此处可将视图重置为其默认状态。",
+      "ctrlDragDescription": "您还可以通过按住 CTRL 键并拖动地图来倾斜和旋转地图。",
+      "dismissText": "关闭提示窗口并且不再显示",
+      "title": "陀螺仪控制"
+    },
+    "description": "拖动外环：旋转视图。\n拖动内陀螺：自由轨道。\n双击：重置视图。\n提示：您也可以通过按住 CTRL 键并拖动地图来释放轨道。",
+    "title": "单击并拖动以旋转相机",
+    "guidanceBtnTitle": "陀螺仪引导",
+    "guidanceBtnText": "查看有关如何使用指南针的详细说明"
+  },
+  "pedestrianMode": {
+    "controls": {
+      "title": "控件"
+    },
+    "toolButtonTitle": "行人模式",
+    "dropPedestrianTooltipMessage": "<b>鼠标左键点击</b> 选择放置位置<br /><b>右键点击 或 键盘按 Esc</b>取消操作"
+  },
+  "notification": {
+    "title": "消息"
+  },
+  "itemSearchTool": {
+    "resetBtnText": "清除输入",
+    "numericParameter": {
+      "minimum": "最小",
+      "maximum": "最大"
+    },
+    "backBtnText": "重新搜索",
+    "resultsCount": "找到 {{count}} 个匹配",
+    "actions": {
+      "highlightAll": "高亮显示所有",
+      "showMatchingOnly": "仅显示匹配"
+    },
+    "searching": "搜索",
+    "searchError": "搜索失败。前往控制台查看错误详情。",
+    "searchBtnText": "搜索"
+  },
+  "indexedItemSearchProvider": {
+    "errorParsingIndexRoot": "indexRoot 文件解析出错：{{indexRootUrl}}。",
+    "missingOptionIndexRootUrl": "项目搜索配置中未设置 `indexRootUrl`选项 。"
+  },
+  "toast": {
+    "mapIsZooming": "缩放到最佳比例..."
+  },
+  "printView": {
+    "loading": "创建打印视图..."
+  },
+  "AR": {
+    "btnResetRealign": "重置指南针对齐",
+    "title": "实验功能：增强现实(AR)",
+    "experimentalFeatureMessage": "增强现实模式目前处于测试阶段。此模式仅适用于最新的高端移动设备。 <br /><br />警告：此模式会消耗大量数据，请注意网络提供商的数据使用费。 <br /><br />此模式的准确性取决于您的移动设备内部指南针的准确性。",
+    "confirmText": "知道了",
+    "manualAlignmentTitle": "手动对齐",
+    "resetAlignmentTitle": "重置对齐",
+    "resetAlignmentMessage": "重置为指南针对齐。如果对齐与现实世界不匹配，请尝试以 8 字形动作挥动您的设备以重新校准设备。您可以随时进行校准设备。<br /> <br />避免放置在有磁场或金属物体的位置，因为这些可能会干扰设备的指南针正常工作。",
+    "arTool": "增强现实(AR)工具",
+    "btnHover": "切换悬停高度",
+    "btnRealign": "切换手动对齐",
+    "manualAlignmentMessage": "对齐您的移动设备，使其与地图当前对齐方式相对应，然后单击闪烁的指南针。如果地图上当前没有要对齐的地标，您可以使用拖动和捏合操作移动地图，直到出现可识别的地标，然后再将设备与地图对齐。 <br /><div>{{img}}</div> <br />提示：如果您在不熟悉的位置，太阳或月亮通常是很好的标记（注意不要看太阳——它会伤害你的眼睛）。"
+  },
+  "tool": {
+    "closeButtonTitle": "关闭 {{toolName}} 工具",
+    "loadingError": {
+      "title": "载入 {{toolName}} 工具时出错",
+      "message": "尝试从服务器加载此工具时出错。请再试一次。"
+    },
+    "exitBtnTitle": "退出",
+    "button": {
+      "open": "退出{{toolNameLowerCase}}",
+      "closed": "{{toolName}}"
+    }
+  },
+  "diffTool": {
+    "title": "差异",
+    "exit": "退出",
+    "instructions": {
+      "setDateA": "设置日期 A",
+      "setDateB": "设置日期 B",
+      "changeDates": "更改日期",
+      "paneDescription": "在一个位置查看和比较两个日期之间的数据差异。"
+    },
+    "choosePreview": "选择预览样式",
+    "chooseDifference": "选择一个不同的输出",
+    "differenceResultsTitle": "更改检测结果",
+    "labels": {
+      "area": "区域",
+      "dates": "日期",
+      "dateComparisonA": "日期对比 A",
+      "dateComparisonB": "日期对比 B",
+      "sourceDataset": "源数据集",
+      "previewStyle": "预览样式",
+      "differenceOutput": "差异输出",
+      "generateDiffButtonText": "生成变更检测",
+      "disabledButtonPrompt": "请注意：必须选择位置和日期才能继续进行变更检测",
+      "areaFilterSelection": "区域过滤器选择"
+    },
+    "locationDisplay": {
+      "noLocationSelected": {
+        "title": "未选择位置",
+        "description": "要按位置过滤图像日期选择器，请在地图上选择一个点"
+      },
+      "locationSelected": {
+        "title": "选择的位置和过滤的日期",
+        "description": "要更改，请单击地图上的另一个点"
+      }
+    },
+    "locationPicker": {
+      "initialMessages": {
+        "title": "选择一个精确的位置",
+        "beforePick": "我们需要它来运行我们的变更检测过程。",
+        "afterPick": "单击另一个位置点来更改所选区域"
+      },
+      "nextMessages": {
+        "title": "您已选择位置纬度 {{latitude}}经度 {{longitude}}",
+        "beforePick": "单击另一个点来更改选择",
+        "afterPick": "单击另一个点位置来更改选择"
+      },
+      "errorMessages": {
+        "title": "选择一个精确的位置",
+        "beforePick": "无法解析该位置的图像！请选择不同的位置或缩放级别。",
+        "afterPick": "单击另一个点位置来更改选择"
+      }
+    },
+    "datePicker": {
+      "back": "返回",
+      "previousDateTitle": "前一个日期",
+      "nextDateTitle": "下一个日期",
+      "dateButtonTitle": "选择一个日期",
+      "dateOutOfRange": "当前输入内容超出范围"
+    }
+  },
+  "share": {
+    "btnStoryShareText": "分享",
+    "browserPrint": "为了获得更好的打印效果，请使用 {{appName}} 的打印按钮而不是您的网络浏览器的打印功能。",
+    "shortLinkShortening": "缩写...",
+    "shortLinkError": "尝试缩短 URL 时出错。 请检查您的互联网连接，然后重试。",
+    "localDataNote": "<0><0>注意：</0></0><1>以下数据源将不会被共享，因为它们包含来自该本地系统的数据。 要共享这些数据源，请将其数据发布到网络服务器上并<2>使用 url 添加它们</2>。</1>",
+    "generatingUrl": "正在生成共享 URL链接...",
+    "printTitle": "打印地图",
+    "printExplanation": "打开此地图的可打印版本。",
+    "printButton": "打印",
+    "printViewButton": "显示打印视图",
+    "btnMapShareText": "分享/打印",
+    "btnCatalogShareTitle": "与他人分享您的目录",
+    "btnStoryShareTitle": "与他人分享您的地图故事",
+    "btnMapShareTitle": "与他人分享你的地图",
+    "convertNotificationMessage": "此共享链接基于旧版本的 TerriaJS - 支持此网络地图的软件。 尽管已尽最大努力保留链接，但您可能会遇到数据可视化问题。\n\n如果您是共享链接的用户，请单击确定以使警告消息消失并继续访问数据。",
+    "downloadMap": "下载地图(png图片)",
+    "creatingPrintView": "正在创建打印视图...",
+    "btnAdvanced": "高级选项",
+    "embedTitle": "要嵌入，请复制此代码以将此地图嵌入 HTML 页面：",
+    "shortenUsingService": "使用 Web 服务缩短共享 URL地址",
+    "btnCatalogShareText": "分享",
+    "convertNotificationTitle": "注意：分享链接已更新",
+    "convertNotificationHelp": "如果您已创建共享链接，请查看“帮助”菜单以查看有关更新共享链接的提示。",
+    "convertNotificationFeedback": "如有问题或反馈，请单击此处。",
+    "convertNotificationWarningsTitle": "技术细节",
+    "convertErrorTitle": "无法将共享链接升级到 V8版本",
+    "convertErrorMessage": "此共享链接基于旧版本的 TerriaJS - 支持此网络地图的软件。 尝试升级共享数据时发生错误。"
+  },
+  "feedback": {
+    "close": "关闭反馈",
+    "yourName": "您的姓名（可选）",
+    "captionText": "这有助于我们通过让我们看到您所看到的内容来解决问题",
+    "cancel": "取消",
+    "sending": "发送中...",
+    "send": "发送",
+    "feedbackBtnText": "提交反馈",
+    "minLength": "反馈评论的最小长度是 {{minLength}}个字",
+    "feedbackPreamble": "我们很在意您的反馈！",
+    "title": "反馈",
+    "email": "电子邮件地址（可选）<br/><em>没有它我们无法跟您联系！</em>",
+    "commentQuestion": "评论或问题",
+    "shareWithDevelopers": "与 {{appName}} 开发者分享我的地图视图"
+  },
+  "legend": {
+    "lat": "纬度",
+    "lon": "经度",
+    "zone": "区域",
+    "e": "E",
+    "n": "N",
+    "elev": "Elev"
+  },
+  "languagePanel": {
+    "changeLanguage": "更改语言"
+  },
+  "countDatasets": {
+    "totals": "<div>本目录包含 {{items}} 个子项在{{groups}} 组中</div>",
+    "btnText": "开始",
+    "loadError": "加载时失败。",
+    "countingMessage": "正在计算中，请稍候...",
+    "subTotals": "<div> {{name}}：{{items}} 子项 / {{groups}} 组</div>",
+    "recount": "重新计算",
+    "title": "计数数据集",
+    "btnCount": "计算数据集",
+    "noMapDataEnabled": "未启用地图数据",
+    "mapDataState": "在地图上启用 {{count}} 个数据集"
+  },
+  "settingPanel": {
+    "baseMap": "底图",
+    "imageOptimisation": "图像优化",
+    "nativeResolutionHeader": "使用本机设备分辨率",
+    "mapQuality": "栅格地图质量：",
+    "qualityLabel": "质量",
+    "performanceLabel": "性能",
+    "timeline": {
+      "alwaysShow": "始终显示",
+      "hideLabel": "按下以开始始终显示时间线，即使工作台上没有随时间变化的数据集",
+      "title": "时间线",
+      "alwaysShowLabel": "当工作台上有随时间变化的数据集时，按下开始仅显示时间线"
+    },
+    "mapView": "地图视角",
+    "none": "(无)",
+    "viewerModeLabels": {
+      "CesiumTerrain": "3D地形",
+      "CesiumEllipsoid": "3D平滑",
+      "Leaflet": "2D"
+    },
+    "qualityLabels": {
+      "maximumPerformance": "最性能，低质量",
+      "balancedPerformance": "平衡的性能和质量",
+      "lowerPerformance": "高质量，低性能"
+    },
+    "nativeResolutionLabel": "按停止使用 {{resolution 1}} 分辨率并开始使用 {{resolution 2}} 分辨率",
+    "native": "原生",
+    "screen": "屏幕",
+    "btnTitle": "更换视图",
+    "btnText": "地图设定",
+    "terrain": {
+      "hideUnderground": "地形隐藏地下特征",
+      "showUndergroundFeatures": "按下以开始显示地形表面下方的要素",
+      "hideUndergroundFeatures": "按下以开始隐藏地形表面下方的要素",
+      "sideLabel": "显示地形",
+      "left": "左",
+      "both": "两边",
+      "right": "右"
+    }
+  },
+  "helpPanel": {
+    "promptMessage": "在此处查找教程、操作方法视频和其他帮助内容",
+    "dismissText": "知道了，谢谢！",
+    "takeTour": "学习教程",
+    "btnText": "帮助",
+    "menuPaneTitle": "我们在这里为您提供帮助",
+    "menuPaneBody": "通过查看以下指南或通过 [{{supportEmail}}]({{supportEmail}}) 联系团队，找到有关如何使用 TerriaJS 的有用提示",
+    "mapUserGuide": "地图用户指南"
+  },
+  "helpMenu": {
+    "btnText": "帮助",
+    "btnTitle": "获取帮助",
+    "done": "完成",
+    "next": "下一个",
+    "helpMenuHeader": "您想做什么？",
+    "helpMenuOpenWelcome": "显示欢迎信息",
+    "helpMenuSatelliteGuideTitle": "查看卫星图像指南",
+    "helpMenuMoreHelpTitle": "更多帮助"
+  },
+  "story": {
+    "deleteStory": "删除",
+    "delete": "删除",
+    "panelTitle": "地图故事编辑器",
+    "panelBody": "直接从您的地图创建和分享互动的地图故事",
+    "editor": {
+      "cancelBtn": "取消",
+      "cancelEditing": "取消",
+      "saveBtn": "保存",
+      "placeholder": "在此处输入标题",
+      "saveStory": "保存"
+    },
+    "dismissText": "知道了，谢谢！",
+    "mobileViewStory": "查看地图故事 {{storiesLength}}",
+    "promptHtml2": "<0><0>介绍</0><1>数据故事</1><2>直接从您的地图创建和分享互动地图故事。</2></0>",
+    "playStory": "地图故事",
+    "story": "地图故事",
+    "storyEditor": "地图事故编辑器",
+    "hideStoryPanel": "隐藏地图故事生成器",
+    "loadSceneErrorTitle": "加载地图故事场景时出错",
+    "share": "分享",
+    "navBtn": "转到地图故事 {{title}}",
+    "badgeBarLabel": "场景",
+    "captureSceneTitle": "抓取当前场景",
+    "removeAllStoriesDialog": "您确定要删除 {{ count }} 个场景吗？",
+    "captureScene": "抓取场景",
+    "nextBtn": "转到下一个场景",
+    "locationBtn": "中心场景",
+    "previousBtn": "转到上一个场景",
+    "promptHtml1": "<0>点击此处，您可以随时查看和创建地图故事。</0>",
+    "exitBtn": "退出地图故事",
+    "untitled": "未命名场景",
+    "navBtnMobile": "转到地图故事{{title}}",
+    "loadSceneErrorMessage": "加载地图故事场景数据时出错，标题：`{{title}}`。",
+    "gettingStarted": "初次使用",
+    "gettingStartedTitle": "初次使用",
+    "shareTitle": "分享地图故事",
+    "viewStory": "视图",
+    "view": "视图",
+    "editStory": "编辑",
+    "edit": "编辑",
+    "recaptureStory": "重复抓取",
+    "recapture": "重复抓取",
+    "untitledScene": "未命名场景",
+    "doesNotExist": "地图故事不存在",
+    "message": "<2>这是您的地图故事编辑器</2><1>直接从您的地图创建和分享互动地图故事<1><0><0></0>开始使用</0></1></1 >",
+    "removeAllStories": "移除全部",
+    "removeStoryDialog": "您确定要删除“<1>{{storyName}}</1>”吗？",
+    "preview": "预览地图故事",
+    "play": "播放"
+  },
+  "sui": {
+    "notifications": {
+      "title": "这张地图包含一个地图故事",
+      "message": "您想现在查看吗？",
+      "confirmText": "是",
+      "denyText": "也许以后吧。"
+    },
+    "showWorkbench": "显示工作台",
+    "hideWorkbench": "隐藏工作台"
+  },
+  "featureInfo": {
+    "download": "下载此表",
+    "pickLocation": "选择一个位置",
+    "clickMap": "单击地图以了解有关此位置的更多信息",
+    "noDataAvailable": "此处没有可用数据 - 请尝试其他位置。",
+    "clickToAddData": "单击“$t(addData.addDataBtnText)”将数据添加到地图。",
+    "satelliteSuggestionBtn": "在此位置显示 {{catalogItemName}}",
+    "locationMarker": "位置标记",
+    "noInfoAvailable": "无资料",
+    "catalogItem": {
+      "moreThanMax": "找到超过 {{maximum}} 个 {{catalogItemName}} 个特征。",
+      "featuresFound": "找到 {{featCount}} 个 {catalogItemName} 个特征。",
+      "featureInfoShown": "第一个 {{maximum}} 如下所示。"
+    },
+    "userSelection": "用户选择",
+    "panelHeading": "功能信息",
+    "btnCloseFeature": "关闭数据面板",
+    "siteData": "站点数据",
+    "latLon": "纬度/经度 ",
+    "showRawData": "显示原始数据",
+    "showCuratedData": "显示精选数据"
+  },
+  "welcomeMessage": {
+    "dismissText": "关闭消息，不再向我显示此消息",
+    "welcomeMessageOnMobile": "对数据发现和探索感兴趣？",
+    "welcomeMessage": "对数据发现和探索感兴趣？<br/>立即开始学习或查看以下帮助指南选项。",
+    "title": "让我们开始吧",
+    "tourBtnText": "开始教程",
+    "helpBtnText": "我需要一些帮助",
+    "exploreDataBtnText": "探索地图数据",
+    "searchBtnText": "搜索位置"
+  },
+  "satelliteGuidance": {
+    "menuTitle": "您可以通过查看<2>帮助菜单</2>随时访问地图指南。",
+    "dismissText": "知道了，谢谢！",
+    "titleI": "卫星图像：我该如何做……？",
+    "bodyI": "充分利用历史卫星图像的超快指南。",
+    "prevI": "不客气",
+    "nextI": "查看指南",
+    "titleII": "我的卫星图像在哪里？",
+    "titleIV": "按位置过滤图像",
+    "titleV": "如何查看伪彩色图像?",
+    "bodyV": "通过单击数据工作台中的样式下拉菜单，您可以将一系列样式（例如假色）应用于卫星图像。",
+    "bodyIV": "在您喜欢的时间和地点，卫星图像可能并不总是可用。 如果您只想查看特定位置的图像，请单击数据工作台中的“按位置过滤”。",
+    "bodyII": "您可能需要调整缩放级别以使卫星图像在地图上可见。",
+    "titleIII": "加载历史图像",
+    "bodyIII": "在您的数据工作台中，单击捕获日期下拉菜单并从可用时间中选择以加载历史图像。"
+  },
+  "toolsPanel": {
+    "btnText": "工具",
+    "btnTitle": "高级工具箱"
+  },
+  "dateTime": {
+    "selectorLabel": "时间:",
+    "back": "返回",
+    "previous": "上一个时间",
+    "selectTime": "选择一个时间",
+    "timeline": {
+      "playSlower": "慢速播放",
+      "textCell": "显示时间范围的数据集名称",
+      "playFaster": "快速播放",
+      "gotoStart": "转到开头",
+      "togglePlay": "播放"
+    },
+    "next": "下一个时间",
+    "availableTimeChart": "在图表上显示可用时间",
+    "useTimeline": "使用时间线",
+    "outOfRange": "当前输入内容超出范围"
+  },
+  "satellite": {
+    "newLocation": "新位置",
+    "infoGroup": "仅显示以下可用的捕获时间：",
+    "pickPoint": "通过单击地图选择一个点。",
+    "querying": "查询位置...",
+    "filterByLocation": "按位置过滤",
+    "removeFilter": "移除过滤条件",
+    "zoomTo": "缩放至"
+  },
+  "timer": {
+    "nextScheduledUpdateTime": "下次数据更新时间为 {{scheduledUpdateTime}}",
+    "nextScheduledUpdateCountdown": "下一次数据更新为{{timeCountdown}}"
+  },
+  "clipboard": {
+    "success": "复制到剪贴板",
+    "unsuccessful": "复制失败...",
+    "shareURL": "分享URL链接",
+    "copy": "复制",
+    "shareExplanation": "拥有此 URL 的任何人都可以访问此地图。"
+  },
+  "core": {
+    "readXml": {
+      "xmlError": "该文件内无有效的 XML。"
+    },
+    "terriaError": {
+      "defaultTitle": "发生错误",
+      "defaultMessage": "未知错误",
+      "networkRequestTitle": "发生网络请求错误",
+      "networkRequestMessage": "由于数据管理者的服务中断，数据可能无法使用或无法正确显示。请尝试重新加载地图、稍后访问数据或选择不同的数据集。 <feedbacklink feedback-message='如果问题仍然存在，请在此提交反馈。' email-message='如果问题依旧，请报告给{{email}}'/>",
+      "defaultCombineMessage": "错误的详细信息如下",
+      "networkRequestMessageDetailed": "这可能出现了以下情况之一：\n\n* 无法解析服务器主机名\n* 服务器没有响应请求 - 或暂时不可用\n* 服务器拒绝 [Cross-Origin Resource Sharing (CORS)](https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/) 访问此 URL\n* 您的网络连接有问题\n\n如果您手动输入链接，请验证链接是否正确。",
+      "defaultCombineTitle": "遇到多个错误"
+    },
+    "googleAnalytics": {
+      "log": "由于未指定 terria.configParameters.googleAnalyticsKey，Google Analytics 跟踪已禁用",
+      "logEnabledOnDevelopment": "Google Analytics 在“开发”环境中初始化"
+    },
+    "errors": {
+      "tooDeepAddedByUser": "检查 addedByUser 并登陆 ID：“{{memberId}}”时达到 100 个目录项？ 检查您是否没有递归目录组。"
+    },
+    "userAddedData": "用户添加的数据",
+    "chartData": "图表数据",
+    "dataUri": {
+      "errorTitle": "浏览器不支持数据下载",
+      "errorMessage": "不幸的是，Microsoft 浏览器（包括所有版本的 Internet Explorer 和 Edge）不支持将数据下载为文件所需的数据 uri 功能。 要下载，请将以下 uri 复制到其他浏览器，例如 Chrome、Firefox 或 Safari：{{href}}"
+    },
+    "dataType": {
+      "wps-getCapabilities": "Web Processing Service (WPS)服务",
+      "auto": "自动检测(推荐)",
+      "wmts-group": "Web Map Tile Service (WMTS) 服务",
+      "wfs-group": "Web Feature Service (WFS) 服务",
+      "esri-group": "Esri ArcGIS 服务",
+      "esri-mapServer": "Esri ArcGIS 地图服务 (单用户)",
+      "esri-featureServer": "Esri ArcGIS 信息服务 (单用户)",
+      "3d-tiles": "3D模型",
+      "wms-group": "Web Map Service (WMS) 服务",
+      "opendatasoft-group": "Opendatasoft 门户",
+      "open-street-map": "Open Street Map(OSM)服务",
+      "geojson": "GeoJSON格式",
+      "geoRss": "GeoRSS格式",
+      "gpx": "GPX格式",
+      "carto": "Carto格式",
+      "shp": "Shapefile 文件(zip)",
+      "other": "其它格式(使用转换服务)",
+      "sdmx-group": "SDMX-JSON数据组",
+      "json": "JSON格式",
+      "czml": "CZML格式",
+      "gltf": "GLTF格式",
+      "kml": "KML或者KMZ",
+      "csv": "CSV格式"
+    },
+    "printWindow": {
+      "onafterprint": "打印之后",
+      "errorTitle": "打印错误",
+      "printMediaStart": "打印介质开始",
+      "printMediaEnd": "打印介质结束",
+      "onbeforeprint": "打印开始前",
+      "errorMessage": "打印未在 10 秒内开始。也许这个网络浏览器不支持打印？"
+    },
+    "consoleAnalytics": {
+      "started": "ConsoleAnalytics 已启动。",
+      "startedNoenableConsoleAnalytics": "ConsoleAnalytics 已启动，但未定义“configParameters.enableConsoleAnalytics”或未设置为 false。",
+      "logStartedWithGAParameters": "ConsoleAnalytics 已启动，但在 `configParameters` 上显示为 `googleAnalyticsKey` 或 `googleAnalyticsOptions` 键"
+    },
+    "readText": {
+      "fileRequired": "文件是必需的"
+    },
+    "serverConfig": {
+      "failedToGet": "无法从 {{serverConfigUrl}} 获取服务器配置。这意味着代理、转换和 URL 缩短等服务可能无法正常工作。"
+    }
+  },
+  "terriaViewer": {
+    "slowWebGLAvailableMessageII": "{{appName}} 最适用于支持 {{webGL}} 的网络浏览器，包括最新版本的 {{chrome}}、{{firefox}}、{{safari}} 和 {{internetExplorer}}。 您的 Web 浏览器似乎不支持 WebGL，因此您将看到有限的纯 2D 体验。",
+    "chrome": "谷歌Chrome浏览器",
+    "webGLNotSupportedOrSlowMessage": "您的 Web 浏览器无法以 3D 显示地图，因为它不支持 WebGL，或者您的 Web 浏览器报告说 WebGL 会非常慢。 请尝试其他网络浏览器，例如最新版本的 {{chrome}}、{{firefox}}、{{safari}}、{{internetExplorer}}。在某些情况下，您可能需要升级计算机的视频驱动程序 或操作系统以获得 {{appName}} 中的 3D 视图。",
+    "slowWebGLAvailableTitle": "本机WebGL性能低下",
+    "webGLNotSupportedTitle": "WebGL不受支持",
+    "webGLNotSupportedOrSlowTitle": "WebGL 不受支持或者太慢了",
+    "internetExplorer": "IE 11版本浏览器",
+    "firefox": "FireFox浏览器",
+    "safari": "苹果Safari浏览器",
+    "slowWebGLAvailableMessage": "您的网络浏览器报告在 3D 中显示 {{appName}} 时存在性能问题，因此您将看到有限的纯 2D 体验。 要获得完整的 3D 体验，请尝试使用不同的 Web 浏览器、升级您的视频驱动程序或升级您的操作系统。"
+  },
+  "map": {
+    "cesium": {
+      "failedToObtain": "未能获取图像块 X:{{x}} Y:{{y}} Level: {{level}}",
+      "devError": "cesium组件是必需的。",
+      "notWebMercatorTilingScheme": "此数据集无法在 2D 地图上显示，因为它不支持 Web Mercator (EPSG:3857) 投影。",
+      "unusalTilingScheme": "此数据集无法在 2D 地图上显示，因为它使用了不受支持的切片方案。"
+    },
+    "addressGeocoder": {
+      "devError": "bulkConvertAddresses 必须在派生类中实现。"
+    },
+    "gmlToGeoJson": {
+      "missingPos": "GML 点元素缺少 pos 元素。",
+      "containsUnsupportedFeatureType": "GML 包含不受支持的特征类型：{{type}}",
+      "missingExteriorRing": "GML 多边形缺少其外环。",
+      "missingPosList": "GML 多边形的外环缺少 posList。"
+    },
+    "gnafAddressGeocoder": {
+      "noAddresses2": "即使 tableStructure 报告它有一个地址列，它也没有地址",
+      "postcode": "邮政编码",
+      "matchedAddresses": "匹配地址",
+      "lon": "经度",
+      "lat": "纬度",
+      "suburb": "市郊",
+      "noAddresses": "此表结构没有地址！",
+      "score": "分数",
+      "poBox": "pobox编码",
+      "postOfficeBox": "邮局信箱",
+      "state": "状态"
+    },
+    "regionProvider": {
+      "csvRegionMappingTitle": "CSV 区域映射",
+      "csvRegionMappingMessageZeroFound": "区域类型 {{regionType}} 找到零个区域名称",
+      "csvRegionMappingMessageZeroBoundariesFound": "区域 {{regionName}} 找到零个区域边界",
+      "csvRegionMappingMessageLoadError": "无法加载区域 {{regionName}} {{exception}} 的区域边界"
+    },
+    "mapboxVectorTileImageryProvider": {
+      "requireLayerName": "MapboxVectorTileImageryProvider 需要一个作为 options.layerName 传递的层名",
+      "requireStyles": "MapboxVectorTileImageryProvider 需要作为 options.styleFunc 传递的样式函数",
+      "maxLevelError": "数据集的最高级别过高",
+      "moreThanFourTiles": "图像提供者(Imagery providers )的区块显示在最低级别有 {{tileCount}} 个图块。图像提供程序(Imagery providers ) 不支持在最低级别具有四个以上图块。"
+    },
+    "extraCreditLinks": {
+      "basemap": "底图",
+      "disclaimer": "免责声明",
+      "dataAttribution": "数据归属"
+    },
+    "computeRingWindingOrder": {
+      "devError": "类型为 {x:number, y:number} 的预期点"
+    },
+    "displayVariablesConcept": {
+      "defaultName": "显示变量"
+    },
+    "drawExtentHelper": {
+      "drawExtent": "绘制范围",
+      "extent": "范围"
+    },
+    "geoRssToGeoJson": {
+      "containsUnsupportedFeatureType": "GeoRSS 包含不受支持的功能类型：{{type}}"
+    },
+    "w3cToGeoJson": {
+      "containsUnsupportedFeatureType": "带有 W3C 几何的 GeoRSS 包含不受支持的特征类型：{{type}}"
+    },
+    "imageryProviderHooks": {
+      "devError": "没有图像重新着色的相关信息。"
+    }
+  },
+  "models": {
+    "userData": {
+      "addingDataErrorTitle": "无法添加数据",
+      "addingDataErrorMessage": "无法添加指定的数据，因为它无效或不具有预期的格式。",
+      "fileApiNotSupportedTitle": "不支持文件 API",
+      "internetExplorer": "IE 11浏览器",
+      "edge": "微软Edge浏览器",
+      "firefox": "火狐",
+      "fileApiNotSupportedMessage": "抱歉，您的网络浏览器不支持 {{appName}} 需要的 File API，以便从系统上的文件中添加数据。 请升级您的网页浏览器。 为获得最佳体验，我们建议使用最新版本的 {{chrome}}、{{firefox}} 或 {{edge}}。",
+      "chrome": "谷歌Chrome"
+    },
+    "arcGisFeatureServerCatalogGroup": {
+      "groupNotAvailableTitle": "群组不可用",
+      "invalidServiceTitle": "ArcGIS 要素服务无效",
+      "dataDescription": "数据说明",
+      "serviceDescription": "服务说明",
+      "name": "ArcGIS 要素服务器组",
+      "copyrightText": "版权文本",
+      "invalidServiceMessage": "调用 ArcGIS 要素服务时出错。 服务器的响应似乎不是有效的要素服务文档。",
+      "groupNotAvailableMessage": "调用 ArcGIS 要素服务时出错。"
+    },
+    "arcGisFeatureServerCatalogItem": {
+      "invalidServiceMessage": "调用 ArcGIS 要素服务时出错。 服务器的响应表明该内容不是有效的要素服务图层。",
+      "reachedMaxFeatureLimit": "警告：此图层已达到 FeatureService 功能限制。",
+      "name": "Esri ArcGIS 特征服务器",
+      "dataDescription": "数据说明",
+      "serviceDescription": "服务说明",
+      "copyrightText": "版权文本",
+      "missingUrlTitle": "无法加载 FeatureServer",
+      "missingUrlMessage": "无法加载 ArcGis FeatureServer 端点，因为目录项没有“url”。",
+      "invalidServiceTitle": "ArcGIS 要素服务图层无效"
+    },
+    "arcGisMapServerCatalogGroup": {
+      "dataDescription": "数据描述",
+      "name": "ArcGIS 地图服务器组"
+    },
+    "arcGisService": {
+      "name": "ArcGIS服务组",
+      "invalidServerTitle": "无效的ArcGIS Server",
+      "groupNotAvailableTitle": "群组不可用",
+      "invalidServerMessage": "调用 ArcGIS REST 服务时出错。 服务器的响应似乎不是有效的 ArcGIS REST 文档。",
+      "groupNotAvailableMessage": "调用 ArcGIS REST 服务时发生错误。"
+    },
+    "arcGisFeatureServer": {
+      "name": "ArcGIS 要素服务器",
+      "nameGroup": "ArcGIS 要素服务器组",
+      "groupNotAvailableTitle": "群组不可用",
+      "invalidServiceTitle": "ArcGIS 要素服务无效",
+      "invalidServiceMessage": "调用 ArcGIS 要素服务时出错。 服务器的响应似乎不是有效的要素服务文档。",
+      "groupNotAvailableMessage": "调用 ArcGIS 要素服务时出错。"
+    }
+  },
+  "addData": {
+    "addDataBtnText": "探索地图数据",
+    "webFile": "<0>第2步：</0>输入数据文件或网络服务的URL",
+    "urlInputBtn": "添加",
+    "back": "返回",
+    "btnHide": "隐藏",
+    "closeDataPanel": "关闭数据面板",
+    "dataCatalogue": "数据目录",
+    "searchPlaceholderWhole": "搜索整个目录",
+    "searchPlaceholder": "搜索目录",
+    "localAdd": "添加本地文件",
+    "localFileType": "<0>步骤 1：</0> 选择文件类型（可选）",
+    "localFile": "<0>步骤 2：</0> 选择文件",
+    "webAdd": "添加网络数据",
+    "browse": "浏览...",
+    "localTitle": "添加本地数据",
+    "dragDrop": "拖放",
+    "note": "<0>注意：</0>以这种方式添加的数据不会被保存或对其他人可见。",
+    "load": "加载本地/网络数据",
+    "myData": "我的数据",
+    "webTitle": "添加网络数据",
+    "done": "完成",
+    "infoText": "<0>将文件拖放到此处以在地图上本地查看</0><1>（不会保存或上传到互联网）</1>",
+    "webFileType": "<0>步骤 1：</0> 选择文件类型（可选）"
+  },
+  "description": {
+    "dataLocal": "该文件仅存在于您的浏览器中。 要共享它，您必须将其加载到公共 Web 服务器上。",
+    "name": "描述",
+    "dataUrl": "数据链接",
+    "downloadInFormat": "以 {{format}} 格式下载当前选择的数据",
+    "useTheLinkToDownload": "使用下面的链接直接下载数据。",
+    "dataSourceDetails": "数据源详细信息",
+    "dataNotLocal": "请联系此数据的提供者以获取更多信息，包括有关使用权利和限制的信息。",
+    "typeName": "类型名称",
+    "wms": "这是一项<1>WMS 服务</1>，可根据请求生成地图图像。 它可以通过这个 URL 在 GIS 软件中使用：",
+    "dataCustodian": "数据保管人",
+    "wfs": "这是一项<1>WFS 服务</1>，可根据请求传输原始空间数据。 它可以通过这个 URL 在 GIS 软件中使用：",
+    "metadataUrls": "元数据链接",
+    "downloadNotSupported": "不幸的是，您的浏览器不支持将此数据下载为文件所需的功能。 请使用 Chrome、Firefox 或 Safari 下载此数据。",
+    "layerName": "图层名称",
+    "useLinkBelow": "使用下面的链接下载数据。 有关自定义 URL 查询参数的更多信息，请参阅 {{link}}。",
+    "downloadData": "下载数据",
+    "dataServiceDetails": "数据服务详情"
+  },
+  "preview": {
+    "contact": "联系",
+    "doesNotContainGeospatialData": "该文件不包含地理空间数据。",
+    "selectToPreview": "<0>选择数据集以查看预览</0><1>- 或 -</1><2>转到地图</2>",
+    "loading": "预览加载中...",
+    "previewItemErrorTitle": "无法预览目录项。",
+    "previewItemErrorMessage": "加载目录项时出错。",
+    "dataPreview": "数据预览",
+    "dataPreviewError": "数据预览错误",
+    "removeFromMap": "从地图中移除",
+    "addToMap": "添加到地图中",
+    "disclaimer": "免责声明",
+    "dataDescription": "资料说明",
+    "serviceDescription": "服务说明",
+    "resourceDescription": "资源描述",
+    "licence": "许可证",
+    "accessConstraints": "访问约束",
+    "fees": "fees",
+    "created": "创建",
+    "updateFrequency": "更新频率",
+    "dataCustodian": "数据保管人",
+    "mayBeExperiencingIssues": "此数据集当前可能遇到问题",
+    "noPreviewAvailable": "预览不可用",
+    "dataPreviewLoading": "数据预览加载中...",
+    "preview": "{{appName}} 预览",
+    "datasetDescription": "数据集描述",
+    "modified": "修改",
+    "author": "作者"
+  },
+  "workbench": {
+    "splitItem": "比较",
+    "colorScaleRangeMin": "最小值必须是数字。",
+    "colorScaleRange": "色阶范围",
+    "rangeMax": "最大值：",
+    "rangeMin": "最小值:",
+    "colorScaleUpdateRange": "更新范围",
+    "opacity": "不透明度：{{opacity}} %",
+    "zoomTo": "缩放到数据区",
+    "openFeatureTitle": "缩放到数据区",
+    "openFeature": "缩放至",
+    "previewItemTitle": "关于此数据",
+    "showMoreActionsTitle": "显示更多动作",
+    "previewItem": "关于数据",
+    "splitItemTitle": "分屏同步显示",
+    "diffImageTitle": "查看两个日期之间的图像差异",
+    "exportData": "导出",
+    "removeFromMapTitle": "移除此数据",
+    "label": "数据集",
+    "removeAll": "移除所有数据",
+    "collapseAll": "全部收缩",
+    "expandAll": "展开全部",
+    "toggleVisibility": "数据显示/隐藏",
+    "addItemErrorMessage": "加载目录子项时出错。",
+    "dimensionsSelector": {
+      "undefinedLabel": "未标明"
+    },
+    "searchItemTitle": "搜索",
+    "colorScaleRangeMinSmallerThanMax": "色标范围的最小值必须小于最大值。",
+    "colorScaleRangeTitle": "色阶范围无效",
+    "colorScaleRangeMax": "最大值必须是数字。",
+    "zoomToTitle": "缩放至范围",
+    "displayPercent": "显示为区域总数的百分比",
+    "exportDataTitle": "导出地图数据",
+    "removeFromMap": "移除",
+    "diffImage": "不同之处",
+    "addItemErrorTitle": "无法将目录子项添加到工作台。",
+    "searchItem": "搜索"
+  },
+  "dataCatalog": {
+    "groupRemove": "移除此群组",
+    "groupEmpty": "此组为空"
+  },
+  "search": {
+    "data": "数据",
+    "search": "在数据目录中搜索“{{searchText}}”",
+    "viewMore": "查看更多 {{name}} 结果",
+    "placeholder": "搜索位置",
+    "searchCatalogue": "搜索目录",
+    "resultsLabel": "搜索结果",
+    "viewLess": "查看较少的 {{name}} 个结果",
+    "searchInDataCatalog": "在数据目录中搜索 <1>'{{locationSearchText}}'</1>",
+    "done": "完成"
+  },
+  "mobile": {
+    "doneBtnText": "完成",
+    "toggleNavigation": "切换导航",
+    "addDataBtnText": "数据"
+  },
+  "dragDrop": {
+    "not": "<0>bbbb</0>",
+    "text": "<0>拖放</0><1>您的数据可在地图上任意位置查看<1>"
+  },
+  "loader": {
+    "loadingMessage": "加载中"
+  },
+  "emptyWorkbench": {
+    "emptyArea": "你的工作台是空的",
+    "helpfulHints": "有帮助的提示",
+    "helpfulHintsOne": "通过选择“探索地图数据”浏览可用数据或单击“上传”将您自己的数据添加到地图中。",
+    "helpfulHintsThree": "在工作台中，如果数据支持此功能，您可以打开和关闭数据集、更改其不透明度、激活分屏比较、更改样式以及浏览日期和时间。",
+    "helpfulHintsTwo": "将数据添加到地图后，您的活动数据集将在工作台中列出。 工作台将帮助您与数据进行交互。"
+  },
+  "emptyWorkbenchMessage": "<0><0>你的工作台是空的</0><1><strong>点击上面的'$t(addData.addDataBtnText)' </strong></1><2><0>浏览数据目录 </0><1>将您自己的数据加载到地图上</1></2><3><0></0><strong>提示</strong><2>您所有的活动数据集都会 在此处列出</2></3></0>"
+}

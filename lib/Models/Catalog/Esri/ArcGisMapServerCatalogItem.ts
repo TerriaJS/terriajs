@@ -13,7 +13,7 @@ import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
-import proj4definitions from "../../../Map/Proj4Definitions";
+import proj4definitions from "../../../Map/Vector/Proj4Definitions";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
 import MappableMixin, {
@@ -361,12 +361,10 @@ class MapServerStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(MapServerStratum.stratumName);
 
-export default class ArcGisMapServerCatalogItem extends MappableMixin(
-  UrlMixin(
-    DiscretelyTimeVaryingMixin(
-      MinMaxLevelMixin(
-        CatalogMemberMixin(CreateModel(ArcGisMapServerCatalogItemTraits))
-      )
+export default class ArcGisMapServerCatalogItem extends UrlMixin(
+  DiscretelyTimeVaryingMixin(
+    MinMaxLevelMixin(
+      CatalogMemberMixin(CreateModel(ArcGisMapServerCatalogItemTraits))
     )
   )
 ) {
@@ -477,6 +475,8 @@ export default class ArcGisMapServerCatalogItem extends MappableMixin(
         layers: layers,
         tilingScheme: new WebMercatorTilingScheme(),
         maximumLevel: maximumLevel,
+        tileHeight: this.tileHeight,
+        tileWidth: this.tileWidth,
         parameters: params,
         enablePickFeatures: this.allowFeaturePicking,
         usePreCachedTilesIfAvailable: !dynamicRequired,

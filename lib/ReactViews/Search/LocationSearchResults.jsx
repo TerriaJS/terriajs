@@ -177,9 +177,9 @@ const LocationSearchResults = observer(
                 justifySpaceBetween
               >
                 <RawButton onClick={this.toggleExpand}>
-                  <Text small isLink>
+                  <TextSpan small isLink>
                     {this.renderResultsFooter()}
-                  </Text>
+                  </TextSpan>
                 </RawButton>
               </BoxSpan>
             )}

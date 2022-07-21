@@ -72,11 +72,12 @@
 }
 
 .btn--wrapper {
-  text-align: right;
+  text-align: left;
 }
 
 .btn--advanced {
   outline: 0;
+  padding: 0em;
 }
 
 .img--share {
@@ -123,8 +124,9 @@
   margin-bottom: 10px;
 }
 
-.shorten-url {
+.advanced-option {
   padding-right: 0;
+  padding-top: 0.5em;
   button {
     text-align: left;
     border: 0px;
@@ -174,4 +176,21 @@
     text-decoration: underline;
     cursor: pointer;
   }
+}
+
+.checkbox {
+  padding: 0.5em;
+  float: left;
+}
+
+.getShareSaveHelpText {
+  text-decoration: underline;
+  padding-top: 0.8em;
+  cursor: help;
+}
+
+hr.thin-line-divider {
+  border: 0;
+  height: 0;
+  border-top: 0.5px solid rgba(255, 255, 255, 0.15);
 }

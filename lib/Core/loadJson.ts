@@ -1,4 +1,3 @@
-import makeRealPromise from "./makeRealPromise";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 
 export default function loadJson(
@@ -9,7 +8,7 @@ export default function loadJson(
 ): Promise<any> {
   let responseType: XMLHttpRequestResponseType = "json";
 
-  let jsonPromise;
+  let jsonPromise: Promise<any>;
   let params: any = {
     url: urlOrResource,
     headers: headers
@@ -36,15 +35,15 @@ export default function loadJson(
       urlOrResource instanceof Resource
         ? urlOrResource.post(body, {
             responseType: responseType
-          })
-        : Resource.post(params);
+          })!
+        : Resource.post(params)!;
   } else {
     // Make a GET instead
     jsonPromise =
       urlOrResource instanceof Resource
-        ? urlOrResource.fetchJson()
-        : Resource.fetchJson(params);
+        ? urlOrResource.fetchJson()!
+        : Resource.fetchJson(params)!;
   }
 
-  return makeRealPromise<string>(jsonPromise);
+  return jsonPromise;
 }

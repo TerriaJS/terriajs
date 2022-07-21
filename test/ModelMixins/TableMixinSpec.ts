@@ -1,19 +1,29 @@
 import { runInAction } from "mobx";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
+import { getMakiIcon } from "../../lib/Map/Icons/Maki/MakiIcons";
 import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
 import Terria from "../../lib/Models/Terria";
+import TableColorStyleTraits from "../../lib/Traits/TraitsClasses/TableColorStyleTraits";
+import TableOutlineStyleTraits, {
+  BinOutlineSymbolTraits,
+  EnumOutlineSymbolTraits
+} from "../../lib/Traits/TraitsClasses/TableOutlineStyleTraits";
+import TablePointStyleTraits, {
+  BinPointSymbolTraits,
+  EnumPointSymbolTraits
+} from "../../lib/Traits/TraitsClasses/TablePointStyleTraits";
 import TableStyleTraits from "../../lib/Traits/TraitsClasses/TableStyleTraits";
 import TableTimeStyleTraits from "../../lib/Traits/TraitsClasses/TableTimeStyleTraits";
 
 const LatLonValCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_val.csv");
+const LatLonEnumCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum.csv");
 const LatLonValCsvDuplicate = require("raw-loader!../../wwwroot/test/csv/lat_lon_val_with_duplicate_row.csv");
 const LatLonEnumDateIdCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum_date_id.csv");
+const LatLonEnumDateIdWithRegionCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum_date_id_with_regions.csv");
 const LgaWithDisambigCsv = require("raw-loader!../../wwwroot/test/csv/lga_state_disambig.csv");
 const ParkingSensorDataCsv = require("raw-loader!../../wwwroot/test/csv/parking-sensor-data.csv");
 const LegendDecimalPlacesCsv = require("raw-loader!../../wwwroot/test/csv/legend-decimal-places.csv");
@@ -26,6 +36,9 @@ const regionIdsSte = JSON.stringify(
 );
 const regionIdsLgaName = JSON.stringify(
   require("../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json")
+);
+const regionIdsLgaCode = JSON.stringify(
+  require("../../wwwroot/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json")
 );
 const regionIdsLgaNameStates = JSON.stringify(
   require("../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json")
@@ -57,6 +70,10 @@ describe("TableMixin", function() {
     ).andReturn({ responseText: regionIdsLgaName });
 
     jasmine.Ajax.stubRequest(
+      "build/TerriaJS/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json"
+    ).andReturn({ responseText: regionIdsLgaCode });
+
+    jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json"
     ).andReturn({ responseText: regionIdsLgaNameStates });
   });
@@ -79,6 +96,115 @@ describe("TableMixin", function() {
       if (dataSource instanceof CustomDataSource) {
         expect(dataSource.entities.values.length).toBe(4);
       }
+    });
+
+    it("sets showInChartPanel to false - as is mappable", async function() {
+      expect(item.showInChartPanel).toBeFalsy();
+    });
+
+    it("sets showInChartPanel to true - when lat/lon is disabled", async function() {
+      updateModelFromJson(item, CommonStrata.definition, {
+        columns: [
+          { name: "lat", type: "scalar" },
+          { name: "lon", type: "scalar" }
+        ]
+      });
+      expect(item.showInChartPanel).toBeTruthy();
+    });
+
+    it("doesn't show regions - even if empty region column is detected", () => {});
+
+    it("calculates rectangle", async function() {
+      expect(item.rectangle.north).toEqual(-20);
+      expect(item.rectangle.south).toEqual(-37);
+      expect(item.rectangle.east).toEqual(155);
+      expect(item.rectangle.west).toEqual(115);
+    });
+
+    describe("the entities", function() {
+      it("has availability defined over the correct span", function() {
+        expect(
+          dataSource.entities.values.map(e => e.availability?.start.toString())
+        ).toEqual([
+          "2015-08-01T00:00:00Z",
+          "2015-08-01T00:00:00Z",
+          "2015-08-02T00:00:00Z",
+          "2015-08-03T00:00:00Z"
+        ]);
+        expect(
+          dataSource.entities.values.map(e => e.availability?.stop.toString())
+        ).toEqual([
+          "2015-08-07T06:00:00Z",
+          "2015-08-07T00:00:00Z",
+          "2015-08-02T23:59:59Z",
+          "2015-08-05T00:00:00Z"
+        ]);
+      });
+    });
+
+    describe("when timeColumn is `null`", function() {
+      it("returns an empty `discreteTimes`", async function() {
+        expect(item.discreteTimes?.length).toBe(6);
+        item.defaultStyle.time.setTrait(CommonStrata.user, "timeColumn", null);
+        expect(item.discreteTimes).toBe(undefined);
+      });
+
+      it("creates entities for all times", async function() {
+        item.defaultStyle.time.setTrait(CommonStrata.user, "timeColumn", null);
+        await item.loadMapItems();
+        const mapItem = item.mapItems[0];
+        expect(mapItem instanceof CustomDataSource).toBe(true);
+        if (mapItem instanceof CustomDataSource) {
+          expect(mapItem.entities.values.length).toBe(13);
+        }
+      });
+    });
+  });
+
+  // Note this is identical to "when the table has time, lat/lon and id columns" EXCEPT
+  // - one additional spec - "doesn't show regions - even if empty region column is detected"
+  // - "sets showInChartPanel to true - when lat/lon is disabled" is replaced by "shows regions when lat/lon is disabled"
+  describe("when the table has time, lat/lon, id columns AND regions", function() {
+    let dataSource: CustomDataSource;
+    beforeEach(async function() {
+      item.setTrait(
+        CommonStrata.user,
+        "csvString",
+        LatLonEnumDateIdWithRegionCsv
+      );
+      await item.loadMapItems();
+      dataSource = <CustomDataSource>item.mapItems[0];
+      expect(dataSource instanceof CustomDataSource).toBe(true);
+    });
+
+    it("creates one entity per id", async function() {
+      expect(item.activeTableStyle.rowGroups.length).toBe(4);
+      if (dataSource instanceof CustomDataSource) {
+        expect(dataSource.entities.values.length).toBe(4);
+      }
+    });
+
+    it("sets showInChartPanel to false - as is mappable", async function() {
+      expect(item.showInChartPanel).toBeFalsy();
+    });
+
+    it("shows regions when lat/lon is disabled", async function() {
+      updateModelFromJson(item, CommonStrata.definition, {
+        columns: [
+          { name: "lat", type: "scalar" },
+          { name: "lon", type: "scalar" }
+        ]
+      });
+      expect(item.showInChartPanel).toBeFalsy();
+      expect(item.showingRegions).toBeTruthy();
+      expect(
+        item.activeTableStyle.regionColumn?.valuesAsRegions.uniqueRegionIds
+          .length
+      ).toBe(3);
+    });
+
+    it("doesn't show regions - as more points are detected than unique regions", () => {
+      expect(item.showingRegions).toBeFalsy();
     });
 
     it("calculates rectangle", async function() {
@@ -442,7 +568,7 @@ describe("TableMixin", function() {
 
       await item.loadMapItems();
 
-      expect(item.regionProviderList?.regionProviders.length).toBe(103);
+      expect(item.regionProviderList?.regionProviders.length).toBe(114);
     });
   });
 
@@ -541,7 +667,19 @@ describe("TableMixin", function() {
       expect(ImageryParts.is(item.mapItems[0])).toBeTruthy();
     });
 
-    it("with default style (state)", async function() {
+    it("with state", async function() {
+      updateModelFromJson(item, CommonStrata.user, {
+        columns: [
+          {
+            name: "State",
+            regionType: "STE_NAME_2016"
+          }
+        ],
+        defaultStyle: {
+          regionColumn: "State"
+        }
+      });
+
       expect(item.activeTableStyle.regionColumn?.name).toBe("State");
       expect(item.activeTableStyle.regionColumn?.regionType?.regionType).toBe(
         "STE_NAME_2016"
@@ -581,6 +719,485 @@ describe("TableMixin", function() {
         item.activeTableStyle.regionColumn?.valuesAsRegions.uniqueRegionIds
           .length
       ).toBe(8);
+    });
+
+    it("matches column name with whitespace", async function() {
+      item.setTrait(
+        CommonStrata.user,
+        "csvString",
+        `lga code-_-2015,number
+        35740,1
+        36720,2
+        `
+      );
+
+      await item.loadMapItems();
+
+      expect(item.activeTableStyle.regionColumn?.name).toBe("lga code-_-2015");
+      expect(item.activeTableStyle.regionColumn?.regionType?.regionType).toBe(
+        "LGA_2015"
+      );
+    });
+
+    it("shows region shortReportSection", async function() {
+      const regionCol = item.activeTableStyle.regionColumn;
+
+      const regionType = regionCol?.regionType;
+
+      expect(regionType).toBeDefined();
+
+      expect(item.shortReportSections[0].name).toBe(
+        `**Regions:** ${regionType?.description}`
+      );
+    });
+
+    it("doesn't show region shortReportSection if region is disabled", async function() {
+      updateModelFromJson(item, CommonStrata.user, {
+        defaultStyle: {
+          regionColumn: "Something else"
+        }
+      });
+
+      expect(item.shortReportSections.length).toBe(0);
+    });
+  });
+
+  describe("applies TableStyles to lat/lon features", function() {
+    it("bin outline style with points", async function() {
+      item.setTrait(CommonStrata.user, "csvString", LatLonValCsv);
+
+      item.setTrait(CommonStrata.user, "styles", [
+        createStratumInstance(TableStyleTraits, {
+          id: "test-style",
+          color: createStratumInstance(TableColorStyleTraits, {
+            colorColumn: "value",
+            colorPalette: "Greens",
+            numberOfBins: 7
+          }),
+          point: createStratumInstance(TablePointStyleTraits, {
+            column: "value",
+            bin: [
+              createStratumInstance(BinPointSymbolTraits, {
+                maxValue: 1,
+                marker: "point",
+                height: 20
+              }),
+              createStratumInstance(BinPointSymbolTraits, {
+                maxValue: 3,
+                marker: "point",
+                height: 10
+              }),
+              createStratumInstance(BinPointSymbolTraits, {
+                maxValue: 5,
+                marker: "point",
+                height: 30
+              })
+            ]
+          }),
+          outline: createStratumInstance(TableOutlineStyleTraits, {
+            column: "value",
+            bin: [
+              createStratumInstance(BinOutlineSymbolTraits, {
+                maxValue: 1,
+                color: "rgb(0,0,0)",
+                width: 1
+              }),
+              createStratumInstance(BinOutlineSymbolTraits, {
+                maxValue: 3,
+                color: "rgb(255,0,0)",
+                width: 2
+              }),
+              createStratumInstance(BinOutlineSymbolTraits, {
+                maxValue: 5,
+                color: "rgb(0,255,0)",
+                width: 3
+              })
+            ]
+          })
+        })
+      ]);
+      item.setTrait(CommonStrata.user, "activeStyle", "test-style");
+
+      await item.loadMapItems();
+
+      const mapItem = item.mapItems[0] as CustomDataSource;
+
+      const styles = [
+        {
+          fillColor: "rgb(35,139,69)",
+          outlineColor: "rgb(0,255,0)",
+          outlineWidth: 3,
+          pixelSize: 30
+        },
+        {
+          fillColor: "rgb(116,196,118)",
+          outlineColor: "rgb(255,0,0)",
+          outlineWidth: 2,
+          pixelSize: 10
+        },
+        {
+          fillColor: "rgb(186,228,179)",
+          outlineColor: "rgb(0,0,0)",
+          outlineWidth: 1,
+          pixelSize: 20
+        },
+        {
+          fillColor: "rgb(237,248,233)",
+          outlineColor: "rgb(0,0,0)",
+          outlineWidth: 1,
+          pixelSize: 20
+        },
+        {
+          fillColor: "rgb(116,196,118)",
+          outlineColor: "rgb(255,0,0)",
+          outlineWidth: 2,
+          pixelSize: 10
+        }
+      ];
+
+      styles.forEach((style, index) => {
+        const feature = mapItem.entities.values[index];
+        expect(
+          feature.point?.color
+            ?.getValue(item.terria.timelineClock.currentTime)
+            ?.toCssColorString()
+        ).toBe(style.fillColor);
+
+        expect(
+          feature.point?.outlineColor
+            ?.getValue(item.terria.timelineClock.currentTime)
+            ?.toCssColorString()
+        ).toBe(style.outlineColor);
+
+        expect(
+          feature.point?.outlineWidth?.getValue(
+            item.terria.timelineClock.currentTime
+          )
+        ).toBe(style.outlineWidth);
+
+        expect(
+          feature.point?.pixelSize?.getValue(
+            item.terria.timelineClock.currentTime
+          )
+        ).toBe(style.pixelSize);
+      });
+    });
+
+    it("bin color and outline style with markers", async function() {
+      item.setTrait(CommonStrata.user, "csvString", LatLonValCsv);
+
+      item.setTrait(CommonStrata.user, "styles", [
+        createStratumInstance(TableStyleTraits, {
+          id: "test-style",
+          color: createStratumInstance(TableColorStyleTraits, {
+            nullColor: "rgb(0,255,255)"
+          }),
+          point: createStratumInstance(TablePointStyleTraits, {
+            column: "value",
+            bin: [
+              createStratumInstance(BinPointSymbolTraits, {
+                maxValue: 1,
+                marker: "circle",
+                height: 20,
+                width: 10
+              }),
+              createStratumInstance(BinPointSymbolTraits, {
+                maxValue: 3,
+                marker: "cross",
+                height: 10,
+                width: 5
+              }),
+              createStratumInstance(BinPointSymbolTraits, {
+                maxValue: 5,
+                marker: "hospital",
+                height: 30,
+                width: 15,
+                rotation: 45
+              })
+            ]
+          }),
+          outline: createStratumInstance(TableOutlineStyleTraits, {
+            null: createStratumInstance(BinOutlineSymbolTraits, {
+              maxValue: 1,
+              color: "rgb(0,0,255)",
+              width: 1
+            })
+          })
+        })
+      ]);
+      item.setTrait(CommonStrata.user, "activeStyle", "test-style");
+
+      await item.loadMapItems();
+
+      const mapItem = item.mapItems[0] as CustomDataSource;
+
+      const styles = [
+        {
+          fillColor: "rgb(0,255,255)",
+          outlineColor: "rgb(0,0,255)",
+          outlineWidth: 1,
+          marker: "hospital",
+          height: 30,
+          width: 15,
+          rotation: ((360 - 45) / 360) * (2 * Math.PI)
+        },
+        {
+          fillColor: "rgb(0,255,255)",
+          outlineColor: "rgb(0,0,255)",
+          outlineWidth: 1,
+          marker: "cross",
+          height: 10,
+          width: 5,
+          rotation: 2 * Math.PI
+        },
+        {
+          fillColor: "rgb(0,255,255)",
+          outlineColor: "rgb(0,0,255)",
+          outlineWidth: 1,
+          marker: "circle",
+          height: 20,
+          width: 10,
+          rotation: 2 * Math.PI
+        },
+        {
+          fillColor: "rgb(0,255,255)",
+          outlineColor: "rgb(0,0,255)",
+          outlineWidth: 1,
+          marker: "circle",
+          height: 20,
+          width: 10,
+          rotation: 2 * Math.PI
+        },
+        {
+          fillColor: "rgb(0,255,255)",
+          outlineColor: "rgb(0,0,255)",
+          outlineWidth: 1,
+          marker: "cross",
+          height: 10,
+          width: 5,
+          rotation: 2 * Math.PI
+        }
+      ];
+
+      styles.forEach((style, index) => {
+        const feature = mapItem.entities.values[index];
+
+        expect(
+          feature.billboard?.rotation?.getValue(
+            item.terria.timelineClock.currentTime
+          )
+        ).toBeCloseTo(style.rotation);
+
+        expect(
+          feature.billboard?.image?.getValue(
+            item.terria.timelineClock.currentTime
+          )
+        ).toBe(
+          getMakiIcon(
+            style.marker,
+            style.fillColor,
+            style.outlineWidth,
+            style.outlineColor,
+            style.height,
+            style.width
+          )
+        );
+      });
+
+      // Test merging legends
+
+      expect(
+        item.legends[0].items.map(item => ({
+          title: item.title,
+          outlineColor: item.outlineColor,
+          outlineWidth: item.outlineWidth,
+          imageHeight: item.imageHeight,
+          imageWidth: item.imageWidth,
+          color: item.color,
+          marker: item.marker,
+          rotation: item.rotation
+        }))
+      ).toEqual([
+        {
+          title: "3 to 5",
+          color: "rgb(0,255,255)",
+          outlineColor: "rgb(0,0,255)",
+          outlineWidth: 1,
+          marker: "hospital",
+          rotation: 45,
+          imageHeight: 24,
+          imageWidth: 24
+        },
+        {
+          title: "1 to 3",
+          color: "rgb(0,255,255)",
+          outlineColor: "rgb(0,0,255)",
+          outlineWidth: 1,
+          marker: "cross",
+          imageHeight: 24,
+          imageWidth: 24,
+          rotation: 0
+        },
+        {
+          title: "-1 to 1",
+          color: "rgb(0,255,255)",
+          outlineColor: "rgb(0,0,255)",
+          outlineWidth: 1,
+          marker: "circle",
+          imageHeight: 24,
+          imageWidth: 24,
+          rotation: 0
+        }
+      ]);
+    });
+
+    it("enum outline style with points", async function() {
+      item.setTrait(CommonStrata.user, "csvString", LatLonEnumCsv);
+
+      item.setTrait(CommonStrata.user, "styles", [
+        createStratumInstance(TableStyleTraits, {
+          id: "test-style",
+          color: createStratumInstance(TableColorStyleTraits, {
+            nullColor: "rgb(255,0,255)"
+          }),
+          point: createStratumInstance(TablePointStyleTraits, {
+            column: "enum",
+            enum: [
+              createStratumInstance(EnumPointSymbolTraits, {
+                value: "hello",
+                height: 20
+              }),
+              createStratumInstance(EnumPointSymbolTraits, {
+                value: "boots",
+                height: 10
+              }),
+              createStratumInstance(EnumPointSymbolTraits, {
+                value: "frogs",
+                height: 30
+              })
+            ]
+          }),
+          outline: createStratumInstance(TableOutlineStyleTraits, {
+            column: "enum",
+            enum: [
+              createStratumInstance(EnumOutlineSymbolTraits, {
+                value: "hello",
+                color: "rgb(0,0,0)",
+                width: 1
+              }),
+              createStratumInstance(EnumOutlineSymbolTraits, {
+                value: "boots",
+                color: "rgb(255,0,0)",
+                width: 2
+              }),
+              createStratumInstance(EnumOutlineSymbolTraits, {
+                value: "frogs",
+                color: "rgb(0,255,0)",
+                width: 3
+              })
+            ]
+          })
+        })
+      ]);
+      item.setTrait(CommonStrata.user, "activeStyle", "test-style");
+
+      await item.loadMapItems();
+
+      const mapItem = item.mapItems[0] as CustomDataSource;
+
+      const styles = [
+        {
+          fillColor: "rgb(255,0,255)",
+          outlineColor: "rgb(0,0,0)",
+          outlineWidth: 1,
+          pixelSize: 20
+        },
+        {
+          fillColor: "rgb(255,0,255)",
+          outlineColor: "rgb(255,0,0)",
+          outlineWidth: 2,
+          pixelSize: 10
+        },
+        {
+          fillColor: "rgb(255,0,255)",
+          outlineColor: "rgb(0,255,0)",
+          outlineWidth: 3,
+          pixelSize: 30
+        },
+        {
+          fillColor: "rgb(255,0,255)",
+          outlineColor: "rgb(255,0,0)",
+          outlineWidth: 2,
+          pixelSize: 10
+        },
+        {
+          fillColor: "rgb(255,0,255)",
+          outlineColor: "rgb(0,0,0)",
+          outlineWidth: 1,
+          pixelSize: 20
+        }
+      ];
+
+      styles.forEach((style, index) => {
+        const feature = mapItem.entities.values[index];
+        expect(
+          feature.point?.color
+            ?.getValue(item.terria.timelineClock.currentTime)
+            ?.toCssColorString()
+        ).toBe(style.fillColor);
+
+        expect(
+          feature.point?.outlineColor
+            ?.getValue(item.terria.timelineClock.currentTime)
+            ?.toCssColorString()
+        ).toBe(style.outlineColor);
+
+        expect(
+          feature.point?.outlineWidth?.getValue(
+            item.terria.timelineClock.currentTime
+          )
+        ).toBe(style.outlineWidth);
+
+        expect(
+          feature.point?.pixelSize?.getValue(
+            item.terria.timelineClock.currentTime
+          )
+        ).toBe(style.pixelSize);
+
+        // Test merging legends
+
+        expect(
+          item.legends[0].items.map(item => ({
+            title: item.title,
+            outlineColor: item.outlineColor,
+            outlineWidth: item.outlineWidth,
+            imageHeight: item.imageHeight,
+            imageWidth: item.imageWidth
+          }))
+        ).toEqual([
+          {
+            title: "hello",
+            outlineColor: "rgb(0,0,0)",
+            outlineWidth: 1,
+            imageHeight: 24,
+            imageWidth: 24
+          },
+          {
+            title: "boots",
+            outlineColor: "rgb(255,0,0)",
+            outlineWidth: 2,
+            imageHeight: 24,
+            imageWidth: 24
+          },
+          {
+            title: "frogs",
+            outlineColor: "rgb(0,255,0)",
+            outlineWidth: 3,
+            imageHeight: 24,
+            imageWidth: 24
+          }
+        ]);
+      });
     });
   });
 });

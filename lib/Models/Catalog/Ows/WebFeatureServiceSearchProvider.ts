@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { runInAction } from "mobx";
 import URI from "urijs";
-import zoomRectangleFromPoint from "../../../Map/zoomRectangleFromPoint";
+import zoomRectangleFromPoint from "../../../Map/Vector/zoomRectangleFromPoint";
 import xml2json from "../../../ThirdParty/xml2json";
 import SearchProvider from "../../SearchProviders/SearchProvider";
 import SearchProviderResults from "../../SearchProviders/SearchProviderResults";
@@ -9,7 +9,6 @@ import SearchResult from "../../SearchProviders/SearchResult";
 import Terria from "../../Terria";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import Resource from "terriajs-cesium/Source/Core/Resource";
-import makeRealPromise from "../../../Core/makeRealPromise";
 
 export interface WebFeatureServiceSearchProviderOptions {
   /** Base url for the service */
@@ -68,9 +67,9 @@ export default class WebFeatureServiceSearchProvider extends SearchProvider {
   getXml(): Promise<XMLDocument> {
     const resource = new Resource({ url: this._wfsServiceUrl.toString() });
     this._waitingForResults = true;
-    const xmlPromise = resource.fetchXML();
+    const xmlPromise = resource.fetchXML()!;
     this.cancelRequest = resource.request.cancelFunction;
-    return makeRealPromise<XMLDocument>(xmlPromise).finally(() => {
+    return xmlPromise.finally(() => {
       this._waitingForResults = false;
     });
   }

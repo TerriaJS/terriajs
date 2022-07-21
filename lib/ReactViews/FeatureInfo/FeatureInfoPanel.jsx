@@ -4,7 +4,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import FeatureInfoCatalogItem from "./FeatureInfoCatalogItem";
-import { featureBelongsToCatalogItem } from "../../Map/PickedFeatures.ts";
+import { featureBelongsToCatalogItem } from "../../Map/PickedFeatures/PickedFeatures.ts";
 import DragWrapper from "../DragWrapper";
 import Loader from "../Loader";
 import React from "react";
@@ -18,7 +18,7 @@ import {
   removeMarker,
   isMarkerVisible
 } from "../../Models/LocationMarkerUtils";
-import prettifyCoordinates from "../../Map/prettifyCoordinates";
+import prettifyCoordinates from "../../Map/Vector/prettifyCoordinates";
 import i18next from "i18next";
 import Styles from "./feature-info-panel.scss";
 import classNames from "classnames";
@@ -374,7 +374,7 @@ class FeatureInfoPanel extends React.Component {
                 }
               >
                 <li>
-                  <Loader />
+                  <Loader light />
                 </li>
               </When>
               <When

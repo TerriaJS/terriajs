@@ -1,5 +1,5 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import DimensionTraits from "./DimensionTraits";
+import EnumDimensionTraits from "./DimensionTraits";
 import GroupTraits from "./GroupTraits";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
@@ -44,7 +44,7 @@ export type ModelOverrideType =
  *
  * Then regionTypeReplacements are applied (which can replace regionType with a different regionType - using [{find:string, replace:string}] pattern)
  */
-export class ModelOverrideTraits extends mixTraits(DimensionTraits) {
+export class ModelOverrideTraits extends mixTraits(EnumDimensionTraits) {
   @primitiveTrait({
     type: "string",
     name: "ID",

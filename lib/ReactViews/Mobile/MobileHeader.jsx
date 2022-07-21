@@ -309,4 +309,4 @@ const HamburgerButton = styled(RawButton)`
   }
 `;
 
-module.exports = withTranslation()(withTheme(MobileHeader));
+export default withTranslation()(withTheme(MobileHeader));

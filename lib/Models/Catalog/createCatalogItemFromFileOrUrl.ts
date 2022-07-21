@@ -1,15 +1,15 @@
 import i18next from "i18next";
-import { runInAction } from "mobx";
 import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";
-import ViewState from "../../ReactViewModels/ViewState";
-import CatalogMemberFactory from "./CatalogMemberFactory";
-import CommonStrata from "../Definition/CommonStrata";
-import createUrlReferenceFromUrl from "./CatalogReferences/createUrlReferenceFromUrl";
-import { BaseModel } from "../Definition/Model";
-import Terria from "../Terria";
-import upsertModelFromJson from "../Definition/upsertModelFromJson";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
+import ViewState from "../../ReactViewModels/ViewState";
+import CommonStrata from "../Definition/CommonStrata";
+import { BaseModel } from "../Definition/Model";
+import upsertModelFromJson from "../Definition/upsertModelFromJson";
+import HasLocalData from "../HasLocalData";
+import Terria from "../Terria";
+import CatalogMemberFactory from "./CatalogMemberFactory";
+import createUrlReferenceFromUrl from "./CatalogReferences/createUrlReferenceFromUrl";
 
 export default function createCatalogItemFromFileOrUrl(
   terria: Terria,
@@ -85,17 +85,9 @@ async function loadItem(
 
   if (typeof fileOrUrl === "string") {
     newCatalogItem.setTrait(CommonStrata.user, "url", fileOrUrl);
-  } else if (hasFileInput(newCatalogItem)) {
+  } else if (HasLocalData.is(newCatalogItem)) {
     newCatalogItem.setFileInput(fileOrUrl);
   }
 
   return newCatalogItem;
-}
-
-export interface HasFileInput extends BaseModel {
-  setFileInput(file: File): void;
-}
-
-export function hasFileInput(model: BaseModel): model is HasFileInput {
-  return "setFileInput" in model;
 }

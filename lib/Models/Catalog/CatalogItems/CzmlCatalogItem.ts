@@ -4,7 +4,6 @@ import Clock from "terriajs-cesium/Source/Core/Clock";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CzmlDataSource from "terriajs-cesium/Source/DataSources/CzmlDataSource";
 import isDefined from "../../../Core/isDefined";
-import makeRealPromise from "../../../Core/makeRealPromise";
 import readJson from "../../../Core/readJson";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
@@ -17,6 +16,7 @@ import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
+import HasLocalData from "../../HasLocalData";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 /**
@@ -71,7 +71,7 @@ export default class CzmlCatalogItem
       UrlMixin(CatalogMemberMixin(CreateModel(CzmlCatalogItemTraits)))
     )
   )
-  implements TimeVarying {
+  implements TimeVarying, HasLocalData {
   static readonly type = "czml";
   get type() {
     return CzmlCatalogItem.type;
@@ -110,11 +110,9 @@ export default class CzmlCatalogItem
       });
     }
 
-    return makeRealPromise<CzmlDataSource>(
-      CzmlDataSource.load(loadableData, {
-        credit: attribution
-      })
-    )
+    return CzmlDataSource.load(loadableData, {
+      credit: attribution
+    })
       .then(
         action(czmlDataSource => {
           this._dataSource = czmlDataSource;

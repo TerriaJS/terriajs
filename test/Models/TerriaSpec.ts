@@ -2,12 +2,12 @@ import { action, runInAction, toJS } from "mobx";
 import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import hashEntity from "../../lib/Core/hashEntity";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import Result from "../../lib/Core/Result";
 import TerriaError from "../../lib/Core/TerriaError";
-import PickedFeatures from "../../lib/Map/PickedFeatures";
+import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
 import CameraView from "../../lib/Models/CameraView";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import MagdaReference from "../../lib/Models/Catalog/CatalogReferences/MagdaReference";
@@ -23,9 +23,9 @@ import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import { BaseModel } from "../../lib/Models/Definition/Model";
 import Feature from "../../lib/Models/Feature";
 import {
-  isInitData,
-  isInitDataPromise,
-  isInitUrl
+  isInitFromData,
+  isInitFromDataPromise,
+  isInitFromUrl
 } from "../../lib/Models/InitSource";
 import Terria from "../../lib/Models/Terria";
 import ViewerMode from "../../lib/Models/ViewerMode";
@@ -180,8 +180,8 @@ describe("Terria", function() {
           })
           .then(function() {
             expect(terria.initSources.length).toEqual(1);
-            expect(isInitUrl(terria.initSources[0])).toEqual(true);
-            if (isInitUrl(terria.initSources[0])) {
+            expect(isInitFromUrl(terria.initSources[0])).toEqual(true);
+            if (isInitFromUrl(terria.initSources[0])) {
               expect(terria.initSources[0].initUrl).toEqual(
                 mapConfigBasicJson.aspects["terria-config"]
                   .initializationUrls[0]
@@ -218,10 +218,10 @@ describe("Terria", function() {
         });
 
         expect(terria.initSources.length).toBe(1);
-        expect(isInitDataPromise(terria.initSources[0])).toBeTruthy(
+        expect(isInitFromDataPromise(terria.initSources[0])).toBeTruthy(
           "Expected initSources[0] to be an InitDataPromise"
         );
-        if (isInitDataPromise(terria.initSources[0])) {
+        if (isInitFromDataPromise(terria.initSources[0])) {
           const data = await terria.initSources[0].data;
           // JSON parse & stringify to avoid a problem where I think catalog-converter
           //  can return {"id": undefined} instead of no "id"
@@ -259,7 +259,7 @@ describe("Terria", function() {
 
         /** Ensure inlined data catalog from init sources */
         expect(terria.initSources.length).toEqual(1);
-        if (isInitData(terria.initSources[0])) {
+        if (isInitFromData(terria.initSources[0])) {
           expect(terria.initSources[0].data.catalog).toEqual(
             inlineInit.catalog
           );
@@ -299,6 +299,35 @@ describe("Terria", function() {
             done.fail(error);
           });
       });
+    });
+
+    it("calls `beforeRestoreAppState` before restoring app state from share data", async function() {
+      terria = new Terria({
+        appBaseHref: "/",
+        baseUrl: "./"
+      });
+
+      const restoreAppState = spyOn(
+        terria,
+        "restoreAppState" as any
+      ).and.callThrough();
+
+      const beforeRestoreAppState = jasmine
+        .createSpy("beforeRestoreAppState")
+        // It should also handle errors when calling beforeRestoreAppState
+        .and.returnValue(Promise.reject("some error"));
+
+      expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Cesium);
+      await terria.start({
+        configUrl: "",
+        applicationUrl: {
+          href: "http://test.com/#map=2d"
+        } as Location,
+        beforeRestoreAppState
+      });
+
+      expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
+      expect(beforeRestoreAppState).toHaveBeenCalledBefore(restoreAppState);
     });
   });
 
@@ -428,7 +457,7 @@ describe("Terria", function() {
           model1.setTrait(
             CommonStrata.user,
             "splitDirection",
-            ImagerySplitDirection.RIGHT
+            SplitDirection.RIGHT
           );
         });
 
@@ -443,9 +472,7 @@ describe("Terria", function() {
           newTerria.getModelById(BaseModel, "itemABC")
         );
         expect(newModel1).toBeDefined();
-        expect(newModel1.splitDirection).toEqual(
-          <any>ImagerySplitDirection.RIGHT
-        );
+        expect(newModel1.splitDirection).toEqual(<any>SplitDirection.RIGHT);
       });
 
       it("opens and loads members of shared open groups", async function() {
@@ -486,7 +513,7 @@ describe("Terria", function() {
         );
         expect(terria.initSources.length).toBe(1);
         expect(terria.initSources[0].name).toMatch(/my-story/);
-        if (!isInitData(terria.initSources[0]))
+        if (!isInitFromData(terria.initSources[0]))
           throw new Error("Expected initSource to be InitData from my-story");
 
         expect(toJS(terria.initSources[0].data)).toEqual(
@@ -500,7 +527,7 @@ describe("Terria", function() {
         );
         expect(terria.initSources.length).toBe(1);
         expect(terria.initSources[0].name).toMatch(/my-story/);
-        if (!isInitData(terria.initSources[0]))
+        if (!isInitFromData(terria.initSources[0]))
           throw new Error("Expected initSource to be InitData from my-story");
 
         expect(toJS(terria.initSources[0].data)).toEqual(
@@ -938,9 +965,9 @@ describe("Terria", function() {
   //             expect(terria.checkNowViewingForTimeWms()).toEqual(true);
   //           })
   //           .then(done)
-  //           .otherwise(done.fail);
+  //           .catch(done.fail);
   //       })
-  //       .otherwise(done.fail);
+  //       .catch(done.fail);
   //   });
 
   describe("applyInitData", function() {
@@ -1228,6 +1255,39 @@ describe("Terria", function() {
       expect(terria.mainViewer.viewerOptions.useTerrain).toBe(false);
       expect(getLocalPropertySpy).toHaveBeenCalledWith("viewermode");
     });
+
+    it("uses `settings` in initsource", async () => {
+      const setBaseMapSpy = spyOn(terria.mainViewer, "setBaseMap");
+
+      await terria.start({ configUrl: "" });
+
+      terria.applyInitData({
+        initData: {
+          settings: {
+            baseMaximumScreenSpaceError: 1,
+            useNativeResolution: true,
+            alwaysShowTimeline: true,
+            baseMapId: "basemap-natural-earth-II",
+            terrainSplitDirection: -1,
+            depthTestAgainstTerrainEnabled: true
+          }
+        }
+      });
+
+      await terria.loadInitSources();
+
+      expect(terria.baseMaximumScreenSpaceError).toBe(1);
+      expect(terria.useNativeResolution).toBeTruthy;
+      expect(terria.timelineStack.alwaysShowingTimeline).toBeTruthy();
+      expect(setBaseMapSpy).toHaveBeenCalledWith(
+        terria.baseMapsModel.baseMapItems.find(
+          item => item.item.uniqueId === "basemap-natural-earth-II"
+        )?.item
+      );
+
+      expect(terria.terrainSplitDirection).toBe(SplitDirection.LEFT);
+      expect(terria.depthTestAgainstTerrainEnabled).toBeTruthy();
+    });
   });
 
   describe("basemaps", function() {
@@ -1356,6 +1416,7 @@ describe("Terria", function() {
       expect(terria.selectedFeature?.name).toBe("foo");
     });
   });
+
   it("customRequestSchedulerLimits sets RequestScheduler limits for domains", async function() {
     const configUrl = `data:application/json;base64,${btoa(
       JSON.stringify({

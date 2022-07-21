@@ -12,13 +12,20 @@ import Model from "../Models/Definition/Model";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
 
+// Unfortunately Cesium does not declare a single interface that represents a primitive,
+// but here is what primitives have in common:
+export interface AbstractPrimitive {
+  show: boolean;
+  destroy(): void;
+  isDestroyed(): boolean;
+}
+
 export type MapItem =
   | ImageryParts
   | DataSource
-  | Cesium3DTileset
+  | AbstractPrimitive
   | TerrainProvider;
 
-// Shouldn't this be a class?
 export interface ImageryParts {
   alpha: number;
   clippingRectangle: Rectangle | undefined;
@@ -31,6 +38,10 @@ export namespace ImageryParts {
   export function is(object: MapItem): object is ImageryParts {
     return "imageryProvider" in object;
   }
+}
+
+export function isPrimitive(mapItem: MapItem): mapItem is AbstractPrimitive {
+  return "isDestroyed" in mapItem;
 }
 
 export function isCesium3DTileset(

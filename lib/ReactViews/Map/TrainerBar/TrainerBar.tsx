@@ -1,7 +1,7 @@
-import i18next, { TFunction } from "i18next";
+import { TFunction } from "i18next";
 import { observer } from "mobx-react";
 import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import { Translation, WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import Terria from "../../../Models/Terria";
 import {
@@ -11,15 +11,14 @@ import {
   TrainerItem
 } from "../../../ReactViewModels/defaultHelpContent";
 import ViewState from "../../../ReactViewModels/ViewState";
-import Select from "../../../Styled/Select";
-import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
-import measureElement from "../../HOCs/measureElement";
-import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
-import Text from "../../../Styled/Text";
 import Box from "../../../Styled/Box";
 import Button, { RawButton } from "../../../Styled/Button";
+import measureElement, { MeasureElementProps } from "../../HOCs/measureElement";
+import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
+import Select from "../../../Styled/Select";
 import Spacing from "../../../Styled/Spacing";
-import { useTranslationIfExists } from "./../../../Language/languageHelpers";
+import Text, { TextSpan } from "../../../Styled/Text";
+import { applyTranslationIfExists } from "./../../../Language/languageHelpers";
 
 const StyledHtml: any = require("../../Map/Panels/HelpPanel/StyledHtml")
   .default;
@@ -89,9 +88,13 @@ const renderStep = (
         <Spacing right={3} />
       </Box>
       <Box column>
-        <Text textLight extraExtraLarge semiBold>
-          {useTranslationIfExists(step.title)}
-        </Text>
+        <Translation>
+          {(t, { i18n }) => (
+            <Text textLight extraExtraLarge semiBold>
+              {applyTranslationIfExists(step.title, i18n)}
+            </Text>
+          )}
+        </Translation>
         {options.renderDescription && step?.markdownDescription && (
           <>
             {/* {options.comfortable && <Spacing bottom={2} />} */}
@@ -133,7 +136,6 @@ interface StepAccordionProps {
   setIsShowingAllSteps: (bool: boolean) => void;
   isExpanded: boolean;
   setIsExpanded: (bool: boolean) => void;
-  heightFromMeasureElementHOC: number | null;
 }
 interface StepAccordionState {
   isExpanded: boolean;
@@ -141,7 +143,7 @@ interface StepAccordionState {
 
 // Originally written as a SFC but measureElement only supports class components at the moment
 class StepAccordionRaw extends React.Component<
-  StepAccordionProps,
+  StepAccordionProps & MeasureElementProps & WithTranslation,
   StepAccordionState
 > {
   refToMeasure: any;
@@ -221,11 +223,11 @@ class StepAccordionRaw extends React.Component<
                           : t("trainer.showAllSteps")
                       }
                     >
-                      <Text medium primary isLink textAlignLeft>
+                      <TextSpan medium primary isLink textAlignLeft>
                         {isShowingAllSteps
                           ? t("trainer.hideAllSteps")
                           : t("trainer.showAllSteps")}
-                      </Text>
+                      </TextSpan>
                     </RawButton>
                   </>
                 )
@@ -292,7 +294,7 @@ class StepAccordionRaw extends React.Component<
     );
   }
 }
-const StepAccordion = measureElement(StepAccordionRaw);
+const StepAccordion = withTranslation()(measureElement(StepAccordionRaw));
 
 interface TrainerBarProps extends WithTranslation {
   viewState: ViewState;
@@ -302,7 +304,7 @@ interface TrainerBarProps extends WithTranslation {
 }
 
 export const TrainerBar = observer((props: TrainerBarProps) => {
-  const { t, terria, theme, viewState } = props;
+  const { i18n, t, terria, theme, viewState } = props;
   const { helpContent } = terria.configParameters;
 
   // All these null guards are because we are rendering based on nested
@@ -384,7 +386,7 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
           >
             {selectedTrainerItems.map((item, index) => (
               <option key={item.title} value={index}>
-                {useTranslationIfExists(item.title)}
+                {applyTranslationIfExists(item.title, i18n)}
               </option>
             ))}
           </Select>
@@ -406,7 +408,6 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
           }
           selectedTrainer={selectedTrainerItem}
           theme={theme}
-          t={t}
         />
         <Spacing right={4} />
 

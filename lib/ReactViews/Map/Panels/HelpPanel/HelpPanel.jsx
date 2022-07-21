@@ -41,6 +41,14 @@ class HelpPanel extends React.Component {
     setTimeout(() => this.setState({ isAnimatingOpen: false }), 0);
   }
 
+  componentWillUnmount() {
+    // Make sure that retainSharePanel is set to false. This property is used to temporarily disable closing when Share Panel loses focus.
+    // If the Share Panel is open underneath help panel, we now want to allow it to close normally.
+    setTimeout(() => {
+      this.props.viewState.setRetainSharePanel(false);
+    }, 500); // We need to re-enable closing of share panel when loses focus.
+  }
+
   render() {
     const { i18n, t } = this.props;
     const isRtl = i18n.dir() === "rtl";

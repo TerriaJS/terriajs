@@ -1,8 +1,9 @@
-var path = require('path');
-var StringReplacePlugin = require("string-replace-webpack-plugin");
-var ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-var ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
-var webpack = require('webpack');
+const path = require('path');
+const CopyPlugin = require("copy-webpack-plugin");
+const StringReplacePlugin = require("string-replace-webpack-plugin");
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
+const webpack = require('webpack');
 
 function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtractPlugin, disableStyleLoader) {
     const cesiumDir = path.dirname(require.resolve('terriajs-cesium/package.json'));
@@ -37,13 +38,10 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
         loader: StringReplacePlugin.replace({
             replacements: [
                 {
-                    pattern: /buildModuleUrl\([\'|\"](.*)[\'|\"]\)/ig,
+                    pattern: /buildModuleUrl\([\'|\"|\`](.*)[\'|\"|\`]\)/ig,
                     replacement: function (match, p1, offset, string) {
-                        // The original string might have double quotes in it, so we'll replace them with single quotes
-                        // That way, the quotes in "require" will hopefully always match
-                        let p1_modified = p1.replace(/\"/g, '\'');
-                        p1_modified = p1_modified.replace(/\\/g, '\\\\')
-                        return "require('" + cesiumDir.replace(/\\/g, '\\\\') + "/Source/" + p1_modified + "')";
+                        let p1_modified = p1.replace(/\\/g, '\\\\')
+                        return "require(`" + cesiumDir.replace(/\\/g, '\\\\') + "/Source/" + p1_modified + "`)";
                     }
                 },
                 {
@@ -195,15 +193,15 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
     });
 
     // Don't let Cesium's `crunch.js` see require - only the AMD version is relevant.
-    config.module.rules.push({
-        test: require.resolve('terriajs-cesium/Source/ThirdParty/crunch'),
-        loader: 'imports-loader?require=>false'
-    });
+    // config.module.rules.push({
+    //     test: require.resolve('terriajs-cesium/Source/ThirdParty/crunch'),
+    //     loader: 'imports-loader?require=>false'
+    // });
 
     config.module.rules.push({
         test: /\.(png|jpg|svg|gif)$/,
         include: [
-            path.resolve(terriaJSBasePath),
+            path.resolve(terriaJSBasePath) + path.sep,
             path.resolve(cesiumDir)
         ],
         exclude: [
@@ -279,6 +277,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
     config.plugins.push(
         new ForkTsCheckerWebpackPlugin({
             typescript: {
+                memoryLimit:4096,
                 configFile: path.resolve(__dirname, '..', 'tsconfig.json'),
                 diagnosticOptions: {
                     semantic: true,
@@ -288,16 +287,25 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
         })
     );
     config.plugins.push(
-        new ForkTsCheckerNotifierWebpackPlugin({
-            excludeWarnings: true,
-            // probably don't need to know first check worked as well - disable it
-            skipFirstNotification: true
-        })
-    );
+      new ForkTsCheckerNotifierWebpackPlugin({
+          excludeWarnings: true,
+          // probably don't need to know first check worked as well - disable it
+          skipFirstNotification: true
+      })
+  );
+
+  // Copy assimpjs.wasm file - this is used by AssImpCatalogItem (see AssImpCatalogItem.forceLoadMapItems())
+  config.plugins.push(
+    new CopyPlugin({
+      patterns: [
+        { from: require.resolve('assimpjs/dist/assimpjs.wasm'), to: "assimpjs.wasm" }
+      ],
+    })
+  );
 
     if (hot && !disableStyleLoader) {
         config.module.rules.push({
-            include: path.resolve(terriaJSBasePath),
+            include: path.resolve(terriaJSBasePath) + path.sep,
             test: /\.scss$/,
             use: [
                 require.resolve('style-loader'),

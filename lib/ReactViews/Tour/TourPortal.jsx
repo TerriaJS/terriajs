@@ -23,7 +23,7 @@ import { parseCustomMarkdownToReactWithOptions } from "../Custom/parseCustomMark
 import Caret from "../Generic/Caret";
 import CloseButton from "../Generic/CloseButton";
 import { useWindowSize } from "../Hooks/useWindowSize";
-import { useTranslationIfExists } from "./../../Language/languageHelpers";
+import { applyTranslationIfExists } from "./../../Language/languageHelpers";
 import {
   calculateLeftPosition,
   calculateRightPosition,
@@ -238,6 +238,7 @@ TourExplanation.propTypes = {
 };
 
 const TourGrouping = observer(({ viewState, tourPoints }) => {
+  const { i18n } = useTranslation();
   const currentTourPoint = tourPoints[viewState.currentTourIndex];
   const currentTourPointRef = viewState.appRefs.get(
     currentTourPoint?.appRefName
@@ -318,7 +319,7 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
             indicatorOffsetRight={indicatorOffsetRight}
           >
             {parseCustomMarkdownToReactWithOptions(
-              useTranslationIfExists(tourPoint?.content),
+              applyTranslationIfExists(tourPoint?.content, i18n),
               {
                 injectTermsAsTooltips: true,
                 tooltipTerms: viewState.terria.configParameters.helpContentTerms

@@ -1,0 +1,779 @@
+{
+  "story": {
+    "gettingStartedTitle": "Mulai",
+    "gettingStarted": "Mulai",
+    "panelBody": "Buat dan bagikan cerita interaktif langsung dari peta Anda",
+    "panelTitle": "Penyunting Cerita",
+    "storyEditor": "Penyunting Cerita",
+    "dismissText": "Mengerti, terima kasih!",
+    "story": "Cerita",
+    "promptHtml1": "<0>Anda dapat melihat dan membuat cerita kapan saja dengan mengklik di sini.</0>",
+    "navBtnMobile": "pergi ke cerita {{title}}",
+    "navBtn": "pergi ke cerita {{title}}",
+    "editor": {
+      "saveStory": "Simpan",
+      "saveBtn": "simpan",
+      "cancelEditing": "Batal",
+      "cancelBtn": "batal",
+      "placeholder": "Masukkan sebuah judul di sini"
+    },
+    "play": "Putar",
+    "removeStoryDialog": "Apakah Anda yakin ingin menghapus '<1>{{storyName}}</1>'?",
+    "removeAllStories": "Hapus Semua",
+    "message": "<2>Ini adalah penyunting cerita Anda</2><1>Buat dan bagikan cerita interaktif langsung dari peta Anda<1><0><0></0>Memulai </0></1></1>",
+    "doesNotExist": "Cerita tidak ada",
+    "delete": "Hapus",
+    "deleteStory": "hapus",
+    "edit": "Sunting",
+    "editStory": "sunting",
+    "viewStory": "lihat",
+    "shareTitle": "bagikan cerita",
+    "share": "Bagikan",
+    "recapture": "Menangkap kembali",
+    "promptHtml2": "<0><0>MEMPERKENALKAN</0><1>Cerita Data</1><2>Buat dan bagikan cerita interaktif langsung dari peta Anda.</2></0>",
+    "exitBtn": "keluar cerita",
+    "view": "Tampilan",
+    "untitledScene": "scene tanpa judul",
+    "untitled": "scene tanpa judul",
+    "previousBtn": "ke scene sebelumnya",
+    "recaptureStory": "Tangkap kembali",
+    "removeAllStoriesDialog": "Ada yakin ingin menghapus {{ count }} scene?",
+    "preview": "pratinjau stories",
+    "nextBtn": "ke scene selanjutnya",
+    "mobileViewStory": "Lihat Cerita {{storiesLength}}",
+    "badgeBarLabel": "Scene"
+  },
+  "welcomeMessage": {
+    "dismissText": "Tutup pesan dan jangan tampilkan ini lagi",
+    "exploreDataBtnText": "Jelajahi data peta",
+    "helpBtnText": "Saya butuh sedikit bantuan",
+    "tourBtnText": "Ikuti turnya",
+    "title": "Mari kita mulai",
+    "searchBtnText": "Cari lokasi"
+  },
+  "featureInfo": {
+    "clickMap": "Klik peta untuk mengetahui lebih banyak tentang sebuah lokasi",
+    "pickLocation": "Pilih Lokasi",
+    "latLon": "Lin / Buj ",
+    "siteData": "Data Situs",
+    "noInfoAvailable": "Tak ada informasi yang tersedia",
+    "btnCloseFeature": "Tutup panel data",
+    "clickToAddData": "Klik '$t(addData.addDataBtnText)' untuk menambahkan data ke peta.",
+    "noDataAvailable": "Tak ada data yang tersedia di sini - coba lokasi lain.",
+    "download": "Unduh Tabel ini",
+    "satelliteSuggestionBtn": "Tampilkan {{catalogItemName}} di lokasi ini",
+    "panelHeading": "Informasi Fitur",
+    "catalogItem": {
+      "moreThanMax": "Lebih dari {{maximum}} {{catalogItemName}} fitur ditemukan.",
+      "featuresFound": "{{featCount}} {catalogItemName} fitur ditemukan.",
+      "featureInfoShown": "Yang pertama {{maximum}} ditunjukkan di bawah ini."
+    },
+    "userSelection": "Seleksi Pengguna",
+    "locationMarker": "Penanda Lokasi",
+    "showRawData": "Tampilkan Data Mentah",
+    "showCuratedData": "Tampilkan Data yang dikurasi"
+  },
+  "sui": {
+    "notifications": {
+      "denyText": "Mungkin nanti",
+      "confirmText": "Ya",
+      "message": "Apakah Anda ingin melihatnya sekarang?",
+      "title": "Peta ini mengandung sebuah cerita"
+    },
+    "showWorkbench": "Tampilkan Workbench",
+    "hideWorkbench": "Sembunyikan Workbench"
+  },
+  "helpMenu": {
+    "next": "BERIKUTNYA",
+    "done": "SELESAI",
+    "helpMenuMoreHelpTitle": "Lebih banyak bantuan",
+    "helpMenuOpenWelcome": "Tunjukkan pesan selamat datang",
+    "helpMenuHeader": "Apa yang ingin Anda lakukan?",
+    "btnTitle": "dapatkan bantuan",
+    "btnText": "Bantuan",
+    "helpMenuSatelliteGuideTitle": "Lihat panduan gambar satelit"
+  },
+  "helpPanel": {
+    "takeTour": "Ikuti turnya",
+    "dismissText": "Mengerti, terima kasih!",
+    "promptMessage": "Temukan Tur, video petunjuk & konten bantuan lainnya di sini",
+    "menuPaneBody": "Cari tip berguna tentang bagaimana cara menggunakan TerriaJS dengan mengecek panduan berikut atau dengan menghubungi tim di [{{supportEmail}}]({{supportEmail}})",
+    "menuPaneTitle": "Kami di sini untuk membantu",
+    "btnText": "Bantuan",
+    "mapUserGuide": "Panduan pengguna peta"
+  },
+  "feedback": {
+    "minLength": "Panjang minimum dari komentar adalah {{minLength}}",
+    "feedbackBtnText": "Berikan Masukan",
+    "send": "Kirim",
+    "sending": "Mengirim...",
+    "cancel": "Batal",
+    "captionText": "Ini membantu kami memecahkan masalah dengan mengizinkan kami melihat apa yang Anda lihat",
+    "shareWithDevelopers": "Bagikan tampilan peta saya dengan pengembang-pengembang {{appName}}",
+    "commentQuestion": "Komentar atau pertanyaan",
+    "email": "Alamat surel (opsional)<br/><em>Kami tidak dapat membalas tanpa ini!</em>",
+    "yourName": "Nama Anda (opsional)",
+    "close": "tutup masukan",
+    "title": "Masukan",
+    "feedbackPreamble": "Kami ingin mendengar dari Anda!"
+  },
+  "settingPanel": {
+    "terrain": {
+      "right": "Kanan",
+      "both": "Keduanya",
+      "left": "Kiri"
+    },
+    "timeline": {
+      "alwaysShow": "Selalu tampilkan",
+      "title": "Linimasa"
+    },
+    "performanceLabel": "Performa",
+    "qualityLabel": "Kualitas",
+    "btnTitle": "Ubah tampilan",
+    "nativeResolutionLabel": "Tekan untuk berhenti menggunakan resolusi {{resolution1}} dan mulai menggunakan resolusi {{resolution2}}",
+    "imageOptimisation": "Optimisasi Gambar",
+    "btnText": "Pengaturan Peta",
+    "screen": "layar",
+    "qualityLabels": {
+      "lowerPerformance": "Kualitas maksimal, performa menurun",
+      "balancedPerformance": "Performa & kualitas seimbang",
+      "maximumPerformance": "Performa maksimal, kualitas menurun"
+    },
+    "viewerModeLabels": {
+      "Leaflet": "2D",
+      "CesiumEllipsoid": "3D Halus"
+    },
+    "none": "(Tidak Ada)",
+    "mapQuality": "Kualitas Peta Raster:",
+    "baseMap": "Peta Dasar",
+    "mapView": "Tampilan Peta"
+  },
+  "toolsPanel": {
+    "btnText": "Alat"
+  },
+  "countDatasets": {
+    "mapDataState": "{{count}} dataset diaktifkan di peta",
+    "noMapDataEnabled": "Tak ada data peta yang diaktifkan",
+    "btnCount": "Hitung dataset",
+    "title": "Hitung Dataset",
+    "recount": "Hitung ulang",
+    "subTotals": "<div> {{name}}: {{items}} item / {{groups}} kelompok</div>",
+    "countingMessage": "Menghitung, harap tunggu...",
+    "loadError": "gagal memuat.",
+    "btnText": "Mulai"
+  },
+  "share": {
+    "convertNotificationWarningsTitle": "Keterangan teknis",
+    "convertNotificationFeedback": "Untuk pertanyaan dan masukan, klik di sini.",
+    "btnMapShareTitle": "Bagikan peta Anda kepada orang lain",
+    "btnStoryShareTitle": "Bagikan cerita Anda kepada orang lain",
+    "btnMapShareText": "Bagikan / Cetak",
+    "btnStoryShareText": "Bagikan",
+    "btnCatalogShareText": "Bagikan",
+    "creatingPrintView": "Membuat tampilan pencetakan...",
+    "printViewButton": "Perlihatkan Tampilan Pencetakan",
+    "printButton": "Cetak",
+    "printExplanation": "Buka versi yang dapat dicetak dari peta ini.",
+    "printTitle": "Cetak Peta",
+    "shortLinkError": "Sebuah kesalahan terjadi ketika mencoba untuk memperpendek URL.  Harap periksa koneksi internet Anda dan coba lagi.",
+    "shortLinkShortening": "Memendekkan...",
+    "btnAdvanced": "Opsi lanjutan",
+    "btnCatalogShareTitle": "Bagikan katalog Anda dengan orang lain"
+  },
+  "measure": {
+    "measureTool": "Alat Pengukur",
+    "measureToolTitle": "Ukur Garis",
+    "measureDistance": "Ukur jarak diantara lokasi-lokasi"
+  },
+  "tour": {
+    "previous": "Sebelumnya",
+    "finish": "Selesai",
+    "end": "Akhiri tur",
+    "preface": {
+      "start": "Mulai tur",
+      "close": "Mungkin nanti",
+      "content": "Tidak yakin di mana untuk mulai? Ikuti tur singkat dari fitur-fitur utama dari perangkat lunak kami, dan belajar tentang beberapa fungsi utama untuk membantumu.",
+      "title": "Ikuti turnya"
+    },
+    "locationSearchInput": {
+      "content": "## Pencarian lokasi\n\nMasukkan lokasi atau alamat untuk memudahkan menemukan point of interest di peta."
+    },
+    "menuBarMapSettingsButton": {
+      "content": "## Pengaturan Peta\n\nSesuaikan pengaturan peta seperti peta dasar, Medan 2D/3D, dan kualitas gambar peta untuk meningkatkan kinerja."
+    },
+    "sidePanelUploadButton": {
+      "content": "## Unggah Data\n\nAnda dapat mengunggah data Anda ke peta untuk melihatnya bersama kumpulan data lainnya. Unggah file atau tautan ke kumpulan data online atau layanan data yang ada. Format data yang didukung termasuk CSV, GeoJSON, KML, GPX dan CZML."
+    },
+    "exploreMapDataButton": {
+      "content": "##Jelaja peta\n\nJelajah katalog data yang tersedia dan tambahkan ke peta di sini. Anda dapat menambahkan beberapa kumpulan data sekaligus, dan Anda akan melihatnya tercantum di bawah di meja kerja."
+    }
+  },
+  "trainer": {
+    "hideAllSteps": "Sembunyikan seluruh langkah",
+    "showAllSteps": "Tampilkan seluruh langkah",
+    "collapseTrainer": "Sembunyikan keterangan langkah",
+    "expandTrainer": "Tampilkan lebih banyak keterangan langkah"
+  },
+  "general": {
+    "confirm": "Konfirmasi",
+    "cancel": "Batal",
+    "delete": "Hapus",
+    "back": "Kembali",
+    "skip": "Lewati",
+    "open": "Buka",
+    "close": "Tutup",
+    "prev": "Sebelumnya",
+    "next": "Selanjutnya"
+  },
+  "languagePanel": {
+    "changeLanguage": "Ubah Bahasa"
+  },
+  "legend": {
+    "n": "U",
+    "e": "T",
+    "zone": "ZONA",
+    "lon": "Buj",
+    "lat": "Lin"
+  },
+  "diffTool": {
+    "datePicker": {
+      "dateOutOfRange": "Saat ini di luar jangkauan",
+      "dateButtonTitle": "Pilih tanggal",
+      "nextDateTitle": "Tanggal selanjutnya",
+      "previousDateTitle": "Tanggal sebelumnya",
+      "back": "Kenbali"
+    },
+    "locationPicker": {
+      "nextMessages": {
+        "title": "Anda telah memilih lokasi {{latitude}} {{longitude}}",
+        "beforePick": "Ketuk titik lain untuk mengubah pilihan"
+      }
+    },
+    "locationDisplay": {
+      "locationSelected": {
+        "description": "Untuk mengubah, klik titik lain di peta"
+      },
+      "noLocationSelected": {
+        "title": "Tidak ada lokasi yang dipilih"
+      }
+    },
+    "labels": {
+      "previewStyle": "Gaya tinjauan",
+      "dates": "Tanggal-tanggal"
+    },
+    "choosePreview": "Pilih gaya tinjauan",
+    "instructions": {
+      "setDateB": "Tetapkan tanggal B",
+      "setDateA": "Tetapkan tanggal A",
+      "changeDates": "Ubah tanggal-tanggal"
+    },
+    "exit": "Keluar",
+    "title": "Perbedaan"
+  },
+  "tool": {
+    "button": {
+      "closed": "{{toolName}}",
+      "open": "Keluar {{toolNameLowerCase}}"
+    },
+    "exitBtnTitle": "Keluar",
+    "loadingError": {
+      "message": "Sebuah kesalahan terjadi ketika mencoba memuat alat ini dari server. Harap coba lagi.",
+      "title": "Terjadi Kesalahan Memuat Alat {{toolName}}"
+    },
+    "closeButtonTitle": "Tutup Alat {{toolName}}"
+  },
+  "AR": {
+    "confirmText": "Mengerti",
+    "title": "Fitur Eksperimental: Augmented Reality"
+  },
+  "compass": {
+    "guidanceBtnText": "Lihat petunjuk lengkap tentang bagaimana cara menggunakan kompas",
+    "title": "Klik dan seret untuk memutar kamera"
+  },
+  "zoomCotrol": {
+    "zoomOut": "Perkecil",
+    "zoomIn": "Perbesar",
+    "zoomReset": "Setel ulang zum"
+  },
+  "splitterTool": {
+    "workbench": {
+      "copyName": "{{name}} (salinan)",
+      "goright": "Kanan",
+      "gorightTitle": "Tampilkan di sisi kanan",
+      "both": "Keduanya",
+      "bothTitle": "Tampilkan di kedua sisi",
+      "goleft": "Kiri",
+      "goleftTitle": "Tampilkan di sisi kiri"
+    },
+    "toggleSplitterToolTitle": "Bandingkan"
+  },
+  "location": {
+    "originError": "Browser Anda hanya dapat menyediakan lokasi Anda ketika menggunakan https. Anda mungkin dapat menggunakan {{secureUrl}} saja.",
+    "location": "Lokasi",
+    "myLocation": "Lokasi Saya",
+    "browserCannotProvide": "Browser Anda tidak dapat menyediakan lokasi Anda.",
+    "errorGettingLocation": "Terjadi kesalahan mendapatkan lokasi"
+  },
+  "itemSearchTool": {
+    "backBtnText": "Cari lagi",
+    "searchBtnText": "Cari",
+    "searchError": "Pencarian gagal. Lihat konsol untuk keterangan kesalahan.",
+    "searching": "Mencari",
+    "title": "Cari {{itemName}}",
+    "numericParameter": {
+      "maximum": "Maksimum",
+      "minimum": "Minimum"
+    },
+    "actions": {
+      "showMatchingOnly": "Hanya tampilkan yang cocok",
+      "highlightAll": "Sorot semua"
+    },
+    "resetBtnText": "Hapus input",
+    "loading": "Memuat parameter pencarian",
+    "resultsCount": "{{count}} cocok"
+  },
+  "deltaTool": {
+    "cancelBtn": "Batal",
+    "pickerMessage": {
+      "pickAnother": "Klik titik lain untuk mengubah pilihan",
+      "pickFirst": "Pilih titik dengan mengklik peta"
+    },
+    "secondaryImage": "Gambar Kedua",
+    "primaryImage": "Gambar Utama",
+    "selectedLocation": "Pilih lokasi"
+  },
+  "toast": {
+    "mapIsZooming": "Memuat pembesaran yang ideal..."
+  },
+  "satelliteGuidance": {
+    "dismissText": "Mengerti, terima kasih!",
+    "nextI": "Lihat panduan",
+    "prevI": "Tidak, terima kasih",
+    "titleIII": "Memuat gambar bersejarah"
+  },
+  "models": {
+    "socrataServer": {
+      "tags": "Tag",
+      "attributes": "Atribut",
+      "licence": "Lisensi",
+      "description": "Deskripsi"
+    },
+    "ogr": {
+      "safari": "Apple Safari"
+    },
+    "gpx": {
+      "serviceErrorMessage": "Layanan ini tidak memiliki keterangan apapun.",
+      "dataSourceErrorMessage": "Sumber data ini tidak memiliki keterangan apapun.",
+      "name": "GPX",
+      "errorLoadingTitle": "Galat saat memuat GPX"
+    },
+    "gltf": {
+      "error": "Galat",
+      "dataSourceErrorMessage": "Sumber data ini tidak memiliki keterangan apapun.",
+      "name": "GL Transmission Format (glTF)",
+      "serviceErrorMessage": "Layanan ini tidak memiliki keterangan apapun.",
+      "notSupportedErrorTitle": "Tidak mendukung 2D",
+      "notSupportedErrorMessage": "\"{{name}}\" tidak dapat ditampilkan dalam tampilan 2D.  harap ganti ke 3D dan coba lagi."
+    },
+    "geoJson": {
+      "firefox": "Mozilla Firefox",
+      "internetExplorer": "Internet Explorer 11",
+      "unsupportedBrowserTitle": "Peramban web tidak didukung",
+      "couldNotLoadTitle": "Tidak dapat memuat JSON",
+      "serviceErrorMessage": "Layanan ini tidak memiliki keterangan apapun.",
+      "unableToLoadItemTitle": "Tidak ada GeoJSON",
+      "name": "GeoJSON",
+      "dataSourceErrorMessage": "Sumber data ini tidak memiliki keterangan apapun.",
+      "errorLoadingTitle": "Galat saat memuat GeoJSON",
+      "chrome": "Google Chrome"
+    },
+    "czml": {
+      "serviceErrorMessage": "Layanan ini tidak memiliki keterangan apapun.",
+      "dataSourceErrorMessage": "Sumber data ini tidak memiliki keterangan apapun.",
+      "errorLoadingTitle": "Tidak dapat memuat CZML",
+      "unableToLoadItemTitle": "Tidak ada CZML",
+      "errorLoadingMessage": "Terjadi kesalahan saat memuat file CZML."
+    },
+    "csw": {
+      "links": "Tautan",
+      "name": "Catalogue Service (CSW)",
+      "cors": "CORS",
+      "errorLoadingTitle": "Tidak dapat memuat CSW",
+      "errorLoadingRecordsTitle": "Gagal memuat data CSW.",
+      "notUseableTitle": "Catalogue service tidak dapar digunakan. \n\n {{message}}"
+    },
+    "catalog": {
+      "cancel": "Batal",
+      "upload": "Unggah",
+      "serviceErrorMessage": "Layanan ini tidak memiliki keterangan apapun.",
+      "dataSourceErrorMessage": "Sumber data ini tidak memiliki keterangan apapun.",
+      "group": "Grup",
+      "convertErrorTitle": "Tidak dapat mengupgrade katalog ke V8",
+      "unsupportedFileTypeTitle": "Format file tidak didukung",
+      "unsupportedTypeTitle": "tipe tidak diketahui"
+    },
+    "ckan": {
+      "update_freq": "Frekuensi Pembaruan",
+      "contact_point": "Kontak",
+      "metadata_modified": "Diubah",
+      "metadata_created": "Dibuat",
+      "author": "Pembuat",
+      "licence": "Lisensi",
+      "dataDescription": "Keterangan Data",
+      "datasetDescription": "Keterangan Dataset",
+      "serviceErrorMessage": "Layanan ini tidak memiliki keterangan apapun.",
+      "dataSourceErrorMessage": "Sumber data ini tidak memiliki keterangan apapun."
+    },
+    "userData": {
+      "firefox": "Mozilla Firefox",
+      "chrome": "Google Chrome",
+      "internetExplorer": "Internet Explorer 11"
+    },
+    "time": {
+      "invalidDate": "Tanggal Tidak Valid"
+    },
+    "resultPending": {
+      "name": "Hasil Tertunda"
+    },
+    "feedback": {
+      "unableToSendTitle": "Tak bisa mengirim umpan balik",
+      "thanksMessage": "Umpan balik Anda membantu membuat {{appName}} lebih baik",
+      "thanksTitle": "Terima kasih atas masukan Anda"
+    },
+    "sensorObservationService": {
+      "alreadyLoadingTitle": "Data sudah dimuat",
+      "sos": "SOS",
+      "property": "Properti",
+      "procedure": "Prosedur"
+    },
+    "webProcessingService": {
+      "wpsServer": "Peladen Layanan Pemrosesan Web (WPS)",
+      "regionParameterName": "Parameter Wilayah",
+      "errorDetails": "Rincian Galat"
+    },
+    "terriaJSONcatalog": {
+      "buttonTitleConfirm": "Saya Setuju",
+      "requestFailedMessage": "Permintaan gagal dengan kode status {{status}}.",
+      "requestFailedTitle": "Permintaan Gagal"
+    },
+    "terria": {
+      "buttonTitleConfirm": "Saya Setuju"
+    },
+    "mapboxMap": {
+      "name": "Peta Mapbox"
+    },
+    "cartoMap": {
+      "noUrlTitle": "Tidak ada URL"
+    },
+    "webMapServiceCatalogGroup": {
+      "missingUrlTitle": "Tidak dapat memuat GetCapabilities",
+      "groupNotAvailableTitle": "Grup tidak tersedia"
+    },
+    "webMapServiceCatalogItem": {
+      "noLayerFoundTitle": "Tidak ada layer yang ditemukan",
+      "defaultStyleLabel": "Gaya Bawaan",
+      "missingUrlTitle": "Tidak dapat memuat GetCapabilities",
+      "dataDescription": "Keterangan Data",
+      "serviceDescription": "Keterangan Layanan"
+    },
+    "webMapTileServiceCatalogGroup": {
+      "groupNotAvailableTitle": "Grup tidak tersedia"
+    },
+    "webMapTileServiceCatalogItem": {
+      "serviceDescription": "Keterangan Layanan",
+      "dataDescription": "Keterangan Data",
+      "noUsableTileMatrixTitle": "Peringatan",
+      "missingUrlTitle": "Tidak dapat memuat GetCapabilities"
+    },
+    "shadow": {
+      "name": "Bayangan",
+      "options": {
+        "none": "Kosong"
+      }
+    },
+    "function": {
+      "unknownFormaterTitle": "Formatter tidak dikenal"
+    },
+    "magda": {
+      "distributionDesc": "Deskripsi Distribusi",
+      "retrieveErrorTitle": "Galat saat mengambil data MAGDA"
+    },
+    "arcGisFeatureServerCatalogGroup": {
+      "groupNotAvailableTitle": "Grup tidak tersedia",
+      "dataDescription": "Keterangan Data",
+      "serviceDescription": "Keterangan Layanan"
+    },
+    "arcGisMapServerCatalogGroup": {
+      "groupNotAvailableTitle": "Grup tidak tersedia",
+      "dataDescription": "Keterangan Data",
+      "serviceDescription": "Keterangan Layanan"
+    },
+    "csv": {
+      "name": "Comma-Separated Values (CSV)",
+      "unableToLoadTitle": "Tidak dapat memuat file CSV",
+      "unableToLoadItemTitle": "Tidak ada CSV"
+    },
+    "webFeatureServiceCatalogItem": {
+      "missingUrlTitle": "Tidak dapat memuat GetCapabilities",
+      "dataDescription": "Keterangan Data",
+      "noLayerFoundTitle": "Tidak ada layer yang ditemukan",
+      "serviceDescription": "Keterangan Layanan"
+    },
+    "webProcessingServiceCatalogGroup": {
+      "missingUrlTitle": "Tidak dapat memuat GetCapabilities",
+      "typeName": "Web Processing Service (WPS) Server"
+    },
+    "georss": {
+      "copyrightText": "Teks Hak Cipta",
+      "link": "Tautan",
+      "author": "Pembuat",
+      "unableToLoadItemTitle": "Tidak ada GeoRSS",
+      "name": "GeoRSS",
+      "subtitle": "Subjudul",
+      "updated": "Diperbarui",
+      "category": "Kategori",
+      "description": "Deskripsi",
+      "errorLoadingTitle": "Tidak dapat memuat GeoRSS"
+    },
+    "senaps": {
+      "locationHeadingFeatureInfo": "Lokasi",
+      "name": "Lokasi Senaps"
+    },
+    "userDrawing": {
+      "btnCancel": "Batalkan",
+      "btnDone": "Selesai"
+    },
+    "arcGisFeatureServerCatalogItem": {
+      "serviceDescription": "Keterangan Layanan",
+      "dataDescription": "Keterangan Data"
+    },
+    "imageryLayer": {
+      "intervalSupportErrorTitle": "Interval tidak didukung"
+    },
+    "arcGisMapServerCatalogItem": {
+      "serviceDescription": "Keterangan Layanan",
+      "dataDescription": "Keterangan Data"
+    },
+    "mapboxStyle": {
+      "name": "Gaya Mapbox"
+    },
+    "bing": {
+      "name": "Peta Bing"
+    },
+    "arcgisPortal": {
+      "dataSourceErrorMessage": "Sumber data ini tidak memiliki keterangan apapun.",
+      "serviceErrorMessage": "Layanan ini tidak memiliki keterangan apapun.",
+      "licence": "Lisensi",
+      "datasetDescription": "Keterangan Dataset"
+    },
+    "webFeatureServiceCatalogGroup": {
+      "groupNotAvailableTitle": "Grup tidak tersedia"
+    },
+    "wfsFeatures": {
+      "groupNotAvailableTitle": "Grup tidak tersedia"
+    },
+    "kml": {
+      "unableToLoadItemTitle": "Tidak ada KML",
+      "name": "KML atau KMZ",
+      "dataSourceErrorMessage": "Sumber data ini tidak memiliki keterangan apapun.",
+      "serviceErrorMessage": "Layanan ini tidak memiliki keterangan apapun."
+    }
+  },
+  "viewModels": {
+    "searchLocations": "Lokasi",
+    "searchCatalogueItem": "Item-item Katalog"
+  },
+  "chart": {
+    "expand": "Perluas",
+    "closePanel": "Tutup Panel",
+    "sectionLabel": "Bagan",
+    "download": "Unduh"
+  },
+  "catalogItem": {
+    "add": "Tambah",
+    "removeFromMap": "Hapus dari peta",
+    "trash": "Hapus dari katalog",
+    "remove": "Hapus"
+  },
+  "concept": {
+    "inactive": {
+      "cancel": "Batal"
+    },
+    "active": {
+      "edit": "Sunting kondisi"
+    }
+  },
+  "satellite": {
+    "newLocation": "Lokasi baru",
+    "removeFilter": "Hapus filter",
+    "filterByLocation": "Saring menurut lokasi"
+  },
+  "dateTime": {
+    "timeline": {
+      "togglePlay": "Putar",
+      "gotoStart": "Ke awal"
+    },
+    "selectorLabel": "Waktu:",
+    "previous": "Waktu sebelumnya",
+    "selectTime": "Pilih waktu",
+    "outOfRange": "Saat ini di luar jangkauan.",
+    "useTimeline": "Gunakan timeline",
+    "availableTimeChart": "Tampilkan waktu yang tersedia pada bagan",
+    "back": "Kembali"
+  },
+  "workbench": {
+    "removeAll": "Hapus semua",
+    "removeFromMap": "Hapus",
+    "exportData": "Ekspor",
+    "rangeMin": "Minimum:",
+    "rangeMax": "Maksimum:",
+    "showMoreActionsTitle": "Tunjukkan tindakan lainnya",
+    "previewItemTitle": "Tentang data ini",
+    "previewItem": "Tentang Data",
+    "colorScaleRange": "Rentang Skala Warna",
+    "opacity": "Opasitas: {{opacity}} %",
+    "expandAll": "Bentangkan Semua",
+    "toggleVisibility": "Tampilkan/sembunyikan data",
+    "searchItem": "Pencarian",
+    "searchItemTitle": "Pencarian",
+    "colorScaleRangeTitle": "Rentang skala warna tidak valid",
+    "colorScaleRangeMin": "Nilai minimum harus berupa angka.",
+    "colorScaleRangeMax": "Nilai maksimum harus berupa angka.",
+    "splitItem": "Bandingkan",
+    "collapseAll": "Tutup Semua",
+    "diffImage": "Perbedaan",
+    "exportDataTitle": "Ekspor data peta",
+    "label": "Set data"
+  },
+  "preview": {
+    "disclaimer": "Sangkalan",
+    "updateFrequency": "Frekuensi Pembaruan",
+    "created": "Dibuat",
+    "contact": "Kontak",
+    "author": "Pembuat",
+    "datasetDescription": "Keterangan Dataset",
+    "dataDescription": "Keterangan Data",
+    "addToMap": "Tambahkan ke peta",
+    "removeFromMap": "Hapus dari peta",
+    "modified": "Diubah",
+    "preview": "{{appName}} pratinjau",
+    "fees": "Biaya",
+    "serviceDescription": "Keterangan Layanan",
+    "resourceDescription": "Keterangan Sumberdaya",
+    "licence": "Lisensi",
+    "accessConstraints": "Batasan Akses",
+    "dataCustodian": "Kustodian Data"
+  },
+  "mobile": {
+    "toggleNavigation": "Toggle Navigasi",
+    "addDataBtnText": "Data",
+    "doneBtnText": "Selesai"
+  },
+  "addData": {
+    "dragDrop": "Tarik dan Jatuhkan",
+    "back": "Kembali",
+    "urlInputBtn": "Tambahkan",
+    "webFileType": "<0>Langkah 1:</0> Pilih jenis berkas (opsional)",
+    "myData": "Data Saya",
+    "done": "Selesai",
+    "btnHide": "Sembunyikan",
+    "webAdd": "tambah data web",
+    "load": "Muat data lokal/web",
+    "localFileType": "<0>Langkah 1:</0> Pilih jenis berkas (opsional)",
+    "localFile": "<0>Langkah 2:</0> Pilih file",
+    "browse": "Telusuri...",
+    "localTitle": "Tambah Data Lokal",
+    "webTitle": "Tambah Data Web",
+    "addDataBtnText": "Jelajahi data peta",
+    "closeDataPanel": "Tutup panel data",
+    "localAdd": "Tambah file lokal",
+    "dataCatalogue": "Katalog Data",
+    "searchPlaceholderWhole": "Cari semua katalog",
+    "searchPlaceholder": "Cari katalog"
+  },
+  "notification": {
+    "title": "Pesan"
+  },
+  "core": {
+    "printWindow": {
+      "errorTitle": "Kesalahan mencetak"
+    },
+    "dataType": {
+      "other": "Lainnya (gunakan layanan pengkonversi)",
+      "json": "JSON",
+      "gpx": "GPX",
+      "czml": "CZML",
+      "csv": "CSV",
+      "kml": "KML atau KMZ",
+      "geoRss": "GeoRSS",
+      "geojson": "GeoJSON",
+      "auto": "Deteksi otomatis (direkomendasikan)"
+    }
+  },
+  "analytics": {
+    "enterValidCoords": "Mohon masukkan koordinat yang valid (contoh 131.0361, -25.3450).",
+    "clickToDrawLine": "Klik untuk menggambar garis",
+    "runAnalysis": "Jalankan Analisis",
+    "polygon": "Poligon",
+    "regionName": "Nama daerah",
+    "selectedPolygon": "Poligon yang Dipilih",
+    "clickToDrawRectangle": "Klik untuk menggambar persegi panjang",
+    "clickToDrawPolygon": "Klik untuk menggambar poligon",
+    "selectLocation": "Pilih lokasi"
+  },
+  "terriaViewer": {
+    "webGLNotSupportedOrSlowTitle": "WebGL tak didukung atau terlalu lambat",
+    "webGLNotSupportedTitle": "WebGL tidak didukung",
+    "slowWebGLAvailableTitle": "Performa WebGL buruk"
+  },
+  "loader": {
+    "loadingMessage": "Memuat"
+  },
+  "clipboard": {
+    "copy": "Salin",
+    "shareExplanation": "Siapapun yang memiliki URL ini dapat mengakses peta ini.",
+    "shareURL": "Bagikan URL",
+    "success": "Disalin ke papan klip"
+  },
+  "description": {
+    "dataUrl": "Tautan Data",
+    "name": "Keterangan",
+    "layerName": "Nama layer",
+    "typeName": "Nama tipe",
+    "metadataUrls": "Tautan Metadata",
+    "downloadData": "Unduh Data",
+    "dataSourceDetails": "Rincian Sumber Data",
+    "dataServiceDetails": "Rincian Layanan Data",
+    "dataCustodian": "Kustodian Data"
+  },
+  "search": {
+    "data": "Data",
+    "done": "Selesai",
+    "resultsLabel": "Hasil Pencarian",
+    "placeholder": "Cari lokasi",
+    "searchCatalogue": "Cari katalog"
+  },
+  "mapNavigation": {
+    "additionalToolsTitle": "Buka alat tambahan",
+    "additionalTools": "Alat tambahan"
+  },
+  "term": {
+    "missingContent": "konten hilang"
+  },
+  "pedestrianMode": {
+    "controls": {
+      "title": "Kontrol"
+    },
+    "toolButtonTitle": "Mode pejalan kaki"
+  },
+  "indexedItemSearchProvider": {
+    "errorParsingIndexRoot": "Kesalahan saat mengurai file indexRoot: {{indexRootUrl}}.",
+    "missingOptionIndexRootUrl": "Opsi `indexRootUrl` tidak ada dalam konfigurasi pencarian item."
+  },
+  "browsers": {
+    "chrome": "Google Chrome",
+    "firefox": "Mozilla Firefox",
+    "edge": "Microsoft Edge",
+    "safari": ""
+  }
+}

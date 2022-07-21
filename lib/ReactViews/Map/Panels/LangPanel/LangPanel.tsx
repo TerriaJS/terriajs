@@ -1,14 +1,12 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
+import Terria from "../../../../Models/Terria";
 import Box from "../../../../Styled/Box";
 import { RawButton } from "../../../../Styled/Button";
-import Ul, { Li } from "../../../../Styled/List";
-
-import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
-import Terria from "../../../../Models/Terria";
-
-import Styles from "../../menu-bar.scss";
 import Icon from "../../../../Styled/Icon";
-import { useTranslation } from "react-i18next";
+import Ul, { Li } from "../../../../Styled/List";
+import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
+import Styles from "../../menu-bar.scss";
 
 const stripLangLocale = (lang: string = ""): string => lang.split("-")[0];
 
@@ -40,7 +38,15 @@ export default (props: Props) => {
       smallScreen={props.smallScreen}
     >
       <Box styledPadding={"20px 10px 10px 10px"}>
-        <Ul spaced lined fullWidth>
+        <Ul
+          spaced
+          lined
+          fullWidth
+          column
+          css={`
+            padding-left: 0;
+          `}
+        >
           {Object.entries(
             props.terria.configParameters.languageConfiguration.languages
           ).map(([key, value]) => (

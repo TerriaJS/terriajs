@@ -22,8 +22,9 @@ import MapNavigationModel, {
 } from "../../../ViewModels/MapNavigation/MapNavigationModel";
 import withControlledVisibility from "../../HOCs/withControlledVisibility";
 import MapIconButton from "../../MapIconButton/MapIconButton";
-import { Control, MapNavigationItem } from "./Items/MapNavigationItem";
+import MapNavigationItem, { Control } from "./Items/MapNavigationItem";
 import { registerMapNavigations } from "./registerMapNavigations";
+import { ScreenSize } from "../../../ViewModels/CompositeBar/CompositeBarModel";
 
 const OVERFLOW_ACTION_SIZE = 42;
 
@@ -342,17 +343,18 @@ export function filterViewerAndScreenSize(
   viewState: ViewState
 ) {
   const currentViewer = viewState.terria.mainViewer.viewerMode;
+  const screenSize: ScreenSize = item.screenSize ?? "any";
   if (viewState.useSmallScreenInterface) {
     return (
       (!isDefined(item.controller.viewerMode) ||
         item.controller.viewerMode === currentViewer) &&
-      (!isDefined(item.screenSize) || item.screenSize === "small")
+      (screenSize === "any" || item.screenSize === "small")
     );
   } else {
     return (
       (!isDefined(item.controller.viewerMode) ||
         item.controller.viewerMode === currentViewer) &&
-      (!isDefined(item.screenSize) || item.screenSize === "medium")
+      (screenSize === "any" || item.screenSize === "medium")
     );
   }
 }

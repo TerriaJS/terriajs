@@ -7,7 +7,7 @@ import FeatureInfoTraits from "./FeatureInfoTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
-import RasterLayerTraits from "./RasterLayerTraits";
+import ImageryProviderTraits from "./ImageryProviderTraits";
 import UrlTraits from "./UrlTraits";
 
 export default class MapboxVectorTileCatalogItemTraits extends mixTraits(
@@ -17,7 +17,7 @@ export default class MapboxVectorTileCatalogItemTraits extends mixTraits(
   MappableTraits,
   CatalogMemberTraits,
   LegendOwnerTraits,
-  RasterLayerTraits
+  ImageryProviderTraits
 ) {
   @primitiveTrait({
     type: "string",

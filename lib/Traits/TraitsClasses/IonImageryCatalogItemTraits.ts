@@ -3,11 +3,11 @@ import LayerOrderingTraits from "./LayerOrderingTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "../mixTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
-import RasterLayerTraits from "./RasterLayerTraits";
+import ImageryProviderTraits from "./ImageryProviderTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 
 export default class IonImageryCatalogItemTraits extends mixTraits(
-  RasterLayerTraits,
+  ImageryProviderTraits,
   LayerOrderingTraits,
   MappableTraits,
   CatalogMemberTraits,

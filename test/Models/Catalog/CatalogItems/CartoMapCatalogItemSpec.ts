@@ -48,8 +48,8 @@ describe("CartoMapCatalogItem", function() {
       if (imageryProvider !== undefined) {
         expect(imageryProvider.url).toEqual(<string>stratum.tileUrl);
         expect(imageryProvider.credit.html).toEqual(<string>item.attribution);
-        expect(imageryProvider.minimumLevel).toEqual(item.minimumLevel);
-        expect(imageryProvider.maximumLevel).toEqual(item.maximumLevel);
+        expect(imageryProvider.minimumLevel).toEqual(0);
+        expect(imageryProvider.maximumLevel).toEqual(25);
         expect((<any>imageryProvider)._subdomains).toEqual(
           stratum.tileSubdomains
         );

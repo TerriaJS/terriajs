@@ -260,7 +260,9 @@ class Compass extends React.Component<PropTypes, IStateTypes> {
     windowPosition.y = scene.canvas.clientHeight / 2;
     const ray = camera.getPickRay(windowPosition, pickRayScratch);
 
-    const center = scene.globe.pick(ray, scene, centerScratch);
+    const center = isDefined(ray)
+      ? scene.globe.pick(ray, scene, centerScratch)
+      : undefined;
     if (!isDefined(center)) {
       // Globe is barely visible, so reset to home view.
       this.props.terria.currentViewer.zoomTo(
@@ -481,7 +483,9 @@ function rotate(
   windowPosition.y = scene.canvas.clientHeight / 2;
   const ray = camera.getPickRay(windowPosition, pickRayScratch);
 
-  const viewCenter = scene.globe.pick(ray, scene, centerScratch);
+  const viewCenter = isDefined(ray)
+    ? scene.globe.pick(ray, scene, centerScratch)
+    : undefined;
   if (!isDefined(viewCenter)) {
     viewModel.rotateFrame = Transforms.eastNorthUpToFixedFrame(
       camera.positionWC,
@@ -607,7 +611,9 @@ function orbit(
   windowPosition.y = scene.canvas.clientHeight / 2;
   const ray = camera.getPickRay(windowPosition, pickRayScratch);
 
-  const center = scene.globe.pick(ray, scene, centerScratch);
+  const center = isDefined(ray)
+    ? scene.globe.pick(ray, scene, centerScratch)
+    : undefined;
   if (!isDefined(center)) {
     viewModel.orbitFrame = Transforms.eastNorthUpToFixedFrame(
       camera.positionWC,
