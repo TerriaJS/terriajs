@@ -130,7 +130,8 @@ export default class LegendTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
     name: "URL",
-    description: "The URL of the legend image."
+    description:
+      "The URL of the legend image. If the URL suffix isn't one of the following `png|jpg|jpeg|gif|svg`, then `urlMimeType` must be defined - otherwise a hyperlink will be shown."
   })
   url?: string;
 
@@ -145,7 +146,8 @@ export default class LegendTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
     name: "URL MIME Type",
-    description: "The MIME type of the `URL` legend image."
+    description:
+      'The MIME type of the `URL` legend image. For example `"image/png"`'
   })
   urlMimeType?: string;
 

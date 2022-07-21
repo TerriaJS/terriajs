@@ -1,6 +1,6 @@
 import i18next from "i18next";
-import L, { GridLayer } from "leaflet";
-import { action, autorun, observable, runInAction, computed } from "mobx";
+import { GridLayer } from "leaflet";
+import { action, autorun, computed, observable, runInAction } from "mobx";
 import { computedFn } from "mobx-utils";
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -34,11 +34,13 @@ import LeafletDataSourceDisplay from "../Map/Leaflet/LeafletDataSourceDisplay";
 import LeafletScene from "../Map/Leaflet/LeafletScene";
 import LeafletSelectionIndicator from "../Map/Leaflet/LeafletSelectionIndicator";
 import LeafletVisualizer from "../Map/Leaflet/LeafletVisualizer";
+import L from "../Map/LeafletPatched";
 import PickedFeatures, {
   ProviderCoords,
   ProviderCoordsMap
 } from "../Map/PickedFeatures/PickedFeatures";
 import rectangleToLatLngBounds from "../Map/Vector/rectangleToLatLngBounds";
+import FeatureInfoMixin from "../ModelMixins/FeatureInfoMixin";
 import MappableMixin, {
   ImageryParts,
   MapItem
@@ -51,9 +53,9 @@ import CameraView from "./CameraView";
 import hasTraits from "./Definition/hasTraits";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
+import { LeafletAttribution } from "./LeafletAttribution";
 import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
-import { LeafletAttribution } from "./LeafletAttribution";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
@@ -589,13 +591,35 @@ export default class Leaflet extends GlobeOrMap {
       }
     }
 
-    const feature = Feature.fromEntityCollectionOrEntity(entity);
-    if (isDefined(this._pickedFeatures)) {
-      this._pickedFeatures.features.push(feature);
+    const catalogItem = (entity as any)._catalogItem;
 
-      if (isDefined(entity) && entity.position) {
-        this._pickedFeatures.pickPosition = (<any>entity.position)._value;
+    if (
+      FeatureInfoMixin.isMixedInto(catalogItem) &&
+      typeof catalogItem.getFeaturesFromPickResult === "function" &&
+      this.terria.allowFeatureInfoRequests
+    ) {
+      const result = catalogItem.getFeaturesFromPickResult.bind(catalogItem)(
+        undefined,
+        entity,
+        (this._pickedFeatures?.features.length || 0) < catalogItem.maxRequests
+      );
+      if (result && isDefined(this._pickedFeatures)) {
+        if (Array.isArray(result)) {
+          this._pickedFeatures.features.push(...result);
+        } else {
+          this._pickedFeatures.features.push(result);
+        }
       }
+    } else if (isDefined(this._pickedFeatures)) {
+      const feature = Feature.fromEntityCollectionOrEntity(entity);
+      this._pickedFeatures.features.push(feature);
+    }
+    if (
+      isDefined(this._pickedFeatures) &&
+      isDefined(entity) &&
+      entity.position
+    ) {
+      this._pickedFeatures.pickPosition = (<any>entity.position)._value;
     }
   }
 

@@ -7,11 +7,11 @@ import {
   Geometries,
   Geometry,
   GeometryCollection,
+  MultiPoint,
   MultiPolygon,
   Point,
   Polygon,
-  Properties,
-  MultiPoint
+  Properties
 } from "@turf/helpers";
 import i18next from "i18next";
 import {
@@ -32,6 +32,7 @@ import {
   LineSymbolizer,
   PolygonSymbolizer
 } from "protomaps";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -73,7 +74,6 @@ import Reproject from "../Map/Vector/Reproject";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
-import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
@@ -87,8 +87,10 @@ import { isConstantStyleMap } from "../Table/TableStyleMap";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
 import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import StyleTraits from "../Traits/TraitsClasses/StyleTraits";
+import TerriaFeature from "./../Models/Feature";
 import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
 import { ExportData } from "./ExportableMixin";
+import FeatureInfoMixin from "./FeatureInfoMixin";
 import { isDataSource } from "./MappableMixin";
 import TableMixin from "./TableMixin";
 
@@ -212,7 +214,7 @@ interface FeatureCounts {
 
 function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
   abstract class GeoJsonMixin extends TableMixin(
-    UrlMixin(CatalogMemberMixin(Base))
+    FeatureInfoMixin(UrlMixin(CatalogMemberMixin(Base)))
   ) {
     @observable
     private _dataSource:
@@ -391,6 +393,20 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       ]);
     }
 
+    /**
+     * {@link FeatureInfoMixin.buildFeatureFromPickResult}
+     */
+    buildFeatureFromPickResult(
+      _screenPosition: Cartesian2 | undefined,
+      pickResult: any
+    ): TerriaFeature | undefined {
+      if (pickResult instanceof Entity) {
+        return TerriaFeature.fromEntityCollectionOrEntity(pickResult);
+      } else if (isDefined(pickResult?.id)) {
+        return TerriaFeature.fromEntityCollectionOrEntity(pickResult.id);
+      }
+    }
+
     /** Only use MapboxVectorTiles (through geojson-vt and protomaps.js) if enabled and not using unsupported traits
      * For more info see GeoJsonMixin.forceLoadMapItems
      */
@@ -547,6 +563,9 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             this._imageryProvider = undefined;
           });
         }
+        this._dataSource?.entities.values.forEach(
+          entity => ((entity as any)._catalogItem = this)
+        );
       } catch (e) {
         throw networkRequestError(
           TerriaError.from(e, {
@@ -721,7 +740,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         protomapsData = this._imageryProvider.source;
       }
 
-      return new ProtomapsImageryProvider({
+      let provider = new ProtomapsImageryProvider({
         terria: this.terria,
         data: protomapsData,
         paintRules: [
@@ -779,6 +798,9 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         ],
         labelRules: []
       });
+
+      provider = this.wrapImageryPickFeatures(provider);
+      return provider;
     }
 
     private async loadCzmlDataSource(
