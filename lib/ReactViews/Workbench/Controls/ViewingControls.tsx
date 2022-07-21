@@ -477,7 +477,6 @@ class ViewingControls extends React.Component<
     const { i18n, t } = this.props;
     const showMenu = item.uniqueId === viewState.workbenchItemWithOpenControls;
     const isRtl = i18n.dir() === "rtl";
-    if (showMenu) debugger;
     return (
       <Box>
         <Ul
