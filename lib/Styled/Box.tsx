@@ -84,8 +84,8 @@ export const Box = styled.div<IBoxProps>`
     right: 0px;
     top: 0px;
     [dir="rtl"] & {
-    left: 0px;
-  }
+      left: 0px;
+    }
   `}
   ${props => props.displayInlineBlock && `display: inline-block;`}
 
@@ -179,7 +179,7 @@ export const Box = styled.div<IBoxProps>`
   ${props => props.styledPadding && `padding: ${props.styledPadding};`}
 
   ${props => props.styledMargin && `margin: ${props.styledMargin};`}
-  
+
   ${props =>
     props.backgroundImage &&
     `
