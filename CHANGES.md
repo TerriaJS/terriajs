@@ -19,6 +19,7 @@ Change Log
 * Implemented FeatureInfoMixin in GeojsonMixin (#5660)
 * `GpxCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
 * `GeoRssCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
+* Limit workbench item title to 2 lines and show overflow: ellipsis after.
 * [The next improvement]
 
 #### 8.2.9 - 2022-07-13
@@ -59,8 +60,6 @@ Change Log
 * Wrap the following components in `observer` - `ChartItem`, `LineChart`, (chart) `Legends`, `ChartPanelDownloadButton`
 * Improve TerriaReference error logging
 * Fix handling GeoJSON if features have null geometry
-* Limit workbench item title to 2 lines and show overflow: ellipsis after.
-* [The next improvement]
 * Fix bug where map tools names appear as translation strings
 * Allow IFC files to be added to a map from local or web data (Requires non-open source plugin) 
 * Rename `useTranslationIfExists` to `applyTranslationIfExists` so it doesn't look like a React hook.
