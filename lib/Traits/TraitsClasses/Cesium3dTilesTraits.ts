@@ -108,7 +108,7 @@ export class OptionsTraits extends ModelTraits {
     description:
       "Indicates whether tiles in this catalog item can be selected by clicking them on the map. This will also enable / disable Feature Info"
   })
-  allowFeaturePicking = true;
+  allowFeaturePicking = true; // TODO: is it OK to set a default here?
 }
 
 export default class Cesium3DTilesTraits extends mixTraits(
