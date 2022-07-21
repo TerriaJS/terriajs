@@ -20,7 +20,6 @@ Change Log
 * `GpxCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
 * `GeoRssCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
 * Upgrade i18next to `v21`
-* Update `translation` to use new pluralization format (i18next JSON v4)
 * [The next improvement]
 
 #### 8.2.9 - 2022-07-13
