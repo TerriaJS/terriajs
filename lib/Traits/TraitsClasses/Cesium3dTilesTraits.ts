@@ -17,6 +17,7 @@ import ShadowTraits from "./ShadowTraits";
 import SplitterTraits from "./SplitterTraits";
 import TransformationTraits from "./TransformationTraits";
 import UrlTraits from "./UrlTraits";
+import FeaturePickingTraits from "./FeaturePickingTraits";
 
 export class FilterTraits extends ModelTraits {
   @primitiveTrait({
@@ -106,6 +107,7 @@ export default class Cesium3DTilesTraits extends mixTraits(
   HighlightColorTraits,
   PlaceEditorTraits,
   TransformationTraits,
+  FeaturePickingTraits,
   MappableTraits,
   UrlTraits,
   CatalogMemberTraits,
