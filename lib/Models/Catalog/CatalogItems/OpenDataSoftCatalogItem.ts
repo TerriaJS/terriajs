@@ -603,7 +603,7 @@ export default class OpenDataSoftCatalogItem
       feature = new Feature(pickResult?.id);
     }
     // If feature is time-series, we have to make sure that recordId is set in feature.properties
-    // Otherwise we won't be able to use featureInfoUrlTemplate in FeatureInfoMixin
+    // Otherwise we won't be able to use featureInfoUrlTemplate in FeatureInfoUrlTemplateMixin
     const recordId = pickResult?.id?.data?.getValue?.(
       this.terria.timelineClock.currentTime
     )?.[RECORD_ID_COL];

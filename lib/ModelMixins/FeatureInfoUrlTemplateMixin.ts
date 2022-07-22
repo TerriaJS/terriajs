@@ -20,7 +20,7 @@ type Target = Model<FeatureInfoUrlTemplateTraits>;
 
 function FeatureInfoUrlTemplateMixin<T extends Constructor<Target>>(Base: T) {
   abstract class FeatureInfoUrlTemplateMixin extends Base {
-    get FeatureInfoUrlTemplateMixin() {
+    get hasFeatureInfoUrlTemplateMixin() {
       return true;
     }
     /**
@@ -174,7 +174,7 @@ namespace FeatureInfoUrlTemplateMixin {
   export interface Instance
     extends InstanceType<ReturnType<typeof FeatureInfoUrlTemplateMixin>> {}
   export function isMixedInto(model: any): model is Instance {
-    return model && model.hasFeatureInfoMixin;
+    return model && model.hasFeatureInfoUrlTemplateMixin;
   }
 }
 
