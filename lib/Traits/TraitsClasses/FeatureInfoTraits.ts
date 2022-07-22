@@ -1,7 +1,6 @@
-import ModelTraits from "../ModelTraits";
-import objectTrait from "../Decorators/objectTrait";
-import primitiveTrait from "../Decorators/primitiveTrait";
 import anyTrait from "../Decorators/anyTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import ModelTraits from "../ModelTraits";
 
 class FeatureInfoFormatTraits extends ModelTraits {
   @primitiveTrait({
@@ -73,15 +72,13 @@ export class FeatureInfoTemplateTraits extends ModelTraits {
   formats?: { [key_name: string]: FeatureInfoFormatTraits };
 }
 
-export default class FeatureInfoTraits extends ModelTraits {
-  @objectTrait({
-    type: FeatureInfoTemplateTraits,
-    name: "Feature info template",
-    description:
-      "A template object for formatting content in feature info panel"
-  })
-  featureInfoTemplate?: FeatureInfoTemplateTraits;
-
+/** Note: MappableTraits has the following:
+ * - featureInfoTemplate
+ * - showStringIfPropertyValueIsNull
+ *
+ * FeatureInfoUrlTemplateTraits is used by FeatureInfoUrlTemplateMixin
+ */
+export default class FeatureInfoUrlTemplateTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
     name: "Feature Info Url template",
@@ -89,14 +86,6 @@ export default class FeatureInfoTraits extends ModelTraits {
       "A template URL string for fetching feature info. Template values of the form {x} will be replaced with corresponding property values from the picked feature."
   })
   featureInfoUrlTemplate?: string;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Show string if property value is null",
-    description:
-      "If the value of a property is null or undefined, show the specified string as the value of the property. Otherwise, the property name will not be listed at all."
-  })
-  showStringIfPropertyValueIsNull?: string;
 
   @primitiveTrait({
     type: "number",

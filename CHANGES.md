@@ -33,6 +33,10 @@ Change Log
 * TSIfy `SharePanel` 
 * Move `includeStoryInShare` out of `ViewState` into local state
 * Implement ability to navigate between scenes in StoryPanel using keyboard arrows
+* Rename `FeatureInfoMixin` to `FeatureInfoUrlTemplateMixin`
+* Move `featureInfoTemplate` and `showStringIfPropertyValueIsNull` from `FeatureInfoTraits` to `MappableTraits` (all mappable catalog items)
+* Remove `FeatureInfoUrlTemplateTraits` from all models that don't use `FeatureInfoUrlTemplateMixin`
+* [The next improvement]
 * Fix "Regions: xxx" short report showing for non region mapped items
 * Fix `showInChartPanel` default for mappable items
 
