@@ -443,7 +443,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       pickResult: any
     ) {
       if (
-        this.options.allowFeaturePicking &&
+        this.allowFeaturePicking &&
         (pickResult instanceof Cesium3DTileFeature ||
           pickResult instanceof Cesium3DTilePointFeature)
       ) {

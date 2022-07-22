@@ -18,6 +18,7 @@ import ShadowTraits from "./ShadowTraits";
 import SplitterTraits from "./SplitterTraits";
 import TransformationTraits from "./TransformationTraits";
 import UrlTraits from "./UrlTraits";
+import FeaturePickingTraits from "./FeaturePickingTraits";
 
 export class FilterTraits extends ModelTraits {
   @primitiveTrait({
@@ -101,14 +102,6 @@ export class OptionsTraits extends ModelTraits {
     description: "Point cloud shading parameters"
   })
   pointCloudShading?: PointCloudShadingTraits;
-
-  @primitiveTrait({
-    name: "Allow feature picking",
-    type: "boolean",
-    description:
-      "Indicates whether tiles in this catalog item can be selected by clicking them on the map. This will also enable / disable Feature Info"
-  })
-  allowFeaturePicking = true; // TODO: is it OK to set a default here?
 }
 
 export default class Cesium3DTilesTraits extends mixTraits(
@@ -116,6 +109,7 @@ export default class Cesium3DTilesTraits extends mixTraits(
   PlaceEditorTraits,
   TransformationTraits,
   FeatureInfoTraits,
+  FeaturePickingTraits,
   MappableTraits,
   UrlTraits,
   CatalogMemberTraits,
