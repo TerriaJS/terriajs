@@ -24,6 +24,8 @@ Change Log
 * `GeoRssCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
 * Upgrade i18next to `v21`
 * Limit workbench item title to 2 lines and show overflow: ellipsis after.
+* Add `allowFeaturePicking` trait to Cesium3dTileMixin.
+* Feature Info now hidden on Cesium3dTiles items if `allowFeaturePicking` set to false. Default is true.
 * [The next improvement]
 
 #### 8.2.9 - 2022-07-13
