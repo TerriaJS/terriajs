@@ -1,0 +1,15 @@
+lat,lon,enum,date,id,value,level,state
+-36,145,foo,2015-08-01,feature A,13,50,NSW
+-36,145,bar,2015-08-02,feature A,5,60,NSW
+-36,145,foo,2015-08-04,feature A,15,70,NSW
+-36,145,bar,2015-08-05,feature A,7,55,NSW
+-36,145,foo,2015-08-06,feature A,10,66,NSW
+-21,115,moving,2015-08-01,feature B,4,33,NSW
+-37,136,foo,2015-08-02,feature B,15,55,NSW
+-23,155,going!,2015-08-03,feature B,5,41,NSW
+-33,130,bar,2015-08-04,feature B,14,22,TAS
+-20,150,moving,2015-08-05,feature B,6,77,TAS
+-37,140,going!,2015-08-06,feature B,13,47,TAS
+-30,145.5,blip,2015-08-02,feature C,16,10,VIC
+-33,140,blip,2015-08-03,feature D,16,50,VIC
+,144.5,gone,2015-08-05,feature D,14,80,VIC

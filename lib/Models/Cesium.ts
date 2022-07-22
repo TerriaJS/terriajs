@@ -68,6 +68,7 @@ import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryPro
 import PickedFeatures, {
   ProviderCoordsMap
 } from "../Map/PickedFeatures/PickedFeatures";
+import FeatureInfoUrlTemplateMixin from "../ModelMixins/FeatureInfoUrlTemplateMixin";
 import MappableMixin, {
   ImageryParts,
   isCesium3DTileset,
@@ -1262,13 +1263,20 @@ export default class Cesium extends GlobeOrMap {
         id = picked.primitive.id;
       }
 
-      // Try to find catalogItem for picked feature, and use catalogItem.getFeaturesFromPickResult() if it exists - this is used by FeatureInfoMixin
+      // Try to find catalogItem for picked feature, and use catalogItem.getFeaturesFromPickResult() if it exists - this is used by FeatureInfoUrlTemplateMixin
       const catalogItem = picked?.primitive?._catalogItem ?? id?._catalogItem;
 
-      if (typeof catalogItem?.getFeaturesFromPickResult === "function") {
-        const result = catalogItem.getFeaturesFromPickResult.bind(catalogItem)(
+      if (
+        FeatureInfoUrlTemplateMixin.isMixedInto(catalogItem) &&
+        typeof catalogItem?.getFeaturesFromPickResult === "function" &&
+        this.terria.allowFeatureInfoRequests
+      ) {
+        const result: any = catalogItem.getFeaturesFromPickResult.bind(
+          catalogItem
+        )(
           screenPosition,
-          picked
+          picked,
+          vectorFeatures.length < catalogItem.maxRequests
         );
         if (result) {
           if (Array.isArray(result)) {

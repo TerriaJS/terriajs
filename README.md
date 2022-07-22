@@ -55,7 +55,7 @@ Sites we're aware of that are using TerriaJS. These are not endorsements or test
 
 ### Technical
 
-* NodeJS v12, 14 or 16 are supported
+* NodeJS v14 or v16 are supported
 * Built in TypeScript & ES2020+ JavaScript, compiled with Babel to ES5.
 * Supports modern browsers (recent versions of Microsoft Edge, Mozilla Firefox & Google Chrome).
 * [TerriaJS Server component](https://github.com/TerriajS/TerriaJS-Server) runs in NodeJS and provides proxying for web services that don't support CORS or require authentication. Instead of using TerriaJS-Sever proxy service, an alternative proxying service URL can be specified. See [Specify an alternative proxy server URL](/doc/connecting-to-data/cross-origin-resource-sharing.md)

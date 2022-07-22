@@ -48,6 +48,7 @@ interface ITextPropsBase {
   overflowEllipsis?: boolean;
   isDisabled?: boolean;
   style?: any;
+  maxLines?: boolean | number;
 }
 
 export type ITextProps = ITextPropsBase &
@@ -206,6 +207,16 @@ export const Text = styled.div<ITextProps>`
 
   ${props => props.overflowHide && ` overflow: hidden;`}
   ${props => props.overflowEllipsis && ` text-overflow: ellipsis;`}
+
+  ${props =>
+    props.maxLines &&
+    `
+    -webkit-line-clamp: ${props.maxLines === true ? 2 : props.maxLines};
+    display: -webkit-box;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+  `}
 `;
 
 export const TextSpan = styled(Text).attrs<{

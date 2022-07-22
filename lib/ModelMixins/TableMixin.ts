@@ -37,11 +37,7 @@ import { TableAutomaticLegendStratum } from "../Table/TableLegendStratum";
 import TableStyle from "../Table/TableStyle";
 import TableTraits from "../Traits/TraitsClasses/TableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
-import ChartableMixin, {
-  calculateDomain,
-  ChartAxis,
-  ChartItem
-} from "./ChartableMixin";
+import { calculateDomain, ChartAxis, ChartItem } from "./ChartableMixin";
 import DiscretelyTimeVaryingMixin, {
   DiscreteTimeAsJS
 } from "./DiscretelyTimeVaryingMixin";
@@ -266,6 +262,14 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         return true;
       }
       return super.disableZoomTo;
+    }
+
+    /** Is showing regions (instead of points) */
+    @computed get showingRegions() {
+      return (
+        this.regionMappedImageryParts &&
+        this.mapItems[0] === this.regionMappedImageryParts
+      );
     }
 
     /**
@@ -824,7 +828,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           features = createLongitudeLatitudeFeaturePerRow(style);
         }
 
-        // _catalogItem property is needed for some feature picking functions (eg FeatureInfoMixin)
+        // _catalogItem property is needed for some feature picking functions (eg `featureInfoTemplate`)
         features.forEach(f => {
           (f as any)._catalogItem = this;
           dataSource.entities.add(f);

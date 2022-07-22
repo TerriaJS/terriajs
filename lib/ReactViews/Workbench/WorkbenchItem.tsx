@@ -107,13 +107,21 @@ class WorkbenchItemRaw extends React.Component<IProps> {
                       `}
                       textProps={{ medium: true, fullWidth: true }}
                     >
-                      <TextSpan medium>{item.name}</TextSpan>
+                      <TextSpan
+                        medium
+                        maxLines={!item.isOpenInWorkbench ? 2 : false}
+                        title={item.name}
+                      >
+                        {item.name}
+                      </TextSpan>
                     </Checkbox>
                   </Box>
                 ) : (
                   <TextSpan
                     medium
                     textLight
+                    maxLines={!item.isOpenInWorkbench ? 2 : false}
+                    title={item.name}
                     css={`
                       overflow-wrap: anywhere;
                     `}
