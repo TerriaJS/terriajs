@@ -171,9 +171,12 @@ export interface IStyledIconProps {
   realDark?: boolean;
   fillColor?: string;
   opacity?: number;
+  hoverOposite?: boolean;
+  hoverFillColor?: string;
 }
 
 export const StyledIcon = styled(Icon)<IStyledIconProps>`
+  fill: currentColor;
   display: ${props => (props.displayInline ? `inline` : `block`)};
   ${props =>
     props.displayInline
@@ -190,11 +193,32 @@ export const StyledIcon = styled(Icon)<IStyledIconProps>`
   ${props => props.light && `fill: ${props.theme.textLight};`}
   ${props => props.dark && `fill: ${props.theme.textDark};`}
 
+  ${props =>
+    props.hoverOposite &&
+    `
+    &:hover, 
+    &:focus {
+      fill: ${
+        props.light
+          ? props.theme.textDark
+          : props.dark
+          ? props.theme.textLight
+          : "inherit"
+      };
+    }
+  `}
+
   // Until we sort out what "light / dark" means for components that have both
   // modes, use "realDark" to get real
   ${props => props.realDark && `fill: ${props.theme.dark};`}
 
   ${props => props.fillColor && `fill: ${props.fillColor};`}
+
+  ${props =>
+    props.hoverFillColor &&
+    `
+      &:hover, &:focus { fill: ${props.hoverFillColor}; }
+    `}
 
   ${props => props.opacity && `opacity: ${props.opacity};`}
 `;

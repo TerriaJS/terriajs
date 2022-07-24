@@ -12,6 +12,8 @@ export const Ul = styled(Box).attrs({
 })<IUlProps>`
   list-style: none;
   margin: 0;
+  padding-inline-start: 0;
+
   ${props =>
     props.fullWidth &&
     css`

@@ -1,6 +1,7 @@
 import { Ref } from "react";
 import styled from "styled-components";
 import { OneKeyFrom, Overflow, WhiteSpace, WordBreak } from "./Styled.types";
+import isDefined from "../Core/isDefined";
 
 interface Column {
   col1?: boolean;
@@ -53,6 +54,10 @@ interface IBoxPropsBase {
   paddedRatio?: number;
   paddedHorizontally?: number | boolean;
   paddedVertically?: number | boolean;
+  pt?: number | boolean;
+  pb?: number | boolean;
+  pl?: number | boolean;
+  pr?: number | boolean;
   styledPadding?: string;
   styledMargin?: string;
   backgroundImage?: any;
@@ -173,6 +178,22 @@ export const Box = styled.div<IBoxProps>`
       padding-bottom: ${5 *
         (props.paddedVertically === true ? 1 : props.paddedVertically)}px;
     `}
+  ${props =>
+    isDefined(props.pt) &&
+    props.pt !== false &&
+    `padding-top: ${5 * (props.pt === true ? 1 : props.pt)}px;`}
+  ${props =>
+    isDefined(props.pb) &&
+    props.pb !== false &&
+    `padding-bottom: ${5 * (props.pb === true ? 1 : props.pb)}px;`}
+  ${props =>
+    isDefined(props.pr) &&
+    props.pr !== false &&
+    `padding-right: ${5 * (props.pr === true ? 1 : props.pr)}px;`}
+  ${props =>
+    isDefined(props.pl) &&
+    props.pl !== false &&
+    `padding-left: ${5 * (props.pl === true ? 1 : props.pl)}px;`}
   ${props => props.styledPadding && `padding: ${props.styledPadding};`}
 
   ${props => props.styledMargin && `margin: ${props.styledMargin};`}

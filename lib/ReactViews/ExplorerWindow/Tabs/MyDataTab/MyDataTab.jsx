@@ -7,7 +7,7 @@ import Icon from "../../../../Styled/Icon";
 import Box from "../../../../Styled/Box";
 import PropTypes from "prop-types";
 
-import DataCatalog from "../../../DataCatalog/DataCatalog.jsx";
+import { DataCatalog } from "../../../DataCatalog/DataCatalog";
 import DataPreview from "../../../Preview/DataPreview.jsx";
 import AddData from "./AddData.jsx";
 import { withTranslation, Trans } from "react-i18next";

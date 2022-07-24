@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
@@ -8,6 +8,8 @@ import { RawButton } from "../../Styled/Button";
 import Icon from "../../Styled/Icon";
 import Text from "../../Styled/Text";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
+import { ActionButton } from "./ActionButton";
+import { Li } from "../../Styled/List";
 
 export enum ButtonState {
   Loading,
@@ -44,6 +46,9 @@ interface Props {
 /** Dumb catalog item */
 function CatalogItem(props: Props) {
   const { t } = useTranslation();
+
+  const elementRef = useRef<HTMLLIElement>();
+
   const STATE_TO_TITLE = {
     [ButtonState.Loading]: t("catalogItem.loading"),
     [ButtonState.Remove]: t("catalogItem.remove"),
@@ -55,8 +60,18 @@ function CatalogItem(props: Props) {
     props.titleOverrides,
     STATE_TO_TITLE
   );
+
+  useEffect(() => {
+    if (props.selected) {
+      elementRef?.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+  }, []);
+
   return (
-    <Root>
+    <Root ref={elementRef as any}>
       <Text fullWidth primary={props.isPrivate} bold={props.selected} breakWord>
         <ItemTitleButton
           selected={props.selected}
@@ -91,7 +106,7 @@ function CatalogItem(props: Props) {
   );
 }
 
-const Root = styled.li`
+const Root = styled(Li)`
   display: flex;
   width: 100%;
 `;
@@ -118,22 +133,6 @@ const ItemTitleButton = styled(RawButton)<{
     padding-top: 10px;
     padding-bottom: 10px;
     border-bottom: 1px solid ${p => p.theme.greyLighter};
-  }
-`;
-
-const ActionButton = styled(RawButton)`
-  svg {
-    height: 20px;
-    width: 20px;
-    margin: 5px;
-    fill: ${p => p.theme.charcoalGrey};
-  }
-
-  &:hover,
-  &:focus {
-    svg {
-      fill: ${p => p.theme.modalHighlight};
-    }
   }
 `;
 
