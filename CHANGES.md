@@ -26,13 +26,13 @@ Change Log
 * Limit workbench item title to 2 lines and show overflow: ellipsis after.
 * Add `allowFeaturePicking` trait to Cesium3dTileMixin.
 * Feature Info now hidden on Cesium3dTiles items if `allowFeaturePicking` set to false. Default is true.
+* Add `initFragmentPaths` support for hostnames different to `configUrl`/`applicationUrl`
 * [The next improvement]
 
 #### 8.2.9 - 2022-07-13
 
 * Pin `html-to-react` to `1.4.5` due to ESM module in dependency (`parse5`) breaking webpack
 * Add step to `"Deploy TerriaMap"` action to save `yarn.lock` after `sync-dependencies` (for debug purposes)
-* Add `initFragmentPaths` support for hostnames different to `configUrl`/`applicationUrl`
 * TSIfy `SharePanel` 
 * Move `includeStoryInShare` out of `ViewState` into local state
 * Implement ability to navigate between scenes in StoryPanel using keyboard arrows
