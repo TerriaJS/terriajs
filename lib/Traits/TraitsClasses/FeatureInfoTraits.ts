@@ -1,7 +1,6 @@
-import ModelTraits from "../ModelTraits";
-import objectTrait from "../Decorators/objectTrait";
-import primitiveTrait from "../Decorators/primitiveTrait";
 import anyTrait from "../Decorators/anyTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import ModelTraits from "../ModelTraits";
 
 export interface FeatureInfoFormat {
   /** To reduce the number of decimal places to a maximum of X digits. */
@@ -50,15 +49,13 @@ export class FeatureInfoTemplateTraits extends ModelTraits {
   formats?: Record<string, FeatureInfoFormat>;
 }
 
-export default class FeatureInfoTraits extends ModelTraits {
-  @objectTrait({
-    type: FeatureInfoTemplateTraits,
-    name: "Feature info template",
-    description:
-      "A template object for formatting content in feature info panel"
-  })
-  featureInfoTemplate?: FeatureInfoTemplateTraits;
-
+/** Note: MappableTraits has the following:
+ * - featureInfoTemplate
+ * - showStringIfPropertyValueIsNull
+ *
+ * FeatureInfoUrlTemplateTraits is used by FeatureInfoUrlTemplateMixin
+ */
+export default class FeatureInfoUrlTemplateTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
     name: "Feature Info Url template",
@@ -68,10 +65,10 @@ export default class FeatureInfoTraits extends ModelTraits {
   featureInfoUrlTemplate?: string;
 
   @primitiveTrait({
-    type: "string",
-    name: "Show string if property value is null",
+    type: "number",
+    name: "Max feature request",
     description:
-      "If the value of a property is null or undefined, show the specified string as the value of the property. Otherwise, the property name will not be listed at all."
+      "Max number of feature info requests to send to API url. Keep this number small to avoid sending to many requests to server (default 10)."
   })
-  showStringIfPropertyValueIsNull?: string;
+  maxRequests: number = 10;
 }

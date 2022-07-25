@@ -806,7 +806,7 @@ const simpleStyleIdentifiers = [
  * Derived from Cesium's geoJsonDataSource, but made to work with possibly time-varying properties.
  * @private
  */
-function describeFromProperties(
+export function describeFromProperties(
   properties: PropertyBag,
   time: JulianDate,
   showStringIfPropertyValueIsNull: string | undefined

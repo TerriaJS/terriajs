@@ -16,6 +16,8 @@ import filterOutUndefined from "../Core/filterOutUndefined";
  * @param Traits10
  * @param Traits11
  * @param Traits12
+ * @param Traits13
+ * @param Traits14
  */
 export default function mixTraits<
   T1 extends ModelTraits = ModelTraits,
@@ -30,7 +32,8 @@ export default function mixTraits<
   T10 extends ModelTraits = ModelTraits,
   T11 extends ModelTraits = ModelTraits,
   T12 extends ModelTraits = ModelTraits,
-  T13 extends ModelTraits = ModelTraits
+  T13 extends ModelTraits = ModelTraits,
+  T14 extends ModelTraits = ModelTraits
 >(
   Traits1?: TraitsConstructor<T1>,
   Traits2?: TraitsConstructor<T2>,
@@ -44,9 +47,10 @@ export default function mixTraits<
   Traits10?: TraitsConstructor<T10>,
   Traits11?: TraitsConstructor<T11>,
   Traits12?: TraitsConstructor<T12>,
-  Traits13?: TraitsConstructor<T13>
+  Traits13?: TraitsConstructor<T13>,
+  Traits14?: TraitsConstructor<T14>
 ): TraitsConstructor<
-  T1 & T2 & T3 & T4 & T5 & T6 & T7 & T8 & T9 & T10 & T11 & T12 & T13
+  T1 & T2 & T3 & T4 & T5 & T6 & T7 & T8 & T9 & T10 & T11 & T12 & T13 & T14
 > {
   const traitsClasses = filterOutUndefined([
     Traits1,
@@ -61,7 +65,8 @@ export default function mixTraits<
     Traits10,
     Traits11,
     Traits12,
-    Traits13
+    Traits13,
+    Traits14
   ]);
   const traitsInstances = traitsClasses.map(TraitsClass => new TraitsClass());
   const keysValues = traitsInstances.reduce((result, traitsInstance) => {
