@@ -5,7 +5,7 @@ import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
+import FeatureInfoUrlTemplateTraits from "./FeatureInfoTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import StyleTraits from "./StyleTraits";
 import TableTraits from "./TableTraits";
@@ -37,9 +37,9 @@ export class PerPropertyGeoJsonStyleTraits extends ModelTraits {
 }
 
 export class GeoJsonTraits extends mixTraits(
+  FeatureInfoUrlTemplateTraits,
   LegendOwnerTraits,
   TableTraits,
-  FeatureInfoTraits,
   UrlTraits
 ) {
   /** Override TableTraits which aren't applicable to GeoJsonTraits */

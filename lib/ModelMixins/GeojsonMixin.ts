@@ -90,7 +90,7 @@ import StyleTraits from "../Traits/TraitsClasses/StyleTraits";
 import TerriaFeature from "./../Models/Feature";
 import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
 import { ExportData } from "./ExportableMixin";
-import FeatureInfoMixin from "./FeatureInfoMixin";
+import FeatureInfoUrlTemplateMixin from "./FeatureInfoUrlTemplateMixin";
 import { isDataSource } from "./MappableMixin";
 import TableMixin from "./TableMixin";
 
@@ -214,7 +214,7 @@ interface FeatureCounts {
 
 function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
   abstract class GeoJsonMixin extends TableMixin(
-    FeatureInfoMixin(UrlMixin(CatalogMemberMixin(Base)))
+    FeatureInfoUrlTemplateMixin(UrlMixin(CatalogMemberMixin(Base)))
   ) {
     @observable
     private _dataSource:
@@ -394,7 +394,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     }
 
     /**
-     * {@link FeatureInfoMixin.buildFeatureFromPickResult}
+     * {@link FeatureInfoUrlTemplateMixin.buildFeatureFromPickResult}
      */
     buildFeatureFromPickResult(
       _screenPosition: Cartesian2 | undefined,
@@ -647,7 +647,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         latitudes
       );
 
-      // _catalogItem property is needed for some feature picking functions (eg FeatureInfoMixin)
+      // _catalogItem property is needed for some feature picking functions (eg FeatureInfoUrlTemplateMixin)
       features.forEach(f => {
         (f as any)._catalogItem = this;
         dataSource.entities.add(f);

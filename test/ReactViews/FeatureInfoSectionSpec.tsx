@@ -30,7 +30,7 @@ import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
 import mixTraits from "../../lib/Traits/mixTraits";
-import FeatureInfoTraits from "../../lib/Traits/TraitsClasses/FeatureInfoTraits";
+import FeatureInfoUrlTemplateTraits from "../../lib/Traits/TraitsClasses/FeatureInfoTraits";
 import DiscretelyTimeVaryingTraits from "../../lib/Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import DiscretelyTimeVaryingMixin from "../../lib/ModelMixins/DiscretelyTimeVaryingMixin";
 import MappableMixin, { MapItem } from "../../lib/ModelMixins/MappableMixin";
@@ -890,7 +890,7 @@ describe("FeatureInfoSection", function() {
 
     /*
     // v8 version does not support this feature at the moment. See https://github.com/TerriaJS/terriajs/issues/5685
-     
+
     it("can access the current time", function() {
       const template = "<div class='rrrr'>Time: {{terria.currentTime}}</div>";
       catalogItem._discreteTimes = ["2017-11-23", "2018-01-03"];
@@ -1152,7 +1152,7 @@ describe("FeatureInfoSection", function() {
 // Traits: traits for the above
 
 class TestModelTraits extends mixTraits(
-  FeatureInfoTraits,
+  FeatureInfoUrlTemplateTraits,
   MappableTraits,
   DiscretelyTimeVaryingTraits
 ) {}

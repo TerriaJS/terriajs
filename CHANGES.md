@@ -3,6 +3,8 @@ Change Log
 
 #### next release (8.2.10)
 
+* **Breaking changes:**
+  * **Minimum NodeJS version is now 14**
 * Consolidate `HasLocalData` interface
 * Add `GlTf` type definition (v2)
 * Add `gltfModelUrl` to `GltfMixin` - this must be implemented by Models which use `GltfMixin`
@@ -12,6 +14,7 @@ Change Log
   * Supports over 40 formats - including Collada, obj, Blender, DXF - [full list](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md)
 * Add `description` to `getDataType` - this will be displayed between Step 1 and Step 2
 * Add warning message to `GltfMixin` when showing in 2D mode (Leaflet)
+* Upgrade `husky` to `^8.0.1`
 * Prevent looping when navigating between scenes in StoryPanel using keyboard arrows
 * Fix bug where StoryPanel keyboard navigation persists after closing StoryPanel
 * Fix select when clicking on multiple features in 2D (#5660)
@@ -20,7 +23,10 @@ Change Log
 * `GpxCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
 * `GeoRssCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
 * Strongly type `item` in WorkbenchItem and remove `show` toggle for non `Mappable` items
+* Upgrade i18next to `v21`
 * Limit workbench item title to 2 lines and show overflow: ellipsis after.
+* Add `allowFeaturePicking` trait to Cesium3dTileMixin.
+* Feature Info now hidden on Cesium3dTiles items if `allowFeaturePicking` set to false. Default is true.
 * [The next improvement]
 
 #### 8.2.9 - 2022-07-13
@@ -30,6 +36,10 @@ Change Log
 * TSIfy `SharePanel` 
 * Move `includeStoryInShare` out of `ViewState` into local state
 * Implement ability to navigate between scenes in StoryPanel using keyboard arrows
+* Rename `FeatureInfoMixin` to `FeatureInfoUrlTemplateMixin`
+* Move `featureInfoTemplate` and `showStringIfPropertyValueIsNull` from `FeatureInfoTraits` to `MappableTraits` (all mappable catalog items)
+* Remove `FeatureInfoUrlTemplateTraits` from all models that don't use `FeatureInfoUrlTemplateMixin`
+* [The next improvement]
 * Fix "Regions: xxx" short report showing for non region mapped items
 * Fix `showInChartPanel` default for mappable items
 

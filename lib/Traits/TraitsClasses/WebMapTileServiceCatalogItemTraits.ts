@@ -6,13 +6,12 @@ import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
+import ImageryProviderTraits from "./ImageryProviderTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import LegendTraits from "./LegendTraits";
 import MappableTraits from "./MappableTraits";
-import ImageryProviderTraits from "./ImageryProviderTraits";
 import UrlTraits from "./UrlTraits";
 
 export class WebMapTileServiceAvailableStyleTraits extends ModelTraits {
@@ -70,7 +69,6 @@ export class WebMapTileServiceAvailableLayerStylesTraits extends ModelTraits {
 }
 
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
-  FeatureInfoTraits,
   LayerOrderingTraits,
   GetCapabilitiesTraits,
   ImageryProviderTraits,
