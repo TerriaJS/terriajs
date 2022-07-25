@@ -35,14 +35,6 @@ export default class Feature extends Entity {
    */
   @observable currentDescription: string | undefined = undefined;
 
-  /**
-   * Gets or sets counter objects used to trigger an update of the Feature Info Section,
-   * to allow custom components to self-update. The object keys are timeoutIds, and values are
-   * {reactComponent: ReactComponent, counter: Integer}.
-   * This property is observable.
-   */
-  @observable updateCounters: any = undefined;
-
   data: any;
 
   cesiumEntity?: Entity;

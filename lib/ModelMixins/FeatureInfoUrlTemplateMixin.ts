@@ -11,7 +11,7 @@ import loadJson from "../Core/loadJson";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import Model from "../Models/Definition/Model";
 import Feature from "../Models/Feature";
-import { describeFromProperties } from "../ReactViews/FeatureInfo/FeatureInfoSection";
+import { generateCesiumInfoHTMLFromProperties } from "../ReactViews/FeatureInfo/FeatureInfoSection";
 import FeatureInfoUrlTemplateTraits from "../Traits/TraitsClasses/FeatureInfoTraits";
 import MappableMixin from "./MappableMixin";
 import TimeVarying from "./TimeVarying";
@@ -67,14 +67,14 @@ function FeatureInfoUrlTemplateMixin<T extends Constructor<Target>>(Base: T) {
               // Update description of the feature after it is resolved from
               // feature info template url
               feature.description = new ConstantProperty(
-                describeFromProperties(
+                generateCesiumInfoHTMLFromProperties(
                   feature.properties,
                   (TimeVarying.is(this)
                     ? this.currentTimeAsJulianDate
                     : undefined) ?? JulianDate.now(),
                   MappableMixin.isMixedInto(this)
                     ? this.showStringIfPropertyValueIsNull
-                    : false
+                    : undefined
                 )
               );
             } catch (e) {
@@ -144,14 +144,14 @@ function FeatureInfoUrlTemplateMixin<T extends Constructor<Target>>(Base: T) {
               });
               // Update description of the feature after it is resolved from
               // feature info template url
-              feature.description = describeFromProperties(
+              feature.description = generateCesiumInfoHTMLFromProperties(
                 feature.properties,
                 (TimeVarying.is(catalogItem)
                   ? catalogItem.currentTimeAsJulianDate
                   : undefined) ?? JulianDate.now(),
                 MappableMixin.isMixedInto(catalogItem)
                   ? catalogItem.showStringIfPropertyValueIsNull
-                  : false
+                  : undefined
               );
             } catch (e) {
               if (!feature.properties) {
