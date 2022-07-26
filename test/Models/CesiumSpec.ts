@@ -1,18 +1,23 @@
 import range from "lodash-es/range";
-import { computed, observable, runInAction } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
+import Scene from "terriajs-cesium/Source/Scene/Scene";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import filterOutUndefined from "../../lib/Core/filterOutUndefined";
 import runLater from "../../lib/Core/runLater";
 import MappableMixin from "../../lib/ModelMixins/MappableMixin";
+import CesiumTerrainCatalogItem from "../../lib/Models/Catalog/CatalogItems/CesiumTerrainCatalogItem";
+import CatalogMemberFactory from "../../lib/Models/Catalog/CatalogMemberFactory";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Cesium from "../../lib/Models/Cesium";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import CreateModel from "../../lib/Models/Definition/CreateModel";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
+import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson";
 import Terria from "../../lib/Models/Terria";
 import MappableTraits, {
   RectangleTraits
@@ -168,6 +173,119 @@ describeIfSupported("Cesium Model", function() {
     expect(dataSourceNames()).toEqual(["ds3"]);
     expect(tilesetUrls()).toEqual(["prim3"]);
     expect(imageryProviderUrls()).toEqual(["img3"]);
+  });
+
+  describe("Terrain provider selection", function() {
+    let workbenchTerrainItem: CesiumTerrainCatalogItem;
+    let scene: Scene;
+
+    beforeEach(
+      action(async function() {
+        // We need a cesium instance bound to terria.mainViewer for workbench
+        // changes to be reflected in these specs
+        cesium = new Cesium(terria.mainViewer, container);
+        scene = cesium.scene;
+        cesium.terriaViewer.viewerOptions.useTerrain = true;
+        terria.configParameters.cesiumTerrainAssetId = 123;
+        terria.configParameters.cesiumTerrainUrl =
+          "https://cesium-terrain.example.com/";
+        terria.configParameters.useCesiumIonTerrain = true;
+
+        workbenchTerrainItem = upsertModelFromJson(
+          CatalogMemberFactory,
+          terria,
+          "",
+          CommonStrata.user,
+          {
+            id: "local-terrain",
+            type: "cesium-terrain",
+            name: "Local terrain",
+            url: "http://local-terrain.example.com"
+          },
+          { addModelToTerria: true }
+        ).throwIfUndefined() as CesiumTerrainCatalogItem;
+        await terria.workbench.add(workbenchTerrainItem);
+      })
+    );
+
+    it("should use Elliposidal/3d-smooth terrain when `useTerrain` is `false`", function() {
+      expect(scene.terrainProvider instanceof EllipsoidTerrainProvider).toBe(
+        false
+      );
+      runInAction(() => {
+        cesium.terriaViewer.viewerOptions.useTerrain = false;
+      });
+      expect(scene.terrainProvider instanceof EllipsoidTerrainProvider).toBe(
+        true
+      );
+    });
+
+    it(
+      "should otherwise use the first terrain provider from the workbench or overlay",
+      action(async function() {
+        expect(scene.terrainProvider).toBe(workbenchTerrainItem.mapItems[0]);
+      })
+    );
+
+    it("should otherwise use the ION terrain specified by configParameters.cesiumTerrainAssetId", function() {
+      const createSpy = spyOn(
+        cesium as any,
+        "createTerrainProviderFromIonAssetId"
+      ).and.callThrough();
+      runInAction(() => terria.workbench.removeAll());
+
+      expect(createSpy).toHaveBeenCalledTimes(1);
+      const ionAssetTerrainProvider = createSpy.calls.mostRecent().returnValue;
+      expect(scene.terrainProvider).toEqual(ionAssetTerrainProvider);
+    });
+
+    it("should otherwise use the terrain specified by configParameters.cesiumTerrainUrl", function() {
+      const createSpy = spyOn(
+        cesium as any,
+        "createTerrainProviderFromUrl"
+      ).and.callThrough();
+
+      runInAction(() => {
+        terria.workbench.removeAll();
+        terria.configParameters.cesiumTerrainAssetId = undefined;
+      });
+
+      expect(createSpy).toHaveBeenCalledTimes(1);
+      const urlTerrainProvider = createSpy.calls.mostRecent().returnValue;
+      expect(scene.terrainProvider).toEqual(urlTerrainProvider);
+    });
+
+    it("should otherwise use cesium-world-terrain when `configParameters.useCesiumIonTerrain` is true", function() {
+      const createSpy = spyOn(
+        cesium as any,
+        "createWorldTerrain"
+      ).and.callThrough();
+
+      runInAction(() => {
+        terria.workbench.removeAll();
+        terria.configParameters.cesiumTerrainAssetId = undefined;
+        terria.configParameters.cesiumTerrainUrl = undefined;
+      });
+
+      expect(terria.configParameters.useCesiumIonTerrain).toBe(true);
+      expect(createSpy).toHaveBeenCalledTimes(1);
+      const cesiumWorldTerrainProvider = createSpy.calls.mostRecent()
+        .returnValue;
+      expect(scene.terrainProvider).toEqual(cesiumWorldTerrainProvider);
+    });
+
+    it("should otherwise fallback to Elliposidal/3d-smooth", function() {
+      runInAction(() => {
+        terria.workbench.removeAll();
+        terria.configParameters.cesiumTerrainAssetId = undefined;
+        terria.configParameters.cesiumTerrainUrl = undefined;
+        terria.configParameters.useCesiumIonTerrain = false;
+      });
+
+      expect(scene.terrainProvider instanceof EllipsoidTerrainProvider).toBe(
+        true
+      );
+    });
   });
 });
 

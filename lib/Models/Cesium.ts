@@ -1,7 +1,6 @@
 import i18next from "i18next";
 import { autorun, computed, runInAction } from "mobx";
 import { computedFn } from "mobx-utils";
-import Event from "terriajs-cesium/Source/Core/Event";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -15,6 +14,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import destroyObject from "terriajs-cesium/Source/Core/destroyObject";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
+import Event from "terriajs-cesium/Source/Core/Event";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import HeadingPitchRange from "terriajs-cesium/Source/Core/HeadingPitchRange";
@@ -61,9 +61,9 @@ import PickedFeatures, {
 } from "../Map/PickedFeatures/PickedFeatures";
 import MappableMixin, {
   ImageryParts,
-  isPrimitive,
   isCesium3DTileset,
   isDataSource,
+  isPrimitive,
   isTerrainProvider,
   MapItem
 } from "../ModelMixins/MappableMixin";
@@ -76,6 +76,7 @@ import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
@@ -530,6 +531,7 @@ export default class Cesium extends GlobeOrMap {
     destroyObject(this);
   }
 
+  @computed
   private get _allMappables() {
     const catalogItems = [
       ...this.terriaViewer.items.get(),
@@ -956,7 +958,7 @@ export default class Cesium extends GlobeOrMap {
   }
 
   @computed
-  private get _firstMapItemTerrainProviders(): TerrainProvider | undefined {
+  private get _firstMapItemTerrainProvider(): TerrainProvider | undefined {
     // Get the top map item that is a terrain provider, if any are
     return this._allMapItems.find(isTerrainProvider);
   }
@@ -968,31 +970,30 @@ export default class Cesium extends GlobeOrMap {
     credit?: Credit;
   } {
     if (!this.terriaViewer.viewerOptions.useTerrain) {
+      // Terrain mode is off, use the ellipsoidal terrain (aka 3d-smooth)
       return { terrain: new EllipsoidTerrainProvider() };
-    }
-    if (this.terria.configParameters.cesiumTerrainAssetId !== undefined) {
+    } else if (this._firstMapItemTerrainProvider) {
+      // If there's a TerrainProvider in map items/workbench then use it
+      return { terrain: this._firstMapItemTerrainProvider };
+    } else if (
+      this.terria.configParameters.cesiumTerrainAssetId !== undefined
+    ) {
+      // Load the terrain provider from Ion
       return {
-        terrain: new CesiumTerrainProvider({
-          url: IonResource.fromAssetId(
-            this.terria.configParameters.cesiumTerrainAssetId,
-            {
-              accessToken: this.terria.configParameters.cesiumIonAccessToken
-            }
-          )
-        })
+        terrain: this.createTerrainProviderFromIonAssetId(
+          this.terria.configParameters.cesiumTerrainAssetId,
+          this.terria.configParameters.cesiumIonAccessToken
+        )
       };
-    }
-    if (this.terria.configParameters.cesiumTerrainUrl) {
+    } else if (this.terria.configParameters.cesiumTerrainUrl) {
+      // Load the terrain provider from the given URL
       return {
-        terrain: new CesiumTerrainProvider({
-          url: this.terria.configParameters.cesiumTerrainUrl
-        })
+        terrain: this.createTerrainProviderFromUrl(
+          this.terria.configParameters.cesiumTerrainUrl
+        )
       };
-    }
-    // Check if there's a TerrainProvider in map items and use that if there is
-    else if (this._firstMapItemTerrainProviders) {
-      return { terrain: this._firstMapItemTerrainProviders };
     } else if (this.terria.configParameters.useCesiumIonTerrain) {
+      // Use Cesium ION world Terrain
       const logo = require("terriajs-cesium/Source/Assets/Images/ion-credit.png");
       const ionCredit = new Credit(
         '<a href="https://cesium.com/" target="_blank" rel="noopener noreferrer"><img src="' +
@@ -1001,11 +1002,49 @@ export default class Cesium extends GlobeOrMap {
         true
       );
       return {
-        terrain: createWorldTerrain({}),
+        terrain: this.createWorldTerrain(),
         credit: ionCredit
       };
+    } else {
+      // Default to ellipsoid/3d-smooth
+      return { terrain: new EllipsoidTerrainProvider() };
     }
-    return { terrain: new EllipsoidTerrainProvider() };
+  }
+
+  /**
+   * Returns terrainProvider from `configParameters.cesiumTerrainAssetId` when set or `undefined`.
+   *
+   * Used for spying in specs
+   */
+  private createTerrainProviderFromIonAssetId(
+    assetId: number,
+    accessToken?: string
+  ): CesiumTerrainProvider {
+    return new CesiumTerrainProvider({
+      url: IonResource.fromAssetId(assetId, {
+        accessToken
+      })
+    });
+  }
+
+  /**
+   * Returns terrainProvider from `configParameters.cesiumTerrainAssetId` when set or `undefined`.
+   *
+   * Used for spying in specs
+   */
+  private createTerrainProviderFromUrl(url: string): CesiumTerrainProvider {
+    return new CesiumTerrainProvider({
+      url
+    });
+  }
+
+  /**
+   * Creates cesium-world-terrain.
+   *
+   * Used for spying in specs
+   */
+  private createWorldTerrain(): CesiumTerrainProvider {
+    return createWorldTerrain({});
   }
 
   // WIP working out how to deal with credits

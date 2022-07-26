@@ -33,11 +33,13 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
       // Deal with errors from this better
     }
 
-    return [
-      new CesiumTerrainProvider({
-        url: resource,
-        credit: this.attribution
-      })
-    ];
+    return this.show
+      ? [
+          new CesiumTerrainProvider({
+            url: resource,
+            credit: this.attribution
+          })
+        ]
+      : [];
   }
 }
