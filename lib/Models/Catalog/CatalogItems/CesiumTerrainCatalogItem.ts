@@ -34,8 +34,11 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
 
   @computed
   get shortReport() {
-    const status = this.isTerrainActive ? "In use" : "Not in use";
-    return `Terrain status: ${status}`;
+    if (super.shortReport === undefined) {
+      const status = this.isTerrainActive ? "In use" : "Not in use";
+      return `Terrain status: ${status}`;
+    }
+    return super.shortReport;
   }
 
   /**
