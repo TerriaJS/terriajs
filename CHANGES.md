@@ -32,6 +32,7 @@ Change Log
   * `useViewState` hook
   * `withViewState` HOC
 * Move `GlobalTerriaStyles` from `StandardUserInterface` to separate file
+* Add `ExternalLinkWithWarning` component - this will replace all URLs in story body and add a warning message when URLs are clicked on.
 * [The next improvement]
 
 #### 8.2.9 - 2022-07-13
