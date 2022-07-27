@@ -23,6 +23,7 @@ import MappableTraits, {
   RectangleTraits
 } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
+import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 
 const supportsWebGL = require("../../lib/Core/supportsWebGL");
 
@@ -204,6 +205,12 @@ describeIfSupported("Cesium Model", function() {
           },
           { addModelToTerria: true }
         ).throwIfUndefined() as CesiumTerrainCatalogItem;
+        spyOn(
+          workbenchTerrainItem as any,
+          "loadTerrainProvider"
+        ).and.returnValue(
+          Promise.resolve(new CesiumTerrainProvider({ url: "some/url" }))
+        );
         await terria.workbench.add(workbenchTerrainItem);
       })
     );
