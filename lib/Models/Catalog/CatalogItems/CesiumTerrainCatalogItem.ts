@@ -6,6 +6,7 @@ import MappableMixin from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import CesiumTerrainCatalogItemTraits from "../../../Traits/TraitsClasses/CesiumTerrainCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
+import TerriaError from "../../../Core/TerriaError";
 
 export default class CesiumTerrainCatalogItem extends UrlMixin(
   MappableMixin(CatalogMemberMixin(CreateModel(CesiumTerrainCatalogItemTraits)))
@@ -85,7 +86,7 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
 
     return isReady
       ? terrainProvider
-      : Promise.reject("Failed to load terrain provider");
+      : Promise.reject(TerriaError.from("Failed to load terrain provider"));
   }
 
   protected async forceLoadMapItems(): Promise<void> {
