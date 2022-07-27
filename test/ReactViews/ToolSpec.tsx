@@ -3,7 +3,7 @@ import { act } from "react-dom/test-utils";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import Tool from "../../lib/ReactViews/Tools/Tool";
-import { createWithContexts } from "./SpecHelpers";
+import { createWithContexts } from "./withContext";
 
 const TestComponent = () => <div>Test hello</div>;
 

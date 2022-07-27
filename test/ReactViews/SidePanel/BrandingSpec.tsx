@@ -3,7 +3,7 @@ import TestRenderer from "react-test-renderer";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import Branding from "../../../lib/ReactViews/SidePanel/Branding";
-import { createWithContexts } from "../SpecHelpers";
+import { createWithContexts } from "../withContext";
 // import Branding from "../../../lib/ReactViews/SidePanel/Branding";
 
 describe("Branding", function() {

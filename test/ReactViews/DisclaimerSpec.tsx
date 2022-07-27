@@ -4,7 +4,7 @@ import { act } from "react-dom/test-utils";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import Box from "../../lib/Styled/Box";
-import { createWithContexts } from "./SpecHelpers";
+import { createWithContexts } from "./withContext";
 const Disclaimer: any = require("../../lib/ReactViews/Disclaimer").default;
 
 describe("Disclaimer", function() {

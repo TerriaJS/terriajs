@@ -9,7 +9,7 @@ import TourPortal, {
   TourExplanation,
   TourPreface
 } from "../../../lib/ReactViews/Tour/TourPortal";
-import { createWithContexts } from "../SpecHelpers";
+import { createWithContexts } from "../withContext";
 
 describe("TourPortal", function() {
   let terria: Terria;

@@ -9,6 +9,7 @@ export function withThemeContext(node: React.ReactNode) {
   return <ThemeProvider theme={terriaTheme}>{node}</ThemeProvider>;
 }
 
+/** Wrap react node in viewState and theme provider */
 export function createWithContexts(
   viewState: ViewState,
   node: React.ReactNode,

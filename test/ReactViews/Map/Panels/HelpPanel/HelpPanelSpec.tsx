@@ -7,7 +7,7 @@ import HelpPanelItem from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/He
 import HelpVideoPanel from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/HelpVideoPanel";
 import StyledHtml from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/StyledHtml";
 import Text from "../../../../../lib/Styled/Text";
-import { createWithContexts } from "../../../SpecHelpers";
+import { createWithContexts } from "../../../withContext";
 const HelpPanel: any = require("../../../../../lib/ReactViews/Map/Panels/HelpPanel/HelpPanel")
   .default;
 

@@ -5,7 +5,7 @@ import Terria from "../../../../lib/Models/Terria";
 import ViewState from "../../../../lib/ReactViewModels/ViewState";
 import TrainerBar from "../../../../lib/ReactViews/Map/TrainerBar/TrainerBar";
 import Box from "../../../../lib/Styled/Box";
-import { createWithContexts } from "../../SpecHelpers";
+import { createWithContexts } from "../../withContext";
 import TestHelpContent from "./test-help-content";
 
 describe("TrainerBar", function() {
