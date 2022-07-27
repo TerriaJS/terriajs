@@ -28,6 +28,7 @@ Change Log
 * Feature Info now hidden on Cesium3dTiles items if `allowFeaturePicking` set to false. Default is true.
 * Add DOMPurify to `parseCustomHtmlToReact` (it was already present in `parseCustomMarkdownToReact`)
 * Update `html-to-react` to `1.4.7`
+* Move `maximumShownFeatureInfos` from `WebMapServiceCatalogItemTraits` to `MappableTraits`
 * [The next improvement]
 
 #### 8.2.9 - 2022-07-13

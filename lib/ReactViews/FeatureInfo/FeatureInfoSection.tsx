@@ -50,11 +50,11 @@ interface FeatureInfoProps {
   viewState: ViewState;
   template: Model<FeatureInfoTemplateTraits>;
   feature: Feature;
-  position: Cartesian3;
-  catalogItem: CatalogMemberMixin.Instance & Model<FeatureInfoTraits>; // Note this may not be known (eg. WFS).
+  position?: Cartesian3;
+  catalogItem: MappableMixin.Instance; // Note this may not be known (eg. WFS).
   isOpen: boolean;
   onClickHeader?: (feature: Feature) => void;
-  printView: boolean;
+  printView?: boolean;
   t: TFunction;
 }
 
@@ -369,10 +369,9 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
       title = Mustache.render(this.props.template.name, this.featureProperties);
     } else
       title =
-        (this.props.catalogItem.name
-          ? this.props.catalogItem.name + " - "
-          : "") + this.props.feature.name ||
-        this.props.t("featureInfo.siteData");
+        getName(this.props.catalogItem) +
+        " - " +
+        (this.props.feature.name || this.props.t("featureInfo.siteData"));
 
     return (
       <li className={classNames(Styles.section)}>

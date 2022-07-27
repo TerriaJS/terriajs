@@ -388,7 +388,7 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
                 props.viewState.topElement = "FeatureInfo";
               })}
             >
-              <FeatureInfoPanel terria={terria} viewState={props.viewState} />
+              <FeatureInfoPanel viewState={props.viewState} />
             </div>
             <DragDropFile terria={props.terria} viewState={props.viewState} />
             <DragDropNotification viewState={props.viewState} />
