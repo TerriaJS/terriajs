@@ -16,7 +16,7 @@ export const ExternalLinkWithWarning: React.FC<Props> = (props: {
   children: React.ReactNode;
 }) => {
   const viewState = useViewState();
-  const [t] = useTranslation();
+  const { t } = useTranslation();
 
   const onClick = (evt: React.MouseEvent) => {
     evt.stopPropagation();
