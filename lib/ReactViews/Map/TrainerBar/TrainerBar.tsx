@@ -3,7 +3,6 @@ import { observer } from "mobx-react";
 import React from "react";
 import { Translation, WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
-import Terria from "../../../Models/Terria";
 import {
   HelpContentItem,
   PaneMode,

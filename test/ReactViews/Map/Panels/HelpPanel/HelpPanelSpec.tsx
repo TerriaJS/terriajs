@@ -1,17 +1,15 @@
-const create: any = require("react-test-renderer").create;
+import { runInAction } from "mobx";
 import React from "react";
 import { act } from "react-dom/test-utils";
-import { ThemeProvider } from "styled-components";
-import { terriaTheme } from "../../../../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import Terria from "../../../../../lib/Models/Terria";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
-const HelpPanel: any = require("../../../../../lib/ReactViews/Map/Panels/HelpPanel/HelpPanel")
-  .default;
 import HelpPanelItem from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/HelpPanelItem";
 import HelpVideoPanel from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/HelpVideoPanel";
-import Text from "../../../../../lib/Styled/Text";
 import StyledHtml from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/StyledHtml";
-import { runInAction } from "mobx";
+import Text from "../../../../../lib/Styled/Text";
+import { createWithContexts } from "../../../SpecHelpers";
+const HelpPanel: any = require("../../../../../lib/ReactViews/Map/Panels/HelpPanel/HelpPanel")
+  .default;
 
 describe("HelpPanel", function() {
   let terria: Terria;
@@ -33,11 +31,7 @@ describe("HelpPanel", function() {
   describe("with no help content in config", function() {
     it("does not render any items in help", function() {
       act(() => {
-        testRenderer = create(
-          <ThemeProvider theme={terriaTheme}>
-            <HelpPanel terria={terria} viewState={viewState} />
-          </ThemeProvider>
-        );
+        testRenderer = createWithContexts(viewState, <HelpPanel />);
       });
 
       const helpItems = testRenderer.root.findAllByType(HelpPanelItem);
@@ -55,11 +49,7 @@ describe("HelpPanel", function() {
         ];
       });
       act(() => {
-        testRenderer = create(
-          <ThemeProvider theme={terriaTheme}>
-            <HelpPanel terria={terria} viewState={viewState} />
-          </ThemeProvider>
-        );
+        testRenderer = createWithContexts(viewState, <HelpPanel />);
       });
     });
 
@@ -106,11 +96,7 @@ describe("HelpPanel", function() {
         ];
       });
       act(() => {
-        testRenderer = create(
-          <ThemeProvider theme={terriaTheme}>
-            <HelpPanel terria={terria} viewState={viewState} />
-          </ThemeProvider>
-        );
+        testRenderer = createWithContexts(viewState, <HelpPanel />);
       });
     });
 

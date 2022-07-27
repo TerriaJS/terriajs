@@ -485,4 +485,5 @@ function featureHasInfo(feature) {
   return defined(feature.properties) || defined(feature.description);
 }
 
+export { FeatureInfoPanel };
 export default withTranslation()(withViewState(FeatureInfoPanel));

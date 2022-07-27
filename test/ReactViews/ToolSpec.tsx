@@ -1,9 +1,9 @@
 import React from "react";
 import { act } from "react-dom/test-utils";
-import TestRenderer from "react-test-renderer";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import Tool from "../../lib/ReactViews/Tools/Tool";
+import { createWithContexts } from "./SpecHelpers";
 
 const TestComponent = () => <div>Test hello</div>;
 
@@ -24,10 +24,10 @@ describe("Tool", function() {
   xit("renders the item returned by getToolComponent", async function() {
     let rendered: any;
     await act(async () => {
-      rendered = TestRenderer.create(
+      rendered = createWithContexts(
+        viewState,
         <Tool
           toolName="test-tool"
-          viewState={viewState}
           getToolComponent={() => TestComponent as any}
         />
       );
@@ -39,10 +39,10 @@ describe("Tool", function() {
   xit("renders the promised item returned by getToolComponent", async function() {
     let rendered: any;
     await act(async () => {
-      rendered = TestRenderer.create(
+      rendered = createWithContexts(
+        viewState,
         <Tool
           toolName="test-tool"
-          viewState={viewState}
           getToolComponent={() => Promise.resolve(TestComponent as any)}
         />
       );

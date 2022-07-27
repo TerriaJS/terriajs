@@ -1,11 +1,11 @@
-const create: any = require("react-test-renderer").create;
+import { runInAction } from "mobx";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
-import { runInAction } from "mobx";
-const Disclaimer: any = require("../../lib/ReactViews/Disclaimer").default;
 import Box from "../../lib/Styled/Box";
+import { createWithContexts } from "./SpecHelpers";
+const Disclaimer: any = require("../../lib/ReactViews/Disclaimer").default;
 
 describe("Disclaimer", function() {
   let terria: Terria;
@@ -36,7 +36,10 @@ describe("Disclaimer", function() {
         viewState.disclaimerVisible = true;
       });
       act(() => {
-        testRenderer = create(<Disclaimer viewState={viewState} />);
+        testRenderer = createWithContexts(
+          viewState,
+          <Disclaimer viewState={viewState} />
+        );
       });
       const disclaimerContent = testRenderer.root.findAllByType(Box);
       expect(disclaimerContent.length).toBeTruthy();
@@ -50,7 +53,10 @@ describe("Disclaimer", function() {
         viewState.disclaimerVisible = true;
       });
       act(() => {
-        testRenderer = create(<Disclaimer viewState={viewState} />);
+        testRenderer = createWithContexts(
+          viewState,
+          <Disclaimer viewState={viewState} />
+        );
       });
       const disclaimerContent = testRenderer.root.findAllByType(Box);
       expect(disclaimerContent.length).toBeTruthy();
@@ -64,7 +70,10 @@ describe("Disclaimer", function() {
         viewState.disclaimerVisible = false;
       });
       act(() => {
-        testRenderer = create(<Disclaimer viewState={viewState} />);
+        testRenderer = createWithContexts(
+          viewState,
+          <Disclaimer viewState={viewState} />
+        );
       });
       const disclaimerContent = testRenderer.root.findAllByType(Box);
       expect(disclaimerContent.length).toBeFalsy();
