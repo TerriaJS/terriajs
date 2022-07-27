@@ -44,7 +44,6 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
   /**
    * Returns a Promise to load the terrain provider
    */
-  @action
   private async loadTerrainProvider(): Promise<
     CesiumTerrainProvider | undefined
   > {
