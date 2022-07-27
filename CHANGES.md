@@ -26,6 +26,8 @@ Change Log
 * Limit workbench item title to 2 lines and show overflow: ellipsis after.
 * Add `allowFeaturePicking` trait to Cesium3dTileMixin.
 * Feature Info now hidden on Cesium3dTiles items if `allowFeaturePicking` set to false. Default is true.
+* Add DOMPurify to `parseCustomHtmlToReact` (it was already present in `parseCustomMarkdownToReact`)
+* Update `html-to-react` to `1.4.7`
 * [The next improvement]
 
 #### 8.2.9 - 2022-07-13

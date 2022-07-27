@@ -14,7 +14,6 @@ class FeatureInfoDownload extends React.Component<{
   data: JsonObject;
   name: string;
   viewState: ViewState;
-  canUseDataUri?: boolean;
   t: TFunction;
 }> {
   getLinks() {
@@ -45,25 +44,21 @@ class FeatureInfoDownload extends React.Component<{
       </span>
     );
 
-    if (DataUri.checkCompatibility()) {
-      return (
-        <Dropdown
-          options={links}
-          textProperty="label"
-          theme={{
-            dropdown: Styles.download,
-            list: Styles.dropdownList,
-            button: Styles.dropdownButton,
-            icon: icon
-          }}
-          buttonClassName={Styles.btn}
-        >
-          {t("featureInfo.download")}
-        </Dropdown>
-      );
-    } else {
-      return null;
-    }
+    return (
+      <Dropdown
+        options={links}
+        textProperty="label"
+        theme={{
+          dropdown: Styles.download,
+          list: Styles.dropdownList,
+          button: Styles.dropdownButton,
+          icon: icon
+        }}
+        buttonClassName={Styles.btn}
+      >
+        {t("featureInfo.download")}
+      </Dropdown>
+    );
   }
 }
 
