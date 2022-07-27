@@ -10,14 +10,13 @@ import { traitClass } from "../Trait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import DiffableTraits from "./DiffableTraits";
 import ExportWebCoverageServiceTraits from "./ExportWebCoverageServiceTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
+import ImageryProviderTraits from "./ImageryProviderTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import LegendTraits from "./LegendTraits";
 import MappableTraits from "./MappableTraits";
 import { MinMaxLevelTraits } from "./MinMaxLevelTraits";
-import ImageryProviderTraits from "./ImageryProviderTraits";
 import UrlTraits from "./UrlTraits";
 
 export const SUPPORTED_CRS_3857 = ["EPSG:3857", "EPSG:900913"];
@@ -169,7 +168,6 @@ export class GetFeatureInfoFormat extends ModelTraits {
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
   ExportWebCoverageServiceTraits,
   DiffableTraits,
-  FeatureInfoTraits,
   LayerOrderingTraits,
   GetCapabilitiesTraits,
   ImageryProviderTraits,

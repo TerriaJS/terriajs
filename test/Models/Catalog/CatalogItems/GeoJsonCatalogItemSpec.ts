@@ -1,10 +1,12 @@
 import { runInAction } from "mobx";
 import { GeomType, LineSymbolizer, PolygonSymbolizer } from "protomaps";
 import { CustomDataSource } from "terriajs-cesium";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import { JsonObject } from "../../../../lib/Core/Json";
@@ -40,6 +42,45 @@ describe("GeoJsonCatalogItemSpec", () => {
     });
 
     describe("GeoJsonCatalogItem", function() {
+      it("handles features with null geom", async () => {
+        geojson.setTrait(CommonStrata.user, "geoJsonData", {
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              properties: {
+                LGA_CODE19: "19499",
+                LGA_NAME19: "No usual address (NSW)",
+                STE_CODE16: "1",
+                STE_NAME16: "New South Wales",
+                AREASQKM19: 0.0
+              },
+              geometry: null
+            },
+            {
+              type: "Feature",
+              properties: {},
+              geometry: {
+                type: "Polygon",
+                coordinates: [
+                  [
+                    [144.80667114257812, -32.96258644191746],
+                    [145.008544921875, -33.19273094190691],
+                    [145.557861328125, -32.659031913817685],
+                    [145.04287719726562, -32.375322284319346],
+                    [144.7998046875, -32.96719522935591],
+                    [144.80667114257812, -32.96258644191746]
+                  ]
+                ]
+              }
+            }
+          ]
+        });
+
+        await geojson.loadMapItems();
+        expect(geojson.readyData?.features.length).toBe(1);
+      });
+
       it("reloads when the URL is changed", async function() {
         geojson.setTrait(
           CommonStrata.user,
@@ -840,6 +881,18 @@ describe("GeoJsonCatalogItemSpec", () => {
 
       expect(geojson.legends.length).toBe(1);
       expect(geojson.legends[0].url).toBe("some-url");
+    });
+
+    it("correctly builds `Feature` from picked Entity", function() {
+      const picked = new Entity();
+      const feature = geojson.buildFeatureFromPickResult(
+        Cartesian2.ZERO,
+        picked
+      );
+      expect(feature).toBeDefined();
+      if (feature) {
+        expect(feature.cesiumEntity).toBe(picked);
+      }
     });
   });
 

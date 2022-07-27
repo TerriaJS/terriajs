@@ -1,6 +1,23 @@
 import i18next from "i18next";
 
-export default function() {
+interface DataType {
+  value: string;
+  name: string;
+  description?: string;
+}
+
+interface RemoteDataType extends DataType {}
+
+interface LocalDataType extends DataType {
+  extensions?: string[];
+}
+
+interface GetDataTypes {
+  remoteDataType: RemoteDataType[];
+  localDataType: LocalDataType[];
+}
+
+export default function(): GetDataTypes {
   return {
     remoteDataType: [
       {
@@ -97,6 +114,10 @@ export default function() {
       {
         value: "socrata-group",
         name: i18next.t("core.dataType.socrata-group")
+      },
+      {
+        value: "gltf",
+        name: i18next.t("core.dataType.gltf")
       }
     ],
     localDataType: [
@@ -148,6 +169,12 @@ export default function() {
         value: "shp",
         name: i18next.t("core.dataType.shp"),
         extensions: ["zip"]
+      },
+      {
+        // NOTE: will only work if non open-source terriajs-ifc plugin is added to the map
+        value: "ifc",
+        name: i18next.t("core.dataType.ifc"),
+        extensions: ["ifc"]
       }
     ]
   };

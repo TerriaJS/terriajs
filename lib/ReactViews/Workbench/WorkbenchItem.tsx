@@ -69,7 +69,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
 
     return (
       <StyledLi style={this.props.style} className={this.props.className}>
-        <Box fullWidth justifySpaceBetween padded styledHeight="38px">
+        <Box fullWidth justifySpaceBetween padded styledMinHeight="38px">
           <Box fullWidth>
             <Box left fullWidth paddedHorizontally centered>
               <DraggableBox
@@ -107,13 +107,21 @@ class WorkbenchItemRaw extends React.Component<IProps> {
                       `}
                       textProps={{ medium: true, fullWidth: true }}
                     >
-                      <TextSpan medium>{item.name}</TextSpan>
+                      <TextSpan
+                        medium
+                        maxLines={!item.isOpenInWorkbench ? 2 : false}
+                        title={item.name}
+                      >
+                        {item.name}
+                      </TextSpan>
                     </Checkbox>
                   </Box>
                 ) : (
                   <TextSpan
                     medium
                     textLight
+                    maxLines={!item.isOpenInWorkbench ? 2 : false}
+                    title={item.name}
                     css={`
                       overflow-wrap: anywhere;
                     `}

@@ -174,7 +174,7 @@ export function addModeButton(
     name: options.text,
     title: options.tooltip,
     location: options.position ?? "TOP",
-    order: options.order ?? terria.mapNavigationModel.items.length,
+    order: options.order,
     controller
   });
 

@@ -4,6 +4,7 @@ import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
 import OpacityTraits from "./OpacityTraits";
 import SplitterTraits from "./SplitterTraits";
+import FeaturePickingTraits from "./FeaturePickingTraits";
 
 export class TileErrorHandlingTraits extends ModelTraits {
   @primitiveTrait({
@@ -39,6 +40,7 @@ export class TileErrorHandlingTraits extends ModelTraits {
 }
 
 export default class ImageryProviderTraits extends mixTraits(
+  FeaturePickingTraits,
   OpacityTraits,
   SplitterTraits
 ) {
@@ -88,14 +90,6 @@ For example, if a point feature on the edge of the extent is drawn as a circle w
     type: "number"
   })
   maximumLevel?: number;
-
-  @primitiveTrait({
-    name: "Allow feature picking",
-    type: "boolean",
-    description:
-      "Indicates whether features in this catalog item can be selected by clicking them on the map."
-  })
-  allowFeaturePicking = true;
 
   @primitiveTrait({
     type: "number",

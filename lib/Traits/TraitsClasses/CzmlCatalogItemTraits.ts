@@ -5,7 +5,6 @@ import mixTraits from "../mixTraits";
 import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
 import UrlTraits from "./UrlTraits";
@@ -13,7 +12,6 @@ import UrlTraits from "./UrlTraits";
 export default class CzmlCatalogItemTraits extends mixTraits(
   AutoRefreshingTraits,
   DiscretelyTimeVaryingTraits,
-  FeatureInfoTraits,
   UrlTraits,
   CatalogMemberTraits,
   LegendOwnerTraits,

@@ -1,10 +1,9 @@
 import JsonValue, { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
-import FeatureInfoTraits from "./FeatureInfoTraits";
-import mixTraits from "../mixTraits";
-import ModelTraits from "../ModelTraits";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import ModelTraits from "../ModelTraits";
 import CatalogFunctionJobTraits from "./CatalogFunctionJobTraits";
 import WebProcessingServiceCatalogFunctionTraits from "./WebProcessingServiceCatalogFunctionTraits";
 
@@ -32,7 +31,6 @@ export class WPSParameterTraits extends ModelTraits {
 }
 
 export default class WebProcessingServiceCatalogJobTraits extends mixTraits(
-  FeatureInfoTraits,
   CatalogFunctionJobTraits,
   WebProcessingServiceCatalogFunctionTraits
 ) {

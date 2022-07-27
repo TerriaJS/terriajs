@@ -6,6 +6,8 @@ import CustomComponent, {
   DomElement,
   ProcessNodeContext
 } from "./CustomComponent";
+
+const DOMPurify = require("dompurify/dist/purify");
 const HtmlToReact = require("html-to-react");
 const combine = require("terriajs-cesium/Source/Core/combine").default;
 const defined = require("terriajs-cesium/Source/Core/defined").default;
@@ -31,7 +33,7 @@ const shouldProcessEveryNodeExceptWhiteSpace = function(node: DomElement) {
 
 let keyIndex = 0;
 
-const ExternalLinkIcon = styled(StyledIcon).attrs({
+export const ExternalLinkIcon = styled(StyledIcon).attrs({
   glyph: Icon.GLYPHS.externalLink,
   styledWidth: "10px",
   styledHeight: "10px",
@@ -113,13 +115,22 @@ export type ParseCustomHtmlToReactContext = ProcessNodeContext &
 
 /**
  * Return html as a React Element.
+ * HTML is purified by default. Custom components are not supported by default
+ * Set domPurifyOptions to specify supported custom components - for example
+ * - eg. {ADD_TAGS: ['component1', 'component2']} (https://github.com/cure53/DOMPurify).
  */
 function parseCustomHtmlToReact(
   html: string,
-  context?: ParseCustomHtmlToReactContext
+  context?: ParseCustomHtmlToReactContext,
+  allowUnsafeHtml: boolean = false,
+  domPurifyOptions: Object = {}
 ) {
   if (!defined(html) || html.length === 0) {
     return html;
+  }
+
+  if (!allowUnsafeHtml) {
+    html = DOMPurify.sanitize(html, domPurifyOptions);
   }
 
   return htmlToReactParser.parseWithInstructions(

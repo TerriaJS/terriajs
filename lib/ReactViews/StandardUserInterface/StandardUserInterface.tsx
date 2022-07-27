@@ -3,7 +3,7 @@ import "inobounce";
 import { action } from "mobx";
 import { observer } from "mobx-react";
 import React, { useEffect, useRef } from "react";
-import { useTranslation, withTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import {
   createGlobalStyle,
   DefaultTheme,
@@ -12,6 +12,7 @@ import {
 import combine from "terriajs-cesium/Source/Core/combine";
 import arrayContains from "../../Core/arrayContains";
 import ViewState from "../../ReactViewModels/ViewState";
+import { MapCredits } from "../Credits";
 import Disclaimer from "../Disclaimer";
 import DragDropFile from "../DragDropFile";
 import DragDropNotification from "../DragDropNotification";
@@ -323,6 +324,12 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
                     allBaseMaps={allBaseMaps}
                     animationDuration={animationDuration}
                   />
+                  <MapCredits
+                    hideTerriaLogo={!!terria.configParameters.hideTerriaLogo}
+                    credits={terria.configParameters.extraCreditLinks?.slice()}
+                    currentViewer={terria.mainViewer.currentViewer}
+                  />
+                  <div id="map-data-attribution"></div>
                   <main>
                     <ExplorerWindow
                       terria={terria}

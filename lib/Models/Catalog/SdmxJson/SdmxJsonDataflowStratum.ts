@@ -56,7 +56,7 @@ export interface SdmxJsonDataflow {
   codelists?: CodeLists;
   /** concept schemes: used to describe dimensions and attributes */
   conceptSchemes?: ConceptSchemes;
-  /** contentConstraints: describe allowed values for enumeratted dimensions/attributes */
+  /** contentConstraints: describe allowed values for enumerated dimensions/attributes */
   contentConstraints?: ContentConstraints;
 }
 export class SdmxJsonDataflowStratum extends LoadableStratum(
@@ -247,7 +247,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    */
   @computed
   get dimensions(): StratumFromTraits<SdmxDimensionTraits>[] | undefined {
-    // Contraint contains allowed dimension values for a given dataflow
+    // Constraint contains allowed dimension values for a given dataflow
     // Get 'actual' constraints (rather than 'allowed' constraints)
     const constraints = this.sdmxJsonDataflow.contentConstraints?.filter(
       c => c.type === "Actual"
@@ -383,7 +383,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    * - We will only use a column if it has a single unique value - as this unitMeasure it used effectively as "units" for the dataset
    * - Also search for dimensions which have modelOverrides of type "frequency".
    * - These will be used to add the frequency to the end of the unitMeasure string
-   * For example: "Value (Yearly)" or "AUD (Quaterly)"
+   * For example: "Value (Yearly)" or "AUD (Quarterly)"
    *
    */
   @computed
@@ -399,9 +399,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
             this.getAttributionWithConceptOrCodelist(override.id!) ??
             this.getDimensionWithConceptOrCodelist(override.id!);
 
-          const column = dimOrAttr?.id
-            ? this.catalogItem.findColumnByName(dimOrAttr.id)
-            : undefined;
+          const column = this.catalogItem.findColumnByName(dimOrAttr?.id);
 
           if (column?.uniqueValues.values.length === 1) {
             // If this column has a codelist, use it to format the value
@@ -438,7 +436,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    * Add TableColumnTraits for primary measure column - this column contains observational values to be visualised on chart or map:
    * - `name` to dimension id
    * - `title` to concept name
-   * - `transformation` if unit multiplier attribute has been found (which will apply `x*(10^unitMultiplier)` to all observation vlues)
+   * - `transformation` if unit multiplier attribute has been found (which will apply `x*(10^unitMultiplier)` to all observation values)
    */
   @computed
   get primaryMeasureColumn(): StratumFromTraits<TableColumnTraits> | undefined {
@@ -448,7 +446,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       this.sdmxPrimaryMeasure?.conceptIdentity
     );
 
-    // Find unit multipler columns by searching for attributes/dimensions which have modelOverrides of type "unit-multiplier".
+    // Find unit multiplier columns by searching for attributes/dimensions which have modelOverrides of type "unit-multiplier".
     // Use the first column found
     const unitMultiplier = filterOutUndefined(
       this.catalogItem.modelOverrides
@@ -519,16 +517,17 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
             modelOverride?.regionType
           );
 
-          // Next try fetching reigon type from another dimension (only if this modelOverride type 'region')
+          // Next try fetching region type from another dimension (only if this modelOverride type 'region')
           // It will look through dimensions which have modelOverrides of type `region-type` and have a selectedId, if one is found - it will be used as the regionType of this column
           // Note this will override previous regionType
           if (modelOverride?.type === "region") {
             // Use selectedId of first dimension with one
-            regionType = this.catalogItem.matchRegionType(
-              this.getDimensionsWithOverrideType("region-type").find(d =>
-                isDefined(d.selectedId)
-              )?.selectedId ?? regionType
-            );
+            regionType =
+              this.catalogItem.matchRegionType(
+                this.getDimensionsWithOverrideType("region-type").find(d =>
+                  isDefined(d.selectedId)
+                )?.selectedId
+              ) ?? regionType;
           }
 
           // Try to find valid region type from:
@@ -621,7 +620,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
   /** Get region TableColumn by searching catalogItem.tableColumns for region dimension
    * NOTE: this is searching through catalogItem.tableColumns to find the completely resolved regionColumn
-   * This can only be used in computeds/fns outside of ColumnTraits - or you will get infinite recursion
+   * This can only be used in computed/fns outside of ColumnTraits - or you will get infinite recursion
    */
   @computed get resolvedRegionColumn() {
     return this.catalogItem.tableColumns.find(
@@ -678,7 +677,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
   /**
    * Set TableStyleTraits for primary measure column:
-   * - Legend title is set to `unitMeasure` to add context - eg "AUD (Quaterly)"
+   * - Legend title is set to `unitMeasure` to add context - eg "AUD (Quarterly)"
    * - Chart traits are set if this dataflow is time-series with no region-mapping:
    *   - `xAxisColumn` to time column name
    *   - `lines.name` set to `unitMeasure`

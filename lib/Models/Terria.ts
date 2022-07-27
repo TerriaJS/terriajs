@@ -55,6 +55,7 @@ import TimeVarying from "../ModelMixins/TimeVarying";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
 import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
 import NotificationState from "../ReactViewModels/NotificationState";
+import { ICredit } from "../ReactViews/Credits";
 import { SHARE_VERSION } from "../ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
@@ -284,7 +285,7 @@ interface ConfigParameters {
   /**
    * Extra links to show in the credit line at the bottom of the map (currently only the Cesium map).
    */
-  extraCreditLinks?: { url: string; text: string }[];
+  extraCreditLinks?: ICredit[];
 
   /**
    * Configurable discalimer that shows up in print view
@@ -320,6 +321,13 @@ interface StartOptions {
    * some functions that are passed in from a TerriaMap
    *  */
   i18nOptions?: I18nStartOptions;
+
+  /**
+   * Hook to run before restoring app state from the share URL. This is for
+   * example used in terriamap/index.js for loading plugins before restoring
+   * app state.
+   */
+  beforeRestoreAppState?: () => Promise<void> | void;
 }
 
 interface Analytics {
@@ -921,7 +929,7 @@ export default class Terria {
       });
     } finally {
       if (!options.i18nOptions?.skipInit) {
-        Internationalization.initLanguage(
+        await Internationalization.initLanguage(
           this.configParameters.languageConfiguration,
           options.i18nOptions,
           this.baseUrl
@@ -964,6 +972,18 @@ export default class Terria {
         )
       );
 
+    if (typeof options.beforeRestoreAppState === "function") {
+      try {
+        await options.beforeRestoreAppState();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    await this.restoreAppState(options);
+  }
+
+  private async restoreAppState(options: StartOptions) {
     if (options.applicationUrl) {
       (await this.updateApplicationUrl(options.applicationUrl.href)).raiseError(
         this
