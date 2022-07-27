@@ -2,9 +2,11 @@ import DOMPurify from "dompurify";
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { StyleSheetManager, ThemeProvider } from "styled-components";
-import Terria from "../../../../../Models/Terria";
-import ViewState from "../../../../../ReactViewModels/ViewState";
 import { terriaTheme } from "../../../../StandardUserInterface/StandardTheme";
+import {
+  WithViewState,
+  withViewState
+} from "../../../../StandardUserInterface/ViewStateContext";
 import DistanceLegend from "../../../Legend/DistanceLegend";
 import {
   buildShareLink,
@@ -115,10 +117,8 @@ export const downloadImg = (
   a.click();
 };
 
-interface Props {
+interface Props extends WithViewState {
   window: Window;
-  terria: Terria;
-  viewState: ViewState;
   closeCallback: () => void;
 }
 
@@ -141,28 +141,28 @@ const PrintView = (props: Props) => {
   }, [props.window]);
 
   useEffect(() => {
-    setScreenshot(props.terria.currentViewer.captureScreenshot());
+    setScreenshot(props.viewState.terria.currentViewer.captureScreenshot());
   }, [props.window]);
 
   useEffect(() => {
-    canShorten(props.terria)
-      ? buildShortShareLink(props.terria, props.viewState, {
+    canShorten(props.viewState.terria)
+      ? buildShortShareLink(props.viewState.terria, props.viewState, {
           includeStories: false
         })
           .then(url => {
             setShareLink(url);
           })
           .catch(() =>
-            buildShareLink(props.terria, props.viewState, {
+            buildShareLink(props.viewState.terria, props.viewState, {
               includeStories: false
             })
           )
       : setShareLink(
-          buildShareLink(props.terria, props.viewState, {
+          buildShareLink(props.viewState.terria, props.viewState, {
             includeStories: false
           })
         );
-  }, [props.terria, props.viewState]);
+  }, [props.viewState.terria, props.viewState]);
 
   return ReactDOM.createPortal(
     <StyleSheetManager target={props.window.document.head}>
@@ -170,14 +170,16 @@ const PrintView = (props: Props) => {
         <PrintViewButtons window={props.window} screenshot={screenshot} />
         <section className="mapSection">
           <div className="datasets">
-            <PrintWorkbench workbench={props.terria.workbench} />
+            <PrintWorkbench workbench={props.viewState.terria.workbench} />
           </div>
           <div className="map">
             {screenshot ? (
               <PrintViewMap screenshot={screenshot}>
                 <DistanceLegend
-                  terria={props.terria}
-                  scale={getScale(props.terria.currentViewer.getContainer())}
+                  terria={props.viewState.terria}
+                  scale={getScale(
+                    props.viewState.terria.currentViewer.getContainer()
+                  )}
                   isPrintMode={true}
                 />
               </PrintViewMap>
@@ -191,7 +193,7 @@ const PrintView = (props: Props) => {
         </section>
         <section>
           <h2>Datasets</h2>
-          <PrintDatasets items={props.terria.workbench.items} />
+          <PrintDatasets items={props.viewState.terria.workbench.items} />
         </section>
       </ThemeProvider>
     </StyleSheetManager>,
@@ -199,4 +201,4 @@ const PrintView = (props: Props) => {
   );
 };
 
-export default PrintView;
+export default withViewState(PrintView);

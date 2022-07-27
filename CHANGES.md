@@ -28,6 +28,10 @@ Change Log
 * Feature Info now hidden on Cesium3dTiles items if `allowFeaturePicking` set to false. Default is true.
 * Add DOMPurify to `parseCustomHtmlToReact` (it was already present in `parseCustomMarkdownToReact`)
 * Update `html-to-react` to `1.4.7`
+* Add `ViewState` React context provider to `StandardUserInterface` - instead of passing `viewState` or `terria` props through components, please use
+  * `useViewState` hook
+  * `withViewState` HOC
+* Move `GlobalTerriaStyles` from `StandardUserInterface` to separate file
 * [The next improvement]
 
 #### 8.2.9 - 2022-07-13

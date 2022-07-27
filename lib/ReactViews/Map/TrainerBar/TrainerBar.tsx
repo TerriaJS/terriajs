@@ -13,11 +13,15 @@ import {
 import ViewState from "../../../ReactViewModels/ViewState";
 import Box from "../../../Styled/Box";
 import Button, { RawButton } from "../../../Styled/Button";
-import measureElement, { MeasureElementProps } from "../../HOCs/measureElement";
 import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Select from "../../../Styled/Select";
 import Spacing from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
+import measureElement, { MeasureElementProps } from "../../HOCs/measureElement";
+import {
+  WithViewState,
+  withViewState
+} from "../../StandardUserInterface/ViewStateContext";
 import { applyTranslationIfExists } from "./../../../Language/languageHelpers";
 
 const StyledHtml: any = require("../../Map/Panels/HelpPanel/StyledHtml")
@@ -127,7 +131,6 @@ const renderOrderedStepList = function(
 };
 
 interface StepAccordionProps {
-  viewState: ViewState;
   selectedTrainerSteps: StepItem[];
   t: TFunction;
   theme: DefaultTheme;
@@ -143,7 +146,7 @@ interface StepAccordionState {
 
 // Originally written as a SFC but measureElement only supports class components at the moment
 class StepAccordionRaw extends React.Component<
-  StepAccordionProps & MeasureElementProps & WithTranslation,
+  StepAccordionProps & MeasureElementProps & WithTranslation & WithViewState,
   StepAccordionState
 > {
   refToMeasure: any;
@@ -294,17 +297,18 @@ class StepAccordionRaw extends React.Component<
     );
   }
 }
-const StepAccordion = withTranslation()(measureElement(StepAccordionRaw));
+const StepAccordion = withTranslation()(
+  withViewState(measureElement(StepAccordionRaw))
+);
 
-interface TrainerBarProps extends WithTranslation {
-  viewState: ViewState;
+interface TrainerBarProps extends WithTranslation, WithViewState {
   t: TFunction;
-  terria: Terria;
   theme: DefaultTheme;
 }
 
 export const TrainerBar = observer((props: TrainerBarProps) => {
-  const { i18n, t, terria, theme, viewState } = props;
+  const { i18n, t, theme, viewState } = props;
+  const terria = viewState.terria;
   const { helpContent } = terria.configParameters;
 
   // All these null guards are because we are rendering based on nested
@@ -396,7 +400,6 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
         {/* Trainer Steps within a Trainer Item */}
 
         <StepAccordion
-          viewState={viewState}
           selectedTrainerSteps={selectedTrainerSteps}
           isShowingAllSteps={viewState.trainerBarShowingAllSteps}
           setIsShowingAllSteps={(bool: boolean) =>
@@ -463,4 +466,4 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
   );
 });
 
-export default withTranslation()(withTheme(TrainerBar));
+export default withTranslation()(withViewState(withTheme(TrainerBar)));

@@ -1,34 +1,34 @@
 "use strict";
 
+import classNames from "classnames";
+import i18next from "i18next";
+import { action, reaction, runInAction } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
+import PropTypes from "prop-types";
+import React from "react";
+import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import FeatureInfoCatalogItem from "./FeatureInfoCatalogItem";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import { featureBelongsToCatalogItem } from "../../Map/PickedFeatures/PickedFeatures.ts";
+import prettifyCoordinates from "../../Map/Vector/prettifyCoordinates";
+import {
+  addMarker,
+  isMarkerVisible,
+  LOCATION_MARKER_DATA_SOURCE_NAME,
+  removeMarker
+} from "../../Models/LocationMarkerUtils";
+import Icon from "../../Styled/Icon";
 import DragWrapper from "../DragWrapper";
 import Loader from "../Loader";
-import React from "react";
-import PropTypes from "prop-types";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import { withTranslation } from "react-i18next";
-import Icon from "../../Styled/Icon";
-import {
-  LOCATION_MARKER_DATA_SOURCE_NAME,
-  addMarker,
-  removeMarker,
-  isMarkerVisible
-} from "../../Models/LocationMarkerUtils";
-import prettifyCoordinates from "../../Map/Vector/prettifyCoordinates";
-import i18next from "i18next";
+import { withViewState } from "../StandardUserInterface/ViewStateContext";
 import Styles from "./feature-info-panel.scss";
-import classNames from "classnames";
-import { observer, disposeOnUnmount } from "mobx-react";
-import { action, reaction, runInAction } from "mobx";
+import FeatureInfoCatalogItem from "./FeatureInfoCatalogItem";
 
 @observer
 class FeatureInfoPanel extends React.Component {
   static propTypes = {
-    terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
     printView: PropTypes.bool,
     t: PropTypes.func.isRequired
@@ -47,7 +47,7 @@ class FeatureInfoPanel extends React.Component {
   componentDidMount() {
     const { t } = this.props;
     const createFakeSelectedFeatureDuringPicking = true;
-    const terria = this.props.terria;
+    const terria = this.props.viewState.terria;
     disposeOnUnmount(
       this,
       reaction(
@@ -112,7 +112,7 @@ class FeatureInfoPanel extends React.Component {
             viewState={this.props.viewState}
             catalogItem={catalogItem}
             features={features}
-            terria={this.props.terria}
+            terria={this.props.viewState.terria}
             onToggleOpen={this.toggleOpenFeature}
             printView={this.props.printView}
           />
@@ -127,8 +127,8 @@ class FeatureInfoPanel extends React.Component {
     // give the close animation time to finish before unselecting, to avoid jumpiness
     setTimeout(
       action(() => {
-        this.props.terria.pickedFeatures = undefined;
-        this.props.terria.selectedFeature = undefined;
+        this.props.viewState.terria.pickedFeatures = undefined;
+        this.props.viewState.terria.selectedFeature = undefined;
       }),
       200
     );
@@ -142,7 +142,7 @@ class FeatureInfoPanel extends React.Component {
 
   @action.bound
   toggleOpenFeature(feature) {
-    const terria = this.props.terria;
+    const terria = this.props.viewState.terria;
     if (feature === terria.selectedFeature) {
       terria.selectedFeature = undefined;
     } else {
@@ -152,7 +152,7 @@ class FeatureInfoPanel extends React.Component {
 
   getMessageForNoResults() {
     const { t } = this.props;
-    if (this.props.terria.workbench.items.length > 0) {
+    if (this.props.viewState.terria.workbench.items.length > 0) {
       // feature info shows up becuase data has been added for the first time
       if (this.props.viewState.firstTimeAddingData) {
         runInAction(() => {
@@ -169,7 +169,7 @@ class FeatureInfoPanel extends React.Component {
 
   addManualMarker(longitude, latitude) {
     const { t } = this.props;
-    addMarker(this.props.terria, {
+    addMarker(this.props.viewState.terria, {
       name: t("featureInfo.userSelection"),
       location: {
         latitude: latitude,
@@ -179,10 +179,10 @@ class FeatureInfoPanel extends React.Component {
   }
 
   pinClicked(longitude, latitude) {
-    if (!isMarkerVisible(this.props.terria)) {
+    if (!isMarkerVisible(this.props.viewState.terria)) {
       this.addManualMarker(longitude, latitude);
     } else {
-      removeMarker(this.props.terria);
+      removeMarker(this.props.viewState.terria);
     }
   }
 
@@ -190,9 +190,9 @@ class FeatureInfoPanel extends React.Component {
   //   if (
   //     defined(latitude) &&
   //     defined(longitude) &&
-  //     isMarkerVisible(this.props.terria)
+  //     isMarkerVisible(this.props.viewState.terria)
   //   ) {
-  //     removeMarker(this.props.terria);
+  //     removeMarker(this.props.viewState.terria);
   //     this.addManualMarker(longitude, latitude);
   //   }
   // }
@@ -201,10 +201,10 @@ class FeatureInfoPanel extends React.Component {
     try {
       catalogItem.setTimeFilterFeature(
         feature,
-        this.props.terria.pickedFeatures
+        this.props.viewState.terria.pickedFeatures
       );
     } catch (e) {
-      this.props.terria.raiseErrorToUser(e);
+      this.props.viewState.terria.raiseErrorToUser(e);
     }
   }
 
@@ -225,7 +225,7 @@ class FeatureInfoPanel extends React.Component {
       that.pinClicked(longitude, latitude);
     };
 
-    const locationButtonStyle = isMarkerVisible(this.props.terria)
+    const locationButtonStyle = isMarkerVisible(this.props.viewState.terria)
       ? Styles.btnLocationSelected
       : Styles.btnLocation;
 
@@ -250,13 +250,13 @@ class FeatureInfoPanel extends React.Component {
 
   render() {
     const { t } = this.props;
-    const terria = this.props.terria;
+    const terria = this.props.viewState.terria;
     const viewState = this.props.viewState;
 
     const {
       catalogItems,
       featureCatalogItemPairs
-    } = getFeaturesGroupedByCatalogItems(this.props.terria);
+    } = getFeaturesGroupedByCatalogItems(this.props.viewState.terria);
     const featureInfoCatalogItems = this.renderFeatureInfoCatalogItems(
       catalogItems,
       featureCatalogItemPairs
@@ -484,5 +484,5 @@ function flatten(acc, cur) {
 function featureHasInfo(feature) {
   return defined(feature.properties) || defined(feature.description);
 }
-export { FeatureInfoPanel };
-export default withTranslation()(FeatureInfoPanel);
+
+export default withTranslation()(withViewState(FeatureInfoPanel));
