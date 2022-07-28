@@ -72,16 +72,6 @@ export const ShareUrl = forwardRef<
       [forwardRef, shareUrl, shorteningInProgress]
     );
 
-    const buildUnshortenderUrl = (
-      terria: Terria,
-      viewState: ViewState,
-      includeStories: boolean
-    ) => {
-      return buildShareLink(terria, viewState, {
-        includeStories
-      });
-    };
-
     useEffect(() => {
       if (shouldShorten) {
         setPlaceholder(t("share.shortLinkShortening"));
@@ -92,12 +82,18 @@ export const ShareUrl = forwardRef<
           .then(shareUrl => setShareUrl(shareUrl))
           .catch(() => {
             setShareUrl(
-              buildUnshortenderUrl(terria, viewState, includeStories)
+              buildShareLink(terria, viewState, {
+                includeStories
+              })
             );
           })
           .finally(() => setShorteningInProgress(false));
       } else {
-        setShareUrl(buildUnshortenderUrl(terria, viewState, includeStories));
+        setShareUrl(
+          buildShareLink(terria, viewState, {
+            includeStories
+          })
+        );
       }
     }, [terria, viewState, shouldShorten, includeStories]);
 
