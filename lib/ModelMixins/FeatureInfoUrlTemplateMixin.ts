@@ -88,9 +88,8 @@ function FeatureInfoUrlTemplateMixin<T extends Constructor<Target>>(Base: T) {
                 "Unable to retrieve feature details from:\n\n" + resource.url
               );
             }
-
-            runInAction(() => (feature.loadingFeatureInfoUrl = false));
           }
+          runInAction(() => (feature.loadingFeatureInfoUrl = false));
         })();
       }
       return feature;
