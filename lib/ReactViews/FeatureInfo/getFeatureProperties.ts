@@ -7,9 +7,9 @@ import {
   isJsonString,
   JsonObject
 } from "../../Core/Json";
-import propertyGetTimeValues from "../../Core/propertyGetTimeValues";
 import Model from "../../Models/Definition/Model";
 import Feature from "../../Models/Feature";
+import { isTerriaFeatureData } from "../../Models/FeatureData";
 import {
   FeatureInfoFormat,
   FeatureInfoTemplateTraits
@@ -24,12 +24,12 @@ import { formatDateTime } from "./mustacheExpressions";
  */
 export default function getFeatureProperties(
   feature: Feature,
-  currentTime?: JulianDate,
+  currentTime: JulianDate,
   featureInfoTemplate?: Model<FeatureInfoTemplateTraits>
 ) {
-  const properties =
-    feature.currentProperties ||
-    propertyGetTimeValues(feature.properties, currentTime);
+  const properties = propertyGetTimeValues(feature, currentTime);
+
+  if (!properties) return undefined;
 
   // Try JSON.parse on values that look like JSON arrays or objects
   let result = parseValues(properties);
@@ -39,6 +39,36 @@ export default function getFeatureProperties(
     applyFormatsInPlace(result, featureInfoTemplate.formats);
   }
   return result;
+}
+
+/**
+ * Gets the values from a Entity's properties object for the time on the current clock.
+ */
+export function propertyGetTimeValues(
+  feature: Feature,
+  currentTime: JulianDate
+): JsonObject | undefined {
+  // Check if feature.data is TerriaFeatureData with timeIntervalCollection
+  // If so - use that instead of feature.properties
+  if (isDefined(feature.data)) {
+    if (
+      isTerriaFeatureData(feature.data) &&
+      feature.data.timeIntervalCollection
+    )
+      return feature.data.timeIntervalCollection.getValue(currentTime);
+  }
+
+  if (isDefined(feature.properties)) {
+    const result = feature.properties.getValue(currentTime);
+
+    // Fixes a bug where FeatureInfoDownload tries to serialize a circular object
+    // the _changedEvent._scope property contains _intervals
+    // Serializing the Event is not very useful, anyway
+    if (result._intervals && result._intervals._changedEvent) {
+      result._intervals._changedEvent = undefined;
+    }
+    return result;
+  }
 }
 
 function parseValues(properties: JsonObject) {

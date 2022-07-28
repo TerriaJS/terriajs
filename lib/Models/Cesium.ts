@@ -1271,9 +1271,7 @@ export default class Cesium extends GlobeOrMap {
         typeof catalogItem?.getFeaturesFromPickResult === "function" &&
         this.terria.allowFeatureInfoRequests
       ) {
-        const result: any = catalogItem.getFeaturesFromPickResult.bind(
-          catalogItem
-        )(
+        const result = catalogItem.getFeaturesFromPickResult.bind(catalogItem)(
           screenPosition,
           picked,
           vectorFeatures.length < catalogItem.maxRequests
@@ -1397,10 +1395,6 @@ export default class Cesium extends GlobeOrMap {
               }
 
               let features = imageryLayerFeatures.map(feature => {
-                if (isDefined(imageryLayers)) {
-                  (<any>feature).imageryLayer = imageryLayers[i];
-                }
-
                 if (!isDefined(feature.position)) {
                   feature.position =
                     pickPosition &&

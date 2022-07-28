@@ -35,6 +35,15 @@ export class FeatureInfoTemplateTraits extends ModelTraits {
   })
   template?: string;
 
+  @primitiveTrait({
+    type: "boolean",
+    name: "Show feature info download",
+    description:
+      "Show feature info download **if** a `template` has been provided. If no `template` is provided, then download will always show.",
+    isNullable: false
+  })
+  showFeatureInfoDownloadWithTemplate: boolean = false;
+
   @anyTrait({
     name: "Partials",
     description:

@@ -4,12 +4,12 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import { JsonObject } from "../Core/Json";
+import Feature from "../Models/Feature";
 import { getFeatureStyle } from "./getFeatureStyle";
 import TableColumn from "./TableColumn";
 import TableStyle from "./TableStyle";
@@ -18,7 +18,7 @@ export default function createLongitudeLatitudeFeaturePerRow(
   style: TableStyle,
   longitudes = style.longitudeColumn?.valuesAsNumbers.values,
   latitudes = style.latitudeColumn?.valuesAsNumbers.values
-): Entity[] {
+): Feature[] {
   if (!longitudes || !latitudes) return [];
 
   const tableColumns = style.tableModel.tableColumns;
@@ -44,7 +44,7 @@ export default function createLongitudeLatitudeFeaturePerRow(
         makiIcon
       } = getFeatureStyle(style, rowId);
 
-      const feature = new Entity({
+      const feature = new Feature({
         position: new ConstantPositionProperty(
           Cartesian3.fromDegrees(longitude, latitude, 0.0)
         ),
@@ -80,6 +80,7 @@ export default function createLongitudeLatitudeFeaturePerRow(
       if (timeInterval)
         feature.availability = new TimeIntervalCollection([timeInterval]);
       feature.properties = new PropertyBag(getRowValues(rowId, tableColumns));
+      feature.data = { rowIds: [rowId], type: "terriaFeatureData" };
       return feature;
     })
   );

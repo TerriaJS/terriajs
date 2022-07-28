@@ -203,8 +203,8 @@ export default class Leaflet extends GlobeOrMap {
         map.tap
       ]);
       const pickLocation = this.pickLocation.bind(this);
-      const pickFeature = (entity: Entity, event: L.LeafletMouseEvent) => {
-        this._featurePicked(entity, event);
+      const pickFeature = (feature: Feature, event: L.LeafletMouseEvent) => {
+        this._featurePicked(feature, event);
       };
 
       // Update mouse coords on mouse move
@@ -577,12 +577,12 @@ export default class Leaflet extends GlobeOrMap {
    */
 
   @action
-  private _featurePicked(entity: Entity, event: L.LeafletMouseEvent) {
+  private _featurePicked(feature: Feature, event: L.LeafletMouseEvent) {
     this._pickFeatures(event.latlng);
 
     // Ignore clicks on the feature highlight.
-    if (entity.entityCollection && entity.entityCollection.owner) {
-      const owner = entity.entityCollection.owner;
+    if (feature.entityCollection && feature.entityCollection.owner) {
+      const owner = feature.entityCollection.owner;
       if (
         owner instanceof DataSource &&
         owner.name == GlobeOrMap._featureHighlightName
@@ -591,7 +591,7 @@ export default class Leaflet extends GlobeOrMap {
       }
     }
 
-    const catalogItem = (entity as any)._catalogItem;
+    const catalogItem = feature._catalogItem;
 
     if (
       FeatureInfoUrlTemplateMixin.isMixedInto(catalogItem) &&
@@ -600,7 +600,7 @@ export default class Leaflet extends GlobeOrMap {
     ) {
       const result = catalogItem.getFeaturesFromPickResult.bind(catalogItem)(
         undefined,
-        entity,
+        feature,
         (this._pickedFeatures?.features.length || 0) < catalogItem.maxRequests
       );
       if (result && isDefined(this._pickedFeatures)) {
@@ -611,15 +611,14 @@ export default class Leaflet extends GlobeOrMap {
         }
       }
     } else if (isDefined(this._pickedFeatures)) {
-      const feature = Feature.fromEntityCollectionOrEntity(entity);
       this._pickedFeatures.features.push(feature);
     }
     if (
       isDefined(this._pickedFeatures) &&
-      isDefined(entity) &&
-      entity.position
+      isDefined(feature) &&
+      feature.position
     ) {
-      this._pickedFeatures.pickPosition = (<any>entity.position)._value;
+      this._pickedFeatures.pickPosition = (<any>feature.position)._value;
     }
   }
 
@@ -794,8 +793,6 @@ export default class Leaflet extends GlobeOrMap {
 
           return allFeatures.concat(
             result.features.map(feature => {
-              (<any>feature).imageryLayer = result.imageryLayer;
-
               // For features without a position, use the picked location.
               if (!isDefined(feature.position)) {
                 feature.position = pickedLocation;

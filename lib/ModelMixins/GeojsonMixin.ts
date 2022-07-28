@@ -61,7 +61,12 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import formatPropertyValue from "../Core/formatPropertyValue";
 import hashFromString from "../Core/hashFromString";
 import isDefined from "../Core/isDefined";
-import { isJsonNumber, isJsonObject, JsonObject } from "../Core/Json";
+import {
+  isJsonNumber,
+  isJsonObject,
+  JsonObject,
+  isJsonString
+} from "../Core/Json";
 import { isJson } from "../Core/loadBlob";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError, { networkRequestError } from "../Core/TerriaError";
@@ -1280,29 +1285,41 @@ export default GeoJsonMixin;
 export function isFeatureCollection(
   json: any
 ): json is FeatureCollectionWithCrs {
-  return json.type === "FeatureCollection" && Array.isArray(json.features);
+  return (
+    isJsonObject(json, false) &&
+    json.type === "FeatureCollection" &&
+    Array.isArray(json.features)
+  );
 }
 
 export function isFeature(json: any): json is Feature {
-  return json.type === "Feature" && json.geometry;
+  return (
+    isJsonObject(json, false) && json.type === "Feature" && !!json.geometry
+  );
 }
 
 export function isPoint(json: any): json is Feature<Point> {
   return (
-    json.type === "Feature" && json.geometry && json.geometry.type === "Point"
+    isJsonObject(json, false) &&
+    json.type === "Feature" &&
+    isJsonObject(json.geometry, false) &&
+    json.geometry.type === "Point"
   );
 }
 
 export function isMultiPoint(json: any): json is Feature<MultiPoint> {
   return (
+    isJsonObject(json, false) &&
     json.type === "Feature" &&
-    json.geometry &&
+    isJsonObject(json.geometry, false) &&
     json.geometry.type === "MultiPoint"
   );
 }
 
 export function isGeometries(json: any): json is Geometries {
   return (
+    isJsonObject(json, false) &&
+    isJsonString(json.type) &&
     [
       "Point",
       "MultiPoint",
@@ -1310,7 +1327,8 @@ export function isGeometries(json: any): json is Geometries {
       "MultiLineString",
       "Polygon",
       "MultiPolygon"
-    ].includes(json.type) && Array.isArray(json.coordinates)
+    ].includes(json.type) &&
+    Array.isArray(json.coordinates)
   );
 }
 

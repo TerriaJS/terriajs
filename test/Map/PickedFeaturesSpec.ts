@@ -32,7 +32,7 @@ describe("featureBelongsToCatalogItem", function() {
       url: "test",
       layers: "test"
     });
-    feature.imageryLayer = new ImageryLayer(imageryProvider);
+    feature.imageryProvider = new ImageryLayer(imageryProvider);
     expect(featureBelongsToCatalogItem(feature, item)).toBe(false);
     item.mapItems = [
       { imageryProvider, alpha: 0, show: false, clippingRectangle: undefined }

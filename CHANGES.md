@@ -29,6 +29,7 @@ Change Log
 * Add DOMPurify to `parseCustomHtmlToReact` (it was already present in `parseCustomMarkdownToReact`)
 * Update `html-to-react` to `1.4.7`
 * Move `maximumShownFeatureInfos` from `WebMapServiceCatalogItemTraits` to `MappableTraits`
+* Remove `featureInfoUrlTemplate` from `OpenDataSoftCatalogItem` - as it is incompatible with time varying datasets
 * [The next improvement]
 
 #### 8.2.9 - 2022-07-13

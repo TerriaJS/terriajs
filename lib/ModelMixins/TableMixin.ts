@@ -5,13 +5,13 @@ import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
+import { JsonObject } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
 import TerriaError from "../Core/TerriaError";
 import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
@@ -19,6 +19,8 @@ import RegionProviderList from "../Map/Region/RegionProviderList";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
+import Feature from "../Models/Feature";
+import FeatureInfoContext from "../Models/FeatureInfoContext";
 import SelectableDimensions, {
   SelectableDimension,
   SelectableDimensionEnum,
@@ -33,6 +35,8 @@ import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitu
 import createRegionMappedImageryProvider from "../Table/createRegionMappedImageryProvider";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
+import { tableFeatureInfoContext } from "../Table/tableFeatureInfoContext";
+import TableFeatureInfoStratum from "../Table/TableFeatureInfoStratum";
 import { TableAutomaticLegendStratum } from "../Table/TableLegendStratum";
 import TableStyle from "../Table/TableStyle";
 import TableTraits from "../Traits/TraitsClasses/TableTraits";
@@ -49,7 +53,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     extends ExportableMixin(
       DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base))
     )
-    implements SelectableDimensions, ViewingControls {
+    implements SelectableDimensions, ViewingControls, FeatureInfoContext {
     /**
      * The default {@link TableStyle}, which is used for styling
      * only when there are no styles defined.
@@ -61,6 +65,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
       // Create default TableStyle and set TableAutomaticLegendStratum
       this.defaultTableStyle = new TableStyle(this);
+
       if (
         this.strata.get(TableAutomaticLegendStratum.stratumName) === undefined
       ) {
@@ -68,6 +73,15 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           this.strata.set(
             TableAutomaticLegendStratum.stratumName,
             TableAutomaticLegendStratum.load(this)
+          );
+        });
+      }
+
+      if (this.strata.get(TableFeatureInfoStratum.stratumName) === undefined) {
+        runInAction(() => {
+          this.strata.set(
+            TableFeatureInfoStratum.stratumName,
+            TableFeatureInfoStratum.load(this)
           );
         });
       }
@@ -465,6 +479,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       ]);
     }
 
+    @computed get featureInfoContext(): (f: Feature) => JsonObject {
+      return tableFeatureInfoContext(this);
+    }
+
     @computed
     get selectableDimensions(): SelectableDimension[] {
       return filterOutUndefined([
@@ -821,7 +839,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         const dataSource = new CustomDataSource(this.name || "Table");
         dataSource.entities.suspendEvents();
 
-        let features: Entity[];
+        let features: Feature[];
         if (style.isTimeVaryingPointsWithId()) {
           features = createLongitudeLatitudeFeaturePerId(style);
         } else {
@@ -830,7 +848,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
         // _catalogItem property is needed for some feature picking functions (eg `featureInfoTemplate`)
         features.forEach(f => {
-          (f as any)._catalogItem = this;
+          f._catalogItem = this;
           dataSource.entities.add(f);
         });
         dataSource.show = this.show;

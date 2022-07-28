@@ -1,4 +1,4 @@
-import { action } from "mobx";
+import { action, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Resource from "terriajs-cesium/Source/Core/Resource";
@@ -11,7 +11,7 @@ import loadJson from "../Core/loadJson";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import Model from "../Models/Definition/Model";
 import Feature from "../Models/Feature";
-import { generateCesiumInfoHTMLFromProperties } from "../ReactViews/FeatureInfo/FeatureInfoSection";
+import { generateCesiumInfoHTMLFromProperties } from "../ReactViews/FeatureInfo/generateCesiumInfoHTMLFromProperties";
 import FeatureInfoUrlTemplateTraits from "../Traits/TraitsClasses/FeatureInfoTraits";
 import MappableMixin from "./MappableMixin";
 import TimeVarying from "./TimeVarying";
@@ -47,6 +47,8 @@ function FeatureInfoUrlTemplateMixin<T extends Constructor<Target>>(Base: T) {
       );
       if (isDefined(feature)) {
         feature._catalogItem = this;
+
+        feature.loadingFeatureInfoUrl = true;
 
         (async () => {
           if (loadExternal && isDefined(this.featureInfoUrlTemplate)) {
@@ -86,6 +88,8 @@ function FeatureInfoUrlTemplateMixin<T extends Constructor<Target>>(Base: T) {
                 "Unable to retrieve feature details from:\n\n" + resource.url
               );
             }
+
+            runInAction(() => (feature.loadingFeatureInfoUrl = false));
           }
         })();
       }

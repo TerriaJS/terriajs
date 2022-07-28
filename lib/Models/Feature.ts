@@ -1,57 +1,38 @@
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import { observable } from "mobx";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTilePointFeature from "terriajs-cesium/Source/Scene/Cesium3DTilePointFeature";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import { JsonObject } from "../Core/Json";
+import { BaseModel } from "./Definition/Model";
+import { TerriaFeatureData } from "./FeatureData";
 
 const customProperties = ["entityCollection", "properties", "data"];
-/**
- * A feature is just a Cesium Entity, with observable properties added for
- * currentDescription and currentProperties. These are tracked so that the feature info updates as the clock time changes,
- * because the properties and description themselves do not change (they are functions of the time, whose values change).
- * Set these if needed from an event listener on the terria clock, eg.
- *       terria.clock.onTick.addEventListener(function(clock) {
- *           if (typeof feature.description.getValue === 'function') {
- *               feature.currentDescription = feature.description.getValue(clock.currentTime);
- *           };
- *           if (typeof feature.properties.getValue === 'function') {
- *               feature.currentProperties = feature.properties.getValue(clock.currentTime);
- *           };
- *       });
- *
- * @alias Feature
- * @constructor
- * @param {Object} [options] Object with the same properties as Cesium's Entity.
- * @extends Entity
+
+/** Terria wrapper around Cesium Entity
+ * Adds a few extra properties
+ * -
  */
+
 export default class Feature extends Entity {
-  /**
-   * Gets or sets the current properties. This property is observable.
-   */
-  @observable currentProperties: any = undefined;
-
-  /**
-   * Gets or sets the current description. This property is observable.
-   */
-  @observable currentDescription: string | undefined = undefined;
-
-  data: any;
+  /** This object can be used to pass Terria-specific properties */
+  data?: TerriaFeatureData | JsonObject;
 
   cesiumEntity?: Entity;
+  imageryProvider?: ImageryProvider | undefined;
 
-  imageryLayer?: ImageryLayer;
-
+  /** This comes from Cesium.scene.drillPick
+   * No type provided
+   */
   cesiumPrimitive?: any;
 
-  _catalogItem?: unknown;
+  _catalogItem?: BaseModel;
   _cesium3DTileFeature?: Cesium3DTileFeature | Cesium3DTilePointFeature;
 
-  /** If this feature was created by TableMixin - it will have row ID (or IDs)
-   * This is used to generate charts in FeatureInfoPanel
-   */
-  _tableRowId?: number | number[];
+  /** Flag if loading featureInfoUrl (see `FeatureInfoUrlTemplateMixin.getFeaturesFromPickResult`) */
+  @observable loadingFeatureInfoUrl: boolean = false;
 
-  constructor(options: any) {
+  constructor(options: Entity.ConstructorOptions) {
     super(options);
     addCustomFeatureProperties(this);
   }

@@ -1,4 +1,4 @@
-import { action, observable, runInAction, computed } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -11,8 +11,10 @@ import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/Constan
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import isDefined from "../Core/isDefined";
+import { isJsonObject } from "../Core/Json";
 import LatLonHeight from "../Core/LatLonHeight";
 import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
@@ -158,7 +160,7 @@ export default abstract class GlobeOrMap {
     }
     feature.properties = imageryFeature.properties;
     feature.data = imageryFeature.data;
-    feature.imageryLayer = imageryFeature.imageryLayer;
+    feature.imageryProvider = imageryFeature.imageryLayer.imageryProvider;
 
     if (imageryFeature.position) {
       feature.position = new ConstantPositionProperty(
@@ -326,36 +328,34 @@ export default abstract class GlobeOrMap {
         let vectorTileHighlightCreated = false;
         // Feature from MapboxVectorTileImageryProvider
         if (
-          feature.imageryLayer &&
-          feature.imageryLayer.imageryProvider instanceof
-            MapboxVectorTileImageryProvider
+          feature.imageryProvider instanceof MapboxVectorTileImageryProvider
         ) {
           const featureId =
-            feature.data?.id ?? feature.properties?.id?.getValue?.();
+            (isJsonObject(feature.data) ? feature.data?.id : undefined) ??
+            feature.properties?.id?.getValue?.();
           if (isDefined(featureId)) {
-            const highlightImageryProvider = feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
+            const highlightImageryProvider = feature.imageryProvider.createHighlightImageryProvider(
               featureId
             );
             this._removeHighlightCallback = this.terria.currentViewer._addVectorTileHighlight(
               highlightImageryProvider,
-              feature.imageryLayer.imageryProvider.rectangle
+              feature.imageryProvider.rectangle
             );
           }
           vectorTileHighlightCreated = true;
         }
         // Feature from ProtomapsImageryProvider (replacement for MapboxVectorTileImageryProvider)
         else if (
-          feature.imageryLayer &&
-          feature.imageryLayer.imageryProvider instanceof
-            ProtomapsImageryProvider
+          feature.imageryProvider &&
+          feature.imageryProvider instanceof ProtomapsImageryProvider
         ) {
-          const highlightImageryProvider = feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
+          const highlightImageryProvider = feature.imageryProvider.createHighlightImageryProvider(
             feature
           );
           if (highlightImageryProvider)
             this._removeHighlightCallback = this.terria.currentViewer._addVectorTileHighlight(
               highlightImageryProvider,
-              feature.imageryLayer.imageryProvider.rectangle
+              feature.imageryProvider.rectangle
             );
           vectorTileHighlightCreated = true;
         }

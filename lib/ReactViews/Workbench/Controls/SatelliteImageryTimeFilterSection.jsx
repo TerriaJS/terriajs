@@ -86,7 +86,7 @@ const SatelliteImageryTimeFilterSection = observer(
                 mapItem =>
                   mapItem.imageryProvider &&
                   mapItem.imageryProvider ===
-                    feature.imageryLayer?.imageryProvider
+                    feature.imageryProvider?.imageryProvider
               ) !== undefined
             );
           })[0];

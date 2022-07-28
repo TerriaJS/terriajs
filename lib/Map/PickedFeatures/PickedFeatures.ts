@@ -66,7 +66,7 @@ export function featureBelongsToCatalogItem(
   if (!MappableMixin.isMixedInto(catalogItem)) return;
 
   const dataSource = feature.entityCollection?.owner;
-  const imageryProvider = feature.imageryLayer?.imageryProvider;
+  const imageryProvider = feature.imageryProvider;
 
   // Test whether the catalog item has a matching dataSource or an imageryProvider
   const match = catalogItem.mapItems.some(mapItem => {

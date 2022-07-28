@@ -44,9 +44,7 @@ describe("FeatureInfoPanel", function() {
 
   it("has isVisible class when viewState.featureInfoPanelIsVisible is true", function() {
     viewState.featureInfoPanelIsVisible = true;
-    const panel = (
-      <FeatureInfoPanel terria={terria} viewState={viewState} t={() => {}} />
-    );
+    const panel = <FeatureInfoPanel viewState={viewState} t={() => {}} />;
     const result = getShallowRenderedOutput(panel);
     expect(result.props.children.props.className).toContain("is-visible");
   });
@@ -57,18 +55,14 @@ describe("FeatureInfoPanel", function() {
     runInAction(() => {
       terria.pickedFeatures = pickedFeatures;
     });
-    const panel = (
-      <FeatureInfoPanel terria={terria} viewState={viewState} t={() => {}} />
-    );
+    const panel = <FeatureInfoPanel viewState={viewState} t={() => {}} />;
     const result = getShallowRenderedOutput(panel);
     expect(findWithType(result, Loader)).toBeDefined();
   });
 
   it("does not have isVisible class when viewState.featureInfoPanelIsVisible is false", function() {
     viewState.featureInfoPanelIsVisible = false;
-    const panel = (
-      <FeatureInfoPanel terria={terria} viewState={viewState} t={() => {}} />
-    );
+    const panel = <FeatureInfoPanel viewState={viewState} t={() => {}} />;
     const result = getShallowRenderedOutput(panel);
     expect(result.props.children.props.className).not.toContain("is-visible");
   });
@@ -89,7 +83,7 @@ describe("FeatureInfoPanel", function() {
   //         pickedFeatures.features = [feature1, feature2];
   //     });
   //     terria.pickedFeatures = pickedFeatures;
-  //     const panel = <FeatureInfoPanel terria={terria} viewState={viewState}/>;
+  //     const panel = <FeatureInfoPanel viewState={viewState}/>;
   //     const result = getShallowRenderedOutput(panel);
   //     const sections = findAllWithType(result, FeatureInfoSection);
   //     expect(sections.length).toEqual(2);
