@@ -92,7 +92,7 @@ import { isConstantStyleMap } from "../Table/TableStyleMap";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
 import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import StyleTraits from "../Traits/TraitsClasses/StyleTraits";
-import TerriaFeature from "./../Models/Feature";
+import TerriaFeature from "../Models/Feature/Feature";
 import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
 import { ExportData } from "./ExportableMixin";
 import FeatureInfoUrlTemplateMixin from "./FeatureInfoUrlTemplateMixin";

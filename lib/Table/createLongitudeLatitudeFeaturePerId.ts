@@ -14,7 +14,7 @@ import SampledProperty from "terriajs-cesium/Source/DataSources/SampledProperty"
 import TimeIntervalCollectionPositionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionPositionProperty";
 import TimeIntervalCollectionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
-import Feature from "../Models/Feature";
+import Feature from "../Models/Feature/Feature";
 import { getRowValues } from "./createLongitudeLatitudeFeaturePerRow";
 import { getFeatureStyle } from "./getFeatureStyle";
 import TableColumn from "./TableColumn";

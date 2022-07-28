@@ -40,7 +40,7 @@ import {
   FEATURE_ID_PROP as GEOJSON_FEATURE_ID_PROP,
   toFeatureCollection
 } from "../../ModelMixins/GeojsonMixin";
-import { default as CesiumFeature } from "../../Models/Feature";
+import { default as CesiumFeature } from "../../Models/Feature/Feature";
 import Terria from "../../Models/Terria";
 import { ImageryProviderWithGridLayerSupport } from "../Leaflet/ImageryProviderLeafletGridLayer";
 

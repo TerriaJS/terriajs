@@ -9,7 +9,7 @@ import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import { JsonObject } from "../Core/Json";
-import Feature from "../Models/Feature";
+import Feature from "../Models/Feature/Feature";
 import { getFeatureStyle } from "./getFeatureStyle";
 import TableColumn from "./TableColumn";
 import TableStyle from "./TableStyle";

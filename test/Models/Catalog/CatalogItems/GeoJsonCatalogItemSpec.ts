@@ -25,7 +25,7 @@ import GeoJsonCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoJ
 import SplitItemReference from "../../../../lib/Models/Catalog/CatalogReferences/SplitItemReference";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
-import Feature from "../../../../lib/Models/Feature";
+import Feature from "../../../../lib/Models/Feature/Feature";
 import Terria from "../../../../lib/Models/Terria";
 
 describe("GeoJsonCatalogItemSpec", () => {

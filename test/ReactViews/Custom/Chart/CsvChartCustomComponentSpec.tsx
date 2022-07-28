@@ -1,5 +1,5 @@
 import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
-import Feature from "../../../../lib/Models/Feature";
+import Feature from "../../../../lib/Models/Feature/Feature";
 import StubCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import CsvChartCustomComponent from "../../../../lib/ReactViews/Custom/CsvChartCustomComponent";

@@ -11,7 +11,7 @@ import supportsWebGL from "../../lib/Core/supportsWebGL";
 import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
 import Terria from "../../lib/Models/Terria";
 import UserDrawing from "../../lib/Models/UserDrawing";
-import Feature from "../../lib/Models/Feature";
+import Feature from "../../lib/Models/Feature/Feature";
 
 const describeIfSupported = supportsWebGL() ? describe : xdescribe;
 

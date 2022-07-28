@@ -17,7 +17,7 @@ import MappableMixin from "../../ModelMixins/MappableMixin";
 import TimeFilterMixin from "../../ModelMixins/TimeFilterMixin";
 import CompositeCatalogItem from "../../Models/Catalog/CatalogItems/CompositeCatalogItem";
 import { BaseModel } from "../../Models/Definition/Model";
-import Feature from "../../Models/Feature";
+import Feature from "../../Models/Feature/Feature";
 import {
   addMarker,
   isMarkerVisible,

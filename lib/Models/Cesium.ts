@@ -82,7 +82,7 @@ import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
 import hasTraits from "./Definition/hasTraits";
-import Feature from "./Feature";
+import Feature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";

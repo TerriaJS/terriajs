@@ -21,7 +21,7 @@ import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapService
 import Cesium from "../../lib/Models/Cesium";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import { BaseModel } from "../../lib/Models/Definition/Model";
-import Feature from "../../lib/Models/Feature";
+import Feature from "../../lib/Models/Feature/Feature";
 import {
   isInitFromData,
   isInitFromDataPromise,

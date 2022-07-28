@@ -23,7 +23,7 @@ import MappableMixin, {
   ImageryParts
 } from "../../../ModelMixins/MappableMixin";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
-import Feature from "../../../Models/Feature";
+import Feature from "../../../Models/Feature/Feature";
 import hasTraits, { HasTrait } from "../../../Models/Definition/hasTraits";
 import {
   getMarkerLocation,

@@ -16,7 +16,7 @@ import Loader from "../../lib/ReactViews/Loader";
 import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
-import Feature from "../../lib/Models/Feature";
+import Feature from "../../lib/Models/Feature/Feature";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 import CompositeCatalogItem from "../../lib/Models/Catalog/CatalogItems/CompositeCatalogItem";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";

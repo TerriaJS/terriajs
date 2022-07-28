@@ -8,7 +8,7 @@ import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFe
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import isDefined from "../Core/isDefined";
 import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
-import { TerriaFeatureData } from "../Models/FeatureData";
+import { TerriaFeatureData } from "../Models/Feature/FeatureData";
 import TableStyle from "./TableStyle";
 import { isConstantStyleMap } from "./TableStyleMap";
 

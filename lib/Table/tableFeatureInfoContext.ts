@@ -1,8 +1,8 @@
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import TableMixin from "../ModelMixins/TableMixin";
-import Feature from "../Models/Feature";
-import { isTerriaFeatureData } from "../Models/FeatureData";
+import Feature from "../Models/Feature/Feature";
+import { isTerriaFeatureData } from "../Models/Feature/FeatureData";
 
 /** Adds timeseries chart to feature info context (on terria.timeSeries property).
  * This enables timeseries chart to be used in featureInfoTemplate like so:

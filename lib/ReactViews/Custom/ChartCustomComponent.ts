@@ -14,7 +14,7 @@ import CommonStrata from "../../Models/Definition/CommonStrata";
 import createStratumInstance from "../../Models/Definition/createStratumInstance";
 import hasTraits from "../../Models/Definition/hasTraits";
 import { BaseModel } from "../../Models/Definition/Model";
-import Feature from "../../Models/Feature";
+import Feature from "../../Models/Feature/Feature";
 import ChartPointOnMapTraits from "../../Traits/TraitsClasses/ChartPointOnMapTraits";
 import DiscretelyTimeVaryingTraits from "../../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import LatLonHeightTraits from "../../Traits/TraitsClasses/LatLonHeightTraits";

@@ -19,8 +19,8 @@ import RegionProviderList from "../Map/Region/RegionProviderList";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
-import Feature from "../Models/Feature";
-import FeatureInfoContext from "../Models/FeatureInfoContext";
+import Feature from "../Models/Feature/Feature";
+import FeatureInfoContext from "../Models/Feature/FeatureInfoContext";
 import SelectableDimensions, {
   SelectableDimension,
   SelectableDimensionEnum,

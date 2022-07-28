@@ -3,8 +3,8 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTilePointFeature from "terriajs-cesium/Source/Scene/Cesium3DTilePointFeature";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import { JsonObject } from "../Core/Json";
-import { BaseModel } from "./Definition/Model";
+import { JsonObject } from "../../Core/Json";
+import { BaseModel } from "../Definition/Model";
 import { TerriaFeatureData } from "./FeatureData";
 
 const customProperties = ["entityCollection", "properties", "data"];

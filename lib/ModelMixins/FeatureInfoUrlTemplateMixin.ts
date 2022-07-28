@@ -10,7 +10,7 @@ import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import Model from "../Models/Definition/Model";
-import Feature from "../Models/Feature";
+import Feature from "../Models/Feature/Feature";
 import { generateCesiumInfoHTMLFromProperties } from "../ReactViews/FeatureInfo/generateCesiumInfoHTMLFromProperties";
 import FeatureInfoUrlTemplateTraits from "../Traits/TraitsClasses/FeatureInfoTraits";
 import MappableMixin from "./MappableMixin";

@@ -4,7 +4,7 @@ import ChartableMixin from "../../../../lib/ModelMixins/ChartableMixin";
 import StubCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
 import CreateModel from "../../../../lib/Models/Definition/CreateModel";
 import { BaseModel } from "../../../../lib/Models/Definition/Model";
-import Feature from "../../../../lib/Models/Feature";
+import Feature from "../../../../lib/Models/Feature/Feature";
 import Terria from "../../../../lib/Models/Terria";
 import ChartExpandAndDownloadButtons from "../../../../lib/ReactViews/Custom/Chart/ChartExpandAndDownloadButtons";
 import Chart from "../../../../lib/ReactViews/Custom/Chart/FeatureInfoPanelChart";

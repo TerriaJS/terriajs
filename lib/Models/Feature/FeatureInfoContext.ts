@@ -1,4 +1,4 @@
-import { JsonObject } from "../Core/Json";
+import { JsonObject } from "../../Core/Json";
 import Feature from "./Feature";
 
 /** This model can be used to inject properties into FeatureInfoSections context. These properties will be accessible from featureInfoTemplate mustache template.

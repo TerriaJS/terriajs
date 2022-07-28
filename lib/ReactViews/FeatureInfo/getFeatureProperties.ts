@@ -8,8 +8,8 @@ import {
   JsonObject
 } from "../../Core/Json";
 import Model from "../../Models/Definition/Model";
-import Feature from "../../Models/Feature";
-import { isTerriaFeatureData } from "../../Models/FeatureData";
+import Feature from "../../Models/Feature/Feature";
+import { isTerriaFeatureData } from "../../Models/Feature/FeatureData";
 import {
   FeatureInfoFormat,
   FeatureInfoTemplateTraits

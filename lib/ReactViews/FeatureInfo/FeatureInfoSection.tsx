@@ -17,8 +17,8 @@ import DiscretelyTimeVaryingMixin from "../../ModelMixins/DiscretelyTimeVaryingM
 import MappableMixin from "../../ModelMixins/MappableMixin";
 import TimeVarying from "../../ModelMixins/TimeVarying";
 import Model from "../../Models/Definition/Model";
-import Feature from "../../Models/Feature";
-import FeatureInfoContext from "../../Models/FeatureInfoContext";
+import Feature from "../../Models/Feature/Feature";
+import FeatureInfoContext from "../../Models/Feature/FeatureInfoContext";
 import ViewState from "../../ReactViewModels/ViewState";
 import Icon from "../../Styled/Icon";
 import { FeatureInfoTemplateTraits } from "../../Traits/TraitsClasses/FeatureInfoTraits";

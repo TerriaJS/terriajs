@@ -32,10 +32,10 @@ import CameraView from "./CameraView";
 import Cesium3DTilesCatalogItem from "./Catalog/CatalogItems/Cesium3DTilesCatalogItem";
 import CommonStrata from "./Definition/CommonStrata";
 import createStratumInstance from "./Definition/createStratumInstance";
-import Feature from "./Feature";
+import Feature from "./Feature/Feature";
 import Terria from "./Terria";
 
-require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
+require("./Feature/ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
 
 export default abstract class GlobeOrMap {
   abstract readonly type: string;

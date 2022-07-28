@@ -8,7 +8,7 @@ import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
-import Feature from "./Feature";
+import Feature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
 import { observable } from "mobx";

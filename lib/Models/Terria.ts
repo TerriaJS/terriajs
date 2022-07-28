@@ -81,7 +81,7 @@ import {
   initializeErrorServiceProvider
 } from "./ErrorServiceProviders/ErrorService";
 import StubErrorServiceProvider from "./ErrorServiceProviders/StubErrorServiceProvider";
-import Feature from "./Feature";
+import Feature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import IElementConfig from "./IElementConfig";
 import InitSource, {

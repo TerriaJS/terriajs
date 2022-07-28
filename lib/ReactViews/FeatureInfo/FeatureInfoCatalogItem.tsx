@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../../ModelMixins/MappableMixin";
-import Feature from "../../Models/Feature";
+import Feature from "../../Models/Feature/Feature";
 import ViewState from "../../ReactViewModels/ViewState";
 import Styles from "./feature-info-catalog-item.scss";
 import FeatureInfoSection from "./FeatureInfoSection";

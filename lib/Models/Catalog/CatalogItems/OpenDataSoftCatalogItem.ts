@@ -27,7 +27,7 @@ import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
-import Feature from "../../Feature";
+import Feature from "../../Feature/Feature";
 import SelectableDimensions, {
   SelectableDimension
 } from "../../SelectableDimensions/SelectableDimensions";

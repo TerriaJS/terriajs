@@ -12,7 +12,7 @@ import GeoJsonCatalogItem from "../../../../../lib/Models/Catalog/CatalogItems/G
 import WebMapServiceCatalogItem from "../../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../../../../lib/Models/Definition/CommonStrata";
 import { BaseModel } from "../../../../../lib/Models/Definition/Model";
-import Feature from "../../../../../lib/Models/Feature";
+import Feature from "../../../../../lib/Models/Feature/Feature";
 import { InitSourceData } from "../../../../../lib/Models/InitSource";
 import Terria from "../../../../../lib/Models/Terria";
 import { setViewerMode } from "../../../../../lib/Models/ViewerMode";

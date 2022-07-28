@@ -2,7 +2,7 @@ import { observable } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import MappableMixin, { ImageryParts } from "../../ModelMixins/MappableMixin";
 import { BaseModel } from "../../Models/Definition/Model";
-import Feature from "../../Models/Feature";
+import Feature from "../../Models/Feature/Feature";
 
 export type ProviderCoords = { x: number; y: number; level: number };
 export type ProviderCoordsMap = { [url: string]: ProviderCoords };
