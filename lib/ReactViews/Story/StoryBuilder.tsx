@@ -40,7 +40,7 @@ const STORY_VIDEO = "storyVideo";
 
 type StoryData = ViewState["terria"]["stories"][number];
 
-interface IProps extends MeasureElementProps, WithTranslation, WithViewState {
+interface IProps {
   isVisible?: boolean;
   animationDuration?: number;
   theme: DefaultTheme;
@@ -60,14 +60,19 @@ interface IState {
 }
 
 @observer
-class StoryBuilder extends React.Component<IProps, IState> {
+class StoryBuilder extends React.Component<
+  IProps & MeasureElementProps & WithTranslation & WithViewState,
+  IState
+> {
   storiesWrapperRef = React.createRef<HTMLElement>();
 
   refToMeasure: any;
 
   clearRecaptureSuccessTimeout?: () => void;
 
-  constructor(props: IProps) {
+  constructor(
+    props: IProps & MeasureElementProps & WithTranslation & WithViewState
+  ) {
     super(props);
     this.state = {
       editingMode: false,
