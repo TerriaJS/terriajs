@@ -5,7 +5,9 @@ import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
-import TimeVarying from "../ModelMixins/TimeVarying";
+import TimeVarying, {
+  DATE_SECONDS_PRECISION
+} from "../ModelMixins/TimeVarying";
 import DefaultTimelineModel from "./DefaultTimelineModel";
 import CommonStrata from "./Definition/CommonStrata";
 import Terria from "./Terria";
@@ -181,19 +183,22 @@ export default class TimelineStack {
   @action
   syncToClock(stratumId: string) {
     const clock = this.clock;
-    const currentTime = JulianDate.toIso8601(clock.currentTime);
+    const currentTime = JulianDate.toIso8601(
+      clock.currentTime,
+      DATE_SECONDS_PRECISION
+    );
     const isPaused = !clock.shouldAnimate;
 
     if (this.top) {
       this.top.setTrait(
         stratumId,
         "startTime",
-        JulianDate.toIso8601(clock.startTime)
+        JulianDate.toIso8601(clock.startTime, DATE_SECONDS_PRECISION)
       );
       this.top.setTrait(
         stratumId,
         "stopTime",
-        JulianDate.toIso8601(clock.stopTime)
+        JulianDate.toIso8601(clock.stopTime, DATE_SECONDS_PRECISION)
       );
       this.top.setTrait(stratumId, "multiplier", clock.multiplier);
     }
