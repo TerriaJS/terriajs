@@ -308,8 +308,8 @@ describe("ArcGisMapServerCatalogItem", function() {
       if (item.discreteTimes !== undefined) {
         expect(item.discreteTimes.length).toBe(781);
       }
-      expect(item.startTime).toBe("2004-11-26T09:43:22Z");
-      expect(item.stopTime).toBe("2019-11-03T14:00:00Z");
+      expect(item.startTime).toBe("2004-11-26T09:43:22.000000000Z");
+      expect(item.stopTime).toBe("2019-11-03T14:00:00.000000000Z");
     });
   });
 });

@@ -28,6 +28,7 @@ Change Log
 * Feature Info now hidden on Cesium3dTiles items if `allowFeaturePicking` set to false. Default is true.
 * Add DOMPurify to `parseCustomHtmlToReact` (it was already present in `parseCustomMarkdownToReact`)
 * Update `html-to-react` to `1.4.7`
+* Set `JulianDate.toIso8601` second precision to nanosecond - this prevents weird date strings with scientific/exponent notation (eg `2008-05-07T22:54:45.7275957614183426e-11Z`)
 * [The next improvement]
 
 #### 8.2.9 - 2022-07-13
