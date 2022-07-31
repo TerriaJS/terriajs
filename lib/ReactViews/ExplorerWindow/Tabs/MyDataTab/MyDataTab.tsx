@@ -1,21 +1,20 @@
-import React, { FC, useState, useMemo } from "react";
+import React, { FC, useState } from "react";
+
 import { observer } from "mobx-react";
-import Terria from "../../../../Models/Terria";
-import ViewState from "../../../../ReactViewModels/ViewState";
-import { useTranslation, Trans } from "react-i18next";
-import Box from "../../../../Styled/Box";
-import { AddDataSection } from "./AddData/AddDataSection";
-import { DataCatalog } from "../../../DataCatalog/DataCatalog";
-import Text, { TextSpan } from "../../../../Styled/Text";
-import { RawButton } from "../../../../Styled/Button";
-import { GLYPHS, StyledIcon } from "../../../../Styled/Icon";
+import { Trans, useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
-import Spacing from "../../../../Styled/Spacing";
-import { AddDataButtons } from "./AddData/AddDataButtons";
-import { EmptyMyDataTab } from "./EmptyMyDataTab";
-import DataPreview from "../../../Preview/DataPreview";
-import { PromptBox } from "./PromptBox";
+
 import { BaseModel } from "../../../../Models/Definition/Model";
+import ViewState from "../../../../ReactViewModels/ViewState";
+
+import Box from "../../../../Styled/Box";
+import Text from "../../../../Styled/Text";
+
+import { DataCatalog } from "../../../DataCatalog";
+import DataPreview from "../../../Preview/DataPreview";
+import { AddDataButtons, AddDataSection } from "./AddData";
+import { EmptyMyDataTab } from "./EmptyMyDataTab";
+import { PromptBox } from "./PromptBox";
 
 interface IMyDataTabProps {
   viewState: ViewState;

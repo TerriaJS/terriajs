@@ -7,7 +7,7 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import Box from "../../Styled/Box";
 import Icon from "../../Styled/Icon";
-import { DataCatalog } from "../DataCatalog/DataCatalog";
+import { DataCatalog } from "../DataCatalog";
 import DataPreview from "../Preview/DataPreview";
 import WorkbenchList from "../Workbench/WorkbenchList";
 import Styles from "./mobile-modal-window.scss";

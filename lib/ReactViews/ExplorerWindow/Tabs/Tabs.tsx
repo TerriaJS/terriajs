@@ -1,21 +1,27 @@
+import React, { FC, useEffect, useState } from "react";
+
+import { useTranslation } from "react-i18next";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React, { FC, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
-import defined from "terriajs-cesium/Source/Core/defined";
-import { DataCatalogTab } from "./DataCatalogTab/DataCatalogTab";
-import { MyDataTab } from "./MyDataTab/MyDataTab";
-import { RawButton } from "../../../Styled/Button";
-import Box from "../../../Styled/Box";
-import { TextSpan } from "../../../Styled/Text";
-import Terria from "../../../Models/Terria";
-import ViewState from "../../../ReactViewModels/ViewState";
-import Ul, { Li } from "../../../Styled/List";
-import GroupMixin from "../../../ModelMixins/GroupMixin";
+
+import isDefined from "../../../Core/isDefined";
+
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import { BaseModel } from "../../../Models/Definition/Model";
+import GroupMixin from "../../../ModelMixins/GroupMixin";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
+
+import { BaseModel } from "../../../Models/Definition/Model";
+
+import ViewState from "../../../ReactViewModels/ViewState";
+
+import Box from "../../../Styled/Box";
+import { RawButton } from "../../../Styled/Button";
+import Ul, { Li } from "../../../Styled/List";
+import { TextSpan } from "../../../Styled/Text";
+
+import { DataCatalogTab } from "./DataCatalogTab";
+import { MyDataTab } from "./MyDataTab";
 
 interface ITabsProps {
   viewState: ViewState;
@@ -121,7 +127,7 @@ export const Tabs: FC<ITabsProps> = observer(({ viewState, onClose }) => {
             m => m.uniqueId === idInCategory
           )[0];
           // If member was found and member can be opened, open it (causes CkanCatalogGroups to fetch etc.)
-          if (defined(member)) {
+          if (isDefined(member)) {
             viewState.viewCatalogMember(member);
           }
         }

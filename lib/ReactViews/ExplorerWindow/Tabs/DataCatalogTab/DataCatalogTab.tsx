@@ -3,16 +3,16 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "styled-components";
 import { runInAction } from "mobx";
+import { observer } from "mobx-react";
 
 import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
 import Box from "../../../../Styled/Box";
 import SearchBox, { DEBOUNCE_INTERVAL } from "../../../Search/SearchBox";
-import { DataCatalog } from "../../../DataCatalog/DataCatalog";
+import { DataCatalog } from "../../../DataCatalog";
 import Breadcrumbs from "../../../Search/Breadcrumbs";
 import DataPreview from "../../../Preview/DataPreview.jsx";
 import { BaseModel } from "../../../../Models/Definition/Model";
-import { observer } from "mobx-react";
 
 interface IDataCatalogTabProps {
   viewState: ViewState;

@@ -4,10 +4,9 @@ import { Trans } from "react-i18next";
 import { useTheme } from "styled-components";
 
 import Box from "../../../../Styled/Box";
-import { StyledIcon, GLYPHS } from "../../../../Styled/Icon";
 import Text from "../../../../Styled/Text";
 
-import { AddDataButtons } from "./AddData/AddDataButtons";
+import { AddDataButtons } from "./AddData";
 import { MyDataTabContainer } from "./MyDataTabContainer";
 import { PromptBox } from "./PromptBox";
 

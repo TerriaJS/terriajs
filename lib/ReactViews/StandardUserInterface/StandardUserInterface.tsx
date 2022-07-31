@@ -16,7 +16,7 @@ import { MapCredits } from "../Credits";
 import Disclaimer from "../Disclaimer";
 import DragDropFile from "../DragDropFile";
 import DragDropNotification from "../DragDropNotification";
-import ExplorerWindow from "../ExplorerWindow/ExplorerWindow";
+import { ExplorerWindow } from "../ExplorerWindow";
 import FeatureInfoPanel from "../FeatureInfo/FeatureInfoPanel";
 import FeedbackForm from "../Feedback/FeedbackForm";
 import { Medium, Small } from "../Generic/Responsive";

@@ -8,7 +8,7 @@ import Button from "../../Styled/Button";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
-import { ExplorerWindowElementName } from "../ExplorerWindow/ExplorerWindow";
+import { ExplorerWindowElementName } from "../ExplorerWindow";
 import { useRefForTerria } from "../Hooks/useRefForTerria";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import Workbench from "../Workbench/Workbench";
