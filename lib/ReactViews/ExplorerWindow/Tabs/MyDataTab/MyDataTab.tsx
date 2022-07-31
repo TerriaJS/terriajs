@@ -114,7 +114,7 @@ export const MyDataTab: FC<IMyDataTabProps> = observer(
           <DataPreview
             terria={terria}
             viewState={viewState}
-            previewed={viewState.previewedItem}
+            previewed={viewState.userDataPreviewedItem}
           />
         </Box>
       </Box>

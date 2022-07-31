@@ -96,11 +96,13 @@ export const AddLocalData: FC<IAddLocalDataProps> = ({
         </Trans>
       </Text>
       <Spacing bottom={2} />
-      <SelectDataType
-        options={localDataTypes}
-        onChange={setSelectedLocalDataType}
-        selectedValue={selectedLocalDataType}
-      />
+      <Text medium>
+        <SelectDataType
+          options={localDataTypes}
+          onChange={setSelectedLocalDataType}
+          selectedValue={selectedLocalDataType}
+        />
+      </Text>
       {selectedLocalDataType?.description ? (
         <StyledDescription textDark small>
           <Spacing bottom={1} />
