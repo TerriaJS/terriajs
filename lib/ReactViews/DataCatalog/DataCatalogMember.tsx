@@ -25,7 +25,7 @@ interface IDataCatalogMemberProps {
   removable: boolean;
   isTopLevel: boolean;
 
-  onActionButtonClicked: (member: IDataCatalogMemberProps["member"]) => void;
+  onActionButtonClicked?: (member: IDataCatalogMemberProps["member"]) => void;
 }
 
 /**

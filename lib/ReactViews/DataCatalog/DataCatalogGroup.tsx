@@ -27,7 +27,7 @@ interface IDataCatalogGroupProps {
   isTopLevel: boolean;
   manageIsOpenLocally: boolean;
   removable: boolean;
-  onActionButtonClicked: (member: IDataCatalogGroupProps["group"]) => void;
+  onActionButtonClicked?: (member: IDataCatalogGroupProps["group"]) => void;
 }
 
 export const DataCatalogGroup: FC<IDataCatalogGroupProps> = observer(

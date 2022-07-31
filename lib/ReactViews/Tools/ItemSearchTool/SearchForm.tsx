@@ -6,7 +6,7 @@ import {
   WithTranslation,
   withTranslation
 } from "react-i18next";
-import ReactSelect, { ActionMeta, ValueType } from "react-select";
+import ReactSelect, { ActionMeta, OnChangeValue } from "react-select";
 import styled from "styled-components";
 import ItemSearchProvider, {
   EnumItemSearchParameter,
@@ -216,7 +216,7 @@ interface EnumParameterProps {
 }
 
 type SelectOnChangeHandler<OptionType, IsMulti extends boolean> = (
-  value: ValueType<OptionType, IsMulti>,
+  value: OnChangeValue<OptionType, IsMulti>,
   actionMeta: ActionMeta<OptionType>
 ) => void;
 
@@ -247,6 +247,7 @@ const EnumParameter: React.FC<EnumParameterProps> = props => {
           isMulti
           value={value}
           menuPosition="fixed"
+          //@ts-ignore
           onChange={onChange}
           isDisabled={disabled}
         />

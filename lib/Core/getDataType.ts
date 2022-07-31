@@ -1,23 +1,23 @@
 import i18next from "i18next";
 
-interface DataType {
+export interface IDataType {
   value: string;
   name: string;
   description?: string;
 }
 
-interface RemoteDataType extends DataType {}
+export interface IRemoteDataType extends IDataType {}
 
-interface LocalDataType extends DataType {
+export interface ILocalDataType extends IDataType {
   extensions?: string[];
 }
 
-interface GetDataTypes {
-  remoteDataType: RemoteDataType[];
-  localDataType: LocalDataType[];
+interface IGetDataTypes {
+  remoteDataType: IRemoteDataType[];
+  localDataType: ILocalDataType[];
 }
 
-export default function(): GetDataTypes {
+export default function(): IGetDataTypes {
   return {
     remoteDataType: [
       {
@@ -123,7 +123,8 @@ export default function(): GetDataTypes {
     localDataType: [
       {
         value: "auto",
-        name: i18next.t("core.dataType.auto")
+        name: "auto",
+        description: i18next.t("core.dataType.auto")
       },
       {
         value: "geojson",

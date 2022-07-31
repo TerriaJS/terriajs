@@ -3,7 +3,8 @@ import { observer } from "mobx-react";
 import React from "react";
 import ViewState from "../../ReactViewModels/ViewState";
 import ModalPopup from "./ModalPopup";
-import Tabs from "./Tabs";
+import Box from "../../Styled/Box";
+import { Tabs } from "./Tabs/Tabs";
 
 export const ExplorerWindowElementName = "AddData";
 
@@ -40,7 +41,16 @@ export default observer<React.FC<IProps>>(function ExplorerWindow(props) {
       onStartAnimatingIn={onStartAnimatingIn}
       onDoneAnimatingIn={onDoneAnimatingIn}
     >
-      <Tabs terria={props.terria} viewState={props.viewState} />
+      <Box
+        id="explorer-panel"
+        aria-labelledby="modalTitle"
+        aria-describedby="modalDescription"
+        role="dialog"
+        styledMaxWidth="1200px"
+        flex="1"
+      >
+        <Tabs viewState={props.viewState} onClose={onClose} />
+      </Box>
     </ModalPopup>
   );
 });

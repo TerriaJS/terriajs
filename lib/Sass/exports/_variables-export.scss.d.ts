@@ -33,7 +33,9 @@ interface CssExports {
   'md': string;
   'mobile': string;
   'modalBg': string;
+  'modalContentHeight': string;
   'modalHighlight': string;
+  'modalSecondaryBg': string;
   'modalText': string;
   'notificationWindowZIndex': string;
   'overlay': string;

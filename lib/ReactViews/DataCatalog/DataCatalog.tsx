@@ -8,6 +8,7 @@ import SearchHeader from "../Search/SearchHeader";
 
 import ViewState from "../../ReactViewModels/ViewState";
 import Terria from "../../Models/Terria";
+import { BaseModel } from "../../Models/Definition/Model";
 import Ul from "../../Styled/List";
 import isDefined from "../../Core/isDefined";
 import Text from "../../Styled/Text";
@@ -15,8 +16,8 @@ import Text from "../../Styled/Text";
 interface IDataCatalogProps {
   terria: Terria;
   viewState: ViewState;
-  items: any[];
-  onActionButtonClicked: (item: any) => void;
+  items: readonly BaseModel[];
+  onActionButtonClicked?: (item: any) => void;
   removable: boolean;
 }
 
@@ -33,16 +34,17 @@ export const DataCatalog: FC<IDataCatalogProps> = observer(
       catalogSearchProvider &&
       searchState.catalogSearchResults?.results
         ? searchState.catalogSearchResults.results.map(
-            result => result.catalogItem
+            result => result.catalogItem!
           )
         : items;
-    const filteredItems = (unfilteredItems || []).filter(
+    const filteredItems = unfilteredItems.filter(
       item => isDefined(item) && item !== terria.catalog.userAddedDataGroup
     );
 
     return (
       <Ul
         column
+        fullWidth
         scroll
         overflowY="auto"
         overflowX="hidden"
@@ -64,7 +66,7 @@ export const DataCatalog: FC<IDataCatalogProps> = observer(
         {filteredItems.map(item => (
           <DataCatalogMember
             viewState={viewState}
-            member={item}
+            member={item as any}
             // manage group `isOpen` flag locally if searching through models dynamically (i.e. not using catalog index)
             // This must be false if resultsAreReferences - so group references open correctly in the search
             manageIsOpenLocally={

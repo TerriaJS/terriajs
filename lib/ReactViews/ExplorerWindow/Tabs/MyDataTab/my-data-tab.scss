@@ -13,7 +13,6 @@
 }
 
 .left-col {
-  composes: tab-left-col from "../../tabs.scss";
   composes: scrollbars from "../../../../Sass/common/_base.scss";
   overflow-y: auto;
   background: #ffffff;

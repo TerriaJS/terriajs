@@ -2,9 +2,11 @@ import classNames from "classnames";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ViewState from "../../ReactViewModels/ViewState";
-import Styles from "./explorer-window.scss";
+import Box from "../../Styled/Box";
+import { PrefaceBox } from "../Generic/PrefaceBox";
+import styled from "styled-components";
 
-const SLIDE_DURATION = 300;
+const SLIDE_DURATION = 3000;
 
 interface IProps {
   isVisible?: boolean;
@@ -21,7 +23,7 @@ const ModalPopup: React.FC<IProps> = props => {
   const [inTransition, setInTransition] = useState(false);
   const animationTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  function slideIn() {
+  /* function slideIn() {
     props.onStartAnimatingIn?.();
     setInTransition(true);
     animationTimeout.current = setTimeout(() => {
@@ -50,7 +52,7 @@ const ModalPopup: React.FC<IProps> = props => {
     } else {
       slideOut();
     }
-  }, [props.isVisible]);
+  }, [props.isVisible]); */
 
   useEffect(() => {
     const escKeyListener = (e: KeyboardEvent) => {
@@ -67,42 +69,37 @@ const ModalPopup: React.FC<IProps> = props => {
   const renderUi = props.isVisible || inTransition;
 
   return renderUi ? (
-    <div
-      className={classNames(
-        Styles.modalWrapper,
-        props.isTopElement ? "top-element" : ""
-      )}
-      id="explorer-panel-wrapper"
-      aria-hidden={!props.isVisible}
-    >
-      <div
+    <>
+      <PrefaceBox
+        className={props.isTopElement ? "top-element" : ""}
         onClick={props.onClose}
-        id="modal-overlay"
-        className={Styles.modalOverlay}
-        tabIndex={-1}
-      />
-      <div
-        id="explorer-panel"
-        className={classNames(Styles.explorerPanel, {
-          [Styles.isMounted]: props.isVisible && !inTransition
-        })}
-        aria-labelledby="modalTitle"
-        aria-describedby="modalDescription"
-        role="dialog"
+        role="presentation"
+        aria-hidden="true"
+        pseudoBg
+        css={{ top: 0, left: 0, zIndex: 99989 }}
+      ></PrefaceBox>
+      <ModalPopupBox
+        className={props.isTopElement ? "top-element" : ""}
+        id="explorer-panel-wrapper"
+        aria-hidden={!props.isVisible}
       >
-        <button
-          type="button"
-          onClick={props.onClose}
-          className={Styles.btnCloseModal}
-          title={t("addData.closeDataPanel")}
-          data-target="close-modal"
-        >
-          {t("addData.done")}
-        </button>
         {props.children}
-      </div>
-    </div>
+      </ModalPopupBox>
+    </>
   ) : null;
 };
+
+const ModalPopupBox = styled(Box).attrs({
+  position: "absolute",
+  fullWidth: true,
+  paddedHorizontally: 6,
+  centered: true
+})`
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+`;
 
 export default ModalPopup;
