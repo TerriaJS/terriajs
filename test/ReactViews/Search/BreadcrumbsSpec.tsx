@@ -5,12 +5,11 @@ import Terria from "../../../lib/Models/Terria";
 import CatalogGroup from "../../../lib/Models/Catalog/CatalogGroup";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import Breadcrumbs from "../../../lib/ReactViews/Search/Breadcrumbs";
-const DataCatalogTab: any = require("../../../lib/ReactViews/ExplorerWindow/Tabs/DataCatalogTab")
-  .default;
 import Icon from "../../../lib/Styled/Icon";
 import { ThemeProvider } from "styled-components";
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import { runInAction } from "mobx";
+import { DataCatalogTab } from "../../../lib/ReactViews/ExplorerWindow/Tabs/DataCatalogTab";
 
 describe("Breadcrumbs", function() {
   let terria: Terria;
@@ -39,7 +38,12 @@ describe("Breadcrumbs", function() {
       act(() => {
         testRenderer = create(
           <ThemeProvider theme={terriaTheme}>
-            <DataCatalogTab terria={terria} viewState={viewState} />
+            <DataCatalogTab
+              terria={terria}
+              viewState={viewState}
+              items={[]}
+              searchPlaceholder=""
+            />
           </ThemeProvider>
         );
       });
@@ -63,7 +67,12 @@ describe("Breadcrumbs", function() {
       act(() => {
         testRenderer = create(
           <ThemeProvider theme={terriaTheme}>
-            <DataCatalogTab terria={terria} viewState={viewState} />
+            <DataCatalogTab
+              terria={terria}
+              viewState={viewState}
+              items={[]}
+              searchPlaceholder=""
+            />
           </ThemeProvider>
         );
       });
