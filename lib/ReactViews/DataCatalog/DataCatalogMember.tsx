@@ -41,11 +41,15 @@ export const DataCatalogMember: FC<IDataCatalogMemberProps> = observer(
     isTopLevel,
     onActionButtonClicked
   }) => {
-    if (ReferenceMixin.isMixedInto(member)) {
-      const catalogMember: any =
-        member.nestedTarget !== undefined ? member.nestedTarget : member;
+    const catalogMember =
+      ReferenceMixin.isMixedInto(member) && member.nestedTarget !== undefined
+        ? member.nestedTarget
+        : member;
+
+    if (ReferenceMixin.isMixedInto(catalogMember)) {
       return (
         <DataCatalogReference
+          //@ts-ignore
           reference={catalogMember}
           viewState={viewState}
           terria={terria}
@@ -54,10 +58,10 @@ export const DataCatalogMember: FC<IDataCatalogMemberProps> = observer(
         />
       );
     }
-    if (GroupMixin.isMixedInto(member)) {
+    if (GroupMixin.isMixedInto(catalogMember)) {
       return (
         <DataCatalogGroup
-          group={member}
+          group={catalogMember}
           viewState={viewState}
           manageIsOpenLocally={manageIsOpenLocally}
           onActionButtonClicked={onActionButtonClicked}
@@ -69,7 +73,8 @@ export const DataCatalogMember: FC<IDataCatalogMemberProps> = observer(
     }
     return (
       <DataCatalogItem
-        item={member}
+        //@ts-ignore
+        item={catalogMember}
         viewState={viewState}
         onActionButtonClicked={onActionButtonClicked}
         removable={removable}

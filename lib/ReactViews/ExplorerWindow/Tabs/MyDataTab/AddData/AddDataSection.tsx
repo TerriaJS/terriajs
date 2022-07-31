@@ -7,10 +7,11 @@ import {
   IRemoteDataType
 } from "../../../../../Core/getDataType";
 import ViewState from "../../../../../ReactViewModels/ViewState";
-import Icon from "../../../../../Styled/Icon";
+
+import Icon, { StyledIcon } from "../../../../../Styled/Icon";
+import { RawButton } from "../../../../../Styled/Button";
 
 import { BaseModel } from "../../../../../Models/Definition/Model";
-import Styles from "../my-data-tab.scss";
 import { AddLocalData } from "./AddLocalData";
 import { MyDataTabContainer } from "../MyDataTabContainer";
 import { AddWebData } from "./AddWebData";
@@ -37,11 +38,20 @@ export const AddDataSection: FC<IAddDataSectionProps> = ({
 
   return (
     <MyDataTabContainer>
-      <button
+      <RawButton
         type="button"
         onClick={goBack}
-        className={Styles.btnBackToMyData}
         css={`
+          display: flex;
+          align-items: center;
+          position: absolute;
+          left: 40px;
+          top: 40px;
+          padding: 4px 10px;
+          gap: 5px;
+          background-color: ${theme.textLight};
+          border: 1px solid ${theme.greyLighter};
+          border-radius: ${theme.radiusSmall};
           color: ${theme.colorPrimary};
           &:hover,
           &:focus {
@@ -52,9 +62,9 @@ export const AddDataSection: FC<IAddDataSectionProps> = ({
           }
         `}
       >
-        <Icon glyph={Icon.GLYPHS.left} />
+        <StyledIcon glyph={Icon.GLYPHS.left} styledHeight="10px" />
         {t("addData.back")}
-      </button>
+      </RawButton>
       {activeTabId === "local" && (
         <AddLocalData
           viewState={viewState}

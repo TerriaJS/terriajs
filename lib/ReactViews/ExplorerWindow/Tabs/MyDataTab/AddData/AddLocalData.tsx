@@ -10,7 +10,7 @@ import ViewState from "../../../../../ReactViewModels/ViewState";
 import Box from "../../../../../Styled/Box";
 import { parseCustomMarkdownToReactWithOptions } from "../../../../Custom/parseCustomMarkdownToReact";
 import Loader from "../../../../Loader";
-import { FileInput } from "./FileInput2";
+import { FileInput } from "./FileInput";
 import Text from "../../../../../Styled/Text";
 import Spacing from "../../../../../Styled/Spacing";
 import { SelectDataType } from "./SelectDataType";
@@ -68,7 +68,15 @@ export const AddLocalData: FC<IAddLocalDataProps> = ({
   );
 
   return (
-    <Box column styledWidth="50%" styledMaxWidth="600px">
+    <Box
+      column
+      styledWidth="50%"
+      styledMaxWidth="600px"
+      fullHeight
+      css={`
+        justify-content: center;
+      `}
+    >
       <Text
         textDark
         extraLarge

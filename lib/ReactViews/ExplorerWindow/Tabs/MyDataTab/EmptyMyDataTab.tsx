@@ -7,7 +7,7 @@ import Box from "../../../../Styled/Box";
 import { StyledIcon, GLYPHS } from "../../../../Styled/Icon";
 import Text from "../../../../Styled/Text";
 
-import { AddDataButtons } from "./AddDataButtons";
+import { AddDataButtons } from "./AddData/AddDataButtons";
 import { MyDataTabContainer } from "./MyDataTabContainer";
 import { PromptBox } from "./PromptBox";
 

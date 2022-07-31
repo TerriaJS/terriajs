@@ -1,19 +1,9 @@
-import React, { SFC, Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 
-import ReactSelect, { StylesConfig } from "react-select";
+import { useTheme } from "styled-components";
+import ReactSelect from "react-select";
 
 import { IDataType } from "../../../../../Core/getDataType";
-
-const styles: StylesConfig = {
-  control: base => ({
-    ...base,
-    fontSize: "14px"
-  }),
-  menu: base => ({
-    ...base,
-    fontSize: "14px"
-  })
-};
 
 export const SelectDataType = <T extends IDataType>({
   options,
@@ -24,9 +14,10 @@ export const SelectDataType = <T extends IDataType>({
   onChange: Dispatch<SetStateAction<T>>;
   selectedValue: T;
 }) => {
+  const theme = useTheme();
+
   return (
     <ReactSelect
-      // styles={styles}
       value={selectedValue}
       classNamePrefix="ReactSelect"
       options={options}
@@ -37,6 +28,16 @@ export const SelectDataType = <T extends IDataType>({
       // @ts-ignore
       onChange={onChange}
       isClearable={false}
+      theme={selectTheme => ({
+        ...selectTheme,
+        colors: {
+          ...selectTheme.colors,
+          primary25: theme.greyLighter,
+          primary50: theme.colorPrimary,
+          primary75: theme.colorPrimary,
+          primary: theme.colorPrimary
+        }
+      })}
     />
   );
 };

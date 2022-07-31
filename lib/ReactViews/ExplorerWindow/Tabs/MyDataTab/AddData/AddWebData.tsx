@@ -113,7 +113,15 @@ export const AddWebData: FC<IAddWebDataProps> = ({
   };
 
   return (
-    <Box column styledWidth="50%" styledMaxWidth="600px">
+    <Box
+      column
+      styledWidth="50%"
+      styledMaxWidth="600px"
+      fullHeight
+      css={`
+        justify-content: center;
+      `}
+    >
       <Text
         textDark
         extraLarge

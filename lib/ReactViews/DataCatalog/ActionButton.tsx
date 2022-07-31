@@ -5,7 +5,7 @@ export const ActionButton = styled(RawButton)`
   svg {
     height: 20px;
     width: 20px;
-    margin: 5px;
+    padding: 5px;
     fill: ${p => p.theme.charcoalGrey};
   }
 

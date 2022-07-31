@@ -36,7 +36,7 @@ export default observer<React.FC<IProps>>(function ExplorerWindow(props) {
     <ModalPopup
       viewState={props.viewState}
       isVisible={isVisible}
-      isTopElement={props.viewState.topElement === ExplorerWindowElementName}
+      isTopElement={true}
       onClose={onClose}
       onStartAnimatingIn={onStartAnimatingIn}
       onDoneAnimatingIn={onDoneAnimatingIn}
@@ -48,6 +48,7 @@ export default observer<React.FC<IProps>>(function ExplorerWindow(props) {
         role="dialog"
         styledMaxWidth="1200px"
         flex="1"
+        css={{ zIndex: 99999 }}
       >
         <Tabs viewState={props.viewState} onClose={onClose} />
       </Box>

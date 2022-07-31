@@ -3,13 +3,13 @@ import { useTranslation } from "react-i18next";
 
 import { useTheme } from "styled-components";
 
-import Box from "../../../../Styled/Box";
-import { RawButton } from "../../../../Styled/Button";
-import { StyledIcon, GLYPHS } from "../../../../Styled/Icon";
-import Spacing from "../../../../Styled/Spacing";
-import { TextSpan } from "../../../../Styled/Text";
+import Box from "../../../../../Styled/Box";
+import { RawButton } from "../../../../../Styled/Button";
+import { StyledIcon, GLYPHS } from "../../../../../Styled/Icon";
+import Spacing from "../../../../../Styled/Spacing";
+import { TextSpan } from "../../../../../Styled/Text";
 
-import { ITab } from "./MyDataTab";
+import { ITab } from "../MyDataTab";
 
 export const AddDataButtons: FC<{ changeTab: (tabId: string) => void }> = ({
   changeTab

@@ -1,4 +1,3 @@
-import classNames from "classnames";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ViewState from "../../ReactViewModels/ViewState";
@@ -6,7 +5,7 @@ import Box from "../../Styled/Box";
 import { PrefaceBox } from "../Generic/PrefaceBox";
 import styled from "styled-components";
 
-const SLIDE_DURATION = 3000;
+const SLIDE_DURATION = 300;
 
 interface IProps {
   isVisible?: boolean;
@@ -19,7 +18,6 @@ interface IProps {
 }
 
 const ModalPopup: React.FC<IProps> = props => {
-  const { t } = useTranslation();
   const [inTransition, setInTransition] = useState(false);
   const animationTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -70,19 +68,19 @@ const ModalPopup: React.FC<IProps> = props => {
 
   return renderUi ? (
     <>
-      <PrefaceBox
-        className={props.isTopElement ? "top-element" : ""}
-        onClick={props.onClose}
-        role="presentation"
-        aria-hidden="true"
-        pseudoBg
-        css={{ top: 0, left: 0, zIndex: 99989 }}
-      ></PrefaceBox>
       <ModalPopupBox
         className={props.isTopElement ? "top-element" : ""}
         id="explorer-panel-wrapper"
         aria-hidden={!props.isVisible}
       >
+        <PrefaceBox
+          className={props.isTopElement ? "top-element" : ""}
+          onClick={props.onClose}
+          role="presentation"
+          aria-hidden="true"
+          pseudoBg
+          css={{ top: 0, left: 0, zIndex: 99989 }}
+        ></PrefaceBox>
         {props.children}
       </ModalPopupBox>
     </>

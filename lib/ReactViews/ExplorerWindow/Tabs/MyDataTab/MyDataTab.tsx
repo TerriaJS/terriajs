@@ -11,7 +11,7 @@ import { RawButton } from "../../../../Styled/Button";
 import { GLYPHS, StyledIcon } from "../../../../Styled/Icon";
 import styled, { useTheme } from "styled-components";
 import Spacing from "../../../../Styled/Spacing";
-import { AddDataButtons } from "./AddDataButtons";
+import { AddDataButtons } from "./AddData/AddDataButtons";
 import { EmptyMyDataTab } from "./EmptyMyDataTab";
 import DataPreview from "../../../Preview/DataPreview";
 import { PromptBox } from "./PromptBox";
