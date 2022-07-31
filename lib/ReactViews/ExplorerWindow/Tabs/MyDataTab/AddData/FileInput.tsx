@@ -45,4 +45,10 @@ const StyledLabel = styled.label`
   border-radius: 4px;
   width: 100%;
   text-align: center;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    opacity: 0.9;
+  }
 `;
