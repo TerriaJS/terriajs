@@ -157,7 +157,9 @@ class MobileHeader extends React.Component {
               >
                 <HamburgerButton
                   type="button"
-                  onClick={() => this.props.viewState.toggleMobileMenu()}
+                  onClick={this.props.viewState.toggleMobileMenu.bind(
+                    this.props.viewState
+                  )}
                   title={t("mobile.toggleNavigation")}
                 >
                   <StyledIcon
@@ -182,7 +184,7 @@ class MobileHeader extends React.Component {
                 <button
                   type="button"
                   className={Styles.btnAdd}
-                  onClick={this.onMobileDataCatalogClicked}
+                  onClick={this.onMobileDataCatalogClicked.bind(this)}
                 >
                   {t("mobile.addDataBtnText")}
                   <StyledIcon
@@ -195,7 +197,7 @@ class MobileHeader extends React.Component {
                   <button
                     type="button"
                     className={Styles.btnNowViewing}
-                    onClick={this.onMobileNowViewingClicked}
+                    onClick={this.onMobileNowViewingClicked.bind(this)}
                   >
                     <Icon glyph={Icon.GLYPHS.eye} />
                     <span
@@ -210,7 +212,7 @@ class MobileHeader extends React.Component {
                 <button
                   className={Styles.btnSearch}
                   type="button"
-                  onClick={this.showSearch}
+                  onClick={this.showSearch.bind(this)}
                 >
                   <StyledIcon
                     glyph={Icon.GLYPHS.search}
@@ -226,21 +228,25 @@ class MobileHeader extends React.Component {
                   <When condition={searchState.showMobileLocationSearch}>
                     <SearchBox
                       searchText={searchState.locationSearchText}
-                      onSearchTextChanged={this.changeLocationSearchText}
-                      onDoSearch={this.searchLocations}
+                      onSearchTextChanged={this.changeLocationSearchText.bind(
+                        this
+                      )}
+                      onDoSearch={this.searchLocations.bind(this)}
                       placeholder={t("search.placeholder")}
                       alwaysShowClear={true}
-                      onClear={this.closeLocationSearch}
+                      onClear={this.closeLocationSearch.bind(this)}
                       autoFocus={true}
                     />
                   </When>
                   <When condition={searchState.showMobileCatalogSearch}>
                     <SearchBox
                       searchText={searchState.catalogSearchText}
-                      onSearchTextChanged={this.changeCatalogSearchText}
-                      onDoSearch={this.searchCatalog}
+                      onSearchTextChanged={this.changeCatalogSearchText.bind(
+                        this
+                      )}
+                      onDoSearch={this.searchCatalog.bind(this)}
                       placeholder={t("search.searchCatalogue")}
-                      onClear={this.closeCatalogSearch}
+                      onClear={this.closeCatalogSearch.bind(this)}
                       autoFocus={true}
                     />
                   </When>
