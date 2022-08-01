@@ -74,8 +74,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
       () => [
         this.props.feature,
         this.props.template.template,
-        this.props.template.partials,
-        this.mustacheContextData
+        this.props.template.partials
       ],
       () => {
         if (this.props.template.template && this.mustacheContextData) {

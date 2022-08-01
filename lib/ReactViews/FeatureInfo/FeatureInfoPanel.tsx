@@ -422,10 +422,6 @@ function getFeaturesGroupedByCatalogItems(terria: Terria) {
   const catalogItems: MappableMixin.Instance[] = []; // Will contain a list of all unique catalog items.
 
   features.forEach(feature => {
-    // Why was this here? Surely changing the feature objects is not a good side-effect?
-    // if (!isDefined(feature.position)) {
-    //     feature.position = terria.pickedFeatures.pickPosition;
-    // }
     const catalogItem = determineCatalogItem(terria.workbench, feature);
     if (catalogItem) {
       featureCatalogItemPairs.push({
