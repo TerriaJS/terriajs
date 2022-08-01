@@ -33,6 +33,10 @@ Change Log
   * `withViewState` HOC
 * Move `GlobalTerriaStyles` from `StandardUserInterface` to separate file
 * Add `ExternalLinkWithWarning` component - this will replace all URLs in story body and add a warning message when URLs are clicked on.
+* Fixed a bug where adding `CesiumTerrainCatalogItem` to workbench didn't apply it when `configParameters.cesiumTerrainAssetId` or `configParameters.cesiumTerrainUrl` was set.
+* `CesiumTerrainCatalogItem` will now show a status `In use` or `Not in use` in the workbench.
+* Rewrote `CesiumTerrainCatalogItem` to handle and report network errors.
+* Set `JulianDate.toIso8601` second precision to nanosecond - this prevents weird date strings with scientific/exponent notation (eg `2008-05-07T22:54:45.7275957614183426e-11Z`)
 * [The next improvement]
 
 #### 8.2.9 - 2022-07-13
