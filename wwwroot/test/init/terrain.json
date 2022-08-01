@@ -1,56 +1,50 @@
 {
-    "catalog": [
+  "catalog": [
+    {
+      "name": "Terrain",
+      "type": "group",
+      "items": [
         {
-          "name": "Terrain",
-          "type": "group",
+          "name": "Pennsylvania",
+          "type": "cesium-terrain",
+          "url": "https://assets.agi.com/stk-terrain/v1/tilesets/PAMAP/tiles"
+        },
+        {
+          "name": "Caco Demo",
+          "type": "cesium-terrain",
+          "url": "http://stkdesktop.agi.com/stk-terrain/v1/tilesets/CacoSample/tiles",
+          "rectangle": [
+            -69.95496855318628, 41.82165113892819, -69.93832861576816,
+            41.85021565878684
+          ]
+        },
+        {
+          "name": "Caco with Imagery",
+          "type": "composite",
+          "rectangle": [
+            -69.95496855318628, 41.82165113892819, -69.93832861576816,
+            41.85021565878684
+          ],
           "items": [
             {
-                "name": "Pennsylvania",
-                "type": "cesium-terrain",
-                "url": "https://assets.agi.com/stk-terrain/v1/tilesets/PAMAP/tiles"
+              "name": "Caco with Imagery - Imagery",
+              "type": "url-template",
+              "url": "http://agi-tas-demo.s3-website-us-east-1.amazonaws.com/SandwichOrtho/TILES/caco_f1_rgb1_v4_ortho_TILES/{z}/{x}/{reverseY}.png",
+              "minimumLevel": 13,
+              "maximumLevel": 21,
+              "rectangle": [
+                -69.95496855318628, 41.82165113892819, -69.93832861576816,
+                41.85021565878684
+              ]
             },
             {
-                "name": "Caco Demo",
-                "type": "cesium-terrain",
-                "url": "http://stkdesktop.agi.com/stk-terrain/v1/tilesets/CacoSample/tiles",
-                "rectangle": [
-                    -69.95496855318628,
-                    41.82165113892819,
-                    -69.93832861576816,
-                    41.85021565878684
-                ]
-            },
-            {
-                "name": "Caco with Imagery",
-                "type": "composite",
-                "rectangle": [
-                    -69.95496855318628,
-                    41.82165113892819,
-                    -69.93832861576816,
-                    41.85021565878684
-                ],
-                "items": [
-                    {
-                        "name": "Caco with Imagery - Imagery",
-                        "type": "url-template",
-                        "url": "http://agi-tas-demo.s3-website-us-east-1.amazonaws.com/SandwichOrtho/TILES/caco_f1_rgb1_v4_ortho_TILES/{z}/{x}/{reverseY}.png",
-                        "minimumLevel": 13,
-                        "maximumLevel": 21,
-                        "rectangle": [
-                            -69.95496855318628,
-                            41.82165113892819,
-                            -69.93832861576816,
-                            41.85021565878684
-                        ]
-                    },
-                    {
-                      "name": "Caco with Imagery - Terrain",
-                      "type": "cesium-terrain",
-                      "url": "http://stkdesktop.agi.com/stk-terrain/v1/tilesets/CacoSample/tiles"
-                    }
-                ]
+              "name": "Caco with Imagery - Terrain",
+              "type": "cesium-terrain",
+              "url": "http://stkdesktop.agi.com/stk-terrain/v1/tilesets/CacoSample/tiles"
             }
           ]
         }
-    ]
+      ]
+    }
+  ]
 }

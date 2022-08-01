@@ -26,13 +26,13 @@ interface ExtendedLoadWithXhr {
 
 const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
 
-describe("CkanCatalogGroup", function() {
+describe("CkanCatalogGroup", function () {
   const ckanServerUrl = "http://data.gov.au";
   let terria: Terria;
   let ckanCatalogGroup: CkanCatalogGroup;
   let ckanServerStratum: CkanServerStratum;
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -40,19 +40,19 @@ describe("CkanCatalogGroup", function() {
 
     const realLoadWithXhr = loadWithXhr.load;
     // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
-    spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
+    spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
       args[0] = "test/CKAN/search-result.json";
 
       return realLoadWithXhr(...args);
     });
   });
 
-  it("has a type and typeName", function() {
+  it("has a type and typeName", function () {
     expect(ckanCatalogGroup.type).toBe("ckan-group");
     expect(ckanCatalogGroup.typeName).toBe(i18next.t("models.ckan.nameServer"));
   });
 
-  it("add filter query correctly", function() {
+  it("add filter query correctly", function () {
     const filterQueries: (JsonObject | string)[] = [
       "fq=+(res_format%3Awms%20OR%20res_format%3AWMS)",
       "fq=(res_format:wms OR res_format:WMS)",
@@ -78,8 +78,8 @@ describe("CkanCatalogGroup", function() {
     });
   });
 
-  describe("after loading metadata - default settings - ", function() {
-    beforeEach(async function() {
+  describe("after loading metadata - default settings - ", function () {
+    beforeEach(async function () {
       runInAction(() => {
         ckanCatalogGroup.setTrait(
           "definition",
@@ -93,7 +93,7 @@ describe("CkanCatalogGroup", function() {
       );
     });
 
-    it("properly creates members", function() {
+    it("properly creates members", function () {
       expect(ckanCatalogGroup.members).toBeDefined();
       expect(ckanCatalogGroup.members.length).toBe(2);
       let member0 = <CatalogGroup>ckanCatalogGroup.memberModels[0];
@@ -102,7 +102,7 @@ describe("CkanCatalogGroup", function() {
       expect(member1.name).toBe("Murray-Darling Basin Authority");
     });
 
-    it("properly creates groups", function() {
+    it("properly creates groups", function () {
       if (ckanServerStratum !== undefined) {
         if (ckanServerStratum.groups) {
           // 3 groups because we add an Ungrouped Group
@@ -128,8 +128,8 @@ describe("CkanCatalogGroup", function() {
     });
   });
 
-  describe("after loading metadata - change some settings - ", function() {
-    beforeEach(async function() {
+  describe("after loading metadata - change some settings - ", function () {
+    beforeEach(async function () {
       runInAction(() => {
         ckanCatalogGroup.setTrait(
           "definition",
@@ -151,7 +151,7 @@ describe("CkanCatalogGroup", function() {
       );
     });
 
-    it("properly creates members", function() {
+    it("properly creates members", function () {
       expect(ckanCatalogGroup.members).toBeDefined();
       expect(ckanCatalogGroup.members.length).toBe(3);
       let member0 = <CatalogGroup>ckanCatalogGroup.memberModels[0];
@@ -165,14 +165,14 @@ describe("CkanCatalogGroup", function() {
       expect(member2.name).toBe("Science");
     });
 
-    it("Geography group has been filtered from the groups", function() {
+    it("Geography group has been filtered from the groups", function () {
       if (ckanServerStratum.groups && ckanServerStratum.filteredGroups) {
         expect(ckanServerStratum.groups.length).toBe(4);
         expect(ckanServerStratum.filteredGroups.length).toBe(3);
       }
     });
 
-    it("itemProperties get added", async function() {
+    it("itemProperties get added", async function () {
       const m = terria.getModelById(
         CkanItemReference,
         ckanCatalogGroup.uniqueId +
@@ -189,8 +189,8 @@ describe("CkanCatalogGroup", function() {
       }
     });
   });
-  describe("with item naming using", function() {
-    beforeEach(async function() {
+  describe("with item naming using", function () {
+    beforeEach(async function () {
       runInAction(() => {
         ckanCatalogGroup.setTrait(
           "definition",
@@ -200,7 +200,7 @@ describe("CkanCatalogGroup", function() {
       });
     });
 
-    it("useDatasetNameAndFormatWhereMultipleResources (the default)", async function() {
+    it("useDatasetNameAndFormatWhereMultipleResources (the default)", async function () {
       await ckanCatalogGroup.loadMembers();
       ckanServerStratum = <CkanServerStratum>(
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
@@ -222,7 +222,7 @@ describe("CkanCatalogGroup", function() {
       );
     });
 
-    it("useCombinationNameWhereMultipleResources", async function() {
+    it("useCombinationNameWhereMultipleResources", async function () {
       runInAction(() => {
         ckanCatalogGroup.setTrait(
           "definition",
@@ -259,7 +259,7 @@ describe("CkanCatalogGroup", function() {
       );
     });
 
-    it("useResourceName", async function() {
+    it("useResourceName", async function () {
       runInAction(() => {
         ckanCatalogGroup.setTrait("definition", "useResourceName", true);
       });
@@ -283,8 +283,8 @@ describe("CkanCatalogGroup", function() {
     });
   });
 
-  describe("filters resources according to supportedResourceFormats", function() {
-    beforeEach(async function() {
+  describe("filters resources according to supportedResourceFormats", function () {
+    beforeEach(async function () {
       runInAction(() => {
         ckanCatalogGroup.setTrait(
           "definition",
@@ -294,7 +294,7 @@ describe("CkanCatalogGroup", function() {
       });
     });
 
-    it("urlRegex", async function() {
+    it("urlRegex", async function () {
       updateModelFromJson(ckanCatalogGroup, CommonStrata.definition, {
         supportedResourceFormats: [
           {
@@ -328,7 +328,7 @@ describe("CkanCatalogGroup", function() {
       );
     });
 
-    it("onlyUseIfSoleResource - with multiple resources", async function() {
+    it("onlyUseIfSoleResource - with multiple resources", async function () {
       updateModelFromJson(ckanCatalogGroup, CommonStrata.definition, {
         supportedResourceFormats: [
           {
@@ -362,7 +362,7 @@ describe("CkanCatalogGroup", function() {
       );
     });
 
-    it("onlyUseIfSoleResource - with single resources", async function() {
+    it("onlyUseIfSoleResource - with single resources", async function () {
       updateModelFromJson(ckanCatalogGroup, CommonStrata.definition, {
         supportedResourceFormats: [
           {
@@ -403,7 +403,7 @@ describe("CkanCatalogGroup", function() {
       expect(items[1]._supportedFormat?.id).toBe("Kml");
     });
 
-    it("maxFileSize", async function() {
+    it("maxFileSize", async function () {
       updateModelFromJson(ckanCatalogGroup, CommonStrata.definition, {
         supportedResourceFormats: [
           {
@@ -434,7 +434,7 @@ describe("CkanCatalogGroup", function() {
       );
     });
 
-    it("removeDuplicates", async function() {
+    it("removeDuplicates", async function () {
       updateModelFromJson(ckanCatalogGroup, CommonStrata.definition, {
         supportedResourceFormats: [
           {
@@ -468,7 +468,7 @@ describe("CkanCatalogGroup", function() {
       );
     });
 
-    it("useSingleResource", async function() {
+    it("useSingleResource", async function () {
       updateModelFromJson(ckanCatalogGroup, CommonStrata.definition, {
         useSingleResource: true
       });
@@ -500,7 +500,7 @@ describe("CkanCatalogGroup", function() {
   });
 
   describe("allowEntireWmsServers", () => {
-    beforeEach(async function() {
+    beforeEach(async function () {
       runInAction(() => {
         ckanCatalogGroup.setTrait(
           "definition",
@@ -527,7 +527,7 @@ describe("CkanCatalogGroup", function() {
       });
     });
 
-    it("allowEntireWmsServers = true", async function() {
+    it("allowEntireWmsServers = true", async function () {
       updateModelFromJson(ckanCatalogGroup, CommonStrata.definition, {
         allowEntireWmsServers: true
       });
@@ -554,7 +554,7 @@ describe("CkanCatalogGroup", function() {
       expect(items[1].target instanceof WebMapServiceCatalogGroup).toBeTruthy();
     });
 
-    it("allowEntireWmsServers = false", async function() {
+    it("allowEntireWmsServers = false", async function () {
       updateModelFromJson(ckanCatalogGroup, CommonStrata.definition, {
         allowEntireWmsServers: false
       });

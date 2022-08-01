@@ -126,7 +126,7 @@ export default class ImageryProviderLeafletGridLayer extends L.GridLayer {
           canvas
         );
       })
-      .then(function(canvas) {
+      .then(function (canvas) {
         done(undefined, canvas);
       });
     return canvas; // Not yet drawn on, but Leaflet requires the tile

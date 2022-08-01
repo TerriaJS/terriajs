@@ -98,7 +98,7 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
   get members(): ModelReference[] {
     return filterOutUndefined(
       this.folders
-        .map(folder => {
+        .map((folder) => {
           return (
             this._catalogGroup.uniqueId +
             "/" +
@@ -107,10 +107,10 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
         })
         .concat(
           this.services
-            .filter(service => {
+            .filter((service) => {
               return validServerTypes.indexOf(service.type) !== -1;
             })
-            .map(service => {
+            .map((service) => {
               return (
                 this._catalogGroup.uniqueId +
                 "/" +
@@ -138,7 +138,7 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
 
   @action
   createMembersFromFolders() {
-    this.folders.forEach(folder => this.createMemberFromFolder(folder));
+    this.folders.forEach((folder) => this.createMemberFromFolder(folder));
   }
 
   @action
@@ -174,7 +174,7 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
 
   @action
   createMembersFromServices() {
-    this.services.forEach(service => this.createMemberFromService(service));
+    this.services.forEach((service) => this.createMemberFromService(service));
   }
 
   @action
@@ -261,19 +261,19 @@ export default class ArcGisCatalogGroup extends UrlMixin(
   protected forceLoadMetadata(): Promise<void> {
     const url = this.url || "";
     if (/\/MapServer(\/?.*)?$/i.test(url)) {
-      return MapServerStratum.load(this).then(stratum => {
+      return MapServerStratum.load(this).then((stratum) => {
         runInAction(() => {
           this.strata.set(MapServerStratum.stratumName, stratum);
         });
       });
     } else if (/\/FeatureServer(\/.*)?$/i.test(url)) {
-      return FeatureServerStratum.load(this).then(stratum => {
+      return FeatureServerStratum.load(this).then((stratum) => {
         runInAction(() => {
           this.strata.set(FeatureServerStratum.stratumName, stratum);
         });
       });
     } else {
-      return ArcGisServerStratum.load(this).then(stratum => {
+      return ArcGisServerStratum.load(this).then((stratum) => {
         runInAction(() => {
           this.strata.set(ArcGisServerStratum.stratumName, stratum);
         });

@@ -90,7 +90,8 @@ class WebMapServiceCatalogItem
       )
     )
   )
-  implements SelectableDimensions {
+  implements SelectableDimensions
+{
   /**
    * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere
    * in the Abstract, the Abstract will not be used.  This makes it easy to filter out placeholder data like
@@ -229,15 +230,14 @@ class WebMapServiceCatalogItem
    * These can be fetched from the server (eg GetMap request)
    */
   @computed get validLayers() {
-    const gcStratum:
-      | WebMapServiceCapabilitiesStratum
-      | undefined = this.strata.get(
-      GetCapabilitiesMixin.getCapabilitiesStratumName
-    ) as WebMapServiceCapabilitiesStratum;
+    const gcStratum: WebMapServiceCapabilitiesStratum | undefined =
+      this.strata.get(
+        GetCapabilitiesMixin.getCapabilitiesStratumName
+      ) as WebMapServiceCapabilitiesStratum;
 
     if (gcStratum)
       return this.layersArray
-        .map(layer => gcStratum.capabilities.findLayer(layer)?.Name)
+        .map((layer) => gcStratum.capabilities.findLayer(layer)?.Name)
         .filter(isDefined);
 
     return [];
@@ -247,15 +247,14 @@ class WebMapServiceCatalogItem
    * These layers can **not** be fetched the server (eg GetMap request)
    */
   @computed get invalidLayers() {
-    const gcStratum:
-      | WebMapServiceCapabilitiesStratum
-      | undefined = this.strata.get(
-      GetCapabilitiesMixin.getCapabilitiesStratumName
-    ) as WebMapServiceCapabilitiesStratum;
+    const gcStratum: WebMapServiceCapabilitiesStratum | undefined =
+      this.strata.get(
+        GetCapabilitiesMixin.getCapabilitiesStratumName
+      ) as WebMapServiceCapabilitiesStratum;
 
     if (gcStratum)
       return this.layersArray.filter(
-        layer => !isDefined(gcStratum.capabilities.findLayer(layer)?.Name)
+        (layer) => !isDefined(gcStratum.capabilities.findLayer(layer)?.Name)
       );
 
     return [];
@@ -268,11 +267,10 @@ class WebMapServiceCatalogItem
 
   @computed
   get discreteTimes() {
-    const getCapabilitiesStratum:
-      | WebMapServiceCapabilitiesStratum
-      | undefined = this.strata.get(
-      GetCapabilitiesMixin.getCapabilitiesStratumName
-    ) as WebMapServiceCapabilitiesStratum;
+    const getCapabilitiesStratum: WebMapServiceCapabilitiesStratum | undefined =
+      this.strata.get(
+        GetCapabilitiesMixin.getCapabilitiesStratumName
+      ) as WebMapServiceCapabilitiesStratum;
     return getCapabilitiesStratum?.discreteTimes;
   }
 
@@ -293,9 +291,9 @@ class WebMapServiceCatalogItem
 
   @computed
   get canDiffImages(): boolean {
-    const hasValidDiffStyles = this.availableDiffStyles.some(diffStyle =>
+    const hasValidDiffStyles = this.availableDiffStyles.some((diffStyle) =>
       this.styleSelectableDimensions?.[0]?.options?.find(
-        style => style.id === diffStyle
+        (style) => style.id === diffStyle
       )
     );
     return hasValidDiffStyles === true;
@@ -334,8 +332,8 @@ class WebMapServiceCatalogItem
     const firstTag = firstDate && this.getTagForTime(firstDate);
     const secondTag = secondDate && this.getTagForTime(secondDate);
     const time = filterOutUndefined([firstTag, secondTag]).join(",");
-    const layerName = this.availableStyles.find(style =>
-      style.styles.some(s => s.name === styleId)
+    const layerName = this.availableStyles.find((style) =>
+      style.styles.some((s) => s.name === styleId)
     )?.layerName;
     const uri = URI(
       `${this.url}?service=WMS&version=1.1.0&request=GetLegendGraphic&format=image/png&transparent=True`
@@ -605,19 +603,19 @@ class WebMapServiceCatalogItem
         // Attempt to get layer title from GetCapabilitiesStratum
         const layerTitle =
           layer.layerName &&
-          (this.strata.get(
-            GetCapabilitiesMixin.getCapabilitiesStratumName
-          ) as WebMapServiceCapabilitiesStratum).capabilitiesLayers.get(
-            layer.layerName
-          )?.Title;
+          (
+            this.strata.get(
+              GetCapabilitiesMixin.getCapabilitiesStratumName
+            ) as WebMapServiceCapabilitiesStratum
+          ).capabilitiesLayers.get(layer.layerName)?.Title;
 
-        name = `${layerTitle ||
-          layer.layerName ||
-          `Layer ${layerIndex + 1}`} styles`;
+        name = `${
+          layerTitle || layer.layerName || `Layer ${layerIndex + 1}`
+        } styles`;
       }
 
       const options = filterOutUndefined(
-        layer.styles.map(function(s) {
+        layer.styles.map(function (s) {
           if (isDefined(s.name)) {
             return {
               name: s.title || s.name || "",
@@ -643,7 +641,7 @@ class WebMapServiceCatalogItem
           if (!newStyle) return;
           runInAction(() => {
             const styles = this.styleSelectableDimensions.map(
-              style => style.selectedId || ""
+              (style) => style.selectedId || ""
             );
             styles[layerIndex] = newStyle;
             this.setTrait(stratumId, "styles", styles.join(","));
@@ -667,13 +665,13 @@ class WebMapServiceCatalogItem
     const dimensions: SelectableDimensionEnum[] = [];
 
     // For each layer -> For each dimension
-    this.availableDimensions.forEach(layer => {
-      layer.dimensions.forEach(dim => {
+    this.availableDimensions.forEach((layer) => {
+      layer.dimensions.forEach((dim) => {
         // Only add dimensions if hasn't already been added (multiple layers may have the same dimension)
         if (
           !isDefined(dim.name) ||
           dim.values.length < 2 ||
-          dimensions.findIndex(findDim => findDim.name === dim.name) !== -1
+          dimensions.findIndex((findDim) => findDim.name === dim.name) !== -1
         ) {
           return;
         }
@@ -681,7 +679,7 @@ class WebMapServiceCatalogItem
         dimensions.push({
           name: dim.name,
           id: `${this.uniqueId}-${dim.name}`,
-          options: dim.values.map(value => {
+          options: dim.values.map((value) => {
             let name = value;
             // Add units and unitSybol if defined
             if (typeof dim.units === "string" && dim.units !== "") {

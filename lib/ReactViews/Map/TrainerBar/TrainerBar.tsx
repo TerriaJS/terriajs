@@ -20,14 +20,14 @@ import Spacing from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
 import { applyTranslationIfExists } from "./../../../Language/languageHelpers";
 
-const StyledHtml: any = require("../../Map/Panels/HelpPanel/StyledHtml")
-  .default;
+const StyledHtml: any =
+  require("../../Map/Panels/HelpPanel/StyledHtml").default;
 const CloseButton: any = require("../../Generic/CloseButton").default;
 
 const TrainerBarWrapper = styled(Box)<{ isMapFullScreen: boolean }>`
   top: 0;
-  left: ${p => (p.isMapFullScreen ? 0 : Number(p.theme.workbenchWidth))}px;
-  z-index: ${p => Number(p.theme.frontComponentZIndex) + 100};
+  left: ${(p) => (p.isMapFullScreen ? 0 : Number(p.theme.workbenchWidth))}px;
+  z-index: ${(p) => Number(p.theme.frontComponentZIndex) + 100};
 `;
 
 // Help with discoverability
@@ -38,9 +38,11 @@ const getSelectedTrainerFromHelpContent = (
   helpContent: HelpContentItem[]
 ) => {
   const selected = viewState.selectedTrainerItem;
-  const found = helpContent.find(item => item.itemName === selected);
+  const found = helpContent.find((item) => item.itemName === selected);
   // Try and find the item that we selected, otherwise find the first trainer pane
-  return found || helpContent.find(item => item.paneMode === PaneMode.trainer);
+  return (
+    found || helpContent.find((item) => item.paneMode === PaneMode.trainer)
+  );
 };
 
 // Ripped from StyledHtml.jsx
@@ -49,7 +51,7 @@ const Numbers = styled(Text)<{ darkBg: boolean }>`
   height: 22px;
   line-height: 22px;
   border-radius: 50%;
-  background-color: ${props => props.theme.textLight};
+  background-color: ${(props) => props.theme.textLight};
 `;
 
 const StepText = styled(Text).attrs({})`
@@ -114,7 +116,7 @@ const renderStep = (
   );
 };
 
-const renderOrderedStepList = function(
+const renderOrderedStepList = function (
   steps: StepItem[],
   viewState: ViewState
 ) {
@@ -421,7 +423,7 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
               color: ${theme.textLight};
               border-color: ${theme.textLight};
               ${viewState.currentTrainerStepIndex === 0 &&
-                `visibility: hidden;`}
+              `visibility: hidden;`}
             `}
             onClick={() => {
               viewState.setCurrentTrainerStepIndex(

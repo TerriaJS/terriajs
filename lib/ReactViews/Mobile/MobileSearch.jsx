@@ -82,7 +82,7 @@ const MobileSearch = observer(
 
     renderLocationResult(theme) {
       const searchState = this.props.viewState.searchState;
-      return searchState.locationSearchResults.map(search => (
+      return searchState.locationSearchResults.map((search) => (
         <LocationSearchResults
           key={search.searchProvider.name}
           terria={this.props.terria}

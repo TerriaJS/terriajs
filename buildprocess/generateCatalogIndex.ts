@@ -86,9 +86,9 @@ export default async function generateCatalogIndex(
 
     console.log(
       "\x1b[44m\x1b[37m%s\x1b[0m",
-      `${(((c.DONE ?? 0) * 100) / (total || 1)).toPrecision(
-        2
-      )}% DONE - (${c.DONE ?? 0}/${total})`
+      `${(((c.DONE ?? 0) * 100) / (total || 1)).toPrecision(2)}% DONE - (${
+        c.DONE ?? 0
+      }/${total})`
     );
   };
 
@@ -98,7 +98,7 @@ export default async function generateCatalogIndex(
   function getPath(terria: Terria, member: BaseModel | undefined): string {
     return filterOutUndefined([
       ...[
-        member?.knownContainerUniqueIds.map(id =>
+        member?.knownContainerUniqueIds.map((id) =>
           getPath(terria, terria.getModelById(BaseModel, id))
         )
       ].reverse(),
@@ -136,13 +136,15 @@ export default async function generateCatalogIndex(
           { expiration: 30000, priority },
           async () => {
             console.log(`Loading Reference ${name} (${path}) = ${priority}`);
-            const result = await (member as ReferenceMixin.Instance).loadReference();
+            const result = await (
+              member as ReferenceMixin.Instance
+            ).loadReference();
             result.logError(`FAILED to load Reference ${name} (${path})`);
             result.pushErrorTo(
               errors,
               `FAILED to load Reference ${name} (${path})`
             );
-            result.catchError(e => console.error(e.toError().message));
+            result.catchError((e) => console.error(e.toError().message));
           }
         );
       } catch (timeout) {
@@ -167,7 +169,7 @@ export default async function generateCatalogIndex(
         const result = await (member as GroupMixin.Instance).loadMembers();
         result.logError(`FAILED to load GROUP ${name} (${path})`);
         result.pushErrorTo(errors, `FAILED to load GROUP ${name} (${path})`);
-        result.catchError(e => console.error(e.toError().message));
+        result.catchError((e) => console.error(e.toError().message));
       };
 
       // CatalogGroup can be loaded immediately
@@ -194,7 +196,7 @@ export default async function generateCatalogIndex(
 
       // Recursively load group members
       await Promise.all(
-        shuffle(member.memberModels).map(child => {
+        shuffle(member.memberModels).map((child) => {
           return loadMember(terria, child);
         })
       );
@@ -250,7 +252,7 @@ export default async function generateCatalogIndex(
       };
     }
     if (GroupMixin.isMixedInto(member)) {
-      member.memberModels.forEach(childMember =>
+      member.memberModels.forEach((childMember) =>
         indexModel(childMember, index)
       );
     }
@@ -322,12 +324,7 @@ export default async function generateCatalogIndex(
   }
 }
 
-const [
-  configUrl,
-  baseUrl,
-  outPath,
-  speedString,
-  basicAuth
-] = process.argv.slice(2);
+const [configUrl, baseUrl, outPath, speedString, basicAuth] =
+  process.argv.slice(2);
 
 generateCatalogIndex(configUrl, baseUrl, outPath, speedString, basicAuth);

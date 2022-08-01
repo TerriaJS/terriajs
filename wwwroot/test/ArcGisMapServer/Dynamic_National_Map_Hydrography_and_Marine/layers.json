@@ -38,12 +38,7 @@
             "useCodedValues": true,
             "symbol": {
               "type": "esriTS",
-              "color": [
-                78,
-                78,
-                78,
-                255
-              ],
+              "color": [78, 78, 78, 255],
               "backgroundColor": null,
               "borderLineColor": null,
               "verticalAlignment": "baseline",
@@ -154,12 +149,7 @@
             "useCodedValues": true,
             "symbol": {
               "type": "esriTS",
-              "color": [
-                78,
-                78,
-                78,
-                255
-              ],
+              "color": [78, 78, 78, 255],
               "backgroundColor": null,
               "borderLineColor": null,
               "verticalAlignment": "baseline",
@@ -270,12 +260,7 @@
             "useCodedValues": true,
             "symbol": {
               "type": "esriTS",
-              "color": [
-                78,
-                78,
-                78,
-                255
-              ],
+              "color": [78, 78, 78, 255],
               "backgroundColor": null,
               "borderLineColor": null,
               "verticalAlignment": "baseline",
@@ -367,23 +352,13 @@
           "symbol": {
             "type": "esriSMS",
             "style": "esriSMSCircle",
-            "color": [
-              0,
-              0,
-              0,
-              255
-            ],
+            "color": [0, 0, 0, 255],
             "size": 4,
             "angle": 0,
             "xoffset": 0,
             "yoffset": 0,
             "outline": {
-              "color": [
-                0,
-                0,
-                0,
-                255
-              ],
+              "color": [0, 0, 0, 255],
               "width": 1
             }
           },
@@ -550,23 +525,13 @@
           "symbol": {
             "type": "esriSMS",
             "style": "esriSMSCircle",
-            "color": [
-              0,
-              0,
-              0,
-              0
-            ],
+            "color": [0, 0, 0, 0],
             "size": 4,
             "angle": 0,
             "xoffset": 0,
             "yoffset": 0,
             "outline": {
-              "color": [
-                0,
-                0,
-                0,
-                255
-              ],
+              "color": [0, 0, 0, 255],
               "width": 1
             }
           },
@@ -897,23 +862,13 @@
           "symbol": {
             "type": "esriSMS",
             "style": "esriSMSCircle",
-            "color": [
-              0,
-              0,
-              0,
-              0
-            ],
+            "color": [0, 0, 0, 0],
             "size": 4,
             "angle": 0,
             "xoffset": 0,
             "yoffset": 0,
             "outline": {
-              "color": [
-                0,
-                0,
-                0,
-                255
-              ],
+              "color": [0, 0, 0, 255],
               "width": 1
             }
           },
@@ -1128,23 +1083,13 @@
           "symbol": {
             "type": "esriSMS",
             "style": "esriSMSCircle",
-            "color": [
-              0,
-              0,
-              0,
-              0
-            ],
+            "color": [0, 0, 0, 0],
             "size": 4,
             "angle": 0,
             "xoffset": 0,
             "yoffset": 0,
             "outline": {
-              "color": [
-                0,
-                0,
-                0,
-                255
-              ],
+              "color": [0, 0, 0, 255],
               "width": 1
             }
           },
@@ -1359,23 +1304,13 @@
           "symbol": {
             "type": "esriSMS",
             "style": "esriSMSCircle",
-            "color": [
-              0,
-              0,
-              0,
-              255
-            ],
+            "color": [0, 0, 0, 255],
             "size": 7,
             "angle": 0,
             "xoffset": 0,
             "yoffset": 0,
             "outline": {
-              "color": [
-                0,
-                0,
-                0,
-                255
-              ],
+              "color": [0, 0, 0, 255],
               "width": 1.0001
             }
           },
@@ -1590,23 +1525,13 @@
           "symbol": {
             "type": "esriSMS",
             "style": "esriSMSCircle",
-            "color": [
-              0,
-              0,
-              0,
-              255
-            ],
+            "color": [0, 0, 0, 255],
             "size": 6.9999,
             "angle": 0,
             "xoffset": 0,
             "yoffset": 0,
             "outline": {
-              "color": [
-                0,
-                0,
-                0,
-                255
-              ],
+              "color": [0, 0, 0, 255],
               "width": 1.0001
             }
           },
@@ -1821,23 +1746,13 @@
           "symbol": {
             "type": "esriSMS",
             "style": "esriSMSCircle",
-            "color": [
-              0,
-              132,
-              168,
-              255
-            ],
+            "color": [0, 132, 168, 255],
             "size": 6.9999,
             "angle": 0,
             "xoffset": 0,
             "yoffset": 0,
             "outline": {
-              "color": [
-                0,
-                0,
-                0,
-                255
-              ],
+              "color": [0, 0, 0, 255],
               "width": 1.4173
             }
           },
@@ -2052,23 +1967,13 @@
           "symbol": {
             "type": "esriSMS",
             "style": "esriSMSCircle",
-            "color": [
-              0,
-              0,
-              0,
-              255
-            ],
+            "color": [0, 0, 0, 255],
             "size": 7,
             "angle": 0,
             "xoffset": 0,
             "yoffset": 0,
             "outline": {
-              "color": [
-                0,
-                0,
-                0,
-                255
-              ],
+              "color": [0, 0, 0, 255],
               "width": 1.4173
             }
           },
@@ -2283,23 +2188,13 @@
           "symbol": {
             "type": "esriSMS",
             "style": "esriSMSCircle",
-            "color": [
-              0,
-              0,
-              0,
-              255
-            ],
+            "color": [0, 0, 0, 255],
             "size": 7,
             "angle": 0,
             "xoffset": 0,
             "yoffset": 0,
             "outline": {
-              "color": [
-                0,
-                0,
-                0,
-                255
-              ],
+              "color": [0, 0, 0, 255],
               "width": 1.4173
             }
           },
@@ -2514,23 +2409,13 @@
           "symbol": {
             "type": "esriSMS",
             "style": "esriSMSCircle",
-            "color": [
-              0,
-              0,
-              0,
-              255
-            ],
+            "color": [0, 0, 0, 255],
             "size": 7,
             "angle": 0,
             "xoffset": 0,
             "yoffset": 0,
             "outline": {
-              "color": [
-                0,
-                0,
-                0,
-                255
-              ],
+              "color": [0, 0, 0, 255],
               "width": 1.4173
             }
           },
@@ -2745,23 +2630,13 @@
           "symbol": {
             "type": "esriSMS",
             "style": "esriSMSCircle",
-            "color": [
-              0,
-              0,
-              0,
-              255
-            ],
+            "color": [0, 0, 0, 255],
             "size": 7,
             "angle": 0,
             "xoffset": 0,
             "yoffset": 0,
             "outline": {
-              "color": [
-                0,
-                0,
-                0,
-                255
-              ],
+              "color": [0, 0, 0, 255],
               "width": 1.4173
             }
           },
@@ -2976,23 +2851,13 @@
           "symbol": {
             "type": "esriSMS",
             "style": "esriSMSCircle",
-            "color": [
-              0,
-              0,
-              0,
-              255
-            ],
+            "color": [0, 0, 0, 255],
             "size": 7,
             "angle": 0,
             "xoffset": 0,
             "yoffset": 0,
             "outline": {
-              "color": [
-                0,
-                0,
-                0,
-                255
-              ],
+              "color": [0, 0, 0, 255],
               "width": 1.4173
             }
           },
@@ -3207,23 +3072,13 @@
           "symbol": {
             "type": "esriSMS",
             "style": "esriSMSCircle",
-            "color": [
-              0,
-              0,
-              0,
-              0
-            ],
+            "color": [0, 0, 0, 0],
             "size": 4,
             "angle": 0,
             "xoffset": 0,
             "yoffset": 0,
             "outline": {
-              "color": [
-                0,
-                0,
-                0,
-                255
-              ],
+              "color": [0, 0, 0, 255],
               "width": 1
             }
           },
@@ -7124,12 +6979,7 @@
               "symbol": {
                 "type": "esriSLS",
                 "style": "esriSLSSolid",
-                "color": [
-                  255,
-                  255,
-                  190,
-                  255
-                ],
+                "color": [255, 255, 190, 255],
                 "width": 3
               }
             },
@@ -7140,12 +6990,7 @@
               "symbol": {
                 "type": "esriSLS",
                 "style": "esriSLSSolid",
-                "color": [
-                  255,
-                  255,
-                  190,
-                  255
-                ],
+                "color": [255, 255, 190, 255],
                 "width": 3
               }
             },
@@ -7156,12 +7001,7 @@
               "symbol": {
                 "type": "esriSLS",
                 "style": "esriSLSSolid",
-                "color": [
-                  255,
-                  255,
-                  190,
-                  255
-                ],
+                "color": [255, 255, 190, 255],
                 "width": 3
               }
             },
@@ -7172,12 +7012,7 @@
               "symbol": {
                 "type": "esriSLS",
                 "style": "esriSLSSolid",
-                "color": [
-                  255,
-                  255,
-                  190,
-                  255
-                ],
+                "color": [255, 255, 190, 255],
                 "width": 3
               }
             }
@@ -7362,12 +7197,7 @@
               "symbol": {
                 "type": "esriSFS",
                 "style": "esriSFSSolid",
-                "color": [
-                  0,
-                  197,
-                  255,
-                  255
-                ],
+                "color": [0, 197, 255, 255],
                 "outline": {
                   "type": "esriSLS",
                   "style": "esriSLSSolid",
@@ -7994,23 +7824,13 @@
           "symbol": {
             "type": "esriSMS",
             "style": "esriSMSCircle",
-            "color": [
-              190,
-              232,
-              255,
-              255
-            ],
+            "color": [190, 232, 255, 255],
             "size": 5,
             "angle": 0,
             "xoffset": 0,
             "yoffset": 0,
             "outline": {
-              "color": [
-                0,
-                0,
-                0,
-                255
-              ],
+              "color": [0, 0, 0, 255],
               "width": 0
             }
           },
@@ -8225,23 +8045,13 @@
           "symbol": {
             "type": "esriSMS",
             "style": "esriSMSCircle",
-            "color": [
-              115,
-              178,
-              255,
-              255
-            ],
+            "color": [115, 178, 255, 255],
             "size": 5,
             "angle": 0,
             "xoffset": 0,
             "yoffset": 0,
             "outline": {
-              "color": [
-                0,
-                0,
-                0,
-                255
-              ],
+              "color": [0, 0, 0, 255],
               "width": 0
             }
           },
@@ -8456,23 +8266,13 @@
           "symbol": {
             "type": "esriSMS",
             "style": "esriSMSCircle",
-            "color": [
-              0,
-              132,
-              168,
-              255
-            ],
+            "color": [0, 132, 168, 255],
             "size": 5,
             "angle": 0,
             "xoffset": 0,
             "yoffset": 0,
             "outline": {
-              "color": [
-                0,
-                0,
-                0,
-                255
-              ],
+              "color": [0, 0, 0, 255],
               "width": 0
             }
           },
@@ -8687,23 +8487,13 @@
           "symbol": {
             "type": "esriSMS",
             "style": "esriSMSCircle",
-            "color": [
-              115,
-              223,
-              255,
-              255
-            ],
+            "color": [115, 223, 255, 255],
             "size": 5,
             "angle": 0,
             "xoffset": 0,
             "yoffset": 0,
             "outline": {
-              "color": [
-                0,
-                0,
-                0,
-                255
-              ],
+              "color": [0, 0, 0, 255],
               "width": 0
             }
           },
@@ -8918,23 +8708,13 @@
           "symbol": {
             "type": "esriSMS",
             "style": "esriSMSCircle",
-            "color": [
-              115,
-              223,
-              255,
-              255
-            ],
+            "color": [115, 223, 255, 255],
             "size": 5,
             "angle": 0,
             "xoffset": 0,
             "yoffset": 0,
             "outline": {
-              "color": [
-                0,
-                0,
-                0,
-                255
-              ],
+              "color": [0, 0, 0, 255],
               "width": 0
             }
           },
@@ -9149,23 +8929,13 @@
           "symbol": {
             "type": "esriSMS",
             "style": "esriSMSCircle",
-            "color": [
-              115,
-              223,
-              255,
-              255
-            ],
+            "color": [115, 223, 255, 255],
             "size": 5,
             "angle": 0,
             "xoffset": 0,
             "yoffset": 0,
             "outline": {
-              "color": [
-                0,
-                0,
-                0,
-                255
-              ],
+              "color": [0, 0, 0, 255],
               "width": 0
             }
           },
@@ -9380,23 +9150,13 @@
           "symbol": {
             "type": "esriSMS",
             "style": "esriSMSCircle",
-            "color": [
-              115,
-              223,
-              255,
-              255
-            ],
+            "color": [115, 223, 255, 255],
             "size": 5,
             "angle": 0,
             "xoffset": 0,
             "yoffset": 0,
             "outline": {
-              "color": [
-                0,
-                0,
-                0,
-                255
-              ],
+              "color": [0, 0, 0, 255],
               "width": 0
             }
           },
@@ -9611,23 +9371,13 @@
           "symbol": {
             "type": "esriSMS",
             "style": "esriSMSCircle",
-            "color": [
-              115,
-              223,
-              255,
-              255
-            ],
+            "color": [115, 223, 255, 255],
             "size": 5,
             "angle": 0,
             "xoffset": 0,
             "yoffset": 0,
             "outline": {
-              "color": [
-                0,
-                0,
-                0,
-                255
-              ],
+              "color": [0, 0, 0, 255],
               "width": 0
             }
           },
@@ -10062,12 +9812,7 @@
           "symbol": {
             "type": "esriSLS",
             "style": "esriSLSSolid",
-            "color": [
-              115,
-              178,
-              255,
-              255
-            ],
+            "color": [115, 178, 255, 255],
             "width": 1.5
           },
           "label": "Canal Lines",
@@ -10320,12 +10065,7 @@
           "symbol": {
             "type": "esriSLS",
             "style": "esriSLSSolid",
-            "color": [
-              0,
-              77,
-              168,
-              255
-            ],
+            "color": [0, 77, 168, 255],
             "width": 2
           },
           "label": "Dam Walls",
@@ -10554,12 +10294,7 @@
           "symbol": {
             "type": "esriSLS",
             "style": "esriSLSSolid",
-            "color": [
-              0,
-              255,
-              197,
-              255
-            ],
+            "color": [0, 255, 197, 255],
             "width": 2
           },
           "label": "Rapid Lines",
@@ -10812,12 +10547,7 @@
           "symbol": {
             "type": "esriSLS",
             "style": "esriSLSSolid",
-            "color": [
-              0,
-              197,
-              255,
-              255
-            ],
+            "color": [0, 197, 255, 255],
             "width": 3
           },
           "label": "",
@@ -10979,12 +10709,7 @@
               "symbol": {
                 "type": "esriSLS",
                 "style": "esriSLSSolid",
-                "color": [
-                  127,
-                  127,
-                  205,
-                  255
-                ],
+                "color": [127, 127, 205, 255],
                 "width": 2
               }
             }
@@ -11130,21 +10855,11 @@
           "symbol": {
             "type": "esriSFS",
             "style": "esriSFSSolid",
-            "color": [
-              212,
-              232,
-              247,
-              255
-            ],
+            "color": [212, 232, 247, 255],
             "outline": {
               "type": "esriSLS",
               "style": "esriSLSSolid",
-              "color": [
-                115,
-                178,
-                255,
-                255
-              ],
+              "color": [115, 178, 255, 255],
               "width": 0.2
             }
           },
@@ -11390,21 +11105,11 @@
           "symbol": {
             "type": "esriSFS",
             "style": "esriSFSSolid",
-            "color": [
-              212,
-              232,
-              247,
-              255
-            ],
+            "color": [212, 232, 247, 255],
             "outline": {
               "type": "esriSLS",
               "style": "esriSLSSolid",
-              "color": [
-                115,
-                178,
-                255,
-                255
-              ],
+              "color": [115, 178, 255, 255],
               "width": 0.2
             }
           },
@@ -11580,21 +11285,11 @@
               "symbol": {
                 "type": "esriSFS",
                 "style": "esriSFSSolid",
-                "color": [
-                  212,
-                  232,
-                  247,
-                  255
-                ],
+                "color": [212, 232, 247, 255],
                 "outline": {
                   "type": "esriSLS",
                   "style": "esriSLSSolid",
-                  "color": [
-                    115,
-                    178,
-                    255,
-                    255
-                  ],
+                  "color": [115, 178, 255, 255],
                   "width": 0.2
                 }
               }
@@ -11606,21 +11301,11 @@
               "symbol": {
                 "type": "esriSFS",
                 "style": "esriSFSSolid",
-                "color": [
-                  212,
-                  232,
-                  247,
-                  255
-                ],
+                "color": [212, 232, 247, 255],
                 "outline": {
                   "type": "esriSLS",
                   "style": "esriSLSSolid",
-                  "color": [
-                    115,
-                    178,
-                    255,
-                    255
-                  ],
+                  "color": [115, 178, 255, 255],
                   "width": 0.2
                 }
               }
@@ -11632,21 +11317,11 @@
               "symbol": {
                 "type": "esriSFS",
                 "style": "esriSFSSolid",
-                "color": [
-                  230,
-                  242,
-                  222,
-                  255
-                ],
+                "color": [230, 242, 222, 255],
                 "outline": {
                   "type": "esriSLS",
                   "style": "esriSLSSolid",
-                  "color": [
-                    190,
-                    210,
-                    255,
-                    255
-                  ],
+                  "color": [190, 210, 255, 255],
                   "width": 0.4
                 }
               }
@@ -11658,21 +11333,11 @@
               "symbol": {
                 "type": "esriSFS",
                 "style": "esriSFSSolid",
-                "color": [
-                  230,
-                  242,
-                  222,
-                  255
-                ],
+                "color": [230, 242, 222, 255],
                 "outline": {
                   "type": "esriSLS",
                   "style": "esriSLSSolid",
-                  "color": [
-                    190,
-                    210,
-                    255,
-                    255
-                  ],
+                  "color": [190, 210, 255, 255],
                   "width": 0.4
                 }
               }
@@ -11684,21 +11349,11 @@
               "symbol": {
                 "type": "esriSFS",
                 "style": "esriSFSSolid",
-                "color": [
-                  230,
-                  242,
-                  222,
-                  255
-                ],
+                "color": [230, 242, 222, 255],
                 "outline": {
                   "type": "esriSLS",
                   "style": "esriSLSSolid",
-                  "color": [
-                    190,
-                    210,
-                    255,
-                    255
-                  ],
+                  "color": [190, 210, 255, 255],
                   "width": 0.4
                 }
               }
@@ -11944,21 +11599,11 @@
           "symbol": {
             "type": "esriSFS",
             "style": "esriSFSSolid",
-            "color": [
-              158,
-              204,
-              222,
-              255
-            ],
+            "color": [158, 204, 222, 255],
             "outline": {
               "type": "esriSLS",
               "style": "esriSLSSolid",
-              "color": [
-                102,
-                153,
-                205,
-                255
-              ],
+              "color": [102, 153, 205, 255],
               "width": 1
             }
           },
@@ -12204,21 +11849,11 @@
           "symbol": {
             "type": "esriSFS",
             "style": "esriSFSSolid",
-            "color": [
-              158,
-              204,
-              222,
-              255
-            ],
+            "color": [158, 204, 222, 255],
             "outline": {
               "type": "esriSLS",
               "style": "esriSLSSolid",
-              "color": [
-                102,
-                153,
-                205,
-                255
-              ],
+              "color": [102, 153, 205, 255],
               "width": 1
             }
           },
@@ -12464,21 +12099,11 @@
           "symbol": {
             "type": "esriSFS",
             "style": "esriSFSSolid",
-            "color": [
-              158,
-              204,
-              222,
-              255
-            ],
+            "color": [158, 204, 222, 255],
             "outline": {
               "type": "esriSLS",
               "style": "esriSLSSolid",
-              "color": [
-                102,
-                153,
-                205,
-                255
-              ],
+              "color": [102, 153, 205, 255],
               "width": 1
             }
           },
@@ -12724,12 +12349,7 @@
           "symbol": {
             "type": "esriSFS",
             "style": "esriSFSSolid",
-            "color": [
-              242,
-              233,
-              219,
-              255
-            ],
+            "color": [242, 233, 219, 255],
             "outline": {
               "type": "esriSLS",
               "style": "esriSLSSolid",
@@ -12895,21 +12515,11 @@
               "symbol": {
                 "type": "esriSFS",
                 "style": "esriSFSSolid",
-                "color": [
-                  212,
-                  232,
-                  247,
-                  255
-                ],
+                "color": [212, 232, 247, 255],
                 "outline": {
                   "type": "esriSLS",
                   "style": "esriSLSSolid",
-                  "color": [
-                    115,
-                    178,
-                    255,
-                    255
-                  ],
+                  "color": [115, 178, 255, 255],
                   "width": 0.2
                 }
               }
@@ -12921,21 +12531,11 @@
               "symbol": {
                 "type": "esriSFS",
                 "style": "esriSFSSolid",
-                "color": [
-                  212,
-                  232,
-                  247,
-                  255
-                ],
+                "color": [212, 232, 247, 255],
                 "outline": {
                   "type": "esriSLS",
                   "style": "esriSLSSolid",
-                  "color": [
-                    115,
-                    178,
-                    255,
-                    255
-                  ],
+                  "color": [115, 178, 255, 255],
                   "width": 0.2
                 }
               }
@@ -12947,21 +12547,11 @@
               "symbol": {
                 "type": "esriSFS",
                 "style": "esriSFSSolid",
-                "color": [
-                  230,
-                  242,
-                  222,
-                  255
-                ],
+                "color": [230, 242, 222, 255],
                 "outline": {
                   "type": "esriSLS",
                   "style": "esriSLSSolid",
-                  "color": [
-                    190,
-                    210,
-                    255,
-                    255
-                  ],
+                  "color": [190, 210, 255, 255],
                   "width": 0.4
                 }
               }
@@ -12973,21 +12563,11 @@
               "symbol": {
                 "type": "esriSFS",
                 "style": "esriSFSSolid",
-                "color": [
-                  230,
-                  242,
-                  222,
-                  255
-                ],
+                "color": [230, 242, 222, 255],
                 "outline": {
                   "type": "esriSLS",
                   "style": "esriSLSSolid",
-                  "color": [
-                    190,
-                    210,
-                    255,
-                    255
-                  ],
+                  "color": [190, 210, 255, 255],
                   "width": 0.4
                 }
               }
@@ -13244,21 +12824,11 @@
               "symbol": {
                 "type": "esriSFS",
                 "style": "esriSFSSolid",
-                "color": [
-                  212,
-                  232,
-                  247,
-                  255
-                ],
+                "color": [212, 232, 247, 255],
                 "outline": {
                   "type": "esriSLS",
                   "style": "esriSLSSolid",
-                  "color": [
-                    115,
-                    178,
-                    255,
-                    255
-                  ],
+                  "color": [115, 178, 255, 255],
                   "width": 0.2
                 }
               }
@@ -13270,21 +12840,11 @@
               "symbol": {
                 "type": "esriSFS",
                 "style": "esriSFSSolid",
-                "color": [
-                  212,
-                  232,
-                  247,
-                  255
-                ],
+                "color": [212, 232, 247, 255],
                 "outline": {
                   "type": "esriSLS",
                   "style": "esriSLSSolid",
-                  "color": [
-                    115,
-                    178,
-                    255,
-                    255
-                  ],
+                  "color": [115, 178, 255, 255],
                   "width": 0.2
                 }
               }
@@ -13296,21 +12856,11 @@
               "symbol": {
                 "type": "esriSFS",
                 "style": "esriSFSSolid",
-                "color": [
-                  230,
-                  242,
-                  222,
-                  255
-                ],
+                "color": [230, 242, 222, 255],
                 "outline": {
                   "type": "esriSLS",
                   "style": "esriSLSSolid",
-                  "color": [
-                    190,
-                    210,
-                    255,
-                    255
-                  ],
+                  "color": [190, 210, 255, 255],
                   "width": 0.4
                 }
               }
@@ -13322,21 +12872,11 @@
               "symbol": {
                 "type": "esriSFS",
                 "style": "esriSFSSolid",
-                "color": [
-                  230,
-                  242,
-                  222,
-                  255
-                ],
+                "color": [230, 242, 222, 255],
                 "outline": {
                   "type": "esriSLS",
                   "style": "esriSLSSolid",
-                  "color": [
-                    190,
-                    210,
-                    255,
-                    255
-                  ],
+                  "color": [190, 210, 255, 255],
                   "width": 0.4
                 }
               }
@@ -13593,21 +13133,11 @@
               "symbol": {
                 "type": "esriSFS",
                 "style": "esriSFSSolid",
-                "color": [
-                  212,
-                  232,
-                  247,
-                  255
-                ],
+                "color": [212, 232, 247, 255],
                 "outline": {
                   "type": "esriSLS",
                   "style": "esriSLSSolid",
-                  "color": [
-                    115,
-                    178,
-                    255,
-                    255
-                  ],
+                  "color": [115, 178, 255, 255],
                   "width": 0.2
                 }
               }
@@ -13864,21 +13394,11 @@
               "symbol": {
                 "type": "esriSFS",
                 "style": "esriSFSSolid",
-                "color": [
-                  212,
-                  232,
-                  247,
-                  255
-                ],
+                "color": [212, 232, 247, 255],
                 "outline": {
                   "type": "esriSLS",
                   "style": "esriSLSSolid",
-                  "color": [
-                    115,
-                    178,
-                    255,
-                    255
-                  ],
+                  "color": [115, 178, 255, 255],
                   "width": 0.2
                 }
               }
@@ -13890,21 +13410,11 @@
               "symbol": {
                 "type": "esriSFS",
                 "style": "esriSFSSolid",
-                "color": [
-                  230,
-                  242,
-                  222,
-                  255
-                ],
+                "color": [230, 242, 222, 255],
                 "outline": {
                   "type": "esriSLS",
                   "style": "esriSLSSolid",
-                  "color": [
-                    190,
-                    210,
-                    255,
-                    255
-                  ],
+                  "color": [190, 210, 255, 255],
                   "width": 0.4
                 }
               }
@@ -13916,21 +13426,11 @@
               "symbol": {
                 "type": "esriSFS",
                 "style": "esriSFSSolid",
-                "color": [
-                  212,
-                  232,
-                  247,
-                  255
-                ],
+                "color": [212, 232, 247, 255],
                 "outline": {
                   "type": "esriSLS",
                   "style": "esriSLSSolid",
-                  "color": [
-                    115,
-                    178,
-                    255,
-                    255
-                  ],
+                  "color": [115, 178, 255, 255],
                   "width": 0.2
                 }
               }
@@ -14132,21 +13632,11 @@
               "symbol": {
                 "type": "esriSFS",
                 "style": "esriSFSSolid",
-                "color": [
-                  212,
-                  232,
-                  247,
-                  255
-                ],
+                "color": [212, 232, 247, 255],
                 "outline": {
                   "type": "esriSLS",
                   "style": "esriSLSSolid",
-                  "color": [
-                    115,
-                    178,
-                    255,
-                    255
-                  ],
+                  "color": [115, 178, 255, 255],
                   "width": 0.5
                 }
               }
@@ -14158,21 +13648,11 @@
               "symbol": {
                 "type": "esriSFS",
                 "style": "esriSFSSolid",
-                "color": [
-                  212,
-                  232,
-                  247,
-                  255
-                ],
+                "color": [212, 232, 247, 255],
                 "outline": {
                   "type": "esriSLS",
                   "style": "esriSLSSolid",
-                  "color": [
-                    115,
-                    178,
-                    255,
-                    255
-                  ],
+                  "color": [115, 178, 255, 255],
                   "width": 0.5
                 }
               }
@@ -14184,21 +13664,11 @@
               "symbol": {
                 "type": "esriSFS",
                 "style": "esriSFSSolid",
-                "color": [
-                  230,
-                  242,
-                  222,
-                  255
-                ],
+                "color": [230, 242, 222, 255],
                 "outline": {
                   "type": "esriSLS",
                   "style": "esriSLSSolid",
-                  "color": [
-                    190,
-                    210,
-                    255,
-                    255
-                  ],
+                  "color": [190, 210, 255, 255],
                   "width": 0.4
                 }
               }
@@ -14210,21 +13680,11 @@
               "symbol": {
                 "type": "esriSFS",
                 "style": "esriSFSSolid",
-                "color": [
-                  230,
-                  242,
-                  222,
-                  255
-                ],
+                "color": [230, 242, 222, 255],
                 "outline": {
                   "type": "esriSLS",
                   "style": "esriSLSSolid",
-                  "color": [
-                    190,
-                    210,
-                    255,
-                    255
-                  ],
+                  "color": [190, 210, 255, 255],
                   "width": 0.4
                 }
               }
@@ -14470,21 +13930,11 @@
           "symbol": {
             "type": "esriSFS",
             "style": "esriSFSSolid",
-            "color": [
-              212,
-              232,
-              247,
-              255
-            ],
+            "color": [212, 232, 247, 255],
             "outline": {
               "type": "esriSLS",
               "style": "esriSLSSolid",
-              "color": [
-                115,
-                178,
-                255,
-                255
-              ],
+              "color": [115, 178, 255, 255],
               "width": 0.2
             }
           },
@@ -14730,21 +14180,11 @@
           "symbol": {
             "type": "esriSFS",
             "style": "esriSFSSolid",
-            "color": [
-              212,
-              232,
-              247,
-              255
-            ],
+            "color": [212, 232, 247, 255],
             "outline": {
               "type": "esriSLS",
               "style": "esriSLSSolid",
-              "color": [
-                115,
-                178,
-                255,
-                255
-              ],
+              "color": [115, 178, 255, 255],
               "width": 0.2
             }
           },
@@ -14990,21 +14430,11 @@
           "symbol": {
             "type": "esriSFS",
             "style": "esriSFSSolid",
-            "color": [
-              158,
-              215,
-              194,
-              255
-            ],
+            "color": [158, 215, 194, 255],
             "outline": {
               "type": "esriSLS",
               "style": "esriSLSSolid",
-              "color": [
-                0,
-                77,
-                168,
-                255
-              ],
+              "color": [0, 77, 168, 255],
               "width": 0.4
             }
           },
@@ -15250,12 +14680,7 @@
           "symbol": {
             "type": "esriSLS",
             "style": "esriSLSSolid",
-            "color": [
-              115,
-              178,
-              255,
-              255
-            ],
+            "color": [115, 178, 255, 255],
             "width": 1.5
           },
           "label": "",
@@ -15457,12 +14882,7 @@
               "symbol": {
                 "type": "esriSLS",
                 "style": "esriSLSSolid",
-                "color": [
-                  89,
-                  153,
-                  230,
-                  255
-                ],
+                "color": [89, 153, 230, 255],
                 "width": 1.5
               }
             },
@@ -15473,12 +14893,7 @@
               "symbol": {
                 "type": "esriSLS",
                 "style": "esriSLSSolid",
-                "color": [
-                  89,
-                  153,
-                  230,
-                  255
-                ],
+                "color": [89, 153, 230, 255],
                 "width": 1.5
               }
             },
@@ -15489,12 +14904,7 @@
               "symbol": {
                 "type": "esriSLS",
                 "style": "esriSLSSolid",
-                "color": [
-                  89,
-                  153,
-                  230,
-                  255
-                ],
+                "color": [89, 153, 230, 255],
                 "width": 1
               }
             },
@@ -15505,12 +14915,7 @@
               "symbol": {
                 "type": "esriSLS",
                 "style": "esriSLSSolid",
-                "color": [
-                  89,
-                  153,
-                  230,
-                  255
-                ],
+                "color": [89, 153, 230, 255],
                 "width": 1
               }
             },
@@ -15521,12 +14926,7 @@
               "symbol": {
                 "type": "esriSLS",
                 "style": "esriSLSSolid",
-                "color": [
-                  89,
-                  153,
-                  230,
-                  255
-                ],
+                "color": [89, 153, 230, 255],
                 "width": 1
               }
             },
@@ -15537,12 +14937,7 @@
               "symbol": {
                 "type": "esriSLS",
                 "style": "esriSLSSolid",
-                "color": [
-                  89,
-                  153,
-                  230,
-                  255
-                ],
+                "color": [89, 153, 230, 255],
                 "width": 1
               }
             },
@@ -15553,12 +14948,7 @@
               "symbol": {
                 "type": "esriSLS",
                 "style": "esriSLSSolid",
-                "color": [
-                  89,
-                  153,
-                  230,
-                  255
-                ],
+                "color": [89, 153, 230, 255],
                 "width": 1
               }
             }
@@ -15760,12 +15150,7 @@
               "symbol": {
                 "type": "esriSLS",
                 "style": "esriSLSSolid",
-                "color": [
-                  89,
-                  153,
-                  230,
-                  255
-                ],
+                "color": [89, 153, 230, 255],
                 "width": 1.5
               }
             },
@@ -15776,12 +15161,7 @@
               "symbol": {
                 "type": "esriSLS",
                 "style": "esriSLSSolid",
-                "color": [
-                  89,
-                  153,
-                  230,
-                  255
-                ],
+                "color": [89, 153, 230, 255],
                 "width": 1
               }
             },
@@ -15792,12 +15172,7 @@
               "symbol": {
                 "type": "esriSLS",
                 "style": "esriSLSSolid",
-                "color": [
-                  89,
-                  153,
-                  230,
-                  255
-                ],
+                "color": [89, 153, 230, 255],
                 "width": 1
               }
             }
@@ -16061,12 +15436,7 @@
               "symbol": {
                 "type": "esriSLS",
                 "style": "esriSLSSolid",
-                "color": [
-                  89,
-                  153,
-                  230,
-                  255
-                ],
+                "color": [89, 153, 230, 255],
                 "width": 1.5
               }
             },
@@ -16077,12 +15447,7 @@
               "symbol": {
                 "type": "esriSLS",
                 "style": "esriSLSSolid",
-                "color": [
-                  89,
-                  153,
-                  230,
-                  255
-                ],
+                "color": [89, 153, 230, 255],
                 "width": 1
               }
             },
@@ -16093,12 +15458,7 @@
               "symbol": {
                 "type": "esriSLS",
                 "style": "esriSLSSolid",
-                "color": [
-                  89,
-                  153,
-                  230,
-                  255
-                ],
+                "color": [89, 153, 230, 255],
                 "width": 1
               }
             }
@@ -16351,21 +15711,11 @@
           "symbol": {
             "type": "esriSFS",
             "style": "esriSFSSolid",
-            "color": [
-              219,
-              227,
-              255,
-              255
-            ],
+            "color": [219, 227, 255, 255],
             "outline": {
               "type": "esriSLS",
               "style": "esriSLSNull",
-              "color": [
-                110,
-                110,
-                110,
-                255
-              ],
+              "color": [110, 110, 110, 255],
               "width": 0
             }
           },
@@ -16611,21 +15961,11 @@
           "symbol": {
             "type": "esriSFS",
             "style": "esriSFSSolid",
-            "color": [
-              133,
-              212,
-              196,
-              255
-            ],
+            "color": [133, 212, 196, 255],
             "outline": {
               "type": "esriSLS",
               "style": "esriSLSNull",
-              "color": [
-                110,
-                110,
-                110,
-                255
-              ],
+              "color": [110, 110, 110, 255],
               "width": 0
             }
           },
@@ -16871,12 +16211,7 @@
           "symbol": {
             "type": "esriSFS",
             "style": "esriSFSSolid",
-            "color": [
-              230,
-              230,
-              230,
-              255
-            ],
+            "color": [230, 230, 230, 255],
             "outline": {
               "type": "esriSLS",
               "style": "esriSLSNull",
@@ -17126,21 +16461,11 @@
           "symbol": {
             "type": "esriSFS",
             "style": "esriSFSSolid",
-            "color": [
-              196,
-              214,
-              215,
-              255
-            ],
+            "color": [196, 214, 215, 255],
             "outline": {
               "type": "esriSLS",
               "style": "esriSLSNull",
-              "color": [
-                110,
-                110,
-                110,
-                255
-              ],
+              "color": [110, 110, 110, 255],
               "width": 0
             }
           },

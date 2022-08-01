@@ -10,13 +10,13 @@ import { terriaTheme } from "../../../../lib/ReactViews/StandardUserInterface/St
 import TestHelpContent from "./test-help-content";
 import Box from "../../../../lib/Styled/Box";
 
-describe("TrainerBar", function() {
+describe("TrainerBar", function () {
   let terria: Terria;
   let viewState: ViewState;
 
   let testRenderer: any;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -27,8 +27,8 @@ describe("TrainerBar", function() {
     });
   });
 
-  describe("with basic props", function() {
-    it("mounts without problems", function() {
+  describe("with basic props", function () {
+    it("mounts without problems", function () {
       act(() => {
         testRenderer = create(
           <ThemeProvider theme={terriaTheme}>
@@ -43,7 +43,7 @@ describe("TrainerBar", function() {
         trainerBarRender.findByType("div");
       }).toThrow();
     });
-    it("renders nothing when setTrainerBarVisible is false", function() {
+    it("renders nothing when setTrainerBarVisible is false", function () {
       runInAction(() => {
         terria.updateParameters({
           regionMappingDefinitionsUrl: "",
@@ -70,7 +70,7 @@ describe("TrainerBar", function() {
       expect(buttons.length).toEqual(0);
       expect(boxes.length).toEqual(0);
     });
-    it("renders a button to toggle visibility", function() {
+    it("renders a button to toggle visibility", function () {
       runInAction(() => {
         terria.updateParameters({
           regionMappingDefinitionsUrl: "",

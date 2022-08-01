@@ -14,8 +14,8 @@ import Box from "../../../../Styled/Box";
 import Text from "../../../../Styled/Text";
 import Spacing from "../../../../Styled/Spacing";
 
-const MenuPanel = require("../../../StandardUserInterface/customizable/MenuPanel")
-  .default;
+const MenuPanel =
+  require("../../../StandardUserInterface/customizable/MenuPanel").default;
 const StorySharePanel = require("./StorySharePanel").default;
 
 interface PropTypes extends WithTranslation {
@@ -119,12 +119,8 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
 
   render() {
     const { t } = this.props;
-    const {
-      catalogShare,
-      storyShare,
-      catalogShareWithoutText,
-      modalWidth
-    } = this.props;
+    const { catalogShare, storyShare, catalogShareWithoutText, modalWidth } =
+      this.props;
     const dropdownTheme = {
       btn: classNames({
         [Styles.btnCatalogShare]: catalogShare,

@@ -149,7 +149,7 @@ const PrintView = (props: Props) => {
       ? buildShortShareLink(props.terria, props.viewState, {
           includeStories: false
         })
-          .then(url => {
+          .then((url) => {
             setShareLink(url);
           })
           .catch(() =>

@@ -226,9 +226,7 @@ export interface StopTimeUpdate {
   schedule_relationship?: StopTimeUpdateScheduleRelationship;
 }
 
-export class StopTimeUpdateReader extends ProtobufMessageReader<
-  StopTimeUpdate
-> {
+export class StopTimeUpdateReader extends ProtobufMessageReader<StopTimeUpdate> {
   readonly defaultMessage: StopTimeUpdate = {
     stop_sequence: 0,
     stop_id: "",
@@ -282,9 +280,7 @@ export interface VehiclePosition {
   occupancy_status?: OccupancyStatus;
 }
 
-export class VehiclePositionReader extends ProtobufMessageReader<
-  VehiclePosition
-> {
+export class VehiclePositionReader extends ProtobufMessageReader<VehiclePosition> {
   readonly defaultMessage: VehiclePosition = {
     trip: null,
     vehicle: null,
@@ -519,9 +515,7 @@ export interface TripDescriptor {
   schedule_relationship?: TripDescriptorScheduleRelationship;
 }
 
-export class TripDescriptorReader extends ProtobufMessageReader<
-  TripDescriptor
-> {
+export class TripDescriptorReader extends ProtobufMessageReader<TripDescriptor> {
   readonly defaultMessage: TripDescriptor = {
     trip_id: "",
     route_id: "",
@@ -579,9 +573,7 @@ export interface VehicleDescriptor {
   license_plate?: string;
 }
 
-export class VehicleDescriptorReader extends ProtobufMessageReader<
-  VehicleDescriptor
-> {
+export class VehicleDescriptorReader extends ProtobufMessageReader<VehicleDescriptor> {
   readonly defaultMessage: VehicleDescriptor = {
     id: "",
     label: "",
@@ -613,9 +605,7 @@ export interface EntitySelector {
   stop_id?: string;
 }
 
-export class EntitySelectorReader extends ProtobufMessageReader<
-  EntitySelector
-> {
+export class EntitySelectorReader extends ProtobufMessageReader<EntitySelector> {
   readonly defaultMessage: EntitySelector = {
     agency_id: "",
     route_id: "",
@@ -651,9 +641,7 @@ export interface TranslatedString {
   translation?: Translation[];
 }
 
-export class TranslatedStringReader extends ProtobufMessageReader<
-  TranslatedString
-> {
+export class TranslatedStringReader extends ProtobufMessageReader<TranslatedString> {
   readonly defaultMessage: TranslatedString = { translation: [] };
 
   protected readField(tag: number, obj?: TranslatedString, pbf?: Pbf): void {

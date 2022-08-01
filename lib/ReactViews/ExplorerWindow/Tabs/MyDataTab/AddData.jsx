@@ -78,7 +78,7 @@ const AddData = createReactClass({
       this.props.terria,
       this.props.viewState,
       this.state.localDataType
-    ).then(addedCatalogItems => {
+    ).then((addedCatalogItems) => {
       if (addedCatalogItems && addedCatalogItems.length > 0) {
         this.props.onFileAddFinished(addedCatalogItems);
       }
@@ -122,7 +122,7 @@ const AddData = createReactClass({
           message: `An error occurred trying to add data from URL: ${url}`
         });
         newItem.setTrait(CommonStrata.user, "url", url);
-        promise = newItem.loadMetadata().then(result => {
+        promise = newItem.loadMetadata().then((result) => {
           if (result.error) {
             return Promise.reject(result.error);
           }
@@ -133,7 +133,7 @@ const AddData = createReactClass({
         promise = Promise.reject(e);
       }
     }
-    addUserCatalogMember(this.props.terria, promise).then(addedItem => {
+    addUserCatalogMember(this.props.terria, promise).then((addedItem) => {
       if (addedItem) {
         this.props.onFileAddFinished([addedItem]);
         if (TimeVarying.is(addedItem)) {
@@ -165,13 +165,13 @@ const AddData = createReactClass({
       icon: <Icon glyph={Icon.GLYPHS.opened} />
     };
 
-    const dataTypes = this.state.localDataTypes.reduce(function(
+    const dataTypes = this.state.localDataTypes.reduce(function (
       result,
       currentDataType
     ) {
       if (currentDataType.extensions) {
         return result.concat(
-          currentDataType.extensions.map(extension => "." + extension)
+          currentDataType.extensions.map((extension) => "." + extension)
         );
       } else {
         return result;

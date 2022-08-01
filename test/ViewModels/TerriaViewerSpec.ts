@@ -7,11 +7,11 @@ import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 const mockBeforeViewerChanges = jasmine.createSpy("", () => {});
 const mockAfterViewerChanges = jasmine.createSpy("", () => {});
 
-describe("TerriaViewer", function() {
+describe("TerriaViewer", function () {
   let terria: Terria;
   let terriaViewer: TerriaViewer;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });

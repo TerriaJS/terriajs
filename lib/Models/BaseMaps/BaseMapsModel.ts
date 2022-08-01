@@ -46,7 +46,7 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
   get baseMapItems(): BaseMapItem[] {
     const enabledBaseMaps: BaseMapItem[] = [];
 
-    this.items.forEach(baseMapItem => {
+    this.items.forEach((baseMapItem) => {
       if (
         baseMapItem.item &&
         !ModelReference.isRemoved(baseMapItem.item) &&
@@ -104,7 +104,7 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
       const newItemsIds = itemsTrait.fromJson(this, stratumId, items);
       newItemsIds.pushErrorTo(errors)?.forEach((member: BaseMapModel) => {
         const existingItem = this.items.find(
-          baseMap => baseMap.item === member.item
+          (baseMap) => baseMap.item === member.item
         );
         if (existingItem) {
           // object array trait doesn't automatically update model item

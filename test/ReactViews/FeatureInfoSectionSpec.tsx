@@ -61,13 +61,13 @@ function absPad2(value: number) {
   return (Math.abs(value) < 10 ? "0" : "") + Math.abs(value);
 }
 
-describe("FeatureInfoSection", function() {
+describe("FeatureInfoSection", function () {
   let terria: Terria;
   let feature: any;
   let viewState: any;
   let catalogItem: TestModel;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -93,9 +93,9 @@ describe("FeatureInfoSection", function() {
     });
   });
 
-  it("renders a static description", function() {
+  it("renders a static description", function () {
     feature.description = {
-      getValue: function() {
+      getValue: function () {
         return "<p>hi!</p>";
       },
       isConstant: true
@@ -113,9 +113,9 @@ describe("FeatureInfoSection", function() {
     expect(findAllEqualTo(result, "hi!").length).toEqual(1);
   });
 
-  it("does not render unsafe html", function() {
+  it("does not render unsafe html", function () {
     feature.description = {
-      getValue: function() {
+      getValue: function () {
         return '<script>alert("gotcha")</script><p>hi!</p>';
       },
       isConstant: true
@@ -154,7 +154,7 @@ describe("FeatureInfoSection", function() {
     return desc;
   }
 
-  it("renders a time-varying description", function() {
+  it("renders a time-varying description", function () {
     feature.description = timeVaryingDescription();
     catalogItem.setTrait(CommonStrata.user, "currentTime", "2011-06-30");
 
@@ -187,7 +187,7 @@ describe("FeatureInfoSection", function() {
     expect(findAllEqualTo(result2, "bye").length).toEqual(0);
   });
 
-  it("handles features with no properties", function() {
+  it("handles features with no properties", function () {
     feature = new Entity({
       name: "Foot",
       description: "bart"
@@ -205,7 +205,7 @@ describe("FeatureInfoSection", function() {
     expect(findAllEqualTo(result, "bart").length).toEqual(1);
   });
 
-  it("handles html format feature info", function() {
+  it("handles html format feature info", function () {
     feature = new Entity({
       name: "Foo",
       description:
@@ -224,7 +224,7 @@ describe("FeatureInfoSection", function() {
     expect(findAllEqualTo(result, "BAR").length).toEqual(1);
   });
 
-  it("handles html format feature info where markdown would break the html", function() {
+  it("handles html format feature info where markdown would break the html", function () {
     feature = new Entity({
       name: "Foo",
       description:
@@ -244,7 +244,7 @@ describe("FeatureInfoSection", function() {
     expect(findAllEqualTo(result, "&lt;\n").length).toEqual(0); // Also cover the possibility that it might be encoded.
   });
 
-  it("maintains and applies inline style attributes", function() {
+  it("maintains and applies inline style attributes", function () {
     feature = new Entity({
       name: "Foo",
       description: '<div style="background:rgb(170, 187, 204)">countdown</div>'
@@ -266,7 +266,7 @@ describe("FeatureInfoSection", function() {
     );
   });
 
-  it("does not break when html format feature info has style tag", function() {
+  it("does not break when html format feature info has style tag", function () {
     // Note this does not test that it actually uses the style tag for styling.
     feature = new Entity({
       name: "Foo",
@@ -286,7 +286,7 @@ describe("FeatureInfoSection", function() {
     expect(findAllEqualTo(result, "BAR").length).toEqual(1);
   });
 
-  it("does not break when there are neither properties nor description", function() {
+  it("does not break when there are neither properties nor description", function () {
     feature = new Entity({
       name: "Vapid"
     });
@@ -303,14 +303,14 @@ describe("FeatureInfoSection", function() {
     expect(findWithRef(result, "no-info")).toBeDefined();
   });
 
-  it("shows properties if no description", function() {
+  it("shows properties if no description", function () {
     // Tests both static and potentially time-varying properties.
     feature = new Entity({
       name: "Meals",
       properties: {
         lunch: "eggs",
         dinner: {
-          getValue: function() {
+          getValue: function () {
             return "ham";
           }
         }
@@ -332,8 +332,8 @@ describe("FeatureInfoSection", function() {
     expect(findAllEqualTo(result, "ham").length).toEqual(1);
   });
 
-  describe("templating", function() {
-    it("uses and completes a string-form featureInfoTemplate if present", function() {
+  describe("templating", function () {
+    it("uses and completes a string-form featureInfoTemplate if present", function () {
       const template = "This is a {{material}} {{foo}}.";
       const section = (
         <FeatureInfoSection
@@ -348,7 +348,7 @@ describe("FeatureInfoSection", function() {
       expect(findAllEqualTo(result, "This is a steel bar.").length).toEqual(1);
     });
 
-    it("can use _ to refer to . and # in property keys in the featureInfoTemplate", function() {
+    it("can use _ to refer to . and # in property keys in the featureInfoTemplate", function () {
       const template = "Made from {{material_process__1}} {{material}}.";
       const section = (
         <FeatureInfoSection
@@ -365,7 +365,7 @@ describe("FeatureInfoSection", function() {
       );
     });
 
-    it("formats large numbers without commas", function() {
+    it("formats large numbers without commas", function () {
       const template = "Size: {{size}}";
       const section = (
         <FeatureInfoSection
@@ -380,7 +380,7 @@ describe("FeatureInfoSection", function() {
       expect(findAllEqualTo(result, "Size: 12345678.9012").length).toEqual(1);
     });
 
-    it("can format numbers with commas", function() {
+    it("can format numbers with commas", function () {
       const template = {
         template: "Size: {{size}}",
         formats: { size: { type: "number", useGrouping: true } }
@@ -403,7 +403,7 @@ describe("FeatureInfoSection", function() {
       ).toEqual(1);
     });
 
-    it("formats numbers in the formats section with no type as if type were number", function() {
+    it("formats numbers in the formats section with no type as if type were number", function () {
       const template = {
         template: "Size: {{size}}",
         formats: { size: { useGrouping: true } }
@@ -426,7 +426,7 @@ describe("FeatureInfoSection", function() {
       ).toEqual(1);
     });
 
-    it("can format numbers using terria.formatNumber", function() {
+    it("can format numbers using terria.formatNumber", function () {
       let template =
         "Base: {{#terria.formatNumber}}{{size}}{{/terria.formatNumber}}";
       template +=
@@ -455,7 +455,7 @@ describe("FeatureInfoSection", function() {
       ).toEqual(1);
     });
 
-    it("can format numbers using terria.formatNumber without quotes", function() {
+    it("can format numbers using terria.formatNumber without quotes", function () {
       let template =
         "Sep: {{#terria.formatNumber}}{useGrouping:true, maximumFractionDigits:3}{{size}}{{/terria.formatNumber}}";
       template +=
@@ -478,7 +478,7 @@ describe("FeatureInfoSection", function() {
       ).toEqual(1);
     });
 
-    it("can handle white text in terria.formatNumber", function() {
+    it("can handle white text in terria.formatNumber", function () {
       const template =
         'Sep: {{#terria.formatNumber}}{"useGrouping":true, "maximumFractionDigits":3} \n {{size}}{{/terria.formatNumber}}';
       const section = (
@@ -499,7 +499,7 @@ describe("FeatureInfoSection", function() {
       ).toEqual(1);
     });
 
-    it("handles non-numbers terria.formatNumber", function() {
+    it("handles non-numbers terria.formatNumber", function () {
       const template =
         "Test: {{#terria.formatNumber}}text{{/terria.formatNumber}}";
       const section = (
@@ -515,7 +515,7 @@ describe("FeatureInfoSection", function() {
       expect(findAllEqualTo(result, "Test: text").length).toEqual(1);
     });
 
-    it("can use a dateFormatString when it is specified in terria.formatDateTime", function() {
+    it("can use a dateFormatString when it is specified in terria.formatDateTime", function () {
       const template =
         'Test: {{#terria.formatDateTime}}{"format": "dd-mm-yyyy HH:MM:ss"}2017-11-23T08:47:53Z{{/terria.formatDateTime}}';
       const section = (
@@ -546,7 +546,7 @@ describe("FeatureInfoSection", function() {
       );
     });
 
-    it("defaults dateFormatString to isoDateTime when it is not specified in terria.formatDateTime", function() {
+    it("defaults dateFormatString to isoDateTime when it is not specified in terria.formatDateTime", function () {
       const template =
         "Test: {{#terria.formatDateTime}}2017-11-23T08:47:53Z{{/terria.formatDateTime}}";
       const section = (
@@ -586,7 +586,7 @@ describe("FeatureInfoSection", function() {
       );
     });
 
-    it("can format dates using the dateTime as the type within the formats section", function() {
+    it("can format dates using the dateTime as the type within the formats section", function () {
       const template = {
         template: "Date: {{date}}",
         formats: { date: { type: "dateTime", format: "dd-mm-yyyy HH:MM:ss" } }
@@ -620,7 +620,7 @@ describe("FeatureInfoSection", function() {
       );
     });
 
-    it("handles non-numbers in terria.formatDateTime", function() {
+    it("handles non-numbers in terria.formatDateTime", function () {
       const template =
         "Test: {{#terria.formatDateTime}}text{{/terria.formatDateTime}}";
       const section = (
@@ -636,7 +636,7 @@ describe("FeatureInfoSection", function() {
       expect(findAllEqualTo(result, "Test: text").length).toEqual(1);
     });
 
-    it("url encodes text components", function() {
+    it("url encodes text components", function () {
       const template =
         "Test: {{#terria.urlEncodeComponent}}W/HO:E#1{{/terria.urlEncodeComponent}}";
       const section = (
@@ -652,7 +652,7 @@ describe("FeatureInfoSection", function() {
       expect(findAllEqualTo(result, "Test: W%2FHO%3AE%231").length).toEqual(1);
     });
 
-    it("url encodes sections of text", function() {
+    it("url encodes sections of text", function () {
       const template =
         "Test: {{#terria.urlEncode}}http://example.com/a b{{/terria.urlEncode}}";
       const section = (
@@ -670,7 +670,7 @@ describe("FeatureInfoSection", function() {
       ).toEqual(1);
     });
 
-    it("does not escape ampersand as &amp;", function() {
+    it("does not escape ampersand as &amp;", function () {
       const template = { template: "Ampersand: {{ampersand}}" };
       const section = (
         <FeatureInfoSection
@@ -686,7 +686,7 @@ describe("FeatureInfoSection", function() {
       expect(findAllEqualTo(result, "&amp;").length).toEqual(0);
     });
 
-    it("does not escape < as &lt;", function() {
+    it("does not escape < as &lt;", function () {
       const template = { template: "Less than: {{lessThan}}" };
       const section = (
         <FeatureInfoSection
@@ -702,7 +702,7 @@ describe("FeatureInfoSection", function() {
       expect(findAllEqualTo(result, "&lt;").length).toEqual(0);
     });
 
-    it("can embed safe html in template", function() {
+    it("can embed safe html in template", function () {
       const template = "<div>Hello {{owner_html}}.</div>";
       const section = (
         <FeatureInfoSection
@@ -719,7 +719,7 @@ describe("FeatureInfoSection", function() {
       expect(findAllEqualTo(result, "Smith.").length).toEqual(1);
     });
 
-    it("cannot embed unsafe html in template", function() {
+    it("cannot embed unsafe html in template", function () {
       const template = "<div>Hello {{unsafe}}</div>";
       const section = (
         <FeatureInfoSection
@@ -736,7 +736,7 @@ describe("FeatureInfoSection", function() {
       expect(findAllEqualTo(result, 'alert("gotcha")').length).toEqual(0);
     });
 
-    it("can use a json featureInfoTemplate with partials", function() {
+    it("can use a json featureInfoTemplate with partials", function () {
       const template = {
         template: '<div class="jj">test {{>boldfoo}}</div>',
         partials: { boldfoo: "<b>{{foo}}</b>" }
@@ -758,7 +758,7 @@ describe("FeatureInfoSection", function() {
       expect(findAllEqualTo(result, "bar").length).toEqual(1);
     });
 
-    it("sets the name from featureInfoTemplate", function() {
+    it("sets the name from featureInfoTemplate", function () {
       const template = { name: "{{name}} {{foo}}" };
       const section = (
         <FeatureInfoSection
@@ -776,7 +776,7 @@ describe("FeatureInfoSection", function() {
       expect(name).toContain("Kay bar");
     });
 
-    it("can access clicked lat and long", function() {
+    it("can access clicked lat and long", function () {
       const template =
         "<div>Clicked {{#terria.formatNumber}}{maximumFractionDigits:0}{{terria.coords.latitude}}{{/terria.formatNumber}}, {{#terria.formatNumber}}{maximumFractionDigits:0}{{terria.coords.longitude}}{{/terria.formatNumber}}</div>";
       const position = Ellipsoid.WGS84.cartographicToCartesian(
@@ -796,7 +796,7 @@ describe("FeatureInfoSection", function() {
       expect(findAllEqualTo(result, "Clicked 44, 77").length).toEqual(1);
     });
 
-    it("can replace text, using terria.partialByName", function() {
+    it("can replace text, using terria.partialByName", function () {
       // Replace "Kay" of feature.properties.name with "Yak", or "This name" with "That name".
       const template = {
         template: "{{#terria.partialByName}}{{name}}{{/terria.partialByName}}",
@@ -835,7 +835,7 @@ describe("FeatureInfoSection", function() {
       expect(findAllEqualTo(result, "Yak").length).toEqual(0);
     });
 
-    it("does not replace text if no matching, using terria.partialByName", function() {
+    it("does not replace text if no matching, using terria.partialByName", function () {
       const template = {
         template: "{{#terria.partialByName}}{{name}}{{/terria.partialByName}}",
         partials: {
@@ -859,7 +859,7 @@ describe("FeatureInfoSection", function() {
       expect(findAllEqualTo(result, "Kay").length).toEqual(1);
     });
 
-    it("can replace text and filter out unsafe replacement, using terria.partialByName", function() {
+    it("can replace text and filter out unsafe replacement, using terria.partialByName", function () {
       const template = {
         template: "{{#terria.partialByName}}{{name}}{{/terria.partialByName}}",
         partials: {
@@ -934,7 +934,7 @@ describe("FeatureInfoSection", function() {
       );
     });
 */
-    it("can render a recursive featureInfoTemplate", function() {
+    it("can render a recursive featureInfoTemplate", function () {
       const template = {
         template: "<ul>{{>show_children}}</ul>",
         partials: {
@@ -991,17 +991,17 @@ describe("FeatureInfoSection", function() {
     });
   });
 
-  describe("raw data", function() {
-    beforeEach(function() {
+  describe("raw data", function () {
+    beforeEach(function () {
       feature.description = {
-        getValue: function() {
+        getValue: function () {
           return "<p>hi!</p>";
         },
         isConstant: true
       };
     });
 
-    it("does not appear if no template", function() {
+    it("does not appear if no template", function () {
       const section = (
         <FeatureInfoSection
           feature={feature}
@@ -1019,7 +1019,7 @@ describe("FeatureInfoSection", function() {
       );
     });
 
-    it('shows "Show Raw Data" if template', function() {
+    it('shows "Show Raw Data" if template', function () {
       const template = "Test";
       const section = (
         <FeatureInfoSection
@@ -1040,10 +1040,10 @@ describe("FeatureInfoSection", function() {
     });
   });
 
-  describe("CZML templating", function() {
-    beforeEach(function() {});
+  describe("CZML templating", function () {
+    beforeEach(function () {});
 
-    it("uses and completes a string-form featureInfoTemplate", async function() {
+    it("uses and completes a string-form featureInfoTemplate", async function () {
       // target = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>ABC</td></tr></tbody></table><br />
       //           <table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
       const json = await loadJson("test/init/czml-with-template-0.json");
@@ -1078,7 +1078,7 @@ describe("FeatureInfoSection", function() {
       expect(findAllEqualTo(result, "10.7").length).toEqual(1);
     });
 
-    it("uses and completes a time-varying, string-form featureInfoTemplate", async function() {
+    it("uses and completes a time-varying, string-form featureInfoTemplate", async function () {
       // targetBlank = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td></td></tr></tbody></table><br />
       //                <table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
       // targetABC = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>ABC</td></tr></tbody></table><br />
@@ -1169,6 +1169,6 @@ class TestModel extends MappableMixin(
 
   @observable _discreteTimes: string[] = [];
   get discreteTimes() {
-    return this._discreteTimes.map(t => ({ time: t, tag: undefined }));
+    return this._discreteTimes.map((t) => ({ time: t, tag: undefined }));
   }
 }

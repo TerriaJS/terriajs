@@ -32,14 +32,14 @@ const DataAttributionBox = styled(Box).attrs({
   top: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.12), 0 10px 20px 0 rgba(0, 0, 0, 0.05);
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${(props) => props.theme.mobile}px) {
     width: 100%;
   }
 `;
 
 const AttributionText = styled(Text).attrs(() => ({ medium: true }))`
   a {
-    color: ${props => props.theme.textDark};
+    color: ${(props) => props.theme.textDark};
     text-decoration: underline;
 
     img {

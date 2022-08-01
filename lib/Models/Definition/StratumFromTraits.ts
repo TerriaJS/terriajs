@@ -19,14 +19,12 @@ type ArrayTrait<TTrait, TElement> = Array<SingleTrait<TElement>>;
  *
  * Nested traits classes follow the rules above.
  */
-type StratumFromTraits<TDefinition extends ModelTraits> = Complete<
-  {
-    [P in keyof TDefinition]: NotUndefined<TDefinition[P]> extends Array<
-      infer TElement
-    >
-      ? ArrayTrait<TDefinition[P], TElement> | undefined
-      : SingleTrait<TDefinition[P]> | undefined;
-  }
->;
+type StratumFromTraits<TDefinition extends ModelTraits> = Complete<{
+  [P in keyof TDefinition]: NotUndefined<TDefinition[P]> extends Array<
+    infer TElement
+  >
+    ? ArrayTrait<TDefinition[P], TElement> | undefined
+    : SingleTrait<TDefinition[P]> | undefined;
+}>;
 
 export default StratumFromTraits;

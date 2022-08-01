@@ -27,7 +27,7 @@ export default observer(
       else if (isDefined(displayOne))
         brandingHtmlElements = [
           (brandingHtmlElements[displayOne] ||
-            brandingHtmlElements.find(item => item.length > 0)) ??
+            brandingHtmlElements.find((item) => item.length > 0)) ??
             DEFAULT_BRANDING
         ];
     }

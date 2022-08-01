@@ -95,7 +95,8 @@ const MobileHeader = observer(
         const text = this.props.viewState.searchState.locationSearchText;
         if (text && text.length > 0) {
           this.props.viewState.explorerPanelIsVisible = true;
-          this.props.viewState.mobileView = this.props.viewState.mobileViewOptions.locationSearchResults;
+          this.props.viewState.mobileView =
+            this.props.viewState.mobileViewOptions.locationSearchResults;
         } else {
           // TODO: return to the preview mobileView, rather than dropping back to the map
           this.props.viewState.explorerPanelIsVisible = false;
@@ -191,7 +192,7 @@ const MobileHeader = observer(
                 <div
                   className={Styles.groupRight}
                   css={`
-                    background-color: ${p => p.theme.dark};
+                    background-color: ${(p) => p.theme.dark};
                   `}
                 >
                   <button
@@ -291,7 +292,7 @@ const HamburgerButton = styled(RawButton)`
   border-radius: 4px;
   padding: 0 5px;
   margin-right: 3px;
-  background: ${p => p.theme.darkLighter};
+  background: ${(p) => p.theme.darkLighter};
   width: 50px;
   height: 38px;
   box-sizing: content-box;
@@ -301,7 +302,7 @@ const HamburgerButton = styled(RawButton)`
   &:hover,
   &:focus,
   & {
-    border: 1px solid ${p => p.theme.textLightTranslucent};
+    border: 1px solid ${(p) => p.theme.textLightTranslucent};
   }
 `;
 

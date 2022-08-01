@@ -63,8 +63,11 @@ class DragDropFile extends React.Component<PropsType> {
           // update last batch of uploaded files
           runInAction(
             () =>
-              (props.viewState.lastUploadedFiles = addedCatalogItems.map(item =>
-                CatalogMemberMixin.isMixedInto(item) ? item.name : item.uniqueId
+              (props.viewState.lastUploadedFiles = addedCatalogItems.map(
+                (item) =>
+                  CatalogMemberMixin.isMixedInto(item)
+                    ? item.name
+                    : item.uniqueId
               ))
           );
         }
@@ -75,12 +78,12 @@ class DragDropFile extends React.Component<PropsType> {
         );
 
         Result.combine(
-          await Promise.all(mappableItems.map(f => f.loadMapItems())),
+          await Promise.all(mappableItems.map((f) => f.loadMapItems())),
           "Failed to load uploaded files"
         ).raiseError(props.terria);
 
         // Zoom to first item
-        const firstZoomableItem = mappableItems.find(i =>
+        const firstZoomableItem = mappableItems.find((i) =>
           isDefined(i.rectangle)
         );
 

@@ -34,9 +34,8 @@ class MyLocation extends MapNavigationItemController {
     this._marker = new GeoJsonCatalogItem(createGuid(), props.terria);
     this.zoomToMyLocation = this.zoomToMyLocation.bind(this);
     this.handleLocationError = this.handleLocationError.bind(this);
-    this.augmentedVirtualityEnabled = this.augmentedVirtualityEnabled.bind(
-      this
-    );
+    this.augmentedVirtualityEnabled =
+      this.augmentedVirtualityEnabled.bind(this);
     this.followMeEnabled = this.followMeEnabled.bind(this);
   }
 

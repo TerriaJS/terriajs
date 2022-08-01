@@ -24,11 +24,11 @@ configure({
   computedRequiresReaction: true
 });
 
-describe("YDYRCatalogFunctionJob", function() {
+describe("YDYRCatalogFunctionJob", function () {
   let terria: Terria;
   let job: YDYRCatalogFunctionJob;
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     jasmine.Ajax.install();
 
     jasmine.Ajax.stubRequest(
@@ -43,7 +43,7 @@ describe("YDYRCatalogFunctionJob", function() {
     let logCounter = 0;
     jasmine.Ajax.stubRequest(
       "http://example.com/api/v1/status/someStatusId"
-    ).andCallFunction(req => {
+    ).andCallFunction((req) => {
       if (logCounter < 1) {
         req.respondWith({ responseText: `"Some Log ${logCounter}"` });
 
@@ -83,16 +83,16 @@ describe("YDYRCatalogFunctionJob", function() {
     job.setTrait(CommonStrata.definition, "jobId", "someStatusId");
   });
 
-  afterEach(function() {
+  afterEach(function () {
     jasmine.Ajax.uninstall();
   });
 
-  it("has a type & typeName", function() {
+  it("has a type & typeName", function () {
     expect(YDYRCatalogFunctionJob.type).toBe("ydyr-job");
     expect(job.typeName).toBe("YourDataYourRegions Job");
   });
 
-  describe("start polling after added to workbench", async function() {
+  describe("start polling after added to workbench", async function () {
     let dispose: () => void;
     beforeEach(() => {
       terria.workbench.add(job);
@@ -105,16 +105,16 @@ describe("YDYRCatalogFunctionJob", function() {
       dispose();
     });
 
-    it("should be in workbench", async function() {
+    it("should be in workbench", async function () {
       expect(job.inWorkbench).toBeTruthy();
     });
 
-    it("polls twice - and creates 2 log entries", async function() {
+    it("polls twice - and creates 2 log entries", async function () {
       // Wait until job finished
-      await new Promise(resolve => {
+      await new Promise((resolve) => {
         reaction(
           () => job.jobStatus,
-          status => (status === "finished" ? resolve() : undefined)
+          (status) => (status === "finished" ? resolve() : undefined)
         );
       });
 
@@ -126,12 +126,12 @@ describe("YDYRCatalogFunctionJob", function() {
 
       expect(job.resultId).toBe("someResultKey");
     });
-    it("downloads results and creates CSVCatalogItem", async function() {
+    it("downloads results and creates CSVCatalogItem", async function () {
       // Wait until job finished downloading results
-      await new Promise(resolve => {
+      await new Promise((resolve) => {
         reaction(
           () => job.downloadedResults,
-          downloadedResults => (downloadedResults ? resolve() : undefined)
+          (downloadedResults) => (downloadedResults ? resolve() : undefined)
         );
       });
 

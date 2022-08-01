@@ -37,13 +37,13 @@ export default class EnumIndex implements IndexBase<EnumSearchQuery> {
    */
   async load(indexRootUrl: string, searchHint: EnumSearchQuery): Promise<void> {
     const enumValueIds = searchHint;
-    const promises = enumValueIds.map(async valueId => {
+    const promises = enumValueIds.map(async (valueId) => {
       const value = this.values[valueId];
       if (value.dataRowIds) return Promise.resolve();
       const promise = loadCsv(joinUrl(indexRootUrl, value.url), {
         dynamicTyping: true,
         header: true
-      }).then(rows => rows.map(({ dataRowId }) => dataRowId));
+      }).then((rows) => rows.map(({ dataRowId }) => dataRowId));
       value.dataRowIds = promise;
       return promise;
     });
@@ -58,7 +58,7 @@ export default class EnumIndex implements IndexBase<EnumSearchQuery> {
    */
   async search(enumValueIds: EnumSearchQuery): Promise<Set<number>> {
     const idSets = await Promise.all(
-      enumValueIds.map(async valueId => {
+      enumValueIds.map(async (valueId) => {
         const value = this.values[valueId];
         if (!value) throw new Error(`Not an enum value: ${valueId}`);
         if (!value.dataRowIds)

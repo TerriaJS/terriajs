@@ -6,13 +6,13 @@ describe("DiscretelyTimeVaryingMixin", () => {
   let terria: Terria;
   let wmsItem: WebMapServiceCatalogItem;
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     terria = new Terria({
       baseUrl: "./"
     });
   });
 
-  it("ObjectifiedDates returns correct object", async function() {
+  it("ObjectifiedDates returns correct object", async function () {
     wmsItem = new WebMapServiceCatalogItem("mywms2", terria);
     wmsItem.setTrait(
       "definition",
@@ -30,7 +30,7 @@ describe("DiscretelyTimeVaryingMixin", () => {
     expect(months.index[0]).toBe(3);
   });
 
-  it("supports specifying a chartColor", async function() {
+  it("supports specifying a chartColor", async function () {
     wmsItem = new WebMapServiceCatalogItem("mywms2", terria);
     wmsItem.setTrait(
       "definition",
@@ -44,7 +44,7 @@ describe("DiscretelyTimeVaryingMixin", () => {
     expect(wmsItem.chartItems[0].getColor()).toBe("#efefef");
   });
 
-  it("sets multiplier correctly from multiplierDefaultDeltaStep", async function() {
+  it("sets multiplier correctly from multiplierDefaultDeltaStep", async function () {
     wmsItem = new WebMapServiceCatalogItem("mywms2", terria);
     wmsItem.setTrait(
       "definition",

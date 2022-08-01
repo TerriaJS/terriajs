@@ -44,10 +44,10 @@ const regionIdsLgaNameStates = JSON.stringify(
   require("../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json")
 );
 
-describe("TableMixin", function() {
+describe("TableMixin", function () {
   let item: CsvCatalogItem;
 
-  beforeEach(function() {
+  beforeEach(function () {
     item = new CsvCatalogItem(
       "test",
       new Terria({
@@ -78,31 +78,31 @@ describe("TableMixin", function() {
     ).andReturn({ responseText: regionIdsLgaNameStates });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     jasmine.Ajax.uninstall();
   });
 
-  describe("when the table has time, lat/lon and id columns", function() {
+  describe("when the table has time, lat/lon and id columns", function () {
     let dataSource: CustomDataSource;
-    beforeEach(async function() {
+    beforeEach(async function () {
       item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
       await item.loadMapItems();
       dataSource = <CustomDataSource>item.mapItems[0];
       expect(dataSource instanceof CustomDataSource).toBe(true);
     });
 
-    it("creates one entity per id", async function() {
+    it("creates one entity per id", async function () {
       expect(item.activeTableStyle.rowGroups.length).toBe(4);
       if (dataSource instanceof CustomDataSource) {
         expect(dataSource.entities.values.length).toBe(4);
       }
     });
 
-    it("sets showInChartPanel to false - as is mappable", async function() {
+    it("sets showInChartPanel to false - as is mappable", async function () {
       expect(item.showInChartPanel).toBeFalsy();
     });
 
-    it("sets showInChartPanel to true - when lat/lon is disabled", async function() {
+    it("sets showInChartPanel to true - when lat/lon is disabled", async function () {
       updateModelFromJson(item, CommonStrata.definition, {
         columns: [
           { name: "lat", type: "scalar" },
@@ -114,17 +114,19 @@ describe("TableMixin", function() {
 
     it("doesn't show regions - even if empty region column is detected", () => {});
 
-    it("calculates rectangle", async function() {
+    it("calculates rectangle", async function () {
       expect(item.rectangle.north).toEqual(-20);
       expect(item.rectangle.south).toEqual(-37);
       expect(item.rectangle.east).toEqual(155);
       expect(item.rectangle.west).toEqual(115);
     });
 
-    describe("the entities", function() {
-      it("has availability defined over the correct span", function() {
+    describe("the entities", function () {
+      it("has availability defined over the correct span", function () {
         expect(
-          dataSource.entities.values.map(e => e.availability?.start.toString())
+          dataSource.entities.values.map((e) =>
+            e.availability?.start.toString()
+          )
         ).toEqual([
           "2015-08-01T00:00:00Z",
           "2015-08-01T00:00:00Z",
@@ -132,7 +134,7 @@ describe("TableMixin", function() {
           "2015-08-03T00:00:00Z"
         ]);
         expect(
-          dataSource.entities.values.map(e => e.availability?.stop.toString())
+          dataSource.entities.values.map((e) => e.availability?.stop.toString())
         ).toEqual([
           "2015-08-07T06:00:00Z",
           "2015-08-07T00:00:00Z",
@@ -142,14 +144,14 @@ describe("TableMixin", function() {
       });
     });
 
-    describe("when timeColumn is `null`", function() {
-      it("returns an empty `discreteTimes`", async function() {
+    describe("when timeColumn is `null`", function () {
+      it("returns an empty `discreteTimes`", async function () {
         expect(item.discreteTimes?.length).toBe(6);
         item.defaultStyle.time.setTrait(CommonStrata.user, "timeColumn", null);
         expect(item.discreteTimes).toBe(undefined);
       });
 
-      it("creates entities for all times", async function() {
+      it("creates entities for all times", async function () {
         item.defaultStyle.time.setTrait(CommonStrata.user, "timeColumn", null);
         await item.loadMapItems();
         const mapItem = item.mapItems[0];
@@ -164,9 +166,9 @@ describe("TableMixin", function() {
   // Note this is identical to "when the table has time, lat/lon and id columns" EXCEPT
   // - one additional spec - "doesn't show regions - even if empty region column is detected"
   // - "sets showInChartPanel to true - when lat/lon is disabled" is replaced by "shows regions when lat/lon is disabled"
-  describe("when the table has time, lat/lon, id columns AND regions", function() {
+  describe("when the table has time, lat/lon, id columns AND regions", function () {
     let dataSource: CustomDataSource;
-    beforeEach(async function() {
+    beforeEach(async function () {
       item.setTrait(
         CommonStrata.user,
         "csvString",
@@ -177,18 +179,18 @@ describe("TableMixin", function() {
       expect(dataSource instanceof CustomDataSource).toBe(true);
     });
 
-    it("creates one entity per id", async function() {
+    it("creates one entity per id", async function () {
       expect(item.activeTableStyle.rowGroups.length).toBe(4);
       if (dataSource instanceof CustomDataSource) {
         expect(dataSource.entities.values.length).toBe(4);
       }
     });
 
-    it("sets showInChartPanel to false - as is mappable", async function() {
+    it("sets showInChartPanel to false - as is mappable", async function () {
       expect(item.showInChartPanel).toBeFalsy();
     });
 
-    it("shows regions when lat/lon is disabled", async function() {
+    it("shows regions when lat/lon is disabled", async function () {
       updateModelFromJson(item, CommonStrata.definition, {
         columns: [
           { name: "lat", type: "scalar" },
@@ -207,17 +209,19 @@ describe("TableMixin", function() {
       expect(item.showingRegions).toBeFalsy();
     });
 
-    it("calculates rectangle", async function() {
+    it("calculates rectangle", async function () {
       expect(item.rectangle.north).toEqual(-20);
       expect(item.rectangle.south).toEqual(-37);
       expect(item.rectangle.east).toEqual(155);
       expect(item.rectangle.west).toEqual(115);
     });
 
-    describe("the entities", function() {
-      it("has availability defined over the correct span", function() {
+    describe("the entities", function () {
+      it("has availability defined over the correct span", function () {
         expect(
-          dataSource.entities.values.map(e => e.availability?.start.toString())
+          dataSource.entities.values.map((e) =>
+            e.availability?.start.toString()
+          )
         ).toEqual([
           "2015-08-01T00:00:00Z",
           "2015-08-01T00:00:00Z",
@@ -225,7 +229,7 @@ describe("TableMixin", function() {
           "2015-08-03T00:00:00Z"
         ]);
         expect(
-          dataSource.entities.values.map(e => e.availability?.stop.toString())
+          dataSource.entities.values.map((e) => e.availability?.stop.toString())
         ).toEqual([
           "2015-08-07T06:00:00Z",
           "2015-08-07T00:00:00Z",
@@ -235,14 +239,14 @@ describe("TableMixin", function() {
       });
     });
 
-    describe("when timeColumn is `null`", function() {
-      it("returns an empty `discreteTimes`", async function() {
+    describe("when timeColumn is `null`", function () {
+      it("returns an empty `discreteTimes`", async function () {
         expect(item.discreteTimes?.length).toBe(6);
         item.defaultStyle.time.setTrait(CommonStrata.user, "timeColumn", null);
         expect(item.discreteTimes).toBe(undefined);
       });
 
-      it("creates entities for all times", async function() {
+      it("creates entities for all times", async function () {
         item.defaultStyle.time.setTrait(CommonStrata.user, "timeColumn", null);
         await item.loadMapItems();
         const mapItem = item.mapItems[0];
@@ -254,8 +258,8 @@ describe("TableMixin", function() {
     });
   });
 
-  describe("when the table has lat/lon columns but no time & id columns", function() {
-    it("creates one entity per row", async function() {
+  describe("when the table has lat/lon columns but no time & id columns", function () {
+    it("creates one entity per row", async function () {
       runInAction(() =>
         item.setTrait(CommonStrata.user, "csvString", LatLonValCsv)
       );
@@ -268,7 +272,7 @@ describe("TableMixin", function() {
       }
     });
 
-    it("removes duplicate rows when requested", async function() {
+    it("removes duplicate rows when requested", async function () {
       runInAction(() => {
         item.setTrait(CommonStrata.user, "csvString", LatLonValCsvDuplicate);
         item.setTrait(CommonStrata.user, "removeDuplicateRows", true);
@@ -292,7 +296,7 @@ describe("TableMixin", function() {
       }
     });
 
-    it("has the correct property names", async function() {
+    it("has the correct property names", async function () {
       runInAction(() =>
         item.setTrait(CommonStrata.user, "csvString", LatLonValCsv)
       );
@@ -304,8 +308,8 @@ describe("TableMixin", function() {
     });
   });
 
-  describe("when the time column has bad datetimes in it", function() {
-    it("ignores them gracefully", async function() {
+  describe("when the time column has bad datetimes in it", function () {
+    it("ignores them gracefully", async function () {
       runInAction(() =>
         item.setTrait(CommonStrata.user, "csvString", BadDatesCsv)
       );
@@ -319,24 +323,24 @@ describe("TableMixin", function() {
     });
   });
 
-  describe("when the table has time-series points with intervals", function() {
+  describe("when the table has time-series points with intervals", function () {
     let dataSource: CustomDataSource;
-    beforeEach(async function() {
+    beforeEach(async function () {
       item.setTrait(CommonStrata.user, "csvString", ParkingSensorDataCsv);
       await item.loadMapItems();
       dataSource = <CustomDataSource>item.mapItems[0];
       expect(dataSource instanceof CustomDataSource).toBe(true);
     });
 
-    it("creates one entity per id", async function() {
+    it("creates one entity per id", async function () {
       expect(dataSource.entities.values.length).toBe(21);
     });
 
-    it("creates correct intervals", async function() {
+    it("creates correct intervals", async function () {
       expect(item.activeTableStyle.timeIntervals?.length).toBe(21);
       expect(item.disableDateTimeSelector).toBeFalsy();
       expect(
-        item.activeTableStyle.timeIntervals?.map(t => [
+        item.activeTableStyle.timeIntervals?.map((t) => [
           t?.start.toString(),
           t?.stop.toString()
         ])
@@ -365,7 +369,7 @@ describe("TableMixin", function() {
       ]);
     });
 
-    it("creates correct intervals if spreadStartTime", async function() {
+    it("creates correct intervals if spreadStartTime", async function () {
       runInAction(() =>
         item.setTrait(
           CommonStrata.user,
@@ -380,7 +384,7 @@ describe("TableMixin", function() {
       expect(item.disableDateTimeSelector).toBeFalsy();
       expect(item.activeTableStyle.timeIntervals?.length).toBe(21);
       expect(
-        item.activeTableStyle.timeIntervals?.map(t => [
+        item.activeTableStyle.timeIntervals?.map((t) => [
           t?.start.toString(),
           t?.stop.toString()
         ])
@@ -409,7 +413,7 @@ describe("TableMixin", function() {
       ]);
     });
 
-    it("creates correct intervals if spreadStartTime and spreadFinishTime", async function() {
+    it("creates correct intervals if spreadStartTime and spreadFinishTime", async function () {
       runInAction(() =>
         item.setTrait(
           CommonStrata.user,
@@ -427,7 +431,7 @@ describe("TableMixin", function() {
       expect(item.activeTableStyle.moreThanOneTimeInterval).toBe(false);
     });
 
-    it("creates correct intervals if spreadFinishTime", async function() {
+    it("creates correct intervals if spreadFinishTime", async function () {
       runInAction(() =>
         item.setTrait(
           CommonStrata.user,
@@ -441,7 +445,7 @@ describe("TableMixin", function() {
       );
       expect(item.activeTableStyle.timeIntervals?.length).toBe(21);
       expect(
-        item.activeTableStyle.timeIntervals?.map(t => [
+        item.activeTableStyle.timeIntervals?.map((t) => [
           t?.start.toString(),
           t?.stop.toString()
         ])
@@ -470,11 +474,11 @@ describe("TableMixin", function() {
       ]);
     });
 
-    it("creates disable time dimension by default for this dataset", async function() {
+    it("creates disable time dimension by default for this dataset", async function () {
       expect(item.timeDisableDimension).toBeDefined();
     });
 
-    it("doesn't disable time dimension if `showDisableTimeOption = false`", async function() {
+    it("doesn't disable time dimension if `showDisableTimeOption = false`", async function () {
       runInAction(() =>
         item.setTrait(CommonStrata.user, "showDisableTimeOption", false)
       );
@@ -482,7 +486,7 @@ describe("TableMixin", function() {
       expect(item.timeDisableDimension).toBeUndefined();
     });
 
-    it("doesn't disable time dimension by default for another dataset", async function() {
+    it("doesn't disable time dimension by default for another dataset", async function () {
       runInAction(() => {
         item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
       });
@@ -491,7 +495,7 @@ describe("TableMixin", function() {
       expect(item.timeDisableDimension).toBeUndefined();
     });
 
-    it("creates disable time dimension for another dataset if `showDisableTimeOption = true`", async function() {
+    it("creates disable time dimension for another dataset if `showDisableTimeOption = true`", async function () {
       runInAction(() => {
         item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
         item.setTrait(CommonStrata.user, "showDisableTimeOption", true);
@@ -502,8 +506,8 @@ describe("TableMixin", function() {
     });
   });
 
-  describe("when the table has a few styles", function() {
-    it("creates all styleDimensions", async function() {
+  describe("when the table has a few styles", function () {
+    it("creates all styleDimensions", async function () {
       runInAction(() => {
         item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
       });
@@ -515,7 +519,7 @@ describe("TableMixin", function() {
       expect(item.styleDimensions?.options?.[2].name).toBe("Value");
     });
 
-    it("creates all styleDimensions - with disable style", async function() {
+    it("creates all styleDimensions - with disable style", async function () {
       runInAction(() => {
         item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
         item.setTrait(CommonStrata.user, "showDisableStyleOption", true);
@@ -530,7 +534,7 @@ describe("TableMixin", function() {
       );
     });
 
-    it("uses TableColumnTraits for style title", async function() {
+    it("uses TableColumnTraits for style title", async function () {
       runInAction(() => {
         item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
         updateModelFromJson(item, CommonStrata.definition, {
@@ -544,7 +548,7 @@ describe("TableMixin", function() {
       expect(item.styleDimensions?.options?.[2].name).toBe("Some Title");
     });
 
-    it("uses TableStyleTraits for style title", async function() {
+    it("uses TableStyleTraits for style title", async function () {
       runInAction(() => {
         item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
         updateModelFromJson(item, CommonStrata.definition, {
@@ -559,7 +563,7 @@ describe("TableMixin", function() {
       expect(item.styleDimensions?.options?.[2].name).toBe("Some Style Title");
     });
 
-    it("loads regionProviderList on loadMapItems", async function() {
+    it("loads regionProviderList on loadMapItems", async function () {
       item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
 
       await item.loadMetadata();
@@ -572,8 +576,8 @@ describe("TableMixin", function() {
     });
   });
 
-  describe("creates legend", function() {
-    it(" - correct decimal places for values [0,100]", async function() {
+  describe("creates legend", function () {
+    it(" - correct decimal places for values [0,100]", async function () {
       item.setTrait("definition", "csvString", LegendDecimalPlacesCsv);
 
       item.setTrait("definition", "activeStyle", "0dp");
@@ -581,7 +585,7 @@ describe("TableMixin", function() {
       await item.loadMapItems();
 
       expect(item.legends[0].items.length).toBe(7);
-      expect(item.legends[0].items.map(i => i.title)).toEqual([
+      expect(item.legends[0].items.map((i) => i.title)).toEqual([
         "65",
         "54",
         "44",
@@ -592,7 +596,7 @@ describe("TableMixin", function() {
       ]);
     });
 
-    it(" - correct decimal places for values [0,10]", async function() {
+    it(" - correct decimal places for values [0,10]", async function () {
       item.setTrait("definition", "csvString", LegendDecimalPlacesCsv);
 
       item.setTrait("definition", "activeStyle", "1dp");
@@ -600,7 +604,7 @@ describe("TableMixin", function() {
       await item.loadMapItems();
 
       expect(item.legends[0].items.length).toBe(7);
-      expect(item.legends[0].items.map(i => i.title)).toEqual([
+      expect(item.legends[0].items.map((i) => i.title)).toEqual([
         "10.0",
         "8.3",
         "6.7",
@@ -611,7 +615,7 @@ describe("TableMixin", function() {
       ]);
     });
 
-    it(" - correct decimal places for values [0,1]", async function() {
+    it(" - correct decimal places for values [0,1]", async function () {
       item.setTrait("definition", "csvString", LegendDecimalPlacesCsv);
 
       item.setTrait("definition", "activeStyle", "2dp");
@@ -619,7 +623,7 @@ describe("TableMixin", function() {
       await item.loadMapItems();
 
       expect(item.legends[0].items.length).toBe(7);
-      expect(item.legends[0].items.map(i => i.title)).toEqual([
+      expect(item.legends[0].items.map((i) => i.title)).toEqual([
         "0.70",
         "0.58",
         "0.47",
@@ -630,7 +634,7 @@ describe("TableMixin", function() {
       ]);
     });
 
-    it(" - correct decimal places for values [0,0.1]", async function() {
+    it(" - correct decimal places for values [0,0.1]", async function () {
       item.setTrait("definition", "csvString", LegendDecimalPlacesCsv);
 
       item.setTrait("definition", "activeStyle", "3dp");
@@ -638,7 +642,7 @@ describe("TableMixin", function() {
       await item.loadMapItems();
 
       expect(item.legends[0].items.length).toBe(7);
-      expect(item.legends[0].items.map(i => i.title)).toEqual([
+      expect(item.legends[0].items.map((i) => i.title)).toEqual([
         "0.080",
         "0.068",
         "0.057",
@@ -650,8 +654,8 @@ describe("TableMixin", function() {
     });
   });
 
-  describe("region mapping - LGA with disambig", function() {
-    beforeEach(async function() {
+  describe("region mapping - LGA with disambig", function () {
+    beforeEach(async function () {
       item.setTrait(CommonStrata.user, "csvString", LgaWithDisambigCsv);
       await item.loadMapItems();
 
@@ -663,11 +667,11 @@ describe("TableMixin", function() {
         ?.loadRegionIDs();
     });
 
-    it("creates imagery parts", async function() {
+    it("creates imagery parts", async function () {
       expect(ImageryParts.is(item.mapItems[0])).toBeTruthy();
     });
 
-    it("with state", async function() {
+    it("with state", async function () {
       updateModelFromJson(item, CommonStrata.user, {
         columns: [
           {
@@ -694,7 +698,7 @@ describe("TableMixin", function() {
       ).toBe(3);
     });
 
-    it("with lga_name", async function() {
+    it("with lga_name", async function () {
       updateModelFromJson(item, CommonStrata.user, {
         columns: [
           {
@@ -721,7 +725,7 @@ describe("TableMixin", function() {
       ).toBe(8);
     });
 
-    it("matches column name with whitespace", async function() {
+    it("matches column name with whitespace", async function () {
       item.setTrait(
         CommonStrata.user,
         "csvString",
@@ -739,7 +743,7 @@ describe("TableMixin", function() {
       );
     });
 
-    it("shows region shortReportSection", async function() {
+    it("shows region shortReportSection", async function () {
       const regionCol = item.activeTableStyle.regionColumn;
 
       const regionType = regionCol?.regionType;
@@ -751,7 +755,7 @@ describe("TableMixin", function() {
       );
     });
 
-    it("doesn't show region shortReportSection if region is disabled", async function() {
+    it("doesn't show region shortReportSection if region is disabled", async function () {
       updateModelFromJson(item, CommonStrata.user, {
         defaultStyle: {
           regionColumn: "Something else"
@@ -762,8 +766,8 @@ describe("TableMixin", function() {
     });
   });
 
-  describe("applies TableStyles to lat/lon features", function() {
-    it("bin outline style with points", async function() {
+  describe("applies TableStyles to lat/lon features", function () {
+    it("bin outline style with points", async function () {
       item.setTrait(CommonStrata.user, "csvString", LatLonValCsv);
 
       item.setTrait(CommonStrata.user, "styles", [
@@ -883,7 +887,7 @@ describe("TableMixin", function() {
       });
     });
 
-    it("bin color and outline style with markers", async function() {
+    it("bin color and outline style with markers", async function () {
       item.setTrait(CommonStrata.user, "csvString", LatLonValCsv);
 
       item.setTrait(CommonStrata.user, "styles", [
@@ -1007,7 +1011,7 @@ describe("TableMixin", function() {
       // Test merging legends
 
       expect(
-        item.legends[0].items.map(item => ({
+        item.legends[0].items.map((item) => ({
           title: item.title,
           outlineColor: item.outlineColor,
           outlineWidth: item.outlineWidth,
@@ -1051,7 +1055,7 @@ describe("TableMixin", function() {
       ]);
     });
 
-    it("enum outline style with points", async function() {
+    it("enum outline style with points", async function () {
       item.setTrait(CommonStrata.user, "csvString", LatLonEnumCsv);
 
       item.setTrait(CommonStrata.user, "styles", [
@@ -1167,7 +1171,7 @@ describe("TableMixin", function() {
         // Test merging legends
 
         expect(
-          item.legends[0].items.map(item => ({
+          item.legends[0].items.map((item) => ({
             title: item.title,
             outlineColor: item.outlineColor,
             outlineWidth: item.outlineWidth,

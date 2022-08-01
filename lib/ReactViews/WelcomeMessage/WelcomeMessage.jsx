@@ -75,7 +75,7 @@ class WelcomeMessage extends React.Component {
     return (
       <WelcomeMessagePure
         showWelcomeMessage={viewState.showWelcomeMessage}
-        setShowWelcomeMessage={bool =>
+        setShowWelcomeMessage={(bool) =>
           this.props.viewState.setShowWelcomeMessage(bool)
         }
         isTopElement={this.props.viewState.topElement === "WelcomeMessage"}
@@ -85,7 +85,7 @@ class WelcomeMessage extends React.Component {
   }
 }
 
-export const WelcomeMessagePure = props => {
+export const WelcomeMessagePure = (props) => {
   const { showWelcomeMessage, setShowWelcomeMessage, viewState } = props;
   const { t } = useTranslation();
   // This is required so we can do nested animations
@@ -183,7 +183,7 @@ export const WelcomeMessagePure = props => {
               styledMinHeight={"504px"}
               displayInlineBlock
               paddedRatio={viewState.useSmallScreenInterface ? 2 : 6}
-              onClick={e => {
+              onClick={(e) => {
                 viewState.setTopElement("WelcomeMessage");
                 e.stopPropagation();
               }}

@@ -22,7 +22,7 @@ const ChartDisclaimer: React.FC<ChartDisclaimerProps> = ({ terria }) => {
   const uniqueChartDisclaimers: string[] = [
     ...new Set(
       filterOutUndefined(
-        chartView.chartItems.map(chartItem =>
+        chartView.chartItems.map((chartItem) =>
           chartItem.showInChartPanel &&
           hasTraits(
             chartItem.item,
@@ -51,7 +51,7 @@ const ChartDisclaimer: React.FC<ChartDisclaimerProps> = ({ terria }) => {
       `}
     >
       <Spacing bottom={2} />
-      {uniqueChartDisclaimers.map(chartDisclaimer => (
+      {uniqueChartDisclaimers.map((chartDisclaimer) => (
         <React.Fragment key={chartDisclaimer}>
           <Text textLight>{parseCustomHtmlToReact(chartDisclaimer!)}</Text>
           <Spacing bottom={2} />

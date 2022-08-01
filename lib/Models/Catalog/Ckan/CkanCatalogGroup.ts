@@ -124,9 +124,8 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
       if (ckanServerResponse === undefined) {
         ckanServerResponse = result;
       } else {
-        ckanServerResponse.result.results = ckanServerResponse.result.results.concat(
-          result.result.results
-        );
+        ckanServerResponse.result.results =
+          ckanServerResponse.result.results.concat(result.result.results);
       }
     }
     if (ckanServerResponse === undefined) return undefined;
@@ -149,7 +148,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
       this._catalogGroup.groupBy !== "none"
     ) {
       const groupIds: ModelReference[] = [];
-      this.filteredGroups.forEach(g => {
+      this.filteredGroups.forEach((g) => {
         if (g.members.length > 0) {
           groupIds.push(g.uniqueId as ModelReference);
         }
@@ -158,8 +157,8 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     }
 
     return flatten(
-      this.filteredDatasets.map(dataset =>
-        dataset.resources.map(resource => this.getItemId(dataset, resource))
+      this.filteredDatasets.map((dataset) =>
+        dataset.resources.map((resource) => this.getItemId(dataset, resource))
       )
     );
   }
@@ -173,7 +172,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     if (this.datasets.length === 0) return [];
     if (this._catalogGroup.excludeMembers !== undefined) {
       const bl = this._catalogGroup.excludeMembers;
-      return this.datasets.filter(ds => bl.indexOf(ds.title) === -1);
+      return this.datasets.filter((ds) => bl.indexOf(ds.title) === -1);
     }
     return this.datasets;
   }
@@ -191,7 +190,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
 
     groups = [...new Set(groups)];
 
-    groups.sort(function(a, b) {
+    groups.sort(function (a, b) {
       if (a.name === undefined || b.name === undefined) return 0;
       if (a.name < b.name) {
         return -1;
@@ -209,7 +208,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     if (this.groups.length === 0) return [];
     if (this._catalogGroup.excludeMembers !== undefined) {
       const bl = this._catalogGroup.excludeMembers;
-      return this.groups.filter(group => {
+      return this.groups.filter((group) => {
         if (group.name === undefined) return false;
         else return bl.indexOf(group.name) === -1;
       });
@@ -219,7 +218,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
 
   @action
   createMembersFromDatasets() {
-    this.filteredDatasets.forEach(dataset => {
+    this.filteredDatasets.forEach((dataset) => {
       this.createMemberFromDataset(dataset);
     });
   }
@@ -230,12 +229,8 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     dataset: CkanDataset,
     groupId: string
   ) {
-    let group:
-      | CatalogGroup
-      | undefined = this._catalogGroup.terria.getModelById(
-      CatalogGroup,
-      groupId
-    );
+    let group: CatalogGroup | undefined =
+      this._catalogGroup.terria.getModelById(CatalogGroup, groupId);
     if (group !== undefined) {
       group.add(CommonStrata.definition, catalogItem);
     }
@@ -251,7 +246,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
       this.addCatalogItemToCatalogGroup(catalogItem, dataset, groupId);
       return;
     }
-    dataset.groups.forEach(g => {
+    dataset.groups.forEach((g) => {
       const groupId = this._catalogGroup.uniqueId + "/" + g.id;
       this.addCatalogItemToCatalogGroup(catalogItem, dataset, groupId);
     });
@@ -280,9 +275,9 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
       // - onlyUseIfSoleResource
       // - removeDuplicates
 
-      this.preparedSupportedFormats.forEach(supportedFormat => {
+      this.preparedSupportedFormats.forEach((supportedFormat) => {
         let matchingResources = supportedResources.filter(
-          format => format.format.id === supportedFormat.id
+          (format) => format.format.id === supportedFormat.id
         );
         if (matchingResources.length === 0) return;
 
@@ -489,7 +484,7 @@ function createGroupsByOrganisations(
   ckanServer: CkanServerStratum,
   groups: CatalogGroup[]
 ) {
-  ckanServer.filteredDatasets.forEach(ds => {
+  ckanServer.filteredDatasets.forEach((ds) => {
     if (ds.organization !== null) {
       const groupId =
         ckanServer._catalogGroup.uniqueId + "/" + ds.organization.id;
@@ -513,8 +508,8 @@ function createGroupsByCkanGroups(
   ckanServer: CkanServerStratum,
   groups: CatalogGroup[]
 ) {
-  ckanServer.filteredDatasets.forEach(ds => {
-    ds.groups.forEach(g => {
+  ckanServer.filteredDatasets.forEach((ds) => {
+    ds.groups.forEach((g) => {
       const groupId = ckanServer._catalogGroup.uniqueId + "/" + g.id;
       let existingGroup = ckanServer._catalogGroup.terria.getModelById(
         CatalogGroup,

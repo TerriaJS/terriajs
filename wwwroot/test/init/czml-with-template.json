@@ -10,8 +10,8 @@
           "type": "czml",
           "url": "test/CZML/withProperties.czml",
           "featureInfoTemplate": {
-              "name": "{{Name}} {{Asset type}}",
-              "template": "<table><tbody><tr><td>Name:</td><td>{{Name}}</td></tr><tr><td>Type:</td><td>{{Type}}</td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr>{{#Support table}}<tr><td>{{Year}}</td><td>{{Capacity}}</td></tr>{{/Support table}}</tbody></table>"
+            "name": "{{Name}} {{Asset type}}",
+            "template": "<table><tbody><tr><td>Name:</td><td>{{Name}}</td></tr><tr><td>Type:</td><td>{{Type}}</td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr>{{#Support table}}<tr><td>{{Year}}</td><td>{{Capacity}}</td></tr>{{/Support table}}</tbody></table>"
           }
         },
         {
@@ -19,8 +19,8 @@
           "type": "czml",
           "url": "test/CZML/withTimeVaryingProperties.czml",
           "featureInfoTemplate": {
-              "name": "{{Name}} {{Asset type}}",
-              "template": "<table><tbody><tr><td>Name:</td><td>{{Name}}</td></tr><tr><td>Type:</td><td>{{Type}}</td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr>{{#Support table}}<tr><td>{{Year}}</td><td>{{Capacity}}</td></tr>{{/Support table}}</tbody></table>"
+            "name": "{{Name}} {{Asset type}}",
+            "template": "<table><tbody><tr><td>Name:</td><td>{{Name}}</td></tr><tr><td>Type:</td><td>{{Type}}</td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr>{{#Support table}}<tr><td>{{Year}}</td><td>{{Capacity}}</td></tr>{{/Support table}}</tbody></table>"
           }
         }
       ]

@@ -36,11 +36,11 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
   const shareUrlRef = useCallbackRef<IShareUrlRef>(null, () => update({}));
 
   const includeStoryInShareOnChange = useCallback(() => {
-    setIncludeStoryInShare(prevState => !prevState);
+    setIncludeStoryInShare((prevState) => !prevState);
   }, []);
 
   const shouldShortenOnChange = useCallback(() => {
-    setShouldShorten(prevState => {
+    setShouldShorten((prevState) => {
       terria.setLocalProperty("shortenShareUrls", prevState);
       return !prevState;
     });

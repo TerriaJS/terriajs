@@ -84,8 +84,7 @@ export function defaultBaseMaps(terria: Terria): BaseMapJson[] {
       id: "basemap-natural-earth-II",
       name: "Natural Earth II",
       type: "url-template-imagery",
-      url:
-        "https://storage.googleapis.com/terria-datasets-public/basemaps/natural-earth-tiles/{z}/{x}/{reverseY}.png",
+      url: "https://storage.googleapis.com/terria-datasets-public/basemaps/natural-earth-tiles/{z}/{x}/{reverseY}.png",
       maximumLevel: 7,
       opacity: 1.0
     },
@@ -98,8 +97,7 @@ export function defaultBaseMaps(terria: Terria): BaseMapJson[] {
       id: "basemap-black-marble",
       name: "NASA Black Marble",
       type: "wms",
-      url:
-        "http://geoserver.nationalmap.nicta.com.au/imagery/nasa-black-marble/wms",
+      url: "http://geoserver.nationalmap.nicta.com.au/imagery/nasa-black-marble/wms",
       layers: "nasa-black-marble:dnb_land_ocean_ice.2012.54000x27000_geo",
       opacity: 1.0
     },

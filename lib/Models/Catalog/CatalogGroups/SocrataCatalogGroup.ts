@@ -160,7 +160,7 @@ export class SocrataCatalogStratum extends LoadableStratum(
       if (!Array.isArray(facets))
         throw `Could not fetch facets for domain ${domain}`;
 
-      facets = facets.filter(f => facetsToUse.includes(f.facet));
+      facets = facets.filter((f) => facetsToUse.includes(f.facet));
 
       if (facets.length === 0)
         throw `Could not find any facets for domain ${domain}`;
@@ -216,18 +216,18 @@ export class SocrataCatalogStratum extends LoadableStratum(
     // If we only have one facet, return it's children instead of a single facet group
     if (this.facets.length === 1)
       return this.facets[0].values.map(
-        facetValue => `${this.getFacetId(this.facets[0])}/${facetValue.value}`
+        (facetValue) => `${this.getFacetId(this.facets[0])}/${facetValue.value}`
       );
 
     return [
-      ...this.facets.map(f => this.getFacetId(f)),
-      ...this.results.map(r => this.getResultId(r))
+      ...this.facets.map((f) => this.getFacetId(f)),
+      ...this.results.map((r) => this.getResultId(r))
     ];
   }
 
   createMembers() {
-    this.facets.forEach(facet => this.createGroupFromFacet(facet));
-    this.results.forEach(result => this.createItemFromResult(result));
+    this.facets.forEach((facet) => this.createGroupFromFacet(facet));
+    this.results.forEach((result) => this.createItemFromResult(result));
   }
 
   /** Turn facet into SocrataCatalogGroup */
@@ -255,7 +255,7 @@ export class SocrataCatalogStratum extends LoadableStratum(
     facetGroup.setTrait(CommonStrata.definition, "name", facet.facet);
 
     // Create child groups for Facet values
-    facet.values.forEach(facetValue => {
+    facet.values.forEach((facetValue) => {
       const facetValueId = `${facetGroupId}/${facetValue.value}`;
 
       let facetValueGroup = this.catalogGroup.terria.getModelById(
@@ -327,7 +327,7 @@ export class SocrataCatalogStratum extends LoadableStratum(
     // - Otherwise - create CsvCatalogItem
     if (result.resource.type === "dataset") {
       if (
-        result.resource.columns_datatype.find(type =>
+        result.resource.columns_datatype.find((type) =>
           [
             "Point",
             "Line",

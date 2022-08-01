@@ -11,13 +11,13 @@ import TourPortal, {
   TourExplanation
 } from "../../../lib/ReactViews/Tour/TourPortal";
 
-describe("TourPortal", function() {
+describe("TourPortal", function () {
   let terria: Terria;
   let viewState: ViewState;
 
   let testRenderer: any;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -28,16 +28,16 @@ describe("TourPortal", function() {
     });
   });
 
-  describe("with basic props", function() {
-    describe("renders", function() {
-      it("nothing when current tour index is negative", function() {
+  describe("with basic props", function () {
+    describe("renders", function () {
+      it("nothing when current tour index is negative", function () {
         act(() => {
           testRenderer = create(<TourPortal viewState={viewState} />);
         });
         // tourportal should just not render anything in this case
         expect(() => testRenderer.root.findByType("div")).toThrow();
       });
-      it("renders something using the TourPreface path under preface conditions", function() {
+      it("renders something using the TourPreface path under preface conditions", function () {
         runInAction(() => {
           viewState.setTourIndex(0);
           viewState.setShowTour(false);
@@ -59,7 +59,7 @@ describe("TourPortal", function() {
         expect(testRenderer.root.findByType(TourPreface)).toBeDefined();
         expect(() => testRenderer.root.findByType(TourExplanation)).toThrow();
       });
-      it("renders something using the TourGrouping path under showPortal conditions", function() {
+      it("renders something using the TourGrouping path under showPortal conditions", function () {
         const testRef: any = React.createRef();
         const testRef2: any = React.createRef();
         const testRef3: any = React.createRef();

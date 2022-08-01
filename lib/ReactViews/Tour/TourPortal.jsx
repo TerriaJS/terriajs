@@ -42,11 +42,11 @@ import TourProgressDot from "./TourProgressDot.jsx";
  * Fill in indicator dot depending on progress determined from count & max count
  */
 const TourProgress = ({ max, step, setTourIndex }) => {
-  const countArray = Array.from(Array(max).keys()).map(e => e++);
+  const countArray = Array.from(Array(max).keys()).map((e) => e++);
   const countStep = step;
   return (
     <Box centered>
-      {countArray.map(count => {
+      {countArray.map((count) => {
         return (
           <TourProgressDot
             onClick={() => setTourIndex(count)}
@@ -198,7 +198,8 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
   const currentTourPointRef = viewState.appRefs.get(
     currentTourPoint?.appRefName
   );
-  const currentRectangle = currentTourPointRef?.current?.getBoundingClientRect?.();
+  const currentRectangle =
+    currentTourPointRef?.current?.getBoundingClientRect?.();
   if (!currentRectangle) {
     console.log(
       "Tried to show guidance portal with no rectangle available from ref"
@@ -215,7 +216,8 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
       {tourPoints.map((tourPoint, index) => {
         const tourPointRef = viewState.appRefs.get(tourPoint?.appRefName);
 
-        const currentRectangle = tourPointRef?.current?.getBoundingClientRect?.();
+        const currentRectangle =
+          tourPointRef?.current?.getBoundingClientRect?.();
         const {
           offsetTop,
           offsetLeft,
@@ -249,7 +251,7 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
             active={currentTourIndex === index}
             currentStep={currentTourIndex + 1}
             maxSteps={maxSteps}
-            setTourIndex={idx => viewState.setTourIndex(idx)}
+            setTourIndex={(idx) => viewState.setTourIndex(idx)}
             onTourIndicatorClick={() => viewState.setTourIndex(index)}
             onPrevious={() => viewState.previousTourPoint()}
             onNext={() => viewState.nextTourPoint()}
@@ -317,7 +319,7 @@ export const TourPreface = ({ viewState }) => {
             <Button
               fullWidth
               secondary
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
                 viewState.closeTour();
               }}
@@ -329,7 +331,7 @@ export const TourPreface = ({ viewState }) => {
               primary
               fullWidth
               textProps={{ noFontSize: true }}
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
                 viewState.setShowTour(true);
               }}

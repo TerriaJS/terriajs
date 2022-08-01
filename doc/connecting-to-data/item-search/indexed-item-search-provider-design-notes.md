@@ -4,7 +4,7 @@
 
 - Should be file based, not requiring any additional backends
 - Should be performant enough to search datasets with as many as 500000 features
-- Must be able to search numeric, text or enum properties 
+- Must be able to search numeric, text or enum properties
 
 In the remaining section we describe the structure of the index.
 
@@ -17,12 +17,10 @@ In the remaining section we describe the structure of the index.
   - Name of the feature property that is used as ID for indexing. This is also
     sometimes used by the catalog item to uniquely identify & highlight the
     selected feature.
-    
 - `resultsDataUrl: string`
   - Required
   - URL of the CSV [results data file](#results-data-file) mapping a feature by
     its ID to result data associated with the feature.
-    
 - `indexes: Record<string, Index>`
   - Required
   - An object whose keys are the property names and values are the
@@ -30,29 +28,30 @@ In the remaining section we describe the structure of the index.
 
 ## Results data file
 
-A CSV file mapping an indexed feature to result data using its ID. 
+A CSV file mapping an indexed feature to result data using its ID.
 
 eg:
+
 ```
 "building_id","latitude","longitude","height","street_address"
 "abc1","45.0","100.0","120","abc def"
 ```
 
-It should contain a header for each column. It should also have a column for the `idProperty` specified in the `indexRoot.json` file. Terria also recongnizes a few special columns which it uses to construct a target to zoom to when the user selects the result. 
+It should contain a header for each column. It should also have a column for the `idProperty` specified in the `indexRoot.json` file. Terria also recongnizes a few special columns which it uses to construct a target to zoom to when the user selects the result.
 
- - `latitude`
-   - Required 
-   - The latitude of the feature
- - `longitude` 
-   - Required
-   - The longitude of the feature
- - `height`
-   - Optional
-   - The height of the feature
- - `radius`
-   - Optional
-   - The radius of the bounding sphere containing the feature
-  
+- `latitude`
+  - Required
+  - The latitude of the feature
+- `longitude`
+  - Required
+  - The longitude of the feature
+- `height`
+  - Optional
+  - The height of the feature
+- `radius`
+  - Optional
+  - The radius of the bounding sphere containing the feature
+
 A zoom target is constructed using the `latitude`, `longitude` and `height` or the `radius` whichever is known. `height` is the height of the feature and `radius` is a radius of the bounding sphere to zoom to.
 
 ## Index types
@@ -75,6 +74,7 @@ Numeric index is used for searching numeric properties. It can be used for searc
   - URL of the [numeric index file](#numeric-index-file)
 
 eg:
+
 ```
 {
   type: "numeric",
@@ -86,7 +86,6 @@ eg:
 #### Numeric index file
 
 A numeric index file is a CSV file sorted by its value. The file must have two named columns `dataRowId` and `value`. The `dataRowId` is the index of the corresponding feature in the [results data file](#results-data-file).
-
 
 ```
 "dataRowId","value"
@@ -106,7 +105,7 @@ Enum index is useful for searching fixed list of strings, eg: Roof material prop
 - `values: Record<string, EnumValue>`
   - Required
   - An object whose keys are the enum string and value defines the [enum value index](#enum-value-index).
-  
+
 eg:
 
 ```
@@ -123,7 +122,7 @@ eg:
 }
 ```
 
-#### Enum value index 
+#### Enum value index
 
 Defines the index for a single enum member.
 
@@ -135,7 +134,7 @@ Defines the index for a single enum member.
 - `url: string`
   - Required
   - URL of the [enum value index file](#enum-value-index-file).
-  
+
 ##### Enum value index file
 
 The enum value index file is a CSV file with a single column named `dataRowId` which is the index of the corresponding feature in the [results data file](#results-data-file).
@@ -157,11 +156,11 @@ Text index is used for searching arbitrary text properties, for eg: street addre
 ##### Definition
 
 - `type: "text"`
- - Required
+- Required
 - `url: string`
- - Required
- - URL of the [text index file](#text-index-file).
- 
+- Required
+- URL of the [text index file](#text-index-file).
+
 eg:
 
 ```
@@ -179,8 +178,6 @@ Text index file is a JSON file with the following structure:
   - Required
   - The options used to create the MiniSearch instance.
 
-      
 ### Why CSV and not JSON?
 
 In our testing we found that parsing CSV in javascript is significantly faster than parsing JSON (a difference of 2-3secs). So we decided to use CSV for representing numeric & enum indexes. Text index is persisted as a JSON searialization of the Minisearch instance.
-

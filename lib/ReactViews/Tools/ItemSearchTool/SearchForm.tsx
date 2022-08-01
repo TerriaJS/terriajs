@@ -38,7 +38,7 @@ type State =
   | { is: "error"; error: Error }
   | { is: "results"; results: ItemSearchResult[] };
 
-const SearchForm: React.FC<SearchFormProps> = props => {
+const SearchForm: React.FC<SearchFormProps> = (props) => {
   const { parameters, itemSearchProvider } = props;
   const [t] = useTranslation();
   const [state, setState] = useState<State>({ is: "initial" });
@@ -51,18 +51,17 @@ const SearchForm: React.FC<SearchFormProps> = props => {
     [props.query]
   );
 
-  const setParameterValue = (id: string, type: ItemSearchParameterType) => (
-    value: any
-  ) => {
-    const newQuery: ItemSearchQuery = {
-      ...query,
-      [id]: { type, value }
+  const setParameterValue =
+    (id: string, type: ItemSearchParameterType) => (value: any) => {
+      const newQuery: ItemSearchQuery = {
+        ...query,
+        [id]: { type, value }
+      };
+      // Delete the value so that we don't trigger search for it
+      if (newQuery[id].value === undefined) delete newQuery[id];
+      setQuery(newQuery);
+      if (value !== undefined) props.onValueChange?.(id, value);
     };
-    // Delete the value so that we don't trigger search for it
-    if (newQuery[id].value === undefined) delete newQuery[id];
-    setQuery(newQuery);
-    if (value !== undefined) props.onValueChange?.(id, value);
-  };
 
   function search() {
     const parameterValues: Map<string, any> = new Map(
@@ -71,11 +70,11 @@ const SearchForm: React.FC<SearchFormProps> = props => {
     setState({ is: "searching" });
     itemSearchProvider
       .search(parameterValues)
-      .then(results => {
+      .then((results) => {
         setState({ is: "results", results });
         props.onResults(query, results);
       })
-      .catch(error => {
+      .catch((error) => {
         console.warn(error);
         setState({ is: "error", error });
       });
@@ -104,7 +103,7 @@ const SearchForm: React.FC<SearchFormProps> = props => {
         )}
       </Box>
       <FieldSet disabled={disabled}>
-        {parameters.map(p => (
+        {parameters.map((p) => (
           <Field key={p.id}>
             <Parameter
               parameter={p}
@@ -133,7 +132,7 @@ interface ParameterProps extends WithT {
   disabled: boolean;
 }
 
-const Parameter: React.FC<ParameterProps> = props => {
+const Parameter: React.FC<ParameterProps> = (props) => {
   const { parameter } = props;
   switch (parameter.type) {
     case "numeric":
@@ -151,19 +150,18 @@ interface NumericParameterProps extends WithT {
   value?: { start: number; end: number };
 }
 
-export const NumericParameter: React.FC<NumericParameterProps> = props => {
+export const NumericParameter: React.FC<NumericParameterProps> = (props) => {
   const { parameter, value, t } = props;
   const { min, max } = parameter.range;
 
-  const onChange = (tag: "start" | "end") => (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const parsed = parseFloat(e.target.value);
-    const newValue: any = { ...props.value };
-    if (isNaN(parsed)) delete newValue[tag];
-    else newValue[tag] = parsed;
-    props.onChange(isEmpty(newValue) ? undefined : newValue);
-  };
+  const onChange =
+    (tag: "start" | "end") => (e: React.ChangeEvent<HTMLInputElement>) => {
+      const parsed = parseFloat(e.target.value);
+      const newValue: any = { ...props.value };
+      if (isNaN(parsed)) delete newValue[tag];
+      else newValue[tag] = parsed;
+      props.onChange(isEmpty(newValue) ? undefined : newValue);
+    };
 
   return (
     <Box column>
@@ -220,20 +218,20 @@ type SelectOnChangeHandler<OptionType, IsMulti extends boolean> = (
   actionMeta: ActionMeta<OptionType>
 ) => void;
 
-const EnumParameter: React.FC<EnumParameterProps> = props => {
+const EnumParameter: React.FC<EnumParameterProps> = (props) => {
   const { parameter, disabled } = props;
   const options = parameter.values.map(({ id }) => ({
     value: id,
     label: id || "<empty>"
   }));
-  const value = options.filter(o => props.value?.includes(o.value));
+  const value = options.filter((o) => props.value?.includes(o.value));
   const onChange: SelectOnChangeHandler<
     {
       value: string;
       label: string;
     },
     true
-  > = selectedOptions => {
+  > = (selectedOptions) => {
     const values = selectedOptions?.map(({ value }) => value);
     props.onChange(values?.length === 0 ? undefined : values);
   };
@@ -261,7 +259,7 @@ interface TextParameterProps {
   onChange: (value: string | undefined) => void;
 }
 
-const TextParameter: React.FC<TextParameterProps> = props => {
+const TextParameter: React.FC<TextParameterProps> = (props) => {
   const { parameter, value, onChange } = props;
   return (
     <Box column>
@@ -271,7 +269,9 @@ const TextParameter: React.FC<TextParameterProps> = props => {
           type="text"
           name={parameter.id}
           value={value || ""}
-          onChange={e => onChange(e.target.value ? e.target.value : undefined)}
+          onChange={(e) =>
+            onChange(e.target.value ? e.target.value : undefined)
+          }
         />
       </Label>
     </Box>
@@ -312,7 +312,7 @@ const HalfWidthLabel = styled(Label)`
 `;
 
 const Input = styled.input`
-  color: ${p => p.theme.dark};
+  color: ${(p) => p.theme.dark};
   box-sizing: border-box;
   width: 100%;
   height: 38px;
@@ -322,7 +322,7 @@ const Input = styled.input`
 const Select = styled(ReactSelect).attrs({
   classNamePrefix: "ReactSelect"
 })`
-  color: ${p => p.theme.dark};
+  color: ${(p) => p.theme.dark};
   width: 100%;
   & .ReactSelect__control {
     border-radius: 0;

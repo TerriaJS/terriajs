@@ -43,10 +43,10 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
     @computed get mergedExcludeMembers(): string[] {
       const blacklistSet = new Set(this.excludeMembers ?? []);
 
-      this.knownContainerUniqueIds.forEach(containerId => {
+      this.knownContainerUniqueIds.forEach((containerId) => {
         const container = this.terria.getModelById(BaseModel, containerId);
         if (container && GroupMixin.isMixedInto(container)) {
-          container.mergedExcludeMembers.forEach(s => blacklistSet.add(s));
+          container.mergedExcludeMembers.forEach((s) => blacklistSet.add(s));
         }
       });
 
@@ -60,7 +60,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
         return [];
       }
       const models = filterOutUndefined(
-        members.map(id => {
+        members.map((id) => {
           if (!ModelReference.isRemoved(id)) {
             const model = this.terria.getModelById(BaseModel, id);
             if (this.mergedExcludeMembers.length == 0) {
@@ -75,14 +75,14 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
               model &&
               // Does excludeMembers not include model ID
               !this.mergedExcludeMembers.find(
-                name =>
+                (name) =>
                   model.uniqueId?.toLowerCase().trim() ===
                   name.toLowerCase().trim()
               ) &&
               // Does excludeMembers not include model name
               (!modelName ||
                 !this.mergedExcludeMembers.find(
-                  name =>
+                  (name) =>
                     modelName.toLowerCase().trim() === name.toLowerCase().trim()
                 ))
             )
@@ -207,12 +207,12 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       members.forEach((model: BaseModel) => {
         // Only add shareKey if model.uniqueId is an autoID (i.e. contains groupId)
         if (isDefined(model.uniqueId) && model.uniqueId.includes(groupId)) {
-          shareKeys.forEach(groupShareKey => {
+          shareKeys.forEach((groupShareKey) => {
             // Get shareKeys for current model
             const modelShareKeys = this.terria.modelIdShareKeysMap.get(
               model.uniqueId!
             );
-            modelShareKeys?.forEach(modelShareKey => {
+            modelShareKeys?.forEach((modelShareKey) => {
               this.terria.addShareKey(
                 model.uniqueId!,
                 modelShareKey.replace(groupId, groupShareKey)
@@ -396,12 +396,12 @@ export function applyItemProperties(
     setItemPropertyTraits(
       target,
       model.itemPropertiesByType.find(
-        itemProps => itemProps.type && itemProps.type === target.type
+        (itemProps) => itemProps.type && itemProps.type === target.type
       )?.itemProperties
     );
 
     // Apply itemPropertiesByIds
-    model.itemPropertiesByIds.forEach(itemPropsById => {
+    model.itemPropertiesByIds.forEach((itemPropsById) => {
       if (itemPropsById.ids.includes(target.uniqueId!)) {
         setItemPropertyTraits(target, itemPropsById.itemProperties);
       }

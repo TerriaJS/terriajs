@@ -24,11 +24,12 @@ const showErrorNotification = (viewState: ViewState, error: TerriaError) => {
 const WarningBox: React.FC<{
   error?: TerriaError;
   viewState?: ViewState;
-}> = props => {
+}> = (props) => {
   // We only show FeedbankLink if the error message doesn't include the <feedbacklink> custom component (so we don't get duplicates)
-  const includesFeedbackLink = props.error?.highestImportanceError.message.includes(
-    `<${FeedbackLinkCustomComponent.componentName}`
-  );
+  const includesFeedbackLink =
+    props.error?.highestImportanceError.message.includes(
+      `<${FeedbackLinkCustomComponent.componentName}`
+    );
 
   return (
     <Box backgroundColor={warningColor} rounded padded>

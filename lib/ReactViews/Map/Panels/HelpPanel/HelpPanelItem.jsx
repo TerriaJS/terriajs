@@ -113,15 +113,15 @@ const MenuButton = styled.button`
   background: transparent;
 
   &:hover {
-    color: ${p => p.theme.textBlack};
+    color: ${(p) => p.theme.textBlack};
     & ${StyledIcon} {
-      fill: ${p => p.theme.textBlack};
+      fill: ${(p) => p.theme.textBlack};
     }
   }
 
-  color: ${p => (p.isSelected ? p.theme.textBlack : p.theme.textDark)};
+  color: ${(p) => (p.isSelected ? p.theme.textBlack : p.theme.textDark)};
   & ${StyledIcon} {
-    fill: ${p => (p.isSelected ? p.theme.textBlack : p.theme.textDark)};
+    fill: ${(p) => (p.isSelected ? p.theme.textBlack : p.theme.textDark)};
   }
 `;
 

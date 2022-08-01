@@ -34,7 +34,7 @@ const CollapsedNavigationBox = styled(Box).attrs({
   top: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.12), 0 10px 20px 0 rgba(0, 0, 0, 0.05);
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${(props) => props.theme.mobile}px) {
     width: 100%;
   }
 `;
@@ -54,7 +54,7 @@ const NavigationButton = styled(BoxSpan).attrs({
 })`
   cursor: pointer;
   &:hover {
-    border: 2px solid ${p => p.theme.darkWithOverlay};
+    border: 2px solid ${(p) => p.theme.darkWithOverlay};
     svg {
       opacity: 0.9;
     }
@@ -66,7 +66,7 @@ const NavigationButton = styled(BoxSpan).attrs({
     width: 0;
     padding-bottom: 100%;
   }
-  ${props =>
+  ${(props) =>
     props.disabled &&
     `
     background-color: ${props.theme.grey};
@@ -99,7 +99,7 @@ const CollapsedNavigationPanel: React.FC<PropTypes> = observer(
         </Text>
         <Spacing bottom={5} />
         <ButtonsBox>
-          {items.map(item => (
+          {items.map((item) => (
             <NavigationButton
               key={item.id}
               title={applyTranslationIfExists(item.name, i18n)}
@@ -111,7 +111,7 @@ const CollapsedNavigationPanel: React.FC<PropTypes> = observer(
               }}
               css={`
                 ${item.controller.active &&
-                  `border: 2px solid ${theme.colorPrimary};`}
+                `border: 2px solid ${theme.colorPrimary};`}
               `}
               disabled={item.controller.disabled}
             >
@@ -143,9 +143,9 @@ const CollapsedNavigation: React.FC<{ viewState: ViewState }> = observer(
     );
 
     let items = viewState.terria.mapNavigationModel.items.filter(
-      item => item.controller.collapsed
+      (item) => item.controller.collapsed
     );
-    items = items.filter(item => filterViewerAndScreenSize(item, viewState));
+    items = items.filter((item) => filterViewerAndScreenSize(item, viewState));
 
     if (!viewState.showCollapsedNavigation || items.length === 0) {
       viewState.closeCollapsedNavigation();

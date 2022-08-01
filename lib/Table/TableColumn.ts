@@ -123,8 +123,10 @@ export default class TableColumn {
         value: THIS_COLUMN_EXPRESSION_TOKEN
       },
       ...filterOutUndefined(
-        this.traits.transformation?.dependencies?.map(colName => {
-          if (this.tableModel.tableColumns.find(col => col.name === colName)) {
+        this.traits.transformation?.dependencies?.map((colName) => {
+          if (
+            this.tableModel.tableColumns.find((col) => col.name === colName)
+          ) {
             return {
               type: 3, // This type defines a constant value
               token: colName,
@@ -159,7 +161,7 @@ export default class TableColumn {
       (pairs, token) => {
         if (token.token !== THIS_COLUMN_EXPRESSION_TOKEN)
           pairs[token.value] =
-            this.tableModel.tableColumns.find(col => col.name === token.token)
+            this.tableModel.tableColumns.find((col) => col.name === token.token)
               ?.valuesAsNumbers.values[rowIndex] ?? null;
         // Add column pair for this value (token `THIS_COLUMN_EXPRESSION_TOKEN`)
         else pairs[THIS_COLUMN_EXPRESSION_TOKEN] = value;
@@ -293,7 +295,7 @@ export default class TableColumn {
     const centuryFix = (y: number) =>
       y < 50 ? 2000 + y : y < 100 ? 1900 + y : y;
 
-    const ddmmyyyy: StringToDateFunction = value => {
+    const ddmmyyyy: StringToDateFunction = (value) => {
       // Try dd/mm/yyyy and watch out for failures that would also cross out mm/dd/yyyy
       for (let separator of separators) {
         const sep1 = value.indexOf(separator);
@@ -337,7 +339,7 @@ export default class TableColumn {
       return null;
     };
 
-    let mmddyyyy: StringToDateFunction = value => {
+    let mmddyyyy: StringToDateFunction = (value) => {
       // This function only exists to allow mm-dd-yyyy dates
       // mm/dd/yyyy dates could be picked up by `new Date`
       const separator = "-";
@@ -369,7 +371,7 @@ export default class TableColumn {
       }
     };
 
-    let yyyyQQ: StringToDateFunction = value => {
+    let yyyyQQ: StringToDateFunction = (value) => {
       // Is it quarterly data in the format yyyy-Qx ? (Ignoring null values, and failing on any purely numeric values)
       if (value[4] === "-" && value[5] === "Q") {
         const year = +value.slice(0, 4);
@@ -397,7 +399,7 @@ export default class TableColumn {
       return null;
     };
 
-    let dateConstructor: StringToDateFunction = value => {
+    let dateConstructor: StringToDateFunction = (value) => {
       const ms = Date.parse(value);
       if (!Number.isNaN(ms)) {
         return new Date(ms);
@@ -471,7 +473,7 @@ export default class TableColumn {
     return {
       ...this.valuesAsDates,
       values: valuesAsDates.values.map(
-        date => date && JulianDate.fromDate(date)
+        (date) => date && JulianDate.fromDate(date)
       ),
       minimum:
         valuesAsDates.minimum && JulianDate.fromDate(valuesAsDates.minimum),
@@ -487,7 +489,7 @@ export default class TableColumn {
   get uniqueValues(): UniqueColumnValues {
     const replaceWithNull = this.traits.replaceWithNullValues;
 
-    const values = this.values.map(value => {
+    const values = this.values.map((value) => {
       if (value.length === 0) {
         return "";
       } else if (replaceWithNull && replaceWithNull.indexOf(value) >= 0) {
@@ -503,15 +505,17 @@ export default class TableColumn {
     function toArray(key: string, value: number): [string, number] {
       return [key, value];
     }
-    const countArray = Object.keys(count).map(key => toArray(key, count[key]));
+    const countArray = Object.keys(count).map((key) =>
+      toArray(key, count[key])
+    );
 
-    countArray.sort(function(a, b) {
+    countArray.sort(function (a, b) {
       return b[1] - a[1];
     });
 
     return {
-      values: countArray.map(a => a[0]),
-      counts: countArray.map(a => a[1]),
+      values: countArray.map((a) => a[0]),
+      counts: countArray.map((a) => a[1]),
       numberOfNulls: nullCount
     };
   }
@@ -608,11 +612,11 @@ export default class TableColumn {
       // - remove underscores
       // - capitalise
       this.name
-        .replace(/[A-Z][a-z]/g, letter => ` ${letter.toLowerCase()}`)
+        .replace(/[A-Z][a-z]/g, (letter) => ` ${letter.toLowerCase()}`)
         .replace(/_/g, " ")
         .trim()
         .toLowerCase()
-        .replace(/(^\w|\s\w)/g, m => m.toUpperCase())
+        .replace(/(^\w|\s\w)/g, (m) => m.toUpperCase())
     );
   }
 
@@ -631,7 +635,7 @@ export default class TableColumn {
   get traits(): Model<TableColumnTraits> {
     // It is important to match on column name and not column number because the column numbers can vary between stratum
     const thisColumn = this.tableModel.columns.find(
-      column => column.name === this.name
+      (column) => column.name === this.name
     );
     if (thisColumn !== undefined) {
       const result = createCombinedModel(
@@ -736,21 +740,21 @@ export default class TableColumn {
     if (columnName !== undefined) {
       // Resolve the explicit disambiguation column.
       return this.tableModel.tableColumns.find(
-        column => column.name === columnName
+        (column) => column.name === columnName
       );
     }
 
     // See if the region provider likes any of the table's other columns for
     // disambiguation.
     const disambigName = this.regionType.findDisambigVariable(
-      this.tableModel.tableColumns.map(column => column.name)
+      this.tableModel.tableColumns.map((column) => column.name)
     );
     if (disambigName === undefined) {
       return undefined;
     }
 
     return this.tableModel.tableColumns.find(
-      column => column.name === disambigName
+      (column) => column.name === disambigName
     );
   }
 
@@ -764,13 +768,13 @@ export default class TableColumn {
   get valueFunctionForType(): (rowIndex: number) => string | number | null {
     if (this.type === TableColumnType.scalar) {
       const values = this.valuesAsNumbers.values;
-      return function(rowIndex: number) {
+      return function (rowIndex: number) {
         return values[rowIndex];
       };
     }
 
     const values = this.values;
-    return function(rowIndex: number) {
+    return function (rowIndex: number) {
       return values[rowIndex];
     };
   }
@@ -803,7 +807,7 @@ export default class TableColumn {
       }
 
       const values = valuesAsNumbers.values;
-      return function(rowIndex: number) {
+      return function (rowIndex: number) {
         const value = values[rowIndex];
         if (value === null) {
           return null;
@@ -884,7 +888,7 @@ export default class TableColumn {
       { hint: /^(year)$/i, type: TableColumnType.time } // Match "year" only, not "Final year" or "0-4 years".
     ];
 
-    const match = typeHintSet.find(hint => {
+    const match = typeHintSet.find((hint) => {
       if (hint.hint.test(name)) {
         if (hint.typeFromValues) {
           return hint.typeFromValues === this.guessColumnTypeFromValues();
