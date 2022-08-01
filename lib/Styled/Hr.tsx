@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 interface IProps {
-  fullWidth: boolean;
+  fullWidth?: boolean;
   size: number;
   borderBottomColor: string;
 }
