@@ -577,12 +577,12 @@ export default class Leaflet extends GlobeOrMap {
    */
 
   @action
-  private _featurePicked(feature: Feature, event: L.LeafletMouseEvent) {
+  private _featurePicked(entity: Entity, event: L.LeafletMouseEvent) {
     this._pickFeatures(event.latlng);
 
     // Ignore clicks on the feature highlight.
-    if (feature.entityCollection && feature.entityCollection.owner) {
-      const owner = feature.entityCollection.owner;
+    if (entity.entityCollection && entity.entityCollection.owner) {
+      const owner = entity.entityCollection.owner;
       if (
         owner instanceof DataSource &&
         owner.name == GlobeOrMap._featureHighlightName
@@ -590,6 +590,8 @@ export default class Leaflet extends GlobeOrMap {
         return;
       }
     }
+
+    const feature = Feature.fromEntityCollectionOrEntity(entity);
 
     const catalogItem = feature._catalogItem;
 
@@ -600,7 +602,7 @@ export default class Leaflet extends GlobeOrMap {
     ) {
       const result = catalogItem.getFeaturesFromPickResult.bind(catalogItem)(
         undefined,
-        feature,
+        entity,
         (this._pickedFeatures?.features.length || 0) < catalogItem.maxRequests
       );
       if (result && isDefined(this._pickedFeatures)) {
