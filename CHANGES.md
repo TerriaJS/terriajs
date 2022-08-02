@@ -1,7 +1,11 @@
 Change Log
 ==========
 
-#### next release (8.2.10)
+#### next release (8.2.11)
+
+* [The next improvement]
+
+#### release 8.2.10 - 2022-08-02
 
 * **Breaking changes:**
   * **Minimum NodeJS version is now 14**
@@ -39,7 +43,6 @@ Change Log
 * Rewrote `CesiumTerrainCatalogItem` to handle and report network errors.
 * Set `JulianDate.toIso8601` second precision to nanosecond - this prevents weird date strings with scientific/exponent notation (eg `2008-05-07T22:54:45.7275957614183426e-11Z`)
 * Add attribution for Natural Earth II and NASA Black Marble basemaps.
-* [The next improvement]
 
 #### 8.2.9 - 2022-07-13
 
@@ -51,7 +54,6 @@ Change Log
 * Rename `FeatureInfoMixin` to `FeatureInfoUrlTemplateMixin`
 * Move `featureInfoTemplate` and `showStringIfPropertyValueIsNull` from `FeatureInfoTraits` to `MappableTraits` (all mappable catalog items)
 * Remove `FeatureInfoUrlTemplateTraits` from all models that don't use `FeatureInfoUrlTemplateMixin`
-* [The next improvement]
 * Fix "Regions: xxx" short report showing for non region mapped items
 * Fix `showInChartPanel` default for mappable items
 
