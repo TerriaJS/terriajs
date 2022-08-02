@@ -171,6 +171,8 @@ describe("Terria", function() {
       if (!isInitFromOptions(initSource))
         throw "Init source is not from options";
 
+      // Note: initFragmentPaths in `initializationUrls` are resolved to the base URL of configURL
+      // - which is path/to/config/
       expect(
         initSource.options.map(source =>
           isInitFromUrl(source) ? source.initUrl : ""
@@ -413,6 +415,8 @@ describe("Terria", function() {
       if (!isInitFromOptions(initSource))
         throw "Init source is not from options";
 
+      // Note: initFragmentPaths in hash parameters are resolved to the base URL of application URL
+      // - which is https://application.url/
       expect(
         initSource.options.map(source =>
           isInitFromUrl(source) ? source.initUrl : ""
