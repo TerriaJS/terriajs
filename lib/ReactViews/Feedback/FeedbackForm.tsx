@@ -16,11 +16,14 @@ import Text from "../../Styled/Text";
 import parseCustomMarkdownToReact, {
   parseCustomMarkdownToReactWithOptions
 } from "../Custom/parseCustomMarkdownToReact";
+import {
+  WithViewState,
+  withViewState
+} from "../StandardUserInterface/ViewStateContext";
 import { applyTranslationIfExists } from "./../../Language/languageHelpers";
 
-interface IProps extends WithTranslation {
+interface IProps extends WithTranslation, WithViewState {
   theme: DefaultTheme;
-  viewState: ViewState;
 }
 
 interface IState {
@@ -436,4 +439,4 @@ const FormWrapper = styled(Box).attrs(props => ({
   }
 `;
 
-export default withTranslation()(withTheme(FeedbackForm));
+export default withTranslation()(withViewState(withTheme(FeedbackForm)));

@@ -1,6 +1,7 @@
 import { action } from "mobx";
 import styled from "styled-components";
 import ViewState from "../../ReactViewModels/ViewState";
+import { withViewState } from "./ViewStateContext";
 
 type PropsType = {
   viewState: ViewState;
@@ -34,4 +35,4 @@ const SidePanelContainer = styled.div.attrs<PropsType>(({ viewState }) => ({
   margin-left: ${p => (p.show ? "0px" : `-${p.theme.workbenchWidth}px`)};
 `;
 
-export default SidePanelContainer;
+export default withViewState(SidePanelContainer);

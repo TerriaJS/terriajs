@@ -61,7 +61,9 @@ const StoryBody = ({
           `}
           medium
         >
-          {parseCustomHtmlToReact(story.text)}
+          {parseCustomHtmlToReact(story.text, {
+            showExternalLinkWarning: true
+          })}
         </Text>
       </StoryContainer>
     ) : null}
