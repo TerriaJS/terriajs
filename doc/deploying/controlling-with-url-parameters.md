@@ -30,11 +30,11 @@ Parameter      | Meaning
 Any unrecognised parameter (eg `foo` or `http://foo.com/bar.json`) is treated as an "Init Source". 
 These can be [Init Fragments](../customizing/client-side-config.md#init-fragment) (eg `foo`) or [Init URLs](../customizing/client-side-config.md#init-url) (eg `http://foo.com/bar.json`)
 
-[Init fragments](../customizing/client-side-config.md#init-fragment) are resolved using Client-side config [`parameters.initFragmentPaths`](../customizing/client-side-config.md#parameters) (which defaults to `"init/"`).
+[Init fragments](../customizing/client-side-config.md#init-fragment) are resolved using Client-side config [`parameters.initFragmentPaths`](../customizing/client-side-config.md#parameters) (which defaults to `"init/"`). For example, `foo` would become `init/foo.json`
 
 Multiple catalog files can be loaded this way, and will be combined. Files are loaded in order provided.
 
-**Note:** relative URLs (and relative init fragments) in hash are resolved using **base URL of the map** - where as relative URLs in Client-side config and resolved using **base URL of config URL**
+**Note:** relative URLs (and relative init fragments) in hash are resolved using **base URL of the map** - where as relative URLs in Client-side config [`initializationUrls`](../customizing/client-side-config.md#intializationurls) and resolved using **base URL of config URL**
 
 For example, http://nationalmap.gov.au#test will load init file http://nationalmap.gov.au/init/test.json
 
