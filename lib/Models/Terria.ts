@@ -1866,8 +1866,8 @@ export default class Terria {
           .reduce((arr: Entity[], ds) => arr.concat(ds.entities.values), []);
 
         entities.forEach(entity => {
-          const hash = hashEntity(entity, this.timelineClock);
           const feature = Feature.fromEntityCollectionOrEntity(entity);
+          const hash = hashEntity(feature, this.timelineClock.currentTime);
           featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
         });
       });
@@ -1909,9 +1909,8 @@ export default class Terria {
     }
 
     runInAction(() => {
-      this.pickedFeatures?.features.forEach((entity: Entity) => {
-        const hash = hashEntity(entity, this.timelineClock);
-        const feature = entity;
+      this.pickedFeatures?.features.forEach(feature => {
+        const hash = hashEntity(feature, this.timelineClock.currentTime);
         featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
       });
 

@@ -3,6 +3,8 @@ Change Log
 
 #### next release (8.2.11)
 
+* Move `maximumShownFeatureInfos` from `WebMapServiceCatalogItemTraits` to `MappableTraits`
+* Remove `featureInfoUrlTemplate` from `OpenDataSoftCatalogItem` - as it is incompatible with time varying datasets
 * [The next improvement]
 
 #### release 8.2.10 - 2022-08-02
@@ -33,8 +35,6 @@ Change Log
 * Add `initFragmentPaths` support for hostnames different to `configUrl`/`applicationUrl`
 * Add DOMPurify to `parseCustomHtmlToReact` (it was already present in `parseCustomMarkdownToReact`)
 * Update `html-to-react` to `1.4.7`
-* Move `maximumShownFeatureInfos` from `WebMapServiceCatalogItemTraits` to `MappableTraits`
-* Remove `featureInfoUrlTemplate` from `OpenDataSoftCatalogItem` - as it is incompatible with time varying datasets
 * Add `ViewState` React context provider to `StandardUserInterface` - instead of passing `viewState` or `terria` props through components, please use
   * `useViewState` hook
   * `withViewState` HOC

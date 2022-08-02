@@ -30,7 +30,7 @@ export default class Feature extends Entity {
   _cesium3DTileFeature?: Cesium3DTileFeature | Cesium3DTilePointFeature;
 
   /** Flag if loading featureInfoUrl (see `FeatureInfoUrlTemplateMixin.getFeaturesFromPickResult`) */
-  @observable loadingFeatureInfoUrl: boolean = false;
+  @observable loadingFeatureInfoUrl?: boolean = false;
 
   constructor(options: Entity.ConstructorOptions) {
     super(options);
