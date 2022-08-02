@@ -856,7 +856,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           features = createLongitudeLatitudeFeaturePerRow(style);
         }
 
-        // _catalogItem property is needed for some feature picking functions (eg FeatureInfoMixin)
+        // _catalogItem property is needed for some feature picking functions (eg `featureInfoTemplate`)
         features.forEach(f => {
           (f as any)._catalogItem = this;
           dataSource.entities.add(f);

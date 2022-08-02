@@ -187,8 +187,6 @@ If your TerriaMap has many (>50) dynamic groups (groups which need to be loaded 
 
 The https://github.com/nextapps-de/flexsearch library is used to index and search the catalog index file.
 
-**Note** NodeJS v10 is not supported, please use v12 or v14.
-
 To generate the catalog index:
 
 - `yarn build-tools`

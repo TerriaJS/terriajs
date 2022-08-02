@@ -3,14 +3,14 @@ import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import EnumDimensionTraits from "./DimensionTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
+import FeatureInfoUrlTemplateTraits from "./FeatureInfoTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
 
 export default class OpenDataSoftCatalogItemTraits extends mixTraits(
   TableTraits,
-  FeatureInfoTraits,
+  FeatureInfoUrlTemplateTraits,
   UrlTraits,
   CatalogMemberTraits,
   LegendOwnerTraits

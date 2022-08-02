@@ -1,8 +1,8 @@
 import i18next from "i18next";
 import { action, computed, observable, toJS } from "mobx";
-import Clock from "terriajs-cesium/Source/Core/Clock";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CzmlDataSource from "terriajs-cesium/Source/DataSources/CzmlDataSource";
+import DataSourceClock from "terriajs-cesium/Source/DataSources/DataSourceClock";
 import isDefined from "../../../Core/isDefined";
 import readJson from "../../../Core/readJson";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
@@ -35,8 +35,8 @@ class CzmlTimeVaryingStratum extends LoadableStratum(CzmlCatalogItemTraits) {
   }
 
   @computed
-  private get clock(): Clock | undefined {
-    return (this.catalogItem as any)._dataSource?.clock;
+  private get clock(): DataSourceClock | undefined {
+    return this.catalogItem._dataSource?.clock;
   }
 
   @computed
@@ -77,7 +77,7 @@ export default class CzmlCatalogItem
     return CzmlCatalogItem.type;
   }
 
-  @observable private _dataSource: CzmlDataSource | undefined;
+  @observable _dataSource: CzmlDataSource | undefined;
   private _czmlFile?: File;
 
   setFileInput(file: File) {

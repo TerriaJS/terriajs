@@ -63,10 +63,6 @@ const Clipboard: React.FC<ClipboardProps> = props => {
   const isLightTheme = theme === "light";
   return (
     <ClipboardDiv>
-      <span>{t("clipboard.shareURL")}</span>
-      <Spacing bottom={2} />
-      <Explanation>{t("clipboard.shareExplanation")}</Explanation>
-      <Spacing bottom={3} />
       <Box>
         {source}
         <Button
@@ -122,10 +118,6 @@ export default Clipboard;
 
 const ClipboardDiv = styled.div`
   position: relative;
-`;
-
-const Explanation = styled.div`
-  opacity: 0.8;
 `;
 
 const TooltipText = styled.span`
