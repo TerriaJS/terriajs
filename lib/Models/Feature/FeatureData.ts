@@ -3,6 +3,7 @@ import TimeIntervalCollectionProperty from "terriajs-cesium/Source/DataSources/T
 /** Terria specific properties */
 export interface TerriaFeatureData {
   type: "terriaFeatureData";
+
   /** If feature is time-based, this can be used instead of `Feature.properties` */
   timeIntervalCollection?: TimeIntervalCollectionProperty;
 

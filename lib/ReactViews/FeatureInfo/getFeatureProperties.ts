@@ -7,13 +7,9 @@ import {
   isJsonString,
   JsonObject
 } from "../../Core/Json";
-import Model from "../../Models/Definition/Model";
 import Feature from "../../Models/Feature/Feature";
 import { isTerriaFeatureData } from "../../Models/Feature/FeatureData";
-import {
-  FeatureInfoFormat,
-  FeatureInfoTemplateTraits
-} from "../../Traits/TraitsClasses/FeatureInfoTraits";
+import { FeatureInfoFormat } from "../../Traits/TraitsClasses/FeatureInfoTraits";
 import { formatDateTime } from "./mustacheExpressions";
 
 /**
@@ -25,7 +21,7 @@ import { formatDateTime } from "./mustacheExpressions";
 export default function getFeatureProperties(
   feature: Feature,
   currentTime: JulianDate,
-  featureInfoTemplate?: Model<FeatureInfoTemplateTraits>
+  formats?: Record<string, FeatureInfoFormat>
 ) {
   const properties = propertyGetTimeValues(feature, currentTime);
 
@@ -35,8 +31,8 @@ export default function getFeatureProperties(
   let result = parseValues(properties);
   result = replaceBadKeyCharacters(result);
 
-  if (featureInfoTemplate?.formats) {
-    applyFormatsInPlace(result, featureInfoTemplate.formats);
+  if (formats) {
+    applyFormatsInPlace(result, formats);
   }
   return result;
 }

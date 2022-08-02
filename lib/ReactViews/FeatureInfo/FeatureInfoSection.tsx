@@ -145,19 +145,10 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
       this.props.feature,
       this.currentTimeIfAvailable ?? JulianDate.now(),
       MappableMixin.isMixedInto(this.props.catalogItem) &&
-        this.props.catalogItem.featureInfoTemplate
-        ? this.props.catalogItem.featureInfoTemplate
+        this.props.catalogItem.featureInfoTemplate.formats
+        ? this.props.catalogItem.featureInfoTemplate.formats
         : undefined
     );
-  }
-
-  @computed
-  get catalogItemFeatureContext() {
-    // If catalog item has featureInfoContext function
-    // Merge it into other properties
-    if (FeatureInfoContext.is(this.props.catalogItem)) {
-      return this.props.catalogItem.featureInfoContext(this.props.feature);
-    }
   }
 
   /** This monstrosity contains properties which can be used by Mustache templates:
@@ -237,8 +228,11 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
 
     // If catalog item has featureInfoContext function
     // Merge it into other properties
-    if (this.catalogItemFeatureContext) {
-      return merge({ ...propertyData, terria }, this.catalogItemFeatureContext);
+    if (FeatureInfoContext.is(this.props.catalogItem)) {
+      return merge(
+        { ...propertyData, terria },
+        this.props.catalogItem.featureInfoContext(this.props.feature) ?? {}
+      );
     }
 
     return { ...propertyData, terria };
