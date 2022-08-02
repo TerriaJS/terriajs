@@ -1,19 +1,23 @@
 "use strict";
 
-import React, { ReactElement } from "react";
+import React, {
+  AnchorHTMLAttributes,
+  createElement,
+  DetailedReactHTMLElement,
+  ReactElement
+} from "react";
 import styled from "styled-components";
 import CustomComponent, {
   DomElement,
   ProcessNodeContext
 } from "./CustomComponent";
+import { ExternalLinkWithWarning, ExternalLinkIcon } from "./ExternalLink";
 
 const DOMPurify = require("dompurify/dist/purify");
 const HtmlToReact = require("html-to-react");
 const combine = require("terriajs-cesium/Source/Core/combine").default;
 const defined = require("terriajs-cesium/Source/Core/defined").default;
 const utils = require("html-to-react/lib/utils");
-const Icon = require("../../Styled/Icon").default;
-const { StyledIcon } = require("../../Styled/Icon");
 
 const htmlToReactParser = new HtmlToReact.Parser({
   decodeEntities: true
@@ -33,21 +37,9 @@ const shouldProcessEveryNodeExceptWhiteSpace = function(node: DomElement) {
 
 let keyIndex = 0;
 
-export const ExternalLinkIcon = styled(StyledIcon).attrs({
-  glyph: Icon.GLYPHS.externalLink,
-  styledWidth: "10px",
-  styledHeight: "10px",
-  displayInline: true
-})`
-  margin-left: 5px;
-  fill: currentColor;
-`;
-
-type ExternalLinkIconOptions = { disableExternalLinkIcon?: boolean };
-
 function shouldAppendExternalLinkIcon(
   url: string | undefined,
-  context: ExternalLinkIconOptions
+  context: ParseCustomHtmlToReactContext
 ) {
   if (!url) return false;
   const tmp = document.createElement("a");
@@ -81,10 +73,15 @@ function getProcessingInstructions(context: ParseCustomHtmlToReactContext) {
     });
   }
 
-  // Make sure any <a href> tags open in a new window
+  /** Process anchor elements:
+   * - Make sure any <a href> tags open in a new window
+   * - Add ExternalLinkIcon
+   * - Replace anchor with ExternalLinkWithWarning if `context.showExternalLinkWarning`
+   */
   processingInstructions.push({
     shouldProcessNode: (node: DomElement) => node.name === "a",
     processNode: function(node: DomElement, children, index) {
+      // Make sure any <a href> tags open in a new window
       // eslint-disable-line react/display-name
       const elementProps = {
         key: "anchor-" + keyIndex++,
@@ -93,12 +90,36 @@ function getProcessingInstructions(context: ParseCustomHtmlToReactContext) {
       };
       node.attribs = combine(node.attribs, elementProps);
 
-      if (shouldAppendExternalLinkIcon(node?.attribs?.href, context)) {
+      // If applicable - append ExternalLinkIcon
+      const appendExternalLink = shouldAppendExternalLinkIcon(
+        node?.attribs?.href,
+        context
+      );
+      if (appendExternalLink) {
         const externalIcon = React.createElement(ExternalLinkIcon, {});
         children.push(externalIcon);
       }
 
-      return utils.createElement(node, index, node.data, children);
+      // Create new Anchor element
+      const aElement = utils.createElement(
+        node,
+        index,
+        node.data,
+        children
+      ) as DetailedReactHTMLElement<
+        AnchorHTMLAttributes<HTMLAnchorElement>,
+        HTMLAnchorElement
+      >;
+
+      // If external link and showExternalLinkWarning is true - replace with ExternalLinkWithWarning
+      if (appendExternalLink && context.showExternalLinkWarning) {
+        return createElement(ExternalLinkWithWarning, {
+          attributes: aElement.props,
+          children: aElement.props.children
+        });
+      }
+
+      return aElement;
     }
   });
 
@@ -110,8 +131,11 @@ function getProcessingInstructions(context: ParseCustomHtmlToReactContext) {
   return processingInstructions;
 }
 
-export type ParseCustomHtmlToReactContext = ProcessNodeContext &
-  ExternalLinkIconOptions;
+export type ParseCustomHtmlToReactContext = ProcessNodeContext & {
+  disableExternalLinkIcon?: boolean;
+  /** Show warning prompt for external links */
+  showExternalLinkWarning?: boolean;
+};
 
 /**
  * Return html as a React Element.

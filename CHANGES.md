@@ -28,6 +28,11 @@ Change Log
 * Feature Info now hidden on Cesium3dTiles items if `allowFeaturePicking` set to false. Default is true.
 * Add DOMPurify to `parseCustomHtmlToReact` (it was already present in `parseCustomMarkdownToReact`)
 * Update `html-to-react` to `1.4.7`
+* Add `ViewState` React context provider to `StandardUserInterface` - instead of passing `viewState` or `terria` props through components, please use
+  * `useViewState` hook
+  * `withViewState` HOC
+* Move `GlobalTerriaStyles` from `StandardUserInterface` to separate file
+* Add `ExternalLinkWithWarning` component - this will replace all URLs in story body and add a warning message when URLs are clicked on.
 * Fixed a bug where adding `CesiumTerrainCatalogItem` to workbench didn't apply it when `configParameters.cesiumTerrainAssetId` or `configParameters.cesiumTerrainUrl` was set.
 * `CesiumTerrainCatalogItem` will now show a status `In use` or `Not in use` in the workbench.
 * Rewrote `CesiumTerrainCatalogItem` to handle and report network errors.
