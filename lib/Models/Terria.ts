@@ -105,6 +105,7 @@ import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
+import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 
 // import overrides from "../Overrides/defaults.jsx";
 
@@ -671,6 +672,14 @@ export default class Terria {
     ) {
       return this.mainViewer.currentViewer as import("./Cesium").default;
     }
+  }
+
+  /**
+   * @returns The currently active `TerrainProvider` or `undefined`.
+   */
+  @computed
+  get terrainProvider(): TerrainProvider | undefined {
+    return this.cesium?.terrainProvider;
   }
 
   @computed

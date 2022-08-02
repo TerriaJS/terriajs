@@ -27,6 +27,18 @@ Change Log
 * Add `allowFeaturePicking` trait to Cesium3dTileMixin.
 * Feature Info now hidden on Cesium3dTiles items if `allowFeaturePicking` set to false. Default is true.
 * Add `initFragmentPaths` support for hostnames different to `configUrl`/`applicationUrl`
+* Add DOMPurify to `parseCustomHtmlToReact` (it was already present in `parseCustomMarkdownToReact`)
+* Update `html-to-react` to `1.4.7`
+* Add `ViewState` React context provider to `StandardUserInterface` - instead of passing `viewState` or `terria` props through components, please use
+  * `useViewState` hook
+  * `withViewState` HOC
+* Move `GlobalTerriaStyles` from `StandardUserInterface` to separate file
+* Add `ExternalLinkWithWarning` component - this will replace all URLs in story body and add a warning message when URLs are clicked on.
+* Fixed a bug where adding `CesiumTerrainCatalogItem` to workbench didn't apply it when `configParameters.cesiumTerrainAssetId` or `configParameters.cesiumTerrainUrl` was set.
+* `CesiumTerrainCatalogItem` will now show a status `In use` or `Not in use` in the workbench.
+* Rewrote `CesiumTerrainCatalogItem` to handle and report network errors.
+* Set `JulianDate.toIso8601` second precision to nanosecond - this prevents weird date strings with scientific/exponent notation (eg `2008-05-07T22:54:45.7275957614183426e-11Z`)
+* Add attribution for Natural Earth II and NASA Black Marble basemaps.
 * [The next improvement]
 
 #### 8.2.9 - 2022-07-13
