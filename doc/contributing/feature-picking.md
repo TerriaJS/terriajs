@@ -23,11 +23,11 @@ It is a work in progress
     - `FeatureInfoUrlMixin.getFeaturesFromPickResult` is called if applicable
     - Feature highlight is created if applicable
 2. Terria `PickedFeatures` is populated
-3. Picked features appear in `FeatureInfoPanel`
+3. Picked features appear in [`FeatureInfoPanel`](#featureinfopanel)
     - Catalog item for each feature is resolved
-    - Each catalog item renders `FeatureInfoCatalogItem`
-    - Each feature in catalog item renders `FeatureInfoSection`
-4. Feature info is rendered by `FeatureInfoSection`
+    - Each catalog item renders [`FeatureInfoCatalogItem`](#featureinfocatalogitem)
+    - Each feature in catalog item renders [`FeatureInfoSection`](#featureinfosection)
+4. Feature info is rendered by [`FeatureInfoSection`](#featureinfosection)
     - Pre-processing/cleaning of feature properties
     - Setup Mustache template context data (eg custom expressions)
     - `FeatureInfoContext.featureInfoContext()` is called if applicable - and merged into Mustache template context
@@ -77,12 +77,12 @@ Most imagery providers are handled automatically by Cesium like so:
 1. Click on imagery provider on map (Leaflet or Cesium)
 2. Network request is made by Cesium (`ImageryProvider.pickFeatures`)
 3. Returns `ImageryLayerFeatureInfo`
-4. Convert into Terria `Feature`
-5. [`featureDataToGeoJson`](../../lib/Map/PickedFeatures/featureDataToGeoJson.ts) will attempt to convert `Feature` into geoJSON for feature highlighting
+4. Convert into Terria [`Feature`](#terria-feature-object)
+5. [`featureDataToGeoJson`](../../lib/Map/PickedFeatures/featureDataToGeoJson.ts) will attempt to convert [`Feature`](#terria-feature-object) into geoJSON for feature highlighting
 
 ### [Cesium Data Source](https://cesium.com/learn/cesiumjs/ref-doc/DataSource.html)
 
-When picking features, Cesium will return an `Entity` or `EntityCollection` - which is converted into a Terria `Feature` object (see [`Cesium.pickVectorFeatures`](/lib/Models/Cesium.ts))
+When picking features, Cesium will return an [`Entity`](https://cesium.com/learn/cesiumjs/ref-doc/Entity.html) or `EntityCollection` - which is converted into a Terria [`Feature`](#terria-feature-object) object (see [`Cesium.pickVectorFeatures`](/lib/Models/Cesium.ts))
 
 Leaflet is a bit more complicated - as it doesn't natively support Cesium Data Sources - see [`LeafletScene`](/lib/Map/Leaflet/LeafletScene.ts) and [`LeafletVisualizer`](/lib/Map/Leaflet/LeafletVisualizer.ts).
 
@@ -98,9 +98,11 @@ No feature picking is implemented
 
 ### Terria `Feature` object
 
-`Feature` is a wrapper around a Cesium `Entity`
+See [lib/Models/Feature/Feature.ts](/lib/Models/Feature/Feature.ts)
 
-- `data` property contains `TerriaFeatureData`
+`Feature` is a wrapper around a Cesium [`Entity`](https://cesium.com/learn/cesiumjs/ref-doc/Entity.html)
+
+- `data` property contains [`TerriaFeatureData`](#terriafeaturedata)
 - `_catalogItem` - owner of feature
 - `imageryProvider` - if feature picked is from imagery provider
 - `loadingFeatureInfoUrl`
@@ -109,11 +111,13 @@ No feature picking is implemented
 
 #### `TerriaFeatureData`
 
-This property of `Feature` should be used for Terria specific data - it should only be added to `Feature` objects when they are created.
+See [lib/Models/Feature/FeatureData.ts](/lib/Models/Feature/FeatureData.ts)
+
+This property of [`Feature`](#terria-feature-object) should be used for Terria specific data - it should only be added to [`Feature`](#terria-feature-object) objects when they are created.
 
 Current properties:
 
-- `rowIds` - array of table row IDS that correspond to the feature. This is required for TableMixin to find original data after a `Feature` has been picked,
+- `rowIds` - array of table row IDS that correspond to the feature. This is required for TableMixin to find original data after a [`Feature`](#terria-feature-object) has been picked,
 - `timeIntervalCollection` - if feature is time varying, this property can be used instead of `properties` for convenience.
 
 #### Example usage
@@ -127,7 +131,7 @@ Current properties:
 
 ### `ImageryLayerFeatureInfo`
 
-This is a Cesium object - unchanged in `Terria`. It is converted to a `Feature` object when picked.
+This is a Cesium object - unchanged in Terria. It is converted to a [`Feature`](#terria-feature-object) object when picked.
 
 Note use of `data` property and how we use `featureDataToGeoJson` to convert `ImageryLayerFeatureInfo` `data` to geoJSON for feature highlighting
 
@@ -137,7 +141,7 @@ Note use of `data` property and how we use `featureDataToGeoJson` to convert `Im
 
 ## Feature info panel (view layer)
 
-There are three nested React omponents
+There are three nested React components
 
 - [`FeatureInfoPanel`](/lib/ReactViews/FeatureInfo/FeatureInfoPanel.tsx)
   - [`FeatureInfoCatalogItem`](/lib/ReactViews/FeatureInfo/FeatureInfoCatalogItem.tsx) for each catalog item
@@ -171,6 +175,7 @@ There are two methods of rendering feature info:
 #### Cleans/pre-processes feature properties
 
 - For time-varying features, gets values for `currentTime`
+  - **Note**: this is occur
 - Processes nested JSON values
 - Replaces values which may interfere with Mustache templates
 - Applies `FeatureInfoTraits.format` options (eg `number.toLocaleString` options)
@@ -220,8 +225,8 @@ The output HTML/markdown may contain Custom Components. These are handled by the
 
 #### Render HTML/markdown to React
 
-Uses [`parseCustomMarkdownToReact`](/lib/ReactViews/Custom/parseCustomMarkdownToReact.ts) function to turn HTML/markdown with custom components to React.
-
-This step may cause side-effects - eg `CSVChartCustomComponent`
-
 This step is applied to "Raw" and "Curated" data
+
+Uses [`parseCustomMarkdownToReact.ts`](/lib/ReactViews/Custom/parseCustomMarkdownToReact.ts) function to turn HTML/markdown with custom components to React.
+
+This step may cause model layer side-effects - eg `CSVChartCustomComponent`

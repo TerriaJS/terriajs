@@ -74,7 +74,9 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
       () => [
         this.props.feature,
         this.props.template.template,
-        this.props.template.partials
+        this.props.template.partials,
+        // Note `mustacheContextData` will trigger update when `currentTime` changes (through this.featureProperties)
+        this.mustacheContextData
       ],
       () => {
         if (this.props.template.template && this.mustacheContextData) {
@@ -167,9 +169,6 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
    */
   @computed
   get mustacheContextData() {
-    // Don't return context data if no feature properties to show
-    if (!this.featureProperties) return undefined;
-
     const propertyValues = Object.assign({}, this.featureProperties);
 
     // Properties accessible as {name, value} array; useful when you want
@@ -345,25 +344,47 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
         this.props.catalogItem.featureInfoTemplate
           .showFeatureInfoDownloadWithTemplate);
 
+    const titleElement = this.props.printView ? (
+      <h2>{title}</h2>
+    ) : (
+      <button
+        type="button"
+        onClick={this.clickHeader.bind(this)}
+        className={Styles.title}
+      >
+        <span>{title}</span>
+        {this.props.isOpen ? (
+          <Icon glyph={Icon.GLYPHS.opened} />
+        ) : (
+          <Icon glyph={Icon.GLYPHS.closed} />
+        )}
+      </button>
+    );
+
+    // If feature is unavailable (or not showing) - show no info message
+    if (
+      !this.props.feature.isAvailable(
+        this.currentTimeIfAvailable ?? JulianDate.now()
+      ) ||
+      !this.props.feature.isShowing
+    ) {
+      return (
+        <li className={classNames(Styles.section)}>
+          {titleElement}
+          {this.props.isOpen ? (
+            <section className={Styles.content}>
+              <div ref="no-info" key="no-info">
+                {t("featureInfo.noInfoAvailable")}
+              </div>
+            </section>
+          ) : null}
+        </li>
+      );
+    }
+
     return (
       <li className={classNames(Styles.section)}>
-        {this.props.printView ? (
-          <h2>{title}</h2>
-        ) : (
-          <button
-            type="button"
-            onClick={this.clickHeader.bind(this)}
-            className={Styles.title}
-          >
-            <span>{title}</span>
-            {this.props.isOpen ? (
-              <Icon glyph={Icon.GLYPHS.opened} />
-            ) : (
-              <Icon glyph={Icon.GLYPHS.closed} />
-            )}
-          </button>
-        )}
-
+        {titleElement}
         {this.props.isOpen ? (
           <section className={Styles.content}>
             {/* If we have templated feature info (and not in print mode) - render "show raw data" button */}
