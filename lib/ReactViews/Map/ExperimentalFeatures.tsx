@@ -1,9 +1,9 @@
 import React from "react";
-import ViewState from "../../ReactViewModels/ViewState";
 import styled from "styled-components";
+import ViewState from "../../ReactViewModels/ViewState";
+import { withViewState } from "../StandardUserInterface/ViewStateContext";
 
 interface IProps {
-  terria: ViewState["terria"];
   viewState: ViewState;
   experimentalItems?: React.ReactNode[];
 }
@@ -37,4 +37,4 @@ const ExperimentalFeatures: React.FC<IProps> = props => {
   );
 };
 
-export default ExperimentalFeatures;
+export default withViewState(ExperimentalFeatures);

@@ -29,6 +29,7 @@ import Workbench from "../../Models/Workbench";
 import ViewState from "../../ReactViewModels/ViewState";
 import Icon from "../../Styled/Icon";
 import Loader from "../Loader";
+import { withViewState } from "../StandardUserInterface/ViewStateContext";
 import Styles from "./feature-info-panel.scss";
 import FeatureInfoCatalogItem from "./FeatureInfoCatalogItem";
 
@@ -463,4 +464,4 @@ function recurseIntoMembers(catalogItem: BaseModel): BaseModel[] {
 }
 
 export { FeatureInfoPanel };
-export default withTranslation()(FeatureInfoPanel);
+export default withTranslation()(withViewState(FeatureInfoPanel));

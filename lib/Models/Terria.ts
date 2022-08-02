@@ -1986,7 +1986,9 @@ function generateInitializationUrl(
     return {
       options: initFragmentPaths.map(fragmentPath => {
         return {
-          initUrl: URI.joinPaths(fragmentPath, url + ".json")
+          initUrl: new URI(fragmentPath)
+            .segment(url)
+            .suffix("json")
             .absoluteTo(baseUri)
             .toString()
         };
