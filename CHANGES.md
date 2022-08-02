@@ -1,8 +1,9 @@
 Change Log
 ==========
 
-#### next release (8.2.10)
+#### next release (8.2.11)
 
+#### release 8.2.10 - 2022-08-02
 * **Breaking changes:**
   * **Minimum NodeJS version is now 14**
 * Consolidate `HasLocalData` interface
