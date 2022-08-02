@@ -36,7 +36,18 @@ If a string ends with `.json`, it is assumed to be a complete relative or absolu
 
 If the string does not end with `.json`, such as `"foo"`, it refers to an init file on the same web server at `init/foo.json`.  In a TerriaMap directory on your computer, it can be found at `wwwroot/init/foo.json`.
 
-See `parameters.initFragmentPaths` for defining path to Init fragments (defaults to `init/`). Note: relative paths will be resolved to the base URL of client-side config URL (which defaults to `config.json`)
+### Init fragment paths
+
+See `parameters.initFragmentPaths` for defining path to Init fragments (defaults to `init/`). 
+
+Note: relative paths will be resolved to the base URL of client-side config URL (which defaults to `config.json` - which means the base application URL is used)
+
+For example a map hosted at http://something.com/map
+
+- will have default `configUrl = http://something.com/map/config.json`
+- therefore will resolve `initFragmentPaths` to `http://something.com/map`
+- if using default `initFragmentPaths = ["init"]`
+  - init fragments will be resolved to `http://something.com/map/init`
 
 ### `v7initializationUrls`
 
