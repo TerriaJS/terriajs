@@ -26,6 +26,7 @@ Change Log
 * Limit workbench item title to 2 lines and show overflow: ellipsis after.
 * Add `allowFeaturePicking` trait to Cesium3dTileMixin.
 * Feature Info now hidden on Cesium3dTiles items if `allowFeaturePicking` set to false. Default is true.
+* Add `initFragmentPaths` support for hostnames different to `configUrl`/`applicationUrl`
 * Add DOMPurify to `parseCustomHtmlToReact` (it was already present in `parseCustomMarkdownToReact`)
 * Update `html-to-react` to `1.4.7`
 * Add `ViewState` React context provider to `StandardUserInterface` - instead of passing `viewState` or `terria` props through components, please use
