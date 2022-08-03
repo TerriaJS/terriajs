@@ -12,5 +12,5 @@ export interface TerriaFeatureData {
 }
 
 export function isTerriaFeatureData(data: any): data is TerriaFeatureData {
-  return "type" in data && data.type === "terriaFeatureData";
+  return data && "type" in data && data.type === "terriaFeatureData";
 }

@@ -165,6 +165,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
    *       - `urlEncode`
    *     - `coords` with `latitude` and `longitude`
    *     - `currentTime`
+   *     - `rawDataTable` contains markdown table
    *  - properties provided by catalog item through `featureInfoContext` function
    */
   @computed
@@ -196,6 +197,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
       };
       currentTime?: Date;
       timeSeries?: unknown;
+      rawDataTable?: string;
     } = {
       partialByName: mustacheRenderPartialByName(
         this.props.template?.partials ?? {},
@@ -204,7 +206,8 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
       formatNumber: mustacheFormatNumberFunction,
       formatDateTime: mustacheFormatDateTime,
       urlEncodeComponent: mustacheURLEncodeTextComponent,
-      urlEncode: mustacheURLEncodeText
+      urlEncode: mustacheURLEncodeText,
+      rawDataTable: this.rawDataMarkdown
     };
 
     if (this.props.position) {
@@ -254,11 +257,8 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
     };
   }
 
-  /** Get Raw feature info.
-   * Note: this can be computed - as no custom components are used which cause side-effects (eg CSVChartCustomComponent)
-   */
-  @computed
-  get rawFeatureInfo(): React.ReactNode | undefined {
+  /** Get raw data table as markdown string */
+  @computed get rawDataMarkdown() {
     const feature = this.props.feature;
 
     const currentTime = this.currentTimeIfAvailable ?? JulianDate.now();
@@ -267,7 +267,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
     );
 
     if (!isDefined(description) && isDefined(feature.properties)) {
-      description = generateCesiumInfoHTMLFromProperties(
+      return generateCesiumInfoHTMLFromProperties(
         feature.properties,
         currentTime,
         MappableMixin.isMixedInto(this.props.catalogItem)
@@ -275,13 +275,18 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
           : undefined
       );
     }
+  }
 
-    if (!description) return;
-
-    return parseCustomMarkdownToReact(
-      description,
-      this.parseMarkdownContextData
-    );
+  /** Get Raw data as ReactNode.
+   * Note: this can be computed - as no custom components are used which cause side-effects (eg CSVChartCustomComponent)
+   */
+  @computed
+  get rawDataReactNode(): React.ReactNode | undefined {
+    if (this.rawDataMarkdown)
+      return parseCustomMarkdownToReact(
+        this.rawDataMarkdown,
+        this.parseMarkdownContextData
+      );
   }
 
   @action
@@ -404,8 +409,8 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
                 "Loading"
               ) : this.showRawData || !this.templatedFeatureInfo ? (
                 <>
-                  {this.rawFeatureInfo ? (
-                    this.rawFeatureInfo
+                  {this.rawDataReactNode ? (
+                    this.rawDataReactNode
                   ) : (
                     <div ref="no-info" key="no-info">
                       {t("featureInfo.noInfoAvailable")}
