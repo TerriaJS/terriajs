@@ -123,7 +123,7 @@ export default class TableTraits extends mixTraits(
     description: `Gets an id which is different if the view of the data is different. Defaults to undefined. For a csv file with a fixed TableStructure, undefined is fine.
       However, if the underlying table changes depending on user selection (eg. for SDMX-JSON or SOS), then the same feature may show different information.
       If it is time-varying, the feature info panel will show a preview chart of the values over time.
-      This id is used when that chart is expanded, so that it can be opened into a different item, and not override an earlier expanded chart of the same feature (but different data).`
+      This id is used when that chart is expanded, so that it can be opened into a different item, and not override an earlier expanded chart of the same feature (but different data). This defaults to \`activeStyle\``
   })
   dataViewId?: string;
 }

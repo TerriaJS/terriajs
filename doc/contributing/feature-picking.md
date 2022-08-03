@@ -4,7 +4,11 @@ How Terria handles picking features on a map.
 
 This document mainly serves as a guide to debug or extend feature picking functionality.
 
-It is a work in progress
+It is a work in progress.
+
+**Not included in doc**:
+
+- How picked features are shared
 
 ## Related docs
 
@@ -175,7 +179,6 @@ There are two methods of rendering feature info:
 #### Cleans/pre-processes feature properties
 
 - For time-varying features, gets values for `currentTime`
-  - **Note**: this is occur
 - Processes nested JSON values
 - Replaces values which may interfere with Mustache templates
 - Applies `FeatureInfoTraits.format` options (eg `number.toLocaleString` options)

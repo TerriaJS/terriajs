@@ -9,12 +9,13 @@ import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import Constructor from "../Core/Constructor";
 import TerriaError from "../Core/TerriaError";
 import getUrlForImageryTile from "../Map/ImageryProvider/getUrlForImageryTile";
-import CommonStrata from "../Models/Definition/CommonStrata";
+import { ProviderCoords } from "../Map/PickedFeatures/PickedFeatures";
 import CompositeCatalogItem from "../Models/Catalog/CatalogItems/CompositeCatalogItem";
+import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
 import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
-import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import ImageryProviderTraits from "../Traits/TraitsClasses/ImageryProviderTraits";
+import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
 import MappableMixin from "./MappableMixin";
 
@@ -50,7 +51,7 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
      */
     handleTileError?: (
       request: Promise<void>,
-      tile: { x: number; y: number; level: number }
+      tile: ProviderCoords
     ) => Promise<void>;
 
     get hasTileErrorHandlerMixin() {
@@ -179,7 +180,7 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
         result.resolve();
       };
 
-      const getTileKey = (tile: { x: number; y: number; level: number }) => {
+      const getTileKey = (tile: ProviderCoords) => {
         const time = DiscretelyTimeVaryingMixin.isMixedInto(this)
           ? this.currentTime
           : "";
@@ -327,7 +328,7 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
    * Trying fetching image using an XHR request
    */
   function fetchTileImage(
-    tile: { x: number; y: number; level: number },
+    tile: ProviderCoords,
     imageryProvider: ImageryProvider
   ) {
     const tileUrl = getUrlForImageryTile(
@@ -346,7 +347,7 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
   }
 
   function isTileOutsideExtent(
-    tile: { x: number; y: number; level: number },
+    tile: ProviderCoords,
     rectangle: Rectangle | undefined,
     imageryProvider: ImageryProvider
   ): boolean {

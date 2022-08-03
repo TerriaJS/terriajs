@@ -1848,8 +1848,8 @@ export default class Terria {
 
   @action
   async loadPickedFeatures(pickedFeatures: JsonObject): Promise<void> {
-    let vectorFeatures: Entity[] = [];
-    let featureIndex: Record<number, Entity[] | undefined> = {};
+    let vectorFeatures: Feature[] = [];
+    let featureIndex: Record<number, Feature[] | undefined> = {};
 
     if (Array.isArray(pickedFeatures.entities)) {
       // Build index of terria features by a hash of their properties.
@@ -1867,14 +1867,7 @@ export default class Terria {
 
         entities.forEach(entity => {
           const feature = Feature.fromEntityCollectionOrEntity(entity);
-          const catalogItemTime =
-            feature._catalogItem && TimeVarying.is(feature._catalogItem)
-              ? feature._catalogItem.currentTimeAsJulianDate
-              : undefined;
-          const hash = hashEntity(
-            feature,
-            catalogItemTime ?? this.timelineClock.currentTime
-          );
+          const hash = hashEntity(feature, this);
 
           featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
         });
@@ -1918,28 +1911,20 @@ export default class Terria {
 
     runInAction(() => {
       this.pickedFeatures?.features.forEach(feature => {
-        const catalogItemTime =
-          feature._catalogItem && TimeVarying.is(feature._catalogItem)
-            ? feature._catalogItem.currentTimeAsJulianDate
-            : undefined;
-        const hash = hashEntity(
-          feature,
-          catalogItemTime ?? this.timelineClock.currentTime
-        );
+        const hash = hashEntity(feature, this);
         featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
       });
 
+      // Find picked feature by matching feature hash
+      // Also try to match name if defined
       const current = pickedFeatures.current;
-      if (
-        isJsonObject(current) &&
-        typeof current.hash === "number" &&
-        typeof current.name === "string"
-      ) {
-        const selectedFeature = (featureIndex[current.hash] || []).find(
-          feature => feature.name === current.name
-        );
+      if (isJsonObject(current) && typeof current.hash === "number") {
+        const selectedFeature =
+          (featureIndex[current.hash] || []).find(
+            feature => feature.name === current.name
+          ) ?? featureIndex[current.hash]?.[0];
         if (selectedFeature) {
-          this.selectedFeature = selectedFeature as Feature;
+          this.selectedFeature = selectedFeature;
         }
       }
     });

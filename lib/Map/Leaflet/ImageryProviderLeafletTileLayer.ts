@@ -16,6 +16,7 @@ import isDefined from "../../Core/isDefined";
 import pollToPromise from "../../Core/pollToPromise";
 import Leaflet from "../../Models/Leaflet";
 import getUrlForImageryTile from "../ImageryProvider/getUrlForImageryTile";
+import { ProviderCoords } from "../PickedFeatures/PickedFeatures";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
@@ -397,7 +398,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     map: L.Map,
     longitudeRadians: number,
     latitudeRadians: number
-  ): Promise<{ x: number; y: number; level: number }> {
+  ): Promise<ProviderCoords> {
     const ll = new Cartographic(
       CesiumMath.negativePiToPi(longitudeRadians),
       latitudeRadians,
@@ -424,7 +425,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     level: number,
     longitudeRadians: number,
     latitudeRadians: number
-  ): Promise<ImageryLayerFeatureInfo | ImageryLayerFeatureInfo[] | undefined> {
+  ): Promise<ImageryLayerFeatureInfo[] | undefined> {
     return pollToPromise(() => {
       return this.imageryProvider.ready;
     }).then(() => {

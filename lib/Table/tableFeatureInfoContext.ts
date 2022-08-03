@@ -60,14 +60,12 @@ export const tableFeatureInfoContext: (
         units: chartColumns.map(column => column.units || ""),
         id: featureId,
         data: csvData,
-        chart: `<chart ${'id="' + featureId + '" '} ${
+        chart: `<chart ${'identifier="' + featureId + '" '} ${
           title ? `title="${title}"` : ""
         }>${csvData}</chart>`
       }
     }
   };
-
-  console.log(result);
 
   return result;
 };

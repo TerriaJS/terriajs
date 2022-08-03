@@ -203,8 +203,8 @@ export default class Leaflet extends GlobeOrMap {
         map.tap
       ]);
       const pickLocation = this.pickLocation.bind(this);
-      const pickFeature = (feature: Feature, event: L.LeafletMouseEvent) => {
-        this._featurePicked(feature, event);
+      const pickFeature = (entity: Entity, event: L.LeafletMouseEvent) => {
+        this._featurePicked(entity, event);
       };
 
       // Update mouse coords on mouse move
@@ -626,7 +626,7 @@ export default class Leaflet extends GlobeOrMap {
 
   private _pickFeatures(
     latlng: L.LatLng,
-    tileCoordinates?: any,
+    tileCoordinates?: Record<string, ProviderCoords>,
     existingFeatures?: Feature[],
     ignoreSplitter: boolean = false
   ) {
@@ -704,118 +704,119 @@ export default class Leaflet extends GlobeOrMap {
       pickedLocation
     );
 
-    // We want the all available promise to return after the cleanup one to
-    // make sure all vector click events have resolved.
-    const promises = [cleanup].concat(
-      imageryLayers.map(async imageryLayer => {
-        const imageryLayerUrl = (<any>imageryLayer.imageryProvider).url;
-        const longRadians = CesiumMath.toRadians(latlng.lng);
-        const latRadians = CesiumMath.toRadians(latlng.lat);
+    const imageryFeaturePromises = imageryLayers.map(async imageryLayer => {
+      const imageryLayerUrl = (<any>imageryLayer.imageryProvider).url;
+      const longRadians = CesiumMath.toRadians(latlng.lng);
+      const latRadians = CesiumMath.toRadians(latlng.lat);
 
-        if (tileCoordinates[imageryLayerUrl])
-          return tileCoordinates[imageryLayerUrl];
-
-        const coords = await imageryLayer.getFeaturePickingCoords(
+      const coords =
+        tileCoordinates?.[imageryLayerUrl] ??
+        (await imageryLayer.getFeaturePickingCoords(
           this.map,
           longRadians,
           latRadians
-        );
+        ));
 
-        const features = await imageryLayer.pickFeatures(
-          coords.x,
-          coords.y,
-          coords.level,
-          longRadians,
-          latRadians
-        );
+      const features = await imageryLayer.pickFeatures(
+        coords.x,
+        coords.y,
+        coords.level,
+        longRadians,
+        latRadians
+      );
 
-        return {
-          features: features,
-          imageryLayer: imageryLayer,
-          coords: coords
-        };
-      })
-    );
+      // Make sure ImageryLayerFeatureInfo has imagery layer property
+      features?.forEach(feature => (feature.imageryLayer = imageryLayer));
+
+      return {
+        features: features,
+        imageryLayer: imageryLayer,
+        coords: coords
+      };
+    });
 
     const pickedFeatures = this._pickedFeatures;
 
-    pickedFeatures.allFeaturesAvailablePromise = Promise.all(promises)
-      .then((results: any) => {
-        // Get rid of the cleanup promise
-        const promiseResult: {
-          features: ImageryLayerFeatureInfo[];
-          imageryLayer: ImageryProviderLeafletTileLayer;
-          coords: ProviderCoords;
-        }[] = results.slice(1);
+    // We want the all available promise to return after the cleanup one to
+    // make sure all vector click events have resolved.
+    pickedFeatures.allFeaturesAvailablePromise = Promise.all([
+      cleanup,
+      Promise.all(imageryFeaturePromises)
+        .then(results => {
+          runInAction(() => {
+            pickedFeatures.isLoading = false;
+          });
 
-        runInAction(() => {
-          pickedFeatures.isLoading = false;
-        });
+          pickedFeatures.providerCoords = {};
+          const filteredResults = results.filter(function(result) {
+            return (
+              isDefined(result.features) &&
+              result.features.length > 0 &&
+              result.imageryLayer &&
+              result.coords
+            );
+          });
 
-        pickedFeatures.providerCoords = {};
-        const filteredResults = promiseResult.filter(function(result) {
-          return isDefined(result.features) && result.features.length > 0;
-        });
-
-        pickedFeatures.providerCoords = filteredResults.reduce(function(
-          coordsSoFar: ProviderCoordsMap,
-          result
-        ) {
-          const imageryProvider = result.imageryLayer.imageryProvider;
-          coordsSoFar[(<any>imageryProvider).url] = result.coords;
-          return coordsSoFar;
-        },
-        {});
-
-        const features = filteredResults.reduce((allFeatures, result) => {
-          if (
-            this.terria.showSplitter &&
-            ignoreSplitter === false &&
-            isDefined(pickedFeatures.pickPosition)
+          pickedFeatures.providerCoords = filteredResults.reduce(function(
+            coordsSoFar: ProviderCoordsMap,
+            result
           ) {
-            // Skip this feature, unless the imagery layer is on the picked side or
-            // belongs to both sides of the splitter
-            const screenPosition = this._computePositionOnScreen(
-              pickedFeatures.pickPosition
-            );
-            const pickedSide = this._getSplitterSideForScreenPosition(
-              screenPosition
-            );
-            const layerDirection = result.imageryLayer.splitDirection;
+            const imageryProvider = result.imageryLayer?.imageryProvider;
+            coordsSoFar[(<any>imageryProvider).url] = result.coords;
+            return coordsSoFar;
+          },
+          {});
 
+          const features = filteredResults.reduce((allFeatures, result) => {
             if (
-              !(
-                layerDirection === pickedSide ||
-                layerDirection === SplitDirection.NONE
-              )
+              this.terria.showSplitter &&
+              ignoreSplitter === false &&
+              isDefined(pickedFeatures.pickPosition)
             ) {
-              return allFeatures;
-            }
-          }
+              // Skip this feature, unless the imagery layer is on the picked side or
+              // belongs to both sides of the splitter
+              const screenPosition = this._computePositionOnScreen(
+                pickedFeatures.pickPosition
+              );
+              const pickedSide = this._getSplitterSideForScreenPosition(
+                screenPosition
+              );
+              const layerDirection = result.imageryLayer.splitDirection;
 
-          return allFeatures.concat(
-            result.features.map(feature => {
-              // For features without a position, use the picked location.
-              if (!isDefined(feature.position)) {
-                feature.position = pickedLocation;
+              if (
+                !(
+                  layerDirection === pickedSide ||
+                  layerDirection === SplitDirection.NONE
+                )
+              ) {
+                return allFeatures;
               }
+            }
 
-              return this._createFeatureFromImageryLayerFeature(feature);
-            })
-          );
-        }, pickedFeatures.features);
-        runInAction(() => {
-          pickedFeatures.features = features;
-        });
-      })
-      .catch(e => {
-        runInAction(() => {
-          pickedFeatures.isLoading = false;
-          pickedFeatures.error =
-            "An unknown error occurred while picking features.";
-        });
-        throw e;
-      });
+            return allFeatures.concat(
+              result.features!.map(feature => {
+                // For features without a position, use the picked location.
+                if (!isDefined(feature.position)) {
+                  feature.position = pickedLocation;
+                }
+
+                return this._createFeatureFromImageryLayerFeature(feature);
+              })
+            );
+          }, pickedFeatures.features);
+          runInAction(() => {
+            pickedFeatures.features = features;
+          });
+        })
+        .catch(e => {
+          runInAction(() => {
+            pickedFeatures.isLoading = false;
+            pickedFeatures.error =
+              "An unknown error occurred while picking features.";
+          });
+          throw e;
+        })
+    ]).then(() => undefined);
 
     runInAction(() => {
       const mapInteractionModeStack = this.terria.mapInteractionModeStack;

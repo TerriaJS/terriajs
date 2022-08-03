@@ -365,10 +365,7 @@ function addFeaturePicking(terria: Terria, initSource: InitSourceData) {
       // id and name as a fallback.
       pickedFeatures.current = {
         name: terria.selectedFeature.name,
-        hash: hashEntity(
-          terria.selectedFeature,
-          terria.timelineClock.currentTime
-        )
+        hash: hashEntity(terria.selectedFeature, terria)
       };
     }
 
@@ -378,7 +375,7 @@ function addFeaturePicking(terria: Terria, initSource: InitSourceData) {
       .map(entity => {
         return {
           name: entity.name,
-          hash: hashEntity(entity, terria.timelineClock.currentTime)
+          hash: hashEntity(entity, terria)
         };
       });
 

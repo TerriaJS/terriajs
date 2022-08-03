@@ -259,15 +259,6 @@ class FeatureInfoPanel extends React.Component<Props> {
       featureCatalogItemPairs
     } = getFeaturesGroupedByCatalogItems(this.props.viewState.terria);
 
-    const locationFeature = this.props.viewState.terria.pickedFeatures?.features.find(
-      f =>
-        f.entityCollection?.owner instanceof DataSource &&
-        f.entityCollection?.owner?.name === LOCATION_MARKER_DATA_SOURCE_NAME
-    );
-
-    // TODO something with locationFeature
-    // name: i18next.t("featureInfo.locationMarker")
-
     const featureInfoCatalogItems = this.renderFeatureInfoCatalogItems(
       catalogItems,
       featureCatalogItemPairs
