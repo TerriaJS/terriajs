@@ -66,7 +66,6 @@ export const DataAttributionModal: FC<IDataAttributionModalProps> = observer(
           css={{ top: 0, left: 0, zIndex: 99989 }}
         ></PrefaceBox>
         <DataAttributionBox>
-          DATA ATTRIBUTIONS
           <CloseButton color="#red" topRight onClick={closeModal} />
           <Text extraExtraLarge bold textDarker>
             {t("map.extraCreditLinks.dataProvider")}
