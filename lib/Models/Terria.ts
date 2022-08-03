@@ -106,6 +106,7 @@ import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
+import { StoryVideoSettings } from "./StoryVideoSettings";
 
 // import overrides from "../Overrides/defaults.jsx";
 
@@ -240,7 +241,7 @@ interface ConfigParameters {
   /**
    * Video to show in Story Builder.
    */
-  storyVideo?: any;
+  storyVideo?: StoryVideoSettings;
   /**
    * True to display in-app guides.
    */
