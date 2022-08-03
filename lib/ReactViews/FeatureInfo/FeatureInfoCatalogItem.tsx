@@ -64,11 +64,9 @@ export default (props: Props) => {
           return (
             <FeatureInfoSection
               key={i}
-              viewState={props.viewState}
               catalogItem={catalogItem}
               feature={feature}
               position={terria.pickedFeatures?.pickPosition}
-              template={catalogItem.featureInfoTemplate}
               isOpen={!!(feature === terria.selectedFeature || props.printView)}
               onClickHeader={props.onToggleOpen}
               printView={props.printView}

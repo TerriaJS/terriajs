@@ -104,13 +104,18 @@ function applyFormatsInPlace(
       // Default type if not provided is number.
       const value = properties[key];
       if (
-        isJsonNumber(value) &&
-        (!isDefined(formats[key].type) ||
-          (isDefined(formats[key].type) && formats[key].type === "number"))
+        (isJsonNumber(value) && !isDefined(formats[key].type)) ||
+        (isDefined(formats[key].type) && formats[key].type === "number")
       ) {
         runInAction(() => {
+          // Convert string to number if necessary
+          const number = isJsonNumber(value)
+            ? value
+            : isJsonString(value)
+            ? parseFloat(value)
+            : undefined;
           // Note we default maximumFractionDigits to 20 (not 3).
-          properties[key] = value.toLocaleString(undefined, {
+          properties[key] = number?.toLocaleString(undefined, {
             maximumFractionDigits: 20,
             useGrouping: true,
             ...formats[key]

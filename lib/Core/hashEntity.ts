@@ -18,11 +18,11 @@ export default function hashEntity(feature: Feature, terria: Terria) {
       : undefined;
 
   return hashFromString(
-    JSON.stringify(
+    (JSON.stringify(
       propertyGetTimeValues(
         feature,
         catalogItemTime ?? terria.timelineClock.currentTime
       )
-    ) + feature.name
+    ) ?? "") + (feature.name ?? "")
   );
 }

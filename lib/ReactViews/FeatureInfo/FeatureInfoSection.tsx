@@ -16,13 +16,14 @@ import { getName } from "../../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../../ModelMixins/DiscretelyTimeVaryingMixin";
 import MappableMixin from "../../ModelMixins/MappableMixin";
 import TimeVarying from "../../ModelMixins/TimeVarying";
-import Model from "../../Models/Definition/Model";
 import Feature from "../../Models/Feature/Feature";
 import FeatureInfoContext from "../../Models/Feature/FeatureInfoContext";
-import ViewState from "../../ReactViewModels/ViewState";
 import Icon from "../../Styled/Icon";
-import { FeatureInfoTemplateTraits } from "../../Traits/TraitsClasses/FeatureInfoTraits";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
+import {
+  withViewState,
+  WithViewState
+} from "../StandardUserInterface/ViewStateContext";
 import Styles from "./feature-info-section.scss";
 import FeatureInfoDownload from "./FeatureInfoDownload";
 import { generateCesiumInfoHTMLFromProperties } from "./generateCesiumInfoHTMLFromProperties";
@@ -41,9 +42,7 @@ Mustache.escape = function(string) {
   return string;
 };
 
-interface FeatureInfoProps {
-  viewState: ViewState;
-  template: Model<FeatureInfoTemplateTraits>;
+interface FeatureInfoProps extends WithViewState {
   feature: Feature;
   position?: Cartesian3;
   catalogItem: MappableMixin.Instance; // Note this may not be known (eg. WFS).
@@ -73,18 +72,21 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
     this.templateReactionDisposer = reaction(
       () => [
         this.props.feature,
-        this.props.template.template,
-        this.props.template.partials,
+        this.props.catalogItem.featureInfoTemplate.template,
+        this.props.catalogItem.featureInfoTemplate.partials,
         // Note `mustacheContextData` will trigger update when `currentTime` changes (through this.featureProperties)
         this.mustacheContextData
       ],
       () => {
-        if (this.props.template.template && this.mustacheContextData) {
+        if (
+          this.props.catalogItem.featureInfoTemplate.template &&
+          this.mustacheContextData
+        ) {
           this.templatedFeatureInfo = parseCustomMarkdownToReact(
             Mustache.render(
-              this.props.template.template,
+              this.props.catalogItem.featureInfoTemplate.template,
               this.mustacheContextData,
-              this.props.template.partials
+              this.props.catalogItem.featureInfoTemplate.partials
             ),
             this.parseMarkdownContextData
           );
@@ -200,7 +202,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
       rawDataTable?: string;
     } = {
       partialByName: mustacheRenderPartialByName(
-        this.props.template?.partials ?? {},
+        this.props.catalogItem.featureInfoTemplate?.partials ?? {},
         propertyData
       ),
       formatNumber: mustacheFormatNumberFunction,
@@ -257,7 +259,11 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
     };
   }
 
-  /** Get raw data table as markdown string */
+  /** Get raw data table as markdown string
+   *
+   * Will use feature.description if defined
+   * Otherwise, will generate cesium info HTML table from feature properties
+   */
   @computed get rawDataMarkdown() {
     const feature = this.props.feature;
 
@@ -266,7 +272,9 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
       currentTime
     );
 
-    if (!isDefined(description) && isDefined(feature.properties)) {
+    if (isDefined(description)) return description;
+
+    if (isDefined(feature.properties)) {
       return generateCesiumInfoHTMLFromProperties(
         feature.properties,
         currentTime,
@@ -332,8 +340,11 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
 
     let title: string;
 
-    if (this.props.template.name) {
-      title = Mustache.render(this.props.template.name, this.featureProperties);
+    if (this.props.catalogItem.featureInfoTemplate.name) {
+      title = Mustache.render(
+        this.props.catalogItem.featureInfoTemplate.name,
+        this.featureProperties
+      );
     } else
       title =
         getName(this.props.catalogItem) +
@@ -427,7 +438,6 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
               isDefined(this.downloadableData.data) ? (
                 <FeatureInfoDownload
                   key="download"
-                  viewState={this.props.viewState}
                   data={this.downloadableData.data}
                   name={this.downloadableData.fileName}
                 />
@@ -453,4 +463,4 @@ function contains(text: string, number: number, precision: number) {
   );
 }
 
-export default withTranslation()(FeatureInfoSection);
+export default withTranslation()(withViewState(FeatureInfoSection));

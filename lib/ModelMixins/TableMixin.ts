@@ -77,6 +77,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         });
       }
 
+      // Create TableFeatureInfoStratum
       if (this.strata.get(TableFeatureInfoStratum.stratumName) === undefined) {
         runInAction(() => {
           this.strata.set(

@@ -748,14 +748,9 @@ export default class Leaflet extends GlobeOrMap {
           });
 
           pickedFeatures.providerCoords = {};
-          const filteredResults = results.filter(function(result) {
-            return (
-              isDefined(result.features) &&
-              result.features.length > 0 &&
-              result.imageryLayer &&
-              result.coords
-            );
-          });
+          const filteredResults = results.filter(
+            result => isDefined(result.features) && result.features.length > 0
+          );
 
           pickedFeatures.providerCoords = filteredResults.reduce(function(
             coordsSoFar: ProviderCoordsMap,

@@ -1485,10 +1485,7 @@ describe("Terria", function() {
       ds.entities.add(entity);
       testItem.mapItems = [ds];
       await terria.workbench.add(testItem);
-      // It is irrelevant what we pass as argument for `clock` param because
-      // the current implementation of `hashEntity` is broken because as it
-      // expects a `Clock` but actually uses it as a `JulianDate`
-      const entityHash = hashEntity(entity, undefined);
+      const entityHash = hashEntity(entity, terria);
       await terria.loadPickedFeatures({
         pickCoords: {
           lat: 84.93,
