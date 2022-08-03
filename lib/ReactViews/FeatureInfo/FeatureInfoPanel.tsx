@@ -73,6 +73,16 @@ class FeatureInfoPanel extends React.Component<Props> {
                 const featuresShownAtAll = pickedFeatures.features.filter(x =>
                   isDefined(determineCatalogItem(terria.workbench, x))
                 );
+
+                // Return if `terria.selectedFeatures` already showing a valid feature?
+                if (
+                  featuresShownAtAll.some(
+                    feature => feature === terria.selectedFeature
+                  )
+                )
+                  return;
+
+                // Otherwise find first feature with data to show
                 let selectedFeature = featuresShownAtAll.filter(
                   feature =>
                     isDefined(feature.properties) ||
