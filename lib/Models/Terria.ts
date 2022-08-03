@@ -238,6 +238,10 @@ interface ConfigParameters {
    */
   welcomeMessageVideo?: any;
   /**
+   * Video to show in Story Builder.
+   */
+  storyVideo?: any;
+  /**
    * True to display in-app guides.
    */
   showInAppGuides?: boolean;
@@ -475,6 +479,9 @@ export default class Terria {
       videoUrl: "https://www.youtube-nocookie.com/embed/FjSxaviSLhc",
       placeholderImage:
         "https://img.youtube.com/vi/FjSxaviSLhc/maxresdefault.jpg"
+    },
+    storyVideo: {
+      videoUrl: "https://www.youtube-nocookie.com/embed/fbiQawV8IYY"
     },
     showInAppGuides: false,
     helpContent: [],

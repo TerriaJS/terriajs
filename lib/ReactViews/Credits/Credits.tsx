@@ -12,6 +12,7 @@ export const Credits: FC<ICreditsProps> = ({ credits }) => {
   }
   return (
     <>
+      CREDITS HERE
       {credits.map((credit, index) => (
         <Credit
           key={index}

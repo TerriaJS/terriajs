@@ -264,7 +264,10 @@ class StoryBuilder extends React.Component<
           /*
           // @ts-ignore */
           viewState={this.props.viewState}
-          videoLink={"https://www.youtube-nocookie.com/embed/fbiQawV8IYY"}
+          videoLink={
+            this.props.viewState.terria.configParameters.storyVideo?.videoUrl ||
+            "https://www.youtube-nocookie.com/embed/fbiQawV8IYY"
+          }
           background={dataStoriesImg}
           videoName={STORY_VIDEO}
         />
