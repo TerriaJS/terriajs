@@ -1867,7 +1867,15 @@ export default class Terria {
 
         entities.forEach(entity => {
           const feature = Feature.fromEntityCollectionOrEntity(entity);
-          const hash = hashEntity(feature, this.timelineClock.currentTime);
+          const catalogItemTime =
+            feature._catalogItem && TimeVarying.is(feature._catalogItem)
+              ? feature._catalogItem.currentTimeAsJulianDate
+              : undefined;
+          const hash = hashEntity(
+            feature,
+            catalogItemTime ?? this.timelineClock.currentTime
+          );
+
           featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
         });
       });
@@ -1910,7 +1918,14 @@ export default class Terria {
 
     runInAction(() => {
       this.pickedFeatures?.features.forEach(feature => {
-        const hash = hashEntity(feature, this.timelineClock.currentTime);
+        const catalogItemTime =
+          feature._catalogItem && TimeVarying.is(feature._catalogItem)
+            ? feature._catalogItem.currentTimeAsJulianDate
+            : undefined;
+        const hash = hashEntity(
+          feature,
+          catalogItemTime ?? this.timelineClock.currentTime
+        );
         featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
       });
 
