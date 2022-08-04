@@ -19,7 +19,7 @@ import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import ConsoleAnalytics from "../Core/ConsoleAnalytics";
 import CorsProxy from "../Core/CorsProxy";
-import ensurePrefix from "../Core/ensurePrefix";
+import ensureSuffix from "../Core/ensureSuffix";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 import GoogleAnalytics from "../Core/GoogleAnalytics";
@@ -637,11 +637,11 @@ export default class Terria {
     }
 
     if (options.baseUrl) {
-      this.baseUrl = ensurePrefix(options.baseUrl, "/");
+      this.baseUrl = ensureSuffix(options.baseUrl, "/");
     }
 
-    this.cesiumBaseUrl = ensurePrefix(
-      options.cesiumBaseUrl ?? `${this.baseUrl}build/Cesium/build`,
+    this.cesiumBaseUrl = ensureSuffix(
+      options.cesiumBaseUrl ?? `${this.baseUrl}build/Cesium/build/`,
       "/"
     );
     // Casting to `any` as `setBaseUrl` method is not part of the Cesiums' type definitions
