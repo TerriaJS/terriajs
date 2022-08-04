@@ -34,6 +34,7 @@ import ViewState from "../../lib/ReactViewModels/ViewState";
 import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 import { defaultBaseMaps } from "./../../lib/Models/BaseMaps/defaultBaseMaps";
+import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
 
 const mapConfigBasicJson = require("../../wwwroot/test/Magda/map-config-basic.json");
 const mapConfigBasicString = JSON.stringify(mapConfigBasicJson);
@@ -65,6 +66,45 @@ describe("Terria", function() {
     terria = new Terria({
       appBaseHref: "/",
       baseUrl: "./"
+    });
+  });
+
+  describe("cesiumBaseUrl", function() {
+    it("is set when passed as an option when constructing Terria", function() {
+      terria = new Terria({
+        appBaseHref: "/",
+        baseUrl: "./",
+        cesiumBaseUrl: "some/path/to/cesium"
+      });
+      expect(terria.cesiumBaseUrl).toBe("some/path/to/cesium/");
+    });
+
+    it("should default to a path relative to `baseUrl`", function() {
+      terria = new Terria({
+        appBaseHref: "/",
+        baseUrl: "some/path/to/terria"
+      });
+      expect(terria.cesiumBaseUrl).toBe(
+        "some/path/to/terria/build/Cesium/build/"
+      );
+    });
+
+    it("should update the baseUrl setting in the cesium module", function() {
+      expect(
+        buildModuleUrl("Assets/some/image.png").endsWith(
+          "/build/Cesium/build/Assets/some/image.png"
+        )
+      ).toBe(true);
+
+      terria = new Terria({
+        appBaseHref: "/",
+        baseUrl: "some/path/to/terria"
+      });
+      expect(
+        buildModuleUrl("Assets/some/image.png").endsWith(
+          "/some/path/to/terria/build/Cesium/build/Assets/some/image.png"
+        )
+      ).toBe(true);
     });
   });
 

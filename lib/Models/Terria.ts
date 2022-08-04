@@ -1,6 +1,7 @@
 import i18next from "i18next";
 import { action, computed, observable, runInAction, toJS, when } from "mobx";
 import { createTransformer } from "mobx-utils";
+import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -9,6 +10,7 @@ import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
+import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import URI from "urijs";
@@ -17,6 +19,7 @@ import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import ConsoleAnalytics from "../Core/ConsoleAnalytics";
 import CorsProxy from "../Core/CorsProxy";
+import ensureSuffix from "../Core/ensureSuffix";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 import GoogleAnalytics from "../Core/GoogleAnalytics";
@@ -101,12 +104,11 @@ import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
 import ShareDataService from "./ShareDataService";
+import { StoryVideoSettings } from "./StoryVideoSettings";
 import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
-import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
-import { StoryVideoSettings } from "./StoryVideoSettings";
 
 // import overrides from "../Overrides/defaults.jsx";
 
@@ -366,6 +368,12 @@ interface TerriaOptions {
    * Normally "build/TerriaJS/" in any TerriaMap and "./" in specs
    */
   baseUrl?: string;
+
+  /**
+   * Base url where Cesium static resources can be found.
+   */
+  cesiumBaseUrl?: string;
+
   analytics?: Analytics;
 }
 
@@ -390,6 +398,13 @@ export default class Terria {
     typeof document !== "undefined" ? document.baseURI : "/";
   /** Base URL to Terria resources */
   readonly baseUrl: string = "build/TerriaJS/";
+
+  /**
+   * Base URL used by Cesium to link to images and other static assets.
+   * This can be customized by passing `options.cesiumBaseUrl`
+   * Default value is constructed relative to `Terria.baseUrl`.
+   */
+  readonly cesiumBaseUrl: string;
 
   readonly tileLoadProgressEvent = new CesiumEvent();
   readonly indeterminateTileLoadProgressEvent = new CesiumEvent();
@@ -625,13 +640,17 @@ export default class Terria {
         typeof document !== "undefined" ? document.baseURI : "/"
       ).toString();
     }
+
     if (options.baseUrl) {
-      if (options.baseUrl.lastIndexOf("/") !== options.baseUrl.length - 1) {
-        this.baseUrl = options.baseUrl + "/";
-      } else {
-        this.baseUrl = options.baseUrl;
-      }
+      this.baseUrl = ensureSuffix(options.baseUrl, "/");
     }
+
+    this.cesiumBaseUrl = ensureSuffix(
+      options.cesiumBaseUrl ?? `${this.baseUrl}build/Cesium/build/`,
+      "/"
+    );
+    // Casting to `any` as `setBaseUrl` method is not part of the Cesiums' type definitions
+    (buildModuleUrl as any).setBaseUrl(this.cesiumBaseUrl);
 
     this.analytics = options.analytics;
     if (!defined(this.analytics)) {
