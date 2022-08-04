@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.2.11)
 
+* Added ability to customise the getting started video in the StoryBuilder panel.
 * Fixed a bug where menu items were rendered in the wrong style if the window was resized from small to large, or large to small.
 * [The next improvement]
 
