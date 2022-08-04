@@ -54,6 +54,7 @@ const DataAttributionBox = styled(Box).attrs({
   */
   ${AttributionText} img[title="Bing Imagery"] {
     background-color: grey;
+    padding: 3px;
   }
 `;
 
