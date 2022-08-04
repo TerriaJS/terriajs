@@ -65,6 +65,9 @@ class WorkbenchItemRaw extends React.Component<IProps> {
       );
   }
 
+  /** If workbench item is CatalogMember use CatalogMemberTraits.isOpenInWorkbench
+   * Otherwise, defaults to true
+   */
   @computed
   get isOpen(): boolean {
     if (!CatalogMemberMixin.isMixedInto(this.props.item)) return true;

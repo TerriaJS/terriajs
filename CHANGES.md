@@ -5,6 +5,7 @@ Change Log
 
 * Added ability to customise the getting started video in the StoryBuilder panel.
 * Fixed a bug where menu items were rendered in the wrong style if the window was resized from small to large, or large to small.
+* Strongly type `item` in WorkbenchItem and remove `show` toggle for non `Mappable` items
 * [The next improvement]
 
 #### release 8.2.10 - 2022-08-02
@@ -28,7 +29,6 @@ Change Log
 * Implemented FeatureInfoMixin in GeojsonMixin (#5660)
 * `GpxCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
 * `GeoRssCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
-* Strongly type `item` in WorkbenchItem and remove `show` toggle for non `Mappable` items
 * Upgrade i18next to `v21`
 * Limit workbench item title to 2 lines and show overflow: ellipsis after.
 * Add `allowFeaturePicking` trait to Cesium3dTileMixin.
