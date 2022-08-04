@@ -796,12 +796,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     async loadRegionProviderList() {
       if (isDefined(this.regionProviderLists)) return;
 
-      // regionMappingDefinitionsUrl can be string | ObservableArray - so transform into string[]
-      const urls = isObservableArray(
+      // regionMappingDefinitionsUrl is deprecated - but we use it instead of regionMappingDefinitionsUrls if defined
+      const urls = isDefined(
         this.terria.configParameters.regionMappingDefinitionsUrl
       )
-        ? [...this.terria.configParameters.regionMappingDefinitionsUrl]
-        : [this.terria.configParameters.regionMappingDefinitionsUrl];
+        ? [this.terria.configParameters.regionMappingDefinitionsUrl]
+        : this.terria.configParameters.regionMappingDefinitionsUrls;
 
       // Load all region in parallel (but preserve order)
       const regionProviderLists = await Promise.all(

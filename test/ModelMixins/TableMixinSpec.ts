@@ -581,7 +581,7 @@ describe("TableMixin", function() {
       });
 
       terria.updateParameters({
-        regionMappingDefinitionsUrl: [
+        regionMappingDefinitionsUrls: [
           "additionalRegion.json",
           "build/TerriaJS/data/regionMapping.json"
         ]
@@ -603,6 +603,40 @@ describe("TableMixin", function() {
       // Item region provider should match from "additionalRegion.json" (as it comes before "build/TerriaJS/data/regionMapping.json")
       expect(item.activeTableStyle.regionColumn?.regionType?.description).toBe(
         "Local Government Areas 2011 by name (ABS) !!!! OVERRIDDEN"
+      );
+    });
+
+    it("loads regionProviderLists on loadMapItems - will use regionMappingDefinitionsUrl instead of regionMappingDefinitionsUrls", async function() {
+      // We add "additionalRegion.json" - which defines two region types
+      // - "SOME_OTHER_REGION" - which is just another region type
+      // - "SOME_OVERRIDDEN_REGION" - which will override "LGA_NAME_2011" in "build/TerriaJS/data/regionMapping.json"
+      jasmine.Ajax.stubRequest("additionalRegion.json").andReturn({
+        responseText: additionalRegionMapping
+      });
+
+      terria.updateParameters({
+        regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
+        regionMappingDefinitionsUrls: [
+          "additionalRegion.json",
+          "build/TerriaJS/data/regionMapping.json"
+        ]
+      });
+
+      item.setTrait(CommonStrata.user, "csvString", LgaWithDisambigCsv);
+
+      await item.loadMetadata();
+
+      expect(item.regionProviderLists).toBeUndefined();
+
+      await item.loadMapItems();
+
+      expect(item.regionProviderLists?.length).toBe(1);
+
+      expect(item.regionProviderLists?.[0]?.regionProviders.length).toBe(114);
+
+      // Item region provider should match from "build/TerriaJS/data/regionMapping.json"
+      expect(item.activeTableStyle.regionColumn?.regionType?.description).toBe(
+        "Local Government Areas 2011 by name (ABS)"
       );
     });
   });
