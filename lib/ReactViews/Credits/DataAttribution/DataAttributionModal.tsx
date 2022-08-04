@@ -16,6 +16,18 @@ interface IDataAttributionModalProps {
   attributions?: string[];
 }
 
+const AttributionText = styled(Text).attrs(() => ({ medium: true }))`
+  a {
+    color: ${props => props.theme.textDark};
+    text-decoration: underline;
+
+    img {
+      height: 19px;
+      vertical-align: middle;
+    }
+  }
+`;
+
 const DataAttributionBox = styled(Box).attrs({
   position: "absolute",
   styledWidth: "500px",
@@ -35,17 +47,13 @@ const DataAttributionBox = styled(Box).attrs({
   @media (max-width: ${props => props.theme.mobile}px) {
     width: 100%;
   }
-`;
 
-const AttributionText = styled(Text).attrs(() => ({ medium: true }))`
-  a {
-    color: ${props => props.theme.textDark};
-    text-decoration: underline;
-
-    img {
-      height: 19px;
-      vertical-align: middle;
-    }
+  /* Default cesium bing map logo is white on transparent which is rendered invisible
+     on our modal with white background. This rule forces the background color of the
+      bing imagery to grey so that it is visible.
+  */
+  ${AttributionText} img[title="Bing Imagery"] {
+    background-color: grey;
   }
 `;
 
