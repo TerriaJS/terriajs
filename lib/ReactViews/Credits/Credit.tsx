@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { ExternalLinkIcon } from "../Custom/parseCustomHtmlToReact";
+import { ExternalLinkIcon } from "../Custom/ExternalLink";
 import { ICredit } from "./Credit.type";
 import { Spacer } from "./Spacer";
 
