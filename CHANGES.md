@@ -6,6 +6,7 @@ Change Log
 * Add ability to customise the getting started video in the StoryBuilder panel
 * Set cesium base URL by default so that cesium assets are resolved correctly
 * Add `cesiumBaseUrl` to `TerriaOptions` for overriding the default cesium base url setting
+* Fix broken Bing map logo in attributions
 * [The next improvement]
 
 #### release 8.2.10 - 2022-08-02
