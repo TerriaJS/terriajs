@@ -53,7 +53,8 @@ const DataAttributionBox = styled(Box).attrs({
       bing imagery to grey so that it is visible.
   */
   ${AttributionText} img[title="Bing Imagery"] {
-    background-color: grey;
+    -webkit-filter: invert(1);
+    filter: invert(1);
   }
 `;
 
