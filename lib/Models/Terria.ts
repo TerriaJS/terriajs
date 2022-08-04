@@ -1,6 +1,7 @@
 import i18next from "i18next";
 import { action, computed, observable, runInAction, toJS, when } from "mobx";
 import { createTransformer } from "mobx-utils";
+import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -9,6 +10,7 @@ import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
+import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import URI from "urijs";
@@ -17,6 +19,7 @@ import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import ConsoleAnalytics from "../Core/ConsoleAnalytics";
 import CorsProxy from "../Core/CorsProxy";
+import ensurePrefix from "../Core/ensureSlashPrefix";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 import GoogleAnalytics from "../Core/GoogleAnalytics";
@@ -101,13 +104,11 @@ import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
 import ShareDataService from "./ShareDataService";
+import { StoryVideoSettings } from "./StoryVideoSettings";
 import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
-import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
-import ensurePrefix from "../Core/ensureSlashPrefix";
-import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
 
 // import overrides from "../Overrides/defaults.jsx";
 
@@ -239,6 +240,10 @@ interface ConfigParameters {
    * Video to show in welcome message.
    */
   welcomeMessageVideo?: any;
+  /**
+   * Video to show in Story Builder.
+   */
+  storyVideo?: StoryVideoSettings;
   /**
    * True to display in-app guides.
    */
@@ -490,6 +495,9 @@ export default class Terria {
       videoUrl: "https://www.youtube-nocookie.com/embed/FjSxaviSLhc",
       placeholderImage:
         "https://img.youtube.com/vi/FjSxaviSLhc/maxresdefault.jpg"
+    },
+    storyVideo: {
+      videoUrl: "https://www.youtube-nocookie.com/embed/fbiQawV8IYY"
     },
     showInAppGuides: false,
     helpContent: [],

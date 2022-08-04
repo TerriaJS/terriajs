@@ -109,7 +109,7 @@ Specifies various options for configuring TerriaJS:
 |`theme`|no|**any**|`{}`|An object used to override theme properties - for example `{"logoHeight": "70px"}`.|
 |`storyRouteUrlPrefix`|no|**string**|undefined|(Experimental) Prefix to which `:story-id` is added to fetch JSON for stories when using `/story/:story-id` routes. Should end in /|
 |`leafletAttributionPrefix`|no|**string**|undefined|Attribution HTML string to show on Leaflet maps. Will use Leaflet's default if undefined. To hide Leaflet attribution - set `leafletAttributionPrefix:""`|
-
+|`storyVideo.videoUrl`|no|**string**|https://www.youtube-nocookie.com/embed/fbiQawV8IYY|Video to show in Story Editor panel under Getting Started.|
 
 
 ### MagdaReferenceHeaders
