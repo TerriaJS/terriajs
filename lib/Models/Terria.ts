@@ -106,6 +106,8 @@ import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
+import ensurePrefix from "../Core/ensureSlashPrefix";
+import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
 
 // import overrides from "../Overrides/defaults.jsx";
 
@@ -357,6 +359,12 @@ interface TerriaOptions {
    * Normally "build/TerriaJS/" in any TerriaMap and "./" in specs
    */
   baseUrl?: string;
+
+  /**
+   * Base url where Cesium static resources can be found.
+   */
+  cesiumBaseUrl?: string;
+
   analytics?: Analytics;
 }
 
@@ -381,6 +389,13 @@ export default class Terria {
     typeof document !== "undefined" ? document.baseURI : "/";
   /** Base URL to Terria resources */
   readonly baseUrl: string = "build/TerriaJS/";
+
+  /**
+   * Base URL used by Cesium to link to images and other static assets.
+   * This can be customized by passing `options.cesiumBaseUrl`
+   * Default value is constructed relative to `Terria.baseUrl`.
+   */
+  readonly cesiumBaseUrl: string;
 
   readonly tileLoadProgressEvent = new CesiumEvent();
   readonly indeterminateTileLoadProgressEvent = new CesiumEvent();
@@ -612,13 +627,17 @@ export default class Terria {
         typeof document !== "undefined" ? document.baseURI : "/"
       ).toString();
     }
+
     if (options.baseUrl) {
-      if (options.baseUrl.lastIndexOf("/") !== options.baseUrl.length - 1) {
-        this.baseUrl = options.baseUrl + "/";
-      } else {
-        this.baseUrl = options.baseUrl;
-      }
+      this.baseUrl = ensurePrefix(options.baseUrl, "/");
     }
+
+    this.cesiumBaseUrl = ensurePrefix(
+      options.cesiumBaseUrl ?? `${this.baseUrl}build/Cesium/build`,
+      "/"
+    );
+    // Casting to `any` as `setBaseUrl` method is not part of the Cesiums' type definitions
+    (buildModuleUrl as any).setBaseUrl(this.cesiumBaseUrl);
 
     this.analytics = options.analytics;
     if (!defined(this.analytics)) {
