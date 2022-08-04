@@ -9,6 +9,7 @@ Change Log
 * Fix broken Bing map logo in attributions
 * Added ability to customise the getting started video in the StoryBuilder panel.
 * Fixed a bug where menu items were rendered in the wrong style if the window was resized from small to large, or large to small.
+* Strongly type `item` in WorkbenchItem and remove `show` toggle for non `Mappable` items
 * [The next improvement]
 
 #### release 8.2.10 - 2022-08-02

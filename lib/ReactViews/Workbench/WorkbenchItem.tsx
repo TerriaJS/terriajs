@@ -7,9 +7,13 @@ import { sortable } from "react-anything-sortable";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import getPath from "../../Core/getPath";
-import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
+import CatalogMemberMixin, {
+  getName
+} from "../../ModelMixins/CatalogMemberMixin";
+import MappableMixin from "../../ModelMixins/MappableMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
 import CommonStrata from "../../Models/Definition/CommonStrata";
+import { BaseModel } from "../../Models/Definition/Model";
 import ViewState from "../../ReactViewModels/ViewState";
 import Box, { BoxSpan } from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
@@ -24,7 +28,7 @@ import WorkbenchItemControls from "./Controls/WorkbenchItemControls";
 
 interface IProps extends WithTranslation {
   theme: DefaultTheme;
-  item: any;
+  item: BaseModel;
   onMouseDown(): void;
   onTouchStart(): void;
   viewState: ViewState;
@@ -43,6 +47,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
 
   @action.bound
   toggleDisplay() {
+    if (!CatalogMemberMixin.isMixedInto(this.props.item)) return;
     this.props.item.setTrait(
       CommonStrata.user,
       "isOpenInWorkbench",
@@ -52,11 +57,20 @@ class WorkbenchItemRaw extends React.Component<IProps> {
 
   @action.bound
   toggleVisibility() {
-    this.props.item.setTrait(CommonStrata.user, "show", !this.props.item.show);
+    if (MappableMixin.isMixedInto(this.props.item))
+      this.props.item.setTrait(
+        CommonStrata.user,
+        "show",
+        !this.props.item.show
+      );
   }
 
+  /** If workbench item is CatalogMember use CatalogMemberTraits.isOpenInWorkbench
+   * Otherwise, defaults to true
+   */
   @computed
   get isOpen(): boolean {
+    if (!CatalogMemberMixin.isMixedInto(this.props.item)) return true;
     return this.props.item.isOpenInWorkbench;
   }
 
@@ -89,7 +103,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
                     </Box>
                   </BoxSpan>
                 )}
-                {true || item.supportsToggleShown ? (
+                {MappableMixin.isMixedInto(item) ? (
                   <Box
                     left
                     verticalCenter
@@ -109,10 +123,10 @@ class WorkbenchItemRaw extends React.Component<IProps> {
                     >
                       <TextSpan
                         medium
-                        maxLines={!item.isOpenInWorkbench ? 2 : false}
-                        title={item.name}
+                        maxLines={!this.isOpen ? 2 : false}
+                        title={getName(item)}
                       >
-                        {item.name}
+                        {getName(item)}
                       </TextSpan>
                     </Checkbox>
                   </Box>
@@ -120,44 +134,46 @@ class WorkbenchItemRaw extends React.Component<IProps> {
                   <TextSpan
                     medium
                     textLight
-                    maxLines={!item.isOpenInWorkbench ? 2 : false}
-                    title={item.name}
+                    maxLines={!this.isOpen ? 2 : false}
+                    title={getName(item)}
                     css={`
                       overflow-wrap: anywhere;
                     `}
                   >
-                    {item.name}
+                    {getName(item)}
                   </TextSpan>
                 )}
               </DraggableBox>
             </Box>
           </Box>
-          <Box centered paddedHorizontally>
-            <RawButton onClick={() => this.toggleDisplay()}>
-              {item.isPrivate && (
-                <BoxSpan paddedHorizontally>
-                  <PrivateIndicator inWorkbench />
-                </BoxSpan>
-              )}
-              <BoxSpan padded>
-                {item.isOpenInWorkbench ? (
-                  <StyledIcon
-                    styledHeight={"8px"}
-                    light
-                    glyph={Icon.GLYPHS.opened}
-                  />
-                ) : (
-                  <StyledIcon
-                    styledHeight={"8px"}
-                    light
-                    glyph={Icon.GLYPHS.closed}
-                  />
+          {CatalogMemberMixin.isMixedInto(item) ? (
+            <Box centered paddedHorizontally>
+              <RawButton onClick={() => this.toggleDisplay()}>
+                {item.isPrivate && (
+                  <BoxSpan paddedHorizontally>
+                    <PrivateIndicator inWorkbench />
+                  </BoxSpan>
                 )}
-              </BoxSpan>
-            </RawButton>
-          </Box>
+                <BoxSpan padded>
+                  {this.isOpen ? (
+                    <StyledIcon
+                      styledHeight={"8px"}
+                      light
+                      glyph={Icon.GLYPHS.opened}
+                    />
+                  ) : (
+                    <StyledIcon
+                      styledHeight={"8px"}
+                      light
+                      glyph={Icon.GLYPHS.closed}
+                    />
+                  )}
+                </BoxSpan>
+              </RawButton>
+            </Box>
+          ) : null}
         </Box>
-        {item.isOpenInWorkbench && (
+        {this.isOpen && (
           <>
             <Spacing
               bottom={2}
