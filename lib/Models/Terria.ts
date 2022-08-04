@@ -106,6 +106,7 @@ import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
+import { StoryVideoSettings } from "./StoryVideoSettings";
 
 // import overrides from "../Overrides/defaults.jsx";
 
@@ -241,6 +242,10 @@ interface ConfigParameters {
    * Video to show in welcome message.
    */
   welcomeMessageVideo?: any;
+  /**
+   * Video to show in Story Builder.
+   */
+  storyVideo?: StoryVideoSettings;
   /**
    * True to display in-app guides.
    */
@@ -480,6 +485,9 @@ export default class Terria {
       videoUrl: "https://www.youtube-nocookie.com/embed/FjSxaviSLhc",
       placeholderImage:
         "https://img.youtube.com/vi/FjSxaviSLhc/maxresdefault.jpg"
+    },
+    storyVideo: {
+      videoUrl: "https://www.youtube-nocookie.com/embed/fbiQawV8IYY"
     },
     showInAppGuides: false,
     helpContent: [],
@@ -1991,7 +1999,9 @@ function generateInitializationUrl(
     return {
       options: initFragmentPaths.map(fragmentPath => {
         return {
-          initUrl: URI.joinPaths(fragmentPath, url + ".json")
+          initUrl: new URI(fragmentPath)
+            .segment(url)
+            .suffix("json")
             .absoluteTo(baseUri)
             .toString()
         };

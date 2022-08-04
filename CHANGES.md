@@ -1,7 +1,13 @@
 Change Log
 ==========
 
-#### next release (8.2.10)
+#### next release (8.2.11)
+
+* Added ability to customise the getting started video in the StoryBuilder panel.
+* Fixed a bug where menu items were rendered in the wrong style if the window was resized from small to large, or large to small.
+* [The next improvement]
+
+#### release 8.2.10 - 2022-08-02
 
 * **Breaking changes:**
   * **Minimum NodeJS version is now 14**
@@ -28,6 +34,7 @@ Change Log
 * `TableMixin.matchRegionProvider` now returns `RegionProvider` instead of `string` region type. (which exists at `regionProvider.regionType`)
 * Add `allowFeaturePicking` trait to Cesium3dTileMixin.
 * Feature Info now hidden on Cesium3dTiles items if `allowFeaturePicking` set to false. Default is true.
+* Add `initFragmentPaths` support for hostnames different to `configUrl`/`applicationUrl`
 * Add DOMPurify to `parseCustomHtmlToReact` (it was already present in `parseCustomMarkdownToReact`)
 * Update `html-to-react` to `1.4.7`
 * Add `ViewState` React context provider to `StandardUserInterface` - instead of passing `viewState` or `terria` props through components, please use
@@ -40,7 +47,6 @@ Change Log
 * Rewrote `CesiumTerrainCatalogItem` to handle and report network errors.
 * Set `JulianDate.toIso8601` second precision to nanosecond - this prevents weird date strings with scientific/exponent notation (eg `2008-05-07T22:54:45.7275957614183426e-11Z`)
 * Add attribution for Natural Earth II and NASA Black Marble basemaps.
-* [The next improvement]
 
 #### 8.2.9 - 2022-07-13
 
@@ -52,7 +58,6 @@ Change Log
 * Rename `FeatureInfoMixin` to `FeatureInfoUrlTemplateMixin`
 * Move `featureInfoTemplate` and `showStringIfPropertyValueIsNull` from `FeatureInfoTraits` to `MappableTraits` (all mappable catalog items)
 * Remove `FeatureInfoUrlTemplateTraits` from all models that don't use `FeatureInfoUrlTemplateMixin`
-* [The next improvement]
 * Fix "Regions: xxx" short report showing for non region mapped items
 * Fix `showInChartPanel` default for mappable items
 
