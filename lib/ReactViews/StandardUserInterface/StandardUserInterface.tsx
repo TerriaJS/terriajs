@@ -56,13 +56,9 @@ interface StandardUserInterfaceProps {
   version: string;
 }
 
-const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
+const StandardUserInterface: React.FC<StandardUserInterfaceProps> = observer(
   props => {
     const { t } = useTranslation();
-    const uiRootRef = useRef<HTMLDivElement>(null);
-
-    const shouldUseMobileInterface =
-      document.body.clientWidth < (props.minimumLargeScreenWidth ?? 768);
 
     const acceptDragDropFile = action(() => {
       props.viewState.isDraggingDroppingFile = true;
@@ -85,17 +81,21 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
       acceptDragDropFile();
     };
 
+    const shouldUseMobileInterface = () =>
+      document.body.clientWidth < (props.minimumLargeScreenWidth ?? 768);
+
     const resizeListener = action(() => {
-      props.viewState.useSmallScreenInterface = shouldUseMobileInterface;
+      props.viewState.useSmallScreenInterface = shouldUseMobileInterface();
     });
 
     useEffect(() => {
       window.addEventListener("resize", resizeListener, false);
-      resizeListener();
       return () => {
         window.removeEventListener("resize", resizeListener, false);
       };
     }, []);
+
+    useEffect(resizeListener, [props.minimumLargeScreenWidth]);
 
     useEffect(() => {
       if (
