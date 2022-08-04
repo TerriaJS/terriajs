@@ -687,7 +687,7 @@ describe("Terria", function() {
           JSON.stringify({
             initializationUrls: [],
             parameters: {
-              regionMappingDefinitionsUrl: "data/regionMapping.json"
+              regionMappingDefinitionsUrls: ["data/regionMapping.json"]
             }
           })
         )}`;

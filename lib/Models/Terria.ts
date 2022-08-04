@@ -130,9 +130,13 @@ interface ConfigParameters {
    */
   catalogIndexUrl?: string;
   /**
-   * URL of the JSON file that defines region mapping for CSV files.
+   * **Deprecated** - please use regionMappingDefinitionsUrls array instead. If this is defined, it will override `regionMappingDefinitionsUrls`
    */
-  regionMappingDefinitionsUrl: string;
+  regionMappingDefinitionsUrl?: string | undefined;
+  /**
+   * URLs of the JSON file that defines region mapping for CSV files. First matching region will be used (in array order)
+   */
+  regionMappingDefinitionsUrls: string[];
   /**
    * URL of Proj4 projection lookup service (part of TerriaJS-Server).
    */
@@ -458,7 +462,8 @@ export default class Terria {
     supportEmail: "info@terria.io",
     defaultMaximumShownFeatureInfos: 100,
     catalogIndexUrl: undefined,
-    regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
+    regionMappingDefinitionsUrl: undefined,
+    regionMappingDefinitionsUrls: ["build/TerriaJS/data/regionMapping.json"],
     proj4ServiceBaseUrl: "proj4def/",
     corsProxyBaseUrl: "proxy/",
     proxyableDomainsUrl: "proxyabledomains/", // deprecated, will be determined from serverconfig

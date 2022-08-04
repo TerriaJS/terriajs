@@ -64,7 +64,8 @@ Specifies various options for configuring TerriaJS:
 |`appName`|no|**string**|`"TerriaJS App"`|TerriaJS uses this name whenever it needs to display the name of the application.|
 |`supportEmail`|no|**string**|`"info@terria.io"`|The email address shown when things go wrong.|
 |`defaultMaximumShownFeatureInfos`|no|**number**|`100`|The maximum number of "feature info" boxes that can be displayed when clicking a point.|
-|`regionMappingDefinitionsUrl`|yes|**string**|`"build/TerriaJS/data/regionMapping.json"`|URL of the JSON file that defines region mapping for CSV files. This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
+|`regionMappingDefinitionsUrl`|no|**string**||**Deprecated** please use `regionMappingDefinitionsUrls` array instead. If this is defined, it will override `regionMappingDefinitionsUrls` |
+|`regionMappingDefinitionsUrls`|no|**string[]**|`["build/TerriaJS/data/regionMapping.json"]`|URLs of JSON files that define region mapping for Tabular data (eg CSV). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance. It multiple URLs are provided then the first matching region will be used (in order of URLs) |
 |`catalogIndexUrl`|no|**string**||URL of the JSON file that contains index of catalog. See [CatalogIndex](#catalogindex)|
 |`proj4ServiceBaseUrl`|no|**string**|`"proj4def/"`|URL of Proj4 projection lookup service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
 |`corsProxyBaseUrl`|no|**string**|`"proxy/"`|URL of CORS proxy service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|

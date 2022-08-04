@@ -9,7 +9,10 @@ Change Log
 * Fix broken Bing map logo in attributions
 * Added ability to customise the getting started video in the StoryBuilder panel.
 * Fixed a bug where menu items were rendered in the wrong style if the window was resized from small to large, or large to small.
-* Strongly type `item` in WorkbenchItem and remove `show` toggle for non `Mappable` items
+* Strongly type `item` in WorkbenchItem and remove `show` toggle for non `Mappable` items.
+* Add `configParameters.regionMappingDefinitionsUrls` - to support multiple URLs for region mapping definitions  - if multiple provided then the first matching region will be used (in order of URLs)
+  * `configParameters.regionMappingDefinitionsUrl` still exists but is deprecated - if defined it will override `regionMappingDefinitionsUrls`
+* `TableMixin.matchRegionProvider` now returns `RegionProvider` instead of `string` region type. (which exists at `regionProvider.regionType`)
 * [The next improvement]
 
 #### release 8.2.10 - 2022-08-02
