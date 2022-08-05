@@ -13,6 +13,8 @@ Change Log
 * Add `configParameters.regionMappingDefinitionsUrls` - to support multiple URLs for region mapping definitions  - if multiple provided then the first matching region will be used (in order of URLs)
   * `configParameters.regionMappingDefinitionsUrl` still exists but is deprecated - if defined it will override `regionMappingDefinitionsUrls`
 * `TableMixin.matchRegionProvider` now returns `RegionProvider` instead of `string` region type. (which exists at `regionProvider.regionType`)
+* Add `videoCoverImageOpacity` option to `HelpContentItem` so that we can fade the background of help video panels.
+* Fix a bug where all `HelpVideoPanel`s were being rendered resulting in autoplayed videos playing at random.
 * [The next improvement]
 
 #### release 8.2.10 - 2022-08-02
