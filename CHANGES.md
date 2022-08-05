@@ -1,12 +1,73 @@
 Change Log
 ==========
 
-#### next release (8.2.9)
+#### next release (8.2.11)
+
+* Add ability to customise the getting started video in the StoryBuilder panel
+* Set cesium base URL by default so that cesium assets are resolved correctly
+* Add `cesiumBaseUrl` to `TerriaOptions` for overriding the default cesium base url setting
+* Fix broken Bing map logo in attributions
+* Added ability to customise the getting started video in the StoryBuilder panel.
+* Fixed a bug where menu items were rendered in the wrong style if the window was resized from small to large, or large to small.
+* Strongly type `item` in WorkbenchItem and remove `show` toggle for non `Mappable` items.
+* Add `configParameters.regionMappingDefinitionsUrls` - to support multiple URLs for region mapping definitions  - if multiple provided then the first matching region will be used (in order of URLs)
+  * `configParameters.regionMappingDefinitionsUrl` still exists but is deprecated - if defined it will override `regionMappingDefinitionsUrls`
+* `TableMixin.matchRegionProvider` now returns `RegionProvider` instead of `string` region type. (which exists at `regionProvider.regionType`)
+* Add `getFeatureInfoUrl` and `getFeatureInfoParameters` to `WebMapServiceCatalogItemTraits`
+* Load all `InitSources` sequentially instead of asyncronosly
+* [The next improvement]
+
+#### release 8.2.10 - 2022-08-02
+
+* **Breaking changes:**
+  * **Minimum NodeJS version is now 14**
+* Consolidate `HasLocalData` interface
+* Add `GlTf` type definition (v2)
+* Add `gltfModelUrl` to `GltfMixin` - this must be implemented by Models which use `GltfMixin`
+* Moved `GltfCatalogItem` to `lib/Models/Catalog/Gltf/GltfCatalogItem.ts`
+* Add experimental client-side 3D file conversion using [`assimpjs`](https://github.com/kovacsv/assimpjs) ([emscripten](https://emscripten.org) interface for the [assimp](https://github.com/assimp/assimp) library)
+  * This supports `zip` files and `HasLocalData` - but is not in `getDataType` as the scene editor (closed source) is required to geo-reference
+  * Supports over 40 formats - including Collada, obj, Blender, DXF - [full list](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md)
+* Add `description` to `getDataType` - this will be displayed between Step 1 and Step 2
+* Add warning message to `GltfMixin` when showing in 2D mode (Leaflet)
+* Upgrade `husky` to `^8.0.1`
+* Prevent looping when navigating between scenes in StoryPanel using keyboard arrows
+* Fix bug where StoryPanel keyboard navigation persists after closing StoryPanel
+* Fix select when clicking on multiple features in 2D (#5660)
+* Implemented support for `featureInfoUrlTemplate` on 2D vector features (#5660)
+* Implemented FeatureInfoMixin in GeojsonMixin (#5660)
+* `GpxCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
+* `GeoRssCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
+* Upgrade i18next to `v21`
+* Limit workbench item title to 2 lines and show overflow: ellipsis after.
+* Add `allowFeaturePicking` trait to Cesium3dTileMixin.
+* Feature Info now hidden on Cesium3dTiles items if `allowFeaturePicking` set to false. Default is true.
+* Add `initFragmentPaths` support for hostnames different to `configUrl`/`applicationUrl`
+* Add DOMPurify to `parseCustomHtmlToReact` (it was already present in `parseCustomMarkdownToReact`)
+* Update `html-to-react` to `1.4.7`
+* Add `ViewState` React context provider to `StandardUserInterface` - instead of passing `viewState` or `terria` props through components, please use
+  * `useViewState` hook
+  * `withViewState` HOC
+* Move `GlobalTerriaStyles` from `StandardUserInterface` to separate file
+* Add `ExternalLinkWithWarning` component - this will replace all URLs in story body and add a warning message when URLs are clicked on.
+* Fixed a bug where adding `CesiumTerrainCatalogItem` to workbench didn't apply it when `configParameters.cesiumTerrainAssetId` or `configParameters.cesiumTerrainUrl` was set.
+* `CesiumTerrainCatalogItem` will now show a status `In use` or `Not in use` in the workbench.
+* Rewrote `CesiumTerrainCatalogItem` to handle and report network errors.
+* Set `JulianDate.toIso8601` second precision to nanosecond - this prevents weird date strings with scientific/exponent notation (eg `2008-05-07T22:54:45.7275957614183426e-11Z`)
+* Add attribution for Natural Earth II and NASA Black Marble basemaps.
+
+#### 8.2.9 - 2022-07-13
 
 * Pin `html-to-react` to `1.4.5` due to ESM module in dependency (`parse5`) breaking webpack
 * Add step to `"Deploy TerriaMap"` action to save `yarn.lock` after `sync-dependencies` (for debug purposes)
-* Load all `InitSources` sequentially instead of asyncronosly
-* [The next improvement]
+* TSIfy `SharePanel` 
+* Move `includeStoryInShare` out of `ViewState` into local state
+* Implement ability to navigate between scenes in StoryPanel using keyboard arrows
+* Rename `FeatureInfoMixin` to `FeatureInfoUrlTemplateMixin`
+* Move `featureInfoTemplate` and `showStringIfPropertyValueIsNull` from `FeatureInfoTraits` to `MappableTraits` (all mappable catalog items)
+* Remove `FeatureInfoUrlTemplateTraits` from all models that don't use `FeatureInfoUrlTemplateMixin`
+* Fix "Regions: xxx" short report showing for non region mapped items
+* Fix `showInChartPanel` default for mappable items
 
 #### 8.2.8 - 2022-07-04
 

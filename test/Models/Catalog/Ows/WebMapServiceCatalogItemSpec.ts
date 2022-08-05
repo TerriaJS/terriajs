@@ -237,6 +237,75 @@ describe("WebMapServiceCatalogItem", function() {
     }
   });
 
+  it("supports parameters in GetMap and GetFeatureInfo requests", async function() {
+    let wms: WebMapServiceCatalogItem;
+    const terria = new Terria();
+    wms = new WebMapServiceCatalogItem("test", terria);
+    runInAction(() => {
+      wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
+      wms.setTrait("definition", "layers", "single_period");
+      wms.setTrait("definition", "parameters", {
+        some: "thing",
+        another: "value"
+      });
+      wms.setTrait("definition", "getFeatureInfoParameters", {
+        some: "thing else"
+      });
+      wms.setTrait("definition", "getFeatureInfoUrl", "another/url");
+    });
+    let mapItems: ImageryParts[] = [];
+    const cleanup = autorun(() => {
+      mapItems = wms.mapItems.slice();
+    });
+    try {
+      await wms.loadMetadata();
+      expect(mapItems.length).toBe(1);
+      expect(mapItems[0].alpha).toBeCloseTo(0.8);
+      expect(
+        mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider
+      ).toBeTruthy();
+      if (mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider) {
+        expect(mapItems[0].imageryProvider.url).toBe(
+          "test/WMS/single_metadata_url.xml"
+        );
+
+        const tileProviderResource: Resource = (mapItems[0]
+          .imageryProvider as any)._tileProvider._resource;
+
+        expect(tileProviderResource.queryParameters.version).toBe("1.3.0");
+        expect(tileProviderResource.queryParameters.crs).toBe("EPSG:3857");
+        expect(tileProviderResource.queryParameters.exceptions).toBe("XML");
+        expect(tileProviderResource.queryParameters.service).toBe("WMS");
+        expect(tileProviderResource.queryParameters.request).toBe("GetMap");
+        expect(tileProviderResource.queryParameters.transparent).toBeTruthy();
+        expect(tileProviderResource.queryParameters.format).toBe("image/png");
+        expect(tileProviderResource.queryParameters.some).toBe("thing");
+        expect(tileProviderResource.queryParameters.another).toBe("value");
+
+        const getFeatureInfoResource: Resource = (mapItems[0]
+          .imageryProvider as any)._pickFeaturesResource;
+
+        expect(getFeatureInfoResource.queryParameters.version).toBe("1.3.0");
+        expect(getFeatureInfoResource.queryParameters.crs).toBe("EPSG:3857");
+        expect(getFeatureInfoResource.queryParameters.exceptions).toBe("XML");
+        expect(getFeatureInfoResource.queryParameters.service).toBe("WMS");
+        expect(getFeatureInfoResource.queryParameters.request).toBe(
+          "GetFeatureInfo"
+        );
+        expect(getFeatureInfoResource.queryParameters.feature_count).toBe(
+          terria.configParameters.defaultMaximumShownFeatureInfos + 1
+        );
+        expect(getFeatureInfoResource.queryParameters.some).toBe("thing else");
+        expect(getFeatureInfoResource.queryParameters.another).toBe("value");
+
+        expect(mapItems[0].imageryProvider.tileHeight).toBe(256);
+        expect(mapItems[0].imageryProvider.tileWidth).toBe(256);
+      }
+    } finally {
+      cleanup();
+    }
+  });
+
   it("constructs correct ImageryProvider when layers trait provided Title", async function() {
     let wms: WebMapServiceCatalogItem;
     const terria = new Terria();

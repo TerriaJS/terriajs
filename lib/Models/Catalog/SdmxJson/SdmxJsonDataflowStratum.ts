@@ -513,9 +513,9 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           let regionType: string | undefined;
 
           // Are any regionTypes present in modelOverride
-          regionType = this.catalogItem.matchRegionType(
+          regionType = this.catalogItem.matchRegionProvider(
             modelOverride?.regionType
-          );
+          )?.regionType;
 
           // Next try fetching region type from another dimension (only if this modelOverride type 'region')
           // It will look through dimensions which have modelOverrides of type `region-type` and have a selectedId, if one is found - it will be used as the regionType of this column
@@ -523,11 +523,11 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           if (modelOverride?.type === "region") {
             // Use selectedId of first dimension with one
             regionType =
-              this.catalogItem.matchRegionType(
+              this.catalogItem.matchRegionProvider(
                 this.getDimensionsWithOverrideType("region-type").find(d =>
                   isDefined(d.selectedId)
                 )?.selectedId
-              ) ?? regionType;
+              )?.regionType ?? regionType;
           }
 
           // Try to find valid region type from:
@@ -539,11 +539,12 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
           if (!isDefined(regionType))
             regionType =
-              this.catalogItem.matchRegionType(dim.id) ??
-              this.catalogItem.matchRegionType(codelist?.name) ??
-              this.catalogItem.matchRegionType(codelist?.id) ??
-              this.catalogItem.matchRegionType(concept?.name) ??
-              this.catalogItem.matchRegionType(concept?.id);
+              this.catalogItem.matchRegionProvider(dim.id)?.regionType ??
+              this.catalogItem.matchRegionProvider(codelist?.name)
+                ?.regionType ??
+              this.catalogItem.matchRegionProvider(codelist?.id)?.regionType ??
+              this.catalogItem.matchRegionProvider(concept?.name)?.regionType ??
+              this.catalogItem.matchRegionProvider(concept?.id)?.regionType;
 
           // Apply regionTypeReplacements (which can replace regionType with a different regionType - using [{find:string, replace:string}] pattern)
           if (modelOverride?.type === "region") {

@@ -10,7 +10,7 @@ import DataPreviewUrl from "./DataPreviewUrl";
 import measureElement from "../HOCs/measureElement";
 import Styles from "./mappable-preview.scss";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
-import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
+import SharePanel from "../Map/Panels/SharePanel/SharePanel";
 import { withTranslation } from "react-i18next";
 import WarningBox from "./WarningBox";
 

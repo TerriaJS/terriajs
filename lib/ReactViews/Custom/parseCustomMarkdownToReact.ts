@@ -32,7 +32,11 @@ export function parseCustomMarkdownToReactWithOptions(
     },
     options
   );
-  return parseCustomHtmlToReact("<span>" + html + "</span>", context);
+  return parseCustomHtmlToReact(
+    "<span>" + html + "</span>",
+    context,
+    true /** We can set allowUnsafeHtml to true here as we purify HTML in markdownToHtml */
+  );
 }
 
 export default parseCustomMarkdownToReact;

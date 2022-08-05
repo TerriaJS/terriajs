@@ -5,7 +5,6 @@ import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
 import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
 import GtfsModelTraits from "./GtfsModelTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
@@ -37,8 +36,7 @@ export default class GtfsCatalogItemTraits extends mixTraits(
   MappableTraits,
   OpacityTraits,
   LayerOrderingTraits,
-  AutoRefreshingTraits,
-  FeatureInfoTraits
+  AutoRefreshingTraits
 ) {
   @objectArrayTrait({
     name: "Headers",

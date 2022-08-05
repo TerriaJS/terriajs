@@ -25,6 +25,7 @@ import Feature from "../../lib/Models/Feature";
 import {
   isInitFromData,
   isInitFromDataPromise,
+  isInitFromOptions,
   isInitFromUrl
 } from "../../lib/Models/InitSource";
 import Terria from "../../lib/Models/Terria";
@@ -33,6 +34,7 @@ import ViewState from "../../lib/ReactViewModels/ViewState";
 import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 import { defaultBaseMaps } from "./../../lib/Models/BaseMaps/defaultBaseMaps";
+import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
 
 const mapConfigBasicJson = require("../../wwwroot/test/Magda/map-config-basic.json");
 const mapConfigBasicString = JSON.stringify(mapConfigBasicJson);
@@ -64,6 +66,45 @@ describe("Terria", function() {
     terria = new Terria({
       appBaseHref: "/",
       baseUrl: "./"
+    });
+  });
+
+  describe("cesiumBaseUrl", function() {
+    it("is set when passed as an option when constructing Terria", function() {
+      terria = new Terria({
+        appBaseHref: "/",
+        baseUrl: "./",
+        cesiumBaseUrl: "some/path/to/cesium"
+      });
+      expect(terria.cesiumBaseUrl).toBe("some/path/to/cesium/");
+    });
+
+    it("should default to a path relative to `baseUrl`", function() {
+      terria = new Terria({
+        appBaseHref: "/",
+        baseUrl: "some/path/to/terria"
+      });
+      expect(terria.cesiumBaseUrl).toBe(
+        "some/path/to/terria/build/Cesium/build/"
+      );
+    });
+
+    it("should update the baseUrl setting in the cesium module", function() {
+      expect(
+        buildModuleUrl("Assets/some/image.png").endsWith(
+          "/build/Cesium/build/Assets/some/image.png"
+        )
+      ).toBe(true);
+
+      terria = new Terria({
+        appBaseHref: "/",
+        baseUrl: "some/path/to/terria"
+      });
+      expect(
+        buildModuleUrl("Assets/some/image.png").endsWith(
+          "/some/path/to/terria/build/Cesium/build/Assets/some/image.png"
+        )
+      ).toBe(true);
     });
   });
 
@@ -204,6 +245,47 @@ describe("Terria", function() {
       expect(terria.workbench.items[0].uniqueId).toBe("test-2");
     });
 
+    it("works with initializationUrls and initFragmentPaths", async function() {
+      expect(terria.initSources.length).toEqual(0);
+
+      jasmine.Ajax.stubRequest("path/to/config/configUrl.json").andReturn({
+        responseText: JSON.stringify({
+          initializationUrls: ["something"],
+          parameters: {
+            applicationUrl: "https://application.url/",
+            initFragmentPaths: [
+              "path/to/init/",
+              "https://hostname.com/some/other/path/"
+            ]
+          }
+        })
+      });
+
+      await terria.start({
+        configUrl: `path/to/config/configUrl.json`,
+        i18nOptions
+      });
+
+      expect(terria.initSources.length).toEqual(1);
+
+      const initSource = terria.initSources[0];
+      expect(isInitFromOptions(initSource)).toBeTruthy();
+
+      if (!isInitFromOptions(initSource))
+        throw "Init source is not from options";
+
+      // Note: initFragmentPaths in `initializationUrls` are resolved to the base URL of configURL
+      // - which is path/to/config/
+      expect(
+        initSource.options.map(source =>
+          isInitFromUrl(source) ? source.initUrl : ""
+        )
+      ).toEqual([
+        "path/to/config/path/to/init/something.json",
+        "https://hostname.com/some/other/path/something.json"
+      ]);
+    });
+
     describe("via loadMagdaConfig", function() {
       it("should dereference uniqueId to `/`", function(done) {
         expect(terria.catalog.group.uniqueId).toEqual("/");
@@ -228,6 +310,7 @@ describe("Terria", function() {
             done.fail(error);
           });
       });
+
       it("works with basic initializationUrls", function(done) {
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
           // terria's "Magda derived url"
@@ -258,6 +341,7 @@ describe("Terria", function() {
             done.fail(error);
           });
       });
+
       it("works with v7initializationUrls", async function() {
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
           // terria's "Magda derived url"
@@ -395,6 +479,59 @@ describe("Terria", function() {
   });
 
   describe("updateApplicationUrl", function() {
+    it("works with initializationUrls and initFragmentPaths", async function() {
+      expect(terria.initSources.length).toEqual(0);
+
+      jasmine.Ajax.install();
+      // Fail all requests by default.
+      jasmine.Ajax.stubRequest(/.*/).andError({});
+
+      jasmine.Ajax.stubRequest("path/to/config/configUrl.json").andReturn({
+        responseText: JSON.stringify({
+          initializationUrls: ["something"],
+          parameters: {
+            applicationUrl: "https://application.url/",
+            initFragmentPaths: [
+              "path/to/init/",
+              "https://hostname.com/some/other/path/"
+            ]
+          }
+        })
+      });
+
+      await terria.start({
+        configUrl: `path/to/config/configUrl.json`,
+        i18nOptions
+      });
+
+      await terria.updateApplicationUrl(
+        "https://application.url/#someInitHash"
+      );
+
+      console.log(terria.initSources);
+
+      expect(terria.initSources.length).toEqual(2);
+
+      const initSource = terria.initSources[1];
+      expect(isInitFromOptions(initSource)).toBeTruthy();
+
+      if (!isInitFromOptions(initSource))
+        throw "Init source is not from options";
+
+      // Note: initFragmentPaths in hash parameters are resolved to the base URL of application URL
+      // - which is https://application.url/
+      expect(
+        initSource.options.map(source =>
+          isInitFromUrl(source) ? source.initUrl : ""
+        )
+      ).toEqual([
+        "https://application.url/path/to/init/someInitHash.json",
+        "https://hostname.com/some/other/path/someInitHash.json"
+      ]);
+
+      jasmine.Ajax.uninstall();
+    });
+
     describe("test via serialise & load round-trip", function() {
       let newTerria: Terria;
       let viewState: ViewState;
@@ -564,6 +701,7 @@ describe("Terria", function() {
           storyRouteUrlPrefix: "test/stories/TerriaJS%20App/"
         });
       });
+
       it("sets playStory to 1", async function() {
         await terria.updateApplicationUrl(
           new URL("story/my-story", document.baseURI).toString()
@@ -612,7 +750,7 @@ describe("Terria", function() {
           JSON.stringify({
             initializationUrls: [],
             parameters: {
-              regionMappingDefinitionsUrl: "data/regionMapping.json"
+              regionMappingDefinitionsUrls: ["data/regionMapping.json"]
             }
           })
         )}`;

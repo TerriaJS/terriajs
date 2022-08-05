@@ -23,12 +23,16 @@ const LatLonValCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_val.csv"
 const LatLonEnumCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum.csv");
 const LatLonValCsvDuplicate = require("raw-loader!../../wwwroot/test/csv/lat_lon_val_with_duplicate_row.csv");
 const LatLonEnumDateIdCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum_date_id.csv");
+const LatLonEnumDateIdWithRegionCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum_date_id_with_regions.csv");
 const LgaWithDisambigCsv = require("raw-loader!../../wwwroot/test/csv/lga_state_disambig.csv");
 const ParkingSensorDataCsv = require("raw-loader!../../wwwroot/test/csv/parking-sensor-data.csv");
 const LegendDecimalPlacesCsv = require("raw-loader!../../wwwroot/test/csv/legend-decimal-places.csv");
 const BadDatesCsv = require("raw-loader!../../wwwroot/test/csv/bad-dates.csv");
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")
+);
+const additionalRegionMapping = JSON.stringify(
+  require("../../wwwroot/test/regionMapping/additionalRegion.json")
 );
 const regionIdsSte = JSON.stringify(
   require("../../wwwroot/data/regionids/region_map-STE_2016_AUST_STE_NAME16.json")
@@ -45,15 +49,13 @@ const regionIdsLgaNameStates = JSON.stringify(
 
 describe("TableMixin", function() {
   let item: CsvCatalogItem;
+  let terria: Terria;
 
   beforeEach(function() {
-    item = new CsvCatalogItem(
-      "test",
-      new Terria({
-        baseUrl: "./"
-      }),
-      undefined
-    );
+    terria = new Terria({
+      baseUrl: "./"
+    });
+    item = new CsvCatalogItem("test", terria, undefined);
 
     jasmine.Ajax.install();
     jasmine.Ajax.stubRequest(
@@ -95,6 +97,115 @@ describe("TableMixin", function() {
       if (dataSource instanceof CustomDataSource) {
         expect(dataSource.entities.values.length).toBe(4);
       }
+    });
+
+    it("sets showInChartPanel to false - as is mappable", async function() {
+      expect(item.showInChartPanel).toBeFalsy();
+    });
+
+    it("sets showInChartPanel to true - when lat/lon is disabled", async function() {
+      updateModelFromJson(item, CommonStrata.definition, {
+        columns: [
+          { name: "lat", type: "scalar" },
+          { name: "lon", type: "scalar" }
+        ]
+      });
+      expect(item.showInChartPanel).toBeTruthy();
+    });
+
+    it("doesn't show regions - even if empty region column is detected", () => {});
+
+    it("calculates rectangle", async function() {
+      expect(item.rectangle.north).toEqual(-20);
+      expect(item.rectangle.south).toEqual(-37);
+      expect(item.rectangle.east).toEqual(155);
+      expect(item.rectangle.west).toEqual(115);
+    });
+
+    describe("the entities", function() {
+      it("has availability defined over the correct span", function() {
+        expect(
+          dataSource.entities.values.map(e => e.availability?.start.toString())
+        ).toEqual([
+          "2015-08-01T00:00:00Z",
+          "2015-08-01T00:00:00Z",
+          "2015-08-02T00:00:00Z",
+          "2015-08-03T00:00:00Z"
+        ]);
+        expect(
+          dataSource.entities.values.map(e => e.availability?.stop.toString())
+        ).toEqual([
+          "2015-08-07T06:00:00Z",
+          "2015-08-07T00:00:00Z",
+          "2015-08-02T23:59:59Z",
+          "2015-08-05T00:00:00Z"
+        ]);
+      });
+    });
+
+    describe("when timeColumn is `null`", function() {
+      it("returns an empty `discreteTimes`", async function() {
+        expect(item.discreteTimes?.length).toBe(6);
+        item.defaultStyle.time.setTrait(CommonStrata.user, "timeColumn", null);
+        expect(item.discreteTimes).toBe(undefined);
+      });
+
+      it("creates entities for all times", async function() {
+        item.defaultStyle.time.setTrait(CommonStrata.user, "timeColumn", null);
+        await item.loadMapItems();
+        const mapItem = item.mapItems[0];
+        expect(mapItem instanceof CustomDataSource).toBe(true);
+        if (mapItem instanceof CustomDataSource) {
+          expect(mapItem.entities.values.length).toBe(13);
+        }
+      });
+    });
+  });
+
+  // Note this is identical to "when the table has time, lat/lon and id columns" EXCEPT
+  // - one additional spec - "doesn't show regions - even if empty region column is detected"
+  // - "sets showInChartPanel to true - when lat/lon is disabled" is replaced by "shows regions when lat/lon is disabled"
+  describe("when the table has time, lat/lon, id columns AND regions", function() {
+    let dataSource: CustomDataSource;
+    beforeEach(async function() {
+      item.setTrait(
+        CommonStrata.user,
+        "csvString",
+        LatLonEnumDateIdWithRegionCsv
+      );
+      await item.loadMapItems();
+      dataSource = <CustomDataSource>item.mapItems[0];
+      expect(dataSource instanceof CustomDataSource).toBe(true);
+    });
+
+    it("creates one entity per id", async function() {
+      expect(item.activeTableStyle.rowGroups.length).toBe(4);
+      if (dataSource instanceof CustomDataSource) {
+        expect(dataSource.entities.values.length).toBe(4);
+      }
+    });
+
+    it("sets showInChartPanel to false - as is mappable", async function() {
+      expect(item.showInChartPanel).toBeFalsy();
+    });
+
+    it("shows regions when lat/lon is disabled", async function() {
+      updateModelFromJson(item, CommonStrata.definition, {
+        columns: [
+          { name: "lat", type: "scalar" },
+          { name: "lon", type: "scalar" }
+        ]
+      });
+      expect(item.showInChartPanel).toBeFalsy();
+      expect(item.showingRegions).toBeTruthy();
+      expect(
+        item.activeTableStyle.regionColumn?.valuesAsRegions.uniqueRegionIds
+          .length
+      ).toBe(3);
+    });
+
+    it("doesn't show regions - as more points are detected than unique regions", () => {
+      expect(item.showingRegions).toBeFalsy();
     });
 
     it("calculates rectangle", async function() {
@@ -449,16 +560,84 @@ describe("TableMixin", function() {
       expect(item.styleDimensions?.options?.[2].name).toBe("Some Style Title");
     });
 
-    it("loads regionProviderList on loadMapItems", async function() {
+    it("loads regionProviderLists on loadMapItems", async function() {
       item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
 
       await item.loadMetadata();
 
-      expect(item.regionProviderList).toBeUndefined();
+      expect(item.regionProviderLists).toBeUndefined();
 
       await item.loadMapItems();
 
-      expect(item.regionProviderList?.regionProviders.length).toBe(114);
+      expect(item.regionProviderLists?.[0]?.regionProviders.length).toBe(114);
+    });
+
+    it("loads regionProviderLists on loadMapItems - with multiple regionMappingDefinitionsUrl", async function() {
+      // We add "additionalRegion.json" - which defines two region types
+      // - "SOME_OTHER_REGION" - which is just another region type
+      // - "SOME_OVERRIDDEN_REGION" - which will override "LGA_NAME_2011" in "build/TerriaJS/data/regionMapping.json"
+      jasmine.Ajax.stubRequest("additionalRegion.json").andReturn({
+        responseText: additionalRegionMapping
+      });
+
+      terria.updateParameters({
+        regionMappingDefinitionsUrls: [
+          "additionalRegion.json",
+          "build/TerriaJS/data/regionMapping.json"
+        ]
+      });
+
+      item.setTrait(CommonStrata.user, "csvString", LgaWithDisambigCsv);
+
+      await item.loadMetadata();
+
+      expect(item.regionProviderLists).toBeUndefined();
+
+      await item.loadMapItems();
+
+      expect(item.regionProviderLists?.length).toBe(2);
+
+      expect(item.regionProviderLists?.[0]?.regionProviders.length).toBe(2);
+      expect(item.regionProviderLists?.[1]?.regionProviders.length).toBe(114);
+
+      // Item region provider should match from "additionalRegion.json" (as it comes before "build/TerriaJS/data/regionMapping.json")
+      expect(item.activeTableStyle.regionColumn?.regionType?.description).toBe(
+        "Local Government Areas 2011 by name (ABS) !!!! OVERRIDDEN"
+      );
+    });
+
+    it("loads regionProviderLists on loadMapItems - will use regionMappingDefinitionsUrl instead of regionMappingDefinitionsUrls", async function() {
+      // We add "additionalRegion.json" - which defines two region types
+      // - "SOME_OTHER_REGION" - which is just another region type
+      // - "SOME_OVERRIDDEN_REGION" - which will override "LGA_NAME_2011" in "build/TerriaJS/data/regionMapping.json"
+      jasmine.Ajax.stubRequest("additionalRegion.json").andReturn({
+        responseText: additionalRegionMapping
+      });
+
+      terria.updateParameters({
+        regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
+        regionMappingDefinitionsUrls: [
+          "additionalRegion.json",
+          "build/TerriaJS/data/regionMapping.json"
+        ]
+      });
+
+      item.setTrait(CommonStrata.user, "csvString", LgaWithDisambigCsv);
+
+      await item.loadMetadata();
+
+      expect(item.regionProviderLists).toBeUndefined();
+
+      await item.loadMapItems();
+
+      expect(item.regionProviderLists?.length).toBe(1);
+
+      expect(item.regionProviderLists?.[0]?.regionProviders.length).toBe(114);
+
+      // Item region provider should match from "build/TerriaJS/data/regionMapping.json"
+      expect(item.activeTableStyle.regionColumn?.regionType?.description).toBe(
+        "Local Government Areas 2011 by name (ABS)"
+      );
     });
   });
 
@@ -545,10 +724,10 @@ describe("TableMixin", function() {
       item.setTrait(CommonStrata.user, "csvString", LgaWithDisambigCsv);
       await item.loadMapItems();
 
-      await item.regionProviderList
+      await item.regionProviderLists?.[0]
         ?.getRegionProvider("LGA_NAME_2011")
         ?.loadRegionIDs();
-      await item.regionProviderList
+      await item.regionProviderLists?.[0]
         ?.getRegionProvider("STE_NAME_2016")
         ?.loadRegionIDs();
     });
@@ -639,6 +818,16 @@ describe("TableMixin", function() {
       expect(item.shortReportSections[0].name).toBe(
         `**Regions:** ${regionType?.description}`
       );
+    });
+
+    it("doesn't show region shortReportSection if region is disabled", async function() {
+      updateModelFromJson(item, CommonStrata.user, {
+        defaultStyle: {
+          regionColumn: "Something else"
+        }
+      });
+
+      expect(item.shortReportSections.length).toBe(0);
     });
   });
 
