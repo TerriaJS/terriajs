@@ -28,6 +28,7 @@ class HelpVideoPanel extends React.Component {
     markdownContent: PropTypes.string,
     videoUrl: PropTypes.string,
     placeholderImage: PropTypes.string,
+    videoCoverImageOpacity: PropTypes.number,
     theme: PropTypes.object,
     t: PropTypes.func.isRequired,
     i18n: PropTypes.object.isRequired
@@ -58,6 +59,7 @@ class HelpVideoPanel extends React.Component {
           viewState={this.props.viewState}
           videoLink={this.props.videoUrl}
           background={this.props.placeholderImage}
+          backgroundOpacity={this.props.videoCoverImageOpacity}
           videoName={HELP_VIDEO_NAME}
         />
         <Box
