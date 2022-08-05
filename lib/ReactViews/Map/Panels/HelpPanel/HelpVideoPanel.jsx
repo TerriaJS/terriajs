@@ -50,11 +50,10 @@ class HelpVideoPanel extends React.Component {
       [Styles.shiftedToRight]:
         !isExpanded ||
         !this.props.viewState.showHelpMenu ||
-        this.props.viewState.topElement !== "HelpPanel",
-      [Styles.isHidden]: !itemSelected // when the item isn't selected
+        this.props.viewState.topElement !== "HelpPanel"
     });
     return (
-      <div className={className}>
+      itemSelected && <div className={className}>
         <VideoGuide
           viewState={this.props.viewState}
           videoLink={this.props.videoUrl}
