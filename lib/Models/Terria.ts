@@ -1245,7 +1245,7 @@ export default class Terria {
     // Sequentially apply all InitSources
     for (let i = 0; i < loadedInitSources.length; i++) {
       const initSource = loadedInitSources[i];
-      if (!isDefined(initSource?.data)) return;
+      if (!isDefined(initSource?.data)) continue;
       try {
         await this.applyInitData({
           initData: initSource!.data
