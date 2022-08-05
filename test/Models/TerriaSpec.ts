@@ -1,4 +1,5 @@
 import { action, runInAction, toJS } from "mobx";
+import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
 import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
@@ -34,7 +35,6 @@ import ViewState from "../../lib/ReactViewModels/ViewState";
 import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 import { defaultBaseMaps } from "./../../lib/Models/BaseMaps/defaultBaseMaps";
-import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
 
 const mapConfigBasicJson = require("../../wwwroot/test/Magda/map-config-basic.json");
 const mapConfigBasicString = JSON.stringify(mapConfigBasicJson);
