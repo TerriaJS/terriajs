@@ -3,16 +3,15 @@ import { TFunction } from "i18next";
 import { observer } from "mobx-react";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-
 import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
-
+import Box from "../../../../Styled/Box";
+import Spacing from "../../../../Styled/Spacing";
+import Text from "../../../../Styled/Text";
+import { canShorten } from "./BuildShareLink";
 import Styles from "./share-panel.scss";
 import { SharePanelContent } from "./SharePanelContent";
 import { ShareUrl } from "./ShareUrl";
-import Box from "../../../../Styled/Box";
-import Text from "../../../../Styled/Text";
-import Spacing from "../../../../Styled/Spacing";
 
 const MenuPanel = require("../../../StandardUserInterface/customizable/MenuPanel")
   .default;
@@ -80,9 +79,8 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
             terria={terria}
             viewState={viewState}
             includeStories={true}
-            shouldShorten={
-              !!terria.getLocalProperty("shortenShareUrls") ?? true
-            }
+            // Note we don't use terria.getLocalProperty("shortenShareUrls") here - as it is only configurable in SharePanelContent
+            shouldShorten={!!canShorten(terria)}
             theme="light"
             inputTheme="light"
           />
@@ -97,9 +95,8 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
             terria={terria}
             viewState={viewState}
             includeStories={true}
-            shouldShorten={
-              !!terria.getLocalProperty("shortenShareUrls") ?? true
-            }
+            // Note we don't use terria.getLocalProperty("shortenShareUrls") here - as it is only configurable in SharePanelContent
+            shouldShorten={!!canShorten(terria)}
             theme="dark"
             inputTheme="light"
             rounded
