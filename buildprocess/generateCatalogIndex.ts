@@ -217,15 +217,23 @@ export default async function generateCatalogIndex(
   // Recursively add models to CatalogIndex
   function indexModel(member: BaseModel, index: CatalogIndexFile = {}) {
     let knownContainerUniqueIds = member.knownContainerUniqueIds;
-    if (ReferenceMixin.isMixedInto(member) && member.target) {
-      knownContainerUniqueIds = Array.from(
-        new Set([
-          ...member.knownContainerUniqueIds,
-          ...member.target.knownContainerUniqueIds
-        ])
-      );
-      member = member.target;
-    }
+
+    // de-reference (and handle nested references)
+    const dereference = () => {
+      if (ReferenceMixin.isMixedInto(member) && member.target) {
+        knownContainerUniqueIds = Array.from(
+          new Set([
+            ...member.knownContainerUniqueIds,
+            ...member.target.knownContainerUniqueIds
+          ])
+        );
+        member = member.target;
+        dereference();
+      }
+    };
+
+    dereference();
+
     if (
       member.uniqueId &&
       member.uniqueId !== "/" &&
