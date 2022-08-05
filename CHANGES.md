@@ -6,6 +6,16 @@ Change Log
 * Move `maximumShownFeatureInfos` from `WebMapServiceCatalogItemTraits` to `MappableTraits`
 * Remove `featureInfoUrlTemplate` from `OpenDataSoftCatalogItem` - as it is incompatible with time varying datasets
 * Add ability to customise the getting started video in the StoryBuilder panel
+* Set cesium base URL by default so that cesium assets are resolved correctly
+* Add `cesiumBaseUrl` to `TerriaOptions` for overriding the default cesium base url setting
+* Fix broken Bing map logo in attributions
+* Added ability to customise the getting started video in the StoryBuilder panel.
+* Fixed a bug where menu items were rendered in the wrong style if the window was resized from small to large, or large to small.
+* Strongly type `item` in WorkbenchItem and remove `show` toggle for non `Mappable` items.
+* Add `configParameters.regionMappingDefinitionsUrls` - to support multiple URLs for region mapping definitions  - if multiple provided then the first matching region will be used (in order of URLs)
+  * `configParameters.regionMappingDefinitionsUrl` still exists but is deprecated - if defined it will override `regionMappingDefinitionsUrls`
+* `TableMixin.matchRegionProvider` now returns `RegionProvider` instead of `string` region type. (which exists at `regionProvider.regionType`)
+* Add `getFeatureInfoUrl` and `getFeatureInfoParameters` to `WebMapServiceCatalogItemTraits`
 * [The next improvement]
 
 #### release 8.2.10 - 2022-08-02

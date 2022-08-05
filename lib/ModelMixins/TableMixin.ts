@@ -1,5 +1,11 @@
 import i18next from "i18next";
-import { action, computed, observable, runInAction } from "mobx";
+import {
+  action,
+  computed,
+  isObservableArray,
+  observable,
+  runInAction
+} from "mobx";
 import { createTransformer, ITransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -10,11 +16,13 @@ import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
 import TerriaError from "../Core/TerriaError";
 import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
+import RegionProvider from "../Map/Region/RegionProvider";
 import RegionProviderList from "../Map/Region/RegionProviderList";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
@@ -100,7 +108,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      * The list of region providers to be used with this table.
      */
     @observable
-    regionProviderList: RegionProviderList | undefined;
+    regionProviderLists: RegionProviderList[] | undefined;
 
     /**
      * The raw data table in column-major format, i.e. the outer array is an
@@ -355,16 +363,22 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     /**
      * Try to resolve `regionType` to a region provider (this will also match against region provider aliases)
      */
-    matchRegionType(regionType?: string): string | undefined {
+    matchRegionProvider(regionType?: string): RegionProvider | undefined {
       if (!isDefined(regionType)) return;
-      const matchingRegionProviders = this.regionProviderList?.getRegionDetails(
-        [regionType],
-        undefined,
-        undefined
+      const matchingRegionProviders = this.regionProviderLists?.map(
+        regionProviderList =>
+          regionProviderList?.getRegionDetails(
+            [regionType],
+            undefined,
+            undefined
+          )
       );
-      if (matchingRegionProviders && matchingRegionProviders.length > 0) {
-        return matchingRegionProviders[0].regionProvider.regionType;
-      }
+
+      // Return first regionProviderList with it's first match
+      // Note: a regionProviderList may have multiple matches - we could improve which one it selects
+      return matchingRegionProviders?.find(
+        match => match && match.length > 0
+      )?.[0].regionProvider;
     }
 
     /**
@@ -534,8 +548,11 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      */
     @computed
     get regionProviderDimensions(): SelectableDimensionEnum | undefined {
+      const allRegionProviders = flatten(
+        this.regionProviderLists?.map(list => list.regionProviders) ?? []
+      );
       if (
-        !Array.isArray(this.regionProviderList?.regionProviders) ||
+        allRegionProviders.length === 0 ||
         !isDefined(this.activeTableStyle.regionColumn)
       ) {
         return;
@@ -544,14 +561,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return {
         id: "regionMapping",
         name: "Region Mapping",
-        options: this.regionProviderList!.regionProviders.map(
-          regionProvider => {
-            return {
-              name: regionProvider.description,
-              id: regionProvider.regionType
-            };
-          }
-        ),
+        options: allRegionProviders.map(regionProvider => {
+          return {
+            name: regionProvider.description,
+            id: regionProvider.regionType
+          };
+        }),
         allowUndefined: true,
         selectedId: this.activeTableStyle.regionColumn?.regionType?.regionType,
         setDimensionValue: (
@@ -585,7 +600,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      */
     @computed
     get regionColumnDimensions(): SelectableDimensionEnum | undefined {
-      if (!Array.isArray(this.regionProviderList?.regionProviders)) {
+      if (!isDefined(this.regionProviderLists)) {
         return;
       }
 
@@ -794,16 +809,29 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      */
     protected abstract forceLoadTableData(): Promise<string[][] | undefined>;
 
+    /** Load all region provider lists
+     * These are loaded from terria.configParameters.regionMappingDefinitionsUrl
+     */
     async loadRegionProviderList() {
-      if (isDefined(this.regionProviderList)) return;
+      if (isDefined(this.regionProviderLists)) return;
 
-      const regionProviderList:
-        | RegionProviderList
-        | undefined = await RegionProviderList.fromUrl(
-        this.terria.configParameters.regionMappingDefinitionsUrl,
-        this.terria.corsProxy
+      // regionMappingDefinitionsUrl is deprecated - but we use it instead of regionMappingDefinitionsUrls if defined
+      const urls = isDefined(
+        this.terria.configParameters.regionMappingDefinitionsUrl
+      )
+        ? [this.terria.configParameters.regionMappingDefinitionsUrl]
+        : this.terria.configParameters.regionMappingDefinitionsUrls;
+
+      // Load all region in parallel (but preserve order)
+      const regionProviderLists = await Promise.all(
+        urls.map(
+          async (url, i) =>
+            // Note can be called many times - all promises/results are cached in RegionProviderList.metaList
+            await RegionProviderList.fromUrl(url, this.terria.corsProxy)
+        )
       );
-      runInAction(() => (this.regionProviderList = regionProviderList));
+
+      runInAction(() => (this.regionProviderLists = regionProviderLists));
     }
 
     /*

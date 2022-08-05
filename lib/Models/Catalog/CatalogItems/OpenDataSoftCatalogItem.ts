@@ -191,8 +191,8 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     // Find first field which matches a region type
     return this.dataset.fields?.find(
       f =>
-        this.catalogItem.matchRegionType(f.name) ||
-        this.catalogItem.matchRegionType(f.label)
+        this.catalogItem.matchRegionProvider(f.name)?.regionType ||
+        this.catalogItem.matchRegionProvider(f.label)?.regionType
     )?.name;
   }
 
@@ -460,8 +460,8 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
           !isIdField(f.name) &&
           !isIdField(f.label) &&
           f.name !== this.catalogItem.regionFieldName &&
-          !this.catalogItem.matchRegionType(f.name) &&
-          !this.catalogItem.matchRegionType(f.label)
+          !this.catalogItem.matchRegionProvider(f.name)?.regionType &&
+          !this.catalogItem.matchRegionProvider(f.label)?.regionType
       ) ?? []
     );
   }
