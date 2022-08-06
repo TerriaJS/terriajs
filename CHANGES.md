@@ -23,6 +23,8 @@ Change Log
 * Fix `SearchBoxAndResults` Trans values
 * Fix `generateCatalogIndex` for nested references
 * Fix `SearchBox` handling of `searchWithDebounce` when `debounceDuration` prop changes. It now fushes instead of cancels.
+* Move map credits to map column so it don't get hidden by chart panel
+* [The next improvement]
 
 #### release 8.2.10 - 2022-08-02
 
