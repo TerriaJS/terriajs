@@ -23,7 +23,7 @@ export interface HelpContentItem {
   placeholderImage?: string;
 
   // The `placeholderImage` is also used as background cover image for the container that embeds the video. This setting allows us to control the opacity of the cover image.
-  videoCoverImageOpacity?: boolean;
+  videoCoverImageOpacity?: number;
 
   paneMode?: PaneMode;
   trainerItems?: TrainerItem[];
