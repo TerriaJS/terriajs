@@ -15,6 +15,7 @@ Change Log
 * `TableMixin.matchRegionProvider` now returns `RegionProvider` instead of `string` region type. (which exists at `regionProvider.regionType`)
 * Add `videoCoverImageOpacity` option to `HelpContentItem` so that we can fade the background of help video panels.
 * Fix a bug where all `HelpVideoPanel`s were being rendered resulting in autoplayed videos playing at random.
+* Add `getFeatureInfoUrl` and `getFeatureInfoParameters` to `WebMapServiceCatalogItemTraits`
 * [The next improvement]
 
 #### release 8.2.10 - 2022-08-02
