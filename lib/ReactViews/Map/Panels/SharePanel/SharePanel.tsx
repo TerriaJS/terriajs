@@ -79,8 +79,10 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
             terria={terria}
             viewState={viewState}
             includeStories={true}
-            // Note we don't use terria.getLocalProperty("shortenShareUrls") here - as it is only configurable in SharePanelContent
-            shouldShorten={!!canShorten(terria)}
+            shouldShorten={
+              stringToBool(terria.getLocalProperty("shortenShareUrls")) ??
+              !!canShorten(terria)
+            }
             theme="light"
             inputTheme="light"
           />
@@ -95,8 +97,10 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
             terria={terria}
             viewState={viewState}
             includeStories={true}
-            // Note we don't use terria.getLocalProperty("shortenShareUrls") here - as it is only configurable in SharePanelContent
-            shouldShorten={!!canShorten(terria)}
+            shouldShorten={
+              stringToBool(terria.getLocalProperty("shortenShareUrls")) ??
+              !!canShorten(terria)
+            }
             theme="dark"
             inputTheme="light"
             rounded
@@ -191,3 +195,11 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
 }
 
 export default withTranslation()(SharePanel);
+
+function stringToBool(s: string | boolean | null | undefined) {
+  if (s === true) return true;
+  if (s === false) return false;
+  if (s === "true") return true;
+  if (s === "false") return false;
+  return undefined;
+}
