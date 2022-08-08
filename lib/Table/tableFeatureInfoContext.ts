@@ -55,6 +55,7 @@ export const tableFeatureInfoContext: (
   const result = {
     terria: {
       timeSeries: {
+        title: style.colorColumn?.title,
         xName: style.timeColumn?.title,
         yName: style.colorColumn?.title,
         units: chartColumns.map(column => column.units || ""),
