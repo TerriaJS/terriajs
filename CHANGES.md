@@ -1,7 +1,9 @@
 Change Log
 ==========
 
-#### next release (8.2.11)
+#### next release (8.2.12)
+
+#### release 8.2.11 - 2022-08-08
 
 * Add ability to customise the getting started video in the StoryBuilder panel
 * Set cesium base URL by default so that cesium assets are resolved correctly
@@ -21,7 +23,6 @@ Change Log
 * Fix `SearchBoxAndResults` Trans values
 * Fix `generateCatalogIndex` for nested references
 * Fix `SearchBox` handling of `searchWithDebounce` when `debounceDuration` prop changes. It now fushes instead of cancels.
-* [The next improvement]
 
 #### release 8.2.10 - 2022-08-02
 
