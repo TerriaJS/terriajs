@@ -15,6 +15,7 @@ Change Log
 * `TableMixin.matchRegionProvider` now returns `RegionProvider` instead of `string` region type. (which exists at `regionProvider.regionType`)
 * Add `getFeatureInfoUrl` and `getFeatureInfoParameters` to `WebMapServiceCatalogItemTraits`
 * Fix `SearchBoxAndResults` Trans values
+* Fix `generateCatalogIndex` for nested references
 * [The next improvement]
 
 #### release 8.2.10 - 2022-08-02
