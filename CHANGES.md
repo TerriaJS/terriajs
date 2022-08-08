@@ -14,6 +14,7 @@ Change Log
   * `configParameters.regionMappingDefinitionsUrl` still exists but is deprecated - if defined it will override `regionMappingDefinitionsUrls`
 * `TableMixin.matchRegionProvider` now returns `RegionProvider` instead of `string` region type. (which exists at `regionProvider.regionType`)
 * Fix `shouldShorten` property in catalog and story `ShareUrl`
+* Fix `shortenShareUrls` user property
 * Add `getFeatureInfoUrl` and `getFeatureInfoParameters` to `WebMapServiceCatalogItemTraits`
 * Fix `generateCatalogIndex` for nested references
 * [The next improvement]
