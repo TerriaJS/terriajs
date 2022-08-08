@@ -1,7 +1,9 @@
 Change Log
 ==========
 
-#### next release (8.2.11)
+#### next release (8.2.12)
+
+#### release 8.2.11 - 2022-08-08
 
 * Move `maximumShownFeatureInfos` from `WebMapServiceCatalogItemTraits` to `MappableTraits`
 * Remove `featureInfoUrlTemplate` from `OpenDataSoftCatalogItem` - as it is incompatible with time varying datasets
@@ -15,6 +17,8 @@ Change Log
 * Add `configParameters.regionMappingDefinitionsUrls` - to support multiple URLs for region mapping definitions  - if multiple provided then the first matching region will be used (in order of URLs)
   * `configParameters.regionMappingDefinitionsUrl` still exists but is deprecated - if defined it will override `regionMappingDefinitionsUrls`
 * `TableMixin.matchRegionProvider` now returns `RegionProvider` instead of `string` region type. (which exists at `regionProvider.regionType`)
+* Fix `shouldShorten` property in catalog and story `ShareUrl`
+* Fix `shortenShareUrls` user property
 * Add `videoCoverImageOpacity` option to `HelpContentItem` so that we can fade the background of help video panels.
 * Fix a bug where all `HelpVideoPanel`s were being rendered resulting in autoplayed videos playing at random.
 * Add `getFeatureInfoUrl` and `getFeatureInfoParameters` to `WebMapServiceCatalogItemTraits`
@@ -22,6 +26,7 @@ Change Log
 * Fix `generateCatalogIndex` for nested references
 * Removed `formatNumberForLocale` - we now use `Number.toLocaleString`
 * [The next improvement]
+* Fix `SearchBox` handling of `searchWithDebounce` when `debounceDuration` prop changes. It now fushes instead of cancels.
 
 #### release 8.2.10 - 2022-08-02
 
