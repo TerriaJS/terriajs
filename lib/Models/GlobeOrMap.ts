@@ -160,7 +160,7 @@ export default abstract class GlobeOrMap {
     }
     feature.properties = imageryFeature.properties;
     feature.data = imageryFeature.data;
-    feature.imageryProvider = imageryFeature.imageryLayer.imageryProvider;
+    feature.imageryLayer = imageryFeature.imageryLayer;
 
     if (imageryFeature.position) {
       feature.position = new ConstantPositionProperty(
@@ -328,34 +328,35 @@ export default abstract class GlobeOrMap {
         let vectorTileHighlightCreated = false;
         // Feature from MapboxVectorTileImageryProvider
         if (
-          feature.imageryProvider instanceof MapboxVectorTileImageryProvider
+          feature.imageryLayer?.imageryProvider instanceof
+          MapboxVectorTileImageryProvider
         ) {
           const featureId =
             (isJsonObject(feature.data) ? feature.data?.id : undefined) ??
             feature.properties?.id?.getValue?.();
           if (isDefined(featureId)) {
-            const highlightImageryProvider = feature.imageryProvider.createHighlightImageryProvider(
+            const highlightImageryProvider = feature.imageryLayer?.imageryProvider.createHighlightImageryProvider(
               featureId
             );
             this._removeHighlightCallback = this.terria.currentViewer._addVectorTileHighlight(
               highlightImageryProvider,
-              feature.imageryProvider.rectangle
+              feature.imageryLayer.imageryProvider.rectangle
             );
           }
           vectorTileHighlightCreated = true;
         }
         // Feature from ProtomapsImageryProvider (replacement for MapboxVectorTileImageryProvider)
         else if (
-          feature.imageryProvider &&
-          feature.imageryProvider instanceof ProtomapsImageryProvider
+          feature.imageryLayer?.imageryProvider instanceof
+          ProtomapsImageryProvider
         ) {
-          const highlightImageryProvider = feature.imageryProvider.createHighlightImageryProvider(
+          const highlightImageryProvider = feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
             feature
           );
           if (highlightImageryProvider)
             this._removeHighlightCallback = this.terria.currentViewer._addVectorTileHighlight(
               highlightImageryProvider,
-              feature.imageryProvider.rectangle
+              feature.imageryLayer.imageryProvider.rectangle
             );
           vectorTileHighlightCreated = true;
         }

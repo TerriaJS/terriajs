@@ -371,7 +371,7 @@ function addFeaturePicking(terria: Terria, initSource: InitSourceData) {
 
     // Remember the ids of vector features only, the raster ones we can reconstruct from providerCoords.
     pickedFeatures.entities = terria.pickedFeatures.features
-      .filter(feature => !isDefined(feature.imageryProvider))
+      .filter(feature => !isDefined(feature.imageryLayer?.imageryProvider))
       .map(entity => {
         return {
           name: entity.name,

@@ -1456,8 +1456,7 @@ export default class Cesium extends GlobeOrMap {
                 );
 
                 features = features.filter(feature => {
-                  const splitDirection = (<any>feature).imageryLayer
-                    .splitDirection;
+                  const splitDirection = feature.imageryLayer?.splitDirection;
                   return (
                     splitDirection === pickedSide ||
                     splitDirection === SplitDirection.NONE

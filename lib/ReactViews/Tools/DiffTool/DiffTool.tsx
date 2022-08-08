@@ -1033,7 +1033,7 @@ function doesFeatureBelongToItem(
   item: DiffableItem
 ): Boolean {
   if (!MappableMixin.isMixedInto(item)) return false;
-  const imageryProvider = feature.imageryProvider;
+  const imageryProvider = feature.imageryLayer?.imageryProvider;
   if (imageryProvider === undefined) return false;
   return (
     item.mapItems.find(

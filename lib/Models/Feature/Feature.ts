@@ -2,7 +2,7 @@ import { observable } from "mobx";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTilePointFeature from "terriajs-cesium/Source/Scene/Cesium3DTilePointFeature";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import { JsonObject } from "../../Core/Json";
 import { BaseModel } from "../Definition/Model";
 import { TerriaFeatureData } from "./FeatureData";
@@ -19,7 +19,7 @@ export default class Feature extends Entity {
   data?: TerriaFeatureData | JsonObject;
 
   cesiumEntity?: Entity;
-  imageryProvider?: ImageryProvider | undefined;
+  imageryLayer?: ImageryLayer | undefined;
 
   /** This comes from Cesium.scene.drillPick
    * No type provided
