@@ -205,7 +205,7 @@
     "printViewButton": "Zobrazení náhledu tisku",
     "creatingPrintView": "Vytvoření tiskového náhledu...",
     "btnAdvanced": "Pokročilé možnosti",
-    "embedTitle": "Chcete-li mapu vložit, zkopírujte tento kód a vložte ji do stránky HTML:",
+    "embedTitle": "Vložit mapu",
     "shortenUsingService": "Zkrácení URL pro sdílení pomocí webové služby",
     "btnCatalogShareText": "Sdílet",
     "btnStoryShareText": "Sdílet",
@@ -223,7 +223,8 @@
     "shortLinkShortening": "Zkracování...",
     "downloadMap": "Stáhnout mapu (png)",
     "convertNotificationMessage": "Tento odkaz na sdílení je založen na starší verzi softwaru TerriaJS, který pohání tuto webovou mapu. Přestože se snažíme odkaz zachovat, můžete se setkat s problémy při vizualizaci dat.  \n\nPokud jste uživatelem sdíleného odkazu, klikněte na tlačítko OK, aby varovná zpráva zmizela, a pokračujte v přístupu k datům.",
-    "getShareSaveHelpMessage": "Jak přidat do záložek sdílené odkazy"
+    "getShareSaveHelpMessage": "Jak přidat do záložek sdílené odkazy",
+    "embedDescription": "Chcete-li mapu vložit, zkopírujte tento kód a vložte ji do stránky HTML:"
   },
   "countDatasets": {
     "btnText": "Spustit",
@@ -330,7 +331,7 @@
   "featureInfo": {
     "catalogItem": {
       "moreThanMax": "Bylo nalezeno více než {{maximum}} {{catalogItemName}} funkcí.",
-      "featuresFound": "{{featCount}} {catalogItemName} funkcí bylo nalezeno.",
+      "featuresFound": "Bylo nalezeno {{featCount}} funkcí v {{catalogItemName}} .",
       "featureInfoShown": "První {{maximum}} jsou uvedeny níže."
     },
     "download": "Stáhnout tuto tabulku",
@@ -722,7 +723,11 @@
       "open-street-map": "Open Street Map Server",
       "gltf": "glTF",
       "socrata-group": "Socrata Server",
-      "ifc": "IFC"
+      "ifc": "IFC",
+      "assimp-local": "Konvertor 3D souborů (zip) (experimentální)",
+      "assimp-local-description": "**Upozornění:** Konvertor 3D souborů je experimentální.  \nViz seznam [podporovaných formátů](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nSoubory musí být zazipovány.",
+      "assimp-remote": "Převodník 3D souborů (experimentální)",
+      "assimp-remote-description": "**Upozornění:** Konvertor 3D souborů je experimentální.  \nViz seznam [podporovaných formátů](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nPodporovány jsou také soubory Zip"
     },
     "printWindow": {
       "errorTitle": "Chyba tisku",
@@ -761,6 +766,12 @@
     },
     "serverConfig": {
       "failedToGet": "Nepodařilo se získat konfiguraci serveru z {{serverConfigUrl}}. To znamená, že služby jako proxy, konverze a zkracování URL nemusí fungovat."
+    },
+    "unverifiedExternalLink": {
+      "denyText": "Zrušit",
+      "title": "Upozornění: neověřený odkaz",
+      "message": "Chystáte se otevřít: \n\n`{{url}}`  \n\nTento odkaz není ověřený a může být nebezpečný.",
+      "confirmText": "Otevřít na nové kartě"
     }
   },
   "map": {
