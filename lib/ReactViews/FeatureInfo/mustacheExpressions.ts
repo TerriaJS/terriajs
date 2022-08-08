@@ -48,8 +48,15 @@ export function mustacheFormatNumberFunction(): (
   render: (value: string) => string
 ) => string {
   return mustacheJsonSubOptions(
-    (value: string, options?: Intl.NumberFormatOptions) =>
-      parseFloat(value).toLocaleString(undefined, options)
+    (value: string, options?: Intl.NumberFormatOptions) => {
+      const number = parseFloat(value);
+      if (Number.isNaN(number)) return value;
+      return parseFloat(value).toLocaleString(undefined, {
+        useGrouping: false,
+        maximumFractionDigits: 20,
+        ...options
+      });
+    }
   );
 }
 

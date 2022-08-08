@@ -221,8 +221,19 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
         longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
       };
     }
+
+    // Add currentTime property
+    // if discrete - use current discrete time
+    // otherwise - use current (continuous) time
     if (
       DiscretelyTimeVaryingMixin.isMixedInto(this.props.catalogItem) &&
+      this.props.catalogItem.currentDiscreteJulianDate
+    ) {
+      terria.currentTime = JulianDate.toDate(
+        this.props.catalogItem.currentDiscreteJulianDate
+      );
+    } else if (
+      TimeVarying.is(this.props.catalogItem) &&
       this.props.catalogItem.currentTimeAsJulianDate
     ) {
       terria.currentTime = JulianDate.toDate(

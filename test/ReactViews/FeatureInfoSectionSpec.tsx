@@ -65,8 +65,8 @@ describe("FeatureInfoSection", function() {
       foo: "bar",
       material: "steel",
       "material.process.#1": "smelted",
-      size: "12345678.9012",
-      efficiency: 0.2345678,
+      size: 12345678.9012,
+      efficiency: "0.2345678",
       date: "2017-11-23T08:47:53Z",
       owner_html: "Jay<br>Smith",
       ampersand: "A & B",
@@ -152,15 +152,6 @@ describe("FeatureInfoSection", function() {
     );
     const result = createWithContexts(viewState, section);
 
-    console.log(
-      result.root.findAll(node =>
-        node.children.some(child => {
-          console.log(child);
-          return child === "bye";
-        })
-      )
-    );
-
     expect(
       result.root.findAll(node => node.children.some(child => child === "hi"))
         .length
@@ -205,7 +196,7 @@ describe("FeatureInfoSection", function() {
       />
     );
     const result = createWithContexts(viewState, section);
-    console.log(result);
+
     expect(
       findWithText(result, getName(catalogItem) + " - " + "Foot").length
     ).toEqual(1);
@@ -315,7 +306,7 @@ describe("FeatureInfoSection", function() {
       />
     );
     const result = createWithContexts(viewState, section);
-    console.log(result);
+
     expect(
       findWithText(result, getName(catalogItem) + " - " + "Vapid").length
     ).toEqual(1);
@@ -444,7 +435,7 @@ describe("FeatureInfoSection", function() {
         />
       );
       const result = createWithContexts(viewState, section);
-      console.log(result);
+
       expect(
         findWithText(
           result,
@@ -506,7 +497,7 @@ describe("FeatureInfoSection", function() {
         />
       );
       const result = createWithContexts(viewState, section);
-      console.log(result);
+
       expect(
         findWithText(
           result,
@@ -985,9 +976,7 @@ describe("FeatureInfoSection", function() {
         />
       );
       result = createWithContexts(viewState, section);
-      expect(
-        findWithText(result, getName(catalogItem) + " - " + "That name").length
-      ).toEqual(1);
+      expect(findWithText(result, "That name").length).toEqual(1);
       expect(findWithText(result, "Yak").length).toEqual(0);
     });
 
@@ -1100,7 +1089,10 @@ describe("FeatureInfoSection", function() {
       );
       const result = createWithContexts(viewState, section);
       expect(
-        findWithText(result, catalogItem._discreteTimes[0]).length
+        findWithText(
+          result,
+          "Time: " + new Date(catalogItem._discreteTimes[0]).toString()
+        ).length
       ).toEqual(1);
     });
 
@@ -1163,7 +1155,7 @@ describe("FeatureInfoSection", function() {
       );
       const result = createWithContexts(viewState, section);
       expect(result.root.findAllByType("ul").length).toEqual(7);
-      expect(result.root.findAllByType("li").length).toEqual(6);
+      expect(result.root.findAllByType("li").length).toEqual(7); // Note extra "li" element for FeatureInfoSection <li>
     });
   });
 
