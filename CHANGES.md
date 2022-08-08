@@ -15,7 +15,10 @@ Change Log
 * `TableMixin.matchRegionProvider` now returns `RegionProvider` instead of `string` region type. (which exists at `regionProvider.regionType`)
 * Fix `shouldShorten` property in catalog and story `ShareUrl`
 * Fix `shortenShareUrls` user property
+* Add `videoCoverImageOpacity` option to `HelpContentItem` so that we can fade the background of help video panels.
+* Fix a bug where all `HelpVideoPanel`s were being rendered resulting in autoplayed videos playing at random.
 * Add `getFeatureInfoUrl` and `getFeatureInfoParameters` to `WebMapServiceCatalogItemTraits`
+* Fix `SearchBoxAndResults` Trans values
 * Fix `generateCatalogIndex` for nested references
 * [The next improvement]
 
