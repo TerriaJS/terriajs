@@ -503,6 +503,7 @@ class WebMapServiceCatalogItem
           (this.maximumShownFeatureInfos ??
             this.terria.configParameters.defaultMaximumShownFeatureInfos),
         ...this.parameters,
+        ...this.getFeatureInfoParameters,
         ...dimensionParameters
       };
 
@@ -564,6 +565,7 @@ class WebMapServiceCatalogItem
         layers: this.validLayers.length > 0 ? this.validLayers.join(",") : "",
         parameters,
         getFeatureInfoParameters,
+        getFeatureInfoUrl: this.getFeatureInfoUrl,
         tileWidth: this.tileWidth,
         tileHeight: this.tileHeight,
         tilingScheme: this.tilingScheme,
