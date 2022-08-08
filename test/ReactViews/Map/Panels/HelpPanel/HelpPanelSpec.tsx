@@ -81,7 +81,7 @@ describe("HelpPanel", function() {
     });
   });
 
-  describe("with text, video and image in helpContent", function() {
+  describe("when help item with text, video and image in helpContent is selected", function() {
     beforeEach(() => {
       runInAction(() => {
         terria.configParameters.helpContent = [
@@ -94,6 +94,7 @@ describe("HelpPanel", function() {
               "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
           }
         ];
+        viewState.selectedHelpMenuItem = "test";
       });
       act(() => {
         testRenderer = createWithContexts(viewState, <HelpPanel />);

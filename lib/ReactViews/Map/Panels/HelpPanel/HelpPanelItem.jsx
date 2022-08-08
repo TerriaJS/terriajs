@@ -94,6 +94,7 @@ class HelpPanelItem extends React.Component {
                   )
                 : undefined
             }
+            videoCoverImageOpacity={this.props.content.videoCoverImageOpacity}
           />
         )}
       </div>
