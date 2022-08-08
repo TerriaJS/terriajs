@@ -1,19 +1,17 @@
-import React, { FC, useState, useRef, useMemo, useCallback } from "react";
+import React, { FC, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-
 import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
-
 import Box from "../../../../Styled/Box";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
-
-import { ShareUrl, IShareUrlRef, ShareUrlBookmark } from "./ShareUrl";
-import { canShorten } from "./BuildShareLink";
-import { AdvancedOptions } from "./AdvancedOptions";
-import { StyledHr } from "./StyledHr";
-import { PrintSection } from "./Print/PrintSection";
 import { useCallbackRef } from "../../../useCallbackRef";
+import { AdvancedOptions } from "./AdvancedOptions";
+import { canShorten } from "./BuildShareLink";
+import { PrintSection } from "./Print/PrintSection";
+import { shouldShorten as shouldShortenDefault } from "./SharePanel";
+import { IShareUrlRef, ShareUrl, ShareUrlBookmark } from "./ShareUrl";
+import { StyledHr } from "./StyledHr";
 
 interface ISharePanelContentProps {
   terria: Terria;
@@ -30,7 +28,9 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
   const canShortenUrl = useMemo(() => !!canShorten(terria), [terria]);
 
   const [includeStoryInShare, setIncludeStoryInShare] = useState(true);
-  const [shouldShorten, setShouldShorten] = useState(canShortenUrl);
+  const [shouldShorten, setShouldShorten] = useState(
+    shouldShortenDefault(terria)
+  );
 
   const [_, update] = useState<{}>();
   const shareUrlRef = useCallbackRef<IShareUrlRef>(null, () => update({}));
@@ -41,7 +41,7 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
 
   const shouldShortenOnChange = useCallback(() => {
     setShouldShorten(prevState => {
-      terria.setLocalProperty("shortenShareUrls", prevState);
+      terria.setLocalProperty("shortenShareUrls", !prevState);
       return !prevState;
     });
   }, [terria]);

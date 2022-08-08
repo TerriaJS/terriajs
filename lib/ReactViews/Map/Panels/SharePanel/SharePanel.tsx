@@ -3,16 +3,15 @@ import { TFunction } from "i18next";
 import { observer } from "mobx-react";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-
 import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
-
+import Box from "../../../../Styled/Box";
+import Spacing from "../../../../Styled/Spacing";
+import Text from "../../../../Styled/Text";
+import { canShorten } from "./BuildShareLink";
 import Styles from "./share-panel.scss";
 import { SharePanelContent } from "./SharePanelContent";
 import { ShareUrl } from "./ShareUrl";
-import Box from "../../../../Styled/Box";
-import Text from "../../../../Styled/Text";
-import Spacing from "../../../../Styled/Spacing";
 
 const MenuPanel = require("../../../StandardUserInterface/customizable/MenuPanel")
   .default;
@@ -80,9 +79,7 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
             terria={terria}
             viewState={viewState}
             includeStories={true}
-            shouldShorten={
-              !!terria.getLocalProperty("shortenShareUrls") ?? true
-            }
+            shouldShorten={shouldShorten(terria)}
             theme="light"
             inputTheme="light"
           />
@@ -97,9 +94,7 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
             terria={terria}
             viewState={viewState}
             includeStories={true}
-            shouldShorten={
-              !!terria.getLocalProperty("shortenShareUrls") ?? true
-            }
+            shouldShorten={shouldShorten(terria)}
             theme="dark"
             inputTheme="light"
             rounded
@@ -194,3 +189,18 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
 }
 
 export default withTranslation()(SharePanel);
+
+export function shouldShorten(terria: Terria) {
+  return (
+    stringToBool(terria.getLocalProperty("shortenShareUrls")) ??
+    !!canShorten(terria)
+  );
+}
+
+function stringToBool(s: string | boolean | null | undefined) {
+  if (s === true) return true;
+  if (s === false) return false;
+  if (s === "true") return true;
+  if (s === "false") return false;
+  return undefined;
+}
