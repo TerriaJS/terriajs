@@ -16,6 +16,7 @@ Change Log
 * Add `videoCoverImageOpacity` option to `HelpContentItem` so that we can fade the background of help video panels.
 * Fix a bug where all `HelpVideoPanel`s were being rendered resulting in autoplayed videos playing at random.
 * Add `getFeatureInfoUrl` and `getFeatureInfoParameters` to `WebMapServiceCatalogItemTraits`
+* Fix `SearchBoxAndResults` Trans values
 * Fix `generateCatalogIndex` for nested references
 * [The next improvement]
 
