@@ -22,7 +22,7 @@ import {
 import Icon from "../../Styled/Icon";
 import DragWrapper from "../DragWrapper";
 import Loader from "../Loader";
-import { withViewState } from "../StandardUserInterface/ViewStateContext";
+import { withViewState } from "../Context";
 import Styles from "./feature-info-panel.scss";
 import FeatureInfoCatalogItem from "./FeatureInfoCatalogItem";
 

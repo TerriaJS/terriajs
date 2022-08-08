@@ -2,9 +2,9 @@ import DOMPurify from "dompurify";
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { StyleSheetManager, ThemeProvider } from "styled-components";
-import { terriaTheme } from "../../../../StandardUserInterface/StandardTheme";
-import { useViewState } from "../../../../StandardUserInterface/ViewStateContext";
-import DistanceLegend from "../../../Legend/DistanceLegend";
+import { terriaTheme } from "../../../../StandardUserInterface";
+import { useViewState } from "../../../../Context";
+import { DistanceLegend } from "../../../BottomBar/DistanceLegend";
 import {
   buildShareLink,
   buildShortShareLink,
@@ -72,10 +72,19 @@ const styles = `
       padding: 5px;
     }
 
+    .tjs-legend__distanceLegend > label {
+      color: black;
+    }
+
+    .tjs-legend__distanceLegend:hover {
+      background: #fff;
+    }
+
     .tjs-legend__bar {
       border-bottom: 3px solid black;
       border-right: 3px solid black;
       border-left: 3px solid black;
+      margin: 0 auto;
     }
 
     body {
@@ -174,7 +183,6 @@ const PrintView = (props: Props) => {
             {screenshot ? (
               <PrintViewMap screenshot={screenshot}>
                 <DistanceLegend
-                  terria={viewState.terria}
                   scale={getScale(
                     viewState.terria.currentViewer.getContainer()
                   )}

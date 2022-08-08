@@ -2,7 +2,7 @@ import { create, ReactTestInstance } from "react-test-renderer";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import { ThemeProvider } from "styled-components";
-import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
+import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
 import WarningBox from "../../lib/ReactViews/Preview/WarningBox";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";

@@ -1,7 +1,7 @@
 import { action } from "mobx";
 import styled from "styled-components";
 import ViewState from "../../ReactViewModels/ViewState";
-import { withViewState } from "./ViewStateContext";
+import { withViewState } from "../Context";
 
 type PropsType = {
   viewState: ViewState;

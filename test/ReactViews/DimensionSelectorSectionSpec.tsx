@@ -15,7 +15,7 @@ import SelectableDimensions, {
 import Terria from "../../lib/Models/Terria";
 import { SelectableDimensionGroup } from "../../lib/ReactViews/SelectableDimensions/Group";
 import SelectableDimension from "../../lib/ReactViews/SelectableDimensions/SelectableDimension";
-import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
+import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
 import SelectableDimensionSection from "../../lib/ReactViews/Workbench/Controls/SelectableDimensionSection";
 import Checkbox from "../../lib/Styled/Checkbox";
 import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";

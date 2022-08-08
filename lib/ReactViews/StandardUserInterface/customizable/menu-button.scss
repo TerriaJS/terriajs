@@ -1,0 +1,31 @@
+@import "~terriajs-variables";
+
+.btn--about-link {
+  composes: btn from "../../../Sass/common/_buttons.scss";
+  composes: btn--map from "../../../Sass/common/_buttons.scss";
+  border-radius: $radius-small;
+  border: 0;
+  svg {
+    // fill: #6487ae;
+    // margin: 0 3px 0 4px;
+    vertical-align: middle;
+  }
+
+  span {
+    line-height: 1.5;
+  }
+
+  &:hover,
+  &:focus {
+    border: 0;
+    svg {
+      fill: $text-light;
+    }
+  }
+}
+
+.about-tweak {
+  svg {
+    // margin-top: 3px;
+  }
+}

@@ -2,8 +2,8 @@ import React from "react";
 import { create, TestRendererOptions } from "react-test-renderer";
 import { ThemeProvider } from "styled-components";
 import ViewState from "../../lib/ReactViewModels/ViewState";
-import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
-import { ViewStateProvider } from "../../lib/ReactViews/StandardUserInterface/ViewStateContext";
+import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
+import { ViewStateProvider } from "../../lib/ReactViews/Context/ViewStateContext";
 
 export function withThemeContext(node: React.ReactNode) {
   return <ThemeProvider theme={terriaTheme}>{node}</ThemeProvider>;

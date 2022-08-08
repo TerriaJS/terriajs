@@ -10,13 +10,13 @@ import Styles from "./bottom-dock.scss";
 import ChartDisclaimer from "./ChartDisclaimer";
 import Timeline from "./Timeline/Timeline";
 
-interface PropsType extends MeasureElementProps {
+interface PropsType {
   terria: Terria;
   viewState: ViewState;
 }
 
 @observer
-class BottomDock extends React.Component<PropsType> {
+class BottomDock extends React.Component<PropsType & MeasureElementProps> {
   refToMeasure: HTMLDivElement | null = null;
 
   handleClick() {
@@ -25,7 +25,7 @@ class BottomDock extends React.Component<PropsType> {
     });
   }
 
-  componentDidUpdate(prevProps: PropsType) {
+  componentDidUpdate(prevProps: PropsType & MeasureElementProps) {
     if (
       prevProps.heightFromMeasureElementHOC !==
       this.props.heightFromMeasureElementHOC

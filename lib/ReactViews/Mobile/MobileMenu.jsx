@@ -29,7 +29,6 @@ const MobileMenu = observer(
       showFeedback: PropTypes.bool,
       terria: PropTypes.object.isRequired,
       i18n: PropTypes.object,
-      allBaseMaps: PropTypes.array.isRequired,
       t: PropTypes.func.isRequired
     },
 

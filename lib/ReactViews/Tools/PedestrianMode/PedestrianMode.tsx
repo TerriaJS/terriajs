@@ -8,7 +8,7 @@ import PositionRightOfWorkbench from "../../Workbench/PositionRightOfWorkbench";
 import DropPedestrianToGround from "./DropPedestrianToGround";
 import MiniMap, { getViewFromScene, MiniMapView } from "./MiniMap";
 import MovementControls from "./MovementControls";
-import MeasureTool from "../../Map/Navigation/Items/MeasureTool";
+import { MeasureTool } from "../../Map/MapNavigation/Items";
 
 // The desired camera height measured from the surface in metres
 export const PEDESTRIAN_HEIGHT = 1.7;

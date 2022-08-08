@@ -1,7 +1,7 @@
 import { AnchorHTMLAttributes, default as React } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { useViewState } from "../StandardUserInterface/ViewStateContext";
+import { useViewState } from "../Context";
 
 const Icon = require("../../Styled/Icon").default;
 const { StyledIcon } = require("../../Styled/Icon");

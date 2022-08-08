@@ -16,10 +16,7 @@ import Text from "../../Styled/Text";
 import parseCustomMarkdownToReact, {
   parseCustomMarkdownToReactWithOptions
 } from "../Custom/parseCustomMarkdownToReact";
-import {
-  WithViewState,
-  withViewState
-} from "../StandardUserInterface/ViewStateContext";
+import { WithViewState, withViewState } from "../Context";
 import { applyTranslationIfExists } from "./../../Language/languageHelpers";
 
 interface IProps extends WithTranslation, WithViewState {

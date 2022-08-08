@@ -38,11 +38,11 @@ export default class MouseCoords {
   tileRequestInFlight?: unknown;
 
   @observable elevation?: string;
-  @observable utmZone?: unknown;
+  @observable utmZone?: string;
   @observable latitude?: string;
   @observable longitude?: string;
-  @observable north?: unknown;
-  @observable east?: unknown;
+  @observable north?: string;
+  @observable east?: string;
   @observable cartographic?: Cartographic;
   @observable useProjection = false;
 
@@ -64,11 +64,12 @@ export default class MouseCoords {
     );
   }
 
-  @action
+  @action.bound
   toggleUseProjection() {
     this.useProjection = !this.useProjection;
   }
 
+  @action
   updateCoordinatesFromCesium(terria: Terria, position: Cartesian2) {
     if (!terria.cesium) {
       return;
@@ -156,6 +157,7 @@ export default class MouseCoords {
     }
   }
 
+  @action
   updateCoordinatesFromLeaflet(terria: Terria, mouseMoveEvent: MouseEvent) {
     if (!terria.leaflet) {
       return;

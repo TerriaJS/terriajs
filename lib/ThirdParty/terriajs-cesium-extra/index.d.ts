@@ -53,4 +53,5 @@ declare interface FeatureDetection {
   isEdge(): boolean;
   isInternetExplorer(): boolean;
   internetExplorerVersion(): number[];
+  chromeVersion(): number[];
 }
