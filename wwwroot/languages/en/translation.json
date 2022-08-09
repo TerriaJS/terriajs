@@ -718,7 +718,7 @@
       "json": "Terria Catalog",
       "carto": "Carto",
       "gltf": "glTF",
-      "shp": "Shapefile (zip)",
+      "shp": "Shapefile",
       "socrata-group": "Socrata Server",
       "assimp-local": "3D file converter (zip) (experimental)",
       "assimp-local-description": "**Warning:** 3D file converter is experimental.  \nSee list of [supported formats](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nFiles must be zipped.",

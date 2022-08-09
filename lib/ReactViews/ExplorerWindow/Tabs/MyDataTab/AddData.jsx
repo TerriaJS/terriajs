@@ -44,8 +44,16 @@ const AddData = createReactClass({
   getInitialState() {
     const remoteDataTypes =
       this.props.remoteDataTypes ?? getDataType().remoteDataType;
-    const localDataTypes =
-      this.props.localDataTypes ?? getDataType().localDataType;
+
+    // Automatically suffix supported extension types to localDataType names
+    const localDataTypes = (
+      this.props.localDataTypes ?? getDataType().localDataType
+    ).map(dataType => {
+      const extensions = dataType.extensions?.length
+        ? ` (${buildExtensionsList(dataType.extensions)})`
+        : "";
+      return { ...dataType, name: `${dataType.name}${extensions}` };
+    });
 
     return {
       remoteDataTypes,
@@ -266,5 +274,13 @@ const AddData = createReactClass({
     return <div className={Styles.inner}>{this.renderPanels()}</div>;
   }
 });
+
+/**
+ * @param extensions - string[]
+ * @returns Comma separated string of extensions
+ */
+function buildExtensionsList(extensions) {
+  return extensions.map(ext => `.${ext}`).join(", ");
+}
 
 module.exports = withTranslation()(AddData);
