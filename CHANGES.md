@@ -2,6 +2,11 @@ Change Log
 ==========
 
 #### next release (8.2.12)
+* Dropped "optional" from the prompt text in file upload modal for both local and web data.
+* Changed the text for the first file upload option from "Auto-detect (recommended)" to simply "File type".
+* Automatically suffix supported extension list to the entries in file type dropdown to improve clarity.
+* Removed IFC from upload file type (until further testing).
+* [The next improvement]
 
 #### release 8.2.11 - 2022-08-08
 
