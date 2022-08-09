@@ -3,6 +3,8 @@ Change Log
 
 #### next release (8.2.12)
 
+* Move `CkanCatalogGroup` "ungrouped" group to end of members
+
 #### release 8.2.11 - 2022-08-08
 
 * Add ability to customise the getting started video in the StoryBuilder panel

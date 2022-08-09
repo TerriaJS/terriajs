@@ -182,12 +182,13 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
   protected getGroups(): CatalogGroup[] {
     if (this._catalogGroup.groupBy === "none") return [];
     let groups: CatalogGroup[] = [];
-    createUngroupedGroup(this, groups);
 
     if (this._catalogGroup.groupBy === "organization")
       createGroupsByOrganisations(this, groups);
     if (this._catalogGroup.groupBy === "group")
       createGroupsByCkanGroups(this, groups);
+
+    const ungroupedGroup = createUngroupedGroup(this);
 
     groups = [...new Set(groups)];
 
@@ -201,7 +202,9 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
       }
       return 0;
     });
-    return groups;
+
+    // Put "ungrouped" group at end of groups
+    return [...groups, ungroupedGroup];
   }
 
   @action
@@ -466,10 +469,7 @@ function createGroup(groupId: string, terria: Terria, groupName: string) {
   return g;
 }
 
-function createUngroupedGroup(
-  ckanServer: CkanServerStratum,
-  groups: CatalogGroup[]
-) {
+function createUngroupedGroup(ckanServer: CkanServerStratum) {
   const groupId = ckanServer._catalogGroup.uniqueId + "/ungrouped";
   let existingGroup = ckanServer._catalogGroup.terria.getModelById(
     CatalogGroup,
@@ -482,7 +482,7 @@ function createUngroupedGroup(
       ckanServer._catalogGroup.ungroupedTitle
     );
   }
-  groups.push(existingGroup);
+  return existingGroup;
 }
 
 function createGroupsByOrganisations(
