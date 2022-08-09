@@ -6,6 +6,7 @@ Change Log
 * Changed the text for the first file upload option from "Auto-detect (recommended)" to simply "File type" for local files and "File or web service type" for web urls.
 * Automatically suffix supported extension list to the entries in file type dropdown to improve clarity.
 * Removed IFC from upload file type (until further testing).
+* Make logo in mobile header responsive.
 * [The next improvement]
 
 #### release 8.2.11 - 2022-08-08

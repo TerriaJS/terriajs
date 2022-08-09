@@ -149,12 +149,7 @@ class MobileHeader extends React.Component {
                 !searchState.showMobileCatalogSearch
               }
             >
-              <Box
-                position="absolute"
-                css={`
-                  left: 5px;
-                `}
-              >
+              <Box>
                 <HamburgerButton
                   type="button"
                   onClick={this.props.viewState.toggleMobileMenu.bind(
@@ -175,12 +170,7 @@ class MobileHeader extends React.Component {
                   version={this.props.version}
                 />
               </Box>
-              <div
-                className={Styles.groupRight}
-                css={`
-                  background-color: ${p => p.theme.dark};
-                `}
-              >
+              <Box flex flexShrinkZero backgroundColodr={p => p.theme.dark}>
                 <button
                   type="button"
                   className={Styles.btnAdd}
@@ -220,7 +210,7 @@ class MobileHeader extends React.Component {
                     styledHeight="20px"
                   />
                 </button>
-              </div>
+              </Box>
             </When>
             <Otherwise>
               <div className={Styles.formSearchData}>
@@ -288,6 +278,7 @@ const HamburgerButton = styled(RawButton)`
   height: 38px;
   box-sizing: content-box;
   display: flex;
+  flex-shrink: 0;
   justify-content: center;
   align-items: center;
   &:hover,
