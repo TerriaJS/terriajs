@@ -120,7 +120,7 @@ describe("CkanCatalogGroup", function() {
           expect(group1.members.length).toBe(9);
 
           // "Ungrouped" group should be last
-          let group2 = <CatalogGroup>ckanServerStratum.groups[8];
+          let group2 = <CatalogGroup>ckanServerStratum.groups[2];
           expect(group2.name).toBe(ckanCatalogGroup.ungroupedTitle);
           expect(group2.name).toBe("No group");
           expect(group2.members.length).toBe(0);
