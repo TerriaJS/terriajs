@@ -170,7 +170,7 @@ class MobileHeader extends React.Component {
                   version={this.props.version}
                 />
               </Box>
-              <Box flex flexShrinkZero backgroundColodr={p => p.theme.dark}>
+              <Box flex flexShrinkZero backgroundColor={this.props.theme.dark}>
                 <button
                   type="button"
                   className={Styles.btnAdd}
