@@ -194,7 +194,7 @@ const AddData = createReactClass({
           <section className={Styles.tabPanel}>
             <label className={Styles.label}>
               <Trans i18nKey="addData.localFileType">
-                <strong>Step 1:</strong> Select file type (optional)
+                <strong>Step 1:</strong> Select file type
               </Trans>
             </label>
             <Dropdown
@@ -226,7 +226,7 @@ const AddData = createReactClass({
           <section className={Styles.tabPanel}>
             <label className={Styles.label}>
               <Trans i18nKey="addData.webFileType">
-                <strong>Step 1:</strong> Select file type (optional)
+                <strong>Step 1:</strong> Select file or web service type
               </Trans>
             </label>
             <Dropdown

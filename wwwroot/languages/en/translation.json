@@ -443,7 +443,7 @@
     "localFileType": "<0>Step 1:</0> Select file type",
     "localFile": "<0>Step 2:</0> Select file",
     "webAdd": "Add web data",
-    "webFileType": "<0>Step 1:</0> Select file type",
+    "webFileType": "<0>Step 1:</0> Select file or web service type",
     "webFile": "<0>Step 2:</0> Enter the URL of the data file or web service",
     "urlInputBtn": "Add",
     "browse": "Browse...",
