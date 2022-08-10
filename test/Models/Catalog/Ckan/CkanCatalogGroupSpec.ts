@@ -162,9 +162,9 @@ describe("CkanCatalogGroup", function() {
       expect(member2 instanceof CatalogGroup).toBeTruthy();
       expect(member2.name).toBe("Science");
       // "Ungrouped" group should be last
-      let member0 = <CatalogGroup>ckanCatalogGroup.memberModels[2];
-      expect(member0 instanceof CatalogGroup).toBeTruthy();
-      expect(member0.name).toBe("Blah");
+      let member3 = <CatalogGroup>ckanCatalogGroup.memberModels[2];
+      expect(member3 instanceof CatalogGroup).toBeTruthy();
+      expect(member3.name).toBe("Blah");
     });
 
     it("Geography group has been filtered from the groups", function() {
