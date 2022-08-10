@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.2.13)
 
+* Propagate `knownContainerUniqueIds` across references and their target.
 * [The next improvement]
 
 #### release 8.2.12 - 2022-08-10
