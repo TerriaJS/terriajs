@@ -1,13 +1,16 @@
 Change Log
 ==========
 
-#### next release (8.2.12)
+#### next release (8.2.13)
+
+* [The next improvement]
+
+#### release 8.2.12 - 2022-08-10
+
 * Dropped "optional" from the prompt text in file upload modal for both local and web data.
 * Changed the text for the first file upload option from "Auto-detect (recommended)" to simply "File type" for local files and "File or web service type" for web urls.
 * Automatically suffix supported extension list to the entries in file type dropdown to improve clarity.
 * Removed IFC from upload file type (until further testing).
-* [The next improvement]
-
 * Move `CkanCatalogGroup` "ungrouped" group to end of members
 
 #### release 8.2.11 - 2022-08-08
