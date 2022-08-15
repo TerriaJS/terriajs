@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.2.13)
 
+* Fix pedestrian drop behaviour so that the camera heading stays unchanged even after the drop
 * [The next improvement]
 
 #### release 8.2.12 - 2022-08-10
