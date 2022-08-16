@@ -569,6 +569,7 @@ class WebMapServiceCatalogItem
         tileWidth: this.tileWidth,
         tileHeight: this.tileHeight,
         tilingScheme: this.tilingScheme,
+        crs: this.crs,
         maximumLevel: this.getMaximumLevel(true) ?? this.maximumLevel,
         minimumLevel: this.minimumLevel,
         credit: this.attribution,
