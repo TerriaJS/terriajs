@@ -884,15 +884,24 @@ describe("WebMapServiceCatalogItem", function() {
   });
 });
 
-function getWebMapServiceImageryProvider(item: WebMapServiceCatalogItem): WebMapServiceImageryProvider | undefined {
+function getWebMapServiceImageryProvider(
+  item: WebMapServiceCatalogItem
+): WebMapServiceImageryProvider | undefined {
   const imageryProvider = runInAction(() => item.mapItems[0])?.imageryProvider;
-  return imageryProvider instanceof WebMapServiceImageryProvider ? imageryProvider : undefined;
+  return imageryProvider instanceof WebMapServiceImageryProvider
+    ? imageryProvider
+    : undefined;
 }
 
-function getTileProviderResourceForItem(item: WebMapServiceCatalogItem): Resource | undefined {
-  return (getWebMapServiceImageryProvider(item) as any)?._tileProvider._resource;
+function getTileProviderResourceForItem(
+  item: WebMapServiceCatalogItem
+): Resource | undefined {
+  return (getWebMapServiceImageryProvider(item) as any)?._tileProvider
+    ._resource;
 }
 
-function getFeatureInfoResourceForItem(item: WebMapServiceCatalogItem): Resource | undefined {
+function getFeatureInfoResourceForItem(
+  item: WebMapServiceCatalogItem
+): Resource | undefined {
   return (getWebMapServiceImageryProvider(item) as any)?._pickFeaturesResource;
 }
