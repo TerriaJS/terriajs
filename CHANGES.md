@@ -1,7 +1,22 @@
 Change Log
 ==========
 
-#### next release (8.2.11)
+#### next release (8.2.13)
+
+* Fix pedestrian drop behaviour so that the camera heading stays unchanged even after the drop
+* Improve the CKAN model robustness by removing leading and trailing spaces in wms layer names.
+* Load all `InitSources` sequentially instead of asyncronosly
+* [The next improvement]
+
+#### release 8.2.12 - 2022-08-10
+
+* Dropped "optional" from the prompt text in file upload modal for both local and web data.
+* Changed the text for the first file upload option from "Auto-detect (recommended)" to simply "File type" for local files and "File or web service type" for web urls.
+* Automatically suffix supported extension list to the entries in file type dropdown to improve clarity.
+* Removed IFC from upload file type (until further testing).
+* Move `CkanCatalogGroup` "ungrouped" group to end of members
+
+#### release 8.2.11 - 2022-08-08
 
 * Add ability to customise the getting started video in the StoryBuilder panel
 * Set cesium base URL by default so that cesium assets are resolved correctly
@@ -13,9 +28,14 @@ Change Log
 * Add `configParameters.regionMappingDefinitionsUrls` - to support multiple URLs for region mapping definitions  - if multiple provided then the first matching region will be used (in order of URLs)
   * `configParameters.regionMappingDefinitionsUrl` still exists but is deprecated - if defined it will override `regionMappingDefinitionsUrls`
 * `TableMixin.matchRegionProvider` now returns `RegionProvider` instead of `string` region type. (which exists at `regionProvider.regionType`)
+* Fix `shouldShorten` property in catalog and story `ShareUrl`
+* Fix `shortenShareUrls` user property
+* Add `videoCoverImageOpacity` option to `HelpContentItem` so that we can fade the background of help video panels.
+* Fix a bug where all `HelpVideoPanel`s were being rendered resulting in autoplayed videos playing at random.
 * Add `getFeatureInfoUrl` and `getFeatureInfoParameters` to `WebMapServiceCatalogItemTraits`
-* Load all `InitSources` sequentially instead of asyncronosly
-* [The next improvement]
+* Fix `SearchBoxAndResults` Trans values
+* Fix `generateCatalogIndex` for nested references
+* Fix `SearchBox` handling of `searchWithDebounce` when `debounceDuration` prop changes. It now fushes instead of cancels.
 
 #### release 8.2.10 - 2022-08-02
 
