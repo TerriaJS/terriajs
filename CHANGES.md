@@ -7,6 +7,7 @@ Change Log
 * Improve the CKAN model robustness by removing leading and trailing spaces in wms layer names.
 * Load all `InitSources` sequentially instead of asyncronosly
 * Fix `DOMPurify.sanitize` call in `PrintView`
+* Fix support for `initUrls` in `startData.initSources`
 * [The next improvement]
 
 #### release 8.2.12 - 2022-08-10
@@ -81,8 +82,6 @@ Change Log
 
 * Pin `html-to-react` to `1.4.5` due to ESM module in dependency (`parse5`) breaking webpack
 * Add step to `"Deploy TerriaMap"` action to save `yarn.lock` after `sync-dependencies` (for debug purposes)
-* Fix support for `initUrls` in `startData.initSources`
-* [The next improvement]
 * TSIfy `SharePanel` 
 * Move `includeStoryInShare` out of `ViewState` into local state
 * Implement ability to navigate between scenes in StoryPanel using keyboard arrows
