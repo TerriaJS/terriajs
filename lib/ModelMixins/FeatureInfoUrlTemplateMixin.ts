@@ -12,14 +12,15 @@ import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import Model from "../Models/Definition/Model";
 import Feature from "../Models/Feature";
 import { describeFromProperties } from "../ReactViews/FeatureInfo/FeatureInfoSection";
-import FeatureInfoTraits from "../Traits/TraitsClasses/FeatureInfoTraits";
+import FeatureInfoUrlTemplateTraits from "../Traits/TraitsClasses/FeatureInfoTraits";
+import MappableMixin from "./MappableMixin";
 import TimeVarying from "./TimeVarying";
 
-type Target = Model<FeatureInfoTraits>;
+type Target = Model<FeatureInfoUrlTemplateTraits>;
 
-function FeatureInfoMixin<T extends Constructor<Target>>(Base: T) {
-  abstract class FeatureInfoMixin extends Base {
-    get hasFeatureInfoMixin() {
+function FeatureInfoUrlTemplateMixin<T extends Constructor<Target>>(Base: T) {
+  abstract class FeatureInfoUrlTemplateMixin extends Base {
+    get hasFeatureInfoUrlTemplateMixin() {
       return true;
     }
     /**
@@ -71,7 +72,7 @@ function FeatureInfoMixin<T extends Constructor<Target>>(Base: T) {
                   (TimeVarying.is(this)
                     ? this.currentTimeAsJulianDate
                     : undefined) ?? JulianDate.now(),
-                  TimeVarying.is(this)
+                  MappableMixin.isMixedInto(this)
                     ? this.showStringIfPropertyValueIsNull
                     : false
                 )
@@ -148,7 +149,7 @@ function FeatureInfoMixin<T extends Constructor<Target>>(Base: T) {
                 (TimeVarying.is(catalogItem)
                   ? catalogItem.currentTimeAsJulianDate
                   : undefined) ?? JulianDate.now(),
-                TimeVarying.is(catalogItem)
+                MappableMixin.isMixedInto(catalogItem)
                   ? catalogItem.showStringIfPropertyValueIsNull
                   : false
               );
@@ -166,15 +167,15 @@ function FeatureInfoMixin<T extends Constructor<Target>>(Base: T) {
       return imageryProvider;
     }
   }
-  return FeatureInfoMixin;
+  return FeatureInfoUrlTemplateMixin;
 }
 
-namespace FeatureInfoMixin {
+namespace FeatureInfoUrlTemplateMixin {
   export interface Instance
-    extends InstanceType<ReturnType<typeof FeatureInfoMixin>> {}
+    extends InstanceType<ReturnType<typeof FeatureInfoUrlTemplateMixin>> {}
   export function isMixedInto(model: any): model is Instance {
-    return model && model.hasFeatureInfoMixin;
+    return model && model.hasFeatureInfoUrlTemplateMixin;
   }
 }
 
-export default FeatureInfoMixin;
+export default FeatureInfoUrlTemplateMixin;

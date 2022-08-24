@@ -1,10 +1,10 @@
 {
   "name": "terriajs",
-  "version": "8.2.9",
+  "version": "8.2.12",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
-    "node": ">= 12.0.0"
+    "node": ">= 14.0.0"
   },
   "repository": {
     "type": "git",
@@ -111,10 +111,10 @@
     "gulp": "^4.0.0",
     "hammerjs": "^2.0.6",
     "hoist-non-react-statics": "^3.3.2",
-    "html-to-react": "1.4.5",
-    "i18next": "^19.9.0",
-    "i18next-browser-languagedetector": "^4.0.1",
-    "i18next-http-backend": "^1.1.1",
+    "html-to-react": "1.4.7",
+    "i18next": "^21.8.13",
+    "i18next-browser-languagedetector": "^6.1.4",
+    "i18next-http-backend": "^1.4.1",
     "imports-loader": "^0.8.0",
     "inobounce": "^0.1.2",
     "interactjs": "1.4.0-alpha.17",
@@ -141,13 +141,13 @@
     "protomaps": "1.19.0",
     "raw-loader": "^1.0.0",
     "rc-slider": "^9.7.2",
-    "react": "^16.3.2",
+    "react": "^16.14.0",
     "react-addons-pure-render-mixin": "^15.6.0",
     "react-anything-sortable": "^1.5.2",
     "react-color": "^2.19.3",
     "react-datepicker": "0.53.0",
-    "react-dom": "^16.3.2",
-    "react-i18next": "^11.2.1",
+    "react-dom": "^16.14.0",
+    "react-i18next": "^11.18.0",
     "react-responsive": "^5.0.0",
     "react-select": "^3.1.1",
     "react-swipeable": "^5.1.0",
@@ -194,7 +194,7 @@
     "fs-extra": "^7.0.1",
     "generate-terriajs-schema": "^1.5.0",
     "glob-all": "^3.0.1",
-    "husky": "^2.7.0",
+    "husky": "^8.0.1",
     "istanbul-instrumenter-loader": "^3.0.1",
     "jasmine-ajax": "^4.0.0",
     "jasmine-core": "^2.9.1",
@@ -244,11 +244,6 @@
     "pretty-quick": "pretty-quick",
     "prettier-check": "prettier --check \"**/*\"",
     "build-for-node": "tsc -b tsconfig-node.json",
-    "prepare": "yarn build-for-node"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
-    }
+    "prepare": "yarn build-for-node && husky install"
   }
 }

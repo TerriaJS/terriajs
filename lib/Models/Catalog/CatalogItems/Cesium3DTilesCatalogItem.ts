@@ -10,7 +10,7 @@ import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import PickedFeatures from "../../../Map/PickedFeatures/PickedFeatures";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import Cesium3dTilesMixin from "../../../ModelMixins/Cesium3dTilesMixin";
-import FeatureInfoMixin from "../../../ModelMixins/FeatureInfoMixin";
+import FeatureInfoUrlTemplateMixin from "../../../ModelMixins/FeatureInfoUrlTemplateMixin";
 import SearchableItemMixin, {
   ItemSelectionDisposer
 } from "../../../ModelMixins/SearchableItemMixin";
@@ -22,7 +22,7 @@ import { ItemSearchResult } from "../../ItemSearchProviders/ItemSearchProvider";
 const SEARCH_RESULT_TAG = "terriajs_search_result";
 
 export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
-  FeatureInfoMixin(
+  FeatureInfoUrlTemplateMixin(
     Cesium3dTilesMixin(
       CatalogMemberMixin(CreateModel(Cesium3DTilesCatalogItemTraits))
     )

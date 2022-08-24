@@ -150,7 +150,7 @@ describe("SdmxJsonCatalogItem", function() {
     });
 
     await sdmxItem.loadMapItems();
-    await sdmxItem.regionProviderList
+    await sdmxItem.regionProviderLists?.[0]
       ?.getRegionProvider("CNT2")
       ?.loadRegionIDs();
 
@@ -207,7 +207,7 @@ describe("SdmxJsonCatalogItem", function() {
     });
 
     await sdmxItem.loadMapItems();
-    await sdmxItem.regionProviderList
+    await sdmxItem.regionProviderLists?.[0]
       ?.getRegionProvider("CNT2")
       ?.loadRegionIDs();
 
@@ -232,7 +232,7 @@ describe("SdmxJsonCatalogItem", function() {
       ]);
     });
 
-    await sdmxItem.regionProviderList
+    await sdmxItem.regionProviderLists?.[0]
       ?.getRegionProvider("STE_2016")
       ?.loadRegionIDs();
 
@@ -280,7 +280,7 @@ describe("SdmxJsonCatalogItem", function() {
       ]);
     });
 
-    await sdmxItem.regionProviderList
+    await sdmxItem.regionProviderLists?.[0]
       ?.getRegionProvider("STE_2016")
       ?.loadRegionIDs();
 

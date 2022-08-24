@@ -11,7 +11,7 @@ import flatten from "../../../Core/flatten";
 import isDefined from "../../../Core/isDefined";
 import { isJsonObject } from "../../../Core/Json";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import FeatureInfoMixin from "../../../ModelMixins/FeatureInfoMixin";
+import FeatureInfoUrlTemplateMixin from "../../../ModelMixins/FeatureInfoUrlTemplateMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStratum";
@@ -191,8 +191,8 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     // Find first field which matches a region type
     return this.dataset.fields?.find(
       f =>
-        this.catalogItem.matchRegionType(f.name) ||
-        this.catalogItem.matchRegionType(f.label)
+        this.catalogItem.matchRegionProvider(f.name)?.regionType ||
+        this.catalogItem.matchRegionProvider(f.label)?.regionType
     )?.name;
   }
 
@@ -516,8 +516,8 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
           !isIdField(f.name) &&
           !isIdField(f.label) &&
           f.name !== this.catalogItem.regionFieldName &&
-          !this.catalogItem.matchRegionType(f.name) &&
-          !this.catalogItem.matchRegionType(f.label)
+          !this.catalogItem.matchRegionProvider(f.name)?.regionType &&
+          !this.catalogItem.matchRegionProvider(f.label)?.regionType
       ) ?? []
     );
   }
@@ -568,7 +568,7 @@ function getTimeField(dataset: Dataset) {
 StratumOrder.addLoadStratum(OpenDataSoftDatasetStratum.stratumName);
 
 export default class OpenDataSoftCatalogItem
-  extends FeatureInfoMixin(
+  extends FeatureInfoUrlTemplateMixin(
     TableMixin(
       UrlMixin(CatalogMemberMixin(CreateModel(OpenDataSoftCatalogItemTraits)))
     )
@@ -603,7 +603,7 @@ export default class OpenDataSoftCatalogItem
       feature = new Feature(pickResult?.id);
     }
     // If feature is time-series, we have to make sure that recordId is set in feature.properties
-    // Otherwise we won't be able to use featureInfoUrlTemplate in FeatureInfoMixin
+    // Otherwise we won't be able to use featureInfoUrlTemplate in FeatureInfoUrlTemplateMixin
     const recordId = pickResult?.id?.data?.getValue?.(
       this.terria.timelineClock.currentTime
     )?.[RECORD_ID_COL];

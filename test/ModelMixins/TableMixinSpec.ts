@@ -31,6 +31,9 @@ const BadDatesCsv = require("raw-loader!../../wwwroot/test/csv/bad-dates.csv");
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")
 );
+const additionalRegionMapping = JSON.stringify(
+  require("../../wwwroot/test/regionMapping/additionalRegion.json")
+);
 const regionIdsSte = JSON.stringify(
   require("../../wwwroot/data/regionids/region_map-STE_2016_AUST_STE_NAME16.json")
 );
@@ -46,15 +49,13 @@ const regionIdsLgaNameStates = JSON.stringify(
 
 describe("TableMixin", function() {
   let item: CsvCatalogItem;
+  let terria: Terria;
 
   beforeEach(function() {
-    item = new CsvCatalogItem(
-      "test",
-      new Terria({
-        baseUrl: "./"
-      }),
-      undefined
-    );
+    terria = new Terria({
+      baseUrl: "./"
+    });
+    item = new CsvCatalogItem("test", terria, undefined);
 
     jasmine.Ajax.install();
     jasmine.Ajax.stubRequest(
@@ -559,16 +560,84 @@ describe("TableMixin", function() {
       expect(item.styleDimensions?.options?.[2].name).toBe("Some Style Title");
     });
 
-    it("loads regionProviderList on loadMapItems", async function() {
+    it("loads regionProviderLists on loadMapItems", async function() {
       item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
 
       await item.loadMetadata();
 
-      expect(item.regionProviderList).toBeUndefined();
+      expect(item.regionProviderLists).toBeUndefined();
 
       await item.loadMapItems();
 
-      expect(item.regionProviderList?.regionProviders.length).toBe(114);
+      expect(item.regionProviderLists?.[0]?.regionProviders.length).toBe(114);
+    });
+
+    it("loads regionProviderLists on loadMapItems - with multiple regionMappingDefinitionsUrl", async function() {
+      // We add "additionalRegion.json" - which defines two region types
+      // - "SOME_OTHER_REGION" - which is just another region type
+      // - "SOME_OVERRIDDEN_REGION" - which will override "LGA_NAME_2011" in "build/TerriaJS/data/regionMapping.json"
+      jasmine.Ajax.stubRequest("additionalRegion.json").andReturn({
+        responseText: additionalRegionMapping
+      });
+
+      terria.updateParameters({
+        regionMappingDefinitionsUrls: [
+          "additionalRegion.json",
+          "build/TerriaJS/data/regionMapping.json"
+        ]
+      });
+
+      item.setTrait(CommonStrata.user, "csvString", LgaWithDisambigCsv);
+
+      await item.loadMetadata();
+
+      expect(item.regionProviderLists).toBeUndefined();
+
+      await item.loadMapItems();
+
+      expect(item.regionProviderLists?.length).toBe(2);
+
+      expect(item.regionProviderLists?.[0]?.regionProviders.length).toBe(2);
+      expect(item.regionProviderLists?.[1]?.regionProviders.length).toBe(114);
+
+      // Item region provider should match from "additionalRegion.json" (as it comes before "build/TerriaJS/data/regionMapping.json")
+      expect(item.activeTableStyle.regionColumn?.regionType?.description).toBe(
+        "Local Government Areas 2011 by name (ABS) !!!! OVERRIDDEN"
+      );
+    });
+
+    it("loads regionProviderLists on loadMapItems - will use regionMappingDefinitionsUrl instead of regionMappingDefinitionsUrls", async function() {
+      // We add "additionalRegion.json" - which defines two region types
+      // - "SOME_OTHER_REGION" - which is just another region type
+      // - "SOME_OVERRIDDEN_REGION" - which will override "LGA_NAME_2011" in "build/TerriaJS/data/regionMapping.json"
+      jasmine.Ajax.stubRequest("additionalRegion.json").andReturn({
+        responseText: additionalRegionMapping
+      });
+
+      terria.updateParameters({
+        regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
+        regionMappingDefinitionsUrls: [
+          "additionalRegion.json",
+          "build/TerriaJS/data/regionMapping.json"
+        ]
+      });
+
+      item.setTrait(CommonStrata.user, "csvString", LgaWithDisambigCsv);
+
+      await item.loadMetadata();
+
+      expect(item.regionProviderLists).toBeUndefined();
+
+      await item.loadMapItems();
+
+      expect(item.regionProviderLists?.length).toBe(1);
+
+      expect(item.regionProviderLists?.[0]?.regionProviders.length).toBe(114);
+
+      // Item region provider should match from "build/TerriaJS/data/regionMapping.json"
+      expect(item.activeTableStyle.regionColumn?.regionType?.description).toBe(
+        "Local Government Areas 2011 by name (ABS)"
+      );
     });
   });
 
@@ -655,10 +724,10 @@ describe("TableMixin", function() {
       item.setTrait(CommonStrata.user, "csvString", LgaWithDisambigCsv);
       await item.loadMapItems();
 
-      await item.regionProviderList
+      await item.regionProviderLists?.[0]
         ?.getRegionProvider("LGA_NAME_2011")
         ?.loadRegionIDs();
-      await item.regionProviderList
+      await item.regionProviderLists?.[0]
         ?.getRegionProvider("STE_NAME_2016")
         ?.loadRegionIDs();
     });

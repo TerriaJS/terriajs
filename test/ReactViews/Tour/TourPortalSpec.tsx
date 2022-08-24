@@ -1,15 +1,15 @@
 const create: any = require("react-test-renderer").create;
+import { runInAction } from "mobx";
 import React from "react";
 import { act } from "react-dom/test-utils";
-import { runInAction } from "mobx";
-import { withThemeContext } from "../withThemeContext";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import CloseButton from "../../../lib/ReactViews/Generic/CloseButton";
 import TourPortal, {
-  TourPreface,
-  TourExplanation
+  TourExplanation,
+  TourPreface
 } from "../../../lib/ReactViews/Tour/TourPortal";
+import { createWithContexts } from "../withContext";
 
 describe("TourPortal", function() {
   let terria: Terria;
@@ -32,7 +32,7 @@ describe("TourPortal", function() {
     describe("renders", function() {
       it("nothing when current tour index is negative", function() {
         act(() => {
-          testRenderer = create(<TourPortal viewState={viewState} />);
+          testRenderer = createWithContexts(viewState, <TourPortal />);
         });
         // tourportal should just not render anything in this case
         expect(() => testRenderer.root.findByType("div")).toThrow();
@@ -43,9 +43,7 @@ describe("TourPortal", function() {
           viewState.setShowTour(false);
         });
         act(() => {
-          testRenderer = create(
-            withThemeContext(<TourPortal viewState={viewState} />)
-          );
+          testRenderer = createWithContexts(viewState, <TourPortal />);
         });
 
         // tourportal should render the TourPreface 2*close & accept buttons
@@ -64,12 +62,13 @@ describe("TourPortal", function() {
         const testRef2: any = React.createRef();
         const testRef3: any = React.createRef();
         act(() => {
-          testRenderer = create(
+          testRenderer = createWithContexts(
+            viewState,
             <div>
               <div ref={testRef} />
               <div ref={testRef2} />
               <div ref={testRef3} />
-              {withThemeContext(<TourPortal viewState={viewState} />)}
+              <TourPortal />
             </div>,
             {
               createNodeMock: (/* element: any */) => {
@@ -113,9 +112,7 @@ describe("TourPortal", function() {
           ];
         });
         act(() => {
-          testRenderer.update(
-            withThemeContext(<TourPortal viewState={viewState} />)
-          );
+          testRenderer = createWithContexts(viewState, <TourPortal />);
         });
 
         // 3 test tour points
@@ -128,9 +125,7 @@ describe("TourPortal", function() {
           viewState.deleteAppRef("TestRef");
         });
         act(() => {
-          testRenderer.update(
-            withThemeContext(<TourPortal viewState={viewState} />)
-          );
+          testRenderer = createWithContexts(viewState, <TourPortal />);
         });
         // 2 test tour points
         expect(testRenderer.root.findAllByType(TourExplanation).length).toBe(2);
