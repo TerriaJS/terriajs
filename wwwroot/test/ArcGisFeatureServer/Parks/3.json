@@ -13,9 +13,7 @@
   "copyrightText": "",
   "editFieldsInfo": null,
   "syncCanReturnChanges": true,
-  "relationships": [
-    
-  ],
+  "relationships": [],
   "isDataVersioned": false,
   "isDataArchived": false,
   "isCoGoEnabled": false,
@@ -40,9 +38,9 @@
     "supportsHavingClause": true
   },
   "extent": {
-    "xmin": 1.6699557568122052E7,
+    "xmin": 1.6699557568122052e7,
     "ymin": -4074199.224050209,
-    "xmax": 1.684752587776097E7,
+    "xmax": 1.684752587776097e7,
     "ymax": -3894782.230000466,
     "spatialReference": {
       "wkid": 102100,
@@ -52,7 +50,7 @@
       "mTolerance": 0.001,
       "falseX": -20037700,
       "falseY": -30241100,
-      "xyUnits": 1.4892314192838538E8,
+      "xyUnits": 1.4892314192838538e8,
       "falseZ": -100000,
       "zUnits": 10000,
       "falseM": -100000,
@@ -67,7 +65,7 @@
     "mTolerance": 0.001,
     "falseX": -20037700,
     "falseY": -30241100,
-    "xyUnits": 1.48923141928385E8,
+    "xyUnits": 1.48923141928385e8,
     "falseZ": 0,
     "zUnits": 1,
     "falseM": 0,
@@ -79,21 +77,11 @@
       "symbol": {
         "type": "esriSFS",
         "style": "esriSFSSolid",
-        "color": [
-          215,
-          203,
-          247,
-          255
-        ],
+        "color": [215, 203, 247, 255],
         "outline": {
           "type": "esriSLS",
           "style": "esriSLSSolid",
-          "color": [
-            110,
-            110,
-            110,
-            255
-          ],
+          "color": [110, 110, 110, 255],
           "width": 1
         }
       }
@@ -178,9 +166,7 @@
     "timeZone": "UTC",
     "respectsDaylightSaving": false
   },
-  "types": [
-    
-  ],
+  "types": [],
   "templates": [
     {
       "name": "SHSF2019_5yrs_LGA",

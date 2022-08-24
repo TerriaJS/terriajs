@@ -6,10 +6,10 @@ import Terria from "../../lib/Models/Terria";
 const describeCoverageXml = require("raw-loader!../../wwwroot/test/WCS/DescribeCoverage.xml");
 const wmsGetCapabilitiesXml = require("raw-loader!../../wwwroot/test/WMS/wms_crs.xml");
 
-describe("ExportWebCoverageServiceMixin", function() {
+describe("ExportWebCoverageServiceMixin", function () {
   let terria: Terria;
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -35,7 +35,7 @@ describe("ExportWebCoverageServiceMixin", function() {
     jasmine.Ajax.uninstall();
   });
 
-  it("Can call DescribeCoverage and set correct GetCoverage URL", async function() {
+  it("Can call DescribeCoverage and set correct GetCoverage URL", async function () {
     const wms = new WebMapServiceCatalogItem("test", terria);
     runInAction(() => {
       wms.setTrait("definition", "url", "https://some.ows.service/wms");

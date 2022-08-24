@@ -20,7 +20,7 @@ const BottomLeftContainer = styled(Box)`
   position: absolute;
   bottom: 40px;
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${(props) => props.theme.mobile}px) {
     bottom: 35px;
   }
 `;

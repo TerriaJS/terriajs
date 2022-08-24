@@ -7,10 +7,10 @@ import { createWithContexts } from "./withContext";
 
 const TestComponent = () => <div>Test hello</div>;
 
-describe("Tool", function() {
+describe("Tool", function () {
   let viewState: ViewState;
 
-  beforeEach(function() {
+  beforeEach(function () {
     const terria = new Terria();
     viewState = new ViewState({
       terria,
@@ -21,7 +21,7 @@ describe("Tool", function() {
 
   // The following specs are excluded as they will break in react version
   // 16.3.2, we can enable them after migrating to a newer version.
-  xit("renders the item returned by getToolComponent", async function() {
+  xit("renders the item returned by getToolComponent", async function () {
     let rendered: any;
     await act(async () => {
       rendered = createWithContexts(
@@ -36,7 +36,7 @@ describe("Tool", function() {
     expect(testComponent).toBeDefined();
   });
 
-  xit("renders the promised item returned by getToolComponent", async function() {
+  xit("renders the promised item returned by getToolComponent", async function () {
     let rendered: any;
     await act(async () => {
       rendered = createWithContexts(

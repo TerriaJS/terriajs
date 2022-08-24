@@ -6,7 +6,7 @@ import React from "react";
 import TestRenderer from "react-test-renderer";
 import MomentPointsChart from "../../../../lib/ReactViews/Custom/Chart/MomentPointsChart";
 
-describe("MomentPointsChart", function() {
+describe("MomentPointsChart", function () {
   const chartItem = {
     categoryName: "Points chart",
     name: "chartitem",
@@ -29,13 +29,13 @@ describe("MomentPointsChart", function() {
     scales: { x: scales.x, y: scales.y.domain([0, 1]) }
   };
 
-  it("renders all points", function() {
+  it("renders all points", function () {
     const renderer = TestRenderer.create(<MomentPointsChart {...props} />);
     const glyphs = renderer.root.findAllByType(Glyph);
     expect(glyphs.length).toBe(6);
   });
 
-  it("renders the points at the correct positions", function() {
+  it("renders the points at the correct positions", function () {
     const renderer = TestRenderer.create(<MomentPointsChart {...props} />);
     const glyphs = renderer.root.findAllByType(Glyph);
     const xs = [0, 2, 4, 6, 8, 10];
@@ -45,7 +45,7 @@ describe("MomentPointsChart", function() {
     });
   });
 
-  it("renders the correct type of glyph", function() {
+  it("renders the correct type of glyph", function () {
     const renderer = TestRenderer.create(
       <MomentPointsChart {...props} glyph="square" />
     );
@@ -53,8 +53,8 @@ describe("MomentPointsChart", function() {
     expect(glyphs.length).toBe(6);
   });
 
-  describe("when a basis item is provided", function() {
-    it("renders the points on the basis item", function() {
+  describe("when a basis item is provided", function () {
+    it("renders the points on the basis item", function () {
       const basisItem = {
         ...chartItem,
         name: "basisitem",
@@ -84,9 +84,12 @@ describe("MomentPointsChart", function() {
 });
 
 function getScales(points: { x: Date; y: number }[]) {
-  const xs = points.map(p => p.x);
-  const ys = points.map(p => p.y);
-  const xDomain = [minBy(xs, d => d.getTime())!, maxBy(xs, d => d.getTime())!];
+  const xs = points.map((p) => p.x);
+  const ys = points.map((p) => p.y);
+  const xDomain = [
+    minBy(xs, (d) => d.getTime())!,
+    maxBy(xs, (d) => d.getTime())!
+  ];
   const yDomain = [Math.min(...ys), Math.max(...ys)];
   return {
     x: scaleTime({ domain: xDomain, range: [0, 10] }),

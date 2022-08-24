@@ -110,11 +110,11 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   @computed
   get defaultChartStyle(): StratumFromTraits<TableStyleTraits> | undefined {
     const timeColumns = this.catalogItem.tableColumns.filter(
-      column => column.type === TableColumnType.time
+      (column) => column.type === TableColumnType.time
     );
 
     const scalarColumns = this.catalogItem.tableColumns.filter(
-      column => column.type === TableColumnType.scalar
+      (column) => column.type === TableColumnType.scalar
     );
 
     const hasTime = timeColumns.length > 0;
@@ -138,7 +138,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   get styles(): StratumFromTraits<TableStyleTraits>[] {
     // If no styles for scalar, enum - show styles using region columns
     const showRegionStyles = this.catalogItem.tableColumns.every(
-      column =>
+      (column) =>
         column.type !== TableColumnType.scalar &&
         column.type !== TableColumnType.enum
     );
@@ -196,12 +196,11 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
       i < this.catalogItem.activeTableStyle.rowGroups.length;
       i++
     ) {
-      const [rowGroupId, rowIds] = this.catalogItem.activeTableStyle.rowGroups[
-        i
-      ];
+      const [rowGroupId, rowIds] =
+        this.catalogItem.activeTableStyle.rowGroups[i];
       // Check if there is only 1 unique date in this rowGroup
       const dates = rowIds
-        .map(rowId =>
+        .map((rowId) =>
           this.catalogItem.activeTableStyle.timeColumn?.valuesAsDates.values[
             rowId
           ]?.getTime()

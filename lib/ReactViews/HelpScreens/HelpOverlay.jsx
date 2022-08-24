@@ -43,7 +43,7 @@ const HelpOverlay = createReactClass({
       // If this is the first help screen in a sequence, locate the highlighted element and track the rectangle
       // to make sure the overlay and help screen move with the element.
       const that = this;
-      this.setIntervalId = setInterval(function() {
+      this.setIntervalId = setInterval(function () {
         if (!defined(that.state.screens)) {
           return;
         }
@@ -75,7 +75,7 @@ const HelpOverlay = createReactClass({
           currentScreen.rectangle = that.state.currentRectangle;
           currentScreen.currentScreenNumber = i + 1;
           currentScreen.totalNumberOfScreens = that.state.screens.length;
-          currentScreen.onNext = function() {
+          currentScreen.onNext = function () {
             if (typeof currentScreen.postDisplayHook === "function") {
               currentScreen.postDisplayHook(that.props.viewState);
             }

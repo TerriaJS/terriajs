@@ -57,7 +57,7 @@ interface StandardUserInterfaceProps {
 }
 
 const StandardUserInterface: React.FC<StandardUserInterfaceProps> = observer(
-  props => {
+  (props) => {
     const { t } = useTranslation();
 
     const acceptDragDropFile = action(() => {
@@ -212,8 +212,8 @@ const StandardUserInterface: React.FC<StandardUserInterfaceProps> = observer(
                         props.viewState.trainerBarVisible,
                       [Styles.showWorkbenchButtonisVisible]:
                         props.viewState.isMapFullScreen,
-                      [Styles.showWorkbenchButtonisNotVisible]: !props.viewState
-                        .isMapFullScreen
+                      [Styles.showWorkbenchButtonisNotVisible]:
+                        !props.viewState.isMapFullScreen
                     })}
                   >
                     <FullScreenButton

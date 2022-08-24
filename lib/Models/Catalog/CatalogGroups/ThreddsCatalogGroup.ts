@@ -74,7 +74,7 @@ export class ThreddsStratum extends LoadableStratum(ThreddsCatalogGroupTraits) {
     });
 
     this.threddsCatalog.datasets.forEach((dataset: ThreddsDataset) => {
-      dataset.catalogs.forEach(c => {
+      dataset.catalogs.forEach((c) => {
         memberIds.push(`${this._catalogGroup.uniqueId}/${c.id}`);
       });
       memberIds.push(`${this._catalogGroup.uniqueId}/${dataset.id}`);
@@ -141,7 +141,7 @@ export class ThreddsStratum extends LoadableStratum(ThreddsCatalogGroupTraits) {
           parent = model;
         }
 
-        ds.datasets.forEach(dataset => {
+        ds.datasets.forEach((dataset) => {
           const item = this.createMemberFromDataset(dataset);
           if (item !== undefined) parent.add(CommonStrata.definition, item);
         });

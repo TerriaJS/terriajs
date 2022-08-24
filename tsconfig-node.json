@@ -2,45 +2,45 @@
 // Build with ./node_modules/.bin/tsc -p tsconfig-models.json
 {
   "compilerOptions": {
-      "target": "es2019",
-      "experimentalDecorators": true,
-      "module": "esNext",
-      "moduleResolution": "node",
-      "sourceMap": true,
-      "strict": true,
-      "allowJs": true,
-      "jsx": "react",
-      "esModuleInterop": true,
-      "allowSyntheticDefaultImports": true,
-      "outDir": "dist",
-      "resolveJsonModule": true,
-      // "composite": true,
-      // "declaration": true,
-      "typeRoots": [
-          "./lib/ThirdParty",
-          //"./node_modules/@types",
-          //"../node_modules/@types"
-      ],
-      "types": [
-          "terriajs-cesium",
-          "mapbox__geojson-merge",
-          "mapbox__point-geometry",
-          "mapbox__vector-tile",
-          "pmtiles",
-          "terriajs-html2canvas",
-          "urijs",
-          "styled-components", // eventually it will be required anyway for SSR.
-          //"react"
-      ]
+    "target": "es2019",
+    "experimentalDecorators": true,
+    "module": "esNext",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "strict": true,
+    "allowJs": true,
+    "jsx": "react",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "dist",
+    "resolveJsonModule": true,
+    // "composite": true,
+    // "declaration": true,
+    "typeRoots": [
+      "./lib/ThirdParty"
+      //"./node_modules/@types",
+      //"../node_modules/@types"
+    ],
+    "types": [
+      "terriajs-cesium",
+      "mapbox__geojson-merge",
+      "mapbox__point-geometry",
+      "mapbox__vector-tile",
+      "pmtiles",
+      "terriajs-html2canvas",
+      "urijs",
+      "styled-components" // eventually it will be required anyway for SSR.
+      //"react"
+    ]
   },
   "include": [
-      "./lib/Core/**/*",
-      "./lib/Models/**/*",
-      "./lib/Map/**/*",
-      "./lib/ModelMixins/**/*",
-      "./lib/Traits/**/*",
-      "./lib/Language/**/*",
-      "./lib/ReactViews/**/*",
-      "./lib/ThirdParty/**/*"
+    "./lib/Core/**/*",
+    "./lib/Models/**/*",
+    "./lib/Map/**/*",
+    "./lib/ModelMixins/**/*",
+    "./lib/Traits/**/*",
+    "./lib/Language/**/*",
+    "./lib/ReactViews/**/*",
+    "./lib/ThirdParty/**/*"
   ]
 }

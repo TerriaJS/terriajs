@@ -5,16 +5,16 @@ import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import { WelcomeMessagePure } from "../../lib/ReactViews/WelcomeMessage/WelcomeMessage";
 import { createWithContexts } from "./withContext";
-const WelcomeMessage: any = require("../../lib/ReactViews/WelcomeMessage/WelcomeMessage")
-  .default;
+const WelcomeMessage: any =
+  require("../../lib/ReactViews/WelcomeMessage/WelcomeMessage").default;
 
-describe("WelcomeMessage", function() {
+describe("WelcomeMessage", function () {
   let terria: Terria;
   let viewState: ViewState;
 
   let testRenderer: any;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -25,7 +25,7 @@ describe("WelcomeMessage", function() {
     });
   });
 
-  it("renders when showWelcomeMessage is set to true in config file", function() {
+  it("renders when showWelcomeMessage is set to true in config file", function () {
     runInAction(() => (terria.configParameters.showWelcomeMessage = true));
     act(() => {
       testRenderer = createWithContexts(viewState, <WelcomeMessage />);
@@ -34,7 +34,7 @@ describe("WelcomeMessage", function() {
     expect(welcomeMessagePure.props.showWelcomeMessage).toEqual(true);
   });
 
-  it("doesn't render when showWelcomeMessage is set to true in config file", function() {
+  it("doesn't render when showWelcomeMessage is set to true in config file", function () {
     runInAction(() => (terria.configParameters.showWelcomeMessage = false));
     act(() => {
       testRenderer = createWithContexts(viewState, <WelcomeMessage />);

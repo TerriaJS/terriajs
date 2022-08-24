@@ -25,7 +25,7 @@ type PropsType = {
 };
 
 /** Wraps component in Portal, adds TitleBar, ErrorBoundary and Footer (PanelButton) */
-const WorkflowPanel: React.FC<PropsType> = observer(props => {
+const WorkflowPanel: React.FC<PropsType> = observer((props) => {
   const viewState = props.viewState;
 
   useEffect(function hideTerriaSidePanelOnMount() {
@@ -100,10 +100,10 @@ const Container = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  font-family: ${p => p.theme.fontPop}px;
-  width: ${p => p.theme.workflowPanelWidth}px;
+  font-family: ${(p) => p.theme.fontPop}px;
+  width: ${(p) => p.theme.workflowPanelWidth}px;
   height: 100vh;
-  max-width: ${p => p.theme.workflowPanelWidth}px;
+  max-width: ${(p) => p.theme.workflowPanelWidth}px;
   box-sizing: border-box;
   padding: 0 0 5px;
 `;
@@ -114,7 +114,7 @@ const TitleBar = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0.7em;
-  border-bottom: 1px solid ${p => p.theme.darkLighter};
+  border-bottom: 1px solid ${(p) => p.theme.darkLighter};
 `;
 
 const FooterBar = styled(TitleBar)`
@@ -160,7 +160,7 @@ const Error = styled.div`
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: ${p => p.theme.textLight};
+  color: ${(p) => p.theme.textLight};
   font-size: 14px;
 `;
 

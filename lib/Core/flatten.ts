@@ -7,7 +7,7 @@
 
  */
 export default function flatten<T>(arrayOfArrays: T[][]): T[] {
-  return arrayOfArrays.reduce(function(a, b) {
+  return arrayOfArrays.reduce(function (a, b) {
     return a.concat(b);
   }, []);
 }

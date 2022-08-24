@@ -1,167 +1,141 @@
 {
-    "catalog": [
+  "catalog": [
+    {
+      "name": "Composite Tests",
+      "type": "group",
+      "items": [
         {
-            "name": "Composite Tests",
-            "type": "group",
-            "items": [
+          "name": "Composite of Stations and Lines",
+          "type": "composite",
+          "info": [
+            {
+              "name": "This is a composite of the stations and lines.",
+              "content": "[Licence](http://www.ga.gov.au/copyright)"
+            }
+          ],
+          "items": [
+            {
+              "name": "Power stations",
+              "layers": "Power Stations",
+              "info": [
                 {
-                    "name": "Composite of Stations and Lines",
-                    "type": "composite",
-                    "info": [
-                        {
-                            "name":"This is a composite of the stations and lines.",
-                            "content":"[Licence](http://www.ga.gov.au/copyright)"
-                        }
-                    ],
-                    "items": [
-                        {
-                            "name": "Power stations",
-                            "layers": "Power Stations",
-                            "info": [
-                                {
-                                    "name": "Licensing, Terms & Conditions",
-                                    "content": "[Licence](http://www.ga.gov.au/copyright)"
-                                }
-                            ],
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "url": "http://www.ga.gov.au/gis/services/energy/ASEIS_Features/MapServer/WMSServer",
-                            "type": "wms",
-                            "opacity": "1.0",
-                            "clipToRectangle": true,
-                            "parameters": {"tiled": true},
-                            "rectangle": [
-                                "100.0",
-                                "-44.0",
-                                "159.0",
-                                "-4.0"
-                            ]
-                        },
-                        {
-                            "name":"Transmission Lines",
-                            "layers":"National_Electricity_Transmission_Lines",
-                            "dataCustodian":"[Geoscience Australia](http://www.ga.gov.au/)",
-                            "info": [
-                                {
-                                    "name":"Licensing, Terms & Conditions",
-                                    "content":"[Licence](http://www.ga.gov.au/copyright)"
-                                }
-                            ],
-                            "infoSectionOrder": [
-                                "Data Description",
-                                "Data Custodian",
-                                "Licensing, Terms & Conditions",
-                                "Service Description"
-                            ],
-                            "url":"http://www.ga.gov.au/gis/rest/services/topography/National_Electricity_Transmission_Lines/MapServer",
-                            "type":"esri-mapServer",
-                            "opacity":"1.0",
-                            "clipToRectangle":true,
-                            "legendUrl":"http://www.ga.gov.au/gis/server/capabilities/National_Electricity_Transmission_Lines.png",
-                            "dataUrl":"http://www.ga.gov.au/gis/services/topography/National_Electricity_Transmission_Lines/MapServer/WFSServer?service=WFS&version=1.1.0&request=GetFeature&typeName=National_Electricity_Transmission_Lines&srsName=EPSG%3A4326&maxFeatures=100000",
-                            "dataUrlType":"wfs-complete",
-                            "rectangle":[
-                                "112.0",
-                                "-48.0",
-                                "155.0",
-                                "-5.0"
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "Composite of Substations only",
-                    "type": "composite",
-                    "info": [
-                        {
-                            "name":"This is a composite containing a single item, the substations.",
-                            "content":"[Licence](http://www.ga.gov.au/copyright)"
-                        }
-                    ],
-                    "items": [
-                        {
-                            "name":"Substations",
-                            "dataCustodian":"[Geoscience Australia](http://www.ga.gov.au/)",
-                            "info": [
-                                {
-                                    "name":"Licensing, Terms & Conditions",
-                                    "content":"[Licence](http://www.ga.gov.au/copyright)"
-                                }
-                            ],
-                            "url":"http://www.ga.gov.au/gis/rest/services/topography/National_Electricity_Transmission_Substations/MapServer",
-                            "layers":"National_Electricity_Transmission_Substations",
-                            "type":"esri-mapServer",
-                            "dataUrl":"http://www.ga.gov.au/gis/services/topography/National_Electricity_Transmission_Substations/MapServer/WFSServer?service=WFS&request=GetFeature&typeName=topography_National_Electricity_Transmission_Substations:National_Electricity_Transmission_Substations&srsName=EPSG%3A4326&maxFeatures=10000",
-                            "dataUrlType":"wfs-complete",
-                            "legendUrl":"http://www.ga.gov.au/gis/server/capabilities/National_Electricity_Transmission_Substations.png",
-                            "clipToRectangle":true,
-                            "opacity":"1.0",
-                            "rectangle": [
-                                "112.0",
-                                "-48.0",
-                                "155.0",
-                                "-5.0"
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "A composite of 3",
-                    "type": "composite",
-                    "info": [
-                        {
-                            "name":"This is a composite of three things.",
-                            "content":"[Licence](http://www.ga.gov.au/copyright)"
-                        }
-                    ],
-                    "items": [
-                        {
-                            "type":"kml",
-                            "url":"datasets/dance/CSP-Cost-benefit-NoCarbonPrice-Possiblelocations.kmz",
-                            "legendUrl":"datasets/dance/CSP-Cost-benefit-legend.png",
-                            "rectangle": [
-                                "137",
-                                "-41",
-                                "154",
-                                "-18"
-                            ]
-                        },
-                        {
-                            "name":"Damwalls",
-                            "layers":"damwalls",
-                            "info": [
-                                {
-                                    "name":"Licensing, Terms & Conditions",
-                                    "content":"[Licence](http://www.ga.gov.au/copyright)"
-                                }
-                            ],
-                            "dataCustodian":"[Geoscience Australia](http://www.ga.gov.au/)",
-                            "url":"http://geoserver.nationalmap.nicta.com.au/geotopo_250k/ows",
-                            "type":"wms",
-                            "opacity":"1.0",
-                            "clipToRectangle":true,
-                            "parameters":{"tiled":true},
-                            "rectangle":["100.0",
-                            "-44.0",
-                            "159.0",
-                            "-4.0"]
-                        },
-                        {
-                            "name":"Waste Management Facilities",
-                            "type":"wms",
-                            "url":"http://www.ga.gov.au/gis/services/topography/National_Waste_Management_Facilities/MapServer/WMSServer",
-                            "layers":"National Waste Management Facilities",
-                            "legendUrl":"http://www.ga.gov.au/gis/server/capabilities/National_Waste_Management_Facilities_Legend.png",
-                            "opacity":"1.0",
-                            "clipToRectangle":true,
-                            "parameters":{"tiled":true},
-                            "rectangle":["112.0",
-                            "-48.0",
-                            "155.0",
-                            "-5.0"]
-                        }
-                    ]
+                  "name": "Licensing, Terms & Conditions",
+                  "content": "[Licence](http://www.ga.gov.au/copyright)"
                 }
-            ]
+              ],
+              "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+              "url": "http://www.ga.gov.au/gis/services/energy/ASEIS_Features/MapServer/WMSServer",
+              "type": "wms",
+              "opacity": "1.0",
+              "clipToRectangle": true,
+              "parameters": { "tiled": true },
+              "rectangle": ["100.0", "-44.0", "159.0", "-4.0"]
+            },
+            {
+              "name": "Transmission Lines",
+              "layers": "National_Electricity_Transmission_Lines",
+              "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+              "info": [
+                {
+                  "name": "Licensing, Terms & Conditions",
+                  "content": "[Licence](http://www.ga.gov.au/copyright)"
+                }
+              ],
+              "infoSectionOrder": [
+                "Data Description",
+                "Data Custodian",
+                "Licensing, Terms & Conditions",
+                "Service Description"
+              ],
+              "url": "http://www.ga.gov.au/gis/rest/services/topography/National_Electricity_Transmission_Lines/MapServer",
+              "type": "esri-mapServer",
+              "opacity": "1.0",
+              "clipToRectangle": true,
+              "legendUrl": "http://www.ga.gov.au/gis/server/capabilities/National_Electricity_Transmission_Lines.png",
+              "dataUrl": "http://www.ga.gov.au/gis/services/topography/National_Electricity_Transmission_Lines/MapServer/WFSServer?service=WFS&version=1.1.0&request=GetFeature&typeName=National_Electricity_Transmission_Lines&srsName=EPSG%3A4326&maxFeatures=100000",
+              "dataUrlType": "wfs-complete",
+              "rectangle": ["112.0", "-48.0", "155.0", "-5.0"]
+            }
+          ]
+        },
+        {
+          "name": "Composite of Substations only",
+          "type": "composite",
+          "info": [
+            {
+              "name": "This is a composite containing a single item, the substations.",
+              "content": "[Licence](http://www.ga.gov.au/copyright)"
+            }
+          ],
+          "items": [
+            {
+              "name": "Substations",
+              "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+              "info": [
+                {
+                  "name": "Licensing, Terms & Conditions",
+                  "content": "[Licence](http://www.ga.gov.au/copyright)"
+                }
+              ],
+              "url": "http://www.ga.gov.au/gis/rest/services/topography/National_Electricity_Transmission_Substations/MapServer",
+              "layers": "National_Electricity_Transmission_Substations",
+              "type": "esri-mapServer",
+              "dataUrl": "http://www.ga.gov.au/gis/services/topography/National_Electricity_Transmission_Substations/MapServer/WFSServer?service=WFS&request=GetFeature&typeName=topography_National_Electricity_Transmission_Substations:National_Electricity_Transmission_Substations&srsName=EPSG%3A4326&maxFeatures=10000",
+              "dataUrlType": "wfs-complete",
+              "legendUrl": "http://www.ga.gov.au/gis/server/capabilities/National_Electricity_Transmission_Substations.png",
+              "clipToRectangle": true,
+              "opacity": "1.0",
+              "rectangle": ["112.0", "-48.0", "155.0", "-5.0"]
+            }
+          ]
+        },
+        {
+          "name": "A composite of 3",
+          "type": "composite",
+          "info": [
+            {
+              "name": "This is a composite of three things.",
+              "content": "[Licence](http://www.ga.gov.au/copyright)"
+            }
+          ],
+          "items": [
+            {
+              "type": "kml",
+              "url": "datasets/dance/CSP-Cost-benefit-NoCarbonPrice-Possiblelocations.kmz",
+              "legendUrl": "datasets/dance/CSP-Cost-benefit-legend.png",
+              "rectangle": ["137", "-41", "154", "-18"]
+            },
+            {
+              "name": "Damwalls",
+              "layers": "damwalls",
+              "info": [
+                {
+                  "name": "Licensing, Terms & Conditions",
+                  "content": "[Licence](http://www.ga.gov.au/copyright)"
+                }
+              ],
+              "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+              "url": "http://geoserver.nationalmap.nicta.com.au/geotopo_250k/ows",
+              "type": "wms",
+              "opacity": "1.0",
+              "clipToRectangle": true,
+              "parameters": { "tiled": true },
+              "rectangle": ["100.0", "-44.0", "159.0", "-4.0"]
+            },
+            {
+              "name": "Waste Management Facilities",
+              "type": "wms",
+              "url": "http://www.ga.gov.au/gis/services/topography/National_Waste_Management_Facilities/MapServer/WMSServer",
+              "layers": "National Waste Management Facilities",
+              "legendUrl": "http://www.ga.gov.au/gis/server/capabilities/National_Waste_Management_Facilities_Legend.png",
+              "opacity": "1.0",
+              "clipToRectangle": true,
+              "parameters": { "tiled": true },
+              "rectangle": ["112.0", "-48.0", "155.0", "-5.0"]
+            }
+          ]
         }
-    ]
+      ]
+    }
+  ]
 }

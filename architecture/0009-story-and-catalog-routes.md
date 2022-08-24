@@ -28,9 +28,9 @@ Catalog routes are useful for sitemaps, story routes are useful to provide nicer
 
 While it's not part of this ADR, this ADR leaves future opportunity to enhance the SEO of both of these types of routes through some combination of:
 
-* Sitemaps
-* Pre-rendering each route
-* Server rendering pages
+- Sitemaps
+- Pre-rendering each route
+- Server rendering pages
 
 ## Decisions
 
@@ -41,5 +41,5 @@ While it's not part of this ADR, this ADR leaves future opportunity to enhance t
 
 ## Consequences
 
-* Routing support added to terriajs by parsing the URL on URL change (and load) and updating the model layer appropriately.
-* Apps that want to create official stories will use terriajs-server's SPA options.
+- Routing support added to terriajs by parsing the URL on URL change (and load) and updating the model layer appropriately.
+- Apps that want to create official stories will use terriajs-server's SPA options.

@@ -33,7 +33,8 @@ interface Options extends FunctionParameterOptions {
 
 export default class GeoJsonParameter
   extends FunctionParameter<CartographicPoint | PolygonCoordinates | JsonObject>
-  implements GeoJsonFunctionParameter {
+  implements GeoJsonFunctionParameter
+{
   static readonly type = "geojson";
   readonly type = "geojson";
 

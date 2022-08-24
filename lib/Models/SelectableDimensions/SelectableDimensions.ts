@@ -202,10 +202,11 @@ export const isColor = (
   dim: SelectableDimension
 ): dim is SelectableDimensionColor => dim.type === "color";
 
-const isCorrectPlacement = (placement?: Placement) => (
-  dim: SelectableDimension
-) =>
-  dim.placement ? dim.placement === placement : placement === DEFAULT_PLACEMENT;
+const isCorrectPlacement =
+  (placement?: Placement) => (dim: SelectableDimension) =>
+    dim.placement
+      ? dim.placement === placement
+      : placement === DEFAULT_PLACEMENT;
 
 const isEnabled = (dim: SelectableDimension) => !dim.disable;
 
@@ -218,19 +219,19 @@ const enumHasValidOptions = (dim: EnumDimension) => {
 /** Filter with SelectableDimension should be shown for a given placement.
  * This will take into account whether SelectableDimension is valid, not disabled, etc...
  */
-export const filterSelectableDimensions = (placement?: Placement) => (
-  selectableDimensions: SelectableDimension[] = []
-) =>
-  selectableDimensions.filter(
-    dim =>
-      // Filter by placement if defined, otherwise use default placement
-      (!isDefined(placement) || isCorrectPlacement(placement)(dim)) &&
-      isEnabled(dim) &&
-      // Check enum (select and checkbox) dimensions for valid options
-      ((!isEnum(dim) && !isCheckbox(dim)) || enumHasValidOptions(dim)) &&
-      // Only show groups if they have at least one SelectableDimension
-      (!isGroup(dim) || dim.selectableDimensions.length > 0)
-  );
+export const filterSelectableDimensions =
+  (placement?: Placement) =>
+  (selectableDimensions: SelectableDimension[] = []) =>
+    selectableDimensions.filter(
+      (dim) =>
+        // Filter by placement if defined, otherwise use default placement
+        (!isDefined(placement) || isCorrectPlacement(placement)(dim)) &&
+        isEnabled(dim) &&
+        // Check enum (select and checkbox) dimensions for valid options
+        ((!isEnum(dim) && !isCheckbox(dim)) || enumHasValidOptions(dim)) &&
+        // Only show groups if they have at least one SelectableDimension
+        (!isGroup(dim) || dim.selectableDimensions.length > 0)
+    );
 
 /** Find human readable name for the current value for a SelectableDimension */
 export const findSelectedValueName = (
@@ -241,7 +242,7 @@ export const findSelectedValueName = (
   }
 
   if (isEnum(dim)) {
-    return dim.options?.find(opt => opt.id === dim.selectedId)?.name;
+    return dim.options?.find((opt) => opt.id === dim.selectedId)?.name;
   }
 
   if (isNumeric(dim)) {
