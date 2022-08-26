@@ -17,21 +17,21 @@ interface ILeftRightButton {
   isActive: boolean;
 }
 
-const LeftRightButton = styled(RawButton).attrs({ fullWidth: true })<
-  ILeftRightButton
->`
+const LeftRightButton = styled(RawButton).attrs({
+  fullWidth: true
+})<ILeftRightButton>`
   text-align: center;
   padding: 5px;
-  color: ${p => p.theme.textLight};
-  background-color: ${p => p.theme.dark};
-  ${p =>
+  color: ${(p) => p.theme.textLight};
+  background-color: ${(p) => p.theme.dark};
+  ${(p) =>
     p.isActive &&
     `
     background-color: ${p.theme.colorSecondary};
   `}
   &:hover,
   &:focus {
-    background-color: ${p => p.theme.colorSecondary};
+    background-color: ${(p) => p.theme.colorSecondary};
   }
 `;
 

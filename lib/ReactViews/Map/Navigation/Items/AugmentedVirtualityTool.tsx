@@ -57,7 +57,7 @@ export class AugmentedVirtualityController extends MapNavigationItemController {
       typeof DeviceMotionEvent.requestPermission === "function"
     ) {
       DeviceMotionEvent.requestPermission()
-        .then(permissionState => {
+        .then((permissionState) => {
           if (permissionState !== "granted") {
             console.error("couldn't get access for motion events");
           }
@@ -70,7 +70,7 @@ export class AugmentedVirtualityController extends MapNavigationItemController {
       typeof DeviceOrientationEvent.requestPermission === "function"
     ) {
       DeviceOrientationEvent.requestPermission()
-        .then(permissionState => {
+        .then((permissionState) => {
           if (permissionState !== "granted") {
             console.error("couldn't get access for orientation events");
           }
@@ -138,8 +138,7 @@ export class AugmentedVirtualityRealignController extends MapNavigationItemContr
       this.props.viewState.terria.notificationState.addNotificationToQueue({
         title: i18next.t("AR.manualAlignmentTitle"),
         message: i18next.t("AR.manualAlignmentMessage", {
-          img:
-            '<img width="100%" src="./build/TerriaJS/images/ar-realign-guide.gif" />'
+          img: '<img width="100%" src="./build/TerriaJS/images/ar-realign-guide.gif" />'
         }),
         confirmText: i18next.t("AR.confirmText")
       });
@@ -225,7 +224,7 @@ export class AugmentedVirtualityHoverController extends MapNavigationItemControl
 
 const StyledMapIconButton = styled(MapIconButton)<{ blink: boolean }>`
   svg {
-    ${p =>
+    ${(p) =>
       p.blink &&
       `
       -webkit-animation-name: blinker;

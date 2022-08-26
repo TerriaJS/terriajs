@@ -13,7 +13,7 @@ export const SelectableDimensionCheckbox: React.FC<{
     <Checkbox
       name={id}
       isChecked={dim.selectedId === "true"}
-      onChange={evt =>
+      onChange={(evt) =>
         runInAction(() =>
           dim.setDimensionValue(
             CommonStrata.user,
@@ -23,7 +23,7 @@ export const SelectableDimensionCheckbox: React.FC<{
       }
     >
       <Text>
-        {dim.options?.find(opt => opt.id === dim.selectedId)?.name ??
+        {dim.options?.find((opt) => opt.id === dim.selectedId)?.name ??
           (dim.selectedId === "true" ? "Enabled" : "Disabled")}
       </Text>
     </Checkbox>

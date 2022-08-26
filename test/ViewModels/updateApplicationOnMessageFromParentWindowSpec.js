@@ -5,11 +5,11 @@ var createCatalogMemberFromType = require("../../lib/Models/Catalog/createCatalo
 var Terria = require("../../lib/Models/Terria");
 var updateApplicationOnMessageFromParentWindow = require("../../lib/ViewModels/updateApplicationOnMessageFromParentWindow");
 
-describe("updateApplicationOnMessageFromParentWindow", function() {
+describe("updateApplicationOnMessageFromParentWindow", function () {
   var terria;
   var fakeWindow;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -19,13 +19,13 @@ describe("updateApplicationOnMessageFromParentWindow", function() {
     fakeWindow.parent = jasmine.createSpyObj("parentWindow", ["postMessage"]);
   });
 
-  it("subscribes to messages", function() {
+  it("subscribes to messages", function () {
     updateApplicationOnMessageFromParentWindow(terria, fakeWindow);
     expect(fakeWindow.addEventListener.calls.count()).toBe(1);
     expect(fakeWindow.addEventListener.calls.first().args[0]).toBe("message");
   });
 
-  it("posts a message to its parent when ready", function() {
+  it("posts a message to its parent when ready", function () {
     updateApplicationOnMessageFromParentWindow(terria, fakeWindow);
     expect(fakeWindow.parent.postMessage.calls.count()).toBe(1);
     expect(fakeWindow.parent.postMessage.calls.first().args).toEqual([
@@ -34,9 +34,9 @@ describe("updateApplicationOnMessageFromParentWindow", function() {
     ]);
   });
 
-  it("updates the model when it receives a message from the parent", function() {
+  it("updates the model when it receives a message from the parent", function () {
     var messageEventHandler;
-    fakeWindow.addEventListener.and.callFake(function(eventName, callback) {
+    fakeWindow.addEventListener.and.callFake(function (eventName, callback) {
       messageEventHandler = callback;
     });
     updateApplicationOnMessageFromParentWindow(terria, fakeWindow);
@@ -62,9 +62,9 @@ describe("updateApplicationOnMessageFromParentWindow", function() {
     expect(fooGroup.type).toBe("group");
   });
 
-  it("updates the model when it receives a message from the opener", function() {
+  it("updates the model when it receives a message from the opener", function () {
     var messageEventHandler;
-    fakeWindow.addEventListener.and.callFake(function(eventName, callback) {
+    fakeWindow.addEventListener.and.callFake(function (eventName, callback) {
       messageEventHandler = callback;
     });
     updateApplicationOnMessageFromParentWindow(terria, fakeWindow);
@@ -90,9 +90,9 @@ describe("updateApplicationOnMessageFromParentWindow", function() {
     expect(fooGroup.type).toBe("group");
   });
 
-  it("ignores messages that are not from its parent or opener window", function() {
+  it("ignores messages that are not from its parent or opener window", function () {
     var messageEventHandler;
-    fakeWindow.addEventListener.and.callFake(function(eventName, callback) {
+    fakeWindow.addEventListener.and.callFake(function (eventName, callback) {
       messageEventHandler = callback;
     });
     updateApplicationOnMessageFromParentWindow(terria, fakeWindow);

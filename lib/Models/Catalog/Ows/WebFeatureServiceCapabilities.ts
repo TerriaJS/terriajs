@@ -135,11 +135,9 @@ function getOutputTypes(json: any): string[] | undefined {
 }
 
 export default class WebFeatureServiceCapabilities {
-  static fromUrl: (
-    url: string
-  ) => Promise<WebFeatureServiceCapabilities> = createTransformer(
-    (url: string) => {
-      return loadXML(url).then(function(capabilitiesXml: any) {
+  static fromUrl: (url: string) => Promise<WebFeatureServiceCapabilities> =
+    createTransformer((url: string) => {
+      return loadXML(url).then(function (capabilitiesXml: any) {
         const json = xml2json(capabilitiesXml);
         if (!defined(json.ServiceIdentification)) {
           throw new TerriaError({
@@ -152,8 +150,7 @@ export default class WebFeatureServiceCapabilities {
 
         return new WebFeatureServiceCapabilities(capabilitiesXml, json);
       });
-    }
-  );
+    });
 
   readonly service: CapabilitiesService;
   readonly outputTypes: string[] | undefined;
@@ -177,20 +174,22 @@ export default class WebFeatureServiceCapabilities {
    */
   findLayer(name: string): FeatureType | undefined {
     // Look for an exact match on the name.
-    let match = this.featureTypes.find(ft => ft.Name === name);
+    let match = this.featureTypes.find((ft) => ft.Name === name);
     if (!match) {
       const colonIndex = name.indexOf(":");
       if (colonIndex >= 0) {
         // This looks like a namespaced name.  Such names will (usually?) show up in GetCapabilities
         // as just their name without the namespace qualifier.
         const nameWithoutNamespace = name.substring(colonIndex + 1);
-        match = this.featureTypes.find(ft => ft.Name === nameWithoutNamespace);
+        match = this.featureTypes.find(
+          (ft) => ft.Name === nameWithoutNamespace
+        );
       }
     }
 
     if (!match) {
       // Try matching by title.
-      match = this.featureTypes.find(ft => ft.Title === name);
+      match = this.featureTypes.find((ft) => ft.Title === name);
     }
 
     return match;

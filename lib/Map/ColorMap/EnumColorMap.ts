@@ -23,7 +23,7 @@ export default class EnumColorMap extends ColorMap {
     const values: string[] = [];
     const colors: Readonly<Color>[] = [];
 
-    options.enumColors.forEach(bin => {
+    options.enumColors.forEach((bin) => {
       values.push(bin.value);
       colors.push(Color.clone(bin.color));
     });

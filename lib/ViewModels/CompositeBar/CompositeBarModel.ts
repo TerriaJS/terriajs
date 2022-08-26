@@ -54,19 +54,19 @@ export abstract class CompositeBarModel<
 
   @computed
   get visibleItems(): CompositeBarItem[] {
-    return this.items.filter(item => item.controller.visible);
+    return this.items.filter((item) => item.controller.visible);
   }
 
   get pinnedItems(): CompositeBarItem[] {
     return this.items.filter(
-      item => item.controller.visible && item.controller.pinned
+      (item) => item.controller.visible && item.controller.pinned
     );
   }
 
   setItems(items: CompositeBarItem[]) {
     const result: CompositeBarItem[] = [];
     if (!this.items || this.items.length === 0) {
-      this._items = items.map(item => {
+      this._items = items.map((item) => {
         return this.createCompositeBarItem(item);
       });
     } else {
@@ -224,7 +224,7 @@ export abstract class CompositeBarModel<
   }
 
   findItem(id: string): CompositeBarItem | undefined {
-    return this.items.filter(item => item.id === id)[0];
+    return this.items.filter((item) => item.id === id)[0];
   }
 
   protected createCompositeBarItem(item: CompositeBarItem): CompositeBarItem {

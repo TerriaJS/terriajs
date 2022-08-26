@@ -39,7 +39,7 @@ and when it is loaded - `wms` items will have:
 
 Even if the `wms-group` has `shareKeys`, the `wms` item ID will be incorrect for a v7 share link
 
-- wms-group v7 autoID will be `Root Group/$wmsGroup.name` 
+- wms-group v7 autoID will be `Root Group/$wmsGroup.name`
   - which will be in `shareKeys` (this is added by `catalog-converter`) - so ID will be resolved correctly
 - A wms-item v7 autoID will be `Root Group/$wmsGroup.name/$wmsItem.name`
   - the item won't have any `shareKeys`, therefore the ID will **not** be resolved
@@ -61,7 +61,7 @@ This is also relevant if moving from v8 JSON to v8 Magda catalog - or any other 
 
 ### Auto IDs for `CatalogGroups`
 
-Different dynamic `CatalogGroups` may generate member autoIDs differently.  
+Different dynamic `CatalogGroups` may generate member autoIDs differently.
 
 #### WMS-Group
 

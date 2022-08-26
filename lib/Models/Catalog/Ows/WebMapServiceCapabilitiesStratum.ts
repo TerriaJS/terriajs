@@ -90,7 +90,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   @computed get metadataUrls() {
     const metadataUrls: MetadataURL[] = [];
 
-    Array.from(this.capabilitiesLayers.values()).forEach(layer => {
+    Array.from(this.capabilitiesLayers.values()).forEach((layer) => {
       if (!layer?.MetadataURL) return;
       Array.isArray(layer?.MetadataURL)
         ? metadataUrls.push(...layer?.MetadataURL)
@@ -98,8 +98,8 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     });
 
     return metadataUrls
-      .filter(m => m.OnlineResource?.["xlink:href"])
-      .map(m =>
+      .filter((m) => m.OnlineResource?.["xlink:href"])
+      .map((m) =>
         createStratumInstance(MetadataUrlTraits, {
           url: m.OnlineResource!["xlink:href"]
         })
@@ -119,7 +119,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     if (layers === undefined) {
       // Use all the top-level, named layers
       layers = filterOutUndefined(
-        this.capabilities.topLevelNamedLayers.map(layer => layer.Name)
+        this.capabilities.topLevelNamedLayers.map((layer) => layer.Name)
       ).join(",");
     }
 
@@ -166,7 +166,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       let legendScaling: number | undefined;
 
       const layerAvailableStyles = availableStyles.find(
-        candidate => candidate.layerName === layer
+        (candidate) => candidate.layerName === layer
       )?.styles;
 
       let layerStyle: Model<WebMapServiceAvailableStyleTraits> | undefined;
@@ -174,7 +174,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       if (isDefined(style)) {
         // Attempt to find layer style based on AvailableStyleTraits
         layerStyle = layerAvailableStyles?.find(
-          candidate => candidate.name === style
+          (candidate) => candidate.name === style
         );
       }
 
@@ -273,26 +273,23 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
 
   @computed
   get capabilitiesLayers(): ReadonlyMap<string, CapabilitiesLayer | undefined> {
-    const lookup: (
-      name: string
-    ) => [string, CapabilitiesLayer | undefined] = name => [
-      name,
-      this.capabilities && this.capabilities.findLayer(name)
-    ];
+    const lookup: (name: string) => [string, CapabilitiesLayer | undefined] = (
+      name
+    ) => [name, this.capabilities && this.capabilities.findLayer(name)];
     return new Map(this.catalogItem.layersArray.map(lookup));
   }
 
   @computed get availableCrs() {
     // Get set of supported CRS from layer hierarchy
     const layerCrs = new Set<string>();
-    this.capabilitiesLayers.forEach(layer => {
+    this.capabilitiesLayers.forEach((layer) => {
       if (layer) {
         const srs = this.capabilities.getInheritedValues(layer, "SRS");
         const crs = this.capabilities.getInheritedValues(layer, "CRS");
         [
           ...(Array.isArray(srs) ? srs : [srs]),
           ...(Array.isArray(crs) ? crs : [crs])
-        ].forEach(c => layerCrs.add(c));
+        ].forEach((c) => layerCrs.add(c));
       }
     });
 
@@ -312,17 +309,14 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
 
     // If nothing is supported, ask for EPSG:3857, and hope for the best.
     return (
-      supportedCrs.find(crs => this.availableCrs.includes(crs)) ?? "EPSG:3857"
+      supportedCrs.find((crs) => this.availableCrs.includes(crs)) ?? "EPSG:3857"
     );
   }
 
   @computed
-  get availableDimensions(): StratumFromTraits<
-    WebMapServiceAvailableLayerDimensionsTraits
-  >[] {
-    const result: StratumFromTraits<
-      WebMapServiceAvailableLayerDimensionsTraits
-    >[] = [];
+  get availableDimensions(): StratumFromTraits<WebMapServiceAvailableLayerDimensionsTraits>[] {
+    const result: StratumFromTraits<WebMapServiceAvailableLayerDimensionsTraits>[] =
+      [];
 
     if (!this.capabilities) {
       return result;
@@ -341,8 +335,8 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       result.push({
         layerName: layerName,
         dimensions: dimensions
-          .filter(dim => dim.name !== "time")
-          .map(dim => {
+          .filter((dim) => dim.name !== "time")
+          .map((dim) => {
             return {
               name: dim.name,
               units: dim.units,
@@ -361,12 +355,9 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get availableStyles(): StratumFromTraits<
-    WebMapServiceAvailableLayerStylesTraits
-  >[] {
-    const result: StratumFromTraits<
-      WebMapServiceAvailableLayerStylesTraits
-    >[] = [];
+  get availableStyles(): StratumFromTraits<WebMapServiceAvailableLayerStylesTraits>[] {
+    const result: StratumFromTraits<WebMapServiceAvailableLayerStylesTraits>[] =
+      [];
 
     if (!this.capabilities) {
       return result;
@@ -382,7 +373,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
         : [];
       result.push({
         layerName: layerName,
-        styles: styles.map(style => {
+        styles: styles.map((style) => {
           var wmsLegendUrl = isReadOnlyArray(style.LegendURL)
             ? style.LegendURL[0]
             : style.LegendURL;
@@ -434,7 +425,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
 
     if (!this.catalogItem.supportsGetLegendGraphic) {
       return this.catalogItem.availableStyles
-        .map(layer => {
+        .map((layer) => {
           if (layer.layerName && layer.styles.length > 0) {
             return layer.styles[0].name ?? "";
           }
@@ -588,7 +579,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     // If more than one layer, push layer description titles for each applicable layer
     if (this.capabilitiesLayers.size > 1) {
       layerDescriptions = [];
-      this.capabilitiesLayers.forEach(layer => {
+      this.capabilitiesLayers.forEach((layer) => {
         if (
           layer &&
           layer.Abstract &&
@@ -639,8 +630,8 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   @computed
   get rectangle(): StratumFromTraits<RectangleTraits> | undefined {
     const layers: CapabilitiesLayer[] = [...this.capabilitiesLayers.values()]
-      .filter(layer => layer !== undefined)
-      .map(l => l!);
+      .filter((layer) => layer !== undefined)
+      .map((l) => l!);
     // Get union of bounding rectangles for all layers
     const allLayersRectangle = layers.reduce<Rectangle | undefined>(
       (unionRectangle, layer) => {
@@ -745,7 +736,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       );
 
       const timeDimension = dimensions.find(
-        dimension => dimension.name.toLowerCase() === "time"
+        (dimension) => dimension.name.toLowerCase() === "time"
       );
       if (!timeDimension) {
         continue;
@@ -759,7 +750,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
         "Extent"
       );
       const extentElement = extentElements.find(
-        extent => extent.name.toLowerCase() === "time"
+        (extent) => extent.name.toLowerCase() === "time"
       );
       if (extentElement) {
         extent = extentElement;
@@ -808,7 +799,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
         );
 
         const timeDimension = dimensions.find(
-          dimension => dimension.name.toLowerCase() === "time"
+          (dimension) => dimension.name.toLowerCase() === "time"
         );
 
         return timeDimension?.default;
@@ -839,8 +830,8 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   @computed get getFeatureInfoFormat():
     | StratumFromTraits<GetFeatureInfoFormat>
     | undefined {
-    const formats: string | string[] | undefined = this.capabilities.json
-      ?.Capability?.Request?.GetFeatureInfo?.Format;
+    const formats: string | string[] | undefined =
+      this.capabilities.json?.Capability?.Request?.GetFeatureInfo?.Format;
 
     const formatsArray = isJsonArray(formats)
       ? formats
@@ -906,7 +897,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
         : undefined,
       // Add other dimensions
       ...dimensionSubsets
-    ]).map(subset => createStratumInstance(KeyValueTraits, subset));
+    ]).map((subset) => createStratumInstance(KeyValueTraits, subset));
 
     return createStratumInstance(WebCoverageServiceParameterTraits, {
       outputCrs,

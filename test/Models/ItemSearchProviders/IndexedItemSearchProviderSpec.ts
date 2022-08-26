@@ -41,23 +41,23 @@ const validIndexRoot = {
   }
 };
 
-describe("IndexedItemSearchProvider", function() {
-  beforeEach(function() {
+describe("IndexedItemSearchProvider", function () {
+  beforeEach(function () {
     jasmine.Ajax.install();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     jasmine.Ajax.uninstall();
   });
 
-  describe("construction", function() {
-    it("can be constructed", function() {
+  describe("construction", function () {
+    it("can be constructed", function () {
       new IndexedItemSearchProvider({ indexRootUrl: "indexRoot.json" }, []);
     });
   });
 
-  describe("load", function() {
-    it("can be loaded", async function() {
+  describe("load", function () {
+    it("can be loaded", async function () {
       const provider = new IndexedItemSearchProvider(
         {
           indexRootUrl: "indexRoot.json"
@@ -74,7 +74,7 @@ describe("IndexedItemSearchProvider", function() {
       expect(error).toBeUndefined();
     });
 
-    it("throws an error if the indexRoot file cannot be parsed", async function() {
+    it("throws an error if the indexRoot file cannot be parsed", async function () {
       const provider = new IndexedItemSearchProvider(
         {
           indexRootUrl: "indexRoot.json"
@@ -94,8 +94,8 @@ describe("IndexedItemSearchProvider", function() {
     });
   });
 
-  describe("describeParameters", function() {
-    it("returns the parameters", async function() {
+  describe("describeParameters", function () {
+    it("returns the parameters", async function () {
       const provider = new IndexedItemSearchProvider(
         {
           indexRootUrl: "indexRoot.json"
@@ -137,11 +137,11 @@ describe("IndexedItemSearchProvider", function() {
     });
   });
 
-  describe("search", function() {
+  describe("search", function () {
     let provider: IndexedItemSearchProvider;
     let parameterValues: Map<string, any>;
 
-    beforeEach(async function() {
+    beforeEach(async function () {
       provider = new IndexedItemSearchProvider(
         {
           indexRootUrl: "indexRoot.json"
@@ -161,7 +161,7 @@ describe("IndexedItemSearchProvider", function() {
       await provider.initialize();
     });
 
-    it("returns matching results", async function() {
+    it("returns matching results", async function () {
       const results = await provider.search(parameterValues);
       expect(results).toEqual([
         {
@@ -187,7 +187,7 @@ describe("IndexedItemSearchProvider", function() {
       ]);
     });
 
-    it("should load the index and data files only once", async function() {
+    it("should load the index and data files only once", async function () {
       await provider.search(parameterValues);
       const finalCount = jasmine.Ajax.requests.count();
       expect(finalCount).toEqual(4);

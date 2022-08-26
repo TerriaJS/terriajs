@@ -142,7 +142,7 @@ export const SearchBox = createReactClass({
     return (
       <form
         autoComplete="off"
-        onSubmit={event => {
+        onSubmit={(event) => {
           event.preventDefault();
           event.stopPropagation();
           this.search();

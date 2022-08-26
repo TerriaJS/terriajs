@@ -59,7 +59,7 @@ export default class TableColumnTraits extends ModelTraits {
       "The type of the column. If not specified, the type is guessed from " +
       "the column's name and values. Valid types are:\n\n" +
       Object.keys(TableColumnType)
-        .map(type => `  * \`${type}\``)
+        .map((type) => `  * \`${type}\``)
         .join("\n"),
     type: "string"
   })

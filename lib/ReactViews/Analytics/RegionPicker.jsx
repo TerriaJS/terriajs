@@ -48,7 +48,7 @@ const RegionPicker = createReactClass({
     this._lastPickedFeatures = undefined;
 
     knockout.defineProperty(this, "regionProvider", {
-      get: function() {
+      get: function () {
         return this.props.parameter.regionProvider;
       }
     });
@@ -60,10 +60,10 @@ const RegionPicker = createReactClass({
     );
 
     knockout.defineProperty(this, "regionValue", {
-      get: function() {
+      get: function () {
         return this.props.parameter.value;
       },
-      set: function(value) {
+      set: function (value) {
         if (defined(value) && defined(value.realRegion)) {
           value = value.realRegion;
         }
@@ -77,12 +77,12 @@ const RegionPicker = createReactClass({
         this.props.previewed.terria.mapInteractionModeStack[0],
         "pickedFeatures"
       )
-      .subscribe(function(pickedFeatures) {
+      .subscribe(function (pickedFeatures) {
         if (!defined(pickedFeatures)) {
           return;
         }
         that._lastPickedFeatures = pickedFeatures;
-        pickedFeatures.allFeaturesAvailablePromise.then(function() {
+        pickedFeatures.allFeaturesAvailablePromise.then(function () {
           if (
             pickedFeatures !== that._lastPickedFeatures ||
             pickedFeatures.features.length === 0
@@ -98,7 +98,7 @@ const RegionPicker = createReactClass({
   },
 
   componentWillUnmount() {
-    this._subscriptions.forEach(subscription => subscription.dispose());
+    this._subscriptions.forEach((subscription) => subscription.dispose());
     if (defined(this._regionsCatalogItem)) {
       this._regionsCatalogItem.isEnabled = false;
       this._regionsCatalogItem = undefined;
@@ -157,7 +157,7 @@ const RegionPicker = createReactClass({
     Promise.all([
       that.regionProvider.loadRegionIDs(),
       that.regionProvider.loadRegionNames()
-    ]).then(function() {
+    ]).then(function () {
       if (that.regionProvider !== that._loadingRegionProvider) {
         return;
       }
@@ -201,7 +201,7 @@ const RegionPicker = createReactClass({
     const that = this;
     this.regionProvider
       .getRegionFeature(terria, value, that._lastRegionFeature)
-      .then(function(feature) {
+      .then(function (feature) {
         if (!defined(feature)) {
           return;
         }
@@ -220,7 +220,7 @@ const RegionPicker = createReactClass({
           that._selectedRegionCatalogItem.zoomTo();
         }
       })
-      .catch(function() {
+      .catch(function () {
         if (that.props.parameter.value !== value) {
           // Value has already changed.
           return;

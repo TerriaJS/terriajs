@@ -68,10 +68,10 @@ export default function mixTraits<
     Traits13,
     Traits14
   ]);
-  const traitsInstances = traitsClasses.map(TraitsClass => new TraitsClass());
+  const traitsInstances = traitsClasses.map((TraitsClass) => new TraitsClass());
   const keysValues = traitsInstances.reduce((result, traitsInstance) => {
     return result.concat(
-      Object.keys(traitsInstance).map(property => ({
+      Object.keys(traitsInstance).map((property) => ({
         key: property,
         value: (<any>traitsInstance)[property]
       }))
@@ -82,14 +82,14 @@ export default function mixTraits<
     static readonly traits: any = {};
     constructor() {
       super();
-      keysValues.forEach(kv => {
+      keysValues.forEach((kv) => {
         (<any>this)[kv.key] = kv.value;
       });
     }
   }
 
-  traitsClasses.forEach(traitsClass => {
-    Object.keys(traitsClass.traits).forEach(trait => {
+  traitsClasses.forEach((traitsClass) => {
+    Object.keys(traitsClass.traits).forEach((trait) => {
       Mixed.traits[trait] = traitsClass.traits[trait];
     });
   });

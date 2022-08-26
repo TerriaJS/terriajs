@@ -37,7 +37,7 @@ export function selectOnMap(
   const pickPolygonMode = new MapInteractionMode({
     message:
       '<div>Select existing polygon<div style="font-size:12px"><p><i>If there are no polygons to select, add a layer that provides polygons.</i></p></div></div>',
-    onCancel: function() {
+    onCancel: function () {
       terria.mapInteractionModeStack.pop();
       viewState.openAddData();
       if (pickedFeaturesSubscription) {
@@ -60,7 +60,7 @@ export function selectOnMap(
       }
 
       const catalogItems = (pickedFeatures?.features
-        .map(function(feature) {
+        .map(function (feature) {
           let geojson: FeatureCollectionWithCrs | GeoJsonFeature | undefined;
           if (feature.data) {
             geojson = featureDataToGeoJson(feature.data);
@@ -78,9 +78,8 @@ export function selectOnMap(
             const positions = feature.polygon.hierarchy
               ?.getValue(terria.timelineClock.currentTime)
               .positions.map((position: Cartesian3) => {
-                const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
-                  position
-                );
+                const cartographic =
+                  Ellipsoid.WGS84.cartesianToCartographic(position);
                 return [
                   CesiumMath.toDegrees(cartographic.longitude),
                   CesiumMath.toDegrees(cartographic.latitude)
@@ -110,10 +109,10 @@ export function selectOnMap(
             return catalogItem;
           }
         })
-        .filter(item => isDefined(item)) ?? []) as GeoJsonCatalogItem[];
+        .filter((item) => isDefined(item)) ?? []) as GeoJsonCatalogItem[];
 
       const result = Result.combine(
-        await Promise.all(catalogItems.map(model => model.loadMapItems())),
+        await Promise.all(catalogItems.map((model) => model.loadMapItems())),
         "Failed to load picked polygons"
       );
 
@@ -122,9 +121,11 @@ export function selectOnMap(
         terria.mapInteractionModeStack.pop();
       } else {
         const features = flatten(
-          filterOutUndefined(catalogItems.map(item => item.readyData?.features))
+          filterOutUndefined(
+            catalogItems.map((item) => item.readyData?.features)
+          )
         ).filter(
-          f =>
+          (f) =>
             f.geometry.type === "Polygon" || f.geometry.type === "MultiPolygon"
         ) as any;
 
@@ -149,7 +150,7 @@ export function getDisplayValue(value: GeoJsonFeature[]) {
     return "";
   }
   return value
-    .map(function(featureData) {
+    .map(function (featureData) {
       return featureData.id;
     })
     .join(", ");
