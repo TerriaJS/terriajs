@@ -195,7 +195,7 @@ const StandardUserInterface = createReactClass({
                     terria={terria}
                     menuItems={customElements.menu}
                     viewState={viewState}
-                    version={this.props.version}
+                    version={this.props?.version}
                     allBaseMaps={allBaseMaps}
                   />
                 </Small>
@@ -305,6 +305,7 @@ const StandardUserInterface = createReactClass({
                       <div className="flex">
                         {terria.nowViewing.items
                           .filter(item => item.isShown)
+                          .filter(item => item.isLegendVisible)
                           .map((item, i) => (
                             <Legend item={item} key={i} />
                           ))}
