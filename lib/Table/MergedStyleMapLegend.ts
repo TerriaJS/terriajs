@@ -22,7 +22,7 @@ export class MergedStyleMapLegend extends LoadableStratum(LegendTraits) {
   }
 
   @computed get title() {
-    return this.legends.find(l => l.title)?.title;
+    return this.legends.find((l) => l.title)?.title;
   }
 
   @computed
@@ -30,10 +30,10 @@ export class MergedStyleMapLegend extends LoadableStratum(LegendTraits) {
     let items: StratumFromTraits<LegendItemTraits>[] = [];
 
     // Merge all Legend items by title
-    this.legends.forEach(legend => {
-      legend.items?.forEach(currentItem => {
+    this.legends.forEach((legend) => {
+      legend.items?.forEach((currentItem) => {
         const existingItemIndex = items.findIndex(
-          item => item.title && item.title === currentItem.title
+          (item) => item.title && item.title === currentItem.title
         );
         const existingItem = items[existingItemIndex];
         if (!existingItem) {

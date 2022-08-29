@@ -48,7 +48,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props);
-    this.escKeyListener = e => {
+    this.escKeyListener = (e) => {
       if (e.keyCode === 27) {
         this.onDismiss();
       }
@@ -359,7 +359,7 @@ const TextArea: React.FC<TextAreaProps> = (props: TextAreaProps) => {
       styledHeight={styledMinHeight}
       styledMinHeight={styledMinHeight}
       styledMaxHeight={styledMaxHeight}
-      onChange={event => {
+      onChange={(event) => {
         textAreaRef.current!.style.setProperty("height", "auto");
 
         if (props.onChange) {
@@ -382,7 +382,7 @@ interface StyledLabelProps {
 const StyledLabel: React.FC<StyledLabelProps> = (props: StyledLabelProps) => {
   const { viewState, label, textProps } = props;
   const id = useUID();
-  const childrenWithId = React.Children.map(props.children, child => {
+  const childrenWithId = React.Children.map(props.children, (child) => {
     // checking isValidElement is the safe way and avoids a typescript error too
     if (React.isValidElement(child)) {
       return React.cloneElement(child, { id: id });
@@ -412,7 +412,7 @@ const Form = styled(Box).attrs({
   as: "form"
 })``;
 
-const FormWrapper = styled(Box).attrs(props => ({
+const FormWrapper = styled(Box).attrs((props) => ({
   column: true,
   position: "absolute",
   styledMaxHeight: "60vh",
@@ -420,14 +420,14 @@ const FormWrapper = styled(Box).attrs(props => ({
   styledWidth: "350px",
   backgroundColor: props.theme.textLight
 }))`
-  z-index: ${props => props.theme.notificationWindowZIndex};
+  z-index: ${(props) => props.theme.notificationWindowZIndex};
   border-radius: 5px;
-  @media (min-width: ${props => props.theme.sm}px) {
+  @media (min-width: ${(props) => props.theme.sm}px) {
     bottom: 75px;
     right: 20px;
     //max-height: 60vh;
   }
-  @media (max-width: ${props => props.theme.sm}px) {
+  @media (max-width: ${(props) => props.theme.sm}px) {
     right: 0;
     top: 50px;
     left: 0;

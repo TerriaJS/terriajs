@@ -12,12 +12,12 @@ import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
 import ShortReport from "../../lib/ReactViews/Workbench/Controls/ShortReport";
 import Text from "../../lib/Styled/Text";
 
-describe("ShortReport", function() {
+describe("ShortReport", function () {
   let testRenderer: ReactTestRenderer | undefined;
   let terria: Terria;
   let wmsItem: WebMapServiceCatalogItem;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -42,8 +42,8 @@ describe("ShortReport", function() {
     ]);
   });
 
-  describe("with basic props", function() {
-    it("renders without errors", function() {
+  describe("with basic props", function () {
+    it("renders without errors", function () {
       act(() => {
         testRenderer = create(
           <ThemeProvider theme={terriaTheme}>
@@ -85,7 +85,7 @@ describe("ShortReport", function() {
       const boxes = testRenderer.root.findAllByType("p");
       expect(
         boxes.some(
-          box => box.props.children === "Report Name - with no content"
+          (box) => box.props.children === "Report Name - with no content"
         )
       ).toBeTruthy();
     });

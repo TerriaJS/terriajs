@@ -53,8 +53,8 @@ interface StandardUserInterfaceProps {
   version: string;
 }
 
-const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> = observer(
-  props => {
+const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
+  observer((props) => {
     const { t } = useTranslation();
 
     const acceptDragDropFile = action(() => {
@@ -207,8 +207,8 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> = observer
                         props.viewState.trainerBarVisible,
                       [Styles.showWorkbenchButtonisVisible]:
                         props.viewState.isMapFullScreen,
-                      [Styles.showWorkbenchButtonisNotVisible]: !props.viewState
-                        .isMapFullScreen
+                      [Styles.showWorkbenchButtonisNotVisible]:
+                        !props.viewState.isMapFullScreen
                     })}
                   >
                     <FullScreenButton
@@ -301,8 +301,7 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> = observer
         )}
       </ContextProviders>
     );
-  }
-);
+  });
 
 export const StandardUserInterface = withFallback(StandardUserInterfaceBase);
 export default withFallback(StandardUserInterfaceBase);

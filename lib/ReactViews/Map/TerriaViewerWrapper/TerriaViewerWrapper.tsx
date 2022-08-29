@@ -78,7 +78,7 @@ const StyledMapPlaceholder = styled.div`
   width: 100%;
   height: 25%;
   margin: auto;
-  @media (min-width: ${p => p.theme.sm}px) {
+  @media (min-width: ${(p) => p.theme.sm}px) {
     color: white;
   }
 `;

@@ -45,7 +45,7 @@ class BottomDock extends React.Component<PropsType & MeasureElementProps> {
         className={`${Styles.bottomDock} ${
           this.props.viewState.topElement === "BottomDock" ? "top-element" : ""
         }`}
-        ref={element => {
+        ref={(element) => {
           if (element !== null) {
             this.refToMeasure = element;
           }

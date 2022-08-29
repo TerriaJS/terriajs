@@ -96,10 +96,12 @@ const DropdownPanel = createReactClass({
             [Styles.buttonForModalDropdown]: this.props.showDropdownAsModal
           })}
           title={this.props.btnTitle}
-          ref={this.props.btnRef || (element => (this.buttonElement = element))}
+          ref={
+            this.props.btnRef || ((element) => (this.buttonElement = element))
+          }
           isOpen={this.isOpen()}
           css={`
-            ${p =>
+            ${(p) =>
               p.isOpen &&
               `&:not(.foo) {
                 background: ${p.theme.colorPrimary};

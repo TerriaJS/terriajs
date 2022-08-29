@@ -4,16 +4,16 @@ import { act } from "react-dom/test-utils";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import { runInAction } from "mobx";
-const MapDataCount = require("../../../lib/ReactViews/BottomDock/MapDataCount")
-  .default;
+const MapDataCount =
+  require("../../../lib/ReactViews/BottomDock/MapDataCount").default;
 
-describe("MapDataCount", function() {
+describe("MapDataCount", function () {
   let terria: Terria;
   let viewState: ViewState;
 
   let testRenderer: any;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -24,7 +24,7 @@ describe("MapDataCount", function() {
     });
   });
 
-  it("renders", function() {
+  it("renders", function () {
     expect(viewState.useSmallScreenInterface).toEqual(false);
     act(() => {
       testRenderer = create(
@@ -35,7 +35,7 @@ describe("MapDataCount", function() {
     expect(divs).toBeDefined();
   });
 
-  it("doesn't render anything when in mobile UI via useSmallScreenInterface", function() {
+  it("doesn't render anything when in mobile UI via useSmallScreenInterface", function () {
     runInAction(() => (viewState.useSmallScreenInterface = true));
     expect(viewState.useSmallScreenInterface).toEqual(true);
     act(() => {

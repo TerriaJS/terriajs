@@ -60,9 +60,7 @@
       }
     }
   ],
-  "childViews": [
-    "7emh-y3dj"
-  ],
+  "childViews": ["7emh-y3dj"],
   "columns": [],
   "displayFormat": {
     "distinctLegend": true,
@@ -95,9 +93,7 @@
     {
       "inherited": false,
       "type": "viewer",
-      "flags": [
-        "public"
-      ]
+      "flags": ["public"]
     }
   ],
   "license": {
@@ -124,12 +120,7 @@
         "Reliability level": "Useful with caveats"
       }
     },
-    "availableDisplayTypes": [
-      "map",
-      "table",
-      "fatrow",
-      "page"
-    ],
+    "availableDisplayTypes": ["map", "table", "fatrow", "page"],
     "renderTypeConfig": {
       "visible": {
         "map": true
@@ -144,14 +135,10 @@
     "profileImageUrlSmall": "/api/users/by7m-q3n8/profile_images/TINY",
     "screenName": "City of Melbourne Open Data Team",
     "type": "interactive",
-    "flags": [
-      "mayBeStoriesCoOwner"
-    ]
+    "flags": ["mayBeStoriesCoOwner"]
   },
   "query": {},
-  "rights": [
-    "read"
-  ],
+  "rights": ["read"],
   "tableAuthor": {
     "id": "by7m-q3n8",
     "displayName": "City of Melbourne Open Data Team",
@@ -160,9 +147,7 @@
     "profileImageUrlSmall": "/api/users/by7m-q3n8/profile_images/TINY",
     "screenName": "City of Melbourne Open Data Team",
     "type": "interactive",
-    "flags": [
-      "mayBeStoriesCoOwner"
-    ]
+    "flags": ["mayBeStoriesCoOwner"]
   },
   "tags": [
     "urban forest",
@@ -172,8 +157,5 @@
     "eventsplanner",
     "citizenreporter"
   ],
-  "flags": [
-    "default",
-    "ownerMayBeContacted"
-  ]
+  "flags": ["default", "ownerMayBeContacted"]
 }

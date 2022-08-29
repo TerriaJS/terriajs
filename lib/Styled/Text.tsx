@@ -59,18 +59,18 @@ export type ITextProps = ITextPropsBase &
 
 // should it be a span or inline-block-div? - leaning to div
 export const Text = styled.div<ITextProps>`
-  ${props => props.displayBlock && `display: block;`}
+  ${(props) => props.displayBlock && `display: block;`}
 
   // Unsure about this one, as we don't have react-router / "actual links" at
   // the moment, no present way to distinguish external links, etc
-  ${props => props.isLink && `text-decoration: underline; cursor: pointer;`}
+  ${(props) => props.isLink && `text-decoration: underline; cursor: pointer;`}
 
   // TODO: themeify family
-  font-family: ${props => props.theme.fontBase};
-  
-  ${props => props.mono && `font-family: ${props.theme.fontMono};`}
+  font-family: ${(props) => props.theme.fontBase};
 
-  ${props =>
+  ${(props) => props.mono && `font-family: ${props.theme.fontMono};`}
+
+  ${(props) =>
     props.breakWord &&
     `
     overflow-wrap: break-word;
@@ -78,116 +78,116 @@ export const Text = styled.div<ITextProps>`
   `}
 
   font-weight: 400;
-  ${props => props.light && `font-weight: 300;`}
-  ${props => props.bold && `font-weight: bold;`}
-  ${props => props.semiBold && `font-weight: 600;`}
-  ${props => props.extraBold && `font-weight: 800;`}
-  ${props => props.uppercase && `text-transform: uppercase;`}
+  ${(props) => props.light && `font-weight: 300;`}
+  ${(props) => props.bold && `font-weight: bold;`}
+  ${(props) => props.semiBold && `font-weight: 600;`}
+  ${(props) => props.extraBold && `font-weight: 800;`}
+  ${(props) => props.uppercase && `text-transform: uppercase;`}
 
-  ${props => props.textAlignLeft && `text-align: left;`}
-  ${props => props.textAlignCenter && `text-align: center;`}
-  ${props =>
+  ${(props) => props.textAlignLeft && `text-align: left;`}
+  ${(props) => props.textAlignCenter && `text-align: center;`}
+  ${(props) =>
     props.primary &&
     `
     color: ${props.theme.colorPrimary};
   `}
-  ${props =>
+  ${(props) =>
     props.textLight &&
     `
     color: ${props.theme.textLight};
   `}
-  ${props =>
+  ${(props) =>
     props.textLightDimmed &&
     `
     color: ${props.theme.textLightDimmed};
   `}
-  ${props =>
+  ${(props) =>
     props.textDark &&
     `
     color: ${props.theme.textDark};
   `}
-  ${props =>
+  ${(props) =>
     props.textDarker &&
     `
     color: ${props.theme.textDarker};
   `}
-  ${props =>
+  ${(props) =>
     props.color &&
     `
     color: ${props.color};
   `}
 
-  ${props => props.fullWidth && `width: 100%;`}
-  ${props => props.noWrap && `white-space: nowrap;`}
+  ${(props) => props.fullWidth && `width: 100%;`}
+  ${(props) => props.noWrap && `white-space: nowrap;`}
 
   line-height: 20px;
-  ${props =>
+  ${(props) =>
     !props.noFontSize &&
     `
     font-size: 13px;
     line-height: normal;
   `}
 
-  ${props =>
+  ${(props) =>
     props.mini &&
     `
     font-size: 10px;
   `}
 
-  ${props =>
+  ${(props) =>
     props.small &&
     `
     font-size: 12px;
     line-height: 16px;
   `}
 
-  ${props =>
+  ${(props) =>
     props.medium &&
     `
     // terrace designed ~h4 equivalent?
     font-size: 14px;
   `}
-  ${props =>
+  ${(props) =>
     props.large &&
     `
     font-size: 15px;
   `}
-  ${props =>
+  ${(props) =>
     (props?.as === "h4" || props.extraLarge) &&
     `
     font-size: 16px;
   `}
 
   // yeah extra extra large - will re-port to h4 once we re-add Heading.tsx
-  ${props =>
+  ${(props) =>
     (props?.as === "h3" || props.extraExtraLarge) &&
     `
     font-size: 18px;
   `}
-  ${props =>
+  ${(props) =>
     (props?.as === "h2" || props.subHeading) &&
     `
     font-weight: bold;
     font-size: 23px;
     line-height: 31px;
   `}
-  ${props =>
+  ${(props) =>
     (props?.as === "h1" || props.heading) &&
     `
     font-weight: 800;
     font-size: 26px;
     line-height: 32px;
   `}
-  ${props =>
+  ${(props) =>
     props.styledLineHeight && `line-height: ${props.styledLineHeight}`};
 
-  ${props =>
+  ${(props) =>
     props.styledFontSize &&
     `
     font-size: ${props.styledFontSize};
   `}
 
-  ${props =>
+  ${(props) =>
     props.highlightLinks &&
     `
     a {
@@ -195,17 +195,17 @@ export const Text = styled.div<ITextProps>`
     }
   `}
 
-  ${props =>
+  ${(props) =>
     props.isDisabled &&
     `
     opacity: 0.3;
     cursor: not-allowed;
   `}
 
-  ${props => props.overflowHide && ` overflow: hidden;`}
-  ${props => props.overflowEllipsis && ` text-overflow: ellipsis;`}
+  ${(props) => props.overflowHide && ` overflow: hidden;`}
+  ${(props) => props.overflowEllipsis && ` text-overflow: ellipsis;`}
 
-  ${props =>
+  ${(props) =>
     props.maxLines &&
     `
     -webkit-line-clamp: ${props.maxLines === true ? 2 : props.maxLines};

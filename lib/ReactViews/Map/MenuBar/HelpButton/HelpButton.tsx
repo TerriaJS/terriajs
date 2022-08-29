@@ -20,7 +20,7 @@ export default (props: Props) => {
     <div>
       <button
         className={Styles.helpBtn}
-        onClick={evt => {
+        onClick={(evt) => {
           evt.preventDefault();
           evt.stopPropagation();
           props.viewState.showHelpPanel();

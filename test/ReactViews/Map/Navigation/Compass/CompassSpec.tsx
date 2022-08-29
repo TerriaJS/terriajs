@@ -9,13 +9,13 @@ import { terriaTheme } from "../../../../../lib/ReactViews/StandardUserInterface
 import { Compass } from "../../../../../lib/ReactViews/Map/MapNavigation/Items/Compass/Compass";
 import { StyledIcon } from "../../../../../lib/Styled/Icon";
 
-describe("Compass", function() {
+describe("Compass", function () {
   let terria: Terria;
   let viewState: ViewState;
 
   let testRenderer: any;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -26,8 +26,8 @@ describe("Compass", function() {
     });
   });
 
-  describe("with basic props", function() {
-    it("renders", function() {
+  describe("with basic props", function () {
+    it("renders", function () {
       act(() => {
         testRenderer = create(
           <ThemeProvider theme={terriaTheme}>

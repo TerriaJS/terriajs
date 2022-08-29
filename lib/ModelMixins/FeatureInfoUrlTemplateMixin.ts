@@ -58,7 +58,7 @@ function FeatureInfoUrlTemplateMixin<T extends Constructor<Target>>(Base: T) {
             });
             try {
               const featureInfo = await loadJson(resource);
-              Object.keys(featureInfo).forEach(property => {
+              Object.keys(featureInfo).forEach((property) => {
                 if (!feature.properties) {
                   feature.properties = new PropertyBag();
                 }
@@ -129,7 +129,7 @@ function FeatureInfoUrlTemplateMixin<T extends Constructor<Target>>(Base: T) {
             });
             try {
               const featureInfo = await loadJson(resource);
-              Object.keys(featureInfo).forEach(property => {
+              Object.keys(featureInfo).forEach((property) => {
                 if (!feature.properties) {
                   feature.properties = {};
                 }

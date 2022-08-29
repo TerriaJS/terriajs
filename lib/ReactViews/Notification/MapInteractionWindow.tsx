@@ -14,7 +14,7 @@ import { withViewState } from "../Context";
 import Styles from "./map-interaction-window.scss";
 
 const MapInteractionWindowWrapper = styled.div<{ isDiffTool: boolean }>`
-  ${props =>
+  ${(props) =>
     props.isDiffTool &&
     `
     display: none;
@@ -57,10 +57,10 @@ class MapInteractionWindow extends React.Component<{
           this.props.viewState.terria.mapInteractionModeStack.length - 1
         ],
       () => {
-        const mapInteractionMode = this.props.viewState.terria
-          .mapInteractionModeStack[
-          this.props.viewState.terria.mapInteractionModeStack.length - 1
-        ];
+        const mapInteractionMode =
+          this.props.viewState.terria.mapInteractionModeStack[
+            this.props.viewState.terria.mapInteractionModeStack.length - 1
+          ];
 
         if (mapInteractionMode !== this.currentInteractionMode) {
           this.currentInteractionMode = mapInteractionMode;

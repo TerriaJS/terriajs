@@ -2,9 +2,9 @@
 
 import featureDataToGeoJson from "../../lib/Map/PickedFeatures/featureDataToGeoJson";
 
-describe("featureDataToGeoJson", function() {
-  describe("Esri polygon", function() {
-    it("with a single outer ring", function() {
+describe("featureDataToGeoJson", function () {
+  describe("Esri polygon", function () {
+    it("with a single outer ring", function () {
       const esri = {
         geometryType: "esriGeometryPolygon",
         geometry: {
@@ -39,7 +39,7 @@ describe("featureDataToGeoJson", function() {
       });
     });
 
-    it("with one outer ring and two holes", function() {
+    it("with one outer ring and two holes", function () {
       const esri = {
         geometryType: "esriGeometryPolygon",
         geometry: {
@@ -102,7 +102,7 @@ describe("featureDataToGeoJson", function() {
       });
     });
 
-    it("with two outer rings", function() {
+    it("with two outer rings", function () {
       const esri = {
         geometryType: "esriGeometryPolygon",
         geometry: {
@@ -155,7 +155,7 @@ describe("featureDataToGeoJson", function() {
       });
     });
 
-    it("with two outer rings and a hole in each", function() {
+    it("with two outer rings and a hole in each", function () {
       const esri = {
         geometryType: "esriGeometryPolygon",
         geometry: {
@@ -236,7 +236,7 @@ describe("featureDataToGeoJson", function() {
       });
     });
 
-    it("with no outer rings, assumes winding order is reversed and uses holes as outer rings", function() {
+    it("with no outer rings, assumes winding order is reversed and uses holes as outer rings", function () {
       const esri = {
         geometryType: "esriGeometryPolygon",
         geometry: {

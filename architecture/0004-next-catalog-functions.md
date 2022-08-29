@@ -1,4 +1,4 @@
-# 2. *Next* Catalog Functions
+# 2. _Next_ Catalog Functions
 
 Date: 2020-11-03
 
@@ -17,7 +17,7 @@ Catalog function jobs take those parameters, perform some unit of work (usually 
 ### What do we need
 
 - To make share work
-  - Save catalog function state (specifically `FunctionParameter` state) - so values entered by user in form are saved 
+  - Save catalog function state (specifically `FunctionParameter` state) - so values entered by user in form are saved
   - Save catalog function job state - so jobs can be shared and recovered (regardless of `jobStatus` - inactive, running, finished...)
 - Create simple Mixin for `CatalogFunction` and `CatalogFunctionJob` to make creating catalog functions easier
 - Typescript everything
@@ -54,14 +54,14 @@ Contains values for `functionParameters`.
 #### `functionParameters`
 
 ```ts
-@computed 
+@computed
 abstract get functionParameters(): FunctionParameter[];
 ```
 
 Function parameters are rendered as `ParameterEditors`, their values directly map to the `parameters` trait. When a `FunctionParameter` value is modified, it will automatically update `parameters` trait.
 
 When a job is created, the `parameters` are copied across automatically (see `CatalogFunctionMixin#submitJob`)
-    
+
 #### `createJob()`
 
 ```ts
@@ -70,7 +70,7 @@ protected abstract createJob(id: string): Promise<CatalogFunctionJobMixin>
 
 Note: `name` and `parameters` traits are automatically copied across when submitted (see `CatalogFunctionMixin#submitJob`)
 All user-configured job parameters should be in the `parameters` trait, this is the ensure that function parameter state behaves correctly, and that values can be easily copied across jobs.
-     
+
 Other job traits can be set in this function, as long as they aren't related to function parameters - for example the `url` and `processIdentier` trait for WPS are copied from the WPSCatalogFunction.
 
 #### `submitJob()`
@@ -78,7 +78,9 @@ Other job traits can be set in this function, as long as they aren't related to 
 ```ts
  async submitJob(): Promise<CatalogFunctionJobMixin>
 ```
-Submit job:  
+
+Submit job:
+
 - create new job - see `CatalogFunctionMixin#createJob`
 - sets job traits (`name`, `parameters`, `jobStatus`, ...)
 - invokes job see `CatalogFunctionJobMixin#invoke`
@@ -93,7 +95,7 @@ Extends `AutoRefreshTraits` (to handle polling for job results), `CatalogFunctio
 
 For log messages
 
-#### `jobStatus: "inactive" | "running" | "error" | "finished"`  trait
+#### `jobStatus: "inactive" | "running" | "error" | "finished"` trait
 
 `jobStatus` should not be modified outside of `CatalogFunctionJobMixin`
 
@@ -131,9 +133,10 @@ private async onJobFinish(addToWorkbench = this.inWorkbench)
 ```
 
 This handles downloading job results, it can be triggered three ways:
+
 - `_invoke()` returns `true` (see CatalogFunctionJobMixin#invoke)
 - `pollForResults()` returns `true` (see CatalogFunctionJobMixin#refreshData)
-- on `loadMetadata` if `jobStatus` is "finished", and `!downloadedResults`  (see CatalogFunctionJobMixin#forceLoadMetadata)
+- on `loadMetadata` if `jobStatus` is "finished", and `!downloadedResults` (see CatalogFunctionJobMixin#forceLoadMetadata)
 
 #### `downloadResults()`
 
@@ -143,7 +146,7 @@ This handles downloading job results, it can be triggered three ways:
     >;
 ```
 
-Called in `onJobFinish()` 
+Called in `onJobFinish()`
 returns catalog members which are added to the workbench
 
 #### `results`
@@ -157,7 +160,6 @@ Job result `CatalogMembers` - set from calling `CatalogFunctionJobMixin#download
 #### Job history
 
 Jobs are added to the My Data tab when submitted - they act like Catalog Groups - all results are members of the `CatalogFunctionJob`
-
 
 ## Consequences
 

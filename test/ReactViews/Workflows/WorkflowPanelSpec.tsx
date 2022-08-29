@@ -4,12 +4,12 @@ import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import WorkflowPanel from "../../../lib/ReactViews/Workflow/WorkflowPanel";
 
-describe("WorkflowPanel", function() {
+describe("WorkflowPanel", function () {
   let terria: Terria;
   let viewState: ViewState;
   let testRenderer: ReactTestRenderer;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -22,7 +22,7 @@ describe("WorkflowPanel", function() {
     });
   });
 
-  it("sets isWorkflowPanelActive when opened", async function() {
+  it("sets isWorkflowPanelActive when opened", async function () {
     expect(viewState.terria.isWorkflowPanelActive).toBe(false);
     await act(() => {
       TestRenderer.create(
@@ -38,7 +38,7 @@ describe("WorkflowPanel", function() {
     expect(viewState.terria.isWorkflowPanelActive).toBe(true);
   });
 
-  it("unsets isWorkflowPanelActive sidepanel when closed", async function() {
+  it("unsets isWorkflowPanelActive sidepanel when closed", async function () {
     await act(() => {
       testRenderer = TestRenderer.create(
         <WorkflowPanel

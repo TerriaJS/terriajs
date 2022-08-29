@@ -223,7 +223,7 @@ class ZoomControlBase extends React.Component<PropTypes> {
   }
 }
 
-const StyledZoomControl = styled(Box).attrs(props => ({
+const StyledZoomControl = styled(Box).attrs((props) => ({
   backgroundColor: props.theme.textLight,
   centered: true,
   column: true,
@@ -234,7 +234,7 @@ const StyledZoomControl = styled(Box).attrs(props => ({
   svg {
     height: 20px;
     width: 20px;
-    fill: ${props => props.theme.darkWithOverlay};
+    fill: ${(props) => props.theme.darkWithOverlay};
   }
   ${Li} {
     margin: 5px 0;

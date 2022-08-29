@@ -236,14 +236,11 @@ type ButtonLauncherProps = {
   [spread: string]: any;
 };
 
-export const TooltipWithButtonLauncher: React.SFC<ButtonLauncherProps> = props => {
-  const {
-    launcherComponent,
-    children,
-    dismissOnLeave,
-    orientation,
-    ...rest
-  } = props;
+export const TooltipWithButtonLauncher: React.SFC<ButtonLauncherProps> = (
+  props
+) => {
+  const { launcherComponent, children, dismissOnLeave, orientation, ...rest } =
+    props;
 
   const idForAria = `ButtonLauncher-${useUID()}`;
   const idForChildAria = `ButtonLauncher-child-${useUID()}`;
@@ -256,7 +253,7 @@ export const TooltipWithButtonLauncher: React.SFC<ButtonLauncherProps> = props =
       orientation={orientation || "below"}
       {...rest}
       disableEventListeners
-      launcher={launchObj => {
+      launcher={(launchObj) => {
         const handleClose = () => {
           if (launchObj.state.open) {
             launchObj.forceSetState(false);
@@ -287,7 +284,7 @@ export const TooltipWithButtonLauncher: React.SFC<ButtonLauncherProps> = props =
         );
       }}
     >
-      {applyAriaId => (
+      {(applyAriaId) => (
         <TextSpan
           // provide some base text styles as a textspan,
           // as this will be rendered outside the tree

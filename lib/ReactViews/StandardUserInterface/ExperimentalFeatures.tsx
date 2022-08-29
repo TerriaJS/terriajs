@@ -13,7 +13,7 @@ const ControlsWrapper = styled.div`
   left: 25px;
   bottom: 25px;
   z-index: 1;
-  @media (min-width: ${props => props.theme.sm}px) {
+  @media (min-width: ${(props) => props.theme.sm}px) {
     top: auto;
     bottom: 100px;
   }
@@ -25,7 +25,7 @@ const Control = styled.div`
     margin-bottom: 0;
   }
 `;
-const ExperimentalFeatures: React.FC<IProps> = props => {
+const ExperimentalFeatures: React.FC<IProps> = (props) => {
   return (
     <ControlsWrapper>
       {(props.experimentalItems || []).map((item, i) => (

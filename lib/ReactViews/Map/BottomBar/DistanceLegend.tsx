@@ -17,38 +17,9 @@ import { useViewState } from "../../Context";
 const geodesic = new EllipsoidGeodesic();
 
 const distances = [
-  1,
-  2,
-  3,
-  5,
-  10,
-  20,
-  30,
-  50,
-  100,
-  200,
-  300,
-  500,
-  1000,
-  2000,
-  3000,
-  5000,
-  10000,
-  20000,
-  30000,
-  50000,
-  100000,
-  200000,
-  300000,
-  500000,
-  1000000,
-  2000000,
-  3000000,
-  5000000,
-  10000000,
-  20000000,
-  30000000,
-  50000000
+  1, 2, 3, 5, 10, 20, 30, 50, 100, 200, 300, 500, 1000, 2000, 3000, 5000, 10000,
+  20000, 30000, 50000, 100000, 200000, 300000, 500000, 1000000, 2000000,
+  3000000, 5000000, 10000000, 20000000, 30000000, 50000000
 ];
 
 interface IDistanceLegendProps {
@@ -78,7 +49,7 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
         if (removeUpdateSubscription) {
           removeUpdateSubscription();
         }
-        viewerSubscriptions.forEach(clear => clear());
+        viewerSubscriptions.forEach((clear) => clear());
       };
     }, [terria.cesium, terria.leaflet]);
 
@@ -88,15 +59,14 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
       | undefined => {
       if (isDefined(terria.cesium)) {
         const scene = terria.cesium.scene;
-        let removeUpdateSubscription:
-          | CesiumEvent.RemoveCallback
-          | undefined = scene.postRender.addEventListener(() => {
-          updateDistanceLegendCesium(scene);
-          if (isPrintMode) {
-            removeUpdateSubscription?.();
-            removeUpdateSubscription = undefined;
-          }
-        });
+        let removeUpdateSubscription: CesiumEvent.RemoveCallback | undefined =
+          scene.postRender.addEventListener(() => {
+            updateDistanceLegendCesium(scene);
+            if (isPrintMode) {
+              removeUpdateSubscription?.();
+              removeUpdateSubscription = undefined;
+            }
+          });
         return removeUpdateSubscription;
       } else if (isDefined(terria.leaflet)) {
         const map = terria.leaflet.map;
@@ -106,7 +76,7 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
           const potentialChangeCallback = function potentialChangeCallback() {
             updateDistanceLegendLeaflet(map);
           };
-          removeUpdateSubscription = function() {
+          removeUpdateSubscription = function () {
             map.off("zoomend", potentialChangeCallback);
             map.off("moveend", potentialChangeCallback);
           };
@@ -149,12 +119,10 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
         return;
       }
 
-      const leftCartographic = globe.ellipsoid.cartesianToCartographic(
-        leftPosition
-      );
-      const rightCartographic = globe.ellipsoid.cartesianToCartographic(
-        rightPosition
-      );
+      const leftCartographic =
+        globe.ellipsoid.cartesianToCartographic(leftPosition);
+      const rightCartographic =
+        globe.ellipsoid.cartesianToCartographic(rightPosition);
 
       geodesic.setEndPoints(leftCartographic, rightCartographic);
       const pixelDistance = geodesic.surfaceDistance;

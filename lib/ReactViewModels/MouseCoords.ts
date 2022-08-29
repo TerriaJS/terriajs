@@ -17,8 +17,8 @@ import Terria from "../Models/Terria";
 // This is a dodgy workaround.
 class EarthGravityModel1996 extends JSEarthGravityModel1996 {}
 
-const sampleTerrainMostDetailed = require("terriajs-cesium/Source/Core/sampleTerrainMostDetailed")
-  .default;
+const sampleTerrainMostDetailed =
+  require("terriajs-cesium/Source/Core/sampleTerrainMostDetailed").default;
 
 interface Cancelable {
   cancel: () => void;
@@ -118,9 +118,10 @@ export default class MouseCoords {
           intersection.height = height;
         }
 
-        const geometricError = globe.terrainProvider.getLevelMaximumGeometricError(
-          pickedTriangle.tile.level
-        );
+        const geometricError =
+          globe.terrainProvider.getLevelMaximumGeometricError(
+            pickedTriangle.tile.level
+          );
         const approximateHeight = intersection.height;
         const minHeight = Math.max(
           pickedTriangle.tile.data.tileBoundingRegion.minimumHeight,
@@ -218,7 +219,7 @@ export default class MouseCoords {
       positionWithHeight
     ]);
     this.tileRequestInFlight = Promise.all([geoidHeightPromise, terrainPromise])
-      .then(result => {
+      .then((result) => {
         const geoidHeight = result[0] || 0.0;
         this.tileRequestInFlight = undefined;
         if (Cartographic.equals(position, this.cartographic)) {

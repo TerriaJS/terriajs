@@ -80,7 +80,7 @@ export const Splitter: FC<ISplitterProps> = observer(
             cursor: "ew-resize",
             backgroundColor: "white"
           }}
-          onClick={e => e.preventDefault()}
+          onClick={(e) => e.preventDefault()}
           onMouseDown={startDrag}
           onTouchStart={startDrag}
           title={t("splitterTool.title")}

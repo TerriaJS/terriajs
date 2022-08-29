@@ -38,7 +38,7 @@ const DisclaimerButton = styled(Button).attrs({
   },
   rounded: true
 })`
-  width: ${props => (props.fullWidth ? "100%" : "280px")};
+  width: ${(props) => (props.fullWidth ? "100%" : "280px")};
 `;
 
 @observer
@@ -77,8 +77,8 @@ class Disclaimer extends React.Component {
     const disclaimerDeny = disclaimer?.denyText || "Cancel";
     const disclaimerMessage =
       disclaimer?.message || "Disclaimer text goes here";
-    const useSmallScreenInterface = this.props.viewState
-      .useSmallScreenInterface;
+    const useSmallScreenInterface =
+      this.props.viewState.useSmallScreenInterface;
     const renderDenyButton = !!disclaimer?.denyAction;
     return disclaimer ? (
       <FadeIn isVisible={this.props.viewState.disclaimerVisible}>
@@ -115,7 +115,7 @@ class Disclaimer extends React.Component {
             <Text
               styledLineHeight={"18px"}
               textLight
-              css={props =>
+              css={(props) =>
                 `
                 // not sure of the ideal way to deal with this
                 a {

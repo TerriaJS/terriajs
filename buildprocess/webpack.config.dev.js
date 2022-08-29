@@ -1,1 +1,1 @@
-module.exports = require('./webpack.config.make')(false, true);
+module.exports = require("./webpack.config.make")(false, true);

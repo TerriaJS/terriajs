@@ -79,7 +79,7 @@ export default class TableStyleMap<T extends TableStyleMapSymbolTraits> {
   @computed get column() {
     return this.traitValues.column
       ? this.tableModel.tableColumns.find(
-          column => column.name === this.traitValues.column
+          (column) => column.name === this.traitValues.column
         )
       : undefined;
   }
@@ -98,7 +98,7 @@ export default class TableStyleMap<T extends TableStyleMapSymbolTraits> {
     ) {
       return {
         type: "bin",
-        mapValueToStyle: rowId => {
+        mapValueToStyle: (rowId) => {
           const value = this.column?.valuesForType[rowId];
           if (typeof value !== "number") {
             return this.traitValues.null;
@@ -127,9 +127,9 @@ export default class TableStyleMap<T extends TableStyleMapSymbolTraits> {
     ) {
       return {
         type: "enum",
-        mapValueToStyle: rowId => {
+        mapValueToStyle: (rowId) => {
           const style = this.traitValues.enum!.find(
-            enumStyle =>
+            (enumStyle) =>
               enumStyle.value !== null &&
               enumStyle.value === this.column?.values[rowId]
           );

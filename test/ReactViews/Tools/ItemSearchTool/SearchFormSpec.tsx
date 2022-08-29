@@ -27,8 +27,8 @@ class TestItemSearchProvider extends ItemSearchProvider {
   }
 }
 
-describe("SearchForm", function() {
-  it("calls `onResults` after searching", async function() {
+describe("SearchForm", function () {
+  it("calls `onResults` after searching", async function () {
     const itemSearchProvider = new TestItemSearchProvider({}, []);
     const onResults = jasmine.createSpy("onResults");
     const { root } = render({

@@ -11,7 +11,7 @@ import ViewState from "../../../../ReactViewModels/ViewState";
 let passiveSupported = false;
 try {
   const options = Object.defineProperty({}, "passive", {
-    get: function() {
+    get: function () {
       passiveSupported = true;
       return true;
     }

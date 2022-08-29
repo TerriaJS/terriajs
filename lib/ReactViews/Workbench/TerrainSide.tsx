@@ -56,7 +56,8 @@ const TerrainSide: React.FC<ITerrainSideProps> = observer(
     const toggleDepthTestAgainstTerrainEnabled = (event: any) => {
       event.stopPropagation();
       runInAction(() => {
-        terria.depthTestAgainstTerrainEnabled = !terria.depthTestAgainstTerrainEnabled;
+        terria.depthTestAgainstTerrainEnabled =
+          !terria.depthTestAgainstTerrainEnabled;
       });
       terria.currentViewer.notifyRepaintRequired();
     };
@@ -97,7 +98,7 @@ const TerrainSide: React.FC<ITerrainSideProps> = observer(
             ${props.spaced && `gap: 6px;`}
           `}
         >
-          {Object.values(sides).map(side => (
+          {Object.values(sides).map((side) => (
             <RawButton
               key={side}
               onClick={(evt: any) => showTerrainOnSide(side, evt)}
@@ -114,8 +115,8 @@ const TerrainSide: React.FC<ITerrainSideProps> = observer(
                     : `transparent`};
                 ${props.buttonProps && props.buttonProps.css}
                 ${props.activeColor &&
-                  side === currentSide &&
-                  `background-color: ${props.activeColor}`}
+                side === currentSide &&
+                `background-color: ${props.activeColor}`}
               `}
               {...props.buttonProps}
             >

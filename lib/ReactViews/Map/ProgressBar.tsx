@@ -63,12 +63,12 @@ const StyledProgressBar = styled.div<IStyledProgressBarProps>`
   height: 5px;
   overflow: hidden;
   transition: opacity 200ms linear, width 200ms linear, visibility 400ms linear;
-  background-color: ${props => props.backgroundColor};
-  width: ${props => props.loadPercentage};
+  background-color: ${(props) => props.backgroundColor};
+  width: ${(props) => props.loadPercentage};
 
-  ${props => props.complete && `visibility: hidden;`}
+  ${(props) => props.complete && `visibility: hidden;`}
 
-  ${props =>
+  ${(props) =>
     props.indeterminate &&
     `
     width: 100%;

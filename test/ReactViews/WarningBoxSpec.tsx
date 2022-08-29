@@ -8,14 +8,14 @@ import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Box from "../../lib/Styled/Box";
 
-describe("WarningBox", function() {
+describe("WarningBox", function () {
   let testRenderer: ReturnType<typeof create>;
   let terria: Terria;
-  beforeEach(function() {
+  beforeEach(function () {
     // terria = new Terria({ baseUrl: "./" });
   });
 
-  it("renders", function() {
+  it("renders", function () {
     act(() => {
       testRenderer = create(
         <ThemeProvider theme={terriaTheme}>
@@ -24,6 +24,8 @@ describe("WarningBox", function() {
       );
     });
     const boxes = testRenderer.root.findAllByType(Box);
-    expect(boxes.some(box => box.props.children === "Test text")).toBeTruthy();
+    expect(
+      boxes.some((box) => box.props.children === "Test text")
+    ).toBeTruthy();
   });
 });

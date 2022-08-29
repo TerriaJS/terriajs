@@ -26,12 +26,12 @@ configure({
 
 const lga11Csv = require("raw-loader!../../../../wwwroot/test/csv/lga_code_2011.csv");
 
-describe("YDYRCatalogFunction", function() {
+describe("YDYRCatalogFunction", function () {
   let terria: Terria;
   let csv: CsvCatalogItem;
   let ydyr: YDYRCatalogFunction;
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     jasmine.Ajax.install();
     jasmine.Ajax.stubRequest(
       "http://example.com/api/v1/disaggregate.json"
@@ -49,7 +49,7 @@ describe("YDYRCatalogFunction", function() {
     let logCounter = 0;
     jasmine.Ajax.stubRequest(
       "http://example.com/api/v1/status/someStatusId"
-    ).andCallFunction(req => {
+    ).andCallFunction((req) => {
       if (logCounter < 1) {
         req.respondWith({ responseText: `"Some Log ${logCounter}"` });
 
@@ -102,17 +102,17 @@ describe("YDYRCatalogFunction", function() {
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     jasmine.Ajax.uninstall();
   });
 
-  it("has a type & typeName", function() {
+  it("has a type & typeName", function () {
     expect(YDYRCatalogFunction.type).toBe("ydyr");
     expect(ydyr.typeName).toBe("YourDataYourRegions");
   });
 
-  describe("when loading", async function() {
-    it("should correctly render functionParameters", function() {
+  describe("when loading", async function () {
+    it("should correctly render functionParameters", function () {
       expect(ydyr.functionParameters.map(({ type }) => type)).toEqual([
         "string",
         "enumeration",
@@ -127,7 +127,7 @@ describe("YDYRCatalogFunction", function() {
     });
 
     it("should set default values", () => {
-      expect(ydyr.functionParameters.map(p => p.value)).toEqual([
+      expect(ydyr.functionParameters.map((p) => p.value)).toEqual([
         "http://example.com/api/v1/",
         csv.uniqueId,
         csv.activeTableStyle.regionColumn?.name,
@@ -141,7 +141,7 @@ describe("YDYRCatalogFunction", function() {
     });
   });
 
-  describe("when submitted", async function() {
+  describe("when submitted", async function () {
     let job: YDYRCatalogFunctionJob;
     let dispose: () => void;
     beforeEach(async () => {
@@ -154,24 +154,24 @@ describe("YDYRCatalogFunction", function() {
     afterEach(() => {
       dispose();
     });
-    it("should correctly set parameters", async function() {
+    it("should correctly set parameters", async function () {
       expect(toJS(job.parameters)).toEqual(toJS(ydyr.parameters));
     });
 
-    it("should be in workbench", async function() {
+    it("should be in workbench", async function () {
       expect(job.inWorkbench).toBeTruthy();
     });
 
-    it("calls YDYR api and sets status id", async function() {
+    it("calls YDYR api and sets status id", async function () {
       expect(job.jobId).toEqual("someStatusId");
     });
 
-    it("polls twice - and creates 2 log entries", async function() {
+    it("polls twice - and creates 2 log entries", async function () {
       // Wait until job finished
-      await new Promise(resolve => {
+      await new Promise((resolve) => {
         reaction(
           () => job.jobStatus,
-          status => (status === "finished" ? resolve() : undefined)
+          (status) => (status === "finished" ? resolve() : undefined)
         );
       });
 
@@ -183,12 +183,12 @@ describe("YDYRCatalogFunction", function() {
 
       expect(job.resultId).toBe("someResultKey");
     });
-    it("downloads results and creates CSVCatalogItem", async function() {
+    it("downloads results and creates CSVCatalogItem", async function () {
       // Wait until job finished downloading results
-      await new Promise(resolve => {
+      await new Promise((resolve) => {
         reaction(
           () => job.downloadedResults,
-          downloadedResults => (downloadedResults ? resolve() : undefined)
+          (downloadedResults) => (downloadedResults ? resolve() : undefined)
         );
       });
 

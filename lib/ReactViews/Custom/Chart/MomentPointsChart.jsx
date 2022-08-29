@@ -33,7 +33,7 @@ class MomentPointsChart extends React.Component {
         domain: basisItemScales.y.domain(),
         range: scales.y.domain()
       });
-      const interpolatedPoints = chartItem.points.map(p => ({
+      const interpolatedPoints = chartItem.points.map((p) => ({
         ...p,
         ...interpolate(p, basisItem.points, basisToSourceScale)
       }));
@@ -67,7 +67,7 @@ class MomentPointsChart extends React.Component {
     const baseKey = `moment-point-${chartItem.categoryName}-${chartItem.name}`;
     const fillColor = chartItem.getColor();
     const isClickable = chartItem.onClick !== undefined;
-    const clickProps = point => {
+    const clickProps = (point) => {
       if (isClickable) {
         return {
           pointerEvents: "all",

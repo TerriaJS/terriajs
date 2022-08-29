@@ -7,8 +7,10 @@ import { GeoJsonFunctionParameter } from "./GeoJsonParameter";
 type Coordinates = number[];
 export type Line = Coordinates[];
 
-export default class LineParameter extends FunctionParameter<Line>
-  implements GeoJsonFunctionParameter {
+export default class LineParameter
+  extends FunctionParameter<Line>
+  implements GeoJsonFunctionParameter
+{
   static readonly type = "line";
   readonly type = "line";
 
