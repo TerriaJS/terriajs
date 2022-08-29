@@ -407,13 +407,19 @@ export default class CkanItemReference extends UrlMixin(
       this.itemProperties?.layers;
 
     // Mixing ?? and || because for params we don't want to use empty string params if there are non-empty string parameters
-    return (
+    const rawLayers =
       (isJsonString(layersFromItemProperties)
         ? layersFromItemProperties
         : undefined) ??
       this._ckanResource?.wms_layer ??
-      (params?.LAYERS || params?.layers || params?.typeName)
-    );
+      (params?.LAYERS || params?.layers || params?.typeName);
+
+    // Improve the robustness.
+    const cleanLayers = rawLayers
+      ?.split(",")
+      .map(layer => layer.trim())
+      .join(",");
+    return cleanLayers;
   }
 }
 
