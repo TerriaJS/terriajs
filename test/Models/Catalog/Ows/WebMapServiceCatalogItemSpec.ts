@@ -871,7 +871,7 @@ describe("WebMapServiceCatalogItem", function () {
       expect(item.scaleWorkbenchInfo).not.toBeDefined();
     });
 
-    it("correctly sets the crs for WMS 1.3.0", function() {
+    it("correctly sets the crs for WMS 1.3.0", function () {
       item.setTrait(CommonStrata.user, "crs", "EPSG:7855");
       const tileProviderResource = getTileProviderResourceForItem(item);
       const featureInfoResource = getFeatureInfoResourceForItem(item);
@@ -879,7 +879,7 @@ describe("WebMapServiceCatalogItem", function () {
       expect(featureInfoResource?.queryParameters.crs).toEqual("EPSG:7855");
     });
 
-    it("correctly sets the sr for WMS 1.1.x", function() {
+    it("correctly sets the sr for WMS 1.1.x", function () {
       item.setTrait(CommonStrata.user, "crs", "EPSG:7855");
       item.setTrait(CommonStrata.user, "useWmsVersion130", false);
       const tileProviderResource = getTileProviderResourceForItem(item);
