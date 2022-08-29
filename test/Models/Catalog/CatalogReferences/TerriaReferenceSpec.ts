@@ -107,7 +107,7 @@ describe("TerriaReference", function () {
     }
   });
 
-  it("propagates knownUniqueContainerIds", async function() {
+  it("propagates knownUniqueContainerIds", async function () {
     const ref = new TerriaReference("test", new Terria());
     ref.setTrait(CommonStrata.user, "url", "test/init/wms-v8.json");
     ref.setTrait(CommonStrata.user, "isGroup", true);

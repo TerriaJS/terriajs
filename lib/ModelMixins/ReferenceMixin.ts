@@ -109,7 +109,7 @@ function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
 
       if (!result.error && this.target) {
         // Copy knownContainerUniqueIds to target
-        this.knownContainerUniqueIds.forEach(id =>
+        this.knownContainerUniqueIds.forEach((id) =>
           !this.target!.knownContainerUniqueIds.includes(id)
             ? this.target!.knownContainerUniqueIds.push(id)
             : null
