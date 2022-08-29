@@ -128,13 +128,13 @@ function RCPageEditor(props) {
             value={section}
             onChange={e => setSection(e.target.value)}
           >
-            <option value="INTRODUCTION">Introduction</option>
+            <option value="SCOPE">Scope</option>
+            <option value="HOTSPOTS">Hotspots</option>
             <option value="CONNECTION">Connection</option>
-            <option value="CLIMATE_EVENT">Climate event</option>
-            <option value="LOCAL_IMPACT">Local impact</option>
-            <option value="CONNECTION_IMPACT">Connection impact</option>
             <option value="EU_IMPACT">EU impact</option>
-            <option value="GLOBAL_IMPACT">Global impact</option>
+            <option value="CLIMATE_SCENARIOS">Climate scenarios</option>
+            <option value="SOC_ECON_SCENARIOS">Socio-economic scenarios</option>
+            <option value="COMPARISON">Comparison</option>
           </select>
           <label className={title && Styles.topLabel}>Section</label>
         </div>

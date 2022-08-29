@@ -877,7 +877,12 @@
         "inputFields" : null,
         "interfaces" : null,
         "enumValues" : [ {
-          "name" : "INTRODUCTION",
+          "name" : "SCOPE",
+          "description" : null,
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "HOTSPOTS",
           "description" : null,
           "isDeprecated" : false,
           "deprecationReason" : null
@@ -887,27 +892,22 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "CLIMATE_EVENT",
-          "description" : null,
-          "isDeprecated" : false,
-          "deprecationReason" : null
-        }, {
-          "name" : "LOCAL_IMPACT",
-          "description" : null,
-          "isDeprecated" : false,
-          "deprecationReason" : null
-        }, {
-          "name" : "CONNECTION_IMPACT",
-          "description" : null,
-          "isDeprecated" : false,
-          "deprecationReason" : null
-        }, {
           "name" : "EU_IMPACT",
           "description" : null,
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "GLOBAL_IMPACT",
+          "name" : "CLIMATE_SCENARIOS",
+          "description" : null,
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "SOC_ECON_SCENARIOS",
+          "description" : null,
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "COMPARISON",
           "description" : null,
           "isDeprecated" : false,
           "deprecationReason" : null

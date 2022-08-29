@@ -265,72 +265,72 @@ const RCStoryPanel = createReactClass({
               <div className="flex flex-wrap gap-2 mb-3">
                 <div
                   onClick={() =>
-                    this.navigateStory(findFirstPageOfSection("INTRODUCTION"))
+                    this.navigateStory(findFirstPageOfSection("SCOPE"))
                   }
                   className={`btn btn-xs rounded-none border-0 text-black bg-red-100    ${story.section ===
-                    "INTRODUCTION" && "bg-red-400"}          hover:bg-red-400`}
+                    "SCOPE" && "bg-red-400"}          hover:bg-red-400`}
                 >
                   Scope
                 </div>
                 <div
                   onClick={() =>
-                    this.navigateStory(findFirstPageOfSection("CONNECTION"))
+                    this.navigateStory(findFirstPageOfSection("HOTSPOTS"))
                   }
                   className={`btn btn-xs rounded-none border-0 text-black bg-blue-100   ${story.section ===
-                    "CONNECTION" && "bg-blue-400"}           hover:bg-blue-400`}
+                    "HOTSPOTS" && "bg-blue-400"}           hover:bg-blue-400`}
                 >
-                  Connections
+                  Hotspots
                 </div>
                 <div
                   onClick={() =>
-                    this.navigateStory(findFirstPageOfSection("CLIMATE_EVENT"))
+                    this.navigateStory(findFirstPageOfSection("CONNECTION"))
                   }
                   className={`btn btn-xs rounded-none border-0 text-black bg-purple-100 ${story.section ===
-                    "CLIMATE_EVENT" &&
-                    "bg-purple-400"}      hover:bg-purple-400`}
+                    "CONNECTION" && "bg-purple-400"}      hover:bg-purple-400`}
                 >
-                  Climate scenarios
-                </div>
-                <div
-                  onClick={() =>
-                    this.navigateStory(findFirstPageOfSection("LOCAL_IMPACT"))
-                  }
-                  className={`btn btn-xs rounded-none border-0 text-black bg-green-100  ${story.section ===
-                    "LOCAL_IMPACT" &&
-                    "bg-green-400"}        hover:bg-green-400`}
-                >
-                  Local Impact
-                </div>
-                <div
-                  onClick={() =>
-                    this.navigateStory(
-                      findFirstPageOfSection("CONNECTION_IMPACT")
-                    )
-                  }
-                  className={`btn btn-xs rounded-none border-0 text-black bg-orange-100 ${story.section ===
-                    "CONNECTION_IMPACT" &&
-                    "bg-orange-400"}  hover:bg-orange-400`}
-                >
-                  Conenctions Impact
+                  Connection
                 </div>
                 <div
                   onClick={() =>
                     this.navigateStory(findFirstPageOfSection("EU_IMPACT"))
                   }
-                  className={`btn btn-xs rounded-none border-0 text-black bg-amber-100  ${story.section ===
-                    "EU_IMPACT" &&
-                    "bg-amber-400"}           hover:bg-amber-400`}
+                  className={`btn btn-xs rounded-none border-0 text-black bg-green-100  ${story.section ===
+                    "EU_IMPACT" && "bg-green-400"}        hover:bg-green-400`}
                 >
-                  EU impacts
+                  EU impact
                 </div>
                 <div
                   onClick={() =>
-                    this.navigateStory(findFirstPageOfSection("GLOBAL_IMPACT"))
+                    this.navigateStory(
+                      findFirstPageOfSection("CLIMATE_SCENARIOS")
+                    )
+                  }
+                  className={`btn btn-xs rounded-none border-0 text-black bg-orange-100 ${story.section ===
+                    "CLIMATE_SCENARIOS" &&
+                    "bg-orange-400"}  hover:bg-orange-400`}
+                >
+                  Climate scenarios
+                </div>
+                <div
+                  onClick={() =>
+                    this.navigateStory(
+                      findFirstPageOfSection("SOC_ECON_SCENARIOS")
+                    )
+                  }
+                  className={`btn btn-xs rounded-none border-0 text-black bg-amber-100  ${story.section ===
+                    "SOC_ECON_SCENARIOS" &&
+                    "bg-amber-400"}           hover:bg-amber-400`}
+                >
+                  Socio-economic scenarios
+                </div>
+                <div
+                  onClick={() =>
+                    this.navigateStory(findFirstPageOfSection("COMPARISON"))
                   }
                   className={`btn btn-xs rounded-none border-0 text-black bg-lime-100   ${story.section ===
-                    "GLOBAL_IMPACT" && "bg-lime-400"}        hover:bg-lime-400`}
+                    "COMPARISON" && "bg-lime-400"}        hover:bg-lime-400`}
                 >
-                  Global Impact
+                  Comparison
                 </div>
               </div>
             </div>
@@ -395,19 +395,19 @@ const RCStoryPanel = createReactClass({
                               this.props.viewState.currentStoryId &&
                               "opacity-100"}
                             ${
-                              story.section === "INTRODUCTION"
+                              story.section === "SCOPE"
                                 ? "text-red-600"
-                                : story.section === "CONNECTION"
+                                : story.section === "HOTSPOTS"
                                 ? "text-blue-600"
-                                : story.section === "CLIMATE_EVENT"
+                                : story.section === "CONNECTION"
                                 ? "text-purple-600"
-                                : story.section === "LOCAL_IMPACT"
-                                ? "text-green-600"
-                                : story.section === "CONNECTION_IMPACT"
-                                ? "text-orange-600"
                                 : story.section === "EU_IMPACT"
+                                ? "text-green-600"
+                                : story.section === "CLIMATE_SCENARIOS"
+                                ? "text-orange-600"
+                                : story.section === "SOC_ECON_SCENARIOS"
                                 ? "text-amber-600"
-                                : story.section === "GLOBAL_IMPACT" &&
+                                : story.section === "COMPARISON" &&
                                   "text-lime-600"
                             }
                             `}
