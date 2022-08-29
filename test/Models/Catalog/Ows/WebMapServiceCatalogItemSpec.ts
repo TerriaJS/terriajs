@@ -870,5 +870,44 @@ describe("WebMapServiceCatalogItem", function () {
       imageryProvider.requestImage(0, 0, 100);
       expect(item.scaleWorkbenchInfo).not.toBeDefined();
     });
+
+    it("correctly sets the crs for WMS 1.3.0", function () {
+      item.setTrait(CommonStrata.user, "crs", "EPSG:7855");
+      const tileProviderResource = getTileProviderResourceForItem(item);
+      const featureInfoResource = getFeatureInfoResourceForItem(item);
+      expect(tileProviderResource?.queryParameters.crs).toEqual("EPSG:7855");
+      expect(featureInfoResource?.queryParameters.crs).toEqual("EPSG:7855");
+    });
+
+    it("correctly sets the sr for WMS 1.1.x", function () {
+      item.setTrait(CommonStrata.user, "crs", "EPSG:7855");
+      item.setTrait(CommonStrata.user, "useWmsVersion130", false);
+      const tileProviderResource = getTileProviderResourceForItem(item);
+      const featureInfoResource = getFeatureInfoResourceForItem(item);
+      expect(tileProviderResource?.queryParameters.srs).toEqual("EPSG:7855");
+      expect(featureInfoResource?.queryParameters.srs).toEqual("EPSG:7855");
+    });
   });
 });
+
+function getWebMapServiceImageryProvider(
+  item: WebMapServiceCatalogItem
+): WebMapServiceImageryProvider | undefined {
+  const imageryProvider = runInAction(() => item.mapItems[0])?.imageryProvider;
+  return imageryProvider instanceof WebMapServiceImageryProvider
+    ? imageryProvider
+    : undefined;
+}
+
+function getTileProviderResourceForItem(
+  item: WebMapServiceCatalogItem
+): Resource | undefined {
+  return (getWebMapServiceImageryProvider(item) as any)?._tileProvider
+    ._resource;
+}
+
+function getFeatureInfoResourceForItem(
+  item: WebMapServiceCatalogItem
+): Resource | undefined {
+  return (getWebMapServiceImageryProvider(item) as any)?._pickFeaturesResource;
+}

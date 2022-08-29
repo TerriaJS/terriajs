@@ -3,6 +3,8 @@
 #### next release (8.2.13)
 
 - Fix pedestrian drop behaviour so that the camera heading stays unchanged even after the drop
+- Fixed a bug causing incorrect loading of EPSG:4326 layers in WMS v1.3.0 by sending wrong `bbox` in GetMap requests.
+- Fix pedestrian drop behaviour so that the camera heading stays unchanged even after the drop
 - Improve the CKAN model robustness by removing leading and trailing spaces in wms layer names.
 - Load all `InitSources` sequentially instead of asyncronosly
 - Fix `DOMPurify.sanitize` call in `PrintView`
