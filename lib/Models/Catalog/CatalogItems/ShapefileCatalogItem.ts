@@ -21,7 +21,7 @@ export function isJsonArrayOrDeepArrayOfObjects(
   return (
     Array.isArray(value) &&
     value.every(
-      child => isJsonObject(child) || isJsonArrayOrDeepArrayOfObjects(child)
+      (child) => isJsonObject(child) || isJsonArrayOrDeepArrayOfObjects(child)
     )
   );
 }
@@ -30,7 +30,8 @@ class ShapefileCatalogItem
   extends GeoJsonMixin(
     CatalogMemberMixin(CreateModel(ShapefileCatalogItemTraits))
   )
-  implements HasLocalData {
+  implements HasLocalData
+{
   static readonly type = "shp";
   get type() {
     return ShapefileCatalogItem.type;

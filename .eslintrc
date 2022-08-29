@@ -1,221 +1,250 @@
 {
-    "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:jsx-control-statements/recommended"],
-    "parser": "@babel/eslint-parser",
-    "parserOptions": {
-      "requireConfigFile": false,
-      "ecmaVersion": 2018,
-      "ecmaFeatures": {
-        "jsx": true,
-        "modules": true,
-        "legacyDecorators": true
-      }
-    },
-    "env": {
-        "browser": true,
-        "commonjs": true,
-        "es6": true
-    },
-    "plugins": [
-        "react",
-        "jsx-control-statements"
-    ],
-    "globals": {
-        "process": true
-    },
-    "settings": {
-        "react": {
-            "version": "detect"
-        }
-    },
-    "rules": {
-        "jsx-control-statements/jsx-use-if-tag": 0,
-        "react/jsx-no-undef": 0,
-
-        /*Possible Errors */
-        "no-cond-assign": [1, "except-parens"],
-        "no-console": 0,
-        "no-constant-condition": 1,
-        "no-control-regex": 1,
-        "no-debugger": 1,
-        "no-dupe-args": 1,
-        "no-dupe-keys": 1,
-        "no-duplicate-case": 0,
-        "no-empty-character-class": 1,
-        "no-empty": 0,
-        "no-ex-assign": 1,
-        "no-extra-boolean-cast": 1,
-        "no-extra-parens": 0,
-        "no-extra-semi": 1,
-        "no-func-assign": 1,
-        "no-inner-declarations": [1, "functions"],
-        "no-invalid-regexp": 1,
-        "no-irregular-whitespace": 1,
-        "no-negated-in-lhs": 1,
-        "no-obj-calls": 1,
-        "no-regex-spaces": 1,
-        "no-reserved-keys": 0,
-        "no-sparse-arrays": 1,
-        "no-unexpected-multiline": 1,
-        "no-unreachable": 1,
-        "use-isnan": 1,
-        "valid-jsdoc": 0,
-        "valid-typeof": 1,
-
-        /* Best Practices */
-        "accessor-pairs": 0,
-        "block-scoped-var": 0, // see Babel section
-        "complexity": 0,
-        "consistent-return": 0,
-        "curly": 0,
-        "default-case": 0,
-        "dot-notation": [0, {
-            "allowKeywords": true,
-            "allowPattern": ""
-        }],
-        "dot-location": [1, "property"],
-        "eqeqeq": 1,
-        "guard-for-in": 0,
-        "no-alert": 1,
-        "no-caller": 1,
-        "no-div-regex": 1,
-        "no-else-return": 0,
-        "no-eq-null": 0,
-        "no-eval": 1,
-        "no-extend-native": 1,
-        "no-extra-bind": 0,
-        "no-fallthrough": 0,
-        "no-floating-decimal": 1,
-        "no-implied-eval": 1,
-        "no-iterator": 1,
-        "no-labels": 1,
-        "no-lone-blocks": 1,
-        "no-loop-func": 1,
-        "no-multi-spaces": 0,
-        "no-multi-str": 0,
-        "no-native-reassign": 1,
-        "no-new-func": 1,
-        "no-new-wrappers": 1,
-        "no-new": 1,
-        "no-octal-escape": 1,
-        "no-octal": 1,
-        "no-param-reassign": 0,
-        "no-process-env": 0,
-        "no-proto": 1,
-        "no-redeclare": 1,
-        "no-return-assign": 1,
-        "no-script-url": 1,
-        "no-self-compare": 0,
-        "no-sequences": 1,
-        "no-throw-literal": 0,
-        "no-unused-expressions": 0,
-        "no-void": 0,
-        "no-warning-comments": [0, {
-            "terms": ["todo", "tofix"],
-            "location": "start"
-        }],
-        "no-with": 1,
-        "radix": 1,
-        "vars-on-top": 0,
-        "wrap-iife": [1, "inside"],
-        "yoda": [0, "never"],
-
-        /* Strict Mode */
-        "strict": [0, "global"],
-
-        /* Variables */
-        "no-catch-shadow": 0,
-        "no-delete-var": 1,
-        "no-label-var": 1,
-        "no-shadow-restricted-names": 1,
-        "no-shadow": 0,
-        "no-undef-init": 1,
-        "no-undefined": 0,
-        "no-unused-vars": [1, {
-            "vars": "local",
-            "args": "none"
-        }],
-        "no-use-before-define": 0,
-
-        /* Node.js */
-        "handle-callback-err": 0,
-        "no-mixed-requires": 1,
-        "no-new-require": 1,
-        "no-path-concat": 1,
-        "no-process-exit": 1,
-        "no-restricted-modules": [1, ""], // add any unwanted Node.js core modules
-        "no-sync": 1,
-
-        /* Stylistic Issues */
-        "array-bracket-spacing": [0, "never"],
-        "brace-style": [0, "1tbs", {
-            "allowSingleLine": true
-        }],
-        "camelcase": [0, {
-            "properties": "always"
-        }],
-        "comma-spacing": [0, {
-            "before": false,
-            "after": true
-        }],
-        "comma-style": [1, "last"],
-        "comma-dangle": 0,
-        "computed-property-spacing": 0,
-        "consistent-this": 0,
-        "eol-last": 0,
-        "func-names": 0,
-        "func-style": 0,
-        "indent": [0, 4, {"SwitchCase": 1}],
-        "key-spacing": [0, {
-            "beforeColon": false,
-            "afterColon": true
-        }],
-        "linebreak-style": 0,
-        "max-nested-callbacks": [0, 3],
-        "new-cap": 0, // see Babel section
-        "new-parens": 1,
-        "newline-after-var": 0,
-        "no-array-constructor": 1,
-        "no-continue": 0,
-        "no-inline-comments": 0,
-        "no-lonely-if": 0,
-        "no-mixed-spaces-and-tabs": 0,
-        "no-multiple-empty-lines": [0, {
-            "max": 1
-        }],
-        "no-nested-ternary": 0,
-        "no-new-object": 1,
-        "no-spaced-func": 0,
-        "no-ternary": 0,
-        "no-trailing-spaces": 0,
-        "no-underscore-dangle": 0,
-        "no-unneeded-ternary": 1,
-        "object-curly-spacing": 0, // see Babel section
-        "one-var": [0, "never"],
-        "padded-blocks": [0, "never"],
-        "quote-props": [0, "as-needed"],
-        "quotes": [0, "single"],
-        "semi-spacing": [1, {
-            "before": false,
-            "after": true
-        }],
-        "semi": [1, "always"],
-        "sort-vars": 0,
-        "space-after-keywords": 0,
-        "space-before-blocks": [0, "always"],
-        "space-before-function-paren": [0, "never"],
-        "space-in-parens": [0, "never"],
-        "space-infix-ops": 0,
-        "space-unary-ops": 0,
-        "spaced-comment": [0, "always"],
-        "wrap-regex": 0,
-
-        /* ECMAScript 6 */
-        "constructor-super": 1,
-        "generator-star-spacing": 0, // see Babel section
-        "no-this-before-super": 1,
-        "no-var": 0,
-        "object-shorthand": 0, // see Babel section
-        "prefer-const": 1,
-        "no-useless-escape": 0
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:jsx-control-statements/recommended"
+  ],
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "ecmaVersion": 2018,
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules": true,
+      "legacyDecorators": true
     }
+  },
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true
+  },
+  "plugins": ["react", "jsx-control-statements"],
+  "globals": {
+    "process": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "jsx-control-statements/jsx-use-if-tag": 0,
+    "react/jsx-no-undef": 0,
+
+    /*Possible Errors */
+    "no-cond-assign": [1, "except-parens"],
+    "no-console": 0,
+    "no-constant-condition": 1,
+    "no-control-regex": 1,
+    "no-debugger": 1,
+    "no-dupe-args": 1,
+    "no-dupe-keys": 1,
+    "no-duplicate-case": 0,
+    "no-empty-character-class": 1,
+    "no-empty": 0,
+    "no-ex-assign": 1,
+    "no-extra-boolean-cast": 1,
+    "no-extra-parens": 0,
+    "no-extra-semi": 1,
+    "no-func-assign": 1,
+    "no-inner-declarations": [1, "functions"],
+    "no-invalid-regexp": 1,
+    "no-irregular-whitespace": 1,
+    "no-negated-in-lhs": 1,
+    "no-obj-calls": 1,
+    "no-regex-spaces": 1,
+    "no-reserved-keys": 0,
+    "no-sparse-arrays": 1,
+    "no-unexpected-multiline": 1,
+    "no-unreachable": 1,
+    "use-isnan": 1,
+    "valid-jsdoc": 0,
+    "valid-typeof": 1,
+
+    /* Best Practices */
+    "accessor-pairs": 0,
+    "block-scoped-var": 0, // see Babel section
+    "complexity": 0,
+    "consistent-return": 0,
+    "curly": 0,
+    "default-case": 0,
+    "dot-notation": [
+      0,
+      {
+        "allowKeywords": true,
+        "allowPattern": ""
+      }
+    ],
+    "dot-location": [1, "property"],
+    "eqeqeq": 1,
+    "guard-for-in": 0,
+    "no-alert": 1,
+    "no-caller": 1,
+    "no-div-regex": 1,
+    "no-else-return": 0,
+    "no-eq-null": 0,
+    "no-eval": 1,
+    "no-extend-native": 1,
+    "no-extra-bind": 0,
+    "no-fallthrough": 0,
+    "no-floating-decimal": 1,
+    "no-implied-eval": 1,
+    "no-iterator": 1,
+    "no-labels": 1,
+    "no-lone-blocks": 1,
+    "no-loop-func": 1,
+    "no-multi-spaces": 0,
+    "no-multi-str": 0,
+    "no-native-reassign": 1,
+    "no-new-func": 1,
+    "no-new-wrappers": 1,
+    "no-new": 1,
+    "no-octal-escape": 1,
+    "no-octal": 1,
+    "no-param-reassign": 0,
+    "no-process-env": 0,
+    "no-proto": 1,
+    "no-redeclare": 1,
+    "no-return-assign": 1,
+    "no-script-url": 1,
+    "no-self-compare": 0,
+    "no-sequences": 1,
+    "no-throw-literal": 0,
+    "no-unused-expressions": 0,
+    "no-void": 0,
+    "no-warning-comments": [
+      0,
+      {
+        "terms": ["todo", "tofix"],
+        "location": "start"
+      }
+    ],
+    "no-with": 1,
+    "radix": 1,
+    "vars-on-top": 0,
+    "wrap-iife": [1, "inside"],
+    "yoda": [0, "never"],
+
+    /* Strict Mode */
+    "strict": [0, "global"],
+
+    /* Variables */
+    "no-catch-shadow": 0,
+    "no-delete-var": 1,
+    "no-label-var": 1,
+    "no-shadow-restricted-names": 1,
+    "no-shadow": 0,
+    "no-undef-init": 1,
+    "no-undefined": 0,
+    "no-unused-vars": [
+      1,
+      {
+        "vars": "local",
+        "args": "none"
+      }
+    ],
+    "no-use-before-define": 0,
+
+    /* Node.js */
+    "handle-callback-err": 0,
+    "no-mixed-requires": 1,
+    "no-new-require": 1,
+    "no-path-concat": 1,
+    "no-process-exit": 1,
+    "no-restricted-modules": [1, ""], // add any unwanted Node.js core modules
+    "no-sync": 1,
+
+    /* Stylistic Issues */
+    "array-bracket-spacing": [0, "never"],
+    "brace-style": [
+      0,
+      "1tbs",
+      {
+        "allowSingleLine": true
+      }
+    ],
+    "camelcase": [
+      0,
+      {
+        "properties": "always"
+      }
+    ],
+    "comma-spacing": [
+      0,
+      {
+        "before": false,
+        "after": true
+      }
+    ],
+    "comma-style": [1, "last"],
+    "comma-dangle": 0,
+    "computed-property-spacing": 0,
+    "consistent-this": 0,
+    "eol-last": 0,
+    "func-names": 0,
+    "func-style": 0,
+    "indent": [0, 4, { "SwitchCase": 1 }],
+    "key-spacing": [
+      0,
+      {
+        "beforeColon": false,
+        "afterColon": true
+      }
+    ],
+    "linebreak-style": 0,
+    "max-nested-callbacks": [0, 3],
+    "new-cap": 0, // see Babel section
+    "new-parens": 1,
+    "newline-after-var": 0,
+    "no-array-constructor": 1,
+    "no-continue": 0,
+    "no-inline-comments": 0,
+    "no-lonely-if": 0,
+    "no-mixed-spaces-and-tabs": 0,
+    "no-multiple-empty-lines": [
+      0,
+      {
+        "max": 1
+      }
+    ],
+    "no-nested-ternary": 0,
+    "no-new-object": 1,
+    "no-spaced-func": 0,
+    "no-ternary": 0,
+    "no-trailing-spaces": 0,
+    "no-underscore-dangle": 0,
+    "no-unneeded-ternary": 1,
+    "object-curly-spacing": 0, // see Babel section
+    "one-var": [0, "never"],
+    "padded-blocks": [0, "never"],
+    "quote-props": [0, "as-needed"],
+    "quotes": [0, "single"],
+    "semi-spacing": [
+      1,
+      {
+        "before": false,
+        "after": true
+      }
+    ],
+    "semi": [1, "always"],
+    "sort-vars": 0,
+    "space-after-keywords": 0,
+    "space-before-blocks": [0, "always"],
+    "space-before-function-paren": [0, "never"],
+    "space-in-parens": [0, "never"],
+    "space-infix-ops": 0,
+    "space-unary-ops": 0,
+    "spaced-comment": [0, "always"],
+    "wrap-regex": 0,
+
+    /* ECMAScript 6 */
+    "constructor-super": 1,
+    "generator-star-spacing": 0, // see Babel section
+    "no-this-before-super": 1,
+    "no-var": 0,
+    "object-shorthand": 0, // see Babel section
+    "prefer-const": 1,
+    "no-useless-escape": 0
+  }
 }

@@ -41,7 +41,7 @@ class Workbench extends React.Component<IProps> {
 
   @action.bound
   removeAll() {
-    this.props.terria.workbench.items.forEach(item => {
+    this.props.terria.workbench.items.forEach((item) => {
       this.props.terria.analytics?.logEvent(
         Category.dataSource,
         DataSourceAction.removeAllFromWorkbench,

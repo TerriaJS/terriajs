@@ -36,7 +36,7 @@ export const DataCatalog = observer(
         catalogSearchProvider &&
         searchState.catalogSearchResults?.results
           ? searchState.catalogSearchResults.results.map(
-              result => result.catalogItem
+              (result) => result.catalogItem
             )
           : this.props.items;
       const items = (unfilteredItems || []).filter(defined);

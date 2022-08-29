@@ -10,13 +10,13 @@ import { StyledHtmlRaw } from "../../lib/ReactViews/Map/Panels/HelpPanel/StyledH
 import { TooltipWithButtonLauncher } from "../../lib/ReactViews/Generic/TooltipWrapper";
 import registerCustomComponentTypes from "../../lib/ReactViews/Custom/registerCustomComponentTypes";
 
-describe("StyledHtml", function() {
+describe("StyledHtml", function () {
   let terria: Terria;
   let viewState: ViewState;
 
   let testRenderer: any;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -27,8 +27,8 @@ describe("StyledHtml", function() {
     });
   });
 
-  describe("with basic props", function() {
-    it("mounts without problems", function() {
+  describe("with basic props", function () {
+    it("mounts without problems", function () {
       act(() => {
         testRenderer = create(
           <ThemeProvider theme={terriaTheme}>
@@ -43,7 +43,7 @@ describe("StyledHtml", function() {
       const renderer = testRenderer.root;
       expect(renderer).toBeDefined();
     });
-    it("creates TooltipWithButtonLauncher when there are terms to inject", function() {
+    it("creates TooltipWithButtonLauncher when there are terms to inject", function () {
       registerCustomComponentTypes();
       const spatialDataTerm = {
         term: "spatial data",

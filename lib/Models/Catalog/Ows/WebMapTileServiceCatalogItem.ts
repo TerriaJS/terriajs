@@ -241,11 +241,11 @@ class GetCapabilitiesStratum extends LoadableStratum(
   @computed
   get legends() {
     const layerAvailableStyles = this.catalogItem.availableStyles.find(
-      candidate => candidate.layerName === this.capabilitiesLayer?.Identifier
+      (candidate) => candidate.layerName === this.capabilitiesLayer?.Identifier
     )?.styles;
 
     const layerStyle = layerAvailableStyles?.find(
-      candidate => candidate.identifier === this.catalogItem.style
+      (candidate) => candidate.identifier === this.catalogItem.style
     );
 
     if (isDefined(layerStyle?.legend)) {
@@ -267,9 +267,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get availableStyles(): StratumFromTraits<
-    WebMapTileServiceAvailableLayerStylesTraits
-  >[] {
+  get availableStyles(): StratumFromTraits<WebMapTileServiceAvailableLayerStylesTraits>[] {
     const result: any = [];
     if (!this.capabilities) {
       return result;
@@ -366,7 +364,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       }
 
       if (defined(matrixSet.TileMatrix) && matrixSet.TileMatrix.length > 0) {
-        const ids = matrixSet.TileMatrix.map(function(item) {
+        const ids = matrixSet.TileMatrix.map(function (item) {
           return item.Identifier;
         });
         const firstTile = matrixSet.TileMatrix[0];
@@ -404,11 +402,11 @@ class GetCapabilitiesStratum extends LoadableStratum(
     if (!isDefined(this.catalogItem.layer)) return;
 
     const layerAvailableStyles = this.availableStyles.find(
-      candidate => candidate.layerName === this.capabilitiesLayer?.Identifier
+      (candidate) => candidate.layerName === this.capabilitiesLayer?.Identifier
     )?.styles;
 
     return (
-      layerAvailableStyles?.find(style => style.isDefault)?.identifier ??
+      layerAvailableStyles?.find((style) => style.isDefault)?.identifier ??
       layerAvailableStyles?.[0]?.identifier
     );
   }
@@ -602,7 +600,7 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     }
 
     if (Array.isArray(tileMatrixSetLabels)) {
-      const levels = tileMatrixSetLabels.map(label => {
+      const levels = tileMatrixSetLabels.map((label) => {
         const lastIndex = label.lastIndexOf(":");
         return Math.abs(Number(label.substring(lastIndex + 1)));
       });

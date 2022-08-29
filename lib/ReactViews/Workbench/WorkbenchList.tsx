@@ -61,7 +61,7 @@ class WorkbenchList extends React.Component<IProps> {
             width: 100%;
           `}
         >
-          {this.props.terria.workbench.items.map(item => {
+          {this.props.terria.workbench.items.map((item) => {
             return (
               <WorkbenchItem
                 item={item}

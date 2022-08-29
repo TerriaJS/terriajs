@@ -53,8 +53,9 @@ function renderTraitRow(property: string, trait: Trait, defaultValue: any) {
   let traitTypeIsArray =
     trait instanceof PrimitiveArrayTrait || trait instanceof ObjectArrayTrait;
   if (trait instanceof ObjectTrait || trait instanceof ObjectArrayTrait) {
-    traitType = `<a href="#${traitType.toLocaleLowerCase()}"><code>${traitType +
-      (traitTypeIsArray ? "[]" : "")}</code></b>`;
+    traitType = `<a href="#${traitType.toLocaleLowerCase()}"><code>${
+      traitType + (traitTypeIsArray ? "[]" : "")
+    }</code></b>`;
     defaultValue = undefined;
   } else {
     traitType = `<code>${traitType + (traitTypeIsArray ? "[]" : "")}</code>`;
@@ -63,7 +64,7 @@ function renderTraitRow(property: string, trait: Trait, defaultValue: any) {
   // Delete defalut value is it is an empty array
   if (
     Array.isArray(defaultValue) &&
-    (defaultValue.length === 0 || defaultValue.every(i => !isDefined(i)))
+    (defaultValue.length === 0 || defaultValue.every((i) => !isDefined(i)))
   )
     defaultValue = undefined;
 
@@ -134,12 +135,12 @@ function renderTraitTable(model: BaseModel, recursive = false, depth = 1) {
 
   // List of all groups of traits
   const otherTraits = Object.keys(traits)
-    .filter(trait => trait !== rootTraits)
+    .filter((trait) => trait !== rootTraits)
     .sort();
 
   const traitGroups = [rootTraits, ...otherTraits];
 
-  const traitGroupRows = traitGroups.map(traits =>
+  const traitGroupRows = traitGroups.map((traits) =>
     renderTraitRows(traits, model, traits !== rootTraits)
   );
 
@@ -157,15 +158,15 @@ ${"#".repeat(depth + 1)} ${rootTraits}
       </tr>
   </thead>
   <tbody>
-  ${traitGroupRows.map(rows => rows.html).join("\n")}
+  ${traitGroupRows.map((rows) => rows.html).join("\n")}
   </tbody>
 </table>`;
 
-  const objectTraits = flatten(traitGroupRows.map(rows => rows.objectTraits));
+  const objectTraits = flatten(traitGroupRows.map((rows) => rows.objectTraits));
 
   if (recursive) {
     html += objectTraits
-      .map(model => renderTraitTable(model, true, depth + 1).html)
+      .map((model) => renderTraitTable(model, true, depth + 1).html)
       .filter(isDefined)
       .join("\n");
   }
@@ -198,7 +199,7 @@ ${JSON.stringify(sampleMember.TraitsClass.example, null, 2)}
 
   // Render object-traits
   content += mainTraitTable.objectTraits
-    ?.map(objectTrait => renderTraitTable(objectTrait, true).html)
+    ?.map((objectTrait) => renderTraitTable(objectTrait, true).html)
     .filter(isDefined)
     .join("\n");
 
@@ -257,11 +258,11 @@ export default async function generateDocs() {
   const catalogMembers = CatalogMemberFactory.constructorsArray;
 
   const members = catalogMembers
-    .map(member => {
+    .map((member) => {
       const memberName = member[1];
       return new memberName(undefined, terria);
     })
-    .sort(function(a, b) {
+    .sort(function (a, b) {
       if (a.constructor.name < b.constructor.name) return -1;
       else if (a.constructor.name > b.constructor.name) return 1;
       return 0;
@@ -340,7 +341,7 @@ export default async function generateDocs() {
   );
 }
 
-generateDocs().catch(err => {
+generateDocs().catch((err) => {
   console.error(err);
   process.exitCode = 1;
 });

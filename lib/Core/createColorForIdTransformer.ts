@@ -20,7 +20,7 @@ function createColorForIdTransformer() {
       useColor(nextColor);
       return nextColor;
     },
-    color => (color ? freeColor(color) : undefined)
+    (color) => (color ? freeColor(color) : undefined)
   );
 }
 

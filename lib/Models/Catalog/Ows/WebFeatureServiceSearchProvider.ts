@@ -159,7 +159,7 @@ export default class WebFeatureServiceSearchProvider extends SearchProvider {
 
           let searchResults = features
             .map(this._featureToSearchResultFunction)
-            .map(result => {
+            .map((result) => {
               result.clickAction = createZoomToFunction(this, result.location);
               return result;
             });
@@ -176,7 +176,7 @@ export default class WebFeatureServiceSearchProvider extends SearchProvider {
           }
 
           // Remove results that have the same name and are close to each other
-          searchResults = searchResults.filter(result => {
+          searchResults = searchResults.filter((result) => {
             const hash = `${result.name},${result.location?.latitude.toFixed(
               1
             )},${result.location?.longitude.toFixed(1)}`;
@@ -191,7 +191,7 @@ export default class WebFeatureServiceSearchProvider extends SearchProvider {
           results.results.push(...searchResults);
         });
       })
-      .catch(e => {
+      .catch((e) => {
         if (results.isCanceled) {
           // A new search has superseded this one, so ignore the result.
           return;
@@ -214,7 +214,7 @@ function createZoomToFunction(
     bboxSize
   );
 
-  return function() {
+  return function () {
     model.terria.currentViewer.zoomTo(rectangle, model.flightDurationSeconds);
   };
 }

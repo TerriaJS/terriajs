@@ -144,73 +144,72 @@ StratumOrder.addLoadStratum(ArcGisPortalItemStratum.stratumName);
 export default class ArcGisPortalItemReference extends AccessControlMixin(
   UrlMixin(ReferenceMixin(CreateModel(ArcGisPortalItemTraits)))
 ) {
-  static readonly defaultSupportedFormats: StratumFromTraits<
-    ArcGisPortalItemFormatTraits
-  >[] = [
-    createStratumInstance(ArcGisPortalItemFormatTraits, {
-      id: "I3S",
-      formatRegex: "Scene Service",
-      urlRegex: "SceneServer$|SceneServer/$",
-      definition: {
-        type: "3d-tiles"
-      }
-    }),
-    // createStratumInstance(ArcGisPortalItemFormatTraits, {
-    //   id: "WFS",
-    //   formatRegex: "WFS",
-    //   urlRegex: "WFSServer",
-    //   definition: {
-    //     type: "wfs"
-    //   }
-    // }),
-    createStratumInstance(ArcGisPortalItemFormatTraits, {
-      id: "WMS",
-      formatRegex: "WMS",
-      urlRegex: "WMSServer",
-      definition: {
-        type: "wms"
-      }
-    }),
-    createStratumInstance(ArcGisPortalItemFormatTraits, {
-      id: "ArcGIS MapServer Group",
-      formatRegex: "Map Service",
-      urlRegex: "MapServer$|MapServer/$",
-      definition: {
-        type: "esri-mapServer-group"
-      }
-    }),
-    createStratumInstance(ArcGisPortalItemFormatTraits, {
-      id: "ArcGIS MapServer",
-      formatRegex: "Map Service",
-      urlRegex: /MapServer\/\d/,
-      definition: {
-        type: "esri-mapServer"
-      }
-    }),
-    createStratumInstance(ArcGisPortalItemFormatTraits, {
-      id: "ArcGIS FeatureServer Group",
-      formatRegex: "Feature Service",
-      urlRegex: "FeatureServer$|FeatureServer/$",
-      definition: {
-        type: "esri-featureServer-group"
-      }
-    }),
-    createStratumInstance(ArcGisPortalItemFormatTraits, {
-      id: "ArcGIS FeatureServer",
-      formatRegex: "Feature Service",
-      urlRegex: /FeatureServer\/\d/,
-      definition: {
-        type: "esri-featureServer"
-      }
-    }),
-    createStratumInstance(ArcGisPortalItemFormatTraits, {
-      id: "Kml",
-      formatRegex: "KML",
-      definition: {
-        type: "kml"
-      }
-    })
-  ];
+  static readonly defaultSupportedFormats: StratumFromTraits<ArcGisPortalItemFormatTraits>[] =
+    [
+      createStratumInstance(ArcGisPortalItemFormatTraits, {
+        id: "I3S",
+        formatRegex: "Scene Service",
+        urlRegex: "SceneServer$|SceneServer/$",
+        definition: {
+          type: "3d-tiles"
+        }
+      }),
+      // createStratumInstance(ArcGisPortalItemFormatTraits, {
+      //   id: "WFS",
+      //   formatRegex: "WFS",
+      //   urlRegex: "WFSServer",
+      //   definition: {
+      //     type: "wfs"
+      //   }
+      // }),
+      createStratumInstance(ArcGisPortalItemFormatTraits, {
+        id: "WMS",
+        formatRegex: "WMS",
+        urlRegex: "WMSServer",
+        definition: {
+          type: "wms"
+        }
+      }),
+      createStratumInstance(ArcGisPortalItemFormatTraits, {
+        id: "ArcGIS MapServer Group",
+        formatRegex: "Map Service",
+        urlRegex: "MapServer$|MapServer/$",
+        definition: {
+          type: "esri-mapServer-group"
+        }
+      }),
+      createStratumInstance(ArcGisPortalItemFormatTraits, {
+        id: "ArcGIS MapServer",
+        formatRegex: "Map Service",
+        urlRegex: /MapServer\/\d/,
+        definition: {
+          type: "esri-mapServer"
+        }
+      }),
+      createStratumInstance(ArcGisPortalItemFormatTraits, {
+        id: "ArcGIS FeatureServer Group",
+        formatRegex: "Feature Service",
+        urlRegex: "FeatureServer$|FeatureServer/$",
+        definition: {
+          type: "esri-featureServer-group"
+        }
+      }),
+      createStratumInstance(ArcGisPortalItemFormatTraits, {
+        id: "ArcGIS FeatureServer",
+        formatRegex: "Feature Service",
+        urlRegex: /FeatureServer\/\d/,
+        definition: {
+          type: "esri-featureServer"
+        }
+      }),
+      createStratumInstance(ArcGisPortalItemFormatTraits, {
+        id: "Kml",
+        formatRegex: "KML",
+        definition: {
+          type: "kml"
+        }
+      })
+    ];
 
   static readonly type = "arcgis-portal-item";
 
@@ -316,9 +315,8 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
     if (this._supportedFormat === undefined) return undefined;
 
     // See comments below re this sequence
-    const itemDataInfo:
-      | ArcGisItemInfo
-      | undefined = await loadAdditionalPortalInfo(this);
+    const itemDataInfo: ArcGisItemInfo | undefined =
+      await loadAdditionalPortalInfo(this);
     if (itemDataInfo !== undefined && this._arcgisItem !== undefined) {
       if (!itemDataInfo.error && itemDataInfo.layers) {
         if (itemDataInfo.layers.length === 1) {
@@ -336,7 +334,7 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
       this._arcgisItem.typeKeywords.indexOf("Tiled") > -1
     ) {
       const mapServerFormat = this.preparedSupportedFormats.filter(
-        f => f.definition.type === "esri-mapServer"
+        (f) => f.definition.type === "esri-mapServer"
       );
       if (mapServerFormat.length === 1)
         this._supportedFormat = mapServerFormat[0];

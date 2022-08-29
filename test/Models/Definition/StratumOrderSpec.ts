@@ -1,13 +1,13 @@
 import StratumOrder from "../../../lib/Models/Definition/StratumOrder";
 
-describe("StratumOrder", function() {
-  it("initially has a definition and a user stratum", function() {
+describe("StratumOrder", function () {
+  it("initially has a definition and a user stratum", function () {
     const so = new StratumOrder();
     expect(so.priorities.get("definition")).toBeDefined();
     expect(so.priorities.get("user")).toBeDefined();
   });
 
-  it("strata types are added in the right order", function() {
+  it("strata types are added in the right order", function () {
     const so = new StratumOrder();
     so.addDefinitionStratum("definitionTest");
     so.addUserStratum("userTest");
@@ -21,7 +21,7 @@ describe("StratumOrder", function() {
     );
   });
 
-  it("strata of the same type get unique priorities", function() {
+  it("strata of the same type get unique priorities", function () {
     const so = new StratumOrder();
 
     so.addDefinitionStratum("a");
@@ -37,7 +37,7 @@ describe("StratumOrder", function() {
     expect(so.priorities.get("e")).not.toEqual(so.priorities.get("f"));
   });
 
-  it("sort functions return strata in the expected order", function() {
+  it("sort functions return strata in the expected order", function () {
     const so = new StratumOrder();
 
     so.addDefinitionStratum("a");
@@ -80,7 +80,7 @@ describe("StratumOrder", function() {
     ]);
   });
 
-  it("add functions do not change the priority of existing strata", function() {
+  it("add functions do not change the priority of existing strata", function () {
     const so = new StratumOrder();
 
     so.addDefinitionStratum("a");
@@ -99,7 +99,7 @@ describe("StratumOrder", function() {
     expect(so.priorities.get("c")).toEqual(c);
   });
 
-  it("throws when a strata does not have a priority", function() {
+  it("throws when a strata does not have a priority", function () {
     const so = new StratumOrder();
 
     so.addDefinitionStratum("a");
@@ -111,7 +111,7 @@ describe("StratumOrder", function() {
       ["b", b]
     ]);
 
-    expect(function() {
+    expect(function () {
       so.sortBottomToTop(strata);
     }).toThrow();
   });

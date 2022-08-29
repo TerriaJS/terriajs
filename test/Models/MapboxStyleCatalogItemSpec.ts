@@ -5,26 +5,26 @@ import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import MapboxStyleCatalogItem from "../../lib/Models/Catalog/CatalogItems/MapboxStyleCatalogItem";
 import Terria from "../../lib/Models/Terria";
 
-describe("MapboxStyleCatalogItem", function() {
+describe("MapboxStyleCatalogItem", function () {
   let terria: Terria;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria();
   });
 
-  it("defines a type", function() {
+  it("defines a type", function () {
     expect(MapboxStyleCatalogItem.type).toBe("mapbox-style");
     expect(new MapboxStyleCatalogItem("test", terria).type).toBe(
       "mapbox-style"
     );
   });
 
-  it("can be created", function() {
+  it("can be created", function () {
     new MapboxStyleCatalogItem("test", terria);
   });
 
-  describe("mapItems ImageryPart", function() {
-    it("has a MapboxStyleImageryProvider", function() {
+  describe("mapItems ImageryPart", function () {
+    it("has a MapboxStyleImageryProvider", function () {
       const item = new MapboxStyleCatalogItem("test", terria);
       item.setTrait(CommonStrata.user, "styleId", "123");
       item.setTrait(CommonStrata.user, "accessToken", "456");
@@ -37,7 +37,7 @@ describe("MapboxStyleCatalogItem", function() {
       }
     });
 
-    it("sets show from traits", function() {
+    it("sets show from traits", function () {
       const item = new MapboxStyleCatalogItem("test", terria);
       item.setTrait(CommonStrata.user, "styleId", "123");
       item.setTrait(CommonStrata.user, "accessToken", "456");
@@ -49,7 +49,7 @@ describe("MapboxStyleCatalogItem", function() {
       }
     });
 
-    it("sets opacity from traits", function() {
+    it("sets opacity from traits", function () {
       const item = new MapboxStyleCatalogItem("test", terria);
       item.setTrait(CommonStrata.user, "styleId", "123");
       item.setTrait(CommonStrata.user, "accessToken", "456");
@@ -62,10 +62,10 @@ describe("MapboxStyleCatalogItem", function() {
     });
   });
 
-  describe("the constructed MapboxStyleImageryProvider", function() {
+  describe("the constructed MapboxStyleImageryProvider", function () {
     let item: MapboxStyleCatalogItem;
 
-    beforeEach(function() {
+    beforeEach(function () {
       item = new MapboxStyleCatalogItem("test", terria);
       item.setTrait(CommonStrata.user, "styleId", "123");
       item.setTrait(CommonStrata.user, "accessToken", "456");
@@ -77,7 +77,7 @@ describe("MapboxStyleCatalogItem", function() {
       item.setTrait(CommonStrata.user, "attribution", "&copy; Foo author");
     });
 
-    it("sets the url from traits", function() {
+    it("sets the url from traits", function () {
       item.setTrait(
         CommonStrata.user,
         "url",
@@ -89,14 +89,14 @@ describe("MapboxStyleCatalogItem", function() {
       ).toBe(true);
     });
 
-    it("sets the username from traits", function() {
+    it("sets the username from traits", function () {
       const imageryProvider = getImageryProvider(item);
       expect(
         imageryProvider.url.startsWith("https://api.mapbox.com/styles/v1/foo")
       ).toBe(true);
     });
 
-    it("sets the styleId from traits", function() {
+    it("sets the styleId from traits", function () {
       const imageryProvider = getImageryProvider(item);
       expect(
         imageryProvider.url.startsWith(
@@ -105,13 +105,13 @@ describe("MapboxStyleCatalogItem", function() {
       ).toBe(true);
     });
 
-    it("sets the accessToken from traits", function() {
+    it("sets the accessToken from traits", function () {
       const imageryProvider = getImageryProvider(item);
       const uri = new URI(imageryProvider.url);
       expect(uri.search(true).access_token).toBe("456");
     });
 
-    it("sets the tilesize from traits", function() {
+    it("sets the tilesize from traits", function () {
       const imageryProvider = getImageryProvider(item);
       expect(
         imageryProvider.url.startsWith(
@@ -120,7 +120,7 @@ describe("MapboxStyleCatalogItem", function() {
       ).toBe(true);
     });
 
-    it("sets the scaleFactor from traits", function() {
+    it("sets the scaleFactor from traits", function () {
       const imageryProvider = getImageryProvider(item);
       expect(
         imageryProvider.url.startsWith(
@@ -129,17 +129,17 @@ describe("MapboxStyleCatalogItem", function() {
       ).toBe(true);
     });
 
-    it("sets the minimumLevel from traits", function() {
+    it("sets the minimumLevel from traits", function () {
       const imageryProvider = getImageryProvider(item);
       expect(imageryProvider.minimumLevel).toBe(2);
     });
 
-    it("sets the maximumLevel from traits", function() {
+    it("sets the maximumLevel from traits", function () {
       const imageryProvider = getImageryProvider(item);
       expect(imageryProvider.maximumLevel).toBe(64);
     });
 
-    it("sets the credits from traits", function() {
+    it("sets the credits from traits", function () {
       const imageryProvider = getImageryProvider(item);
       expect(imageryProvider.credit.html).toBe("&copy; Foo author");
     });

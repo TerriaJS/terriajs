@@ -240,7 +240,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     ) as WpsLoadableStratum;
     if (!isDefined(stratum)) return [];
 
-    return stratum.inputs.map(input => {
+    return stratum.inputs.map((input) => {
       const parameter = this.convertInputToParameter(this, input);
       if (isDefined(parameter)) {
         return parameter;
@@ -259,19 +259,19 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     let dataInputs = filterOutUndefined(
       await Promise.all(
         this.functionParameters
-          .filter(p => isDefined(p.value) && p.value !== null)
-          .map(p => this.convertParameterToInput(p))
+          .filter((p) => isDefined(p.value) && p.value !== null)
+          .map((p) => this.convertParameterToInput(p))
       )
     );
 
     runInAction(() =>
       updateModelFromJson(job, CommonStrata.user, {
-        name: `WPS: ${this.name ||
-          this.identifier ||
-          this.uniqueId} result ${new Date().toISOString()}`,
+        name: `WPS: ${
+          this.name || this.identifier || this.uniqueId
+        } result ${new Date().toISOString()}`,
         geojsonFeatures: flatten(
           this.functionParameters
-            .map(param =>
+            .map((param) =>
               isGeoJsonFunctionParameter(param)
                 ? param.geoJsonFeature
                 : undefined
@@ -334,7 +334,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
 }
 
 const LiteralDataConverter = {
-  inputToParameter: function(
+  inputToParameter: function (
     catalogFunction: CatalogFunctionMixin,
     input: Input,
     options: FunctionParameterOptions
@@ -352,7 +352,7 @@ const LiteralDataConverter = {
         isObservableArray(allowedValues.Value)
           ? (allowedValues.Value as string[])
           : [allowedValues.Value]
-        ).map(id => {
+        ).map((id) => {
           return { id };
         })
       });
@@ -398,7 +398,7 @@ const LiteralDataConverter = {
       });
     }
   },
-  parameterToInput: function(parameter: FunctionParameter) {
+  parameterToInput: function (parameter: FunctionParameter) {
     return {
       inputValue: <string | undefined>parameter.value,
       inputType: "LiteralData"
@@ -407,7 +407,7 @@ const LiteralDataConverter = {
 };
 
 const ComplexDateConverter = {
-  inputToParameter: function(
+  inputToParameter: function (
     catalogFunction: CatalogFunctionMixin,
     input: Input,
     options: FunctionParameterOptions
@@ -429,7 +429,7 @@ const ComplexDateConverter = {
     dparam.variant = "complex";
     return dparam;
   },
-  parameterToInput: function(parameter: FunctionParameter) {
+  parameterToInput: function (parameter: FunctionParameter) {
     return {
       inputType: "ComplexData",
       inputValue: DateParameter.formatValueForUrl(
@@ -440,7 +440,7 @@ const ComplexDateConverter = {
 };
 
 const ComplexDateTimeConverter = {
-  inputToParameter: function(
+  inputToParameter: function (
     catalogFunction: CatalogFunctionMixin,
     input: Input,
     options: FunctionParameterOptions
@@ -462,7 +462,7 @@ const ComplexDateTimeConverter = {
     dt.variant = "complex";
     return dt;
   },
-  parameterToInput: function(parameter: FunctionParameter) {
+  parameterToInput: function (parameter: FunctionParameter) {
     return {
       inputType: "ComplexData",
       inputValue: DateTimeParameter.formatValueForUrl(
@@ -483,7 +483,7 @@ const PolygonConverter = simpleGeoJsonDataConverter(
 );
 
 const RectangleConverter = {
-  inputToParameter: function(
+  inputToParameter: function (
     catalogFunction: CatalogFunctionMixin,
     input: Input,
     options: FunctionParameterOptions
@@ -525,7 +525,7 @@ const RectangleConverter = {
       crs: usedCrs
     });
   },
-  parameterToInput: function(functionParameter: FunctionParameter) {
+  parameterToInput: function (functionParameter: FunctionParameter) {
     const parameter = <RectangleParameter>functionParameter;
     const value = parameter.value;
 
@@ -572,7 +572,7 @@ const RectangleConverter = {
 };
 
 const GeoJsonGeometryConverter = {
-  inputToParameter: function(
+  inputToParameter: function (
     catalogFunction: CatalogFunctionMixin,
     input: Input,
     options: FunctionParameterOptions
@@ -609,7 +609,7 @@ const GeoJsonGeometryConverter = {
     });
   },
 
-  parameterToInput: function(
+  parameterToInput: function (
     parameter: FunctionParameter
   ): WpsInputData | undefined {
     if (!isDefined(parameter.value) || parameter.value === null) {
@@ -623,7 +623,7 @@ const GeoJsonGeometryConverter = {
 
 function simpleGeoJsonDataConverter(schemaType: string, klass: any) {
   return {
-    inputToParameter: function(
+    inputToParameter: function (
       catalogFunction: CatalogFunctionMixin,
       input: Input,
       options: FunctionParameterOptions
@@ -648,7 +648,7 @@ function simpleGeoJsonDataConverter(schemaType: string, klass: any) {
 
       return new klass(catalogFunction, options);
     },
-    parameterToInput: function(parameter: FunctionParameter) {
+    parameterToInput: function (parameter: FunctionParameter) {
       return {
         inputType: "ComplexData",
         inputValue: klass.formatValueForUrl(parameter.value)
