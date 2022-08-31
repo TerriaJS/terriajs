@@ -8,6 +8,7 @@
 - Improve the CKAN model robustness by removing leading and trailing spaces in wms layer names.
 - Load all `InitSources` sequentially instead of asyncronosly
 - Fix `DOMPurify.sanitize` call in `PrintView`
+- Fix warning for WFS item exceeding max displayable features
 - [The next improvement]
 
 #### release 8.2.12 - 2022-08-10
@@ -2760,7 +2761,7 @@
 ### 2.3.0
 
 - Share links now contain details about the picked point, picked features and currently selected feature.
-- Reorganised the display of disclaimers so that they're triggered by `CatalogGroup` and `CatalogItem` models, which trigger `terria.disclaimerEvent`, which is listened to by DisclaimerViewModel`. `DisclaimerViewModel` must be added by the map that's using Terria.
+- Reorganised the display of disclaimers so that they're triggered by `CatalogGroup` and `CatalogItem` models, which trigger `terria.disclaimerEvent`, which is listened to by DisclaimerViewModel`.`DisclaimerViewModel` must be added by the map that's using Terria.
 - Added a mechanism for hiding the source of a CatalogItem in the view info popup.
 - Added the `hideSource` flag to the init json for hiding the source of a CatalogItem in the View Info popup.
 - Fixed a bug where `CatalogMember.load` would return a new promise every time it was called, instead of retaining the one in progress.
@@ -2858,7 +2859,7 @@
   - `RegionMapping`: Used instead of TableDataSource for region-mapped csvs.
   - `DataTable` and `DataVariable` have been replaced with new classes, `TableStructure` and `TableColumn`.
   - `RegionProvider`: `loadRegionsFromWfs`, `processRegionIds`, `applyReplacements`, `findRegionIndex` have been made internal functions.
-  - `RegionProviderList`: `chooseRegionProvider` has been changed and renamed `getRegionDetails `.
+  - `RegionProviderList`: `chooseRegionProvider` has been changed and renamed `getRegionDetails`.
   - `ColorMap`: `fromArray` and `fromString` have been removed, with the constructor taking on that functionality.
   - `LegendUrl` has been moved to the `Map` directory.
   - `TableStyle`: `loadColorMap` and `chooseColorMap` have been removed. Moved from `Map` to `Models` directory.
