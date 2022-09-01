@@ -2761,7 +2761,7 @@
 ### 2.3.0
 
 - Share links now contain details about the picked point, picked features and currently selected feature.
-- Reorganised the display of disclaimers so that they're triggered by `CatalogGroup` and `CatalogItem` models, which trigger `terria.disclaimerEvent`, which is listened to by DisclaimerViewModel`.`DisclaimerViewModel` must be added by the map that's using Terria.
+- Reorganised the display of disclaimers so that they're triggered by `CatalogGroup` and `CatalogItem` models, which trigger `terria.disclaimerEvent`, which is listened to by DisclaimerViewModel`. `DisclaimerViewModel` must be added by the map that's using Terria.
 - Added a mechanism for hiding the source of a CatalogItem in the view info popup.
 - Added the `hideSource` flag to the init json for hiding the source of a CatalogItem in the View Info popup.
 - Fixed a bug where `CatalogMember.load` would return a new promise every time it was called, instead of retaining the one in progress.
