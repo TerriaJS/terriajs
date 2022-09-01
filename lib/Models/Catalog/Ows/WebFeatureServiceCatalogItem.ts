@@ -418,7 +418,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
   get shortReport(): string | undefined {
     // Show notice if reached
     if (
-      isObservableArray(this.readyData?.features) &&
+      this.readyData?.features !== undefined &&
       this.readyData!.features.length >= this.maxFeatures
     ) {
       return i18next.t(
