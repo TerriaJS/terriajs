@@ -15,12 +15,17 @@ import Tooltip from "../RCTooltip/RCTooltip";
 import RCScenarioTabs from "../Story/RCScenarioTabs";
 import Styles from "./story-panel.scss";
 
-export function activateStory(story, terria, scenarioIndex = 0) {
+export function activateStory(
+  story,
+  terria,
+  scenarioIndex = 0,
+  resetZoom = true
+) {
   if (story.mapScenarios && story.mapScenarios[scenarioIndex]) {
     const initSources = story.mapScenarios[scenarioIndex].initSources;
 
     const promises = initSources.map(initSource =>
-      terria.addInitSource(initSource, true)
+      terria.addInitSource(initSource, true, resetZoom)
     );
     when.all(promises).then(() => {
       const nowViewingPaths = initSources.reduce((p, c) => {
@@ -98,7 +103,8 @@ const RCStoryPanel = createReactClass({
       activateStory(
         story,
         this.props.terria,
-        this.props.viewState.currentScenario
+        this.props.viewState.currentScenario,
+        false // don't reset zoom to initial/home
       );
 
       this.setState({ state: this.state });
@@ -211,6 +217,7 @@ const RCStoryPanel = createReactClass({
     );
   },
 
+  //TODO: is this still used? Possibly related to old-style scenarios?
   scenarioChanged(scenarioId) {
     //TODO: use some kind of identifier for scenario
     this.props.viewState.currentScenario = scenarioId.toString();
