@@ -459,7 +459,7 @@
       "sideLabel": "地形の表示",
       "hideUndergroundFeatures": "ここを押すと地下が非表示になります",
       "showUndergroundFeatures": "ここを押すと地下が表示されます",
-      "hideUnderground": "地下を隠す"
+      "hideUnderground": "地下部分を非表示にする"
     },
     "timeline": {
       "alwaysShow": "常に表示",
