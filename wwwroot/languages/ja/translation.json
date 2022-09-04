@@ -1,7 +1,7 @@
 {
   "tour": {
     "exploreMapDataButton": {
-      "content": "## データを地図上で見る\n\nここでは、データカタログからデータを探し、地図に追加することができます。複数のデータも追加できます。追加したデータは、画面左側にリストとして表示されます。"
+      "content": "## データを追加\n\nここでは、データカタログからデータを探し、地図に追加することができます。複数のデータも追加できます。追加したデータは、画面左側にリストとして表示されます。"
     },
     "locationSearchInput": {
       "content": "## 場所・データを検索\n\n地名や住所を入力するとその場所を地図上で検索できます。"
@@ -28,7 +28,7 @@
       "content": "## 地図の設定\n\nベースとなる地図、2D/3D地形、画質などのオプションを設定できます。"
     },
     "sidePanelUploadButton": {
-      "content": "## 自データ\n\n手元にある独自のデータを他のデータセットと一緒に表示できます。CSV、GeoJSON、KML、GPX、CZMLなどのファイルフォーマットをサポートしています。"
+      "content": "## ローカルデータ\n\n手元にあるデータを他のデータセットと一緒に表示できます。CSV、GeoJSON、KML、GPX、CZMLなどのファイルフォーマットをサポートしています。"
     }
   },
   "trainer": {
@@ -252,10 +252,10 @@
     "groupRemove": "グループを削除"
   },
   "emptyWorkbench": {
-    "emptyArea": "「データを地図上で見る」ボタンから、表示するデータを追加できます",
-    "helpfulHintsThree": "一旦読み込んだデータは、表示・非表示の切り替え、透過度の調整、画面分割比較モードへの移行、スタイルの変更ができるほか、対応しているデータでは日時の変更も行えます。",
+    "emptyArea": "「データを追加」ボタンから、表示するデータを追加できます",
+    "helpfulHintsThree": "一旦読み込んだデータは、表示・非表示の切り替え、不透明度の調整、画面分割比較モードへの移行、スタイルの変更ができるほか、対応しているデータでは日時の変更も行えます。",
     "helpfulHintsTwo": "データを地図に追加すると、データセットがここにリストされます。",
-    "helpfulHintsOne": "「データを地図上で見る」 を選択して登録済みのデータを探すか、「自分のデータを追加」 で手元のデータを地図に追加します。",
+    "helpfulHintsOne": "「データを追加」 を選択して登録済みのデータを探すか、「ローカルデータ」 で手元のデータを地図に追加します。",
     "helpfulHints": "使い方"
   },
   "loader": {
@@ -298,7 +298,7 @@
     "openFeatureTitle": "データ範囲にズーム",
     "zoomTo": "データ視点移動",
     "zoomToTitle": "データの範囲にズーム",
-    "opacity": "透過度: {{opacity}} %",
+    "opacity": "不透明度: {{opacity}} %",
     "displayPercent": "合計値に対するパーセント表示にする",
     "colorScaleUpdateRange": "カラーレンジを更新",
     "rangeMin": "最小値:",
@@ -373,7 +373,7 @@
   },
   "welcomeMessage": {
     "dismissText": "閉じて今後は表示しない",
-    "exploreDataBtnText": "データを地図上で見る",
+    "exploreDataBtnText": "データを追加",
     "helpBtnText": "ヘルプを見る",
     "tourBtnText": "操作方法を見る",
     "welcomeMessage": "データを探して3D地図上に展開してみませんか？<br/>とにかく触ってみるか、ヘルプガイドで使い方の概要を見てみてください。",
@@ -580,7 +580,7 @@
     "closeDataPanel": "データパネルを閉じる",
     "load": "ローカル/ウェブのデータを読み込む",
     "btnHide": "閉じる",
-    "addDataBtnText": "データを地図上で見る"
+    "addDataBtnText": "データを追加"
   },
   "feedback": {
     "minLength": "ご意見・ご要望のコメントは最低でも{{minLength}}が必要です",
@@ -726,7 +726,7 @@
     "noData": "チャート化できるデータがありません。",
     "showItemInChart": "チャートで {{value}} を表示"
   },
-  "emptyWorkbenchMessage": "<0><0>「データを地図上でみる」ボタンから、表示するデータを追加できます。</0><1><strong>上の「$t(addData.addDataBtnText)」をクリック</strong>して</1><2><0>データカタログが開き、</0><1>自分のデータを地図上に展開できます</1></2><3><0></0><strong>使い方：</strong><2>アクティブなデータセットはすべてここに表示されます</2></3></0>",
+  "emptyWorkbenchMessage": "<0><0>「データを追加」ボタンから、表示するデータを追加できます。</0><1><strong>上の「$t(addData.addDataBtnText)」をクリック</strong>して</1><2><0>データカタログを開き、</0><1>データを地図上に展開できます</1></2><3><0></0><strong>使い方：</strong><2>アクティブなデータセットはすべてここに表示されます</2></3></0>",
   "concept": {
     "summary": {
       "addFirstText": "新しい条件を追加",
@@ -806,7 +806,7 @@
       "mustHaveType": "各アイテムにはタイプを指定する必要があります。",
       "useConversion": "変換サービスを使用しますか？",
       "cancel": "キャンセル",
-      "upload": "自データ",
+      "upload": "ローカルデータ",
       "readyToUpload": "{{appName}}の変換サービスにアップロードする準備はできていますか？",
       "getConfirmationMessage": "このファイルは{{appName}}では直接サポートされていません。\n\n{{appName}}の変換サービスにアップロードしますか？ファイルサイズが小さく、かつzip化されたEsri ShapeファイルやMapInfo Tabファイルであればこの方法で表示できる可能性があります。",
       "unsupportedFileTypeMessageII": "このファイルフォーマットは{{appName}}ではサポートされていません。直接サポートされているフォーマットは <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>  です。オンライン変換サービスを通してサポートされているファイルフォーマットは <ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>その他の {{linkII}}</li></ul> などです。",
