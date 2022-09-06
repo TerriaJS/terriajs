@@ -241,7 +241,7 @@
   "catalogItem": {
     "removeFromMap": "マップから削除",
     "trash": "カタログから削除",
-    "add": "追加",
+    "add": "マップに追加",
     "remove": "削除",
     "loading": "読み込み中...",
     "privateIndicatorTitle": "プライベートデータセット",
@@ -341,7 +341,7 @@
     "noPreviewAvailable": "プレビューが利用できません",
     "preview": "{{appName}} プレビュー",
     "loading": "プレビュー読み込み中...",
-    "selectToPreview": "<0>データセット名を選択してプレビューを表示 </0><1>- 又は -</1><2>Ctrlを押しながら＋をクリックして複数データを読み込む</2><3>- 又は -</3><4>マップを開く</4>",
+    "selectToPreview": "<0>データセット名を選択してプレビューを表示<br /><br /><strong>Ctrl</strong> または <strong>Shift</strong> を押しながら + をクリックして複数のデータを読み込みます。</0><1>- 又は -</1><2>マップを開く</2>",
     "accessConstraints": "アクセス制限",
     "licence": "ライセンス",
     "resourceDescription": "リソースの説明",
