@@ -154,6 +154,20 @@ const StandardUserInterface = createReactClass({
     return document.body.clientWidth < this.props.minimumLargeScreenWidth;
   },
 
+  // Remove duplicates in the legends
+  removeDuplicateLegends(legends) {
+    const seen = new Set();
+    const arr = legends.filter(legend => legend.legendUrl?.url); // filter those catalogs with legend inside
+
+    const filteredArr = arr.filter(el => {
+      const duplicate = seen.has(el.loadingUrl?.url);
+      seen.add(el.loadingUrl?.url);
+      return !duplicate;
+    });
+
+    return filteredArr;
+  },
+
   render() {
     const { t, viewState, terria } = this.props;
     const customElements = processCustomElements(
@@ -190,6 +204,7 @@ const StandardUserInterface = createReactClass({
               <If
                 condition={!viewState.hideMapUi() && !viewState.showToolPanel()}
               >
+                {/* Mobile header */}
                 <Small>
                   <MobileHeader
                     terria={terria}
@@ -199,13 +214,17 @@ const StandardUserInterface = createReactClass({
                     allBaseMaps={allBaseMaps}
                   />
                 </Small>
+
+                {/* Map */}
                 <Small>
-                  <div className={Styles.middleContainer}>
+                  <div id="map" className={Styles.middleContainer}>
                     <section
-                      className={classNames(
-                        Styles.map,
-                        showStoryPanel && Styles.smallMap
-                      )}
+                      className={
+                        classNames(
+                          Styles.map,
+                          showStoryPanel && Styles.smallMap
+                        ) + " relative"
+                      }
                     >
                       <ProgressBar terria={terria} />
                       <MapColumn
@@ -213,6 +232,52 @@ const StandardUserInterface = createReactClass({
                         viewState={viewState}
                         customFeedbacks={customElements.feedback}
                       />
+
+                      {/* Mobile LEGEND*/}
+                      {this.removeDuplicateLegends(
+                        terria.nowViewing.items.filter(item => item.isShown)
+                      ).length > 0 && (
+                        <div
+                          id="legends"
+                          className="absolute botton top-1 right-1 text-black"
+                        >
+                          <label
+                            htmlFor="mobile-legends-modal"
+                            className="btn btn-sm rounded-none modal-button"
+                          >
+                            Show legends
+                          </label>
+
+                          <input
+                            type="checkbox"
+                            id="mobile-legends-modal"
+                            className="modal-toggle"
+                          />
+                          <div className="modal modal-bottom sm:modal-middle">
+                            <div className="modal-box">
+                              <div className="flex ">
+                                {terria.nowViewing.items.length > 0 &&
+                                  this.removeDuplicateLegends(
+                                    terria.nowViewing.items.filter(
+                                      item => item.isShown
+                                    )
+                                  ).map((item, i) => (
+                                    <Legend item={item} key={i} />
+                                  ))}
+                              </div>
+
+                              <div className="modal-action">
+                                <label
+                                  htmlFor="mobile-legends-modal"
+                                  className="btn btn-sm rounded-none"
+                                >
+                                  Close
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </section>
 
                     {showStoryPanel ? (
@@ -235,6 +300,8 @@ const StandardUserInterface = createReactClass({
                     )}
                   </div>
                 </Small>
+
+                {/* Side Panel */}
                 <Medium>
                   <div
                     className={classNames(
@@ -252,6 +319,8 @@ const StandardUserInterface = createReactClass({
                     <SidePanel terria={terria} viewState={viewState} />
                   </div>
                 </Medium>
+
+                {/* Map */}
                 <Medium>
                   <section className={Styles.map}>
                     <ProgressBar terria={terria} />
@@ -280,6 +349,8 @@ const StandardUserInterface = createReactClass({
                     </main>
                   </section>
                 </Medium>
+
+                {/* Development Menu */}
                 <Medium>
                   <div
                     className={classNames(
@@ -301,13 +372,21 @@ const StandardUserInterface = createReactClass({
                       <Link to="/users">Users</Link>
                     </div>
 
+                    {/* LEGEND*/}
                     <div className="fixed bottom-24 left-2 text-black">
                       <div className="flex">
-                        {terria.nowViewing.items
-                          .filter(item => item.isShown)
-                          .filter(item => item.isLegendVisible)
-                          .map((item, i) => (
-                            <Legend item={item} key={i} />
+                        {terria.nowViewing.items.length > 0 &&
+                          this.removeDuplicateLegends(
+                            terria.nowViewing.items
+                              .filter(item => item.isShown)
+                              .filter(item => item.isLegendVisible)
+                          ).map((item, i) => (
+                            <div
+                              className="origin-bottom-left transition scale-50 hover:scale-125"
+                              key={i}
+                            >
+                              <Legend item={item} />
+                            </div>
                           ))}
                       </div>
                     </div>
