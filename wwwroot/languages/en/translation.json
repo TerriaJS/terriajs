@@ -472,7 +472,7 @@
   },
   "preview": {
     "doesNotContainGeospatialData": "This file does not contain geospatial data.",
-    "selectToPreview": "<0>Select a dataset to see a preview </0><1>- OR -</1><2>Go to the map</2>",
+    "selectToPreview": "<0>Select a dataset to see a preview<br /><br />Press <strong>Ctrl</strong> or <strong>Shift</strong> and click + to add multiple datasets.</0><1>- OR -</1><2>Go to the map</2>",
     "loading": "PREVIEW LOADING...",
     "preview": "{{appName}} preview",
     "previewItemErrorTitle": "Catalog item could not be previewed.",

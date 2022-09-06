@@ -3,6 +3,7 @@
 #### next release (8.2.14)
 
 - Moved map credits to map column so it don't get hidden by chart panel.
+- Update a prompt text in DataPreview.
 - [The next improvement]
 
 #### 8.2.13 - 2022-09-01
