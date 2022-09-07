@@ -106,4 +106,17 @@ describe("TerriaReference", function () {
       expect(target.name).toBe("Foo");
     }
   });
+
+  it("propagates knownUniqueContainerIds", async function () {
+    const ref = new TerriaReference("test", new Terria());
+    ref.setTrait(CommonStrata.user, "url", "test/init/wms-v8.json");
+    ref.setTrait(CommonStrata.user, "isGroup", true);
+    ref.setTrait(CommonStrata.user, "path", ["MLzS8W"]);
+    ref.setTrait(CommonStrata.user, "name", "Foo");
+    ref.knownContainerUniqueIds.push("some-id");
+    await ref.loadReference();
+    const target = ref.target;
+    expect(target?.knownContainerUniqueIds.length).toBe(1);
+    expect(target?.knownContainerUniqueIds[0]).toBe("some-id");
+  });
 });
