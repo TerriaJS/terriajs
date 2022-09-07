@@ -72,12 +72,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
   @computed
   get capabilitiesFeatureTypes(): ReadonlyMap<string, FeatureType | undefined> {
-    const lookup: (
-      name: string
-    ) => [string, FeatureType | undefined] = name => [
-      name,
-      this.capabilities && this.capabilities.findLayer(name)
-    ];
+    const lookup: (name: string) => [string, FeatureType | undefined] = (
+      name
+    ) => [name, this.capabilities && this.capabilities.findLayer(name)];
     return new Map(this.catalogItem.typeNamesArray.map(lookup));
   }
 
@@ -168,7 +165,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     // If more than one layer, push layer description titles for each applicable layer
     if (this.capabilitiesFeatureTypes.size > 1) {
       layerDescriptions = [];
-      this.capabilitiesFeatureTypes.forEach(layer => {
+      this.capabilitiesFeatureTypes.forEach((layer) => {
         if (
           layer &&
           layer.Abstract &&
@@ -301,11 +298,10 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
   }
 
   protected async forceLoadGeojsonData(): Promise<FeatureCollectionWithCrs> {
-    const getCapabilitiesStratum:
-      | GetCapabilitiesStratum
-      | undefined = this.strata.get(
-      GetCapabilitiesMixin.getCapabilitiesStratumName
-    ) as GetCapabilitiesStratum;
+    const getCapabilitiesStratum: GetCapabilitiesStratum | undefined =
+      this.strata.get(
+        GetCapabilitiesMixin.getCapabilitiesStratumName
+      ) as GetCapabilitiesStratum;
 
     if (!this.uri) {
       throw new TerriaError({
@@ -320,7 +316,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
 
     // Check if layers exist
     const missingLayers = this.typeNamesArray.filter(
-      layer => !getCapabilitiesStratum.capabilitiesFeatureTypes.has(layer)
+      (layer) => !getCapabilitiesStratum.capabilitiesFeatureTypes.has(layer)
     );
     if (missingLayers.length > 0) {
       throw new TerriaError({
@@ -338,7 +334,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
     // Check if geojson output is supported (by checking GetCapabilities OutputTypes OR FeatureType OutputTypes)
     const hasOutputFormat = (outputFormats: string[] | undefined) => {
       return isDefined(
-        outputFormats?.find(format =>
+        outputFormats?.find((format) =>
           ["json", "JSON", "application/json"].includes(format)
         )
       );
@@ -346,9 +342,9 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
 
     const supportsGeojson =
       hasOutputFormat(getCapabilitiesStratum.capabilities.outputTypes) ||
-      [...getCapabilitiesStratum.capabilitiesFeatureTypes.values()].reduce<
-        boolean
-      >(
+      [
+        ...getCapabilitiesStratum.capabilitiesFeatureTypes.values()
+      ].reduce<boolean>(
         (hasGeojson, current) =>
           hasGeojson && hasOutputFormat(current?.OutputFormats),
         true
@@ -422,7 +418,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
   get shortReport(): string | undefined {
     // Show notice if reached
     if (
-      isObservableArray(this.readyData?.features) &&
+      this.readyData?.features !== undefined &&
       this.readyData!.features.length >= this.maxFeatures
     ) {
       return i18next.t(

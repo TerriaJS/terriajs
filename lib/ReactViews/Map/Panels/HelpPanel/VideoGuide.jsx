@@ -10,7 +10,7 @@ import { useKeyPress } from "../../../Hooks/useKeyPress.js";
 import { RawButton } from "../../../../Styled/Button";
 import Icon, { StyledIcon } from "../../../../Styled/Icon";
 
-const VideoWrapperBox = props => {
+const VideoWrapperBox = (props) => {
   const { viewState } = props;
   const handleClose = () => viewState.setVideoGuideVisible("");
 
@@ -21,7 +21,7 @@ const VideoWrapperBox = props => {
   return (
     <Box
       centered
-      onClick={e => {
+      onClick={(e) => {
         e.stopPropagation();
         handleClose();
       }}
@@ -99,7 +99,7 @@ class VideoGuide extends React.Component {
                 left: -30px;
               }
             `}
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
           >
             <Loader message={` `} />
             <iframe

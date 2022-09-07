@@ -17,7 +17,7 @@ import highlightKeyword from "../ReactViewHelpers/highlightKeyword";
 // Initially had this as border bottom on the button, but need a HR given it's not a full width border
 // // ${p => !p.isLastResult && `border-bottom: 1px solid ${p.theme.greyLighter};`}
 const RawButtonAndHighlight = styled(RawButton)`
-  ${p => `
+  ${(p) => `
   &:hover, &:focus {
     background-color: ${p.theme.greyLighter};
     ${StyledIcon} {

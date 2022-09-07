@@ -107,9 +107,9 @@ export default class Result<T = undefined> {
     errorOverrides: TerriaErrorOverrides
   ): Result<U[]> {
     return new Result(
-      results.map(r => r.value),
+      results.map((r) => r.value),
       TerriaError.combine(
-        results.map(r => r.error),
+        results.map((r) => r.error),
         errorOverrides
       )
     );

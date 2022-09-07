@@ -65,9 +65,7 @@ export class StyleMapLegend<
     return items;
   }
 
-  private _createLegendItemsFromBinStyleMap(): StratumFromTraits<
-    LegendItemTraits
-  >[] {
+  private _createLegendItemsFromBinStyleMap(): StratumFromTraits<LegendItemTraits>[] {
     const column = this.styleMap.column;
     const minimum =
       column && column.valuesAsNumbers.minimum !== undefined
@@ -112,9 +110,7 @@ export class StyleMapLegend<
       .concat(nullBin);
   }
 
-  private _createLegendItemsFromEnumStyleMap(): StratumFromTraits<
-    LegendItemTraits
-  >[] {
+  private _createLegendItemsFromEnumStyleMap(): StratumFromTraits<LegendItemTraits>[] {
     const column = this.styleMap.column;
 
     // Show null bin if data has null values - or if EnumColorMap doesn't have enough colors to show all values
@@ -122,9 +118,9 @@ export class StyleMapLegend<
       column &&
       (column.uniqueValues.numberOfNulls > 0 ||
         column.uniqueValues.values.find(
-          value =>
+          (value) =>
             !this.styleMap.commonTraits.enum.find(
-              enumStyle => enumStyle.value === value
+              (enumStyle) => enumStyle.value === value
             )
         ))
         ? [
@@ -136,7 +132,7 @@ export class StyleMapLegend<
         : [];
 
     return this.styleMap.traitValues.enum
-      .map(enumPoint =>
+      .map((enumPoint) =>
         createStratumInstance(
           LegendItemTraits,
           this.getPreview(
@@ -152,9 +148,7 @@ export class StyleMapLegend<
       .concat(nullBin);
   }
 
-  private _createLegendItemsFromConstantColorMap(): StratumFromTraits<
-    LegendItemTraits
-  >[] {
+  private _createLegendItemsFromConstantColorMap(): StratumFromTraits<LegendItemTraits>[] {
     return [
       createStratumInstance(LegendItemTraits, {
         ...this.legendItemOverrides,
@@ -171,9 +165,8 @@ export class StyleMapLegend<
     format: Intl.NumberFormatOptions | JsonObject | undefined
   ): string {
     if (!isDefined(value) || value === null) return "No value";
-    return (format?.maximumFractionDigits
-      ? value
-      : Math.round(value)
+    return (
+      format?.maximumFractionDigits ? value : Math.round(value)
     ).toLocaleString(undefined, format);
   }
 }

@@ -61,14 +61,14 @@ export default class MapInteractionMode {
     /**
      * Gets or sets the html formatted message displayed on the map when in this mode.
      */
-    this.message = function() {
+    this.message = function () {
       return options.message;
     };
 
     /**
      * Gets or sets the react node displayed on the map when in this mode.
      */
-    this.messageAsNode = function() {
+    this.messageAsNode = function () {
       return options.messageAsNode;
     };
 

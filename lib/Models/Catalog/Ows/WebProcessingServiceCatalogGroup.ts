@@ -144,7 +144,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   @computed
   get members(): ModelReference[] {
     return filterOutUndefined(
-      this.capabilities.ProcessOfferings?.map(process =>
+      this.capabilities.ProcessOfferings?.map((process) =>
         this.getProcessId(process)
       ) ?? []
     );
@@ -157,7 +157,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   createMembersForProcesses() {
-    this.capabilities.ProcessOfferings?.forEach(process =>
+    this.capabilities.ProcessOfferings?.forEach((process) =>
       this.createMemberForProcess(process)
     );
   }
@@ -169,9 +169,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
       return;
     }
 
-    const memberModel: WebProcessingServiceCatalogFunction = this.getOrCreateWPSCatalogFunction(
-      processId
-    );
+    const memberModel: WebProcessingServiceCatalogFunction =
+      this.getOrCreateWPSCatalogFunction(processId);
 
     // Replace the stratum inherited from the parent group.
     memberModel.strata.delete(CommonStrata.definition);

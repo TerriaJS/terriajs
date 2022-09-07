@@ -51,9 +51,7 @@
     "supportsPercentileStatistics": true,
     "supportsLod": true,
     "supportsQueryWithLodSR": false,
-    "supportedLodTypes": [
-      "geohash"
-    ],
+    "supportedLodTypes": ["geohash"],
     "supportsReturningGeometryCentroid": false,
     "supportsReturningGeometryProperties": true,
     "supportsQueryWithDatumTransformation": true,
@@ -83,12 +81,7 @@
       "type": "uniqueValue",
       "field1": "id1",
       "defaultSymbol": {
-        "color": [
-          252,
-          146,
-          31,
-          255
-        ],
+        "color": [252, 146, 31, 255],
         "width": 4.5,
         "type": "esriSLS",
         "style": "esriSLSDash"
@@ -98,12 +91,7 @@
         {
           "value": "1",
           "symbol": {
-            "color": [
-              237,
-              81,
-              81,
-              255
-            ],
+            "color": [237, 81, 81, 255],
             "width": 1.5,
             "type": "esriSLS",
             "style": "esriSLSSolid"
@@ -113,12 +101,7 @@
         {
           "value": "2",
           "symbol": {
-            "color": [
-              20,
-              158,
-              206,
-              255
-            ],
+            "color": [20, 158, 206, 255],
             "width": 1.5,
             "type": "esriSLS",
             "style": "esriSLSDot"
@@ -128,12 +111,7 @@
         {
           "value": "3",
           "symbol": {
-            "color": [
-              167,
-              198,
-              54,
-              255
-            ],
+            "color": [167, 198, 54, 255],
             "width": 1.5,
             "type": "esriSLS",
             "style": "esriSLSDash"
@@ -143,12 +121,7 @@
         {
           "value": "4",
           "symbol": {
-            "color": [
-              158,
-              85,
-              156,
-              255
-            ],
+            "color": [158, 85, 156, 255],
             "width": 1.5,
             "type": "esriSLS",
             "style": "esriSLSDashDot"
@@ -158,12 +131,7 @@
         {
           "value": "5",
           "symbol": {
-            "color": [
-              252,
-              146,
-              31,
-              255
-            ],
+            "color": [252, 146, 31, 255],
             "width": 1.5,
             "type": "esriSLS",
             "style": "esriSLSDashDotDot"
@@ -173,12 +141,7 @@
         {
           "value": "6",
           "symbol": {
-            "color": [
-              255,
-              222,
-              62,
-              255
-            ],
+            "color": [255, 222, 62, 255],
             "width": 1.5,
             "type": "esriSLS",
             "style": "esriSLSLongDash"
@@ -188,12 +151,7 @@
         {
           "value": "7",
           "symbol": {
-            "color": [
-              247,
-              137,
-              216,
-              255
-            ],
+            "color": [247, 137, 216, 255],
             "width": 1.5,
             "type": "esriSLS",
             "style": "esriSLSLongDashDot"
@@ -203,12 +161,7 @@
         {
           "value": "8",
           "symbol": {
-            "color": [
-              183,
-              129,
-              74,
-              255
-            ],
+            "color": [183, 129, 74, 255],
             "width": 1.5,
             "type": "esriSLS",
             "style": "esriSLSShortDash"
@@ -218,12 +171,7 @@
         {
           "value": "9",
           "symbol": {
-            "color": [
-              60,
-              175,
-              153,
-              255
-            ],
+            "color": [60, 175, 153, 255],
             "width": 1.5,
             "type": "esriSLS",
             "style": "esriSLSShortDot"
@@ -233,12 +181,7 @@
         {
           "value": "10",
           "symbol": {
-            "color": [
-              107,
-              107,
-              214,
-              255
-            ],
+            "color": [107, 107, 214, 255],
             "width": 1.5,
             "type": "esriSLS",
             "style": "esriSLSShortDashDot"
@@ -248,12 +191,7 @@
         {
           "value": "11",
           "symbol": {
-            "color": [
-              181,
-              71,
-              121,
-              255
-            ],
+            "color": [181, 71, 121, 255],
             "width": 1.5,
             "type": "esriSLS",
             "style": "esriSLSShortDashDotDot"

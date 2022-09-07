@@ -150,7 +150,7 @@ class StoryEditor extends React.Component {
         <div className={Styles.inner}>
           <div className={Styles.header}>
             <input
-              ref={titleInput => (this.titleInput = titleInput)}
+              ref={(titleInput) => (this.titleInput = titleInput)}
               placeholder={t("story.editor.placeholder")}
               autoComplete="off"
               className={Styles.field}

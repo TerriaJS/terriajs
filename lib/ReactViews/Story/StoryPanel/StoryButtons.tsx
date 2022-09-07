@@ -49,11 +49,11 @@ export const ExitBtn = ({ onClick }: BtnProp) => {
   );
 };
 
-export const StoryIcon = styled(StyledIcon).attrs(props => ({
+export const StoryIcon = styled(StyledIcon).attrs((props) => ({
   fillColor: props.theme.textDark,
   opacity: 0.5
 }))`
   &:hover {
-    fill: ${p => p.theme.colorPrimary};
+    fill: ${(p) => p.theme.colorPrimary};
   }
 `;

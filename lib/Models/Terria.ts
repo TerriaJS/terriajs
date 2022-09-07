@@ -426,9 +426,9 @@ export default class Terria {
     computed(() =>
       filterOutUndefined(
         this.overlays.items
-          .map(item => (MappableMixin.isMixedInto(item) ? item : undefined))
+          .map((item) => (MappableMixin.isMixedInto(item) ? item : undefined))
           .concat(
-            this.workbench.items.map(item =>
+            this.workbench.items.map((item) =>
               MappableMixin.isMixedInto(item) ? item : undefined
             )
           )
@@ -556,7 +556,7 @@ export default class Terria {
   get baseMapContrastColor() {
     return (
       this.baseMapsModel.baseMapItems.find(
-        basemap =>
+        (basemap) =>
           isDefined(basemap.item?.uniqueId) &&
           basemap.item?.uniqueId === this.mainViewer.baseMap?.uniqueId
       )?.contrastColor ?? "#ffffff"
@@ -757,7 +757,9 @@ export default class Terria {
     }
 
     this.models.set(model.uniqueId, model);
-    shareKeys?.forEach(shareKey => this.addShareKey(model.uniqueId!, shareKey));
+    shareKeys?.forEach((shareKey) =>
+      this.addShareKey(model.uniqueId!, shareKey)
+    );
   }
 
   /**
@@ -849,17 +851,17 @@ export default class Terria {
    */
   setupErrorServiceProvider(errorService: ErrorServiceOptions) {
     initializeErrorServiceProvider(errorService)
-      .then(errorService => {
+      .then((errorService) => {
         this.errorService = errorService;
       })
-      .catch(e => {
+      .catch((e) => {
         console.error("Failed to initialize error service", e);
       });
   }
 
   setupInitializationUrls(baseUri: uri.URI, config: any) {
     const initializationUrls: string[] = config?.initializationUrls || [];
-    const initSources: InitSource[] = initializationUrls.map(url => ({
+    const initSources: InitSource[] = initializationUrls.map((url) => ({
       name: `Init URL from config ${url}`,
       errorSeverity: TerriaErrorSeverity.Error,
       ...generateInitializationUrl(
@@ -874,7 +876,7 @@ export default class Terria {
       initSources.push(
         ...(config.v7initializationUrls as JsonArray)
           .filter(isJsonString)
-          .map(v7initUrl => ({
+          .map((v7initUrl) => ({
             name: `V7 Init URL from config ${v7initUrl}`,
             errorSeverity: TerriaErrorSeverity.Error,
             data: (async () => {
@@ -887,7 +889,7 @@ export default class Terria {
                 console.log(
                   `WARNING: ${v7initUrl} is a v7 catalog - it has been upgraded to v8\nMessages:\n`
                 );
-                convert.messages.forEach(message =>
+                convert.messages.forEach((message) =>
                   console.log(`- ${message.path.join(".")}: ${message.message}`)
                 );
                 return new Result({
@@ -999,7 +1001,7 @@ export default class Terria {
 
     this.baseMapsModel
       .initializeDefaultBaseMaps()
-      .catchError(error =>
+      .catchError((error) =>
         this.raiseErrorToUser(
           TerriaError.from(error, "Failed to load default basemaps")
         )
@@ -1065,7 +1067,7 @@ export default class Terria {
     let baseMap = baseMapItems[0];
     const persistedBaseMapId = this.getLocalProperty("basemap");
     const baseMapSearch = baseMapItems.find(
-      baseMapItem => baseMapItem.item?.uniqueId === persistedBaseMapId
+      (baseMapItem) => baseMapItem.item?.uniqueId === persistedBaseMapId
     );
     if (baseMapSearch?.item && MappableMixin.isMixedInto(baseMapSearch.item)) {
       baseMap = baseMapSearch;
@@ -1073,11 +1075,11 @@ export default class Terria {
       // Try to find basemap using defaultBaseMapId and defaultBaseMapName
       const baseMapSearch =
         baseMapItems.find(
-          baseMapItem =>
+          (baseMapItem) =>
             baseMapItem.item?.uniqueId === this.baseMapsModel.defaultBaseMapId
         ) ??
         baseMapItems.find(
-          baseMapItem =>
+          (baseMapItem) =>
             CatalogMemberMixin.isMixedInto(baseMapItem) &&
             (<any>baseMapItem.item).name ===
               this.baseMapsModel.defaultBaseMapName
@@ -1133,10 +1135,7 @@ export default class Terria {
         this,
         hashProperties,
         this.userProperties,
-        new URI(newUrl)
-          .filename("")
-          .query("")
-          .hash("")
+        new URI(newUrl).filename("").query("").hash("")
       );
 
       if (!this.appBaseHref.endsWith("/")) {
@@ -1262,7 +1261,7 @@ export default class Terria {
     // Load all init sources
     // Converts them to InitSourceFromData
     const loadedInitSources = await Promise.all(
-      this.initSources.map(async initSource => {
+      this.initSources.map(async (initSource) => {
         try {
           return {
             name: initSource.name,
@@ -1351,7 +1350,7 @@ export default class Terria {
     if (Array.isArray(containerIds)) {
       // Groups that contain this item must be loaded before this item.
       await Promise.all(
-        containerIds.map(async containerId => {
+        containerIds.map(async (containerId) => {
           if (typeof containerId !== "string") {
             return;
           }
@@ -1421,7 +1420,7 @@ export default class Terria {
     ).pushErrorTo(errors);
 
     if (loadedModel && Array.isArray(containerIds)) {
-      containerIds.forEach(containerId => {
+      containerIds.forEach((containerId) => {
         if (
           typeof containerId === "string" &&
           loadedModel.knownContainerUniqueIds.indexOf(containerId) < 0
@@ -1492,7 +1491,7 @@ export default class Terria {
         // This will set TerriaErrorSeverity to Error if the model which FAILED to load is in the workbench.
         severity: () =>
           this.workbench.items.find(
-            workbenchItem => workbenchItem.uniqueId === modelId
+            (workbenchItem) => workbenchItem.uniqueId === modelId
           )
             ? TerriaErrorSeverity.Error
             : TerriaErrorSeverity.Warning,
@@ -1524,7 +1523,7 @@ export default class Terria {
     } else if (GroupMixin.isMixedInto(model)) {
       (await model.loadMembers()).pushErrorTo(errors);
 
-      model.memberModels.map(async m => {
+      model.memberModels.map(async (m) => {
         await this.pushAndLoadMapItems(m, newItems, errors);
       });
     } else if (MappableMixin.isMixedInto(model)) {
@@ -1642,7 +1641,7 @@ export default class Terria {
       if (isJsonString(initData.settings.baseMapId)) {
         this.mainViewer.setBaseMap(
           this.baseMapsModel.baseMapItems.find(
-            item => item.item.uniqueId === initData.settings!.baseMapId
+            (item) => item.item.uniqueId === initData.settings!.baseMapId
           )?.item
         );
       }
@@ -1668,7 +1667,7 @@ export default class Terria {
     const models = initData.models;
     if (isJsonObject(models, false)) {
       await Promise.all(
-        Object.keys(models).map(async modelId => {
+        Object.keys(models).map(async (modelId) => {
           (
             await this.loadModelStratum(
               modelId,
@@ -1689,7 +1688,7 @@ export default class Terria {
 
     // Set the new contents of the workbench.
     const newItemsRaw = filterOutUndefined(
-      workbench.map(modelId => {
+      workbench.map((modelId) => {
         if (typeof modelId !== "string") {
           errors.push(
             new TerriaError({
@@ -1721,7 +1720,7 @@ export default class Terria {
     // For ids that don't correspond to models resolve an id by share keys
     const timelineWithShareKeysResolved = new Set(
       filterOutUndefined(
-        timeline.map(modelId => {
+        timeline.map((modelId) => {
           if (typeof modelId !== "string") {
             errors.push(
               new TerriaError({
@@ -1746,13 +1745,13 @@ export default class Terria {
     runInAction(
       () =>
         (this.timelineStack.items = this.workbench.items
-          .filter(item => {
+          .filter((item) => {
             return (
               item.uniqueId && timelineWithShareKeysResolved.has(item.uniqueId)
             );
             // && TODO: what is a good way to test if an item is of type TimeVarying.
           })
-          .map(item => <TimeVarying>item))
+          .map((item) => <TimeVarying>item))
     );
 
     if (isJsonObject(initData.pickedFeatures)) {
@@ -1888,18 +1887,18 @@ export default class Terria {
     if (Array.isArray(pickedFeatures.entities)) {
       // Build index of terria features by a hash of their properties.
       const relevantItems = this.workbench.items.filter(
-        item =>
+        (item) =>
           hasTraits(item, MappableTraits, "show") &&
           item.show &&
           MappableMixin.isMixedInto(item)
       ) as MappableMixin.Instance[];
 
-      relevantItems.forEach(item => {
+      relevantItems.forEach((item) => {
         const entities: Entity[] = item.mapItems
           .filter(isDataSource)
           .reduce((arr: Entity[], ds) => arr.concat(ds.entities.values), []);
 
-        entities.forEach(entity => {
+        entities.forEach((entity) => {
           const hash = hashEntity(entity, this.timelineClock);
           const feature = Feature.fromEntityCollectionOrEntity(entity);
           featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
@@ -1909,10 +1908,10 @@ export default class Terria {
       // Go through the features we've got from terria match them up to the id/name info we got from the
       // share link, filtering out any without a match.
       vectorFeatures = filterOutUndefined(
-        pickedFeatures.entities.map(e => {
+        pickedFeatures.entities.map((e) => {
           if (isJsonObject(e) && typeof e.hash === "number") {
             const features = featureIndex[e.hash] || [];
-            const match = features.find(f => f.name === e.name);
+            const match = features.find((f) => f.name === e.name);
             return match;
           }
         })
@@ -1956,7 +1955,7 @@ export default class Terria {
         typeof current.name === "string"
       ) {
         const selectedFeature = (featureIndex[current.hash] || []).find(
-          feature => feature.name === current.name
+          (feature) => feature.name === current.name
         );
         if (selectedFeature) {
           this.selectedFeature = selectedFeature as Feature;
@@ -2018,7 +2017,7 @@ function generateInitializationUrl(
 ): InitSource {
   if (url.toLowerCase().substring(url.length - 5) !== ".json") {
     return {
-      options: initFragmentPaths.map(fragmentPath => {
+      options: initFragmentPaths.map((fragmentPath) => {
         return {
           initUrl: new URI(fragmentPath)
             .segment(url)
@@ -2047,7 +2046,7 @@ async function interpretHash(
   }
 
   runInAction(() => {
-    Object.keys(hashProperties).forEach(function(property) {
+    Object.keys(hashProperties).forEach(function (property) {
       if (["clean", "hideWelcomeMessage", "start", "share"].includes(property))
         return;
       const propertyValue = hashProperties[property];
@@ -2151,7 +2150,7 @@ async function interpretStartData(
             : SHARE_VERSION,
           initSources: Array.isArray(startData.initSources)
             ? (startData.initSources.filter(
-                initSource =>
+                (initSource) =>
                   isJsonString(initSource) || isJsonObject(initSource)
               ) as (string | JsonObject)[])
             : []
@@ -2162,7 +2161,7 @@ async function interpretStartData(
         // Push startData to initSources array
         runInAction(() => {
           terria.initSources.push(
-            ...startDataV8!.initSources.map(initSource =>
+            ...startDataV8!.initSources.map((initSource) =>
               isJsonString(initSource)
                 ? {
                     name,

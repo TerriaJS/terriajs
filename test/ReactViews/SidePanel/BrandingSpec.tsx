@@ -6,12 +6,12 @@ import Branding from "../../../lib/ReactViews/SidePanel/Branding";
 import { createWithContexts } from "../withContext";
 // import Branding from "../../../lib/ReactViews/SidePanel/Branding";
 
-describe("Branding", function() {
+describe("Branding", function () {
   let terria: Terria;
   let viewState: ViewState;
   let rendered: TestRenderer.ReactTestRenderer;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria();
     viewState = new ViewState({
       terria,
@@ -20,12 +20,12 @@ describe("Branding", function() {
     });
   });
 
-  it("renders without issues", function() {
+  it("renders without issues", function () {
     terria.configParameters.brandBarElements = ["<a href='blah'>a thing</a>"];
     rendered = createWithContexts(viewState, <Branding />);
     expect(rendered.root.findByType("a")).toBeDefined();
   });
-  it("renders when provided displayOne inside of index", function() {
+  it("renders when provided displayOne inside of index", function () {
     terria.configParameters.brandBarElements = [
       "<details><summary>a thing</summary></details>"
     ];
@@ -36,7 +36,7 @@ describe("Branding", function() {
       rendered.root.findByType("a");
     }).toThrow();
   });
-  it("renders when provided displayOne inside of index, but targetting empty string", function() {
+  it("renders when provided displayOne inside of index, but targetting empty string", function () {
     terria.configParameters.brandBarElements = [
       "",
       "<progress>progress is a html element!</progress>"
@@ -48,7 +48,7 @@ describe("Branding", function() {
       rendered.root.findByType("span");
     }).toThrow();
   });
-  it("renders when provided displayOne outside of index", function() {
+  it("renders when provided displayOne outside of index", function () {
     terria.configParameters.brandBarElements = [
       "",
       "<meter>meter is a html element!</meter>"
@@ -60,7 +60,7 @@ describe("Branding", function() {
       rendered.root.findByType("progress");
     }).toThrow();
   });
-  it("renders brandBarElements when provided brandBarSmallElements", function() {
+  it("renders brandBarElements when provided brandBarSmallElements", function () {
     terria.configParameters.brandBarElements = [
       "",
       "<meter>meter is a html element!</meter>"
@@ -75,7 +75,7 @@ describe("Branding", function() {
     expect(rendered.root.findByType("meter")).toBeDefined();
   });
 
-  it("renders when provided brandBarSmallElements and ignores displayOneBrand", function() {
+  it("renders when provided brandBarSmallElements and ignores displayOneBrand", function () {
     terria.configParameters.brandBarElements = [
       "",
       "<meter>meter is a html element!</meter>"

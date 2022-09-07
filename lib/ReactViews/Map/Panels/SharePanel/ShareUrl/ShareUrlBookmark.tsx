@@ -15,13 +15,13 @@ export const ShareUrlBookmark: FC<IShareUrlBookmarkProps> = ({ viewState }) => {
   const { t } = useTranslation();
 
   return viewState.terria.configParameters.helpContent?.some(
-    e => e.itemName === bookMarkHelpItemName
+    (e) => e.itemName === bookMarkHelpItemName
   ) ? (
     <Text
       medium
       textLight
       isLink
-      onClick={evt =>
+      onClick={(evt) =>
         viewState.openHelpPanelItemFromSharePanel(evt, bookMarkHelpItemName)
       }
     >

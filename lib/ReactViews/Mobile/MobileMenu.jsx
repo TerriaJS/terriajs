@@ -42,8 +42,8 @@ const MobileMenu = observer(
 
     toggleMenu() {
       runInAction(() => {
-        this.props.viewState.mobileMenuVisible = !this.props.viewState
-          .mobileMenuVisible;
+        this.props.viewState.mobileMenuVisible =
+          !this.props.viewState.mobileMenuVisible;
       });
     },
 

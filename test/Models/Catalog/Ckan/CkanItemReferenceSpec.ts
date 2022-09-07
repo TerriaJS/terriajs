@@ -12,13 +12,13 @@ const taxationStatisticsWmsResource = require("../../../../wwwroot/test/CKAN/tax
 const vicWmsLayerResource = require("../../../../wwwroot/test/CKAN/vic-wms-layer-resource.json");
 const wmsNoLayerResource = require("../../../../wwwroot/test/CKAN/wms-no-layer-resource.json");
 
-describe("CkanItemReference", function() {
+describe("CkanItemReference", function () {
   let terria: Terria;
   let ckanItemReference: CkanItemReference;
   let ckanDatasetStratum: CkanDatasetStratum;
   let ckanItemTarget: any;
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -26,7 +26,7 @@ describe("CkanItemReference", function() {
 
     jasmine.Ajax.install();
     // Fail and log requests by default.
-    jasmine.Ajax.stubRequest(/.*/).andCallFunction(request => {
+    jasmine.Ajax.stubRequest(/.*/).andCallFunction((request) => {
       console.dir(request);
       request.respondWith({ status: 404 });
     });
@@ -54,17 +54,17 @@ describe("CkanItemReference", function() {
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     jasmine.Ajax.uninstall();
   });
 
-  it("has a type and typeName", function() {
+  it("has a type and typeName", function () {
     expect(ckanItemReference.type).toBe("ckan-item");
     expect(ckanItemReference.typeName).toBe(i18next.t("models.ckan.name"));
   });
 
-  describe("Can load an item by datasetId - ", function() {
-    beforeEach(async function() {
+  describe("Can load an item by datasetId - ", function () {
+    beforeEach(async function () {
       runInAction(() => {
         ckanItemReference.setTrait("definition", "url", "https://example.com");
         ckanItemReference.setTrait("definition", "name", "Taxation Statistics");
@@ -81,7 +81,7 @@ describe("CkanItemReference", function() {
       ckanItemTarget = ckanItemReference.target;
     });
 
-    it("properly creates item", function() {
+    it("properly creates item", function () {
       // when creating a single item directly name is retained from the definition stratum
       expect(ckanItemTarget.name).toBe("Taxation Statistics");
 
@@ -146,15 +146,15 @@ describe("CkanItemReference", function() {
     });
   });
 
-  describe("Can load an item by resourceId - ", function() {
-    beforeEach(async function() {
+  describe("Can load an item by resourceId - ", function () {
+    beforeEach(async function () {
       runInAction(() => {
         ckanItemReference.setTrait("definition", "url", "https://example.com");
         ckanItemReference.setTrait("definition", "name", "Taxation Statistics");
       });
     });
 
-    it("properly creates item", async function() {
+    it("properly creates item", async function () {
       ckanItemReference.setTrait(
         "definition",
         "resourceId",
@@ -184,7 +184,7 @@ describe("CkanItemReference", function() {
       );
     });
 
-    it("creates WMS group instead of WMS item if no LAYERS", async function() {
+    it("creates WMS group instead of WMS item if no LAYERS", async function () {
       ckanItemReference.setTrait(
         "definition",
         "resourceId",
@@ -213,8 +213,8 @@ describe("CkanItemReference", function() {
     });
   });
 
-  describe("Can load a different item by resourceId - ", function() {
-    beforeEach(async function() {
+  describe("Can load a different item by resourceId - ", function () {
+    beforeEach(async function () {
       runInAction(() => {
         ckanItemReference.setTrait("definition", "url", "https://example.com");
         ckanItemReference.setTrait(
@@ -234,7 +234,7 @@ describe("CkanItemReference", function() {
       );
       ckanItemTarget = ckanItemReference.target;
     });
-    it("uses LAYERS from url query string for WMS item", function() {
+    it("uses LAYERS from url query string for WMS item", function () {
       expect(ckanItemReference._ckanResource).toBeDefined();
       expect(ckanItemReference._ckanDataset).toBe(undefined);
       expect(ckanItemReference._ckanCatalogGroup).toBe(undefined);
@@ -259,8 +259,8 @@ describe("CkanItemReference", function() {
     });
   });
 
-  describe("Rejected if there is no datasetId or resourceId - ", function() {
-    beforeEach(async function() {
+  describe("Rejected if there is no datasetId or resourceId - ", function () {
+    beforeEach(async function () {
       runInAction(() => {
         ckanItemReference.setTrait("definition", "url", "https://example.com");
         ckanItemReference.setTrait("definition", "name", "Taxation Statistics");
@@ -268,7 +268,7 @@ describe("CkanItemReference", function() {
       await ckanItemReference.loadReference();
     });
 
-    it("No target can be created", function() {
+    it("No target can be created", function () {
       expect(ckanItemReference.target).toBe(undefined);
     });
   });

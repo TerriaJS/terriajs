@@ -3,11 +3,11 @@ import ShapefileCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/Sh
 import Terria from "../../../../lib/Models/Terria";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 
-describe("ShapefileCatalogItem", function() {
+describe("ShapefileCatalogItem", function () {
   let terria: Terria;
   let shapefile: ShapefileCatalogItem;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -15,7 +15,7 @@ describe("ShapefileCatalogItem", function() {
     shapefile.setTrait(CommonStrata.user, "forceCesiumPrimitives", true);
   });
 
-  it("works by URL in EPSG:28356", async function() {
+  it("works by URL in EPSG:28356", async function () {
     shapefile.setTrait(
       CommonStrata.user,
       "url",
@@ -31,7 +31,7 @@ describe("ShapefileCatalogItem", function() {
     ).toBeDefined();
   });
 
-  it("works by URL in CRS:84", async function() {
+  it("works by URL in CRS:84", async function () {
     shapefile.setTrait(
       CommonStrata.user,
       "url",
