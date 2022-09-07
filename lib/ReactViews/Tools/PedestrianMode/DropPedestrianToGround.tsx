@@ -50,7 +50,7 @@ const DropPedestrianToGround: React.FC<DropPedestrianToGroundProps> = props => {
         const position = Cartographic.toCartesian(cartographic);
         flyTo(scene, position, {
           orientation: {
-            heading: 0,
+            heading: scene.camera.heading,
             pitch: 0,
             roll: 0
           }

@@ -94,7 +94,8 @@ import InitSource, {
   isInitFromOptions,
   isInitFromUrl,
   ShareInitSourceData,
-  StoryData
+  StoryData,
+  InitSourceFromData
 } from "./InitSource";
 import Internationalization, {
   I18nStartOptions,
@@ -1259,13 +1260,15 @@ export default class Terria {
     const errors: TerriaError[] = [];
 
     // Load all init sources
+    // Converts them to InitSourceFromData
     const loadedInitSources = await Promise.all(
       this.initSources.map(async initSource => {
         try {
           return {
-            ...initSource,
+            name: initSource.name,
+            errorSeverity: initSource.errorSeverity,
             data: await loadInitSource(initSource)
-          };
+          } as InitSourceFromData;
         } catch (e) {
           errors.push(
             TerriaError.from(e, {
@@ -1280,29 +1283,28 @@ export default class Terria {
       })
     );
 
-    // Apply all init sources
-    await Promise.all(
-      loadedInitSources.map(async initSource => {
-        if (!isDefined(initSource?.data)) return;
-        try {
-          await this.applyInitData({
-            initData: initSource!.data
-          });
-        } catch (e) {
-          errors.push(
-            TerriaError.from(e, {
-              severity: initSource?.errorSeverity,
-              message: {
-                key: "models.terria.loadingInitSourceError2Message",
-                parameters: {
-                  loadSource: initSource!.name ?? "Unknown source"
-                }
+    // Sequentially apply all InitSources
+    for (let i = 0; i < loadedInitSources.length; i++) {
+      const initSource = loadedInitSources[i];
+      if (!isDefined(initSource?.data)) continue;
+      try {
+        await this.applyInitData({
+          initData: initSource!.data
+        });
+      } catch (e) {
+        errors.push(
+          TerriaError.from(e, {
+            severity: initSource?.errorSeverity,
+            message: {
+              key: "models.terria.loadingInitSourceError2Message",
+              parameters: {
+                loadSource: initSource!.name ?? "Unknown source"
               }
-            })
-          );
-        }
-      })
-    );
+            }
+          })
+        );
+      }
+    }
 
     // Load basemap
     runInAction(() => {
