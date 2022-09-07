@@ -509,18 +509,6 @@ class WebMapServiceCatalogItem
         ? this.diffModeParameters
         : {};
 
-      // Set CRS for WMS 1.3.0
-      // Set SRS for WMS 1.1.1
-      if (this.crs) {
-        if (this.useWmsVersion130) {
-          parameters.crs = this.crs;
-          getFeatureInfoParameters.crs = this.crs;
-        } else {
-          parameters.srs = this.crs;
-          getFeatureInfoParameters.srs = this.crs;
-        }
-      }
-
       if (this.supportsColorScaleRange) {
         parameters.COLORSCALERANGE = this.colorScaleRange;
       }
@@ -558,10 +546,17 @@ class WebMapServiceCatalogItem
         new URI(this.url)
       );
 
+      // Set CRS for WMS 1.3.0
+      // Set SRS for WMS 1.1.1
+      const crs = this.useWmsVersion130 ? this.crs : undefined;
+      const srs = this.useWmsVersion130 ? undefined : this.crs;
+
       const imageryOptions: WebMapServiceImageryProvider.ConstructorOptions = {
         url: proxyCatalogItemUrl(this, baseUrl.toString()),
         layers: this.validLayers.length > 0 ? this.validLayers.join(",") : "",
         parameters,
+        crs,
+        srs,
         getFeatureInfoParameters,
         getFeatureInfoUrl: this.getFeatureInfoUrl,
         tileWidth: this.tileWidth,
