@@ -5,6 +5,9 @@
 - Moved map credits to map column so it don't get hidden by chart panel.
 - Fix support for `initUrls` in `startData.initSources`
 - Propagate `knownContainerUniqueIds` across references and their target.
+- Migrated `/#tools=1` to version 8.
+- Removed dummy function `Terria.getUserProperty`.
+- Removed unused version 7 React components.
 - [The next improvement]
 
 #### 8.2.13 - 2022-09-01
