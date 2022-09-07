@@ -2154,9 +2154,10 @@ async function interpretStartData(
       }
 
       if (startDataV8 !== null && Array.isArray(startDataV8.initSources)) {
-        // Push startData to initSources array
-        // Note shareData.initSources can be an initUrl (string) or initData (InitDataSource/JsonObject)
-        // These need to be transformed into appropriate `InitSource`
+        // Push startData.initSources to terria.initSources array
+        // Note startData.initSources can be an initUrl (string) or initData (InitDataSource/JsonObject)
+        // Terria.initSources are different to startData.initSources
+        // They need to be transformed into appropriate `InitSource`
         runInAction(() => {
           terria.initSources.push(
             ...startDataV8!.initSources.map((initSource) =>
