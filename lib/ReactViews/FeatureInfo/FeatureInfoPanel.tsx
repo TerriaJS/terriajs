@@ -17,7 +17,7 @@ import MappableMixin from "../../ModelMixins/MappableMixin";
 import TimeFilterMixin from "../../ModelMixins/TimeFilterMixin";
 import CompositeCatalogItem from "../../Models/Catalog/CatalogItems/CompositeCatalogItem";
 import { BaseModel } from "../../Models/Definition/Model";
-import Feature from "../../Models/Feature/Feature";
+import TerriaFeature from "../../Models/Feature/Feature";
 import {
   addMarker,
   isMarkerVisible,
@@ -55,7 +55,7 @@ class FeatureInfoPanel extends React.Component<Props> {
           if (!isDefined(pickedFeatures)) {
             terria.selectedFeature = undefined;
           } else {
-            terria.selectedFeature = Feature.fromEntity(
+            terria.selectedFeature = TerriaFeature.fromEntity(
               new Entity({
                 id: t("featureInfo.pickLocation"),
                 position: pickedFeatures.pickPosition
@@ -149,7 +149,7 @@ class FeatureInfoPanel extends React.Component<Props> {
   }
 
   @action.bound
-  toggleOpenFeature(feature: Feature) {
+  toggleOpenFeature(feature: TerriaFeature) {
     const terria = this.props.viewState.terria;
     if (feature === terria.selectedFeature) {
       terria.selectedFeature = undefined;
@@ -207,7 +207,7 @@ class FeatureInfoPanel extends React.Component<Props> {
 
   filterIntervalsByFeature(
     catalogItem: TimeFilterMixin.Instance,
-    feature: Feature
+    feature: TerriaFeature
   ) {
     try {
       catalogItem.setTimeFilterFeature(
@@ -410,7 +410,7 @@ class FeatureInfoPanel extends React.Component<Props> {
 }
 
 type FeatureCatalogItemPair = {
-  feature: Feature;
+  feature: TerriaFeature;
   catalogItem: MappableMixin.Instance;
 };
 
@@ -442,7 +442,10 @@ function getFeaturesGroupedByCatalogItems(terria: Terria) {
   return { catalogItems, featureCatalogItemPairs };
 }
 
-export function determineCatalogItem(workbench: Workbench, feature: Feature) {
+export function determineCatalogItem(
+  workbench: Workbench,
+  feature: TerriaFeature
+) {
   if (
     MappableMixin.isMixedInto(feature._catalogItem) &&
     workbench.items.includes(feature._catalogItem)

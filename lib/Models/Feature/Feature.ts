@@ -14,7 +14,7 @@ const customProperties = ["entityCollection", "properties", "data"];
  * -
  */
 
-export default class Feature extends Entity {
+export default class TerriaFeature extends Entity {
   /** This object can be used to pass Terria-specific properties */
   data?: TerriaFeatureData | JsonObject;
 
@@ -41,8 +41,8 @@ export default class Feature extends Entity {
    * Creates a new Feature from an Entity.
    * Note the custom properties are also copied into the new Feature properly.
    */
-  static fromEntity(entity: Entity): Feature {
-    const feature = new Feature({ id: entity.id });
+  static fromEntity(entity: Entity): TerriaFeature {
+    const feature = new TerriaFeature({ id: entity.id });
     feature.merge(entity);
 
     for (let i = 0; i < customProperties.length; i++) {
@@ -61,14 +61,14 @@ export default class Feature extends Entity {
    * then return the matching feature from the collection.
    * Otherwise, return a new Feature from this entity.
    */
-  static fromEntityCollectionOrEntity(entity: Entity): Feature {
+  static fromEntityCollectionOrEntity(entity: Entity): TerriaFeature {
     // If this entity is part of a collection, get the feature with this id from that collection.
     let feature;
     if (entity.entityCollection) {
       feature = entity.entityCollection.getById(entity.id);
     }
-    if (!feature || !(feature instanceof Feature)) {
-      feature = Feature.fromEntity(entity);
+    if (!feature || !(feature instanceof TerriaFeature)) {
+      feature = TerriaFeature.fromEntity(entity);
     }
     return feature;
   }
@@ -84,4 +84,4 @@ function addCustomFeatureProperties(entity: Entity) {
   }
 }
 
-module.exports = Feature;
+module.exports = TerriaFeature;

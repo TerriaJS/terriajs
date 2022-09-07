@@ -4,7 +4,7 @@ import ChartableMixin from "../../../../lib/ModelMixins/ChartableMixin";
 import StubCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
 import CreateModel from "../../../../lib/Models/Definition/CreateModel";
 import { BaseModel } from "../../../../lib/Models/Definition/Model";
-import Feature from "../../../../lib/Models/Feature/Feature";
+import TerriaFeature from "../../../../lib/Models/Feature/Feature";
 import Terria from "../../../../lib/Models/Terria";
 import ChartExpandAndDownloadButtons from "../../../../lib/ReactViews/Custom/Chart/ChartExpandAndDownloadButtons";
 import Chart from "../../../../lib/ReactViews/Custom/Chart/FeatureInfoPanelChart";
@@ -33,7 +33,7 @@ describe("ChartCustomComponent", function () {
     const context: ProcessNodeContext = {
       terria: terria,
       catalogItem: new StubCatalogItem(undefined, terria, undefined),
-      feature: new Feature({})
+      feature: new TerriaFeature({})
     };
     const node: DomElement = {
       name: component.name,
@@ -71,7 +71,7 @@ describe("ChartCustomComponent", function () {
     const context: ProcessNodeContext = {
       terria: terria,
       catalogItem: new StubCatalogItem("parent", terria, undefined),
-      feature: new Feature({})
+      feature: new TerriaFeature({})
     };
     const node: DomElement = {
       name: component.name,

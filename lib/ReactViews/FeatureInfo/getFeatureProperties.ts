@@ -7,7 +7,7 @@ import {
   isJsonString,
   JsonObject
 } from "../../Core/Json";
-import Feature from "../../Models/Feature/Feature";
+import TerriaFeature from "../../Models/Feature/Feature";
 import { isTerriaFeatureData } from "../../Models/Feature/FeatureData";
 import { FeatureInfoFormat } from "../../Traits/TraitsClasses/FeatureInfoTraits";
 import { formatDateTime } from "./mustacheExpressions";
@@ -19,7 +19,7 @@ import { formatDateTime } from "./mustacheExpressions";
  * If they have formatting, apply it.
  */
 export default function getFeatureProperties(
-  feature: Feature,
+  feature: TerriaFeature,
   currentTime: JulianDate,
   formats?: Record<string, FeatureInfoFormat>
 ) {
@@ -41,7 +41,7 @@ export default function getFeatureProperties(
  * Gets the values from a Entity's properties object for the time on the current clock.
  */
 export function propertyGetTimeValues(
-  feature: Feature,
+  feature: TerriaFeature,
   currentTime: JulianDate
 ): JsonObject | undefined {
   // Check if feature.data is TerriaFeatureData with timeIntervalCollection

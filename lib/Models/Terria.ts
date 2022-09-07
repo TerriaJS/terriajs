@@ -84,7 +84,7 @@ import {
   initializeErrorServiceProvider
 } from "./ErrorServiceProviders/ErrorService";
 import StubErrorServiceProvider from "./ErrorServiceProviders/StubErrorServiceProvider";
-import Feature from "./Feature/Feature";
+import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import IElementConfig from "./IElementConfig";
 import InitSource, {
@@ -534,7 +534,7 @@ export default class Terria {
   pickedFeatures: PickedFeatures | undefined;
 
   @observable
-  selectedFeature: Feature | undefined;
+  selectedFeature: TerriaFeature | undefined;
 
   @observable
   allowFeatureInfoRequests: boolean = true;
@@ -780,7 +780,7 @@ export default class Terria {
     if (pickedFeatures) {
       // Remove picked features that belong to the catalog item
       pickedFeatures.features.forEach((feature, i) => {
-        if (featureBelongsToCatalogItem(<Feature>feature, model)) {
+        if (featureBelongsToCatalogItem(<TerriaFeature>feature, model)) {
           pickedFeatures?.features.splice(i, 1);
           if (this.selectedFeature === feature)
             this.selectedFeature = undefined;
@@ -1881,8 +1881,8 @@ export default class Terria {
 
   @action
   async loadPickedFeatures(pickedFeatures: JsonObject): Promise<void> {
-    let vectorFeatures: Feature[] = [];
-    let featureIndex: Record<number, Feature[] | undefined> = {};
+    let vectorFeatures: TerriaFeature[] = [];
+    let featureIndex: Record<number, TerriaFeature[] | undefined> = {};
 
     if (Array.isArray(pickedFeatures.entities)) {
       // Build index of terria features by a hash of their properties.
@@ -1899,7 +1899,7 @@ export default class Terria {
           .reduce((arr: Entity[], ds) => arr.concat(ds.entities.values), []);
 
         entities.forEach((entity) => {
-          const feature = Feature.fromEntityCollectionOrEntity(entity);
+          const feature = TerriaFeature.fromEntityCollectionOrEntity(entity);
           const hash = hashEntity(feature, this);
 
           featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
@@ -1933,7 +1933,7 @@ export default class Terria {
       this.currentViewer.pickFromLocation(
         pickCoords,
         pickedFeatures.providerCoords,
-        vectorFeatures as Feature[]
+        vectorFeatures as TerriaFeature[]
       );
     }
 

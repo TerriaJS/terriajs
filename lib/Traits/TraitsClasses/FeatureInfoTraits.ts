@@ -2,6 +2,7 @@ import anyTrait from "../Decorators/anyTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import ModelTraits from "../ModelTraits";
 
+/** Note these shouldn't be Traits as they are used in `@anyTrait FeatureInfoTemplateTraits.formats` */
 export interface FeatureInfoFormat {
   /** To reduce the number of decimal places to a maximum of X digits. */
   maximumFractionDigits?: number;

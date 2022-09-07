@@ -51,7 +51,7 @@ import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
 import hasTraits from "./Definition/hasTraits";
-import Feature from "./Feature/Feature";
+import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import { LeafletAttribution } from "./LeafletAttribution";
 import MapInteractionMode from "./MapInteractionMode";
@@ -507,7 +507,7 @@ export default class Leaflet extends GlobeOrMap {
   pickFromLocation(
     latLngHeight: LatLonHeight,
     providerCoords: ProviderCoordsMap,
-    existingFeatures: Feature[]
+    existingFeatures: TerriaFeature[]
   ) {
     this._pickFeatures(
       L.latLng({
@@ -593,7 +593,7 @@ export default class Leaflet extends GlobeOrMap {
       }
     }
 
-    const feature = Feature.fromEntityCollectionOrEntity(entity);
+    const feature = TerriaFeature.fromEntityCollectionOrEntity(entity);
 
     const catalogItem = feature._catalogItem;
 
@@ -629,7 +629,7 @@ export default class Leaflet extends GlobeOrMap {
   private _pickFeatures(
     latlng: L.LatLng,
     tileCoordinates?: Record<string, ProviderCoords>,
-    existingFeatures?: Feature[],
+    existingFeatures?: TerriaFeature[],
     ignoreSplitter: boolean = false
   ) {
     if (isDefined(this._pickedFeatures)) {
@@ -904,7 +904,7 @@ export default class Leaflet extends GlobeOrMap {
     return result;
   }
 
-  private _selectFeature(feature: Feature | undefined) {
+  private _selectFeature(feature: TerriaFeature | undefined) {
     this._highlightFeature(feature);
 
     if (isDefined(feature) && isDefined(feature.position)) {

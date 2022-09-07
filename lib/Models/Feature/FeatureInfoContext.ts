@@ -1,10 +1,10 @@
 import { JsonObject } from "../../Core/Json";
-import Feature from "./Feature";
+import TerriaFeature from "./Feature";
 
 /** This model can be used to inject properties into FeatureInfoSections context. These properties will be accessible from featureInfoTemplate mustache template.
  */
 interface FeatureInfoContext {
-  featureInfoContext: (f: Feature) => JsonObject | undefined;
+  featureInfoContext: (f: TerriaFeature) => JsonObject | undefined;
 }
 
 namespace FeatureInfoContext {

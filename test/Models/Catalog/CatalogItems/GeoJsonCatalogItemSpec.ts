@@ -25,7 +25,7 @@ import GeoJsonCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoJ
 import SplitItemReference from "../../../../lib/Models/Catalog/CatalogReferences/SplitItemReference";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
-import Feature from "../../../../lib/Models/Feature/Feature";
+import TerriaFeature from "../../../../lib/Models/Feature/Feature";
 import Terria from "../../../../lib/Models/Terria";
 
 describe("GeoJsonCatalogItemSpec", () => {
@@ -1198,7 +1198,7 @@ describe("GeoJsonCatalogItemSpec", () => {
       if ("imageryProvider" in imagery) {
         const highlight =
           imagery.imageryProvider.createHighlightImageryProvider(
-            new Feature({ properties: { [FEATURE_ID_PROP]: "0" } })
+            new TerriaFeature({ properties: { [FEATURE_ID_PROP]: "0" } })
           );
         expect(highlight).toBeDefined();
 

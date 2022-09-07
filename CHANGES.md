@@ -3,6 +3,20 @@
 #### next release (8.2.14)
 
 - Moved map credits to map column so it don't get hidden by chart panel.
+- TSified `FeatureInfo*.tsx`
+  - `describeFromProperties` is now `generateCesiumInfoHTMLFromProperties`
+  - `FeatureInfoSection` has been split up into `FeatureInfoSection.tsx`, `getFeatureProperties`, `mustacheExpressions` and `generateCesiumInfoHTMLFromProperties`
+- Added `TableFeatureInfoStratum` - which adds default feature info template to `TableMixin`
+- Add `FeatureInfoContext` - used to inject properties into `FeatureInfoSections` context. These properties will be accessible from `featureInfoTemplate` mustache template.
+  - `tableFeatureInfoContext` adds time series chart properties using `FeatureInfoContext` (`getChartDetails` has been removed)
+- Move `maximumShownFeatureInfos` from `WebMapServiceCatalogItemTraits` to `MappableTraits`
+- Remove `featureInfoUrlTemplate` from `OpenDataSoftCatalogItem` - as it is incompatible with time varying datasets
+- Removed `formatNumberForLocale` - we now use `Number.toLocaleString`
+- Rename `Feature` to `TerriaFeature` - improve typing and usage across code-base
+  - Added `data: TerriaFeatureData` - which is used to pass Terria-specific properties around (eg `rowIds`)
+- Added `loadingFeatureInfoUrl` to `FeatureInfoUrlTemplateMixin`
+- Move `Cesium.ts` `ImageryLayer` feature picking to `cesium.pickImageryLayerFeatures()`
+- Move `lib/Core/propertyGetTimeValues.js` into `lib/ReactViews/FeatureInfo/getFeatureProperties.ts`
 - [The next improvement]
 
 #### 8.2.13 - 2022-09-01
@@ -25,8 +39,6 @@
 
 #### 8.2.11 - 2022-08-08
 
-- Move `maximumShownFeatureInfos` from `WebMapServiceCatalogItemTraits` to `MappableTraits`
-- Remove `featureInfoUrlTemplate` from `OpenDataSoftCatalogItem` - as it is incompatible with time varying datasets
 - Add ability to customise the getting started video in the StoryBuilder panel
 - Set cesium base URL by default so that cesium assets are resolved correctly
 - Add `cesiumBaseUrl` to `TerriaOptions` for overriding the default cesium base url setting
@@ -44,8 +56,6 @@
 - Add `getFeatureInfoUrl` and `getFeatureInfoParameters` to `WebMapServiceCatalogItemTraits`
 - Fix `SearchBoxAndResults` Trans values
 - Fix `generateCatalogIndex` for nested references
-- Removed `formatNumberForLocale` - we now use `Number.toLocaleString`
-- [The next improvement]
 - Fix `SearchBox` handling of `searchWithDebounce` when `debounceDuration` prop changes. It now fushes instead of cancels.
 
 #### 8.2.10 - 2022-08-02

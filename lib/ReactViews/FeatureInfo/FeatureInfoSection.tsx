@@ -16,7 +16,7 @@ import { getName } from "../../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../../ModelMixins/DiscretelyTimeVaryingMixin";
 import MappableMixin from "../../ModelMixins/MappableMixin";
 import TimeVarying from "../../ModelMixins/TimeVarying";
-import Feature from "../../Models/Feature/Feature";
+import TerriaFeature from "../../Models/Feature/Feature";
 import FeatureInfoContext from "../../Models/Feature/FeatureInfoContext";
 import Icon from "../../Styled/Icon";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
@@ -43,11 +43,11 @@ Mustache.escape = function (string) {
 };
 
 interface FeatureInfoProps extends WithViewState {
-  feature: Feature;
+  feature: TerriaFeature;
   position?: Cartesian3;
   catalogItem: MappableMixin.Instance; // Note this may not be known (eg. WFS).
   isOpen: boolean;
-  onClickHeader?: (feature: Feature) => void;
+  onClickHeader?: (feature: TerriaFeature) => void;
   printView?: boolean;
   t: TFunction;
 }
@@ -57,8 +57,13 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
   private templateReactionDisposer: IDisposer | undefined;
   private removeFeatureChangedSubscription: (() => void) | undefined;
 
-  @observable private templatedFeatureInfo: React.ReactNode | undefined =
-    undefined;
+  /** Rendered feature info template - this is set using reaction.
+   * We can't use `@computed` values for custom templates - as CustomComponents (eg CSVChartCustomComponent) cause side-effects.
+   * See `rawDataReactNode` for rendered raw data
+   */
+  @observable private templatedFeatureInfoReactNode:
+    | React.ReactNode
+    | undefined = undefined;
 
   @observable
   private showRawData: boolean = false;
@@ -67,7 +72,6 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
   @observable featureChangedCounter = 0;
 
   componentDidMount() {
-    /** We can't use `@computed` values for custom templates - as CustomComponents (eg CSVChartCustomComponent) cause side-effects */
     this.templateReactionDisposer = reaction(
       () => [
         this.props.feature,
@@ -81,7 +85,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
           this.props.catalogItem.featureInfoTemplate.template &&
           this.mustacheContextData
         ) {
-          this.templatedFeatureInfo = parseCustomMarkdownToReact(
+          this.templatedFeatureInfoReactNode = parseCustomMarkdownToReact(
             Mustache.render(
               this.props.catalogItem.featureInfoTemplate.template,
               this.mustacheContextData,
@@ -90,7 +94,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
             this.parseMarkdownContextData
           );
         } else {
-          this.templatedFeatureInfo = undefined;
+          this.templatedFeatureInfoReactNode = undefined;
         }
       },
       { fireImmediately: true }
@@ -116,11 +120,11 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
    * We use `featureChangedCounter` and increment it every change
    */
   @action
-  private setFeatureChangedCounter(feature: Feature) {
+  private setFeatureChangedCounter(feature: TerriaFeature) {
     this.removeFeatureChangedSubscription?.();
     this.removeFeatureChangedSubscription =
       feature.definitionChanged.addEventListener(
-        ((changedFeature: Feature) => {
+        ((changedFeature: TerriaFeature) => {
           runInAction(() => {
             this.featureChangedCounter++;
           });
@@ -297,9 +301,10 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
 
   /** Get Raw data as ReactNode.
    * Note: this can be computed - as no custom components are used which cause side-effects (eg CSVChartCustomComponent)
+   * See `templatedFeatureInfoReactNode` for rendered feature info template
    */
   @computed
-  get rawDataReactNode(): React.ReactNode | undefined {
+  get rawFeatureInfoReactNode(): React.ReactNode | undefined {
     if (this.rawDataMarkdown)
       return parseCustomMarkdownToReact(
         this.rawDataMarkdown,
@@ -365,8 +370,8 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
      */
     const showFeatureInfoDownload =
       this.showRawData ||
-      !this.templatedFeatureInfo ||
-      (this.templatedFeatureInfo &&
+      !this.templatedFeatureInfoReactNode ||
+      (this.templatedFeatureInfoReactNode &&
         this.props.catalogItem.featureInfoTemplate
           .showFeatureInfoDownloadWithTemplate);
 
@@ -414,7 +419,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
         {this.props.isOpen ? (
           <section className={Styles.content}>
             {/* If we have templated feature info (and not in print mode) - render "show raw data" button */}
-            {!this.props.printView && this.templatedFeatureInfo ? (
+            {!this.props.printView && this.templatedFeatureInfoReactNode ? (
               <button
                 type="button"
                 className={Styles.rawDataButton}
@@ -428,10 +433,10 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
             <div>
               {this.props.feature.loadingFeatureInfoUrl ? (
                 "Loading"
-              ) : this.showRawData || !this.templatedFeatureInfo ? (
+              ) : this.showRawData || !this.templatedFeatureInfoReactNode ? (
                 <>
-                  {this.rawDataReactNode ? (
-                    this.rawDataReactNode
+                  {this.rawFeatureInfoReactNode ? (
+                    this.rawFeatureInfoReactNode
                   ) : (
                     <div ref="no-info" key="no-info">
                       {t("featureInfo.noInfoAvailable")}
@@ -440,7 +445,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
                 </>
               ) : (
                 // Show templated feature info
-                this.templatedFeatureInfo
+                this.templatedFeatureInfoReactNode
               )}
               {
                 // Show FeatureInfoDownload

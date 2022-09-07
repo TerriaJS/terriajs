@@ -11,7 +11,7 @@ import supportsWebGL from "../../lib/Core/supportsWebGL";
 import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
 import Terria from "../../lib/Models/Terria";
 import UserDrawing from "../../lib/Models/UserDrawing";
-import Feature from "../../lib/Models/Feature/Feature";
+import TerriaFeature from "../../lib/Models/Feature/Feature";
 
 const describeIfSupported = supportsWebGL() ? describe : xdescribe;
 
@@ -341,7 +341,7 @@ describe("UserDrawing", function () {
     // If in the UI the user clicks on a point, it returns that entity, so we're pulling it out of userDrawing and
     // pretending the user actually clicked on it.
     const pt1Entity = userDrawing.pointEntities.entities.values[0];
-    pickedFeatures.features = [pt1Entity as Feature];
+    pickedFeatures.features = [pt1Entity as TerriaFeature];
     runInAction(() => {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures =
         pickedFeatures;
@@ -406,7 +406,7 @@ describe("UserDrawing", function () {
     // If in the UI the user clicks on a point, it returns that entity, so we're pulling it out of userDrawing and
     // pretending the user actually clicked on it.
     const pt1Entity = userDrawing.pointEntities.entities.values[0];
-    pickedFeatures.features = [pt1Entity as Feature];
+    pickedFeatures.features = [pt1Entity as TerriaFeature];
     runInAction(() => {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures =
         pickedFeatures;
@@ -471,7 +471,7 @@ describe("UserDrawing", function () {
     // If in the UI the user clicks on a point, it returns that entity, so we're pulling it out of userDrawing and
     // pretending the user actually clicked on it.
     const pt1Entity = userDrawing.pointEntities.entities.values[0];
-    pickedFeatures.features = [pt1Entity as Feature];
+    pickedFeatures.features = [pt1Entity as TerriaFeature];
     runInAction(() => {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures =
         pickedFeatures;
@@ -552,7 +552,7 @@ describe("UserDrawing", function () {
     // If in the UI the user clicks on a point, it returns that entity, so we're pulling it out of userDrawing and
     // pretending the user actually clicked on it.
     const pt2Entity = userDrawing.pointEntities.entities.values[1];
-    pickedFeatures.features = [pt2Entity as Feature];
+    pickedFeatures.features = [pt2Entity as TerriaFeature];
     runInAction(() => {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures =
         pickedFeatures;

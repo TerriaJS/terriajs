@@ -262,8 +262,4 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
       this.catalogItem.mapItems.length === 0
     );
   }
-
-  @computed get dataViewId() {
-    return this.catalogItem.activeStyle;
-  }
 }

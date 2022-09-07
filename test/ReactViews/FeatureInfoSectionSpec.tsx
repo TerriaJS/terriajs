@@ -21,7 +21,7 @@ import CatalogMemberFactory from "../../lib/Models/Catalog/CatalogMemberFactory"
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import CreateModel from "../../lib/Models/Definition/CreateModel";
 import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson";
-import Feature from "../../lib/Models/Feature/Feature";
+import TerriaFeature from "../../lib/Models/Feature/Feature";
 import Terria from "../../lib/Models/Terria";
 import { FeatureInfoSection } from "../../lib/ReactViews/FeatureInfo/FeatureInfoSection";
 import mixTraits from "../../lib/Traits/mixTraits";
@@ -51,7 +51,7 @@ function absPad2(value: number) {
 
 describe("FeatureInfoSection", function () {
   let terria: Terria;
-  let feature: Feature;
+  let feature: TerriaFeature;
   let viewState: any;
   let catalogItem: TestModel;
 
@@ -75,7 +75,7 @@ describe("FeatureInfoSection", function () {
       lessThan: "A < B",
       unsafe: 'ok!<script>alert("gotcha")</script>'
     };
-    feature = new Feature({
+    feature = new TerriaFeature({
       name: "Bar",
       properties: properties
     });

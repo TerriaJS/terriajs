@@ -1,5 +1,5 @@
 import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
-import Feature from "../../../../lib/Models/Feature/Feature";
+import TerriaFeature from "../../../../lib/Models/Feature/Feature";
 import StubCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import CsvChartCustomComponent from "../../../../lib/ReactViews/Custom/CsvChartCustomComponent";
@@ -27,7 +27,7 @@ describe("CsvChartCustomComponent", function () {
       context = {
         terria: terria,
         catalogItem: new StubCatalogItem(undefined, terria, undefined),
-        feature: new Feature({})
+        feature: new TerriaFeature({})
       };
       node = {
         name: component.name,

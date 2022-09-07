@@ -40,7 +40,7 @@ import {
   FEATURE_ID_PROP as GEOJSON_FEATURE_ID_PROP,
   toFeatureCollection
 } from "../../ModelMixins/GeojsonMixin";
-import { default as CesiumFeature } from "../../Models/Feature/Feature";
+import { default as TerriaFeature } from "../../Models/Feature/Feature";
 import Terria from "../../Models/Terria";
 import { ImageryProviderWithGridLayerSupport } from "../Leaflet/ImageryProviderLeafletGridLayer";
 
@@ -649,7 +649,7 @@ export default class ProtomapsImageryProvider
   /** Clones ImageryProvider, and sets paintRules to highlight picked features */
   @action
   createHighlightImageryProvider(
-    feature: CesiumFeature
+    feature: TerriaFeature
   ): ProtomapsImageryProvider | undefined {
     // Depending on this.source, feature IDs might be FID (for actual vector tile sources) or they will use GEOJSON_FEATURE_ID_PROP
     let featureProp: string | undefined;

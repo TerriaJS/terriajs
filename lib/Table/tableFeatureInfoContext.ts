@@ -1,7 +1,7 @@
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import TableMixin from "../ModelMixins/TableMixin";
-import Feature from "../Models/Feature/Feature";
+import TerriaFeature from "../Models/Feature/Feature";
 import { isTerriaFeatureData } from "../Models/Feature/FeatureData";
 
 /** Adds timeseries chart to feature info context (on terria.timeSeries property).
@@ -20,7 +20,7 @@ import { isTerriaFeatureData } from "../Models/Feature/FeatureData";
  */
 export const tableFeatureInfoContext: (
   catalogItem: TableMixin.Instance
-) => (feature: Feature) => JsonObject = (catalogItem) => (feature) => {
+) => (feature: TerriaFeature) => JsonObject = (catalogItem) => (feature) => {
   // Find rows for feature
   if (!catalogItem.isSampled) return {};
 
@@ -47,11 +47,7 @@ export const tableFeatureInfoContext: (
 
   const title = style.colorColumn?.title;
 
-  const featureId = (
-    isDefined(catalogItem.dataViewId)
-      ? catalogItem.dataViewId + "--" + feature.id
-      : feature.id
-  ).replace(/\"/g, "");
+  const featureId = feature.id.replace(/\"/g, "");
 
   const result = {
     terria: {

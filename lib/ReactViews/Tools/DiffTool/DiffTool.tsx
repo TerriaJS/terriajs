@@ -23,7 +23,7 @@ import MappableMixin, {
   ImageryParts
 } from "../../../ModelMixins/MappableMixin";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
-import Feature from "../../../Models/Feature/Feature";
+import TerriaFeature from "../../../Models/Feature/Feature";
 import hasTraits, { HasTrait } from "../../../Models/Definition/hasTraits";
 import {
   getMarkerLocation,
@@ -352,8 +352,8 @@ class Main extends React.Component<MainPropsType> {
     const { leftItem, rightItem, t } = this.props;
     const feature = pickedFeatures.features.find(
       (f) =>
-        doesFeatureBelongToItem(f as Feature, leftItem) ||
-        doesFeatureBelongToItem(f as Feature, rightItem)
+        doesFeatureBelongToItem(f, leftItem) ||
+        doesFeatureBelongToItem(f, rightItem)
     );
 
     if (feature) {
@@ -1024,7 +1024,7 @@ function removeSplitItem(item: DiffableItem) {
 }
 
 function doesFeatureBelongToItem(
-  feature: Feature,
+  feature: TerriaFeature,
   item: DiffableItem
 ): Boolean {
   if (!MappableMixin.isMixedInto(item)) return false;

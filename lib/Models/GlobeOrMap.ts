@@ -32,7 +32,7 @@ import CameraView from "./CameraView";
 import Cesium3DTilesCatalogItem from "./Catalog/CatalogItems/Cesium3DTilesCatalogItem";
 import CommonStrata from "./Definition/CommonStrata";
 import createStratumInstance from "./Definition/createStratumInstance";
-import Feature from "./Feature/Feature";
+import TerriaFeature from "./Feature/Feature";
 import Terria from "./Terria";
 
 require("./Feature/ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
@@ -129,7 +129,7 @@ export default abstract class GlobeOrMap {
   abstract pickFromLocation(
     latLngHeight: LatLonHeight,
     providerCoords: ProviderCoordsMap,
-    existingFeatures: Feature[]
+    existingFeatures: TerriaFeature[]
   ): void;
 
   /**
@@ -151,7 +151,7 @@ export default abstract class GlobeOrMap {
   protected _createFeatureFromImageryLayerFeature(
     imageryFeature: ImageryLayerFeatureInfo
   ) {
-    const feature = new Feature({
+    const feature = new TerriaFeature({
       id: imageryFeature.name
     });
     feature.name = imageryFeature.name;
@@ -223,7 +223,7 @@ export default abstract class GlobeOrMap {
     rectangle: Rectangle
   ): () => void;
 
-  async _highlightFeature(feature: Feature | undefined) {
+  async _highlightFeature(feature: TerriaFeature | undefined) {
     if (isDefined(this._removeHighlightCallback)) {
       await this._removeHighlightCallback();
       this._removeHighlightCallback = undefined;

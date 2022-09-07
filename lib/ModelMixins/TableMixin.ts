@@ -27,7 +27,7 @@ import RegionProviderList from "../Map/Region/RegionProviderList";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
-import Feature from "../Models/Feature/Feature";
+import TerriaFeature from "../Models/Feature/Feature";
 import FeatureInfoContext from "../Models/Feature/FeatureInfoContext";
 import SelectableDimensions, {
   SelectableDimension,
@@ -495,7 +495,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       ]);
     }
 
-    @computed get featureInfoContext(): (f: Feature) => JsonObject {
+    @computed get featureInfoContext(): (f: TerriaFeature) => JsonObject {
       return tableFeatureInfoContext(this);
     }
 
@@ -869,7 +869,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         const dataSource = new CustomDataSource(this.name || "Table");
         dataSource.entities.suspendEvents();
 
-        let features: Feature[];
+        let features: TerriaFeature[];
         if (style.isTimeVaryingPointsWithId()) {
           features = createLongitudeLatitudeFeaturePerId(style);
         } else {

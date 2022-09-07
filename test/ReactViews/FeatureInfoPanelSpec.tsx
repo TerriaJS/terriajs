@@ -16,7 +16,7 @@ import Loader from "../../lib/ReactViews/Loader";
 import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
-import Feature from "../../lib/Models/Feature/Feature";
+import TerriaFeature from "../../lib/Models/Feature/Feature";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 import CompositeCatalogItem from "../../lib/Models/Catalog/CatalogItems/CompositeCatalogItem";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
@@ -94,12 +94,12 @@ describe("FeatureInfoPanel", function () {
     let simple1: SimpleCatalogItem,
       simple2: SimpleCatalogItem,
       composite: CompositeCatalogItem;
-    let feature1: Feature, feature2: Feature;
+    let feature1: TerriaFeature, feature2: TerriaFeature;
     beforeEach(function () {
-      feature1 = new Feature({});
+      feature1 = new TerriaFeature({});
       simple1 = new SimpleCatalogItem("simple1", terria);
       feature1._catalogItem = simple1;
-      feature2 = new Feature({});
+      feature2 = new TerriaFeature({});
       simple2 = new SimpleCatalogItem("simple2", terria);
       feature2._catalogItem = simple2;
       composite = new CompositeCatalogItem("composite", terria);

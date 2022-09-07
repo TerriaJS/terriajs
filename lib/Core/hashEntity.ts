@@ -1,5 +1,5 @@
 import TimeVarying from "../ModelMixins/TimeVarying";
-import Feature from "../Models/Feature/Feature";
+import TerriaFeature from "../Models/Feature/Feature";
 import Terria from "../Models/Terria";
 import { propertyGetTimeValues } from "../ReactViews/FeatureInfo/getFeatureProperties";
 import hashFromString from "./hashFromString";
@@ -11,7 +11,7 @@ import hashFromString from "./hashFromString";
  * @param clock A clock that will be used to resolve the property values.
  * @returns {Number} the hash, as an integer.
  */
-export default function hashEntity(feature: Feature, terria: Terria) {
+export default function hashEntity(feature: TerriaFeature, terria: Terria) {
   const catalogItemTime =
     feature._catalogItem && TimeVarying.is(feature._catalogItem)
       ? feature._catalogItem.currentTimeAsJulianDate

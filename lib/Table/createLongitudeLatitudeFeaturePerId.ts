@@ -14,7 +14,7 @@ import SampledProperty from "terriajs-cesium/Source/DataSources/SampledProperty"
 import TimeIntervalCollectionPositionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionPositionProperty";
 import TimeIntervalCollectionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
-import Feature from "../Models/Feature/Feature";
+import TerriaFeature from "../Models/Feature/Feature";
 import { getRowValues } from "./createLongitudeLatitudeFeaturePerRow";
 import { getFeatureStyle } from "./getFeatureStyle";
 import TableColumn from "./TableColumn";
@@ -34,7 +34,7 @@ type RequiredTableStyle = TableStyle & {
  */
 export default function createLongitudeLatitudeFeaturePerId(
   style: RequiredTableStyle
-): Feature[] {
+): TerriaFeature[] {
   const features = style.rowGroups.map(([featureId, rowIds]) =>
     createFeature(featureId, rowIds, style)
   );
@@ -51,7 +51,7 @@ function createFeature(
   featureId: string,
   rowIds: number[],
   style: RequiredTableStyle
-): Feature {
+): TerriaFeature {
   const isSampled = !!style.timeTraits.isSampled;
   const tableHasScalarColumn = !!style.tableModel.tableColumns.find(
     (col) => col.type === TableColumnType.scalar
@@ -175,7 +175,7 @@ function createFeature(
   });
 
   const show = calculateShow(availability);
-  const feature = new Feature({
+  const feature = new TerriaFeature({
     position: positionProperty,
     point: usePointGraphics
       ? new PointGraphics({

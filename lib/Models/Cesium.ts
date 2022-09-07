@@ -82,7 +82,7 @@ import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
 import hasTraits from "./Definition/hasTraits";
-import Feature from "./Feature/Feature";
+import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
@@ -1149,7 +1149,7 @@ export default class Cesium extends GlobeOrMap {
   pickFromLocation(
     latLngHeight: LatLonHeight,
     providerCoords: ProviderCoordsMap,
-    existingFeatures: Feature[]
+    existingFeatures: TerriaFeature[]
   ) {
     const pickPosition = this.scene.globe.ellipsoid.cartographicToCartesian(
       Cartographic.fromDegrees(
@@ -1196,7 +1196,7 @@ export default class Cesium extends GlobeOrMap {
   async getFeaturesAtLocation(
     latLngHeight: LatLonHeight,
     providerCoords: ProviderCoordsMap,
-    existingFeatures: Feature[] = []
+    existingFeatures: TerriaFeature[] = []
   ) {
     const pickPosition = this.scene.globe.ellipsoid.cartographicToCartesian(
       Cartographic.fromDegrees(
@@ -1313,7 +1313,7 @@ export default class Cesium extends GlobeOrMap {
           }
         }
       } else if (id instanceof Entity && vectorFeatures.indexOf(id) === -1) {
-        const feature = Feature.fromEntityCollectionOrEntity(id);
+        const feature = TerriaFeature.fromEntityCollectionOrEntity(id);
         if (picked.primitive) {
           feature.cesiumPrimitive = picked.primitive;
         }

@@ -12,7 +12,7 @@ import GeoJsonCatalogItem from "../../../../../lib/Models/Catalog/CatalogItems/G
 import WebMapServiceCatalogItem from "../../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../../../../lib/Models/Definition/CommonStrata";
 import { BaseModel } from "../../../../../lib/Models/Definition/Model";
-import Feature from "../../../../../lib/Models/Feature/Feature";
+import TerriaFeature from "../../../../../lib/Models/Feature/Feature";
 import { InitSourceData } from "../../../../../lib/Models/InitSource";
 import Terria from "../../../../../lib/Models/Terria";
 import { setViewerMode } from "../../../../../lib/Models/ViewerMode";
@@ -232,7 +232,7 @@ describe("BuildShareLink", function () {
           83234.52,
           952313.73
         );
-        terria.pickedFeatures.features.push(new Feature({}));
+        terria.pickedFeatures.features.push(new TerriaFeature({}));
         const shareLink = buildShareLink(terria, viewState);
         const params = decodeAndParseStartHash(shareLink);
         const initSources = flattenInitSources(params.initSources);
@@ -256,7 +256,7 @@ describe("BuildShareLink", function () {
           "https://foo": { x: 123, y: 456, level: 7 },
           "https://bar": { x: 42, y: 42, level: 4 }
         };
-        terria.pickedFeatures.features.push(new Feature({}));
+        terria.pickedFeatures.features.push(new TerriaFeature({}));
         const shareLink = buildShareLink(terria, viewState);
         const params = decodeAndParseStartHash(shareLink);
         const initSources = flattenInitSources(params.initSources);
@@ -277,7 +277,7 @@ describe("BuildShareLink", function () {
           83234.52,
           952313.73
         );
-        const feature = new Entity({ name: "testFeature" }) as Feature;
+        const feature = new Entity({ name: "testFeature" }) as TerriaFeature;
         terria.pickedFeatures.features.push(feature);
         terria.selectedFeature = feature;
         const shareLink = buildShareLink(terria, viewState);
@@ -299,10 +299,10 @@ describe("BuildShareLink", function () {
           952313.73
         );
         terria.pickedFeatures.features.push(
-          new Feature({ name: "testFeature1" })
+          new TerriaFeature({ name: "testFeature1" })
         );
         terria.pickedFeatures.features.push(
-          new Feature({ name: "testFeature2" })
+          new TerriaFeature({ name: "testFeature2" })
         );
         const shareLink = buildShareLink(terria, viewState);
         const params = decodeAndParseStartHash(shareLink);

@@ -22,7 +22,7 @@ import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapService
 import Cesium from "../../lib/Models/Cesium";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import { BaseModel } from "../../lib/Models/Definition/Model";
-import Feature from "../../lib/Models/Feature/Feature";
+import TerriaFeature from "../../lib/Models/Feature/Feature";
 import {
   isInitFromData,
   isInitFromDataPromise,
@@ -1124,7 +1124,7 @@ describe("Terria", function () {
       "it removes picked features & selected feature for the model",
       action(function () {
         terria.pickedFeatures = new PickedFeatures();
-        const feature = new Feature({});
+        const feature = new TerriaFeature({});
         terria.selectedFeature = feature;
         feature._catalogItem = model;
         terria.pickedFeatures.features.push(feature);
@@ -1173,7 +1173,9 @@ describe("Terria", function () {
     describe("when pickedFeatures is not present in initData", function () {
       it("unsets the feature picking state if `canUnsetFeaturePickingState` is `true`", async function () {
         terria.pickedFeatures = new PickedFeatures();
-        terria.selectedFeature = new Entity({ name: "selected" }) as Feature;
+        terria.selectedFeature = new Entity({
+          name: "selected"
+        }) as TerriaFeature;
         await terria.applyInitData({
           initData: {},
           canUnsetFeaturePickingState: true
@@ -1184,7 +1186,9 @@ describe("Terria", function () {
 
       it("otherwise, should not unset feature picking state", async function () {
         terria.pickedFeatures = new PickedFeatures();
-        terria.selectedFeature = new Entity({ name: "selected" }) as Feature;
+        terria.selectedFeature = new Entity({
+          name: "selected"
+        }) as TerriaFeature;
         await terria.applyInitData({
           initData: {}
         });

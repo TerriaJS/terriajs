@@ -8,7 +8,7 @@ import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
-import Feature from "./Feature/Feature";
+import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
 import { observable } from "mobx";
@@ -44,7 +44,7 @@ class NoViewer extends GlobeOrMap {
   pickFromLocation(
     latLngHeight: LatLonHeight,
     providerCoords: ProviderCoordsMap,
-    existingFeatures: Feature[]
+    existingFeatures: TerriaFeature[]
   ) {}
 
   /**
