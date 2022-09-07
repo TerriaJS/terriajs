@@ -182,12 +182,10 @@ class Main extends React.Component<MainPropsType> {
   @observable private _locationPickError = false;
   @observable private _isPickingNewLocation = false;
 
-  private openLeftDatePickerButton: React.RefObject<
-    HTMLButtonElement
-  > = React.createRef();
-  private openRightDatePickerButton: React.RefObject<
-    HTMLButtonElement
-  > = React.createRef();
+  private openLeftDatePickerButton: React.RefObject<HTMLButtonElement> =
+    React.createRef();
+  private openRightDatePickerButton: React.RefObject<HTMLButtonElement> =
+    React.createRef();
 
   constructor(props: MainPropsType) {
     super(props);
@@ -245,7 +243,7 @@ class Main extends React.Component<MainPropsType> {
   @computed
   get diffableItemsInWorkbench(): DiffableItem[] {
     return this.props.terria.workbench.items.filter(
-      item => DiffableMixin.isMixedInto(item) && item.canDiffImages
+      (item) => DiffableMixin.isMixedInto(item) && item.canDiffImages
     ) as DiffableItem[];
   }
 
@@ -262,9 +260,9 @@ class Main extends React.Component<MainPropsType> {
   @computed
   get availableDiffStyles(): EnumDimensionOption[] {
     return filterOutUndefined(
-      this.diffItem.availableDiffStyles.map(diffStyleId =>
+      this.diffItem.availableDiffStyles.map((diffStyleId) =>
         this.diffItem.styleSelectableDimensions?.[0]?.options?.find(
-          style => style.id === diffStyleId
+          (style) => style.id === diffStyleId
         )
       )
     );
@@ -318,7 +316,7 @@ class Main extends React.Component<MainPropsType> {
   @action.bound
   changeSourceItem(e: React.ChangeEvent<HTMLSelectElement>) {
     const newSourceItem = this.diffableItemsInWorkbench.find(
-      item => item.uniqueId === e.target.value
+      (item) => item.uniqueId === e.target.value
     );
     if (newSourceItem) this.props.changeSourceItem(newSourceItem);
   }
@@ -353,7 +351,7 @@ class Main extends React.Component<MainPropsType> {
   ) {
     const { leftItem, rightItem, t } = this.props;
     const feature = pickedFeatures.features.find(
-      f =>
+      (f) =>
         doesFeatureBelongToItem(f as Feature, leftItem) ||
         doesFeatureBelongToItem(f as Feature, rightItem)
     );
@@ -426,7 +424,7 @@ class Main extends React.Component<MainPropsType> {
     const markerLocation = getMarkerLocation(this.props.terria);
     const sourceItem = this.props.sourceItem;
     if (markerLocation && MappableMixin.isMixedInto(sourceItem)) {
-      const part = sourceItem.mapItems.find(p => ImageryParts.is(p));
+      const part = sourceItem.mapItems.find((p) => ImageryParts.is(p));
       const imageryProvider =
         part && ImageryParts.is(part) && part.imageryProvider;
       if (imageryProvider) {
@@ -442,7 +440,7 @@ class Main extends React.Component<MainPropsType> {
             imageryProvider
           )
         ];
-        const someSuccessful = (await Promise.all(promises)).some(ok => ok);
+        const someSuccessful = (await Promise.all(promises)).some((ok) => ok);
         if (someSuccessful) {
           runInAction(() => (this.location = markerLocation));
         } else {
@@ -456,11 +454,8 @@ class Main extends React.Component<MainPropsType> {
   @action
   async componentDidMount() {
     if (this.location === undefined) {
-      const {
-        latitude,
-        longitude,
-        height
-      } = this.diffItem.timeFilterCoordinates;
+      const { latitude, longitude, height } =
+        this.diffItem.timeFilterCoordinates;
       if (latitude !== undefined && longitude !== undefined) {
         this.location = {
           latitude,
@@ -591,7 +586,7 @@ class Main extends React.Component<MainPropsType> {
                   label={t("diffTool.labels.sourceDataset")}
                 >
                   <option disabled>Select source item</option>
-                  {this.diffableItemsInWorkbench.map(item => (
+                  {this.diffableItemsInWorkbench.map((item) => (
                     <option key={item.uniqueId} value={item.uniqueId}>
                       {item.name}
                     </option>
@@ -613,7 +608,7 @@ class Main extends React.Component<MainPropsType> {
                     {t("diffTool.choosePreview")}
                   </option>
                   {this.diffItem.styleSelectableDimensions?.[0]?.options?.map(
-                    style => (
+                    (style) => (
                       <option key={style.id} value={style.id}>
                         {style.name}
                       </option>
@@ -638,7 +633,7 @@ class Main extends React.Component<MainPropsType> {
               <option disabled value="">
                 {t("diffTool.chooseDifference")}
               </option>
-              {this.availableDiffStyles.map(style => (
+              {this.availableDiffStyles.map((style) => (
                 <option key={style.id} value={style.id}>
                   {style.name}
                 </option>
@@ -748,7 +743,7 @@ const DiffAccordionToggle = styled(Box)`
   ${({ theme }) => theme.borderRadiusTop(theme.radius40Button)}
 `;
 
-const DiffAccordion: React.FC<DiffAccordionProps> = props => {
+const DiffAccordion: React.FC<DiffAccordionProps> = (props) => {
   const [showChildren, setShowChildren] = useState(true);
   const { t, viewState } = props;
   const theme = useTheme();
@@ -810,8 +805,8 @@ const DiffAccordionWrapper = styled(Box).attrs({
   top: 70px;
   left: 0px;
   min-height: 220px;
-  // background: ${p => p.theme.dark};
-  margin-left: ${props =>
+  // background: ${(p) => p.theme.dark};
+  margin-left: ${(props) =>
     props.isMapFullScreen ? 16 : parseInt(props.theme.workbenchWidth) + 40}px;
   transition: margin-left 0.25s;
 `;
@@ -822,7 +817,7 @@ const MainPanel = styled(Box).attrs({
   paddedRatio: 2
 })<{ isMapFullScreen: boolean }>`
   ${({ theme }) => theme.borderRadiusBottom(theme.radius40Button)}
-  background-color: ${p => p.theme.darkWithOverlay};
+  background-color: ${(p) => p.theme.darkWithOverlay};
 `;
 
 const BackButton = styled(Button).attrs({
@@ -929,7 +924,7 @@ const LocationAndDatesDisplayBox = styled(Box).attrs({
   column: true,
   charcoalGreyBg: true
 })`
-  color: ${p => p.theme.textLight};
+  color: ${(p) => p.theme.textLight};
   padding: 15px;
   > ${Box}:first-child {
     margin-bottom: 13px;
@@ -941,16 +936,16 @@ const LocationAndDatesDisplayBox = styled(Box).attrs({
   }
 `;
 
-const LegendImage = function(props: any) {
+const LegendImage = function (props: any) {
   return (
     <img
       {...props}
       // Show the legend only if it loads successfully, so we start out hidden
       style={{ display: "none", marginTop: "4px" }}
       // @ts-ignore
-      onLoad={e => (e.target.style.display = "block")}
+      onLoad={(e) => (e.target.style.display = "block")}
       // @ts-ignore
-      onError={e => (e.target.style.display = "none")}
+      onError={(e) => (e.target.style.display = "none")}
     />
   );
 };
@@ -985,7 +980,7 @@ async function createSplitItem(
 
     // Set the default style to true color style if it exists
     const trueColor = newItem.styleSelectableDimensions?.[0]?.options?.find(
-      style => isDefined(style.name) && style.name.search(/true/i) >= 0
+      (style) => isDefined(style.name) && style.name.search(/true/i) >= 0
     );
     if (trueColor?.id) {
       newItem.styleSelectableDimensions?.[0]?.setDimensionValue(
@@ -1008,9 +1003,9 @@ function setDefaultDiffStyle(item: DiffableItem) {
   }
 
   const availableStyles = filterOutUndefined(
-    item.availableDiffStyles.map(diffStyleId =>
+    item.availableDiffStyles.map((diffStyleId) =>
       item.styleSelectableDimensions?.[0]?.options?.find(
-        style => style.id === diffStyleId
+        (style) => style.id === diffStyleId
       )
     )
   );
@@ -1037,7 +1032,7 @@ function doesFeatureBelongToItem(
   if (imageryProvider === undefined) return false;
   return (
     item.mapItems.find(
-      m => ImageryParts.is(m) && m.imageryProvider === imageryProvider
+      (m) => ImageryParts.is(m) && m.imageryProvider === imageryProvider
     ) !== undefined
   );
 }

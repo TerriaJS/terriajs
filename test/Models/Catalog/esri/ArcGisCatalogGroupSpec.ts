@@ -25,7 +25,7 @@ interface ExtendedLoadWithXhr {
 
 const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
 
-describe("ArcGisCatalogGroup", function() {
+describe("ArcGisCatalogGroup", function () {
   const arcgisServerUrl = "http://example.com/arcgis/rest/services/";
   const arcgisMapServerUrl =
     "http://example.com/arcgis/rest/services/Redlands_Emergency_Vehicles/MapServer";
@@ -34,7 +34,7 @@ describe("ArcGisCatalogGroup", function() {
   let terria: Terria;
   let group: ArcGisCatalogGroup;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -42,7 +42,7 @@ describe("ArcGisCatalogGroup", function() {
 
     const realLoadWithXhr = loadWithXhr.load;
     // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
-    spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
+    spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
       let url = args[0];
       if (url.match("Redlands_Emergency_Vehicles/MapServer")) {
         url = url.replace(/^.*\/MapServer/, "MapServer");
@@ -88,13 +88,13 @@ describe("ArcGisCatalogGroup", function() {
     });
   });
 
-  it("has a type and typeName", function() {
+  it("has a type and typeName", function () {
     expect(group.type).toBe("esri-group");
     expect(group.typeName).toBe(i18next.t("models.arcGisService.name"));
   });
 
-  describe("loadMembers", function() {
-    it("properly creates members", async function() {
+  describe("loadMembers", function () {
+    it("properly creates members", async function () {
       runInAction(() => {
         group.setTrait(CommonStrata.definition, "url", arcgisServerUrl);
       });
@@ -192,14 +192,14 @@ describe("ArcGisCatalogGroup", function() {
     });
   });
 
-  describe("loading mapserver", function() {
-    beforeEach(async function() {
+  describe("loading mapserver", function () {
+    beforeEach(async function () {
       runInAction(() => {
         group.setTrait("definition", "url", arcgisMapServerUrl);
       });
       await group.loadMetadata();
     });
-    it("proper init", function() {
+    it("proper init", function () {
       const arcgisServerStratum = <MapServerStratum | undefined>(
         group.strata.get(MapServerStratum.stratumName)
       );
@@ -208,14 +208,14 @@ describe("ArcGisCatalogGroup", function() {
     });
   });
 
-  describe("loading featureServer of mapServer", function() {
-    beforeEach(async function() {
+  describe("loading featureServer of mapServer", function () {
+    beforeEach(async function () {
       runInAction(() => {
         group.setTrait("definition", "url", arcgisFeatureServerUrl);
       });
       await group.loadMetadata();
     });
-    it("proper init", function() {
+    it("proper init", function () {
       const arcgisServerStratum = <FeatureServerStratum | undefined>(
         group.strata.get(FeatureServerStratum.stratumName)
       );

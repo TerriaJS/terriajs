@@ -174,8 +174,8 @@ export interface IStyledIconProps {
 }
 
 export const StyledIcon = styled(Icon)<IStyledIconProps>`
-  display: ${props => (props.displayInline ? `inline` : `block`)};
-  ${props =>
+  display: ${(props) => (props.displayInline ? `inline` : `block`)};
+  ${(props) =>
     props.displayInline
       ? `
   display: inline;
@@ -184,19 +184,19 @@ export const StyledIcon = styled(Icon)<IStyledIconProps>`
   display: block;`}
 
   flex-shrink: 0;
-  ${props => props.styledWidth && `width: ${props.styledWidth};`}
-  ${props => props.styledHeight && `height: ${props.styledHeight};`}
+  ${(props) => props.styledWidth && `width: ${props.styledWidth};`}
+  ${(props) => props.styledHeight && `height: ${props.styledHeight};`}
 
-  ${props => props.light && `fill: ${props.theme.textLight};`}
-  ${props => props.dark && `fill: ${props.theme.textDark};`}
+  ${(props) => props.light && `fill: ${props.theme.textLight};`}
+  ${(props) => props.dark && `fill: ${props.theme.textDark};`}
 
   // Until we sort out what "light / dark" means for components that have both
   // modes, use "realDark" to get real
-  ${props => props.realDark && `fill: ${props.theme.dark};`}
+  ${(props) => props.realDark && `fill: ${props.theme.dark};`}
 
-  ${props => props.fillColor && `fill: ${props.fillColor};`}
+  ${(props) => props.fillColor && `fill: ${props.fillColor};`}
 
-  ${props => props.opacity && `opacity: ${props.opacity};`}
+  ${(props) => props.opacity && `opacity: ${props.opacity};`}
 `;
 
 export default Object.assign(Icon, { GLYPHS });

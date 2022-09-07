@@ -1,18 +1,16 @@
 {
-    "tags": {
-        "allowUnknownTags": true,
-        "dictionaries": ["jsdoc","closure"]
-    },
-    "source": {
-        "includePattern": ".+\\.((js(doc)?))$",
-        "excludePattern": "((^|\\/|\\\\)_)|(^ThirdParty/)"
-    },
-    "plugins": [
-        "plugins/markdown"
-    ],
-    "opts": {
-        "recurse": true,
-        "encoding": "utf8",
-        "destination": "./wwwroot/doc/reference/"
-    }
- }
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc", "closure"]
+  },
+  "source": {
+    "includePattern": ".+\\.((js(doc)?))$",
+    "excludePattern": "((^|\\/|\\\\)_)|(^ThirdParty/)"
+  },
+  "plugins": ["plugins/markdown"],
+  "opts": {
+    "recurse": true,
+    "encoding": "utf8",
+    "destination": "./wwwroot/doc/reference/"
+  }
+}

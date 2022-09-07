@@ -55,7 +55,7 @@ const InnerPanel = createReactClass({
   },
 
   componentDidMount() {
-    this.escKeyListener = e => {
+    this.escKeyListener = (e) => {
       if (e.keyCode === 27) {
         this.close(e);
       }
@@ -112,10 +112,10 @@ const InnerPanel = createReactClass({
           { [Styles.showDropdownInCenter]: this.props.showDropdownInCenter }
         )}
         css={`
-          background: ${p => p.theme.dark};
+          background: ${(p) => p.theme.dark};
         `}
         ref={this.props.innerRef}
-        onClick={e => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
         style={{
           width: this.props.modalWidth,
           left: this.props.dropdownOffset,
@@ -142,15 +142,15 @@ const InnerPanel = createReactClass({
           showDropdownAsModal={this.props.showDropdownAsModal}
           css={`
             svg {
-              fill: ${p => p.theme.textLight};
+              fill: ${(p) => p.theme.textLight};
             }
             &:hover,
             &:focus {
               svg {
-                fill: ${p => p.theme.colorPrimary};
+                fill: ${(p) => p.theme.colorPrimary};
               }
             }
-            ${p =>
+            ${(p) =>
               p.showDropdownAsModal &&
               `
                 svg {
@@ -170,7 +170,7 @@ const InnerPanel = createReactClass({
             className={classNames(Styles.caret, "tjs-sc-InnerPanel__caret")}
             style={{ left: this.props.caretOffset }}
             css={`
-              background: ${p => p.theme.dark};
+              background: ${(p) => p.theme.dark};
             `}
           />
         </If>

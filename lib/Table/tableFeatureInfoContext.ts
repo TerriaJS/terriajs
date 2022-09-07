@@ -20,7 +20,7 @@ import { isTerriaFeatureData } from "../Models/Feature/FeatureData";
  */
 export const tableFeatureInfoContext: (
   catalogItem: TableMixin.Instance
-) => (feature: Feature) => JsonObject = catalogItem => feature => {
+) => (feature: Feature) => JsonObject = (catalogItem) => (feature) => {
   // Find rows for feature
   if (!catalogItem.isSampled) return {};
 
@@ -37,9 +37,9 @@ export const tableFeatureInfoContext: (
 
   const chartColumns = [style.timeColumn, style.colorColumn];
   const csvData = [
-    chartColumns.map(col => col!.title).join(","),
-    ...rowIds.map(i =>
-      chartColumns!.map(col => col.valueFunctionForType(i)).join(",")
+    chartColumns.map((col) => col!.title).join(","),
+    ...rowIds.map((i) =>
+      chartColumns!.map((col) => col.valueFunctionForType(i)).join(",")
     )
   ]
     .join("\n")
@@ -47,9 +47,10 @@ export const tableFeatureInfoContext: (
 
   const title = style.colorColumn?.title;
 
-  const featureId = (isDefined(catalogItem.dataViewId)
-    ? catalogItem.dataViewId + "--" + feature.id
-    : feature.id
+  const featureId = (
+    isDefined(catalogItem.dataViewId)
+      ? catalogItem.dataViewId + "--" + feature.id
+      : feature.id
   ).replace(/\"/g, "");
 
   const result = {
@@ -58,7 +59,7 @@ export const tableFeatureInfoContext: (
         title: style.colorColumn?.title,
         xName: style.timeColumn?.title,
         yName: style.colorColumn?.title,
-        units: chartColumns.map(column => column.units || ""),
+        units: chartColumns.map((column) => column.units || ""),
         id: featureId,
         data: csvData,
         chart: `<chart ${'identifier="' + featureId + '" '} ${

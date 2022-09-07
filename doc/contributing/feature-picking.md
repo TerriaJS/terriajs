@@ -1,6 +1,6 @@
 # Feature picking
 
-How Terria handles picking features on a map.  
+How Terria handles picking features on a map.
 
 This document mainly serves as a guide to debug or extend feature picking functionality.
 
@@ -17,27 +17,27 @@ It is a work in progress.
 ## Outline
 
 1. Catalog item creates "mappable" items:
-    - [Cesium Imagery Provider](https://cesium.com/learn/cesiumjs/ref-doc/ImageryProvider.html)
-    - [Cesium Data Source](https://cesium.com/learn/cesiumjs/ref-doc/DataSource.html)
-    - [Cesium Terrain Provider](https://cesium.com/learn/cesiumjs/ref-doc/TerrainProvider.html)
-    - [Cesium Abstract Primitive](https://cesium.com/learn/cesiumjs/ref-doc/Primitive.html)
+   - [Cesium Imagery Provider](https://cesium.com/learn/cesiumjs/ref-doc/ImageryProvider.html)
+   - [Cesium Data Source](https://cesium.com/learn/cesiumjs/ref-doc/DataSource.html)
+   - [Cesium Terrain Provider](https://cesium.com/learn/cesiumjs/ref-doc/TerrainProvider.html)
+   - [Cesium Abstract Primitive](https://cesium.com/learn/cesiumjs/ref-doc/Primitive.html)
 1. Catalog item returns `mapItems` which are rendered by Leaflet or Cesium
 1. User clicks on map
-    - Cesium/Leaflet resolves features
-    - `FeatureInfoUrlMixin.getFeaturesFromPickResult` is called if applicable
-    - Feature highlight is created if applicable
-2. Terria `PickedFeatures` is populated
-3. Picked features appear in [`FeatureInfoPanel`](#featureinfopanel)
-    - Catalog item for each feature is resolved
-    - Each catalog item renders [`FeatureInfoCatalogItem`](#featureinfocatalogitem)
-    - Each feature in catalog item renders [`FeatureInfoSection`](#featureinfosection)
-4. Feature info is rendered by [`FeatureInfoSection`](#featureinfosection)
-    - Pre-processing/cleaning of feature properties
-    - Setup Mustache template context data (eg custom expressions)
-    - `FeatureInfoContext.featureInfoContext()` is called if applicable - and merged into Mustache template context
-    - Feature info template is rendered
-      - Mustache
-      - parseCustomHtmlToReact
+   - Cesium/Leaflet resolves features
+   - `FeatureInfoUrlMixin.getFeaturesFromPickResult` is called if applicable
+   - Feature highlight is created if applicable
+1. Terria `PickedFeatures` is populated
+1. Picked features appear in [`FeatureInfoPanel`](#featureinfopanel)
+   - Catalog item for each feature is resolved
+   - Each catalog item renders [`FeatureInfoCatalogItem`](#featureinfocatalogitem)
+   - Each feature in catalog item renders [`FeatureInfoSection`](#featureinfosection)
+1. Feature info is rendered by [`FeatureInfoSection`](#featureinfosection)
+   - Pre-processing/cleaning of feature properties
+   - Setup Mustache template context data (eg custom expressions)
+   - `FeatureInfoContext.featureInfoContext()` is called if applicable - and merged into Mustache template context
+   - Feature info template is rendered
+     - Mustache
+     - parseCustomHtmlToReact
 
 **Why is this so complicated?**
 
@@ -155,7 +155,7 @@ There are three nested React components
 
 Top level component
 
-- Pulls features from  `Terria.pickedFeatures`
+- Pulls features from `Terria.pickedFeatures`
 - Matches features with catalog items
 - Renders `FeatureInfoCatalogItem` for each.
 
@@ -213,7 +213,7 @@ Some Text: {{someFeatureProperty}}
 A magical property from Terria: {{terria.currentTime}}
 
 A custom expression - which formats `terria.currentTime` as `"dd-mm-yyyy HH:MM:ss"`
-  {{#terria.formatDateTime}}{"format": "dd-mm-yyyy HH:MM:ss"}{{terria.currentTime}}{{/terria.formatDateTime}}
+{{#terria.formatDateTime}}{"format": "dd-mm-yyyy HH:MM:ss"}{{terria.currentTime}}{{/terria.formatDateTime}}
 ```
 
 #### Curated data: Render mustache template to HTML/markdown

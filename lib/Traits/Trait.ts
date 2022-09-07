@@ -9,7 +9,7 @@ export interface TraitClassOptions {
 
 /** Decorator to set traitClass options (eg `description` of the class) */
 export function traitClass(options: TraitClassOptions) {
-  return function(target: any) {
+  return function (target: any) {
     target.description = options.description;
     target.example = options.example;
   };

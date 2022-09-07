@@ -4,11 +4,11 @@ import {
   applyTranslationIfExists
 } from "../../lib/Language/languageHelpers";
 
-describe("applyTranslationIfExists", function() {
+describe("applyTranslationIfExists", function () {
   let i18n: i18n;
   const translationKey = "testKey";
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     i18n = i18next.createInstance({
       lng: "spec",
       debug: false,
@@ -23,11 +23,11 @@ describe("applyTranslationIfExists", function() {
     await i18n.init();
   });
 
-  it("returns an unprefixed string without changing it", function() {
+  it("returns an unprefixed string without changing it", function () {
     expect(applyTranslationIfExists(translationKey, i18n)).toBe(translationKey);
   });
 
-  it("returns a translation of a prefixed string", function() {
+  it("returns a translation of a prefixed string", function () {
     expect(
       applyTranslationIfExists(TRANSLATE_KEY_PREFIX + translationKey, i18n)
     ).toBe("testString");

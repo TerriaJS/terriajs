@@ -7,6 +7,7 @@ See [Initialization file](../customizing/initialization-files.md) for JSON struc
 ### Types of `InitSource`
 
 In order they are applied:
+
 - URL to [Initialization file](../customizing/initialization-files.md) specified in [`initializationUrls` in Client-side config](../customizing/client-side-config.md#intializationurls)
 - Init fragment paths, for example
   - `#simple` - will be resolved using [`initFragmentPaths` in Client-side config](../customizing/client-side-config.md#parameters)
@@ -17,7 +18,7 @@ In order they are applied:
 
 Any number of `InitSources` can be specified
 
-When they are applied, some properties may overwrite each other - for example `workbench`.  Other properties will be merged - for example `catalog`.
+When they are applied, some properties may overwrite each other - for example `workbench`. Other properties will be merged - for example `catalog`.
 
 ### Example
 
@@ -64,9 +65,7 @@ Uses JSON:
 ```json
 {
   "version": "8.0.0",
-  "initSources": [
-    "https://some.url/config.json"
-  ]
+  "initSources": ["https://some.url/config.json"]
 }
 ```
 
@@ -84,4 +83,3 @@ http://ci.terria.io/main/#start={%22version%22:%228.0.0%22,%22initSources%22:[{%
   ]
 }
 ```
-

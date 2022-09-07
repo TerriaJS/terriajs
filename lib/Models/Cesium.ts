@@ -155,7 +155,8 @@ export default class Cesium extends GlobeOrMap {
     this.terria = terriaViewer.terria;
 
     if (this.terria.configParameters.cesiumIonAccessToken !== undefined) {
-      Ion.defaultAccessToken = this.terria.configParameters.cesiumIonAccessToken;
+      Ion.defaultAccessToken =
+        this.terria.configParameters.cesiumIonAccessToken;
     }
 
     //An arbitrary base64 encoded image used to populate the placeholder SingleTileImageryProvider
@@ -267,12 +268,12 @@ export default class Cesium extends GlobeOrMap {
     //     ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT);
 
     // Handle mouse move
-    inputHandler.setInputAction(e => {
+    inputHandler.setInputAction((e) => {
       this.mouseCoords.updateCoordinatesFromCesium(this.terria, e.endPosition);
     }, ScreenSpaceEventType.MOUSE_MOVE);
 
     inputHandler.setInputAction(
-      e => {
+      (e) => {
         this.mouseCoords.updateCoordinatesFromCesium(
           this.terria,
           e.endPosition
@@ -283,7 +284,7 @@ export default class Cesium extends GlobeOrMap {
     );
 
     // Handle left click by picking objects from the map.
-    inputHandler.setInputAction(e => {
+    inputHandler.setInputAction((e) => {
       if (!this.isFeaturePickingPaused)
         this.pickFromScreenPosition(e.position, false);
     }, ScreenSpaceEventType.LEFT_CLICK);
@@ -292,7 +293,7 @@ export default class Cesium extends GlobeOrMap {
 
     // Handle zooming on SHIFT + MOUSE DOWN
     inputHandler.setInputAction(
-      e => {
+      (e) => {
         if (!this.isFeaturePickingPaused && !isDefined(zoomUserDrawing)) {
           this.pauseMapInteraction();
 
@@ -356,7 +357,7 @@ export default class Cesium extends GlobeOrMap {
     // Handle SHIFT + CLICK for zooming
 
     inputHandler.setInputAction(
-      e => {
+      (e) => {
         if (isDefined(zoomUserDrawing)) {
           this.pickFromScreenPosition(e.position, false);
         }
@@ -407,17 +408,20 @@ export default class Cesium extends GlobeOrMap {
       this.scene.globe.splitDirection = this.terria.showSplitter
         ? this.terria.terrainSplitDirection
         : SplitDirection.NONE;
-      this.scene.globe.depthTestAgainstTerrain = this.terria.depthTestAgainstTerrainEnabled;
+      this.scene.globe.depthTestAgainstTerrain =
+        this.terria.depthTestAgainstTerrainEnabled;
       if (this.scene.skyAtmosphere) {
-        this.scene.skyAtmosphere.splitDirection = this.scene.globe.splitDirection;
+        this.scene.skyAtmosphere.splitDirection =
+          this.scene.globe.splitDirection;
       }
     });
     this._disposeSplitterReaction = this._reactToSplitterChanges();
 
     this._disposeResolutionReaction = autorun(() => {
-      (this.cesiumWidget as any).useBrowserRecommendedResolution = !this.terria
-        .useNativeResolution;
-      this.cesiumWidget.scene.globe.maximumScreenSpaceError = this.terria.baseMaximumScreenSpaceError;
+      (this.cesiumWidget as any).useBrowserRecommendedResolution =
+        !this.terria.useNativeResolution;
+      this.cesiumWidget.scene.globe.maximumScreenSpaceError =
+        this.terria.baseMaximumScreenSpaceError;
     });
   }
 
@@ -586,9 +590,9 @@ export default class Cesium extends GlobeOrMap {
     ];
     return flatten(
       filterOutUndefined(
-        catalogItems.map(item => {
+        catalogItems.map((item) => {
           if (isDefined(item) && MappableMixin.isMixedInto(item))
-            return item.mapItems.map(mapItem => ({ mapItem, item }));
+            return item.mapItems.map((mapItem) => ({ mapItem, item }));
         })
       )
     );
@@ -617,17 +621,17 @@ export default class Cesium extends GlobeOrMap {
       }
 
       // Add new data sources
-      allDataSources.forEach(d => {
+      allDataSources.forEach((d) => {
         if (!dataSources.contains(d)) {
           dataSources.add(d);
         }
       });
 
       // Ensure stacking order matches order in allDataSources - first item appears on top.
-      allDataSources.forEach(d => dataSources.raiseToTop(d));
+      allDataSources.forEach((d) => dataSources.raiseToTop(d));
 
       const allImageryParts = this._allMappables
-        .map(m =>
+        .map((m) =>
           ImageryParts.is(m.mapItem)
             ? this._makeImageryLayerFromParts(m.mapItem, m.item)
             : undefined
@@ -670,13 +674,13 @@ export default class Cesium extends GlobeOrMap {
       const primitives = this.scene.primitives;
 
       // Remove deleted primitives
-      prevPrimitives.forEach(primitive => {
+      prevPrimitives.forEach((primitive) => {
         if (!allPrimitives.includes(primitive)) {
           if (isCesium3DTileset(primitive)) {
             // Remove all event listeners from any Cesium3DTilesets by running stored remover functions
             const fnArray = this._3dTilesetEventListeners.get(primitive);
             try {
-              fnArray?.forEach(fn => fn()); // Run the remover functions
+              fnArray?.forEach((fn) => fn()); // Run the remover functions
             } catch (error) {}
 
             this._3dTilesetEventListeners.delete(primitive); // Remove the item for this tileset from our eventListener reference storage array
@@ -687,7 +691,7 @@ export default class Cesium extends GlobeOrMap {
       });
 
       // Add new primitives
-      allPrimitives.forEach(primitive => {
+      allPrimitives.forEach((primitive) => {
         if (!primitives.contains(primitive)) {
           primitives.add(primitive);
 
@@ -732,12 +736,10 @@ export default class Cesium extends GlobeOrMap {
         // target is a Rectangle
 
         // Work out the destination that the camera would naturally fly to
-        const destinationCartesian = camera.getRectangleCameraCoordinates(
-          target
-        );
-        const destination = Ellipsoid.WGS84.cartesianToCartographic(
-          destinationCartesian
-        );
+        const destinationCartesian =
+          camera.getRectangleCameraCoordinates(target);
+        const destination =
+          Ellipsoid.WGS84.cartesianToCartographic(destinationCartesian);
         const terrainProvider = this.scene.globe.terrainProvider;
         // A sufficiently coarse tile level that still has approximately accurate height
         const level = 6;
@@ -860,7 +862,7 @@ export default class Cesium extends GlobeOrMap {
     const disposeSplitDirectionChange = autorun(() => {
       const items = this.terria.mainViewer.items.get();
       const showSplitter = this.terria.showSplitter;
-      items.forEach(item => {
+      items.forEach((item) => {
         if (
           MappableMixin.isMixedInto(item) &&
           hasTraits(item, SplitterTraits, "splitDirection")
@@ -868,7 +870,7 @@ export default class Cesium extends GlobeOrMap {
           const splittableItems = this.getSplittableMapItems(item);
           const splitDirection = item.splitDirection;
 
-          splittableItems.forEach(splittableItem => {
+          splittableItems.forEach((splittableItem) => {
             if (showSplitter) {
               splittableItem.splitDirection = splitDirection;
             } else {
@@ -880,7 +882,7 @@ export default class Cesium extends GlobeOrMap {
       this.notifyRepaintRequired();
     });
 
-    return function() {
+    return function () {
       disposeSplitPositionChange();
       disposeSplitDirectionChange();
     };
@@ -1156,9 +1158,8 @@ export default class Cesium extends GlobeOrMap {
         latLngHeight.height
       )
     );
-    const pickPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(
-      pickPosition
-    );
+    const pickPositionCartographic =
+      Ellipsoid.WGS84.cartesianToCartographic(pickPosition);
 
     const promises = this.terria.allowFeatureInfoRequests
       ? this.pickImageryLayerFeatures(pickPositionCartographic, providerCoords)
@@ -1204,9 +1205,8 @@ export default class Cesium extends GlobeOrMap {
         latLngHeight.height
       )
     );
-    const pickPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(
-      pickPosition
-    );
+    const pickPositionCartographic =
+      Ellipsoid.WGS84.cartesianToCartographic(pickPosition);
 
     const promises = this.terria.allowFeatureInfoRequests
       ? this.pickImageryLayerFeatures(pickPositionCartographic, providerCoords)
@@ -1251,8 +1251,8 @@ export default class Cesium extends GlobeOrMap {
               pickPosition.latitude
             )
             // Make sure all features have imageryLayer
-            ?.then(features =>
-              features.map(f => {
+            ?.then((features) =>
+              features.map((f) => {
                 f.imageryLayer = imageryLayer;
                 return f;
               })
@@ -1336,7 +1336,7 @@ export default class Cesium extends GlobeOrMap {
   private _attachProviderCoordHooks() {
     const providerCoords: ProviderCoordsMap = {};
 
-    const pickFeaturesHook = function(
+    const pickFeaturesHook = function (
       imageryProvider: ImageryProvider,
       oldPick: (
         x: number,
@@ -1413,7 +1413,7 @@ export default class Cesium extends GlobeOrMap {
     result.pickPosition = pickPosition;
 
     result.allFeaturesAvailablePromise = Promise.all(featurePromises)
-      .then(allFeatures => {
+      .then((allFeatures) => {
         runInAction(() => {
           result.isLoading = false;
           result.features = allFeatures.reduce(
@@ -1422,7 +1422,7 @@ export default class Cesium extends GlobeOrMap {
                 return resultFeaturesSoFar;
               }
 
-              let features = imageryLayerFeatures.map(feature => {
+              let features = imageryLayerFeatures.map((feature) => {
                 if (!isDefined(feature.position)) {
                   feature.position =
                     pickPosition &&
@@ -1451,11 +1451,10 @@ export default class Cesium extends GlobeOrMap {
                 const screenPosition = this._computePositionOnScreen(
                   result.pickPosition
                 );
-                const pickedSide = this._getSplitterSideForScreenPosition(
-                  screenPosition
-                );
+                const pickedSide =
+                  this._getSplitterSideForScreenPosition(screenPosition);
 
-                features = features.filter(feature => {
+                features = features.filter((feature) => {
                   const splitDirection = feature.imageryLayer?.splitDirection;
                   return (
                     splitDirection === pickedSide ||
@@ -1470,7 +1469,7 @@ export default class Cesium extends GlobeOrMap {
           );
         });
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(TerriaError.from(e, "Failed to pick features"));
         runInAction(() => {
           result.isLoading = false;
@@ -1485,7 +1484,7 @@ export default class Cesium extends GlobeOrMap {
     item: MappableMixin.Instance
   ): (ImageryLayer | Cesium3DTileset)[] {
     return filterOutUndefined(
-      item.mapItems.map(m => {
+      item.mapItems.map((m) => {
         if (ImageryParts.is(m)) {
           return this._makeImageryLayerFromParts(m, item) as ImageryLayer;
         } else if (isCesium3DTileset(m)) {
@@ -1605,7 +1604,7 @@ export default class Cesium extends GlobeOrMap {
     const scene = this.scene;
     scene.imageryLayers.add(result);
 
-    return function() {
+    return function () {
       scene.imageryLayers.remove(result);
     };
   }
@@ -1620,7 +1619,7 @@ function zoomToDataSource(
 ): Promise<void> {
   let flyToPromise: Promise<void> | undefined;
   const pollPromise = pollToPromise(
-    function() {
+    function () {
       const dataSourceDisplay = cesium.dataSourceDisplay;
       if (dataSourceDisplay === undefined) {
         return false;
@@ -1651,9 +1650,8 @@ function zoomToDataSource(
 
       // Test if boundingSpheres is empty to avoid zooming to nowhere
       if (boundingSpheres.length > 0 && _lastZoomTarget === target) {
-        var boundingSphere = BoundingSphere.fromBoundingSpheres(
-          boundingSpheres
-        );
+        var boundingSphere =
+          BoundingSphere.fromBoundingSpheres(boundingSpheres);
         flyToPromise = flyToBoundingSpherePromise(
           cesium.scene.camera,
           boundingSphere,

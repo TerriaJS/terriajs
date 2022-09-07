@@ -6,8 +6,8 @@ import Feature from "../../lib/Models/Feature/Feature";
 import Terria from "../../lib/Models/Terria";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 
-describe("featureBelongsToCatalogItem", function() {
-  it("returns true if the `_catalogItem` property matches", function() {
+describe("featureBelongsToCatalogItem", function () {
+  it("returns true if the `_catalogItem` property matches", function () {
     const item = new SimpleCatalogItem(undefined, new Terria());
     const feature = new Feature({});
     expect(featureBelongsToCatalogItem(feature, item)).toBe(false);
@@ -15,7 +15,7 @@ describe("featureBelongsToCatalogItem", function() {
     expect(featureBelongsToCatalogItem(feature, item)).toBe(true);
   });
 
-  it("returns true if mapItems has the dataSource that owns the feature", function() {
+  it("returns true if mapItems has the dataSource that owns the feature", function () {
     const item = new SimpleCatalogItem(undefined, new Terria());
     const feature = new Feature({});
     const dataSource = new CustomDataSource("testData");
@@ -25,7 +25,7 @@ describe("featureBelongsToCatalogItem", function() {
     expect(featureBelongsToCatalogItem(feature, item)).toBe(true);
   });
 
-  it("returns true if mapItems has a matching imagery provider", function() {
+  it("returns true if mapItems has a matching imagery provider", function () {
     const item = new SimpleCatalogItem(undefined, new Terria());
     const feature = new Feature({});
     const imageryProvider = new WebMapServiceImageryProvider({

@@ -55,7 +55,7 @@ class DataCatalogTab extends React.Component {
               {searchState.catalogSearchProvider && (
                 <SearchBox
                   searchText={searchState.catalogSearchText}
-                  onSearchTextChanged={val => this.changeSearchText(val)}
+                  onSearchTextChanged={(val) => this.changeSearchText(val)}
                   onDoSearch={() => this.search()}
                   placeholder={this.searchPlaceholder}
                   debounceDuration={

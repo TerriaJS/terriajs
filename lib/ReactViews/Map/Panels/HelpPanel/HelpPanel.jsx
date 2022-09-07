@@ -130,7 +130,7 @@ class HelpPanel extends React.Component {
                 large: true
               }}
               css={`
-                ${p => p.theme.addTerriaPrimaryBtnStyles(p)}
+                ${(p) => p.theme.addTerriaPrimaryBtnStyles(p)}
               `}
             >
               {t("helpPanel.takeTour")}

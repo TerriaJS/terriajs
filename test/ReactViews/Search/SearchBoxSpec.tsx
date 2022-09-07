@@ -6,13 +6,13 @@ import ViewState from "../../../lib/ReactViewModels/ViewState";
 import { SearchBox } from "../../../lib/ReactViews/Search/SearchBox";
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface/StandardTheme";
 
-describe("SearchBox", function() {
+describe("SearchBox", function () {
   let terria: Terria;
   let viewState: ViewState;
 
   let testRenderer: any;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -23,11 +23,11 @@ describe("SearchBox", function() {
     });
   });
 
-  describe("with basic props", function() {
+  describe("with basic props", function () {
     const searchText = "mochi";
     let searchBoxValue = "something";
 
-    beforeEach(function() {
+    beforeEach(function () {
       searchBoxValue = "something";
     });
     const searchBoxWithProps = (
@@ -46,7 +46,7 @@ describe("SearchBox", function() {
       />
     );
 
-    it("renders", function() {
+    it("renders", function () {
       act(() => {
         testRenderer = create(searchBoxWithProps);
       });
@@ -55,7 +55,7 @@ describe("SearchBox", function() {
       expect(searchBoxInput).toBeDefined();
       expect(searchBoxInput.props.value).toEqual(searchText);
     });
-    it("renders and clearSearch triggers onSearchTextChanged callback", function() {
+    it("renders and clearSearch triggers onSearchTextChanged callback", function () {
       act(() => {
         testRenderer = create(searchBoxWithProps);
       });

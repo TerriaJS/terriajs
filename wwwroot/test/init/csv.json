@@ -1,364 +1,366 @@
 {
-    "catalog": [{
-        "name": "CSV testing",
-        "type": "group",
-        "isOpen": true,
-        "items": [
+  "catalog": [
+    {
+      "name": "CSV testing",
+      "type": "group",
+      "isOpen": true,
+      "items": [
+        {
+          "name": "CSVs with moving features",
+          "nameInCatalog": "Moving features",
+          "type": "group",
+          "isOpen": false,
+          "items": [
             {
-                "name": "CSVs with moving features",
-                "nameInCatalog": "Moving features",
-                "type": "group",
-                "isOpen": false,
-                "items": [
-                    {
-                        "name": "Moving features (sampled)",
-                        "nameInCatalog": "Sampled",
-                        "type": "csv",
-                        "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
-                        "idColumns": ["id"],
-                        "tableStyle": {
-                            "dataVariable": "value",
-                            "scaleByValue": true
-                        }
-                    },
-                    {
-                        "name": "Moving features turned off with []",
-                        "nameInCatalog": "Turned off with []",
-                        "type": "csv",
-                        "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
-                        "idColumns": [],
-                        "tableStyle": {
-                            "dataVariable": "value",
-                            "scaleByValue": true
-                        }
-                    },
-                    {
-                        "name": "Moving features turned off with null",
-                        "nameInCatalog": "Turned off with null",
-                        "type": "csv",
-                        "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
-                        "idColumns": null,
-                        "tableStyle": {
-                            "dataVariable": "value",
-                            "scaleByValue": true
-                        }
-                    },
-                    {
-                        "name": "Moving features (sampled, with info template)",
-                        "nameInCatalog": "Sampled, with info template",
-                        "type": "csv",
-                        "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
-                        "idColumns": ["id"],
-                        "tableStyle": {
-                            "dataVariable": "value",
-                            "scaleByValue": true
-                        },
-                        "featureInfoTemplate": "<p>Name: {{id}}</p><h2>Time series</h2>{{terria.timeSeries.chart}}"
-                    },
-                    {
-                        "name": "Moving features (sampled, with manual info template)",
-                        "nameInCatalog": "Sampled, with manual info template",
-                        "type": "csv",
-                        "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
-                        "idColumns": ["id"],
-                        "tableStyle": {
-                            "dataVariable": "value",
-                            "scaleByValue": true,
-                            "columns": {
-                                "value": {
-                                    "name": "speed",
-                                    "units": "km/hr"
-                                }
-                            }
-                        },
-                        "featureInfoTemplate": "<p>Name: {{id}}</p><h2>Time series</h2><p><chart x-column='{{terria.timeSeries.xName}}' y-column='{{terria.timeSeries.yName}}' column-units='{{terria.timeSeries.units}}' id='{{terria.timeSeries.id}}'>{{terria.timeSeries.data}}</chart></p>"
-                    },
-                    {
-                        "name": "Moving features (not sampled)",
-                        "nameInCatalog": "Not sampled",
-                        "type": "csv",
-                        "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
-                        "idColumns": ["id"],
-                        "isSampled": false,
-                        "tableStyle": {
-                            "dataVariable": "value",
-                            "scaleByValue": true
-                        }
-                    }
-                ]
+              "name": "Moving features (sampled)",
+              "nameInCatalog": "Sampled",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
+              "idColumns": ["id"],
+              "tableStyle": {
+                "dataVariable": "value",
+                "scaleByValue": true
+              }
             },
             {
-                "name": "CSVs from the init file",
-                "nameInCatalog": "From the init file",
-                "type": "group",
-                "isOpen": false,
-                "items": [
-                    {
-                        "name": "Lat/lon CSV from init file",
-                        "nameInCatalog": "Lat/lon CSV",
-                        "type": "csv",
-                        "data": "longitude,latitude,value\n134.384,-26.716,5\n121.659,-33.592,10"
-                    },
-                    {
-                        "name": "Region-mapped CSV from init file",
-                        "nameInCatalog": "Region-mapped CSV",
-                        "type": "csv",
-                        "data": "POA,value\n2880,5\n5710,10"
-                    }
-                ]
+              "name": "Moving features turned off with []",
+              "nameInCatalog": "Turned off with []",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
+              "idColumns": [],
+              "tableStyle": {
+                "dataVariable": "value",
+                "scaleByValue": true
+              }
             },
             {
-                "name": "CSVs with a time column",
-                "nameInCatalog": "Time column",
-                "type": "group",
-                "isOpen": false,
-                "items": [
-                    {
-                        "name": "Melbourne postcodes with time column",
-                        "type": "csv",
-                        "url": "build/TerriaJS/test/csv/postcode_val_enum_time.csv"
-                    },
-                    {
-                        "name": "WA postcodes with start and end dates",
-                        "type": "csv",
-                        "url": "build/TerriaJS/test/csv/postcode_val_enum_start_end.csv",
-                        "isSampled": false // Suppresses the chart over time in feature info, which looks bad.
-                    },
-                    {
-                        "name": "Melbourne postcodes with time column and template",
-                        "type": "csv",
-                        "url": "build/TerriaJS/test/csv/postcode_val_enum_time.csv",
-                        "featureInfoTemplate": "<p>Postcode: {{postcode}}</p><p>Time: {{time}}</p><p>Val1: {{val1}}</p><p>Enum: {{enum}}</enum>"
-                    },
-                    {
-                        "name": "Lat/lon CSV with duration of 1 hour",
-                        "type": "csv",
-                        "url": "build/TerriaJS/test/csv/lat_lon_date_value.csv",
-                        "tableStyle": {
-                            "displayDuration": 60
-                        }
-                    },
-                ]
+              "name": "Moving features turned off with null",
+              "nameInCatalog": "Turned off with null",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
+              "idColumns": null,
+              "tableStyle": {
+                "dataVariable": "value",
+                "scaleByValue": true
+              }
             },
             {
-                "name": "CSVs with blank values",
-                "nameInCatalog": "Blank values",
-                "type": "group",
-                "isOpen": false,
-                "items": [
-                    {
-                        "name": "CSV (with 0) with blank values as zero",
-                        "type": "csv",
-                        "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,0",
-                        "tableStyle": {
-                            "replaceWithZeroValues": [null]
-                        }
-                    },
-                    {
-                        "name": "CSV (with 0) with blank values separated",
-                        "type": "csv",
-                        "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,0",
-                        "tableStyle": {
-                            "replaceWithZeroValues": [],
-                            "nullColor": "green",
-                            "nullLabel": "blank"
-                        }
-                    },
-                    {
-                        "name": "CSV (no 0) with blank values as zero",
-                        "type": "csv",
-                        "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,1",
-                        "tableStyle": {
-                            "replaceWithZeroValues": [null]
-                        }
-                    },
-                    {
-                        "name": "CSV (no 0) with blank values separated",
-                        "type": "csv",
-                        "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,1",
-                        "tableStyle": {
-                            "replaceWithZeroValues": [],
-                            "nullColor": "green",
-                            "nullLabel": "blank"
-                        }
-                    },
-                    {
-                        "name": "CSV with blank string values",
-                        "type": "csv",
-                        "data": "longitude,latitude,enum\n134,-26,dog\n121,-33,\n124,-32,cat\n130,-30,frog\n132,-28,dog",
-                        "tableStyle": {
-                            "nullLabel": "blank"
-                        }
-                    },
-                    {
-                        "name": "CSV with all values replaced with null",
-                        "type": "csv",
-                        "data": "longitude,latitude,val\n134,-26,0\n121,-33,\n124,-32,",
-                        "tableStyle": {
-                            "replaceWithNullValues": [0],
-                            "nullLabel": "blank"
-                        }
-                    },
-                ]
+              "name": "Moving features (sampled, with info template)",
+              "nameInCatalog": "Sampled, with info template",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
+              "idColumns": ["id"],
+              "tableStyle": {
+                "dataVariable": "value",
+                "scaleByValue": true
+              },
+              "featureInfoTemplate": "<p>Name: {{id}}</p><h2>Time series</h2>{{terria.timeSeries.chart}}"
             },
             {
-                "name": "CSVs with colors",
-                "nameInCatalog": "Colors",
-                "type": "group",
-                "isOpen": false,
-                "items": [
-                    {
-                        "name": "CSV with colorBins=0 (gradient)",
-                        "type": "csv",
-                        "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,1",
-                        "tableStyle": {
-                            "replaceWithZeroValues": [null],
-                            "colorBins": 0
-                        }
-                    },
-                    {
-                        "name": "CSV with colorBins=0 (gradient) and blank values separated",
-                        "type": "csv",
-                        "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,1",
-                        "tableStyle": {
-                            "replaceWithZeroValues": [],
-                            "nullColor": "green",
-                            "nullLabel": "blank",
-                            "colorBins": 0
-                        }
-                    },
-                    {
-                        "name": "CSV with explicit enum colors",
-                        "type": "csv",
-                        "data": "longitude,latitude,enum\n134,-26,dog\n121,-33,\n124,-32,cat\n130,-30,frog\n132,-28,dog",
-                        "tableStyle": {
-                            "nullLabel": "blank",
-                            "colorBins": [
-                                {"value": "dog", "color": "lightblue"},
-                                {"value": "cat", "color": "pink"},
-                                {"value": "frog", "color": "green"}
-                            ]
-                        }
-                    },
-                    {
-                         "name":"CSV with explicit per column color",
-                         "type": "csv",
-                         "data": "Date,PV,NPV,BS\n2000-01-01T00:00:00.000Z,80,2,45\n2000-01-09T00:00:00.000Z,59,14,43\n2000-01-17T00:00:00.000Z,97,39,49\n2000-01-25T00:00:00.000Z,40,75,91\n",
-                         "tableStyle": {
-                             "columns" : {
-                                 "PV": {
-                                     "chartLineColor": "#00b050"
-                                 },
-                                 "NPV": {
-                                     "chartLineColor": "#0070c0"
-                                 }
-                             }
-                         }
-                    },
-                    {
-                         "name":"CSV with explicit per column y axis extents",
-                         "type": "csv",
-                         "data": "Date,PV,NPV,BS\n2000-01-01T00:00:00.000Z,80,2,45\n2000-01-09T00:00:00.000Z,59,14,43\n2000-01-17T00:00:00.000Z,97,39,49\n2000-01-25T00:00:00.000Z,40,75,91\n",
-                         "tableStyle": {
-                             "columns" : {
-                                 "PV": {
-                                     "units": "%",
-                                     "yAxisMin": 30,
-                                     "yAxisMax": 100
-                                 },
-                                 "NPV": {
-                                     "units": "mm",
-                                     "yAxisMin": 0,
-                                     "yAxisMax": 200
-                                 }
-                             }
-                         }
-                    },
-                    {
-                        "name": "Lat/lon with too many enum values",
-                        "type": "csv",
-                        "url": "build/TerriaJS/test/csv/lat_lon_enum_lots.csv",
-                        "tableStyle": {
-                            "colorBins": 9
-                        }
-                    },
-                    {
-                        "name": "Lat/lon with 9 enum values and 9 bins",
-                        "type": "csv",
-                        "url": "build/TerriaJS/test/csv/lat_lon_enum_lots2.csv",
-                        "tableStyle": {
-                            "colorBins": 9
-                        }
-                    },
-                    {
-                        "name": "Postcodes with 9 enum values and 9 bins",
-                        "type": "csv",
-                        "url": "build/TerriaJS/test/csv/postcode_enum_lots2.csv",
-                        "tableStyle": {
-                            "colorBins": 9
-                        }
-                    },
-                    {
-                        "name": "Postcodes with too many enum values",
-                        "type": "csv",
-                        "url": "build/TerriaJS/test/csv/postcode_enum_lots.csv",
-                        "tableStyle": {
-                            "colorBins": 9
-                        }
-                    },
-                    {
-                        "name": "RDA LGA 2015 (Top)",
-                        "type": "csv",
-                        "url": "build/TerriaJS/test/csv/RDA_LGA_2015_16.csv",
-                        "tableStyle": {
-                            "dataVariable": "RDA_NAME",
-                            "colorBinMethod": "top"
-                        }
-                    },
-                    {
-                        "name": "RDA LGA 2015 (Color cycling)",
-                        "type": "csv",
-                        "url": "build/TerriaJS/test/csv/RDA_LGA_2015_16.csv",
-                        "tableStyle": {
-                            "dataVariable": "RDA_NAME",
-                            "colorBinMethod": "cycle"
-                        }
-                    }
-                ]
+              "name": "Moving features (sampled, with manual info template)",
+              "nameInCatalog": "Sampled, with manual info template",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
+              "idColumns": ["id"],
+              "tableStyle": {
+                "dataVariable": "value",
+                "scaleByValue": true,
+                "columns": {
+                  "value": {
+                    "name": "speed",
+                    "units": "km/hr"
+                  }
+                }
+              },
+              "featureInfoTemplate": "<p>Name: {{id}}</p><h2>Time series</h2><p><chart x-column='{{terria.timeSeries.xName}}' y-column='{{terria.timeSeries.yName}}' column-units='{{terria.timeSeries.units}}' id='{{terria.timeSeries.id}}'>{{terria.timeSeries.data}}</chart></p>"
             },
             {
-                "name": "Other test CSVs",
-                "type": "group",
-                "isOpen": false,
-                "items": [
-                    {
-                        "name": "CSV with no data variable selected",
-                        "type": "csv",
-                        "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,1",
-                        "tableStyle": {
-                            "dataVariable": null
-                        }
-                    },
-                    {
-                        "name": "Lat/lon CSV with no other columns",
-                        "type": "csv",
-                        "url": "build/TerriaJS/test/csv/lat_lon.csv"
-                    },
-                    {
-                        "name": "Csv with LATIN-1 encoding not specified by server",
-                        "type": "csv",
-                        "url": "http://data.gov.au/dataset/3fd356c6-0ad4-453e-82e9-03af582024c3/resource/d73f2a2a-c271-4edd-ac45-25fd7ad2241f/download/localphotostories20092014csv.csv",
-                        "charSet": "iso-8859-1",
-                        "featureInfoTemplate": {
-                            "template": "<div class='abc'><small>{{Date}}</small>{{#Primary image}}<figure><img src='{{Primary image}}'/><figcaption>{{Primary image caption}}</figcaption></figure>{{/Primary image}}<p><a target='_blank' href={{URL}}>Read More</a></div>"
-                        },
-                        "tableStyle": {
-                            "dataVariable": "State",
-                            "timeColumn": null
-                        }
-                    }
-                ]
+              "name": "Moving features (not sampled)",
+              "nameInCatalog": "Not sampled",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
+              "idColumns": ["id"],
+              "isSampled": false,
+              "tableStyle": {
+                "dataVariable": "value",
+                "scaleByValue": true
+              }
             }
-        ]
-    }]
+          ]
+        },
+        {
+          "name": "CSVs from the init file",
+          "nameInCatalog": "From the init file",
+          "type": "group",
+          "isOpen": false,
+          "items": [
+            {
+              "name": "Lat/lon CSV from init file",
+              "nameInCatalog": "Lat/lon CSV",
+              "type": "csv",
+              "data": "longitude,latitude,value\n134.384,-26.716,5\n121.659,-33.592,10"
+            },
+            {
+              "name": "Region-mapped CSV from init file",
+              "nameInCatalog": "Region-mapped CSV",
+              "type": "csv",
+              "data": "POA,value\n2880,5\n5710,10"
+            }
+          ]
+        },
+        {
+          "name": "CSVs with a time column",
+          "nameInCatalog": "Time column",
+          "type": "group",
+          "isOpen": false,
+          "items": [
+            {
+              "name": "Melbourne postcodes with time column",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/postcode_val_enum_time.csv"
+            },
+            {
+              "name": "WA postcodes with start and end dates",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/postcode_val_enum_start_end.csv",
+              "isSampled": false // Suppresses the chart over time in feature info, which looks bad.
+            },
+            {
+              "name": "Melbourne postcodes with time column and template",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/postcode_val_enum_time.csv",
+              "featureInfoTemplate": "<p>Postcode: {{postcode}}</p><p>Time: {{time}}</p><p>Val1: {{val1}}</p><p>Enum: {{enum}}</enum>"
+            },
+            {
+              "name": "Lat/lon CSV with duration of 1 hour",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/lat_lon_date_value.csv",
+              "tableStyle": {
+                "displayDuration": 60
+              }
+            }
+          ]
+        },
+        {
+          "name": "CSVs with blank values",
+          "nameInCatalog": "Blank values",
+          "type": "group",
+          "isOpen": false,
+          "items": [
+            {
+              "name": "CSV (with 0) with blank values as zero",
+              "type": "csv",
+              "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,0",
+              "tableStyle": {
+                "replaceWithZeroValues": [null]
+              }
+            },
+            {
+              "name": "CSV (with 0) with blank values separated",
+              "type": "csv",
+              "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,0",
+              "tableStyle": {
+                "replaceWithZeroValues": [],
+                "nullColor": "green",
+                "nullLabel": "blank"
+              }
+            },
+            {
+              "name": "CSV (no 0) with blank values as zero",
+              "type": "csv",
+              "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,1",
+              "tableStyle": {
+                "replaceWithZeroValues": [null]
+              }
+            },
+            {
+              "name": "CSV (no 0) with blank values separated",
+              "type": "csv",
+              "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,1",
+              "tableStyle": {
+                "replaceWithZeroValues": [],
+                "nullColor": "green",
+                "nullLabel": "blank"
+              }
+            },
+            {
+              "name": "CSV with blank string values",
+              "type": "csv",
+              "data": "longitude,latitude,enum\n134,-26,dog\n121,-33,\n124,-32,cat\n130,-30,frog\n132,-28,dog",
+              "tableStyle": {
+                "nullLabel": "blank"
+              }
+            },
+            {
+              "name": "CSV with all values replaced with null",
+              "type": "csv",
+              "data": "longitude,latitude,val\n134,-26,0\n121,-33,\n124,-32,",
+              "tableStyle": {
+                "replaceWithNullValues": [0],
+                "nullLabel": "blank"
+              }
+            }
+          ]
+        },
+        {
+          "name": "CSVs with colors",
+          "nameInCatalog": "Colors",
+          "type": "group",
+          "isOpen": false,
+          "items": [
+            {
+              "name": "CSV with colorBins=0 (gradient)",
+              "type": "csv",
+              "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,1",
+              "tableStyle": {
+                "replaceWithZeroValues": [null],
+                "colorBins": 0
+              }
+            },
+            {
+              "name": "CSV with colorBins=0 (gradient) and blank values separated",
+              "type": "csv",
+              "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,1",
+              "tableStyle": {
+                "replaceWithZeroValues": [],
+                "nullColor": "green",
+                "nullLabel": "blank",
+                "colorBins": 0
+              }
+            },
+            {
+              "name": "CSV with explicit enum colors",
+              "type": "csv",
+              "data": "longitude,latitude,enum\n134,-26,dog\n121,-33,\n124,-32,cat\n130,-30,frog\n132,-28,dog",
+              "tableStyle": {
+                "nullLabel": "blank",
+                "colorBins": [
+                  { "value": "dog", "color": "lightblue" },
+                  { "value": "cat", "color": "pink" },
+                  { "value": "frog", "color": "green" }
+                ]
+              }
+            },
+            {
+              "name": "CSV with explicit per column color",
+              "type": "csv",
+              "data": "Date,PV,NPV,BS\n2000-01-01T00:00:00.000Z,80,2,45\n2000-01-09T00:00:00.000Z,59,14,43\n2000-01-17T00:00:00.000Z,97,39,49\n2000-01-25T00:00:00.000Z,40,75,91\n",
+              "tableStyle": {
+                "columns": {
+                  "PV": {
+                    "chartLineColor": "#00b050"
+                  },
+                  "NPV": {
+                    "chartLineColor": "#0070c0"
+                  }
+                }
+              }
+            },
+            {
+              "name": "CSV with explicit per column y axis extents",
+              "type": "csv",
+              "data": "Date,PV,NPV,BS\n2000-01-01T00:00:00.000Z,80,2,45\n2000-01-09T00:00:00.000Z,59,14,43\n2000-01-17T00:00:00.000Z,97,39,49\n2000-01-25T00:00:00.000Z,40,75,91\n",
+              "tableStyle": {
+                "columns": {
+                  "PV": {
+                    "units": "%",
+                    "yAxisMin": 30,
+                    "yAxisMax": 100
+                  },
+                  "NPV": {
+                    "units": "mm",
+                    "yAxisMin": 0,
+                    "yAxisMax": 200
+                  }
+                }
+              }
+            },
+            {
+              "name": "Lat/lon with too many enum values",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/lat_lon_enum_lots.csv",
+              "tableStyle": {
+                "colorBins": 9
+              }
+            },
+            {
+              "name": "Lat/lon with 9 enum values and 9 bins",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/lat_lon_enum_lots2.csv",
+              "tableStyle": {
+                "colorBins": 9
+              }
+            },
+            {
+              "name": "Postcodes with 9 enum values and 9 bins",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/postcode_enum_lots2.csv",
+              "tableStyle": {
+                "colorBins": 9
+              }
+            },
+            {
+              "name": "Postcodes with too many enum values",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/postcode_enum_lots.csv",
+              "tableStyle": {
+                "colorBins": 9
+              }
+            },
+            {
+              "name": "RDA LGA 2015 (Top)",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/RDA_LGA_2015_16.csv",
+              "tableStyle": {
+                "dataVariable": "RDA_NAME",
+                "colorBinMethod": "top"
+              }
+            },
+            {
+              "name": "RDA LGA 2015 (Color cycling)",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/RDA_LGA_2015_16.csv",
+              "tableStyle": {
+                "dataVariable": "RDA_NAME",
+                "colorBinMethod": "cycle"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Other test CSVs",
+          "type": "group",
+          "isOpen": false,
+          "items": [
+            {
+              "name": "CSV with no data variable selected",
+              "type": "csv",
+              "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,1",
+              "tableStyle": {
+                "dataVariable": null
+              }
+            },
+            {
+              "name": "Lat/lon CSV with no other columns",
+              "type": "csv",
+              "url": "build/TerriaJS/test/csv/lat_lon.csv"
+            },
+            {
+              "name": "Csv with LATIN-1 encoding not specified by server",
+              "type": "csv",
+              "url": "http://data.gov.au/dataset/3fd356c6-0ad4-453e-82e9-03af582024c3/resource/d73f2a2a-c271-4edd-ac45-25fd7ad2241f/download/localphotostories20092014csv.csv",
+              "charSet": "iso-8859-1",
+              "featureInfoTemplate": {
+                "template": "<div class='abc'><small>{{Date}}</small>{{#Primary image}}<figure><img src='{{Primary image}}'/><figcaption>{{Primary image caption}}</figcaption></figure>{{/Primary image}}<p><a target='_blank' href={{URL}}>Read More</a></div>"
+              },
+              "tableStyle": {
+                "dataVariable": "State",
+                "timeColumn": null
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

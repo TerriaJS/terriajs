@@ -121,7 +121,7 @@ const featureCodesToNamesMap = new Map([
   ["YD", "Yard"]
 ]);
 
-const featureToSearchResultFunction = function(feature: any): SearchResult {
+const featureToSearchResultFunction = function (feature: any): SearchResult {
   let featureTypeString = "";
   const featureType = featureCodesToNamesMap.get(
     feature.Gazetteer_of_Australia.Feature_code
@@ -138,7 +138,7 @@ const featureToSearchResultFunction = function(feature: any): SearchResult {
   });
 };
 
-const searchResultFilterFunction = function(feature: any): boolean {
+const searchResultFilterFunction = function (feature: any): boolean {
   return (
     // search results with state ID of N/A seem to be poor quality
     feature.Gazetteer_of_Australia.State_ID !== "N/A" &&
@@ -147,7 +147,7 @@ const searchResultFilterFunction = function(feature: any): boolean {
   );
 };
 
-const searchResultScoreFunction = function(
+const searchResultScoreFunction = function (
   feature: any,
   searchText: string
 ): number {
@@ -234,7 +234,7 @@ export default function createAustralianGazetteerSearchProvider(
     wfsServiceUrl: WFS_SERVICE_URL,
     searchPropertyName: SEARCH_PROPERTY_NAME,
     searchPropertyTypeName: SEARCH_PROPERTY_TYPE_NAME,
-    transformSearchText: searchText => searchText.toUpperCase(),
+    transformSearchText: (searchText) => searchText.toUpperCase(),
     name: i18next.t("viewModels.searchPlaceNames"),
     searchResultFilterFunction: searchResultFilterFunction,
     searchResultScoreFunction: searchResultScoreFunction

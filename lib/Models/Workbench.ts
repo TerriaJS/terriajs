@@ -38,7 +38,7 @@ export default class Workbench {
    */
   @computed
   get itemIds(): readonly string[] {
-    return filterOutUndefined(this._items.map(item => item.uniqueId));
+    return filterOutUndefined(this._items.map((item) => item.uniqueId));
   }
 
   /**
@@ -46,7 +46,7 @@ export default class Workbench {
    */
   @computed
   get shouldExpandAll(): boolean {
-    return this._items.every(item => !(<any>item).isOpenInWorkbench);
+    return this._items.every((item) => !(<any>item).isOpenInWorkbench);
   }
 
   /**
@@ -55,7 +55,7 @@ export default class Workbench {
   @computed
   get hasTimeWMS(): boolean {
     return this._items.some(
-      item =>
+      (item) =>
         item.type === "wms" &&
         TimeFilterMixin.isMixedInto(item) &&
         item.discreteTimesAsSortedJulianDates?.length
@@ -87,7 +87,7 @@ export default class Workbench {
    */
   @action
   collapseAll() {
-    this._items.map(item => {
+    this._items.map((item) => {
       item.setTrait(CommonStrata.user, "isOpenInWorkbench", false);
     });
   }
@@ -97,7 +97,7 @@ export default class Workbench {
    */
   @action
   expandAll() {
-    this._items.map(item => {
+    this._items.map((item) => {
       item.setTrait(CommonStrata.user, "isOpenInWorkbench", true);
     });
   }
@@ -171,7 +171,7 @@ export default class Workbench {
    */
   public async add(item: BaseModel | BaseModel[]): Promise<Result<unknown>> {
     if (Array.isArray(item)) {
-      const results = await Promise.all(item.reverse().map(i => this.add(i)));
+      const results = await Promise.all(item.reverse().map((i) => this.add(i)));
       return Result.combine(results, {
         title: i18next.t("workbench.addItemErrorTitle"),
         message: i18next.t("workbench.addItemErrorMessage"),
@@ -241,7 +241,7 @@ export default class Workbench {
    */
   indexOf(item: BaseModel) {
     return this.items.findIndex(
-      model =>
+      (model) =>
         model === item || dereferenceModel(model) === dereferenceModel(item)
     );
   }

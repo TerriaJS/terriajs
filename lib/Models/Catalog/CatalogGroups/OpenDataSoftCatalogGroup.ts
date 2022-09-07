@@ -48,7 +48,7 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
       catalogGroup.facetFilters.length === 0 &&
       !catalogGroup.flatten
     ) {
-      facets = (await client.get(fromCatalog().facets())).facets?.filter(f =>
+      facets = (await client.get(fromCatalog().facets())).facets?.filter((f) =>
         isValidFacet(f)
       ) as ValidFacet[];
     }
@@ -66,15 +66,16 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
       // If facet filters, use them to filter datasets
       if (catalogGroup.facetFilters && catalogGroup.facetFilters.length > 0) {
         q = q.refine(
-          catalogGroup.facetFilters.map(f => `${f.name}:${f.value}`).join(",")
+          catalogGroup.facetFilters.map((f) => `${f.name}:${f.value}`).join(",")
         );
       }
 
       const catalog = await client.get(q);
 
       datasets = filterOutUndefined(
-        catalog.datasets?.map(d => d.dataset).filter(d => isValidDataset(d)) ??
-          []
+        catalog.datasets
+          ?.map((d) => d.dataset)
+          .filter((d) => isValidDataset(d)) ?? []
       ) as ValidDataset[];
     }
 
@@ -106,14 +107,14 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
   @computed
   get members(): ModelReference[] {
     return [
-      ...this.facets.map(f => this.getFacetId(f)),
-      ...this.datasets.map(d => this.getDatasetId(d))
+      ...this.facets.map((f) => this.getFacetId(f)),
+      ...this.datasets.map((d) => this.getDatasetId(d))
     ];
   }
 
   createMembers() {
-    this.facets.forEach(facet => this.createGroupFromFacet(facet));
-    this.datasets.forEach(dataset => this.createMemberFromDataset(dataset));
+    this.facets.forEach((facet) => this.createGroupFromFacet(facet));
+    this.datasets.forEach((dataset) => this.createMemberFromDataset(dataset));
   }
 
   /** Turn facet into OpenDataSoftCatalogGroup */

@@ -60,8 +60,8 @@ import Terria from "./Terria";
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
 // we still maintain the type checking, without TS screaming with errors
-const FeatureDetection: FeatureDetection = require("terriajs-cesium/Source/Core/FeatureDetection")
-  .default;
+const FeatureDetection: FeatureDetection =
+  require("terriajs-cesium/Source/Core/FeatureDetection").default;
 
 // This class is an observer. It probably won't contain any observables itself
 
@@ -217,13 +217,13 @@ export default class Leaflet extends GlobeOrMap {
       });
 
       if (this.terriaViewer.disableInteraction) {
-        interactions.forEach(handler => handler.disable());
+        interactions.forEach((handler) => handler.disable());
         this.map.off("click", pickLocation);
         this.scene.featureClicked.removeEventListener(pickFeature);
         this._disposeSelectedFeatureSubscription &&
           this._disposeSelectedFeatureSubscription();
       } else {
-        interactions.forEach(handler => handler.enable());
+        interactions.forEach((handler) => handler.enable());
         this.map.on("click", pickLocation);
         this.scene.featureClicked.addEventListener(pickFeature);
         this._disposeSelectedFeatureSubscription = autorun(() => {
@@ -252,13 +252,13 @@ export default class Leaflet extends GlobeOrMap {
     const onTileLoadChange = () => {
       var tilesLoadingCount = 0;
 
-      this.map.eachLayer(function(layerOrGridlayer) {
+      this.map.eachLayer(function (layerOrGridlayer) {
         // _tiles is protected but our knockout-loading-logic accesses it here anyway
         const layer = layerOrGridlayer as any;
         if (layer?._tiles) {
           // Count all tiles not marked as loaded
           tilesLoadingCount += Object.keys(layer._tiles).filter(
-            key => !layer._tiles[key].loaded
+            (key) => !layer._tiles[key].loaded
           ).length;
         }
       });
@@ -268,7 +268,7 @@ export default class Leaflet extends GlobeOrMap {
 
     this.map.on(
       "layeradd",
-      function(evt: any) {
+      function (evt: any) {
         // This check makes sure we only watch tile layers, and also protects us if this private variable gets changed.
         if (typeof evt.layer._tiles !== "undefined") {
           evt.layer.on("tileloadstart tileload load", onTileLoadChange);
@@ -278,7 +278,7 @@ export default class Leaflet extends GlobeOrMap {
 
     this.map.on(
       "layerremove",
-      function(evt: any) {
+      function (evt: any) {
         evt.layer.off("tileloadstart tileload load", onTileLoadChange);
       }.bind(this)
     );
@@ -349,13 +349,15 @@ export default class Leaflet extends GlobeOrMap {
         this.terriaViewer.baseMap
       ];
       // Flatmap
-      const allImageryMapItems = ([] as {
-        item: MappableMixin.Instance;
-        parts: ImageryParts;
-      }[]).concat(
+      const allImageryMapItems = (
+        [] as {
+          item: MappableMixin.Instance;
+          parts: ImageryParts;
+        }[]
+      ).concat(
         ...catalogItems
           .filter(isDefined)
-          .map(item =>
+          .map((item) =>
             item.mapItems
               .filter(ImageryParts.is)
               .map((parts: ImageryParts) => ({ item, parts }))
@@ -374,12 +376,12 @@ export default class Leaflet extends GlobeOrMap {
       });
 
       // Delete imagery layers no longer in the model
-      this.map.eachLayer(mapLayer => {
+      this.map.eachLayer((mapLayer) => {
         if (
           isImageryLayer(mapLayer) ||
           mapLayer instanceof ImageryProviderLeafletGridLayer
         ) {
-          const index = allImagery.findIndex(im => im.layer === mapLayer);
+          const index = allImagery.findIndex((im) => im.layer === mapLayer);
           if (index === -1) {
             this.map.removeLayer(mapLayer);
           }
@@ -404,7 +406,7 @@ export default class Leaflet extends GlobeOrMap {
 
       /* Handle datasources */
       const allMapItems = ([] as MapItem[]).concat(
-        ...catalogItems.filter(isDefined).map(item => item.mapItems)
+        ...catalogItems.filter(isDefined).map((item) => item.mapItems)
       );
       const allDataSources = allMapItems.filter(isDataSource);
 
@@ -419,7 +421,7 @@ export default class Leaflet extends GlobeOrMap {
       }
 
       // Add new data sources, remove hidden ones
-      allDataSources.forEach(d => {
+      allDataSources.forEach((d) => {
         if (d.show) {
           if (!dataSources.contains(d)) {
             dataSources.add(d);
@@ -430,7 +432,7 @@ export default class Leaflet extends GlobeOrMap {
       });
 
       // Ensure stacking order matches order in allDataSources - first item appears on top.
-      allDataSources.forEach(d => dataSources.raiseToTop(d));
+      allDataSources.forEach((d) => dataSources.raiseToTop(d));
     });
   }
 
@@ -645,9 +647,8 @@ export default class Leaflet extends GlobeOrMap {
     // be reasonably sure that all of them will be processed by the time our runLater func is invoked.
     const cleanup = runLater(() => {
       // Set this again just in case a vector pick came through and reset it to the vector's position.
-      const newPickLocation = Ellipsoid.WGS84.cartographicToCartesian(
-        pickedLocation
-      );
+      const newPickLocation =
+        Ellipsoid.WGS84.cartographicToCartesian(pickedLocation);
       runInAction(() => {
         const mapInteractionModeStack = this.terria.mapInteractionModeStack;
         if (
@@ -671,7 +672,7 @@ export default class Leaflet extends GlobeOrMap {
 
     const imageryLayers: ImageryProviderLeafletTileLayer[] = [];
     if (this.terria.allowFeatureInfoRequests) {
-      this.map.eachLayer(layer => {
+      this.map.eachLayer((layer) => {
         if (isImageryLayer(layer)) {
           imageryLayers.push(layer);
         }
@@ -700,11 +701,10 @@ export default class Leaflet extends GlobeOrMap {
     tileCoordinates = defaultValue(tileCoordinates, {});
 
     const pickedLocation = Cartographic.fromDegrees(latlng.lng, latlng.lat);
-    this._pickedFeatures.pickPosition = Ellipsoid.WGS84.cartographicToCartesian(
-      pickedLocation
-    );
+    this._pickedFeatures.pickPosition =
+      Ellipsoid.WGS84.cartographicToCartesian(pickedLocation);
 
-    const imageryFeaturePromises = imageryLayers.map(async imageryLayer => {
+    const imageryFeaturePromises = imageryLayers.map(async (imageryLayer) => {
       const imageryLayerUrl = (<any>imageryLayer.imageryProvider).url;
       const longRadians = CesiumMath.toRadians(latlng.lng);
       const latRadians = CesiumMath.toRadians(latlng.lat);
@@ -726,7 +726,7 @@ export default class Leaflet extends GlobeOrMap {
       );
 
       // Make sure ImageryLayerFeatureInfo has imagery layer property
-      features?.forEach(feature => (feature.imageryLayer = imageryLayer));
+      features?.forEach((feature) => (feature.imageryLayer = imageryLayer));
 
       return {
         features: features,
@@ -742,17 +742,17 @@ export default class Leaflet extends GlobeOrMap {
     pickedFeatures.allFeaturesAvailablePromise = Promise.all([
       cleanup,
       Promise.all(imageryFeaturePromises)
-        .then(results => {
+        .then((results) => {
           runInAction(() => {
             pickedFeatures.isLoading = false;
           });
 
           pickedFeatures.providerCoords = {};
           const filteredResults = results.filter(
-            result => isDefined(result.features) && result.features.length > 0
+            (result) => isDefined(result.features) && result.features.length > 0
           );
 
-          pickedFeatures.providerCoords = filteredResults.reduce(function(
+          pickedFeatures.providerCoords = filteredResults.reduce(function (
             coordsSoFar: ProviderCoordsMap,
             result
           ) {
@@ -773,9 +773,8 @@ export default class Leaflet extends GlobeOrMap {
               const screenPosition = this._computePositionOnScreen(
                 pickedFeatures.pickPosition
               );
-              const pickedSide = this._getSplitterSideForScreenPosition(
-                screenPosition
-              );
+              const pickedSide =
+                this._getSplitterSideForScreenPosition(screenPosition);
               const layerDirection = result.imageryLayer.splitDirection;
 
               if (
@@ -789,7 +788,7 @@ export default class Leaflet extends GlobeOrMap {
             }
 
             return allFeatures.concat(
-              result.features!.map(feature => {
+              result.features!.map((feature) => {
                 // For features without a position, use the picked location.
                 if (!isDefined(feature.position)) {
                   feature.position = pickedLocation;
@@ -803,7 +802,7 @@ export default class Leaflet extends GlobeOrMap {
             pickedFeatures.features = features;
           });
         })
-        .catch(e => {
+        .catch((e) => {
           runInAction(() => {
             pickedFeatures.isLoading = false;
             pickedFeatures.error =
@@ -833,7 +832,7 @@ export default class Leaflet extends GlobeOrMap {
       const items = this.terria.mainViewer.items.get();
       const showSplitter = this.terria.showSplitter;
       const splitPosition = this.terria.splitPosition;
-      items.forEach(item => {
+      items.forEach((item) => {
         if (
           MappableMixin.isMixedInto(item) &&
           hasTraits(item, SplitterTraits, "splitDirection")
@@ -842,7 +841,7 @@ export default class Leaflet extends GlobeOrMap {
           const splitDirection = item.splitDirection;
 
           layers.forEach(
-            action(layer => {
+            action((layer) => {
               if (showSplitter) {
                 layer.splitDirection = splitDirection;
                 layer.splitPosition = splitPosition;
@@ -862,7 +861,7 @@ export default class Leaflet extends GlobeOrMap {
     item: MappableMixin.Instance
   ): (ImageryProviderLeafletTileLayer | ImageryProviderLeafletGridLayer)[] {
     return filterOutUndefined(
-      item.mapItems.map(m => {
+      item.mapItems.map((m) => {
         if (ImageryParts.is(m)) {
           const layer = this._makeImageryLayerFromParts(m, item);
           return layer instanceof ImageryProviderLeafletTileLayer ||
@@ -989,9 +988,8 @@ export default class Leaflet extends GlobeOrMap {
             const combined = document.createElement("canvas");
             combined.width = leftCanvas.width;
             combined.height = leftCanvas.height;
-            const context: CanvasRenderingContext2D | null = combined.getContext(
-              "2d"
-            );
+            const context: CanvasRenderingContext2D | null =
+              combined.getContext("2d");
             if (context === undefined || context === null) {
               // Error
               return null;
@@ -1064,7 +1062,7 @@ export default class Leaflet extends GlobeOrMap {
     layer.addTo(map);
     layer.bringToFront();
 
-    return function() {
+    return function () {
       map.removeLayer(layer);
     };
   }

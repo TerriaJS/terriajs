@@ -8,30 +8,28 @@
           "name": "Gravity Anomaly (single dynamic layer)",
           "type": "esri-mapServer",
           "url": "http://services.ga.gov.au/gis/rest/services/Geophysical_Grids/MapServer/9",
-          "attribution" : "Plain text <a href=\"test\">hello</a>",
-          "featureInfoTemplate" : "<h1> Heading1</h1> <h2> Heading2</h2> <h3> Heading3</h3> <h4> Heading4</h4> <h5> Heading5</h5> <h6> Heading6</h6> <p><mark> Marked text </makr></p><p><s> Strike through text </s></p><p><u> Underlined text </u></p><p><small> Small text </small></p><p><strong> Bold text </strong></p><ul><li> Default unordered list </li><li> Default unordered list </li></ul><ol><li> Default ordered list </li><li> Default ordered list </li></ol><ul class='circle'><li> circle unordered list </li><li> circle unordered list </li></ul><ul class='square'><li> square unordered list </li><li> square unordered list </li></ul><ol class='upper-roman'><li> Upper Roman ordered list </li><li> Upper Roman ordered list </li></ol><ol class='lower-alpha'><li> Lower Alpha ordered list </li><li> Lower Alpha ordered list </li></ol><ul class='list-reset'><li> list without list style </li><li> list without list style </li></ul><p class='center'> center align text</p><p class='right-align'> right align text</p><p class='justify'> justified text</p>"
+          "attribution": "Plain text <a href=\"test\">hello</a>",
+          "featureInfoTemplate": "<h1> Heading1</h1> <h2> Heading2</h2> <h3> Heading3</h3> <h4> Heading4</h4> <h5> Heading5</h5> <h6> Heading6</h6> <p><mark> Marked text </makr></p><p><s> Strike through text </s></p><p><u> Underlined text </u></p><p><small> Small text </small></p><p><strong> Bold text </strong></p><ul><li> Default unordered list </li><li> Default unordered list </li></ul><ol><li> Default ordered list </li><li> Default ordered list </li></ol><ul class='circle'><li> circle unordered list </li><li> circle unordered list </li></ul><ul class='square'><li> square unordered list </li><li> square unordered list </li></ul><ol class='upper-roman'><li> Upper Roman ordered list </li><li> Upper Roman ordered list </li></ol><ol class='lower-alpha'><li> Lower Alpha ordered list </li><li> Lower Alpha ordered list </li></ol><ul class='list-reset'><li> list without list style </li><li> list without list style </li></ul><p class='center'> center align text</p><p class='right-align'> right align text</p><p class='justify'> justified text</p>"
         },
         {
           "name": "Gravity Anomaly two",
           "type": "esri-mapServer",
           "url": "http://services.ga.gov.au/gis/rest/services/Geophysical_Grids/MapServer/9",
-          "attribution" :
-            {
-              "text" : "test attribution which is a link",
-              "link" : "http://www.ga.gov.au"
-            },
-          "featureInfoTemplate" : "Red is {{Red}}. Blue is {{Blue}} <h1>Green is {{Green}} </h1>!"
+          "attribution": {
+            "text": "test attribution which is a link",
+            "link": "http://www.ga.gov.au"
+          },
+          "featureInfoTemplate": "Red is {{Red}}. Blue is {{Blue}} <h1>Green is {{Green}} </h1>!"
         },
         {
           "name": "Gravity Anomaly with partials",
           "type": "esri-mapServer",
           "url": "http://services.ga.gov.au/gis/rest/services/Geophysical_Grids/MapServer/9",
-          "attribution" :
-            {
-              "text" : "test attribution which is a link",
-              "link" : "http://www.ga.gov.au"
-            },
-          "featureInfoTemplate" : {
+          "attribution": {
+            "text": "test attribution which is a link",
+            "link": "http://www.ga.gov.au"
+          },
+          "featureInfoTemplate": {
             "template": "{{>header}}Red is {{Red}}. Blue is {{Blue}}. Green is {{Green}}.{{>footer}}",
             "partials": {
               "header": "<h1>Color Information</h1><br>",
@@ -42,7 +40,7 @@
         {
           "name": "Bad link",
           "type": "esri-mapServer",
-          "url": "http://www.ga.gov.au/gisimg/rest/services/earth_science/Geoscience_Australia_National_Geophysical_Grids/MapServer/6",
+          "url": "http://www.ga.gov.au/gisimg/rest/services/earth_science/Geoscience_Australia_National_Geophysical_Grids/MapServer/6"
         }
       ],
       // This shows how you can display descriptive info on a group in the Data preview panel.

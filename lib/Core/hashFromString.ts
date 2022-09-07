@@ -2,7 +2,7 @@
 
 export default function hashFromString(s: string) {
   return Math.abs(
-    s.split("").reduce(function(prev, c) {
+    s.split("").reduce(function (prev, c) {
       var hash = (prev << 5) - prev + c.charCodeAt(0);
       return hash;
     }, 0)

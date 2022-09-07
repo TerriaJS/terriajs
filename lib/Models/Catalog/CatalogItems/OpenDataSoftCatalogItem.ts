@@ -65,9 +65,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     });
 
     const response = await client.get(
-      fromCatalog()
-        .dataset(catalogItem.datasetId)
-        .itself()
+      fromCatalog().dataset(catalogItem.datasetId).itself()
     );
 
     const dataset = response.dataset;
@@ -173,9 +171,9 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
    */
   @computed get colorFieldName() {
     return (
-      this.usefulFields.find(f => f.type === "double") ??
-      this.usefulFields.find(f => f.type === "int") ??
-      this.usefulFields.find(f => f.type === "text")
+      this.usefulFields.find((f) => f.type === "double") ??
+      this.usefulFields.find((f) => f.type === "int") ??
+      this.usefulFields.find((f) => f.type === "text")
     )?.name;
   }
 
@@ -190,7 +188,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   @computed get regionFieldName() {
     // Find first field which matches a region type
     return this.dataset.fields?.find(
-      f =>
+      (f) =>
         this.catalogItem.matchRegionProvider(f.name)?.regionType ||
         this.catalogItem.matchRegionProvider(f.label)?.regionType
     )?.name;
@@ -208,7 +206,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   /** Get the maximum number of samples for a given point (or sensor) */
   @computed get maxPointSamples() {
     if (!this.pointTimeSeries) return;
-    return Math.max(...this.pointTimeSeries.map(p => p.samples ?? 0));
+    return Math.max(...this.pointTimeSeries.map((p) => p.samples ?? 0));
   }
 
   /** Should we select all fields (properties) in each record?
@@ -233,13 +231,13 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
       return filterOutUndefined(
         this.dataset.fields
           ?.filter(
-            f =>
+            (f) =>
               f.type !== "geo_shape" &&
               !["lat", "lon", "long", "latitude", "longitude"].includes(
                 f.name?.toLowerCase() ?? ""
               )
           )
-          .map(f => f.name) ?? []
+          .map((f) => f.name) ?? []
       ).join(", ");
     }
 
@@ -288,7 +286,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     if (!this.catalogItem.colorFieldName) return;
 
     const f = this.dataset.fields?.find(
-      f => f.name === this.catalogItem.colorFieldName
+      (f) => f.name === this.catalogItem.colorFieldName
     );
     if (f) {
       return createStratumInstance(TableColumnTraits, {
@@ -304,7 +302,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     if (!this.catalogItem.timeFieldName) return;
 
     const f = this.dataset.fields?.find(
-      f => f.name === this.catalogItem.timeFieldName
+      (f) => f.name === this.catalogItem.timeFieldName
     );
     if (f) {
       return createStratumInstance(TableColumnTraits, {
@@ -320,12 +318,12 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     return (
       this.dataset.fields
         ?.filter(
-          f =>
+          (f) =>
             f.name !== this.catalogItem.timeFieldName &&
             f.name !== this.catalogItem.colorFieldName &&
             f.name !== this.catalogItem.regionFieldName
         )
-        ?.map(f =>
+        ?.map((f) =>
           createStratumInstance(TableColumnTraits, {
             name: f.name,
             title: f.label,
@@ -383,8 +381,9 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   get currentTime() {
     if (!this.pointTimeSeries && this.catalogItem.geoPoint2dFieldName) return;
 
-    const lastDate = this.catalogItem.activeTableStyle?.timeColumn
-      ?.valuesAsJulianDates.maximum;
+    const lastDate =
+      this.catalogItem.activeTableStyle?.timeColumn?.valuesAsJulianDates
+        .maximum;
 
     if (
       !this.catalogItem.activeTableStyle.timeIntervals ||
@@ -400,7 +399,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
         let start: JulianDate | undefined;
         let stop: JulianDate | undefined;
 
-        rows.forEach(rowId => {
+        rows.forEach((rowId) => {
           const interval =
             this.catalogItem.activeTableStyle.timeIntervals![rowId] ??
             undefined;
@@ -452,7 +451,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   @computed get usefulFields() {
     return (
       this.dataset.fields?.filter(
-        f =>
+        (f) =>
           ["double", "int", "text"].includes(f.type ?? "") &&
           !["lat", "lon", "long", "latitude", "longitude"].includes(
             f.name?.toLowerCase() ?? ""
@@ -475,7 +474,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
         id: "available-fields",
         name: "Fields",
         selectedId: this.catalogItem.colorFieldName,
-        options: this.usefulFields.map(f => ({
+        options: this.usefulFields.map((f) => ({
           id: f.name,
           name: f.label,
           value: undefined
@@ -502,11 +501,11 @@ function isIdField(...names: (string | undefined)[]) {
 }
 
 function getGeoPointField(dataset: Dataset) {
-  return dataset.fields?.find(f => f.type === "geo_point_2d")?.name;
+  return dataset.fields?.find((f) => f.type === "geo_point_2d")?.name;
 }
 
 function getTimeField(dataset: Dataset) {
-  return dataset.fields?.find(f => f.type === "datetime")?.name;
+  return dataset.fields?.find((f) => f.type === "datetime")?.name;
 }
 
 StratumOrder.addLoadStratum(OpenDataSoftDatasetStratum.stratumName);
@@ -515,7 +514,8 @@ export default class OpenDataSoftCatalogItem
   extends TableMixin(
     UrlMixin(CatalogMemberMixin(CreateModel(OpenDataSoftCatalogItemTraits)))
   )
-  implements SelectableDimensions {
+  implements SelectableDimensions
+{
   static readonly type = "opendatasoft-item";
 
   constructor(
@@ -554,10 +554,7 @@ export default class OpenDataSoftCatalogItem
 
     let data: string[][] = [];
 
-    let q = fromCatalog()
-      .dataset(this.datasetId)
-      .records()
-      .limit(100);
+    let q = fromCatalog().dataset(this.datasetId).records().limit(100);
 
     // If fetching time - order records by latest time
     if (this.timeFieldName) q = q.orderBy(`${this.timeFieldName} DESC`);
@@ -655,7 +652,7 @@ export default class OpenDataSoftCatalogItem
     return filterOutUndefined([
       this.availableFieldsDimension,
       ...super.selectableDimensions.filter(
-        s => !this.availableFieldsDimension || s.id !== "activeStyle"
+        (s) => !this.availableFieldsDimension || s.id !== "activeStyle"
       )
     ]);
   }

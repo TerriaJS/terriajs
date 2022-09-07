@@ -17,7 +17,7 @@ export type MustacheFunction = () => (
 function mustacheJsonSubOptions(
   customProcessing: (value: string, options?: JsonObject) => string
 ) {
-  return function(text: string, render: (input: string) => string) {
+  return function (text: string, render: (input: string) => string) {
     // Eg. "{foo:1}hi there".match(optionReg) = ["{foo:1}hi there", "{foo:1}", "hi there"].
     // Note this won't work with nested objects in the options (but these aren't used yet).
     // Note I use [\s\S]* instead of .* at the end - .* does not match newlines, [\s\S]* does.
@@ -144,7 +144,7 @@ export function mustacheFormatDateTime() {
  * @private
  */
 export function mustacheURLEncodeTextComponent() {
-  return function(text: string, render: (value: string) => string) {
+  return function (text: string, render: (value: string) => string) {
     return encodeURIComponent(render(text));
   };
 }
@@ -157,7 +157,7 @@ export function mustacheURLEncodeTextComponent() {
  * @private
  */
 export function mustacheURLEncodeText() {
-  return function(text: string, render: (value: string) => string) {
+  return function (text: string, render: (value: string) => string) {
     return encodeURI(render(text));
   };
 }

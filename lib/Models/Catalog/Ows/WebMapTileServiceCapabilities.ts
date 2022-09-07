@@ -127,11 +127,9 @@ export interface TileMatrix {
 }
 
 export default class WebMapTileServiceCapabilities {
-  static fromUrl: (
-    url: string
-  ) => Promise<WebMapTileServiceCapabilities> = createTransformer(
-    (url: string) => {
-      return Promise.resolve(loadXML(url)).then(function(capabilitiesXml) {
+  static fromUrl: (url: string) => Promise<WebMapTileServiceCapabilities> =
+    createTransformer((url: string) => {
+      return Promise.resolve(loadXML(url)).then(function (capabilitiesXml) {
         const json = xml2json(capabilitiesXml);
         if (!defined(json.ServiceIdentification)) {
           throw networkRequestError({
@@ -149,8 +147,7 @@ export default class WebMapTileServiceCapabilities {
 
         return new WebMapTileServiceCapabilities(capabilitiesXml, json);
       });
-    }
-  );
+    });
 
   readonly layers: WmtsLayer[];
   readonly tileMatrixSets: TileMatrixSet[];
@@ -208,7 +205,7 @@ export default class WebMapTileServiceCapabilities {
       return undefined;
     }
     let match = this.layers.find(
-      layer => layer.Identifier === name || layer.Title === name
+      (layer) => layer.Identifier === name || layer.Title === name
     );
     if (!match) {
       const colonIndex = name.indexOf(":");
@@ -217,7 +214,7 @@ export default class WebMapTileServiceCapabilities {
         // as just their name without the namespace qualifier.
         const nameWithoutNamespace = name.substring(colonIndex + 1);
         match = this.layers.find(
-          layer =>
+          (layer) =>
             layer.Identifier === nameWithoutNamespace ||
             layer.Title === nameWithoutNamespace
         );
@@ -232,7 +229,7 @@ export default class WebMapTileServiceCapabilities {
       return undefined;
     }
     return this.tileMatrixSets.find(
-      tileMatrixSet => tileMatrixSet.Identifier === set
+      (tileMatrixSet) => tileMatrixSet.Identifier === set
     );
   }
 }

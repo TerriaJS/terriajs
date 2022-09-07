@@ -83,13 +83,13 @@ const injectTerms = (string: string, termDictionary: Term[]): string => {
     );
     // some help content things will have aliases / variants
 
-    termDictionary.forEach(term => {
+    termDictionary.forEach((term) => {
       const termAliases = term.aliases;
       if (!termAliases) {
         return;
       }
       const addAliasesToTooltipTerms = (aliases: string[]) =>
-        aliases.forEach(alias => {
+        aliases.forEach((alias) => {
           tooltipTerms.set(alias.toLowerCase(), term);
         });
       if (Array.isArray(termAliases)) {
@@ -114,7 +114,7 @@ const injectTerms = (string: string, termDictionary: Term[]): string => {
         const translated = i18next.t(termAliases, { returnObjects: true });
         if (
           Array.isArray(translated) &&
-          translated.every(item => typeof item === "string")
+          translated.every((item) => typeof item === "string")
         ) {
           addAliasesToTooltipTerms(translated);
         }

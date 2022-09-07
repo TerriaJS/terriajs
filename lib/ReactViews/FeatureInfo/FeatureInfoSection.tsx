@@ -38,7 +38,7 @@ import {
 } from "./mustacheExpressions";
 
 // We use Mustache templates inside React views, where React does the escaping; don't escape twice, or eg. " => &quot;
-Mustache.escape = function(string) {
+Mustache.escape = function (string) {
   return string;
 };
 
@@ -57,9 +57,8 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
   private templateReactionDisposer: IDisposer | undefined;
   private removeFeatureChangedSubscription: (() => void) | undefined;
 
-  @observable private templatedFeatureInfo:
-    | React.ReactNode
-    | undefined = undefined;
+  @observable private templatedFeatureInfo: React.ReactNode | undefined =
+    undefined;
 
   @observable
   private showRawData: boolean = false;
@@ -119,13 +118,14 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
   @action
   private setFeatureChangedCounter(feature: Feature) {
     this.removeFeatureChangedSubscription?.();
-    this.removeFeatureChangedSubscription = feature.definitionChanged.addEventListener(
-      ((changedFeature: Feature) => {
-        runInAction(() => {
-          this.featureChangedCounter++;
-        });
-      }).bind(this)
-    );
+    this.removeFeatureChangedSubscription =
+      feature.definitionChanged.addEventListener(
+        ((changedFeature: Feature) => {
+          runInAction(() => {
+            this.featureChangedCounter++;
+          });
+        }).bind(this)
+      );
 
     // setTimeoutsForUpdatingCustomComponents(featureInfoSection);
   }
@@ -279,9 +279,8 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
     const feature = this.props.feature;
 
     const currentTime = this.currentTimeIfAvailable ?? JulianDate.now();
-    let description: string | undefined = feature.description?.getValue(
-      currentTime
-    );
+    let description: string | undefined =
+      feature.description?.getValue(currentTime);
 
     if (isDefined(description)) return description;
 
@@ -443,16 +442,18 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
                 // Show templated feature info
                 this.templatedFeatureInfo
               )}
-              {// Show FeatureInfoDownload
-              !this.props.printView &&
-              showFeatureInfoDownload &&
-              isDefined(this.downloadableData.data) ? (
-                <FeatureInfoDownload
-                  key="download"
-                  data={this.downloadableData.data}
-                  name={this.downloadableData.fileName}
-                />
-              ) : null}
+              {
+                // Show FeatureInfoDownload
+                !this.props.printView &&
+                showFeatureInfoDownload &&
+                isDefined(this.downloadableData.data) ? (
+                  <FeatureInfoDownload
+                    key="download"
+                    data={this.downloadableData.data}
+                    name={this.downloadableData.fileName}
+                  />
+                ) : null
+              }
             </div>
           </section>
         ) : null}

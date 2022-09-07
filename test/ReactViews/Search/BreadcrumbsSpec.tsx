@@ -5,21 +5,21 @@ import Terria from "../../../lib/Models/Terria";
 import CatalogGroup from "../../../lib/Models/Catalog/CatalogGroup";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import Breadcrumbs from "../../../lib/ReactViews/Search/Breadcrumbs";
-const DataCatalogTab: any = require("../../../lib/ReactViews/ExplorerWindow/Tabs/DataCatalogTab")
-  .default;
+const DataCatalogTab: any =
+  require("../../../lib/ReactViews/ExplorerWindow/Tabs/DataCatalogTab").default;
 import Icon from "../../../lib/Styled/Icon";
 import { ThemeProvider } from "styled-components";
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import { runInAction } from "mobx";
 
-describe("Breadcrumbs", function() {
+describe("Breadcrumbs", function () {
   let terria: Terria;
   let viewState: ViewState;
   let catalogGroup: CatalogGroup;
 
   let testRenderer: any;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -32,8 +32,8 @@ describe("Breadcrumbs", function() {
     terria.addModel(catalogGroup);
   });
 
-  describe("with a prevewied catalog item", function() {
-    it("renders", async function() {
+  describe("with a prevewied catalog item", function () {
+    it("renders", async function () {
       await viewState.viewCatalogMember(catalogGroup);
 
       act(() => {
@@ -51,8 +51,8 @@ describe("Breadcrumbs", function() {
     });
   });
 
-  describe("without a previewed catalog item", function() {
-    it("does not render", function() {
+  describe("without a previewed catalog item", function () {
+    it("does not render", function () {
       runInAction(() => {
         viewState.clearPreviewedItem();
       });

@@ -206,7 +206,7 @@ export default class TableColorMap {
     ) {
       return new EnumColorMap({
         enumColors: filterOutUndefined(
-          this.enumColors.map(e => {
+          this.enumColors.map((e) => {
             if (e.value === undefined || e.color === undefined) {
               return undefined;
             }
@@ -358,7 +358,7 @@ export default class TableColorMap {
           color
         };
       })
-      .filter(color => isDefined(color.value));
+      .filter((color) => isDefined(color.value));
   }
 
   /** This color is used to color values outside minimumValue and maximumValue - it is only used for ContinuousColorMaps
@@ -482,8 +482,8 @@ export default class TableColorMap {
    * - colorColumn is scalar and the activeStyle has a regionColumn
    */
   @computed get regionValues() {
-    const regionColumn = this.colorColumn?.tableModel.activeTableStyle
-      .regionColumn;
+    const regionColumn =
+      this.colorColumn?.tableModel.activeTableStyle.regionColumn;
     if (this.colorColumn?.type !== TableColumnType.scalar || !regionColumn)
       return;
 
@@ -502,7 +502,7 @@ export default class TableColorMap {
     const values =
       this.regionValues ?? this.colorColumn?.valuesAsNumbers.values;
     if (values) {
-      return values.filter(val => val !== null) as number[];
+      return values.filter((val) => val !== null) as number[];
     }
   }
 
@@ -544,12 +544,14 @@ export default class TableColorMap {
 
     // Array of row group values
     const rowGroupValues = rowGroups.map(
-      group =>
-        group[1].map(row => values[row]).filter(val => val !== null) as number[]
+      (group) =>
+        group[1]
+          .map((row) => values[row])
+          .filter((val) => val !== null) as number[]
     );
 
     // Get average value for each row group
-    const rowGroupAverages = rowGroupValues.map(val => getMean(val));
+    const rowGroupAverages = rowGroupValues.map((val) => getMean(val));
     const definedRowGroupAverages = filterOutUndefined(rowGroupAverages);
     const std = getStandardDeviation(definedRowGroupAverages);
     const mean = getMean(definedRowGroupAverages);
@@ -727,7 +729,7 @@ function getStandardDeviation(array: number[]) {
   const mean = getMean(array);
   return isDefined(mean)
     ? Math.sqrt(
-        array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n
+        array.map((x) => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n
       )
     : undefined;
 }

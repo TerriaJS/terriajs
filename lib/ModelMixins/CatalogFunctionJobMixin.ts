@@ -212,13 +212,13 @@ function CatalogFunctionJobMixin<
       ) {
         this.downloadingResults = true;
         this.results = (await this.downloadResults()) || [];
-        this.results.forEach(result => {
+        this.results.forEach((result) => {
           if (MappableMixin.isMixedInto(result))
             result.setTrait(CommonStrata.user, "show", true);
           if (addResultsToWorkbench)
             this.terria.workbench
               .add(result)
-              .then(r => r.raiseError(this.terria));
+              .then((r) => r.raiseError(this.terria));
 
           this.terria.addModel(result);
         });
@@ -227,7 +227,7 @@ function CatalogFunctionJobMixin<
           this.setTrait(
             CommonStrata.user,
             "members",
-            filterOutUndefined(this.results.map(result => result.uniqueId))
+            filterOutUndefined(this.results.map((result) => result.uniqueId))
           );
           this.setTrait(CommonStrata.user, "downloadedResults", true);
         });
@@ -263,9 +263,9 @@ function CatalogFunctionJobMixin<
       this.setTrait(
         CommonStrata.user,
         "shortReport",
-        `${this.typeName ||
-          this
-            .type} invocation failed. More details are available on the Info panel.`
+        `${
+          this.typeName || this.type
+        } invocation failed. More details are available on the Info panel.`
       );
 
       const errorInfo = createStratumInstance(InfoSectionTraits, {

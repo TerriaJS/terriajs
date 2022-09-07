@@ -28,7 +28,7 @@ export const SelectableDimensionGroup: React.FC<{
       title={
         dim.type === "group"
           ? dim.name ?? dim.id ?? ""
-          : dim.options?.find(opt => opt.id === dim.selectedId)?.name ??
+          : dim.options?.find((opt) => opt.id === dim.selectedId)?.name ??
             (dim.selectedId === "true" ? "Enabled" : "Disabled")
       }
       bodyBoxProps={{
@@ -40,7 +40,7 @@ export const SelectableDimensionGroup: React.FC<{
       onToggle={
         dim.type === "group"
           ? dim.onToggle
-          : isOpen =>
+          : (isOpen) =>
               dim.setDimensionValue(
                 CommonStrata.user,
                 isOpen ? "true" : "false"
@@ -51,7 +51,7 @@ export const SelectableDimensionGroup: React.FC<{
     >
       <Box displayInlineBlock fullWidth styledPadding="5px 0 0 20px">
         {/* recursively render nested dimensions */}
-        {childDims.map(nestedDim => (
+        {childDims.map((nestedDim) => (
           <SelectableDimension
             id={`${id}-${nestedDim.id}`}
             dim={nestedDim}

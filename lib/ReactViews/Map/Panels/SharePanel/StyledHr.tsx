@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import Hr from "../../../../Styled/Hr";
 
-export const StyledHr = styled(Hr).attrs(props => ({
+export const StyledHr = styled(Hr).attrs((props) => ({
   size: 1,
   borderBottomColor: props.theme.darkWithOverlay
 }))`

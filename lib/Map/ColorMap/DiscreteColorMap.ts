@@ -25,7 +25,7 @@ export default class DiscreteColorMap extends ColorMap {
     const maximums: number[] = [];
     const colors: Color[] = [];
 
-    options.bins.forEach(bin => {
+    options.bins.forEach((bin) => {
       maximums.push(bin.maximum);
       includeMinimumInThisBin.push(bin.includeMinimumInThisBin);
       colors.push(Color.clone(bin.color));

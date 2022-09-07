@@ -51,7 +51,7 @@ class FeatureInfoPanel extends React.Component<Props> {
       this,
       reaction(
         () => terria.pickedFeatures,
-        pickedFeatures => {
+        (pickedFeatures) => {
           if (!isDefined(pickedFeatures)) {
             terria.selectedFeature = undefined;
           } else {
@@ -70,21 +70,21 @@ class FeatureInfoPanel extends React.Component<Props> {
 
                 // We only show features that are associated with a catalog item, so make sure the one we select to be
                 // open initially is one we're actually going to show.
-                const featuresShownAtAll = pickedFeatures.features.filter(x =>
+                const featuresShownAtAll = pickedFeatures.features.filter((x) =>
                   isDefined(determineCatalogItem(terria.workbench, x))
                 );
 
                 // Return if `terria.selectedFeatures` already showing a valid feature?
                 if (
                   featuresShownAtAll.some(
-                    feature => feature === terria.selectedFeature
+                    (feature) => feature === terria.selectedFeature
                   )
                 )
                   return;
 
                 // Otherwise find first feature with data to show
                 let selectedFeature = featuresShownAtAll.filter(
-                  feature =>
+                  (feature) =>
                     isDefined(feature.properties) ||
                     isDefined(feature.description)
                 )[0];
@@ -113,8 +113,8 @@ class FeatureInfoPanel extends React.Component<Props> {
     return catalogItems.map((catalogItem, i) => {
       // From the pairs, select only those with this catalog item, and pull the features out of the pair objects.
       const features = featureCatalogItemPairs
-        .filter(pair => pair.catalogItem === catalogItem)
-        .map(pair => pair.feature);
+        .filter((pair) => pair.catalogItem === catalogItem)
+        .map((pair) => pair.feature);
       return (
         <FeatureInfoCatalogItem
           key={i}
@@ -144,8 +144,8 @@ class FeatureInfoPanel extends React.Component<Props> {
 
   @action.bound
   toggleCollapsed() {
-    this.props.viewState.featureInfoPanelIsCollapsed = !this.props.viewState
-      .featureInfoPanelIsCollapsed;
+    this.props.viewState.featureInfoPanelIsCollapsed =
+      !this.props.viewState.featureInfoPanelIsCollapsed;
   }
 
   @action.bound
@@ -220,9 +220,8 @@ class FeatureInfoPanel extends React.Component<Props> {
   }
 
   renderLocationItem(cartesianPosition: Cartesian3) {
-    const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
-      cartesianPosition
-    );
+    const cartographic =
+      Ellipsoid.WGS84.cartesianToCartographic(cartesianPosition);
     if (cartographic === undefined) {
       return <></>;
     }
@@ -232,7 +231,7 @@ class FeatureInfoPanel extends React.Component<Props> {
     // this.locationUpdated(longitude, latitude);
 
     const that = this;
-    const pinClicked = function() {
+    const pinClicked = function () {
       that.pinClicked(longitude, latitude);
     };
 
@@ -264,10 +263,8 @@ class FeatureInfoPanel extends React.Component<Props> {
     const terria = this.props.viewState.terria;
     const viewState = this.props.viewState;
 
-    const {
-      catalogItems,
-      featureCatalogItemPairs
-    } = getFeaturesGroupedByCatalogItems(this.props.viewState.terria);
+    const { catalogItems, featureCatalogItemPairs } =
+      getFeaturesGroupedByCatalogItems(this.props.viewState.terria);
 
     const featureInfoCatalogItems = this.renderFeatureInfoCatalogItems(
       catalogItems,
@@ -281,20 +278,20 @@ class FeatureInfoPanel extends React.Component<Props> {
 
     const filterableCatalogItems = catalogItems
       .filter(
-        catalogItem =>
+        (catalogItem) =>
           TimeFilterMixin.isMixedInto(catalogItem) &&
           catalogItem.canFilterTimeByFeature
       )
-      .map(catalogItem => {
+      .map((catalogItem) => {
         const features = featureCatalogItemPairs.filter(
-          pair => pair.catalogItem === catalogItem
+          (pair) => pair.catalogItem === catalogItem
         );
         return {
           catalogItem: catalogItem as TimeFilterMixin.Instance,
           feature: isDefined(features[0]) ? features[0].feature : undefined
         };
       })
-      .filter(pair => isDefined(pair.feature));
+      .filter((pair) => isDefined(pair.feature));
 
     // If the clock is avaliable then use it, otherwise don't.
     const clock = terria.timelineClock?.currentTime;
@@ -359,47 +356,52 @@ class FeatureInfoPanel extends React.Component<Props> {
           <ul className={Styles.body}>
             {this.props.printView && locationElements}
 
-            {// Is feature info visible
-            !viewState.featureInfoPanelIsCollapsed &&
-            viewState.featureInfoPanelIsVisible ? (
-              // Are picked features loading -> show Loader
-              isDefined(terria.pickedFeatures) &&
-              terria.pickedFeatures.isLoading ? (
-                <li>
-                  <Loader light />
-                </li>
-              ) : // Do we have no features/catalog items to show?
-              !featureInfoCatalogItems ||
-                featureInfoCatalogItems.length === 0 ? (
-                <li className={Styles.noResults}>
-                  {this.getMessageForNoResults()}
-                </li>
-              ) : (
-                // Finally show feature info
-                featureInfoCatalogItems
-              )
-            ) : null}
+            {
+              // Is feature info visible
+              !viewState.featureInfoPanelIsCollapsed &&
+              viewState.featureInfoPanelIsVisible ? (
+                // Are picked features loading -> show Loader
+                isDefined(terria.pickedFeatures) &&
+                terria.pickedFeatures.isLoading ? (
+                  <li>
+                    <Loader light />
+                  </li>
+                ) : // Do we have no features/catalog items to show?
+                !featureInfoCatalogItems ||
+                  featureInfoCatalogItems.length === 0 ? (
+                  <li className={Styles.noResults}>
+                    {this.getMessageForNoResults()}
+                  </li>
+                ) : (
+                  // Finally show feature info
+                  featureInfoCatalogItems
+                )
+              ) : null
+            }
 
             {!this.props.printView && locationElements}
-            {// Add "filter by location" buttons if supported
-            filterableCatalogItems.map(pair =>
-              TimeFilterMixin.isMixedInto(pair.catalogItem) && pair.feature ? (
-                <button
-                  key={pair.catalogItem.uniqueId}
-                  type="button"
-                  onClick={this.filterIntervalsByFeature.bind(
-                    this,
-                    pair.catalogItem,
-                    pair.feature
-                  )}
-                  className={Styles.satelliteSuggestionBtn}
-                >
-                  {t("featureInfo.satelliteSuggestionBtn", {
-                    catalogItemName: pair.catalogItem.name
-                  })}
-                </button>
-              ) : null
-            )}
+            {
+              // Add "filter by location" buttons if supported
+              filterableCatalogItems.map((pair) =>
+                TimeFilterMixin.isMixedInto(pair.catalogItem) &&
+                pair.feature ? (
+                  <button
+                    key={pair.catalogItem.uniqueId}
+                    type="button"
+                    onClick={this.filterIntervalsByFeature.bind(
+                      this,
+                      pair.catalogItem,
+                      pair.feature
+                    )}
+                    className={Styles.satelliteSuggestionBtn}
+                  >
+                    {t("featureInfo.satelliteSuggestionBtn", {
+                      catalogItemName: pair.catalogItem.name
+                    })}
+                  </button>
+                ) : null
+              )
+            }
           </ul>
         </div>
       </DragWrapper>
@@ -423,7 +425,7 @@ function getFeaturesGroupedByCatalogItems(terria: Terria) {
   const featureCatalogItemPairs: FeatureCatalogItemPair[] = []; // Will contain objects of {feature, catalogItem}.
   const catalogItems: MappableMixin.Instance[] = []; // Will contain a list of all unique catalog items.
 
-  features.forEach(feature => {
+  features.forEach((feature) => {
     const catalogItem = determineCatalogItem(terria.workbench, feature);
     if (catalogItem) {
       featureCatalogItemPairs.push({
@@ -454,7 +456,7 @@ export function determineCatalogItem(workbench: Workbench, feature: Feature) {
   const items = flatten(workbench.items.map(recurseIntoMembers)).filter(
     MappableMixin.isMixedInto
   );
-  return items.find(item => featureBelongsToCatalogItem(feature, item));
+  return items.find((item) => featureBelongsToCatalogItem(feature, item));
 }
 
 function recurseIntoMembers(catalogItem: BaseModel): BaseModel[] {

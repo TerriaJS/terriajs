@@ -29,7 +29,7 @@ export default class TableFeatureInfoStratum extends LoadableStratum(
 
     template += this.catalogItem.tableColumns
       ?.map(
-        col =>
+        (col) =>
           `<tr><td style="vertical-align: middle"><b>${col.title}</b></td><td>{{${col.name}}}</td></tr>`
       )
       .join("");

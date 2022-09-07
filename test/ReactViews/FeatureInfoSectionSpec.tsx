@@ -39,7 +39,9 @@ if (typeof Intl === "object" && typeof Intl.NumberFormat === "function") {
 }
 
 function findWithText(test: ReactTestRenderer, text: string) {
-  return test.root.findAll(node => node.children.some(child => child === text));
+  return test.root.findAll((node) =>
+    node.children.some((child) => child === text)
+  );
 }
 
 // Takes the absolute value of the value and pads it to 2 digits i.e. 7->07, 17->17, -3->3, -13->13. It is expected that value is an integer is in the range [0, 99].
@@ -47,13 +49,13 @@ function absPad2(value: number) {
   return (Math.abs(value) < 10 ? "0" : "") + Math.abs(value);
 }
 
-describe("FeatureInfoSection", function() {
+describe("FeatureInfoSection", function () {
   let terria: Terria;
   let feature: Feature;
   let viewState: any;
   let catalogItem: TestModel;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -81,7 +83,7 @@ describe("FeatureInfoSection", function() {
     feature._catalogItem = catalogItem;
   });
 
-  it("renders a static description", function() {
+  it("renders a static description", function () {
     feature.description = new ConstantProperty("<p>hi!</p>");
     const section = (
       <FeatureInfoSection
@@ -98,7 +100,7 @@ describe("FeatureInfoSection", function() {
     expect(findWithText(result, "hi!").length).toEqual(1);
   });
 
-  it("does not render unsafe html", function() {
+  it("does not render unsafe html", function () {
     feature.description = new ConstantProperty(
       '<script>alert("gotcha")</script><p>hi!</p>'
     );
@@ -137,7 +139,7 @@ describe("FeatureInfoSection", function() {
     return desc;
   }
 
-  it("renders a time-varying description", function() {
+  it("renders a time-varying description", function () {
     feature.description = timeVaryingDescription();
     catalogItem.setTrait(CommonStrata.user, "currentTime", "2011-06-30");
 
@@ -153,12 +155,13 @@ describe("FeatureInfoSection", function() {
     const result = createWithContexts(viewState, section);
 
     expect(
-      result.root.findAll(node => node.children.some(child => child === "hi"))
-        .length
+      result.root.findAll((node) =>
+        node.children.some((child) => child === "hi")
+      ).length
     ).toEqual(0, "hi");
     expect(
       result.root.findAll(
-        node => node.children.some(child => child === "bye"),
+        (node) => node.children.some((child) => child === "bye"),
         {
           deep: true
         }
@@ -181,7 +184,7 @@ describe("FeatureInfoSection", function() {
     expect(findWithText(result2, "bye").length).toEqual(0, "bye2");
   });
 
-  it("handles features with no properties", function() {
+  it("handles features with no properties", function () {
     feature = new Entity({
       name: "Foot",
       description: "bart"
@@ -203,7 +206,7 @@ describe("FeatureInfoSection", function() {
     expect(findWithText(result, "bart").length).toEqual(1);
   });
 
-  it("handles html format feature info", function() {
+  it("handles html format feature info", function () {
     feature = new Entity({
       name: "Foo",
       description:
@@ -225,7 +228,7 @@ describe("FeatureInfoSection", function() {
     expect(findWithText(result, "BAR").length).toEqual(1);
   });
 
-  it("handles html format feature info where markdown would break the html", function() {
+  it("handles html format feature info where markdown would break the html", function () {
     feature = new Entity({
       name: "Foo",
       description:
@@ -246,7 +249,7 @@ describe("FeatureInfoSection", function() {
     expect(findWithText(result, "&lt;\n").length).toEqual(0); // Also cover the possibility that it might be encoded.
   });
 
-  it("maintains and applies inline style attributes", function() {
+  it("maintains and applies inline style attributes", function () {
     feature = new Entity({
       name: "Foo",
       description: '<div style="background:rgb(170, 187, 204)">countdown</div>'
@@ -269,7 +272,7 @@ describe("FeatureInfoSection", function() {
     );
   });
 
-  it("does not break when html format feature info has style tag", function() {
+  it("does not break when html format feature info has style tag", function () {
     // Note this does not test that it actually uses the style tag for styling.
     feature = new Entity({
       name: "Foo",
@@ -292,7 +295,7 @@ describe("FeatureInfoSection", function() {
     expect(findWithText(result, "BAR").length).toEqual(1);
   });
 
-  it("does not break when there are neither properties nor description", function() {
+  it("does not break when there are neither properties nor description", function () {
     feature = new Entity({
       name: "Vapid"
     });
@@ -313,18 +316,19 @@ describe("FeatureInfoSection", function() {
 
     // Dodgy test to see if no info message is shown
     expect(
-      result.root.findAll(node => (node as any)._fiber.key === "no-info").length
+      result.root.findAll((node) => (node as any)._fiber.key === "no-info")
+        .length
     ).toEqual(1);
   });
 
-  it("shows properties if no description", function() {
+  it("shows properties if no description", function () {
     // Tests both static and potentially time-varying properties.
     feature = new Entity({
       name: "Meals",
       properties: {
         lunch: "eggs",
         dinner: {
-          getValue: function() {
+          getValue: function () {
             return "ham";
           }
         }
@@ -349,8 +353,8 @@ describe("FeatureInfoSection", function() {
     expect(findWithText(result, "ham").length).toEqual(1);
   });
 
-  describe("templating", function() {
-    it("uses and completes a string-form featureInfoTemplate if present", function() {
+  describe("templating", function () {
+    it("uses and completes a string-form featureInfoTemplate if present", function () {
       const template = "This is a {{material}} {{foo}}.";
       catalogItem.featureInfoTemplate.setTrait(
         CommonStrata.definition,
@@ -370,7 +374,7 @@ describe("FeatureInfoSection", function() {
       expect(findWithText(result, "This is a steel bar.").length).toEqual(1);
     });
 
-    it("can use _ to refer to . and # in property keys in the featureInfoTemplate", function() {
+    it("can use _ to refer to . and # in property keys in the featureInfoTemplate", function () {
       const template = "Made from {{material_process__1}} {{material}}.";
 
       catalogItem.featureInfoTemplate.setTrait(
@@ -393,7 +397,7 @@ describe("FeatureInfoSection", function() {
       );
     });
 
-    it("formats large numbers without commas", function() {
+    it("formats large numbers without commas", function () {
       const template = "Size: {{size}}";
 
       catalogItem.featureInfoTemplate.setTrait(
@@ -414,7 +418,7 @@ describe("FeatureInfoSection", function() {
       expect(findWithText(result, "Size: 12345678.9012").length).toEqual(1);
     });
 
-    it("can format numbers with commas", function() {
+    it("can format numbers with commas", function () {
       catalogItem.featureInfoTemplate.setTrait(
         CommonStrata.definition,
         "template",
@@ -444,7 +448,7 @@ describe("FeatureInfoSection", function() {
       ).toEqual(1);
     });
 
-    it("formats numbers in the formats section with no type as if type were number", function() {
+    it("formats numbers in the formats section with no type as if type were number", function () {
       catalogItem.featureInfoTemplate.setTrait(
         CommonStrata.definition,
         "template",
@@ -474,7 +478,7 @@ describe("FeatureInfoSection", function() {
       ).toEqual(1);
     });
 
-    it("can format numbers using terria.formatNumber", function() {
+    it("can format numbers using terria.formatNumber", function () {
       let template =
         'Base: {{#terria.formatNumber}}{"useGrouping":false}{{size}}{{/terria.formatNumber}}';
       template +=
@@ -510,7 +514,7 @@ describe("FeatureInfoSection", function() {
       ).toEqual(1);
     });
 
-    it("can format numbers using terria.formatNumber without quotes", function() {
+    it("can format numbers using terria.formatNumber without quotes", function () {
       let template =
         "Sep: {{#terria.formatNumber}}{useGrouping:true, maximumFractionDigits:3}{{size}}{{/terria.formatNumber}}";
       template +=
@@ -539,7 +543,7 @@ describe("FeatureInfoSection", function() {
       ).toEqual(1);
     });
 
-    it("can handle white text in terria.formatNumber", function() {
+    it("can handle white text in terria.formatNumber", function () {
       const template =
         'Sep: {{#terria.formatNumber}}{"useGrouping":true, "maximumFractionDigits":3} \n {{size}}{{/terria.formatNumber}}';
 
@@ -566,7 +570,7 @@ describe("FeatureInfoSection", function() {
       ).toEqual(1);
     });
 
-    it("handles non-numbers terria.formatNumber", function() {
+    it("handles non-numbers terria.formatNumber", function () {
       const template =
         "Test: {{#terria.formatNumber}}text{{/terria.formatNumber}}";
 
@@ -588,7 +592,7 @@ describe("FeatureInfoSection", function() {
       expect(findWithText(result, "Test: text").length).toEqual(1);
     });
 
-    it("can use a dateFormatString when it is specified in terria.formatDateTime", function() {
+    it("can use a dateFormatString when it is specified in terria.formatDateTime", function () {
       const template =
         'Test: {{#terria.formatDateTime}}{"format": "dd-mm-yyyy HH:MM:ss"}2017-11-23T08:47:53Z{{/terria.formatDateTime}}';
 
@@ -623,7 +627,7 @@ describe("FeatureInfoSection", function() {
       expect(findWithText(result, "Test: " + formattedDate).length).toEqual(1);
     });
 
-    it("defaults dateFormatString to isoDateTime when it is not specified in terria.formatDateTime", function() {
+    it("defaults dateFormatString to isoDateTime when it is not specified in terria.formatDateTime", function () {
       const template =
         "Test: {{#terria.formatDateTime}}2017-11-23T08:47:53Z{{/terria.formatDateTime}}";
 
@@ -667,7 +671,7 @@ describe("FeatureInfoSection", function() {
       expect(findWithText(result, "Test: " + formattedDate).length).toEqual(1);
     });
 
-    it("can format dates using the dateTime as the type within the formats section", function() {
+    it("can format dates using the dateTime as the type within the formats section", function () {
       catalogItem.featureInfoTemplate.setTrait(
         CommonStrata.definition,
         "template",
@@ -704,7 +708,7 @@ describe("FeatureInfoSection", function() {
       expect(findWithText(result, "Date: " + formattedDate).length).toEqual(1);
     });
 
-    it("handles non-numbers in terria.formatDateTime", function() {
+    it("handles non-numbers in terria.formatDateTime", function () {
       const template =
         "Test: {{#terria.formatDateTime}}text{{/terria.formatDateTime}}";
 
@@ -726,7 +730,7 @@ describe("FeatureInfoSection", function() {
       expect(findWithText(result, "Test: text").length).toEqual(1);
     });
 
-    it("url encodes text components", function() {
+    it("url encodes text components", function () {
       const template =
         "Test: {{#terria.urlEncodeComponent}}W/HO:E#1{{/terria.urlEncodeComponent}}";
 
@@ -748,7 +752,7 @@ describe("FeatureInfoSection", function() {
       expect(findWithText(result, "Test: W%2FHO%3AE%231").length).toEqual(1);
     });
 
-    it("url encodes sections of text", function() {
+    it("url encodes sections of text", function () {
       const template =
         "Test: {{#terria.urlEncode}}http://example.com/a b{{/terria.urlEncode}}";
 
@@ -773,7 +777,7 @@ describe("FeatureInfoSection", function() {
       ).toEqual(1);
     });
 
-    it("does not escape ampersand as &amp;", function() {
+    it("does not escape ampersand as &amp;", function () {
       catalogItem.featureInfoTemplate.setTrait(
         CommonStrata.definition,
         "template",
@@ -793,7 +797,7 @@ describe("FeatureInfoSection", function() {
       expect(findWithText(result, "&amp;").length).toEqual(0);
     });
 
-    it("does not escape < as &lt;", function() {
+    it("does not escape < as &lt;", function () {
       catalogItem.featureInfoTemplate.setTrait(
         CommonStrata.definition,
         "template",
@@ -813,7 +817,7 @@ describe("FeatureInfoSection", function() {
       expect(findWithText(result, "&lt;").length).toEqual(0);
     });
 
-    it("can embed safe html in template", function() {
+    it("can embed safe html in template", function () {
       const template = "<div>Hello {{owner_html}}.</div>";
       catalogItem.featureInfoTemplate.setTrait(
         CommonStrata.definition,
@@ -836,7 +840,7 @@ describe("FeatureInfoSection", function() {
       expect(findWithText(result, "Smith.").length).toEqual(1);
     });
 
-    it("cannot embed unsafe html in template", function() {
+    it("cannot embed unsafe html in template", function () {
       const template = "<div>Hello {{unsafe}}</div>";
       catalogItem.featureInfoTemplate.setTrait(
         CommonStrata.definition,
@@ -859,7 +863,7 @@ describe("FeatureInfoSection", function() {
       expect(findWithText(result, 'alert("gotcha")').length).toEqual(0);
     });
 
-    it("can use a json featureInfoTemplate with partials", function() {
+    it("can use a json featureInfoTemplate with partials", function () {
       catalogItem.featureInfoTemplate.setTrait(
         CommonStrata.definition,
         "template",
@@ -888,7 +892,7 @@ describe("FeatureInfoSection", function() {
       expect(findWithText(result, "bar").length).toEqual(1);
     });
 
-    it("sets the name from featureInfoTemplate", function() {
+    it("sets the name from featureInfoTemplate", function () {
       catalogItem.featureInfoTemplate.setTrait(
         CommonStrata.definition,
         "name",
@@ -908,7 +912,7 @@ describe("FeatureInfoSection", function() {
       expect(findWithText(result, "Kay bar").length).toBe(1);
     });
 
-    it("can access clicked lat and long", function() {
+    it("can access clicked lat and long", function () {
       const template =
         "<div>Clicked {{#terria.formatNumber}}{maximumFractionDigits:0}{{terria.coords.latitude}}{{/terria.formatNumber}}, {{#terria.formatNumber}}{maximumFractionDigits:0}{{terria.coords.longitude}}{{/terria.formatNumber}}</div>";
       const position = Ellipsoid.WGS84.cartographicToCartesian(
@@ -934,7 +938,7 @@ describe("FeatureInfoSection", function() {
       expect(findWithText(result, "Clicked 44, 77").length).toEqual(1);
     });
 
-    it("can replace text, using terria.partialByName", function() {
+    it("can replace text, using terria.partialByName", function () {
       // Replace "Kay" of feature.properties.name with "Yak", or "This name" with "That name".
 
       catalogItem.featureInfoTemplate.setTrait(
@@ -980,7 +984,7 @@ describe("FeatureInfoSection", function() {
       expect(findWithText(result, "Yak").length).toEqual(0);
     });
 
-    it("does not replace text if no matching, using terria.partialByName", function() {
+    it("does not replace text if no matching, using terria.partialByName", function () {
       catalogItem.featureInfoTemplate.setTrait(
         CommonStrata.definition,
         "template",
@@ -1010,7 +1014,7 @@ describe("FeatureInfoSection", function() {
       expect(findWithText(result, "Kay").length).toEqual(1);
     });
 
-    it("can replace text and filter out unsafe replacement, using terria.partialByName", function() {
+    it("can replace text and filter out unsafe replacement, using terria.partialByName", function () {
       catalogItem.featureInfoTemplate.setTrait(
         CommonStrata.definition,
         "template",
@@ -1045,7 +1049,7 @@ describe("FeatureInfoSection", function() {
       expect(findWithText(result, "Kay").length).toEqual(0);
     });
 
-    it("can access the current time", function() {
+    it("can access the current time", function () {
       const template = "<div class='rrrr'>Time: {{terria.currentTime}}</div>";
       catalogItem.featureInfoTemplate.setTrait(
         CommonStrata.definition,
@@ -1096,7 +1100,7 @@ describe("FeatureInfoSection", function() {
       ).toEqual(1);
     });
 
-    it("can render a recursive featureInfoTemplate", function() {
+    it("can render a recursive featureInfoTemplate", function () {
       catalogItem.featureInfoTemplate.setTrait(
         CommonStrata.definition,
         "template",
@@ -1159,12 +1163,12 @@ describe("FeatureInfoSection", function() {
     });
   });
 
-  describe("raw data", function() {
-    beforeEach(function() {
+  describe("raw data", function () {
+    beforeEach(function () {
       feature.description = new ConstantProperty("<p>hi!</p>");
     });
 
-    it("does not appear if no template", function() {
+    it("does not appear if no template", function () {
       const section = (
         <FeatureInfoSection
           catalogItem={catalogItem}
@@ -1181,7 +1185,7 @@ describe("FeatureInfoSection", function() {
       expect(findWithText(result, "featureInfo.showRawData").length).toEqual(0);
     });
 
-    it('shows "Show Raw Data" if template', function() {
+    it('shows "Show Raw Data" if template', function () {
       const template = "Test";
       catalogItem.featureInfoTemplate.setTrait(
         CommonStrata.definition,
@@ -1206,10 +1210,10 @@ describe("FeatureInfoSection", function() {
     });
   });
 
-  describe("CZML templating", function() {
-    beforeEach(function() {});
+  describe("CZML templating", function () {
+    beforeEach(function () {});
 
-    it("uses and completes a string-form featureInfoTemplate", async function() {
+    it("uses and completes a string-form featureInfoTemplate", async function () {
       // target = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>ABC</td></tr></tbody></table><br />
       //           <table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
       const json = await loadJson("test/init/czml-with-template-0.json");
@@ -1244,7 +1248,7 @@ describe("FeatureInfoSection", function() {
       expect(findWithText(result, "10.7").length).toEqual(1);
     });
 
-    it("uses and completes a time-varying, string-form featureInfoTemplate", async function() {
+    it("uses and completes a time-varying, string-form featureInfoTemplate", async function () {
       // targetBlank = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td></td></tr></tbody></table><br />
       //                <table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
       // targetABC = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>ABC</td></tr></tbody></table><br />
@@ -1332,6 +1336,6 @@ class TestModel extends MappableMixin(
 
   @observable _discreteTimes: string[] = [];
   get discreteTimes() {
-    return this._discreteTimes.map(t => ({ time: t, tag: undefined }));
+    return this._discreteTimes.map((t) => ({ time: t, tag: undefined }));
   }
 }

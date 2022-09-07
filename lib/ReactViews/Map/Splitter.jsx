@@ -12,7 +12,7 @@ import { runInAction } from "mobx";
 let passiveSupported = false;
 try {
   const options = Object.defineProperty({}, "passive", {
-    get: function() {
+    get: function () {
       passiveSupported = true;
       return true;
     }
@@ -45,7 +45,7 @@ const Splitter = observer(
 
     componentDidMount() {
       const that = this;
-      window.addEventListener("resize", function() {
+      window.addEventListener("resize", function () {
         that.forceRefresh();
       });
     },
@@ -165,10 +165,10 @@ const Splitter = observer(
     },
 
     getPosition() {
-      const canvasWidth = this.props.terria.currentViewer.getContainer()
-        .clientWidth;
-      const canvasHeight = this.props.terria.currentViewer.getContainer()
-        .clientHeight;
+      const canvasWidth =
+        this.props.terria.currentViewer.getContainer().clientWidth;
+      const canvasHeight =
+        this.props.terria.currentViewer.getContainer().clientHeight;
       return {
         x: this.props.terria.splitPosition * canvasWidth,
         y: this.props.terria.splitPositionVertical * canvasHeight
@@ -214,7 +214,7 @@ const Splitter = observer(
           <button
             className={Styles.thumb}
             style={thumbStyle}
-            onClick={e => e.preventDefault()}
+            onClick={(e) => e.preventDefault()}
             onMouseDown={this.startDrag}
             onTouchStart={this.startDrag}
             title={t("splitterTool.title")}

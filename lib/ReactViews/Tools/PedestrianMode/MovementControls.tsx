@@ -20,7 +20,7 @@ type MovementControlsProps = {
   maxVerticalLookAngle: number;
 };
 
-const MovementControls: React.FC<MovementControlsProps> = props => {
+const MovementControls: React.FC<MovementControlsProps> = (props) => {
   const [isMaximized, setIsMaximized] = useState(true);
   const [t] = useTranslation();
 
@@ -77,7 +77,7 @@ const Title = styled(Box).attrs({
   border-bottom: 1px solid #c0c0c0;
 `;
 
-const MinimizeMaximizeButton = styled(Button).attrs(props => ({
+const MinimizeMaximizeButton = styled(Button).attrs((props) => ({
   renderIcon: () => (
     <ButtonIcon
       glyph={props.maximized ? Icon.GLYPHS.minimize : Icon.GLYPHS.maximize}
