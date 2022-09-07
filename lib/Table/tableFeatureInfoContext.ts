@@ -21,14 +21,12 @@ import { isTerriaFeatureData } from "../Models/Feature/FeatureData";
 export const tableFeatureInfoContext: (
   catalogItem: TableMixin.Instance
 ) => (feature: TerriaFeature) => JsonObject = (catalogItem) => (feature) => {
-  // Find rows for feature
   if (!catalogItem.isSampled) return {};
 
   const style = catalogItem.activeTableStyle;
 
-  // We have two methods for getting rowIds for current feature
-  // - createLongitudeLatitudeFeaturePerId will place them on `Feature.tableRowIds`
-  // - createRegionMappedImageryProvider - we can look at feature properties
+  // Corresponding row IDs for the selected feature are stored in TerriaFeatureData
+  // See createLongitudeLatitudeFeaturePerId, createLongitudeLatitudeFeaturePerRow and createRegionMappedImageryProvider
   const rowIds = isTerriaFeatureData(feature.data)
     ? feature.data.rowIds ?? []
     : [];
