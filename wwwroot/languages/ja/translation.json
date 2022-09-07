@@ -4,7 +4,7 @@
       "content": "## データを追加\n\nここでは、データカタログからデータを探し、地図に追加することができます。複数のデータも追加できます。追加したデータは、画面左側にリストとして表示されます。"
     },
     "locationSearchInput": {
-      "content": "## 場所・データを検索\n\n地名や住所を入力するとその場所を地図上で検索できます。"
+      "content": "## 場所・データを検索\n\n地名やキーワードを入力すると、その場所に関連するデータや地図上の位置を検索できます。"
     },
     "previous": "前",
     "finish": "完了",
@@ -65,15 +65,15 @@
     "title": "クリック＋ドラッグでカメラを回転",
     "guidanceBtnText": "コンパスの詳しい使い方を見る",
     "guidanceBtnTitle": "ジャイロスコープの使い方",
-    "description": "外側の輪：ビューを回転。\n内側のジャイロスコープ：軌道の変更。\nダブルクリック：ホームポジション。\nヒント：軌道の変更はCtrlキーを押しながらマップをドラッグでも可能。",
+    "description": "・内側の円：視点の自由移動.\n・外側の輪：地図を回転.\n・ダブルクリック：ホームポジションに戻る.\n簡便操作：Ctrlキーと地図のドラッグ操作で視点移動.",
     "guidance": {
       "ctrlDragDescription": "CTRLキーを押しながらドラッグしても地図を傾けたり回したりできます。",
       "dismissText": "閉じて今後は表示しない",
       "innerCircleDescription2": "また、ここをダブルクリックすると表示が初期状態に戻ります。",
       "innerCircleDescription1": "内側の丸い部分をクリックしたまま上下左右にゆっくりとドラッグすると、地図を傾けたり回したりできます。",
       "innerCircleTitle": "内側の円",
-      "outerRingDescription": "外側のリングをドラッグして回すと地図が回転します。",
-      "outerRingTitle": "外側のリング",
+      "outerRingDescription": "外側の輪をドラッグして回すと地図が回転します。",
+      "outerRingTitle": "外側の輪",
       "title": "ジャイロスコープ制御"
     }
   },
@@ -239,9 +239,9 @@
     "slowWebGLAvailableMessage": "パフォーマンスの問題により、お使いのブラウザでは{{appName}}を3Dで表示することができないため、2D表示のみが利用できます。完全な3D表示を体験するには、別のブラウザを使うか、ビデオドライバをアップグレードするか、OSをアップグレードしてください。"
   },
   "catalogItem": {
-    "removeFromMap": "マップから削除",
+    "removeFromMap": "マップから削除する",
     "trash": "カタログから削除",
-    "add": "マップに追加",
+    "add": "マップに追加する",
     "remove": "削除",
     "loading": "読み込み中...",
     "privateIndicatorTitle": "プライベートデータセット",
@@ -284,7 +284,7 @@
     "removeAll": "すべて削除",
     "label": "データセット",
     "removeFromMap": "削除",
-    "removeFromMapTitle": "データを削除",
+    "removeFromMapTitle": "データを削除する",
     "exportData": "エクスポート",
     "exportDataTitle": "マップデータをエクスポート",
     "diffImage": "差分",
@@ -334,7 +334,7 @@
   "preview": {
     "mayBeExperiencingIssues": "このデータセットには問題がある可能性があります",
     "addToMap": "マップに追加",
-    "removeFromMap": "マップから削除",
+    "removeFromMap": "マップから削除する",
     "dataPreviewError": "データプレビューのエラー",
     "dataPreview": "データプレビュー",
     "dataPreviewLoading": "プレビュー読み込み中...",
@@ -565,7 +565,7 @@
     "webTitle": "ウェブからデータを追加する",
     "localTitle": "ローカルのデータを追加する",
     "browse": "ブラウズ...",
-    "urlInputBtn": "追加",
+    "urlInputBtn": "マップに追加する",
     "localFile": "<0>ステップ2</0>：ファイルを選択",
     "webFile": "<0>ステップ2</0>：データファイルまたはウェブサービスのURLを入力",
     "webFileType": "<0>ステップ1</0>：ファイルまたはウェブサービスタイプを選択",
