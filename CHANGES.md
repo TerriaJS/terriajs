@@ -19,6 +19,7 @@
 - Added `loadingFeatureInfoUrl` to `FeatureInfoUrlTemplateMixin`
 - Move `Cesium.ts` `ImageryLayer` feature picking to `cesium.pickImageryLayerFeatures()`
 - Move `lib/Core/propertyGetTimeValues.js` into `lib/ReactViews/FeatureInfo/getFeatureProperties.ts`
+- Add `showFeatureInfoDownloadWithTemplate` to `FeatureInfoTraits` - Toggle to show feature info download **if** a `template` has been provided. If no `template` is provided, then download will always show.
 - [The next improvement]
 
 #### 8.2.13 - 2022-09-01
