@@ -6,6 +6,7 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import BottomDock from "../BottomDock/BottomDock";
+import { MapCredits } from "../Credits";
 import Loader from "../Loader";
 import BottomLeftBar from "../Map/BottomLeftBar/BottomLeftBar";
 import DistanceLegend from "../Map/Legend/DistanceLegend";
@@ -115,6 +116,16 @@ const MapColumn = observer(
                     />
                   </Toast>
                 </SlideUpFadeIn>
+                <MapCredits
+                  hideTerriaLogo={
+                    !!this.props.viewState.terria.configParameters
+                      .hideTerriaLogo
+                  }
+                  credits={this.props.viewState.terria.configParameters.extraCreditLinks?.slice()}
+                  currentViewer={
+                    this.props.viewState.terria.mainViewer.currentViewer
+                  }
+                />
                 <div className={Styles.locationDistance}>
                   <LocationBar
                     terria={this.props.viewState.terria}

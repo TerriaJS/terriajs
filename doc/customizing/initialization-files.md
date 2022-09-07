@@ -51,25 +51,25 @@ Key points:
 
 Most of the other properties of each layer depend on the specific type. See the links above for details of each type.
 
-### Using a catalog file
+### Using an init file
 
-There are four ways to load a catalog file into a TerriaJS application:
+There are four ways to load an init file into a TerriaJS application:
 
 1. Store it in Terria Map's `wwwroot/init` directory, and refer to it in the `initializationUrls` section of the [`config.json`](../customizing/client-side-config.md) file. It is loaded automatically when you visit the webpage. This is how `wwwroot/init/terria.json` is loaded in the default TerriaMap setup.
-2. Store it in Terria Maps's `wwwroot/init` directory, without adding it to config.json. Add the catalog file name (without `.json`) to the URL after `#`. For instance, `example.com/terria#mycatalog`. See [Controlling with URL Parameters](../deploying/controlling-with-url-parameters.md) for more information. This method is useful when developing a catalog that is not quite ready for public access, but it is helpful to show it to interested stakeholders.
+2. Store it in Terria Maps's `wwwroot/init` directory, without adding it to config.json. Add the init file name (without `.json`) to the URL after `#`. For instance, `example.com/terria#mycatalog`. See [Controlling with URL Parameters](../deploying/controlling-with-url-parameters.md) for more information. This method is useful when developing a catalog that is not quite ready for public access, but it is helpful to show it to interested stakeholders.
 3. Store it anywhere on the web (on a [CORS-enabled](../connecting-to-data/cross-origin-resource-sharing.md) server). Add the complete URL (including `.json`) to the URL, after `#`. For instance, `http://nationalmap.gov.au/#http://example.com/mycatalog.json`. This method is useful when developing services for a TerriaJS instance which you don't directly control, and for rapidly previewing changes which you can also share with people.
 4. Store it locally, then drag and drop it into the Terria Map window.
 
-All catalog files, however loaded, are merged together in TerriaJS. Any two items with the same name and place in the tree are combined. This means that if two catalog files each define a group called "Water", there will be only one "Water" group in Terria, containing the two sets of group members merged together.
+All init files, however loaded, are merged together in TerriaJS. Any two items with the same name and place in the tree are combined. This means that if two init files each define a group called "Water", there will be only one "Water" group in Terria, containing the two sets of group members merged together.
 
-### Editing catalog files
+### Editing init files
 
-Catalog files can be edited two ways:
+Init files can be edited two ways:
 
 1. Using a desktop text editor. Be very careful to ensure that your file is valid JSON. This is more restrictive format than simple JavaScript, for instance. You can use [http://jsonlint.com/](http://jsonlint.com/).
 2. Using a JSON-specific editor, such as [http://www.jsoneditoronline.org/](http://www.jsoneditoronline.org/). This has the advantage that your file will be valid JSON.
 
-## Catalog file properties
+## Init file properties
 
 | Name              | Required | Type                                                                                                                                                                                                  | Default | Description                                                                                                                                                                                                                                                                              |
 | ----------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -232,10 +232,10 @@ Definition of the story. This can be pretty complex to define for the standard u
 
 #### ShareData
 
-| Name          | Required | Type                                                    | Default   | Description                |
-| ------------- | -------- | ------------------------------------------------------- | --------- | -------------------------- |
-| `version`     | yes      | **`string`**                                            | `"8.0.0"` | The version of share data. |
-| `initSources` | yes      | [**`CatalogFileProperties`**](#catalog-file-properties) |
+| Name          | Required | Type                         | Default   | Description                                                       |
+| ------------- | -------- | ---------------------------- | --------- | ----------------------------------------------------------------- |
+| `version`     | yes      | **`string`**                 | `"8.0.0"` | The version of share data.                                        |
+| `initSources` | yes      | **`(string \| InitFile)[]`** |           | Array of Init URLs and/or [**`InitFile`**](#init-file-properties) |
 
 ### <a id="base-maps"></a>`baseMaps`
 
