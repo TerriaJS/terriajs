@@ -6,6 +6,8 @@
 - TSified `FeatureInfo*.tsx`
   - `describeFromProperties` is now `generateCesiumInfoHTMLFromProperties`
   - `FeatureInfoSection` has been split up into `FeatureInfoSection.tsx`, `getFeatureProperties`, `mustacheExpressions` and `generateCesiumInfoHTMLFromProperties`
+- Fix `{{terria.currentTime}}` in feature info template
+- Add `{{terria.rawDataTable}}` in feature info template - to show raw data HTML table
 - Added `TableFeatureInfoStratum` - which adds default feature info template to `TableMixin`
 - Add `FeatureInfoContext` - used to inject properties into `FeatureInfoSections` context. These properties will be accessible from `featureInfoTemplate` mustache template.
   - `tableFeatureInfoContext` adds time series chart properties using `FeatureInfoContext` (`getChartDetails` has been removed)
