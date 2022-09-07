@@ -42,6 +42,7 @@ export interface StoryData {
 }
 export interface ShareInitSourceData {
   version: string;
+  /** Share data initSources can be a mix of initUrls (string) and initData (InitDataSource/JsonObject) */
   initSources: (InitSourceData | string)[];
 }
 

@@ -508,8 +508,6 @@ describe("Terria", function () {
         "https://application.url/#someInitHash"
       );
 
-      console.log(terria.initSources);
-
       expect(terria.initSources.length).toEqual(2);
 
       const initSource = terria.initSources[1];
@@ -558,8 +556,6 @@ describe("Terria", function () {
             initSources: ["http://something/init.json", { splitPosition: 0.3 }]
           })
       );
-
-      console.log(terria.initSources);
 
       expect(terria.initSources.length).toEqual(2);
 
