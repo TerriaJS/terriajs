@@ -23,19 +23,19 @@ export function activateStory(story, terria, scenarioIndex = 0) {
       terria.addInitSource(initSource, true)
     );
     when.all(promises).then(() => {
-      const nowViewingPaths = initSources.reduce((p, c) => {
+      const catalogPaths = initSources.reduce((p, c) => {
         if (c.sharedCatalogMembers) {
           return p.concat(Object.keys(c.sharedCatalogMembers));
         }
         return p;
       }, []);
-      const nowViewing = terria.nowViewing.items;
-      nowViewing.slice().forEach(item => {
+      const catalogItems = terria.catalog.group.items;
+      catalogItems.slice().forEach(item => {
         const itemToCheck = defined(item.creatorCatalogItem)
           ? item.creatorCatalogItem
           : item;
         const path = itemToCheck.uniqueId;
-        if (nowViewingPaths.indexOf(path) < 0) {
+        if (catalogPaths.indexOf(path) < 0) {
           itemToCheck.isEnabled = false;
         }
       });
@@ -212,7 +212,7 @@ const RCStoryPanel = createReactClass({
   },
 
   scenarioChanged(scenarioId) {
-    //TODO: use some kind of identifier for scenario
+    // TODO: use some kind of identifier for scenario
     this.props.viewState.currentScenario = scenarioId.toString();
 
     this.activateStory(this.props.viewState.currentStoryId);
