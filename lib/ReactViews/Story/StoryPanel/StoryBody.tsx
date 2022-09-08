@@ -17,8 +17,10 @@ const StoryContainer = styled(Box).attrs((props: { isCollapsed: boolean }) => ({
     max-height: ${(props) => (props.isCollapsed ? 0 : "400px")};
   }
 
+  border: 1px solid red;
+
   transition: max-height 0.2s, padding 0.2s;
-  overflow-y: auto;
+  overflow-y: scroll;
 
   img {
     max-width: 100%;
@@ -58,7 +60,6 @@ const StoryBody = ({
             display: flex;
             flex-direction: column;
             gap: 5px;
-            overflow-y: auto;
           `}
           medium
         >
