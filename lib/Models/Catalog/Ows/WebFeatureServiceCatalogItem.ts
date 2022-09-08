@@ -359,7 +359,9 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
             request: "GetFeature",
             typeName: this.typeNames,
             version: "1.1.0",
+            // outputFormat: supportsGeojson ? "JSON" : "gml3.1.1", //THIS ALTERNATIVE WORKS BETTER FOR SOME DATASETS
             outputFormat: supportsGeojson ? "JSON" : "gml3",
+            // srsName: "EPSG:4326", //THIS ALTERNATIVE WORKS BETTER FOR SOME DATASETS
             srsName: "urn:ogc:def:crs:EPSG::4326", // srsName must be formatted like this for correct lat/long order  >:(
             maxFeatures: this.maxFeatures
           },
