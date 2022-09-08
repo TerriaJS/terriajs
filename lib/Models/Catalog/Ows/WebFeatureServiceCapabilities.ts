@@ -134,6 +134,43 @@ function getOutputTypes(json: any): string[] | undefined {
   return Array.isArray(outputTypes) ? outputTypes : [outputTypes];
 }
 
+interface SrsNamesForLayer {
+  layerName: string;
+  srsArray: string[]; // First element is DefaultSRS
+}
+
+/**
+ * Get the coordinate systems (srsName) supported by the WFS service for each layer.
+ * @param json
+ * returns an object with an array of srsNames for each layer. The first element is the defaultSRS as specified by the WFS service.
+ * TODO: For catalog items that specify which layer we are interested in, why build the array describing the srsNames for all the other layers too?
+ */
+function getSrsNames(json: any): SrsNamesForLayer[] | undefined {
+  let layers = json.FeatureTypeList?.FeatureType;
+  let srsNamesByLayer: SrsNamesForLayer[] = [];
+  if (Array.isArray(layers)) {
+    srsNamesByLayer = layers.map(buildSrsNameObject);
+  } else {
+    srsNamesByLayer.push(buildSrsNameObject(json.FeatureTypeList?.FeatureType));
+  }
+  return srsNamesByLayer;
+}
+
+function buildSrsNameObject(layer: any): SrsNamesForLayer {
+  let srsNames: string[] = [];
+  (layer: any) => {
+    if (layer.DefaultSRS) {
+      srsNames.push(layer.DefaultSRS);
+    }
+    if (layer.OtherSRS) {
+      layer.OtherSRS?.forEach((item: string) => {
+        srsNames.push(item);
+      });
+    }
+  };
+  return { layerName: layer.Name, srsArray: srsNames };
+}
+
 export default class WebFeatureServiceCapabilities {
   static fromUrl: (url: string) => Promise<WebFeatureServiceCapabilities> =
     createTransformer((url: string) => {
@@ -155,11 +192,13 @@ export default class WebFeatureServiceCapabilities {
   readonly service: CapabilitiesService;
   readonly outputTypes: string[] | undefined;
   readonly featureTypes: FeatureType[];
+  readonly srsNames: SrsNamesForLayer[] | undefined;
 
   private constructor(xml: XMLDocument, json: any) {
     this.service = getService(json);
     this.outputTypes = getOutputTypes(json);
     this.featureTypes = getFeatureTypes(json);
+    this.srsNames = getSrsNames(json);
   }
 
   /**

@@ -332,7 +332,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
     }
 
     // Check if geojson output is supported (by checking GetCapabilities OutputTypes OR FeatureType OutputTypes)
-    const hasOutputFormat = (outputFormats: string[] | undefined) => {
+    const hasJsonOutputFormat = (outputFormats: string[] | undefined) => {
       return isDefined(
         outputFormats?.find((format) =>
           ["json", "JSON", "application/json"].includes(format)
@@ -340,13 +340,38 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
       );
     };
 
+    // Find which GML formats are supported, choose the one most suited to Terria. If not available, default to "gml3"
+    const getBestGmlOutputFormat = () => {
+      const searchValue = new RegExp(".*gml/3.1.1.*|.*gml3.1.1.*");
+      return (
+        getCapabilitiesStratum.capabilities.outputTypes?.find((outputFormat) =>
+          searchValue.test(outputFormat)
+        ) ?? "gml3"
+      );
+    };
+
+    // Returns the first listed srs that contains `4326`. This enables us to use a urn identifier if supported, or a normal EPSG code if not.
+    // e.g. "urn:ogc:def:crs:EPSG::4326" or "EPSG:4326"
+    const getBestSrsName = () => {
+      const layerSrsArray = getCapabilitiesStratum.capabilities.srsNames?.find(
+        (layer) => {
+          layer.layerName === this.typeNames;
+        }
+      );
+
+      const searchValue = new RegExp("4326");
+      return layerSrsArray?.srsArray.find((srsName) =>
+        searchValue.test(srsName)
+      );
+    };
+
     const supportsGeojson =
-      hasOutputFormat(getCapabilitiesStratum.capabilities.outputTypes) ||
+      hasJsonOutputFormat(getCapabilitiesStratum.capabilities.outputTypes) ||
       [
         ...getCapabilitiesStratum.capabilitiesFeatureTypes.values()
       ].reduce<boolean>(
         (hasGeojson, current) =>
-          hasGeojson && hasOutputFormat(current?.OutputFormats),
+          hasGeojson && hasJsonOutputFormat(current?.OutputFormats),
         true
       );
 
@@ -359,10 +384,8 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
             request: "GetFeature",
             typeName: this.typeNames,
             version: "1.1.0",
-            // outputFormat: supportsGeojson ? "JSON" : "gml3.1.1", //THIS ALTERNATIVE WORKS BETTER FOR SOME DATASETS
-            outputFormat: supportsGeojson ? "JSON" : "gml3",
-            // srsName: "EPSG:4326", //THIS ALTERNATIVE WORKS BETTER FOR SOME DATASETS
-            srsName: "urn:ogc:def:crs:EPSG::4326", // srsName must be formatted like this for correct lat/long order  >:(
+            outputFormat: supportsGeojson ? "JSON" : getBestGmlOutputFormat(), // Will choose from GetCapabilities response
+            srsName: getBestSrsName(), // Will choose from GetCapabilities response
             maxFeatures: this.maxFeatures
           },
           this.parameters
