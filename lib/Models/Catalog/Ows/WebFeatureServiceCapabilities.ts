@@ -156,18 +156,16 @@ function getSrsNames(json: any): SrsNamesForLayer[] | undefined {
   return srsNamesByLayer;
 }
 
+/**
+ * Helper function to build individual objects describing the allowable srsNames for each layer in the WFS
+ * @param layer
+ */
 function buildSrsNameObject(layer: any): SrsNamesForLayer {
   let srsNames: string[] = [];
-  (layer: any) => {
-    if (layer.DefaultSRS) {
-      srsNames.push(layer.DefaultSRS);
-    }
-    if (layer.OtherSRS) {
-      layer.OtherSRS?.forEach((item: string) => {
-        srsNames.push(item);
-      });
-    }
-  };
+  srsNames.push(layer.DefaultSRS);
+  layer.OtherSRS?.forEach((item: string) => {
+    srsNames.push(item);
+  });
   return { layerName: layer.Name, srsArray: srsNames };
 }
 
