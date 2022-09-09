@@ -101,6 +101,8 @@ class Disclaimer extends React.Component {
             css={`
               max-height: 100%;
               overflow: auto;
+              /* Required for the content to be scrollable in Safari iOS */
+              -webkit-overflow-scrolling: touch;
             `}
           >
             <Text
