@@ -17,10 +17,11 @@ const StoryContainer = styled(Box).attrs((props: { isCollapsed: boolean }) => ({
     max-height: ${(props) => (props.isCollapsed ? 0 : "400px")};
   }
 
-  border: 1px solid red;
+  /* Required for the content to be scrollable in Safari iOS */
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
 
   transition: max-height 0.2s, padding 0.2s;
-  overflow-y: scroll;
 
   img {
     max-width: 100%;
