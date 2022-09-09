@@ -98,11 +98,10 @@ class Disclaimer extends React.Component {
             left
             styledWidth={useSmallScreenInterface ? "100%" : "613px"}
             paddedRatio={4}
+            scroll
             css={`
               max-height: 100%;
               overflow: auto;
-              /* Required for the content to be scrollable in Safari iOS */
-              -webkit-overflow-scrolling: touch;
             `}
           >
             <Text
