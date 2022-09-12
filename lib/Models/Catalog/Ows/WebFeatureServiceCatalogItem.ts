@@ -352,17 +352,18 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
 
     // Returns the first listed srs that contains `4326`. This enables us to use a urn identifier if supported, or a normal EPSG code if not.
     // e.g. "urn:ogc:def:crs:EPSG::4326" or "EPSG:4326"
-    const getBestSrsName = () => {
+    const getBestSrsName = (layerNamesArray: readonly string[]) => {
+      // Just use the first layer in the layerNames array.
+      // If in the rare case we are making a WFS request for multiple layers, we will assume that all layers use the same code for WGS84 coordinate system
       const layerSrsArray = getCapabilitiesStratum.capabilities.srsNames?.find(
-        (layer) => {
-          layer.layerName === this.typeNames;
-        }
+        (layer) => layer.layerName === layerNamesArray[0]
       );
 
       const searchValue = new RegExp("4326");
-      return layerSrsArray?.srsArray.find((srsName) =>
-        searchValue.test(srsName)
-      );
+      const result =
+        layerSrsArray?.srsArray.find((srsName) => searchValue.test(srsName)) ??
+        "urn:ogc:def:crs:EPSG::4326"; // Default to urn identifier for WGS84 if we cant find something better.
+      return result;
     };
 
     const supportsGeojson =
@@ -384,8 +385,8 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
             request: "GetFeature",
             typeName: this.typeNames,
             version: "1.1.0",
-            outputFormat: supportsGeojson ? "JSON" : getBestGmlOutputFormat(), // Will choose from GetCapabilities response
-            srsName: getBestSrsName(), // Will choose from GetCapabilities response
+            outputFormat: supportsGeojson ? "JSON" : getBestGmlOutputFormat(), // Will choose best option from GetCapabilities response
+            srsName: getBestSrsName(this.typeNamesArray), // Will choose best option from GetCapabilities response
             maxFeatures: this.maxFeatures
           },
           this.parameters
