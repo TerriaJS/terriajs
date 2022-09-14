@@ -20,6 +20,10 @@
 - Move `Cesium.ts` `ImageryLayer` feature picking to `cesium.pickImageryLayerFeatures()`
 - Move `lib/Core/propertyGetTimeValues.js` into `lib/ReactViews/FeatureInfo/getFeatureProperties.ts`
 - Add `showFeatureInfoDownloadWithTemplate` to `FeatureInfoTraits` - Toggle to show feature info download **if** a `template` has been provided. If no `template` is provided, then download will always show.
+- Fix support for `initUrls` in `startData.initSources`
+- Propagate `knownContainerUniqueIds` across references and their target.
+- Show scrollbar for story content in Safari iOS.
+- Use `document.baseURI` for building share links instead of `window.location`.
 - [The next improvement]
 
 #### 8.2.13 - 2022-09-01
