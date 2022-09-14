@@ -1,10 +1,10 @@
 {
   "tour": {
     "exploreMapDataButton": {
-      "content": "## データを地図上で見る\n\nここでは、データカタログからデータを探し、地図に追加することができます。複数のデータも追加できます。追加したデータは、画面左側にリストとして表示されます。"
+      "content": "## データを追加\n\nここでは、データカタログからデータを探し、地図に追加することができます。複数のデータも追加できます。追加したデータは、画面左側にリストとして表示されます。"
     },
     "locationSearchInput": {
-      "content": "## 場所を検索\n\n地名や住所を入力するとその場所を地図上で検索できます。"
+      "content": "## 場所・データを検索\n\n地名やキーワードを入力すると、その場所に関連するデータや地図上の位置を検索できます。"
     },
     "previous": "前",
     "finish": "完了",
@@ -28,7 +28,7 @@
       "content": "## 地図の設定\n\nベースとなる地図、2D/3D地形、画質などのオプションを設定できます。"
     },
     "sidePanelUploadButton": {
-      "content": "## 自データ\n\n手元にある独自のデータを他のデータセットと一緒に表示できます。CSV、GeoJSON、KML、GPX、CZMLなどのファイルフォーマットをサポートしています。"
+      "content": "## ローカルデータ\n\n手元にあるデータを他のデータセットと一緒に表示できます。CSV、GeoJSON、KML、GPX、CZMLなどのファイルフォーマットをサポートしています。"
     }
   },
   "trainer": {
@@ -65,15 +65,15 @@
     "title": "クリック＋ドラッグでカメラを回転",
     "guidanceBtnText": "コンパスの詳しい使い方を見る",
     "guidanceBtnTitle": "ジャイロスコープの使い方",
-    "description": "外側の輪：ビューを回転。\n内側のジャイロスコープ：軌道の変更。\nダブルクリック：ホームポジション。\nヒント：軌道の変更はCtrlキーを押しながらマップをドラッグでも可能。",
+    "description": "・内側の円：視点の自由移動.\n・外側の輪：地図を回転.\n・ダブルクリック：ホームポジションに戻る.\n簡便操作：Ctrlキーと地図のドラッグ操作で視点移動.",
     "guidance": {
       "ctrlDragDescription": "CTRLキーを押しながらドラッグしても地図を傾けたり回したりできます。",
       "dismissText": "閉じて今後は表示しない",
       "innerCircleDescription2": "また、ここをダブルクリックすると表示が初期状態に戻ります。",
-      "innerCircleDescription1": "内側の丸い部分をクリックして上下左右にゆっくりとドラッグすると、一度に地図を傾けたり回したりできます。",
+      "innerCircleDescription1": "内側の丸い部分をクリックしたまま上下左右にゆっくりとドラッグすると、地図を傾けたり回したりできます。",
       "innerCircleTitle": "内側の円",
-      "outerRingDescription": "外側のリングをドラッグして回すと地図が回転します。",
-      "outerRingTitle": "外側のリング",
+      "outerRingDescription": "外側の輪をドラッグして回すと地図が回転します。",
+      "outerRingTitle": "外側の輪",
       "title": "ジャイロスコープ制御"
     }
   },
@@ -90,7 +90,10 @@
     "title": "左右にドラッグしてビューを調整してください",
     "toggleSplitterToolDisabled": "標準の比較機能を使うには、並列比較の機能を無効にしてください",
     "toggleSplitterTool": "2つのデータセットを並列比較できるようになります",
-    "toggleSplitterToolTitle": "比較"
+    "toggleSplitterToolTitle": "比較",
+    "errorTitle": "カタログアイテムの比較に失敗しました。",
+    "modelNotFoundErrorMessage": "モデル ID `\"{{id}}\"` が見つかりません",
+    "duplicateModelErrorMessage": "カタログアイテム `\"{{name}}\"`を分割中にエラーが起きました。 このカタログアイテムでは、「比較」機能がサポートされていないようです"
   },
   "satelliteGuidance": {
     "bodyV": "ワークベンチからスタイルのドロップダウンをクリックすると、衛生画像にフォールスカラーをはじめとする様々なスタイルを適用することができます。",
@@ -155,9 +158,14 @@
     "badgeBarLabel": "シーン",
     "gettingStartedTitle": "開始する",
     "gettingStarted": "開始する",
-    "panelBody": "地図を使ってストーリーを作成し、共有することができます",
+    "panelBody": "地図のスクリーンショットをつなげて「ストーリー」を作成すれば、伝えたい情報をわかりやすく共有することができます。データを読み込み、共有したい場所を表示させたら、「シーンをキャプチャ」ボタンをクリックして、「ストーリー」を作ってみましょう。各場面には詳しい解説も追加できます。作成したストーリーは、誰とでも共有できます。",
     "panelTitle": "ストーリーエディタ",
-    "playStory": "ストーリー"
+    "playStory": "ストーリー",
+    "prev": "前",
+    "next": "次",
+    "restart": "再開",
+    "expand": "展開する",
+    "collapse": "折りたたむ"
   },
   "diffTool": {
     "instructions": {
@@ -220,20 +228,20 @@
   },
   "terriaViewer": {
     "slowWebGLAvailableTitle": "WebGLのパフォーマンスが不足しています",
-    "webGLNotSupportedOrSlowMessage": "WebGLがサポートされていないかパフォーマンスが極端に悪いため、お使いのブラウザではマップを3Dで表示することができません。{{chrome}}、{{firefox}}、{{safari}}、{{internetExplorer}}の最新版など、別のブラウザで試してください。また場合によっては、{{appName}}を3Dで表示するにはコンピューターのビデオドライバーかOSをアップグレードする必要があります。",
+    "webGLNotSupportedOrSlowMessage": "WebGLがサポートされていないかパフォーマンスが極端に悪いため、お使いのブラウザではマップを3Dで表示することができません。$t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), $t(browsers.safari)の最新版など、別のブラウザで試してください。また場合によっては、{{appName}}を3Dで表示するにはコンピューターのビデオドライバーかOSをアップグレードする必要があります。",
     "webGLNotSupportedOrSlowTitle": "WebGLがサポートされていないか低速すぎます",
     "webGLNotSupportedTitle": "WebGLがサポートされていません",
     "safari": "Apple Safari",
     "firefox": "Mozilla Firefox",
     "chrome": "Google Chrome",
     "internetExplorer": "Internet Explorer 11",
-    "slowWebGLAvailableMessageII": "{{appName}}は{{webGL}}をサポートするブラウザで最適に動作します。これには{{chrome}}、{{firefox}}、{{safari}}、{{internetExplorer}}の最新版が含まれます。お使いのブラウザはWebGLをサポートしていないようですので、2D表示のみが利用できます。",
+    "slowWebGLAvailableMessageII": "{{appName}}は{{webGL}}をサポートするブラウザで最適に動作します。これには $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), $t(browsers.safari)の最新版が含まれます。お使いのブラウザはWebGLをサポートしていないようですので、2D表示のみが利用できます。",
     "slowWebGLAvailableMessage": "パフォーマンスの問題により、お使いのブラウザでは{{appName}}を3Dで表示することができないため、2D表示のみが利用できます。完全な3D表示を体験するには、別のブラウザを使うか、ビデオドライバをアップグレードするか、OSをアップグレードしてください。"
   },
   "catalogItem": {
-    "removeFromMap": "マップから削除",
+    "removeFromMap": "マップから削除する",
     "trash": "カタログから削除",
-    "add": "追加",
+    "add": "マップに追加する",
     "remove": "削除",
     "loading": "読み込み中...",
     "privateIndicatorTitle": "プライベートデータセット",
@@ -244,10 +252,10 @@
     "groupRemove": "グループを削除"
   },
   "emptyWorkbench": {
-    "emptyArea": "「データを地図上で見る」ボタンから、表示するデータを追加できます",
-    "helpfulHintsThree": "一旦読み込んだデータは、表示・非表示の切り替え、透過度の調整、画面分割比較モードへの移行、スタイルの変更ができるほか、対応しているデータでは日時の変更も行えます。",
+    "emptyArea": "「データを追加」ボタンから、表示するデータを追加できます",
+    "helpfulHintsThree": "一旦読み込んだデータは、表示・非表示の切り替え、不透明度の調整、画面分割比較モードへの移行、スタイルの変更ができるほか、対応しているデータでは日時の変更も行えます。",
     "helpfulHintsTwo": "データを地図に追加すると、データセットがここにリストされます。",
-    "helpfulHintsOne": "「データを地図上で見る」 を選択して登録済みのデータを探すか、「自分のデータを追加」 で手元のデータを地図に追加します。",
+    "helpfulHintsOne": "「データを追加」 を選択して登録済みのデータを探すか、「ローカルデータ」 で手元のデータを地図に追加します。",
     "helpfulHints": "使い方"
   },
   "loader": {
@@ -276,7 +284,7 @@
     "removeAll": "すべて削除",
     "label": "データセット",
     "removeFromMap": "削除",
-    "removeFromMapTitle": "データを削除",
+    "removeFromMapTitle": "データを削除する",
     "exportData": "エクスポート",
     "exportDataTitle": "マップデータをエクスポート",
     "diffImage": "差分",
@@ -290,7 +298,7 @@
     "openFeatureTitle": "データ範囲にズーム",
     "zoomTo": "データ視点移動",
     "zoomToTitle": "データの範囲にズーム",
-    "opacity": "透過度: {{opacity}} %",
+    "opacity": "不透明度: {{opacity}} %",
     "displayPercent": "合計値に対するパーセント表示にする",
     "colorScaleUpdateRange": "カラーレンジを更新",
     "rangeMin": "最小値:",
@@ -301,7 +309,8 @@
     "colorScaleRangeMin": "最小値は数値にしてください。",
     "colorScaleRangeTitle": "カラーレンジのスケールが間違っています",
     "searchItemTitle": "検索",
-    "searchItem": "検索"
+    "searchItem": "検索",
+    "splitScreenMode": "画面分割モード"
   },
   "description": {
     "dataNotLocal": "データの詳細はデータ提供者に確認してください（データ利用上の制限も含む）。",
@@ -310,7 +319,7 @@
     "dataSourceDetails": "データソースの詳細",
     "downloadData": "データをダウンロード",
     "useTheLinkToDownload": "データを直接ダウンロードするには以下のリンクを使用してください。",
-    "downloadNotSupported": "残念ながらお使いのブラウザにはこのデータをファイルとしてダウンロードするための機能がありません。データをダウンロードするには Chrome、Firefox、Safari のどれかを使用してください。",
+    "downloadNotSupported": "残念ながらお使いのブラウザにはこのデータをファイルとしてダウンロードするための機能がありません。データをダウンロードするには $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), $t(browsers.safari)のどれかを使用してください。",
     "downloadInFormat": "選択中のデータを{{format}}フォーマットでダウンロード",
     "useLinkBelow": "データをダウンロードするには以下のリンクを使用してください。URLのクエリーパラメーターをカスタマイズする方法の詳細は{{link}}から確認してください。",
     "metadataUrls": "メタデータのリンク",
@@ -325,14 +334,14 @@
   "preview": {
     "mayBeExperiencingIssues": "このデータセットには問題がある可能性があります",
     "addToMap": "マップに追加",
-    "removeFromMap": "マップから削除",
+    "removeFromMap": "マップから削除する",
     "dataPreviewError": "データプレビューのエラー",
     "dataPreview": "データプレビュー",
     "dataPreviewLoading": "プレビュー読み込み中...",
     "noPreviewAvailable": "プレビューが利用できません",
     "preview": "{{appName}} プレビュー",
     "loading": "プレビュー読み込み中...",
-    "selectToPreview": "<0>データセットを選択してください（プレビューが表示されます） </0><1>- OR -</1><2>マップを開く</2>",
+    "selectToPreview": "<0>データセット名を選択してプレビューを表示<br /><br /><strong>Ctrl</strong> または <strong>Shift</strong> を押しながら + をクリックして複数のデータを読み込みます。</0><1>- 又は -</1><2>マップを開く</2>",
     "accessConstraints": "アクセス制限",
     "licence": "ライセンス",
     "resourceDescription": "リソースの説明",
@@ -353,7 +362,7 @@
   },
   "search": {
     "searchCatalogue": "カタログを検索する",
-    "placeholder": "場所を検索",
+    "placeholder": "場所・データを検索",
     "viewMore": "より {{name}} 結果を表示",
     "viewLess": "{{name}} 少なく結果を表示",
     "search": "データカタログで '{{searchText}}' を検索",
@@ -364,7 +373,7 @@
   },
   "welcomeMessage": {
     "dismissText": "閉じて今後は表示しない",
-    "exploreDataBtnText": "データを地図上で見る",
+    "exploreDataBtnText": "データを追加",
     "helpBtnText": "ヘルプを見る",
     "tourBtnText": "操作方法を見る",
     "welcomeMessage": "データを探して3D地図上に展開してみませんか？<br/>とにかく触ってみるか、ヘルプガイドで使い方の概要を見てみてください。",
@@ -388,7 +397,7 @@
     "download": "この表をダウンロード",
     "catalogItem": {
       "featureInfoShown": "以下には最初の{{maximum}}個が表示されています。",
-      "featuresFound": "{catalogItemName}には{{featCount}}個のフィーチャーがあります。",
+      "featuresFound": "{{catalogItemName}}には{{featCount}}個のフィーチャーがあります。",
       "moreThanMax": "{{catalogItemName}}には{{maximum}}個以上のフィーチャーがあります。"
     },
     "showRawData": "生データ表示",
@@ -450,7 +459,7 @@
       "sideLabel": "地形の表示",
       "hideUndergroundFeatures": "ここを押すと地下が非表示になります",
       "showUndergroundFeatures": "ここを押すと地下が表示されます",
-      "hideUnderground": "地下を隠す"
+      "hideUnderground": "地下部分を非表示にする"
     },
     "timeline": {
       "alwaysShow": "常に表示",
@@ -483,7 +492,7 @@
     "btnMapShareTitle": "地図を共有する",
     "btnStoryShareTitle": "ストーリーを共有する",
     "btnCatalogShareTitle": "カタログを共有する",
-    "embedTitle": "HTMLページへの埋め込みは下記のコードをお使いください:",
+    "embedTitle": "地図を貼り付ける",
     "btnAdvanced": "詳細設定",
     "printExplanation": "このマップを印刷できる状態で表示。",
     "printTitle": "印刷",
@@ -506,7 +515,9 @@
     "shortLinkError": "短縮リンクが作成できませんでした。インターネット接続を確認してやり直してください。",
     "shortLinkShortening": "短縮リンクを作成しています...",
     "browserPrint": "より良い印刷結果を得るには、ブラウザの印刷機能ではなく{{appName}}の印刷ボタンを使用してください。",
-    "downloadMap": "地図をダウンロード (png)"
+    "downloadMap": "地図をダウンロード (png)",
+    "getShareSaveHelpMessage": "共有リンクのブックマークの作り方",
+    "embedDescription": "このコードをコピーしてHTMLに挿入すると、ウェブサイトで地図を表示できます:"
   },
   "legend": {
     "elev": "標高",
@@ -554,12 +565,12 @@
     "webTitle": "ウェブからデータを追加する",
     "localTitle": "ローカルのデータを追加する",
     "browse": "ブラウズ...",
-    "urlInputBtn": "追加",
+    "urlInputBtn": "マップに追加する",
     "localFile": "<0>ステップ2</0>：ファイルを選択",
     "webFile": "<0>ステップ2</0>：データファイルまたはウェブサービスのURLを入力",
-    "webFileType": "<0>ステップ1</0>：ファイルタイプを選択（任意）",
+    "webFileType": "<0>ステップ1</0>：ファイルまたはウェブサービスタイプを選択",
     "webAdd": "ウェブからデータを追加する",
-    "localFileType": "<0>ステップ1</0>：ファイルタイプを選択（任意）",
+    "localFileType": "<0>ステップ1</0>：ファイルタイプを選択",
     "localAdd": "ローカルのファイルを追加する",
     "searchPlaceholder": "カタログから検索する",
     "searchPlaceholderWhole": "カタログ全体から検索する",
@@ -569,7 +580,7 @@
     "closeDataPanel": "データパネルを閉じる",
     "load": "ローカル/ウェブのデータを読み込む",
     "btnHide": "閉じる",
-    "addDataBtnText": "データを地図上で見る"
+    "addDataBtnText": "データを追加"
   },
   "feedback": {
     "minLength": "ご意見・ご要望のコメントは最低でも{{minLength}}が必要です",
@@ -614,11 +625,11 @@
       "wfs-group": "Web Feature Service (WFS) サーバー",
       "wmts-group": "Web Map Tile Service (WMTS) サーバー",
       "wms-group": "Web Map Service (WMS) サーバー",
-      "auto": "自動検出（推奨）",
-      "shp": "Shapefile (zip)",
-      "gltf": "GLTF",
+      "auto": "ファイルタイプ",
+      "shp": "Shapefile",
+      "gltf": "glTF",
       "carto": "Carto",
-      "json": "JSON",
+      "json": "Terriaカタログ",
       "gpx": "GPX",
       "czml": "CZML",
       "csv": "CSV",
@@ -627,10 +638,15 @@
       "geojson": "GeoJSON",
       "opendatasoft-group": "Opendatasoftポータル",
       "sdmx-group": "SDMX-JSON",
-      "socrata-group": "Socrata サーバー"
+      "socrata-group": "Socrata サーバー",
+      "assimp-remote-description": "**警告:** 3D ファイルコンバータは試験的機能です。  \n[サポートされる形式のリスト](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nファイルは必ずZIPしてください",
+      "ifc": "IFC",
+      "assimp-local": "3Dファイルコンバーター (zip) (試験的機能)",
+      "assimp-local-description": "**警告:** 3D ファイルコンバータは試験的機能です。  \n[サポートされる形式のリスト](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nファイルは必ずZIPしてください。",
+      "assimp-remote": "3Dファイルコンバータ（試験的機能）"
     },
     "dataUri": {
-      "errorMessage": "残念ながら、Microsoftのブラウザ（全てのバージョンのInternet ExplorerとEdge）では、データをファイルとしてダウンロードするのに必要となるdata URI機能がサポートされていません。ダウンロードするには、次のURLをChrome、Firefox、Safariなど別のブラウザにコピーしてください。{{href}}",
+      "errorMessage": "残念ながら、Microsoftのブラウザ（全てのバージョンのInternet ExplorerとEdge）では、データをファイルとしてダウンロードするのに必要となるdata URI機能がサポートされていません。ダウンロードするには、次のURLを $t(browsers.chrome), $t(browsers.firefox), $t(browsers.safari)など別のブラウザにコピーしてください。{{href}}",
       "errorTitle": "お使いのブラウザではデータのダウンロードがサポートされていません"
     },
     "chartData": "図表データ",
@@ -664,6 +680,12 @@
     },
     "errors": {
       "tooDeepAddedByUser": "addedByUser と ID: \"{{memberId}}\" チェックしたところカタログアイテムが100を超えました。カタロググループに再帰が起きていないか確認してください。"
+    },
+    "unverifiedExternalLink": {
+      "title": "警告: 検証されていないリンク",
+      "message": "以下を開こうとしています: \n\n`{{url}}`  \n\nこのリンクは検証されておらず、安全ではない可能性があります。",
+      "denyText": "キャンセル",
+      "confirmText": "新規タブで開く"
     }
   },
   "analytics": {
@@ -701,9 +723,10 @@
     "closePanel": "パネルを閉じる",
     "sectionLabel": "図",
     "loading": "チャートデータの読み込み...",
-    "noData": "チャート化できるデータがありません。"
+    "noData": "チャート化できるデータがありません。",
+    "showItemInChart": "チャートで {{value}} を表示"
   },
-  "emptyWorkbenchMessage": "<0><0>「データを地図上でみる」ボタンから、表示するデータを追加できます。</0><1><strong>上の「$t(addData.addDataBtnText)」をクリック</strong>して</1><2><0>データカタログが開き、</0><1>自分のデータを地図上に展開できます</1></2><3><0></0><strong>使い方：</strong><2>アクティブなデータセットはすべてここに表示されます</2></3></0>",
+  "emptyWorkbenchMessage": "<0><0>「データを追加」ボタンから、表示するデータを追加できます。</0><1><strong>上の「$t(addData.addDataBtnText)」をクリック</strong>して</1><2><0>データカタログを開き、</0><1>データを地図上に展開できます</1></2><3><0></0><strong>使い方：</strong><2>アクティブなデータセットはすべてここに表示されます</2></3></0>",
   "concept": {
     "summary": {
       "addFirstText": "新しい条件を追加",
@@ -755,7 +778,7 @@
       "copyrightText": "著作権",
       "unusableMetadataDefaultMessage": "このデータセットは利用できないメタデータをかえしています。",
       "unusableMetadataTitle": "ArcGIS フィーチャーサーバーエラー",
-      "reachedMaxFeatureLimit": "警告：このレイヤはフィーチャーサービスのフィーチャ制限の上限に達しました。",
+      "reachedMaxFeatureLimit": "警告：このレイヤはフィーチャーサービスのフィーチャ制限の上限 ({{maxFeatures}})に達しました。",
       "invalidServiceMessage": "ArcGISフィーチャーサービスを呼び出す際にエラーが発生しました。サーバーのレスポンスからは、有効なフィーチャーサービスレイヤではないようです。",
       "invalidServiceTitle": "無効なArcGISフィーチャーサービスレイヤ",
       "missingUrlMessage": "カタログアイテムに`url`がないため、ArcGISフィーチャーサーバーのエンドポイントが読み込めません。",
@@ -763,7 +786,7 @@
       "name": "Esri ArcGIS フィーチャーサーバー"
     },
     "catalog": {
-      "unsupportedFileTypeMessage": "このファイルフォーマットは{{appName}}でサポートされていません。サポートされているファイル形式は次の通りです。<ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>",
+      "unsupportedFileTypeMessage": "このファイルフォーマットは{{appName}}でサポートされていません。サポートされているファイル形式は次の通りです。<ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li><li>Shapefile (.zip)</li></ul>",
       "unsupportedFileTypeTitle": "サポートされていないファイル形式",
       "unsupportedTypeMessage": "不明なモデルタイプ{{type}}を作成できませんでした。",
       "unsupportedTypeTitle": "不明なタイプ",
@@ -783,7 +806,7 @@
       "mustHaveType": "各アイテムにはタイプを指定する必要があります。",
       "useConversion": "変換サービスを使用しますか？",
       "cancel": "キャンセル",
-      "upload": "自データ",
+      "upload": "ローカルデータ",
       "readyToUpload": "{{appName}}の変換サービスにアップロードする準備はできていますか？",
       "getConfirmationMessage": "このファイルは{{appName}}では直接サポートされていません。\n\n{{appName}}の変換サービスにアップロードしますか？ファイルサイズが小さく、かつzip化されたEsri ShapeファイルやMapInfo Tabファイルであればこの方法で表示できる可能性があります。",
       "unsupportedFileTypeMessageII": "このファイルフォーマットは{{appName}}ではサポートされていません。直接サポートされているフォーマットは <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>  です。オンライン変換サービスを通してサポートされているファイルフォーマットは <ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>その他の {{linkII}}</li></ul> などです。",
@@ -1074,7 +1097,7 @@
       "errorLoadingTitle": "GeoJSON読み込みエラー",
       "name": "GeoJSON",
       "couldNotLoadMessage": "与えられたリンクからJSONデータを読み込むことができませんでした。CORS",
-      "unsupportedBrowserMessage": "お使いのウェブブラウザは{{appName}}がファイルからデータを読み込む上で必要となるFile APIをサポートしていません。ブラウザをアップグレードしてください。最適な体験のためには、{{chrome}}、{{firefox}}または{{internetExplorer}}の最新版をお使いになることをおすすめします。",
+      "unsupportedBrowserMessage": "お使いのウェブブラウザは{{appName}}がファイルからデータを読み込む上で必要となるFile APIをサポートしていません。ブラウザをアップグレードしてください。最適な体験のためには、$t(browsers.chrome) , $t(browsers.firefox) , $t(browsers.edge) または $t(browsers.safari)の最新版をお使いになることをおすすめします。",
       "errorLoadingMessage": "GeoJSONファイルの読み込み中にエラーが発生しました。このファイル形式は無効またはサポートされていない可能性があります。",
       "errorParsingMessage": "与えられたデータをJSONとしてパーズできませんでした。このファイルは無効またはサポートされていない可能性があります。"
     },
@@ -1320,7 +1343,7 @@
       "outdatedBrowserTitle": "ウェブブラウザが古すぎます",
       "noDataForRegion": "選択した地域にデータなし。",
       "noDataForDate": "選んだデータにデータなし。",
-      "outdatedBrowserMessage": "「地域マップ」を利用できない、古いウェブブラウザを使っているようです。  最新の Google Chrome, Mozilla Firefox, Microsoft Edge, Microsoft Internet Explorer 11, または Apple Safari にアップブレードしてください。"
+      "outdatedBrowserMessage": "「地域マップ」を利用できない、古いウェブブラウザを使っているようです。  最新の $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), または$t(browsers.safari)にアップブレードしてください。"
     },
     "raiseError": {
       "developerDetails": "開発者の詳細",
@@ -1419,7 +1442,8 @@
       "otherEntities": "ラインとポリゴン",
       "pointEntities": "ポイント",
       "messageHeader": "地図上に描画",
-      "devError": "Terriaのインスタンスが必要です。"
+      "devError": "Terriaのインスタンスが必要です。",
+      "clickToRedrawRectangle": "長方形を再描画するため、別のポイントをクリックしてください"
     },
     "urlTemplateMapServer": {
       "name": "URL テンプレート地図サーバー"
@@ -1555,7 +1579,8 @@
     "extraCreditLinks": {
       "basemap": "背景地図",
       "disclaimer": "免責事項",
-      "dataAttribution": "データの帰属"
+      "dataAttribution": "データの帰属",
+      "dataProvider": "データ提供先:"
     }
   },
   "toast": {
@@ -1627,5 +1652,51 @@
   },
   "printView": {
     "loading": "印刷ビューを作成..."
+  },
+  "includeStory": {
+    "message": "ストーリを共有に含む"
+  },
+  "compare": {
+    "title": "比較",
+    "entireMapMenu": {
+      "sendAllToFront": "すべてを前面に送る",
+      "sendAllToBack": "すべてを背面に送る",
+      "hideAll": "すべてを隠す",
+      "browse": "地図データを見る"
+    },
+    "info": "地図上でワークベンチ上の空間データを横並びで比較。",
+    "dataset": {
+      "label": "データセット",
+      "selectOne": "一つを選択"
+    },
+    "dimensionSelector": {
+      "undefinedLabel": "指定なし"
+    },
+    "dateButton": {
+      "left": "左",
+      "right": "右",
+      "select": "日付を選択"
+    },
+    "dateLocationFilter": {
+      "filter": "位置で日付をフィルター",
+      "cancel": "キャンセル",
+      "loading": "フィルタ読み込み中...",
+      "location": "以下の座標で入手できる画像を表示しています: {{latitude}}, {{longitude}}",
+      "mouseTooltipTitle": "位置を選択",
+      "mouseTooltipMessage": "右クリックでキャンセル"
+    },
+    "entireMap": {
+      "title": "地図全体",
+      "emptyText": "上のドットメニューで、地図全体にわたり表示するデータを追加。"
+    },
+    "leftPanel": "左パネル",
+    "done": "完了",
+    "rightPanel": "右パネル"
+  },
+  "browsers": {
+    "chrome": "Google Chrome",
+    "firefox": "Mozilla Firefox",
+    "safari": "Apple Safari",
+    "edge": "Microsoft Edge"
   }
 }
