@@ -58,7 +58,9 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
   private removeFeatureChangedSubscription: (() => void) | undefined;
 
   /** Rendered feature info template - this is set using reaction.
-   * We can't use `@computed` values for custom templates - as CustomComponents (eg CSVChartCustomComponent) cause side-effects.
+   * We can't use `@computed` values for custom templates - as CustomComponents may cause side-effects.
+   * For example
+   * - A CsvChartCustomComponent will create a new CsvCatalogItem and set traits
    * See `rawDataReactNode` for rendered raw data
    */
   @observable private templatedFeatureInfoReactNode:
@@ -130,8 +132,6 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
           });
         }).bind(this)
       );
-
-    // setTimeoutsForUpdatingCustomComponents(featureInfoSection);
   }
 
   @computed get currentTimeIfAvailable() {
@@ -140,11 +140,6 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
       : undefined;
   }
 
-  /** Manipulate the properties before tempesting them.
-   * If they require .getValue, apply that.
-   * If they have bad keys, fix them.
-   * If they have formatting, apply it.
-   **/
   @computed get featureProperties() {
     // Force computed to re-calculate when cesium feature properties change
     this.featureChangedCounter;

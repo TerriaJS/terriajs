@@ -108,16 +108,17 @@ class FeatureInfoPanel extends React.Component<Props> {
 
   renderFeatureInfoCatalogItems(
     catalogItems: MappableMixin.Instance[],
-    featureCatalogItemPairs: FeatureCatalogItemPair[]
+    featureMap: Map<string, TerriaFeature[]>
   ) {
     return catalogItems.map((catalogItem, i) => {
       // From the pairs, select only those with this catalog item, and pull the features out of the pair objects.
-      const features = featureCatalogItemPairs
-        .filter((pair) => pair.catalogItem === catalogItem)
-        .map((pair) => pair.feature);
+      const features =
+        (catalogItem.uniqueId
+          ? featureMap.get(catalogItem.uniqueId)
+          : undefined) ?? [];
       return (
         <FeatureInfoCatalogItem
-          key={i}
+          key={catalogItem.uniqueId}
           viewState={this.props.viewState}
           catalogItem={catalogItem}
           features={features}
@@ -263,12 +264,13 @@ class FeatureInfoPanel extends React.Component<Props> {
     const terria = this.props.viewState.terria;
     const viewState = this.props.viewState;
 
-    const { catalogItems, featureCatalogItemPairs } =
-      getFeaturesGroupedByCatalogItems(this.props.viewState.terria);
+    const { catalogItems, featureMap } = getFeatureMapByCatalogItems(
+      this.props.viewState.terria
+    );
 
     const featureInfoCatalogItems = this.renderFeatureInfoCatalogItems(
       catalogItems,
-      featureCatalogItemPairs
+      featureMap
     );
     const panelClassName = classNames(Styles.panel, {
       [Styles.isCollapsed]: viewState.featureInfoPanelIsCollapsed,
@@ -283,17 +285,18 @@ class FeatureInfoPanel extends React.Component<Props> {
           catalogItem.canFilterTimeByFeature
       )
       .map((catalogItem) => {
-        const features = featureCatalogItemPairs.filter(
-          (pair) => pair.catalogItem === catalogItem
-        );
+        const features =
+          (catalogItem.uniqueId
+            ? featureMap.get(catalogItem.uniqueId)
+            : undefined) ?? [];
         return {
           catalogItem: catalogItem as TimeFilterMixin.Instance,
-          feature: isDefined(features[0]) ? features[0].feature : undefined
+          feature: isDefined(features[0]) ? features[0] : undefined
         };
       })
       .filter((pair) => isDefined(pair.feature));
 
-    // If the clock is avaliable then use it, otherwise don't.
+    // If the clock is available then use it, otherwise don't.
     const clock = terria.timelineClock?.currentTime;
 
     // If there is a selected feature then use the feature location.
@@ -367,8 +370,8 @@ class FeatureInfoPanel extends React.Component<Props> {
                     <Loader light />
                   </li>
                 ) : // Do we have no features/catalog items to show?
-                !featureInfoCatalogItems ||
-                  featureInfoCatalogItems.length === 0 ? (
+
+                featureInfoCatalogItems.length === 0 ? (
                   <li className={Styles.noResults}>
                     {this.getMessageForNoResults()}
                   </li>
@@ -409,37 +412,25 @@ class FeatureInfoPanel extends React.Component<Props> {
   }
 }
 
-type FeatureCatalogItemPair = {
-  feature: TerriaFeature;
-  catalogItem: MappableMixin.Instance;
-};
+function getFeatureMapByCatalogItems(terria: Terria) {
+  const featureMap = new Map<string, TerriaFeature[]>();
+  const catalogItems = new Set<MappableMixin.Instance>(); // Will contain a list of all unique catalog items.
 
-/**
- * Returns an object of {catalogItems, featureCatalogItemPairs}.
- */
-function getFeaturesGroupedByCatalogItems(terria: Terria) {
   if (!isDefined(terria.pickedFeatures)) {
-    return { catalogItems: [], featureCatalogItemPairs: [] };
+    return { featureMap, catalogItems: Array.from(catalogItems) };
   }
-  const features = terria.pickedFeatures.features;
-  const featureCatalogItemPairs: FeatureCatalogItemPair[] = []; // Will contain objects of {feature, catalogItem}.
-  const catalogItems: MappableMixin.Instance[] = []; // Will contain a list of all unique catalog items.
 
-  features.forEach((feature) => {
+  terria.pickedFeatures.features.forEach((feature) => {
     const catalogItem = determineCatalogItem(terria.workbench, feature);
-    if (catalogItem) {
-      featureCatalogItemPairs.push({
-        catalogItem: catalogItem,
-        feature: feature
-      });
-      if (catalogItems.indexOf(catalogItem) === -1) {
-        // Note this works for undefined too.
-        catalogItems.push(catalogItem);
-      }
+    if (catalogItem?.uniqueId) {
+      catalogItems.add(catalogItem);
+      if (featureMap.has(catalogItem.uniqueId))
+        featureMap.get(catalogItem.uniqueId)?.push(feature);
+      else featureMap.set(catalogItem.uniqueId, [feature]);
     }
   });
 
-  return { catalogItems, featureCatalogItemPairs };
+  return { featureMap, catalogItems: Array.from(catalogItems) };
 }
 
 export function determineCatalogItem(

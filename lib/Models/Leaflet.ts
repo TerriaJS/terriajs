@@ -757,7 +757,8 @@ export default class Leaflet extends GlobeOrMap {
             result
           ) {
             const imageryProvider = result.imageryLayer?.imageryProvider;
-            coordsSoFar[(<any>imageryProvider).url] = result.coords;
+            if (imageryProvider)
+              coordsSoFar[(<any>imageryProvider).url] = result.coords;
             return coordsSoFar;
           },
           {});
