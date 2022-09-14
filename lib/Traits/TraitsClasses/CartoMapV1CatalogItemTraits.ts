@@ -9,7 +9,7 @@ import MappableTraits from "./MappableTraits";
 import ImageryProviderTraits from "./ImageryProviderTraits";
 import UrlTraits from "./UrlTraits";
 
-export default class CartoMapCatalogItemTraits extends mixTraits(
+export default class CartoMapV1CatalogItemTraits extends mixTraits(
   ImageryProviderTraits,
   LayerOrderingTraits,
   UrlTraits,
@@ -23,6 +23,7 @@ export default class CartoMapCatalogItemTraits extends mixTraits(
   })
   config?: JsonObject | string;
 
+  /** TODO: Make this camel case please */
   @primitiveTrait({
     type: "string",
     name: "Authorization token",

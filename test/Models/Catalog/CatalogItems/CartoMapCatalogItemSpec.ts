@@ -2,9 +2,9 @@ import { configure, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
-import CartoMapCatalogItem, {
+import CartoMapV1CatalogItem, {
   CartoLoadableStratum
-} from "../../../../lib/Models/Catalog/CatalogItems/CartoMapCatalogItem";
+} from "../../../../lib/Models/Catalog/CatalogItems/CartoMapV1CatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 
 configure({
@@ -13,14 +13,14 @@ configure({
 });
 
 describe("CartoMapCatalogItem", function () {
-  let item: CartoMapCatalogItem;
+  let item: CartoMapV1CatalogItem;
 
   beforeEach(function () {
-    item = new CartoMapCatalogItem("test", new Terria());
+    item = new CartoMapV1CatalogItem("test", new Terria());
   });
 
   it("has a type", function () {
-    expect(CartoMapCatalogItem.type).toBe("carto");
+    expect(CartoMapV1CatalogItem.type).toBe("carto");
   });
 
   describe("when tileUrl has been set", function () {

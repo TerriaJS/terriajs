@@ -6,7 +6,8 @@ import SocrataCatalogGroup from "./CatalogGroups/SocrataCatalogGroup";
 import ThreddsCatalogGroup from "./CatalogGroups/ThreddsCatalogGroup";
 import { ApiTableCatalogItem } from "./CatalogItems/ApiTableCatalogItem";
 import BingMapsCatalogItem from "./CatalogItems/BingMapsCatalogItem";
-import CartoMapCatalogItem from "./CatalogItems/CartoMapCatalogItem";
+import CartoMapV1CatalogItem from "./CatalogItems/CartoMapV1CatalogItem";
+import CartoMapV3TableCatalogItem from "./CatalogItems/CartoMapV3TableCatalogItem";
 import Cesium3DTilesCatalogItem from "./CatalogItems/Cesium3DTilesCatalogItem";
 import CesiumTerrainCatalogItem from "./CatalogItems/CesiumTerrainCatalogItem";
 import CompositeCatalogItem from "./CatalogItems/CompositeCatalogItem";
@@ -154,7 +155,14 @@ export default function registerCatalogMembers() {
     MapboxVectorTileCatalogItem.type,
     MapboxVectorTileCatalogItem
   );
-  CatalogMemberFactory.register(CartoMapCatalogItem.type, CartoMapCatalogItem);
+  CatalogMemberFactory.register(
+    CartoMapV1CatalogItem.type,
+    CartoMapV1CatalogItem
+  );
+  CatalogMemberFactory.register(
+    CartoMapV3TableCatalogItem.type,
+    CartoMapV3TableCatalogItem
+  );
   CatalogMemberFactory.register(UrlReference.type, UrlReference);
   CatalogMemberFactory.register(SplitItemReference.type, SplitItemReference);
   CatalogMemberFactory.register(YDYRCatalogFunction.type, YDYRCatalogFunction);
