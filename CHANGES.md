@@ -6,6 +6,7 @@
 - Fix support for `initUrls` in `startData.initSources`
 - Propagate `knownContainerUniqueIds` across references and their target.
 - Show scrollbar for story content in Safari iOS.
+- Use `document.baseURI` for building share links instead of `window.location`.
 - [The next improvement]
 
 #### 8.2.13 - 2022-09-01
