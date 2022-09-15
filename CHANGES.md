@@ -1,6 +1,10 @@
 # Change Log
 
-#### next release (8.2.14)
+#### next release (8.2.15)
+
+- [The next improvement]
+
+#### 8.2.14 - 2022-09-15
 
 - Moved map credits to map column so it don't get hidden by chart panel.
 - TSified `FeatureInfo*.tsx`
@@ -24,7 +28,6 @@
 - Propagate `knownContainerUniqueIds` across references and their target.
 - Show scrollbar for story content in Safari iOS.
 - Use `document.baseURI` for building share links instead of `window.location`.
-- [The next improvement]
 
 #### 8.2.13 - 2022-09-01
 
