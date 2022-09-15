@@ -7,7 +7,7 @@ import ThreddsCatalogGroup from "./CatalogGroups/ThreddsCatalogGroup";
 import { ApiTableCatalogItem } from "./CatalogItems/ApiTableCatalogItem";
 import BingMapsCatalogItem from "./CatalogItems/BingMapsCatalogItem";
 import CartoMapV1CatalogItem from "./CatalogItems/CartoMapV1CatalogItem";
-import CartoMapV3TableCatalogItem from "./CatalogItems/CartoMapV3TableCatalogItem";
+import CartoMapV3CatalogItem from "./CatalogItems/CartoMapV3CatalogItem";
 import Cesium3DTilesCatalogItem from "./CatalogItems/Cesium3DTilesCatalogItem";
 import CesiumTerrainCatalogItem from "./CatalogItems/CesiumTerrainCatalogItem";
 import CompositeCatalogItem from "./CatalogItems/CompositeCatalogItem";
@@ -160,8 +160,8 @@ export default function registerCatalogMembers() {
     CartoMapV1CatalogItem
   );
   CatalogMemberFactory.register(
-    CartoMapV3TableCatalogItem.type,
-    CartoMapV3TableCatalogItem
+    CartoMapV3CatalogItem.type,
+    CartoMapV3CatalogItem
   );
   CatalogMemberFactory.register(UrlReference.type, UrlReference);
   CatalogMemberFactory.register(SplitItemReference.type, SplitItemReference);

@@ -12,15 +12,15 @@ import TerriaError from "../../../Core/TerriaError";
 import GeoJsonMixin, {
   toFeatureCollection
 } from "../../../ModelMixins/GeojsonMixin";
-import CartoMapV3TableCatalogItemTraits from "../../../Traits/TraitsClasses/CartoMapV3TableCatalogItemTraits";
+import CartoMapV3CatalogItemTraits from "../../../Traits/TraitsClasses/CartoMapV3CatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 
-export default class CartoMapV3TableCatalogItem extends GeoJsonMixin(
-  CreateModel(CartoMapV3TableCatalogItemTraits)
+export default class CartoMapV3CatalogItem extends GeoJsonMixin(
+  CreateModel(CartoMapV3CatalogItemTraits)
 ) {
-  static readonly type = "carto-table";
+  static readonly type = "carto-v3";
   get type() {
-    return CartoMapV3TableCatalogItem.type;
+    return CartoMapV3CatalogItem.type;
   }
 
   get typeName() {
