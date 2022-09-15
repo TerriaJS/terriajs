@@ -186,7 +186,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
     {{/streamIds}}</ul>
     <br/>
     <chart
-      id='{{id}}'
+      identifier='{{id}}'
       title='{{id}}'
       sources='${proxiedBaseUrl}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=1440&media=csv&csvheader=false&sort=descending,${proxiedBaseUrl}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=7200&media=csv&csvheader=false&sort=descending'
       source-names='1d,5d'
