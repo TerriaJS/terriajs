@@ -1,37 +1,39 @@
+import { TFunction } from "i18next";
 import React from "react";
-
-import PropTypes from "prop-types";
-import createReactClass from "create-react-class";
 import { withTranslation } from "react-i18next";
-
 import DataUri from "../../Core/DataUri";
-import Dropdown from "../Generic/Dropdown";
+import filterOutUndefined from "../../Core/filterOutUndefined";
+import JsonValue, { JsonObject } from "../../Core/Json";
+import ViewState from "../../ReactViewModels/ViewState";
 import Icon from "../../Styled/Icon";
-
+import { withViewState } from "../StandardUserInterface/ViewStateContext";
 import Styles from "./feature-info-download.scss";
 
-const FeatureInfoDownload = createReactClass({
-  propTypes: {
-    data: PropTypes.object.isRequired,
-    name: PropTypes.string.isRequired,
-    viewState: PropTypes.object.isRequired,
-    t: PropTypes.func.isRequired
-  },
+const Dropdown = require("../Generic/Dropdown");
 
+class FeatureInfoDownload extends React.Component<{
+  data: JsonObject;
+  name: string;
+  viewState: ViewState;
+  t: TFunction;
+}> {
   getLinks() {
-    return [
-      {
-        href: DataUri.make("csv", generateCsvData(this.props.data)),
-        download: `${this.props.name}.csv`,
-        label: "CSV"
-      },
+    const csv = generateCsvData(this.props.data);
+    return filterOutUndefined([
+      csv
+        ? {
+            href: DataUri.make("csv", csv),
+            download: `${this.props.name}.csv`,
+            label: "CSV"
+          }
+        : undefined,
       {
         href: DataUri.make("json", JSON.stringify(this.props.data)),
         download: `${this.props.name}.json`,
         label: "JSON"
       }
-    ].filter((download) => !!download.href);
-  },
+    ]);
+  }
 
   render() {
     const { t } = this.props;
@@ -59,17 +61,13 @@ const FeatureInfoDownload = createReactClass({
       </Dropdown>
     );
   }
-});
+}
 
 /**
  * Turns a 2-dimensional javascript object into a CSV string, with the first row being the property names and the second
  * row being the data. If the object is too hierarchical to be made into a CSV, returns undefined.
  */
-function generateCsvData(data) {
-  if (!data) {
-    return;
-  }
-
+function generateCsvData(data: JsonObject) {
   const row1 = [];
   const row2 = [];
   const keys = Object.keys(data);
@@ -99,10 +97,10 @@ function generateCsvData(data) {
  * Makes a string safe for insertion into a CSV by wrapping it in inverted commas (") and changing inverted commas within
  * it to double-inverted-commas ("") as per CSV convention.
  */
-function makeSafeForCsv(value) {
+function makeSafeForCsv(value: JsonValue) {
   value = value ? `${value}` : "";
 
   return '"' + value.replace(/"/g, '""') + '"';
 }
 
-export default withTranslation()(FeatureInfoDownload);
+export default withTranslation()(withViewState(FeatureInfoDownload));
