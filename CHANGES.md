@@ -2,6 +2,8 @@
 
 #### next release (8.2.15)
 
+- Moved default `activeStyle` from `TableMixin` to `TableAutomaticStylesStratum`.
+- `TableAutomaticStylesStratum` will no longer pick default `activeStyle` if it is hidden
 - [The next improvement]
 
 #### 8.2.14 - 2022-09-15

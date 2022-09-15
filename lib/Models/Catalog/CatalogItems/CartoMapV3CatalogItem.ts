@@ -1,6 +1,6 @@
 import { featureCollection, Geometry, GeometryCollection } from "@turf/helpers";
 import i18next from "i18next";
-import { observable, runInAction } from "mobx";
+import { computed, observable, runInAction } from "mobx";
 import URI from "urijs";
 import JsonValue, {
   isJsonObject,
@@ -13,11 +13,62 @@ import GeoJsonMixin, {
   toFeatureCollection
 } from "../../../ModelMixins/GeojsonMixin";
 import CartoMapV3CatalogItemTraits from "../../../Traits/TraitsClasses/CartoMapV3CatalogItemTraits";
+import { GeoJsonTraits } from "../../../Traits/TraitsClasses/GeoJsonTraits";
+import TableStyleTraits from "../../../Traits/TraitsClasses/TableStyleTraits";
 import CreateModel from "../../Definition/CreateModel";
+import createStratumInstance from "../../Definition/createStratumInstance";
+import LoadableStratum from "../../Definition/LoadableStratum";
+import { BaseModel } from "../../Definition/Model";
+import StratumOrder from "../../Definition/StratumOrder";
+import Terria from "../../Terria";
+
+class CartoMapV3Stratum extends LoadableStratum(GeoJsonTraits) {
+  static stratumName = "cartoMapV3Stratum";
+  constructor(readonly catalogItem: CartoMapV3CatalogItem) {
+    super();
+  }
+
+  static load(item: CartoMapV3CatalogItem) {
+    return new CartoMapV3Stratum(item);
+  }
+
+  duplicateLoadableStratum(newModel: BaseModel): this {
+    return new CartoMapV3Stratum(newModel as CartoMapV3CatalogItem) as this;
+  }
+
+  // Hide "cartodb_id" style
+  @computed get styles() {
+    return [
+      createStratumInstance(TableStyleTraits, {
+        id: "cartodb_id",
+        hidden: true
+      })
+    ];
+  }
+}
+
+StratumOrder.addLoadStratum(CartoMapV3Stratum.stratumName);
 
 export default class CartoMapV3CatalogItem extends GeoJsonMixin(
   CreateModel(CartoMapV3CatalogItemTraits)
 ) {
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference: BaseModel | undefined
+  ) {
+    super(id, terria, sourceReference);
+
+    if (this.strata.get(CartoMapV3Stratum.stratumName) === undefined) {
+      runInAction(() => {
+        this.strata.set(
+          CartoMapV3Stratum.stratumName,
+          new CartoMapV3Stratum(this)
+        );
+      });
+    }
+  }
+
   static readonly type = "carto-v3";
   get type() {
     return CartoMapV3CatalogItem.type;
