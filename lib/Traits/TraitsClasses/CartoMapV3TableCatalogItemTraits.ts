@@ -15,6 +15,13 @@ export default class CartoMapV3TableCatalogItemTraits extends mixTraits(
 
   @primitiveTrait({
     type: "string",
+    name: "Authorization token",
+    description: "The authorization token to pass to the Carto Maps API"
+  })
+  connectionName = "carto_dw";
+
+  @primitiveTrait({
+    type: "string",
     name: "Base URL",
     description:
       'Base URL for Carto API (eg "https://gcp-us-east1.api.carto.com/")'
@@ -24,30 +31,32 @@ export default class CartoMapV3TableCatalogItemTraits extends mixTraits(
   @primitiveTrait({
     type: "string",
     name: "Geo column name",
-    description: "Column name of the geom at the table"
+    description:
+      "Column name of the geom at the table (used for Table and Query API)"
   })
   cartoGeoColumn = "geom";
 
   @primitiveTrait({
     type: "string",
-    name: "Table name",
+    name: "Geo column name",
     description:
-      'Table fully qualified name (eg "carto-demo-data.demo_tables.airports")'
+      "Carto SQL Query (used for Query API). If this is defined, then the Query API will be used instead of Table API."
   })
-  cartoTableName?: string;
+  cartoQuery?: string;
 
   @primitiveTrait({
     type: "string",
-    name: "Authorization token",
-    description: "The authorization token to pass to the Carto Maps API"
+    name: "Table name",
+    description:
+      'Table fully qualified name - eg "carto-demo-data.demo_tables.airports". (used for Table API). Note if `cartoQuery` defined, then the Query API will be used instead of Table API.'
   })
-  connectionName = "carto_dw";
+  cartoTableName?: string;
 
   @primitiveArrayTrait({
     type: "string",
     name: "Column",
     description:
-      "Columns to retrieve from the layer, by default all are returned"
+      "Columns to retrieve from the layer, by default all are returned. (used for Table API)"
   })
   cartoColumns?: string[];
 }
