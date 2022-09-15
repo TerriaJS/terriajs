@@ -1,9 +1,12 @@
 # Change Log
 
-#### next release (8.2.15)
+#### next release (8.2.16)
+
+- [The next improvement]
+
+#### 8.2.15 - 2022-09-16
 
 - Fix bug with "propagate `knownContainerUniqueIds` across references and their target" - missing `runInAction`
-- [The next improvement]
 
 #### 8.2.14 - 2022-09-15
 
