@@ -7,8 +7,7 @@ import { GeoJsonTraits } from "./GeoJsonTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import StyleTraits from "./StyleTraits";
 
-// TODO: Update this list. Is this what we want for WFS services? How do we prioritise "urn:ogc:def:crs:EPSG::4326"?
-// export const SUPPORTED_CRS_3857 = ["EPSG:3857", "EPSG:900913"];
+// TODO: this is repeated in two files, WMS and WFS. In a global config somewhere?
 export const SUPPORTED_CRS_4326 = [
   "urn:ogc:def:crs:EPSG::4326",
   "EPSG:4326",
