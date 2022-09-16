@@ -1,71 +1,67 @@
-"use strict";
-
 import classNames from "classnames";
-import i18next from "i18next";
+import { TFunction } from "i18next";
 import { action, reaction, runInAction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import defined from "terriajs-cesium/Source/Core/defined";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import { featureBelongsToCatalogItem } from "../../Map/PickedFeatures/PickedFeatures.ts";
+import flatten from "../../Core/flatten";
+import isDefined from "../../Core/isDefined";
+import { featureBelongsToCatalogItem } from "../../Map/PickedFeatures/PickedFeatures";
 import prettifyCoordinates from "../../Map/Vector/prettifyCoordinates";
+import MappableMixin from "../../ModelMixins/MappableMixin";
+import TimeFilterMixin from "../../ModelMixins/TimeFilterMixin";
+import CompositeCatalogItem from "../../Models/Catalog/CatalogItems/CompositeCatalogItem";
+import { BaseModel } from "../../Models/Definition/Model";
+import TerriaFeature from "../../Models/Feature/Feature";
 import {
   addMarker,
   isMarkerVisible,
   LOCATION_MARKER_DATA_SOURCE_NAME,
   removeMarker
 } from "../../Models/LocationMarkerUtils";
+import Terria from "../../Models/Terria";
+import Workbench from "../../Models/Workbench";
+import ViewState from "../../ReactViewModels/ViewState";
 import Icon from "../../Styled/Icon";
-import DragWrapper from "../DragWrapper";
 import Loader from "../Loader";
 import { withViewState } from "../StandardUserInterface/ViewStateContext";
 import Styles from "./feature-info-panel.scss";
 import FeatureInfoCatalogItem from "./FeatureInfoCatalogItem";
 
+const DragWrapper = require("../DragWrapper");
+
+interface Props {
+  viewState: ViewState;
+  printView?: boolean;
+  t: TFunction;
+}
+
 @observer
-class FeatureInfoPanel extends React.Component {
-  static propTypes = {
-    viewState: PropTypes.object.isRequired,
-    printView: PropTypes.bool,
-    t: PropTypes.func.isRequired
-  };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      left: null,
-      right: null,
-      top: null,
-      bottom: null
-    };
-  }
-
+class FeatureInfoPanel extends React.Component<Props> {
   componentDidMount() {
     const { t } = this.props;
-    const createFakeSelectedFeatureDuringPicking = true;
     const terria = this.props.viewState.terria;
+
     disposeOnUnmount(
       this,
       reaction(
         () => terria.pickedFeatures,
         (pickedFeatures) => {
-          if (!defined(pickedFeatures)) {
+          if (!isDefined(pickedFeatures)) {
             terria.selectedFeature = undefined;
           } else {
-            if (createFakeSelectedFeatureDuringPicking) {
-              const fakeFeature = new Entity({
-                id: t("featureInfo.pickLocation")
-              });
-              fakeFeature.position = pickedFeatures.pickPosition;
-              terria.selectedFeature = fakeFeature;
-            } else {
-              terria.selectedFeature = undefined;
-            }
-            if (defined(pickedFeatures.allFeaturesAvailablePromise)) {
+            terria.selectedFeature = TerriaFeature.fromEntity(
+              new Entity({
+                id: t("featureInfo.pickLocation"),
+                position: pickedFeatures.pickPosition
+              })
+            );
+            if (isDefined(pickedFeatures.allFeaturesAvailablePromise)) {
               pickedFeatures.allFeaturesAvailablePromise.then(() => {
                 if (this.props.viewState.featureInfoPanelIsVisible === false) {
                   // Panel is closed, refrain from setting selectedFeature
@@ -75,12 +71,25 @@ class FeatureInfoPanel extends React.Component {
                 // We only show features that are associated with a catalog item, so make sure the one we select to be
                 // open initially is one we're actually going to show.
                 const featuresShownAtAll = pickedFeatures.features.filter((x) =>
-                  defined(determineCatalogItem(terria.workbench, x))
+                  isDefined(determineCatalogItem(terria.workbench, x))
                 );
-                let selectedFeature =
-                  featuresShownAtAll.filter(featureHasInfo)[0];
+
+                // Return if `terria.selectedFeatures` already showing a valid feature?
                 if (
-                  !defined(selectedFeature) &&
+                  featuresShownAtAll.some(
+                    (feature) => feature === terria.selectedFeature
+                  )
+                )
+                  return;
+
+                // Otherwise find first feature with data to show
+                let selectedFeature = featuresShownAtAll.filter(
+                  (feature) =>
+                    isDefined(feature.properties) ||
+                    isDefined(feature.description)
+                )[0];
+                if (
+                  !isDefined(selectedFeature) &&
                   featuresShownAtAll.length > 0
                 ) {
                   // Handles the case when no features have info - still want something to be open.
@@ -97,26 +106,27 @@ class FeatureInfoPanel extends React.Component {
     );
   }
 
-  renderFeatureInfoCatalogItems(catalogItems, featureCatalogItemPairs) {
-    return catalogItems
-      .filter((catalogItem) => defined(catalogItem))
-      .map((catalogItem, i) => {
-        // From the pairs, select only those with this catalog item, and pull the features out of the pair objects.
-        const features = featureCatalogItemPairs
-          .filter((pair) => pair.catalogItem === catalogItem)
-          .map((pair) => pair.feature);
-        return (
-          <FeatureInfoCatalogItem
-            key={i}
-            viewState={this.props.viewState}
-            catalogItem={catalogItem}
-            features={features}
-            terria={this.props.viewState.terria}
-            onToggleOpen={this.toggleOpenFeature}
-            printView={this.props.printView}
-          />
-        );
-      });
+  renderFeatureInfoCatalogItems(
+    catalogItems: MappableMixin.Instance[],
+    featureMap: Map<string, TerriaFeature[]>
+  ) {
+    return catalogItems.map((catalogItem, i) => {
+      // From the pairs, select only those with this catalog item, and pull the features out of the pair objects.
+      const features =
+        (catalogItem.uniqueId
+          ? featureMap.get(catalogItem.uniqueId)
+          : undefined) ?? [];
+      return (
+        <FeatureInfoCatalogItem
+          key={catalogItem.uniqueId}
+          viewState={this.props.viewState}
+          catalogItem={catalogItem}
+          features={features}
+          onToggleOpen={this.toggleOpenFeature}
+          printView={this.props.printView}
+        />
+      );
+    });
   }
 
   @action.bound
@@ -134,13 +144,13 @@ class FeatureInfoPanel extends React.Component {
   }
 
   @action.bound
-  toggleCollapsed(event) {
+  toggleCollapsed() {
     this.props.viewState.featureInfoPanelIsCollapsed =
       !this.props.viewState.featureInfoPanelIsCollapsed;
   }
 
   @action.bound
-  toggleOpenFeature(feature) {
+  toggleOpenFeature(feature: TerriaFeature) {
     const terria = this.props.viewState.terria;
     if (feature === terria.selectedFeature) {
       terria.selectedFeature = undefined;
@@ -166,7 +176,7 @@ class FeatureInfoPanel extends React.Component {
     }
   }
 
-  addManualMarker(longitude, latitude) {
+  addManualMarker(longitude: number, latitude: number) {
     const { t } = this.props;
     addMarker(this.props.viewState.terria, {
       name: t("featureInfo.userSelection"),
@@ -177,7 +187,7 @@ class FeatureInfoPanel extends React.Component {
     });
   }
 
-  pinClicked(longitude, latitude) {
+  pinClicked(longitude: number, latitude: number) {
     if (!isMarkerVisible(this.props.viewState.terria)) {
       this.addManualMarker(longitude, latitude);
     } else {
@@ -187,8 +197,8 @@ class FeatureInfoPanel extends React.Component {
 
   // locationUpdated(longitude, latitude) {
   //   if (
-  //     defined(latitude) &&
-  //     defined(longitude) &&
+  //     isDefined(latitude) &&
+  //     isDefined(longitude) &&
   //     isMarkerVisible(this.props.viewState.terria)
   //   ) {
   //     removeMarker(this.props.viewState.terria);
@@ -196,18 +206,21 @@ class FeatureInfoPanel extends React.Component {
   //   }
   // }
 
-  filterIntervalsByFeature(catalogItem, feature) {
+  filterIntervalsByFeature(
+    catalogItem: TimeFilterMixin.Instance,
+    feature: TerriaFeature
+  ) {
     try {
       catalogItem.setTimeFilterFeature(
         feature,
-        this.props.viewState.terria.pickedFeatures
+        this.props.viewState.terria.pickedFeatures?.providerCoords
       );
     } catch (e) {
       this.props.viewState.terria.raiseErrorToUser(e);
     }
   }
 
-  renderLocationItem(cartesianPosition) {
+  renderLocationItem(cartesianPosition: Cartesian3) {
     const cartographic =
       Ellipsoid.WGS84.cartesianToCartographic(cartesianPosition);
     if (cartographic === undefined) {
@@ -251,11 +264,13 @@ class FeatureInfoPanel extends React.Component {
     const terria = this.props.viewState.terria;
     const viewState = this.props.viewState;
 
-    const { catalogItems, featureCatalogItemPairs } =
-      getFeaturesGroupedByCatalogItems(this.props.viewState.terria);
+    const { catalogItems, featureMap } = getFeatureMapByCatalogItems(
+      this.props.viewState.terria
+    );
+
     const featureInfoCatalogItems = this.renderFeatureInfoCatalogItems(
       catalogItems,
-      featureCatalogItemPairs
+      featureMap
     );
     const panelClassName = classNames(Styles.panel, {
       [Styles.isCollapsed]: viewState.featureInfoPanelIsCollapsed,
@@ -266,60 +281,47 @@ class FeatureInfoPanel extends React.Component {
     const filterableCatalogItems = catalogItems
       .filter(
         (catalogItem) =>
-          defined(catalogItem) && catalogItem.canFilterTimeByFeature
+          TimeFilterMixin.isMixedInto(catalogItem) &&
+          catalogItem.canFilterTimeByFeature
       )
       .map((catalogItem) => {
-        const features = featureCatalogItemPairs.filter(
-          (pair) => pair.catalogItem === catalogItem
-        );
+        const features =
+          (catalogItem.uniqueId
+            ? featureMap.get(catalogItem.uniqueId)
+            : undefined) ?? [];
         return {
-          catalogItem: catalogItem,
-          feature: defined(features[0]) ? features[0].feature : undefined
+          catalogItem: catalogItem as TimeFilterMixin.Instance,
+          feature: isDefined(features[0]) ? features[0] : undefined
         };
       })
-      .filter((pair) => defined(pair.feature));
+      .filter((pair) => isDefined(pair.feature));
 
-    let position;
+    // If the clock is available then use it, otherwise don't.
+    const clock = terria.timelineClock?.currentTime;
+
+    // If there is a selected feature then use the feature location.
+    let position = terria.selectedFeature?.position?.getValue(clock);
+
+    // If position is invalid then don't use it.
+    // This seems to be fixing the symptom rather then the cause, but don't know what is the true cause this ATM.
     if (
-      defined(terria.selectedFeature) &&
-      defined(terria.selectedFeature.position)
+      position === undefined ||
+      isNaN(position.x) ||
+      isNaN(position.y) ||
+      isNaN(position.z)
     ) {
-      // If the clock is avaliable then use it, otherwise don't.
-      const clock = terria.timelineClock?.currentTime;
-
-      // If there is a selected feature then use the feature location.
-      position = terria.selectedFeature.position.getValue(clock);
-      if (position === undefined) {
-        // For discretely time varying features, we'll only have values for integer values of clock
-        position = terria.selectedFeature.position.getValue(Math.floor(clock));
-      }
-
-      // If position is invalid then don't use it.
-      // This seems to be fixing the symptom rather then the cause, but don't know what is the true cause this ATM.
-      if (
-        position === undefined ||
-        isNaN(position.x) ||
-        isNaN(position.y) ||
-        isNaN(position.z)
-      ) {
-        position = undefined;
-      }
+      position = undefined;
     }
-    if (!defined(position)) {
+
+    if (!isDefined(position)) {
       // Otherwise use the location picked.
-      if (
-        defined(terria.pickedFeatures) &&
-        defined(terria.pickedFeatures.pickPosition)
-      ) {
-        position = terria.pickedFeatures.pickPosition;
-      }
+      position = terria.pickedFeatures?.pickPosition;
     }
 
-    const locationElements = (
-      <If condition={position}>
-        <li>{this.renderLocationItem(position)}</li>
-      </If>
-    );
+    const locationElements = position ? (
+      <li>{this.renderLocationItem(position)}</li>
+    ) : null;
+
     return (
       <DragWrapper>
         <div
@@ -356,52 +358,53 @@ class FeatureInfoPanel extends React.Component {
           )}
           <ul className={Styles.body}>
             {this.props.printView && locationElements}
-            <Choose>
-              <When
-                condition={
-                  viewState.featureInfoPanelIsCollapsed ||
-                  !viewState.featureInfoPanelIsVisible
-                }
-              />
-              <When
-                condition={
-                  defined(terria.pickedFeatures) &&
-                  terria.pickedFeatures.isLoading
-                }
-              >
-                <li>
-                  <Loader light />
-                </li>
-              </When>
-              <When
-                condition={
-                  !featureInfoCatalogItems ||
-                  featureInfoCatalogItems.length === 0
-                }
-              >
-                <li className={Styles.noResults}>
-                  {this.getMessageForNoResults()}
-                </li>
-              </When>
-              <Otherwise>{featureInfoCatalogItems}</Otherwise>
-            </Choose>
+
+            {
+              // Is feature info visible
+              !viewState.featureInfoPanelIsCollapsed &&
+              viewState.featureInfoPanelIsVisible ? (
+                // Are picked features loading -> show Loader
+                isDefined(terria.pickedFeatures) &&
+                terria.pickedFeatures.isLoading ? (
+                  <li>
+                    <Loader light />
+                  </li>
+                ) : // Do we have no features/catalog items to show?
+
+                featureInfoCatalogItems.length === 0 ? (
+                  <li className={Styles.noResults}>
+                    {this.getMessageForNoResults()}
+                  </li>
+                ) : (
+                  // Finally show feature info
+                  featureInfoCatalogItems
+                )
+              ) : null
+            }
+
             {!this.props.printView && locationElements}
-            {filterableCatalogItems.map((pair) => (
-              <button
-                key={pair.catalogItem.id}
-                type="button"
-                onClick={this.filterIntervalsByFeature.bind(
-                  this,
-                  pair.catalogItem,
-                  pair.feature
-                )}
-                className={Styles.satelliteSuggestionBtn}
-              >
-                {t("featureInfo.satelliteSuggestionBtn", {
-                  catalogItemName: pair.catalogItem.name
-                })}
-              </button>
-            ))}
+            {
+              // Add "filter by location" buttons if supported
+              filterableCatalogItems.map((pair) =>
+                TimeFilterMixin.isMixedInto(pair.catalogItem) &&
+                pair.feature ? (
+                  <button
+                    key={pair.catalogItem.uniqueId}
+                    type="button"
+                    onClick={this.filterIntervalsByFeature.bind(
+                      this,
+                      pair.catalogItem,
+                      pair.feature
+                    )}
+                    className={Styles.satelliteSuggestionBtn}
+                  >
+                    {t("featureInfo.satelliteSuggestionBtn", {
+                      catalogItemName: pair.catalogItem.name
+                    })}
+                  </button>
+                ) : null
+              )
+            }
           </ul>
         </div>
       </DragWrapper>
@@ -409,76 +412,52 @@ class FeatureInfoPanel extends React.Component {
   }
 }
 
-/**
- * Returns an object of {catalogItems, featureCatalogItemPairs}.
- */
-function getFeaturesGroupedByCatalogItems(terria) {
-  if (!defined(terria.pickedFeatures)) {
-    return { catalogItems: [], featureCatalogItemPairs: [] };
-  }
-  const features = terria.pickedFeatures.features;
-  const featureCatalogItemPairs = []; // Will contain objects of {feature, catalogItem}.
-  const catalogItems = []; // Will contain a list of all unique catalog items.
+function getFeatureMapByCatalogItems(terria: Terria) {
+  const featureMap = new Map<string, TerriaFeature[]>();
+  const catalogItems = new Set<MappableMixin.Instance>(); // Will contain a list of all unique catalog items.
 
-  features.forEach((feature) => {
-    // Why was this here? Surely changing the feature objects is not a good side-effect?
-    // if (!defined(feature.position)) {
-    //     feature.position = terria.pickedFeatures.pickPosition;
-    // }
+  if (!isDefined(terria.pickedFeatures)) {
+    return { featureMap, catalogItems: Array.from(catalogItems) };
+  }
+
+  terria.pickedFeatures.features.forEach((feature) => {
     const catalogItem = determineCatalogItem(terria.workbench, feature);
-    featureCatalogItemPairs.push({
-      catalogItem: catalogItem,
-      feature: feature
-    });
-    if (catalogItems.indexOf(catalogItem) === -1) {
-      // Note this works for undefined too.
-      catalogItems.push(catalogItem);
+    if (catalogItem?.uniqueId) {
+      catalogItems.add(catalogItem);
+      if (featureMap.has(catalogItem.uniqueId))
+        featureMap.get(catalogItem.uniqueId)?.push(feature);
+      else featureMap.set(catalogItem.uniqueId, [feature]);
     }
   });
 
-  return { catalogItems, featureCatalogItemPairs };
+  return { featureMap, catalogItems: Array.from(catalogItems) };
 }
 
-export function determineCatalogItem(workbench, feature) {
-  // If the feature is a marker return a fake item
-  if (feature.entityCollection && feature.entityCollection.owner) {
-    const dataSource = feature.entityCollection.owner;
-    if (dataSource.name === LOCATION_MARKER_DATA_SOURCE_NAME) {
-      return {
-        name: i18next.t("featureInfo.locationMarker")
-      };
-    }
-  }
-
-  if (feature._catalogItem && workbench.items.includes(feature._catalogItem)) {
+export function determineCatalogItem(
+  workbench: Workbench,
+  feature: TerriaFeature
+) {
+  if (
+    MappableMixin.isMixedInto(feature._catalogItem) &&
+    workbench.items.includes(feature._catalogItem)
+  ) {
     return feature._catalogItem;
   }
 
   // Expand child members of composite catalog items.
   // This ensures features from each child model are treated as belonging to
   // that child model, not the parent composite model.
-  const items = workbench.items.map(recurseIntoMembers).reduce(flatten, []);
+  const items = flatten(workbench.items.map(recurseIntoMembers)).filter(
+    MappableMixin.isMixedInto
+  );
   return items.find((item) => featureBelongsToCatalogItem(feature, item));
 }
 
-function recurseIntoMembers(catalogItem) {
-  const { memberModels } = catalogItem;
-  if (memberModels) {
-    return memberModels.map(recurseIntoMembers).reduce(flatten, []);
+function recurseIntoMembers(catalogItem: BaseModel): BaseModel[] {
+  if (catalogItem instanceof CompositeCatalogItem) {
+    return flatten(catalogItem.memberModels.map(recurseIntoMembers));
   }
   return [catalogItem];
-}
-
-function flatten(acc, cur) {
-  acc.push(...cur);
-  return acc;
-}
-
-/**
- * Determines whether the passed feature has properties or a description.
- */
-function featureHasInfo(feature) {
-  return defined(feature.properties) || defined(feature.description);
 }
 
 export { FeatureInfoPanel };

@@ -64,7 +64,7 @@ function TimeFilterMixin<T extends Constructor<Model<TimeFilterTraits>>>(
     @action
     async setTimeFilterFromLocation(coordinates: {
       position: LatLonHeight;
-      tileCoords: { x: number; y: number; level: number };
+      tileCoords: ProviderCoords;
     }): Promise<boolean> {
       const propertyName = this.timeFilterPropertyName;
       if (propertyName === undefined || !MappableMixin.isMixedInto(this)) {

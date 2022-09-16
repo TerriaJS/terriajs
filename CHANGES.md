@@ -1,10 +1,37 @@
 # Change Log
 
-#### next release (8.2.14)
+#### next release (8.2.16)
+
+- [The next improvement]
+
+#### 8.2.15 - 2022-09-16
+
+- Fix bug with "propagate `knownContainerUniqueIds` across references and their target" - missing `runInAction`
+
+#### 8.2.14 - 2022-09-15
 
 - Moved map credits to map column so it don't get hidden by chart panel.
+- TSified `FeatureInfo*.tsx`
+  - `describeFromProperties` is now `generateCesiumInfoHTMLFromProperties`
+  - `FeatureInfoSection` has been split up into `FeatureInfoSection.tsx`, `getFeatureProperties`, `mustacheExpressions` and `generateCesiumInfoHTMLFromProperties`
+- Fix `{{terria.currentTime}}` in feature info template
+- Add `{{terria.rawDataTable}}` in feature info template - to show raw data HTML table
+- Added `TableFeatureInfoStratum` - which adds default feature info template to `TableMixin`
+- Add `FeatureInfoContext` - used to inject properties into `FeatureInfoSections` context. These properties will be accessible from `featureInfoTemplate` mustache template.
+  - `tableFeatureInfoContext` adds time series chart properties using `FeatureInfoContext` (`getChartDetails` has been removed)
+- Move `maximumShownFeatureInfos` from `WebMapServiceCatalogItemTraits` to `MappableTraits`
+- Remove `featureInfoUrlTemplate` from `OpenDataSoftCatalogItem` - as it is incompatible with time varying datasets
+- Removed `formatNumberForLocale` - we now use `Number.toLocaleString`
+- Rename `Feature` to `TerriaFeature` - improve typing and usage across code-base
+  - Added `data: TerriaFeatureData` - which is used to pass Terria-specific properties around (eg `rowIds`)
+- Added `loadingFeatureInfoUrl` to `FeatureInfoUrlTemplateMixin`
+- Move `Cesium.ts` `ImageryLayer` feature picking to `cesium.pickImageryLayerFeatures()`
+- Move `lib/Core/propertyGetTimeValues.js` into `lib/ReactViews/FeatureInfo/getFeatureProperties.ts`
+- Add `showFeatureInfoDownloadWithTemplate` to `FeatureInfoTraits` - Toggle to show feature info download **if** a `template` has been provided. If no `template` is provided, then download will always show.
 - Fix support for `initUrls` in `startData.initSources`
 - Propagate `knownContainerUniqueIds` across references and their target.
+- Show scrollbar for story content in Safari iOS.
+- Use `document.baseURI` for building share links instead of `window.location`.
 - Make srsName and outputFormat for WFS requests dynamic
 - [The next improvement]
 
