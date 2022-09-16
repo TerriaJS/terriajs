@@ -246,6 +246,25 @@ class GetCapabilitiesStratum extends LoadableStratum(
       ) ?? "gml3"
     );
   }
+
+  // Returns the first listed srs that contains `4326`. This enables us to use a urn identifier if supported, or a normal EPSG code if not.
+  // e.g. "urn:ogc:def:crs:EPSG::4326" or "EPSG:4326"
+  @computed
+  get srsName(): string | undefined {
+    debugger;
+    const layerSrsArray = this.capabilities.srsNames?.find(
+      (layer) => layer.layerName === this.capabilities.featureTypes[0].Name //If multiple layers in this WFS request, only use the first layer to find best srsName
+      // TODO: this is using the first layer from the entire WFS group... We want to check jsut for the layer we are interested in in our url... How do we get actual typeName we are itnerested in?
+      // (layer) => layer.layerName === this.typeNames //Should be this.typeNames[0] but that is in different class...
+    );
+
+    const searchValue = new RegExp("4326");
+
+    return (
+      layerSrsArray?.srsArray.find((srsName) => searchValue.test(srsName)) ??
+      "urn:ogc:def:crs:EPSG::4326" // Default to urn identifier for WGS84 if we cant find something better.
+    );
+  }
 }
 
 class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
@@ -351,22 +370,6 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
       );
     };
 
-    // Returns the first listed srs that contains `4326`. This enables us to use a urn identifier if supported, or a normal EPSG code if not.
-    // e.g. "urn:ogc:def:crs:EPSG::4326" or "EPSG:4326"
-    const getBestSrsName = (layerNamesArray: readonly string[]) => {
-      // Just use the first layer in the layerNames array.
-      // If in the rare case we are making a WFS request for multiple layers, we will assume that all layers use the same code for WGS84 coordinate system
-      const layerSrsArray = getCapabilitiesStratum.capabilities.srsNames?.find(
-        (layer) => layer.layerName === layerNamesArray[0]
-      );
-
-      const searchValue = new RegExp("4326");
-      const result =
-        layerSrsArray?.srsArray.find((srsName) => searchValue.test(srsName)) ??
-        "urn:ogc:def:crs:EPSG::4326"; // Default to urn identifier for WGS84 if we cant find something better.
-      return result;
-    };
-
     const supportsGeojson =
       hasJsonOutputFormat(getCapabilitiesStratum.capabilities.outputTypes) ||
       [
@@ -386,8 +389,8 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
             request: "GetFeature",
             typeName: this.typeNames,
             version: "1.1.0",
-            outputFormat: supportsGeojson ? "JSON" : this.outputFormat, // Will choose best option from GetCapabilities response
-            srsName: getBestSrsName(this.typeNamesArray), // Will choose best option from GetCapabilities response
+            outputFormat: supportsGeojson ? "JSON" : this.outputFormat, // Will choose best option from GetCapabilities response TODO: should we move JSON conditional stuff to where default is set too?
+            srsName: this.srsName, // Will choose best option from GetCapabilities response
             maxFeatures: this.maxFeatures
           },
           this.parameters
