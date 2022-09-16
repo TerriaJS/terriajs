@@ -235,6 +235,17 @@ class GetCapabilitiesStratum extends LoadableStratum(
       return keyword === "GEOSERVER";
     }
   }
+
+  @computed
+  // Find which GML formats are supported, choose the one most suited to Terria. If not available, default to "gml3"
+  get outputFormat(): string | undefined {
+    const searchValue = new RegExp(".*gml/3.1.1.*|.*gml3.1.1.*");
+    return (
+      this.capabilities.outputTypes?.find((outputFormat) =>
+        searchValue.test(outputFormat)
+      ) ?? "gml3"
+    );
+  }
 }
 
 class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
@@ -340,16 +351,6 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
       );
     };
 
-    // Find which GML formats are supported, choose the one most suited to Terria. If not available, default to "gml3"
-    const getBestGmlOutputFormat = () => {
-      const searchValue = new RegExp(".*gml/3.1.1.*|.*gml3.1.1.*");
-      return (
-        getCapabilitiesStratum.capabilities.outputTypes?.find((outputFormat) =>
-          searchValue.test(outputFormat)
-        ) ?? "gml3"
-      );
-    };
-
     // Returns the first listed srs that contains `4326`. This enables us to use a urn identifier if supported, or a normal EPSG code if not.
     // e.g. "urn:ogc:def:crs:EPSG::4326" or "EPSG:4326"
     const getBestSrsName = (layerNamesArray: readonly string[]) => {
@@ -375,7 +376,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
           hasGeojson && hasJsonOutputFormat(current?.OutputFormats),
         true
       );
-
+    ``;
     const url = this.uri
       .clone()
       .setSearch(
@@ -385,7 +386,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
             request: "GetFeature",
             typeName: this.typeNames,
             version: "1.1.0",
-            outputFormat: supportsGeojson ? "JSON" : getBestGmlOutputFormat(), // Will choose best option from GetCapabilities response
+            outputFormat: supportsGeojson ? "JSON" : this.outputFormat, // Will choose best option from GetCapabilities response
             srsName: getBestSrsName(this.typeNamesArray), // Will choose best option from GetCapabilities response
             maxFeatures: this.maxFeatures
           },
