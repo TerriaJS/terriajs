@@ -2,6 +2,7 @@
 
 #### next release (8.2.16)
 
+- Added `excludeInactiveDatasets` to `CkanCatalogGroup` (`true` by default). This will filter out CKAN Datasets which have `state` or `data_state` (data.gov.au specific) **not** set to `"active"`.
 - [The next improvement]
 
 #### 8.2.15 - 2022-09-16

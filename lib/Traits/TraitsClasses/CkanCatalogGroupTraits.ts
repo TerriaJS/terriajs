@@ -60,4 +60,11 @@ export default class CkanCatalogGroupTraits extends mixTraits(
     description: `True to allow entire WMS servers (that is, WMS resources without a clearly-defined layer) to be added to the catalog; otherwise, false.`
   })
   allowEntireWmsServers: boolean = true;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Exclude inactive datasets",
+    description: `True to remove inactive datasets (\`state\` is not \`active\` OR )\`data_state\` is not \`active\`.`
+  })
+  excludeInactiveDatasets: boolean = true;
 }

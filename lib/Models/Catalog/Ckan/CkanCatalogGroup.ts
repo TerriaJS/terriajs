@@ -261,6 +261,15 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
       return;
     }
 
+    // Return if excluding inactive dataset and dataset is inactive
+    if (
+      this._catalogGroup.excludeInactiveDatasets &&
+      ((ckanDataset.state && ckanDataset.state !== "active") ||
+        (ckanDataset.data_state && ckanDataset.data_state !== "active"))
+    ) {
+      return;
+    }
+
     // Get list of resources to turn into CkanItemReferences
     const supportedResources = getSupportedFormats(
       ckanDataset,

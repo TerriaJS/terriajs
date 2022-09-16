@@ -52,6 +52,12 @@ export interface CkanDataset {
   groups: CkanDatasetGroup[];
   resources: CkanResource[];
   spatial?: string;
+  /** If undefined - we assume state is "active" */
+  state?: string;
+  /** `data_state` is only relevant to Data.gov.au
+   * If undefined - we assume state is "active"
+   */
+  data_state?: string;
 }
 
 export interface CkanResourceServerResponse {
