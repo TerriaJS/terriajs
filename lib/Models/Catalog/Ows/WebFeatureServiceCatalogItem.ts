@@ -16,7 +16,9 @@ import UrlMixin from "../../../ModelMixins/UrlMixin";
 import xml2json from "../../../ThirdParty/xml2json";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
-import WebFeatureServiceCatalogItemTraits from "../../../Traits/TraitsClasses/WebFeatureServiceCatalogItemTraits";
+import WebFeatureServiceCatalogItemTraits, {
+  SUPPORTED_CRS_4326
+} from "../../../Traits/TraitsClasses/WebFeatureServiceCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
@@ -236,8 +238,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
     }
   }
 
-  @computed
   // Find which GML formats are supported, choose the one most suited to Terria. If not available, default to "gml3"
+  @computed
   get outputFormat(): string | undefined {
     const searchValue = new RegExp(".*gml/3.1.1.*|.*gml3.1.1.*");
     return (
@@ -247,17 +249,18 @@ class GetCapabilitiesStratum extends LoadableStratum(
     );
   }
 
-  // Returns the first listed srs that contains `4326`. This enables us to use a urn identifier if supported, or a normal EPSG code if not.
+  // Returns the first listed srs that is included in our list of supported srs. This enables us to use a urn identifier if supported, or a normal EPSG code if not.
   // e.g. "urn:ogc:def:crs:EPSG::4326" or "EPSG:4326"
   @computed
   get srsName(): string | undefined {
     const layerSrsArray = this.capabilities.srsNames?.find(
       (layer) => layer.layerName === this.catalogItem.typeNamesArray[0] //If multiple layers in this WFS request, only use the first layer to find best srsName
     );
-    const searchValue = new RegExp("4326");
+
     return (
-      layerSrsArray?.srsArray.find((srsName) => searchValue.test(srsName)) ??
-      "urn:ogc:def:crs:EPSG::4326" // Default to urn identifier for WGS84 if we cant find something better. Sometimes WFS service will support this even if not specified in GetCapabilities response.
+      layerSrsArray?.srsArray.find((srsName) =>
+        SUPPORTED_CRS_4326.includes(srsName)
+      ) ?? "urn:ogc:def:crs:EPSG::4326" // Default to urn identifier for WGS84 if we cant find something better. Sometimes WFS service will support this even if not specified in GetCapabilities response.
     );
   }
 }
