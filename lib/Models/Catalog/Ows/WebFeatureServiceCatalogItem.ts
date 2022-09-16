@@ -251,18 +251,13 @@ class GetCapabilitiesStratum extends LoadableStratum(
   // e.g. "urn:ogc:def:crs:EPSG::4326" or "EPSG:4326"
   @computed
   get srsName(): string | undefined {
-    debugger;
     const layerSrsArray = this.capabilities.srsNames?.find(
-      (layer) => layer.layerName === this.capabilities.featureTypes[0].Name //If multiple layers in this WFS request, only use the first layer to find best srsName
-      // TODO: this is using the first layer from the entire WFS group... We want to check jsut for the layer we are interested in in our url... How do we get actual typeName we are itnerested in?
-      // (layer) => layer.layerName === this.typeNames //Should be this.typeNames[0] but that is in different class...
+      (layer) => layer.layerName === this.catalogItem.typeNamesArray[0] //If multiple layers in this WFS request, only use the first layer to find best srsName
     );
-
     const searchValue = new RegExp("4326");
-
     return (
       layerSrsArray?.srsArray.find((srsName) => searchValue.test(srsName)) ??
-      "urn:ogc:def:crs:EPSG::4326" // Default to urn identifier for WGS84 if we cant find something better.
+      "urn:ogc:def:crs:EPSG::4326" // Default to urn identifier for WGS84 if we cant find something better. Sometimes WFS service will support this even if not specified in GetCapabilities response.
     );
   }
 }
