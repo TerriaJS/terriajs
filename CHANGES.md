@@ -2,6 +2,7 @@
 
 #### next release (8.2.16)
 
+- Make srsName and outputFormat for WFS requests dynamic
 - [The next improvement]
 
 #### 8.2.15 - 2022-09-16
@@ -32,8 +33,6 @@
 - Propagate `knownContainerUniqueIds` across references and their target.
 - Show scrollbar for story content in Safari iOS.
 - Use `document.baseURI` for building share links instead of `window.location`.
-- Make srsName and outputFormat for WFS requests dynamic
-- [The next improvement]
 
 #### 8.2.13 - 2022-09-01
 
