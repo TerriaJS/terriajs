@@ -1,14 +1,17 @@
 import { featureCollection, Geometry, GeometryCollection } from "@turf/helpers";
 import i18next from "i18next";
 import { computed, observable, runInAction } from "mobx";
+import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import URI from "urijs";
 import JsonValue, {
   isJsonObject,
+  isJsonString,
   isJsonStringArray,
   JsonObject
 } from "../../../Core/Json";
 import loadJson from "../../../Core/loadJson";
-import TerriaError from "../../../Core/TerriaError";
+import Result from "../../../Core/Result";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import GeoJsonMixin, {
   toFeatureCollection
 } from "../../../ModelMixins/GeojsonMixin";
@@ -91,13 +94,12 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
         .path("")
         .path(`v3/maps/${this.connectionName}/query`);
 
-      response = await loadJson(
-        url.toString(),
-        {
-          Authorization: `Bearer ${this.accessToken}`
-        },
-        { q: this.cartoQuery, geo_column: this.cartoGeoColumn }
-      );
+      response = (
+        await callCartoApi(url.toString(), this.accessToken, {
+          q: this.cartoQuery,
+          geo_column: this.cartoGeoColumn
+        })
+      ).throwIfError();
     }
     // If cartoTableName is defined - use Table API (https://api-docs.carto.com/#6a05d4d7-c6a1-4635-a8de-c91fa5e77fda)
     else if (this.cartoTableName) {
@@ -110,9 +112,9 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
           geo_column: this.cartoGeoColumn
         });
 
-      response = await loadJson(url.toString(), {
-        Authorization: `Bearer ${this.accessToken}`
-      });
+      response = (
+        await callCartoApi(url.toString(), this.accessToken)
+      ).throwIfError();
     } else {
       throw new TerriaError({
         title: "Invalid Carto V3 config",
@@ -149,9 +151,7 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
     // Download all geoJson files
     const geojsonResponses = await Promise.all(
       this.geoJsonUrls.map(async (url) => {
-        jsonData = await loadJson(url, {
-          Authorization: `Bearer ${this.accessToken}`
-        });
+        jsonData = (await callCartoApi(url, this.accessToken)).throwIfError();
 
         if (jsonData === undefined) {
           throw new TerriaError({
@@ -191,5 +191,52 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
     });
 
     return combinedFeatureCollection;
+  }
+}
+
+interface CartoApiErrorResponse {
+  error?: string;
+  message?: string;
+  status?: number;
+  source?: string;
+  connection_id?: string;
+  connection_name?: string;
+}
+
+/** Wrap loadJson calls to handle Carto API error messages */
+async function callCartoApi(url: string, auth?: string, body?: JsonObject) {
+  try {
+    return new Result(
+      await loadJson(
+        url,
+        auth
+          ? {
+              Authorization: `Bearer ${auth}`
+            }
+          : {},
+        body
+      )
+    );
+  } catch (e) {
+    if (e instanceof RequestErrorEvent) {
+      try {
+        const jsonResponse = isJsonString(e.response)
+          ? JSON.parse(e.response)
+          : e.response;
+        if (isJsonObject(jsonResponse) && isJsonString(jsonResponse.error)) {
+          const cartoError = jsonResponse as CartoApiErrorResponse;
+          return Result.error(
+            networkRequestError(
+              TerriaError.from(e, {
+                title: "Error from Carto API",
+                message: cartoError.message ?? cartoError.error,
+                importance: -1
+              })
+            )
+          );
+        }
+      } catch {}
+    }
+    return Result.error(e);
   }
 }
