@@ -7,7 +7,8 @@ import JsonValue, {
   isJsonObject,
   isJsonString,
   isJsonStringArray,
-  JsonObject
+  JsonObject,
+  isJsonNumber
 } from "../../../Core/Json";
 import loadJson from "../../../Core/loadJson";
 import Result from "../../../Core/Result";
@@ -55,6 +56,16 @@ StratumOrder.addLoadStratum(CartoMapV3Stratum.stratumName);
 export default class CartoMapV3CatalogItem extends GeoJsonMixin(
   CreateModel(CartoMapV3CatalogItemTraits)
 ) {
+  static readonly type = "carto-v3";
+
+  @observable
+  geoJsonUrls: string[] = [];
+
+  @observable
+  mvtTileJsonUrls: string[] = [];
+
+  @observable geoJsonSize: number | undefined;
+
   constructor(
     id: string | undefined,
     terria: Terria,
@@ -72,7 +83,6 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
     }
   }
 
-  static readonly type = "carto-v3";
   get type() {
     return CartoMapV3CatalogItem.type;
   }
@@ -80,9 +90,6 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
   get typeName() {
     return i18next.t("models.geoJson.name");
   }
-
-  @observable
-  geoJsonUrls: string[] = [];
 
   protected async forceLoadMetadata() {
     let response: JsonObject | undefined;
@@ -122,11 +129,9 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
       });
     }
 
-    // Do something with file size here?
-    // response.size (in bytes)
-
     let geoJsonUrls: string[] = [];
-    // const mvtTileJsonUrls: string[] = response.tilejson?.url ?? [];
+    let mvtTileJsonUrls: string[] = [];
+
     if (
       response &&
       isJsonObject(response.geojson) &&
@@ -135,11 +140,25 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
       geoJsonUrls = response.geojson.url;
     }
 
-    if (geoJsonUrls.length === 0) {
+    if (
+      response &&
+      isJsonObject(response.tilejson) &&
+      isJsonStringArray(response.tilejson.url)
+    ) {
+      mvtTileJsonUrls = response.tilejson.url;
+    }
+
+    if (geoJsonUrls.length === 0 /*&& mvtTileJsonUrls.length === 0*/) {
       throw TerriaError.from("No GeoJSON found.");
     }
 
-    runInAction(() => (this.geoJsonUrls = geoJsonUrls));
+    runInAction(() => {
+      if (response && isJsonNumber(response?.size)) {
+        this.geoJsonSize = response.size;
+      }
+      this.geoJsonUrls = geoJsonUrls;
+      this.mvtTileJsonUrls = mvtTileJsonUrls;
+    });
   }
 
   protected async forceLoadGeojsonData() {
@@ -178,6 +197,35 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
         });
       })
     );
+
+    // NOTE: Commented out until we add tileJson/mvt support
+    // Download all tileJson files
+    // const tilejsonResponses = await Promise.all(
+    //   this.mvtTileJsonUrls.map(async (url) => {
+    //     jsonData = await loadJson(url, {
+    //       Authorization: `Bearer ${this.accessToken}`
+    //     });
+
+    //     if (jsonData === undefined) {
+    //       throw new TerriaError({
+    //         title: "Failed to load GeoJSON",
+    //         message: `Failed to load GeoJSON URL ${url}`
+    //       });
+    //     }
+
+    //     if (isJsonObject(jsonData, false)) {
+    //       return jsonData;
+    //     }
+
+    //     throw new TerriaError({
+    //       title: "Failed to load GeoJSON",
+    //       message: `Invalid response from GeoJSON URL ${url}:\n\n
+    //       \`\`\`
+    //       ${JSON.stringify(jsonData)}
+    //       \`\`\``
+    //     });
+    //   })
+    // );
 
     // Merge all geojson responses into a combined feature collection
     const combinedFeatureCollection = featureCollection<
