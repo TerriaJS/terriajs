@@ -272,7 +272,6 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
         ckanDataset.state === "draft" ||
         ckanDataset.data_state === "inactive")
     ) {
-      console.log(`excluded ${ckanDataset.name}`);
       return;
     }
 
