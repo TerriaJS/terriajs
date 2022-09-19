@@ -14,6 +14,9 @@ export const SUPPORTED_CRS_4326 = [
   "CRS:84",
   "EPSG:4283"
 ];
+
+export const SUPPORTED_CRS_3857 = ["EPSG:3857", "EPSG:900913"];
+
 export default class WebFeatureServiceCatalogItemTraits extends mixTraits(
   GeoJsonTraits,
   GetCapabilitiesTraits
@@ -44,7 +47,8 @@ export default class WebFeatureServiceCatalogItemTraits extends mixTraits(
   @primitiveTrait({
     type: "string",
     name: "Output Format",
-    description: `Output format to request for WFS requests. We support gml3 and gml3.1.1.`
+    description:
+      "Output format to request for WFS requests. We prefer GeoJSON. We support gml3 and gml3.1.1 but only in EPSG:4326 projection or similar."
   })
   outputFormat?: string;
 

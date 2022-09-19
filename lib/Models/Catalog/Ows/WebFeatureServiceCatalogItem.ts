@@ -17,7 +17,8 @@ import xml2json from "../../../ThirdParty/xml2json";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import WebFeatureServiceCatalogItemTraits, {
-  SUPPORTED_CRS_4326
+  SUPPORTED_CRS_4326,
+  SUPPORTED_CRS_3857
 } from "../../../Traits/TraitsClasses/WebFeatureServiceCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
@@ -238,21 +239,56 @@ class GetCapabilitiesStratum extends LoadableStratum(
     }
   }
 
+  // Check if geojson output is supported (by checking GetCapabilities OutputTypes OR FeatureType OutputTypes)
+  @computed
+  hasJsonOutputFormat = (outputFormats: string[] | undefined) => {
+    return isDefined(
+      outputFormats?.find((format) =>
+        ["json", "JSON", "application/json"].includes(format)
+      )
+    );
+  };
+
+  @computed
+  supportsGeojson =
+    this.hasJsonOutputFormat(this.capabilities.outputTypes) ||
+    [...this.capabilitiesFeatureTypes.values()].reduce<boolean>(
+      (hasGeojson, current) =>
+        hasGeojson && this.hasJsonOutputFormat(current?.OutputFormats),
+      true
+    );
+
   // Find which GML formats are supported, choose the one most suited to Terria. If not available, default to "gml3"
   @computed
   get outputFormat(): string | undefined {
     const searchValue = new RegExp(".*gml/3.1.1.*|.*gml3.1.1.*");
-    return (
-      this.capabilities.outputTypes?.find((outputFormat) =>
-        searchValue.test(outputFormat)
-      ) ?? "gml3"
-    );
+
+    return this.supportsGeojson
+      ? "JSON"
+      : this.capabilities.outputTypes?.find((outputFormat) =>
+          searchValue.test(outputFormat)
+        ) ?? "gml3";
   }
 
-  // Returns the first listed srs that is included in our list of supported srs. This enables us to use a urn identifier if supported, or a normal EPSG code if not.
+  // Finds the best srsName to use. First checks if one provided in url.
+  // Then checks getCapabilities response and returns the first listed srs that is included in our list of supported srs.
+  // This enables us to use a urn identifier if supported, or a normal EPSG code if not.
   // e.g. "urn:ogc:def:crs:EPSG::4326" or "EPSG:4326"
   @computed
   get srsName(): string | undefined {
+    // First check to see if URL has CRS or SRS
+    const supportedCrs = [...SUPPORTED_CRS_3857, ...SUPPORTED_CRS_4326];
+    const queryParams: any = this.catalogItem.uri?.query(true) ?? {};
+    const urlCrs =
+      queryParams.srsName ??
+      queryParams.crs ??
+      queryParams.CRS ??
+      queryParams.srs ??
+      queryParams.SRS;
+    if (urlCrs && supportedCrs.includes(urlCrs)) return urlCrs;
+    //TODO: should we bother checking that the WFS server supports this provided srsName?
+
+    // If no srsName provided, then find what the server supports and use the best one for Terria
     const layerSrsArray = this.capabilities.srsNames?.find(
       (layer) => layer.layerName === this.catalogItem.typeNamesArray[0] //If multiple layers in this WFS request, only use the first layer to find best srsName
     );
@@ -359,25 +395,6 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
       });
     }
 
-    // Check if geojson output is supported (by checking GetCapabilities OutputTypes OR FeatureType OutputTypes)
-    const hasJsonOutputFormat = (outputFormats: string[] | undefined) => {
-      return isDefined(
-        outputFormats?.find((format) =>
-          ["json", "JSON", "application/json"].includes(format)
-        )
-      );
-    };
-
-    const supportsGeojson =
-      hasJsonOutputFormat(getCapabilitiesStratum.capabilities.outputTypes) ||
-      [
-        ...getCapabilitiesStratum.capabilitiesFeatureTypes.values()
-      ].reduce<boolean>(
-        (hasGeojson, current) =>
-          hasGeojson && hasJsonOutputFormat(current?.OutputFormats),
-        true
-      );
-    ``;
     const url = this.uri
       .clone()
       .setSearch(
@@ -387,7 +404,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
             request: "GetFeature",
             typeName: this.typeNames,
             version: "1.1.0",
-            outputFormat: supportsGeojson ? "JSON" : this.outputFormat, // Will choose best option from GetCapabilities response TODO: should we move JSON conditional stuff to where default is set too?
+            outputFormat: this.outputFormat, // Will choose best option from GetCapabilities response TODO: should we move JSON conditional stuff to where default is set too?
             srsName: this.srsName, // Will choose best option from GetCapabilities response
             maxFeatures: this.maxFeatures
           },
@@ -400,7 +417,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
 
     // Check for errors (if supportsGeojson and the request returns XML, OR the response includes ExceptionReport)
     if (
-      (supportsGeojson && getFeatureResponse.startsWith("<")) ||
+      (this.outputFormat === "JSON" && getFeatureResponse.startsWith("<")) ||
       getFeatureResponse.includes("ExceptionReport")
     ) {
       let errorMessage: string | undefined;
@@ -420,9 +437,10 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
       });
     }
 
-    let geojsonData = supportsGeojson
-      ? JSON.parse(getFeatureResponse)
-      : gmlToGeoJson(getFeatureResponse);
+    let geojsonData =
+      this.outputFormat === "JSON"
+        ? JSON.parse(getFeatureResponse)
+        : gmlToGeoJson(getFeatureResponse);
 
     const fc = toFeatureCollection(geojsonData);
     if (fc) return fc;
