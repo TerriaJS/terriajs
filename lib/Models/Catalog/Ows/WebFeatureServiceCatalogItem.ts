@@ -286,7 +286,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
       queryParams.srs ??
       queryParams.SRS;
     if (urlCrs && supportedCrs.includes(urlCrs)) return urlCrs;
-    //TODO: should we bother checking that the WFS server supports this provided srsName?
 
     // If no srsName provided, then find what the server supports and use the best one for Terria
     const layerSrsArray = this.capabilities.srsNames?.find(
@@ -404,8 +403,8 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
             request: "GetFeature",
             typeName: this.typeNames,
             version: "1.1.0",
-            outputFormat: this.outputFormat, // Will choose best option from GetCapabilities response TODO: should we move JSON conditional stuff to where default is set too?
-            srsName: this.srsName, // Will choose best option from GetCapabilities response
+            outputFormat: this.outputFormat,
+            srsName: this.srsName,
             maxFeatures: this.maxFeatures
           },
           this.parameters
