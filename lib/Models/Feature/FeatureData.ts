@@ -1,4 +1,5 @@
 import TimeIntervalCollectionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty";
+import { isJsonObject } from "../../Core/Json";
 
 /** Terria specific properties */
 export interface TerriaFeatureData {
@@ -12,5 +13,10 @@ export interface TerriaFeatureData {
 }
 
 export function isTerriaFeatureData(data: any): data is TerriaFeatureData {
-  return data && "type" in data && data.type === "terriaFeatureData";
+  return (
+    data &&
+    isJsonObject(data, false) &&
+    "type" in data &&
+    data.type === "terriaFeatureData"
+  );
 }
