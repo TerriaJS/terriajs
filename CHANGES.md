@@ -2,6 +2,7 @@
 
 #### next release (8.2.16)
 
+- Fix `isTerriaFeatureData` bug - not checking `isJsonObject`
 - [The next improvement]
 
 #### 8.2.15 - 2022-09-16
