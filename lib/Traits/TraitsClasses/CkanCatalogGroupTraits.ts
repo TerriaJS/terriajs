@@ -57,14 +57,15 @@ export default class CkanCatalogGroupTraits extends mixTraits(
   @primitiveTrait({
     type: "boolean",
     name: "Allow entire WMS Servers",
-    description: `True to allow entire WMS servers (that is, WMS resources without a clearly-defined layer) to be added to the catalog; otherwise, false.`
+    description:
+      "True to allow entire WMS servers (that is, WMS resources without a clearly-defined layer) to be added to the catalog; otherwise, false."
   })
   allowEntireWmsServers: boolean = true;
 
   @primitiveTrait({
     type: "boolean",
     name: "Exclude inactive datasets",
-    description: `True to remove inactive datasets (\`state\` is not \`active\` OR )\`data_state\` is not \`active\`.`
+    description: `True to remove inactive datasets. Where \`state = "deleted"\` (CKAN official), \`state === "draft"\` (CKAN official) or \`data_state === "inactive"\` (Data.gov.au CKAN).`
   })
   excludeInactiveDatasets: boolean = true;
 }
