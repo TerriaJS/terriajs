@@ -4,11 +4,11 @@ import { computed, observable, runInAction } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import URI from "urijs";
 import JsonValue, {
+  isJsonNumber,
   isJsonObject,
   isJsonString,
   isJsonStringArray,
-  JsonObject,
-  isJsonNumber
+  JsonObject
 } from "../../../Core/Json";
 import loadJson from "../../../Core/loadJson";
 import Result from "../../../Core/Result";
@@ -69,7 +69,7 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
   constructor(
     id: string | undefined,
     terria: Terria,
-    sourceReference: BaseModel | undefined
+    sourceReference?: BaseModel | undefined
   ) {
     super(id, terria, sourceReference);
 
@@ -88,7 +88,7 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
   }
 
   get typeName() {
-    return i18next.t("models.geoJson.name");
+    return i18next.t("models.carto-v3.name");
   }
 
   protected async forceLoadMetadata() {

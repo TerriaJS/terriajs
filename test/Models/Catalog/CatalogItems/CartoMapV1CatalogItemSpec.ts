@@ -12,7 +12,7 @@ configure({
   computedRequiresReaction: true
 });
 
-describe("CartoMapCatalogItem", function () {
+describe("CartoMapV1CatalogItem", function () {
   let item: CartoMapV1CatalogItem;
 
   beforeEach(function () {
