@@ -240,7 +240,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   // Check if geojson output is supported (by checking GetCapabilities OutputTypes OR FeatureType OutputTypes)
-  @computed
   hasJsonOutputFormat = (outputFormats: string[] | undefined) => {
     return isDefined(
       outputFormats?.find((format) =>
@@ -249,7 +248,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     );
   };
 
-  @computed
+  // Helper function for get outputFormat()
   supportsGeojson =
     this.hasJsonOutputFormat(this.capabilities.outputTypes) ||
     [...this.capabilitiesFeatureTypes.values()].reduce<boolean>(
