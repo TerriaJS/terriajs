@@ -239,7 +239,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     }
   }
 
-  // Check if geojson output is supported (by checking GetCapabilities OutputTypes OR FeatureType OutputTypes)
+  // Helper function to check if geojson output is supported (by checking GetCapabilities OutputTypes OR FeatureType OutputTypes)
   hasJsonOutputFormat = (outputFormats: string[] | undefined) => {
     return isDefined(
       outputFormats?.find((format) =>
@@ -248,21 +248,20 @@ class GetCapabilitiesStratum extends LoadableStratum(
     );
   };
 
-  // Helper function for get outputFormat()
-  supportsGeojson =
-    this.hasJsonOutputFormat(this.capabilities.outputTypes) ||
-    [...this.capabilitiesFeatureTypes.values()].reduce<boolean>(
-      (hasGeojson, current) =>
-        hasGeojson && this.hasJsonOutputFormat(current?.OutputFormats),
-      true
-    );
-
   // Find which GML formats are supported, choose the one most suited to Terria. If not available, default to "gml3"
   @computed
   get outputFormat(): string | undefined {
+    const supportsGeojson =
+      this.hasJsonOutputFormat(this.capabilities.outputTypes) ||
+      [...this.capabilitiesFeatureTypes.values()].reduce<boolean>(
+        (hasGeojson, current) =>
+          hasGeojson && this.hasJsonOutputFormat(current?.OutputFormats),
+        true
+      );
+
     const searchValue = new RegExp(".*gml/3.1.1.*|.*gml3.1.1.*");
 
-    return this.supportsGeojson
+    return supportsGeojson
       ? "JSON"
       : this.capabilities.outputTypes?.find((outputFormat) =>
           searchValue.test(outputFormat)
