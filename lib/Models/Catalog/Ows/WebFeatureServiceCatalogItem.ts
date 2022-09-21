@@ -268,10 +268,14 @@ class GetCapabilitiesStratum extends LoadableStratum(
         ) ?? "gml3";
   }
 
-  // Finds the best srsName to use. First checks if one provided in url.
-  // Then checks getCapabilities response and returns the first listed srs that is included in our list of supported srs.
-  // This enables us to use a urn identifier if supported, or a normal EPSG code if not.
-  // e.g. "urn:ogc:def:crs:EPSG::4326" or "EPSG:4326"
+  /** Finds the best srsName to use.
+   * First checks if one provided in url. If one is provided in url, and this is supported by Terria, will use this.
+   * Note that an error will be thrown if user supplied srsName is not supported by the user supplied WFS service.
+   * If no srsName provided, or the provided one is not supported by Terria,
+   * then checks getCapabilities response and returns the first listed srs that is included in our list of supported srs.
+   * This enables us to use a urn identifier if supported, or a normal EPSG code if not.
+   * e.g. "urn:ogc:def:crs:EPSG::4326" or "EPSG:4326"
+   **/
   @computed
   get srsName(): string | undefined {
     // First check to see if URL has CRS or SRS
