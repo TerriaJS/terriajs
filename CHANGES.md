@@ -2,6 +2,7 @@
 
 #### next release (8.2.16)
 
+- Make srsName and outputFormat for WFS requests dynamic
 - Added `excludeInactiveDatasets` to `CkanCatalogGroup` (`true` by default). This will filter out CKAN Datasets which have `state` or `data_state` (data.gov.au specific) **not** set to `"active"`.
 - Fix `isTerriaFeatureData` bug - not checking `isJsonObject`
 - [The next improvement]
