@@ -17,7 +17,7 @@ const Container = styled.div`
   z-index: 99999;
   bottom: 80px; //on mobile make it appear above play story button
   left: 35%;
-  @media (min-width: ${props => props.theme.sm}px) {
+  @media (min-width: ${(props) => props.theme.sm}px) {
     position: absolute;
     left: 45%; // on larger screens
     bottom: 40px;
@@ -31,7 +31,7 @@ const Container = styled.div`
 
   border-radius: 16px;
   min-height: 32px;
-  background: ${p => p.theme.textLight};
+  background: ${(p) => p.theme.textLight};
 `;
 
 export default Toast;

@@ -2,23 +2,24 @@
 import { observer } from "mobx-react";
 import React from "react";
 import isDefined from "../../Core/isDefined";
-import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
+import { withViewState } from "../StandardUserInterface/ViewStateContext";
 
 const DEFAULT_BRANDING =
   '<a target="_blank" href="http://terria.io"><img src="images/terria_logo.png" height="52" title="Version: {{ version }}" /></a>';
 
-export default observer(
-  (props: { terria: Terria; viewState: ViewState; version?: string }) => {
+export default withViewState(
+  observer((props: { viewState: ViewState; version?: string }) => {
     // Set brandingHtmlElements to brandBarElements or default Terria branding as default
-    let brandingHtmlElements = props.terria.configParameters
+    let brandingHtmlElements = props.viewState.terria.configParameters
       .brandBarElements ?? [DEFAULT_BRANDING];
 
     if (props.viewState.useSmallScreenInterface) {
       const brandBarSmallElements =
-        props.terria.configParameters.brandBarSmallElements;
-      const displayOne = props.terria.configParameters.displayOneBrand;
+        props.viewState.terria.configParameters.brandBarSmallElements;
+      const displayOne =
+        props.viewState.terria.configParameters.displayOneBrand;
 
       // Use brandBarSmallElements if it exists
       if (brandBarSmallElements) brandingHtmlElements = brandBarSmallElements;
@@ -27,7 +28,7 @@ export default observer(
       else if (isDefined(displayOne))
         brandingHtmlElements = [
           (brandingHtmlElements[displayOne] ||
-            brandingHtmlElements.find(item => item.length > 0)) ??
+            brandingHtmlElements.find((item) => item.length > 0)) ??
             DEFAULT_BRANDING
         ];
     }
@@ -89,5 +90,5 @@ export default observer(
         ))}
       </div>
     );
-  }
+  })
 );

@@ -16,7 +16,7 @@ import { runInAction } from "mobx";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 
 const RawButtonAndUnderline = styled(RawButton)`
-  ${props => `
+  ${(props) => `
   &:hover, &:focus {
     text-decoration: underline ${props.theme.textDark};
   }`}
@@ -33,12 +33,14 @@ class Breadcrumbs extends React.Component {
   };
 
   async openInCatalog(items) {
-    items.forEach(item => {
+    items.forEach((item) => {
       runInAction(() => {
         item.setTrait(CommonStrata.user, "isOpen", true);
       });
     });
-    await this.props.viewState.viewCatalogMember(items[0]);
+    (await this.props.viewState.viewCatalogMember(items[0])).raiseError(
+      this.props.viewState.terria
+    );
     this.props.viewState.changeSearchState("");
   }
 
@@ -46,7 +48,7 @@ class Breadcrumbs extends React.Component {
     const parentGroups = this.props.previewed
       ? getParentGroups(this.props.previewed)
       : undefined;
-    const ancestors = getAncestors(this.props.previewed).map(ancestor =>
+    const ancestors = getAncestors(this.props.previewed).map((ancestor) =>
       getDereferencedIfExists(ancestor)
     );
     return (

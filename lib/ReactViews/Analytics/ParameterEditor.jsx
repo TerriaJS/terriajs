@@ -80,7 +80,7 @@ const ParameterEditor = createReactClass({
       }
     }
     const genericEditor = ParameterEditor.parameterTypeConverters.filter(
-      function(item) {
+      function (item) {
         return item.id === "generic";
       }
     )[0];
@@ -256,7 +256,7 @@ ParameterEditor.parameterTypeConverters = [
     ) {
       if (type === this.id) {
         const regionParam = parameterEditor.props.previewed.parameters.filter(
-          function(param) {
+          function (param) {
             return (
               defined(param.regionTypeParameter) &&
               param.regionTypeParameter === parameterEditor.props.parameter

@@ -11,9 +11,9 @@ import Terria from "../../Models/Terria";
 import ViewerMode from "../../Models/ViewerMode";
 import ViewState from "../../ReactViewModels/ViewState";
 import MapNavigationItemController from "../../ViewModels/MapNavigation/MapNavigationItemController";
+import { useViewState } from "../StandardUserInterface/ViewStateContext";
 
 interface ToolProps {
-  viewState: ViewState;
   toolName: string;
   getToolComponent: () => React.ComponentType | Promise<React.ComponentType>;
   params?: any;
@@ -27,8 +27,9 @@ interface ToolProps {
  * module that exports a default React Component. The promise is useful for
  * lazy-loading the tool.
  */
-const Tool: React.FC<ToolProps> = props => {
-  const { viewState, getToolComponent, params, toolName } = props;
+const Tool: React.FC<ToolProps> = (props) => {
+  const { getToolComponent, params, toolName } = props;
+  const viewState = useViewState();
   const [t] = useTranslation();
 
   // Track the tool component & props together so that we always
@@ -37,7 +38,7 @@ const Tool: React.FC<ToolProps> = props => {
   useEffect(() => {
     setToolAndProps([
       React.lazy(() =>
-        Promise.resolve(getToolComponent()).then(c => ({ default: c }))
+        Promise.resolve(getToolComponent()).then((c) => ({ default: c }))
       ),
       params
     ]);
@@ -59,6 +60,7 @@ const Tool: React.FC<ToolProps> = props => {
 
 interface ToolButtonProps extends ToolProps {
   icon: { id: string };
+  viewState: ViewState;
 }
 
 export class ToolButtonController extends MapNavigationItemController {

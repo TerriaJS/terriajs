@@ -14,7 +14,6 @@ import CsvCatalogItem from "./CatalogItems/CsvCatalogItem";
 import CzmlCatalogItem from "./CatalogItems/CzmlCatalogItem";
 import GeoJsonCatalogItem from "./CatalogItems/GeoJsonCatalogItem";
 import GeoRssCatalogItem from "./CatalogItems/GeoRssCatalogItem";
-import GltfCatalogItem from "./CatalogItems/GltfCatalogItem";
 import GpxCatalogItem from "./CatalogItems/GpxCatalogItem";
 import IonImageryCatalogItem from "./CatalogItems/IonImageryCatalogItem";
 import KmlCatalogItem from "./CatalogItems/KmlCatalogItem";
@@ -46,6 +45,8 @@ import ArcGisMapServerCatalogItem from "./Esri/ArcGisMapServerCatalogItem";
 import ArcGisPortalCatalogGroup from "./Esri/ArcGisPortalCatalogGroup";
 import ArcGisPortalItemReference from "./Esri/ArcGisPortalItemReference";
 import ArcGisTerrainCatalogItem from "./Esri/ArcGisTerrainCatalogItem";
+import AssImpCatalogItem from "./Gltf/AssImpCatalogItem";
+import GltfCatalogItem from "./Gltf/GltfCatalogItem";
 import GtfsCatalogItem from "./Gtfs/GtfsCatalogItem";
 import CswCatalogGroup from "./Ows/CswCatalogGroup";
 import SensorObservationServiceCatalogItem from "./Ows/SensorObservationServiceCatalogItem";
@@ -224,6 +225,7 @@ export default function registerCatalogMembers() {
     UrlTemplateImageryCatalogItem.type,
     UrlTemplateImageryCatalogItem
   );
+  CatalogMemberFactory.register(AssImpCatalogItem.type, AssImpCatalogItem);
 
   UrlToCatalogMemberMapping.register(
     matchesExtension("csv"),
@@ -345,33 +347,37 @@ export default function registerCatalogMembers() {
 
   // These don't even try to match a URL, they're just total fallbacks. We really, really want something to work.
   UrlToCatalogMemberMapping.register(
-    s => true,
+    (s) => true,
     WebMapServiceCatalogGroup.type,
     true
   );
   UrlToCatalogMemberMapping.register(
-    s => true,
+    (s) => true,
     WebFeatureServiceCatalogGroup.type,
     true
   );
   UrlToCatalogMemberMapping.register(
-    s => true,
+    (s) => true,
     ArcGisMapServerCatalogItem.type,
     true
   );
   UrlToCatalogMemberMapping.register(
-    s => true,
+    (s) => true,
     ArcGisMapServerCatalogGroup.type,
     true
   );
   UrlToCatalogMemberMapping.register(
-    s => true,
+    (s) => true,
     ArcGisFeatureServerCatalogItem.type,
     true
   );
-  UrlToCatalogMemberMapping.register(s => true, ArcGisCatalogGroup.type, true);
   UrlToCatalogMemberMapping.register(
-    s => true,
+    (s) => true,
+    ArcGisCatalogGroup.type,
+    true
+  );
+  UrlToCatalogMemberMapping.register(
+    (s) => true,
     ArcGisFeatureServerCatalogGroup.type,
     true
   );
@@ -383,7 +389,7 @@ function matchesUrl(regex: RegExp) {
 
 export function matchesExtension(extension: string) {
   var regex = new RegExp("\\." + extension + "$", "i");
-  return function(url: string) {
+  return function (url: string) {
     return Boolean(url.match(regex));
   };
 }

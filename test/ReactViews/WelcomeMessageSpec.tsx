@@ -1,20 +1,20 @@
-const create: any = require("react-test-renderer").create;
+import { runInAction } from "mobx";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
-import { runInAction } from "mobx";
-const WelcomeMessage: any = require("../../lib/ReactViews/WelcomeMessage/WelcomeMessage")
-  .default;
 import { WelcomeMessagePure } from "../../lib/ReactViews/WelcomeMessage/WelcomeMessage";
+import { createWithContexts } from "./withContext";
+const WelcomeMessage: any =
+  require("../../lib/ReactViews/WelcomeMessage/WelcomeMessage").default;
 
-describe("WelcomeMessage", function() {
+describe("WelcomeMessage", function () {
   let terria: Terria;
   let viewState: ViewState;
 
   let testRenderer: any;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -25,19 +25,19 @@ describe("WelcomeMessage", function() {
     });
   });
 
-  it("renders when showWelcomeMessage is set to true in config file", function() {
+  it("renders when showWelcomeMessage is set to true in config file", function () {
     runInAction(() => (terria.configParameters.showWelcomeMessage = true));
     act(() => {
-      testRenderer = create(<WelcomeMessage viewState={viewState} />);
+      testRenderer = createWithContexts(viewState, <WelcomeMessage />);
     });
     const welcomeMessagePure = testRenderer.root.findByType(WelcomeMessagePure);
     expect(welcomeMessagePure.props.showWelcomeMessage).toEqual(true);
   });
 
-  it("doesn't render when showWelcomeMessage is set to true in config file", function() {
+  it("doesn't render when showWelcomeMessage is set to true in config file", function () {
     runInAction(() => (terria.configParameters.showWelcomeMessage = false));
     act(() => {
-      testRenderer = create(<WelcomeMessage viewState={viewState} />);
+      testRenderer = createWithContexts(viewState, <WelcomeMessage />);
     });
     const welcomeMessagePure = testRenderer.root.findByType(WelcomeMessagePure);
     expect(welcomeMessagePure.props.showWelcomeMessage).toEqual(false);

@@ -25,13 +25,13 @@ export const SelectableDimensionEnum: React.FC<{
       i18next.t("workbench.dimensionsSelector.undefinedLabel")
   };
 
-  let options = dim.options?.map(option => ({
+  let options = dim.options?.map((option) => ({
     value: option.id,
     label: option.name ?? option.id
   }));
 
   const selectedOption = dim.selectedId
-    ? options?.find(option => option.value === dim.selectedId)
+    ? options?.find((option) => option.value === dim.selectedId)
     : undefinedOption;
 
   if (!options) return null;
@@ -47,14 +47,14 @@ export const SelectableDimensionEnum: React.FC<{
       `}
       options={options}
       value={selectedOption}
-      onChange={evt => {
+      onChange={(evt) => {
         runInAction(() =>
           dim.setDimensionValue(CommonStrata.user, evt?.value ?? "")
         );
       }}
       isClearable={dim.allowUndefined}
       formatOptionLabel={dim.optionRenderer}
-      theme={selectTheme => ({
+      theme={(selectTheme) => ({
         ...selectTheme,
         colors: {
           ...selectTheme.colors,
@@ -72,14 +72,14 @@ export const SelectableDimensionEnum: React.FC<{
       `}
       options={options}
       value={selectedOption}
-      onChange={evt => {
+      onChange={(evt) => {
         runInAction(() =>
           dim.setDimensionValue(CommonStrata.user, evt?.value ?? "")
         );
       }}
       isClearable={dim.allowUndefined}
       formatOptionLabel={dim.optionRenderer}
-      theme={selectTheme => ({
+      theme={(selectTheme) => ({
         ...selectTheme,
         colors: {
           ...selectTheme.colors,
@@ -99,15 +99,15 @@ export const SelectableDimensionEnumMulti: React.FC<{
 }> = observer(({ id, dim }) => {
   const theme = useTheme();
 
-  let options = dim.options?.map(option => ({
+  let options = dim.options?.map((option) => ({
     value: option.id,
     label: option.name ?? option.id
   }));
 
   if (!options) return null;
 
-  const selectedOptions = options.filter(option =>
-    dim.selectedIds?.some(id => option.value === id)
+  const selectedOptions = options.filter((option) =>
+    dim.selectedIds?.some((id) => option.value === id)
   );
 
   return (
@@ -117,17 +117,17 @@ export const SelectableDimensionEnumMulti: React.FC<{
       `}
       options={options}
       value={selectedOptions}
-      onChange={evt => {
+      onChange={(evt) => {
         runInAction(() =>
           dim.setDimensionValue(
             CommonStrata.user,
-            evt?.map(selected => selected.value).filter(isDefined) ?? []
+            evt?.map((selected) => selected.value).filter(isDefined) ?? []
           )
         );
       }}
       isClearable={true}
       formatOptionLabel={dim.optionRenderer}
-      theme={selectTheme => ({
+      theme={(selectTheme) => ({
         ...selectTheme,
         colors: {
           ...selectTheme.colors,

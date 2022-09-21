@@ -8,17 +8,14 @@ import Packable from "terriajs-cesium/Source/Core/Packable";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
-import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 import SampledPositionProperty from "terriajs-cesium/Source/DataSources/SampledPositionProperty";
 import SampledProperty from "terriajs-cesium/Source/DataSources/SampledProperty";
 import TimeIntervalCollectionPositionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionPositionProperty";
 import TimeIntervalCollectionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
-import Feature from "../Models/Feature";
+import TerriaFeature from "../Models/Feature/Feature";
 import { getRowValues } from "./createLongitudeLatitudeFeaturePerRow";
-import getChartDetailsFn from "./getChartDetailsFn";
 import { getFeatureStyle } from "./getFeatureStyle";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
@@ -37,7 +34,7 @@ type RequiredTableStyle = TableStyle & {
  */
 export default function createLongitudeLatitudeFeaturePerId(
   style: RequiredTableStyle
-): Entity[] {
+): TerriaFeature[] {
   const features = style.rowGroups.map(([featureId, rowIds]) =>
     createFeature(featureId, rowIds, style)
   );
@@ -54,10 +51,10 @@ function createFeature(
   featureId: string,
   rowIds: number[],
   style: RequiredTableStyle
-): Entity {
+): TerriaFeature {
   const isSampled = !!style.timeTraits.isSampled;
   const tableHasScalarColumn = !!style.tableModel.tableColumns.find(
-    col => col.type === TableColumnType.scalar
+    (col) => col.type === TableColumnType.scalar
   );
   const interpolate = isSampled && tableHasScalarColumn;
 
@@ -90,7 +87,7 @@ function createFeature(
   /** use `PointGraphics` or `BillboardGraphics`. This wil be false if any pointTraits.marker !== "point", as then we use images as billboards */
   let usePointGraphics = true;
 
-  rowIds.forEach(rowId => {
+  rowIds.forEach((rowId) => {
     const longitude = longitudes[rowId];
     const latitude = latitudes[rowId];
     const interval = timeIntervals[rowId];
@@ -178,7 +175,7 @@ function createFeature(
   });
 
   const show = calculateShow(availability);
-  const feature = new Feature({
+  const feature = new TerriaFeature({
     position: positionProperty,
     point: usePointGraphics
       ? new PointGraphics({
@@ -206,16 +203,12 @@ function createFeature(
     availability
   });
 
-  const propertiesBag = new PropertyBag(properties);
-  propertiesBag.addProperty(
-    "_terria_getChartDetails",
-    getChartDetailsFn(style, rowIds)
-  );
-
   // Add properties to feature.data so we have access to TimeIntervalCollectionProperty outside of the PropertyBag.
-  feature.data = properties;
-
-  feature.properties = propertiesBag;
+  feature.data = {
+    timeIntervalCollection: properties,
+    rowIds,
+    type: "terriaFeatureData"
+  };
   feature.description = description;
   return feature;
 }
@@ -271,7 +264,7 @@ function getRowDescription(
   tableColumns: Readonly<TableColumn[]>
 ) {
   const rows = tableColumns
-    .map(column => {
+    .map((column) => {
       const title = column.title;
       const value = column.valueFunctionForType(index);
       return `<tr><td>${title}</td><td>${value}</td></tr>`;

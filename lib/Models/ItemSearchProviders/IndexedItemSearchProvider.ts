@@ -168,7 +168,7 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
     const matchingIds = intersectSets(idSets);
 
     // Map the IDs to data and build the search result.
-    const results = [...matchingIds].map(id =>
+    const results = [...matchingIds].map((id) =>
       this.buildResult(this.lookupDataForId(data, id), id)
     );
     return results;
@@ -265,5 +265,5 @@ export function intersectSets<T>(sets: Set<T>[]): Set<T> {
   if (sets.length === 0) return new Set();
   return sets
     .sort((a, b) => a.size - b.size)
-    .reduce((a, b) => new Set([...a].filter(x => b.has(x))));
+    .reduce((a, b) => new Set([...a].filter((x) => b.has(x))));
 }

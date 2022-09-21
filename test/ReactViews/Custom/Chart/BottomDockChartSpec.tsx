@@ -6,12 +6,12 @@ import Terria from "../../../../lib/Models/Terria";
 import BottomDockChart from "../../../../lib/ReactViews/Custom/Chart/BottomDockChart";
 import PointOnMap from "../../../../lib/ReactViews/Custom/Chart/PointOnMap";
 
-describe("BottomDockChart", function() {
+describe("BottomDockChart", function () {
   let terria: Terria;
   let testRenderer: ReactTestRenderer;
   let chartItems: ChartItem[];
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });

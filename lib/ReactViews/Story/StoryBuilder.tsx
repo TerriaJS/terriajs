@@ -1,4 +1,4 @@
-import { toJS, action } from "mobx";
+import { action, toJS } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import Sortable from "react-anything-sortable";
@@ -8,37 +8,39 @@ import {
   withTranslation,
   WithTranslation
 } from "react-i18next";
-import styled, { withTheme, DefaultTheme } from "styled-components";
+import styled, { DefaultTheme, withTheme } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
-const dataStoriesImg = require("../../../wwwroot/images/data-stories-getting-started.jpg");
-import triggerResize from "../../Core/triggerResize";
-import Box from "../../Styled/Box";
-import Button, { RawButton } from "../../Styled/Button";
-import Spacing from "../../Styled/Spacing";
-import Text, { TextSpan } from "../../Styled/Text";
-import BadgeBar from "../BadgeBar";
-import measureElement, { MeasureElementProps } from "../HOCs/measureElement";
-import Icon, { StyledIcon } from "../../Styled/Icon";
-import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
-import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
-import SharePanel from "../Map/Panels/SharePanel/SharePanel";
-import Styles from "./story-builder.scss";
-import Story from "./Story";
-import StoryEditor from "./StoryEditor.jsx";
 import {
   Category,
   StoryAction
 } from "../../Core/AnalyticEvents/analyticEvents";
+import triggerResize from "../../Core/triggerResize";
 import ViewState from "../../ReactViewModels/ViewState";
+import Box from "../../Styled/Box";
+import Button, { RawButton } from "../../Styled/Button";
+import Icon, { StyledIcon } from "../../Styled/Icon";
+import Spacing from "../../Styled/Spacing";
+import Text, { TextSpan } from "../../Styled/Text";
+import BadgeBar from "../BadgeBar";
+import measureElement, { MeasureElementProps } from "../HOCs/measureElement";
+import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
+import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
+import SharePanel from "../Map/Panels/SharePanel/SharePanel";
+import {
+  WithViewState,
+  withViewState
+} from "../StandardUserInterface/ViewStateContext";
+import Story from "./Story";
+import Styles from "./story-builder.scss";
+import StoryEditor from "./StoryEditor.jsx";
+const dataStoriesImg = require("../../../wwwroot/images/data-stories-getting-started.jpg");
 
 const STORY_VIDEO = "storyVideo";
 
 type StoryData = ViewState["terria"]["stories"][number];
 
 interface IProps {
-  terria: ViewState["terria"];
-  viewState: ViewState;
   isVisible?: boolean;
   animationDuration?: number;
   theme: DefaultTheme;
@@ -59,7 +61,7 @@ interface IState {
 
 @observer
 class StoryBuilder extends React.Component<
-  IProps & MeasureElementProps & WithTranslation,
+  IProps & MeasureElementProps & WithTranslation & WithViewState,
   IState
 > {
   storiesWrapperRef = React.createRef<HTMLElement>();
@@ -68,7 +70,9 @@ class StoryBuilder extends React.Component<
 
   clearRecaptureSuccessTimeout?: () => void;
 
-  constructor(props: IProps & MeasureElementProps & WithTranslation) {
+  constructor(
+    props: IProps & MeasureElementProps & WithTranslation & WithViewState
+  ) {
     super(props);
     this.state = {
       editingMode: false,
@@ -95,9 +99,10 @@ class StoryBuilder extends React.Component<
   @action.bound
   removeAction() {
     if (this.state.storyToRemove && this.state.storyRemoveIndex !== undefined) {
-      this.props.terria.stories = this.props.terria.stories.filter(
-        st => st.id !== this.state.storyToRemove!.id
-      );
+      this.props.viewState.terria.stories =
+        this.props.viewState.terria.stories.filter(
+          (st) => st.id !== this.state.storyToRemove!.id
+        );
       if (this.state.storyRemoveIndex < this.props.viewState.currentStoryId) {
         this.props.viewState.currentStoryId -= 1;
       }
@@ -121,7 +126,7 @@ class StoryBuilder extends React.Component<
 
   @action.bound
   removeAllStories() {
-    this.props.terria.stories = [];
+    this.props.viewState.terria.stories = [];
   }
 
   @action.bound
@@ -132,24 +137,24 @@ class StoryBuilder extends React.Component<
       id: _story.id ? _story.id : createGuid()
     };
 
-    this.props.terria.analytics?.logEvent(
+    this.props.viewState.terria.analytics?.logEvent(
       Category.story,
       StoryAction.saveStory,
       JSON.stringify(story)
     );
 
-    const storyIndex = (this.props.terria.stories || []).findIndex(
-      story => story.id === _story.id
+    const storyIndex = (this.props.viewState.terria.stories || []).findIndex(
+      (story) => story.id === _story.id
     );
 
     if (storyIndex >= 0) {
-      const oldStory = this.props.terria.stories[storyIndex];
+      const oldStory = this.props.viewState.terria.stories[storyIndex];
       // replace the old story, we need to replace the stories array so that
       // it is observable
-      this.props.terria.stories = [
-        ...this.props.terria.stories.slice(0, storyIndex),
+      this.props.viewState.terria.stories = [
+        ...this.props.viewState.terria.stories.slice(0, storyIndex),
         combine(story, oldStory),
-        ...this.props.terria.stories.slice(storyIndex + 1)
+        ...this.props.viewState.terria.stories.slice(storyIndex + 1)
       ];
     } else {
       this.captureStory(story);
@@ -165,11 +170,11 @@ class StoryBuilder extends React.Component<
     story: Omit<StoryData, "shareData"> & { shareData?: StoryData["shareData"] }
   ) {
     const shareData = toJS(
-      getShareData(this.props.terria, this.props.viewState, {
+      getShareData(this.props.viewState.terria, this.props.viewState, {
         includeStories: false
       })
     );
-    this.props.terria.stories.push({ ...story, shareData });
+    this.props.viewState.terria.stories.push({ ...story, shareData });
   }
 
   @action
@@ -177,21 +182,21 @@ class StoryBuilder extends React.Component<
     const { t } = this.props;
     this.closeShareRemoving();
     this.clearRecaptureSuccessTimeout?.();
-    const storyIndex = (this.props.terria.stories || []).findIndex(
-      st => st.id === story.id
+    const storyIndex = (this.props.viewState.terria.stories || []).findIndex(
+      (st) => st.id === story.id
     );
     if (storyIndex >= 0) {
       story.shareData = JSON.parse(
         JSON.stringify(
-          getShareData(this.props.terria, this.props.viewState, {
+          getShareData(this.props.viewState.terria, this.props.viewState, {
             includeStories: false
           })
         )
       );
-      this.props.terria.stories = [
-        ...this.props.terria.stories.slice(0, storyIndex),
+      this.props.viewState.terria.stories = [
+        ...this.props.viewState.terria.stories.slice(0, storyIndex),
         story,
-        ...this.props.terria.stories.slice(storyIndex + 1)
+        ...this.props.viewState.terria.stories.slice(storyIndex + 1)
       ];
       this.setState({
         recaptureSuccessId: story.id
@@ -245,7 +250,7 @@ class StoryBuilder extends React.Component<
     _currentDraggingSortData: any,
     _currentDraggingIndex: any
   ) {
-    this.props.terria.stories = sortedArray;
+    this.props.viewState.terria.stories = sortedArray;
   }
 
   componentWillUnmount() {
@@ -260,7 +265,10 @@ class StoryBuilder extends React.Component<
           /*
           // @ts-ignore */
           viewState={this.props.viewState}
-          videoLink={"https://www.youtube-nocookie.com/embed/fbiQawV8IYY"}
+          videoLink={
+            this.props.viewState.terria.configParameters.storyVideo?.videoUrl ||
+            "https://www.youtube-nocookie.com/embed/fbiQawV8IYY"
+          }
           background={dataStoriesImg}
           videoName={STORY_VIDEO}
         />
@@ -310,7 +318,7 @@ class StoryBuilder extends React.Component<
         <SharePanel
           storyShare
           btnDisabled={this.state.editingMode || !hasStories}
-          terria={this.props.terria}
+          terria={this.props.viewState.terria}
           viewState={this.props.viewState}
           modalWidth={(this.props.widthFromMeasureElementHOC ?? 100) - 22}
           onUserClick={this.toggleSharePanel}
@@ -327,7 +335,7 @@ class StoryBuilder extends React.Component<
 
   renderStories(editingMode: boolean) {
     const { t, i18n } = this.props;
-    const stories = this.props.terria.stories || [];
+    const stories = this.props.viewState.terria.stories || [];
     const storyName = this.state.storyToRemove
       ? this.state.storyToRemove.title.length
         ? this.state.storyToRemove.title
@@ -337,7 +345,7 @@ class StoryBuilder extends React.Component<
       <Box displayInlineBlock>
         <BadgeBar
           label={t("story.badgeBarLabel")}
-          badge={this.props.terria.stories.length}
+          badge={this.props.viewState.terria.stories.length}
         >
           <RawButton
             type="button"
@@ -367,7 +375,7 @@ class StoryBuilder extends React.Component<
                 ) : (
                   <Text textLight large>
                     {t("story.removeAllStoriesDialog", {
-                      count: this.props.terria.stories.length
+                      count: this.props.viewState.terria.stories.length
                     })}
                   </Text>
                 )
@@ -381,7 +389,7 @@ class StoryBuilder extends React.Component<
             position="static"
             css={`
               ${(this.state.isRemoving || this.state.isSharing) &&
-                `opacity: 0.3`}
+              `opacity: 0.3`}
             `}
           >
             <Box
@@ -445,9 +453,9 @@ class StoryBuilder extends React.Component<
 
   hideStoryBuilder = () => {
     this.props.viewState.toggleStoryBuilder();
-    this.props.terria.currentViewer.notifyRepaintRequired();
+    this.props.viewState.terria.currentViewer.notifyRepaintRequired();
     // Allow any animations to finish, then trigger a resize.
-    setTimeout(function() {
+    setTimeout(function () {
       triggerResize();
     }, this.props.animationDuration || 1);
     this.props.viewState.toggleFeaturePrompt("story", false, true);
@@ -455,7 +463,7 @@ class StoryBuilder extends React.Component<
 
   render() {
     const { t } = this.props;
-    const hasStories = this.props.terria.stories.length > 0;
+    const hasStories = this.props.viewState.terria.stories.length > 0;
     return (
       <Panel
         ref={(component: HTMLElement) => (this.refToMeasure = component)}
@@ -501,7 +509,7 @@ class StoryBuilder extends React.Component<
             exitEditingMode={() => this.setState({ editingMode: false })}
             story={this.state.currentStory}
             saveStory={this.onSave}
-            terria={this.props.terria}
+            terria={this.props.viewState.terria}
           />
         )}
       </Panel>
@@ -517,13 +525,13 @@ type PanelProps = React.ComponentPropsWithoutRef<typeof Box> & {
 const Panel = styled(Box)<PanelProps>`
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  ${props =>
+  ${(props) =>
     props.isVisible &&
     `
     visibility: visible;
     margin-right: 0;
   `}
-  ${props =>
+  ${(props) =>
     props.isHidden &&
     `
     visibility: hidden;
@@ -536,7 +544,7 @@ interface CaptureSceneProps {
   disabled?: boolean;
 }
 
-const CaptureScene: React.FC<CaptureSceneProps> = props => {
+const CaptureScene: React.FC<CaptureSceneProps> = (props) => {
   const { t } = useTranslation();
   return (
     <StoryButton
@@ -556,7 +564,7 @@ type StoryButtonProps = React.ComponentPropsWithoutRef<typeof Button> & {
   children: React.ReactNode;
 };
 
-export const StoryButton: React.FC<StoryButtonProps> = props => {
+export const StoryButton: React.FC<StoryButtonProps> = (props) => {
   const { btnText, ...rest } = props;
   return (
     <Button
@@ -579,7 +587,7 @@ interface RemoveDialogProps {
   closeDialog: () => void;
 }
 
-const RemoveDialog: React.FC<RemoveDialogProps> = props => {
+const RemoveDialog: React.FC<RemoveDialogProps> = (props) => {
   const { t } = useTranslation();
   return (
     <Box
@@ -628,4 +636,6 @@ const RemoveDialog: React.FC<RemoveDialogProps> = props => {
   );
 };
 
-export default withTranslation()(withTheme(measureElement(StoryBuilder)));
+export default withViewState(
+  withTranslation()(withTheme(measureElement(StoryBuilder)))
+);

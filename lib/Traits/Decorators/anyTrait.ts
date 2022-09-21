@@ -6,7 +6,7 @@ import Trait, { TraitOptions } from "../Trait";
 export interface AnyTraitOptions extends TraitOptions {}
 
 export default function anyTrait(options: TraitOptions) {
-  return function(target: any, propertyKey: string) {
+  return function (target: any, propertyKey: string) {
     const constructor = target.constructor;
     if (!constructor.traits) {
       constructor.traits = {};

@@ -42,7 +42,8 @@ export class BinOutlineSymbolTraits extends mixTraits(
 
 export default class TableOutlineStyleTraits
   extends mixTraits(TableStyleMapTraits)
-  implements TableStyleMapModel<OutlineSymbolTraits> {
+  implements TableStyleMapModel<OutlineSymbolTraits>
+{
   @objectArrayTrait({
     name: "Enum Colors",
     description:

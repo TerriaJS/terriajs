@@ -11,10 +11,7 @@
       "name": "911 Calls Hotspot",
       "parentLayerId": -1,
       "defaultVisibility": true,
-      "subLayerIds": [
-        1,
-        2
-      ],
+      "subLayerIds": [1, 2],
       "minScale": 0,
       "maxScale": 0,
       "type": "Group Layer"
@@ -68,10 +65,7 @@
     }
   },
   "timeInfo": {
-    "timeExtent": [
-      883785600000,
-      885686400000
-    ],
+    "timeExtent": [883785600000, 885686400000],
     "timeReference": null,
     "timeRelation": "esriTimeRelationOverlaps",
     "defaultTimeInterval": 2,

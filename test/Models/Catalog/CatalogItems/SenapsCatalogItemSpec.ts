@@ -15,7 +15,7 @@ interface ExtendedLoadWithXhr {
 
 const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
 
-describe("SenapsLocationsCatalogItem", function() {
+describe("SenapsLocationsCatalogItem", function () {
   let terria: Terria;
   let item: SenapsLocationsCatalogItem;
   let geoJsonItem: any;
@@ -40,7 +40,7 @@ describe("SenapsLocationsCatalogItem", function() {
       {{/streamIds}}</ul>
       <br/>
       <chart
-      id='{{id}}'
+      identifier='{{id}}'
       title='{{id}}'
       sources='${url}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=1440&media=csv&csvheader=false&sort=descending,${url}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=7200&media=csv&csvheader=false&sort=descending'
       source-names='1d,5d'
@@ -59,7 +59,7 @@ describe("SenapsLocationsCatalogItem", function() {
     return expectedFeatureInfoTemplate;
   }
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -67,7 +67,7 @@ describe("SenapsLocationsCatalogItem", function() {
     item.setTrait("definition", "url", senapsCatalogItemUrl);
 
     const realLoadWithXhr = loadWithXhr.load;
-    spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
+    spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
       let url = args[0];
       // if we have a ?id= then we've passed in a filter
       if (url.match(/locations\?id/g))
@@ -83,27 +83,27 @@ describe("SenapsLocationsCatalogItem", function() {
     });
   });
 
-  it("- has a type and typename", function() {
+  it("- has a type and typename", function () {
     expect(item.type).toBe("senaps-locations");
     expect(item.typeName).toBe(i18next.t("models.senaps.name"));
   });
 
-  it("- supports zooming to extent", function() {
+  it("- supports zooming to extent", function () {
     expect(item.disableZoomTo).toBeFalsy();
   });
 
-  it("- supports show info", function() {
+  it("- supports show info", function () {
     expect(item.disableAboutData).toBeFalsy();
   });
 
-  describe("Can not get any items without base url", async function() {
-    beforeEach(async function() {
+  describe("Can not get any items without base url", async function () {
+    beforeEach(async function () {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());
       });
     });
 
-    it("- fail to construct locations url", async function() {
+    it("- fail to construct locations url", async function () {
       async function foundError() {
         let errorMessage: string = "";
         try {
@@ -117,7 +117,7 @@ describe("SenapsLocationsCatalogItem", function() {
       expect(await foundError()).toBe(true);
     });
 
-    it("- fail to construct streams url", async function() {
+    it("- fail to construct streams url", async function () {
       async function foundError() {
         let errorMessage: string = "";
         try {
@@ -132,31 +132,31 @@ describe("SenapsLocationsCatalogItem", function() {
     });
   });
 
-  describe("Can get all items via implicitly specified proxy", async function() {
-    beforeEach(async function() {
+  describe("Can get all items via implicitly specified proxy", async function () {
+    beforeEach(async function () {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());
         item.setTrait("definition", "url", altProxiedBaseUrl);
       });
       await item.loadMapItems();
       geoJsonItem = item.geoJsonItem;
-      geoJsonData = (geoJsonItem.geoJsonData as any) as SenapsFeatureCollection;
+      geoJsonData = geoJsonItem.geoJsonData as any as SenapsFeatureCollection;
       feature = geoJsonData.features[0];
     });
 
-    it("- constructs correct locations url", function() {
+    it("- constructs correct locations url", function () {
       expect(item._constructLocationsUrl()).toBe(
         `${altProxiedBaseUrl}/locations?count=1000&expand=true`
       );
     });
 
-    it("- constructs correct streams url", function() {
+    it("- constructs correct streams url", function () {
       expect(item._constructStreamsUrl("123")).toBe(
         `${altProxiedBaseUrl}/streams?locationid=123`
       );
     });
 
-    it("- creates correct feature info template", function() {
+    it("- creates correct feature info template", function () {
       const actualFeatureInfoTemplate: string =
         item.featureInfoTemplate.template?.split(" ").join("") || "";
       expect(actualFeatureInfoTemplate).toBe(
@@ -164,13 +164,13 @@ describe("SenapsLocationsCatalogItem", function() {
       );
     });
 
-    it("- has the right number of features", function() {
+    it("- has the right number of features", function () {
       expect(item.geoJsonItem).toBeDefined();
       expect(geoJsonData).toBeDefined();
       expect(geoJsonData.features.length).toEqual(2);
     });
 
-    it("- has a feature with the right properties", function() {
+    it("- has a feature with the right properties", function () {
       expect(feature.geometry.coordinates).toEqual([148.699683, -34.470083]);
       expect(feature.properties).toBeDefined();
       expect(feature.properties.id).toBe("boorowa.temprh.site5a");
@@ -183,31 +183,31 @@ describe("SenapsLocationsCatalogItem", function() {
     });
   });
 
-  describe("Can get all items via default proxy", async function() {
-    beforeEach(async function() {
+  describe("Can get all items via default proxy", async function () {
+    beforeEach(async function () {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());
         item.setTrait("definition", "url", senapsCatalogItemUrl);
       });
       await item.loadMapItems();
       geoJsonItem = item.geoJsonItem;
-      geoJsonData = (geoJsonItem.geoJsonData as any) as SenapsFeatureCollection;
+      geoJsonData = geoJsonItem.geoJsonData as any as SenapsFeatureCollection;
       feature = geoJsonData.features[0];
     });
 
-    it("- constructs correct locations url", function() {
+    it("- constructs correct locations url", function () {
       expect(item._constructLocationsUrl()).toBe(
         `${senapsCatalogItemUrl}/locations?count=1000&expand=true`
       );
     });
 
-    it("- constructs correct streams url", function() {
+    it("- constructs correct streams url", function () {
       expect(item._constructStreamsUrl("123")).toBe(
         `${senapsCatalogItemUrl}/streams?locationid=123`
       );
     });
 
-    it("- creates correct feature info template", function() {
+    it("- creates correct feature info template", function () {
       const actualFeatureInfoTemplate: string =
         item.featureInfoTemplate.template?.split(" ").join("") || "";
       expect(actualFeatureInfoTemplate).toBe(
@@ -215,13 +215,13 @@ describe("SenapsLocationsCatalogItem", function() {
       );
     });
 
-    it("- has the right number of features", function() {
+    it("- has the right number of features", function () {
       expect(item.geoJsonItem).toBeDefined();
       expect(geoJsonData).toBeDefined();
       expect(geoJsonData.features.length).toEqual(2);
     });
 
-    it("- has a feature with the right properties", function() {
+    it("- has a feature with the right properties", function () {
       expect(feature.geometry.coordinates).toEqual([148.699683, -34.470083]);
       expect(feature.properties).toBeDefined();
       expect(feature.properties.id).toBe("boorowa.temprh.site5a");
@@ -234,8 +234,8 @@ describe("SenapsLocationsCatalogItem", function() {
     });
   });
 
-  describe("Can get filtered items via default proxy", async function() {
-    beforeEach(async function() {
+  describe("Can get filtered items via default proxy", async function () {
+    beforeEach(async function () {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());
         item.setTrait("definition", "locationIdFilter", "boor");
@@ -244,23 +244,23 @@ describe("SenapsLocationsCatalogItem", function() {
       });
       await item.loadMapItems();
       geoJsonItem = item.geoJsonItem;
-      geoJsonData = (geoJsonItem.geoJsonData as any) as SenapsFeatureCollection;
+      geoJsonData = geoJsonItem.geoJsonData as any as SenapsFeatureCollection;
       feature = geoJsonData.features[0];
     });
 
-    it("- constructs correct locations url", function() {
+    it("- constructs correct locations url", function () {
       expect(item._constructLocationsUrl()).toBe(
         `${senapsCatalogItemUrl}/locations?id=boor&count=1000&expand=true`
       );
     });
 
-    it("- constructs correct streams url", function() {
+    it("- constructs correct streams url", function () {
       expect(item._constructStreamsUrl("123")).toBe(
         `${senapsCatalogItemUrl}/streams?id=temp&locationid=123`
       );
     });
 
-    it("- creates correct feature info template", function() {
+    it("- creates correct feature info template", function () {
       const actualFeatureInfoTemplate: string =
         item.featureInfoTemplate.template?.split(" ").join("") || "";
       expect(actualFeatureInfoTemplate).toBe(
@@ -268,19 +268,19 @@ describe("SenapsLocationsCatalogItem", function() {
       );
     });
 
-    it("- only retrieves matching features", async function() {
+    it("- only retrieves matching features", async function () {
       expect(item.geoJsonItem).toBeDefined();
       expect(geoJsonData.type).toEqual("FeatureCollection");
       expect(geoJsonData.features.length).toEqual(1);
     });
 
-    it("- only retrieves matching streams", async function() {
+    it("- only retrieves matching streams", async function () {
       expect(feature.properties.streamIds.length).toEqual(1);
     });
   });
 
-  describe("Can get filtered items via implicitly specified alternative proxy", async function() {
-    beforeEach(async function() {
+  describe("Can get filtered items via implicitly specified alternative proxy", async function () {
+    beforeEach(async function () {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());
         item.setTrait("definition", "locationIdFilter", "boor");
@@ -289,23 +289,23 @@ describe("SenapsLocationsCatalogItem", function() {
       });
       await item.loadMapItems();
       geoJsonItem = item.geoJsonItem;
-      geoJsonData = (geoJsonItem.geoJsonData as any) as SenapsFeatureCollection;
+      geoJsonData = geoJsonItem.geoJsonData as any as SenapsFeatureCollection;
       feature = geoJsonData.features[0];
     });
 
-    it("- constructs correct locations url", function() {
+    it("- constructs correct locations url", function () {
       expect(item._constructLocationsUrl()).toBe(
         `${altProxiedBaseUrl}/locations?id=boor&count=1000&expand=true`
       );
     });
 
-    it("- constructs correct streams url", function() {
+    it("- constructs correct streams url", function () {
       expect(item._constructStreamsUrl("123")).toBe(
         `${altProxiedBaseUrl}/streams?id=temp&locationid=123`
       );
     });
 
-    it("- creates correct feature info template", function() {
+    it("- creates correct feature info template", function () {
       const actualFeatureInfoTemplate: string =
         item.featureInfoTemplate.template?.split(" ").join("") || "";
       expect(actualFeatureInfoTemplate).toBe(
@@ -313,13 +313,13 @@ describe("SenapsLocationsCatalogItem", function() {
       );
     });
 
-    it("- only retrieves matching features", async function() {
+    it("- only retrieves matching features", async function () {
       expect(item.geoJsonItem).toBeDefined();
       expect(geoJsonData.type).toEqual("FeatureCollection");
       expect(geoJsonData.features.length).toEqual(1);
     });
 
-    it("- only retrieves matching streams", async function() {
+    it("- only retrieves matching streams", async function () {
       expect(feature.properties.streamIds.length).toEqual(1);
     });
   });

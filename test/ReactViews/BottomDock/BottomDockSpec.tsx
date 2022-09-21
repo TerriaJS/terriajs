@@ -4,12 +4,12 @@ import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import BottomDock from "../../../lib/ReactViews/BottomDock/BottomDock";
 
-describe("BottomDock", function() {
+describe("BottomDock", function () {
   let terria: Terria;
   let viewState: ViewState;
   let testRenderer: ReactTestRenderer;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -20,7 +20,7 @@ describe("BottomDock", function() {
     });
   });
 
-  it("must create TJS-BottomDockFirstPortal", function() {
+  it("must create TJS-BottomDockFirstPortal", function () {
     act(() => {
       testRenderer = create(
         // @ts-ignore - because measureElement is untyped
@@ -33,7 +33,7 @@ describe("BottomDock", function() {
     expect(firstPortal).toBeDefined();
   });
 
-  it("must create TJS-BottomDockLastPortal", function() {
+  it("must create TJS-BottomDockLastPortal", function () {
     act(() => {
       testRenderer = create(
         // @ts-ignore - because measureElement is untyped

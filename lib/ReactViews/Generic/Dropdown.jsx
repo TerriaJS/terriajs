@@ -59,11 +59,11 @@ const Dropdown = createReactClass({
 
   removeListeners() {
     document.body.removeEventListener("click", this.hideList);
-    this.buttonElement.removeEventListener("click", this.nativeButtonListener);
+    this.buttonElement?.removeEventListener("click", this.nativeButtonListener);
     this.nativeButtonListener = undefined;
 
-    (this.scrollListeners || []).forEach(listenerElement =>
-      listenerElement.removeEventListener("scroll", this.hideList)
+    (this.scrollListeners || []).forEach((listenerElement) =>
+      listenerElement?.removeEventListener("scroll", this.hideList)
     );
     this.scrollListeners = undefined;
   },
@@ -94,7 +94,7 @@ const Dropdown = createReactClass({
 
     // Unfortunately we need to add a native event listener because the native event hits document.body before
     // the react event ever gets triggered.
-    this.nativeButtonListener = event => {
+    this.nativeButtonListener = (event) => {
       event.stopPropagation();
       this.hideList();
     };
@@ -123,7 +123,7 @@ const Dropdown = createReactClass({
           type="button"
           onClick={this.onButtonClicked}
           className={classNames(this.props.theme.button, Styles.btnDropdown)}
-          ref={element => {
+          ref={(element) => {
             this.buttonElement = element;
           }}
           disabled={this.props.disabled}

@@ -5,10 +5,8 @@ import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
 import ShadowTraits from "./ShadowTraits";
 import TransformationTraits from "./TransformationTraits";
-import UrlTraits from "./UrlTraits";
 
 export default class GltfTraits extends mixTraits(
-  UrlTraits,
   MappableTraits,
   TransformationTraits,
   ShadowTraits,

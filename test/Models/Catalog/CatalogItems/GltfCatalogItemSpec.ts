@@ -3,26 +3,26 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import MappableMixin from "../../../../lib/ModelMixins/MappableMixin";
-import GltfCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GltfCatalogItem";
+import GltfCatalogItem from "../../../../lib/Models/Catalog/Gltf/GltfCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import createStratumInstance from "../../../../lib/Models/Definition/createStratumInstance";
 import Terria from "../../../../lib/Models/Terria";
 import HeadingPitchRollTraits from "../../../../lib/Traits/TraitsClasses/HeadingPitchRollTraits";
 import LatLonHeightTraits from "../../../../lib/Traits/TraitsClasses/LatLonHeightTraits";
 
-describe("GltfCatalogItem", function() {
+describe("GltfCatalogItem", function () {
   let gltf: GltfCatalogItem;
 
-  beforeEach(function() {
+  beforeEach(function () {
     gltf = new GltfCatalogItem("test", new Terria());
     gltf.setTrait("definition", "url", "test/gltf/Cesium_Air.glb");
   });
 
-  it("is Mappable", function() {
+  it("is Mappable", function () {
     expect(MappableMixin.isMixedInto(gltf)).toBeTruthy();
   });
 
-  it("creates a DataSource with a model", async function() {
+  it("creates a DataSource with a model", async function () {
     await gltf.loadMapItems();
     expect(gltf.mapItems.length).toBe(1);
     expect(gltf.mapItems[0].entities.values.length).toBe(1);
@@ -30,9 +30,9 @@ describe("GltfCatalogItem", function() {
     expect(gltf.mapItems[0].entities.values[0].model).toBeDefined();
   });
 
-  describe("orientation", function() {
-    describe("when no rotation is defined", function() {
-      it("defaults to zero rotation", async function() {
+  describe("orientation", function () {
+    describe("when no rotation is defined", function () {
+      it("defaults to zero rotation", async function () {
         gltf.setTrait(
           CommonStrata.user,
           "origin",
@@ -57,8 +57,8 @@ describe("GltfCatalogItem", function() {
       });
     });
 
-    describe("when rotation is defined", function() {
-      it("correctly sets the orientation", async function() {
+    describe("when rotation is defined", function () {
+      it("correctly sets the orientation", async function () {
         gltf.setTrait(
           CommonStrata.user,
           "rotation",
@@ -93,12 +93,12 @@ describe("GltfCatalogItem", function() {
     });
   });
 
-  describe("hasLocalData", function() {
-    it("should be false by default", function() {
+  describe("hasLocalData", function () {
+    it("should be false by default", function () {
       expect(gltf.hasLocalData).toBeFalsy();
     });
 
-    it("should be true if the catalog item has local file data", function() {
+    it("should be true if the catalog item has local file data", function () {
       gltf.setFileInput(new Blob());
       expect(gltf.hasLocalData).toBeTruthy();
     });

@@ -58,7 +58,7 @@ class WpsLoadableStratum extends LoadableStratum(
 
   @computed get shortReportSections() {
     const reports = this.item.outputs
-      .map(output => {
+      .map((output) => {
         let report;
         if (isDefined(output.Data.LiteralData)) {
           report = createStratumInstance(ShortReportTraits, {
@@ -76,7 +76,7 @@ class WpsLoadableStratum extends LoadableStratum(
   @computed get featureInfoTemplate() {
     const template = [
       "#### Inputs\n\n" +
-        this.item.info.find(info => info.name === "Inputs")?.content,
+        this.item.info.find((info) => info.name === "Inputs")?.content,
       "#### Outputs\n\n" + this.outputsSectionHtml
     ].join("\n\n");
     return createStratumInstance(FeatureInfoTemplateTraits, {
@@ -260,8 +260,10 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     }
 
     if (isDefined(status.ProcessFailed)) {
-      throw status.ProcessFailed.ExceptionReport?.Exception?.ExceptionText ||
-        JSON.stringify(status.ProcessFailed);
+      throw (
+        status.ProcessFailed.ExceptionReport?.Exception?.ExceptionText ||
+        JSON.stringify(status.ProcessFailed)
+      );
     } else if (isDefined(status.ProcessSucceeded)) {
       return true;
     }
@@ -372,7 +374,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
 
   @computed get mapItems() {
     if (isDefined(this.geoJsonItem)) {
-      return this.geoJsonItem.mapItems.map(mapItem => {
+      return this.geoJsonItem.mapItems.map((mapItem) => {
         mapItem.show = this.show;
         return mapItem;
       });
@@ -410,7 +412,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     const obj = wpsResponse.ProcessOutputs.Output;
     const outputs = Array.isArray(obj) || isObservableArray(obj) ? obj : [obj];
     return outputs.filter(
-      o => o.Identifier !== ".context" && isDefined(o.Data)
+      (o) => o.Identifier !== ".context" && isDefined(o.Data)
     );
   }
 
@@ -458,7 +460,7 @@ function formatOutputValue(title: string, value: string | undefined) {
 
   const values = value.split(",");
 
-  return values.reduce(function(previousValue, currentValue) {
+  return values.reduce(function (previousValue, currentValue) {
     if (value.match(/[.\/](png|jpg|jpeg|gif|svg)/i)) {
       return (
         previousValue +
@@ -497,7 +499,7 @@ async function convertResultV7toV8(
     const { member, messages } = convertMember(input);
     if (member === null)
       throw TerriaError.combine(
-        messages.map(m => TerriaError.from(m.message)),
+        messages.map((m) => TerriaError.from(m.message)),
         "Error converting v7 item to v8"
       );
     return member;
@@ -505,7 +507,7 @@ async function convertResultV7toV8(
     const { result, messages } = convertCatalog(input);
     if (result === null)
       throw TerriaError.combine(
-        messages.map(m => TerriaError.from(m.message)),
+        messages.map((m) => TerriaError.from(m.message)),
         "Error converting v7 catalog to v8"
       );
     return result;

@@ -3,6 +3,7 @@ import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
 import AttributionTraits from "./AttributionTraits";
+import { FeatureInfoTemplateTraits } from "./FeatureInfoTraits";
 
 export class RectangleTraits extends ModelTraits {
   @primitiveTrait({
@@ -253,4 +254,28 @@ export default class MappableTraits extends mixTraits(AttributionTraits) {
       "A message to show when the user adds the catalog item to the workbench. Useful for showing disclaimers."
   })
   initialMessage?: InitialMessageTraits;
+
+  @objectTrait({
+    type: FeatureInfoTemplateTraits,
+    name: "Feature info template",
+    description:
+      "A template object for formatting content in feature info panel"
+  })
+  featureInfoTemplate?: FeatureInfoTemplateTraits;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Show string if (feature info) property value is null",
+    description:
+      "If the value of a property is null or undefined, show the specified string as the value of the property. Otherwise, the property name will not be listed at all."
+  })
+  showStringIfPropertyValueIsNull?: string;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Maximum shown feature infos",
+    description:
+      'The maximum number of "feature infos" that can be displayed in feature info panel.'
+  })
+  maximumShownFeatureInfos?: number;
 }

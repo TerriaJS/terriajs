@@ -1,4 +1,5 @@
 import { action, runInAction, toJS } from "mobx";
+import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
 import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
@@ -21,10 +22,11 @@ import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapService
 import Cesium from "../../lib/Models/Cesium";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import { BaseModel } from "../../lib/Models/Definition/Model";
-import Feature from "../../lib/Models/Feature";
+import TerriaFeature from "../../lib/Models/Feature/Feature";
 import {
   isInitFromData,
   isInitFromDataPromise,
+  isInitFromOptions,
   isInitFromUrl
 } from "../../lib/Models/InitSource";
 import Terria from "../../lib/Models/Terria";
@@ -57,18 +59,57 @@ const i18nOptions = {
   skipInit: true
 };
 
-describe("Terria", function() {
+describe("Terria", function () {
   let terria: Terria;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       appBaseHref: "/",
       baseUrl: "./"
     });
   });
 
-  describe("terria refresh catalog members from magda", function() {
-    it("refreshes group aspect with given URL", async function() {
+  describe("cesiumBaseUrl", function () {
+    it("is set when passed as an option when constructing Terria", function () {
+      terria = new Terria({
+        appBaseHref: "/",
+        baseUrl: "./",
+        cesiumBaseUrl: "some/path/to/cesium"
+      });
+      expect(terria.cesiumBaseUrl).toBe("some/path/to/cesium/");
+    });
+
+    it("should default to a path relative to `baseUrl`", function () {
+      terria = new Terria({
+        appBaseHref: "/",
+        baseUrl: "some/path/to/terria"
+      });
+      expect(terria.cesiumBaseUrl).toBe(
+        "some/path/to/terria/build/Cesium/build/"
+      );
+    });
+
+    it("should update the baseUrl setting in the cesium module", function () {
+      expect(
+        buildModuleUrl("Assets/some/image.png").endsWith(
+          "/build/Cesium/build/Assets/some/image.png"
+        )
+      ).toBe(true);
+
+      terria = new Terria({
+        appBaseHref: "/",
+        baseUrl: "some/path/to/terria"
+      });
+      expect(
+        buildModuleUrl("Assets/some/image.png").endsWith(
+          "/some/path/to/terria/build/Cesium/build/Assets/some/image.png"
+        )
+      ).toBe(true);
+    });
+  });
+
+  describe("terria refresh catalog members from magda", function () {
+    it("refreshes group aspect with given URL", async function () {
       function verifyGroups(groupAspect: any, groupNum: number) {
         const ids = groupAspect.members.map((member: any) => member.id);
         expect(terria.catalog.group.uniqueId).toEqual("/");
@@ -98,8 +139,8 @@ describe("Terria", function() {
     });
   });
 
-  describe("terria start", function() {
-    beforeEach(function() {
+  describe("terria start", function () {
+    beforeEach(function () {
       jasmine.Ajax.install();
       // Fail all requests by default.
       jasmine.Ajax.stubRequest(/.*/).andError({});
@@ -137,12 +178,116 @@ describe("Terria", function() {
       });
     });
 
-    afterEach(function() {
+    afterEach(function () {
       jasmine.Ajax.uninstall();
     });
 
-    describe("via loadMagdaConfig", function() {
-      it("should dereference uniqueId to `/`", function(done) {
+    it("applies initSources in correct order", async function () {
+      expect(terria.initSources.length).toEqual(0);
+      jasmine.Ajax.stubRequest("config.json").andReturn({
+        responseText: JSON.stringify({
+          initializationUrls: ["something"]
+        })
+      });
+
+      jasmine.Ajax.stubRequest("init/something.json").andReturn({
+        responseText: JSON.stringify({
+          workbench: ["test"],
+          catalog: [
+            { id: "test", type: "czml", url: "test.czml" },
+            { id: "test-2", type: "czml", url: "test-2.czml" }
+          ],
+          showSplitter: false,
+          splitPosition: 0.5
+        })
+      });
+
+      jasmine.Ajax.stubRequest(
+        "https://application.url/init/hash-init.json"
+      ).andReturn({
+        responseText: JSON.stringify({
+          // Override workbench in "init/something.json"
+          workbench: ["test-2"],
+          showSplitter: true
+        })
+      });
+
+      // This model is added to the workbench in "init/something.json" - which is loaded before "https://application.url/init/hash-init.json"
+      // So we add a long delay to make sure that `workbench` is overridden by `hash-init.json`
+      jasmine.Ajax.stubRequest("test.czml").andCallFunction((req) => {
+        setTimeout(
+          () =>
+            req.respondWith({
+              contentType: "text/json",
+              responseText: JSON.stringify([{ id: "document", version: "1.0" }])
+            }),
+          500
+        );
+      });
+
+      // Note: no delay for "test-2.czml" - which is added to `workbench` by `hash-init.json
+      jasmine.Ajax.stubRequest("test-2.czml").andReturn({
+        responseText: JSON.stringify([{ id: "document", version: "1.0" }])
+      });
+
+      await terria.start({
+        configUrl: `config.json`,
+        i18nOptions
+      });
+
+      await terria.updateApplicationUrl("https://application.url/#hash-init");
+
+      expect(terria.initSources.length).toEqual(2);
+
+      expect(terria.showSplitter).toBe(true);
+      expect(terria.splitPosition).toBe(0.5);
+      expect(terria.workbench.items.length).toBe(1);
+      expect(terria.workbench.items[0].uniqueId).toBe("test-2");
+    });
+
+    it("works with initializationUrls and initFragmentPaths", async function () {
+      expect(terria.initSources.length).toEqual(0);
+
+      jasmine.Ajax.stubRequest("path/to/config/configUrl.json").andReturn({
+        responseText: JSON.stringify({
+          initializationUrls: ["something"],
+          parameters: {
+            applicationUrl: "https://application.url/",
+            initFragmentPaths: [
+              "path/to/init/",
+              "https://hostname.com/some/other/path/"
+            ]
+          }
+        })
+      });
+
+      await terria.start({
+        configUrl: `path/to/config/configUrl.json`,
+        i18nOptions
+      });
+
+      expect(terria.initSources.length).toEqual(1);
+
+      const initSource = terria.initSources[0];
+      expect(isInitFromOptions(initSource)).toBeTruthy();
+
+      if (!isInitFromOptions(initSource))
+        throw "Init source is not from options";
+
+      // Note: initFragmentPaths in `initializationUrls` are resolved to the base URL of configURL
+      // - which is path/to/config/
+      expect(
+        initSource.options.map((source) =>
+          isInitFromUrl(source) ? source.initUrl : ""
+        )
+      ).toEqual([
+        "path/to/config/path/to/init/something.json",
+        "https://hostname.com/some/other/path/something.json"
+      ]);
+    });
+
+    describe("via loadMagdaConfig", function () {
+      it("should dereference uniqueId to `/`", function (done) {
         expect(terria.catalog.group.uniqueId).toEqual("/");
 
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
@@ -157,15 +302,16 @@ describe("Terria", function() {
             configUrl: "test/Magda/map-config-basic.json",
             i18nOptions
           })
-          .then(function() {
+          .then(function () {
             expect(terria.catalog.group.uniqueId).toEqual("/");
             done();
           })
-          .catch(error => {
+          .catch((error) => {
             done.fail(error);
           });
       });
-      it("works with basic initializationUrls", function(done) {
+
+      it("works with basic initializationUrls", function (done) {
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
           // terria's "Magda derived url"
           responseText: mapConfigBasicString
@@ -178,7 +324,7 @@ describe("Terria", function() {
             configUrl: "test/Magda/map-config-basic.json",
             i18nOptions
           })
-          .then(function() {
+          .then(function () {
             expect(terria.initSources.length).toEqual(1);
             expect(isInitFromUrl(terria.initSources[0])).toEqual(true);
             if (isInitFromUrl(terria.initSources[0])) {
@@ -191,11 +337,12 @@ describe("Terria", function() {
             }
             done();
           })
-          .catch(error => {
+          .catch((error) => {
             done.fail(error);
           });
       });
-      it("works with v7initializationUrls", async function() {
+
+      it("works with v7initializationUrls", async function () {
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
           // terria's "Magda derived url"
           responseText: mapConfigBasicString
@@ -237,7 +384,7 @@ describe("Terria", function() {
           ]);
         }
       });
-      it("works with inline init", async function() {
+      it("works with inline init", async function () {
         // inline init
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
           responseText: mapConfigInlineInitString
@@ -267,7 +414,7 @@ describe("Terria", function() {
           throw "not init source";
         }
       });
-      it("parses dereferenced group aspect", async function(done) {
+      it("parses dereferenced group aspect", async function (done) {
         expect(terria.catalog.group.uniqueId).toEqual("/");
         // dereferenced res
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
@@ -278,7 +425,7 @@ describe("Terria", function() {
             configUrl: "test/Magda/map-config-dereferenced.json",
             i18nOptions
           })
-          .then(function() {
+          .then(function () {
             const groupAspect = mapConfigDereferencedJson.aspects["group"];
             const ids = groupAspect.members.map((member: any) => member.id);
             expect(terria.catalog.group.uniqueId).toEqual("/");
@@ -295,13 +442,13 @@ describe("Terria", function() {
             });
             done();
           })
-          .catch(error => {
+          .catch((error) => {
             done.fail(error);
           });
       });
     });
 
-    it("calls `beforeRestoreAppState` before restoring app state from share data", async function() {
+    it("calls `beforeRestoreAppState` before restoring app state from share data", async function () {
       terria = new Terria({
         appBaseHref: "/",
         baseUrl: "./"
@@ -331,12 +478,109 @@ describe("Terria", function() {
     });
   });
 
-  describe("updateApplicationUrl", function() {
-    describe("test via serialise & load round-trip", function() {
+  describe("updateApplicationUrl", function () {
+    it("works with initializationUrls and initFragmentPaths", async function () {
+      expect(terria.initSources.length).toEqual(0);
+
+      jasmine.Ajax.install();
+      // Fail all requests by default.
+      jasmine.Ajax.stubRequest(/.*/).andError({});
+
+      jasmine.Ajax.stubRequest("path/to/config/configUrl.json").andReturn({
+        responseText: JSON.stringify({
+          initializationUrls: ["something"],
+          parameters: {
+            applicationUrl: "https://application.url/",
+            initFragmentPaths: [
+              "path/to/init/",
+              "https://hostname.com/some/other/path/"
+            ]
+          }
+        })
+      });
+
+      await terria.start({
+        configUrl: `path/to/config/configUrl.json`,
+        i18nOptions
+      });
+
+      await terria.updateApplicationUrl(
+        "https://application.url/#someInitHash"
+      );
+
+      expect(terria.initSources.length).toEqual(2);
+
+      const initSource = terria.initSources[1];
+      expect(isInitFromOptions(initSource)).toBeTruthy();
+
+      if (!isInitFromOptions(initSource))
+        throw "Init source is not from options";
+
+      // Note: initFragmentPaths in hash parameters are resolved to the base URL of application URL
+      // - which is https://application.url/
+      expect(
+        initSource.options.map((source) =>
+          isInitFromUrl(source) ? source.initUrl : ""
+        )
+      ).toEqual([
+        "https://application.url/path/to/init/someInitHash.json",
+        "https://hostname.com/some/other/path/someInitHash.json"
+      ]);
+
+      jasmine.Ajax.uninstall();
+    });
+
+    it("processes #start correctly", async function () {
+      expect(terria.initSources.length).toEqual(0);
+
+      jasmine.Ajax.install();
+      // Fail all requests by default.
+      jasmine.Ajax.stubRequest(/.*/).andError({});
+
+      jasmine.Ajax.stubRequest("configUrl.json").andReturn({
+        responseText: JSON.stringify({})
+      });
+
+      await terria.start({
+        configUrl: `configUrl.json`,
+        i18nOptions
+      });
+
+      // Test #start with two init sources
+      // - one initURL = "http://something/init.json"
+      // - one initData which sets `splitPosition`
+      await terria.updateApplicationUrl(
+        "https://application.url/#start=" +
+          JSON.stringify({
+            version: "8.0.0",
+            initSources: ["http://something/init.json", { splitPosition: 0.3 }]
+          })
+      );
+
+      expect(terria.initSources.length).toEqual(2);
+
+      const urlInitSource = terria.initSources[0];
+      expect(isInitFromUrl(urlInitSource)).toBeTruthy();
+
+      if (!isInitFromUrl(urlInitSource)) throw "Init source is not from url";
+
+      expect(urlInitSource.initUrl).toBe("http://something/init.json");
+
+      const jsonInitSource = terria.initSources[1];
+      expect(isInitFromData(jsonInitSource)).toBeTruthy();
+
+      if (!isInitFromData(jsonInitSource)) throw "Init source is not from data";
+
+      expect(jsonInitSource.data.splitPosition).toBe(0.3);
+
+      jasmine.Ajax.uninstall();
+    });
+
+    describe("test via serialise & load round-trip", function () {
       let newTerria: Terria;
       let viewState: ViewState;
 
-      beforeEach(function() {
+      beforeEach(function () {
         newTerria = new Terria({ appBaseHref: "/", baseUrl: "./" });
         viewState = new ViewState({
           terria: terria,
@@ -345,7 +589,7 @@ describe("Terria", function() {
         });
 
         UrlToCatalogMemberMapping.register(
-          s => true,
+          (s) => true,
           WebMapServiceCatalogItem.type,
           true
         );
@@ -378,7 +622,7 @@ describe("Terria", function() {
         ]);
       });
 
-      it("initializes user added data group with shared items", async function() {
+      it("initializes user added data group with shared items", async function () {
         expect(newTerria.catalog.userAddedDataGroup.members).not.toContain(
           "itemABC"
         );
@@ -397,7 +641,7 @@ describe("Terria", function() {
         );
       });
 
-      it("initializes user added data group with shared UrlReference items", async function() {
+      it("initializes user added data group with shared UrlReference items", async function () {
         terria.catalog.userAddedDataGroup.addMembersFromJson(
           CommonStrata.user,
           [
@@ -426,7 +670,7 @@ describe("Terria", function() {
         }
       });
 
-      it("initializes workbench with shared workbench items", async function() {
+      it("initializes workbench with shared workbench items", async function () {
         const model1 = <WebMapServiceCatalogItem>(
           terria.getModelById(BaseModel, "itemABC")
         );
@@ -445,7 +689,7 @@ describe("Terria", function() {
         expect(newTerria.workbench.itemIds).toEqual(terria.workbench.itemIds);
       });
 
-      it("initializes splitter correctly", async function() {
+      it("initializes splitter correctly", async function () {
         const model1 = <WebMapServiceCatalogItem>(
           terria.getModelById(BaseModel, "itemABC")
         );
@@ -475,7 +719,7 @@ describe("Terria", function() {
         expect(newModel1.splitDirection).toEqual(<any>SplitDirection.RIGHT);
       });
 
-      it("opens and loads members of shared open groups", async function() {
+      it("opens and loads members of shared open groups", async function () {
         const group = <WebMapServiceCatalogGroup>(
           terria.getModelById(BaseModel, "groupABC")
         );
@@ -493,21 +737,22 @@ describe("Terria", function() {
       });
     });
 
-    describe("using story route", function() {
-      beforeEach(async function() {
+    describe("using story route", function () {
+      beforeEach(async function () {
         // These specs must run with a Terria constructed with "appBaseHref": "/"
         // to make the specs work with Karma runner
         terria.updateParameters({
           storyRouteUrlPrefix: "test/stories/TerriaJS%20App/"
         });
       });
-      it("sets playStory to 1", async function() {
+
+      it("sets playStory to 1", async function () {
         await terria.updateApplicationUrl(
           new URL("story/my-story", document.baseURI).toString()
         );
         expect(terria.userProperties.get("playStory")).toBe("1");
       });
-      it("correctly adds the story share as a datasource", async function() {
+      it("correctly adds the story share as a datasource", async function () {
         await terria.updateApplicationUrl(
           new URL("story/my-story", document.baseURI).toString()
         );
@@ -521,7 +766,7 @@ describe("Terria", function() {
             .initSources[0]
         );
       });
-      it("correctly adds the story share as a datasource when there's a trailing slash on story url", async function() {
+      it("correctly adds the story share as a datasource when there's a trailing slash on story url", async function () {
         await terria.updateApplicationUrl(
           new URL("story/my-story/", document.baseURI).toString()
         );
@@ -539,17 +784,17 @@ describe("Terria", function() {
   });
 
   // Test share keys by serialising from one catalog and deserialising with a reorganised catalog
-  describe("shareKeys", function() {
-    describe("with a JSON catalog", function() {
+  describe("shareKeys", function () {
+    describe("with a JSON catalog", function () {
       let newTerria: Terria;
       let viewState: ViewState;
-      beforeEach(async function() {
+      beforeEach(async function () {
         // Create a config.json in a URL to pass to Terria.start
         const configUrl = `data:application/json;base64,${btoa(
           JSON.stringify({
             initializationUrls: [],
             parameters: {
-              regionMappingDefinitionsUrl: "data/regionMapping.json"
+              regionMappingDefinitionsUrls: ["data/regionMapping.json"]
             }
           })
         )}`;
@@ -561,7 +806,7 @@ describe("Terria", function() {
         });
 
         await Promise.all(
-          [terria, newTerria].map(t => t.start({ configUrl, i18nOptions }))
+          [terria, newTerria].map((t) => t.start({ configUrl, i18nOptions }))
         );
 
         terria.catalog.group.addMembersFromJson(CommonStrata.definition, [
@@ -572,8 +817,7 @@ describe("Terria", function() {
               {
                 name: "Random CSV",
                 type: "csv",
-                url:
-                  "data:text/csv,lon%2Clat%2Cval%2Cdate%0A151%2C-31%2C15%2C2010%0A151%2C-31%2C15%2C2011"
+                url: "data:text/csv,lon%2Clat%2Cval%2Cdate%0A151%2C-31%2C15%2C2010%0A151%2C-31%2C15%2C2011"
               }
             ]
           }
@@ -591,8 +835,7 @@ describe("Terria", function() {
                   {
                     name: "My random CSV",
                     type: "csv",
-                    url:
-                      "data:text/csv,lon%2Clat%2Cval%2Cdate%0A151%2C-31%2C15%2C2010%0A151%2C-31%2C15%2C2011",
+                    url: "data:text/csv,lon%2Clat%2Cval%2Cdate%0A151%2C-31%2C15%2C2010%0A151%2C-31%2C15%2C2011",
                     shareKeys: ["//Old group/Random CSV"]
                   }
                 ]
@@ -602,7 +845,7 @@ describe("Terria", function() {
         ]);
       });
 
-      it("correctly applies user stratum changes to moved item", async function() {
+      it("correctly applies user stratum changes to moved item", async function () {
         const csv = terria.getModelById(
           CsvCatalogItem,
           "//Old group/Random CSV"
@@ -623,7 +866,7 @@ describe("Terria", function() {
         expect(newCsv?.opacity).toBe(0.5);
       });
 
-      it("correctly adds moved item to workbench and timeline", async function() {
+      it("correctly adds moved item to workbench and timeline", async function () {
         const csv = terria.getModelById(
           CsvCatalogItem,
           "//Old group/Random CSV"
@@ -651,7 +894,7 @@ describe("Terria", function() {
       });
     });
 
-    describe("with a Magda catalog", function() {
+    describe("with a Magda catalog", function () {
       // Simulate same as above but with Magda catalogs
       // This is really messy before a proper MagdaCatalogProvider is made
       //  that can call a (currently not yet written) Magda API to find the location of
@@ -663,7 +906,7 @@ describe("Terria", function() {
 
       let newTerria: Terria;
       let viewState: ViewState;
-      beforeEach(async function() {
+      beforeEach(async function () {
         // Create a config.json in a URL to pass to Terria.start
         const configUrl =
           "https://magda.example.com/api/v0/registry/records/map-config-example?optionalAspect=terria-config&optionalAspect=terria-init&optionalAspect=group&dereference=true";
@@ -735,11 +978,11 @@ describe("Terria", function() {
         jasmine.Ajax.stubRequest(configUrl).andError({});
       });
 
-      afterEach(function() {
+      afterEach(function () {
         jasmine.Ajax.uninstall();
       });
 
-      it("correctly applies user stratum changes to moved item", async function() {
+      it("correctly applies user stratum changes to moved item", async function () {
         const oldGroupRef = terria.getModelById(
           MagdaReference,
           "6b24aa39-1aa7-48d1-b6a6-9e755aff4476"
@@ -799,7 +1042,7 @@ describe("Terria", function() {
         expect(newCsv?.opacity).toBe(0.5);
       });
 
-      it("correctly adds moved item to workbench and timeline", async function() {
+      it("correctly adds moved item to workbench and timeline", async function () {
         const oldGroupRef = terria.getModelById(
           MagdaReference,
           "6b24aa39-1aa7-48d1-b6a6-9e755aff4476"
@@ -869,8 +1112,8 @@ describe("Terria", function() {
     });
   });
 
-  describe("proxyConfiguration", function() {
-    beforeEach(function() {
+  describe("proxyConfiguration", function () {
+    beforeEach(function () {
       jasmine.Ajax.install();
       jasmine.Ajax.stubRequest(/.*(test\/init\/configProxy).*/).andReturn({
         responseText: JSON.stringify(
@@ -884,17 +1127,17 @@ describe("Terria", function() {
       });
     });
 
-    afterEach(function() {
+    afterEach(function () {
       jasmine.Ajax.uninstall();
     });
 
-    it("initializes proxy with parameters from config file", function(done) {
+    it("initializes proxy with parameters from config file", function (done) {
       terria
         .start({
           configUrl: "test/init/configProxy.json",
           i18nOptions
         })
-        .then(function() {
+        .then(function () {
           expect(terria.corsProxy.baseProxyUrl).toBe("/myproxy/");
           expect(terria.corsProxy.proxyDomains).toEqual([
             "example.com",
@@ -902,20 +1145,20 @@ describe("Terria", function() {
           ]);
           done();
         })
-        .catch(error => {
+        .catch((error) => {
           done.fail();
         });
     });
   });
 
-  describe("removeModelReferences", function() {
+  describe("removeModelReferences", function () {
     let model: SimpleCatalogItem;
-    beforeEach(function() {
+    beforeEach(function () {
       model = new SimpleCatalogItem("testId", terria);
       terria.addModel(model);
     });
 
-    it("removes the model from workbench", function() {
+    it("removes the model from workbench", function () {
       terria.workbench.add(model);
       terria.removeModelReferences(model);
       expect(terria.workbench).not.toContain(model);
@@ -923,9 +1166,9 @@ describe("Terria", function() {
 
     it(
       "it removes picked features & selected feature for the model",
-      action(function() {
+      action(function () {
         terria.pickedFeatures = new PickedFeatures();
-        const feature = new Feature({});
+        const feature = new TerriaFeature({});
         terria.selectedFeature = feature;
         feature._catalogItem = model;
         terria.pickedFeatures.features.push(feature);
@@ -935,7 +1178,7 @@ describe("Terria", function() {
       })
     );
 
-    it("unregisters the model from Terria", function() {
+    it("unregisters the model from Terria", function () {
       terria.removeModelReferences(model);
       expect(terria.getModelById(BaseModel, "testId")).toBeUndefined();
     });
@@ -970,11 +1213,13 @@ describe("Terria", function() {
   //       .catch(done.fail);
   //   });
 
-  describe("applyInitData", function() {
-    describe("when pickedFeatures is not present in initData", function() {
-      it("unsets the feature picking state if `canUnsetFeaturePickingState` is `true`", async function() {
+  describe("applyInitData", function () {
+    describe("when pickedFeatures is not present in initData", function () {
+      it("unsets the feature picking state if `canUnsetFeaturePickingState` is `true`", async function () {
         terria.pickedFeatures = new PickedFeatures();
-        terria.selectedFeature = new Entity({ name: "selected" }) as Feature;
+        terria.selectedFeature = new Entity({
+          name: "selected"
+        }) as TerriaFeature;
         await terria.applyInitData({
           initData: {},
           canUnsetFeaturePickingState: true
@@ -983,9 +1228,11 @@ describe("Terria", function() {
         expect(terria.selectedFeature).toBeUndefined();
       });
 
-      it("otherwise, should not unset feature picking state", async function() {
+      it("otherwise, should not unset feature picking state", async function () {
         terria.pickedFeatures = new PickedFeatures();
-        terria.selectedFeature = new Entity({ name: "selected" }) as Feature;
+        terria.selectedFeature = new Entity({
+          name: "selected"
+        }) as TerriaFeature;
         await terria.applyInitData({
           initData: {}
         });
@@ -994,7 +1241,7 @@ describe("Terria", function() {
       });
     });
 
-    describe("Sets workbench contents correctly", function() {
+    describe("Sets workbench contents correctly", function () {
       interface ExtendedLoadWithXhr {
         (): any;
         load: { (...args: any[]): any; calls: any };
@@ -1048,9 +1295,9 @@ describe("Terria", function() {
       let loadMapItemsWms: any = undefined;
       let loadMapItemsArcGisMap: any = undefined;
       let loadMapItemsArcGisFeature: any = undefined;
-      beforeEach(function() {
+      beforeEach(function () {
         const realLoadWithXhr = loadWithXhr.load;
-        spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
+        spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
           const url = args[0];
 
           if (
@@ -1105,7 +1352,7 @@ describe("Terria", function() {
         ).and.returnValue(Result.none());
       });
 
-      it("when a workbench item is a simple map server group", async function() {
+      it("when a workbench item is a simple map server group", async function () {
         await terria.applyInitData({
           initData: {
             catalog: [mapServerGroupModel],
@@ -1116,7 +1363,7 @@ describe("Terria", function() {
         expect(loadMapItemsArcGisMap).toHaveBeenCalledTimes(1);
       });
 
-      it("when a workbench item is a referenced map server group", async function() {
+      it("when a workbench item is a referenced map server group", async function () {
         await terria.applyInitData({
           initData: {
             catalog: [magdaRecordDerefencedToFeatureServerGroup],
@@ -1127,7 +1374,7 @@ describe("Terria", function() {
         expect(loadMapItemsArcGisFeature).toHaveBeenCalledTimes(1);
       });
 
-      it("when a workbench item is a referenced wms", async function() {
+      it("when a workbench item is a referenced wms", async function () {
         await terria.applyInitData({
           initData: {
             catalog: [magdaRecordDerefencedToWms],
@@ -1138,7 +1385,7 @@ describe("Terria", function() {
         expect(loadMapItemsWms).toHaveBeenCalledTimes(1);
       });
 
-      it("when the workbench has more than one items", async function() {
+      it("when the workbench has more than one items", async function () {
         await terria.applyInitData({
           initData: {
             catalog: [
@@ -1160,7 +1407,7 @@ describe("Terria", function() {
         expect(loadMapItemsArcGisFeature).toHaveBeenCalledTimes(1);
       });
 
-      it("when the workbench has an unknown item", async function() {
+      it("when the workbench has an unknown item", async function () {
         await terria.applyInitData({
           initData: {
             catalog: [
@@ -1183,7 +1430,7 @@ describe("Terria", function() {
         expect(loadMapItemsArcGisFeature).toHaveBeenCalledTimes(1);
       });
 
-      it("when a workbench item has errors", async function() {
+      it("when a workbench item has errors", async function () {
         let error: TerriaError | undefined = undefined;
         try {
           await terria.applyInitData({
@@ -1216,7 +1463,7 @@ describe("Terria", function() {
     });
   });
 
-  describe("mapSettings", function() {
+  describe("mapSettings", function () {
     it("properly interprets map hash parameter", async () => {
       const getLocalPropertySpy = spyOn(terria, "getLocalProperty");
       //@ts-ignore
@@ -1281,7 +1528,7 @@ describe("Terria", function() {
       expect(terria.timelineStack.alwaysShowingTimeline).toBeTruthy();
       expect(setBaseMapSpy).toHaveBeenCalledWith(
         terria.baseMapsModel.baseMapItems.find(
-          item => item.item.uniqueId === "basemap-natural-earth-II"
+          (item) => item.item.uniqueId === "basemap-natural-earth-II"
         )?.item
       );
 
@@ -1290,8 +1537,8 @@ describe("Terria", function() {
     });
   });
 
-  describe("basemaps", function() {
-    it("when no base maps are specified load defaultBaseMaps", async function() {
+  describe("basemaps", function () {
+    it("when no base maps are specified load defaultBaseMaps", async function () {
       await terria.start({ configUrl: "" });
       terria.applyInitData({
         initData: {}
@@ -1304,7 +1551,7 @@ describe("Terria", function() {
       );
     });
 
-    it("propperly loads base maps", async function() {
+    it("propperly loads base maps", async function () {
       await terria.start({ configUrl: "" });
       terria.applyInitData({
         initData: {
@@ -1348,8 +1595,8 @@ describe("Terria", function() {
     });
   });
 
-  describe("loadPickedFeatures", function() {
-    beforeEach(async function() {
+  describe("loadPickedFeatures", function () {
+    beforeEach(async function () {
       // Attach cesium viewer and wait for it to be loaded
       const container = document.createElement("div");
       document.body.appendChild(container);
@@ -1357,7 +1604,7 @@ describe("Terria", function() {
       return (terria.mainViewer as any)._cesiumPromise;
     });
 
-    it("sets the pickCoords", async function() {
+    it("sets the pickCoords", async function () {
       expect(terria.currentViewer instanceof Cesium).toBeTruthy();
       await terria.loadPickedFeatures({
         pickCoords: {
@@ -1380,17 +1627,14 @@ describe("Terria", function() {
       }
     });
 
-    it("sets the selectedFeature", async function() {
+    it("sets the selectedFeature", async function () {
       const testItem = new SimpleCatalogItem("test", terria);
       const ds = new CustomDataSource("ds");
       const entity = new Entity({ name: "foo" });
       ds.entities.add(entity);
       testItem.mapItems = [ds];
       await terria.workbench.add(testItem);
-      // It is irrelevant what we pass as argument for `clock` param because
-      // the current implementation of `hashEntity` is broken because as it
-      // expects a `Clock` but actually uses it as a `JulianDate`
-      const entityHash = hashEntity(entity, undefined);
+      const entityHash = hashEntity(entity, terria);
       await terria.loadPickedFeatures({
         pickCoords: {
           lat: 84.93,
@@ -1417,7 +1661,7 @@ describe("Terria", function() {
     });
   });
 
-  it("customRequestSchedulerLimits sets RequestScheduler limits for domains", async function() {
+  it("customRequestSchedulerLimits sets RequestScheduler limits for domains", async function () {
     const configUrl = `data:application/json;base64,${btoa(
       JSON.stringify({
         initializationUrls: [],

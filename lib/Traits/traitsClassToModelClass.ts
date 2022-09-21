@@ -8,7 +8,7 @@ import TraitsConstructor from "./TraitsConstructor";
 // (check objectTrait & objectArrayTrait) and it will always be run outside an
 // `autorun` or an `observer`. Therefore, thecall to `createTransformer` will
 // not memoize and logs a warning.
-const traitsClassToModelClass = memoize(function<T extends ModelTraits>(
+const traitsClassToModelClass = memoize(function <T extends ModelTraits>(
   traitsClass: TraitsConstructor<T>
 ) {
   return CreateModel(traitsClass);

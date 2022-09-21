@@ -13,7 +13,7 @@ export interface ModelTraitOptions extends TraitOptions {
 }
 
 export default function modelReferenceTrait<T>(options: ModelTraitOptions) {
-  return function(target: any, propertyKey: string) {
+  return function (target: any, propertyKey: string) {
     const constructor = target.constructor;
     if (!constructor.traits) {
       constructor.traits = {};
@@ -77,7 +77,7 @@ export class ModelReferenceTrait extends Trait {
           stratumName,
           jsonValue,
           {}
-        ).catchError(error => errors.push(error));
+        ).catchError((error) => errors.push(error));
         result =
           newModel?.uniqueId ?? createStubCatalogItem(model.terria).uniqueId!;
       }

@@ -40,7 +40,7 @@ import {
   FEATURE_ID_PROP as GEOJSON_FEATURE_ID_PROP,
   toFeatureCollection
 } from "../../ModelMixins/GeojsonMixin";
-import { default as CesiumFeature } from "../../Models/Feature";
+import { default as TerriaFeature } from "../../Models/Feature/Feature";
 import Terria from "../../Models/Terria";
 import { ImageryProviderWithGridLayerSupport } from "../Leaflet/ImageryProviderLeafletGridLayer";
 
@@ -162,7 +162,7 @@ export class GeojsonSource implements TileSource {
         GEOJSON_SOURCE_LAYER_NAME,
 
         // We have to transform feature objects from GeojsonVtTile to ProtomapsFeature
-        tile.features.map(f => {
+        tile.features.map((f) => {
           let transformedGeom: Point[][] = [];
           let numVertices = 0;
 
@@ -176,8 +176,8 @@ export class GeojsonSource implements TileSource {
           // Multi geometry (eg polygon, multi-line string)
           if (Array.isArray(f.geometry[0][0])) {
             const geom = f.geometry as [number, number][][];
-            transformedGeom = geom.map(g1 =>
-              g1.map(g2 => {
+            transformedGeom = geom.map((g1) =>
+              g1.map((g2) => {
                 g2 = [g2[0] * scale, g2[1] * scale];
                 if (bbox.minX > g2[0]) {
                   bbox.minX = g2[0];
@@ -206,7 +206,7 @@ export class GeojsonSource implements TileSource {
           else {
             const geom = f.geometry as [number, number][];
             transformedGeom = [
-              geom.map(g1 => {
+              geom.map((g1) => {
                 g1 = [g1[0] * scale, g1[1] * scale];
 
                 if (bbox.minX > g1[0]) {
@@ -250,7 +250,8 @@ export class GeojsonSource implements TileSource {
 type Source = PmtilesSource | ZxySource | GeojsonSource;
 
 export default class ProtomapsImageryProvider
-  implements ImageryProviderWithGridLayerSupport {
+  implements ImageryProviderWithGridLayerSupport
+{
   private readonly terria: Terria;
 
   // Imagery provider properties
@@ -481,7 +482,7 @@ export default class ProtomapsImageryProvider
     if (this.view) {
       // Get list of vector tile layers which are rendered
       const renderedLayers = [...this.paintRules, ...this.labelRules].map(
-        r => r.dataLayer
+        (r) => r.dataLayer
       );
 
       return filterOutUndefined(
@@ -491,7 +492,7 @@ export default class ProtomapsImageryProvider
             CesiumMath.toDegrees(latitude),
             level
           )
-          .map(f => {
+          .map((f) => {
             // Only create FeatureInfo for visible features with properties
             if (
               !f.feature.props ||
@@ -533,8 +534,8 @@ export default class ProtomapsImageryProvider
 
       // Create wrappedBuffer with only positive coordinates - this is needed for features which overlap antemeridian
       const wrappedBuffer = cloneDeep(buffer);
-      wrappedBuffer.geometry.coordinates.forEach(ring =>
-        ring.forEach(point => {
+      wrappedBuffer.geometry.coordinates.forEach((ring) =>
+        ring.forEach((point) => {
           point[0] = point[0] < 0 ? point[0] + 360 : point[0];
         })
       );
@@ -577,7 +578,7 @@ export default class ProtomapsImageryProvider
       }
 
       // Convert pickedFeatures to ImageryLayerFeatureInfos
-      return pickedFeatures.map(f => {
+      return pickedFeatures.map((f) => {
         const featureInfo = new ImageryLayerFeatureInfo();
 
         featureInfo.data = f;
@@ -648,7 +649,7 @@ export default class ProtomapsImageryProvider
   /** Clones ImageryProvider, and sets paintRules to highlight picked features */
   @action
   createHighlightImageryProvider(
-    feature: CesiumFeature
+    feature: TerriaFeature
   ): ProtomapsImageryProvider | undefined {
     // Depending on this.source, feature IDs might be FID (for actual vector tile sources) or they will use GEOJSON_FEATURE_ID_PROP
     let featureProp: string | undefined;
