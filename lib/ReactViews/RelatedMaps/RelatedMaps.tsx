@@ -2,6 +2,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { DefaultTheme, withTheme } from "styled-components";
+import { RelatedMap } from "../../Models/RelatedMaps";
 import Box from "../../Styled/Box";
 import { ExternalLinkIcon } from "../Custom/ExternalLink";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
@@ -16,9 +17,8 @@ const MenuPanel =
 
 type PropTypes = WithViewState &
   WithTranslation & {
-    refFromHOC?: React.Ref<HTMLDivElement>;
     theme: DefaultTheme;
-    smallScreen: boolean;
+    relatedMaps: RelatedMap[];
   };
 
 @observer
@@ -36,16 +36,13 @@ class RelatedMaps extends React.Component<PropTypes> {
       icon: "gallery"
     };
 
-    const relatedMaps =
-      this.props.viewState.terria.configParameters.relatedMaps;
-
-    if (!relatedMaps || relatedMaps.length === 0) return null;
+    const smallScreen = this.props.viewState.useSmallScreenInterface;
 
     return (
       <MenuPanel
         theme={dropdownTheme}
         btnText="Related Maps"
-        smallScreen={this.props.smallScreen}
+        smallScreen={smallScreen}
         viewState={this.props.viewState}
         btnTitle="See related maps"
         showDropdownInCenter
@@ -54,7 +51,7 @@ class RelatedMaps extends React.Component<PropTypes> {
 
         <p>Clicking on a map below will open it in a separate window or tab.</p>
 
-        {relatedMaps.map((map) => (
+        {this.props.relatedMaps.map((map) => (
           <Box flex>
             <Box>
               <a target="_blank" href={map.url}>
