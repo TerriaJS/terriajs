@@ -53,11 +53,13 @@ export interface CkanDataset {
   resources: CkanResource[];
   spatial?: string;
   /** If undefined - we assume state is "active" */
-  state?: string;
-  /** `data_state` is only relevant to Data.gov.au
-   * If undefined - we assume state is "active"
+  state?: "active" | "deleted" | "draft" | undefined;
+  /** If undefined - we assume state is "active"
+   * `data_state` is only relevant to Data.gov.au CKAN datasets
+   * See https://github.com/datagovau/ckanext-datagovau/blob/966e045f8bfe0cc1453d9eaf6511e8c476d59c26/ckanext/datagovau/schemas/dataset.yaml#L91-L100
+   *
    */
-  data_state?: string;
+  data_state?: "active" | "inactive" | undefined;
 }
 
 export interface CkanResourceServerResponse {

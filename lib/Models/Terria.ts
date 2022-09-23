@@ -30,7 +30,6 @@ import {
   isJsonBoolean,
   isJsonNumber,
   isJsonObject,
-  isJsonObjectArray,
   isJsonString,
   JsonArray,
   JsonObject
@@ -89,13 +88,13 @@ import GlobeOrMap from "./GlobeOrMap";
 import IElementConfig from "./IElementConfig";
 import InitSource, {
   InitSourceData,
+  InitSourceFromData,
   isInitFromData,
   isInitFromDataPromise,
   isInitFromOptions,
   isInitFromUrl,
   ShareInitSourceData,
-  StoryData,
-  InitSourceFromData
+  StoryData
 } from "./InitSource";
 import Internationalization, {
   I18nStartOptions,
@@ -103,6 +102,7 @@ import Internationalization, {
 } from "./Internationalization";
 import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
+import { defaultRelatedMaps, RelatedMap } from "./RelatedMaps";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
 import ShareDataService from "./ShareDataService";
 import { StoryVideoSettings } from "./StoryVideoSettings";
@@ -318,6 +318,8 @@ interface ConfigParameters {
    * Options for Google Analytics
    */
   googleAnalyticsOptions?: unknown;
+
+  relatedMaps?: RelatedMap[];
 }
 
 interface StartOptions {
@@ -527,7 +529,8 @@ export default class Terria {
     printDisclaimer: undefined,
     storyRouteUrlPrefix: undefined,
     enableConsoleAnalytics: undefined,
-    googleAnalyticsOptions: undefined
+    googleAnalyticsOptions: undefined,
+    relatedMaps: defaultRelatedMaps
   };
 
   @observable
