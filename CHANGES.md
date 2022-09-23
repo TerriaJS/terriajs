@@ -2,6 +2,7 @@
 
 #### next release (8.2.17)
 
+- Fix region mapping feature `rowIds` incorrect type.
 - [The next improvement]
 
 #### next release (8.2.16)
