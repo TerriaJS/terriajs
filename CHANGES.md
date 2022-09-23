@@ -5,6 +5,7 @@
 - Make srsName and outputFormat for WFS requests dynamic
 - Added `excludeInactiveDatasets` to `CkanCatalogGroup` (`true` by default). This will filter out CKAN Datasets which have `state` or `data_state` (data.gov.au specific) **not** set to `"active"`.
 - Fix `isTerriaFeatureData` bug - not checking `isJsonObject`
+- Move `RelatedMaps` to terriajs. They are now generated from `configParameters` (see [`doc/customizing/client-side-config.md`](./doc/customizing/client-side-config.md#relatedmap))
 - [The next improvement]
 
 #### 8.2.15 - 2022-09-16
