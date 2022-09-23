@@ -1,11 +1,14 @@
 # Change Log
 
-#### next release (8.2.17)
+#### next release (8.2.18)
 
-- Fix region mapping feature `rowIds` incorrect type.
 - [The next improvement]
 
-#### next release (8.2.16)
+#### 8.2.17 - 2022-09-23
+
+- Fix region mapping feature `rowIds` incorrect type.
+
+#### 8.2.16 - 2022-09-23
 
 - Make srsName and outputFormat for WFS requests dynamic
 - Added `excludeInactiveDatasets` to `CkanCatalogGroup` (`true` by default). This will filter out CKAN Datasets which have `state` or `data_state` (data.gov.au specific) **not** set to `"active"`.
