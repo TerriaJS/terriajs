@@ -30,7 +30,6 @@ import {
   isJsonBoolean,
   isJsonNumber,
   isJsonObject,
-  isJsonObjectArray,
   isJsonString,
   JsonArray,
   JsonObject
@@ -84,18 +83,18 @@ import {
   initializeErrorServiceProvider
 } from "./ErrorServiceProviders/ErrorService";
 import StubErrorServiceProvider from "./ErrorServiceProviders/StubErrorServiceProvider";
-import Feature from "./Feature";
+import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import IElementConfig from "./IElementConfig";
 import InitSource, {
   InitSourceData,
+  InitSourceFromData,
   isInitFromData,
   isInitFromDataPromise,
   isInitFromOptions,
   isInitFromUrl,
   ShareInitSourceData,
-  StoryData,
-  InitSourceFromData
+  StoryData
 } from "./InitSource";
 import Internationalization, {
   I18nStartOptions,
@@ -103,6 +102,7 @@ import Internationalization, {
 } from "./Internationalization";
 import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
+import { defaultRelatedMaps, RelatedMap } from "./RelatedMaps";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
 import ShareDataService from "./ShareDataService";
 import { StoryVideoSettings } from "./StoryVideoSettings";
@@ -318,6 +318,8 @@ interface ConfigParameters {
    * Options for Google Analytics
    */
   googleAnalyticsOptions?: unknown;
+
+  relatedMaps?: RelatedMap[];
 }
 
 interface StartOptions {
@@ -527,14 +529,15 @@ export default class Terria {
     printDisclaimer: undefined,
     storyRouteUrlPrefix: undefined,
     enableConsoleAnalytics: undefined,
-    googleAnalyticsOptions: undefined
+    googleAnalyticsOptions: undefined,
+    relatedMaps: defaultRelatedMaps
   };
 
   @observable
   pickedFeatures: PickedFeatures | undefined;
 
   @observable
-  selectedFeature: Feature | undefined;
+  selectedFeature: TerriaFeature | undefined;
 
   @observable
   allowFeatureInfoRequests: boolean = true;
@@ -780,7 +783,7 @@ export default class Terria {
     if (pickedFeatures) {
       // Remove picked features that belong to the catalog item
       pickedFeatures.features.forEach((feature, i) => {
-        if (featureBelongsToCatalogItem(<Feature>feature, model)) {
+        if (featureBelongsToCatalogItem(<TerriaFeature>feature, model)) {
           pickedFeatures?.features.splice(i, 1);
           if (this.selectedFeature === feature)
             this.selectedFeature = undefined;
@@ -1881,8 +1884,8 @@ export default class Terria {
 
   @action
   async loadPickedFeatures(pickedFeatures: JsonObject): Promise<void> {
-    let vectorFeatures: Entity[] = [];
-    let featureIndex: Record<number, Entity[] | undefined> = {};
+    let vectorFeatures: TerriaFeature[] = [];
+    let featureIndex: Record<number, TerriaFeature[] | undefined> = {};
 
     if (Array.isArray(pickedFeatures.entities)) {
       // Build index of terria features by a hash of their properties.
@@ -1899,8 +1902,9 @@ export default class Terria {
           .reduce((arr: Entity[], ds) => arr.concat(ds.entities.values), []);
 
         entities.forEach((entity) => {
-          const hash = hashEntity(entity, this.timelineClock);
-          const feature = Feature.fromEntityCollectionOrEntity(entity);
+          const feature = TerriaFeature.fromEntityCollectionOrEntity(entity);
+          const hash = hashEntity(feature, this);
+
           featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
         });
       });
@@ -1932,7 +1936,7 @@ export default class Terria {
       this.currentViewer.pickFromLocation(
         pickCoords,
         pickedFeatures.providerCoords,
-        vectorFeatures as Feature[]
+        vectorFeatures as TerriaFeature[]
       );
     }
 
@@ -1942,23 +1946,21 @@ export default class Terria {
     }
 
     runInAction(() => {
-      this.pickedFeatures?.features.forEach((entity: Entity) => {
-        const hash = hashEntity(entity, this.timelineClock);
-        const feature = entity;
+      this.pickedFeatures?.features.forEach((feature) => {
+        const hash = hashEntity(feature, this);
         featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
       });
 
+      // Find picked feature by matching feature hash
+      // Also try to match name if defined
       const current = pickedFeatures.current;
-      if (
-        isJsonObject(current) &&
-        typeof current.hash === "number" &&
-        typeof current.name === "string"
-      ) {
-        const selectedFeature = (featureIndex[current.hash] || []).find(
-          (feature) => feature.name === current.name
-        );
+      if (isJsonObject(current) && typeof current.hash === "number") {
+        const selectedFeature =
+          (featureIndex[current.hash] || []).find(
+            (feature) => feature.name === current.name
+          ) ?? featureIndex[current.hash]?.[0];
         if (selectedFeature) {
-          this.selectedFeature = selectedFeature as Feature;
+          this.selectedFeature = selectedFeature;
         }
       }
     });

@@ -110,7 +110,11 @@ const Tabs = observer(
             )[0];
             // If member was found and member can be opened, open it (causes CkanCatalogGroups to fetch etc.)
             if (defined(member)) {
-              this.props.viewState.viewCatalogMember(member);
+              this.props.viewState
+                .viewCatalogMember(member)
+                .then((result) =>
+                  result.raiseError(this.props.viewState.terria)
+                );
             }
           }
         }

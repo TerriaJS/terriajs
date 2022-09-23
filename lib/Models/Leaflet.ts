@@ -51,7 +51,7 @@ import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
 import hasTraits from "./Definition/hasTraits";
-import Feature from "./Feature";
+import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import { LeafletAttribution } from "./LeafletAttribution";
 import MapInteractionMode from "./MapInteractionMode";
@@ -507,7 +507,7 @@ export default class Leaflet extends GlobeOrMap {
   pickFromLocation(
     latLngHeight: LatLonHeight,
     providerCoords: ProviderCoordsMap,
-    existingFeatures: Feature[]
+    existingFeatures: TerriaFeature[]
   ) {
     this._pickFeatures(
       L.latLng({
@@ -593,7 +593,9 @@ export default class Leaflet extends GlobeOrMap {
       }
     }
 
-    const catalogItem = (entity as any)._catalogItem;
+    const feature = TerriaFeature.fromEntityCollectionOrEntity(entity);
+
+    const catalogItem = feature._catalogItem;
 
     if (
       FeatureInfoUrlTemplateMixin.isMixedInto(catalogItem) &&
@@ -613,22 +615,21 @@ export default class Leaflet extends GlobeOrMap {
         }
       }
     } else if (isDefined(this._pickedFeatures)) {
-      const feature = Feature.fromEntityCollectionOrEntity(entity);
       this._pickedFeatures.features.push(feature);
     }
     if (
       isDefined(this._pickedFeatures) &&
-      isDefined(entity) &&
-      entity.position
+      isDefined(feature) &&
+      feature.position
     ) {
-      this._pickedFeatures.pickPosition = (<any>entity.position)._value;
+      this._pickedFeatures.pickPosition = (<any>feature.position)._value;
     }
   }
 
   private _pickFeatures(
     latlng: L.LatLng,
-    tileCoordinates?: any,
-    existingFeatures?: Feature[],
+    tileCoordinates?: Record<string, ProviderCoords>,
+    existingFeatures?: TerriaFeature[],
     ignoreSplitter: boolean = false
   ) {
     if (isDefined(this._pickedFeatures)) {
@@ -703,119 +704,114 @@ export default class Leaflet extends GlobeOrMap {
     this._pickedFeatures.pickPosition =
       Ellipsoid.WGS84.cartographicToCartesian(pickedLocation);
 
-    // We want the all available promise to return after the cleanup one to
-    // make sure all vector click events have resolved.
-    const promises = [cleanup].concat(
-      imageryLayers.map(async (imageryLayer) => {
-        const imageryLayerUrl = (<any>imageryLayer.imageryProvider).url;
-        const longRadians = CesiumMath.toRadians(latlng.lng);
-        const latRadians = CesiumMath.toRadians(latlng.lat);
+    const imageryFeaturePromises = imageryLayers.map(async (imageryLayer) => {
+      const imageryLayerUrl = (<any>imageryLayer.imageryProvider).url;
+      const longRadians = CesiumMath.toRadians(latlng.lng);
+      const latRadians = CesiumMath.toRadians(latlng.lat);
 
-        if (tileCoordinates[imageryLayerUrl])
-          return tileCoordinates[imageryLayerUrl];
-
-        const coords = await imageryLayer.getFeaturePickingCoords(
+      const coords =
+        tileCoordinates?.[imageryLayerUrl] ??
+        (await imageryLayer.getFeaturePickingCoords(
           this.map,
           longRadians,
           latRadians
-        );
+        ));
 
-        const features = await imageryLayer.pickFeatures(
-          coords.x,
-          coords.y,
-          coords.level,
-          longRadians,
-          latRadians
-        );
+      const features = await imageryLayer.pickFeatures(
+        coords.x,
+        coords.y,
+        coords.level,
+        longRadians,
+        latRadians
+      );
 
-        return {
-          features: features,
-          imageryLayer: imageryLayer,
-          coords: coords
-        };
-      })
-    );
+      // Make sure ImageryLayerFeatureInfo has imagery layer property
+      features?.forEach((feature) => (feature.imageryLayer = imageryLayer));
+
+      return {
+        features: features,
+        imageryLayer: imageryLayer,
+        coords: coords
+      };
+    });
 
     const pickedFeatures = this._pickedFeatures;
 
-    pickedFeatures.allFeaturesAvailablePromise = Promise.all(promises)
-      .then((results: any) => {
-        // Get rid of the cleanup promise
-        const promiseResult: {
-          features: ImageryLayerFeatureInfo[];
-          imageryLayer: ImageryProviderLeafletTileLayer;
-          coords: ProviderCoords;
-        }[] = results.slice(1);
+    // We want the all available promise to return after the cleanup one to
+    // make sure all vector click events have resolved.
+    pickedFeatures.allFeaturesAvailablePromise = Promise.all([
+      cleanup,
+      Promise.all(imageryFeaturePromises)
+        .then((results) => {
+          runInAction(() => {
+            pickedFeatures.isLoading = false;
+          });
 
-        runInAction(() => {
-          pickedFeatures.isLoading = false;
-        });
-
-        pickedFeatures.providerCoords = {};
-        const filteredResults = promiseResult.filter(function (result) {
-          return isDefined(result.features) && result.features.length > 0;
-        });
-
-        pickedFeatures.providerCoords = filteredResults.reduce(function (
-          coordsSoFar: ProviderCoordsMap,
-          result
-        ) {
-          const imageryProvider = result.imageryLayer.imageryProvider;
-          coordsSoFar[(<any>imageryProvider).url] = result.coords;
-          return coordsSoFar;
-        },
-        {});
-
-        const features = filteredResults.reduce((allFeatures, result) => {
-          if (
-            this.terria.showSplitter &&
-            ignoreSplitter === false &&
-            isDefined(pickedFeatures.pickPosition)
-          ) {
-            // Skip this feature, unless the imagery layer is on the picked side or
-            // belongs to both sides of the splitter
-            const screenPosition = this._computePositionOnScreen(
-              pickedFeatures.pickPosition
-            );
-            const pickedSide =
-              this._getSplitterSideForScreenPosition(screenPosition);
-            const layerDirection = result.imageryLayer.splitDirection;
-
-            if (
-              !(
-                layerDirection === pickedSide ||
-                layerDirection === SplitDirection.NONE
-              )
-            ) {
-              return allFeatures;
-            }
-          }
-
-          return allFeatures.concat(
-            result.features.map((feature) => {
-              (<any>feature).imageryLayer = result.imageryLayer;
-
-              // For features without a position, use the picked location.
-              if (!isDefined(feature.position)) {
-                feature.position = pickedLocation;
-              }
-
-              return this._createFeatureFromImageryLayerFeature(feature);
-            })
+          pickedFeatures.providerCoords = {};
+          const filteredResults = results.filter(
+            (result) => isDefined(result.features) && result.features.length > 0
           );
-        }, pickedFeatures.features);
-        runInAction(() => {
-          pickedFeatures.features = features;
-        });
-      })
-      .catch((e) => {
-        runInAction(() => {
-          pickedFeatures.isLoading = false;
-          pickedFeatures.error =
-            "An unknown error occurred while picking features.";
-        });
-        throw e;
-      });
+
+          pickedFeatures.providerCoords = filteredResults.reduce(function (
+            coordsSoFar: ProviderCoordsMap,
+            result
+          ) {
+            const imageryProvider = result.imageryLayer?.imageryProvider;
+            if (imageryProvider)
+              coordsSoFar[(<any>imageryProvider).url] = result.coords;
+            return coordsSoFar;
+          },
+          {});
+
+          const features = filteredResults.reduce((allFeatures, result) => {
+            if (
+              this.terria.showSplitter &&
+              ignoreSplitter === false &&
+              isDefined(pickedFeatures.pickPosition)
+            ) {
+              // Skip this feature, unless the imagery layer is on the picked side or
+              // belongs to both sides of the splitter
+              const screenPosition = this._computePositionOnScreen(
+                pickedFeatures.pickPosition
+              );
+              const pickedSide =
+                this._getSplitterSideForScreenPosition(screenPosition);
+              const layerDirection = result.imageryLayer.splitDirection;
+
+              if (
+                !(
+                  layerDirection === pickedSide ||
+                  layerDirection === SplitDirection.NONE
+                )
+              ) {
+                return allFeatures;
+              }
+            }
+
+            return allFeatures.concat(
+              result.features!.map((feature) => {
+                // For features without a position, use the picked location.
+                if (!isDefined(feature.position)) {
+                  feature.position = pickedLocation;
+                }
+
+                return this._createFeatureFromImageryLayerFeature(feature);
+              })
+            );
+          }, pickedFeatures.features);
+          runInAction(() => {
+            pickedFeatures.features = features;
+          });
+        })
+        .catch((e) => {
+          runInAction(() => {
+            pickedFeatures.isLoading = false;
+            pickedFeatures.error =
+              "An unknown error occurred while picking features.";
+          });
+          throw e;
+        })
+    ]).then(() => undefined);
 
     runInAction(() => {
       const mapInteractionModeStack = this.terria.mapInteractionModeStack;
@@ -909,7 +905,7 @@ export default class Leaflet extends GlobeOrMap {
     return result;
   }
 
-  private _selectFeature(feature: Feature | undefined) {
+  private _selectFeature(feature: TerriaFeature | undefined) {
     this._highlightFeature(feature);
 
     if (isDefined(feature) && isDefined(feature.position)) {
