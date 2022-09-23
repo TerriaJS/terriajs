@@ -7,6 +7,7 @@ import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import isDefined from "../Core/isDefined";
+import { isJsonNumber } from "../Core/Json";
 import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
 import { TerriaFeatureData } from "../Models/Feature/FeatureData";
 import TableStyle from "./TableStyle";
@@ -200,10 +201,11 @@ const getImageryLayerFeatureInfo = action(
 
       featureData.id = feature.properties[regionType.uniqueIdProp];
       featureInfo.properties = featureData;
-      featureInfo.data = {
-        rowIds: regionRows,
+      const terriaFeatureData: TerriaFeatureData = {
+        rowIds: isJsonNumber(regionRows) ? [regionRows] : [...regionRows],
         type: "terriaFeatureData"
-      } as TerriaFeatureData;
+      };
+      featureInfo.data = terriaFeatureData;
 
       featureInfo.configureDescriptionFromProperties(featureData);
       featureInfo.configureNameFromProperties(featureData);
