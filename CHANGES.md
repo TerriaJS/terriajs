@@ -1,5 +1,9 @@
 # Change Log
 
+#### next release (8.2.17)
+
+- [The next improvement]
+
 #### next release (8.2.16)
 
 - Make srsName and outputFormat for WFS requests dynamic
@@ -7,7 +11,6 @@
 - Fix `isTerriaFeatureData` bug - not checking `isJsonObject`
 - Add `.logError()` to all usage of `updateModelFromJson` where the `Result` object is ignored
 - Move `RelatedMaps` to terriajs. They are now generated from `configParameters` (see [`doc/customizing/client-side-config.md`](./doc/customizing/client-side-config.md#relatedmap))
-- [The next improvement]
 
 #### 8.2.15 - 2022-09-16
 
