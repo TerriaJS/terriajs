@@ -2,6 +2,7 @@
 
 #### next release (8.2.18)
 
+- Fix `RelatedMaps` default broken URLs
 - [The next improvement]
 
 #### 8.2.17 - 2022-09-23
