@@ -2,8 +2,15 @@ name: Deploy TerriaMap
 
 on: push
 
+permissions:
+  contents: read # to fetch code (actions/checkout)
+
 jobs:
   deploy:
+    permissions:
+      contents: read # to fetch code (actions/checkout)
+      statuses: write # to create commit status (ci-deploy.sh)
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
