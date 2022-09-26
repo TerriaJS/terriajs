@@ -16,6 +16,14 @@ export const defaultRelatedMaps: RelatedMap[] = [
   },
   {
     imageUrl:
+      "https://terria-catalogs-public.storage.googleapis.com/misc/related-maps/vic-dt.jpg",
+    url: "https://vic.digitaltwin.terria.io/",
+    title: "Digital Twin Victoria",
+    description:
+      "The Digital Twin Victoria (DTV) platform is the most comprehensive digital model ever assembled for Victoria. It brings together masses of 2D, 3D and live data in a single online place open for everyone to use. The DTV platform is one part of the $37.4 million Digital Twin Victoria Program."
+  },
+  {
+    imageUrl:
       "https://terria-catalogs-public.storage.googleapis.com/misc/related-maps/nsw-dt.png",
     url: "https://nsw.digitaltwin.terria.io/",
     title: "NSW Spatial Digital Twin",
