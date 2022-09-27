@@ -731,7 +731,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             defaultStyle: {
               color: { zScoreFilterEnabled: value === "true" }
             }
-          });
+          }).logError("Failed to update zScoreFilterEnabled");
         },
         placement: "belowLegend",
         type: "checkbox"
