@@ -70,7 +70,7 @@ In order for your server to perform effectively we highly recommend that you cac
 
 The easiest solution is to just use the GeoWebCache service. The documentation for GeoWebCache is [here](http://docs.geoserver.org/stable/en/user/geowebcache/). Mainly it consists of turning on direct integration in the caching defaults and making sure that your layers have caching turned on. You may also want to control the caching folder which can be done by editing your geoserver instance as explained [here](http://docs.geoserver.org/2.1.4/user/geowebcache/config.html). You will also probably need to set permissions in your new cache folder to 666.
 
-The other solution is to put a caching proxy in front of your geoserver instance. This also has the benefit of being able to access your server on port 80 if you wish. The option we recommend is [nginx](http://nginx.org/en/) and [varnish](https://www.varnish-cache.org/). This is FOSS software and is available as a package on ubuntu. Below is an example of setting up nginx to work with geoserver.
+The other solution is to put a caching proxy in front of your geoserver instance. This also has the benefit of being able to access your server on port 80 if you wish. The option we recommend is [nginx](http://nginx.org/en/). This is FOSS software and is available as a package on ubuntu. Below is an example of setting up nginx to work with geoserver.
 
 ### nginx
 
