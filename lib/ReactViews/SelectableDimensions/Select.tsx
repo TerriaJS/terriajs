@@ -125,7 +125,7 @@ export const SelectableDimensionEnumMulti: React.FC<{
           )
         );
       }}
-      isClearable={true}
+      isClearable={dim.allowUndefined}
       formatOptionLabel={dim.optionRenderer}
       theme={(selectTheme) => ({
         ...selectTheme,

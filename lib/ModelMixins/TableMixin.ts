@@ -1,11 +1,5 @@
 import i18next from "i18next";
-import {
-  action,
-  computed,
-  isObservableArray,
-  observable,
-  runInAction
-} from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import { createTransformer, ITransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -18,7 +12,7 @@ import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
-import { JsonObject } from "../Core/Json";
+import { isJsonNumber, JsonObject } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
 import TerriaError from "../Core/TerriaError";
 import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
@@ -296,6 +290,26 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       );
     }
 
+    @computed get numberOfPoints() {
+      return this.activeTableStyle.isPoints()
+        ? this.activeTableStyle.rowGroups.length
+        : 0;
+    }
+
+    @computed get numberOfRegions() {
+      const regionIds = new Set<number>();
+      const regions =
+        this.activeTableStyle.regionColumn?.valuesAsRegions.regionIds;
+
+      if (!regions) return 0;
+
+      for (let i = 0; i < this.rowIds.length; i++) {
+        const region = regions[this.rowIds[i]];
+        if (isJsonNumber(region)) regionIds.add(region);
+      }
+      return regionIds.size;
+    }
+
     /**
      * Gets the items to show on the map.
      */
@@ -309,21 +323,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       )
         return [];
 
-      const numRegions =
-        this.activeTableStyle.regionColumn?.valuesAsRegions?.uniqueRegionIds
-          ?.length ?? 0;
-
-      // Estimate number of points based off number of rowGroups
-      const numPoints = this.activeTableStyle.isPoints()
-        ? this.activeTableStyle.rowGroups.length
-        : 0;
-
       // If we have more points than regions OR we have points are are using a ConstantColorMap - show points instead of regions
       // (Using ConstantColorMap with regions will result in all regions being the same color - which isn't useful)
       if (
-        (numPoints > 0 &&
+        (this.numberOfPoints > 0 &&
           this.activeTableStyle.colorMap instanceof ConstantColorMap) ||
-        numPoints > numRegions
+        this.numberOfPoints > this.numberOfRegions
       ) {
         const pointsDataSource = this.createLongitudeLatitudeDataSource(
           this.activeTableStyle
@@ -332,7 +337,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         // Make sure there are actually more points than regions
         if (
           pointsDataSource &&
-          pointsDataSource.entities.values.length > numRegions
+          pointsDataSource.entities.values.length > this.numberOfRegions
         )
           return [pointsDataSource];
       }
@@ -570,6 +575,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
                   options: col.uniqueValues.values.map((value) => ({
                     id: value
                   })),
+                  allowUndefined: col.traits.filter.allowUndefined,
                   selectedIds: col.traits.filter.values as string[],
                   setDimensionValue: (stratumId: string, values: string[]) => {
                     (
@@ -774,7 +780,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       };
     }
 
-    /** Array of row IDs
+    /** Array of row IDs to visualise
      * This takes into account column filters.
      */
     @computed
@@ -789,29 +795,30 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           const column = this.tableColumns[i];
           const filter = column.traits.filter;
           const rowValue = column.values[rowId];
+          const filterValues = filter.values ?? [];
 
-          const filterValues = [...(filter.values ?? [])];
-          if (
-            filterValues.length === 0 &&
-            !filter.allowUndefined &&
-            isDefined(column.uniqueValues.values[0])
-          ) {
-            filterValues.push(column.uniqueValues.values[0]);
-          }
-          if (
-            filter &&
-            filter.enable &&
-            filter.values &&
-            filter.values.length > 0
-          ) {
-            if (filter.allowMultipleValues) {
-              if (!filter.values.some((v) => v === rowValue)) {
+          if (filter?.enable) {
+            if (filterValues.length === 0) {
+              // If filter has no values selected - and does NOT allow undefined - then don't include row
+              if (!filter.allowUndefined) {
                 include = false;
                 break;
               }
-            } else if (filter.values[0] !== rowValue) {
-              include = false;
-              break;
+            } else {
+              // Match filter with multiple values (array of selected values)
+              if (
+                filter.allowMultipleValues &&
+                !filterValues.some((v) => v === rowValue)
+              ) {
+                include = false;
+                break;
+              }
+
+              // Match filter with single value
+              if (filterValues[0] !== rowValue) {
+                include = false;
+                break;
+              }
             }
           }
         }

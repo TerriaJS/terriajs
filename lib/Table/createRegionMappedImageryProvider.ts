@@ -41,6 +41,7 @@ export default function createRegionMappedImageryProvider(
     currentTimeRows = style.timeIntervals.reduce<number[]>(
       (rows, timeInterval, index) => {
         if (timeInterval && TimeInterval.contains(timeInterval, currentTime!)) {
+          // TODO: handle row filtering here - by looking at rowIds
           rows.push(index);
         }
         return rows;
@@ -175,8 +176,6 @@ const getImageryLayerFeatureInfo = action(
       );
 
       if (!isDefined(rowId)) return;
-
-      style.tableModel.tableColumns;
 
       const rowObject = style.tableModel.tableColumns.reduce<{
         [key: string]: string | number | null;

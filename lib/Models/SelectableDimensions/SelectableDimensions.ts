@@ -28,6 +28,7 @@ export interface EnumDimension<T = string> extends Dimension {
 export interface MultiEnumDimension<T = string> extends Dimension {
   readonly options?: readonly EnumDimensionOption<T>[];
   readonly selectedIds?: T[];
+  readonly allowUndefined?: boolean;
 }
 
 export interface NumericalDimension extends Dimension {
