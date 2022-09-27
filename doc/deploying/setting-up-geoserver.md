@@ -1,6 +1,6 @@
 # Setting up GeoServer
 
-Geoserver will allow you to host your own spatial data on the web, such as vector data (e.g. shapefiles) and rasters, and to make this spatial data available in your TerriaMap. Geoserver can serve vector data and rasters as [WMS](https://www.ogc.org/standards/wms), and vector data as [WFS](https://www.ogc.org/standards/wfs). These can then be added as catalog items to your TerriaMap.
+Geoserver will allow you to host your own spatial data on the web, such as vector data (e.g. shapefiles) and rasters. Geoserver can serve vector data and rasters as [WMS](https://www.ogc.org/standards/wms), and vector data as [WFS](https://www.ogc.org/standards/wfs). These can then be added as catalog items to your TerriaMap and viewed from anywhere.
 
 Here we describe the process of setting up Geoserver on a server running Ubuntu OS (e.g. see below for how to setup on an AWS virtual machine).
 
