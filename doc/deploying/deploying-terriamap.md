@@ -30,7 +30,7 @@ And on the server, change to the directory where you copied those files and dire
 
 The server will start on port 3001. You can specify a different port by adding ` --port 1234` to the end of [the `args` configuration string](https://github.com/TerriaJS/TerriaMap/blob/f3c0b5e2a6ecd264b975beb155f9db84acca48df/ecosystem-production.config.js#L16) in `ecosystem-production.config.js`.
 
-It is usually a good idea to run another web server, such as [nginx](https://nginx.org/en/) on port 80 and then reverse-proxy to the Node.js server, rather than running terriajs-server on port 80 directly. NGINX is available as a package on Ubuntu via `sudo apt-get install -y nginx`. Using a separate web server such as such as [nginx](https://nginx.org/en/) will enable more security features, allow you to server TerriaMap over HTTPS, and allow caching if you intend to [setup Geoserver](https://docs.terria.io/guide/deploying/setting-up-geoserver/) or other backend services.
+It is usually a good idea to run another web server, such as [nginx](https://nginx.org/en/) on port 80 and then reverse-proxy to the Node.js server, rather than running terriajs-server on port 80 directly. NGINX is available as a package on Ubuntu via `sudo apt-get install -y nginx`. Using a separate web server such as such as [nginx](https://nginx.org/en/) will enable more security features, allow you to serve TerriaMap over HTTPS, and allow caching if you intend to [setup Geoserver](https://docs.terria.io/guide/deploying/setting-up-geoserver/) or other backend services.
 
 ### Using any web server
 
