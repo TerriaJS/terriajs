@@ -2,6 +2,7 @@
 
 #### next release (8.2.18)
 
+- Only preload next timestep of timeseries rasters (WMS & ArcGIS MapServer) when animating the item on the map.
 - [The next improvement]
 
 #### 8.2.17 - 2022-09-23
