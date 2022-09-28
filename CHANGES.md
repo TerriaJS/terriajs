@@ -4,6 +4,7 @@
 
 - Add support for `OpenDataSoftCatalogGroup` with more than 100 datasets
 - Add `refreshIntervalTemplate` to `OpenDataSoftCatalogItemTraits` - this can be used to set `refreshInterval` using Mustache template rendered on ODS Dataset JSON object
+- Only preload next timestep of timeseries rasters (WMS & ArcGIS MapServer) when animating the item on the map.
 - [The next improvement]
 
 #### 8.2.17 - 2022-09-23
