@@ -307,7 +307,8 @@
     "next": "Sig",
     "prev": "Ant",
     "open": "Abrir",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "back": "Atrás"
   },
   "measure": {
     "measureTool": "Herramienta de Medición",
