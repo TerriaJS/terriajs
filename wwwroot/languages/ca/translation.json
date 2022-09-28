@@ -203,7 +203,7 @@
     "printButton": "Imprimir",
     "printViewButton": "Mostra la vista d'impressió",
     "btnAdvanced": "Opcions avançades",
-    "embedTitle": "Per embed, copieu aquest codi per inserir aquest mapa en una pàgina HTML:",
+    "embedTitle": "Inserir mapa",
     "shortenUsingService": "Escurceu l'URL per compartir mitjançant un servei web",
     "btnStoryShareText": "Compartir",
     "btnMapShareText": "Compartir / Imprimir",
@@ -223,7 +223,8 @@
     "convertNotificationMessage": "Aquest enllaç per compartir es basa en una versió anterior de TerriaJS, el programari que alimenta aquest mapa web. Tot i que es fan els millors esforços per preservar l'enllaç, és possible que tingueu problemes amb la visualització de les dades.\n\nSi sou usuari de l'enllaç per compartir, feu clic a D'acord per tal que el missatge d'advertència desaparegui i continueu accedint a les dades.",
     "convertErrorMessage": "Aquest enllaç per compartir es basa en una versió anterior de TerriaJS, el programari que alimenta aquest mapa web. S'ha produït un error en intentar actualitzar les dades compartides.",
     "downloadMap": "Descarregar mapa (png)",
-    "getShareSaveHelpMessage": "Com desar enllaços compartits"
+    "getShareSaveHelpMessage": "Com desar enllaços compartits",
+    "embedDescription": "Per inserir, copieu aquest codi per inserir aquest mapa en una pàgina HTML:"
   },
   "countDatasets": {
     "btnText": "Començar",
@@ -413,9 +414,9 @@
     "searchPlaceholder": "Cerca el catàleg",
     "localAdd": "Afegeix un arxiu local",
     "localFile": "<0>Pas 2:</0> Seleccioneu l'arxiu",
-    "localFileType": "<0>Pas 1:</0> Seleccioneu el tipus d'arxiu(opcional)",
+    "localFileType": "<0>Pas 1:</0> Seleccioneu el tipus d'arxiu",
     "webAdd": "Afegiu dades web",
-    "webFileType": "<0>Pas 1:</0> Seleccioneu el tipus d'arxiu (opcional)",
+    "webFileType": "<0>Pas 1:</0> Seleccioneu el tipus d'arxiu o servei web",
     "urlInputBtn": "Afegir",
     "browse": "Navegar...",
     "localTitle": "Afegir dades locals",
@@ -671,7 +672,7 @@
       "errorMessage": "Malauradament els navegadors de Microsoft (incloses totes les versions d'Internet Explorer i Edge) no admeten la funcionalitat d'uri de dades necessària per descarregar dades com un arxiu. Per baixar-lo copieu l'uri següent a un altre navegador, com ara $t(browsers.chrome), $t(browsers.firefox), o $t(browsers.safari): {{href}}"
     },
     "dataType": {
-      "auto": "Detecció automàtica (recomanat)",
+      "auto": "Tipus d'arxiu",
       "wms-group": "Servidor del servei de mapes web (WMS)",
       "wmts-group": "Servidor del servei de mapes tessel·lats (WMTS)",
       "wfs-group": "Servidor del servei web de funcions (WFS)",
@@ -689,10 +690,10 @@
       "csv": "CSV",
       "czml": "CZML",
       "gpx": "GPX",
-      "json": "JSON",
+      "json": "Catàleg Terria",
       "carto": "Carto",
       "gltf": "gLTF",
-      "shp": "Shapefile (zip)",
+      "shp": "Shapefile",
       "other": "Altres (utilitza el servei de conversió)",
       "socrata-group": "Servidor Socrata",
       "ifc": "IFC",
@@ -735,6 +736,12 @@
     },
     "serverConfig": {
       "failedToGet": "No s'ha pogut obtenir la configuració del servidor de {{serverConfigUrl}}. Això vol dir que és possible que serveis com ara el proxy, la conversió i l'escurçament d'URL no funcionin."
+    },
+    "unverifiedExternalLink": {
+      "title": "Avís: enllaç no verificat",
+      "message": "Estàs a punt d'obrir:\n\n`{{url}}`\n\nAquest enllaç no està verificat i pot ser insegur.",
+      "denyText": "Cancel·lar",
+      "confirmText": "Obre en una pestanya nova"
     }
   },
   "map": {

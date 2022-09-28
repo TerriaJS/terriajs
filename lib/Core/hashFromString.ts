@@ -1,7 +1,6 @@
-"use strict";
+/** Returns a 32-bit integer hash of a string.  '' => 0. */
 
-// Returns a 32-bit integer hash of a string.  '' => 0.
-function hashFromString(s) {
+export default function hashFromString(s: string) {
   return Math.abs(
     s.split("").reduce(function (prev, c) {
       var hash = (prev << 5) - prev + c.charCodeAt(0);
@@ -9,5 +8,3 @@ function hashFromString(s) {
     }, 0)
   );
 }
-
-module.exports = hashFromString;

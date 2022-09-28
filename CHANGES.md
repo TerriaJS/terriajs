@@ -1,14 +1,62 @@
 # Change Log
 
-#### next release (8.2.13)
+#### next release (8.2.18)
+
+- Only preload next timestep of timeseries rasters (WMS & ArcGIS MapServer) when animating the item on the map.
+- [The next improvement]
+
+#### 8.2.17 - 2022-09-23
+
+- Fix region mapping feature `rowIds` incorrect type.
+
+#### 8.2.16 - 2022-09-23
+
+- Make srsName and outputFormat for WFS requests dynamic
+- Added `excludeInactiveDatasets` to `CkanCatalogGroup` (`true` by default). This will filter out CKAN Datasets which have `state` or `data_state` (data.gov.au specific) **not** set to `"active"`.
+- Fix `isTerriaFeatureData` bug - not checking `isJsonObject`
+- Add `.logError()` to all usage of `updateModelFromJson` where the `Result` object is ignored
+- Move `RelatedMaps` to terriajs. They are now generated from `configParameters` (see [`doc/customizing/client-side-config.md`](./doc/customizing/client-side-config.md#relatedmap))
+
+#### 8.2.15 - 2022-09-16
+
+- Fix bug with "propagate `knownContainerUniqueIds` across references and their target" - missing `runInAction`
+
+#### 8.2.14 - 2022-09-15
+
+- Moved map credits to map column so it don't get hidden by chart panel.
+- TSified `FeatureInfo*.tsx`
+  - `describeFromProperties` is now `generateCesiumInfoHTMLFromProperties`
+  - `FeatureInfoSection` has been split up into `FeatureInfoSection.tsx`, `getFeatureProperties`, `mustacheExpressions` and `generateCesiumInfoHTMLFromProperties`
+- Fix `{{terria.currentTime}}` in feature info template
+- Add `{{terria.rawDataTable}}` in feature info template - to show raw data HTML table
+- Added `TableFeatureInfoStratum` - which adds default feature info template to `TableMixin`
+- Add `FeatureInfoContext` - used to inject properties into `FeatureInfoSections` context. These properties will be accessible from `featureInfoTemplate` mustache template.
+  - `tableFeatureInfoContext` adds time series chart properties using `FeatureInfoContext` (`getChartDetails` has been removed)
+- Move `maximumShownFeatureInfos` from `WebMapServiceCatalogItemTraits` to `MappableTraits`
+- Remove `featureInfoUrlTemplate` from `OpenDataSoftCatalogItem` - as it is incompatible with time varying datasets
+- Removed `formatNumberForLocale` - we now use `Number.toLocaleString`
+- Rename `Feature` to `TerriaFeature` - improve typing and usage across code-base
+  - Added `data: TerriaFeatureData` - which is used to pass Terria-specific properties around (eg `rowIds`)
+- Added `loadingFeatureInfoUrl` to `FeatureInfoUrlTemplateMixin`
+- Move `Cesium.ts` `ImageryLayer` feature picking to `cesium.pickImageryLayerFeatures()`
+- Move `lib/Core/propertyGetTimeValues.js` into `lib/ReactViews/FeatureInfo/getFeatureProperties.ts`
+- Add `showFeatureInfoDownloadWithTemplate` to `FeatureInfoTraits` - Toggle to show feature info download **if** a `template` has been provided. If no `template` is provided, then download will always show.
+- Fix support for `initUrls` in `startData.initSources`
+- Propagate `knownContainerUniqueIds` across references and their target.
+- Show scrollbar for story content in Safari iOS.
+- Use `document.baseURI` for building share links instead of `window.location`.
+
+#### 8.2.13 - 2022-09-01
 
 - Fix pedestrian drop behaviour so that the camera heading stays unchanged even after the drop
+- Fixed a bug causing incorrect loading of EPSG:4326 layers in WMS v1.3.0 by sending wrong `bbox` in GetMap requests.
 - Improve the CKAN model robustness by removing leading and trailing spaces in wms layer names.
 - Load all `InitSources` sequentially instead of asyncronosly
 - Fix `DOMPurify.sanitize` call in `PrintView`
-- [The next improvement]
+- Fix warning for WFS item exceeding max displayable features
+- Upgrade prettier to version 2.7.1
 
-#### release 8.2.12 - 2022-08-10
+#### 8.2.12 - 2022-08-10
 
 - Dropped "optional" from the prompt text in file upload modal for both local and web data.
 - Changed the text for the first file upload option from "Auto-detect (recommended)" to simply "File type" for local files and "File or web service type" for web urls.
@@ -16,7 +64,7 @@
 - Removed IFC from upload file type (until further testing).
 - Move `CkanCatalogGroup` "ungrouped" group to end of members
 
-#### release 8.2.11 - 2022-08-08
+#### 8.2.11 - 2022-08-08
 
 - Add ability to customise the getting started video in the StoryBuilder panel
 - Set cesium base URL by default so that cesium assets are resolved correctly
@@ -37,7 +85,7 @@
 - Fix `generateCatalogIndex` for nested references
 - Fix `SearchBox` handling of `searchWithDebounce` when `debounceDuration` prop changes. It now fushes instead of cancels.
 
-#### release 8.2.10 - 2022-08-02
+#### 8.2.10 - 2022-08-02
 
 - **Breaking changes:**
   - **Minimum NodeJS version is now 14**
@@ -92,8 +140,6 @@
 - Rename `FeatureInfoMixin` to `FeatureInfoUrlTemplateMixin`
 - Move `featureInfoTemplate` and `showStringIfPropertyValueIsNull` from `FeatureInfoTraits` to `MappableTraits` (all mappable catalog items)
 - Remove `FeatureInfoUrlTemplateTraits` from all models that don't use `FeatureInfoUrlTemplateMixin`
-- Upgrade prettier to version 2.7.1
-- [The next improvement]
 - Fix "Regions: xxx" short report showing for non region mapped items
 - Fix `showInChartPanel` default for mappable items
 
@@ -2862,7 +2908,7 @@
   - `RegionMapping`: Used instead of TableDataSource for region-mapped csvs.
   - `DataTable` and `DataVariable` have been replaced with new classes, `TableStructure` and `TableColumn`.
   - `RegionProvider`: `loadRegionsFromWfs`, `processRegionIds`, `applyReplacements`, `findRegionIndex` have been made internal functions.
-  - `RegionProviderList`: `chooseRegionProvider` has been changed and renamed `getRegionDetails `.
+  - `RegionProviderList`: `chooseRegionProvider` has been changed and renamed `getRegionDetails`.
   - `ColorMap`: `fromArray` and `fromString` have been removed, with the constructor taking on that functionality.
   - `LegendUrl` has been moved to the `Map` directory.
   - `TableStyle`: `loadColorMap` and `chooseColorMap` have been removed. Moved from `Map` to `Models` directory.

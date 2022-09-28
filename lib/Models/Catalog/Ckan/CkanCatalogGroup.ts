@@ -261,6 +261,20 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
       return;
     }
 
+    /** If excludeInactiveDatasets is true - then filter out datasets with one of the following
+     * - state === "deleted" (CKAN official)
+     * - state === "draft" (CKAN official)
+     * - data_state === "inactive" (Data.gov.au CKAN)
+     */
+    if (
+      this._catalogGroup.excludeInactiveDatasets &&
+      (ckanDataset.state === "deleted" ||
+        ckanDataset.state === "draft" ||
+        ckanDataset.data_state === "inactive")
+    ) {
+      return;
+    }
+
     // Get list of resources to turn into CkanItemReferences
     const supportedResources = getSupportedFormats(
       ckanDataset,

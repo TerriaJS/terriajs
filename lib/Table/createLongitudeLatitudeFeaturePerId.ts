@@ -8,17 +8,14 @@ import Packable from "terriajs-cesium/Source/Core/Packable";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
-import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 import SampledPositionProperty from "terriajs-cesium/Source/DataSources/SampledPositionProperty";
 import SampledProperty from "terriajs-cesium/Source/DataSources/SampledProperty";
 import TimeIntervalCollectionPositionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionPositionProperty";
 import TimeIntervalCollectionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
-import Feature from "../Models/Feature";
+import TerriaFeature from "../Models/Feature/Feature";
 import { getRowValues } from "./createLongitudeLatitudeFeaturePerRow";
-import getChartDetailsFn from "./getChartDetailsFn";
 import { getFeatureStyle } from "./getFeatureStyle";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
@@ -37,7 +34,7 @@ type RequiredTableStyle = TableStyle & {
  */
 export default function createLongitudeLatitudeFeaturePerId(
   style: RequiredTableStyle
-): Entity[] {
+): TerriaFeature[] {
   const features = style.rowGroups.map(([featureId, rowIds]) =>
     createFeature(featureId, rowIds, style)
   );
@@ -54,7 +51,7 @@ function createFeature(
   featureId: string,
   rowIds: number[],
   style: RequiredTableStyle
-): Entity {
+): TerriaFeature {
   const isSampled = !!style.timeTraits.isSampled;
   const tableHasScalarColumn = !!style.tableModel.tableColumns.find(
     (col) => col.type === TableColumnType.scalar
@@ -179,7 +176,7 @@ function createFeature(
   });
 
   const show = calculateShow(availability);
-  const feature = new Feature({
+  const feature = new TerriaFeature({
     position: positionProperty,
     point: usePointGraphics
       ? new PointGraphics({
@@ -207,16 +204,12 @@ function createFeature(
     availability
   });
 
-  const propertiesBag = new PropertyBag(properties);
-  propertiesBag.addProperty(
-    "_terria_getChartDetails",
-    getChartDetailsFn(style, rowIds)
-  );
-
   // Add properties to feature.data so we have access to TimeIntervalCollectionProperty outside of the PropertyBag.
-  feature.data = properties;
-
-  feature.properties = propertiesBag;
+  feature.data = {
+    timeIntervalCollection: properties,
+    rowIds,
+    type: "terriaFeatureData"
+  };
   feature.description = description;
   return feature;
 }
