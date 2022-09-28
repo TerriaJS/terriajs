@@ -7,9 +7,9 @@ import Intersections2D from "terriajs-cesium/Source/Core/Intersections2D";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import isDefined from "../Core/isDefined";
-import JSEarthGravityModel1996 from "../Map/EarthGravityModel1996";
-import prettifyCoordinates from "../Map/prettifyCoordinates";
-import prettifyProjection from "../Map/prettifyProjection";
+import JSEarthGravityModel1996 from "../Map/Vector/EarthGravityModel1996";
+import prettifyCoordinates from "../Map/Vector/prettifyCoordinates";
+import prettifyProjection from "../Map/Vector/prettifyProjection";
 import Terria from "../Models/Terria";
 
 // TypeScript 3.6.3 can't tell JSEarthGravityModel1996 is a class and reports
@@ -17,8 +17,8 @@ import Terria from "../Models/Terria";
 // This is a dodgy workaround.
 class EarthGravityModel1996 extends JSEarthGravityModel1996 {}
 
-const sampleTerrainMostDetailed = require("terriajs-cesium/Source/Core/sampleTerrainMostDetailed")
-  .default;
+const sampleTerrainMostDetailed =
+  require("terriajs-cesium/Source/Core/sampleTerrainMostDetailed").default;
 
 interface Cancelable {
   cancel: () => void;
@@ -117,9 +117,10 @@ export default class MouseCoords {
           intersection.height = height;
         }
 
-        const geometricError = globe.terrainProvider.getLevelMaximumGeometricError(
-          pickedTriangle.tile.level
-        );
+        const geometricError =
+          globe.terrainProvider.getLevelMaximumGeometricError(
+            pickedTriangle.tile.level
+          );
         const approximateHeight = intersection.height;
         const minHeight = Math.max(
           pickedTriangle.tile.data.tileBoundingRegion.minimumHeight,
@@ -216,7 +217,7 @@ export default class MouseCoords {
       positionWithHeight
     ]);
     this.tileRequestInFlight = Promise.all([geoidHeightPromise, terrainPromise])
-      .then(result => {
+      .then((result) => {
         const geoidHeight = result[0] || 0.0;
         this.tileRequestInFlight = undefined;
         if (Cartographic.equals(position, this.cartographic)) {

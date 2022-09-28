@@ -37,9 +37,7 @@
   },
   "meta": {
     "schema": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
-    "content-languages": [
-      "en"
-    ],
+    "content-languages": ["en"],
     "id": "IDREF2927",
     "prepared": "2020-09-22T03:36:47.2551975Z",
     "test": false,

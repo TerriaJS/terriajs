@@ -5,11 +5,11 @@ import Terria from "../../../lib/Models/Terria";
 import updateModelFromJson from "../../../lib/Models/Definition/updateModelFromJson";
 import WebMapServiceCatalogItem from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 
-describe("updateModelFromJson", function() {
+describe("updateModelFromJson", function () {
   let model: BaseModel;
 
-  describe("when replaceStratum is", function() {
-    beforeEach(function() {
+  describe("when replaceStratum is", function () {
+    beforeEach(function () {
       model = new WebMapServiceCatalogItem("Test", new Terria());
       runInAction(() => {
         model.setTrait(CommonStrata.definition, "url", "A");
@@ -18,7 +18,7 @@ describe("updateModelFromJson", function() {
       });
     });
 
-    it("true then the stratum is replaced", function() {
+    it("true then the stratum is replaced", function () {
       updateModelFromJson(model, CommonStrata.definition, { url: "Z" }, true);
 
       expect(model.getTrait(CommonStrata.definition, "url")).toBe("Z");
@@ -26,7 +26,7 @@ describe("updateModelFromJson", function() {
       expect(model.getTrait(CommonStrata.user, "name")).toBe("C");
     });
 
-    it("false then the stratum is not replaced", function() {
+    it("false then the stratum is not replaced", function () {
       updateModelFromJson(model, CommonStrata.definition, { url: "Z" }, false);
 
       expect(model.getTrait(CommonStrata.definition, "url")).toBe("Z");
@@ -34,7 +34,7 @@ describe("updateModelFromJson", function() {
       expect(model.getTrait(CommonStrata.user, "name")).toBe("C");
     });
 
-    it("not specified then the stratum is not replaced", function() {
+    it("not specified then the stratum is not replaced", function () {
       updateModelFromJson(model, CommonStrata.definition, { url: "Z" });
 
       expect(model.getTrait(CommonStrata.definition, "url")).toBe("Z");
@@ -43,10 +43,10 @@ describe("updateModelFromJson", function() {
     });
   });
 
-  describe("when id of group already exists", function() {
+  describe("when id of group already exists", function () {
     let terria: Terria;
 
-    beforeEach(function() {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -78,7 +78,7 @@ describe("updateModelFromJson", function() {
       );
     });
 
-    it("updating the members trait should add new members to the existing members array", function() {
+    it("updating the members trait should add new members to the existing members array", function () {
       const model = terria.getModelById(BaseModel, "testgroup")!;
       const newJson: any = {
         name: "TestGroup",
@@ -103,7 +103,25 @@ describe("updateModelFromJson", function() {
       ).toContain(newJson.members[0].id);
     });
 
-    it("updating any other trait should replace the existing traits with the new trait", function() {
+    it("ignores adding duplicate ids to members", function () {
+      const model = terria.getModelById(BaseModel, "testgroup")!;
+      const newJson: any = {
+        name: "TestGroup",
+        type: "group",
+        id: "testgroup",
+        members: ["1", "2", "hello", "hello", "goodbye", "hello"]
+      };
+
+      updateModelFromJson(model, CommonStrata.definition, newJson);
+      expect(
+        (model.getTrait(CommonStrata.definition, "members") as any[]).length
+      ).toBe(4);
+      expect(
+        model.getTrait(CommonStrata.definition, "members") as any[]
+      ).toEqual(["1", "2", "hello", "goodbye"]);
+    });
+
+    it("updating any other trait should replace the existing traits with the new trait", function () {
       const model = terria.getModelById(BaseModel, "testgroup")!;
       const newJson: any = {
         name: "NewTestGroup",
@@ -128,7 +146,7 @@ describe("updateModelFromJson", function() {
       );
     });
 
-    it("will ignore trait which doesn't exist in model", function() {
+    it("will ignore trait which doesn't exist in model", function () {
       const model = terria.getModelById(BaseModel, "testgroup")!;
       const newJson: any = {
         name: "NewTestGroup",
@@ -172,7 +190,7 @@ describe("updateModelFromJson", function() {
         result.error
           ?.flatten()
           .find(
-            error =>
+            (error) =>
               error.message ===
               "The property `someTrait` is not valid for type `wms`."
           )
@@ -181,7 +199,7 @@ describe("updateModelFromJson", function() {
         result.error
           ?.flatten()
           .find(
-            error =>
+            (error) =>
               error.message ===
               "The property `someOtherTrait` is not valid for type `wms`."
           )

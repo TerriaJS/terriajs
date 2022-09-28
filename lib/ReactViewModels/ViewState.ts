@@ -8,12 +8,15 @@ import {
 } from "mobx";
 import { Ref } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import addedByUser from "../Core/addedByUser";
-import { Category, HelpAction } from "../Core/AnalyticEvents/analyticEvents";
+import {
+  Category,
+  HelpAction,
+  StoryAction
+} from "../Core/AnalyticEvents/analyticEvents";
 import Result from "../Core/Result";
 import triggerResize from "../Core/triggerResize";
-import PickedFeatures from "../Map/PickedFeatures";
+import PickedFeatures from "../Map/PickedFeatures/PickedFeatures";
 import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
@@ -22,7 +25,9 @@ import CommonStrata from "../Models/Definition/CommonStrata";
 import { BaseModel } from "../Models/Definition/Model";
 import getAncestors from "../Models/getAncestors";
 import Terria from "../Models/Terria";
+import { ViewingControl } from "../Models/ViewingControls";
 import { SATELLITE_HELP_PROMPT_KEY } from "../ReactViews/HelpScreens/SatelliteHelpPrompt";
+import { animationDuration } from "../ReactViews/StandardUserInterface/StandardUserInterface";
 import {
   defaultTourPoints,
   RelativePosition,
@@ -76,6 +81,8 @@ export default class ViewState {
   @observable mobileMenuVisible: boolean = false;
   @observable explorerPanelAnimating: boolean = false;
   @observable topElement: string = "FeatureInfo";
+  // Map for storing react portal containers created by <PortalContainer> component.
+  @observable portals: Map<string, HTMLElement | null> = new Map();
   @observable lastUploadedFiles: any[] = [];
   @observable storyBuilderShown: boolean = false;
 
@@ -95,6 +102,21 @@ export default class ViewState {
   @observable selectedTrainerItem: string = "";
   @observable currentTrainerItemIndex: number = 0;
   @observable currentTrainerStepIndex: number = 0;
+
+  @observable printWindow: Window | null = null;
+
+  /**
+   * A global list of functions that generate a {@link ViewingControl} option
+   * for the given catalog item instance.  This is useful for plugins to extend
+   * the viewing control menu across catalog items.
+   *
+   * Use {@link ViewingControlsMenu.addMenuItem} instead of updating directly.
+   */
+  @observable
+  readonly globalViewingControlOptions: ((
+    item: CatalogMemberMixin.Instance
+  ) => ViewingControl | undefined)[] = [];
+
   @action
   setSelectedTrainerItem(trainerItem: string) {
     this.selectedTrainerItem = trainerItem;
@@ -136,7 +158,11 @@ export default class ViewState {
     }
   }
 
-  @observable workbenchWithOpenControls: string | undefined = undefined;
+  /**
+   * ID of the workbench item whose ViewingControls menu is currently open.
+   */
+  @observable
+  workbenchItemWithOpenControls: string | undefined = undefined;
 
   errorProvider: any | null = null;
 
@@ -196,7 +222,7 @@ export default class ViewState {
         return a.priority - b.priority;
       })
       .filter(
-        tourPoint => (<any>this.appRefs).get(tourPoint.appRefName)?.current
+        (tourPoint) => (<any>this.appRefs).get(tourPoint.appRefName)?.current
       );
   }
   @action
@@ -281,10 +307,16 @@ export default class ViewState {
   @observable feedbackFormIsVisible: boolean = false;
 
   /**
-   * Gets or sets a value indicating whether the catalog's model share panel
+   * Gets or sets a value indicating whether the catalog's modal share panel
    * is currently visible.
    */
-  @observable shareModelIsVisible: boolean = false;
+  @observable shareModalIsVisible: boolean = false; // Small share modal inside StoryEditor
+
+  /**
+   * Used to indicate that the Share Panel should stay open even if it loses focus.
+   * This is used when clicking a help link in the Share Panel - The Help Panel will open, and when it is closed, the Share Panel should still be visible for the user to continue their task.
+   */
+  @observable retainSharePanel: boolean = false; // The large share panel accessed via Share/Print button
 
   /**
    * The currently open tool
@@ -334,7 +366,7 @@ export default class ViewState {
     // of the original camera set from config once they acknowdge
     this._disclaimerVisibleSubscription = reaction(
       () => this.disclaimerVisible,
-      disclaimerVisible => {
+      (disclaimerVisible) => {
         if (disclaimerVisible) {
           this.isMapFullScreen = true;
         } else if (!disclaimerVisible && this.isMapFullScreen) {
@@ -353,10 +385,10 @@ export default class ViewState {
         // if /#hideWorkbench=1 exists in url onload, show stories directly
         // any show/hide workbench will not automatically show story
         if (!defined(this.storyShown)) {
-          // why only checkk config params here? because terria.stories are not
+          // why only check config params here? because terria.stories are not
           // set at the moment, and that property will be checked in rendering
           // Here are all are checking are: is terria story enabled in this app?
-          // if so we should show it when app first laod, if workbench is hiddne
+          // if so we should show it when app first load, if workbench is hidden
           this.storyShown = terria.configParameters.storyEnabled;
         }
       }
@@ -410,14 +442,22 @@ export default class ViewState {
 
     this._previewedItemIdSubscription = reaction(
       () => this.terria.previewedItemId,
-      (previewedItemId: string | undefined) => {
+      async (previewedItemId: string | undefined) => {
         if (previewedItemId === undefined) {
           return;
         }
 
-        const model = this.terria.getModelById(BaseModel, previewedItemId);
-        if (model !== undefined) {
+        try {
+          const result = await this.terria.getModelByIdShareKeyOrCatalogIndex(
+            previewedItemId
+          );
+          result.throwIfError();
+          const model = result.throwIfUndefined();
           this.viewCatalogMember(model);
+        } catch (e) {
+          terria.raiseErrorToUser(e, {
+            message: `Couldn't find model \`${previewedItemId}\` for preview`
+          });
         }
       }
     );
@@ -431,7 +471,7 @@ export default class ViewState {
 
     this._storyBeforeUnloadSubscription = reaction(
       () => this.terria.stories.length > 0,
-      hasScenes => {
+      (hasScenes) => {
         if (hasScenes) {
           window.addEventListener("beforeunload", handleWindowClose);
         } else {
@@ -469,7 +509,7 @@ export default class ViewState {
 
     // (wing): much better to do by listening for transitionend, but will leave
     // this as is until that's in place
-    setTimeout(function() {
+    setTimeout(function () {
       // should we do this here in viewstate? it pulls in browser dependent things,
       // and (defensively) calls it.
       // but only way to ensure we trigger this resize, by standardising fullscreen
@@ -544,9 +584,19 @@ export default class ViewState {
     stratum: string = CommonStrata.user,
     openAddData = true
   ): Promise<Result<void>> {
+    // Set preview item before loading - so we can see loading indicator and errors in DataPreview panel.
+    runInAction(() => (this._previewedItem = item));
+
     try {
-      // Set preview item
-      runInAction(() => (this._previewedItem = item));
+      // If item is a Reference - recursively load and call viewCatalogMember on the target
+      if (ReferenceMixin.isMixedInto(item)) {
+        (await item.loadReference()).throwIfError();
+        if (item.target) {
+          return this.viewCatalogMember(item.target);
+        } else {
+          return Result.error(`Could not view catalog member ${getName(item)}`);
+        }
+      }
 
       // Open "Add Data"
       if (openAddData) {
@@ -567,21 +617,10 @@ export default class ViewState {
           });
         }
 
-        // mobile switch to nowvewing if not viewing a group
+        // mobile switch to now viewing if not viewing a group
         if (!GroupMixin.isMixedInto(item)) {
           this.switchMobileView(this.mobileViewOptions.preview);
         }
-      }
-
-      // Load preview item
-      if (ReferenceMixin.isMixedInto(item)) {
-        (await item.loadReference()).throwIfError();
-
-        // call viewCatalogMember on reference.target
-        if (item.target) {
-          return await this.viewCatalogMember(item.target, isOpen, stratum);
-        }
-        return Result.error(`Failed to resolve reference for ${getName(item)}`);
       }
 
       if (GroupMixin.isMixedInto(item)) {
@@ -614,6 +653,18 @@ export default class ViewState {
   }
 
   @action
+  openHelpPanelItemFromSharePanel(
+    evt: React.MouseEvent<HTMLDivElement>,
+    itemName: string
+  ) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    this.setRetainSharePanel(true);
+    this.showHelpPanel();
+    this.selectHelpMenuItem(itemName);
+  }
+
+  @action
   selectHelpMenuItem(key: string) {
     this.selectedHelpMenuItem = key;
     this.helpPanelExpanded = true;
@@ -622,6 +673,11 @@ export default class ViewState {
   @action
   hideHelpPanel() {
     this.showHelpMenu = false;
+  }
+
+  @action
+  setRetainSharePanel(retain: boolean) {
+    this.retainSharePanel = retain;
   }
 
   @action
@@ -705,10 +761,31 @@ export default class ViewState {
     this.currentTool = undefined;
   }
 
+  @action setPrintWindow(window: Window | null) {
+    if (this.printWindow) {
+      this.printWindow.close();
+    }
+    this.printWindow = window;
+  }
+
   @action
   toggleMobileMenu() {
     this.setTopElement("mobileMenu");
     this.mobileMenuVisible = !this.mobileMenuVisible;
+  }
+
+  @action
+  runStories() {
+    this.storyBuilderShown = false;
+    this.storyShown = true;
+
+    setTimeout(function () {
+      triggerResize();
+    }, animationDuration || 1);
+
+    this.terria.currentViewer.notifyRepaintRequired();
+
+    this.terria.analytics?.logEvent(Category.story, StoryAction.runStory);
   }
 
   @computed
@@ -748,7 +825,9 @@ export default class ViewState {
 
 interface Tool {
   toolName: string;
-  getToolComponent: () => React.ComponentType | Promise<React.ComponentType>;
+  getToolComponent: () =>
+    | React.ComponentType<any>
+    | Promise<React.ComponentType<any>>;
 
   showCloseButton: boolean;
   params?: any;

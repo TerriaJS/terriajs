@@ -12,19 +12,19 @@ configure({
   computedRequiresReaction: true
 });
 
-describe("CartoMapCatalogItem", function() {
+describe("CartoMapCatalogItem", function () {
   let item: CartoMapCatalogItem;
 
-  beforeEach(function() {
+  beforeEach(function () {
     item = new CartoMapCatalogItem("test", new Terria());
   });
 
-  it("has a type", function() {
+  it("has a type", function () {
     expect(CartoMapCatalogItem.type).toBe("carto");
   });
 
-  describe("when tileUrl has been set", function() {
-    beforeEach(function() {
+  describe("when tileUrl has been set", function () {
+    beforeEach(function () {
       const tileUrl = "abc";
       item.strata.set(
         CartoLoadableStratum.stratumName,
@@ -32,7 +32,7 @@ describe("CartoMapCatalogItem", function() {
       );
     });
 
-    it("should create an imageryProvider with correct properties", function() {
+    it("should create an imageryProvider with correct properties", function () {
       const stratum = <CartoLoadableStratum>item.strata.get("cartoLoadable");
 
       expect(
@@ -48,16 +48,16 @@ describe("CartoMapCatalogItem", function() {
       if (imageryProvider !== undefined) {
         expect(imageryProvider.url).toEqual(<string>stratum.tileUrl);
         expect(imageryProvider.credit.html).toEqual(<string>item.attribution);
-        expect(imageryProvider.minimumLevel).toEqual(item.minimumLevel);
-        expect(imageryProvider.maximumLevel).toEqual(item.maximumLevel);
+        expect(imageryProvider.minimumLevel).toEqual(0);
+        expect(imageryProvider.maximumLevel).toEqual(25);
         expect((<any>imageryProvider)._subdomains).toEqual(
           stratum.tileSubdomains
         );
       }
     });
 
-    describe("mapItem", function() {
-      it("has the correct `alpha` value", function() {
+    describe("mapItem", function () {
+      it("has the correct `alpha` value", function () {
         if (!ImageryParts.is(item.mapItems[0]))
           throw new Error("Expected MapItem to be an ImageryParts");
         runInAction(() => item.setTrait("definition", "opacity", 0.42));
@@ -66,7 +66,7 @@ describe("CartoMapCatalogItem", function() {
         expect(item.mapItems[0].alpha).toBe(0.9);
       });
 
-      it("has the correct `show` value", function() {
+      it("has the correct `show` value", function () {
         if (!ImageryParts.is(item.mapItems[0]))
           throw new Error("Expected MapItem to be an ImageryParts");
         runInAction(() => item.setTrait("definition", "show", false));
@@ -75,7 +75,7 @@ describe("CartoMapCatalogItem", function() {
         expect(item.mapItems[0].show).toBe(true);
       });
 
-      it("has the correct `clippingRectangle` value", function() {
+      it("has the correct `clippingRectangle` value", function () {
         const rectangleDegrees = {
           west: 10,
           south: -15,

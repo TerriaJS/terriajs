@@ -16,6 +16,8 @@ import filterOutUndefined from "../Core/filterOutUndefined";
  * @param Traits10
  * @param Traits11
  * @param Traits12
+ * @param Traits13
+ * @param Traits14
  */
 export default function mixTraits<
   T1 extends ModelTraits = ModelTraits,
@@ -29,7 +31,9 @@ export default function mixTraits<
   T9 extends ModelTraits = ModelTraits,
   T10 extends ModelTraits = ModelTraits,
   T11 extends ModelTraits = ModelTraits,
-  T12 extends ModelTraits = ModelTraits
+  T12 extends ModelTraits = ModelTraits,
+  T13 extends ModelTraits = ModelTraits,
+  T14 extends ModelTraits = ModelTraits
 >(
   Traits1?: TraitsConstructor<T1>,
   Traits2?: TraitsConstructor<T2>,
@@ -42,9 +46,11 @@ export default function mixTraits<
   Traits9?: TraitsConstructor<T9>,
   Traits10?: TraitsConstructor<T10>,
   Traits11?: TraitsConstructor<T11>,
-  Traits12?: TraitsConstructor<T12>
+  Traits12?: TraitsConstructor<T12>,
+  Traits13?: TraitsConstructor<T13>,
+  Traits14?: TraitsConstructor<T14>
 ): TraitsConstructor<
-  T1 & T2 & T3 & T4 & T5 & T6 & T7 & T8 & T9 & T10 & T11 & T12
+  T1 & T2 & T3 & T4 & T5 & T6 & T7 & T8 & T9 & T10 & T11 & T12 & T13 & T14
 > {
   const traitsClasses = filterOutUndefined([
     Traits1,
@@ -58,12 +64,14 @@ export default function mixTraits<
     Traits9,
     Traits10,
     Traits11,
-    Traits12
+    Traits12,
+    Traits13,
+    Traits14
   ]);
-  const traitsInstances = traitsClasses.map(TraitsClass => new TraitsClass());
+  const traitsInstances = traitsClasses.map((TraitsClass) => new TraitsClass());
   const keysValues = traitsInstances.reduce((result, traitsInstance) => {
     return result.concat(
-      Object.keys(traitsInstance).map(property => ({
+      Object.keys(traitsInstance).map((property) => ({
         key: property,
         value: (<any>traitsInstance)[property]
       }))
@@ -74,14 +82,14 @@ export default function mixTraits<
     static readonly traits: any = {};
     constructor() {
       super();
-      keysValues.forEach(kv => {
+      keysValues.forEach((kv) => {
         (<any>this)[kv.key] = kv.value;
       });
     }
   }
 
-  traitsClasses.forEach(traitsClass => {
-    Object.keys(traitsClass.traits).forEach(trait => {
+  traitsClasses.forEach((traitsClass) => {
+    Object.keys(traitsClass.traits).forEach((trait) => {
       Mixed.traits[trait] = traitsClass.traits[trait];
     });
   });

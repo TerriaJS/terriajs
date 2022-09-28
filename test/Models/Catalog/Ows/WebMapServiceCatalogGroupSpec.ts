@@ -1,25 +1,29 @@
+import i18next from "i18next";
+import { runInAction } from "mobx";
+import CatalogMemberMixin from "../../../../lib/ModelMixins/CatalogMemberMixin";
+import GroupMixin from "../../../../lib/ModelMixins/GroupMixin";
 import WebMapServiceCatalogGroup from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
-import { runInAction } from "mobx";
+import createStratumInstance from "../../../../lib/Models/Definition/createStratumInstance";
 import Terria from "../../../../lib/Models/Terria";
-import i18next from "i18next";
-import GroupMixin from "../../../../lib/ModelMixins/GroupMixin";
-import CatalogMemberMixin from "../../../../lib/ModelMixins/CatalogMemberMixin";
+import ExportWebCoverageServiceTraits, {
+  WebCoverageServiceParameterTraits
+} from "../../../../lib/Traits/TraitsClasses/ExportWebCoverageServiceTraits";
 
-describe("WebMapServiceCatalogGroup", function() {
+describe("WebMapServiceCatalogGroup", function () {
   let terria: Terria;
   let wms: WebMapServiceCatalogGroup;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria();
     wms = new WebMapServiceCatalogGroup("test", terria);
   });
 
-  it("has a type", function() {
+  it("has a type", function () {
     expect(wms.type).toBe("wms-group");
   });
 
-  it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specified", function() {
+  it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specified", function () {
     wms.setTrait("definition", "url", "http://www.example.com");
     expect(wms.getCapabilitiesUrl).toBeDefined();
     expect(wms.url).toBeDefined();
@@ -29,19 +33,19 @@ describe("WebMapServiceCatalogGroup", function() {
     ).toBe(true);
   });
 
-  describe("after loading capabilities", function() {
-    beforeEach(async function() {
+  describe("after loading capabilities", function () {
+    beforeEach(async function () {
       runInAction(() => {
         wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
       });
     });
 
-    it("defines name", async function() {
+    it("defines name", async function () {
       await wms.loadMetadata();
       expect(wms.name).toBe("wms Server");
     });
 
-    it("doesn't override user set name", async function() {
+    it("doesn't override user set name", async function () {
       const userDefinedName = "user defined name";
       runInAction(() => {
         wms.setTrait("definition", "name", userDefinedName);
@@ -50,7 +54,7 @@ describe("WebMapServiceCatalogGroup", function() {
       expect(wms.name).toBe(userDefinedName);
     });
 
-    it("defines info", async function() {
+    it("defines info", async function () {
       await wms.loadMetadata();
       const abstract = i18next.t("models.webMapServiceCatalogGroup.abstract");
       const accessConstraints = i18next.t(
@@ -72,8 +76,8 @@ describe("WebMapServiceCatalogGroup", function() {
     });
   });
 
-  describe("loadMembers", function() {
-    beforeEach(async function() {
+  describe("loadMembers", function () {
+    beforeEach(async function () {
       runInAction(() => {
         wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
         wms.setTrait("definition", "itemProperties", {
@@ -85,19 +89,19 @@ describe("WebMapServiceCatalogGroup", function() {
       await wms.loadMembers();
     });
 
-    it("loads", async function() {
+    it("loads", async function () {
       expect(wms.members.length).toEqual(1);
       expect(wms.memberModels.length).toEqual(1);
     });
 
-    it("item properties are passed down", async function() {
+    it("item properties are passed down", async function () {
       const member: any = wms.memberModels[0];
       expect(member.parameters.foo).toEqual("baa");
     });
   });
 
-  describe("loadMembersWithSharekeys", function() {
-    beforeEach(async function() {
+  describe("loadMembersWithSharekeys", function () {
+    beforeEach(async function () {
       runInAction(() => {
         terria.addShareKey(wms.uniqueId!, "some-share-key");
         wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
@@ -105,7 +109,7 @@ describe("WebMapServiceCatalogGroup", function() {
       await wms.loadMembers();
     });
 
-    it("addsShareKeys", async function() {
+    it("addsShareKeys", async function () {
       expect(wms.members.length).toEqual(1);
       expect(wms.memberModels.length).toEqual(1);
       const wmsItem = wms.memberModels[0] as WebMapServiceCatalogItem;
@@ -120,15 +124,15 @@ describe("WebMapServiceCatalogGroup", function() {
     });
   });
 
-  describe("loadNestedMembers", function() {
-    beforeEach(async function() {
+  describe("loadNestedMembers", function () {
+    beforeEach(async function () {
       runInAction(() => {
         wms.setTrait("definition", "url", "test/WMS/wms_nested_groups.xml");
       });
       await wms.loadMembers();
     });
 
-    it("loads", async function() {
+    it("loads", async function () {
       expect(wms.members.length).toEqual(3);
       expect(wms.memberModels.length).toEqual(3);
 
@@ -149,6 +153,37 @@ describe("WebMapServiceCatalogGroup", function() {
       expect(
         GroupMixin.isMixedInto(thirdGroup) && thirdGroup.members.length
       ).toEqual(1);
+    });
+  });
+
+  describe("perLayerLinkedWcs", function () {
+    beforeEach(async function () {
+      runInAction(() => {
+        wms.setTrait("definition", "url", "test/WMS/wms_nested_groups.xml");
+        wms.setTrait(
+          "definition",
+          "perLayerLinkedWcs",
+          createStratumInstance(ExportWebCoverageServiceTraits, {
+            linkedWcsUrl: "some-url",
+            linkedWcsParameters: createStratumInstance(
+              WebCoverageServiceParameterTraits,
+              { outputFormat: "some-output-format" }
+            )
+          })
+        );
+      });
+      await wms.loadMembers();
+    });
+
+    it("sets traits correctly", async function () {
+      const wmsItem = (wms.memberModels[0] as WebMapServiceCatalogGroup)
+        .memberModels[0] as WebMapServiceCatalogItem;
+
+      expect(wmsItem.linkedWcsUrl).toEqual("some-url");
+      expect(wmsItem.linkedWcsCoverage).toEqual("ls8_nbart_geomedian_annual");
+      expect(wmsItem.linkedWcsParameters.outputFormat).toEqual(
+        "some-output-format"
+      );
     });
   });
 });

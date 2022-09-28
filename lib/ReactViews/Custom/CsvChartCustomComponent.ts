@@ -34,9 +34,7 @@ interface CsvChartCustomComponentAttributes
 // Any chart type not listed here won't work, because FeatureInfoPanelChart only draws line charts.
 const SUPPORTED_CHART_TYPES = ["line", "lineAndPoint"];
 
-export default class CsvChartCustomComponent extends ChartCustomComponent<
-  CsvCatalogItem
-> {
+export default class CsvChartCustomComponent extends ChartCustomComponent<CsvCatalogItem> {
   get name(): string {
     // For backward compatibility reasons, since the original ChartCustomComponent assumed your catalog item was a Csv, we use the name "chart" even though "csv-chart" would be more correct
     return "chart";
@@ -145,7 +143,7 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<
     // Set chart type
     if (
       attrs.chartType !== undefined &&
-      SUPPORTED_CHART_TYPES.some(supported => supported === attrs.chartType)
+      SUPPORTED_CHART_TYPES.some((supported) => supported === attrs.chartType)
     ) {
       item.setTrait(
         CommonStrata.user,
@@ -170,7 +168,7 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<
         attrs.xColumn
       );
 
-      (attrs.yColumns || []).forEach(y => {
+      (attrs.yColumns || []).forEach((y) => {
         chartStyle.chart.addObject(CommonStrata.user, "lines", y)!;
       });
 
@@ -196,6 +194,11 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<
     parsed.chartGlyphStyle = nodeAttrs["chart-glyph-style"];
     return parsed;
   }
+
+  constructDownloadUrlFromBody = (body: string) => {
+    const blob = new Blob([body], { type: "text/csv;charset=utf-8" });
+    return URL.createObjectURL(blob);
+  };
 }
 
 function parseIntOrUndefined(s: string | undefined): number | undefined {

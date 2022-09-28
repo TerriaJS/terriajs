@@ -1,122 +1,143 @@
 terriamap:
-    serverConfig:
-        port: 3001
-        allowProxyFor: [
-            "nicta.com.au",
-            "gov.au",
-            "csiro.au",
-            "arcgis.com",
-            "argo.jcommops.org",
-            "www.abc.net.au",
-            "geoserver.aurin.org.au",
-            "mapsengine.google.com",
-            "s3-ap-southeast-2.amazonaws.com",
-            "adelaidecitycouncil.com",
-            "www.dptiapps.com.au",
-            "geoserver-123.aodn.org.au",
-            "geoserver.imos.org.au",
-            "nci.org.au",
-            "static.nationalmap.nicta.com.au",
-            "githubusercontent.com",
-            "gov",
-            "gov.uk",
-            "gov.nz",
-            "sample.aero3dpro.com.au",
-            "ydyr.info"
+  serverConfig:
+    port: 3001
+    allowProxyFor:
+      [
+        "nicta.com.au",
+        "gov.au",
+        "csiro.au",
+        "arcgis.com",
+        "argo.jcommops.org",
+        "www.abc.net.au",
+        "geoserver.aurin.org.au",
+        "mapsengine.google.com",
+        "s3-ap-southeast-2.amazonaws.com",
+        "adelaidecitycouncil.com",
+        "www.dptiapps.com.au",
+        "geoserver-123.aodn.org.au",
+        "geoserver.imos.org.au",
+        "nci.org.au",
+        "static.nationalmap.nicta.com.au",
+        "githubusercontent.com",
+        "gov",
+        "gov.uk",
+        "gov.nz",
+        "sample.aero3dpro.com.au",
+        "ydyr.info"
+      ]
+    initPaths:
+      - "/etc/config/client"
+    newShareUrlPrefix: "s"
+    shareUrlPrefixes:
+      s:
+        service: "s3"
+        region: "ap-southeast-2"
+        bucket: "terriajs-ci-sharing"
+        accessKeyId: "secret"
+        secretAccessKey: "secret"
+    feedback:
+      userAgent: TerriaBot (TerriaJS Feedback)
+      issuesUrl: https://api.github.com/repos/TerriaJS/demo-feedback/issues
+      accessToken: secret
+    singlePageRouting:
+      resolvePathRelativeToWwwroot: "/index.html"
+      resolveUnmatchedPathsWithIndexHtml: true
+  clientConfig:
+    initializationUrls:
+      - simple
+    parameters:
+      bingMapsKey: "ApZeR4iLSH_Pl2w5OSXrIqjvc_KzgPn_UXjn6jTtQDiueg72InBThCeIO4OSs6Fq"
+      cesiumIonAccessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxZDY5MDE1YS0yNGFlLTQ1MzctYWNkNy0wNDQ1YWNiNTM5MDIiLCJpZCI6Mjk5Miwic2NvcGVzIjpbImFzciIsImdjIl0sImlhdCI6MTUzODAzMzgyNn0.a2uTotdiHUo8FiHsO4MVNZ1KT5pOF0rb7CFdwbRAsOo"
+      useCesiumIonBingImagery: true
+      googleAnalyticsKey:
+      disclaimer:
+        text: "Disclaimer: This map must not be used for navigation or precise spatial analysis"
+        url: "https://terria.io"
+      developerAttribution:
+        text: "Terria"
+        link: "https://terria.io"
+      appName: "TerriaJS Continuous Integration"
+      brandBarElements:
+        [
+          "",
+          '<a target="_blank" href="http://terria.io"><img src="images/terria_logo.png" height="52" title="Version: {{version}}" /></a>',
+          ""
         ]
-        initPaths:
-        - "/etc/config/client"
-        newShareUrlPrefix: "s"
-        shareUrlPrefixes:
-            s:
-                service: "s3"
-                region: "ap-southeast-2"
-                bucket: "terriajs-ci-sharing"
-                accessKeyId: "secret"
-                secretAccessKey: "secret"
-        feedback:
-            userAgent: TerriaBot (TerriaJS Feedback)
-            issuesUrl: https://api.github.com/repos/TerriaJS/demo-feedback/issues
-            accessToken: secret
-    clientConfig:
-        initializationUrls:
-        - simple
-        parameters:
-            bingMapsKey: "ApZeR4iLSH_Pl2w5OSXrIqjvc_KzgPn_UXjn6jTtQDiueg72InBThCeIO4OSs6Fq"
-            cesiumIonAccessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxZDY5MDE1YS0yNGFlLTQ1MzctYWNkNy0wNDQ1YWNiNTM5MDIiLCJpZCI6Mjk5Miwic2NvcGVzIjpbImFzciIsImdjIl0sImlhdCI6MTUzODAzMzgyNn0.a2uTotdiHUo8FiHsO4MVNZ1KT5pOF0rb7CFdwbRAsOo"
-            useCesiumIonBingImagery: true
-            googleAnalyticsKey:
-            disclaimer:
-                text: "Disclaimer: This map must not be used for navigation or precise spatial analysis"
-                url: "https://terria.io"
-            developerAttribution:
-                text: "Terria"
-                link: "https://terria.io"
-            appName: "TerriaJS Continuous Integration"
-            brandBarElements: ["", "<a target=\"_blank\" href=\"http://terria.io\"><img src=\"images/terria_logo.png\" height=\"52\" title=\"Version: {{version}}\" /></a>", ""]
-            supportEmail: "info@terria.io"
-            mobileDefaultViewerMode: "2d"
-            experimentalFeatures: true
-            feedbackUrl: "feedback"
-            helpContent:
-                -
-                  title: "Getting started with the map"
-                  itemName: gettingstarted
-                  markdownText: "## Getting started with the map\n\nIf you''re new to the map or using spatial data, our Getting Started video quickly covers the basic functionality you''ll need to use to add and interrogate data sets.\n\nIf you don''t have time to watch the video, we suggest exploring the following areas:\n\n1. Search for a location to quickly find an area of interest\n2. Use ''Explore map data'' to view the catalogue of available data sets and add them to the map\n3. Interact with the data layer, including opacity and toggling on and off on the left in your workbench\n4. Click on the data on the map to view more detailed data, including the raw data\n5. Change your basemap using options in ''Map Settings'' to help make some data sets more visible\n6. Zoom and change your view, including tilting the view angle using the controls on the right-hand side of the screen"
-                  icon: "video"
-                  videoUrl: "https://www.youtube-nocookie.com/embed/FjSxaviSLhc"
-                  placeholderImage: "https://img.youtube.com/vi/FjSxaviSLhc/maxresdefault.jpg"
-                -
-                  icon: oneTwoThree
-                  itemName: stepbystepguide
-                  markdownText: |-
-                    ## Step by step guide
+      supportEmail: "info@terria.io"
+      mobileDefaultViewerMode: "2d"
+      experimentalFeatures: true
+      feedbackUrl: "feedback"
+      languageConfiguration:
+        enabled: true
+        languages:
+          en: English
+          ca: "Català"
+          cs: "Čeština"
+          ja: "日本語"
+          pt_BR: "Português do Brasil"
+          it: "Italiano"
+          fr: "Français"
+          km: "ខ្មែរ"
+          zh_Hans: "中文"
+          nb_NO: "Bokmål"
+          id: "Bahasa Indonesia"
+      helpContent:
+        - title: "Getting started with the map"
+          itemName: gettingstarted
+          markdownText: "## Getting started with the map\n\nIf you''re new to the map or using spatial data, our Getting Started video quickly covers the basic functionality you''ll need to use to add and interrogate data sets.\n\nIf you don''t have time to watch the video, we suggest exploring the following areas:\n\n1. Search for a location to quickly find an area of interest\n2. Use ''Explore map data'' to view the catalogue of available data sets and add them to the map\n3. Interact with the data layer, including opacity and toggling on and off on the left in your workbench\n4. Click on the data on the map to view more detailed data, including the raw data\n5. Change your basemap using options in ''Map Settings'' to help make some data sets more visible\n6. Zoom and change your view, including tilting the view angle using the controls on the right-hand side of the screen"
+          icon: "video"
+          videoUrl: "https://www.youtube-nocookie.com/embed/FjSxaviSLhc"
+          placeholderImage: "https://img.youtube.com/vi/FjSxaviSLhc/maxresdefault.jpg"
+        - icon: oneTwoThree
+          itemName: stepbystepguide
+          markdownText: |-
+            ## Step by step guide
 
-                    Launch a step by step guide for various popular workflows below:
-                  paneMode: trainer
-                  title: Step by step guide
-                  trainerItems:
-                    - steps:
-                        - markdownDescription: The search is at the top of the workbench on the left.
-                          title: Search for a location to find an area of interest
-                        - markdownDescription: You can view the catalogue at any time
-                          title: Use "Explore map data" to view data catalogue
-                        - markdownDescription: Find a dataset of interest
-                          title: Search for data or browse catalogue
-                        - title: >-
-                            Add data to map by clicking on + sign or "Add to map" button in
-                            preview window
-                        - title: >-
-                            Interact with data, including opacity and toggling on & off on the
-                            left in your workbench
-                        - title: >-
-                            Click on data on the map to view more details by triggering Feature
-                            Information panel
-                        - title: >-
-                            Change your basemap using options in "Map Settings" to improve
-                            contrast
-                        - title: >-
-                            Zoom and change view using the controls on the right-hand side of the
-                            screen
-                      title: Getting started with the map
-                -
-                  icon: story
-                  itemName: storymigration
-                  markdownText: "## Share & Story Migration\n\n### Guide on updating share links, including
-                    stories\n\nIf you''ve received a warning telling you that a share link was based
-                    off an older version of TerriaJS, you''ll want to do a few things to recreate them
-                    in the latest version of Terria!\n\n#### Creators\n\n1. Identify the share URL which
-                    causes a notification of share preservation effort when loading them into Terria.
-                    e.g. you may know where they are embedded, or come across them accidentally\n2.
-                    Open them in the newer (v8) based map application \n3. Check that everything is
-                    sharing as you expect, tweak the layers to fit if some are missing or not behaving
-                    correctly.\n4. Update the share link by clicking the Share/Print button and copy
-                    the new link\n5. If distribution of share link is known, update the url in your
-                    web page (if embedded), or send the new link to users \n\n#### Consumers\n1. Load
-                    the share URL\n2. If it doesn''t quite look right, notify the provider so they can
-                    follow the above steps to recreate it in the latest version of Terria"
-                  title: Share & Story migration
-    resources:
-        requests:
-            cpu: 10m
-            memory: 10Mi
+            Launch a step by step guide for various popular workflows below:
+          paneMode: trainer
+          title: Step by step guide
+          trainerItems:
+            - steps:
+                - markdownDescription: The search is at the top of the workbench on the left.
+                  title: Search for a location to find an area of interest
+                - markdownDescription: You can view the catalogue at any time
+                  title: Use "Explore map data" to view data catalogue
+                - markdownDescription: Find a dataset of interest
+                  title: Search for data or browse catalogue
+                - title: >-
+                    Add data to map by clicking on + sign or "Add to map" button in
+                    preview window
+                - title: >-
+                    Interact with data, including opacity and toggling on & off on the
+                    left in your workbench
+                - title: >-
+                    Click on data on the map to view more details by triggering Feature
+                    Information panel
+                - title: >-
+                    Change your basemap using options in "Map Settings" to improve
+                    contrast
+                - title: >-
+                    Zoom and change view using the controls on the right-hand side of the
+                    screen
+              title: Getting started with the map
+        - icon: story
+          itemName: storymigration
+          markdownText:
+            "## Share & Story Migration\n\n### Guide on updating share links, including
+            stories\n\nIf you''ve received a warning telling you that a share link was based
+            off an older version of TerriaJS, you''ll want to do a few things to recreate them
+            in the latest version of Terria!\n\n#### Creators\n\n1. Identify the share URL which
+            causes a notification of share preservation effort when loading them into Terria.
+            e.g. you may know where they are embedded, or come across them accidentally\n2.
+            Open them in the newer (v8) based map application \n3. Check that everything is
+            sharing as you expect, tweak the layers to fit if some are missing or not behaving
+            correctly.\n4. Update the share link by clicking the Share/Print button and copy
+            the new link\n5. If distribution of share link is known, update the url in your
+            web page (if embedded), or send the new link to users \n\n#### Consumers\n1. Load
+            the share URL\n2. If it doesn''t quite look right, notify the provider so they can
+            follow the above steps to recreate it in the latest version of Terria"
+          title: Share & Story migration
+  resources:
+    requests:
+      cpu: 10m
+      memory: 10Mi

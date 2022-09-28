@@ -11,17 +11,18 @@ import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
-import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import ModelReference from "../../../Traits/ModelReference";
+import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import WebMapServiceCatalogGroupTraits from "../../../Traits/TraitsClasses/WebMapServiceCatalogGroupTraits";
-import CatalogGroup from "../CatalogGroup";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
+import updateModelFromJson from "../../Definition/updateModelFromJson";
+import CatalogGroup from "../CatalogGroup";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import WebMapServiceCapabilities, {
   CapabilitiesLayer
 } from "./WebMapServiceCapabilities";
@@ -129,7 +130,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   @computed
   get members(): ModelReference[] {
     return filterOutUndefined(
-      this.topLevelLayers.map(layer => this.getLayerId(layer))
+      this.topLevelLayers.map((layer) => this.getLayerId(layer))
     );
   }
 
@@ -137,8 +138,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
     if (this.catalogGroup.flatten) {
       return this.capabilities.allLayers;
     } else {
-      let rootLayers: readonly CapabilitiesLayer[] = this.capabilities
-        .rootLayers;
+      let rootLayers: readonly CapabilitiesLayer[] =
+        this.capabilities.rootLayers;
       while (
         rootLayers &&
         rootLayers.length === 1 &&
@@ -162,7 +163,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
   @action
   createMembersFromLayers() {
-    this.topLevelLayers.forEach(layer => this.createMemberFromLayer(layer));
+    this.topLevelLayers.forEach((layer) => this.createMemberFromLayer(layer));
   }
 
   @action
@@ -183,7 +184,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         members = [layer.Layer as CapabilitiesLayer];
       }
 
-      members.forEach(member => this.createMemberFromLayer(member));
+      members.forEach((member) => this.createMemberFromLayer(member));
 
       // Create group
       const existingModel = this.catalogGroup.terria.getModelById(
@@ -194,16 +195,26 @@ class GetCapabilitiesStratum extends LoadableStratum(
       let model: CatalogGroup;
       if (existingModel === undefined) {
         model = new CatalogGroup(layerId, this.catalogGroup.terria);
-        this.catalogGroup.terria.addModel(model, this.getLayerShareKeys(layer));
+        try {
+          // Sometimes WMS Layers have duplicate names
+          // At the moment we ignore duplicate layers
+          this.catalogGroup.terria.addModel(
+            model,
+            this.getLayerShareKeys(layer)
+          );
+        } catch (e) {
+          TerriaError.from(e, "Failed to add CatalogGroup").log();
+          return;
+        }
       } else {
         model = existingModel;
       }
 
-      model.setTrait(CommonStrata.underride, "name", layer.Title);
+      model.setTrait(CommonStrata.definition, "name", layer.Title);
       model.setTrait(
-        CommonStrata.underride,
+        CommonStrata.definition,
         "members",
-        filterOutUndefined(members.map(member => this.getLayerId(member)))
+        filterOutUndefined(members.map((member) => this.getLayerId(member)))
       );
 
       // Set group `info` trait if applicable
@@ -212,7 +223,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         layer.Abstract &&
         !containsAny(layer.Abstract, WebMapServiceCatalogItem.abstractsToIgnore)
       ) {
-        model.setTrait(CommonStrata.underride, "info", [
+        model.setTrait(CommonStrata.definition, "info", [
           createStratumInstance(InfoSectionTraits, {
             name: i18next.t("models.webMapServiceCatalogGroup.abstract"),
             content: layer.Abstract
@@ -222,6 +233,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
       return;
     }
+
+    // We can only request WMS layers if `Name` is defined
+    if (!isDefined(layer.Name)) return;
 
     // No nested layers -> create model for WebMapServiceCatalogItem
     const existingModel = this.catalogGroup.terria.getModelById(
@@ -233,54 +247,73 @@ class GetCapabilitiesStratum extends LoadableStratum(
     if (existingModel === undefined) {
       model = new WebMapServiceCatalogItem(layerId, this.catalogGroup.terria);
 
-      this.catalogGroup.terria.addModel(model, this.getLayerShareKeys(layer));
+      try {
+        // Sometimes WMS Layers have duplicate names
+        // At the moment we ignore duplicate layers
+        this.catalogGroup.terria.addModel(model, this.getLayerShareKeys(layer));
+      } catch (e) {
+        TerriaError.from(e, "Failed to add WebMapServiceCatalogItem").log();
+        return;
+      }
     } else {
       model = existingModel;
     }
 
     // Replace the stratum inherited from the parent group.
-    const stratum = CommonStrata.underride;
+    model.strata.delete(CommonStrata.definition);
 
-    model.strata.delete(stratum);
-
-    model.setTrait(stratum, "name", layer.Title);
-    model.setTrait(stratum, "url", this.catalogGroup.url);
+    model.setTrait(CommonStrata.definition, "name", layer.Title);
+    model.setTrait(CommonStrata.definition, "url", this.catalogGroup.url);
     model._webMapServiceCatalogGroup = this.catalogGroup;
     model.setTrait(
-      stratum,
+      CommonStrata.definition,
       "getCapabilitiesUrl",
       this.catalogGroup.getCapabilitiesUrl
     );
     model.setTrait(
-      stratum,
+      CommonStrata.definition,
       "getCapabilitiesCacheDuration",
       this.catalogGroup.getCapabilitiesCacheDuration
     );
-    model.setTrait(stratum, "layers", layer.Name);
+    model.setTrait(CommonStrata.definition, "layers", layer.Name);
 
-    // if user defined following properties on th group level we should pass them to all group members
-    model.setTrait(stratum, "hideSource", this.catalogGroup.hideSource);
+    // if user defined following properties on the group level we should pass them to all group members
     model.setTrait(
-      stratum,
+      CommonStrata.definition,
+      "hideSource",
+      this.catalogGroup.hideSource
+    );
+    model.setTrait(
+      CommonStrata.definition,
       "isOpenInWorkbench",
       this.catalogGroup.isOpenInWorkbench
     );
     model.setTrait(
-      stratum,
+      CommonStrata.definition,
       "isExperiencingIssues",
       this.catalogGroup.isExperiencingIssues
     );
     model.setTrait(
-      stratum,
+      CommonStrata.definition,
       "hideLegendInWorkbench",
       this.catalogGroup.hideLegendInWorkbench
     );
 
-    if (this.catalogGroup.itemProperties !== undefined) {
-      Object.keys(this.catalogGroup.itemProperties).map((k: any) =>
-        model.setTrait(stratum, k, this.catalogGroup.itemProperties![k])
+    // Copy over ExportWebCoverageTraits if `linkedWcsUrl` has been set
+    // See WebMapServiceCatalogGroupTraits.perLayerLinkedWcs for more info
+    if (this.catalogGroup.perLayerLinkedWcs?.linkedWcsUrl) {
+      updateModelFromJson(model, CommonStrata.definition, {
+        // Copy over all perLayerLinkedWcs objects
+        ...this.catalogGroup.traits.perLayerLinkedWcs.toJson(
+          this.catalogGroup.perLayerLinkedWcs
+        ),
+        // Override linkedWcsCoverage with layer.Name
+        linkedWcsCoverage: layer.Name
+      }).logError(
+        `Failed to set \`perLayerLinkedWcs\` for WMS layer ${layer.Title}`
       );
     }
+
     model.createGetCapabilitiesStratumFromParent(this.capabilities);
   }
 

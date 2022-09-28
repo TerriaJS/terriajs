@@ -10,25 +10,25 @@ configure({
   computedRequiresReaction: true
 });
 
-describe("OpenStreetMapCatalogItem", function() {
+describe("OpenStreetMapCatalogItem", function () {
   const testUrl = "https://example.com/ooo/";
   let item: OpenStreetMapCatalogItem;
 
-  beforeEach(function() {
+  beforeEach(function () {
     item = new OpenStreetMapCatalogItem("test", new Terria());
   });
 
-  it("has a type", function() {
+  it("has a type", function () {
     expect(OpenStreetMapCatalogItem.type).toBe("open-street-map");
   });
 
-  describe("templateUrl", function() {
-    it("has placeholders for tile coordinates", function() {
+  describe("templateUrl", function () {
+    it("has placeholders for tile coordinates", function () {
       runInAction(() => item.setTrait("definition", "url", testUrl));
       expect(item.templateUrl).toBe("https://example.com/ooo/{z}/{x}/{y}.png");
     });
 
-    it("has placeholder for subdomains", function() {
+    it("has placeholder for subdomains", function () {
       runInAction(() => {
         item.setTrait("definition", "url", testUrl);
         item.setTrait("definition", "subdomains", ["a", "b"]);
@@ -40,27 +40,27 @@ describe("OpenStreetMapCatalogItem", function() {
     });
   });
 
-  describe("after loading", function() {
-    beforeEach(async function() {
+  describe("after loading", function () {
+    beforeEach(async function () {
       runInAction(() => {
         item.setTrait("definition", "url", testUrl);
       });
       return item.loadMapItems();
     });
 
-    it("returns exactly 1 mapItem", function() {
+    it("returns exactly 1 mapItem", function () {
       expect(item.mapItems.length).toBe(1);
     });
 
-    describe("the mapItem", function() {
-      it("correctly sets the `alpha` value", function() {
+    describe("the mapItem", function () {
+      it("correctly sets the `alpha` value", function () {
         if (!ImageryParts.is(item.mapItems[0]))
           throw new Error("Expected MapItem to be an ImageryParts");
         runInAction(() => item.setTrait("definition", "opacity", 0.42));
         expect(item.mapItems[0].alpha).toBe(0.42);
       });
 
-      it("correctly sets `show`", function() {
+      it("correctly sets `show`", function () {
         if (!ImageryParts.is(item.mapItems[0]))
           throw new Error("Expected MapItem to be an ImageryParts");
         runInAction(() => item.setTrait("definition", "show", false));
@@ -69,7 +69,7 @@ describe("OpenStreetMapCatalogItem", function() {
         expect(item.mapItems[0].show).toBe(true);
       });
 
-      it("correctly sets the `clippingRectangle` value", function() {
+      it("correctly sets the `clippingRectangle` value", function () {
         item.setTrait("definition", "rectangle", {
           west: 0,
           south: -30,
@@ -106,8 +106,8 @@ describe("OpenStreetMapCatalogItem", function() {
         expect(item.mapItems[0].clippingRectangle).toBe(undefined);
       });
 
-      describe("imageryProvider", function() {
-        it("should be a UrlTemplateImageryProvider", function() {
+      describe("imageryProvider", function () {
+        it("should be a UrlTemplateImageryProvider", function () {
           if (!ImageryParts.is(item.mapItems[0]))
             throw new Error("Expected MapItem to be an ImageryParts");
 
@@ -117,7 +117,7 @@ describe("OpenStreetMapCatalogItem", function() {
           ).toBeTruthy();
         });
 
-        it("has the correct properties", function() {
+        it("has the correct properties", function () {
           runInAction(() => {
             item.setTrait("definition", "attribution", "foo bar baz");
             item.setTrait("definition", "subdomains", ["a"]);
@@ -142,7 +142,7 @@ describe("OpenStreetMapCatalogItem", function() {
             tileWidth: 256,
             tileHeight: 256,
             minimumLevel: 0,
-            maximumLevel: item.maximumLevel,
+            maximumLevel: 25,
             subdomains: ["a"]
           });
         });

@@ -1,4 +1,5 @@
 import dateFormat from "dateformat";
+import { get as _get } from "lodash";
 import { computed, observable, runInAction } from "mobx";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
@@ -7,6 +8,7 @@ import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStratum";
+import ApiRequestTraits from "../../../Traits/TraitsClasses/ApiRequestTraits";
 import ApiTableCatalogItemTraits, {
   ApiTableRequestTraits
 } from "../../../Traits/TraitsClasses/ApiTableCatalogItemTraits";
@@ -16,10 +18,10 @@ import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import Model, { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import saveModelToJson from "../../Definition/saveModelToJson";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 export class ApiTableStratum extends LoadableStratum(
   ApiTableCatalogItemTraits
@@ -81,18 +83,23 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
   }
 
   protected loadDataFromApis() {
-    const apisWithUrl = this.apis.filter(api => api.url);
-    const apiUrls = apisWithUrl.map(api => proxyCatalogItemUrl(this, api.url!));
+    const apisWithUrl = this.apis.filter((api) => api.url);
+    const apiUrls = apisWithUrl.map((api) =>
+      proxyCatalogItemUrl(this, api.url!)
+    );
     return Promise.all(
       apisWithUrl.map(async (api, idx) => {
-        const data = await loadJson(
+        let data = await loadJson(
           apiUrls[idx],
           undefined,
           api.requestData
-            ? saveModelToJson((api.requestData as unknown) as BaseModel)
+            ? saveModelToJson(api.requestData as unknown as BaseModel)
             : undefined,
           api.postRequestDataAsFormData
         );
+        if (api.responseDataPath !== undefined) {
+          data = _get(data, api.responseDataPath);
+        }
         return Promise.resolve({
           data,
           api
@@ -100,22 +107,55 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
       })
     ).then((values: { data: any[]; api: Model<ApiTableRequestTraits> }[]) => {
       runInAction(() => {
+        const columnMajorData: Map<string, any> = new Map();
+        values
+          .filter((val) => val.api.kind === "COLUMN_MAJOR") // column major rows only
+          .map((val, i) => {
+            // add the column name to each column
+            (val.data as any)["TERRIA_columnName"] =
+              val.api.columnMajorColumnNames[i];
+            return val.data;
+          })
+          .flat()
+          // make row id/data pairs for columnMajorData map
+          .map((data) => Object.entries(data))
+          .flat()
+          // merge rows with the same id
+          .forEach((rowPart) => {
+            const id = rowPart[0];
+            const value: any = rowPart[1];
+            const row: any = {};
+            row["value"] = value; // add the id to the row's data
+            row[this.idKey!] = id;
+            if (columnMajorData.has(id)) {
+              let currentRow = columnMajorData.get(id);
+              columnMajorData.set(id, { currentRow, ...value });
+            } else {
+              columnMajorData.set(id, row);
+            }
+          });
+
+        if (columnMajorData.size !== 0) {
+          this.apiResponses = Array.from(columnMajorData.values());
+          return;
+        }
+
         // Make map of ids to values that are constant for that id
         const perIdData: Map<string, any> = new Map(
           values
-            .filter(val => val.api.kind === "PER_ID") // per id only
-            .map(val => val.data) // throw away api, keep data
+            .filter((val) => val.api.kind === "PER_ID") // per id only
+            .map((val) => val.data) // throw away api, keep data
             .reduce((curr, prev) => curr.concat(prev), []) // flatten
             // make id/data pair for perIdData map
-            .map(data => [data[this.idKey!], data])
+            .map((data) => [data[this.idKey!], data])
         );
 
         // Merge PER_ID data with *all* PER_ROW data (this may result in the same PER_ID data row being added to multiple PER_ROW data row)
         const perRowData = values
-          .filter(val => val.api.kind === "PER_ROW")
-          .map(val => val.data)
+          .filter((val) => val.api.kind === "PER_ROW")
+          .map((val) => val.data)
           .reduce((curr, prev) => curr.concat(prev), [])
-          .map(row =>
+          .map((row) =>
             Object.assign(
               row,
               isDefined(row[this.idKey!]) ? perIdData.get(row[this.idKey!]) : {}
@@ -128,7 +168,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
   }
 
   protected makeTableColumns(addHeaders: boolean) {
-    return this.columns.map(col => (addHeaders ? [col.name ?? ""] : []));
+    return this.columns.map((col) => (addHeaders ? [col.name ?? ""] : []));
   }
 
   protected apiResponseToTable() {
@@ -139,7 +179,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
       return columnMajorTable;
     }
     // Fill in column values from the API response
-    this.apiResponses.forEach(response => {
+    this.apiResponses.forEach((response) => {
       this.columns.forEach((col, mappingIdx) => {
         if (!isDefined(col.name)) return;
         // Append the new value to the correct column
@@ -158,7 +198,10 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     return this.loadDataFromApis()
       .then(() => {
         runInAction(() => {
-          this.append(this.apiResponseToTable());
+          const newTableData = this.apiResponseToTable();
+          this.shouldAppendNewData
+            ? this.append(newTableData)
+            : (this.dataColumnMajor = newTableData);
           this.hasData = true;
         });
       })
@@ -168,12 +211,15 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
   refreshData(): void {
     this.loadDataFromApis().then(() => {
       runInAction(() => {
-        this.append(this.apiResponseToTable());
+        const newTableData = this.apiResponseToTable();
+        this.shouldAppendNewData
+          ? this.append(newTableData)
+          : (this.dataColumnMajor = newTableData);
       });
     });
   }
 
-  protected addQueryParams(api: Model<ApiTableRequestTraits>): string {
+  protected addQueryParams(api: Model<ApiRequestTraits>): string {
     const uri = new URI(api.url);
 
     const substituteDateTimesInQueryParam = (param: string) => {
@@ -190,7 +236,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     const commonQueryParameters = useUpdateParams
       ? this.updateQueryParameters
       : this.queryParameters;
-    commonQueryParameters.forEach(query => {
+    commonQueryParameters.forEach((query) => {
       uri.addQuery(query.name!, substituteDateTimesInQueryParam(query.value!));
     });
 
@@ -199,7 +245,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     const specificQueryParameters = useUpdateParams
       ? api.updateQueryParameters
       : api.queryParameters;
-    specificQueryParameters.forEach(query => {
+    specificQueryParameters.forEach((query) => {
       uri.addQuery(query.name!, substituteDateTimesInQueryParam(query.value!));
     });
 

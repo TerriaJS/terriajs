@@ -1,8 +1,10 @@
 import i18next from "i18next";
 import { flow } from "mobx";
+import isDefined from "../../../Core/isDefined";
 import { isJsonObject, JsonObject } from "../../../Core/Json";
 import loadJson5 from "../../../Core/loadJson5";
 import TerriaError from "../../../Core/TerriaError";
+import GroupMixin from "../../../ModelMixins/GroupMixin";
 import ReferenceMixin from "../../../ModelMixins/ReferenceMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import TerriaReferenceTraits from "../../../Traits/TraitsClasses/TerriaReferenceTraits";
@@ -35,7 +37,7 @@ export default class TerriaReference extends UrlMixin(
     return TerriaReference.type;
   }
 
-  protected forceLoadReference = flow(function*(
+  protected forceLoadReference = flow(function* (
     this: TerriaReference,
     _previousTarget: BaseModel | undefined
   ) {
@@ -86,13 +88,27 @@ export default class TerriaReference extends UrlMixin(
           // This avoids the name of the catalog suddenly changing after the reference is loaded.
           targetJson.name = this.name;
         }
+        // Override `GroupTraits` if targetJson is a group
+
+        if (
+          GroupMixin.isMixedInto(target) &&
+          isDefined(targetJson.isOpen) &&
+          typeof targetJson.isOpen === "boolean"
+        ) {
+          target.setTrait(
+            CommonStrata.definition,
+            "isOpen",
+            targetJson.isOpen as boolean
+          );
+        }
+
         updateModelFromJson(
           target,
           CommonStrata.definition,
           targetJson
-        ).catchError(error => {
+        ).catchError((error) => {
           target.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
-          console.log(error.toError());
+          error.log();
         });
         return target;
       }
@@ -116,7 +132,7 @@ function findCatalogMemberJson(
   const member = path.reduce(
     (group, id) => {
       if (Array.isArray(group?.members)) {
-        return group.members.find(m => m?.id === id);
+        return group.members.find((m) => m?.id === id);
       } else {
         return undefined;
       }

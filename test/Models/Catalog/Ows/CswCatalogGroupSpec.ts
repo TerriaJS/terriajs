@@ -10,10 +10,10 @@ import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import CatalogGroup from "../../../../lib/Models/Catalog/CatalogGroup";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 
-describe("CswCatalogGroup", function() {
+describe("CswCatalogGroup", function () {
   let terria: Terria;
   let group: CswCatalogGroup;
-  beforeEach(async function() {
+  beforeEach(async function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -53,7 +53,7 @@ describe("CswCatalogGroup", function() {
     let page = 0;
     jasmine.Ajax.stubRequest(
       "http://oa-gis.csiro.au/geonetwork/srv/eng/csw"
-    ).andCallFunction(req => {
+    ).andCallFunction((req) => {
       req.respondWith({
         contentType: "text/xml",
         responseText: getRecords[page]
@@ -62,11 +62,11 @@ describe("CswCatalogGroup", function() {
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     jasmine.Ajax.uninstall();
   });
 
-  it("loads domain and creates members", async function() {
+  it("loads domain and creates members", async function () {
     await group.loadMembers();
 
     expect(group.memberModels.length).toBe(3);
@@ -88,7 +88,7 @@ describe("CswCatalogGroup", function() {
     expect(wmsLayer.name).toBe("National Tidal Model Outline");
   });
 
-  it("loads records without domainspec", async function() {
+  it("loads records without domainspec", async function () {
     const group2 = new CswCatalogGroup("test2", terria);
 
     updateModelFromJson(group2, CommonStrata.override, {
@@ -112,7 +112,7 @@ describe("CswCatalogGroup", function() {
     expect(group2.memberModels[1].type).toBe(WebMapServiceCatalogItem.type);
   });
 
-  it("loads flattened catalog", async function() {
+  it("loads flattened catalog", async function () {
     group.setTrait(CommonStrata.override, "flatten", true);
     await group.loadMembers();
 
@@ -129,12 +129,12 @@ describe("CswCatalogGroup", function() {
     expect(group.memberModels[1].type).toBe(WebMapServiceCatalogItem.type);
   });
 
-  it("creates correct WMS layer form record (without loading GetCapabilities)", async function() {
+  it("creates correct WMS layer form record (without loading GetCapabilities)", async function () {
     await group.loadMembers();
 
-    const wmsLayer = ((group.memberModels[1] as CatalogGroup)
-      .memberModels[0] as CatalogGroup)
-      .memberModels[0] as WebMapServiceCatalogItem;
+    const wmsLayer = (
+      (group.memberModels[1] as CatalogGroup).memberModels[0] as CatalogGroup
+    ).memberModels[0] as WebMapServiceCatalogItem;
     expect(wmsLayer.name).toBe("National Tidal Model Outline");
     expect(wmsLayer.type).toBe(WebMapServiceCatalogItem.type);
 
@@ -159,7 +159,7 @@ describe("CswCatalogGroup", function() {
     expect(wmsLayer.legends.length).toBe(0);
   });
 
-  it("honors itemProperties", async function() {
+  it("honors itemProperties", async function () {
     updateModelFromJson(group, CommonStrata.override, {
       itemProperties: {
         shortReport: "test"
@@ -168,9 +168,15 @@ describe("CswCatalogGroup", function() {
 
     await group.loadMembers();
 
-    const wmsLayer = ((group.memberModels[1] as CatalogGroup)
-      .memberModels[0] as CatalogGroup)
-      .memberModels[0] as WebMapServiceCatalogItem;
+    const nestedGroup = group.memberModels[1] as CatalogGroup;
+
+    await nestedGroup.loadMembers();
+
+    const nestedGroup2 = nestedGroup.memberModels[0] as CatalogGroup;
+
+    await nestedGroup2.loadMembers();
+
+    const wmsLayer = nestedGroup2.memberModels[0] as WebMapServiceCatalogItem;
 
     expect(wmsLayer.shortReport).toBe("test");
   });

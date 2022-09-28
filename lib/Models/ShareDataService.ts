@@ -1,11 +1,10 @@
+import i18next from "i18next";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import { JsonObject } from "../Core/Json";
+import { isJsonObject, JsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
 import loadWithXhr from "../Core/loadWithXhr";
 import TerriaError from "../Core/TerriaError";
 import Terria from "./Terria";
-import i18next from "i18next";
 
 interface ShareDataServiceOptions {
   terria: Terria;
@@ -52,49 +51,55 @@ export default class ShareDataService {
    * @param shareData JSON to store.
    * @return A promise for the token (which can later be resolved at /share/TOKEN).
    */
-  getShareToken(shareData: any): Promise<string> {
+  async getShareToken(shareData: any): Promise<string> {
     if (!this.isUsable) {
-      throw new DeveloperError("ShareDataService is not usable.");
+      throw TerriaError.from("`ShareDataService` is not usable");
     }
 
-    return loadWithXhr({
-      url: this.url,
-      method: "POST",
-      data: JSON.stringify(shareData),
-      headers: { "Content-Type": "application/json" },
-      responseType: "json"
-    })
-      .then((result: string | JsonObject) => {
-        const json = typeof result === "string" ? JSON.parse(result) : result;
-        return json.id;
-      })
-      .catch((error: any) => {
-        console.log(error);
-        this.terria.raiseErrorToUser(
-          new TerriaError({
-            title: i18next.t("models.shareData.generateErrorTitle"),
-            message: i18next.t("models.shareData.generateErrorMessage")
-          })
-        );
+    try {
+      const result = await loadWithXhr({
+        url: this.url,
+        method: "POST",
+        data: JSON.stringify(shareData),
+        headers: { "Content-Type": "application/json" },
+        responseType: "json"
       });
+      const json = typeof result === "string" ? JSON.parse(result) : result;
+      return json.id;
+    } catch (error) {
+      throw TerriaError.from(error, {
+        title: i18next.t("models.shareData.generateErrorTitle"),
+        message: i18next.t("models.shareData.generateErrorMessage"),
+        importance: 1
+      });
+    }
   }
 
-  resolveData(token: string): Promise<JsonObject | undefined> {
+  async resolveData(token: string): Promise<JsonObject> {
     if (!this.isUsable) {
-      throw new DeveloperError("ShareDataService is not usable because ###");
+      throw TerriaError.from("`ShareDataService` is not usable");
     }
 
-    return loadJson(this.url + "/" + token).catch(() => {
-      this.terria.raiseErrorToUser(
-        new TerriaError({
-          title: i18next.t("models.shareData.expandErrorTitle"),
-          message: i18next.t("models.shareData.expandErrorMessage", {
-            appName: this.terria.appName
-          })
-        })
-      );
+    try {
+      const shareJson = await loadJson(this.url + "/" + token);
 
-      return undefined;
-    });
+      if (!isJsonObject(shareJson, false)) {
+        throw TerriaError.from(
+          `Invalid server response for share ${
+            this.url + "/" + token
+          }\n\`${JSON.stringify(shareJson)}\``
+        );
+      }
+
+      return shareJson;
+    } catch (error) {
+      throw TerriaError.from(error, {
+        title: i18next.t("models.shareData.expandErrorTitle"),
+        message: i18next.t("models.shareData.expandErrorMessage", {
+          appName: this.terria.appName
+        }),
+        importance: 1
+      });
+    }
   }
 }

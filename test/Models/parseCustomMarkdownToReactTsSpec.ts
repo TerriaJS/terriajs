@@ -3,20 +3,20 @@ import registerCustomComponentTypes from "../../lib/ReactViews/Custom/registerCu
 import Terria from "../../lib/Models/Terria";
 import { TooltipWithButtonLauncher } from "../../lib/ReactViews/Generic/TooltipWrapper";
 
-const isComponentOfType: any = require("react-shallow-testutils")
-  .isComponentOfType;
+const isComponentOfType: any =
+  require("react-shallow-testutils").isComponentOfType;
 const findAll: any = require("react-shallow-testutils").findAll;
 
-describe("parseCustomMarkdownToReactTs", function() {
+describe("parseCustomMarkdownToReactTs", function () {
   let terria: Terria;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
     registerCustomComponentTypes();
   });
-  it("correctly parses tooltip terms", function() {
+  it("correctly parses tooltip terms", function () {
     const spatialDataTerm = {
       term: "spatial data",
       content: "data that is spatial, spluh"
@@ -36,7 +36,7 @@ describe("parseCustomMarkdownToReactTs", function() {
     expect(tooltip.props.launcherComponent()).toContain(spatialDataTerm.term);
     expect(tooltip.props.children()).toContain(spatialDataTerm.content);
   });
-  it("skips injecting tooltips when no options provided", function() {
+  it("skips injecting tooltips when no options provided", function () {
     const result = parseCustomMarkdownToReactWithOptions(
       "something something spatial data mochi",
       {}

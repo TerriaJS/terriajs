@@ -9,7 +9,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: '14.x'
+          node-version: "14.x"
       - uses: google-github-actions/setup-gcloud@v0.2.1
         with:
           service_account_key: ${{ secrets.GCP_CREDENTIALS }}
@@ -20,7 +20,7 @@ jobs:
           location: ${{ secrets.GKE_LOCATION }}
       - uses: azure/setup-helm@v1.1
         with:
-          version: 'v3.3.1'
+          version: "v3.3.1"
       - run: bash ./buildprocess/ci-deploy.sh
         env:
           NODE_OPTIONS: --max_old_space_size=4096
@@ -28,3 +28,9 @@ jobs:
           SHARE_S3_SECRET_ACCESS_KEY: ${{ secrets.SHARE_S3_SECRET_ACCESS_KEY }}
           FEEDBACK_GITHUB_TOKEN: ${{ secrets.FEEDBACK_GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Upload new yarn.lock file (as it may change after `sync-dependencies`)
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: yarn.lock
+          path: yarn.lock

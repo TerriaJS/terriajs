@@ -8,7 +8,7 @@ import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import styled from "styled-components";
 
-import { useTranslationIfExists } from "../../../../Language/languageHelpers";
+import { applyTranslationIfExists } from "../../../../Language/languageHelpers";
 import { parseCustomMarkdownToReactWithOptions } from "../../../Custom/parseCustomMarkdownToReact";
 
 const Numbers = styled(Text)`
@@ -16,10 +16,10 @@ const Numbers = styled(Text)`
   height: 22px;
   line-height: 22px;
   border-radius: 50%;
-  background-color: ${props => props.theme.textDarker};
+  background-color: ${(props) => props.theme.textDarker};
 `;
 
-const renderOrderedList = function(contents) {
+const renderOrderedList = function (contents) {
   return (
     <For each="content" index="i" of={contents}>
       <Box key={i} paddedVertically>
@@ -46,7 +46,8 @@ export class StyledHtmlRaw extends React.Component {
     theme: PropTypes.object,
     styledTextProps: PropTypes.object,
     injectTooltips: PropTypes.bool,
-    t: PropTypes.func.isRequired
+    t: PropTypes.func.isRequired,
+    i18n: PropTypes.object.isRequired
   };
   static defaultProps = {
     injectTooltips: true
@@ -57,10 +58,10 @@ export class StyledHtmlRaw extends React.Component {
   }
 
   render() {
-    const { viewState, injectTooltips } = this.props;
+    const { viewState, injectTooltips, i18n } = this.props;
     const styledTextProps = this.props.styledTextProps || {};
 
-    const markdownToParse = useTranslationIfExists(this.props.markdown);
+    const markdownToParse = applyTranslationIfExists(this.props.markdown, i18n);
 
     const parsed = parseCustomMarkdownToReactWithOptions(markdownToParse, {
       injectTermsAsTooltips: injectTooltips,
@@ -90,7 +91,7 @@ export class StyledHtmlRaw extends React.Component {
                 </When>
                 <When condition={item.type === "ol"}>
                   {renderOrderedList(
-                    item.props.children.map(point => point.props.children)
+                    item.props.children.map((point) => point.props.children)
                   )}
                   <Spacing bottom={4} />
                 </When>

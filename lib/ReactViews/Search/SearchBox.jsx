@@ -68,7 +68,8 @@ export const SearchBox = createReactClass({
       prevProps.debounceDuration !== this.props.debounceDuration &&
       this.props.debounceDuration > 0
     ) {
-      this.removeDebounce();
+      // Before we create a new debounced search - make sure there are no previous search values waiting to be called
+      this.searchWithDebounce.flush();
       this.searchWithDebounce = debounce(
         this.search,
         this.props.debounceDuration
@@ -77,7 +78,7 @@ export const SearchBox = createReactClass({
   },
 
   componentWillUnmount() {
-    this.removeDebounce();
+    this.searchWithDebounce.cancel();
   },
 
   hasValue() {
@@ -85,12 +86,8 @@ export const SearchBox = createReactClass({
   },
 
   search() {
-    this.removeDebounce();
-    this.props.onDoSearch();
-  },
-
-  removeDebounce() {
     this.searchWithDebounce.cancel();
+    this.props.onDoSearch();
   },
 
   handleChange(event) {
@@ -145,7 +142,7 @@ export const SearchBox = createReactClass({
     return (
       <form
         autoComplete="off"
-        onSubmit={event => {
+        onSubmit={(event) => {
           event.preventDefault();
           event.stopPropagation();
           this.search();

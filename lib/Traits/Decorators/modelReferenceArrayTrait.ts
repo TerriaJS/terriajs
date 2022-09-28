@@ -16,7 +16,7 @@ export interface ModelArrayTraitOptions extends TraitOptions {
 export default function modelReferenceArrayTrait<T>(
   options: ModelArrayTraitOptions
 ) {
-  return function(target: any, propertyKey: string) {
+  return function (target: any, propertyKey: string) {
     const constructor = target.constructor;
     if (!constructor.traits) {
       constructor.traits = {};
@@ -55,7 +55,7 @@ export class ModelReferenceArrayTrait extends Trait {
       const modelIdArray: ModelReference[] = stratum[this.id];
 
       if (modelIdArray) {
-        modelIdArray.forEach(modelId => {
+        modelIdArray.forEach((modelId) => {
           if (ModelReference.isRemoved(modelId)) {
             // This ID is removed in this stratum.
             removedIds[modelId.removed] = true;
@@ -80,7 +80,7 @@ export class ModelReferenceArrayTrait extends Trait {
     model: BaseModel,
     stratumName: string,
     jsonValue: any
-  ): Result<ReadonlyArray<ModelReference> | undefined> {
+  ): Result<ReadonlyArray<string> | undefined> {
     // TODO: support removals
 
     if (!Array.isArray(jsonValue)) {
@@ -97,7 +97,7 @@ export class ModelReferenceArrayTrait extends Trait {
     const errors: TerriaError[] = [];
 
     const result = jsonValue
-      .map(jsonElement => {
+      .map((jsonElement) => {
         if (typeof jsonElement === "string") {
           return jsonElement;
         } else if (typeof jsonElement === "object") {

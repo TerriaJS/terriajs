@@ -1,12 +1,12 @@
 "use strict";
-import React from "react";
-import PropTypes from "prop-types";
 import classNames from "classnames";
+import { reaction } from "mobx";
+import { observer } from "mobx-react";
+import PropTypes from "prop-types";
+import React from "react";
 import Icon from "../Styled/Icon";
 import Styles from "./drag-drop-notification.scss";
-
-import { observer } from "mobx-react";
-import { reaction } from "mobx";
+import { withViewState } from "./StandardUserInterface/ViewStateContext";
 
 @observer
 class DragDropNotification extends React.Component {
@@ -93,4 +93,4 @@ class DragDropNotification extends React.Component {
   }
 }
 
-module.exports = DragDropNotification;
+export default withViewState(DragDropNotification);

@@ -1,9 +1,10 @@
 import { ReactChild } from "react";
+import { isComponentOfType } from "react-shallow-testutils";
 import ChartableMixin from "../../../../lib/ModelMixins/ChartableMixin";
-import CreateModel from "../../../../lib/Models/Definition/CreateModel";
-import Feature from "../../../../lib/Models/Feature";
-import { BaseModel } from "../../../../lib/Models/Definition/Model";
 import StubCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
+import CreateModel from "../../../../lib/Models/Definition/CreateModel";
+import { BaseModel } from "../../../../lib/Models/Definition/Model";
+import TerriaFeature from "../../../../lib/Models/Feature/Feature";
 import Terria from "../../../../lib/Models/Terria";
 import ChartExpandAndDownloadButtons from "../../../../lib/ReactViews/Custom/Chart/ChartExpandAndDownloadButtons";
 import Chart from "../../../../lib/ReactViews/Custom/Chart/FeatureInfoPanelChart";
@@ -14,17 +15,14 @@ import {
   DomElement,
   ProcessNodeContext
 } from "../../../../lib/ReactViews/Custom/CustomComponent";
-import UrlTraits from "../../../../lib/Traits/TraitsClasses/UrlTraits";
 import mixTraits from "../../../../lib/Traits/mixTraits";
 import MappableTraits from "../../../../lib/Traits/TraitsClasses/MappableTraits";
+import UrlTraits from "../../../../lib/Traits/TraitsClasses/UrlTraits";
 
-const isComponentOfType: any = require("react-shallow-testutils")
-  .isComponentOfType;
-
-describe("ChartCustomComponent", function() {
+describe("ChartCustomComponent", function () {
   let terria: Terria;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -35,7 +33,7 @@ describe("ChartCustomComponent", function() {
     const context: ProcessNodeContext = {
       terria: terria,
       catalogItem: new StubCatalogItem(undefined, terria, undefined),
-      feature: new Feature({})
+      feature: new TerriaFeature({})
     };
     const node: DomElement = {
       name: component.name,
@@ -61,7 +59,7 @@ describe("ChartCustomComponent", function() {
     ).toBeTruthy();
   });
 
-  it("creates shareable chart items for the expand menu", function() {
+  it("creates shareable chart items for the expand menu", function () {
     const TestComponentWithShareableChartItem = class extends TestChartCustomComponent {
       constructShareableCatalogItem = (
         id: string | undefined,
@@ -73,7 +71,7 @@ describe("ChartCustomComponent", function() {
     const context: ProcessNodeContext = {
       terria: terria,
       catalogItem: new StubCatalogItem("parent", terria, undefined),
-      feature: new Feature({})
+      feature: new TerriaFeature({})
     };
     const node: DomElement = {
       name: component.name,
@@ -98,9 +96,7 @@ describe("ChartCustomComponent", function() {
   });
 });
 
-class TestChartCustomComponent extends ChartCustomComponent<
-  ChartableMixin.Instance
-> {
+class TestChartCustomComponent extends ChartCustomComponent<ChartableMixin.Instance> {
   get name(): string {
     return "test";
   }

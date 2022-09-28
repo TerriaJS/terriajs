@@ -4,14 +4,14 @@ import { act } from "react-dom/test-utils";
 import { ThemeProvider } from "styled-components";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import Clipboard from "../../lib/ReactViews/Clipboard";
-import Input from "../../lib/ReactViews/Styled/Input/Input";
+import Input from "../../lib/Styled/Input";
 import Button from "../../lib/Styled/Button";
 
-describe("Clipboard", function() {
+describe("Clipboard", function () {
   let testRenderer: any;
 
-  describe("with basic props", function() {
-    it("renders a button", function() {
+  describe("with basic props", function () {
+    it("renders a button", function () {
       act(() => {
         testRenderer = create(
           <ThemeProvider theme={terriaTheme}>

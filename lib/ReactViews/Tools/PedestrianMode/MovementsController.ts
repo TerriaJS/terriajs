@@ -13,7 +13,6 @@ import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEven
 import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
-import makeRealPromise from "../../../Core/makeRealPromise";
 import Cesium from "../../../Models/Cesium";
 
 type Movement =
@@ -324,7 +323,7 @@ export default class MovementsController {
 
   animate() {
     if (this.activeMovements.size > 0) {
-      [...this.activeMovements].forEach(movement => this.move(movement));
+      [...this.activeMovements].forEach((movement) => this.move(movement));
       this.updateSurfaceHeightEstimate();
       this.onMove();
 
@@ -383,7 +382,8 @@ export default class MovementsController {
     const eventHandler = new ScreenSpaceEventHandler(this.scene.canvas);
 
     const startLook = (click: { position: Cartesian2 }) => {
-      this.currentMousePosition = this.startMousePosition = click.position.clone();
+      this.currentMousePosition = this.startMousePosition =
+        click.position.clone();
       this.activeMovements.add("look");
     };
 
@@ -426,9 +426,10 @@ export default class MovementsController {
    * Animate on each clock tick
    */
   startAnimating() {
-    const stopAnimating = this.cesium.cesiumWidget.clock.onTick.addEventListener(
-      this.animate.bind(this)
-    );
+    const stopAnimating =
+      this.cesium.cesiumWidget.clock.onTick.addEventListener(
+        this.animate.bind(this)
+      );
     return stopAnimating;
   }
 
@@ -459,8 +460,8 @@ export default class MovementsController {
       destroyMouseMap();
       stopAnimating();
 
-      const screenSpaceCameraController = this.scene
-        .screenSpaceCameraController;
+      const screenSpaceCameraController =
+        this.scene.screenSpaceCameraController;
       // screenSpaceCameraController will be undefined if the cesium map is already destroyed
       if (screenSpaceCameraController !== undefined) {
         screenSpaceCameraController.enableTranslate = true;
@@ -488,11 +489,9 @@ async function sampleTerrainHeight(
   const terrainProvider = scene.terrainProvider;
   if (terrainProvider instanceof EllipsoidTerrainProvider) return 0;
 
-  const [sample] = await makeRealPromise<Cartographic[]>(
-    sampleTerrainMostDetailed(terrainProvider, [
-      Cartographic.fromCartesian(position, scene.globe.ellipsoid, sampleScratch)
-    ])
-  );
+  const [sample] = await sampleTerrainMostDetailed(terrainProvider, [
+    Cartographic.fromCartesian(position, scene.globe.ellipsoid, sampleScratch)
+  ]);
   return sample.height;
 }
 
@@ -577,7 +576,7 @@ const inputNodeRe = /input|textarea|select/i;
 function excludeInputEvents(
   handler: (ev: KeyboardEvent) => void
 ): (ev: KeyboardEvent) => void {
-  return ev => {
+  return (ev) => {
     const target = ev.target;
     if (target !== null) {
       const nodeName = (target as any).nodeName;

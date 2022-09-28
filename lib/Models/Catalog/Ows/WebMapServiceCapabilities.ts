@@ -52,6 +52,19 @@ export interface MetadataURL {
 
 export interface CapabilitiesLayer {
   readonly _parent?: CapabilitiesLayer;
+  /** ### Adapted from WMS 1.3.0 spec:
+   *
+   * #### 7.2.4.2
+   *
+   * A number of elements have both a `<Name>` and a `<Title>`.
+   * The `Name` is a text string used for machine-to-machine communication while the `Title` is for the benefit of humans.
+   *
+   * #### 7.2.4.6.3
+   *
+   * If, and only if, a layer has a `<Name>`, then it is a map layer that can be requested by using that `Name` in the `LAYERS` parameter of a GetMap request.
+   * If the layer has a `Title` but no `Name`, then that layer is only a category title for all the layers nested within.
+   * A client shall not attempt to request a layer that has a `Title` but no `Name`.
+   */
   readonly Name?: string;
   readonly Title: string;
   readonly Abstract?: string;
@@ -142,23 +155,22 @@ export function getRectangleFromLayer(
 }
 
 export default class WebMapServiceCapabilities {
-  static fromUrl: (
-    url: string
-  ) => Promise<WebMapServiceCapabilities> = createTransformer((url: string) => {
-    return Promise.resolve(loadXML(url)).then(function(capabilitiesXml) {
-      const json = xml2json(capabilitiesXml);
-      if (!defined(json.Capability)) {
-        throw networkRequestError({
-          title: "Invalid GetCapabilities",
-          message:
-            `The URL ${url} was retrieved successfully but it does not appear to be a valid Web Map Service (WMS) GetCapabilities document.` +
-            `\n\nEither the catalog file has been set up incorrectly, or the server address has changed.`
-        });
-      }
+  static fromUrl: (url: string) => Promise<WebMapServiceCapabilities> =
+    createTransformer((url: string) => {
+      return Promise.resolve(loadXML(url)).then(function (capabilitiesXml) {
+        const json = xml2json(capabilitiesXml);
+        if (!defined(json.Capability)) {
+          throw networkRequestError({
+            title: "Invalid GetCapabilities",
+            message:
+              `The URL ${url} was retrieved successfully but it does not appear to be a valid Web Map Service (WMS) GetCapabilities document.` +
+              `\n\nEither the catalog file has been set up incorrectly, or the server address has changed.`
+          });
+        }
 
-      return new WebMapServiceCapabilities(capabilitiesXml, json);
+        return new WebMapServiceCapabilities(capabilitiesXml, json);
+      });
     });
-  });
 
   get Service(): CapabilitiesService {
     return this.json.Service;
@@ -184,10 +196,10 @@ export default class WebMapServiceCapabilities {
     const allLayers = this.allLayers;
     const rootLayers = this.rootLayers;
     const topLevelNamedLayers = this.topLevelNamedLayers;
-    const layersByName: { [name: string]: CapabilitiesLayer } = this
-      .layersByName;
-    const layersByTitle: { [name: string]: CapabilitiesLayer } = this
-      .layersByTitle;
+    const layersByName: { [name: string]: CapabilitiesLayer } =
+      this.layersByName;
+    const layersByTitle: { [name: string]: CapabilitiesLayer } =
+      this.layersByTitle;
 
     function traverseLayer(
       layer: Mutable<CapabilitiesLayer>,
@@ -227,7 +239,7 @@ export default class WebMapServiceCapabilities {
         rootLayers.push(layerElements);
       }
 
-      rootLayers.forEach(layer => traverseLayer(layer, true));
+      rootLayers.forEach((layer) => traverseLayer(layer, true));
     }
   }
 

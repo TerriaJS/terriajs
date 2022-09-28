@@ -1,0 +1,1681 @@
+{
+  "tour": {
+    "preface": {
+      "close": "Možná později",
+      "title": "Prohlídka",
+      "content": "Nevíte, kde začít? Podívejte se na stručnou prohlídku hlavních funkcí našeho softwaru a seznamte se s některými klíčovými funkcemi, které vám pomohou na cestě.",
+      "start": "Začátek prohlídky"
+    },
+    "exploreMapDataButton": {
+      "content": "## Prozkoumat mapové podklady\n\nProhlédněte si katalog dostupných dat a přidejte je do mapy zde. Najednou můžete přidat více datových sad, které se zobrazí v seznamu níže v pracovní ploše."
+    },
+    "menuBarMapSettingsButton": {
+      "content": "## Nastavení mapy\n\nPřizpůsobte si nastavení mapy, jako jsou základní mapy, 2D/3D terén a kvalita mapového obrazu pro lepší výkon."
+    },
+    "sidePanelUploadButton": {
+      "content": "## Nahrání dat\n\nDo mapy můžete nahrát vlastní data a zobrazit je společně s dalšími datovými sadami. Nahrajte soubor nebo odkaz na existující online datovou sadu nebo datovou službu. Mezi podporované formáty dat patří CSV, GeoJSON, KML, GPX a CZML."
+    },
+    "mapNavigationCompassOuterRing": {
+      "content": "## Zobrazení ovládacích prvků\n\nZde můžete změnit zobrazení mapy. Pomocí vnějšího kroužku můžete měnit orientaci pohledu a pomocí vnitřního kroužku můžete naklánět úhel kamery. Dvojím klepnutím na tlačítko pohled obnovíte."
+    },
+    "end": "Konec prohlídky",
+    "finish": "Cíl",
+    "previous": "Předchozí",
+    "locationSearchInput": {
+      "content": "## Vyhledávání polohy\n\nZadejte lokalitu nebo adresu a snadno vyhledejte bod zájmu na mapě."
+    },
+    "menuBarStoryButton": {
+      "content": "## Příběhy\n\nPříběhy umožňují přidat k datové sadě kontextové informace a oživit tak příběh. Vytvořte si vlastní datový příběh pomocí editoru příběhů a po dokončení jej sdílejte prostřednictvím panelu \"Sdílet\"."
+    },
+    "mapNavigationSplitterIcon": {
+      "content": "## Porovnání\n\nVýkonnou funkcí Terrie je možnost porovnávat datové sady pomocí rozdělené obrazovky. U datových sad s časovou řadou, jako jsou satelitní snímky, můžete data porovnávat zpětně a dopředu v čase kliknutím na volič/selektor data."
+    }
+  },
+  "trainer": {
+    "hideAllSteps": "Skrýt všechny kroky",
+    "expandTrainer": "Zobrazit více detailů kroku",
+    "collapseTrainer": "Skrýt detail kroku",
+    "showAllSteps": "Zobrazit všechny kroky"
+  },
+  "general": {
+    "skip": "Přeskočit",
+    "next": "Další",
+    "close": "Zavřít",
+    "open": "Otevřít",
+    "prev": "Předchozí",
+    "back": "Zpět",
+    "delete": "Smazat",
+    "cancel": "Zrušit",
+    "confirm": "Potvrdit"
+  },
+  "compass": {
+    "guidance": {
+      "outerRingDescription": "Tažením vnějšího kruhu otočte zobrazení mapy o 360˚.",
+      "innerCircleTitle": "Vnitřní kruh",
+      "title": "Ovládání gyroskopu",
+      "outerRingTitle": "Vnější kruh",
+      "innerCircleDescription1": "Klikněte na střed a pomalým tažením nahoru, dolů, doleva nebo doprava mapu nakloňte a zároveň otočte.",
+      "innerCircleDescription2": "Dvojklikem zde obnovíte zobrazení do výchozího stavu.",
+      "dismissText": "Zavřít a znovu nezobrazovat",
+      "ctrlDragDescription": "Mapu můžete také naklánět a otáčet podržením klávesy CTRL a tažením mapy."
+    },
+    "description": "Přetažení vnějšího kroužku: otočení zobrazení.\nPřetažení vnitřního gyroskopu: volné otáčení.\nDvojité kliknutí: resetování zobrazení.\nTIP: Oběžnou dráhu můžete uvolnit také podržením klávesy CTRL a tažením mapy.",
+    "title": "Kliknutím a přetažením otočíte kameru",
+    "guidanceBtnTitle": "Navádění gyroskopem",
+    "guidanceBtnText": "Zobrazit podrobné pokyny k používání kompasu"
+  },
+  "location": {
+    "browserCannotProvide": "Váš prohlížeč nemůže poskytnout vaši polohu.",
+    "originError": "Váš prohlížeč může poskytnout vaši polohu pouze při použití protokolu https. Místo toho můžete použít {{secureUrl}}.",
+    "errorGettingLocation": "Chyba při zjišťování polohy",
+    "myLocation": "Moje poloha",
+    "location": "Poloha",
+    "centreMap": "Vystředit mapu v místě, kde se právě nacházíte"
+  },
+  "splitterTool": {
+    "title": "Přetažením doleva nebo doprava upravíte zobrazení",
+    "workbench": {
+      "goleft": "Vlevo",
+      "both": "Obě",
+      "gorightTitle": "Zobrazit na pravé straně",
+      "copyName": "{{name}} (kopie)",
+      "goright": "Vpravo",
+      "goleftTitle": "Zobrazit na levé straně",
+      "bothTitle": "Zobrazit na obou stranách"
+    },
+    "toggleSplitterToolTitle": "Porovnat",
+    "toggleSplitterTool": "Povolit porovnání dvou různých sad dat vedle sebe",
+    "toggleSplitterToolDisabled": "Chcete-li povolit standardní porovnávání, vypněte ostatní funkce porovnávání vedle sebe",
+    "errorTitle": "Nepodařilo se porovnat položku katalogu.",
+    "duplicateModelErrorMessage": "Při rozdělování položky katalogu `\"{{name}}\"` došlo k chybě. Tato položka katalogu nemusí podporovat funkci \"porovnat\"",
+    "modelNotFoundErrorMessage": "ID modelu `\"{{id}}\"` nebylo nalezeno"
+  },
+  "zoomCotrol": {
+    "zoomIn": "Přiblížit",
+    "zoomReset": "Obnovit přiblížení",
+    "zoomOut": "Oddálit"
+  },
+  "measure": {
+    "measureTool": "Nástroj měření",
+    "measureToolTitle": "Liniové měření",
+    "measureDistance": "Měření vzdálenosti mezi místy"
+  },
+  "AR": {
+    "title": "Experimentální funkce: Rozšířená realita",
+    "confirmText": "Chápu",
+    "manualAlignmentTitle": "Ruční zarovnání",
+    "resetAlignmentTitle": "Obnovení zarovnání",
+    "resetAlignmentMessage": "Resetování na zarovnání kompasu. Pokud zarovnání neodpovídá skutečnému světu, zkuste zařízením zamávat pohybem na obrázku 8, abyste zařízení překalibrovali. To lze provést kdykoli.<br /> <br />Vyhýbejte se místům s magnetickými poli nebo kovovými předměty, protože by mohly dezorientovat kompas zařízení.",
+    "arTool": "nástroj rozšířené reality",
+    "btnHover": "přepínač výšky při najetí",
+    "btnRealign": "přepínač ručního zarovnání",
+    "btnResetRealign": "obnovení seřízení kompasu",
+    "experimentalFeatureMessage": "Režim rozšířené reality je aktuálně ve verzi beta. Tento režim je určen pouze pro použití na nejnovějších mobilních zařízeních vyšší třídy. <br /><br />UPOZORNĚNÍ: Tento režim může spotřebovat velké množství dat, mějte prosím na paměti poplatky za využití dat od vašeho poskytovatele sítě. <br /><br />Přesnost tohoto režimu závisí na přesnosti interního kompasu vašeho mobilního zařízení.",
+    "manualAlignmentMessage": "Zarovnejte své mobilní zařízení tak, aby odpovídalo aktuálnímu zarovnání mapy, poté klikněte na blikající kompas. Pokud na mapě nejsou aktuálně viditelné žádné orientační body, které by bylo možné zarovnat, můžete mapu posouvat pomocí akcí přetažení a zmenšení, dokud nebude viditelný rozpoznatelný orientační bod, než zařízení zarovnáte s mapou. <br /><div>{{img}}</div> <br />Tip: Slunce nebo Měsíc jsou často dobré orientační body, pomocí kterých se můžete orientovat, pokud se nacházíte na místě, které neznáte (pozor, nedívejte se do slunce - mhli byste si poškodit ztrak)."
+  },
+  "tool": {
+    "closeButtonTitle": "Zavřít nástroj {{toolName}}",
+    "loadingError": {
+      "title": "Chyba při načítání nástroje {{toolName}}",
+      "message": "Při pokusu o načtení tohoto nástroje ze serveru došlo k chybě. Zkuste to prosím znovu."
+    },
+    "exitBtnTitle": "Ukončit",
+    "button": {
+      "closed": "{{toolName}}",
+      "open": "Ukončit {{toolNameLowerCase}}"
+    }
+  },
+  "diffTool": {
+    "exit": "Ukončit",
+    "instructions": {
+      "setDateA": "Nastavit datum A",
+      "setDateB": "Nastavit datum B",
+      "changeDates": "Změnit data",
+      "paneDescription": "Vizualizujte a porovnejte rozdíl dat mezi dvěma daty na jednom místě."
+    },
+    "choosePreview": "Zvolte styl náhledu",
+    "chooseDifference": "Zvolte rozdílový výstup",
+    "differenceResultsTitle": "Výsledky zjišťování změn",
+    "labels": {
+      "area": "Oblast",
+      "dates": "Data",
+      "dateComparisonA": "Srovnání dat A",
+      "dateComparisonB": "Srovnání dat B",
+      "sourceDataset": "Zdrojová datová sada",
+      "previewStyle": "Styl náhledu",
+      "differenceOutput": "Rozdílový výstup",
+      "generateDiffButtonText": "Generování detekce změn",
+      "disabledButtonPrompt": "Upozornění: Aby bylo možné provést detekci změn, musí být vybráno místo a datum",
+      "areaFilterSelection": "Výběr filtru oblasti"
+    },
+    "locationDisplay": {
+      "noLocationSelected": {
+        "title": "Nebylo vybráno žádné místo",
+        "description": "Chcete-li filtrovat výběr data snímku podle místa, vyberte bod na mapě"
+      },
+      "locationSelected": {
+        "title": "Vybraná lokalita a filtrovaná data",
+        "description": "Chcete-li provést změnu, klikněte na jiný bod na mapě"
+      }
+    },
+    "locationPicker": {
+      "initialMessages": {
+        "title": "Zvolte přesné umístění",
+        "beforePick": "Potřebujeme ho ke spuštění procesu detekce změn.",
+        "afterPick": "Kliknutím na jiný bod změníte vybranou oblast"
+      },
+      "nextMessages": {
+        "title": "Vybrali jste polohu {{latitude}} {{longitude}}",
+        "beforePick": "Kliknutím na jiný bod změníte výběr",
+        "afterPick": "Kliknutím na jiný bod změníte výběr"
+      },
+      "errorMessages": {
+        "afterPick": "Kliknutím na jiný bod změníte výběr",
+        "title": "Výběr přesného umístění",
+        "beforePick": "Nepodařilo se vyřešit snímky v místě! Zvolte prosím jinou polohu nebo úroveň přiblížení."
+      }
+    },
+    "datePicker": {
+      "back": "Vrátit se zpět",
+      "previousDateTitle": "Předchozí datum",
+      "nextDateTitle": "Další datum",
+      "dateButtonTitle": "Vyberte datum",
+      "dateOutOfRange": "Momentálně mimo rozsah"
+    },
+    "title": "Rozdíl"
+  },
+  "legend": {
+    "lat": "Lat",
+    "lon": "Lon",
+    "zone": "ZÓNA",
+    "e": "V",
+    "n": "S",
+    "elev": "Výška"
+  },
+  "languagePanel": {
+    "changeLanguage": "Změnit jazyk"
+  },
+  "share": {
+    "browserPrint": "Chcete-li dosáhnout lepších výsledků při tisku, použijte místo funkce tisku webového prohlížeče tlačítko Tisk {{appName}}.",
+    "localDataNote": "<0><0>Poznámka:</0></0><1>Následující zdroje dat NEBUDOU sdíleny, protože obsahují data z tohoto místního systému. Chcete-li tyto zdroje dat sdílet, zveřejněte jejich data na webovém serveru a <2>přidejte je pomocí url adresy</2>.</1>",
+    "generatingUrl": "Generování sdílené adresy URL...",
+    "printTitle": "Tisk mapy",
+    "printExplanation": "Otevřít tisknutelnou verzi této mapy.",
+    "printButton": "Tisk",
+    "printViewButton": "Zobrazení náhledu tisku",
+    "creatingPrintView": "Vytvoření tiskového náhledu...",
+    "btnAdvanced": "Pokročilé možnosti",
+    "embedTitle": "Vložit mapu",
+    "shortenUsingService": "Zkrácení URL pro sdílení pomocí webové služby",
+    "btnCatalogShareText": "Sdílet",
+    "btnStoryShareText": "Sdílet",
+    "btnMapShareText": "Sdílení / Tisk",
+    "btnCatalogShareTitle": "Sdílejte svůj katalog s ostatními",
+    "btnStoryShareTitle": "Podělte se o svůj příběh s ostatními",
+    "btnMapShareTitle": "Sdílejte svou mapu s ostatními",
+    "convertNotificationTitle": "Upozornění: odkaz sdílení aktualizován",
+    "convertNotificationHelp": "Pokud jste vytvořili odkaz na sdílení, podívejte se do nabídky Nápověda, kde najdete tipy pro aktualizaci odkazu na sdílení.",
+    "convertNotificationFeedback": "Pokud máte dotazy nebo připomínky, klikněte zde.",
+    "convertNotificationWarningsTitle": "Technické detaily",
+    "convertErrorTitle": "Nelze aktualizovat odkaz na sdílení na V8",
+    "convertErrorMessage": "Tento odkaz na sdílení je založen na starší verzi softwaru TerriaJS, na kterém běží tato webová mapa. Při pokusu o aktualizaci dat sdílení došlo k chybě.",
+    "shortLinkError": "Při pokusu o zkrácení adresy URL došlo k chybě.  Zkontrolujte prosím své internetové připojení a zkuste to znovu.",
+    "shortLinkShortening": "Zkracování...",
+    "downloadMap": "Stáhnout mapu (png)",
+    "convertNotificationMessage": "Tento odkaz na sdílení je založen na starší verzi softwaru TerriaJS, který pohání tuto webovou mapu. Přestože se snažíme odkaz zachovat, můžete se setkat s problémy při vizualizaci dat.  \n\nPokud jste uživatelem sdíleného odkazu, klikněte na tlačítko OK, aby varovná zpráva zmizela, a pokračujte v přístupu k datům.",
+    "getShareSaveHelpMessage": "Jak přidat do záložek sdílené odkazy",
+    "embedDescription": "Chcete-li mapu vložit, zkopírujte tento kód a vložte ji do stránky HTML:"
+  },
+  "countDatasets": {
+    "btnText": "Spustit",
+    "loadError": "nepodařilo načíst.",
+    "totals": "<div>Katalog obsahuje {{items}} položky ve {{groups}} skupinách.</div>",
+    "subTotals": "<div> {{name}}: {{items}} položek / {{groups}} skupin</div>",
+    "recount": "Přepočítat",
+    "title": "Počet datových sad",
+    "noMapDataEnabled": "Nejsou povolena mapová data",
+    "countingMessage": "Počítání, počkejte prosím...",
+    "btnCount": "Počet datových sad",
+    "mapDataState_0": "{{count}} datová sada povolena na mapě",
+    "mapDataState_1": "{{count}} datové sady povolené na mapě",
+    "mapDataState_2": "{{count}} datových sad povoleno na mapě"
+  },
+  "toolsPanel": {
+    "btnText": "Nástroj",
+    "btnTitle": "Pokročilá sada nástrojů"
+  },
+  "settingPanel": {
+    "none": "(Žádný)",
+    "viewerModeLabels": {
+      "CesiumTerrain": "3D Terén",
+      "CesiumEllipsoid": "3D Hladký",
+      "Leaflet": "2D"
+    },
+    "qualityLabels": {
+      "lowerPerformance": "Maximální kvalita, nižší výkon",
+      "maximumPerformance": "Maximální výkon, nižší kvalita",
+      "balancedPerformance": "Vyvážený výkon a kvalita"
+    },
+    "native": "nativní",
+    "screen": "obrazovka",
+    "btnTitle": "Změnit zobrazení",
+    "btnText": "Nastavení mapy",
+    "mapView": "Zobrazení mapy",
+    "baseMap": "Základní mapa",
+    "imageOptimisation": "Optimalizace obrázků",
+    "nativeResolutionHeader": "Použití nativního rozlišení zařízení",
+    "mapQuality": "Kvalita rastrové mapy:",
+    "qualityLabel": "Kvalita",
+    "performanceLabel": "Výkon",
+    "timeline": {
+      "title": "Časová osa",
+      "alwaysShowLabel": "Stiskněte tlačítko pro spuštění zobrazení časové osy pouze v případě, že jsou na pracovní ploše časově proměnné datové sady",
+      "alwaysShow": "Vždy zobrazit",
+      "hideLabel": "Stiskněte tlačítko pro spuštění zobrazení časové osy pouze v případě, že jsou na pracovní ploše časově proměnné datové sady"
+    },
+    "terrain": {
+      "hideUnderground": "Terén skrývá podzemní prvky",
+      "hideUndergroundFeatures": "Stisknutím tlačítka spustíte skrývání prvků, které se nacházejí pod povrchem terénu",
+      "sideLabel": "Zobrazit terén na",
+      "left": "Vlevo",
+      "both": "Oba",
+      "right": "Vpravo",
+      "showUndergroundFeatures": "Stisknutím tlačítka začnete zobrazovat prvky, které se nacházejí pod povrchem terénu"
+    },
+    "nativeResolutionLabel": "Stisknutím přestanete používat rozlišení {{resolution1}} a začnete používat rozlišení {{resolution2}}"
+  },
+  "feedback": {
+    "feedbackPreamble": "Rádi vás uslyšíme!",
+    "close": "zavřít zpětnou vazbu",
+    "yourName": "Vaše jméno (volitelné)",
+    "email": "E-mailová adresa (volitelné)<br/><em>Bez ní nemůžeme navázat kontakt!</em>",
+    "commentQuestion": "Komentář nebo dotaz",
+    "shareWithDevelopers": "Sdílení mého zobrazení mapy s vývojáři {{appName}}",
+    "cancel": "Zrušit",
+    "sending": "Odeslání...",
+    "send": "Odeslat",
+    "feedbackBtnText": "Poskytněte zpětnou vazbu",
+    "minLength": "Minimální délka komentáře je {{minLength}}",
+    "title": "Zpětná vazba",
+    "captionText": "To nám pomáhá řešit problémy tím, že vidíme, co vidíte"
+  },
+  "helpPanel": {
+    "btnText": "Nápověda",
+    "menuPaneTitle": "Jsme tu, abychom pomohli",
+    "promptMessage": "Prohlídku, videa s návody a další obsah nápovědy najdete zde",
+    "dismissText": "Chápu, díky!",
+    "takeTour": "Prohlídka",
+    "mapUserGuide": "Uživatelská příručka mapy",
+    "menuPaneBody": "Užitečné tipy, jak používat TerriaJS, najdete buď v níže uvedených příručkách, nebo kontaktujte tým na adrese [{{supportEmail}}({{supportEmail}})"
+  },
+  "helpMenu": {
+    "btnText": "Nápověda",
+    "btnTitle": "získejte pomoc",
+    "helpMenuHeader": "Co byste chtěli dělat?",
+    "helpMenuOpenWelcome": "Zobrazit uvítací zprávu",
+    "helpMenuMoreHelpTitle": "Další nápověda",
+    "done": "HOTOVO",
+    "next": "DALŠÍ",
+    "helpMenuSatelliteGuideTitle": "Zobrazit průvodce satelitními snímky"
+  },
+  "sui": {
+    "notifications": {
+      "title": "Mapa obsahuje příběh",
+      "message": "Chcete si ji prohlédnout hned?",
+      "denyText": "Možná později",
+      "confirmText": "Ano"
+    },
+    "showWorkbench": "Zobrazit pracovní plochu",
+    "hideWorkbench": "Skrýt pracovní plochu"
+  },
+  "featureInfo": {
+    "catalogItem": {
+      "moreThanMax": "Bylo nalezeno více než {{maximum}} {{catalogItemName}} funkcí.",
+      "featuresFound": "Bylo nalezeno {{featCount}} funkcí v {{catalogItemName}} .",
+      "featureInfoShown": "První {{maximum}} jsou uvedeny níže."
+    },
+    "download": "Stáhnout tuto tabulku",
+    "pickLocation": "Vybrat polohu",
+    "clickMap": "Kliknutím na mapu se dozvíte více informací o lokalitě",
+    "noDataAvailable": "Zde nejsou k dispozici žádná data - zkuste jiné místo.",
+    "userSelection": "Uživatelský výběr",
+    "panelHeading": "Informace o funkci",
+    "btnCloseFeature": "Zavřít datový panel",
+    "satelliteSuggestionBtn": "Zobrazit {{catalogItemName}} na tomto místě",
+    "locationMarker": "Značka polohy",
+    "noInfoAvailable": "Žádné dostupné informace",
+    "showCuratedData": "Zobrazit kurátorská data",
+    "clickToAddData": "Kliknutím na '$t(addData.addDataBtnText)' přidáte data do mapy.",
+    "latLon": "Lat / Lon ",
+    "siteData": "Údaje o lokalitě",
+    "showRawData": "Zobrazit surová data"
+  },
+  "welcomeMessage": {
+    "welcomeMessageOnMobile": "Zajímáte se o zjišťování a průzkum dat?",
+    "tourBtnText": "Prohlídka",
+    "helpBtnText": "Potřebuji pomoc",
+    "exploreDataBtnText": "Prozkoumat mapové podklady",
+    "searchBtnText": "Vyhledání umístění",
+    "dismissText": "Zavřít zprávu a už mi to nezobrazovat",
+    "welcomeMessage": "Zajímá vás zjišťování a zkoumání dat?<br/>Ponořte se do toho a začněte, nebo se podívejte na následující možnosti nápovědy.",
+    "title": "Začneme"
+  },
+  "story": {
+    "panelTitle": "Editor příběhu",
+    "panelBody": "Vytváření a sdílení interaktivních příběhů přímo z mapy",
+    "gettingStarted": "Začínáme",
+    "gettingStartedTitle": "Začínáme",
+    "badgeBarLabel": "Scény",
+    "share": "Sdílet",
+    "shareTitle": "sdílejte příběhy",
+    "viewStory": "zobrazit",
+    "view": "Zobrazení",
+    "recaptureStory": "znovu zachytit",
+    "recapture": "Zachycení",
+    "deleteStory": "Smazat",
+    "untitledScene": "scéna bez názvu",
+    "doesNotExist": "Příběh neexistuje",
+    "removeAllStories": "Odebrat vše",
+    "removeStoryDialog": "Opravdu si přejete odstranit '<1>{{storyName}}</1>'?",
+    "preview": "náhled příběhů",
+    "play": "Přehrát",
+    "captureSceneTitle": "zachytit aktuální scénu",
+    "captureScene": "Zachycení scény",
+    "editor": {
+      "placeholder": "Zde zadejte název",
+      "cancelBtn": "Zrušit",
+      "cancelEditing": "Zrušit",
+      "saveBtn": "uložit",
+      "saveStory": "Uložit"
+    },
+    "locationBtn": "vystředit scénu",
+    "exitBtn": "konec příběhu",
+    "previousBtn": "přejít na předchozí scénu",
+    "untitled": "scéna bez názvu",
+    "navBtn": "přejít na článek {{title}}",
+    "nextBtn": "přejít na další scénu",
+    "navBtnMobile": "přejít na příběh {{title}}",
+    "promptHtml1": "<0>Příběhy si můžete kdykoli prohlížet a vytvářet kliknutím sem.</0>",
+    "promptHtml2": "<0><0>ÚVOD</0><1>Datové příběhy</1><2>Vytvářejte a sdílejte interaktivní příběhy přímo z mapy </2></0>",
+    "story": "Příběh",
+    "dismissText": "Chápu, díky!",
+    "mobileViewStory": "Zobrazit příběhy {{storiesLength}}",
+    "storyEditor": "Editor příběhu",
+    "hideStoryPanel": "skrýt tvůrce příběhu",
+    "loadSceneErrorTitle": "Chyba při načítání scény příběhu",
+    "loadSceneErrorMessage": "Při načítání dat pro scénu příběhu došlo k chybě: `{{title}}`.",
+    "edit": "Upravit",
+    "editStory": "upravit",
+    "delete": "Smazat",
+    "message": "<2>To je váš editor příběhů</2><1>Vytvářejte a sdílejte interaktivní příběhy přímo z mapy<1><0><0></0>Začínáme </0></1></1>",
+    "removeAllStoriesDialog_0": "Opravdu si přejete odstranit {{ count }} scénu?",
+    "removeAllStoriesDialog_1": "Opravdu si přejete odstranit {{ count }} scény?",
+    "removeAllStoriesDialog_2": "Opravdu si přejete odstranit {{ count }} scén?",
+    "playStory": "Příběh",
+    "expand": "Rozbalit",
+    "collapse": "Sbalit",
+    "prev": "Předchozí",
+    "next": "Další",
+    "restart": "Restartovat"
+  },
+  "satelliteGuidance": {
+    "menuTitle": "Do mapových průvodců se můžete kdykoli podívat v nabídce <2>nápověda</2>.",
+    "dismissText": "Chápu, díky!",
+    "titleI": "Satelitní snímky: Jak mohu...?",
+    "bodyI": "Velmi rychlý průvodce, jak co nejlépe využít historické satelitní snímky.",
+    "prevI": "Ne, děkuji",
+    "nextI": "Zobrazit průvodce",
+    "titleII": "Kde jsou mé satelitní snímky?",
+    "titleIII": "Načítání historických snímků",
+    "bodyIII": "Na pracovní ploše s daty klikněte na rozevírací seznam Datum pořízení a vyberte z dostupných časů pro načtení historických snímků.",
+    "titleIV": "Filtrování snímků podle polohy",
+    "bodyV": "Na satelitní snímky můžete použít řadu stylů, například falešnou barvu, kliknutím na rozbalovací nabídku stylů na pracovní ploše s daty.",
+    "bodyII": "Možná bude nutné upravit úroveň přiblížení, aby byly satelitní snímky na mapě viditelné.",
+    "bodyIV": "Satelitní snímky nemusí být vždy k dispozici ve vámi preferovaném čase a místě. Pokud chcete zobrazit pouze snímky pro konkrétní místo, klikněte na tlačítko \"filtrovat podle místa\" v pracovní ploše s daty.",
+    "titleV": "Jak zobrazím falešně barevné snímky?"
+  },
+  "addData": {
+    "addDataBtnText": "Prozkoumejte mapové podklady",
+    "btnHide": "Skrýt",
+    "load": "Načtení místních/webových dat",
+    "closeDataPanel": "Zavřít datový panel",
+    "done": "Hotovo",
+    "myData": "Moje data",
+    "dataCatalogue": "Katalog dat",
+    "searchPlaceholderWhole": "Vyhledávání v celém katalogu",
+    "searchPlaceholder": "Vyhledávání v katalogu",
+    "localAdd": "Přidat místní soubor",
+    "localFileType": "<0>Krok 1:</0> Vybrat typ souboru",
+    "localFile": "<0>Krok 2:</0> Vybrat soubor",
+    "webAdd": "Přidat webová data",
+    "webFile": "<0>Krok 2:</0> Zadejte adresu URL datového souboru nebo webové služby",
+    "localTitle": "Přidat místní data",
+    "webTitle": "Přidat webová data",
+    "dragDrop": "Přetáhnout a pustit",
+    "infoText": "<0>Přetažením souboru sem jej zobrazíte lokálně na mapě</0><1>(nebude uložen ani odeslán na internet)</1>",
+    "note": "<0>Poznámka: </0>Takto přidaná data se neukládají ani nejsou viditelná pro ostatní.",
+    "urlInputBtn": "Přidat",
+    "back": "Zpět",
+    "browse": "Procházet...",
+    "webFileType": "<0>Krok 1:</0> Výběr typu souboru nebo webové služby"
+  },
+  "search": {
+    "resultsLabel": "Výsledky hledání",
+    "done": "Hotovo",
+    "data": "Data",
+    "searchInDataCatalog": "Hledání <1>'{{locationSearchText}}'</1> v katalogu dat",
+    "search": "Hledat '{{searchText}}' v Katalogu dat",
+    "viewMore": "Zobrazit více výsledků {{name}}",
+    "placeholder": "Hledání lokalit",
+    "searchCatalogue": "Hledání v katalogu",
+    "viewLess": "Zobrazit méně výsledků {{name}}"
+  },
+  "mobile": {
+    "toggleNavigation": "přepnout navigaci",
+    "addDataBtnText": "Data",
+    "doneBtnText": "Hotovo"
+  },
+  "preview": {
+    "doesNotContainGeospatialData": "Tento soubor neobsahuje geoprostorová data.",
+    "selectToPreview": "<0>Výběr datové sady pro zobrazení náhledu </0><1>- NEBO -</1><2>Přejít na mapu</2>",
+    "loading": "NAČÍTÁNÍ NÁHLEDU...",
+    "preview": "náhled {{appName}}",
+    "previewItemErrorMessage": "Při načítání položky katalogu došlo k chybě.",
+    "noPreviewAvailable": "NÁHLED NENÍ K DISPOZICI",
+    "dataPreviewLoading": "NAČÍTÁNÍ NÁHLEDU DAT...",
+    "dataPreview": "NÁHLED DAT",
+    "dataPreviewError": "CHYBA NÁHLEDU DAT",
+    "removeFromMap": "Odstranit z mapy",
+    "addToMap": "Přidat do mapy",
+    "disclaimer": "Odmítnutí odpovědnosti",
+    "datasetDescription": "Popis datové sady",
+    "serviceDescription": "Popis služby",
+    "licence": "Licence",
+    "accessConstraints": "Omezení přístupu",
+    "fees": "Poplatky",
+    "author": "Autor",
+    "contact": "Kontakt",
+    "created": "Vytvořeno",
+    "modified": "Upraveno",
+    "updateFrequency": "Četnost aktualizací",
+    "dataCustodian": "Správce dat",
+    "previewItemErrorTitle": "Položku katalogu nelze zobrazit.",
+    "dataDescription": "Popis dat",
+    "resourceDescription": "Popis Zdroje",
+    "mayBeExperiencingIssues": "U této datové sady může v současné době docházet k problémům"
+  },
+  "description": {
+    "name": "Popis",
+    "dataLocal": "Tento soubor existuje pouze v prohlížeči. Chcete-li jej sdílet, musíte jej nahrát na veřejný webový server.",
+    "wms": "Jedná se o službu <1>WMS</1>, která na vyžádání generuje obrázky map. Pomocí této adresy URL ji lze použít v softwaru GIS:",
+    "wfs": "Jedná se o službu <1>WFS</1>, která na vyžádání přenáší nezpracovaná prostorová data. Pomocí této adresy URL ji lze použít v softwaru GIS:",
+    "layerName": "Název vrstvy",
+    "typeName": "Název typu",
+    "metadataUrls": "Odkazy na metadata",
+    "dataUrl": "Odkazy na data",
+    "useLinkBelow": "Ke stažení dat použijte níže uvedený odkaz. Další informace o přizpůsobení parametrů dotazu URL naleznete v části {{link}}.",
+    "downloadInFormat": "Stažení aktuálně vybraných dat ve formátu {{format}}",
+    "useTheLinkToDownload": "Pomocí níže uvedeného odkazu si můžete data stáhnout přímo.",
+    "downloadData": "Stáhnout data",
+    "dataSourceDetails": "Podrobnosti o zdroji dat",
+    "dataServiceDetails": "Podrobnosti o datové službě",
+    "dataCustodian": "Správce dat",
+    "dataNotLocal": "Další informace, včetně informací o právech a omezeních používání, získáte u poskytovatele těchto údajů.",
+    "downloadNotSupported": "Váš prohlížeč bohužel nepodporuje funkce potřebné ke stažení těchto dat jako souboru. Pro stažení těchto dat použijte prosím $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge) nebo $t(browsers.safari)."
+  },
+  "workbench": {
+    "colorScaleRangeTitle": "Nesprávný rozsah barevné škály",
+    "colorScaleRangeMin": "Minimální hodnota musí být číslo.",
+    "colorScaleRangeMax": "Maximální hodnota musí být číslo.",
+    "rangeMax": "Maximum:",
+    "rangeMin": "Minimum:",
+    "colorScaleUpdateRange": "Rozsah aktualizace",
+    "zoomToTitle": "Přiblížit rozsah",
+    "zoomTo": "Ideální přiblížení",
+    "openFeatureTitle": "Přiblížení k datům",
+    "openFeature": "Přiblížit na",
+    "opacity": "Neprůhlednost: {{opacity}} %",
+    "colorScaleRange": "Rozsah barevné škály",
+    "colorScaleRangeMinSmallerThanMax": "Minimální hodnota rozsahu barevné stupnice musí být menší než maximální hodnota.",
+    "displayPercent": "Zobrazení jako procento z celkového počtu regionů",
+    "previewItemTitle": "O těchto datech",
+    "showMoreActionsTitle": "Zobrazit další akce",
+    "splitItemTitle": "Duplikovat a zobrazit rozdělovač",
+    "splitItem": "Porovnat",
+    "diffImageTitle": "Zobrazení rozdílů mezi dvěma daty",
+    "diffImage": "Rozdíl",
+    "exportDataTitle": "Export mapových dat",
+    "exportData": "Export",
+    "removeFromMapTitle": "Odstranit tato data",
+    "removeFromMap": "Odstranit",
+    "label": "Datové sady",
+    "removeAll": "Odstranit vše",
+    "collapseAll": "Sbalit vše",
+    "toggleVisibility": "Data zobrazit/skrýt",
+    "addItemErrorMessage": "Při načítání položky katalogu došlo k chybě.",
+    "dimensionsSelector": {
+      "undefinedLabel": "Neuvedeno"
+    },
+    "searchItem": "Hledat",
+    "searchItemTitle": "Hledat",
+    "addItemErrorTitle": "Katalogovou položku nelze přidat do pracovního plochy.",
+    "previewItem": "O datech",
+    "expandAll": "Rozbalit vše",
+    "splitScreenMode": "REŽIM DĚLENÉ OBRAZOVKY"
+  },
+  "dateTime": {
+    "selectorLabel": "Čas:",
+    "back": "Vrátit se",
+    "previous": "Předchozí doba",
+    "selectTime": "Zvolte čas",
+    "outOfRange": "Momentálně mimo dosah.",
+    "next": "Příště",
+    "useTimeline": "Použijte časovou osu",
+    "timeline": {
+      "textCell": "Název souboru dat, jehož časový rozsah se zobrazuje",
+      "gotoStart": "Přejít na začátek",
+      "playSlower": "Přehrát pomaleji",
+      "playFaster": "Přehrát rychleji",
+      "togglePlay": "Přehrát"
+    },
+    "availableTimeChart": "Zobrazit dostupné časy v grafu"
+  },
+  "satellite": {
+    "pickPoint": "Kliknutím na mapu vyberte bod.",
+    "querying": "Dotazování na pozici...",
+    "filterByLocation": "Filtrovat podle místa",
+    "infoGroup": "Zobrazuje pouze dostupné časy snímání pro:",
+    "removeFilter": "Odstranit filtr",
+    "zoomTo": "Přiblížit na",
+    "newLocation": "Nová poloha"
+  },
+  "timer": {
+    "nextScheduledUpdateCountdown": "Příští aktualizace dat v {{timeCountdown}}",
+    "nextScheduledUpdateTime": "Příští aktualizace dat v {{scheduledUpdateTime}}"
+  },
+  "concept": {
+    "inactive": {
+      "cancel": "Zrušit",
+      "newText": "Nový stav"
+    },
+    "summary": {
+      "addMoreText": "Přidat stav",
+      "addFirstText": "Přidat nový stav"
+    },
+    "active": {
+      "remove": "Odstranit stav",
+      "edit": "Upravit stav"
+    }
+  },
+  "clipboard": {
+    "success": "Zkopírováno do schránky",
+    "unsuccessful": "Kopírování neúspěšné...",
+    "shareURL": "Sdílet URL",
+    "shareExplanation": "Kdokoli s touto adresou URL bude mít přístup k této mapě.",
+    "copy": "Kopírovat"
+  },
+  "dragDrop": {
+    "text": "<0>Přetáhnout a pustit</0><1>Vaše data kdekoli zobrazit na mapě<1>",
+    "not": "<0>bbbb</0>"
+  },
+  "loader": {
+    "loadingMessage": "Načítání"
+  },
+  "emptyWorkbench": {
+    "emptyArea": "Vaše pracovní plocha je prázdná",
+    "helpfulHints": "Užitečné rady",
+    "helpfulHintsOne": "Projděte si dostupná data výběrem možnosti \"Prozkoumat data mapy\" nebo klikněte na \"Nahrát\" a přidejte do mapy vlastní data.",
+    "helpfulHintsTwo": "Po přidání dat do mapy jsou zde na pracovním stole uvedeny vaše aktivní datové sady. Pracovní plocha vám pomůže s daty pracovat.",
+    "helpfulHintsThree": "V pracovní ploše můžete zapínat a vypínat datové sady, měnit jejich průhlednost, aktivovat porovnání rozdělené obrazovky, měnit styly a procházet data a časy, pokud data tuto funkci podporují."
+  },
+  "dataCatalog": {
+    "groupRemove": "odebrat tuto skupinu",
+    "groupEmpty": "Tato skupina je prázdná"
+  },
+  "catalogItem": {
+    "privateIndicatorTitle": "Soukromá datová sada",
+    "loading": "Načítání...",
+    "remove": "Odstranit",
+    "add": "Přidat",
+    "trash": "Odebrat z katalogu",
+    "removeFromMap": "Odebrat z mapy",
+    "preview": "Náhled"
+  },
+  "chart": {
+    "sectionLabel": "Grafy",
+    "closePanel": "Zavřít panel",
+    "expand": "Rozbalit",
+    "download": "Stáhnout",
+    "loading": "Načítání dat grafu...",
+    "noData": "Nenalezeny žádné údaje, které by bylo možné zobrazit v tabulce.",
+    "showItemInChart": "Zobrazit {{value}} v tabulce"
+  },
+  "viewModels": {
+    "searchNoLocations": "Je nám líto, vašemu vyhledávacímu dotazu neodpovídají žádná místa.",
+    "searchAddresses": "Adresy",
+    "searchCatalogueItem": "Položky katalogu",
+    "searchNoCatalogueItem": "Litujeme, ale vašemu vyhledávacímu dotazu neodpovídají žádné položky katalogu.",
+    "inMultipleLocations": "Na více místech včetně: ",
+    "inDataCatalogue": "V Katalogu dat",
+    "searchLocations": "Poloha",
+    "searchNoPlaceNames": "Litujeme, ale vašemu vyhledávacímu dotazu neodpovídají žádné oficiální názvy míst.",
+    "searchErrorOccurred": "Při hledání došlo k chybě. Zkontrolujte prosím připojení k internetu nebo to zkuste znovu později.",
+    "searchPlaceNames": "Oficiální názvy míst"
+  },
+  "terriaViewer": {
+    "slowWebGLAvailableTitle": "Slabý výkon WebGL",
+    "internetExplorer": "Internet Explorer 11",
+    "chrome": "Google Chrome",
+    "webGLNotSupportedTitle": "WebGL není podporováno",
+    "webGLNotSupportedOrSlowTitle": "WebGL není podporováno nebo je příliš pomalé",
+    "slowWebGLAvailableMessageII": "{{appName}} funguje nejlépe s webovým prohlížečem, který podporuje {{webGL}}, včetně nejnovějších verzí $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge) a $t(browsers.safari). Zdá se, že váš webový prohlížeč nepodporuje WebGL, takže se zobrazí omezené, pouze 2D zobrazení.",
+    "webGLNotSupportedOrSlowMessage": "Váš webový prohlížeč nemůže zobrazit mapu ve 3D, protože buď nepodporuje WebGL, nebo protože váš webový prohlížeč oznámil, že WebGL bude extrémně pomalý. Zkuste prosím použít jiný webový prohlížeč, například nejnovější verzi $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge) nebo $t(browsers.safari). V některých případech může být nutné aktualizovat video ovladač počítače nebo operační systém, abyste mohli v {{appName}} zobrazit 3D zobrazení.",
+    "slowWebGLAvailableMessage": "Váš webový prohlížeč hlásí, že má problémy s výkonem při zobrazování {{appName}} ve 3D, takže se zobrazí pouze 2D zobrazení. Pro plné 3D zobrazení zkuste použít jiný webový prohlížeč, aktualizovat ovladače grafické karty, nebo použít lepší operační systém.",
+    "firefox": "Mozilla Firefox",
+    "safari": "Apple Safari"
+  },
+  "analytics": {
+    "selectLocation": "Zvolte místo",
+    "point": "Bod (zem. šířka/délka)",
+    "polygon": "Polygon",
+    "existingPolygon": "Stávající polygon",
+    "nothingSelected": "Nic nebylo vybráno, pro výběr použijte tlačítka výše.",
+    "runAnalysis": "Analýza běhu",
+    "clickToDrawPolygon": "Klikněte pro kreslení polygonu",
+    "shiftToDrawRectangle": "Stisknutím klávesy SHIFT a podržením levého tlačítka myši nakreslíte obdélník",
+    "clickToDrawRectangle": "Kliknutím nakreslíte obdélník",
+    "selectedPolygon": "Vybraný polygon",
+    "regionName": "Název regionu",
+    "selectExistingPolygon": "Výběr stávajícího polygonu",
+    "clickToDrawLine": "Klikněte pro kreslení čáry",
+    "enterValidCoords": "Zadejte platné souřadnice (např. 131.0361, -25.3450).",
+    "selectPoint": "Kliknutím na mapu vyberte bod."
+  },
+  "core": {
+    "userAddedData": "Uživatelem přidaná data",
+    "chartData": "Data grafu",
+    "dataUri": {
+      "errorTitle": "Prohlížeč nepodporuje stahování dat",
+      "errorMessage": "Prohlížeče společnosti Microsoft (včetně všech verzí prohlížečů Internet Explorer a Edge) bohužel nepodporují funkci uri potřebnou ke stažení dat jako souboru. Chcete-li stáhnout data, zkopírujte následující uri do jiného prohlížeče, například $t(browsers.chrome), $t(browsers.firefox) nebo $t(browsers.safari): {{href}}"
+    },
+    "dataType": {
+      "auto": "Typ souboru",
+      "wms-group": "Web Map Service (WMS) Server",
+      "wmts-group": "Web Map Tile Service (WMTS) Server",
+      "wfs-group": "Web Feature Service (WFS) Server",
+      "wps-getCapabilities": "Web Processing Service (WPS) Server",
+      "esri-group": "Esri ArcGIS Server",
+      "esri-mapServer": "Esri ArcGIS MapServer (jedna vrstva)",
+      "esri-featureServer": "Esri ArcGIS FeatureServer (jedna vrstva)",
+      "3d-tiles": "3D Dlaždice",
+      "sdmx-group": "SDMX-JSON",
+      "opendatasoft-group": "Opendatasoft Portal",
+      "geojson": "GeoJSON",
+      "geoRss": "GeoRSS",
+      "kml": "KML nebo KMZ",
+      "csv": "CSV",
+      "czml": "CZML",
+      "gpx": "GPX",
+      "json": "Katalog Terria",
+      "carto": "Carto",
+      "shp": "Shapefile",
+      "other": "Ostatní (použijte konverzní službu)",
+      "open-street-map": "Open Street Map Server",
+      "gltf": "glTF",
+      "socrata-group": "Socrata Server",
+      "ifc": "IFC",
+      "assimp-local": "Konvertor 3D souborů (zip) (experimentální)",
+      "assimp-local-description": "**Upozornění:** Konvertor 3D souborů je experimentální.  \nViz seznam [podporovaných formátů](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nSoubory musí být zazipovány.",
+      "assimp-remote": "Převodník 3D souborů (experimentální)",
+      "assimp-remote-description": "**Upozornění:** Konvertor 3D souborů je experimentální.  \nViz seznam [podporovaných formátů](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nPodporovány jsou také soubory Zip"
+    },
+    "printWindow": {
+      "errorTitle": "Chyba tisku",
+      "errorMessage": "Tisk se nespustil do 10 sekund. Možná tento webový prohlížeč nepodporuje tisk?",
+      "printMediaStart": "zahájení tisku",
+      "printMediaEnd": "konec tisku",
+      "onbeforeprint": "před tiskem",
+      "onafterprint": "po tisku"
+    },
+    "googleAnalytics": {
+      "logEnabledOnDevelopment": "Služba Google Analytics byla inicializována ve `vývojovém` prostředí",
+      "log": "Sledování služby Google Analytics je zakázáno, protože není zadán klíč terria.configParameters.googleAnalyticsKey"
+    },
+    "readText": {
+      "fileRequired": "soubor je vyžadován"
+    },
+    "readXml": {
+      "xmlError": "Soubor neobsahuje platné XML."
+    },
+    "terriaError": {
+      "defaultTitle": "Došlo k chybě",
+      "defaultMessage": "Neznámá chyba",
+      "defaultCombineTitle": "Došlo k více chybám",
+      "defaultCombineMessage": "Podrobnosti o chybách jsou uvedeny níže",
+      "networkRequestTitle": "Došlo k chybě síťového požadavku",
+      "networkRequestMessage": "Data nemusí být dostupná nebo se nemusí zobrazovat správně z důvodu výpadku služby správce dat. Zkuste prosím znovu načíst mapu, přistupovat k datům později nebo vybrat jinou datovou sadu. <feedbacklink feedback-message=\"Pokud problém přetrvává, zašlete prosím zpětnou vazbu zde.\" email-message=\"Pokud problém přetrvává, zašlete prosím zprávu na {{email}}\"/>",
+      "networkRequestMessageDetailed": "To může znamenat jednu z následujících možností:\n\n* Název hostitele serveru se nepodařilo přeložit.\n* Server neodpověděl na požadavek - nebo je dočasně nedostupný.\n* Server odmítl [Cross-Origin Resource Sharing (CORS)](https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/) přístup k této adrese URL.\n* Došlo k problému s internetovým připojením\n\nPokud jste odkaz zadali ručně, ověřte, zda je odkaz správný."
+    },
+    "errors": {
+      "tooDeepAddedByUser": "Dosaženo 100 položek katalogu při kontrole addedByUser a zastavení na ID: \"{{memberId}}\"? Zkontrolujte, zda nemáte rekurzivní skupinu katalogu."
+    },
+    "consoleAnalytics": {
+      "started": "ConsoleAnalytics byl spuštěn.",
+      "startedNoenableConsoleAnalytics": "Nástroj ConsoleAnalytics byl spuštěn, ale položka `configParameters.enableConsoleAnalytics` nebyla definována nebo byla nastavena na hodnotu false.",
+      "logStartedWithGAParameters": "Nástroj ConsoleAnalytics byl spuštěn, ale v položce `configParameters` byl pozorován klíč `googleAnalyticsKey` nebo `googleAnalyticsOptions`"
+    },
+    "serverConfig": {
+      "failedToGet": "Nepodařilo se získat konfiguraci serveru z {{serverConfigUrl}}. To znamená, že služby jako proxy, konverze a zkracování URL nemusí fungovat."
+    },
+    "unverifiedExternalLink": {
+      "denyText": "Zrušit",
+      "title": "Upozornění: neověřený odkaz",
+      "message": "Chystáte se otevřít: \n\n`{{url}}`  \n\nTento odkaz není ověřený a může být nebezpečný.",
+      "confirmText": "Otevřít na nové kartě"
+    }
+  },
+  "map": {
+    "addressGeocoder": {
+      "devError": "bulkConvertAddresses musí být implementována v odvozené třídě."
+    },
+    "cesium": {
+      "devError": "cesium je vyžadováno.",
+      "failedToObtain": "Nepodařilo se získat obrazovou dlaždici X: {{x}} Y: {{y}} Úroveň: {{level}}.",
+      "notWebMercatorTilingScheme": "Tuto datovou sadu nelze zobrazit na 2D mapě, protože nepodporuje projekci Web Mercator (EPSG:3857).",
+      "unusalTilingScheme": "Tuto datovou sadu nelze zobrazit na 2D mapě, protože používá neobvyklé schéma dlaždic, které není podporováno."
+    },
+    "displayVariablesConcept": {
+      "defaultName": "Zobrazit proměnnou"
+    },
+    "drawExtentHelper": {
+      "drawExtent": "Rozsah kreslení",
+      "extent": "Rozsah"
+    },
+    "gmlToGeoJson": {
+      "missingPos": "V prvku GML point chybí prvek pos.",
+      "missingPosList": "Vnějšímu kruhu polygonu GML chybí posList.",
+      "containsUnsupportedFeatureType": "GML obsahuje nepodporovaný typ prvku: {{type}}",
+      "missingExteriorRing": "Polygonu GML chybí vnější prstenec."
+    },
+    "geoRssToGeoJson": {
+      "containsUnsupportedFeatureType": "GeoRSS obsahuje nepodporovaný typ prvku: {{type}}"
+    },
+    "gnafAddressGeocoder": {
+      "noAddresses": "Tato tabulkaStructure nemá žádné adresy!",
+      "suburb": "Předměstí",
+      "state": "Stát",
+      "postcode": "PSČ",
+      "matchedAddresses": "Odpovídající adresa",
+      "postOfficeBox": "poštovní přihrádka",
+      "noAddresses2": "I když tabulkaStructure hlásí, že má sloupec s adresou, nemá žádné adresy",
+      "score": "Skóre",
+      "lon": "Zem. délka",
+      "lat": "Zem. šířka",
+      "poBox": "POBox"
+    },
+    "imageryProviderHooks": {
+      "devError": "Žádný kontext pro přebarvení obrázku."
+    },
+    "mapboxVectorTileImageryProvider": {
+      "requireLayerName": "MapboxVectorTileImageryProvider vyžaduje název vrstvy předaný jako options.layerName",
+      "requireStyles": "MapboxVectorTileImageryProvider vyžaduje stylovací funkci předanou jako options.styleFunc",
+      "maxLevelError": "Příliš vysoká maximální úroveň pro soubor dat",
+      "moreThanFourTiles": "Obdélník poskytovatele snímků a minimumLevel udávají, že na minimální úrovni jsou dlaždice {{tileCount}}. Poskytovatelé snímků s více než čtyřmi dlaždicemi na minimální úrovni nejsou podporováni."
+    },
+    "regionProvider": {
+      "csvRegionMappingTitle": "Mapování regionu CSV",
+      "csvRegionMappingMessageZeroFound": "Nalezeno nula názvů regionů pro typ regionu {{regionType}}",
+      "csvRegionMappingMessageZeroBoundariesFound": "Pro region {{regionName}} nalezeno nula hranic regionu",
+      "csvRegionMappingMessageLoadError": "Nepodařilo se načíst hranice regionu pro region {{regionName}} {{exception}}"
+    },
+    "extraCreditLinks": {
+      "dataAttribution": "Připsání dat",
+      "disclaimer": "Odmítnutí odpovědnosti",
+      "basemap": "Základní mapa",
+      "dataProvider": "Data poskytl:"
+    },
+    "computeRingWindingOrder": {
+      "devError": "Očekávané body typu {x:number, y:number}"
+    },
+    "w3cToGeoJson": {
+      "containsUnsupportedFeatureType": "GeoRSS s geometrií W3C obsahuje nepodporovaný typ prvku: {{type}}"
+    }
+  },
+  "models": {
+    "userData": {
+      "addingDataErrorTitle": "Data nebylo možné přidat",
+      "fileApiNotSupportedTitle": "API souborů není podporováno",
+      "internetExplorer": "Internet Explorer 11",
+      "edge": "Microsoft Edge",
+      "chrome": "Google Chrome",
+      "firefox": "Mozilla Firefox",
+      "addingDataErrorMessage": "Zadaná data nelze přidat, protože jsou neplatná nebo nemají očekávaný formát.",
+      "fileApiNotSupportedMessage": "Je nám líto, ale váš webový prohlížeč nepodporuje rozhraní API pro soubory, které {{appName}} vyžaduje pro přidání dat ze souboru ve vašem systému.  Upgradujte prosím svůj webový prohlížeč.  Pro nejlepší zážitek doporučujeme nejnovější verzi {{chrome}}, {{firefox}} nebo {{edge}}."
+    },
+    "arcGisService": {
+      "name": "Skupina služeb ArcGIS",
+      "invalidServerTitle": "Neplatný ArcGIS Server",
+      "invalidServerMessage": "Při volání služby ArcGIS REST došlo k chybě.  Odpověď serveru se nezdá být platným dokumentem ArcGIS REST.",
+      "groupNotAvailableTitle": "Skupina není k dispozici",
+      "groupNotAvailableMessage": "Při volání služby ArcGIS REST došlo k chybě."
+    },
+    "arcGisFeatureServer": {
+      "name": "ArcGIS Feature Server",
+      "nameGroup": "ArcGIS Feature Server Group",
+      "invalidServiceTitle": "Neplatná služba ArcGIS Feature Service",
+      "groupNotAvailableTitle": "Skupina není k dispozici",
+      "groupNotAvailableMessage": "Při volání služby ArcGIS Feature Service došlo k chybě.",
+      "invalidServiceMessage": "Při volání služby ArcGIS Feature Service došlo k chybě.  Odpověď serveru se nezdá být platným dokumentem Feature Service."
+    },
+    "arcGisFeatureServerCatalogGroup": {
+      "name": "ArcGIS Feature Server Group",
+      "dataDescription": "Popis dat",
+      "serviceDescription": "Popis služby",
+      "copyrightText": "Copyright Text",
+      "invalidServiceTitle": "Neplatná služba ArcGIS Feature Service",
+      "groupNotAvailableTitle": "Skupina není k dispozici",
+      "groupNotAvailableMessage": "Při volání služby ArcGIS Feature Service došlo k chybě.",
+      "invalidServiceMessage": "Při volání služby ArcGIS Feature Service došlo k chybě.  Odpověď serveru se nezdá být platným dokumentem Feature Service."
+    },
+    "arcGisFeatureServerCatalogItem": {
+      "dataDescription": "Popis dat",
+      "serviceDescription": "Popis služby",
+      "missingUrlTitle": "Nelze načíst FeatureServer",
+      "missingUrlMessage": "Nelze načíst koncový bod ArcGis FeatureServer, protože položka katalogu nemá `url`.",
+      "invalidServiceTitle": "Neplatná vrstva služby ArcGIS Feature Service",
+      "reachedMaxFeatureLimit": "Varování: Tato vrstva dosáhla limitu funkcí WFS ({{maxFeatures}}).",
+      "copyrightText": "Copyright Text",
+      "name": "Esri ArcGIS FeatureServer",
+      "invalidServiceMessage": "Při volání služby ArcGIS Feature Service došlo k chybě.  Odpověď serveru se nezdá být platnou vrstvou Feature Service."
+    },
+    "arcGisMapServerCatalogGroup": {
+      "name": "ArcGIS Map Server Group",
+      "dataDescription": "Popis dat",
+      "serviceDescription": "Popis služby",
+      "copyrightText": "Copyright Text",
+      "invalidServiceTitle": "Neplatná mapová služba ArcGIS",
+      "groupNotAvailableTitle": "Skupina není k dispozici",
+      "groupNotAvailableMessage": "Při vyvolání mapové služby ArcGIS došlo k chybě.",
+      "invalidServiceMessage": "Při vyvolání mapové služby ArcGIS došlo k chybě.  Odpověď serveru se nezdá být platným dokumentem mapové služby."
+    },
+    "arcGisMapServerCatalogItem": {
+      "name": "Esri ArcGIS MapServer",
+      "dataDescription": "Popis dat",
+      "serviceDescription": "Popis služby",
+      "invalidUrlMessage": "Nelze načíst koncový bod ArcGis MapServer, protože položka katalogu nemá `url`.",
+      "noLayersFoundTitle": "Nepodařilo se načíst ArcGIS MapServer.",
+      "noLayersFoundMessage": "Mapový server Esri ArcGIS '{{name}}' nemá žádné vrstvy k zobrazení.",
+      "copyrightText": "Copyright Text",
+      "invalidUrlTitle": "Nelze načíst MapServer"
+    },
+    "bing": {
+      "name": "Bing Mapy"
+    },
+    "wcs": {
+      "asyncResultLoadingMetadata": "Načítání WCS:\n{{name}} služba v {{timestamp}}.\n\n*Načítání metadat (`DescribeCoverage`)*",
+      "asyncPendingDescription": "Načítání WCS:\n{{name}} služba v {{timestamp}}.\n\n*Obsah stahování*",
+      "exportFailedTitle": "Export dat se nezdařil",
+      "exportFailedMessage": "Služba Web Coverage Service selhala",
+      "exportFailedMessageII": "Služba Web Coverage Service selhala: {{error}}",
+      "asyncResultDescription": "Toto je výsledek exportu dat ze služby {{name}} v {{timestamp}} s níže uvedenými vstupními parametry."
+    },
+    "cartoMap": {
+      "name": "Carto Map",
+      "noUrlTitle": "Chybí URL",
+      "noUrlMessage": "Nelze najít použitelnou adresu URL pro vrstvu Carto Map."
+    },
+    "cesiumTerrain": {
+      "name": "Cesium Terrain",
+      "name3D": "Cesium 3D dlaždice",
+      "notSupportedErrorTitle": "Není podporováno ve 2D",
+      "errorRenderingTitle": "Chyba při vykreslování ve 3D",
+      "errorRenderingMessage": "Při vykreslování ve 3D došlo k chybě.  Pravděpodobně se jedná o chybu v {{appName}} nebo o nekompatibilitu s vaším systémem či webovým prohlížečem.  Nyní vás přepneme do 2D, abyste mohli pokračovat v práci.",
+      "notSupportedErrorMessage": "\"{{name}}\" nelze zobrazit ve 2D zobrazení. Přepněte na 3D zobrazení a zkuste to znovu."
+    },
+    "ckan": {
+      "nameServer": "CKAN Server",
+      "errorLoadingTitle": "Chyba při načítání katalogu CKAN",
+      "errorLoadingMessage": "Definice tohoto katalogu CKAN neobsahuje platný dotaz na filtr.",
+      "corsErrorMessage": "Nepodařilo se načíst balíčky z tohoto serveru CKAN.",
+      "name": "Zdroje CKAN",
+      "serviceErrorMessage": "U této služby nejsou k dispozici žádné podrobnosti.",
+      "datasetDescription": "Popis datové sady",
+      "dataDescription": "Popis dat",
+      "resourceDescription": "Popis zdroje",
+      "datasetCustodian": "Správce datové sady",
+      "author": "Autor",
+      "contact_point": "Kontakt",
+      "metadata_created": "Vytvořeno",
+      "metadata_modified": "Upraveno",
+      "update_freq": "Frekvence aktualizací",
+      "idsNotSpecifiedTitle": "musí být uvedeno resourceId nebo datasetId",
+      "idsNotSpecifiedMessage": "CkanCatalogItem vyžaduje zadání resourceId nebo datasetId.",
+      "errorRetrievingUrlTitle": "Chyba při načítání URL CKAN",
+      "invalidCkanTitle": "Neplatný JSON zdroje CKAN",
+      "notCompatibleTitle": "Nebyly nalezeny žádné kompatibilní zdroje",
+      "notCompatibleMessageII": "Datová sada CKAN nemá žádné zdroje s podporovaným formátem.",
+      "dataSourceErrorMessage": "Tento zdroj dat nemá k dispozici žádné podrobnosti.",
+      "licence": "Licence",
+      "errorRetrievingUrlMessage": "Nelze načíst adresu URL jako JSON: {{url}}.",
+      "notCompatibleMessageI": "Datová sada CKAN nemá zdroj s ID {{resourceId}} nebo nemá podporovaný formát.",
+      "invalidCkanMessage": "Zdá se, že prostředek vrácený ze serveru CKAN nemá package_id."
+    },
+    "arcgisPortal": {
+      "nameGroup": "Skupina ArcGIS Portal",
+      "errorLoadingTitle": "Chyba při načítání katalogu ArcGIS Portal",
+      "errorLoadingMessage": "Definice tohoto katalogu ArcGIS Portal neobsahuje platný dotaz filtru.",
+      "corsErrorMessage": "Nepodařilo se načíst balíčky z tohoto serveru ArcGIS Portal. ",
+      "name": "Položka portálu ArcGIS",
+      "serviceErrorMessage": "U této služby nejsou k dispozici žádné podrobnosti.",
+      "datasetDescription": "Popis datové sady",
+      "licence": "Licence",
+      "openInPortal": "Otevřít v ArcGIS Portal",
+      "idsNotSpecifiedTitle": "musí být uvedeno resourceId nebo datasetId",
+      "idsNotSpecifiedMessage": "ArcGIS Portal Item vyžaduje zadání itemId.",
+      "errorRetrievingUrlMessage": "Nelze načíst adresu URL jako JSON: {{url}}.",
+      "dataSourceErrorMessage": "Tento zdroj dat nemá k dispozici žádné podrobnosti.",
+      "errorRetrievingUrlTitle": "Chyba při načítání adresy URL portálu ArcGIS"
+    },
+    "catalog": {
+      "name": "Nejmenovaná položka",
+      "idForMatchingErrorMessage": "Objekty modelu musí mít vlastnost `id`, `localId` nebo `name`.",
+      "catalogMemberMustHaveName": "Nově vytvořený člen katalogu musí mít jméno.",
+      "userAddedDataGroup": "Skupina pro data, která uživatel přidal prostřednictvím panelu Přidat data.",
+      "chartDataGroup": "Skupina pro data grafu.",
+      "dataSourceErrorMessage": "Tento zdroj dat nemá k dispozici žádné podrobnosti.",
+      "stubCreationFailure": "Nepodařilo se vyřadit položku katalogu {{item}}",
+      "unsupportedTypeTitle": "Neznámý typ",
+      "unsupportedTypeMessage": "Nepodařilo se vytvořit neznámý typ modelu {{type}}.",
+      "unsupportedFileTypeTitle": "Nepodporovaný typ souboru",
+      "getConfirmationMessage": "Tento soubor není přímo podporován {{appName}}.\n\nChcete jej zkusit nahrát do konverzní služby {{appName}}? To může fungovat pro malé zazipované soubory Esri Shapefiles nebo MapInfo TAB.",
+      "readyToUpload": "Jste připraveni nahrát svůj soubor do konverzní služby {{appName}}?",
+      "upload": "Nahrát",
+      "cancel": "Zrušit",
+      "useConversion": "Používáte konverzní službu?",
+      "convertErrorTitle": "Nelze aktualizovat katalog na verzi V8",
+      "idForMatchingErrorTitle": "Chybějící vlastnost",
+      "group": "Skupina",
+      "catalogMemberMustHaveType": "Člen katalogu musí mít typ.",
+      "serviceErrorMessage": "U této služby nejsou k dispozici žádné podrobnosti.",
+      "unsupportedFileTypeMessageII": "Tento formát souboru aplikace {{appName}} nepodporuje. Mezi přímo podporované formáty souborů patří: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (v {{link}})</li></ul > Formáty souborů podporované prostřednictvím služby online převodu zahrnují: <ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>Případně další {{linkII}}</li></ul>",
+      "unsupportedFileTypeMessage": "Tento formát souboru aplikace {{appName}} nepodporuje. Mezi podporované formáty souborů patří: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (v {{link}})</li><li>Shapefile (.zip)</li></ul>",
+      "compositesError": "Kompozity nemohou obsahovat složené položky.",
+      "mustHaveType": "Každá položka musí mít typ.",
+      "convertErrorMessage": "Tento katalogový soubor je založen na starší verzi softwaru TerriaJS, který pohání tuto webovou mapu. Při pokusu o aktualizaci katalogových dat pro {{url}} došlo k chybě."
+    },
+    "createParameter": {
+      "unsupportedErrorTitle": "Nepodporovaný typ parametru funkce",
+      "unsupportedErrorMessage": "Neznámý typ parametru funkce: {{type}}."
+    },
+    "csv": {
+      "name": "Hodnoty oddělené čárkou (CSV)",
+      "dataSourceErrorMessage": "Tento zdroj dat nemá k dispozici žádné podrobnosti.",
+      "serviceErrorMessage": "U této služby nejsou k dispozici žádné podrobnosti.",
+      "unexpectedTypeTitle": "Neočekávaný typ dat CSV",
+      "unexpectedTypeMessage": "Očekává se, že data CsvCatalogItem budou Blob, File nebo String, ale nebyla to žádná z těchto možností.",
+      "unableToLoadTitle": "Nelze načíst soubor CSV",
+      "unableToLoadItemTitle": "CSV není k dispozici",
+      "unableToLoadItemMessage": "Položku katalogu CSV nelze načíst, protože nebyla nakonfigurována s vlastností `url` nebo `csvString`.",
+      "unableToLoadMessage": "Podporované formáty CSV najdete ve specifikaci <a href=\"https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au\">csv-geo-au</a>.\n\n {{message}}"
+    },
+    "csw": {
+      "name": "Katalogová služba (CSW)",
+      "unknownError": "Server CSW ohlásil neznámou chybu.",
+      "exceptionMessage": "Server CSW ohlásil chybu:\n\n {{exceptionText}}",
+      "errorLoadingTitle": "Nelze načíst CSW",
+      "notUseableTitle": "Služba katalogu není použitelná.  \n\n{{message}}",
+      "errorLoadingRecordsTitle": "Nepodařilo se načíst záznamy CSW.",
+      "errorLoadingRecordsMessage": "Neplatná odpověď získaná při volání GetRecords na CSW",
+      "checkCORSDomain": "Na tomto serveru CSW se nepodařilo spustit funkci GetDomain.",
+      "dataResponsibility": "Odpovědnost za data",
+      "links": "Odkazy",
+      "metadataURL": "URL záznamu metadat",
+      "cors": "CORS",
+      "missingUrlTitle": "Nelze načíst službu katalogu (CSW)",
+      "notUseableMessage": "Neplatná odpověď získaná při volání GetDomain na serveru CSW.",
+      "checkCORSRecords": "Na tomto serveru CSW se nepodařilo spustit funkci GetRecords.",
+      "checkCORS": "Na tomto serveru CSW se nepodařilo spustit funkci GetRecords.",
+      "missingUrlMessage": "Nepodařilo se načíst službu katalogu (CSW), protože skupina katalogu nemá `url`."
+    },
+    "czml": {
+      "dataSourceErrorMessage": "Tento zdroj dat nemá k dispozici žádné podrobnosti.",
+      "serviceErrorMessage": "U této služby nejsou k dispozici žádné podrobnosti.",
+      "errorLoadingTitle": "Nepodařilo se načíst CZML",
+      "unableToLoadItemTitle": "CZML není k dispozici",
+      "name": "Cesium Language (CZML)",
+      "unableToLoadItemMessage": "Položku katalogu CZML nelze načíst, protože nebyla nakonfigurována s vlastnostmi `url`, `czmlData` nebo `czmlString`.",
+      "errorLoadingMessage": "Při načítání souboru CZML došlo k chybě."
+    },
+    "function": {
+      "unknownFormaterTitle": "Neznámý formátovač",
+      "unknownFormaterMessage": "Formátovač parametrů funkce {{formatter}} není znám.\n\nPlatné formátovače jsou:\n\n"
+    },
+    "geoJson": {
+      "couldNotLoadTitle": "Nelze načíst JSON",
+      "couldNotLoadMessage": "Při načítání dat JSON ze zadaného odkazu.CORS došlo k chybě",
+      "unableToLoadItemTitle": "GeoJSON není k dispozici",
+      "firefox": "Mozilla Firefox",
+      "errorParsingMessage": "Došlo k chybě při zpracování zadaných dat jako JSON.  To může znamenat, že soubor je neplatný nebo že není podporován.",
+      "dataSourceErrorMessage": "Tento zdroj dat nemá k dispozici žádné podrobnosti.",
+      "serviceErrorMessage": "U této služby nejsou k dispozici žádné podrobnosti.",
+      "name": "GeoJSON",
+      "errorLoadingTitle": "Chyba při načítání GeoJSON",
+      "errorLoadingMessage": "Při načítání souboru GeoJSON došlo k chybě.  To může znamenat, že soubor je neplatný nebo že není podporován.",
+      "unsupportedBrowserMessage": "Je nám líto, ale váš webový prohlížeč nepodporuje rozhraní API souborů, které {{appName}} vyžaduje pro načtení této datové sady.  Upgradujte prosím svůj webový prohlížeč.  Pro nejlepší zážitek doporučujeme nejnovější verze $t(browsers.chrome) nebo $t(browsers.firefox) nebo $t(browsers.edge) nebo $t(browsers.safari).",
+      "unsupportedBrowserTitle": "Nepodporovaný webový prohlížeč",
+      "internetExplorer": "Internet Explorer 11",
+      "unableToLoadItemMessage": "Položku katalogu GeoJSON nelze načíst, protože nebyla nakonfigurována s vlastnostmi `url`, `geoJsonData` nebo `geoJsonString`.",
+      "chrome": "Google Chrome"
+    },
+    "getToken": {
+      "errorTitle": "Chyba Tokenu",
+      "invalidToken": "<p>Server s tokeny odpověděl neplatným tokenem.</p><p>Prosím, nahlaste to zasláním e-mailu na adresu {{email}}</p>",
+      "unableToRequest": "<p>Nedaří se vyžádat token ze serveru tokenů.</p><p>Prosím, nahlaste to zasláním e-mailu na adresu {{email}}</p>"
+    },
+    "gltf": {
+      "name": "Přenosový formát GL (glTF)",
+      "serviceErrorMessage": "U této služby nejsou k dispozici žádné podrobnosti.",
+      "notSupportedErrorTitle": "Není podporováno ve 2D",
+      "notSupportedErrorMessage": "\"{{name}}\" nelze zobrazit ve 2D zobrazení.  Přepněte na 3D zobrazení a zkuste to znovu.",
+      "error": "Chyba",
+      "unableToRetrieve": "Nelze načíst podrobnosti o funkci z:\n\n{{url}}",
+      "dataSourceErrorMessage": "Tento zdroj dat nemá k dispozici žádné podrobnosti."
+    },
+    "gpx": {
+      "name": "GPX",
+      "dataSourceErrorMessage": "Tento zdroj dat nemá k dispozici žádné podrobnosti.",
+      "serviceErrorMessage": "U této služby nejsou k dispozici žádné podrobnosti.",
+      "errorLoadingTitle": "Chyba při načítání GPX",
+      "errorLoadingMessage": "Při načítání souboru GPX došlo k chybě.  To může znamenat, že soubor je neplatný nebo že není podporován {{appName}}."
+    },
+    "georss": {
+      "subtitle": "Podtitul",
+      "updated": "Aktualizováno",
+      "errorLoadingTitle": "Nelze načíst GeoRSS",
+      "errorLoadingMessage": "Při načítání souboru GeoRSS došlo k chybě.",
+      "unableToLoadItemTitle": "GeoRSS není k dispozici",
+      "link": "Odkaz",
+      "copyrightText": "Copyright Text",
+      "description": "Popis",
+      "name": "GeoRSS",
+      "category": "Kategorie",
+      "author": "Autor",
+      "unableToLoadItemMessage": "Položku katalogu GeoRSS nelze načíst, protože nebyla nakonfigurována s vlastností `url` nebo `geoRss`."
+    },
+    "imageryLayer": {
+      "intervalSupportErrorTitle": "Intervaly nejsou podporovány",
+      "resolvingAvailability": "Řešení dostupnosti v místě...",
+      "accessingBaseMapErrorTitle": "Chyba při přístupu k základní mapě",
+      "tileErrorTitle": "Chyba dlaždic",
+      "tileErrorMessageII": "Z adresy URL přišla odpověď 200 (OK):\n{{url}}\nale nepodařilo se jej načíst jako obrázek.",
+      "unknownTileErrorTitle": "Neznámá chyba dlaždic",
+      "unableToDisplayTitle": "Nelze zobrazit datovou sadu",
+      "intervalSupportErrorMessage": "Promiňte, {{typeName}} ({{type}}) katalogové položky nelze v současné době nastavit jako časově proměnné zadáním vlastnosti \"intervaly\".",
+      "accessingBaseMapErrorMessage": "Při pokusu o stažení dlaždic pro základní mapu došlo k chybě:<p><center>{{name}} </center></p> Vyberte prosím jinou základní mapu pomocí tlačítka Mapa v pravém horním rohu.",
+      "accessingCatalogItemErrorTitle": "Chyba při přístupu k položce katalogu",
+      "accessingCatalogItemErrorMessage": "Při pokusu o stažení dlaždic pro položku katalogu došlo k chybě:<p><center>{{name}}</center></p> Položka katalogu byla z mapy skryta.  Můžete ji znovu zobrazit na panelu Nyní zobrazeno a zkusit to znovu.",
+      "tileErrorMessage": "Dlaždice s adresou URL:\n{{url}}\n uspěla při načtení pomocí XMLHttpRequest, ale při přímém načtení pomocí Cesium nebo Leaflet se několikrát nezdařilo.\n To může znamenat, že server je velmi citlivý na zadané hlavičky požadavku nebo je prostě nespolehlivý.",
+      "unknownTileErrorMessage": "Při přístupu na adresu URL:\n{{url}}\nTo pravděpodobně znamená jednu z následujících možností:\n* Název hostitele serveru se nepodařilo přeložit,\n* server neodpověděl na požadavek, nebo\n* Server odepřel přístup k této adrese URL prostřednictvím služby CORS (Cross-Origin Resource Sharing) (viz https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/).",
+      "unableToDisplayMessage": "{{name}} nelze zobrazit ve 2D, protože nepodporuje standardní projekci Web Mercator (EPSG:3857). Přepněte prosím na 3D, pokud je ve vašem systému podporováno, aktualizujte datovou sadu tak, aby podporovala tuto projekci, nebo použijte jinou datovou sadu.",
+      "unableToShowLocTitle": "Nelze zobrazit v tomto umístění",
+      "unableToShowLocMessage": "{{name}} nelze na tomto místě zobrazit, protože dostupné časy zachycení nejsou známy. Vlastnost {{featureTimesProperty}} nebyla nalezena."
+    },
+    "ionImagery": {
+      "name": "Cesium Ion Snímky"
+    },
+    "kml": {
+      "name": "KML nebo KMZ",
+      "serviceErrorMessage": "U této služby nejsou k dispozici žádné podrobnosti.",
+      "unexpectedTypeTitle": "Neočekávaný typ dat KML",
+      "errorLoadingTitle": "Chyba při načítání KML nebo KMZ",
+      "errorLoadingMessage": "Při načítání souboru KML nebo KMZ došlo k chybě.  To může znamenat, že soubor je neplatný nebo že není podporován {{appName}}.",
+      "unableToLoadItemMessage": "Položku katalogu KML/KMZ nelze načíst, protože nebyla nakonfigurována s vlastnostmi `url`, `kmlData` nebo `kmlString`.",
+      "dataSourceErrorMessage": "Tento zdroj dat nemá k dispozici žádné podrobnosti.",
+      "unexpectedTypeMessage": "Očekává se, že KmlCatalogItem.data bude dokument XML, blob nebo soubor, ale nebyl to ani jeden z nich. To může znamenat chybu v {{appName}} nebo nesprávné použití {{appName}}. API.",
+      "unableToLoadItemTitle": "KML není k dispozici"
+    },
+    "magda": {
+      "name": "MAGDA Distribuce",
+      "dataSourceErrorMessage": "Tento zdroj dat nemá k dispozici žádné podrobnosti.",
+      "distributionDesc": "Popis distribuce",
+      "idsNotSpecifiedTitle": "musí být uvedeno recordId",
+      "retrieveErrorTitle": "Chyba při načítání záznamu MAGDA",
+      "retrieveErrorMessage": "Není uvedeno ID distribuce ani datové sady",
+      "notCompatibleTitle": "Nebyly nalezeny žádné kompatibilní distribuce",
+      "notCompatibleMessageII": "Datová sada MAGDA nemá žádné distribuce s podporovaným formátem.",
+      "serviceErrorMessage": "U této služby nejsou k dispozici žádné podrobnosti.",
+      "idsNotSpecifiedMessage": "MagdaReference vyžaduje zadání recordId.",
+      "notCompatibleMessageI": "Datová sada MAGDA nemá distribuci s ID {{distributionId}} nebo nemá podporovaný formát."
+    },
+    "mapboxMap": {
+      "name": "Mapbox Mapa"
+    },
+    "mapboxVectorTile": {
+      "name": "Vektorové dlaždice Mapbox"
+    },
+    "mapboxStyle": {
+      "name": "Styl Mapbox"
+    },
+    "senaps": {
+      "generalErrorMessage": "Došlo k chybě při zpracování dat Senaps",
+      "name": "Lokality Senaps",
+      "locationHeadingFeatureInfo": "Poloha",
+      "missingKeyErrorMessage": "Klíč API Senaps by měl být přidán do konfigurace terriajs-serveru pomocí volby appendParamToQueryString",
+      "retrieveErrorTitle": "Chyba při zpracování položky katalogu Senaps",
+      "availableStreamsHeadingFeatureInfo": "Dostupné streamy",
+      "noStreamsMessageFeatureInfo": "V této lokalitě nejsou žádné toky.",
+      "missingSenapsBaseUrl": "Základní url adresa Senaps nebyla poskytnuta. Přihlásili jste se?"
+    },
+    "ogr": {
+      "name": "Neznámý / Převedeno do GeoJSON",
+      "internetExplorer": "Internet Explorer 11",
+      "firefox": "Mozilla Firefox",
+      "loadError": "Velikost souboru je větší než limit {{maxConversionSizeMB}} MB konverzní služby {{appName}}",
+      "errorConvertingToGeoJsonMessage": "Při pokusu o převod tohoto souboru do formátu GeoJson došlo k chybě. ",
+      "dataSourceErrorMessage": "Tento zdroj dat nemá k dispozici žádné podrobnosti.",
+      "legacyBrowserTitle": "Starší prohlížeč není podporován",
+      "serviceErrorMessage": "U této služby nejsou k dispozici žádné podrobnosti.",
+      "legacyBrowserMessage": "Je nám líto, ale váš webový prohlížeč nepodporuje typ \"FormData\", který je vyžadován konverzní službou \"{{appName}}\".  Doporučujeme vám přejít na nejnovější verzi {{chrome}}, {{firefox}}, {{safari}} nebo {{internetExplorer}}.",
+      "chrome": "Google Chrome",
+      "safari": "Apple Safari",
+      "unsupportedFileTzpe": "Nepodporovaný typ souboru",
+      "invalidFile": "To může znamenat, že soubor je neplatný nebo že není podporován konverzní službou {{appName}}.",
+      "errorConvertingToGeoJsonTitle": "Chyba při převodu souboru do formátu GeoJson",
+      "emailUs": "Pokud máte zájem o pomoc nebo další informace, napište nám na {{email}}"
+    },
+    "openStreetMap": {
+      "name": "Open Street Map"
+    },
+    "placesLikeMe": {
+      "regionsLikeThisName": "Podobné regiony",
+      "regionsLikeThisDescription": "Identifikuje regiony, které jsou _nejpodobnější_ danému regionu podle zadaného souboru charakteristik.",
+      "regionTypeName": "Typ regionu",
+      "regionTypeDescription": "Typ analyzovaného regionu.",
+      "regionName": "Region",
+      "regioNotSelectedDescription": "Musíte vybrat region.",
+      "regionDescription": "Oblast k analýze.  Analýza určí, které regiony jsou nejvíce podobné tomuto regionu.",
+      "likenessesError": "Seznam podobností a seznam kódů oblastí neobsahují stejný počet prvků.",
+      "characteristics": "Charakteristika",
+      "characteristicsDescription": "Charakteristiky regionu, které je třeba zahrnout do analýzy.",
+      "name": "Místa jako já",
+      "placesLike": "Místa jako {{regionName}}",
+      "regioNotSelectedName": "Region nebyl vybrán"
+    },
+    "regionMapping": {
+      "invalidServerTypeTitle": "Neplatný typ serveru {{serverType}} v souboru regionMapping.json",
+      "notRecognised": "Tyto názvy regionů byly {{notRecognisedText}} ",
+      "csvSpecification": "Specifikace CSV-geo-au",
+      "issuesLoadingTitle": "Problémy s načítáním {{name}}",
+      "moreThanOneValue": "Tyto regiony měly {{moreThanOneValueText}}",
+      "msg": "Podívejte se na {{link}}, jak soubor naformátovat.",
+      "moreThanOneValueText": "více než jedna hodnota",
+      "noDataForRegion": "Pro vybranou oblast nejsou k dispozici žádná data.",
+      "noDataForDate": "Pro vybrané datum nejsou k dispozici žádná data.",
+      "outdatedBrowserTitle": "Zastaralý webový prohlížeč",
+      "outdatedBrowserMessage": "Používáte velmi starý webový prohlížeč, který nedokáže zobrazit datové sady \"mapované na regiony\", jako je tato.  Co nejdříve prosím přejděte na nejnovější verzi $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge) nebo $t(browsers.safari).",
+      "invalidServerTypeMessage": "Očekávaný typ serveru byl \"WMS\" nebo \"vector\", ale je \"{{serverType}}\"",
+      "notRecognisedText": "nerozeznáno"
+    },
+    "openDataSoft": {
+      "viewDatasetPage": "Zobrazit stránku datové sady"
+    },
+    "sdmxServerStratum": {
+      "sdmxStructureLoadErrorTitle": "Požadavek na strukturu SDMX se nezdařil",
+      "loadDataErrorMessage": "Server nemá žádné datové toky",
+      "loadDataErrorTitle": "Nepodařilo se načíst skupinu SDMX"
+    },
+    "sdmxJsonDataflowStratum": {
+      "loadDataErrorTitle": "Nelze načíst datový tok SDMX",
+      "loadDataErrorMessage": {
+        "noDataflow": "Datový tok {{catalogItem.dataflowId}} je neplatný",
+        "invalidResponse": "Neplatný objekt JSON",
+        "noDatastructure": "Pro datový tok {{catalogItem.dataflowId}} nebyly nalezeny žádné datové struktury"
+      },
+      "defaultUnitMeasure": "Jednotky"
+    },
+    "sdmxCatalogItem": {
+      "loadDataErrorTitle": "Nepodařilo se načíst data SDMX pro {{name}}",
+      "loadDataErrorMessage": "Neplatná odpověď z {{csvUrl}}",
+      "noResultsWithDimensions": "Nebyly nalezeny žádné výsledky. Zvolte v pracovním poli jiné hodnoty rozměrů než následující:  \n\n{{dimensions}}",
+      "viewBy": {
+        "time": "Časové řady",
+        "region": "Region",
+        "title": "Zobrazit podle"
+      }
+    },
+    "time": {
+      "invalidDate": "Neplatné datum",
+      "invalidInitialTimeSource": "V konfiguračním souboru je zadán nesprávný initialTimeSource: {{initialTimeSource}}"
+    },
+    "shareData": {
+      "generateErrorMessage": "Při pokusu o použití služby sdílení dat k vygenerování krátké adresy URL se něco pokazilo.",
+      "expandErrorTitle": "Nelze rozbalit adresu URL",
+      "generateErrorTitle": "Nepodařilo se vygenerovat krátkou adresu URL.",
+      "expandErrorMessage": "Služba sdílení dat použitá ke spuštění {{appName}} nebyla nalezena. To může znamenat chybu v odkazu nebo to, že služba je v tuto chvíli nedostupná."
+    },
+    "socrataServer": {
+      "description": "Popis",
+      "retrieveErrorMessage": "Z tohoto serveru Socrata se nepodařilo načíst balíčky.",
+      "licence": "Licence",
+      "name": "Socrata Server",
+      "tags": "Štítky",
+      "attributes": "Atributy"
+    },
+    "spatialDetailing": {
+      "description": "Předpovídá charakteristiky jemnozrnných oblastí pomocí učení a využívání korelací hrubozrnných dat s charakteristikami sčítání.",
+      "regionTypeToPredictName": "Typ oblasti k předpovědi",
+      "aggregationName": "Agregace",
+      "aggregationFalseDescription": "Hodnoty hrubé oblasti jsou součtem vzorků v dané oblasti.  Například celková populace.",
+      "characteristicToPredictName": "Charakteristika k předpovědi",
+      "characteristicToPredictDescription": "Charakteristika, kterou je třeba předpovědět pro každou oblast.",
+      "spatialDetailingOf": "Prostorová podrobnost {{of}} při {{at}}",
+      "name": "Prostorová detailnost",
+      "coarseDataRegionTypeDescription": "Typ oblasti, ke které jsou přiřazeny hrubé vstupní charakteristiky.",
+      "regionTypeToPredictDescription": "Typ regionu, pro který se předpovídají charakteristiky.",
+      "coarseDataRegionTypeName": "Typ oblasti hrubých dat",
+      "aggregationDescription": "Určuje, jak byly agregovány hodnoty hrubých oblastí.  True, pokud je hodnota průměrem hodnot v celé oblasti, nebo False, pokud je hodnota součtem hodnot v celé oblasti.",
+      "aggregationTrueName": "Průměrná agregace",
+      "aggregationTrueDescription": "Hodnoty hrubé oblasti jsou průměrem vzorků v dané oblasti.  Například průměrný příjem domácnosti.",
+      "aggregationFalseName": "Agregace součtů",
+      "wrongNumberOfElements": "Seznam hodnot a seznam kódů oblastí neobsahují stejný počet prvků"
+    },
+    "tableData": {
+      "unsupportedCharactersTitle": "Neplatné znaky ve sloupcích zeměpisné šířky a délky",
+      "unsupportedCharactersMessage": "Nepodařilo se interpretovat dvojici zeměpisných šířek a délek {{longitude}}, {{latitude}}",
+      "bulkGeocoderInfoTitle": "Hromadné informace o geokodéru",
+      "legendZFilterLabel": "Extrémní hodnoty",
+      "legendNullLabel": "(Bez hodnoty)",
+      "styleDisabledLabel": "Zakázat styl",
+      "zFilterEnabled": "Extrémní hodnoty skryté (kliknutím zobrazíte)",
+      "zFilterDisabled": "Zjištěné extrémní hodnoty (klikněte pro skrytí)",
+      "bulkGeocoderErrorMessage": "Nelze mapovat adresy na souřadnice zeměpisné šířky a délky, protože při načítání souřadnic adres došlo k chybě. Zkontrolujte prosím své internetové připojení nebo to zkuste později.",
+      "noData": "Žádné údaje k prokázání",
+      "bulkGeocoderErrorTitle": "Chyba hromadného geokodéru",
+      "timeDimensionDisabled": "Čas zakázán (kliknutím povolíte)",
+      "bulkGeocoderInfoMessage": "CSV obsahuje adresy, ale {{number}} nelze na mapě najít: ",
+      "bulkGeocoderInfo2Message": "V CSV chybí adresy {{nullAddresses}}.",
+      "timeDimensionEnabled": "Čas povolen (kliknutím jej zakážete)"
+    },
+    "terria": {
+      "loadConfigErrorTitle": "Nepodařilo se načíst konfiguraci mapy Terria",
+      "proxyableDomainsDeprecation": "`proxyableDomainsUrl` již není ve verzi v8 podporován",
+      "initErrorTitle": "Nepodařilo se inicializovat služby",
+      "initErrorMessage": "Došlo k problému se serverem Terria. To může způsobit nedostupnost některých vrstev nebo konverzní služby.",
+      "urlLoadErrorTitle": "Problém s načítáním URL",
+      "urlLoadErrorMessage": "Při inicializaci Terria s parametry URL došlo k problému.",
+      "loadModelErrorMessage": "Při načítání modelu `{{model}}` došlo k chybě.",
+      "loadingMagdaInitSourceErrorTitle": "Chyba při načítání inicializačního zdroje Magda",
+      "loadingInitSourcesErrorTitle": "Chyba při načítání konfigurace mapy",
+      "loadingInitSourceErrorTitle": "Chyba při načítání inicializačního zdroje",
+      "loadingInitSourceErrorMessage": "Nepodařilo se načíst inicializační informace z `{{fragment}}`, protože nejsou definovány žádné cesty initFragmentPaths.",
+      "loadingInitSourceError2Message": "Při načítání inicializačních informací došlo k chybě:  \n*`{{loadSource}}`*.",
+      "loadingInitJsonMessage": "Při načítání souboru JSON {{url}} došlo k chybě.",
+      "loadingBaseMapsErrorTitle": "Chyba při načítání základních map",
+      "loadingBaseMapErrorTitle": "Chyba při načítání podkladové mapy: `{{name}}`",
+      "loadingWorkbenchItemErrorTitle": "Chyba při načítání položky na pracovní desku: `{{name}}`",
+      "disclaimer": "Odmítnutí odpovědnosti",
+      "buttonTitleConfirm": "Souhlasím",
+      "loadingMagdaInitSourceErrorMessage": "Při načítání inicializačních informací ze záznamu Magda `{{url}}` došlo k chybě.",
+      "loadingInitSourcesErrorMessage": "Při načítání konfigurace mapy {{appName}} došlo k chybě &mdash; nemusí se správně zobrazit. Zkuste prosím mapu načíst znovu, a pokud problém přetrvává, nahlaste jej prosím zasláním e-mailu na adresu {{email}} nebo můžete stisknout níže uvedené tlačítko.",
+      "loadingShareDataErrorTitle": "Chyba při načítání dat sdílení",
+      "parsingStartDataErrorMessage": "Při parsování startovacích dat JSON došlo k chybě."
+    },
+    "terriaJSONcatalog": {
+      "name": "Funkce katalogu Terria JSON",
+      "misconfiguredErrorTitle": "Chybně nakonfigurovaný init soubor",
+      "serviceResponseErrorMessage": "Funkce TerriaJsonCatalogFunction měla přijmout řetězec JSON, obdržela {{xhr}}",
+      "requestFailedTitle": "Žádost se nezdařila",
+      "asyncResultDescription": "Toto je výsledek vyvolání procesu nebo služby {{name}} v {{timestamp}} s níže uvedenými vstupními parametry.",
+      "loadingInitSourceErrorTitle": "Chyba při načítání inicializačního zdroje",
+      "loadingInitSourceErrorMessage": "Chyba při načítání inicializačního zdroje {{fragment}}, protože nejsou definovány žádné cesty initFragmentPaths.",
+      "buttonTitleConfirm": "Souhlasím",
+      "misconfiguredErrorMessage": "Služba není nakonfigurována pro TerriaJsonCatalogFunction HTTP 202.",
+      "misconfiguredError2Message": "Konfigurace HTTP 202 {{url}} není v odpovědi {{xhr}}",
+      "serviceResponseErrorTitle": "Odpověď služby není řetězec JSON",
+      "requestFailedMessage": "Požadavek se nezdařil se stavovým kódem {{status}}.",
+      "disclaimer": "Odmítnutí odpovědnosti",
+      "loadingInitSourceError2Message": "Při načítání inicializačních informací došlo k chybě:  \n*`{{loadSource}}`*."
+    },
+    "thredds": {
+      "nameGroup": "Skupina katalogu THREDDS"
+    },
+    "urlTemplateMapServer": {
+      "name": "Šablona URL Mapový server"
+    },
+    "userDrawing": {
+      "messageHeader": "Kreslit na mapu",
+      "otherEntities": "Čáry a polygony",
+      "clickToAddFirstPoint": "Kliknutím přidejte bod",
+      "clickToAddAnotherPoint": "Kliknutím přidáte další bod",
+      "userPolygon": "Uživatelský polygon",
+      "devError": "Je vyžadována instance Terria.",
+      "pointEntities": "Body",
+      "btnCancel": "Zrušit",
+      "btnDone": "Hotovo",
+      "anotherPoint": "Další bod",
+      "line": "Čára",
+      "firstPoint": "První bod",
+      "clickToRedrawRectangle": "Kliknutím na jiný bod překreslíte obdélník"
+    },
+    "webFeatureServiceCatalogGroup": {
+      "groupNotAvailableTitle": "Skupina není k dispozici",
+      "abstract": "Popis Web Feature Service",
+      "invalidWFSServerMessage": "Při vyvolání funkce GetCapabilities na serveru WFS došlo k chybě.  Odpověď serveru se nezdá být platným dokumentem GetCapabilities.",
+      "invalidWFSServerTitle": "Neplatný WFS server",
+      "groupNotAvailableMessage": "Při vyvolání funkce GetCapabilities na serveru WFS došlo k chybě.",
+      "wfsServer": "Web Feature Service (WFS) Server",
+      "fees": "Poplatky Web Feature Service",
+      "accessConstraints": "Omezení přístupu k Web Feature Service"
+    },
+    "webFeatureServiceCatalogItem": {
+      "wfs": "Web Feature Service (WFS)",
+      "dataDescription": "Popis dat",
+      "abstract": "Popis Web Feature Service",
+      "serviceDescription": "Popis služby",
+      "metadataUrls": "Odkazy na metadata",
+      "accessConstraints": "Omezení přístupu",
+      "serviceContact": "Kontakt služby",
+      "getCapabilitiesUrl": "URL GetCapabilities",
+      "missingDataTitle": "Chybějící data",
+      "missingDataMessage": "Datová sada WFS '{{name}}' nevrátila žádná data.{{line}}{{line}}Buď byl katalogový soubor nesprávně nastaven, nebo se změnila adresa serveru.",
+      "missingUrlTitle": "Nelze načíst GetCapabilities",
+      "missingUrlMessage": "Nepodařilo se načíst dokument GetCapabilities služby WFS (Web Feature Service), protože položka katalogu nemá `url`.",
+      "noLayerFoundTitle": "Nenalezena žádná vrstva",
+      "noLayerFoundMessage": "Datová sada WFS '{{name}}' nemá žádné vrstvy odpovídající '{{typeNames}}'. {{suggested}} {{line}}{{line}}Buď byl katalogový soubor nastaven nesprávně, nebo se změnil server WFS.",
+      "reachedMaxFeatureLimit": "Varování: Tato vrstva dosáhla limitu funkcí WFS ({{maxFeatures}})"
+    },
+    "webMapServiceCatalogGroup": {
+      "groupNotAvailableTitle": "Skupina není dostupná",
+      "missingUrlTitle": "Nelze načíst GetCapabilities",
+      "abstract": "Popis Web Map Service",
+      "accessConstraints": "Omezení přístupu Web Map Service",
+      "wmsServer": "Web Map Service (WMS) Server",
+      "invalidWMSServerMessage": "Při vyvolání funkce GetCapabilities na serveru WMS došlo k chybě. Odpověď serveru se nezdá být platným dokumentem GetCapabilities.",
+      "missingUrlMessage": "Nepodařilo se načíst dokument GetCapabilities Web Map Service (WMS), protože položka katalogu nemá `url`.",
+      "invalidWMSServerTitle": "Neplatný WMS server",
+      "groupNotAvailableMessage": "Při vyvolání funkce GetCapabilities na serveru WMS došlo k chybě.",
+      "fees": "Poplatky Web Map Service"
+    },
+    "webMapServiceCatalogItem": {
+      "dataDescription": "Popis dat",
+      "accessConstraints": "Omezení přístupu",
+      "serviceContact": "Kontakt služby",
+      "defaultStyleLabel": "Výchozí styl",
+      "noLayerFoundTitle": "Nenalezena žádná vrstva",
+      "badlyFormatedTitle": "Špatně formátovaná periodicita",
+      "badlyFormatedMessage": "Datová sada '{{name}}' má špatně vytvořenou periodicitu '{{isoSegments}}'. Kliknutím na tlačítko Info o datasetu získáte další informace o datové sadě a správci dat.",
+      "missingDataTitle": "Chybějící data",
+      "missingDataMessage": "Datová sada WMS '{{name}}' nevrátila žádná data.{{line}}{{line}}Buď byl katalogový soubor nesprávně nastaven, nebo se změnila adresa serveru.",
+      "serviceDescription": "Popis služby",
+      "getCapabilitiesUrl": "URL GetCapabilities",
+      "metadataUrls": "Odkazy metadat",
+      "wms": "Web Map Service (WMS)",
+      "noLayerFoundMessage": "Datová sada WMS '{{name}}' nemá žádné vrstvy odpovídající '{{layers}}'. {{suggested}} {{line}}{{line}}Buď byl katalogový soubor nastaven nesprávně, nebo se změnil server WMS.",
+      "missingUrlTitle": "Nelze načíst GetCapabilities",
+      "missingUrlMessage": "Nepodařilo se načíst dokument GetCapabilities Web Map Service (WMS), protože položka katalogu nemá `url`."
+    },
+    "webMapTileServiceCatalogGroup": {
+      "wmtsServer": "Web Map Tile Service (WMTS) Server",
+      "invalidWMTSServerMessage": "Při vyvolání funkce GetCapabilities na serveru WMTS došlo k chybě. Odpověď serveru se nezdá být platným dokumentem GetCapabilities.",
+      "groupNotAvailableTitle": "Skupina není dostupná",
+      "groupNotAvailableMessage": "Při vyvolání funkce GetCapabilities na serveru WMTS došlo k chybě.",
+      "accessConstraints": "Omezení přístupu Web Map Service",
+      "fees": "Poplatky Web Map Service",
+      "invalidCapabilitiesTitle": "Neplatné GetCapabilities",
+      "invalidWMTSServerTitle": "Neplatný WMTS server",
+      "abstract": "Popis Web Map Service",
+      "invalidCapabilitiesMessage": "Adresa URL {{url}} byla úspěšně načtena, ale zdá se, že se nejedná o platný dokument GetCapabilities služby WMTS (Web Map Tile Service). \n\nBuď byl katalogový soubor nastaven nesprávně, nebo se změnila adresa serveru."
+    },
+    "webMapTileServiceCatalogItem": {
+      "wmts": "Web Map Tile Service (WMTS)",
+      "dataDescription": "Popis dat",
+      "serviceDescription": "Popis služby",
+      "serviceContact": "Kontakt služby",
+      "getCapabilitiesUrl": "URL GetCapabilities",
+      "missingUrlMessage": "Nepodařilo se načíst dokument GetCapabilities služby WMTS (Web Map Tile Service), protože položka katalogu nemá `url`.",
+      "noUsableTileMatrixTitle": "Upozornění",
+      "accessConstraints": "Omezení přístupu",
+      "fees": "Poplatky Web Map Tile Service",
+      "missingUrlTitle": "Nelze načíst GetCapabilities",
+      "noUsableTileMatrixMessage": "Tato vrstva WMTS nemá nastavenou matici dlaždic Web Mercator - nemusí se zobrazit správně"
+    },
+    "webProcessingService": {
+      "wps": "Web Processing Service (WPS)",
+      "invalidWPSServerMessage": "Při volání {{endpoint}} na serveru WPS pro název procesu {{name}} došlo k chybě. Odpověď serveru se nezdá být platným dokumentem {{endpoint}}.",
+      "processDescriptionErrorTitle": "Proces nemá popis procesu",
+      "processInputErrorMessage": "Tento proces WPS nespecifikuje žádné vstupy.",
+      "unsupportedParameterErrorTitle": "Nepodporovaný typ parametru",
+      "unsupportedParameterErrorMessage": "Parametr {{identifier}} není podporovaným typem parametru.",
+      "invalidResponseErrorTitle": "Neplatná odpověď serveru WPS",
+      "invalidResponseError2Title": "Neplatná odpověď ze serveru WPS",
+      "invalidResponseError2Message": "Odpověď serveru WPS neobsahuje prvek Status.",
+      "failureReasonUnknowError": "Důvod selhání není znám.",
+      "asyncShortReportFailed": "Vyvolání Web Processing Service se nezdařilo.  Další podrobnosti jsou k dispozici na informačním panelu.",
+      "resultPendingDescription": "Toto je výsledek vyvolání procesu nebo služby {{name}} v {{timestamp}} s níže uvedenými vstupními parametry.",
+      "regionParameterName": "Parametr regionu",
+      "wpsServer": "Web Processing Service (WPS) Server",
+      "wpsResult": "Výsledky Web Processing Service",
+      "processDescriptionErrorMessage": "WPS DescribeProcess pro tento proces neobsahuje ProcessDescription.",
+      "invalidResponseErrorMessage": "Při přístupu k umístění stavu na serveru WPS pro název procesu {{name}} došlo k chybě.",
+      "invalidWPSServerTitle": "Neplatný WPS server",
+      "processInputErrorTitle": "Proces nemá žádné vstupy",
+      "errorDetails": "Podrobnosti o chybě",
+      "regionTypeDescription": "Typ analyzovaného regionu.",
+      "regionTypeName": "Typ regionu"
+    },
+    "webProcessingServiceCatalogGroup": {
+      "missingUrlTitle": "Nelze načíst GetCapabilities",
+      "invalidCapabilitiesMessage": "Adresa URL {{url}} byla úspěšně načtena, ale zdá se, že se nejedná o platný dokument GetCapabilities Web Processing Service (WPS). \n\nBuď byl katalogový soubor nastaven nesprávně, nebo se změnila adresa serveru.",
+      "invalidServerTitle": "Neplatný WPS server",
+      "accessConstraints": "Omezení přístupu Web Processing Service",
+      "providerSite": "web poskytovatele Web Processing Service",
+      "abstract": "Popis Web Processing Service",
+      "missingUrlMessage": "Nepodařilo se načíst dokument GetCapabilities služby WPS (Web Processing Service), protože položka katalogu nemá `url`.",
+      "invalidCapabilitiesTitle": "Neplatné GetCapabilities",
+      "typeName": "Web Processing Service (WPS) Server",
+      "invalidServerMessage": "Při vyvolání funkce GetCapabilities na serveru WPS došlo k chybě. Odpověď serveru se nezdá být platným dokumentem GetCapabilities.",
+      "providerName": "Název poskytovatele Web Processing Service",
+      "fees": "Poplatky Web Processing Service"
+    },
+    "wfsFeatures": {
+      "queryErrorTitle": "Chyba při dotazu na server WFS",
+      "groupNotAvailableTitle": "Skupina není dostupná",
+      "groupNotAvailableMessage": "Při vyvolání funkce GetFeature na serveru WFS došlo k chybě.",
+      "featuresGroup": "Skupina funkcí na serveru služby WFS (Web Feature Service)",
+      "queryErrorMessage": "Při vyvolání funkce GetFeature na serveru WFS došlo k chybě. Odpověď serveru se nezdá být platným dokumentem GeoJSON."
+    },
+    "shadow": {
+      "name": "Stíny",
+      "options": {
+        "none": "Žádný",
+        "cast": "Pouze obsazení",
+        "receive": "Pouze příjem",
+        "both": "Obsazení a příjem"
+      }
+    },
+    "commonModelErrors": {
+      "3dTypeIn2dMode": "**Poznámka:** Tuto datovou sadu nelze zobrazit ve 2D prohlížeči. Přepněte na jeden z režimů 3D mapy."
+    },
+    "scaleDatasetNotVisible": {
+      "scaleZoomIn": "Datová sada není k dispozici v tomto měřítku, přiblížení ji zobrazí",
+      "scaleZoomOut": "Datová sada není k dispozici v tomto měřítku, pro její zobrazení ji zmenšete"
+    },
+    "shapefile": {
+      "name": "Shapefile"
+    },
+    "invokeAnalyticsService": {
+      "invocationFailedTitle": "Volání služby se nezdařilo",
+      "invocationFailedMessage": "Při výpočtu {{invocationName}} došlo na serveru k chybě."
+    },
+    "terria-reference": {
+      "failedToLoadTarget": "Nepodařilo se načíst člena z externího katalogu"
+    },
+    "feedback": {
+      "thanksTitle": "Děkujeme vám za zpětnou vazbu!",
+      "unableToSendTitle": "Nelze odeslat zpětnou vazbu",
+      "thanksMessage": "Vaše zpětná vazba pomáhá zlepšovat {{appName}}",
+      "unableToSendMessage": "Je to opravdu trapné, ale při pokusu o odeslání zpětné vazby došlo k chybě.  Místo toho ji prosím zašlete na adresu {{email}}."
+    },
+    "resultPending": {
+      "name": "Čeká na výsledek"
+    },
+    "sensorObservationService": {
+      "alreadyLoadingTitle": "Data se již načítají",
+      "exceptionMessage": "Server ohlásil chybu: \n\n {{exceptionText}}",
+      "unknownFormat": "Server odpověděl neznámým formátem funkce.",
+      "alreadyLoadingMessage": "Vaše data se stále načítají. Po načtení budete moci zobrazení změnit",
+      "noFeatures": "Vašemu dotazu neodpovídají žádné funkce.",
+      "procedure": "Postup",
+      "sos": "SOS",
+      "property": "Vlastnictví",
+      "unknownError": "Server ohlásil neznámou chybu.",
+      "missingBody": "Server odpověděl s chybějícím obsahem.",
+      "noMatchingFeatures": "Služba Sensor Observation Service nevrátila žádné prvky odpovídající vašemu dotazu."
+    },
+    "raiseError": {
+      "notificationFeedback": "Pokud máte dotazy nebo připomínky, klikněte zde.",
+      "notificationFeedbackEmail": "V případě dotazů nebo zpětné vazby kontaktujte {{email}}",
+      "errorTitle": "Došlo k chybě",
+      "developerDetails": "Podrobnosti o vývojářích"
+    },
+    "terrainCatalog": {
+      "notSupportedErrorTitle": "Nepodporováno ve 2D",
+      "notSupportedErrorMessage": "{{name}} nelze zobrazit ve 2D zobrazení. Přepněte na 3D a zkuste to znovu"
+    },
+    "threddsItem": {
+      "name": "THREDDS Odkaz na položku"
+    },
+    "clippingBox": {
+      "groupName": "Ořezový rámeček",
+      "clipModel": "Ořezový model",
+      "clipDirection": {
+        "name": "Směr ořezu",
+        "options": {
+          "inside": "Ořez uvnitř rámečku",
+          "outside": "Ořez vně rámečku"
+        }
+      },
+      "showClippingBox": "Zobrazit ořezový rámeček",
+      "keepBoxAboveGround": "Pouze nad zemí"
+    }
+  },
+  "deltaTool": {
+    "titlePrefix": "Detekce změn",
+    "pickLocation": "Chcete-li si prohlédnout dostupné snímky, vyberte si na následující mapě místo, které vás zajímá.",
+    "cancelBtn": "Zrušit",
+    "generateDeltaBtn": "Generování rozdílové mapy",
+    "secondaryImage": "Druhý obrázek",
+    "pickerMessage": {
+      "pickFirst": "Vyberte bod kliknutím na mapu",
+      "pickError": "Chyba při pokusu o vyřešení snímků v místě! Vyberte prosím bod znovu kliknutím na mapu.",
+      "pickAnother": "Kliknutím na jiný bod změníte výběr"
+    },
+    "loadingError": {
+      "title": "Chyba načítání Delta nástroje",
+      "message": "Při pokusu o načtení tohoto nástroje ze serveru došlo k chybě. Zkuste to prosím znovu."
+    },
+    "selectedLocation": "Vybraná lokalita",
+    "description": "Tento nástroj vizualizuje rozdíl mezi snímky pořízenými ve dvou časově oddělených bodech.",
+    "catalogItem": {
+      "description": "Tato vrstva vizualizuje rozdíl mezi snímky pořízenými ve dvou diskrétních časových bodech"
+    },
+    "primaryImage": "První obrázek"
+  },
+  "term": {
+    "missingContent": "chybějící obsah"
+  },
+  "mapNavigation": {
+    "additionalTools": "Další nástroje",
+    "additionalToolsTitle": "Otevřít další nástroje"
+  },
+  "itemSearchTool": {
+    "toolLoadError": "Chyba načítání vyhledávacího nástroje.",
+    "title": "Hledat {{itemName}}",
+    "loading": "Načítání parametrů hledání",
+    "loadError": "Chyba při načítání parametrů vyhledávání. Podrobné informace o chybách naleznete v konzoli.",
+    "noParameters": "Nebyly nalezeny žádné vyhledatelné parametry",
+    "searching": "Hledání",
+    "searchError": "Hledání se nezdařilo. Podrobné informace o chybách naleznete v konzoli.",
+    "resetBtnText": "Vymazat zadání",
+    "actions": {
+      "showMatchingOnly": "Zobrazit pouze shodu",
+      "highlightAll": "Zvýraznit vše"
+    },
+    "numericParameter": {
+      "minimum": "Minimum",
+      "maximum": "Maximum"
+    },
+    "searchBtnText": "Hledat",
+    "backBtnText": "Znovu vyhledat",
+    "resultsCount_0": "{{count}} nalezená shoda",
+    "resultsCount_1": "{{count}} nalezené shody",
+    "resultsCount_2": "{{count}} nalezených shod"
+  },
+  "indexedItemSearchProvider": {
+    "errorParsingIndexRoot": "Chyba při zpracování souboru indexRoot: {{indexRootUrl}}.",
+    "missingOptionIndexRootUrl": "V konfiguraci vyhledávání položky chybí možnost `indexRootUrl`."
+  },
+  "printView": {
+    "loading": "Vytvoření tiskového náhledu..."
+  },
+  "pedestrianMode": {
+    "toolButtonTitle": "Režim chodce",
+    "dropPedestrianTooltipMessage": "<b>Klikněte levým tlačítkem</b> pro výběr umístění přetažení<br /><b>Kliknutím pravým tlačítkem / Esc</b> zrušíte",
+    "controls": {
+      "title": "Ovládací prvky"
+    }
+  },
+  "notification": {
+    "title": "Zpráva"
+  },
+  "toast": {
+    "mapIsZooming": "Načítání ideálního zvětšení..."
+  },
+  "emptyWorkbenchMessage": "<0><0>Vaše pracovní plocha je prázdná</0><1><strong>Kliknutím na '$t(addData.addDataBtnText) výše můžete </strong></1><2><0>Procházet katalog dat </0><1>Nahrát vlastní data do mapy</1></2><3><0></0><strong>TIP.</strong><2>Všechny vaše aktivní datové sady budou uvedeny zde</2></3></0>",
+  "browsers": {
+    "chrome": "Google Chrome",
+    "firefox": "Mozilla Firefox",
+    "edge": "Microsoft Edge",
+    "safari": "Apple Safari"
+  },
+  "compare": {
+    "title": "Porovnat",
+    "rightPanel": "Pravý panel",
+    "entireMap": {
+      "title": "Celá mapa",
+      "emptyText": "Pomocí tečkovaného menu výše můžete přidat nová data, která se zobrazí na celé mapě."
+    },
+    "entireMapMenu": {
+      "browse": "Procházet mapová data",
+      "sendAllToBack": "Odeslat vše do pozadí",
+      "hideAll": "Skrýt vše",
+      "sendAllToFront": "Odeslat vše do popředí"
+    },
+    "dataset": {
+      "label": "Datová sada",
+      "selectOne": "Vybrat jeden"
+    },
+    "dimensionSelector": {
+      "undefinedLabel": "Neuvedeno"
+    },
+    "dateLocationFilter": {
+      "filter": "Filtrovat datum podle místa",
+      "loading": "Načítání filtru...",
+      "cancel": "Zrušit",
+      "location": "Nyní zobrazuje dostupné snímky pro {{latitude}}, {{longitude}}",
+      "mouseTooltipTitle": "Zvolte místo",
+      "mouseTooltipMessage": "Kliknutím pravým tlačítkem myši zrušíte"
+    },
+    "leftPanel": "Levý panel",
+    "done": "Hotovo",
+    "dateButton": {
+      "left": "Vlevo",
+      "right": "Vpravo",
+      "select": "Vyberte datum"
+    },
+    "info": "Porovnejte na mapě vedle sebe soubory prostorových dat z pracovní plochy."
+  },
+  "includeStory": {
+    "message": "Zahrnout příběh do sdílení"
+  }
+}

@@ -144,7 +144,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   @computed
   get members(): ModelReference[] {
     return filterOutUndefined(
-      this.capabilities.ProcessOfferings?.map(process =>
+      this.capabilities.ProcessOfferings?.map((process) =>
         this.getProcessId(process)
       ) ?? []
     );
@@ -157,7 +157,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   createMembersForProcesses() {
-    this.capabilities.ProcessOfferings?.forEach(process =>
+    this.capabilities.ProcessOfferings?.forEach((process) =>
       this.createMemberForProcess(process)
     );
   }
@@ -169,26 +169,24 @@ class GetCapabilitiesStratum extends LoadableStratum(
       return;
     }
 
-    const memberModel: WebProcessingServiceCatalogFunction = this.getOrCreateWPSCatalogFunction(
-      processId
-    );
+    const memberModel: WebProcessingServiceCatalogFunction =
+      this.getOrCreateWPSCatalogFunction(processId);
 
     // Replace the stratum inherited from the parent group.
-    const stratum = CommonStrata.underride;
-    memberModel.strata.delete(stratum);
+    memberModel.strata.delete(CommonStrata.definition);
 
-    memberModel.setTrait(stratum, "name", process.Title);
-    memberModel.setTrait(stratum, "url", this.model.url);
-    memberModel.setTrait(stratum, "identifier", process.Identifier);
-    memberModel.setTrait(stratum, "description", process.Abstract);
-
-    const itemProperties: any = this.model.itemProperties;
-    if (isJsonObject(itemProperties)) {
-      Object.keys(itemProperties).forEach((key: any) => {
-        if (key in memberModel.traits)
-          memberModel.setTrait(stratum, key, itemProperties[key]);
-      });
-    }
+    memberModel.setTrait(CommonStrata.definition, "name", process.Title);
+    memberModel.setTrait(CommonStrata.definition, "url", this.model.url);
+    memberModel.setTrait(
+      CommonStrata.definition,
+      "identifier",
+      process.Identifier
+    );
+    memberModel.setTrait(
+      CommonStrata.definition,
+      "description",
+      process.Abstract
+    );
   }
 
   getOrCreateWPSCatalogFunction(

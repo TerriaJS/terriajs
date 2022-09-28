@@ -10,7 +10,7 @@ import DataPreviewUrl from "./DataPreviewUrl";
 import measureElement from "../HOCs/measureElement";
 import Styles from "./mappable-preview.scss";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
-import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
+import SharePanel from "../Map/Panels/SharePanel/SharePanel";
 import { withTranslation } from "react-i18next";
 import WarningBox from "./WarningBox";
 
@@ -41,7 +41,7 @@ const GroupPreview = observer(
         <div>
           <div
             className={Styles.titleAndShareWrapper}
-            ref={component => (this.refToMeasure = component)}
+            ref={(component) => (this.refToMeasure = component)}
           >
             <h3>{this.props.previewed.name}</h3>
             <div className={Styles.shareLinkWrapper}>

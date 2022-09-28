@@ -1,20 +1,21 @@
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
-import { runInAction } from "mobx";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
-import Icon, { StyledIcon } from "../../../../Styled/Icon";
-import Spacing from "../../../../Styled/Spacing";
-import Text from "../../../../Styled/Text";
-import Box from "../../../../Styled/Box";
-import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToReact";
-import HelpPanelItem from "./HelpPanelItem";
-import Button, { RawButton } from "../../../../Styled/Button";
 import {
   Category,
   HelpAction
 } from "../../../../Core/AnalyticEvents/analyticEvents";
+import Box from "../../../../Styled/Box";
+import Button, { RawButton } from "../../../../Styled/Button";
+import Icon, { StyledIcon } from "../../../../Styled/Icon";
+import Spacing from "../../../../Styled/Spacing";
+import Text from "../../../../Styled/Text";
+import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToReact";
+import { withViewState } from "../../../StandardUserInterface/ViewStateContext";
+import HelpPanelItem from "./HelpPanelItem";
 
 export const HELP_PANEL_ID = "help";
 
@@ -23,7 +24,6 @@ class HelpPanel extends React.Component {
   static displayName = "HelpPanel";
 
   static propTypes = {
-    terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
     theme: PropTypes.object,
     t: PropTypes.func.isRequired
@@ -41,9 +41,17 @@ class HelpPanel extends React.Component {
     setTimeout(() => this.setState({ isAnimatingOpen: false }), 0);
   }
 
+  componentWillUnmount() {
+    // Make sure that retainSharePanel is set to false. This property is used to temporarily disable closing when Share Panel loses focus.
+    // If the Share Panel is open underneath help panel, we now want to allow it to close normally.
+    setTimeout(() => {
+      this.props.viewState.setRetainSharePanel(false);
+    }, 500); // We need to re-enable closing of share panel when loses focus.
+  }
+
   render() {
     const { t } = this.props;
-    const helpItems = this.props.terria.configParameters.helpContent;
+    const helpItems = this.props.viewState.terria.configParameters.helpContent;
     const isExpanded = this.props.viewState.helpPanelExpanded;
     const isAnimatingOpen = this.state.isAnimatingOpen;
     return (
@@ -91,7 +99,7 @@ class HelpPanel extends React.Component {
           <Text medium textDark highlightLinks>
             {parseCustomMarkdownToReact(
               t("helpPanel.menuPaneBody", {
-                supportEmail: this.props.terria.supportEmail
+                supportEmail: this.props.viewState.terria.supportEmail
               })
             )}
           </Text>
@@ -102,7 +110,7 @@ class HelpPanel extends React.Component {
               rounded
               styledMinWidth={"240px"}
               onClick={() => {
-                this.props.terria.analytics?.logEvent(
+                this.props.viewState.terria.analytics?.logEvent(
                   Category.help,
                   HelpAction.takeTour
                 );
@@ -122,7 +130,7 @@ class HelpPanel extends React.Component {
                 large: true
               }}
               css={`
-                ${p => p.theme.addTerriaPrimaryBtnStyles(p)}
+                ${(p) => p.theme.addTerriaPrimaryBtnStyles(p)}
               `}
             >
               {t("helpPanel.takeTour")}
@@ -135,7 +143,7 @@ class HelpPanel extends React.Component {
             <For each="item" index="i" of={helpItems}>
               <HelpPanelItem
                 key={i}
-                terria={this.props.terria}
+                terria={this.props.viewState.terria}
                 viewState={this.props.viewState}
                 content={item}
               />
@@ -147,4 +155,4 @@ class HelpPanel extends React.Component {
   }
 }
 
-export default withTranslation()(withTheme(HelpPanel));
+export default withTranslation()(withViewState(withTheme(HelpPanel)));

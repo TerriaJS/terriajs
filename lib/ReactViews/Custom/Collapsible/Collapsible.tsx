@@ -1,12 +1,13 @@
 "use strict";
 
 import { observer } from "mobx-react";
-import React from "react";
-import Box from "../../../Styled/Box";
+import React, { useEffect, useState } from "react";
+import Box, { IBoxProps } from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
+import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import { SpacingSpan } from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
-import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
+import { parseCustomMarkdownToReactWithOptions } from "../parseCustomMarkdownToReact";
 
 interface CollapsibleIconProps {
   isOpen?: boolean;
@@ -17,96 +18,106 @@ interface CollapsibleIconProps {
   /**
    * caret is default style
    */
-  btnStyle?: "plus" | "caret";
+  btnStyle?: "plus" | "caret" | "checkbox";
 }
 
 interface CollapsibleProps extends CollapsibleIconProps {
   title: string;
 
-  onToggle?: (isOpen: boolean) => void;
+  /** Function is called whenever Collapsible is toggled (close or open).
+   * Return value is `true` if the listener has consumed the event, `false` otherwise.
+   */
+  onToggle?: (isOpen: boolean) => boolean | void;
   btnRight?: boolean;
 
   titleTextProps?: any;
-  bodyBoxProps?: any;
+  bodyBoxProps?: IBoxProps;
   bodyTextProps?: any;
 }
 
-export const CollapseIcon: React.FC<CollapsibleIconProps> = props => (
-  <StyledIcon
-    displayInline
-    styledWidth={"8px"}
-    light={props.light ?? true}
-    glyph={
-      props.btnStyle === "plus"
-        ? props.isOpen
-          ? GLYPHS.minus
-          : GLYPHS.plus
-        : GLYPHS.opened
-    }
-    opacity={props.isOpen ? 1 : 0.4}
-    rotation={props.isOpen ? 0 : -90}
-  />
-);
+export const CollapseIcon: React.FC<CollapsibleIconProps> = (props) => {
+  let glyph = GLYPHS.opened;
+  let glyphWidth = 8;
+  let glyphRotation = 0;
+  let glyphOpacity = 1;
 
-@observer
-export default class Collapsible extends React.Component<
-  CollapsibleProps,
-  { isOpen: boolean }
-> {
-  constructor(props: CollapsibleProps) {
-    super(props);
-    this.state = { isOpen: props.isOpen ?? false };
+  if (props.btnStyle === "plus") {
+    glyph = props.isOpen ? GLYPHS.minus : GLYPHS.plus;
+    glyphOpacity = props.isOpen ? 1 : 0.4;
+  } else if (props.btnStyle === "checkbox") {
+    glyph = props.isOpen ? GLYPHS.checkboxOn : GLYPHS.checkboxOff;
+    glyphWidth = 13;
+  } else {
+    glyphRotation = props.isOpen ? 0 : -90;
+    glyphOpacity = props.isOpen ? 1 : 0.4;
   }
 
-  toggleOpen() {
-    this.setState({ isOpen: !this.state.isOpen });
-    if (this.props.onToggle) this.props.onToggle(!this.state.isOpen);
-  }
+  return (
+    <StyledIcon
+      displayInline
+      styledWidth={`${glyphWidth}px`}
+      light={props.light ?? true}
+      glyph={glyph}
+      opacity={glyphOpacity}
+      rotation={glyphRotation}
+    />
+  );
+};
 
-  render() {
-    return (
-      <React.Fragment>
-        <RawButton
-          fullWidth
-          onClick={this.toggleOpen.bind(this)}
-          css={`
-            text-align: left;
-            display: flex;
-            align-items: center;
-          `}
-          aria-expanded={this.state.isOpen}
-          aria-controls={`${this.props.title}`}
+const Collapsible: React.FC<CollapsibleProps> = observer((props) => {
+  const [isOpen, setIsOpen] = useState<boolean | undefined>();
+
+  useEffect(() => setIsOpen(props.isOpen), [props.isOpen]);
+
+  const toggleOpen = () => {
+    const newIsOpen = !isOpen;
+    // Only update isOpen state if onToggle doesn't consume the event
+    if (!props.onToggle || !props.onToggle(newIsOpen)) setIsOpen(newIsOpen);
+  };
+
+  return (
+    <React.Fragment>
+      <RawButton
+        fullWidth
+        onClick={toggleOpen}
+        css={`
+          text-align: left;
+          display: flex;
+          align-items: center;
+        `}
+        aria-expanded={isOpen}
+        aria-controls={`${props.title}`}
+        activeStyles
+      >
+        {!props.btnRight && <CollapseIcon {...props} isOpen={isOpen} />}
+        {!props.btnRight && <SpacingSpan right={1} />}
+        <TextSpan
+          textLight={props.light ?? true}
+          bold
+          medium
+          {...props.titleTextProps}
         >
-          {!this.props.btnRight && (
-            <CollapseIcon {...this.props} isOpen={this.state.isOpen} />
-          )}
-          {!this.props.btnRight && <SpacingSpan right={2} />}
-          <TextSpan
-            textLight={this.props.light ?? true}
-            bold
-            medium
-            {...this.props.titleTextProps}
+          {parseCustomMarkdownToReactWithOptions(props.title, {
+            inline: true
+          })}
+        </TextSpan>
+        {props.btnRight && <SpacingSpan right={1} />}
+        {props.btnRight && <CollapseIcon {...props} isOpen={isOpen} />}
+      </RawButton>
+      {isOpen ? (
+        <Box {...props.bodyBoxProps}>
+          <Text
+            textLight={props.light ?? true}
+            small
+            id={`${props.title}`}
+            {...props.bodyTextProps}
           >
-            {this.props.title}
-          </TextSpan>
-          {this.props.btnRight && <SpacingSpan right={2} />}
-          {this.props.btnRight && (
-            <CollapseIcon {...this.props} isOpen={this.state.isOpen} />
-          )}
-        </RawButton>
-        <Box {...this.props.bodyBoxProps}>
-          {this.state.isOpen && (
-            <Text
-              textLight={this.props.light ?? true}
-              small
-              id={`${this.props.title}`}
-              {...this.props.bodyTextProps}
-            >
-              {this.props.children}
-            </Text>
-          )}
+            {props.children}
+          </Text>
         </Box>
-      </React.Fragment>
-    );
-  }
-}
+      ) : null}
+    </React.Fragment>
+  );
+});
+
+export default Collapsible;

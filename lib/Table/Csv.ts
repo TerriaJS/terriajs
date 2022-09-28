@@ -61,7 +61,7 @@ export default class Csv {
     filterOutComments: boolean = false,
     options: papaparse.ParseConfig = {}
   ): Promise<string[][]> {
-    return loadWithXhr({ url }).then(csv => {
+    return loadWithXhr({ url }).then((csv: any) => {
       if (typeof csv === "string") {
         return Csv.parseString(csv, columnMajor, filterOutComments, options);
       } else {
@@ -102,17 +102,17 @@ function getParseOptionsRowMajor(
     comments: filterOutComments,
     skipEmptyLines: true,
     worker: useWorker,
-    chunk: function(results, p) {
+    chunk: function (results, p) {
       parser = p;
       const data = results.data;
       for (let i = 0; i < data.length; ++i) {
         result.push(data[i]);
       }
     },
-    complete: function() {
+    complete: function () {
       resolve(result);
     },
-    error: function(e) {
+    error: function (e) {
       // If we did manage to get some data lets use what we've got
       // Perhaps there was an error because there was no Content-Length header
       if (result.length > 0) parser.abort();
@@ -133,7 +133,7 @@ function getParseOptionsColumnMajor(
     comments: filterOutComments,
     skipEmptyLines: true,
     worker: useWorker,
-    chunk: function(results, p) {
+    chunk: function (results, p) {
       parser = p;
       const data = results.data;
       for (let i = 0; i < data.length; ++i) {
@@ -149,10 +149,10 @@ function getParseOptionsColumnMajor(
         }
       }
     },
-    complete: function() {
+    complete: function () {
       resolve(result);
     },
-    error: function(e) {
+    error: function (e) {
       // If we did manage to get some data lets use what we've got
       // Perhaps there was an error because there was no Content-Length header
       if (result.length > 0) parser.abort();

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import Icon from "../../Styled/Icon";
 
 const MoreOrLess = createReactClass({
-  getInitialState: function() {
+  getInitialState: function () {
     return { isOpen: this.props.initialopen };
   },
   displayName: "MoreOrLess",
@@ -12,10 +12,10 @@ const MoreOrLess = createReactClass({
     initialopen: PropTypes.bool,
     myclass: PropTypes.string
   },
-  toggleIcon: function() {
+  toggleIcon: function () {
     this.setState({ isOpen: !this.state.isOpen });
   },
-  render: function() {
+  render: function () {
     return (
       <button
         type="button"

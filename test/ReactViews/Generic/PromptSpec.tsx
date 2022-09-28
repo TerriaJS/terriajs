@@ -8,12 +8,12 @@ const Prompt: any = require("../../../lib/ReactViews/Generic/Prompt").default;
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import Caret from "../../../lib/ReactViews/Generic/Caret";
 
-describe("HelpPrompt", function() {
+describe("HelpPrompt", function () {
   let terria: Terria;
   let viewState: ViewState;
   let testRenderer: any;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -24,8 +24,8 @@ describe("HelpPrompt", function() {
     });
   });
 
-  describe("with basic props, when welcome message is enabled on startup", function() {
-    it("does not render when welcome message is visible", function() {
+  describe("with basic props, when welcome message is enabled on startup", function () {
+    it("does not render when welcome message is visible", function () {
       runInAction(() => {
         terria.configParameters.showWelcomeMessage = true;
         viewState.showWelcomeMessage = true;
@@ -45,7 +45,7 @@ describe("HelpPrompt", function() {
       expect(promptCaret.length).toBeFalsy();
     });
 
-    it("renders when welcome message is not visible", function() {
+    it("renders when welcome message is not visible", function () {
       runInAction(() => {
         terria.configParameters.showWelcomeMessage = true;
         viewState.showWelcomeMessage = false;
@@ -66,8 +66,8 @@ describe("HelpPrompt", function() {
     });
   });
 
-  describe("when welcome message is disabled on startup", function() {
-    it("does not render", function() {
+  describe("when welcome message is disabled on startup", function () {
+    it("does not render", function () {
       runInAction(() => {
         terria.configParameters.showWelcomeMessage = false;
       });

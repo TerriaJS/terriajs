@@ -3,8 +3,7 @@ import { observer } from "mobx-react";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
-import { useTranslationIfExists } from "../../../../Language/languageHelpers";
-import ViewState from "../../../../ReactViewModels/ViewState";
+import { applyTranslationIfExists } from "../../../../Language/languageHelpers";
 import Box, { BoxSpan } from "../../../../Styled/Box";
 import { StyledIcon } from "../../../../Styled/Icon";
 import Spacing from "../../../../Styled/Spacing";
@@ -12,10 +11,10 @@ import Text from "../../../../Styled/Text";
 import { IMapNavigationItem } from "../../../../ViewModels/MapNavigation/MapNavigationModel";
 import CloseButton from "../../../Generic/CloseButton";
 import { PrefaceBox } from "../../../Generic/PrefaceBox";
+import { useViewState } from "../../../StandardUserInterface/ViewStateContext";
 import { filterViewerAndScreenSize } from "../MapNavigation";
 
 interface PropTypes {
-  viewState: ViewState;
   items: IMapNavigationItem[];
 }
 
@@ -34,7 +33,7 @@ const CollapsedNavigationBox = styled(Box).attrs({
   top: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.12), 0 10px 20px 0 rgba(0, 0, 0, 0.05);
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${(props) => props.theme.mobile}px) {
     width: 100%;
   }
 `;
@@ -54,7 +53,7 @@ const NavigationButton = styled(BoxSpan).attrs({
 })`
   cursor: pointer;
   &:hover {
-    border: 2px solid ${p => p.theme.darkWithOverlay};
+    border: 2px solid ${(p) => p.theme.darkWithOverlay};
     svg {
       opacity: 0.9;
     }
@@ -66,7 +65,7 @@ const NavigationButton = styled(BoxSpan).attrs({
     width: 0;
     padding-bottom: 100%;
   }
-  ${props =>
+  ${(props) =>
     props.disabled &&
     `
     background-color: ${props.theme.grey};
@@ -83,9 +82,9 @@ const NavigationButton = styled(BoxSpan).attrs({
 
 const CollapsedNavigationPanel: React.FC<PropTypes> = observer(
   (props: PropTypes) => {
-    const { viewState } = props;
+    const viewState = useViewState();
     const theme = useTheme();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     let items = props.items;
     return (
       <CollapsedNavigationBox column>
@@ -99,10 +98,10 @@ const CollapsedNavigationPanel: React.FC<PropTypes> = observer(
         </Text>
         <Spacing bottom={5} />
         <ButtonsBox>
-          {items.map(item => (
+          {items.map((item) => (
             <NavigationButton
               key={item.id}
-              title={useTranslationIfExists(item.name)}
+              title={applyTranslationIfExists(item.name, i18n)}
               onClick={() => {
                 if (!item.controller.disabled) {
                   viewState.closeCollapsedNavigation();
@@ -111,7 +110,7 @@ const CollapsedNavigationPanel: React.FC<PropTypes> = observer(
               }}
               css={`
                 ${item.controller.active &&
-                  `border: 2px solid ${theme.colorPrimary};`}
+                `border: 2px solid ${theme.colorPrimary};`}
               `}
               disabled={item.controller.disabled}
             >
@@ -129,44 +128,40 @@ const CollapsedNavigationPanel: React.FC<PropTypes> = observer(
 );
 
 const CollapsedNavigationDisplayName = "CollapsedNavigation";
-const CollapsedNavigation: React.FC<{ viewState: ViewState }> = observer(
-  ({ viewState }) => {
-    useEffect(() =>
-      autorun(() => {
-        if (
-          viewState.showCollapsedNavigation &&
-          viewState.topElement !== CollapsedNavigationDisplayName
-        ) {
-          viewState.setTopElement(CollapsedNavigationDisplayName);
-        }
-      })
-    );
+const CollapsedNavigation: React.FC = observer(() => {
+  const viewState = useViewState();
+  useEffect(() =>
+    autorun(() => {
+      if (
+        viewState.showCollapsedNavigation &&
+        viewState.topElement !== CollapsedNavigationDisplayName
+      ) {
+        viewState.setTopElement(CollapsedNavigationDisplayName);
+      }
+    })
+  );
 
-    let items = viewState.terria.mapNavigationModel.items.filter(
-      item => item.controller.collapsed
-    );
-    items = items.filter(item => filterViewerAndScreenSize(item, viewState));
+  let items = viewState.terria.mapNavigationModel.items.filter(
+    (item) => item.controller.collapsed
+  );
+  items = items.filter((item) => filterViewerAndScreenSize(item, viewState));
 
-    if (!viewState.showCollapsedNavigation || items.length === 0) {
-      viewState.closeCollapsedNavigation();
-      return null;
-    }
-
-    return (
-      <>
-        <PrefaceBox
-          onClick={() => viewState.closeCollapsedNavigation()}
-          role="presentation"
-          aria-hidden="true"
-          pseudoBg
-        ></PrefaceBox>
-        <CollapsedNavigationPanel
-          viewState={viewState}
-          items={items}
-        ></CollapsedNavigationPanel>
-      </>
-    );
+  if (!viewState.showCollapsedNavigation || items.length === 0) {
+    viewState.closeCollapsedNavigation();
+    return null;
   }
-);
+
+  return (
+    <>
+      <PrefaceBox
+        onClick={() => viewState.closeCollapsedNavigation()}
+        role="presentation"
+        aria-hidden="true"
+        pseudoBg
+      ></PrefaceBox>
+      <CollapsedNavigationPanel items={items}></CollapsedNavigationPanel>
+    </>
+  );
+});
 
 export default CollapsedNavigation;

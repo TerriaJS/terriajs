@@ -2,13 +2,13 @@ import { computed, observable, reaction } from "mobx";
 import isDefined from "../../Core/isDefined";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import CommonStrata from "../Definition/CommonStrata";
-import { DimensionOption } from "../SelectableDimensions";
+import { EnumDimensionOption } from "../SelectableDimensions/SelectableDimensions";
 import FunctionParameter, {
   Options as FunctionParameterOptions
 } from "./FunctionParameter";
 
 interface Options extends FunctionParameterOptions {
-  options: DimensionOption[];
+  options: EnumDimensionOption[];
 }
 
 export default class EnumerationParameter extends FunctionParameter<string> {
@@ -16,7 +16,7 @@ export default class EnumerationParameter extends FunctionParameter<string> {
   readonly type = "enumeration";
 
   @observable
-  readonly options: DimensionOption[];
+  readonly options: EnumDimensionOption[];
 
   constructor(catalogFunction: CatalogFunctionMixin, options: Options) {
     super(catalogFunction, options);
@@ -44,6 +44,6 @@ export default class EnumerationParameter extends FunctionParameter<string> {
       return !this.isRequired;
     }
 
-    return isDefined(this.options.find(option => option.id === this.value));
+    return isDefined(this.options.find((option) => option.id === this.value));
   }
 }

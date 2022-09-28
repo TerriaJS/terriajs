@@ -1,3 +1,4 @@
+import { get as _get } from "lodash-es";
 import { computed, IReactionDisposer, observable, runInAction } from "mobx";
 import { createTransformer, ITransformer } from "mobx-utils";
 import Pbf from "pbf";
@@ -15,8 +16,10 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
+import ColorBlendMode from "terriajs-cesium/Source/Scene/ColorBlendMode";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
-import URI from "urijs";
+import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
+import isDefined from "../../../Core/isDefined";
 import loadArrayBuffer from "../../../Core/loadArrayBuffer";
 import TerriaError from "../../../Core/TerriaError";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
@@ -151,9 +154,8 @@ export default class GtfsCatalogItem extends MappableMixin(
     this._dataSource.entities.suspendEvents();
 
     // Convert the GTFS protobuf into a more useful shape
-    const vehicleData: VehicleData[] = this.convertManyFeedEntitiesToBillboardData(
-      this.gtfsFeedEntities
-    );
+    const vehicleData: VehicleData[] =
+      this.convertManyFeedEntitiesToBillboardData(this.gtfsFeedEntities);
     for (let data of vehicleData) {
       if (data.sourceId === undefined) {
         continue;
@@ -163,8 +165,30 @@ export default class GtfsCatalogItem extends MappableMixin(
         data.sourceId
       );
 
-      if (!entity.model && this._model) {
-        entity.model = this._model;
+      if (!entity.model) {
+        if (this._coloredModels) {
+          const gtfsEntity: FeedEntity = data.featureInfo?.get("entity");
+          const value = _get(
+            gtfsEntity,
+            this.model.colorModelsByProperty.property!
+          );
+          if (value !== undefined) {
+            const index =
+              this.model.colorModelsByProperty.colorGroups.findIndex(
+                (colorGroup) =>
+                  colorGroup.regExp !== undefined &&
+                  new RegExp(colorGroup.regExp).test(value)
+              );
+            if (index !== -1) {
+              entity.model = this._coloredModels[index];
+            }
+            entity.point = undefined;
+          } else {
+            entity.model = this._model;
+          }
+        } else if (this._model) {
+          entity.model = this._model;
+        }
       }
 
       if (
@@ -231,11 +255,11 @@ export default class GtfsCatalogItem extends MappableMixin(
 
     // remove entities that no longer exist
     if (this._dataSource.entities.values.length > vehicleData.length) {
-      const idSet = new Set(vehicleData.map(val => val.sourceId));
+      const idSet = new Set(vehicleData.map((val) => val.sourceId));
 
       this._dataSource.entities.values
-        .filter(entity => !idSet.has(entity.id))
-        .forEach(entity => this._dataSource.entities.remove(entity));
+        .filter((entity) => !idSet.has(entity.id))
+        .forEach((entity) => this._dataSource.entities.remove(entity));
     }
 
     this._dataSource.entities.resumeEvents();
@@ -279,17 +303,41 @@ export default class GtfsCatalogItem extends MappableMixin(
       uri: new ConstantProperty(this.model.url),
       upAxis: new ConstantProperty(this._cesiumUpAxis),
       forwardAxis: new ConstantProperty(this._cesiumForwardAxis),
-      scale: new ConstantProperty(
-        this.model.scale !== undefined ? this.model.scale : 1
-      ),
+      scale: new ConstantProperty(this.model.scale ?? 1),
       heightReference: new ConstantProperty(HeightReference.RELATIVE_TO_GROUND),
       distanceDisplayCondition: new ConstantProperty({
         near: 0.0,
         far: this.model.maximumDistance
-      })
+      }),
+      maximumScale: new ConstantProperty(this.model.maximumScale),
+      minimumPixelSize: new ConstantProperty(this.model.minimumPixelSize ?? 0),
+      shadows: ShadowMode.DISABLED
     };
 
     return new ModelGraphics(options);
+  }
+
+  @computed
+  private get _coloredModels() {
+    const colorGroups = this.model?.colorModelsByProperty?.colorGroups;
+    const model = this._model;
+    if (
+      !isDefined(model) ||
+      !isDefined(this.model?.colorModelsByProperty?.property) ||
+      !isDefined(colorGroups) ||
+      colorGroups.length === 0
+    ) {
+      return undefined;
+    }
+    return colorGroups.map(({ color }) => {
+      const coloredModel = model.clone();
+      coloredModel.color = new ConstantProperty(
+        Color.fromCssColorString(color ?? "white")
+      );
+      coloredModel.colorBlendMode = new ConstantProperty(ColorBlendMode.MIX);
+      coloredModel.colorBlendAmount = new ConstantProperty(0.7);
+      return coloredModel;
+    });
   }
 
   constructor(
@@ -306,7 +354,7 @@ export default class GtfsCatalogItem extends MappableMixin(
 
   protected forceLoadMapItems(): Promise<void> {
     if (this.strata.get(GtfsStratum.stratumName) === undefined) {
-      GtfsStratum.load(this).then(stratum => {
+      GtfsStratum.load(this).then((stratum) => {
         runInAction(() => {
           this.strata.set(GtfsStratum.stratumName, stratum);
         });
@@ -339,8 +387,10 @@ export default class GtfsCatalogItem extends MappableMixin(
       "Cache-Control": "no-cache"
     };
 
-    if (this.apiKey !== undefined) {
-      headers.Authorization = `apikey ${this.apiKey}`;
+    if (this.headers !== undefined) {
+      this.headers.forEach(({ name, value }) => {
+        if (name !== undefined && value !== undefined) headers[name] = value;
+      });
     }
 
     if (this.url !== null && this.url !== undefined) {
@@ -403,9 +453,7 @@ export default class GtfsCatalogItem extends MappableMixin(
 
     if (this.image !== undefined && this.image !== null) {
       billboard = new BillboardGraphics({
-        image: new ConstantProperty(
-          new URI(this.image).absoluteTo(this.terria.baseUrl).toString()
-        ),
+        image: new ConstantProperty(this.image),
         heightReference: new ConstantProperty(
           HeightReference.RELATIVE_TO_GROUND
         ),

@@ -1,3 +1,4 @@
+import { BBox } from "@turf/helpers";
 import groupBy from "lodash-es/groupBy";
 import { computed } from "mobx";
 import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
@@ -5,23 +6,28 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
-import ConstantColorMap from "../Map/ConstantColorMap";
-import ConstantPointSizeMap from "../Map/ConstantPointSizeMap";
-import DiscreteColorMap from "../Map/DiscreteColorMap";
-import EnumColorMap from "../Map/EnumColorMap";
-import PointSizeMap from "../Map/PointSizeMap";
-import ScalePointSizeMap from "../Map/ScalePointSizeMap";
+import { isJsonNumber } from "../Core/Json";
+import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
+import DiscreteColorMap from "../Map/ColorMap/DiscreteColorMap";
+import EnumColorMap from "../Map/ColorMap/EnumColorMap";
+import ConstantPointSizeMap from "../Map/SizeMap/ConstantPointSizeMap";
+import PointSizeMap from "../Map/SizeMap/PointSizeMap";
+import ScalePointSizeMap from "../Map/SizeMap/ScalePointSizeMap";
 import TableMixin from "../ModelMixins/TableMixin";
+import CommonStrata from "../Models/Definition/CommonStrata";
 import createCombinedModel from "../Models/Definition/createCombinedModel";
 import Model from "../Models/Definition/Model";
 import TableChartStyleTraits from "../Traits/TraitsClasses/TableChartStyleTraits";
 import TableColorStyleTraits from "../Traits/TraitsClasses/TableColorStyleTraits";
+import { OutlineSymbolTraits } from "../Traits/TraitsClasses/TableOutlineStyleTraits";
 import TablePointSizeStyleTraits from "../Traits/TraitsClasses/TablePointSizeStyleTraits";
+import { PointSymbolTraits } from "../Traits/TraitsClasses/TablePointStyleTraits";
 import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
 import TableTimeStyleTraits from "../Traits/TraitsClasses/TableTimeStyleTraits";
 import TableColorMap from "./TableColorMap";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
+import TableStyleMap from "./TableStyleMap";
 
 const DEFAULT_FINAL_DURATION_SECONDS = 3600 * 24 - 1; // one day less a second, if there is only one date.
 
@@ -31,8 +37,8 @@ const DEFAULT_FINAL_DURATION_SECONDS = 3600 * 24 - 1; // one day less a second, 
 export default class TableStyle {
   /**
    *
-   * @param tableModel TableMixin catalog memeber
-   * @param styleNumber Index of column in tablemodel (if undefined, then default style will be used)
+   * @param tableModel TableMixin catalog member
+   * @param styleNumber Index of styleTraits in tableModel (if undefined, then default style will be used)
    */
   constructor(
     readonly tableModel: TableMixin.Instance,
@@ -54,7 +60,7 @@ export default class TableStyle {
       this.colorColumn,
       this.pointSizeColumn,
       ...(this.idColumns ?? [])
-    ]).every(col => col.ready);
+    ]).every((col) => col.ready);
   }
 
   /**
@@ -62,14 +68,19 @@ export default class TableStyle {
    */
   @computed
   get id(): string {
-    return this.styleTraits.id || "Style" + this.styleNumber;
+    return (
+      this.styleTraits.id ??
+      (isDefined(this.styleNumber)
+        ? "Style" + this.styleNumber
+        : "Default Style")
+    );
   }
 
   @computed
   get title(): string {
     return (
       this.styleTraits.title ??
-      this.tableModel.tableColumns.find(col => col.name === this.id)?.title ??
+      this.tableModel.tableColumns.find((col) => col.name === this.id)?.title ??
       this.id
     );
   }
@@ -109,6 +120,25 @@ export default class TableStyle {
     }
   }
 
+  /** Is style "custom" - that is - has the style been created/modified by the user (either directly, or indirectly through a share link).
+   */
+  @computed get isCustom() {
+    const userStrata = this.colorTraits.strata.get(CommonStrata.user);
+    if (!userStrata) return false;
+
+    return (
+      (userStrata.binColors ?? [])?.length > 0 ||
+      (userStrata.binMaximums ?? [])?.length > 0 ||
+      (userStrata.enumColors ?? [])?.length > 0 ||
+      isDefined(userStrata.numberOfBins) ||
+      isDefined(userStrata.minimumValue) ||
+      isDefined(userStrata.maximumValue) ||
+      isDefined(userStrata.regionColor) ||
+      isDefined(userStrata.nullColor) ||
+      isDefined(userStrata.outlierColor)
+    );
+  }
+
   /**
    * Gets the {@link TableColorStyleTraits} from the {@link #styleTraits}.
    * Returns a default instance of no color traits are specified explicitly.
@@ -145,6 +175,58 @@ export default class TableStyle {
     return this.styleTraits.time;
   }
 
+  /** Compute rectangle for point (lat/long) based table styles */
+  @computed get rectangle() {
+    if (this.isPoints()) {
+      const bounds: BBox = [Infinity, Infinity, -Infinity, -Infinity];
+
+      if (this.longitudeColumn && this.latitudeColumn) {
+        for (let i = 0; i < this.longitudeColumn.values.length; i++) {
+          const long = this.longitudeColumn.valuesAsNumbers.values[i];
+          const lat = this.latitudeColumn.valuesAsNumbers.values[i];
+          if (isJsonNumber(long) && isJsonNumber(lat)) {
+            if (bounds[0] > long) {
+              bounds[0] = long;
+            }
+            if (bounds[1] > lat) {
+              bounds[1] = lat;
+            }
+            if (bounds[2] < long) {
+              bounds[2] = long;
+            }
+            if (bounds[3] < lat) {
+              bounds[3] = lat;
+            }
+          }
+        }
+      }
+
+      // If bbox has no width or height - add crude buffer of .2 degrees
+      if (bounds[0] === bounds[2]) {
+        bounds[0] -= 0.1;
+        bounds[2] += 0.1;
+      }
+
+      if (bounds[1] === bounds[3]) {
+        bounds[1] -= 0.1;
+        bounds[3] += 0.1;
+      }
+
+      if (
+        bounds[0] !== Infinity &&
+        bounds[1] !== Infinity &&
+        bounds[2] !== -Infinity &&
+        bounds[3] !== -Infinity
+      )
+        return {
+          west: bounds[0],
+          south: bounds[1],
+          east: bounds[2],
+          north: bounds[3]
+        };
+    }
+  }
+
   /**
    * Gets the longitude column for this style, if any.
    */
@@ -178,7 +260,7 @@ export default class TableStyle {
   get idColumns(): TableColumn[] | undefined {
     const idColumns = filterOutUndefined(
       this.timeTraits.idColumns
-        ? this.timeTraits.idColumns.map(name => this.resolveColumn(name))
+        ? this.timeTraits.idColumns.map((name) => this.resolveColumn(name))
         : []
     );
     return idColumns.length > 0 ? idColumns : undefined;
@@ -223,7 +305,8 @@ export default class TableStyle {
    */
   @computed
   get pointSizeColumn(): TableColumn | undefined {
-    return this.resolveColumn(this.pointSizeTraits.pointSizeColumn);
+    const col = this.resolveColumn(this.pointSizeTraits.pointSizeColumn);
+    if (col?.type === TableColumnType.scalar) return col;
   }
 
   /**
@@ -294,6 +377,22 @@ export default class TableStyle {
     return this.tableColorMap.colorMap;
   }
 
+  @computed get pointStyleMap() {
+    return new TableStyleMap<PointSymbolTraits>(
+      this.tableModel,
+      this.styleTraits,
+      "point"
+    );
+  }
+
+  @computed get outlineStyleMap() {
+    return new TableStyleMap<OutlineSymbolTraits>(
+      this.tableModel,
+      this.styleTraits,
+      "outline"
+    );
+  }
+
   @computed
   get pointSizeMap(): PointSizeMap {
     const pointSizeColumn = this.pointSizeColumn;
@@ -357,13 +456,13 @@ export default class TableStyle {
   @computed get moreThanOneTimeInterval() {
     if (this.timeIntervals) {
       // Find first non-null time interval
-      const firstInterval = this.timeIntervals?.find(t => t) as
+      const firstInterval = this.timeIntervals?.find((t) => t) as
         | TimeInterval
         | undefined;
       if (firstInterval) {
         // Does there exist an interval which is different from firstInterval (that is to say, does there exist at least two unique intervals)
         return !!this.timeIntervals?.find(
-          t =>
+          (t) =>
             t &&
             (!firstInterval.start.equals(t.start) ||
               !firstInterval.stop.equals(t.stop))
@@ -405,7 +504,7 @@ export default class TableStyle {
       if (this.timeTraits.spreadStartTime) {
         // Find row ID with earliest date in this rowGroup
         const firstRowId = rowIds
-          .filter(id => filteredStartDates[id])
+          .filter((id) => filteredStartDates[id])
           .sort((idA, idB) =>
             JulianDate.compare(
               filteredStartDates[idA]!,
@@ -461,13 +560,13 @@ export default class TableStyle {
     for (let i = 0; i < this.rowGroups.length; i++) {
       const rowIds = this.rowGroups[i][1];
       const sortedStartDates = sortedUniqueDates(
-        rowIds.map(id => timeColumn.valuesAsJulianDates.values[id])
+        rowIds.map((id) => timeColumn.valuesAsJulianDates.values[id])
       );
       const finalDuration =
         estimateFinalDurationSeconds(sortedStartDates) ??
         DEFAULT_FINAL_DURATION_SECONDS;
 
-      const startDatesForGroup = rowIds.map(id => startDates[id]);
+      const startDatesForGroup = rowIds.map((id) => startDates[id]);
       const finishDatesForGroup = this.calculateFinishDatesFromStartDates(
         startDatesForGroup,
         finalDuration
@@ -499,9 +598,9 @@ export default class TableStyle {
 
     return (
       Object.entries(
-        groupBy(tableRowIds, rowId =>
+        groupBy(tableRowIds, (rowId) =>
           groupByCols!
-            .map(col => {
+            .map((col) => {
               // If using region column as ID - only use valid regions
               if (col.type === TableColumnType.region) {
                 return col.valuesAsRegions.regionIds[rowId];
@@ -512,8 +611,52 @@ export default class TableStyle {
         )
       )
         // Filter out bad IDs
-        .filter(value => value[0] !== "")
+        .filter((value) => value[0] !== "")
     );
+  }
+
+  @computed get numberFormatOptions(): Intl.NumberFormatOptions | undefined {
+    const colorColumn = this.colorColumn;
+    if (colorColumn?.traits?.format)
+      return colorColumn?.traits?.format as Intl.NumberFormatOptions;
+
+    let min =
+      this.tableColorMap.minimumValue ?? colorColumn?.valuesAsNumbers.minimum;
+    let max =
+      this.tableColorMap.maximumValue ?? colorColumn?.valuesAsNumbers.maximum;
+
+    if (
+      colorColumn &&
+      colorColumn.type === TableColumnType.scalar &&
+      isDefined(min) &&
+      isDefined(max)
+    ) {
+      if (max - min === 0) return;
+
+      // We want to show fraction digits depending on how small difference is between min and max.
+      // This also takes into consideration the default number of legend items - 7
+      // So we add an extra digit
+      // For example:
+      // - if difference is 10 - we want to show one fraction digit
+      // - if difference is 1 - we want to show two fraction digits
+      // - if difference is 0.1 - we want to show three fraction digits
+
+      // log_10(20/x) achieves this (where x is difference between min and max)
+      // https://www.wolframalpha.com/input/?i=log_10%2820%2Fx%29
+      // We use 20 here instead of 10 to give us a more conservative value (that is, we may show an extra fraction digit even if it is not needed)
+      // So when x >= 20 - we will not show any fraction digits
+
+      // Clamp values between 0 and 5
+      let fractionDigits = Math.max(
+        0,
+        Math.min(5, Math.ceil(Math.log10(20 / Math.abs(max - min))))
+      );
+
+      return {
+        maximumFractionDigits: fractionDigits,
+        minimumFractionDigits: fractionDigits
+      };
+    }
   }
 
   /**
@@ -569,11 +712,11 @@ export default class TableStyle {
     return finishDates;
   }
 
-  private resolveColumn(name: string | undefined): TableColumn | undefined {
+  resolveColumn(name: string | undefined): TableColumn | undefined {
     if (name === undefined) {
       return undefined;
     }
-    return this.tableModel.tableColumns.find(column => column.name === name);
+    return this.tableModel.tableColumns.find((column) => column.name === name);
   }
 }
 

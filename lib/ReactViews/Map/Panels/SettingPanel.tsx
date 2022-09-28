@@ -5,9 +5,10 @@ import Slider from "rc-slider";
 import React, { ChangeEvent, ComponentProps, MouseEvent } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
 import Cesium from "../../../Models/Cesium";
-import DefaultTimelineModel from "../../../Models/DefaultTimelineModel";
+import { BaseModel } from "../../../Models/Definition/Model";
 import Terria from "../../../Models/Terria";
 import ViewerMode, {
   MapViewers,
@@ -58,8 +59,10 @@ class SettingPanel extends React.Component<PropTypes> {
       : "(None)";
   }
 
-  selectBaseMap(baseMap: any, event: MouseEvent<HTMLButtonElement>) {
+  selectBaseMap(baseMap: BaseModel, event: MouseEvent<HTMLButtonElement>) {
     event.stopPropagation();
+    if (!MappableMixin.isMixedInto(baseMap)) return;
+
     this.props.terria.mainViewer.setBaseMap(baseMap);
     // this.props.terria.baseMapContrastColor = baseMap.contrastColor;
 
@@ -105,15 +108,15 @@ class SettingPanel extends React.Component<PropTypes> {
 
     switch (side) {
       case sides.left:
-        this.props.terria.terrainSplitDirection = ImagerySplitDirection.LEFT;
+        this.props.terria.terrainSplitDirection = SplitDirection.LEFT;
         this.props.terria.showSplitter = true;
         break;
       case sides.right:
-        this.props.terria.terrainSplitDirection = ImagerySplitDirection.RIGHT;
+        this.props.terria.terrainSplitDirection = SplitDirection.RIGHT;
         this.props.terria.showSplitter = true;
         break;
       case sides.both:
-        this.props.terria.terrainSplitDirection = ImagerySplitDirection.NONE;
+        this.props.terria.terrainSplitDirection = SplitDirection.NONE;
         break;
     }
 
@@ -123,8 +126,8 @@ class SettingPanel extends React.Component<PropTypes> {
   @action
   toggleDepthTestAgainstTerrainEnabled(event: ChangeEvent<HTMLInputElement>) {
     event.stopPropagation();
-    this.props.terria.depthTestAgainstTerrainEnabled = !this.props.terria
-      .depthTestAgainstTerrainEnabled;
+    this.props.terria.depthTestAgainstTerrainEnabled =
+      !this.props.terria.depthTestAgainstTerrainEnabled;
     this.props.terria.currentViewer.notifyRepaintRequired();
   }
 
@@ -207,23 +210,18 @@ class SettingPanel extends React.Component<PropTypes> {
     let currentSide = sides.both;
     if (supportsSide) {
       switch (this.props.terria.terrainSplitDirection) {
-        case ImagerySplitDirection.LEFT:
+        case SplitDirection.LEFT:
           currentSide = sides.left;
           break;
-        case ImagerySplitDirection.RIGHT:
+        case SplitDirection.RIGHT:
           currentSide = sides.right;
           break;
       }
     }
 
     const timelineStack = this.props.terria.timelineStack;
-    const alwaysShowTimeline =
-      timelineStack.defaultTimeVarying !== undefined &&
-      timelineStack.defaultTimeVarying.startTimeAsJulianDate !== undefined &&
-      timelineStack.defaultTimeVarying.stopTimeAsJulianDate !== undefined &&
-      timelineStack.defaultTimeVarying.currentTimeAsJulianDate !== undefined;
 
-    const alwaysShowTimelineLabel = alwaysShowTimeline
+    const alwaysShowTimelineLabel = timelineStack.alwaysShowingTimeline
       ? t("settingPanel.timeline.alwaysShowLabel")
       : t("settingPanel.timeline.hideLabel");
 
@@ -305,13 +303,13 @@ class SettingPanel extends React.Component<PropTypes> {
                 </Text>
               </Box>
               <FlexGrid gap={1} elementsNo={4}>
-                {this.props.terria.baseMapsModel.baseMapItems.map(baseMap => (
+                {this.props.terria.baseMapsModel.baseMapItems.map((baseMap) => (
                   <StyledBasemapButton
                     key={baseMap.item?.uniqueId}
                     isActive={
                       baseMap.item === this.props.terria.mainViewer.baseMap
                     }
-                    onClick={event => this.selectBaseMap(baseMap.item, event)}
+                    onClick={(event) => this.selectBaseMap(baseMap.item, event)}
                     onMouseEnter={this.mouseEnterBaseMap.bind(this, baseMap)}
                     onMouseLeave={this.mouseLeaveBaseMap.bind(this, baseMap)}
                     onFocus={this.mouseEnterBaseMap.bind(this, baseMap)}
@@ -344,19 +342,12 @@ class SettingPanel extends React.Component<PropTypes> {
               <Checkbox
                 textProps={{ small: true }}
                 id="alwaysShowTimeline"
-                isChecked={alwaysShowTimeline}
+                isChecked={timelineStack.alwaysShowingTimeline}
                 title={alwaysShowTimelineLabel}
                 onChange={() => {
-                  runInAction(() => {
-                    if (alwaysShowTimeline) {
-                      this.props.terria.timelineStack.defaultTimeVarying = undefined;
-                    } else {
-                      this.props.terria.timelineStack.defaultTimeVarying = new DefaultTimelineModel(
-                        "defaultTimeVarying",
-                        this.props.terria
-                      );
-                    }
-                  });
+                  timelineStack.setAlwaysShowTimeline(
+                    !timelineStack.alwaysShowingTimeline
+                  );
                 }}
               >
                 <TextSpan>{t("settingPanel.timeline.alwaysShow")}</TextSpan>
@@ -392,7 +383,7 @@ class SettingPanel extends React.Component<PropTypes> {
                     max={3}
                     step={0.1}
                     value={this.props.terria.baseMaximumScreenSpaceError}
-                    onChange={val =>
+                    onChange={(val) =>
                       this.onBaseMaximumScreenSpaceErrorChange(val)
                     }
                     marks={{ 2: "" }}
@@ -424,10 +415,10 @@ type IFlexGrid = {
 };
 
 const FlexGrid = styled(Box).attrs({ flexWrap: true })<IFlexGrid>`
-  gap: ${props => props.gap * 5}px;
+  gap: ${(props) => props.gap * 5}px;
   > * {
-    flex: ${props => `1 0 ${getCalcWidth(props.elementsNo, props.gap)}`};
-    max-width: ${props => getCalcWidth(props.elementsNo, props.gap)};
+    flex: ${(props) => `1 0 ${getCalcWidth(props.elementsNo, props.gap)}`};
+    max-width: ${(props) => getCalcWidth(props.elementsNo, props.gap)};
   }
 `;
 const getCalcWidth = (elementsNo: number, gap: number) =>
@@ -438,16 +429,16 @@ type IButtonProps = {
 };
 
 const SettingsButton = styled(Button)<IButtonProps>`
-  background-color: ${props => props.theme.overlay};
+  background-color: ${(props) => props.theme.overlay};
   border: 1px solid
-    ${props => (props.isActive ? "rgba(255, 255, 255, 0.5)" : "transparent")};
+    ${(props) => (props.isActive ? "rgba(255, 255, 255, 0.5)" : "transparent")};
 `;
 
 const StyledBasemapButton = styled(RawButton)<IButtonProps>`
   border-radius: 4px;
   position: relative;
   border: 2px solid
-    ${props =>
+    ${(props) =>
       props.isActive ? props.theme.turquoiseBlue : "rgba(255, 255, 255, 0.5)"};
 `;
 

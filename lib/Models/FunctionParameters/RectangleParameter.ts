@@ -3,7 +3,7 @@ import FunctionParameter, {
   Options as FunctionParameterOptions
 } from "./FunctionParameter";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
-const Reproject = require("../../Map/Reproject");
+const Reproject = require("../../Map/Vector/Reproject");
 
 interface Options extends FunctionParameterOptions {
   crs?: string;
@@ -16,9 +16,7 @@ export type RectangleCoordinates = {
   north: number;
 };
 
-export default class RectangleParameter extends FunctionParameter<
-  RectangleCoordinates
-> {
+export default class RectangleParameter extends FunctionParameter<RectangleCoordinates> {
   static readonly type = "rectangle";
   readonly type = "rectangle";
 

@@ -155,7 +155,7 @@ export class FeatureServerStratum extends LoadableStratum(
   @computed
   get members(): ModelReference[] {
     return filterOutUndefined(
-      this.layers.map(layer => {
+      this.layers.map((layer) => {
         if (!isDefined(layer.id)) {
           return undefined;
         }
@@ -171,7 +171,7 @@ export class FeatureServerStratum extends LoadableStratum(
 
   @action
   createMembersFromLayers() {
-    this.layers.forEach(layer => this.createMemberFromLayer(layer));
+    this.layers.forEach((layer) => this.createMemberFromLayer(layer));
   }
 
   @action
@@ -199,14 +199,16 @@ export class FeatureServerStratum extends LoadableStratum(
     }
 
     // Replace the stratum inherited from the parent group.
-    const stratum = CommonStrata.underride;
+    model.strata.delete(CommonStrata.definition);
 
-    model.strata.delete(stratum);
-
-    model.setTrait(stratum, "name", replaceUnderscores(layer.name));
+    model.setTrait(
+      CommonStrata.definition,
+      "name",
+      replaceUnderscores(layer.name)
+    );
 
     var uri = new URI(this._catalogGroup.url).segment(layer.id + ""); // Convert layer id to string as segment(0) means sthg different.
-    model.setTrait(stratum, "url", uri.toString());
+    model.setTrait(CommonStrata.definition, "url", uri.toString());
   }
 }
 
@@ -228,7 +230,7 @@ export default class ArcGisFeatureServerCatalogGroup extends UrlMixin(
   }
 
   protected forceLoadMetadata(): Promise<void> {
-    return FeatureServerStratum.load(this).then(stratum => {
+    return FeatureServerStratum.load(this).then((stratum) => {
       runInAction(() => {
         this.strata.set(FeatureServerStratum.stratumName, stratum);
       });

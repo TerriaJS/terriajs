@@ -7,7 +7,9 @@ import ChartPointOnMapTraits from "./ChartPointOnMapTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import ExportableTraits from "./ExportableTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
-import RasterLayerTraits from "./RasterLayerTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
+import OpacityTraits from "./OpacityTraits";
+import SplitterTraits from "./SplitterTraits";
 import TableColumnTraits from "./TableColumnTraits";
 import TableStyleTraits from "./TableStyleTraits";
 
@@ -15,8 +17,10 @@ export default class TableTraits extends mixTraits(
   DiscretelyTimeVaryingTraits,
   ExportableTraits,
   LayerOrderingTraits,
-  RasterLayerTraits,
-  ChartPointOnMapTraits
+  OpacityTraits,
+  SplitterTraits,
+  ChartPointOnMapTraits,
+  LegendOwnerTraits
 ) {
   // Not implemented in v8
   @primitiveTrait({

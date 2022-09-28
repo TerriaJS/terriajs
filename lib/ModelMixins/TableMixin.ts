@@ -1,42 +1,55 @@
 import i18next from "i18next";
-import { action, computed, observable, runInAction } from "mobx";
+import {
+  action,
+  computed,
+  isObservableArray,
+  observable,
+  runInAction
+} from "mobx";
 import { createTransformer, ITransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
+import { JsonObject } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
-import makeRealPromise from "../Core/makeRealPromise";
 import TerriaError from "../Core/TerriaError";
-import ConstantColorMap from "../Map/ConstantColorMap";
-import RegionProviderList from "../Map/RegionProviderList";
+import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
+import RegionProvider from "../Map/Region/RegionProvider";
+import RegionProviderList from "../Map/Region/RegionProviderList";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
+import TerriaFeature from "../Models/Feature/Feature";
+import FeatureInfoContext from "../Models/Feature/FeatureInfoContext";
 import SelectableDimensions, {
-  SelectableDimension
-} from "../Models/SelectableDimensions";
+  SelectableDimension,
+  SelectableDimensionEnum,
+  SelectableDimensionGroup
+} from "../Models/SelectableDimensions/SelectableDimensions";
+import ViewingControls, { ViewingControl } from "../Models/ViewingControls";
+import * as SelectableDimensionWorkflow from "../Models/Workflows/SelectableDimensionWorkflow";
+import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
+import Icon from "../Styled/Icon";
 import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
 import createRegionMappedImageryProvider from "../Table/createRegionMappedImageryProvider";
-import { ColorStyleLegend } from "../Table/TableAutomaticStylesStratum";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
+import { tableFeatureInfoContext } from "../Table/tableFeatureInfoContext";
+import TableFeatureInfoStratum from "../Table/TableFeatureInfoStratum";
+import { TableAutomaticLegendStratum } from "../Table/TableLegendStratum";
 import TableStyle from "../Table/TableStyle";
 import TableTraits from "../Traits/TraitsClasses/TableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
-import ChartableMixin, {
-  calculateDomain,
-  ChartAxis,
-  ChartItem
-} from "./ChartableMixin";
+import { calculateDomain, ChartAxis, ChartItem } from "./ChartableMixin";
 import DiscretelyTimeVaryingMixin, {
   DiscreteTimeAsJS
 } from "./DiscretelyTimeVaryingMixin";
@@ -46,9 +59,10 @@ import { ImageryParts } from "./MappableMixin";
 function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
   abstract class TableMixin
     extends ExportableMixin(
-      ChartableMixin(DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base)))
+      DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base))
     )
-    implements SelectableDimensions {
+    implements SelectableDimensions, ViewingControls, FeatureInfoContext
+  {
     /**
      * The default {@link TableStyle}, which is used for styling
      * only when there are no styles defined.
@@ -58,15 +72,29 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     constructor(...args: any[]) {
       super(...args);
 
-      const tableStyle = new TableStyle(this);
-      runInAction(() =>
-        tableStyle.colorTraits.setTrait(
-          CommonStrata.defaults,
-          "legend",
-          new ColorStyleLegend(this, undefined)
-        )
-      );
-      this.defaultTableStyle = tableStyle;
+      // Create default TableStyle and set TableAutomaticLegendStratum
+      this.defaultTableStyle = new TableStyle(this);
+
+      if (
+        this.strata.get(TableAutomaticLegendStratum.stratumName) === undefined
+      ) {
+        runInAction(() => {
+          this.strata.set(
+            TableAutomaticLegendStratum.stratumName,
+            TableAutomaticLegendStratum.load(this)
+          );
+        });
+      }
+
+      // Create TableFeatureInfoStratum
+      if (this.strata.get(TableFeatureInfoStratum.stratumName) === undefined) {
+        runInAction(() => {
+          this.strata.set(
+            TableFeatureInfoStratum.stratumName,
+            TableFeatureInfoStratum.load(this)
+          );
+        });
+      }
     }
 
     get hasTableMixin() {
@@ -81,7 +109,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      * The list of region providers to be used with this table.
      */
     @observable
-    regionProviderList: RegionProviderList | undefined;
+    regionProviderLists: RegionProviderList[] | undefined;
 
     /**
      * The raw data table in column-major format, i.e. the outer array is an
@@ -99,7 +127,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         const rowsToRemove = new Set();
         const seenRows = new Set();
         for (let i = 0; i < dataColumnMajor[0].length; i++) {
-          const row = dataColumnMajor.map(col => col[i]).join();
+          const row = dataColumnMajor.map((col) => col[i]).join();
           if (seenRows.has(row)) {
             // Mark row for deletion
             rowsToRemove.add(i);
@@ -109,7 +137,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         }
 
         if (rowsToRemove.size > 0) {
-          return dataColumnMajor.map(col =>
+          return dataColumnMajor.map((col) =>
             col.filter((cell, idx) => !rowsToRemove.has(idx))
           );
         }
@@ -148,9 +176,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      * Gets the {@link TableStyleTraits#id} of the currently-active style.
      * Note that this is a trait so there is no guarantee that a style
      * with this ID actually exists. If no active style is explicitly
-     * specified, the ID of the first style with a scalar color column is used.
-     * If there is no such style the id of the first style of the {@link #styles}
-     * is used.
+     * specified, return first style with a scalar color column (if none is found then find first style with enum, text and then region)
+     *
      */
     @computed
     get activeStyle(): string | undefined {
@@ -158,16 +185,28 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       if (value !== undefined) {
         return value;
       } else if (this.styles && this.styles.length > 0) {
-        // Find and return a style with scalar color column if it exists,
-        // otherwise just return the first available style id.
-        const styleWithScalarColorColumn = this.styles.find(s => {
-          const colName = s.color.colorColumn;
-          return (
-            colName &&
-            this.findColumnByName(colName)?.type === TableColumnType.scalar
-          );
-        });
-        return styleWithScalarColorColumn?.id || this.styles[0].id;
+        // Find default active style in this order:
+        // - First scalar style
+        // - First enum style
+        // - First text style
+        // - First region style
+
+        const types = [
+          TableColumnType.scalar,
+          TableColumnType.enum,
+          TableColumnType.text,
+          TableColumnType.region
+        ];
+
+        const firstStyleOfEachType = types.map(
+          (columnType) =>
+            this.styles.find(
+              (s) =>
+                this.findColumnByName(s.color.colorColumn)?.type === columnType
+            )?.id
+        );
+
+        return filterOutUndefined(firstStyleOfEachType)[0];
       }
       return undefined;
     }
@@ -182,7 +221,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       if (activeStyle === undefined) {
         return this.defaultTableStyle;
       }
-      let ret = this.tableStyles.find(style => style.id === this.activeStyle);
+      let ret = this.tableStyles.find((style) => style.id === this.activeStyle);
       if (ret === undefined) {
         return this.defaultTableStyle;
       }
@@ -199,11 +238,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     get yColumns(): TableColumn[] {
       const lines = this.activeTableStyle.chartTraits.lines;
       return filterOutUndefined(
-        lines.map(line =>
-          line.yAxisColumn === undefined
-            ? undefined
-            : this.findColumnByName(line.yAxisColumn)
-        )
+        lines.map((line) => this.findColumnByName(line.yAxisColumn))
       );
     }
 
@@ -217,7 +252,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         // I am assuming all columns have the same length -> so use first column
         let csvString = this.dataColumnMajor[0]
           .map((row, rowIndex) =>
-            this.dataColumnMajor!.map(col => col[rowIndex]).join(",")
+            this.dataColumnMajor!.map((col) => col[rowIndex]).join(",")
           )
           .join("\n");
 
@@ -240,26 +275,25 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     @computed
-    get disableOpacityControl() {
-      // disable opacity control for point tables - or if no mapItems
-      return this.activeTableStyle.isPoints() || this.mapItems.length === 0;
-    }
-
-    @computed
-    get disableSplitter() {
-      return !isDefined(this.activeTableStyle.regionColumn);
-    }
-
-    @computed
     get disableZoomTo() {
       // Disable zoom if only showing imagery parts  (eg region mapping) and no rectangle is defined
       if (
-        !this.mapItems.find(m => m instanceof DataSource) &&
+        !this.mapItems.find(
+          (m) => m instanceof DataSource || m instanceof CustomDataSource
+        ) &&
         !isDefined(this.cesiumRectangle)
       ) {
         return true;
       }
       return super.disableZoomTo;
+    }
+
+    /** Is showing regions (instead of points) */
+    @computed get showingRegions() {
+      return (
+        this.regionMappedImageryParts &&
+        this.mapItems[0] === this.regionMappedImageryParts
+      );
     }
 
     /**
@@ -268,7 +302,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     @computed
     get mapItems(): (DataSource | ImageryParts)[] {
       // Wait for activeTableStyle to be ready
-      if (!this.activeTableStyle.ready || this.isLoadingMapItems) return [];
+      if (
+        this.dataColumnMajor?.length === 0 ||
+        !this.activeTableStyle.ready ||
+        this.isLoadingMapItems
+      )
+        return [];
 
       const numRegions =
         this.activeTableStyle.regionColumn?.valuesAsRegions?.uniqueRegionIds
@@ -303,15 +342,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return [];
     }
 
-    @computed
-    get shortReport() {
-      return this.mapItems.length === 0 &&
-        this.chartItems.length === 0 &&
-        !this.isLoading
-        ? i18next.t("models.tableData.noData")
-        : super.shortReport;
-    }
-
     // regionMappedImageryParts and regionMappedImageryProvider are split up like this so that we aren't re-creating the imageryProvider if things like `opacity` and `show` change
     @computed get regionMappedImageryParts() {
       if (!this.regionMappedImageryProvider) return;
@@ -320,9 +350,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         imageryProvider: this.regionMappedImageryProvider,
         alpha: this.opacity,
         show: this.show,
-        clippingRectangle: this.clipToRectangle
-          ? this.cesiumRectangle
-          : undefined
+        clippingRectangle: this.cesiumRectangle
       };
     }
 
@@ -336,16 +364,22 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     /**
      * Try to resolve `regionType` to a region provider (this will also match against region provider aliases)
      */
-    matchRegionType(regionType?: string): string | undefined {
+    matchRegionProvider(regionType?: string): RegionProvider | undefined {
       if (!isDefined(regionType)) return;
-      const matchingRegionProviders = this.regionProviderList?.getRegionDetails(
-        [regionType],
-        undefined,
-        undefined
+      const matchingRegionProviders = this.regionProviderLists?.map(
+        (regionProviderList) =>
+          regionProviderList?.getRegionDetails(
+            [regionType],
+            undefined,
+            undefined
+          )
       );
-      if (matchingRegionProviders && matchingRegionProviders.length > 0) {
-        return matchingRegionProviders[0].regionProvider.regionType;
-      }
+
+      // Return first regionProviderList with it's first match
+      // Note: a regionProviderList may have multiple matches - we could improve which one it selects
+      return matchingRegionProviders?.find(
+        (match) => match && match.length > 0
+      )?.[0].regionProvider;
     }
 
     /**
@@ -376,10 +410,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       };
 
       return filterOutUndefined(
-        lines.map(line => {
-          const yColumn = line.yAxisColumn
-            ? this.findColumnByName(line.yAxisColumn)
-            : undefined;
+        lines.map((line) => {
+          const yColumn = this.findColumnByName(line.yAxisColumn);
           if (yColumn === undefined) {
             return undefined;
           }
@@ -446,13 +478,35 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       ]);
     }
 
+    @computed get viewingControls(): ViewingControl[] {
+      return filterOutUndefined([
+        ...super.viewingControls,
+        {
+          id: TableStylingWorkflow.type,
+          name: "Edit Style",
+          onClick: action((viewState) =>
+            SelectableDimensionWorkflow.runWorkflow(
+              viewState,
+              new TableStylingWorkflow(this)
+            )
+          ),
+          icon: { glyph: Icon.GLYPHS.layers }
+        }
+      ]);
+    }
+
+    @computed get featureInfoContext(): (f: TerriaFeature) => JsonObject {
+      return tableFeatureInfoContext(this);
+    }
+
     @computed
     get selectableDimensions(): SelectableDimension[] {
       return filterOutUndefined([
         this.timeDisableDimension,
         ...super.selectableDimensions,
-        this.regionColumnDimensions,
-        this.regionProviderDimensions,
+        this.enableManualRegionMapping
+          ? this.regionMappingDimensions
+          : undefined,
         this.styleDimensions,
         this.outlierFilterDimension
       ]);
@@ -462,17 +516,17 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      * Takes {@link TableStyle}s and returns a SelectableDimension which can be rendered in a Select dropdown
      */
     @computed
-    get styleDimensions(): SelectableDimension | undefined {
+    get styleDimensions(): SelectableDimensionEnum | undefined {
       if (this.mapItems.length === 0 && !this.enableManualRegionMapping) {
         return;
       }
-
       return {
+        type: "select",
         id: "activeStyle",
         name: "Display Variable",
         options: this.tableStyles
-          .filter(style => !style.hidden || this.activeStyle === style.id)
-          .map(style => {
+          .filter((style) => !style.hidden || this.activeStyle === style.id)
+          .map((style) => {
             return {
               id: style.id,
               name: style.title
@@ -483,7 +537,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         undefinedLabel: this.showDisableStyleOption
           ? i18next.t("models.tableData.styleDisabledLabel")
           : undefined,
-        setDimensionValue: (stratumId: string, styleId: string) => {
+        setDimensionValue: (stratumId: string, styleId) => {
           this.setTrait(stratumId, "activeStyle", styleId);
         }
       };
@@ -494,10 +548,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      * {@link TableTraits#enableManualRegionMapping} must be enabled.
      */
     @computed
-    get regionProviderDimensions(): SelectableDimension | undefined {
+    get regionProviderDimensions(): SelectableDimensionEnum | undefined {
+      const allRegionProviders = flatten(
+        this.regionProviderLists?.map((list) => list.regionProviders) ?? []
+      );
       if (
-        !this.enableManualRegionMapping ||
-        !Array.isArray(this.regionProviderList?.regionProviders) ||
+        allRegionProviders.length === 0 ||
         !isDefined(this.activeTableStyle.regionColumn)
       ) {
         return;
@@ -506,19 +562,20 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return {
         id: "regionMapping",
         name: "Region Mapping",
-        options: this.regionProviderList!.regionProviders.map(
-          regionProvider => {
-            return {
-              name: regionProvider.regionType,
-              id: regionProvider.regionType
-            };
-          }
-        ),
+        options: allRegionProviders.map((regionProvider) => {
+          return {
+            name: regionProvider.description,
+            id: regionProvider.regionType
+          };
+        }),
         allowUndefined: true,
         selectedId: this.activeTableStyle.regionColumn?.regionType?.regionType,
-        setDimensionValue: (stratumId: string, regionType: string) => {
+        setDimensionValue: (
+          stratumId: string,
+          regionType: string | undefined
+        ) => {
           let columnTraits = this.columns?.find(
-            column => column.name === this.activeTableStyle.regionColumn?.name
+            (column) => column.name === this.activeTableStyle.regionColumn?.name
           );
           if (!isDefined(columnTraits)) {
             columnTraits = this.addObject(
@@ -543,27 +600,38 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      * {@link TableTraits#enableManualRegionMapping} must be enabled.
      */
     @computed
-    get regionColumnDimensions(): SelectableDimension | undefined {
-      if (
-        !this.enableManualRegionMapping ||
-        !Array.isArray(this.regionProviderList?.regionProviders)
-      ) {
+    get regionColumnDimensions(): SelectableDimensionEnum | undefined {
+      if (!isDefined(this.regionProviderLists)) {
         return;
       }
 
       return {
         id: "regionColumn",
         name: "Region Column",
-        options: this.tableColumns.map(col => {
+        options: this.tableColumns.map((col) => {
           return {
             name: col.name,
             id: col.name
           };
         }),
         selectedId: this.activeTableStyle.regionColumn?.name,
-        setDimensionValue: (stratumId: string, regionCol: string) => {
+        setDimensionValue: (
+          stratumId: string,
+          regionCol: string | undefined
+        ) => {
           this.defaultStyle.setTrait(stratumId, "regionColumn", regionCol);
         }
+      };
+    }
+
+    @computed get regionMappingDimensions(): SelectableDimensionGroup {
+      return {
+        id: "Manual Region Mapping",
+        type: "group",
+        selectableDimensions: filterOutUndefined([
+          this.regionColumnDimensions,
+          this.regionProviderDimensions
+        ])
       };
     }
 
@@ -589,12 +657,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         selectedId: this.activeTableStyle.colorTraits.zScoreFilterEnabled
           ? "true"
           : "false",
-        setDimensionValue: (stratumId: string, value: string) => {
+        setDimensionValue: (stratumId: string, value) => {
           updateModelFromJson(this, stratumId, {
             defaultStyle: {
               color: { zScoreFilterEnabled: value === "true" }
             }
-          });
+          }).logError("Failed to update zScoreFilterEnabled");
         },
         placement: "belowLegend",
         type: "checkbox"
@@ -624,7 +692,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         ],
         selectedId:
           this.defaultStyle.time.timeColumn === null ? "false" : "true",
-        setDimensionValue: (stratumId: string, value: string) => {
+        setDimensionValue: (stratumId: string, value) => {
           // We have to set showDisableTimeOption to true - or this will hide when time column is disabled
           this.setTrait(stratumId, "showDisableTimeOption", true);
           this.defaultStyle.time.setTrait(
@@ -659,7 +727,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         return;
       }
       const times = filterOutUndefined(
-        dates.map(d =>
+        dates.map((d) =>
           d ? { time: d.toISOString(), tag: undefined } : undefined
         )
       ).reduce(
@@ -670,7 +738,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         // expects uniques, return uniques here
         (acc: DiscreteTimeAsJS[], time) =>
           !acc.some(
-            accTime => accTime.time === time.time && accTime.tag === time.tag
+            (accTime) => accTime.time === time.time && accTime.tag === time.tag
           )
             ? [...acc, time]
             : acc,
@@ -679,22 +747,29 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return times;
     }
 
-    @computed
-    get legends() {
-      if (this.mapItems.length > 0) {
-        const colorLegend = this.activeTableStyle.colorTraits.legend;
-        return filterOutUndefined([colorLegend]);
-      } else {
-        return [];
-      }
+    /** This is a temporary button which shows in the Legend in the Workbench, if custom styling has been applied. */
+    @computed get legendButton() {
+      return this.activeTableStyle.isCustom
+        ? {
+            title: "Custom",
+            onClick: action(() => {
+              SelectableDimensionWorkflow.runWorkflow(
+                this.terria,
+                new TableStylingWorkflow(this)
+              );
+            })
+          }
+        : undefined;
     }
 
     findFirstColumnByType(type: TableColumnType): TableColumn | undefined {
-      return this.tableColumns.find(column => column.type === type);
+      return this.tableColumns.find((column) => column.type === type);
     }
 
-    findColumnByName(name: string): TableColumn | undefined {
-      return this.tableColumns.find(column => column.name === name);
+    findColumnByName(name: string | undefined): TableColumn | undefined {
+      return isDefined(name)
+        ? this.tableColumns.find((column) => column.name === name)
+        : undefined;
     }
 
     protected async forceLoadMapItems() {
@@ -735,18 +810,29 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      */
     protected abstract forceLoadTableData(): Promise<string[][] | undefined>;
 
+    /** Load all region provider lists
+     * These are loaded from terria.configParameters.regionMappingDefinitionsUrl
+     */
     async loadRegionProviderList() {
-      if (isDefined(this.regionProviderList)) return;
+      if (isDefined(this.regionProviderLists)) return;
 
-      const regionProviderList:
-        | RegionProviderList
-        | undefined = await makeRealPromise(
-        RegionProviderList.fromUrl(
-          this.terria.configParameters.regionMappingDefinitionsUrl,
-          this.terria.corsProxy
+      // regionMappingDefinitionsUrl is deprecated - but we use it instead of regionMappingDefinitionsUrls if defined
+      const urls = isDefined(
+        this.terria.configParameters.regionMappingDefinitionsUrl
+      )
+        ? [this.terria.configParameters.regionMappingDefinitionsUrl]
+        : this.terria.configParameters.regionMappingDefinitionsUrls;
+
+      // Load all region in parallel (but preserve order)
+      const regionProviderLists = await Promise.all(
+        urls.map(
+          async (url, i) =>
+            // Note can be called many times - all promises/results are cached in RegionProviderList.metaList
+            await RegionProviderList.fromUrl(url, this.terria.corsProxy)
         )
       );
-      runInAction(() => (this.regionProviderList = regionProviderList));
+
+      runInAction(() => (this.regionProviderLists = regionProviderLists));
     }
 
     /*
@@ -783,16 +869,16 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         const dataSource = new CustomDataSource(this.name || "Table");
         dataSource.entities.suspendEvents();
 
-        let features: Entity[];
+        let features: TerriaFeature[];
         if (style.isTimeVaryingPointsWithId()) {
           features = createLongitudeLatitudeFeaturePerId(style);
         } else {
           features = createLongitudeLatitudeFeaturePerRow(style);
         }
 
-        // _catalogItem property is needed for some feature picking functions (eg FeatureInfoMixin)
-        features.forEach(f => {
-          (f as any)._catalogItem = this;
+        // _catalogItem property is needed for some feature picking functions (eg `featureInfoTemplate`)
+        features.forEach((f) => {
+          f._catalogItem = this;
           dataSource.entities.add(f);
         });
         dataSource.show = this.show;
@@ -809,19 +895,15 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         createRegionMappedImageryProvider(input.style, input.currentTime)
     );
 
-    private readonly getTableColumn: ITransformer<
-      number,
-      TableColumn
-    > = createTransformer((index: number) => {
-      return new TableColumn(this, index);
-    });
+    private readonly getTableColumn: ITransformer<number, TableColumn> =
+      createTransformer((index: number) => {
+        return new TableColumn(this, index);
+      });
 
-    private readonly getTableStyle: ITransformer<
-      number,
-      TableStyle
-    > = createTransformer((index: number) => {
-      return new TableStyle(this, index);
-    });
+    private readonly getTableStyle: ITransformer<number, TableStyle> =
+      createTransformer((index: number) => {
+        return new TableStyle(this, index);
+      });
   }
 
   return TableMixin;

@@ -12,12 +12,12 @@ import Button from "../../../../Styled/Button";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 
-import { useTranslationIfExists } from "../../../../Language/languageHelpers";
+import { applyTranslationIfExists } from "../../../../Language/languageHelpers";
 
 const UlTrainerItems = styled(Box).attrs({
   as: "ul"
 })`
-  ${p => p.theme.removeListStyles()}
+  ${(p) => p.theme.removeListStyles()}
 `;
 
 const TrainerButton = styled(Button)``;
@@ -38,7 +38,7 @@ class TrainerPane extends React.Component {
   }
 
   render() {
-    const { content, viewState } = this.props;
+    const { content, i18n, viewState } = this.props;
     const { trainerItems, markdownText } = content;
     return (
       <Text textDark noFontSize>
@@ -62,7 +62,7 @@ class TrainerPane extends React.Component {
                   >
                     <BoxSpan centered>
                       <BoxSpan centered>
-                        {useTranslationIfExists(item.title)}
+                        {applyTranslationIfExists(item.title, i18n)}
                       </BoxSpan>
                     </BoxSpan>
                   </TrainerButton>

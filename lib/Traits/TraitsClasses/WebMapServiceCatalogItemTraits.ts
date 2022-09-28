@@ -9,16 +9,15 @@ import ModelTraits from "../ModelTraits";
 import { traitClass } from "../Trait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import DiffableTraits from "./DiffableTraits";
-import ExportableTraits from "./ExportableTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
+import ExportWebCoverageServiceTraits from "./ExportWebCoverageServiceTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
+import ImageryProviderTraits from "./ImageryProviderTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 import LegendTraits from "./LegendTraits";
 import MappableTraits from "./MappableTraits";
-import RasterLayerTraits from "./RasterLayerTraits";
-import TimeFilterTraits from "./TimeFilterTraits";
-import UrlTraits from "./UrlTraits";
 import { MinMaxLevelTraits } from "./MinMaxLevelTraits";
+import UrlTraits from "./UrlTraits";
 
 export const SUPPORTED_CRS_3857 = ["EPSG:3857", "EPSG:900913"];
 export const SUPPORTED_CRS_4326 = ["EPSG:4326", "CRS:84", "EPSG:4283"];
@@ -137,6 +136,23 @@ export class WebMapServiceAvailableLayerDimensionsTraits extends ModelTraits {
   })
   dimensions?: WebMapServiceAvailableDimensionTraits[];
 }
+export class GetFeatureInfoFormat extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "Type",
+    description:
+      "The type of response to expect from a GetFeatureInfo request.  Valid values are 'json', 'xml', 'html', or 'text'."
+  })
+  type?: "json" | "xml" | "html" | "text" | undefined;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Format",
+    description:
+      "The info format to request from the WMS server.  This is usually a MIME type such as 'application/json' or text/xml'.  If this parameter is not specified, the provider will request 'json' using 'application/json', 'xml' using 'text/xml', 'html' using 'text/html', and 'text' using 'text/plain'."
+  })
+  format?: string;
+}
 
 @traitClass({
   description: `Creates a single item in the catalog from one or many WMS layers.
@@ -150,16 +166,15 @@ export class WebMapServiceAvailableLayerDimensionsTraits extends ModelTraits {
   }
 })
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
-  ExportableTraits,
+  ExportWebCoverageServiceTraits,
   DiffableTraits,
-  FeatureInfoTraits,
   LayerOrderingTraits,
-  TimeFilterTraits,
   GetCapabilitiesTraits,
-  RasterLayerTraits,
+  ImageryProviderTraits,
   UrlTraits,
   MappableTraits,
   CatalogMemberTraits,
+  LegendOwnerTraits,
   MinMaxLevelTraits
 ) {
   @primitiveTrait({
@@ -212,25 +227,9 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   @anyTrait({
     name: "Parameters",
     description:
-      "Additional parameters to pass to the MapServer when requesting images. Style parameters are stored as CSV in `styles`, dimension parameters are stored in `dimensions`."
+      "Additional parameters to pass WMS `GetMap` and `GetFeatureInfo` requests. Style parameters are stored as CSV in `styles`, dimension parameters are stored in `dimensions`."
   })
   parameters?: JsonObject;
-
-  @primitiveTrait({
-    type: "number",
-    name: "Tile width (in pixels)",
-    description:
-      "Tile width in pixels. This will be added to `GetMap` requests for map tiles using the `width` parameter. Default value is 256 pixels"
-  })
-  tileWidth: number = 256;
-
-  @primitiveTrait({
-    type: "number",
-    name: "Tile height (in pixels)",
-    description:
-      "Tile height in pixels. This will be added to `GetMap` requests for map tiles using the `height` parameter. Default value is 256 pixels"
-  })
-  tileHeight: number = 256;
 
   @primitiveTrait({
     type: "number",
@@ -248,22 +247,6 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     description: "When true, disables the dimension selectors in the workbench."
   })
   disableDimensionSelectors = false;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Linked WCS URL",
-    description:
-      "Gets or sets the URL of a WCS that enables clip-and-ship for this WMS item."
-  })
-  linkedWcsUrl?: string;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Linked WCS Coverage Name",
-    description:
-      "Gets or sets the coverage name for linked WCS for clip-and-ship."
-  })
-  linkedWcsCoverage?: string;
 
   @primitiveTrait({
     type: "boolean",
@@ -313,7 +296,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     type: "number",
     name: "Color scale minimum",
     description:
-      "The minumum of the color scale range. Because COLORSCALERANGE is a non-standard property supported by ncWMS servers, this property is ignored unless WebMapServiceCatalogItem's supportsColorScaleRange is true. WebMapServiceCatalogItem's colorScaleMaximum must be set as well."
+      "The minimum of the color scale range. Because COLORSCALERANGE is a non-standard property supported by ncWMS servers, this property is ignored unless WebMapServiceCatalogItem's supportsColorScaleRange is true. WebMapServiceCatalogItem's colorScaleMaximum must be set as well."
   })
   colorScaleMinimum: number = -50;
 
@@ -326,10 +309,33 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   colorScaleMaximum: number = 50;
 
   @primitiveTrait({
-    type: "number",
-    name: "Maximum shown feature infos",
+    type: "boolean",
+    name: "Use WMS version 1.3.0",
     description:
-      'The maximum number of "feature infos" that can be displayed in feature info panel.'
+      'Use WMS version 1.3.0. True by default (unless `url` has `"version=1.1.1"` or `"version=1.1.0"`), if false, then WMS version 1.1.1 will be used.'
   })
-  maximumShownFeatureInfos?: number;
+  useWmsVersion130: boolean = true;
+
+  @objectTrait({
+    type: GetFeatureInfoFormat,
+    name: "GetFeatureInfo format",
+    description:
+      'Format parameter to pass to GetFeatureInfo requests. Defaults to "application/json", "application/vnd.ogc.gml", "text/html" or "text/plain" - depending on GetCapabilities response'
+  })
+  getFeatureInfoFormat?: GetFeatureInfoFormat;
+
+  @primitiveTrait({
+    type: "string",
+    name: "GetFeatureInfo URL",
+    description:
+      "If defined, this URL will be used for `GetFeatureInfo` requests instead of `url`."
+  })
+  getFeatureInfoUrl?: string;
+
+  @anyTrait({
+    name: "Parameters",
+    description:
+      "Additional parameters to pass WMS `GetFeatureInfo` requests. If `parameters` trait is also defined, this is applied on top. Dimension parameters are stored in `dimensions`."
+  })
+  getFeatureInfoParameters?: JsonObject;
 }

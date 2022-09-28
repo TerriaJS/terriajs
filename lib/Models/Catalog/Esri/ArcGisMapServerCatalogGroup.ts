@@ -151,14 +151,14 @@ export class MapServerStratum extends LoadableStratum(
   get members(): ModelReference[] {
     return filterOutUndefined(
       this.layers
-        .map(layer => {
+        .map((layer) => {
           if (!isDefined(layer.id) || layer.parentLayerId !== -1) {
             return undefined;
           }
           return this._catalogGroup.uniqueId + "/" + layer.id;
         })
         .concat(
-          this.subLayers.map(subLayer => {
+          this.subLayers.map((subLayer) => {
             if (!isDefined(subLayer.id)) {
               return undefined;
             }
@@ -180,7 +180,7 @@ export class MapServerStratum extends LoadableStratum(
 
   @action
   createMembersFromLayers() {
-    this.layers.forEach(layer => this.createMemberFromLayer(layer));
+    this.layers.forEach((layer) => this.createMemberFromLayer(layer));
   }
 
   @action
@@ -232,20 +232,16 @@ export class MapServerStratum extends LoadableStratum(
     }
 
     // Replace the stratum inherited from the parent group.
-    const stratum = CommonStrata.underride;
+    model.strata.delete(CommonStrata.definition);
 
-    model.strata.delete(stratum);
-
-    model.setTrait(stratum, "name", replaceUnderscores(layer.name));
+    model.setTrait(
+      CommonStrata.definition,
+      "name",
+      replaceUnderscores(layer.name)
+    );
 
     var uri = new URI(this._catalogGroup.url).segment(layer.id + ""); // Convert layer id to string as segment(0) means sthg different.
-    model.setTrait(stratum, "url", uri.toString());
-
-    if (this._catalogGroup.itemProperties !== undefined) {
-      Object.keys(this._catalogGroup.itemProperties).map((k: any) =>
-        model.setTrait(stratum, k, this._catalogGroup.itemProperties![k])
-      );
-    }
+    model.setTrait(CommonStrata.definition, "url", uri.toString());
   }
 }
 
@@ -272,7 +268,7 @@ export default class ArcGisMapServerCatalogGroup extends UrlMixin(
   }
 
   protected forceLoadMetadata(): Promise<void> {
-    return MapServerStratum.load(this).then(stratum => {
+    return MapServerStratum.load(this).then((stratum) => {
       runInAction(() => {
         this.strata.set(MapServerStratum.stratumName, stratum);
       });

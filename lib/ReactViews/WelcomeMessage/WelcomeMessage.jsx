@@ -9,8 +9,10 @@ import Button, { RawButton } from "../../Styled/Button";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import Spacing from "../../Styled/Spacing";
 import Text, { TextSpan } from "../../Styled/Text";
+import { ExplorerWindowElementName } from "../ExplorerWindow/ExplorerWindow";
 import { useKeyPress } from "../Hooks/useKeyPress.js";
 import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
+import { withViewState } from "../StandardUserInterface/ViewStateContext";
 import { TourPortalDisplayName } from "../Tour/TourPortal";
 import FadeIn from "../Transitions/FadeIn/FadeIn";
 import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
@@ -74,7 +76,7 @@ class WelcomeMessage extends React.Component {
     return (
       <WelcomeMessagePure
         showWelcomeMessage={viewState.showWelcomeMessage}
-        setShowWelcomeMessage={bool =>
+        setShowWelcomeMessage={(bool) =>
           this.props.viewState.setShowWelcomeMessage(bool)
         }
         isTopElement={this.props.viewState.topElement === "WelcomeMessage"}
@@ -84,7 +86,7 @@ class WelcomeMessage extends React.Component {
   }
 }
 
-export const WelcomeMessagePure = props => {
+export const WelcomeMessagePure = (props) => {
   const { showWelcomeMessage, setShowWelcomeMessage, viewState } = props;
   const { t } = useTranslation();
   // This is required so we can do nested animations
@@ -128,7 +130,7 @@ export const WelcomeMessagePure = props => {
           if (shouldExploreData) {
             setShouldExploreData(false);
             viewState.openAddData();
-            viewState.setTopElement("AddData");
+            viewState.setTopElement(ExplorerWindowElementName);
           }
           if (shouldOpenHelp) {
             setShouldOpenHelp(false);
@@ -182,7 +184,7 @@ export const WelcomeMessagePure = props => {
               styledMinHeight={"504px"}
               displayInlineBlock
               paddedRatio={viewState.useSmallScreenInterface ? 2 : 6}
-              onClick={e => {
+              onClick={(e) => {
                 viewState.setTopElement("WelcomeMessage");
                 e.stopPropagation();
               }}
@@ -354,4 +356,4 @@ WelcomeMessagePure.propTypes = {
   viewState: PropTypes.object.isRequired
 };
 
-export default withTranslation()(withTheme(WelcomeMessage));
+export default withTranslation()(withViewState(withTheme(WelcomeMessage)));

@@ -11,9 +11,10 @@ import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStra
 import CsvCatalogItemTraits from "../../../Traits/TraitsClasses/CsvCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
+import HasLocalData from "../../HasLocalData";
 import Terria from "../../Terria";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -25,11 +26,14 @@ import Terria from "../../Terria";
 // - ID+time column -> point moves, region changes (continuously?) over time
 // - points, no ID, time -> "blips" with a duration (perhaps provided by another column)
 //
-export default class CsvCatalogItem extends TableMixin(
-  AutoRefreshingMixin(
-    UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
+export default class CsvCatalogItem
+  extends TableMixin(
+    AutoRefreshingMixin(
+      UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
+    )
   )
-) {
+  implements HasLocalData
+{
   static get type() {
     return "csv";
   }
@@ -131,7 +135,7 @@ export default class CsvCatalogItem extends TableMixin(
       proxyCatalogItemUrl(this, this.refreshUrl),
       true,
       this.ignoreRowsStartingWithComment
-    ).then(dataColumnMajor => {
+    ).then((dataColumnMajor) => {
       runInAction(() => {
         if (this.polling.shouldReplaceData) {
           this.dataColumnMajor = dataColumnMajor;

@@ -1,6 +1,6 @@
+import classNames from "classnames";
 import React from "react";
 import styled from "styled-components";
-import classNames from "classnames";
 
 // Icon
 export const GLYPHS = {
@@ -55,12 +55,14 @@ export const GLYPHS = {
   opened: require("../../wwwroot/images/icons/opened.svg"),
   pause: require("../../wwwroot/images/icons/pause.svg"),
   play: require("../../wwwroot/images/icons/play.svg"),
+  playStory: require("../../wwwroot/images/icons/play-story.svg"),
   radioOff: require("../../wwwroot/images/icons/radio-off.svg"),
   radioOn: require("../../wwwroot/images/icons/radio-on.svg"),
   refresh: require("../../wwwroot/images/icons/refresh.svg"),
   remove: require("../../wwwroot/images/icons/remove.svg"),
   right: require("../../wwwroot/images/icons/right.svg"),
   right2: require("../../wwwroot/images/icons/right2.svg"),
+  revert: require("../../wwwroot/images/icons/revert.svg"),
   search: require("../../wwwroot/images/icons/search.svg"),
   selected: require("../../wwwroot/images/icons/selected.svg"),
   settings: require("../../wwwroot/images/icons/settings.svg"),
@@ -127,11 +129,22 @@ export const GLYPHS = {
   minimize: require("../../wwwroot/images/icons/minimize.svg"),
   maximize: require("../../wwwroot/images/icons/maximize.svg"),
   closeTool: require("../../wwwroot/images/icons/close-tool.svg"),
-  moreItems: require("../../wwwroot/images/icons/more-items.svg")
+  moreItems: require("../../wwwroot/images/icons/more-items.svg"),
+  info: require("../../wwwroot/images/icons/info.svg"),
+  leftSmall: require("../../wwwroot/images/icons/left-small.svg"),
+  rightSmall: require("../../wwwroot/images/icons/right-small.svg"),
+  compareLeftPanel: require("../../wwwroot/images/icons/compare-left-panel.svg"),
+  compareRightPanel: require("../../wwwroot/images/icons/compare-right-panel.svg"),
+  compareBothPanels: require("../../wwwroot/images/icons/compare-both-panels.svg"),
+  closeCircle: require("../../wwwroot/images/icons/close-circle.svg")
 };
 
-interface IconProps {
-  glyph: { id: string };
+export interface IconGlyph {
+  id: string;
+}
+
+export interface IconProps {
+  glyph: IconGlyph;
   style?: any;
   className?: string;
   rotation?: number;
@@ -144,12 +157,12 @@ export const Icon: React.FC<IconProps> = (props: IconProps) => {
       style={props.style}
       transform={`rotate(${props.rotation ?? 0})`}
     >
-      <use xlinkHref={"#" + props.glyph.id} />
+      <use xlinkHref={"#" + props.glyph?.id} />
     </svg>
   );
 };
 
-interface IStyledIconProps {
+export interface IStyledIconProps {
   displayInline?: boolean;
   styledWidth?: string;
   styledHeight?: string;
@@ -161,8 +174,8 @@ interface IStyledIconProps {
 }
 
 export const StyledIcon = styled(Icon)<IStyledIconProps>`
-  display: ${props => (props.displayInline ? `inline` : `block`)};
-  ${props =>
+  display: ${(props) => (props.displayInline ? `inline` : `block`)};
+  ${(props) =>
     props.displayInline
       ? `
   display: inline;
@@ -171,19 +184,19 @@ export const StyledIcon = styled(Icon)<IStyledIconProps>`
   display: block;`}
 
   flex-shrink: 0;
-  ${props => props.styledWidth && `width: ${props.styledWidth};`}
-  ${props => props.styledHeight && `height: ${props.styledHeight};`}
+  ${(props) => props.styledWidth && `width: ${props.styledWidth};`}
+  ${(props) => props.styledHeight && `height: ${props.styledHeight};`}
 
-  ${props => props.light && `fill: ${props.theme.textLight};`}
-  ${props => props.dark && `fill: ${props.theme.textDark};`}
+  ${(props) => props.light && `fill: ${props.theme.textLight};`}
+  ${(props) => props.dark && `fill: ${props.theme.textDark};`}
 
   // Until we sort out what "light / dark" means for components that have both
   // modes, use "realDark" to get real
-  ${props => props.realDark && `fill: ${props.theme.dark};`}
+  ${(props) => props.realDark && `fill: ${props.theme.dark};`}
 
-  ${props => props.fillColor && `fill: ${props.fillColor};`}
+  ${(props) => props.fillColor && `fill: ${props.fillColor};`}
 
-  ${props => props.opacity && `opacity: ${props.opacity};`}
+  ${(props) => props.opacity && `opacity: ${props.opacity};`}
 `;
 
 export default Object.assign(Icon, { GLYPHS });

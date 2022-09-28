@@ -4,6 +4,7 @@ import SensorObservationServiceCatalogItem from "../../../../lib/Models/Catalog/
 import Terria from "../../../../lib/Models/Terria";
 import SimpleCatalogItem from "../../../Helpers/SimpleCatalogItem";
 import TableAutomaticStylesStratum from "../../../../lib/Table/TableAutomaticStylesStratum";
+import { isEnum } from "../../../../lib/Models/SelectableDimensions/SelectableDimensions";
 
 const GetFeatureOfInterestResponse = require("raw-loader!../../../../wwwroot/test/sos/GetFeatureOfInterestResponse.xml");
 const EmptyGetFeatureOfInterestResponse = require("raw-loader!../../../../wwwroot/test/sos/GetFeatureOfInterestResponse_NoMembers.xml");
@@ -14,15 +15,15 @@ const regionMapping = JSON.stringify(
   require("../../../../wwwroot/data/regionMapping.json")
 );
 
-describe("SensorObservationServiceCatalogItem", function() {
+describe("SensorObservationServiceCatalogItem", function () {
   let item: SensorObservationServiceCatalogItem;
 
-  beforeEach(function() {
+  beforeEach(function () {
     jasmine.Ajax.install();
     jasmine.Ajax.addCustomParamParser({
       // @ts-ignore
-      test: xhr => /^application\/soap\+xml/.test(xhr.contentType()),
-      parse: paramString => paramString
+      test: (xhr) => /^application\/soap\+xml/.test(xhr.contentType()),
+      parse: (paramString) => paramString
     });
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionMapping.json"
@@ -59,12 +60,12 @@ describe("SensorObservationServiceCatalogItem", function() {
     );
   });
 
-  afterEach(function() {
+  afterEach(function () {
     jasmine.Ajax.uninstall();
   });
 
-  describe("when constructed", function() {
-    it("correctly sets the sourceReference", function() {
+  describe("when constructed", function () {
+    it("correctly sets the sourceReference", function () {
       const terria = new Terria();
       const sourceItem = new SimpleCatalogItem(undefined, terria);
       const sosItem = new SensorObservationServiceCatalogItem(
@@ -75,7 +76,7 @@ describe("SensorObservationServiceCatalogItem", function() {
       expect(sosItem.sourceReference).toBe(sourceItem);
     });
 
-    it("correctly initializes the automatic stratum", function() {
+    it("correctly initializes the automatic stratum", function () {
       const terria = new Terria();
       const sourceItem = new SimpleCatalogItem(undefined, terria);
       const sosItem = new SensorObservationServiceCatalogItem(
@@ -89,19 +90,19 @@ describe("SensorObservationServiceCatalogItem", function() {
     });
   });
 
-  describe("features table", function() {
-    beforeEach(function() {
+  describe("features table", function () {
+    beforeEach(function () {
       jasmine.Ajax.stubRequest(
-        "https://sos.example.com",
+        "https://sos.example.com/",
         /\<sos:GetFeatureOfInterest/
       ).andReturn({ responseText: GetFeatureOfInterestResponse });
     });
 
-    describe("when loading", function() {
-      it("makes a GetFeatureOfInterest request", async function() {
+    describe("when loading", function () {
+      it("makes a GetFeatureOfInterest request", async function () {
         await item.loadMapItems();
-        const req = jasmine.Ajax.requests.filter("https://sos.example.com")[0];
-        expect(req.url).toBe("https://sos.example.com");
+        const req = jasmine.Ajax.requests.filter("https://sos.example.com/")[0];
+        expect(req.url).toBe("https://sos.example.com/");
         expect(req.method).toBe("POST");
         expect(req.data()).toContain("sos:GetFeatureOfInterest");
         expect(req.data()).toContain("/foiRetrieval/");
@@ -119,8 +120,8 @@ describe("SensorObservationServiceCatalogItem", function() {
         );
       });
 
-      describe("when `filterByProcedures` is false", function() {
-        it("should not add any procedures to the request", async function() {
+      describe("when `filterByProcedures` is false", function () {
+        it("should not add any procedures to the request", async function () {
           item.setTrait(CommonStrata.user, "filterByProcedures", false);
           await runInAction(() => item.loadMapItems());
           const req = jasmine.Ajax.requests.mostRecent();
@@ -128,9 +129,9 @@ describe("SensorObservationServiceCatalogItem", function() {
         });
       });
 
-      it("throws an error if features is empty", async function() {
+      it("throws an error if features is empty", async function () {
         jasmine.Ajax.stubRequest(
-          "https://sos.example.com",
+          "https://sos.example.com/",
           /\<sos:GetFeatureOfInterest/
         ).andReturn({ responseText: EmptyGetFeatureOfInterestResponse });
         let ex = (await item.loadMapItems()).error;
@@ -138,10 +139,10 @@ describe("SensorObservationServiceCatalogItem", function() {
       });
     });
 
-    describe("when loaded", function() {
-      it("defines all feature columns", async function() {
+    describe("when loaded", function () {
+      it("defines all feature columns", async function () {
         await item.loadMapItems();
-        expect(item.tableColumns.map(c => c.name)).toEqual([
+        expect(item.tableColumns.map((c) => c.name)).toEqual([
           "identifier",
           "lat",
           "lon",
@@ -152,7 +153,7 @@ describe("SensorObservationServiceCatalogItem", function() {
         ]);
       });
 
-      it("populates the column values correctly", async function() {
+      it("populates the column values correctly", async function () {
         await item.loadMapItems();
         const values: any = {
           identifier: [
@@ -172,15 +173,15 @@ describe("SensorObservationServiceCatalogItem", function() {
         };
         item.tableColumns
           .slice(0, -1)
-          .forEach(col => expect(col.values).toEqual(values[col.name]));
+          .forEach((col) => expect(col.values).toEqual(values[col.name]));
         // just test that the chart columns have chart component defined
         item.tableColumns
           .slice(-1)[0]
-          .values.forEach(value => expect(value).toContain("<sos-chart "));
+          .values.forEach((value) => expect(value).toContain("<sos-chart "));
       });
 
-      describe("with a station id whiteliest", function() {
-        it("should only have points for the white listed stations", async function() {
+      describe("with a station id whiteliest", function () {
+        it("should only have points for the white listed stations", async function () {
           item.setTrait(CommonStrata.user, "stationIdWhitelist", [
             "http://sos.example.com/stations/1"
           ]);
@@ -191,8 +192,8 @@ describe("SensorObservationServiceCatalogItem", function() {
         });
       });
 
-      describe("with a station id blacklist", function() {
-        it("should not have points for the black listed stations", async function() {
+      describe("with a station id blacklist", function () {
+        it("should not have points for the black listed stations", async function () {
           item.setTrait(CommonStrata.user, "stationIdBlacklist", [
             "http://sos.example.com/stations/1"
           ]);
@@ -205,24 +206,39 @@ describe("SensorObservationServiceCatalogItem", function() {
         });
       });
 
-      it("sets the style selectors correctly", async function() {
+      it("sets the style selectors correctly", async function () {
         await item.loadMapItems();
-        expect(item.selectableDimensions.map(s => s.name)).toEqual([
+        expect(item.selectableDimensions.map((s) => s.name)).toEqual([
           "Frequency",
           "Observation Type"
         ]);
       });
+
+      it("shows all options for the procedure selector", async function () {
+        await item.loadMapItems();
+        const procedureSelector = item.selectableDimensions.find(
+          (s) => s.name === "Frequency"
+        );
+        expect(procedureSelector && isEnum(procedureSelector)).toBeTruthy();
+
+        if (!procedureSelector || !isEnum(procedureSelector))
+          throw "Invalid procedureSelector";
+
+        if (procedureSelector) {
+          expect(procedureSelector.options?.length).toEqual(4);
+        }
+      });
     });
   });
 
-  describe("observations table", function() {
-    beforeEach(function() {
+  describe("observations table", function () {
+    beforeEach(function () {
       jasmine.Ajax.stubRequest(
-        "https://sos.example.com",
+        "https://sos.example.com/",
         /\<sos:GetObservation[\s\S]*Yearly/
       ).andReturn({ responseText: GetObservationResponseYearly });
       jasmine.Ajax.stubRequest(
-        "https://sos.example.com",
+        "https://sos.example.com/",
         /\<sos:GetObservation[\s\S]*Daily/
       ).andReturn({ responseText: GetObservationResponseDaily });
       item.setTrait(CommonStrata.user, "showAsChart", true);
@@ -235,11 +251,11 @@ describe("SensorObservationServiceCatalogItem", function() {
       item.setTrait(CommonStrata.user, "endDate", "2020-03-26T03:56:15.025Z");
     });
 
-    describe("when loading", function() {
-      it("makes a GetObservation request", async function() {
+    describe("when loading", function () {
+      it("makes a GetObservation request", async function () {
         await runInAction(() => item.loadMapItems());
         const req = jasmine.Ajax.requests.mostRecent();
-        expect(req.url).toBe("https://sos.example.com");
+        expect(req.url).toBe("https://sos.example.com/");
         expect(req.method).toBe("POST");
         expect(req.data()).toContain("sos:GetObservation");
         expect(req.data()).toContain("/core/");
@@ -260,7 +276,7 @@ describe("SensorObservationServiceCatalogItem", function() {
         );
       });
 
-      it("sets the procedure based on active style", async function() {
+      it("sets the procedure based on active style", async function () {
         item.setTrait(CommonStrata.user, "activeStyle", "Daily Mean");
 
         await item.loadMapItems();
@@ -283,13 +299,13 @@ describe("SensorObservationServiceCatalogItem", function() {
       });
     });
 
-    describe("when loaded", function() {
-      beforeEach(async function() {
+    describe("when loaded", function () {
+      beforeEach(async function () {
         await runInAction(() => item.loadMapItems());
       });
 
-      it("defines all feature columns", function() {
-        expect(item.tableColumns.map(c => c.name)).toEqual([
+      it("defines all feature columns", function () {
+        expect(item.tableColumns.map((c) => c.name)).toEqual([
           "date",
           "values",
           "observations",
@@ -299,7 +315,7 @@ describe("SensorObservationServiceCatalogItem", function() {
         ]);
       });
 
-      it("sets populates the column values correctly", function() {
+      it("sets populates the column values correctly", function () {
         const dates = [
           "2016-08-09T02:00:00.000+10:00",
           "2016-08-10T02:00:00.000+10:00",

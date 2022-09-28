@@ -7,13 +7,6 @@ import CkanResourceFormatTraits from "./CkanResourceFormatTraits";
 import ReferenceTraits from "./ReferenceTraits";
 
 export default class CkanSharedTraits extends mixTraits(ReferenceTraits) {
-  @anyTrait({
-    name: "Item Properties",
-    description:
-      "An object of properties that will be set on the item created from the CKAN resource."
-  })
-  itemProperties?: JsonObject;
-
   @primitiveTrait({
     type: "boolean",
     name: "Use resource name",
@@ -30,8 +23,7 @@ export default class CkanSharedTraits extends mixTraits(ReferenceTraits) {
 
   @primitiveTrait({
     type: "boolean",
-    name:
-      "Use combination of dataset and resource name where multiple resources",
+    name: "Use combination of dataset and resource name where multiple resources",
     description: `Use a combination of the name and the resource and dataset name where there are multiple resources for a single dataset.`
   })
   useCombinationNameWhereMultipleResources: boolean = false;

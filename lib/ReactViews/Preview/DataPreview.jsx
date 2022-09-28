@@ -14,6 +14,7 @@ import Styles from "./data-preview.scss";
 import Description from "./Description";
 import GroupPreview from "./GroupPreview";
 import MappablePreview from "./MappablePreview";
+import WarningBox from "./WarningBox";
 
 /**
  * Data preview section, for the preview map see DataPreviewMap
@@ -133,15 +134,24 @@ const DataPreview = observer(
           <div className={Styles.previewInner}>
             {isLoading && <Loader />}
             {!isLoading && !hasTarget && (
-              <div className={Styles.placeholder}>
-                <h2>Unable to resolve reference</h2>
-                <p>
-                  {this.props.previewed.loadReferenceResult?.error
-                    ? this.props.previewed.loadReferenceResult?.error?.message
-                    : `This reference could not be resolved because it is invalid or
-                  because it points to something that cannot be visualised.`}
-                </p>
-              </div>
+              <>
+                <div className={Styles.placeholder}>
+                  <h2>Unable to resolve reference</h2>
+                  {!this.props.previewed.loadReferenceResult?.error ? (
+                    <p>
+                      This reference could not be resolved because it is invalid
+                      or because it points to something that cannot be
+                      visualised.
+                    </p>
+                  ) : null}
+                </div>
+                {this.props.previewed.loadReferenceResult?.error ? (
+                  <WarningBox
+                    error={this.props.previewed.loadReferenceResult?.error}
+                    viewState={this.props.viewState}
+                  />
+                ) : null}
+              </>
             )}
           </div>
         </div>

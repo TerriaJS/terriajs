@@ -1,35 +1,30 @@
 {
-    "aspects": {
-        "terria-config": {
-            "parameters": {
-                "appName": "TestTerriaMap"
-            }
-        },
-        "terria-init": {
-            "catalog": [
-                {
-                  "type": "csv",
-                  "url": "build/TerriaJS/test/csv/lat_lon_date_value.csv"
-                }
-            ],
-            "corsDomains": [
-                "a-cors.domainz",
-                "mochi.other.domainz"
-            ],
-            "homeCamera": {
-                "east": 2,
-                "north": 1,
-                "south": -2,
-                "west": 1
-            }
-        },
-        "group": {
-            "members": [
-                "a-member"
-            ]
-        }
+  "aspects": {
+    "terria-config": {
+      "parameters": {
+        "appName": "TestTerriaMap"
+      }
     },
-    "id": "map-config-inline-init",
-    "name": "Terria Configuration",
-    "tenantId": 0
+    "terria-init": {
+      "catalog": [
+        {
+          "type": "csv",
+          "url": "build/TerriaJS/test/csv/lat_lon_date_value.csv"
+        }
+      ],
+      "corsDomains": ["a-cors.domainz", "mochi.other.domainz"],
+      "homeCamera": {
+        "east": 2,
+        "north": 1,
+        "south": -2,
+        "west": 1
+      }
+    },
+    "group": {
+      "members": ["a-member"]
+    }
+  },
+  "id": "map-config-inline-init",
+  "name": "Terria Configuration",
+  "tenantId": 0
 }

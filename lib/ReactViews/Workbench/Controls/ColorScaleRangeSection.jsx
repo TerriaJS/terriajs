@@ -1,5 +1,3 @@
-"use strict";
-
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
@@ -18,7 +16,7 @@ const ColorScaleRangeSection = createReactClass({
     t: PropTypes.func.isRequired
   },
 
-  getInitialState: function() {
+  getInitialState: function () {
     return {
       minRange: -50,
       maxRange: 50
@@ -135,4 +133,5 @@ const ColorScaleRangeSection = createReactClass({
     );
   }
 });
-module.exports = withTranslation()(ColorScaleRangeSection);
+
+export default withTranslation()(ColorScaleRangeSection);

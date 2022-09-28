@@ -13,7 +13,7 @@ import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
-import proj4definitions from "../../../Map/Proj4Definitions";
+import proj4definitions from "../../../Map/Vector/Proj4Definitions";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
 import MappableMixin, {
@@ -99,7 +99,7 @@ interface Legend {
 }
 
 interface Legends {
-  layers?: { layerId: number; layerName: string; legend: Legend[] }[];
+  layers?: { layerId: number; layerName: string; legend?: Legend[] }[];
 }
 
 class MapServerStratum extends LoadableStratum(
@@ -181,18 +181,15 @@ class MapServerStratum extends LoadableStratum(
     let layers: Layer[] | undefined;
 
     // Use the slightly more basic layer metadata
-    if (
-      isDefined(layersMetadataResponse) &&
-      isDefined(serviceMetadata.layers)
-    ) {
+    if (isDefined(serviceMetadata.layers)) {
       layers = serviceMetadata.layers;
-    } else {
-      if (isDefined(layersMetadataResponse.layers)) {
-        layers = layersMetadataResponse.layers;
-        // If layersMetadata is only a single layer -> shove into an array
-      } else if (isDefined(layersMetadataResponse.id)) {
-        layers = [layersMetadataResponse];
-      }
+    }
+
+    if (isDefined(layersMetadataResponse?.layers)) {
+      layers = layersMetadataResponse.layers;
+      // If layersMetadata is only a single layer -> shove into an array
+    } else if (isDefined(layersMetadataResponse?.id)) {
+      layers = [layersMetadataResponse];
     }
 
     if (!isDefined(layers) || layers.length === 0) {
@@ -327,7 +324,7 @@ class MapServerStratum extends LoadableStratum(
 
     let items: StratumFromTraits<LegendItemTraits>[] = [];
 
-    (this._legends?.layers || []).forEach(l => {
+    (this._legends?.layers || []).forEach((l) => {
       if (noDataRegex.test(l.layerName) || labelsRegex.test(l.layerName)) {
         return;
       }
@@ -340,7 +337,7 @@ class MapServerStratum extends LoadableStratum(
         return;
       }
 
-      l.legend.forEach(leg => {
+      l.legend?.forEach((leg) => {
         const title = replaceUnderscores(
           leg.label !== "" ? leg.label : l.layerName
         );
@@ -364,12 +361,10 @@ class MapServerStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(MapServerStratum.stratumName);
 
-export default class ArcGisMapServerCatalogItem extends MappableMixin(
-  UrlMixin(
-    DiscretelyTimeVaryingMixin(
-      MinMaxLevelMixin(
-        CatalogMemberMixin(CreateModel(ArcGisMapServerCatalogItemTraits))
-      )
+export default class ArcGisMapServerCatalogItem extends UrlMixin(
+  DiscretelyTimeVaryingMixin(
+    MinMaxLevelMixin(
+      CatalogMemberMixin(CreateModel(ArcGisMapServerCatalogItemTraits))
     )
   )
 ) {
@@ -484,6 +479,8 @@ export default class ArcGisMapServerCatalogItem extends MappableMixin(
         layers: layers,
         tilingScheme: new WebMercatorTilingScheme(),
         maximumLevel: maximumLevel,
+        tileHeight: this.tileHeight,
+        tileWidth: this.tileWidth,
         parameters: params,
         enablePickFeatures: this.allowFeaturePicking,
         usePreCachedTilesIfAvailable: !dynamicRequired,
@@ -531,7 +528,7 @@ export default class ArcGisMapServerCatalogItem extends MappableMixin(
     const stratum = <MapServerStratum>(
       this.strata.get(MapServerStratum.stratumName)
     );
-    const ids = stratum ? stratum.allLayers.map(l => l.id) : [];
+    const ids = stratum ? stratum.allLayers.map((l) => l.id) : [];
     return ids.length === 0 ? undefined : ids.join(",");
   }
 
@@ -550,7 +547,7 @@ export default class ArcGisMapServerCatalogItem extends MappableMixin(
 
     const layerIds = this.layers.split(",");
     return stratum.allLayers.filter(({ id }) =>
-      layerIds.find(x => x == id.toString())
+      layerIds.find((x) => x == id.toString())
     );
   }
 }
@@ -599,7 +596,7 @@ function findLayers(layers: Layer[], names: string | undefined) {
     // If a list of layers is not specified, we're using all layers.
     return layers;
   }
-  return names.split(",").map(function(id) {
+  return names.split(",").map(function (id) {
     return findLayer(layers, id);
   });
 }
@@ -647,7 +644,7 @@ function getRectangleFromLayer(extent: Extent, rectangle: RectangleExtent) {
 }
 
 function getRectangleFromLayers(rectangle: RectangleExtent, layers: Layer[]) {
-  layers.forEach(function(item) {
+  layers.forEach(function (item) {
     item.extent && getRectangleFromLayer(item.extent, rectangle);
   });
 }

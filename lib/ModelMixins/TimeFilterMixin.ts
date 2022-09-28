@@ -7,22 +7,19 @@ import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import LatLonHeight from "../Core/LatLonHeight";
 import runLater from "../Core/runLater";
-import { ProviderCoords, ProviderCoordsMap } from "../Map/PickedFeatures";
-import MappableMixin, { ImageryParts } from "./MappableMixin";
+import {
+  ProviderCoords,
+  ProviderCoordsMap
+} from "../Map/PickedFeatures/PickedFeatures";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import Model from "../Models/Definition/Model";
-import DiscretelyTimeVaryingTraits from "../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
-import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import TimeFilterTraits, {
   TimeFilterCoordinates
 } from "../Traits/TraitsClasses/TimeFilterTraits";
 import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
+import MappableMixin, { ImageryParts } from "./MappableMixin";
 import TimeVarying from "./TimeVarying";
-
-type MixinModel = Model<
-  TimeFilterTraits & DiscretelyTimeVaryingTraits & MappableTraits
->;
 
 /**
  * A Mixin for filtering the dates for which imagery is available at a location
@@ -34,7 +31,9 @@ type MixinModel = Model<
  * Mixin is used to implement the Location filter feature for Satellite
  * Imagery.
  */
-function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
+function TimeFilterMixin<T extends Constructor<Model<TimeFilterTraits>>>(
+  Base: T
+) {
   abstract class TimeFilterMixin extends DiscretelyTimeVaryingMixin(Base) {
     @observable _currentTimeFilterFeature?: Entity;
 
@@ -65,7 +64,7 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
     @action
     async setTimeFilterFromLocation(coordinates: {
       position: LatLonHeight;
-      tileCoords: { x: number; y: number; level: number };
+      tileCoords: ProviderCoords;
     }): Promise<boolean> {
       const propertyName = this.timeFilterPropertyName;
       if (propertyName === undefined || !MappableMixin.isMixedInto(this)) {
@@ -101,7 +100,7 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
       return filterOutUndefined(
         this.mapItems.map(
           // @ts-ignore
-          mapItem => ImageryParts.is(mapItem) && mapItem.imageryProvider.url
+          (mapItem) => ImageryParts.is(mapItem) && mapItem.imageryProvider.url
         )
       );
     }
@@ -125,7 +124,7 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
       }
 
       return filterOutUndefined(
-        featureTimes.map(s => {
+        featureTimes.map((s) => {
           try {
             return s === undefined ? undefined : JulianDate.fromIso8601(s);
           } catch {
@@ -142,8 +141,8 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
         return super.discreteTimesAsSortedJulianDates;
       }
 
-      return super.discreteTimesAsSortedJulianDates?.filter(dt =>
-        featureTimes.some(d => d.equals(dt.time))
+      return super.discreteTimesAsSortedJulianDates?.filter((dt) =>
+        featureTimes.some((d) => d.equals(dt.time))
       );
     }
 
@@ -168,7 +167,7 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
       const position = feature.position.getValue(this.currentTimeAsJulianDate);
       const cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
       const featureImageryUrl = this.imageryUrls.find(
-        url => providerCoords[url]
+        (url) => providerCoords[url]
       );
       const tileCoords = featureImageryUrl && providerCoords[featureImageryUrl];
       if (!tileCoords) return;
@@ -207,7 +206,7 @@ namespace TimeFilterMixin {
 /**
  * Return the feature at position containing the time filter property.
  */
-const resolveFeature = action(async function(
+const resolveFeature = action(async function (
   model: MappableMixin.Instance & TimeVarying,
   propertyName: string,
   position: LatLonHeight,
@@ -216,7 +215,7 @@ const resolveFeature = action(async function(
   const { latitude, longitude, height } = position;
   const { x, y, level } = tileCoords;
   const providers: ProviderCoordsMap = {};
-  model.mapItems.forEach(mapItem => {
+  model.mapItems.forEach((mapItem) => {
     if (ImageryParts.is(mapItem)) {
       // @ts-ignore
       providers[mapItem.imageryProvider.url] = { x, y, level };
@@ -228,7 +227,7 @@ const resolveFeature = action(async function(
     providers
   );
 
-  const feature = (features || []).find(feature => {
+  const feature = (features || []).find((feature) => {
     if (!feature.properties) {
       return false;
     }

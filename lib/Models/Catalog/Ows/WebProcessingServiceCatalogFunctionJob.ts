@@ -10,7 +10,7 @@ import {
 import Mustache from "mustache";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
-import { JsonObject } from "../../../Core/Json";
+import { JsonObject, isJsonObject } from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";
 import CatalogFunctionJobMixin from "../../../ModelMixins/CatalogFunctionJobMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -19,18 +19,18 @@ import xml2json from "../../../ThirdParty/xml2json";
 import { ShortReportTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import { FeatureInfoTemplateTraits } from "../../../Traits/TraitsClasses/FeatureInfoTraits";
 import WebProcessingServiceCatalogFunctionJobTraits from "../../../Traits/TraitsClasses/WebProcessingServiceCatalogFunctionJobTraits";
-import CatalogMemberFactory from "../CatalogMemberFactory";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import updateModelFromJson from "../../Definition/updateModelFromJson";
 import upsertModelFromJson from "../../Definition/upsertModelFromJson";
+import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
+import CatalogMemberFactory from "../CatalogMemberFactory";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
 
@@ -58,7 +58,7 @@ class WpsLoadableStratum extends LoadableStratum(
 
   @computed get shortReportSections() {
     const reports = this.item.outputs
-      .map(output => {
+      .map((output) => {
         let report;
         if (isDefined(output.Data.LiteralData)) {
           report = createStratumInstance(ShortReportTraits, {
@@ -76,7 +76,7 @@ class WpsLoadableStratum extends LoadableStratum(
   @computed get featureInfoTemplate() {
     const template = [
       "#### Inputs\n\n" +
-        this.item.info.find(info => info.name === "Inputs")?.content,
+        this.item.info.find((info) => info.name === "Inputs")?.content,
       "#### Outputs\n\n" + this.outputsSectionHtml
     ].join("\n\n");
     return createStratumInstance(FeatureInfoTemplateTraits, {
@@ -260,8 +260,10 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     }
 
     if (isDefined(status.ProcessFailed)) {
-      throw status.ProcessFailed.ExceptionReport?.Exception?.ExceptionText ||
-        JSON.stringify(status.ProcessFailed);
+      throw (
+        status.ProcessFailed.ExceptionReport?.Exception?.ExceptionText ||
+        JSON.stringify(status.ProcessFailed)
+      );
     } else if (isDefined(status.ProcessSucceeded)) {
       return true;
     }
@@ -346,17 +348,21 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
 
     // Create geojson catalog item for input features
     const geojsonFeatures = runInAction(() => this.geojsonFeatures);
-    if (isDefined(geojsonFeatures)) {
+    if (isJsonObject(geojsonFeatures, false)) {
       runInAction(() => {
         this.geoJsonItem = new GeoJsonCatalogItem(createGuid(), this.terria);
         updateModelFromJson(this.geoJsonItem, CommonStrata.user, {
           name: `${this.name} Input Features`,
+          // Use cesium primitives so we don't have to deal with feature picking/selection
+          forceCesiumPrimitives: true,
           geoJsonData: {
             type: "FeatureCollection",
             features: geojsonFeatures,
             totalFeatures: this.geojsonFeatures!.length
           }
-        });
+        }).logError(
+          "Error ocurred while updating Input Features GeoJSON model JSON"
+        );
       });
       (await this.geoJsonItem!.loadMapItems()).throwIfError;
     }
@@ -370,7 +376,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
 
   @computed get mapItems() {
     if (isDefined(this.geoJsonItem)) {
-      return this.geoJsonItem.mapItems.map(mapItem => {
+      return this.geoJsonItem.mapItems.map((mapItem) => {
         mapItem.show = this.show;
         return mapItem;
       });
@@ -408,15 +414,25 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     const obj = wpsResponse.ProcessOutputs.Output;
     const outputs = Array.isArray(obj) || isObservableArray(obj) ? obj : [obj];
     return outputs.filter(
-      o => o.Identifier !== ".context" && isDefined(o.Data)
+      (o) => o.Identifier !== ".context" && isDefined(o.Data)
     );
   }
 
   private async createCatalogItemFromJson(json: any) {
     let itemJson = json;
     try {
-      itemJson = await tryConvertV7ToV8Catalog(json);
-    } catch {}
+      if (
+        this.forceConvertResultsToV8 ||
+        // If startData.version has version 0.x.x - user catalog-converter to convert result
+        ("version" in itemJson &&
+          typeof itemJson.version === "string" &&
+          itemJson.version.startsWith("0"))
+      ) {
+        itemJson = await convertResultV7toV8(json);
+      }
+    } catch (e) {
+      throw e;
+    }
     const catalogItem = upsertModelFromJson(
       CatalogMemberFactory,
       this.terria,
@@ -429,7 +445,12 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
       {
         addModelToTerria: false
       }
-    ).throwIfError();
+    ).throwIfError({
+      title: "WPS output error",
+      message: `Failed to create Terria model from WPS output${
+        itemJson.name ? `: ${itemJson.name}` : ""
+      }`
+    });
     return catalogItem;
   }
 }
@@ -441,7 +462,7 @@ function formatOutputValue(title: string, value: string | undefined) {
 
   const values = value.split(",");
 
-  return values.reduce(function(previousValue, currentValue) {
+  return values.reduce(function (previousValue, currentValue) {
     if (value.match(/[.\/](png|jpg|jpeg|gif|svg)/i)) {
       return (
         previousValue +
@@ -472,19 +493,25 @@ function formatOutputValue(title: string, value: string | undefined) {
   }, "");
 }
 
-async function tryConvertV7ToV8Catalog(
+async function convertResultV7toV8(
   input: JsonObject
 ): Promise<Record<string, unknown> | undefined> {
   const { convertMember, convertCatalog } = await import("catalog-converter");
   if (typeof input.type === "string") {
     const { member, messages } = convertMember(input);
-    if (member === null || messages.length > 0)
-      throw new Error("Error converting v7 item to v8");
+    if (member === null)
+      throw TerriaError.combine(
+        messages.map((m) => TerriaError.from(m.message)),
+        "Error converting v7 item to v8"
+      );
     return member;
   } else {
     const { result, messages } = convertCatalog(input);
-    if (result === null || messages.length > 0)
-      throw new Error("Error converting v7 catalog to v8");
+    if (result === null)
+      throw TerriaError.combine(
+        messages.map((m) => TerriaError.from(m.message)),
+        "Error converting v7 catalog to v8"
+      );
     return result;
   }
 }

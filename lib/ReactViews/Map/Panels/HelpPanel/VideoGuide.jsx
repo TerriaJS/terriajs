@@ -10,7 +10,7 @@ import { useKeyPress } from "../../../Hooks/useKeyPress.js";
 import { RawButton } from "../../../../Styled/Button";
 import Icon, { StyledIcon } from "../../../../Styled/Icon";
 
-const VideoWrapperBox = props => {
+const VideoWrapperBox = (props) => {
   const { viewState } = props;
   const handleClose = () => viewState.setVideoGuideVisible("");
 
@@ -21,7 +21,7 @@ const VideoWrapperBox = props => {
   return (
     <Box
       centered
-      onClick={e => {
+      onClick={(e) => {
         e.stopPropagation();
         handleClose();
       }}
@@ -63,6 +63,8 @@ class VideoGuide extends React.Component {
     videoName: PropTypes.string.isRequired,
     videoLink: PropTypes.string,
     background: PropTypes.string,
+    // A number between 0 and 1.0
+    backgroundOpacity: PropTypes.number,
     theme: PropTypes.object,
     t: PropTypes.func
   };
@@ -72,6 +74,9 @@ class VideoGuide extends React.Component {
   }
 
   render() {
+    const backgroundOpacity = this.props.backgroundOpacity;
+    const backgroundBlackOverlay =
+      backgroundOpacity === undefined ? undefined : 1.0 - backgroundOpacity;
     return (
       <FadeIn
         isVisible={
@@ -84,6 +89,7 @@ class VideoGuide extends React.Component {
             col11
             styledHeight={"87%"}
             backgroundImage={this.props.background}
+            backgroundBlackOverlay={backgroundBlackOverlay}
             css={`
               svg {
                 fill: #fff;
@@ -93,7 +99,7 @@ class VideoGuide extends React.Component {
                 left: -30px;
               }
             `}
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
           >
             <Loader message={` `} />
             <iframe

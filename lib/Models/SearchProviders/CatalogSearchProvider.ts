@@ -41,7 +41,7 @@ export function loadAndSearchCatalogRecursively(
       // saveModelToJson(modelToSave, {
       //   includeStrata: [CommonStrata.definition]
       // });
-      autorun(reaction => {
+      autorun((reaction) => {
         const searchString = `${modelToSave.name} ${modelToSave.uniqueId} ${modelToSave.description}`;
         const matchesString =
           searchString.toLowerCase().indexOf(searchTextLowercase) !== -1;
@@ -73,10 +73,10 @@ export function loadAndSearchCatalogRecursively(
   if (referencesAndGroupsToLoad.length === 0) {
     return Promise.resolve();
   }
-  return new Promise(resolve => {
-    autorun(reaction => {
+  return new Promise((resolve) => {
+    autorun((reaction) => {
       Promise.all(
-        referencesAndGroupsToLoad.map(async model => {
+        referencesAndGroupsToLoad.map(async (model) => {
           if (ReferenceMixin.isMixedInto(model)) {
             // TODO: could handle errors better here
             (await model.loadReference()).throwIfError();
@@ -126,12 +126,13 @@ export default class CatalogSearchProvider extends SearchProvider {
     searchText: string,
     searchResults: SearchProviderResults
   ): Promise<void> {
-    this.isSearching = true;
+    runInAction(() => (this.isSearching = true));
+
     searchResults.results.length = 0;
     searchResults.message = undefined;
 
     if (searchText === undefined || /^\s*$/.test(searchText)) {
-      this.isSearching = false;
+      runInAction(() => (this.isSearching = false));
       return Promise.resolve();
     }
 

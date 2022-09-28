@@ -1,4 +1,4 @@
-import { observable, runInAction, untracked, computed } from "mobx";
+import { computed, observable, runInAction, untracked } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
@@ -6,6 +6,7 @@ import Result from "../Core/Result";
 import Model, { BaseModel, ModelInterface } from "../Models/Definition/Model";
 import ReferenceTraits from "../Traits/TraitsClasses/ReferenceTraits";
 import { getName } from "./CatalogMemberMixin";
+import { applyItemProperties } from "./GroupMixin";
 
 interface ReferenceInterface extends ModelInterface<ReferenceTraits> {
   readonly isLoadingReference: boolean;
@@ -23,8 +24,10 @@ interface ReferenceInterface extends ModelInterface<ReferenceTraits> {
 function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
   Base: T
 ) {
-  abstract class ReferenceMixinClass extends Base
-    implements ReferenceInterface {
+  abstract class ReferenceMixinClass
+    extends Base
+    implements ReferenceInterface
+  {
     /** A "weak" reference has a target which doesn't include the `sourceReference` property.
      * This means the reference is treated more like a shortcut to the target. So share links, for example, will use the target instead of sourceReference. */
     protected readonly weakReference: boolean = false;
@@ -32,32 +35,30 @@ function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
     @observable
     private _target: BaseModel | undefined;
 
-    private _referenceLoader = new AsyncLoader(() => {
+    private _referenceLoader = new AsyncLoader(async () => {
       const previousTarget = untracked(() => this._target);
-      return this.forceLoadReference(previousTarget).then(target => {
-        if (!target) {
-          throw new DeveloperError("Failed to create reference");
-        }
+      const target = await this.forceLoadReference(previousTarget);
 
-        if (target?.uniqueId !== this.uniqueId) {
-          throw new DeveloperError(
-            "The model returned by `forceLoadReference` must be constructed with its `uniqueId` set to the same value as the Reference model."
-          );
-        }
-        if (!this.weakReference && target?.sourceReference !== this) {
-          throw new DeveloperError(
-            "The model returned by `forceLoadReference` must be constructed with its `sourceReference` set to the Reference model."
-          );
-        }
-
-        if (this.weakReference && target?.sourceReference) {
-          throw new DeveloperError(
-            'This is a "weak" reference, so the model returned by `forceLoadReference` must not have a `sourceReference` set.'
-          );
-        }
-        runInAction(() => {
-          this._target = target;
-        });
+      if (!target) {
+        throw new DeveloperError("Failed to create reference");
+      }
+      if (target?.uniqueId !== this.uniqueId) {
+        throw new DeveloperError(
+          "The model returned by `forceLoadReference` must be constructed with its `uniqueId` set to the same value as the Reference model."
+        );
+      }
+      if (!this.weakReference && target?.sourceReference !== this) {
+        throw new DeveloperError(
+          "The model returned by `forceLoadReference` must be constructed with its `sourceReference` set to the Reference model."
+        );
+      }
+      if (this.weakReference && target?.sourceReference) {
+        throw new DeveloperError(
+          'This is a "weak" reference, so the model returned by `forceLoadReference` must not have a `sourceReference` set.'
+        );
+      }
+      runInAction(() => {
+        this._target = target;
       });
     });
 
@@ -102,9 +103,24 @@ function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
      * {@see AsyncLoader}
      */
     async loadReference(forceReload: boolean = false): Promise<Result<void>> {
-      return (await this._referenceLoader.load(forceReload)).clone(
+      const result = (await this._referenceLoader.load(forceReload)).clone(
         `Failed to load reference \`${getName(this)}\``
       );
+
+      if (!result.error && this.target) {
+        runInAction(() => {
+          // Copy knownContainerUniqueIds to target
+          this.knownContainerUniqueIds.forEach((id) =>
+            !this.target!.knownContainerUniqueIds.includes(id)
+              ? this.target!.knownContainerUniqueIds.push(id)
+              : null
+          );
+        });
+
+        applyItemProperties(this, this.target);
+      }
+
+      return result;
     }
 
     /**

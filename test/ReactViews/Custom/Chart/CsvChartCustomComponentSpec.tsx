@@ -1,5 +1,5 @@
 import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
-import Feature from "../../../../lib/Models/Feature";
+import TerriaFeature from "../../../../lib/Models/Feature/Feature";
 import StubCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import CsvChartCustomComponent from "../../../../lib/ReactViews/Custom/CsvChartCustomComponent";
@@ -8,26 +8,26 @@ import {
   ProcessNodeContext
 } from "../../../../lib/ReactViews/Custom/CustomComponent";
 
-describe("CsvChartCustomComponent", function() {
+describe("CsvChartCustomComponent", function () {
   let terria: Terria;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
   });
 
-  describe("setTraitsFromAttrs", function() {
+  describe("setTraitsFromAttrs", function () {
     let component: CsvChartCustomComponent;
     let context: ProcessNodeContext;
     let node: DomElement;
 
-    beforeEach(function() {
+    beforeEach(function () {
       component = new CsvChartCustomComponent();
       context = {
         terria: terria,
         catalogItem: new StubCatalogItem(undefined, terria, undefined),
-        feature: new Feature({})
+        feature: new TerriaFeature({})
       };
       node = {
         name: component.name,
@@ -37,7 +37,7 @@ describe("CsvChartCustomComponent", function() {
       };
     });
 
-    it("accepts a list of plain strings columnTitles", async function() {
+    it("accepts a list of plain strings columnTitles", async function () {
       node.attribs = {
         ...node.attribs,
         "column-titles": "Meteor,Speed,Temperature"
@@ -56,7 +56,7 @@ describe("CsvChartCustomComponent", function() {
       }
     });
 
-    it("accepts a list of {name, title} columnTitles", async function() {
+    it("accepts a list of {name, title} columnTitles", async function () {
       node.attribs = {
         ...node.attribs,
         "column-titles": "x:Meteor,y:Speed,z:Temperature"
@@ -71,6 +71,11 @@ describe("CsvChartCustomComponent", function() {
         expect(csvCatalogItem.columns[1].title).toBe("Speed");
         expect(csvCatalogItem.columns[2].title).toBe("Temperature");
       }
+    });
+
+    it("can create a download url from csv text passed as chart body", function () {
+      const url = component.constructDownloadUrlFromBody("a,b\n1,2\n3,4");
+      expect(url.startsWith("blob:")).toBeTruthy();
     });
   });
 });

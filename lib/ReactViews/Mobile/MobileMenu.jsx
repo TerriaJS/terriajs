@@ -10,15 +10,12 @@ import MobileMenuItem from "./MobileMenuItem";
 import SettingPanel from "../Map/Panels/SettingPanel";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel";
 // import HelpMenuPanelBasic from "../HelpScreens/HelpMenuPanelBasic";
-import Terria from "../../Models/Terria";
 import { withTranslation } from "react-i18next";
-
-import ViewState from "../../ReactViewModels/ViewState";
 
 import Styles from "./mobile-menu.scss";
 import { runInAction } from "mobx";
 import LangPanel from "../Map/Panels/LangPanel/LangPanel";
-import { useTranslationIfExists } from "../../Language/languageHelpers";
+import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import { Category, HelpAction } from "../../Core/AnalyticEvents/analyticEvents";
 
 const MobileMenu = observer(
@@ -28,9 +25,9 @@ const MobileMenu = observer(
     propTypes: {
       menuItems: PropTypes.arrayOf(PropTypes.element),
       menuLeftItems: PropTypes.arrayOf(PropTypes.element),
-      viewState: PropTypes.instanceOf(ViewState).isRequired,
+      viewState: PropTypes.object.isRequired,
       showFeedback: PropTypes.bool,
-      terria: PropTypes.instanceOf(Terria).isRequired,
+      terria: PropTypes.object.isRequired,
       i18n: PropTypes.object,
       allBaseMaps: PropTypes.array.isRequired,
       t: PropTypes.func.isRequired
@@ -45,8 +42,8 @@ const MobileMenu = observer(
 
     toggleMenu() {
       runInAction(() => {
-        this.props.viewState.mobileMenuVisible = !this.props.viewState
-          .mobileMenuVisible;
+        this.props.viewState.mobileMenuVisible =
+          !this.props.viewState.mobileMenuVisible;
       });
     },
 
@@ -68,11 +65,7 @@ const MobileMenu = observer(
     },
 
     runStories() {
-      runInAction(() => {
-        this.props.viewState.storyBuilderShown = false;
-        this.props.viewState.storyShown = true;
-        this.props.viewState.mobileMenuVisible = false;
-      });
+      this.props.viewState.runStories();
     },
 
     dismissSatelliteGuidanceAction() {
@@ -91,7 +84,10 @@ const MobileMenu = observer(
       if (!mapUserGuideItem) {
         return undefined;
       }
-      const title = useTranslationIfExists(mapUserGuideItem.title);
+      const title = applyTranslationIfExists(
+        mapUserGuideItem.title,
+        this.props.i18n
+      );
       return {
         href: mapUserGuideItem.url,
         caption: title,

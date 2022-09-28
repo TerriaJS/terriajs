@@ -9,12 +9,12 @@ import WebMapServiceCatalogItem from "../../../lib/Models/Catalog/Ows/WebMapServ
 import Description from "../../../lib/ReactViews/Preview/Description";
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface/StandardTheme";
 
-describe("DescriptionSpec", function() {
+describe("DescriptionSpec", function () {
   let testRenderer: ReactTestRenderer;
   let terria: Terria;
   let wmsItem: WebMapServiceCatalogItem;
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -26,7 +26,7 @@ describe("DescriptionSpec", function() {
     await wmsItem.loadMetadata();
   });
 
-  it("renders metadataUrls", function() {
+  it("renders metadataUrls", function () {
     act(() => {
       testRenderer = create(
         <ThemeProvider theme={terriaTheme}>
@@ -36,7 +36,7 @@ describe("DescriptionSpec", function() {
     });
 
     const metadataUrls = testRenderer.root.findAll(
-      node =>
+      (node) =>
         node.props.className?.includes("description-metadataUrls") &&
         node.type === "a"
     );
@@ -46,7 +46,7 @@ describe("DescriptionSpec", function() {
     expect(metadataUrls[0].children[0]).toBe("http://examplemetadata.com");
   });
 
-  it("renders metadataUrl button", function() {
+  it("renders metadataUrl button", function () {
     runInAction(() => {
       updateModelFromJson(wmsItem, "definition", {
         metadataUrls: [{ title: "Some Title" }]
@@ -62,7 +62,7 @@ describe("DescriptionSpec", function() {
     });
 
     const metadataUrls = testRenderer.root.findAll(
-      node =>
+      (node) =>
         node.props.className?.includes("description-metadataUrls") &&
         node.type === "a"
     );
@@ -75,7 +75,7 @@ describe("DescriptionSpec", function() {
     expect(child.props.children).toBe("Some Title");
   });
 
-  it("renders dataUrls", function() {
+  it("renders dataUrls", function () {
     runInAction(() => {
       updateModelFromJson(wmsItem, "definition", {
         metadataUrls: [{ title: "Some Title" }],
@@ -97,7 +97,7 @@ describe("DescriptionSpec", function() {
     });
 
     const dataUrls = testRenderer.root.findAll(
-      node =>
+      (node) =>
         node.props.className?.includes("description-dataUrls") &&
         node.type === "a"
     );
@@ -107,7 +107,7 @@ describe("DescriptionSpec", function() {
     expect(dataUrls[0].children[0]).toBe("http://exampledata.com");
   });
 
-  it("renders metadataUrl button", function() {
+  it("renders metadataUrl button", function () {
     runInAction(() => {
       updateModelFromJson(wmsItem, "definition", {
         metadataUrls: [{ title: "Some Title" }],
@@ -130,7 +130,7 @@ describe("DescriptionSpec", function() {
     });
 
     const dataUrls = testRenderer.root.findAll(
-      node =>
+      (node) =>
         node.props.className?.includes("description-dataUrls") &&
         node.type === "a"
     );

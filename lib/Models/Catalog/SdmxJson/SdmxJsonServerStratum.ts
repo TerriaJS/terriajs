@@ -107,7 +107,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
 
     // If categorisations exist => organise Dataflows into a tree!
     if (isDefined(this.sdmxServer.categorisations)) {
-      this.sdmxServer.categorisations.forEach(categorisiation => {
+      this.sdmxServer.categorisations.forEach((categorisiation) => {
         const categorySchemeUrn = parseSdmxUrn(categorisiation.target);
 
         const agencyId = categorySchemeUrn?.agencyId;
@@ -158,7 +158,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
         let categoryParentNode = categorySchemeNode;
 
         // Make category nodes (may be nested)
-        categoryIds.forEach(categoryId => {
+        categoryIds.forEach((categoryId) => {
           // Create category node if it doesn't exist
           if (!isDefined(categoryParentNode.members![categoryId])) {
             let category: Category | undefined;
@@ -231,11 +231,11 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
       );
     }
 
-    return rootTreeNodes.map(node => this.getMemberId(node));
+    return rootTreeNodes.map((node) => this.getMemberId(node));
   }
 
   createMembers() {
-    Object.values(this.dataflowTree).forEach(node =>
+    Object.values(this.dataflowTree).forEach((node) =>
       this.createMemberFromLayer(node)
     );
   }
@@ -249,13 +249,12 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     }
 
     // Replace the stratum inherited from the parent group.
-    const stratum = CommonStrata.underride;
 
     // If has nested layers -> create model for CatalogGroup
     if (node.members && Object.keys(node.members).length > 0) {
       // Create nested layers
 
-      Object.values(node.members).forEach(member =>
+      Object.values(node.members).forEach((member) =>
         this.createMemberFromLayer(member)
       );
 
@@ -273,18 +272,26 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
         groupModel = existingGroupModel;
       }
 
-      groupModel.setTrait(stratum, "name", node.item.name || node.item.id);
       groupModel.setTrait(
-        stratum,
+        CommonStrata.definition,
+        "name",
+        node.item.name || node.item.id
+      );
+      groupModel.setTrait(
+        CommonStrata.definition,
         "members",
         filterOutUndefined(
-          Object.values(node.members).map(member => this.getMemberId(member))
+          Object.values(node.members).map((member) => this.getMemberId(member))
         )
       );
 
       // Set group description
       if (node.item.description) {
-        groupModel.setTrait(stratum, "description", node.item.description);
+        groupModel.setTrait(
+          CommonStrata.definition,
+          "description",
+          node.item.description
+        );
       }
 
       return;
@@ -315,20 +322,32 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
       itemModel = existingItemModel;
     }
 
-    itemModel.strata.delete(stratum);
-
-    itemModel.setTrait(stratum, "name", node.item.name || node.item.id);
-    itemModel.setTrait(stratum, "url", this.catalogGroup.url);
-    // Set group description
-    if (node.item.description) {
-      itemModel.setTrait(stratum, "description", node.item.description);
-    }
-
-    itemModel.setTrait(stratum, "agencyId", node.item.agencyID as string);
-    itemModel.setTrait(stratum, "dataflowId", node.item.id);
+    itemModel.strata.delete(CommonStrata.definition);
 
     itemModel.setTrait(
-      stratum,
+      CommonStrata.definition,
+      "name",
+      node.item.name || node.item.id
+    );
+    itemModel.setTrait(CommonStrata.definition, "url", this.catalogGroup.url);
+    // Set group description
+    if (node.item.description) {
+      itemModel.setTrait(
+        CommonStrata.definition,
+        "description",
+        node.item.description
+      );
+    }
+
+    itemModel.setTrait(
+      CommonStrata.definition,
+      "agencyId",
+      node.item.agencyID as string
+    );
+    itemModel.setTrait(CommonStrata.definition, "dataflowId", node.item.id);
+
+    itemModel.setTrait(
+      CommonStrata.definition,
       "modelOverrides",
       this.catalogGroup.traits.modelOverrides.toJson(
         this.catalogGroup.modelOverrides
@@ -342,12 +361,12 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
 
   getDataflow(id?: string) {
     if (!isDefined(id)) return;
-    return this.sdmxServer.dataflows.find(d => d.id === id);
+    return this.sdmxServer.dataflows.find((d) => d.id === id);
   }
 
   getCategoryScheme(id?: string) {
     if (!isDefined(id)) return;
-    return this.sdmxServer.categorySchemes?.find(d => d.id === id);
+    return this.sdmxServer.categorySchemes?.find((d) => d.id === id);
   }
 
   getCategoryFromCatagoryScheme(
@@ -367,20 +386,20 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
   }
 
   getCategoryFromCategories(categories: Categories | undefined, id?: string) {
-    return isDefined(id) ? categories?.find(c => c.id === id) : undefined;
+    return isDefined(id) ? categories?.find((c) => c.id === id) : undefined;
   }
 
   getAgency(id?: string) {
     if (!isDefined(id)) return;
 
     const agencies = this.sdmxServer.agencySchemes?.map(
-      agencyScheme => agencyScheme.agencies
+      (agencyScheme) => agencyScheme.agencies
     );
 
     if (!isDefined(agencies)) return;
 
     return flatten(filterOutUndefined(agencies)).find(
-      d => d.id === id
+      (d) => d.id === id
     ) as Agency;
   }
 }
@@ -398,7 +417,7 @@ export function parseSdmxUrn(urn?: string) {
   if (
     matches.length >= 1 &&
     matches[0].length >= 3 &&
-    !isDefined([0, 1, 2].find(idx => matches[0][idx] === null))
+    !isDefined([0, 1, 2].find((idx) => matches[0][idx] === null))
   ) {
     return {
       agencyId: matches[0][0],

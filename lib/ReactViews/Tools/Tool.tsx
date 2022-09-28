@@ -1,16 +1,19 @@
-import { WithT } from "i18next";
+import i18next, { WithT } from "i18next";
 import { computed } from "mobx";
 import React, { Suspense, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import TerriaError from "../../Core/TerriaError";
-import { useTranslationIfExists } from "../../Language/languageHelpers";
+import {
+  applyTranslationIfExists,
+  TRANSLATE_KEY_PREFIX
+} from "../../Language/languageHelpers";
 import Terria from "../../Models/Terria";
 import ViewerMode from "../../Models/ViewerMode";
 import ViewState from "../../ReactViewModels/ViewState";
 import MapNavigationItemController from "../../ViewModels/MapNavigation/MapNavigationItemController";
+import { useViewState } from "../StandardUserInterface/ViewStateContext";
 
 interface ToolProps {
-  viewState: ViewState;
   toolName: string;
   getToolComponent: () => React.ComponentType | Promise<React.ComponentType>;
   params?: any;
@@ -24,8 +27,9 @@ interface ToolProps {
  * module that exports a default React Component. The promise is useful for
  * lazy-loading the tool.
  */
-const Tool: React.FC<ToolProps> = props => {
-  const { viewState, getToolComponent, params, toolName } = props;
+const Tool: React.FC<ToolProps> = (props) => {
+  const { getToolComponent, params, toolName } = props;
+  const viewState = useViewState();
   const [t] = useTranslation();
 
   // Track the tool component & props together so that we always
@@ -34,7 +38,7 @@ const Tool: React.FC<ToolProps> = props => {
   useEffect(() => {
     setToolAndProps([
       React.lazy(() =>
-        Promise.resolve(getToolComponent()).then(c => ({ default: c }))
+        Promise.resolve(getToolComponent()).then((c) => ({ default: c }))
       ),
       params
     ]);
@@ -56,6 +60,7 @@ const Tool: React.FC<ToolProps> = props => {
 
 interface ToolButtonProps extends ToolProps {
   icon: { id: string };
+  viewState: ViewState;
 }
 
 export class ToolButtonController extends MapNavigationItemController {
@@ -70,15 +75,21 @@ export class ToolButtonController extends MapNavigationItemController {
   }
 
   get name() {
-    return useTranslationIfExists(this.props.toolName);
+    return applyTranslationIfExists(this.props.toolName, i18next);
   }
-  @computed
+
+  // TODO: do not use the global i18next instead get i18n from react-i18next
+  // @computed
   get title() {
     const buttonState = this.active ? "open" : "closed";
-    return useTranslationIfExists(`tool.button.${buttonState}`, {
-      toolName: this.name,
-      toolNameLowerCase: this.name.toLowerCase()
-    });
+    return applyTranslationIfExists(
+      `${TRANSLATE_KEY_PREFIX}tool.button.${buttonState}`,
+      i18next,
+      {
+        toolName: this.name,
+        toolNameLowerCase: this.name.toLowerCase()
+      }
+    );
   }
 
   @computed

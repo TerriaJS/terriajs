@@ -5,7 +5,6 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import ObserverModelMixin from "../../../ObserveModelMixin";
 import defined from "terriajs-cesium/Source/Core/defined";
-import when from "terriajs-cesium/Source/ThirdParty/when";
 import { withTranslation } from "react-i18next";
 import Loader from "../../../Loader";
 
@@ -76,7 +75,7 @@ const CountDatasets = createReactClass({
                     path.slice()
                   )
                 )
-                .otherwise(
+                .catch(
                   reportLoadError.bind(undefined, item, stats, path.slice())
                 )
             );
@@ -92,11 +91,11 @@ const CountDatasets = createReactClass({
         }
       }
 
-      return when.all(promises);
+      return Promise.all(promises);
     }
 
     function recurseAndUpdateTotals(item, stats, childStats, path) {
-      const promise = counter(item, childStats, path).then(function() {
+      const promise = counter(item, childStats, path).then(function () {
         stats.groups += childStats.groups + 1;
         stats.items += childStats.items;
         stats.messages.push.apply(stats.messages, childStats.messages);
@@ -118,7 +117,7 @@ const CountDatasets = createReactClass({
     const root = this.props.terria.catalog.group;
     const that = this;
 
-    counter(root, totals, []).then(function() {
+    counter(root, totals, []).then(function () {
       let info = t("countDatasets.totals", {
         items: totals.items,
         groups: totals.groups

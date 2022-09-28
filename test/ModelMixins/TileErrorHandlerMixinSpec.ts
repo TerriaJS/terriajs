@@ -12,7 +12,7 @@ import Terria from "../../lib/Models/Terria";
 import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
 import mixTraits from "../../lib/Traits/mixTraits";
-import RasterLayerTraits from "../../lib/Traits/TraitsClasses/RasterLayerTraits";
+import ImageryProviderTraits from "../../lib/Traits/TraitsClasses/ImageryProviderTraits";
 import UrlTraits from "../../lib/Traits/TraitsClasses/UrlTraits";
 
 class TestCatalogItem extends TileErrorHandlerMixin(
@@ -20,7 +20,7 @@ class TestCatalogItem extends TileErrorHandlerMixin(
     CreateModel(
       mixTraits(
         UrlTraits,
-        RasterLayerTraits,
+        ImageryProviderTraits,
         MappableTraits,
         CatalogMemberTraits
       )
@@ -58,12 +58,12 @@ class TestCatalogItem extends TileErrorHandlerMixin(
   }
 }
 
-describe("TileErrorHandlerMixin", function() {
+describe("TileErrorHandlerMixin", function () {
   let item: TestCatalogItem;
   let imageryProvider: ImageryProvider;
 
   const newError = (statusCode: number | undefined, timesRetried = 0) => {
-    const httpError = (new RequestErrorEvent(statusCode) as any) as Error;
+    const httpError = new RequestErrorEvent(statusCode) as any as Error;
     return new TileProviderError(
       imageryProvider,
       "Something broke",
@@ -82,14 +82,14 @@ describe("TileErrorHandlerMixin", function() {
     return new Promise((resolve, reject) => {
       const retry: { then?: any; otherwise: any } = error.retry as any;
       if (retry && retry.then) {
-        retry.then(resolve).otherwise(reject);
+        retry.then(resolve).catch(reject);
       } else {
         resolve();
       }
     });
   }
 
-  beforeEach(function() {
+  beforeEach(function () {
     imageryProvider = new WebMapServiceImageryProvider({
       url: "/foo",
       layers: "0"
@@ -98,7 +98,7 @@ describe("TileErrorHandlerMixin", function() {
     item.setTrait(CommonStrata.user, "url", "/foo");
   });
 
-  it("gives up silently if the failed tile is outside the extent of the item", async function() {
+  it("gives up silently if the failed tile is outside the extent of the item", async function () {
     item.setTrait(CommonStrata.user, "rectangle", {
       west: 106.9,
       east: 120.9,
@@ -111,8 +111,8 @@ describe("TileErrorHandlerMixin", function() {
     expect(item.tileFailures).toBe(0);
   });
 
-  describe("when statusCode is between 400 and 499", function() {
-    it("gives up silently if statusCode is 403 and treat403AsError is false", async function() {
+  describe("when statusCode is between 400 and 499", function () {
+    it("gives up silently if statusCode is 403 and treat403AsError is false", async function () {
       try {
         item.tileErrorHandlingOptions.setTrait(
           CommonStrata.user,
@@ -124,7 +124,7 @@ describe("TileErrorHandlerMixin", function() {
       expect(item.tileFailures).toBe(0);
     });
 
-    it("gives up silently if statusCode is 404 and treat404AsError is false", async function() {
+    it("gives up silently if statusCode is 404 and treat404AsError is false", async function () {
       try {
         item.tileErrorHandlingOptions.setTrait(
           CommonStrata.user,
@@ -136,7 +136,7 @@ describe("TileErrorHandlerMixin", function() {
       expect(item.tileFailures).toBe(0);
     });
 
-    it("fails otherwise", async function() {
+    it("fails otherwise", async function () {
       item.tileErrorHandlingOptions.setTrait(
         CommonStrata.user,
         "treat403AsError",
@@ -158,8 +158,8 @@ describe("TileErrorHandlerMixin", function() {
     });
   });
 
-  describe("when statusCode is between 500 and 599", function() {
-    it("retries fetching the tile using xhr", async function() {
+  describe("when statusCode is between 500 and 599", function () {
+    it("retries fetching the tile using xhr", async function () {
       try {
         const error = newError(randomIntBetween(500, 599));
         spyOn(Resource, "fetchImage").and.returnValue(
@@ -171,10 +171,10 @@ describe("TileErrorHandlerMixin", function() {
     });
   });
 
-  describe("when statusCode is undefined", function() {
+  describe("when statusCode is undefined", function () {
     let raiseEvent: jasmine.Spy;
 
-    beforeEach(function() {
+    beforeEach(function () {
       raiseEvent = spyOn(item.terria, "raiseErrorToUser");
       item.tileErrorHandlingOptions.setTrait(
         CommonStrata.user,
@@ -183,7 +183,7 @@ describe("TileErrorHandlerMixin", function() {
       );
     });
 
-    it("gives up silently if ignoreUnknownTileErrors is true", async function() {
+    it("gives up silently if ignoreUnknownTileErrors is true", async function () {
       item.tileErrorHandlingOptions.setTrait(
         CommonStrata.user,
         "ignoreUnknownTileErrors",
@@ -196,7 +196,7 @@ describe("TileErrorHandlerMixin", function() {
       expect(raiseEvent.calls.count()).toBe(0);
     });
 
-    it("fails with bad image error if the error defines a target element", async function() {
+    it("fails with bad image error if the error defines a target element", async function () {
       try {
         const tileProviderError = newError(undefined);
         // @ts-ignore
@@ -210,7 +210,7 @@ describe("TileErrorHandlerMixin", function() {
       );
     });
 
-    it("otherwise, it fails with unknown error", async function() {
+    it("otherwise, it fails with unknown error", async function () {
       try {
         await onTileLoadError(item, newError(undefined));
       } catch {}
@@ -222,8 +222,8 @@ describe("TileErrorHandlerMixin", function() {
     });
   });
 
-  describe("when performing xhr retries", function() {
-    it("it fails after retrying a maximum of specified number of times", async function() {
+  describe("when performing xhr retries", function () {
+    it("it fails after retrying a maximum of specified number of times", async function () {
       try {
         const error = newError(randomIntBetween(500, 599));
         spyOn(Resource, "fetchImage").and.returnValue(
@@ -232,18 +232,20 @@ describe("TileErrorHandlerMixin", function() {
         await onTileLoadError(item, error);
       } catch {}
       expect(Resource.fetchImage).toHaveBeenCalledTimes(
-        item.tileRetryOptions.retries || 0
+        !Array.isArray(item.tileRetryOptions)
+          ? item.tileRetryOptions.retries ?? 0
+          : 0
       );
       expect(item.tileFailures).toBe(1);
     });
 
-    it("tells the map to reload the tile again if an xhr attempt succeeds", async function() {
+    it("tells the map to reload the tile again if an xhr attempt succeeds", async function () {
       spyOn(Resource, "fetchImage").and.returnValue(Promise.resolve());
       await onTileLoadError(item, newError(randomIntBetween(500, 599)));
       expect(item.tileFailures).toBe(0);
     });
 
-    it("fails if the xhr succeeds but the map fails to load the tile for more than 5 times", async function() {
+    it("fails if the xhr succeeds but the map fails to load the tile for more than 5 times", async function () {
       try {
         spyOn(Resource, "fetchImage").and.returnValue(Promise.resolve());
         await onTileLoadError(item, newError(randomIntBetween(500, 599), 0));
@@ -256,7 +258,7 @@ describe("TileErrorHandlerMixin", function() {
       expect(item.tileFailures).toEqual(1);
     });
 
-    it("gives up silently if the item is hidden", async function() {
+    it("gives up silently if the item is hidden", async function () {
       try {
         const error = newError(randomIntBetween(500, 599));
         spyOn(Resource, "fetchImage").and.returnValue(
@@ -270,8 +272,8 @@ describe("TileErrorHandlerMixin", function() {
     });
   });
 
-  describe("when a tile fails more than the threshold number of times", function() {
-    beforeEach(function() {
+  describe("when a tile fails more than the threshold number of times", function () {
+    beforeEach(function () {
       item.tileErrorHandlingOptions.setTrait(
         CommonStrata.user,
         "thresholdBeforeDisablingItem",
@@ -279,7 +281,7 @@ describe("TileErrorHandlerMixin", function() {
       );
     });
 
-    it("reports the last error to the user", async function() {
+    it("reports the last error to the user", async function () {
       spyOn(item.terria, "raiseErrorToUser");
       try {
         await onTileLoadError(item, newError(undefined));
@@ -291,7 +293,7 @@ describe("TileErrorHandlerMixin", function() {
       expect(item.terria.raiseErrorToUser).toHaveBeenCalled();
     });
 
-    it("disables the catalog item", async function() {
+    it("disables the catalog item", async function () {
       expect(item.show).toBe(true);
       try {
         await onTileLoadError(item, newError(undefined));
@@ -303,7 +305,7 @@ describe("TileErrorHandlerMixin", function() {
     });
   });
 
-  it("resets tileFailures to 0 when there is an intervening success", async function() {
+  it("resets tileFailures to 0 when there is an intervening success", async function () {
     const error = newError(undefined);
     expect(item.tileFailures).toBe(0);
 
@@ -325,8 +327,8 @@ describe("TileErrorHandlerMixin", function() {
     expect(item.tileFailures).toBe(1);
   });
 
-  it("calls `handleTileError` if the item defines it", async function() {
-    item.handleTileError = promise => promise;
+  it("calls `handleTileError` if the item defines it", async function () {
+    item.handleTileError = (promise) => promise;
     spyOn(item, "handleTileError");
     try {
       await onTileLoadError(item, newError(400));

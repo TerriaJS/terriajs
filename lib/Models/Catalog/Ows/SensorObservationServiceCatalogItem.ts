@@ -9,27 +9,24 @@ import loadWithXhr from "../../../Core/loadWithXhr";
 import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
-import TableAutomaticStylesStratum, {
-  ColorStyleLegend
-} from "../../../Table/TableAutomaticStylesStratum";
+import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStratum";
 import TableColumnType from "../../../Table/TableColumnType";
 import xml2json from "../../../ThirdParty/xml2json";
 import SensorObservationServiceCatalogItemTraits from "../../../Traits/TraitsClasses/SensorObservationCatalogItemTraits";
 import TableChartStyleTraits, {
   TableChartLineStyleTraits
 } from "../../../Traits/TraitsClasses/TableChartStyleTraits";
-import TableColorStyleTraits from "../../../Traits/TraitsClasses/TableColorStyleTraits";
 import TablePointSizeStyleTraits from "../../../Traits/TraitsClasses/TablePointSizeStyleTraits";
 import TableStyleTraits from "../../../Traits/TraitsClasses/TableStyleTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import { SelectableDimension } from "../../SelectableDimensions";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
+import { SelectableDimension } from "../../SelectableDimensions/SelectableDimensions";
 import Terria from "../../Terria";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 interface GetFeatureOfInterestResponse {
   featureMember?: FeatureMember[] | FeatureMember;
@@ -93,18 +90,23 @@ class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
     return new SosAutomaticStylesStratum(newModel) as this;
   }
 
+  @computed get activeStyle() {
+    return this.catalogItem.procedures[0]?.identifier;
+  }
+
   @computed
   get styles(): StratumFromTraits<TableStyleTraits>[] {
-    return this.catalogItem.procedures.map(p => {
+    return this.catalogItem.procedures.map((p) => {
       return createStratumInstance(TableStyleTraits, {
         id: p.identifier,
         title: p.title,
-        color: createStratumInstance(TableColorStyleTraits, {
-          legend: new ColorStyleLegend(this.catalogItem, 0)
-        }),
         pointSize: createStratumInstance(TablePointSizeStyleTraits, {
           pointSizeColumn: p.identifier
-        })
+        }),
+        // table style is hidden by default when the table uses only 1 color (https://github.com/TerriaJS/terriajs/blob/bbe8a11ae9bf6c0eb78c52d7b5c9b260d5ddc8cf/lib/Table/TableStyle.ts#L82)
+        // force hidden to false so that the frequency and procedure selector will always be shown
+        // Ideally we should rewrite frequency & procedure selector using selectable dimensions and stop using styles to display them.
+        hidden: false
       });
     });
   }
@@ -112,11 +114,11 @@ class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
   @computed
   get defaultChartStyle() {
     const timeColumn = this.catalogItem.tableColumns.find(
-      column => column.type === TableColumnType.time
+      (column) => column.type === TableColumnType.time
     );
 
     const valueColumn = this.catalogItem.tableColumns.find(
-      column => column.type === TableColumnType.scalar
+      (column) => column.type === TableColumnType.scalar
     );
 
     if (timeColumn && valueColumn) {
@@ -148,7 +150,7 @@ class GetFeatureOfInterestRequest {
   @computed
   get observedProperties() {
     return filterOutUndefined(
-      this.catalogItem.observableProperties.map(p => p.identifier)
+      this.catalogItem.observableProperties.map((p) => p.identifier)
     );
   }
 
@@ -156,7 +158,7 @@ class GetFeatureOfInterestRequest {
   get procedures() {
     if (this.catalogItem.filterByProcedures) {
       return filterOutUndefined(
-        this.catalogItem.procedures.map(p => p.identifier)
+        this.catalogItem.procedures.map((p) => p.identifier)
       );
     }
   }
@@ -369,7 +371,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     const whiteList = runInAction(() => this.stationIdWhitelist);
     if (whiteList) {
       featureMembers = featureMembers.filter(
-        m =>
+        (m) =>
           m.MonitoringPoint?.identifier &&
           whiteList.indexOf(String(m.MonitoringPoint.identifier)) >= 0
       );
@@ -378,7 +380,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     const blackList = runInAction(() => this.stationIdBlacklist);
     if (blackList) {
       featureMembers = featureMembers.filter(
-        m =>
+        (m) =>
           m.MonitoringPoint &&
           blackList.indexOf(String(m.MonitoringPoint.identifier)) < 0
       );
@@ -392,7 +394,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     const typeCols = ["type"];
     const chartCols = ["chart"];
 
-    featureMembers.forEach(member => {
+    featureMembers.forEach((member) => {
       const pointShape = member.MonitoringPoint?.shape?.Point;
       if (!pointShape) {
         throw new DeveloperError(
@@ -460,25 +462,25 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
         if (!points) return;
         if (!Array.isArray(points)) points = [points];
 
-        var measurements = points.map(point => point.MeasurementTVP); // TVP = Time value pairs, I think.
+        var measurements = points.map((point) => point.MeasurementTVP); // TVP = Time value pairs, I think.
         var featureIdentifier =
           observation.featureOfInterest["xlink:href"] || "";
         datesCol.push(
-          ...measurements.map(measurement =>
+          ...measurements.map((measurement) =>
             typeof measurement.time === "object" ? "" : measurement.time
           )
         );
         valuesCol.push(
-          ...measurements.map(measurement =>
+          ...measurements.map((measurement) =>
             typeof measurement.value === "object" ? "" : measurement.value
           )
         );
-        identifiersCol.push(...measurements.map(_ => featureIdentifier));
+        identifiersCol.push(...measurements.map((_) => featureIdentifier));
         proceduresCol.push(
-          ...measurements.map(_ => procedure.identifier || "")
+          ...measurements.map((_) => procedure.identifier || "")
         );
         observedPropertiesCol.push(
-          ...measurements.map(_ => observableProperty.identifier || "")
+          ...measurements.map((_) => observableProperty.identifier || "")
         );
       };
 
@@ -491,8 +493,8 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
         return [];
       }
 
-      const observations = observationData.map(o => o.OM_Observation);
-      observations.forEach(observation => {
+      const observations = observationData.map((o) => o.OM_Observation);
+      observations.forEach((observation) => {
         if (observation) {
           addObservationToColumns(observation);
         }
@@ -543,7 +545,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     return filterOutUndefined([
       // Filter out proceduresSelector - as it duplicates TableMixin.styleDimensions
       ...super.selectableDimensions.filter(
-        dim => dim.id !== this.proceduresSelector?.id
+        (dim) => dim.id !== this.proceduresSelector?.id
       ),
       this.proceduresSelector,
       this.observablesSelector
@@ -579,7 +581,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
       },
       get options() {
         return filterOutUndefined(
-          item.observableProperties.map(p => {
+          item.observableProperties.map((p) => {
             if (p.identifier && p.title) {
               return {
                 id: p.identifier,
@@ -592,7 +594,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
       get selectedId(): string | undefined {
         return item.selectedObservableId;
       },
-      setDimensionValue(stratumId: string, observableId: string) {
+      setDimensionValue(stratumId: string, observableId: string | undefined) {
         item.setTrait(stratumId, "selectedObservableId", observableId);
       }
     };
@@ -608,13 +610,15 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   @computed
   get selectedObservable() {
     return this.observableProperties.find(
-      p => p.identifier === this.selectedObservableId
+      (p) => p.identifier === this.selectedObservableId
     );
   }
 
   @computed
   get selectedProcedure() {
-    return this.procedures.find(p => p.identifier === this.activeTableStyle.id);
+    return this.procedures.find(
+      (p) => p.identifier === this.activeTableStyle.id
+    );
   }
 }
 

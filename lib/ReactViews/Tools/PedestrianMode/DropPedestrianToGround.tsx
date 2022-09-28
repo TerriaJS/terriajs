@@ -9,6 +9,7 @@ import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrain
 import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
 import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
+import isDefined from "../../../Core/isDefined";
 import Cesium from "../../../Models/Cesium";
 import MouseTooltip from "./MouseTooltip";
 
@@ -19,7 +20,9 @@ type DropPedestrianToGroundProps = {
   afterDrop: () => void;
 };
 
-const DropPedestrianToGround: React.FC<DropPedestrianToGroundProps> = props => {
+const DropPedestrianToGround: React.FC<DropPedestrianToGroundProps> = (
+  props
+) => {
   const cesium = props.cesium;
   const scene = cesium.scene;
   const eventHandler = new ScreenSpaceEventHandler(scene.canvas);
@@ -37,17 +40,19 @@ const DropPedestrianToGround: React.FC<DropPedestrianToGroundProps> = props => {
     }) => {
       // Convert mouse position to a point on the globe.
       const pickRay = scene.camera.getPickRay(mousePosition);
-      const pickPosition = scene.globe.pick(pickRay, scene);
+      const pickPosition = isDefined(pickRay)
+        ? scene.globe.pick(pickRay, scene)
+        : undefined;
       if (!pickPosition) return;
 
       setShowMouseTooltip(false);
       // Get the precise position and fly to it.
-      getPrecisePosition(scene, pickPosition).then(cartographic => {
+      getPrecisePosition(scene, pickPosition).then((cartographic) => {
         cartographic.height += props.pedestrianHeight;
         const position = Cartographic.toCartesian(cartographic);
         flyTo(scene, position, {
           orientation: {
-            heading: 0,
+            heading: scene.camera.heading,
             pitch: 0,
             roll: 0
           }
@@ -113,7 +118,7 @@ async function flyTo(
   destination: Cartesian3,
   options?: { duration?: number; orientation: any }
 ): Promise<void> {
-  return new Promise(resolve =>
+  return new Promise((resolve) =>
     scene.camera.flyTo({
       destination,
       ...options,

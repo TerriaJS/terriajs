@@ -15,6 +15,7 @@ import RegionTypeParameterEditor from "./RegionTypeParameterEditor";
 import RegionDataParameterEditor from "./RegionDataParameterEditor";
 import BooleanParameterEditor from "./BooleanParameterEditor";
 import BooleanParameterGroupEditor from "./BooleanParameterGroupEditor";
+import DateParameterEditor from "./DateParameterEditor";
 import DateTimeParameterEditor from "./DateTimeParameterEditor";
 import EnumerationParameterEditor from "./EnumerationParameterEditor";
 import GenericParameterEditor from "./GenericParameterEditor";
@@ -79,7 +80,7 @@ const ParameterEditor = createReactClass({
       }
     }
     const genericEditor = ParameterEditor.parameterTypeConverters.filter(
-      function(item) {
+      function (item) {
         return item.id === "generic";
       }
     )[0];
@@ -196,6 +197,23 @@ ParameterEditor.parameterTypeConverters = [
     }
   },
   {
+    id: "date",
+    parameterTypeToDiv: function DateParameterToDiv(type, parameterEditor) {
+      if (type === this.id) {
+        return (
+          <div>
+            {parameterEditor.renderLabel()}
+            <DateParameterEditor
+              previewed={parameterEditor.props.previewed}
+              parameter={parameterEditor.props.parameter}
+              parameterViewModel={parameterEditor.props.parameterViewModel}
+            />
+          </div>
+        );
+      }
+    }
+  },
+  {
     id: "dateTime",
     parameterTypeToDiv: function DateTimeParameterToDiv(type, parameterEditor) {
       if (type === this.id) {
@@ -238,7 +256,7 @@ ParameterEditor.parameterTypeConverters = [
     ) {
       if (type === this.id) {
         const regionParam = parameterEditor.props.previewed.parameters.filter(
-          function(param) {
+          function (param) {
             return (
               defined(param.regionTypeParameter) &&
               param.regionTypeParameter === parameterEditor.props.parameter

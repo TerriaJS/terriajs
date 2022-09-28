@@ -1,12 +1,16 @@
 import { action, autorun, computed, IReactionDisposer, observable } from "mobx";
+import Clock from "terriajs-cesium/Source/Core/Clock";
 import ClockRange from "terriajs-cesium/Source/Core/ClockRange";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
-import Clock from "terriajs-cesium/Source/Core/Clock";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
-import TimeVarying from "../ModelMixins/TimeVarying";
+import TimeVarying, {
+  DATE_SECONDS_PRECISION
+} from "../ModelMixins/TimeVarying";
+import DefaultTimelineModel from "./DefaultTimelineModel";
 import CommonStrata from "./Definition/CommonStrata";
+import Terria from "./Terria";
 
 /**
  * Manages a stack of all the time-varying datasets currently attached to the timeline. Provides
@@ -26,10 +30,12 @@ export default class TimelineStack {
   @observable
   defaultTimeVarying: TimeVarying | undefined;
 
-  private _disposeClockAutorun: IReactionDisposer;
+  private _disposeClockAutorun: IReactionDisposer | undefined;
   private _disposeTickSubscription: CesiumEvent.RemoveCallback | undefined;
 
-  constructor(readonly clock: Clock) {
+  constructor(readonly terria: Terria, readonly clock: Clock) {}
+
+  activate() {
     // Keep the Cesium clock in sync with the top layer's clock.
     this._disposeClockAutorun = autorun(() => {
       const topLayer = this.top;
@@ -74,7 +80,7 @@ export default class TimelineStack {
     });
   }
 
-  destroy() {
+  deactivate() {
     if (this._disposeClockAutorun) {
       this._disposeClockAutorun();
     }
@@ -91,7 +97,7 @@ export default class TimelineStack {
     // Find the first item with a current, start, and stop time.
     // Use the default if there isn't one.
     return (
-      this.items.find(item => {
+      this.items.find((item) => {
         const dereferenced: TimeVarying =
           ReferenceMixin.isMixedInto(item) && item.target
             ? (item.target as TimeVarying)
@@ -107,7 +113,7 @@ export default class TimelineStack {
 
   @computed
   get itemIds(): readonly string[] {
-    return filterOutUndefined(this.items.map(item => item.uniqueId));
+    return filterOutUndefined(this.items.map((item) => item.uniqueId));
   }
 
   /**
@@ -177,19 +183,22 @@ export default class TimelineStack {
   @action
   syncToClock(stratumId: string) {
     const clock = this.clock;
-    const currentTime = JulianDate.toIso8601(clock.currentTime);
+    const currentTime = JulianDate.toIso8601(
+      clock.currentTime,
+      DATE_SECONDS_PRECISION
+    );
     const isPaused = !clock.shouldAnimate;
 
     if (this.top) {
       this.top.setTrait(
         stratumId,
         "startTime",
-        JulianDate.toIso8601(clock.startTime)
+        JulianDate.toIso8601(clock.startTime, DATE_SECONDS_PRECISION)
       );
       this.top.setTrait(
         stratumId,
         "stopTime",
-        JulianDate.toIso8601(clock.stopTime)
+        JulianDate.toIso8601(clock.stopTime, DATE_SECONDS_PRECISION)
       );
       this.top.setTrait(stratumId, "multiplier", clock.multiplier);
     }
@@ -204,6 +213,28 @@ export default class TimelineStack {
       this.defaultTimeVarying.setTrait(stratumId, "currentTime", currentTime);
       this.defaultTimeVarying.setTrait(stratumId, "isPaused", isPaused);
     }
+  }
+
+  @action
+  setAlwaysShowTimeline(show = true) {
+    if (!show) {
+      this.defaultTimeVarying = undefined;
+    } else {
+      this.defaultTimeVarying = new DefaultTimelineModel(
+        "defaultTimeVarying",
+        this.terria
+      );
+    }
+  }
+
+  @computed
+  get alwaysShowingTimeline() {
+    return (
+      this.defaultTimeVarying !== undefined &&
+      this.defaultTimeVarying.startTimeAsJulianDate !== undefined &&
+      this.defaultTimeVarying.stopTimeAsJulianDate !== undefined &&
+      this.defaultTimeVarying.currentTimeAsJulianDate !== undefined
+    );
   }
 }
 

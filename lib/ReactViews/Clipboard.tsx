@@ -19,10 +19,11 @@ interface ClipboardProps {
   source: React.ReactElement;
   theme: "dark" | "light";
   rounded?: boolean;
+  text?: string;
   onCopy?: (contents: string) => void;
 }
 
-const Clipboard: React.FC<ClipboardProps> = props => {
+const Clipboard: React.FC<ClipboardProps> = (props) => {
   const { id, source, theme, rounded } = props;
   const { t } = useTranslation();
   const [status, setStatus] = useState<CopyStatus>(
@@ -44,7 +45,7 @@ const Clipboard: React.FC<ClipboardProps> = props => {
         setStatus(CopyStatus.NotCopiedOrWaiting);
       }, 3000);
     }
-    clipboardBtn.on("success", evt => {
+    clipboardBtn.on("success", (evt) => {
       props.onCopy?.(evt.text);
       setStatus(CopyStatus.Success);
       resetTooltipLater();
@@ -62,10 +63,6 @@ const Clipboard: React.FC<ClipboardProps> = props => {
   const isLightTheme = theme === "light";
   return (
     <ClipboardDiv>
-      <span>{t("clipboard.shareURL")}</span>
-      <Spacing bottom={2} />
-      <Explanation>{t("clipboard.shareExplanation")}</Explanation>
-      <Spacing bottom={3} />
       <Box>
         {source}
         <Button
@@ -121,10 +118,6 @@ export default Clipboard;
 
 const ClipboardDiv = styled.div`
   position: relative;
-`;
-
-const Explanation = styled.div`
-  opacity: 0.8;
 `;
 
 const TooltipText = styled.span`

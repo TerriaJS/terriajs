@@ -1,21 +1,20 @@
 "use strict";
 
-import React from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-const parseCustomHtmlToReact = require("../Custom/parseCustomHtmlToReact")
-  .default;
-import Styles from "./map-interaction-window.scss";
 import classNames from "classnames";
+import { Lambda, observable, reaction } from "mobx";
 import { observer } from "mobx-react";
-import MapInteractionMode, { UIMode } from "../../Models/MapInteractionMode";
-import { observable, Lambda, reaction } from "mobx";
+import PropTypes from "prop-types";
+import React from "react";
+import styled from "styled-components";
 import isDefined from "../../Core/isDefined";
-import Terria from "../../Models/Terria";
+import MapInteractionMode, { UIMode } from "../../Models/MapInteractionMode";
 import ViewState from "../../ReactViewModels/ViewState";
+import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
+import { withViewState } from "../StandardUserInterface/ViewStateContext";
+import Styles from "./map-interaction-window.scss";
 
 const MapInteractionWindowWrapper = styled.div<{ isDiffTool: boolean }>`
-  ${props =>
+  ${(props) =>
     props.isDiffTool &&
     `
     display: none;
@@ -32,15 +31,9 @@ const MapInteractionWindowWrapper = styled.div<{ isDiffTool: boolean }>`
 `;
 
 @observer
-export default class MapInteractionWindow extends React.Component<{
-  terria: Terria;
+class MapInteractionWindow extends React.Component<{
   viewState: ViewState;
 }> {
-  static propTypes = {
-    terria: PropTypes.object,
-    viewState: PropTypes.object
-  };
-
   displayName = "MapInteractionWindow";
 
   private disposeMapInteractionObserver?: Lambda;
@@ -59,14 +52,15 @@ export default class MapInteractionWindow extends React.Component<{
   componentDidMount() {
     this.disposeMapInteractionObserver = reaction(
       () =>
-        this.props.terria.mapInteractionModeStack.length > 0 &&
-        this.props.terria.mapInteractionModeStack[
-          this.props.terria.mapInteractionModeStack.length - 1
+        this.props.viewState.terria.mapInteractionModeStack.length > 0 &&
+        this.props.viewState.terria.mapInteractionModeStack[
+          this.props.viewState.terria.mapInteractionModeStack.length - 1
         ],
       () => {
-        const mapInteractionMode = this.props.terria.mapInteractionModeStack[
-          this.props.terria.mapInteractionModeStack.length - 1
-        ];
+        const mapInteractionMode =
+          this.props.viewState.terria.mapInteractionModeStack[
+            this.props.viewState.terria.mapInteractionModeStack.length - 1
+          ];
 
         if (mapInteractionMode !== this.currentInteractionMode) {
           this.currentInteractionMode = mapInteractionMode;
@@ -150,3 +144,5 @@ export default class MapInteractionWindow extends React.Component<{
     );
   }
 }
+
+export default withViewState(MapInteractionWindow);

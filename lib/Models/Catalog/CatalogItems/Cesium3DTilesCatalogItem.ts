@@ -7,11 +7,10 @@ import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrain
 import Cesium3DTile from "terriajs-cesium/Source/Scene/Cesium3DTile";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
-import makeRealPromise from "../../../Core/makeRealPromise";
-import PickedFeatures from "../../../Map/PickedFeatures";
+import PickedFeatures from "../../../Map/PickedFeatures/PickedFeatures";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import Cesium3dTilesMixin from "../../../ModelMixins/Cesium3dTilesMixin";
-import FeatureInfoMixin from "../../../ModelMixins/FeatureInfoMixin";
+import FeatureInfoUrlTemplateMixin from "../../../ModelMixins/FeatureInfoUrlTemplateMixin";
 import SearchableItemMixin, {
   ItemSelectionDisposer
 } from "../../../ModelMixins/SearchableItemMixin";
@@ -23,7 +22,7 @@ import { ItemSearchResult } from "../../ItemSearchProviders/ItemSearchProvider";
 const SEARCH_RESULT_TAG = "terriajs_search_result";
 
 export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
-  FeatureInfoMixin(
+  FeatureInfoUrlTemplateMixin(
     Cesium3dTilesMixin(
       CatalogMemberMixin(CreateModel(Cesium3DTilesCatalogItemTraits))
     )
@@ -53,7 +52,7 @@ export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
       return () => {}; // empty disposer
     }
 
-    const resultIds = new Set(results.map(r => r.id));
+    const resultIds = new Set(results.map((r) => r.id));
     const idPropertyName = results[0].idPropertyName;
     const highligtedFeatures: Set<Cesium3DTileFeature> = new Set();
     let disposeFeatureInfoPanel: (() => void) | undefined;
@@ -94,7 +93,7 @@ export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
       disposeWatch();
       disposeFeatureInfoPanel?.();
       this.removeColorExpression(colorExpression);
-      highligtedFeatures.forEach(feature => {
+      highligtedFeatures.forEach((feature) => {
         try {
           feature.setProperty(SEARCH_RESULT_TAG, undefined);
         } catch {
@@ -121,7 +120,7 @@ export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
       return () => {}; // empty disposer
     }
 
-    const resultIds = new Set(results.map(r => r.id));
+    const resultIds = new Set(results.map((r) => r.id));
     const idPropertyName = results[0].idPropertyName;
     const hiddenFeatures: Set<Cesium3DTileFeature> = new Set();
 
@@ -146,7 +145,7 @@ export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
     const disposer = action(() => {
       disposeWatch();
       this.removeShowExpression(showExpression);
-      hiddenFeatures.forEach(feature => {
+      hiddenFeatures.forEach((feature) => {
         try {
           feature.setProperty(SEARCH_RESULT_TAG, undefined);
         } catch {
@@ -206,18 +205,16 @@ export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
 
     const scene = this.terria.cesium.scene;
     const camera = scene.camera;
-    const {
-      latitudeDegrees,
-      longitudeDegrees,
-      featureHeight
-    } = result.featureCoordinate;
+    const { latitudeDegrees, longitudeDegrees, featureHeight } =
+      result.featureCoordinate;
 
     const cartographic = Cartographic.fromDegrees(
       longitudeDegrees,
       latitudeDegrees
     );
-    const [terrainCartographic] = await makeRealPromise<Cartographic[]>(
-      sampleTerrainMostDetailed(scene.terrainProvider, [cartographic])
+    const [terrainCartographic] = await sampleTerrainMostDetailed(
+      scene.terrainProvider,
+      [cartographic]
     ).catch(() => [cartographic]);
 
     if (featureHeight < 20) {

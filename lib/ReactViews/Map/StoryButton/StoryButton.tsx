@@ -25,11 +25,11 @@ interface ButtonProps extends Props {
 
 const STORY_BUTTON_NAME = "MenuBarStoryButton";
 
-const onStoryButtonClick = (props: Props) => () => {
+export const onStoryButtonClick = (props: Props) => () => {
   props.viewState.toggleStoryBuilder();
   props.terria.currentViewer.notifyRepaintRequired();
   // Allow any animations to finish, then trigger a resize.
-  setTimeout(function() {
+  setTimeout(function () {
     triggerResize();
   }, props.animationDuration || 1);
   props.viewState.toggleFeaturePrompt("story", false, true);

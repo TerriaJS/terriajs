@@ -1,5 +1,9 @@
 # Setting up GeoServer
 
+Geoserver will allow you to host your own spatial data on the web, such as vector data (e.g. shapefiles) and rasters. Geoserver can serve vector data and rasters as [WMS](https://www.ogc.org/standards/wms), and vector data as [WFS](https://www.ogc.org/standards/wfs). These can then be added as catalog items to your TerriaMap and viewed from anywhere.
+
+Here we describe the process of setting up Geoserver on a server running Ubuntu OS (e.g. see below for how to setup on an AWS virtual machine).
+
 ## Installing Java and Tomcat8
 
 On ubuntu install the java and tomcat8 packages
@@ -11,7 +15,7 @@ sudo apt-get install -y oracle-java8-installer
 sudo apt-get install -y oracle-java8-set-default
 ```
 
-Check that you have the correct java version installed.  It should be 1.8._xx.
+Check that you have the correct java version installed. It should be 1.8.\_xx.
 
 ```
 java -version
@@ -49,24 +53,24 @@ sudo /etc/init.d/tomcat8 restart
 
 ## Installing Geoserver
 
-To install geoserver, go to the [GeoServer website](http://geoserver.org/) and download the current stable web archive file to your home folder, unzip the file and copy geoserver.war to your home folder, and then copy that file to the tomcat installation as the desired name for the geoserver and restart.  For example to create a geoserver called my_new_geoserver use the commands below.
+To install geoserver, go to the [GeoServer website](http://geoserver.org/) and download the current stable web archive file to your home folder, unzip the file and copy geoserver.war to your home folder, and then copy that file to the tomcat installation as the desired name for the geoserver and restart. For example to create a geoserver called my_new_geoserver use the commands below.
 
 ```
 sudo cp geoserver.war /var/lib/tomcat8/webapps/my_new_geoserver.war
 sudo /etc/init.d/tomcat8 restart
 ```
 
-You should now be able to see a geoserver running at http://localhost:8080/my_new_geoserver/ .  
+You should now be able to see a geoserver running at http://localhost:8080/my_new_geoserver/ .
 
-The geoserver will contain the example datasets that ship with Geoserver.  Geoserver has good documentation available [here](http://docs.geoserver.org/stable/en/user/) to get you going on entering your data into your server instance.
+The geoserver will contain the example datasets that ship with Geoserver. Geoserver has good documentation available [here](http://docs.geoserver.org/stable/en/user/) to get you going on entering your data into your server instance.
 
 ## Caching Tiles
 
-In order for your server to perform effectively we highly recommend that you cache the tile requests from National Map.  There are 2 primary ways to do this - either turning on the GeoWebCache that comes with Geoserver or running a proxy server in front of your geoserver.
+In order for your server to perform effectively we highly recommend that you cache the tile requests from TerriaMap. There are 2 primary ways to do this - either turning on the GeoWebCache that comes with Geoserver or running a proxy server in front of your geoserver.
 
-The easiest solution is to just use the GeoWebCache service.  The documentation for GeoWebCache is [here](http://docs.geoserver.org/stable/en/user/geowebcache/).  Mainly it consists of turning on direct integration in the caching defaults and making sure that your layers have caching turned on.  You may also want to control the caching folder which can be done by editing your geoserver instance as explained [here](http://docs.geoserver.org/2.1.4/user/geowebcache/config.html).  You will also probably need to set permissions in your new cache folder to 666.
+The easiest solution is to just use the GeoWebCache service. The documentation for GeoWebCache is [here](http://docs.geoserver.org/stable/en/user/geowebcache/). Mainly it consists of turning on direct integration in the caching defaults and making sure that your layers have caching turned on. You may also want to control the caching folder which can be done by editing your geoserver instance as explained [here](http://docs.geoserver.org/2.1.4/user/geowebcache/config.html). You will also probably need to set permissions in your new cache folder to 666.
 
-The other solution is to put a caching proxy in front of your geoserver instance.  This also has the benefit of being able to access your server on port 80 if you wish.  The two primary options we have worked with are [nginx](http://nginx.org/en/) and [varnish](https://www.varnish-cache.org/).  These are both available as packages on ubuntu.  Below is an example of setting up nginx to work with geoserver.
+The other solution is to put a caching proxy in front of your geoserver instance. This also has the benefit of being able to access your server on port 80 if you wish. The option we recommend is [nginx](http://nginx.org/en/). This is FOSS software and is available as a package on ubuntu. Below is an example of setting up nginx to work with geoserver.
 
 ### nginx
 
@@ -121,24 +125,17 @@ sudo /etc/init.d/nginx start
 
 And if all went as planned you should be able to access your server at http://localhost/my_new_geoserver/web.
 
-## Allowing National Map to access your server
+## Allowing TerriaMap to access your server
 
-Due to security in modern browsers, for National Map to use your service you will probably need to do a little more work.  Either you will need to set up your server with CORS support or provide a proxy service for your geoserver to allow National Map access to your data.  National Map includes a proxy to some domains by default and if you are in these domains we will provide the proxy service.
+Due to security in modern browsers, for TerriaMap to use your service you will probably need to do a little more work. Either you will need to set up your server with CORS support or provide a proxy service for your geoserver to allow TerriaMap access to your data. TerriaMap includes a proxy to some domains by default and if you are in these domains we will provide the proxy service.
 
-If you are not in these domains, you will get an cross-domain-access error. To work with National Map without using a proxy, Geoserver must be configured to support [CORS](http://enable-cors.org/).  The most common way to do this is to install [CORS Filter](http://software.dzhuvinov.com/cors-filter-installation.html).
+If you are not in these domains, you will get an cross-domain-access error. To work with TerriaMap without using a proxy, Geoserver must be configured to support [CORS](http://enable-cors.org/). The most common way to do this is to install [CORS Filter](http://software.dzhuvinov.com/cors-filter-installation.html).
 
-An alternative approach, is to add CORS support to your nginx or varnish proxy service.  See the documentation on how to do this.  Thanks to the AREMI team, adding the necessary CORS headers with a Varnish reverse-proxy in front of the Geoserver can be done by adding the following to `/etc/varnish/default.vcl`:
-
-```
-sub vcl_fetch {
-    set beresp.http.Access-Control-Allow-Origin = "*";
-    set beresp.http.Access-Control-Allow-Credentials = "true";
-}
-```
+An alternative approach, is to add CORS support to your nginx proxy service. See the documentation on how to do this.
 
 ## Moving your Geoserver Instance
 
-Moving your geoserver instance to a new location is pretty straightforward.  The .war file that a geoserver instance comes in is just a special layout of a .zip file.  So the following commands can be used to create a .war file that you can then add to a tomcat instance on another server.
+Moving your geoserver instance to a new location is pretty straightforward. The .war file that a geoserver instance comes in is just a special layout of a .zip file. So the following commands can be used to create a .war file that you can then add to a tomcat instance on another server.
 
 ```
 sudo /etc/init.d/tomcat8 stop
@@ -158,7 +155,7 @@ sudo /etc/init.d/tomcat8 restart
 
 ## Running your Geoserver on AWS
 
-Running a geoserver on a standard EC2 instance requires a little tuning to take advantage of the instance storage volume properly.  First go ahead and create your instance (we use a standard m3.large instance with port 80 opened) and install java and tomcat as explained above.
+Running a geoserver on a standard EC2 instance requires a little tuning to take advantage of the instance storage volume properly. First go ahead and create your instance (we use a standard m3.large instance with port 80 opened) and install java and tomcat as explained above.
 
 Now package up your geoserver as described in the previous section and copy it up to your EC2 instance and ssh in once it's copied.
 
@@ -191,4 +188,4 @@ sudo /etc/init.d/nginx restart
 
 If you are using geowebcache or a caching proxy you will need to change the caching dir as referenced above to also be on the /mnt drive to avoid running out of space on the EC2 boot drive.
 
-NOTE: If the instance is stopped you will need to go through these step again when you start, since the instance storage is wiped clean in this case.  This does not apply to reboot of the OS in the EC2 instance so it will still be fine after.
+NOTE: If the instance is stopped you will need to go through these step again when you start, since the instance storage is wiped clean in this case. This does not apply to reboot of the OS in the EC2 instance so it will still be fine after.

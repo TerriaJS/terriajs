@@ -1,31 +1,84 @@
-type JsonValue = boolean | number | string | null | JsonArray | JsonObject;
+type JsonValue =
+  | boolean
+  | number
+  | string
+  | null
+  | JsonArray
+  | JsonObject
+  | undefined;
 export interface JsonObject {
   [key: string]: JsonValue;
 }
-export interface JsonArray extends Array<JsonValue> {}
+export interface JsonArray<T = JsonValue> extends Array<T> {}
+
 export default JsonValue;
 
 export function isJsonObject(
-  value: JsonValue | undefined
+  value: unknown | undefined,
+  deep = true
 ): value is JsonObject {
   return (
     value !== undefined &&
-    value !== null &&
     typeof value === "object" &&
-    !Array.isArray(value)
+    value !== null &&
+    !Array.isArray(value) &&
+    (!deep || Object.values(value).every((v) => isJsonValue(v, true)))
   );
 }
 
-export function isJsonBoolean(value: JsonValue | undefined): value is boolean {
+export function isJsonBoolean(value: unknown | undefined): value is boolean {
   return typeof value === "boolean";
 }
 
-export function isJsonNumber(value: JsonValue | undefined): value is number {
+export function isJsonNumber(value: unknown | undefined): value is number {
   return typeof value === "number";
 }
 
-export function isJsonString(value: JsonValue | undefined): value is string {
+export function isJsonString(value: unknown | undefined): value is string {
   return typeof value === "string";
+}
+
+export function isJsonValue(value: unknown, deep = true): value is JsonValue {
+  return (
+    typeof value === "undefined" ||
+    value === null ||
+    isJsonBoolean(value) ||
+    isJsonNumber(value) ||
+    isJsonString(value) ||
+    isJsonArray(value, deep) ||
+    isJsonObject(value, deep)
+  );
+}
+
+export function isJsonArray(
+  value: unknown | undefined,
+  deep = true
+): value is JsonArray {
+  return (
+    Array.isArray(value) &&
+    (!deep || value.every((child) => isJsonValue(child, true)))
+  );
+}
+
+export function isJsonObjectArray(
+  value: unknown | undefined,
+  deep = true
+): value is JsonArray<JsonObject> {
+  return (
+    Array.isArray(value) && value.every((child) => isJsonObject(child, deep))
+  );
+}
+
+export function isJsonStringArray(
+  value: unknown | undefined
+): value is JsonArray<string> {
+  return Array.isArray(value) && value.every((child) => isJsonString(child));
+}
+
+export function isJsonNumberArray(
+  value: unknown | undefined
+): value is JsonArray<number> {
+  return Array.isArray(value) && value.every((child) => isJsonNumber(child));
 }
 
 export function assertObject(

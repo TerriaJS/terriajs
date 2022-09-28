@@ -1,17 +1,21 @@
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
+import objectTrait from "../Decorators/objectTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import ExportWebCoverageServiceTraits from "./ExportWebCoverageServiceTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import GroupTraits from "./GroupTraits";
-import mixTraits from "../mixTraits";
-import primitiveTrait from "../Decorators/primitiveTrait";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 import UrlTraits from "./UrlTraits";
 
 export default class WebMapServiceCatalogGroupTraits extends mixTraits(
   GetCapabilitiesTraits,
   GroupTraits,
   UrlTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  LegendOwnerTraits
 ) {
   @primitiveTrait({
     type: "boolean",
@@ -21,9 +25,11 @@ export default class WebMapServiceCatalogGroupTraits extends mixTraits(
   })
   flatten?: boolean;
 
-  @anyTrait({
-    name: "Item Properties",
-    description: "Sets traits on child WebMapServiceCatalogItem's"
+  @objectTrait({
+    name: "Per layer WebCoverageService",
+    description:
+      "To enable Export/WebCoverageService for **all** WMS layers in this group, set `perLayerLinkedWcs.linkedWcsUrl`. `linkedWcsCoverage` will be set to the WMS layer `Name` if it is defined, layer `Title` otherwise.",
+    type: ExportWebCoverageServiceTraits
   })
-  itemProperties?: JsonObject;
+  perLayerLinkedWcs?: ExportWebCoverageServiceTraits;
 }

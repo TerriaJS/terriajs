@@ -1,4 +1,3 @@
-import { TFunctionResult } from "i18next";
 import React from "react";
 import { ITextProps } from "../Text";
 
@@ -42,6 +41,12 @@ export type ICheckboxProps = {
   children?: React.ReactChild;
 
   textProps?: ITextProps;
+
+  /**
+   * Accepting className lets allows the Checkbox component to be extended using
+   * styled components.
+   */
+  className?: string;
 };
 
 export interface CheckboxIconProps {

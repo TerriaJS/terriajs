@@ -61,18 +61,6 @@
   opacity: 0.3;
 }
 
-.sidePanel {
-  position: relative;
-  font-family: $font-pop;
-  width: $work-bench-width;
-  flex-basis: $work-bench-width;
-  max-width: $work-bench-width;
-  box-sizing: border-box;
-  h1 {
-    margin: 0;
-  }
-}
-
 .map {
   @include transition(left $animation-fast ease-in);
   position: absolute;
@@ -108,8 +96,6 @@
     top: 62px;
     right: 96px;
     bottom: 0;
-    // debugger
-    // background: rgba(#ffcc00, 0.5);
   }
 
   & > div {
@@ -137,19 +123,6 @@
 
 .featureInfoFullScreen {
   left: 0;
-}
-
-.sidePanel {
-  transition: all 0.25s;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  // border-right: 1px solid rgba(255, 255, 255, 0.2);
-  visibility: visible;
-}
-
-.sidePanelHide {
-  display: block;
-  margin-left: 0-$work-bench-width;
-  visibility: hidden;
 }
 
 .showWorkbenchButton {
@@ -181,6 +154,7 @@
   .uiInner {
     display: flex;
     overflow: hidden;
+    height: 100%;
   }
   .sidePanel {
     vertical-align: top;
@@ -197,5 +171,19 @@
     // overflow: hidden;
     flex-grow: 1;
     flex-basis: calc(100% - #{$work-bench-width});
+  }
+}
+
+// TODO: In v7 this is specified only in cesium-timeline.scss In v8 we have to
+// additionally specify it here to prevent ugly timeline height readjustments
+// when page loads with active timeline (especially in firefox but also visible
+// in chrome).
+:global {
+  .cesium-timeline {
+    &-needle,
+    &-trackContainer,
+    &-ruler {
+      display: none !important;
+    }
   }
 }

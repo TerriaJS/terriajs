@@ -1,0 +1,76 @@
+{
+  "exceededTransferLimit": false,
+  "features": [
+    {
+      "attributes": {
+        "fid": 1,
+        "lganame": "A",
+        "councilnam": "LGA A",
+        "fiveyearfo": 950
+      },
+      "geometry": {
+        "rings": [
+          [
+            [16775685.718625374, -3895224.3849160187],
+            [16775707.947109431, -3895226.202908296],
+            [16820923.655232877, -3915702.8949223123],
+            [16820919.98111982, -3915713.532630626],
+            [16775685.718625374, -3895224.3849160187]
+          ]
+        ]
+      }
+    },
+    {
+      "attributes": {
+        "fid": 2,
+        "lganame": "B",
+        "councilnam": "LGA B",
+        "fiveyearfo": 150
+      },
+      "geometry": {
+        "rings": [
+          [
+            [16824755.737825453, -4004473.1371091977],
+            [16824763.31961301, -4004477.7192538492],
+            [16824771.255597092, -4004477.708529316],
+            [16824786.6437236, -4004473.3389471658],
+            [16824755.737825453, -4004473.1371091977]
+          ]
+        ]
+      }
+    }
+  ],
+  "fields": [
+    {
+      "name": "fid",
+      "type": "esriFieldTypeOID",
+      "alias": "db_f86av.hsu_lrsts.SHSF2019_5yrs_LGA_SHSF2019_5yrs_LGA.fid"
+    },
+    {
+      "name": "lganame",
+      "type": "esriFieldTypeString",
+      "alias": "lganame",
+      "length": 60
+    },
+    {
+      "name": "councilnam",
+      "type": "esriFieldTypeString",
+      "alias": "councilnam",
+      "length": 80
+    },
+    {
+      "name": "fiveyearfo",
+      "type": "esriFieldTypeInteger",
+      "alias": "fiveyearfo"
+    }
+  ],
+  "geometryType": "esriGeometryPolygon",
+  "spatialReference": {
+    "wkid": 102100,
+    "latestWkid": 3857
+  },
+  "objectIdFieldName": "fid",
+  "hasZ": false,
+  "hasM": false,
+  "id": 3
+}

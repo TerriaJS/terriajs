@@ -132,13 +132,13 @@ class GetCapabilitiesStratum extends LoadableStratum(
   @computed
   get members(): ModelReference[] {
     return filterOutUndefined(
-      this.capabilities.layers.map(layer => this.getLayerId(layer))
+      this.capabilities.layers.map((layer) => this.getLayerId(layer))
     );
   }
 
   @action
   createMembersFromLayers() {
-    this.capabilities.layers.forEach(layer =>
+    this.capabilities.layers.forEach((layer) =>
       this.createMemberFromLayer(layer)
     );
   }
@@ -170,32 +170,34 @@ class GetCapabilitiesStratum extends LoadableStratum(
     }
 
     // Replace the stratum inherited from the parent group.
-    const stratum = CommonStrata.underride;
+    model.strata.delete(CommonStrata.definition);
 
-    model.strata.delete(stratum);
+    model.setTrait(CommonStrata.definition, "name", layer.Title);
 
-    model.setTrait(stratum, "name", layer.Title);
-
-    model.setTrait(stratum, "url", this.catalogGroup.url);
+    model.setTrait(CommonStrata.definition, "url", this.catalogGroup.url);
     model.setTrait(
-      stratum,
+      CommonStrata.definition,
       "getCapabilitiesUrl",
       this.catalogGroup.getCapabilitiesUrl
     );
     model.setTrait(
-      stratum,
+      CommonStrata.definition,
       "getCapabilitiesCacheDuration",
       this.catalogGroup.getCapabilitiesCacheDuration
     );
-    model.setTrait(stratum, "layer", layer.Title);
-    model.setTrait(stratum, "hideSource", this.catalogGroup.hideSource);
+    model.setTrait(CommonStrata.definition, "layer", layer.Title);
     model.setTrait(
-      stratum,
+      CommonStrata.definition,
+      "hideSource",
+      this.catalogGroup.hideSource
+    );
+    model.setTrait(
+      CommonStrata.definition,
       "isOpenInWorkbench",
       this.catalogGroup.isOpenInWorkbench
     );
     model.setTrait(
-      stratum,
+      CommonStrata.definition,
       "isExperiencingIssues",
       this.catalogGroup.isExperiencingIssues
     );

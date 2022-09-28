@@ -1,59 +1,59 @@
 {
-    "currentVersion": 10.71,
-    "serviceDescription": "Vehicle Service Description",
-    "hasVersionedData": true,
-    "hasArchivedData": false,
-    "supportsDisconnectedEditing": false,
-    "supportsQueryDataElements": true,
-    "supportsRelationshipsResource": true,
-    "syncEnabled": false,
-    "supportedQueryFormats": "JSON",
-    "maxRecordCount": 1000,
-    "maxRecordCountFactor": 1,
-    "capabilities": "Query,Create,Update,Delete,Uploads,Editing",
-    "description": "Vehicle Description",
-    "copyrightText": "Vehicle Copyright",
+  "currentVersion": 10.71,
+  "serviceDescription": "Vehicle Service Description",
+  "hasVersionedData": true,
+  "hasArchivedData": false,
+  "supportsDisconnectedEditing": false,
+  "supportsQueryDataElements": true,
+  "supportsRelationshipsResource": true,
+  "syncEnabled": false,
+  "supportedQueryFormats": "JSON",
+  "maxRecordCount": 1000,
+  "maxRecordCountFactor": 1,
+  "capabilities": "Query,Create,Update,Delete,Uploads,Editing",
+  "description": "Vehicle Description",
+  "copyrightText": "Vehicle Copyright",
+  "spatialReference": {
+    "wkid": 4326,
+    "latestWkid": 4326
+  },
+  "initialExtent": {
+    "xmin": -117.2811874924825,
+    "ymin": 33.99470075848109,
+    "xmax": -117.13223323351752,
+    "ymax": 34.164118382096206,
     "spatialReference": {
-     "wkid": 4326,
-     "latestWkid": 4326
-    },
-    "initialExtent": {
-     "xmin": -117.2811874924825,
-     "ymin": 33.99470075848109,
-     "xmax": -117.13223323351752,
-     "ymax": 34.164118382096206,
-     "spatialReference": {
       "wkid": 4326,
       "latestWkid": 4326
-     }
-    },
-    "fullExtent": {
-     "xmin": -118.838732241,
-     "ymin": 25.159020188,
-     "xmax": 55.27645578800002,
-     "ymax": 38.485991961000025,
-     "spatialReference": {
+    }
+  },
+  "fullExtent": {
+    "xmin": -118.838732241,
+    "ymin": 25.159020188,
+    "xmax": 55.27645578800002,
+    "ymax": 38.485991961000025,
+    "spatialReference": {
       "wkid": 4326,
       "latestWkid": 4326
-     }
-    },
-    "allowGeometryUpdates": true,
-    "allowTrueCurvesUpdates": false,
-    "onlyAllowTrueCurveUpdatesByTrueCurveClients": true,
-    "supportsApplyEditsWithGlobalIds": false,
-    "supportsTrueCurve": true,
-    "units": "esriDecimalDegrees",
-    "documentInfo": {
-     "Title": "",
-     "Author": "",
-     "Comments": "Feeds",
-     "Subject": "Feeds",
-     "Category": "",
-     "Keywords": "Feeds"
-    },
-    "supportsQueryDomains": true,
-    "layers": [
-     {
+    }
+  },
+  "allowGeometryUpdates": true,
+  "allowTrueCurvesUpdates": false,
+  "onlyAllowTrueCurveUpdatesByTrueCurveClients": true,
+  "supportsApplyEditsWithGlobalIds": false,
+  "supportsTrueCurve": true,
+  "units": "esriDecimalDegrees",
+  "documentInfo": {
+    "Title": "",
+    "Author": "",
+    "Comments": "Feeds",
+    "Subject": "Feeds",
+    "Category": "",
+    "Keywords": "Feeds"
+  },
+  "supportsQueryDomains": true,
+  "layers": [
+    {
       "id": 0,
       "name": "Ambulances",
       "parentLayerId": -1,
@@ -63,8 +63,8 @@
       "maxScale": 0,
       "type": "Feature Layer",
       "geometryType": "esriGeometryPoint"
-     },
-     {
+    },
+    {
       "id": 1,
       "name": "Police",
       "parentLayerId": -1,
@@ -74,8 +74,8 @@
       "maxScale": 0,
       "type": "Feature Layer",
       "geometryType": "esriGeometryPoint"
-     },
-     {
+    },
+    {
       "id": 123,
       "name": "Fire",
       "parentLayerId": -1,
@@ -85,32 +85,32 @@
       "maxScale": 0,
       "type": "Feature Layer",
       "geometryType": "esriGeometryPoint"
-     }
-    ],
-    "tables": [],
-    "relationships": [],
-    "enableZDefaults": false,
-    "allowUpdateWithoutMValues": false,
-    "datumTransformations": [
-     {
+    }
+  ],
+  "tables": [],
+  "relationships": [],
+  "enableZDefaults": false,
+  "allowUpdateWithoutMValues": false,
+  "datumTransformations": [
+    {
       "geoTransforms": [
-       {
-        "wkid": 108001,
-        "latestWkid": 1241,
-        "transformForward": true,
-        "name": "NAD_1927_To_NAD_1983_NADCON"
-       }
+        {
+          "wkid": 108001,
+          "latestWkid": 1241,
+          "transformForward": true,
+          "name": "NAD_1927_To_NAD_1983_NADCON"
+        }
       ]
-     },
-     {
+    },
+    {
       "geoTransforms": [
-       {
-        "wkid": 108001,
-        "latestWkid": 1241,
-        "transformForward": false,
-        "name": "NAD_1927_To_NAD_1983_NADCON"
-       }
+        {
+          "wkid": 108001,
+          "latestWkid": 1241,
+          "transformForward": false,
+          "name": "NAD_1927_To_NAD_1983_NADCON"
+        }
       ]
-     }
-    ]
-   }
+    }
+  ]
+}

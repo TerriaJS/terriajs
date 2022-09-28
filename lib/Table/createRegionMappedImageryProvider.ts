@@ -1,14 +1,17 @@
 import { VectorTileFeature } from "@mapbox/vector-tile";
-import { action } from "mobx";
+import { action, runInAction } from "mobx";
+import Color from "terriajs-cesium/Source/Core/Color";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import isDefined from "../Core/isDefined";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import getChartDetailsFn from "./getChartDetailsFn";
+import { isJsonNumber } from "../Core/Json";
+import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
+import { TerriaFeatureData } from "../Models/Feature/FeatureData";
 import TableStyle from "./TableStyle";
+import { isConstantStyleMap } from "./TableStyleMap";
 
 export default function createRegionMappedImageryProvider(
   style: TableStyle,
@@ -24,13 +27,12 @@ export default function createRegionMappedImageryProvider(
     return undefined;
   }
 
-  const baseMapContrastColor = style.tableModel.terria.baseMapContrastColor;
-
   const colorColumn = style.colorColumn;
   const valueFunction =
     colorColumn !== undefined ? colorColumn.valueFunctionForType : () => null;
   const colorMap = style.colorMap;
   const valuesAsRegions = regionColumn.valuesAsRegions;
+  const outlineStyleMap = style.outlineStyleMap.styleMap;
 
   let currentTimeRows: number[] | undefined;
 
@@ -50,7 +52,7 @@ export default function createRegionMappedImageryProvider(
   return new MapboxVectorTileImageryProvider({
     url: regionType.server,
     layerName: regionType.layerName,
-    styleFunc: function(feature: any) {
+    styleFunc: function (feature: any) {
       const regionId = feature.properties[regionType.uniqueIdProp];
 
       let rowNumber = getImageryLayerFilteredRow(
@@ -67,10 +69,20 @@ export default function createRegionMappedImageryProvider(
         return undefined;
       }
 
+      const outlineStyle = isConstantStyleMap(outlineStyleMap)
+        ? outlineStyleMap.style
+        : outlineStyleMap.mapValueToStyle(rowNumber ?? -1);
+
+      const outlineColorValue = Color.fromCssColorString(
+        outlineStyle.color ??
+          runInAction(() => style.tableModel.terria.baseMapContrastColor)
+      );
+
       return {
         fillStyle: color.toCssColorString(),
-        strokeStyle: value !== null ? baseMapContrastColor : "transparent",
-        lineWidth: 1,
+        strokeStyle:
+          value !== null ? outlineColorValue.toCssColorString() : "transparent",
+        lineWidth: outlineStyle.width ?? 1,
         lineJoin: "miter"
       };
     },
@@ -114,7 +126,7 @@ const getImageryLayerFilteredRow = action(
     ) {
       return rowNumbers;
     } else if (Array.isArray(rowNumbers)) {
-      const matchingTimeRows: number[] = rowNumbers.filter(row =>
+      const matchingTimeRows: number[] = rowNumbers.filter((row) =>
         currentTimeRows!.includes(row)
       );
       if (matchingTimeRows.length <= 1) {
@@ -169,7 +181,7 @@ const getImageryLayerFeatureInfo = action(
       const rowObject = style.tableModel.tableColumns.reduce<{
         [key: string]: string | number | null;
       }>((obj, column) => {
-        obj[column.title] = column.valueFunctionForType(rowId);
+        obj[column.name] = column.valueFunctionForType(rowId);
 
         return obj;
       }, {});
@@ -189,22 +201,14 @@ const getImageryLayerFeatureInfo = action(
 
       featureData.id = feature.properties[regionType.uniqueIdProp];
       featureInfo.properties = featureData;
+      const terriaFeatureData: TerriaFeatureData = {
+        rowIds: isJsonNumber(regionRows) ? [regionRows] : [...regionRows],
+        type: "terriaFeatureData"
+      };
+      featureInfo.data = terriaFeatureData;
 
       featureInfo.configureDescriptionFromProperties(featureData);
       featureInfo.configureNameFromProperties(featureData);
-
-      // If time-series region-mapping - show timeseries chart
-      if (
-        !isDefined(featureData._terria_getChartDetails) &&
-        style.tableModel.discreteTimes &&
-        style.tableModel.discreteTimes.length > 1 &&
-        Array.isArray(regionRows)
-      ) {
-        featureInfo.properties._terria_getChartDetails = getChartDetailsFn(
-          style,
-          regionRows
-        );
-      }
 
       return featureInfo;
     }

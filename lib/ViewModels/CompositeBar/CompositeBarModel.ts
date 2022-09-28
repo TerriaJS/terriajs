@@ -2,7 +2,7 @@ import { action, computed, observable } from "mobx";
 import isDefined from "../../Core/isDefined";
 import { CompositeBarItemController } from "./CompositeBarItemController";
 
-export type ScreenSize = "small" | "medium";
+export type ScreenSize = "small" | "medium" | "any";
 
 export enum CompositeOrientation {
   HORIZONTAL,
@@ -23,8 +23,8 @@ export interface ICompositeBarItem<
   id: string;
   name: string;
   title?: string;
-  screenSize: ScreenSize | undefined;
-  order: number;
+  screenSize?: ScreenSize;
+  order?: number;
   controller: ItemController;
 }
 
@@ -54,19 +54,19 @@ export abstract class CompositeBarModel<
 
   @computed
   get visibleItems(): CompositeBarItem[] {
-    return this.items.filter(item => item.controller.visible);
+    return this.items.filter((item) => item.controller.visible);
   }
 
   get pinnedItems(): CompositeBarItem[] {
     return this.items.filter(
-      item => item.controller.visible && item.controller.pinned
+      (item) => item.controller.visible && item.controller.pinned
     );
   }
 
   setItems(items: CompositeBarItem[]) {
     const result: CompositeBarItem[] = [];
     if (!this.items || this.items.length === 0) {
-      this._items = items.map(item => {
+      this._items = items.map((item) => {
         return this.createCompositeBarItem(item);
       });
     } else {
@@ -117,7 +117,7 @@ export abstract class CompositeBarModel<
         while (
           index < this.items.length &&
           typeof this.items[index].order === "number" &&
-          this.items[index].order < item.order
+          (this.items[index].order as number) < item.order
         ) {
           index++;
         }
@@ -224,7 +224,7 @@ export abstract class CompositeBarModel<
   }
 
   findItem(id: string): CompositeBarItem | undefined {
-    return this.items.filter(item => item.id === id)[0];
+    return this.items.filter((item) => item.id === id)[0];
   }
 
   protected createCompositeBarItem(item: CompositeBarItem): CompositeBarItem {

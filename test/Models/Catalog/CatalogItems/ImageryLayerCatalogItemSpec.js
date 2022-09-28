@@ -1,33 +1,32 @@
 "use strict";
 
 const CesiumEvent = require("terriajs-cesium/Source/Core/Event").default;
-const ImageryLayer = require("terriajs-cesium/Source/Scene/ImageryLayer")
-  .default;
-const ImageryProvider = require("terriajs-cesium/Source/Scene/ImageryProvider")
-  .default;
-const ImageryState = require("terriajs-cesium/Source/Scene/ImageryState")
-  .default;
+const ImageryLayer =
+  require("terriajs-cesium/Source/Scene/ImageryLayer").default;
+const ImageryProvider =
+  require("terriajs-cesium/Source/Scene/ImageryProvider").default;
+const ImageryState =
+  require("terriajs-cesium/Source/Scene/ImageryState").default;
 const JulianDate = require("terriajs-cesium/Source/Core/JulianDate").default;
 const pollToPromise = require("../../lib/Core/pollToPromise");
-const RequestErrorEvent = require("terriajs-cesium/Source/Core/RequestErrorEvent")
-  .default;
+const RequestErrorEvent =
+  require("terriajs-cesium/Source/Core/RequestErrorEvent").default;
 const Resource = require("terriajs-cesium/Source/Core/Resource").default;
 const runLater = require("../../../../lib/Core/runLater");
-const TimeIntervalCollection = require("terriajs-cesium/Source/Core/TimeIntervalCollection")
-  .default;
-const TimeInterval = require("terriajs-cesium/Source/Core/TimeInterval")
-  .default;
-const when = require("terriajs-cesium/Source/ThirdParty/when").default;
+const TimeIntervalCollection =
+  require("terriajs-cesium/Source/Core/TimeIntervalCollection").default;
+const TimeInterval =
+  require("terriajs-cesium/Source/Core/TimeInterval").default;
 
 const Terria = require("../../../../lib/Models/Terria");
 const ImageryLayerCatalogItem = require("../../lib/Models/ImageryLayerCatalogItem");
 
-describe("ImageryLayerCatalogItem", function() {
-  describe("Time slider initial time as specified by initialTimeSource ", function() {
+describe("ImageryLayerCatalogItem", function () {
+  describe("Time slider initial time as specified by initialTimeSource ", function () {
     var terria;
     var catalogItem;
 
-    beforeEach(function() {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -35,7 +34,7 @@ describe("ImageryLayerCatalogItem", function() {
     });
 
     // Future developers take note: some of these tests will stop working in August 3015.
-    it('should be start if "start" set', function() {
+    it('should be start if "start" set', function () {
       catalogItem.initialTimeSource = "start";
       catalogItem.intervals = new TimeIntervalCollection([
         new TimeInterval({
@@ -49,7 +48,7 @@ describe("ImageryLayerCatalogItem", function() {
       expect(currentTime).toBe("2013-08-07");
     });
 
-    it('should be current time if "present" set', function() {
+    it('should be current time if "present" set', function () {
       catalogItem.initialTimeSource = "present";
       catalogItem.intervals = new TimeIntervalCollection([
         new TimeInterval({
@@ -65,7 +64,7 @@ describe("ImageryLayerCatalogItem", function() {
       expect(currentTime).toBe(dateNow);
     });
 
-    it('should be last time if "end" set', function() {
+    it('should be last time if "end" set', function () {
       catalogItem.initialTimeSource = "end";
       catalogItem.intervals = new TimeIntervalCollection([
         new TimeInterval({
@@ -79,7 +78,7 @@ describe("ImageryLayerCatalogItem", function() {
       expect(currentTime).toBe("2015-08-09");
     });
 
-    it("should be set to date specified if date is specified", function() {
+    it("should be set to date specified if date is specified", function () {
       catalogItem.initialTimeSource = "2015-08-08T00:00:00.00Z";
       catalogItem.intervals = new TimeIntervalCollection([
         new TimeInterval({
@@ -93,7 +92,7 @@ describe("ImageryLayerCatalogItem", function() {
       expect(currentTime).toBe("2015-08-08");
     });
 
-    it("should be set to start if date specified is before time range, with two intervals", function() {
+    it("should be set to start if date specified is before time range, with two intervals", function () {
       catalogItem.initialTimeSource = "2012-01-01T12:00:00Z";
       catalogItem.intervals = new TimeIntervalCollection([
         new TimeInterval({
@@ -111,10 +110,10 @@ describe("ImageryLayerCatalogItem", function() {
       expect(currentTime).toBe("2013-08-01");
     });
 
-    it("should throw if a rubbish string is specified", function() {
+    it("should throw if a rubbish string is specified", function () {
       catalogItem.initialTimeSource = "2015z08-08";
 
-      expect(function() {
+      expect(function () {
         catalogItem.intervals = new TimeIntervalCollection([
           new TimeInterval({
             start: JulianDate.fromIso8601("2013-08-07T00:00:00.00Z"),
@@ -125,7 +124,7 @@ describe("ImageryLayerCatalogItem", function() {
     });
   });
 
-  describe("tile error handling", function() {
+  describe("tile error handling", function () {
     const image = document.createElement("img");
     image.src = "images/blank.png";
 
@@ -136,7 +135,7 @@ describe("ImageryLayerCatalogItem", function() {
     let imagery;
     let imageryLayer;
 
-    beforeEach(function() {
+    beforeEach(function () {
       terria = {
         error: new CesiumEvent()
       };
@@ -145,20 +144,20 @@ describe("ImageryLayerCatalogItem", function() {
         tileErrorThresholdBeforeDisabling: 5
       };
       imageryProvider = {
-        requestImage: function(x, y, level) {
+        requestImage: function (x, y, level) {
           return ImageryProvider.loadImage(this, "images/blank.png");
         },
         errorEvent: new CesiumEvent()
       };
       globeOrMap = {
         terria: terria,
-        addImageryProvider: function(options) {
+        addImageryProvider: function (options) {
           options.imageryProvider.errorEvent.addEventListener(
             options.onLoadError
           );
           return new ImageryLayer(options.imageryProvider);
         },
-        isImageryLayerShown: function() {
+        isImageryLayerShown: function () {
           return true;
         }
       };
@@ -180,63 +179,63 @@ describe("ImageryLayerCatalogItem", function() {
     });
 
     function failLoad(statusCode, times) {
-      return spyOn(Resource.prototype, "fetchImage").and.callFake(function(
+      return spyOn(Resource.prototype, "fetchImage").and.callFake(function (
         options
       ) {
         if (times > 0) {
           --times;
           if (options.preferBlob) {
-            return when.reject(new RequestErrorEvent(statusCode, "bad", []));
+            return Promise.reject(new RequestErrorEvent(statusCode, "bad", []));
           } else {
-            return when.reject(image);
+            return Promise.reject(image);
           }
         } else {
-          return when.resolve(image);
+          return Promise.resolve(image);
         }
       });
     }
 
-    it("ignores errors in disabled layers", function(done) {
+    it("ignores errors in disabled layers", function (done) {
       spyOn(globeOrMap, "isImageryLayerShown").and.returnValue(false);
       const fetchImage = failLoad(503, 10);
 
       imageryLayer._requestImagery(imagery);
 
-      pollToPromise(function() {
+      pollToPromise(function () {
         return imagery.state === ImageryState.FAILED;
       })
-        .then(function() {
+        .then(function () {
           expect(fetchImage.calls.count()).toEqual(1);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
 
-    it("retries images that fail with a 503 error", function(done) {
+    it("retries images that fail with a 503 error", function (done) {
       const fetchImage = failLoad(503, 2);
 
       imageryLayer._requestImagery(imagery);
 
-      pollToPromise(function() {
+      pollToPromise(function () {
         return imagery.state === ImageryState.RECEIVED;
       })
-        .then(function() {
+        .then(function () {
           expect(fetchImage.calls.count()).toEqual(4);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
 
-    it("eventually gives up on a tile that only succeeds when loaded via blob", function(done) {
+    it("eventually gives up on a tile that only succeeds when loaded via blob", function (done) {
       const fetchImage = spyOn(Resource.prototype, "fetchImage").and.callFake(
-        function(options) {
+        function (options) {
           if (options.preferBlob) {
-            return runLater(function() {
+            return runLater(function () {
               return image;
             });
           } else {
-            return runLater(function() {
-              return when.reject(image);
+            return runLater(function () {
+              return Promise.reject(image);
             });
           }
         }
@@ -244,17 +243,17 @@ describe("ImageryLayerCatalogItem", function() {
 
       imageryLayer._requestImagery(imagery);
 
-      pollToPromise(function() {
+      pollToPromise(function () {
         return imagery.state === ImageryState.FAILED;
       })
-        .then(function() {
+        .then(function () {
           expect(fetchImage.calls.count()).toBeGreaterThan(5);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
 
-    it("ignores any number of 404 errors if treat404AsError is false", function(done) {
+    it("ignores any number of 404 errors if treat404AsError is false", function (done) {
       const fetchImage = failLoad(404, 100);
       catalogItem.treat404AsError = false;
 
@@ -268,21 +267,21 @@ describe("ImageryLayerCatalogItem", function() {
         imageryLayer._requestImagery(tiles[i]);
       }
 
-      pollToPromise(function() {
+      pollToPromise(function () {
         let result = true;
         for (let i = 0; i < tiles.length; ++i) {
           result = result && tiles[i].state === ImageryState.FAILED;
         }
         return result;
       })
-        .then(function() {
+        .then(function () {
           expect(fetchImage.calls.count()).toEqual(tiles.length * 2);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
 
-    it("ignores any number of 403 errors if treat403AsError is false", function(done) {
+    it("ignores any number of 403 errors if treat403AsError is false", function (done) {
       const fetchImage = failLoad(403, 100);
       catalogItem.treat403AsError = false;
 
@@ -296,21 +295,21 @@ describe("ImageryLayerCatalogItem", function() {
         imageryLayer._requestImagery(tiles[i]);
       }
 
-      pollToPromise(function() {
+      pollToPromise(function () {
         let result = true;
         for (let i = 0; i < tiles.length; ++i) {
           result = result && tiles[i].state === ImageryState.FAILED;
         }
         return result;
       })
-        .then(function() {
+        .then(function () {
           expect(fetchImage.calls.count()).toEqual(tiles.length * 2);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
 
-    it("doesn't disable the layer after only five 404s if treat404AsError is true", function(done) {
+    it("doesn't disable the layer after only five 404s if treat404AsError is true", function (done) {
       const fetchImage = failLoad(404, 100);
       catalogItem.treat404AsError = true;
       catalogItem.isShown = true;
@@ -325,22 +324,22 @@ describe("ImageryLayerCatalogItem", function() {
         imageryLayer._requestImagery(tiles[i]);
       }
 
-      pollToPromise(function() {
+      pollToPromise(function () {
         let result = true;
         for (let i = 0; i < tiles.length; ++i) {
           result = result && tiles[i].state === ImageryState.FAILED;
         }
         return result;
       })
-        .then(function() {
+        .then(function () {
           expect(fetchImage.calls.count()).toEqual(tiles.length * 2);
           expect(catalogItem.isShown).toBe(true);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
 
-    it("disables the layer after six 404s if treat404AsError is true", function(done) {
+    it("disables the layer after six 404s if treat404AsError is true", function (done) {
       const fetchImage = failLoad(404, 100);
       catalogItem.treat404AsError = true;
       catalogItem.isShown = true;
@@ -355,19 +354,19 @@ describe("ImageryLayerCatalogItem", function() {
         imageryLayer._requestImagery(tiles[i]);
       }
 
-      pollToPromise(function() {
+      pollToPromise(function () {
         let result = true;
         for (let i = 0; i < tiles.length; ++i) {
           result = result && tiles[i].state === ImageryState.FAILED;
         }
         return result;
       })
-        .then(function() {
+        .then(function () {
           expect(fetchImage.calls.count()).toEqual(tiles.length * 2);
           expect(catalogItem.isShown).toBe(false);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
   });
 });

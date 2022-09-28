@@ -1,0 +1,71 @@
+{
+  "comments": "Matching takes place in the order defined in this file. Place code matches before name matches, and smaller regions before larger ones.",
+  "regionWmsMap": {
+    "SOME_OTHER_REGION": {
+      "layerName": "SOME_OTHER_REGION",
+      "server": "https://vector-tiles.terria.io/SOME_OTHER_REGION/{z}/{x}/{y}.pbf",
+      "regionProp": "SOME_OTHER_REGION",
+      "digits": 11,
+      "description": "SOME_OTHER_REGION",
+      "regionIdsFile": "build/TerriaJS/test/regionMapping/region_map-SOME_OTHER_REGION.json",
+      "serverType": "MVT",
+      "serverSubdomains": [],
+      "serverMinZoom": 0,
+      "serverMaxNativeZoom": 12,
+      "serverMaxZoom": 28,
+      "bbox": [
+        96.81694140799998, -43.74050960300003, 159.10921900799997,
+        -9.142175976999999
+      ],
+      "nameProp": "SOME_OTHER_REGION"
+    },
+    "SOME_OVERRIDDEN_REGION": {
+      "_comment": "This section must go before State",
+      "description": "Local Government Areas 2011 by name (ABS) !!!! OVERRIDDEN",
+      "layerName": "FID_LGA_2011_AUST",
+      "server": "https://vector-tiles.terria.io/FID_LGA_2011_AUST/{z}/{x}/{y}.pbf",
+      "analyticsWmsLayerName": "region_map:FID_LGA_2011_AUST",
+      "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+      "regionProp": "LGA_NAME11",
+      "aliases": [
+        "lga_name_2011",
+        "lga name",
+        "lga_name_2015",
+        "lga_name_2014",
+        "lga_name_2013",
+        "lga_name_2012",
+        "lga_name_2010"
+      ],
+      "serverReplacements": [
+        [" \\([a-z]+\\)$", ""],
+        ["-", " "]
+      ],
+      "dataReplacements": [
+        ["^The ", ""],
+        ["^.*Council of (the )?", ""],
+        ["^.* of (the )?", ""],
+        [" Council$", ""],
+        [
+          " (Shire|City|Rural City|Borough|District|Aboriginal|Municipality|Municipal|Regional|Town|Government Community|Aboriginal Shire|Island|\\(Unincorporated\\)|\\(Uninc.\\))$",
+          ""
+        ],
+        ["( \\([A-Z]+\\)$)", ""],
+        ["-", " "]
+      ],
+      "disambigProp": "STE_NAME16",
+      "disambigRegionId": "STE_NAME_2016",
+      "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json",
+      "regionDisambigIdsFile": "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json",
+      "serverType": "MVT",
+      "serverSubdomains": [],
+      "serverMinZoom": 0,
+      "serverMaxNativeZoom": 12,
+      "serverMaxZoom": 28,
+      "bbox": [
+        112.92111395999996, -43.74050957999999, 153.63872711999997,
+        -9.142175969999997
+      ],
+      "nameProp": "LGA_NAME11"
+    }
+  }
+}

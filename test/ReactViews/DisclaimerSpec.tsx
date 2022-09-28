@@ -1,19 +1,19 @@
-const create: any = require("react-test-renderer").create;
+import { runInAction } from "mobx";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
-import { runInAction } from "mobx";
-const Disclaimer: any = require("../../lib/ReactViews/Disclaimer").default;
 import Box from "../../lib/Styled/Box";
+import { createWithContexts } from "./withContext";
+const Disclaimer: any = require("../../lib/ReactViews/Disclaimer").default;
 
-describe("Disclaimer", function() {
+describe("Disclaimer", function () {
   let terria: Terria;
   let viewState: ViewState;
 
   let testRenderer: any;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -24,8 +24,8 @@ describe("Disclaimer", function() {
     });
   });
 
-  describe("with basic disclaimerSettings and disclaimerVisible set to true", function() {
-    it("renders", function() {
+  describe("with basic disclaimerSettings and disclaimerVisible set to true", function () {
+    it("renders", function () {
       runInAction(() => {
         viewState.disclaimerSettings = {
           title: "Disclaimer",
@@ -36,35 +36,44 @@ describe("Disclaimer", function() {
         viewState.disclaimerVisible = true;
       });
       act(() => {
-        testRenderer = create(<Disclaimer viewState={viewState} />);
+        testRenderer = createWithContexts(
+          viewState,
+          <Disclaimer viewState={viewState} />
+        );
       });
       const disclaimerContent = testRenderer.root.findAllByType(Box);
       expect(disclaimerContent.length).toBeTruthy();
     });
   });
 
-  describe("with limited disclaimerSettings and disclaimerVisible set to true", function() {
-    it("renders", function() {
+  describe("with limited disclaimerSettings and disclaimerVisible set to true", function () {
+    it("renders", function () {
       runInAction(() => {
         viewState.disclaimerSettings = {};
         viewState.disclaimerVisible = true;
       });
       act(() => {
-        testRenderer = create(<Disclaimer viewState={viewState} />);
+        testRenderer = createWithContexts(
+          viewState,
+          <Disclaimer viewState={viewState} />
+        );
       });
       const disclaimerContent = testRenderer.root.findAllByType(Box);
       expect(disclaimerContent.length).toBeTruthy();
     });
   });
 
-  describe("with disclaimerVisible set to false", function() {
-    it("does not render", function() {
+  describe("with disclaimerVisible set to false", function () {
+    it("does not render", function () {
       runInAction(() => {
         terria.configParameters.globalDisclaimer = undefined;
         viewState.disclaimerVisible = false;
       });
       act(() => {
-        testRenderer = create(<Disclaimer viewState={viewState} />);
+        testRenderer = createWithContexts(
+          viewState,
+          <Disclaimer viewState={viewState} />
+        );
       });
       const disclaimerContent = testRenderer.root.findAllByType(Box);
       expect(disclaimerContent.length).toBeFalsy();

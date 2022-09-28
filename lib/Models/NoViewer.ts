@@ -2,20 +2,23 @@
 
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import LatLonHeight from "../Core/LatLonHeight";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import { ProviderCoordsMap } from "../Map/PickedFeatures";
+import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
+import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
+import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
-import Feature from "./Feature";
+import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
+import { observable } from "mobx";
 
 class NoViewer extends GlobeOrMap {
   readonly type = "none";
   readonly terria: Terria;
   readonly canShowSplitter = false;
   private _currentView: CameraView = new CameraView(Rectangle.MAX_VALUE);
+  readonly dataAttributions = observable([]);
 
   constructor(terriaViewer: TerriaViewer) {
     super();
@@ -41,7 +44,7 @@ class NoViewer extends GlobeOrMap {
   pickFromLocation(
     latLngHeight: LatLonHeight,
     providerCoords: ProviderCoordsMap,
-    existingFeatures: Feature[]
+    existingFeatures: TerriaFeature[]
   ) {}
 
   /**
@@ -66,7 +69,7 @@ class NoViewer extends GlobeOrMap {
   pauseMapInteraction() {}
   resumeMapInteraction() {}
   _addVectorTileHighlight(
-    imageryProvider: MapboxVectorTileImageryProvider,
+    imageryProvider: MapboxVectorTileImageryProvider | ProtomapsImageryProvider,
     rectangle: Rectangle
   ) {
     return () => {};

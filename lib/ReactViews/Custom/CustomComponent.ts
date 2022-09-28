@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import Feature from "../../Models/Feature";
+import TerriaFeature from "../../Models/Feature/Feature";
 import { BaseModel } from "../../Models/Definition/Model";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
@@ -43,7 +43,7 @@ export interface ProcessNodeContext {
   /**
    * The feature for which this HTML is being processed.
    */
-  readonly feature?: Feature;
+  readonly feature?: TerriaFeature;
 }
 
 /**
