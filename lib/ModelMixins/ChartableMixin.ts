@@ -20,8 +20,8 @@ export interface ChartDomain {
 }
 
 export function calculateDomain(points: ChartPoint[]): ChartDomain {
-  const xs = points.map(p => p.x);
-  const ys = points.map(p => p.y);
+  const xs = points.map((p) => p.x);
+  const ys = points.map((p) => p.y);
   const asNum = (x: Date | number) => (x instanceof Date ? x.getTime() : x);
   return {
     x: [minBy(xs, asNum) || 0, maxBy(xs, asNum) || 0],

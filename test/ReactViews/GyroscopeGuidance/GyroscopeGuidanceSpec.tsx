@@ -6,13 +6,13 @@ import ViewState from "../../../lib/ReactViewModels/ViewState";
 import GyroscopeGuidance from "../../../lib/ReactViews/GyroscopeGuidance/GyroscopeGuidance";
 import MapIconButton from "../../../lib/ReactViews/MapIconButton/MapIconButton";
 
-describe("GyroscopeGuidance", function() {
+describe("GyroscopeGuidance", function () {
   let terria: Terria;
   let viewState: ViewState;
 
   let testRenderer: any;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -23,8 +23,8 @@ describe("GyroscopeGuidance", function() {
     });
   });
 
-  describe("with basic props", function() {
-    it("renders with 1 button", function() {
+  describe("with basic props", function () {
+    it("renders with 1 button", function () {
       act(() => {
         testRenderer = create(
           <GyroscopeGuidance

@@ -8,15 +8,15 @@ import parseCustomHtmlToReact from "../../lib/ReactViews/Custom/parseCustomHtmlT
 import registerCustomComponentTypes from "../../lib/ReactViews/Custom/registerCustomComponentTypes";
 
 function findAllEqualTo(reactElement, text) {
-  return findAll(reactElement, element => element && element === text);
+  return findAll(reactElement, (element) => element && element === text);
 }
 
-describe("parseCustomHtmlToReact and registerCustomComponentTypes", function() {
-  beforeEach(function() {
+describe("parseCustomHtmlToReact and registerCustomComponentTypes", function () {
+  beforeEach(function () {
     registerCustomComponentTypes();
   });
 
-  it("parses a div", function() {
+  it("parses a div", function () {
     const result = parseCustomHtmlToReact("<div>Foo</div>");
     expect(result.type).toEqual("div");
     // This is a bit cheeky - using the shallow test utils to test a fully rendered div.
@@ -25,7 +25,7 @@ describe("parseCustomHtmlToReact and registerCustomComponentTypes", function() {
     expect(findAllEqualTo(result, "Foo").length).toEqual(1);
   });
 
-  it("parses a collapsible", function() {
+  it("parses a collapsible", function () {
     const result = parseCustomHtmlToReact(
       '<collapsible title="Untitled">Bar</collapsible>'
     );
@@ -34,7 +34,7 @@ describe("parseCustomHtmlToReact and registerCustomComponentTypes", function() {
     expect(result.props.children[0]).toEqual("Bar");
   });
 
-  it("parses a chart with a src attribute", function() {
+  it("parses a chart with a src attribute", function () {
     const result = parseCustomHtmlToReact(
       '<chart src="http://example.com"></chart>'
     );
@@ -44,7 +44,7 @@ describe("parseCustomHtmlToReact and registerCustomComponentTypes", function() {
     expect(chart.props.url).toEqual("http://example.com");
   });
 
-  it("parses a chart with a data attribute containing csv", function() {
+  it("parses a chart with a data attribute containing csv", function () {
     // Both line feeds (\n) and backslash-n ("\n" or \\n here) work.
     const result = parseCustomHtmlToReact(
       '<chart data="x,y\n1,2\\n3,4\n5,6"></chart>'
@@ -57,7 +57,7 @@ describe("parseCustomHtmlToReact and registerCustomComponentTypes", function() {
     expect(chart.props.tableStructure.columns[1].values.length).toEqual(3);
   });
 
-  it("parses a chart with a data attribute containing json", function() {
+  it("parses a chart with a data attribute containing json", function () {
     // Use &quot; for quotes.
     const result = parseCustomHtmlToReact(
       '<chart data="[[&quot;x&quot;,&quot;y&quot;,&quot;z&quot;],[1,10,3],[2,15,9],[3,8,12],[5,25,4]]"></chart>'
@@ -70,7 +70,7 @@ describe("parseCustomHtmlToReact and registerCustomComponentTypes", function() {
     expect(chart.props.tableStructure.columns[2].values.length).toEqual(4);
   });
 
-  it("parses a chart with child csv", function() {
+  it("parses a chart with child csv", function () {
     // Both line feeds (\n) and backslash-n ("\n" or \\n here) work.
     const result = parseCustomHtmlToReact("<chart>x,y\n1,2\\n3,4\n5,6</chart>");
     const charts = findAllWithType(result, Chart);
@@ -81,7 +81,7 @@ describe("parseCustomHtmlToReact and registerCustomComponentTypes", function() {
     expect(chart.props.tableStructure.columns[1].values.length).toEqual(3);
   });
 
-  it("parses a chart with child json", function() {
+  it("parses a chart with child json", function () {
     // This is nicer, as you can use real quotes.
     const result = parseCustomHtmlToReact(
       '<chart>[["x","y","z"],[1,10,3],[2,15,9],[3,8,12],[5,25,4]]</chart>'
@@ -94,7 +94,7 @@ describe("parseCustomHtmlToReact and registerCustomComponentTypes", function() {
     expect(chart.props.tableStructure.columns[2].values.length).toEqual(4);
   });
 
-  it("decodes HTML entities in text nodes and in attributes", function() {
+  it("decodes HTML entities in text nodes and in attributes", function () {
     const result = parseCustomHtmlToReact(
       '<a href="https://programs.communications.gov.au/geoserver/ows?service=WMS&amp;version=1.3.0&amp;request=GetCapabilities">https://programs.communications.gov.au/geoserver/ows?service=WMS&amp;version=1.3.0&amp;request=GetCapabilities</a>'
     );
@@ -115,7 +115,7 @@ describe("parseCustomHtmlToReact and registerCustomComponentTypes", function() {
 });
 
 describe("Parse html to react", () => {
-  it("should open link in new tab", function() {
+  it("should open link in new tab", function () {
     const html = '<a href="https://www.csiro.au/">csiro</a>';
     const reactComponent = parseCustomHtmlToReact(html);
     const reactHtml = ReactDOMServer.renderToStaticMarkup(reactComponent);
@@ -124,7 +124,7 @@ describe("Parse html to react", () => {
     );
   });
 
-  it("should correctly parse style attributes on a tag", function() {
+  it("should correctly parse style attributes on a tag", function () {
     const html =
       '<a href="https://www.csiro.au/" style="color:yellow" >csiro</a>';
     const reactComponent = parseCustomHtmlToReact(html);
@@ -134,7 +134,7 @@ describe("Parse html to react", () => {
     );
   });
 
-  it("should correctly parse empty style attributes on a tag", function() {
+  it("should correctly parse empty style attributes on a tag", function () {
     const html = '<a href="https://www.csiro.au/" style="" >csiro</a>';
     const reactComponent = parseCustomHtmlToReact(html);
     const reactHtml = ReactDOMServer.renderToStaticMarkup(reactComponent);

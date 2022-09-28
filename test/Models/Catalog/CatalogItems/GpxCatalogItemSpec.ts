@@ -5,27 +5,27 @@ import GpxCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GpxCatal
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../../lib/Models/Terria";
 
-describe("GpxCatalogItem", function() {
+describe("GpxCatalogItem", function () {
   let terria;
   let item: GpxCatalogItem;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria();
     item = new GpxCatalogItem("test", terria);
   });
 
-  it("has type and type name", function() {
+  it("has type and type name", function () {
     expect(item.type).toBe("gpx");
     expect(item.typeName).toBe(i18next.t("models.gpx.name"));
   });
 
-  it("supports zooming to extent", async function() {
+  it("supports zooming to extent", async function () {
     item.setTrait(CommonStrata.definition, "url", "test/gpx/example.gpx");
     await item.loadMapItems();
     expect(item.disableZoomTo).toBeFalsy();
   });
 
-  it("supports show info", async function() {
+  it("supports show info", async function () {
     item.setTrait(CommonStrata.definition, "url", "test/gpx/example.gpx");
     await item.loadMapItems();
     expect(item.disableAboutData).toBeFalsy();

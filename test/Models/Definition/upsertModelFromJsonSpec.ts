@@ -6,8 +6,8 @@ import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import upsertModelFromJson from "../../../lib/Models/Definition/upsertModelFromJson";
 import Terria from "../../../lib/Models/Terria";
 
-describe("upsertModelFromJson", function() {
-  it("can create basic WMS item", function() {
+describe("upsertModelFromJson", function () {
+  it("can create basic WMS item", function () {
     const terria = new Terria();
 
     const json = {
@@ -34,7 +34,7 @@ describe("upsertModelFromJson", function() {
     expect(wms.layers).toBe("mybroadband:MyBroadband_ADSL_Availability");
   });
 
-  it("can merge members from multiple strata", async function() {
+  it("can merge members from multiple strata", async function () {
     const terria = new Terria();
 
     const json = {
@@ -122,7 +122,7 @@ describe("upsertModelFromJson", function() {
     expect(item.isGeoServer).toBe(true, "item.isGeoServer");
   });
 
-  it("can update a model by shareKey", function() {
+  it("can update a model by shareKey", function () {
     const terria = new Terria();
 
     const json = {

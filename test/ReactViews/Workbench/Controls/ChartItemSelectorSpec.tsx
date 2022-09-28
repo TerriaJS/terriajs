@@ -61,12 +61,12 @@ class SomeChartableItem extends ChartableMixin(
   }
 }
 
-describe("ChartItemSelector", function() {
+describe("ChartItemSelector", function () {
   let terria: Terria;
   let item: SomeChartableItem;
   let testRenderer: ReactTestRenderer;
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -78,10 +78,10 @@ describe("ChartItemSelector", function() {
     });
   });
 
-  it("sorts the chart items by name", function() {
+  it("sorts the chart items by name", function () {
     const chartItemNames = testRenderer.root
       .findAllByType("label")
-      .map(c => (c.children[3] as any).children[0].children[0]);
+      .map((c) => (c.children[3] as any).children[0].children[0]);
     expect(chartItemNames).toEqual(["aaa", "zzz"]);
   });
 });

@@ -1,1 +1,1804 @@
-{"data":{"dataflows":[{"id":"DF_COMMODITY_PRICES","links":[{"rel":"self","type":"dataflow"},{"rel":"structure","type":"datastructure"}],"version":"1.0","agencyID":"SPC","isFinal":false,"name":"Selected International Commodity Prices","names":{"en":"Selected International Commodity Prices"},"description":"Nominal prices in USD for selected key international commodity prices relevant to Pacific Island Countries and Territories, extracted from World bank Commodity Prices (« pink sheets ») and from FAO GLOBEFISH European Fish Price Report.","descriptions":{"en":"Nominal prices in USD for selected key international commodity prices relevant to Pacific Island Countries and Territories, extracted from World bank Commodity Prices (« pink sheets ») and from FAO GLOBEFISH European Fish Price Report."},"annotations":[{"type":"NonProductionDataflow","text":"true","texts":{"en":"true"}},{"title":"COMMODITY","type":"LAYOUT_ROW"},{"title":"TIME_PERIOD","type":"LAYOUT_COLUMN"},{"title":"FREQ=A,INDICATOR=COMPRICE,TIME_PERIOD_START=2010,TIME_PERIOD_END=2020","type":"DEFAULT"},{"type":"EXT_RESOURCE","text":"Metadata|http://purl.org/spc/digilib/doc/vbwmj|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png","texts":{"en":"Metadata|http://purl.org/spc/digilib/doc/vbwmj|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"}}],"structure":"urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_COMMODITY_PRICES(1.0)"}],"categorySchemes":[{"id":"CAS_COM_TOPIC","links":[{"rel":"self","type":"categoryscheme"}],"version":"1.0","agencyID":"SPC","isFinal":false,"name":"Topic","names":{"en":"Topic"},"isPartial":false,"categories":[{"id":"ECO","name":"Economy","names":{"en":"Economy"},"annotations":[{"type":"ORDER","text":"10","texts":{"en":"10"}}],"links":[{"rel":"self","type":"category"}]},{"id":"ENV","name":"Environment","names":{"en":"Environment"},"annotations":[{"type":"ORDER","text":"20","texts":{"en":"20"}}],"links":[{"rel":"self","type":"category"}]},{"id":"HEA","name":"Health","names":{"en":"Health"},"annotations":[{"type":"ORDER","text":"30","texts":{"en":"30"}}],"links":[{"rel":"self","type":"category"}]},{"id":"IND","name":"Industry and Services","names":{"en":"Industry and Services"},"annotations":[{"type":"ORDER","text":"40","texts":{"en":"40"}}],"links":[{"rel":"self","type":"category"}]},{"id":"POP","name":"Population","names":{"en":"Population"},"annotations":[{"type":"ORDER","text":"50","texts":{"en":"50"}}],"links":[{"rel":"self","type":"category"}]},{"id":"SOC","name":"Social","names":{"en":"Social"},"annotations":[{"type":"ORDER","text":"60","texts":{"en":"60"}}],"links":[{"rel":"self","type":"category"}]},{"id":"XDO","name":"Multi-domain","names":{"en":"Multi-domain"},"annotations":[{"type":"ORDER","text":"70","texts":{"en":"70"}}],"links":[{"rel":"self","type":"category"}]}]}],"categorisations":[{"id":"CAT_COMMODITY_PRICES","links":[{"rel":"self","type":"categorisation"}],"version":"1.0","agencyID":"SPC","isFinal":false,"name":"Categorisation for the Costal Population dataflow","names":{"en":"Categorisation for the Costal Population dataflow"},"source":"urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_COMMODITY_PRICES(1.0)","target":"urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_TOPIC(1.0).ECO"}],"conceptSchemes":[{"id":"CS_COMMON","links":[{"rel":"self","type":"conceptscheme"}],"version":"2.0","agencyID":"SPC","isFinal":false,"name":"Common concepts for SPC .Stat data","names":{"en":"Common concepts for SPC .Stat data"},"isPartial":false,"concepts":[{"id":"TIME_PERIOD","name":"Time","names":{"en":"Time"},"links":[{"rel":"self","type":"concept"}]},{"id":"FREQ","name":"Frequency","names":{"en":"Frequency"},"links":[{"rel":"self","type":"concept"}]},{"id":"OBS_VALUE","name":"Observation value","names":{"en":"Observation value"},"links":[{"rel":"self","type":"concept"}]},{"id":"OBS_SATUS","name":"Observation Status","names":{"en":"Observation Status"},"links":[{"rel":"self","type":"concept"}]},{"id":"CONF_STATUS","name":"Confidentiality status","names":{"en":"Confidentiality status"},"links":[{"rel":"self","type":"concept"}]},{"id":"UNIT_MEASURE","name":"Unit of measure","names":{"en":"Unit of measure"},"links":[{"rel":"self","type":"concept"}]},{"id":"UNIT_MULT","name":"Unit multiplier","names":{"en":"Unit multiplier"},"links":[{"rel":"self","type":"concept"}]},{"id":"COMMENT","name":"Comment","names":{"en":"Comment"},"links":[{"rel":"self","type":"concept"}]},{"id":"DECIMALS","name":"Decimals","names":{"en":"Decimals"},"links":[{"rel":"self","type":"concept"}]},{"id":"GEO_AREA","name":"Geographical area","names":{"en":"Geographical area"},"links":[{"rel":"self","type":"concept"}]},{"id":"GEO_PICT","name":"Pacific Island Countries and territories","names":{"en":"Pacific Island Countries and territories"},"links":[{"rel":"self","type":"concept"}]},{"id":"SEX","name":"Sex","names":{"en":"Sex"},"links":[{"rel":"self","type":"concept"}]},{"id":"AGE","name":"Age","names":{"en":"Age"},"links":[{"rel":"self","type":"concept"}]},{"id":"CURRENCY","name":"Currency","names":{"en":"Currency"},"links":[{"rel":"self","type":"concept"}]},{"id":"DATA_SOURCE","name":"Data source","names":{"en":"Data source"},"links":[{"rel":"self","type":"concept"}]},{"id":"INDICATOR","name":"Indicator","names":{"en":"Indicator"},"links":[{"rel":"self","type":"concept"}]},{"id":"COMMODITY","name":"Commodity","names":{"en":"Commodity"},"links":[{"rel":"self","type":"concept"}]},{"id":"URBANIZATION","name":"Urbanization","names":{"en":"Urbanization"},"links":[{"rel":"self","type":"concept"}]},{"id":"EDUCATION","name":"Education level","names":{"en":"Education level"},"links":[{"rel":"self","type":"concept"}]},{"id":"OCCUPATION","name":"Occupation","names":{"en":"Occupation"},"links":[{"rel":"self","type":"concept"}]},{"id":"DISABILITY","name":"Disability","names":{"en":"Disability"},"links":[{"rel":"self","type":"concept"}]},{"id":"INCOME","name":"Income","names":{"en":"Income"},"links":[{"rel":"self","type":"concept"}]},{"id":"COMPOSITE_BREAKDOWN","name":"Composite breakdown","names":{"en":"Composite breakdown"},"links":[{"rel":"self","type":"concept"}]},{"id":"ECONOMIC_SECTOR","name":"Economic sector","names":{"en":"Economic sector"},"links":[{"rel":"self","type":"concept"}]},{"id":"LABOUR_FORCE_STATUS","name":"Labour force status","names":{"en":"Labour force status"},"links":[{"rel":"self","type":"concept"}]},{"id":"EMPLOYMENT_STATUS","name":"Employment status","names":{"en":"Employment status"},"links":[{"rel":"self","type":"concept"}]},{"id":"BASE_PER","name":"Base period","names":{"en":"Base period"},"links":[{"rel":"self","type":"concept"}]},{"id":"TIME_FORMAT","name":"Time format","names":{"en":"Time format"},"links":[{"rel":"self","type":"concept"}]}]}],"codelists":[{"id":"CL_COMMODITY_PRICES","links":[{"rel":"self","type":"codelist"}],"version":"1.0","agencyID":"SPC","isFinal":false,"name":"Code list for commodity prices","names":{"en":"Code list for commodity prices"},"isPartial":false,"codes":[{"id":"ALUMINUM","name":"Aluminum","names":{"en":"Aluminum"},"annotations":[{"type":"ORDER","text":"10","texts":{"en":"10"}}],"links":[{"rel":"self","type":"code"}]},{"id":"BANANA_EU","name":"Banana, Europe","names":{"en":"Banana, Europe"},"annotations":[{"type":"ORDER","text":"20","texts":{"en":"20"}}],"links":[{"rel":"self","type":"code"}]},{"id":"BANANA_US","name":"Banana, US","names":{"en":"Banana, US"},"annotations":[{"type":"ORDER","text":"30","texts":{"en":"30"}}],"links":[{"rel":"self","type":"code"}]},{"id":"BARLEY","name":"Barley","names":{"en":"Barley"},"annotations":[{"type":"ORDER","text":"40","texts":{"en":"40"}}],"links":[{"rel":"self","type":"code"}]},{"id":"BEEF","name":"Beef","names":{"en":"Beef"},"annotations":[{"type":"ORDER","text":"50","texts":{"en":"50"}}],"links":[{"rel":"self","type":"code"}]},{"id":"CHICKEN","name":"Meat, chicken","names":{"en":"Meat, chicken"},"annotations":[{"type":"ORDER","text":"320","texts":{"en":"320"}}],"links":[{"rel":"self","type":"code"}]},{"id":"COAL_AUS","name":"Coal, Australian","names":{"en":"Coal, Australian"},"annotations":[{"type":"ORDER","text":"60","texts":{"en":"60"}}],"links":[{"rel":"self","type":"code"}]},{"id":"COAL_COL","name":"Coal, Colombian","names":{"en":"Coal, Colombian"},"annotations":[{"type":"ORDER","text":"70","texts":{"en":"70"}}],"links":[{"rel":"self","type":"code"}]},{"id":"COAL_SAFRICA","name":"Coal, South Afican","names":{"en":"Coal, South Afican"},"annotations":[{"type":"ORDER","text":"80","texts":{"en":"80"}}],"links":[{"rel":"self","type":"code"}]},{"id":"COCOA","name":"Cocoa","names":{"en":"Cocoa"},"annotations":[{"type":"ORDER","text":"90","texts":{"en":"90"}}],"links":[{"rel":"self","type":"code"}]},{"id":"COCONUT_OIL","name":"Coconut oil","names":{"en":"Coconut oil"},"annotations":[{"type":"ORDER","text":"100","texts":{"en":"100"}}],"links":[{"rel":"self","type":"code"}]},{"id":"COFFEE_ARABIC","name":"Coffee, Arabica","names":{"en":"Coffee, Arabica"},"annotations":[{"type":"ORDER","text":"110","texts":{"en":"110"}}],"links":[{"rel":"self","type":"code"}]},{"id":"COFFEE_ROBUS","name":"Coffee, Robusta","names":{"en":"Coffee, Robusta"},"annotations":[{"type":"ORDER","text":"120","texts":{"en":"120"}}],"links":[{"rel":"self","type":"code"}]},{"id":"COPPER","name":"Copper","names":{"en":"Copper"},"annotations":[{"type":"ORDER","text":"130","texts":{"en":"130"}}],"links":[{"rel":"self","type":"code"}]},{"id":"COPRA","name":"Copra","names":{"en":"Copra"},"annotations":[{"type":"ORDER","text":"140","texts":{"en":"140"}}],"links":[{"rel":"self","type":"code"}]},{"id":"COTTON_A_INDX","name":"Cotton, A Index","names":{"en":"Cotton, A Index"},"annotations":[{"type":"ORDER","text":"150","texts":{"en":"150"}}],"links":[{"rel":"self","type":"code"}]},{"id":"COTTON_MEMPH","name":"Cotton, Memphis","names":{"en":"Cotton, Memphis"},"annotations":[{"type":"ORDER","text":"160","texts":{"en":"160"}}],"links":[{"rel":"self","type":"code"}]},{"id":"CRUDE_BRENT","name":"Crude oil, Brent","names":{"en":"Crude oil, Brent"},"annotations":[{"type":"ORDER","text":"180","texts":{"en":"180"}}],"links":[{"rel":"self","type":"code"}]},{"id":"CRUDE_DUBAI","name":"Crude oil, Dubai","names":{"en":"Crude oil, Dubai"},"annotations":[{"type":"ORDER","text":"190","texts":{"en":"190"}}],"links":[{"rel":"self","type":"code"}]},{"id":"CRUDE_PETRO","name":"Crude oil, average","names":{"en":"Crude oil, average"},"annotations":[{"type":"ORDER","text":"170","texts":{"en":"170"}}],"links":[{"rel":"self","type":"code"}]},{"id":"CRUDE_WTI","name":"Crude oil, WTI","names":{"en":"Crude oil, WTI"},"annotations":[{"type":"ORDER","text":"200","texts":{"en":"200"}}],"links":[{"rel":"self","type":"code"}]},{"id":"DAP","name":"DAP","names":{"en":"DAP"},"annotations":[{"type":"ORDER","text":"210","texts":{"en":"210"}}],"links":[{"rel":"self","type":"code"}]},{"id":"FISH_MEAL","name":"Fish meal","names":{"en":"Fish meal"},"annotations":[{"type":"ORDER","text":"220","texts":{"en":"220"}}],"links":[{"rel":"self","type":"code"}]},{"id":"GOLD","name":"Gold","names":{"en":"Gold"},"annotations":[{"type":"ORDER","text":"230","texts":{"en":"230"}}],"links":[{"rel":"self","type":"code"}]},{"id":"GRNUT","name":"Groundnuts","names":{"en":"Groundnuts"},"annotations":[{"type":"ORDER","text":"250","texts":{"en":"250"}}],"links":[{"rel":"self","type":"code"}]},{"id":"GRNUT_OIL","name":"Groundnut oil","names":{"en":"Groundnut oil"},"annotations":[{"type":"ORDER","text":"240","texts":{"en":"240"}}],"links":[{"rel":"self","type":"code"}]},{"id":"iNATGAS","name":"Natural gas index","names":{"en":"Natural gas index"},"annotations":[{"type":"ORDER","text":"340","texts":{"en":"340"}}],"links":[{"rel":"self","type":"code"}]},{"id":"IRON_ORE","name":"Iron ore, cfr spot","names":{"en":"Iron ore, cfr spot"},"annotations":[{"type":"ORDER","text":"260","texts":{"en":"260"}}],"links":[{"rel":"self","type":"code"}]},{"id":"iSTL_JP_INDX","name":"Steel Index","names":{"en":"Steel Index"},"annotations":[{"type":"ORDER","text":"600","texts":{"en":"600"}}],"links":[{"rel":"self","type":"code"}]},{"id":"LAMB","name":"Meat, sheep","names":{"en":"Meat, sheep"},"annotations":[{"type":"ORDER","text":"330","texts":{"en":"330"}}],"links":[{"rel":"self","type":"code"}]},{"id":"LEAD","name":"Lead","names":{"en":"Lead"},"annotations":[{"type":"ORDER","text":"270","texts":{"en":"270"}}],"links":[{"rel":"self","type":"code"}]},{"id":"LOGS_CMR","name":"Logs, Cameroon","names":{"en":"Logs, Cameroon"},"annotations":[{"type":"ORDER","text":"290","texts":{"en":"290"}}],"links":[{"rel":"self","type":"code"}]},{"id":"LOGS_MYS","name":"Logs, Malaysian","names":{"en":"Logs, Malaysian"},"annotations":[{"type":"ORDER","text":"300","texts":{"en":"300"}}],"links":[{"rel":"self","type":"code"}]},{"id":"MAIZE","name":"Maize","names":{"en":"Maize"},"annotations":[{"type":"ORDER","text":"310","texts":{"en":"310"}}],"links":[{"rel":"self","type":"code"}]},{"id":"NGAS_EUR","name":"Natural gas, Europe","names":{"en":"Natural gas, Europe"},"annotations":[{"type":"ORDER","text":"350","texts":{"en":"350"}}],"links":[{"rel":"self","type":"code"}]},{"id":"NGAS_JP","name":"Liquefied natural gas, Japan","names":{"en":"Liquefied natural gas, Japan"},"annotations":[{"type":"ORDER","text":"280","texts":{"en":"280"}}],"links":[{"rel":"self","type":"code"}]},{"id":"NGAS_US","name":"Natural gas, US","names":{"en":"Natural gas, US"},"annotations":[{"type":"ORDER","text":"360","texts":{"en":"360"}}],"links":[{"rel":"self","type":"code"}]},{"id":"NICKEL","name":"Nickel","names":{"en":"Nickel"},"annotations":[{"type":"ORDER","text":"370","texts":{"en":"370"}}],"links":[{"rel":"self","type":"code"}]},{"id":"ORANGE","name":"Orange","names":{"en":"Orange"},"annotations":[{"type":"ORDER","text":"380","texts":{"en":"380"}}],"links":[{"rel":"self","type":"code"}]},{"id":"PALM_OIL","name":"Palm oil","names":{"en":"Palm oil"},"annotations":[{"type":"ORDER","text":"400","texts":{"en":"400"}}],"links":[{"rel":"self","type":"code"}]},{"id":"PHOSROCK","name":"Phosphate rock","names":{"en":"Phosphate rock"},"annotations":[{"type":"ORDER","text":"410","texts":{"en":"410"}}],"links":[{"rel":"self","type":"code"}]},{"id":"PLATINUM","name":"Platinum","names":{"en":"Platinum"},"annotations":[{"type":"ORDER","text":"420","texts":{"en":"420"}}],"links":[{"rel":"self","type":"code"}]},{"id":"PLMKRNL_OIL","name":"Palm kernel oil","names":{"en":"Palm kernel oil"},"annotations":[{"type":"ORDER","text":"390","texts":{"en":"390"}}],"links":[{"rel":"self","type":"code"}]},{"id":"PLYWOOD","name":"Plywood","names":{"en":"Plywood"},"annotations":[{"type":"ORDER","text":"430","texts":{"en":"430"}}],"links":[{"rel":"self","type":"code"}]},{"id":"POTASH","name":"Potassium chloride","names":{"en":"Potassium chloride"},"annotations":[{"type":"ORDER","text":"440","texts":{"en":"440"}}],"links":[{"rel":"self","type":"code"}]},{"id":"RICE_05","name":"Rice, Thai 5%","names":{"en":"Rice, Thai 5%"},"annotations":[{"type":"ORDER","text":"460","texts":{"en":"460"}}],"links":[{"rel":"self","type":"code"}]},{"id":"RICE_05_VNM","name":"Rice, Vietnamese 5%","names":{"en":"Rice, Vietnamese 5%"},"annotations":[{"type":"ORDER","text":"480","texts":{"en":"480"}}],"links":[{"rel":"self","type":"code"}]},{"id":"RICE_25","name":"Rice, Thai 25%","names":{"en":"Rice, Thai 25%"},"annotations":[{"type":"ORDER","text":"450","texts":{"en":"450"}}],"links":[{"rel":"self","type":"code"}]},{"id":"RICE_A1","name":"Rice, Thai A.1","names":{"en":"Rice, Thai A.1"},"annotations":[{"type":"ORDER","text":"470","texts":{"en":"470"}}],"links":[{"rel":"self","type":"code"}]},{"id":"RUBBER_TSR20","name":"Rubber, TSR20","names":{"en":"Rubber, TSR20"},"annotations":[{"type":"ORDER","text":"500","texts":{"en":"500"}}],"links":[{"rel":"self","type":"code"}]},{"id":"RUBBER1_MYSG","name":"Rubber, SGP/MYS","names":{"en":"Rubber, SGP/MYS"},"annotations":[{"type":"ORDER","text":"490","texts":{"en":"490"}}],"links":[{"rel":"self","type":"code"}]},{"id":"RUBBER1_US","name":"Rubber, US","names":{"en":"Rubber, US"},"annotations":[{"type":"ORDER","text":"510","texts":{"en":"510"}}],"links":[{"rel":"self","type":"code"}]},{"id":"SAWNWD_CMR","name":"Sawnwood, Cameroon","names":{"en":"Sawnwood, Cameroon"},"annotations":[{"type":"ORDER","text":"520","texts":{"en":"520"}}],"links":[{"rel":"self","type":"code"}]},{"id":"SAWNWD_MYS","name":"Sawnwood, Malaysian","names":{"en":"Sawnwood, Malaysian"},"annotations":[{"type":"ORDER","text":"530","texts":{"en":"530"}}],"links":[{"rel":"self","type":"code"}]},{"id":"SHRIMP_MEX","name":"Shrimps, Mexican","names":{"en":"Shrimps, Mexican"},"annotations":[{"type":"ORDER","text":"540","texts":{"en":"540"}}],"links":[{"rel":"self","type":"code"}]},{"id":"SILVER","name":"Silver","names":{"en":"Silver"},"annotations":[{"type":"ORDER","text":"550","texts":{"en":"550"}}],"links":[{"rel":"self","type":"code"}]},{"id":"SORGHUM","name":"Sorghum","names":{"en":"Sorghum"},"annotations":[{"type":"ORDER","text":"560","texts":{"en":"560"}}],"links":[{"rel":"self","type":"code"}]},{"id":"SOYBEAN_MEAL","name":"Soybean meal","names":{"en":"Soybean meal"},"annotations":[{"type":"ORDER","text":"570","texts":{"en":"570"}}],"links":[{"rel":"self","type":"code"}]},{"id":"SOYBEAN_OIL","name":"Soybean oil","names":{"en":"Soybean oil"},"annotations":[{"type":"ORDER","text":"580","texts":{"en":"580"}}],"links":[{"rel":"self","type":"code"}]},{"id":"SOYBEANS","name":"Soybeans","names":{"en":"Soybeans"},"annotations":[{"type":"ORDER","text":"590","texts":{"en":"590"}}],"links":[{"rel":"self","type":"code"}]},{"id":"STL_JP_CROLL","name":"Steel, cold rolled coilsheet","names":{"en":"Steel, cold rolled coilsheet"},"annotations":[{"type":"ORDER","text":"630","texts":{"en":"630"}}],"links":[{"rel":"self","type":"code"}]},{"id":"STL_JP_HROLL","name":"Steel, hot rolled coilsheet","names":{"en":"Steel, hot rolled coilsheet"},"annotations":[{"type":"ORDER","text":"640","texts":{"en":"640"}}],"links":[{"rel":"self","type":"code"}]},{"id":"STL_JP_REBAR","name":"Steel rebar","names":{"en":"Steel rebar"},"annotations":[{"type":"ORDER","text":"610","texts":{"en":"610"}}],"links":[{"rel":"self","type":"code"}]},{"id":"STL_JP_WIROD","name":"Steel wire rod","names":{"en":"Steel wire rod"},"annotations":[{"type":"ORDER","text":"620","texts":{"en":"620"}}],"links":[{"rel":"self","type":"code"}]},{"id":"SUGAR_EU","name":"Sugar, EU","names":{"en":"Sugar, EU"},"annotations":[{"type":"ORDER","text":"650","texts":{"en":"650"}}],"links":[{"rel":"self","type":"code"}]},{"id":"SUGAR_US","name":"Sugar, US","names":{"en":"Sugar, US"},"annotations":[{"type":"ORDER","text":"660","texts":{"en":"660"}}],"links":[{"rel":"self","type":"code"}]},{"id":"SUGAR_WLD","name":"Sugar, world","names":{"en":"Sugar, world"},"annotations":[{"type":"ORDER","text":"670","texts":{"en":"670"}}],"links":[{"rel":"self","type":"code"}]},{"id":"TEA_AVG","name":"Tea, avg 3 auctions","names":{"en":"Tea, avg 3 auctions"},"annotations":[{"type":"ORDER","text":"680","texts":{"en":"680"}}],"links":[{"rel":"self","type":"code"}]},{"id":"TEA_COLOMBO","name":"Tea, Colombo","names":{"en":"Tea, Colombo"},"annotations":[{"type":"ORDER","text":"690","texts":{"en":"690"}}],"links":[{"rel":"self","type":"code"}]},{"id":"TEA_KOLKATA","name":"Tea, Kolkata","names":{"en":"Tea, Kolkata"},"annotations":[{"type":"ORDER","text":"700","texts":{"en":"700"}}],"links":[{"rel":"self","type":"code"}]},{"id":"TEA_MOMBASA","name":"Tea, Mombasa","names":{"en":"Tea, Mombasa"},"annotations":[{"type":"ORDER","text":"710","texts":{"en":"710"}}],"links":[{"rel":"self","type":"code"}]},{"id":"Tin","name":"Tin","names":{"en":"Tin"},"annotations":[{"type":"ORDER","text":"720","texts":{"en":"720"}}],"links":[{"rel":"self","type":"code"}]},{"id":"TOBAC_US","name":"Tobacco, US import u.v.","names":{"en":"Tobacco, US import u.v."},"annotations":[{"type":"ORDER","text":"730","texts":{"en":"730"}}],"links":[{"rel":"self","type":"code"}]},{"id":"TSP","name":"TSP","names":{"en":"TSP"},"annotations":[{"type":"ORDER","text":"740","texts":{"en":"740"}}],"links":[{"rel":"self","type":"code"}]},{"id":"TUNA_SJCSI","name":"Tuna- Skipjack (loins cooked, from Solomon Islands)","names":{"en":"Tuna- Skipjack (loins cooked, from Solomon Islands)"},"annotations":[{"type":"ORDER","text":"750","texts":{"en":"750"}}],"links":[{"rel":"self","type":"code"}]},{"id":"TUNA_SJFEP","name":"Tuna-Yellow fin (loins frozen, from Eastern Pacific)","names":{"en":"Tuna-Yellow fin (loins frozen, from Eastern Pacific)"},"annotations":[{"type":"ORDER","text":"790","texts":{"en":"790"}}],"links":[{"rel":"self","type":"code"}]},{"id":"TUNA_SJWPO","name":"Tuna-Skipjack (whole, from Pacific Ocean)","names":{"en":"Tuna-Skipjack (whole, from Pacific Ocean)"},"annotations":[{"type":"ORDER","text":"770","texts":{"en":"770"}}],"links":[{"rel":"self","type":"code"}]},{"id":"TUNA_YFCSI","name":"Tuna-Yellow fin (loins cooked, from Solomon Islands)","names":{"en":"Tuna-Yellow fin (loins cooked, from Solomon Islands)"},"annotations":[{"type":"ORDER","text":"780","texts":{"en":"780"}}],"links":[{"rel":"self","type":"code"}]},{"id":"TUNA_YFFEP","name":"Tuna-Skipjack (loins frozen, from Eastern Pacific)","names":{"en":"Tuna-Skipjack (loins frozen, from Eastern Pacific)"},"annotations":[{"type":"ORDER","text":"760","texts":{"en":"760"}}],"links":[{"rel":"self","type":"code"}]},{"id":"TUNA_YFWPO","name":"Tuna-Yellow fin (whole, from Pacific Ocean)","names":{"en":"Tuna-Yellow fin (whole, from Pacific Ocean)"},"annotations":[{"type":"ORDER","text":"800","texts":{"en":"800"}}],"links":[{"rel":"self","type":"code"}]},{"id":"UREA_EE_BULK","name":"Urea","names":{"en":"Urea"},"annotations":[{"type":"ORDER","text":"810","texts":{"en":"810"}}],"links":[{"rel":"self","type":"code"}]},{"id":"WHEAT_CANADI","name":"Wheat, Canadian","names":{"en":"Wheat, Canadian"},"annotations":[{"type":"ORDER","text":"820","texts":{"en":"820"}}],"links":[{"rel":"self","type":"code"}]},{"id":"WHEAT_US_HRW","name":"Wheat, US HRW","names":{"en":"Wheat, US HRW"},"annotations":[{"type":"ORDER","text":"830","texts":{"en":"830"}}],"links":[{"rel":"self","type":"code"}]},{"id":"WHEAT_US_SRW","name":"Wheat, US SRW","names":{"en":"Wheat, US SRW"},"annotations":[{"type":"ORDER","text":"840","texts":{"en":"840"}}],"links":[{"rel":"self","type":"code"}]},{"id":"WOODPULP","name":"Woodpulp","names":{"en":"Woodpulp"},"annotations":[{"type":"ORDER","text":"850","texts":{"en":"850"}}],"links":[{"rel":"self","type":"code"}]},{"id":"Zinc","name":"Zinc","names":{"en":"Zinc"},"annotations":[{"type":"ORDER","text":"860","texts":{"en":"860"}}],"links":[{"rel":"self","type":"code"}]}]},{"id":"CL_COMMODITY_PRICES_INDICATORS","links":[{"rel":"self","type":"codelist"}],"version":"1.0","agencyID":"SPC","isFinal":false,"name":"Codelist for commodity prices  indicators","names":{"en":"Codelist for commodity prices  indicators"},"isPartial":false,"codes":[{"id":"COMPRICE","name":"Commodity price","names":{"en":"Commodity price"},"links":[{"rel":"self","type":"code"}]},{"id":"PRICEVAR","name":"Price variation rate","names":{"en":"Price variation rate"},"links":[{"rel":"self","type":"code"}]}]},{"id":"CL_COM_FREQ","links":[{"rel":"self","type":"codelist"}],"version":"1.0","agencyID":"SPC","isFinal":false,"name":"Common codelist for data frequencies","names":{"en":"Common codelist for data frequencies"},"isPartial":false,"codes":[{"id":"X","name":"Non-periodic","names":{"en":"Non-periodic"},"links":[{"rel":"self","type":"code"}]},{"id":"A","name":"Annual","names":{"en":"Annual"},"links":[{"rel":"self","type":"code"}]},{"id":"Q","name":"Quarterly","names":{"en":"Quarterly"},"links":[{"rel":"self","type":"code"}]},{"id":"M","name":"Monthly","names":{"en":"Monthly"},"links":[{"rel":"self","type":"code"}]}]},{"id":"CL_COM_UNIT_MEASURE","links":[{"rel":"self","type":"codelist"}],"version":"1.0","agencyID":"SPC","isFinal":false,"name":"Common codelist for units of measure","names":{"en":"Common codelist for units of measure"},"isPartial":false,"codes":[{"id":"N","name":"units","names":{"en":"units"},"links":[{"rel":"self","type":"code"}]},{"id":"PERCENT","name":"percent","names":{"en":"percent"},"links":[{"rel":"self","type":"code"}]},{"id":"KM2","name":"square kilometre","names":{"en":"square kilometre"},"links":[{"rel":"self","type":"code"}]},{"id":"POP_KM2","name":"persons per square kilometre","names":{"en":"persons per square kilometre"},"links":[{"rel":"self","type":"code"}]},{"id":"RATIO_POP","name":"ratio to total population","names":{"en":"ratio to total population"},"links":[{"rel":"self","type":"code"}]},{"id":"INDEX","name":"index","names":{"en":"index"},"links":[{"rel":"self","type":"code"}]},{"id":"PER_100000_LIVE_BIRTHS","name":"per 100,000 live births","names":{"en":"per 100,000 live births"},"links":[{"rel":"self","type":"code"}]},{"id":"PER_100000_POP","name":"per 100,000 population","names":{"en":"per 100,000 population"},"links":[{"rel":"self","type":"code"}]},{"id":"PER_1000_POP","name":"per 1,000 population","names":{"en":"per 1,000 population"},"links":[{"rel":"self","type":"code"}]},{"id":"LITRES_PURE_ALCOHOL","name":"litres pure alcohol","names":{"en":"litres pure alcohol"},"links":[{"rel":"self","type":"code"}]},{"id":"PER_100_POP","name":"per 100 population","names":{"en":"per 100 population"},"links":[{"rel":"self","type":"code"}]},{"id":"USD_MILLIONS","name":"usd in millions","names":{"en":"usd in millions"},"links":[{"rel":"self","type":"code"}]},{"id":"USD","name":"USD","names":{"en":"USD"},"links":[{"rel":"self","type":"code"}]},{"id":"T","name":"metric tons","names":{"en":"metric tons"},"links":[{"rel":"self","type":"code"}]},{"id":"CUR_LCU","name":"local currency","names":{"en":"local currency"},"links":[{"rel":"self","type":"code"}]},{"id":"USDBBL","name":"$/bbl","names":{"en":"$/bbl"},"links":[{"rel":"self","type":"code"}]},{"id":"USDMT","name":"$/mt","names":{"en":"$/mt"},"links":[{"rel":"self","type":"code"}]},{"id":"USDMMBTU","name":"$/mmbtu","names":{"en":"$/mmbtu"},"links":[{"rel":"self","type":"code"}]},{"id":"BASE2010","name":"2010=100","names":{"en":"2010=100"},"links":[{"rel":"self","type":"code"}]},{"id":"USDKG","name":"$/kg","names":{"en":"$/kg"},"links":[{"rel":"self","type":"code"}]},{"id":"USDCM","name":"$/cubic meter","names":{"en":"$/cubic meter"},"links":[{"rel":"self","type":"code"}]},{"id":"USHSHEET","name":"¢/sheet","names":{"en":"¢/sheet"},"links":[{"rel":"self","type":"code"}]},{"id":"USDDMTU","name":"$/dmtu","names":{"en":"$/dmtu"},"links":[{"rel":"self","type":"code"}]},{"id":"USDTROYOZ","name":"$/troy oz","names":{"en":"$/troy oz"},"links":[{"rel":"self","type":"code"}]},{"id":"BASE2005","name":"2005=100","names":{"en":"2005=100"},"links":[{"rel":"self","type":"code"}]},{"id":"CENTSKG","name":"cents/kg","names":{"en":"cents/kg"},"links":[{"rel":"self","type":"code"}]},{"id":"NZD","name":"New Zealand Dollar","names":{"en":"New Zealand Dollar"},"links":[{"rel":"self","type":"code"}]},{"id":"FJD","name":"Fiji Dollar","names":{"en":"Fiji Dollar"},"links":[{"rel":"self","type":"code"}]},{"id":"AUD","name":"Australian Dollar","names":{"en":"Australian Dollar"},"links":[{"rel":"self","type":"code"}]},{"id":"XPF","name":"CFP Franc","names":{"en":"CFP Franc"},"links":[{"rel":"self","type":"code"}]},{"id":"PGK","name":"Kina","names":{"en":"Kina"},"links":[{"rel":"self","type":"code"}]},{"id":"SBD","name":"Solomon Islands Dollar","names":{"en":"Solomon Islands Dollar"},"links":[{"rel":"self","type":"code"}]},{"id":"TOP","name":"Pa’anga","names":{"en":"Pa’anga"},"links":[{"rel":"self","type":"code"}]},{"id":"VUV","name":"Vatu","names":{"en":"Vatu"},"links":[{"rel":"self","type":"code"}]},{"id":"WST","name":"Tala","names":{"en":"Tala"},"links":[{"rel":"self","type":"code"}]},{"id":"USD_POP","name":"USD per person","names":{"en":"USD per person"},"links":[{"rel":"self","type":"code"}]},{"id":"NZD_POP","name":"New Zealand Dollar per person","names":{"en":"New Zealand Dollar per person"},"links":[{"rel":"self","type":"code"}]},{"id":"FJD_POP","name":"Fiji Dollar per person","names":{"en":"Fiji Dollar per person"},"links":[{"rel":"self","type":"code"}]},{"id":"AUD_POP","name":"Australian Dollar per person","names":{"en":"Australian Dollar per person"},"links":[{"rel":"self","type":"code"}]},{"id":"XPF_POP","name":"CFP Franc per person","names":{"en":"CFP Franc per person"},"links":[{"rel":"self","type":"code"}]},{"id":"PGK_POP","name":"Kina per person","names":{"en":"Kina per person"},"links":[{"rel":"self","type":"code"}]},{"id":"SBD_POP","name":"Solomon Islands Dollar per person","names":{"en":"Solomon Islands Dollar per person"},"links":[{"rel":"self","type":"code"}]},{"id":"TOP_POP","name":"Pa’anga per person","names":{"en":"Pa’anga per person"},"links":[{"rel":"self","type":"code"}]},{"id":"VUV_POP","name":"Vatu per person","names":{"en":"Vatu per person"},"links":[{"rel":"self","type":"code"}]},{"id":"WST_POP","name":"Tala per person","names":{"en":"Tala per person"},"links":[{"rel":"self","type":"code"}]},{"id":"GY","name":"Growth Rate, Over 1 Year","names":{"en":"Growth Rate, Over 1 Year"},"links":[{"rel":"self","type":"code"}]},{"id":"USD_R_POP","name":"Per Capita, US $, Exchange Rates Converted","names":{"en":"Per Capita, US $, Exchange Rates Converted"},"links":[{"rel":"self","type":"code"}]},{"id":"PERCENT_GDP","name":"As a % of GDP","names":{"en":"As a % of GDP"},"links":[{"rel":"self","type":"code"}]},{"id":"YR","name":"Years","names":{"en":"Years"},"links":[{"rel":"self","type":"code"}]},{"id":"PER_1000_LIVE_BIRTHS","name":"per 1,000 live births","names":{"en":"per 1,000 live births"},"links":[{"rel":"self","type":"code"}]},{"id":"RF","name":"Relative frequency (% of total)","names":{"en":"Relative frequency (% of total)"},"links":[{"rel":"self","type":"code"}]},{"id":"g","name":"g","names":{"en":"g"},"links":[{"rel":"self","type":"code"}]},{"id":"kcal","name":"kcal","names":{"en":"kcal"},"links":[{"rel":"self","type":"code"}]},{"id":"kj","name":"kj","names":{"en":"kj"},"links":[{"rel":"self","type":"code"}]},{"id":"mg","name":"mg","names":{"en":"mg"},"links":[{"rel":"self","type":"code"}]},{"id":"YEAR","name":"years","names":{"en":"years"},"links":[{"rel":"self","type":"code"}]},{"id":"BOOL","name":"Boolean or binary measure","names":{"en":"Boolean or binary measure"},"links":[{"rel":"self","type":"code"}]},{"id":"CON_USD","name":"Constant USD","names":{"en":"Constant USD"},"links":[{"rel":"self","type":"code"}]},{"id":"HA","name":"Hectares","names":{"en":"Hectares"},"links":[{"rel":"self","type":"code"}]},{"id":"MJ_PER_GDP_CON_PPP_USD","name":"Megajoules per USD constant PPP GDP","names":{"en":"Megajoules per USD constant PPP GDP"},"links":[{"rel":"self","type":"code"}]}]}],"dataStructures":[{"id":"DSD_COMMODITY_PRICES","links":[{"rel":"self","type":"datastructure"}],"version":"1.0","agencyID":"SPC","isFinal":false,"name":"DSD for commodity prices","names":{"en":"DSD for commodity prices"},"dataStructureComponents":{"attributeList":{"id":"AttributeDescriptor","links":[{"rel":"self","type":"attributedescriptor"}],"attributes":[{"id":"DATA_SOURCE","links":[{"rel":"self","type":"dataattribute"}],"conceptIdentity":"urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).DATA_SOURCE","localRepresentation":{"textFormat":{"textType":"String","isSequence":false,"isMultiLingual":false}},"assignmentStatus":"Conditional","attributeRelationship":{"dimensions":["FREQ","COMMODITY","INDICATOR"]}},{"id":"UNIT_MEASURE","links":[{"rel":"self","type":"dataattribute"}],"conceptIdentity":"urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).UNIT_MEASURE","localRepresentation":{"enumeration":"urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SPC:CL_COM_UNIT_MEASURE(1.0)"},"assignmentStatus":"Conditional","attributeRelationship":{"dimensions":["COMMODITY","INDICATOR"]}},{"id":"OBS_COMMENT","links":[{"rel":"self","type":"dataattribute"}],"conceptIdentity":"urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).COMMENT","localRepresentation":{"textFormat":{"textType":"String","isSequence":false,"isMultiLingual":false}},"assignmentStatus":"Conditional","attributeRelationship":{"primaryMeasure":"OBS_VALUE"}}]},"dimensionList":{"id":"DimensionDescriptor","links":[{"rel":"self","type":"dimensiondescriptor"}],"dimensions":[{"id":"FREQ","links":[{"rel":"self","type":"dimension"}],"position":0,"type":"Dimension","conceptIdentity":"urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).FREQ","localRepresentation":{"enumeration":"urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SPC:CL_COM_FREQ(1.0)"}},{"id":"COMMODITY","links":[{"rel":"self","type":"dimension"}],"position":1,"type":"Dimension","conceptIdentity":"urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).COMMODITY","localRepresentation":{"enumeration":"urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SPC:CL_COMMODITY_PRICES(1.0)"}},{"id":"INDICATOR","links":[{"rel":"self","type":"dimension"}],"position":2,"type":"Dimension","conceptIdentity":"urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).INDICATOR","localRepresentation":{"enumeration":"urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SPC:CL_COMMODITY_PRICES_INDICATORS(1.0)"}}],"timeDimensions":[{"id":"TIME_PERIOD","links":[{"rel":"self","type":"timedimension"}],"position":3,"type":"TimeDimension","conceptIdentity":"urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).TIME_PERIOD","localRepresentation":{"textFormat":{"textType":"ObservationalTimePeriod","isSequence":false,"isMultiLingual":false}}}]},"measureList":{"id":"MeasureDescriptor","links":[{"rel":"self","type":"measuredescriptor"}],"primaryMeasure":{"id":"OBS_VALUE","links":[{"rel":"self","type":"primarymeasure"}],"conceptIdentity":"urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).OBS_VALUE"}}}}],"contentConstraints":[{"id":"CON_COMMODITY_PRICES","links":[{"rel":"self","type":"contentconstraint"}],"version":"1.0","agencyID":"SPC","isFinal":false,"name":"Content constraint for DF_COMMODITY_PRICES","names":{"en":"Content constraint for DF_COMMODITY_PRICES"},"type":"Allowed","constraintAttachment":{"dataflows":["urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_COMMODITY_PRICES(1.0)"]},"cubeRegions":[{"isIncluded":true,"keyValues":[{"id":"FREQ","values":["A","M"]},{"id":"INDICATOR","values":["COMPRICE","PRICEVAR"]},{"id":"COMMODITY","values":["COCOA","COCONUT_OIL","COPRA","CRUDE_BRENT","CRUDE_PETRO","GOLD","LOGS_CMR","LOGS_MYS","NGAS_JP","NICKEL","PALM_OIL","RICE_05","RICE_05_VNM","RICE_25","RICE_A1","SILVER","SUGAR_EU","SUGAR_US","SUGAR_WLD","TUNA_SJCSI","TUNA_SJFEP","TUNA_SJWPO","TUNA_YFCSI","TUNA_YFFEP","TUNA_YFWPO","WHEAT_US_HRW","WHEAT_US_SRW","WOODPULP"]}]}]},{"id":"CR_A_DF_COMMODITY_PRICES","links":[{"rel":"self","type":"contentconstraint"}],"version":"1.0","agencyID":"SPC","isFinal":false,"name":"Availability (A) for DF_COMMODITY_PRICES","names":{"en":"Availability (A) for DF_COMMODITY_PRICES"},"annotations":[{"title":"A","type":"ReleaseVersion"}],"type":"Actual","constraintAttachment":{"dataflows":["urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_COMMODITY_PRICES(1.0)"]},"cubeRegions":[{"isIncluded":true,"keyValues":[{"id":"FREQ","values":["A","M"]},{"id":"COMMODITY","values":["COCOA","COCONUT_OIL","COPRA","CRUDE_BRENT","CRUDE_PETRO","GOLD","LOGS_CMR","LOGS_MYS","NGAS_JP","NICKEL","PALM_OIL","RICE_05","RICE_05_VNM","RICE_25","RICE_A1","SILVER","SUGAR_EU","SUGAR_US","SUGAR_WLD","TUNA_SJCSI","TUNA_SJFEP","TUNA_SJWPO","TUNA_YFCSI","TUNA_YFFEP","TUNA_YFWPO","WHEAT_US_HRW","WHEAT_US_SRW","WOODPULP"]},{"id":"INDICATOR","values":["COMPRICE","PRICEVAR"]},{"id":"TIME_PERIOD","timeRange":{"startPeriod":{"period":"1960-01-01T00:00:00Z","isInclusive":true},"endPeriod":{"period":"2020-08-31T23:59:59Z","isInclusive":true}}}]}]}]},"meta":{"schema":"https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json","content-languages":["en"],"id":"IDREF2929","prepared":"2020-09-22T03:36:52.0923177Z","test":false,"sender":{"id":"Unknown"},"receiver":[{"id":"Unknown"}]}}
+{
+  "data": {
+    "dataflows": [
+      {
+        "id": "DF_COMMODITY_PRICES",
+        "links": [
+          { "rel": "self", "type": "dataflow" },
+          { "rel": "structure", "type": "datastructure" }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Selected International Commodity Prices",
+        "names": { "en": "Selected International Commodity Prices" },
+        "description": "Nominal prices in USD for selected key international commodity prices relevant to Pacific Island Countries and Territories, extracted from World bank Commodity Prices (« pink sheets ») and from FAO GLOBEFISH European Fish Price Report.",
+        "descriptions": {
+          "en": "Nominal prices in USD for selected key international commodity prices relevant to Pacific Island Countries and Territories, extracted from World bank Commodity Prices (« pink sheets ») and from FAO GLOBEFISH European Fish Price Report."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": { "en": "true" }
+          },
+          { "title": "COMMODITY", "type": "LAYOUT_ROW" },
+          { "title": "TIME_PERIOD", "type": "LAYOUT_COLUMN" },
+          {
+            "title": "FREQ=A,INDICATOR=COMPRICE,TIME_PERIOD_START=2010,TIME_PERIOD_END=2020",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/vbwmj|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/vbwmj|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_COMMODITY_PRICES(1.0)"
+      }
+    ],
+    "categorySchemes": [
+      {
+        "id": "CAS_COM_TOPIC",
+        "links": [{ "rel": "self", "type": "categoryscheme" }],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Topic",
+        "names": { "en": "Topic" },
+        "isPartial": false,
+        "categories": [
+          {
+            "id": "ECO",
+            "name": "Economy",
+            "names": { "en": "Economy" },
+            "annotations": [
+              { "type": "ORDER", "text": "10", "texts": { "en": "10" } }
+            ],
+            "links": [{ "rel": "self", "type": "category" }]
+          },
+          {
+            "id": "ENV",
+            "name": "Environment",
+            "names": { "en": "Environment" },
+            "annotations": [
+              { "type": "ORDER", "text": "20", "texts": { "en": "20" } }
+            ],
+            "links": [{ "rel": "self", "type": "category" }]
+          },
+          {
+            "id": "HEA",
+            "name": "Health",
+            "names": { "en": "Health" },
+            "annotations": [
+              { "type": "ORDER", "text": "30", "texts": { "en": "30" } }
+            ],
+            "links": [{ "rel": "self", "type": "category" }]
+          },
+          {
+            "id": "IND",
+            "name": "Industry and Services",
+            "names": { "en": "Industry and Services" },
+            "annotations": [
+              { "type": "ORDER", "text": "40", "texts": { "en": "40" } }
+            ],
+            "links": [{ "rel": "self", "type": "category" }]
+          },
+          {
+            "id": "POP",
+            "name": "Population",
+            "names": { "en": "Population" },
+            "annotations": [
+              { "type": "ORDER", "text": "50", "texts": { "en": "50" } }
+            ],
+            "links": [{ "rel": "self", "type": "category" }]
+          },
+          {
+            "id": "SOC",
+            "name": "Social",
+            "names": { "en": "Social" },
+            "annotations": [
+              { "type": "ORDER", "text": "60", "texts": { "en": "60" } }
+            ],
+            "links": [{ "rel": "self", "type": "category" }]
+          },
+          {
+            "id": "XDO",
+            "name": "Multi-domain",
+            "names": { "en": "Multi-domain" },
+            "annotations": [
+              { "type": "ORDER", "text": "70", "texts": { "en": "70" } }
+            ],
+            "links": [{ "rel": "self", "type": "category" }]
+          }
+        ]
+      }
+    ],
+    "categorisations": [
+      {
+        "id": "CAT_COMMODITY_PRICES",
+        "links": [{ "rel": "self", "type": "categorisation" }],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for the Costal Population dataflow",
+        "names": { "en": "Categorisation for the Costal Population dataflow" },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_COMMODITY_PRICES(1.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_TOPIC(1.0).ECO"
+      }
+    ],
+    "conceptSchemes": [
+      {
+        "id": "CS_COMMON",
+        "links": [{ "rel": "self", "type": "conceptscheme" }],
+        "version": "2.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Common concepts for SPC .Stat data",
+        "names": { "en": "Common concepts for SPC .Stat data" },
+        "isPartial": false,
+        "concepts": [
+          {
+            "id": "TIME_PERIOD",
+            "name": "Time",
+            "names": { "en": "Time" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "FREQ",
+            "name": "Frequency",
+            "names": { "en": "Frequency" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "OBS_VALUE",
+            "name": "Observation value",
+            "names": { "en": "Observation value" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "OBS_SATUS",
+            "name": "Observation Status",
+            "names": { "en": "Observation Status" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "CONF_STATUS",
+            "name": "Confidentiality status",
+            "names": { "en": "Confidentiality status" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "UNIT_MEASURE",
+            "name": "Unit of measure",
+            "names": { "en": "Unit of measure" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "UNIT_MULT",
+            "name": "Unit multiplier",
+            "names": { "en": "Unit multiplier" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "COMMENT",
+            "name": "Comment",
+            "names": { "en": "Comment" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "DECIMALS",
+            "name": "Decimals",
+            "names": { "en": "Decimals" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "GEO_AREA",
+            "name": "Geographical area",
+            "names": { "en": "Geographical area" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "GEO_PICT",
+            "name": "Pacific Island Countries and territories",
+            "names": { "en": "Pacific Island Countries and territories" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "SEX",
+            "name": "Sex",
+            "names": { "en": "Sex" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "AGE",
+            "name": "Age",
+            "names": { "en": "Age" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "CURRENCY",
+            "name": "Currency",
+            "names": { "en": "Currency" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "DATA_SOURCE",
+            "name": "Data source",
+            "names": { "en": "Data source" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "INDICATOR",
+            "name": "Indicator",
+            "names": { "en": "Indicator" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "COMMODITY",
+            "name": "Commodity",
+            "names": { "en": "Commodity" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "URBANIZATION",
+            "name": "Urbanization",
+            "names": { "en": "Urbanization" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "EDUCATION",
+            "name": "Education level",
+            "names": { "en": "Education level" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "OCCUPATION",
+            "name": "Occupation",
+            "names": { "en": "Occupation" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "DISABILITY",
+            "name": "Disability",
+            "names": { "en": "Disability" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "INCOME",
+            "name": "Income",
+            "names": { "en": "Income" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "COMPOSITE_BREAKDOWN",
+            "name": "Composite breakdown",
+            "names": { "en": "Composite breakdown" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "ECONOMIC_SECTOR",
+            "name": "Economic sector",
+            "names": { "en": "Economic sector" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "LABOUR_FORCE_STATUS",
+            "name": "Labour force status",
+            "names": { "en": "Labour force status" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "EMPLOYMENT_STATUS",
+            "name": "Employment status",
+            "names": { "en": "Employment status" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "BASE_PER",
+            "name": "Base period",
+            "names": { "en": "Base period" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          },
+          {
+            "id": "TIME_FORMAT",
+            "name": "Time format",
+            "names": { "en": "Time format" },
+            "links": [{ "rel": "self", "type": "concept" }]
+          }
+        ]
+      }
+    ],
+    "codelists": [
+      {
+        "id": "CL_COMMODITY_PRICES",
+        "links": [{ "rel": "self", "type": "codelist" }],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Code list for commodity prices",
+        "names": { "en": "Code list for commodity prices" },
+        "isPartial": false,
+        "codes": [
+          {
+            "id": "ALUMINUM",
+            "name": "Aluminum",
+            "names": { "en": "Aluminum" },
+            "annotations": [
+              { "type": "ORDER", "text": "10", "texts": { "en": "10" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "BANANA_EU",
+            "name": "Banana, Europe",
+            "names": { "en": "Banana, Europe" },
+            "annotations": [
+              { "type": "ORDER", "text": "20", "texts": { "en": "20" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "BANANA_US",
+            "name": "Banana, US",
+            "names": { "en": "Banana, US" },
+            "annotations": [
+              { "type": "ORDER", "text": "30", "texts": { "en": "30" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "BARLEY",
+            "name": "Barley",
+            "names": { "en": "Barley" },
+            "annotations": [
+              { "type": "ORDER", "text": "40", "texts": { "en": "40" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "BEEF",
+            "name": "Beef",
+            "names": { "en": "Beef" },
+            "annotations": [
+              { "type": "ORDER", "text": "50", "texts": { "en": "50" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "CHICKEN",
+            "name": "Meat, chicken",
+            "names": { "en": "Meat, chicken" },
+            "annotations": [
+              { "type": "ORDER", "text": "320", "texts": { "en": "320" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "COAL_AUS",
+            "name": "Coal, Australian",
+            "names": { "en": "Coal, Australian" },
+            "annotations": [
+              { "type": "ORDER", "text": "60", "texts": { "en": "60" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "COAL_COL",
+            "name": "Coal, Colombian",
+            "names": { "en": "Coal, Colombian" },
+            "annotations": [
+              { "type": "ORDER", "text": "70", "texts": { "en": "70" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "COAL_SAFRICA",
+            "name": "Coal, South Afican",
+            "names": { "en": "Coal, South Afican" },
+            "annotations": [
+              { "type": "ORDER", "text": "80", "texts": { "en": "80" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "COCOA",
+            "name": "Cocoa",
+            "names": { "en": "Cocoa" },
+            "annotations": [
+              { "type": "ORDER", "text": "90", "texts": { "en": "90" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "COCONUT_OIL",
+            "name": "Coconut oil",
+            "names": { "en": "Coconut oil" },
+            "annotations": [
+              { "type": "ORDER", "text": "100", "texts": { "en": "100" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "COFFEE_ARABIC",
+            "name": "Coffee, Arabica",
+            "names": { "en": "Coffee, Arabica" },
+            "annotations": [
+              { "type": "ORDER", "text": "110", "texts": { "en": "110" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "COFFEE_ROBUS",
+            "name": "Coffee, Robusta",
+            "names": { "en": "Coffee, Robusta" },
+            "annotations": [
+              { "type": "ORDER", "text": "120", "texts": { "en": "120" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "COPPER",
+            "name": "Copper",
+            "names": { "en": "Copper" },
+            "annotations": [
+              { "type": "ORDER", "text": "130", "texts": { "en": "130" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "COPRA",
+            "name": "Copra",
+            "names": { "en": "Copra" },
+            "annotations": [
+              { "type": "ORDER", "text": "140", "texts": { "en": "140" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "COTTON_A_INDX",
+            "name": "Cotton, A Index",
+            "names": { "en": "Cotton, A Index" },
+            "annotations": [
+              { "type": "ORDER", "text": "150", "texts": { "en": "150" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "COTTON_MEMPH",
+            "name": "Cotton, Memphis",
+            "names": { "en": "Cotton, Memphis" },
+            "annotations": [
+              { "type": "ORDER", "text": "160", "texts": { "en": "160" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "CRUDE_BRENT",
+            "name": "Crude oil, Brent",
+            "names": { "en": "Crude oil, Brent" },
+            "annotations": [
+              { "type": "ORDER", "text": "180", "texts": { "en": "180" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "CRUDE_DUBAI",
+            "name": "Crude oil, Dubai",
+            "names": { "en": "Crude oil, Dubai" },
+            "annotations": [
+              { "type": "ORDER", "text": "190", "texts": { "en": "190" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "CRUDE_PETRO",
+            "name": "Crude oil, average",
+            "names": { "en": "Crude oil, average" },
+            "annotations": [
+              { "type": "ORDER", "text": "170", "texts": { "en": "170" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "CRUDE_WTI",
+            "name": "Crude oil, WTI",
+            "names": { "en": "Crude oil, WTI" },
+            "annotations": [
+              { "type": "ORDER", "text": "200", "texts": { "en": "200" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "DAP",
+            "name": "DAP",
+            "names": { "en": "DAP" },
+            "annotations": [
+              { "type": "ORDER", "text": "210", "texts": { "en": "210" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "FISH_MEAL",
+            "name": "Fish meal",
+            "names": { "en": "Fish meal" },
+            "annotations": [
+              { "type": "ORDER", "text": "220", "texts": { "en": "220" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "GOLD",
+            "name": "Gold",
+            "names": { "en": "Gold" },
+            "annotations": [
+              { "type": "ORDER", "text": "230", "texts": { "en": "230" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "GRNUT",
+            "name": "Groundnuts",
+            "names": { "en": "Groundnuts" },
+            "annotations": [
+              { "type": "ORDER", "text": "250", "texts": { "en": "250" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "GRNUT_OIL",
+            "name": "Groundnut oil",
+            "names": { "en": "Groundnut oil" },
+            "annotations": [
+              { "type": "ORDER", "text": "240", "texts": { "en": "240" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "iNATGAS",
+            "name": "Natural gas index",
+            "names": { "en": "Natural gas index" },
+            "annotations": [
+              { "type": "ORDER", "text": "340", "texts": { "en": "340" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "IRON_ORE",
+            "name": "Iron ore, cfr spot",
+            "names": { "en": "Iron ore, cfr spot" },
+            "annotations": [
+              { "type": "ORDER", "text": "260", "texts": { "en": "260" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "iSTL_JP_INDX",
+            "name": "Steel Index",
+            "names": { "en": "Steel Index" },
+            "annotations": [
+              { "type": "ORDER", "text": "600", "texts": { "en": "600" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "LAMB",
+            "name": "Meat, sheep",
+            "names": { "en": "Meat, sheep" },
+            "annotations": [
+              { "type": "ORDER", "text": "330", "texts": { "en": "330" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "LEAD",
+            "name": "Lead",
+            "names": { "en": "Lead" },
+            "annotations": [
+              { "type": "ORDER", "text": "270", "texts": { "en": "270" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "LOGS_CMR",
+            "name": "Logs, Cameroon",
+            "names": { "en": "Logs, Cameroon" },
+            "annotations": [
+              { "type": "ORDER", "text": "290", "texts": { "en": "290" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "LOGS_MYS",
+            "name": "Logs, Malaysian",
+            "names": { "en": "Logs, Malaysian" },
+            "annotations": [
+              { "type": "ORDER", "text": "300", "texts": { "en": "300" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "MAIZE",
+            "name": "Maize",
+            "names": { "en": "Maize" },
+            "annotations": [
+              { "type": "ORDER", "text": "310", "texts": { "en": "310" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "NGAS_EUR",
+            "name": "Natural gas, Europe",
+            "names": { "en": "Natural gas, Europe" },
+            "annotations": [
+              { "type": "ORDER", "text": "350", "texts": { "en": "350" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "NGAS_JP",
+            "name": "Liquefied natural gas, Japan",
+            "names": { "en": "Liquefied natural gas, Japan" },
+            "annotations": [
+              { "type": "ORDER", "text": "280", "texts": { "en": "280" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "NGAS_US",
+            "name": "Natural gas, US",
+            "names": { "en": "Natural gas, US" },
+            "annotations": [
+              { "type": "ORDER", "text": "360", "texts": { "en": "360" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "NICKEL",
+            "name": "Nickel",
+            "names": { "en": "Nickel" },
+            "annotations": [
+              { "type": "ORDER", "text": "370", "texts": { "en": "370" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "ORANGE",
+            "name": "Orange",
+            "names": { "en": "Orange" },
+            "annotations": [
+              { "type": "ORDER", "text": "380", "texts": { "en": "380" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PALM_OIL",
+            "name": "Palm oil",
+            "names": { "en": "Palm oil" },
+            "annotations": [
+              { "type": "ORDER", "text": "400", "texts": { "en": "400" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PHOSROCK",
+            "name": "Phosphate rock",
+            "names": { "en": "Phosphate rock" },
+            "annotations": [
+              { "type": "ORDER", "text": "410", "texts": { "en": "410" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PLATINUM",
+            "name": "Platinum",
+            "names": { "en": "Platinum" },
+            "annotations": [
+              { "type": "ORDER", "text": "420", "texts": { "en": "420" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PLMKRNL_OIL",
+            "name": "Palm kernel oil",
+            "names": { "en": "Palm kernel oil" },
+            "annotations": [
+              { "type": "ORDER", "text": "390", "texts": { "en": "390" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PLYWOOD",
+            "name": "Plywood",
+            "names": { "en": "Plywood" },
+            "annotations": [
+              { "type": "ORDER", "text": "430", "texts": { "en": "430" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "POTASH",
+            "name": "Potassium chloride",
+            "names": { "en": "Potassium chloride" },
+            "annotations": [
+              { "type": "ORDER", "text": "440", "texts": { "en": "440" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "RICE_05",
+            "name": "Rice, Thai 5%",
+            "names": { "en": "Rice, Thai 5%" },
+            "annotations": [
+              { "type": "ORDER", "text": "460", "texts": { "en": "460" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "RICE_05_VNM",
+            "name": "Rice, Vietnamese 5%",
+            "names": { "en": "Rice, Vietnamese 5%" },
+            "annotations": [
+              { "type": "ORDER", "text": "480", "texts": { "en": "480" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "RICE_25",
+            "name": "Rice, Thai 25%",
+            "names": { "en": "Rice, Thai 25%" },
+            "annotations": [
+              { "type": "ORDER", "text": "450", "texts": { "en": "450" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "RICE_A1",
+            "name": "Rice, Thai A.1",
+            "names": { "en": "Rice, Thai A.1" },
+            "annotations": [
+              { "type": "ORDER", "text": "470", "texts": { "en": "470" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "RUBBER_TSR20",
+            "name": "Rubber, TSR20",
+            "names": { "en": "Rubber, TSR20" },
+            "annotations": [
+              { "type": "ORDER", "text": "500", "texts": { "en": "500" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "RUBBER1_MYSG",
+            "name": "Rubber, SGP/MYS",
+            "names": { "en": "Rubber, SGP/MYS" },
+            "annotations": [
+              { "type": "ORDER", "text": "490", "texts": { "en": "490" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "RUBBER1_US",
+            "name": "Rubber, US",
+            "names": { "en": "Rubber, US" },
+            "annotations": [
+              { "type": "ORDER", "text": "510", "texts": { "en": "510" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "SAWNWD_CMR",
+            "name": "Sawnwood, Cameroon",
+            "names": { "en": "Sawnwood, Cameroon" },
+            "annotations": [
+              { "type": "ORDER", "text": "520", "texts": { "en": "520" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "SAWNWD_MYS",
+            "name": "Sawnwood, Malaysian",
+            "names": { "en": "Sawnwood, Malaysian" },
+            "annotations": [
+              { "type": "ORDER", "text": "530", "texts": { "en": "530" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "SHRIMP_MEX",
+            "name": "Shrimps, Mexican",
+            "names": { "en": "Shrimps, Mexican" },
+            "annotations": [
+              { "type": "ORDER", "text": "540", "texts": { "en": "540" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "SILVER",
+            "name": "Silver",
+            "names": { "en": "Silver" },
+            "annotations": [
+              { "type": "ORDER", "text": "550", "texts": { "en": "550" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "SORGHUM",
+            "name": "Sorghum",
+            "names": { "en": "Sorghum" },
+            "annotations": [
+              { "type": "ORDER", "text": "560", "texts": { "en": "560" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "SOYBEAN_MEAL",
+            "name": "Soybean meal",
+            "names": { "en": "Soybean meal" },
+            "annotations": [
+              { "type": "ORDER", "text": "570", "texts": { "en": "570" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "SOYBEAN_OIL",
+            "name": "Soybean oil",
+            "names": { "en": "Soybean oil" },
+            "annotations": [
+              { "type": "ORDER", "text": "580", "texts": { "en": "580" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "SOYBEANS",
+            "name": "Soybeans",
+            "names": { "en": "Soybeans" },
+            "annotations": [
+              { "type": "ORDER", "text": "590", "texts": { "en": "590" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "STL_JP_CROLL",
+            "name": "Steel, cold rolled coilsheet",
+            "names": { "en": "Steel, cold rolled coilsheet" },
+            "annotations": [
+              { "type": "ORDER", "text": "630", "texts": { "en": "630" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "STL_JP_HROLL",
+            "name": "Steel, hot rolled coilsheet",
+            "names": { "en": "Steel, hot rolled coilsheet" },
+            "annotations": [
+              { "type": "ORDER", "text": "640", "texts": { "en": "640" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "STL_JP_REBAR",
+            "name": "Steel rebar",
+            "names": { "en": "Steel rebar" },
+            "annotations": [
+              { "type": "ORDER", "text": "610", "texts": { "en": "610" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "STL_JP_WIROD",
+            "name": "Steel wire rod",
+            "names": { "en": "Steel wire rod" },
+            "annotations": [
+              { "type": "ORDER", "text": "620", "texts": { "en": "620" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "SUGAR_EU",
+            "name": "Sugar, EU",
+            "names": { "en": "Sugar, EU" },
+            "annotations": [
+              { "type": "ORDER", "text": "650", "texts": { "en": "650" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "SUGAR_US",
+            "name": "Sugar, US",
+            "names": { "en": "Sugar, US" },
+            "annotations": [
+              { "type": "ORDER", "text": "660", "texts": { "en": "660" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "SUGAR_WLD",
+            "name": "Sugar, world",
+            "names": { "en": "Sugar, world" },
+            "annotations": [
+              { "type": "ORDER", "text": "670", "texts": { "en": "670" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "TEA_AVG",
+            "name": "Tea, avg 3 auctions",
+            "names": { "en": "Tea, avg 3 auctions" },
+            "annotations": [
+              { "type": "ORDER", "text": "680", "texts": { "en": "680" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "TEA_COLOMBO",
+            "name": "Tea, Colombo",
+            "names": { "en": "Tea, Colombo" },
+            "annotations": [
+              { "type": "ORDER", "text": "690", "texts": { "en": "690" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "TEA_KOLKATA",
+            "name": "Tea, Kolkata",
+            "names": { "en": "Tea, Kolkata" },
+            "annotations": [
+              { "type": "ORDER", "text": "700", "texts": { "en": "700" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "TEA_MOMBASA",
+            "name": "Tea, Mombasa",
+            "names": { "en": "Tea, Mombasa" },
+            "annotations": [
+              { "type": "ORDER", "text": "710", "texts": { "en": "710" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "Tin",
+            "name": "Tin",
+            "names": { "en": "Tin" },
+            "annotations": [
+              { "type": "ORDER", "text": "720", "texts": { "en": "720" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "TOBAC_US",
+            "name": "Tobacco, US import u.v.",
+            "names": { "en": "Tobacco, US import u.v." },
+            "annotations": [
+              { "type": "ORDER", "text": "730", "texts": { "en": "730" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "TSP",
+            "name": "TSP",
+            "names": { "en": "TSP" },
+            "annotations": [
+              { "type": "ORDER", "text": "740", "texts": { "en": "740" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "TUNA_SJCSI",
+            "name": "Tuna- Skipjack (loins cooked, from Solomon Islands)",
+            "names": {
+              "en": "Tuna- Skipjack (loins cooked, from Solomon Islands)"
+            },
+            "annotations": [
+              { "type": "ORDER", "text": "750", "texts": { "en": "750" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "TUNA_SJFEP",
+            "name": "Tuna-Yellow fin (loins frozen, from Eastern Pacific)",
+            "names": {
+              "en": "Tuna-Yellow fin (loins frozen, from Eastern Pacific)"
+            },
+            "annotations": [
+              { "type": "ORDER", "text": "790", "texts": { "en": "790" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "TUNA_SJWPO",
+            "name": "Tuna-Skipjack (whole, from Pacific Ocean)",
+            "names": { "en": "Tuna-Skipjack (whole, from Pacific Ocean)" },
+            "annotations": [
+              { "type": "ORDER", "text": "770", "texts": { "en": "770" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "TUNA_YFCSI",
+            "name": "Tuna-Yellow fin (loins cooked, from Solomon Islands)",
+            "names": {
+              "en": "Tuna-Yellow fin (loins cooked, from Solomon Islands)"
+            },
+            "annotations": [
+              { "type": "ORDER", "text": "780", "texts": { "en": "780" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "TUNA_YFFEP",
+            "name": "Tuna-Skipjack (loins frozen, from Eastern Pacific)",
+            "names": {
+              "en": "Tuna-Skipjack (loins frozen, from Eastern Pacific)"
+            },
+            "annotations": [
+              { "type": "ORDER", "text": "760", "texts": { "en": "760" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "TUNA_YFWPO",
+            "name": "Tuna-Yellow fin (whole, from Pacific Ocean)",
+            "names": { "en": "Tuna-Yellow fin (whole, from Pacific Ocean)" },
+            "annotations": [
+              { "type": "ORDER", "text": "800", "texts": { "en": "800" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "UREA_EE_BULK",
+            "name": "Urea",
+            "names": { "en": "Urea" },
+            "annotations": [
+              { "type": "ORDER", "text": "810", "texts": { "en": "810" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "WHEAT_CANADI",
+            "name": "Wheat, Canadian",
+            "names": { "en": "Wheat, Canadian" },
+            "annotations": [
+              { "type": "ORDER", "text": "820", "texts": { "en": "820" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "WHEAT_US_HRW",
+            "name": "Wheat, US HRW",
+            "names": { "en": "Wheat, US HRW" },
+            "annotations": [
+              { "type": "ORDER", "text": "830", "texts": { "en": "830" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "WHEAT_US_SRW",
+            "name": "Wheat, US SRW",
+            "names": { "en": "Wheat, US SRW" },
+            "annotations": [
+              { "type": "ORDER", "text": "840", "texts": { "en": "840" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "WOODPULP",
+            "name": "Woodpulp",
+            "names": { "en": "Woodpulp" },
+            "annotations": [
+              { "type": "ORDER", "text": "850", "texts": { "en": "850" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "Zinc",
+            "name": "Zinc",
+            "names": { "en": "Zinc" },
+            "annotations": [
+              { "type": "ORDER", "text": "860", "texts": { "en": "860" } }
+            ],
+            "links": [{ "rel": "self", "type": "code" }]
+          }
+        ]
+      },
+      {
+        "id": "CL_COMMODITY_PRICES_INDICATORS",
+        "links": [{ "rel": "self", "type": "codelist" }],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Codelist for commodity prices  indicators",
+        "names": { "en": "Codelist for commodity prices  indicators" },
+        "isPartial": false,
+        "codes": [
+          {
+            "id": "COMPRICE",
+            "name": "Commodity price",
+            "names": { "en": "Commodity price" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PRICEVAR",
+            "name": "Price variation rate",
+            "names": { "en": "Price variation rate" },
+            "links": [{ "rel": "self", "type": "code" }]
+          }
+        ]
+      },
+      {
+        "id": "CL_COM_FREQ",
+        "links": [{ "rel": "self", "type": "codelist" }],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Common codelist for data frequencies",
+        "names": { "en": "Common codelist for data frequencies" },
+        "isPartial": false,
+        "codes": [
+          {
+            "id": "X",
+            "name": "Non-periodic",
+            "names": { "en": "Non-periodic" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "A",
+            "name": "Annual",
+            "names": { "en": "Annual" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "Q",
+            "name": "Quarterly",
+            "names": { "en": "Quarterly" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "M",
+            "name": "Monthly",
+            "names": { "en": "Monthly" },
+            "links": [{ "rel": "self", "type": "code" }]
+          }
+        ]
+      },
+      {
+        "id": "CL_COM_UNIT_MEASURE",
+        "links": [{ "rel": "self", "type": "codelist" }],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Common codelist for units of measure",
+        "names": { "en": "Common codelist for units of measure" },
+        "isPartial": false,
+        "codes": [
+          {
+            "id": "N",
+            "name": "units",
+            "names": { "en": "units" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PERCENT",
+            "name": "percent",
+            "names": { "en": "percent" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "KM2",
+            "name": "square kilometre",
+            "names": { "en": "square kilometre" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "POP_KM2",
+            "name": "persons per square kilometre",
+            "names": { "en": "persons per square kilometre" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "RATIO_POP",
+            "name": "ratio to total population",
+            "names": { "en": "ratio to total population" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "INDEX",
+            "name": "index",
+            "names": { "en": "index" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PER_100000_LIVE_BIRTHS",
+            "name": "per 100,000 live births",
+            "names": { "en": "per 100,000 live births" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PER_100000_POP",
+            "name": "per 100,000 population",
+            "names": { "en": "per 100,000 population" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PER_1000_POP",
+            "name": "per 1,000 population",
+            "names": { "en": "per 1,000 population" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "LITRES_PURE_ALCOHOL",
+            "name": "litres pure alcohol",
+            "names": { "en": "litres pure alcohol" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PER_100_POP",
+            "name": "per 100 population",
+            "names": { "en": "per 100 population" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "USD_MILLIONS",
+            "name": "usd in millions",
+            "names": { "en": "usd in millions" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "USD",
+            "name": "USD",
+            "names": { "en": "USD" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "T",
+            "name": "metric tons",
+            "names": { "en": "metric tons" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "CUR_LCU",
+            "name": "local currency",
+            "names": { "en": "local currency" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "USDBBL",
+            "name": "$/bbl",
+            "names": { "en": "$/bbl" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "USDMT",
+            "name": "$/mt",
+            "names": { "en": "$/mt" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "USDMMBTU",
+            "name": "$/mmbtu",
+            "names": { "en": "$/mmbtu" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "BASE2010",
+            "name": "2010=100",
+            "names": { "en": "2010=100" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "USDKG",
+            "name": "$/kg",
+            "names": { "en": "$/kg" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "USDCM",
+            "name": "$/cubic meter",
+            "names": { "en": "$/cubic meter" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "USHSHEET",
+            "name": "¢/sheet",
+            "names": { "en": "¢/sheet" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "USDDMTU",
+            "name": "$/dmtu",
+            "names": { "en": "$/dmtu" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "USDTROYOZ",
+            "name": "$/troy oz",
+            "names": { "en": "$/troy oz" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "BASE2005",
+            "name": "2005=100",
+            "names": { "en": "2005=100" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "CENTSKG",
+            "name": "cents/kg",
+            "names": { "en": "cents/kg" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "NZD",
+            "name": "New Zealand Dollar",
+            "names": { "en": "New Zealand Dollar" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "FJD",
+            "name": "Fiji Dollar",
+            "names": { "en": "Fiji Dollar" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "AUD",
+            "name": "Australian Dollar",
+            "names": { "en": "Australian Dollar" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "XPF",
+            "name": "CFP Franc",
+            "names": { "en": "CFP Franc" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PGK",
+            "name": "Kina",
+            "names": { "en": "Kina" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "SBD",
+            "name": "Solomon Islands Dollar",
+            "names": { "en": "Solomon Islands Dollar" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "TOP",
+            "name": "Pa’anga",
+            "names": { "en": "Pa’anga" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "VUV",
+            "name": "Vatu",
+            "names": { "en": "Vatu" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "WST",
+            "name": "Tala",
+            "names": { "en": "Tala" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "USD_POP",
+            "name": "USD per person",
+            "names": { "en": "USD per person" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "NZD_POP",
+            "name": "New Zealand Dollar per person",
+            "names": { "en": "New Zealand Dollar per person" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "FJD_POP",
+            "name": "Fiji Dollar per person",
+            "names": { "en": "Fiji Dollar per person" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "AUD_POP",
+            "name": "Australian Dollar per person",
+            "names": { "en": "Australian Dollar per person" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "XPF_POP",
+            "name": "CFP Franc per person",
+            "names": { "en": "CFP Franc per person" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PGK_POP",
+            "name": "Kina per person",
+            "names": { "en": "Kina per person" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "SBD_POP",
+            "name": "Solomon Islands Dollar per person",
+            "names": { "en": "Solomon Islands Dollar per person" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "TOP_POP",
+            "name": "Pa’anga per person",
+            "names": { "en": "Pa’anga per person" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "VUV_POP",
+            "name": "Vatu per person",
+            "names": { "en": "Vatu per person" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "WST_POP",
+            "name": "Tala per person",
+            "names": { "en": "Tala per person" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "GY",
+            "name": "Growth Rate, Over 1 Year",
+            "names": { "en": "Growth Rate, Over 1 Year" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "USD_R_POP",
+            "name": "Per Capita, US $, Exchange Rates Converted",
+            "names": { "en": "Per Capita, US $, Exchange Rates Converted" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PERCENT_GDP",
+            "name": "As a % of GDP",
+            "names": { "en": "As a % of GDP" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "YR",
+            "name": "Years",
+            "names": { "en": "Years" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "PER_1000_LIVE_BIRTHS",
+            "name": "per 1,000 live births",
+            "names": { "en": "per 1,000 live births" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "RF",
+            "name": "Relative frequency (% of total)",
+            "names": { "en": "Relative frequency (% of total)" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "g",
+            "name": "g",
+            "names": { "en": "g" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "kcal",
+            "name": "kcal",
+            "names": { "en": "kcal" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "kj",
+            "name": "kj",
+            "names": { "en": "kj" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "mg",
+            "name": "mg",
+            "names": { "en": "mg" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "YEAR",
+            "name": "years",
+            "names": { "en": "years" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "BOOL",
+            "name": "Boolean or binary measure",
+            "names": { "en": "Boolean or binary measure" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "CON_USD",
+            "name": "Constant USD",
+            "names": { "en": "Constant USD" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "HA",
+            "name": "Hectares",
+            "names": { "en": "Hectares" },
+            "links": [{ "rel": "self", "type": "code" }]
+          },
+          {
+            "id": "MJ_PER_GDP_CON_PPP_USD",
+            "name": "Megajoules per USD constant PPP GDP",
+            "names": { "en": "Megajoules per USD constant PPP GDP" },
+            "links": [{ "rel": "self", "type": "code" }]
+          }
+        ]
+      }
+    ],
+    "dataStructures": [
+      {
+        "id": "DSD_COMMODITY_PRICES",
+        "links": [{ "rel": "self", "type": "datastructure" }],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "DSD for commodity prices",
+        "names": { "en": "DSD for commodity prices" },
+        "dataStructureComponents": {
+          "attributeList": {
+            "id": "AttributeDescriptor",
+            "links": [{ "rel": "self", "type": "attributedescriptor" }],
+            "attributes": [
+              {
+                "id": "DATA_SOURCE",
+                "links": [{ "rel": "self", "type": "dataattribute" }],
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).DATA_SOURCE",
+                "localRepresentation": {
+                  "textFormat": {
+                    "textType": "String",
+                    "isSequence": false,
+                    "isMultiLingual": false
+                  }
+                },
+                "assignmentStatus": "Conditional",
+                "attributeRelationship": {
+                  "dimensions": ["FREQ", "COMMODITY", "INDICATOR"]
+                }
+              },
+              {
+                "id": "UNIT_MEASURE",
+                "links": [{ "rel": "self", "type": "dataattribute" }],
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).UNIT_MEASURE",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SPC:CL_COM_UNIT_MEASURE(1.0)"
+                },
+                "assignmentStatus": "Conditional",
+                "attributeRelationship": {
+                  "dimensions": ["COMMODITY", "INDICATOR"]
+                }
+              },
+              {
+                "id": "OBS_COMMENT",
+                "links": [{ "rel": "self", "type": "dataattribute" }],
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).COMMENT",
+                "localRepresentation": {
+                  "textFormat": {
+                    "textType": "String",
+                    "isSequence": false,
+                    "isMultiLingual": false
+                  }
+                },
+                "assignmentStatus": "Conditional",
+                "attributeRelationship": { "primaryMeasure": "OBS_VALUE" }
+              }
+            ]
+          },
+          "dimensionList": {
+            "id": "DimensionDescriptor",
+            "links": [{ "rel": "self", "type": "dimensiondescriptor" }],
+            "dimensions": [
+              {
+                "id": "FREQ",
+                "links": [{ "rel": "self", "type": "dimension" }],
+                "position": 0,
+                "type": "Dimension",
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).FREQ",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SPC:CL_COM_FREQ(1.0)"
+                }
+              },
+              {
+                "id": "COMMODITY",
+                "links": [{ "rel": "self", "type": "dimension" }],
+                "position": 1,
+                "type": "Dimension",
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).COMMODITY",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SPC:CL_COMMODITY_PRICES(1.0)"
+                }
+              },
+              {
+                "id": "INDICATOR",
+                "links": [{ "rel": "self", "type": "dimension" }],
+                "position": 2,
+                "type": "Dimension",
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).INDICATOR",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SPC:CL_COMMODITY_PRICES_INDICATORS(1.0)"
+                }
+              }
+            ],
+            "timeDimensions": [
+              {
+                "id": "TIME_PERIOD",
+                "links": [{ "rel": "self", "type": "timedimension" }],
+                "position": 3,
+                "type": "TimeDimension",
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).TIME_PERIOD",
+                "localRepresentation": {
+                  "textFormat": {
+                    "textType": "ObservationalTimePeriod",
+                    "isSequence": false,
+                    "isMultiLingual": false
+                  }
+                }
+              }
+            ]
+          },
+          "measureList": {
+            "id": "MeasureDescriptor",
+            "links": [{ "rel": "self", "type": "measuredescriptor" }],
+            "primaryMeasure": {
+              "id": "OBS_VALUE",
+              "links": [{ "rel": "self", "type": "primarymeasure" }],
+              "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).OBS_VALUE"
+            }
+          }
+        }
+      }
+    ],
+    "contentConstraints": [
+      {
+        "id": "CON_COMMODITY_PRICES",
+        "links": [{ "rel": "self", "type": "contentconstraint" }],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Content constraint for DF_COMMODITY_PRICES",
+        "names": { "en": "Content constraint for DF_COMMODITY_PRICES" },
+        "type": "Allowed",
+        "constraintAttachment": {
+          "dataflows": [
+            "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_COMMODITY_PRICES(1.0)"
+          ]
+        },
+        "cubeRegions": [
+          {
+            "isIncluded": true,
+            "keyValues": [
+              { "id": "FREQ", "values": ["A", "M"] },
+              { "id": "INDICATOR", "values": ["COMPRICE", "PRICEVAR"] },
+              {
+                "id": "COMMODITY",
+                "values": [
+                  "COCOA",
+                  "COCONUT_OIL",
+                  "COPRA",
+                  "CRUDE_BRENT",
+                  "CRUDE_PETRO",
+                  "GOLD",
+                  "LOGS_CMR",
+                  "LOGS_MYS",
+                  "NGAS_JP",
+                  "NICKEL",
+                  "PALM_OIL",
+                  "RICE_05",
+                  "RICE_05_VNM",
+                  "RICE_25",
+                  "RICE_A1",
+                  "SILVER",
+                  "SUGAR_EU",
+                  "SUGAR_US",
+                  "SUGAR_WLD",
+                  "TUNA_SJCSI",
+                  "TUNA_SJFEP",
+                  "TUNA_SJWPO",
+                  "TUNA_YFCSI",
+                  "TUNA_YFFEP",
+                  "TUNA_YFWPO",
+                  "WHEAT_US_HRW",
+                  "WHEAT_US_SRW",
+                  "WOODPULP"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "CR_A_DF_COMMODITY_PRICES",
+        "links": [{ "rel": "self", "type": "contentconstraint" }],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Availability (A) for DF_COMMODITY_PRICES",
+        "names": { "en": "Availability (A) for DF_COMMODITY_PRICES" },
+        "annotations": [{ "title": "A", "type": "ReleaseVersion" }],
+        "type": "Actual",
+        "constraintAttachment": {
+          "dataflows": [
+            "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_COMMODITY_PRICES(1.0)"
+          ]
+        },
+        "cubeRegions": [
+          {
+            "isIncluded": true,
+            "keyValues": [
+              { "id": "FREQ", "values": ["A", "M"] },
+              {
+                "id": "COMMODITY",
+                "values": [
+                  "COCOA",
+                  "COCONUT_OIL",
+                  "COPRA",
+                  "CRUDE_BRENT",
+                  "CRUDE_PETRO",
+                  "GOLD",
+                  "LOGS_CMR",
+                  "LOGS_MYS",
+                  "NGAS_JP",
+                  "NICKEL",
+                  "PALM_OIL",
+                  "RICE_05",
+                  "RICE_05_VNM",
+                  "RICE_25",
+                  "RICE_A1",
+                  "SILVER",
+                  "SUGAR_EU",
+                  "SUGAR_US",
+                  "SUGAR_WLD",
+                  "TUNA_SJCSI",
+                  "TUNA_SJFEP",
+                  "TUNA_SJWPO",
+                  "TUNA_YFCSI",
+                  "TUNA_YFFEP",
+                  "TUNA_YFWPO",
+                  "WHEAT_US_HRW",
+                  "WHEAT_US_SRW",
+                  "WOODPULP"
+                ]
+              },
+              { "id": "INDICATOR", "values": ["COMPRICE", "PRICEVAR"] },
+              {
+                "id": "TIME_PERIOD",
+                "timeRange": {
+                  "startPeriod": {
+                    "period": "1960-01-01T00:00:00Z",
+                    "isInclusive": true
+                  },
+                  "endPeriod": {
+                    "period": "2020-08-31T23:59:59Z",
+                    "isInclusive": true
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "meta": {
+    "schema": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+    "content-languages": ["en"],
+    "id": "IDREF2929",
+    "prepared": "2020-09-22T03:36:52.0923177Z",
+    "test": false,
+    "sender": { "id": "Unknown" },
+    "receiver": [{ "id": "Unknown" }]
+  }
+}

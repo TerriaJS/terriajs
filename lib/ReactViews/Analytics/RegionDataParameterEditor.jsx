@@ -54,9 +54,10 @@ const RegionDataParameterEditor = createReactClass({
     if (newValue) {
       value[column.name] = {
         regionProvider: this.regionProvider(),
-        regionColumn: catalogItem.regionMapping.tableStructure.getColumnWithNameOrId(
-          catalogItem.regionMapping.regionDetails[0].columnName
-        ),
+        regionColumn:
+          catalogItem.regionMapping.tableStructure.getColumnWithNameOrId(
+            catalogItem.regionMapping.regionDetails[0].columnName
+          ),
         valueColumn: column
       };
 
@@ -98,9 +99,10 @@ const RegionDataParameterEditor = createReactClass({
       ) {
         value[column.name] = {
           regionProvider: this.regionProvider(),
-          regionColumn: catalogItem.regionMapping.tableStructure.getColumnWithNameOrId(
-            catalogItem.regionMapping.regionDetails[0].columnName
-          ),
+          regionColumn:
+            catalogItem.regionMapping.tableStructure.getColumnWithNameOrId(
+              catalogItem.regionMapping.regionDetails[0].columnName
+            ),
           valueColumn: column
         };
       }

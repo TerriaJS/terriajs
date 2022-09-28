@@ -127,7 +127,8 @@ export default class GeoRssCatalogItem
   extends GeoJsonMixin(
     UrlMixin(CatalogMemberMixin(CreateModel(GeoRssCatalogItemTraits)))
   )
-  implements HasLocalData {
+  implements HasLocalData
+{
   static readonly type = "georss";
   get type() {
     return GeoRssCatalogItem.type;

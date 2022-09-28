@@ -3,11 +3,11 @@ import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import Icon from "../../../lib/Styled/Icon";
 
-describe("MapToolbar", function() {
+describe("MapToolbar", function () {
   let viewState: ViewState;
   let terria: Terria;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria();
     viewState = new ViewState({
       terria,
@@ -16,8 +16,8 @@ describe("MapToolbar", function() {
     });
   });
 
-  describe("simple click button", function() {
-    it("can be added to the toolbar", function() {
+  describe("simple click button", function () {
+    it("can be added to the toolbar", function () {
       expect(terria.mapNavigationModel.items.length).toBe(0);
       MapToolbar.addButton(viewState, {
         text: "Simple button",
@@ -28,7 +28,7 @@ describe("MapToolbar", function() {
       expect(terria.mapNavigationModel.items[0].name).toBe("Simple button");
     });
 
-    it("calls `onClick` when clicked", function() {
+    it("calls `onClick` when clicked", function () {
       const onClickSpy = jasmine.createSpy("onClick");
       MapToolbar.addButton(viewState, {
         text: "Simple button",
@@ -42,8 +42,8 @@ describe("MapToolbar", function() {
     });
   });
 
-  describe("mode button", function() {
-    it("can be added to the toolbar", function() {
+  describe("mode button", function () {
+    it("can be added to the toolbar", function () {
       expect(terria.mapNavigationModel.items.length).toBe(0);
       MapToolbar.addModeButton(viewState, {
         text: "Mode button",
@@ -55,8 +55,8 @@ describe("MapToolbar", function() {
       expect(terria.mapNavigationModel.items[0].name).toBe("Mode button");
     });
 
-    describe("onUserEnterMode", function() {
-      it("is called once when user activates the mode button", function() {
+    describe("onUserEnterMode", function () {
+      it("is called once when user activates the mode button", function () {
         const onUserEnterModeSpy = jasmine.createSpy("onUserEnterMode");
         MapToolbar.addModeButton(viewState, {
           text: "Mode button",
@@ -72,7 +72,7 @@ describe("MapToolbar", function() {
         expect(onUserEnterModeSpy).toHaveBeenCalledTimes(1);
       });
 
-      it("raises any callback errors to the user", function() {
+      it("raises any callback errors to the user", function () {
         MapToolbar.addModeButton(viewState, {
           text: "Mode button",
           icon: Icon.GLYPHS.pedestrian,
@@ -91,8 +91,8 @@ describe("MapToolbar", function() {
       });
     });
 
-    describe("onUserCloseMode", function() {
-      it("is called once when user deactivates the mode button", function() {
+    describe("onUserCloseMode", function () {
+      it("is called once when user deactivates the mode button", function () {
         const onUserCloseModeSpy = jasmine.createSpy("onUserCloseMode");
         MapToolbar.addModeButton(viewState, {
           text: "Mode button",
@@ -108,7 +108,7 @@ describe("MapToolbar", function() {
         expect(onUserCloseModeSpy).toHaveBeenCalledTimes(1);
       });
 
-      it("raises any callback errors to the user", function() {
+      it("raises any callback errors to the user", function () {
         MapToolbar.addModeButton(viewState, {
           text: "Mode button",
           icon: Icon.GLYPHS.pedestrian,

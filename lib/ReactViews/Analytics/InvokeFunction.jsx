@@ -68,7 +68,7 @@ const InvokeFunction = observer(
     },
 
     submit() {
-      this.props.previewed.submitJob().catch(e => {
+      this.props.previewed.submitJob().catch((e) => {
         this.props.terria.raiseErrorToUser(e);
       });
 

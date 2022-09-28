@@ -30,7 +30,7 @@ export default class RegionProviderList {
    */
   static fromUrl(url: string, corsProxy: CorsProxy) {
     if (!isDefined(RegionProviderList.metaList[url])) {
-      RegionProviderList.metaList[url] = loadJson(url).then(function(o) {
+      RegionProviderList.metaList[url] = loadJson(url).then(function (o) {
         return new RegionProviderList(corsProxy).initFromObject(o);
       });
     }
@@ -49,13 +49,13 @@ export default class RegionProviderList {
    * Initialises from the already-retrieved contents of a JSON file.
    */
   initFromObject(obj: any) {
-    Object.keys(obj.regionWmsMap).forEach(r => {
+    Object.keys(obj.regionWmsMap).forEach((r) => {
       this.regionProviders.push(
         new RegionProvider(r, obj.regionWmsMap[r], this.corsProxy)
       );
     });
     // after loading all providers, now we can set cross references for disambiguation, where required.
-    Object.keys(obj.regionWmsMap).forEach(r => {
+    Object.keys(obj.regionWmsMap).forEach((r) => {
       const rp = this.getRegionProvider(r);
       if (rp && obj.regionWmsMap[r].disambigRegionId) {
         rp.setDisambigProperties(
@@ -101,9 +101,8 @@ export default class RegionProviderList {
           results.push({
             regionProvider: regionProvider,
             variableName: preferedRegionVariableName,
-            disambigVariableName: regionProvider.findDisambigVariable(
-              variableNames
-            )
+            disambigVariableName:
+              regionProvider.findDisambigVariable(variableNames)
           });
       }
     }
@@ -114,9 +113,8 @@ export default class RegionProviderList {
         results.push({
           regionProvider: this.regionProviders[i],
           variableName: rv,
-          disambigVariableName: this.regionProviders[i].findDisambigVariable(
-            variableNames
-          )
+          disambigVariableName:
+            this.regionProviders[i].findDisambigVariable(variableNames)
         });
       }
     }
@@ -130,7 +128,7 @@ export default class RegionProviderList {
    * @return {RegionProvider} The region provider matching a regionType string (eg, STE), or undefined.
    */
   getRegionProvider(regionType: string) {
-    const r = this.regionProviders.filter(function(p) {
+    const r = this.regionProviders.filter(function (p) {
       return p.regionType.toLowerCase() === regionType.toLowerCase();
     });
     if (r.length > 1) {

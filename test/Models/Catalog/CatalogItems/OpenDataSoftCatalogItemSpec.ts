@@ -19,11 +19,11 @@ const regionMapping = JSON.stringify(
   require("../../../../wwwroot/data/regionMapping.json")
 );
 
-describe("OpenDataSoftCatalogItem", function() {
+describe("OpenDataSoftCatalogItem", function () {
   let terria: Terria;
   let odsItem: OpenDataSoftCatalogItem;
 
-  beforeEach(function() {
+  beforeEach(function () {
     fetchMock.mock(
       "https://example.com/api/v2/catalog/datasets/weather-stations/",
       { body: dataset }
@@ -49,24 +49,24 @@ describe("OpenDataSoftCatalogItem", function() {
     odsItem = new OpenDataSoftCatalogItem("test", terria, undefined);
   });
 
-  afterEach(function() {
+  afterEach(function () {
     jasmine.Ajax.uninstall();
     fetchMock.restore();
   });
 
-  it("has a type", function() {
+  it("has a type", function () {
     expect(odsItem.type).toBe("opendatasoft-item");
   });
 
-  describe("loads dataset", function() {
-    beforeEach(async function() {
+  describe("loads dataset", function () {
+    beforeEach(async function () {
       runInAction(() => {
         odsItem.setTrait("definition", "url", "https://example.com");
         odsItem.setTrait("definition", "datasetId", "weather-stations");
       });
     });
 
-    it("load map items", async function() {
+    it("load map items", async function () {
       await odsItem.loadMapItems();
 
       expect(odsItem.name).toBe("Environmental sensors");

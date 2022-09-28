@@ -81,9 +81,8 @@ export default class BingMapsSearchProvider extends SearchProvider {
 
     const view = this.terria.currentViewer.getCurrentCameraView();
     if (view.position !== undefined) {
-      const cameraPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(
-        view.position
-      );
+      const cameraPositionCartographic =
+        Ellipsoid.WGS84.cartesianToCartographic(view.position);
       longitudeDegrees = CesiumMath.toDegrees(
         cameraPositionCartographic.longitude
       );
@@ -115,7 +114,7 @@ export default class BingMapsSearchProvider extends SearchProvider {
     );
 
     return promise
-      .then(result => {
+      .then((result) => {
         if (searchResults.isCanceled) {
           // A new search has superseded this one, so ignore the result.
           return;
@@ -202,7 +201,7 @@ function createZoomToFunction(model: BingMapsSearchProvider, resource: any) {
   const [south, west, north, east] = resource.bbox;
   const rectangle = Rectangle.fromDegrees(west, south, east, north);
 
-  return function() {
+  return function () {
     const terria = model.terria;
     terria.currentViewer.zoomTo(rectangle, model.flightDurationSeconds);
   };

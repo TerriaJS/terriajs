@@ -13,7 +13,7 @@ const BooleanParameterGroupEditor = createReactClass({
     previewed: PropTypes.object,
     parameter: PropTypes.object
   },
-  toggleDiv: function(divID, ev) {
+  toggleDiv: function (divID, ev) {
     const thisDiv = document.getElementById(divID);
     if (thisDiv.style.display === "none") {
       thisDiv.style.display = "block";
@@ -21,7 +21,7 @@ const BooleanParameterGroupEditor = createReactClass({
       thisDiv.style.display = "none";
     }
   },
-  toggleAll: function(inputArgs, ev) {
+  toggleAll: function (inputArgs, ev) {
     // if OneForAll selected, set the value of all BooleanParameters in
     // ParameterList to true, disable them,
     // else set the value of all BooleanParameters in ParameterList to
@@ -35,11 +35,11 @@ const BooleanParameterGroupEditor = createReactClass({
     const ParamElementArray = [];
     Array.from(
       document.getElementById(inputArgs.ParameterListId).children
-    ).forEach(function(child) {
+    ).forEach(function (child) {
       ParamElementArray.push(child.children[0].children[0]);
     });
     if (OneForAllValue === false) {
-      ParamElementArray.forEach(function(Parameter) {
+      ParamElementArray.forEach(function (Parameter) {
         // Parameter.value = true;
         // only have the ability to check state of button
         // and fire the onclick if it needs to change.
@@ -50,7 +50,7 @@ const BooleanParameterGroupEditor = createReactClass({
         ) {
           // fire react click event
           thisButton[
-            Object.keys(thisButton).filter(function(v) {
+            Object.keys(thisButton).filter(function (v) {
               return /__reactEventHandlers/.test(v);
             })
           ].onClick();
@@ -58,7 +58,7 @@ const BooleanParameterGroupEditor = createReactClass({
         thisButton.disabled = true;
       });
     } else {
-      ParamElementArray.forEach(function(Parameter) {
+      ParamElementArray.forEach(function (Parameter) {
         // Parameter.value = false;
         const thisButton = Parameter.children[0];
         if (
@@ -66,7 +66,7 @@ const BooleanParameterGroupEditor = createReactClass({
           "off"
         ) {
           thisButton[
-            Object.keys(thisButton).filter(function(v) {
+            Object.keys(thisButton).filter(function (v) {
               return /__reactEventHandlers/.test(v);
             })
           ].onClick();
@@ -107,7 +107,7 @@ const BooleanParameterGroupEditor = createReactClass({
           id={name}
           style={whichIcon ? { display: "block" } : { display: "none" }}
         >
-          {this.props.parameter.ParameterList.map(function(item, key) {
+          {this.props.parameter.ParameterList.map(function (item, key) {
             return (
               <div key={key}>
                 <BooleanParameterEditor parameter={item} />

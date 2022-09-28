@@ -417,7 +417,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         !isDefined(this.czmlTemplate) &&
         // Table styling doesn't support the old GeoJson StyleTraits
         Object.keys(this.style.traits).every(
-          styleTrait => !isDefined(this.style[styleTrait as keyof StyleTraits])
+          (styleTrait) =>
+            !isDefined(this.style[styleTrait as keyof StyleTraits])
         ) &&
         !isDefined(this.timeProperty) &&
         !isDefined(this.heightProperty) &&
@@ -532,7 +533,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           }
 
           // Does feature include simplestyle-spec properties (eg "fill-colour)")
-          if (SIMPLE_STYLE_KEYS.find(key => properties[key])) {
+          if (SIMPLE_STYLE_KEYS.find((key) => properties[key])) {
             featureCounts.simpleStyle++;
           }
 
@@ -552,9 +553,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           });
         } else if (runInAction(() => this.useTableStylingAndProtomaps)) {
           runInAction(() => {
-            this._imageryProvider = this.createProtomapsImageryProvider(
-              geoJsonWgs84
-            );
+            this._imageryProvider =
+              this.createProtomapsImageryProvider(geoJsonWgs84);
           });
         } else {
           const dataSource = await this.loadGeoJsonDataSource(geoJsonWgs84);
@@ -564,7 +564,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           });
         }
         this._dataSource?.entities.values.forEach(
-          entity => ((entity as any)._catalogItem = this)
+          (entity) => ((entity as any)._catalogItem = this)
         );
       } catch (e) {
         throw networkRequestError(
@@ -585,7 +585,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         }
         const featurePropertiesEntires = Object.entries(featureProperties);
 
-        const matchedStyles = this.perPropertyStyles.filter(style => {
+        const matchedStyles = this.perPropertyStyles.filter((style) => {
           const stylePropertiesEntries = Object.entries(style.properties ?? {});
 
           // For every key-value pair in the style, is there an identical one in the feature's properties?
@@ -619,43 +619,43 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     // Create point features using TableMixin.createLongitudeLatitudeFeaturePerRow
     // Used with table styling
     // Line and Polygon features are handled by Protomaps
-    private readonly createPoints = createTransformer((style: TableStyle):
-      | DataSource
-      | undefined => {
-      if (!this.readyData) return;
+    private readonly createPoints = createTransformer(
+      (style: TableStyle): DataSource | undefined => {
+        if (!this.readyData) return;
 
-      const latitudes: (number | null)[] = [];
-      const longitudes: (number | null)[] = [];
+        const latitudes: (number | null)[] = [];
+        const longitudes: (number | null)[] = [];
 
-      for (let i = 0; i < this.readyData.features.length; i++) {
-        const feature = this.readyData.features[i];
-        if (!isPoint(feature)) {
-          latitudes.push(null);
-          longitudes.push(null);
-          continue;
+        for (let i = 0; i < this.readyData.features.length; i++) {
+          const feature = this.readyData.features[i];
+          if (!isPoint(feature)) {
+            latitudes.push(null);
+            longitudes.push(null);
+            continue;
+          }
+          latitudes.push(feature.geometry.coordinates[1]);
+          longitudes.push(feature.geometry.coordinates[0]);
         }
-        latitudes.push(feature.geometry.coordinates[1]);
-        longitudes.push(feature.geometry.coordinates[0]);
+
+        const dataSource = new CustomDataSource(this.name || "Table");
+        dataSource.entities.suspendEvents();
+
+        let features: Entity[] = createLongitudeLatitudeFeaturePerRow(
+          style,
+          longitudes,
+          latitudes
+        );
+
+        // _catalogItem property is needed for some feature picking functions (eg FeatureInfoUrlTemplateMixin)
+        features.forEach((f) => {
+          (f as any)._catalogItem = this;
+          dataSource.entities.add(f);
+        });
+
+        dataSource.entities.resumeEvents();
+        return dataSource;
       }
-
-      const dataSource = new CustomDataSource(this.name || "Table");
-      dataSource.entities.suspendEvents();
-
-      let features: Entity[] = createLongitudeLatitudeFeaturePerRow(
-        style,
-        longitudes,
-        latitudes
-      );
-
-      // _catalogItem property is needed for some feature picking functions (eg FeatureInfoUrlTemplateMixin)
-      features.forEach(f => {
-        (f as any)._catalogItem = this;
-        dataSource.entities.add(f);
-      });
-
-      dataSource.entities.resumeEvents();
-      return dataSource;
-    });
+    );
 
     @action
     private createProtomapsImageryProvider(geoJson: FeatureCollectionWithCrs) {
@@ -689,8 +689,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       const rows = this.activeTableStyle.colorColumn?.valuesForType;
       const colorMap = this.activeTableStyle.colorMap;
       const outlineStyleMap = this.activeTableStyle.outlineStyleMap.styleMap;
-      const useOutlineColorForLineFeatures = this
-        .useOutlineColorForLineFeatures;
+      const useOutlineColorForLineFeatures =
+        this.useOutlineColorForLineFeatures;
 
       // Style function
       const getColorValue = (z: number, f?: ProtomapsFeature) => {
@@ -727,7 +727,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           currentTimeRows.includes(f?.props[FEATURE_ID_PROP] as number));
 
       let protomapsData: ProtomapsData = Object.assign({}, geoJson, {
-        features: geoJson.features.filter(f => f.geometry.type !== "Point")
+        features: geoJson.features.filter((f) => f.geometry.type !== "Point")
       });
 
       // Are we creating a protomaps imagery provider with the same geojson data (readyData)?
@@ -858,7 +858,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             const positions: number[] = [];
             const holes: number[][] = [];
 
-            geom[0].forEach(coords => {
+            geom[0].forEach((coords) => {
               if (isJsonNumber(this.czmlTemplate?.heightOffset)) {
                 coords[2] = (coords[2] ?? 0) + this.czmlTemplate!.heightOffset;
               }
@@ -1016,7 +1016,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         ) {
           const startTimeDiscreteTime = properties[this.timeProperty];
           const startTimeIdx = this.discreteTimesAsSortedJulianDates?.findIndex(
-            t => t.tag === startTimeDiscreteTime.getValue()
+            (t) => t.tag === startTimeDiscreteTime.getValue()
           );
           const startTime = this.discreteTimesAsSortedJulianDates[startTimeIdx];
 
@@ -1248,7 +1248,9 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
     @computed get viewingControls(): ViewingControl[] {
       return !this.useTableStylingAndProtomaps
-        ? super.viewingControls.filter(v => v.id !== TableStylingWorkflow.type)
+        ? super.viewingControls.filter(
+            (v) => v.id !== TableStylingWorkflow.type
+          )
         : super.viewingControls;
     }
   }
@@ -1324,12 +1326,12 @@ export function toFeatureCollection(
 
   if (isGeometries(json))
     return featureCollection([feature(json)]) as FeatureCollectionWithCrs;
-  if (Array.isArray(json) && json.every(item => isFeature(item))) {
+  if (Array.isArray(json) && json.every((item) => isFeature(item))) {
     return featureCollection(json) as FeatureCollectionWithCrs;
   }
-  if (Array.isArray(json) && json.every(item => isGeometries(item))) {
+  if (Array.isArray(json) && json.every((item) => isGeometries(item))) {
     return featureCollection(
-      json.map(item => feature(item, item.properties))
+      json.map((item) => feature(item, item.properties))
     ) as FeatureCollectionWithCrs;
   }
 }
@@ -1408,8 +1410,8 @@ async function reprojectToGeographic(
 
   if (needsReprojection) {
     try {
-      filterValue(geoJson, "coordinates", function(obj, prop) {
-        obj[prop] = filterArray(obj[prop], function(pts) {
+      filterValue(geoJson, "coordinates", function (obj, prop) {
+        obj[prop] = filterArray(obj[prop], function (pts) {
           if (pts.length === 0) return [];
 
           return reprojectPointList(pts, code);

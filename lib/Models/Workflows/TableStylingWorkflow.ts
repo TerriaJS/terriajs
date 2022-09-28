@@ -83,7 +83,8 @@ export const ADVANCED_TABLE_COLUMN_TYPES = [
 
 /** SelectableDimensionWorkflow to set styling options for TableMixin models */
 export default class TableStylingWorkflow
-  implements SelectableDimensionWorkflow {
+  implements SelectableDimensionWorkflow
+{
   static type = "table-styling";
 
   /** This is used to simplify SelectableDimensions available to the user.
@@ -198,8 +199,8 @@ export default class TableStylingWorkflow
   setColorSchemeTypeFromPalette(): void {
     const colorMap = this.tableStyle.colorMap;
     const colorPalette = this.tableStyle.colorTraits.colorPalette;
-    const defaultColorPalette = this.tableStyle.tableColorMap
-      .defaultColorPaletteName;
+    const defaultColorPalette =
+      this.tableStyle.tableColorMap.defaultColorPaletteName;
 
     const colorPaletteWithDefault = colorPalette ?? defaultColorPalette;
 
@@ -440,12 +441,12 @@ export default class TableStylingWorkflow
    */
   @computed get tableStyleSelectableDim(): SelectableDimensionWorkflowGroup {
     const showPointStyles = !!this.item.mapItems.find(
-      d => isDataSource(d) && d.entities.values.length > 0
+      (d) => isDataSource(d) && d.entities.values.length > 0
     );
     const showPointSize =
       showPointStyles &&
       (this.tableStyle.pointSizeColumn ||
-        this.item.tableColumns.find(t => t.type === TableColumnType.scalar));
+        this.item.tableColumns.find((t) => t.type === TableColumnType.scalar));
 
     return {
       type: "group",
@@ -460,30 +461,29 @@ export default class TableStylingWorkflow
           // Find all workbench items which have TableStylingWorkflow
           options: this.item.terria.workbench.items
             .filter(
-              item =>
+              (item) =>
                 ViewingControls.is(item) &&
                 item.viewingControls.find(
-                  control => control.id === TableStylingWorkflow.type
+                  (control) => control.id === TableStylingWorkflow.type
                 )
             )
-            .map(item => ({
+            .map((item) => ({
               id: item.uniqueId,
               name: getName(item)
             })),
           setDimensionValue: (stratumId, value) => {
             const item = this.item.terria.workbench.items.find(
-              i => i.uniqueId === value
+              (i) => i.uniqueId === value
             );
             if (item && TableMixin.isMixedInto(item)) {
               // Trigger new TableStylingWorkflow
               if (
                 item.viewingControls.find(
-                  control => control.id === TableStylingWorkflow.type
+                  (control) => control.id === TableStylingWorkflow.type
                 )
               ) {
-                item.terria.selectableDimensionWorkflow = new TableStylingWorkflow(
-                  item
-                );
+                item.terria.selectableDimensionWorkflow =
+                  new TableStylingWorkflow(item);
               }
             }
           }
@@ -493,13 +493,13 @@ export default class TableStylingWorkflow
           id: "table-style",
           name: "Style",
           selectedId: this.tableStyle.id,
-          options: this.item.tableStyles.map(style => ({
+          options: this.item.tableStyles.map((style) => ({
             id: style.id,
             name: style.title
           })),
           allowCustomInput: true,
           setDimensionValue: (stratumId, value) => {
-            if (!this.item.tableStyles.find(style => style.id === value)) {
+            if (!this.item.tableStyles.find((style) => style.id === value)) {
               this.getTableStyleTraits(stratumId, value);
             }
             this.item.setTrait(stratumId, "activeStyle", value);
@@ -570,7 +570,7 @@ export default class TableStylingWorkflow
               id: "table-color-col",
               name: "Variable",
               selectedId: this.tableStyle.colorColumn?.name,
-              options: this.item.tableColumns.map(col => ({
+              options: this.item.tableColumns.map((col) => ({
                 id: col.name,
                 name: col.title
               })),
@@ -589,8 +589,8 @@ export default class TableStylingWorkflow
               id: "data-type",
               name: "Column type (advanced)",
               options: Object.keys(TableColumnType)
-                .filter(type => type.length > 1)
-                .map(colType => ({ id: colType })),
+                .filter((type) => type.length > 1)
+                .map((colType) => ({ id: colType })),
               selectedId: isDefined(this.tableStyle.colorColumn?.type)
                 ? TableColumnType[this.tableStyle.colorColumn!.type]
                 : undefined,
@@ -653,7 +653,7 @@ export default class TableStylingWorkflow
           selectedId:
             this.tableStyle.colorTraits.colorPalette ??
             this.tableStyle.tableColorMap.defaultColorPaletteName,
-          options: this.colorSchemesForType.map(style => ({
+          options: this.colorSchemesForType.map((style) => ({
             id: style
           })),
           optionRenderer:
@@ -801,7 +801,7 @@ export default class TableStylingWorkflow
                   } to ${bin}`
                 ),
                 isOpen: this.openBinIndex.get("fill") === idx,
-                onToggle: open => {
+                onToggle: (open) => {
                   if (open && this.openBinIndex.get("fill") !== idx) {
                     runInAction(() => this.openBinIndex.set("fill", idx));
                     return true;
@@ -832,9 +832,8 @@ export default class TableStylingWorkflow
                         type: "numeric",
                         id: `bin-${idx}-start`,
                         name: "Start",
-                        value: this.tableStyle.tableColorMap.binMaximums[
-                          idx - 1
-                        ],
+                        value:
+                          this.tableStyle.tableColorMap.binMaximums[idx - 1],
                         setDimensionValue: (stratumId, value) => {
                           const binMaximums = [
                             ...this.tableStyle.tableColorMap.binMaximums
@@ -878,7 +877,7 @@ export default class TableStylingWorkflow
             id: `enum-${idx}-start`,
             name: getColorPreview(enumCol.color ?? "#aaa", enumCol.value),
             isOpen: this.openBinIndex.get("fill") === idx,
-            onToggle: open => {
+            onToggle: (open) => {
               if (open && this.openBinIndex.get("fill") !== idx) {
                 runInAction(() => this.openBinIndex.set("fill", idx));
                 return true;
@@ -906,12 +905,12 @@ export default class TableStylingWorkflow
                   { id: enumCol.value },
                   ...(this.tableStyle.colorColumn?.uniqueValues.values
                     ?.filter(
-                      value =>
+                      (value) =>
                         !this.tableStyle.tableColorMap.enumColors.find(
-                          enumCol => enumCol.value === value
+                          (enumCol) => enumCol.value === value
                         )
                     )
-                    .map(id => ({ id })) ?? [])
+                    .map((id) => ({ id })) ?? [])
                 ],
                 setDimensionValue: (stratumId, value) => {
                   this.colorSchemeType = "custom-qualitative";
@@ -922,7 +921,7 @@ export default class TableStylingWorkflow
                 type: "button",
                 id: `enum-${idx}-remove`,
                 value: "Remove",
-                setDimensionValue: stratumId => {
+                setDimensionValue: (stratumId) => {
                   this.colorSchemeType = "custom-qualitative";
                   // Remove element by clearing `value`
                   this.setEnumColorTrait(stratumId, idx, undefined, undefined);
@@ -936,20 +935,21 @@ export default class TableStylingWorkflow
         // Are there more colors to add (are there more unique values in the column than enumCols)
         // Create "Add" to user can add more
         this.tableStyle.colorColumn &&
-        this.tableStyle.tableColorMap.enumColors.filter(col => col.value)
+        this.tableStyle.tableColorMap.enumColors.filter((col) => col.value)
           .length < this.tableStyle.colorColumn?.uniqueValues.values.length
           ? {
               type: "button",
               id: `enum-add`,
               value: "Add Color",
-              setDimensionValue: stratumId => {
+              setDimensionValue: (stratumId) => {
                 this.colorSchemeType = "custom-qualitative";
-                const firstValue = this.tableStyle.colorColumn?.uniqueValues.values.find(
-                  value =>
-                    !this.tableStyle.tableColorMap.enumColors.find(
-                      col => col.value === value
-                    )
-                );
+                const firstValue =
+                  this.tableStyle.colorColumn?.uniqueValues.values.find(
+                    (value) =>
+                      !this.tableStyle.tableColorMap.enumColors.find(
+                        (col) => col.value === value
+                      )
+                  );
                 if (!isDefined(firstValue)) return;
 
                 // Can we find any unused colors in the colorPalette
@@ -958,9 +958,9 @@ export default class TableStylingWorkflow
                     this.tableStyle.tableColorMap.enumColors.length + 1
                   )
                   .find(
-                    col =>
+                    (col) =>
                       !this.tableStyle.tableColorMap.enumColors.find(
-                        enumColor => enumColor.color === col
+                        (enumColor) => enumColor.color === col
                       )
                   );
 
@@ -1093,8 +1093,8 @@ export default class TableStylingWorkflow
           name: `Variable`,
           selectedId: this.tableStyle.pointSizeTraits.pointSizeColumn,
           options: this.item.tableColumns
-            .filter(col => col.type === TableColumnType.scalar)
-            .map(col => ({
+            .filter((col) => col.type === TableColumnType.scalar)
+            .map((col) => ({
               id: col.name,
               name: col.title
             })),
@@ -1278,7 +1278,7 @@ export default class TableStylingWorkflow
             name: "Longitude column",
             selectedId: this.tableStyle.longitudeColumn?.name,
             allowUndefined: true,
-            options: this.item.tableColumns.map(col => ({
+            options: this.item.tableColumns.map((col) => ({
               id: col.name,
               name: col.title
             })),
@@ -1296,7 +1296,7 @@ export default class TableStylingWorkflow
             name: "Latitude column",
             selectedId: this.tableStyle.latitudeColumn?.name,
             allowUndefined: true,
-            options: this.item.tableColumns.map(col => ({
+            options: this.item.tableColumns.map((col) => ({
               id: col.name,
               name: col.title
             })),
@@ -1436,7 +1436,7 @@ export default class TableStylingWorkflow
             name: "Variable",
             selectedId: tableStyleMap.column?.name,
             allowUndefined: true,
-            options: this.item.tableColumns.map(col => ({
+            options: this.item.tableColumns.map((col) => ({
               id: col.name,
               name: col.title
             })),
@@ -1484,7 +1484,7 @@ export default class TableStylingWorkflow
                     tableStyleMap.commonTraits.enum[idx].value ?? "No value"
                   ),
                   isOpen: this.openBinIndex.get(key) === idx,
-                  onToggle: open => {
+                  onToggle: (open) => {
                     if (open && this.openBinIndex.get(key) !== idx) {
                       runInAction(() => this.openBinIndex.set(key, idx));
                       return true;
@@ -1502,12 +1502,12 @@ export default class TableStylingWorkflow
                         enumPoint.value ? { id: enumPoint.value } : undefined,
                         ...(tableStyleMap.column?.uniqueValues.values
                           ?.filter(
-                            value =>
+                            (value) =>
                               !traits.enum.find(
-                                enumCol => enumCol.value === value
+                                (enumCol) => enumCol.value === value
                               )
                           )
-                          .map(id => ({ id })) ?? [])
+                          .map((id) => ({ id })) ?? [])
                       ]),
                       setDimensionValue: (stratumId, value) => {
                         enumPoint.setTrait(stratumId, "value", value);
@@ -1523,7 +1523,7 @@ export default class TableStylingWorkflow
                       type: "button",
                       id: `${key}-enum-${idx}-remove`,
                       value: "Remove",
-                      setDimensionValue: stratumId => {
+                      setDimensionValue: (stratumId) => {
                         enumPoint.setTrait(stratumId, "value", null);
                       }
                     }
@@ -1535,16 +1535,18 @@ export default class TableStylingWorkflow
               // Create "Add" to user can add more
 
               tableStyleMap.column?.uniqueValues.values.filter(
-                v => !traits.enum?.find(col => col.value === v)
+                (v) => !traits.enum?.find((col) => col.value === v)
               ).length > 0
                 ? ({
                     type: "button",
                     id: `${key}-enum-add`,
                     value: "Add style for value",
-                    setDimensionValue: stratumId => {
-                      const firstValue = tableStyleMap.column?.uniqueValues.values.find(
-                        value => !traits.enum?.find(col => col.value === value)
-                      );
+                    setDimensionValue: (stratumId) => {
+                      const firstValue =
+                        tableStyleMap.column?.uniqueValues.values.find(
+                          (value) =>
+                            !traits.enum?.find((col) => col.value === value)
+                        );
                       if (!isDefined(firstValue)) return;
 
                       traits
@@ -1569,7 +1571,7 @@ export default class TableStylingWorkflow
                 type: "button",
                 id: `${key}-bin-add`,
                 value: "Add style bin",
-                setDimensionValue: stratumId => {
+                setDimensionValue: (stratumId) => {
                   traits.addObject(stratumId, "bin");
                   this.openBinIndex.set(key, traits.bin.length - 1);
                 }
@@ -1593,7 +1595,7 @@ export default class TableStylingWorkflow
                     ),
 
                     isOpen: this.openBinIndex.get(key) === idx,
-                    onToggle: open => {
+                    onToggle: (open) => {
                       if (open && this.openBinIndex.get(key) !== idx) {
                         runInAction(() => this.openBinIndex.set(key, idx));
                         return true;
@@ -1633,7 +1635,7 @@ export default class TableStylingWorkflow
                         type: "button",
                         id: `${key}-bin-${idx}-remove`,
                         value: "Remove",
-                        setDimensionValue: stratumId => {
+                        setDimensionValue: (stratumId) => {
                           bin.setTrait(stratumId, "maxValue", null);
                         }
                       }
@@ -1671,12 +1673,11 @@ export default class TableStylingWorkflow
           {
             type: "select",
             id: `${id}-marker`,
-            name:
-              '<terriatooltip title="Marker">Marker supports URL and base64 of any supported image format (eg PNG, SVG)</terriatooltip>',
+            name: '<terriatooltip title="Marker">Marker supports URL and base64 of any supported image format (eg PNG, SVG)</terriatooltip>',
             selectedId: (pointTraits.marker ?? nullValues.marker) || "point",
             allowUndefined: true,
             allowCustomInput: true,
-            options: [...allIcons, "point"].map(icon => ({
+            options: [...allIcons, "point"].map((icon) => ({
               id: icon
             })),
             optionRenderer: MarkerOptionRenderer,
@@ -1717,15 +1718,18 @@ export default class TableStylingWorkflow
             : undefined
         ]),
       (point, nullValue, label) =>
-        `<div><img height="${24}px" style="margin-bottom: -4px; transform: rotate(${point.rotation ??
-          0}deg)" src="${getMakiIcon(
-          point.marker ?? nullValue.marker,
-          "#fff",
-          1,
-          "#000",
-          24,
-          24
-        ) ?? point.marker}"></img> ${label}</div>`
+        `<div><img height="${24}px" style="margin-bottom: -4px; transform: rotate(${
+          point.rotation ?? 0
+        }deg)" src="${
+          getMakiIcon(
+            point.marker ?? nullValue.marker,
+            "#fff",
+            1,
+            "#000",
+            24,
+            24
+          ) ?? point.marker
+        }"></img> ${label}</div>`
     );
   }
 
@@ -1851,7 +1855,7 @@ export default class TableStylingWorkflow
       "binMaximums",
       undefined
     );
-    const binMaximums = this.tableStyle.tableColorMap.binMaximums.map(bin =>
+    const binMaximums = this.tableStyle.tableColorMap.binMaximums.map((bin) =>
       parseFloat(
         bin.toFixed(this.tableStyle.numberFormatOptions?.maximumFractionDigits)
       )
@@ -1901,7 +1905,7 @@ export default class TableStylingWorkflow
     }
 
     const style =
-      this.item.styles?.find(style => style.id === id) ??
+      this.item.styles?.find((style) => style.id === id) ??
       this.item.addObject(stratumId, "styles", id);
 
     style?.setTrait(stratumId, "hidden", false);
@@ -1914,7 +1918,7 @@ export default class TableStylingWorkflow
     if (!this.tableStyle.colorColumn?.name) return;
     return (
       this.item.columns?.find(
-        col => col.name === this.tableStyle.colorColumn!.name
+        (col) => col.name === this.tableStyle.colorColumn!.name
       ) ??
       this.item.addObject(
         stratumId,

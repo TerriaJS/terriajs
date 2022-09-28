@@ -57,7 +57,7 @@ function createFeature(
 ): Entity {
   const isSampled = !!style.timeTraits.isSampled;
   const tableHasScalarColumn = !!style.tableModel.tableColumns.find(
-    col => col.type === TableColumnType.scalar
+    (col) => col.type === TableColumnType.scalar
   );
   const interpolate = isSampled && tableHasScalarColumn;
 
@@ -90,7 +90,7 @@ function createFeature(
   /** use `PointGraphics` or `BillboardGraphics`. This wil be false if any pointTraits.marker !== "point", as then we use images as billboards */
   let usePointGraphics = true;
 
-  rowIds.forEach(rowId => {
+  rowIds.forEach((rowId) => {
     const longitude = longitudes[rowId];
     const latitude = latitudes[rowId];
     const interval = timeIntervals[rowId];
@@ -272,7 +272,7 @@ function getRowDescription(
   tableColumns: Readonly<TableColumn[]>
 ) {
   const rows = tableColumns
-    .map(column => {
+    .map((column) => {
       const title = column.title;
       const value = column.valueFunctionForType(index);
       return `<tr><td>${title}</td><td>${value}</td></tr>`;

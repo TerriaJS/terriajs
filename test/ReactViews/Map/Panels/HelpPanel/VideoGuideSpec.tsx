@@ -5,11 +5,11 @@ import { ThemeProvider } from "styled-components";
 import { terriaTheme } from "../../../../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import Terria from "../../../../../lib/Models/Terria";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
-const VideoGuide: any = require("../../../../../lib/ReactViews/Map/Panels/HelpPanel/VideoGuide")
-  .default;
+const VideoGuide: any =
+  require("../../../../../lib/ReactViews/Map/Panels/HelpPanel/VideoGuide").default;
 import { runInAction } from "mobx";
 
-describe("VideoGuide", function() {
+describe("VideoGuide", function () {
   let terria: Terria;
   let viewState: ViewState;
 
@@ -17,7 +17,7 @@ describe("VideoGuide", function() {
 
   const videoName = "testVideo";
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -28,7 +28,7 @@ describe("VideoGuide", function() {
     });
   });
 
-  it("renders when videoGuideVisible is set to its videoName", function() {
+  it("renders when videoGuideVisible is set to its videoName", function () {
     runInAction(() => {
       viewState.setVideoGuideVisible(videoName);
     });
@@ -48,7 +48,7 @@ describe("VideoGuide", function() {
     expect(videoGuideComponents.length).toBeTruthy();
   });
 
-  it("does not render when videoGuideVisible is an empty string", function() {
+  it("does not render when videoGuideVisible is an empty string", function () {
     runInAction(() => {
       viewState.setVideoGuideVisible("");
     });
@@ -68,7 +68,7 @@ describe("VideoGuide", function() {
     expect(videoGuideComponents.length).toBeFalsy();
   });
 
-  it("does not render when videoGuideVisible is a different string", function() {
+  it("does not render when videoGuideVisible is a different string", function () {
     runInAction(() => {
       viewState.setVideoGuideVisible("someRandomString");
     });

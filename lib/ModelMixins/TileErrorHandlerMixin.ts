@@ -209,18 +209,15 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
       }
 
       operation.attempt(
-        action(async attemptNumber => {
+        action(async (attemptNumber) => {
           if (this.show === false) {
             // If the layer is no longer shown, ignore errors and don't retry.
             tellMapToSilentlyGiveUp();
             return;
           }
 
-          const {
-            ignoreUnknownTileErrors,
-            treat403AsError,
-            treat404AsError
-          } = this.tileErrorHandlingOptions;
+          const { ignoreUnknownTileErrors, treat403AsError, treat404AsError } =
+            this.tileErrorHandlingOptions;
 
           // Browsers don't tell us much about a failed image load, so we do an
           // XHR to get more error information if needed.

@@ -97,7 +97,7 @@ export default class TimelineStack {
     // Find the first item with a current, start, and stop time.
     // Use the default if there isn't one.
     return (
-      this.items.find(item => {
+      this.items.find((item) => {
         const dereferenced: TimeVarying =
           ReferenceMixin.isMixedInto(item) && item.target
             ? (item.target as TimeVarying)
@@ -113,7 +113,7 @@ export default class TimelineStack {
 
   @computed
   get itemIds(): readonly string[] {
-    return filterOutUndefined(this.items.map(item => item.uniqueId));
+    return filterOutUndefined(this.items.map((item) => item.uniqueId));
   }
 
   /**

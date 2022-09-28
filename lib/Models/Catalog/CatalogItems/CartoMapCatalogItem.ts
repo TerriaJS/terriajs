@@ -63,7 +63,7 @@ export class CartoLoadableStratum extends LoadableStratum(
       .then(() => {
         return resource.post(JSON.stringify(catalogItem.config || {}));
       })
-      .then(response => {
+      .then((response) => {
         if (response === undefined) {
           throw new TerriaError({
             sender: this,
@@ -126,7 +126,7 @@ export default class CartoMapCatalogItem extends MappableMixin(
   }
 
   protected forceLoadMapItems(): Promise<void> {
-    return CartoLoadableStratum.load(this).then(stratum => {
+    return CartoLoadableStratum.load(this).then((stratum) => {
       runInAction(() => {
         this.strata.set(CartoLoadableStratum.stratumName, stratum);
       });

@@ -4,20 +4,20 @@ import CatalogMemberMixin from "../../../../lib/ModelMixins/CatalogMemberMixin";
 import Terria from "../../../../lib/Models/Terria";
 import WebFeatureServiceCatalogGroup from "../../../../lib/Models/Catalog/Ows/WebFeatureServiceCatalogGroup";
 
-describe("WebFeatureServiceCatalogGroup", function() {
+describe("WebFeatureServiceCatalogGroup", function () {
   let terria: Terria;
   let wfs: WebFeatureServiceCatalogGroup;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria();
     wfs = new WebFeatureServiceCatalogGroup("test", terria);
   });
 
-  it("has a type", function() {
+  it("has a type", function () {
     expect(wfs.type).toBe("wfs-group");
   });
 
-  it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specified", function() {
+  it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specified", function () {
     wfs.setTrait("definition", "url", "http://www.example.com");
     expect(wfs.getCapabilitiesUrl).toBeDefined();
     expect(wfs.url).toBeDefined();
@@ -27,19 +27,19 @@ describe("WebFeatureServiceCatalogGroup", function() {
     ).toBe(true);
   });
 
-  describe("after loading capabilities", function() {
-    beforeEach(async function() {
+  describe("after loading capabilities", function () {
+    beforeEach(async function () {
       runInAction(() => {
         wfs.setTrait("definition", "url", "test/WFS/getCapabilities.xml");
       });
     });
 
-    it("defines name", async function() {
+    it("defines name", async function () {
       await wfs.loadMetadata();
       expect(wfs.name).toBe("Geoscience Australia Marine Data");
     });
 
-    it("doesn't override user set name", async function() {
+    it("doesn't override user set name", async function () {
       const userDefinedName = "user defined name";
       runInAction(() => {
         wfs.setTrait("definition", "name", userDefinedName);
@@ -48,7 +48,7 @@ describe("WebFeatureServiceCatalogGroup", function() {
       expect(wfs.name).toBe(userDefinedName);
     });
 
-    it("defines info", async function() {
+    it("defines info", async function () {
       await wfs.loadMetadata();
       const abstract = i18next.t(
         "models.webFeatureServiceCatalogGroup.abstract"
@@ -69,15 +69,15 @@ describe("WebFeatureServiceCatalogGroup", function() {
     });
   });
 
-  describe("loadNestedMembers", function() {
-    beforeEach(async function() {
+  describe("loadNestedMembers", function () {
+    beforeEach(async function () {
       runInAction(() => {
         wfs.setTrait("definition", "url", "test/WFS/getCapabilities.xml");
       });
       await wfs.loadMembers();
     });
 
-    it("loads", async function() {
+    it("loads", async function () {
       expect(wfs.members.length).toEqual(6);
       expect(wfs.memberModels.length).toEqual(6);
 

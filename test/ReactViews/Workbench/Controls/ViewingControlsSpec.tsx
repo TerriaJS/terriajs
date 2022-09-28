@@ -8,11 +8,11 @@ import * as ViewingControlsMenu from "../../../../lib/ViewModels/ViewingControls
 import Icon from "../../../../lib/Styled/Icon";
 import { runInAction } from "mobx";
 
-describe("ViewingControls", function() {
+describe("ViewingControls", function () {
   let terria: Terria;
   let viewState: ViewState;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria();
     viewState = new ViewState({
       terria,
@@ -21,13 +21,13 @@ describe("ViewingControls", function() {
     });
   });
 
-  it("shows viewing controls added through `viewState.globalViewingControls`", function() {
+  it("shows viewing controls added through `viewState.globalViewingControls`", function () {
     const simpleItem = new SimpleCatalogItem("simple", terria);
     runInAction(() => {
       // Open the ViewingControls menu for this item
       viewState.workbenchItemWithOpenControls = simpleItem.uniqueId;
     });
-    ViewingControlsMenu.addMenuItem(viewState, item => ({
+    ViewingControlsMenu.addMenuItem(viewState, (item) => ({
       name: "View details",
       icon: Icon.GLYPHS.eye,
       iconTitle: "View more details",

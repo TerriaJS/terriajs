@@ -20,7 +20,9 @@ type DropPedestrianToGroundProps = {
   afterDrop: () => void;
 };
 
-const DropPedestrianToGround: React.FC<DropPedestrianToGroundProps> = props => {
+const DropPedestrianToGround: React.FC<DropPedestrianToGroundProps> = (
+  props
+) => {
   const cesium = props.cesium;
   const scene = cesium.scene;
   const eventHandler = new ScreenSpaceEventHandler(scene.canvas);
@@ -45,7 +47,7 @@ const DropPedestrianToGround: React.FC<DropPedestrianToGroundProps> = props => {
 
       setShowMouseTooltip(false);
       // Get the precise position and fly to it.
-      getPrecisePosition(scene, pickPosition).then(cartographic => {
+      getPrecisePosition(scene, pickPosition).then((cartographic) => {
         cartographic.height += props.pedestrianHeight;
         const position = Cartographic.toCartesian(cartographic);
         flyTo(scene, position, {
@@ -116,7 +118,7 @@ async function flyTo(
   destination: Cartesian3,
   options?: { duration?: number; orientation: any }
 ): Promise<void> {
-  return new Promise(resolve =>
+  return new Promise((resolve) =>
     scene.camera.flyTo({
       destination,
       ...options,

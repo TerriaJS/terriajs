@@ -60,7 +60,7 @@ export default class TableStyle {
       this.colorColumn,
       this.pointSizeColumn,
       ...(this.idColumns ?? [])
-    ]).every(col => col.ready);
+    ]).every((col) => col.ready);
   }
 
   /**
@@ -80,7 +80,7 @@ export default class TableStyle {
   get title(): string {
     return (
       this.styleTraits.title ??
-      this.tableModel.tableColumns.find(col => col.name === this.id)?.title ??
+      this.tableModel.tableColumns.find((col) => col.name === this.id)?.title ??
       this.id
     );
   }
@@ -264,7 +264,7 @@ export default class TableStyle {
   get idColumns(): TableColumn[] | undefined {
     const idColumns = filterOutUndefined(
       this.timeTraits.idColumns
-        ? this.timeTraits.idColumns.map(name => this.resolveColumn(name))
+        ? this.timeTraits.idColumns.map((name) => this.resolveColumn(name))
         : []
     );
     return idColumns.length > 0 ? idColumns : undefined;
@@ -460,13 +460,13 @@ export default class TableStyle {
   @computed get moreThanOneTimeInterval() {
     if (this.timeIntervals) {
       // Find first non-null time interval
-      const firstInterval = this.timeIntervals?.find(t => t) as
+      const firstInterval = this.timeIntervals?.find((t) => t) as
         | TimeInterval
         | undefined;
       if (firstInterval) {
         // Does there exist an interval which is different from firstInterval (that is to say, does there exist at least two unique intervals)
         return !!this.timeIntervals?.find(
-          t =>
+          (t) =>
             t &&
             (!firstInterval.start.equals(t.start) ||
               !firstInterval.stop.equals(t.stop))
@@ -508,7 +508,7 @@ export default class TableStyle {
       if (this.timeTraits.spreadStartTime) {
         // Find row ID with earliest date in this rowGroup
         const firstRowId = rowIds
-          .filter(id => filteredStartDates[id])
+          .filter((id) => filteredStartDates[id])
           .sort((idA, idB) =>
             JulianDate.compare(
               filteredStartDates[idA]!,
@@ -564,13 +564,13 @@ export default class TableStyle {
     for (let i = 0; i < this.rowGroups.length; i++) {
       const rowIds = this.rowGroups[i][1];
       const sortedStartDates = sortedUniqueDates(
-        rowIds.map(id => timeColumn.valuesAsJulianDates.values[id])
+        rowIds.map((id) => timeColumn.valuesAsJulianDates.values[id])
       );
       const finalDuration =
         estimateFinalDurationSeconds(sortedStartDates) ??
         DEFAULT_FINAL_DURATION_SECONDS;
 
-      const startDatesForGroup = rowIds.map(id => startDates[id]);
+      const startDatesForGroup = rowIds.map((id) => startDates[id]);
       const finishDatesForGroup = this.calculateFinishDatesFromStartDates(
         startDatesForGroup,
         finalDuration
@@ -602,9 +602,9 @@ export default class TableStyle {
 
     return (
       Object.entries(
-        groupBy(tableRowIds, rowId =>
+        groupBy(tableRowIds, (rowId) =>
           groupByCols!
-            .map(col => {
+            .map((col) => {
               // If using region column as ID - only use valid regions
               if (col.type === TableColumnType.region) {
                 return col.valuesAsRegions.regionIds[rowId];
@@ -615,7 +615,7 @@ export default class TableStyle {
         )
       )
         // Filter out bad IDs
-        .filter(value => value[0] !== "")
+        .filter((value) => value[0] !== "")
     );
   }
 
@@ -720,7 +720,7 @@ export default class TableStyle {
     if (name === undefined) {
       return undefined;
     }
-    return this.tableModel.tableColumns.find(column => column.name === name);
+    return this.tableModel.tableColumns.find((column) => column.name === name);
   }
 }
 
