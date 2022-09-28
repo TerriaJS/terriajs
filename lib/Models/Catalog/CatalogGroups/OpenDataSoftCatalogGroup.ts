@@ -39,7 +39,7 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
       domain: catalogGroup.url
     });
 
-    let datasets: ValidDataset[] | undefined;
+    let datasets: ValidDataset[] = [];
     let facets: ValidFacet[] | undefined;
 
     // If no facetFilters, try to get some facets
@@ -55,9 +55,14 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
 
     // If no facets (or we have facetFiles) - get datasets
     if (!facets || facets.length === 0) {
+      // We can only fetch datasets in batch of 100
+      let offset = 0;
+      let totalDatasets: number | undefined;
+      const limit = 100;
+
       let q = fromCatalog()
         .datasets()
-        .limit(100)
+        .limit(limit)
         .orderBy("title asc")
         // Filter dataset with 'geo' or 'timeserie' features.
         // Possible values: calendar, geo, image, apiproxy, timeserie, and aggregate
@@ -70,13 +75,23 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
         );
       }
 
-      const catalog = await client.get(q);
+      while (!isDefined(totalDatasets) || offset < totalDatasets) {
+        q = q.offset(offset);
 
-      datasets = filterOutUndefined(
-        catalog.datasets
-          ?.map((d) => d.dataset)
-          .filter((d) => isValidDataset(d)) ?? []
-      ) as ValidDataset[];
+        const catalog = await client.get(q);
+
+        totalDatasets = catalog.total_count ?? 0;
+
+        datasets.push(
+          ...(filterOutUndefined(
+            catalog.datasets
+              ?.map((d) => d.dataset)
+              .filter((d) => isValidDataset(d)) ?? []
+          ) as ValidDataset[])
+        );
+
+        offset += limit;
+      }
     }
 
     return new OpenDataSoftCatalogStratum(
