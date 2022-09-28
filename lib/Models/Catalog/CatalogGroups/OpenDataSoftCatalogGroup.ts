@@ -82,13 +82,11 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
 
         totalDatasets = catalog.total_count ?? 0;
 
-        datasets.push(
-          ...(filterOutUndefined(
-            catalog.datasets
-              ?.map((d) => d.dataset)
-              .filter((d) => isValidDataset(d)) ?? []
-          ) as ValidDataset[])
-        );
+        catalog.datasets?.forEach((response) => {
+          if (isValidDataset(response.dataset)) {
+            datasets.push(response.dataset);
+          }
+        });
 
         offset += limit;
       }
