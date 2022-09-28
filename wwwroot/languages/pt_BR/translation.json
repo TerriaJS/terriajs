@@ -74,7 +74,10 @@
       "copyName": "{{name}} (cópia)",
       "gorightTitle": "Mostrar no lado direito",
       "goleftTitle": "Mostrar no lado esquerdo"
-    }
+    },
+    "errorTitle": "Falha ao comparar o item do catálogo.",
+    "modelNotFoundErrorMessage": "ID do modelo `\"{{id}}\"` não foi encontrado",
+    "duplicateModelErrorMessage": "Ocorreu um erro ao dividir o item de catálogo `\"{{name}}\"`. Este item de catálogo pode não ser compatível com a funcionalidade \"comparar\""
   },
   "zoomCotrol": {
     "zoomReset": "Redefinir zoom",
@@ -216,7 +219,8 @@
     "convertNotificationHelp": "Se você criou o link de compartilhamento, verifique o menu Ajuda para ver dicas sobre como atualizá-lo.",
     "convertNotificationFeedback": "Para perguntas ou comentários, clique aqui.",
     "convertNotificationWarningsTitle": "Detalhes técnicos",
-    "downloadMap": "Download mapa (png)"
+    "downloadMap": "Download mapa (png)",
+    "getShareSaveHelpMessage": "Como Marcar Compartilhamentos"
   },
   "addData": {
     "done": "Ok",
@@ -341,7 +345,12 @@
     "story": "História",
     "storyEditor": "Editor de Histórias",
     "exitBtn": "Encerrar História",
-    "playStory": "História"
+    "playStory": "História",
+    "prev": "Anterior",
+    "expand": "Expandir",
+    "next": "Próximo",
+    "restart": "Reiniciar",
+    "collapse": "Colapso"
   },
   "settingPanel": {
     "mapView": "Visualização do mapa",
@@ -548,7 +557,8 @@
     "expandAll": "Expandir",
     "addItemErrorMessage": "Ocorreu um erro ao carregar o item do catálogo.",
     "searchItem": "Procurar",
-    "searchItemTitle": "Procurar"
+    "searchItemTitle": "Procurar",
+    "splitScreenMode": "MODO DE TELA DIVIDIDA"
   },
   "dateTime": {
     "useTimeline": "Use a linha do tempo",
@@ -577,7 +587,8 @@
     "closePanel": "Fechar painel",
     "expand": "Expandir",
     "download": "Baixar",
-    "loading": "Carregando dados do gráfico ..."
+    "loading": "Carregando dados do gráfico ...",
+    "showItemInChart": "Mostrar {{value}} no gráfico"
   },
   "terriaViewer": {
     "slowWebGLAvailableMessage": "Seu navegador da web informa que tem problemas de desempenho exibindo {{appName}} em 3D, então você verá uma experiência limitada, apenas 2D. Para a experiência 3D completa, tente usar um navegador da web diferente, atualizando seus drivers de vídeo ou atualizando seu sistema operacional.",
@@ -663,9 +674,14 @@
       "3d-tiles": "3D Tiles",
       "opendatasoft-group": "Portal Opendatasoft",
       "json": "JSON",
-      "gltf": "GLTF",
+      "gltf": "glTF",
       "other": "Outro (usar serviço de conversão)",
-      "socrata-group": "Servidor Socrata"
+      "socrata-group": "Servidor Socrata",
+      "assimp-local": "Conversor de arquivos 3D (zip) (experimental)",
+      "assimp-remote-description": "**Aviso:** o conversor de arquivos 3D é experimental.\nVeja a lista de [formatos suportados](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).\nArquivos zip também são suportados",
+      "ifc": "IFC",
+      "assimp-local-description": "**Aviso:** o conversor de arquivos 3D é experimental.\nVeja a lista de [formatos suportados](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).\nOs arquivos devem ser compactados.",
+      "assimp-remote": "Conversor de arquivos 3D (experimental)"
     },
     "printWindow": {
       "onbeforeprint": "onbeforeprint",
@@ -785,7 +801,8 @@
     "extraCreditLinks": {
       "dataAttribution": "Atribuição de dados",
       "disclaimer": "Isenção de responsabilidade",
-      "basemap": "Mapa base"
+      "basemap": "Mapa base",
+      "dataProvider": "Dados fornecidos por:"
     },
     "addressGeocoder": {
       "devError": "bulkConvertAddresses deve ser implementado na classe derivada."
@@ -818,7 +835,7 @@
   },
   "models": {
     "arcGisFeatureServerCatalogItem": {
-      "reachedMaxFeatureLimit": "Aviso: Esta camada atingiu o limite de recursos do FeatureService.",
+      "reachedMaxFeatureLimit": "Aviso: esta camada atingiu o limite de recursos WFS ({{maxFeatures}})",
       "name": "Esri ArcGIS FeatureServer",
       "dataDescription": "Descrição dos dados",
       "serviceDescription": "Descrição do Serviço",
@@ -1365,7 +1382,8 @@
       "devError": "A instância Terria é necessária.",
       "messageHeader": "Desenhar no mapa",
       "btnDone": "Ok",
-      "clickToAddAnotherPoint": "Clique para adicionar outro ponto"
+      "clickToAddAnotherPoint": "Clique para adicionar outro ponto",
+      "clickToRedrawRectangle": "Clique em outro ponto para redesenhar o retângulo"
     },
     "webProcessingServiceCatalogGroup": {
       "accessConstraints": "Restrições de Acesso ao Serviço de Processamento Web",
@@ -1518,6 +1536,19 @@
     "scaleDatasetNotVisible": {
       "scaleZoomIn": "O conjunto de dados não está disponível nesta escala, amplie para vê-lo",
       "scaleZoomOut": "O conjunto de dados não está disponível nesta escala, diminua o zoom para vê-lo"
+    },
+    "clippingBox": {
+      "clipModel": "Modelo de clipe",
+      "clipDirection": {
+        "name": "Direção do corte",
+        "options": {
+          "inside": "Corte dentro da caixa",
+          "outside": "Corte fora da caixa"
+        }
+      },
+      "showClippingBox": "Mostrar caixa de recorte",
+      "keepBoxAboveGround": "Apenas acima do solo",
+      "groupName": "Caixa de recorte"
     }
   },
   "deltaTool": {
@@ -1590,5 +1621,51 @@
   },
   "printView": {
     "loading": "Criando visualização de impressão ..."
+  },
+  "compare": {
+    "info": "Compare os conjuntos de dados espaciais da sua bancada lado a lado no mapa.",
+    "dataset": {
+      "label": "Conjunto de dados",
+      "selectOne": "Selecione um"
+    },
+    "dimensionSelector": {
+      "undefinedLabel": "Não especificado"
+    },
+    "dateButton": {
+      "left": "Esquerda",
+      "right": "Direita",
+      "select": "Selecione uma data"
+    },
+    "entireMapMenu": {
+      "browse": "Navegue pelos dados do mapa",
+      "sendAllToFront": "Enviar tudo para a frente",
+      "sendAllToBack": "Enviar tudo para trás",
+      "hideAll": "Esconda tudo"
+    },
+    "done": "Terminado",
+    "dateLocationFilter": {
+      "loading": "Carregando filtro...",
+      "cancel": "Cancelar",
+      "mouseTooltipMessage": "Clique com o botão direito para cancelar",
+      "mouseTooltipTitle": "Selecione a localização",
+      "filter": "Filtrar data por local",
+      "location": "Agora mostrando imagens disponíveis para {{latitude}}, {{longitude}}"
+    },
+    "title": "Comparar",
+    "entireMap": {
+      "title": "Mapa inteiro",
+      "emptyText": "Adicione novos dados para mostrar em todo o mapa por meio do menu pontilhado acima."
+    },
+    "rightPanel": "Painel direito",
+    "leftPanel": "Painel esquerdo"
+  },
+  "browsers": {
+    "chrome": "Google Chrome",
+    "firefox": "Mozilla Firefox",
+    "edge": "Microsoft Edge",
+    "safari": "Apple Safari"
+  },
+  "includeStory": {
+    "message": "Incluir história no compartilhamento"
   }
 }

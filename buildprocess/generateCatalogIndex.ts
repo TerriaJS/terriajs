@@ -108,7 +108,7 @@ export default async function generateCatalogIndex(
     ]).join("/");
   }
 
-  /** Recusrively load all references and groups */
+  /** Recursively load all references and groups */
   async function loadMember(terria: Terria, member: BaseModel) {
     let name = getName(member);
     let path = getPath(terria, member);
@@ -116,47 +116,58 @@ export default async function generateCatalogIndex(
     const memberPriority = Math.round(Math.random() * 6) + 3;
     // Random priority between 0 and 5
     const groupPriority = Math.round(Math.random() * 5);
-    // Load reference
-    if (ReferenceMixin.isMixedInto(member)) {
-      try {
-        const priority =
-          hasTraits(member, CatalogMemberReferenceTraits, "isGroup") &&
-          member.isGroup
-            ? groupPriority
-            : memberPriority;
 
-        // Timeout after 30 seconds
-        debug
-          ? console.log(
-              "\x1b[32m%s\x1b[0m",
-              `Adding Reference ${name} (${path})`
+    // Load reference - this also handles nested references
+    const loadReference = async () => {
+      if (ReferenceMixin.isMixedInto(member)) {
+        try {
+          const priority =
+            hasTraits(member, CatalogMemberReferenceTraits, "isGroup") &&
+            member.isGroup
+              ? groupPriority
+              : memberPriority;
+
+          // Timeout after 30 seconds
+          debug
+            ? console.log(
+                "\x1b[32m%s\x1b[0m",
+                `Adding Reference ${name} (${path})`
+              )
+            : null;
+
+          await timeout(Math.random() * 1000);
+          await loadLimiter.schedule(
+            { expiration: 30000, priority },
+            async () => {
+              console.log(`Loading Reference ${name} (${path}) = ${priority}`);
+              const result = await (member as ReferenceMixin.Instance).loadReference();
+              result.logError(`FAILED to load Reference ${name} (${path})`);
+              result.pushErrorTo(
+                errors,
+                `FAILED to load Reference ${name} (${path})`
+              );
+              result.catchError(e => console.error(e.toError().message));
+            }
+          );
+        } catch (timeout) {
+          errors.push(
+            TerriaError.from(
+              `TIMEOUT FAILED to load Reference ${name} (${path})`
             )
-          : null;
+          );
+          console.error(`TIMEOUT FAILED to load Reference ${name}`);
+        }
 
-        await timeout(Math.random() * 1000);
-        await loadLimiter.schedule(
-          { expiration: 30000, priority },
-          async () => {
-            console.log(`Loading Reference ${name} (${path}) = ${priority}`);
-            const result = await (member as ReferenceMixin.Instance).loadReference();
-            result.logError(`FAILED to load Reference ${name} (${path})`);
-            result.pushErrorTo(
-              errors,
-              `FAILED to load Reference ${name} (${path})`
-            );
-            result.catchError(e => console.error(e.toError().message));
-          }
-        );
-      } catch (timeout) {
-        errors.push(
-          TerriaError.from(`TIMEOUT FAILED to load Reference ${name} (${path})`)
-        );
-        console.error(`TIMEOUT FAILED to load Reference ${name}`);
+        if (member.target) {
+          member = member.target;
+          // Load nested references
+          await loadReference();
+        }
+        name = getName(member);
       }
+    };
 
-      if (member.target) member = member.target;
-      name = getName(member);
-    }
+    await loadReference();
 
     if (GroupMixin.isMixedInto(member)) {
       debug
@@ -208,15 +219,23 @@ export default async function generateCatalogIndex(
   // Recursively add models to CatalogIndex
   function indexModel(member: BaseModel, index: CatalogIndexFile = {}) {
     let knownContainerUniqueIds = member.knownContainerUniqueIds;
-    if (ReferenceMixin.isMixedInto(member) && member.target) {
-      knownContainerUniqueIds = Array.from(
-        new Set([
-          ...member.knownContainerUniqueIds,
-          ...member.target.knownContainerUniqueIds
-        ])
-      );
-      member = member.target;
-    }
+
+    // de-reference (and handle nested references)
+    const dereference = () => {
+      if (ReferenceMixin.isMixedInto(member) && member.target) {
+        knownContainerUniqueIds = Array.from(
+          new Set([
+            ...member.knownContainerUniqueIds,
+            ...member.target.knownContainerUniqueIds
+          ])
+        );
+        member = member.target;
+        dereference();
+      }
+    };
+
+    dereference();
+
     if (
       member.uniqueId &&
       member.uniqueId !== "/" &&

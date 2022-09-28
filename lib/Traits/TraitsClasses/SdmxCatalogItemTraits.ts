@@ -2,8 +2,7 @@ import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import EnumDimensionTraits from "./DimensionTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
-import LegendOwnerTraits from "./LegendOwnerTraits";
+import LegendOwnerTraits from "./FeatureInfoTraits";
 import SdmxCommonTraits from "./SdmxCommonTraits";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
@@ -20,7 +19,6 @@ export class SdmxDimensionTraits extends mixTraits(EnumDimensionTraits) {
 export default class SdmxCatalogItemTraits extends mixTraits(
   SdmxCommonTraits,
   UrlTraits,
-  FeatureInfoTraits,
   TableTraits,
   LegendOwnerTraits
 ) {

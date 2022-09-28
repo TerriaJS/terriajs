@@ -1,4 +1,5 @@
 import { action, runInAction, toJS } from "mobx";
+import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
 import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
@@ -25,6 +26,7 @@ import Feature from "../../lib/Models/Feature";
 import {
   isInitFromData,
   isInitFromDataPromise,
+  isInitFromOptions,
   isInitFromUrl
 } from "../../lib/Models/InitSource";
 import Terria from "../../lib/Models/Terria";
@@ -64,6 +66,45 @@ describe("Terria", function() {
     terria = new Terria({
       appBaseHref: "/",
       baseUrl: "./"
+    });
+  });
+
+  describe("cesiumBaseUrl", function() {
+    it("is set when passed as an option when constructing Terria", function() {
+      terria = new Terria({
+        appBaseHref: "/",
+        baseUrl: "./",
+        cesiumBaseUrl: "some/path/to/cesium"
+      });
+      expect(terria.cesiumBaseUrl).toBe("some/path/to/cesium/");
+    });
+
+    it("should default to a path relative to `baseUrl`", function() {
+      terria = new Terria({
+        appBaseHref: "/",
+        baseUrl: "some/path/to/terria"
+      });
+      expect(terria.cesiumBaseUrl).toBe(
+        "some/path/to/terria/build/Cesium/build/"
+      );
+    });
+
+    it("should update the baseUrl setting in the cesium module", function() {
+      expect(
+        buildModuleUrl("Assets/some/image.png").endsWith(
+          "/build/Cesium/build/Assets/some/image.png"
+        )
+      ).toBe(true);
+
+      terria = new Terria({
+        appBaseHref: "/",
+        baseUrl: "some/path/to/terria"
+      });
+      expect(
+        buildModuleUrl("Assets/some/image.png").endsWith(
+          "/some/path/to/terria/build/Cesium/build/Assets/some/image.png"
+        )
+      ).toBe(true);
     });
   });
 
@@ -141,6 +182,110 @@ describe("Terria", function() {
       jasmine.Ajax.uninstall();
     });
 
+    it("applies initSources in correct order", async function() {
+      expect(terria.initSources.length).toEqual(0);
+      jasmine.Ajax.stubRequest("config.json").andReturn({
+        responseText: JSON.stringify({
+          initializationUrls: ["something"]
+        })
+      });
+
+      jasmine.Ajax.stubRequest("init/something.json").andReturn({
+        responseText: JSON.stringify({
+          workbench: ["test"],
+          catalog: [
+            { id: "test", type: "czml", url: "test.czml" },
+            { id: "test-2", type: "czml", url: "test-2.czml" }
+          ],
+          showSplitter: false,
+          splitPosition: 0.5
+        })
+      });
+
+      jasmine.Ajax.stubRequest(
+        "https://application.url/init/hash-init.json"
+      ).andReturn({
+        responseText: JSON.stringify({
+          // Override workbench in "init/something.json"
+          workbench: ["test-2"],
+          showSplitter: true
+        })
+      });
+
+      // This model is added to the workbench in "init/something.json" - which is loaded before "https://application.url/init/hash-init.json"
+      // So we add a long delay to make sure that `workbench` is overridden by `hash-init.json`
+      jasmine.Ajax.stubRequest("test.czml").andCallFunction(req => {
+        setTimeout(
+          () =>
+            req.respondWith({
+              contentType: "text/json",
+              responseText: JSON.stringify([{ id: "document", version: "1.0" }])
+            }),
+          500
+        );
+      });
+
+      // Note: no delay for "test-2.czml" - which is added to `workbench` by `hash-init.json
+      jasmine.Ajax.stubRequest("test-2.czml").andReturn({
+        responseText: JSON.stringify([{ id: "document", version: "1.0" }])
+      });
+
+      await terria.start({
+        configUrl: `config.json`,
+        i18nOptions
+      });
+
+      await terria.updateApplicationUrl("https://application.url/#hash-init");
+
+      expect(terria.initSources.length).toEqual(2);
+
+      expect(terria.showSplitter).toBe(true);
+      expect(terria.splitPosition).toBe(0.5);
+      expect(terria.workbench.items.length).toBe(1);
+      expect(terria.workbench.items[0].uniqueId).toBe("test-2");
+    });
+
+    it("works with initializationUrls and initFragmentPaths", async function() {
+      expect(terria.initSources.length).toEqual(0);
+
+      jasmine.Ajax.stubRequest("path/to/config/configUrl.json").andReturn({
+        responseText: JSON.stringify({
+          initializationUrls: ["something"],
+          parameters: {
+            applicationUrl: "https://application.url/",
+            initFragmentPaths: [
+              "path/to/init/",
+              "https://hostname.com/some/other/path/"
+            ]
+          }
+        })
+      });
+
+      await terria.start({
+        configUrl: `path/to/config/configUrl.json`,
+        i18nOptions
+      });
+
+      expect(terria.initSources.length).toEqual(1);
+
+      const initSource = terria.initSources[0];
+      expect(isInitFromOptions(initSource)).toBeTruthy();
+
+      if (!isInitFromOptions(initSource))
+        throw "Init source is not from options";
+
+      // Note: initFragmentPaths in `initializationUrls` are resolved to the base URL of configURL
+      // - which is path/to/config/
+      expect(
+        initSource.options.map(source =>
+          isInitFromUrl(source) ? source.initUrl : ""
+        )
+      ).toEqual([
+        "path/to/config/path/to/init/something.json",
+        "https://hostname.com/some/other/path/something.json"
+      ]);
+    });
+
     describe("via loadMagdaConfig", function() {
       it("should dereference uniqueId to `/`", function(done) {
         expect(terria.catalog.group.uniqueId).toEqual("/");
@@ -165,6 +310,7 @@ describe("Terria", function() {
             done.fail(error);
           });
       });
+
       it("works with basic initializationUrls", function(done) {
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
           // terria's "Magda derived url"
@@ -195,6 +341,7 @@ describe("Terria", function() {
             done.fail(error);
           });
       });
+
       it("works with v7initializationUrls", async function() {
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
           // terria's "Magda derived url"
@@ -332,6 +479,59 @@ describe("Terria", function() {
   });
 
   describe("updateApplicationUrl", function() {
+    it("works with initializationUrls and initFragmentPaths", async function() {
+      expect(terria.initSources.length).toEqual(0);
+
+      jasmine.Ajax.install();
+      // Fail all requests by default.
+      jasmine.Ajax.stubRequest(/.*/).andError({});
+
+      jasmine.Ajax.stubRequest("path/to/config/configUrl.json").andReturn({
+        responseText: JSON.stringify({
+          initializationUrls: ["something"],
+          parameters: {
+            applicationUrl: "https://application.url/",
+            initFragmentPaths: [
+              "path/to/init/",
+              "https://hostname.com/some/other/path/"
+            ]
+          }
+        })
+      });
+
+      await terria.start({
+        configUrl: `path/to/config/configUrl.json`,
+        i18nOptions
+      });
+
+      await terria.updateApplicationUrl(
+        "https://application.url/#someInitHash"
+      );
+
+      console.log(terria.initSources);
+
+      expect(terria.initSources.length).toEqual(2);
+
+      const initSource = terria.initSources[1];
+      expect(isInitFromOptions(initSource)).toBeTruthy();
+
+      if (!isInitFromOptions(initSource))
+        throw "Init source is not from options";
+
+      // Note: initFragmentPaths in hash parameters are resolved to the base URL of application URL
+      // - which is https://application.url/
+      expect(
+        initSource.options.map(source =>
+          isInitFromUrl(source) ? source.initUrl : ""
+        )
+      ).toEqual([
+        "https://application.url/path/to/init/someInitHash.json",
+        "https://hostname.com/some/other/path/someInitHash.json"
+      ]);
+
+      jasmine.Ajax.uninstall();
+    });
+
     describe("test via serialise & load round-trip", function() {
       let newTerria: Terria;
       let viewState: ViewState;
@@ -501,6 +701,7 @@ describe("Terria", function() {
           storyRouteUrlPrefix: "test/stories/TerriaJS%20App/"
         });
       });
+
       it("sets playStory to 1", async function() {
         await terria.updateApplicationUrl(
           new URL("story/my-story", document.baseURI).toString()
@@ -549,7 +750,7 @@ describe("Terria", function() {
           JSON.stringify({
             initializationUrls: [],
             parameters: {
-              regionMappingDefinitionsUrl: "data/regionMapping.json"
+              regionMappingDefinitionsUrls: ["data/regionMapping.json"]
             }
           })
         )}`;

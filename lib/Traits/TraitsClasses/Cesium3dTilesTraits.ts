@@ -6,18 +6,18 @@ import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
-import OpacityTraits from "./OpacityTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import ClippingPlanesTraits from "./ClippingPlanesTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
 import HighlightColorTraits from "./HighlightColorTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
+import OpacityTraits from "./OpacityTraits";
 import PlaceEditorTraits from "./PlaceEditorTraits";
 import ShadowTraits from "./ShadowTraits";
 import SplitterTraits from "./SplitterTraits";
 import TransformationTraits from "./TransformationTraits";
 import UrlTraits from "./UrlTraits";
+import FeaturePickingTraits from "./FeaturePickingTraits";
 
 export class FilterTraits extends ModelTraits {
   @primitiveTrait({
@@ -107,7 +107,7 @@ export default class Cesium3DTilesTraits extends mixTraits(
   HighlightColorTraits,
   PlaceEditorTraits,
   TransformationTraits,
-  FeatureInfoTraits,
+  FeaturePickingTraits,
   MappableTraits,
   UrlTraits,
   CatalogMemberTraits,
