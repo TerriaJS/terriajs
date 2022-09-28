@@ -2,6 +2,7 @@
 
 #### next release (8.2.18)
 
+- Add `refreshIntervalTemplate` to `OpenDataSoftCatalogItemTraits` - this can be used to set `refreshInterval` using Mustache template rendered on ODS Dataset JSON object
 - [The next improvement]
 
 #### 8.2.17 - 2022-09-23
