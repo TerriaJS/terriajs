@@ -1,13 +1,26 @@
 # Change Log
 
-#### next release (8.2.16)
+#### next release (8.2.18)
 
 - Moved default `activeStyle` from `TableMixin` to `TableAutomaticStylesStratum`.
 - `TableAutomaticStylesStratum` will no longer pick default `activeStyle` if it is hidden
 - Fix bug with "propagate `knownContainerUniqueIds` across references and their target" - missing `runInAction`
 - Add Carto v3 Maps API support for `table` and `query` endpoint (only GeoJSON - not MVT yet)
 - Moved `activeStyle` default from `TableMixin` to `TableAutomaticStyleStratum`. The default `activeStyle` will now not pick a `hidden` `TableStyle`.
+- Only preload next timestep of timeseries rasters (WMS & ArcGIS MapServer) when animating the item on the map.
 - [The next improvement]
+
+#### 8.2.17 - 2022-09-23
+
+- Fix region mapping feature `rowIds` incorrect type.
+
+#### 8.2.16 - 2022-09-23
+
+- Make srsName and outputFormat for WFS requests dynamic
+- Added `excludeInactiveDatasets` to `CkanCatalogGroup` (`true` by default). This will filter out CKAN Datasets which have `state` or `data_state` (data.gov.au specific) **not** set to `"active"`.
+- Fix `isTerriaFeatureData` bug - not checking `isJsonObject`
+- Add `.logError()` to all usage of `updateModelFromJson` where the `Result` object is ignored
+- Move `RelatedMaps` to terriajs. They are now generated from `configParameters` (see [`doc/customizing/client-side-config.md`](./doc/customizing/client-side-config.md#relatedmap))
 
 #### 8.2.15 - 2022-09-16
 
