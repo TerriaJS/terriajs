@@ -19,9 +19,11 @@ import createCombinedModel from "../Models/Definition/createCombinedModel";
 import Model from "../Models/Definition/Model";
 import TableChartStyleTraits from "../Traits/TraitsClasses/TableChartStyleTraits";
 import TableColorStyleTraits from "../Traits/TraitsClasses/TableColorStyleTraits";
+import { LabelSymbolTraits } from "../Traits/TraitsClasses/TableLabelStyleTraits";
 import { OutlineSymbolTraits } from "../Traits/TraitsClasses/TableOutlineStyleTraits";
 import TablePointSizeStyleTraits from "../Traits/TraitsClasses/TablePointSizeStyleTraits";
 import { PointSymbolTraits } from "../Traits/TraitsClasses/TablePointStyleTraits";
+import { TrailSymbolTraits } from "../Traits/TraitsClasses/TablePointTrailStyleTraits";
 import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
 import TableTimeStyleTraits from "../Traits/TraitsClasses/TableTimeStyleTraits";
 import TableColorMap from "./TableColorMap";
@@ -390,6 +392,22 @@ export default class TableStyle {
       this.tableModel,
       this.styleTraits,
       "outline"
+    );
+  }
+
+  @computed get pointTrailStyleMap() {
+    return new TableStyleMap<TrailSymbolTraits>(
+      this.tableModel,
+      this.styleTraits,
+      "pointTrail"
+    );
+  }
+
+  @computed get labelStyleMap() {
+    return new TableStyleMap<LabelSymbolTraits>(
+      this.tableModel,
+      this.styleTraits,
+      "label"
     );
   }
 

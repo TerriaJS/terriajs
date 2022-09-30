@@ -27,6 +27,14 @@ export function getFeatureStyle(style: TableStyle, rowId: number) {
     outlineStyle.color ?? style.tableModel.terria.baseMapContrastColor
   );
 
+  const trailStyle = isConstantStyleMap(style.pointTrailStyleMap.styleMap)
+    ? style.pointTrailStyleMap.styleMap.style
+    : style.pointTrailStyleMap.styleMap.mapValueToStyle(rowId);
+
+  const labelStyle = isConstantStyleMap(style.labelStyleMap.styleMap)
+    ? style.labelStyleMap.styleMap.style
+    : style.labelStyleMap.styleMap.mapValueToStyle(rowId);
+
   const makiIcon = getMakiIcon(
     pointStyle.marker ?? "circle",
     color.toCssColorString(),
@@ -38,9 +46,11 @@ export function getFeatureStyle(style: TableStyle, rowId: number) {
 
   return {
     color,
+    labelStyle,
     pointSize,
     pointStyle,
     outlineStyle,
+    trailStyle,
     outlineColor,
     makiIcon,
     isMakiIcon: isMakiIcon(pointStyle.marker)
