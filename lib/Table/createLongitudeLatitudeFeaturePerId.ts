@@ -81,25 +81,29 @@ function createFeature(
   // Required<T> is used as we need to make sure that all styling properties have a time-enabled property defined
   // See `getFeatureStyle` for "raw" feature styling properties
 
-  const pointGraphicsTimeProperties: TimeProperties<
-    Required<SupportedPointGraphics>
-  > = {
-    color: createProperty(Color, interpolate),
-    outlineColor: createProperty(Color, interpolate),
-    pixelSize: createProperty(Number, interpolate),
-    outlineWidth: createProperty(Number, interpolate)
-  };
+  const pointGraphicsTimeProperties:
+    | TimeProperties<Required<SupportedPointGraphics>>
+    | undefined = style.pointStyleMap.traits.enabled
+    ? {
+        color: createProperty(Color, interpolate),
+        outlineColor: createProperty(Color, interpolate),
+        pixelSize: createProperty(Number, interpolate),
+        outlineWidth: createProperty(Number, interpolate)
+      }
+    : undefined;
 
-  const billboardGraphicsTimeProperties: TimeProperties<
-    Required<SupportedBillboardGraphics>
-  > = {
-    image: new TimeIntervalCollectionProperty(),
-    height: createProperty(Number, interpolate),
-    width: createProperty(Number, interpolate),
-    color: createProperty(Color, interpolate),
-    rotation: createProperty(Number, interpolate),
-    pixelOffset: createProperty(Cartesian2, interpolate)
-  };
+  const billboardGraphicsTimeProperties:
+    | TimeProperties<Required<SupportedBillboardGraphics>>
+    | undefined = style.pointStyleMap.traits.enabled
+    ? {
+        image: new TimeIntervalCollectionProperty(),
+        height: createProperty(Number, interpolate),
+        width: createProperty(Number, interpolate),
+        color: createProperty(Color, interpolate),
+        rotation: createProperty(Number, interpolate),
+        pixelOffset: createProperty(Cartesian2, interpolate)
+      }
+    : undefined;
 
   const pathGraphicsTimeProperties:
     | TimeProperties<Required<SupportedPathGraphics>>
@@ -191,28 +195,30 @@ function createFeature(
       usePointGraphicsForId = false;
     }
 
-    // Copy all style object values across to time-enabled properties
-    Object.entries(pointGraphicsOptions).forEach(([key, value]) => {
-      if (key in pointGraphicsTimeProperties)
-        addSampleOrInterval(
-          pointGraphicsTimeProperties[key as keyof SupportedPointGraphics],
-          value,
-          interval
-        );
-    });
+    if (pointGraphicsTimeProperties && pointGraphicsOptions)
+      // Copy all style object values across to time-enabled properties
+      Object.entries(pointGraphicsOptions).forEach(([key, value]) => {
+        if (key in pointGraphicsTimeProperties)
+          addSampleOrInterval(
+            pointGraphicsTimeProperties[key as keyof SupportedPointGraphics],
+            value,
+            interval
+          );
+      });
 
-    Object.entries(billboardGraphicsOptions).forEach(([key, value]) => {
-      if (key in billboardGraphicsTimeProperties)
-        addSampleOrInterval(
-          billboardGraphicsTimeProperties[
-            key as keyof SupportedBillboardGraphics
-          ],
-          value,
-          interval
-        );
-    });
+    if (billboardGraphicsTimeProperties && billboardGraphicsOptions)
+      Object.entries(billboardGraphicsOptions).forEach(([key, value]) => {
+        if (key in billboardGraphicsTimeProperties)
+          addSampleOrInterval(
+            billboardGraphicsTimeProperties[
+              key as keyof SupportedBillboardGraphics
+            ],
+            value,
+            interval
+          );
+      });
 
-    if (labelGraphicsTimeProperties)
+    if (labelGraphicsTimeProperties && labelGraphicsOptions)
       Object.entries(labelGraphicsOptions).forEach(([key, value]) => {
         if (key in labelGraphicsTimeProperties)
           addSampleOrInterval(
@@ -222,7 +228,7 @@ function createFeature(
           );
       });
 
-    if (pathGraphicsTimeProperties)
+    if (pathGraphicsTimeProperties && pathGraphicsOptions)
       Object.entries(pathGraphicsOptions).forEach(([key, value]) => {
         if (key in pathGraphicsTimeProperties)
           addSampleOrInterval(
@@ -244,7 +250,10 @@ function createFeature(
           );
       });
 
-    if (pathGraphicsPolylineGlowTimeProperties)
+    if (
+      pathGraphicsPolylineGlowTimeProperties &&
+      pathGraphicsPolylineGlowOptions
+    )
       Object.entries(pathGraphicsPolylineGlowOptions).forEach(
         ([key, value]) => {
           if (key in pathGraphicsPolylineGlowTimeProperties)

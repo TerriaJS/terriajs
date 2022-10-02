@@ -106,9 +106,10 @@ export default class TableLabelStyleTraits
   extends mixTraits(TableStyleMapTraits)
   implements TableStyleMapModel<LabelSymbolTraits>
 {
+  // Override TableStyleMapTraits.enabled default
   @primitiveTrait({
     name: "Enabled",
-    description: "True to enable TableLabelStyle. False by default",
+    description: "True to enable. False by default",
     type: "boolean"
   })
   enabled = false;
