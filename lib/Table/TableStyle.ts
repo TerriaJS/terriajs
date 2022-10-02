@@ -23,7 +23,7 @@ import { LabelSymbolTraits } from "../Traits/TraitsClasses/TableLabelStyleTraits
 import { OutlineSymbolTraits } from "../Traits/TraitsClasses/TableOutlineStyleTraits";
 import TablePointSizeStyleTraits from "../Traits/TraitsClasses/TablePointSizeStyleTraits";
 import { PointSymbolTraits } from "../Traits/TraitsClasses/TablePointStyleTraits";
-import { TrailSymbolTraits } from "../Traits/TraitsClasses/TablePointTrailStyleTraits";
+import { TrailSymbolTraits } from "../Traits/TraitsClasses/TableTrailStyleTraits";
 import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
 import TableTimeStyleTraits from "../Traits/TraitsClasses/TableTimeStyleTraits";
 import TableColorMap from "./TableColorMap";
@@ -395,11 +395,11 @@ export default class TableStyle {
     );
   }
 
-  @computed get pointTrailStyleMap() {
+  @computed get trailStyleMap() {
     return new TableStyleMap<TrailSymbolTraits>(
       this.tableModel,
       this.styleTraits,
-      "pointTrail"
+      "trail"
     );
   }
 

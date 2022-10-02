@@ -3,7 +3,6 @@ import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Packable from "terriajs-cesium/Source/Core/Packable";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
@@ -18,10 +17,17 @@ import SampledProperty from "terriajs-cesium/Source/DataSources/SampledProperty"
 import TimeIntervalCollectionPositionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionPositionProperty";
 import TimeIntervalCollectionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
-import LabelStyle from "terriajs-cesium/Source/Scene/LabelStyle";
 import TerriaFeature from "../Models/Feature/Feature";
 import { getRowValues } from "./createLongitudeLatitudeFeaturePerRow";
-import { getFeatureStyle } from "./getFeatureStyle";
+import {
+  getFeatureStyle,
+  SupportedBillboardGraphics,
+  SupportedLabelGraphics,
+  SupportedPathGraphics,
+  SupportedPointGraphics,
+  SupportedPolylineGlowMaterial,
+  SupportedSolidColorMaterial
+} from "./getFeatureStyle";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
 import TableStyle from "./TableStyle";
@@ -32,6 +38,10 @@ type RequiredTableStyle = TableStyle & {
   timeColumn: TableColumn;
   idColumns: TableColumn[];
   timeIntervals: (JulianDate | null)[];
+};
+
+type TimeProperties<T> = {
+  [key in keyof T]: SampledProperty | TimeIntervalCollectionProperty;
 };
 
 /**
@@ -67,42 +77,66 @@ function createFeature(
     ? new SampledPositionProperty()
     : new TimeIntervalCollectionPositionProperty();
 
-  const colorProperty = createProperty(Color, interpolate);
+  // The following "TimeProperties<T>" objects are used to transform feature styling properties into time-enabled properties (eg SampledProperty or TimeIntervalCollectionProperty)
+  // Required<T> is used as we need to make sure that all styling properties have a time-enabled property defined
+  // See `getFeatureStyle` for "raw" feature styling properties
 
-  const outlineColorProperty = createProperty(Color, interpolate);
-  const outlineWidthProperty = createProperty(Number, interpolate);
+  const pointGraphicsTimeProperties: TimeProperties<
+    Required<SupportedPointGraphics>
+  > = {
+    color: createProperty(Color, interpolate),
+    outlineColor: createProperty(Color, interpolate),
+    pixelSize: createProperty(Number, interpolate),
+    outlineWidth: createProperty(Number, interpolate)
+  };
 
-  const pointSizeProperty = createProperty(Number, interpolate);
-  const pointRotationProperty = createProperty(Number, interpolate);
-  const pointPixelOffsetProperty = createProperty(Cartesian2, interpolate);
-  const pointHeightProperty = createProperty(Number, interpolate);
-  const pointWidthProperty = createProperty(Number, interpolate);
-  const pointMarkerProperty = new TimeIntervalCollectionProperty();
+  const billboardGraphicsTimeProperties: TimeProperties<
+    Required<SupportedBillboardGraphics>
+  > = {
+    image: new TimeIntervalCollectionProperty(),
+    height: createProperty(Number, interpolate),
+    width: createProperty(Number, interpolate),
+    color: createProperty(Color, interpolate),
+    rotation: createProperty(Number, interpolate),
+    pixelOffset: createProperty(Cartesian2, interpolate)
+  };
 
-  const trailProperties = style.pointTrailStyleMap.traits.enabled
+  const pathGraphicsTimeProperties:
+    | TimeProperties<Required<SupportedPathGraphics>>
+    | undefined = style.trailStyleMap.traits.enabled
     ? {
         leadTime: createProperty(Number, interpolate),
         trailTime: createProperty(Number, interpolate),
         width: createProperty(Number, interpolate),
-        resolution: createProperty(Number, interpolate),
-        solidColor:
-          style.pointTrailStyleMap.traits.materialType === "solidColor"
-            ? {
-                color: createProperty(Color, interpolate)
-              }
-            : undefined,
-        polylineGlow:
-          style.pointTrailStyleMap.traits.materialType === "polylineGlow"
-            ? {
-                color: createProperty(Color, interpolate),
-                glowPower: createProperty(Number, interpolate),
-                taperPower: createProperty(Number, interpolate)
-              }
-            : undefined
+        resolution: createProperty(Number, interpolate)
       }
     : undefined;
 
-  const labelProperties = style.labelStyleMap.traits.enabled
+  const pathGraphicsSolidColorTimeProperties:
+    | TimeProperties<Required<SupportedSolidColorMaterial>>
+    | undefined =
+    style.trailStyleMap.traits.enabled &&
+    style.trailStyleMap.traits.materialType === "solidColor"
+      ? {
+          color: createProperty(Color, interpolate)
+        }
+      : undefined;
+
+  const pathGraphicsPolylineGlowTimeProperties:
+    | TimeProperties<Required<SupportedPolylineGlowMaterial>>
+    | undefined =
+    style.trailStyleMap.traits.enabled &&
+    style.trailStyleMap.traits.materialType === "polylineGlow"
+      ? {
+          color: createProperty(Color, interpolate),
+          glowPower: createProperty(Number, interpolate),
+          taperPower: createProperty(Number, interpolate)
+        }
+      : undefined;
+
+  const labelGraphicsTimeProperties:
+    | TimeProperties<Required<SupportedLabelGraphics>>
+    | undefined = style.labelStyleMap.traits.enabled
     ? {
         font: new TimeIntervalCollectionProperty(),
         text: new TimeIntervalCollectionProperty(),
@@ -126,7 +160,7 @@ function createFeature(
   const tableColumns = style.tableModel.tableColumns;
 
   /** use `PointGraphics` or `BillboardGraphics`. This wil be false if any pointTraits.marker !== "point", as then we use images as billboards */
-  let usePointGraphics = true;
+  let usePointGraphicsForId = true;
 
   rowIds.forEach((rowId) => {
     const longitude = longitudes[rowId];
@@ -144,166 +178,85 @@ function createFeature(
     );
 
     const {
-      pointStyle,
-      color,
-      pointSize,
-      outlineStyle,
-      outlineColor,
-      makiIcon,
-      isMakiIcon,
-      trailStyle,
-      labelStyle
+      pointGraphicsOptions,
+      usePointGraphics,
+      pathGraphicsOptions,
+      pathGraphicsPolylineGlowOptions,
+      pathGraphicsSolidColorOptions,
+      labelGraphicsOptions,
+      billboardGraphicsOptions
     } = getFeatureStyle(style, rowId);
 
-    // Color symbolization
-    // Only add color property for non maki icons - as we color maki icons directly (see `getMakiIcon()`)
-    addSampleOrInterval(
-      colorProperty,
-      !isMakiIcon ? color : Color.WHITE,
-      interval
-    );
-
-    // Point size symbolization
-    addSampleOrInterval(
-      pointSizeProperty,
-      pointSize ?? pointStyle.height ?? pointStyle.width,
-      interval
-    );
-
-    // Outline symbolization
-    addSampleOrInterval(outlineColorProperty, outlineColor, interval);
-    addSampleOrInterval(outlineWidthProperty, outlineStyle.width, interval);
-
-    // Marker symbolization
-    addSampleOrInterval(
-      pointRotationProperty,
-      CesiumMath.toRadians(360 - (pointStyle.rotation ?? 0)),
-      interval
-    );
-    addSampleOrInterval(
-      pointPixelOffsetProperty,
-      new Cartesian2(
-        pointStyle.pixelOffset?.[0] ?? 0,
-        pointStyle.pixelOffset?.[1] ?? 0
-      ),
-      interval
-    );
-    addSampleOrInterval(
-      pointHeightProperty,
-      pointSize ?? pointStyle.height,
-      interval
-    );
-    addSampleOrInterval(
-      pointWidthProperty,
-      pointSize ?? pointStyle.width,
-      interval
-    );
-
-    if (isMakiIcon) {
-      usePointGraphics = false;
+    if (!usePointGraphics) {
+      usePointGraphicsForId = false;
     }
 
-    addSampleOrInterval(
-      pointMarkerProperty,
-      makiIcon ?? pointStyle.marker,
-      interval
-    );
-
-    // Label symbolization
-    if (labelProperties) {
-      addSampleOrInterval(labelProperties.font, labelStyle.font, interval);
-      if (labelStyle.labelColumn) {
-        console.log(
-          `adding label ${
-            tableColumns.find((col) => col.name === labelStyle.labelColumn)
-              ?.values[rowId]
-          }`
-        );
+    // Copy all style object values across to time-enabled properties
+    Object.entries(pointGraphicsOptions).forEach(([key, value]) => {
+      if (key in pointGraphicsTimeProperties)
         addSampleOrInterval(
-          labelProperties.text,
-          tableColumns.find((col) => col.name === labelStyle.labelColumn)
-            ?.values[rowId],
+          pointGraphicsTimeProperties[key as keyof SupportedPointGraphics],
+          value,
           interval
         );
-      }
+    });
 
-      addSampleOrInterval(
-        labelProperties.style,
-        labelStyle.style === "OUTLINE"
-          ? LabelStyle.OUTLINE
-          : labelStyle.style === "FILL_AND_OUTLINE"
-          ? LabelStyle.FILL_AND_OUTLINE
-          : LabelStyle.FILL,
-        interval
-      );
-      addSampleOrInterval(labelProperties.scale, labelStyle.scale, interval);
-      addSampleOrInterval(
-        labelProperties.fillColor,
-        Color.fromCssColorString(labelStyle.fillColor),
-        interval
-      );
-      addSampleOrInterval(
-        labelProperties.outlineColor,
-        Color.fromCssColorString(labelStyle.outlineColor),
-        interval
-      );
-      addSampleOrInterval(
-        labelProperties.outlineWidth,
-        labelStyle.outlineWidth,
-        interval
-      );
-      addSampleOrInterval(
-        labelProperties.pixelOffset,
-        new Cartesian2(labelStyle.pixelOffset[0], labelStyle.pixelOffset[1]),
-        interval
-      );
-    }
-
-    // Point trail symbolization
-    if (trailProperties) {
-      addSampleOrInterval(
-        trailProperties.leadTime,
-        trailStyle.leadTime,
-        interval
-      );
-      addSampleOrInterval(
-        trailProperties.trailTime,
-        trailStyle.trailTime,
-        interval
-      );
-      addSampleOrInterval(trailProperties.width, trailStyle.width, interval);
-      addSampleOrInterval(
-        trailProperties.resolution,
-        trailStyle.resolution,
-        interval
-      );
-
-      if (trailProperties.solidColor) {
+    Object.entries(billboardGraphicsOptions).forEach(([key, value]) => {
+      if (key in billboardGraphicsTimeProperties)
         addSampleOrInterval(
-          trailProperties.solidColor.color,
-          Color.fromCssColorString(trailStyle.solidColor!.color),
+          billboardGraphicsTimeProperties[
+            key as keyof SupportedBillboardGraphics
+          ],
+          value,
           interval
         );
-      }
+    });
 
-      if (trailProperties.polylineGlow) {
-        addSampleOrInterval(
-          trailProperties.polylineGlow.color,
-          Color.fromCssColorString(trailStyle.polylineGlow!.color),
-          interval
-        );
-        addSampleOrInterval(
-          trailProperties.polylineGlow.glowPower,
-          trailStyle.polylineGlow?.glowPower,
-          interval
-        );
-        addSampleOrInterval(
-          trailProperties.polylineGlow.taperPower,
-          trailStyle.polylineGlow?.taperPower,
-          interval
-        );
-      }
-    }
+    if (labelGraphicsTimeProperties)
+      Object.entries(labelGraphicsOptions).forEach(([key, value]) => {
+        if (key in labelGraphicsTimeProperties)
+          addSampleOrInterval(
+            labelGraphicsTimeProperties[key as keyof SupportedLabelGraphics],
+            value,
+            interval
+          );
+      });
+
+    if (pathGraphicsTimeProperties)
+      Object.entries(pathGraphicsOptions).forEach(([key, value]) => {
+        if (key in pathGraphicsTimeProperties)
+          addSampleOrInterval(
+            pathGraphicsTimeProperties[key as keyof SupportedPathGraphics],
+            value,
+            interval
+          );
+      });
+
+    if (pathGraphicsSolidColorTimeProperties && pathGraphicsSolidColorOptions)
+      Object.entries(pathGraphicsSolidColorOptions).forEach(([key, value]) => {
+        if (key in pathGraphicsSolidColorTimeProperties)
+          addSampleOrInterval(
+            pathGraphicsSolidColorTimeProperties[
+              key as keyof SupportedSolidColorMaterial
+            ],
+            value,
+            interval
+          );
+      });
+
+    if (pathGraphicsPolylineGlowTimeProperties)
+      Object.entries(pathGraphicsPolylineGlowOptions).forEach(
+        ([key, value]) => {
+          if (key in pathGraphicsPolylineGlowTimeProperties)
+            addSampleOrInterval(
+              pathGraphicsPolylineGlowTimeProperties[
+                key as keyof SupportedPolylineGlowMaterial
+              ],
+              value,
+              interval
+            );
+        }
+      );
 
     // Feature properties/description
     addSampleOrInterval(
@@ -324,58 +277,41 @@ function createFeature(
   const show = calculateShow(availability);
   const feature = new TerriaFeature({
     position: positionProperty,
-    point: usePointGraphics
+    point: usePointGraphicsForId
       ? new PointGraphics({
-          color: colorProperty,
-          outlineColor: outlineColorProperty,
-          pixelSize: pointSizeProperty,
-          show: show,
-          outlineWidth: outlineWidthProperty,
+          ...pointGraphicsTimeProperties,
+          show,
           heightReference: HeightReference.CLAMP_TO_GROUND
         })
       : undefined,
-    billboard: !usePointGraphics
+    billboard: !usePointGraphicsForId
       ? new BillboardGraphics({
-          image: pointMarkerProperty,
-          height: pointHeightProperty,
-          width: pointWidthProperty,
-          color: colorProperty,
-          rotation: pointRotationProperty,
-          pixelOffset: pointPixelOffsetProperty,
+          ...billboardGraphicsTimeProperties,
           heightReference: HeightReference.CLAMP_TO_GROUND,
           show
         })
       : undefined,
-    path: trailProperties
+    path: pathGraphicsTimeProperties
       ? new PathGraphics({
-          show: true,
-          leadTime: trailProperties.leadTime,
-          trailTime: trailProperties.trailTime,
-          resolution: trailProperties.resolution,
-          width: trailProperties.width,
+          show,
+          ...pathGraphicsTimeProperties,
 
-          material: trailProperties.polylineGlow
-            ? new PolylineGlowMaterialProperty({
-                color: trailProperties.polylineGlow.color,
-                glowPower: trailProperties.polylineGlow.glowPower,
-                taperPower: trailProperties.polylineGlow.taperPower
-              })
-            : trailProperties.solidColor
-            ? new ColorMaterialProperty(trailProperties.solidColor.color)
+          // Material has to be handled separately from trailProperties
+          material: pathGraphicsPolylineGlowTimeProperties
+            ? new PolylineGlowMaterialProperty(
+                pathGraphicsPolylineGlowTimeProperties
+              )
+            : pathGraphicsSolidColorTimeProperties
+            ? new ColorMaterialProperty(
+                pathGraphicsSolidColorTimeProperties.color
+              )
             : undefined
         })
       : undefined,
-    label: labelProperties
+    label: labelGraphicsTimeProperties
       ? new LabelGraphics({
-          show: true,
-          font: labelProperties.font,
-          text: labelProperties.text,
-          style: labelProperties.style,
-          scale: labelProperties.scale,
-          fillColor: labelProperties.fillColor,
-          outlineColor: labelProperties.outlineColor,
-          outlineWidth: labelProperties.outlineWidth,
-          pixelOffset: labelProperties.pixelOffset
+          show,
+          ...labelGraphicsTimeProperties
         })
       : undefined,
 
@@ -397,7 +333,8 @@ function addSampleOrInterval(
     | SampledProperty
     | SampledPositionProperty
     | TimeIntervalCollectionProperty
-    | TimeIntervalCollectionPositionProperty,
+    | TimeIntervalCollectionPositionProperty
+    | undefined,
   data: any,
   interval: TimeInterval
 ) {
@@ -409,7 +346,7 @@ function addSampleOrInterval(
   } else {
     const thisInterval = interval.clone();
     thisInterval.data = data;
-    property.intervals.addInterval(thisInterval);
+    property?.intervals.addInterval(thisInterval);
   }
 }
 

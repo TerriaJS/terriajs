@@ -11,7 +11,7 @@ import {
   TableStyleMapTraits
 } from "./TableStyleMapTraits";
 
-class SolidColorMaterialTraits extends ModelTraits {
+export class SolidColorMaterialTraits extends ModelTraits {
   @primitiveTrait({
     name: "Color",
     description: "The color.",
@@ -20,7 +20,7 @@ class SolidColorMaterialTraits extends ModelTraits {
   color = "#ffffff";
 }
 
-class PolylineGlowMaterialTraits extends ModelTraits {
+export class PolylineGlowMaterialTraits extends ModelTraits {
   @primitiveTrait({
     name: "Color",
     description: "The color.",
@@ -46,7 +46,7 @@ class PolylineGlowMaterialTraits extends ModelTraits {
 }
 
 /** Supports subset of CZML PolylineMaterial https://github.com/AnalyticalGraphicsInc/czml-writer/wiki/PolylineMaterial */
-class PolylineMaterialTraits extends ModelTraits {
+export class PolylineMaterialTraits extends ModelTraits {
   @objectTrait({
     type: PolylineGlowMaterialTraits,
     name: "Polyline glow material",

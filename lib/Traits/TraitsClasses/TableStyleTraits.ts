@@ -8,7 +8,7 @@ import TableLabelStyleTraits from "./TableLabelStyleTraits";
 import TableOutlineStyleTraits from "./TableOutlineStyleTraits";
 import TablePointSizeStyleTraits from "./TablePointSizeStyleTraits";
 import TablePointStyleTraits from "./TablePointStyleTraits";
-import TableTrailStyleTraits from "./TablePointTrailStyleTraits";
+import TableTrailStyleTraits from "./TableTrailStyleTraits";
 import TableTimeStyleTraits from "./TableTimeStyleTraits";
 
 export default class TableStyleTraits extends ModelTraits {
@@ -81,7 +81,7 @@ export default class TableStyleTraits extends ModelTraits {
       "Options for controlling the trail or path behind a time-series point.",
     type: TableTrailStyleTraits
   })
-  pointTrail: TableTrailStyleTraits = new TableTrailStyleTraits();
+  trail: TableTrailStyleTraits = new TableTrailStyleTraits();
 
   @objectTrait({
     name: "Label",
