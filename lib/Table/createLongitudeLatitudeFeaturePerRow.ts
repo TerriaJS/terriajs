@@ -45,19 +45,21 @@ export default function createLongitudeLatitudeFeaturePerRow(
         position: new ConstantPositionProperty(
           Cartesian3.fromDegrees(longitude, latitude, 0.0)
         ),
-        point: usePointGraphics
-          ? new PointGraphics({
-              ...pointGraphicsOptions,
-              heightReference: HeightReference.CLAMP_TO_GROUND
-            })
-          : undefined,
-        billboard: !usePointGraphics
-          ? new BillboardGraphics({
-              ...billboardGraphicsOptions,
-              heightReference: HeightReference.CLAMP_TO_GROUND
-            })
-          : undefined,
-        label: style.labelStyleMap.traits.enabled
+        point:
+          pointGraphicsOptions && usePointGraphics
+            ? new PointGraphics({
+                ...pointGraphicsOptions,
+                heightReference: HeightReference.CLAMP_TO_GROUND
+              })
+            : undefined,
+        billboard:
+          billboardGraphicsOptions && !usePointGraphics
+            ? new BillboardGraphics({
+                ...billboardGraphicsOptions,
+                heightReference: HeightReference.CLAMP_TO_GROUND
+              })
+            : undefined,
+        label: labelGraphicsOptions
           ? new LabelGraphics({
               ...labelGraphicsOptions,
               heightReference: HeightReference.CLAMP_TO_GROUND

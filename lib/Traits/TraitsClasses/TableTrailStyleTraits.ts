@@ -115,9 +115,10 @@ export default class TableTrailStyleTraits
   extends mixTraits(TableStyleMapTraits)
   implements TableStyleMapModel<TrailSymbolTraits>
 {
+  // Override TableStyleMapTraits.enabled default
   @primitiveTrait({
     name: "Enabled",
-    description: "True to enable TableTrailStyle. False by default",
+    description: "True to enable. False by default",
     type: "boolean"
   })
   enabled = false;

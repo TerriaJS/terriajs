@@ -13,6 +13,7 @@ import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
 import TableColumnType from "./TableColumnType";
 
 export interface TableStyleMapModel<T extends TableStyleMapSymbolTraits> {
+  enabled?: boolean;
   mapType: StyleMapType | undefined;
   column: string | undefined;
 

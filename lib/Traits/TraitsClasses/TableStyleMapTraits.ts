@@ -32,6 +32,13 @@ export class EnumStyleTraits extends ModelTraits {
 
 export class TableStyleMapTraits extends ModelTraits {
   @primitiveTrait({
+    name: "Enabled",
+    description: "True to enable.",
+    type: "boolean"
+  })
+  enabled = true;
+
+  @primitiveTrait({
     name: "Style map type",
     description:
       'The type of style map. Valid values are "continuous", "enum", "bin", "constant"',

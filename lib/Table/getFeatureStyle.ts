@@ -74,6 +74,10 @@ export type SupportedLabelGraphics = Pick<
  * - `usePointGraphics` flag - whether to use PointGraphics or BillboardGraphics for marker symbology
  */
 export function getFeatureStyle(style: TableStyle, rowId: number) {
+  // Convert TablePointStyleTraits, TableColorStyleTraits, TableOutlineStyleTraits and TablePointSizeStyleTraits into
+  // PointGraphics options
+  // BillboardGraphics options
+  // makiIcon SVG string (used in BillboardGraphics options)
   const color =
     style.colorMap.mapValueToColor(style.colorColumn?.valuesForType[rowId]) ??
     null;
@@ -85,96 +89,123 @@ export function getFeatureStyle(style: TableStyle, rowId: number) {
         )
       : undefined;
 
-  const pointStyleTraits = isConstantStyleMap(style.pointStyleMap.styleMap)
-    ? style.pointStyleMap.styleMap.style
-    : style.pointStyleMap.styleMap.mapValueToStyle(rowId);
+  const pointStyle = style.pointStyleMap.traits.enabled
+    ? isConstantStyleMap(style.pointStyleMap.styleMap)
+      ? style.pointStyleMap.styleMap.style
+      : style.pointStyleMap.styleMap.mapValueToStyle(rowId)
+    : undefined;
 
-  const outlineStyle = isConstantStyleMap(style.outlineStyleMap.styleMap)
-    ? style.outlineStyleMap.styleMap.style
-    : style.outlineStyleMap.styleMap.mapValueToStyle(rowId);
+  const outlineStyle = style.outlineStyleMap.traits.enabled
+    ? isConstantStyleMap(style.outlineStyleMap.styleMap)
+      ? style.outlineStyleMap.styleMap.style
+      : style.outlineStyleMap.styleMap.mapValueToStyle(rowId)
+    : undefined;
 
   // If no outline color is defined in traits, use current basemap contrast color
-  const outlineColor = Color.fromCssColorString(
-    outlineStyle.color ?? style.tableModel.terria.baseMapContrastColor
-  );
+  const outlineColor = outlineStyle
+    ? Color.fromCssColorString(
+        outlineStyle.color ?? style.tableModel.terria.baseMapContrastColor
+      )
+    : undefined;
 
-  // Convert TablePointStyleTraits (and TableColorStyleTraits, TableOutlineStyleTraits, TablePointSizeStyleTraits) into PointGraphics options
-  const pointGraphicsOptions: ExcludeCesiumProperty<SupportedPointGraphics> = {
-    color: color,
-    pixelSize: pointSize ?? pointStyleTraits.height ?? pointStyleTraits.width,
-    outlineWidth: outlineStyle.width,
-    outlineColor: outlineColor
-  };
+  const pointGraphicsOptions:
+    | ExcludeCesiumProperty<SupportedPointGraphics>
+    | undefined = pointStyle
+    ? {
+        color: color,
+        pixelSize: pointSize ?? pointStyle?.height ?? pointStyle?.width
+      }
+    : undefined;
 
-  // Convert TablePointStyleTraits (and TableColorStyleTraits, TableOutlineStyleTraits, TablePointSizeStyleTraits) into a Maki Icon
+  if (pointGraphicsOptions && outlineStyle && outlineColor) {
+    pointGraphicsOptions.outlineWidth = outlineStyle.width;
+    pointGraphicsOptions.outlineColor = outlineColor;
+  }
+
   // This returns SVG string
-  const makiIcon = getMakiIcon(
-    pointStyleTraits.marker ?? "circle",
-    color.toCssColorString(),
-    outlineStyle.width ?? 1,
-    outlineColor.toCssColorString(),
-    pointSize ?? pointStyleTraits.height ?? 24,
-    pointSize ?? pointStyleTraits.width ?? 24
-  );
+  const makiIcon = pointStyle
+    ? getMakiIcon(
+        pointStyle.marker ?? "circle",
+        color.toCssColorString(),
+        outlineStyle?.width,
+        outlineColor?.toCssColorString(),
+        pointSize ?? pointStyle.height ?? 24,
+        pointSize ?? pointStyle.width ?? 24
+      )
+    : undefined;
 
-  // Convert TablePointStyleTraits (and TableColorStyleTraits, TableOutlineStyleTraits, TablePointSizeStyleTraits) into BillboardGraphics options
-  const billboardGraphicsOptions: SupportedBillboardGraphics = {
-    image: makiIcon ?? pointStyleTraits.marker,
-    // Only add color property for non maki icons - as we color maki icons directly (see `makiIcon = getMakiIcon(...)`)
-    color: !makiIcon ? color : Color.WHITE,
-    width: pointSize ?? pointStyleTraits.width,
-    height: pointSize ?? pointStyleTraits.height,
-    rotation: CesiumMath.toRadians(360 - (pointStyleTraits.rotation ?? 0)),
-    pixelOffset: new Cartesian2(
-      pointStyleTraits.pixelOffset?.[0],
-      pointStyleTraits.pixelOffset?.[1]
-    )
-  };
+  const billboardGraphicsOptions: SupportedBillboardGraphics | undefined =
+    pointStyle
+      ? {
+          image: makiIcon ?? pointStyle.marker,
+          // Only add color property for non maki icons - as we color maki icons directly (see `makiIcon = getMakiIcon(...)`)
+          color: !makiIcon ? color : Color.WHITE,
+          width: pointSize ?? pointStyle.width,
+          height: pointSize ?? pointStyle.height,
+          // Convert clockwise degrees to counter-clockwise radians
+          rotation: CesiumMath.toRadians(360 - (pointStyle.rotation ?? 0)),
+          pixelOffset: new Cartesian2(
+            pointStyle.pixelOffset?.[0],
+            pointStyle.pixelOffset?.[1]
+          )
+        }
+      : undefined;
 
   // Convert TableTrailStyleTraits into PathGraphics options
   // We also have two supported materials
   // - PolylineGlowMaterialTraits -> PolylineGlowMaterial options
   // - SolidColorMaterialTraits -> ColorMaterialProperty options
-  const trailStyleTraits = isConstantStyleMap(style.trailStyleMap.styleMap)
-    ? style.trailStyleMap.styleMap.style
-    : style.trailStyleMap.styleMap.mapValueToStyle(rowId);
+  const trailStyle = style.trailStyleMap.traits.enabled
+    ? isConstantStyleMap(style.trailStyleMap.styleMap)
+      ? style.trailStyleMap.styleMap.style
+      : style.trailStyleMap.styleMap.mapValueToStyle(rowId)
+    : undefined;
 
-  const pathGraphicsOptions: SupportedPathGraphics = {
-    ...trailStyleTraits
-  };
+  const pathGraphicsOptions: SupportedPathGraphics | undefined = trailStyle;
 
-  const pathGraphicsSolidColorOptions: SupportedSolidColorMaterial = {
-    color: Color.fromCssColorString(trailStyleTraits.solidColor!.color)
-  };
+  const pathGraphicsSolidColorOptions: SupportedSolidColorMaterial | undefined =
+    trailStyle?.solidColor
+      ? {
+          color: Color.fromCssColorString(trailStyle.solidColor.color)
+        }
+      : undefined;
 
-  const pathGraphicsPolylineGlowOptions: SupportedPolylineGlowMaterial = {
-    ...trailStyleTraits.polylineGlow,
-    color: Color.fromCssColorString(trailStyleTraits.polylineGlow!.color)
-  };
+  const pathGraphicsPolylineGlowOptions:
+    | SupportedPolylineGlowMaterial
+    | undefined = trailStyle?.polylineGlow
+    ? {
+        ...trailStyle.polylineGlow,
+        color: Color.fromCssColorString(trailStyle.polylineGlow.color)
+      }
+    : undefined;
 
-  const labelStyleTraits = isConstantStyleMap(style.labelStyleMap.styleMap)
-    ? style.labelStyleMap.styleMap.style
-    : style.labelStyleMap.styleMap.mapValueToStyle(rowId);
+  const labelStyle = style.labelStyleMap.traits.enabled
+    ? isConstantStyleMap(style.labelStyleMap.styleMap)
+      ? style.labelStyleMap.styleMap.style
+      : style.labelStyleMap.styleMap.mapValueToStyle(rowId)
+    : undefined;
 
   // Convert TableLabelStyleTraits to LabelGraphics options
-  const labelGraphicsOptions: SupportedLabelGraphics = {
-    ...labelStyleTraits,
-    text: style.tableModel.tableColumns.find(
-      (col) => col.name === labelStyleTraits.labelColumn
-    )?.values[rowId],
-    style:
-      labelStyleTraits.style === "OUTLINE"
-        ? LabelStyle.OUTLINE
-        : labelStyleTraits.style === "FILL_AND_OUTLINE"
-        ? LabelStyle.FILL_AND_OUTLINE
-        : LabelStyle.FILL,
-    fillColor: Color.fromCssColorString(labelStyleTraits.fillColor),
-    outlineColor: Color.fromCssColorString(labelStyleTraits.outlineColor),
-    pixelOffset: new Cartesian2(
-      labelStyleTraits.pixelOffset[0],
-      labelStyleTraits.pixelOffset[1]
-    )
-  };
+  const labelGraphicsOptions: SupportedLabelGraphics | undefined = labelStyle
+    ? {
+        ...labelStyle,
+        text: style.tableModel.tableColumns.find(
+          (col) => col.name === labelStyle.labelColumn
+        )?.values[rowId],
+        style:
+          labelStyle.style === "OUTLINE"
+            ? LabelStyle.OUTLINE
+            : labelStyle.style === "FILL_AND_OUTLINE"
+            ? LabelStyle.FILL_AND_OUTLINE
+            : LabelStyle.FILL,
+        fillColor: Color.fromCssColorString(labelStyle.fillColor),
+        outlineColor: Color.fromCssColorString(labelStyle.outlineColor),
+        pixelOffset: new Cartesian2(
+          labelStyle.pixelOffset[0],
+          labelStyle.pixelOffset[1]
+        )
+      }
+    : undefined;
 
   return {
     labelGraphicsOptions,
@@ -184,6 +215,6 @@ export function getFeatureStyle(style: TableStyle, rowId: number) {
     pathGraphicsPolylineGlowOptions,
     billboardGraphicsOptions,
     /** Use PointGraphics instead of BillboardGraphics, if not using maki icon. */
-    usePointGraphics: !isMakiIcon(pointStyleTraits.marker)
+    usePointGraphics: !isMakiIcon(pointStyle?.marker)
   };
 }
