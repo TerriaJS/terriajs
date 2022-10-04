@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import * as React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Swipeable } from "react-swipeable";
 import { DefaultTheme, withTheme } from "styled-components";

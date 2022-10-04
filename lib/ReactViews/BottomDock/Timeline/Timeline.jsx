@@ -2,7 +2,6 @@ import createReactClass from "create-react-class";
 import dateFormat from "dateformat";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-import React from "react";
 import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";

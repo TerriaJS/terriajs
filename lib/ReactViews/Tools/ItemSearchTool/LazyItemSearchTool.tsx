@@ -1,5 +1,6 @@
 import i18next from "i18next";
-import React, { Suspense } from "react";
+import { Suspense } from "react";
+import * as React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";

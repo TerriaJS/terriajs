@@ -1,7 +1,7 @@
 import "!!style-loader!css-loader?sourceMap!./sortable.css";
 import { action } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import { Component } from "react";
 //@ts-ignore
 import Sortable from "react-anything-sortable";
 import styled from "styled-components";
@@ -26,7 +26,7 @@ interface IProps {
 }
 
 @observer
-class WorkbenchList extends React.Component<IProps> {
+class WorkbenchList extends Component<IProps> {
   @action.bound
   onSort(
     sortedArray: any,

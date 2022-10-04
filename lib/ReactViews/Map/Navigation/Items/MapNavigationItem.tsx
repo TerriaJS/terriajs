@@ -1,6 +1,6 @@
 import { i18n } from "i18next";
 import { observer } from "mobx-react";
-import React from "react";
+import { Component } from "react";
 import { withTranslation } from "react-i18next";
 import styled from "styled-components";
 import { applyTranslationIfExists } from "../../../../Language/languageHelpers";
@@ -19,7 +19,7 @@ interface PropTypes {
 }
 
 @observer
-class MapNavigationItem extends React.Component<PropTypes> {
+class MapNavigationItem extends Component<PropTypes> {
   constructor(props: PropTypes) {
     super(props);
   }

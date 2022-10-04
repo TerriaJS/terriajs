@@ -1,6 +1,7 @@
 import i18next, { WithT } from "i18next";
 import { computed } from "mobx";
-import React, { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import * as React from "react";
 import { useTranslation } from "react-i18next";
 import TerriaError from "../../Core/TerriaError";
 import {

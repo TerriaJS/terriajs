@@ -1,11 +1,12 @@
 "use strict";
-
-import React, {
+import {
   AnchorHTMLAttributes,
   createElement,
   DetailedReactHTMLElement,
   ReactElement
 } from "react";
+
+import * as React from "react";
 import styled from "styled-components";
 import CustomComponent, {
   DomElement,

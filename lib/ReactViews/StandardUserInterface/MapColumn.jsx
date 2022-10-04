@@ -2,7 +2,6 @@ import classNames from "classnames";
 import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-import React from "react";
 import { withTranslation } from "react-i18next";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import BottomDock from "../BottomDock/BottomDock";

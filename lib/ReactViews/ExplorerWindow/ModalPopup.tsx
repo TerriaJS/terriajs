@@ -1,5 +1,6 @@
 import classNames from "classnames";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import * as React from "react";
 import { useTranslation } from "react-i18next";
 import ViewState from "../../ReactViewModels/ViewState";
 import Styles from "./explorer-window.scss";

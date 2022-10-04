@@ -1,7 +1,8 @@
 import { debounce } from "lodash-es";
 import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React, { useState } from "react";
+import { useState } from "react";
+import * as React from "react";
 import { ChromePicker } from "react-color";
 import isDefined from "../../Core/isDefined";
 import CommonStrata from "../../Models/Definition/CommonStrata";

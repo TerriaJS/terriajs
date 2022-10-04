@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import React from "react";
+import { Component } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { DefaultTheme, withTheme } from "styled-components";
 import { RelatedMap } from "../../Models/RelatedMaps";
@@ -22,7 +22,7 @@ type PropTypes = WithViewState &
   };
 
 @observer
-class RelatedMaps extends React.Component<PropTypes> {
+class RelatedMaps extends Component<PropTypes> {
   /**
    * @param {Props} props
    */

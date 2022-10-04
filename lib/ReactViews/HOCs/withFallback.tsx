@@ -1,4 +1,5 @@
-import React, { Suspense } from "react";
+import { Suspense } from "react";
+import * as React from "react";
 import PropTypes from "prop-types";
 
 import ViewState from "../../ReactViewModels/ViewState";

@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { create, TestRendererOptions } from "react-test-renderer";
 import { ThemeProvider } from "styled-components";
 import ViewState from "../../lib/ReactViewModels/ViewState";

@@ -1,7 +1,7 @@
 /**
  * base tooltipwrapperraw repurposed from magda, with some a11y modifications
  */
-import React from "react";
+import * as React from "react";
 import ReactDOM from "react-dom";
 import { withTheme, DefaultTheme } from "styled-components";
 import { useUID } from "react-uid";

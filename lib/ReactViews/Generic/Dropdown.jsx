@@ -1,6 +1,4 @@
 "use strict";
-
-import React from "react";
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
 import defined from "terriajs-cesium/Source/Core/defined";

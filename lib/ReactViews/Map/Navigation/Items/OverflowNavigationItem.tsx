@@ -1,6 +1,7 @@
 import { autorun } from "mobx";
 import { observer } from "mobx-react";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import * as React from "react";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
 import { applyTranslationIfExists } from "../../../../Language/languageHelpers";

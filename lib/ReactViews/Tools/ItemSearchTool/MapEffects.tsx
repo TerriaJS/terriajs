@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import * as React from "react";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
 import { ItemSearchResult } from "../../../Models/ItemSearchProviders/ItemSearchProvider";
 

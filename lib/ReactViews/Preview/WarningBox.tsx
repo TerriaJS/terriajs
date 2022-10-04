@@ -1,5 +1,5 @@
 import { runInAction } from "mobx";
-import React from "react";
+import * as React from "react";
 import TerriaError from "../../Core/TerriaError";
 import ViewState from "../../ReactViewModels/ViewState";
 import Box from "../../Styled/Box";

@@ -1,6 +1,7 @@
 import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import * as React from "react";
 import styled from "styled-components";
 import ViewState from "../../ReactViewModels/ViewState";
 import Button from "../../Styled/Button";

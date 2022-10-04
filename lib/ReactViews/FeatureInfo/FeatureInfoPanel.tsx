@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { TFunction } from "i18next";
 import { action, reaction, runInAction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import React from "react";
+import { Component } from "react";
 import { withTranslation } from "react-i18next";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -42,7 +42,7 @@ interface Props {
 }
 
 @observer
-class FeatureInfoPanel extends React.Component<Props> {
+class FeatureInfoPanel extends Component<Props> {
   componentDidMount() {
     const { t } = this.props;
     const terria = this.props.viewState.terria;

@@ -1,10 +1,8 @@
 "use strict";
-
 import classNames from "classnames";
 import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-import React from "react";
 import { withTheme } from "styled-components";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import { withViewState } from "../StandardUserInterface/ViewStateContext";

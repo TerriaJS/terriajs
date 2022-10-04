@@ -1,5 +1,5 @@
 "use strict";
-import React from "react";
+import { Component } from "react";
 import PropTypes from "prop-types";
 import L from "leaflet";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -19,7 +19,7 @@ const distances = [
 ];
 
 @observer
-class DistanceLegend extends React.Component {
+class DistanceLegend extends Component {
   constructor(props) {
     super(props);
     this.state = {

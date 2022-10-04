@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import Box from "../../Styled/Box";
 
 const logo = require("../../../wwwroot/images/terria-watermark.svg");

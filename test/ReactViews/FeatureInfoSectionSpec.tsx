@@ -1,6 +1,5 @@
 import i18next from "i18next";
 import { observable } from "mobx";
-import React from "react";
 import { ReactTestRenderer } from "react-test-renderer";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";

@@ -1,6 +1,6 @@
 import { computed, observable, action } from "mobx";
 import ViewerMode from "../../Models/ViewerMode";
-import React from "react";
+import * as React from "react";
 
 export interface ICompositeBarItemController {
   readonly id: string;

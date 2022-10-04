@@ -1,4 +1,7 @@
-import React, {
+import {
+  Children,
+  isValidElement,
+  cloneElement,
   ChangeEvent,
   forwardRef,
   memo,
@@ -53,11 +56,11 @@ const Checkbox = memo(
     const id = useUID();
 
     // Add props to children
-    const childrenWithProps = React.Children.map(children, (child) => {
+    const childrenWithProps = Children.map(children, (child) => {
       // Checking isValidElement is the safe way and avoids a typescript
       // error too.
-      if (React.isValidElement(child)) {
-        return React.cloneElement(child, {
+      if (isValidElement(child)) {
+        return cloneElement(child, {
           isDisabled,
           isChecked,
           style: { fontSize: "inherit" }

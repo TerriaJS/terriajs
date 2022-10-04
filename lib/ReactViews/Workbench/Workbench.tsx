@@ -1,7 +1,7 @@
 import { TFunction } from "i18next";
 import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import { Component } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import getPath from "../../Core/getPath";
 import Terria from "../../Models/Terria";
@@ -24,7 +24,7 @@ interface IProps extends WithTranslation {
 }
 
 @observer
-class Workbench extends React.Component<IProps> {
+class Workbench extends Component<IProps> {
   @action.bound
   collapseAll() {
     runInAction(() => {

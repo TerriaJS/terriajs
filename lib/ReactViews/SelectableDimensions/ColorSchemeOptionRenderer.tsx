@@ -1,6 +1,6 @@
 import { lab, rgb } from "d3-color";
 import * as d3Scale from "d3-scale-chromatic";
-import React from "react";
+import * as React from "react";
 import StandardCssColors from "../../Core/StandardCssColors";
 import { OptionRenderer } from "../../Models/SelectableDimensions/SelectableDimensions";
 

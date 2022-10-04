@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { TFunction } from "i18next";
 import { observer } from "mobx-react";
-import React from "react";
+import { Component } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
@@ -34,7 +34,7 @@ interface SharePanelState {
 }
 
 @observer
-class SharePanel extends React.Component<PropTypes, SharePanelState> {
+class SharePanel extends Component<PropTypes, SharePanelState> {
   static displayName = "SharePanel";
 
   constructor(props: PropTypes) {

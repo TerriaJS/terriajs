@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import React from "react";
+import * as React from "react";
 import { Complete } from "../../../Core/TypeModifiers";
 import DiscretelyTimeVaryingMixin from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
 import hasTraits from "../../../Models/Definition/hasTraits";
