@@ -19,7 +19,11 @@ export type MapEffectsProps = {
  * A component that applies some effect on the map.
  *
  */
-const MapEffects: React.FC<MapEffectsProps> = ({ item, results, effect }) => {
+const MapEffects: React.FC<React.PropsWithChildren<MapEffectsProps>> = ({
+  item,
+  results,
+  effect
+}) => {
   switch (effect.is) {
     case "highlightAll":
       return <HighlightResults item={item} results={results} />;
@@ -39,7 +43,9 @@ export type HideAllResultsProps = {
   results: ItemSearchResult[];
 };
 
-export const HideAllResults: React.FC<HideAllResultsProps> = (props) => {
+export const HideAllResults: React.FC<
+  React.PropsWithChildren<HideAllResultsProps>
+> = (props) => {
   const { item, results } = props;
   useEffect(() => {
     const disposer = item.hideFeaturesNotInItemSearchResults(results);
@@ -53,7 +59,9 @@ export type HighlightResultsProps = {
   results: ItemSearchResult | ItemSearchResult[];
 };
 
-export const HighlightResults: React.FC<HighlightResultsProps> = (props) => {
+export const HighlightResults: React.FC<
+  React.PropsWithChildren<HighlightResultsProps>
+> = (props) => {
   useEffect(() => {
     const item = props.item;
     const results = Array.isArray(props.results)

@@ -173,7 +173,9 @@ type ButtonProps = {
 } & React.ComponentPropsWithoutRef<typeof StyledButton>;
 
 // Icon and props-children-mandatory-text-wrapping is a mess here so it's all very WIP
-export const Button: React.FC<ButtonProps> = (props) => {
+export const Button: React.FC<React.PropsWithChildren<ButtonProps>> = (
+  props
+) => {
   const {
     primary,
     secondary,

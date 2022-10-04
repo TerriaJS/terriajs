@@ -84,7 +84,7 @@ interface SelectProps {
   [spread: string]: any;
 }
 
-const Select: React.FC<SelectProps> = (props) => {
+const Select: React.FC<React.PropsWithChildren<SelectProps>> = (props) => {
   const {
     leftIcon,
     children,

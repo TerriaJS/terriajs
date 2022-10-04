@@ -9,9 +9,9 @@ interface IDisplayAsPercentSection {
   item: any;
 }
 
-const DisplayAsPercentSection: React.FC<IDisplayAsPercentSection> = (
-  props: IDisplayAsPercentSection
-) => {
+const DisplayAsPercentSection: React.FC<
+  React.PropsWithChildren<IDisplayAsPercentSection>
+> = (props: IDisplayAsPercentSection) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const togglePercentage = () => {

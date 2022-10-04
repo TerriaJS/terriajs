@@ -13,10 +13,12 @@ import SelectableDimension from "./SelectableDimension";
 /**
  * Component to render a SelectableDimensionGroup or DimensionSelectorCheckboxGroup.
  */
-export const SelectableDimensionGroup: React.FC<{
-  id: string;
-  dim: SelectableDimensionGroupModel | SelectableDimensionCheckboxGroupModel;
-}> = ({ id, dim }) => {
+export const SelectableDimensionGroup: React.FC<
+  React.PropsWithChildren<{
+    id: string;
+    dim: SelectableDimensionGroupModel | SelectableDimensionCheckboxGroupModel;
+  }>
+> = ({ id, dim }) => {
   const childDims = filterSelectableDimensions(dim.placement)(
     dim.selectableDimensions
   );

@@ -5,7 +5,10 @@ import ViewState from "../../ReactViewModels/ViewState";
 
 type PropsType = { viewState: ViewState; id: string };
 
-const PortalContainer: React.FC<PropsType> = ({ viewState, id }) => {
+const PortalContainer: React.FC<React.PropsWithChildren<PropsType>> = ({
+  viewState,
+  id
+}) => {
   useEffect(
     action(() => {
       viewState.portals.set(id, document.getElementById(id));

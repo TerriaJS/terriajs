@@ -16,42 +16,44 @@ export interface FrameProps {
   viewState: ViewState;
 }
 
-export const Frame: React.FC<FrameProps> = observer((props) => {
-  const theme = useTheme();
-  const [t] = useTranslation();
-  const [showChildren, setShowChildren] = useState(true);
-  const { viewState } = props;
-  return (
-    <Wrapper isMapFullScreen={viewState.isMapFullScreen}>
-      <Toggle
-        paddedVertically
-        paddedHorizontally={2}
-        centered
-        justifySpaceBetween
-        backgroundColor={theme.toolPrimaryColor}
-      >
-        <Title title={props.title} icon={GLYPHS.search} />
-        {/* margin-right 5px for the padded button offset - larger click area
+export const Frame: React.FC<React.PropsWithChildren<FrameProps>> = observer(
+  (props) => {
+    const theme = useTheme();
+    const [t] = useTranslation();
+    const [showChildren, setShowChildren] = useState(true);
+    const { viewState } = props;
+    return (
+      <Wrapper isMapFullScreen={viewState.isMapFullScreen}>
+        <Toggle
+          paddedVertically
+          paddedHorizontally={2}
+          centered
+          justifySpaceBetween
+          backgroundColor={theme.toolPrimaryColor}
+        >
+          <Title title={props.title} icon={GLYPHS.search} />
+          {/* margin-right 5px for the padded button offset - larger click area
           but visible should be inline with rest of box */}
-        <Box centered css={"margin-right:-5px;"}>
-          <ToolCloseButton viewState={viewState} t={t} />
-          <Spacing right={4} />
-          {/* collapse button */}
-          <RawButton onClick={() => setShowChildren(!showChildren)}>
-            <BoxSpan paddedRatio={1} centered>
-              <StyledIcon
-                styledWidth="12px"
-                light
-                glyph={showChildren ? GLYPHS.opened : GLYPHS.closed}
-              />
-            </BoxSpan>
-          </RawButton>
-        </Box>
-      </Toggle>
-      {showChildren && props.children}
-    </Wrapper>
-  );
-});
+          <Box centered css={"margin-right:-5px;"}>
+            <ToolCloseButton viewState={viewState} t={t} />
+            <Spacing right={4} />
+            {/* collapse button */}
+            <RawButton onClick={() => setShowChildren(!showChildren)}>
+              <BoxSpan paddedRatio={1} centered>
+                <StyledIcon
+                  styledWidth="12px"
+                  light
+                  glyph={showChildren ? GLYPHS.opened : GLYPHS.closed}
+                />
+              </BoxSpan>
+            </RawButton>
+          </Box>
+        </Toggle>
+        {showChildren && props.children}
+      </Wrapper>
+    );
+  }
+);
 
 export const Main = styled(Text)`
   display: flex;
@@ -87,7 +89,9 @@ interface ToolCloseButtonProps {
   t: TFunction;
 }
 
-const ToolCloseButton: React.FC<ToolCloseButtonProps> = (props) => {
+const ToolCloseButton: React.FC<
+  React.PropsWithChildren<ToolCloseButtonProps>
+> = (props) => {
   return (
     <RawButton onClick={() => props.viewState.closeTool()}>
       <Text textLight small semiBold uppercase>
@@ -102,7 +106,7 @@ interface TitleProps {
   icon?: { id: string };
 }
 
-const Title: React.FC<TitleProps> = (props) => {
+const Title: React.FC<React.PropsWithChildren<TitleProps>> = (props) => {
   return (
     <Box centered>
       <Box>

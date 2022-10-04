@@ -10,7 +10,9 @@ type MouseTooltipProps = {
   text: string;
 };
 
-const MouseTooltip: React.FC<MouseTooltipProps> = (props) => {
+const MouseTooltip: React.FC<React.PropsWithChildren<MouseTooltipProps>> = (
+  props
+) => {
   const { scene, text } = props;
   const tooltipText = createRef<typeof TooltipText>();
 

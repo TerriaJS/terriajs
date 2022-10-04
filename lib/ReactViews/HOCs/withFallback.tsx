@@ -20,7 +20,9 @@ interface WithFallbackProps {
  * features
  */
 export const withFallback = <P extends React.ComponentProps<any>>(
-  WrappedComponent: React.ComponentClass<P> | React.FunctionComponent<P>
+  WrappedComponent:
+    | React.ComponentClass<P>
+    | React.FunctionComponent<React.PropsWithChildren<P>>
 ) => {
   const WithFallback = (props: P & WithFallbackProps) => {
     return (

@@ -9,7 +9,7 @@ interface ToolButtonProps {
   controller: ToolButtonController;
 }
 
-const ToolButton: React.FC<ToolButtonProps> = observer(
+const ToolButton: React.FC<React.PropsWithChildren<ToolButtonProps>> = observer(
   (props: ToolButtonProps) => {
     const { controller } = props;
 

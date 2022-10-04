@@ -8,7 +8,7 @@ export type ToastProps = {
 /**
  * A toast component that positions its children bottom center of the map
  */
-const Toast: React.FC<ToastProps> = ({ children }) => {
+const Toast: React.FC<React.PropsWithChildren<ToastProps>> = ({ children }) => {
   return <Container>{children}</Container>;
 };
 

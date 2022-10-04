@@ -76,58 +76,54 @@ export const hideAllControls: Complete<WorkbenchControls> = {
   legend: false
 };
 
-const WorkbenchItemControls: React.FC<WorkbenchItemControlsProps> = observer(
-  ({ item, viewState, controls: controlsWithoutDefaults }) => {
-    // Apply controls from props on top of defaultControls
-    const controls = { ...defaultControls, ...controlsWithoutDefaults };
+const WorkbenchItemControls: React.FC<
+  React.PropsWithChildren<WorkbenchItemControlsProps>
+> = observer(({ item, viewState, controls: controlsWithoutDefaults }) => {
+  // Apply controls from props on top of defaultControls
+  const controls = { ...defaultControls, ...controlsWithoutDefaults };
 
-    return (
-      <>
-        {controls?.viewingControls ? (
-          <ViewingControls item={item} viewState={viewState} />
-        ) : null}
-        {controls?.opacity ? <OpacitySection item={item} /> : null}
-        {controls?.scaleWorkbench ? <ScaleWorkbenchInfo item={item} /> : null}
-        {controls?.timer ? <TimerSection item={item} /> : null}
-        {controls?.splitter ? <LeftRightSection item={item as any} /> : null}
-        {controls?.chartItems ? <ChartItemSelector item={item} /> : null}
-        {controls?.filter ? <FilterSection item={item} /> : null}
-        {controls?.dateTime && DiscretelyTimeVaryingMixin.isMixedInto(item) ? (
-          <DateTimeSelectorSection item={item} />
-        ) : null}
-        {controls?.timeFilter ? (
-          <SatelliteImageryTimeFilterSection item={item} />
-        ) : null}
-        {controls?.selectableDimensions ? (
-          <DimensionSelectorSection item={item} placement={DEFAULT_PLACEMENT} />
-        ) : null}
-        {/* TODO: remove min max props and move the checks to
+  return (
+    <>
+      {controls?.viewingControls ? (
+        <ViewingControls item={item} viewState={viewState} />
+      ) : null}
+      {controls?.opacity ? <OpacitySection item={item} /> : null}
+      {controls?.scaleWorkbench ? <ScaleWorkbenchInfo item={item} /> : null}
+      {controls?.timer ? <TimerSection item={item} /> : null}
+      {controls?.splitter ? <LeftRightSection item={item as any} /> : null}
+      {controls?.chartItems ? <ChartItemSelector item={item} /> : null}
+      {controls?.filter ? <FilterSection item={item} /> : null}
+      {controls?.dateTime && DiscretelyTimeVaryingMixin.isMixedInto(item) ? (
+        <DateTimeSelectorSection item={item} />
+      ) : null}
+      {controls?.timeFilter ? (
+        <SatelliteImageryTimeFilterSection item={item} />
+      ) : null}
+      {controls?.selectableDimensions ? (
+        <DimensionSelectorSection item={item} placement={DEFAULT_PLACEMENT} />
+      ) : null}
+      {/* TODO: remove min max props and move the checks to
       ColorScaleRangeSection to keep this component simple. */}
-        {controls?.colorScaleRange &&
-          hasTraits(
-            item,
-            WebMapServiceCatalogItemTraits,
-            "colorScaleMinimum"
-          ) &&
-          hasTraits(
-            item,
-            WebMapServiceCatalogItemTraits,
-            "colorScaleMaximum"
-          ) && (
-            <ColorScaleRangeSection
-              item={item}
-              minValue={item.colorScaleMinimum}
-              maxValue={item.colorScaleMaximum}
-            />
-          )}
-        {controls?.shortReport ? <ShortReport item={item} /> : null}
-        {controls?.legend ? <Legend item={item} /> : null}
-        {controls?.selectableDimensions ? (
-          <DimensionSelectorSection item={item} placement={"belowLegend"} />
-        ) : null}
-      </>
-    );
-  }
-);
+      {controls?.colorScaleRange &&
+        hasTraits(item, WebMapServiceCatalogItemTraits, "colorScaleMinimum") &&
+        hasTraits(
+          item,
+          WebMapServiceCatalogItemTraits,
+          "colorScaleMaximum"
+        ) && (
+          <ColorScaleRangeSection
+            item={item}
+            minValue={item.colorScaleMinimum}
+            maxValue={item.colorScaleMaximum}
+          />
+        )}
+      {controls?.shortReport ? <ShortReport item={item} /> : null}
+      {controls?.legend ? <Legend item={item} /> : null}
+      {controls?.selectableDimensions ? (
+        <DimensionSelectorSection item={item} placement={"belowLegend"} />
+      ) : null}
+    </>
+  );
+});
 
 export default WorkbenchItemControls;

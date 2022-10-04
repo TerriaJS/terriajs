@@ -88,7 +88,9 @@ interface IProps {
   onClick?: (e?: any) => void;
 }
 
-const WorkbenchButton: React.FC<IProps> = (props: IProps) => {
+const WorkbenchButton: React.FC<React.PropsWithChildren<IProps>> = (
+  props: IProps
+) => {
   const { children, title, primary, inverted, disabled, iconOnly } = props;
 
   return (

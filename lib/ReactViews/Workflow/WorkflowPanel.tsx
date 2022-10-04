@@ -26,49 +26,53 @@ type PropsType = {
 };
 
 /** Wraps component in Portal, adds TitleBar, ErrorBoundary and Footer (PanelButton) */
-const WorkflowPanel: React.FC<PropsType> = observer((props) => {
-  const viewState = props.viewState;
+const WorkflowPanel: React.FC<React.PropsWithChildren<PropsType>> = observer(
+  (props) => {
+    const viewState = props.viewState;
 
-  useEffect(function hideTerriaSidePanelOnMount() {
-    runInAction(() => {
-      viewState.terria.isWorkflowPanelActive = true;
-    });
-    return () =>
+    useEffect(function hideTerriaSidePanelOnMount() {
       runInAction(() => {
-        viewState.terria.isWorkflowPanelActive = false;
+        viewState.terria.isWorkflowPanelActive = true;
       });
-  });
+      return () =>
+        runInAction(() => {
+          viewState.terria.isWorkflowPanelActive = false;
+        });
+    });
 
-  return (
-    <Portal viewState={viewState} id={WorkflowPanelPortalId}>
-      <Container
-        className={
-          viewState.topElement === "WorkflowPanel" ? "top-element" : ""
-        }
-        onClick={action(() => {
-          viewState.topElement = "WorkflowPanel";
-        })}
-      >
-        <TitleBar>
-          <Icon glyph={props.icon} />
-          <Title>{props.title}</Title>
-          <CloseButton onClick={props.onClose}>
-            {props.closeButtonText}
-          </CloseButton>
-        </TitleBar>
-        <Content>
-          <ErrorBoundary viewState={viewState}>{props.children}</ErrorBoundary>
-        </Content>
-        {props.footer ? (
-          <PanelButton
-            onClick={props.footer.onClick}
-            title={props.footer.buttonText}
-          />
-        ) : null}
-      </Container>
-    </Portal>
-  );
-});
+    return (
+      <Portal viewState={viewState} id={WorkflowPanelPortalId}>
+        <Container
+          className={
+            viewState.topElement === "WorkflowPanel" ? "top-element" : ""
+          }
+          onClick={action(() => {
+            viewState.topElement = "WorkflowPanel";
+          })}
+        >
+          <TitleBar>
+            <Icon glyph={props.icon} />
+            <Title>{props.title}</Title>
+            <CloseButton onClick={props.onClose}>
+              {props.closeButtonText}
+            </CloseButton>
+          </TitleBar>
+          <Content>
+            <ErrorBoundary viewState={viewState}>
+              {props.children}
+            </ErrorBoundary>
+          </Content>
+          {props.footer ? (
+            <PanelButton
+              onClick={props.footer.onClick}
+              title={props.footer.buttonText}
+            />
+          ) : null}
+        </Container>
+      </Portal>
+    );
+  }
+);
 
 type ErrorBoundaryProps = {
   viewState: ViewState;

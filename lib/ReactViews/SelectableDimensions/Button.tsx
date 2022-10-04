@@ -6,10 +6,12 @@ import { RawButton } from "../../Styled/Button";
 import Text from "../../Styled/Text";
 import { parseCustomMarkdownToReactWithOptions } from "../Custom/parseCustomMarkdownToReact";
 
-export const SelectableDimensionButton: React.FC<{
-  id: string;
-  dim: SelectableDimensionButtonModel;
-}> = ({ id, dim }) => {
+export const SelectableDimensionButton: React.FC<
+  React.PropsWithChildren<{
+    id: string;
+    dim: SelectableDimensionButtonModel;
+  }>
+> = ({ id, dim }) => {
   return (
     <RawButton
       onClick={() =>

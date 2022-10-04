@@ -21,7 +21,9 @@ type MovementControlsProps = {
   maxVerticalLookAngle: number;
 };
 
-const MovementControls: React.FC<MovementControlsProps> = (props) => {
+const MovementControls: React.FC<
+  React.PropsWithChildren<MovementControlsProps>
+> = (props) => {
   const [isMaximized, setIsMaximized] = useState(true);
   const [t] = useTranslation();
 

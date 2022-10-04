@@ -744,7 +744,9 @@ const DiffAccordionToggle = styled(Box)`
   ${({ theme }) => theme.borderRadiusTop(theme.radius40Button)}
 `;
 
-const DiffAccordion: React.FC<DiffAccordionProps> = (props) => {
+const DiffAccordion: React.FC<React.PropsWithChildren<DiffAccordionProps>> = (
+  props
+) => {
   const [showChildren, setShowChildren] = useState(true);
   const { t, viewState } = props;
   const theme = useTheme();

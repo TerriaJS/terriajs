@@ -25,8 +25,8 @@ interface ITerrainSideProps {
   activeColor: string;
 }
 
-const TerrainSide: React.FC<ITerrainSideProps> = observer(
-  (props: ITerrainSideProps) => {
+const TerrainSide: React.FC<React.PropsWithChildren<ITerrainSideProps>> =
+  observer((props: ITerrainSideProps) => {
     const { t } = useTranslation();
     const theme = useTheme();
     const { terria } = props;
@@ -140,8 +140,7 @@ const TerrainSide: React.FC<ITerrainSideProps> = observer(
         )}
       </Box>
     );
-  }
-);
+  });
 
 TerrainSide.defaultProps = {
   spaced: true

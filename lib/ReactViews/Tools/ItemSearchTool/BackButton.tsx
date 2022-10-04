@@ -5,10 +5,9 @@ import Button from "../../../Styled/Button";
 import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import { TextSpan } from "../../../Styled/Text";
 
-const BackButton: React.FC<{ onClick: () => void }> = ({
-  children,
-  onClick
-}) => {
+const BackButton: React.FC<
+  React.PropsWithChildren<{ onClick: () => void }>
+> = ({ children, onClick }) => {
   const theme = useTheme();
   return (
     <Button

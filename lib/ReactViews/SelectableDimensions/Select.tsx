@@ -8,10 +8,12 @@ import { useTheme } from "styled-components";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import { SelectableDimensionEnum as SelectableDimensionEnumModel } from "../../Models/SelectableDimensions/SelectableDimensions";
 
-export const SelectableDimensionEnum: React.FC<{
-  id: string;
-  dim: SelectableDimensionEnumModel;
-}> = observer(({ id, dim }) => {
+export const SelectableDimensionEnum: React.FC<
+  React.PropsWithChildren<{
+    id: string;
+    dim: SelectableDimensionEnumModel;
+  }>
+> = observer(({ id, dim }) => {
   const theme = useTheme();
 
   const undefinedOption = {

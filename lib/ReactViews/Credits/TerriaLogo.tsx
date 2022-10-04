@@ -3,7 +3,7 @@ import Box from "../../Styled/Box";
 
 const logo = require("../../../wwwroot/images/terria-watermark.svg");
 
-export const TerriaLogo: FC = () => {
+export const TerriaLogo: FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <Box
       as={"a"}

@@ -162,9 +162,11 @@ export class AugmentedVirtualityRealignController extends MapNavigationItemContr
   }
 }
 
-export const AugmentedVirtualityRealign: React.FC<{
-  arRealignController: AugmentedVirtualityRealignController;
-}> = observer(
+export const AugmentedVirtualityRealign: React.FC<
+  React.PropsWithChildren<{
+    arRealignController: AugmentedVirtualityRealignController;
+  }>
+> = observer(
   (props: { arRealignController: AugmentedVirtualityRealignController }) => {
     const augmentedVirtuality = props.arRealignController.augmentedVirtuality;
     const realignment = augmentedVirtuality.manualAlignment;

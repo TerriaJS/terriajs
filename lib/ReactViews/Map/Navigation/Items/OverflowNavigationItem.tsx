@@ -81,8 +81,8 @@ const NavigationButton = styled(BoxSpan).attrs({
   `}
 `;
 
-const CollapsedNavigationPanel: React.FC<PropTypes> = observer(
-  (props: PropTypes) => {
+const CollapsedNavigationPanel: React.FC<React.PropsWithChildren<PropTypes>> =
+  observer((props: PropTypes) => {
     const viewState = useViewState();
     const theme = useTheme();
     const { t, i18n } = useTranslation();
@@ -125,44 +125,44 @@ const CollapsedNavigationPanel: React.FC<PropTypes> = observer(
         </ButtonsBox>
       </CollapsedNavigationBox>
     );
-  }
-);
+  });
 
 const CollapsedNavigationDisplayName = "CollapsedNavigation";
-const CollapsedNavigation: React.FC = observer(() => {
-  const viewState = useViewState();
-  useEffect(() =>
-    autorun(() => {
-      if (
-        viewState.showCollapsedNavigation &&
-        viewState.topElement !== CollapsedNavigationDisplayName
-      ) {
-        viewState.setTopElement(CollapsedNavigationDisplayName);
-      }
-    })
-  );
+const CollapsedNavigation: React.FC<React.PropsWithChildren<unknown>> =
+  observer(() => {
+    const viewState = useViewState();
+    useEffect(() =>
+      autorun(() => {
+        if (
+          viewState.showCollapsedNavigation &&
+          viewState.topElement !== CollapsedNavigationDisplayName
+        ) {
+          viewState.setTopElement(CollapsedNavigationDisplayName);
+        }
+      })
+    );
 
-  let items = viewState.terria.mapNavigationModel.items.filter(
-    (item) => item.controller.collapsed
-  );
-  items = items.filter((item) => filterViewerAndScreenSize(item, viewState));
+    let items = viewState.terria.mapNavigationModel.items.filter(
+      (item) => item.controller.collapsed
+    );
+    items = items.filter((item) => filterViewerAndScreenSize(item, viewState));
 
-  if (!viewState.showCollapsedNavigation || items.length === 0) {
-    viewState.closeCollapsedNavigation();
-    return null;
-  }
+    if (!viewState.showCollapsedNavigation || items.length === 0) {
+      viewState.closeCollapsedNavigation();
+      return null;
+    }
 
-  return (
-    <>
-      <PrefaceBox
-        onClick={() => viewState.closeCollapsedNavigation()}
-        role="presentation"
-        aria-hidden="true"
-        pseudoBg
-      ></PrefaceBox>
-      <CollapsedNavigationPanel items={items}></CollapsedNavigationPanel>
-    </>
-  );
-});
+    return (
+      <>
+        <PrefaceBox
+          onClick={() => viewState.closeCollapsedNavigation()}
+          role="presentation"
+          aria-hidden="true"
+          pseudoBg
+        ></PrefaceBox>
+        <CollapsedNavigationPanel items={items}></CollapsedNavigationPanel>
+      </>
+    );
+  });
 
 export default CollapsedNavigation;

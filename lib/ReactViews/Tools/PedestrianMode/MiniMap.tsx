@@ -28,7 +28,7 @@ export type MiniMapView = {
   rotation: number;
 };
 
-const MiniMap: React.FC<MiniMapProps> = (props) => {
+const MiniMap: React.FC<React.PropsWithChildren<MiniMapProps>> = (props) => {
   const { terria, baseMap, view } = props;
   const container = useRef<HTMLDivElement>(null);
   const [miniMapViewer, setMiniMapViewer] = useState<

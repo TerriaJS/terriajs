@@ -38,7 +38,9 @@ type State =
   | { is: "error"; error: Error }
   | { is: "results"; results: ItemSearchResult[] };
 
-const SearchForm: React.FC<SearchFormProps> = (props) => {
+const SearchForm: React.FC<React.PropsWithChildren<SearchFormProps>> = (
+  props
+) => {
   const { parameters, itemSearchProvider } = props;
   const [t] = useTranslation();
   const [state, setState] = useState<State>({ is: "initial" });
@@ -132,7 +134,9 @@ interface ParameterProps extends WithT {
   disabled: boolean;
 }
 
-const Parameter: React.FC<ParameterProps> = (props) => {
+const Parameter: React.FC<React.PropsWithChildren<ParameterProps>> = (
+  props
+) => {
   const { parameter } = props;
   switch (parameter.type) {
     case "numeric":
@@ -150,7 +154,9 @@ interface NumericParameterProps extends WithT {
   value?: { start: number; end: number };
 }
 
-export const NumericParameter: React.FC<NumericParameterProps> = (props) => {
+export const NumericParameter: React.FC<
+  React.PropsWithChildren<NumericParameterProps>
+> = (props) => {
   const { parameter, value, t } = props;
   const { min, max } = parameter.range;
 
@@ -218,7 +224,9 @@ type SelectOnChangeHandler<OptionType, IsMulti extends boolean> = (
   actionMeta: ActionMeta<OptionType>
 ) => void;
 
-const EnumParameter: React.FC<EnumParameterProps> = (props) => {
+const EnumParameter: React.FC<React.PropsWithChildren<EnumParameterProps>> = (
+  props
+) => {
   const { parameter, disabled } = props;
   const options = parameter.values.map(({ id }) => ({
     value: id,
@@ -259,7 +267,9 @@ interface TextParameterProps {
   onChange: (value: string | undefined) => void;
 }
 
-const TextParameter: React.FC<TextParameterProps> = (props) => {
+const TextParameter: React.FC<React.PropsWithChildren<TextParameterProps>> = (
+  props
+) => {
   const { parameter, value, onChange } = props;
   return (
     <Box column>
