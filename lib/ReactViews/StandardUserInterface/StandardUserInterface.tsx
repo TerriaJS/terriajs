@@ -188,6 +188,7 @@ const StandardUserInterface: React.FC<
                         show={props.terria.isWorkflowPanelActive}
                       />
                       <SidePanelContainer
+                        viewState={props.viewState}
                         tabIndex={0}
                         show={
                           props.viewState.isMapFullScreen === false &&
