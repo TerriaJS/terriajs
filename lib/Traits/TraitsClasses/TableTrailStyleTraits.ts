@@ -72,14 +72,14 @@ export class TrailSymbolTraits extends mixTraits(
     description: "The number of seconds in front of the object to show.",
     type: "number"
   })
-  leadTime?: number;
+  leadTime = 0;
 
   @primitiveTrait({
     name: "Trail time",
     description: "The number of seconds behind the object to show.",
     type: "number"
   })
-  trailTime?: number;
+  trailTime = 10;
 
   @primitiveTrait({
     name: "Width",
