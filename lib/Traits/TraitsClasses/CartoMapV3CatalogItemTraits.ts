@@ -24,9 +24,9 @@ export default class CartoMapV3TableCatalogItemTraits extends mixTraits(
     type: "string",
     name: "Base URL",
     description:
-      'Base URL for Carto API (eg "https://gcp-us-east1.api.carto.com/")'
+      'Base URL for Carto API (eg "https://gcp-australia-southeast1.api.carto.com/")'
   })
-  baseUrl = "https://gcp-us-east1.api.carto.com/";
+  baseUrl = "https://gcp-australia-southeast1.api.carto.com/";
 
   @primitiveTrait({
     type: "string",
@@ -38,7 +38,7 @@ export default class CartoMapV3TableCatalogItemTraits extends mixTraits(
 
   @primitiveTrait({
     type: "string",
-    name: "Geo column name",
+    name: "Carto SQL Query",
     description:
       "Carto SQL Query (used for Query API). If this is defined, then the Query API will be used instead of Table API."
   })

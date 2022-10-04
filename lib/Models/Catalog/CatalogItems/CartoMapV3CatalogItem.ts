@@ -61,8 +61,9 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
   @observable
   geoJsonUrls: string[] = [];
 
-  @observable
-  mvtTileJsonUrls: string[] = [];
+  // Commented out as we don't support tileJSON yet
+  // @observable
+  // mvtTileJsonUrls: string[] = [];
 
   @observable geoJsonSize: number | undefined;
 
@@ -94,8 +95,7 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
   protected async forceLoadMetadata() {
     let response: JsonObject | undefined;
 
-    /** If cartoQuery is defined - use Query API (https://api-docs.carto.com/#8f2020d9-edf3-4b50-ae58-9edeaa34613c)
-     */
+    // If cartoQuery is defined - use Query API (https://api-docs.carto.com/#8f2020d9-edf3-4b50-ae58-9edeaa34613c)
     if (this.cartoQuery) {
       const url = new URI(this.baseUrl)
         .path("")
@@ -130,7 +130,8 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
     }
 
     let geoJsonUrls: string[] = [];
-    let mvtTileJsonUrls: string[] = [];
+    // Commented out as we don't support tileJSON yet
+    // let mvtTileJsonUrls: string[] = [];
 
     if (
       response &&
@@ -140,13 +141,14 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
       geoJsonUrls = response.geojson.url;
     }
 
-    if (
-      response &&
-      isJsonObject(response.tilejson) &&
-      isJsonStringArray(response.tilejson.url)
-    ) {
-      mvtTileJsonUrls = response.tilejson.url;
-    }
+    // Commented out as we don't support tileJSON yet
+    // if (
+    //   response &&
+    //   isJsonObject(response.tilejson) &&
+    //   isJsonStringArray(response.tilejson.url)
+    // ) {
+    //   mvtTileJsonUrls = response.tilejson.url;
+    // }
 
     if (geoJsonUrls.length === 0 /*&& mvtTileJsonUrls.length === 0*/) {
       throw TerriaError.from("No GeoJSON found.");
@@ -157,7 +159,8 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
         this.geoJsonSize = response.size;
       }
       this.geoJsonUrls = geoJsonUrls;
-      this.mvtTileJsonUrls = mvtTileJsonUrls;
+      // Commented out as we don't support tileJSON yet
+      // this.mvtTileJsonUrls = mvtTileJsonUrls;
     });
   }
 
