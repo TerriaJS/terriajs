@@ -1,8 +1,21 @@
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
+import { traitClass } from "../Trait";
 import { GeoJsonTraits } from "./GeoJsonTraits";
 
+@traitClass({
+  description: `Calls Carto V3 API to return GeoJSON. It supports the Query API and the Table API.
+
+To use the Query API - see traits:
+- \`cartoQuery\`
+- \`cartoGeoColumn\`
+
+To use the Table API - see traits:
+- \`cartoTableName\`
+- \`cartoColumns\`
+- \`cartoGeoColumn\``
+})
 export default class CartoMapV3TableCatalogItemTraits extends mixTraits(
   GeoJsonTraits
 ) {
