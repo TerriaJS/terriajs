@@ -219,7 +219,7 @@
     "prettier": "2.7.1",
     "pretty-quick": "^1.10.0",
     "react-shallow-testutils": "^3.0.0",
-    "react-test-renderer": "^17.0.2",
+    "react-test-renderer": "18.2.0",
     "regenerator-runtime": "^0.13.2",
     "terriajs-server": "^3.3.4",
     "webpack-cli": "^3.3.11",
