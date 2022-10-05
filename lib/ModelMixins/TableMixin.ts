@@ -739,7 +739,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           // will eliminate duplicates on the UI front, so given the datepicker
           // expects uniques, return uniques here
           if (
-            times.some(
+            !times.some(
               (t) => t.tag === discreteTime.tag && t.time === discreteTime.time
             )
           ) {
