@@ -7,6 +7,7 @@
 - Fix bug with "propagate `knownContainerUniqueIds` across references and their target" - missing `runInAction`
 - Add Carto v3 Maps API support for `table` and `query` endpoint (only GeoJSON - not MVT yet)
 - Moved `activeStyle` default from `TableMixin` to `TableAutomaticStyleStratum`. The default `activeStyle` will now not pick a `hidden` `TableStyle`.
+- Pin `flexsearch` version to `0.7.21` - as incorrect types are shipped in version `0.7.31`
 - Only preload next timestep of timeseries rasters (WMS & ArcGIS MapServer) when animating the item on the map.
 - [The next improvement]
 
