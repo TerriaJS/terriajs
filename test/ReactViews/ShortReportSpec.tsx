@@ -10,6 +10,7 @@ import Terria from "../../lib/Models/Terria";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import ShortReport from "../../lib/ReactViews/Workbench/Controls/ShortReport";
 import Text from "../../lib/Styled/Text";
+import Collapsible from "../../lib/ReactViews/Custom/Collapsible/Collapsible";
 
 describe("ShortReport", function () {
   let testRenderer: ReactTestRenderer | undefined;
@@ -59,19 +60,22 @@ describe("ShortReport", function () {
       expect(reports.length).toEqual(3);
 
       // Test that collapsible components have been created with correct props
-      expect(
-        testRenderer.root.findAllByProps({
-          title: "Report Name 1",
-          isOpen: true
-        }).length
-      ).toBe(1);
+      const instances = testRenderer.root
+        .findAllByType((Collapsible as any).type) //our observable wrapped components types are not correctly defined to be accessed otuside of React. This only occurs in testing.
+        .map((instance) => ({
+          title: instance.props.title,
+          isOpen: instance.props.isOpen
+        }));
 
-      expect(
-        testRenderer.root.findAllByProps({
-          title: "Report Name 2",
-          isOpen: false
-        }).length
-      ).toBe(1);
+      expect(instances).toContain({
+        title: "Report Name 1",
+        isOpen: true
+      });
+
+      expect(instances).toContain({
+        title: "Report Name 2",
+        isOpen: false
+      });
 
       // Expect no Collapsible component
       expect(
