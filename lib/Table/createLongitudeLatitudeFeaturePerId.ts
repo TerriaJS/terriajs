@@ -310,7 +310,7 @@ function createFeature(
           show,
           ...pathGraphicsTimeProperties,
 
-          // Material has to be handled separately from trailProperties
+          // Material has to be handled separately from pathGraphicsTimeProperties
           material: pathGraphicsPolylineGlowTimeProperties
             ? new PolylineGlowMaterialProperty(
                 pathGraphicsPolylineGlowTimeProperties
@@ -347,8 +347,7 @@ function addSampleOrInterval(
     | SampledProperty
     | SampledPositionProperty
     | TimeIntervalCollectionProperty
-    | TimeIntervalCollectionPositionProperty
-    | undefined,
+    | TimeIntervalCollectionPositionProperty,
   data: any,
   interval: TimeInterval
 ) {

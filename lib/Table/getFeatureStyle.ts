@@ -18,7 +18,9 @@ import { isConstantStyleMap } from "./TableStyleMap";
  * => {someKey: string}
  * ```
  *
- * This is useful when creating style options for cesium primitives (eg PointGraphics, LabelGraphics, ...), as it means we can directly pass these options into cesium primitive constructors (eg new PointGraphics(options)) OR we can turn style options into `SampledProperty` or `TimeIntervalCollectionProperty` (which is required for `createLongitudeLatitudeFeaturePerId`)
+ * This is useful when creating style options for cesium primitives (eg `PointGraphics`, `LabelGraphics`, ...), as it means we can
+ * - directly pass these options into cesium primitive constructors (eg `new PointGraphics(options)`) - which we do in `createLongitudeLatitudeFeaturePerRow`
+ * - OR we can turn style options into `SampledProperty` or `TimeIntervalCollectionProperty`  - which is required for `createLongitudeLatitudeFeaturePerId`
  */
 type ExcludeCesiumProperty<T> = {
   [key in keyof T]: Exclude<T[key], Property>;
@@ -26,8 +28,8 @@ type ExcludeCesiumProperty<T> = {
 
 // The following "Supported*" types contain all supported properties for different cesium primitives.
 // The are used to transform TableStyleTraits into applicable constructor options for cesium primitives:
-// - For example - TableLabelStyleTraits are transformed into LabelGraphics.ConstructorOptions
-// The `ExcludeCesiumProperty` is used here because all "*.ConstructorOptions" properties allow Cesium.Property values - which we don't want.
+// - For example - TableLabelStyleTraits are transformed into LabelGraphics.ConstructorOptions - which follows the SupportedLabelGraphics type
+// The `ExcludeCesiumProperty` is used here because all "*.ConstructorOptions" properties allow Cesium.Property values - which we don't want - we want the "raw" values (eg `string`, `Color`, ...).
 
 export type SupportedPointGraphics = Pick<
   ExcludeCesiumProperty<PointGraphics.ConstructorOptions>,
@@ -75,9 +77,9 @@ export type SupportedLabelGraphics = Pick<
  */
 export function getFeatureStyle(style: TableStyle, rowId: number) {
   // Convert TablePointStyleTraits, TableColorStyleTraits, TableOutlineStyleTraits and TablePointSizeStyleTraits into
-  // PointGraphics options
-  // BillboardGraphics options
-  // makiIcon SVG string (used in BillboardGraphics options)
+  // - PointGraphics options
+  // - BillboardGraphics options
+  // - makiIcon SVG string (used in BillboardGraphics options)
   const color =
     style.colorMap.mapValueToColor(style.colorColumn?.valuesForType[rowId]) ??
     null;
@@ -179,13 +181,13 @@ export function getFeatureStyle(style: TableStyle, rowId: number) {
       }
     : undefined;
 
+  // Convert TableLabelStyleTraits to LabelGraphics options
   const labelStyle = style.labelStyleMap.traits.enabled
     ? isConstantStyleMap(style.labelStyleMap.styleMap)
       ? style.labelStyleMap.styleMap.style
       : style.labelStyleMap.styleMap.mapValueToStyle(rowId)
     : undefined;
 
-  // Convert TableLabelStyleTraits to LabelGraphics options
   const labelGraphicsOptions: SupportedLabelGraphics | undefined = labelStyle
     ? {
         ...labelStyle,
