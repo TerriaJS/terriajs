@@ -2,6 +2,7 @@
 
 #### next release (8.2.18)
 
+- Pin `flexsearch` version to `0.7.21` - as incorrect types are shipped in version `0.7.31`
 - Only preload next timestep of timeseries rasters (WMS & ArcGIS MapServer) when animating the item on the map.
 - [The next improvement]
 
