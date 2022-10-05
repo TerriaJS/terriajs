@@ -14,6 +14,7 @@ import {
 /** Supports subset of CZML Label https://github.com/AnalyticalGraphicsInc/czml-writer/wiki/Label
  *
  * Unimplemented properties
+ * - show
  * - eyeOffset
  * - horizontalOrigin
  * - verticalOrigin

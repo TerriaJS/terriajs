@@ -65,6 +65,7 @@ export default function createLongitudeLatitudeFeaturePerRow(
               heightReference: HeightReference.CLAMP_TO_GROUND
             })
           : undefined
+        // Note: we don't add path/PathGraphicsOptions here as it is only relevant to time-series (see `createLongitudeLatitudeFeaturePerId.ts`)
       });
       const timeInterval = intervals[rowId];
       if (timeInterval)

@@ -535,8 +535,9 @@ export default class Cesium extends GlobeOrMap {
 
   private previousRenderError: string | undefined;
 
+  /** Show error message to user if Cesium stops rendering. */
   private onRenderError(scene: Scene, error: unknown) {
-    // This function is called many times
+    // This function can be called many times with the same error
     // So we do a rudimentary check to only show the error message once
     // - by comparing error.toString() to this.previousRenderError
     if (typeof error === "object" && error !== null) {

@@ -11,6 +11,7 @@ import {
   TableStyleMapTraits
 } from "./TableStyleMapTraits";
 
+/** Supports CZML SolidColorMaterial https://github.com/AnalyticalGraphicsInc/czml-writer/wiki/SolidColorMaterial */
 export class SolidColorMaterialTraits extends ModelTraits {
   @primitiveTrait({
     name: "Color",
@@ -20,6 +21,7 @@ export class SolidColorMaterialTraits extends ModelTraits {
   color = "#ffffff";
 }
 
+/** Supports CZML PolylineGlowMaterial https://github.com/AnalyticalGraphicsInc/czml-writer/wiki/PolylineGlowMaterial */
 export class PolylineGlowMaterialTraits extends ModelTraits {
   @primitiveTrait({
     name: "Color",
@@ -45,7 +47,17 @@ export class PolylineGlowMaterialTraits extends ModelTraits {
   taperPower = 1;
 }
 
-/** Supports subset of CZML PolylineMaterial https://github.com/AnalyticalGraphicsInc/czml-writer/wiki/PolylineMaterial */
+/** Supports subset of CZML PolylineMaterial https://github.com/AnalyticalGraphicsInc/czml-writer/wiki/PolylineMaterial
+ *
+ * Unimplemented materials
+ * - polylineOutline
+ * - polylineArrow
+ * - polylineDash
+ * - image
+ * - grid
+ * - stripe
+ * - checkerboard
+ */
 export class PolylineMaterialTraits extends ModelTraits {
   @objectTrait({
     type: PolylineGlowMaterialTraits,
@@ -63,6 +75,14 @@ export class PolylineMaterialTraits extends ModelTraits {
   solidColor?: SolidColorMaterialTraits;
 }
 
+/** Supports subset of CZML Path https://github.com/AnalyticalGraphicsInc/czml-writer/wiki/Path
+ *
+ * Unimplemented properties
+ * - show
+ * - distanceDisplayCondition
+ *
+ * Note: materials is handled slightly differently
+ */
 export class TrailSymbolTraits extends mixTraits(
   PolylineMaterialTraits,
   TableStyleMapSymbolTraits

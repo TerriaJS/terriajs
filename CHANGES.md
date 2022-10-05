@@ -4,6 +4,10 @@
 
 - Pin `flexsearch` version to `0.7.21` - as incorrect types are shipped in version `0.7.31`
 - Only preload next timestep of timeseries rasters (WMS & ArcGIS MapServer) when animating the item on the map.
+- Added error message if cesium stops rendering
+- Add `enabled` to `TableStyleMapTraits` - which defaults to `true`
+- Add `TableLabelStyleTraits` - this can be used to add `LabelGraphics` to point features (table or geojson)
+- Add `TableTrailStyleTraits` - this can be used to add `PathGraphics` to time-series point features (table or geojson)
 - [The next improvement]
 
 #### 8.2.17 - 2022-09-23
