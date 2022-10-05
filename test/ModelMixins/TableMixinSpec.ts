@@ -13,7 +13,8 @@ import { TerriaFeatureData } from "../../lib/Models/Feature/FeatureData";
 import Terria from "../../lib/Models/Terria";
 import TableColorStyleTraits from "../../lib/Traits/TraitsClasses/TableColorStyleTraits";
 import TableLabelStyleTraits, {
-  EnumLabelSymbolTraits
+  EnumLabelSymbolTraits,
+  LabelSymbolTraits
 } from "../../lib/Traits/TraitsClasses/TableLabelStyleTraits";
 import TableOutlineStyleTraits, {
   BinOutlineSymbolTraits,
@@ -1444,6 +1445,15 @@ describe("TableMixin", function () {
           label: createStratumInstance(TableLabelStyleTraits, {
             column: "id",
             enabled: true,
+            null: createStratumInstance(LabelSymbolTraits, {
+              labelColumn: "id",
+              font: "40px serif",
+              style: "OUTLINE",
+              scale: 4,
+              outlineColor: "#ffffff",
+              outlineWidth: 3,
+              pixelOffset: [3, 3]
+            }),
             enum: [
               createStratumInstance(EnumLabelSymbolTraits, {
                 value: "feature A",
@@ -1467,16 +1477,6 @@ describe("TableMixin", function () {
               }),
               createStratumInstance(EnumLabelSymbolTraits, {
                 value: "feature C",
-                labelColumn: "id",
-                font: "30px serif",
-                style: "OUTLINE",
-                scale: 3,
-                outlineColor: "#ff0000",
-                outlineWidth: 2,
-                pixelOffset: [2, 2]
-              }),
-              createStratumInstance(EnumLabelSymbolTraits, {
-                value: "feature D",
                 labelColumn: "id",
                 font: "30px serif",
                 style: "OUTLINE",
@@ -1528,18 +1528,20 @@ describe("TableMixin", function () {
           outlineColor: "rgb(255,0,0)",
           outlineWidth: 2,
           pixelOffset: "(2, 2)" // Cartesian2.toString()
-        },
-        {
-          value: "feature D",
-          text: "feature D",
-          font: "30px serif",
-          style: LabelStyle.OUTLINE,
-          scale: 3,
-          outlineColor: "rgb(255,0,0)",
-          outlineWidth: 2,
-          pixelOffset: "(2, 2)" // Cartesian2.toString()
         }
       ];
+
+      const nullStyle = {
+        value: undefined,
+        text: "feature D", // null style only applied to "feature D"
+        font: "40px serif",
+        style: LabelStyle.OUTLINE,
+        scale: 4,
+        fillColor: undefined,
+        outlineColor: "rgb(255,255,255)",
+        outlineWidth: 3,
+        pixelOffset: "(3, 3)" // Cartesian2.toString()
+      };
 
       mapItem.entities.values.forEach((feature) => {
         // We check all discrete times - but all values are the same for every timestamp
@@ -1560,10 +1562,8 @@ describe("TableMixin", function () {
 
           const featureIdValue = featureData?.getValue(discreteTime.time)?.id;
 
-          const style = enumStyles.find((s) => s.value === featureIdValue);
-
-          if (!style)
-            throw `Failed to find style for feature ID: ${feature.id}, value: ${featureIdValue}`;
+          const style =
+            enumStyles.find((s) => s.value === featureIdValue) ?? nullStyle;
 
           const failMessage = (prop: string) =>
             `Failed to test feature ID: ${feature.id}, ID value: ${style.value}, time: ${discreteTime.tag}, property: ${prop}`;
