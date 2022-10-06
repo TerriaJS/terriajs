@@ -691,7 +691,7 @@
       "czml": "CZML",
       "gpx": "GPX",
       "json": "Catàleg Terria",
-      "carto": "Carto",
+      "carto": "Carto V1",
       "gltf": "gLTF",
       "shp": "Shapefile",
       "other": "Altres (utilitza el servei de conversió)",
@@ -700,7 +700,8 @@
       "assimp-local": "Convertidor de fitxers 3D (zip) (experimental)",
       "assimp-local-description": "**Avís:** el convertidor de fitxers 3D és experimental.\nConsulteu la llista de [formats admesos](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).\nEls fitxers s'han de comprimir.",
       "assimp-remote": "Convertidor de fitxers 3D (experimental)",
-      "assimp-remote-description": "**Avís:** el convertidor de fitxers 3D és experimental.\nConsulteu la llista de [formats admesos](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).\nTambé s'admeten fitxers zip"
+      "assimp-remote-description": "**Avís:** el convertidor de fitxers 3D és experimental.\nConsulteu la llista de [formats admesos](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).\nTambé s'admeten fitxers zip",
+      "carto-v3": "Carto V3"
     },
     "printWindow": {
       "errorTitle": "Error d'impressió",
