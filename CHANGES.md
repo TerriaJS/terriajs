@@ -2,8 +2,6 @@
 
 #### next release (8.2.18)
 
-- Moved default `activeStyle` from `TableMixin` to `TableAutomaticStylesStratum`.
-- `TableAutomaticStylesStratum` will no longer pick default `activeStyle` if it is hidden
 - Fix bug with "propagate `knownContainerUniqueIds` across references and their target" - missing `runInAction`
 - Add Carto v3 Maps API support for `table` and `query` endpoint (only GeoJSON - not MVT yet)
 - Moved `activeStyle` default from `TableMixin` to `TableAutomaticStyleStratum`. The default `activeStyle` will now not pick a `hidden` `TableStyle`.
