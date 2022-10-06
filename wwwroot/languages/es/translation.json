@@ -308,7 +308,8 @@
     "prev": "Ant",
     "open": "Abrir",
     "close": "Cerrar",
-    "back": "Atrás"
+    "back": "Atrás",
+    "confirm": "Confirmar"
   },
   "measure": {
     "measureTool": "Herramienta de Medición",
@@ -330,5 +331,29 @@
   },
   "mobile": {
     "toggleNavigation": "Cambiar navegación"
+  },
+  "trainer": {
+    "collapseTrainer": "Ocultar detalles del paso",
+    "hideAllSteps": "Ocultar todos los pasos",
+    "showAllSteps": "Mostrar todos los pasos",
+    "expandTrainer": "Mostrar más detalles del paso"
+  },
+  "tour": {
+    "preface": {
+      "title": "Hacer el recorrido",
+      "close": "Tal vez más tarde",
+      "content": "¿No está seguro por dónde comenzar? Haga un recorrido rápido por las funciones principales de nuestro software y aprenda algunas de las funciones clave para ayudarlo en su camino.",
+      "start": "Empezar Tour"
+    },
+    "locationSearchInput": {
+      "content": "## Búsqueda de ubicación\n\nIngrese una localidad o dirección para ubicar fácilmente un punto de interés en el mapa."
+    },
+    "finish": "Finalizar"
+  },
+  "browsers": {
+    "chrome": "Google Chrome",
+    "firefox": "Mozilla Firefox",
+    "edge": "Microsoft Edge",
+    "safari": "Apple Safari"
   }
 }
