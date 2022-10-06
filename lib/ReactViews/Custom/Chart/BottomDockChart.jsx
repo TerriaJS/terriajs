@@ -1,3 +1,4 @@
+import * as React from "react";
 import { observer } from "mobx-react";
 import { action, computed, observable } from "mobx";
 import { AxisLeft, AxisBottom } from "@visx/axis";

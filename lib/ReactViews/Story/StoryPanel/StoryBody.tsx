@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Story } from "../Story";
 import parseCustomHtmlToReact from "../../Custom/parseCustomHtmlToReact";
 import styled from "styled-components";

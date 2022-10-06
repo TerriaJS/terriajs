@@ -1,3 +1,4 @@
+import * as React from "react";
 import { createElement, ReactElement } from "react";
 import { TooltipWithButtonLauncher } from "../Generic/TooltipWrapper";
 import CustomComponent, {

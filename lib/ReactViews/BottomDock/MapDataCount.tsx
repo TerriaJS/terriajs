@@ -1,3 +1,4 @@
+import * as React from "react";
 import { observer } from "mobx-react";
 
 import Icon, { StyledIcon } from "../../Styled/Icon";

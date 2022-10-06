@@ -1,3 +1,4 @@
+import * as React from "react";
 import MenuButton from "../../Map/MenuButton";
 import responsiveSwitch from "./ResponsiveSwitch";
 import withControlledVisibility from "../../HOCs/withControlledVisibility";

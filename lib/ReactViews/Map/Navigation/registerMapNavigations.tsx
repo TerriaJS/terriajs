@@ -1,3 +1,4 @@
+import * as React from "react";
 import { runInAction } from "mobx";
 import AugmentedVirtuality from "../../../Models/AugmentedVirtuality";
 import ViewerMode from "../../../Models/ViewerMode";

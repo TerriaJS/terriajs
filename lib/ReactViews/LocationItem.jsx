@@ -1,3 +1,4 @@
+import * as React from "react";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import prettifyCoordinates from "../Map/Vector/prettifyCoordinates";

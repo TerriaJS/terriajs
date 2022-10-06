@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../../ModelMixins/MappableMixin";

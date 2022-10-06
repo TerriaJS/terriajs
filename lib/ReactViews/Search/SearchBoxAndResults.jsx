@@ -1,3 +1,4 @@
+import * as React from "react";
 import { createRef, Component } from "react";
 import { removeMarker } from "../../Models/LocationMarkerUtils";
 import { reaction, runInAction } from "mobx";

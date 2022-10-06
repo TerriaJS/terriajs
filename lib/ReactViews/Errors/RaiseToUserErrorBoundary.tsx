@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Component, ErrorInfo } from "react";
 import TerriaError, { TerriaErrorOverrides } from "../../Core/TerriaError";
 import ViewState from "../../ReactViewModels/ViewState";

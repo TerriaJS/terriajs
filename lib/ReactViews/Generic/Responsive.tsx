@@ -1,3 +1,4 @@
+import * as React from "react";
 import PropTypes, { InferProps } from "prop-types";
 const MediaQuery = require("react-responsive").default;
 

@@ -1,3 +1,4 @@
+import * as React from "react";
 import { TFunction } from "i18next";
 import { debounce } from "lodash-es";
 import {

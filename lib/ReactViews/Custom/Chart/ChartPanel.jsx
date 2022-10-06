@@ -1,4 +1,5 @@
-"use strict";
+import * as React from "react";
+("use strict");
 
 import { computed } from "mobx";
 import { observer } from "mobx-react";

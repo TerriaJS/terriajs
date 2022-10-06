@@ -1,3 +1,4 @@
+import * as React from "react";
 import { LinePath } from "@visx/shape";
 import { line } from "d3-shape";
 import PropTypes from "prop-types";

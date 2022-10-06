@@ -1,3 +1,4 @@
+import * as React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";

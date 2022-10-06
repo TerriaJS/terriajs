@@ -1,3 +1,4 @@
+import * as React from "react";
 import { FC } from "react";
 import { Credit } from "./Credit";
 import { ICredit } from "./Credit.type";

@@ -1,3 +1,4 @@
+import * as React from "react";
 import "!!style-loader!css-loader?sourceMap!./sortable.css";
 import { action } from "mobx";
 import { observer } from "mobx-react";

@@ -1,3 +1,4 @@
+import * as React from "react";
 import { observer } from "mobx-react";
 import Mustache from "mustache";
 import { FC, MouseEventHandler, useCallback, useRef, useState } from "react";

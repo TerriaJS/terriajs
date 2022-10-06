@@ -1,3 +1,4 @@
+import * as React from "react";
 import PropTypes from "prop-types";
 import { createRef, PureComponent } from "react";
 import LineChart from "./LineChart";

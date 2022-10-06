@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Feature as GeoJsonFeature } from "@turf/helpers";
 import {
   IReactionPublic,

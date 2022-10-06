@@ -1,4 +1,5 @@
-"use strict";
+import * as React from "react";
+("use strict");
 import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";

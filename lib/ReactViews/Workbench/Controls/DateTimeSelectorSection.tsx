@@ -1,3 +1,4 @@
+import * as React from "react";
 import dateFormat from "dateformat";
 import { TFunction } from "i18next";
 import { runInAction } from "mobx";

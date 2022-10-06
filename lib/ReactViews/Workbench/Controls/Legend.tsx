@@ -1,4 +1,5 @@
-"use strict";
+import * as React from "react";
+("use strict");
 
 import { observer } from "mobx-react";
 import { Component, Fragment, SyntheticEvent } from "react";

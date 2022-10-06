@@ -1,3 +1,4 @@
+import * as React from "react";
 import classNames from "classnames";
 import { TFunction } from "i18next";
 import { action, reaction, runInAction } from "mobx";

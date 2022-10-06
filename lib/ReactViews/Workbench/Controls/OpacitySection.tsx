@@ -1,4 +1,5 @@
-"use strict";
+import * as React from "react";
+("use strict");
 
 import { TFunction } from "i18next";
 import { runInAction } from "mobx";

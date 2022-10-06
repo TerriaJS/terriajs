@@ -1,3 +1,4 @@
+import * as React from "react";
 /**
  * <Guidance /> is the (currently unused) "in app tour" where we have the dots,
  * whereas <Guide /> is the generic "slider/static tour"

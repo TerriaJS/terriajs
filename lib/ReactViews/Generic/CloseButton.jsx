@@ -1,3 +1,4 @@
+import * as React from "react";
 // for all the panels and modals we will eventually normalise
 import styled from "styled-components";
 // import Box  from "../../Styled/Box";

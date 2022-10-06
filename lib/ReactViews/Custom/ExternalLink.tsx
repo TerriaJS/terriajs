@@ -1,4 +1,5 @@
-import { AnchorHTMLAttributes, default as React } from "react";
+import * as React from "react";
+import { AnchorHTMLAttributes } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { useViewState } from "../StandardUserInterface/ViewStateContext";

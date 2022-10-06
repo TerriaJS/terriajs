@@ -1,4 +1,5 @@
-"use strict";
+import * as React from "react";
+("use strict");
 import ObserverModelMixin from "../ObserveModelMixin";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";

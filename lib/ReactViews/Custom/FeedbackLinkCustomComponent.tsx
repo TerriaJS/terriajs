@@ -1,3 +1,4 @@
+import * as React from "react";
 import i18next from "i18next";
 import { runInAction } from "mobx";
 import { ReactElement } from "react";

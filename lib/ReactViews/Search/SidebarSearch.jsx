@@ -1,3 +1,4 @@
+import * as React from "react";
 import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";

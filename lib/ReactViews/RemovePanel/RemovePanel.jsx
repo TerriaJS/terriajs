@@ -1,3 +1,4 @@
+import * as React from "react";
 import ObserveModelMixin from "../ObserveModelMixin";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";

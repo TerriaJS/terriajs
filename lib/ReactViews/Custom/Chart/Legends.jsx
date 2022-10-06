@@ -1,3 +1,4 @@
+import * as React from "react";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { scaleOrdinal } from "@visx/scale";

@@ -1,3 +1,4 @@
+import * as React from "react";
 import { TFunction } from "i18next";
 import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";

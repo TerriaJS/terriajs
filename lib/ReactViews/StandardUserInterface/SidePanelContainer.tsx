@@ -1,3 +1,4 @@
+import * as React from "react";
 import { action } from "mobx";
 import styled from "styled-components";
 import ViewState from "../../ReactViewModels/ViewState";

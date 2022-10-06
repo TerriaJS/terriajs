@@ -1,3 +1,4 @@
+import * as React from "react";
 export default function highlightKeyword(searchResult, keywordToHighlight) {
   if (!keywordToHighlight) return searchResult;
   const parts = searchResult.split(new RegExp(`(${keywordToHighlight})`, "gi"));

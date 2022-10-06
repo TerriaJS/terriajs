@@ -1,3 +1,4 @@
+import * as React from "react";
 import { observer } from "mobx-react";
 import { computed } from "mobx";
 import { Tooltip as VisxTooltip } from "@visx/tooltip";

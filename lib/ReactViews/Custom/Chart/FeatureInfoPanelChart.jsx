@@ -1,3 +1,4 @@
+import * as React from "react";
 import { AxisBottom, AxisLeft } from "@visx/axis";
 import { Group } from "@visx/group";
 import { withParentSize } from "@vx/responsive";

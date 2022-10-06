@@ -1,3 +1,4 @@
+import * as React from "react";
 import { computed, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";

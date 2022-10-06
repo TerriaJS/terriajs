@@ -1,3 +1,4 @@
+import * as React from "react";
 import { observer } from "mobx-react";
 import { zoom as d3Zoom } from "d3-zoom";
 import { select as d3Select, event as d3Event } from "d3-selection";

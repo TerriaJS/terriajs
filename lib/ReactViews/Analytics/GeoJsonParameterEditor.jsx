@@ -1,4 +1,5 @@
-"use strict";
+import * as React from "react";
+("use strict");
 import PropTypes from "prop-types";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Styles from "./parameter-editors.scss";

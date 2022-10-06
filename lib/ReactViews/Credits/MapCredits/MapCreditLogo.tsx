@@ -1,3 +1,4 @@
+import * as React from "react";
 import { FC } from "react";
 import CreditDisplay from "terriajs-cesium/Source/Scene/CreditDisplay";
 import GlobeOrMap from "../../../Models/GlobeOrMap";

@@ -1,3 +1,4 @@
+import * as React from "react";
 import { TFunction } from "i18next";
 import { Component } from "react";
 import { withTranslation } from "react-i18next";

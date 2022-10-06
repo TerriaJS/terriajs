@@ -1,3 +1,4 @@
+import * as React from "react";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { Component } from "react";

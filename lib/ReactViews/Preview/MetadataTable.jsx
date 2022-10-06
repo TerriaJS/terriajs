@@ -1,3 +1,4 @@
+import * as React from "react";
 import { isArrayLike } from "mobx";
 import createReactClass from "create-react-class";
 

@@ -1,3 +1,4 @@
+import * as React from "react";
 import { ComponentProps } from "react";
 import styled from "styled-components";
 import { OneKeyFrom } from "./Styled.types";

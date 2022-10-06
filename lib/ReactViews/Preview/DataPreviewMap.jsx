@@ -1,4 +1,5 @@
-"use strict";
+import * as React from "react";
+("use strict");
 
 import classNames from "classnames";
 import { action, autorun, computed, observable, runInAction } from "mobx";

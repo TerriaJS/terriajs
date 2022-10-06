@@ -1,3 +1,4 @@
+import * as React from "react";
 import { observer } from "mobx-react";
 import { Component } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";

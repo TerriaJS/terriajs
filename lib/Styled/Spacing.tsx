@@ -1,3 +1,4 @@
+import * as React from "react";
 // <Spacing /> example from terrace
 
 // we'd typically want to avoid this but as the heading and paragraph margins

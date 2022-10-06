@@ -1,4 +1,5 @@
-"use strict";
+import * as React from "react";
+("use strict");
 // proptypes are in mixin
 /* eslint react/prop-types:0*/
 

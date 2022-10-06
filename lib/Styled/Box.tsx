@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Ref } from "react";
 import styled from "styled-components";
 import { OneKeyFrom, Overflow, WhiteSpace, WordBreak } from "./Styled.types";

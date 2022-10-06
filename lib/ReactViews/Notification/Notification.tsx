@@ -1,3 +1,4 @@
+import * as React from "react";
 import { observer } from "mobx-react";
 import triggerResize from "../../Core/triggerResize";
 import { useViewState } from "../StandardUserInterface/ViewStateContext";

@@ -1,3 +1,4 @@
+import * as React from "react";
 import { WithT } from "i18next";
 import isEmpty from "lodash-es/isEmpty";
 import { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";

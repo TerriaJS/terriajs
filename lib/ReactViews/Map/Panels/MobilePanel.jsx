@@ -1,3 +1,4 @@
+import * as React from "react";
 // proptypes are in mixin.
 /* eslint react/prop-types:0*/
 

@@ -1,3 +1,4 @@
+import * as React from "react";
 import DOMPurify from "dompurify";
 import { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";

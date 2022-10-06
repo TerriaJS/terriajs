@@ -1,4 +1,5 @@
-"use strict";
+import * as React from "react";
+("use strict");
 
 import { PureComponent } from "react";
 import PropTypes from "prop-types";

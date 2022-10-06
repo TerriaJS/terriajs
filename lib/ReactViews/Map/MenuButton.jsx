@@ -1,3 +1,4 @@
+import * as React from "react";
 import classNames from "classnames";
 import Icon from "../../Styled/Icon";
 import PropTypes from "prop-types";

@@ -1,3 +1,4 @@
+import * as React from "react";
 import createReactClass from "create-react-class";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
