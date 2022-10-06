@@ -628,7 +628,7 @@
       "auto": "ファイルタイプ",
       "shp": "Shapefile",
       "gltf": "glTF",
-      "carto": "Carto",
+      "carto": "Carto V1",
       "json": "Terriaカタログ",
       "gpx": "GPX",
       "czml": "CZML",
@@ -643,7 +643,8 @@
       "ifc": "IFC",
       "assimp-local": "3Dファイルコンバーター (zip) (試験的機能)",
       "assimp-local-description": "**警告:** 3D ファイルコンバータは試験的機能です。  \n[サポートされる形式のリスト](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nファイルは必ずZIPしてください。",
-      "assimp-remote": "3Dファイルコンバータ（試験的機能）"
+      "assimp-remote": "3Dファイルコンバータ（試験的機能）",
+      "carto-v3": "CARTO V3"
     },
     "dataUri": {
       "errorMessage": "残念ながら、Microsoftのブラウザ（全てのバージョンのInternet ExplorerとEdge）では、データをファイルとしてダウンロードするのに必要となるdata URI機能がサポートされていません。ダウンロードするには、次のURLを $t(browsers.chrome), $t(browsers.firefox), $t(browsers.safari)など別のブラウザにコピーしてください。{{href}}",
