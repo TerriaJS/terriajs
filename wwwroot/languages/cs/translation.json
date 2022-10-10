@@ -717,7 +717,7 @@
       "czml": "CZML",
       "gpx": "GPX",
       "json": "Katalog Terria",
-      "carto": "Carto",
+      "carto": "Carto V1",
       "shp": "Shapefile",
       "other": "Ostatní (použijte konverzní službu)",
       "open-street-map": "Open Street Map Server",
@@ -727,7 +727,8 @@
       "assimp-local": "Konvertor 3D souborů (zip) (experimentální)",
       "assimp-local-description": "**Upozornění:** Konvertor 3D souborů je experimentální.  \nViz seznam [podporovaných formátů](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nSoubory musí být zazipovány.",
       "assimp-remote": "Převodník 3D souborů (experimentální)",
-      "assimp-remote-description": "**Upozornění:** Konvertor 3D souborů je experimentální.  \nViz seznam [podporovaných formátů](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nPodporovány jsou také soubory Zip"
+      "assimp-remote-description": "**Upozornění:** Konvertor 3D souborů je experimentální.  \nViz seznam [podporovaných formátů](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nPodporovány jsou také soubory Zip",
+      "carto-v3": "Carto V3"
     },
     "printWindow": {
       "errorTitle": "Chyba tisku",
