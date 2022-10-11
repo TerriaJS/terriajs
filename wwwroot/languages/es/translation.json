@@ -348,7 +348,19 @@
     "locationSearchInput": {
       "content": "## Búsqueda de ubicación\n\nIngrese una localidad o dirección para ubicar fácilmente un punto de interés en el mapa."
     },
-    "finish": "Finalizar"
+    "finish": "Finalizar",
+    "menuBarStoryButton": {
+      "content": "## Historias\nLas historias permiten añadir información contextual a un conjunto de datos para dar vida a una narración. Cree su propia historia de datos con el Editor de Historias y compártala a través del panel \"Compartir\" una vez que haya terminado."
+    },
+    "exploreMapDataButton": {
+      "content": "## Explorar datos del mapa\nBusca en el catálogo datos disponibles y agrega al mapa aquí. Tu puedes agregar múltiples set de datos en cualquier momento, y verás a ellos  en el listado abajo"
+    },
+    "menuBarMapSettingsButton": {
+      "content": "## Configuraciones de mapa\nPersonalice los ajustes de los mapas, como los mapas base, el terreno 2D/3D y la calidad de la imagen del mapa para mejorar el rendimiento."
+    },
+    "sidePanelUploadButton": {
+      "content": "## Cargar datos\nPuede cargar sus propios datos en el mapa para visualizarlos con otros conjuntos de datos. Cargue un archivo o enlace a un conjunto de datos en línea o servicio de datos existente. Los formatos de datos admitidos son CSV, GeoJSON, KML, GPX and CZML."
+    }
   },
   "browsers": {
     "chrome": "Google Chrome",
