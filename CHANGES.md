@@ -13,6 +13,7 @@
 - Add `enabled` to `TableStyleMapTraits` - which defaults to `true`
 - Add `TableLabelStyleTraits` - this can be used to add `LabelGraphics` to point features (table or geojson)
 - Add `TableTrailStyleTraits` - this can be used to add `PathGraphics` to time-series point features (table or geojson)
+- Added missing `proxyCatalogItemUrl` to GeoJson, Shapefile, Gltf and AssImp catalog items.
 - [The next improvement]
 
 #### 8.2.17 - 2022-09-23
