@@ -6,7 +6,7 @@ import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
-import CartoMapCatalogItemTraits from "../../../Traits/TraitsClasses/CartoMapCatalogItemTraits";
+import CartoMapV1CatalogItemTraits from "../../../Traits/TraitsClasses/CartoMapV1CatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
@@ -14,12 +14,12 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
 
 export class CartoLoadableStratum extends LoadableStratum(
-  CartoMapCatalogItemTraits
+  CartoMapV1CatalogItemTraits
 ) {
   static stratumName = "cartoLoadable";
 
   constructor(
-    readonly catalogItem: CartoMapCatalogItem,
+    readonly catalogItem: CartoMapV1CatalogItem,
     readonly tileUrl: string,
     readonly tileSubdomains: string[]
   ) {
@@ -28,13 +28,15 @@ export class CartoLoadableStratum extends LoadableStratum(
 
   duplicateLoadableStratum(newModel: BaseModel): this {
     return new CartoLoadableStratum(
-      newModel as CartoMapCatalogItem,
+      newModel as CartoMapV1CatalogItem,
       this.tileUrl,
       this.tileSubdomains
     ) as this;
   }
 
-  static load(catalogItem: CartoMapCatalogItem): Promise<CartoLoadableStratum> {
+  static load(
+    catalogItem: CartoMapV1CatalogItem
+  ): Promise<CartoLoadableStratum> {
     let queryParameters: { auth_token?: string };
     queryParameters = {};
     if (catalogItem.auth_token) {
@@ -100,13 +102,13 @@ export class CartoLoadableStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(CartoLoadableStratum.stratumName);
 
-export default class CartoMapCatalogItem extends MappableMixin(
-  UrlMixin(CatalogMemberMixin(CreateModel(CartoMapCatalogItemTraits)))
+export default class CartoMapV1CatalogItem extends MappableMixin(
+  UrlMixin(CatalogMemberMixin(CreateModel(CartoMapV1CatalogItemTraits)))
 ) {
   static readonly type = "carto";
 
   get type() {
-    return CartoMapCatalogItem.type;
+    return CartoMapV1CatalogItem.type;
   }
 
   @computed get mapItems(): MapItem[] {

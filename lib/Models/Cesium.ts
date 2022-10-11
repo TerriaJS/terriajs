@@ -253,6 +253,8 @@ export default class Cesium extends GlobeOrMap {
 
     this.scene.globe.depthTestAgainstTerrain = false;
 
+    this.scene.renderError.addEventListener(this.onRenderError.bind(this));
+
     const inputHandler = this.cesiumWidget.screenSpaceEventHandler;
 
     // // Add double click zoom
@@ -531,9 +533,29 @@ export default class Cesium extends GlobeOrMap {
     }
   }
 
+  private previousRenderError: string | undefined;
+
+  /** Show error message to user if Cesium stops rendering. */
+  private onRenderError(scene: Scene, error: unknown) {
+    // This function can be called many times with the same error
+    // So we do a rudimentary check to only show the error message once
+    // - by comparing error.toString() to this.previousRenderError
+    if (typeof error === "object" && error !== null) {
+      const newError = error.toString();
+      if (newError !== this.previousRenderError) {
+        this.previousRenderError = error.toString();
+        this.terria.raiseErrorToUser(error, {
+          title: i18next.t("map.cesium.stoppedRenderingTitle"),
+          message: i18next.t("map.cesium.stoppedRenderingMessage")
+        });
+      }
+    }
+  }
+
   destroy() {
     // Port old Cesium.prototype.destroy stuff
     // this._enableSelectExtent(cesiumWidget.scene, false);
+    this.scene.renderError.removeEventListener(this.onRenderError);
 
     const inputHandler = this.cesiumWidget.screenSpaceEventHandler;
     inputHandler.removeInputAction(ScreenSpaceEventType.MOUSE_MOVE);
