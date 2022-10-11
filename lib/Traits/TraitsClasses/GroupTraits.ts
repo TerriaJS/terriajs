@@ -23,6 +23,13 @@ export default class GroupTraits extends mixTraits(ItemPropertiesTraits) {
   isOpen: boolean = false;
 
   @primitiveTrait({
+    name: "Merge by name",
+    description: "Merge member groups by name.",
+    type: "boolean"
+  })
+  mergeGroupsByName: boolean = false;
+
+  @primitiveTrait({
     name: "Sort members by",
     description:
       "Sort members by the given property/trait. For example `name`, will sort all members by alphabetically",

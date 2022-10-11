@@ -2,6 +2,7 @@
 
 #### next release (8.2.18)
 
+- Add `mergeGroupsByName` trait to `GroupTraits` - this will merge all group members with the same name
 - Fix bug with "propagate `knownContainerUniqueIds` across references and their target" - missing `runInAction`
 - Add Carto v3 Maps API support for `table` and `query` endpoint (only GeoJSON - not MVT yet)
 - Moved `activeStyle` default from `TableMixin` to `TableAutomaticStyleStratum`. The default `activeStyle` will now not pick a `hidden` `TableStyle`.
