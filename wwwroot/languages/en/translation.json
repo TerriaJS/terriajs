@@ -716,7 +716,8 @@
       "czml": "CZML",
       "gpx": "GPX",
       "json": "Terria Catalog",
-      "carto": "Carto",
+      "carto": "Carto V1",
+      "carto-v3": "Carto V3",
       "gltf": "glTF",
       "shp": "Shapefile",
       "socrata-group": "Socrata Server",
@@ -773,6 +774,8 @@
       "devError": "bulkConvertAddresses must be implemented in the derived class."
     },
     "cesium": {
+      "stoppedRenderingTitle": "3D map failed to render",
+      "stoppedRenderingMessage": "This may have been caused by a dataset just added to the workbench - please try removing it. If this does not resolve your problem you may need to reload {{appName}}.",
       "devError": "cesium is required.",
       "failedToObtain": "Failed to obtain image tile X: {{x}} Y: {{y}} Level: {{level}}.",
       "notWebMercatorTilingScheme": "This dataset cannot be displayed on the 2D map because it does not support the Web Mercator (EPSG:3857) projection.",
