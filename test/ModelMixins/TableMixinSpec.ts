@@ -1933,5 +1933,24 @@ describe("TableMixin", function () {
         });
       });
     });
+
+    it("doesn't pick hidden style as default activeStyle", async function () {
+      item.setTrait(CommonStrata.user, "csvString", ParkingSensorDataCsv);
+
+      await item.loadMapItems();
+
+      expect(item.activeStyle).toBe("eventid");
+
+      item.setTrait(CommonStrata.user, "styles", [
+        createStratumInstance(TableStyleTraits, {
+          id: "eventid",
+          hidden: true
+        })
+      ]);
+
+      await item.loadMapItems();
+
+      expect(item.activeStyle).toBe("parkflag");
+    });
   });
 });
