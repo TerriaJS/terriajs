@@ -1,9 +1,8 @@
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
+import LabelGraphics from "terriajs-cesium/Source/DataSources/LabelGraphics";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
@@ -36,12 +35,10 @@ export default function createLongitudeLatitudeFeaturePerRow(
       }
 
       const {
-        pointStyle,
-        color,
-        pointSize,
-        outlineStyle,
-        outlineColor,
-        makiIcon
+        pointGraphicsOptions,
+        billboardGraphicsOptions,
+        labelGraphicsOptions,
+        usePointGraphics
       } = getFeatureStyle(style, rowId);
 
       const feature = new TerriaFeature({
@@ -49,32 +46,26 @@ export default function createLongitudeLatitudeFeaturePerRow(
           Cartesian3.fromDegrees(longitude, latitude, 0.0)
         ),
         point:
-          pointStyle.marker === "point"
+          pointGraphicsOptions && usePointGraphics
             ? new PointGraphics({
-                color: color,
-                pixelSize: pointSize ?? pointStyle.height ?? pointStyle.width,
-                outlineWidth: outlineStyle.width,
-                outlineColor: outlineColor,
+                ...pointGraphicsOptions,
                 heightReference: HeightReference.CLAMP_TO_GROUND
               })
             : undefined,
         billboard:
-          pointStyle.marker !== "point"
+          billboardGraphicsOptions && !usePointGraphics
             ? new BillboardGraphics({
-                image: makiIcon ?? pointStyle.marker,
-                color: !makiIcon ? color : undefined,
-                width: pointStyle.width,
-                height: pointStyle.height,
-                rotation: CesiumMath.toRadians(
-                  360 - (pointStyle.rotation ?? 0)
-                ),
-                pixelOffset: new Cartesian2(
-                  pointStyle.pixelOffset?.[0],
-                  pointStyle.pixelOffset?.[1]
-                ),
+                ...billboardGraphicsOptions,
                 heightReference: HeightReference.CLAMP_TO_GROUND
               })
-            : undefined
+            : undefined,
+        label: labelGraphicsOptions
+          ? new LabelGraphics({
+              ...labelGraphicsOptions,
+              heightReference: HeightReference.CLAMP_TO_GROUND
+            })
+          : undefined
+        // Note: we don't add path/PathGraphicsOptions here as it is only relevant to time-series (see `createLongitudeLatitudeFeaturePerId.ts`)
       });
       const timeInterval = intervals[rowId];
       if (timeInterval)
