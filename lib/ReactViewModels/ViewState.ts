@@ -24,6 +24,7 @@ import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import { BaseModel } from "../Models/Definition/Model";
 import getAncestors from "../Models/getAncestors";
+import { SelectableDimension } from "../Models/SelectableDimensions/SelectableDimensions";
 import Terria from "../Models/Terria";
 import { ViewingControl } from "../Models/ViewingControls";
 import { SATELLITE_HELP_PROMPT_KEY } from "../ReactViews/HelpScreens/SatelliteHelpPrompt";
@@ -105,6 +106,8 @@ export default class ViewState {
 
   @observable printWindow: Window | null = null;
 
+  @observable isActionBarVisible = false;
+
   /**
    * A global list of functions that generate a {@link ViewingControl} option
    * for the given catalog item instance.  This is useful for plugins to extend
@@ -116,6 +119,18 @@ export default class ViewState {
   readonly globalViewingControlOptions: ((
     item: CatalogMemberMixin.Instance
   ) => ViewingControl | undefined)[] = [];
+
+  /**
+   * A global ist of functions that dynamicall generate {@link
+   * SelectableDimension} for items in the workbench. This is useful for
+   * plugins to extend the workbench controls for items shown in the workbench.
+   *
+   * Use {@link WorkbenchItemControls.addControl} instead of updating directly.
+   */
+  @observable
+  readonly workbenchItemControlGenerators: ((
+    item: BaseModel
+  ) => SelectableDimension[] | undefined)[] = [];
 
   @action
   setSelectedTrainerItem(trainerItem: string) {
@@ -145,6 +160,11 @@ export default class ViewState {
   @action
   setCurrentTrainerStepIndex(index: number) {
     this.currentTrainerStepIndex = index;
+  }
+
+  @action
+  setActionBarVisible(visible: boolean) {
+    this.isActionBarVisible = visible;
   }
 
   /**

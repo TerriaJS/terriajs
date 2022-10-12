@@ -36,10 +36,10 @@ const WorkflowPanel: React.FC<PropsType> = observer((props) => {
       runInAction(() => {
         viewState.terria.isWorkflowPanelActive = false;
       });
-  });
+  }, []);
 
   return (
-    <Portal viewState={viewState} id={WorkflowPanelPortalId}>
+    <Portal id={WorkflowPanelPortalId}>
       <Container
         className={
           viewState.topElement === "WorkflowPanel" ? "top-element" : ""
@@ -56,7 +56,9 @@ const WorkflowPanel: React.FC<PropsType> = observer((props) => {
           </CloseButton>
         </TitleBar>
         <Content>
-          <ErrorBoundary viewState={viewState}>{props.children}</ErrorBoundary>
+          <ErrorBoundary viewState={viewState}>
+            {props.children ?? null}
+          </ErrorBoundary>
         </Content>
         {props.footer ? (
           <PanelButton

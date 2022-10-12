@@ -2,6 +2,9 @@ import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Result from "../../Core/Result";
+import prettifyCoordinates, {
+  PrettifyOptions
+} from "../../Map/Vector/prettifyCoordinates";
 import Model from "../../Models/Definition/Model";
 import updateModelFromJson from "../../Models/Definition/updateModelFromJson";
 import primitiveTrait from "../Decorators/primitiveTrait";
@@ -92,5 +95,15 @@ export default class LatLonHeightTraits extends ModelTraits {
       undefined,
       result ?? new Cartesian3()
     );
+  }
+
+  static prettifyCoordinates(
+    model: Model<LatLonHeightTraits>,
+    options?: Pick<PrettifyOptions, "digits">
+  ) {
+    return prettifyCoordinates(model.longitude ?? 0, model.latitude ?? 0, {
+      height: model.height,
+      ...options
+    });
   }
 }

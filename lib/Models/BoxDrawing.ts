@@ -123,7 +123,15 @@ type ScalePointStyle = {
  */
 type InteractionState =
   | { is: "none" }
-  | { is: "picked"; entity: Entity & Interactable }
+  | {
+      is: "picked";
+      entity: Entity & Interactable;
+      // Captures previous input state so that we can restore it
+      beforeState: {
+        isFeaturePickingPaused: boolean;
+        enableInputs: boolean;
+      };
+    }
   | { is: "hovering"; entity: Entity & Interactable };
 
 type OnChangeParams = {
@@ -156,6 +164,12 @@ type BoxDrawingOptions = {
    * A callback method to call when box parameters change.
    */
   onChange?: (params: OnChangeParams) => void;
+
+  /**
+   * Set `false` to disable non-uniform scaling
+   * Default: true
+   */
+  enableNonUniformScaling?: boolean;
 };
 
 // The 6 box sides defined as planes in local coordinate space.
@@ -168,6 +182,9 @@ const SIDE_PLANES: Plane[] = [
   new Plane(new Cartesian3(-1, 0, 0), 0.5)
 ];
 
+// The box has 8 corner points and 6 face points that act as scaling grips.
+// Here we represent them as 7 vectors in local coordinates space.
+// Each vector represents a point and its opposite points can be easily derived from it.
 const CORNER_POINT_VECTORS = [
   new Cartesian3(0.5, 0.5, 0.5),
   new Cartesian3(0.5, -0.5, 0.5),
@@ -180,11 +197,6 @@ const FACE_POINT_VECTORS = [
   new Cartesian3(0.0, 0.5, 0.0),
   new Cartesian3(0.0, 0.0, 0.5)
 ];
-
-// The box has 8 corner points and 6 face points that act as scaling grips.
-// Here we represent them as 7 vectors in local coordinates space.
-// Each vector represents a point and its opposite points can be easily derived from it.
-const SCALE_POINT_VECTORS = [...CORNER_POINT_VECTORS, ...FACE_POINT_VECTORS];
 
 /**
  * Checks whether the given entity is updatable (i.e repsonds to box parameter changes).
@@ -329,6 +341,10 @@ export default class BoxDrawing {
       this.trs.rotation
     );
     this.updateBox();
+  }
+
+  getScale(result: Cartesian3): Cartesian3 {
+    return Cartesian3.clone(this.trs.scale, result);
   }
 
   /**
@@ -519,22 +535,31 @@ export default class BoxDrawing {
         return;
       }
 
-      this.cesium.isFeaturePickingPaused = true;
-      scene.screenSpaceCameraController.enableInputs = false;
       if (state.is === "hovering") {
         state.entity.onMouseOut({
           startPosition: click.position,
           endPosition: click.position
         });
       }
-      state = { is: "picked", entity };
+      state = {
+        is: "picked",
+        entity,
+        beforeState: {
+          isFeaturePickingPaused: this.cesium.isFeaturePickingPaused,
+          enableInputs: scene.screenSpaceCameraController.enableInputs
+        }
+      };
+      this.cesium.isFeaturePickingPaused = true;
+      scene.screenSpaceCameraController.enableInputs = false;
       entity.onPick(click);
     };
 
     const handleRelease = (click: MouseClick) => {
       if (state.is === "picked") {
-        this.cesium.isFeaturePickingPaused = false;
-        scene.screenSpaceCameraController.enableInputs = true;
+        this.cesium.isFeaturePickingPaused =
+          state.beforeState.isFeaturePickingPaused;
+        scene.screenSpaceCameraController.enableInputs =
+          state.beforeState.enableInputs;
         state.entity.onRelease(click);
         state = { is: "none" };
       }
@@ -648,7 +673,14 @@ export default class BoxDrawing {
    * Draw the scale grip points.
    */
   private drawScalePoints() {
-    SCALE_POINT_VECTORS.forEach((vector) => {
+    const enableNonUniformScaling =
+      this.options.enableNonUniformScaling ?? true;
+    const scalePointVectors = [
+      ...CORNER_POINT_VECTORS,
+      ...(enableNonUniformScaling ? FACE_POINT_VECTORS : [])
+    ];
+
+    scalePointVectors.forEach((vector) => {
       const pointLocal1 = vector;
       const pointLocal2 = Cartesian3.multiplyByScalar(
         vector,
@@ -1058,7 +1090,9 @@ export default class BoxDrawing {
       ) as any,
       model: {
         uri: require("file-loader!../../wwwroot/models/Box.glb"),
+        // minimumPixelSize and maximumScale must be relative to the box size
         minimumPixelSize: 12,
+        //maximumScale: 0.5,
         shadows: ShadowMode.DISABLED,
         color: new CallbackProperty(() => getColor(), false),
         // Forces the above color ignoring the color specified in gltf material

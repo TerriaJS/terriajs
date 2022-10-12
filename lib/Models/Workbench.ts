@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import Result from "../Core/Result";
 import TerriaError, { TerriaErrorSeverity } from "../Core/TerriaError";
@@ -208,9 +208,11 @@ export default class Workbench {
 
     if (!error && MappableMixin.isMixedInto(item)) {
       error = (await item.loadMapItems()).error;
-      if (!error && item.zoomOnAddToWorkbench && !item.disableZoomTo) {
-        item.terria.currentViewer.zoomTo(item);
-      }
+      runInAction(() => {
+        if (!error && item.zoomOnAddToWorkbench && !item.disableZoomTo) {
+          item.terria.currentViewer.zoomTo(item);
+        }
+      });
     }
 
     // Remove item if TerriaError severity is Error

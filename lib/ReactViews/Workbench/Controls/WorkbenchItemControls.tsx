@@ -1,16 +1,21 @@
 import { observer } from "mobx-react";
 import React from "react";
+import { TerriaError } from "terriajs-plugin-api";
 import { Complete } from "../../../Core/TypeModifiers";
 import DiscretelyTimeVaryingMixin from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
 import hasTraits from "../../../Models/Definition/hasTraits";
 import { BaseModel } from "../../../Models/Definition/Model";
-import { DEFAULT_PLACEMENT } from "../../../Models/SelectableDimensions/SelectableDimensions";
+import {
+  DEFAULT_PLACEMENT,
+  SelectableDimension
+} from "../../../Models/SelectableDimensions/SelectableDimensions";
 import ViewState from "../../../ReactViewModels/ViewState";
 import WebMapServiceCatalogItemTraits from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
 import ChartItemSelector from "./ChartItemSelector";
 import ColorScaleRangeSection from "./ColorScaleRangeSection";
 import DateTimeSelectorSection from "./DateTimeSelectorSection";
 import FilterSection from "./FilterSection";
+import GeneratedControlSection from "./GeneratedControlSection";
 import LeftRightSection from "./LeftRightSection";
 import Legend from "./Legend";
 import OpacitySection from "./OpacitySection";
@@ -80,6 +85,14 @@ const WorkbenchItemControls: React.FC<WorkbenchItemControlsProps> = observer(
   ({ item, viewState, controls: controlsWithoutDefaults }) => {
     // Apply controls from props on top of defaultControls
     const controls = { ...defaultControls, ...controlsWithoutDefaults };
+    const { controls: generatedControls, error } = generateControls(
+      viewState,
+      item
+    );
+
+    if (error) {
+      error.log();
+    }
 
     return (
       <>
@@ -101,6 +114,13 @@ const WorkbenchItemControls: React.FC<WorkbenchItemControlsProps> = observer(
         {controls?.selectableDimensions ? (
           <DimensionSelectorSection item={item} placement={DEFAULT_PLACEMENT} />
         ) : null}
+        {
+          <GeneratedControlSection
+            item={item}
+            placement={DEFAULT_PLACEMENT}
+            controls={generatedControls}
+          />
+        }
         {/* TODO: remove min max props and move the checks to
       ColorScaleRangeSection to keep this component simple. */}
         {controls?.colorScaleRange &&
@@ -125,9 +145,31 @@ const WorkbenchItemControls: React.FC<WorkbenchItemControlsProps> = observer(
         {controls?.selectableDimensions ? (
           <DimensionSelectorSection item={item} placement={"belowLegend"} />
         ) : null}
+        {
+          <GeneratedControlSection
+            item={item}
+            placement="belowLegend"
+            controls={generatedControls}
+          />
+        }
       </>
     );
   }
 );
+
+function generateControls(viewState: ViewState, item: BaseModel) {
+  const controls: SelectableDimension[] = [];
+  const errors: TerriaError[] = [];
+  viewState.workbenchItemControlGenerators.forEach((generator) => {
+    try {
+      controls.push(...(generator(item) ?? []));
+    } catch (error) {
+      errors.push(TerriaError.from(error));
+    }
+  });
+
+  const error = errors.length > 0 ? TerriaError.combine(errors, {}) : undefined;
+  return { controls, error };
+}
 
 export default WorkbenchItemControls;

@@ -67,6 +67,16 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
       return true;
     }
 
+    /**
+     * Should item of this type be zoomed to when user uploads data using the
+     * Add local/web data flow.
+     *
+     * Catalog items may override to customize the default setting.
+     */
+    get zoomToItemOnUpload() {
+      return true;
+    }
+
     @computed
     get cesiumRectangle() {
       if (

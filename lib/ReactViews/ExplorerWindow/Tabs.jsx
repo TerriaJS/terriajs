@@ -29,7 +29,7 @@ const Tabs = observer(
         const result = await this.props.viewState.viewCatalogMember(file);
         if (result.error) {
           result.raiseError(this.props.terria);
-        } else {
+        } else if (file.zoomToItemOnUpload) {
           this.props.terria.currentViewer.zoomTo(file, 1);
         }
       }

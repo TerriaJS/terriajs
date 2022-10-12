@@ -19,7 +19,7 @@ import Icon, { GLYPHS } from "../../../../Styled/Icon";
 import Ul, { Li } from "../../../../Styled/List";
 import Terria from "./../../../../Models/Terria";
 
-const Tween = require("terriajs-cesium/Source/ThirdParty/Tween").default;
+//const Tween = require("terriajs-cesium/Source/ThirdParty/Tween").default;
 
 interface PropTypes extends WithTranslation {
   terria: Terria;
@@ -54,7 +54,7 @@ class ZoomControl extends React.Component<PropTypes> {
 
     scene.tweens.add({
       duration: durationMilliseconds / 1000.0,
-      easingFunction: Tween.Easing.Sinusoidal.InOut,
+      //easingFunction: Tween.Easing.Sinusoidal.InOut,
       startObject: {
         time: 0.0
       },

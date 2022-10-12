@@ -47,15 +47,16 @@ function configureWebpack(
     test: /\.js?$/,
     include: path.dirname(require.resolve("terriajs-cesium")),
     exclude: [
-      require.resolve("terriajs-cesium/Source/ThirdParty/zip"),
-      require.resolve("terriajs-cesium/Source/Core/buildModuleUrl"),
-      require.resolve("terriajs-cesium/Source/Core/TaskProcessor")
+      new RegExp("terriajs-cesium/Source/ThirdParty/zip"),
+      new RegExp("terriajs-cesium/Source/Core/buildModuleUrl"),
+      new RegExp("terriajs-cesium/Source/Core/TaskProcessor")
     ],
     loader: StringReplacePlugin.replace({
       replacements: [
         {
           pattern: /buildModuleUrl\([\'|\"|\`](.*)[\'|\"|\`]\)/gi,
           replacement: function (match, p1, offset, string) {
+            console.log(match);
             let p1_modified = p1.replace(/\\/g, "\\\\");
             return (
               "require(`" +
@@ -217,7 +218,7 @@ function configureWebpack(
 
   // Don't let Cesium's `buildModuleUrl` see require - only the AMD version is relevant.
   config.module.rules.push({
-    test: require.resolve("terriajs-cesium/Source/Core/buildModuleUrl"),
+    test: new RegExp("terriajs-cesium/Source/Core/buildModuleUrl"),
     loader: "imports-loader?require=>false"
   });
 

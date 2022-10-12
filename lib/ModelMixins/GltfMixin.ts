@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed } from "mobx";
+import { computed, trace } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
@@ -28,8 +28,19 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
   abstract class GltfMixin extends ShadowMixin(
     CatalogMemberMixin(MappableMixin(Base))
   ) {
+    private readonly dataSource = new CustomDataSource("glTF Model");
+    private readonly _gltfModelEntity = new Entity();
+
     get hasGltfMixin() {
       return true;
+    }
+
+    /**
+     * Allow zooming to item on upload only if the item is geo-referenced
+     */
+    @computed
+    get zoomToItemOnUpload() {
+      return this.cesiumPosition !== undefined;
     }
 
     @computed
@@ -57,7 +68,7 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
     }
 
     @computed
-    private get cesiumPosition(): Cartesian3 {
+    private get cesiumPosition(): Cartesian3 | undefined {
       if (
         this.origin !== undefined &&
         this.origin.longitude !== undefined &&
@@ -69,9 +80,8 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
           this.origin.latitude,
           this.origin.height
         );
-      } else {
-        return Cartesian3.ZERO;
       }
+      return undefined;
     }
 
     /**
@@ -86,7 +96,7 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
         roll ?? 0
       );
       const orientation = Transforms.headingPitchRollQuaternion(
-        this.cesiumPosition,
+        this.cesiumPosition ?? Cartesian3.ZERO,
         hpr
       );
       return orientation;
@@ -127,22 +137,88 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
     }
 
     @computed
+    get gltfModelEntity(): Entity {
+      const entity = this._gltfModelEntity;
+      entity.position = new ConstantPositionProperty(
+        this.cesiumPosition ?? Cartesian3.ZERO
+      );
+      entity.orientation = new ConstantProperty(this.orientation);
+      entity.model = this.model;
+      return entity;
+    }
+
+    @computed
     get mapItems() {
+      trace();
       if (this.model === undefined) {
         return [];
       }
 
       this.model.show = new ConstantProperty(this.show);
-      const dataSource: CustomDataSource = new CustomDataSource(
-        this.name || "glTF model"
-      );
-      dataSource.entities.add(
-        new Entity({
-          position: new ConstantPositionProperty(this.cesiumPosition),
-          orientation: new ConstantProperty(this.orientation),
-          model: this.model
-        })
-      );
+      const dataSource = this.dataSource;
+      if (this.name) {
+        this.dataSource.name = this.name;
+      }
+      // const dataSource: CustomDataSource = new CustomDataSource(
+      //   this.name || "glTF model"
+      // );
+      const modelEntity = this.gltfModelEntity;
+      // modelEntity.position = new ConstantPositionProperty(this.cesiumPosition);
+      // modelEntity.orientation = new ConstantProperty(this.orientation);
+      // modelEntity.model = this.model;
+
+      // const modelEntity = new Entity({
+      //   position: new ConstantPositionProperty(this.cesiumPosition),
+      //   orientation: new ConstantProperty(this.orientation),
+      //   model: this.model
+      // });
+      console.log("**createEntity**", this.name, modelEntity.id);
+      if (!dataSource.entities.contains(modelEntity)) {
+        dataSource.entities.add(modelEntity);
+      }
+
+      // const controls = new CustomDataSource();
+
+      // controls.entities.add(
+      //   new Entity({
+      //     position: new CallbackProperty(
+      //       () => modelEntity.position?.getValue(JulianDate.now()),
+      //       false
+      //     ),
+      //     point: {
+      //       color: Color.YELLOW,
+      //       pixelSize: 20
+      //     }
+      //   })
+      // );
+
+      // controls.entities.add(
+      //   new Entity({
+      //     position: new CallbackProperty(
+      //       () => window.boxPositionMin ?? Cartesian3.ZERO,
+      //       false
+      //     ),
+      //     point: {
+      //       color: Color.ORANGE,
+      //       pixelSize: 10
+      //     }
+      //   })
+      // );
+
+      // controls.entities.add(
+      //   new Entity({
+      //     position: new CallbackProperty(
+      //       () => window.boxPositionMax ?? Cartesian3.ZERO,
+      //       false
+      //     ),
+      //     point: {
+      //       color: Color.PINK,
+      //       pixelSize: 10
+      //     }
+      //   })
+      // );
+
+      dataSource.show = this.show;
       return [dataSource];
     }
   }

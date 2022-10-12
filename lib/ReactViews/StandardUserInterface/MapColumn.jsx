@@ -17,6 +17,7 @@ import TerriaViewerWrapper from "../Map/TerriaViewerWrapper";
 import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
 import Styles from "./map-column.scss";
 import Toast from "./Toast";
+import { ActionBarPortalContainer } from "./Portals/ActionBarPortal";
 import { withViewState } from "./ViewStateContext";
 
 const chromeVersion = FeatureDetection.chromeVersion();
@@ -106,6 +107,7 @@ const MapColumn = observer(
                   terria={this.props.viewState.terria}
                   viewState={this.props.viewState}
                 />
+                <ActionBarPortalContainer show={viewState.isActionBarVisible} />
                 <SlideUpFadeIn isVisible={this.props.viewState.isMapZooming}>
                   <Toast>
                     <Loader

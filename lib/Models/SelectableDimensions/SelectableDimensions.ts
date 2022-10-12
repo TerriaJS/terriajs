@@ -44,6 +44,7 @@ export interface ColorDimension extends Dimension {
 
 export interface ButtonDimension extends Dimension {
   readonly value?: string;
+  readonly buttonStyle?: "primary" | "secondary" | "warning";
 }
 
 export type SelectableDimensionType =

@@ -603,32 +603,42 @@ export default class Cesium extends GlobeOrMap {
     return this._allMappables.map(({ mapItem }) => mapItem);
   }
 
+  @computed
+  private get allDataSources(): DataSource[] {
+    return this._allMapItems.filter(isDataSource);
+  }
+
   private observeModelLayer() {
     let prevMapItems: MapItem[] = [];
     return autorun(() => {
       // TODO: Look up the type in a map and call the associated function.
       //       That way the supported types of map items is extensible.
-      const allDataSources = this._allMapItems.filter(isDataSource);
 
       let dataSources = this.dataSources;
       // Remove deleted data sources
       // Iterate backwards because we're removing items.
       for (let i = dataSources.length - 1; i >= 0; i--) {
         const d = dataSources.get(i);
-        if (allDataSources.indexOf(d) === -1) {
+        if (this.allDataSources.indexOf(d) === -1) {
           dataSources.remove(d);
         }
       }
 
       // Add new data sources
-      allDataSources.forEach((d) => {
-        if (!dataSources.contains(d)) {
-          dataSources.add(d);
-        }
-      });
+      const dataSourcesAdded = Promise.all(
+        this.allDataSources.map((d) =>
+          dataSources.contains(d)
+            ? Promise.resolve()
+            : dataSources.add(d).then(() => {})
+        )
+      );
 
       // Ensure stacking order matches order in allDataSources - first item appears on top.
-      allDataSources.forEach((d) => dataSources.raiseToTop(d));
+      dataSourcesAdded.then(() =>
+        runInAction(() =>
+          this.allDataSources.forEach((d) => dataSources.raiseToTop(d))
+        )
+      );
 
       const allImageryParts = this._allMappables
         .map((m) =>
@@ -800,7 +810,7 @@ export default class Cesium extends GlobeOrMap {
                 // distance cesium calculates for large models is often too far away.
                 target.boundingSphere.radius < 100
                   ? undefined
-                  : target.boundingSphere.radius
+                  : target.boundingSphere.radius * 2.5
               ),
               duration: flightDurationSeconds
             });
@@ -1652,6 +1662,7 @@ function zoomToDataSource(
       if (boundingSpheres.length > 0 && _lastZoomTarget === target) {
         var boundingSphere =
           BoundingSphere.fromBoundingSpheres(boundingSpheres);
+
         flyToPromise = flyToBoundingSpherePromise(
           cesium.scene.camera,
           boundingSphere,
@@ -1664,7 +1675,9 @@ function zoomToDataSource(
               // cesium calculate an appropriate zoom distance. For the rest
               // use the radius as the zoom distance because the offset
               // distance cesium calculates for large models is often too far away.
-              boundingSphere.radius < 100 ? undefined : boundingSphere.radius
+              boundingSphere.radius < 100
+                ? undefined
+                : boundingSphere.radius * 2.5
             )
           }
         );

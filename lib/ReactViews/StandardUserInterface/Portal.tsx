@@ -1,14 +1,14 @@
 import { observer } from "mobx-react";
 import React from "react";
 import ReactDOM from "react-dom";
-import ViewState from "../../ReactViewModels/ViewState";
+import useViewState from "../Hooks/useViewState";
 
 export type PropsType = {
-  viewState: ViewState;
   id: string;
 };
 
-const Portal: React.FC<PropsType> = observer(({ viewState, id, children }) => {
+const Portal: React.FC<PropsType> = observer(({ id, children }) => {
+  const viewState = useViewState();
   const container = viewState.portals.get(id);
   return container ? ReactDOM.createPortal(<>{children}</>, container) : null;
 });
