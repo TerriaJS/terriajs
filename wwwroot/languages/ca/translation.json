@@ -753,7 +753,9 @@
       "devError": "es requereix Cesium.",
       "failedToObtain": "No s'ha pogut obtenir la tessel·la X: {{x}} Y: {{y}} Nivell: {{level}}.",
       "notWebMercatorTilingScheme": "Aquest conjunt de dades no es pot mostrar al mapa 2D perquè no admet la projecció Web Mercator (EPSG:3857).",
-      "unusalTilingScheme": "Aquest conjunt de dades no es pot mostrar al mapa 2D perquè utilitza un esquema de mosaic inusual que no és compatible."
+      "unusalTilingScheme": "Aquest conjunt de dades no es pot mostrar al mapa 2D perquè utilitza un esquema de mosaic inusual que no és compatible.",
+      "stoppedRenderingTitle": "El mapa 3D no s'ha pogut renderitzar",
+      "stoppedRenderingMessage": "Això pot haver estat causat per un conjunt de dades que s'acaba d'afegir a l'espai de treball, proveu d'eliminar-lo. Si això no resol el vostre problema, és possible que ho hàgiu de tornar a carregar {{appName}}."
     },
     "computeRingWindingOrder": {
       "devError": "Punts esperats del tipus {x:nombre, y:nombre}"
