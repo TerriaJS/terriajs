@@ -44,6 +44,41 @@ type TimeProperties<T> = {
   [key in keyof T]: SampledProperty | TimeIntervalCollectionProperty;
 };
 
+class PreSampledProperty {
+  private epoch: JulianDate | undefined;
+  private samples: [JulianDate, any][] = [];
+
+  constructor(
+    readonly type: Packable & {
+      pack: (value: any, array: number[], startingIndex?: number) => number[];
+    }
+  ) {}
+
+  toSampledProperty() {
+    if (!this.epoch || this.samples.length === 0) return;
+    const property = new SampledProperty(this.type);
+    const packedSamples: number[] = [];
+
+    for (let i = 0; i < this.samples.length; i++) {
+      const sample = this.samples[i];
+      this.type.pack(sample[1], packedSamples);
+      packedSamples.push(JulianDate.secondsDifference(this.epoch, sample[0]));
+    }
+    property.addSamplesPackedArray(packedSamples, this.epoch);
+
+    return property;
+  }
+
+  addSample(time: JulianDate, value: any) {
+    this.samples.push([time, value]);
+    if (!this.epoch) {
+      this.epoch = time;
+    } else if (JulianDate.compare(this.epoch, time) > 0) {
+      this.epoch = time;
+    }
+  }
+}
+
 /**
  * Create lat/lon features, one for each id group in the table
  */
