@@ -14,6 +14,9 @@
 - Add `TableLabelStyleTraits` - this can be used to add `LabelGraphics` to point features (table or geojson)
 - Add `TableTrailStyleTraits` - this can be used to add `PathGraphics` to time-series point features (table or geojson)
 - Added missing `proxyCatalogItemUrl` to GeoJson, Shapefile, Gltf and AssImp catalog items.
+- Added support for `OpenDataSoftCatalogGroup` with more than 100 datasets.
+- Added `refreshIntervalTemplate` to `OpenDataSoftCatalogItemTraits` - this can be used to set `refreshInterval` using Mustache template rendered on ODS Dataset JSON object.
+
 - [The next improvement]
 
 #### 8.2.17 - 2022-09-23
