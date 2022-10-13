@@ -16,7 +16,7 @@
 - Added missing `proxyCatalogItemUrl` to GeoJson, Shapefile, Gltf and AssImp catalog items.
 - Added support for `OpenDataSoftCatalogGroup` with more than 100 datasets.
 - Added `refreshIntervalTemplate` to `OpenDataSoftCatalogItemTraits` - this can be used to set `refreshInterval` using Mustache template rendered on ODS Dataset JSON object.
-
+- Tweak `generateCatalogIndex` to use less memory. (+ add `diffCatalogIndex.js` script to show added/removed members between two catalog index files)
 - [The next improvement]
 
 #### 8.2.17 - 2022-09-23
@@ -27,7 +27,6 @@
 
 - Make srsName and outputFormat for WFS requests dynamic
 - Added `excludeInactiveDatasets` to `CkanCatalogGroup` (`true` by default). This will filter out CKAN Datasets which have `state` or `data_state` (data.gov.au specific) **not** set to `"active"`.
-- Tweak `generateCatalogIndex` to use less memory. (+ add `diffCatalogIndex.js` script to show added/removed members between two catalog index files)
 - Fix `isTerriaFeatureData` bug - not checking `isJsonObject`
 - Add `.logError()` to all usage of `updateModelFromJson` where the `Result` object is ignored
 - Move `RelatedMaps` to terriajs. They are now generated from `configParameters` (see [`doc/customizing/client-side-config.md`](./doc/customizing/client-side-config.md#relatedmap))
