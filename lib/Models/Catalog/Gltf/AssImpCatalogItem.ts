@@ -10,6 +10,7 @@ import AssImpCatalogItemTraits from "../../../Traits/TraitsClasses/AssImpCatalog
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import HasLocalData from "../../HasLocalData";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { GlTf } from "./GLTF";
 
 // List of supported image formats from https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types
@@ -99,7 +100,7 @@ export default class AssImpCatalogItem
       urls.map(async (url) => {
         // **Local data** - treat all URLs as zip if they have been uploaded
         if (isZip(url) || this.hasLocalData) {
-          const blob = await loadBlob(url);
+          const blob = await loadBlob(proxyCatalogItemUrl(this, url));
           const zipFiles = await parseZipArrayBuffers(blob);
           zipFiles.forEach((zipFile) => {
             fileArrayBuffers.push({
@@ -116,7 +117,9 @@ export default class AssImpCatalogItem
         }
         // **Remote data** - explicitly defined in `url` or `urls`
         else {
-          const arrayBuffer = await loadArrayBuffer(url);
+          const arrayBuffer = await loadArrayBuffer(
+            proxyCatalogItemUrl(this, url)
+          );
           const uri = new URI(url);
           const name = uri.filename();
           fileArrayBuffers.push({
