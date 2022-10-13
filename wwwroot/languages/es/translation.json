@@ -18,7 +18,12 @@
       "goleftTitle": "Mostrar en el lado izquierdo"
     },
     "title": "Arrastrar a izquierda o derecha para ajustar vistas",
-    "toggleSplitterTool": "Habilitar comparación lado a lado entre diferentes conjuntos de datos"
+    "toggleSplitterTool": "Habilitar comparación lado a lado entre diferentes conjuntos de datos",
+    "toggleSplitterToolDisabled": "Desactive otras funciones de comparación por pares para poder activar la comparación estándar",
+    "toggleSplitterToolTitle": "Comparar",
+    "errorTitle": "Fallo en la comparación del artículo del catálogo.",
+    "duplicateModelErrorMessage": "Se ha producido un error al dividir el elemento del catálogo `\"{{nombre}}\"`. Es posible que este elemento del catálogo no admita la función de \"comparación\".",
+    "modelNotFoundErrorMessage": "ID del modelo `\"{{id}}\"`No se ha encontrado"
   },
   "viewModels": {
     "searchCatalogueItem": "Elementos del catálogo",
@@ -293,7 +298,8 @@
     "arTool": "herramienta de realidad aumentada",
     "resetAlignmentTitle": "Restablecer Alineación",
     "manualAlignmentTitle": "Alineación Manual",
-    "title": "Funcionalidad Experimental: Realidad Aumentada"
+    "title": "Funcionalidad Experimental: Realidad Aumentada",
+    "resetAlignmentMessage": "Resetea la alineación del compas. Si la alineación no concuerda con el mundo real trata de resetear tu dispositivo como en la figura 8 para recalibrar el dispositivo. Evite lugares con campos magnéticos u objetos metálicos, ya que pueden desorientar la brújula del dispositivo."
   },
   "zoomCotrol": {
     "zoomOut": "Zoom -",
@@ -313,11 +319,24 @@
   },
   "measure": {
     "measureTool": "Herramienta de Medición",
-    "measureDistance": "Medir distancia entre localizaciones"
+    "measureDistance": "Medir distancia entre localizaciones",
+    "measureToolTitle": "Medida de la línea"
   },
   "compass": {
     "description": "Arrastrar anillo exterior: rotar vista.\nArrastre el giroscopio interior: órbita libre.\nHacer doble clic: restablecer la vista.\nSUGERENCIA: también puede liberar la órbita manteniendo presionada la tecla CTRL y arrastrando el mapa.",
-    "title": "Pichar y mover para rotar la cámara"
+    "title": "Pichar y mover para rotar la cámara",
+    "guidanceBtnTitle": "Guiado por giroscopio",
+    "guidanceBtnText": "Ver instrucciones detalladas sobre el uso de la brújula",
+    "guidance": {
+      "dismissText": "Cerrar y no volver a mostrar",
+      "innerCircleDescription2": "Haga doble clic aquí para restablecer la vista a su estado predeterminado.",
+      "ctrlDragDescription": "También puedes inclinar y girar el mapa manteniendo pulsada la tecla CTRL y arrastrando el mapa.",
+      "title": "Controles del giroscopio",
+      "outerRingTitle": "Anillo exterior",
+      "innerCircleTitle": "Círculo interior",
+      "outerRingDescription": "Arrastre el anillo exterior con un movimiento circular para girar la vista del mapa 360˚.",
+      "innerCircleDescription1": "Haz clic en el centro y arrastra lentamente hacia arriba, hacia abajo, hacia la izquierda o hacia la derecha para inclinar y girar el mapa al mismo tiempo."
+    }
   },
   "preview": {
     "addToMap": "Añadir al mapa",
@@ -360,6 +379,12 @@
     },
     "sidePanelUploadButton": {
       "content": "## Cargar datos\nPuede cargar sus propios datos en el mapa para visualizarlos con otros conjuntos de datos. Cargue un archivo o enlace a un conjunto de datos en línea o servicio de datos existente. Los formatos de datos admitidos son CSV, GeoJSON, KML, GPX and CZML."
+    },
+    "mapNavigationCompassOuterRing": {
+      "content": "## Controles de la vista\n\nAquí puedes cambiar la vista del mapa. Puedes cambiar la orientación de la vista usando el anillo exterior, y puedes inclinar el ángulo de la cámara usando el anillo interior. Haz doble clic para restablecer la vista."
+    },
+    "mapNavigationSplitterIcon": {
+      "content": "## Comparar\n\nUna potente característica de Terria es la posibilidad de comparar conjuntos de datos utilizando una vista de pantalla dividida. En el caso de los conjuntos de datos con un componente de serie temporal, como las imágenes de satélite, puede comparar fechas hacia atrás y hacia delante en el tiempo haciendo clic en el selector de fechas."
     }
   },
   "browsers": {
@@ -367,5 +392,26 @@
     "firefox": "Mozilla Firefox",
     "edge": "Microsoft Edge",
     "safari": "Apple Safari"
+  },
+  "tool": {
+    "closeButtonTitle": "Cerrar {{toolName}} herramienta",
+    "loadingError": {
+      "message": "Se ha producido un error al intentar cargar esta herramienta desde el servidor. Por favor, inténtelo de nuevo",
+      "title": "Error al cargar {{Nombre herrmienta} Herramienta"
+    },
+    "button": {
+      "open": "Salir {{toolNameLowerCase}}",
+      "closed": "{{Nombre de la herramienta}}"
+    },
+    "exitBtnTitle": "Salida"
+  },
+  "diffTool": {
+    "instructions": {
+      "setDateB": "Fijar fecha B",
+      "changeDates": "Cambio de fechas",
+      "setDateA": "Fijar la fecha A"
+    },
+    "title": "Diferencia",
+    "exit": "Salida"
   }
 }
