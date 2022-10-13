@@ -1522,7 +1522,9 @@
       "unusalTilingScheme": "このデータセットは特殊なタイル化方式を使用しているため、2Dのマップでは表示できません。",
       "notWebMercatorTilingScheme": "このデータセットはウェブメルカトル（EPSG:3857）図法をサポートしていないため、2Dのマップでは表示できません。",
       "failedToObtain": "画像タイル X: {{x}} Y: {{y}} Level: {{level}} の取得に失敗しました。",
-      "devError": "cesiumが必須です。"
+      "devError": "cesiumが必須です。",
+      "stoppedRenderingTitle": "3D地図の描画に失敗しました",
+      "stoppedRenderingMessage": "先程ワークベンチに追加したデータが原因で問題が起きているかもしれません - データを削除してください。それでも問題が解決しない場合は {{appName}}を再読込してみてください。"
     },
     "regionProvider": {
       "csvRegionMappingMessageLoadError": "リージョン{{regionName}}のリージョン境界を読み込めませんでした。{{exception}}",
