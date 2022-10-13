@@ -116,9 +116,6 @@ const MenuBar = observer((props) => {
 });
 MenuBar.displayName = "MenuBar";
 MenuBar.propTypes = {
-  terria: PropTypes.object,
-  viewState: PropTypes.object.isRequired,
-  allBaseMaps: PropTypes.array, // Not implemented yet
   animationDuration: PropTypes.number,
   menuItems: PropTypes.arrayOf(PropTypes.element),
   menuLeftItems: PropTypes.arrayOf(PropTypes.element)
