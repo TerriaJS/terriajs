@@ -425,4 +425,80 @@ describe("CatalogGroup", function () {
       expect(splitRef.target instanceof GeoJsonCatalogItem).toBe(true);
     });
   });
+
+  describe("mergeGroupsByName", () => {
+    beforeEach(() => {
+      json = {
+        type: "group",
+        id: "root",
+        name: "Test Group",
+        members: [
+          {
+            type: "group",
+            id: "group-1",
+            name: "Group with the same name",
+            members: [
+              // Note these two items **won't** be merged when `mergeGroupsByName = true` - as it only applies to top level
+              { type: "wms", id: "wms-1", name: "wms with the same name" },
+              { type: "wms", id: "wms-2", name: "wms with the same name" },
+              {
+                type: "geojson",
+                id: "geojson-1",
+                name: "geojson 1"
+              }
+            ]
+          },
+          {
+            type: "group",
+            id: "group-2",
+            name: "Group with the same name",
+            members: [
+              { type: "wms", id: "wms-3", name: "wms 3" },
+              {
+                type: "geojson",
+                id: "geojson-2",
+                name: "geojson 2"
+              }
+            ]
+          }
+        ]
+      };
+      upsertModelFromJson(
+        CatalogMemberFactory,
+        terria,
+        "",
+        "definition",
+        json,
+        { replaceStratum: true }
+      ).throwIfUndefined();
+    });
+
+    it("set to false", async function () {
+      const item = <CatalogGroup>terria.getModelById(CatalogGroup, "root");
+      item.setTrait(CommonStrata.definition, "mergeGroupsByName", false);
+      (await item.loadMembers()).throwIfError();
+      expect(item.memberModels.length).toBe(2);
+
+      const parent1 = item.memberModels[0] as CatalogGroup;
+      (await parent1.loadMembers()).throwIfError();
+      expect(parent1.memberModels.length).toBe(3);
+
+      const parent1Copy = item.memberModels[1] as CatalogGroup;
+      (await parent1Copy.loadMembers()).throwIfError();
+      expect(parent1Copy.memberModels.length).toBe(2);
+
+      expect(parent1.name).toBe(parent1Copy.name);
+    });
+
+    it("set to true", async function () {
+      const item = <CatalogGroup>terria.getModelById(CatalogGroup, "root");
+      item.setTrait(CommonStrata.definition, "mergeGroupsByName", true);
+      (await item.loadMembers()).throwIfError();
+      expect(item.memberModels.length).toBe(1);
+
+      const mergedGroup = item.memberModels[0] as CatalogGroup;
+      (await mergedGroup.loadMembers()).throwIfError();
+      expect(mergedGroup.memberModels.length).toBe(5);
+    });
+  });
 });

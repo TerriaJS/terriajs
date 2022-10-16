@@ -1,15 +1,39 @@
 # Change Log
 
-#### next release (8.2.16)
+#### next release (8.2.18)
+
+- Fix `RelatedMaps` default broken URLs
+- Add `mergeGroupsByName` trait to `GroupTraits` - this will merge all group members with the same name
+- Fix bug with "propagate `knownContainerUniqueIds` across references and their target" - missing `runInAction`
+- Add Carto v3 Maps API support for `table` and `query` endpoint (only GeoJSON - not MVT yet)
+- Moved `activeStyle` default from `TableMixin` to `TableAutomaticStyleStratum`. The default `activeStyle` will now not pick a `hidden` `TableStyle`.
+- Pin `flexsearch` version to `0.7.21` - as incorrect types are shipped in version `0.7.31`
+- Only preload next timestep of timeseries rasters (WMS & ArcGIS MapServer) when animating the item on the map.
+- Added error message if cesium stops rendering
+- Add `enabled` to `TableStyleMapTraits` - which defaults to `true`
+- Add `TableLabelStyleTraits` - this can be used to add `LabelGraphics` to point features (table or geojson)
+- Add `TableTrailStyleTraits` - this can be used to add `PathGraphics` to time-series point features (table or geojson)
+- Added missing `proxyCatalogItemUrl` to GeoJson, Shapefile, Gltf and AssImp catalog items.
+- Added support for `OpenDataSoftCatalogGroup` with more than 100 datasets.
+- Added `refreshIntervalTemplate` to `OpenDataSoftCatalogItemTraits` - this can be used to set `refreshInterval` using Mustache template rendered on ODS Dataset JSON object.
+- Tweak `generateCatalogIndex` to use less memory. (+ add `diffCatalogIndex.js` script to show added/removed members between two catalog index files)
+- Migrated `/#tools=1` to version 8.
+- Removed dummy function `Terria.getUserProperty`.
+- Removed unused version 7 React components.
+
+- [The next improvement]
+
+#### 8.2.17 - 2022-09-23
+
+- Fix region mapping feature `rowIds` incorrect type.
+
+#### 8.2.16 - 2022-09-23
 
 - Make srsName and outputFormat for WFS requests dynamic
 - Added `excludeInactiveDatasets` to `CkanCatalogGroup` (`true` by default). This will filter out CKAN Datasets which have `state` or `data_state` (data.gov.au specific) **not** set to `"active"`.
 - Fix `isTerriaFeatureData` bug - not checking `isJsonObject`
+- Add `.logError()` to all usage of `updateModelFromJson` where the `Result` object is ignored
 - Move `RelatedMaps` to terriajs. They are now generated from `configParameters` (see [`doc/customizing/client-side-config.md`](./doc/customizing/client-side-config.md#relatedmap))
-- Migrated `/#tools=1` to version 8.
-- Removed dummy function `Terria.getUserProperty`.
-- Removed unused version 7 React components.
-- [The next improvement]
 
 #### 8.2.15 - 2022-09-16
 
