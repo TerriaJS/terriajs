@@ -8,6 +8,8 @@ import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
+import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import LabelGraphics from "terriajs-cesium/Source/DataSources/LabelGraphics";
 import PathGraphics from "terriajs-cesium/Source/DataSources/PathGraphics";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
@@ -41,41 +43,103 @@ type RequiredTableStyle = TableStyle & {
 };
 
 type TimeProperties<T> = {
-  [key in keyof T]: SampledProperty | TimeIntervalCollectionProperty;
+  [key in keyof T]: PreSampledProperty | TimeIntervalCollectionProperty;
 };
 
+type ResolvedTimeProperties<T> = {
+  [key in keyof T]?:
+    | SampledProperty
+    | TimeIntervalCollectionProperty
+    | ConstantProperty;
+};
+
+function convertPreSampledProperties<T>(
+  timeProperties: TimeProperties<T> | undefined
+): ResolvedTimeProperties<T> {
+  if (!timeProperties) return {};
+  return Object.entries(timeProperties).reduce<ResolvedTimeProperties<T>>(
+    (current, [key, value]) => {
+      if (value instanceof PreSampledProperty) {
+        const sampledProperty = value.getProperty();
+        if (sampledProperty) {
+          current[key as keyof T] = sampledProperty;
+        }
+      } else if (value instanceof TimeIntervalCollectionPositionProperty) {
+        current[key as keyof T] = value;
+      }
+      return current;
+    },
+    {}
+  );
+}
+
+/** This class can be used in-place for Cesium's SampledProperty.
+ *
+ * It provides better performance as instead of calling `SampledProperty.addSample` for every sample, it will call `SampledProperty.addSamples` once with all samples.
+ * This occurs when `PreSampledProperty.toSampledProperty()` is called
+ **/
 class PreSampledProperty {
-  private epoch: JulianDate | undefined;
-  private samples: [JulianDate, any][] = [];
+  private times: JulianDate[] = [];
+  private values: Packable[] = [];
 
-  constructor(
-    readonly type: Packable & {
-      pack: (value: any, array: number[], startingIndex?: number) => number[];
+  private allValuesAreTheSame = true;
+
+  constructor(private readonly type: Packable) {}
+
+  getProperty() {
+    if (this.allValuesAreTheSame) {
+      return new ConstantProperty(this.values[0]);
     }
-  ) {}
-
-  toSampledProperty() {
-    if (!this.epoch || this.samples.length === 0) return;
     const property = new SampledProperty(this.type);
-    const packedSamples: number[] = [];
-
-    for (let i = 0; i < this.samples.length; i++) {
-      const sample = this.samples[i];
-      this.type.pack(sample[1], packedSamples);
-      packedSamples.push(JulianDate.secondsDifference(this.epoch, sample[0]));
-    }
-    property.addSamplesPackedArray(packedSamples, this.epoch);
-
+    property.addSamples(this.times, this.values);
     return property;
   }
 
-  addSample(time: JulianDate, value: any) {
-    this.samples.push([time, value]);
-    if (!this.epoch) {
-      this.epoch = time;
-    } else if (JulianDate.compare(this.epoch, time) > 0) {
-      this.epoch = time;
+  addSample(time: JulianDate, value: Packable) {
+    this.times.push(time);
+    if (
+      this.allValuesAreTheSame &&
+      this.values.length > 1 &&
+      value.toString() !== this.values[this.values.length - 2].toString()
+    ) {
+      this.allValuesAreTheSame = false;
     }
+    this.values.push(value);
+  }
+}
+
+/** This class can be used in-place for Cesium's SampledPositionProperty.
+ *
+ * It behaves exactly the same as PreSampledProperty
+ **/
+class PreSampledPositionProperty {
+  private times: JulianDate[] = [];
+  private values: Cartesian3[] = [];
+
+  private allValuesAreTheSame = true;
+
+  constructor() {}
+
+  getProperty() {
+    if (this.allValuesAreTheSame) {
+      return new ConstantPositionProperty(this.values[0]);
+    }
+
+    const property = new SampledPositionProperty();
+    property.addSamples(this.times, this.values);
+    return property;
+  }
+
+  addSample(time: JulianDate, value: Cartesian3) {
+    this.times.push(time);
+    if (
+      this.allValuesAreTheSame &&
+      this.values.length > 1 &&
+      !value.equals(this.values[this.values.length - 2])
+    ) {
+      this.allValuesAreTheSame = false;
+    }
+    this.values.push(value);
   }
 }
 
@@ -96,7 +160,7 @@ export default function createLongitudeLatitudeFeaturePerId(
 
 function createProperty(type: Packable, interpolate: boolean) {
   return interpolate
-    ? new SampledProperty(type)
+    ? new PreSampledProperty(type)
     : new TimeIntervalCollectionProperty();
 }
 
@@ -112,7 +176,7 @@ function createFeature(
   const interpolate = isSampled && tableHasScalarColumn;
 
   const positionProperty = isSampled
-    ? new SampledPositionProperty()
+    ? new PreSampledPositionProperty()
     : new TimeIntervalCollectionPositionProperty();
 
   // The following "TimeProperties<T>" objects are used to transform feature styling properties into time-enabled properties (eg SampledProperty or TimeIntervalCollectionProperty)
@@ -325,17 +389,20 @@ function createFeature(
 
   const show = calculateShow(availability);
   const feature = new TerriaFeature({
-    position: positionProperty,
+    position:
+      positionProperty instanceof PreSampledPositionProperty
+        ? positionProperty.getProperty()
+        : positionProperty,
     point: usePointGraphicsForId
       ? new PointGraphics({
-          ...pointGraphicsTimeProperties,
+          ...convertPreSampledProperties(pointGraphicsTimeProperties),
           show,
           heightReference: HeightReference.CLAMP_TO_GROUND
         })
       : undefined,
     billboard: !usePointGraphicsForId
       ? new BillboardGraphics({
-          ...billboardGraphicsTimeProperties,
+          ...convertPreSampledProperties(billboardGraphicsTimeProperties),
           heightReference: HeightReference.CLAMP_TO_GROUND,
           show
         })
@@ -343,16 +410,20 @@ function createFeature(
     path: pathGraphicsTimeProperties
       ? new PathGraphics({
           show,
-          ...pathGraphicsTimeProperties,
+          ...convertPreSampledProperties(pathGraphicsTimeProperties),
 
           // Material has to be handled separately from pathGraphicsTimeProperties
           material: pathGraphicsPolylineGlowTimeProperties
             ? new PolylineGlowMaterialProperty(
-                pathGraphicsPolylineGlowTimeProperties
+                convertPreSampledProperties(
+                  pathGraphicsPolylineGlowTimeProperties
+                )
               )
             : pathGraphicsSolidColorTimeProperties
             ? new ColorMaterialProperty(
-                pathGraphicsSolidColorTimeProperties.color
+                convertPreSampledProperties(
+                  pathGraphicsSolidColorTimeProperties
+                ).color
               )
             : undefined
         })
@@ -360,7 +431,7 @@ function createFeature(
     label: labelGraphicsTimeProperties
       ? new LabelGraphics({
           show,
-          ...labelGraphicsTimeProperties
+          ...convertPreSampledProperties(labelGraphicsTimeProperties)
         })
       : undefined,
 
@@ -379,16 +450,16 @@ function createFeature(
 
 function addSampleOrInterval(
   property:
-    | SampledProperty
-    | SampledPositionProperty
+    | PreSampledProperty
+    | PreSampledPositionProperty
     | TimeIntervalCollectionProperty
     | TimeIntervalCollectionPositionProperty,
   data: any,
   interval: TimeInterval
 ) {
   if (
-    property instanceof SampledProperty ||
-    property instanceof SampledPositionProperty
+    property instanceof PreSampledProperty ||
+    property instanceof PreSampledPositionProperty
   ) {
     property.addSample(interval.start, data);
   } else {
