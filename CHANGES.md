@@ -16,7 +16,7 @@
 - Added missing `proxyCatalogItemUrl` to GeoJson, Shapefile, Gltf and AssImp catalog items.
 - Added support for `OpenDataSoftCatalogGroup` with more than 100 datasets.
 - Added `refreshIntervalTemplate` to `OpenDataSoftCatalogItemTraits` - this can be used to set `refreshInterval` using Mustache template rendered on ODS Dataset JSON object.
-
+- Tweak `generateCatalogIndex` to use less memory. (+ add `diffCatalogIndex.js` script to show added/removed members between two catalog index files)
 - [The next improvement]
 
 #### 8.2.17 - 2022-09-23
