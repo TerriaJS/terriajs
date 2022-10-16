@@ -546,7 +546,9 @@ export default class Cesium extends GlobeOrMap {
         this.previousRenderError = error.toString();
         this.terria.raiseErrorToUser(error, {
           title: i18next.t("map.cesium.stoppedRenderingTitle"),
-          message: i18next.t("map.cesium.stoppedRenderingMessage")
+          message: i18next.t("map.cesium.stoppedRenderingMessage", {
+            appName: this.terria.appName
+          })
         });
       }
     }
