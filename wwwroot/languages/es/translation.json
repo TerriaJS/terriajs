@@ -409,9 +409,23 @@
     "instructions": {
       "setDateB": "Fijar fecha B",
       "changeDates": "Cambio de fechas",
-      "setDateA": "Fijar la fecha A"
+      "setDateA": "Fijar la fecha A",
+      "paneDescription": "Visualice y compare la diferencia de datos entre dos fechas en un lugar."
     },
     "title": "Diferencia",
-    "exit": "Salida"
+    "exit": "Salida",
+    "labels": {
+      "differenceOutput": "Diferencia de salida",
+      "generateDiffButtonText": "Generar la detección de cambios",
+      "area": "Area",
+      "dates": "Fechas",
+      "previewStyle": "Estilo de vista previa",
+      "dateComparisonA": "Comparación de datos A",
+      "dateComparisonB": "Comparación de datos B",
+      "sourceDataset": "Conjunto de datos de origen"
+    },
+    "choosePreview": "Elija un estilo de vista previa",
+    "chooseDifference": "Elija una salida de diferente",
+    "differenceResultsTitle": "Cambia la detección de cambios"
   }
 }
