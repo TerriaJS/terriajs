@@ -53,6 +53,7 @@ type ResolvedTimeProperties<T> = {
     | ConstantProperty;
 };
 
+/** For a given TimeProperties object, convert all PreSampledProperty to SampledProperty */
 function convertPreSampledProperties<T>(
   timeProperties: TimeProperties<T> | undefined
 ): ResolvedTimeProperties<T> {
@@ -64,7 +65,7 @@ function convertPreSampledProperties<T>(
         if (sampledProperty) {
           current[key as keyof T] = sampledProperty;
         }
-      } else if (value instanceof TimeIntervalCollectionPositionProperty) {
+      } else if (value instanceof TimeIntervalCollectionProperty) {
         current[key as keyof T] = value;
       }
       return current;
@@ -381,6 +382,8 @@ function createFeature(
     );
     availability.addInterval(interval);
   });
+
+  console.log(labelGraphicsTimeProperties);
 
   const show = calculateShow(availability);
   const feature = new TerriaFeature({
