@@ -383,8 +383,6 @@ function createFeature(
     availability.addInterval(interval);
   });
 
-  console.log(labelGraphicsTimeProperties);
-
   const show = calculateShow(availability);
   const feature = new TerriaFeature({
     position:
