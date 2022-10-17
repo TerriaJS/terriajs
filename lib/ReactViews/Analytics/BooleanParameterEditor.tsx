@@ -1,5 +1,5 @@
 import * as React from "react";
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Component } from "react";
 import CommonStrata from "../../Models/Definition/CommonStrata";
@@ -11,6 +11,11 @@ import Styles from "./parameter-editors.scss";
 export default class BooleanParameterEditor extends Component<{
   parameter: BooleanParameter;
 }> {
+  constructor(props: { parameter: BooleanParameter }) {
+    super(props);
+    makeObservable(this);
+  }
+
   @action
   onClick() {
     this.props.parameter.setValue(

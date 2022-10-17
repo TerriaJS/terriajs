@@ -1,5 +1,5 @@
 import * as React from "react";
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Component } from "react";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
@@ -20,6 +20,11 @@ interface PropsType {
 export default class PointOnMap extends Component<PropsType> {
   @observable
   pointItem?: GeoJsonCatalogItem;
+
+  constructor(props: PropsType) {
+    super(props);
+    makeObservable(this);
+  }
 
   @action
   componentDidMount() {

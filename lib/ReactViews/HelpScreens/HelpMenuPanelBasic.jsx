@@ -10,7 +10,7 @@ import DropdownStyles from "../Map/Panels/panel.scss";
 import helpIcon from "../../../wwwroot/images/icons/help.svg";
 
 import { withTranslation } from "react-i18next";
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 
 @observer
@@ -22,6 +22,7 @@ class HelpMenuPanelBasic extends Component {
 
   constructor() {
     super();
+    makeObservable(this);
     this.state = {
       isOpen: false
     };

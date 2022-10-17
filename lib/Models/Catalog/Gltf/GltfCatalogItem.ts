@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import GltfMixin from "../../../ModelMixins/GltfMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import GltfCatalogItemTraits from "../../../Traits/TraitsClasses/GltfCatalogItemTraits";
@@ -11,6 +11,13 @@ export default class GltfCatalogItem
   implements HasLocalData
 {
   static readonly type = "gltf";
+
+  constructor() {
+    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+    super();
+
+    makeObservable(this);
+  }
 
   get type() {
     return GltfCatalogItem.type;

@@ -1,6 +1,6 @@
 ("use strict");
 
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import { Component } from "react";
@@ -28,6 +28,11 @@ class ChartPanel extends Component {
     animationDuration: PropTypes.number,
     t: PropTypes.func.isRequired
   };
+
+  constructor(props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed
   get chartView() {

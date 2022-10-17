@@ -2,7 +2,7 @@ import * as React from "react";
 ("use strict");
 
 import classNames from "classnames";
-import { Lambda, observable, reaction } from "mobx";
+import { Lambda, observable, reaction, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import { Component } from "react";
@@ -40,6 +40,11 @@ class MapInteractionWindow extends Component<{
   private disposeMapInteractionObserver?: Lambda;
 
   @observable currentInteractionMode?: MapInteractionMode;
+
+  constructor(props: { viewState: ViewState }) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentWillUnmount() {
     // this.removeContextItem();

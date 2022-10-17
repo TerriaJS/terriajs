@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import { AxisLeft, AxisBottom } from "@visx/axis";
 import { RectClipPath } from "@visx/clip-path";
 import { localPoint } from "@visx/event";
@@ -74,6 +74,11 @@ class Chart extends Component {
 
   @observable zoomedXScale;
   @observable mouseCoords;
+
+  constructor(props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed
   get chartItems() {
@@ -331,6 +336,11 @@ class Plot extends Component {
     initialScales: PropTypes.array.isRequired,
     zoomedScales: PropTypes.array.isRequired
   };
+
+  constructor(props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed
   get chartRefs() {

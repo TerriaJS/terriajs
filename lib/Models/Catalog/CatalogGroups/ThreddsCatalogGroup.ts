@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, runInAction, makeObservable } from "mobx";
 import threddsCrawler from "thredds-catalog-crawler/src/entryBrowser";
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -51,6 +51,7 @@ export class ThreddsStratum extends LoadableStratum(ThreddsCatalogGroupTraits) {
 
   constructor(readonly _catalogGroup: ThreddsCatalogGroup) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -181,6 +182,13 @@ export default class ThreddsCatalogGroup extends UrlMixin(
   GroupMixin(CatalogMemberMixin(CreateModel(ThreddsCatalogGroupTraits)))
 ) {
   static readonly type = "thredds-group";
+
+  constructor() {
+    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+    super();
+
+    makeObservable(this);
+  }
 
   get type() {
     return ThreddsCatalogGroup.type;

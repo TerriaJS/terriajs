@@ -1,5 +1,5 @@
 import { Feature, Point } from "@turf/helpers";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import isDefined from "../../Core/isDefined";
@@ -18,6 +18,13 @@ export default class PointParameter
 {
   static readonly type = "point";
   readonly type = "point";
+
+  constructor() {
+    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+    super();
+
+    makeObservable(this);
+  }
 
   /**
    * Get feature as geojson for display on map.

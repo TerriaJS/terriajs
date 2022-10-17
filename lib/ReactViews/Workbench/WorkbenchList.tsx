@@ -1,6 +1,6 @@
 import * as React from "react";
 import "!!style-loader!css-loader?sourceMap!./sortable.css";
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Component } from "react";
 //@ts-ignore
@@ -28,6 +28,11 @@ interface IProps {
 
 @observer
 class WorkbenchList extends Component<IProps> {
+  constructor(props: IProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   @action.bound
   onSort(
     sortedArray: any,

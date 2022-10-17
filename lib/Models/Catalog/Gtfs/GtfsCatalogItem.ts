@@ -1,5 +1,11 @@
 import { get as _get } from "lodash-es";
-import { computed, IReactionDisposer, observable, runInAction } from "mobx";
+import {
+  computed,
+  IReactionDisposer,
+  observable,
+  runInAction,
+  makeObservable
+} from "mobx";
 import { createTransformer, ITransformer } from "mobx-utils";
 import Pbf from "pbf";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -60,6 +66,7 @@ class GtfsStratum extends LoadableStratum(GtfsCatalogItemTraits) {
 
   constructor(private readonly _item: GtfsCatalogItem) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -346,6 +353,7 @@ export default class GtfsCatalogItem extends MappableMixin(
     sourceReference?: BaseModel
   ) {
     super(id, terria, sourceReference);
+    makeObservable(this);
   }
 
   protected forceLoadMetadata(): Promise<void> {

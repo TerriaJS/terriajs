@@ -1,6 +1,6 @@
 import * as React from "react";
 import { TFunction } from "i18next";
-import { action, runInAction } from "mobx";
+import { action, runInAction, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Component } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
@@ -26,6 +26,11 @@ interface IProps extends WithTranslation {
 
 @observer
 class Workbench extends Component<IProps> {
+  constructor(props: IProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   @action.bound
   collapseAll() {
     runInAction(() => {

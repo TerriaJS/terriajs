@@ -1,6 +1,13 @@
 import hoistStatics from "hoist-non-react-statics";
 import { TFunction } from "i18next";
-import { action, computed, observable, reaction, runInAction } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  reaction,
+  runInAction,
+  makeObservable
+} from "mobx";
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
 import { useState } from "react";
@@ -67,6 +74,11 @@ class DiffTool extends React.Component<PropsType> {
 
   private splitterItemsDisposer?: IDisposer;
   private originalSettings: any;
+
+  constructor(props: PropsType) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed
   get sourceItem(): DiffableItem {
@@ -190,6 +202,7 @@ class Main extends React.Component<MainPropsType> {
 
   constructor(props: MainPropsType) {
     super(props);
+    makeObservable(this);
   }
 
   @computed

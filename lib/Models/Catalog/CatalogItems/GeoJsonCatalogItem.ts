@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { get as _get, set as _set } from "lodash";
-import { computed, toJS } from "mobx";
+import { computed, toJS, makeObservable } from "mobx";
 import isDefined from "../../../Core/isDefined";
 import JsonValue, { isJsonObject } from "../../../Core/Json";
 import loadBlob, { isZip, parseZipJsonBlob } from "../../../Core/loadBlob";
@@ -21,6 +21,14 @@ class GeoJsonCatalogItem
   implements HasLocalData
 {
   static readonly type = "geojson";
+
+  constructor() {
+    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+    super();
+
+    makeObservable(this);
+  }
+
   get type() {
     return GeoJsonCatalogItem.type;
   }

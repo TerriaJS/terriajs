@@ -1,4 +1,4 @@
-import { action, computed, runInAction } from "mobx";
+import { action, computed, runInAction, makeObservable } from "mobx";
 import clone from "terriajs-cesium/Source/Core/clone";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import AsyncLoader from "../Core/AsyncLoader";
@@ -23,6 +23,13 @@ naturalSort.insensitive = true;
 function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
   abstract class Klass extends Base implements Group {
     private _memberLoader = new AsyncLoader(this.forceLoadMembers.bind(this));
+
+    constructor() {
+      // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+      super();
+
+      makeObservable(this);
+    }
 
     get isGroup() {
       return true;

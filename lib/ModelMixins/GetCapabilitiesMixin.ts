@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
@@ -11,6 +11,13 @@ function GetCapabilitiesMixin<T extends Constructor<CapabilitiesModel>>(
 ) {
   abstract class GetCapabilitiesMixin extends Base {
     protected abstract get defaultGetCapabilitiesUrl(): string | undefined;
+
+    constructor(...args: any[]) {
+      // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+      super(args);
+
+      makeObservable(this);
+    }
 
     @computed
     get getCapabilitiesUrl(): string | undefined {

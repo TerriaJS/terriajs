@@ -23,7 +23,8 @@ import {
   onBecomeUnobserved,
   reaction,
   runInAction,
-  toJS
+  toJS,
+  makeObservable
 } from "mobx";
 import { createTransformer } from "mobx-utils";
 import {
@@ -142,6 +143,7 @@ class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
   static stratumName = "geojson";
   constructor(private readonly _item: GeoJsonMixin.Instance) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -249,6 +251,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
     constructor(...args: any[]) {
       super(...args);
+      makeObservable(this);
       // Add GeoJsonStratum
       if (this.strata.get(GeoJsonStratum.stratumName) === undefined) {
         runInAction(() => {

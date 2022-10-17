@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
@@ -28,6 +28,13 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
   abstract class GltfMixin extends ShadowMixin(
     CatalogMemberMixin(MappableMixin(Base))
   ) {
+    constructor() {
+      // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+      super();
+
+      makeObservable(this);
+    }
+
     get hasGltfMixin() {
       return true;
     }

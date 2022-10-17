@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, toJS } from "mobx";
+import { action, computed, toJS, makeObservable } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import clone from "terriajs-cesium/Source/Core/clone";
@@ -39,6 +39,13 @@ function ClippingMixin<T extends Constructor<BaseType>>(
     abstract clippingPlanesOriginMatrix(): Matrix4;
 
     private clippingPlaneModelMatrix: Matrix4 = Matrix4.IDENTITY.clone();
+
+    constructor(...args: any[]) {
+      // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+      super(args);
+
+      makeObservable(this);
+    }
 
     @computed
     get inverseClippingPlanesOriginMatrix(): Matrix4 {

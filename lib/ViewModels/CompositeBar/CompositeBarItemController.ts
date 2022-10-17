@@ -1,4 +1,4 @@
-import { computed, observable, action } from "mobx";
+import { computed, observable, action, makeObservable } from "mobx";
 import ViewerMode from "../../Models/ViewerMode";
 import * as React from "react";
 
@@ -19,6 +19,10 @@ export abstract class CompositeBarItemController
 {
   static id: string;
   itemRef: React.RefObject<HTMLDivElement> = React.createRef();
+
+  constructor() {
+    makeObservable(this);
+  }
 
   get id() {
     return CompositeBarItemController.id;

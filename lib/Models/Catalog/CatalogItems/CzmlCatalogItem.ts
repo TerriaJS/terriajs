@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, observable, toJS } from "mobx";
+import { action, computed, observable, toJS, makeObservable } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CzmlDataSource from "terriajs-cesium/Source/DataSources/CzmlDataSource";
 import DataSourceClock from "terriajs-cesium/Source/DataSources/DataSourceClock";
@@ -28,6 +28,7 @@ class CzmlTimeVaryingStratum extends LoadableStratum(CzmlCatalogItemTraits) {
 
   constructor(readonly catalogItem: CzmlCatalogItem) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -74,6 +75,14 @@ export default class CzmlCatalogItem
   implements TimeVarying, HasLocalData
 {
   static readonly type = "czml";
+
+  constructor() {
+    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+    super();
+
+    makeObservable(this);
+  }
+
   get type() {
     return CzmlCatalogItem.type;
   }
