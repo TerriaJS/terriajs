@@ -306,16 +306,6 @@
     "takeTour": "Take the tour",
     "mapUserGuide": "Map user guide"
   },
-  "helpMenu": {
-    "btnText": "Help",
-    "btnTitle": "get help",
-    "helpMenuHeader": "What would you like to do?",
-    "helpMenuOpenWelcome": "Show welcome message",
-    "helpMenuSatelliteGuideTitle": "View satellite imagery guide",
-    "helpMenuMoreHelpTitle": "More help",
-    "done": "DONE",
-    "next": "NEXT"
-  },
   "sui": {
     "notifications": {
       "title": "This map contains a story",
