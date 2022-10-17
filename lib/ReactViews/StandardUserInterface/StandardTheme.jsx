@@ -1,4 +1,3 @@
-import * as React from "react";
 import Variables from "../../Sass/exports/_variables-export.scss";
 
 import Mixins from "../../Styled/mixins";

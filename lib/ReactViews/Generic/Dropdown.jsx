@@ -1,4 +1,3 @@
-import * as React from "react";
 ("use strict");
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";

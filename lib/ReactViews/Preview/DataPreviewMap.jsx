@@ -1,4 +1,3 @@
-import * as React from "react";
 ("use strict");
 
 import classNames from "classnames";

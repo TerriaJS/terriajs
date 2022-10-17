@@ -1,4 +1,3 @@
-import * as React from "react";
 import DropdownPanel from "../../Map/Panels/DropdownPanel";
 import MobilePanel from "../../Map/Panels/MobilePanel";
 import withControlledVisibility from "../../HOCs/withControlledVisibility";

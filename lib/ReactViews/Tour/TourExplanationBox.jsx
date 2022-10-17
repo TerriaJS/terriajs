@@ -1,4 +1,3 @@
-import * as React from "react";
 import styled from "styled-components";
 import Box from "../../Styled/Box";
 import { TOUR_WIDTH } from "./tour-helpers.ts";

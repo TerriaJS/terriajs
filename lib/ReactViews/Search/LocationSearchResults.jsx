@@ -1,4 +1,3 @@
-import * as React from "react";
 /**
   Initially this was written to support various location search providers in master,
   however we only have a single location provider at the moment, and how we merge

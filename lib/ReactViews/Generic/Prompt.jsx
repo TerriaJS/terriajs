@@ -1,4 +1,3 @@
-import * as React from "react";
 import { PureComponent } from "react";
 import PropTypes from "prop-types";
 import FadeIn from "../Transitions/FadeIn/FadeIn";

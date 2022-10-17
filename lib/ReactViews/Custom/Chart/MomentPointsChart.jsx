@@ -1,4 +1,3 @@
-import * as React from "react";
 import { scaleLinear } from "@visx/scale";
 import { interpolateNumber as d3InterpolateNumber } from "d3-interpolate";
 import { computed } from "mobx";

@@ -1,4 +1,3 @@
-import * as React from "react";
 /**
  * The elements specified in this aren't actually ever rendered directly, rather they serve to provide a nice way
  * to define a customised StandardUserInterface - elements are defined in these groups as the children of

@@ -1,4 +1,3 @@
-import * as React from "react";
 /**
  * TourPortal.jsx
  * Framework for tour

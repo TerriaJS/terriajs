@@ -1,4 +1,3 @@
-import * as React from "react";
 /* eslint-disable camelcase */
 import { useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";

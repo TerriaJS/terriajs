@@ -1,4 +1,3 @@
-import * as React from "react";
 import { lazy, Component, Suspense } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";

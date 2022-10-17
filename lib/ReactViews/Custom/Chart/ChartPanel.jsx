@@ -1,4 +1,3 @@
-import * as React from "react";
 ("use strict");
 
 import { computed } from "mobx";

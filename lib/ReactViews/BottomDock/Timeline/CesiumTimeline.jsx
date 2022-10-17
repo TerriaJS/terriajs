@@ -1,4 +1,3 @@
-import * as React from "react";
 ("use strict");
 import Styles from "!style-loader!css-loader?modules&sourceMap!sass-loader?sourceMap!./cesium-timeline.scss";
 import createReactClass from "create-react-class";

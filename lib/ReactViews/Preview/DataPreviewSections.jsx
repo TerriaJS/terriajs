@@ -1,4 +1,3 @@
-import * as React from "react";
 import createReactClass from "create-react-class";
 import naturalSort from "javascript-natural-sort";
 import { runInAction } from "mobx";
