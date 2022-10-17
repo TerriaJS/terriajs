@@ -163,11 +163,11 @@ export const RawButton = styled.button<IButtonProps>`
 `;
 
 type ButtonProps = {
-  renderIcon?: () => React.ReactChild;
+  renderIcon?: () => React.ReactNode;
   iconProps?: any;
   rightIcon?: boolean;
   textProps?: any;
-  children?: React.ReactChildren;
+  children?: React.ReactNode;
   buttonRef?: React.Ref<HTMLButtonElement>;
   title?: string;
 } & React.ComponentPropsWithoutRef<typeof StyledButton>;
