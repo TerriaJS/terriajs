@@ -143,7 +143,7 @@
     "react": "^16.14.0",
     "react-anything-sortable": "^1.5.2",
     "react-color": "^2.19.3",
-    "react-datepicker": "0.53.0",
+    "react-datepicker": "4.8.0",
     "react-dom": "^16.14.0",
     "react-i18next": "^11.18.0",
     "react-responsive": "^5.0.0",
