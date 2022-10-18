@@ -237,7 +237,10 @@
     "recount": "Recontando",
     "subTotals": "<div> {{name}}: {{items}} elementos/ {{groups}} grupos</div>",
     "totals": "<div>El catálogo contiene {{items}} elementos en {{groups}} grupos.</div>",
-    "countingMessage": "Contando, por favor espere…"
+    "countingMessage": "Contando, por favor espere…",
+    "mapDataState": "{{count}} conjunto de datos habilitado en el mapa",
+    "mapDataState_plural": "{{count}} conjunto de datos habilitado en el mapa",
+    "noMapDataEnabled": "No hay datos cartográficos habilitados"
   },
   "share": {
     "printTitle": "Imprimir mapa",
@@ -247,7 +250,7 @@
     "shortenUsingService": "Acortar la URL para compartir usando un servicio web",
     "localDataNote": "<0><0>Nota:</0></0> <1> Las siguientes fuentes de datos NO se compartirán porque incluyen datos de este sistema local. Para compartir estas fuentes de datos, publique sus datos en un servidor web y <2> añádalos usando una URL </2>. </1>",
     "shortLinkShortening": "Acortamiento…",
-    "embedTitle": "Para incrustar, copie este código para incrustar este mapa en una página HTML:",
+    "embedTitle": "Incrustar mapa",
     "shortLinkError": "Se ha producido un error cuando se intentaba acortar la URL. Por favor revise sus opciones de conexión a internet y pruebe de nuevo.",
     "browserPrint": "Para obtener mejores resultado de impresión, por favor use el botón de impresión de {{appName}} en vez de las opción de impresión del navegador.",
     "generatingUrl": "Generando URL para compartir…",
@@ -258,7 +261,17 @@
     "btnStoryShareText": "Compartir",
     "creatingPrintView": "Creando vista de impresión…",
     "printViewButton": "Mostrar Vista de Impresión",
-    "printExplanation": "Abrir una versión imprimible de este mapa."
+    "printExplanation": "Abrir una versión imprimible de este mapa.",
+    "getShareSaveHelpMessage": "Cómo marcar los enlaces de Sharelinks",
+    "convertNotificationTitle": "Aviso: se ha actualizado el enlace para actualizar",
+    "convertNotificationFeedback": "Si tiene preguntas o comentarios, haga clic aquí.",
+    "embedDescription": "Para incrustar, copie este código para incrustar este mapa en una página HTML:",
+    "convertNotificationMessage": "Este enlace compartido se basa en una versión antigua de TerriaJS, el software que hace funcionar este mapa web. Aunque se ha hecho todo lo posible por conservar el enlace, es posible que tenga problemas para visualizar los datos.  \n\nSi eres un usuario del enlace compartido, haz clic en aceptar para que desaparezca el mensaje de advertencia y continuar con el acceso a los datos.",
+    "convertNotificationHelp": "Si ha creado el enlace para compartir, consulte el menú de ayuda para ver consejos sobre cómo actualizar el enlace para compartir.",
+    "convertErrorTitle": "No se ha podido actualizar el enlace compartido a V8",
+    "convertErrorMessage": "Este enlace para compartir está basado en una versión antigua de TerriaJS, el software que hace funcionar este mapa web. Se ha producido un error al intentar actualizar los datos compartidos.",
+    "convertNotificationWarningsTitle": "Detalles técnicos",
+    "downloadMap": "Descargar mapa (png)"
   },
   "settingPanel": {
     "performanceLabel": "Rendimiento",
@@ -282,7 +295,23 @@
     "mapQuality": "Calidad del Mapa Ráster:",
     "nativeResolutionHeader": "Usar resolución nativa del dispositivo",
     "btnTitle": "Cambiar vista",
-    "baseMap": "Mapa Base"
+    "baseMap": "Mapa Base",
+    "timeline": {
+      "alwaysShowLabel": "Pulse empezar a mostrar la línea de tiempo sólo cuando haya conjuntos de datos que varíen en el tiempo en la mesa de trabajo",
+      "hideLabel": "Pulse para que se muestre siempre la línea de tiempo, aunque no haya conjuntos de datos que varíen en el tiempo en la mesa de trabajo",
+      "title": "Línea de tiempo",
+      "alwaysShow": "Siempre mostrar"
+    },
+    "terrain": {
+      "hideUnderground": "El terreno esconde elementos subterráneos",
+      "left": "Izquierda",
+      "showUndergroundFeatures": "Pulse para empezar a mostrar las características que están debajo de la superficie del terreno",
+      "hideUndergroundFeatures": "Pulse para empezar a ocultar los elementos que se encuentran bajo la superficie del terreno",
+      "sideLabel": "Mostrar el terreno en el",
+      "both": "Ambos",
+      "right": "Derecha"
+    },
+    "btnText": "Configuraciones del mapa"
   },
   "toolsPanel": {
     "btnText": "Herramienta",
@@ -422,10 +451,48 @@
       "previewStyle": "Estilo de vista previa",
       "dateComparisonA": "Comparación de datos A",
       "dateComparisonB": "Comparación de datos B",
-      "sourceDataset": "Conjunto de datos de origen"
+      "sourceDataset": "Conjunto de datos de origen",
+      "disabledButtonPrompt": "Nota: Las locación y las fechas deberán ser seleccionada para proceder con la detección del cambio",
+      "areaFilterSelection": "Selección del filtro de área"
     },
     "choosePreview": "Elija un estilo de vista previa",
     "chooseDifference": "Elija una salida de diferente",
-    "differenceResultsTitle": "Cambia la detección de cambios"
+    "differenceResultsTitle": "Cambia la detección de cambios",
+    "locationDisplay": {
+      "noLocationSelected": {
+        "title": "No se ha seleccionado ninguna ubicación",
+        "description": "Para filtrar el selector de fecha de la imagen por ubicación, por favor seleccione un punto en el mapa"
+      },
+      "locationSelected": {
+        "title": "Ubicación seleccionada y fechas filtradas",
+        "description": "Para cambiar, haga clic en otro punto del mapa"
+      }
+    },
+    "locationPicker": {
+      "nextMessages": {
+        "afterPick": "Haga clic en otro punto para cambiar la selección",
+        "title": "Ha seleccionado la ubicación {{latitud}} {{longitud}}",
+        "beforePick": "Haga clic en otro punto para cambiar la selección"
+      },
+      "errorMessages": {
+        "title": "Seleccione una ubicación precisa",
+        "beforePick": "No se han podido resolver las imágenes en la ubicación. Por favor, elija otra ubicación o nivel de zoom.",
+        "afterPick": "Haga clic en otro punto para cambiar la selección"
+      },
+      "initialMessages": {
+        "beforePick": "Lo necesitamos para ejecutar nuestro proceso de detección de cambios.",
+        "title": "Seleccione una ubicación precisa",
+        "afterPick": "Haga clic en otro punto para cambiar la región seleccionada"
+      }
+    },
+    "datePicker": {
+      "back": "Volver",
+      "previousDateTitle": "Fecha anterior",
+      "nextDateTitle": "Fecha siguiente",
+      "dateButtonTitle": "Seleccione una fecha"
+    }
+  },
+  "languagePanel": {
+    "changeLanguage": "Cambiar lenguaje"
   }
 }
