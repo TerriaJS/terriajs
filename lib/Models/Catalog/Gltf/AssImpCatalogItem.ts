@@ -1,4 +1,4 @@
-import { action, observable, runInAction } from "mobx";
+import { action, observable, runInAction, makeObservable } from "mobx";
 import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import loadArrayBuffer from "../../../Core/loadArrayBuffer";
@@ -38,6 +38,13 @@ export default class AssImpCatalogItem
   protected gltfModelUrl: string | undefined;
 
   static readonly type = "assimp";
+
+  constructor() {
+    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+    super();
+
+    makeObservable(this);
+  }
 
   get type() {
     return AssImpCatalogItem.type;

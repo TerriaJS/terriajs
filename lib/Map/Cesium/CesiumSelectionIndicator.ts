@@ -4,7 +4,8 @@ import {
   computed,
   IReactionDisposer,
   observable,
-  runInAction
+  runInAction,
+  makeObservable
 } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -65,6 +66,7 @@ export default class CesiumSelectionIndicator {
   private _disposeAutorun: IReactionDisposer;
 
   constructor(cesium: import("../../Models/Cesium").default) {
+    makeObservable(this);
     this._cesium = cesium;
     this._tweens = cesium.scene.tweens;
     this.container = cesium.cesiumWidget.container;

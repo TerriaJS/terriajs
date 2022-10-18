@@ -1,4 +1,4 @@
-import { computed, decorate } from "mobx";
+import { computed, makeObservable } from "mobx";
 import ModelTraits from "../../Traits/ModelTraits";
 import Stratified from "../../Traits/Stratified";
 import TraitsConstructor from "../../Traits/TraitsConstructor";
@@ -45,7 +45,7 @@ export default function addModelStrataView<
     decorators[traitName] = trait.decoratorForFlattened || computed;
   });
 
-  decorate(model, decorators);
+  makeObservable(model, decorators);
 
   return model;
 }

@@ -4,7 +4,8 @@ import {
   computed,
   isObservableArray,
   observable,
-  runInAction
+  runInAction,
+  makeObservable
 } from "mobx";
 import { createTransformer, ITransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
@@ -71,6 +72,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     constructor(...args: any[]) {
       super(...args);
+
+      makeObservable(this);
 
       // Create default TableStyle and set TableAutomaticLegendStratum
       this.defaultTableStyle = new TableStyle(this);

@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, isObservableArray, runInAction } from "mobx";
+import { computed, isObservableArray, runInAction, makeObservable } from "mobx";
 import combine from "terriajs-cesium/Source/Core/combine";
 import containsAny from "../../../Core/containsAny";
 import isDefined from "../../../Core/isDefined";
@@ -64,6 +64,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     readonly capabilities: WebFeatureServiceCapabilities
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -321,6 +322,13 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
   ];
 
   static readonly type = "wfs";
+
+  constructor() {
+    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+    super();
+
+    makeObservable(this);
+  }
 
   get type() {
     return WebFeatureServiceCatalogItem.type;

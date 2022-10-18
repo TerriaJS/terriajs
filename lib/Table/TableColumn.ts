@@ -1,6 +1,6 @@
 import countBy from "lodash-es/countBy";
 import Mexp from "math-expression-evaluator";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
@@ -82,6 +82,7 @@ export default class TableColumn {
   readonly tableModel: TableMixin.Instance;
 
   constructor(tableModel: TableMixin.Instance, columnNumber: number) {
+    makeObservable(this);
     this.columnNumber = columnNumber;
     this.tableModel = tableModel;
   }

@@ -1,6 +1,6 @@
 import * as geoJsonMerge from "@mapbox/geojson-merge";
 import i18next from "i18next";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import * as shp from "shpjs";
 import isDefined from "../../../Core/isDefined";
 import JsonValue, { isJsonObject, JsonArray } from "../../../Core/Json";
@@ -34,6 +34,14 @@ class ShapefileCatalogItem
   implements HasLocalData
 {
   static readonly type = "shp";
+
+  constructor() {
+    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+    super();
+
+    makeObservable(this);
+  }
+
   get type() {
     return ShapefileCatalogItem.type;
   }

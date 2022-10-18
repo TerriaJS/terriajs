@@ -1,4 +1,4 @@
-import { action, runInAction } from "mobx";
+import { action, runInAction, makeObservable } from "mobx";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
@@ -18,6 +18,14 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
   readonly typeName = "YourDataYourRegions Job";
 
   static readonly type = "ydyr-job";
+
+  constructor() {
+    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+    super();
+
+    makeObservable(this);
+  }
+
   get type() {
     return YDYRCatalogFunctionJob.type;
   }
