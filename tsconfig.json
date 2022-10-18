@@ -13,7 +13,8 @@
     "outDir": "ts-out",
     "resolveJsonModule": true,
     "typeRoots": ["./lib/ThirdParty/**/*.d.ts"],
-    "types": ["terriajs-cesium"]
+    "types": ["terriajs-cesium"],
+    "useDefineForClassFields": true
   },
   "include": [
     "./lib/**/*",
