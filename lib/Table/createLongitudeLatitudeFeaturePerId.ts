@@ -386,6 +386,8 @@ function createFeature(
   const show = calculateShow(availability);
   const feature = new TerriaFeature({
     position:
+      // positionProperty is either SampledPositionProperty or PreSampledPositionProperty
+      // If it's PreSampledPositionProperty - we need to transform it to SampledPositionProperty by calling `getProperty()`
       positionProperty instanceof PreSampledPositionProperty
         ? positionProperty.getProperty()
         : positionProperty,
