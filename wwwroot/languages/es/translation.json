@@ -219,7 +219,9 @@
     "shareWithDevelopers": "Compartir mi vista del mapa con los desarrolladores de {{appName}}",
     "commentQuestion": "Comentario o pregunta",
     "close": "cerrar sugerencia",
-    "title": "Sugerencias"
+    "title": "Sugerencias",
+    "minLength": "La longitud mínima del comentario es {{minLength}}",
+    "email": "Dirección de correo electrónico(opcional)<br/><em>No podemos seguir sin él!</em>"
   },
   "location": {
     "centreMap": "Centrar mapa en su localización",
@@ -494,5 +496,9 @@
   },
   "languagePanel": {
     "changeLanguage": "Cambiar lenguaje"
+  },
+  "helpPanel": {
+    "menuPaneTitle": "Estamos aquí para ayudar",
+    "btnText": "Ayuda"
   }
 }
