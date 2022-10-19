@@ -1,6 +1,10 @@
 # Change Log
 
-#### next release (8.2.18)
+#### next release (8.2.19)
+
+- [The next improvement]
+
+#### 8.2.18 - 2022-10-19
 
 - Fix `RelatedMaps` default broken URLs
 - Add `mergeGroupsByName` trait to `GroupTraits` - this will merge all group members with the same name
@@ -20,8 +24,7 @@
 - Migrated `/#tools=1` to version 8.
 - Removed dummy function `Terria.getUserProperty`.
 - Removed unused version 7 React components.
-
-- [The next improvement]
+- Fix Cesium `stoppedRenderingMessage`
 
 #### 8.2.17 - 2022-09-23
 
