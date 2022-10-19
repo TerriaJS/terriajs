@@ -1977,10 +1977,6 @@ export default class Terria {
     );
   }
 
-  getUserProperty(key: string) {
-    return undefined;
-  }
-
   getLocalProperty(key: string): string | boolean | null {
     try {
       if (!defined(window.localStorage)) {

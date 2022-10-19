@@ -70,8 +70,6 @@ const MapColumn = observer(
                   `}
                 >
                   <MenuBar
-                    terria={this.props.viewState.terria}
-                    viewState={this.props.viewState}
                     allBaseMaps={this.props.allBaseMaps}
                     menuItems={customElements.menu}
                     menuLeftItems={customElements.menuLeft}
