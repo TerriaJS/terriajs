@@ -186,7 +186,21 @@
     "editStory": "editar",
     "view": "Vista",
     "viewStory": "vista",
-    "storyEditor": "Editor de historias"
+    "storyEditor": "Editor de historias",
+    "panelTitle": "Editor de la historia",
+    "gettingStarted": "Empezar",
+    "gettingStartedTitle": "Empezar",
+    "share": "Compartir",
+    "collapse": "Colapso",
+    "badgeBarLabel": "Escenas",
+    "untitledScene": "escena sin título",
+    "doesNotExist": "La historia no existe",
+    "removeAllStoriesDialog": "¿Está seguro de que desea eliminar la escena {{ count }}?",
+    "removeAllStoriesDialog_plural": "¿Está seguro de que desea eliminar las escenas {{ count }}?",
+    "panelBody": "Crea y comparte historias interactivas directamente desde tu mapa",
+    "recapture": "Recaptura",
+    "recaptureStory": "volver a capturar",
+    "expand": "Expandir"
   },
   "featureInfo": {
     "noInfoAvailable": "No hay información disponible",
@@ -206,7 +220,9 @@
       "featureInfoShown": "Los primeros{{maximum}} se muestran a continuación.",
       "featuresFound": "{{featCount}} {catalogItemName} elementos fueron encontrados.",
       "moreThanMax": "Se encontraron más de {{maximum}} {{catalogItemName}} elementos."
-    }
+    },
+    "showRawData": "Mostrar datos en crudo",
+    "showCuratedData": "Mostrar datos organizados"
   },
   "feedback": {
     "feedbackBtnText": "Danos tu opinión",
@@ -499,6 +515,21 @@
   },
   "helpPanel": {
     "menuPaneTitle": "Estamos aquí para ayudar",
-    "btnText": "Ayuda"
+    "btnText": "Ayuda",
+    "takeTour": "Haz el recorrido",
+    "menuPaneBody": "Encuentre consejos útiles sobre cómo utilizar TerriaJS consultando las guías que aparecen a continuación o poniéndose en contacto con el equipo en [{{supportEmail}}]({{supportEmail}})",
+    "dismissText": "Lo tengo, ¡gracias!",
+    "mapUserGuide": "Guía del usuario del mapa",
+    "promptMessage": "Encuentre el Tour, los vídeos explicativos y otros contenidos de ayuda aquí"
+  },
+  "welcomeMessage": {
+    "welcomeMessage": "¿Está interesado en el descubrimiento y la exploración de datos? <br/>Entre directamente y comience o consulte las siguientes opciones de la guía de ayuda.",
+    "exploreDataBtnText": "Explorar los datos del mapa",
+    "title": "Vamos a empezar",
+    "helpBtnText": "Necesitaré ayuda",
+    "searchBtnText": "Buscar una ubicación",
+    "dismissText": "Cierra el mensaje y no me vuelvas a mostrar esto",
+    "welcomeMessageOnMobile": "¿Le interesa el descubrimiento y la exploración de datos?",
+    "tourBtnText": "Haz el recorrido"
   }
 }
