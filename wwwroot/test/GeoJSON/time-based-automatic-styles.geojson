@@ -5,7 +5,8 @@
       "type": "Feature",
       "properties": {
         "date": 2018,
-        "someProperty": 3
+        "someProperty": 3,
+        "id": 0
       },
       "geometry": {
         "type": "Polygon",
@@ -24,7 +25,8 @@
       "type": "Feature",
       "properties": {
         "date": 2019,
-        "someProperty": 6
+        "someProperty": 6,
+        "id": 0
       },
       "geometry": {
         "type": "Polygon",
@@ -43,7 +45,8 @@
       "type": "Feature",
       "properties": {
         "date": 2020,
-        "someProperty": 10
+        "someProperty": 10,
+        "id": 0
       },
       "geometry": {
         "type": "Polygon",
@@ -62,7 +65,8 @@
       "type": "Feature",
       "properties": {
         "date": 2021,
-        "someProperty": 0
+        "someProperty": 0,
+        "id": 0
       },
       "geometry": {
         "type": "Polygon",
@@ -81,7 +85,8 @@
       "type": "Feature",
       "properties": {
         "date": 2018,
-        "someProperty": 3
+        "someProperty": 3,
+        "id": 1
       },
       "geometry": {
         "type": "Polygon",
@@ -99,7 +104,8 @@
       "type": "Feature",
       "properties": {
         "date": 2019,
-        "someProperty": 4
+        "someProperty": 4,
+        "id": 1
       },
       "geometry": {
         "type": "Polygon",
@@ -117,7 +123,8 @@
       "type": "Feature",
       "properties": {
         "date": 2020,
-        "someProperty": 1
+        "someProperty": 1,
+        "id": 1
       },
       "geometry": {
         "type": "Polygon",
@@ -135,7 +142,8 @@
       "type": "Feature",
       "properties": {
         "date": 2021,
-        "someProperty": 10
+        "someProperty": 10,
+        "id": 1
       },
       "geometry": {
         "type": "Polygon",
@@ -153,7 +161,8 @@
       "type": "Feature",
       "properties": {
         "date": 2022,
-        "someProperty": 7
+        "someProperty": 7,
+        "id": 1
       },
       "geometry": {
         "type": "Polygon",
