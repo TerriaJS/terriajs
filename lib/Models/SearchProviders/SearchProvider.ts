@@ -1,4 +1,4 @@
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import { fromPromise } from "mobx-utils";
 import SearchProviderResults from "./SearchProviderResults";
 
@@ -10,6 +10,10 @@ export default abstract class SearchProvider {
 
   @observable name = "Unknown";
   @observable isOpen = true;
+
+  constructor() {
+    makeObservable(this);
+  }
 
   @action
   toggleOpen() {

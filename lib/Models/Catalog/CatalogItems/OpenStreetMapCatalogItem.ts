@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
@@ -12,6 +12,13 @@ export default class OpenStreetMapCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(OpenStreetMapCatalogItemTraits))
 ) {
   static readonly type = "open-street-map";
+
+  constructor() {
+    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+    super();
+
+    makeObservable(this);
+  }
 
   get type() {
     return OpenStreetMapCatalogItem.type;

@@ -1,4 +1,4 @@
-import { action, computed } from "mobx";
+import { action, computed, makeObservable } from "mobx";
 import Constructor from "../Core/Constructor";
 import ItemSearchProvider, {
   ItemSearchResult
@@ -43,6 +43,13 @@ function SearchableItemMixin<T extends Constructor<MixinModel>>(Base: T) {
      *
      */
     abstract zoomToItemSearchResult(result: ItemSearchResult): void;
+
+    constructor() {
+      // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+      super();
+
+      makeObservable(this);
+    }
 
     /**
      * Returns true if this item is searchable and has a valid item search provider defined.

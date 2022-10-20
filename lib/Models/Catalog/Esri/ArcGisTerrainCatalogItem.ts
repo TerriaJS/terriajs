@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import ArcGISTiledElevationTerrainProvider from "terriajs-cesium/Source/Core/ArcGISTiledElevationTerrainProvider";
 import Credit from "terriajs-cesium/Source/Core/Credit";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
@@ -11,6 +11,13 @@ export default class ArcGisTerrainCatalogItem extends UrlMixin(
   MappableMixin(CatalogMemberMixin(CreateModel(ArcGisTerrainCatalogItemTraits)))
 ) {
   static type = "arcgis-terrain";
+
+  constructor() {
+    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+    super();
+
+    makeObservable(this);
+  }
 
   get type() {
     return ArcGisTerrainCatalogItem.type;

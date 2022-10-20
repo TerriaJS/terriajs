@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import { ReactNode } from "react";
 import ViewState from "./ViewState";
 
@@ -28,6 +28,10 @@ export interface Notification {
 export default class NotificationState {
   @observable protected notifications: Notification[] = [];
   protected alreadyNotifiedKeys: Set<string> = new Set();
+
+  constructor() {
+    makeObservable(this);
+  }
 
   @action
   addNotificationToQueue(notification: Notification) {

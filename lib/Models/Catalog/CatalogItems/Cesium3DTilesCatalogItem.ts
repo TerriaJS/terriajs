@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -30,6 +30,14 @@ export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
 ) {
   static readonly type = "3d-tiles";
   readonly type = Cesium3DTilesCatalogItem.type;
+
+  constructor() {
+    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+    super();
+
+    makeObservable(this);
+  }
+
   get typeName() {
     return i18next.t("models.cesiumTerrain.name3D");
   }

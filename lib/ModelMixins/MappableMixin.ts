@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
@@ -63,6 +63,14 @@ export function isDataSource(object: MapItem): object is DataSource {
 function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
   abstract class MappableMixin extends Base {
     initialMessageShown: boolean = false;
+
+    constructor() {
+      // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+      super();
+
+      makeObservable(this);
+    }
+
     get isMappable() {
       return true;
     }

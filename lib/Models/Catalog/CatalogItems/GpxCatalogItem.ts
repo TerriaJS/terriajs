@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import getFilenameFromUri from "terriajs-cesium/Source/Core/getFilenameFromUri";
 import isDefined from "../../../Core/isDefined";
 import loadText from "../../../Core/loadText";
@@ -20,6 +20,13 @@ class GpxCatalogItem extends GeoJsonMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(GpxCatalogItemTraits)))
 ) {
   static readonly type = "gpx";
+
+  constructor() {
+    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+    super();
+
+    makeObservable(this);
+  }
 
   get type() {
     return GpxCatalogItem.type;

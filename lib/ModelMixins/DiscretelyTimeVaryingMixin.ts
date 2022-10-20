@@ -1,4 +1,4 @@
-import { action, computed, runInAction } from "mobx";
+import { action, computed, runInAction, makeObservable } from "mobx";
 import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import { ChartPoint } from "../Charts/ChartData";
@@ -33,6 +33,13 @@ function DiscretelyTimeVaryingMixin<
     extends ChartableMixin(Base)
     implements TimeVarying
   {
+    constructor() {
+      // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+      super();
+
+      makeObservable(this);
+    }
+
     get hasDiscreteTimes() {
       return true;
     }

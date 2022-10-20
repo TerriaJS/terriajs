@@ -1,6 +1,6 @@
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import PickedFeatures from "../Map/PickedFeatures/PickedFeatures";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import ViewState from "../ReactViewModels/ViewState";
 
 export enum UIMode {
@@ -44,6 +44,7 @@ export default class MapInteractionMode {
   onEnable?: (viewState: ViewState) => void;
 
   constructor(options: Options) {
+    makeObservable(this);
     /**
      * Gets or sets a callback that is invoked when the user cancels the interaction mode.  If this property is undefined,
      * the interaction mode cannot be canceled.

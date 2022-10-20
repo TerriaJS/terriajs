@@ -1,4 +1,4 @@
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -64,6 +64,7 @@ export default class MovementsController {
     readonly pedestrianHeight: number,
     readonly maxVerticalLookAngle: number
   ) {
+    makeObservable(this);
     this.currentSurfaceHeightEstimate = this.camera.positionCartographic.height;
     this.updateSurfaceHeightEstimate();
   }

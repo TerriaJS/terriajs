@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import CatalogFunctionMixin from "../../../ModelMixins/CatalogFunctionMixin";
@@ -179,6 +179,14 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   CreateModel(YDYRCatalogFunctionTraits)
 ) {
   static readonly type = "ydyr";
+
+  constructor() {
+    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+    super();
+
+    makeObservable(this);
+  }
+
   get type(): string {
     return YDYRCatalogFunction.type;
   }

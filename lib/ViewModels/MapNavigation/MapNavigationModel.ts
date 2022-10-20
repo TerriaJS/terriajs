@@ -1,4 +1,4 @@
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import { ReactNode } from "react";
 import isDefined from "../../Core/isDefined";
 import Terria from "../../Models/Terria";
@@ -26,6 +26,7 @@ export default class MapNavigationModel extends CompositeBarModel<IMapNavigation
     options?: ICompositeBarOptions
   ) {
     super(items, options);
+    makeObservable(this);
   }
 
   @action.bound

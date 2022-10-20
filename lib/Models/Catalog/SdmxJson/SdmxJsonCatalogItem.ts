@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
@@ -36,6 +36,7 @@ export default class SdmxJsonCatalogItem
     sourceReference: BaseModel | undefined
   ) {
     super(id, terria, sourceReference);
+    makeObservable(this);
     this.strata.set(
       TableAutomaticStylesStratum.stratumName,
       new TableAutomaticStylesStratum(this)

@@ -1,4 +1,4 @@
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import ViewerMode from "../../Models/ViewerMode";
 import {
   CompositeBarItemController,
@@ -12,6 +12,13 @@ export interface IMapNavigationItemController
 }
 
 export default abstract class MapNavigationItemController extends CompositeBarItemController {
+  constructor() {
+    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+    super();
+
+    makeObservable(this);
+  }
+
   /**
    * Set this item to active state. If used it's recommended to override this method and a proper logic
    * for activating this item, so it's easier to programmatically control the item from other places.
@@ -73,6 +80,7 @@ interface IOptions {
 export class GenericMapNavigationItemController extends MapNavigationItemController {
   constructor(private options: IOptions) {
     super();
+    makeObservable(this);
   }
 
   get glyph(): { id: string } {

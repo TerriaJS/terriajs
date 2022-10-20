@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import MapboxImageryProvider from "terriajs-cesium/Source/Scene/MapboxImageryProvider";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
@@ -14,6 +14,13 @@ export default class MapboxMapCatalogItem extends CatalogMemberMixin(
 ) {
   static readonly type = "mapbox-map";
   readonly type = MapboxMapCatalogItem.type;
+
+  constructor() {
+    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+    super();
+
+    makeObservable(this);
+  }
 
   @computed
   private get imageryProvider(): MapboxImageryProvider | undefined {

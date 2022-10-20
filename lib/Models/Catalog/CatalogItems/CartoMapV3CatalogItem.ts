@@ -1,6 +1,6 @@
 import { featureCollection, Geometry, GeometryCollection } from "@turf/helpers";
 import i18next from "i18next";
-import { computed, observable, runInAction } from "mobx";
+import { computed, observable, runInAction, makeObservable } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import URI from "urijs";
 import JsonValue, {
@@ -30,6 +30,7 @@ class CartoMapV3Stratum extends LoadableStratum(GeoJsonTraits) {
   static stratumName = "cartoMapV3Stratum";
   constructor(readonly catalogItem: CartoMapV3CatalogItem) {
     super();
+    makeObservable(this);
   }
 
   static load(item: CartoMapV3CatalogItem) {
@@ -73,6 +74,8 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
     sourceReference?: BaseModel | undefined
   ) {
     super(id, terria, sourceReference);
+
+    makeObservable(this);
 
     if (this.strata.get(CartoMapV3Stratum.stratumName) === undefined) {
       runInAction(() => {

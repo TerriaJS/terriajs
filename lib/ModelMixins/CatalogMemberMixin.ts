@@ -1,4 +1,11 @@
-import { action, computed, isObservableArray, runInAction, toJS } from "mobx";
+import {
+  action,
+  computed,
+  isObservableArray,
+  runInAction,
+  toJS,
+  makeObservable
+} from "mobx";
 import Mustache from "mustache";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
@@ -31,6 +38,13 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
     // The names of items in the CatalogMember's info array that contain details of the source of this CatalogMember's data.
     // This should be overridden by children of this class. For an example see the WebMapServiceCatalogItem
     _sourceInfoItemNames: string[] | undefined = undefined;
+
+    constructor() {
+      // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+      super();
+
+      makeObservable(this);
+    }
 
     get typeName(): string | undefined {
       return;

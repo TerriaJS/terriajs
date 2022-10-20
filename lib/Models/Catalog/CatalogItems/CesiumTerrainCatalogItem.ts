@@ -1,4 +1,10 @@
-import { action, computed, observable, runInAction } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  runInAction,
+  makeObservable
+} from "mobx";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -18,6 +24,13 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
    */
   @observable
   private terrainProvider: CesiumTerrainProvider | undefined = undefined;
+
+  constructor() {
+    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+    super();
+
+    makeObservable(this);
+  }
 
   get type() {
     return CesiumTerrainCatalogItem.type;

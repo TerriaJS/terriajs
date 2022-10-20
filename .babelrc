@@ -14,7 +14,7 @@
     "babel-plugin-jsx-control-statements",
     "@babel/plugin-transform-modules-commonjs",
     ["@babel/plugin-proposal-decorators", { "legacy": true }],
-    "@babel/proposal-class-properties",
+    ["@babel/plugin-proposal-class-properties", { "loose": false }],
     "@babel/proposal-object-rest-spread",
     "babel-plugin-styled-components",
     "@babel/plugin-syntax-dynamic-import",

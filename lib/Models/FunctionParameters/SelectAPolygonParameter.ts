@@ -1,5 +1,5 @@
 import { Feature, Polygon } from "@turf/helpers";
-import { computed, isObservableArray } from "mobx";
+import { computed, isObservableArray, makeObservable } from "mobx";
 import { JsonObject } from "../../Core/Json";
 import FunctionParameter from "./FunctionParameter";
 import { GeoJsonFunctionParameter } from "./GeoJsonParameter";
@@ -11,6 +11,13 @@ export default class SelectAPolygonParameter
   implements GeoJsonFunctionParameter
 {
   readonly type = "polygon";
+
+  constructor() {
+    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+    super();
+
+    makeObservable(this);
+  }
 
   static formatValueForUrl(value: Feature[]) {
     if (!(Array.isArray(value) || isObservableArray(value))) {

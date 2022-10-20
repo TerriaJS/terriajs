@@ -1,7 +1,7 @@
 import { ApiClient, fromCatalog } from "@opendatasoft/api-client";
 import { Dataset } from "@opendatasoft/api-client/dist/client/types";
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
@@ -144,6 +144,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     private readonly pointTimeSeries?: PointTimeSeries[]
   ) {
     super();
+    makeObservable(this);
   }
 
   @computed get name() {
@@ -524,6 +525,7 @@ export default class OpenDataSoftCatalogItem
     sourceReference: BaseModel | undefined
   ) {
     super(id, terria, sourceReference);
+    makeObservable(this);
     this.strata.set(
       TableAutomaticStylesStratum.stratumName,
       new TableAutomaticStylesStratum(this)

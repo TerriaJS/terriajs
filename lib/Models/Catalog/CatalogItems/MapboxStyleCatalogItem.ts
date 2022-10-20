@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import MapboxStyleImageryProvider from "terriajs-cesium/Source/Scene/MapboxStyleImageryProvider";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
@@ -13,6 +13,13 @@ export default class MapboxStyleCatalogItem extends MappableMixin(
 ) {
   static readonly type = "mapbox-style";
   readonly type = MapboxStyleCatalogItem.type;
+
+  constructor() {
+    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+    super();
+
+    makeObservable(this);
+  }
 
   forceLoadMapItems() {
     return Promise.resolve();

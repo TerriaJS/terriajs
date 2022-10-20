@@ -1,4 +1,4 @@
-import { action, observable, runInAction } from "mobx";
+import { action, observable, runInAction, makeObservable } from "mobx";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import CorsProxy from "../../Core/CorsProxy";
@@ -193,6 +193,7 @@ export default class RegionProvider {
     properties: RegionProvierOptions,
     corsProxy: CorsProxy
   ) {
+    makeObservable(this);
     this.regionType = regionType;
     this.corsProxy = corsProxy;
 

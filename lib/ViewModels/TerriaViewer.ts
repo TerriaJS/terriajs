@@ -8,7 +8,8 @@ import {
   observable,
   reaction,
   runInAction,
-  untracked
+  untracked,
+  makeObservable
 } from "mobx";
 import { fromPromise, FULFILLED } from "mobx-utils";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
@@ -109,6 +110,7 @@ export default class TerriaViewer {
   readonly afterViewerChanged = new CesiumEvent();
 
   constructor(terria: Terria, items: IComputedValue<MappableMixin.Instance[]>) {
+    makeObservable(this);
     this.terria = terria;
     this.items = items;
 

@@ -1,5 +1,5 @@
 import createReactClass from "create-react-class";
-import { observable, runInAction } from "mobx";
+import { observable, runInAction, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -39,6 +39,7 @@ class ParameterViewModel {
   wasEverBlurredWhileInvalid = false;
 
   constructor(parameter) {
+    makeObservable(this);
     this.parameter = parameter;
   }
 }

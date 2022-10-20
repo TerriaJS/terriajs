@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, autorun, computed, runInAction } from "mobx";
+import { action, autorun, computed, runInAction, makeObservable } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
@@ -20,6 +20,13 @@ export default class CompositeCatalogItem extends MappableMixin(
   private _visibilityDisposer = autorun(() => {
     this.syncVisibilityToMembers();
   });
+
+  constructor() {
+    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+    super();
+
+    makeObservable(this);
+  }
 
   get type() {
     return CompositeCatalogItem.type;

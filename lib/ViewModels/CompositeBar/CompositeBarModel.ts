@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import isDefined from "../../Core/isDefined";
 import { CompositeBarItemController } from "./CompositeBarItemController";
 
@@ -39,6 +39,7 @@ export abstract class CompositeBarModel<
     items?: CompositeBarItem[],
     options?: ICompositeBarOptions
   ) {
+    makeObservable(this);
     if (options) {
       this.options = options;
     }

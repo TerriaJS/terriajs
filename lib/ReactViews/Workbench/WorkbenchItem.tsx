@@ -1,5 +1,5 @@
 import { TFunction } from "i18next";
-import { action, computed } from "mobx";
+import { action, computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 //@ts-ignore
@@ -43,6 +43,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
   static displayName = "WorkbenchItem";
   constructor(props: IProps) {
     super(props);
+    makeObservable(this);
   }
 
   @action.bound

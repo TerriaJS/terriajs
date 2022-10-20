@@ -1,6 +1,6 @@
 import { scaleLinear } from "@visx/scale";
 import { interpolateNumber as d3InterpolateNumber } from "d3-interpolate";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -21,6 +21,11 @@ class MomentPointsChart extends React.Component {
   static defaultProps = {
     glyph: "circle"
   };
+
+  constructor(props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed
   get points() {

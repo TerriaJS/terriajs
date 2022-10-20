@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -17,6 +17,13 @@ export default class UrlTemplateImageryCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(UrlTemplateImageryCatalogItemTraits))
 ) {
   static readonly type = "url-template-imagery";
+
+  constructor() {
+    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+    super();
+
+    makeObservable(this);
+  }
 
   get type() {
     return UrlTemplateImageryCatalogItem.type;
