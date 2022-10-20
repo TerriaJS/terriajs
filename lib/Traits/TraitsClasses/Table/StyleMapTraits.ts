@@ -1,7 +1,7 @@
-import StratumFromTraits from "../../Models/Definition/StratumFromTraits";
-import { StyleMapType } from "../../Table/TableStyleMap";
-import primitiveTrait from "../Decorators/primitiveTrait";
-import ModelTraits from "../ModelTraits";
+import StratumFromTraits from "../../../Models/Definition/StratumFromTraits";
+import { StyleMapType } from "../../../Table/TableStyleMap";
+import primitiveTrait from "../../Decorators/primitiveTrait";
+import ModelTraits from "../../ModelTraits";
 
 export class BinStyleTraits extends ModelTraits {
   @primitiveTrait({

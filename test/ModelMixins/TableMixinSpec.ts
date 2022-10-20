@@ -11,25 +11,25 @@ import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson
 import TerriaFeature from "../../lib/Models/Feature/Feature";
 import { TerriaFeatureData } from "../../lib/Models/Feature/FeatureData";
 import Terria from "../../lib/Models/Terria";
-import TableColorStyleTraits from "../../lib/Traits/TraitsClasses/TableColorStyleTraits";
+import TableColorStyleTraits from "../../lib/Traits/TraitsClasses/Table/ColorStyleTraits";
 import TableLabelStyleTraits, {
   EnumLabelSymbolTraits,
   LabelSymbolTraits
-} from "../../lib/Traits/TraitsClasses/TableLabelStyleTraits";
+} from "../../lib/Traits/TraitsClasses/Table/LabelStyleTraits";
 import TableOutlineStyleTraits, {
   BinOutlineSymbolTraits,
   EnumOutlineSymbolTraits
-} from "../../lib/Traits/TraitsClasses/TableOutlineStyleTraits";
+} from "../../lib/Traits/TraitsClasses/Table/OutlineStyleTraits";
 import TablePointStyleTraits, {
   BinPointSymbolTraits,
   EnumPointSymbolTraits
-} from "../../lib/Traits/TraitsClasses/TablePointStyleTraits";
-import TableStyleTraits from "../../lib/Traits/TraitsClasses/TableStyleTraits";
-import TableTimeStyleTraits from "../../lib/Traits/TraitsClasses/TableTimeStyleTraits";
+} from "../../lib/Traits/TraitsClasses/Table/PointStyleTraits";
+import TableStyleTraits from "../../lib/Traits/TraitsClasses/Table/StyleTraits";
+import TableTimeStyleTraits from "../../lib/Traits/TraitsClasses/Table/TimeStyleTraits";
 import TableTrailStyleTraits, {
   BinTrailSymbolTraits,
   EnumTrailSymbolTraits
-} from "../../lib/Traits/TraitsClasses/TableTrailStyleTraits";
+} from "../../lib/Traits/TraitsClasses/Table/TrailStyleTraits";
 
 const LatLonValCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_val.csv");
 const LatLonEnumCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum.csv");

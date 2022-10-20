@@ -9,7 +9,7 @@ import StratumFromTraits from "../Models/Definition/StratumFromTraits";
 import LegendTraits, {
   LegendItemTraits
 } from "../Traits/TraitsClasses/LegendTraits";
-import { TableStyleMapSymbolTraits } from "../Traits/TraitsClasses/TableStyleMapTraits";
+import { TableStyleMapSymbolTraits } from "../Traits/TraitsClasses/Table/StyleMapTraits";
 import TableStyleMap from "./TableStyleMap";
 
 export class StyleMapLegend<

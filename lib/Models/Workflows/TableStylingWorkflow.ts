@@ -36,7 +36,7 @@ import {
 import TableColumnType from "../../Table/TableColumnType";
 import TableStyleMap from "../../Table/TableStyleMap";
 import ModelTraits from "../../Traits/ModelTraits";
-import { EnumColorTraits } from "../../Traits/TraitsClasses/TableColorStyleTraits";
+import { EnumColorTraits } from "../../Traits/TraitsClasses/Table/ColorStyleTraits";
 import CommonStrata from "../Definition/CommonStrata";
 import Model from "../Definition/Model";
 import ModelPropertiesFromTraits from "../Definition/ModelPropertiesFromTraits";

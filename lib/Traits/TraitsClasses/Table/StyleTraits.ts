@@ -1,15 +1,15 @@
-import StratumFromTraits from "../../Models/Definition/StratumFromTraits";
-import objectTrait from "../Decorators/objectTrait";
-import primitiveTrait from "../Decorators/primitiveTrait";
-import ModelTraits from "../ModelTraits";
-import TableChartStyleTraits from "./TableChartStyleTraits";
-import TableColorStyleTraits from "./TableColorStyleTraits";
-import TableLabelStyleTraits from "./TableLabelStyleTraits";
-import TableOutlineStyleTraits from "./TableOutlineStyleTraits";
-import TablePointSizeStyleTraits from "./TablePointSizeStyleTraits";
-import TablePointStyleTraits from "./TablePointStyleTraits";
-import TableTrailStyleTraits from "./TableTrailStyleTraits";
-import TableTimeStyleTraits from "./TableTimeStyleTraits";
+import StratumFromTraits from "../../../Models/Definition/StratumFromTraits";
+import objectTrait from "../../Decorators/objectTrait";
+import primitiveTrait from "../../Decorators/primitiveTrait";
+import ModelTraits from "../../ModelTraits";
+import TableChartStyleTraits from "./ChartStyleTraits";
+import TableColorStyleTraits from "./ColorStyleTraits";
+import TableLabelStyleTraits from "./LabelStyleTraits";
+import TableOutlineStyleTraits from "./OutlineStyleTraits";
+import TablePointSizeStyleTraits from "./PointSizeStyleTraits";
+import TablePointStyleTraits from "./PointStyleTraits";
+import TableTrailStyleTraits from "./TrailStyleTraits";
+import TableTimeStyleTraits from "./TimeStyleTraits";
 
 export default class TableStyleTraits extends ModelTraits {
   @primitiveTrait({

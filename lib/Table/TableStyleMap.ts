@@ -8,8 +8,8 @@ import {
   EnumStyleTraits,
   TableStyleMapSymbolTraits,
   TableStyleMapTraits
-} from "../Traits/TraitsClasses/TableStyleMapTraits";
-import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
+} from "../Traits/TraitsClasses/Table/StyleMapTraits";
+import TableStyleTraits from "../Traits/TraitsClasses/Table/StyleTraits";
 import TableColumnType from "./TableColumnType";
 
 export interface TableStyleMapModel<T extends TableStyleMapSymbolTraits> {

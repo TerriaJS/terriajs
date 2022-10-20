@@ -19,9 +19,9 @@ import { MetadataUrlTraits } from "../../../Traits/TraitsClasses/CatalogMemberTr
 import EnumDimensionTraits from "../../../Traits/TraitsClasses/DimensionTraits";
 import { FeatureInfoTemplateTraits } from "../../../Traits/TraitsClasses/FeatureInfoTraits";
 import OpenDataSoftCatalogItemTraits from "../../../Traits/TraitsClasses/OpenDataSoftCatalogItemTraits";
-import TableColumnTraits from "../../../Traits/TraitsClasses/TableColumnTraits";
-import TableStyleTraits from "../../../Traits/TraitsClasses/TableStyleTraits";
-import TableTimeStyleTraits from "../../../Traits/TraitsClasses/TableTimeStyleTraits";
+import TableColumnTraits from "../../../Traits/TraitsClasses/Table/ColumnTraits";
+import TableStyleTraits from "../../../Traits/TraitsClasses/Table/StyleTraits";
+import TableTimeStyleTraits from "../../../Traits/TraitsClasses/Table/TimeStyleTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";

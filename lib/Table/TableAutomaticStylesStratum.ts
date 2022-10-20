@@ -11,12 +11,12 @@ import StratumFromTraits from "../Models/Definition/StratumFromTraits";
 import { ShortReportTraits } from "../Traits/TraitsClasses/CatalogMemberTraits";
 import TableChartStyleTraits, {
   TableChartLineStyleTraits
-} from "../Traits/TraitsClasses/TableChartStyleTraits";
-import TableColorStyleTraits from "../Traits/TraitsClasses/TableColorStyleTraits";
-import TablePointSizeStyleTraits from "../Traits/TraitsClasses/TablePointSizeStyleTraits";
-import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
-import TableTimeStyleTraits from "../Traits/TraitsClasses/TableTimeStyleTraits";
-import TableTraits from "../Traits/TraitsClasses/TableTraits";
+} from "../Traits/TraitsClasses/Table/ChartStyleTraits";
+import TableColorStyleTraits from "../Traits/TraitsClasses/Table/ColorStyleTraits";
+import TablePointSizeStyleTraits from "../Traits/TraitsClasses/Table/PointSizeStyleTraits";
+import TableStyleTraits from "../Traits/TraitsClasses/Table/StyleTraits";
+import TableTimeStyleTraits from "../Traits/TraitsClasses/Table/TimeStyleTraits";
+import TableTraits from "../Traits/TraitsClasses/Table/TableTraits";
 import TableColumnType from "./TableColumnType";
 
 const DEFAULT_ID_COLUMN = "id";

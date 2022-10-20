@@ -18,7 +18,7 @@ import GeoJsonMixin, {
 } from "../../../ModelMixins/GeojsonMixin";
 import CartoMapV3CatalogItemTraits from "../../../Traits/TraitsClasses/CartoMapV3CatalogItemTraits";
 import { GeoJsonTraits } from "../../../Traits/TraitsClasses/GeoJsonTraits";
-import TableStyleTraits from "../../../Traits/TraitsClasses/TableStyleTraits";
+import TableStyleTraits from "../../../Traits/TraitsClasses/Table/StyleTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";

@@ -11,7 +11,7 @@ import createCombinedModel from "../Models/Definition/createCombinedModel";
 import Model from "../Models/Definition/Model";
 import TableColumnTraits, {
   THIS_COLUMN_EXPRESSION_TOKEN
-} from "../Traits/TraitsClasses/TableColumnTraits";
+} from "../Traits/TraitsClasses/Table/ColumnTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
 import flatten from "../Core/flatten";
 const naturalSort = require("javascript-natural-sort");
