@@ -1,8 +1,12 @@
 # Change Log
 
-#### next release (8.2.20)
+#### next release (8.2.21)
 
 - [The next improvement]
+
+#### 8.2.20 - 2022-10-20
+
+- Handle errors thrown in `ImageryProviderLeafletTileLayer.pickFeatures`. This fixes a bug where some WMTS layers break feature picking (in Leaflet/2D mode)
 
 #### 8.2.19 - 2022-10-20
 
