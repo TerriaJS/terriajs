@@ -1,9 +1,12 @@
 # Change Log
 
-#### next release (8.2.19)
+#### next release (8.2.20)
+
+- [The next improvement]
+
+#### 8.2.19 - 2022-10-20
 
 - Handle errors thrown in `Cesium._attachProviderCoordHooks`. This fixes a bug where some WMTS layers break feature picking.
-- [The next improvement]
 
 #### 8.2.18 - 2022-10-19
 
