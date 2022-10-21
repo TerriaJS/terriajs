@@ -2017,7 +2017,7 @@ export default class TableStylingWorkflow
             name: "Vertical origin",
             selectedId: labelTraits.verticalOrigin ?? nullValues.verticalOrigin,
             options: [
-              { id: "TOP", name: "Left" },
+              { id: "TOP", name: "Top" },
               { id: "CENTER", name: "Center" },
               { id: "BASELINE", name: "Baseline" },
               { id: "BOTTOM", name: "Bottom" }
