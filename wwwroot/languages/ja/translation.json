@@ -241,7 +241,7 @@
   "catalogItem": {
     "removeFromMap": "マップから削除する",
     "trash": "カタログから削除",
-    "add": "マップに追加する",
+    "add": "マップに追加",
     "remove": "削除",
     "loading": "読み込み中...",
     "privateIndicatorTitle": "プライベートデータセット",
@@ -565,7 +565,7 @@
     "webTitle": "ウェブからデータを追加する",
     "localTitle": "ローカルのデータを追加する",
     "browse": "ブラウズ...",
-    "urlInputBtn": "マップに追加する",
+    "urlInputBtn": "マップに追加",
     "localFile": "<0>ステップ2</0>：ファイルを選択",
     "webFile": "<0>ステップ2</0>：データファイルまたはウェブサービスのURLを入力",
     "webFileType": "<0>ステップ1</0>：ファイルまたはウェブサービスタイプを選択",
