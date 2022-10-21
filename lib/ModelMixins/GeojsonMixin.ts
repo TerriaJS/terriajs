@@ -295,7 +295,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             this.activeTableStyle.colorMap,
             this.activeTableStyle.pointSizeMap,
             this.activeTableStyle.pointStyleMap.traitValues,
-            this.activeTableStyle.outlineStyleMap.traitValues
+            this.activeTableStyle.outlineStyleMap.traitValues,
+            this.terria.baseMapContrastColor // This needs to be here as `baseMapContrastColor` is used as the default outline color in `getFeatureStyle`
           ],
           () => {
             if (
