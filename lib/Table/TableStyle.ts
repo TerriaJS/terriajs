@@ -141,7 +141,9 @@ export default class TableStyle {
       isDefined(colorTraits?.outlierColor) ||
       pointSizeTraits ||
       styleTraits?.point ||
-      styleTraits?.outline
+      styleTraits?.outline ||
+      styleTraits?.label ||
+      styleTraits?.trail
     );
   }
 

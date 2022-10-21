@@ -13,7 +13,6 @@ import TableColumnTraits, {
   THIS_COLUMN_EXPRESSION_TOKEN
 } from "../Traits/TraitsClasses/Table/ColumnTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
-import flatten from "../Core/flatten";
 const naturalSort = require("javascript-natural-sort");
 naturalSort.insensitive = true;
 
