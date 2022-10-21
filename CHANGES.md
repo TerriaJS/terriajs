@@ -3,6 +3,7 @@
 #### next release (8.2.21)
 
 - Protomaps Polygon features now only use `PolygonSymbolizer` (instead of `PolygonSymbolizer` and `LineSymbolizer`)
+- Add `horizontalOrigin` and `verticalOrigin` to `TableLabelTraits`
 - `TableStylingWorkflow` improvements:
   - Add more options to advanced mode (style title, hide style, long/lat column, time properties)
   - "Style" dropdown now shows `TableStyles` instead of `TableColumns`

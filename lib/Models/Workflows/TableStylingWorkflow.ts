@@ -1997,6 +1997,36 @@ export default class TableStylingWorkflow
               }
             : undefined,
           {
+            type: "select",
+            id: `${id}-horizontal-origin`,
+            name: "Horizontal origin",
+            selectedId:
+              labelTraits.horizontalOrigin ?? nullValues.horizontalOrigin,
+            options: [
+              { id: "LEFT", name: "Left" },
+              { id: "CENTER", name: "Center" },
+              { id: "RIGHT", name: "Right" }
+            ],
+            setDimensionValue: (stratumId, value) => {
+              labelTraits.setTrait(stratumId, "horizontalOrigin", value);
+            }
+          },
+          {
+            type: "select",
+            id: `${id}-vertical-origin`,
+            name: "Vertical origin",
+            selectedId: labelTraits.verticalOrigin ?? nullValues.verticalOrigin,
+            options: [
+              { id: "TOP", name: "Left" },
+              { id: "CENTER", name: "Center" },
+              { id: "BASELINE", name: "Baseline" },
+              { id: "BOTTOM", name: "Bottom" }
+            ],
+            setDimensionValue: (stratumId, value) => {
+              labelTraits.setTrait(stratumId, "verticalOrigin", value);
+            }
+          },
+          {
             type: "numeric",
             id: `${id}-pixel-offset-x`,
             name: "Pixel offset X",

@@ -252,7 +252,9 @@ function createFeature(
         fillColor: createProperty(Color, interpolate),
         outlineColor: createProperty(Color, interpolate),
         outlineWidth: createProperty(Number, interpolate),
-        pixelOffset: createProperty(Cartesian2, interpolate)
+        pixelOffset: createProperty(Cartesian2, interpolate),
+        verticalOrigin: new TimeIntervalCollectionProperty(),
+        horizontalOrigin: new TimeIntervalCollectionProperty()
       }
     : undefined;
 
