@@ -186,7 +186,7 @@ export default class Legend extends React.Component<{
         !imageUrl && legendItem.addSpacingAbove ? "1px solid black" : undefined
     };
 
-    if (!imageUrl && legendItem.outlineColor) {
+    if (!imageUrl && legendItem.outlineColor && legendItem.outlineWidth) {
       boxStyle.border = `${legendItem.outlineWidth}px solid ${legendItem.outlineColor}`;
     }
 
@@ -226,9 +226,9 @@ export default class Legend extends React.Component<{
         };
       } else {
         boxStyle = {
-          border: `${legendItem.outlineWidth}px solid ${legendItem.outlineColor}`,
           backgroundColor: legendItem.color,
-          minWidth: "20px"
+          minWidth: "20px",
+          ...boxStyle
         };
       }
     }
