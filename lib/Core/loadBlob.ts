@@ -2,8 +2,7 @@ import Resource from "terriajs-cesium/Source/Core/Resource";
 import JsonValue from "./Json";
 import loadJson from "./loadJson";
 import URI from "urijs";
-
-const zip = require("terriajs-cesium/Source/ThirdParty/zip").default;
+import * as zip from "@zip.js/zip.js/lib/zip-no-worker.js";
 
 export default function loadBlob(
   urlOrResource: string,
