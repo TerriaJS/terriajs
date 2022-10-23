@@ -81,6 +81,7 @@ function configureWebpack(
       /Source\/Core\/TaskProcessor/
     ],
     use: [
+      babelLoader,
       {
         loader: require.resolve("string-replace-loader"),
         options: {
@@ -112,8 +113,7 @@ function configureWebpack(
             }
           ]
         }
-      },
-      babelLoader
+      }
     ]
   });
 
