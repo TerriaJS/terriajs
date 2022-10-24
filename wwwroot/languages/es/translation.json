@@ -177,7 +177,9 @@
     "editor": {
       "saveStory": "Guardar",
       "saveBtn": "guardar",
-      "cancelBtn": "cancelar"
+      "cancelBtn": "cancelar",
+      "cancelEditing": "Cancelar",
+      "placeholder": "Introduzca un título aquí"
     },
     "removeAllStories": "Eliminar Todos",
     "delete": "Eliminar",
@@ -200,7 +202,17 @@
     "panelBody": "Crea y comparte historias interactivas directamente desde tu mapa",
     "recapture": "Recaptura",
     "recaptureStory": "volver a capturar",
-    "expand": "Expandir"
+    "expand": "Expandir",
+    "removeStoryDialog": "¿Está seguro de que desea eliminar '<1>{{storyName}}</1>'?",
+    "locationBtn": "Centrar escena",
+    "exitBtn": "Salir de la historia",
+    "prev": "Previo",
+    "previousBtn": "Ir a la escena previa",
+    "playStory": "Historia",
+    "preview": "previsualizar historias",
+    "captureSceneTitle": "capturar la escena actual",
+    "play": "Reproducir",
+    "captureScene": "Captura escena"
   },
   "featureInfo": {
     "noInfoAvailable": "No hay información disponible",
