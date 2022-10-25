@@ -1,6 +1,18 @@
 # Change Log
 
-#### next release (8.2.18)
+#### next release (8.2.21)
+
+- [The next improvement]
+
+#### 8.2.20 - 2022-10-20
+
+- Handle errors thrown in `ImageryProviderLeafletTileLayer.pickFeatures`. This fixes a bug where some WMTS layers break feature picking (in Leaflet/2D mode)
+
+#### 8.2.19 - 2022-10-20
+
+- Handle errors thrown in `Cesium._attachProviderCoordHooks`. This fixes a bug where some WMTS layers break feature picking.
+
+#### 8.2.18 - 2022-10-19
 
 - Fix `RelatedMaps` default broken URLs
 - Add `mergeGroupsByName` trait to `GroupTraits` - this will merge all group members with the same name
@@ -16,12 +28,12 @@
 - Added missing `proxyCatalogItemUrl` to GeoJson, Shapefile, Gltf and AssImp catalog items.
 - Added support for `OpenDataSoftCatalogGroup` with more than 100 datasets.
 - Added `refreshIntervalTemplate` to `OpenDataSoftCatalogItemTraits` - this can be used to set `refreshInterval` using Mustache template rendered on ODS Dataset JSON object.
+- Performance optimisation for time-series `TableMixin`
 - Tweak `generateCatalogIndex` to use less memory. (+ add `diffCatalogIndex.js` script to show added/removed members between two catalog index files)
 - Migrated `/#tools=1` to version 8.
 - Removed dummy function `Terria.getUserProperty`.
 - Removed unused version 7 React components.
-
-- [The next improvement]
+- Fix Cesium `stoppedRenderingMessage`
 
 #### 8.2.17 - 2022-09-23
 

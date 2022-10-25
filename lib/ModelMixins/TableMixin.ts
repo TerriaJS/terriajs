@@ -687,25 +687,22 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       if (dates === undefined) {
         return;
       }
-      const times = filterOutUndefined(
-        dates.map((d) =>
-          d ? { time: d.toISOString(), tag: undefined } : undefined
-        )
-      ).reduce(
-        // is it correct for discrete times to remove duplicates?
-        // see discussion on https://github.com/TerriaJS/terriajs/pull/4577
-        // duplicates will mess up the indexing problem as our `<DateTimePicker />`
-        // will eliminate duplicates on the UI front, so given the datepicker
-        // expects uniques, return uniques here
-        (acc: DiscreteTimeAsJS[], time) =>
-          !acc.some(
-            (accTime) => accTime.time === time.time && accTime.tag === time.tag
-          )
-            ? [...acc, time]
-            : acc,
-        []
-      );
-      return times;
+
+      // is it correct for discrete times to remove duplicates?
+      // see discussion on https://github.com/TerriaJS/terriajs/pull/4577
+      // duplicates will mess up the indexing problem as our `<DateTimePicker />`
+      // will eliminate duplicates on the UI front, so given the datepicker
+      // expects uniques, return uniques here
+      const times = new Set<string>();
+
+      for (let i = 0; i < dates.length; i++) {
+        const d = dates[i];
+        if (d) {
+          times.add(d.toISOString());
+        }
+      }
+
+      return Array.from(times).map((time) => ({ time, tag: undefined }));
     }
 
     /** This is a temporary button which shows in the Legend in the Workbench, if custom styling has been applied. */
