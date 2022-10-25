@@ -5,12 +5,13 @@ import { computed, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import flatten from "../../../Core/flatten";
 import isDefined from "../../../Core/isDefined";
 import { isJsonObject } from "../../../Core/Json";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import FeatureInfoMixin from "../../../ModelMixins/FeatureInfoMixin";
+import FeatureInfoUrlTemplateMixin from "../../../ModelMixins/FeatureInfoUrlTemplateMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStratum";
@@ -23,18 +24,18 @@ import TableStyleTraits from "../../../Traits/TraitsClasses/TableStyleTraits";
 import TableTimeStyleTraits from "../../../Traits/TraitsClasses/TableTimeStyleTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import Feature from "../../Feature";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
+import StratumOrder from "../../Definition/StratumOrder";
+import TerriaFeature from "../../Feature/Feature";
+import SelectableDimensions, {
+  SelectableDimension
+} from "../../SelectableDimensions/SelectableDimensions";
+import Terria from "../../Terria";
 import {
   isValidDataset,
   ValidDataset
 } from "../CatalogGroups/OpenDataSoftCatalogGroup";
-import SelectableDimensions, {
-  SelectableDimension
-} from "../../SelectableDimensions/SelectableDimensions";
-import StratumOrder from "../../Definition/StratumOrder";
-import Terria from "../../Terria";
 
 type PointTimeSeries = {
   samples?: number;
@@ -64,9 +65,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     });
 
     const response = await client.get(
-      fromCatalog()
-        .dataset(catalogItem.datasetId)
-        .itself()
+      fromCatalog().dataset(catalogItem.datasetId).itself()
     );
 
     const dataset = response.dataset;
@@ -172,9 +171,9 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
    */
   @computed get colorFieldName() {
     return (
-      this.usefulFields.find(f => f.type === "double") ??
-      this.usefulFields.find(f => f.type === "int") ??
-      this.usefulFields.find(f => f.type === "text")
+      this.usefulFields.find((f) => f.type === "double") ??
+      this.usefulFields.find((f) => f.type === "int") ??
+      this.usefulFields.find((f) => f.type === "text")
     )?.name;
   }
 
@@ -189,9 +188,9 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   @computed get regionFieldName() {
     // Find first field which matches a region type
     return this.dataset.fields?.find(
-      f =>
-        this.catalogItem.matchRegionType(f.name) ||
-        this.catalogItem.matchRegionType(f.label)
+      (f) =>
+        this.catalogItem.matchRegionProvider(f.name)?.regionType ||
+        this.catalogItem.matchRegionProvider(f.label)?.regionType
     )?.name;
   }
 
@@ -207,7 +206,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   /** Get the maximum number of samples for a given point (or sensor) */
   @computed get maxPointSamples() {
     if (!this.pointTimeSeries) return;
-    return Math.max(...this.pointTimeSeries.map(p => p.samples ?? 0));
+    return Math.max(...this.pointTimeSeries.map((p) => p.samples ?? 0));
   }
 
   /** Should we select all fields (properties) in each record?
@@ -232,13 +231,13 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
       return filterOutUndefined(
         this.dataset.fields
           ?.filter(
-            f =>
+            (f) =>
               f.type !== "geo_shape" &&
               !["lat", "lon", "long", "latitude", "longitude"].includes(
                 f.name?.toLowerCase() ?? ""
               )
           )
-          .map(f => f.name) ?? []
+          .map((f) => f.name) ?? []
       ).join(", ");
     }
 
@@ -287,7 +286,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     if (!this.catalogItem.colorFieldName) return;
 
     const f = this.dataset.fields?.find(
-      f => f.name === this.catalogItem.colorFieldName
+      (f) => f.name === this.catalogItem.colorFieldName
     );
     if (f) {
       return createStratumInstance(TableColumnTraits, {
@@ -303,7 +302,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     if (!this.catalogItem.timeFieldName) return;
 
     const f = this.dataset.fields?.find(
-      f => f.name === this.catalogItem.timeFieldName
+      (f) => f.name === this.catalogItem.timeFieldName
     );
     if (f) {
       return createStratumInstance(TableColumnTraits, {
@@ -319,12 +318,12 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     return (
       this.dataset.fields
         ?.filter(
-          f =>
+          (f) =>
             f.name !== this.catalogItem.timeFieldName &&
             f.name !== this.catalogItem.colorFieldName &&
             f.name !== this.catalogItem.regionFieldName
         )
-        ?.map(f =>
+        ?.map((f) =>
           createStratumInstance(TableColumnTraits, {
             name: f.name,
             title: f.label,
@@ -374,62 +373,6 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     });
   }
 
-  /** If `selectAllFields` is false, we have to fetch record information with the Record API */
-  @computed get featureInfoUrlTemplate() {
-    if (
-      !this.catalogItem.datasetId ||
-      !this.catalogItem.url ||
-      this.selectAllFields
-    )
-      return;
-
-    return `${this.catalogItem.url}/api/v2/catalog/datasets/${this.catalogItem.datasetId}/records/{${RECORD_ID_COL}}`;
-  }
-
-  @computed
-  get featureInfoTemplate() {
-    if (
-      !this.catalogItem.datasetId ||
-      !this.catalogItem.url ||
-      this.selectAllFields
-    )
-      return;
-
-    let template = '<table class="cesium-infoBox-defaultTable">';
-
-    // Function to format row with title and value
-    const row = (title: string, value: string) =>
-      `<tr><td style="vertical-align: middle">${title}</td><td>${value}</td></tr>`;
-
-    // Add fields (except for geo_* fields)
-    template += this.dataset.fields
-      ?.filter(
-        field => field.type !== "geo_point_2d" && field.type !== "geo_shape"
-      )
-      ?.map(field =>
-        row(field.label ?? field.name ?? "", `{{record.fields.${field.name}}}`)
-      )
-      .join("");
-
-    // Add region mapping info
-    const regionType = this.catalogItem.activeTableStyle.regionColumn
-      ?.regionType;
-
-    if (regionType)
-      template += row(regionType?.description, `{{${regionType?.nameProp}}}`);
-
-    // Add timeSeries chart if more than one time observation
-    if (
-      this.catalogItem.discreteTimes &&
-      this.catalogItem.discreteTimes.length > 1
-    ) {
-      const chartName = `${this.catalogItem.name}: {{${this.catalogItem.activeTableStyle.title}}}`;
-      template += `</table><chart title="${chartName}" x-column="{{terria.timeSeries.xName}}" y-column="{{terria.timeSeries.yName}}" >{{terria.timeSeries.data}}</chart>`;
-    }
-
-    return createStratumInstance(FeatureInfoTemplateTraits, { template });
-  }
-
   /** Try to find a sensible currentTime based on the latest timeInterval which has values for all points
    * This is biased for real-time sensor data - where we would usually want to see the latest values.
    * As we are fetching the last 1000 records, there may be time intervals which are incomplete. Ideally we want to see all sensors with some data by default.
@@ -438,8 +381,9 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   get currentTime() {
     if (!this.pointTimeSeries && this.catalogItem.geoPoint2dFieldName) return;
 
-    const lastDate = this.catalogItem.activeTableStyle?.timeColumn
-      ?.valuesAsJulianDates.maximum;
+    const lastDate =
+      this.catalogItem.activeTableStyle?.timeColumn?.valuesAsJulianDates
+        .maximum;
 
     if (
       !this.catalogItem.activeTableStyle.timeIntervals ||
@@ -455,7 +399,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
         let start: JulianDate | undefined;
         let stop: JulianDate | undefined;
 
-        rows.forEach(rowId => {
+        rows.forEach((rowId) => {
           const interval =
             this.catalogItem.activeTableStyle.timeIntervals![rowId] ??
             undefined;
@@ -507,7 +451,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   @computed get usefulFields() {
     return (
       this.dataset.fields?.filter(
-        f =>
+        (f) =>
           ["double", "int", "text"].includes(f.type ?? "") &&
           !["lat", "lon", "long", "latitude", "longitude"].includes(
             f.name?.toLowerCase() ?? ""
@@ -515,8 +459,8 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
           !isIdField(f.name) &&
           !isIdField(f.label) &&
           f.name !== this.catalogItem.regionFieldName &&
-          !this.catalogItem.matchRegionType(f.name) &&
-          !this.catalogItem.matchRegionType(f.label)
+          !this.catalogItem.matchRegionProvider(f.name)?.regionType &&
+          !this.catalogItem.matchRegionProvider(f.label)?.regionType
       ) ?? []
     );
   }
@@ -530,7 +474,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
         id: "available-fields",
         name: "Fields",
         selectedId: this.catalogItem.colorFieldName,
-        options: this.usefulFields.map(f => ({
+        options: this.usefulFields.map((f) => ({
           id: f.name,
           name: f.label,
           value: undefined
@@ -557,22 +501,21 @@ function isIdField(...names: (string | undefined)[]) {
 }
 
 function getGeoPointField(dataset: Dataset) {
-  return dataset.fields?.find(f => f.type === "geo_point_2d")?.name;
+  return dataset.fields?.find((f) => f.type === "geo_point_2d")?.name;
 }
 
 function getTimeField(dataset: Dataset) {
-  return dataset.fields?.find(f => f.type === "datetime")?.name;
+  return dataset.fields?.find((f) => f.type === "datetime")?.name;
 }
 
 StratumOrder.addLoadStratum(OpenDataSoftDatasetStratum.stratumName);
 
 export default class OpenDataSoftCatalogItem
-  extends FeatureInfoMixin(
-    TableMixin(
-      UrlMixin(CatalogMemberMixin(CreateModel(OpenDataSoftCatalogItemTraits)))
-    )
+  extends TableMixin(
+    UrlMixin(CatalogMemberMixin(CreateModel(OpenDataSoftCatalogItemTraits)))
   )
-  implements SelectableDimensions {
+  implements SelectableDimensions
+{
   static readonly type = "opendatasoft-item";
 
   constructor(
@@ -589,20 +532,6 @@ export default class OpenDataSoftCatalogItem
 
   get type() {
     return OpenDataSoftCatalogItem.type;
-  }
-
-  buildFeatureFromPickResult(
-    _screenPosition: Cartesian2 | undefined,
-    pickResult: any
-  ) {
-    const feature = new Feature(pickResult?.id);
-    // If feature is time-series, we have to make sure that recordId is set in feature.properties
-    // Otherwise we won't be able to use featureInfoUrlTemplate in FeatureInfoMixin
-    const recordId = pickResult?.id?.data?.getValue?.(
-      this.terria.timelineClock.currentTime
-    )?.[RECORD_ID_COL];
-    feature.properties?.addProperty(RECORD_ID_COL, recordId);
-    return feature;
   }
 
   protected async forceLoadMetadata(): Promise<void> {
@@ -625,10 +554,7 @@ export default class OpenDataSoftCatalogItem
 
     let data: string[][] = [];
 
-    let q = fromCatalog()
-      .dataset(this.datasetId)
-      .records()
-      .limit(100);
+    let q = fromCatalog().dataset(this.datasetId).records().limit(100);
 
     // If fetching time - order records by latest time
     if (this.timeFieldName) q = q.orderBy(`${this.timeFieldName} DESC`);
@@ -726,7 +652,7 @@ export default class OpenDataSoftCatalogItem
     return filterOutUndefined([
       this.availableFieldsDimension,
       ...super.selectableDimensions.filter(
-        s => !this.availableFieldsDimension || s.id !== "activeStyle"
+        (s) => !this.availableFieldsDimension || s.id !== "activeStyle"
       )
     ]);
   }

@@ -2,7 +2,6 @@ import { createTransformer } from "mobx-utils";
 import defined from "terriajs-cesium/Source/Core/defined";
 import isDefined from "../../../Core/isDefined";
 import loadXML from "../../../Core/loadXML";
-import makeRealPromise from "../../../Core/makeRealPromise";
 import TerriaError from "../../../Core/TerriaError";
 import xml2json from "../../../ThirdParty/xml2json";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
@@ -135,12 +134,45 @@ function getOutputTypes(json: any): string[] | undefined {
   return Array.isArray(outputTypes) ? outputTypes : [outputTypes];
 }
 
+interface SrsNamesForLayer {
+  layerName: string;
+  srsArray: string[]; // First element is DefaultSRS
+}
+
+/**
+ * Get the coordinate systems (srsName) supported by the WFS service for each layer.
+ * @param json
+ * returns an object with an array of srsNames for each layer. The first element is the defaultSRS as specified by the WFS service.
+ * TODO: For catalog items that specify which layer we are interested in, why build the array describing the srsNames for all the other layers too?
+ */
+function getSrsNames(json: any): SrsNamesForLayer[] | undefined {
+  let layers = json.FeatureTypeList?.FeatureType;
+  let srsNamesByLayer: SrsNamesForLayer[] = [];
+  if (Array.isArray(layers)) {
+    srsNamesByLayer = layers.map(buildSrsNameObject);
+  } else {
+    srsNamesByLayer.push(buildSrsNameObject(json.FeatureTypeList?.FeatureType));
+  }
+  return srsNamesByLayer;
+}
+
+/**
+ * Helper function to build individual objects describing the allowable srsNames for each layer in the WFS
+ * @param layer
+ */
+function buildSrsNameObject(layer: any): SrsNamesForLayer {
+  let srsNames: string[] = [];
+  srsNames.push(layer.DefaultSRS);
+  layer.OtherSRS?.forEach((item: string) => {
+    srsNames.push(item);
+  });
+  return { layerName: layer.Name, srsArray: srsNames };
+}
+
 export default class WebFeatureServiceCapabilities {
-  static fromUrl: (
-    url: string
-  ) => Promise<WebFeatureServiceCapabilities> = createTransformer(
-    (url: string) => {
-      return makeRealPromise(loadXML(url)).then(function(capabilitiesXml: any) {
+  static fromUrl: (url: string) => Promise<WebFeatureServiceCapabilities> =
+    createTransformer((url: string) => {
+      return loadXML(url).then(function (capabilitiesXml: any) {
         const json = xml2json(capabilitiesXml);
         if (!defined(json.ServiceIdentification)) {
           throw new TerriaError({
@@ -153,17 +185,18 @@ export default class WebFeatureServiceCapabilities {
 
         return new WebFeatureServiceCapabilities(capabilitiesXml, json);
       });
-    }
-  );
+    });
 
   readonly service: CapabilitiesService;
   readonly outputTypes: string[] | undefined;
   readonly featureTypes: FeatureType[];
+  readonly srsNames: SrsNamesForLayer[] | undefined;
 
   private constructor(xml: XMLDocument, json: any) {
     this.service = getService(json);
     this.outputTypes = getOutputTypes(json);
     this.featureTypes = getFeatureTypes(json);
+    this.srsNames = getSrsNames(json);
   }
 
   /**
@@ -178,20 +211,22 @@ export default class WebFeatureServiceCapabilities {
    */
   findLayer(name: string): FeatureType | undefined {
     // Look for an exact match on the name.
-    let match = this.featureTypes.find(ft => ft.Name === name);
+    let match = this.featureTypes.find((ft) => ft.Name === name);
     if (!match) {
       const colonIndex = name.indexOf(":");
       if (colonIndex >= 0) {
         // This looks like a namespaced name.  Such names will (usually?) show up in GetCapabilities
         // as just their name without the namespace qualifier.
         const nameWithoutNamespace = name.substring(colonIndex + 1);
-        match = this.featureTypes.find(ft => ft.Name === nameWithoutNamespace);
+        match = this.featureTypes.find(
+          (ft) => ft.Name === nameWithoutNamespace
+        );
       }
     }
 
     if (!match) {
       // Try matching by title.
-      match = this.featureTypes.find(ft => ft.Title === name);
+      match = this.featureTypes.find((ft) => ft.Title === name);
     }
 
     return match;

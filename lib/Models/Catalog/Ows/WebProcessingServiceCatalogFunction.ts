@@ -18,6 +18,7 @@ import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import updateModelFromJson from "../../Definition/updateModelFromJson";
 import BooleanParameter from "../../FunctionParameters/BooleanParameter";
+import DateParameter from "../../FunctionParameters/DateParameter";
 import DateTimeParameter from "../../FunctionParameters/DateTimeParameter";
 import EnumerationParameter from "../../FunctionParameters/EnumerationParameter";
 import FunctionParameter, {
@@ -40,10 +41,16 @@ type AllowedValues = {
   Value?: string | string[];
 };
 
+type LiteralDataType = {
+  "ows:reference"?: string;
+  text?: string;
+};
 type LiteralData = {
   AllowedValues?: AllowedValues;
   AllowedValue?: AllowedValues;
   AnyValue?: unknown;
+  DataType?: LiteralDataType | string;
+  dataType?: string;
 };
 
 type ComplexData = {
@@ -233,7 +240,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     ) as WpsLoadableStratum;
     if (!isDefined(stratum)) return [];
 
-    return stratum.inputs.map(input => {
+    return stratum.inputs.map((input) => {
       const parameter = this.convertInputToParameter(this, input);
       if (isDefined(parameter)) {
         return parameter;
@@ -252,19 +259,19 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     let dataInputs = filterOutUndefined(
       await Promise.all(
         this.functionParameters
-          .filter(p => isDefined(p.value) && p.value !== null)
-          .map(p => this.convertParameterToInput(p))
+          .filter((p) => isDefined(p.value) && p.value !== null)
+          .map((p) => this.convertParameterToInput(p))
       )
     );
 
     runInAction(() =>
       updateModelFromJson(job, CommonStrata.user, {
-        name: `WPS: ${this.name ||
-          this.identifier ||
-          this.uniqueId} result ${new Date().toISOString()}`,
+        name: `WPS: ${
+          this.name || this.identifier || this.uniqueId
+        } result ${new Date().toISOString()}`,
         geojsonFeatures: flatten(
           this.functionParameters
-            .map(param =>
+            .map((param) =>
               isGeoJsonFunctionParameter(param)
                 ? param.geoJsonFeature
                 : undefined
@@ -279,7 +286,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
         wpsParameters: dataInputs,
         forceConvertResultsToV8: this.forceConvertResultsToV8
       })
-    );
+    ).raiseError(this.terria, "Error ocurred while updating job model JSON");
 
     return job;
   }
@@ -327,7 +334,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
 }
 
 const LiteralDataConverter = {
-  inputToParameter: function(
+  inputToParameter: function (
     catalogFunction: CatalogFunctionMixin,
     input: Input,
     options: FunctionParameterOptions
@@ -345,17 +352,53 @@ const LiteralDataConverter = {
         isObservableArray(allowedValues.Value)
           ? (allowedValues.Value as string[])
           : [allowedValues.Value]
-        ).map(id => {
+        ).map((id) => {
           return { id };
         })
       });
     } else if (isDefined(input.LiteralData.AnyValue)) {
+      let dtype: string | null = null;
+      if (isDefined(input.LiteralData["dataType"])) {
+        dtype = input.LiteralData["dataType"];
+      } else if (isDefined(input.LiteralData.DataType)) {
+        if (typeof input.LiteralData.DataType === "string") {
+          dtype = input.LiteralData.DataType;
+        } else if (isDefined(input.LiteralData.DataType["ows:reference"])) {
+          dtype = input.LiteralData.DataType["ows:reference"];
+        } else if (isDefined(input.LiteralData.DataType.text)) {
+          dtype = input.LiteralData.DataType.text;
+        }
+      }
+      if (dtype !== null) {
+        if (dtype.indexOf("http://www.w3.org/TR/xmlschema-2/#") === 0) {
+          dtype = dtype.substring(dtype.lastIndexOf("#") + 1).toLowerCase();
+        }
+      }
+
+      if (dtype === "string") {
+        return new StringParameter(catalogFunction, {
+          ...options
+        });
+      } else if (dtype === "boolean") {
+        return new BooleanParameter(catalogFunction, {
+          ...options
+        });
+      } else if (dtype === "date") {
+        const dt = new DateParameter(catalogFunction, { ...options });
+        dt.variant = "literal";
+        return dt;
+      } else if (dtype?.toLowerCase() === "datetime") {
+        const dt = new DateTimeParameter(catalogFunction, { ...options });
+        dt.variant = "literal";
+        return dt;
+      }
+      // Assume its a string, if no literal datatype given
       return new StringParameter(catalogFunction, {
         ...options
       });
     }
   },
-  parameterToInput: function(parameter: FunctionParameter) {
+  parameterToInput: function (parameter: FunctionParameter) {
     return {
       inputValue: <string | undefined>parameter.value,
       inputType: "LiteralData"
@@ -363,8 +406,8 @@ const LiteralDataConverter = {
   }
 };
 
-const DateTimeConverter = {
-  inputToParameter: function(
+const ComplexDateConverter = {
+  inputToParameter: function (
     catalogFunction: CatalogFunctionMixin,
     input: Input,
     options: FunctionParameterOptions
@@ -378,13 +421,48 @@ const DateTimeConverter = {
       return undefined;
     }
 
-    var schema = input.ComplexData.Default.Format.Schema;
+    const schema = input.ComplexData.Default.Format.Schema;
+    if (schema !== "http://www.w3.org/TR/xmlschema-2/#date") {
+      return undefined;
+    }
+    const dparam = new DateParameter(catalogFunction, options);
+    dparam.variant = "complex";
+    return dparam;
+  },
+  parameterToInput: function (parameter: FunctionParameter) {
+    return {
+      inputType: "ComplexData",
+      inputValue: DateParameter.formatValueForUrl(
+        parameter?.value?.toString() || ""
+      )
+    };
+  }
+};
+
+const ComplexDateTimeConverter = {
+  inputToParameter: function (
+    catalogFunction: CatalogFunctionMixin,
+    input: Input,
+    options: FunctionParameterOptions
+  ) {
+    if (
+      !isDefined(input.ComplexData) ||
+      !isDefined(input.ComplexData.Default) ||
+      !isDefined(input.ComplexData.Default.Format) ||
+      !isDefined(input.ComplexData.Default.Format.Schema)
+    ) {
+      return undefined;
+    }
+
+    const schema = input.ComplexData.Default.Format.Schema;
     if (schema !== "http://www.w3.org/TR/xmlschema-2/#dateTime") {
       return undefined;
     }
-    return new DateTimeParameter(catalogFunction, options);
+    const dt = new DateTimeParameter(catalogFunction, options);
+    dt.variant = "complex";
+    return dt;
   },
-  parameterToInput: function(parameter: FunctionParameter) {
+  parameterToInput: function (parameter: FunctionParameter) {
     return {
       inputType: "ComplexData",
       inputValue: DateTimeParameter.formatValueForUrl(
@@ -405,7 +483,7 @@ const PolygonConverter = simpleGeoJsonDataConverter(
 );
 
 const RectangleConverter = {
-  inputToParameter: function(
+  inputToParameter: function (
     catalogFunction: CatalogFunctionMixin,
     input: Input,
     options: FunctionParameterOptions
@@ -447,7 +525,7 @@ const RectangleConverter = {
       crs: usedCrs
     });
   },
-  parameterToInput: function(functionParameter: FunctionParameter) {
+  parameterToInput: function (functionParameter: FunctionParameter) {
     const parameter = <RectangleParameter>functionParameter;
     const value = parameter.value;
 
@@ -494,7 +572,7 @@ const RectangleConverter = {
 };
 
 const GeoJsonGeometryConverter = {
-  inputToParameter: function(
+  inputToParameter: function (
     catalogFunction: CatalogFunctionMixin,
     input: Input,
     options: FunctionParameterOptions
@@ -531,7 +609,7 @@ const GeoJsonGeometryConverter = {
     });
   },
 
-  parameterToInput: function(
+  parameterToInput: function (
     parameter: FunctionParameter
   ): WpsInputData | undefined {
     if (!isDefined(parameter.value) || parameter.value === null) {
@@ -545,7 +623,7 @@ const GeoJsonGeometryConverter = {
 
 function simpleGeoJsonDataConverter(schemaType: string, klass: any) {
   return {
-    inputToParameter: function(
+    inputToParameter: function (
       catalogFunction: CatalogFunctionMixin,
       input: Input,
       options: FunctionParameterOptions
@@ -570,7 +648,7 @@ function simpleGeoJsonDataConverter(schemaType: string, klass: any) {
 
       return new klass(catalogFunction, options);
     },
-    parameterToInput: function(parameter: FunctionParameter) {
+    parameterToInput: function (parameter: FunctionParameter) {
       return {
         inputType: "ComplexData",
         inputValue: klass.formatValueForUrl(parameter.value)
@@ -587,8 +665,14 @@ function parameterTypeToConverter(
     case StringParameter.type:
     case EnumerationParameter.type:
       return LiteralDataConverter;
+    case DateParameter.type:
+      return (parameter as DateParameter).variant === "literal"
+        ? LiteralDataConverter
+        : ComplexDateConverter;
     case DateTimeParameter.type:
-      return DateTimeConverter;
+      return (parameter as DateTimeParameter).variant === "literal"
+        ? LiteralDataConverter
+        : ComplexDateTimeConverter;
     case PointParameter.type:
       return PointConverter;
     case LineParameter.type:
@@ -606,7 +690,8 @@ function parameterTypeToConverter(
 
 const parameterConverters: ParameterConverter[] = [
   LiteralDataConverter,
-  DateTimeConverter,
+  ComplexDateConverter,
+  ComplexDateTimeConverter,
   PointConverter,
   LineConverter,
   PolygonConverter,

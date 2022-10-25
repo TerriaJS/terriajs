@@ -5,12 +5,7 @@
       "layerName": "region_map:FID_SA1_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "SA1_MAIN11",
-      "aliases": [
-        "sa1_code_2011",
-        "sa1_maincode_2011",
-        "sa1_code",
-        "sa1"
-      ],
+      "aliases": ["sa1_code_2011", "sa1_maincode_2011", "sa1_code", "sa1"],
       "digits": 11,
       "description": "Statistical Area Level 1",
       "regionIdsFile": "data/regionids/region_map-FID_SA1_2011_AUST_SA1_MAIN11.json"
@@ -19,10 +14,7 @@
       "layerName": "region_map:FID_SA1_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "SA1_7DIG11",
-      "aliases": [
-        "sa1_7digitcode_2011",
-        "sa1_7digitcode"
-      ],
+      "aliases": ["sa1_7digitcode_2011", "sa1_7digitcode"],
       "digits": 7,
       "description": "Statistical Area Level 1",
       "regionIdsFile": "data/regionids/region_map-FID_SA1_2011_AUST_SA1_7DIG11.json"
@@ -31,11 +23,7 @@
       "layerName": "region_map:FID_SA4_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "SA4_CODE11",
-      "aliases": [
-        "sa4_code",
-        "sa4_code_2011",
-        "sa4"
-      ],
+      "aliases": ["sa4_code", "sa4_code_2011", "sa4"],
       "digits": 3,
       "description": "Statistical Area Level 4",
       "regionIdsFile": "data/regionids/region_map-FID_SA4_2011_AUST_SA4_CODE11.json"
@@ -44,10 +32,7 @@
       "layerName": "region_map:FID_SA4_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "SA4_NAME11",
-      "aliases": [
-        "sa4_name",
-        "sa4_name_2011"
-      ],
+      "aliases": ["sa4_name", "sa4_name_2011"],
       "description": "Statistical Area Level 4",
       "regionIdsFile": "data/regionids/region_map-FID_SA4_2011_AUST_SA4_NAME11.json"
     },
@@ -55,11 +40,7 @@
       "layerName": "region_map:FID_SA3_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "SA3_CODE11",
-      "aliases": [
-        "sa3_code_2011",
-        "sa3_code",
-        "sa3"
-      ],
+      "aliases": ["sa3_code_2011", "sa3_code", "sa3"],
       "digits": 5,
       "description": "Statistical Area Level 3",
       "regionIdsFile": "data/regionids/region_map-FID_SA3_2011_AUST_SA3_CODE11.json"
@@ -68,10 +49,7 @@
       "layerName": "region_map:FID_SA3_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "SA3_NAME11",
-      "aliases": [
-        "sa3_name_2011",
-        "sa3_name"
-      ],
+      "aliases": ["sa3_name_2011", "sa3_name"],
       "digits": 5,
       "description": "Statistical Area Level 3",
       "regionIdsFile": "data/regionids/region_map-FID_SA3_2011_AUST_SA3_NAME11.json"
@@ -80,11 +58,7 @@
       "layerName": "region_map:FID_SA2_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "SA2_MAIN11",
-      "aliases": [
-        "sa2_code_2011",
-        "sa2_code",
-        "sa2"
-      ],
+      "aliases": ["sa2_code_2011", "sa2_code", "sa2"],
       "digits": 9,
       "description": "Statistical Area Level 2",
       "regionIdsFile": "data/regionids/region_map-FID_SA2_2011_AUST_SA2_MAIN11.json"
@@ -93,10 +67,7 @@
       "layerName": "region_map:FID_SA2_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "SA2_5DIG11",
-      "aliases": [
-        "sa2_5digitcode",
-        "sa2_5digitcode_2011"
-      ],
+      "aliases": ["sa2_5digitcode", "sa2_5digitcode_2011"],
       "digits": 5,
       "description": "Statistical Area Level 2",
       "regionIdsFile": "data/regionids/region_map-FID_SA2_2011_AUST_SA2_5DIG11.json"
@@ -105,10 +76,7 @@
       "layerName": "region_map:FID_SA2_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "SA2_NAME11",
-      "aliases": [
-        "sa2_name_2011",
-        "sa2_name"
-      ],
+      "aliases": ["sa2_name_2011", "sa2_name"],
       "description": "Statistical Area Level 2",
       "regionIdsFile": "data/regionids/region_map-FID_SA2_2011_AUST_SA2_NAME11.json"
     },
@@ -116,11 +84,7 @@
       "layerName": "region_map:FID_SSC_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "SSC_CODE",
-      "aliases": [
-        "ssc_code_2011",
-        "ssc_code",
-        "ssc"
-      ],
+      "aliases": ["ssc_code_2011", "ssc_code", "ssc"],
       "digits": 5,
       "description": "ABS approximations of suburbs",
       "regionIdsFile": "data/regionids/region_map-FID_SSC_2011_AUST_SSC_CODE.json"
@@ -129,11 +93,7 @@
       "layerName": "region_map:FID_SSC_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "SSC_NAME",
-      "aliases": [
-        "ssc_name",
-        "ssc_name_2011",
-        "suburb"
-      ],
+      "aliases": ["ssc_name", "ssc_name_2011", "suburb"],
       "description": "ABS approximations of suburbs",
       "regionIdsFile": "data/regionids/region_map-FID_SSC_2011_AUST_SSC_NAME.json"
     },
@@ -159,9 +119,7 @@
       "layerName": "region_map:FID_LGA_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "LGA_CODE11",
-      "aliases": [
-        "lga_code_2011"
-      ],
+      "aliases": ["lga_code_2011"],
       "digits": 5,
       "description": "Local government areas",
       "regionIdsFile": "data/regionids/region_map-FID_LGA_2011_AUST_LGA_CODE11.json"
@@ -182,44 +140,20 @@
         "lga_name_2010"
       ],
       "serverReplacements": [
-        [
-          " \\([a-z]+\\)$",
-          ""
-        ],
-        [
-          "-",
-          " "
-        ]
+        [" \\([a-z]+\\)$", ""],
+        ["-", " "]
       ],
       "dataReplacements": [
-        [
-          "^The ",
-          ""
-        ],
-        [
-          "^.*Council of (the )?",
-          ""
-        ],
-        [
-          "^.* of (the )?",
-          ""
-        ],
-        [
-          " Council$",
-          ""
-        ],
+        ["^The ", ""],
+        ["^.*Council of (the )?", ""],
+        ["^.* of (the )?", ""],
+        [" Council$", ""],
         [
           " (Shire|City|Rural City|Borough|District|Aboriginal|Municipality|Municipal|Regional|Town|Government Community|Aboriginal Shire|Island|\\(Unincorporated\\)|\\(Uninc.\\))$",
           ""
         ],
-        [
-          "( \\([A-Z]+\\)$)",
-          ""
-        ],
-        [
-          "-",
-          " "
-        ]
+        ["( \\([A-Z]+\\)$)", ""],
+        ["-", " "]
       ],
       "disambigProp": "STE_NAME11",
       "disambigRegionId": "STE_NAME",
@@ -248,11 +182,7 @@
       "layerName": "region_map:FID_CED_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "CED_CODE",
-      "aliases": [
-        "ced_code_2011",
-        "ced_code",
-        "ced"
-      ],
+      "aliases": ["ced_code_2011", "ced_code", "ced"],
       "digits": 3,
       "description": "Commonwealth electoral districts (ABS approximations)",
       "disabledregionIdsFile": "data/regionids/region_map-FID_CED_2011_AUST_CED_CODE.json"
@@ -261,10 +191,7 @@
       "layerName": "region_map:FID_CED_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "CED_NAME",
-      "aliases": [
-        "ced_name_2011",
-        "ced_name"
-      ],
+      "aliases": ["ced_name_2011", "ced_name"],
       "description": "Commonwealth electoral districts (ABS approximations)",
       "regionIdsFile": "data/regionids/region_map-FID_CED_2011_AUST_CED_NAME.json"
     },
@@ -273,11 +200,7 @@
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "ELECT_DIV",
       "textCodes": true,
-      "aliases": [
-        "divisionnm",
-        "ced_aec",
-        "ced_aec_2011"
-      ],
+      "aliases": ["divisionnm", "ced_aec", "ced_aec_2011"],
       "description": "Commonwealth electoral districts (Australian Electoral Commission)",
       "regionIdsFile": "data/regionids/region_map-FID_COM20111216_ELB_region_ELECT_DIV.json"
     },
@@ -285,11 +208,7 @@
       "layerName": "region_map:FID_SED_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "SED_CODE",
-      "aliases": [
-        "sed_code_2011",
-        "sed_code",
-        "sed"
-      ],
+      "aliases": ["sed_code_2011", "sed_code", "sed"],
       "digits": 5,
       "description": "State electoral districts (ABS approximations)",
       "regionIdsFile": "data/regionids/region_map-FID_SED_2011_AUST_SED_CODE.json"
@@ -298,10 +217,7 @@
       "layerName": "region_map:FID_SED_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "SED_NAME",
-      "aliases": [
-        "sed_name_2011",
-        "sed_name"
-      ],
+      "aliases": ["sed_name_2011", "sed_name"],
       "description": "State electoral districts (ABS approximations)",
       "regionIdsFile": "data/regionids/region_map-FID_SED_2011_AUST_SED_NAME.json"
     },
@@ -309,11 +225,7 @@
       "layerName": "region_map:FID_GCCSA_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "GCC_CODE11",
-      "aliases": [
-        "gccsa_code_2011",
-        "gccsa_code",
-        "gccsa"
-      ],
+      "aliases": ["gccsa_code_2011", "gccsa_code", "gccsa"],
       "digits": 5,
       "description": "Greater capital city statistical areas",
       "regionIdsFile": "data/regionids/region_map-FID_GCCSA_2011_AUST_GCC_CODE11.json"
@@ -322,10 +234,7 @@
       "layerName": "region_map:FID_GCCSA_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "GCC_NAME11",
-      "aliases": [
-        "gccsa_name_2011",
-        "gccsa_name"
-      ],
+      "aliases": ["gccsa_name_2011", "gccsa_name"],
       "description": "Greater capital city statistical areas",
       "regionIdsFile": "data/regionids/region_map-FID_GCCSA_2011_AUST_GCC_NAME11.json"
     },
@@ -333,11 +242,7 @@
       "layerName": "region_map:FID_SUA_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "SUA_CODE11",
-      "aliases": [
-        "sua_code_2011",
-        "sua_code",
-        "sua"
-      ],
+      "aliases": ["sua_code_2011", "sua_code", "sua"],
       "digits": 4,
       "description": "Significant urban areas",
       "regionIdsFile": "data/regionids/region_map-FID_SUA_2011_AUST_SUA_CODE11.json"
@@ -346,34 +251,17 @@
       "layerName": "region_map:FID_SUA_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "SUA_NAME11",
-      "aliases": [
-        "sua_name_2011",
-        "sua_name"
-      ],
+      "aliases": ["sua_name_2011", "sua_name"],
       "description": "Significant urban areas",
-      "serverReplacements": [
-        [
-          "[^A-Za-z]",
-          ""
-        ]
-      ],
-      "dataReplacements": [
-        [
-          "[^A-Za-z]",
-          ""
-        ]
-      ],
+      "serverReplacements": [["[^A-Za-z]", ""]],
+      "dataReplacements": [["[^A-Za-z]", ""]],
       "regionIdsFile": "data/regionids/region_map-FID_SUA_2011_AUST_SUA_NAME11.json"
     },
     "STE": {
       "layerName": "region_map:FID_STE_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "STE_CODE11",
-      "aliases": [
-        "ste_code",
-        "ste_code_2011",
-        "ste"
-      ],
+      "aliases": ["ste_code", "ste_code_2011", "ste"],
       "digits": 1,
       "regionIdsFile": "data/regionids/region_map-FID_STE_2011_AUST_STE_CODE11.json"
     },
@@ -381,11 +269,7 @@
       "layerName": "region_map:FID_SOS_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "SOS_CODE11",
-      "aliases": [
-        "sos_code_2011",
-        "sos_code",
-        "sos"
-      ],
+      "aliases": ["sos_code_2011", "sos_code", "sos"],
       "digits": 2,
       "description": "Section of state",
       "regionIdsFile": "data/regionids/region_map-FID_SOS_2011_AUST_SOS_CODE11.json"
@@ -394,11 +278,7 @@
       "layerName": "region_map:FID_SOSR_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "SSR_CODE11",
-      "aliases": [
-        "sosr_code_2011",
-        "sosr_code",
-        "sosr"
-      ],
+      "aliases": ["sosr_code_2011", "sosr_code", "sosr"],
       "digits": 3,
       "description": "Section of state range",
       "regionIdsFile": "data/regionids/region_map-FID_SOSR_2011_AUST_SSR_CODE11.json"
@@ -407,11 +287,7 @@
       "layerName": "region_map:FID_UCL_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "UCL_CODE11",
-      "aliases": [
-        "ucl_code_2011",
-        "ucl_code",
-        "ucl"
-      ],
+      "aliases": ["ucl_code_2011", "ucl_code", "ucl"],
       "digits": 6,
       "description": "Urban centres and localities",
       "regionIdsFile": "data/regionids/region_map-FID_UCL_2011_AUST_UCL_CODE11.json"
@@ -420,11 +296,7 @@
       "layerName": "region_map:FID_IREG_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "IR_CODE11",
-      "aliases": [
-        "ireg_code_2011",
-        "ireg_code",
-        "ireg"
-      ],
+      "aliases": ["ireg_code_2011", "ireg_code", "ireg"],
       "digits": 3,
       "description": "Indigenous regions",
       "regionIdsFile": "data/regionids/region_map-FID_IREG_2011_AUST_IR_CODE11.json"
@@ -433,11 +305,7 @@
       "layerName": "region_map:FID_ILOC_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "IL_CODE11",
-      "aliases": [
-        "iloc_code_2011",
-        "iloc_code",
-        "iloc"
-      ],
+      "aliases": ["iloc_code_2011", "iloc_code", "iloc"],
       "digits": 8,
       "description": "Indigenous locations",
       "regionIdsFile": "data/regionids/region_map-FID_ILOC_2011_AUST_IL_CODE11.json"
@@ -446,11 +314,7 @@
       "layerName": "region_map:FID_IARE_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "IA_CODE11",
-      "aliases": [
-        "iare_code_2011",
-        "iare_code",
-        "iare"
-      ],
+      "aliases": ["iare_code_2011", "iare_code", "iare"],
       "digits": 6,
       "description": "Indigenous areas",
       "regionIdsFile": "data/regionids/region_map-FID_IARE_2011_AUST_IA_CODE11.json"
@@ -459,11 +323,7 @@
       "layerName": "region_map:FID_RA_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "RA_CODE11",
-      "aliases": [
-        "ra_code_2011",
-        "ra_code",
-        "ra"
-      ],
+      "aliases": ["ra_code_2011", "ra_code", "ra"],
       "digits": 2,
       "description": "Remoteness areas",
       "regionIdsFile": "data/regionids/region_map-FID_RA_2011_AUST_RA_CODE11.json"
@@ -472,11 +332,7 @@
       "layerName": "region_map:FID_TR_2015_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "TR_CODE15",
-      "aliases": [
-        "tr_code_2015",
-        "tr_code",
-        "tr"
-      ],
+      "aliases": ["tr_code_2015", "tr_code", "tr"],
       "digits": 5,
       "description": "Tourism regions",
       "regionIdsFile": "data/regionids/region_map-FID_TR_2015_AUST_TR_CODE15.json"
@@ -485,11 +341,7 @@
       "layerName": "region_map:FID_PHN_boundaries_AUS_Sep2015_V5",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "PHN_Code",
-      "aliases": [
-        "phn_code_2015",
-        "phn_code",
-        "phn"
-      ],
+      "aliases": ["phn_code_2015", "phn_code", "phn"],
       "digits": 6,
       "description": "Primary health networks",
       "regionIdsFile": "data/regionids/region_map-FID_PHN_boundaries_AUS_Sep2015_V5_PHN_Code.json"
@@ -498,76 +350,24 @@
       "layerName": "region_map:FID_STE_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "STE_NAME11",
-      "aliases": [
-        "ste_name",
-        "ste_name_2011",
-        "state"
-      ],
+      "aliases": ["ste_name", "ste_name_2011", "state"],
       "dataReplacements": [
-        [
-          "^Vic[.]?$",
-          "Victoria"
-        ],
-        [
-          "^N[ .]?S[ .]?W[ .]?$",
-          "New South Wales"
-        ],
-        [
-          "^S[ .]?A[ .]?$",
-          "South Australia"
-        ],
-        [
-          "^N[ .]?T[ .]?$",
-          "Northern Territory"
-        ],
-        [
-          "^W[ .]?A[ .]?$",
-          "Western Australia"
-        ],
-        [
-          "^Tas[.]?$",
-          "Tasmania"
-        ],
-        [
-          "^Q[ .]?L[ .]?D[ .]?$",
-          "Queensland"
-        ],
-        [
-          "^A[ .]?C[ .]?T[ .]?$",
-          "Australian Capital Territory"
-        ],
-        [
-          "^1$",
-          "New South Wales"
-        ],
-        [
-          "^2$",
-          "Victoria"
-        ],
-        [
-          "^3$",
-          "Queensland"
-        ],
-        [
-          "^4$",
-          "South Australia"
-        ],
-        [
-          "^5$",
-          "Western Australia"
-        ],
-        [
-          "^6$",
-          "Northern Territory"
-        ],
-        [
-          "^7$",
-          "Australian Capital Territory"
-        ],
-        [
-          "^8$",
-          "Other Territories"
-        ]
+        ["^Vic[.]?$", "Victoria"],
+        ["^N[ .]?S[ .]?W[ .]?$", "New South Wales"],
+        ["^S[ .]?A[ .]?$", "South Australia"],
+        ["^N[ .]?T[ .]?$", "Northern Territory"],
+        ["^W[ .]?A[ .]?$", "Western Australia"],
+        ["^Tas[.]?$", "Tasmania"],
+        ["^Q[ .]?L[ .]?D[ .]?$", "Queensland"],
+        ["^A[ .]?C[ .]?T[ .]?$", "Australian Capital Territory"],
+        ["^1$", "New South Wales"],
+        ["^2$", "Victoria"],
+        ["^3$", "Queensland"],
+        ["^4$", "South Australia"],
+        ["^5$", "Western Australia"],
+        ["^6$", "Northern Territory"],
+        ["^7$", "Australian Capital Territory"],
+        ["^8$", "Other Territories"]
       ],
       "regionIdsFile": "data/regionids/region_map-FID_STE_2011_AUST_STE_NAME11.json"
     },
@@ -575,10 +375,7 @@
       "layerName": "region_map:FID_TM_WORLD_BORDERS",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "ISO2",
-      "aliases": [
-        "cnt2",
-        "iso2"
-      ],
+      "aliases": ["cnt2", "iso2"],
       "digits": 2,
       "textCodes": true,
       "regionIdsFile": "data/regionids/region_map-FID_TM_WORLD_BORDERS_ISO2.json"
@@ -587,11 +384,7 @@
       "layerName": "region_map:FID_TM_WORLD_BORDERS",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "ISO3",
-      "aliases": [
-        "iso3",
-        "iso3",
-        "country"
-      ],
+      "aliases": ["iso3", "iso3", "country"],
       "digits": 3,
       "textCodes": true,
       "regionIdsFile": "data/regionids/region_map-FID_TM_WORLD_BORDERS_ISO3.json"
@@ -601,18 +394,14 @@
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "NAME",
       "textCodes": true,
-      "aliases": [
-        "country"
-      ],
+      "aliases": ["country"],
       "regionIdsFile": "data/regionids/region_map-FID_TM_WORLD_BORDERS_NAME.json"
     },
     "AUS": {
       "layerName": "region_map:FID_AUS_2011_AUST",
       "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "AUS_CODE",
-      "aliases": [
-        "aus"
-      ],
+      "aliases": ["aus"],
       "regionIdsFile": "data/regionids/region_map-FID_AUS_2011_AUST_AUS_CODE.json"
     }
   }

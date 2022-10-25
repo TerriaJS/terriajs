@@ -1,6 +1,7 @@
 import { observer } from "mobx-react";
 import React from "react";
 import { Complete } from "../../../Core/TypeModifiers";
+import DiscretelyTimeVaryingMixin from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
 import hasTraits from "../../../Models/Definition/hasTraits";
 import { BaseModel } from "../../../Models/Definition/Model";
 import { DEFAULT_PLACEMENT } from "../../../Models/SelectableDimensions/SelectableDimensions";
@@ -88,10 +89,12 @@ const WorkbenchItemControls: React.FC<WorkbenchItemControlsProps> = observer(
         {controls?.opacity ? <OpacitySection item={item} /> : null}
         {controls?.scaleWorkbench ? <ScaleWorkbenchInfo item={item} /> : null}
         {controls?.timer ? <TimerSection item={item} /> : null}
-        {controls?.splitter ? <LeftRightSection item={item} /> : null}
+        {controls?.splitter ? <LeftRightSection item={item as any} /> : null}
         {controls?.chartItems ? <ChartItemSelector item={item} /> : null}
         {controls?.filter ? <FilterSection item={item} /> : null}
-        {controls?.dateTime ? <DateTimeSelectorSection item={item} /> : null}
+        {controls?.dateTime && DiscretelyTimeVaryingMixin.isMixedInto(item) ? (
+          <DateTimeSelectorSection item={item} />
+        ) : null}
         {controls?.timeFilter ? (
           <SatelliteImageryTimeFilterSection item={item} />
         ) : null}

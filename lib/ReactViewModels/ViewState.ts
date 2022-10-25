@@ -222,7 +222,7 @@ export default class ViewState {
         return a.priority - b.priority;
       })
       .filter(
-        tourPoint => (<any>this.appRefs).get(tourPoint.appRefName)?.current
+        (tourPoint) => (<any>this.appRefs).get(tourPoint.appRefName)?.current
       );
   }
   @action
@@ -307,10 +307,16 @@ export default class ViewState {
   @observable feedbackFormIsVisible: boolean = false;
 
   /**
-   * Gets or sets a value indicating whether the catalog's model share panel
+   * Gets or sets a value indicating whether the catalog's modal share panel
    * is currently visible.
    */
-  @observable shareModelIsVisible: boolean = false;
+  @observable shareModalIsVisible: boolean = false; // Small share modal inside StoryEditor
+
+  /**
+   * Used to indicate that the Share Panel should stay open even if it loses focus.
+   * This is used when clicking a help link in the Share Panel - The Help Panel will open, and when it is closed, the Share Panel should still be visible for the user to continue their task.
+   */
+  @observable retainSharePanel: boolean = false; // The large share panel accessed via Share/Print button
 
   /**
    * The currently open tool
@@ -360,12 +366,11 @@ export default class ViewState {
     // of the original camera set from config once they acknowdge
     this._disclaimerVisibleSubscription = reaction(
       () => this.disclaimerVisible,
-      disclaimerVisible => {
-        if (disclaimerVisible) {
-          this.isMapFullScreen = true;
-        } else if (!disclaimerVisible && this.isMapFullScreen) {
-          this.isMapFullScreen = false;
-        }
+      (disclaimerVisible) => {
+        this.isMapFullScreen =
+          disclaimerVisible ||
+          terria.userProperties.get("hideWorkbench") === "1" ||
+          terria.userProperties.get("hideExplorerPanel") === "1";
       }
     );
 
@@ -436,14 +441,22 @@ export default class ViewState {
 
     this._previewedItemIdSubscription = reaction(
       () => this.terria.previewedItemId,
-      (previewedItemId: string | undefined) => {
+      async (previewedItemId: string | undefined) => {
         if (previewedItemId === undefined) {
           return;
         }
 
-        const model = this.terria.getModelById(BaseModel, previewedItemId);
-        if (model !== undefined) {
+        try {
+          const result = await this.terria.getModelByIdShareKeyOrCatalogIndex(
+            previewedItemId
+          );
+          result.throwIfError();
+          const model = result.throwIfUndefined();
           this.viewCatalogMember(model);
+        } catch (e) {
+          terria.raiseErrorToUser(e, {
+            message: `Couldn't find model \`${previewedItemId}\` for preview`
+          });
         }
       }
     );
@@ -457,7 +470,7 @@ export default class ViewState {
 
     this._storyBeforeUnloadSubscription = reaction(
       () => this.terria.stories.length > 0,
-      hasScenes => {
+      (hasScenes) => {
         if (hasScenes) {
           window.addEventListener("beforeunload", handleWindowClose);
         } else {
@@ -495,7 +508,7 @@ export default class ViewState {
 
     // (wing): much better to do by listening for transitionend, but will leave
     // this as is until that's in place
-    setTimeout(function() {
+    setTimeout(function () {
       // should we do this here in viewstate? it pulls in browser dependent things,
       // and (defensively) calls it.
       // but only way to ensure we trigger this resize, by standardising fullscreen
@@ -639,6 +652,18 @@ export default class ViewState {
   }
 
   @action
+  openHelpPanelItemFromSharePanel(
+    evt: React.MouseEvent<HTMLDivElement>,
+    itemName: string
+  ) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    this.setRetainSharePanel(true);
+    this.showHelpPanel();
+    this.selectHelpMenuItem(itemName);
+  }
+
+  @action
   selectHelpMenuItem(key: string) {
     this.selectedHelpMenuItem = key;
     this.helpPanelExpanded = true;
@@ -647,6 +672,11 @@ export default class ViewState {
   @action
   hideHelpPanel() {
     this.showHelpMenu = false;
+  }
+
+  @action
+  setRetainSharePanel(retain: boolean) {
+    this.retainSharePanel = retain;
   }
 
   @action
@@ -748,7 +778,7 @@ export default class ViewState {
     this.storyBuilderShown = false;
     this.storyShown = true;
 
-    setTimeout(function() {
+    setTimeout(function () {
       triggerResize();
     }, animationDuration || 1);
 

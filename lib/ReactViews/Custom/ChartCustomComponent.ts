@@ -14,7 +14,7 @@ import CommonStrata from "../../Models/Definition/CommonStrata";
 import createStratumInstance from "../../Models/Definition/createStratumInstance";
 import hasTraits from "../../Models/Definition/hasTraits";
 import { BaseModel } from "../../Models/Definition/Model";
-import Feature from "../../Models/Feature";
+import TerriaFeature from "../../Models/Feature/Feature";
 import ChartPointOnMapTraits from "../../Traits/TraitsClasses/ChartPointOnMapTraits";
 import DiscretelyTimeVaryingTraits from "../../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import LatLonHeightTraits from "../../Traits/TraitsClasses/LatLonHeightTraits";
@@ -271,7 +271,7 @@ export default abstract class ChartCustomComponent<
             : this.constructCatalogItem(id, context, undefined);
 
           return Promise.resolve(itemOrPromise).then(
-            action(item => {
+            action((item) => {
               if (item) {
                 this.setTraitsFromParent(item, context.catalogItem!);
                 this.setTraitsFromAttrs(item, attrs, i);
@@ -481,7 +481,7 @@ export default abstract class ChartCustomComponent<
       splitStringIfDefined(nodeAttrs["download-names"]) || sourceNames;
 
     const columnTitles = filterOutUndefined(
-      (nodeAttrs["column-titles"] || "").split(",").map(s => {
+      (nodeAttrs["column-titles"] || "").split(",").map((s) => {
         const [a, b] = rsplit2(s, ":");
         if (a && b) {
           return { name: a, title: b };
@@ -493,7 +493,7 @@ export default abstract class ChartCustomComponent<
     );
 
     const columnUnits = filterOutUndefined(
-      (nodeAttrs["column-units"] || "").split(",").map(s => {
+      (nodeAttrs["column-units"] || "").split(",").map((s) => {
         const [a, b] = rsplit2(s, ":");
         if (a && b) {
           return { name: a, units: b };
@@ -592,7 +592,7 @@ function getInsertedTitle(node: DomElement) {
   }
 }
 
-function getFeaturePosition(feature?: Feature): LatLonHeight | undefined {
+function getFeaturePosition(feature?: TerriaFeature): LatLonHeight | undefined {
   const cartesian = feature?.position?.getValue(JulianDate.now());
   if (cartesian) {
     const carto = Ellipsoid.WGS84.cartesianToCartographic(cartesian);

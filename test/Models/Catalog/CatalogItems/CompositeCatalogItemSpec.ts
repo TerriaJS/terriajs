@@ -7,18 +7,18 @@ import Terria from "../../../../lib/Models/Terria";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import { runInAction } from "mobx";
 
-describe("CompositeCatalogItem", function() {
+describe("CompositeCatalogItem", function () {
   let terria: Terria;
   let composite: CompositeCatalogItem;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
     composite = new CompositeCatalogItem("test", terria);
   });
 
-  it("loads map items after members are added", function(done) {
+  it("loads map items after members are added", function (done) {
     const item1 = new GeoJsonCatalogItem("item1", terria);
     const item2 = new WebMapServiceCatalogItem("item2", terria);
     const item3 = new WebMapServiceCatalogItem("item3", terria);
@@ -57,7 +57,7 @@ describe("CompositeCatalogItem", function() {
       });
   });
 
-  it("updates from json, preserving order", function() {
+  it("updates from json, preserving order", function () {
     const json = {
       members: [
         {
@@ -82,7 +82,7 @@ describe("CompositeCatalogItem", function() {
     );
   });
 
-  it("syncs visibility to its members", function() {
+  it("syncs visibility to its members", function () {
     const item1 = new GeoJsonCatalogItem("item1", terria);
     const item2 = new WebMapServiceCatalogItem("item2", terria);
 
@@ -130,6 +130,6 @@ describe("CompositeCatalogItem", function() {
   //       ]);
   //     })
   //     .then(done)
-  //     .otherwise(fail);
+  //     .catch(fail);
   // });
 });

@@ -32,7 +32,7 @@ const CompassWrapper = styled(Box).attrs({
   flex-shrink: 0;
 
   svg {
-    fill: ${props => props.theme.textDarker};
+    fill: ${(props) => props.theme.textDarker};
   }
 `;
 const CompassPositioning = `
@@ -43,7 +43,7 @@ const CompassIcon = styled(Icon)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  ${props =>
+  ${(props) =>
     props.inner
       ? `
       fill: ${props.theme.textDarker};
@@ -55,7 +55,7 @@ const CompassIcon = styled(Icon)`
       width: 64px;
       height: 64px;
     `}
-  ${props =>
+  ${(props) =>
     props.darken &&
     `
       opacity: 0.2;
@@ -116,9 +116,9 @@ function GyroscopeGuidancePanel(props) {
         <Text>{t("compass.guidance.ctrlDragDescription")}</Text>
         <Spacing bottom={4} />
         <RawButton onClick={props.onClose}>
-          <Text displayBlock primary isLink>
+          <TextSpan displayBlock primary isLink>
             {t("compass.guidance.dismissText")}
-          </Text>
+          </TextSpan>
         </RawButton>
       </Text>
     </Box>
@@ -156,7 +156,7 @@ export default function GyroscopeGuidance(props) {
           `}
         />
         <div
-          onClick={e => e.preventDefault()}
+          onClick={(e) => e.preventDefault()}
           css={`
             position: relative;
           `}
@@ -175,7 +175,7 @@ export default function GyroscopeGuidance(props) {
               opacity: 0.85;
               .tjs-sc-InnerPanel,
               .tjs-sc-InnerPanel__caret {
-                background: ${p => p.theme.textBlack};
+                background: ${(p) => p.theme.textBlack};
               }
             `}
             refForCaret={controlsMapIcon}

@@ -17,7 +17,6 @@ import WindingOrder from "terriajs-cesium/Source/Core/WindingOrder";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import TileDiscardPolicy from "terriajs-cesium/Source/Scene/TileDiscardPolicy";
-import when from "terriajs-cesium/Source/ThirdParty/when";
 import URITemplate from "urijs/src/URITemplate";
 import isDefined from "../../Core/isDefined";
 import loadArrayBuffer from "../../Core/loadArrayBuffer";
@@ -55,7 +54,8 @@ interface MapboxVectorTileImageryProviderOptions {
 
 /** Note this has been deprecated in favour of ProtomapsImageryProvider */
 export default class MapboxVectorTileImageryProvider
-  implements ImageryProviderWithGridLayerSupport {
+  implements ImageryProviderWithGridLayerSupport
+{
   private readonly _uriTemplate: uri.URITemplate;
   private readonly _layerName: string;
   private readonly _subdomains: string[];
@@ -229,7 +229,7 @@ export default class MapboxVectorTileImageryProvider
   }
 
   get readyPromise(): Promise<boolean> {
-    return when(true);
+    return Promise.resolve(true);
   }
 
   get tileDiscardPolicy(): TileDiscardPolicy {
@@ -453,7 +453,7 @@ export default class MapboxVectorTileImageryProvider
       const x_range = [boundRect.west, boundRect.east];
       const y_range = [boundRect.north, boundRect.south];
 
-      const map = function(
+      const map = function (
         pos: Cartesian2,
         in_x_range: number[],
         in_y_range: number[],
@@ -515,7 +515,7 @@ export default class MapboxVectorTileImageryProvider
 
   createHighlightImageryProvider(regionUniqueID: string) {
     const that = this;
-    const styleFunc = function(feature: any) {
+    const styleFunc = function (feature: any) {
       if (regionUniqueID === feature.properties[that._uniqueIdProp]) {
         // No fill, but same style border as the regions, just thicker
         const regionStyling = that._styleFunc(feature);
@@ -542,7 +542,7 @@ export default class MapboxVectorTileImageryProvider
       styleFunc: styleFunc,
       credit: ""
     });
-    imageryProvider.pickFeatures = function() {
+    imageryProvider.pickFeatures = function () {
       return Promise.resolve([]);
     }; // Turn off feature picking
     return imageryProvider;
@@ -578,9 +578,7 @@ function overzoomGeometry(
 function isExteriorRing(ring: Point[]) {
   // Normally an exterior ring would be clockwise but because these coordinates are in "canvas space" the ys are inverted
   // hence check for counter-clockwise ring
-  const windingOrder = (computeRingWindingOrder(
-    ring
-  ) as unknown) as WindingOrder;
+  const windingOrder = computeRingWindingOrder(ring) as unknown as WindingOrder;
   return windingOrder === WindingOrder.COUNTER_CLOCKWISE;
 }
 

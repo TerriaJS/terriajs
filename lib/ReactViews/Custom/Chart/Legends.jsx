@@ -6,7 +6,9 @@ import Glyphs from "./Glyphs";
 import { GlyphCircle } from "@visx/glyph";
 import { TextSpan } from "../../../Styled/Text";
 import styled from "styled-components";
+import { observer } from "mobx-react";
 
+@observer
 export default class Legends extends React.PureComponent {
   static propTypes = {
     chartItems: PropTypes.array.isRequired,
@@ -18,14 +20,14 @@ export default class Legends extends React.PureComponent {
   render() {
     const chartItems = this.props.chartItems;
     const colorScale = scaleOrdinal({
-      domain: chartItems.map(c => `${c.categoryName} ${c.name}`),
-      range: chartItems.map(c => c.getColor())
+      domain: chartItems.map((c) => `${c.categoryName} ${c.name}`),
+      range: chartItems.map((c) => c.getColor())
     });
 
     return (
       <LegendsContainer style={{ maxWidth: this.props.width }}>
         <LegendOrdinal scale={colorScale}>
-          {labels =>
+          {(labels) =>
             labels.map((label, i) => (
               <Legend
                 key={`legend-${label.text}`}

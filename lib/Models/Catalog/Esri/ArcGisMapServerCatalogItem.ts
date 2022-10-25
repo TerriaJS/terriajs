@@ -324,7 +324,7 @@ class MapServerStratum extends LoadableStratum(
 
     let items: StratumFromTraits<LegendItemTraits>[] = [];
 
-    (this._legends?.layers || []).forEach(l => {
+    (this._legends?.layers || []).forEach((l) => {
       if (noDataRegex.test(l.layerName) || labelsRegex.test(l.layerName)) {
         return;
       }
@@ -337,7 +337,7 @@ class MapServerStratum extends LoadableStratum(
         return;
       }
 
-      l.legend?.forEach(leg => {
+      l.legend?.forEach((leg) => {
         const title = replaceUnderscores(
           leg.label !== "" ? leg.label : l.layerName
         );
@@ -361,12 +361,10 @@ class MapServerStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(MapServerStratum.stratumName);
 
-export default class ArcGisMapServerCatalogItem extends MappableMixin(
-  UrlMixin(
-    DiscretelyTimeVaryingMixin(
-      MinMaxLevelMixin(
-        CatalogMemberMixin(CreateModel(ArcGisMapServerCatalogItemTraits))
-      )
+export default class ArcGisMapServerCatalogItem extends UrlMixin(
+  DiscretelyTimeVaryingMixin(
+    MinMaxLevelMixin(
+      CatalogMemberMixin(CreateModel(ArcGisMapServerCatalogItemTraits))
     )
   )
 ) {
@@ -426,7 +424,11 @@ export default class ArcGisMapServerCatalogItem extends MappableMixin(
 
   @computed
   private get _nextImageryParts(): ImageryParts | undefined {
-    if (this.nextDiscreteTimeTag) {
+    if (
+      this.terria.timelineStack.contains(this) &&
+      !this.isPaused &&
+      this.nextDiscreteTimeTag
+    ) {
       const dateAsUnix: number = new Date(this.nextDiscreteTimeTag).getTime();
       const imageryProvider = this._createImageryProvider(
         dateAsUnix.toString()
@@ -526,7 +528,7 @@ export default class ArcGisMapServerCatalogItem extends MappableMixin(
     const stratum = <MapServerStratum>(
       this.strata.get(MapServerStratum.stratumName)
     );
-    const ids = stratum ? stratum.allLayers.map(l => l.id) : [];
+    const ids = stratum ? stratum.allLayers.map((l) => l.id) : [];
     return ids.length === 0 ? undefined : ids.join(",");
   }
 
@@ -545,7 +547,7 @@ export default class ArcGisMapServerCatalogItem extends MappableMixin(
 
     const layerIds = this.layers.split(",");
     return stratum.allLayers.filter(({ id }) =>
-      layerIds.find(x => x == id.toString())
+      layerIds.find((x) => x == id.toString())
     );
   }
 }
@@ -594,7 +596,7 @@ function findLayers(layers: Layer[], names: string | undefined) {
     // If a list of layers is not specified, we're using all layers.
     return layers;
   }
-  return names.split(",").map(function(id) {
+  return names.split(",").map(function (id) {
     return findLayer(layers, id);
   });
 }
@@ -642,7 +644,7 @@ function getRectangleFromLayer(extent: Extent, rectangle: RectangleExtent) {
 }
 
 function getRectangleFromLayers(rectangle: RectangleExtent, layers: Layer[]) {
-  layers.forEach(function(item) {
+  layers.forEach(function (item) {
     item.extent && getRectangleFromLayer(item.extent, rectangle);
   });
 }

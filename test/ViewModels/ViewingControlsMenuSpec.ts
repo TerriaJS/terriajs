@@ -5,9 +5,9 @@ import Icon from "../../lib/Styled/Icon";
 import * as ViewingControlsMenu from "../../lib/ViewModels/ViewingControlsMenu";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 
-describe("ViewingControlsMenu", function() {
-  describe("addMenuItem", function() {
-    it("adds the menu item generator function to `viewState.globalViewingControlOptions` array", function() {
+describe("ViewingControlsMenu", function () {
+  describe("addMenuItem", function () {
+    it("adds the menu item generator function to `viewState.globalViewingControlOptions` array", function () {
       const terria = new Terria();
       const viewState = new ViewState({
         terria,

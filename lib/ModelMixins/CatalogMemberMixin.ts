@@ -1,8 +1,9 @@
 import { action, computed, isObservableArray, runInAction, toJS } from "mobx";
+import Mustache from "mustache";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
-import { isJsonString } from "../Core/Json";
+import { isJsonObject, isJsonString, JsonObject } from "../Core/Json";
 import Result from "../Core/Result";
 import hasTraits from "../Models/Definition/hasTraits";
 import Model, { BaseModel } from "../Models/Definition/Model";
@@ -21,8 +22,10 @@ import ReferenceMixin from "./ReferenceMixin";
 type CatalogMember = Model<CatalogMemberTraits>;
 
 function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
-  abstract class CatalogMemberMixin extends AccessControlMixin(Base)
-    implements SelectableDimensions, ViewingControls {
+  abstract class CatalogMemberMixin
+    extends AccessControlMixin(Base)
+    implements SelectableDimensions, ViewingControls
+  {
     abstract get type(): string;
 
     // The names of items in the CatalogMember's info array that contain details of the source of this CatalogMember's data.
@@ -108,7 +111,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
     @computed
     get nameSortKey() {
       var parts = (this.nameInCatalog || "").split(/(\d+)/);
-      return parts.map(function(part) {
+      return parts.map(function (part) {
         var parsed = parseInt(part, 10);
         if (parsed === parsed) {
           return parsed;
@@ -123,7 +126,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       return (
         (isJsonString(this.description) && this.description.length > 0) ||
         (isObservableArray(this.info) &&
-          this.info.some(info => descriptionRegex.test(info.name || "")))
+          this.info.some((info) => descriptionRegex.test(info.name || "")))
       );
     }
 
@@ -131,7 +134,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
     get infoAsObject() {
       const infoObject: any = {};
 
-      this.info.forEach(infoItem => {
+      this.info.forEach((infoItem) => {
         if (infoItem.name !== undefined && infoItem.name.length > 0) {
           const infoNameNoSpaces = infoItem.name.replace(/ /g, "");
           if (
@@ -154,7 +157,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       if (sourceInfoItemNames === undefined) {
         return this.info;
       } else {
-        return this.info.filter(infoItem => {
+        return this.info.filter((infoItem) => {
           if (infoItem.name === undefined) return true;
           return sourceInfoItemNames.indexOf(infoItem.name) === -1;
         });
@@ -167,7 +170,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
     @computed
     get selectableDimensions(): SelectableDimension[] {
       return (
-        this.modelDimensions.map(dim => ({
+        this.modelDimensions.map((dim) => ({
           id: dim.id,
           name: dim.name,
           selectedId: dim.selectedId,
@@ -179,9 +182,14 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
             runInAction(() =>
               dim.setTrait(stratumId, "selectedId", selectedId)
             );
-            const value = dim.options.find(o => o.id === selectedId)?.value;
+            const value = dim.options.find((o) => o.id === selectedId)?.value;
             if (isDefined(value)) {
-              const result = updateModelFromJson(this, stratumId, toJS(value));
+              const result = updateModelFromJson(
+                this,
+                stratumId,
+                mustacheNestedJsonObject(toJS(value), this)
+              );
+
               result.raiseError(
                 this.terria,
                 `Failed to update catalog item ${getName(this)}`
@@ -189,7 +197,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
 
               // If no error then call loadMapItems
               if (!result.error && MappableMixin.isMixedInto(this)) {
-                this.loadMapItems().then(loadMapItemsResult => {
+                this.loadMapItems().then((loadMapItemsResult) => {
                   loadMapItemsResult.raiseError(this.terria);
                 });
               }
@@ -235,3 +243,17 @@ export const getName = action((model: BaseModel | undefined) => {
     "Unknown model"
   );
 });
+
+/** Recursively apply mustache template to all nested string properties in a JSON Object */
+function mustacheNestedJsonObject(obj: JsonObject, view: any) {
+  return Object.entries(obj).reduce<JsonObject>((acc, [key, value]) => {
+    if (isJsonString(value)) {
+      acc[key] = Mustache.render(value, view);
+    } else if (isJsonObject(value, false)) {
+      acc[key] = mustacheNestedJsonObject(value, view);
+    } else {
+      acc[key] = value;
+    }
+    return acc;
+  }, {});
+}

@@ -2,7 +2,9 @@ import { LinePath } from "@visx/shape";
 import { line } from "d3-shape";
 import PropTypes from "prop-types";
 import React from "react";
+import { observer } from "mobx-react";
 
+@observer
 export default class LineChart extends React.PureComponent {
   static propTypes = {
     id: PropTypes.string.isRequired,
@@ -16,8 +18,8 @@ export default class LineChart extends React.PureComponent {
     if (!el) return;
     const { chartItem } = this.props;
     const path = line()
-      .x(p => scales.x(p.x))
-      .y(p => scales.y(p.y));
+      .x((p) => scales.x(p.x))
+      .y((p) => scales.y(p.y));
     el.setAttribute("d", path(chartItem.points));
   }
 
@@ -28,8 +30,8 @@ export default class LineChart extends React.PureComponent {
       <g id={this.props.id}>
         <LinePath
           data={chartItem.points}
-          x={p => scales.x(p.x)}
-          y={p => scales.y(p.y)}
+          x={(p) => scales.x(p.x)}
+          y={(p) => scales.y(p.y)}
           stroke={stroke}
           strokeWidth={2}
         />

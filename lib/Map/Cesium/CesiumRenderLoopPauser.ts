@@ -131,10 +131,10 @@ export default class CesiumRenderLoopPauser {
       headers: any,
       deferred: any,
       overrideMimeType: any,
-      preferText: any,
-      timeout: any
+      timeout: any,
+      returnType: any
     ) => {
-      deferred.promise.always(this._boundNotifyRepaintRequired);
+      deferred.promise.finally(this._boundNotifyRepaintRequired);
       return this._originalLoadWithXhr(
         url,
         responseType,
@@ -143,15 +143,15 @@ export default class CesiumRenderLoopPauser {
         headers,
         deferred,
         overrideMimeType,
-        preferText,
-        timeout
+        timeout,
+        returnType
       );
     };
 
     // // Hacky way to force a repaint when a web worker sends something back.
     this._originalScheduleTask = TaskProcessor.prototype.scheduleTask;
     const that = this;
-    TaskProcessor.prototype.scheduleTask = function(
+    TaskProcessor.prototype.scheduleTask = function (
       this: any,
       parameters,
       transferableObjects
@@ -166,7 +166,7 @@ export default class CesiumRenderLoopPauser {
         this._originalWorkerMessageSinkRepaint = this._worker.onmessage;
 
         var taskProcessor = this;
-        this._worker.onmessage = function(event: any) {
+        this._worker.onmessage = function (event: any) {
           taskProcessor._originalWorkerMessageSinkRepaint(event);
 
           if (that.isDestroyed()) {

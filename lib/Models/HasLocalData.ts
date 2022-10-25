@@ -1,5 +1,6 @@
 interface HasLocalData {
   hasLocalData: boolean;
+  setFileInput(file: File): void;
 }
 
 namespace HasLocalData {

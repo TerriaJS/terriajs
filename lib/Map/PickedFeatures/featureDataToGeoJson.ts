@@ -19,7 +19,7 @@ import {
 import defined from "terriajs-cesium/Source/Core/defined";
 import WindingOrder from "terriajs-cesium/Source/Core/WindingOrder";
 import filterOutUndefined from "../../Core/filterOutUndefined";
-import JsonValue, { isJsonObject } from "../../Core/Json";
+import JsonValue, { isJsonObject, isJsonValue } from "../../Core/Json";
 import {
   FeatureCollectionWithCrs,
   GeoJsonCrs,
@@ -38,16 +38,15 @@ const pointInPolygon = require("point-in-polygon");
  * @return {FeatureCollectionWithCrs | undefined} The GeoJSON representation of this feature data, or undefined if it cannot be converted to GeoJSON.
  */
 export default function featureDataToGeoJson(
-  featureData: JsonValue
+  featureData: unknown
 ): FeatureCollectionWithCrs | undefined {
-  if (!defined(featureData)) {
+  if (!isJsonValue(featureData)) {
     return undefined;
   }
 
   for (let i = 0; i < featureDataToGeoJson.supportedFormats.length; ++i) {
-    const converted = featureDataToGeoJson.supportedFormats[i].converter(
-      featureData
-    );
+    const converted =
+      featureDataToGeoJson.supportedFormats[i].converter(featureData);
     if (defined(converted)) {
       return converted;
     }
@@ -94,7 +93,7 @@ function getEsriGeometry(
     features: filterOutUndefined(
       "geometry" in featureData
         ? [getEsriFeature(featureData, geometryType)]
-        : featureData.features.map(f => getEsriFeature(f, geometryType))
+        : featureData.features.map((f) => getEsriFeature(f, geometryType))
     )
   };
 }
@@ -125,10 +124,10 @@ function getEsriFeature(
     // Group rings into outer rings and holes/
     const outerRings: ArcGisPosition[][] = [];
     const holes: ArcGisPosition[][] = [];
-    geometry.rings.forEach(function(ring) {
+    geometry.rings.forEach(function (ring) {
       if (
         computeRingWindingOrder(
-          filterOutUndefined(ring.map(p => new Point(p[0], p[1])))
+          filterOutUndefined(ring.map((p) => new Point(p[0], p[1])))
         ) === WindingOrder.CLOCKWISE
       ) {
         outerRings.push(ring);
@@ -144,7 +143,7 @@ function getEsriFeature(
       // Well, this is pretty weird.  We have holes but not outer ring?
       // Most likely scenario is that someone messed up the winding order.
       // So let's treat all the holes as outer rings instead.
-      holes.forEach(hole => {
+      holes.forEach((hole) => {
         Array.isArray(hole) ? hole.reverse() : null;
       });
       outerRings.push(...holes);
@@ -162,7 +161,7 @@ function getEsriFeature(
       // to figure out which outer ring contains each hole.
       geojsonGeom = {
         type: "MultiPolygon",
-        coordinates: outerRings.map(ring => [
+        coordinates: outerRings.map((ring) => [
           ring,
           ...findHolesInRing(ring, holes)
         ])
@@ -197,8 +196,8 @@ function getEsriFeature(
 
 function findHolesInRing(ring: Position[], holes: Position[][]) {
   // Return all holes where every vertex in the hole ring is inside the outer ring.
-  return holes.filter(hole =>
-    hole.every(coordinates => pointInPolygon(coordinates, ring))
+  return holes.filter((hole) =>
+    hole.every((coordinates) => pointInPolygon(coordinates, ring))
   );
 }
 

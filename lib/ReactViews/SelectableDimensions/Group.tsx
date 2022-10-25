@@ -2,9 +2,9 @@ import React from "react";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import {
   filterSelectableDimensions,
+  isGroup,
   SelectableDimensionCheckboxGroup as SelectableDimensionCheckboxGroupModel,
-  SelectableDimensionGroup as SelectableDimensionGroupModel,
-  isGroup
+  SelectableDimensionGroup as SelectableDimensionGroupModel
 } from "../../Models/SelectableDimensions/SelectableDimensions";
 import Box from "../../Styled/Box";
 import Collapsible from "../Custom/Collapsible/Collapsible";
@@ -28,7 +28,7 @@ export const SelectableDimensionGroup: React.FC<{
       title={
         dim.type === "group"
           ? dim.name ?? dim.id ?? ""
-          : dim.options?.find(opt => opt.id === dim.selectedId)?.name ??
+          : dim.options?.find((opt) => opt.id === dim.selectedId)?.name ??
             (dim.selectedId === "true" ? "Enabled" : "Disabled")
       }
       bodyBoxProps={{
@@ -40,7 +40,7 @@ export const SelectableDimensionGroup: React.FC<{
       onToggle={
         dim.type === "group"
           ? dim.onToggle
-          : isOpen =>
+          : (isOpen) =>
               dim.setDimensionValue(
                 CommonStrata.user,
                 isOpen ? "true" : "false"
@@ -51,8 +51,12 @@ export const SelectableDimensionGroup: React.FC<{
     >
       <Box displayInlineBlock fullWidth styledPadding="5px 0 0 20px">
         {/* recursively render nested dimensions */}
-        {childDims.map(nestedDim => (
-          <SelectableDimension id={`${id}-${nestedDim.id}`} dim={nestedDim} />
+        {childDims.map((nestedDim) => (
+          <SelectableDimension
+            id={`${id}-${nestedDim.id}`}
+            dim={nestedDim}
+            key={`${id}-${nestedDim.id}`}
+          />
         ))}
       </Box>
     </Collapsible>

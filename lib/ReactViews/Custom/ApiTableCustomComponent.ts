@@ -14,9 +14,7 @@ interface ApiTableCustomChartComponentAttributes
   apiTableCatalogItemJson: string;
 }
 
-export default class ApiTableChartCustomComponent extends ChartCustomComponent<
-  ApiTableCatalogItem
-> {
+export default class ApiTableChartCustomComponent extends ChartCustomComponent<ApiTableCatalogItem> {
   get name(): string {
     return "api-chart";
   }
@@ -53,11 +51,8 @@ export default class ApiTableChartCustomComponent extends ChartCustomComponent<
     }
 
     json.id = item.uniqueId;
-    const result = updateModelFromJson(
-      item,
-      CommonStrata.definition,
-      json,
-      true
+    updateModelFromJson(item, CommonStrata.definition, json, true).logError(
+      "Error ocurred while updating ApiTableChartCustomComponent model from JSON"
     );
   }
 

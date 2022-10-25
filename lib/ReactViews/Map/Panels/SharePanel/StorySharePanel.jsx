@@ -80,6 +80,7 @@ const StorySharePanel = createReactClass({
           <div
             css={`
               margin-top: 35px;
+              font-family: ${(p) => p.theme.fontBase};
             `}
           >
             <InnerPanel

@@ -9,13 +9,12 @@ import classNames from "classnames";
 import MobileMenuItem from "./MobileMenuItem";
 import SettingPanel from "../Map/Panels/SettingPanel";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel";
-// import HelpMenuPanelBasic from "../HelpScreens/HelpMenuPanelBasic";
 import { withTranslation } from "react-i18next";
 
 import Styles from "./mobile-menu.scss";
 import { runInAction } from "mobx";
 import LangPanel from "../Map/Panels/LangPanel/LangPanel";
-import { useTranslationIfExists } from "../../Language/languageHelpers";
+import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import { Category, HelpAction } from "../../Core/AnalyticEvents/analyticEvents";
 
 const MobileMenu = observer(
@@ -42,8 +41,8 @@ const MobileMenu = observer(
 
     toggleMenu() {
       runInAction(() => {
-        this.props.viewState.mobileMenuVisible = !this.props.viewState
-          .mobileMenuVisible;
+        this.props.viewState.mobileMenuVisible =
+          !this.props.viewState.mobileMenuVisible;
       });
     },
 
@@ -84,7 +83,10 @@ const MobileMenu = observer(
       if (!mapUserGuideItem) {
         return undefined;
       }
-      const title = useTranslationIfExists(mapUserGuideItem.title);
+      const title = applyTranslationIfExists(
+        mapUserGuideItem.title,
+        this.props.i18n
+      );
       return {
         href: mapUserGuideItem.url,
         caption: title,

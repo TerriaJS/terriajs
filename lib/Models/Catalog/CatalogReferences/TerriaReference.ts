@@ -37,7 +37,7 @@ export default class TerriaReference extends UrlMixin(
     return TerriaReference.type;
   }
 
-  protected forceLoadReference = flow(function*(
+  protected forceLoadReference = flow(function* (
     this: TerriaReference,
     _previousTarget: BaseModel | undefined
   ) {
@@ -106,9 +106,9 @@ export default class TerriaReference extends UrlMixin(
           target,
           CommonStrata.definition,
           targetJson
-        ).catchError(error => {
+        ).catchError((error) => {
           target.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
-          console.log(error.toError());
+          error.log();
         });
         return target;
       }
@@ -132,7 +132,7 @@ function findCatalogMemberJson(
   const member = path.reduce(
     (group, id) => {
       if (Array.isArray(group?.members)) {
-        return group.members.find(m => m?.id === id);
+        return group.members.find((m) => m?.id === id);
       } else {
         return undefined;
       }

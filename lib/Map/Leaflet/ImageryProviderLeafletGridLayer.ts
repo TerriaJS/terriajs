@@ -3,7 +3,7 @@ import { autorun, computed, IReactionDisposer, observable } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import Leaflet from "../../Models/Leaflet";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 
@@ -30,7 +30,7 @@ export default class ImageryProviderLeafletGridLayer extends L.GridLayer {
   readonly _zSubtract: number = 0;
   readonly _previousCredits: unknown[] = [];
 
-  @observable splitDirection = ImagerySplitDirection.NONE;
+  @observable splitDirection = SplitDirection.NONE;
   @observable splitPosition: number = 0.5;
 
   constructor(
@@ -62,10 +62,10 @@ export default class ImageryProviderLeafletGridLayer extends L.GridLayer {
         return;
       }
 
-      if (this.splitDirection === ImagerySplitDirection.LEFT) {
+      if (this.splitDirection === SplitDirection.LEFT) {
         const { left: clipLeft } = this._clipsForSplitter;
         container.style.clip = clipLeft;
-      } else if (this.splitDirection === ImagerySplitDirection.RIGHT) {
+      } else if (this.splitDirection === SplitDirection.RIGHT) {
         const { right: clipRight } = this._clipsForSplitter;
         container.style.clip = clipRight;
       } else {
@@ -126,7 +126,7 @@ export default class ImageryProviderLeafletGridLayer extends L.GridLayer {
           canvas
         );
       })
-      .then(function(canvas) {
+      .then(function (canvas) {
         done(undefined, canvas);
       });
     return canvas; // Not yet drawn on, but Leaflet requires the tile

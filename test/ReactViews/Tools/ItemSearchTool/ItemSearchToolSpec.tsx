@@ -22,7 +22,7 @@ import ItemSearchTool, {
 import Loading from "../../../../lib/ReactViews/Tools/ItemSearchTool/Loading";
 import SearchForm from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchForm";
 import SearchResults from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchResults";
-import { withThemeContext } from "../../withThemeContext";
+import { withThemeContext } from "../../withContext";
 import MockSearchableItem from "./MockSearchableItem";
 import i18next from "i18next";
 
@@ -47,13 +47,13 @@ class TestItemSearchProvider extends ItemSearchProvider {
   }
 }
 
-describe("ItemSearchTool", function() {
+describe("ItemSearchTool", function () {
   let viewState: ViewState;
   let item: MockSearchableItem;
   let itemSearchProvider: ItemSearchProvider;
   let rendered: ReactTestRenderer;
 
-  beforeEach(function() {
+  beforeEach(function () {
     registerItemSearchProvider("testProvider", TestItemSearchProvider);
     const terria: Terria = new Terria();
     viewState = new ViewState({
@@ -77,7 +77,7 @@ describe("ItemSearchTool", function() {
     }
   });
 
-  it("can be rendered", function() {
+  it("can be rendered", function () {
     act(() => {
       rendered = render({ item, itemSearchProvider, viewState });
     });
@@ -85,7 +85,7 @@ describe("ItemSearchTool", function() {
     expect(component).toBeDefined();
   });
 
-  it("initializes an describes the parameters when mounted", async function() {
+  it("initializes an describes the parameters when mounted", async function () {
     spyOn(itemSearchProvider, "initialize").and.callThrough();
     spyOn(itemSearchProvider, "describeParameters").and.callThrough();
     await act(() => {
@@ -99,8 +99,8 @@ describe("ItemSearchTool", function() {
     expect(itemSearchProvider.describeParameters).toHaveBeenCalledTimes(1);
   });
 
-  describe("loading", function() {
-    it("shows a Loading component while loading", function() {
+  describe("loading", function () {
+    it("shows a Loading component while loading", function () {
       act(() => {
         rendered = render({
           item,
@@ -115,7 +115,7 @@ describe("ItemSearchTool", function() {
       );
     });
 
-    it("shows an error message on load error", async function() {
+    it("shows an error message on load error", async function () {
       spyOn(itemSearchProvider, "describeParameters").and.callFake(() =>
         Promise.reject(new Error(`Something happened`))
       );
@@ -133,7 +133,7 @@ describe("ItemSearchTool", function() {
       );
     });
 
-    it("shows a search from on successful load", async function() {
+    it("shows a search from on successful load", async function () {
       spyOn(itemSearchProvider, "describeParameters").and.callFake(() =>
         Promise.resolve([
           {
@@ -153,7 +153,7 @@ describe("ItemSearchTool", function() {
       expect(searchForm).toBeDefined();
     });
 
-    it("it shows the search results", async function() {
+    it("it shows the search results", async function () {
       spyOn(itemSearchProvider, "search").and.callFake(() =>
         Promise.resolve([])
       );
@@ -177,7 +177,7 @@ function render(props: Omit<PropsType, "i18n" | "t" | "tReady">) {
 function renderAndLoad(
   props: Omit<PropsType, "i18n" | "t" | "tReady">
 ): Promise<ReactTestRenderer> {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     act(() => {
       const rendered = render({
         ...props,

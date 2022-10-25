@@ -1,10 +1,9 @@
 import i18next from "i18next";
 import { action, computed, observable, toJS } from "mobx";
-import Clock from "terriajs-cesium/Source/Core/Clock";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CzmlDataSource from "terriajs-cesium/Source/DataSources/CzmlDataSource";
+import DataSourceClock from "terriajs-cesium/Source/DataSources/DataSourceClock";
 import isDefined from "../../../Core/isDefined";
-import makeRealPromise from "../../../Core/makeRealPromise";
 import readJson from "../../../Core/readJson";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
@@ -36,8 +35,8 @@ class CzmlTimeVaryingStratum extends LoadableStratum(CzmlCatalogItemTraits) {
   }
 
   @computed
-  private get clock(): Clock | undefined {
-    return (this.catalogItem as any)._dataSource?.clock;
+  private get clock(): DataSourceClock | undefined {
+    return this.catalogItem._dataSource?.clock;
   }
 
   @computed
@@ -72,13 +71,14 @@ export default class CzmlCatalogItem
       UrlMixin(CatalogMemberMixin(CreateModel(CzmlCatalogItemTraits)))
     )
   )
-  implements TimeVarying, HasLocalData {
+  implements TimeVarying, HasLocalData
+{
   static readonly type = "czml";
   get type() {
     return CzmlCatalogItem.type;
   }
 
-  @observable private _dataSource: CzmlDataSource | undefined;
+  @observable _dataSource: CzmlDataSource | undefined;
   private _czmlFile?: File;
 
   setFileInput(file: File) {
@@ -111,13 +111,11 @@ export default class CzmlCatalogItem
       });
     }
 
-    return makeRealPromise<CzmlDataSource>(
-      CzmlDataSource.load(loadableData, {
-        credit: attribution
-      })
-    )
+    return CzmlDataSource.load(loadableData, {
+      credit: attribution
+    })
       .then(
-        action(czmlDataSource => {
+        action((czmlDataSource) => {
           this._dataSource = czmlDataSource;
           this.strata.set(
             CzmlTimeVaryingStratum.stratumName,
@@ -125,7 +123,7 @@ export default class CzmlCatalogItem
           );
         })
       )
-      .catch(e => {
+      .catch((e) => {
         if (e instanceof TerriaError) {
           throw e;
         } else {

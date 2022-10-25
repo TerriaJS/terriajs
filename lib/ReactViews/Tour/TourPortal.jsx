@@ -23,7 +23,8 @@ import { parseCustomMarkdownToReactWithOptions } from "../Custom/parseCustomMark
 import Caret from "../Generic/Caret";
 import CloseButton from "../Generic/CloseButton";
 import { useWindowSize } from "../Hooks/useWindowSize";
-import { useTranslationIfExists } from "./../../Language/languageHelpers";
+import { useViewState } from "../StandardUserInterface/ViewStateContext";
+import { applyTranslationIfExists } from "./../../Language/languageHelpers";
 import {
   calculateLeftPosition,
   calculateTopPosition,
@@ -42,11 +43,11 @@ import TourProgressDot from "./TourProgressDot.jsx";
  * Fill in indicator dot depending on progress determined from count & max count
  */
 const TourProgress = ({ max, step, setTourIndex }) => {
-  const countArray = Array.from(Array(max).keys()).map(e => e++);
+  const countArray = Array.from(Array(max).keys()).map((e) => e++);
   const countStep = step;
   return (
     <Box centered>
-      {countArray.map(count => {
+      {countArray.map((count) => {
         return (
           <TourProgressDot
             onClick={() => setTourIndex(count)}
@@ -192,12 +193,15 @@ TourExplanation.propTypes = {
   active: PropTypes.bool
 };
 
-const TourGrouping = observer(({ viewState, tourPoints }) => {
+const TourGrouping = observer(({ tourPoints }) => {
+  const { i18n } = useTranslation();
+  const viewState = useViewState();
   const currentTourPoint = tourPoints[viewState.currentTourIndex];
   const currentTourPointRef = viewState.appRefs.get(
     currentTourPoint?.appRefName
   );
-  const currentRectangle = currentTourPointRef?.current?.getBoundingClientRect?.();
+  const currentRectangle =
+    currentTourPointRef?.current?.getBoundingClientRect?.();
   if (!currentRectangle) {
     console.log(
       "Tried to show guidance portal with no rectangle available from ref"
@@ -214,7 +218,8 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
       {tourPoints.map((tourPoint, index) => {
         const tourPointRef = viewState.appRefs.get(tourPoint?.appRefName);
 
-        const currentRectangle = tourPointRef?.current?.getBoundingClientRect?.();
+        const currentRectangle =
+          tourPointRef?.current?.getBoundingClientRect?.();
         const {
           offsetTop,
           offsetLeft,
@@ -248,7 +253,7 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
             active={currentTourIndex === index}
             currentStep={currentTourIndex + 1}
             maxSteps={maxSteps}
-            setTourIndex={idx => viewState.setTourIndex(idx)}
+            setTourIndex={(idx) => viewState.setTourIndex(idx)}
             onTourIndicatorClick={() => viewState.setTourIndex(index)}
             onPrevious={() => viewState.previousTourPoint()}
             onNext={() => viewState.nextTourPoint()}
@@ -263,7 +268,7 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
             indicatorOffsetLeft={indicatorOffsetLeft}
           >
             {parseCustomMarkdownToReactWithOptions(
-              useTranslationIfExists(tourPoint?.content),
+              applyTranslationIfExists(tourPoint?.content, i18n),
               {
                 injectTermsAsTooltips: true,
                 tooltipTerms: viewState.terria.configParameters.helpContentTerms
@@ -276,8 +281,9 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
   );
 });
 
-export const TourPreface = ({ viewState }) => {
+export const TourPreface = () => {
   const { t } = useTranslation();
+  const viewState = useViewState();
   const theme = useTheme();
   return (
     <>
@@ -316,7 +322,7 @@ export const TourPreface = ({ viewState }) => {
             <Button
               fullWidth
               secondary
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
                 viewState.closeTour();
               }}
@@ -328,7 +334,7 @@ export const TourPreface = ({ viewState }) => {
               primary
               fullWidth
               textProps={{ noFontSize: true }}
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
                 viewState.setShowTour(true);
               }}
@@ -342,12 +348,11 @@ export const TourPreface = ({ viewState }) => {
     </>
   );
 };
-TourPreface.propTypes = {
-  viewState: PropTypes.object.isRequired
-};
 
 export const TourPortalDisplayName = "TourPortal";
-export const TourPortal = observer(({ viewState }) => {
+export const TourPortal = observer(() => {
+  const viewState = useViewState();
+
   const showPortal = viewState.currentTourIndex !== -1;
   const showPreface = showPortal && !viewState.showTour;
   // should we bump up the debounce here? feels like 16ms is quite aggressive
@@ -378,8 +383,7 @@ export const TourPortal = observer(({ viewState }) => {
 });
 
 TourPortal.propTypes = {
-  children: PropTypes.node,
-  viewState: PropTypes.object.isRequired
+  children: PropTypes.node
 };
 
 export default withTheme(TourPortal);

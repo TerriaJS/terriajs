@@ -7,7 +7,7 @@ import styled from "styled-components";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import {
   Category,
   DataSourceAction
@@ -41,6 +41,7 @@ import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../../Styled/Icon";
+import Ul from "../../../Styled/List";
 import { VectorTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
 import { exportData } from "../../Preview/ExportData";
@@ -56,15 +57,15 @@ const BoxViewingControl = styled(Box).attrs({
 const ViewingControlMenuButton = styled(RawButton).attrs({
   // primaryHover: true
 })`
-  color: ${props => props.theme.textDarker};
-  background-color: ${props => props.theme.textLight};
+  color: ${(props) => props.theme.textDarker};
+  background-color: ${(props) => props.theme.textLight};
 
   ${StyledIcon} {
     width: 35px;
   }
 
   svg {
-    fill: ${props => props.theme.textDarker};
+    fill: ${(props) => props.theme.textDarker};
     width: 18px;
     height: 18px;
   }
@@ -82,10 +83,10 @@ const ViewingControlMenuButton = styled(RawButton).attrs({
 
   &:hover,
   &:focus {
-    color: ${props => props.theme.textLight};
-    background-color: ${props => props.theme.colorPrimary};
+    color: ${(props) => props.theme.textLight};
+    background-color: ${(props) => props.theme.colorPrimary};
     svg {
-      fill: ${props => props.theme.textLight};
+      fill: ${(props) => props.theme.textLight};
     }
   }
 `;
@@ -226,11 +227,11 @@ class ViewingControls extends React.Component<
     runInAction(async () => {
       if (!hasTraits(item, SplitterTraits, "splitDirection")) return;
 
-      if (item.splitDirection === ImagerySplitDirection.NONE) {
+      if (item.splitDirection === SplitDirection.NONE) {
         item.setTrait(
           CommonStrata.user,
           "splitDirection",
-          ImagerySplitDirection.RIGHT
+          SplitDirection.RIGHT
         );
       }
 
@@ -254,9 +255,9 @@ class ViewingControls extends React.Component<
           target.setTrait(
             CommonStrata.user,
             "splitDirection",
-            item.splitDirection === ImagerySplitDirection.LEFT
-              ? ImagerySplitDirection.RIGHT
-              : ImagerySplitDirection.LEFT
+            item.splitDirection === SplitDirection.LEFT
+              ? SplitDirection.RIGHT
+              : SplitDirection.LEFT
           );
         }
       });
@@ -269,13 +270,10 @@ class ViewingControls extends React.Component<
   }
 
   openDiffTool() {
-    // Disable timeline
-    // Should we do this? Difference is quite a specific use case
-    this.props.item.terria.timelineStack.removeAll();
     this.props.viewState.openTool({
       toolName: "Difference",
       getToolComponent: () =>
-        import("../../Tools/DiffTool/DiffTool").then(m => m.default),
+        import("../../Tools/DiffTool/DiffTool").then((m) => m.default),
       showCloseButton: true,
       params: {
         sourceItem: this.props.item
@@ -312,13 +310,15 @@ class ViewingControls extends React.Component<
     let item = this.props.item;
     // Open up all the parents (doesn't matter that this sets it to enabled as well because it already is).
     getAncestors(this.props.item)
-      .map(item => getDereferencedIfExists(item))
-      .forEach(group => {
+      .map((item) => getDereferencedIfExists(item))
+      .forEach((group) => {
         runInAction(() => {
           group.setTrait(CommonStrata.user, "isOpen", true);
         });
       });
-    this.props.viewState.viewCatalogMember(item);
+    this.props.viewState
+      .viewCatalogMember(item)
+      .then((result) => result.raiseError(this.props.viewState.terria));
   }
 
   exportDataClicked() {
@@ -326,7 +326,7 @@ class ViewingControls extends React.Component<
 
     if (!ExportableMixin.isMixedInto(item)) return;
 
-    exportData(item).catch(e => {
+    exportData(item).catch((e) => {
       this.props.item.terria.raiseErrorToUser(e);
     });
   }
@@ -345,7 +345,7 @@ class ViewingControls extends React.Component<
     // Global viewing controls (usually defined by plugins).
     const globalViewingControls = filterOutUndefined(
       viewState.globalViewingControlOptions.map(
-        generateViewingControlForItem => {
+        (generateViewingControlForItem) => {
           try {
             return generateViewingControlForItem(item);
           } catch (err) {
@@ -386,7 +386,7 @@ class ViewingControls extends React.Component<
 
     return (
       <ul>
-        {this.viewingControls.map(viewingControl => (
+        {this.viewingControls.map((viewingControl) => (
           <li key={viewingControl.id}>
             <ViewingControlMenuButton
               onClick={() => handleOnClick(viewingControl)}
@@ -480,7 +480,7 @@ class ViewingControls extends React.Component<
     const showMenu = item.uniqueId === viewState.workbenchItemWithOpenControls;
     return (
       <Box>
-        <ul
+        <Ul
           css={`
             list-style: none;
             padding-left: 0;
@@ -499,6 +499,7 @@ class ViewingControls extends React.Component<
               margin-right: 0;
             }
           `}
+          gap={2}
         >
           <WorkbenchButton
             onClick={this.zoomTo.bind(this)}
@@ -530,7 +531,7 @@ class ViewingControls extends React.Component<
           </WorkbenchButton>
           <WorkbenchButton
             css="flex-grow:0;"
-            onClick={e => {
+            onClick={(e) => {
               e.stopPropagation();
               runInAction(() => {
                 if (viewState.workbenchItemWithOpenControls === item.uniqueId) {
@@ -544,7 +545,7 @@ class ViewingControls extends React.Component<
             iconOnly
             iconElement={() => <Icon glyph={Icon.GLYPHS.menuDotted} />}
           />
-        </ul>
+        </Ul>
         {showMenu && (
           <Box
             css={`

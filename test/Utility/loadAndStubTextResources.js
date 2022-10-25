@@ -1,26 +1,23 @@
 "use strict";
 
 var loadText = require("../../lib/Core/loadText");
-var when = require("terriajs-cesium/Source/ThirdParty/when").default;
 
 function loadTextResources(resources) {
   var result = {};
-  return when
-    .all(
-      resources.map(function(resource) {
-        return loadText(resource).then(function(text) {
-          result[resource] = text;
-        });
-      })
-    )
-    .yield(result);
+  return Promise.all(
+    resources.map(function (resource) {
+      return loadText(resource).then(function (text) {
+        result[resource] = text;
+      });
+    })
+  ).then(() => result);
 }
 
 function loadAndStubTextResources(done, resources) {
-  return loadTextResources(resources).then(function(loadedResources) {
+  return loadTextResources(resources).then(function (loadedResources) {
     jasmine.Ajax.install();
 
-    jasmine.Ajax.stubRequest(/.*/).andCallFunction(function(stub, xhr) {
+    jasmine.Ajax.stubRequest(/.*/).andCallFunction(function (stub, xhr) {
       done.fail("Unhandled request to URL: " + xhr.url);
     });
 

@@ -30,6 +30,7 @@ import Axis from "terriajs-cesium/Source/Scene/Axis";
 import ColorBlendMode from "terriajs-cesium/Source/Scene/ColorBlendMode";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
+import isDefined from "../Core/isDefined";
 import Cesium from "./Cesium";
 
 export type ChangeEvent = {
@@ -453,9 +454,8 @@ export default class BoxDrawing {
     };
 
     // Camera event disposer
-    const disposeCameraEvent = this.scene.camera.changed.addEventListener(
-      onCameraChange
-    );
+    const disposeCameraEvent =
+      this.scene.camera.changed.addEventListener(onCameraChange);
 
     // Disposer for map interactions & camera events
     this.interactionsDisposer = () => {
@@ -478,14 +478,14 @@ export default class BoxDrawing {
    */
   private updateBox() {
     Matrix4.fromTranslationRotationScale(this.trs, this.modelMatrix);
-    this.dataSource.entities.values.forEach(entity => {
+    this.dataSource.entities.values.forEach((entity) => {
       if (isUpdatable(entity)) entity.update();
     });
   }
 
   private updateEntitiesOnOrientationChange() {
-    this.sides.forEach(side => side.updateOnCameraChange());
-    this.scalePoints.forEach(scalePoint => scalePoint.updateOnCameraChange());
+    this.sides.forEach((side) => side.updateOnCameraChange());
+    this.scalePoints.forEach((scalePoint) => scalePoint.updateOnCameraChange());
   }
 
   /**
@@ -613,7 +613,7 @@ export default class BoxDrawing {
    * Draw sides of the box.
    */
   private drawSides() {
-    SIDE_PLANES.forEach(sideLocal => {
+    SIDE_PLANES.forEach((sideLocal) => {
       const side = this.createSide(sideLocal);
       this.dataSource.entities.add(side);
       this.sides.push(side);
@@ -637,7 +637,7 @@ export default class BoxDrawing {
       localEdges.push(verticalEdge, topEdge, bottomEdge);
     });
 
-    localEdges.forEach(localEdge => {
+    localEdges.forEach((localEdge) => {
       const edge = this.createEdge(localEdge);
       this.dataSource.entities.add(edge);
       //this.edges.push(edge);
@@ -648,7 +648,7 @@ export default class BoxDrawing {
    * Draw the scale grip points.
    */
   private drawScalePoints() {
-    SCALE_POINT_VECTORS.forEach(vector => {
+    SCALE_POINT_VECTORS.forEach((vector) => {
       const pointLocal1 = vector;
       const pointLocal2 = Cartesian3.multiplyByScalar(
         vector,
@@ -851,9 +851,9 @@ export default class BoxDrawing {
     };
 
     const highlightAllSides = () =>
-      this.sides.forEach(side => side.highlight());
+      this.sides.forEach((side) => side.highlight());
     const unHighlightAllSides = () =>
-      this.sides.forEach(side => side.unHighlight());
+      this.sides.forEach((side) => side.unHighlight());
 
     const onMouseOver = () => {
       highlightAllSides();
@@ -1228,14 +1228,14 @@ export default class BoxDrawing {
       });
     };
 
-    const adjacentSides = this.sides.filter(side => {
+    const adjacentSides = this.sides.filter((side) => {
       const plane = side.plane.plane?.getValue(JulianDate.now());
       const isAdjacent = Cartesian3.dot(plane.normal, axisLocal) < 0;
       return isAdjacent;
     });
 
     const updateOnCameraChange = () => {
-      isFacingCamera = adjacentSides.some(side => side.isFacingCamera);
+      isFacingCamera = adjacentSides.some((side) => side.isFacingCamera);
     };
 
     const highlightScalePoint = () => {
@@ -1418,6 +1418,10 @@ export function screenToGlobePosition(
   result: Cartesian3
 ): Cartesian3 | undefined {
   const pickRay = scene.camera.getPickRay(position, scratchPickRay);
+  if (!isDefined(pickRay)) {
+    return undefined;
+  }
+
   const globePosition = scene.globe.pick(pickRay, scene, result);
   return globePosition;
 }

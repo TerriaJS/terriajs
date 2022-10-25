@@ -14,22 +14,23 @@ configure({
 registerCatalogMembers();
 
 // Fail the test if a MobX computed property throws an exception.
-spy(event => {
+spy((event) => {
   if (event.type === "error") {
     fail(event.message);
   }
 });
 
-beforeAll(async function() {
+beforeAll(async function () {
   await i18next.init({
     lng: "cimode",
-    debug: false
+    debug: false,
+    resources: {}
   });
 });
 
 jasmine.getEnv().addReporter({
-  specDone: result =>
-    (result.failedExpectations || []).forEach(expectation =>
+  specDone: (result) =>
+    (result.failedExpectations || []).forEach((expectation) =>
       console.warn(expectation.stack)
     )
 });

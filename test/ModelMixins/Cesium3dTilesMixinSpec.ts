@@ -9,12 +9,12 @@ import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 
-describe("Cesium3dTilesMixin", function() {
+describe("Cesium3dTilesMixin", function () {
   let terria: Terria;
   let cesium3dTiles: Cesium3DTilesCatalogItem;
 
-  describe(" - loadClippingPlanes", function() {
-    beforeEach(async function() {
+  describe(" - loadClippingPlanes", function () {
+    beforeEach(async function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -37,22 +37,8 @@ describe("Cesium3dTilesMixin", function() {
             }
           ],
           modelMatrix: [
-            1.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            1.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            1.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            1.0
+            1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0,
+            0.0, 0.0, 1.0
           ],
           edgeColor: "blue",
           edgeWidth: 12.0
@@ -62,17 +48,17 @@ describe("Cesium3dTilesMixin", function() {
       await cesium3dTiles.loadMetadata();
     });
 
-    it(" - Property ClippingPlaneCollection to be defined", function() {
+    it(" - Property ClippingPlaneCollection to be defined", function () {
       expect(cesium3dTiles.clippingPlaneCollection).toBeDefined();
     });
 
-    it(" - Property ClippingPlaneCollection is a ClippingPlaneCollection type", function() {
+    it(" - Property ClippingPlaneCollection is a ClippingPlaneCollection type", function () {
       expect(
         cesium3dTiles.clippingPlaneCollection instanceof ClippingPlaneCollection
       ).toBe(true);
     });
 
-    it(" - ClippingPlaneCollection must contain a ClippingPlane", function() {
+    it(" - ClippingPlaneCollection must contain a ClippingPlane", function () {
       const cpc = cesium3dTiles.clippingPlaneCollection;
       expect(
         cpc?.contains(
@@ -81,35 +67,35 @@ describe("Cesium3dTilesMixin", function() {
       ).toBe(true);
     });
 
-    it(" - ClippingPlaneCollection must be enabled", function() {
+    it(" - ClippingPlaneCollection must be enabled", function () {
       const cpc = cesium3dTiles.clippingPlaneCollection;
       expect(cpc?.enabled).toBe(true);
     });
 
-    it(" - ClippingPlaneCollection unionClippingRegions must be false", function() {
+    it(" - ClippingPlaneCollection unionClippingRegions must be false", function () {
       const cpc = cesium3dTiles.clippingPlaneCollection;
       expect(cpc?.unionClippingRegions).toBe(false);
     });
 
-    it(" - ClippingPlaneCollection edgeWidth must be 12.0", function() {
+    it(" - ClippingPlaneCollection edgeWidth must be 12.0", function () {
       const cpc = cesium3dTiles.clippingPlaneCollection;
       expect(cpc?.edgeWidth).toBe(12.0);
     });
 
-    it(" - ClippingPlaneCollection edgeColor must be Blue", function() {
+    it(" - ClippingPlaneCollection edgeColor must be Blue", function () {
       const cpc = cesium3dTiles.clippingPlaneCollection;
       expect(cpc?.edgeColor.equals(Color.BLUE)).toBe(true);
     });
 
-    it(" - ClippingPlaneCollection must content Identity Matrix as modelMatrix", function() {
+    it(" - ClippingPlaneCollection must content Identity Matrix as modelMatrix", function () {
       const cpc = cesium3dTiles.clippingPlaneCollection;
       expect(cpc?.modelMatrix.equals(Matrix4.IDENTITY)).toBe(true);
     });
   });
 
-  describe("tileset style", function() {
-    describe("show expression from filter", function() {
-      it("casts the property to number", async function() {
+  describe("tileset style", function () {
+    describe("show expression from filter", function () {
+      it("casts the property to number", async function () {
         terria = new Terria({
           baseUrl: "./"
         });
@@ -132,6 +118,7 @@ describe("Cesium3dTilesMixin", function() {
         filter?.setTrait(CommonStrata.user, "maximumShown", 20);
         await cesium3dTiles.loadMapItems();
         const tileset = cesium3dTiles.mapItems[0] as Cesium3DTileset;
+        await tileset.readyPromise;
         const show = tileset.style?.show;
         const expr = (show as any)?.expression as string;
         expect(expr).toBeDefined();

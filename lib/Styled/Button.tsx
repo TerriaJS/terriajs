@@ -4,7 +4,7 @@ import { BoxSpan } from "./Box";
 import { TextSpan } from "./Text";
 
 const Icon = styled.span<{ rightIcon?: boolean }>`
-  ${p => (p.rightIcon ? `margin-left: 8px` : `margin-right: 8px`)};
+  ${(p) => (p.rightIcon ? `margin-left: 8px` : `margin-right: 8px`)};
 `;
 
 export interface IButtonProps {
@@ -39,27 +39,27 @@ const StyledButton = styled.button<IStyledButtonProps>`
   pointer-events: auto;
   cursor: pointer;
   min-height: 40px;
-  ${props => props.shortMinHeight && `min-height: 34px;`}
+  ${(props) => props.shortMinHeight && `min-height: 34px;`}
   // min-width: 75px;
   padding: 0 16px;
 
   border: 1px solid #e4e5e7;
   border-radius: 4px;
 
-  ${props => props.fullWidth && `width: 100%;`}
-  ${props => props.fullHeight && `height: 100%;`}
-  ${props => props.styledWidth && `width: ${props.styledWidth};`}
-  ${props => props.styledMinWidth && `min-width: ${props.styledMinWidth};`}
+  ${(props) => props.fullWidth && `width: 100%;`}
+  ${(props) => props.fullHeight && `height: 100%;`}
+  ${(props) => props.styledWidth && `width: ${props.styledWidth};`}
+  ${(props) => props.styledMinWidth && `min-width: ${props.styledMinWidth};`}
 
-  ${props => props.marginLeft && `margin-left: ${4 * props.marginLeft}px;`}
-  ${props => props.marginRight && `margin-right: ${4 * props.marginRight}px;`}
+  ${(props) => props.marginLeft && `margin-left: ${4 * props.marginLeft}px;`}
+  ${(props) => props.marginRight && `margin-right: ${4 * props.marginRight}px;`}
 
   &:hover,
   &:focus {
     opacity: 0.9;
   }
 
-  ${props =>
+  ${(props) =>
     props.primaryHover &&
     `
     &:hover,
@@ -69,7 +69,7 @@ const StyledButton = styled.button<IStyledButtonProps>`
     }
   `}
 
-  ${props =>
+  ${(props) =>
     props.primary &&
     `
     color: #fff;
@@ -77,11 +77,11 @@ const StyledButton = styled.button<IStyledButtonProps>`
     border: none;
     border-radius:20px;
   `}
-  ${props => props.rounded && ` border-radius: 32px; `}
-  ${props => props.roundLeft && `border-radius: 32px 0 0 32px;`}
-  ${props => props.roundRight && `border-radius: 0 32px 32px 0;`}
+  ${(props) => props.rounded && ` border-radius: 32px; `}
+  ${(props) => props.roundLeft && `border-radius: 32px 0 0 32px;`}
+  ${(props) => props.roundRight && `border-radius: 0 32px 32px 0;`}
 
-  ${props =>
+  ${(props) =>
     props.secondary &&
     `
     // background-color: #4d5766;
@@ -90,28 +90,28 @@ const StyledButton = styled.button<IStyledButtonProps>`
     border-radius: 20px;
     border: 2px solid ${props.theme.darkWithOverlay};
   `}
-  ${props =>
+  ${(props) =>
     props.denyButton &&
     `
     border: 2px solid ${props.theme.grey};
     color: ${props.theme.grey};
     background-color: transparent;
   `}
-  ${props =>
+  ${(props) =>
     props.warning &&
     `
     background-color: red;
   `}
 
-  ${props =>
+  ${(props) =>
     props.splitter &&
     `
     background-color: ${props.theme.colorSecondary};
     color: ${props.theme.textLight};
   `}
 
-  ${props => props.transparentBg && `background: transparent;`}
-  ${props =>
+  ${(props) => props.transparentBg && `background: transparent;`}
+  ${(props) =>
     props.disabled &&
     `
     // normalize.css has some silly overrides so this specificity is needed here to re-override
@@ -138,7 +138,7 @@ export const RawButton = styled.button<IButtonProps>`
     cursor: pointer;
   }
 
-  ${props =>
+  ${(props) =>
     props.activeStyles &&
     `
     &:hover,
@@ -146,7 +146,7 @@ export const RawButton = styled.button<IButtonProps>`
       opacity: 0.9;
     }
   `}
-  ${props =>
+  ${(props) =>
     props.disabled &&
     `
     &[disabled] {
@@ -154,14 +154,15 @@ export const RawButton = styled.button<IButtonProps>`
     }
   `}
 
-  ${props => props.fullWidth && `width: 100%;`}
-  ${props => props.fullHeight && `height: 100%;`}
-  ${props => props.styledWidth && `width: ${props.styledWidth};`}
+  ${(props) => props.fullWidth && `width: 100%;`}
+  ${(props) => props.fullHeight && `height: 100%;`}
+  ${(props) => props.styledWidth && `width: ${props.styledWidth};`}
 
-  ${props => (props.textLight ? `color: ${props.theme.textLight}` : ``)}
+  ${(props) =>
+    props.textLight ? `color: ${props.theme.textLight}` : `color: inherit`}
 `;
 
-interface ButtonProps extends IStyledButtonProps {
+type ButtonProps = {
   renderIcon?: () => React.ReactChild;
   iconProps?: any;
   rightIcon?: boolean;
@@ -169,14 +170,10 @@ interface ButtonProps extends IStyledButtonProps {
   children?: React.ReactChildren;
   buttonRef?: React.Ref<HTMLButtonElement>;
   title?: string;
-  onClick?: (e: any) => void;
-}
+} & React.ComponentPropsWithoutRef<typeof StyledButton>;
 
 // Icon and props-children-mandatory-text-wrapping is a mess here so it's all very WIP
-export const Button = (
-  props: ButtonProps,
-  ref: React.Ref<HTMLButtonElement>
-) => {
+export const Button: React.FC<ButtonProps> = (props) => {
   const {
     primary,
     secondary,
@@ -226,9 +223,6 @@ export const Button = (
   );
 };
 
-const ButtonWithRef = (
-  props: ButtonProps,
-  ref: React.Ref<HTMLButtonElement>
-) => <Button {...props} buttonRef={ref} />;
-
-export default React.forwardRef(ButtonWithRef);
+export default React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (props, ref) => <Button {...props} buttonRef={ref} />
+);

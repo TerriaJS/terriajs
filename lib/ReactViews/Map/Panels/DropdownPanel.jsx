@@ -96,10 +96,12 @@ const DropdownPanel = createReactClass({
             [Styles.buttonForModalDropdown]: this.props.showDropdownAsModal
           })}
           title={this.props.btnTitle}
-          ref={this.props.btnRef || (element => (this.buttonElement = element))}
+          ref={
+            this.props.btnRef || ((element) => (this.buttonElement = element))
+          }
           isOpen={this.isOpen()}
           css={`
-            ${p =>
+            ${(p) =>
               p.isOpen &&
               `&:not(.foo) {
                 background: ${p.theme.colorPrimary};
@@ -127,6 +129,7 @@ const DropdownPanel = createReactClass({
             theme={this.props.theme}
             caretOffset={this.state.caretOffset}
             dropdownOffset={this.state.dropdownOffset}
+            disableCloseOnFocusLoss={this.props.disableCloseOnFocusLoss}
           >
             {this.props.children}
           </InnerPanel>

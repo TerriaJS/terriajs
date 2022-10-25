@@ -8,11 +8,11 @@ import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
 import mixTraits from "../../lib/Traits/mixTraits";
 import TimeFilterTraits from "../../lib/Traits/TraitsClasses/TimeFilterTraits";
 
-describe("TimeFilterMixin", function() {
-  describe("canFilterTimeByFeature", function() {
+describe("TimeFilterMixin", function () {
+  describe("canFilterTimeByFeature", function () {
     it(
       "returns false if timeFilterPropertyName is not set",
-      action(function() {
+      action(function () {
         const testItem = new TestTimeFilterableItem("test", new Terria());
         expect(testItem.canFilterTimeByFeature).toBe(false);
       })
@@ -20,7 +20,7 @@ describe("TimeFilterMixin", function() {
 
     it(
       "returns true if timeFilterPropertyName is set",
-      action(function() {
+      action(function () {
         const testItem = new TestTimeFilterableItem("test", new Terria());
         testItem.setTrait(
           CommonStrata.user,
@@ -34,10 +34,9 @@ describe("TimeFilterMixin", function() {
 });
 
 class TestTimeFilterableItem extends TimeFilterMixin(
-  CreateModel(
-    mixTraits(TimeFilterTraits, DiscretelyTimeVaryingTraits, MappableTraits)
-  )
+  CreateModel(mixTraits(TimeFilterTraits))
 ) {
+  protected async forceLoadMapItems(): Promise<void> {}
   get discreteTimes() {
     return undefined;
   }

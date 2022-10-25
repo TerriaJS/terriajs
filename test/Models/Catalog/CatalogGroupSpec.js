@@ -5,10 +5,10 @@ var CatalogItem = require("../../lib/Models/CatalogItem");
 var createCatalogMemberFromType = require("../../lib/Models/createCatalogMemberFromType");
 var Terria = require("../../../lib/Models/Terria");
 
-describe("CatalogGroup", function() {
+describe("CatalogGroup", function () {
   var terria;
   var group;
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -18,7 +18,7 @@ describe("CatalogGroup", function() {
     createCatalogMemberFromType.register("item", CatalogItem);
   });
 
-  it("sorts on load by default", function(done) {
+  it("sorts on load by default", function (done) {
     group
       .updateFromJson({
         type: "group",
@@ -35,7 +35,7 @@ describe("CatalogGroup", function() {
           }
         ]
       })
-      .then(function() {
+      .then(function () {
         expect(group.items.length).toBe(2);
         expect(group.items[0].name).toBe("A");
         expect(group.items[1].name).toBe("B");
@@ -43,7 +43,7 @@ describe("CatalogGroup", function() {
       });
   });
 
-  it("sorts correctly when there is a number at the beginning", function(done) {
+  it("sorts correctly when there is a number at the beginning", function (done) {
     group
       .updateFromJson({
         type: "group",
@@ -65,17 +65,17 @@ describe("CatalogGroup", function() {
           }
         ]
       })
-      .then(function() {
+      .then(function () {
         expect(group.items.length).toBe(3);
         expect(group.items[0].name).toBe("1 Thing");
         expect(group.items[1].name).toBe("2 Thing");
         expect(group.items[2].name).toBe("10 Thing");
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
-  it("sorts correctly when there is a number at the end", function(done) {
+  it("sorts correctly when there is a number at the end", function (done) {
     group
       .updateFromJson({
         type: "group",
@@ -97,17 +97,17 @@ describe("CatalogGroup", function() {
           }
         ]
       })
-      .then(function() {
+      .then(function () {
         expect(group.items.length).toBe(3);
         expect(group.items[0].name).toBe("Thing 1");
         expect(group.items[1].name).toBe("Thing 2");
         expect(group.items[2].name).toBe("Thing 10");
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
-  it("sorts correctly when nameInCatalog is provided", function(done) {
+  it("sorts correctly when nameInCatalog is provided", function (done) {
     group
       .updateFromJson({
         type: "group",
@@ -130,17 +130,17 @@ describe("CatalogGroup", function() {
           }
         ]
       })
-      .then(function() {
+      .then(function () {
         expect(group.items.length).toBe(3);
         expect(group.items[0].name).toBe("1");
         expect(group.items[1].name).toBe("3");
         expect(group.items[2].name).toBe("2");
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
-  it("sorts items correctly when there is a number in the middle", function(done) {
+  it("sorts items correctly when there is a number in the middle", function (done) {
     group
       .updateFromJson({
         type: "group",
@@ -162,17 +162,17 @@ describe("CatalogGroup", function() {
           }
         ]
       })
-      .then(function() {
+      .then(function () {
         expect(group.items.length).toBe(3);
         expect(group.items[0].name).toBe("Thing 1 Yay");
         expect(group.items[1].name).toBe("Thing 2 Yay");
         expect(group.items[2].name).toBe("Thing 10 Yay");
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
-  it("sorts numbered items after unnumbered items", function(done) {
+  it("sorts numbered items after unnumbered items", function (done) {
     group
       .updateFromJson({
         type: "group",
@@ -189,16 +189,16 @@ describe("CatalogGroup", function() {
           }
         ]
       })
-      .then(function() {
+      .then(function () {
         expect(group.items.length).toBe(2);
         expect(group.items[0].name).toBe("Thing");
         expect(group.items[1].name).toBe("Thing 1");
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
-  it("sorts numbers before letters", function(done) {
+  it("sorts numbers before letters", function (done) {
     group
       .updateFromJson({
         type: "group",
@@ -225,7 +225,7 @@ describe("CatalogGroup", function() {
           }
         ]
       })
-      .then(function() {
+      .then(function () {
         expect(group.items.length).toBe(4);
         expect(group.items[0].name).toBe("1");
         expect(group.items[1].name).toBe("2");
@@ -233,10 +233,10 @@ describe("CatalogGroup", function() {
         expect(group.items[3].name).toBe("A");
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
-  it("does not sort on load if preserveOrder is true", function(done) {
+  it("does not sort on load if preserveOrder is true", function (done) {
     group
       .updateFromJson({
         type: "group",
@@ -254,7 +254,7 @@ describe("CatalogGroup", function() {
           }
         ]
       })
-      .then(function() {
+      .then(function () {
         expect(group.items.length).toBe(2);
         expect(group.items[0].name).toBe("B");
         expect(group.items[1].name).toBe("A");
@@ -262,7 +262,7 @@ describe("CatalogGroup", function() {
       });
   });
 
-  it("puts isPromoted items at the top when sorting", function(done) {
+  it("puts isPromoted items at the top when sorting", function (done) {
     group
       .updateFromJson({
         type: "group",
@@ -285,7 +285,7 @@ describe("CatalogGroup", function() {
           }
         ]
       })
-      .then(function() {
+      .then(function () {
         expect(group.items.length).toBe(3);
         expect(group.items[0].name).toBe("C");
         expect(group.items[1].name).toBe("A");
@@ -294,7 +294,7 @@ describe("CatalogGroup", function() {
       });
   });
 
-  it("puts isPromoted items at the top when preserving order", function(done) {
+  it("puts isPromoted items at the top when preserving order", function (done) {
     group
       .updateFromJson({
         type: "group",
@@ -318,7 +318,7 @@ describe("CatalogGroup", function() {
           }
         ]
       })
-      .then(function() {
+      .then(function () {
         expect(group.items.length).toBe(3);
         expect(group.items[0].name).toBe("C");
         expect(group.items[1].name).toBe("B");
@@ -327,7 +327,7 @@ describe("CatalogGroup", function() {
       });
   });
 
-  it("returns the names of its parents separated by / when uniqueId is called if no id present", function(done) {
+  it("returns the names of its parents separated by / when uniqueId is called if no id present", function (done) {
     group
       .updateFromJson({
         type: "group",
@@ -345,7 +345,7 @@ describe("CatalogGroup", function() {
           }
         ]
       })
-      .then(function() {
+      .then(function () {
         expect(group.items[0].items[0].uniqueId).toBe("A/B/C");
         expect(group.items[0].uniqueId).toBe("A/B");
         expect(group.uniqueId).toBe("A");
@@ -353,8 +353,8 @@ describe("CatalogGroup", function() {
       });
   });
 
-  describe("when updating items", function() {
-    it("adds new items when onlyUpdateExistingItems isn't specified", function(done) {
+  describe("when updating items", function () {
+    it("adds new items when onlyUpdateExistingItems isn't specified", function (done) {
       group
         .updateFromJson({
           type: "group",
@@ -373,7 +373,7 @@ describe("CatalogGroup", function() {
             }
           ]
         })
-        .then(function() {
+        .then(function () {
           expect(group.items[0].name).toBe("A");
           expect(group.items[1].name).toBe("B");
           expect(group.items[2].name).toBe("C");
@@ -381,7 +381,7 @@ describe("CatalogGroup", function() {
         });
     });
 
-    it("updates existing items by id ahead of name", function(done) {
+    it("updates existing items by id ahead of name", function (done) {
       group
         .updateFromJson({
           type: "group",
@@ -410,7 +410,7 @@ describe("CatalogGroup", function() {
             ]
           })
         )
-        .then(function() {
+        .then(function () {
           expect(group.items[0].name).toBe("A");
           expect(group.items[1].uniqueId).toBe("BUniqueId");
           expect(group.items[1].name).toBe("C");
@@ -419,7 +419,7 @@ describe("CatalogGroup", function() {
         });
     });
 
-    it("updates existing items by name", function(done) {
+    it("updates existing items by name", function (done) {
       group
         .updateFromJson({
           type: "group",
@@ -450,14 +450,14 @@ describe("CatalogGroup", function() {
             ]
           })
         )
-        .then(function() {
+        .then(function () {
           expect(group.items[0].url).toBe("http://test.com/A");
           expect(group.items[1].url).toBe("http://test.com/B");
           done();
         });
     });
 
-    it("only updates existing items when onlyUpdateExistingItems === true", function(done) {
+    it("only updates existing items when onlyUpdateExistingItems === true", function (done) {
       group
         .updateFromJson({
           type: "group",
@@ -489,7 +489,7 @@ describe("CatalogGroup", function() {
             }
           )
         )
-        .then(function() {
+        .then(function () {
           expect(group.items[0].url).toBe("http://test.com/A");
           expect(group.items.length).toBe(1);
           done();
@@ -497,7 +497,7 @@ describe("CatalogGroup", function() {
     });
   });
 
-  it("adds new children to the catalog index", function() {
+  it("adds new children to the catalog index", function () {
     var item1 = new CatalogItem(terria);
     item1.id = "blah";
 
@@ -506,8 +506,8 @@ describe("CatalogGroup", function() {
     expect(terria.catalog.shareKeyIndex["blah"]).toBe(item1);
   });
 
-  describe("removes removed children from the catalog index", function() {
-    it("when child has a specific id", function() {
+  describe("removes removed children from the catalog index", function () {
+    it("when child has a specific id", function () {
       var item1 = new CatalogItem(terria);
       item1.id = "blah";
 
@@ -517,7 +517,7 @@ describe("CatalogGroup", function() {
       expect(terria.catalog.shareKeyIndex["blah"]).toBeUndefined();
     });
 
-    it("when child has no id", function() {
+    it("when child has no id", function () {
       var item1 = new CatalogItem(terria);
       item1.name = "blah";
       group.name = "foo";
@@ -532,8 +532,8 @@ describe("CatalogGroup", function() {
     });
   });
 
-  describe("for key clashes", function() {
-    it("inserts items under an altered key if their shareKeys clash with existing keys", function(done) {
+  describe("for key clashes", function () {
+    it("inserts items under an altered key if their shareKeys clash with existing keys", function (done) {
       group
         .updateFromJson({
           type: "group",
@@ -549,7 +549,7 @@ describe("CatalogGroup", function() {
             }
           ]
         })
-        .then(function() {
+        .then(function () {
           var noIdCatalogItem = new CatalogItem(terria);
           noIdCatalogItem.name = "A";
 
@@ -607,11 +607,11 @@ describe("CatalogGroup", function() {
             idCatalogItem2
           );
         })
-        .otherwise(fail)
+        .catch(fail)
         .then(done);
     });
 
-    it("alters the id of clashing items", function(done) {
+    it("alters the id of clashing items", function (done) {
       group
         .updateFromJson({
           type: "group",
@@ -627,7 +627,7 @@ describe("CatalogGroup", function() {
             }
           ]
         })
-        .then(function() {
+        .then(function () {
           var noIdCatalogItem = new CatalogItem(terria);
           noIdCatalogItem.name = "A";
 
@@ -640,33 +640,33 @@ describe("CatalogGroup", function() {
           expect(noIdCatalogItem.uniqueId).toBe("Root Group/A (1)");
           expect(idCatalogItem.uniqueId).toBe("uniqueId (1)");
         })
-        .otherwise(fail)
+        .catch(fail)
         .then(done);
     });
   });
 
-  describe("setting isOpen", function() {
-    beforeEach(function() {
+  describe("setting isOpen", function () {
+    beforeEach(function () {
       spyOn(terria, "disclaimerListener");
     });
 
-    describe("to true when group has a disclaimer", function() {
-      beforeEach(function() {
+    describe("to true when group has a disclaimer", function () {
+      beforeEach(function () {
         group.initialMessage = {};
         group.isOpen = true;
       });
 
-      it("triggers a disclaimerEvent", function() {
+      it("triggers a disclaimerEvent", function () {
         expect(terria.disclaimerListener.calls.argsFor(0)[0]).toBe(group);
       });
     });
 
-    describe("to true when group has no disclaimer", function() {
-      beforeEach(function() {
+    describe("to true when group has no disclaimer", function () {
+      beforeEach(function () {
         group.isOpen = true;
       });
 
-      it("triggers no disclaimerEvent", function() {
+      it("triggers no disclaimerEvent", function () {
         expect(terria.disclaimerListener).not.toHaveBeenCalled();
       });
     });

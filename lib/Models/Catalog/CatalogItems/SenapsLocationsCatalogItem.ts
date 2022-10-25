@@ -144,7 +144,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
       geojsonCatalogItem.setTrait(
         CommonStrata.definition,
         "geoJsonData",
-        (fc as any) as JsonObject
+        fc as any as JsonObject
       );
 
       geojsonCatalogItem.setTrait(
@@ -186,7 +186,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
     {{/streamIds}}</ul>
     <br/>
     <chart
-      id='{{id}}'
+      identifier='{{id}}'
       title='{{id}}'
       sources='${proxiedBaseUrl}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=1440&media=csv&csvheader=false&sort=descending,${proxiedBaseUrl}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=7200&media=csv&csvheader=false&sort=descending'
       source-names='1d,5d'
@@ -244,7 +244,7 @@ class SenapsLocationsCatalogItem extends MappableMixin(
   }
 
   protected forceLoadMapItems(): Promise<void> {
-    return SenapsLocationsStratum.load(this).then(stratum => {
+    return SenapsLocationsStratum.load(this).then((stratum) => {
       if (stratum === undefined) return;
       runInAction(() => {
         this.strata.set(SenapsLocationsStratum.stratumName, stratum);
@@ -261,7 +261,7 @@ class SenapsLocationsCatalogItem extends MappableMixin(
 
   @computed get mapItems() {
     if (isDefined(this.geoJsonItem)) {
-      return this.geoJsonItem.mapItems.map(mapItem => {
+      return this.geoJsonItem.mapItems.map((mapItem) => {
         mapItem.show = this.show;
         return mapItem;
       });

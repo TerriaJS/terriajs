@@ -98,7 +98,7 @@
             "colorBins": 10,
             "dataVariable": "POPULATION ESTIMATE",
             "colorBinMethod": "quantile",
-              "featureInfoFields": [ "LGA_NAME_2012", "POPULATION ESTIMATE" ]
+            "featureInfoFields": ["LGA_NAME_2012", "POPULATION ESTIMATE"]
           }
         },
         {
@@ -110,7 +110,7 @@
             "colorPalette": "10-class BrBG",
             "colorBins": 10,
             "dataVariable": "POPULATION ESTIMATE",
-            "featureInfoFields": [ "LGA_NAME_2012", "POPULATION ESTIMATE" ]
+            "featureInfoFields": ["LGA_NAME_2012", "POPULATION ESTIMATE"]
           }
         },
         {
@@ -123,7 +123,7 @@
             "colorBins": 10,
             "colorBinMethod": "none",
             "dataVariable": "POPULATION ESTIMATE",
-            "featureInfoFields": [ "LGA_NAME_2012", "POPULATION ESTIMATE" ]
+            "featureInfoFields": ["LGA_NAME_2012", "POPULATION ESTIMATE"]
           }
         },
         {
@@ -163,7 +163,6 @@
             "colorMap": "green-hsla(0,50%,50%,0.2)"
           },
           "opacity": 1
-
         },
         {
           "name": "All Victorian postcodes",
@@ -234,7 +233,7 @@
               }
             }
           },
-          "featureInfoTemplate" : "<ul><li>Postcode: {{Postcode}}</li><li>Value via original name: {{Value}}</li><li>Value via new name: {{Renamed value}}</li></ul>"
+          "featureInfoTemplate": "<ul><li>Postcode: {{Postcode}}</li><li>Value via original name: {{Value}}</li><li>Value via new name: {{Renamed value}}</li></ul>"
         },
         {
           "name": "Value column hidden on Now Viewing",

@@ -1,11 +1,15 @@
-import TableChartStyleTraits from "./TableChartStyleTraits";
-import TableColorStyleTraits from "./TableColorStyleTraits";
-import TablePointSizeStyleTraits from "./TablePointSizeStyleTraits";
-import TableTimeStyleTraits from "./TableTimeStyleTraits";
-import ModelTraits from "../ModelTraits";
+import StratumFromTraits from "../../Models/Definition/StratumFromTraits";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
-import StratumFromTraits from "../../Models/Definition/StratumFromTraits";
+import ModelTraits from "../ModelTraits";
+import TableChartStyleTraits from "./TableChartStyleTraits";
+import TableColorStyleTraits from "./TableColorStyleTraits";
+import TableLabelStyleTraits from "./TableLabelStyleTraits";
+import TableOutlineStyleTraits from "./TableOutlineStyleTraits";
+import TablePointSizeStyleTraits from "./TablePointSizeStyleTraits";
+import TablePointStyleTraits from "./TablePointStyleTraits";
+import TableTrailStyleTraits from "./TableTrailStyleTraits";
+import TableTimeStyleTraits from "./TableTimeStyleTraits";
 
 export default class TableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -56,9 +60,40 @@ export default class TableStyleTraits extends ModelTraits {
   color?: TableColorStyleTraits;
 
   @objectTrait({
+    name: "Color",
+    description:
+      "Options for controlling the symbolization. This excludes color (see TableColorStyleTraits) and pointSize (see TablePointSizeStyleTraits).",
+    type: TablePointStyleTraits
+  })
+  point: TablePointStyleTraits = new TablePointStyleTraits();
+
+  @objectTrait({
+    name: "Color",
+    description:
+      "Options for controlling the symbolization. This excludes color (see TableColorStyleTraits) and pointSize (see TablePointSizeStyleTraits).",
+    type: TableOutlineStyleTraits
+  })
+  outline: TableOutlineStyleTraits = new TableOutlineStyleTraits();
+
+  @objectTrait({
+    name: "Point trail",
+    description:
+      "Options for controlling the trail or path behind a time-series point.",
+    type: TableTrailStyleTraits
+  })
+  trail: TableTrailStyleTraits = new TableTrailStyleTraits();
+
+  @objectTrait({
+    name: "Label",
+    description: "Options for controlling the labels.",
+    type: TableLabelStyleTraits
+  })
+  label: TableLabelStyleTraits = new TableLabelStyleTraits();
+
+  @objectTrait({
     name: "Point Size",
     description:
-      "Options for controlling the size of points. This property is ignored for regions.",
+      "Options for controlling the size of points. This property is ignored for regions. This will override TablePointStyleTraits marker width/height if `pointSize.column` can be resolved to scalar column",
     type: TablePointSizeStyleTraits
   })
   pointSize?: TablePointSizeStyleTraits;

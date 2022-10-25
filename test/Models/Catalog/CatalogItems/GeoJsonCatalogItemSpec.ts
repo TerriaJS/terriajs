@@ -1,16 +1,14 @@
 import { runInAction } from "mobx";
+import { GeomType, LineSymbolizer, PolygonSymbolizer } from "protomaps";
+import { CustomDataSource } from "terriajs-cesium";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
-import {
-  CircleSymbolizer,
-  GeomType,
-  LineSymbolizer,
-  PolygonSymbolizer
-} from "terriajs-protomaps";
 import { JsonObject } from "../../../../lib/Core/Json";
 import loadJson from "../../../../lib/Core/loadJson";
 import loadText from "../../../../lib/Core/loadText";
@@ -22,19 +20,20 @@ import {
   FEATURE_ID_PROP,
   getColor
 } from "../../../../lib/ModelMixins/GeojsonMixin";
+import { isDataSource } from "../../../../lib/ModelMixins/MappableMixin";
 import GeoJsonCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import SplitItemReference from "../../../../lib/Models/Catalog/CatalogReferences/SplitItemReference";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
-import Feature from "../../../../lib/Models/Feature";
+import TerriaFeature from "../../../../lib/Models/Feature/Feature";
 import Terria from "../../../../lib/Models/Terria";
 
 describe("GeoJsonCatalogItemSpec", () => {
-  describe("- with cesium primitives", function() {
+  describe("- with cesium primitives", function () {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(function() {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -42,8 +41,47 @@ describe("GeoJsonCatalogItemSpec", () => {
       geojson.setTrait(CommonStrata.user, "forceCesiumPrimitives", true);
     });
 
-    describe("GeoJsonCatalogItem", function() {
-      it("reloads when the URL is changed", async function() {
+    describe("GeoJsonCatalogItem", function () {
+      it("handles features with null geom", async () => {
+        geojson.setTrait(CommonStrata.user, "geoJsonData", {
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              properties: {
+                LGA_CODE19: "19499",
+                LGA_NAME19: "No usual address (NSW)",
+                STE_CODE16: "1",
+                STE_NAME16: "New South Wales",
+                AREASQKM19: 0.0
+              },
+              geometry: null
+            },
+            {
+              type: "Feature",
+              properties: {},
+              geometry: {
+                type: "Polygon",
+                coordinates: [
+                  [
+                    [144.80667114257812, -32.96258644191746],
+                    [145.008544921875, -33.19273094190691],
+                    [145.557861328125, -32.659031913817685],
+                    [145.04287719726562, -32.375322284319346],
+                    [144.7998046875, -32.96719522935591],
+                    [144.80667114257812, -32.96258644191746]
+                  ]
+                ]
+              }
+            }
+          ]
+        });
+
+        await geojson.loadMapItems();
+        expect(geojson.readyData?.features.length).toBe(1);
+      });
+
+      it("reloads when the URL is changed", async function () {
         geojson.setTrait(
           CommonStrata.user,
           "url",
@@ -84,8 +122,8 @@ describe("GeoJsonCatalogItemSpec", () => {
       });
     });
 
-    describe("loading in EPSG:28356", function() {
-      it("works by URL", async function() {
+    describe("loading in EPSG:28356", function () {
+      it("works by URL", async function () {
         geojson.setTrait(
           CommonStrata.user,
           "url",
@@ -101,7 +139,7 @@ describe("GeoJsonCatalogItemSpec", () => {
         ).toBeDefined();
       });
 
-      it("works by string", async function() {
+      it("works by string", async function () {
         const geojsonString = await loadText("test/GeoJSON/bike_racks.geojson");
         geojson.setTrait(CommonStrata.user, "geoJsonString", geojsonString);
         await geojson.loadMapItems();
@@ -114,7 +152,7 @@ describe("GeoJsonCatalogItemSpec", () => {
         ).toBeDefined();
       });
 
-      it("works by data object", async function() {
+      it("works by data object", async function () {
         const geojsonObject = await loadJson("test/GeoJSON/bike_racks.geojson");
         geojson.setTrait(CommonStrata.user, "geoJsonData", geojsonObject);
         await geojson.loadMapItems();
@@ -127,7 +165,7 @@ describe("GeoJsonCatalogItemSpec", () => {
         ).toBeDefined();
       });
 
-      it("works with zip", async function() {
+      it("works with zip", async function () {
         geojson.setTrait(
           CommonStrata.user,
           "url",
@@ -173,8 +211,8 @@ describe("GeoJsonCatalogItemSpec", () => {
        }); */
     });
 
-    describe("loading in CRS:84", function() {
-      it("works by URL", async function() {
+    describe("loading in CRS:84", function () {
+      it("works by URL", async function () {
         geojson.setTrait(
           CommonStrata.user,
           "url",
@@ -190,7 +228,7 @@ describe("GeoJsonCatalogItemSpec", () => {
         ).toBeDefined();
       });
 
-      it("works by string", async function() {
+      it("works by string", async function () {
         const geojsonString = await loadText("test/GeoJSON/cemeteries.geojson");
         geojson.setTrait(CommonStrata.user, "geoJsonString", geojsonString);
         await geojson.loadMapItems();
@@ -203,7 +241,7 @@ describe("GeoJsonCatalogItemSpec", () => {
         ).toBeDefined();
       });
 
-      it("works by blob", async function() {
+      it("works by blob", async function () {
         const blob = await loadJson("test/GeoJSON/cemeteries.geojson");
         geojson.setTrait(CommonStrata.user, "geoJsonData", <JsonObject>blob);
         await geojson.loadMapItems();
@@ -216,7 +254,7 @@ describe("GeoJsonCatalogItemSpec", () => {
         ).toBeDefined();
       });
 
-      it("works with zip", async function() {
+      it("works with zip", async function () {
         geojson.setTrait(
           CommonStrata.user,
           "url",
@@ -233,8 +271,8 @@ describe("GeoJsonCatalogItemSpec", () => {
       });
     });
 
-    describe("loading without specified CRS (assumes EPSG:4326)", function() {
-      it("works by URL", async function() {
+    describe("loading without specified CRS (assumes EPSG:4326)", function () {
+      it("works by URL", async function () {
         geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/gme.geojson");
         await geojson.loadMapItems();
         expect(geojson.mapItems.length).toEqual(1);
@@ -246,7 +284,7 @@ describe("GeoJsonCatalogItemSpec", () => {
         ).toBeDefined();
       });
 
-      it("works by string", async function() {
+      it("works by string", async function () {
         const geojsonString = await loadText("test/GeoJSON/gme.geojson");
         geojson.setTrait(CommonStrata.user, "geoJsonString", geojsonString);
         await geojson.loadMapItems();
@@ -259,7 +297,7 @@ describe("GeoJsonCatalogItemSpec", () => {
         ).toBeDefined();
       });
 
-      it("works by blob", async function() {
+      it("works by blob", async function () {
         const blob = await loadJson("test/GeoJSON/gme.geojson");
         geojson.setTrait(CommonStrata.user, "geoJsonData", <JsonObject>blob);
         await geojson.loadMapItems();
@@ -272,7 +310,7 @@ describe("GeoJsonCatalogItemSpec", () => {
         ).toBeDefined();
       });
 
-      it("works with zip", async function() {
+      it("works with zip", async function () {
         geojson.setTrait(
           CommonStrata.user,
           "url",
@@ -321,7 +359,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     //   });
     // });
 
-    describe("error handling", function() {
+    describe("error handling", function () {
       it("fails gracefully when the data at a URL is not JSON", async () => {
         geojson.setTrait(CommonStrata.user, "url", "test/KML/vic_police.kml");
 
@@ -365,7 +403,7 @@ describe("GeoJsonCatalogItemSpec", () => {
             .then(function() {
               done.fail("Load should not succeed.");
             })
-            .otherwise(function(e) {
+            .catch(function(e) {
               expect(e instanceof TerriaError).toBe(true);
               done();
             });
@@ -513,8 +551,8 @@ describe("GeoJsonCatalogItemSpec", () => {
       });
     });
 
-    describe("Per features styling", function() {
-      it("Applies styles to features according to their properties, respecting string case", async function() {
+    describe("Per features styling", function () {
+      it("Applies styles to features according to their properties, respecting string case", async function () {
         const name = "PETER FAGANS GRAVE";
         const fill = "#0000ff";
         runInAction(() => {
@@ -535,9 +573,10 @@ describe("GeoJsonCatalogItemSpec", () => {
         });
 
         await geojson.loadMapItems();
-        const entity = (geojson
-          .mapItems[0] as GeoJsonDataSource).entities.values.find(
-          e => e.properties?.getValue(JulianDate.now()).NAME === name
+        const entity = (
+          geojson.mapItems[0] as GeoJsonDataSource
+        ).entities.values.find(
+          (e) => e.properties?.getValue(JulianDate.now()).NAME === name
         );
         expect(entity).toBeDefined();
         expect(entity?.properties?.getValue(JulianDate.now())?.fill).toEqual(
@@ -547,11 +586,11 @@ describe("GeoJsonCatalogItemSpec", () => {
     });
   });
 
-  describe("- with CZML template", function() {
+  describe("- with CZML template", function () {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(function() {
+    beforeEach(function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -648,90 +687,20 @@ describe("GeoJsonCatalogItemSpec", () => {
     });
   });
 
-  describe("- with geojson-vt and protomaps", function() {
+  describe("- tablestyling - with geojson-vt and protomaps", function () {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function() {
+    beforeEach(async function () {
       terria = new Terria({
         baseUrl: "./"
       });
       geojson = new GeoJsonCatalogItem("test-geojson", terria);
-
-      geojson.setTrait(
-        CommonStrata.user,
-        "url",
-        "test/GeoJSON/bike_racks.geojson"
-      );
-    });
-
-    it("Creates ProtomapsImageryProvider - with simple styles", async () => {
-      geojson.setTrait(CommonStrata.user, "disableTableStyle", true);
-      geojson.style.setTrait(CommonStrata.user, "fill", "#00ff00");
-      geojson.style.setTrait(CommonStrata.user, "fill-opacity", 0.7);
-      geojson.style.setTrait(CommonStrata.user, "stroke", "#ff0000");
-      geojson.style.setTrait(CommonStrata.user, "stroke-opacity", 0.5);
-      geojson.style.setTrait(CommonStrata.user, "stroke-width", 5);
-      geojson.style.setTrait(CommonStrata.user, "marker-size", "medium");
-      geojson.style.setTrait(CommonStrata.user, "marker-color", "#0000ff");
-      geojson.style.setTrait(CommonStrata.user, "marker-opacity", 0.3);
-
-      await geojson.loadMapItems();
-
-      const mapItem = geojson.mapItems[0];
-
-      expect(
-        "imageryProvider" in mapItem &&
-          mapItem.imageryProvider instanceof ProtomapsImageryProvider
-      ).toBeTruthy();
-
-      const protomaps =
-        "imageryProvider" in mapItem
-          ? (mapItem.imageryProvider as ProtomapsImageryProvider)
-          : undefined;
-
-      if (!protomaps) throw "protomaps should be defined";
-
-      expect(protomaps.paintRules.length).toBe(4);
-      expect(protomaps.paintRules[0].dataLayer).toBe(GEOJSON_SOURCE_LAYER_NAME);
-      expect(protomaps.paintRules[1].dataLayer).toBe(GEOJSON_SOURCE_LAYER_NAME);
-      expect(protomaps.paintRules[2].dataLayer).toBe(GEOJSON_SOURCE_LAYER_NAME);
-      expect(protomaps.paintRules[3].dataLayer).toBe(GEOJSON_SOURCE_LAYER_NAME);
-
-      expect(
-        protomaps.paintRules[0].symbolizer instanceof PolygonSymbolizer
-      ).toBeTruthy();
-      expect(
-        protomaps.paintRules[1].symbolizer instanceof LineSymbolizer
-      ).toBeTruthy();
-      expect(
-        protomaps.paintRules[2].symbolizer instanceof LineSymbolizer
-      ).toBeTruthy();
-      expect(
-        protomaps.paintRules[3].symbolizer instanceof CircleSymbolizer
-      ).toBeTruthy();
-
-      const polygonSymbo = protomaps.paintRules[0]
-        .symbolizer as PolygonSymbolizer;
-      const polygonLineSymbo = protomaps.paintRules[1]
-        .symbolizer as LineSymbolizer;
-      const polylineSymbo = protomaps.paintRules[2]
-        .symbolizer as LineSymbolizer;
-      const pointSymbo = protomaps.paintRules[3].symbolizer as CircleSymbolizer;
-
-      expect(polygonSymbo.fill.get(1)).toBe("rgba(0,255,0,0.7)");
-      expect(polygonLineSymbo.color.get(1)).toBe("rgba(255,0,0,0.5)");
-      expect(polygonLineSymbo.width.get(1)).toBe(5);
-      expect(polylineSymbo.color.get(1)).toBe("rgba(255,0,0,0.5)");
-      expect(polylineSymbo.width.get(1)).toBe(5);
-      expect(pointSymbo.fill.get(1)).toBe("rgb(0,0,255)");
-      expect(pointSymbo.stroke.get(1)).toBe("rgba(255,0,0,0.5)");
-      expect(pointSymbo.width.get(1)).toBe(5);
-      expect(pointSymbo.radius.get(1)).toBe(10);
-      expect(pointSymbo.opacity.get(1)).toBe(0.3);
     });
 
     it("Creates ProtomapsImageryProvider - with table styles", async () => {
+      geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/height.geojson");
+
       await geojson.loadMapItems();
 
       const mapItem = geojson.mapItems[0];
@@ -748,22 +717,21 @@ describe("GeoJsonCatalogItemSpec", () => {
 
       if (!protomaps) throw "protomaps should be defined";
 
-      expect(geojson.activeStyle).toBe("number_of_");
-      expect(geojson.activeTableStyle.colorColumn?.name).toBe("number_of_");
-      expect(geojson.activeTableStyle.tableColorMap.minimumValue).toBe(0);
+      expect(geojson.activeStyle).toBe("someProperty");
+      expect(geojson.activeTableStyle.colorColumn?.name).toBe("someProperty");
+      expect(geojson.activeTableStyle.tableColorMap.minimumValue).toBe(10);
       expect(geojson.activeTableStyle.tableColorMap.maximumValue).toBe(20);
       expect(
         geojson.activeTableStyle.tableColorMap.colorMap instanceof
           ContinuousColorMap
       ).toBeTruthy();
 
-      const polygonSymbo = protomaps.paintRules[0]
+      const polygonSymbol = protomaps.paintRules[0]
         .symbolizer as PolygonSymbolizer;
-      const polygonLineSymbo = protomaps.paintRules[1]
+      const polygonLineSymbol = protomaps.paintRules[1]
         .symbolizer as LineSymbolizer;
-      const polylineSymbo = protomaps.paintRules[2]
+      const polylineSymbol = protomaps.paintRules[2]
         .symbolizer as LineSymbolizer;
-      const pointSymbo = protomaps.paintRules[3].symbolizer as CircleSymbolizer;
 
       const testFeature = {
         props: {},
@@ -774,8 +742,8 @@ describe("GeoJsonCatalogItemSpec", () => {
       };
 
       const rowIdToColor: [number, string][] = [
-        [10, "rgb(254,227,214)"],
-        [20, "rgb(103,0,13)"]
+        [0, "rgb(255,245,240)"],
+        [1, "rgb(103,0,13)"]
       ];
 
       rowIdToColor.forEach(([rowId, col]) => {
@@ -788,7 +756,7 @@ describe("GeoJsonCatalogItemSpec", () => {
         ).toBe(col);
 
         expect(
-          polygonSymbo.fill.get(1, {
+          polygonSymbol.fill.get(1, {
             ...testFeature,
             geomType: GeomType.Polygon,
             props: { _id_: rowId }
@@ -796,32 +764,60 @@ describe("GeoJsonCatalogItemSpec", () => {
         ).toBe(col);
 
         expect(
-          polygonLineSymbo.color.get(1, {
+          polygonLineSymbol.color.get(1, {
             ...testFeature,
             geomType: GeomType.Polygon,
             props: { _id_: rowId }
           })
-        ).toBe(getColor(terria.baseMapContrastColor).toCssColorString());
+        ).toBe(getColor(terria.baseMapContrastColor).toCssHexString());
 
         expect(
-          polylineSymbo.color.get(1, {
+          polylineSymbol.color.get(1, {
             ...testFeature,
             geomType: GeomType.Line,
-            props: { _id_: rowId }
-          })
-        ).toBe(col);
-
-        expect(
-          pointSymbo.fill.get(1, {
-            ...testFeature,
-            geomType: GeomType.Point,
             props: { _id_: rowId }
           })
         ).toBe(col);
       });
     });
 
+    it("Creates table features for points", async () => {
+      geojson.setTrait(
+        CommonStrata.user,
+        "url",
+        "test/GeoJSON/bike_racks.geojson"
+      );
+
+      await geojson.loadMapItems();
+
+      const mapItem = geojson.mapItems[0] as CustomDataSource;
+
+      expect(isDataSource(mapItem)).toBeTruthy();
+
+      expect(geojson.activeStyle).toBe("number_of_");
+      expect(geojson.activeTableStyle.colorColumn?.name).toBe("number_of_");
+      expect(geojson.activeTableStyle.tableColorMap.minimumValue).toBe(0);
+      expect(geojson.activeTableStyle.tableColorMap.maximumValue).toBe(20);
+      expect(
+        geojson.activeTableStyle.tableColorMap.colorMap instanceof
+          ContinuousColorMap
+      ).toBeTruthy();
+
+      // Test some colors
+      expect(
+        mapItem.entities.values[10].point?.color
+          ?.getValue(terria.timelineClock.currentTime)
+          ?.toCssColorString()
+      ).toBe("rgb(254,227,214)");
+      expect(
+        mapItem.entities.values[20].point?.color
+          ?.getValue(terria.timelineClock.currentTime)
+          ?.toCssColorString()
+      ).toBe("rgb(103,0,13)");
+    });
+
     it("Supports LegendOwnerTraits to override TableMixin.legends", async () => {
+      geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/height.geojson");
       await geojson.loadMapItems();
 
       expect(
@@ -831,7 +827,7 @@ describe("GeoJsonCatalogItemSpec", () => {
       ).toBeTruthy();
 
       expect(geojson.legends.length).toBe(1);
-      expect(geojson.legends[0].items.map(i => i.color)).toEqual([
+      expect(geojson.legends[0].items.map((i) => i.color)).toEqual([
         "rgb(103,0,13)",
         "rgb(176,18,24)",
         "rgb(226,48,40)",
@@ -856,6 +852,8 @@ describe("GeoJsonCatalogItemSpec", () => {
     });
 
     it("Supports LegendOwnerTraits to override TableMixin.legends - with style disabled", async () => {
+      geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/height.geojson");
+
       await geojson.loadMapItems();
 
       expect(
@@ -868,7 +866,7 @@ describe("GeoJsonCatalogItemSpec", () => {
 
       expect(geojson.legends.length).toBe(1);
       expect(geojson.legends[0].items.length).toBe(1);
-      expect(geojson.legends[0].items.map(i => i.color)).toEqual([
+      expect(geojson.legends[0].items.map((i) => i.color)).toEqual([
         "rgb(102,194,165)"
       ]);
 
@@ -885,13 +883,25 @@ describe("GeoJsonCatalogItemSpec", () => {
       expect(geojson.legends.length).toBe(1);
       expect(geojson.legends[0].url).toBe("some-url");
     });
+
+    it("correctly builds `Feature` from picked Entity", function () {
+      const picked = new Entity();
+      const feature = geojson.buildFeatureFromPickResult(
+        Cartesian2.ZERO,
+        picked
+      );
+      expect(feature).toBeDefined();
+      if (feature) {
+        expect(feature.cesiumEntity).toBe(picked);
+      }
+    });
   });
 
   describe("Disables protomaps (mvt) if geoJson simple styling is detected", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function() {
+    beforeEach(async function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -907,7 +917,7 @@ describe("GeoJsonCatalogItemSpec", () => {
       );
       await geojson.loadMapItems();
       expect(geojson.mapItems[0] instanceof GeoJsonDataSource).toBeFalsy();
-      expect(geojson.useMvt).toBeTruthy();
+      expect(geojson.useTableStylingAndProtomaps).toBeTruthy();
       expect(geojson.legends.length).toBe(1);
     });
 
@@ -920,7 +930,7 @@ describe("GeoJsonCatalogItemSpec", () => {
       );
       await geojson.loadMapItems();
       expect(geojson.mapItems[0] instanceof GeoJsonDataSource).toBeTruthy();
-      expect(geojson.useMvt).toBeFalsy();
+      expect(geojson.useTableStylingAndProtomaps).toBeFalsy();
 
       expect(geojson.legends.length).toBe(0);
     });
@@ -930,7 +940,7 @@ describe("GeoJsonCatalogItemSpec", () => {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function() {
+    beforeEach(async function () {
       terria = new Terria({
         baseUrl: "./"
       });
@@ -956,18 +966,18 @@ describe("GeoJsonCatalogItemSpec", () => {
     });
   });
 
-  describe("geojson can be split", function() {
+  describe("geojson can be split", function () {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function() {
+    beforeEach(async function () {
       terria = new Terria({
         baseUrl: "./"
       });
       geojson = new GeoJsonCatalogItem("test-geojson", terria);
     });
 
-    it("protomaps-mvt", async function() {
+    it("protomaps-mvt", async function () {
       terria.addModel(geojson);
       const geojsonString = await loadText("test/GeoJSON/cemeteries.geojson");
       geojson.setTrait(CommonStrata.user, "geoJsonString", geojsonString);
@@ -992,18 +1002,18 @@ describe("GeoJsonCatalogItemSpec", () => {
     });
   });
 
-  describe("geojson handles reprojection", function() {
+  describe("geojson handles reprojection", function () {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function() {
+    beforeEach(async function () {
       terria = new Terria({
         baseUrl: "./"
       });
       geojson = new GeoJsonCatalogItem("test-geojson", terria);
     });
 
-    it("feature collection", async function() {
+    it("feature collection", async function () {
       geojson.setTrait(
         CommonStrata.user,
         "geoJsonString",
@@ -1090,7 +1100,7 @@ describe("GeoJsonCatalogItemSpec", () => {
       } as any);
     });
 
-    it("feature", async function() {
+    it("feature", async function () {
       geojson.setTrait(
         CommonStrata.user,
         "geoJsonString",
@@ -1163,18 +1173,18 @@ describe("GeoJsonCatalogItemSpec", () => {
     });
   });
 
-  describe("pick features", function() {
+  describe("pick features", function () {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
 
-    beforeEach(async function() {
+    beforeEach(async function () {
       terria = new Terria({
         baseUrl: "./"
       });
       geojson = new GeoJsonCatalogItem("test-geojson", terria);
     });
 
-    it("ProtomapsImageryProvider.createHighlightImageryProvider", async function() {
+    it("ProtomapsImageryProvider.createHighlightImageryProvider", async function () {
       geojson.setTrait(
         CommonStrata.definition,
         "geoJsonString",
@@ -1186,9 +1196,10 @@ describe("GeoJsonCatalogItemSpec", () => {
       const imagery = geojson.mapItems[0];
 
       if ("imageryProvider" in imagery) {
-        const highlight = imagery.imageryProvider.createHighlightImageryProvider(
-          new Feature({ properties: { [FEATURE_ID_PROP]: "0" } })
-        );
+        const highlight =
+          imagery.imageryProvider.createHighlightImageryProvider(
+            new TerriaFeature({ properties: { [FEATURE_ID_PROP]: "0" } })
+          );
         expect(highlight).toBeDefined();
 
         expect(highlight?.paintRules[0].dataLayer).toBe(

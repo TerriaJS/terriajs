@@ -10,7 +10,7 @@ import toggleItemOnMapFromCatalog, {
   Op as ToggleOnMapOp
 } from "../DataCatalog/toggleItemOnMapFromCatalog";
 import measureElement from "../HOCs/measureElement";
-import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
+import SharePanel from "../Map/Panels/SharePanel/SharePanel";
 import DataPreviewMap from "./DataPreviewMap";
 import Description from "./Description";
 import Styles from "./mappable-preview.scss";
@@ -93,7 +93,7 @@ class MappablePreview extends React.Component {
         <div className={Styles.previewedInfo}>
           <div
             className={Styles.titleAndShareWrapper}
-            ref={component => (this.refToMeasure = component)}
+            ref={(component) => (this.refToMeasure = component)}
           >
             <h3 className={Styles.h3}>{catalogItem.name}</h3>
             <If

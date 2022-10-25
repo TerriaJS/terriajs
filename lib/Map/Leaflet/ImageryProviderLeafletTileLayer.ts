@@ -11,17 +11,19 @@ import TileProviderError from "terriajs-cesium/Source/Core/TileProviderError";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import isDefined from "../../Core/isDefined";
 import pollToPromise from "../../Core/pollToPromise";
+import TerriaError from "../../Core/TerriaError";
 import Leaflet from "../../Models/Leaflet";
 import getUrlForImageryTile from "../ImageryProvider/getUrlForImageryTile";
+import { ProviderCoords } from "../PickedFeatures/PickedFeatures";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
 // we still maintain the type checking, without TS screaming with errors
-const FeatureDetection: FeatureDetection = require("terriajs-cesium/Source/Core/FeatureDetection")
-  .default;
+const FeatureDetection: FeatureDetection =
+  require("terriajs-cesium/Source/Core/FeatureDetection").default;
 
 const swScratch = new Cartographic();
 const neScratch = new Cartographic();
@@ -45,7 +47,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
   private _previousCredits: Credit[] = [];
   private _leafletUpdateInterval: number;
 
-  @observable splitDirection = ImagerySplitDirection.NONE;
+  @observable splitDirection = SplitDirection.NONE;
   @observable splitPosition: number = 0.5;
 
   constructor(
@@ -95,10 +97,10 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
         return;
       }
 
-      if (this.splitDirection === ImagerySplitDirection.LEFT) {
+      if (this.splitDirection === SplitDirection.LEFT) {
         const { left: clipLeft } = this._clipsForSplitter;
         container.style.clip = clipLeft;
-      } else if (this.splitDirection === ImagerySplitDirection.RIGHT) {
+      } else if (this.splitDirection === SplitDirection.RIGHT) {
         const { right: clipRight } = this._clipsForSplitter;
         container.style.clip = clipRight;
       } else {
@@ -153,10 +155,10 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     const doRequest = (waitPromise?: any) => {
       if (waitPromise) {
         waitPromise
-          .then(function() {
+          .then(function () {
             doRequest();
           })
-          .otherwise((e: unknown) => {
+          .catch((e: unknown) => {
             // The tile has failed irrecoverably, so invoke Leaflet's standard
             // tile error handler.
             (<any>L.TileLayer).prototype._tileOnError.call(this, done, tile, e);
@@ -172,7 +174,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
       }
     };
 
-    L.DomEvent.on(tile, "error", e => {
+    L.DomEvent.on(tile, "error", (e) => {
       const level = (<any>this)._getLevelFromZ(coords);
       const message = i18next.t("map.cesium.failedToObtain", {
         x: coords.x,
@@ -302,9 +304,8 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     }
 
     for (let i = 0; i < this._previousCredits.length; ++i) {
-      this._previousCredits[
-        i
-      ]._shownInLeafletLastUpdate = this._previousCredits[i]._shownInLeaflet;
+      this._previousCredits[i]._shownInLeafletLastUpdate =
+        this._previousCredits[i]._shownInLeaflet;
       this._previousCredits[i]._shownInLeaflet = false;
     }
 
@@ -397,7 +398,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     map: L.Map,
     longitudeRadians: number,
     latitudeRadians: number
-  ): Promise<{ x: number; y: number; level: number }> {
+  ): Promise<ProviderCoords> {
     const ll = new Cartographic(
       CesiumMath.negativePiToPi(longitudeRadians),
       latitudeRadians,
@@ -418,24 +419,30 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     });
   }
 
-  pickFeatures(
+  async pickFeatures(
     x: number,
     y: number,
     level: number,
     longitudeRadians: number,
     latitudeRadians: number
-  ): Promise<ImageryLayerFeatureInfo> {
-    return pollToPromise(() => {
-      return this.imageryProvider.ready;
-    }).then(() => {
-      return this.imageryProvider.pickFeatures(
+  ): Promise<ImageryLayerFeatureInfo[] | undefined> {
+    await pollToPromise(() => this.imageryProvider.ready);
+    try {
+      return await this.imageryProvider.pickFeatures(
         x,
         y,
         level,
         longitudeRadians,
         latitudeRadians
       );
-    });
+    } catch (e) {
+      TerriaError.from(
+        e,
+        `An error ocurred while calling \`ImageryProvider#.pickFeatures\`. \`ImageryProvider.url = ${
+          (<any>this.imageryProvider).url
+        }\``
+      ).log();
+    }
   }
 
   onRemove(map: L.Map) {

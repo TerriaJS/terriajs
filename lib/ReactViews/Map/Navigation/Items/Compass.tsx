@@ -32,8 +32,8 @@ import GyroscopeGuidance from "../../../GyroscopeGuidance/GyroscopeGuidance";
 import { withTerriaRef } from "../../../HOCs/withTerriaRef";
 import FadeIn from "../../../Transitions/FadeIn/FadeIn";
 
-const CameraFlightPath = require("terriajs-cesium/Source/Scene/CameraFlightPath")
-  .default;
+const CameraFlightPath =
+  require("terriajs-cesium/Source/Scene/CameraFlightPath").default;
 
 export const COMPASS_LOCAL_PROPERTY_KEY = "CompassHelpPrompted";
 
@@ -55,9 +55,9 @@ interface StyledCompassProps {
 const StyledCompass = styled.div<StyledCompassProps>`
   display: none;
   position: relative;
-  width: ${props => props.theme.compassWidth}px;
-  height: ${props => props.theme.compassWidth}px;
-  @media (min-width: ${props => props.theme.sm}px) {
+  width: ${(props) => props.theme.compassWidth}px;
+  height: ${(props) => props.theme.compassWidth}px;
+  @media (min-width: ${(props) => props.theme.sm}px) {
     display: block;
   }
 `;
@@ -95,12 +95,12 @@ const getCompassScaleRatio = (compassWidth: string) =>
  *
  **/
 const StyledCompassOuterRing = styled.div<StyledCompassProps>`
-  ${props => props.theme.centerWithoutFlex()}
+  ${(props) => props.theme.centerWithoutFlex()}
   // override the transform provided in centerWithoutFlex()
   transform: translate(-50%,-50%) scale(0.9999);
-  z-index: ${props => (props.active ? "2" : "1")};
+  z-index: ${(props) => (props.active ? "2" : "1")};
   width: 100%;
-  ${props =>
+  ${(props) =>
     props.active &&
     `transform: translate(-50%,-50%) scale(${getCompassScaleRatio(
       props.theme.compassWidth
@@ -109,11 +109,11 @@ const StyledCompassOuterRing = styled.div<StyledCompassProps>`
 `;
 
 const StyledCompassInnerRing = styled.div`
-  ${props => props.theme.verticalAlign()}
+  ${(props) => props.theme.verticalAlign()}
 
-  width: ${props =>
+  width: ${(props) =>
     Number(props.theme.compassWidth) - Number(props.theme.ringWidth) - 10}px;
-  height: ${props =>
+  height: ${(props) =>
     Number(props.theme.compassWidth) - Number(props.theme.ringWidth) - 10}px;
   margin: 0 auto;
   padding: 4px;
@@ -121,12 +121,12 @@ const StyledCompassInnerRing = styled.div`
 `;
 
 const StyledCompassRotationMarker = styled.div`
-  ${props => props.theme.centerWithoutFlex()}
+  ${(props) => props.theme.centerWithoutFlex()}
   z-index: 3;
   cursor: pointer;
-  width: ${props =>
+  width: ${(props) =>
     Number(props.theme.compassWidth) + Number(props.theme.ringWidth) - 4}px;
-  height: ${props =>
+  height: ${(props) =>
     Number(props.theme.compassWidth) + Number(props.theme.ringWidth) - 4}px;
   border-radius: 50%;
   background-repeat: no-repeat;
@@ -196,9 +196,10 @@ class Compass extends React.Component<PropTypes, IStateTypes> {
   }
 
   cesiumLoaded() {
-    this._unsubscribeFromViewerChange = this.props.terria.mainViewer.afterViewerChanged.addEventListener(
-      () => viewerChange(this)
-    );
+    this._unsubscribeFromViewerChange =
+      this.props.terria.mainViewer.afterViewerChanged.addEventListener(() =>
+        viewerChange(this)
+      );
     viewerChange(this);
   }
 
@@ -260,7 +261,9 @@ class Compass extends React.Component<PropTypes, IStateTypes> {
     windowPosition.y = scene.canvas.clientHeight / 2;
     const ray = camera.getPickRay(windowPosition, pickRayScratch);
 
-    const center = scene.globe.pick(ray, scene, centerScratch);
+    const center = isDefined(ray)
+      ? scene.globe.pick(ray, scene, centerScratch)
+      : undefined;
     if (!isDefined(center)) {
       // Globe is barely visible, so reset to home view.
       this.props.terria.currentViewer.zoomTo(
@@ -477,7 +480,9 @@ function rotate(
   windowPosition.y = scene.canvas.clientHeight / 2;
   const ray = camera.getPickRay(windowPosition, pickRayScratch);
 
-  const viewCenter = scene.globe.pick(ray, scene, centerScratch);
+  const viewCenter = isDefined(ray)
+    ? scene.globe.pick(ray, scene, centerScratch)
+    : undefined;
   if (!isDefined(viewCenter)) {
     viewModel.rotateFrame = Transforms.eastNorthUpToFixedFrame(
       camera.positionWC,
@@ -505,7 +510,7 @@ function rotate(
   );
   camera.lookAtTransform(oldTransform);
 
-  viewModel.rotateMouseMoveFunction = function(e) {
+  viewModel.rotateMouseMoveFunction = function (e) {
     const compassRectangle = compassElement.getBoundingClientRect();
     const center = new Cartesian2(
       (compassRectangle.right - compassRectangle.left) / 2.0,
@@ -534,7 +539,7 @@ function rotate(
     // viewModel.props.terria.cesium.notifyRepaintRequired();
   };
 
-  viewModel.rotateMouseUpFunction = function(e) {
+  viewModel.rotateMouseUpFunction = function (e) {
     viewModel.isRotating = false;
     if (viewModel.rotateMouseMoveFunction) {
       document.removeEventListener(
@@ -603,7 +608,9 @@ function orbit(
   windowPosition.y = scene.canvas.clientHeight / 2;
   const ray = camera.getPickRay(windowPosition, pickRayScratch);
 
-  const center = scene.globe.pick(ray, scene, centerScratch);
+  const center = isDefined(ray)
+    ? scene.globe.pick(ray, scene, centerScratch)
+    : undefined;
   if (!isDefined(center)) {
     viewModel.orbitFrame = Transforms.eastNorthUpToFixedFrame(
       camera.positionWC,
@@ -620,7 +627,7 @@ function orbit(
     viewModel.orbitIsLook = false;
   }
 
-  viewModel.orbitAnimationFrameFunction = function(e: any) {
+  viewModel.orbitAnimationFrameFunction = function (e: any) {
     const timestamp = getTimestamp();
     const deltaT = timestamp - viewModel.orbitLastTimestamp;
     const rate = ((viewModel.state.orbitCursorOpacity - 0.5) * 2.5) / 1000;
@@ -669,7 +676,7 @@ function orbit(
     // viewModel.props.terria.cesium.notifyRepaintRequired();
   }
 
-  viewModel.orbitMouseMoveFunction = function(e) {
+  viewModel.orbitMouseMoveFunction = function (e) {
     const compassRectangle = compassElement.getBoundingClientRect();
     const center = new Cartesian2(
       (compassRectangle.right - compassRectangle.left) / 2.0,
@@ -683,7 +690,7 @@ function orbit(
     updateAngleAndOpacity(vector, compassRectangle.width);
   };
 
-  viewModel.orbitMouseUpFunction = function(e: any) {
+  viewModel.orbitMouseUpFunction = function (e: any) {
     // TODO: if mouse didn't move, reset view to looking down, north is up?
 
     viewModel.isOrbiting = false;
@@ -727,8 +734,10 @@ function orbit(
 }
 
 function subscribeToAnimationFrame(viewModel: Compass) {
-  viewModel._unsubscribeFromAnimationFrame = (id => () =>
-    cancelAnimationFrame(id))(
+  viewModel._unsubscribeFromAnimationFrame = (
+    (id) => () =>
+      cancelAnimationFrame(id)
+  )(
     requestAnimationFrame(() => {
       if (isDefined(viewModel.orbitAnimationFrameFunction)) {
         viewModel.orbitAnimationFrameFunction();
@@ -746,15 +755,16 @@ function viewerChange(viewModel: Compass) {
         viewModel._unsubscribeFromPostRender = undefined;
       }
 
-      viewModel._unsubscribeFromPostRender = viewModel.props.terria.cesium.scene.postRender.addEventListener(
-        function() {
-          runInAction(() => {
-            viewModel.setState({
-              heading: viewModel.props.terria.cesium!.scene.camera.heading
+      viewModel._unsubscribeFromPostRender =
+        viewModel.props.terria.cesium.scene.postRender.addEventListener(
+          function () {
+            runInAction(() => {
+              viewModel.setState({
+                heading: viewModel.props.terria.cesium!.scene.camera.heading
+              });
             });
-          });
-        }
-      );
+          }
+        );
     } else {
       if (viewModel._unsubscribeFromPostRender) {
         viewModel._unsubscribeFromPostRender();

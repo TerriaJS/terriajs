@@ -6,24 +6,23 @@ var CesiumTileLayer = require("../../lib/Map/CesiumTileLayer");
 var Color = require("terriajs-cesium/Source/Core/Color").default;
 var Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid").default;
 var Entity = require("terriajs-cesium/Source/DataSources/Entity").default;
-var GeoJsonDataSource = require("terriajs-cesium/Source/DataSources/GeoJsonDataSource")
-  .default;
-var ImageryLayerFeatureInfo = require("terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo")
-  .default;
+var GeoJsonDataSource =
+  require("terriajs-cesium/Source/DataSources/GeoJsonDataSource").default;
+var ImageryLayerFeatureInfo =
+  require("terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo").default;
 var L = require("leaflet");
 var Leaflet = require("../../lib/Models/Leaflet");
 var loadJson = require("../../lib/Core/loadJson").default;
 var Terria = require("../../lib/Models/Terria");
-var when = require("terriajs-cesium/Source/ThirdParty/when").default;
 
 var DEFAULT_ZOOM_LEVEL = 5;
 
-describe("Leaflet Model", function() {
+describe("Leaflet Model", function () {
   var terria;
   var leaflet;
   var container, map, layers;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -42,21 +41,21 @@ describe("Leaflet Model", function() {
     ];
   });
 
-  afterEach(function() {
+  afterEach(function () {
     document.body.removeChild(container);
   });
 
   function initLeaflet() {
     leaflet = new Leaflet(terria, map);
     terria.leaflet = leaflet;
-    layers.forEach(function(layer) {
+    layers.forEach(function (layer) {
       map.addLayer(layer);
     });
   }
 
-  describe("should trigger a tileLoadProgressEvent", function() {
-    ["tileloadstart", "tileload", "load"].forEach(function(event) {
-      it("on " + event, function() {
+  describe("should trigger a tileLoadProgressEvent", function () {
+    ["tileloadstart", "tileload", "load"].forEach(function (event) {
+      it("on " + event, function () {
         initLeaflet();
 
         layers[0].fire(event);
@@ -66,12 +65,12 @@ describe("Leaflet Model", function() {
     });
   });
 
-  it("should be able to reference its container", function() {
+  it("should be able to reference its container", function () {
     initLeaflet();
     expect(leaflet.getContainer()).toBe(container);
   });
 
-  it("should trigger a tileLoadProgressEvent with the total number of tiles to be loaded for all layers", function() {
+  it("should trigger a tileLoadProgressEvent with the total number of tiles to be loaded for all layers", function () {
     initLeaflet();
 
     layers[0]._tiles = {
@@ -92,8 +91,8 @@ describe("Leaflet Model", function() {
     expect(terria.tileLoadProgressEvent.raiseEvent).toHaveBeenCalledWith(5, 5);
   });
 
-  describe("should change the max", function() {
-    it("to whatever the highest count of loading tiles so far was", function() {
+  describe("should change the max", function () {
+    it("to whatever the highest count of loading tiles so far was", function () {
       initLeaflet();
 
       changeTileLoadingCount(3);
@@ -106,7 +105,7 @@ describe("Leaflet Model", function() {
       ).toEqual([2, 8]);
     });
 
-    it("to 0 when loading tile count reaches 0", function() {
+    it("to 0 when loading tile count reaches 0", function () {
       initLeaflet();
 
       changeTileLoadingCount(3);
@@ -137,13 +136,20 @@ describe("Leaflet Model", function() {
     }
   });
 
-  describe("feature picking", function() {
+  describe("feature picking", function () {
     var latlng = { lat: 50, lng: 50 };
-    var deferred1, deferred2;
+    var deferred1 = {},
+      deferred2 = {};
 
-    beforeEach(function() {
-      deferred1 = when.defer();
-      deferred2 = when.defer();
+    beforeEach(function () {
+      deferred1.promise = new Promise((resolve, reject) => {
+        deferred1.resolve = resolve;
+        deferred1.reject = reject;
+      });
+      deferred2.promise = new Promise((resolve, reject) => {
+        deferred2.resolve = resolve;
+        deferred2.reject = reject;
+      });
 
       terria.nowViewing.items = [
         {
@@ -156,7 +162,7 @@ describe("Leaflet Model", function() {
             url: "http://example.com/1",
             ready: true,
             tilingScheme: {
-              positionToTileXY: function() {
+              positionToTileXY: function () {
                 return { x: 1, y: 2 };
               }
             }
@@ -172,7 +178,7 @@ describe("Leaflet Model", function() {
             url: "http://example.com/2",
             ready: true,
             tilingScheme: {
-              positionToTileXY: function() {
+              positionToTileXY: function () {
                 return { x: 4, y: 5 };
               }
             }
@@ -186,7 +192,7 @@ describe("Leaflet Model", function() {
             url: "http://example.com/3",
             ready: true,
             tilingScheme: {
-              positionToTileXY: function() {
+              positionToTileXY: function () {
                 return { x: 1, y: 2 };
               }
             }
@@ -200,7 +206,7 @@ describe("Leaflet Model", function() {
             url: "http://example.com/4",
             ready: true,
             tilingScheme: {
-              positionToTileXY: function() {
+              positionToTileXY: function () {
                 return { x: 1, y: 2 };
               }
             }
@@ -209,16 +215,16 @@ describe("Leaflet Model", function() {
       ];
     });
 
-    describe("from location", function() {
-      beforeEach(function() {
+    describe("from location", function () {
+      beforeEach(function () {
         initLeaflet();
       });
 
-      commonFeaturePickingTests(function() {
+      commonFeaturePickingTests(function () {
         leaflet.pickFromLocation(latlng, {});
       });
 
-      it("uses tileCoordinates when provided", function() {
+      it("uses tileCoordinates when provided", function () {
         leaflet.pickFromLocation(latlng, {
           "http://example.com/1": { x: 100, y: 200, level: 300 },
           "http://example.com/2": { x: 400, y: 500, level: 600 }
@@ -257,26 +263,26 @@ describe("Leaflet Model", function() {
         ).toBe(600);
       });
 
-      it("adds existingFeatures to end result", function(done) {
+      it("adds existingFeatures to end result", function (done) {
         var existing = new ImageryLayerFeatureInfo();
         existing.name = "existing";
         leaflet.pickFromLocation(latlng, {}, [existing]);
         finishPickingPromise();
 
         terria.pickedFeatures.allFeaturesAvailablePromise
-          .then(function() {
+          .then(function () {
             expect(terria.pickedFeatures.features[0].name).toBe("existing");
           })
           .then(done)
-          .otherwise(done.fail);
+          .catch(done.fail);
       });
     });
 
-    describe("from click", function() {
+    describe("from click", function () {
       var click;
 
-      beforeEach(function() {
-        spyOn(map, "on").and.callFake(function(type, callback) {
+      beforeEach(function () {
+        spyOn(map, "on").and.callFake(function (type, callback) {
           if (type === "click") {
             click = callback;
           }
@@ -285,16 +291,16 @@ describe("Leaflet Model", function() {
         initLeaflet();
       });
 
-      commonFeaturePickingTests(function() {
+      commonFeaturePickingTests(function () {
         click({
           latlng: latlng
         });
       });
 
-      describe("when combining vector and raster features", function() {
+      describe("when combining vector and raster features", function () {
         var vectorFeature1, vectorFeature2;
 
-        beforeEach(function() {
+        beforeEach(function () {
           vectorFeature1 = new Entity({
             name: "vector1"
           });
@@ -303,7 +309,7 @@ describe("Leaflet Model", function() {
           });
         });
 
-        it("includes vector features with click events both before and after the map click event", function(done) {
+        it("includes vector features with click events both before and after the map click event", function (done) {
           // vector and map clicks can come in any order.
           leaflet.scene.featureClicked.raiseEvent(vectorFeature1, {
             latlng: latlng
@@ -318,17 +324,17 @@ describe("Leaflet Model", function() {
           finishPickingPromise();
 
           terria.pickedFeatures.allFeaturesAvailablePromise
-            .then(function() {
+            .then(function () {
               expect(terria.pickedFeatures.features.length).toBe(5);
               expect(terria.pickedFeatures.features[0].name).toBe("vector1");
               expect(terria.pickedFeatures.features[1].name).toBe("vector2");
               expect(terria.pickedFeatures.features[2].name).toBe("1");
             })
             .then(done)
-            .otherwise(done.fail);
+            .catch(done.fail);
         });
 
-        it("resets the picked vector features if a subsequent map click is made", function(done) {
+        it("resets the picked vector features if a subsequent map click is made", function (done) {
           leaflet.scene.featureClicked.raiseEvent(vectorFeature1, {
             latlng: latlng
           });
@@ -342,25 +348,25 @@ describe("Leaflet Model", function() {
           // The reset happens in a runLater, which a second click will always come behind in a browser,
           // but this isn't guaranteed in unit tests because they're just two setTimeouts racing each other,
           // so give this a healthy 50ms delay to make sure it comes in behind the 0ms delay in Leaflet.js.
-          setTimeout(function() {
+          setTimeout(function () {
             click({
               latlng: latlng
             });
             finishPickingPromise();
             terria.pickedFeatures.allFeaturesAvailablePromise
-              .then(function() {
+              .then(function () {
                 expect(terria.pickedFeatures.features.length).toBe(3);
                 expect(terria.pickedFeatures.features[0].name).toBe("1");
               })
               .then(done)
-              .otherwise(done.fail);
+              .catch(done.fail);
           }, 50);
         });
       });
     });
 
     function commonFeaturePickingTests(trigger) {
-      it("correctly tracks loading state", function(done) {
+      it("correctly tracks loading state", function (done) {
         expect(terria.pickedFeatures).toBeUndefined();
 
         trigger();
@@ -370,14 +376,14 @@ describe("Leaflet Model", function() {
         finishPickingPromise();
 
         terria.pickedFeatures.allFeaturesAvailablePromise
-          .then(function() {
+          .then(function () {
             expect(terria.pickedFeatures.isLoading).toBe(false);
           })
           .then(done)
-          .otherwise(done.fail);
+          .catch(done.fail);
       });
 
-      it("should load imagery layer features when feature info requests are enabled", function(done) {
+      it("should load imagery layer features when feature info requests are enabled", function (done) {
         terria.allowFeatureInfoRequests = true;
         trigger();
 
@@ -393,30 +399,30 @@ describe("Leaflet Model", function() {
         deferred2.resolve([featureInfo2]);
 
         terria.pickedFeatures.allFeaturesAvailablePromise
-          .then(function() {
+          .then(function () {
             expect(terria.pickedFeatures.isLoading).toBe(false);
             expect(terria.pickedFeatures.features.length).toBe(2);
             expect(terria.pickedFeatures.features[0].name).toBe("name1");
             expect(terria.pickedFeatures.features[1].name).toBe("name2");
           })
           .then(done)
-          .otherwise(done.fail);
+          .catch(done.fail);
       });
 
-      it("should not load imagery layer features when feature info requests are disabled", function(done) {
+      it("should not load imagery layer features when feature info requests are disabled", function (done) {
         terria.allowFeatureInfoRequests = false;
         trigger();
 
         terria.pickedFeatures.allFeaturesAvailablePromise
-          .then(function() {
+          .then(function () {
             expect(terria.pickedFeatures.isLoading).toBe(false);
             expect(terria.pickedFeatures.features.length).toBe(0);
           })
           .then(done)
-          .otherwise(done.fail);
+          .catch(done.fail);
       });
 
-      it("records pickPosition", function() {
+      it("records pickPosition", function () {
         trigger();
 
         expect(terria.pickedFeatures.pickPosition).toEqual(
@@ -426,17 +432,17 @@ describe("Leaflet Model", function() {
         );
       });
 
-      describe("after feature picked", function() {
+      describe("after feature picked", function () {
         beforeEach(trigger);
 
-        it("populates terria.pickedFeatures", function() {
+        it("populates terria.pickedFeatures", function () {
           expect(terria.pickedFeatures).toBeDefined();
           expect(
             terria.pickedFeatures.allFeaturesAvailablePromise
           ).toBeDefined();
         });
 
-        it("calls pickFeatures for all enabled and shown layers", function() {
+        it("calls pickFeatures for all enabled and shown layers", function () {
           expect(
             terria.nowViewing.items[0].imageryLayer.imageryProvider.pickFeatures
           ).toHaveBeenCalledWith(
@@ -463,29 +469,29 @@ describe("Leaflet Model", function() {
           ).not.toHaveBeenCalled();
         });
 
-        describe("after pickFeatures returns for all layers", function() {
-          beforeEach(function(done) {
+        describe("after pickFeatures returns for all layers", function () {
+          beforeEach(function (done) {
             finishPickingPromise();
 
             terria.pickedFeatures.allFeaturesAvailablePromise
               .then(done)
-              .otherwise(done.fail);
+              .catch(done.fail);
           });
 
-          it("combines promise results", function() {
+          it("combines promise results", function () {
             expect(terria.pickedFeatures.features[0].name).toBe("1");
             expect(terria.pickedFeatures.features[1].name).toBe("2");
             expect(terria.pickedFeatures.features[2].name).toBe("3");
           });
 
-          it("records pick coords", function() {
+          it("records pick coords", function () {
             expect(terria.pickedFeatures.providerCoords).toEqual({
               "http://example.com/1": { x: 1, y: 2, level: DEFAULT_ZOOM_LEVEL },
               "http://example.com/2": { x: 4, y: 5, level: DEFAULT_ZOOM_LEVEL }
             });
           });
 
-          it("sets imageryLayer on features", function() {
+          it("sets imageryLayer on features", function () {
             expect(terria.pickedFeatures.features[0].imageryLayer).toBe(
               terria.nowViewing.items[0].imageryLayer
             );
@@ -497,9 +503,9 @@ describe("Leaflet Model", function() {
       });
     }
 
-    it("should create GeoJSON for polygon when a rasterized polygon feature is selected", function(done) {
+    it("should create GeoJSON for polygon when a rasterized polygon feature is selected", function (done) {
       loadJson("test/GeoJSON/polygon.geojson")
-        .then(function(polygonGeoJson) {
+        .then(function (polygonGeoJson) {
           initLeaflet();
 
           var entity = new Entity();
@@ -510,7 +516,7 @@ describe("Leaflet Model", function() {
           expect(terria.leaflet._highlightPromise).toBeDefined();
           expect(terria.leaflet._removeHighlightCallback).toBeDefined();
 
-          return terria.leaflet._highlightPromise.then(function() {
+          return terria.leaflet._highlightPromise.then(function () {
             expect(terria.dataSources.length).toBe(1);
             expect(terria.dataSources.get(0) instanceof GeoJsonDataSource).toBe(
               true
@@ -518,12 +524,12 @@ describe("Leaflet Model", function() {
           });
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
 
-    it("should create GeoJSON for polyline when a rasterized polyline feature is selected", function(done) {
+    it("should create GeoJSON for polyline when a rasterized polyline feature is selected", function (done) {
       loadJson("test/GeoJSON/polyline.geojson")
-        .then(function(polylineGeoJson) {
+        .then(function (polylineGeoJson) {
           initLeaflet();
 
           var entity = new Entity();
@@ -534,7 +540,7 @@ describe("Leaflet Model", function() {
           expect(terria.leaflet._highlightPromise).toBeDefined();
           expect(terria.leaflet._removeHighlightCallback).toBeDefined();
 
-          return terria.leaflet._highlightPromise.then(function() {
+          return terria.leaflet._highlightPromise.then(function () {
             expect(terria.dataSources.length).toBe(1);
             expect(terria.dataSources.get(0) instanceof GeoJsonDataSource).toBe(
               true
@@ -542,12 +548,12 @@ describe("Leaflet Model", function() {
           });
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
 
-    it("should update the style of a vector polygon when selected", function(done) {
+    it("should update the style of a vector polygon when selected", function (done) {
       GeoJsonDataSource.load("test/GeoJSON/polygon.geojson")
-        .then(function(dataSource) {
+        .then(function (dataSource) {
           initLeaflet();
 
           terria.dataSources.add(dataSource);
@@ -563,12 +569,12 @@ describe("Leaflet Model", function() {
           );
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
 
-    it("should update the style of a vector polyline when selected", function(done) {
+    it("should update the style of a vector polyline when selected", function (done) {
       GeoJsonDataSource.load("test/GeoJSON/polyline.geojson")
-        .then(function(dataSource) {
+        .then(function (dataSource) {
           initLeaflet();
 
           terria.dataSources.add(dataSource);
@@ -582,7 +588,7 @@ describe("Leaflet Model", function() {
           expect(entity.polyline.width.getValue()).not.toEqual(2);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
 
     function finishPickingPromise() {

@@ -11,7 +11,7 @@ export interface PrimitiveTraitOptions<T> extends TraitOptions {
 }
 
 export default function primitiveTrait<T>(options: PrimitiveTraitOptions<T>) {
-  return function(target: any, propertyKey: string) {
+  return function (target: any, propertyKey: string) {
     const constructor = target.constructor;
     if (!constructor.traits) {
       constructor.traits = {};

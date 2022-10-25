@@ -24,7 +24,7 @@ const Tabs = observer(
     },
 
     async onFileAddFinished(files) {
-      const file = files.find(f => MappableMixin.isMixedInto(f));
+      const file = files.find((f) => MappableMixin.isMixedInto(f));
       if (file) {
         const result = await this.props.viewState.viewCatalogMember(file);
         if (result.error) {
@@ -51,7 +51,7 @@ const Tabs = observer(
           <MyDataTab
             terria={this.props.terria}
             viewState={this.props.viewState}
-            onFileAddFinished={files => this.onFileAddFinished(files)}
+            onFileAddFinished={(files) => this.onFileAddFinished(files)}
           />
         )
       };
@@ -60,7 +60,8 @@ const Tabs = observer(
         return [].concat(
           this.props.terria.catalog.group.memberModels
             .filter(
-              member => member !== this.props.terria.catalog.userAddedDataGroup
+              (member) =>
+                member !== this.props.terria.catalog.userAddedDataGroup
             )
             .map((member, i) => ({
               name: member.nameInCatalog,
@@ -105,11 +106,15 @@ const Tabs = observer(
           this.props.viewState.activeTabIdInCategory = idInCategory;
           if (category === "data-catalog") {
             const member = this.props.terria.catalog.group.memberModels.filter(
-              m => m.uniqueId === idInCategory
+              (m) => m.uniqueId === idInCategory
             )[0];
             // If member was found and member can be opened, open it (causes CkanCatalogGroups to fetch etc.)
             if (defined(member)) {
-              this.props.viewState.viewCatalogMember(member);
+              this.props.viewState
+                .viewCatalogMember(member)
+                .then((result) =>
+                  result.raiseError(this.props.viewState.terria)
+                );
             }
           }
         }
@@ -119,11 +124,11 @@ const Tabs = observer(
     render() {
       const tabs = this.getTabs();
       const sameCategory = tabs.filter(
-        t => t.category === this.props.viewState.activeTabCategory
+        (t) => t.category === this.props.viewState.activeTabCategory
       );
       const currentTab =
         sameCategory.filter(
-          t => t.idInCategory === this.props.viewState.activeTabIdInCategory
+          (t) => t.idInCategory === this.props.viewState.activeTabIdInCategory
         )[0] ||
         sameCategory[0] ||
         tabs[0];
@@ -134,7 +139,7 @@ const Tabs = observer(
             className={Styles.tabList}
             role="tablist"
             css={`
-              background-color: ${p => p.theme.colorPrimary};
+              background-color: ${(p) => p.theme.colorPrimary};
             `}
           >
             <For each="item" index="i" of={tabs}>
@@ -181,7 +186,7 @@ const Tabs = observer(
 );
 
 const ButtonTab = styled.button`
-  ${props => `
+  ${(props) => `
     background: transparent;
     color: ${props.theme.textLight};
     &:hover,
@@ -189,13 +194,15 @@ const ButtonTab = styled.button`
       background: ${props.theme.textLight};
       color: ${props.theme.colorPrimary};
     }
-    ${props.isCurrent &&
+    ${
+      props.isCurrent &&
       `
       background: ${props.theme.textLight};
       color: ${props.theme.colorPrimary};
-    `}
+    `
+    }
 
   `}
 `;
 
-module.exports = withTranslation()(Tabs);
+export default withTranslation()(Tabs);

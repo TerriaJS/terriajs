@@ -1,17 +1,16 @@
-import React, { MouseEventHandler, useEffect, useRef } from "react";
-import { useTranslation } from "react-i18next";
-import styled, { useTheme } from "styled-components";
-import { sortable } from "react-anything-sortable";
 import classNames from "classnames";
 import { TFunction } from "i18next";
-
+import React, { MouseEventHandler, useEffect, useRef } from "react";
+import { sortable } from "react-anything-sortable";
+import { useTranslation } from "react-i18next";
+import styled, { useTheme } from "styled-components";
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
-import Ul from "../../Styled/List";
-import Text from "../../Styled/Text";
-import Spacing from "../../Styled/Spacing";
-import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import Icon, { StyledIcon } from "../../Styled/Icon";
+import Ul from "../../Styled/List";
+import Spacing from "../../Styled/Spacing";
+import Text from "../../Styled/Text";
+import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 
 export interface Story {
   title: string;
@@ -66,15 +65,15 @@ const StoryControl = styled(Box).attrs({
 })``;
 
 const StoryMenuButton = styled(RawButton)`
-  color: ${props => props.theme.textDarker};
-  background-color: ${props => props.theme.textLight};
+  color: ${(props) => props.theme.textDarker};
+  background-color: ${(props) => props.theme.textLight};
 
   ${StyledIcon} {
     width: 35px;
   }
 
   svg {
-    fill: ${props => props.theme.textDarker};
+    fill: ${(props) => props.theme.textDarker};
     width: 18px;
     height: 18px;
   }
@@ -88,12 +87,12 @@ const StoryMenuButton = styled(RawButton)`
 
   &:hover,
   &:focus {
-    color: ${props => props.theme.textLight};
-    background-color: ${props => props.theme.colorPrimary};
+    color: ${(props) => props.theme.textLight};
+    background-color: ${(props) => props.theme.colorPrimary};
 
     svg {
-      fill: ${props => props.theme.textLight};
-      stroke: ${props => props.theme.textLight};
+      fill: ${(props) => props.theme.textLight};
+      stroke: ${(props) => props.theme.textLight};
     }
   }
 `;
@@ -106,57 +105,64 @@ const getTruncatedContent = (text: string) => {
   return except.slice(0, 100);
 };
 
-const toggleMenu = (props: Props): MouseEventHandler<HTMLElement> => event => {
-  event.stopPropagation();
-  props.openMenu();
-};
+const toggleMenu =
+  (props: Props): MouseEventHandler<HTMLElement> =>
+  (event) => {
+    event.stopPropagation();
+    props.openMenu();
+  };
 
-const viewStory = (props: Props): MouseEventHandler<HTMLElement> => event => {
-  event.stopPropagation();
-  props.viewStory();
-  hideList(props);
-};
+const viewStory =
+  (props: Props): MouseEventHandler<HTMLElement> =>
+  (event) => {
+    event.stopPropagation();
+    props.viewStory();
+    hideList(props);
+  };
 
-const deleteStory = (props: Props): MouseEventHandler<HTMLElement> => event => {
-  event.stopPropagation();
-  props.deleteStory();
-  hideList(props);
-};
+const deleteStory =
+  (props: Props): MouseEventHandler<HTMLElement> =>
+  (event) => {
+    event.stopPropagation();
+    props.deleteStory();
+    hideList(props);
+  };
 
-const editStory = (props: Props): MouseEventHandler<HTMLElement> => event => {
-  event.stopPropagation();
-  props.editStory();
-  hideList(props);
-};
+const editStory =
+  (props: Props): MouseEventHandler<HTMLElement> =>
+  (event) => {
+    event.stopPropagation();
+    props.editStory();
+    hideList(props);
+  };
 
-const recaptureStory = (
-  props: Props
-): MouseEventHandler<HTMLElement> => event => {
-  event.stopPropagation();
-  props.recaptureStory();
-  hideList(props);
-};
+const recaptureStory =
+  (props: Props): MouseEventHandler<HTMLElement> =>
+  (event) => {
+    event.stopPropagation();
+    props.recaptureStory();
+    hideList(props);
+  };
 
-const calculateOffset = (props: Props) => (
-  storyRef: React.RefObject<HTMLElement>
-) => {
-  const offsetTop = storyRef.current?.offsetTop || 0;
-  const scrollTop = props.parentRef.current.scrollTop || 0;
-  const heightParent =
-    (storyRef.current?.offsetParent as HTMLElement)?.offsetHeight || 0;
+const calculateOffset =
+  (props: Props) => (storyRef: React.RefObject<HTMLElement>) => {
+    const offsetTop = storyRef.current?.offsetTop || 0;
+    const scrollTop = props.parentRef.current.scrollTop || 0;
+    const heightParent =
+      (storyRef.current?.offsetParent as HTMLElement)?.offsetHeight || 0;
 
-  const offsetTopScroll = offsetTop - scrollTop + 25;
-  if (offsetTopScroll + 125 > heightParent) {
-    return `bottom ${offsetTopScroll + 125 - heightParent + 45}px;`;
-  }
-  return `top: ${offsetTopScroll}px;`;
-};
+    const offsetTopScroll = offsetTop - scrollTop + 25;
+    if (offsetTopScroll + 125 > heightParent) {
+      return `bottom ${offsetTopScroll + 125 - heightParent + 45}px;`;
+    }
+    return `top: ${offsetTopScroll}px;`;
+  };
 
 const renderMenu = (props: MenuProps) => {
   const { t } = props;
 
   return (
-    <Ul>
+    <Ul column>
       <li>
         <StoryMenuButton
           onClick={viewStory(props)}
@@ -314,13 +320,13 @@ const Story = (props: Props) => {
 const MenuButton = styled(RawButton)`
   padding: 0 10px 0 10px;
   min-height: 40px;
-  border-radius: ${props => props.theme.radiusLarge};
+  border-radius: ${(props) => props.theme.radiusLarge};
   background: transparent;
 
   &:hover,
   &:focus {
     opacity: 0.9;
-    background-color: ${props => props.theme.dark};
+    background-color: ${(props) => props.theme.dark};
   }
 `;
 

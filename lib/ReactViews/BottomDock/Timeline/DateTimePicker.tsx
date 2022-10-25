@@ -48,8 +48,8 @@ const monthNames = [
 ];
 
 const GridItem = styled.span<{ active: boolean }>`
-  background: ${p => p.theme.overlay};
-  ${p =>
+  background: ${(p) => p.theme.overlay};
+  ${(p) =>
     p.active &&
     `
     & {
@@ -69,7 +69,7 @@ const GridRowInner = styled.span<{ marginRight: string }>`
     height: 10px;
     width: 2px;
     margin-top: 1px;
-    margin-right: ${p => p.marginRight}px;
+    margin-right: ${(p) => p.marginRight}px;
   }
 `;
 
@@ -93,7 +93,7 @@ const GridHeading = styled.div`
 
 export const GridRow = styled.div`
   :hover {
-    background: ${p => p.theme.overlay};
+    background: ${(p) => p.theme.overlay};
     cursor: pointer;
   }
 `;
@@ -180,29 +180,29 @@ class DateTimePicker extends React.Component<PropsType> {
     let defaultDay: number | undefined;
     let defaultGranularity: Granularity = "century";
 
-    if (datesObject.indice.length === 1) {
+    if (datesObject.index.length === 1) {
       // only one century
-      const soleCentury = datesObject.indice[0];
+      const soleCentury = datesObject.index[0];
       const dataFromThisCentury = datesObject[soleCentury];
       defaultCentury = soleCentury;
 
-      if (dataFromThisCentury.indice.length === 1) {
+      if (dataFromThisCentury.index.length === 1) {
         // only one year, check if this year has only one month
-        const soleYear = dataFromThisCentury.indice[0];
+        const soleYear = dataFromThisCentury.index[0];
         const dataFromThisYear = dataFromThisCentury[soleYear];
         defaultYear = soleYear;
         defaultGranularity = "year";
 
-        if (dataFromThisYear.indice.length === 1) {
+        if (dataFromThisYear.index.length === 1) {
           // only one month data from this one year, need to check day then
-          const soleMonth = dataFromThisYear.indice[0];
+          const soleMonth = dataFromThisYear.index[0];
           const dataFromThisMonth = dataFromThisYear[soleMonth];
           defaultMonth = soleMonth;
           defaultGranularity = "month";
 
-          if (dataFromThisMonth.indice.length === 1) {
+          if (dataFromThisMonth.index.length === 1) {
             // only one day has data
-            defaultDay = dataFromThisMonth.indice[0];
+            defaultDay = dataFromThisMonth.index[0];
           }
         }
       }
@@ -266,12 +266,12 @@ class DateTimePicker extends React.Component<PropsType> {
   }
 
   renderCenturyGrid(datesObject: ObjectifiedDates) {
-    const centuries = datesObject.indice;
+    const centuries = datesObject.index;
     if (datesObject.dates && datesObject.dates.length >= 12) {
       return (
         <Grid>
           <GridHeading>Select a century</GridHeading>
-          {centuries.map(c => (
+          {centuries.map((c) => (
             <DateButton
               key={c}
               css={`
@@ -294,7 +294,7 @@ class DateTimePicker extends React.Component<PropsType> {
 
   renderYearGrid(datesObject: ObjectifiedYears) {
     if (datesObject.dates && datesObject.dates.length > 12) {
-      const years = datesObject.indice;
+      const years = datesObject.index;
       const monthOfYear = (Array.apply as any)(null, { length: 12 }).map(
         Number.call,
         Number
@@ -303,7 +303,7 @@ class DateTimePicker extends React.Component<PropsType> {
         <Grid>
           <GridHeading>Select a year</GridHeading>
           <GridBody>
-            {years.map(y => (
+            {years.map((y) => (
               <GridRow
                 key={y}
                 onClick={() =>
@@ -317,7 +317,7 @@ class DateTimePicker extends React.Component<PropsType> {
               >
                 <GridLabel>{y}</GridLabel>
                 <GridRowInner marginRight="11">
-                  {monthOfYear.map(m => (
+                  {monthOfYear.map((m) => (
                     <GridItem
                       // className={datesObject[y][m] ? Styles.activeGrid : ""}
                       active={isDefined(datesObject[y][m])}
@@ -381,7 +381,7 @@ class DateTimePicker extends React.Component<PropsType> {
               >
                 <GridLabel>{m}</GridLabel>
                 <GridRowInner marginRight="3">
-                  {daysInMonth(i + 1, year).map(d => (
+                  {daysInMonth(i + 1, year).map((d) => (
                     <GridItem
                       active={
                         isDefined(datesObject[year][i]) &&
@@ -415,8 +415,8 @@ class DateTimePicker extends React.Component<PropsType> {
       // Create one date object per day, using an arbitrary time. This does it via Object.keys and moment().
       const days =
         datesObject[this.currentDateIndice.year][this.currentDateIndice.month]
-          .indice;
-      const daysToDisplay = days.map(d =>
+          .index;
+      const daysToDisplay = days.map((d) =>
         moment()
           .date(d)
           .month(this.currentDateIndice.month!)
@@ -495,7 +495,7 @@ class DateTimePicker extends React.Component<PropsType> {
         <Grid>
           <GridHeading>Select a time</GridHeading>
           <GridBody>
-            {items.map(item => (
+            {items.map((item) => (
               <DateButton
                 key={formatDateTime(item)}
                 onClick={() => {
@@ -524,7 +524,7 @@ class DateTimePicker extends React.Component<PropsType> {
     }
     const timeOptions = datesObject[this.currentDateIndice.year][
       this.currentDateIndice.month
-    ][this.currentDateIndice.day].dates.map(m => ({
+    ][this.currentDateIndice.day].dates.map((m) => ({
       value: m,
       label: formatDateTime(m)
     }));
@@ -540,7 +540,7 @@ class DateTimePicker extends React.Component<PropsType> {
           <GridBody>
             {datesObject[this.currentDateIndice.year][
               this.currentDateIndice.month
-            ][this.currentDateIndice.day].indice.map(item => (
+            ][this.currentDateIndice.day].index.map((item) => (
               <DateButton
                 key={item}
                 onClick={() =>
@@ -641,7 +641,7 @@ class DateTimePicker extends React.Component<PropsType> {
             width: 30px;
             height: 30px;
           `}
-          onClick={event => {
+          onClick={(event) => {
             event.stopPropagation();
           }}
         >

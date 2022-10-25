@@ -8,8 +8,8 @@ import Camera from "terriajs-cesium/Source/Scene/Camera";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import Terria from "./Terria";
 
-const sampleTerrainMostDetailed = require("terriajs-cesium/Source/Core/sampleTerrainMostDetailed")
-  .default;
+const sampleTerrainMostDetailed =
+  require("terriajs-cesium/Source/Core/sampleTerrainMostDetailed").default;
 
 interface EventLoopState {
   intervalId?: any;
@@ -193,11 +193,11 @@ export default class AugmentedVirtuality {
       flyToHeight(0);
     } else {
       const terrainProvider = this.scene.terrainProvider;
-      sampleTerrainMostDetailed(terrainProvider, [hoverPosition]).then(function(
-        updatedPosition: Cartographic[]
-      ) {
-        flyToHeight(updatedPosition[0].height);
-      });
+      sampleTerrainMostDetailed(terrainProvider, [hoverPosition]).then(
+        function (updatedPosition: Cartographic[]) {
+          flyToHeight(updatedPosition[0].height);
+        }
+      );
     }
   }
 
@@ -249,7 +249,7 @@ export default class AugmentedVirtuality {
     } else {
       const terrainProvider = scene.terrainProvider;
       sampleTerrainMostDetailed(terrainProvider, [cameraPosition]).then(
-        function(updatedPosition: Array<Cartographic>) {
+        function (updatedPosition: Array<Cartographic>) {
           moveToLocation(updatedPosition[0].height);
         }
       );

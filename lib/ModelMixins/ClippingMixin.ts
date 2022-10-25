@@ -104,7 +104,7 @@ function ClippingMixin<T extends Constructor<BaseType>>(
 
       const clipDirection =
         this.clippingBox.clipDirection === "inside" ? -1 : 1;
-      const planes = BoxDrawing.localSidePlanes.map(plane => {
+      const planes = BoxDrawing.localSidePlanes.map((plane) => {
         return new ClippingPlane(plane.normal, plane.distance * clipDirection);
       });
       const clippingPlaneCollection = new ClippingPlaneCollection({
@@ -198,7 +198,8 @@ function ClippingMixin<T extends Constructor<BaseType>>(
 
       if (this._clippingBoxDrawing) {
         this._clippingBoxDrawing.setTransform(boxTransform);
-        this._clippingBoxDrawing.keepBoxAboveGround = this.clippingBox.keepBoxAboveGround;
+        this._clippingBoxDrawing.keepBoxAboveGround =
+          this.clippingBox.keepBoxAboveGround;
       } else {
         this._clippingBoxDrawing = BoxDrawing.fromTransform(
           cesium,
@@ -233,7 +234,7 @@ function ClippingMixin<T extends Constructor<BaseType>>(
                     width: dimensions.y,
                     height: dimensions.z
                   }
-                );
+                ).logError("Failed to update clipping box dimensions");
 
                 const rotationMatrix = Matrix3.getRotation(
                   Matrix4.getMatrix3(modelMatrix, new Matrix3()),

@@ -5,11 +5,11 @@ import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
+import FeatureInfoUrlTemplateTraits from "./FeatureInfoTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 import StyleTraits from "./StyleTraits";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
-import LegendOwnerTraits from "./LegendOwnerTraits";
 
 export class PerPropertyGeoJsonStyleTraits extends ModelTraits {
   @anyTrait({
@@ -37,9 +37,9 @@ export class PerPropertyGeoJsonStyleTraits extends ModelTraits {
 }
 
 export class GeoJsonTraits extends mixTraits(
+  FeatureInfoUrlTemplateTraits,
   LegendOwnerTraits,
   TableTraits,
-  FeatureInfoTraits,
   UrlTraits
 ) {
   /** Override TableTraits which aren't applicable to GeoJsonTraits */
@@ -51,21 +51,21 @@ export class GeoJsonTraits extends mixTraits(
   })
   enableManualRegionMapping: false = false;
 
+  @primitiveTrait({
+    name: "Use outline color for line features",
+    description:
+      "If enabled, TableOutlineStyleTraits will be used to color Line Features, otherwise TableColorStyleTraits will be used.",
+    type: "boolean"
+  })
+  useOutlineColorForLineFeatures?: boolean;
+
   @objectTrait({
     type: StyleTraits,
     name: "Style",
     description:
-      "Styling rules that follow [simplestyle-spec](https://github.com/mapbox/simplestyle-spec). If using geojson-vt/TableStyleTraits, then this style will be used as the default style (which will be overriden by TableStyleTraits). To disable TableStyleTraits, see `disableTableStyle`."
+      "Styling rules that follow [simplestyle-spec](https://github.com/mapbox/simplestyle-spec). If defined, then `forceCesiumPrimitives` will be true. For styling MVT/protomaps - see `TableStyleTraits`"
   })
   style?: StyleTraits;
-
-  @primitiveTrait({
-    type: "boolean",
-    name: "Disable table style",
-    description:
-      "If true, all table styling will be disabled. This only applies to geojson-vt/protomaps (see `forceCesiumPrimitives`). It disabled, `style` rules will be used instead"
-  })
-  disableTableStyle: boolean = false;
 
   @primitiveTrait({
     type: "boolean",
@@ -79,7 +79,7 @@ export class GeoJsonTraits extends mixTraits(
     type: "boolean",
     name: "Force cesium primitives",
     description:
-      "Force rendering GeoJSON features as Cesium primitives. This will be true if you are using `perPropertyStyles`, `timeProperty`, `heightProperty` or `czmlTemplate`. If undefined, geojson-vt/protomaps will be used"
+      "Force rendering GeoJSON features as Cesium primitives. This will be true if you are using `style`, `perPropertyStyles`, `timeProperty`, `heightProperty` or `czmlTemplate`. If undefined, geojson-vt/protomaps will be used. This will be set to true if simplestyle-spec properties are detected in over 50% of GeoJSON features, or if any MultiPoint features are found "
   })
   forceCesiumPrimitives?: boolean;
 

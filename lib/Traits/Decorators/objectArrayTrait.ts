@@ -32,7 +32,7 @@ export interface ObjectArrayTraitOptions<T extends ModelTraits>
 export default function objectArrayTrait<T extends ModelTraits>(
   options: ObjectArrayTraitOptions<T>
 ) {
-  return function(target: any, propertyKey: string) {
+  return function (target: any, propertyKey: string) {
     const constructor = target.constructor;
     if (!constructor.traits) {
       constructor.traits = {};
@@ -129,7 +129,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
     // For example:
     // - In "definition" stratum, we set the objectArray to: [{item:"one", value:"a"}, {item:"two", value:"b"}]
     // - The in "user" stratum, we remove the {item:"two", value:"b"} element
-    // - Then the corrent model will only have {item:"one", value:"a"}
+    // - Then the correct model will only have {item:"one", value:"a"}
 
     // For more info see objectArrayTraitSpec.ts # allows strata to remove elements
 
@@ -145,7 +145,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
     // Correct ids are:
     // - Ids ordered by strata bottom to top combined with
     // - Ids removed by strata top to bottom
-    const ids = Array.from(idsInCorrectOrder).filter(id =>
+    const ids = Array.from(idsInCorrectOrder).filter((id) =>
       idsWithCorrectRemovals.has(id)
     );
 
@@ -155,7 +155,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
 
     const result: Model<T>[] = [];
 
-    ids.forEach(value => {
+    ids.forEach((value) => {
       result.push(this.createObject(model, value));
     });
 
@@ -182,11 +182,11 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
 
     const errors: TerriaError[] = [];
 
-    const resultArray = jsonValue.map(jsonElement => {
+    const resultArray = jsonValue.map((jsonElement) => {
       const ResultType = this.type;
       const result: any = createStratumInstance(ResultType);
 
-      Object.keys(jsonElement).forEach(propertyName => {
+      Object.keys(jsonElement).forEach((propertyName) => {
         const trait = ResultType.traits[propertyName];
         if (trait === undefined) {
           errors.push(
@@ -229,7 +229,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
       return undefined;
     }
 
-    return value.map(element => saveStratumToJson(this.type.traits, element));
+    return value.map((element) => saveStratumToJson(this.type.traits, element));
   }
 
   isSameType(trait: Trait): boolean {

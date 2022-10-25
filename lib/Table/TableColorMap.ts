@@ -19,6 +19,7 @@ import TableColorStyleTraits, {
 } from "../Traits/TraitsClasses/TableColorStyleTraits";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
+import { StyleMapType } from "./TableStyleMap";
 
 const getColorForId = createColorForIdTransformer();
 const DEFAULT_COLOR = "yellow";
@@ -104,6 +105,16 @@ export default class TableColorMap {
     readonly colorTraits: Model<TableColorStyleTraits>
   ) {}
 
+  @computed get type(): StyleMapType {
+    return this.colorMap instanceof DiscreteColorMap
+      ? "bin"
+      : this.colorMap instanceof ContinuousColorMap
+      ? "continuous"
+      : this.colorMap instanceof EnumColorMap
+      ? "enum"
+      : "constant";
+  }
+
   /**
    * Gets an object used to map values in {@link #colorColumn} to colors
    * for this style.
@@ -125,9 +136,15 @@ export default class TableColorMap {
     const colorTraits = this.colorTraits;
 
     // If column type is `scalar` - use DiscreteColorMap or ContinuousColorMap
-    if (colorColumn && colorColumn.type === TableColumnType.scalar) {
+    if (
+      (!colorTraits.mapType ||
+        colorTraits.mapType === "continuous" ||
+        colorTraits.mapType === "bin") &&
+      colorColumn &&
+      colorColumn.type === TableColumnType.scalar
+    ) {
       // If column type is `scalar` and we have binMaximums - use DiscreteColorMap
-      if (this.binMaximums.length > 0) {
+      if (colorTraits.mapType !== "continuous" && this.binMaximums.length > 0) {
         return new DiscreteColorMap({
           bins: this.binColors.map((color, i) => {
             return {
@@ -142,6 +159,7 @@ export default class TableColorMap {
 
       // If column type is `scalar` and we have a valid minValue and maxValue - use ContinuousColorMap
       if (
+        colorTraits.mapType !== "bin" &&
         isDefined(this.minimumValue) &&
         isDefined(this.maximumValue) &&
         this.minimumValue < this.maximumValue
@@ -177,16 +195,18 @@ export default class TableColorMap {
       // If no useful ColorMap could be found for the scalar column - we will create a ConstantColorMap at the end of the function
     }
 
-    // If column type is `enum` or `region` - and we have enough binColors to represent uniqueValues - use EnumColorMap
+    // If column type is `enum` or `region` - use EnumColorMap
     else if (
       colorColumn &&
-      (colorColumn.type === TableColumnType.enum ||
-        colorColumn.type === TableColumnType.region) &&
-      this.enumColors.length > 0
+      ((!colorTraits.mapType &&
+        (colorColumn.type === TableColumnType.enum ||
+          colorColumn.type === TableColumnType.region) &&
+        this.enumColors.length > 0) ||
+        colorTraits.mapType === "enum")
     ) {
       return new EnumColorMap({
         enumColors: filterOutUndefined(
-          this.enumColors.map(e => {
+          this.enumColors.map((e) => {
             if (e.value === undefined || e.color === undefined) {
               return undefined;
             }
@@ -338,7 +358,7 @@ export default class TableColorMap {
           color
         };
       })
-      .filter(color => isDefined(color.value));
+      .filter((color) => isDefined(color.value));
   }
 
   /** This color is used to color values outside minimumValue and maximumValue - it is only used for ContinuousColorMaps
@@ -462,8 +482,8 @@ export default class TableColorMap {
    * - colorColumn is scalar and the activeStyle has a regionColumn
    */
   @computed get regionValues() {
-    const regionColumn = this.colorColumn?.tableModel.activeTableStyle
-      .regionColumn;
+    const regionColumn =
+      this.colorColumn?.tableModel.activeTableStyle.regionColumn;
     if (this.colorColumn?.type !== TableColumnType.scalar || !regionColumn)
       return;
 
@@ -482,7 +502,7 @@ export default class TableColorMap {
     const values =
       this.regionValues ?? this.colorColumn?.valuesAsNumbers.values;
     if (values) {
-      return values.filter(val => val !== null) as number[];
+      return values.filter((val) => val !== null) as number[];
     }
   }
 
@@ -524,12 +544,14 @@ export default class TableColorMap {
 
     // Array of row group values
     const rowGroupValues = rowGroups.map(
-      group =>
-        group[1].map(row => values[row]).filter(val => val !== null) as number[]
+      (group) =>
+        group[1]
+          .map((row) => values[row])
+          .filter((val) => val !== null) as number[]
     );
 
     // Get average value for each row group
-    const rowGroupAverages = rowGroupValues.map(val => getMean(val));
+    const rowGroupAverages = rowGroupValues.map((val) => getMean(val));
     const definedRowGroupAverages = filterOutUndefined(rowGroupAverages);
     const std = getStandardDeviation(definedRowGroupAverages);
     const mean = getMean(definedRowGroupAverages);
@@ -707,7 +729,7 @@ function getStandardDeviation(array: number[]) {
   const mean = getMean(array);
   return isDefined(mean)
     ? Math.sqrt(
-        array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n
+        array.map((x) => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n
       )
     : undefined;
 }

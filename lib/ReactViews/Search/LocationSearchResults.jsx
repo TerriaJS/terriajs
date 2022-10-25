@@ -25,7 +25,7 @@ import Text, { TextSpan } from "../../Styled/Text";
 import { RawButton } from "../../Styled/Button";
 
 const RawButtonAndHighlight = styled(RawButton)`
-  ${p => `
+  ${(p) => `
   &:hover, &:focus {
     background-color: ${p.theme.greyLighter};
     ${StyledIcon} {
@@ -92,11 +92,11 @@ const LocationSearchResults = observer(
       const search = this.props.search;
       const { isOpen, isExpanded } = this.state;
       const searchProvider = search.searchProvider;
-      const locationSearchBoundingBox = this.props.terria.configParameters
-        .locationSearchBoundingBox;
+      const locationSearchBoundingBox =
+        this.props.terria.configParameters.locationSearchBoundingBox;
 
       const validResults = isDefined(locationSearchBoundingBox)
-        ? search.results.filter(function(r) {
+        ? search.results.filter(function (r) {
             return (
               r.location.longitude > locationSearchBoundingBox[0] &&
               r.location.longitude < locationSearchBoundingBox[2] &&
@@ -177,9 +177,9 @@ const LocationSearchResults = observer(
                 justifySpaceBetween
               >
                 <RawButton onClick={this.toggleExpand}>
-                  <Text small isLink>
+                  <TextSpan small isLink>
                     {this.renderResultsFooter()}
-                  </Text>
+                  </TextSpan>
                 </RawButton>
               </BoxSpan>
             )}

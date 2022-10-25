@@ -1,27 +1,27 @@
 import { action } from "mobx";
-import { LineSymbolizer, PolygonSymbolizer } from "terriajs-protomaps";
+import { LineSymbolizer, PolygonSymbolizer } from "protomaps";
 import ProtomapsImageryProvider from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import MapboxVectorTileCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/MapboxVectorTileCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../../lib/Models/Terria";
 
-describe("MapboxVectorTileCatalogItem", function() {
+describe("MapboxVectorTileCatalogItem", function () {
   let mvt: MapboxVectorTileCatalogItem;
 
-  beforeEach(function() {
+  beforeEach(function () {
     mvt = new MapboxVectorTileCatalogItem("test", new Terria());
   });
 
-  it("has a type", function() {
+  it("has a type", function () {
     expect(MapboxVectorTileCatalogItem.type).toBe("mvt");
     expect(mvt.type).toBe("mvt");
   });
 
-  describe("imageryProvider", function() {
+  describe("imageryProvider", function () {
     let imageryProvider: ProtomapsImageryProvider;
 
-    beforeEach(async function() {
+    beforeEach(async function () {
       mvt.setTrait(CommonStrata.user, "url", "http://test");
       mvt.setTrait(CommonStrata.user, "layer", "test-layer");
       await mvt.loadMapItems();
@@ -32,15 +32,15 @@ describe("MapboxVectorTileCatalogItem", function() {
         .imageryProvider as ProtomapsImageryProvider;
     });
 
-    it("is an instance of ProtomapsImageryProvider", function() {
+    it("is an instance of ProtomapsImageryProvider", function () {
       expect(imageryProvider instanceof ProtomapsImageryProvider).toBeTruthy();
     });
   });
 
-  describe("legends", function() {
+  describe("legends", function () {
     it(
       "constructs a default legend from the definition",
-      action(async function() {
+      action(async function () {
         mvt.setTrait(CommonStrata.user, "fillColor", "red");
         mvt.setTrait(CommonStrata.user, "lineColor", "yellow");
         mvt.setTrait(CommonStrata.user, "name", "Test");
@@ -53,10 +53,10 @@ describe("MapboxVectorTileCatalogItem", function() {
     );
   });
 
-  describe("paint rules", function() {
+  describe("paint rules", function () {
     it(
       "creates paint rules from simple styles",
-      action(async function() {
+      action(async function () {
         mvt.setTrait(CommonStrata.user, "fillColor", "red");
         mvt.setTrait(CommonStrata.user, "lineColor", "yellow");
         mvt.setTrait(CommonStrata.user, "layer", "Test");

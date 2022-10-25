@@ -16,7 +16,10 @@ import UrlMixin from "../../../ModelMixins/UrlMixin";
 import xml2json from "../../../ThirdParty/xml2json";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
-import WebFeatureServiceCatalogItemTraits from "../../../Traits/TraitsClasses/WebFeatureServiceCatalogItemTraits";
+import WebFeatureServiceCatalogItemTraits, {
+  SUPPORTED_CRS_4326,
+  SUPPORTED_CRS_3857
+} from "../../../Traits/TraitsClasses/WebFeatureServiceCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
@@ -72,12 +75,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
   @computed
   get capabilitiesFeatureTypes(): ReadonlyMap<string, FeatureType | undefined> {
-    const lookup: (
-      name: string
-    ) => [string, FeatureType | undefined] = name => [
-      name,
-      this.capabilities && this.capabilities.findLayer(name)
-    ];
+    const lookup: (name: string) => [string, FeatureType | undefined] = (
+      name
+    ) => [name, this.capabilities && this.capabilities.findLayer(name)];
     return new Map(this.catalogItem.typeNamesArray.map(lookup));
   }
 
@@ -168,7 +168,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     // If more than one layer, push layer description titles for each applicable layer
     if (this.capabilitiesFeatureTypes.size > 1) {
       layerDescriptions = [];
-      this.capabilitiesFeatureTypes.forEach(layer => {
+      this.capabilitiesFeatureTypes.forEach((layer) => {
         if (
           layer &&
           layer.Abstract &&
@@ -238,6 +238,68 @@ class GetCapabilitiesStratum extends LoadableStratum(
       return keyword === "GEOSERVER";
     }
   }
+
+  // Helper function to check if geojson output is supported (by checking GetCapabilities OutputTypes OR FeatureType OutputTypes)
+  hasJsonOutputFormat = (outputFormats: string[] | undefined) => {
+    return isDefined(
+      outputFormats?.find((format) =>
+        ["json", "JSON", "application/json"].includes(format)
+      )
+    );
+  };
+
+  // Find which GML formats are supported, choose the one most suited to Terria. If not available, default to "gml3"
+  @computed
+  get outputFormat(): string | undefined {
+    const supportsGeojson =
+      this.hasJsonOutputFormat(this.capabilities.outputTypes) ||
+      [...this.capabilitiesFeatureTypes.values()].reduce<boolean>(
+        (hasGeojson, current) =>
+          hasGeojson && this.hasJsonOutputFormat(current?.OutputFormats),
+        true
+      );
+
+    const searchValue = new RegExp(".*gml/3.1.1.*|.*gml3.1.1.*");
+
+    return supportsGeojson
+      ? "JSON"
+      : this.capabilities.outputTypes?.find((outputFormat) =>
+          searchValue.test(outputFormat)
+        ) ?? "gml3";
+  }
+
+  /** Finds the best srsName to use.
+   * First checks if one provided in url. If one is provided in url, and this is supported by Terria, will use this.
+   * Note that an error will be thrown if user supplied srsName is not supported by the user supplied WFS service.
+   * If no srsName provided, or the provided one is not supported by Terria,
+   * then checks getCapabilities response and returns the first listed srs that is included in our list of supported srs.
+   * This enables us to use a urn identifier if supported, or a normal EPSG code if not.
+   * e.g. "urn:ogc:def:crs:EPSG::4326" or "EPSG:4326"
+   **/
+  @computed
+  get srsName(): string | undefined {
+    // First check to see if URL has CRS or SRS
+    const supportedCrs = [...SUPPORTED_CRS_3857, ...SUPPORTED_CRS_4326];
+    const queryParams: any = this.catalogItem.uri?.query(true) ?? {};
+    const urlCrs =
+      queryParams.srsName ??
+      queryParams.crs ??
+      queryParams.CRS ??
+      queryParams.srs ??
+      queryParams.SRS;
+    if (urlCrs && supportedCrs.includes(urlCrs)) return urlCrs;
+
+    // If no srsName provided, then find what the server supports and use the best one for Terria
+    const layerSrsArray = this.capabilities.srsNames?.find(
+      (layer) => layer.layerName === this.catalogItem.typeNamesArray[0] //If multiple layers in this WFS request, only use the first layer to find best srsName
+    );
+
+    return (
+      layerSrsArray?.srsArray.find((srsName) =>
+        SUPPORTED_CRS_4326.includes(srsName)
+      ) ?? "urn:ogc:def:crs:EPSG::4326" // Default to urn identifier for WGS84 if we cant find something better. Sometimes WFS service will support this even if not specified in GetCapabilities response.
+    );
+  }
 }
 
 class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
@@ -301,11 +363,10 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
   }
 
   protected async forceLoadGeojsonData(): Promise<FeatureCollectionWithCrs> {
-    const getCapabilitiesStratum:
-      | GetCapabilitiesStratum
-      | undefined = this.strata.get(
-      GetCapabilitiesMixin.getCapabilitiesStratumName
-    ) as GetCapabilitiesStratum;
+    const getCapabilitiesStratum: GetCapabilitiesStratum | undefined =
+      this.strata.get(
+        GetCapabilitiesMixin.getCapabilitiesStratumName
+      ) as GetCapabilitiesStratum;
 
     if (!this.uri) {
       throw new TerriaError({
@@ -320,7 +381,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
 
     // Check if layers exist
     const missingLayers = this.typeNamesArray.filter(
-      layer => !getCapabilitiesStratum.capabilitiesFeatureTypes.has(layer)
+      (layer) => !getCapabilitiesStratum.capabilitiesFeatureTypes.has(layer)
     );
     if (missingLayers.length > 0) {
       throw new TerriaError({
@@ -335,25 +396,6 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
       });
     }
 
-    // Check if geojson output is supported (by checking GetCapabilities OutputTypes OR FeatureType OutputTypes)
-    const hasOutputFormat = (outputFormats: string[] | undefined) => {
-      return isDefined(
-        outputFormats?.find(format =>
-          ["json", "JSON", "application/json"].includes(format)
-        )
-      );
-    };
-
-    const supportsGeojson =
-      hasOutputFormat(getCapabilitiesStratum.capabilities.outputTypes) ||
-      [...getCapabilitiesStratum.capabilitiesFeatureTypes.values()].reduce<
-        boolean
-      >(
-        (hasGeojson, current) =>
-          hasGeojson && hasOutputFormat(current?.OutputFormats),
-        true
-      );
-
     const url = this.uri
       .clone()
       .setSearch(
@@ -363,8 +405,8 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
             request: "GetFeature",
             typeName: this.typeNames,
             version: "1.1.0",
-            outputFormat: supportsGeojson ? "JSON" : "gml3",
-            srsName: "urn:ogc:def:crs:EPSG::4326", // srsName must be formatted like this for correct lat/long order  >:(
+            outputFormat: this.outputFormat,
+            srsName: this.srsName,
             maxFeatures: this.maxFeatures
           },
           this.parameters
@@ -376,7 +418,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
 
     // Check for errors (if supportsGeojson and the request returns XML, OR the response includes ExceptionReport)
     if (
-      (supportsGeojson && getFeatureResponse.startsWith("<")) ||
+      (this.outputFormat === "JSON" && getFeatureResponse.startsWith("<")) ||
       getFeatureResponse.includes("ExceptionReport")
     ) {
       let errorMessage: string | undefined;
@@ -396,9 +438,10 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
       });
     }
 
-    let geojsonData = supportsGeojson
-      ? JSON.parse(getFeatureResponse)
-      : gmlToGeoJson(getFeatureResponse);
+    let geojsonData =
+      this.outputFormat === "JSON"
+        ? JSON.parse(getFeatureResponse)
+        : gmlToGeoJson(getFeatureResponse);
 
     const fc = toFeatureCollection(geojsonData);
     if (fc) return fc;
@@ -422,7 +465,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
   get shortReport(): string | undefined {
     // Show notice if reached
     if (
-      isObservableArray(this.readyData?.features) &&
+      this.readyData?.features !== undefined &&
       this.readyData!.features.length >= this.maxFeatures
     ) {
       return i18next.t(

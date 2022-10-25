@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
 import ViewState from "../../ReactViewModels/ViewState";
-import Box from "../../Styled/Box";
+import Box, { BoxSpan } from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
@@ -15,7 +15,7 @@ export interface FrameProps {
   viewState: ViewState;
 }
 
-export const Frame: React.FC<FrameProps> = observer(props => {
+export const Frame: React.FC<FrameProps> = observer((props) => {
   const theme = useTheme();
   const [t] = useTranslation();
   const [showChildren, setShowChildren] = useState(true);
@@ -37,13 +37,13 @@ export const Frame: React.FC<FrameProps> = observer(props => {
           <Spacing right={4} />
           {/* collapse button */}
           <RawButton onClick={() => setShowChildren(!showChildren)}>
-            <Box paddedRatio={1} centered>
+            <BoxSpan paddedRatio={1} centered>
               <StyledIcon
                 styledWidth="12px"
                 light
                 glyph={showChildren ? GLYPHS.opened : GLYPHS.closed}
               />
-            </Box>
+            </BoxSpan>
           </RawButton>
         </Box>
       </Toggle>
@@ -58,7 +58,7 @@ export const Main = styled(Text)`
   padding: 15px;
   overflow-y: auto;
   ${({ theme }) => theme.borderRadiusBottom(theme.radius40Button)}
-  background-color: ${p => p.theme.darkWithOverlay};
+  background-color: ${(p) => p.theme.darkWithOverlay};
   min-height: 350px;
 `;
 
@@ -71,8 +71,8 @@ const Wrapper = styled(Box).attrs({
   top: 70px;
   left: 0px;
   min-height: 220px;
-  // background: ${p => p.theme.dark};
-  margin-left: ${props =>
+  // background: ${(p) => p.theme.dark};
+  margin-left: ${(props) =>
     props.isMapFullScreen ? 16 : parseInt(props.theme.workbenchWidth) + 40}px;
   transition: margin-left 0.25s;
 `;
@@ -86,7 +86,7 @@ interface ToolCloseButtonProps {
   t: TFunction;
 }
 
-const ToolCloseButton: React.FC<ToolCloseButtonProps> = props => {
+const ToolCloseButton: React.FC<ToolCloseButtonProps> = (props) => {
   return (
     <RawButton onClick={() => props.viewState.closeTool()}>
       <Text textLight small semiBold uppercase>
@@ -101,7 +101,7 @@ interface TitleProps {
   icon?: { id: string };
 }
 
-const Title: React.FC<TitleProps> = props => {
+const Title: React.FC<TitleProps> = (props) => {
   return (
     <Box centered>
       <Box>

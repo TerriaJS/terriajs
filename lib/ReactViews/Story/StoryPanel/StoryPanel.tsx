@@ -4,25 +4,27 @@ import { observer } from "mobx-react";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Swipeable } from "react-swipeable";
+import { DefaultTheme, withTheme } from "styled-components";
 import {
   Category,
   StoryAction
 } from "../../../Core/AnalyticEvents/analyticEvents";
+import { animateEnd } from "../../../Core/animation";
 import getPath from "../../../Core/getPath";
 import TerriaError from "../../../Core/TerriaError";
 import Terria from "../../../Models/Terria";
-import { Story } from "../Story";
-import ViewState from "../../../ReactViewModels/ViewState";
-import Styles from "../story-panel.scss";
-import { animateEnd } from "../../../Core/animation";
-import TitleBar from "./TitleBar";
-import FooterBar from "./StoryFooterBar";
-import StoryBody from "./StoryBody";
 import Box from "../../../Styled/Box";
 import Hr from "../../../Styled/Hr";
-import { DefaultTheme, withTheme } from "styled-components";
 import { onStoryButtonClick } from "../../Map/StoryButton/StoryButton";
-import { exit } from "../../Transitions/FadeIn/fade-in.scss";
+import {
+  WithViewState,
+  withViewState
+} from "../../StandardUserInterface/ViewStateContext";
+import { Story } from "../Story";
+import Styles from "../story-panel.scss";
+import StoryBody from "./StoryBody";
+import FooterBar from "./StoryFooterBar";
+import TitleBar from "./TitleBar";
 
 /**
  *
@@ -65,7 +67,7 @@ export async function activateStory(scene: Story, terria: Terria) {
     }
   }
 
-  terria.workbench.items.forEach(item => {
+  terria.workbench.items.forEach((item) => {
     terria.analytics?.logEvent(
       Category.story,
       StoryAction.datasetView,
@@ -74,9 +76,7 @@ export async function activateStory(scene: Story, terria: Terria) {
   });
 }
 
-interface Props extends WithTranslation {
-  terria: Terria;
-  viewState: ViewState;
+interface Props extends WithTranslation, WithViewState {
   theme: DefaultTheme;
 }
 
@@ -87,7 +87,7 @@ interface State {
 
 @observer
 class StoryPanel extends React.Component<Props, State> {
-  escKeyListener: EventListener | undefined;
+  keydownListener: EventListener | undefined;
   slideRef: React.RefObject<HTMLElement>;
 
   constructor(props: Props) {
@@ -100,7 +100,7 @@ class StoryPanel extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const stories = this.props.terria.stories || [];
+    const stories = this.props.viewState.terria.stories || [];
     if (
       this.props.viewState.currentStoryId > stories.length - 1 ||
       this.props.viewState.currentStoryId < 0
@@ -111,12 +111,25 @@ class StoryPanel extends React.Component<Props, State> {
 
     this.slideIn();
 
-    this.escKeyListener = (e: Event) => {
+    this.keydownListener = (e: Event) => {
+      // Use else if for keydown events so only first one is recognised in case of multiple key presses
       if ((e as KeyboardEvent).key === "Escape") {
         this.exitStory();
+      } else if (
+        (e as KeyboardEvent).key === "ArrowRight" ||
+        (e as KeyboardEvent).key === "ArrowDown"
+      ) {
+        this.props.viewState.currentStoryId + 1 != stories.length &&
+          this.goToNextStory();
+      } else if (
+        (e as KeyboardEvent).key === "ArrowLeft" ||
+        (e as KeyboardEvent).key === "ArrowUp"
+      ) {
+        this.props.viewState.currentStoryId != 0 && this.goToPrevStory();
       }
     };
-    window.addEventListener("keydown", this.escKeyListener, true);
+
+    window.addEventListener("keydown", this.keydownListener, true);
   }
 
   slideIn() {
@@ -144,35 +157,35 @@ class StoryPanel extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    if (this.escKeyListener) {
-      window.removeEventListener("keydown", this.escKeyListener, false);
+    if (this.keydownListener) {
+      window.removeEventListener("keydown", this.keydownListener, true);
     }
   }
 
   navigateStory(index: number) {
     if (index < 0) {
-      index = this.props.terria.stories.length - 1;
-    } else if (index >= this.props.terria.stories.length) {
+      index = this.props.viewState.terria.stories.length - 1;
+    } else if (index >= this.props.viewState.terria.stories.length) {
       index = 0;
     }
     if (index !== this.props.viewState.currentStoryId) {
       runInAction(() => {
         this.props.viewState.currentStoryId = index;
       });
-      if (index < (this.props.terria.stories || []).length) {
-        this.activateStory(this.props.terria.stories[index]);
+      if (index < (this.props.viewState.terria.stories || []).length) {
+        this.activateStory(this.props.viewState.terria.stories[index]);
       }
     }
   }
 
   // This is in StoryPanel and StoryBuilder
   activateStory(_story: Story | any) {
-    const story = _story ? _story : this.props.terria.stories[0];
-    activateStory(story, this.props.terria);
+    const story = _story ? _story : this.props.viewState.terria.stories[0];
+    activateStory(story, this.props.viewState.terria);
   }
 
   onCenterScene(story: Story) {
-    activateStory(story, this.props.terria);
+    activateStory(story, this.props.viewState.terria);
   }
 
   goToPrevStory() {
@@ -188,13 +201,13 @@ class StoryPanel extends React.Component<Props, State> {
       runInAction(() => {
         this.props.viewState.storyShown = false;
       });
-      this.props.terria.currentViewer.notifyRepaintRequired();
+      this.props.viewState.terria.currentViewer.notifyRepaintRequired();
     });
     this.slideOut();
   }
 
   render() {
-    const stories = this.props.terria.stories || [];
+    const stories = this.props.viewState.terria.stories || [];
     const story = stories[this.props.viewState.currentStoryId];
 
     return (
@@ -220,11 +233,11 @@ class StoryPanel extends React.Component<Props, State> {
             ${!this.props.viewState.storyShown && "display: none;"}
             @media (min-width: 992px) {
               ${this.props.viewState.isMapFullScreen &&
-                `
+              `
                 transition-delay: 0.5s;
               `}
               ${!this.props.viewState.isMapFullScreen &&
-                `
+              `
                 padding-left: calc(30px + ${this.props.theme.workbenchWidth}px);
                 padding-right: 50px;
               `}
@@ -273,7 +286,7 @@ class StoryPanel extends React.Component<Props, State> {
                     this.props.viewState.storyShown = false;
                   });
                   onStoryButtonClick({
-                    terria: this.props.terria,
+                    terria: this.props.viewState.terria,
                     theme: this.props.theme,
                     viewState: this.props.viewState,
                     animationDuration: 250
@@ -288,4 +301,4 @@ class StoryPanel extends React.Component<Props, State> {
   }
 }
 
-export default withTranslation()(withTheme(StoryPanel));
+export default withTranslation()(withViewState(withTheme(StoryPanel)));

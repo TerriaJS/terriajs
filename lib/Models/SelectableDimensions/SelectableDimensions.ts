@@ -21,6 +21,7 @@ export interface EnumDimension<T = string> extends Dimension {
   readonly options?: readonly EnumDimensionOption<T>[];
   readonly selectedId?: T;
   readonly allowUndefined?: boolean;
+  readonly allowCustomInput?: boolean;
   readonly undefinedLabel?: string;
 }
 
@@ -83,9 +84,6 @@ export interface SelectableDimensionEnum
   /** Render ReactNodes for each option - instead of plain label */
   optionRenderer?: OptionRenderer;
 }
-
-/** Maximum number of options for a `SelectableDimension` */
-export const MAX_SELECTABLE_DIMENSION_OPTIONS = 1000;
 
 export interface SelectableDimensionCheckbox
   extends SelectableDimensionBase<"true" | "false">,
@@ -151,6 +149,11 @@ export interface SelectableDimensionGroup
   >[];
 }
 
+export type FlatSelectableDimension = Exclude<
+  SelectableDimension,
+  SelectableDimensionGroup
+>;
+
 export type SelectableDimension =
   | SelectableDimensionEnum
   | SelectableDimensionCheckbox
@@ -199,39 +202,36 @@ export const isColor = (
   dim: SelectableDimension
 ): dim is SelectableDimensionColor => dim.type === "color";
 
-const isCorrectPlacement = (placement?: Placement) => (
-  dim: SelectableDimension
-) =>
-  dim.placement ? dim.placement === placement : placement === DEFAULT_PLACEMENT;
+const isCorrectPlacement =
+  (placement?: Placement) => (dim: SelectableDimension) =>
+    dim.placement
+      ? dim.placement === placement
+      : placement === DEFAULT_PLACEMENT;
 
 const isEnabled = (dim: SelectableDimension) => !dim.disable;
 
 /** Filter out dimensions with only 1 option (unless they have 1 option and allow undefined - which is 2 total options) */
 const enumHasValidOptions = (dim: EnumDimension) => {
   const minLength = dim.allowUndefined ? 1 : 2;
-  return (
-    isDefined(dim.options) &&
-    dim.options.length >= minLength &&
-    dim.options.length < MAX_SELECTABLE_DIMENSION_OPTIONS
-  );
+  return isDefined(dim.options) && dim.options.length >= minLength;
 };
 
 /** Filter with SelectableDimension should be shown for a given placement.
  * This will take into account whether SelectableDimension is valid, not disabled, etc...
  */
-export const filterSelectableDimensions = (placement?: Placement) => (
-  selectableDimensions: SelectableDimension[] = []
-) =>
-  selectableDimensions.filter(
-    dim =>
-      // Filter by placement if defined, otherwise use default placement
-      (!isDefined(placement) || isCorrectPlacement(placement)(dim)) &&
-      isEnabled(dim) &&
-      // Check enum (select and checkbox) dimensions for valid options
-      ((!isEnum(dim) && !isCheckbox(dim)) || enumHasValidOptions(dim)) &&
-      // Only show groups if they have at least one SelectableDimension
-      (!isGroup(dim) || dim.selectableDimensions.length > 0)
-  );
+export const filterSelectableDimensions =
+  (placement?: Placement) =>
+  (selectableDimensions: SelectableDimension[] = []) =>
+    selectableDimensions.filter(
+      (dim) =>
+        // Filter by placement if defined, otherwise use default placement
+        (!isDefined(placement) || isCorrectPlacement(placement)(dim)) &&
+        isEnabled(dim) &&
+        // Check enum (select and checkbox) dimensions for valid options
+        ((!isEnum(dim) && !isCheckbox(dim)) || enumHasValidOptions(dim)) &&
+        // Only show groups if they have at least one SelectableDimension
+        (!isGroup(dim) || dim.selectableDimensions.length > 0)
+    );
 
 /** Find human readable name for the current value for a SelectableDimension */
 export const findSelectedValueName = (
@@ -242,7 +242,7 @@ export const findSelectedValueName = (
   }
 
   if (isEnum(dim)) {
-    return dim.options?.find(opt => opt.id === dim.selectedId)?.name;
+    return dim.options?.find((opt) => opt.id === dim.selectedId)?.name;
   }
 
   if (isNumeric(dim)) {

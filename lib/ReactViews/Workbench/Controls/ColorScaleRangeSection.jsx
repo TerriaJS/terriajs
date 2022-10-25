@@ -16,7 +16,7 @@ const ColorScaleRangeSection = createReactClass({
     t: PropTypes.func.isRequired
   },
 
-  getInitialState: function() {
+  getInitialState: function () {
     return {
       minRange: -50,
       maxRange: 50

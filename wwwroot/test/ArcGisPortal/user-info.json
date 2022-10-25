@@ -1,74 +1,72 @@
 {
-    "username": "data61",
-    "groups": [
-        {
-            "id": "e81e61c656fb4f70b38b7e9609d2b68c",
-            "title": "NSW Collaborate Council - Digital Twin Secured",
-            "isInvitationOnly": false,
-            "owner": "ajoy.saha@customerservice.nsw.gov.au",
-            "description": "Data Share platform among 8 councils. <span style='font-family: &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif; font-size: 17px; background-color: rgb(255, 255, 255);'>Campbelltown, Camden, Liverpool, Blue Mountain, Hawkesbury, Wollondilly, Fairfield, Penrith.</span><div><span style='font-family: &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif; font-size: 17px; background-color: rgb(255, 255, 255);'>Any data that is shared in this group will be accessible by any member within this group.</span></div>",
-            "snippet": "Group of 8 Council Data Share Platform. Campbelltown, Camden, Liverpool, Blue Mountain, Hawkesbury, Wollondilly, Fairfield, Penrith",
-            "tags": [
-                "Campbelltown",
-                "Camden",
-                "Liverpool",
-                "Blue Mountain",
-                "Hawkesbury",
-                "Wollondilly",
-                "Fairfield",
-                "Penrith"
-            ],
-            "phone": null,
-            "sortField": "title",
-            "sortOrder": "asc",
-            "isViewOnly": false,
-            "thumbnail": null,
-            "created": 1580867472280,
-            "modified": 1582163038938,
-            "access": "org",
-            "capabilities": [],
-            "isFav": false,
-            "isReadOnly": false,
-            "protected": true,
-            "autoJoin": false,
-            "notificationsEnabled": false,
-            "provider": null,
-            "providerGroupName": null,
-            "userMembership": {
-                "username": "data61",
-                "memberType": "member"
-            }
-        },
-        {
-            "id": "7c66fdabec9f4343b802cf4d7aa78a8f",
-            "title": "Fairfield_Digital_Twin_Secure",
-            "isInvitationOnly": true,
-            "owner": "ajoy.saha@customerservice.nsw.gov.au",
-            "description": "Fairfield council to share data with digital twin",
-            "snippet": "This group is created to share data with digital twin.",
-            "tags": [
-                "Fairfield"
-            ],
-            "phone": null,
-            "sortField": "title",
-            "sortOrder": "asc",
-            "isViewOnly": false,
-            "thumbnail": null,
-            "created": 1581548364386,
-            "modified": 1582074367879,
-            "access": "org",
-            "capabilities": [],
-            "isFav": false,
-            "isReadOnly": false,
-            "protected": true,
-            "autoJoin": false,
-            "notificationsEnabled": false,
-            "provider": null,
-            "providerGroupName": null,
-            "userMembership": {
-                "username": "data61",
-                "memberType": "member"
-            }
-        }
-    ]
+  "username": "data61",
+  "groups": [
+    {
+      "id": "e81e61c656fb4f70b38b7e9609d2b68c",
+      "title": "NSW Collaborate Council - Digital Twin Secured",
+      "isInvitationOnly": false,
+      "owner": "ajoy.saha@customerservice.nsw.gov.au",
+      "description": "Data Share platform among 8 councils. <span style='font-family: &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif; font-size: 17px; background-color: rgb(255, 255, 255);'>Campbelltown, Camden, Liverpool, Blue Mountain, Hawkesbury, Wollondilly, Fairfield, Penrith.</span><div><span style='font-family: &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif; font-size: 17px; background-color: rgb(255, 255, 255);'>Any data that is shared in this group will be accessible by any member within this group.</span></div>",
+      "snippet": "Group of 8 Council Data Share Platform. Campbelltown, Camden, Liverpool, Blue Mountain, Hawkesbury, Wollondilly, Fairfield, Penrith",
+      "tags": [
+        "Campbelltown",
+        "Camden",
+        "Liverpool",
+        "Blue Mountain",
+        "Hawkesbury",
+        "Wollondilly",
+        "Fairfield",
+        "Penrith"
+      ],
+      "phone": null,
+      "sortField": "title",
+      "sortOrder": "asc",
+      "isViewOnly": false,
+      "thumbnail": null,
+      "created": 1580867472280,
+      "modified": 1582163038938,
+      "access": "org",
+      "capabilities": [],
+      "isFav": false,
+      "isReadOnly": false,
+      "protected": true,
+      "autoJoin": false,
+      "notificationsEnabled": false,
+      "provider": null,
+      "providerGroupName": null,
+      "userMembership": {
+        "username": "data61",
+        "memberType": "member"
+      }
+    },
+    {
+      "id": "7c66fdabec9f4343b802cf4d7aa78a8f",
+      "title": "Fairfield_Digital_Twin_Secure",
+      "isInvitationOnly": true,
+      "owner": "ajoy.saha@customerservice.nsw.gov.au",
+      "description": "Fairfield council to share data with digital twin",
+      "snippet": "This group is created to share data with digital twin.",
+      "tags": ["Fairfield"],
+      "phone": null,
+      "sortField": "title",
+      "sortOrder": "asc",
+      "isViewOnly": false,
+      "thumbnail": null,
+      "created": 1581548364386,
+      "modified": 1582074367879,
+      "access": "org",
+      "capabilities": [],
+      "isFav": false,
+      "isReadOnly": false,
+      "protected": true,
+      "autoJoin": false,
+      "notificationsEnabled": false,
+      "provider": null,
+      "providerGroupName": null,
+      "userMembership": {
+        "username": "data61",
+        "memberType": "member"
+      }
+    }
+  ]
 }

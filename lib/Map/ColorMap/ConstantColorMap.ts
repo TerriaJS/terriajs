@@ -20,9 +20,7 @@ export default class ConstantColorMap extends ColorMap {
     this.nullColor = options.nullColor;
   }
 
-  mapValueToColor(
-    value: number | null | undefined
-  ): Readonly<Color> | undefined {
+  mapValueToColor(value: number | null | undefined): Readonly<Color> {
     if (this.nullColor && (value === null || !isDefined(value)))
       return this.nullColor;
     return this.color;

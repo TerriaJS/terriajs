@@ -90,7 +90,7 @@ export const SelectableDimensionColor: React.FC<{
         <div
           css={{
             position: "absolute",
-            zIndex: "2"
+            zIndex: 2
           }}
         >
           <div
@@ -107,7 +107,7 @@ export const SelectableDimensionColor: React.FC<{
           <ChromePicker
             css={{ transform: "translate(50px, -50%);" }}
             color={dim.value}
-            onChangeComplete={evt => {
+            onChangeComplete={(evt) => {
               const colorString = isDefined(evt.rgb.a)
                 ? `rgba(${evt.rgb.r},${evt.rgb.g},${evt.rgb.b},${evt.rgb.a})`
                 : `rgb(${evt.rgb.r},${evt.rgb.g},${evt.rgb.b})`;

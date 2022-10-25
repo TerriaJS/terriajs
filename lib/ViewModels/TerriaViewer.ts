@@ -142,17 +142,36 @@ export default class TerriaViewer {
     const currentView = untracked(() => this.destroyCurrentViewer());
 
     let newViewer: GlobeOrMap;
-    if (this.attached && this.viewerMode === ViewerMode.Leaflet) {
-      const LeafletOrNoViewer = this._getLeafletIfLoaded();
-      newViewer = untracked(
-        () => new LeafletOrNoViewer(this, this.mapContainer!)
+    try {
+      if (this.attached && this.viewerMode === ViewerMode.Leaflet) {
+        const LeafletOrNoViewer = this._getLeafletIfLoaded();
+        newViewer = untracked(
+          () => new LeafletOrNoViewer(this, this.mapContainer!)
+        );
+      } else if (this.attached && this.viewerMode === ViewerMode.Cesium) {
+        const CesiumOrNoViewer = this._getCesiumIfLoaded();
+        newViewer = untracked(
+          () => new CesiumOrNoViewer(this, this.mapContainer!)
+        );
+      } else {
+        newViewer = untracked(() => new NoViewer(this));
+      }
+    } catch (error) {
+      // Switch viewerMode inside computed. Could change viewers to
+      //  guarantee no throw in constructor and instead have a `start()`
+      //  method that can throw. Then call that `start()` method inside
+      //  a reaction (reaction would also deal with viewer fallback).
+      // Using this approach might remove the need for `untracked`
+      setTimeout(
+        action(() => {
+          this.terria.raiseErrorToUser(error);
+          this.viewerMode =
+            this.viewerMode === ViewerMode.Cesium
+              ? ViewerMode.Leaflet
+              : undefined;
+        }),
+        0
       );
-    } else if (this.attached && this.viewerMode === ViewerMode.Cesium) {
-      const CesiumOrNoViewer = this._getCesiumIfLoaded();
-      newViewer = untracked(
-        () => new CesiumOrNoViewer(this, this.mapContainer!)
-      );
-    } else {
       newViewer = untracked(() => new NoViewer(this));
     }
 
@@ -168,7 +187,7 @@ export default class TerriaViewer {
   })
   private get _cesiumPromise() {
     return fromPromise(
-      import("../Models/Cesium").then(Cesium => Cesium.default)
+      import("../Models/Cesium").then((Cesium) => Cesium.default)
     );
   }
 
@@ -188,7 +207,7 @@ export default class TerriaViewer {
   })
   private get _leafletPromise() {
     return fromPromise(
-      import("../Models/Leaflet").then(Leaflet => Leaflet.default)
+      import("../Models/Leaflet").then((Leaflet) => Leaflet.default)
     );
   }
 

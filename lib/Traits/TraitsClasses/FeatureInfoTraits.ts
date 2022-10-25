@@ -1,45 +1,22 @@
-import ModelTraits from "../ModelTraits";
-import objectTrait from "../Decorators/objectTrait";
-import primitiveTrait from "../Decorators/primitiveTrait";
 import anyTrait from "../Decorators/anyTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import ModelTraits from "../ModelTraits";
 
-class FeatureInfoFormatTraits extends ModelTraits {
-  @primitiveTrait({
-    type: "number",
-    name: "Maximum Fraction Digits",
-    description:
-      "To reduce the number of decimal places to a maximum of X digits."
-  })
-  maximumFractionDigits: number = 20;
+/** Note these shouldn't be Traits as they are used in `@anyTrait FeatureInfoTemplateTraits.formats` */
+export interface FeatureInfoFormat {
+  /** To reduce the number of decimal places to a maximum of X digits. */
+  maximumFractionDigits?: number;
 
-  @primitiveTrait({
-    type: "number",
-    name: "Minimum Fraction Digits",
-    description:
-      "To increase the number of decimal places to a minimum of X digits."
-  })
-  minimumFractionDigits: number = 0;
+  /** To increase the number of decimal places to a minimum of X digits. */
+  minimumFractionDigits?: number;
 
-  @primitiveTrait({
-    type: "boolean",
-    name: "Use grouping",
-    description: "To show thousands separators"
-  })
-  useGrouping: boolean = true;
+  /** To show thousands separators */
+  useGrouping?: boolean;
 
-  @primitiveTrait({
-    type: "string",
-    name: "Type",
-    description: "Set to 'datetime' if you want to format as a date time"
-  })
+  /** Set to 'datetime' if you want to format as a date time */
   type?: string;
 
-  @primitiveTrait({
-    type: "string",
-    name: "Datetime format",
-    description:
-      "A date format style using the npm dateformat package, e.g. 'dd-mm-yyyy HH:MM:ss' or 'isoDateTime'"
-  })
+  /** A date format style using the npm dateformat package, e.g. 'dd-mm-yyyy HH:MM:ss' or 'isoDateTime' */
   format?: string;
 }
 
@@ -59,29 +36,36 @@ export class FeatureInfoTemplateTraits extends ModelTraits {
   })
   template?: string;
 
+  @primitiveTrait({
+    type: "boolean",
+    name: "Show feature info download",
+    description:
+      "Show feature info download **if** a `template` has been provided. If no `template` is provided, then download will always show.",
+    isNullable: false
+  })
+  showFeatureInfoDownloadWithTemplate: boolean = false;
+
   @anyTrait({
     name: "Partials",
     description:
       "An object, mapping partial names to a template string. Defines the partials used in Template."
   })
-  partials?: { [partial_name: string]: string };
+  partials?: Record<string, string>;
 
   @anyTrait({
     name: "Formats",
     description: "An object, mapping field names to formatting options."
   })
-  formats?: { [key_name: string]: FeatureInfoFormatTraits };
+  formats?: Record<string, FeatureInfoFormat>;
 }
 
-export default class FeatureInfoTraits extends ModelTraits {
-  @objectTrait({
-    type: FeatureInfoTemplateTraits,
-    name: "Feature info template",
-    description:
-      "A template object for formatting content in feature info panel"
-  })
-  featureInfoTemplate?: FeatureInfoTemplateTraits;
-
+/** Note: MappableTraits has the following:
+ * - featureInfoTemplate
+ * - showStringIfPropertyValueIsNull
+ *
+ * FeatureInfoUrlTemplateTraits is used by FeatureInfoUrlTemplateMixin
+ */
+export default class FeatureInfoUrlTemplateTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
     name: "Feature Info Url template",
@@ -91,10 +75,10 @@ export default class FeatureInfoTraits extends ModelTraits {
   featureInfoUrlTemplate?: string;
 
   @primitiveTrait({
-    type: "string",
-    name: "Show string if property value is null",
+    type: "number",
+    name: "Max feature request",
     description:
-      "If the value of a property is null or undefined, show the specified string as the value of the property. Otherwise, the property name will not be listed at all."
+      "Max number of feature info requests to send to API url. Keep this number small to avoid sending to many requests to server (default 10)."
   })
-  showStringIfPropertyValueIsNull?: string;
+  maxRequests: number = 10;
 }

@@ -8,7 +8,7 @@ import Chart from "../../lib/ReactViews/Custom/Chart/Chart";
 import ChartData from "../../lib/Charts/ChartData";
 // import TableStructure  from '../../lib/Map/TableStructure';
 
-describe("Scales", function() {
+describe("Scales", function () {
   const size = {
     width: 1000,
     yAxesWidth: 66,
@@ -18,7 +18,7 @@ describe("Scales", function() {
     xAxisHeight: 14,
     xAxisLabelHeight: 20
   };
-  it("handles a typical scale correctly", function(done) {
+  it("handles a typical scale correctly", function (done) {
     const chartData = [
       new ChartData(
         [
@@ -32,7 +32,7 @@ describe("Scales", function() {
     const instance = getMountedInstance(chart);
     instance
       .getChartDataPromise(instance.getChartParameters().data)
-      .then(function(data) {
+      .then(function (data) {
         const scale = Scales.calculate(size, undefined, data);
         expect(scale.x).toBeDefined();
         expect(scale.y).toBeDefined();
@@ -42,10 +42,10 @@ describe("Scales", function() {
         expect(scale.y.undefined(2)).toEqual(size.plotHeight);
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
-  it("handles overlapping X and Y domains correctly", function(done) {
+  it("handles overlapping X and Y domains correctly", function (done) {
     const chartData = [
       new ChartData(
         [
@@ -65,7 +65,7 @@ describe("Scales", function() {
     const instance = getMountedInstance(<Chart data={chartData} />);
     instance
       .getChartDataPromise(instance.getChartParameters().data)
-      .then(function(data) {
+      .then(function (data) {
         const scale = Scales.calculate(size, undefined, data);
         expect(scale.x).toBeDefined();
         expect(scale.y).toBeDefined();
@@ -75,6 +75,6 @@ describe("Scales", function() {
         expect(scale.y.undefined(102)).toEqual(size.plotHeight);
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 });
