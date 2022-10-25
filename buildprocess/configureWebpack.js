@@ -74,7 +74,7 @@ function configureWebpack(
 
   config.module.rules.push({
     test: /\.js?$/,
-    include: path.dirname(require.resolve("terriajs-cesium")),
+    include: cesiumDir,
     exclude: [
       require.resolve("@zip.js/zip.js"),
       /Source\/Core\/buildModuleUrl/,
