@@ -68,7 +68,11 @@ class GeoJsonCatalogItem
           throw fileApiNotSupportedError(this.terria);
         }
         const body = this.requestData ? toJS(this.requestData) : undefined;
-        const blob = await loadBlob(this.url, undefined, body);
+        const blob = await loadBlob(
+          proxyCatalogItemUrl(this, this.url),
+          undefined,
+          body
+        );
         jsonData = await parseZipJsonBlob(blob);
       } else {
         jsonData = await loadJson(

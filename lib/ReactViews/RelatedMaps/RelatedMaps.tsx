@@ -51,8 +51,8 @@ class RelatedMaps extends React.Component<PropTypes> {
 
         <p>Clicking on a map below will open it in a separate window or tab.</p>
 
-        {this.props.relatedMaps.map((map) => (
-          <Box flex>
+        {this.props.relatedMaps.map((map, i) => (
+          <Box flex key={i}>
             <Box>
               <a target="_blank" href={map.url}>
                 <img

@@ -253,6 +253,8 @@ export default class Cesium extends GlobeOrMap {
 
     this.scene.globe.depthTestAgainstTerrain = false;
 
+    this.scene.renderError.addEventListener(this.onRenderError.bind(this));
+
     const inputHandler = this.cesiumWidget.screenSpaceEventHandler;
 
     // // Add double click zoom
@@ -531,9 +533,31 @@ export default class Cesium extends GlobeOrMap {
     }
   }
 
+  private previousRenderError: string | undefined;
+
+  /** Show error message to user if Cesium stops rendering. */
+  private onRenderError(scene: Scene, error: unknown) {
+    // This function can be called many times with the same error
+    // So we do a rudimentary check to only show the error message once
+    // - by comparing error.toString() to this.previousRenderError
+    if (typeof error === "object" && error !== null) {
+      const newError = error.toString();
+      if (newError !== this.previousRenderError) {
+        this.previousRenderError = error.toString();
+        this.terria.raiseErrorToUser(error, {
+          title: i18next.t("map.cesium.stoppedRenderingTitle"),
+          message: i18next.t("map.cesium.stoppedRenderingMessage", {
+            appName: this.terria.appName
+          })
+        });
+      }
+    }
+  }
+
   destroy() {
     // Port old Cesium.prototype.destroy stuff
     // this._enableSelectExtent(cesiumWidget.scene, false);
+    this.scene.renderError.removeEventListener(this.onRenderError);
 
     const inputHandler = this.cesiumWidget.screenSpaceEventHandler;
     inputHandler.removeInputAction(ScreenSpaceEventType.MOUSE_MOVE);
@@ -1117,7 +1141,7 @@ export default class Cesium extends GlobeOrMap {
     const vectorFeatures = this.pickVectorFeatures(screenPosition);
 
     const providerCoords = this._attachProviderCoordHooks();
-    var pickRasterPromise =
+    const pickRasterPromise =
       this.terria.allowFeatureInfoRequests && isDefined(pickRay)
         ? this.scene.imageryLayers.pickImageryLayerFeatures(pickRay, this.scene)
         : undefined;
@@ -1351,26 +1375,35 @@ export default class Cesium extends GlobeOrMap {
       longitude: number,
       latitude: number
     ) {
-      const featuresPromise = oldPick.call(
-        imageryProvider,
-        x,
-        y,
-        level,
-        longitude,
-        latitude
-      );
+      const url = (<any>imageryProvider).url;
 
-      // Use url to uniquely identify providers because what else can we do?
-      if ((<any>imageryProvider).url) {
-        providerCoords[(<any>imageryProvider).url] = {
-          x: x,
-          y: y,
-          level: level
-        };
+      try {
+        const featuresPromise = oldPick.call(
+          imageryProvider,
+          x,
+          y,
+          level,
+          longitude,
+          latitude
+        );
+
+        // Use url to uniquely identify providers because what else can we do?
+        if (url) {
+          providerCoords[url] = {
+            x: x,
+            y: y,
+            level: level
+          };
+        }
+
+        imageryProvider.pickFeatures = oldPick;
+        return featuresPromise;
+      } catch (e) {
+        TerriaError.from(
+          e,
+          `An error ocurred while hooking into \`ImageryProvider#.pickFeatures\`. \`ImageryProvider.url = ${url}\``
+        ).log();
       }
-
-      imageryProvider.pickFeatures = oldPick;
-      return featuresPromise;
     };
 
     for (let j = 0; j < this.scene.imageryLayers.length; j++) {
