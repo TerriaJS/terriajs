@@ -2,6 +2,7 @@
 
 #### next release (8.2.21)
 
+- Add check for WFS `layer.OtherSRS` in `buildSrsNameObject`
 - [The next improvement]
 
 #### 8.2.20 - 2022-10-20
