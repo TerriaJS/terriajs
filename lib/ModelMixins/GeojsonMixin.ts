@@ -8,12 +8,8 @@ import {
   Geometry,
   GeometryCollection,
   MultiPoint,
-  MultiPolygon,
   Point,
-  Polygon,
-  Properties,
-  LineString,
-  MultiLineString
+  Properties
 } from "@turf/helpers";
 import i18next from "i18next";
 import {
@@ -36,7 +32,6 @@ import {
 } from "protomaps";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
@@ -63,12 +58,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import formatPropertyValue from "../Core/formatPropertyValue";
 import hashFromString from "../Core/hashFromString";
 import isDefined from "../Core/isDefined";
-import {
-  isJsonNumber,
-  isJsonObject,
-  JsonObject,
-  isJsonString
-} from "../Core/Json";
+import { isJsonNumber, isJsonObject, isJsonString } from "../Core/Json";
 import { isJson } from "../Core/loadBlob";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError, { networkRequestError } from "../Core/TerriaError";
@@ -77,6 +67,7 @@ import ProtomapsImageryProvider, {
   GEOJSON_SOURCE_LAYER_NAME,
   ProtomapsData
 } from "../Map/ImageryProvider/ProtomapsImageryProvider";
+import { loadGeoJsonWithCzmlTemplate } from "../Map/Vector/loadGeoJsonWithCzmlTemplate";
 import Reproject from "../Map/Vector/Reproject";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -85,6 +76,7 @@ import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
+import TerriaFeature from "../Models/Feature/Feature";
 import { ViewingControl } from "../Models/ViewingControls";
 import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
@@ -94,7 +86,6 @@ import { isConstantStyleMap } from "../Table/TableStyleMap";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
 import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import StyleTraits from "../Traits/TraitsClasses/StyleTraits";
-import TerriaFeature from "../Models/Feature/Feature";
 import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
 import { ExportData } from "./ExportableMixin";
 import FeatureInfoUrlTemplateMixin from "./FeatureInfoUrlTemplateMixin";
@@ -465,7 +456,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
      *    - MultiPoint features are in GeoJSON (not supported by Table styling)
      */
     protected async forceLoadMapItems(): Promise<void> {
-      const czmlTemplate = this.czmlTemplate;
+      const czmlTemplate = runInAction(() => toJS(this.czmlTemplate));
       const filterByProperties = this.filterByProperties;
 
       let geoJson: FeatureCollectionWithCrs | undefined;
@@ -553,7 +544,10 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         });
 
         if (isDefined(czmlTemplate)) {
-          const dataSource = await this.loadCzmlDataSource(geoJsonWgs84);
+          const dataSource = await loadGeoJsonWithCzmlTemplate(
+            czmlTemplate,
+            geoJsonWgs84
+          );
           runInAction(() => {
             this._dataSource = dataSource;
             this._imageryProvider = undefined;
@@ -808,165 +802,6 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
       provider = this.wrapImageryPickFeatures(provider);
       return provider;
-    }
-
-    private async loadCzmlDataSource(
-      geoJson: FeatureCollectionWithCrs
-    ): Promise<CzmlDataSource> {
-      const czmlTemplate = runInAction(() => toJS(this.czmlTemplate));
-
-      const rootCzml = [
-        {
-          id: "document",
-          name: "CZML",
-          version: "1.0"
-        }
-      ];
-
-      // Create a czml packet for each geoJson Point/Polygon feature
-      // For point: set czml position (CartographicDegrees) to point coordinates
-      // For polygon: set czml positions array (CartographicDegreesListValue) for the `polygon` property
-
-      // Set czml properties to feature properties
-      for (let i = 0; i < geoJson.features.length; i++) {
-        const feature = geoJson.features[i];
-        if (feature === null || feature.geometry.type === "Line") {
-          continue;
-        }
-
-        if (feature.geometry?.type === "Point") {
-          const czml = clone(czmlTemplate ?? {}, true);
-
-          const point = feature.geometry as Point;
-          const coords = point.coordinates;
-
-          // Add height = 0 if no height provided
-          if (coords.length === 2) {
-            coords[2] = 0;
-          }
-
-          if (isJsonNumber(this.czmlTemplate?.heightOffset)) {
-            coords[2] += this.czmlTemplate!.heightOffset;
-          }
-
-          czml.position = {
-            cartographicDegrees: point.coordinates
-          };
-
-          czml.properties = Object.assign(
-            czml.properties ?? {},
-            stringifyFeatureProperties(feature.properties ?? {})
-          );
-          rootCzml.push(czml);
-        } else if (
-          feature.geometry?.type === "Polygon" ||
-          (feature.geometry?.type === "MultiPolygon" && czmlTemplate?.polygon)
-        ) {
-          const czml = clone(czmlTemplate ?? {}, true);
-
-          // To handle both Polygon and MultiPolygon - transform Polygon coords into MultiPolygon coords
-          const multiPolygonGeom =
-            feature.geometry?.type === "Polygon"
-              ? [(feature.geometry as Polygon).coordinates]
-              : (feature.geometry as MultiPolygon).coordinates;
-
-          // Loop through Polygons in MultiPolygon
-          for (let j = 0; j < multiPolygonGeom.length; j++) {
-            const geom = multiPolygonGeom[j];
-            const positions: number[] = [];
-            const holes: number[][] = [];
-
-            geom[0].forEach((coords) => {
-              if (isJsonNumber(this.czmlTemplate?.heightOffset)) {
-                coords[2] = (coords[2] ?? 0) + this.czmlTemplate!.heightOffset;
-              }
-              positions.push(coords[0], coords[1], coords[2]);
-            });
-
-            geom.forEach((ring, idx) => {
-              if (idx === 0) return;
-
-              holes.push(
-                ring.reduce<number[]>((acc, current) => {
-                  if (isJsonNumber(this.czmlTemplate?.heightOffset)) {
-                    current[2] =
-                      (current[2] ?? 0) + this.czmlTemplate!.heightOffset;
-                  }
-
-                  acc.push(current[0], current[1], current[2]);
-
-                  return acc;
-                }, [])
-              );
-            });
-
-            czml.polygon.positions = { cartographicDegrees: positions };
-            czml.polygon.holes = { cartographicDegrees: holes };
-
-            czml.properties = Object.assign(
-              czml.properties ?? {},
-              stringifyFeatureProperties(feature.properties ?? {})
-            );
-            rootCzml.push(czml);
-          }
-        } else if (
-          feature.geometry?.type === "LineString" ||
-          feature.geometry?.type === "MultiLineString"
-        ) {
-          const czml = clone(czmlTemplate ?? {}, true);
-
-          // To handle both LineString and MultiLineString - transform LineString coords into MultiLineString coords
-          const multiLineGeom =
-            feature.geometry?.type === "LineString"
-              ? [(feature.geometry as LineString).coordinates]
-              : (feature.geometry as MultiLineString).coordinates;
-
-          // Loop through Lines in MultiLineString
-          for (let j = 0; j < multiLineGeom.length; j++) {
-            const geom = multiLineGeom[j];
-            const positions: number[] = [];
-
-            geom.forEach(coords => {
-              if (isJsonNumber(this.czmlTemplate?.heightOffset)) {
-                coords[2] = (coords[2] ?? 0) + this.czmlTemplate!.heightOffset;
-              }
-              positions.push(coords[0], coords[1], coords[2]);
-            });
-
-            if (czml.polylineVolume) {
-              czml.polylineVolume.positions = {
-                cartographicDegrees: positions
-              };
-            }
-
-            if (czml.wall) {
-              czml.wall.positions = {
-                cartographicDegrees: positions
-              };
-            }
-
-            if (czml.polyline) {
-              czml.polyline.positions = {
-                cartographicDegrees: positions
-              };
-            }
-
-            if (czml.corridor) {
-              czml.corridor.positions = {
-                cartographicDegrees: positions
-              };
-            }
-
-            czml.properties = Object.assign(
-              czml.properties ?? {},
-              stringifyFeatureProperties(feature.properties ?? {})
-            );
-            rootCzml.push(czml);
-          }
-        }
-      }
-
-      return CzmlDataSource.load(rootCzml);
     }
 
     @computed get defaultStyles() {
@@ -1780,22 +1615,4 @@ export function parseMarkerSize(sizeString?: string): number | undefined {
     return sizes[sizeString];
   }
   return parseInt(sizeString, 10); // SimpleStyle doesn't allow 'marker-size: 20', but people will do it.
-}
-
-function stringifyFeatureProperties(featureProps: JsonObject | undefined) {
-  return Object.keys(featureProps ?? {}).reduce<{
-    [key: string]: string;
-  }>((properties, key) => {
-    const featureProp = featureProps![key];
-    if (typeof featureProp === "string") {
-      properties[key] = featureProp;
-    } else if (
-      isDefined(featureProp) &&
-      featureProp !== null &&
-      typeof featureProp.toString === "function"
-    )
-      properties[key] = featureProp.toString();
-
-    return properties;
-  }, {});
 }

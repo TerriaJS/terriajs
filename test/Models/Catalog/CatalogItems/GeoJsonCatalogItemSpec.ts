@@ -684,6 +684,38 @@ describe("GeoJsonCatalogItemSpec", () => {
         expect(entity1.properties?.foo?.getValue()).toBe("hi");
         expect(entity1.properties?.bar?.getValue()).toBe("bye");
       });
+
+      it("supports lines", async () => {
+        geojson.setTrait(
+          CommonStrata.user,
+          "url",
+          "test/GeoJSON/polyline.geojson"
+        );
+
+        geojson.setTrait(CommonStrata.user, "czmlTemplate", {
+          polyline: {
+            width: 10
+          }
+        });
+        await geojson.loadMapItems();
+
+        const entities = (geojson.mapItems[0] as GeoJsonDataSource).entities
+          .values;
+        console.log(entities);
+        expect(entities.length).toEqual(2);
+
+        const entity1 = entities[0];
+        expect(
+          entity1.polyline?.width?.getValue(terria.timelineClock.currentTime)
+        ).toBe(10);
+        console.log(
+          entity1.polyline?.positions?.getValue(
+            terria.timelineClock.currentTime
+          )
+        );
+        expect(entity1.properties?.foo?.getValue()).toBe("hi");
+        expect(entity1.properties?.bar?.getValue()).toBe("bye");
+      });
     });
   });
 

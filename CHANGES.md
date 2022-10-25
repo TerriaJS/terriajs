@@ -2,6 +2,8 @@
 
 #### next release (8.2.21)
 
+- Move `GeoJsonMixin.loadCzmlDataSource` to `lib/Map/Vector/geoJsonWithCzmlTemplate.ts`
+- Add `czmlTemplate` support for `[Multi]LineString` GeoJSON features.
 - [The next improvement]
 
 #### 8.2.20 - 2022-10-20
@@ -204,8 +206,6 @@
 
 #### 8.2.6 - 2022-06-17
 
-* Add `czmlTemplate` support for `[Multi]LineString` GeoJSON features.
-* [The next improvement]
 - **Breaking changes:**
   - Changed translation resolution. Now the "translation" namespace loads only from `${terria.baseUrl}/languages/{{lng}}/translation.json` (TerriaJS assets) and "languageOverrides" loads from `languages/{{lng}}/languageOverrides.json` (a TerriaMap's assets)
 - Removed EN & FR translation files from bundle. All translation files are now loaded on demand.
