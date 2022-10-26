@@ -2,7 +2,13 @@ import Resource from "terriajs-cesium/Source/Core/Resource";
 import JsonValue from "./Json";
 import loadJson from "./loadJson";
 import URI from "urijs";
-import * as zip from "@zip.js/zip.js/lib/zip-no-worker.js";
+import {
+  configure as zipConfigure,
+  ZipReader,
+  BlobReader as ZipBlobReader,
+  Data64URIWriter as ZipData64URIWriter,
+  Uint8ArrayWriter as ZipUint8ArrayWriter
+} from "@zip.js/zip.js";
 
 export default function loadBlob(
   urlOrResource: string,
@@ -47,14 +53,14 @@ function getZipReader(blob: Blob): any {
     .absoluteTo(location.href)
     .relativeTo(absoluteBase);
 
-  zip.configure({
+  zipConfigure({
     workerScripts: {
       deflate: [zWorkerPakoUrl, relativeInflateUri.toString()],
       inflate: [zWorkerPakoUrl, relativeDeflateUri.toString()]
     }
   });
 
-  return new zip.ZipReader(new zip.BlobReader(blob));
+  return new ZipReader(new ZipBlobReader(blob));
 }
 
 /** Parse zipped blob into JsonValue */
@@ -66,7 +72,7 @@ export function parseZipJsonBlob(blob: Blob): Promise<JsonValue> {
       const entry = entries[i];
       if (isJson(entry.filename)) {
         return entry
-          .getData(new zip.Data64URIWriter())
+          .getData(new ZipData64URIWriter())
           .then(function (uri: string) {
             return loadJson(uri);
           });
@@ -86,7 +92,7 @@ export async function parseZipArrayBuffers(
 
   return await Promise.all(
     entries.map(async (entry: any) => {
-      const data = await entry.getData(new zip.Uint8ArrayWriter());
+      const data = await entry.getData(new ZipUint8ArrayWriter());
       return { fileName: entry.filename, data };
     })
   );

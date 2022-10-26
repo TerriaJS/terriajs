@@ -181,7 +181,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
         y: coords.y,
         level: level
       });
-      this._requestImageError = TileProviderError.handleError(
+      this._requestImageError = TileProviderError.reportError(
         <any>this._requestImageError,
         this.imageryProvider,
         <any>this.imageryProvider.errorEvent,
@@ -189,9 +189,18 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
         coords.x,
         coords.y,
         level,
-        doRequest,
         <any>e
       );
+
+      if (this._requestImageError.retry === false) {
+        // don't retry
+      } else if (this._requestImageError.retry === true) {
+        // retry immediately
+        doRequest();
+      } else {
+        // retry after the promise resolves
+        doRequest(this._requestImageError.retry);
+      }
     });
 
     return tile;

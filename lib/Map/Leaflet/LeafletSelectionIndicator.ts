@@ -149,16 +149,19 @@ export default class LeafletSelectionIndicator {
 
     var feature = this._leaflet.terria.selectedFeature;
     if (isDefined(feature) && isDefined(feature.position)) {
-      var cartographic = Ellipsoid.WGS84.cartesianToCartographic(
-        feature.position.getValue(
-          this._leaflet.terria.timelineClock.currentTime
-        ),
-        cartographicScratch
+      var position = feature.position.getValue(
+        this._leaflet.terria.timelineClock.currentTime
       );
-      this._marker.setLatLng([
-        CesiumMath.toDegrees(cartographic.latitude),
-        CesiumMath.toDegrees(cartographic.longitude)
-      ]);
+      if (isDefined(position)) {
+        var cartographic = Ellipsoid.WGS84.cartesianToCartographic(
+          position,
+          cartographicScratch
+        );
+        this._marker.setLatLng([
+          CesiumMath.toDegrees(cartographic.latitude),
+          CesiumMath.toDegrees(cartographic.longitude)
+        ]);
+      }
     }
 
     if (this._tweens.length > 0) {
