@@ -140,8 +140,17 @@
   "dateTime": {
     "timeline": {
       "togglePlay": "Iniciar",
-      "gotoStart": "Ir al principio"
-    }
+      "gotoStart": "Ir al principio",
+      "textCell": "Nombre del conjunto de datos cuyo rango de tiempo se muestra"
+    },
+    "back": "Volver",
+    "outOfRange": "Actualmente está fuera de alcance.",
+    "availableTimeChart": "Mostrar los tiempos disponibles en el gráfico",
+    "selectorLabel": "Tiempo:",
+    "next": "La próxima vez",
+    "useTimeline": "Utilizar la línea de tiempo",
+    "selectTime": "Seleccione una hora",
+    "previous": "Tiempo anterior"
   },
   "workbench": {
     "removeAll": "Quitar Todos",
@@ -154,11 +163,45 @@
     "opacity": "Opacidad:{{opacity}}%",
     "label": "Conjunto de Datos",
     "rangeMin": "Mínima:",
-    "rangeMax": "Máxima:"
+    "rangeMax": "Máxima:",
+    "colorScaleRangeMin": "El valor mínimo debe ser un número.",
+    "colorScaleRangeMinSmallerThanMax": "El valor mínimo de la gama de la escala de colores debe ser menor que el valor máximo.",
+    "diffImageTitle": "Ver las diferencias de imagen entre dos fechas",
+    "diffImage": "Diferencia",
+    "exportDataTitle": "Exportar datos",
+    "collapseAll": "Colapsar todo",
+    "expandAll": "Ampliar todo",
+    "toggleVisibility": "Mostrar/ocultar datos",
+    "zoomTo": "Zoom ideal",
+    "showMoreActionsTitle": "Mostrar mas acciones",
+    "splitItem": "Comparar",
+    "dimensionsSelector": {
+      "undefinedLabel": "No se especifica"
+    },
+    "displayPercent": "Mostrar en porcentaje del total regional",
+    "colorScaleRange": "Escala de colores",
+    "previewItemTitle": "Sobre estos datos",
+    "splitItemTitle": "Duplicar y mostrar el divisor",
+    "removeFromMapTitle": "Eliminar estos datos",
+    "searchItemTitle": "Buscar",
+    "searchItem": "Buscar",
+    "colorScaleRangeTitle": "Gama de colores no válida",
+    "previewItem": "Sobre los datos",
+    "colorScaleRangeMax": "El valor mínimo debe ser un número.",
+    "addItemErrorTitle": "No se ha podido añadir el artículo del catálogo al banco de trabajo.",
+    "addItemErrorMessage": "Se ha producido un error al cargar el elemento del catálogo.",
+    "splitScreenMode": "MODO DE PANTALLA DIVIDIDA"
   },
   "search": {
     "data": "Datos",
-    "resultsLabel": "Resultados de búsqueda"
+    "resultsLabel": "Resultados de búsqueda",
+    "done": "Terminado",
+    "viewMore": "Ver más resultados de {{name}}",
+    "search": "Buscar \"{{searchText}}\" en el catálogo de datos",
+    "viewLess": "Ver menos resultados de {{name}}",
+    "placeholder": "Buscar lugares",
+    "searchCatalogue": "Buscar en el catálogo",
+    "searchInDataCatalog": "Buscar <1>'{{locationSearchText}}'</1> en el Catálogo de Datos"
   },
   "addData": {
     "back": "Atrás",
@@ -167,10 +210,39 @@
     "urlInputBtn": "Añadir",
     "myData": "Mis datos",
     "done": "Hecho",
-    "btnHide": "Ocultar"
+    "btnHide": "Ocultar",
+    "webAdd": "Añadir datos de la web",
+    "webFile": "<0>Step 2:</0> Introduzca la URL del archivo de datos o del servicio web",
+    "localTitle": "Añadir datos locales",
+    "searchPlaceholderWhole": "Buscar en todo el catálogo",
+    "searchPlaceholder": "Buscar en el catálogo",
+    "localAdd": "Añadir archivo local",
+    "webFileType": "<0>Step 1:</0> Seleccione el tipo de archivo o servicio web",
+    "infoText": "<0>Arrastra y suelta un archivo aquí para verlo localmente en el mapa</0><1>(no se guardará ni se subirá a Internet)</1>",
+    "note": "<0>Nota: </0>Los datos añadidos de esta manera no se guardan ni se hacen visibles para los demás.",
+    "addDataBtnText": "Explorar los datos del mapa",
+    "load": "Cargar datos locales/web",
+    "closeDataPanel": "Cerrar el panel de datos",
+    "localFile": "<0>Step 2:</0> Seleccionar archivo",
+    "webTitle": "Añadir datos web",
+    "dataCatalogue": "Catálogo de datos",
+    "localFileType": "<0>Step 1:</0> Seleccionar tipo de archivo"
   },
   "satelliteGuidance": {
-    "prevI": "No, gracias"
+    "prevI": "No, gracias",
+    "titleI": "Imágenes por satélite: ¿Cómo puedo...?",
+    "bodyI": "Una guía súper rápida para sacar el máximo partido a las imágenes históricas por satélite.",
+    "nextI": "Ver guía",
+    "titleII": "¿Dónde está mi imagen satélite?",
+    "bodyIII": "En su banco de trabajo de datos, haga clic en el desplegable de la fecha de captura y seleccione entre las horas disponibles para cargar las imágenes históricas.",
+    "titleIV": "Filtrar las imágenes por ubicación",
+    "menuTitle": "Puedes acceder a las guías de los mapas en cualquier momento buscando en el <2>menú de ayuda</2>",
+    "dismissText": "Entendido, Gracias!",
+    "titleV": "¿Cómo puedo ver las imágenes en falso color?",
+    "titleIII": "Carga de imágenes históricas",
+    "bodyII": "Es posible que tenga que ajustar el nivel de zoom para que las imágenes por satélite sean visibles en el mapa.",
+    "bodyIV": "Es posible que las imágenes por satélite no estén siempre disponibles en el momento y lugar que usted prefiera. Si sólo quieres ver las imágenes de una ubicación concreta, haz clic en \"filtrar por ubicación\" en tu banco de datos.",
+    "bodyV": "Puedes aplicar una serie de estilos, como el falso color, a las imágenes de satélite haciendo clic en el menú desplegable de estilos de la mesa de trabajo de datos."
   },
   "story": {
     "story": "Historia",
@@ -212,7 +284,20 @@
     "preview": "previsualizar historias",
     "captureSceneTitle": "capturar la escena actual",
     "play": "Reproducir",
-    "captureScene": "Captura escena"
+    "captureScene": "Captura escena",
+    "next": "Siguiente",
+    "untitled": "escena sin título",
+    "hideStoryPanel": "Ocultar el constructor de historias",
+    "promptHtml1": "<0>Puedes ver y crear historias en cualquier momento haciendo clic aquí.</0>",
+    "promptHtml2": "<0><0>INTRODUCCIÓN</0><1>Historias de datos</1><2>Crea y comparte historias interactivas directamente desde tu mapa.</2></0>",
+    "loadSceneErrorTitle": "Error al cargar la escena de la historia",
+    "nextBtn": "Ir a la siguiente escena",
+    "navBtn": "Ir a la historia {{title}}",
+    "loadSceneErrorMessage": "Se ha producido un error al cargar los datos de la escena de la historia: `{{title}}`.",
+    "restart": "Reiniciar",
+    "navBtnMobile": "Ir a la historia {{title}}",
+    "dismissText": "Entendido, Gracias!",
+    "mobileViewStory": "Ver Historias{{storiesLength}}"
   },
   "featureInfo": {
     "noInfoAvailable": "No hay información disponible",
@@ -400,15 +485,55 @@
   "preview": {
     "addToMap": "Añadir al mapa",
     "licence": "Licencia",
-    "disclaimer": "Descargo de responsabilidad"
+    "disclaimer": "Descargo de responsabilidad",
+    "removeFromMap": "Remover del mapa",
+    "mayBeExperiencingIssues": "Este conjunto de datos puede estar experimentando problemas",
+    "dataPreviewLoading": "CARGA DE LA VISTA PREVIA DE LOS DATOS...",
+    "modified": "Modificado",
+    "updateFrequency": "Frecuencia de actualización",
+    "dataCustodian": "Custodia de datos",
+    "dataPreviewError": "ERROR DE PREVISUALIZACIÓN DE DATOS",
+    "loading": "VISTA PREVIA CARGANDO...",
+    "accessConstraints": "Restricciones de acceso",
+    "fees": "Tasas",
+    "serviceDescription": "Descripción del servicio",
+    "resourceDescription": "Descripción del recurso",
+    "doesNotContainGeospatialData": "Este archivo no contiene datos geoespaciales.",
+    "dataPreview": "PREVISUALIZACIÓN DE DATOS",
+    "preview": "{{appName}} vista previa",
+    "previewItemErrorTitle": "No se ha podido previsualizar el artículo del catálogo.",
+    "previewItemErrorMessage": "Se ha producido un error al cargar el elemento del catálogo.",
+    "dataDescription": "Descripción de los datos",
+    "datasetDescription": "Descripción de conjunto de datos",
+    "author": "Autor",
+    "contact": "Contacto",
+    "created": "Creado",
+    "selectToPreview": "<0>Seleccione un conjunto de datos para ver una vista previa </0><1>- O -</1><2>Vaya al mapa</2>",
+    "noPreviewAvailable": "NO HAY VISTA PREVIA DISPONIBLE"
   },
   "description": {
     "typeName": "Nombre del tipo",
     "layerName": "Nombre de capa",
-    "dataServiceDetails": "Detalles del Servicio de Datos"
+    "dataServiceDetails": "Detalles del Servicio de Datos",
+    "dataLocal": "Este conjunto de datos puede estar experimentando problemas. Para compartirlo, debe cargarlo en un servidor web público.",
+    "downloadData": "Descargar datos",
+    "dataSourceDetails": "Detalles de la fuente de datos",
+    "wfs": "Se trata de un <1>servicio WFS</1>, que transfiere datos espaciales en bruto a petición. Se puede utilizar en el software GIS con esta URL:",
+    "dataCustodian": "Custodia de datos",
+    "name": "Descripción",
+    "wms": "Se trata de un <1> servicio WMS</1>, que genera imágenes de mapas a petición. Se puede utilizar en el software GIS con esta URL:",
+    "downloadInFormat": "Descargar los datos seleccionados actualmente en formato {{format}}",
+    "useLinkBelow": "Utilice el siguiente enlace para descargar los datos. Consulte el {{enlace}} para obtener más información sobre la personalización de los parámetros de consulta de la URL.",
+    "dataNotLocal": "Póngase en contacto con el proveedor de estos datos para obtener más información, incluida la relativa a los derechos y limitaciones de uso.",
+    "metadataUrls": "Enlaces de metadatos",
+    "dataUrl": "Enlaces de datos",
+    "useTheLinkToDownload": "Utilice el siguiente enlace para descargar los datos directamente.",
+    "downloadNotSupported": "Lamentablemente su navegador no soporta la funcionalidad necesaria para descargar estos datos como archivo. Por favor, utilice $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge) o $t(browsers.safari) para descargar estos datos."
   },
   "mobile": {
-    "toggleNavigation": "Cambiar navegación"
+    "toggleNavigation": "Cambiar navegación",
+    "doneBtnText": "Terminado",
+    "addDataBtnText": "Datos"
   },
   "trainer": {
     "collapseTrainer": "Ocultar detalles del paso",
