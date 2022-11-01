@@ -455,10 +455,10 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
         this.dataset
       );
       if (isJsonString(string)) {
-        const timeInMs = (ms(string) || 0) / 1000;
+        const timeInSeconds = (ms(string) || 0) / 1000;
         // Only return refreshInterval if less than an hour
-        if (timeInMs < 60 * 60) {
-          return timeInMs;
+        if (timeInSeconds < 60 * 60) {
+          return timeInSeconds;
         }
       }
     } catch (e) {
