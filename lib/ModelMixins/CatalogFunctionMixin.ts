@@ -1,5 +1,5 @@
 import { runInAction, toJS } from "mobx";
-import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
+import { RequestErrorEvent as RequestErrorEvent } from "cesium";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";

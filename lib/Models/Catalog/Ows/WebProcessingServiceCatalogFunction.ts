@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import flatten from "lodash-es/flatten";
 import { action, computed, isObservableArray, runInAction } from "mobx";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import { Math as CesiumMath } from "cesium";
 import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";

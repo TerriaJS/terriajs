@@ -6,13 +6,13 @@ import {
   observable,
   runInAction
 } from "mobx";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import EasingFunction from "terriajs-cesium/Source/Core/EasingFunction";
-import CreditDisplay from "terriajs-cesium/Source/Scene/CreditDisplay";
-import Scene from "terriajs-cesium/Source/Scene/Scene";
-import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
-import TweenCollection from "terriajs-cesium/Source/Scene/TweenCollection";
+import { Cartesian2 as Cartesian2 } from "cesium";
+import { Cartesian3 as Cartesian3 } from "cesium";
+import { EasingFunction as EasingFunction } from "cesium";
+import { CreditDisplay as CreditDisplay } from "cesium";
+import { Scene as Scene } from "cesium";
+import { SceneTransforms as SceneTransforms } from "cesium";
+import { TweenCollection as TweenCollection } from "cesium";
 import isDefined from "../../Core/isDefined";
 
 declare module "terriajs-cesium/Source/Scene/Scene" {

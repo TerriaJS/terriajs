@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
+import { defaultValue as defaultValue } from "cesium";
 import { isJsonObject, JsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
 import loadWithXhr from "../Core/loadWithXhr";

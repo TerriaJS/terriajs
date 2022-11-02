@@ -1,7 +1,7 @@
 import { runInAction } from "mobx";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import LabelStyle from "terriajs-cesium/Source/Scene/LabelStyle";
+import { JulianDate as JulianDate } from "cesium";
+import { CustomDataSource as CustomDataSource } from "cesium";
+import { LabelStyle as LabelStyle } from "cesium";
 import { getMakiIcon } from "../../lib/Map/Icons/Maki/MakiIcons";
 import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";

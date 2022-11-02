@@ -1,6 +1,6 @@
 "use strict";
 
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import { Rectangle as Rectangle } from "cesium";
 import LatLonHeight from "../Core/LatLonHeight";
 import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";

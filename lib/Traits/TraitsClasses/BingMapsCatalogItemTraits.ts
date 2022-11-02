@@ -1,4 +1,4 @@
-import BingMapsStyle from "terriajs-cesium/Source/Scene/BingMapsStyle";
+import { BingMapsStyle as BingMapsStyle } from "cesium";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";

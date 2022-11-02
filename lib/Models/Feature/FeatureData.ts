@@ -1,4 +1,4 @@
-import TimeIntervalCollectionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty";
+import { TimeIntervalCollectionProperty as TimeIntervalCollectionProperty } from "cesium";
 import { isJsonObject } from "../../Core/Json";
 
 /** Terria specific properties */

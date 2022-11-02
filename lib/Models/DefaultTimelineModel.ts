@@ -1,4 +1,4 @@
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import { JulianDate as JulianDate } from "cesium";
 import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
 import { DATE_SECONDS_PRECISION } from "../ModelMixins/TimeVarying";
 import DiscretelyTimeVaryingTraits from "../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";

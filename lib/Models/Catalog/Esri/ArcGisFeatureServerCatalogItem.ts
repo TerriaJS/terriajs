@@ -1,7 +1,7 @@
 import { Geometry, GeometryCollection, Properties } from "@turf/helpers";
 import i18next from "i18next";
 import { computed, runInAction } from "mobx";
-import Color from "terriajs-cesium/Source/Core/Color";
+import { Color as Color } from "cesium";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";

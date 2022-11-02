@@ -5,7 +5,7 @@ import Slider from "rc-slider";
 import React, { ChangeEvent, ComponentProps, MouseEvent } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
-import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
+import { SplitDirection as SplitDirection } from "cesium";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import Cesium from "../../../Models/Cesium";
 import { BaseModel } from "../../../Models/Definition/Model";

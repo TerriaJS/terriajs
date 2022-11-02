@@ -7,22 +7,22 @@ import {
   runInAction,
   toJS
 } from "mobx";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import clone from "terriajs-cesium/Source/Core/clone";
-import Color from "terriajs-cesium/Source/Core/Color";
-import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
-import IonResource from "terriajs-cesium/Source/Core/IonResource";
-import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
-import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
-import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
-import Resource from "terriajs-cesium/Source/Core/Resource";
-import Transforms from "terriajs-cesium/Source/Core/Transforms";
-import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
-import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
-import Cesium3DTilePointFeature from "terriajs-cesium/Source/Scene/Cesium3DTilePointFeature";
-import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
-import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
+import { Cartesian2 as Cartesian2 } from "cesium";
+import { Cartesian3 as Cartesian3 } from "cesium";
+import { clone as clone } from "cesium";
+import { Color as Color } from "cesium";
+import { HeadingPitchRoll as HeadingPitchRoll } from "cesium";
+import { IonResource as IonResource } from "cesium";
+import { Matrix3 as Matrix3 } from "cesium";
+import { Matrix4 as Matrix4 } from "cesium";
+import { Quaternion as Quaternion } from "cesium";
+import { Resource as Resource } from "cesium";
+import { Transforms as Transforms } from "cesium";
+import { Cesium3DTileColorBlendMode as Cesium3DTileColorBlendMode } from "cesium";
+import { Cesium3DTileFeature as Cesium3DTileFeature } from "cesium";
+import { Cesium3DTilePointFeature as Cesium3DTilePointFeature } from "cesium";
+import { Cesium3DTileset as Cesium3DTileset } from "cesium";
+import { Cesium3DTileStyle as Cesium3DTileStyle } from "cesium";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import { isJsonObject, JsonObject } from "../Core/Json";

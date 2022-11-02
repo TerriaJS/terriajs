@@ -1,8 +1,8 @@
 import { action, computed, observable, onBecomeObserved } from "mobx";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import { Ellipsoid as Ellipsoid } from "cesium";
+import { JulianDate as JulianDate } from "cesium";
+import { Math as CesiumMath } from "cesium";
+import { Entity as Entity } from "cesium";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import LatLonHeight from "../Core/LatLonHeight";

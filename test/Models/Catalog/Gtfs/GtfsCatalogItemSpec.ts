@@ -1,4 +1,4 @@
-import Color from "terriajs-cesium/Source/Core/Color";
+import { Color as Color } from "cesium";
 import MappableMixin from "../../../../lib/ModelMixins/MappableMixin";
 import GtfsCatalogItem from "../../../../lib/Models/Catalog/Gtfs/GtfsCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";

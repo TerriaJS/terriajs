@@ -23,15 +23,15 @@ import {
   Zxy,
   ZxySource
 } from "protomaps";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import Credit from "terriajs-cesium/Source/Core/Credit";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import { Cartographic as Cartographic } from "cesium";
+import { Credit as Credit } from "cesium";
+import { defaultValue as defaultValue } from "cesium";
+import { DeveloperError as DeveloperError } from "cesium";
+import { Event as CesiumEvent } from "cesium";
+import { Math as CesiumMath } from "cesium";
+import { Rectangle as Rectangle } from "cesium";
+import { WebMercatorTilingScheme as WebMercatorTilingScheme } from "cesium";
+import { ImageryLayerFeatureInfo as ImageryLayerFeatureInfo } from "cesium";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";

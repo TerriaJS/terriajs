@@ -1,11 +1,11 @@
 import L, { TileEvent } from "leaflet";
 import { autorun, computed, IReactionDisposer, observable } from "mobx";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
+import { Cartographic as Cartographic } from "cesium";
+import { Event as CesiumEvent } from "cesium";
+import { Math as CesiumMath } from "cesium";
+import { SplitDirection as SplitDirection } from "cesium";
 import Leaflet from "../../Models/Leaflet";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import { ImageryProvider as ImageryProvider } from "cesium";
 
 export interface ImageryProviderWithGridLayerSupport extends ImageryProvider {
   requestImageForCanvas: (

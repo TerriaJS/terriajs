@@ -1,5 +1,5 @@
 import { computed, observable, runInAction, untracked } from "mobx";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import { DeveloperError as DeveloperError } from "cesium";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import Result from "../Core/Result";

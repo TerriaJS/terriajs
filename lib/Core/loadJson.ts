@@ -1,4 +1,4 @@
-import Resource from "terriajs-cesium/Source/Core/Resource";
+import { Resource as Resource } from "cesium";
 
 export default function loadJson(
   urlOrResource: any,

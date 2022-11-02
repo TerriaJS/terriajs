@@ -1,4 +1,4 @@
-import MapboxStyleImageryProvider from "terriajs-cesium/Source/Scene/MapboxStyleImageryProvider";
+import { MapboxStyleImageryProvider as MapboxStyleImageryProvider } from "cesium";
 import URI from "urijs";
 import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";

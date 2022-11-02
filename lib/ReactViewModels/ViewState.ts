@@ -7,7 +7,7 @@ import {
   runInAction
 } from "mobx";
 import { Ref } from "react";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined as defined } from "cesium";
 import addedByUser from "../Core/addedByUser";
 import {
   Category,

@@ -88,7 +88,7 @@ gulp.task("reference-guide", function (done) {
 gulp.task("copy-cesium-assets", function () {
   var path = require("path");
 
-  var cesiumPackage = require.resolve("terriajs-cesium/package.json");
+  var cesiumPackage = require.resolve("cesium/package.json");
   var cesiumRoot = path.dirname(cesiumPackage);
   var cesiumWebRoot = path.join(cesiumRoot, "wwwroot");
 

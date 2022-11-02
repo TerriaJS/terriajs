@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined as defined } from "cesium";
 import ChartView from "../../../Charts/ChartView.ts";
 import Result from "../../../Core/Result";
 import MappableMixin from "../../../ModelMixins/MappableMixin";

@@ -5,10 +5,10 @@ import {
   reaction,
   runInAction
 } from "mobx";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import { Cartesian3 as Cartesian3 } from "cesium";
+import { createGuid as createGuid } from "cesium";
+import { Ellipsoid as Ellipsoid } from "cesium";
+import { Math as CesiumMath } from "cesium";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import flatten from "../../Core/flatten";
 import isDefined from "../../Core/isDefined";

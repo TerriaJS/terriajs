@@ -1,5 +1,5 @@
 import { computed, runInAction } from "mobx";
-import combine from "terriajs-cesium/Source/Core/combine";
+import { combine as combine } from "cesium";
 import isDefined from "../../Core/isDefined";
 import JsonValue, { JsonObject } from "../../Core/Json";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";

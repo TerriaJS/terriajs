@@ -5,7 +5,7 @@ import Terria from "../../Models/Terria";
 import { IconGlyph } from "../../Styled/Icon";
 import ViewerMode from "../../Models/ViewerMode";
 import TerriaError from "../../Core/TerriaError";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import { createGuid as createGuid } from "cesium";
 
 interface SimpleButton {
   /**

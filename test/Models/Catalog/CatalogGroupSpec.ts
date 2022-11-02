@@ -9,7 +9,7 @@ import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import upsertModelFromJson from "../../../lib/Models/Definition/upsertModelFromJson";
 import Terria from "../../../lib/Models/Terria";
 import SplitItemReference from "../../../lib/Models/Catalog/CatalogReferences/SplitItemReference";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import { createGuid as createGuid } from "cesium";
 import { runInAction } from "mobx";
 
 describe("CatalogGroup", function () {

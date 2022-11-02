@@ -1,6 +1,6 @@
 import { computed } from "mobx";
-import ArcGISTiledElevationTerrainProvider from "terriajs-cesium/Source/Core/ArcGISTiledElevationTerrainProvider";
-import Credit from "terriajs-cesium/Source/Core/Credit";
+import { ArcGISTiledElevationTerrainProvider as ArcGISTiledElevationTerrainProvider } from "cesium";
+import { Credit as Credit } from "cesium";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";

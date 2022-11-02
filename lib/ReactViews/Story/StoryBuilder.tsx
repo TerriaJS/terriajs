@@ -9,8 +9,8 @@ import {
   WithTranslation
 } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
-import combine from "terriajs-cesium/Source/Core/combine";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import { combine as combine } from "cesium";
+import { createGuid as createGuid } from "cesium";
 import {
   Category,
   StoryAction

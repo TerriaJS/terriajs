@@ -1,6 +1,6 @@
 import { autorun } from "mobx";
 import { createTransformer } from "mobx-utils";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined as defined } from "cesium";
 
 interface Args {
   value: any;

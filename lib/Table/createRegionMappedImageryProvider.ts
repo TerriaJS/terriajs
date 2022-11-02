@@ -1,11 +1,11 @@
 import { VectorTileFeature } from "@mapbox/vector-tile";
 import { action, runInAction } from "mobx";
-import Color from "terriajs-cesium/Source/Core/Color";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import { Color as Color } from "cesium";
+import { JulianDate as JulianDate } from "cesium";
+import { Rectangle as Rectangle } from "cesium";
+import { TimeInterval as TimeInterval } from "cesium";
+import { ImageryLayerFeatureInfo as ImageryLayerFeatureInfo } from "cesium";
+import { ImageryProvider as ImageryProvider } from "cesium";
 import isDefined from "../Core/isDefined";
 import { isJsonNumber } from "../Core/Json";
 import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";

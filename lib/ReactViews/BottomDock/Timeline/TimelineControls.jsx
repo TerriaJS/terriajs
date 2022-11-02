@@ -5,7 +5,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
 
-import ClockRange from "terriajs-cesium/Source/Core/ClockRange";
+import { ClockRange as ClockRange } from "cesium";
 import { withTranslation } from "react-i18next";
 
 import Styles from "./timeline-controls.scss";

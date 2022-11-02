@@ -2,8 +2,8 @@
 
 import { observer } from "mobx-react";
 import React, { SyntheticEvent } from "react";
-import defined from "terriajs-cesium/Source/Core/defined";
-import Resource from "terriajs-cesium/Source/Core/Resource";
+import { defined as defined } from "cesium";
+import { Resource as Resource } from "cesium";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import { getMakiIcon } from "../../../Map/Icons/Maki/MakiIcons";

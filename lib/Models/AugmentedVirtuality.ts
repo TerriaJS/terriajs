@@ -1,11 +1,11 @@
 import { action, computed, observable, runInAction } from "mobx";
-import CesiumCartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import CesiumMatrix3 from "terriajs-cesium/Source/Core/Matrix3";
-import Camera from "terriajs-cesium/Source/Scene/Camera";
-import Scene from "terriajs-cesium/Source/Scene/Scene";
+import { Cartesian3 as CesiumCartesian3 } from "cesium";
+import { Cartographic as Cartographic } from "cesium";
+import { EllipsoidTerrainProvider as EllipsoidTerrainProvider } from "cesium";
+import { Math as CesiumMath } from "cesium";
+import { Matrix3 as CesiumMatrix3 } from "cesium";
+import { Camera as Camera } from "cesium";
+import { Scene as Scene } from "cesium";
 import Terria from "./Terria";
 
 const sampleTerrainMostDetailed =

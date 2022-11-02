@@ -1,4 +1,4 @@
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined as defined } from "cesium";
 import URI from "urijs";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts

@@ -1,24 +1,24 @@
 import "../../../SpecMain";
 import { reaction, runInAction } from "mobx";
 import i18next from "i18next";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import IonResource from "terriajs-cesium/Source/Core/IonResource";
-import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
-import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
-import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
-import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
-import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
+import { Cartesian2 as Cartesian2 } from "cesium";
+import { IonResource as IonResource } from "cesium";
+import { Cesium3DTileFeature as Cesium3DTileFeature } from "cesium";
+import { Cesium3DTileset as Cesium3DTileset } from "cesium";
+import { Cesium3DTileStyle as Cesium3DTileStyle } from "cesium";
+import { Cesium3DTileColorBlendMode as Cesium3DTileColorBlendMode } from "cesium";
+import { ShadowMode as ShadowMode } from "cesium";
 import Cesium3DTilesCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/Cesium3DTilesCatalogItem";
 import createStratumInstance from "../../../../lib/Models/Definition/createStratumInstance";
 import Terria from "../../../../lib/Models/Terria";
-import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
+import { Matrix4 as Matrix4 } from "cesium";
 import HeadingPitchRollTraits from "../../../../lib/Traits/TraitsClasses/HeadingPitchRollTraits";
 import LatLonHeightTraits from "../../../../lib/Traits/TraitsClasses/LatLonHeightTraits";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
-import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
-import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
-import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import { Quaternion as Quaternion } from "cesium";
+import { Matrix3 as Matrix3 } from "cesium";
+import { HeadingPitchRoll as HeadingPitchRoll } from "cesium";
+import { Cartesian3 as Cartesian3 } from "cesium";
 import {
   OptionsTraits,
   FilterTraits

@@ -1,9 +1,9 @@
 import { action, runInAction, toJS } from "mobx";
-import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
-import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
+import { buildModuleUrl as buildModuleUrl } from "cesium";
+import { RequestScheduler as RequestScheduler } from "cesium";
+import { CustomDataSource as CustomDataSource } from "cesium";
+import { Entity as Entity } from "cesium";
+import { SplitDirection as SplitDirection } from "cesium";
 import hashEntity from "../../lib/Core/hashEntity";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import Result from "../../lib/Core/Result";

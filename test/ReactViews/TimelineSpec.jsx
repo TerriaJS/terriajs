@@ -8,7 +8,7 @@ const Terria = require("../../lib/Models/Terria");
 
 const ImageryLayerCatalogItem = require("../../lib/Models/ImageryLayerCatalogItem");
 import { Timeline } from "../../lib/ReactViews/BottomDock/Timeline/Timeline";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import { JulianDate as JulianDate } from "cesium";
 const DataSourceClock =
   require("terriajs-cesium/Source/DataSources/DataSourceClock").default;
 

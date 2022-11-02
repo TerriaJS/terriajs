@@ -1,4 +1,4 @@
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import { DeveloperError as DeveloperError } from "cesium";
 import Constructor from "../../Core/Constructor";
 import ModelTraits from "../../Traits/ModelTraits";
 import TraitsConstructor from "../../Traits/TraitsConstructor";

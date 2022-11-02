@@ -1,12 +1,12 @@
 import { runInAction } from "mobx";
 import Terria from "../../lib/Models/Terria";
 import Cesium3DTilesCatalogItem from "../../lib/Models/Catalog/CatalogItems/Cesium3DTilesCatalogItem";
-import ClippingPlaneCollection from "terriajs-cesium/Source/Scene/ClippingPlaneCollection";
-import ClippingPlane from "terriajs-cesium/Source/Scene/ClippingPlane";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Color from "terriajs-cesium/Source/Core/Color";
-import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
-import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
+import { ClippingPlaneCollection as ClippingPlaneCollection } from "cesium";
+import { ClippingPlane as ClippingPlane } from "cesium";
+import { Cartesian3 as Cartesian3 } from "cesium";
+import { Color as Color } from "cesium";
+import { Matrix4 as Matrix4 } from "cesium";
+import { Cesium3DTileset as Cesium3DTileset } from "cesium";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 
 describe("Cesium3dTilesMixin", function () {

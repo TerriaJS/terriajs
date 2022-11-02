@@ -1,4 +1,4 @@
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
+import { DataSource as DataSource } from "cesium";
 
 /**
  * Returns a promise that resolves when the given dataSource finishes loading

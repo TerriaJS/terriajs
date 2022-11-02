@@ -1,5 +1,5 @@
 import { action, computed, observable, runInAction } from "mobx";
-import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
+import { RequestErrorEvent as RequestErrorEvent } from "cesium";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";

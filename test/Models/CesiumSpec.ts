@@ -1,12 +1,12 @@
 import range from "lodash-es/range";
 import { action, computed, observable, runInAction } from "mobx";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
-import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
-import Scene from "terriajs-cesium/Source/Scene/Scene";
-import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
+import { Cartesian3 as Cartesian3 } from "cesium";
+import { EllipsoidTerrainProvider as EllipsoidTerrainProvider } from "cesium";
+import { Rectangle as Rectangle } from "cesium";
+import { GeoJsonDataSource as GeoJsonDataSource } from "cesium";
+import { Cesium3DTileset as Cesium3DTileset } from "cesium";
+import { Scene as Scene } from "cesium";
+import { WebMapServiceImageryProvider as WebMapServiceImageryProvider } from "cesium";
 import filterOutUndefined from "../../lib/Core/filterOutUndefined";
 import runLater from "../../lib/Core/runLater";
 import MappableMixin from "../../lib/ModelMixins/MappableMixin";
@@ -23,7 +23,7 @@ import MappableTraits, {
   RectangleTraits
 } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
-import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
+import { CesiumTerrainProvider as CesiumTerrainProvider } from "cesium";
 
 const supportsWebGL = require("../../lib/Core/supportsWebGL");
 

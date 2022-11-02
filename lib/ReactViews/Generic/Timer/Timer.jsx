@@ -3,7 +3,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import { createGuid as createGuid } from "cesium";
 
 import { createTimer, startTimer as startTimerAnimation } from "./drawTimer";
 

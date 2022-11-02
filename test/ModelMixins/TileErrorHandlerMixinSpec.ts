@@ -1,9 +1,9 @@
 import i18next from "i18next";
-import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
-import Resource from "terriajs-cesium/Source/Core/Resource";
-import TileProviderError from "terriajs-cesium/Source/Core/TileProviderError";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
+import { RequestErrorEvent as RequestErrorEvent } from "cesium";
+import { Resource as Resource } from "cesium";
+import { TileProviderError as TileProviderError } from "cesium";
+import { ImageryProvider as ImageryProvider } from "cesium";
+import { WebMapServiceImageryProvider as WebMapServiceImageryProvider } from "cesium";
 import MappableMixin, { MapItem } from "../../lib/ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../../lib/ModelMixins/TileErrorHandlerMixin";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";

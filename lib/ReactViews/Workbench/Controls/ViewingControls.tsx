@@ -4,10 +4,10 @@ import { observer } from "mobx-react";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import styled from "styled-components";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import defined from "terriajs-cesium/Source/Core/defined";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
+import { createGuid as createGuid } from "cesium";
+import { defined as defined } from "cesium";
+import { Rectangle as Rectangle } from "cesium";
+import { SplitDirection as SplitDirection } from "cesium";
 import {
   Category,
   DataSourceAction

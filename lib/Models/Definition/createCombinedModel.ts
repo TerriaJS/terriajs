@@ -1,6 +1,6 @@
 import ModelTraits from "../../Traits/ModelTraits";
 import Model, { BaseModel, ModelConstructor } from "./Model";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import { DeveloperError as DeveloperError } from "cesium";
 import traitsClassToModelClass from "../../Traits/traitsClassToModelClass";
 import StratumFromTraits from "./StratumFromTraits";
 import createStratumInstance from "./createStratumInstance";

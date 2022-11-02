@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import styled from "styled-components";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined as defined } from "cesium";
 import MappableMixin from "../../ModelMixins/MappableMixin";
 import Styles from "./tabs.scss";
 import DataCatalogTab from "./Tabs/DataCatalogTab";

@@ -4,10 +4,10 @@
 
 // import PropTypes from "prop-types";
 
-// import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-// import CesiumMath from "terriajs-cesium/Source/Core/Math";
-// import defined from "terriajs-cesium/Source/Core/defined";
-// import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+// import { Cartographic as Cartographic } from "cesium";
+// import { Math as CesiumMath } from "cesium";
+// import { defined as defined } from "cesium";
+// import { Rectangle as Rectangle } from "cesium";
 // import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 
 // import MapInteractionMode from "../../Models/MapInteractionMode";

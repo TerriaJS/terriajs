@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
+import { defaultValue as defaultValue } from "cesium";
 import getDereferencedIfExists from "../../Core/getDereferencedIfExists";
 import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";

@@ -1,5 +1,5 @@
 import ColorMap from "./ColorMap";
-import Color from "terriajs-cesium/Source/Core/Color";
+import { Color as Color } from "cesium";
 
 export interface EnumBin {
   readonly value: string;

@@ -1,5 +1,5 @@
 import { action } from "mobx";
-import MapboxImageryProvider from "terriajs-cesium/Source/Scene/MapboxImageryProvider";
+import { MapboxImageryProvider as MapboxImageryProvider } from "cesium";
 import URI from "urijs";
 import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";

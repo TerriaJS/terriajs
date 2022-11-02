@@ -1,7 +1,7 @@
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import ShapefileCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/ShapefileCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
-import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
+import { GeoJsonDataSource as GeoJsonDataSource } from "cesium";
 
 describe("ShapefileCatalogItem", function () {
   let terria: Terria;

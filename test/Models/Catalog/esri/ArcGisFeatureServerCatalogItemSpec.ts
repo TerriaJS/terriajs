@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { configure, runInAction } from "mobx";
-import Color from "terriajs-cesium/Source/Core/Color";
+import { Color as Color } from "cesium";
 import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import { isDataSource } from "../../../../lib/ModelMixins/MappableMixin";
 import ArcGisFeatureServerCatalogItem, {

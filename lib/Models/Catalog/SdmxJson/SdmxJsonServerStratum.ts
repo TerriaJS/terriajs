@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { action, computed } from "mobx";
-import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
-import Resource from "terriajs-cesium/Source/Core/Resource";
+import { RequestErrorEvent as RequestErrorEvent } from "cesium";
+import { Resource as Resource } from "cesium";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import flatten from "../../../Core/flatten";
 import isDefined from "../../../Core/isDefined";

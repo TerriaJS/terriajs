@@ -1,6 +1,6 @@
 import { computed, runInAction } from "mobx";
-import Resource from "terriajs-cesium/Source/Core/Resource";
-import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
+import { Resource as Resource } from "cesium";
+import { UrlTemplateImageryProvider as UrlTemplateImageryProvider } from "cesium";
 import isDefined from "../../../Core/isDefined";
 import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";

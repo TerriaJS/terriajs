@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined as defined } from "cesium";
 import { DataSourceAction } from "../../Core/AnalyticEvents/analyticEvents";
 import MappableMixin from "../../ModelMixins/MappableMixin";
 import toggleItemOnMapFromCatalog, {

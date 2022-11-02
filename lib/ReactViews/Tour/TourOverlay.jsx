@@ -4,7 +4,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Styles from "../HelpScreens/obscure-overlay.scss";
 import classNames from "classnames";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined as defined } from "cesium";
 
 /**
  * Re-adapted from ObscureOverlay.jsx to be more general and not tied to viewState

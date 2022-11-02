@@ -2,7 +2,7 @@
 
 import i18next from "i18next";
 import { observable } from "mobx";
-import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
+import { RequestErrorEvent as RequestErrorEvent } from "cesium";
 import Terria from "../Models/Terria";
 import { Notification } from "../ReactViewModels/NotificationState";
 import { terriaErrorNotification } from "../ReactViews/Notification/terriaErrorNotification";

@@ -1,10 +1,10 @@
-import defined from "terriajs-cesium/Source/Core/defined";
-import destroyObject from "terriajs-cesium/Source/Core/destroyObject";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
-import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
-import TaskProcessor from "terriajs-cesium/Source/Core/TaskProcessor";
+import { defined as defined } from "cesium";
+import { destroyObject as destroyObject } from "cesium";
+import { Event as CesiumEvent } from "cesium";
+import { getTimestamp as getTimestamp } from "cesium";
+import { JulianDate as JulianDate } from "cesium";
+import { Matrix4 as Matrix4 } from "cesium";
+import { TaskProcessor as TaskProcessor } from "cesium";
 import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
 import loadWithXhr from "../../Core/loadWithXhr";
 

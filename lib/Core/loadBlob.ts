@@ -1,4 +1,4 @@
-import Resource from "terriajs-cesium/Source/Core/Resource";
+import { Resource as Resource } from "cesium";
 import JsonValue from "./Json";
 import loadJson from "./loadJson";
 import URI from "urijs";

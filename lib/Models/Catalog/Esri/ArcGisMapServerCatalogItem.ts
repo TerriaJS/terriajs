@@ -1,10 +1,10 @@
 import i18next from "i18next";
 import uniqWith from "lodash-es/uniqWith";
 import { computed, runInAction } from "mobx";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
-import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import { Ellipsoid as Ellipsoid } from "cesium";
+import { WebMercatorTilingScheme as WebMercatorTilingScheme } from "cesium";
+import { ArcGisMapServerImageryProvider as ArcGisMapServerImageryProvider } from "cesium";
+import { ImageryProvider as ImageryProvider } from "cesium";
 import URI from "urijs";
 import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";
 import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";

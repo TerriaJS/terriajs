@@ -1,6 +1,6 @@
 import { action, computed, observable, runInAction } from "mobx";
-import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
-import IonResource from "terriajs-cesium/Source/Core/IonResource";
+import { CesiumTerrainProvider as CesiumTerrainProvider } from "cesium";
+import { IonResource as IonResource } from "cesium";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";

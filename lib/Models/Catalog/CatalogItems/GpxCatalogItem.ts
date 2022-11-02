@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { computed } from "mobx";
-import getFilenameFromUri from "terriajs-cesium/Source/Core/getFilenameFromUri";
+import { getFilenameFromUri as getFilenameFromUri } from "cesium";
 import isDefined from "../../../Core/isDefined";
 import loadText from "../../../Core/loadText";
 import readText from "../../../Core/readText";

@@ -12,7 +12,7 @@ import CorsProxy from "../../Core/CorsProxy";
 import RegionProvider from "./RegionProvider";
 import isDefined from "../../Core/isDefined";
 import loadJson from "../../Core/loadJson";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import { DeveloperError as DeveloperError } from "cesium";
 
 /**
  * RegionProviderList encapsulates the regionMapping.json file and provides support for choosing the best region

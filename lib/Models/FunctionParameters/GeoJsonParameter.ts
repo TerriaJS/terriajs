@@ -1,6 +1,6 @@
 import { Feature } from "@turf/helpers";
 import { computed, observable } from "mobx";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import { Cartographic as Cartographic } from "cesium";
 import { JsonObject } from "../../Core/Json";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import FunctionParameter, {

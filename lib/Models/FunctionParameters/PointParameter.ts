@@ -1,7 +1,7 @@
 import { Feature, Point } from "@turf/helpers";
 import { computed } from "mobx";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import { Cartographic as Cartographic } from "cesium";
+import { Math as CesiumMath } from "cesium";
 import isDefined from "../../Core/isDefined";
 import FunctionParameter from "./FunctionParameter";
 import { GeoJsonFunctionParameter } from "./GeoJsonParameter";

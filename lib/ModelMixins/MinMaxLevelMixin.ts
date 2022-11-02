@@ -1,5 +1,5 @@
 import { observable } from "mobx";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import { ImageryProvider as ImageryProvider } from "cesium";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import Model from "../Models/Definition/Model";

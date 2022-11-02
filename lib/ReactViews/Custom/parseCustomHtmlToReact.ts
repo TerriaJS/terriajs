@@ -15,8 +15,7 @@ import { ExternalLinkWithWarning, ExternalLinkIcon } from "./ExternalLink";
 
 const DOMPurify = require("dompurify/dist/purify");
 const HtmlToReact = require("html-to-react");
-const combine = require("terriajs-cesium/Source/Core/combine").default;
-const defined = require("terriajs-cesium/Source/Core/defined").default;
+import { combine, defined } from "cesium";
 const utils = require("html-to-react/lib/utils");
 
 const htmlToReactParser = new HtmlToReact.Parser({

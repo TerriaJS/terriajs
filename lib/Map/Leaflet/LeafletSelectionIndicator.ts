@@ -1,9 +1,9 @@
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import EasingFunction from "terriajs-cesium/Source/Core/EasingFunction";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import { Cartographic as Cartographic } from "cesium";
+import { Math as CesiumMath } from "cesium";
+import { EasingFunction as EasingFunction } from "cesium";
+import { Ellipsoid as Ellipsoid } from "cesium";
 import L from "leaflet";
-import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnimationFrame";
+import { requestAnimationFrame as cesiumRequestAnimationFrame } from "cesium";
 import isDefined from "../../Core/isDefined";
 
 import Leaflet from "../../Models/Leaflet";

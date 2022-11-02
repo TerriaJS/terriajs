@@ -1,5 +1,5 @@
 import { runInAction } from "mobx";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import { createGuid as createGuid } from "cesium";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import SplitItemReference from "../../../../lib/Models/Catalog/CatalogReferences/SplitItemReference";
 import Terria from "../../../../lib/Models/Terria";

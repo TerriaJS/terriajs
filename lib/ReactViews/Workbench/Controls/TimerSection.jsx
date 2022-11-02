@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import createReactClass from "create-react-class";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined as defined } from "cesium";
 import Timer from "../../Generic/Timer/Timer";
 import { withTranslation } from "react-i18next";
 

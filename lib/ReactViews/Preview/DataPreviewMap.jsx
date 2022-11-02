@@ -6,7 +6,7 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import { Math as CesiumMath } from "cesium";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import MappableMixin, { ImageryParts } from "../../ModelMixins/MappableMixin";
 import CommonStrata from "../../Models/Definition/CommonStrata";

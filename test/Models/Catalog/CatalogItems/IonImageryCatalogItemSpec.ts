@@ -1,5 +1,5 @@
 import { runInAction } from "mobx";
-import IonImageryProvider from "terriajs-cesium/Source/Scene/IonImageryProvider";
+import { IonImageryProvider as IonImageryProvider } from "cesium";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import IonImageryCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/IonImageryCatalogItem";
 import Terria from "../../../../lib/Models/Terria";

@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { computed, runInAction } from "mobx";
-import getFilenameFromUri from "terriajs-cesium/Source/Core/getFilenameFromUri";
-import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
+import { getFilenameFromUri as getFilenameFromUri } from "cesium";
+import { RuntimeError as RuntimeError } from "cesium";
 import isDefined from "../../../Core/isDefined";
 import { JsonObject } from "../../../Core/Json";
 import loadXML from "../../../Core/loadXML";

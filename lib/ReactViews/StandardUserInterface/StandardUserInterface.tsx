@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { DefaultTheme } from "styled-components";
-import combine from "terriajs-cesium/Source/Core/combine";
+import { combine as combine } from "cesium";
 import arrayContains from "../../Core/arrayContains";
 import ViewState from "../../ReactViewModels/ViewState";
 import Disclaimer from "../Disclaimer";

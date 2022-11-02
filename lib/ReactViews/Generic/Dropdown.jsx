@@ -3,7 +3,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined as defined } from "cesium";
 import classNames from "classnames";
 
 import Styles from "./dropdown.scss";

@@ -1,6 +1,6 @@
 import { configure, runInAction } from "mobx";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
+import { Rectangle as Rectangle } from "cesium";
+import { UrlTemplateImageryProvider as UrlTemplateImageryProvider } from "cesium";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import CartoMapV1CatalogItem, {
   CartoLoadableStratum

@@ -1,4 +1,4 @@
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import { CustomDataSource as CustomDataSource } from "cesium";
 import { isJsonObject } from "../../../../lib/Core/Json";
 import CartoMapV3CatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CartoMapV3CatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";

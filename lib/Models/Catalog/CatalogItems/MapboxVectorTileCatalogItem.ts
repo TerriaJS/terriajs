@@ -3,7 +3,7 @@ import bbox from "@turf/bbox";
 import i18next from "i18next";
 import { clone } from "lodash-es";
 import { action, computed, observable, runInAction } from "mobx";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import { ImageryLayerFeatureInfo as ImageryLayerFeatureInfo } from "cesium";
 import {
   json_style,
   LabelRule,

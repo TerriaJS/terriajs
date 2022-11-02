@@ -9,7 +9,7 @@ import Box from "../../../Styled/Box";
 import MapDataCount from "../../BottomDock/MapDataCount";
 import Terria from "../../../Models/Terria";
 import MapIconButton from "../../MapIconButton/MapIconButton";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined as defined } from "cesium";
 
 interface Props {
   terria: Terria;

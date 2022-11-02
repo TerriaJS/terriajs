@@ -1,9 +1,9 @@
 import { action, observable, reaction } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import { Cartesian3 as Cartesian3 } from "cesium";
+import { Ellipsoid as Ellipsoid } from "cesium";
+import { Math as CesiumMath } from "cesium";
 import LatLonHeight from "../../../Core/LatLonHeight";
 import PickedFeatures from "../../../Map/PickedFeatures/PickedFeatures";
 import { addMarker, removeMarker } from "../../../Models/LocationMarkerUtils";

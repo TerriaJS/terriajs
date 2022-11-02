@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { computed, isObservableArray, runInAction } from "mobx";
-import combine from "terriajs-cesium/Source/Core/combine";
+import { combine as combine } from "cesium";
 import containsAny from "../../../Core/containsAny";
 import isDefined from "../../../Core/isDefined";
 import isReadOnlyArray from "../../../Core/isReadOnlyArray";

@@ -1,4 +1,4 @@
-import CzmlDataSource from "terriajs-cesium/Source/DataSources/CzmlDataSource";
+import { CzmlDataSource as CzmlDataSource } from "cesium";
 import loadBlob from "../../../../lib/Core/loadBlob";
 import loadJson from "../../../../lib/Core/loadJson";
 import loadText from "../../../../lib/Core/loadText";

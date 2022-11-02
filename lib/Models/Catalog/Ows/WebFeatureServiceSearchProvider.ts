@@ -7,8 +7,8 @@ import SearchProvider from "../../SearchProviders/SearchProvider";
 import SearchProviderResults from "../../SearchProviders/SearchProviderResults";
 import SearchResult from "../../SearchProviders/SearchResult";
 import Terria from "../../Terria";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
-import Resource from "terriajs-cesium/Source/Core/Resource";
+import { defaultValue as defaultValue } from "cesium";
+import { Resource as Resource } from "cesium";
 
 export interface WebFeatureServiceSearchProviderOptions {
   /** Base url for the service */

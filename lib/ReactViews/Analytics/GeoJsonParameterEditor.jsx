@@ -2,7 +2,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined as defined } from "cesium";
 import Styles from "./parameter-editors.scss";
 import {
   selectOnMap as selectPointOnMap,

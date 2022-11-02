@@ -1,10 +1,10 @@
 import i18next from "i18next";
 import { computed, runInAction } from "mobx";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
-import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import { Rectangle as Rectangle } from "cesium";
+import { TerrainProvider as TerrainProvider } from "cesium";
+import { DataSource as DataSource } from "cesium";
+import { Cesium3DTileset as Cesium3DTileset } from "cesium";
+import { ImageryProvider as ImageryProvider } from "cesium";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import Result from "../Core/Result";

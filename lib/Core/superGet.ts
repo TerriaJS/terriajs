@@ -1,4 +1,4 @@
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import { DeveloperError as DeveloperError } from "cesium";
 
 /**
  * Gets the value of a named property from a superclass of an instance. If the superclass has

@@ -1,22 +1,22 @@
-import AssociativeArray from "terriajs-cesium/Source/Core/AssociativeArray";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Color from "terriajs-cesium/Source/Core/Color";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollection";
-import EntityCluster from "terriajs-cesium/Source/DataSources/EntityCluster";
+import { AssociativeArray as AssociativeArray } from "cesium";
+import { Cartesian2 as Cartesian2 } from "cesium";
+import { Cartesian3 as Cartesian3 } from "cesium";
+import { Math as CesiumMath } from "cesium";
+import { Color as Color } from "cesium";
+import { DataSource as DataSource } from "cesium";
+import { Ellipsoid as Ellipsoid } from "cesium";
+import { Entity as Entity } from "cesium";
+import { EntityCollection as EntityCollection } from "cesium";
+import { EntityCluster as EntityCluster } from "cesium";
 import isDefined from "../../Core/isDefined";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import { JulianDate as JulianDate } from "cesium";
 import L, { LatLngBounds, PolylineOptions, LatLngBoundsLiteral } from "leaflet";
 import LeafletScene from "./LeafletScene";
-import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
-import PolylineGlowMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineGlowMaterialProperty";
-import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
-import Property from "terriajs-cesium/Source/DataSources/Property";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import { PolygonHierarchy as PolygonHierarchy } from "cesium";
+import { PolylineGlowMaterialProperty as PolylineGlowMaterialProperty } from "cesium";
+import { PolylineDashMaterialProperty as PolylineDashMaterialProperty } from "cesium";
+import { Property as Property } from "cesium";
+import { Rectangle as Rectangle } from "cesium";
 import { getLineStyleLeaflet } from "../../Models/Catalog/Esri/esriLineStyle";
 
 const destroyObject =

@@ -1,7 +1,7 @@
 import { action, observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import { createGuid as createGuid } from "cesium";
 import LatLonHeight from "../../../Core/LatLonHeight";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import createStratumInstance from "../../../Models/Definition/createStratumInstance";

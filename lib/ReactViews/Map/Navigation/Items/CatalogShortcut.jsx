@@ -3,7 +3,7 @@
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import React from "react";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined as defined } from "cesium";
 import Icon from "../../../Styled/Icon";
 import Styles from "./tool_button.scss";
 

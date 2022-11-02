@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { computed } from "mobx";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import { Math as CesiumMath } from "cesium";
+import { Rectangle as Rectangle } from "cesium";
 import URI from "urijs";
 import containsAny from "../../../Core/containsAny";
 import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";

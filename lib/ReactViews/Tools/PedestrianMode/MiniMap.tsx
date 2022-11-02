@@ -1,9 +1,9 @@
 import { action, autorun, computed } from "mobx";
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import Scene from "terriajs-cesium/Source/Scene/Scene";
+import { Cartesian3 as Cartesian3 } from "cesium";
+import { Rectangle as Rectangle } from "cesium";
+import { Scene as Scene } from "cesium";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import Terria from "../../../Models/Terria";
 import ViewerMode from "../../../Models/ViewerMode";

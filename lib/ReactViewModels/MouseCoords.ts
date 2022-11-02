@@ -1,11 +1,11 @@
 import debounce from "lodash-es/debounce";
 import { observable, action, runInAction } from "mobx";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
-import Intersections2D from "terriajs-cesium/Source/Core/Intersections2D";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
+import { Cartesian2 as Cartesian2 } from "cesium";
+import { Cartographic as Cartographic } from "cesium";
+import { EllipsoidTerrainProvider as EllipsoidTerrainProvider } from "cesium";
+import { Intersections2D as Intersections2D } from "cesium";
+import { Math as CesiumMath } from "cesium";
+import { TerrainProvider as TerrainProvider } from "cesium";
 import isDefined from "../Core/isDefined";
 import JSEarthGravityModel1996 from "../Map/Vector/EarthGravityModel1996";
 import prettifyCoordinates from "../Map/Vector/prettifyCoordinates";

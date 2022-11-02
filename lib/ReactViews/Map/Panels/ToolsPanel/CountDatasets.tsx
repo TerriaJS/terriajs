@@ -3,7 +3,7 @@
 import { observer } from "mobx-react";
 import React, { useState } from "react";
 import { useTranslation, withTranslation } from "react-i18next";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined as defined } from "cesium";
 import {
   applyTranslationIfExists,
   TRANSLATE_KEY_PREFIX

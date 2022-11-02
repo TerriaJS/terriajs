@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import CreditDisplay from "terriajs-cesium/Source/Scene/CreditDisplay";
+import { CreditDisplay as CreditDisplay } from "cesium";
 import GlobeOrMap from "../../../Models/GlobeOrMap";
 import Leaflet from "../../../Models/Leaflet";
 import parseCustomHtmlToReact from "../../Custom/parseCustomHtmlToReact";

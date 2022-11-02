@@ -16,8 +16,8 @@ import {
   Position as ArcGisPosition,
   SpatialReference
 } from "arcgis-rest-api";
-import defined from "terriajs-cesium/Source/Core/defined";
-import WindingOrder from "terriajs-cesium/Source/Core/WindingOrder";
+import { defined as defined } from "cesium";
+import { WindingOrder as WindingOrder } from "cesium";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import JsonValue, { isJsonObject, isJsonValue } from "../../Core/Json";
 import {

@@ -9,12 +9,12 @@
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
 import i18next from "i18next";
 import { computed, runInAction } from "mobx";
-import combine from "terriajs-cesium/Source/Core/combine";
-import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
-import GetFeatureInfoFormat from "terriajs-cesium/Source/Scene/GetFeatureInfoFormat";
-import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
+import { combine as combine } from "cesium";
+import { GeographicTilingScheme as GeographicTilingScheme } from "cesium";
+import { JulianDate as JulianDate } from "cesium";
+import { WebMercatorTilingScheme as WebMercatorTilingScheme } from "cesium";
+import { GetFeatureInfoFormat as GetFeatureInfoFormat } from "cesium";
+import { WebMapServiceImageryProvider as WebMapServiceImageryProvider } from "cesium";
 import URI from "urijs";
 import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
 import filterOutUndefined from "../../../Core/filterOutUndefined";

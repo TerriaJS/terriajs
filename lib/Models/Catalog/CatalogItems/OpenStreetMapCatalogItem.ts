@@ -1,5 +1,5 @@
 import { computed } from "mobx";
-import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
+import { UrlTemplateImageryProvider as UrlTemplateImageryProvider } from "cesium";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";

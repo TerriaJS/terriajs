@@ -1,4 +1,4 @@
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import { JulianDate as JulianDate } from "cesium";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import TimeVaryingTraits from "../Traits/TraitsClasses/TimeVaryingTraits";
 

@@ -6,7 +6,7 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTheme } from "styled-components";
-import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
+import { EventHelper as EventHelper } from "cesium";
 import { withViewState } from "../StandardUserInterface/ViewStateContext";
 import Styles from "./progress-bar.scss";
 

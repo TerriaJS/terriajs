@@ -1,10 +1,10 @@
 import { action, runInAction } from "mobx";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import Resource from "terriajs-cesium/Source/Core/Resource";
-import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
-import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import { Cartesian2 as Cartesian2 } from "cesium";
+import { JulianDate as JulianDate } from "cesium";
+import { Resource as Resource } from "cesium";
+import { ConstantProperty as ConstantProperty } from "cesium";
+import { PropertyBag as PropertyBag } from "cesium";
+import { ImageryProvider as ImageryProvider } from "cesium";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";

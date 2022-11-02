@@ -1,7 +1,7 @@
 import countBy from "lodash-es/countBy";
 import Mexp from "math-expression-evaluator";
 import { computed } from "mobx";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import { JulianDate as JulianDate } from "cesium";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import runLater from "../Core/runLater";

@@ -1,7 +1,7 @@
 import Terria from "../../../../lib/Models/Terria";
 import CesiumTerrainCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CesiumTerrainCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
-import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
+import { CesiumTerrainProvider as CesiumTerrainProvider } from "cesium";
 import { runInAction } from "mobx";
 
 describe("CesiumTerrainCatalogItem", function () {

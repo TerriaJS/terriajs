@@ -6,7 +6,7 @@
 
 import { remove } from "lodash-es";
 import { runInAction } from "mobx";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import { createGuid as createGuid } from "cesium";
 import { Optional } from "../Core/TypeModifiers";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import { ViewingControl } from "../Models/ViewingControls";

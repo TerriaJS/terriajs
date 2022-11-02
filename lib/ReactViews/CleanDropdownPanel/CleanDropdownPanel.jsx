@@ -15,7 +15,7 @@ import BaseOuterPanel from "../Map/Panels/BaseOuterPanel";
 // import Styles from "./panel.scss";
 import Box from "../../Styled/Box";
 
-// import defined from "terriajs-cesium/Source/Core/defined";
+// import { defined as defined } from "cesium";
 
 const CleanDropdownPanel = createReactClass({
   displayName: "CleanDropdownPanel",

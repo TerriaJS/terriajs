@@ -1,10 +1,10 @@
 import { observable, runInAction } from "mobx";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
-import defined from "terriajs-cesium/Source/Core/defined";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import Resource from "terriajs-cesium/Source/Core/Resource";
+import { defaultValue as defaultValue } from "cesium";
+import { defined as defined } from "cesium";
+import { Ellipsoid as Ellipsoid } from "cesium";
+import { Math as CesiumMath } from "cesium";
+import { Rectangle as Rectangle } from "cesium";
+import { Resource as Resource } from "cesium";
 import loadJsonp from "../../Core/loadJsonp";
 import SearchProvider from "./SearchProvider";
 import SearchResult from "./SearchResult";

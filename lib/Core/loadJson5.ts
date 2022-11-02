@@ -1,5 +1,5 @@
 import json5 from "json5";
-import Resource from "terriajs-cesium/Source/Core/Resource";
+import { Resource as Resource } from "cesium";
 import JsonValue from "./Json";
 
 const defaultHeaders = {

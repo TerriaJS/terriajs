@@ -1,6 +1,4 @@
-"use strict";
-
-var defined = require("terriajs-cesium/Source/Core/defined").default;
+import { defined } from "cesium";
 var MarkdownIt = require("markdown-it");
 var DOMPurify = require("dompurify/dist/purify");
 import injectTerms from "./injectTerms";
