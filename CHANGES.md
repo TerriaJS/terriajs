@@ -2,6 +2,8 @@
 
 #### next release (8.2.21)
 
+- Move `GeoJsonMixin.loadCzmlDataSource` to `lib/Map/Vector/geoJsonWithCzmlTemplate.ts`
+- Add `czmlTemplate` support for `[Multi]LineString` GeoJSON features.
 - [The next improvement]
 
 #### 8.2.20 - 2022-10-20
