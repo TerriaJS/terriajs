@@ -52,8 +52,8 @@ import { Scene as Scene } from "cesium";
 import { SceneTransforms as SceneTransforms } from "cesium";
 import { SingleTileImageryProvider as SingleTileImageryProvider } from "cesium";
 import { SplitDirection as SplitDirection } from "cesium";
-import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
-import getElement from "terriajs-cesium/Source/Widgets/getElement";
+import { CesiumWidget } from "cesium";
+import { getElement } from "cesium";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
@@ -1067,7 +1067,7 @@ export default class Cesium extends GlobeOrMap {
       };
     } else if (this.terria.configParameters.useCesiumIonTerrain) {
       // Use Cesium ION world Terrain
-      const logo = require("terriajs-cesium/Source/Assets/Images/ion-credit.png");
+      const logo = require("cesium/Source/Assets/Images/ion-credit.png");
       const ionCredit = new Credit(
         '<a href="https://cesium.com/" target="_blank" rel="noopener noreferrer"><img src="' +
           logo +

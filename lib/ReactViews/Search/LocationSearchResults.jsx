@@ -190,4 +190,4 @@ const LocationSearchResults = observer(
   })
 );
 
-module.exports = withTranslation()(LocationSearchResults);
+export default withTranslation()(LocationSearchResults);

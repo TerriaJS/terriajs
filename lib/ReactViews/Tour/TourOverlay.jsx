@@ -103,4 +103,4 @@ TourOverlay.propTypes = {
   onCancel: PropTypes.func.isRequired
 };
 
-module.exports = TourOverlay;
+export default TourOverlay;

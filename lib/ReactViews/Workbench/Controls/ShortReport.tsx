@@ -103,5 +103,3 @@ export default class ShortReport extends React.Component<{
     );
   }
 }
-
-module.exports = ShortReport;

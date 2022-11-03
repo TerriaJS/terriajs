@@ -3,7 +3,7 @@
 
 // This is the webpack-aliased-and-overriden-from-TerriaMap one, otherwise
 // resolves back to our base one provided in terriajs
-@import "~terriajs-variables";
+@import "terriajs/lib/Sass/common/_variables.scss";
 
 :export {
   // TODO: find a better solution for this - some of these we need to provide as

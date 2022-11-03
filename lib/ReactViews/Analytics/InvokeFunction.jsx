@@ -159,4 +159,4 @@ const InvokeFunction = observer(
   })
 );
 
-module.exports = withTranslation()(InvokeFunction);
+export default withTranslation()(InvokeFunction);

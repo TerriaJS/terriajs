@@ -85,4 +85,4 @@ const SideBarDatasetSearchResults = observer(
   })
 );
 
-module.exports = withTranslation()(SideBarDatasetSearchResults);
+export default withTranslation()(SideBarDatasetSearchResults);

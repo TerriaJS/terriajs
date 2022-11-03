@@ -227,4 +227,4 @@ const Splitter = observer(
   })
 );
 
-module.exports = withTranslation()(Splitter);
+export default withTranslation()(Splitter);

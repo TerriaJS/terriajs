@@ -7,4 +7,3 @@ export default function loadArrayBuffer(
   return Resource.fetchArrayBuffer({ url: urlOrResource, headers: headers })!;
 }
 
-module.exports = loadArrayBuffer;

@@ -160,4 +160,4 @@ const DataPreview = observer(
   })
 );
 
-module.exports = withTranslation()(DataPreview);
+export default withTranslation()(DataPreview);

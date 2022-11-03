@@ -54,4 +54,4 @@ class TerriaViewerWrapper extends React.Component {
     );
   }
 }
-module.exports = TerriaViewerWrapper;
+export default TerriaViewerWrapper;

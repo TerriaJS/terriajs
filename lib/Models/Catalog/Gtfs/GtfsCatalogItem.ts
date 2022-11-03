@@ -19,6 +19,7 @@ import { PropertyBag as PropertyBag } from "cesium";
 import { ColorBlendMode as ColorBlendMode } from "cesium";
 import { HeightReference as HeightReference } from "cesium";
 import { ShadowMode as ShadowMode } from "cesium";
+import { Axis } from "cesium";
 import isDefined from "../../../Core/isDefined";
 import loadArrayBuffer from "../../../Core/loadArrayBuffer";
 import TerriaError from "../../../Core/TerriaError";
@@ -42,11 +43,6 @@ import {
 } from "./GtfsRealtimeProtoBufReaders";
 import prettyPrintGtfsEntityField from "./prettyPrintGtfsEntityField";
 import VehicleData from "./VehicleData";
-
-// We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
-// and import doesn't allows us to do that, so instead we use require + type casting to ensure
-// we still maintain the type checking, without TS screaming with errors
-const Axis: Axis = require("terriajs-cesium/Source/Scene/Axis").default;
 
 interface RectangleExtent {
   east: number;

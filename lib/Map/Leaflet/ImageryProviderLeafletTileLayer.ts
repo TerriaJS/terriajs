@@ -12,18 +12,13 @@ import { WebMercatorTilingScheme as WebMercatorTilingScheme } from "cesium";
 import { ImageryLayerFeatureInfo as ImageryLayerFeatureInfo } from "cesium";
 import { ImageryProvider as ImageryProvider } from "cesium";
 import { SplitDirection as SplitDirection } from "cesium";
+import { FeatureDetection } from "cesium";
 import isDefined from "../../Core/isDefined";
 import pollToPromise from "../../Core/pollToPromise";
 import TerriaError from "../../Core/TerriaError";
 import Leaflet from "../../Models/Leaflet";
 import getUrlForImageryTile from "../ImageryProvider/getUrlForImageryTile";
 import { ProviderCoords } from "../PickedFeatures/PickedFeatures";
-
-// We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
-// and import doesn't allows us to do that, so instead we use require + type casting to ensure
-// we still maintain the type checking, without TS screaming with errors
-const FeatureDetection: FeatureDetection =
-  require("terriajs-cesium/Source/Core/FeatureDetection").default;
 
 const swScratch = new Cartographic();
 const neScratch = new Cartographic();

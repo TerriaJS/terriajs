@@ -151,4 +151,4 @@ const MobileModalWindow = observer(
     }
   })
 );
-module.exports = withTranslation()(MobileModalWindow);
+export default withTranslation()(MobileModalWindow);

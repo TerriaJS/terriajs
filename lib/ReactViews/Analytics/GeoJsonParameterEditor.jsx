@@ -155,4 +155,4 @@ function getDisplayValue(value, parameter) {
   return getRegionPickerDisplayValue(value, parameter);
 }
 
-module.exports = withTranslation()(GeoJsonParameterEditor);
+export default withTranslation()(GeoJsonParameterEditor);

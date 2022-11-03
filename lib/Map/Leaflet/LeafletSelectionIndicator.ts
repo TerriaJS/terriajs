@@ -2,14 +2,13 @@ import { Cartographic as Cartographic } from "cesium";
 import { Math as CesiumMath } from "cesium";
 import { EasingFunction as EasingFunction } from "cesium";
 import { Ellipsoid as Ellipsoid } from "cesium";
+import { TweenCollection } from "cesium";
 import L from "leaflet";
 import { requestAnimationFrame as cesiumRequestAnimationFrame } from "cesium";
 import isDefined from "../../Core/isDefined";
 
 import Leaflet from "../../Models/Leaflet";
 
-const TweenCollection =
-  require("terriajs-cesium/Source/Scene/TweenCollection").default;
 const selectionIndicatorUrl = require("../../../wwwroot/images/NM-LocationTarget.svg");
 
 interface Tween {

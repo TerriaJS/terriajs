@@ -31,4 +31,4 @@ const MoreOrLess = createReactClass({
     );
   }
 });
-module.exports = MoreOrLess;
+export default MoreOrLess;

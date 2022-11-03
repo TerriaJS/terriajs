@@ -9,12 +9,9 @@ import { EntityCluster as EntityCluster } from "cesium";
 import { EventHelper as EventHelper } from "cesium";
 import isDefined from "../../Core/isDefined";
 import { JulianDate as JulianDate } from "cesium";
+import { createGuid, destroyObject } from "cesium";
 import L from "leaflet";
 import LeafletScene from "./LeafletScene";
-
-const createGuid = require("terriajs-cesium/Source/Core/createGuid").default;
-const destroyObject =
-  require("terriajs-cesium/Source/Core/destroyObject").default;
 
 interface Visualizer {
   update(time: JulianDate): boolean;

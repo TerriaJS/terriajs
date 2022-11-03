@@ -201,4 +201,4 @@ const MyDataTab = observer(
   })
 );
 
-module.exports = withTranslation()(MyDataTab);
+export default withTranslation()(MyDataTab);

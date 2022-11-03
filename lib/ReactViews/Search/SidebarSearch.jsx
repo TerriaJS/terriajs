@@ -84,4 +84,4 @@ const SidebarSearch = observer(
   })
 );
 
-module.exports = withTranslation()(SidebarSearch);
+export default withTranslation()(SidebarSearch);

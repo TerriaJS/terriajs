@@ -6,6 +6,7 @@ import { EllipsoidTerrainProvider as EllipsoidTerrainProvider } from "cesium";
 import { Intersections2D as Intersections2D } from "cesium";
 import { Math as CesiumMath } from "cesium";
 import { TerrainProvider as TerrainProvider } from "cesium";
+import { sampleTerrainMostDetailed } from "cesium";
 import isDefined from "../Core/isDefined";
 import JSEarthGravityModel1996 from "../Map/Vector/EarthGravityModel1996";
 import prettifyCoordinates from "../Map/Vector/prettifyCoordinates";
@@ -16,9 +17,6 @@ import Terria from "../Models/Terria";
 //   Cannot use namespace 'JSEarthGravityModel1996' as a type.ts(2709)
 // This is a dodgy workaround.
 class EarthGravityModel1996 extends JSEarthGravityModel1996 {}
-
-const sampleTerrainMostDetailed =
-  require("terriajs-cesium/Source/Core/sampleTerrainMostDetailed").default;
 
 interface Cancelable {
   cancel: () => void;
@@ -48,7 +46,7 @@ export default class MouseCoords {
 
   constructor() {
     this.geoidModel = new EarthGravityModel1996(
-      require("file-loader!../../wwwroot/data/WW15MGH.DAC")
+      require("../../wwwroot/data/WW15MGH.DAC")
     );
     this.proj4Projection = "+proj=utm +ellps=GRS80 +units=m +no_defs";
     this.projectionUnits = "m";

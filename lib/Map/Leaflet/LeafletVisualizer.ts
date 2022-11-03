@@ -17,12 +17,9 @@ import { PolylineGlowMaterialProperty as PolylineGlowMaterialProperty } from "ce
 import { PolylineDashMaterialProperty as PolylineDashMaterialProperty } from "cesium";
 import { Property as Property } from "cesium";
 import { Rectangle as Rectangle } from "cesium";
+import { destroyObject } from "cesium";
+import { writeTextToCanvas } from "cesium";
 import { getLineStyleLeaflet } from "../../Models/Catalog/Esri/esriLineStyle";
-
-const destroyObject =
-  require("terriajs-cesium/Source/Core/destroyObject").default;
-const writeTextToCanvas =
-  require("terriajs-cesium/Source/Core/writeTextToCanvas").default;
 
 interface PointDetails {
   layer?: L.CircleMarker;

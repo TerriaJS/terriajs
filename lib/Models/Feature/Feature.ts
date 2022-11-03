@@ -83,5 +83,3 @@ function addCustomFeatureProperties(entity: Entity) {
     }
   }
 }
-
-module.exports = TerriaFeature;

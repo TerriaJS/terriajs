@@ -98,4 +98,4 @@ const MobileSearch = observer(
   })
 );
 
-module.exports = withTranslation()(MobileSearch);
+export default withTranslation()(MobileSearch);

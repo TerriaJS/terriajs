@@ -251,4 +251,4 @@ const RegionDataParameterEditor = createReactClass({
     );
   }
 });
-module.exports = RegionDataParameterEditor;
+export default RegionDataParameterEditor;

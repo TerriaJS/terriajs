@@ -62,4 +62,4 @@ const DateParameterEditor = createReactClass({
   }
 });
 
-module.exports = DateParameterEditor;
+export default DateParameterEditor;

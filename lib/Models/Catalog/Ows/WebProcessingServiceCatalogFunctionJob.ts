@@ -34,7 +34,7 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
 
-const createGuid = require("terriajs-cesium/Source/Core/createGuid").default;
+import { createGuid } from "cesium";
 
 class WpsLoadableStratum extends LoadableStratum(
   WebProcessingServiceCatalogFunctionJobTraits

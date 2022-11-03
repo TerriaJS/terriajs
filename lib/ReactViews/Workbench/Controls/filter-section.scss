@@ -1,4 +1,4 @@
-@import "~terriajs-variables";
+@import "terriajs/lib/Sass/common/_variables.scss";
 .filters {
   composes: clearfix from "../../../Sass/common/_base.scss";
   padding: $padding 0;

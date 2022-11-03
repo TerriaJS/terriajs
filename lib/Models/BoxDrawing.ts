@@ -1057,7 +1057,7 @@ export default class BoxDrawing {
         false
       ) as any,
       model: {
-        uri: require("file-loader!../../wwwroot/models/Box.glb"),
+        uri: require("../../wwwroot/models/Box.glb"),
         minimumPixelSize: 12,
         shadows: ShadowMode.DISABLED,
         color: new CallbackProperty(() => getColor(), false),

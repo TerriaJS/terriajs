@@ -1,5 +1,5 @@
 @import "../../Sass/common/mixins";
-@import "~terriajs-variables";
+@import "terriajs/lib/Sass/common/_variables.scss";
 
 .heading {
   composes: btn from "../../Sass/common/_buttons.scss";

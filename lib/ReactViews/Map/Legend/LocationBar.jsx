@@ -79,4 +79,4 @@ const LocationBar = observer(
   })
 );
 
-module.exports = withTranslation()(LocationBar);
+export default withTranslation()(LocationBar);

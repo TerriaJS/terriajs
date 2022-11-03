@@ -138,4 +138,4 @@ const DataCatalogGroup = observer(
   })
 );
 
-module.exports = withTranslation()(DataCatalogGroup);
+export default withTranslation()(DataCatalogGroup);

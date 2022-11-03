@@ -1,6 +1,6 @@
 import { defined } from "cesium";
-var MarkdownIt = require("markdown-it");
-var DOMPurify = require("dompurify/dist/purify");
+import MarkdownIt from "markdown-it";
+import DOMPurify from "dompurify/dist/purify";
 import injectTerms from "./injectTerms";
 import { Term } from "../ReactViewModels/defaultTerms";
 
