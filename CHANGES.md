@@ -2,6 +2,7 @@
 
 #### next release (8.2.21)
 
+- Fix image markers (eg `marker = "data:image/png;base64,..."`)
 - [The next improvement]
 
 #### 8.2.20 - 2022-10-20
