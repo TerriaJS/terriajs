@@ -2,6 +2,7 @@
 
 #### next release (8.2.21)
 
+- Add `overridesBaseUrl` to `LanguageOptions`. This can be used to set the base URL for language override namespace translation files (see [client-side-config.md#LanguageConfiguration](./doc/customizing/client-side-config.md#LanguageConfiguration))
 - [The next improvement]
 
 #### 8.2.20 - 2022-10-20

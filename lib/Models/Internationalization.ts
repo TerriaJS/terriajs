@@ -1,7 +1,8 @@
 import i18next, { ReactOptions } from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
-import { initReactI18next } from "react-i18next";
 import HttpApi from "i18next-http-backend";
+import { initReactI18next } from "react-i18next";
+import isDefined from "../Core/isDefined";
 
 export interface I18nBackendOptions {
   /**
@@ -33,6 +34,12 @@ export interface LanguageConfiguration {
   languages: Object;
   fallbackLanguage: string;
   changeLanguageOnStartWhen: string[];
+
+  /** Base URL for override namespace translation files. If set, this make up the base URL for translation override files. Should end in /
+   *
+   * For example, if `overridesBaseUrl = "test/path/"`, then the full path for translation override files will be `"test/path/{{lng}}.json"`
+   **/
+  overridesBaseUrl?: string;
 }
 const defaultLanguageConfiguration = {
   enabled: false,
@@ -130,9 +137,18 @@ class Internationalization {
               [_lng]: string[],
               [namespace]: string[]
             ) {
-              return namespace === "translation"
-                ? `${terriajsResourcesBaseUrl}languages/{{lng}}/{{ns}}.json`
-                : "languages/{{lng}}/{{ns}}.json";
+              if (namespace === "translation")
+                return `${terriajsResourcesBaseUrl}languages/{{lng}}/{{ns}}.json`;
+
+              // Apply languageConfig.overridesBaseUrl to path for "languageOverrides" namespace if defined
+              if (
+                namespace === "languageOverrides" &&
+                isDefined(languageConfig.overridesBaseUrl)
+              ) {
+                return `${languageConfig.overridesBaseUrl}{{lng}}.json`;
+              }
+
+              return "languages/{{lng}}/{{ns}}.json";
             },
             crossDomain: false
           },
