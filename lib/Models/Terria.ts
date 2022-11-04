@@ -320,6 +320,8 @@ interface ConfigParameters {
   googleAnalyticsOptions?: unknown;
 
   relatedMaps?: RelatedMap[];
+
+  aboutButtonHrefUrl?: string | null;
 }
 
 interface StartOptions {
@@ -530,7 +532,8 @@ export default class Terria {
     storyRouteUrlPrefix: undefined,
     enableConsoleAnalytics: undefined,
     googleAnalyticsOptions: undefined,
-    relatedMaps: defaultRelatedMaps
+    relatedMaps: defaultRelatedMaps,
+    aboutButtonHrefUrl: "about.html"
   };
 
   @observable
