@@ -325,6 +325,8 @@ interface ConfigParameters {
    * Optional plugin configuration
    */
   pluginsConf?: Record<string, any>;
+
+  aboutButtonHrefUrl?: string | null;
 }
 
 interface StartOptions {
@@ -536,6 +538,7 @@ export default class Terria {
     enableConsoleAnalytics: undefined,
     googleAnalyticsOptions: undefined,
     relatedMaps: defaultRelatedMaps,
+    aboutButtonHrefUrl: "about.html",
     pluginsConf: undefined
   };
 
