@@ -28,7 +28,8 @@
   "viewModels": {
     "searchCatalogueItem": "Elementos del catálogo",
     "searchLocations": "Localizaciones",
-    "searchAddresses": "Direcciones"
+    "searchAddresses": "Direcciones",
+    "searchNoLocations": "Lo sentimos, no hay lugares que coincidan con su búsqueda."
   },
   "catalogItem": {
     "trash": "Quitar del catálogo",
