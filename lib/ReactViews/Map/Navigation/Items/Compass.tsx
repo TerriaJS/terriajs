@@ -23,6 +23,7 @@ import { Math as CesiumMath } from "cesium";
 import { Matrix4 as Matrix4 } from "cesium";
 import { Ray as Ray } from "cesium";
 import { Transforms as Transforms } from "cesium";
+import { CameraFlightPath } from "cesium";
 import isDefined from "../../../../Core/isDefined";
 import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
@@ -31,9 +32,6 @@ import Icon, { StyledIcon } from "../../../../Styled/Icon";
 import GyroscopeGuidance from "../../../GyroscopeGuidance/GyroscopeGuidance";
 import { withTerriaRef } from "../../../HOCs/withTerriaRef";
 import FadeIn from "../../../Transitions/FadeIn/FadeIn";
-
-const CameraFlightPath =
-  require("terriajs-cesium/Source/Scene/CameraFlightPath").default;
 
 export const COMPASS_LOCAL_PROPERTY_KEY = "CompassHelpPrompted";
 

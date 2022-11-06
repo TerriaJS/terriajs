@@ -1,6 +1,6 @@
 "use strict";
 
-import Styles from "!style-loader!css-loader?modules&sourceMap!sass-loader?sourceMap!./cesium-timeline.scss";
+import Styles from "./cesium-timeline.scss";
 import createReactClass from "create-react-class";
 import dateFormat from "dateformat";
 import { autorun, runInAction } from "mobx";
@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { defined as defined } from "cesium";
 import { JulianDate as JulianDate } from "cesium";
-import WrappedTimeline from "terriajs-cesium/Source/Widgets/Timeline/Timeline";
+import { Timeline as WrappedTimeline } from "cesium";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import { formatDate, formatDateTime, formatTime } from "./DateFormats";
 

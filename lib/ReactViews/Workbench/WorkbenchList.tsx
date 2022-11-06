@@ -1,4 +1,4 @@
-import "!!style-loader!css-loader?sourceMap!./sortable.css";
+import "./sortable.css";
 import { action } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";

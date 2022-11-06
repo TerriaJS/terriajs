@@ -5,7 +5,7 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 
 import { defined as defined } from "cesium";
-import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
+import { knockout } from "cesium";
 import VarType from "../../Map/VarType";
 import CatalogItem from "../DataCatalog/CatalogItem";
 import CatalogGroup from "../DataCatalog/CatalogGroup";

@@ -6,10 +6,8 @@ import { Math as CesiumMath } from "cesium";
 import { Matrix3 as CesiumMatrix3 } from "cesium";
 import { Camera as Camera } from "cesium";
 import { Scene as Scene } from "cesium";
+import { sampleTerrainMostDetailed } from "cesium";
 import Terria from "./Terria";
-
-const sampleTerrainMostDetailed =
-  require("terriajs-cesium/Source/Core/sampleTerrainMostDetailed").default;
 
 interface EventLoopState {
   intervalId?: any;

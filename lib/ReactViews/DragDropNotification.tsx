@@ -1,28 +1,33 @@
 "use strict";
 import classNames from "classnames";
-import { reaction } from "mobx";
+import { IReactionDisposer, reaction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import Icon from "../Styled/Icon";
 import Styles from "./drag-drop-notification.scss";
-import { withViewState } from "./StandardUserInterface/ViewStateContext";
+import {
+  WithViewState,
+  withViewState
+} from "./StandardUserInterface/ViewStateContext";
+
+interface PropsType extends WithViewState {}
+
+interface IState {
+  showNotification: boolean
+}
 
 @observer
-class DragDropNotification extends React.Component {
-  constructor(props) {
+class DragDropNotification extends React.Component<PropsType, IState> {
+  constructor(props: PropsType) {
     super(props);
     this.state = {
       showNotification: false
     };
   }
 
-  static propTypes = {
-    viewState: PropTypes.object
-  };
-
-  notificationTimeout = null;
-  lastUploadedFilesReaction = null;
+  notificationTimeout: any = null;
+  lastUploadedFilesReaction: IReactionDisposer | null = null;
 
   componentDidMount() {
     this.lastUploadedFilesReaction = reaction(
@@ -45,7 +50,9 @@ class DragDropNotification extends React.Component {
 
   componentWillUnmount() {
     clearTimeout(this.notificationTimeout);
-    this.lastUploadedFilesReaction();
+    if (this.lastUploadedFilesReaction) {
+      this.lastUploadedFilesReaction();
+    }
   }
 
   handleHover() {

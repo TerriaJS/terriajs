@@ -4,28 +4,35 @@ import { withParentSize } from "@vx/responsive";
 import { scaleLinear, scaleTime } from "@visx/scale";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
-import PropTypes from "prop-types";
 import React from "react";
-import ChartableMixin from "../../../ModelMixins/ChartableMixin";
+import ChartableMixin, { ChartItem } from "../../../ModelMixins/ChartableMixin";
 import Styles from "./chart-preview.scss";
 import LineChart from "./LineChart";
 import styled from "styled-components";
 import i18next from "i18next";
+import { WithViewState } from "../../StandardUserInterface/ViewStateContext";
+import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 
-@withParentSize
-@observer
-class FeatureInfoPanelChart extends React.Component {
-  static propTypes = {
-    parentWidth: PropTypes.number,
-    parentHeight: PropTypes.number,
-    width: PropTypes.number,
-    height: PropTypes.number.isRequired,
-    margin: PropTypes.object,
-    item: PropTypes.object.isRequired,
-    xAxisLabel: PropTypes.string,
-    baseColor: PropTypes.string
+interface FeatureInfoPanelChartPropTypes extends WithViewState {
+  parentWidth: number;
+  parentHeight: number;
+  width: number;
+  height: number;
+  margin: {
+    top: number;
+    left: number;
+    bottom: number;
+    right: number;
   };
+  item: ChartableMixin.Instance & CatalogMemberMixin.Instance;
+  xAxisLabel?: string;
+  baseColor: string;
+  debounceTime?: number;
+  enableDebounceLeadingCall?: boolean;
+}
 
+@observer
+class FeatureInfoPanelChart extends React.Component<FeatureInfoPanelChartPropTypes> {
   static defaultProps = {
     parentWidth: 0,
     parentHeight: 0,
@@ -94,17 +101,22 @@ class FeatureInfoPanelChart extends React.Component {
   }
 }
 
-@observer
-class Chart extends React.Component {
-  static propTypes = {
-    width: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired,
-    margin: PropTypes.object.isRequired,
-    chartItem: PropTypes.object.isRequired,
-    baseColor: PropTypes.string.isRequired,
-    xAxisLabel: PropTypes.string
-  };
+interface ChartPropTypes {
+  width: number,
+  height: number,
+  margin: {
+    top: number;
+    left: number;
+    bottom: number;
+    right: number;
+  },
+  chartItem: ChartItem;
+  baseColor: string;
+  xAxisLabel?: string;
+}
 
+@observer
+class Chart extends React.Component<ChartPropTypes> {
   xAxisHeight = 30;
   yAxisWidth = 10;
 
@@ -142,14 +154,14 @@ class Chart extends React.Component {
 
     // Make sure points are asc sorted by x value
     chartItem.points = chartItem.points.sort(
-      (a, b) => this.scales.x(a.x) - this.scales.x(b.x)
+      (a: any, b: any) => this.scales.x(a.x) - this.scales.x(b.x)
     );
 
     const id = `featureInfoPanelChart-${chartItem.name}`;
     const textStyle = {
       fill: baseColor,
       fontSize: 10,
-      textAnchor: "middle",
+      textAnchor: "middle" as ("start" | "middle" | "end" | "inherit"),
       fontFamily: "Arial"
     };
     return (
@@ -185,7 +197,7 @@ class Chart extends React.Component {
             numTicks={4}
             stroke="none"
             tickStroke="none"
-            label={chartItem.units}
+            label={chartItem.xAxis.units}
             labelOffset={24}
             labelProps={textStyle}
             tickLabelProps={() => ({
@@ -207,7 +219,12 @@ class Chart extends React.Component {
   }
 }
 
-const ChartStatusText = styled.div`
+interface ChartStatusTextProps {
+  width: number,
+  height: number
+}
+
+const ChartStatusText = styled.div<ChartStatusTextProps>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -215,4 +232,4 @@ const ChartStatusText = styled.div`
   height: ${(p) => p.height}px;
 `;
 
-export default FeatureInfoPanelChart;
+export default withParentSize(FeatureInfoPanelChart);
