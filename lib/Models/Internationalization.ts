@@ -35,7 +35,7 @@ export interface LanguageConfiguration {
   fallbackLanguage: string;
   changeLanguageOnStartWhen: string[];
 
-  /** Base URL for override namespace translation files. If set, this make up the base URL for translation override files. Should end in /
+  /** Base URL for override namespace translation files. If set, this makes up the base URL for translation override files. Should end in /
    *
    * For example, if `overridesBaseUrl = "test/path/"`, then the full path for translation override files will be `"test/path/{{lng}}.json"`
    **/
