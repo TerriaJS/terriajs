@@ -3,6 +3,9 @@
 #### next release (8.2.21)
 
 - Add `overridesBaseUrl` to `LanguageOptions`. This can be used to set the base URL for language override namespace translation files (see [client-side-config.md#LanguageConfiguration](./doc/customizing/client-side-config.md#LanguageConfiguration))
+- Add `aboutButtonHrefUrl` to `configParameters`. Defaults to `"about.html"`. If set to `null`, then the About button will not be shown.
+- Add `refreshIntervalTemplate` to `OpenDataSoftCatalogItemTraits` - this can be used to set `refreshInterval` using Mustache template rendered on ODS Dataset JSON object
+- Add `plugins` property to `ConfigParameters` type
 - [The next improvement]
 
 #### 8.2.20 - 2022-10-20
