@@ -4,7 +4,7 @@
 
 - Add `aboutButtonHrefUrl` to `configParameters`. Defaults to `"about.html"`. If set to `null`, then the About button will not be shown.
 - Add `refreshIntervalTemplate` to `OpenDataSoftCatalogItemTraits` - this can be used to set `refreshInterval` using Mustache template rendered on ODS Dataset JSON object
-- Add `pluginsConf` property to `ConfigParameters` type
+- Add `plugins` property to `ConfigParameters` type
 - [The next improvement]
 
 #### 8.2.20 - 2022-10-20

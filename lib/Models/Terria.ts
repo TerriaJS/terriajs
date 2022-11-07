@@ -324,7 +324,7 @@ interface ConfigParameters {
   /**
    * Optional plugin configuration
    */
-  pluginsConf?: Record<string, any>;
+  plugins?: Record<string, any>;
 
   aboutButtonHrefUrl?: string | null;
 }
@@ -539,7 +539,7 @@ export default class Terria {
     googleAnalyticsOptions: undefined,
     relatedMaps: defaultRelatedMaps,
     aboutButtonHrefUrl: "about.html",
-    pluginsConf: undefined
+    plugins: undefined
   };
 
   @observable
