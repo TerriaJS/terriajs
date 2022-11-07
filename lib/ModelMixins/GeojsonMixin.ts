@@ -64,8 +64,8 @@ import isDefined from "../Core/isDefined";
 import {
   isJsonNumber,
   isJsonObject,
-  JsonObject,
-  isJsonString
+  isJsonString,
+  JsonObject
 } from "../Core/Json";
 import { isJson } from "../Core/loadBlob";
 import StandardCssColors from "../Core/StandardCssColors";
@@ -83,6 +83,7 @@ import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
+import TerriaFeature from "../Models/Feature/Feature";
 import { ViewingControl } from "../Models/ViewingControls";
 import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
@@ -92,7 +93,6 @@ import { isConstantStyleMap } from "../Table/TableStyleMap";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
 import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import StyleTraits from "../Traits/TraitsClasses/StyleTraits";
-import TerriaFeature from "../Models/Feature/Feature";
 import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
 import { ExportData } from "./ExportableMixin";
 import FeatureInfoUrlTemplateMixin from "./FeatureInfoUrlTemplateMixin";
@@ -228,9 +228,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       | GeoJsonDataSource
       | undefined;
 
-    /** This is only public so that it can be accessed in GeoJsonStratum, treat it as private */
     @observable
-    _imageryProvider: ProtomapsImageryProvider | undefined;
+    private _imageryProvider: ProtomapsImageryProvider | undefined;
 
     private tableStyleReactionDisposer: IReactionDisposer | undefined;
 
