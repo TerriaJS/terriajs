@@ -29,7 +29,13 @@
     "searchCatalogueItem": "Elementos del catálogo",
     "searchLocations": "Localizaciones",
     "searchAddresses": "Direcciones",
-    "searchNoLocations": "Lo sentimos, no hay lugares que coincidan con su búsqueda."
+    "searchNoLocations": "Lo sentimos, no hay lugares que coincidan con su búsqueda.",
+    "searchPlaceNames": "Nombre oficial de lugares",
+    "inMultipleLocations": "En múltiples lugares, incluyendo: ",
+    "searchErrorOccurred": "Se ha producido un error en la búsqueda. Por favor, compruebe su conexión a internet o inténtelo más tarde.",
+    "inDataCatalogue": "En el catálogo de datos",
+    "searchNoCatalogueItem": "Lo sentimos, ningún artículo del catálogo coincide con su búsqueda.",
+    "searchNoPlaceNames": "Lo sentimos, ningún topónimo oficial coincide con su búsqueda."
   },
   "catalogItem": {
     "trash": "Quitar del catálogo",
@@ -108,7 +114,8 @@
     }
   },
   "analytics": {
-    "selectLocation": "Seleccionar Localización"
+    "selectLocation": "Seleccionar Localización",
+    "point": "Punto (latitud/longitud)"
   },
   "helpMenu": {
     "helpMenuMoreHelpTitle": "Más ayuda",
@@ -701,5 +708,13 @@
   },
   "includeStory": {
     "message": "Incluir la historia en Share"
+  },
+  "terriaViewer": {
+    "webGLNotSupportedOrSlowTitle": "WebGL no se admite o es muy lento",
+    "webGLNotSupportedTitle": "No se admite WebGL",
+    "slowWebGLAvailableTitle": "Bajo rendimiento de WebGL",
+    "slowWebGLAvailableMessage": "Tu navegador informa de que tiene problemas de rendimiento para mostrar {{appName}} en 3D, por lo que verás una experiencia limitada, sólo en 2D. Para disfrutar de una experiencia 3D completa, prueba a utilizar otro navegador web, actualizar los controladores de vídeo o actualizar el sistema operativo.",
+    "slowWebGLAvailableMessageII": "{{appName}} funciona mejor con un navegador web que soporte {{webGL}} incluyendo las últimas versiones de $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), y $t(browsers.safari). Su navegador no parece soportar WebGL, por lo que verá una experiencia limitada, sólo en 2D.",
+    "webGLNotSupportedOrSlowMessage": "Su navegador web no puede mostrar el mapa en 3D, ya sea porque no soporta WebGL o porque su navegador web ha informado de que WebGL es extremadamente lento. Por favor, prueba con otro navegador, como la última versión de $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge) o $t(browsers.safari). En algunos casos, es posible que tengas que actualizar el controlador de vídeo o el sistema operativo de tu ordenador para obtener la vista 3D en {{appName}}."
   }
 }
