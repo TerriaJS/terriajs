@@ -7,7 +7,7 @@
     "sourceMap": true,
     "strict": true,
     "allowJs": true,
-    "jsx": "preserve",
+    "jsx": "react",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "outDir": "ts-out",
