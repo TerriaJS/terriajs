@@ -197,8 +197,8 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
       maximumZoom: this.maximumZoom,
       credit: this.attribution,
       paintRules: this.paintRules,
-      labelRules: this.labelRules
-      // featureInfoFunc: this.featureInfoFromFeature,
+      labelRules: this.labelRules,
+      idProperty: this.idProperty
     });
   }
 
@@ -222,19 +222,6 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
           : undefined
       }
     ];
-  }
-
-  @action.bound
-  featureInfoFromFeature(feature: VectorTileFeature) {
-    const featureInfo = new ImageryLayerFeatureInfo();
-    if (isDefined(this.nameProperty)) {
-      featureInfo.name = feature.properties[this.nameProperty];
-    }
-    (featureInfo as any).properties = clone(feature.properties);
-    featureInfo.data = {
-      id: feature.properties[this.idProperty]
-    }; // For highlight
-    return featureInfo;
   }
 }
 
