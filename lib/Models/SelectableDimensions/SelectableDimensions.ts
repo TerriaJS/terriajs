@@ -21,10 +21,12 @@ export interface EnumDimension<T = string> extends Dimension {
   readonly options?: readonly EnumDimensionOption<T>[];
   readonly selectedId?: T;
   readonly allowUndefined?: boolean;
+  /** If true, then the user can set the value to arbitrary text */
   readonly allowCustomInput?: boolean;
   readonly undefinedLabel?: string;
 }
 
+/** Similar to EnumDimension, but supports multiple selected values */
 export interface MultiEnumDimension<T = string> extends Dimension {
   readonly options?: readonly EnumDimensionOption<T>[];
   readonly selectedIds?: T[];
@@ -92,6 +94,7 @@ export interface SelectableDimensionEnum
   optionRenderer?: OptionRenderer;
 }
 
+/** Similar to SelectableDimensionEnum, but supports multiple selected values */
 export interface SelectableDimensionMultiEnum
   extends SelectableDimensionBase<string[]>,
     MultiEnumDimension {
@@ -236,7 +239,7 @@ const enumHasValidOptions = (dim: EnumDimension) => {
   return isDefined(dim.options) && dim.options.length >= minLength;
 };
 
-/** Multi enums just need one option (the don't have `allowUndefined`) */
+/** Multi enums just need one option (they don't have `allowUndefined`) */
 const multiEnumHasValidOptions = (dim: MultiEnumDimension) => {
   return isDefined(dim.options) && dim.options.length > 0;
 };

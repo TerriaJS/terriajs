@@ -93,6 +93,7 @@ export const SelectableDimensionEnum: React.FC<{
   );
 });
 
+/** Similar to SelectableDimensionEnum, but allows multiple values to be selected */
 export const SelectableDimensionEnumMulti: React.FC<{
   id: string;
   dim: SelectableDimensionEnumMultiModel;

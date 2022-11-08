@@ -173,19 +173,23 @@ export default class Legend extends React.Component<{
       imageUrl =
         getMakiIcon(
           legendItem.marker,
-          legendItem.color ?? "#fff",
-          legendItem.outlineWidth ?? 1,
-          legendItem.outlineColor ?? "#000",
+          legendItem.color ?? "#fff", // We have to have a fallback color here for `getMakiIcon`
+          legendItem.outlineWidth,
+          legendItem.outlineColor,
           legendItem.imageHeight,
           legendItem.imageWidth
-        ) ?? legendItem.marker;
+        ) ??
+        // If getMakiIcons returns nothing, we assume legendItem.marker is a URL
+        legendItem.marker;
     }
 
+    // Set boxStyle border to solid black if we aren't showing an image AND this legend item has space above it
     let boxStyle: any = {
       border:
         !imageUrl && legendItem.addSpacingAbove ? "1px solid black" : undefined
     };
 
+    // Override the boxStyle border if we have outlineColor and outlineWidth defined for this legend item
     if (!imageUrl && legendItem.outlineColor && legendItem.outlineWidth) {
       boxStyle.border = `${legendItem.outlineWidth}px solid ${legendItem.outlineColor}`;
     }
