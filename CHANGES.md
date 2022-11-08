@@ -14,6 +14,7 @@
 - Fix `Legend` outline bug - where invalid `boxStyle` meant old legend styles may be visible
 - Fix `baseMapContrastColor` reactivity in `GeojsonMixin` - mvt was not updating when the basemap changes
 - Add `SelectableDimensionMultiEnum` - A enum SelectableDimension that allows multiple values to be selected
+- Fix `SelectableDimensionNumeric` handling of invalid values
 - [The next improvement]
 
 #### 8.2.20 - 2022-10-20
