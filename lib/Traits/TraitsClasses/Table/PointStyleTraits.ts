@@ -25,7 +25,7 @@ export class PointSymbolTraits extends mixTraits(TableStyleMapSymbolTraits) {
     description: "Rotation of marker in degrees (clockwise).",
     type: "number"
   })
-  rotation?: number;
+  rotation?: number = 0;
 
   @primitiveArrayTrait({
     name: "Pixel offset",
