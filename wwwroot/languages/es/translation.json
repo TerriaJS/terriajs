@@ -115,7 +115,20 @@
   },
   "analytics": {
     "selectLocation": "Seleccionar Localización",
-    "point": "Punto (latitud/longitud)"
+    "point": "Punto (latitud/longitud)",
+    "clickToDrawRectangle": "Haga clic para dibujar un rectángulo",
+    "selectedPolygon": "Polígono seleccionado",
+    "clickToDrawPolygon": "Haga clic para dibujar el polígono",
+    "selectExistingPolygon": "Seleccionar el polígono existente",
+    "existingPolygon": "Polígono existente",
+    "enterValidCoords": "Por favor, introduzca coordenadas válidas (por ejemplo, 131.0361, -25.3450).",
+    "shiftToDrawRectangle": "Pulse la tecla SHIFT y mantenga pulsado el botón izquierdo del ratón para dibujar un rectángulo",
+    "polygon": "Polígono",
+    "selectPoint": "Seleccione un punto haciendo clic en el mapa.",
+    "regionName": "Nombre de la región",
+    "nothingSelected": "No se ha seleccionado nada, por favor, utilice los botones de arriba para hacer una selección.",
+    "runAnalysis": "Empezar análisis",
+    "clickToDrawLine": "Haga clic para dibujar la línea"
   },
   "helpMenu": {
     "helpMenuMoreHelpTitle": "Más ayuda",
@@ -716,5 +729,10 @@
     "slowWebGLAvailableMessage": "Tu navegador informa de que tiene problemas de rendimiento para mostrar {{appName}} en 3D, por lo que verás una experiencia limitada, sólo en 2D. Para disfrutar de una experiencia 3D completa, prueba a utilizar otro navegador web, actualizar los controladores de vídeo o actualizar el sistema operativo.",
     "slowWebGLAvailableMessageII": "{{appName}} funciona mejor con un navegador web que soporte {{webGL}} incluyendo las últimas versiones de $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), y $t(browsers.safari). Su navegador no parece soportar WebGL, por lo que verá una experiencia limitada, sólo en 2D.",
     "webGLNotSupportedOrSlowMessage": "Su navegador web no puede mostrar el mapa en 3D, ya sea porque no soporta WebGL o porque su navegador web ha informado de que WebGL es extremadamente lento. Por favor, prueba con otro navegador, como la última versión de $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge) o $t(browsers.safari). En algunos casos, es posible que tengas que actualizar el controlador de vídeo o el sistema operativo de tu ordenador para obtener la vista 3D en {{appName}}."
+  },
+  "core": {
+    "errors": {
+      "tooDeepAddedByUser": "Alcanzó los 100 elementos del catálogo cuando comprobó agregado por el usuario y aterrizó en el ID: \"{{memberId}}\"? Comprueba que no tienes un grupo de catálogo recursivo"
+    }
   }
 }
