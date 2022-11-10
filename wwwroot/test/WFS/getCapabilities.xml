@@ -1,54 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wfs:WFS_Capabilities version="2.0.0"
+<wfs:WFS_Capabilities version="1.1.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="http://www.opengis.net/wfs/2.0"
-  xmlns:wfs="http://www.opengis.net/wfs/2.0"
-  xmlns:ows="http://www.opengis.net/ows/1.1"
-  xmlns:gml="http://www.opengis.net/gml/3.2"
-  xmlns:fes="http://www.opengis.net/fes/2.0"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://marine.ga.gov.au/geoserver/schemas/wfs/2.0/wfs.xsd"
-  xmlns:xml="http://www.w3.org/XML/1998/namespace"
-  xmlns:marine="http://marine.ga.gov.au" updateSequence="4549">
+  xmlns="http://www.opengis.net/wfs"
+  xmlns:wfs="http://www.opengis.net/wfs"
+  xmlns:ows="http://www.opengis.net/ows"
+  xmlns:gml="http://www.opengis.net/gml"
+  xmlns:ogc="http://www.opengis.net/ogc"
+  xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.1.0/wfs.xsd" updateSequence="50388">
   <ows:ServiceIdentification>
-    <ows:Title>Geoscience Australia Marine Data</ows:Title>
-    <ows:Abstract>This web service contains marine geospatial data held by Geoscience Australia. It includes bathymetry and backscatter gridded data plus derived layers, bathymetry coverage information, bathmetry collection priority and planning areas, marine sediment data and other derived products. It also contains the 150 m and optimal resolution bathymetry, 5 m sidescan sonar (SSS) and synthetic aperture sonar (SAS) data collected during phase 1 and 2 marine surveys conducted by the Governments of Australia, Malaysia and the People's Republic of China for the search of Malaysian Airlines Flight MH370 in the Indian Ocean. This web service allows exploration of the seafloor topography through the compilation of multibeam sonar and other marine datasets acquired.</ows:Abstract>
+    <ows:Title>Fake Web Feature Service</ows:Title>
+    <ows:Abstract>This is a fake WFS abstract.</ows:Abstract>
     <ows:Keywords>
       <ows:Keyword>WFS</ows:Keyword>
-      <ows:Keyword>Bathymetry</ows:Keyword>
-      <ows:Keyword>Marine Survey</ows:Keyword>
-      <ows:Keyword>Environmental</ows:Keyword>
-      <ows:Keyword>Marine Biodiversity</ows:Keyword>
-      <ows:Keyword>Indian Ocean</ows:Keyword>
-      <ows:Keyword>Backscatter</ows:Keyword>
-      <ows:Keyword>Sidescan</ows:Keyword>
-      <ows:Keyword>Synthetic Aperture System</ows:Keyword>
-      <ows:Keyword>Sonar</ows:Keyword>
-      <ows:Keyword>Seabed</ows:Keyword>
-      <ows:Keyword>Sediments</ows:Keyword>
+      <ows:Keyword>WMS</ows:Keyword>
+      <ows:Keyword>GEOSERVER</ows:Keyword>
     </ows:Keywords>
     <ows:ServiceType>WFS</ows:ServiceType>
-    <ows:ServiceTypeVersion>2.0.0</ows:ServiceTypeVersion>
+    <ows:ServiceTypeVersion>1.1.0</ows:ServiceTypeVersion>
     <ows:Fees>NONE</ows:Fees>
-    <ows:AccessConstraints>© Commonwealth of Australia (Geoscience Australia) 2017. This product is released under the Creative Commons Attribution 4.0 International Licence. http://creativecommons.org/licenses/by/4.0/legalcode</ows:AccessConstraints>
+    <ows:AccessConstraints>Lots of constraints</ows:AccessConstraints>
   </ows:ServiceIdentification>
   <ows:ServiceProvider>
-    <ows:ProviderName>Geoscience Australia</ows:ProviderName>
+    <ows:ProviderName>Terria Team</ows:ProviderName>
     <ows:ServiceContact>
-      <ows:IndividualName/>
-      <ows:PositionName>Client Services</ows:PositionName>
+      <ows:IndividualName>Some Terria Team member</ows:IndividualName>
+      <ows:PositionName>Team Leader</ows:PositionName>
       <ows:ContactInfo>
         <ows:Phone>
-          <ows:Voice>+61 2 6249 9111</ows:Voice>
-          <ows:Facsimile>+61 2 6249 9999</ows:Facsimile>
+          <ows:Voice>+61 1 2345 6789</ows:Voice>
+          <ows:Facsimile>+61 9 8765 4321</ows:Facsimile>
         </ows:Phone>
         <ows:Address>
           <ows:DeliveryPoint/>
-          <ows:City/>
-          <ows:AdministrativeArea>ACT</ows:AdministrativeArea>
-          <ows:PostalCode>2601</ows:PostalCode>
+          <ows:City>Hobart</ows:City>
+          <ows:AdministrativeArea>TAS</ows:AdministrativeArea>
+          <ows:PostalCode>7000</ows:PostalCode>
           <ows:Country>Australia</ows:Country>
-          <ows:ElectronicMailAddress>clientservices@ga.gov.au</ows:ElectronicMailAddress>
+          <ows:ElectronicMailAddress>terria@fake.email</ows:ElectronicMailAddress>
         </ows:Address>
       </ows:ContactInfo>
     </ows:ServiceContact>
@@ -57,372 +45,162 @@
     <ows:Operation name="GetCapabilities">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:href="http://marine.ga.gov.au/geoserver/marine/wfs"/>
-          <ows:Post xlink:href="http://marine.ga.gov.au/geoserver/marine/wfs"/>
+          <ows:Get xlink:href="https://www.example.com/geoserver/workspace/wfs"/>
+          <ows:Post xlink:href="https://www.example.com/geoserver/workspace/wfs"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="AcceptVersions">
-        <ows:AllowedValues>
-          <ows:Value>1.0.0</ows:Value>
-          <ows:Value>1.1.0</ows:Value>
-          <ows:Value>2.0.0</ows:Value>
-        </ows:AllowedValues>
+        <ows:Value>1.0.0</ows:Value>
+        <ows:Value>1.1.0</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="AcceptFormats">
-        <ows:AllowedValues>
-          <ows:Value>text/xml</ows:Value>
-        </ows:AllowedValues>
+        <ows:Value>text/xml</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="Sections">
-        <ows:AllowedValues>
-          <ows:Value>ServiceIdentification</ows:Value>
-          <ows:Value>ServiceProvider</ows:Value>
-          <ows:Value>OperationsMetadata</ows:Value>
-          <ows:Value>FeatureTypeList</ows:Value>
-        </ows:AllowedValues>
+        <ows:Value>ServiceIdentification</ows:Value>
+        <ows:Value>ServiceProvider</ows:Value>
+        <ows:Value>OperationsMetadata</ows:Value>
+        <ows:Value>FeatureTypeList</ows:Value>
+        <ows:Value>Filter_Capabilities</ows:Value>
       </ows:Parameter>
     </ows:Operation>
     <ows:Operation name="DescribeFeatureType">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:href="http://marine.ga.gov.au/geoserver/marine/wfs"/>
-          <ows:Post xlink:href="http://marine.ga.gov.au/geoserver/marine/wfs"/>
+          <ows:Get xlink:href="https://www.example.com/geoserver/workspace/wfs"/>
+          <ows:Post xlink:href="https://www.example.com/geoserver/workspace/wfs"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="outputFormat">
-        <ows:AllowedValues>
-          <ows:Value>application/gml+xml; version=3.2</ows:Value>
-        </ows:AllowedValues>
+        <ows:Value>text/xml; subtype=gml/3.1.1</ows:Value>
       </ows:Parameter>
     </ows:Operation>
     <ows:Operation name="GetFeature">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:href="http://marine.ga.gov.au/geoserver/marine/wfs"/>
-          <ows:Post xlink:href="http://marine.ga.gov.au/geoserver/marine/wfs"/>
+          <ows:Get xlink:href="https://www.example.com/geoserver/workspace/wfs"/>
+          <ows:Post xlink:href="https://www.example.com/geoserver/workspace/wfs"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="resultType">
-        <ows:AllowedValues>
-          <ows:Value>results</ows:Value>
-          <ows:Value>hits</ows:Value>
-        </ows:AllowedValues>
+        <ows:Value>results</ows:Value>
+        <ows:Value>hits</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="outputFormat">
-        <ows:AllowedValues>
-          <ows:Value>application/gml+xml; version=3.2</ows:Value>
-          <ows:Value>GML2</ows:Value>
-          <ows:Value>KML</ows:Value>
-          <ows:Value>SHAPE-ZIP</ows:Value>
-          <ows:Value>application/json</ows:Value>
-          <ows:Value>application/vnd.google-earth.kml xml</ows:Value>
-          <ows:Value>application/vnd.google-earth.kml+xml</ows:Value>
-          <ows:Value>csv</ows:Value>
-          <ows:Value>gml3</ows:Value>
-          <ows:Value>gml32</ows:Value>
-          <ows:Value>json</ows:Value>
-          <ows:Value>text/xml; subtype=gml/2.1.2</ows:Value>
-          <ows:Value>text/xml; subtype=gml/3.1.1</ows:Value>
-          <ows:Value>text/xml; subtype=gml/3.2</ows:Value>
-        </ows:AllowedValues>
+        <ows:Value>text/xml; subtype=gml/3.1.1</ows:Value>
+        <ows:Value>GML2</ows:Value>
+        <ows:Value>KML</ows:Value>
+        <ows:Value>SHAPE-ZIP</ows:Value>
+        <ows:Value>application/gml+xml; version=3.2</ows:Value>
+        <ows:Value>application/json</ows:Value>
+        <ows:Value>application/vnd.google-earth.kml xml</ows:Value>
+        <ows:Value>application/vnd.google-earth.kml+xml</ows:Value>
+        <ows:Value>csv</ows:Value>
+        <ows:Value>gml3</ows:Value>
+        <ows:Value>gml32</ows:Value>
+        <ows:Value>json</ows:Value>
+        <ows:Value>text/csv</ows:Value>
+        <ows:Value>text/xml; subtype=gml/2.1.2</ows:Value>
+        <ows:Value>text/xml; subtype=gml/3.2</ows:Value>
       </ows:Parameter>
-      <ows:Parameter name="resolve">
-        <ows:AllowedValues>
-          <ows:Value>none</ows:Value>
-          <ows:Value>local</ows:Value>
-        </ows:AllowedValues>
-      </ows:Parameter>
-      <ows:Constraint name="PagingIsTransactionSafe">
-        <ows:NoValues/>
-        <ows:DefaultValue>FALSE</ows:DefaultValue>
-      </ows:Constraint>
-      <ows:Constraint name="CountDefault">
-        <ows:NoValues/>
-        <ows:DefaultValue>1000000</ows:DefaultValue>
+      <ows:Constraint name="LocalTraverseXLinkScope">
+        <ows:Value>2</ows:Value>
       </ows:Constraint>
     </ows:Operation>
-    <ows:Operation name="GetPropertyValue">
+    <ows:Operation name="GetGmlObject">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:href="http://marine.ga.gov.au/geoserver/marine/wfs"/>
-          <ows:Post xlink:href="http://marine.ga.gov.au/geoserver/marine/wfs"/>
-        </ows:HTTP>
-      </ows:DCP>
-      <ows:Parameter name="resolve">
-        <ows:AllowedValues>
-          <ows:Value>none</ows:Value>
-          <ows:Value>local</ows:Value>
-        </ows:AllowedValues>
-      </ows:Parameter>
-      <ows:Parameter name="outputFormat">
-        <ows:AllowedValues>
-          <ows:Value>application/gml+xml; version=3.2</ows:Value>
-        </ows:AllowedValues>
-      </ows:Parameter>
-    </ows:Operation>
-    <ows:Operation name="ListStoredQueries">
-      <ows:DCP>
-        <ows:HTTP>
-          <ows:Get xlink:href="http://marine.ga.gov.au/geoserver/marine/wfs"/>
-          <ows:Post xlink:href="http://marine.ga.gov.au/geoserver/marine/wfs"/>
-        </ows:HTTP>
-      </ows:DCP>
-    </ows:Operation>
-    <ows:Operation name="DescribeStoredQueries">
-      <ows:DCP>
-        <ows:HTTP>
-          <ows:Get xlink:href="http://marine.ga.gov.au/geoserver/marine/wfs"/>
-          <ows:Post xlink:href="http://marine.ga.gov.au/geoserver/marine/wfs"/>
-        </ows:HTTP>
-      </ows:DCP>
-    </ows:Operation>
-    <ows:Operation name="CreateStoredQuery">
-      <ows:DCP>
-        <ows:HTTP>
-          <ows:Post xlink:href="http://marine.ga.gov.au/geoserver/marine/wfs"/>
-        </ows:HTTP>
-      </ows:DCP>
-      <ows:Parameter name="language">
-        <ows:AllowedValues>
-          <ows:Value>urn:ogc:def:queryLanguage:OGC-WFS::WFSQueryExpression</ows:Value>
-        </ows:AllowedValues>
-      </ows:Parameter>
-    </ows:Operation>
-    <ows:Operation name="DropStoredQuery">
-      <ows:DCP>
-        <ows:HTTP>
-          <ows:Get xlink:href="http://marine.ga.gov.au/geoserver/marine/wfs"/>
-          <ows:Post xlink:href="http://marine.ga.gov.au/geoserver/marine/wfs"/>
+          <ows:Get xlink:href="https://www.example.com/geoserver/workspace/wfs"/>
+          <ows:Post xlink:href="https://www.example.com/geoserver/workspace/wfs"/>
         </ows:HTTP>
       </ows:DCP>
     </ows:Operation>
     <ows:Operation name="LockFeature">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:href="http://marine.ga.gov.au/geoserver/marine/wfs"/>
-          <ows:Post xlink:href="http://marine.ga.gov.au/geoserver/marine/wfs"/>
+          <ows:Get xlink:href="https://www.example.com/geoserver/workspace/wfs"/>
+          <ows:Post xlink:href="https://www.example.com/geoserver/workspace/wfs"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="releaseAction">
-        <ows:AllowedValues>
-          <ows:Value>ALL</ows:Value>
-          <ows:Value>SOME</ows:Value>
-        </ows:AllowedValues>
+        <ows:Value>ALL</ows:Value>
+        <ows:Value>SOME</ows:Value>
       </ows:Parameter>
     </ows:Operation>
     <ows:Operation name="GetFeatureWithLock">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:href="http://marine.ga.gov.au/geoserver/marine/wfs"/>
-          <ows:Post xlink:href="http://marine.ga.gov.au/geoserver/marine/wfs"/>
+          <ows:Get xlink:href="https://www.example.com/geoserver/workspace/wfs"/>
+          <ows:Post xlink:href="https://www.example.com/geoserver/workspace/wfs"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="resultType">
-        <ows:AllowedValues>
-          <ows:Value>results</ows:Value>
-          <ows:Value>hits</ows:Value>
-        </ows:AllowedValues>
+        <ows:Value>results</ows:Value>
+        <ows:Value>hits</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="outputFormat">
-        <ows:AllowedValues>
-          <ows:Value>application/gml+xml; version=3.2</ows:Value>
-          <ows:Value>GML2</ows:Value>
-          <ows:Value>KML</ows:Value>
-          <ows:Value>SHAPE-ZIP</ows:Value>
-          <ows:Value>application/json</ows:Value>
-          <ows:Value>application/vnd.google-earth.kml xml</ows:Value>
-          <ows:Value>application/vnd.google-earth.kml+xml</ows:Value>
-          <ows:Value>csv</ows:Value>
-          <ows:Value>gml3</ows:Value>
-          <ows:Value>gml32</ows:Value>
-          <ows:Value>json</ows:Value>
-          <ows:Value>text/xml; subtype=gml/2.1.2</ows:Value>
-          <ows:Value>text/xml; subtype=gml/3.1.1</ows:Value>
-          <ows:Value>text/xml; subtype=gml/3.2</ows:Value>
-        </ows:AllowedValues>
-      </ows:Parameter>
-      <ows:Parameter name="resolve">
-        <ows:AllowedValues>
-          <ows:Value>none</ows:Value>
-          <ows:Value>local</ows:Value>
-        </ows:AllowedValues>
+        <ows:Value>text/xml; subtype=gml/3.1.1</ows:Value>
+        <ows:Value>GML2</ows:Value>
+        <ows:Value>KML</ows:Value>
+        <ows:Value>SHAPE-ZIP</ows:Value>
+        <ows:Value>application/gml+xml; version=3.2</ows:Value>
+        <ows:Value>application/json</ows:Value>
+        <ows:Value>application/vnd.google-earth.kml xml</ows:Value>
+        <ows:Value>application/vnd.google-earth.kml+xml</ows:Value>
+        <ows:Value>csv</ows:Value>
+        <ows:Value>gml3</ows:Value>
+        <ows:Value>gml32</ows:Value>
+        <ows:Value>json</ows:Value>
+        <ows:Value>text/csv</ows:Value>
+        <ows:Value>text/xml; subtype=gml/2.1.2</ows:Value>
+        <ows:Value>text/xml; subtype=gml/3.2</ows:Value>
       </ows:Parameter>
     </ows:Operation>
     <ows:Operation name="Transaction">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:href="http://marine.ga.gov.au/geoserver/marine/wfs"/>
-          <ows:Post xlink:href="http://marine.ga.gov.au/geoserver/marine/wfs"/>
+          <ows:Get xlink:href="https://www.example.com/geoserver/workspace/wfs"/>
+          <ows:Post xlink:href="https://www.example.com/geoserver/workspace/wfs"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="inputFormat">
-        <ows:AllowedValues>
-          <ows:Value>application/gml+xml; version=3.2</ows:Value>
-        </ows:AllowedValues>
+        <ows:Value>text/xml; subtype=gml/3.1.1</ows:Value>
+      </ows:Parameter>
+      <ows:Parameter name="idgen">
+        <ows:Value>GenerateNew</ows:Value>
+        <ows:Value>UseExisting</ows:Value>
+        <ows:Value>ReplaceDuplicate</ows:Value>
       </ows:Parameter>
       <ows:Parameter name="releaseAction">
-        <ows:AllowedValues>
-          <ows:Value>ALL</ows:Value>
-          <ows:Value>SOME</ows:Value>
-        </ows:AllowedValues>
+        <ows:Value>ALL</ows:Value>
+        <ows:Value>SOME</ows:Value>
       </ows:Parameter>
     </ows:Operation>
-    <ows:Constraint name="ImplementsBasicWFS">
-      <ows:NoValues/>
-      <ows:DefaultValue>TRUE</ows:DefaultValue>
-    </ows:Constraint>
-    <ows:Constraint name="ImplementsTransactionalWFS">
-      <ows:NoValues/>
-      <ows:DefaultValue>TRUE</ows:DefaultValue>
-    </ows:Constraint>
-    <ows:Constraint name="ImplementsLockingWFS">
-      <ows:NoValues/>
-      <ows:DefaultValue>TRUE</ows:DefaultValue>
-    </ows:Constraint>
-    <ows:Constraint name="KVPEncoding">
-      <ows:NoValues/>
-      <ows:DefaultValue>TRUE</ows:DefaultValue>
-    </ows:Constraint>
-    <ows:Constraint name="XMLEncoding">
-      <ows:NoValues/>
-      <ows:DefaultValue>TRUE</ows:DefaultValue>
-    </ows:Constraint>
-    <ows:Constraint name="SOAPEncoding">
-      <ows:NoValues/>
-      <ows:DefaultValue>TRUE</ows:DefaultValue>
-    </ows:Constraint>
-    <ows:Constraint name="ImplementsInheritance">
-      <ows:NoValues/>
-      <ows:DefaultValue>FALSE</ows:DefaultValue>
-    </ows:Constraint>
-    <ows:Constraint name="ImplementsRemoteResolve">
-      <ows:NoValues/>
-      <ows:DefaultValue>FALSE</ows:DefaultValue>
-    </ows:Constraint>
-    <ows:Constraint name="ImplementsResultPaging">
-      <ows:NoValues/>
-      <ows:DefaultValue>TRUE</ows:DefaultValue>
-    </ows:Constraint>
-    <ows:Constraint name="ImplementsStandardJoins">
-      <ows:NoValues/>
-      <ows:DefaultValue>TRUE</ows:DefaultValue>
-    </ows:Constraint>
-    <ows:Constraint name="ImplementsSpatialJoins">
-      <ows:NoValues/>
-      <ows:DefaultValue>TRUE</ows:DefaultValue>
-    </ows:Constraint>
-    <ows:Constraint name="ImplementsTemporalJoins">
-      <ows:NoValues/>
-      <ows:DefaultValue>TRUE</ows:DefaultValue>
-    </ows:Constraint>
-    <ows:Constraint name="ImplementsFeatureVersioning">
-      <ows:NoValues/>
-      <ows:DefaultValue>FALSE</ows:DefaultValue>
-    </ows:Constraint>
-    <ows:Constraint name="ManageStoredQueries">
-      <ows:NoValues/>
-      <ows:DefaultValue>TRUE</ows:DefaultValue>
-    </ows:Constraint>
-    <ows:Constraint name="PagingIsTransactionSafe">
-      <ows:NoValues/>
-      <ows:DefaultValue>FALSE</ows:DefaultValue>
-    </ows:Constraint>
-    <ows:Constraint name="QueryExpressions">
-      <ows:AllowedValues>
-        <ows:Value>wfs:Query</ows:Value>
-        <ows:Value>wfs:StoredQuery</ows:Value>
-      </ows:AllowedValues>
-    </ows:Constraint>
   </ows:OperationsMetadata>
   <FeatureTypeList>
-    <FeatureType xmlns:marine="http://marine.ga.gov.au">
-      <Name>marine:ausseabed_bathymetry</Name>
-      <Title>AusSeabed Bathymetry Holdings</Title>
-      <Abstract>This dataset represents the current extent of bathymetry datasets held by AusSeabed as of January 2019. This dataset is live and will continue to be augmented as coverage is supplied from respective AusSeabed partners. Surveys have been conducted by a wide range of organisations and countries, both inside and outside of Australia's EEZ and for various purposes. Each polygon contains metadata describing the nature of data collection, including details of the survey, as well as the principle investigator of the project. Not all surveys are currently available for download; if available, the Data Access URL attribute will indicate how to access the survey data. Polygons are based on a 500m gridding of the survey data, so may not be representative of the true survey extent when viewed at large scale.</Abstract>
+    <Operations>
+      <Operation>Query</Operation>
+      <Operation>Insert</Operation>
+      <Operation>Update</Operation>
+      <Operation>Delete</Operation>
+      <Operation>Lock</Operation>
+    </Operations>
+    <FeatureType>
+      <Name>name_of_feature_type</Name>
+      <Title>Title of feature type</Title>
+      <Abstract>Abstract of feature type</Abstract>
       <ows:Keywords>
         <ows:Keyword>features</ows:Keyword>
-        <ows:Keyword>ga_multibeam_jun_2020</ows:Keyword>
+        <ows:Keyword>A keyword</ows:Keyword>
       </ows:Keywords>
-      <DefaultCRS>urn:ogc:def:crs:EPSG::4326</DefaultCRS>
+      <DefaultSRS>urn:x-ogc:def:crs:EPSG:4283</DefaultSRS>
+      <OtherSRS>urn:x-ogc:def:crs:EPSG:4326</OtherSRS>
+      <OtherSRS>urn:x-ogc:def:crs:EPSG:900913</OtherSRS>
       <ows:WGS84BoundingBox>
-        <ows:LowerCorner>-181.800003051758 -78.4685287475586</ows:LowerCorner>
-        <ows:UpperCorner>181.800018310547 42.5047035217285</ows:UpperCorner>
+        <ows:LowerCorner>142.163757324219 -28.2700939178467</ows:LowerCorner>
+        <ows:UpperCorner>153.598999023438 -10.4980516433716</ows:UpperCorner>
       </ows:WGS84BoundingBox>
-      <MetadataURL xlink:href="http://pid.geoscience.gov.au/dataset/ga/116321"/>
-    </FeatureType>
-    <FeatureType xmlns:marine="http://marine.ga.gov.au">
-      <Name>marine:ga_holdings_compilations</Name>
-      <Title>AusSeabed Bathymetry Holdings (compilations)</Title>
-      <Abstract>This dataset represents the current extent of bathymetry compilation products produced by Geoscience Australia as of February 2019. Compilation products have been generated from numerous data sources including survey data, lidar, interpolation and other depth data. Each polygon shows the extent of the compilation dataset, and attributes contain information regarding data sources, product details and access methods. Contributing individual survey data can be found in the AusSeabed Bathymetry Holdings dataset.</Abstract>
-      <ows:Keywords>
-        <ows:Keyword>features</ows:Keyword>
-        <ows:Keyword>ga_holdings_compilations</ows:Keyword>
-      </ows:Keywords>
-      <DefaultCRS>urn:ogc:def:crs:EPSG::4326</DefaultCRS>
-      <ows:WGS84BoundingBox>
-        <ows:LowerCorner>31.8232635879207 -69.0194074729579</ows:LowerCorner>
-        <ows:UpperCorner>166.240065687069 -8.0</ows:UpperCorner>
-      </ows:WGS84BoundingBox>
-      <MetadataURL xlink:href="https://ecat.ga.gov.au/geonetwork/srv/eng/catalog.search#/metadata/127150"/>
-    </FeatureType>
-    <FeatureType xmlns:marine="http://marine.ga.gov.au">
-      <Name>marine:bathymetry_tiles</Name>
-      <Title>Bathymetry tiles</Title>
-      <Abstract>On behalf of Australia, the Australian Transport Safety Bureau (ATSB) is leading search operations for missing Malaysian airlines flight MH370 in the Southern Indian Ocean. Geoscience Australia provided advice, expertise and support to the ATSB to facilitate bathymetric surveys, which were undertaken to provide a detailed map of the sea floor topography to aid navigation during the underwater search. Bathymetric data was acquired by multibeam sonar mounted on the hull of multiple vessels (GA survey reference: GA-4421, GA-4422 &amp; GA-4430). Bathymetric surveys were conducted from June 2014 to February 2017, collecting over 710,000 square kilometres of data in the search area and along transit lines (to and from the search area). This dataset shows the search grid of the survey.</Abstract>
-      <ows:Keywords>
-        <ows:Keyword>features</ows:Keyword>
-        <ows:Keyword>MH370_Search_Tiles</ows:Keyword>
-      </ows:Keywords>
-      <DefaultCRS>urn:ogc:def:crs:EPSG::4326</DefaultCRS>
-      <ows:WGS84BoundingBox>
-        <ows:LowerCorner>78.00000000000011 -43.99999999999994</ows:LowerCorner>
-        <ows:UpperCorner>120.0 -8.0</ows:UpperCorner>
-      </ows:WGS84BoundingBox>
-    </FeatureType>
-    <FeatureType xmlns:marine="http://marine.ga.gov.au">
-      <Name>marine:national_priorities</Name>
-      <Title>National priorities</Title>
-      <Abstract>This shapefile comprises an amalgamation of State, Territory and Commonwealth priorities in terms of Seabed mapping as of February 2017. Data that were identified as important for: safe navigation, environmental baseline assessment, resource competition and baseline data, and urgently required to support policy and government decisions were given priority. Agencies then ranked their priority areas 1 – very high/high (red), 2 – moderate (blue), and 3 – low (green), based on the need for the data and the impact of the data.</Abstract>
-      <ows:Keywords>
-        <ows:Keyword>features</ows:Keyword>
-        <ows:Keyword>ga_national_priorities</ows:Keyword>
-      </ows:Keywords>
-      <DefaultCRS>urn:ogc:def:crs:EPSG::4326</DefaultCRS>
-      <ows:WGS84BoundingBox>
-        <ows:LowerCorner>61.1821365356445 -70.1151657104492</ows:LowerCorner>
-        <ows:UpperCorner>165.20671081543 -8.57724952697754</ows:UpperCorner>
-      </ows:WGS84BoundingBox>
-      <MetadataURL xlink:href="http://pid.geoscience.gov.au/dataset/ga/123104"/>
-    </FeatureType>
-    <FeatureType xmlns:marine="http://marine.ga.gov.au">
-      <Name>marine:seabed_sediments_collection</Name>
-      <Title>Seabed Sediments Collection</Title>
-      <Abstract>This service contains point data describing physical properties of marine sediments as held within the Geoscience Australia Marine Sediment database (MARS) for samples acquired by marine surveys that occurred between 1905 and 2017. Points are symbolised by individual texture class according to the Folk (1954) nomenclature for sediments.</Abstract>
-      <ows:Keywords>
-        <ows:Keyword>features</ows:Keyword>
-        <ows:Keyword>seabedsedimentscollection</ows:Keyword>
-      </ows:Keywords>
-      <DefaultCRS>urn:ogc:def:crs:EPSG::4326</DefaultCRS>
-      <ows:WGS84BoundingBox>
-        <ows:LowerCorner>-180.0 -90.0</ows:LowerCorner>
-        <ows:UpperCorner>180.0 90.0</ows:UpperCorner>
-      </ows:WGS84BoundingBox>
-      <MetadataURL xlink:href="http://pid.geoscience.gov.au/dataset/ga/122355"/>
-    </FeatureType>
-    <FeatureType xmlns:marine="http://marine.ga.gov.au">
-      <Name>marine:upcoming_surveys</Name>
-      <Title>Upcoming surveys</Title>
-      <Abstract>This shapefile presents the extents of planned surveys that will be undertaken in the coming years within the Australian maritime region. The purpose of this shapefile is to broadcast information about upcoming voyages with the intent of boosting collaboration and decreasing data collection costs so that travel time is diminished while data collection increases. This shapefile will be updated monthly to reflect new and elapsed voyages.</Abstract>
-      <ows:Keywords>
-        <ows:Keyword>features</ows:Keyword>
-        <ows:Keyword>ga_upcoming_surveys_march_2020</ows:Keyword>
-      </ows:Keywords>
-      <DefaultCRS>urn:ogc:def:crs:EPSG::4326</DefaultCRS>
-      <ows:WGS84BoundingBox>
-        <ows:LowerCorner>104.059668446 -35.0530551149999</ows:LowerCorner>
-        <ows:UpperCorner>160.52 1.55140436300007</ows:UpperCorner>
-      </ows:WGS84BoundingBox>
-      <MetadataURL xlink:href="http://www.ausseabed.gov.au/"/>
+      <MetadataURL type="TC211" format="text/plain">http://www.example.com/some/metadata/url</MetadataURL>
     </FeatureType>
   </FeatureTypeList>
 </wfs:WFS_Capabilities>

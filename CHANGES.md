@@ -2,10 +2,12 @@
 
 #### next release (8.2.21)
 
+- Add check for WFS `layer.OtherSRS` in `buildSrsNameObject`
 - Add `overridesBaseUrl` to `LanguageOptions`. This can be used to set the base URL for language override namespace translation files (see [client-side-config.md#LanguageConfiguration](./doc/customizing/client-side-config.md#LanguageConfiguration))
 - Add `aboutButtonHrefUrl` to `configParameters`. Defaults to `"about.html"`. If set to `null`, then the About button will not be shown.
 - Add `refreshIntervalTemplate` to `OpenDataSoftCatalogItemTraits` - this can be used to set `refreshInterval` using Mustache template rendered on ODS Dataset JSON object
 - Add `plugins` property to `ConfigParameters` type
+- Add more supported 4326 and 3857 CRS strings for WFS (eg `"urn:ogc:def:crs:EPSG::3857"` and `"urn:x-ogc:def:crs:EPSG:3857"`)
 - [The next improvement]
 
 #### 8.2.20 - 2022-10-20
