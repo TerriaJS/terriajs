@@ -169,6 +169,7 @@ function buildSrsNameObject(layer: any): SrsNamesForLayer {
     layer.OtherSRS.forEach((item: string) => {
       if (isJsonString(item)) srsNames.push(item);
     });
+  else if (isJsonString(layer.OtherSRS)) srsNames.push(layer.OtherSRS);
   return { layerName: layer.Name, srsArray: srsNames };
 }
 
