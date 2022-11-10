@@ -414,8 +414,6 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
       )
       .toString();
 
-    console.log(url);
-
     const getFeatureResponse = await loadText(proxyCatalogItemUrl(this, url));
 
     // Check for errors (if supportsGeojson and the request returns XML, OR the response includes ExceptionReport)
