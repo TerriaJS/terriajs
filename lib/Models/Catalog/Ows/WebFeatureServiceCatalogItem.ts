@@ -31,7 +31,7 @@ import WebFeatureServiceCapabilities, {
   getRectangleFromLayer
 } from "./WebFeatureServiceCapabilities";
 
-class GetCapabilitiesStratum extends LoadableStratum(
+export class GetCapabilitiesStratum extends LoadableStratum(
   WebFeatureServiceCatalogItemTraits
 ) {
   static async load(
@@ -413,6 +413,8 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
         )
       )
       .toString();
+
+    console.log(url);
 
     const getFeatureResponse = await loadText(proxyCatalogItemUrl(this, url));
 
