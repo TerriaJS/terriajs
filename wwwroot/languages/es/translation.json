@@ -733,6 +733,11 @@
   "core": {
     "errors": {
       "tooDeepAddedByUser": "Alcanzó los 100 elementos del catálogo cuando comprobó agregado por el usuario y aterrizó en el ID: \"{{memberId}}\"? Comprueba que no tienes un grupo de catálogo recursivo"
+    },
+    "chartData": "Datos de la tabla",
+    "userAddedData": "Datos añadidos por el usuario",
+    "dataUri": {
+      "errorTitle": "El navegador no soporta la descarga de datos"
     }
   }
 }
