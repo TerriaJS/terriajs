@@ -733,6 +733,19 @@ describe("TableMixin", function () {
         "0.010"
       ]);
     });
+
+    it(" - uses color column title by default", async function () {
+      item.setTrait("definition", "csvString", LegendDecimalPlacesCsv);
+      item.setTrait("definition", "activeStyle", "0dp");
+
+      updateModelFromJson(item, CommonStrata.user, {
+        styles: [{ name: "0dp", title: "Some title" }]
+      });
+
+      await item.loadMapItems();
+
+      expect(item.legends[0].title).toBe("0dp");
+    });
   });
 
   describe("region mapping - LGA with disambig", function () {
