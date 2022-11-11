@@ -9,13 +9,21 @@ import StyleTraits from "./StyleTraits";
 
 // TODO: this is repeated in two files, WMS and WFS. In a global config somewhere?
 export const SUPPORTED_CRS_4326 = [
-  "urn:ogc:def:crs:EPSG::4326",
   "EPSG:4326",
+  "urn:ogc:def:crs:EPSG::4326",
+  "urn:x-ogc:def:crs:EPSG:4326",
   "CRS:84",
   "EPSG:4283"
 ];
 
-export const SUPPORTED_CRS_3857 = ["EPSG:3857", "EPSG:900913"];
+export const SUPPORTED_CRS_3857 = [
+  "EPSG:3857",
+  "urn:ogc:def:crs:EPSG::3857",
+  "urn:x-ogc:def:crs:EPSG:3857",
+  "EPSG:900913",
+  "urn:ogc:def:crs:EPSG::900913",
+  "urn:x-ogc:def:crs:EPSG:900913"
+];
 
 export default class WebFeatureServiceCatalogItemTraits extends mixTraits(
   GeoJsonTraits,
