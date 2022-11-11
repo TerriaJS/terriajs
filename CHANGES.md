@@ -4,7 +4,7 @@
 
 - [The next improvement]
 
-#### 8.2.21
+#### 8.2.21 - 2022-11-10
 
 - Add check for WFS `layer.OtherSRS` in `buildSrsNameObject`
 - Add `overridesBaseUrl` to `LanguageOptions`. This can be used to set the base URL for language override namespace translation files (see [client-side-config.md#LanguageConfiguration](./doc/customizing/client-side-config.md#LanguageConfiguration))
