@@ -40,6 +40,7 @@ import { EnumColorTraits } from "../../Traits/TraitsClasses/Table/ColorStyleTrai
 import CommonStrata from "../Definition/CommonStrata";
 import Model from "../Definition/Model";
 import ModelPropertiesFromTraits from "../Definition/ModelPropertiesFromTraits";
+import updateModelFromJson from "../Definition/updateModelFromJson";
 import {
   FlatSelectableDimension,
   SelectableDimensionButton,
@@ -1688,9 +1689,14 @@ export default class TableStylingWorkflow
                         );
                       if (!isDefined(firstValue)) return;
 
-                      traits
-                        .addObject(stratumId, "enum")
-                        ?.setTrait(stratumId, "value", firstValue);
+                      const newModel = traits.addObject(stratumId, "enum");
+
+                      if (newModel)
+                        // Copy over values from null/default traitValues for new enum value
+                        updateModelFromJson(newModel, stratumId, {
+                          ...tableStyleMap.traitValues.null,
+                          value: firstValue
+                        }).logError("Error while adding `enum` item");
 
                       this.openBinIndex.set(key, traits.enum.length - 1);
                     }
@@ -1712,7 +1718,15 @@ export default class TableStylingWorkflow
                 id: `${key}-bin-add`,
                 value: "Add style bin",
                 setDimensionValue: (stratumId) => {
-                  traits.addObject(stratumId, "bin");
+                  const newModel = traits.addObject(stratumId, "bin");
+
+                  if (newModel)
+                    // Copy over values from null/default traitValues for new bin
+                    updateModelFromJson(
+                      newModel,
+                      stratumId,
+                      tableStyleMap.traitValues.null
+                    ).logError("Error while adding `bin` item");
                   this.openBinIndex.set(key, traits.bin.length - 1);
                 }
               } as SelectableDimensionButton,
