@@ -737,7 +737,34 @@
     "chartData": "Datos de la tabla",
     "userAddedData": "Datos añadidos por el usuario",
     "dataUri": {
-      "errorTitle": "El navegador no soporta la descarga de datos"
+      "errorTitle": "El navegador no soporta la descarga de datos",
+      "errorMessage": "Lamentablemente, los navegadores de Microsoft (incluidas todas las versiones de Internet Explorer y Edge) no admiten la funcionalidad de uri de datos necesaria para descargar datos como un archivo. Para descargar, copie la siguiente uri en otro navegador como $t(browsers.chrome), $t(browsers.firefox) o $t(browsers.safari): {{href}}"
+    },
+    "dataType": {
+      "gpx": "GPX",
+      "socrata-group": "Socrata Servicio",
+      "3d-tiles": "3D Escenas",
+      "wmts-group": "Servidor de Mapas en la Web (WMTS)",
+      "wps-getCapabilities": "Servidor del Servicio de Procesamiento Web (WPS)",
+      "esri-featureServer": "Esri ArcGIS FeatureServer (capa única)",
+      "kml": "KML o KMZ",
+      "opendatasoft-group": "Portal Opendatasoft",
+      "geojson": "GeoJSON",
+      "wfs-group": "Servidor de funciones web (WFS)",
+      "esri-mapServer": "Esri ArcGIS MapServer (capa única)",
+      "json": "Terria Catalogo",
+      "carto": "Carto V1",
+      "gltf": "glTF",
+      "csv": "CSV",
+      "czml": "CZML",
+      "wms-group": "Servidor del Servicio de Mapas en la Web (WMS)",
+      "carto-v3": "Carto V3",
+      "auto": "Tipo de carpeta",
+      "esri-group": "Esri ArcGIS Servidor",
+      "open-street-map": "Open Street mapa",
+      "sdmx-group": "SDMX-JSON",
+      "geoRss": "GeoRSS",
+      "shp": "Shapefile"
     }
   }
 }
