@@ -158,11 +158,11 @@ export default class MagdaReference extends AccessControlMixin(
     );
   }
 
-  @computed
-  get accessType(): string {
-    const access = getAccessTypeFromMagdaRecord(this.magdaRecord);
-    return access || super.accessType;
-  }
+  // @computed
+  // get accessType(): string {
+  //   const access = getAccessTypeFromMagdaRecord(this.magdaRecord);
+  //   return access || super.accessType;
+  // }
 
   protected async forceLoadReference(
     previousTarget: BaseModel | undefined

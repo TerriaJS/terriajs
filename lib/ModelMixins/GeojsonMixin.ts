@@ -327,12 +327,12 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return true;
     }
 
-    @computed get name() {
-      if (CatalogMemberMixin.isMixedInto(this.sourceReference)) {
-        return super.name || this.sourceReference.name;
-      }
-      return super.name;
-    }
+    // @computed get name() {
+    //   if (CatalogMemberMixin.isMixedInto(this.sourceReference)) {
+    //     return super.name || this.sourceReference.name;
+    //   }
+    //   return super.name;
+    // }
 
     @computed get cacheDuration(): string {
       if (isDefined(super.cacheDuration)) {

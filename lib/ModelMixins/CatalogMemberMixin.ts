@@ -72,7 +72,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
      */
     async loadMetadata(): Promise<Result<void>> {
       return (await this._metadataLoader.load()).clone({
-        message: `Failed to load \`${getName(this)}\` metadata`,
+        message: `Failed to load metadata`, // \`${getName(this)}\` metadata`,
         importance: -1
       });
     }
@@ -100,12 +100,14 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
 
     @computed
     get name(): string | undefined {
-      return super.name || this.uniqueId;
+      return this.uniqueId;
+      //return super.name || this.uniqueId;
     }
 
     @computed
     get nameInCatalog(): string | undefined {
-      return super.nameInCatalog || this.name;
+      return this.name;
+      // return super.nameInCatalog || this.name;
     }
 
     @computed

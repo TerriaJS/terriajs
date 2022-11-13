@@ -52,13 +52,13 @@ export default class TerriaViewer {
       if (result.error) {
         result.raiseError(this.terria, {
           title: {
-            key: "models.terria.loadingBaseMapErrorTitle",
-            parameters: {
-              name:
-                (CatalogMemberMixin.isMixedInto(baseMap)
-                  ? baseMap.name
-                  : baseMap.uniqueId) ?? "Unknown item"
-            }
+            key: "models.terria.loadingBaseMapErrorTitle"
+            // parameters: {
+            //   name:
+            //     (CatalogMemberMixin.isMixedInto(baseMap)
+            //       ? baseMap.name
+            //       : baseMap.uniqueId) ?? "Unknown item"
+            // }
           }
         });
       } else {

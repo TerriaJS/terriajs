@@ -128,24 +128,24 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      * {@see AsyncLoader}
      */
     async loadMapItems(force?: boolean): Promise<Result<void>> {
-      try {
-        runInAction(() => {
-          if (this.shouldShowInitialMessage) {
-            // Don't await the initialMessage because this causes cyclic dependency between loading
-            //  and user interaction (see https://github.com/TerriaJS/terriajs/issues/5528)
-            this.showInitialMessage();
-          }
-        });
-        if (CatalogMemberMixin.isMixedInto(this))
-          (await this.loadMetadata()).throwIfError();
+      // try {
+      runInAction(() => {
+        if (this.shouldShowInitialMessage) {
+          // Don't await the initialMessage because this causes cyclic dependency between loading
+          //  and user interaction (see https://github.com/TerriaJS/terriajs/issues/5528)
+          this.showInitialMessage();
+        }
+      });
+      if (CatalogMemberMixin.isMixedInto(this))
+        (await this.loadMetadata()).throwIfError();
 
-        (await this._mapItemsLoader.load(force)).throwIfError();
-      } catch (e) {
-        return Result.error(e, {
-          message: `Failed to load \`${getName(this)}\` mapItems`,
-          importance: -1
-        });
-      }
+      (await this._mapItemsLoader.load(force)).throwIfError();
+      // } catch (e) {
+      //   return Result.error(e, {
+      //     message: "Failed to load mapItems", // `Failed to load \`${getName(this)}\` mapItems`,
+      //     importance: -1
+      //   });
+      // }
 
       return Result.none();
     }

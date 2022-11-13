@@ -21,8 +21,8 @@ import "tinymce/plugins/table";
 import "tinymce/plugins/autolink";
 
 // Extra css to enable proper behaviour of tinymce, including image resize handles
-import contentCss from "tinymce/skins/content/default/content.min.css";
-import contentUiCss from "tinymce/skins/ui/oxide/content.min.css";
+//import contentCss from "tinymce/skins/content/default/content.min.css";
+//import contentUiCss from "tinymce/skins/ui/oxide/content.min.css";
 
 export default function TinyEditor(props) {
   const editorRef = useRef(null);
