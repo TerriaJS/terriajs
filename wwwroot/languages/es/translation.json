@@ -764,7 +764,20 @@
       "open-street-map": "Open Street mapa",
       "sdmx-group": "SDMX-JSON",
       "geoRss": "GeoRSS",
-      "shp": "Shapefile"
+      "shp": "Shapefile",
+      "ifc": "IFC",
+      "assimp-local": "Convertidor de archivos 3D (zip) (experimental)",
+      "assimp-local-description": "**Atención:** El convertidor de archivos 3D es experimental.\nVer lista de [formatos soportados](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nLos archivos deben estar comprimidos.",
+      "assimp-remote": "Convertidor de archivos 3D (experimental)",
+      "assimp-remote-description": "**Atención:** El convertidor de archivos 3D es experimental.\nConsulte la lista de [formatos compatibles](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nTambién se admiten archivos Zip"
+    },
+    "printWindow": {
+      "errorTitle": "Error de impresión",
+      "printMediaStart": "inicio de los medios de comunicación impresos",
+      "printMediaEnd": "fin de los medios impresos",
+      "onbeforeprint": "onforeprint",
+      "onafterprint": "onafterprint",
+      "errorMessage": "La impresión no se ha iniciado en 10 segundos. ¿Tal vez este navegador no soporta la impresión?"
     }
   }
 }
