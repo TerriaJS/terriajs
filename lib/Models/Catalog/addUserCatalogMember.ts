@@ -2,7 +2,6 @@ import i18next from "i18next";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import getDereferencedIfExists from "../../Core/getDereferencedIfExists";
 import isDefined from "../../Core/isDefined";
-import TerriaError from "../../Core/TerriaError";
 import GroupMixin from "../../ModelMixins/GroupMixin";
 import GroupTraits from "../../Traits/TraitsClasses/GroupTraits";
 import CommonStrata from "../Definition/CommonStrata";
@@ -63,6 +62,6 @@ export default async function addUserCatalogMember(
       title: i18next.t("models.userData.addingDataErrorTitle"),
       message: i18next.t("models.userData.addingDataErrorTitle")
     });
-    return e;
+    return;
   }
 }

@@ -212,10 +212,14 @@ export class SenapsLocationsStratum extends LoadableStratum(
         geojsonCatalogItem
       );
     } catch (e) {
+      const statusCode =
+        e instanceof Error && "statusCode" in e
+          ? (e as any).statusCode
+          : undefined;
       throw TerriaError.from(e, {
         title: i18next.t("models.senaps.retrieveErrorTitle"),
         message: i18next.t(
-          e.statusCode === 401
+          statusCode === 401
             ? "models.senaps.missingKeyErrorMessage"
             : "models.senaps.generalErrorMessage"
         )

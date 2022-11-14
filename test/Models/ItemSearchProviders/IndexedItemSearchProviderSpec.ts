@@ -82,11 +82,11 @@ describe("IndexedItemSearchProvider", function () {
         []
       );
       stubRequest("indexRoot.json", {});
-      let error;
+      let error: Error | undefined;
       try {
         await provider.initialize();
       } catch (e) {
-        error = e;
+        error = e as Error;
       }
       expect(error?.message).toContain(
         "indexedItemSearchProvider.errorParsingIndexRoot"
