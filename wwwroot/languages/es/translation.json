@@ -778,6 +778,11 @@
       "onbeforeprint": "onforeprint",
       "onafterprint": "onafterprint",
       "errorMessage": "La impresión no se ha iniciado en 10 segundos. ¿Tal vez este navegador no soporta la impresión?"
+    },
+    "consoleAnalytics": {
+      "startedNoenableConsoleAnalytics": "ConsoleAnalytics se inició, sin embargo `configParameters.enableConsoleAnalytics` no se definió o se estableció en falso.",
+      "logStartedWithGAParameters": "ConsoleAnalytics se inició pero se observó una clave `googleAnalyticsKey` o `googleAnalyticsOptions` en `configParameters`.",
+      "started": "Se ha iniciado ConsoleAnalytics."
     }
   }
 }
