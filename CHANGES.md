@@ -3,6 +3,8 @@
 #### next release (8.2.22)
 
 - Add `children` optional property to StandardUserInterfaceProps interface
+- Fix `MapboxVectorTileCatalogItem` feature highlighting - this requires use of `idProperty` trait (also added `idProperty` to `ProtomapsImageryProvider`)
+- Add `maximumNativeZoom` to `ProtomapsImageryProvider`
 - [The next improvement]
 
 #### 8.2.21 - 2022-11-10
@@ -12,9 +14,6 @@
 - Add `aboutButtonHrefUrl` to `configParameters`. Defaults to `"about.html"`. If set to `null`, then the About button will not be shown.
 - Add `refreshIntervalTemplate` to `OpenDataSoftCatalogItemTraits` - this can be used to set `refreshInterval` using Mustache template rendered on ODS Dataset JSON object
 - Add `plugins` property to `ConfigParameters` type
-- Fix `MapboxVectorTileCatalogItem` feature highlighting - this requires use of `idProperty` trait (also added `idProperty` to `ProtomapsImageryProvider`)
-- Add `maximumNativeZoom` to `ProtomapsImageryProvider`
-- [The next improvement]
 - Add more supported 4326 and 3857 CRS strings for WFS (eg `"urn:ogc:def:crs:EPSG::3857"` and `"urn:x-ogc:def:crs:EPSG:3857"`)
 
 #### 8.2.20 - 2022-10-20
