@@ -2,7 +2,7 @@ import classNames from "classnames";
 import "inobounce";
 import { action } from "mobx";
 import { observer } from "mobx-react";
-import React, { useEffect } from "react";
+import React, { useEffect, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { DefaultTheme } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
@@ -53,6 +53,7 @@ interface StandardUserInterfaceProps {
   themeOverrides?: Partial<DefaultTheme>;
   minimumLargeScreenWidth?: number;
   version: string;
+  children?: ReactNode;
 }
 
 const StandardUserInterface: React.FC<StandardUserInterfaceProps> = observer(

@@ -2,6 +2,7 @@
 
 #### next release (8.2.22)
 
+- Add `children` optional property to StandardUserInterfaceProps interface
 - [The next improvement]
 
 #### 8.2.21 - 2022-11-10
