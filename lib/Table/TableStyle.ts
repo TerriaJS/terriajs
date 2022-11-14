@@ -599,7 +599,7 @@ export default class TableStyle {
 
   /** Get rows grouped by id. Id will be calculated using idColumns, latitude/longitude columns or region column
    */
-  @computed get rowGroups() {
+  @computed get rowGroups(): [string, number[]][] {
     let groupByCols = this.idColumns;
 
     if (!groupByCols) {
