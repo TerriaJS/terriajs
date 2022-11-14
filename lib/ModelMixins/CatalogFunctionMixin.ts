@@ -1,21 +1,28 @@
 import { runInAction, toJS } from "mobx";
-import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
 import CommonStrata from "../Models/Definition/CommonStrata";
-import FunctionParameter from "../Models/FunctionParameters/FunctionParameter";
 import Model from "../Models/Definition/Model";
+import FunctionParameter from "../Models/FunctionParameters/FunctionParameter";
 import CatalogFunctionTraits from "../Traits/TraitsClasses/CatalogFunctionTraits";
 import CatalogFunctionJobMixin from "./CatalogFunctionJobMixin";
-import CatalogMemberMixin from "./CatalogMemberMixin";
+import CatalogMemberMixin, { ICatalogMemberMixin } from "./CatalogMemberMixin";
 
 type CatalogFunctionMixin = Model<CatalogFunctionTraits>;
 
+interface ICatalogFunctionMixin extends ICatalogMemberMixin {
+  submitJob(): Promise<CatalogFunctionJobMixin.Instance>;
+}
+
 function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
   Base: T
-) {
-  abstract class CatalogFunctionMixin extends CatalogMemberMixin(Base) {
+): T & AbstractConstructor<ICatalogFunctionMixin> {
+  abstract class CatalogFunctionMixin
+    extends CatalogMemberMixin(Base)
+    implements ICatalogFunctionMixin
+  {
     /**
      * Function parameters are rendered as ParameterEditors, their values directly map to the `parameters` trait. When a FunctionParameter value is modified, it will automatically update `parameters` trait.
      *

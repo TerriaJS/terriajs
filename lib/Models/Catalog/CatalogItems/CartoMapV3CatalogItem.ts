@@ -17,7 +17,6 @@ import GeoJsonMixin, {
   toFeatureCollection
 } from "../../../ModelMixins/GeojsonMixin";
 import CartoMapV3CatalogItemTraits from "../../../Traits/TraitsClasses/CartoMapV3CatalogItemTraits";
-import { GeoJsonTraits } from "../../../Traits/TraitsClasses/GeoJsonTraits";
 import TableStyleTraits from "../../../Traits/TraitsClasses/TableStyleTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
@@ -26,7 +25,7 @@ import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
 
-class CartoMapV3Stratum extends LoadableStratum(GeoJsonTraits) {
+class CartoMapV3Stratum extends LoadableStratum(CartoMapV3CatalogItemTraits) {
   static stratumName = "cartoMapV3Stratum";
   constructor(readonly catalogItem: CartoMapV3CatalogItem) {
     super();
@@ -92,7 +91,7 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
     return i18next.t("models.carto-v3.name");
   }
 
-  protected async forceLoadMetadata() {
+  async forceLoadMetadata() {
     let response: JsonObject | undefined;
 
     // If cartoQuery is defined - use Query API (https://api-docs.carto.com/#8f2020d9-edf3-4b50-ae58-9edeaa34613c)
@@ -164,7 +163,7 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
     });
   }
 
-  protected async forceLoadGeojsonData() {
+  async forceLoadGeojsonData() {
     if (this.geoJsonUrls.length === 0)
       throw TerriaError.from("No GeoJSON URL found for Carto table");
 

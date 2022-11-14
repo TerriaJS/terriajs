@@ -146,7 +146,7 @@ export default class CsvCatalogItem
     });
   }
 
-  protected forceLoadTableData(): Promise<string[][]> {
+  forceLoadTableData(): Promise<string[][]> {
     if (this.csvString !== undefined) {
       return Csv.parseString(
         this.csvString,

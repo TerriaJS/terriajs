@@ -5,6 +5,7 @@ import Resource from "terriajs-cesium/Source/Core/Resource";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
@@ -18,8 +19,29 @@ import TimeVarying from "./TimeVarying";
 
 type Target = Model<FeatureInfoUrlTemplateTraits>;
 
-function FeatureInfoUrlTemplateMixin<T extends Constructor<Target>>(Base: T) {
-  abstract class FeatureInfoUrlTemplateMixin extends Base {
+export interface IFeatureInfoUrlTemplateMixin {
+  hasFeatureInfoUrlTemplateMixin: boolean;
+  buildFeatureFromPickResult(
+    screenPosition: Cartesian2 | undefined,
+    pickResult: any
+  ): TerriaFeature | undefined;
+
+  getFeaturesFromPickResult(
+    screenPosition: Cartesian2 | undefined,
+    pickResult: any,
+    loadExternal?: boolean
+  ): TerriaFeature | undefined;
+
+  wrapImageryPickFeatures<T extends ImageryProvider>(imageryProvider: T): T;
+}
+
+function FeatureInfoUrlTemplateMixin<T extends Constructor<Target>>(
+  Base: T
+): T & AbstractConstructor<IFeatureInfoUrlTemplateMixin> {
+  abstract class FeatureInfoUrlTemplateMixin
+    extends Base
+    implements IFeatureInfoUrlTemplateMixin
+  {
     get hasFeatureInfoUrlTemplateMixin() {
       return true;
     }

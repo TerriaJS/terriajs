@@ -3,6 +3,7 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import LatLonHeight from "../Core/LatLonHeight";
@@ -17,9 +18,23 @@ import Model from "../Models/Definition/Model";
 import TimeFilterTraits, {
   TimeFilterCoordinates
 } from "../Traits/TraitsClasses/TimeFilterTraits";
-import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
+import DiscretelyTimeVaryingMixin, {
+  IDiscretelyTimeVaryingMixin
+} from "./DiscretelyTimeVaryingMixin";
 import MappableMixin, { ImageryParts } from "./MappableMixin";
 import TimeVarying from "./TimeVarying";
+
+export interface ITimeFilterMixin extends IDiscretelyTimeVaryingMixin {
+  canFilterTimeByFeature: boolean;
+  setTimeFilterFeature(
+    feature: Entity,
+    providerCoords?: ProviderCoordsMap
+  ): void;
+  setTimeFilterFromLocation(coordinates: {
+    position: LatLonHeight;
+    tileCoords: ProviderCoords;
+  }): Promise<boolean>;
+}
 
 /**
  * A Mixin for filtering the dates for which imagery is available at a location
@@ -33,8 +48,11 @@ import TimeVarying from "./TimeVarying";
  */
 function TimeFilterMixin<T extends Constructor<Model<TimeFilterTraits>>>(
   Base: T
-) {
-  abstract class TimeFilterMixin extends DiscretelyTimeVaryingMixin(Base) {
+): T & AbstractConstructor<ITimeFilterMixin> {
+  abstract class TimeFilterMixin
+    extends DiscretelyTimeVaryingMixin(Base)
+    implements ITimeFilterMixin
+  {
     @observable _currentTimeFilterFeature?: Entity;
 
     constructor(...args: any[]) {

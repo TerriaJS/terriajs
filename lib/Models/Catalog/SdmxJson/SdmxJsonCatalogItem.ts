@@ -38,11 +38,11 @@ export default class SdmxJsonCatalogItem
     super(id, terria, sourceReference);
     this.strata.set(
       TableAutomaticStylesStratum.stratumName,
-      new TableAutomaticStylesStratum(this)
+      new TableAutomaticStylesStratum(this) as any
     );
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async forceLoadMetadata(): Promise<void> {
     // Load SdmxJsonDataflowStratum if needed
     if (!this.strata.has(SdmxJsonDataflowStratum.stratumName)) {
       const stratum = await SdmxJsonDataflowStratum.load(this);

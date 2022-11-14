@@ -57,6 +57,7 @@ import PolylineGraphics from "terriajs-cesium/Source/DataSources/PolylineGraphic
 import Property from "terriajs-cesium/Source/DataSources/Property";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import formatPropertyValue from "../Core/formatPropertyValue";
 import hashFromString from "../Core/hashFromString";
@@ -95,9 +96,11 @@ import StyleTraits from "../Traits/TraitsClasses/StyleTraits";
 import TerriaFeature from "../Models/Feature/Feature";
 import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
 import { ExportData } from "./ExportableMixin";
-import FeatureInfoUrlTemplateMixin from "./FeatureInfoUrlTemplateMixin";
+import FeatureInfoUrlTemplateMixin, {
+  IFeatureInfoUrlTemplateMixin
+} from "./FeatureInfoUrlTemplateMixin";
 import { isDataSource } from "./MappableMixin";
-import TableMixin from "./TableMixin";
+import TableMixin, { ITableMixin } from "./TableMixin";
 
 export const FEATURE_ID_PROP = "_id_";
 
@@ -154,9 +157,9 @@ class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
 
   @computed
   get rectangle() {
-    if (this._item._readyData) {
+    if (this._item.readyData) {
       try {
-        const geojsonBbox = bbox(this._item._readyData);
+        const geojsonBbox = bbox(this._item.readyData);
         return createStratumInstance(RectangleTraits, {
           west: geojsonBbox[0],
           south: geojsonBbox[1],
@@ -217,10 +220,22 @@ interface FeatureCounts {
   total: number;
 }
 
-function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
-  abstract class GeoJsonMixin extends TableMixin(
-    FeatureInfoUrlTemplateMixin(UrlMixin(CatalogMemberMixin(Base)))
-  ) {
+interface IGeoJsonMixin extends ITableMixin, IFeatureInfoUrlTemplateMixin {
+  featureCounts: FeatureCounts;
+  readyData?: FeatureCollectionWithCrs;
+  useTableStylingAndProtomaps: boolean;
+  forceLoadGeojsonData(): Promise<FeatureCollectionWithCrs | undefined>;
+}
+
+function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(
+  Base: T
+): T & AbstractConstructor<IGeoJsonMixin> {
+  abstract class GeoJsonMixin
+    extends TableMixin(
+      FeatureInfoUrlTemplateMixin(UrlMixin(CatalogMemberMixin(Base)))
+    )
+    implements IGeoJsonMixin
+  {
     @observable
     private _dataSource:
       | CustomDataSource
@@ -265,7 +280,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       ) {
         this.strata.set(
           TableAutomaticStylesStratum.stratumName,
-          new TableAutomaticStylesStratum(this)
+          new TableAutomaticStylesStratum(this) as any
         );
       }
 
@@ -447,7 +462,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
      *
      * Errors can be thrown here.
      */
-    protected abstract forceLoadGeojsonData(): Promise<
+    abstract forceLoadGeojsonData(): Promise<
       FeatureCollectionWithCrs | undefined
     >;
 
@@ -462,7 +477,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
      *    - More than 50% of GeoJSON features have simply-style properties (eg "fill-color")
      *    - MultiPoint features are in GeoJSON (not supported by Table styling)
      */
-    protected async forceLoadMapItems(): Promise<void> {
+    async forceLoadMapItems(): Promise<void> {
       const czmlTemplate = this.czmlTemplate;
       const filterByProperties = this.filterByProperties;
 

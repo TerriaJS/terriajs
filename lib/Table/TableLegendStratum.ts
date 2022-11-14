@@ -10,19 +10,17 @@ import LoadableStratum from "../Models/Definition/LoadableStratum";
 import { BaseModel } from "../Models/Definition/Model";
 import StratumFromTraits from "../Models/Definition/StratumFromTraits";
 import StratumOrder from "../Models/Definition/StratumOrder";
-import LegendOwnerTraits from "../Traits/TraitsClasses/LegendOwnerTraits";
 import LegendTraits, {
   LegendItemTraits
 } from "../Traits/TraitsClasses/LegendTraits";
 import { OutlineSymbolTraits } from "../Traits/TraitsClasses/TableOutlineStyleTraits";
 import { PointSymbolTraits } from "../Traits/TraitsClasses/TablePointStyleTraits";
+import TableTraits from "../Traits/TraitsClasses/TableTraits";
 import { ColorStyleLegend } from "./ColorStyleLegend";
 import { MergedStyleMapLegend } from "./MergedStyleMapLegend";
 import { StyleMapLegend } from "./StyleMapLegend";
 
-export class TableAutomaticLegendStratum extends LoadableStratum(
-  LegendOwnerTraits
-) {
+export class TableAutomaticLegendStratum extends LoadableStratum(TableTraits) {
   static stratumName = "table-legend";
   constructor(private readonly _item: TableMixin.Instance) {
     super();

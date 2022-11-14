@@ -126,7 +126,7 @@ function CatalogFunctionJobMixin<
      *
      * @returns true for FINISHED, false for RUNNING (will then call pollForResults)
      */
-    protected abstract async _invoke(): Promise<boolean>;
+    abstract _invoke(): Promise<boolean>;
 
     public async invoke() {
       this.setTrait(CommonStrata.user, "jobStatus", "running");
@@ -287,9 +287,9 @@ function CatalogFunctionJobMixin<
     get mapItems(): MapItem[] {
       return [];
     }
-    protected async forceLoadMapItems() {}
+    async forceLoadMapItems() {}
 
-    protected async forceLoadMetadata() {
+    async forceLoadMetadata() {
       if (this.jobStatus === "finished" && !this.downloadedResults) {
         await this.onJobFinish();
       }

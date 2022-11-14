@@ -31,7 +31,7 @@ export default class DefaultTimelineModel extends DiscretelyTimeVaryingMixin(
     );
   }
 
-  protected async forceLoadMapItems() {}
+  async forceLoadMapItems() {}
 
   get mapItems() {
     return [];

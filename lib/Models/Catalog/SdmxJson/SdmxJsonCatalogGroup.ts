@@ -16,7 +16,7 @@ export default class SdmxCatalogGroup extends UrlMixin(
     return SdmxCatalogGroup.type;
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async forceLoadMetadata(): Promise<void> {
     if (!this.strata.has(SdmxServerStratum.stratumName)) {
       const stratum = await SdmxServerStratum.load(this);
       runInAction(() => {

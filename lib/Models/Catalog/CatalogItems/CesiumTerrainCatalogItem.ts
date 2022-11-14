@@ -89,7 +89,7 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
       : Promise.reject(TerriaError.from("Failed to load terrain provider"));
   }
 
-  protected async forceLoadMapItems(): Promise<void> {
+  async forceLoadMapItems(): Promise<void> {
     const terrainProvider = await this.loadTerrainProvider();
     runInAction(() => {
       this.terrainProvider = terrainProvider;

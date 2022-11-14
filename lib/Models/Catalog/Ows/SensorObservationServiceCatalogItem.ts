@@ -317,7 +317,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     super(id, terria, sourceReference);
     this.strata.set(
       TableAutomaticStylesStratum.stratumName,
-      new SosAutomaticStylesStratum(this)
+      new SosAutomaticStylesStratum(this) as any
     );
   }
 
@@ -325,7 +325,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     return "sos";
   }
 
-  protected async forceLoadMetadata() {}
+  async forceLoadMetadata() {}
 
   @action
   protected async forceLoadTableData() {

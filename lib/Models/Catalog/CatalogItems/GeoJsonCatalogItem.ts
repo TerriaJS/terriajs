@@ -39,7 +39,7 @@ class GeoJsonCatalogItem
     return isDefined(this._file);
   }
 
-  protected async forceLoadGeojsonData() {
+  async forceLoadGeojsonData() {
     let jsonData: JsonValue | undefined = undefined;
 
     // GeoJsonCatalogItemTraits.geoJsonData

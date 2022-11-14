@@ -41,7 +41,7 @@ describe("DiffableMixin", function () {
 class TestDiffableItem extends DiffableMixin(
   CreateModel(mixTraits(DiffableTraits, CatalogMemberTraits, SplitterTraits))
 ) {
-  protected async forceLoadMapItems() {}
+  async forceLoadMapItems() {}
   styleSelectableDimensions = [];
 
   get canDiffImages() {

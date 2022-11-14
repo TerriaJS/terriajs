@@ -348,11 +348,11 @@ export default class GtfsCatalogItem extends MappableMixin(
     super(id, terria, sourceReference);
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 
-  protected forceLoadMapItems(): Promise<void> {
+  forceLoadMapItems(): Promise<void> {
     if (this.strata.get(GtfsStratum.stratumName) === undefined) {
       GtfsStratum.load(this).then((stratum) => {
         runInAction(() => {

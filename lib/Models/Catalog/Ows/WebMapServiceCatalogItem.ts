@@ -184,7 +184,7 @@ class WebMapServiceCatalogItem
     });
   }
 
-  protected async forceLoadMapItems(): Promise<void> {
+  async forceLoadMapItems(): Promise<void> {
     if (this.invalidLayers.length > 0)
       throw new TerriaError({
         sender: this,
@@ -196,7 +196,7 @@ class WebMapServiceCatalogItem
       });
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async forceLoadMetadata(): Promise<void> {
     if (
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
       undefined

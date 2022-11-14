@@ -225,7 +225,7 @@ export default class WebMapTileServiceCatalogGroup extends GetCapabilitiesMixin(
     return WebMapTileServiceCatalogGroup.type;
   }
 
-  protected async forceLoadMetadata() {
+  async forceLoadMetadata() {
     if (
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
       undefined

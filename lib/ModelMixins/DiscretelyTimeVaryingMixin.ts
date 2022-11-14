@@ -3,18 +3,19 @@ import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
 import ChartableMixin, {
   calculateDomain,
-  ChartItem
+  ChartItem,
+  IChartableMixin
 } from "../ModelMixins/ChartableMixin";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
 import DiscretelyTimeVaryingTraits from "../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
-import TimeVarying, { DATE_SECONDS_PRECISION } from "./TimeVarying";
+import { ITimeVarying, DATE_SECONDS_PRECISION } from "./TimeVarying";
 
 export interface AsJulian {
   time: JulianDate;
@@ -26,12 +27,30 @@ export interface DiscreteTimeAsJS {
   tag: string | undefined;
 }
 
+export interface IDiscretelyTimeVaryingMixin
+  extends ITimeVarying,
+    IChartableMixin {
+  currentDiscreteTimeTag: string | undefined;
+  nextDiscreteTimeTag: string | undefined;
+  previousDiscreteTimeTag: string | undefined;
+  isNextDiscreteTimeAvailable: boolean;
+  isPreviousDiscreteTimeAvailable: boolean;
+  currentDiscreteJulianDate: JulianDate | undefined;
+  discreteTimes: DiscreteTimeAsJS[] | undefined;
+  discreteTimesAsSortedJulianDates: AsJulian[] | undefined;
+  momentChart: ChartItem | undefined;
+  objectifiedDates: ObjectifiedDates;
+  getDiscreteTimeIndex(time: JulianDate): number | undefined;
+  moveToPreviousDiscreteTime(stratumId: string): void;
+  moveToNextDiscreteTime(stratumId: string): void;
+}
+
 function DiscretelyTimeVaryingMixin<
-  T extends Constructor<Model<DiscretelyTimeVaryingTraits>>
->(Base: T) {
+  T extends AbstractConstructor<Model<DiscretelyTimeVaryingTraits>>
+>(Base: T): T & AbstractConstructor<IDiscretelyTimeVaryingMixin> {
   abstract class DiscretelyTimeVaryingMixin
     extends ChartableMixin(Base)
-    implements TimeVarying
+    implements IDiscretelyTimeVaryingMixin
   {
     get hasDiscreteTimes() {
       return true;

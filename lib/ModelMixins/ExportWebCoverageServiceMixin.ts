@@ -27,6 +27,7 @@ import ExportWebCoverageServiceTraits, {
 import { getName } from "./CatalogMemberMixin";
 import ExportableMixin from "./ExportableMixin";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import AbstractConstructor from "../Core/AbstractConstructor";
 
 type Coverage = {
   CoverageId: string;
@@ -181,10 +182,18 @@ class WebCoverageServiceDescribeCoverageStratum extends LoadableStratum(
   }
 }
 
+interface IExportWebCoverageServiceMixin {
+  getCoverageUrl(bbox: Rectangle): Result<string | undefined>;
+  loadWcsMetadata(force?: boolean): void;
+}
+
 function ExportWebCoverageServiceMixin<
   T extends Constructor<Model<ExportWebCoverageServiceTraits>>
->(Base: T) {
-  abstract class ExportWebCoverageServiceMixin extends ExportableMixin(Base) {
+>(Base: T): T & AbstractConstructor<IExportWebCoverageServiceMixin> {
+  abstract class ExportWebCoverageServiceMixin
+    extends ExportableMixin(Base)
+    implements IExportWebCoverageServiceMixin
+  {
     private _wcsCapabilitiesLoader = new AsyncLoader(
       this.loadWcsCapabilities.bind(this)
     );

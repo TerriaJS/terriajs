@@ -36,7 +36,7 @@ describe("TimeFilterMixin", function () {
 class TestTimeFilterableItem extends TimeFilterMixin(
   CreateModel(mixTraits(TimeFilterTraits))
 ) {
-  protected async forceLoadMapItems(): Promise<void> {}
+  async forceLoadMapItems(): Promise<void> {}
   get discreteTimes() {
     return undefined;
   }

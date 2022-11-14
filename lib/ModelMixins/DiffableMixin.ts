@@ -1,5 +1,6 @@
 import { computed } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import Constructor from "../Core/Constructor";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
@@ -8,7 +9,7 @@ import StratumOrder from "../Models/Definition/StratumOrder";
 import { SelectableDimensionEnum } from "../Models/SelectableDimensions/SelectableDimensions";
 import DiffableTraits from "../Traits/TraitsClasses/DiffableTraits";
 import LegendTraits from "../Traits/TraitsClasses/LegendTraits";
-import TimeFilterMixin from "./TimeFilterMixin";
+import TimeFilterMixin, { ITimeFilterMixin } from "./TimeFilterMixin";
 
 class DiffStratum extends LoadableStratum(DiffableTraits) {
   static stratumName = "diffStratum";
@@ -56,8 +57,36 @@ class DiffStratum extends LoadableStratum(DiffableTraits) {
   }
 }
 
-function DiffableMixin<T extends Constructor<Model<DiffableTraits>>>(Base: T) {
-  abstract class DiffableMixin extends TimeFilterMixin(Base) {
+interface IDiffableMixin extends ITimeFilterMixin {
+  hasDiffableMixin: boolean;
+  canDiffImages: boolean;
+  canFilterTimeByFeature: boolean;
+  styleSelectableDimensions: SelectableDimensionEnum[] | undefined;
+  getLegendUrlForStyle(
+    diffStyleId: string,
+    firstDate?: JulianDate,
+    secondDate?: JulianDate
+  ): string;
+  showDiffImage(
+    firstDate: JulianDate,
+    secondDate: JulianDate,
+    diffStyleId: string
+  ): void;
+  clearDiffImage(): void;
+  getLegendUrlForStyle(
+    diffStyleId: string,
+    firstDate?: JulianDate,
+    secondDate?: JulianDate
+  ): string;
+}
+
+function DiffableMixin<T extends Constructor<Model<DiffableTraits>>>(
+  Base: T
+): T & AbstractConstructor<IDiffableMixin> {
+  abstract class DiffableMixin
+    extends TimeFilterMixin(Base)
+    implements IDiffableMixin
+  {
     constructor(...args: any[]) {
       super(...args);
 

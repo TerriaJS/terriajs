@@ -1330,7 +1330,7 @@ class TestModel extends MappableMixin(
   get mapItems(): MapItem[] {
     throw new Error("Method not implemented.");
   }
-  protected forceLoadMapItems(): Promise<void> {
+  forceLoadMapItems(): Promise<void> {
     throw new Error("Method not implemented.");
   }
 

@@ -1,14 +1,22 @@
 import { action, computed, observable } from "mobx";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import Constructor from "../Core/Constructor";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import ModelTraits from "../Traits/ModelTraits";
 
 type AccessControlModel = Model<ModelTraits>;
 
+export interface IAccessControlMixin {
+  accessType: string;
+  isPublic: boolean;
+  isPrivate: boolean;
+  setAccessType(accessType: string): void;
+}
+
 function AccessControlMixin<T extends Constructor<AccessControlModel>>(
   Base: T
-) {
-  class Klass extends Base {
+): T & AbstractConstructor<IAccessControlMixin> {
+  class Klass extends Base implements IAccessControlMixin {
     @observable private _accessType: string | undefined;
 
     get hasAccessControlMixin() {

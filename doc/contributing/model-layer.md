@@ -269,5 +269,5 @@ async loadMetadata(): Promise<Result<void>> {
  *
  * {@see AsyncLoader}
  */
-protected async forceLoadMetadata() {}
+async forceLoadMetadata() {}
 ```

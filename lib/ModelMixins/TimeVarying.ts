@@ -7,11 +7,13 @@ import TimeVaryingTraits from "../Traits/TraitsClasses/TimeVaryingTraits";
  */
 export const DATE_SECONDS_PRECISION = 9;
 
-interface TimeVarying extends Model<TimeVaryingTraits> {
+export interface ITimeVarying {
   readonly currentTimeAsJulianDate: JulianDate | undefined;
   readonly startTimeAsJulianDate: JulianDate | undefined;
   readonly stopTimeAsJulianDate: JulianDate | undefined;
 }
+
+interface TimeVarying extends ITimeVarying, Model<TimeVaryingTraits> {}
 
 namespace TimeVarying {
   export function is(model: BaseModel | TimeVarying): model is TimeVarying {

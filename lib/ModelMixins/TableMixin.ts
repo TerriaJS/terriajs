@@ -14,6 +14,7 @@ import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
@@ -48,20 +49,57 @@ import TableFeatureInfoStratum from "../Table/TableFeatureInfoStratum";
 import { TableAutomaticLegendStratum } from "../Table/TableLegendStratum";
 import TableStyle from "../Table/TableStyle";
 import TableTraits from "../Traits/TraitsClasses/TableTraits";
-import CatalogMemberMixin from "./CatalogMemberMixin";
+import CatalogMemberMixin, { ICatalogMemberMixin } from "./CatalogMemberMixin";
 import { calculateDomain, ChartAxis, ChartItem } from "./ChartableMixin";
 import DiscretelyTimeVaryingMixin, {
-  DiscreteTimeAsJS
+  DiscreteTimeAsJS,
+  IDiscretelyTimeVaryingMixin
 } from "./DiscretelyTimeVaryingMixin";
 import ExportableMixin, { ExportData } from "./ExportableMixin";
 import { ImageryParts } from "./MappableMixin";
 
-function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
+interface LegendButton {
+  title: string;
+  onClick: () => void;
+}
+
+export interface ITableMixin
+  extends SelectableDimensions,
+    ViewingControls,
+    FeatureInfoContext,
+    IDiscretelyTimeVaryingMixin,
+    ICatalogMemberMixin {
+  activeTableStyle: TableStyle;
+  rowIds: number[];
+  isSampled: boolean;
+  xColumn: TableColumn | undefined;
+  yColumns: TableColumn[];
+  tableColumns: readonly TableColumn[];
+  dataColumnMajor: string[][] | undefined;
+  styleDimensions: SelectableDimensionEnum | undefined;
+  tableStyles: TableStyle[];
+  outlierFilterDimension: SelectableDimension | undefined;
+  regionColumnDimensions: SelectableDimensionEnum | undefined;
+  regionProviderDimensions: SelectableDimensionEnum | undefined;
+  showingRegions: boolean;
+  regionProviderLists: RegionProviderList[] | undefined;
+  timeDisableDimension: SelectableDimension | undefined;
+  legendButton: LegendButton | undefined;
+  loadRegionProviderList(): Promise<void>;
+  findColumnByName(name: string | undefined): TableColumn | undefined;
+  findFirstColumnByType(type: TableColumnType): TableColumn | undefined;
+  append(dataColumnMajor2: string[][]): void;
+  matchRegionProvider(regionType?: string): RegionProvider | undefined;
+}
+
+function TableMixin<T extends Constructor<Model<TableTraits>>>(
+  Base: T
+): T & AbstractConstructor<ITableMixin> {
   abstract class TableMixin
     extends ExportableMixin(
       DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base))
     )
-    implements SelectableDimensions, ViewingControls, FeatureInfoContext
+    implements ITableMixin
   {
     /**
      * The default {@link TableStyle}, which is used for styling
@@ -252,7 +290,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     /** Is showing regions (instead of points) */
     @computed get showingRegions() {
       return (
-        this.regionMappedImageryParts &&
+        (this.regionMappedImageryParts ?? false) &&
         this.mapItems[0] === this.regionMappedImageryParts
       );
     }
@@ -706,7 +744,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     /** This is a temporary button which shows in the Legend in the Workbench, if custom styling has been applied. */
-    @computed get legendButton() {
+    @computed get legendButton(): LegendButton | undefined {
       return this.activeTableStyle.isCustom
         ? {
             title: "Custom",
@@ -730,7 +768,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         : undefined;
     }
 
-    protected async forceLoadMapItems() {
+    async forceLoadMapItems() {
       try {
         const dataColumnMajor = await this.forceLoadTableData();
 

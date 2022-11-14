@@ -140,7 +140,7 @@ export default class SocrataMapViewCatalogItem extends GeoJsonMixin(
     return SocrataMapViewCatalogItem.type;
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async forceLoadMetadata(): Promise<void> {
     if (!this.strata.has(SocrataMapViewStratum.stratumName)) {
       const stratum = await SocrataMapViewStratum.load(this);
       runInAction(() => {
@@ -149,7 +149,7 @@ export default class SocrataMapViewCatalogItem extends GeoJsonMixin(
     }
   }
 
-  protected async forceLoadGeojsonData() {
+  async forceLoadGeojsonData() {
     if (this.geojsonUrl) {
       const result = await loadJson(proxyCatalogItemUrl(this, this.geojsonUrl));
 

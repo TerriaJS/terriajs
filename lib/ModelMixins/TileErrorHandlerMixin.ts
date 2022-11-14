@@ -6,6 +6,7 @@ import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import TileProviderError from "terriajs-cesium/Source/Core/TileProviderError";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import Constructor from "../Core/Constructor";
 import TerriaError from "../Core/TerriaError";
 import getUrlForImageryTile from "../Map/ImageryProvider/getUrlForImageryTile";
@@ -24,12 +25,25 @@ type ModelType = Model<
 > &
   MappableMixin.Instance;
 
+interface ITileErrorHandlerMixin {
+  hasTileErrorHandlerMixin: boolean;
+  readonly tileFailures: number;
+  tileRetryOptions: retry.OperationOptions;
+  onTileLoadError(tileProviderError: TileProviderError): void;
+  handleTileError?: (
+    request: Promise<void>,
+    tile: ProviderCoords
+  ) => Promise<void>;
+}
+
 /**
  * A mixin for handling tile errors in raster layers
  *
  */
-function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
-  abstract class Klass extends Base {
+function TileErrorHandlerMixin<T extends Constructor<ModelType>>(
+  Base: T
+): T & AbstractConstructor<ITileErrorHandlerMixin> {
+  abstract class Klass extends Base implements ITileErrorHandlerMixin {
     tileFailures = 0;
     private readonly tileRetriesByMap: Map<string, number> = new Map();
 

@@ -17,7 +17,7 @@ import MappableTraits from "../../../../lib/Traits/TraitsClasses/MappableTraits"
 class SomeChartableItem extends ChartableMixin(
   CreateModel(mixTraits(UrlTraits, MappableTraits))
 ) {
-  protected forceLoadMapItems(): Promise<void> {
+  forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
   get mapItems() {

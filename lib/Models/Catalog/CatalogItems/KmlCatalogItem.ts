@@ -54,7 +54,7 @@ class KmlCatalogItem
     return "1d";
   }
 
-  protected forceLoadMapItems(): Promise<void> {
+  forceLoadMapItems(): Promise<void> {
     return new Promise<string | Resource | Document | Blob>((resolve) => {
       if (isDefined(this.kmlString)) {
         const parser = new DOMParser();
@@ -104,7 +104,7 @@ class KmlCatalogItem
     return [this._dataSource];
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 

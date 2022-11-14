@@ -1,5 +1,6 @@
 import { action, computed, isObservableArray, runInAction, toJS } from "mobx";
 import Mustache from "mustache";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
@@ -13,18 +14,43 @@ import SelectableDimensions, {
 } from "../Models/SelectableDimensions/SelectableDimensions";
 import ViewingControls, { ViewingControl } from "../Models/ViewingControls";
 import CatalogMemberReferenceTraits from "../Traits/TraitsClasses/CatalogMemberReferenceTraits";
-import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
-import AccessControlMixin from "./AccessControlMixin";
+import CatalogMemberTraits, {
+  InfoSectionTraits
+} from "../Traits/TraitsClasses/CatalogMemberTraits";
+import AccessControlMixin, { IAccessControlMixin } from "./AccessControlMixin";
 import GroupMixin from "./GroupMixin";
 import MappableMixin from "./MappableMixin";
 import ReferenceMixin from "./ReferenceMixin";
 
 type CatalogMember = Model<CatalogMemberTraits>;
 
-function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
+export interface ICatalogMemberMixin
+  extends IAccessControlMixin,
+    SelectableDimensions,
+    ViewingControls {
+  hasCatalogMemberMixin: boolean;
+  typeName: string | undefined;
+  isLoadingMetadata: boolean;
+  isLoading: boolean;
+  inWorkbench: boolean;
+  nameSortKey: (string | number)[];
+  hasDescription: boolean;
+  infoAsObject: unknown;
+  infoWithoutSources: readonly InfoSectionTraits[];
+  selectableDimensions: SelectableDimension[];
+  viewingControls: ViewingControl[];
+  loadMetadataResult: Result<void> | undefined;
+  loadMetadata(): Promise<Result<void>>;
+  forceLoadMetadata(): Promise<void>;
+  dispose(): void;
+}
+
+function CatalogMemberMixin<T extends Constructor<CatalogMember>>(
+  Base: T
+): T & AbstractConstructor<ICatalogMemberMixin> {
   abstract class CatalogMemberMixin
     extends AccessControlMixin(Base)
-    implements SelectableDimensions, ViewingControls
+    implements ICatalogMemberMixin
   {
     abstract get type(): string;
 
@@ -87,7 +113,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
      *
      * {@see AsyncLoader}
      */
-    protected async forceLoadMetadata() {}
+    async forceLoadMetadata() {}
 
     get hasCatalogMemberMixin() {
       return true;

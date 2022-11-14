@@ -111,11 +111,11 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
       return new ModelGraphics(options);
     }
 
-    protected forceLoadMetadata(): Promise<void> {
+    forceLoadMetadata(): Promise<void> {
       return Promise.resolve();
     }
 
-    protected forceLoadMapItems(): Promise<void> {
+    forceLoadMapItems(): Promise<void> {
       return Promise.resolve();
     }
 

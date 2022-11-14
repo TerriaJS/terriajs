@@ -172,7 +172,7 @@ export default class GeoRssCatalogItem
     return json;
   }
 
-  protected async forceLoadGeojsonData(): Promise<any> {
+  async forceLoadGeojsonData(): Promise<any> {
     let data: Document | undefined;
     if (isDefined(this.geoRssString)) {
       const parser = new DOMParser();
@@ -196,7 +196,7 @@ export default class GeoRssCatalogItem
     return this.parseGeorss(data);
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 }

@@ -449,7 +449,7 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     });
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async forceLoadMetadata(): Promise<void> {
     if (
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
       undefined
@@ -622,7 +622,7 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     };
   }
 
-  protected forceLoadMapItems(): Promise<void> {
+  forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
 

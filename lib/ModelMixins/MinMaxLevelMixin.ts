@@ -1,5 +1,6 @@
 import { observable } from "mobx";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import Model from "../Models/Definition/Model";
@@ -7,10 +8,20 @@ import { scaleDenominatorToLevel } from "./../Core/scaleToDenominator";
 import CommonStrata from "./../Models/Definition/CommonStrata";
 import { MinMaxLevelTraits } from "./../Traits/TraitsClasses/MinMaxLevelTraits";
 
+interface IMinMaxLevelMixin {
+  supportsMinMaxLevel: boolean;
+  getMinimumLevel(ows: boolean): number | undefined;
+  getMaximumLevel(ows: boolean): number | undefined;
+  updateRequestImage<T extends ImageryProvider>(
+    imageryProvider: T,
+    ows?: boolean
+  ): T;
+}
+
 function MinMaxLevelMixin<T extends Constructor<Model<MinMaxLevelTraits>>>(
   Base: T
-) {
-  abstract class MinMaxLevelMixin extends Base {
+): T & AbstractConstructor<IMinMaxLevelMixin> {
+  abstract class MinMaxLevelMixin extends Base implements IMinMaxLevelMixin {
     @observable notVisible: boolean = false;
 
     get supportsMinMaxLevel() {
@@ -25,7 +36,7 @@ function MinMaxLevelMixin<T extends Constructor<Model<MinMaxLevelTraits>>>(
       return scaleDenominatorToLevel(this.minScaleDenominator, false, ows);
     }
 
-    protected updateRequestImage<T extends ImageryProvider>(
+    updateRequestImage<T extends ImageryProvider>(
       imageryProvider: T,
       ows: boolean = true
     ) {

@@ -1196,10 +1196,11 @@ describe("GeoJsonCatalogItemSpec", () => {
       const imagery = geojson.mapItems[0];
 
       if ("imageryProvider" in imagery) {
-        const highlight =
-          imagery.imageryProvider.createHighlightImageryProvider(
-            new TerriaFeature({ properties: { [FEATURE_ID_PROP]: "0" } })
-          );
+        const highlight = (
+          imagery.imageryProvider as any
+        ).createHighlightImageryProvider(
+          new TerriaFeature({ properties: { [FEATURE_ID_PROP]: "0" } })
+        );
         expect(highlight).toBeDefined();
 
         expect(highlight?.paintRules[0].dataLayer).toBe(

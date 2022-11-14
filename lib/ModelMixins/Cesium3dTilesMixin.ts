@@ -115,7 +115,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       return Matrix4.IDENTITY.clone();
     }
 
-    protected async forceLoadMapItems() {
+    async forceLoadMapItems() {
       try {
         this.loadTileset();
         if (this.tileset) {

@@ -2,13 +2,19 @@ import Model from "../Models/Definition/Model";
 import Constructor from "../Core/Constructor";
 import ExportableTraits from "../Traits/TraitsClasses/ExportableTraits";
 import { computed } from "mobx";
+import AbstractConstructor from "../Core/AbstractConstructor";
 
 export type ExportData = string | { name: string; file: Blob };
 
+interface IExportableMixin {
+  canExportData: boolean;
+  exportData(): Promise<ExportData | undefined> | undefined;
+}
+
 function ExportableMixin<T extends Constructor<Model<ExportableTraits>>>(
   Base: T
-) {
-  abstract class ExportableMixin extends Base {
+): T & AbstractConstructor<IExportableMixin> {
+  abstract class ExportableMixin extends Base implements IExportableMixin {
     protected abstract get _canExportData(): boolean;
 
     /**

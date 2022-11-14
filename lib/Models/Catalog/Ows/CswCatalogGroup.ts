@@ -695,7 +695,7 @@ export default class CswCatalogGroup extends UrlMixin(
     return CswCatalogGroup.type;
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async forceLoadMetadata(): Promise<void> {
     if (this.strata.get(CswStratum.stratumName) !== undefined) return;
     const stratum = await CswStratum.load(this);
     runInAction(() => {

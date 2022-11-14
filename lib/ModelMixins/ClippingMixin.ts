@@ -11,7 +11,7 @@ import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import ClippingPlane from "terriajs-cesium/Source/Scene/ClippingPlane";
 import ClippingPlaneCollection from "terriajs-cesium/Source/Scene/ClippingPlaneCollection";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import BoxDrawing from "../Models/BoxDrawing";
 import CommonStrata from "../Models/Definition/CommonStrata";
@@ -25,16 +25,17 @@ import HeadingPitchRollTraits from "../Traits/TraitsClasses/HeadingPitchRollTrai
 import LatLonHeightTraits from "../Traits/TraitsClasses/LatLonHeightTraits";
 
 type BaseType = Model<ClippingPlanesTraits> & SelectableDimensions;
-type InstanceType = BaseType & {
+
+interface IClippingMixin extends SelectableDimensions {
   clippingPlanesOriginMatrix(): Matrix4;
   clippingPlaneCollection: ClippingPlaneCollection | undefined;
   clippingMapItems: CustomDataSource[];
-};
+}
 
-function ClippingMixin<T extends Constructor<BaseType>>(
+function ClippingMixin<T extends AbstractConstructor<BaseType>>(
   Base: T
-): T & Constructor<InstanceType> {
-  abstract class MixedClass extends Base implements InstanceType {
+): T & AbstractConstructor<IClippingMixin> {
+  abstract class MixedClass extends Base implements IClippingMixin {
     private _clippingBoxDrawing?: BoxDrawing;
     abstract clippingPlanesOriginMatrix(): Matrix4;
 

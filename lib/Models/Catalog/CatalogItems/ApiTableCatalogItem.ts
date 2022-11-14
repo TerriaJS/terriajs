@@ -82,7 +82,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     return this.apiResponses.length > 0;
   }
 
-  protected loadDataFromApis() {
+  loadDataFromApis() {
     const apisWithUrl = this.apis.filter((api) => api.url);
     const apiUrls = apisWithUrl.map((api) =>
       proxyCatalogItemUrl(this, api.url!)
@@ -190,7 +190,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     return columnMajorTable;
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 

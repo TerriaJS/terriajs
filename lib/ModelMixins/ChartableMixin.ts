@@ -1,11 +1,11 @@
 import { maxBy, minBy } from "lodash-es";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import LatLonHeight from "../Core/LatLonHeight";
 import Model from "../Models/Definition/Model";
 import { GlyphStyle } from "../ReactViews/Custom/Chart/Glyphs";
 import ModelTraits from "../Traits/ModelTraits";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
-import MappableMixin from "./MappableMixin";
+import MappableMixin, { IMappableMixin } from "./MappableMixin";
 
 type Scale = "linear" | "time";
 
@@ -65,8 +65,18 @@ export interface ChartItem {
   glyphStyle?: GlyphStyle;
 }
 
-function ChartableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
-  abstract class ChartableMixin extends MappableMixin(Base) {
+export interface IChartableMixin extends IMappableMixin {
+  isChartable: boolean;
+  chartItems: ChartItem[];
+}
+
+function ChartableMixin<T extends AbstractConstructor<Model<MappableTraits>>>(
+  Base: T
+): T & AbstractConstructor<IChartableMixin> {
+  abstract class ChartableMixin
+    extends MappableMixin(Base)
+    implements IChartableMixin
+  {
     get isChartable() {
       return true;
     }

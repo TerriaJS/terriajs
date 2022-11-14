@@ -558,7 +558,7 @@ export default class OpenDataSoftCatalogItem
     return OpenDataSoftCatalogItem.type;
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async forceLoadMetadata(): Promise<void> {
     if (!this.strata.has(OpenDataSoftDatasetStratum.stratumName)) {
       const stratum = await OpenDataSoftDatasetStratum.load(this);
       runInAction(() => {

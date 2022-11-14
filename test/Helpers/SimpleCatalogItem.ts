@@ -11,7 +11,7 @@ export default class SimpleCatalogItem extends CatalogMemberMixin(
     CreateModel(mixTraits(UrlTraits, MappableTraits, CatalogMemberTraits))
   )
 ) {
-  protected forceLoadMapItems(): Promise<void> {
+  forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
   mapItems: MapItem[] = [];

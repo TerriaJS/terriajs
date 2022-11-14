@@ -17,7 +17,7 @@ export default class OpenStreetMapCatalogItem extends MappableMixin(
     return OpenStreetMapCatalogItem.type;
   }
 
-  protected forceLoadMapItems(): Promise<void> {
+  forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
 
