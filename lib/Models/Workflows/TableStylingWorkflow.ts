@@ -286,8 +286,11 @@ export default class TableStylingWorkflow
     }
   }
 
-  /** Handle change on colorType - this is called by the  */
-  @action setColorSchemeType(stratumId: string, id: string | undefined) {
+  /** Handle change on colorType - this is called by the "Type" selectable dimension in `this.colorSchemeSelectableDim` */
+  @action setColorSchemeType(
+    stratumId: string,
+    id: ColorSchemeType | string | undefined
+  ) {
     if (!id) return;
     // Set `activeStyle` trait so the value doesn't change
     this.item.setTrait(stratumId, "activeStyle", this.tableStyle.id);
@@ -582,7 +585,7 @@ export default class TableStylingWorkflow
       id: "Fill Color",
       selectableDimensions: filterOutUndefined([
         // Show "Variable" selector to pick colorColumn if tableStyle ID is different from colorColumn ID
-
+        // OR if we are in advanced mode
         this.tableStyle.id !== this.tableStyle.colorColumn?.name ||
         this.showAdvancedOptions
           ? {
@@ -595,11 +598,29 @@ export default class TableStylingWorkflow
                 name: col.title
               })),
               setDimensionValue: (stratumId, value) => {
+                // Make sure `activeStyle` is set, otherwise it may change when we change `colorColumn`
+                this.item.setTrait(
+                  stratumId,
+                  "activeStyle",
+                  this.tableStyle.id
+                );
+                const prevColumnType = this.tableStyle.colorColumn?.type;
                 this.getTableStyleTraits(stratumId)?.color.setTrait(
                   stratumId,
                   "colorColumn",
                   value
                 );
+                const newColumnType = this.tableStyle.colorColumn?.type;
+                // Reset color palette and color scheme type if color column type has changed
+                // For example, if the color column type changes from `scalar` to `enum` - we don't want to still have a `scalar` color palette
+                if (prevColumnType !== newColumnType) {
+                  this.tableStyle.colorTraits.setTrait(
+                    stratumId,
+                    "colorPalette",
+                    undefined
+                  );
+                  this.setColorSchemeTypeFromPalette();
+                }
               }
             }
           : undefined,
