@@ -17,6 +17,7 @@
 - Add `SelectableDimensionMultiEnum` - A enum SelectableDimension that allows multiple values to be selected
 - Fix `SelectableDimensionNumeric` handling of invalid values
 - `ColorStyleLegend` will use `colorColumn` title by default. It will fallback to `TableStyle.title`
+- Add `children` optional property to StandardUserInterfaceProps interface
 - [The next improvement]
 
 #### 8.2.21 - 2022-11-10
