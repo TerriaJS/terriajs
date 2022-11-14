@@ -24,16 +24,47 @@ describe("MapboxVectorTileCatalogItem", function () {
     beforeEach(async function () {
       mvt.setTrait(CommonStrata.user, "url", "http://test");
       mvt.setTrait(CommonStrata.user, "layer", "test-layer");
+    });
+
+    it("is an instance of ProtomapsImageryProvider", async function () {
       await mvt.loadMapItems();
       if (!ImageryParts.is(mvt.mapItems[0]))
         throw new Error("Expected MapItem to be an ImageryParts");
 
       imageryProvider = mvt.mapItems[0]
         .imageryProvider as ProtomapsImageryProvider;
+
+      expect(imageryProvider instanceof ProtomapsImageryProvider).toBeTruthy();
     });
 
-    it("is an instance of ProtomapsImageryProvider", function () {
-      expect(imageryProvider instanceof ProtomapsImageryProvider).toBeTruthy();
+    it("sets min/max/native zoom properties", async function () {
+      mvt.setTrait(CommonStrata.user, "minimumLevel", 1);
+      mvt.setTrait(CommonStrata.user, "maximumLevel", 20);
+      mvt.setTrait(CommonStrata.user, "maximumNativeZoom", 10);
+
+      await mvt.loadMapItems();
+      if (!ImageryParts.is(mvt.mapItems[0]))
+        throw new Error("Expected MapItem to be an ImageryParts");
+
+      imageryProvider = mvt.mapItems[0]
+        .imageryProvider as ProtomapsImageryProvider;
+
+      expect(imageryProvider.minimumLevel).toBe(1);
+      expect(imageryProvider.maximumLevel).toBe(20);
+      expect(imageryProvider.maximumNativeZoom).toBe(10);
+    });
+
+    it("sets idProperty", async function () {
+      mvt.setTrait(CommonStrata.user, "idProperty", "id");
+
+      await mvt.loadMapItems();
+      if (!ImageryParts.is(mvt.mapItems[0]))
+        throw new Error("Expected MapItem to be an ImageryParts");
+
+      imageryProvider = mvt.mapItems[0]
+        .imageryProvider as ProtomapsImageryProvider;
+
+      expect(imageryProvider.idProperty).toBe("id");
     });
   });
 

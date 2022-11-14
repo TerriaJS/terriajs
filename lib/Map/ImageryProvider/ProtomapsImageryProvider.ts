@@ -287,10 +287,10 @@ export default class ProtomapsImageryProvider
   // Protomaps properties
   /** Data object from constructor options (this is transformed into `source`) */
   private readonly data: ProtomapsData;
-  private readonly maximumNativeZoom: number;
+  readonly maximumNativeZoom: number;
   private readonly labelers: Labelers;
   private readonly view: View | undefined;
-  private idProperty: string;
+  readonly idProperty: string;
 
   readonly source: Source;
   readonly paintRules: PaintRule[];
