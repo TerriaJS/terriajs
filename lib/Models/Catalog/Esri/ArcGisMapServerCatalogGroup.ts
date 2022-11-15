@@ -46,7 +46,15 @@ export interface MapServer {
   copyrightText?: string;
   layers?: Layer[];
   subLayers?: Layer[];
+  /** A single fused cache contains image tiles that are created by grouping all the layers together at each scale, or level of detail.
+   * If this is true, we are unable to request individual layers in a MapServer.
+   * So instead we create a single item in the group called "All layers"
+   */
+  singleFusedMapCache?: boolean;
 }
+
+/** The ID we add to our "All layers" ArcGisMapServerCatalogItem if MapServer.singleFusedMapCache is true */
+const SINGLE_FUSED_MAP_CACHE_ID = "all-layers";
 
 export class MapServerStratum extends LoadableStratum(
   ArcGisMapServerCatalogGroupTraits
@@ -115,40 +123,33 @@ export class MapServerStratum extends LoadableStratum(
   static async load(
     catalogGroup: ArcGisMapServerCatalogGroup | ArcGisCatalogGroup
   ): Promise<MapServerStratum> {
-    var terria = catalogGroup.terria;
-    var uri = new URI(catalogGroup.url).addQuery("f", "json");
+    const uri = new URI(catalogGroup.url).addQuery("f", "json");
 
-    return loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString()))
-      .then((mapServer: MapServer) => {
-        // Is this really a MapServer REST response?
-        if (!mapServer || (!mapServer.layers && !mapServer.subLayers)) {
-          throw networkRequestError({
-            title: i18next.t(
-              "models.arcGisMapServerCatalogGroup.invalidServiceTitle"
-            ),
-            message: i18next.t(
-              "models.arcGisMapServerCatalogGroup.invalidServiceMessage"
-            )
-          });
-        }
-        const stratum = new MapServerStratum(catalogGroup, mapServer);
-        return stratum;
-      })
-      .catch(() => {
-        throw networkRequestError({
-          sender: catalogGroup,
-          title: i18next.t(
-            "models.arcGisMapServerCatalogGroup.groupNotAvailableTitle"
-          ),
-          message: i18next.t(
-            "models.arcGisMapServerCatalogGroup.groupNotAvailableMessage"
-          )
-        });
+    const mapServer: MapServer | undefined = await loadJson(
+      proxyCatalogItemUrl(catalogGroup, uri.toString())
+    );
+
+    // Is this really a MapServer REST response?
+    if (!mapServer || (!mapServer.layers && !mapServer.subLayers)) {
+      throw networkRequestError({
+        title: i18next.t(
+          "models.arcGisMapServerCatalogGroup.invalidServiceTitle"
+        ),
+        message: i18next.t(
+          "models.arcGisMapServerCatalogGroup.invalidServiceMessage"
+        )
       });
+    }
+    const stratum = new MapServerStratum(catalogGroup, mapServer);
+    return stratum;
   }
 
   @computed
   get members(): ModelReference[] {
+    if (this._mapServer.singleFusedMapCache) {
+      return [`${this._catalogGroup.uniqueId}/${SINGLE_FUSED_MAP_CACHE_ID}`];
+    }
+
     return filterOutUndefined(
       this.layers
         .map((layer) => {
@@ -168,23 +169,42 @@ export class MapServerStratum extends LoadableStratum(
     );
   }
 
-  @computed
-  get layers(): readonly Layer[] {
+  private get layers() {
     return this._mapServer.layers || [];
   }
 
-  @computed
-  get subLayers(): readonly Layer[] {
+  private get subLayers() {
     return this._mapServer.subLayers || [];
   }
 
   @action
   createMembersFromLayers() {
-    this.layers.forEach((layer) => this.createMemberFromLayer(layer));
+    if (this._mapServer.singleFusedMapCache)
+      this.createMemberForSingleFusedMapCache();
+    else this.layers.forEach((layer) => this.createMemberFromLayer(layer));
   }
 
   @action
-  createMemberFromLayer(layer: Layer) {
+  private createMemberForSingleFusedMapCache() {
+    const id = `${this._catalogGroup.uniqueId}/${SINGLE_FUSED_MAP_CACHE_ID}`;
+    let model = this._catalogGroup.terria.getModelById(
+      ArcGisMapServerCatalogItem,
+      id
+    );
+    if (model === undefined) {
+      model = new ArcGisMapServerCatalogItem(id, this._catalogGroup.terria);
+      this._catalogGroup.terria.addModel(model);
+    }
+
+    // Replace the stratum inherited from the parent group.
+    model.strata.delete(CommonStrata.definition);
+
+    model.setTrait(CommonStrata.definition, "name", "All layers");
+    model.setTrait(CommonStrata.definition, "url", this._catalogGroup.url);
+  }
+
+  @action
+  private createMemberFromLayer(layer: Layer) {
     if (!isDefined(layer.id)) {
       return;
     }
@@ -240,7 +260,7 @@ export class MapServerStratum extends LoadableStratum(
       replaceUnderscores(layer.name)
     );
 
-    var uri = new URI(this._catalogGroup.url).segment(layer.id + ""); // Convert layer id to string as segment(0) means sthg different.
+    const uri = new URI(this._catalogGroup.url).segment(layer.id.toString()); // Convert layer id to string as segment(0) means something different.
     model.setTrait(CommonStrata.definition, "url", uri.toString());
   }
 }
@@ -267,11 +287,10 @@ export default class ArcGisMapServerCatalogGroup extends UrlMixin(
     return "1d";
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return MapServerStratum.load(this).then((stratum) => {
-      runInAction(() => {
-        this.strata.set(MapServerStratum.stratumName, stratum);
-      });
+  protected async forceLoadMetadata(): Promise<void> {
+    const stratum = await MapServerStratum.load(this);
+    runInAction(() => {
+      this.strata.set(MapServerStratum.stratumName, stratum);
     });
   }
 

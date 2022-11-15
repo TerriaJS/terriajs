@@ -23,7 +23,7 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
     type: "string",
     name: "Layer(s)",
     description:
-      "The layer or layers to display. This can be a comma seperated string of layer IDs or names."
+      "The layer or layers to display. This can be a comma separated string of layer IDs or names."
   })
   layers?: string;
 
