@@ -11,13 +11,15 @@ class RCHotspotSummary extends React.Component {
   }
 
   render() {
+    console.log("HS summary" , this.props.viewState.selectedHotspot);
     const hotspot = this.props.viewState.selectedHotspot;
-    const sector = hotspot["_rc-sector"]?._value;
-    const title = hotspot["_rc-title"]?._value;
-    const description = hotspot["_rc-description"]?._value;
+    const storyId = hotspot["rc-story-id"]?.getValue();
+    const sector = hotspot["rc-sector"]?.getValue();
+    const title = hotspot["rc-title"]?.getValue();
+    const description = hotspot["rc-description"]?.getValue();
     const storyImage =
-      hotspot["_rc-story-img"]?._value || "/images/receipt/placeholder.jpg";
-    const microstories = hotspot["_rc-microstories"]?._value;
+      hotspot["rc-story-img"]?.getValue() || "/images/receipt/placeholder.jpg";
+    const microstories = hotspot["rc-microstories"]?.getValue();
 
     const listMicrostories =
       Array.isArray(microstories) &&
@@ -38,7 +40,7 @@ class RCHotspotSummary extends React.Component {
               RCChangeUrlParams(
                 {
                   sector,
-                  story: hotspot["rc-story-id"],
+                  story: storyId,
                   microstory: microstory["micro-story-id"],
                   page: 1
                 },
@@ -93,7 +95,7 @@ class RCHotspotSummary extends React.Component {
               RCChangeUrlParams(
                 {
                   sector,
-                  story: hotspot["rc-story-id"],
+                  story: storyId,
                   page: 1
                 },
                 this.props.viewState

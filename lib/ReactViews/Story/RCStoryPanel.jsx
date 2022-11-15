@@ -4,15 +4,12 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import { Swipeable } from "react-swipeable";
-import defined from "terriajs-cesium/Source/Core/defined";
-import when from "terriajs-cesium/Source/ThirdParty/when";
-import { objectParamsToURL, RCChangeUrlParams } from "../../Models/Receipt";
+import { RCChangeUrlParams } from "../../Models/Receipt";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import { Medium } from "../Generic/Responsive";
 import Icon from "../Icon.jsx";
 import ObserveModelMixin from "../ObserveModelMixin";
 import Tooltip from "../RCTooltip/RCTooltip";
-import RCScenarioTabs from "../Story/RCScenarioTabs";
 import Styles from "./story-panel.scss";
 
 // export function activateStory(story, terria, scenarioIndex = 0) {
@@ -64,11 +61,11 @@ const RCStoryPanel = createReactClass({
     //
     // Navigate to the story page coming from the url params
     //
-    const urlParams = new URLSearchParams(window.location.search);
-    const page = parseInt(urlParams.get("page"));
-    if (page && this.props.viewState.currentStoryId !== page) {
-      this.navigateStory(this.props.viewState.currentStoryId);
-    }
+    // const urlParams = new URLSearchParams(window.location.search);
+    // const page = parseInt(urlParams.get("page"));
+    // if (page && this.props.viewState.currentStoryId !== page) {
+    //   this.navigateStory(this.props.viewState.currentStoryId);
+    // }
 
     this.slideIn();
     this.escKeyListener = e => {
@@ -94,9 +91,9 @@ const RCStoryPanel = createReactClass({
   },
 
   componentDidUpdate() {
-    const stories = this.props.terria.stories;
-    const story = stories[this.props.viewState.currentStoryId];
-    this.props.terria.updateFromStartData(story.mapScenarios);
+    // const stories = this.props.terria.stories;
+    // const story = stories[this.props.viewState.currentStoryId];
+    // this.props.terria.updateFromStartData(story.mapScenarios);
   },
 
   slideIn() {
