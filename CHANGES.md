@@ -4,6 +4,7 @@
 
 - Add `children` optional property to StandardUserInterfaceProps interface
 - Fix `MapboxVectorTileCatalogItem` feature highlighting - this requires use of `idProperty` trait (also added `idProperty` to `ProtomapsImageryProvider`)
+- Fix `MapboxVectorTileCatalogItem` `fillColor` also applying to Line features
 - Add `maximumNativeZoom` to `ProtomapsImageryProvider`
 - [The next improvement]
 
