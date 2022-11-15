@@ -60,7 +60,7 @@ class RCHotspotSummary extends React.Component {
 
     const close = () => {
       RCChangeUrlParams(
-        { sector: this.props.viewState.selectedHotspot["rc-sector"]?._value },
+        { sector: this.props.viewState.RCSelectedSector },
         this.props.viewState
       );
     };

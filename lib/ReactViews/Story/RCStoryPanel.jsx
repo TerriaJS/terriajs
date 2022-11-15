@@ -15,33 +15,33 @@ import Tooltip from "../RCTooltip/RCTooltip";
 import RCScenarioTabs from "../Story/RCScenarioTabs";
 import Styles from "./story-panel.scss";
 
-export function activateStory(story, terria, scenarioIndex = 0) {
-  if (story.mapScenarios && story.mapScenarios[scenarioIndex]) {
-    const initSources = story.mapScenarios[scenarioIndex].initSources;
+// export function activateStory(story, terria, scenarioIndex = 0) {
+//   if (story.mapScenarios && story.mapScenarios[scenarioIndex]) {
+//     const initSources = story.mapScenarios[scenarioIndex].initSources;
 
-    const promises = initSources.map(initSource =>
-      terria.addInitSource(initSource, true)
-    );
-    when.all(promises).then(() => {
-      const catalogPaths = initSources.reduce((p, c) => {
-        if (c.sharedCatalogMembers) {
-          return p.concat(Object.keys(c.sharedCatalogMembers));
-        }
-        return p;
-      }, []);
-      const catalogItems = terria.catalog.group.items;
-      catalogItems.slice().forEach(item => {
-        const itemToCheck = defined(item.creatorCatalogItem)
-          ? item.creatorCatalogItem
-          : item;
-        const path = itemToCheck.uniqueId;
-        if (catalogPaths.indexOf(path) < 0) {
-          itemToCheck.isEnabled = false;
-        }
-      });
-    });
-  }
-}
+//     const promises = initSources.map(initSource =>
+//       terria.addInitSource(initSource, true)
+//     );
+//     when.all(promises).then(() => {
+//       const catalogPaths = initSources.reduce((p, c) => {
+//         if (c.sharedCatalogMembers) {
+//           return p.concat(Object.keys(c.sharedCatalogMembers));
+//         }
+//         return p;
+//       }, []);
+//       const catalogItems = terria.catalog.group.items;
+//       catalogItems.slice().forEach(item => {
+//         const itemToCheck = defined(item.creatorCatalogItem)
+//           ? item.creatorCatalogItem
+//           : item;
+//         const path = itemToCheck.uniqueId;
+//         if (catalogPaths.indexOf(path) < 0) {
+//           itemToCheck.isEnabled = false;
+//         }
+//       });
+//     });
+//   }
+// }
 
 const RCStoryPanel = createReactClass({
   displayName: "RCStoryPanel",
@@ -60,17 +60,6 @@ const RCStoryPanel = createReactClass({
       inView: false
     };
   },
-  /* eslint-disable-next-line camelcase */
-  UNSAFE_componentWillMount() {
-    const stories = this.props.terria.stories || [];
-    if (
-      this.props.viewState.currentStoryId > stories.length - 1 ||
-      this.props.viewState.currentStoryId < 0
-    ) {
-      this.props.viewState.currentStoryId = 0;
-    }
-    this.activateStory(stories[this.props.viewState.currentStoryId]);
-  },
   componentDidMount() {
     //
     // Navigate to the story page coming from the url params
@@ -78,7 +67,7 @@ const RCStoryPanel = createReactClass({
     const urlParams = new URLSearchParams(window.location.search);
     const page = parseInt(urlParams.get("page"));
     if (page && this.props.viewState.currentStoryId !== page) {
-      this.navigateStory(this.props.viewState.currentStoryId + page - 1);
+      this.navigateStory(this.props.viewState.currentStoryId);
     }
 
     this.slideIn();
@@ -88,21 +77,13 @@ const RCStoryPanel = createReactClass({
       }
     };
 
-    this.changeScenarioListener = e => {
-      this.props.viewState.currentScenario = e.detail.scenarioID;
+    // this.changeScenarioListener = e => {
+    //   this.props.viewState.currentScenario = e.detail.scenarioID;
 
-      const story = this.props.viewState.currentStoryId
-        ? this.props.terria.stories[this.props.viewState.currentStoryId]
-        : this.props.terria.stories[0];
+    //   this.changeUrlPageParameter(this.props.viewState.currentStoryId);
 
-      activateStory(
-        story,
-        this.props.terria,
-        this.props.viewState.currentScenario
-      );
-
-      this.setState({ state: this.state });
-    };
+    //   this.setState({ state: this.state });
+    // };
 
     window.addEventListener("keydown", this.escKeyListener, true);
     window.document.addEventListener(
@@ -113,8 +94,7 @@ const RCStoryPanel = createReactClass({
   },
 
   componentDidUpdate() {
-    // Make hotspots visible when zoomed in
-    const stories = this.props.terria.stories || [];
+    const stories = this.props.terria.stories;
     const story = stories[this.props.viewState.currentStoryId];
     this.props.terria.updateFromStartData(story.mapScenarios);
   },
@@ -148,27 +128,21 @@ const RCStoryPanel = createReactClass({
     }
   },
 
-  navigateStory(index) {
+  navigateStory(pageNr) {
     this.currentScenario = undefined;
-    if (index < 0) {
-      index = this.props.terria.stories.length - 1;
-    } else if (index >= this.props.terria.stories.length) {
-      index = 0;
-    }
-    if (index !== this.props.viewState.currentStoryId) {
-      this.props.viewState.currentStoryId = index;
-      if (index < (this.props.terria.stories || []).length) {
-        this.activateStory(this.props.terria.stories[index]);
-      }
-    }
-    this.changeUrlPageParameter(index);
-  },
 
-  // This is in StoryPanel and StoryBuilder
-  activateStory(_story) {
-    const story = _story ? _story : this.props.terria.stories[0];
+    if (!this.props.terria.stories) {
+      return;
+    }
+    
+    // Clamp page number to range
+    if (pageNr < 1) {
+      pageNr = 1;
+    } else if (pageNr > this.props.terria.stories.length) {
+      pageNr = this.props.terria.stories.length;
+    }
 
-    activateStory(story, this.props.terria);
+    this.changeUrlPageParameter(pageNr);
   },
 
   onCenterScene(story) {
@@ -177,46 +151,21 @@ const RCStoryPanel = createReactClass({
     }
   },
 
-  changeUrlPageParameter(page) {
+  changeUrlPageParameter(pageNr) {
     const urlParams = new URLSearchParams(window.location.search);
-    window.history.pushState(
-      null,
-      null,
-      objectParamsToURL({
+
+    RCChangeUrlParams(
+      {
         sector: urlParams.get("sector"),
         story: urlParams.get("story"),
-        page: page + 1 // +1 because the page number starts with 0
-      })
-    );
-  },
-  goToPrevStory() {
-    this.navigateStory(this.props.viewState.currentStoryId - 1);
-    this.changeUrlPageParameter(this.props.viewState.currentStoryId);
-  },
-
-  goToNextStory() {
-    this.navigateStory(this.props.viewState.currentStoryId + 1);
-    this.changeUrlPageParameter(this.props.viewState.currentStoryId);
+        page: `${pageNr}`
+      }, this.props.viewState);
   },
 
   exitStory() {
     const urlParams = new URLSearchParams(window.location.search);
     // Open story summary page
-    RCChangeUrlParams(
-      {
-        sector: urlParams.get("sector"),
-        story: urlParams.get("story")
-      },
-      this.props.viewState
-    );
-  },
-
-  scenarioChanged(scenarioId) {
-    // TODO: use some kind of identifier for scenario
-    this.props.viewState.currentScenario = scenarioId.toString();
-
-    this.activateStory(this.props.viewState.currentStoryId);
-    this.setState({ state: this.state });
+    RCChangeUrlParams("", this.props.viewState);
   },
 
   render() {
@@ -227,14 +176,14 @@ const RCStoryPanel = createReactClass({
 
     // find the first page with the section
     function findFirstPageOfSection(section = "") {
-      return stories.findIndex(story => story.section === section);
+      return stories.findIndex(story => story.section === section) + 1;
     }
 
     return (
       <React.Fragment>
         <Swipeable
-          onSwipedLeft={this.goToNextStory}
-          onSwipedRight={this.goToPrevStory}
+          onSwipedLeft={this.navigateStory(this.props.viewState.currentStoryId - 1)}
+          onSwipedRight={this.navigateStory(this.props.viewState.currentStoryId + 1)}
         >
           <div className={Styles.RCHotspotSummary}>
             <div className={Styles.titleGroup}>
@@ -335,14 +284,6 @@ const RCStoryPanel = createReactClass({
               </div>
             </div>
 
-            <div>
-              {typeof story.text === "object" && (
-                <RCScenarioTabs
-                  story={story}
-                  onScenarioChange={this.scenarioChanged}
-                />
-              )}
-            </div>
             <div className={Styles.RCSummaryCard}>
               <div
                 className={classNames(Styles.storyContainer, {
@@ -369,7 +310,7 @@ const RCStoryPanel = createReactClass({
                       className={Styles.previousBtn}
                       disabled={this.props.terria.stories.length <= 1}
                       title={t("story.previousBtn")}
-                      onClick={this.goToPrevStory}
+                      onClick={this.navigateStory(this.props.viewState.currentStoryId - 1)}
                     >
                       <Icon glyph={Icon.GLYPHS.left} />
                     </button>
@@ -377,7 +318,7 @@ const RCStoryPanel = createReactClass({
                 </Medium>
                 <If condition={this.props.terria.stories.length >= 2}>
                   <div className={Styles.navBtn}>
-                    {stories.map((story, i) => (
+                    {stories.map((story, circleIndex) => (
                       <Tooltip
                         content={story.pageTitle}
                         direction="top"
@@ -387,11 +328,11 @@ const RCStoryPanel = createReactClass({
                         <button
                           title={t("story.navBtn", { title: story.pageTitle })}
                           type="button"
-                          onClick={() => this.navigateStory(i)}
+                          onClick={() => this.navigateStory(circleIndex + 1)}
                         >
                           <Icon
                             style={{ fill: "currentColor" }}
-                            className={`opacity-40 hover:opacity-100 ${i ===
+                            className={`opacity-40 hover:opacity-100 ${circleIndex ===
                               this.props.viewState.currentStoryId &&
                               "opacity-100"}
                             ${
@@ -412,7 +353,7 @@ const RCStoryPanel = createReactClass({
                             }
                             `}
                             glyph={
-                              i === this.props.viewState.currentStoryId
+                              circleIndex === this.props.viewState.currentStoryId
                                 ? Icon.GLYPHS.circleFull
                                 : Icon.GLYPHS.circleFull
                             }
@@ -428,7 +369,7 @@ const RCStoryPanel = createReactClass({
                       disabled={this.props.terria.stories.length <= 1}
                       className={Styles.nextBtn}
                       title={t("story.nextBtn")}
-                      onClick={this.goToNextStory}
+                      onClick={this.navigateStory(this.props.viewState.currentStoryId + 1)}
                     >
                       <Icon glyph={Icon.GLYPHS.right} />
                     </button>

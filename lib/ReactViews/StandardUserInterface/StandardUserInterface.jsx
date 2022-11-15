@@ -134,7 +134,7 @@ const StandardUserInterface = createReactClass({
     // Wait for router-dom to set before loading the init params: async
     //
     await new Promise(resolve => setTimeout(resolve, 500));
-    RCChangeUrlParams(undefined, this.props.viewState);
+    RCChangeUrlParams("", this.props.viewState);
   },
 
   componentWillUnmount() {
