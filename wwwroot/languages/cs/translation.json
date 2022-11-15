@@ -783,7 +783,9 @@
       "devError": "cesium je vyžadováno.",
       "failedToObtain": "Nepodařilo se získat obrazovou dlaždici X: {{x}} Y: {{y}} Úroveň: {{level}}.",
       "notWebMercatorTilingScheme": "Tuto datovou sadu nelze zobrazit na 2D mapě, protože nepodporuje projekci Web Mercator (EPSG:3857).",
-      "unusalTilingScheme": "Tuto datovou sadu nelze zobrazit na 2D mapě, protože používá neobvyklé schéma dlaždic, které není podporováno."
+      "unusalTilingScheme": "Tuto datovou sadu nelze zobrazit na 2D mapě, protože používá neobvyklé schéma dlaždic, které není podporováno.",
+      "stoppedRenderingTitle": "3D mapu se nepodařilo vykreslit",
+      "stoppedRenderingMessage": "Příčinou může být datová sada právě přidaná do pracovního stolu - zkuste ji odstranit. Pokud se tím problém nevyřeší, bude možná nutné znovu načíst {{appName}}."
     },
     "displayVariablesConcept": {
       "defaultName": "Zobrazit proměnnou"
