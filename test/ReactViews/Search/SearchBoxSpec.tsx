@@ -32,6 +32,7 @@ describe("SearchBox", function () {
     });
     const searchBoxWithProps = (
       <SearchBox
+        //@ts-ignore
         t={() => {}}
         terria={terria}
         viewState={viewState}

@@ -429,7 +429,7 @@ export default class CkanCatalogGroup extends UrlMixin(
 
     this.strata.set(
       CkanDefaultFormatsStratum.stratumName,
-      new CkanDefaultFormatsStratum()
+      new CkanDefaultFormatsStratum() as any
     );
   }
 

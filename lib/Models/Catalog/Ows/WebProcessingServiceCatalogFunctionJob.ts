@@ -14,6 +14,7 @@ import { JsonObject, isJsonObject } from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";
 import CatalogFunctionJobMixin from "../../../ModelMixins/CatalogFunctionJobMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
+import { setShow } from "../../../ModelMixins/MappableMixin";
 import XmlRequestMixin from "../../../ModelMixins/XmlRequestMixin";
 import xml2json from "../../../ThirdParty/xml2json";
 import { ShortReportTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
@@ -377,7 +378,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
   @computed get mapItems() {
     if (isDefined(this.geoJsonItem)) {
       return this.geoJsonItem.mapItems.map((mapItem) => {
-        mapItem.show = this.show;
+        setShow(mapItem, this.show);
         return mapItem;
       });
     }

@@ -40,6 +40,10 @@ export namespace ImageryParts {
   }
 }
 
+export function isImagery(mapItem: MapItem): mapItem is AbstractPrimitive {
+  return ImageryParts.is(mapItem);
+}
+
 export function isPrimitive(mapItem: MapItem): mapItem is AbstractPrimitive {
   return "isDestroyed" in mapItem;
 }
@@ -60,11 +64,18 @@ export function isDataSource(object: MapItem): object is DataSource {
   return "entities" in object;
 }
 
+export function setShow(mapItem: MapItem, show: boolean) {
+  if ("show" in mapItem) {
+    mapItem.show = show;
+  }
+}
+
 export interface IMappableMixin {
   isMappable: boolean;
   cesiumRectangle: Rectangle | undefined;
   isLoadingMapItems: boolean;
   mapItems: MapItem[];
+  loadMapItemsResult: Result<void> | undefined;
   loadMapItems(force?: boolean): Promise<Result<void>>;
   forceLoadMapItems(): Promise<void>;
 }

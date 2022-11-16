@@ -22,7 +22,7 @@ type ArrayTrait<TTrait, TElement> = ReadonlyArray<SingleTrait<TElement>>;
 type ModelPropertiesFromTraits<TDefinition extends ModelTraits> =
   ModelPropertiesFromCompleteTraits<Complete<TDefinition>>;
 
-type ModelPropertiesFromCompleteTraits<TDefinition> = {
+export type ModelPropertiesFromCompleteTraits<TDefinition> = {
   readonly [P in keyof TDefinition]: NotUndefined<TDefinition[P]> extends Array<
     infer TElement
   >

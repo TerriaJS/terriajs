@@ -245,9 +245,7 @@ function CatalogFunctionJobMixin<
      * Called in {@link CatalogFunctionJobMixin#onJobFinish}
      * @returns catalog members to add to workbench
      */
-    abstract async downloadResults(): Promise<
-      CatalogMemberMixin.Instance[] | void
-    >;
+    abstract downloadResults(): Promise<CatalogMemberMixin.Instance[] | void>;
 
     @action
     protected setOnError(error: unknown, raiseToUser: boolean = true) {

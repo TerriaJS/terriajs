@@ -19,3 +19,6 @@ declare module "react" {
     css?: CSSProp;
   }
 }
+
+type A<T extends CSSProp = {}> = string;
+type B<T> = A<T>;

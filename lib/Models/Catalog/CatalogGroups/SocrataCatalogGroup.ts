@@ -7,6 +7,7 @@ import runLater from "../../../Core/runLater";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import ModelReference from "../../../Traits/ModelReference";
 import {
@@ -413,23 +414,28 @@ export class SocrataCatalogStratum extends LoadableStratum(
       );
     }
 
-    if (resultModel) {
-      resultModel.setTrait(
+    if (
+      CatalogMemberMixin.isMixedInto(resultModel) &&
+      MappableMixin.isMixedInto(resultModel)
+    ) {
+      const catalogMember = resultModel as CatalogMemberMixin.Instance &
+        MappableMixin.Instance;
+      catalogMember.setTrait(
         CommonStrata.definition,
         "name",
         result.resource.name
       );
-      resultModel.setTrait(
+      catalogMember.setTrait(
         CommonStrata.definition,
         "description",
         result.resource.description
       );
-      resultModel.setTrait(
+      catalogMember.setTrait(
         CommonStrata.definition,
         "attribution",
         result.resource.attribution
       );
-      resultModel.setTrait(CommonStrata.definition, "info", [
+      catalogMember.setTrait(CommonStrata.definition, "info", [
         createStratumInstance(InfoSectionTraits, {
           name: i18next.t("models.socrataServer.licence"),
           content: result.metadata.license
@@ -444,7 +450,7 @@ export class SocrataCatalogStratum extends LoadableStratum(
         })
       ]);
 
-      resultModel.setTrait(CommonStrata.definition, "metadataUrls", [
+      catalogMember.setTrait(CommonStrata.definition, "metadataUrls", [
         createStratumInstance(MetadataUrlTraits, {
           title: i18next.t("models.openDataSoft.viewDatasetPage"),
           url: result.permalink

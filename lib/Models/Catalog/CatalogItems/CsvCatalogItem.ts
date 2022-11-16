@@ -48,7 +48,7 @@ export default class CsvCatalogItem
     super(id, terria, sourceReference);
     this.strata.set(
       TableAutomaticStylesStratum.stratumName,
-      new TableAutomaticStylesStratum(this)
+      new TableAutomaticStylesStratum(this) as any
     );
   }
 

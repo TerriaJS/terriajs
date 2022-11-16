@@ -7,6 +7,7 @@ import isDefined from "../Core/isDefined";
 import { isJsonObject, isJsonString, JsonObject } from "../Core/Json";
 import Result from "../Core/Result";
 import hasTraits from "../Models/Definition/hasTraits";
+import { Mixin } from "../Models/Definition/Mixin";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
@@ -35,7 +36,7 @@ export interface ICatalogMemberMixin
   inWorkbench: boolean;
   nameSortKey: (string | number)[];
   hasDescription: boolean;
-  infoAsObject: unknown;
+  infoAsObject: Record<string, any>;
   infoWithoutSources: readonly InfoSectionTraits[];
   selectableDimensions: SelectableDimension[];
   viewingControls: ViewingControl[];
@@ -47,7 +48,7 @@ export interface ICatalogMemberMixin
 
 function CatalogMemberMixin<T extends Constructor<CatalogMember>>(
   Base: T
-): T & AbstractConstructor<ICatalogMemberMixin> {
+): Mixin<T, ICatalogMemberMixin, CatalogMemberTraits> {
   abstract class CatalogMemberMixin
     extends AccessControlMixin(Base)
     implements ICatalogMemberMixin

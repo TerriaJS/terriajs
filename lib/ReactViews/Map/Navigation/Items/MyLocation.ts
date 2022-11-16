@@ -82,7 +82,7 @@ class MyLocation extends MapNavigationItemController {
     }
   }
 
-  zoomToMyLocation(position: Position) {
+  zoomToMyLocation(position: GeolocationPosition) {
     const t = i18next.t.bind(i18next);
     const longitude = position.coords.longitude;
     const latitude = position.coords.latitude;

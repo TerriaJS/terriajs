@@ -72,7 +72,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     super(id, terria);
     this.strata.set(
       TableAutomaticStylesStratum.stratumName,
-      new TableAutomaticStylesStratum(this)
+      new TableAutomaticStylesStratum(this) as any
     );
     this.strata.set(ApiTableStratum.stratumName, new ApiTableStratum(this));
   }

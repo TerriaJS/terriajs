@@ -550,7 +550,7 @@ export default class OpenDataSoftCatalogItem
     super(id, terria, sourceReference);
     this.strata.set(
       TableAutomaticStylesStratum.stratumName,
-      new TableAutomaticStylesStratum(this)
+      new TableAutomaticStylesStratum(this) as any
     );
   }
 
