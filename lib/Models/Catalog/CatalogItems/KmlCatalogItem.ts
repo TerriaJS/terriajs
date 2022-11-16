@@ -47,13 +47,6 @@ class KmlCatalogItem
     return isDefined(this._kmlFile);
   }
 
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    }
-    return "1d";
-  }
-
   protected forceLoadMapItems(): Promise<void> {
     return new Promise<string | Resource | Document | Blob>((resolve) => {
       if (isDefined(this.kmlString)) {

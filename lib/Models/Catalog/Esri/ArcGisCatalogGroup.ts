@@ -251,13 +251,6 @@ export default class ArcGisCatalogGroup extends UrlMixin(
     return i18next.t("models.arcGisService.name");
   }
 
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    }
-    return "1d";
-  }
-
   protected forceLoadMetadata(): Promise<void> {
     const url = this.url || "";
     if (/\/MapServer(\/?.*)?$/i.test(url)) {

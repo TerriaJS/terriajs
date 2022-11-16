@@ -58,11 +58,6 @@ export default class SdmxJsonCatalogItem
     return SdmxJsonCatalogItem.type;
   }
 
-  @computed
-  get cacheDuration() {
-    return super.cacheDuration || "1d";
-  }
-
   /**
    * Map SdmxDimensionTraits to SelectableDimension
    */

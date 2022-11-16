@@ -388,13 +388,6 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     return Promise.resolve();
   }
 
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    }
-    return "1d";
-  }
-
   @computed
   get discreteTimes() {
     const mapServerStratum: MapServerStratum | undefined = this.strata.get(

@@ -260,13 +260,6 @@ export default class ArcGisMapServerCatalogGroup extends UrlMixin(
     return i18next.t("models.arcGisMapServerCatalogGroup.name");
   }
 
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    }
-    return "1d";
-  }
-
   protected forceLoadMetadata(): Promise<void> {
     return MapServerStratum.load(this).then((stratum) => {
       runInAction(() => {

@@ -461,13 +461,6 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     });
   }
 
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    }
-    return "1d";
-  }
-
   @computed
   get imageryProvider() {
     const stratum = <GetCapabilitiesStratum>(

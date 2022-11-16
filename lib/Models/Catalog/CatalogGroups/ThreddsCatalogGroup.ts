@@ -190,14 +190,6 @@ export default class ThreddsCatalogGroup extends UrlMixin(
     return i18next.t("models.thredds.nameGroup");
   }
 
-  @computed
-  get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    }
-    return "1d";
-  }
-
   protected async forceLoadMetadata(): Promise<void> {
     if (!this.strata.get(ThreddsStratum.stratumName)) {
       const stratum = await ThreddsStratum.load(this);

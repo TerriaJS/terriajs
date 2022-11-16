@@ -208,13 +208,6 @@ class WebMapServiceCatalogItem
     });
   }
 
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    }
-    return "0d";
-  }
-
   @computed
   get layersArray(): ReadonlyArray<string> {
     if (Array.isArray(this.layers)) {

@@ -334,13 +334,6 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return super.name;
     }
 
-    @computed get cacheDuration(): string {
-      if (isDefined(super.cacheDuration)) {
-        return super.cacheDuration;
-      }
-      return "1d";
-    }
-
     /**
      * Returns the final raw data after all transformations are applied.
      * (Geojson FeatureCollection in WGS84)

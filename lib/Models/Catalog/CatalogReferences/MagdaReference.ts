@@ -788,13 +788,6 @@ export default class MagdaReference extends AccessControlMixin(
     return undefined;
   }
 
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    }
-    return "0d";
-  }
-
   protected loadMagdaRecord(options: RecordOptions): Promise<JsonObject> {
     const recordUri = this.buildMagdaRecordUri(options);
     if (recordUri === undefined) {

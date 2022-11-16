@@ -111,6 +111,16 @@ export class ArcGisPortalItemStratum extends LoadableStratum(
     });
   }
 
+  @computed
+  get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    } else if (isDefined(this.arcgisPortalCatalogGroup)) {
+      return this.arcgisPortalCatalogGroup.cacheDuration;
+    }
+    return "0d";
+  }
+
   @computed get info() {
     const outArray: StratumFromTraits<InfoSectionTraits>[] = [];
     if (this.arcgisPortalItem === undefined) return outArray;
@@ -238,16 +248,6 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
       "supportedFormats",
       ArcGisPortalItemReference.defaultSupportedFormats
     );
-  }
-
-  @computed
-  get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    } else if (isDefined(this._arcgisPortalCatalogGroup)) {
-      return this._arcgisPortalCatalogGroup.cacheDuration;
-    }
-    return "0d";
   }
 
   @computed

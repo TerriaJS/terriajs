@@ -314,13 +314,6 @@ export default class CkanItemReference extends UrlMixin(
     );
   }
 
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    }
-    return "1d";
-  }
-
   // We will first attach this to the CkanItemReference
   // and then we'll attach it to the target model
   // I wonder if it needs to be on both?

@@ -441,13 +441,6 @@ export default class CkanCatalogGroup extends UrlMixin(
     return i18next.t("models.ckan.nameServer");
   }
 
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    }
-    return "1d";
-  }
-
   protected async forceLoadMetadata(): Promise<void> {
     const ckanServerStratum = <CkanServerStratum | undefined>(
       this.strata.get(CkanServerStratum.stratumName)
