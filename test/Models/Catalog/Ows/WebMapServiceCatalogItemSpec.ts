@@ -798,7 +798,7 @@ describe("WebMapServiceCatalogItem", function () {
     wmsItem
       .loadMetadata()
       .then(function () {
-        expect(wmsItem.selectableDimensions.length).toBe(0);
+        expect(wmsItem.selectableDimensions().length).toBe(0);
       })
       .then(done)
       .catch(done.fail);

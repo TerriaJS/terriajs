@@ -26,7 +26,7 @@ class SelectableDimensionSection extends React.Component<PropsType> {
 
     const selectableDimensions = filterSelectableDimensions(
       this.props.placement
-    )(item.selectableDimensions);
+    )(item.selectableDimensions());
 
     if (!isDefined(selectableDimensions) || selectableDimensions.length === 0) {
       return null;

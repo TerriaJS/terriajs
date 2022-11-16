@@ -158,9 +158,9 @@ describe("CatalogMemberMixin", function () {
       expect(wmsItem.styles).toBe("init-style");
       expect(wmsItem.layers).toBe("init-layers");
 
-      const result = wmsItem.selectableDimensions.find(
-        (dim) => dim.id === "modelDimensions"
-      );
+      const result = wmsItem
+        .selectableDimensions()
+        .find((dim) => dim.id === "modelDimensions");
 
       expect(result).toBeDefined();
       expect(result?.type === undefined);

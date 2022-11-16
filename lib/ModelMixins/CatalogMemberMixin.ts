@@ -167,8 +167,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
     /** Converts modelDimensions to selectableDimensions
      * This will apply modelDimension JSON value to user stratum
      */
-    @computed
-    get selectableDimensions(): SelectableDimension[] {
+    selectableDimensions(): SelectableDimension[] {
       return (
         this.modelDimensions.map((dim) => ({
           id: dim.id,

@@ -675,13 +675,12 @@ export default class OpenDataSoftCatalogItem
     }
   }
 
-  @computed
-  get selectableDimensions() {
+  selectableDimensions() {
     return filterOutUndefined([
       this.availableFieldsDimension,
-      ...super.selectableDimensions.filter(
-        (s) => !this.availableFieldsDimension || s.id !== "activeStyle"
-      )
+      ...super
+        .selectableDimensions()
+        .filter((s) => !this.availableFieldsDimension || s.id !== "activeStyle")
     ]);
   }
 }

@@ -32,10 +32,9 @@ function ShadowMixin<T extends Constructor<BaseType>>(Base: T) {
     }
 
     /** Shadow SelectableDimension. This has to be added to a catalog member's `selectableDimension` array */
-    @computed
-    get selectableDimensions(): SelectableDimension[] {
+    selectableDimensions(): SelectableDimension[] {
       return [
-        ...super.selectableDimensions,
+        ...super.selectableDimensions(),
         {
           id: "shadows",
           name: i18next.t("models.shadow.name"),

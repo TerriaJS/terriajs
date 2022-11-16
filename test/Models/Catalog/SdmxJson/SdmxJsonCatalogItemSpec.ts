@@ -172,7 +172,7 @@ describe("SdmxJsonCatalogItem", function () {
       "CNT2"
     );
     expect(
-      sdmxItem.selectableDimensions.find((dim) => dim.id === "GEO_PICT")
+      sdmxItem.selectableDimensions().find((dim) => dim.id === "GEO_PICT")
         ?.disable
     ).toBeTruthy();
 

@@ -92,12 +92,11 @@ export default class SdmxJsonCatalogItem
     });
   }
 
-  @computed
-  get selectableDimensions(): SelectableDimension[] {
+  selectableDimensions(): SelectableDimension[] {
     return filterOutUndefined([
-      ...super.selectableDimensions.filter(
-        (d) => d.id !== this.styleDimensions?.id
-      ),
+      ...super
+        .selectableDimensions()
+        .filter((d) => d.id !== this.styleDimensions?.id),
       ...this.sdmxSelectableDimensions
     ]);
   }
@@ -163,17 +162,18 @@ export default class SdmxJsonCatalogItem
         error instanceof RequestErrorEvent &&
         typeof error.response === "string"
       ) {
+        const selectableDimensions = this.selectableDimensions();
         // If no results and we have selcetable dimensions, give message regarding dimensions
         // This message will include values for each selectable dimension
         if (
           error.statusCode === SdmxHttpErrorCodes.NoResults &&
-          this.selectableDimensions.length > 0
+          selectableDimensions.length > 0
         ) {
           throw new TerriaError({
             message: i18next.t(
               "models.sdmxCatalogItem.noResultsWithDimensions",
               {
-                dimensions: filterEnums(this.selectableDimensions)
+                dimensions: filterEnums(selectableDimensions)
                   .filter((dim) => !dim.disable && dim.options?.length !== 1)
                   .map(
                     (dim) =>

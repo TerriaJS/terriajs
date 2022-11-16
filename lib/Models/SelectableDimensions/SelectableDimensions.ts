@@ -254,7 +254,7 @@ export const findSelectedValueName = (
 
 /** Interface to be implemented by BaseModels (eg CatalogMembers) to add selectableDimensions */
 interface SelectableDimensions {
-  selectableDimensions: SelectableDimension[];
+  selectableDimensions(): SelectableDimension[];
 }
 
 namespace SelectableDimensions {

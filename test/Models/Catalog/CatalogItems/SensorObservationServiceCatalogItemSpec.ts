@@ -208,7 +208,7 @@ describe("SensorObservationServiceCatalogItem", function () {
 
       it("sets the style selectors correctly", async function () {
         await item.loadMapItems();
-        expect(item.selectableDimensions.map((s) => s.name)).toEqual([
+        expect(item.selectableDimensions().map((s) => s.name)).toEqual([
           "Frequency",
           "Observation Type"
         ]);
@@ -216,9 +216,9 @@ describe("SensorObservationServiceCatalogItem", function () {
 
       it("shows all options for the procedure selector", async function () {
         await item.loadMapItems();
-        const procedureSelector = item.selectableDimensions.find(
-          (s) => s.name === "Frequency"
-        );
+        const procedureSelector = item
+          .selectableDimensions()
+          .find((s) => s.name === "Frequency");
         expect(procedureSelector && isEnum(procedureSelector)).toBeTruthy();
 
         if (!procedureSelector || !isEnum(procedureSelector))

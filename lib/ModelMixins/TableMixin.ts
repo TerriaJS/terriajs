@@ -460,11 +460,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return tableFeatureInfoContext(this);
     }
 
-    @computed
-    get selectableDimensions(): SelectableDimension[] {
+    selectableDimensions(): SelectableDimension[] {
       return filterOutUndefined([
         this.timeDisableDimension,
-        ...super.selectableDimensions,
+        ...super.selectableDimensions(),
         this.enableManualRegionMapping
           ? this.regionMappingDimensions
           : undefined,
