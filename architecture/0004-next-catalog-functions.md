@@ -102,7 +102,7 @@ For log messages
 #### `_invoke()`
 
 ```ts
-protected abstract async _invoke(): Promise<boolean>;
+protected abstract _invoke(): Promise<boolean>;
 ```
 
 Must be implemented.
@@ -141,7 +141,7 @@ This handles downloading job results, it can be triggered three ways:
 #### `downloadResults()`
 
 ```ts
-    abstract async downloadResults(): Promise<
+    abstract downloadResults(): Promise<
       CatalogMemberMixin.Instance[] | void
     >;
 ```

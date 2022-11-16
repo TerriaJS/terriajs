@@ -165,7 +165,7 @@ function MappableMixin<T extends AbstractConstructor<Model<MappableTraits>>>(
      *
      * {@see AsyncLoader}
      */
-    protected abstract async forceLoadMapItems(): Promise<void>;
+    protected abstract forceLoadMapItems(): Promise<void>;
 
     /**
      * Array of MapItems to show on the map/chart when Catalog Member is shown
