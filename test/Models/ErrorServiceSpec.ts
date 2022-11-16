@@ -11,7 +11,7 @@ describe("initializeErrorServiceProvider", function () {
   });
 
   it("throws an error when an invalid provider type is given", async function () {
-    let error;
+    let error: any;
     try {
       await initializeErrorServiceProvider({
         provider: "foo",

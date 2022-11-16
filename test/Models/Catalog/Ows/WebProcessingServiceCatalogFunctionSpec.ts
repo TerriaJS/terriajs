@@ -317,7 +317,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
       try {
         const job = await wps.submitJob();
         expect(job).toBeUndefined();
-      } catch (error) {
+      } catch (error: any) {
         expect(error).toBeDefined();
         expect(error instanceof TerriaError).toBeTruthy();
         expect(error.message).toBe(

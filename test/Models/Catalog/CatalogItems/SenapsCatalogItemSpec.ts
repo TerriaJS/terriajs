@@ -108,7 +108,7 @@ describe("SenapsLocationsCatalogItem", function () {
         let errorMessage: string = "";
         try {
           item._constructLocationsUrl();
-        } catch (e) {
+        } catch (e: any) {
           errorMessage = e.message;
         }
         return errorMessage === i18next.t("models.senaps.missingSenapsBaseUrl");
@@ -122,7 +122,7 @@ describe("SenapsLocationsCatalogItem", function () {
         let errorMessage: string = "";
         try {
           item._constructStreamsUrl("123");
-        } catch (e) {
+        } catch (e: any) {
           errorMessage = e.message;
         }
         return errorMessage === i18next.t("models.senaps.missingSenapsBaseUrl");
