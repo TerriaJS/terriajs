@@ -6,52 +6,23 @@ import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import runLater from "../../../Core/runLater";
-import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
+import { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
+import ModelReference from "../../../Traits/ModelReference";
 import ArcGisMapServerCatalogGroupTraits from "../../../Traits/TraitsClasses/ArcGisMapServerCatalogGroupTraits";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
-import ModelReference from "../../../Traits/ModelReference";
-import ArcGisCatalogGroup from "./ArcGisCatalogGroup";
-import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
-
-interface DocumentInfo {
-  Title?: string;
-  Author?: string;
-}
-
-interface Layer {
-  id: number;
-  name?: string;
-  parentLayerId: number;
-  description?: string;
-  copyrightText?: string;
-  type?: string;
-  subLayerIds?: number[] | null;
-}
-
-export interface MapServer {
-  documentInfo?: DocumentInfo;
-  name?: string;
-  serviceDescription?: string;
-  description?: string;
-  copyrightText?: string;
-  layers?: Layer[];
-  subLayers?: Layer[];
-  /** A single fused cache contains image tiles that are created by grouping all the layers together at each scale, or level of detail.
-   * If this is true, we are unable to request individual layers in a MapServer.
-   * So instead we create a single item in the group called "All layers"
-   */
-  singleFusedMapCache?: boolean;
-}
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import ArcGisCatalogGroup from "./ArcGisCatalogGroup";
+import { Layer, MapServer } from "./ArcGisInterfaces";
+import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
 
 /** The ID we add to our "All layers" ArcGisMapServerCatalogItem if MapServer.singleFusedMapCache is true */
 const SINGLE_FUSED_MAP_CACHE_ID = "all-layers";
@@ -75,10 +46,6 @@ export class MapServerStratum extends LoadableStratum(
       model as ArcGisMapServerCatalogGroup,
       this._mapServer
     ) as this;
-  }
-
-  get mapServerData() {
-    return this._mapServer;
   }
 
   @computed get name() {

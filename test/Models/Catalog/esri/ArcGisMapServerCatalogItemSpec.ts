@@ -84,7 +84,7 @@ describe("ArcGisMapServerCatalogItem", function () {
         item.setTrait(CommonStrata.definition, "url", mapServerUrl);
       });
       await item.loadMapItems();
-      expect(item.allSelectedLayers.length).toBe(74);
+      expect(item.layersArray.length).toBe(74);
     });
 
     it("can load specific layers", async function () {
@@ -94,7 +94,7 @@ describe("ArcGisMapServerCatalogItem", function () {
         item.setTrait(CommonStrata.definition, "layers", "31,32");
       });
       await item.loadMapItems();
-      expect(item.allSelectedLayers.length).toBe(2);
+      expect(item.layersArray.length).toBe(2);
     });
 
     it("can load a single layer given in the URL", async function () {
@@ -103,7 +103,7 @@ describe("ArcGisMapServerCatalogItem", function () {
         item.setTrait(CommonStrata.definition, "url", singleLayerUrl);
       });
       await item.loadMapItems();
-      expect(item.allSelectedLayers.length).toBe(1);
+      expect(item.layersArray.length).toBe(1);
       expect(item.layers).toBe("31");
     });
 
