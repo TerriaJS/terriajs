@@ -7,7 +7,6 @@ import isDefined from "../Core/isDefined";
 import { isJsonObject, isJsonString, JsonObject } from "../Core/Json";
 import Result from "../Core/Result";
 import hasTraits from "../Models/Definition/hasTraits";
-import { Mixin } from "../Models/Definition/Mixin";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
@@ -48,7 +47,7 @@ export interface ICatalogMemberMixin
 
 function CatalogMemberMixin<T extends Constructor<CatalogMember>>(
   Base: T
-): Mixin<T, ICatalogMemberMixin, CatalogMemberTraits> {
+): T & AbstractConstructor<ICatalogMemberMixin> {
   abstract class CatalogMemberMixin
     extends AccessControlMixin(Base)
     implements ICatalogMemberMixin

@@ -13,7 +13,7 @@ interface IUrlMixin {
 
 function UrlMixin<T extends Constructor<UrlModel>>(
   Base: T
-): T & Constructor<IUrlMixin & UrlModel> {
+): T & Constructor<IUrlMixin> {
   class UrlMixin extends Base implements IUrlMixin {
     get hasUrlMixin() {
       return true;
