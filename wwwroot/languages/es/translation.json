@@ -783,6 +783,27 @@
       "startedNoenableConsoleAnalytics": "ConsoleAnalytics se inició, sin embargo `configParameters.enableConsoleAnalytics` no se definió o se estableció en falso.",
       "logStartedWithGAParameters": "ConsoleAnalytics se inició pero se observó una clave `googleAnalyticsKey` o `googleAnalyticsOptions` en `configParameters`.",
       "started": "Se ha iniciado ConsoleAnalytics."
+    },
+    "googleAnalytics": {
+      "log": "El seguimiento de Google Analytics está desactivado porque no se ha especificado terria.configParameters.googleAnalyticsKey",
+      "logEnabledOnDevelopment": "Google Analytics se inicializó en un entorno de \"desarrollo\""
+    },
+    "terriaError": {
+      "defaultCombineTitle": "Se han producido múltiples errores",
+      "defaultTitle": "Se ha producido un error",
+      "defaultMessage": "Error desconocido",
+      "defaultCombineMessage": "Los detalles de los errores se encuentran a continuación",
+      "networkRequestTitle": "Se produjo un error de solicitud de red",
+      "networkRequestMessage": "Es posible que los datos no estén disponibles o no se muestren correctamente debido a la interrupción del servicio del custodio de datos. Intente volver a cargar el mapa, acceder a los datos en una etapa posterior o seleccionar un conjunto de datos diferente. <feedbacklink feedback-message='Si el problema persiste, envíe sus comentarios aquí.' email-message='Si el problema persiste, informe a {{email}}'/>"
+    },
+    "readText": {
+      "fileRequired": "se requiere el archivo"
+    },
+    "readXml": {
+      "xmlError": "El archivo no contiene XML válido."
+    },
+    "serverConfig": {
+      "failedToGet": "No se ha podido obtener la configuración del servidor de {{serverConfigUrl}}. Esto significa que servicios como el proxy, la conversión y el acortamiento de URL pueden no funcionar."
     }
   }
 }
