@@ -13,7 +13,7 @@ export interface ViewingControl {
 }
 
 interface ViewingControls {
-  viewingControls: ViewingControl[];
+  viewingControls(): ViewingControl[];
 }
 
 namespace ViewingControls {

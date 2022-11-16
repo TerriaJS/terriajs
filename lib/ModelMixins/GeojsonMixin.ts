@@ -1255,12 +1255,12 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return undefined;
     }
 
-    @computed get viewingControls(): ViewingControl[] {
+    viewingControls(): ViewingControl[] {
       return !this.useTableStylingAndProtomaps
-        ? super.viewingControls.filter(
-            (v) => v.id !== TableStylingWorkflow.type
-          )
-        : super.viewingControls;
+        ? super
+            .viewingControls()
+            .filter((v) => v.id !== TableStylingWorkflow.type)
+        : super.viewingControls();
     }
   }
   return GeoJsonMixin;

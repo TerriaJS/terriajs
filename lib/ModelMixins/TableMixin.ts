@@ -439,9 +439,9 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       ]);
     }
 
-    @computed get viewingControls(): ViewingControl[] {
+    viewingControls(): ViewingControl[] {
       return filterOutUndefined([
-        ...super.viewingControls,
+        ...super.viewingControls(),
         {
           id: TableStylingWorkflow.type,
           name: "Edit Style",

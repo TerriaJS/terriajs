@@ -207,7 +207,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       );
     }
 
-    @computed get viewingControls(): ViewingControl[] {
+    viewingControls(): ViewingControl[] {
       return [];
     }
 
