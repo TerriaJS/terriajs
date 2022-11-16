@@ -21,7 +21,7 @@ interface Props {
 const renderDisplayVariables = (catalogItem: BaseModel) => {
   if (SelectableDimensions.is(catalogItem)) {
     return filterSelectableDimensions(DEFAULT_PLACEMENT)(
-      catalogItem.selectableDimensions
+      catalogItem.selectableDimensions()
     ).map((dim, key) =>
       !isGroup(dim) ? (
         <div key={key}>

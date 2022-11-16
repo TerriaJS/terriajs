@@ -61,7 +61,7 @@ const Checkbox = memo(
           isDisabled,
           isChecked,
           style: { fontSize: "inherit" }
-        });
+        } as any);
       }
       return child;
     });

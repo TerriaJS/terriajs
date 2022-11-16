@@ -110,7 +110,7 @@ describe("CatalogMemberMixin", function () {
       let dispose: IReactionDisposer | undefined;
 
       // Wait for isLoadingMapItems to be true -> then check isLoadingMetadata and isLoading
-      await new Promise((resolve) => {
+      await new Promise<void>((resolve) => {
         dispose = reaction(
           () => wmsItem.isLoadingMapItems,
           () => {

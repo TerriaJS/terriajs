@@ -29,7 +29,11 @@ export default class TestCatalogItem
     return "test";
   }
 
-  selectableDimensions: SelectableDimensionModel[] = [
+  selectableDimensions() {
+    return this.selectableDimensionsArray;
+  }
+
+  selectableDimensionsArray: SelectableDimensionModel[] = [
     {
       id: "some-id",
       name: "Some name",
@@ -208,7 +212,7 @@ describe("DimensionSelectorSection", function () {
     expect(groups.length).toBe(1);
 
     console.log(groups[0].props);
-    expect(groups[0].props.dim.id).toBe(csvItem.selectableDimensions[0].id);
+    expect(groups[0].props.dim.id).toBe(csvItem.selectableDimensions()[0].id);
 
     done();
 
@@ -220,7 +224,7 @@ describe("DimensionSelectorSection", function () {
 
     beforeEach(function () {
       mockItem = new TestCatalogItem("what", terria);
-      mockItem.selectableDimensions = [
+      mockItem.selectableDimensionsArray = [
         {
           id: "checkbox-group1",
           type: "checkbox-group",
@@ -282,7 +286,7 @@ describe("DimensionSelectorSection", function () {
 
     beforeEach(function () {
       mockItem = new TestCatalogItem("what", terria);
-      mockItem.selectableDimensions = [
+      mockItem.selectableDimensionsArray = [
         {
           id: "group",
           type: "group",

@@ -115,7 +115,10 @@ export class ArcGisPortalItemStratum extends LoadableStratum(
   get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
-    } else if (isDefined(this.arcgisPortalCatalogGroup)) {
+    } else if (
+      isDefined(this.arcgisPortalCatalogGroup) &&
+      isDefined(this.arcgisPortalCatalogGroup.cacheDuration)
+    ) {
       return this.arcgisPortalCatalogGroup.cacheDuration;
     }
     return "0d";
