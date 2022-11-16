@@ -1,2 +1,2 @@
-type AbstractConstructor<T> = Function & { prototype: T };
+type AbstractConstructor<T> = abstract new (...args: any[]) => T;
 export default AbstractConstructor;
