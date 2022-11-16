@@ -72,7 +72,9 @@ class GpxCatalogItem extends GeoJsonMixin(
     return Promise.resolve();
   }
 
-  @computed get name() {
+  @computed
+  // @ts-ignore
+  get name() {
     if (this.url && super.name === this.url) {
       return getFilenameFromUri(this.url);
     }

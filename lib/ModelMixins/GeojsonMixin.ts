@@ -327,7 +327,9 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return true;
     }
 
-    @computed get name() {
+    @computed
+    // @ts-ignore
+    get name() {
       if (CatalogMemberMixin.isMixedInto(this.sourceReference)) {
         return super.name || this.sourceReference.name;
       }

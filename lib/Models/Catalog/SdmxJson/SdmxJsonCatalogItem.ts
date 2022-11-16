@@ -110,6 +110,7 @@ export default class SdmxJsonCatalogItem
   }
 
   @computed
+  // @ts-ignore
   get url() {
     if (!super.url) return;
 

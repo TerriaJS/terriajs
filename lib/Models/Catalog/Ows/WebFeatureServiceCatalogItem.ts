@@ -462,6 +462,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
   }
 
   @computed
+  // @ts-ignore
   get shortReport(): string | undefined {
     // Show notice if reached
     if (

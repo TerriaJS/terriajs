@@ -120,6 +120,7 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
     }
 
     @computed
+    // @ts-ignore
     get shortReport(): string | undefined {
       if (this.terria.currentViewer.type === "Leaflet") {
         return i18next.t("models.commonModelErrors.3dTypeIn2dMode", this);

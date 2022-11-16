@@ -198,6 +198,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   }
 
   @computed
+  // @ts-ignore
   get description() {
     return (
       super.description ??

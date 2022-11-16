@@ -24,6 +24,7 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
   }
 
   @computed
+  // @ts-ignore
   get disableZoomTo() {
     return true;
   }
@@ -34,6 +35,7 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
   }
 
   @computed
+  // @ts-ignore
   get shortReport() {
     if (super.shortReport === undefined) {
       const status = this.isTerrainActive ? "In use" : "Not in use";
