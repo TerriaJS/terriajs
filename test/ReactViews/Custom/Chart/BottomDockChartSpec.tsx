@@ -52,7 +52,7 @@ describe("BottomDockChart", function () {
   });
 
   // FIXME: disabling because the new version of `withParentSize` from
-  // `@vx/responsive` uses ResizeObserver to trigger render which doesn't seem to
+  // `@visx/responsive` uses ResizeObserver to trigger render which doesn't seem to
   // work correctly in tests
   //
   /* it("renders all points on map for active chart items", function() {
