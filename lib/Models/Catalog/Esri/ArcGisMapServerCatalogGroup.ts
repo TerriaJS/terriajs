@@ -166,7 +166,13 @@ export class MapServerStratum extends LoadableStratum(
     // Replace the stratum inherited from the parent group.
     model.strata.delete(CommonStrata.definition);
 
-    model.setTrait(CommonStrata.definition, "name", "All layers");
+    model.setTrait(
+      CommonStrata.definition,
+      "name",
+      i18next
+        .t("models.arcGisMapServerCatalogGroup.singleFusedMapCacheLayerName")
+        .toString()
+    );
     model.setTrait(CommonStrata.definition, "url", this._catalogGroup.url);
   }
 

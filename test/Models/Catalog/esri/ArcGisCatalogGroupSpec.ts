@@ -82,6 +82,13 @@ describe("ArcGisCatalogGroup", function () {
           "CommunityAddressingMS.json"
         );
         args[0] = "test/ArcGisServer/sampleserver6/" + url;
+      } else if (url.match("SingleFusedMapCache/MapServer")) {
+        url = url.replace(/^.*\/MapServer/, "MapServer");
+        url = url.replace(/MapServer\/?\?.*/i, "mapserver.json");
+        url = url.replace(/MapServer\/Legend\/?\?.*/i, "legend.json");
+        url = url.replace(/MapServer\/Layers\/?\?.*/i, "layers.json");
+        url = url.replace(/MapServer\/31\/?\?.*/i, "31.json");
+        args[0] = "test/ArcGisMapServer/SingleFusedMapCache/" + url;
       }
 
       return realLoadWithXhr(...args);
@@ -221,6 +228,32 @@ describe("ArcGisCatalogGroup", function () {
       );
       expect(arcgisServerStratum).toBeDefined();
       expect(arcgisServerStratum instanceof FeatureServerStratum).toBeTruthy();
+    });
+  });
+
+  describe("Supports MapServer with a single fused map cache", function () {
+    beforeEach(async () => {
+      runInAction(() => {
+        group.setTrait(
+          CommonStrata.definition,
+          "url",
+          "http://www.example.com/SingleFusedMapCache/MapServer"
+        );
+      });
+      await group.loadMembers();
+    });
+
+    it('Creates a single item called "models.arcGisMapServerCatalogGroup.singleFusedMapCacheLayerName"', async function () {
+      expect(group.memberModels.length).toBe(1);
+      expect(
+        group.memberModels[0] instanceof ArcGisMapServerCatalogItem
+      ).toBeTruthy();
+      const item = group.memberModels[0] as ArcGisMapServerCatalogItem;
+      expect(item.name).toBe(
+        "models.arcGisMapServerCatalogGroup.singleFusedMapCacheLayerName"
+      );
+      expect(item.layers).toBeUndefined();
+      expect(item.layersArray.length).toBe(0);
     });
   });
 });

@@ -126,15 +126,14 @@ class MapServerStratum extends LoadableStratum(
       });
     }
 
-    let layersMetadataResponse = await getJson(item, layersUri);
     const legendMetadata: Legends | undefined = await getJson(item, legendUri);
-
-    // TODO: some error handling on these requests would be nice
     let layers: Layer[] = [];
 
     // If this MapServer is a single fused map cache - we can't request individual layers
     // If it is not - we request layer metadata
     if (!serviceMetadata.singleFusedMapCache) {
+      const layersMetadataResponse = await getJson(item, layersUri);
+
       // Use the slightly more basic layer metadata
       if (isDefined(serviceMetadata.layers)) {
         layers = serviceMetadata.layers;
