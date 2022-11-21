@@ -34,6 +34,7 @@ describe("ArcGisMapServerCatalogItem", function () {
     spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
       let url = args[0];
       url = url.replace("http://example.com/42/", "");
+      console.log(`match URL = ${url}`);
       if (url.match("Dynamic_National_Map_Hydrography_and_Marine/MapServer")) {
         url = url.replace(/^.*\/MapServer/, "MapServer");
         url = url.replace(/MapServer\/?\?.*/i, "mapserver.json");
@@ -44,7 +45,6 @@ describe("ArcGisMapServerCatalogItem", function () {
           "test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/" +
           url;
       } else if (url.match("SingleFusedMapCache/MapServer")) {
-        console.log(`match URL = ${url}`);
         url = url.replace(/^.*\/MapServer/, "MapServer");
         url = url.replace(/MapServer\/?\?.*/i, "mapserver.json");
         url = url.replace(/MapServer\/Legend\/?\?.*/i, "legend.json");

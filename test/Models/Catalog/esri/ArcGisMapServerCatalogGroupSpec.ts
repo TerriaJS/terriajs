@@ -36,14 +36,13 @@ describe("ArcGisMapServerCatalogGroup", function () {
     // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
     spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
       let url = args[0];
-
+      console.log(`match URL = ${url}`);
       if (url.match("Redlands_Emergency_Vehicles/MapServer")) {
         url = url.replace(/^.*\/MapServer/, "MapServer");
         url = url.replace(/MapServer\/?\?f=json$/i, "mapServer.json");
         url = url.replace(/MapServer\/17\/?\?.*/i, "17.json");
         args[0] = "test/ArcGisMapServer/Redlands_Emergency_Vehicles/" + url;
       } else if (url.match("SingleFusedMapCache/MapServer")) {
-        console.log(`match URL = ${url}`);
         url = url.replace(/^.*\/MapServer/, "MapServer");
         url = url.replace(/MapServer\/?\?.*/i, "mapserver.json");
         url = url.replace(/MapServer\/Legend\/?\?.*/i, "legend.json");
