@@ -34,7 +34,7 @@ describe("ArcGisMapServerCatalogItem", function () {
     spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
       let url = args[0];
       url = url.replace("http://example.com/42/", "");
-      console.log(`match URL = ${url}`);
+
       if (url.match("Dynamic_National_Map_Hydrography_and_Marine/MapServer")) {
         url = url.replace(/^.*\/MapServer/, "MapServer");
         url = url.replace(/MapServer\/?\?.*/i, "mapserver.json");
@@ -411,7 +411,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       item.setTrait(CommonStrata.definition, "layers", "61");
 
       expect(item.legends).toBeDefined();
-      console.log(item.legends);
+
       expect(item.legends?.length).toBe(1);
       expect(item.legends[0].items.length).toBe(2); // Note we expect 2 legends here instead of 3 because there are two legends with the same imageUrl
       expect(item.legends[0].items[0].imageUrl).toBe(
@@ -426,7 +426,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       item.setTrait(CommonStrata.definition, "layers", "67");
 
       expect(item.legends).toBeDefined();
-      console.log(item.legends);
+
       expect(item.legends?.length).toBe(1);
       expect(item.legends[0].items.length).toBe(2);
       expect(item.legends[0].items[0].imageUrl).toBe(
