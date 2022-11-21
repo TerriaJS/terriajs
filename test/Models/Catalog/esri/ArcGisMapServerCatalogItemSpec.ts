@@ -469,7 +469,7 @@ describe("ArcGisMapServerCatalogItem", function () {
     });
   });
 
-  describe("Single fused map cache server", function () {
+  describe("TilesOnly + single fused map cache server", function () {
     beforeEach(async () => {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
@@ -479,7 +479,7 @@ describe("ArcGisMapServerCatalogItem", function () {
           "http://www.example.com/SingleFusedMapCache/MapServer"
         );
       });
-      await item.loadMapItems();
+      (await item.loadMapItems()).throwIfError();
     });
 
     it("doesn't request specific layers", async function () {

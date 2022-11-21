@@ -161,17 +161,16 @@ describe("ArcGisMapServerCatalogGroup", function () {
     });
   });
 
-  describe("Supports MapServer with a single fused map cache", function () {
+  describe("Supports MapServer with TilesOnly single fused map cache", function () {
     beforeEach(async () => {
       runInAction(() => {
-        group = new ArcGisMapServerCatalogGroup("test", new Terria());
         group.setTrait(
           CommonStrata.definition,
           "url",
           "http://www.example.com/SingleFusedMapCache/MapServer"
         );
       });
-      await group.loadMembers();
+      (await group.loadMembers()).throwIfError();
     });
 
     it('Creates a single item called "models.arcGisMapServerCatalogGroup.singleFusedMapCacheLayerName"', async function () {

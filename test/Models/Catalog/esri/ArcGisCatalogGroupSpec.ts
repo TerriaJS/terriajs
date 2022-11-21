@@ -1,17 +1,16 @@
+import i18next from "i18next";
 import { configure, runInAction } from "mobx";
 import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
-import Terria from "../../../../lib/Models/Terria";
 import ArcGisCatalogGroup from "../../../../lib/Models/Catalog/Esri/ArcGisCatalogGroup";
-import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
-import i18next from "i18next";
-import ArcGisMapServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
-import TerriaError from "../../../../lib/Core/TerriaError";
-import ArcGisMapServerCatalogGroup, {
-  MapServerStratum
-} from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogGroup";
 import ArcGisFeatureServerCatalogGroup, {
   FeatureServerStratum
 } from "../../../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogGroup";
+import ArcGisMapServerCatalogGroup, {
+  MapServerStratum
+} from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogGroup";
+import ArcGisMapServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
+import Terria from "../../../../lib/Models/Terria";
 
 configure({
   enforceActions: "observed",
@@ -231,7 +230,7 @@ describe("ArcGisCatalogGroup", function () {
     });
   });
 
-  describe("Supports MapServer with a single fused map cache", function () {
+  describe("Supports MapServer with TilesOnly single fused map cache", function () {
     beforeEach(async () => {
       runInAction(() => {
         group.setTrait(
@@ -240,7 +239,7 @@ describe("ArcGisCatalogGroup", function () {
           "http://www.example.com/SingleFusedMapCache/MapServer"
         );
       });
-      await group.loadMembers();
+      (await group.loadMembers()).throwIfError();
     });
 
     it('Creates a single item called "models.arcGisMapServerCatalogGroup.singleFusedMapCacheLayerName"', async function () {
