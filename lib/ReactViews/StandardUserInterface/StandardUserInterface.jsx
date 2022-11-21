@@ -5,7 +5,7 @@ import "inobounce";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import { Link, Route, Switch } from "react-router-dom";
+import { Link, Route, Switch, withRouter } from "react-router-dom";
 import awsconfig from "../../aws-exports";
 import arrayContains from "../../Core/arrayContains";
 import { RCChangeUrlParams } from "../../Models/Receipt";
@@ -156,6 +156,8 @@ const StandardUserInterface = createReactClass({
 
   render() {
     const { t, viewState, terria } = this.props;
+    const path = this.props.match.path;
+
     const customElements = processCustomElements(
       viewState.useSmallScreenInterface,
       this.props.children
@@ -313,20 +315,30 @@ const StandardUserInterface = createReactClass({
                     </div>
 
                     <Switch>
-                      <Route exact path="/">
-                        {showHotspotSummary && (
-                          <RCHotspotSummary viewState={viewState} />
-                        )}
+                      <Route exact path="/">                        
+                        <SidePanelSectorTabs
+                          terria={terria}
+                          viewState={viewState}
+                        />
+                      </Route>
 
-                        {!(showStoryPanel || showHotspotSummary) && (
-                          <SidePanelSectorTabs
-                            terria={terria}
-                            viewState={viewState}
-                          />
-                        )}
-                        {showStoryPanel ? (
-                          <RCStoryPanel terria={terria} viewState={viewState} />
-                        ) : null}
+                      <Route exact path={`/sector/:sectorName`}>
+                        <SidePanelSectorTabs
+                          terria={terria}
+                          viewState={viewState}
+                        />
+                      </Route>
+                      
+                      <Route exact path={`/sector/:sectorName/story/:storyID`}>
+                        <RCHotspotSummary terria={terria} viewState={viewState} />
+                      </Route>
+
+                      <Route exact path={`/sector/:sectorName/story/:storyID/page/:pageIndex`}>
+                        <RCStoryPanel terria={terria} viewState={viewState} />
+                      </Route>
+
+                      <Route exact path={`/sector/:sectorName/story/:storyID/microstory/:microstoryID`}>
+                        <RCStoryPanel terria={terria} viewState={viewState} />
                       </Route>
 
                       <Route path="/builder">
@@ -460,5 +472,5 @@ const StandardUserInterface = createReactClass({
 
 export const StandardUserInterfaceWithoutTranslation = StandardUserInterface;
 
-export default withTranslation()(StandardUserInterface);
+export default withTranslation()(withRouter(StandardUserInterface));
 // export default withTranslation()(StandardUserInterface);

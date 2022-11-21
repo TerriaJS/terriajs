@@ -1,4 +1,5 @@
 import React from "react";
+import { Link, Route, Switch, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import { RCChangeUrlParams } from "../../Models/Receipt";
@@ -16,25 +17,22 @@ class SidePanelSectorTabs extends React.Component {
   };
 
   componentDidMount() {
-    this._viewStateSelectedSector = knockout
-      .getObservable(viewState, "RCSelectedSector")
-      .subscribe(() => {
-        // Re render the panel rather than delegate on React state
-        this.forceUpdate();
-      });
   }
   componentWillUnmount() {
-    this._viewStateSelectedSector.dispose();
   }
 
   render() {
     const { viewState } = this.props;
     const { sectors } = this.state;
+    
+    const path = this.props.match.path;    
+    const selectedSector = this.props.match.params.sectorName;
+
     const selectedId = sectors.findIndex(
-      sector => sector.id === viewState.RCSelectedSector
+      sector => sector.id === selectedSector
     );
     const sector = sectors.find(
-      sector => sector.id === viewState.RCSelectedSector
+      sector => sector.id === selectedSector
     );
     const selectedHotspotsList =
       this.props.terria.nowViewing.items.find(item => item.name === sector?.id)
@@ -50,20 +48,14 @@ class SidePanelSectorTabs extends React.Component {
         <div className={Styles.tabsContainer}>
           {sectors.map((sector, id) => {
             return (
-              <div
-                key={id}
-                onClick={() => {
-                  RCChangeUrlParams(
-                    selectedId === id ? "" : { sector: sector.id },
-                    viewState
-                  );
-                }}
-              >
+              <div key={`sidePanelSectorTabs/sector/${sector.id}`}>
                 <Tooltip content={sector.title} direction="bottom" delay="100">
-                  <Icon
-                    glyph={selectedId === id ? sector.iconHover : sector.icon}
-                    className={selectedId === id ? Styles.selectedTab : ""}
-                  />
+                  <Link to={`/sector/${sector.id}`}>
+                    <Icon
+                      glyph={selectedId === id ? sector.iconHover : sector.icon}
+                      className={selectedId === id ? Styles.selectedTab : ""}
+                    />
+                  </Link>
                 </Tooltip>
               </div>
             );
@@ -78,12 +70,13 @@ class SidePanelSectorTabs extends React.Component {
           <div className={Styles.panel}>
             <div className={Styles.panelBarTitle}>
               <h3 style={{ marginTop: 0 }}>{sector.title}</h3>
-              <button
-                className={Styles.exitBtn}
-                onClick={() => RCChangeUrlParams("", viewState)}
-              >
-                <Icon glyph={Icon.GLYPHS.close} />
-              </button>
+              <Link to={`/`}>
+                <button
+                  className={Styles.exitBtn}                
+                >
+                  <Icon glyph={Icon.GLYPHS.close} />
+                </button>
+              </Link>
             </div>
 
             <div className="rc-card">
@@ -108,20 +101,9 @@ class SidePanelSectorTabs extends React.Component {
                       <div className="rc-list-text">
                         {hotspot.properties["rc-title"]?._value}
                       </div>
-                      <button
-                        onClick={() =>
-                          RCChangeUrlParams(
-                            {
-                              sector: sector.id,
-                              story: hotspot.properties["rc-story-id"]?._value
-                            },
-                            viewState
-                          )
-                        }
-                        className="rc-button"
-                      >
-                        View
-                      </button>
+                      <Link to={`/sector/${sector.id}/story/${hotspot.properties["rc-story-id"]?._value}`}>
+                        <button className="rc-button">View</button>
+                      </Link>
                     </div>
                   ))}
                 </div>
@@ -177,4 +159,4 @@ SidePanelSectorTabs.propTypes = {
   terria: PropTypes.object.isRequired,
   viewState: PropTypes.object
 };
-export default SidePanelSectorTabs;
+export default withRouter(SidePanelSectorTabs);

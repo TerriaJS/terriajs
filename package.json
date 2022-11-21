@@ -127,7 +127,7 @@
     "karma-spec-reporter": "^0.0.32",
     "klaw-sync": "^4.0.0",
     "node-notifier": "^5.1.2",
-    "node-sass": "^7.0.3",
+    "node-sass": "^6",
     "plugin-error": "^1.0.1",
     "prettier": "1.17.0",
     "pretty-quick": "^1.10.0",

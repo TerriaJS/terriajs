@@ -2,9 +2,10 @@ import classNames from "classnames";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import React from "react";
+import { Route, Switch, Link, withRouter } from "react-router-dom";
 import { withTranslation } from "react-i18next";
 import { Swipeable } from "react-swipeable";
-import { RCChangeUrlParams } from "../../Models/Receipt";
+import { RCChangeUrlParams, setSelectedStory } from "../../Models/Receipt";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import { Medium } from "../Generic/Responsive";
 import Icon from "../Icon.jsx";
@@ -13,8 +14,8 @@ import Tooltip from "../RCTooltip/RCTooltip";
 import Styles from "./story-panel.scss";
 
 // export function activateStory(story, terria, scenarioIndex = 0) {
-//   if (story.mapScenarios && story.mapScenarios[scenarioIndex]) {
-//     const initSources = story.mapScenarios[scenarioIndex].initSources;
+//   if (selectedPage.mapScenarios && selectedPage.mapScenarios[scenarioIndex]) {
+//     const initSources = selectedPage.mapScenarios[scenarioIndex].initSources;
 
 //     const promises = initSources.map(initSource =>
 //       terria.addInitSource(initSource, true)
@@ -52,6 +53,7 @@ const RCStoryPanel = createReactClass({
   slideOutTimer: null,
   escKeyListener: null,
 
+
   getInitialState() {
     return {
       inView: true
@@ -60,12 +62,13 @@ const RCStoryPanel = createReactClass({
   componentDidMount() {
     //
     // Navigate to the story page coming from the url params
-    //
-    const urlParams = new URLSearchParams(window.location.search);
-    const page = parseInt(urlParams.get("page"));
-    if (this.props.viewState.currentStoryId !== page) {
-      this.navigateStory(this.props.viewState.currentStoryId);
-    }
+    //        
+    const path = this.props.match.path;
+    const selectedSector = this.props.match.params.sectorName;
+    const selectedStory = this.props.match.params.storyID;
+    const selectedPageIndex = Number(this.props.match.params.pageIndex);
+
+    setSelectedStory(this.props.match.params, this.props.viewState);
 
     this.slideIn();
     this.escKeyListener = e => {
@@ -90,8 +93,8 @@ const RCStoryPanel = createReactClass({
 
   componentDidUpdate() {
     const stories = this.props.terria.stories;
-    const story = stories[this.props.viewState.currentStoryId];
-    this.props.terria.updateFromStartData(story.mapScenarios);
+    const selectedPage = stories[this.props.viewState.currentStoryId];
+    this.props.terria.updateFromStartData(selectedPage.mapScenarios);
   },
 
   slideIn() {
@@ -140,9 +143,9 @@ const RCStoryPanel = createReactClass({
     this.changeUrlPageParameter(pageIndex);
   },
 
-  onCenterScene(story) {
-    if (story.mapScenarios) {
-      this.props.terria.updateFromStartData(story.mapScenarios);
+  onCenterScene(selectedPage) {
+    if (selectedPage.mapScenarios) {
+      this.props.terria.updateFromStartData(selectedPage.mapScenarios);
     }
   },
 
@@ -163,15 +166,22 @@ const RCStoryPanel = createReactClass({
   },
 
   render() {
+    const path = this.props.match.path;
+    const selectedSector = this.props.match.params.sectorName;
+    const selectedStory = this.props.match.params.storyID;
+    const selectedPageIndex = Number(this.props.match.params.pageIndex);
+
     const { t } = this.props;
     const stories = this.props.terria.stories || [];
-    console.log("Story", stories, this.props.viewState.currentStoryId);
-    const story = stories[this.props.viewState.currentStoryId];
+    
+    const selectedPage = stories[selectedPageIndex];
+    console.log("RCStoryPanel story: ", stories, selectedPageIndex, selectedPage);
+
     const scenario = this.props.viewState.currentScenario || 0;
 
     // find the first page with the section
     function findFirstPageIndexOfSection(section = "") {
-      return stories.findIndex(story => story.section === section);
+      return stories.findIndex(story => selectedPage.section === section);
     }
 
     return (
@@ -180,30 +190,30 @@ const RCStoryPanel = createReactClass({
           onSwipedLeft={() => this.navigateStory(this.props.viewState.currentStoryId - 1)}
           onSwipedRight={() => this.navigateStory(this.props.viewState.currentStoryId + 1)}
         >
-          <div className={Styles.RCHotspotSummary}>
+          
+          {selectedPage && (<div className={Styles.RCHotspotSummary}>
             <div className={Styles.titleGroup}>
-              {story.sector ? (
-                <Icon
-                  glyph={Icon.GLYPHS[story.sector + "Simple"]}
+              {selectedPage.sector && (<Icon
+                  glyph={Icon.GLYPHS[selectedPage.sector + "Simple"]}
                   className={Styles.icon}
                 />
-              ) : (
-                <div />
               )}
 
               <h3>
-                {story.storyTitle && story.storyTitle.length > 0
-                  ? story.storyTitle
+                {selectedPage.storyTitle && selectedPage.storyTitle.length > 0
+                  ? selectedPage.storyTitle
                   : t("story.untitled")}
               </h3>
 
-              <button
-                className="buttonClose"
-                title={t("story.exitBtn")}
-                onClick={this.slideOut}
-              >
-                <Icon width={20} glyph={Icon.GLYPHS.close} />
-              </button>
+              <Link to="/">
+                <button
+                  className="buttonClose"
+                  title={t("story.exitBtn")}                  
+                >
+                  <Icon width={20} glyph={Icon.GLYPHS.close} />
+                </button>
+              </Link>
+
               <br />
               {/* Sections buttons for story panel*/}
               <div className="flex flex-wrap gap-2 mb-3">
@@ -211,7 +221,7 @@ const RCStoryPanel = createReactClass({
                   onClick={() =>
                     this.navigateStory(findFirstPageIndexOfSection("SCOPE"))
                   }
-                  className={`btn btn-xs rounded-none border-0 text-black bg-red-100    ${story.section ===
+                  className={`btn btn-xs rounded-none border-0 text-black bg-red-100    ${selectedPage.section ===
                     "SCOPE" && "bg-red-400"}          hover:bg-red-400`}
                 >
                   Scope
@@ -220,7 +230,7 @@ const RCStoryPanel = createReactClass({
                   onClick={() =>
                     this.navigateStory(findFirstPageIndexOfSection("HOTSPOTS"))
                   }
-                  className={`btn btn-xs rounded-none border-0 text-black bg-blue-100   ${story.section ===
+                  className={`btn btn-xs rounded-none border-0 text-black bg-blue-100   ${selectedPage.section ===
                     "HOTSPOTS" && "bg-blue-400"}           hover:bg-blue-400`}
                 >
                   Hotspots
@@ -229,7 +239,7 @@ const RCStoryPanel = createReactClass({
                   onClick={() =>
                     this.navigateStory(findFirstPageIndexOfSection("CONNECTION"))
                   }
-                  className={`btn btn-xs rounded-none border-0 text-black bg-purple-100 ${story.section ===
+                  className={`btn btn-xs rounded-none border-0 text-black bg-purple-100 ${selectedPage.section ===
                     "CONNECTION" && "bg-purple-400"}      hover:bg-purple-400`}
                 >
                   Connection
@@ -238,7 +248,7 @@ const RCStoryPanel = createReactClass({
                   onClick={() =>
                     this.navigateStory(findFirstPageIndexOfSection("EU_IMPACT"))
                   }
-                  className={`btn btn-xs rounded-none border-0 text-black bg-green-100  ${story.section ===
+                  className={`btn btn-xs rounded-none border-0 text-black bg-green-100  ${selectedPage.section ===
                     "EU_IMPACT" && "bg-green-400"}        hover:bg-green-400`}
                 >
                   EU impact
@@ -249,7 +259,7 @@ const RCStoryPanel = createReactClass({
                       findFirstPageIndexOfSection("CLIMATE_SCENARIOS")
                     )
                   }
-                  className={`btn btn-xs rounded-none border-0 text-black bg-orange-100 ${story.section ===
+                  className={`btn btn-xs rounded-none border-0 text-black bg-orange-100 ${selectedPage.section ===
                     "CLIMATE_SCENARIOS" &&
                     "bg-orange-400"}  hover:bg-orange-400`}
                 >
@@ -261,7 +271,7 @@ const RCStoryPanel = createReactClass({
                       findFirstPageIndexOfSection("SOC_ECON_SCENARIOS")
                     )
                   }
-                  className={`btn btn-xs rounded-none border-0 text-black bg-amber-100  ${story.section ===
+                  className={`btn btn-xs rounded-none border-0 text-black bg-amber-100  ${selectedPage.section ===
                     "SOC_ECON_SCENARIOS" &&
                     "bg-amber-400"}           hover:bg-amber-400`}
                 >
@@ -271,7 +281,7 @@ const RCStoryPanel = createReactClass({
                   onClick={() =>
                     this.navigateStory(findFirstPageIndexOfSection("COMPARISON"))
                   }
-                  className={`btn btn-xs rounded-none border-0 text-black bg-lime-100   ${story.section ===
+                  className={`btn btn-xs rounded-none border-0 text-black bg-lime-100   ${selectedPage.section ===
                     "COMPARISON" && "bg-lime-400"}        hover:bg-lime-400`}
                 >
                   Comparison
@@ -285,12 +295,12 @@ const RCStoryPanel = createReactClass({
                   [Styles.isMounted]: this.state.inView
                 })}
               >
-                {story.text && (
+                {selectedPage.text && (
                   <div className={Styles.body}>
-                    {typeof story?.text === "string" &&
-                      parseCustomHtmlToReact(story.text)}
-                    {typeof story?.text === "object" &&
-                      parseCustomHtmlToReact(story.text[scenario])}
+                    {typeof selectedPage?.text === "string" &&
+                      parseCustomHtmlToReact(selectedPage.text)}
+                    {typeof selectedPage?.text === "object" &&
+                      parseCustomHtmlToReact(selectedPage.text[scenario])}
                   </div>
                 )}
               </div>
@@ -300,28 +310,29 @@ const RCStoryPanel = createReactClass({
             <div className={Styles.storyBottomNavigationItems}>
               <div className={Styles.navs}>
                 <Medium>
-                  <div className={Styles.left}>
-                    <button
-                      className={Styles.previousBtn}
-                      disabled={this.props.terria.stories.length <= 1}
-                      title={t("story.previousBtn")}
-                      onClick={() => this.navigateStory(this.props.viewState.currentStoryId - 1)}
-                    >
-                      <Icon glyph={Icon.GLYPHS.left} />
-                    </button>
-                  </div>
+                  <Link to={`/sector/${selectedSector}/story/${selectedStory}/page/${selectedPageIndex == 0 ? 0 : selectedPageIndex-1}`}>
+                    <div className={Styles.left}>
+                      <button
+                        className={Styles.previousBtn}
+                        disabled={this.props.terria.stories.length <= 1}
+                        title={t("story.previousBtn")}
+                      >
+                        <Icon glyph={Icon.GLYPHS.left} />
+                      </button>
+                    </div>
+                  </Link>
                 </Medium>
                 <If condition={this.props.terria.stories.length >= 2}>
                   <div className={Styles.navBtn}>
-                    {stories.map((story, pageIndex) => (
+                    {stories.map((selectedPage, pageIndex) => (
                       <Tooltip
-                        content={story.pageTitle}
+                        content={selectedPage.pageTitle}
                         direction="top"
                         delay="100"
-                        key={story.id}
+                        key={selectedPage.id}
                       >
                         <button
-                          title={t("story.navBtn", { title: story.pageTitle })}
+                          title={t("story.navBtn", { title: selectedPage.pageTitle })}
                           type="button"
                           onClick={() => this.navigateStory(pageIndex)}
                         >
@@ -331,19 +342,19 @@ const RCStoryPanel = createReactClass({
                               this.props.viewState.currentStoryId &&
                               "opacity-100"}
                             ${
-                              story.section === "SCOPE"
+                              selectedPage.section === "SCOPE"
                                 ? "text-red-600"
-                                : story.section === "HOTSPOTS"
+                                : selectedPage.section === "HOTSPOTS"
                                 ? "text-blue-600"
-                                : story.section === "CONNECTION"
+                                : selectedPage.section === "CONNECTION"
                                 ? "text-purple-600"
-                                : story.section === "EU_IMPACT"
+                                : selectedPage.section === "EU_IMPACT"
                                 ? "text-green-600"
-                                : story.section === "CLIMATE_SCENARIOS"
+                                : selectedPage.section === "CLIMATE_SCENARIOS"
                                 ? "text-orange-600"
-                                : story.section === "SOC_ECON_SCENARIOS"
+                                : selectedPage.section === "SOC_ECON_SCENARIOS"
                                 ? "text-amber-600"
-                                : story.section === "COMPARISON" &&
+                                : selectedPage.section === "COMPARISON" &&
                                   "text-lime-600"
                             }
                             `}
@@ -358,25 +369,26 @@ const RCStoryPanel = createReactClass({
                     ))}
                   </div>
                 </If>
-                <Medium>
-                  <div className={Styles.right}>
-                    <button
-                      disabled={this.props.terria.stories.length <= 1}
-                      className={Styles.nextBtn}
-                      title={t("story.nextBtn")}
-                      onClick={() => this.navigateStory(this.props.viewState.currentStoryId + 1)}
-                    >
-                      <Icon glyph={Icon.GLYPHS.right} />
-                    </button>
-                  </div>
+                <Medium>                
+                  <Link to={`/sector/${selectedSector}/story/${selectedStory}/page/${selectedPageIndex == this.props.terria.stories.length-1 ? this.props.terria.stories.length-1 : selectedPageIndex+1}`}>
+                    <div className={Styles.right}>                    
+                      <button
+                        disabled={this.props.terria.stories.length <= 1}
+                        className={Styles.nextBtn}
+                        title={t("story.nextBtn")}
+                      >
+                        <Icon glyph={Icon.GLYPHS.right} />
+                      </button>
+                    </div>
+                  </Link>
                 </Medium>
               </div>
             </div>
-          </div>
+          </div>)}          
         </Swipeable>
       </React.Fragment>
     );
   }
 });
 
-export default withTranslation()(RCStoryPanel);
+export default withTranslation()(withRouter(RCStoryPanel));

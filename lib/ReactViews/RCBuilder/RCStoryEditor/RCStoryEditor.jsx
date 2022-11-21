@@ -12,6 +12,7 @@ import RCHotspotSelector from "../RCHotspotSelector/RCHotspotSelector";
 import RCPageList from "../RCPageList/RCPageList";
 import RCSectorSelection from "./RCSectorSelection/RCSectorSelection";
 import Styles from "./RCStoryEditor.scss";
+
 function RCStoryEditor(props) {
   const [story, setStory] = useState(null);
   const [storyPages, setStoryPages] = useState([]);
