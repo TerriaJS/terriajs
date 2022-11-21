@@ -42,10 +42,12 @@ export interface MapServer {
   layers?: Layer[];
   subLayers?: Layer[];
   /** A single fused cache contains image tiles that are created by grouping all the layers together at each scale, or level of detail.
-   * If this is true, we are unable to request individual layers in a MapServer.
+   * If this is true, and `capabilities` states `TilesOnly` - we are unable to request individual layers in a MapServer.
    * So instead we create a single item in the group called "All layers" (models.arcGisMapServerCatalogGroup.singleFusedMapCacheLayerName)
    */
   singleFusedMapCache?: boolean;
+  //comma separated list of supported capabilities - e.g. "Map,Query,Data,TilesOnly,Tilemap"
+  capabilities?: string;
   mapName?: string;
   timeInfo?: TimeInfo;
   fullExtent: Extent;

@@ -111,9 +111,16 @@ export class MapServerStratum extends LoadableStratum(
     return stratum;
   }
 
+  @computed get tilesOnly() {
+    return (
+      this._mapServer.singleFusedMapCache &&
+      this._mapServer.capabilities?.includes("TilesOnly")
+    );
+  }
+
   @computed
   get members(): ModelReference[] {
-    if (this._mapServer.singleFusedMapCache) {
+    if (this.tilesOnly) {
       return [`${this._catalogGroup.uniqueId}/${SINGLE_FUSED_MAP_CACHE_ID}`];
     }
 
@@ -146,8 +153,7 @@ export class MapServerStratum extends LoadableStratum(
 
   @action
   createMembersFromLayers() {
-    if (this._mapServer.singleFusedMapCache)
-      this.createMemberForSingleFusedMapCache();
+    if (this.tilesOnly) this.createMemberForSingleFusedMapCache();
     else this.layers.forEach((layer) => this.createMemberFromLayer(layer));
   }
 

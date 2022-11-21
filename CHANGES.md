@@ -11,7 +11,7 @@
 - Optimize `LocationBar` component to reduce number of renders on mouse move.
 - Optimize `Compass` component to reduce renders on each frame.
 - Add `children` optional property to StandardUserInterfaceProps interface
-- Add support for ArcGis MapServer with `singleFusedMapCache` - for example layers served from ArcGis Online. This is supported through `ArcGisMapServerCatalogItem`, `ArcGisMapServerCatalogGroup` and `ArcGisCatalogGroup`.
+- Add support for ArcGis MapServer with `TileOnly` capability - for example layers served from ArcGis Online. This is supported through `ArcGisMapServerCatalogItem`, `ArcGisMapServerCatalogGroup` and `ArcGisCatalogGroup`.
 - [The next improvement]
 
 #### 8.2.26 - 2023-03-21

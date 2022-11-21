@@ -131,7 +131,13 @@ class MapServerStratum extends LoadableStratum(
 
     // If this MapServer is a single fused map cache - we can't request individual layers
     // If it is not - we request layer metadata
-    if (!serviceMetadata.singleFusedMapCache) {
+
+    if (
+      !(
+        serviceMetadata.singleFusedMapCache &&
+        serviceMetadata.capabilities?.includes("TilesOnly")
+      )
+    ) {
       const layersMetadataResponse = await getJson(item, layersUri);
 
       // Use the slightly more basic layer metadata
