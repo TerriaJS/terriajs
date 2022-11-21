@@ -794,7 +794,8 @@
       "defaultMessage": "Error desconocido",
       "defaultCombineMessage": "Los detalles de los errores se encuentran a continuación",
       "networkRequestTitle": "Se produjo un error de solicitud de red",
-      "networkRequestMessage": "Es posible que los datos no estén disponibles o no se muestren correctamente debido a la interrupción del servicio del custodio de datos. Intente volver a cargar el mapa, acceder a los datos en una etapa posterior o seleccionar un conjunto de datos diferente. <feedbacklink feedback-message='Si el problema persiste, envíe sus comentarios aquí.' email-message='Si el problema persiste, informe a {{email}}'/>"
+      "networkRequestMessage": "Es posible que los datos no estén disponibles o no se muestren correctamente debido a la interrupción del servicio del custodio de datos. Intente volver a cargar el mapa, acceder a los datos en una etapa posterior o seleccionar un conjunto de datos diferente. <feedbacklink feedback-message='Si el problema persiste, envíe sus comentarios aquí.' email-message='Si el problema persiste, informe a {{email}}'/>",
+      "networkRequestMessageDetailed": "Esto puede indicar una de las siguientes situaciones:\n\n* El nombre del servidor no ha podido ser resuelto\n* El servidor no ha respondido a la solicitud - o no está disponible temporalmente\n* El servidor ha denegado el acceso a esta URL [Cross-Origin Resource Sharing (CORS)](https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/)\n* Hay un problema con su conexión a Internet\n\nSi ha introducido el enlace manualmente, compruebe que el enlace es correcto"
     },
     "readText": {
       "fileRequired": "se requiere el archivo"
@@ -804,6 +805,9 @@
     },
     "serverConfig": {
       "failedToGet": "No se ha podido obtener la configuración del servidor de {{serverConfigUrl}}. Esto significa que servicios como el proxy, la conversión y el acortamiento de URL pueden no funcionar."
+    },
+    "unverifiedExternalLink": {
+      "title": "Advertencia: enlace no verificado"
     }
   }
 }
