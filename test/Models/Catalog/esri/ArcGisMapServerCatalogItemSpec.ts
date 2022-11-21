@@ -44,11 +44,11 @@ describe("ArcGisMapServerCatalogItem", function () {
           "test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/" +
           url;
       } else if (url.match("SingleFusedMapCache/MapServer")) {
+        console.log(`match URL = ${url}`);
         url = url.replace(/^.*\/MapServer/, "MapServer");
         url = url.replace(/MapServer\/?\?.*/i, "mapserver.json");
         url = url.replace(/MapServer\/Legend\/?\?.*/i, "legend.json");
         url = url.replace(/MapServer\/Layers\/?\?.*/i, "layers.json");
-        url = url.replace(/MapServer\/31\/?\?.*/i, "31.json");
         args[0] = "test/ArcGisMapServer/SingleFusedMapCache/" + url;
       } else if (url.match("/token")) {
         args[0] =

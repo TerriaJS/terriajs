@@ -43,6 +43,7 @@ describe("ArcGisMapServerCatalogGroup", function () {
         url = url.replace(/MapServer\/17\/?\?.*/i, "17.json");
         args[0] = "test/ArcGisMapServer/Redlands_Emergency_Vehicles/" + url;
       } else if (url.match("SingleFusedMapCache/MapServer")) {
+        console.log(`match URL = ${url}`);
         url = url.replace(/^.*\/MapServer/, "MapServer");
         url = url.replace(/MapServer\/?\?.*/i, "mapserver.json");
         url = url.replace(/MapServer\/Legend\/?\?.*/i, "legend.json");
