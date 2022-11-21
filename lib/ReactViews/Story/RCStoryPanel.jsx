@@ -61,11 +61,11 @@ const RCStoryPanel = createReactClass({
     //
     // Navigate to the story page coming from the url params
     //
-    // const urlParams = new URLSearchParams(window.location.search);
-    // const page = parseInt(urlParams.get("page"));
-    // if (page && this.props.viewState.currentStoryId !== page) {
-    //   this.navigateStory(this.props.viewState.currentStoryId);
-    // }
+    const urlParams = new URLSearchParams(window.location.search);
+    const page = parseInt(urlParams.get("page"));
+    if (this.props.viewState.currentStoryId !== page) {
+      this.navigateStory(this.props.viewState.currentStoryId);
+    }
 
     this.slideIn();
     this.escKeyListener = e => {
@@ -90,7 +90,7 @@ const RCStoryPanel = createReactClass({
 
   componentDidUpdate() {
     const stories = this.props.terria.stories;
-    const story = stories[0]; //this.props.viewState.currentStoryId];
+    const story = stories[this.props.viewState.currentStoryId];
     this.props.terria.updateFromStartData(story.mapScenarios);
   },
 
@@ -148,7 +148,6 @@ const RCStoryPanel = createReactClass({
 
   changeUrlPageParameter(pageIndex) {
     const urlParams = new URLSearchParams(window.location.search);
-
     RCChangeUrlParams(
       {
         sector: urlParams.get("sector"),
@@ -167,7 +166,7 @@ const RCStoryPanel = createReactClass({
     const { t } = this.props;
     const stories = this.props.terria.stories || [];
     console.log("Story", stories, this.props.viewState.currentStoryId);
-    const story = stories[0];
+    const story = stories[this.props.viewState.currentStoryId];
     const scenario = this.props.viewState.currentScenario || 0;
 
     // find the first page with the section
@@ -314,7 +313,7 @@ const RCStoryPanel = createReactClass({
                 </Medium>
                 <If condition={this.props.terria.stories.length >= 2}>
                   <div className={Styles.navBtn}>
-                    {stories.map((story, circleIndex) => (
+                    {stories.map((story, pageIndex) => (
                       <Tooltip
                         content={story.pageTitle}
                         direction="top"
@@ -324,11 +323,11 @@ const RCStoryPanel = createReactClass({
                         <button
                           title={t("story.navBtn", { title: story.pageTitle })}
                           type="button"
-                          onClick={() => this.navigateStory(circleIndex + 1)}
+                          onClick={() => this.navigateStory(pageIndex)}
                         >
                           <Icon
                             style={{ fill: "currentColor" }}
-                            className={`opacity-40 hover:opacity-100 ${circleIndex ===
+                            className={`opacity-40 hover:opacity-100 ${pageIndex ===
                               this.props.viewState.currentStoryId &&
                               "opacity-100"}
                             ${
@@ -349,7 +348,7 @@ const RCStoryPanel = createReactClass({
                             }
                             `}
                             glyph={
-                              circleIndex === this.props.viewState.currentStoryId
+                              pageIndex === this.props.viewState.currentStoryId
                                 ? Icon.GLYPHS.circleFull
                                 : Icon.GLYPHS.circleFull
                             }
