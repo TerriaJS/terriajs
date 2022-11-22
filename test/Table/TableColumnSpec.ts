@@ -3,7 +3,7 @@ import createStratumInstance from "../../lib/Models/Definition/createStratumInst
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import TableColumn from "../../lib/Table/TableColumn";
-import TableColumnTraits from "../../lib/Traits/TraitsClasses/TableColumnTraits";
+import TableColumnTraits from "../../lib/Traits/TraitsClasses/Table/ColumnTraits";
 import TableColumnType from "../../lib/Table/TableColumnType";
 
 const regionMapping = JSON.stringify(

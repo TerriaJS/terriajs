@@ -11,25 +11,26 @@ import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson
 import TerriaFeature from "../../lib/Models/Feature/Feature";
 import { TerriaFeatureData } from "../../lib/Models/Feature/FeatureData";
 import Terria from "../../lib/Models/Terria";
-import TableColorStyleTraits from "../../lib/Traits/TraitsClasses/TableColorStyleTraits";
+import TableColorStyleTraits from "../../lib/Traits/TraitsClasses/Table/ColorStyleTraits";
 import TableLabelStyleTraits, {
   EnumLabelSymbolTraits,
   LabelSymbolTraits
-} from "../../lib/Traits/TraitsClasses/TableLabelStyleTraits";
+} from "../../lib/Traits/TraitsClasses/Table/LabelStyleTraits";
 import TableOutlineStyleTraits, {
   BinOutlineSymbolTraits,
   EnumOutlineSymbolTraits
-} from "../../lib/Traits/TraitsClasses/TableOutlineStyleTraits";
+} from "../../lib/Traits/TraitsClasses/Table/OutlineStyleTraits";
 import TablePointStyleTraits, {
   BinPointSymbolTraits,
-  EnumPointSymbolTraits
-} from "../../lib/Traits/TraitsClasses/TablePointStyleTraits";
-import TableStyleTraits from "../../lib/Traits/TraitsClasses/TableStyleTraits";
-import TableTimeStyleTraits from "../../lib/Traits/TraitsClasses/TableTimeStyleTraits";
+  EnumPointSymbolTraits,
+  PointSymbolTraits
+} from "../../lib/Traits/TraitsClasses/Table/PointStyleTraits";
+import TableStyleTraits from "../../lib/Traits/TraitsClasses/Table/StyleTraits";
+import TableTimeStyleTraits from "../../lib/Traits/TraitsClasses/Table/TimeStyleTraits";
 import TableTrailStyleTraits, {
   BinTrailSymbolTraits,
   EnumTrailSymbolTraits
-} from "../../lib/Traits/TraitsClasses/TableTrailStyleTraits";
+} from "../../lib/Traits/TraitsClasses/Table/TrailStyleTraits";
 
 const LatLonValCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_val.csv");
 const LatLonEnumCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum.csv");
@@ -733,6 +734,19 @@ describe("TableMixin", function () {
         "0.010"
       ]);
     });
+
+    it(" - uses color column title by default", async function () {
+      item.setTrait("definition", "csvString", LegendDecimalPlacesCsv);
+      item.setTrait("definition", "activeStyle", "0dp");
+
+      updateModelFromJson(item, CommonStrata.user, {
+        styles: [{ name: "0dp", title: "Some title" }]
+      });
+
+      await item.loadMapItems();
+
+      expect(item.legends[0].title).toBe("0dp");
+    });
   });
 
   describe("region mapping - LGA with disambig", function () {
@@ -848,6 +862,44 @@ describe("TableMixin", function () {
   });
 
   describe("applies TableStyles to lat/lon features", function () {
+    it("supports image marker style", async function () {
+      item.setTrait(CommonStrata.user, "csvString", LatLonValCsv);
+
+      const image =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAZNJREFUWIXtlrFLQlEUxr/QPGYhTbYEhhgWErjU0twQ9AdEGNnU0CiBL60pMBqC2gSHhgoamhoFt8ZaIugtQhFFY1Hmp0EN+ehZDd3e84ngB493733vnPPjXj7OdaPFcncA2h3AIyLrJBMiskcy01QAEdkgmTavkTTeaQDpbyFdtgKQXFH5/y9SPQKPefII7PuB2Xqe0xGRgE4ONxOgQX4gbppOHpGlmGIOW10wCoRUY2wFKP0jxhJAHMAqgCCAawBRpwEO6o8VWQKYjqK8lYAEA3Bd3UGf0BBxFOBYg6+n+3M8HkJkaQqVXAFexwCM4oZ2F+HNFdRytHczeq017sJyHi8Aeh0DmMniaSeB96EBeC5ucJ4vYlI1hyWA4iX8Y1/tSbm4ZQCJohxegHgDcD3fQtczDtswtgafMe4PIxLZRElPqfUDW13QN9jiZlR5UI+xBPBWA9wmG96fNN+GVZhuRWfzP74rFVcGEJFtkinVIrYBkNQAaKYlj4hkSc6JyCHJZFMBflG1XjRpXM+dBrCsDsAHoPtrwlSQt8wAAAAASUVORK5CYII=";
+
+      item.setTrait(CommonStrata.user, "styles", [
+        createStratumInstance(TableStyleTraits, {
+          id: "test-style",
+          point: createStratumInstance(TablePointStyleTraits, {
+            null: createStratumInstance(PointSymbolTraits, {
+              marker: image,
+              height: 20
+            })
+          })
+        })
+      ]);
+      item.setTrait(CommonStrata.user, "activeStyle", "test-style");
+
+      await item.loadMapItems();
+
+      const mapItem = item.mapItems[0] as CustomDataSource;
+
+      mapItem.entities.values.forEach((feature) => {
+        expect(
+          feature.billboard?.image?.getValue(
+            item.terria.timelineClock.currentTime
+          )
+        ).toBe(image);
+
+        expect(
+          feature.billboard?.height?.getValue(
+            item.terria.timelineClock.currentTime
+          )
+        ).toBe(20);
+      });
+    });
+
     it("bin outline style with points", async function () {
       item.setTrait(CommonStrata.user, "csvString", LatLonValCsv);
 
@@ -1024,6 +1076,7 @@ describe("TableMixin", function () {
           marker: "hospital",
           height: 30,
           width: 15,
+          // Convert to counter-clockwise radians
           rotation: ((360 - 45) / 360) * (2 * Math.PI)
         },
         {

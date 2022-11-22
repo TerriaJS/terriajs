@@ -158,6 +158,8 @@ async function loadReference(
  * @param excludeIdsCsv CSV of model IDs to exclude from catalog index (eg "some-id-1,some-id-2")
  *
  * @param basicAuth basic auth token to add to requests which include `baseUrl` (or `proxy/`)
+
+ * Example usage: node ./build/generateCatalogIndex.js http://localhost:3001/config.json http://localhost:3001/
  */
 export default async function generateCatalogIndex(
   configUrl: string,

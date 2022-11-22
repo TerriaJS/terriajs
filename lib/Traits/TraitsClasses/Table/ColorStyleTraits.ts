@@ -1,10 +1,10 @@
-import { StyleMapType } from "../../Table/TableStyleMap";
-import objectArrayTrait from "../Decorators/objectArrayTrait";
-import objectTrait from "../Decorators/objectTrait";
-import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
-import primitiveTrait from "../Decorators/primitiveTrait";
-import ModelTraits from "../ModelTraits";
-import LegendTraits from "./LegendTraits";
+import { StyleMapType } from "../../../Table/TableStyleMap";
+import objectArrayTrait from "../../Decorators/objectArrayTrait";
+import objectTrait from "../../Decorators/objectTrait";
+import primitiveArrayTrait from "../../Decorators/primitiveArrayTrait";
+import primitiveTrait from "../../Decorators/primitiveTrait";
+import ModelTraits from "../../ModelTraits";
+import LegendTraits from "../LegendTraits";
 
 export class EnumColorTraits extends ModelTraits {
   @primitiveTrait({

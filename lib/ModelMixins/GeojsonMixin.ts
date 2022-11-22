@@ -294,7 +294,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             this.activeTableStyle.colorMap,
             this.activeTableStyle.pointSizeMap,
             this.activeTableStyle.pointStyleMap.traitValues,
-            this.activeTableStyle.outlineStyleMap.traitValues
+            this.activeTableStyle.outlineStyleMap.traitValues,
+            this.terria.baseMapContrastColor // This needs to be here as `baseMapContrastColor` is used as the default outline color in `getFeatureStyle`
           ],
           () => {
             if (
@@ -453,7 +454,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     /** GeojsonMixin has 3 rendering modes:
      * - CZML:
      *    - if `czmlTemplate` is defined (see `GeoJsonTraits.czmlTemplate`)
-     * - Mapbox vector tiles (through geojson-vt and protomaps.js)
+     * - Table styling / Mapbox vector tiles (through geojson-vt and protomaps.js)
      *    - Will be used by default, if not using unsupported traits (see below)
      * - Cesium primitives if:
      *    - `GeoJsonTraits.forceCesiumPrimitives = true`
@@ -748,26 +749,12 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         terria: this.terria,
         data: protomapsData,
         paintRules: [
-          // Polygon fill
+          // Polygon features
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new PolygonSymbolizer({
-              fill: getColorValue
-            }),
-            minzoom: 0,
-            maxzoom: Infinity,
-            filter: (zoom, feature) => {
-              return (
-                feature?.geomType === GeomType.Polygon &&
-                showFeature(zoom, feature)
-              );
-            }
-          },
-          // Polygon outline
-          {
-            dataLayer: GEOJSON_SOURCE_LAYER_NAME,
-            symbolizer: new LineSymbolizer({
-              color: getOutlineColorValue,
+              fill: getColorValue,
+              stroke: getOutlineColorValue,
               width: getOutlineWidthValue
             }),
             minzoom: 0,
@@ -779,9 +766,11 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               );
             }
           },
+
           // Line features
           // Note - line color will use TableColorStyleTraits by default.
           // If useOutlineColorForLineFeatures is true, then line color will use TableOutlineStyle traits
+
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new LineSymbolizer({
@@ -799,6 +788,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               );
             }
           }
+          // See `createPoints` for Point features - they are handled by Cesium
         ],
         labelRules: []
       });
