@@ -71,7 +71,8 @@ export default class CzmlCatalogItem
       UrlMixin(CatalogMemberMixin(CreateModel(CzmlCatalogItemTraits)))
     )
   )
-  implements TimeVarying, HasLocalData {
+  implements TimeVarying, HasLocalData
+{
   static readonly type = "czml";
   get type() {
     return CzmlCatalogItem.type;
@@ -114,7 +115,7 @@ export default class CzmlCatalogItem
       credit: attribution
     })
       .then(
-        action(czmlDataSource => {
+        action((czmlDataSource) => {
           this._dataSource = czmlDataSource;
           this.strata.set(
             CzmlTimeVaryingStratum.stratumName,
@@ -122,7 +123,7 @@ export default class CzmlCatalogItem
           );
         })
       )
-      .catch(e => {
+      .catch((e) => {
         if (e instanceof TerriaError) {
           throw e;
         } else {

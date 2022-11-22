@@ -17,7 +17,7 @@ interface IGetDataTypes {
   localDataType: ILocalDataType[];
 }
 
-export default function(): IGetDataTypes {
+export default function (): IGetDataTypes {
   return {
     remoteDataType: [
       {

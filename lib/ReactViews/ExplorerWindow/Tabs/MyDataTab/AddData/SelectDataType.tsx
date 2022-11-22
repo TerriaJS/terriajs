@@ -28,7 +28,7 @@ export const SelectDataType = <T extends IDataType>({
       // @ts-ignore
       onChange={onChange}
       isClearable={false}
-      theme={selectTheme => ({
+      theme={(selectTheme) => ({
         ...selectTheme,
         colors: {
           ...selectTheme.colors,

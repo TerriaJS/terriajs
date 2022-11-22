@@ -1,22 +1,22 @@
 {
-    "catalog": [
+  "catalog": [
+    {
+      "name": "glTF",
+      "type": "group",
+      "items": [
         {
-            "name": "glTF",
-            "type": "group",
-            "items": [
-                {
-                    "name": "Cesium Air",
-                    "type": "gltf",
-                    "url": "https://cesiumjs.org/Cesium/Apps/SampleData/models/CesiumAir/Cesium_Air.glb",
-                    "origin": {
-                        "longitude": 151.197,
-                        "latitude": -33.895,
-                        "height": 180.0
-                    },
-                    "upAxis": "Y",
-                    "forwardAxis": "X"
-                }
-            ]
+          "name": "Cesium Air",
+          "type": "gltf",
+          "url": "https://cesiumjs.org/Cesium/Apps/SampleData/models/CesiumAir/Cesium_Air.glb",
+          "origin": {
+            "longitude": 151.197,
+            "latitude": -33.895,
+            "height": 180.0
+          },
+          "upAxis": "Y",
+          "forwardAxis": "X"
         }
-    ]
+      ]
+    }
+  ]
 }

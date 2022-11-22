@@ -2,7 +2,7 @@ import React from "react";
 import { getMakiIcon } from "../../Map/Icons/Maki/MakiIcons";
 import { OptionRenderer } from "../../Models/SelectableDimensions/SelectableDimensions";
 
-export const MarkerOptionRenderer: OptionRenderer = option => (
+export const MarkerOptionRenderer: OptionRenderer = (option) => (
   <div>
     <img
       width="20px"

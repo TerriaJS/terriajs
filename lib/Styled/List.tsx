@@ -14,7 +14,7 @@ export const Ul = styled(Box).attrs({
   margin: 0;
   padding-inline-start: 0;
 
-  ${props =>
+  ${(props) =>
     props.fullWidth &&
     css`
       width: 100%;
@@ -22,7 +22,7 @@ export const Ul = styled(Box).attrs({
         width: 100%;
       }
     `}
-  ${props =>
+  ${(props) =>
     props.spaced &&
     css`
       ${Li}:not(:first-child) {
@@ -30,7 +30,7 @@ export const Ul = styled(Box).attrs({
       }
     `}
 
-  ${props =>
+  ${(props) =>
     props.lined &&
     css`
       ${Li}:first-child {

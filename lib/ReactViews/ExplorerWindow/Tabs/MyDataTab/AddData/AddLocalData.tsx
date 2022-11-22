@@ -40,9 +40,8 @@ export const AddLocalData: FC<IAddLocalDataProps> = ({
     }
   );
 
-  const [selectedLocalDataType, setSelectedLocalDataType] = useState<
-    ILocalDataType
-  >(localDataTypes[0]);
+  const [selectedLocalDataType, setSelectedLocalDataType] =
+    useState<ILocalDataType>(localDataTypes[0]);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
@@ -53,7 +52,7 @@ export const AddLocalData: FC<IAddLocalDataProps> = ({
       viewState.terria,
       viewState,
       selectedLocalDataType
-    ).then(addedCatalogItems => {
+    ).then((addedCatalogItems) => {
       if (addedCatalogItems && addedCatalogItems.length > 0) {
         onFileAddFinished?.(addedCatalogItems);
       }
@@ -67,7 +66,7 @@ export const AddLocalData: FC<IAddLocalDataProps> = ({
     (result: string[], currentFileType) => {
       if (currentFileType.extensions) {
         return result.concat(
-          currentFileType.extensions.map(extension => `.${extension}`)
+          currentFileType.extensions.map((extension) => `.${extension}`)
         );
       } else {
         return result;
@@ -146,6 +145,6 @@ const StyledDescription = styled(Text)`
  * @param extensions - string[]
  * @returns Comma separated string of extensions
  */
- function buildExtensionsList(extensions: string[]) {
-  return extensions.map(ext => `.${ext}`).join(", ");
+function buildExtensionsList(extensions: string[]) {
+  return extensions.map((ext) => `.${ext}`).join(", ");
 }

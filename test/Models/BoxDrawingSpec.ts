@@ -8,11 +8,11 @@ import TranslationRotationScale from "terriajs-cesium/Source/Core/TranslationRot
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 
-describe("BoxDrawing", function() {
+describe("BoxDrawing", function () {
   let terria: Terria;
   let cesium: Cesium;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -27,13 +27,13 @@ describe("BoxDrawing", function() {
     cesium = new Cesium(terriaViewer, container);
   });
 
-  describe("BoxDrawing creation", function() {
-    it("can be created from a transformation matrix", function() {
+  describe("BoxDrawing creation", function () {
+    it("can be created from a transformation matrix", function () {
       const boxDrawing = BoxDrawing.fromTransform(cesium, Matrix4.IDENTITY);
       expect(boxDrawing).toBeDefined();
     });
 
-    it("can be created from translation, rotation, scale object", function() {
+    it("can be created from translation, rotation, scale object", function () {
       const boxDrawing = BoxDrawing.fromTranslationRotationScale(
         cesium,
         new TranslationRotationScale(
@@ -46,8 +46,8 @@ describe("BoxDrawing", function() {
     });
   });
 
-  describe("the dataSource", function() {
-    it("has 6 sides", function() {
+  describe("the dataSource", function () {
+    it("has 6 sides", function () {
       // const box = new BoxDrawing(cesium, Matrix4.IDENTITY, () => {});
       // const sides = box.dataSource.entities.values.filter(isSideEntity);
       // expect(sides.length).toEqual(6);
@@ -57,18 +57,18 @@ describe("BoxDrawing", function() {
     it("has 4 rotation edges");
   });
 
-  describe("setTransform", function() {
+  describe("setTransform", function () {
     it("updates the box position, orientation and dimensions");
   });
 
-  describe("interaction", function() {
+  describe("interaction", function () {
     it("stops interactions when show is set to false on the datasource");
     it("starts interactions when show is set to true on the datasource");
     it("stops interactions when datasource becomes unobserved");
     it("starts interactions when datasource becomes observed");
   });
 
-  describe("move interaction", function() {
+  describe("move interaction", function () {
     it("can move the box up and down by dragging the top side");
     it("can move the box sideways by dragging any other side");
     it(
@@ -76,7 +76,7 @@ describe("BoxDrawing", function() {
     );
   });
 
-  describe("scale interaction", function() {
+  describe("scale interaction", function () {
     it("can scale the box along a side axis by dragging a face point");
     it("can scale the box proportionately by dragging a corner point");
     it(
@@ -84,7 +84,7 @@ describe("BoxDrawing", function() {
     );
   });
 
-  describe("rotate interaction", function() {
+  describe("rotate interaction", function () {
     it("can rotate the box by dragging an edge");
   });
 });

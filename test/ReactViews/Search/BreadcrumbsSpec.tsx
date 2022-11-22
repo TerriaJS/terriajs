@@ -11,14 +11,14 @@ import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface/Stand
 import { runInAction } from "mobx";
 import { DataCatalogTab } from "../../../lib/ReactViews/ExplorerWindow/Tabs/DataCatalogTab";
 
-describe("Breadcrumbs", function() {
+describe("Breadcrumbs", function () {
   let terria: Terria;
   let viewState: ViewState;
   let catalogGroup: CatalogGroup;
 
   let testRenderer: any;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -31,8 +31,8 @@ describe("Breadcrumbs", function() {
     terria.addModel(catalogGroup);
   });
 
-  describe("with a prevewied catalog item", function() {
-    it("renders", async function() {
+  describe("with a prevewied catalog item", function () {
+    it("renders", async function () {
       await viewState.viewCatalogMember(catalogGroup);
 
       act(() => {
@@ -55,8 +55,8 @@ describe("Breadcrumbs", function() {
     });
   });
 
-  describe("without a previewed catalog item", function() {
-    it("does not render", function() {
+  describe("without a previewed catalog item", function () {
+    it("does not render", function () {
       runInAction(() => {
         viewState.clearPreviewedItem();
       });

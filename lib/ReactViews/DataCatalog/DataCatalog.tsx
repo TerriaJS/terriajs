@@ -34,11 +34,11 @@ export const DataCatalog: FC<IDataCatalogProps> = observer(
       catalogSearchProvider &&
       searchState.catalogSearchResults?.results
         ? searchState.catalogSearchResults.results.map(
-            result => result.catalogItem!
+            (result) => result.catalogItem!
           )
         : items;
     const filteredItems = unfilteredItems.filter(
-      item => isDefined(item) && item !== terria.catalog.userAddedDataGroup
+      (item) => isDefined(item) && item !== terria.catalog.userAddedDataGroup
     );
 
     return (
@@ -63,7 +63,7 @@ export const DataCatalog: FC<IDataCatalogProps> = observer(
             />
           </>
         ) : null}
-        {filteredItems.map(item => (
+        {filteredItems.map((item) => (
           <DataCatalogMember
             viewState={viewState}
             member={item as any}

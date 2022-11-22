@@ -20,8 +20,8 @@ import getUrlForImageryTile from "../ImageryProvider/getUrlForImageryTile";
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
 // we still maintain the type checking, without TS screaming with errors
-const FeatureDetection: FeatureDetection = require("terriajs-cesium/Source/Core/FeatureDetection")
-  .default;
+const FeatureDetection: FeatureDetection =
+  require("terriajs-cesium/Source/Core/FeatureDetection").default;
 
 const swScratch = new Cartographic();
 const neScratch = new Cartographic();
@@ -153,7 +153,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     const doRequest = (waitPromise?: any) => {
       if (waitPromise) {
         waitPromise
-          .then(function() {
+          .then(function () {
             doRequest();
           })
           .catch((e: unknown) => {
@@ -172,7 +172,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
       }
     };
 
-    L.DomEvent.on(tile, "error", e => {
+    L.DomEvent.on(tile, "error", (e) => {
       const level = (<any>this)._getLevelFromZ(coords);
       const message = i18next.t("map.cesium.failedToObtain", {
         x: coords.x,
@@ -302,9 +302,8 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     }
 
     for (let i = 0; i < this._previousCredits.length; ++i) {
-      this._previousCredits[
-        i
-      ]._shownInLeafletLastUpdate = this._previousCredits[i]._shownInLeaflet;
+      this._previousCredits[i]._shownInLeafletLastUpdate =
+        this._previousCredits[i]._shownInLeaflet;
       this._previousCredits[i]._shownInLeaflet = false;
     }
 

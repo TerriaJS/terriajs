@@ -54,7 +54,7 @@ export const Tabs: FC<ITabsProps> = observer(({ viewState, onClose }) => {
         ([] as any[]).concat(
           terria.catalog.group.memberModels
             .filter(
-              member =>
+              (member) =>
                 member !== terria.catalog.userAddedDataGroup &&
                 CatalogMemberMixin.isMixedInto(member)
             )
@@ -103,9 +103,9 @@ export const Tabs: FC<ITabsProps> = observer(({ viewState, onClose }) => {
   }, []);
 
   const onFileAddFinished = async (files: BaseModel[]) => {
-    const file = (files.find(f =>
+    const file = files.find((f) =>
       MappableMixin.isMixedInto(f)
-    ) as unknown) as MappableMixin.Instance;
+    ) as unknown as MappableMixin.Instance;
     if (file) {
       const result = await viewState.viewCatalogMember(file);
       if (result.error) {
@@ -124,7 +124,7 @@ export const Tabs: FC<ITabsProps> = observer(({ viewState, onClose }) => {
         viewState.activeTabIdInCategory = idInCategory;
         if (category === "data-catalog") {
           const member = terria.catalog.group.memberModels.filter(
-            m => m.uniqueId === idInCategory
+            (m) => m.uniqueId === idInCategory
           )[0];
           // If member was found and member can be opened, open it (causes CkanCatalogGroups to fetch etc.)
           if (isDefined(member)) {
@@ -136,11 +136,11 @@ export const Tabs: FC<ITabsProps> = observer(({ viewState, onClose }) => {
   };
 
   const sameCategory = tabs.filter(
-    t => t.category === viewState.activeTabCategory
+    (t) => t.category === viewState.activeTabCategory
   );
   const currentTab =
     sameCategory.filter(
-      t => t.idInCategory === viewState.activeTabIdInCategory
+      (t) => t.idInCategory === viewState.activeTabIdInCategory
     )[0] ||
     sameCategory[0] ||
     tabs[0];
@@ -202,7 +202,7 @@ export const Tabs: FC<ITabsProps> = observer(({ viewState, onClose }) => {
   );
 });
 
-const Section = styled(Box).attrs(props => ({
+const Section = styled(Box).attrs((props) => ({
   as: "section",
   fullWidth: true,
   styledHeight: props.theme.modalContentHeight,
@@ -210,7 +210,7 @@ const Section = styled(Box).attrs(props => ({
 }))``;
 
 const ButtonTab = styled(RawButton)<{ isCurrent: boolean }>`
-  ${props => `
+  ${(props) => `
     line-height: 20px;
     background: transparent;
     color: ${props.theme.textLight};
@@ -221,11 +221,13 @@ const ButtonTab = styled(RawButton)<{ isCurrent: boolean }>`
       background: ${props.theme.textLight};
       color: ${props.theme.colorPrimary};
     }
-    ${props.isCurrent &&
+    ${
+      props.isCurrent &&
       `
       background: ${props.theme.textLight};
       color: ${props.theme.colorPrimary};
-    `}
+    `
+    }
 
   `}
 `;
@@ -233,6 +235,6 @@ const ButtonTab = styled(RawButton)<{ isCurrent: boolean }>`
 const DoneButton = styled(RawButton)`
   line-height: 20px;
   padding: 3px 10px;
-  border: 2px solid ${props => props.theme.textLight};
-  border-radius: ${props => props.theme.radiusLarge};
+  border: 2px solid ${(props) => props.theme.textLight};
+  border-radius: ${(props) => props.theme.radiusLarge};
 `;

@@ -42,7 +42,7 @@ interface EmptyWorkbenchProps {
   theme: DefaultTheme;
 }
 
-const EmptyWorkbench: React.FC<EmptyWorkbenchProps> = props => {
+const EmptyWorkbench: React.FC<EmptyWorkbenchProps> = (props) => {
   const { t } = useTranslation();
   return (
     <Text large textLight>
@@ -129,13 +129,17 @@ const SidePanel = observer<React.FC<SidePanelProps>>(
   ({ viewState, theme, refForExploreMapData, refForUploadData }) => {
     const terria = viewState.terria;
     const { t } = useTranslation();
-    const onAddDataClicked: React.MouseEventHandler<HTMLButtonElement> = e => {
+    const onAddDataClicked: React.MouseEventHandler<HTMLButtonElement> = (
+      e
+    ) => {
       e.stopPropagation();
       viewState.setTopElement(ExplorerWindowElementName);
       viewState.openAddData();
     };
 
-    const onAddLocalDataClicked: React.MouseEventHandler<HTMLButtonElement> = e => {
+    const onAddLocalDataClicked: React.MouseEventHandler<HTMLButtonElement> = (
+      e
+    ) => {
       e.stopPropagation();
       viewState.setTopElement(ExplorerWindowElementName);
       viewState.openUserData();
@@ -203,10 +207,9 @@ const SidePanel = observer<React.FC<SidePanelProps>>(
 
 // Used to create two refs for <SidePanel /> to consume, rather than
 // using the withTerriaRef() HOC twice, designed for a single ref
-const SidePanelWithRefs: React.FC<Omit<
-  SidePanelProps,
-  "refForExploreMapData" | "refForUploadData"
->> = props => {
+const SidePanelWithRefs: React.FC<
+  Omit<SidePanelProps, "refForExploreMapData" | "refForUploadData">
+> = (props) => {
   const refForExploreMapData = useRefForTerria(
     EXPLORE_MAP_DATA_NAME,
     props.viewState

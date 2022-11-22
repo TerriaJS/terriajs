@@ -6,13 +6,13 @@ export const ActionButton = styled(RawButton)`
     height: 20px;
     width: 20px;
     padding: 5px;
-    fill: ${p => p.theme.charcoalGrey};
+    fill: ${(p) => p.theme.charcoalGrey};
   }
 
   &:hover,
   &:focus {
     svg {
-      fill: ${p => p.theme.modalHighlight};
+      fill: ${(p) => p.theme.modalHighlight};
     }
   }
 `;

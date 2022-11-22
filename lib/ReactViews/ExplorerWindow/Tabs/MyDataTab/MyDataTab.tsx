@@ -123,6 +123,6 @@ export const MyDataTab: FC<IMyDataTabProps> = observer(
 );
 
 const StyledBox = styled(Box)`
-  border-top: 1px solid ${props => props.theme.greyLighter};
-  border-bottom: 1px solid ${props => props.theme.greyLighter};
+  border-top: 1px solid ${(props) => props.theme.greyLighter};
+  border-bottom: 1px solid ${(props) => props.theme.greyLighter};
 `;

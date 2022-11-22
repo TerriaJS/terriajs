@@ -68,7 +68,7 @@ export const DataCatalogGroup: FC<IDataCatalogGroupProps> = observer(
 
     const clickGroup = async () => {
       if (manageIsOpenLocally) {
-        setIsOpen(isOpen => !isOpen);
+        setIsOpen((isOpen) => !isOpen);
       }
       await viewState.viewCatalogMember(group, !group.isOpen);
     };
@@ -90,7 +90,7 @@ export const DataCatalogGroup: FC<IDataCatalogGroupProps> = observer(
         selected={isSelected}
       >
         {isGroupOpen &&
-          group.memberModels.map(item => (
+          group.memberModels.map((item) => (
             <DataCatalogMember
               key={item.uniqueId}
               member={item as any}

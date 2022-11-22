@@ -52,7 +52,7 @@ function buildEmptyAccumulator() {
 /** Finds the associated key string for the grouping element provided - e.g. a <Nav> element will resolve to 'nav' */
 function findKeyForGroupElement(groupElement) {
   return groupElementKeys.filter(
-    key => groupElement.type === GROUP_ELEMENT_TO_KEY_MAPPING[key]
+    (key) => groupElement.type === GROUP_ELEMENT_TO_KEY_MAPPING[key]
   )[0];
 }
 
@@ -65,7 +65,7 @@ function findKeyForGroupElement(groupElement) {
  * @returns {Array<Element>} a collection of processed children.
  */
 function getGroupChildren(isSmallScreen, groupElement) {
-  return React.Children.map(groupElement.props.children, child => {
+  return React.Children.map(groupElement.props.children, (child) => {
     if (typeof child === "string") {
       return <span>{child}</span>;
     } else if (

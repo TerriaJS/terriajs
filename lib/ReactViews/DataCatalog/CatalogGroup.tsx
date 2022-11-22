@@ -24,10 +24,10 @@ const CatalogGroupBox = styled(Box).attrs({
   &:hover,
   &:focus {
     cursor: pointer;
-    color: ${props => props.theme.textLight};
-    background-color: ${props => props.theme.modalHighlight};
+    color: ${(props) => props.theme.textLight};
+    background-color: ${(props) => props.theme.modalHighlight};
   }
-  ${props =>
+  ${(props) =>
     props.selected &&
     `
       color: ${props.theme.textLight};
@@ -37,11 +37,11 @@ const CatalogGroupBox = styled(Box).attrs({
   word-break: normal;
   overflow-wrap: anywhere;
 
-  @media (max-width: ${p => p.theme.sm}px) {
+  @media (max-width: ${(p) => p.theme.sm}px) {
     font-size: 0.9rem;
     padding-top: 10px;
     padding-bottom: 10px;
-    border-bottom: 1px solid ${p => p.theme.greyLighter};
+    border-bottom: 1px solid ${(p) => p.theme.greyLighter};
   }
 `;
 
@@ -80,7 +80,7 @@ const GroupCaret: FC<{ open: boolean }> = ({ open }) => {
 /**
  * Dumb component that encapsulated the display logic for a catalog group.
  */
-const CatalogGroup: FC<ICatalogGroupProps> = props => {
+const CatalogGroup: FC<ICatalogGroupProps> = (props) => {
   const { t } = useTranslation();
   const theme = useTheme();
 

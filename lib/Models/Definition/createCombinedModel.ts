@@ -193,10 +193,10 @@ function createCombinedStratum<T extends ModelTraits>(
   const traits = TraitsClass.traits;
   const decorators: { [id: string]: PropertyDecorator } = {};
 
-  Object.keys(traits).forEach(traitName => {
+  Object.keys(traits).forEach((traitName) => {
     const trait = traits[traitName];
     Object.defineProperty(result, traitName, {
-      get: function() {
+      get: function () {
         const traitValue = trait.getValue(this);
 
         // The value may be a model (from ObjectTrait) or an array of models
@@ -208,7 +208,7 @@ function createCombinedStratum<T extends ModelTraits>(
         if (traitValue instanceof BaseModel) {
           return unwrapCombinedStratumFromModel(traitValue);
         } else if (Array.isArray(traitValue)) {
-          return traitValue.map(item => {
+          return traitValue.map((item) => {
             if (item instanceof BaseModel) {
               return unwrapCombinedStratumFromModel(item);
             } else {
@@ -219,7 +219,7 @@ function createCombinedStratum<T extends ModelTraits>(
 
         return traitValue;
       },
-      set: function(value) {
+      set: function (value) {
         (<any>top)[traitName] = value;
       },
       enumerable: true,

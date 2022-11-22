@@ -33,7 +33,7 @@ export const AddDataButtons: FC<{ changeTab: (tabId: string) => void }> = ({
 
   return (
     <Box paddedRatio={2} gap={3}>
-      {tabs.map(tab => (
+      {tabs.map((tab) => (
         <RawButton
           onClick={() => changeTab(tab.id)}
           title={tab.caption}

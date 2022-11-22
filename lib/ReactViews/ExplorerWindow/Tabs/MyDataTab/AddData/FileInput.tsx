@@ -39,8 +39,8 @@ const HiddenInput = styled.input`
 `;
 
 const StyledLabel = styled.label`
-  background-color: ${props => props.theme.colorPrimary};
-  color: ${props => props.theme.textLight};
+  background-color: ${(props) => props.theme.colorPrimary};
+  color: ${(props) => props.theme.textLight};
   padding: 10px;
   border-radius: 4px;
   width: 100%;

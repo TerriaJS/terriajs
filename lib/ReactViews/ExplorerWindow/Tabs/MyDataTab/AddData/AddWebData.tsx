@@ -43,9 +43,8 @@ export const AddWebData: FC<IAddWebDataProps> = ({
   const theme = useTheme();
 
   const remoteDataTypes = dataTypes ?? getDataType().remoteDataType;
-  const [selectedRemoteDataType, setSelectedRemoteDataType] = useState<
-    IRemoteDataType
-  >(remoteDataTypes[0]);
+  const [selectedRemoteDataType, setSelectedRemoteDataType] =
+    useState<IRemoteDataType>(remoteDataTypes[0]);
   const [remoteUrl, setRemoteUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -86,7 +85,7 @@ export const AddWebData: FC<IAddWebDataProps> = ({
         }
         console.log(newItem);
         // @ts-ignore
-        promise = newItem.loadMetadata().then(result => {
+        promise = newItem.loadMetadata().then((result) => {
           if (result.error) {
             return Promise.reject(result.error);
           }
@@ -97,7 +96,7 @@ export const AddWebData: FC<IAddWebDataProps> = ({
         promise = Promise.reject(e);
       }
     }
-    addUserCatalogMember(terria, promise).then(addedItem => {
+    addUserCatalogMember(terria, promise).then((addedItem) => {
       if (addedItem) {
         onDataAddFinished([addedItem]);
         if (TimeVarying.is(addedItem)) {
@@ -166,7 +165,7 @@ export const AddWebData: FC<IAddWebDataProps> = ({
       <Box>
         <Input
           value={remoteUrl}
-          onChange={e => setRemoteUrl(e.target.value)}
+          onChange={(e) => setRemoteUrl(e.target.value)}
           type="text"
           placeholder="e.g. http://data.gov.au/geoserver/wms"
           css={`
