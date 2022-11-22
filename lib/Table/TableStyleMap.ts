@@ -8,11 +8,12 @@ import {
   EnumStyleTraits,
   TableStyleMapSymbolTraits,
   TableStyleMapTraits
-} from "../Traits/TraitsClasses/TableStyleMapTraits";
-import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
+} from "../Traits/TraitsClasses/Table/StyleMapTraits";
+import TableStyleTraits from "../Traits/TraitsClasses/Table/StyleTraits";
 import TableColumnType from "./TableColumnType";
 
 export interface TableStyleMapModel<T extends TableStyleMapSymbolTraits> {
+  enabled?: boolean;
   mapType: StyleMapType | undefined;
   column: string | undefined;
 
@@ -69,7 +70,9 @@ export default class TableStyleMap<T extends TableStyleMapSymbolTraits> {
     return this.styleTraits[this.key];
   }
 
-  /** Get all trait values for this TableStyleMapModel */
+  /** Get all trait values for this TableStyleMapModel.
+   * This is a JSON object
+   */
   @computed get traitValues() {
     return this.styleTraits.traits[this.key].toJson(
       this.traits

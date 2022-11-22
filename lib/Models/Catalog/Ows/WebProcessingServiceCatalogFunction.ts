@@ -286,7 +286,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
         wpsParameters: dataInputs,
         forceConvertResultsToV8: this.forceConvertResultsToV8
       })
-    );
+    ).raiseError(this.terria, "Error ocurred while updating job model JSON");
 
     return job;
   }

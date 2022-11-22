@@ -38,7 +38,7 @@ function buildBaseShareUrl(
   terria: Terria,
   hashParams: { [key: string]: string }
 ) {
-  const uri = new URI(window.location).fragment("").search("");
+  const uri = new URI(document.baseURI).fragment("").search("");
 
   if (terria.developmentEnv) {
     uri.addSearch(toJS(terria.userProperties));
@@ -362,17 +362,17 @@ function addFeaturePicking(terria: Terria, initSource: InitSourceData) {
       // id and name as a fallback.
       pickedFeatures.current = {
         name: terria.selectedFeature.name,
-        hash: hashEntity(terria.selectedFeature, terria.timelineClock)
+        hash: hashEntity(terria.selectedFeature, terria)
       };
     }
 
     // Remember the ids of vector features only, the raster ones we can reconstruct from providerCoords.
     pickedFeatures.entities = terria.pickedFeatures.features
-      .filter((feature) => !isDefined(feature.imageryLayer))
+      .filter((feature) => !isDefined(feature.imageryLayer?.imageryProvider))
       .map((entity) => {
         return {
           name: entity.name,
-          hash: hashEntity(entity, terria.timelineClock)
+          hash: hashEntity(entity, terria)
         };
       });
 

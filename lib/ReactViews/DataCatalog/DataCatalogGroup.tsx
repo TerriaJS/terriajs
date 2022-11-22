@@ -70,7 +70,9 @@ export const DataCatalogGroup: FC<IDataCatalogGroupProps> = observer(
       if (manageIsOpenLocally) {
         setIsOpen((isOpen) => !isOpen);
       }
-      await viewState.viewCatalogMember(group, !group.isOpen);
+      (await viewState.viewCatalogMember(group, !group.isOpen)).raiseError(
+        terria
+      );
     };
 
     return (

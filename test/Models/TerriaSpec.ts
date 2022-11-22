@@ -22,7 +22,7 @@ import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapService
 import Cesium from "../../lib/Models/Cesium";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import { BaseModel } from "../../lib/Models/Definition/Model";
-import Feature from "../../lib/Models/Feature";
+import TerriaFeature from "../../lib/Models/Feature/Feature";
 import {
   isInitFromData,
   isInitFromDataPromise,
@@ -508,8 +508,6 @@ describe("Terria", function () {
         "https://application.url/#someInitHash"
       );
 
-      console.log(terria.initSources);
-
       expect(terria.initSources.length).toEqual(2);
 
       const initSource = terria.initSources[1];
@@ -528,6 +526,52 @@ describe("Terria", function () {
         "https://application.url/path/to/init/someInitHash.json",
         "https://hostname.com/some/other/path/someInitHash.json"
       ]);
+
+      jasmine.Ajax.uninstall();
+    });
+
+    it("processes #start correctly", async function () {
+      expect(terria.initSources.length).toEqual(0);
+
+      jasmine.Ajax.install();
+      // Fail all requests by default.
+      jasmine.Ajax.stubRequest(/.*/).andError({});
+
+      jasmine.Ajax.stubRequest("configUrl.json").andReturn({
+        responseText: JSON.stringify({})
+      });
+
+      await terria.start({
+        configUrl: `configUrl.json`,
+        i18nOptions
+      });
+
+      // Test #start with two init sources
+      // - one initURL = "http://something/init.json"
+      // - one initData which sets `splitPosition`
+      await terria.updateApplicationUrl(
+        "https://application.url/#start=" +
+          JSON.stringify({
+            version: "8.0.0",
+            initSources: ["http://something/init.json", { splitPosition: 0.3 }]
+          })
+      );
+
+      expect(terria.initSources.length).toEqual(2);
+
+      const urlInitSource = terria.initSources[0];
+      expect(isInitFromUrl(urlInitSource)).toBeTruthy();
+
+      if (!isInitFromUrl(urlInitSource)) throw "Init source is not from url";
+
+      expect(urlInitSource.initUrl).toBe("http://something/init.json");
+
+      const jsonInitSource = terria.initSources[1];
+      expect(isInitFromData(jsonInitSource)).toBeTruthy();
+
+      if (!isInitFromData(jsonInitSource)) throw "Init source is not from data";
+
+      expect(jsonInitSource.data.splitPosition).toBe(0.3);
 
       jasmine.Ajax.uninstall();
     });
@@ -1124,7 +1168,7 @@ describe("Terria", function () {
       "it removes picked features & selected feature for the model",
       action(function () {
         terria.pickedFeatures = new PickedFeatures();
-        const feature = new Feature({});
+        const feature = new TerriaFeature({});
         terria.selectedFeature = feature;
         feature._catalogItem = model;
         terria.pickedFeatures.features.push(feature);
@@ -1173,7 +1217,9 @@ describe("Terria", function () {
     describe("when pickedFeatures is not present in initData", function () {
       it("unsets the feature picking state if `canUnsetFeaturePickingState` is `true`", async function () {
         terria.pickedFeatures = new PickedFeatures();
-        terria.selectedFeature = new Entity({ name: "selected" }) as Feature;
+        terria.selectedFeature = new Entity({
+          name: "selected"
+        }) as TerriaFeature;
         await terria.applyInitData({
           initData: {},
           canUnsetFeaturePickingState: true
@@ -1184,7 +1230,9 @@ describe("Terria", function () {
 
       it("otherwise, should not unset feature picking state", async function () {
         terria.pickedFeatures = new PickedFeatures();
-        terria.selectedFeature = new Entity({ name: "selected" }) as Feature;
+        terria.selectedFeature = new Entity({
+          name: "selected"
+        }) as TerriaFeature;
         await terria.applyInitData({
           initData: {}
         });
@@ -1586,10 +1634,7 @@ describe("Terria", function () {
       ds.entities.add(entity);
       testItem.mapItems = [ds];
       await terria.workbench.add(testItem);
-      // It is irrelevant what we pass as argument for `clock` param because
-      // the current implementation of `hashEntity` is broken because as it
-      // expects a `Clock` but actually uses it as a `JulianDate`
-      const entityHash = hashEntity(entity, undefined);
+      const entityHash = hashEntity(entity, terria);
       await terria.loadPickedFeatures({
         pickCoords: {
           lat: 84.93,

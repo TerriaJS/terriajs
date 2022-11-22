@@ -61,7 +61,12 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import formatPropertyValue from "../Core/formatPropertyValue";
 import hashFromString from "../Core/hashFromString";
 import isDefined from "../Core/isDefined";
-import { isJsonNumber, isJsonObject, JsonObject } from "../Core/Json";
+import {
+  isJsonNumber,
+  isJsonObject,
+  isJsonString,
+  JsonObject
+} from "../Core/Json";
 import { isJson } from "../Core/loadBlob";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError, { networkRequestError } from "../Core/TerriaError";
@@ -78,6 +83,7 @@ import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
+import TerriaFeature from "../Models/Feature/Feature";
 import { ViewingControl } from "../Models/ViewingControls";
 import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
@@ -87,7 +93,6 @@ import { isConstantStyleMap } from "../Table/TableStyleMap";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
 import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import StyleTraits from "../Traits/TraitsClasses/StyleTraits";
-import TerriaFeature from "./../Models/Feature";
 import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
 import { ExportData } from "./ExportableMixin";
 import FeatureInfoUrlTemplateMixin from "./FeatureInfoUrlTemplateMixin";
@@ -223,9 +228,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       | GeoJsonDataSource
       | undefined;
 
-    /** This is only public so that it can be accessed in GeoJsonStratum, treat it as private */
     @observable
-    _imageryProvider: ProtomapsImageryProvider | undefined;
+    private _imageryProvider: ProtomapsImageryProvider | undefined;
 
     private tableStyleReactionDisposer: IReactionDisposer | undefined;
 
@@ -290,7 +294,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             this.activeTableStyle.colorMap,
             this.activeTableStyle.pointSizeMap,
             this.activeTableStyle.pointStyleMap.traitValues,
-            this.activeTableStyle.outlineStyleMap.traitValues
+            this.activeTableStyle.outlineStyleMap.traitValues,
+            this.terria.baseMapContrastColor // This needs to be here as `baseMapContrastColor` is used as the default outline color in `getFeatureStyle`
           ],
           () => {
             if (
@@ -449,7 +454,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     /** GeojsonMixin has 3 rendering modes:
      * - CZML:
      *    - if `czmlTemplate` is defined (see `GeoJsonTraits.czmlTemplate`)
-     * - Mapbox vector tiles (through geojson-vt and protomaps.js)
+     * - Table styling / Mapbox vector tiles (through geojson-vt and protomaps.js)
      *    - Will be used by default, if not using unsupported traits (see below)
      * - Cesium primitives if:
      *    - `GeoJsonTraits.forceCesiumPrimitives = true`
@@ -744,26 +749,12 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         terria: this.terria,
         data: protomapsData,
         paintRules: [
-          // Polygon fill
+          // Polygon features
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new PolygonSymbolizer({
-              fill: getColorValue
-            }),
-            minzoom: 0,
-            maxzoom: Infinity,
-            filter: (zoom, feature) => {
-              return (
-                feature?.geomType === GeomType.Polygon &&
-                showFeature(zoom, feature)
-              );
-            }
-          },
-          // Polygon outline
-          {
-            dataLayer: GEOJSON_SOURCE_LAYER_NAME,
-            symbolizer: new LineSymbolizer({
-              color: getOutlineColorValue,
+              fill: getColorValue,
+              stroke: getOutlineColorValue,
               width: getOutlineWidthValue
             }),
             minzoom: 0,
@@ -775,9 +766,11 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               );
             }
           },
+
           // Line features
           // Note - line color will use TableColorStyleTraits by default.
           // If useOutlineColorForLineFeatures is true, then line color will use TableOutlineStyle traits
+
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new LineSymbolizer({
@@ -795,6 +788,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               );
             }
           }
+          // See `createPoints` for Point features - they are handled by Cesium
         ],
         labelRules: []
       });
@@ -1282,29 +1276,41 @@ export default GeoJsonMixin;
 export function isFeatureCollection(
   json: any
 ): json is FeatureCollectionWithCrs {
-  return json.type === "FeatureCollection" && Array.isArray(json.features);
+  return (
+    isJsonObject(json, false) &&
+    json.type === "FeatureCollection" &&
+    Array.isArray(json.features)
+  );
 }
 
 export function isFeature(json: any): json is Feature {
-  return json.type === "Feature" && json.geometry;
+  return (
+    isJsonObject(json, false) && json.type === "Feature" && !!json.geometry
+  );
 }
 
 export function isPoint(json: any): json is Feature<Point> {
   return (
-    json.type === "Feature" && json.geometry && json.geometry.type === "Point"
+    isJsonObject(json, false) &&
+    json.type === "Feature" &&
+    isJsonObject(json.geometry, false) &&
+    json.geometry.type === "Point"
   );
 }
 
 export function isMultiPoint(json: any): json is Feature<MultiPoint> {
   return (
+    isJsonObject(json, false) &&
     json.type === "Feature" &&
-    json.geometry &&
+    isJsonObject(json.geometry, false) &&
     json.geometry.type === "MultiPoint"
   );
 }
 
 export function isGeometries(json: any): json is Geometries {
   return (
+    isJsonObject(json, false) &&
+    isJsonString(json.type) &&
     [
       "Point",
       "MultiPoint",
@@ -1312,7 +1318,8 @@ export function isGeometries(json: any): json is Geometries {
       "MultiLineString",
       "Polygon",
       "MultiPolygon"
-    ].includes(json.type) && Array.isArray(json.coordinates)
+    ].includes(json.type) &&
+    Array.isArray(json.coordinates)
   );
 }
 

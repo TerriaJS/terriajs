@@ -15,8 +15,8 @@ export function isMakiIcon(id: string | undefined) {
 export function getMakiIcon(
   id: string | undefined,
   color: string,
-  strokeWidth: number,
-  strokeColor: string,
+  strokeWidth: number | undefined,
+  strokeColor: string | undefined,
   height: number,
   width: number
 ) {
@@ -24,6 +24,8 @@ export function getMakiIcon(
   const svgId = `${id}.svg`;
   const iconSvgs = icons.iconGroups[0].svgs as any;
   if (svgId in iconSvgs) {
+    if (!strokeColor || !strokeWidth) strokeWidth = 0;
+
     // Values are adapted from https://labs.mapbox.com/maki-icons/editor/
     const path = iconSvgs[svgId].pathData[0].d;
     const totalHeight = height + 4 + strokeWidth * 2;

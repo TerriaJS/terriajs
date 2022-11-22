@@ -117,7 +117,9 @@ export default class CatalogIndex {
         if (!isJsonObject(model, false)) return;
         const reference = new CatalogIndexReference(id, this.terria);
 
-        updateModelFromJson(reference, CommonStrata.definition, model);
+        updateModelFromJson(reference, CommonStrata.definition, model).logError(
+          "Error ocurred adding adding catalog model reference"
+        );
 
         if (isJsonStringArray(model.shareKeys)) {
           model.shareKeys.map((s) => this.shareKeysMap.set(s, id));

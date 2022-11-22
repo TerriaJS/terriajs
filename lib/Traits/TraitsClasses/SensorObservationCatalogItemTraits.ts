@@ -4,7 +4,7 @@ import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
-import TableTraits from "./TableTraits";
+import TableTraits from "./Table/TableTraits";
 import UrlTraits from "./UrlTraits";
 
 export class ObservablePropertyTraits extends ModelTraits {

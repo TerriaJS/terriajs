@@ -128,7 +128,9 @@ export const Tabs: FC<ITabsProps> = observer(({ viewState, onClose }) => {
           )[0];
           // If member was found and member can be opened, open it (causes CkanCatalogGroups to fetch etc.)
           if (isDefined(member)) {
-            viewState.viewCatalogMember(member);
+            viewState
+              .viewCatalogMember(member)
+              .then((result) => result.raiseError(terria));
           }
         }
       }
