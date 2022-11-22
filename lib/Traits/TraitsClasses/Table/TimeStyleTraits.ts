@@ -1,6 +1,6 @@
-import ModelTraits from "../ModelTraits";
-import primitiveTrait from "../Decorators/primitiveTrait";
-import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
+import ModelTraits from "../../ModelTraits";
+import primitiveTrait from "../../Decorators/primitiveTrait";
+import primitiveArrayTrait from "../../Decorators/primitiveArrayTrait";
 
 export default class TableTimeStyleTraits extends ModelTraits {
   @primitiveTrait({

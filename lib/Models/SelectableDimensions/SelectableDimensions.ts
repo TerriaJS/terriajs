@@ -21,8 +21,16 @@ export interface EnumDimension<T = string> extends Dimension {
   readonly options?: readonly EnumDimensionOption<T>[];
   readonly selectedId?: T;
   readonly allowUndefined?: boolean;
+  /** If true, then the user can set the value to arbitrary text */
   readonly allowCustomInput?: boolean;
   readonly undefinedLabel?: string;
+}
+
+/** Similar to EnumDimension, but supports multiple selected values */
+export interface MultiEnumDimension<T = string> extends Dimension {
+  readonly options?: readonly EnumDimensionOption<T>[];
+  readonly selectedIds?: T[];
+  readonly allowUndefined?: boolean;
 }
 
 export interface NumericalDimension extends Dimension {
@@ -49,6 +57,7 @@ export interface ButtonDimension extends Dimension {
 export type SelectableDimensionType =
   | undefined
   | "select"
+  | "select-multi"
   | "numeric"
   | "text"
   | "checkbox"
@@ -81,6 +90,15 @@ export interface SelectableDimensionEnum
   extends SelectableDimensionBase<string>,
     EnumDimension {
   type?: undefined | "select";
+  /** Render ReactNodes for each option - instead of plain label */
+  optionRenderer?: OptionRenderer;
+}
+
+/** Similar to SelectableDimensionEnum, but supports multiple selected values */
+export interface SelectableDimensionMultiEnum
+  extends SelectableDimensionBase<string[]>,
+    MultiEnumDimension {
+  type?: undefined | "select-multi";
   /** Render ReactNodes for each option - instead of plain label */
   optionRenderer?: OptionRenderer;
 }
@@ -156,6 +174,7 @@ export type FlatSelectableDimension = Exclude<
 
 export type SelectableDimension =
   | SelectableDimensionEnum
+  | SelectableDimensionMultiEnum
   | SelectableDimensionCheckbox
   | SelectableDimensionCheckboxGroup
   | SelectableDimensionGroup
@@ -168,6 +187,10 @@ export const isEnum = (
   dim: SelectableDimension
 ): dim is SelectableDimensionEnum =>
   dim.type === "select" || dim.type === undefined;
+
+export const isMultiEnum = (
+  dim: SelectableDimension
+): dim is SelectableDimensionMultiEnum => dim.type === "select-multi";
 
 /** Return only SelectableDimensionSelect from array of SelectableDimension */
 export const filterEnums = (
@@ -216,6 +239,11 @@ const enumHasValidOptions = (dim: EnumDimension) => {
   return isDefined(dim.options) && dim.options.length >= minLength;
 };
 
+/** Multi enums just need one option (they don't have `allowUndefined`) */
+const multiEnumHasValidOptions = (dim: MultiEnumDimension) => {
+  return isDefined(dim.options) && dim.options.length > 0;
+};
+
 /** Filter with SelectableDimension should be shown for a given placement.
  * This will take into account whether SelectableDimension is valid, not disabled, etc...
  */
@@ -229,6 +257,8 @@ export const filterSelectableDimensions =
         isEnabled(dim) &&
         // Check enum (select and checkbox) dimensions for valid options
         ((!isEnum(dim) && !isCheckbox(dim)) || enumHasValidOptions(dim)) &&
+        // Check multi-enum
+        (!isMultiEnum(dim) || multiEnumHasValidOptions(dim)) &&
         // Only show groups if they have at least one SelectableDimension
         (!isGroup(dim) || dim.selectableDimensions.length > 0)
     );
@@ -243,6 +273,14 @@ export const findSelectedValueName = (
 
   if (isEnum(dim)) {
     return dim.options?.find((opt) => opt.id === dim.selectedId)?.name;
+  }
+
+  if (isMultiEnum(dim)) {
+    // return names as CSV
+    return dim.options
+      ?.filter((opt) => dim.selectedIds?.some((id) => opt.id === id))
+      ?.map((option) => option.name)
+      ?.join(", ");
   }
 
   if (isNumeric(dim)) {
