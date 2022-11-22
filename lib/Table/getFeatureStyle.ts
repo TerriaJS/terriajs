@@ -216,7 +216,9 @@ export function getFeatureStyle(style: TableStyle, rowId: number) {
     pathGraphicsSolidColorOptions,
     pathGraphicsPolylineGlowOptions,
     billboardGraphicsOptions,
-    /** Use PointGraphics instead of BillboardGraphics, if not using maki icon. */
-    usePointGraphics: !isMakiIcon(pointStyle?.marker)
+    /** Use PointGraphics instead of BillboardGraphics, if not using maki icon AND not using image marker. */
+    usePointGraphics:
+      !isMakiIcon(pointStyle?.marker) &&
+      !pointStyle?.marker?.startsWith("data:image")
   };
 }

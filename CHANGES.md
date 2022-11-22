@@ -18,6 +18,7 @@
 - Fix `SelectableDimensionNumeric` handling of invalid values
 - `ColorStyleLegend` will use `colorColumn` title by default. It will fallback to `TableStyle.title`
 - Add `children` optional property to StandardUserInterfaceProps interface
+- Fix image markers (eg `marker = "data:image/png;base64,..."`)
 - [The next improvement]
 
 #### 8.2.21 - 2022-11-10
