@@ -1,15 +1,15 @@
-import { TableStyleMapModel } from "../../Table/TableStyleMap";
-import objectArrayTrait from "../Decorators/objectArrayTrait";
-import objectTrait from "../Decorators/objectTrait";
-import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
-import primitiveTrait from "../Decorators/primitiveTrait";
-import mixTraits from "../mixTraits";
+import { TableStyleMapModel } from "../../../Table/TableStyleMap";
+import objectArrayTrait from "../../Decorators/objectArrayTrait";
+import objectTrait from "../../Decorators/objectTrait";
+import primitiveArrayTrait from "../../Decorators/primitiveArrayTrait";
+import primitiveTrait from "../../Decorators/primitiveTrait";
+import mixTraits from "../../mixTraits";
 import {
   BinStyleTraits,
   EnumStyleTraits,
   TableStyleMapSymbolTraits,
   TableStyleMapTraits
-} from "./TableStyleMapTraits";
+} from "./StyleMapTraits";
 
 /** Supports subset of CZML Label https://github.com/AnalyticalGraphicsInc/czml-writer/wiki/Label
  *

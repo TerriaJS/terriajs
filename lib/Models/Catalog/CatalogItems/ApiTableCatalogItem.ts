@@ -12,8 +12,8 @@ import ApiRequestTraits from "../../../Traits/TraitsClasses/ApiRequestTraits";
 import ApiTableCatalogItemTraits, {
   ApiTableRequestTraits
 } from "../../../Traits/TraitsClasses/ApiTableCatalogItemTraits";
-import TableStyleTraits from "../../../Traits/TraitsClasses/TableStyleTraits";
-import TableTimeStyleTraits from "../../../Traits/TraitsClasses/TableTimeStyleTraits";
+import TableStyleTraits from "../../../Traits/TraitsClasses/Table/StyleTraits";
+import TableTimeStyleTraits from "../../../Traits/TraitsClasses/Table/TimeStyleTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
