@@ -8,7 +8,6 @@ import { withTranslation } from "react-i18next";
 import { Link, Route, Switch, withRouter } from "react-router-dom";
 import awsconfig from "../../aws-exports";
 import arrayContains from "../../Core/arrayContains";
-import { RCChangeUrlParams } from "../../Models/Receipt";
 import { Medium, Small } from "../Generic/Responsive";
 import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
 import ProgressBar from "../Map/ProgressBar.jsx";
@@ -32,7 +31,6 @@ import ToolPanel from "./../ToolPanel.jsx";
 
 import Legend from "../Workbench/Controls/Legend";
 
-// import FeatureInfoPanel from "../FeatureInfo/FeatureInfoPanel.jsx";
 import MapColumn from "./MapColumn.jsx";
 import processCustomElements from "./processCustomElements";
 import Styles from "./StandardUserInterface.scss";
@@ -126,12 +124,6 @@ const StandardUserInterface = createReactClass({
   async componentDidMount() {
     this._wrapper.addEventListener("dragover", this.dragOverListener, false);
     showStoryPrompt(this.props.viewState, this.props.terria);
-    //
-    // First web enters, read the params
-    // Wait for router-dom to set before loading the init params: async
-    //
-    await new Promise(resolve => setTimeout(resolve, 500));
-    RCChangeUrlParams("", this.props.viewState);
   },
 
   componentWillUnmount() {

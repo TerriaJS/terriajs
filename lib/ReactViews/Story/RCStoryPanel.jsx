@@ -5,7 +5,7 @@ import React from "react";
 import { Link, withRouter } from "react-router-dom";
 import { withTranslation } from "react-i18next";
 import { Swipeable } from "react-swipeable";
-import { RCChangeUrlParams, setSelectedStory } from "../../Models/Receipt";
+import { setSelectedStory } from "../../Models/Receipt";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import { Medium } from "../Generic/Responsive";
 import Icon from "../Icon.jsx";
@@ -25,27 +25,22 @@ const RCStoryPanel = createReactClass({
   slideOutTimer: null,
   escKeyListener: null,
 
-
   getInitialState() {
     return {
-      inView: true
+      inView: false
     };
   },
   componentDidMount() {
     //
     // Navigate to the story page coming from the url params
     //
-    setSelectedStory(this.props.match.params, this.props.viewState);
-
     this.slideIn();
 
     this.changeScenarioListener = e => {
       this.props.viewState.currentScenario = e.detail.scenarioID;
-      this.changeUrlPageParameter(this.props.viewState.currentStoryId);
       this.setState({ state: this.state });
     };
 
-    window.addEventListener("keydown", this.escKeyListener, true);
     window.document.addEventListener(
       "changeScenario",
       this.changeScenarioListener,
@@ -55,7 +50,7 @@ const RCStoryPanel = createReactClass({
 
   componentDidUpdate() {
     const stories = this.props.terria.stories;
-    const selectedPage = stories[this.props.viewState.currentStoryId];
+    const selectedPage = stories[Number(this.props.match.params.pageIndex)];
     this.props.terria.updateFromStartData(selectedPage.mapScenarios);
   },
 
@@ -79,6 +74,11 @@ const RCStoryPanel = createReactClass({
     this.props.viewState.topElement = "StoryPanel";
   },
 
+  /* eslint-disable-next-line camelcase */
+  UNSAFE_componentWillMount() {
+    setSelectedStory(this.props.match.params, this.props.viewState);
+  },
+
   componentWillUnmount() {
     window.removeEventListener("keydown", this.escKeyListener, false);
     clearTimeout(this.slideInTimer);
@@ -91,16 +91,6 @@ const RCStoryPanel = createReactClass({
     if (selectedPage.mapScenarios) {
       this.props.terria.updateFromStartData(selectedPage.mapScenarios);
     }
-  },
-
-  changeUrlPageParameter(pageIndex) {
-    const urlParams = new URLSearchParams(window.location.search);
-    RCChangeUrlParams(
-      {
-        sector: urlParams.get("sector"),
-        story: urlParams.get("story"),
-        page: `${pageIndex + 1}` // For the user, pages start with 1
-      }, this.props.viewState);
   },
 
   render() {
@@ -212,6 +202,9 @@ const RCStoryPanel = createReactClass({
               </div>
             </div>
 
+            {/* DO NOT DELETE THIS DIV - It's making sure the story is rendered at the correct height (for some reason, god I hate CSS) */}
+            <div />
+            
             <div className={Styles.RCSummaryCard}>
               <div
                 className={classNames(Styles.storyContainer, {
@@ -219,11 +212,11 @@ const RCStoryPanel = createReactClass({
                 })}
               >
                 {selectedPage.text && (
-                  <div className={Styles.body}>
+                  <div className={Styles.body}>                    
                     {typeof selectedPage?.text === "string" &&
                       parseCustomHtmlToReact(selectedPage.text)}
                     {typeof selectedPage?.text === "object" &&
-                      parseCustomHtmlToReact(selectedPage.text[scenario])}
+                      parseCustomHtmlToReact(selectedPage.text[scenario])}                    
                   </div>
                 )}
               </div>
