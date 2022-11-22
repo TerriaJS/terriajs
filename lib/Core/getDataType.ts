@@ -170,12 +170,6 @@ export default function(): IGetDataTypes {
         value: "shp",
         name: i18next.t("core.dataType.shp"),
         extensions: ["zip"]
-      },
-      {
-        // NOTE: will only work if non open-source terriajs-ifc plugin is added to the map
-        value: "ifc",
-        name: i18next.t("core.dataType.ifc"),
-        extensions: ["ifc"]
       }
     ]
   };

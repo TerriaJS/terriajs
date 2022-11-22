@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import ViewState from "../../ReactViewModels/ViewState";
-import PortalContainer from "./PortalContainer";
 import { WorkflowPanelPortalId } from "../Workflow/WorkflowPanel";
+import PortalContainer from "./PortalContainer";
+import { withViewState } from "./ViewStateContext";
 
 type PropsType = {
   viewState: ViewState;
@@ -36,4 +37,4 @@ const Container = styled.div<{ show: boolean }>`
   opacity: ${p => (p.show ? 1 : 0)};
 `;
 
-export default WorkflowPanelContainer;
+export default withViewState(WorkflowPanelContainer);

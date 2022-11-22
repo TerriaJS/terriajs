@@ -1,3 +1,5 @@
+## Terria Initialization file (`InitSource`)
+
 A catalog in TerriaJS is defined in one or more "initialization files" (or init files).  In a default TerriaMap installation, the main init file is found in `wwwroot/init/simple.json`.
 
 An init file is a [JSON file](https://en.wikipedia.org/wiki/JSON) with this basic structure:

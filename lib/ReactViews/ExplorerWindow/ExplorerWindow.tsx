@@ -1,40 +1,37 @@
 import { action } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import ViewState from "../../ReactViewModels/ViewState";
+import { useViewState } from "../StandardUserInterface/ViewStateContext";
 import ModalPopup from "./ModalPopup";
 import Box from "../../Styled/Box";
 import { Tabs } from "./Tabs/Tabs";
 
 export const ExplorerWindowElementName = "AddData";
 
-interface IProps {
-  viewState: ViewState;
-  terria: ViewState["terria"];
-}
+export default observer<React.FC>(function ExplorerWindow() {
+  const viewState = useViewState();
 
-export default observer<React.FC<IProps>>(function ExplorerWindow(props) {
   const onClose = action(() => {
-    props.viewState.closeCatalog();
-    props.viewState.switchMobileView("nowViewing");
+    viewState.closeCatalog();
+    viewState.switchMobileView("nowViewing");
   });
 
   const onStartAnimatingIn = action(() => {
-    props.viewState.explorerPanelAnimating = true;
+    viewState.explorerPanelAnimating = true;
   });
 
   const onDoneAnimatingIn = action(() => {
-    props.viewState.explorerPanelAnimating = false;
+    viewState.explorerPanelAnimating = false;
   });
 
   const isVisible =
-    !props.viewState.useSmallScreenInterface &&
-    !props.viewState.hideMapUi &&
-    props.viewState.explorerPanelIsVisible;
+    !viewState.useSmallScreenInterface &&
+    !viewState.hideMapUi &&
+    viewState.explorerPanelIsVisible;
 
   return (
     <ModalPopup
-      viewState={props.viewState}
+      viewState={viewState}
       isVisible={isVisible}
       isTopElement={true}
       onClose={onClose}
@@ -50,7 +47,7 @@ export default observer<React.FC<IProps>>(function ExplorerWindow(props) {
         flex="1"
         css={{ zIndex: 99999 }}
       >
-        <Tabs viewState={props.viewState} onClose={onClose} />
+        <Tabs viewState={viewState} onClose={onClose} />
       </Box>
     </ModalPopup>
   );

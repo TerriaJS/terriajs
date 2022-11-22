@@ -30,7 +30,16 @@ export const AddLocalData: FC<IAddLocalDataProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  const localDataTypes = dataTypes ?? getDataType().localDataType;
+  // Automatically suffix supported extension types to localDataType names
+  const localDataTypes = (dataTypes ?? getDataType().localDataType).map(
+    (dataType) => {
+      const extensions = dataType.extensions?.length
+        ? ` (${buildExtensionsList(dataType.extensions)})`
+        : "";
+      return { ...dataType, name: `${dataType.name}${extensions}` };
+    }
+  );
+
   const [selectedLocalDataType, setSelectedLocalDataType] = useState<
     ILocalDataType
   >(localDataTypes[0]);
@@ -92,7 +101,7 @@ export const AddLocalData: FC<IAddLocalDataProps> = ({
       <Spacing bottom={2} />
       <Text medium textDark>
         <Trans i18nKey="addData.localFileType">
-          <strong>Step 1:</strong> Select file type (optional)
+          <strong>Step 1:</strong> Select file type
         </Trans>
       </Text>
       <Spacing bottom={2} />
@@ -132,3 +141,11 @@ const StyledDescription = styled(Text)`
     margin: 0;
   }
 `;
+
+/**
+ * @param extensions - string[]
+ * @returns Comma separated string of extensions
+ */
+ function buildExtensionsList(extensions: string[]) {
+  return extensions.map(ext => `.${ext}`).join(", ");
+}

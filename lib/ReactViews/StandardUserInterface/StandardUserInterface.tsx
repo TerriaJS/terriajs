@@ -4,11 +4,7 @@ import { action } from "mobx";
 import { observer } from "mobx-react";
 import React, { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  createGlobalStyle,
-  DefaultTheme,
-  ThemeProvider
-} from "styled-components";
+import { DefaultTheme } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
 import arrayContains from "../../Core/arrayContains";
 import ViewState from "../../ReactViewModels/ViewState";
@@ -40,6 +36,8 @@ import Tool from "../Tools/Tool";
 import TourPortal from "../Tour/TourPortal";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
 import SelectableDimensionWorkflow from "../Workflow/SelectableDimensionWorkflow";
+import ContextProviders from "./ContextProviders";
+import { GlobalTerriaStyles } from "./GlobalTerriaStyles";
 import MapColumn from "./MapColumn";
 import processCustomElements from "./processCustomElements";
 import SidePanelContainer from "./SidePanelContainer";
@@ -47,74 +45,6 @@ import Styles from "./standard-user-interface.scss";
 import { terriaTheme } from "./StandardTheme";
 import WorkflowPanelContainer from "./WorkflowPanelContainer";
 
-const GlobalTerriaStyles = createGlobalStyle`
-  body {
-    font-family: ${p => p.theme.fontBase};
-
-    *:focus {
-      outline: 3px solid #C390F9;
-    }
-  }
-
-  // Theme-ify sass classes until they are removed
-
-  // We override the primary, secondary, map and share buttons here as they
-  // are imported everywhere and used in various ways - until we remove sass
-  // this is the quickest way to tackle them for now
-  .tjs-_buttons__btn--map {
-    ${p => p.theme.addTerriaMapBtnStyles(p)}
-  }
-
-  .tjs-_buttons__btn-primary {
-    ${p => p.theme.addTerriaPrimaryBtnStyles(p)}
-  }
-
-  .tjs-_buttons__btn--secondary,
-  .tjs-_buttons__btn--close-modal {
-    ${p => p.theme.addTerriaSecondaryBtnStyles(p)}
-  }
-
-  .tjs-_buttons__btn--tertiary {
-    ${p => p.theme.addTerriaTertiaryBtnStyles(p)}
-  }
-
-  .tjs-_buttons__btn-small:hover,
-  .tjs-_buttons__btn-small:focus {
-    color: ${p => p.theme.colorPrimary};
-  }
-
-  .tjs-share-panel__catalog-share-inner {
-    background: ${p => p.theme.greyLightest};
-  }
-
-  .tjs-share-panel__btn--catalogShare {
-    color: ${p => p.theme.colorPrimary};
-    background:transparent;
-    svg {
-      fill: ${p => p.theme.colorPrimary};
-    }
-  }
-  .tjs-dropdown__btn--dropdown {
-    color: ${p => p.theme.textDark};
-    background: ${p => p.theme.textLight};
-    &:hover,
-    &:focus {
-      color: ${p => p.theme.textDark};
-      background: ${p => p.theme.textLight};
-      border: 1px solid ${p => p.theme.colorPrimary};
-    }
-    svg {
-      fill: ${p => p.theme.textDark};
-    }
-  }
-  .tjs-dropdown__btn--option.tjs-dropdown__is-selected {
-    color: ${p => p.theme.colorPrimary};
-  }
-
-  button {
-    cursor: pointer;
-  }
-`;
 export const animationDuration = 250;
 
 interface StandardUserInterfaceProps {
@@ -126,13 +56,9 @@ interface StandardUserInterfaceProps {
   version: string;
 }
 
-const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
+const StandardUserInterface: React.FC<StandardUserInterfaceProps> = observer(
   props => {
     const { t } = useTranslation();
-    const uiRootRef = useRef<HTMLDivElement>(null);
-
-    const shouldUseMobileInterface =
-      document.body.clientWidth < (props.minimumLargeScreenWidth ?? 768);
 
     const acceptDragDropFile = action(() => {
       props.viewState.isDraggingDroppingFile = true;
@@ -155,17 +81,21 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
       acceptDragDropFile();
     };
 
+    const shouldUseMobileInterface = () =>
+      document.body.clientWidth < (props.minimumLargeScreenWidth ?? 768);
+
     const resizeListener = action(() => {
-      props.viewState.useSmallScreenInterface = shouldUseMobileInterface;
+      props.viewState.useSmallScreenInterface = shouldUseMobileInterface();
     });
 
     useEffect(() => {
       window.addEventListener("resize", resizeListener, false);
-      resizeListener();
       return () => {
         window.removeEventListener("resize", resizeListener, false);
       };
     }, []);
+
+    useEffect(resizeListener, [props.minimumLargeScreenWidth]);
 
     useEffect(() => {
       if (
@@ -217,18 +147,16 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
       !props.viewState.explorerPanelIsVisible &&
       !props.viewState.storyBuilderShown;
     return (
-      <ThemeProvider theme={mergedTheme}>
+      <ContextProviders viewState={props.viewState} theme={mergedTheme}>
         <GlobalTerriaStyles />
-        <TourPortal viewState={props.viewState} />
-        <CollapsedNavigation viewState={props.viewState} />
-        <SatelliteHelpPrompt viewState={props.viewState} />
+        <TourPortal />
+        <CollapsedNavigation />
+        <SatelliteHelpPrompt />
         <Medium>
-          <SelectableDimensionWorkflow viewState={props.viewState} />
+          <SelectableDimensionWorkflow />
         </Medium>
         <div className={Styles.storyWrapper}>
-          {!props.viewState.disclaimerVisible && (
-            <WelcomeMessage viewState={props.viewState} />
-          )}
+          {!props.viewState.disclaimerVisible && <WelcomeMessage />}
           <div
             className={Styles.uiRoot}
             css={`
@@ -247,10 +175,8 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
                   <>
                     <Small>
                       <MobileHeader
-                        terria={terria}
                         menuItems={customElements.menu}
                         menuLeftItems={customElements.menuLeft}
-                        viewState={props.viewState}
                         version={props.version}
                         allBaseMaps={allBaseMaps}
                       />
@@ -258,11 +184,9 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
                     <Medium>
                       <>
                         <WorkflowPanelContainer
-                          viewState={props.viewState}
                           show={props.terria.isWorkflowPanelActive}
                         />
                         <SidePanelContainer
-                          viewState={props.viewState}
                           tabIndex={0}
                           show={
                             props.viewState.isMapFullScreen === false &&
@@ -270,21 +194,12 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
                           }
                         >
                           <FullScreenButton
-                            terria={terria}
-                            viewState={props.viewState}
                             minified={true}
                             animationDuration={250}
                             btnText={t("addData.btnHide")}
                           />
-                          <Branding
-                            terria={terria}
-                            viewState={props.viewState}
-                            version={props.version}
-                          />
-                          <SidePanel
-                            terria={terria}
-                            viewState={props.viewState}
-                          />
+                          <Branding version={props.version} />
+                          <SidePanel />
                         </SidePanelContainer>
                       </>
                     </Medium>
@@ -302,8 +217,6 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
                     })}
                   >
                     <FullScreenButton
-                      terria={props.terria}
-                      viewState={props.viewState}
                       minified={false}
                       btnText={t("sui.showWorkbench")}
                       animationDuration={animationDuration}
@@ -315,10 +228,8 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
                 </Medium>
 
                 <section className={Styles.map}>
-                  <ProgressBar terria={terria} />
+                  <ProgressBar />
                   <MapColumn
-                    terria={terria}
-                    viewState={props.viewState}
                     customFeedbacks={customElements.feedback}
                     customElements={customElements}
                     allBaseMaps={allBaseMaps}
@@ -331,15 +242,10 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
                   />
                   <div id="map-data-attribution"></div>
                   <main>
-                    <ExplorerWindow
-                      terria={terria}
-                      viewState={props.viewState}
-                    />
+                    <ExplorerWindow />
                     {props.terria.configParameters.experimentalFeatures &&
                       !props.viewState.hideMapUi && (
                         <ExperimentalFeatures
-                          terria={terria}
-                          viewState={props.viewState}
                           experimentalItems={customElements.experimentalMenu}
                         />
                       )}
@@ -349,29 +255,24 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
             </div>
             {!props.viewState.hideMapUi && (
               <Medium>
-                <TrainerBar terria={terria} viewState={props.viewState} />
+                <TrainerBar />
               </Medium>
             )}
             <Medium>
               {/* I think this does what the previous boolean condition does, but without the console error */}
               {props.viewState.isToolOpen && (
-                <Tool
-                  {...props.viewState.currentTool!}
-                  viewState={props.viewState}
-                />
+                <Tool {...props.viewState.currentTool!} />
               )}
             </Medium>
 
             {props.viewState.panel}
 
-            <Notification viewState={props.viewState} />
-            <MapInteractionWindow terria={terria} viewState={props.viewState} />
+            <Notification />
+            <MapInteractionWindow />
             {!customElements.feedback.length &&
               props.terria.configParameters.feedbackUrl &&
               !props.viewState.hideMapUi &&
-              props.viewState.feedbackFormIsVisible && (
-                <FeedbackForm viewState={props.viewState} />
-              )}
+              props.viewState.feedbackFormIsVisible && <FeedbackForm />}
             <div
               className={classNames(
                 Styles.featureInfo,
@@ -388,37 +289,29 @@ const StandardUserInterface = observer<React.FC<StandardUserInterfaceProps>>(
                 props.viewState.topElement = "FeatureInfo";
               })}
             >
-              <FeatureInfoPanel terria={terria} viewState={props.viewState} />
+              <FeatureInfoPanel />
             </div>
-            <DragDropFile terria={props.terria} viewState={props.viewState} />
-            <DragDropNotification viewState={props.viewState} />
-            {showStoryPanel && (
-              <StoryPanel terria={terria} viewState={props.viewState} />
-            )}
+            <DragDropFile />
+            <DragDropNotification />
+            {showStoryPanel && <StoryPanel />}
           </div>
           {props.terria.configParameters.storyEnabled && showStoryBuilder && (
             <StoryBuilder
               isVisible={showStoryBuilder}
-              terria={terria}
-              viewState={props.viewState}
               animationDuration={animationDuration}
             />
           )}
           {props.viewState.showHelpMenu &&
-            props.viewState.topElement === "HelpPanel" && (
-              <HelpPanel terria={terria} viewState={props.viewState} />
-            )}
-          <Disclaimer viewState={props.viewState} />
+            props.viewState.topElement === "HelpPanel" && <HelpPanel />}
+          <Disclaimer />
         </div>
         {props.viewState.printWindow && (
           <PrintView
             window={props.viewState.printWindow}
-            terria={terria}
-            viewState={props.viewState}
             closeCallback={() => props.viewState.setPrintWindow(null)}
           />
         )}
-      </ThemeProvider>
+      </ContextProviders>
     );
   }
 );

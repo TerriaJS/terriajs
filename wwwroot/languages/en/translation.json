@@ -209,7 +209,8 @@
     "downloadMap": "Download map (png)",
     "printViewButton": "Show Print View",
     "btnAdvanced": "Advanced options",
-    "embedTitle": "To embed, copy this code to embed this map into an HTML page:",
+    "embedTitle": "Embed map",
+    "embedDescription": "To embed, copy this code to embed this map into an HTML page:",
     "shortenUsingService": "Shorten the share URL using a web service",
     "btnCatalogShareText": "Share",
     "btnStoryShareText": "Share",
@@ -439,10 +440,10 @@
     "searchPlaceholderWhole": "Search whole catalogue",
     "searchPlaceholder": "Search the catalogue",
     "localAdd": "Add local file",
-    "localFileType": "<0>Step 1:</0> Select file type (optional)",
+    "localFileType": "<0>Step 1:</0> Select file type",
     "localFile": "<0>Step 2:</0> Select file",
     "webAdd": "Add web data",
-    "webFileType": "<0>Step 1:</0> Select file type (optional)",
+    "webFileType": "<0>Step 1:</0> Select file or web service type",
     "webFile": "<0>Step 2:</0> Enter the URL of the data file or web service",
     "urlInputBtn": "Add",
     "browse": "Browse...",
@@ -696,7 +697,7 @@
       "errorMessage": "Unfortunately Microsoft browsers (including all versions of Internet Explorer and Edge) do not support the data uri functionality needed to download data as a file. To download, copy the following uri into another browser such as $t(browsers.chrome), $t(browsers.firefox), or $t(browsers.safari): {{href}}"
     },
     "dataType": {
-      "auto": "Auto-detect (recommended)",
+      "auto": "File type",
       "wms-group": "Web Map Service (WMS) Server",
       "wmts-group": "Web Map Tile Service (WMTS) Server",
       "wfs-group": "Web Feature Service (WFS) Server",
@@ -714,10 +715,10 @@
       "csv": "CSV",
       "czml": "CZML",
       "gpx": "GPX",
-      "json": "JSON",
+      "json": "Terria Catalog",
       "carto": "Carto",
       "gltf": "glTF",
-      "shp": "Shapefile (zip)",
+      "shp": "Shapefile",
       "socrata-group": "Socrata Server",
       "assimp-local": "3D file converter (zip) (experimental)",
       "assimp-local-description": "**Warning:** 3D file converter is experimental.  \nSee list of [supported formats](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nFiles must be zipped.",
@@ -759,6 +760,12 @@
       "networkRequestTitle": "A network request error occurred",
       "networkRequestMessage": "Data may not be available or display correctly due to data custodian's service outage. Please try reloading the map, accessing the data at a later stage, or selecting a different dataset. <feedbacklink feedback-message='If the problem persists, please submit feedback here.' email-message='If the problem persists, please report to {{email}}'/>",
       "networkRequestMessageDetailed": "This may indicate one of the following:\n\n* The server hostname could not be resolved\n* The server did not respond to the request - or is temporarily unavailable\n* The server denied [Cross-Origin Resource Sharing (CORS)](https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/) access to this URL\n* There is a problem with your internet connection\n\nIf you entered the link manually, please verify that the link is correct."
+    },
+    "unverifiedExternalLink": {
+      "title": "Warning: unverified link",
+      "message": "You are about to open: \n\n`{{url}}`  \n\nThis link is unverified and could be unsafe.",
+      "denyText": "Cancel",
+      "confirmText": "Open in a new tab"
     }
   },
   "map": {

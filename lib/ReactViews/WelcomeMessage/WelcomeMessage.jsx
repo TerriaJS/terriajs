@@ -12,6 +12,7 @@ import Text, { TextSpan } from "../../Styled/Text";
 import { ExplorerWindowElementName } from "../ExplorerWindow";
 import { useKeyPress } from "../Hooks/useKeyPress.js";
 import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
+import { withViewState } from "../StandardUserInterface/ViewStateContext";
 import { TourPortalDisplayName } from "../Tour/TourPortal";
 import FadeIn from "../Transitions/FadeIn/FadeIn";
 import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
@@ -355,4 +356,4 @@ WelcomeMessagePure.propTypes = {
   viewState: PropTypes.object.isRequired
 };
 
-export default withTranslation()(withTheme(WelcomeMessage));
+export default withTranslation()(withViewState(withTheme(WelcomeMessage)));

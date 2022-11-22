@@ -11,8 +11,8 @@ import Text from "../../Styled/Text";
 import { ExplorerWindowElementName } from "../ExplorerWindow";
 import { useRefForTerria } from "../Hooks/useRefForTerria";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
+import { withViewState } from "../StandardUserInterface/ViewStateContext";
 import Workbench from "../Workbench/Workbench";
-import FullScreenButton from "./FullScreenButton";
 
 const BoxHelpfulHints = styled(Box)``;
 
@@ -119,7 +119,6 @@ export const EXPLORE_MAP_DATA_NAME = "ExploreMapDataButton";
 export const SIDE_PANEL_UPLOAD_BUTTON_NAME = "SidePanelUploadButton";
 
 interface SidePanelProps {
-  terria: ViewState["terria"];
   viewState: ViewState;
   refForExploreMapData: React.Ref<HTMLButtonElement>;
   refForUploadData: React.Ref<HTMLButtonElement>;
@@ -127,7 +126,8 @@ interface SidePanelProps {
 }
 
 const SidePanel = observer<React.FC<SidePanelProps>>(
-  ({ terria, viewState, theme, refForExploreMapData, refForUploadData }) => {
+  ({ viewState, theme, refForExploreMapData, refForUploadData }) => {
+    const terria = viewState.terria;
     const { t } = useTranslation();
     const onAddDataClicked: React.MouseEventHandler<HTMLButtonElement> = e => {
       e.stopPropagation();
@@ -226,4 +226,4 @@ const SidePanelWithRefs: React.FC<Omit<
   );
 };
 
-export default withTranslation()(withTheme(SidePanelWithRefs));
+export default withTranslation()(withViewState(withTheme(SidePanelWithRefs)));

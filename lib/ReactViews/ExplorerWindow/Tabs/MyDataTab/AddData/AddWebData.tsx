@@ -137,7 +137,7 @@ export const AddWebData: FC<IAddWebDataProps> = ({
       <Spacing bottom={2} />
       <Text medium textDark>
         <Trans i18nKey="addData.webFileType">
-          <strong>Step 1:</strong> Select file type (optional)
+          <strong>Step 1:</strong> Select file or web service type
         </Trans>
       </Text>
       <Spacing bottom={2} />

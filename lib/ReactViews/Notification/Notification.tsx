@@ -1,13 +1,13 @@
 import { observer } from "mobx-react";
 import React from "react";
-
 import triggerResize from "../../Core/triggerResize";
-import ViewState from "../../ReactViewModels/ViewState";
+import { useViewState } from "../StandardUserInterface/ViewStateContext";
+
 // Avoid type error caused by importing untyped jsx
 const NotificationWindow = require("./NotificationWindow").default;
 
-const Notification = observer((props: { viewState?: ViewState }) => {
-  const viewState = props.viewState;
+const Notification = observer(() => {
+  const viewState = useViewState();
   const notificationState = viewState?.terria.notificationState;
   const notification = notificationState?.currentNotification;
 
