@@ -11,7 +11,6 @@ import arrayContains from "../../Core/arrayContains";
 import { RCChangeUrlParams } from "../../Models/Receipt";
 import { Medium, Small } from "../Generic/Responsive";
 import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
-// import InternetExplorerOverlay from "../InternetExplorerOverlay/InternetExplorerOverlay.jsx";
 import ProgressBar from "../Map/ProgressBar.jsx";
 import RCBuilder from "../RCBuilder/RCBuilder";
 import RCLogin from "../RCLogin/RCLogin";
@@ -20,7 +19,6 @@ import WelcomeMessage from "../WelcomeMessage/WelcomeMessage.jsx";
 import ExplorerWindow from "./../ExplorerWindow/ExplorerWindow.jsx";
 import MapNavigation from "./../Map/MapNavigation.jsx";
 import RCMenuBar from "./../Map/RCMenuBar.jsx";
-//import MenuBar from "./../Map/MenuBar.jsx";
 import MobileHeader from "./../Mobile/MobileHeader.jsx";
 import MapInteractionWindow from "./../Notification/MapInteractionWindow.jsx";
 import Notification from "./../Notification/Notification.jsx";
@@ -126,7 +124,6 @@ const StandardUserInterface = createReactClass({
   },
 
   async componentDidMount() {
-    // this.props.viewState.isHotspotsFiltered = false;
     this._wrapper.addEventListener("dragover", this.dragOverListener, false);
     showStoryPrompt(this.props.viewState, this.props.terria);
     //
@@ -156,7 +153,6 @@ const StandardUserInterface = createReactClass({
 
   render() {
     const { t, viewState, terria } = this.props;
-    const path = this.props.match.path;
 
     const customElements = processCustomElements(
       viewState.useSmallScreenInterface,
@@ -173,8 +169,6 @@ const StandardUserInterface = createReactClass({
       viewState.storyShown &&
       !viewState.explorerPanelIsVisible &&
       !viewState.storyBuilderShown;
-
-    const showHotspotSummary = viewState.hotspotSummaryEnabled;
 
     return (
       <div className={Styles.storyWrapper}>
@@ -217,24 +211,43 @@ const StandardUserInterface = createReactClass({
                       />
                     </section>
 
-                    {showStoryPanel ? (
-                      <div className={Styles.storyPanelWrapper}>
-                        <RCStoryPanel terria={terria} viewState={viewState} />
-                      </div>
-                    ) : null}
+                    <Switch>
+                      <Route exact path="/">
+                        <div className={Styles.tabsContainer}>
+                          <SidePanelSectorTabs
+                            terria={terria}
+                            viewState={viewState}
+                          />
+                        </div>
+                      </Route>
 
-                    {!(showStoryPanel || showHotspotSummary) && (
-                      <div className={Styles.tabsContainer}>
-                        <SidePanelSectorTabs
-                          terria={terria}
-                          viewState={viewState}
-                        />
-                      </div>
-                    )}
+                      <Route exact path={`/sector/:sectorName`}>
+                        <div className={Styles.tabsContainer}>
+                          <SidePanelSectorTabs
+                            terria={terria}
+                            viewState={viewState}
+                          />
+                        </div>
+                      </Route>
+                      
+                      <Route exact path={`/sector/:sectorName/story/:storyID`}>
+                        <div className={Styles.storyPanelWrapper}>
+                          <RCHotspotSummary terria={terria} viewState={viewState} />
+                        </div>
+                      </Route>
 
-                    {showHotspotSummary && (
-                      <RCHotspotSummary viewState={viewState} />
-                    )}
+                      <Route exact path={`/sector/:sectorName/story/:storyID/page/:pageIndex`}>
+                        <div className={Styles.storyPanelWrapper}>
+                          <RCStoryPanel terria={terria} viewState={viewState} />
+                        </div>
+                      </Route>
+
+                      <Route exact path={`/sector/:sectorName/story/:storyID/microstory/:microstoryID`}>
+                        <div className={Styles.storyPanelWrapper}>
+                          <RCStoryPanel terria={terria} viewState={viewState} />
+                        </div>
+                      </Route>
+                    </Switch>
                   </div>
                 </Small>
                 <Medium>
@@ -349,20 +362,6 @@ const StandardUserInterface = createReactClass({
                         <RCLogin viewState={viewState} />
                       </Route>
                     </Switch>
-
-                    {/*{showHotspotSummary && (*/}
-                    {/*  <RCHotspotSummary viewState={viewState} />*/}
-                    {/*)}*/}
-
-                    {/*{!(showStoryPanel || showHotspotSummary) && (*/}
-                    {/*  <SidePanelSectorTabs*/}
-                    {/*    terria={terria}*/}
-                    {/*    viewState={viewState}*/}
-                    {/*  />*/}
-                    {/*)}*/}
-                    {/*{showStoryPanel ? (*/}
-                    {/*  <RCStoryPanel terria={terria} viewState={viewState} />*/}
-                    {/*) : null}*/}
                   </div>
                 </Medium>
               </If>

@@ -1,9 +1,9 @@
 "use strict";
 import React from "react";
-import { Link, Route, Switch, withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import Styles from "./RCHotspotSummary.scss";
-import { RCChangeUrlParams, setSelectedHotspot  } from "../../Models/Receipt";
+import { setSelectedHotspot  } from "../../Models/Receipt";
 import Icon from "../Icon";
 
 class RCHotspotSummary extends React.Component {
@@ -11,8 +11,7 @@ class RCHotspotSummary extends React.Component {
     super(props);
   }
 
-  render() {    
-    const path = this.props.match.path;
+  render() {
     const selectedSector = this.props.match.params.sectorName;
     const selectedStory = this.props.match.params.storyID;
     
