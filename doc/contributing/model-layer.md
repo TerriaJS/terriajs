@@ -151,7 +151,16 @@ Our roughly object-oriented approach makes it difficult for a `MagdaReference` t
 
 So, instead of trying to make a model change type upon load, `ReferenceMixin` creates/references a _separate_ model, called the `target`, that is not resolved until the reference is loaded.
 
-Some rules:
+There are two types of references
+
+- Strong references
+- Weak references
+
+### Strong references
+
+These are a one-to-one mapping from a reference to it's target. The target can only have one reference, and it is aware of it's reference (through the `sourceReference` property).
+
+#### Some rules
 
 - The target model of a `ReferenceMixin` may be obtained from the `target` property, but it may be undefined until the promise returned by `loadReference` resolves. It may also be stale if a relevant trait of the reference has changed but `loadReference` hasn't yet been called or hasn't yet finished.
 - For simplicity, a particular model may _only_ be the target of a single reference. Multiple references cannot point to the same target. The reference that points to a particular model may be obtained from the model's `sourceReference` property.
@@ -160,14 +169,14 @@ Some rules:
 - The `target` model must _not_ be in `terria.models`.
 - The instance referred to by the `target` property should remain stable (the same instance) whenever possible. But if something drastic changes (e.g. we need an instance of a different model class), it's possible for the `target` property to switch to pointing at an entirely new instance. So it's important to only hold on to references to the `ReferenceMixin` model and access the `target` as needed, rather than holding a reference to the `target` directly.
 
-### Weak Reference
+### Weak References
 
-If `weakReference` is `true`, the reference will be treated more like a shortcut.
+These are treated more like a shortcut to a model.  
+Here it is possible to have many-to-one mapping from references to a target. The target **is not aware** of it's references (`sourceReference` is not set).
 
-In this case:
+Weak references are determined by `weakReference = true`.
 
-- `sourceReference` must not be set.
-- If the reference is shared or added to the workbench, the target will be used in instead of `sourceReference`.
+The main use-case for weak references is the [`CatalogIndex`](./../customizing/client-side-config.md#catalogindex) - which provides for the complete tree of the catalog with a subset of model properties (eg `id`, `name`, `memberKnownContainerUniqueIds`...). This can be used to search and locate catalog members which may be nested in multiple references/groups (for example `MagdaReference` -> `WebMapServiceCatalogGroup` -> `WebMapServiceCatalogItem`).
 
 ## AsyncLoader
 
