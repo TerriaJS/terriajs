@@ -22,6 +22,7 @@
 - Fix `MapboxVectorTileCatalogItem` `fillColor` also applying to Line features
 - Add `maximumNativeZoom` to `ProtomapsImageryProvider`
 - Fix image markers (eg `marker = "data:image/png;base64,..."`)
+- Only add groups to `CatalogIndex` if they aren't empty
 - [The next improvement]
 
 #### 8.2.21 - 2022-11-10

@@ -323,8 +323,8 @@ export default async function generateCatalogIndex(
         })
       );
 
-      // Add catalog group to index
-      indexModel(terria, index, member);
+      // Add catalog group to index (if it isn't empty)
+      if (member.memberModels.length > 0) indexModel(terria, index, member);
     } else if (CatalogMemberMixin.isMixedInto(member)) {
       // Add catalog member to index
       indexModel(terria, index, member);
