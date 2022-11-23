@@ -28,12 +28,11 @@ import SidePanel from "./../SidePanel/SidePanel.jsx";
 import RCStoryPanel from "./../Story/RCStoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 import ToolPanel from "./../ToolPanel.jsx";
-
 import Legend from "../Workbench/Controls/Legend";
-
 import MapColumn from "./MapColumn.jsx";
 import processCustomElements from "./processCustomElements";
 import Styles from "./StandardUserInterface.scss";
+import { loadInitialTerriaState } from "../../Models/Receipt";
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);
@@ -121,9 +120,10 @@ const StandardUserInterface = createReactClass({
     }
   },
 
-  async componentDidMount() {
+  componentDidMount() {
     this._wrapper.addEventListener("dragover", this.dragOverListener, false);
     showStoryPrompt(this.props.viewState, this.props.terria);
+    loadInitialTerriaState(this.props.viewState);
   },
 
   componentWillUnmount() {

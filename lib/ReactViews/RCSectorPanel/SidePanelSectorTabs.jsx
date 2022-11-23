@@ -5,6 +5,9 @@ import Icon from "../Icon";
 import Tooltip from "../RCTooltip/RCTooltip";
 import Styles from "./SidePanelSectorTabs.scss";
 import sectors from "../../Data/Sectors.js";
+import { filterHotspots } from "../../Models/Receipt";
+
+
 
 class SidePanelSectorTabs extends React.Component {
   state = {
@@ -14,13 +17,15 @@ class SidePanelSectorTabs extends React.Component {
     selectedId: -1
   };
 
-  componentDidMount() {
-  }
-  componentWillUnmount() {
+  componentDidMount() {}
+  componentWillUnmount() {}
+  componentDidUpdate() {
+    const selectedSector = this.props.match.params.sectorName;
+    filterHotspots(this.props.viewState, selectedSector, null);
   }
 
   render() {
-    const { sectors } = this.state;       
+    const { sectors } = this.state;
     const selectedSector = this.props.match.params.sectorName;
 
     const selectedId = sectors.findIndex(
