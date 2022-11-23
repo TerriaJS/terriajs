@@ -316,15 +316,17 @@ export default async function generateCatalogIndex(
         }
       }
 
+      // Add catalog group to index (if it isn't empty)
+      // Note: this needs to happen after recursively loading group members - as after each member is loaded, the reference is removed.
+      // This would result in memberModels being empty!
+      if (member.memberModels.length > 0) indexModel(terria, index, member);
+
       // Recursively load group members
       await Promise.all(
         shuffle(member.memberModels).map((child) => {
           return loadAndIndexMember(terria, child);
         })
       );
-
-      // Add catalog group to index (if it isn't empty)
-      if (member.memberModels.length > 0) indexModel(terria, index, member);
     } else if (CatalogMemberMixin.isMixedInto(member)) {
       // Add catalog member to index
       indexModel(terria, index, member);
