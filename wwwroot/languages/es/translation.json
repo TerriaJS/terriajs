@@ -807,7 +807,10 @@
       "failedToGet": "No se ha podido obtener la configuración del servidor de {{serverConfigUrl}}. Esto significa que servicios como el proxy, la conversión y el acortamiento de URL pueden no funcionar."
     },
     "unverifiedExternalLink": {
-      "title": "Advertencia: enlace no verificado"
+      "title": "Advertencia: enlace no verificado",
+      "denyText": "Cancelar",
+      "message": "Está a punto de abrir: \n\n`{{url}}`  \n\nEste enlace no está verificado y podría ser inseguro.",
+      "confirmText": "Abrir en una nueva pestaña"
     }
   }
 }
