@@ -40,7 +40,7 @@ export function SearchInDataCatalog({ viewState, handleClick }) {
         <Text textAlignLeft textLight large fullWidth>
           <Trans
             i18nKey="search.searchInDataCatalog"
-            locationSearchText={locationSearchText}
+            values={{ locationSearchText }}
           >
             Search <strong>{locationSearchText}</strong> in the Data Catalogue
           </Trans>

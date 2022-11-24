@@ -35,6 +35,8 @@ yarn install
 yarn add -W moment@2.24.0
 yarn gulp build --baseHref="/${SAFE_BRANCH_NAME}/"
 
+pwd
+
 yarn "--terriajs-map:docker_name=terriajs-ci" docker-build-ci -- --tag "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME"
 gcloud auth configure-docker asia.gcr.io --quiet
 docker push "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME"

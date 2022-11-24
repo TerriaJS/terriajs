@@ -13,6 +13,7 @@ import TableColumnTraits, {
   THIS_COLUMN_EXPRESSION_TOKEN
 } from "../Traits/TraitsClasses/TableColumnTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
+import flatten from "../Core/flatten";
 const naturalSort = require("javascript-natural-sort");
 naturalSort.insensitive = true;
 
@@ -694,28 +695,23 @@ export default class TableColumn {
   @computed
   get regionType(): RegionProvider | undefined {
     let regionProvider: RegionProvider | undefined;
-    const regions = this.tableModel.regionProviderList;
-    if (regions === undefined) {
+    const regionProviderLists = this.tableModel.regionProviderLists ?? [];
+    if (regionProviderLists.length === 0) {
       return undefined;
     }
 
     const regionType = this.traits.regionType;
     if (regionType !== undefined) {
       // Explicit region type specified, we just need to resolve it.
-      regionProvider = regions.getRegionProvider(regionType);
+      // Return first match in regionProviderLists
+      regionProvider = regionProviderLists
+        .map(list => list.getRegionProvider(regionType))
+        .find(isDefined);
     }
 
     if (!isDefined(regionProvider)) {
-      // No region type specified, so match the column name against the region
-      // aliases.
-      const details = regions.getRegionDetails(
-        [this.name],
-        undefined,
-        undefined
-      );
-      if (details.length > 0) {
-        regionProvider = details[0].regionProvider;
-      }
+      // No region type specified, so match the column name against the region aliases.
+      regionProvider = this.tableModel.matchRegionProvider(this.name);
     }
 
     // Load region IDs for region type

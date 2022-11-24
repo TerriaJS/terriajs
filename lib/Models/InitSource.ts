@@ -94,33 +94,34 @@ export interface InitSourceData {
 /**
  * An absolute or relative URL.
  */
-interface InitSourceFromUrl {
+interface InitSourceFromUrl extends InitSourceBase {
   initUrl: string;
 }
 
-interface InitSourceFromData {
+export interface InitSourceFromData extends InitSourceBase {
   data: InitSourceData;
 }
 
-interface InitSourceFromDataPromise {
+interface InitSourceFromDataPromise extends InitSourceBase {
   data: Promise<Result<InitSourceFromData | undefined>>;
 }
 
-interface InitSourceFromOptions {
+interface InitSourceFromOptions extends InitSourceBase {
   options: InitSource[];
 }
 
-type InitSource = {
+interface InitSourceBase {
   /** Name is only used for debugging purposes */
   name?: string;
   /** Severity to use for errors caught while loading/applying this initSource */
   errorSeverity?: TerriaErrorSeverity;
-} & (
+}
+
+export type InitSource =
   | InitSourceFromUrl
   | InitSourceFromData
   | InitSourceFromOptions
-  | InitSourceFromDataPromise
-);
+  | InitSourceFromDataPromise;
 
 export function isInitFromUrl(
   initSource: InitSource
@@ -442,7 +443,9 @@ function generateInitializationUrl(
     return {
       options: initFragmentPaths.map(fragmentPath => {
         return {
-          initUrl: URI.joinPaths(fragmentPath, url + ".json")
+          initUrl: new URI(fragmentPath)
+            .segment(url)
+            .suffix("json")
             .absoluteTo(baseUri)
             .toString()
         };

@@ -119,6 +119,7 @@ describe("CkanCatalogGroup", function() {
           // There are 2 resources on the 2 datasets
           expect(group1.members.length).toBe(9);
 
+          // "Ungrouped" group should be last
           let group2 = <CatalogGroup>ckanServerStratum.groups[2];
           expect(group2.name).toBe(ckanCatalogGroup.ungroupedTitle);
           expect(group2.name).toBe("No group");
@@ -154,15 +155,16 @@ describe("CkanCatalogGroup", function() {
     it("properly creates members", function() {
       expect(ckanCatalogGroup.members).toBeDefined();
       expect(ckanCatalogGroup.members.length).toBe(3);
-      let member0 = <CatalogGroup>ckanCatalogGroup.memberModels[0];
-      expect(member0 instanceof CatalogGroup).toBeTruthy();
-      expect(member0.name).toBe("Blah");
-      let member1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      let member1 = <CatalogGroup>ckanCatalogGroup.memberModels[0];
       expect(member1 instanceof CatalogGroup).toBeTruthy();
       expect(member1.name).toBe("Environment");
-      let member2 = <CatalogGroup>ckanCatalogGroup.memberModels[2];
+      let member2 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
       expect(member2 instanceof CatalogGroup).toBeTruthy();
       expect(member2.name).toBe("Science");
+      // "Ungrouped" group should be last
+      let member3 = <CatalogGroup>ckanCatalogGroup.memberModels[2];
+      expect(member3 instanceof CatalogGroup).toBeTruthy();
+      expect(member3.name).toBe("Blah");
     });
 
     it("Geography group has been filtered from the groups", function() {

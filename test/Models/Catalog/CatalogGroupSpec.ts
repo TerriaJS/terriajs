@@ -8,6 +8,9 @@ import WebMapServiceCatalogItem from "../../../lib/Models/Catalog/Ows/WebMapServ
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import upsertModelFromJson from "../../../lib/Models/Definition/upsertModelFromJson";
 import Terria from "../../../lib/Models/Terria";
+import SplitItemReference from "../../../lib/Models/Catalog/CatalogReferences/SplitItemReference";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import { runInAction } from "mobx";
 
 describe("CatalogGroup", function() {
   let terria: Terria, json: any, catalogGroup: CatalogGroup;
@@ -317,75 +320,109 @@ describe("CatalogGroup", function() {
     ]);
   });
 
-  it("supports itemProperties, itemPropertiesByType and itemPropertiesByIds", async function() {
-    json = {
-      type: "group",
-      id: "grandmama",
-      name: "Test Group",
-      itemProperties: { name: "some other name" },
-      itemPropertiesByType: [
-        { type: "wms", itemProperties: { name: "some WMS name" } },
-        {
-          type: "geojson",
-          itemProperties: { url: "some geojson url (by type)" }
-        }
-      ],
-      itemPropertiesByIds: [
-        { ids: ["wms-1"], itemProperties: { url: "some WMS url" } },
-        {
-          ids: ["geojson-1"],
-          itemProperties: { url: "some geojson url (by ID)" }
-        }
-      ],
-      members: [
-        {
-          type: "group",
-          id: "parent1",
-          name: "Parent 1",
-          members: [
-            { type: "wms", id: "wms-1", name: "wms definition name" },
-            {
-              type: "geojson",
-              id: "geojson-1",
-              name: "geojson definition name"
-            }
-          ]
-        }
-      ]
-    };
-    upsertModelFromJson(
-      CatalogMemberFactory,
-      terria,
-      "",
-      "definition",
-      json,
-      {}
-    ).throwIfUndefined();
+  describe("itemProperties, itemPropertiesByType and itemPropertiesByIds", () => {
+    beforeEach(() => {
+      json = {
+        type: "group",
+        id: "grandmama",
+        name: "Test Group",
+        itemProperties: { name: "some other name" },
+        itemPropertiesByType: [
+          { type: "wms", itemProperties: { name: "some WMS name" } },
+          {
+            type: "geojson",
+            itemProperties: { url: "some geojson url (by type)" }
+          }
+        ],
+        itemPropertiesByIds: [
+          { ids: ["wms-1"], itemProperties: { url: "some WMS url" } },
+          {
+            ids: ["geojson-1"],
+            itemProperties: { url: "some geojson url (by ID)" }
+          }
+        ],
+        members: [
+          {
+            type: "group",
+            id: "parent1",
+            name: "Parent 1",
+            members: [
+              { type: "wms", id: "wms-1", name: "wms definition name" },
+              {
+                type: "geojson",
+                id: "geojson-1",
+                name: "geojson definition name"
+              }
+            ]
+          }
+        ]
+      };
+      upsertModelFromJson(
+        CatalogMemberFactory,
+        terria,
+        "",
+        "definition",
+        json,
+        {}
+      ).throwIfUndefined();
+    });
 
-    const item = <CatalogGroup>terria.getModelById(CatalogGroup, "grandmama");
+    it("correctly applies traits", async function() {
+      const item = <CatalogGroup>terria.getModelById(CatalogGroup, "grandmama");
 
-    await item.loadMembers();
+      await item.loadMembers();
 
-    const parent1 = <CatalogGroup>terria.getModelById(CatalogGroup, "parent1");
+      const parent1 = <CatalogGroup>(
+        terria.getModelById(CatalogGroup, "parent1")
+      );
 
-    expect(parent1).toBeDefined();
-    expect(parent1.itemProperties).toEqual({ name: "some other name" });
-    expect(parent1.name).toBe("Parent 1");
+      expect(parent1).toBeDefined();
+      expect(parent1.itemProperties).toEqual({ name: "some other name" });
+      expect(parent1.name).toBe("Parent 1");
 
-    await parent1.loadMembers();
+      await parent1.loadMembers();
 
-    const geojsonItem = <GeoJsonCatalogItem>(
-      terria.getModelById(GeoJsonCatalogItem, "geojson-1")
-    );
+      const geojsonItem = <GeoJsonCatalogItem>(
+        terria.getModelById(GeoJsonCatalogItem, "geojson-1")
+      );
 
-    expect(geojsonItem.name).toBe("some other name");
-    expect(geojsonItem.url).toBe("some geojson url (by ID)");
+      expect(geojsonItem.name).toBe("some other name");
+      expect(geojsonItem.url).toBe("some geojson url (by ID)");
 
-    const wmsItem = <WebMapServiceCatalogItem>(
-      terria.getModelById(WebMapServiceCatalogItem, "wms-1")
-    );
+      const wmsItem = <WebMapServiceCatalogItem>(
+        terria.getModelById(WebMapServiceCatalogItem, "wms-1")
+      );
 
-    expect(wmsItem.name).toBe("some WMS name");
-    expect(wmsItem.url).toBe("some WMS url");
+      expect(wmsItem.name).toBe("some WMS name");
+      expect(wmsItem.url).toBe("some WMS url");
+    });
+
+    it("supports splitting items with itemProperties", async function() {
+      const item = <CatalogGroup>terria.getModelById(CatalogGroup, "grandmama");
+
+      await item.loadMembers();
+
+      const parent1 = <CatalogGroup>(
+        terria.getModelById(CatalogGroup, "parent1")
+      );
+
+      await parent1.loadMembers();
+
+      const geojsonItem = <GeoJsonCatalogItem>(
+        terria.getModelById(GeoJsonCatalogItem, "geojson-1")
+      );
+
+      const splitRef = new SplitItemReference(createGuid(), terria);
+      terria.addModel(splitRef);
+      runInAction(() => {
+        splitRef.setTrait(
+          CommonStrata.user,
+          "splitSourceItemId",
+          geojsonItem.uniqueId
+        );
+      });
+      await splitRef.loadReference();
+      expect(splitRef.target instanceof GeoJsonCatalogItem).toBe(true);
+    });
   });
 });

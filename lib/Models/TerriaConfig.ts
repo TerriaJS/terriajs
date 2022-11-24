@@ -9,6 +9,7 @@ import {
   LanguageConfiguration
 } from "./Internationalization";
 import ShareDataService from "./ShareDataService";
+import { StoryVideoSettings } from "./StoryVideoSettings";
 
 export interface TerriaConfig {
   initializationUrls?: string[];
@@ -34,9 +35,13 @@ export interface ConfigParameters {
    */
   catalogIndexUrl?: string;
   /**
-   * URL of the JSON file that defines region mapping for CSV files.
+   * **Deprecated** - please use regionMappingDefinitionsUrls array instead. If this is defined, it will override `regionMappingDefinitionsUrls`
    */
-  regionMappingDefinitionsUrl: string;
+  regionMappingDefinitionsUrl?: string | undefined;
+  /**
+   * URLs of the JSON file that defines region mapping for CSV files. First matching region will be used (in array order)
+   */
+  regionMappingDefinitionsUrls: string[];
   /**
    * URL of Proj4 projection lookup service (part of TerriaJS-Server).
    */
@@ -144,6 +149,10 @@ export interface ConfigParameters {
    * Video to show in welcome message.
    */
   welcomeMessageVideo?: any;
+  /**
+   * Video to show in Story Builder.
+   */
+  storyVideo?: StoryVideoSettings;
   /**
    * True to display in-app guides.
    */
@@ -262,6 +271,12 @@ export interface TerriaOptions {
    * Normally "build/TerriaJS/" in any TerriaMap and "./" in specs
    */
   baseUrl?: string;
+
+  /**
+   * Base url where Cesium static resources can be found.
+   */
+  cesiumBaseUrl?: string;
+
   analytics?: Analytics;
 }
 

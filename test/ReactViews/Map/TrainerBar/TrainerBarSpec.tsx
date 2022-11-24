@@ -1,14 +1,12 @@
-const create: any = require("react-test-renderer").create;
-import React from "react";
 import { runInAction } from "mobx";
-import { ThemeProvider } from "styled-components";
+import React from "react";
 import { act } from "react-dom/test-utils";
 import Terria from "../../../../lib/Models/Terria";
 import ViewState from "../../../../lib/ReactViewModels/ViewState";
 import TrainerBar from "../../../../lib/ReactViews/Map/TrainerBar/TrainerBar";
-import { terriaTheme } from "../../../../lib/ReactViews/StandardUserInterface/StandardTheme";
-import TestHelpContent from "./test-help-content";
 import Box from "../../../../lib/Styled/Box";
+import { createWithContexts } from "../../withContext";
+import TestHelpContent from "./test-help-content";
 
 describe("TrainerBar", function() {
   let terria: Terria;
@@ -30,11 +28,7 @@ describe("TrainerBar", function() {
   describe("with basic props", function() {
     it("mounts without problems", function() {
       act(() => {
-        testRenderer = create(
-          <ThemeProvider theme={terriaTheme}>
-            <TrainerBar terria={terria} viewState={viewState} />
-          </ThemeProvider>
-        );
+        testRenderer = createWithContexts(viewState, <TrainerBar />);
       });
 
       const trainerBarRender = testRenderer.root;
@@ -55,11 +49,7 @@ describe("TrainerBar", function() {
       });
       expect(viewState.trainerBarVisible).toEqual(false);
       act(() => {
-        testRenderer = create(
-          <ThemeProvider theme={terriaTheme}>
-            <TrainerBar terria={terria} viewState={viewState} />
-          </ThemeProvider>
-        );
+        testRenderer = createWithContexts(viewState, <TrainerBar />);
       });
 
       const divs = testRenderer.root.findAllByType("div");
@@ -81,11 +71,7 @@ describe("TrainerBar", function() {
         viewState.setTrainerBarVisible(true);
       });
       act(() => {
-        testRenderer = create(
-          <ThemeProvider theme={terriaTheme}>
-            <TrainerBar terria={terria} viewState={viewState} />
-          </ThemeProvider>
-        );
+        testRenderer = createWithContexts(viewState, <TrainerBar />);
       });
 
       const divs = testRenderer.root.findAllByType("div");
