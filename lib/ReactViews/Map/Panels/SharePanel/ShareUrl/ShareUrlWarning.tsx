@@ -39,9 +39,10 @@ export const ShareUrlWarning: FC<IShareUrlWarningProps> = observer(
   ({ terria, viewState, callback }) => {
     const { t } = useTranslation();
 
-    const unshareableItems = terria.catalog.userAddedDataGroup.memberModels.filter(
-      model => !isShareable(terria)(model.uniqueId || "")
-    );
+    const unshareableItems =
+      terria.catalog.userAddedDataGroup.memberModels.filter(
+        (model) => !isShareable(terria)(model.uniqueId || "")
+      );
 
     if (unshareableItems.length === 0) {
       return null;

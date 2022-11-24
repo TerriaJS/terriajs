@@ -3,11 +3,11 @@ import CatalogIndex from "../../../lib/Models/SearchProviders/CatalogIndex";
 import Terria from "../../../lib/Models/Terria";
 import { applyInitData } from "../../../lib/Models/InitData";
 
-describe("CatalogIndex", function() {
+describe("CatalogIndex", function () {
   let terria: Terria;
   let catalogIndex: CatalogIndex;
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -67,11 +67,11 @@ describe("CatalogIndex", function() {
     await catalogIndex.load();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     jasmine.Ajax.uninstall();
   });
 
-  it("search for items", async function() {
+  it("search for items", async function () {
     const results = await catalogIndex.search("group");
 
     expect(results.length).toBe(2);
@@ -85,7 +85,7 @@ describe("CatalogIndex", function() {
     );
   });
 
-  it("search for group", async function() {
+  it("search for group", async function () {
     const results = await catalogIndex.search("cool");
 
     expect((results[0].catalogItem as CatalogIndexReference).name).toBe(
@@ -93,7 +93,7 @@ describe("CatalogIndex", function() {
     );
   });
 
-  it("load group reference", async function() {
+  it("load group reference", async function () {
     const results = await catalogIndex.search("some random words");
 
     const group = results[0].catalogItem as CatalogIndexReference;
@@ -103,7 +103,7 @@ describe("CatalogIndex", function() {
     expect(group.target?.type).toBe("group");
   });
 
-  it("load nested reference", async function() {
+  it("load nested reference", async function () {
     const results = await catalogIndex.search("nested");
 
     const item = results[0].catalogItem as CatalogIndexReference;
@@ -114,10 +114,10 @@ describe("CatalogIndex", function() {
   });
 });
 
-describe("CatalogIndex - with shareKeys", function() {
+describe("CatalogIndex - with shareKeys", function () {
   let terria: Terria;
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -231,11 +231,11 @@ describe("CatalogIndex - with shareKeys", function() {
     await terria.catalogIndex.load();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     jasmine.Ajax.uninstall();
   });
 
-  it("loads shareKeys", async function() {
+  it("loads shareKeys", async function () {
     expect(terria.catalogIndex!.shareKeysMap.toJSON()).toEqual({
       "test-nested-dynamic-group-sharekey": "test-nested-dynamic-group",
       "test-item-3-sharekey": "test-item-3",
@@ -246,7 +246,7 @@ describe("CatalogIndex - with shareKeys", function() {
     });
   });
 
-  it('can use "deep" shareKeys', async function() {
+  it('can use "deep" shareKeys', async function () {
     expect(
       terria.catalogIndex!.getModelByIdOrShareKey("test-item-3")?.uniqueId
     ).toBe("test-item-3");
@@ -271,7 +271,7 @@ describe("CatalogIndex - with shareKeys", function() {
     });
   });
 
-  it("another one", async function() {
+  it("another one", async function () {
     const model = terria.catalogIndex!.getModelByIdOrShareKey(
       "test-nested-dynamic-group-sharekey/Test item without ID"
     );

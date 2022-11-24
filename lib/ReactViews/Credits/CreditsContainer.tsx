@@ -17,7 +17,7 @@ export const CreditsContainer = styled(Box).attrs(() => ({
   a {
     text-decoration: underline;
     cursor: pointer;
-    color: ${props => props.theme.textLight};
+    color: ${(props) => props.theme.textLight};
     display: flex;
     align-items: center;
   }

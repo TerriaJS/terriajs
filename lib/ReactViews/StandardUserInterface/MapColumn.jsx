@@ -65,7 +65,7 @@ const MapColumn = observer(
                 <div
                   css={`
                     ${this.props.viewState.explorerPanelIsVisible &&
-                      "opacity: 0.3;"}
+                    "opacity: 0.3;"}
                   `}
                 >
                   <MenuBar

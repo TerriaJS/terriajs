@@ -30,7 +30,7 @@ const FeatureInfoDownload = createReactClass({
         download: `${this.props.name}.json`,
         label: "JSON"
       }
-    ].filter(download => !!download.href);
+    ].filter((download) => !!download.href);
   },
 
   render() {

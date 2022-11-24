@@ -10,10 +10,10 @@ import { addInitSourcesFromUrl } from "../Models/InitSource";
  * @param  {Terria} terria The Terria instance to update.
  * @param {Window} window The browser's window DOM object.
  */
-export default function(terria: Terria, window: Window) {
+export default function (terria: Terria, window: Window) {
   window.addEventListener(
     "hashchange",
-    async function() {
+    async function () {
       try {
         await addInitSourcesFromUrl(terria, window.location.toString());
         (await terria.loadInitSources()).throwIfError();

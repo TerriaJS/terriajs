@@ -3,12 +3,12 @@ import { TerriaErrorSeverity } from "../Core/TerriaError";
 import { addInitSourcesFromStartData } from "../Models/InitSource";
 import Terria from "../Models/Terria";
 
-export default function(terria: Terria, window: Window) {
+export default function (terria: Terria, window: Window) {
   var allowOrigin: string | undefined;
 
   window.addEventListener(
     "message",
-    async function(event) {
+    async function (event) {
       var origin = event.origin;
       if (!isDefined(origin) && isDefined((event as any).originalEvent)) {
         // For Chrome, the origin property is in the event.originalEvent object.

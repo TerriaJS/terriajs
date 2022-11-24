@@ -78,13 +78,13 @@ class Chart extends React.Component {
   @computed
   get chartItems() {
     return sortChartItemsByType(this.props.chartItems)
-      .map(chartItem => {
+      .map((chartItem) => {
         return {
           ...chartItem,
           points: chartItem.points.sort((p1, p2) => p1.x - p2.x)
         };
       })
-      .filter(chartItem => chartItem.points.length > 0);
+      .filter((chartItem) => chartItem.points.length > 0);
   }
 
   @computed
@@ -140,17 +140,17 @@ class Chart extends React.Component {
 
   @computed
   get initialScales() {
-    return this.chartItems.map(c => ({
+    return this.chartItems.map((c) => ({
       x: this.initialXScale,
-      y: this.yAxes.find(y => y.units === c.units).scale
+      y: this.yAxes.find((y) => y.units === c.units).scale
     }));
   }
 
   @computed
   get zoomedScales() {
-    return this.chartItems.map(c => ({
+    return this.chartItems.map((c) => ({
       x: this.xScale,
-      y: this.yAxes.find(y => y.units === c.units).scale
+      y: this.yAxes.find((y) => y.units === c.units).scale
     }));
   }
 
@@ -165,7 +165,7 @@ class Chart extends React.Component {
   get pointsNearMouse() {
     if (!this.mouseCoords) return [];
     return this.chartItems
-      .map(chartItem => ({
+      .map((chartItem) => ({
         chartItem,
         point: findNearestPoint(
           chartItem.points,
@@ -204,7 +204,7 @@ class Chart extends React.Component {
     const leftmostYAxis = this.yAxes[0];
     const maxLabelDigits = Math.max(
       0,
-      ...leftmostYAxis.scale.ticks(numTicks).map(n => n.toString().length)
+      ...leftmostYAxis.scale.ticks(numTicks).map((n) => n.toString().length)
     );
     return maxLabelDigits * tickLabelFontSize;
   }
@@ -252,7 +252,7 @@ class Chart extends React.Component {
           [0, 0],
           [Infinity, Infinity]
         ]}
-        onZoom={zoomedScale => this.setZoomedXScale(zoomedScale)}
+        onZoom={(zoomedScale) => this.setZoomedXScale(zoomedScale)}
       >
         <Legends width={this.plotWidth} chartItems={this.chartItems} />
         <div style={{ position: "relative" }}>
@@ -334,7 +334,7 @@ class Plot extends React.Component {
 
   @computed
   get chartRefs() {
-    return this.props.chartItems.map(_ => React.createRef());
+    return this.props.chartItems.map((_) => React.createRef());
   }
 
   componentDidUpdate() {
@@ -363,7 +363,7 @@ class Plot extends React.Component {
           // Find a basis item to stick the points on, if we can't find one, we
           // vertically center the points
           const basisItemIndex = chartItems.findIndex(
-            item =>
+            (item) =>
               (item.type === "line" || item.type === "lineAndPoint") &&
               item.xAxis.scale === "time"
           );
@@ -493,7 +493,7 @@ class Cursor extends React.PureComponent {
 
 function PointsOnMap({ chartItems, terria }) {
   return chartItems.map(
-    chartItem =>
+    (chartItem) =>
       chartItem.pointOnMap && (
         <PointOnMap
           key={`point-on-map-${chartItem.key}`}
@@ -509,10 +509,10 @@ function PointsOnMap({ chartItems, terria }) {
  * Calculates a combined domain of all chartItems.
  */
 function calculateDomain(chartItems) {
-  const xmin = Math.min(...chartItems.map(c => c.domain.x[0]));
-  const xmax = Math.max(...chartItems.map(c => c.domain.x[1]));
-  const ymin = Math.min(...chartItems.map(c => c.domain.y[0]));
-  const ymax = Math.max(...chartItems.map(c => c.domain.y[1]));
+  const xmin = Math.min(...chartItems.map((c) => c.domain.x[0]));
+  const xmax = Math.max(...chartItems.map((c) => c.domain.x[1]));
+  const ymin = Math.min(...chartItems.map((c) => c.domain.y[0]));
+  const ymax = Math.max(...chartItems.map((c) => c.domain.y[1]));
   return {
     x: [xmin, xmax],
     y: [ymin, ymax]
@@ -554,7 +554,7 @@ function findNearestPoint(points, coords, xScale, maxDistancePx) {
   const midPoint = points[mid];
   const rightPoint = points[mid + 1];
 
-  const nearestPoint = minBy([leftPoint, midPoint, rightPoint], p =>
+  const nearestPoint = minBy([leftPoint, midPoint, rightPoint], (p) =>
     p ? Math.abs(distance(coords, p)) : Infinity
   );
 

@@ -6,11 +6,11 @@ import Terria from "../../../lib/Models/Terria";
 import Icon from "../../../lib/Styled/Icon";
 import SimpleCatalogItem from "../../Helpers/SimpleCatalogItem";
 
-describe("SelectableDimensionWorkflow", function() {
+describe("SelectableDimensionWorkflow", function () {
   let viewState: ViewState;
   let terria: Terria;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria();
     viewState = new ViewState({
       terria,
@@ -19,7 +19,7 @@ describe("SelectableDimensionWorkflow", function() {
     });
   });
 
-  it("can run a workflow", function() {
+  it("can run a workflow", function () {
     const item = new SimpleCatalogItem("simple", terria);
     const setSizeWorkflow: SelectableDimensionWorkflow = {
       name: "Workflow name",

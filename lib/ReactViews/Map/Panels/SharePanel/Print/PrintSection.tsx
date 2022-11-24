@@ -28,7 +28,7 @@ export const PrintSection: FC<IPrintSectionProps> = ({ viewState }) => {
     setIsDownloading(true);
     viewState.terria.currentViewer
       .captureScreenshot()
-      .then(dataString => {
+      .then((dataString) => {
         downloadImg(dataString);
       })
       .finally(() => setIsDownloading(false));

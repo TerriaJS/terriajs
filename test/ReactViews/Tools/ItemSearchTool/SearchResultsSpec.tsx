@@ -8,8 +8,8 @@ import SearchResults, {
 } from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchResults";
 import MockSearchableItem from "./MockSearchableItem";
 
-describe("SearchResults", function() {
-  it("shows the results count", async function() {
+describe("SearchResults", function () {
+  it("shows the results count", async function () {
     const { root } = await render({
       item: new MockSearchableItem(undefined, new Terria()),
       results: sampleResults(20)
@@ -35,7 +35,7 @@ async function render(
 }
 
 function sampleResults(count: number): ItemSearchResult[] {
-  return [...Array(count)].map(i => ({
+  return [...Array(count)].map((i) => ({
     id: `building-${i}`,
     idPropertyName: "building-id",
     featureCoordinate: {

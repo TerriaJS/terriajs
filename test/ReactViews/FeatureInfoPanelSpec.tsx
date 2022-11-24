@@ -26,12 +26,12 @@ import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 //     separator = (Intl.NumberFormat().format(1000)[1]);
 // }
 
-describe("FeatureInfoPanel", function() {
+describe("FeatureInfoPanel", function () {
   let terria: Terria;
   // let feature;
   let viewState: ViewState;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -42,7 +42,7 @@ describe("FeatureInfoPanel", function() {
     });
   });
 
-  it("has isVisible class when viewState.featureInfoPanelIsVisible is true", function() {
+  it("has isVisible class when viewState.featureInfoPanelIsVisible is true", function () {
     viewState.featureInfoPanelIsVisible = true;
     const panel = (
       <FeatureInfoPanel terria={terria} viewState={viewState} t={() => {}} />
@@ -51,7 +51,7 @@ describe("FeatureInfoPanel", function() {
     expect(result.props.children.props.className).toContain("is-visible");
   });
 
-  it("displays loader while asychronously loading feature information", function() {
+  it("displays loader while asychronously loading feature information", function () {
     var pickedFeatures = new PickedFeatures();
     pickedFeatures.allFeaturesAvailablePromise = Promise.resolve();
     runInAction(() => {
@@ -64,7 +64,7 @@ describe("FeatureInfoPanel", function() {
     expect(findWithType(result, Loader)).toBeDefined();
   });
 
-  it("does not have isVisible class when viewState.featureInfoPanelIsVisible is false", function() {
+  it("does not have isVisible class when viewState.featureInfoPanelIsVisible is false", function () {
     viewState.featureInfoPanelIsVisible = false;
     const panel = (
       <FeatureInfoPanel terria={terria} viewState={viewState} t={() => {}} />
@@ -96,12 +96,12 @@ describe("FeatureInfoPanel", function() {
   //     expect(sections[0].props.isOpen).toBe(true);
   // });
 
-  describe("determineCatalogItem", function() {
+  describe("determineCatalogItem", function () {
     let simple1: SimpleCatalogItem,
       simple2: SimpleCatalogItem,
       composite: CompositeCatalogItem;
     let feature1: Feature, feature2: Feature;
-    beforeEach(function() {
+    beforeEach(function () {
       feature1 = new Feature({});
       simple1 = new SimpleCatalogItem("simple1", terria);
       feature1._catalogItem = simple1;
@@ -112,12 +112,12 @@ describe("FeatureInfoPanel", function() {
       composite.add(CommonStrata.definition, simple1);
       composite.add(CommonStrata.definition, simple2);
     });
-    it("determines which catalog item a feature belongs to", function() {
+    it("determines which catalog item a feature belongs to", function () {
       terria.workbench.items = [simple1, simple2];
       expect(determineCatalogItem(terria.workbench, feature1)).toBe(simple1);
       expect(determineCatalogItem(terria.workbench, feature2)).toBe(simple2);
     });
-    it("special cases features from composite models", function() {
+    it("special cases features from composite models", function () {
       terria.workbench.items = [composite];
       expect(determineCatalogItem(terria.workbench, feature1)).toBe(simple1);
       expect(determineCatalogItem(terria.workbench, feature2)).toBe(simple2);

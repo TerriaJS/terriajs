@@ -135,7 +135,7 @@ export const applyInitData = action(
       if (isJsonString(initData.settings.baseMapId)) {
         terria.mainViewer.setBaseMap(
           terria.baseMapsModel.baseMapItems.find(
-            item => item.item.uniqueId === initData.settings!.baseMapId
+            (item) => item.item.uniqueId === initData.settings!.baseMapId
           )?.item
         );
       }
@@ -161,7 +161,7 @@ export const applyInitData = action(
     const models = initData.models;
     if (isJsonObject(models, false)) {
       await Promise.all(
-        Object.keys(models).map(async modelId => {
+        Object.keys(models).map(async (modelId) => {
           (
             await loadModelStratum(
               terria,
@@ -183,7 +183,7 @@ export const applyInitData = action(
 
     // Set the new contents of the workbench.
     const newItemsRaw = filterOutUndefined(
-      workbench.map(modelId => {
+      workbench.map((modelId) => {
         if (typeof modelId !== "string") {
           errors.push(
             new TerriaError({
@@ -219,7 +219,7 @@ export const applyInitData = action(
     // For ids that don't correspond to models resolve an id by share keys
     const timelineWithShareKeysResolved = new Set(
       filterOutUndefined(
-        timeline.map(modelId => {
+        timeline.map((modelId) => {
           if (typeof modelId !== "string") {
             errors.push(
               new TerriaError({
@@ -244,13 +244,13 @@ export const applyInitData = action(
     runInAction(
       () =>
         (terria.timelineStack.items = terria.workbench.items
-          .filter(item => {
+          .filter((item) => {
             return (
               item.uniqueId && timelineWithShareKeysResolved.has(item.uniqueId)
             );
             // && TODO: what is a good way to test if an item is of type TimeVarying.
           })
-          .map(item => <TimeVarying>item))
+          .map((item) => <TimeVarying>item))
     );
 
     if (isJsonObject(initData.pickedFeatures)) {
@@ -301,7 +301,7 @@ async function loadModelStratum(
   if (Array.isArray(containerIds)) {
     // Groups that contain terria item must be loaded before terria item.
     await Promise.all(
-      containerIds.map(async containerId => {
+      containerIds.map(async (containerId) => {
         if (typeof containerId !== "string") {
           return;
         }
@@ -370,7 +370,7 @@ async function loadModelStratum(
   ).pushErrorTo(errors);
 
   if (loadedModel && Array.isArray(containerIds)) {
-    containerIds.forEach(containerId => {
+    containerIds.forEach((containerId) => {
       if (
         typeof containerId === "string" &&
         loadedModel.knownContainerUniqueIds.indexOf(containerId) < 0
@@ -441,7 +441,7 @@ async function loadModelStratum(
       // This will set TerriaErrorSeverity to Error if the model which FAILED to load is in the workbench.
       severity: () =>
         terria.workbench.items.find(
-          workbenchItem => workbenchItem.uniqueId === modelId
+          (workbenchItem) => workbenchItem.uniqueId === modelId
         )
           ? TerriaErrorSeverity.Error
           : TerriaErrorSeverity.Warning,
@@ -473,7 +473,7 @@ async function pushAndLoadMapItems(
   } else if (GroupMixin.isMixedInto(model)) {
     (await model.loadMembers()).pushErrorTo(errors);
 
-    model.memberModels.map(async m => {
+    model.memberModels.map(async (m) => {
       await pushAndLoadMapItems(m, newItems, errors);
     });
   } else if (MappableMixin.isMixedInto(model)) {

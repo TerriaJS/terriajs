@@ -85,9 +85,9 @@ export default class ShareDataService {
 
       if (!isJsonObject(shareJson, false)) {
         throw TerriaError.from(
-          `Invalid server response for share ${this.url +
-            "/" +
-            token}\n\`${JSON.stringify(shareJson)}\``
+          `Invalid server response for share ${
+            this.url + "/" + token
+          }\n\`${JSON.stringify(shareJson)}\``
         );
       }
 

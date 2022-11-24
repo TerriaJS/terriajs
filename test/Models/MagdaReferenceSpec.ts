@@ -13,7 +13,7 @@ import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson
 import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson";
 import ModelFactory from "../../lib/Models/Definition/ModelFactory";
 
-describe("MagdaReference", function() {
+describe("MagdaReference", function () {
   const recordGroupWithOneCsv = {
     id: "test-group",
     name: "Test Group",
@@ -37,7 +37,7 @@ describe("MagdaReference", function() {
     }
   };
 
-  it("can dereference to a group", function(done) {
+  it("can dereference to a group", function (done) {
     const terria = new Terria();
 
     const model = new MagdaReference(undefined, terria);
@@ -59,7 +59,7 @@ describe("MagdaReference", function() {
       .catch(done.fail);
   });
 
-  it("dereferenced group contains expected item", function(done) {
+  it("dereferenced group contains expected item", function (done) {
     const terria = new Terria();
 
     const model = new MagdaReference(undefined, terria);
@@ -85,7 +85,7 @@ describe("MagdaReference", function() {
       .catch(done.fail);
   });
 
-  it("definition trait can override traits of dereferenced member", function(done) {
+  it("definition trait can override traits of dereferenced member", function (done) {
     const terria = new Terria();
 
     const model = new MagdaReference(undefined, terria);
@@ -109,7 +109,7 @@ describe("MagdaReference", function() {
       .catch(done.fail);
   });
 
-  it("override trait can override traits of the members of a dereferenced group", function(done) {
+  it("override trait can override traits of the members of a dereferenced group", function (done) {
     const terria = new Terria();
 
     const model = new MagdaReference(undefined, terria);
@@ -140,7 +140,7 @@ describe("MagdaReference", function() {
       .catch(done.fail);
   });
 
-  it("changes to override trait affect members of a dereferenced group", async function(done) {
+  it("changes to override trait affect members of a dereferenced group", async function (done) {
     const terria = new Terria();
 
     const model = new MagdaReference(undefined, terria);
@@ -186,7 +186,7 @@ describe("MagdaReference", function() {
       .catch(done.fail);
   });
 
-  it("changes to Magda record affect members of a dereferenced group", async function(done) {
+  it("changes to Magda record affect members of a dereferenced group", async function (done) {
     const terria = new Terria();
 
     const model = new MagdaReference(undefined, terria);
@@ -232,7 +232,7 @@ describe("MagdaReference", function() {
       .catch(done.fail);
   });
 
-  it("loads valid items and ignores broken items", async function() {
+  it("loads valid items and ignores broken items", async function () {
     const groupWithBrokenItem: any = {
       aspects: {
         group: {
@@ -320,7 +320,7 @@ describe("MagdaReference", function() {
     expect(unknown.target).toBeUndefined();
   });
 
-  it("can add record aspects by override", function(done) {
+  it("can add record aspects by override", function (done) {
     const theMagdaItemId = "a magda item id";
     const theRecordName = "Test Record";
     const theRecordId = "test-record-id";

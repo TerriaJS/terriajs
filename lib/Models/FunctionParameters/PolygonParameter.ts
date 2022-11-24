@@ -10,7 +10,8 @@ export type PolygonCoordinates = LinearRing[];
 
 export default class PolygonParameter
   extends FunctionParameter<PolygonCoordinates>
-  implements GeoJsonFunctionParameter {
+  implements GeoJsonFunctionParameter
+{
   static readonly type = "polygon";
   readonly type = "polygon";
 

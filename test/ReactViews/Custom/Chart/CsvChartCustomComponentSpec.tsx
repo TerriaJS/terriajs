@@ -8,21 +8,21 @@ import {
   ProcessNodeContext
 } from "../../../../lib/ReactViews/Custom/CustomComponent";
 
-describe("CsvChartCustomComponent", function() {
+describe("CsvChartCustomComponent", function () {
   let terria: Terria;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
   });
 
-  describe("setTraitsFromAttrs", function() {
+  describe("setTraitsFromAttrs", function () {
     let component: CsvChartCustomComponent;
     let context: ProcessNodeContext;
     let node: DomElement;
 
-    beforeEach(function() {
+    beforeEach(function () {
       component = new CsvChartCustomComponent();
       context = {
         terria: terria,
@@ -37,7 +37,7 @@ describe("CsvChartCustomComponent", function() {
       };
     });
 
-    it("accepts a list of plain strings columnTitles", async function() {
+    it("accepts a list of plain strings columnTitles", async function () {
       node.attribs = {
         ...node.attribs,
         "column-titles": "Meteor,Speed,Temperature"
@@ -56,7 +56,7 @@ describe("CsvChartCustomComponent", function() {
       }
     });
 
-    it("accepts a list of {name, title} columnTitles", async function() {
+    it("accepts a list of {name, title} columnTitles", async function () {
       node.attribs = {
         ...node.attribs,
         "column-titles": "x:Meteor,y:Speed,z:Temperature"
@@ -73,7 +73,7 @@ describe("CsvChartCustomComponent", function() {
       }
     });
 
-    it("can create a download url from csv text passed as chart body", function() {
+    it("can create a download url from csv text passed as chart body", function () {
       const url = component.constructDownloadUrlFromBody("a,b\n1,2\n3,4");
       expect(url.startsWith("blob:")).toBeTruthy();
     });

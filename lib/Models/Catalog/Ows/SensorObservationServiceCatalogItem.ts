@@ -96,7 +96,7 @@ class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
 
   @computed
   get styles(): StratumFromTraits<TableStyleTraits>[] {
-    return this.catalogItem.procedures.map(p => {
+    return this.catalogItem.procedures.map((p) => {
       return createStratumInstance(TableStyleTraits, {
         id: p.identifier,
         title: p.title,
@@ -114,11 +114,11 @@ class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
   @computed
   get defaultChartStyle() {
     const timeColumn = this.catalogItem.tableColumns.find(
-      column => column.type === TableColumnType.time
+      (column) => column.type === TableColumnType.time
     );
 
     const valueColumn = this.catalogItem.tableColumns.find(
-      column => column.type === TableColumnType.scalar
+      (column) => column.type === TableColumnType.scalar
     );
 
     if (timeColumn && valueColumn) {
@@ -150,7 +150,7 @@ class GetFeatureOfInterestRequest {
   @computed
   get observedProperties() {
     return filterOutUndefined(
-      this.catalogItem.observableProperties.map(p => p.identifier)
+      this.catalogItem.observableProperties.map((p) => p.identifier)
     );
   }
 
@@ -158,7 +158,7 @@ class GetFeatureOfInterestRequest {
   get procedures() {
     if (this.catalogItem.filterByProcedures) {
       return filterOutUndefined(
-        this.catalogItem.procedures.map(p => p.identifier)
+        this.catalogItem.procedures.map((p) => p.identifier)
       );
     }
   }
@@ -371,7 +371,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     const whiteList = runInAction(() => this.stationIdWhitelist);
     if (whiteList) {
       featureMembers = featureMembers.filter(
-        m =>
+        (m) =>
           m.MonitoringPoint?.identifier &&
           whiteList.indexOf(String(m.MonitoringPoint.identifier)) >= 0
       );
@@ -380,7 +380,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     const blackList = runInAction(() => this.stationIdBlacklist);
     if (blackList) {
       featureMembers = featureMembers.filter(
-        m =>
+        (m) =>
           m.MonitoringPoint &&
           blackList.indexOf(String(m.MonitoringPoint.identifier)) < 0
       );
@@ -394,7 +394,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     const typeCols = ["type"];
     const chartCols = ["chart"];
 
-    featureMembers.forEach(member => {
+    featureMembers.forEach((member) => {
       const pointShape = member.MonitoringPoint?.shape?.Point;
       if (!pointShape) {
         throw new DeveloperError(
@@ -462,25 +462,25 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
         if (!points) return;
         if (!Array.isArray(points)) points = [points];
 
-        var measurements = points.map(point => point.MeasurementTVP); // TVP = Time value pairs, I think.
+        var measurements = points.map((point) => point.MeasurementTVP); // TVP = Time value pairs, I think.
         var featureIdentifier =
           observation.featureOfInterest["xlink:href"] || "";
         datesCol.push(
-          ...measurements.map(measurement =>
+          ...measurements.map((measurement) =>
             typeof measurement.time === "object" ? "" : measurement.time
           )
         );
         valuesCol.push(
-          ...measurements.map(measurement =>
+          ...measurements.map((measurement) =>
             typeof measurement.value === "object" ? "" : measurement.value
           )
         );
-        identifiersCol.push(...measurements.map(_ => featureIdentifier));
+        identifiersCol.push(...measurements.map((_) => featureIdentifier));
         proceduresCol.push(
-          ...measurements.map(_ => procedure.identifier || "")
+          ...measurements.map((_) => procedure.identifier || "")
         );
         observedPropertiesCol.push(
-          ...measurements.map(_ => observableProperty.identifier || "")
+          ...measurements.map((_) => observableProperty.identifier || "")
         );
       };
 
@@ -493,8 +493,8 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
         return [];
       }
 
-      const observations = observationData.map(o => o.OM_Observation);
-      observations.forEach(observation => {
+      const observations = observationData.map((o) => o.OM_Observation);
+      observations.forEach((observation) => {
         if (observation) {
           addObservationToColumns(observation);
         }
@@ -545,7 +545,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     return filterOutUndefined([
       // Filter out proceduresSelector - as it duplicates TableMixin.styleDimensions
       ...super.selectableDimensions.filter(
-        dim => dim.id !== this.proceduresSelector?.id
+        (dim) => dim.id !== this.proceduresSelector?.id
       ),
       this.proceduresSelector,
       this.observablesSelector
@@ -581,7 +581,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
       },
       get options() {
         return filterOutUndefined(
-          item.observableProperties.map(p => {
+          item.observableProperties.map((p) => {
             if (p.identifier && p.title) {
               return {
                 id: p.identifier,
@@ -610,13 +610,15 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   @computed
   get selectedObservable() {
     return this.observableProperties.find(
-      p => p.identifier === this.selectedObservableId
+      (p) => p.identifier === this.selectedObservableId
     );
   }
 
   @computed
   get selectedProcedure() {
-    return this.procedures.find(p => p.identifier === this.activeTableStyle.id);
+    return this.procedures.find(
+      (p) => p.identifier === this.activeTableStyle.id
+    );
   }
 }
 

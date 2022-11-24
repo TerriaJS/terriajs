@@ -166,7 +166,7 @@ export function addInitSourcesFromConfig(
   )
     ? config?.initializationUrls
     : [];
-  const initSources: InitSource[] = initializationUrls.map(url => ({
+  const initSources: InitSource[] = initializationUrls.map((url) => ({
     name: `Init URL from config ${url}`,
     errorSeverity: TerriaErrorSeverity.Error,
     ...generateInitializationUrl(
@@ -179,7 +179,7 @@ export function addInitSourcesFromConfig(
   // look for v7 catalogs -> push v7-v8 conversion to initSources
   if (isJsonStringArray(config?.v7initializationUrls)) {
     initSources.push(
-      ...config.v7initializationUrls.map(v7initUrl => ({
+      ...config.v7initializationUrls.map((v7initUrl) => ({
         name: `V7 Init URL from config ${v7initUrl}`,
         errorSeverity: TerriaErrorSeverity.Error,
         data: (async () => {
@@ -192,7 +192,7 @@ export function addInitSourcesFromConfig(
             console.log(
               `WARNING: ${v7initUrl} is a v7 catalog - it has been upgraded to v8\nMessages:\n`
             );
-            convert.messages.forEach(message =>
+            convert.messages.forEach((message) =>
               console.log(`- ${message.path.join(".")}: ${message.message}`)
             );
             return new Result({
@@ -228,7 +228,7 @@ async function interpretHash(
   }
 
   runInAction(() => {
-    Object.keys(hashProperties).forEach(function(property) {
+    Object.keys(hashProperties).forEach(function (property) {
       if (["clean", "hideWelcomeMessage", "start", "share"].includes(property))
         return;
       const propertyValue = hashProperties[property];
@@ -369,10 +369,7 @@ export async function addInitSourcesFromUrl(terria: Terria, url: string) {
     terria,
     hashProperties,
     terria.userProperties,
-    new URI(url)
-      .filename("")
-      .query("")
-      .hash("")
+    new URI(url).filename("").query("").hash("")
   );
 
   if (!terria.appBaseHref.endsWith("/")) {
@@ -441,7 +438,7 @@ function generateInitializationUrl(
 ): InitSource {
   if (url.toLowerCase().substring(url.length - 5) !== ".json") {
     return {
-      options: initFragmentPaths.map(fragmentPath => {
+      options: initFragmentPaths.map((fragmentPath) => {
         return {
           initUrl: new URI(fragmentPath)
             .segment(url)

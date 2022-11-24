@@ -29,7 +29,7 @@ export function isProviderCoords(obj: any): obj is ProviderCoords {
 }
 
 export function isProviderCoordsMap(obj: any): obj is ProviderCoordsMap {
-  return Object.keys(obj).every(url => isProviderCoords(obj[url]));
+  return Object.keys(obj).every((url) => isProviderCoords(obj[url]));
 }
 
 /**
@@ -80,7 +80,7 @@ export function featureBelongsToCatalogItem(
   const imageryProvider = feature.imageryLayer?.imageryProvider;
 
   // Test whether the catalog item has a matching dataSource or an imageryProvider
-  const match = catalogItem.mapItems.some(mapItem => {
+  const match = catalogItem.mapItems.some((mapItem) => {
     if (dataSource && mapItem === dataSource) {
       return true;
     }
@@ -105,18 +105,18 @@ export const loadPickedFeaturesFromJson = action(
     if (Array.isArray(pickedFeatures.entities)) {
       // Build index of terria features by a hash of their properties.
       const relevantItems = terria.workbench.items.filter(
-        item =>
+        (item) =>
           hasTraits(item, MappableTraits, "show") &&
           item.show &&
           MappableMixin.isMixedInto(item)
       ) as MappableMixin.Instance[];
 
-      relevantItems.forEach(item => {
+      relevantItems.forEach((item) => {
         const entities: Entity[] = item.mapItems
           .filter(isDataSource)
           .reduce((arr: Entity[], ds) => arr.concat(ds.entities.values), []);
 
-        entities.forEach(entity => {
+        entities.forEach((entity) => {
           const hash = hashEntity(entity, terria.timelineClock);
           const feature = Feature.fromEntityCollectionOrEntity(entity);
           featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
@@ -126,10 +126,10 @@ export const loadPickedFeaturesFromJson = action(
       // Go through the features we've got from terria match them up to the id/name info we got from the
       // share link, filtering out any without a match.
       vectorFeatures = filterOutUndefined(
-        pickedFeatures.entities.map(e => {
+        pickedFeatures.entities.map((e) => {
           if (isJsonObject(e) && typeof e.hash === "number") {
             const features = featureIndex[e.hash] || [];
-            const match = features.find(f => f.name === e.name);
+            const match = features.find((f) => f.name === e.name);
             return match;
           }
         })
@@ -173,7 +173,7 @@ export const loadPickedFeaturesFromJson = action(
         typeof current.name === "string"
       ) {
         const selectedFeature = (featureIndex[current.hash] || []).find(
-          feature => feature.name === current.name
+          (feature) => feature.name === current.name
         );
         if (selectedFeature) {
           terria.selectedFeature = selectedFeature as Feature;

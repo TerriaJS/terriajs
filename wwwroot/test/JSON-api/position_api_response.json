@@ -1,17 +1,17 @@
 [
-    {
-        "id": 1,
-        "latitude": -37.25,
-        "longitude": 145.25
-    },
-    {
-        "id": 2,
-        "latitude": -37,
-        "longitude": 145.5
-    },
-    {
-        "id": 3,
-        "latitude": -37.1,
-        "longitude": 145.7
-    }
+  {
+    "id": 1,
+    "latitude": -37.25,
+    "longitude": 145.25
+  },
+  {
+    "id": 2,
+    "latitude": -37,
+    "longitude": 145.5
+  },
+  {
+    "id": 3,
+    "latitude": -37.1,
+    "longitude": 145.7
+  }
 ]

@@ -1,8 +1,8 @@
 import icons from "./iconset-all_maki_icons.json";
 
-export const allIcons = Object.keys(
-  icons.iconGroups[0].svgs as any
-).map((iconId: string) => iconId.replace(".svg", ""));
+export const allIcons = Object.keys(icons.iconGroups[0].svgs as any).map(
+  (iconId: string) => iconId.replace(".svg", "")
+);
 
 export function isMakiIcon(id: string | undefined) {
   if (!id) return;

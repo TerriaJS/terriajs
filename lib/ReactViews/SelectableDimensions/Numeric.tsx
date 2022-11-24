@@ -18,7 +18,7 @@ export const SelectableDimensionNumeric: React.FC<{
       value={dim.value}
       min={dim.min}
       max={dim.max}
-      onChange={evt => {
+      onChange={(evt) => {
         runInAction(() =>
           dim.setDimensionValue(CommonStrata.user, parseFloat(evt.target.value))
         );

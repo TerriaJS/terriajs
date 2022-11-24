@@ -125,9 +125,9 @@ export default class Terria {
     computed(() =>
       filterOutUndefined(
         this.overlays.items
-          .map(item => (MappableMixin.isMixedInto(item) ? item : undefined))
+          .map((item) => (MappableMixin.isMixedInto(item) ? item : undefined))
           .concat(
-            this.workbench.items.map(item =>
+            this.workbench.items.map((item) =>
               MappableMixin.isMixedInto(item) ? item : undefined
             )
           )
@@ -255,7 +255,7 @@ export default class Terria {
   get baseMapContrastColor() {
     return (
       this.baseMapsModel.baseMapItems.find(
-        basemap =>
+        (basemap) =>
           isDefined(basemap.item?.uniqueId) &&
           basemap.item?.uniqueId === this.mainViewer.baseMap?.uniqueId
       )?.contrastColor ?? "#ffffff"
@@ -453,7 +453,9 @@ export default class Terria {
     }
 
     this.models.set(model.uniqueId, model);
-    shareKeys?.forEach(shareKey => this.addShareKey(model.uniqueId!, shareKey));
+    shareKeys?.forEach((shareKey) =>
+      this.addShareKey(model.uniqueId!, shareKey)
+    );
   }
 
   /**
@@ -545,10 +547,10 @@ export default class Terria {
    */
   setupErrorServiceProvider(errorService: ErrorServiceOptions) {
     initializeErrorServiceProvider(errorService)
-      .then(errorService => {
+      .then((errorService) => {
         this.errorService = errorService;
       })
-      .catch(e => {
+      .catch((e) => {
         console.error("Failed to initialize error service", e);
       });
   }
@@ -681,7 +683,7 @@ export default class Terria {
     // Init Basemaps
     this.baseMapsModel
       .initializeDefaultBaseMaps()
-      .catchError(error =>
+      .catchError((error) =>
         this.raiseErrorToUser(
           TerriaError.from(error, "Failed to load default basemaps")
         )
@@ -736,7 +738,7 @@ export default class Terria {
     let baseMap = baseMapItems[0];
     const persistedBaseMapId = this.getLocalProperty("basemap");
     const baseMapSearch = baseMapItems.find(
-      baseMapItem => baseMapItem.item?.uniqueId === persistedBaseMapId
+      (baseMapItem) => baseMapItem.item?.uniqueId === persistedBaseMapId
     );
     if (baseMapSearch?.item && MappableMixin.isMixedInto(baseMapSearch.item)) {
       baseMap = baseMapSearch;
@@ -744,11 +746,11 @@ export default class Terria {
       // Try to find basemap using defaultBaseMapId and defaultBaseMapName
       const baseMapSearch =
         baseMapItems.find(
-          baseMapItem =>
+          (baseMapItem) =>
             baseMapItem.item?.uniqueId === this.baseMapsModel.defaultBaseMapId
         ) ??
         baseMapItems.find(
-          baseMapItem =>
+          (baseMapItem) =>
             CatalogMemberMixin.isMixedInto(baseMapItem) &&
             (<any>baseMapItem.item).name ===
               this.baseMapsModel.defaultBaseMapName
@@ -838,7 +840,7 @@ export default class Terria {
     // Load all init sources
     // Converts them to InitSourceFromData
     const loadedInitSources = await Promise.all(
-      this.initSources.map(async initSource => {
+      this.initSources.map(async (initSource) => {
         try {
           return {
             name: initSource.name,

@@ -19,7 +19,7 @@ export interface SearchResultsProps {
 
 type ResultClickHandler = (result: ItemSearchResult) => void;
 
-const SearchResults: React.FC<SearchResultsProps> = props => {
+const SearchResults: React.FC<SearchResultsProps> = (props) => {
   const { item, results } = props;
   const [currentMapEffect, setCurrentMapEffect] = useState<MapEffect>({
     is: "highlightAll"
@@ -101,12 +101,12 @@ type ResultProps = {
   style: any;
 };
 
-export const Result: React.FC<ResultProps> = observer(props => {
+export const Result: React.FC<ResultProps> = observer((props) => {
   const { result, template, isEven, isSelected, style } = props;
   const content = template
     ? parseCustomMarkdownToReact(Mustache.render(template, result.properties))
     : result.id;
-  const onClick: React.MouseEventHandler<HTMLAnchorElement> = e => {
+  const onClick: React.MouseEventHandler<HTMLAnchorElement> = (e) => {
     try {
       props.onClick(result);
     } finally {
@@ -131,7 +131,7 @@ const ClickableItem = styled.a<{ isEven: boolean; isSelected: boolean }>`
   box-sizing: border-box;
   padding: 5px 10px;
   cursor: pointer;
-  ${p =>
+  ${(p) =>
     `background-color: ${
       p.isSelected
         ? p.theme.toolPrimaryColor
@@ -142,13 +142,13 @@ const ClickableItem = styled.a<{ isEven: boolean; isSelected: boolean }>`
 `;
 
 const List = styled.div<{ height: string }>`
-  ${p => `height: ${p.height}`};
+  ${(p) => `height: ${p.height}`};
   width: 100%;
   overflow: auto;
 `;
 
 const ListInner = styled.div<{ height: string }>`
-  ${p => `height: ${p.height}`};
+  ${(p) => `height: ${p.height}`};
   width: 100%;
   position: relative;
 `;
@@ -192,7 +192,7 @@ const ActionMenu = styled.div`
   display: flex;
   justify-content: flex-end;
   padding: 0.5em;
-  background-color: ${p => p.theme.charcoalGrey};
+  background-color: ${(p) => p.theme.charcoalGrey};
 
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;

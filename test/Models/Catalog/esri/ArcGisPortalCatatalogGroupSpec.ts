@@ -22,12 +22,12 @@ interface ExtendedLoadWithXhr {
 
 const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
 
-describe("ArcGisPortalCatalogGroup", function() {
+describe("ArcGisPortalCatalogGroup", function () {
   let terria: Terria;
   let portalCatalogGroup: ArcGisPortalCatalogGroup;
   let portalServerStratum: ArcGisPortalStratum;
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -39,7 +39,7 @@ describe("ArcGisPortalCatalogGroup", function() {
     );
     const realLoadWithXhr = loadWithXhr.load;
     // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
-    spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
+    spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
       if (
         args[0].indexOf(
           "rest/content/groups/2dfa6cfea7774d9585700059e1fc8219"
@@ -62,22 +62,22 @@ describe("ArcGisPortalCatalogGroup", function() {
     });
   });
 
-  it("has a type and typeName", function() {
+  it("has a type and typeName", function () {
     expect(portalCatalogGroup.type).toBe("arcgis-portal-group");
     expect(portalCatalogGroup.typeName).toBe(
       i18next.t("models.arcgisPortal.nameGroup")
     );
   });
 
-  describe("default settings - ", function() {
-    beforeEach(async function() {
+  describe("default settings - ", function () {
+    beforeEach(async function () {
       await portalCatalogGroup.loadMembers();
       portalServerStratum = <ArcGisPortalStratum>(
         portalCatalogGroup.strata.get(ArcGisPortalStratum.stratumName)
       );
     });
 
-    it("properly creates members when no grouping", function() {
+    it("properly creates members when no grouping", function () {
       expect(portalCatalogGroup.members).toBeDefined();
       expect(portalCatalogGroup.members.length).toBe(4);
       let member0 = <CatalogGroup>portalCatalogGroup.memberModels[0];
@@ -87,8 +87,8 @@ describe("ArcGisPortalCatalogGroup", function() {
     });
   });
 
-  describe("groupBy portal groups - ", function() {
-    beforeEach(async function() {
+  describe("groupBy portal groups - ", function () {
+    beforeEach(async function () {
       runInAction(() => {
         portalCatalogGroup.setTrait(
           "definition",
@@ -106,12 +106,12 @@ describe("ArcGisPortalCatalogGroup", function() {
       );
     });
 
-    it("Ungrouped group created", function() {
+    it("Ungrouped group created", function () {
       let member3 = <CatalogGroup>portalCatalogGroup.memberModels[2];
       expect(member3.name).toBe("Ungrouped");
     });
 
-    it("Creates members from portal groups", function() {
+    it("Creates members from portal groups", function () {
       expect(portalCatalogGroup.members).toBeDefined();
       expect(portalCatalogGroup.members.length).toBe(3);
       let member1 = <CatalogGroup>portalCatalogGroup.memberModels[0];
@@ -121,14 +121,14 @@ describe("ArcGisPortalCatalogGroup", function() {
       expect(member2.name).toBe("Spatial Services Basemaps");
     });
 
-    it("Blacklist trait filters Spatial Services Gallery group", function() {
+    it("Blacklist trait filters Spatial Services Gallery group", function () {
       if (portalServerStratum.groups && portalServerStratum.filteredGroups) {
         expect(portalServerStratum.groups.length).toBe(4);
         expect(portalServerStratum.filteredGroups.length).toBe(3);
       }
     });
 
-    it("properly creates members within groups", function() {
+    it("properly creates members within groups", function () {
       if (portalServerStratum !== undefined) {
         if (portalServerStratum.groups) {
           let group0 = <CatalogGroup>portalServerStratum.groups[0];
@@ -144,7 +144,7 @@ describe("ArcGisPortalCatalogGroup", function() {
       }
     });
 
-    it("a single item can be placed in two groups", function() {
+    it("a single item can be placed in two groups", function () {
       if (portalServerStratum !== undefined) {
         if (portalServerStratum.groups) {
           let group0 = <CatalogGroup>portalServerStratum.groups[0];
@@ -155,8 +155,8 @@ describe("ArcGisPortalCatalogGroup", function() {
     });
   });
 
-  describe("groupBy portal categories - ", function() {
-    beforeEach(async function() {
+  describe("groupBy portal categories - ", function () {
+    beforeEach(async function () {
       runInAction(() => {
         portalCatalogGroup.setTrait(
           "definition",
@@ -176,19 +176,19 @@ describe("ArcGisPortalCatalogGroup", function() {
       );
     });
 
-    it("ungroupedTitle trait works", function() {
+    it("ungroupedTitle trait works", function () {
       let member2 = <CatalogGroup>portalCatalogGroup.memberModels[1];
       expect(member2.name).toBe("Ungrouped Content");
     });
 
-    it("properly creates groups from categories", function() {
+    it("properly creates groups from categories", function () {
       expect(portalCatalogGroup.members).toBeDefined();
       expect(portalCatalogGroup.members.length).toBe(2);
       let member1 = <CatalogGroup>portalCatalogGroup.memberModels[0];
       expect(member1.name).toBe("Transport");
     });
 
-    it("properly creates members within groups", function() {
+    it("properly creates members within groups", function () {
       if (portalServerStratum !== undefined) {
         if (portalServerStratum.groups) {
           let group0 = <CatalogGroup>portalServerStratum.groups[0];
