@@ -46,12 +46,12 @@ const RCStoryPanel = createReactClass({
       this.changeScenarioListener,
       false
     );
+
+    // Activate the story (page)
+    setSelectedStory(this.props.match.params, this.props.viewState);
   },
 
   componentDidUpdate() {
-    const stories = this.props.terria.stories;
-    const selectedPage = stories[Number(this.props.match.params.pageIndex)];
-    this.props.terria.updateFromStartData(selectedPage.mapScenarios);
   },
 
   slideIn() {
@@ -74,11 +74,6 @@ const RCStoryPanel = createReactClass({
     this.props.viewState.topElement = "StoryPanel";
   },
 
-  /* eslint-disable-next-line camelcase */
-  UNSAFE_componentWillMount() {
-    setSelectedStory(this.props.match.params, this.props.viewState);
-  },
-
   componentWillUnmount() {
     window.removeEventListener("keydown", this.escKeyListener, false);
     clearTimeout(this.slideInTimer);
@@ -94,26 +89,25 @@ const RCStoryPanel = createReactClass({
   },
 
   render() {
-    const selectedSector = this.props.match.params.sectorName;
-    const selectedStory = this.props.match.params.storyID;
-    const selectedPageIndex = Number(this.props.match.params.pageIndex);
-
     const { t, history } = this.props;
-    const stories = this.props.terria.stories || [];
-    
-    const selectedPage = stories[selectedPageIndex];
-    console.log("RCStoryPanel story: ", stories, selectedPageIndex, selectedPage);
+
+    const routedSectorName = this.props.match.params.sectorName;
+    const routedStoryID = this.props.match.params.storyID;
+    const routedPageIndex = Number(this.props.match.params.pageIndex);
+
+    const terriaStories = this.props.terria.stories || [];    
+    const selectedPage = terriaStories[routedPageIndex];
 
     const scenario = this.props.viewState.currentScenario || 0;
 
     // find the first page with the section
     function findFirstPageURLOfSection(section = "") {
-      const pageIndex = stories.findIndex(page => page.section === section);
-      return `/sector/${selectedSector}/story/${selectedStory}/page/${pageIndex}`;
+      const pageIndex = terriaStories.findIndex(page => page.section === section);
+      return `/sector/${routedSectorName}/story/${routedStoryID}/page/${pageIndex}`;
     }
 
-    const prevURL = `/sector/${selectedSector}/story/${selectedStory}/page/${selectedPageIndex == 0 ? 0 : selectedPageIndex-1}`; 
-    const nextURL = `/sector/${selectedSector}/story/${selectedStory}/page/${selectedPageIndex == this.props.terria.stories.length-1 ? this.props.terria.stories.length-1 : selectedPageIndex+1}`;
+    const prevURL = `/sector/${routedSectorName}/story/${routedStoryID}/page/${routedPageIndex == 0 ? 0 : routedPageIndex-1}`; 
+    const nextURL = `/sector/${routedSectorName}/story/${routedStoryID}/page/${routedPageIndex == terriaStories.length-1 ? terriaStories.length-1 : routedPageIndex+1}`;
 
     return (
       <React.Fragment>
@@ -122,7 +116,7 @@ const RCStoryPanel = createReactClass({
           onSwipedRight={() => history.push(prevURL)}
         >
           
-          {selectedPage && (<div className={Styles.RCHotspotSummary}>
+          {selectedPage? (<div className={Styles.RCHotspotSummary}>
             <div className={Styles.titleGroup}>
               {selectedPage.sector && (<Icon
                   glyph={Icon.GLYPHS[selectedPage.sector + "Simple"]}
@@ -230,7 +224,7 @@ const RCStoryPanel = createReactClass({
                     <div className={Styles.left}>
                       <button
                         className={Styles.previousBtn}
-                        disabled={this.props.terria.stories.length <= 1}
+                        disabled={terriaStories.length <= 1}
                         title={t("story.previousBtn")}
                       >
                         <Icon glyph={Icon.GLYPHS.left} />
@@ -238,16 +232,16 @@ const RCStoryPanel = createReactClass({
                     </div>
                   </Link>
                 </Medium>
-                <If condition={this.props.terria.stories.length >= 2}>
+                <If condition={terriaStories.length >= 2}>
                   <div className={Styles.navBtn}>
-                    {stories.map((selectedPage, pageIndex) => (
+                    {terriaStories.map((selectedPage, pageIndex) => (
                       <Tooltip
                         content={selectedPage.pageTitle}
                         direction="top"
                         delay="100"
                         key={selectedPage.id}
                       >
-                        <Link to={`/sector/${selectedSector}/story/${selectedStory}/page/${pageIndex}`}>
+                        <Link to={`/sector/${routedSectorName}/story/${routedStoryID}/page/${pageIndex}`}>
                           <button
                             title={t("story.navBtn", { title: selectedPage.pageTitle })}
                             type="button"
@@ -255,7 +249,7 @@ const RCStoryPanel = createReactClass({
                             <Icon
                               style={{ fill: "currentColor" }}
                               className={`opacity-40 hover:opacity-100 ${pageIndex ===
-                                this.props.viewState.currentStoryId &&
+                                routedStoryID &&
                                 "opacity-100"}
                               ${
                                 selectedPage.section === "SCOPE"
@@ -275,7 +269,7 @@ const RCStoryPanel = createReactClass({
                               }
                               `}
                               glyph={
-                                pageIndex === this.props.viewState.currentStoryId
+                                pageIndex === routedStoryID
                                   ? Icon.GLYPHS.circleFull
                                   : Icon.GLYPHS.circleFull
                               }
@@ -290,7 +284,7 @@ const RCStoryPanel = createReactClass({
                   <Link to={nextURL}>
                     <div className={Styles.right}>                    
                       <button
-                        disabled={this.props.terria.stories.length <= 1}
+                        disabled={terriaStories.length <= 1}
                         className={Styles.nextBtn}
                         title={t("story.nextBtn")}
                       >
@@ -301,7 +295,7 @@ const RCStoryPanel = createReactClass({
                 </Medium>
               </div>
             </div>
-          </div>)}          
+          </div>) : (<div>Loading story page failed.</div>)}
         </Swipeable>
       </React.Fragment>
     );

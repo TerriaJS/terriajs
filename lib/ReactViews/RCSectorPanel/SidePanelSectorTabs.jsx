@@ -5,38 +5,31 @@ import Icon from "../Icon";
 import Tooltip from "../RCTooltip/RCTooltip";
 import Styles from "./SidePanelSectorTabs.scss";
 import sectors from "../../Data/Sectors.js";
-import { filterHotspots } from "../../Models/Receipt";
-
-
-
+import { getSectorHotspotsList, filterHotspots } from "../../Models/Receipt";
 class SidePanelSectorTabs extends React.Component {
+  constructor(props) {
+    super(props);    
+  }
+  
   state = {
-    sector: null,
-    sectors: sectors,
     selectedHotspotsList: null,
     selectedId: -1
   };
 
-  componentDidMount() {}
-  componentWillUnmount() {}
   componentDidUpdate() {
-    const selectedSector = this.props.match.params.sectorName;
-    filterHotspots(this.props.viewState, selectedSector, null);
+    const routedSectorName = this.props.match.params.sectorName;
+
+    if (this.props.location.pathname.includes(`sector`)) {
+      filterHotspots(this.props.viewState, routedSectorName, null);
+    }
   }
 
   render() {
-    const { sectors } = this.state;
-    const selectedSector = this.props.match.params.sectorName;
+    const routedSectorName = this.props.match.params.sectorName;
 
-    const selectedId = sectors.findIndex(
-      sector => sector.id === selectedSector
-    );
-    const sector = sectors.find(
-      sector => sector.id === selectedSector
-    );
-    const selectedHotspotsList =
-      this.props.terria.nowViewing.items.find(item => item.name === sector?.id)
-        ?._dataSource.entities.values || [];
+    const selectedSectorId = sectors.findIndex(sector => sector.id === routedSectorName);
+    const sector = sectors.find(sector => sector.id === routedSectorName);
+    const selectedHotspotsList = getSectorHotspotsList(this.props.terria.catalog, routedSectorName);
 
     return (
       <div className={Styles.sidePanelSectorTabs}>
@@ -52,8 +45,8 @@ class SidePanelSectorTabs extends React.Component {
                 <Tooltip content={sector.title} direction="bottom" delay="100">
                   <Link to={`/sector/${sector.id}`}>
                     <Icon
-                      glyph={selectedId === id ? sector.iconHover : sector.icon}
-                      className={selectedId === id ? Styles.selectedTab : ""}
+                      glyph={selectedSectorId === id ? sector.iconHover : sector.icon}
+                      className={selectedSectorId === id ? Styles.selectedTab : ""}
                     />
                   </Link>
                 </Tooltip>

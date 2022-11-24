@@ -32,18 +32,19 @@ import Legend from "../Workbench/Controls/Legend";
 import MapColumn from "./MapColumn.jsx";
 import processCustomElements from "./processCustomElements";
 import Styles from "./StandardUserInterface.scss";
-import { loadInitialTerriaState } from "../../Models/Receipt";
+import { loadInitialTerriaState, resetTerriaState } from "../../Models/Receipt";
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);
 
-export const showStoryPrompt = (viewState, terria) => {
-  terria.configParameters.showFeaturePrompts &&
-    terria.configParameters.storyEnabled &&
-    terria.stories.length === 0 &&
-    viewState.toggleFeaturePrompt("story", true);
-};
-const animationDuration = 250;
+// export const showStoryPrompt = (viewState, terria) => {
+//   terria.configParameters.showFeaturePrompts &&
+//     terria.configParameters.storyEnabled &&
+//     terria.stories.length === 0 &&
+//     viewState.toggleFeaturePrompt("story", true);
+// };
+// const animationDuration = 250;
+
 const StandardUserInterface = createReactClass({
   displayName: "StandardUserInterface",
   mixins: [ObserveModelMixin],
@@ -122,13 +123,19 @@ const StandardUserInterface = createReactClass({
 
   componentDidMount() {
     this._wrapper.addEventListener("dragover", this.dragOverListener, false);
-    showStoryPrompt(this.props.viewState, this.props.terria);
-    loadInitialTerriaState(this.props.viewState);
+    // showStoryPrompt(this.props.viewState, this.props.terria);
+    loadInitialTerriaState(this.props.viewState);    
   },
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.resizeListener, false);
     document.removeEventListener("dragover", this.dragOverListener, false);
+  },
+
+  componentDidUpdate() {
+    if (this.props.location.pathname === `/`) {
+      resetTerriaState(this.props.viewState);
+    }
   },
 
   acceptDragDropFile() {
@@ -371,13 +378,13 @@ const StandardUserInterface = createReactClass({
                       .viewState.isMapFullScreen
                   })}
                 >
-                  <FullScreenButton
+                  {/* <FullScreenButton
                     terria={terria}
                     viewState={viewState}
                     minified={false}
                     btnText={t("sui.showWorkbench")}
                     animationDuration={animationDuration}
-                  />
+                  /> */}
                 </div>
               </Medium>
             </div>
@@ -448,14 +455,14 @@ const StandardUserInterface = createReactClass({
             t={this.props.t}
           /> */}
         </div>
-        {terria.configParameters.storyEnabled && (
+        {/* {terria.configParameters.storyEnabled && (
           <StoryBuilder
             isVisible={showStoryBuilder}
             terria={terria}
             viewState={viewState}
             animationDuration={animationDuration}
           />
-        )}
+        )} */}
       </div>
     );
   }
