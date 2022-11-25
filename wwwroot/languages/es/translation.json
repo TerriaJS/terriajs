@@ -812,5 +812,24 @@
       "message": "Está a punto de abrir: \n\n`{{url}}`  \n\nEste enlace no está verificado y podría ser inseguro.",
       "confirmText": "Abrir en una nueva pestaña"
     }
+  },
+  "map": {
+    "cesium": {
+      "stoppedRenderingTitle": "El mapa 3D no se renderiza",
+      "stoppedRenderingMessage": "Esto puede haber sido causado por un conjunto de datos que se acaba de añadir al banco de trabajo - por favor, intente eliminarlo. Si esto no resuelve el problema, es posible que tenga que volver a cargar {{appName}}.",
+      "devError": "cesium es requerido",
+      "failedToObtain": "No se pudo obtener la imagen X: {{x}} Y: {{y}} Nivel: {{level}}.",
+      "notWebMercatorTilingScheme": "Este conjunto de datos no puede mostrarse en el mapa 2D porque no es compatible con la proyección Web Mercator (EPSG:3857).",
+      "unusalTilingScheme": "Este conjunto de datos no puede mostrarse en el mapa 2D porque no es compatible con la proyección Web Mercator (EPSG:3857)."
+    },
+    "displayVariablesConcept": {
+      "defaultName": "Visualización de la variable"
+    },
+    "addressGeocoder": {
+      "devError": "bulkConvertAddresses debe implementarse en la clase derivada."
+    },
+    "computeRingWindingOrder": {
+      "devError": "Puntos esperados de tipo {x:número, y:número}"
+    }
   }
 }
