@@ -59,7 +59,8 @@ export interface StoryData {
 }
 export interface ShareInitSourceData {
   version: string;
-  initSources: InitSourceData[];
+  /** Share data initSources can be a mix of initUrls (string) and initData (InitDataSource/JsonObject) */
+  initSources: (InitSourceData | string)[];
 }
 
 export interface InitSourceData {
@@ -299,8 +300,6 @@ export async function addInitSourcesFromStartData(
   errorSeverity?: TerriaErrorSeverity,
   showConversionWarning = true
 ) {
-  const containsStory = (initSource: InitSourceData) =>
-    Array.isArray(initSource.stories) && initSource.stories.length;
   if (isJsonObject(startData, false)) {
     // Convert startData to v8 if necessary
     let startDataV8: ShareInitSourceData | null;
@@ -329,25 +328,50 @@ export async function addInitSourcesFromStartData(
           version: isJsonString(startData.version)
             ? startData.version
             : SHARE_VERSION,
-          initSources: isJsonObjectArray(startData.initSources)
-            ? startData.initSources
+          initSources: Array.isArray(startData.initSources)
+            ? (startData.initSources.filter(
+                (initSource) =>
+                  isJsonString(initSource) || isJsonObject(initSource)
+              ) as (string | JsonObject)[])
             : []
         };
       }
 
       if (startDataV8 !== null && Array.isArray(startDataV8.initSources)) {
+        // Push startData.initSources to terria.initSources array
+        // Note startData.initSources can be an initUrl (string) or initData (InitDataSource/JsonObject)
+        // Terria.initSources are different to startData.initSources
+        // They need to be transformed into appropriate `InitSource`
         runInAction(() => {
           terria.initSources.push(
-            ...startDataV8!.initSources.map((initSource: unknown) => {
-              return {
-                name,
-                data: isJsonObject(initSource, false) ? initSource : {},
-                errorSeverity
-              };
-            })
+            ...startDataV8!.initSources.map((initSource) =>
+              isJsonString(initSource)
+                ? // InitSourceFromUrl if string
+                  {
+                    name,
+                    initUrl: initSource,
+                    errorSeverity
+                  }
+                : // InitSourceFromData if Json Object
+                  {
+                    name,
+                    data: initSource,
+                    errorSeverity
+                  }
+            )
           );
         });
-        if (startDataV8.initSources.some(containsStory)) {
+
+        // If initSources contain story - we disable the welcome message so there aren't too many modals/popups
+        // We only check JSON share initSources - as URLs will be loaded in `forceLoadInitSources`
+        if (
+          startDataV8.initSources.some(
+            (initSource) =>
+              isJsonObject(initSource) &&
+              Array.isArray(initSource.stories) &&
+              initSource.stories.length
+          )
+        ) {
           terria.configParameters.showWelcomeMessage = false;
         }
       }

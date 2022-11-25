@@ -45,7 +45,10 @@ export default observer(function DataCatalogItem({
     ? viewState.userDataPreviewedItem === item
     : viewState.previewedItem === item;
 
-  const setPreviewedItem = () => viewState.viewCatalogMember(item);
+  const setPreviewedItem = () =>
+    viewState
+      .viewCatalogMember(item)
+      .then((result) => result.raiseError(viewState.terria));
 
   const toggleEnable = async (event: React.MouseEvent<HTMLButtonElement>) => {
     const keepCatalogOpen = event.shiftKey || event.ctrlKey;

@@ -11,7 +11,9 @@ import TerriaError from "../../lib/Core/TerriaError";
 import PickedFeatures, {
   loadPickedFeaturesFromJson
 } from "../../lib/Map/PickedFeatures/PickedFeatures";
+import CameraView from "../../lib/Models/CameraView";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
+import MagdaReference from "../../lib/Models/Catalog/CatalogReferences/MagdaReference";
 import UrlReference, {
   UrlToCatalogMemberMapping
 } from "../../lib/Models/Catalog/CatalogReferences/UrlReference";
@@ -22,7 +24,7 @@ import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapService
 import Cesium from "../../lib/Models/Cesium";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import { BaseModel } from "../../lib/Models/Definition/Model";
-import Feature from "../../lib/Models/Feature";
+import TerriaFeature from "../../lib/Models/Feature/Feature";
 import { applyInitData } from "../../lib/Models/InitData";
 import {
   addInitSourcesFromUrl,
@@ -107,37 +109,6 @@ describe("Terria", function () {
           "/some/path/to/terria/build/Cesium/build/Assets/some/image.png"
         )
       ).toBe(true);
-    });
-  });
-
-  describe("terria refresh catalog members from magda", function () {
-    it("refreshes group aspect with given URL", async function () {
-      function verifyGroups(groupAspect: any, groupNum: number) {
-        const ids = groupAspect.members.map((member: any) => member.id);
-        expect(terria.catalog.group.uniqueId).toEqual("/");
-        // ensure user added data co-exists with dereferenced magda members
-        expect(terria.catalog.group.members.length).toEqual(groupNum);
-        expect(terria.catalog.userAddedDataGroup).toBeDefined();
-        ids.forEach((id: string) => {
-          const model = terria.getModelById(MagdaReference, id);
-          if (!model) {
-            throw new Error(`no record id. ID = ${id}`);
-          }
-          expect(terria.modelIds).toContain(id);
-          expect(model.recordId).toEqual(id);
-        });
-      }
-
-      await terria.start({
-        configUrl: "test/Magda/map-config-dereferenced.json",
-        i18nOptions
-      });
-      verifyGroups(mapConfigDereferencedJson.aspects["group"], 3);
-
-      await terria.refreshCatalogMembersFromMagda(
-        "test/Magda/map-config-dereferenced-new.json"
-      );
-      verifyGroups(mapConfigDereferencedNewJson.aspects["group"], 2);
     });
   });
 
@@ -239,7 +210,7 @@ describe("Terria", function () {
         i18nOptions
       });
 
-      await terria.updateApplicationUrl("https://application.url/#hash-init");
+      await addInitSourcesFromUrl(terria, "https://application.url/#hash-init");
 
       expect(terria.initSources.length).toEqual(2);
 
@@ -451,35 +422,6 @@ describe("Terria", function () {
           });
       });
     });
-
-    it("calls `beforeRestoreAppState` before restoring app state from share data", async function () {
-      terria = new Terria({
-        appBaseHref: "/",
-        baseUrl: "./"
-      });
-
-      const restoreAppState = spyOn(
-        terria,
-        "restoreAppState" as any
-      ).and.callThrough();
-
-      const beforeRestoreAppState = jasmine
-        .createSpy("beforeRestoreAppState")
-        // It should also handle errors when calling beforeRestoreAppState
-        .and.returnValue(Promise.reject("some error"));
-
-      expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Cesium);
-      await terria.start({
-        configUrl: "",
-        applicationUrl: {
-          href: "http://test.com/#map=2d"
-        } as Location,
-        beforeRestoreAppState
-      });
-
-      expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
-      expect(beforeRestoreAppState).toHaveBeenCalledBefore(restoreAppState);
-    });
   });
 
   describe("updateApplicationUrl", function () {
@@ -508,11 +450,10 @@ describe("Terria", function () {
         i18nOptions
       });
 
-      await terria.updateApplicationUrl(
+      await addInitSourcesFromUrl(
+        terria,
         "https://application.url/#someInitHash"
       );
-
-      console.log(terria.initSources);
 
       expect(terria.initSources.length).toEqual(2);
 
@@ -532,6 +473,53 @@ describe("Terria", function () {
         "https://application.url/path/to/init/someInitHash.json",
         "https://hostname.com/some/other/path/someInitHash.json"
       ]);
+
+      jasmine.Ajax.uninstall();
+    });
+
+    it("processes #start correctly", async function () {
+      expect(terria.initSources.length).toEqual(0);
+
+      jasmine.Ajax.install();
+      // Fail all requests by default.
+      jasmine.Ajax.stubRequest(/.*/).andError({});
+
+      jasmine.Ajax.stubRequest("configUrl.json").andReturn({
+        responseText: JSON.stringify({})
+      });
+
+      await terria.start({
+        configUrl: `configUrl.json`,
+        i18nOptions
+      });
+
+      // Test #start with two init sources
+      // - one initURL = "http://something/init.json"
+      // - one initData which sets `splitPosition`
+      await addInitSourcesFromUrl(
+        terria,
+        "https://application.url/#start=" +
+          JSON.stringify({
+            version: "8.0.0",
+            initSources: ["http://something/init.json", { splitPosition: 0.3 }]
+          })
+      );
+
+      expect(terria.initSources.length).toEqual(2);
+
+      const urlInitSource = terria.initSources[0];
+      expect(isInitFromUrl(urlInitSource)).toBeTruthy();
+
+      if (!isInitFromUrl(urlInitSource)) throw "Init source is not from url";
+
+      expect(urlInitSource.initUrl).toBe("http://something/init.json");
+
+      const jsonInitSource = terria.initSources[1];
+      expect(isInitFromData(jsonInitSource)).toBeTruthy();
+
+      if (!isInitFromData(jsonInitSource)) throw "Init source is not from data";
+
+      expect(jsonInitSource.data.splitPosition).toBe(0.3);
 
       jasmine.Ajax.uninstall();
     });
@@ -914,7 +902,7 @@ describe("Terria", function () {
       "it removes picked features & selected feature for the model",
       action(function () {
         terria.pickedFeatures = new PickedFeatures();
-        const feature = new Feature({});
+        const feature = new TerriaFeature({});
         terria.selectedFeature = feature;
         feature._catalogItem = model;
         terria.pickedFeatures.features.push(feature);
@@ -963,7 +951,9 @@ describe("Terria", function () {
     describe("when pickedFeatures is not present in initData", function () {
       it("unsets the feature picking state if `canUnsetFeaturePickingState` is `true`", async function () {
         terria.pickedFeatures = new PickedFeatures();
-        terria.selectedFeature = new Entity({ name: "selected" }) as Feature;
+        terria.selectedFeature = new Entity({
+          name: "selected"
+        }) as TerriaFeature;
         await applyInitData(terria, {
           initData: {},
           canUnsetFeaturePickingState: true
@@ -974,7 +964,9 @@ describe("Terria", function () {
 
       it("otherwise, should not unset feature picking state", async function () {
         terria.pickedFeatures = new PickedFeatures();
-        terria.selectedFeature = new Entity({ name: "selected" }) as Feature;
+        terria.selectedFeature = new Entity({
+          name: "selected"
+        }) as TerriaFeature;
         await applyInitData(terria, {
           initData: {}
         });
@@ -1376,10 +1368,8 @@ describe("Terria", function () {
       ds.entities.add(entity);
       testItem.mapItems = [ds];
       await terria.workbench.add(testItem);
-      // It is irrelevant what we pass as argument for `clock` param because
-      // the current implementation of `hashEntity` is broken because as it
-      // expects a `Clock` but actually uses it as a `JulianDate`
-      const entityHash = hashEntity(entity, undefined);
+
+      const entityHash = hashEntity(entity, terria);
       await loadPickedFeaturesFromJson(terria, {
         pickCoords: {
           lat: 84.93,

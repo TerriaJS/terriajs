@@ -1,19 +1,19 @@
-import { observable, runInAction, action } from "mobx";
+import { action, observable, runInAction } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import filterOutUndefined from "../../Core/filterOutUndefined";
+import hashEntity from "../../Core/hashEntity";
+import { isJsonObject, JsonObject } from "../../Core/Json";
+import { isLatLonHeight } from "../../Core/LatLonHeight";
 import MappableMixin, {
   ImageryParts,
   isDataSource
 } from "../../ModelMixins/MappableMixin";
-import { BaseModel } from "../../Models/Definition/Model";
-import Feature from "../../Models/Feature";
-import { JsonObject, isJsonObject } from "../../Core/Json";
-import MappableTraits from "../../Traits/TraitsClasses/MappableTraits";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import hasTraits from "../../Models/Definition/hasTraits";
-import hashEntity from "../../Core/hashEntity";
-import filterOutUndefined from "../../Core/filterOutUndefined";
-import { isLatLonHeight } from "../../Core/LatLonHeight";
+import { BaseModel } from "../../Models/Definition/Model";
+import TerriaFeature from "../../Models/Feature/Feature";
 import Terria from "../../Models/Terria";
+import MappableTraits from "../../Traits/TraitsClasses/MappableTraits";
 
 export type ProviderCoords = { x: number; y: number; level: number };
 export type ProviderCoordsMap = { [url: string]: ProviderCoords };
@@ -56,7 +56,7 @@ export default class PickedFeatures {
    * Gets or sets the array of picked features.  The array is observable and may be updated up until the point that
    * {@see PickedFeatures#allFeaturesAvailablePromise} resolves.
    */
-  @observable features: Feature[] = [];
+  @observable features: TerriaFeature[] = [];
 
   /**
    * Gets or sets a message describing an error that occurred while picking features.
@@ -69,7 +69,7 @@ export default class PickedFeatures {
 }
 
 export function featureBelongsToCatalogItem(
-  feature: Feature,
+  feature: TerriaFeature,
   catalogItem: BaseModel
 ) {
   if (feature._catalogItem === catalogItem) return true;
@@ -99,8 +99,8 @@ export function featureBelongsToCatalogItem(
 
 export const loadPickedFeaturesFromJson = action(
   async (terria: Terria, pickedFeatures: JsonObject): Promise<void> => {
-    let vectorFeatures: Entity[] = [];
-    let featureIndex: Record<number, Entity[] | undefined> = {};
+    let vectorFeatures: TerriaFeature[] = [];
+    let featureIndex: Record<number, TerriaFeature[] | undefined> = {};
 
     if (Array.isArray(pickedFeatures.entities)) {
       // Build index of terria features by a hash of their properties.
@@ -117,8 +117,9 @@ export const loadPickedFeaturesFromJson = action(
           .reduce((arr: Entity[], ds) => arr.concat(ds.entities.values), []);
 
         entities.forEach((entity) => {
-          const hash = hashEntity(entity, terria.timelineClock);
-          const feature = Feature.fromEntityCollectionOrEntity(entity);
+          const feature = TerriaFeature.fromEntityCollectionOrEntity(entity);
+          const hash = hashEntity(feature, terria);
+
           featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
         });
       });
@@ -150,7 +151,7 @@ export const loadPickedFeaturesFromJson = action(
       terria.currentViewer.pickFromLocation(
         pickCoords,
         pickedFeatures.providerCoords,
-        vectorFeatures as Feature[]
+        vectorFeatures as TerriaFeature[]
       );
     }
 
@@ -160,23 +161,21 @@ export const loadPickedFeaturesFromJson = action(
     }
 
     runInAction(() => {
-      terria.pickedFeatures?.features.forEach((entity: Entity) => {
-        const hash = hashEntity(entity, terria.timelineClock);
-        const feature = entity;
+      terria.pickedFeatures?.features.forEach((feature) => {
+        const hash = hashEntity(feature, terria);
         featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
       });
 
+      // Find picked feature by matching feature hash
+      // Also try to match name if defined
       const current = pickedFeatures.current;
-      if (
-        isJsonObject(current) &&
-        typeof current.hash === "number" &&
-        typeof current.name === "string"
-      ) {
-        const selectedFeature = (featureIndex[current.hash] || []).find(
-          (feature) => feature.name === current.name
-        );
+      if (isJsonObject(current) && typeof current.hash === "number") {
+        const selectedFeature =
+          (featureIndex[current.hash] || []).find(
+            (feature) => feature.name === current.name
+          ) ?? featureIndex[current.hash]?.[0];
         if (selectedFeature) {
-          terria.selectedFeature = selectedFeature as Feature;
+          terria.selectedFeature = selectedFeature;
         }
       }
     });

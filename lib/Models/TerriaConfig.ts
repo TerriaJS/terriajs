@@ -8,6 +8,7 @@ import {
   I18nStartOptions,
   LanguageConfiguration
 } from "./Internationalization";
+import { RelatedMap } from "./RelatedMaps";
 import ShareDataService from "./ShareDataService";
 import { StoryVideoSettings } from "./StoryVideoSettings";
 
@@ -222,6 +223,15 @@ export interface ConfigParameters {
    * Options for Google Analytics
    */
   googleAnalyticsOptions?: unknown;
+
+  relatedMaps?: RelatedMap[];
+
+  /**
+   * Optional plugin configuration
+   */
+  plugins?: Record<string, any>;
+
+  aboutButtonHrefUrl?: string | null;
 }
 
 export interface StartOptions {

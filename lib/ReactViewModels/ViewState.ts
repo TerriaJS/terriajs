@@ -367,11 +367,10 @@ export default class ViewState {
     this._disclaimerVisibleSubscription = reaction(
       () => this.disclaimerVisible,
       (disclaimerVisible) => {
-        if (disclaimerVisible) {
-          this.isMapFullScreen = true;
-        } else if (!disclaimerVisible && this.isMapFullScreen) {
-          this.isMapFullScreen = false;
-        }
+        this.isMapFullScreen =
+          disclaimerVisible ||
+          terria.userProperties.get("hideWorkbench") === "1" ||
+          terria.userProperties.get("hideExplorerPanel") === "1";
       }
     );
 

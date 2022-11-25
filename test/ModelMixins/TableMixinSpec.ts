@@ -1,23 +1,36 @@
 import { runInAction } from "mobx";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import LabelStyle from "terriajs-cesium/Source/Scene/LabelStyle";
 import { getMakiIcon } from "../../lib/Map/Icons/Maki/MakiIcons";
 import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
+import TerriaFeature from "../../lib/Models/Feature/Feature";
+import { TerriaFeatureData } from "../../lib/Models/Feature/FeatureData";
 import Terria from "../../lib/Models/Terria";
-import TableColorStyleTraits from "../../lib/Traits/TraitsClasses/TableColorStyleTraits";
+import TableColorStyleTraits from "../../lib/Traits/TraitsClasses/Table/ColorStyleTraits";
+import TableLabelStyleTraits, {
+  EnumLabelSymbolTraits,
+  LabelSymbolTraits
+} from "../../lib/Traits/TraitsClasses/Table/LabelStyleTraits";
 import TableOutlineStyleTraits, {
   BinOutlineSymbolTraits,
   EnumOutlineSymbolTraits
-} from "../../lib/Traits/TraitsClasses/TableOutlineStyleTraits";
+} from "../../lib/Traits/TraitsClasses/Table/OutlineStyleTraits";
 import TablePointStyleTraits, {
   BinPointSymbolTraits,
-  EnumPointSymbolTraits
-} from "../../lib/Traits/TraitsClasses/TablePointStyleTraits";
-import TableStyleTraits from "../../lib/Traits/TraitsClasses/TableStyleTraits";
-import TableTimeStyleTraits from "../../lib/Traits/TraitsClasses/TableTimeStyleTraits";
+  EnumPointSymbolTraits,
+  PointSymbolTraits
+} from "../../lib/Traits/TraitsClasses/Table/PointStyleTraits";
+import TableStyleTraits from "../../lib/Traits/TraitsClasses/Table/StyleTraits";
+import TableTimeStyleTraits from "../../lib/Traits/TraitsClasses/Table/TimeStyleTraits";
+import TableTrailStyleTraits, {
+  BinTrailSymbolTraits,
+  EnumTrailSymbolTraits
+} from "../../lib/Traits/TraitsClasses/Table/TrailStyleTraits";
 
 const LatLonValCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_val.csv");
 const LatLonEnumCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum.csv");
@@ -721,6 +734,19 @@ describe("TableMixin", function () {
         "0.010"
       ]);
     });
+
+    it(" - uses color column title by default", async function () {
+      item.setTrait("definition", "csvString", LegendDecimalPlacesCsv);
+      item.setTrait("definition", "activeStyle", "0dp");
+
+      updateModelFromJson(item, CommonStrata.user, {
+        styles: [{ name: "0dp", title: "Some title" }]
+      });
+
+      await item.loadMapItems();
+
+      expect(item.legends[0].title).toBe("0dp");
+    });
   });
 
   describe("region mapping - LGA with disambig", function () {
@@ -836,6 +862,44 @@ describe("TableMixin", function () {
   });
 
   describe("applies TableStyles to lat/lon features", function () {
+    it("supports image marker style", async function () {
+      item.setTrait(CommonStrata.user, "csvString", LatLonValCsv);
+
+      const image =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAZNJREFUWIXtlrFLQlEUxr/QPGYhTbYEhhgWErjU0twQ9AdEGNnU0CiBL60pMBqC2gSHhgoamhoFt8ZaIugtQhFFY1Hmp0EN+ehZDd3e84ngB493733vnPPjXj7OdaPFcncA2h3AIyLrJBMiskcy01QAEdkgmTavkTTeaQDpbyFdtgKQXFH5/y9SPQKPefII7PuB2Xqe0xGRgE4ONxOgQX4gbppOHpGlmGIOW10wCoRUY2wFKP0jxhJAHMAqgCCAawBRpwEO6o8VWQKYjqK8lYAEA3Bd3UGf0BBxFOBYg6+n+3M8HkJkaQqVXAFexwCM4oZ2F+HNFdRytHczeq017sJyHi8Aeh0DmMniaSeB96EBeC5ucJ4vYlI1hyWA4iX8Y1/tSbm4ZQCJohxegHgDcD3fQtczDtswtgafMe4PIxLZRElPqfUDW13QN9jiZlR5UI+xBPBWA9wmG96fNN+GVZhuRWfzP74rFVcGEJFtkinVIrYBkNQAaKYlj4hkSc6JyCHJZFMBflG1XjRpXM+dBrCsDsAHoPtrwlSQt8wAAAAASUVORK5CYII=";
+
+      item.setTrait(CommonStrata.user, "styles", [
+        createStratumInstance(TableStyleTraits, {
+          id: "test-style",
+          point: createStratumInstance(TablePointStyleTraits, {
+            null: createStratumInstance(PointSymbolTraits, {
+              marker: image,
+              height: 20
+            })
+          })
+        })
+      ]);
+      item.setTrait(CommonStrata.user, "activeStyle", "test-style");
+
+      await item.loadMapItems();
+
+      const mapItem = item.mapItems[0] as CustomDataSource;
+
+      mapItem.entities.values.forEach((feature) => {
+        expect(
+          feature.billboard?.image?.getValue(
+            item.terria.timelineClock.currentTime
+          )
+        ).toBe(image);
+
+        expect(
+          feature.billboard?.height?.getValue(
+            item.terria.timelineClock.currentTime
+          )
+        ).toBe(20);
+      });
+    });
+
     it("bin outline style with points", async function () {
       item.setTrait(CommonStrata.user, "csvString", LatLonValCsv);
 
@@ -1012,6 +1076,7 @@ describe("TableMixin", function () {
           marker: "hospital",
           height: 30,
           width: 15,
+          // Convert to counter-clockwise radians
           rotation: ((360 - 45) / 360) * (2 * Math.PI)
         },
         {
@@ -1271,6 +1336,674 @@ describe("TableMixin", function () {
           }
         ]);
       });
+    });
+
+    it("enum label style with points", async function () {
+      item.setTrait(CommonStrata.user, "csvString", LatLonEnumCsv);
+
+      item.setTrait(CommonStrata.user, "styles", [
+        createStratumInstance(TableStyleTraits, {
+          id: "test-style",
+          color: createStratumInstance(TableColorStyleTraits, {
+            nullColor: "rgb(255,0,255)"
+          }),
+          label: createStratumInstance(TableLabelStyleTraits, {
+            column: "enum",
+            enabled: true,
+            enum: [
+              createStratumInstance(EnumLabelSymbolTraits, {
+                value: "hello",
+                labelColumn: "enum",
+                font: "10px sans-serif",
+                style: "FILL",
+                scale: 1.5,
+                fillColor: "#ff00ff",
+                pixelOffset: [0, 0]
+              }),
+              createStratumInstance(EnumLabelSymbolTraits, {
+                value: "boots",
+                labelColumn: "enum",
+                font: "20px Arial",
+                style: "FILL_AND_OUTLINE",
+                scale: 2,
+                fillColor: "#0000ff",
+                outlineColor: "#00ff00",
+                outlineWidth: 1,
+                pixelOffset: [1, 1]
+              }),
+              createStratumInstance(EnumLabelSymbolTraits, {
+                value: "frogs",
+                labelColumn: "lon",
+                font: "30px serif",
+                style: "OUTLINE",
+                scale: 3,
+                outlineColor: "#ff0000",
+                outlineWidth: 2,
+                pixelOffset: [2, 2]
+              })
+            ]
+          })
+        })
+      ]);
+      item.setTrait(CommonStrata.user, "activeStyle", "test-style");
+
+      await item.loadMapItems();
+
+      const mapItem = item.mapItems[0] as CustomDataSource;
+
+      // Note these are slightly different from EnumLabelSymbolTraits above
+      // This is because some values get converted into cesium formats (eg Cartesian2, LabelStyle etc)
+      const enumStyles = [
+        {
+          value: "hello",
+          text: "hello", // labelColumn: "enum",
+          labelColumn: "enum",
+          font: "10px sans-serif",
+          style: LabelStyle.FILL,
+          scale: 1.5,
+          fillColor: "rgb(255,0,255)",
+          pixelOffset: "(0, 0)" // Cartesian2.toString()
+        },
+        {
+          value: "boots",
+          text: "boots", //labelColumn: "enum",
+          font: "20px Arial",
+          style: LabelStyle.FILL_AND_OUTLINE,
+          scale: 2,
+          fillColor: "rgb(0,0,255)",
+          outlineColor: "rgb(0,255,0)",
+          outlineWidth: 1,
+          pixelOffset: "(1, 1)" // Cartesian2.toString()
+        },
+        {
+          value: "frogs",
+          text: "145", // labelColumn: "lon",
+          font: "30px serif",
+          style: LabelStyle.OUTLINE,
+          scale: 3,
+          outlineColor: "rgb(255,0,0)",
+          outlineWidth: 2,
+          pixelOffset: "(2, 2)" // Cartesian2.toString()
+        }
+      ];
+
+      mapItem.entities.values.forEach((feature) => {
+        // Find corresponding style by checking `enum` property
+        const style = enumStyles.find(
+          (s) =>
+            s.value ===
+            feature.properties?.getValue(item.terria.timelineClock.currentTime)
+              .enum
+        );
+
+        if (!style) throw "Invalid feature styling!";
+
+        const failMessage = (prop: string) =>
+          `Failed to test feature ID: ${feature.id}, ID value: ${style.value}, property: ${prop}`;
+
+        expect(
+          feature.label?.text?.getValue(item.terria.timelineClock.currentTime)
+        ).toBe(style.text, failMessage("text"));
+
+        expect(
+          feature.label?.font?.getValue(item.terria.timelineClock.currentTime)
+        ).toBe(style.font, failMessage("font"));
+
+        expect(
+          feature.label?.style?.getValue(item.terria.timelineClock.currentTime)
+        ).toBe(style.style, failMessage("style"));
+
+        expect(
+          feature.label?.scale?.getValue(item.terria.timelineClock.currentTime)
+        ).toBe(style.scale, failMessage("scale"));
+
+        expect(
+          feature.label?.pixelOffset
+            ?.getValue(item.terria.timelineClock.currentTime)
+            ?.toString()
+        ).toBe(style.pixelOffset, failMessage("pixelOffset"));
+
+        if (style.fillColor)
+          expect(
+            feature.label?.fillColor
+              ?.getValue(item.terria.timelineClock.currentTime)
+              ?.toCssColorString()
+          ).toBe(style.fillColor, failMessage("fillColor"));
+
+        if (style.outlineColor)
+          expect(
+            feature.label?.outlineColor
+              ?.getValue(item.terria.timelineClock.currentTime)
+              ?.toCssColorString()
+          ).toBe(style.outlineColor, failMessage("outlineColor"));
+
+        if (style.outlineWidth)
+          expect(
+            feature.label?.outlineWidth?.getValue(
+              item.terria.timelineClock.currentTime
+            )
+          ).toBe(style.outlineWidth, failMessage("outlineWidth"));
+      });
+    });
+
+    it("enum label style style with time-enabled points - static styling", async function () {
+      item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
+
+      item.setTrait(CommonStrata.user, "styles", [
+        createStratumInstance(TableStyleTraits, {
+          id: "test-style",
+          color: createStratumInstance(TableColorStyleTraits, {
+            nullColor: "rgb(255,0,255)"
+          }),
+          label: createStratumInstance(TableLabelStyleTraits, {
+            column: "id",
+            enabled: true,
+            null: createStratumInstance(LabelSymbolTraits, {
+              labelColumn: "id",
+              font: "40px serif",
+              style: "OUTLINE",
+              scale: 4,
+              outlineColor: "#ffffff",
+              outlineWidth: 3,
+              pixelOffset: [3, 3]
+            }),
+            enum: [
+              createStratumInstance(EnumLabelSymbolTraits, {
+                value: "feature A",
+                labelColumn: "id",
+                font: "10px sans-serif",
+                style: "FILL",
+                scale: 1.5,
+                fillColor: "#ff00ff",
+                pixelOffset: [0, 0]
+              }),
+              createStratumInstance(EnumLabelSymbolTraits, {
+                value: "feature B",
+                labelColumn: "id",
+                font: "20px Arial",
+                style: "FILL_AND_OUTLINE",
+                scale: 2,
+                fillColor: "#0000ff",
+                outlineColor: "#00ff00",
+                outlineWidth: 1,
+                pixelOffset: [1, 1]
+              }),
+              createStratumInstance(EnumLabelSymbolTraits, {
+                value: "feature C",
+                labelColumn: "id",
+                font: "30px serif",
+                style: "OUTLINE",
+                scale: 3,
+                outlineColor: "#ff0000",
+                outlineWidth: 2,
+                pixelOffset: [2, 2]
+              })
+            ]
+          })
+        })
+      ]);
+      item.setTrait(CommonStrata.user, "activeStyle", "test-style");
+
+      await item.loadMapItems();
+
+      const mapItem = item.mapItems[0] as CustomDataSource;
+
+      // Note these are slightly different from EnumLabelSymbolTraits above
+      // This is because some values get converted into cesium formats (eg Cartesian2, LabelStyle etc)
+      const enumStyles = [
+        {
+          value: "feature A",
+          text: "feature A",
+          labelColumn: "enum",
+          font: "10px sans-serif",
+          style: LabelStyle.FILL,
+          scale: 1.5,
+          fillColor: "rgb(255,0,255)",
+          pixelOffset: "(0, 0)" // Cartesian2.toString()
+        },
+        {
+          value: "feature B",
+          text: "feature B",
+          font: "20px Arial",
+          style: LabelStyle.FILL_AND_OUTLINE,
+          scale: 2,
+          fillColor: "rgb(0,0,255)",
+          outlineColor: "rgb(0,255,0)",
+          outlineWidth: 1,
+          pixelOffset: "(1, 1)" // Cartesian2.toString()
+        },
+        {
+          value: "feature C",
+          text: "feature C",
+          font: "30px serif",
+          style: LabelStyle.OUTLINE,
+          scale: 3,
+          outlineColor: "rgb(255,0,0)",
+          outlineWidth: 2,
+          pixelOffset: "(2, 2)" // Cartesian2.toString()
+        }
+      ];
+
+      const nullStyle = {
+        value: undefined,
+        text: "feature D", // null style only applied to "feature D"
+        font: "40px serif",
+        style: LabelStyle.OUTLINE,
+        scale: 4,
+        fillColor: undefined,
+        outlineColor: "rgb(255,255,255)",
+        outlineWidth: 3,
+        pixelOffset: "(3, 3)" // Cartesian2.toString()
+      };
+
+      mapItem.entities.values.forEach((feature) => {
+        // We check all discrete times - but all values are the same for every timestamp
+        item.discreteTimesAsSortedJulianDates?.map((discreteTime) => {
+          // Don't bother checking point features with no position property
+          if (!feature.position?.getValue(discreteTime.time)) return;
+
+          // Find corresponding style by checking `enum` property
+          const featureData = (
+            (feature as TerriaFeature).data as TerriaFeatureData
+          ).timeIntervalCollection;
+
+          if (!featureData)
+            `Failed to find featureData for feature ID: ${feature.id}`;
+
+          // If feature data doesn't contain current discrete time - we can safely continue
+          if (!featureData?.intervals.contains(discreteTime.time)) return;
+
+          const featureIdValue = featureData?.getValue(discreteTime.time)?.id;
+
+          const style =
+            enumStyles.find((s) => s.value === featureIdValue) ?? nullStyle;
+
+          const failMessage = (prop: string) =>
+            `Failed to test feature ID: ${feature.id}, ID value: ${style.value}, time: ${discreteTime.tag}, property: ${prop}`;
+
+          expect(feature.label?.text?.getValue(discreteTime.time)).toBe(
+            style.text,
+            failMessage("text")
+          );
+
+          expect(feature.label?.font?.getValue(discreteTime.time)).toBe(
+            style.font,
+            failMessage("font")
+          );
+
+          expect(feature.label?.style?.getValue(discreteTime.time)).toBe(
+            style.style,
+            failMessage("style")
+          );
+
+          expect(feature.label?.scale?.getValue(discreteTime.time)).toBe(
+            style.scale,
+            failMessage("scale")
+          );
+
+          expect(
+            feature.label?.pixelOffset?.getValue(discreteTime.time)?.toString()
+          ).toBe(style.pixelOffset, failMessage("pixelOffset"));
+
+          if (style.fillColor)
+            expect(
+              feature.label?.fillColor
+                ?.getValue(discreteTime.time)
+                ?.toCssColorString()
+            ).toBe(style.fillColor, failMessage("fillColor"));
+
+          if (style.outlineColor)
+            expect(
+              feature.label?.outlineColor
+                ?.getValue(discreteTime.time)
+                ?.toCssColorString()
+            ).toBe(style.outlineColor, failMessage("outlineColor"));
+
+          if (style.outlineWidth)
+            expect(
+              feature.label?.outlineWidth?.getValue(discreteTime.time)
+            ).toBe(style.outlineWidth, failMessage("outlineWidth"));
+        });
+      });
+    });
+
+    it("enum trail/path style with time-enabled points - static styling", async function () {
+      item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
+
+      const enumStyles = [
+        {
+          value: "feature A",
+          leadTime: 0,
+          trailTime: 10,
+          width: 1,
+          resolution: 40,
+
+          polylineGlow: {
+            color: "rgb(255,0,0)",
+            glowPower: 0.1,
+            taperPower: 0.4
+          }
+        },
+        {
+          value: "feature B",
+          leadTime: 10,
+          trailTime: 20,
+          width: 1,
+          resolution: 30,
+
+          polylineGlow: {
+            color: "rgb(0,255,0)",
+            glowPower: 0.2,
+            taperPower: 0.5
+          }
+        },
+        {
+          value: "feature C",
+          leadTime: 20,
+          trailTime: 60,
+          width: 3,
+          resolution: 30,
+
+          polylineGlow: {
+            color: "rgb(0,0,255)",
+            glowPower: 0.3,
+            taperPower: 0.6
+          }
+        },
+        {
+          value: "feature D",
+          leadTime: 20,
+          trailTime: 60,
+          width: 3,
+          resolution: 30,
+
+          polylineGlow: {
+            color: "rgb(0,0,255)",
+            glowPower: 0.3,
+            taperPower: 0.6
+          }
+        }
+      ];
+
+      item.setTrait(CommonStrata.user, "styles", [
+        createStratumInstance(TableStyleTraits, {
+          id: "test-style",
+          color: createStratumInstance(TableColorStyleTraits, {
+            nullColor: "rgb(255,0,255)"
+          }),
+          trail: createStratumInstance(TableTrailStyleTraits, {
+            column: "id",
+            enabled: true,
+            materialType: "polylineGlow",
+            enum: [
+              createStratumInstance(EnumTrailSymbolTraits, enumStyles[0]),
+              createStratumInstance(EnumTrailSymbolTraits, enumStyles[1]),
+              createStratumInstance(EnumTrailSymbolTraits, enumStyles[2]),
+              createStratumInstance(EnumTrailSymbolTraits, enumStyles[3])
+            ]
+          })
+        })
+      ]);
+      item.setTrait(CommonStrata.user, "activeStyle", "test-style");
+
+      await item.loadMapItems();
+
+      const mapItem = item.mapItems[0] as CustomDataSource;
+
+      mapItem.entities.values.forEach((feature) => {
+        // We check all discrete times - but all values are the same for every timestamp
+        item.discreteTimesAsSortedJulianDates?.map((discreteTime) => {
+          // Don't bother checking point features with no position property
+          if (!feature.position?.getValue(discreteTime.time)) return;
+
+          // Find corresponding style by checking `enum` property
+          const featureData = (
+            (feature as TerriaFeature).data as TerriaFeatureData
+          ).timeIntervalCollection;
+
+          if (!featureData)
+            `Failed to find featureData for feature ID: ${feature.id}`;
+
+          // If feature data doesn't contain current discrete time - we can safely continue
+          if (!featureData?.intervals.contains(discreteTime.time)) return;
+
+          const featureIdValue = featureData?.getValue(discreteTime.time)?.id;
+
+          const style = enumStyles.find((s) => s.value === featureIdValue);
+
+          if (!style)
+            throw `Failed to find style for feature ID: ${feature.id}, value: ${featureIdValue}`;
+
+          const failMessage = (prop: string) =>
+            `Failed to test feature ID: ${feature.id}, ID value: ${style.value}, time: ${discreteTime.tag}, property: ${prop}`;
+
+          expect(feature.path?.leadTime?.getValue(discreteTime.time)).toBe(
+            style.leadTime,
+            failMessage("leadTime")
+          );
+
+          expect(feature.path?.trailTime?.getValue(discreteTime.time)).toBe(
+            style.trailTime,
+            failMessage("trailTime")
+          );
+
+          expect(feature.path?.width?.getValue(discreteTime.time)).toBe(
+            style.width,
+            failMessage("width")
+          );
+
+          expect(feature.path?.resolution?.getValue(discreteTime.time)).toBe(
+            style.resolution,
+            failMessage("resolution")
+          );
+
+          const material = feature.path?.material?.getValue(discreteTime.time);
+
+          if (material) {
+            expect(material.color?.toCssColorString()).toBe(
+              style.polylineGlow.color,
+              failMessage("polylineGlow.color")
+            );
+
+            expect(material.glowPower).toBe(
+              style.polylineGlow.glowPower,
+              failMessage("polylineGlow.glowPower")
+            );
+
+            expect(material.taperPower).toBe(
+              style.polylineGlow.taperPower,
+              failMessage("polylineGlow.taperPower")
+            );
+          }
+        });
+      });
+    });
+
+    it("bin trail/path style with time-enabled points - dynamic styling", async function () {
+      item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
+
+      const binStyles = [
+        {
+          maxValue: 50,
+          leadTime: 0,
+          trailTime: 10,
+          width: 1,
+          resolution: 40,
+
+          polylineGlow: {
+            color: "rgb(255,0,0)",
+            glowPower: 0.1,
+            taperPower: 0.4
+          }
+        },
+        {
+          maxValue: 60,
+          leadTime: 10,
+          trailTime: 20,
+          width: 2,
+          resolution: 30,
+
+          polylineGlow: {
+            color: "rgb(0,255,0)",
+            glowPower: 0.2,
+            taperPower: 0.5
+          }
+        },
+        {
+          maxValue: 70,
+          leadTime: 20,
+          trailTime: 60,
+          width: 3,
+          resolution: 30,
+
+          polylineGlow: {
+            color: "rgb(0,0,255)",
+            glowPower: 0.3,
+            taperPower: 0.6
+          }
+        }
+      ];
+
+      item.setTrait(CommonStrata.user, "styles", [
+        createStratumInstance(TableStyleTraits, {
+          id: "test-style",
+          color: createStratumInstance(TableColorStyleTraits, {
+            nullColor: "rgb(255,0,255)"
+          }),
+          trail: createStratumInstance(TableTrailStyleTraits, {
+            column: "level",
+            enabled: true,
+            materialType: "polylineGlow",
+            bin: [
+              createStratumInstance(BinTrailSymbolTraits, binStyles[0]),
+              createStratumInstance(BinTrailSymbolTraits, binStyles[1]),
+              createStratumInstance(BinTrailSymbolTraits, binStyles[2])
+            ]
+          })
+        })
+      ]);
+      item.setTrait(CommonStrata.user, "activeStyle", "test-style");
+
+      await item.loadMapItems();
+
+      const mapItem = item.mapItems[0] as CustomDataSource;
+
+      // Time = level
+      // 2015-08-01 = 50 (style 0)
+      // 2015-08-02 = 60 (style 1)
+      // 2015-08-04 = 70 (style 2)
+
+      // We also check interpolated level at 2015-08-03
+      // 2015-08-03 = 65 (style 1 into style 2)
+      const interpolatedStyle = {
+        maxValue: 65,
+        leadTime: 15,
+        trailTime: 40,
+        width: 2.5,
+        resolution: 30,
+
+        polylineGlow: {
+          color: "rgb(0,128,128)",
+          glowPower: 0.25,
+          taperPower: 0.55
+        }
+      };
+
+      const times = [
+        JulianDate.fromDate(new Date("2015-08-01")),
+        JulianDate.fromDate(new Date("2015-08-02")),
+
+        JulianDate.fromDate(new Date("2015-08-04")),
+        JulianDate.fromDate(new Date("2015-08-03")) // Note interpolated date is last
+      ];
+
+      mapItem.entities.values.forEach((feature) => {
+        times.forEach((time, timeIndex) => {
+          const featureData = (
+            (feature as TerriaFeature).data as TerriaFeatureData
+          ).timeIntervalCollection;
+
+          if (!featureData)
+            `Failed to find featureData for feature ID: ${feature.id}`;
+
+          const featureIdColumnValue = featureData?.getValue(time)?.id;
+
+          // We only check features with id === "Feature A"
+          // Otherwise the test would be too large
+          if (featureIdColumnValue !== "feature A") return;
+
+          const featureBinColumnValue = parseFloat(
+            featureData?.getValue(time)?.level
+          );
+
+          // First three time indices map to binStyles - the last uses interpolatedStyle
+          const style = binStyles[timeIndex] ?? interpolatedStyle;
+
+          if (!style)
+            throw `Failed to find style for feature ID: ${feature.id}, value: ${featureBinColumnValue}`;
+
+          const failMessage = (prop: string) =>
+            `Failed to test feature ID: ${feature.id}, ID value: ${featureBinColumnValue}, time: ${time}, property: ${prop}`;
+
+          expect(feature.path?.leadTime?.getValue(time)).toBe(
+            style.leadTime,
+            failMessage("leadTime")
+          );
+
+          expect(feature.path?.trailTime?.getValue(time)).toBe(
+            style.trailTime,
+            failMessage("trailTime")
+          );
+
+          expect(feature.path?.width?.getValue(time)).toBe(
+            style.width,
+            failMessage("width")
+          );
+
+          expect(feature.path?.resolution?.getValue(time)).toBe(
+            style.resolution,
+            failMessage("resolution")
+          );
+
+          const material = feature.path?.material?.getValue(time);
+
+          if (material) {
+            expect(material.color?.toCssColorString()).toBe(
+              style.polylineGlow.color,
+              failMessage("polylineGlow.color")
+            );
+
+            expect(material.glowPower).toBe(
+              style.polylineGlow.glowPower,
+              failMessage("polylineGlow.glowPower")
+            );
+
+            expect(material.taperPower).toBe(
+              style.polylineGlow.taperPower,
+              failMessage("polylineGlow.taperPower")
+            );
+          }
+        });
+      });
+    });
+
+    it("doesn't pick hidden style as default activeStyle", async function () {
+      item.setTrait(CommonStrata.user, "csvString", ParkingSensorDataCsv);
+
+      await item.loadMapItems();
+
+      expect(item.activeStyle).toBe("eventid");
+
+      item.setTrait(CommonStrata.user, "styles", [
+        createStratumInstance(TableStyleTraits, {
+          id: "eventid",
+          hidden: true
+        })
+      ]);
+
+      await item.loadMapItems();
+
+      expect(item.activeStyle).toBe("parkflag");
     });
   });
 });

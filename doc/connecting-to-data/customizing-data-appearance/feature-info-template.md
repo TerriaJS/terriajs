@@ -132,15 +132,17 @@ You can replace text by directly using `terria.partialByName` in the template an
 - If there is no matching in the `partials`, the original value will be used.
 - Any unsafe values in the `partials` will be stripped off when being rendered.
 
-  "featureInfoTemplate": {
+```json
+"featureInfoTemplate": {
   "template": "{{Pixel Value}} dwellings in {{#terria.partialByName}}{{feature.data.layerId}}{{/terria.partialByName}} radius.",
   "partials": {
-  "0": "100m",
-  "1": "500m",
-  "2": "1km",
-  "3": "2km"
+    "0": "100m",
+    "1": "500m",
+    "2": "1km",
+    "3": "2km"
   }
-  }
+}
+```
 
 If `{{Pixel Value}}` equals to `150` and `{{feature.data.layerId}}` to `2`, the text `150 dwellings in 1km radius.` will be rendered.
 

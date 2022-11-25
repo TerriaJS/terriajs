@@ -25,7 +25,7 @@ import GeoJsonCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoJ
 import SplitItemReference from "../../../../lib/Models/Catalog/CatalogReferences/SplitItemReference";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
-import Feature from "../../../../lib/Models/Feature";
+import TerriaFeature from "../../../../lib/Models/Feature/Feature";
 import Terria from "../../../../lib/Models/Terria";
 
 describe("GeoJsonCatalogItemSpec", () => {
@@ -728,9 +728,7 @@ describe("GeoJsonCatalogItemSpec", () => {
 
       const polygonSymbol = protomaps.paintRules[0]
         .symbolizer as PolygonSymbolizer;
-      const polygonLineSymbol = protomaps.paintRules[1]
-        .symbolizer as LineSymbolizer;
-      const polylineSymbol = protomaps.paintRules[2]
+      const polylineSymbol = protomaps.paintRules[1]
         .symbolizer as LineSymbolizer;
 
       const testFeature = {
@@ -764,12 +762,23 @@ describe("GeoJsonCatalogItemSpec", () => {
         ).toBe(col);
 
         expect(
-          polygonLineSymbol.color.get(1, {
+          polygonSymbol.stroke.get(1, {
             ...testFeature,
             geomType: GeomType.Polygon,
             props: { _id_: rowId }
           })
         ).toBe(getColor(terria.baseMapContrastColor).toCssHexString());
+
+        expect(
+          polygonSymbol.width.get(1, {
+            ...testFeature,
+            geomType: GeomType.Polygon,
+            props: { _id_: rowId }
+          })
+        ).toBe(
+          geojson.activeTableStyle.outlineStyleMap.traitValues.null.width ??
+            Infinity
+        );
 
         expect(
           polylineSymbol.color.get(1, {
@@ -1198,7 +1207,7 @@ describe("GeoJsonCatalogItemSpec", () => {
       if ("imageryProvider" in imagery) {
         const highlight =
           imagery.imageryProvider.createHighlightImageryProvider(
-            new Feature({ properties: { [FEATURE_ID_PROP]: "0" } })
+            new TerriaFeature({ properties: { [FEATURE_ID_PROP]: "0" } })
           );
         expect(highlight).toBeDefined();
 

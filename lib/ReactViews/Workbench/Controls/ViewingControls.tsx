@@ -316,7 +316,9 @@ class ViewingControls extends React.Component<
           group.setTrait(CommonStrata.user, "isOpen", true);
         });
       });
-    this.props.viewState.viewCatalogMember(item);
+    this.props.viewState
+      .viewCatalogMember(item)
+      .then((result) => result.raiseError(this.props.viewState.terria));
   }
 
   exportDataClicked() {

@@ -1,6 +1,7 @@
 import i18next from "i18next";
 import { uniq } from "lodash-es";
 import { computed } from "mobx";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import TableMixin from "../ModelMixins/TableMixin";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
@@ -10,12 +11,12 @@ import StratumFromTraits from "../Models/Definition/StratumFromTraits";
 import { ShortReportTraits } from "../Traits/TraitsClasses/CatalogMemberTraits";
 import TableChartStyleTraits, {
   TableChartLineStyleTraits
-} from "../Traits/TraitsClasses/TableChartStyleTraits";
-import TableColorStyleTraits from "../Traits/TraitsClasses/TableColorStyleTraits";
-import TablePointSizeStyleTraits from "../Traits/TraitsClasses/TablePointSizeStyleTraits";
-import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
-import TableTimeStyleTraits from "../Traits/TraitsClasses/TableTimeStyleTraits";
-import TableTraits from "../Traits/TraitsClasses/TableTraits";
+} from "../Traits/TraitsClasses/Table/ChartStyleTraits";
+import TableColorStyleTraits from "../Traits/TraitsClasses/Table/ColorStyleTraits";
+import TablePointSizeStyleTraits from "../Traits/TraitsClasses/Table/PointSizeStyleTraits";
+import TableStyleTraits from "../Traits/TraitsClasses/Table/StyleTraits";
+import TableTimeStyleTraits from "../Traits/TraitsClasses/Table/TimeStyleTraits";
+import TableTraits from "../Traits/TraitsClasses/Table/TableTraits";
 import TableColumnType from "./TableColumnType";
 
 const DEFAULT_ID_COLUMN = "id";
@@ -56,6 +57,40 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
     return !isDefined(this.catalogItem.activeTableStyle.regionColumn)
       ? true
       : undefined;
+  }
+
+  /**
+   * Set default activeStyle to first style with a scalar color column (if none is found then find first style with enum, text and then region)
+   * Ignores styles with `hidden: true`
+   */
+  @computed get activeStyle() {
+    if (this.catalogItem.styles && this.catalogItem.styles.length > 0) {
+      // Find default active style in this order:
+      // - First scalar style
+      // - First enum style
+      // - First text style
+      // - First region style
+
+      const types = [
+        TableColumnType.scalar,
+        TableColumnType.enum,
+        TableColumnType.text,
+        TableColumnType.region
+      ];
+
+      const firstStyleOfEachType = types.map(
+        (columnType) =>
+          this.catalogItem.styles
+            .filter((style) => !style.hidden)
+            .find(
+              (s) =>
+                this.catalogItem.findColumnByName(s.color?.colorColumn)
+                  ?.type === columnType
+            )?.id
+      );
+
+      return filterOutUndefined(firstStyleOfEachType)[0];
+    }
   }
 
   @computed

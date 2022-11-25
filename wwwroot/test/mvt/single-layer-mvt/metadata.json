@@ -1,0 +1,14 @@
+{
+  "name": "test-mvt",
+  "description": "test-mvt",
+  "version": "2",
+  "minzoom": "0",
+  "maxzoom": "4",
+  "center": "123.750000,-31.461472,4",
+  "bounds": "111.661406,-40.808006,148.410691,-17.913343",
+  "type": "overlay",
+  "format": "pbf",
+  "generator": "tippecanoe v1.36.0",
+  "generator_options": "tippecanoe '--maximum-zoom=4' --force '--output-to-directory=test-mvt' --no-tile-compression -r1 layer.geojson",
+  "json": "{\"vector_layers\": [ { \"id\": \"layer\", \"description\": \"\", \"minzoom\": 0, \"maxzoom\": 4, \"fields\": {\"Line\": \"String\", \"This\": \"String\", \"idProperty\": \"Number\"} } ],\"tilestats\": {\"layerCount\": 1,\"layers\": [{\"layer\": \"layer\",\"count\": 4,\"geometry\": \"Point\",\"attributeCount\": 3,\"attributes\": [{\"attribute\": \"Line\",\"count\": 1,\"type\": \"string\",\"values\": [\"true\"]},{\"attribute\": \"This\",\"count\": 1,\"type\": \"string\",\"values\": [\"Is another point\"]},{\"attribute\": \"idProperty\",\"count\": 4,\"type\": \"number\",\"values\": [0,1,2,3],\"min\": 0,\"max\": 3}]}]}}"
+}

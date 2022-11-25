@@ -54,7 +54,7 @@ import {
   initializeErrorServiceProvider
 } from "./ErrorServiceProviders/ErrorService";
 import StubErrorServiceProvider from "./ErrorServiceProviders/StubErrorServiceProvider";
-import Feature from "./Feature";
+import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import IElementConfig from "./IElementConfig";
 import { applyInitData } from "./InitData";
@@ -71,6 +71,7 @@ import InitSource, {
 } from "./InitSource";
 import Internationalization from "./Internationalization";
 import MapInteractionMode from "./MapInteractionMode";
+import { defaultRelatedMaps } from "./RelatedMaps";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
 import ShareDataService from "./ShareDataService";
 import {
@@ -226,14 +227,17 @@ export default class Terria {
     printDisclaimer: undefined,
     storyRouteUrlPrefix: undefined,
     enableConsoleAnalytics: undefined,
-    googleAnalyticsOptions: undefined
+    googleAnalyticsOptions: undefined,
+    relatedMaps: defaultRelatedMaps,
+    aboutButtonHrefUrl: "about.html",
+    plugins: undefined
   };
 
   @observable
   pickedFeatures: PickedFeatures | undefined;
 
   @observable
-  selectedFeature: Feature | undefined;
+  selectedFeature: TerriaFeature | undefined;
 
   @observable
   allowFeatureInfoRequests: boolean = true;
@@ -476,7 +480,7 @@ export default class Terria {
     if (pickedFeatures) {
       // Remove picked features that belong to the catalog item
       pickedFeatures.features.forEach((feature, i) => {
-        if (featureBelongsToCatalogItem(<Feature>feature, model)) {
+        if (featureBelongsToCatalogItem(<TerriaFeature>feature, model)) {
           pickedFeatures?.features.splice(i, 1);
           if (this.selectedFeature === feature)
             this.selectedFeature = undefined;
@@ -951,5 +955,15 @@ export default class Terria {
     }
     window.localStorage.setItem(this.appName + "." + key, value.toString());
     return true;
+  }
+}
+
+function setCustomRequestSchedulerDomainLimits(
+  customDomainLimits: ConfigParameters["customRequestSchedulerLimits"]
+) {
+  if (isDefined(customDomainLimits)) {
+    Object.entries(customDomainLimits).forEach(([domain, limit]) => {
+      RequestScheduler.requestsByServer[domain] = limit;
+    });
   }
 }

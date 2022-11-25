@@ -14,8 +14,10 @@ import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import isDefined from "../../Core/isDefined";
 import pollToPromise from "../../Core/pollToPromise";
+import TerriaError from "../../Core/TerriaError";
 import Leaflet from "../../Models/Leaflet";
 import getUrlForImageryTile from "../ImageryProvider/getUrlForImageryTile";
+import { ProviderCoords } from "../PickedFeatures/PickedFeatures";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
@@ -396,7 +398,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     map: L.Map,
     longitudeRadians: number,
     latitudeRadians: number
-  ): Promise<{ x: number; y: number; level: number }> {
+  ): Promise<ProviderCoords> {
     const ll = new Cartographic(
       CesiumMath.negativePiToPi(longitudeRadians),
       latitudeRadians,
@@ -417,24 +419,30 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     });
   }
 
-  pickFeatures(
+  async pickFeatures(
     x: number,
     y: number,
     level: number,
     longitudeRadians: number,
     latitudeRadians: number
-  ): Promise<ImageryLayerFeatureInfo | ImageryLayerFeatureInfo[] | undefined> {
-    return pollToPromise(() => {
-      return this.imageryProvider.ready;
-    }).then(() => {
-      return this.imageryProvider.pickFeatures(
+  ): Promise<ImageryLayerFeatureInfo[] | undefined> {
+    await pollToPromise(() => this.imageryProvider.ready);
+    try {
+      return await this.imageryProvider.pickFeatures(
         x,
         y,
         level,
         longitudeRadians,
         latitudeRadians
       );
-    });
+    } catch (e) {
+      TerriaError.from(
+        e,
+        `An error ocurred while calling \`ImageryProvider#.pickFeatures\`. \`ImageryProvider.url = ${
+          (<any>this.imageryProvider).url
+        }\``
+      ).log();
+    }
   }
 
   onRemove(map: L.Map) {
