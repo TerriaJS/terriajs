@@ -157,6 +157,17 @@ describe("Terria", function () {
   });
 
   describe("addInitSourcesFromUrl", function () {
+    beforeEach(function () {
+      jasmine.Ajax.install();
+      jasmine.Ajax.stubRequest("serverconfig/").andReturn({
+        responseText: "{}"
+      });
+    });
+
+    afterEach(function () {
+      jasmine.Ajax.uninstall();
+    });
+
     it("applies initSources in correct order", async function () {
       expect(terria.initSources.length).toEqual(0);
       jasmine.Ajax.stubRequest("config.json").andReturn({
@@ -214,6 +225,8 @@ describe("Terria", function () {
 
       expect(terria.initSources.length).toEqual(2);
 
+      await terria.loadInitSources();
+
       expect(terria.showSplitter).toBe(true);
       expect(terria.splitPosition).toBe(0.5);
       expect(terria.workbench.items.length).toBe(1);
@@ -259,168 +272,6 @@ describe("Terria", function () {
         "path/to/config/path/to/init/something.json",
         "https://hostname.com/some/other/path/something.json"
       ]);
-    });
-
-    describe("via loadMagdaConfig", function () {
-      it("should dereference uniqueId to `/`", function (done) {
-        expect(terria.catalog.group.uniqueId).toEqual("/");
-
-        jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
-          // terria's "Magda derived url"
-          responseText: mapConfigBasicString
-        });
-        // no init sources before starting
-        expect(terria.initSources.length).toEqual(0);
-
-        terria
-          .start({
-            configUrl: "test/Magda/map-config-basic.json",
-            i18nOptions
-          })
-          .then(function () {
-            expect(terria.catalog.group.uniqueId).toEqual("/");
-            done();
-          })
-          .catch((error) => {
-            done.fail(error);
-          });
-      });
-
-      it("works with basic initializationUrls", function (done) {
-        jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
-          // terria's "Magda derived url"
-          responseText: mapConfigBasicString
-        });
-        // no init sources before starting
-        expect(terria.initSources.length).toEqual(0);
-
-        terria
-          .start({
-            configUrl: "test/Magda/map-config-basic.json",
-            i18nOptions
-          })
-          .then(function () {
-            expect(terria.initSources.length).toEqual(1);
-            expect(isInitFromUrl(terria.initSources[0])).toEqual(true);
-            if (isInitFromUrl(terria.initSources[0])) {
-              expect(terria.initSources[0].initUrl).toEqual(
-                mapConfigBasicJson.aspects["terria-config"]
-                  .initializationUrls[0]
-              );
-            } else {
-              throw "not init source";
-            }
-            done();
-          })
-          .catch((error) => {
-            done.fail(error);
-          });
-      });
-
-      it("works with v7initializationUrls", async function () {
-        jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
-          // terria's "Magda derived url"
-          responseText: mapConfigBasicString
-        });
-        const groupName = "Simple converter test";
-        jasmine.Ajax.stubRequest(
-          "https://example.foo.bar/initv7.json"
-        ).andReturn({
-          // terria's "Magda derived url"
-          responseText: JSON.stringify({
-            catalog: [{ name: groupName, type: "group", items: [] }]
-          })
-        });
-        // no init sources before starting
-        expect(terria.initSources.length).toBe(0);
-
-        await terria.start({
-          configUrl: "test/Magda/map-config-v7.json",
-          i18nOptions
-        });
-
-        expect(terria.initSources.length).toBe(1);
-        expect(isInitFromDataPromise(terria.initSources[0])).toBeTruthy(
-          "Expected initSources[0] to be an InitDataPromise"
-        );
-        if (isInitFromDataPromise(terria.initSources[0])) {
-          const data = await terria.initSources[0].data;
-          // JSON parse & stringify to avoid a problem where I think catalog-converter
-          //  can return {"id": undefined} instead of no "id"
-          expect(
-            JSON.parse(JSON.stringify(data.ignoreError()?.data.catalog))
-          ).toEqual([
-            {
-              name: groupName,
-              type: "group",
-              members: [],
-              shareKeys: [`Root Group/${groupName}`]
-            }
-          ]);
-        }
-      });
-      it("works with inline init", async function () {
-        // inline init
-        jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
-          responseText: mapConfigInlineInitString
-        });
-        // no init sources before starting
-        expect(terria.initSources.length).toEqual(0);
-        await terria.start({
-          configUrl: "test/Magda/map-config-inline-init.json",
-          i18nOptions
-        });
-
-        const inlineInit = mapConfigInlineInitJson.aspects["terria-init"];
-        /** Check cors domains */
-        expect(terria.corsProxy.corsDomains).toEqual(inlineInit.corsDomains);
-        /** Camera setting */
-        expect(terria.mainViewer.homeCamera).toEqual(
-          CameraView.fromJson(inlineInit.homeCamera)
-        );
-
-        /** Ensure inlined data catalog from init sources */
-        expect(terria.initSources.length).toEqual(1);
-        if (isInitFromData(terria.initSources[0])) {
-          expect(terria.initSources[0].data.catalog).toEqual(
-            inlineInit.catalog
-          );
-        } else {
-          throw "not init source";
-        }
-      });
-      it("parses dereferenced group aspect", async function (done) {
-        expect(terria.catalog.group.uniqueId).toEqual("/");
-        // dereferenced res
-        jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
-          responseText: mapConfigDereferencedString
-        });
-        await terria
-          .start({
-            configUrl: "test/Magda/map-config-dereferenced.json",
-            i18nOptions
-          })
-          .then(function () {
-            const groupAspect = mapConfigDereferencedJson.aspects["group"];
-            const ids = groupAspect.members.map((member: any) => member.id);
-            expect(terria.catalog.group.uniqueId).toEqual("/");
-            // ensure user added data co-exists with dereferenced magda members
-            expect(terria.catalog.group.members.length).toEqual(3);
-            expect(terria.catalog.userAddedDataGroup).toBeDefined();
-            ids.forEach((id: string) => {
-              const model = terria.getModelById(MagdaReference, id);
-              if (!model) {
-                throw "no record id.";
-              }
-              expect(terria.modelIds).toContain(id);
-              expect(model.recordId).toEqual(id);
-            });
-            done();
-          })
-          .catch((error) => {
-            done.fail(error);
-          });
-      });
     });
   });
 
