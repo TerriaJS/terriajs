@@ -5,7 +5,7 @@ import React from "react";
 import { Link, withRouter } from "react-router-dom";
 import { withTranslation } from "react-i18next";
 import { Swipeable } from "react-swipeable";
-import { setSelectedStory } from "../../Models/Receipt";
+import { setSelectedStory, activateStory } from "../../Models/Receipt";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import { Medium } from "../Generic/Responsive";
 import Icon from "../Icon.jsx";
@@ -37,7 +37,7 @@ const RCStoryPanel = createReactClass({
     this.slideIn();
 
     this.changeScenarioListener = e => {
-      this.props.viewState.currentScenario = e.detail.scenarioID;
+      this.props.viewState.selectedScenario = e.detail.scenarioID;
       this.setState({ state: this.state });
     };
 
@@ -48,10 +48,17 @@ const RCStoryPanel = createReactClass({
     );
 
     // Activate the story (page)
-    setSelectedStory(this.props.match.params, this.props.viewState);
+    const promise = setSelectedStory(this.props.match.params, this.props.viewState);
+    promise.then(() => 
+      activateStory(this.props.viewState, true, true)
+    )
   },
 
-  componentDidUpdate() {
+  componentDidUpdate() {    
+    activateStory(this.props.viewState, true, true);
+
+    // console.log(`RCStoryPanel didupdate`);
+    // setSelectedStory(this.props.match.params, this.props.viewState);
   },
 
   slideIn() {
@@ -97,8 +104,12 @@ const RCStoryPanel = createReactClass({
 
     const terriaStories = this.props.terria.stories || [];    
     const selectedPage = terriaStories[routedPageIndex];
+    
+    const scenario = this.props.viewState.selectedScenario || 0;
 
-    const scenario = this.props.viewState.currentScenario || 0;
+    this.props.viewState.selectedStoryID = routedStoryID;
+    this.props.viewState.selectedPageIndex = routedPageIndex;
+    this.props.viewState.selectedScenario = scenario;
 
     // find the first page with the section
     function findFirstPageURLOfSection(section = "") {
