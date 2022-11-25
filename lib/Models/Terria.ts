@@ -923,10 +923,6 @@ export default class Terria {
     this.mainViewer.homeCamera = CameraView.fromJson(homeCameraInit);
   }
 
-  getUserProperty(key: string) {
-    return undefined;
-  }
-
   getLocalProperty(key: string): string | boolean | null {
     try {
       if (!defined(window.localStorage)) {
@@ -955,15 +951,5 @@ export default class Terria {
     }
     window.localStorage.setItem(this.appName + "." + key, value.toString());
     return true;
-  }
-}
-
-function setCustomRequestSchedulerDomainLimits(
-  customDomainLimits: ConfigParameters["customRequestSchedulerLimits"]
-) {
-  if (isDefined(customDomainLimits)) {
-    Object.entries(customDomainLimits).forEach(([domain, limit]) => {
-      RequestScheduler.requestsByServer[domain] = limit;
-    });
   }
 }
