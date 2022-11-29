@@ -1,23 +1,44 @@
 "use strict";
 import React from "react";
+import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import Styles from "./RCHotspotSummary.scss";
-import { RCChangeUrlParams } from "../../Models/Receipt";
 import Icon from "../Icon";
-
+import { getStoryHotspot } from "../../Models/Receipt";
+import { filterHotspots } from "../../Models/Receipt";
 class RCHotspotSummary extends React.Component {
   constructor(props) {
-    super(props);
+    super(props);    
+  }
+
+  doFilter() {
+    const routedSectorName = this.props.match.params.sectorName;
+    const routedStoryID = this.props.match.params.storyID;
+
+    if (this.props.location.pathname.includes(`sector`) && this.props.location.pathname.includes(`story`)) {
+      filterHotspots(this.props.viewState, routedSectorName, routedStoryID);
+    }
+  }
+  
+  componentDidMount() {
+    this.doFilter();
+  }
+
+  componentDidUpdate() {
+    this.doFilter();
   }
 
   render() {
-    const hotspot = this.props.viewState.selectedHotspot;
-    const sector = hotspot["_rc-sector"]?._value;
-    const title = hotspot["_rc-title"]?._value;
-    const description = hotspot["_rc-description"]?._value;
-    const storyImage =
-      hotspot["_rc-story-img"]?._value || "/images/receipt/placeholder.jpg";
-    const microstories = hotspot["_rc-microstories"]?._value;
+    const routedSectorName = this.props.match.params.sectorName;
+    const routedStoryID = this.props.match.params.storyID;
+
+    const selectedHotspot = getStoryHotspot(this.props.terria.catalog, routedSectorName, routedStoryID);
+    const hotspotProperties = selectedHotspot.properties;
+
+    const title = hotspotProperties["rc-title"]?.getValue();
+    const description = hotspotProperties["rc-description"]?.getValue();
+    const storyImage = hotspotProperties["rc-story-img"]?.getValue() || "/images/receipt/placeholder.jpg";
+    const microstories = hotspotProperties["rc-microstories"]?.getValue();
 
     const listMicrostories =
       Array.isArray(microstories) &&
@@ -29,80 +50,54 @@ class RCHotspotSummary extends React.Component {
             microstory["micro-story-img"] +
             ")"
         };
-        return (
+        return (          
           <div
             key={microstory["micro-story-title"]}
             className={Styles["microstory-card"]}
             style={imgStyle}
-            onClick={() =>
-              RCChangeUrlParams(
-                {
-                  sector,
-                  story: hotspot["rc-story-id"],
-                  microstory: microstory["micro-story-id"],
-                  page: 1
-                },
-                this.props.viewState
-              )
-            }
           >
-            <div>
-              <div className={Styles["microstory-title"]}>
-                {microstory["micro-story-title"]}
+            <Link to={`/sector/${routedSectorName}/story/${routedStoryID}/microstory/${microstory["micro-story-id"]}`}>
+              <div>
+                <div className={Styles["microstory-title"]}>
+                  {microstory["micro-story-title"]}
+                </div>
+                <div className={Styles["microstory-desc"]}>
+                  {microstory["micro-story-desc"]}{" "}
+                </div>
               </div>
-              <div className={Styles["microstory-desc"]}>
-                {microstory["micro-story-desc"]}{" "}
-              </div>
-            </div>
+            </Link>
           </div>
         );
       });
 
-    const close = () => {
-      RCChangeUrlParams(
-        { sector: this.props.viewState.selectedHotspot["rc-sector"]?._value },
-        this.props.viewState
-      );
-    };
-
     return (
       <div className={Styles.RCHotspotSummary}>
         <div className={Styles.RCSummaryCard}>
-          <div className={Styles.titleGroup}>
+          <div className={Styles.titleGroup}>            
             <Icon
-              glyph={Icon.GLYPHS[sector + "Simple"]}
+              glyph={Icon.GLYPHS[routedSectorName + "Simple"]}
               className={Styles.icon}
             />
             <h3>{title || "No title provided"}</h3>
-            <button
-              type="button"
-              onClick={close}
-              className={Styles.btnCloseFeature}
-              title="Close"
-            >
-              <Icon glyph={Icon.GLYPHS.close} className={Styles.iconCLose} />
-            </button>
+            <Link to="/">
+              <button
+                type="button"
+                className={Styles.btnCloseFeature}
+                title="Close"
+              >
+                <Icon glyph={Icon.GLYPHS.close} className={Styles.iconCLose} />
+              </button>
+            </Link>
           </div>
           <img src={storyImage} className={Styles.imgStory} />
           <p>{description || "No description provided"}</p>
           <br />
-          <button
-            type="button"
-            className={Styles.receiptButton}
-            onClick={() =>
-              RCChangeUrlParams(
-                {
-                  sector,
-                  story: hotspot["rc-story-id"],
-                  page: 1
-                },
-                this.props.viewState
-              )
-            }
-          >
+          <Link to={`/sector/${routedSectorName}/story/${routedStoryID}/page/0`}>
+            <button type="button" className={Styles.receiptButton}>            
             <Icon className={Styles.iconPlay} glyph={Icon.GLYPHS.roundedPlay} />
             Play story
           </button>
+          </Link>
 
           {listMicrostories.length > 0 ? (
             <div className={Styles.microstoriesWrapper}>
@@ -121,4 +116,4 @@ RCHotspotSummary.propTypes = {
   onClick: PropTypes.func
 };
 
-export default RCHotspotSummary;
+export default withRouter(RCHotspotSummary);
