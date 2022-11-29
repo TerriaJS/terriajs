@@ -1,22 +1,22 @@
-"use strict";
+import isDefined from "../Core/isDefined";
+import { TerriaErrorSeverity } from "../Core/TerriaError";
+import { addInitSourcesFromStartData } from "../Models/InitSource";
+import Terria from "../Models/Terria";
 
-const { TerriaErrorSeverity } = require("../Core/TerriaError");
-
-var defined = require("terriajs-cesium/Source/Core/defined").default;
-var updateApplicationOnMessageFromParentWindow = function (terria, window) {
-  var allowOrigin;
+export default function (terria: Terria, window: Window) {
+  var allowOrigin: string | undefined;
 
   window.addEventListener(
     "message",
     async function (event) {
       var origin = event.origin;
-      if (!defined(origin) && defined(event.originalEvent)) {
+      if (!isDefined(origin) && isDefined((event as any).originalEvent)) {
         // For Chrome, the origin property is in the event.originalEvent object.
-        origin = event.originalEvent.origin;
+        origin = (event as any).originalEvent.origin;
       }
 
       if (
-        (!defined(allowOrigin) || origin !== allowOrigin) && // allowed origin in url hash parameter
+        (!isDefined(allowOrigin) || origin !== allowOrigin) && // allowed origin in url hash parameter
         event.source !== window.parent && // iframe parent
         event.source !== window.opener
       ) {
@@ -38,13 +38,18 @@ var updateApplicationOnMessageFromParentWindow = function (terria, window) {
         return;
       }
 
-      (
-        await terria.updateFromStartData(
+      try {
+        await addInitSourcesFromStartData(
+          terria,
           event.data,
           "Start data from message from parent window",
           TerriaErrorSeverity.Error
-        )
-      ).raiseError(terria);
+        );
+      } catch (e) {
+        terria.raiseErrorToUser(e);
+      }
+
+      return await terria.loadInitSources();
     },
     false
   );
@@ -56,6 +61,4 @@ var updateApplicationOnMessageFromParentWindow = function (terria, window) {
   if (window.opener) {
     window.opener.postMessage("ready", "*");
   }
-};
-
-module.exports = updateApplicationOnMessageFromParentWindow;
+}

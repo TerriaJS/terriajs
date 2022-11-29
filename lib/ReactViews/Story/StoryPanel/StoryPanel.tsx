@@ -12,6 +12,7 @@ import {
 import { animateEnd } from "../../../Core/animation";
 import getPath from "../../../Core/getPath";
 import TerriaError from "../../../Core/TerriaError";
+import { applyInitData } from "../../../Models/InitData";
 import Terria from "../../../Models/Terria";
 import Box from "../../../Styled/Box";
 import Hr from "../../../Styled/Hr";
@@ -44,7 +45,7 @@ export async function activateStory(scene: Story, terria: Terria) {
     await Promise.all(
       scene.shareData.initSources.map(async (initSource: any) => {
         try {
-          await terria.applyInitData({
+          await applyInitData(terria, {
             initData: initSource,
             replaceStratum: true,
             canUnsetFeaturePickingState: true

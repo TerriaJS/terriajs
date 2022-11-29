@@ -23,6 +23,11 @@
 - Fix `MapboxVectorTileCatalogItem` `fillColor` also applying to Line features
 - Add `maximumNativeZoom` to `ProtomapsImageryProvider`
 - Fix image markers (eg `marker = "data:image/png;base64,..."`)
+- TSify `updateApplicationOnMessageFromParentWindow`
+- `updateApplicationOnHashChange` and `updateApplicationOnMessageFromParentWindow` are now called in `Terria.start`
+  - Added `disableUpdateApplicationOnHashChange` and `disableUpdateApplicationOnMessageFromParentWindow` to `StartOptions`
+- Added `getConfig` to Terria `StartOptions` - this can be used to override fetching of Terria config through `StartOptions.configUrl`
+- `Terria.start` will now await Internationalization init
 - [The next improvement]
 
 #### 8.2.21 - 2022-11-10
