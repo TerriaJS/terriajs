@@ -830,6 +830,10 @@
     },
     "computeRingWindingOrder": {
       "devError": "Puntos esperados de tipo {x:número, y:número}"
+    },
+    "drawExtentHelper": {
+      "extent": "Extensión",
+      "drawExtent": "Dibujar la extensión"
     }
   }
 }
