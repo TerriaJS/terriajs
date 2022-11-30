@@ -11,12 +11,12 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import Constructor from "../Core/Constructor";
+import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import Model from "../Models/Definition/Model";
 import GltfTraits from "../Traits/TraitsClasses/GltfTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
-import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
@@ -29,6 +29,12 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
   abstract class GltfMixin extends ShadowMixin(
     CatalogMemberMixin(MappableMixin(Base))
   ) {
+    // Create stable instances of DataSource and Entity instead
+    // of generating a new one each time the traits change and mobx recomputes.
+    // This vastly improves the performance.
+    private readonly _dataSource = new CustomDataSource("glTF Model");
+    private readonly _modelEntity = new Entity({ name: "glTF Model Entity" });
+
     get hasGltfMixin() {
       return true;
     }
@@ -58,7 +64,7 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
     }
 
     @computed
-    private get cesiumPosition(): Cartesian3 {
+    get cesiumPosition(): Cartesian3 {
       if (
         this.origin !== undefined &&
         this.origin.longitude !== undefined &&
@@ -79,24 +85,37 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
      * Returns the orientation of the model in the ECEF frame
      */
     @computed
-    private get orientation(): Quaternion {
-      const { heading, pitch, roll } = this.rotation;
-      const hpr = HeadingPitchRoll.fromDegrees(
-        heading ?? 0,
-        pitch ?? 0,
-        roll ?? 0
-      );
-      const orientation = Transforms.headingPitchRollQuaternion(
+    get cesiumRotation(): Quaternion {
+      const { heading = 0, pitch = 0, roll = 0 } = this.rotation;
+      const hpr = HeadingPitchRoll.fromDegrees(heading, pitch, roll);
+      const rotation = Transforms.headingPitchRollQuaternion(
         this.cesiumPosition,
         hpr
       );
-      return orientation;
+      return rotation;
+    }
+
+    @computed
+    get transformationJson() {
+      return {
+        origin: {
+          latitude: this.origin.latitude,
+          longitude: this.origin.longitude,
+          height: this.origin.height
+        },
+        rotation: {
+          heading: this.rotation.heading,
+          pitch: this.rotation.pitch,
+          roll: this.rotation.roll
+        },
+        scale: this.scale
+      };
     }
 
     protected abstract get gltfModelUrl(): string | undefined;
 
     @computed
-    private get model() {
+    private get modelGraphics() {
       if (this.gltfModelUrl === undefined) {
         return undefined;
       }
@@ -128,22 +147,32 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
     }
 
     @computed
+    get modelEntity(): Entity {
+      const entity = this._modelEntity;
+      entity.position = new ConstantPositionProperty(this.cesiumPosition);
+      entity.orientation = new ConstantProperty(this.cesiumRotation);
+      entity.model = this.modelGraphics;
+      return entity;
+    }
+
+    @computed
     get mapItems() {
-      if (this.model === undefined) {
+      const modelEntity = this.modelEntity;
+      const modelGraphics = this.modelGraphics;
+      const dataSource = this._dataSource;
+      if (modelGraphics === undefined) {
         return [];
       }
 
-      this.model.show = new ConstantProperty(this.show);
-      const dataSource: CustomDataSource = new CustomDataSource(
-        this.name || "glTF model"
-      );
-      dataSource.entities.add(
-        new Entity({
-          position: new ConstantPositionProperty(this.cesiumPosition),
-          orientation: new ConstantProperty(this.orientation),
-          model: this.model
-        })
-      );
+      dataSource.show = this.show;
+      if (modelGraphics) modelGraphics.show = new ConstantProperty(this.show);
+      if (this.name) {
+        dataSource.name = this.name;
+        modelEntity.name = this.name;
+      }
+      if (!dataSource.entities.contains(modelEntity)) {
+        dataSource.entities.add(modelEntity);
+      }
       return [dataSource];
     }
   }
