@@ -627,32 +627,59 @@ export default class Cesium extends GlobeOrMap {
     return this._allMappables.map(({ mapItem }) => mapItem);
   }
 
+  @computed
+  private get availableDataSources(): DataSource[] {
+    return this._allMapItems.filter(isDataSource);
+  }
+
+  /**
+   * Syncs the given DataSourceCollection with availableDataSources
+   *
+   * a. It removes a DS from the collection:
+   *  - if it does not exist in availableDataSources
+   *
+   * b. It adds a DS to the collection:
+   *  - if it exists in availableDataSources but not in the collection
+   *
+   * c. It ensures the order of the DS in the collection is same as the order
+   *    in availableDataSources
+   */
+  private async syncDataSourceCollection(
+    availableDataSources: DataSource[],
+    dataSources: DataSourceCollection
+  ) {
+    // Remove deleted data sources
+    // Iterate backwards because we're removing items.
+    for (let i = dataSources.length - 1; i >= 0; i--) {
+      const d = dataSources.get(i);
+      if (availableDataSources.indexOf(d) === -1) {
+        dataSources.remove(d);
+      }
+    }
+
+    // Add new data sources
+    for (let ds of availableDataSources) {
+      if (!dataSources.contains(ds)) {
+        await dataSources.add(ds);
+      }
+    }
+
+    // Ensure stacking order matches order in allDataSources - first item appears on top.
+    runInAction(() =>
+      availableDataSources.forEach((d) => dataSources.raiseToTop(d))
+    );
+  }
+
   private observeModelLayer() {
     let prevMapItems: MapItem[] = [];
-    return autorun(() => {
+    return autorun(async () => {
       // TODO: Look up the type in a map and call the associated function.
       //       That way the supported types of map items is extensible.
-      const allDataSources = this._allMapItems.filter(isDataSource);
 
-      let dataSources = this.dataSources;
-      // Remove deleted data sources
-      // Iterate backwards because we're removing items.
-      for (let i = dataSources.length - 1; i >= 0; i--) {
-        const d = dataSources.get(i);
-        if (allDataSources.indexOf(d) === -1) {
-          dataSources.remove(d);
-        }
-      }
-
-      // Add new data sources
-      allDataSources.forEach((d) => {
-        if (!dataSources.contains(d)) {
-          dataSources.add(d);
-        }
-      });
-
-      // Ensure stacking order matches order in allDataSources - first item appears on top.
-      allDataSources.forEach((d) => dataSources.raiseToTop(d));
+      this.syncDataSourceCollection(
+        this.availableDataSources,
+        this.dataSources
+      );
 
       const allImageryParts = this._allMappables
         .map((m) =>
