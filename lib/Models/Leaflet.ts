@@ -83,6 +83,9 @@ export default class Leaflet extends GlobeOrMap {
   private _pickedFeatures: PickedFeatures | undefined = undefined;
   private _pauseMapInteractionCount = 0;
 
+  // Tracks the number of active requests to syncDataSourceCollection()
+  private _activeDataSourcesSyncRequests = 0;
+
   /* Disposers */
   private readonly _disposeWorkbenchMapItemsSubscription: () => void;
   private readonly _disposeDisableInteractionSubscription: () => void;
@@ -342,12 +345,29 @@ export default class Leaflet extends GlobeOrMap {
     this.map.remove();
   }
 
+  @computed
+  get availableCatalogItems() {
+    const catalogItems = [
+      ...this.terriaViewer.items.get(),
+      this.terriaViewer.baseMap
+    ];
+    return catalogItems;
+  }
+
+  @computed
+  get availableDataSources() {
+    const catalogItems = this.availableCatalogItems;
+    /* Handle datasources */
+    const allMapItems = ([] as MapItem[]).concat(
+      ...catalogItems.filter(isDefined).map((item) => item.mapItems)
+    );
+    const dataSources = allMapItems.filter(isDataSource);
+    return dataSources;
+  }
+
   private observeModelLayer() {
     return autorun(() => {
-      const catalogItems = [
-        ...this.terriaViewer.items.get(),
-        this.terriaViewer.baseMap
-      ];
+      const catalogItems = this.availableCatalogItems;
       // Flatmap
       const allImageryMapItems = (
         [] as {
@@ -404,36 +424,72 @@ export default class Leaflet extends GlobeOrMap {
         }
       });
 
-      /* Handle datasources */
-      const allMapItems = ([] as MapItem[]).concat(
-        ...catalogItems.filter(isDefined).map((item) => item.mapItems)
-      );
-      const allDataSources = allMapItems.filter(isDataSource);
-
-      // Remove deleted data sources
-      let dataSources = this.dataSources;
-      for (let i = 0; i < dataSources.length; i++) {
-        const d = dataSources.get(i);
-        if (allDataSources.indexOf(d) === -1) {
-          dataSources.remove(d);
-          --i;
-        }
-      }
-
-      // Add new data sources, remove hidden ones
-      allDataSources.forEach((d) => {
-        if (d.show) {
-          if (!dataSources.contains(d)) {
-            dataSources.add(d);
-          }
-        } else {
-          dataSources.remove(d);
-        }
-      });
-
-      // Ensure stacking order matches order in allDataSources - first item appears on top.
-      allDataSources.forEach((d) => dataSources.raiseToTop(d));
+      this.syncDataSourceCollection();
     });
+  }
+
+  /**
+   * Syncs the `dataSources` collection against the latest `availableDataSources`.
+   *
+   * The implementation has a few checks to ensure that:
+   *   - Only 1 sync cycle is run at a time
+   *   - When there are multiple sync requests, we debounce them to run only the last one.
+   */
+  private async syncDataSourceCollection() {
+    const availableDataSources = this.availableDataSources;
+    const dataSources = this.dataSources;
+
+    // We limit the max awaiting sync count to 2 because no matter how many times sync is
+    // called, we only have to sync with the latest copy of
+    // `availableDataSources`. Which means we only have to run at most 2 times
+    // back-to-back.
+    this._activeDataSourcesSyncRequests = Math.min(
+      this._activeDataSourcesSyncRequests + 1,
+      2
+    );
+    if (this._activeDataSourcesSyncRequests === 2) {
+      return;
+    }
+
+    // 1. Remove deleted data sources
+    //
+    // Iterate backwards because we're removing items.
+    for (let i = dataSources.length - 1; i >= 0; i--) {
+      const ds = dataSources.get(i);
+      if (availableDataSources.indexOf(ds) === -1 || !ds.show) {
+        dataSources.remove(ds);
+      }
+    }
+
+    // 2. Add new data sources
+    for (let ds of availableDataSources) {
+      if (!dataSources.contains(ds) && ds.show) {
+        await dataSources.add(ds);
+      }
+    }
+
+    // 3. Ensure stacking order matches order in allDataSources - first item appears on top.
+    //
+    // There is a buggy/un-intended side-effect when calling raiseToTop() with
+    // a source that doesn't exist in the collection. Doing this will replace
+    // the last entry in the collection with the new one. So we should be
+    // careful to raiseToTop() only if the DS already exists in the collection.
+    // Relevant code:
+    //   https://github.com/CesiumGS/cesium/blob/dbd452328a48bfc4e192146862a9f8fa15789dc8/packages/engine/Source/DataSources/DataSourceCollection.js#L298-L299
+    runInAction(() =>
+      availableDataSources.forEach(
+        (ds) => dataSources.contains(ds) && dataSources.raiseToTop(ds)
+      )
+    );
+
+    this._activeDataSourcesSyncRequests -= 1;
+    if (this._activeDataSourcesSyncRequests === 1) {
+      // syncDataSourceCollection() was invoked 1 or more times while we were processing.
+      // Re-run sync after unblocking ourselves
+      this._activeDataSourcesSyncRequests = 0;
+      // yield and re-run
+      Promise.resolve().then(() => this.syncDataSourceCollection());
+    }
   }
 
   doZoomTo(

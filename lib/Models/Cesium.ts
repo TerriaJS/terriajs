@@ -124,6 +124,9 @@ export default class Cesium extends GlobeOrMap {
     | MappableMixin.Instance
     | /*TODO Cesium.Cesium3DTileset*/ any;
 
+  // Tracks the number of active requests to syncDataSourceCollection()
+  private _activeDataSourcesSyncRequests = 0;
+
   private cesiumDataAttributions: IObservableArray<string> = observable([]);
 
   // When true, feature picking is paused. This is useful for temporarily
@@ -633,22 +636,28 @@ export default class Cesium extends GlobeOrMap {
   }
 
   /**
-   * Syncs the given DataSourceCollection with availableDataSources
+   * Syncs the `dataSources` collection against the latest `availableDataSources`.
    *
-   * a. It removes a DS from the collection:
-   *  - if it does not exist in availableDataSources
-   *
-   * b. It adds a DS to the collection:
-   *  - if it exists in availableDataSources but not in the collection
-   *
-   * c. It ensures the order of the DS in the collection is same as the order
-   *    in availableDataSources
+   * The implementation has a few checks to ensure that:
+   *   - Only 1 sync cycle is run at a time
+   *   - When there are multiple sync requests, we debounce them to run only the last one.
    */
-  private async syncDataSourceCollection(
-    availableDataSources: DataSource[],
-    dataSources: DataSourceCollection
-  ) {
-    // Remove deleted data sources
+  private async syncDataSourceCollection() {
+    const availableDataSources = this.availableDataSources;
+    const dataSources = this.dataSources;
+    // We set the max sync count to 2 because no matter how many times sync is
+    // called, we only have to sync with the latest copy of
+    // `availableDataSources`. Which means we only have to run at most 2 times
+    // back-to-back.
+    this._activeDataSourcesSyncRequests = Math.min(
+      this._activeDataSourcesSyncRequests + 1,
+      2
+    );
+    if (this._activeDataSourcesSyncRequests === 2) {
+      return;
+    }
+
+    // 1. Remove deleted data sources
     // Iterate backwards because we're removing items.
     for (let i = dataSources.length - 1; i >= 0; i--) {
       const d = dataSources.get(i);
@@ -657,29 +666,44 @@ export default class Cesium extends GlobeOrMap {
       }
     }
 
-    // Add new data sources
+    // 2. Add new data sources
     for (let ds of availableDataSources) {
       if (!dataSources.contains(ds)) {
         await dataSources.add(ds);
       }
     }
 
-    // Ensure stacking order matches order in allDataSources - first item appears on top.
+    // 3. Ensure stacking order matches order in allDataSources - first item appears on top.
+    //
+    // There is a buggy/un-intended side-effect when calling raiseToTop() with
+    // a source that doesn't exist in the collection. Doing this will replace
+    // the last entry in the collection with the new one. So we should be
+    // careful to raiseToTop() only if the DS already exists in the collection.
+    // Relevant code:
+    //   https://github.com/CesiumGS/cesium/blob/dbd452328a48bfc4e192146862a9f8fa15789dc8/packages/engine/Source/DataSources/DataSourceCollection.js#L298-L299
     runInAction(() =>
-      availableDataSources.forEach((d) => dataSources.raiseToTop(d))
+      availableDataSources.forEach(
+        (ds) => dataSources.contains(ds) && dataSources.raiseToTop(ds)
+      )
     );
+
+    this._activeDataSourcesSyncRequests -= 1;
+    if (this._activeDataSourcesSyncRequests === 1) {
+      // syncDataSourceCollection() was invoked 1 or more times while we were processing.
+      // Re-run sync after unblocking ourselves
+      this._activeDataSourcesSyncRequests = 0;
+      // yield and re-run
+      Promise.resolve().then(() => this.syncDataSourceCollection());
+    }
   }
 
   private observeModelLayer() {
     let prevMapItems: MapItem[] = [];
-    return autorun(async () => {
+    return autorun(() => {
       // TODO: Look up the type in a map and call the associated function.
       //       That way the supported types of map items is extensible.
 
-      this.syncDataSourceCollection(
-        this.availableDataSources,
-        this.dataSources
-      );
+      this.syncDataSourceCollection();
 
       const allImageryParts = this._allMappables
         .map((m) =>
