@@ -654,6 +654,8 @@ export default class Cesium extends GlobeOrMap {
       2
     );
     if (this._activeDataSourcesSyncRequests === 2) {
+      // There is at least 1 sync that started before us, which should start a
+      // new sync when it finishes.
       return;
     }
 
@@ -689,7 +691,7 @@ export default class Cesium extends GlobeOrMap {
     this._activeDataSourcesSyncRequests -= 1;
     if (this._activeDataSourcesSyncRequests === 1) {
       // syncDataSourceCollection() was invoked 1 or more times while we were processing.
-      // Re-run sync after unblocking ourselves
+      // Re-run sync after unblocking
       this._activeDataSourcesSyncRequests = 0;
       // yield and re-run
       Promise.resolve().then(() => this.syncDataSourceCollection());
