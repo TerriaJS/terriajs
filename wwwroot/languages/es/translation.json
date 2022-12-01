@@ -834,6 +834,10 @@
     "drawExtentHelper": {
       "extent": "Extensión",
       "drawExtent": "Dibujar la extensión"
+    },
+    "gmlToGeoJson": {
+      "missingPos": "Al elemento de punto GML le falta un elemento pos.",
+      "missingExteriorRing": "Al polígono GML le falta el anillo exterior."
     }
   }
 }
