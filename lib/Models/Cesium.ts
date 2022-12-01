@@ -673,18 +673,17 @@ export default class Cesium extends GlobeOrMap {
       }
     }
 
-    // 3. Ensure stacking order matches order in allDataSources - first item appears on top.
-    //
-    // There is a buggy/un-intended side-effect when calling raiseToTop() with
-    // a source that doesn't exist in the collection. Doing this will replace
-    // the last entry in the collection with the new one. So we should be
-    // careful to raiseToTop() only if the DS already exists in the collection.
-    // Relevant code:
-    //   https://github.com/CesiumGS/cesium/blob/dbd452328a48bfc4e192146862a9f8fa15789dc8/packages/engine/Source/DataSources/DataSourceCollection.js#L298-L299
+    // 3. Ensure stacking order matches order in `availableDataSources` - first item appears on top.
     runInAction(() =>
-      availableDataSources.forEach(
-        (ds) => dataSources.contains(ds) && dataSources.raiseToTop(ds)
-      )
+      availableDataSources.forEach((ds) => {
+        // There is a buggy/un-intended side-effect when calling raiseToTop() with
+        // a source that doesn't exist in the collection. Doing this will replace
+        // the last entry in the collection with the new one. So we should be
+        // careful to raiseToTop() only if the DS already exists in the collection.
+        // Relevant code:
+        //   https://github.com/CesiumGS/cesium/blob/dbd452328a48bfc4e192146862a9f8fa15789dc8/packages/engine/Source/DataSources/DataSourceCollection.js#L298-L299
+        dataSources.contains(ds) && dataSources.raiseToTop(ds);
+      })
     );
 
     this._activeDataSourcesSyncRequests -= 1;
