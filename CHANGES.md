@@ -1,6 +1,10 @@
 # Change Log
 
-#### next release (8.2.22)
+#### next release (8.2.23)
+
+- [The next improvement]
+
+#### 8.2.22
 
 - Protomaps Polygon features now only use `PolygonSymbolizer` (instead of `PolygonSymbolizer` and `LineSymbolizer`)
 - Add `horizontalOrigin` and `verticalOrigin` to `TableLabelTraits`
