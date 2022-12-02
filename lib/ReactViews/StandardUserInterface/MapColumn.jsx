@@ -105,7 +105,7 @@ const MapColumn = observer(
                   terria={this.props.viewState.terria}
                   viewState={this.props.viewState}
                 />
-                <ActionBarPortal show={viewState.isActionBarVisible} />
+                <ActionBarPortal show={this.props.viewState.isActionBarVisible} />
                 <SlideUpFadeIn isVisible={this.props.viewState.isMapZooming}>
                   <Toast>
                     <Loader
