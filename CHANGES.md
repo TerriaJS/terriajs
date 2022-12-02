@@ -1,6 +1,10 @@
 # Change Log
 
-#### next release (8.2.22)
+#### next release (8.2.23)
+
+- [The next improvement]
+
+#### 8.2.22 - 2022-12-02
 
 - Protomaps Polygon features now only use `PolygonSymbolizer` (instead of `PolygonSymbolizer` and `LineSymbolizer`)
 - Add `horizontalOrigin` and `verticalOrigin` to `TableLabelTraits`
@@ -24,7 +28,6 @@
 - Add `maximumNativeZoom` to `ProtomapsImageryProvider`
 - Fix image markers (eg `marker = "data:image/png;base64,..."`)
 - Fix `AssimpCatalogItem` to correctly handle zip archives that contain files inside a root folder.
-- [The next improvement]
 
 #### 8.2.21 - 2022-11-10
 
