@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { BoxSpan } from "./Box";
 import { TextSpan } from "./Text";
 
-const Icon = styled.span<{ rightIcon?: boolean }>`
-  ${(p) => (p.rightIcon ? `margin-left: 8px` : `margin-right: 8px`)};
+const IconSpan = styled.span<{ margin?: string }>`
+  ${(p) => p.margin};
 `;
 
 export interface IButtonProps {
@@ -162,7 +162,7 @@ export const RawButton = styled.button<IButtonProps>`
     props.textLight ? `color: ${props.theme.textLight}` : `color: inherit`}
 `;
 
-type ButtonProps = {
+export type ButtonProps = {
   renderIcon?: () => React.ReactChild;
   iconProps?: any;
   rightIcon?: boolean;
@@ -188,13 +188,21 @@ export const Button: React.FC<ButtonProps> = (props) => {
   const IconComponent =
     props.renderIcon && typeof props.renderIcon === "function"
       ? () => (
-          <Icon
+          <IconSpan
             css={iconProps && iconProps.css}
+            margin={
+              // Apply left or right margin only when the button content is not empty
+              props.children
+                ? props.rightIcon
+                  ? "margin-left: 8px"
+                  : "margin-right: 8px"
+                : null
+            }
             rightIcon={props.rightIcon}
             {...iconProps}
           >
             {props!.renderIcon!()}
-          </Icon>
+          </IconSpan>
         )
       : undefined;
 

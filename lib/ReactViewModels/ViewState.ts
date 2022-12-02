@@ -81,7 +81,7 @@ export default class ViewState {
   @observable mobileMenuVisible: boolean = false;
   @observable explorerPanelAnimating: boolean = false;
   @observable topElement: string = "FeatureInfo";
-  // Map for storing react portal containers created by <PortalContainer> component.
+  // Map for storing react portal containers created by <Portal> component.
   @observable portals: Map<string, HTMLElement | null> = new Map();
   @observable lastUploadedFiles: any[] = [];
   @observable storyBuilderShown: boolean = false;
@@ -104,6 +104,12 @@ export default class ViewState {
   @observable currentTrainerStepIndex: number = 0;
 
   @observable printWindow: Window | null = null;
+
+  /**
+   * Toggles ActionBar visibility. Do not set manually, it is
+   * automatically set when rendering <ActionBar>
+   */
+  @observable isActionBarVisible = false;
 
   /**
    * A global list of functions that generate a {@link ViewingControl} option
@@ -145,6 +151,11 @@ export default class ViewState {
   @action
   setCurrentTrainerStepIndex(index: number) {
     this.currentTrainerStepIndex = index;
+  }
+
+  @action
+  setActionBarVisible(visible: boolean) {
+    this.isActionBarVisible = visible;
   }
 
   /**
