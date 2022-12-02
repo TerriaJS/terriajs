@@ -1,6 +1,13 @@
 import i18next from "i18next";
 import { GridLayer } from "leaflet";
-import { action, autorun, computed, observable, runInAction } from "mobx";
+import {
+  action,
+  autorun,
+  computed,
+  observable,
+  reaction,
+  runInAction
+} from "mobx";
 import { computedFn } from "mobx-utils";
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -16,7 +23,6 @@ import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnim
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import html2canvas from "terriajs-html2canvas";
@@ -82,9 +88,6 @@ export default class Leaflet extends GlobeOrMap {
   private _cesiumReqAnimFrameId: number | undefined;
   private _pickedFeatures: PickedFeatures | undefined = undefined;
   private _pauseMapInteractionCount = 0;
-
-  // Tracks the number of active requests to syncDataSourceCollection()
-  private _activeDataSourcesSyncRequests = 0;
 
   /* Disposers */
   private readonly _disposeWorkbenchMapItemsSubscription: () => void;
@@ -366,7 +369,31 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   private observeModelLayer() {
-    return autorun(() => {
+    // Setup reaction to sync datSources collection with availableDataSources
+    //
+    // To avoid buggy concurrent syncs, we have to ensure that even when
+    // multiple sync reactions are triggered, we run them one after the
+    // other. To do this, we make each run of the reaction wait for the
+    // previous `syncDataSourcesPromise` to finish before starting itself.
+    let syncDataSourcesPromise: Promise<void> = Promise.resolve();
+    const dataSourcesReactionDisposer = reaction(
+      () => this.availableDataSources,
+      () => {
+        syncDataSourcesPromise = syncDataSourcesPromise
+          .then(async () => {
+            await this.syncDataSourceCollection(
+              this.availableDataSources,
+              this.dataSources
+            );
+            this.notifyRepaintRequired();
+          })
+          .catch(console.error);
+      },
+      { fireImmediately: true }
+    );
+
+    // Reaction to sync imagery from model layer with cesium map
+    const imageryReactionDisposer = autorun(() => {
       const catalogItems = this.availableCatalogItems;
       // Flatmap
       const allImageryMapItems = (
@@ -423,36 +450,22 @@ export default class Leaflet extends GlobeOrMap {
           this.map.removeLayer(layer);
         }
       });
-
-      this.syncDataSourceCollection();
     });
+
+    return () => {
+      dataSourcesReactionDisposer();
+      imageryReactionDisposer();
+    };
   }
 
   /**
    * Syncs the `dataSources` collection against the latest `availableDataSources`.
    *
-   * The implementation has a few checks to ensure that:
-   *   - Only 1 sync cycle is run at a time
-   *   - When there are multiple sync requests, we debounce them to run only the last one.
    */
-  private async syncDataSourceCollection() {
-    const availableDataSources = this.availableDataSources;
-    const dataSources = this.dataSources;
-
-    // We limit the max awaiting sync count to 2 because no matter how many times sync is
-    // called, we only have to sync with the latest copy of
-    // `availableDataSources`. Which means we only have to run at most 2 times
-    // back-to-back.
-    this._activeDataSourcesSyncRequests = Math.min(
-      this._activeDataSourcesSyncRequests + 1,
-      2
-    );
-    if (this._activeDataSourcesSyncRequests === 2) {
-      // There is at least 1 sync that started before us, which should start a
-      // new sync when it finishes.
-      return;
-    }
-
+  private async syncDataSourceCollection(
+    availableDataSources: DataSource[],
+    dataSources: DataSourceCollection
+  ) {
     // 1. Remove deleted data sources
     //
     // Iterate backwards because we're removing items.
@@ -470,6 +483,10 @@ export default class Leaflet extends GlobeOrMap {
       }
     }
 
+    await new Promise((resolve) =>
+      window.setTimeout(resolve, Math.random() * 1000)
+    );
+
     // 3. Ensure stacking order matches order in `availableDataSources` - first item appears on top.
     runInAction(() =>
       availableDataSources.forEach((ds) => {
@@ -482,15 +499,6 @@ export default class Leaflet extends GlobeOrMap {
         dataSources.contains(ds) && dataSources.raiseToTop(ds);
       })
     );
-
-    this._activeDataSourcesSyncRequests -= 1;
-    if (this._activeDataSourcesSyncRequests === 1) {
-      // syncDataSourceCollection() was invoked 1 or more times while we were processing.
-      // Re-run sync after unblocking
-      this._activeDataSourcesSyncRequests = 0;
-      // yield and re-run
-      Promise.resolve().then(() => this.syncDataSourceCollection());
-    }
   }
 
   doZoomTo(

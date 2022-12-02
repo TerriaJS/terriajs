@@ -5,6 +5,7 @@ import {
   computed,
   IObservableArray,
   observable,
+  reaction,
   runInAction
 } from "mobx";
 import { computedFn } from "mobx-utils";
@@ -123,9 +124,6 @@ export default class Cesium extends GlobeOrMap {
     | DataSource
     | MappableMixin.Instance
     | /*TODO Cesium.Cesium3DTileset*/ any;
-
-  // Tracks the number of active requests to syncDataSourceCollection()
-  private _activeDataSourcesSyncRequests = 0;
 
   private cesiumDataAttributions: IObservableArray<string> = observable([]);
 
@@ -638,27 +636,12 @@ export default class Cesium extends GlobeOrMap {
   /**
    * Syncs the `dataSources` collection against the latest `availableDataSources`.
    *
-   * The implementation has a few checks to ensure that:
-   *   - Only 1 sync cycle is run at a time
-   *   - When there are multiple sync requests, we debounce them to run only the last one.
+   * @return Promise for finishing the sync
    */
-  private async syncDataSourceCollection() {
-    const availableDataSources = this.availableDataSources;
-    const dataSources = this.dataSources;
-    // We set the max sync count to 2 because no matter how many times sync is
-    // called, we only have to sync with the latest copy of
-    // `availableDataSources`. Which means we only have to run at most 2 times
-    // back-to-back.
-    this._activeDataSourcesSyncRequests = Math.min(
-      this._activeDataSourcesSyncRequests + 1,
-      2
-    );
-    if (this._activeDataSourcesSyncRequests === 2) {
-      // There is at least 1 sync that started before us, which should start a
-      // new sync when it finishes.
-      return;
-    }
-
+  private async syncDataSourceCollection(
+    availableDataSources: DataSource[],
+    dataSources: DataSourceCollection
+  ): Promise<void> {
     // 1. Remove deleted data sources
     // Iterate backwards because we're removing items.
     for (let i = dataSources.length - 1; i >= 0; i--) {
@@ -687,24 +670,36 @@ export default class Cesium extends GlobeOrMap {
         dataSources.contains(ds) && dataSources.raiseToTop(ds);
       })
     );
-
-    this._activeDataSourcesSyncRequests -= 1;
-    if (this._activeDataSourcesSyncRequests === 1) {
-      // syncDataSourceCollection() was invoked 1 or more times while we were processing.
-      // Re-run sync after unblocking
-      this._activeDataSourcesSyncRequests = 0;
-      // yield and re-run
-      Promise.resolve().then(() => this.syncDataSourceCollection());
-    }
   }
 
   private observeModelLayer() {
+    // Setup reaction to sync datSources collection with availableDataSources
+    //
+    // To avoid buggy concurrent syncs, we have to ensure that even when
+    // multiple sync reactions are triggered, we run them one after the
+    // other. To do this, we make each run of the reaction wait for the
+    // previous `syncDataSourcesPromise` to finish before starting itself.
+    let syncDataSourcesPromise: Promise<void> = Promise.resolve();
+    const reactionDisposer = reaction(
+      () => this.availableDataSources,
+      () => {
+        syncDataSourcesPromise = syncDataSourcesPromise
+          .then(async () => {
+            await this.syncDataSourceCollection(
+              this.availableDataSources,
+              this.dataSources
+            );
+            this.notifyRepaintRequired();
+          })
+          .catch(console.error);
+      },
+      { fireImmediately: true }
+    );
+
     let prevMapItems: MapItem[] = [];
-    return autorun(() => {
+    const autorunDisposer = autorun(() => {
       // TODO: Look up the type in a map and call the associated function.
       //       That way the supported types of map items is extensible.
-
-      this.syncDataSourceCollection();
 
       const allImageryParts = this._allMappables
         .map((m) =>
@@ -794,6 +789,11 @@ export default class Cesium extends GlobeOrMap {
       prevMapItems = this._allMapItems;
       this.notifyRepaintRequired();
     });
+
+    return () => {
+      reactionDisposer();
+      autorunDisposer();
+    };
   }
 
   stopObserving() {
