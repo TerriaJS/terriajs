@@ -127,4 +127,68 @@ describe("MapToolbar", function () {
       });
     });
   });
+
+  describe("tool button", function () {
+    it("can be added to the toolbar", function () {
+      expect(terria.mapNavigationModel.items.length).toBe(0);
+      MapToolbar.addToolButton(viewState, () => ({
+        text: "Light bulb",
+        icon: Icon.GLYPHS.bulb,
+        tool: {
+          name: "Light bulb",
+          component: () => () => null
+        }
+      }));
+      expect(terria.mapNavigationModel.items.length).toBe(1);
+      expect(terria.mapNavigationModel.items[0].name).toBe("Light bulb");
+    });
+
+    it("can be removed from the toolbar", function () {
+      expect(terria.mapNavigationModel.items.length).toBe(0);
+      const toolButton = MapToolbar.addToolButton(viewState, () => ({
+        text: "Light bulb",
+        icon: Icon.GLYPHS.bulb,
+        tool: {
+          name: "Light bulb",
+          component: () => () => null
+        }
+      }));
+      expect(terria.mapNavigationModel.items.length).toBe(1);
+      toolButton.removeButton();
+      expect(terria.mapNavigationModel.items.length).toBe(0);
+    });
+
+    it("is activated when opening the tool", function () {
+      const toolButton = MapToolbar.addToolButton(viewState, () => ({
+        text: "Light bulb",
+        icon: Icon.GLYPHS.bulb,
+        tool: {
+          name: "Light bulb",
+          component: () => () => null
+        }
+      }));
+      const navItem = terria.mapNavigationModel.items[0];
+      expect(navItem.controller.active).toBe(false);
+      toolButton.openTool();
+      expect(navItem.controller.active).toBe(true);
+    });
+
+    it("is deactivated when the tool is closed through other means", function () {
+      const toolButton = MapToolbar.addToolButton(viewState, () => ({
+        text: "Light bulb",
+        icon: Icon.GLYPHS.bulb,
+        tool: {
+          name: "Light bulb",
+          component: () => () => null
+        }
+      }));
+      const navItem = terria.mapNavigationModel.items[0];
+      toolButton.openTool();
+      expect(navItem.controller.active).toBe(true);
+      // The tool can be closed by other means, not nessecarily by calling toolButton.closeTool()
+      // It should deactivate correctly even in that case.
+      viewState.closeTool();
+      expect(navItem.controller.active).toBe(false);
+    });
+  });
 });
