@@ -159,7 +159,8 @@ function generateControls(viewState: ViewState, item: BaseModel) {
   const errors: TerriaError[] = [];
   viewState.workbenchItemControlGenerators.forEach((generator) => {
     try {
-      generatedControls.push(...(generator(item) ?? []));
+      const control = generator(item);
+      control && generatedControls.push(control);
     } catch (error) {
       errors.push(TerriaError.from(error));
     }

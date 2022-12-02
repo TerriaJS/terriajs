@@ -6,7 +6,7 @@ import ViewState from "../ReactViewModels/ViewState";
 
 type WorkbenchItemControlsGenerator = (
   item: BaseModel
-) => SelectableDimension[] | undefined;
+) => SelectableDimension | undefined;
 
 type WorkbenchItemControlDisposer = () => void;
 
