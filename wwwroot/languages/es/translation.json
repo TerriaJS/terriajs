@@ -838,7 +838,8 @@
     "gmlToGeoJson": {
       "missingPos": "Al elemento de punto GML le falta un elemento pos.",
       "missingExteriorRing": "Al polígono GML le falta el anillo exterior.",
-      "missingPosList": "Al anillo exterior del polígono GML le falta una posLista."
+      "missingPosList": "Al anillo exterior del polígono GML le falta una posLista.",
+      "containsUnsupportedFeatureType": "GML contiene un tipo de característica no compatible: {{tipo}}"
     }
   }
 }
