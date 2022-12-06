@@ -1,8 +1,14 @@
 # Change Log
 
-#### next release (8.2.22)
+#### next release (8.2.23)
+
+- Only add groups to `CatalogIndex` if they aren't empty
+- [The next improvement]
+
+#### 8.2.22 - 2022-12-02
 
 - Protomaps Polygon features now only use `PolygonSymbolizer` (instead of `PolygonSymbolizer` and `LineSymbolizer`)
+- Add `horizontalOrigin` and `verticalOrigin` to `TableLabelTraits`
 - `TableStylingWorkflow` improvements:
   - Add more options to advanced mode (style title, hide style, long/lat column, time properties)
   - "Style" dropdown now shows `TableStyles` instead of `TableColumns`
@@ -22,8 +28,7 @@
 - Fix `MapboxVectorTileCatalogItem` `fillColor` also applying to Line features
 - Add `maximumNativeZoom` to `ProtomapsImageryProvider`
 - Fix image markers (eg `marker = "data:image/png;base64,..."`)
-- Only add groups to `CatalogIndex` if they aren't empty
-- [The next improvement]
+- Fix `AssimpCatalogItem` to correctly handle zip archives that contain files inside a root folder.
 
 #### 8.2.21 - 2022-11-10
 
