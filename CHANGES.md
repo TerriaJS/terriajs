@@ -1,6 +1,11 @@
 # Change Log
 
-#### next release (8.2.22)
+#### next release (8.2.23)
+
+- Only add groups to `CatalogIndex` if they aren't empty
+- [The next improvement]
+
+#### 8.2.22 - 2022-12-02
 
 - Protomaps Polygon features now only use `PolygonSymbolizer` (instead of `PolygonSymbolizer` and `LineSymbolizer`)
 - Add `horizontalOrigin` and `verticalOrigin` to `TableLabelTraits`
