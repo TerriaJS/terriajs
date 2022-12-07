@@ -5,14 +5,8 @@ import ViewState from "../ReactViewModels/ViewState";
 import { IconGlyph } from "../Styled/Icon";
 
 /**
- * Close feature info panel
+ * FeatureInfoPanel Button type
  */
-export function closePanel(viewState: ViewState) {
-  runInAction(() => {
-    viewState.terria.pickedFeatures = undefined;
-  });
-}
-
 export interface FeatureInfoPanelButton {
   text?: string;
   icon?: IconGlyph;
@@ -20,13 +14,20 @@ export interface FeatureInfoPanelButton {
   onClick: () => void;
 }
 
+/**
+ * A generator function called once for each feature in the feature info panel.
+ *
+ * @param feature The feature for which the button is being generated
+ * @param item The map item for which the button is being generated
+ * @returns An instance of {@link FeatureInfoPanelButton} or `undefined` if no button should be shown.
+ */
 export type FeatureInfoPanelButtonGenerator = (props: {
   feature: TerriaFeature;
   item: BaseModel;
 }) => FeatureInfoPanelButton | undefined;
 
 /**
- * Add a feature button generator.
+ * Add a new feature button generator to Terria ViewState.
  *
  * @param viewState The ViewState object
  * @param buttonGenerator A button generator function. It will be called once
@@ -41,4 +42,13 @@ export function addFeatureButton(
   runInAction(() =>
     viewState.featureInfoPanelButtonGenerators.push(buttonGenerator)
   );
+}
+
+/**
+ * Close feature info panel
+ */
+export function closePanel(viewState: ViewState) {
+  runInAction(() => {
+    viewState.terria.pickedFeatures = undefined;
+  });
 }
