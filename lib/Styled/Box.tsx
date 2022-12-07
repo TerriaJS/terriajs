@@ -17,7 +17,7 @@ interface Column {
   col12?: boolean;
 }
 
-interface IBoxPropsBase {
+export interface IBoxPropsBase {
   position?: "relative" | "absolute" | "static";
   topRight?: boolean;
   displayInlineBlock?: boolean;
@@ -180,7 +180,7 @@ export const Box = styled.div<IBoxProps>`
   ${(props) => props.styledPadding && `padding: ${props.styledPadding};`}
 
   ${(props) => props.styledMargin && `margin: ${props.styledMargin};`}
-  
+
   ${(props) =>
     props.backgroundImage &&
     `
