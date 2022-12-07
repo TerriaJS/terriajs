@@ -25,6 +25,20 @@ const Axis: Axis = require("terriajs-cesium/Source/Scene/Axis").default;
 
 type GltfModel = Model<GltfTraits>;
 
+export interface GltfTransformationJson {
+  origin: {
+    latitude?: number;
+    longitude?: number;
+    height?: number;
+  };
+  rotation: {
+    heading?: number;
+    pitch?: number;
+    roll?: number;
+  };
+  scale?: number;
+}
+
 function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
   abstract class GltfMixin extends ShadowMixin(
     CatalogMemberMixin(MappableMixin(Base))
@@ -40,7 +54,17 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
     }
 
     @computed
-    private get cesiumUpAxis() {
+    get disableZoomTo() {
+      const { latitude, longitude, height } = this.origin;
+      return (
+        latitude === undefined ||
+        longitude === undefined ||
+        height === undefined
+      );
+    }
+
+    @computed
+    get cesiumUpAxis() {
       if (this.upAxis === undefined) {
         return Axis.Y;
       }
@@ -48,7 +72,7 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
     }
 
     @computed
-    private get cesiumForwardAxis() {
+    get cesiumForwardAxis() {
       if (this.forwardAxis === undefined) {
         return Axis.Z;
       }
@@ -96,7 +120,7 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
     }
 
     @computed
-    get transformationJson() {
+    get transformationJson(): GltfTransformationJson {
       return {
         origin: {
           latitude: this.origin.latitude,
