@@ -85,6 +85,25 @@ describe("GltfMixin", function () {
       }
     })
   );
+
+  describe("disableZoomTo", function () {
+    it("should disable zoom to when model position is not known", function () {
+      const testItem = new TestGltfItem("test", terria);
+      expect(testItem.disableZoomTo).toBeTruthy();
+    });
+
+    it("should enable zoom to when model position is known", function () {
+      const testItem = new TestGltfItem("test", terria);
+      updateModelFromJson(testItem, CommonStrata.user, {
+        origin: {
+          latitude: 42,
+          longitude: 42,
+          height: 42
+        }
+      });
+      expect(testItem.disableZoomTo).toBeFalsy();
+    });
+  });
 });
 
 class TestGltfItem extends GltfMixin(CreateModel(GltfTraits)) {
