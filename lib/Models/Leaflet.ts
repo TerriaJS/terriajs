@@ -483,10 +483,6 @@ export default class Leaflet extends GlobeOrMap {
       }
     }
 
-    await new Promise((resolve) =>
-      window.setTimeout(resolve, Math.random() * 1000)
-    );
-
     // 3. Ensure stacking order matches order in `availableDataSources` - first item appears on top.
     runInAction(() =>
       availableDataSources.forEach((ds) => {
