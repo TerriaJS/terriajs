@@ -1,6 +1,16 @@
 # Change Log
 
-#### next release (8.2.22)
+#### next release (8.2.23)
+
+- Only add groups to `CatalogIndex` if they aren't empty
+- `BoxDrawing` improvements:
+  - Added option `drawNonUniformScaleGrips` to enable/disable uniform-scaling
+  - Set limit on the size of scaling grips relative to the size of the box
+  - Small improvement to move interaction that prevents the box from locking up when trying to move at a camera angle parallel to the ground
+  - Restore modified map state to the previous setting when interaction stops
+- [The next improvement]
+
+#### 8.2.22 - 2022-12-02
 
 - Protomaps Polygon features now only use `PolygonSymbolizer` (instead of `PolygonSymbolizer` and `LineSymbolizer`)
 - Add `horizontalOrigin` and `verticalOrigin` to `TableLabelTraits`
@@ -23,7 +33,7 @@
 - Fix `MapboxVectorTileCatalogItem` `fillColor` also applying to Line features
 - Add `maximumNativeZoom` to `ProtomapsImageryProvider`
 - Fix image markers (eg `marker = "data:image/png;base64,..."`)
-- [The next improvement]
+- Fix `AssimpCatalogItem` to correctly handle zip archives that contain files inside a root folder.
 
 #### 8.2.21 - 2022-11-10
 

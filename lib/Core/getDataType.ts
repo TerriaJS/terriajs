@@ -169,6 +169,12 @@ export default function (): GetDataTypes {
         value: "shp",
         name: i18next.t("core.dataType.shp"),
         extensions: ["zip"]
+      },
+      {
+        value: "assimp",
+        name: i18next.t("core.dataType.assimp-local"),
+        description: i18next.t("core.dataType.assimp-local-description"),
+        extensions: ["zip"]
       }
     ]
   };
