@@ -1,6 +1,13 @@
 import i18next from "i18next";
 import { GridLayer } from "leaflet";
-import { action, autorun, computed, observable, runInAction } from "mobx";
+import {
+  action,
+  autorun,
+  computed,
+  observable,
+  reaction,
+  runInAction
+} from "mobx";
 import { computedFn } from "mobx-utils";
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -16,7 +23,6 @@ import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnim
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import html2canvas from "terriajs-html2canvas";
@@ -342,12 +348,53 @@ export default class Leaflet extends GlobeOrMap {
     this.map.remove();
   }
 
+  @computed
+  get availableCatalogItems() {
+    const catalogItems = [
+      ...this.terriaViewer.items.get(),
+      this.terriaViewer.baseMap
+    ];
+    return catalogItems;
+  }
+
+  @computed
+  get availableDataSources() {
+    const catalogItems = this.availableCatalogItems;
+    /* Handle datasources */
+    const allMapItems = ([] as MapItem[]).concat(
+      ...catalogItems.filter(isDefined).map((item) => item.mapItems)
+    );
+    const dataSources = allMapItems.filter(isDataSource);
+    return dataSources;
+  }
+
   private observeModelLayer() {
-    return autorun(() => {
-      const catalogItems = [
-        ...this.terriaViewer.items.get(),
-        this.terriaViewer.baseMap
-      ];
+    // Setup reaction to sync datSources collection with availableDataSources
+    //
+    // To avoid buggy concurrent syncs, we have to ensure that even when
+    // multiple sync reactions are triggered, we run them one after the
+    // other. To do this, we make each run of the reaction wait for the
+    // previous `syncDataSourcesPromise` to finish before starting itself.
+    let syncDataSourcesPromise: Promise<void> = Promise.resolve();
+    const dataSourcesReactionDisposer = reaction(
+      () => this.availableDataSources,
+      () => {
+        syncDataSourcesPromise = syncDataSourcesPromise
+          .then(async () => {
+            await this.syncDataSourceCollection(
+              this.availableDataSources,
+              this.dataSources
+            );
+            this.notifyRepaintRequired();
+          })
+          .catch(console.error);
+      },
+      { fireImmediately: true }
+    );
+
+    // Reaction to sync imagery from model layer with cesium map
+    const imageryReactionDisposer = autorun(() => {
+      const catalogItems = this.availableCatalogItems;
       // Flatmap
       const allImageryMapItems = (
         [] as {
@@ -403,37 +450,51 @@ export default class Leaflet extends GlobeOrMap {
           this.map.removeLayer(layer);
         }
       });
-
-      /* Handle datasources */
-      const allMapItems = ([] as MapItem[]).concat(
-        ...catalogItems.filter(isDefined).map((item) => item.mapItems)
-      );
-      const allDataSources = allMapItems.filter(isDataSource);
-
-      // Remove deleted data sources
-      let dataSources = this.dataSources;
-      for (let i = 0; i < dataSources.length; i++) {
-        const d = dataSources.get(i);
-        if (allDataSources.indexOf(d) === -1) {
-          dataSources.remove(d);
-          --i;
-        }
-      }
-
-      // Add new data sources, remove hidden ones
-      allDataSources.forEach((d) => {
-        if (d.show) {
-          if (!dataSources.contains(d)) {
-            dataSources.add(d);
-          }
-        } else {
-          dataSources.remove(d);
-        }
-      });
-
-      // Ensure stacking order matches order in allDataSources - first item appears on top.
-      allDataSources.forEach((d) => dataSources.raiseToTop(d));
     });
+
+    return () => {
+      dataSourcesReactionDisposer();
+      imageryReactionDisposer();
+    };
+  }
+
+  /**
+   * Syncs the `dataSources` collection against the latest `availableDataSources`.
+   *
+   */
+  private async syncDataSourceCollection(
+    availableDataSources: DataSource[],
+    dataSources: DataSourceCollection
+  ) {
+    // 1. Remove deleted data sources
+    //
+    // Iterate backwards because we're removing items.
+    for (let i = dataSources.length - 1; i >= 0; i--) {
+      const ds = dataSources.get(i);
+      if (availableDataSources.indexOf(ds) === -1 || !ds.show) {
+        dataSources.remove(ds);
+      }
+    }
+
+    // 2. Add new data sources
+    for (let ds of availableDataSources) {
+      if (!dataSources.contains(ds) && ds.show) {
+        await dataSources.add(ds);
+      }
+    }
+
+    // 3. Ensure stacking order matches order in `availableDataSources` - first item appears on top.
+    runInAction(() =>
+      availableDataSources.forEach((ds) => {
+        // There is a buggy/un-intended side-effect when calling raiseToTop() with
+        // a source that doesn't exist in the collection. Doing this will replace
+        // the last entry in the collection with the new one. So we should be
+        // careful to raiseToTop() only if the DS already exists in the collection.
+        // Relevant code:
+        //   https://github.com/CesiumGS/cesium/blob/dbd452328a48bfc4e192146862a9f8fa15789dc8/packages/engine/Source/DataSources/DataSourceCollection.js#L298-L299
+        dataSources.contains(ds) && dataSources.raiseToTop(ds);
+      })
+    );
   }
 
   doZoomTo(
