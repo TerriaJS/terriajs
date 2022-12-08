@@ -10,6 +10,9 @@
   - Restore modified map state to the previous setting when interaction stops
 - Add `UploadDataTypes` API for extending the supported local and remote upload data types.
 - Fix bug in Cesium and Leaflet maps that resulted in `DataSource`s getting rendered even after their parent items are removed from the workbench.
+- GltfMixin changes:
+  - Refactors code to use stable `DataSource` and `Entity` values instead of re-creating them everytime `mapItems` is recomputed.
+  - Disable zoom to for the item when position is unknown.
 - [The next improvement]
 
 #### 8.2.22 - 2022-12-02
