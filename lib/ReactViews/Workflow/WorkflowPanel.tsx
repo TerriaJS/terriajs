@@ -7,7 +7,7 @@ import Button from "../../Styled/Button";
 import { IconProps, StyledIcon } from "../../Styled/Icon";
 import { addTerriaScrollbarStyles } from "../../Styled/mixins";
 import Text from "../../Styled/Text";
-import Portal from "../StandardUserInterface/Portal";
+import { PortalChild } from "../StandardUserInterface/Portal";
 import { PanelButton } from "./Panel";
 
 export const WorkflowPanelPortalId = "workflow-panel-portal";
@@ -32,14 +32,15 @@ const WorkflowPanel: React.FC<PropsType> = observer((props) => {
     runInAction(() => {
       viewState.terria.isWorkflowPanelActive = true;
     });
-    return () =>
+    return () => {
       runInAction(() => {
         viewState.terria.isWorkflowPanelActive = false;
       });
-  });
+    };
+  }, []);
 
   return (
-    <Portal viewState={viewState} id={WorkflowPanelPortalId}>
+    <PortalChild viewState={viewState} portalId={WorkflowPanelPortalId}>
       <Container
         className={
           viewState.topElement === "WorkflowPanel" ? "top-element" : ""
@@ -65,7 +66,7 @@ const WorkflowPanel: React.FC<PropsType> = observer((props) => {
           />
         ) : null}
       </Container>
-    </Portal>
+    </PortalChild>
   );
 });
 

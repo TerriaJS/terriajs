@@ -1,25 +1,22 @@
 import React from "react";
 import styled from "styled-components";
 import ViewState from "../../ReactViewModels/ViewState";
-import { WorkflowPanelPortalId } from "../Workflow/WorkflowPanel";
-import PortalContainer from "./PortalContainer";
-import { withViewState } from "./ViewStateContext";
+import { WorkflowPanelPortalId } from "./WorkflowPanel";
+import { Portal } from "../StandardUserInterface/Portal";
+import { withViewState } from "../StandardUserInterface/ViewStateContext";
 
 type PropsType = {
   viewState: ViewState;
   show: boolean;
 };
 
-const WorkflowPanelContainer: React.FC<PropsType> = ({ viewState, show }) => {
+const WorkflowPanelPortal: React.FC<PropsType> = ({ viewState, show }) => {
   return (
     <Container
       show={show}
       onTransitionEnd={() => viewState.triggerResizeEvent()}
     >
-      <PortalContainer
-        viewState={viewState}
-        id={WorkflowPanelPortalId}
-      ></PortalContainer>
+      <Portal viewState={viewState} id={WorkflowPanelPortalId} />
     </Container>
   );
 };
@@ -37,4 +34,4 @@ const Container = styled.div<{ show: boolean }>`
   opacity: ${(p) => (p.show ? 1 : 0)};
 `;
 
-export default withViewState(WorkflowPanelContainer);
+export default withViewState(WorkflowPanelPortal);
