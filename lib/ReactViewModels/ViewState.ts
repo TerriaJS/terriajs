@@ -24,6 +24,10 @@ import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import { BaseModel } from "../Models/Definition/Model";
 import getAncestors from "../Models/getAncestors";
+import {
+  SelectableDimension,
+  SelectableDimensionButton
+} from "../Models/SelectableDimensions/SelectableDimensions";
 import Terria from "../Models/Terria";
 import { ViewingControl } from "../Models/ViewingControls";
 import { SATELLITE_HELP_PROMPT_KEY } from "../ReactViews/HelpScreens/SatelliteHelpPrompt";
@@ -125,6 +129,17 @@ export default class ViewState {
   @observable
   readonly featureInfoPanelButtonGenerators: FeatureInfoPanelButtonGenerator[] =
     [];
+
+   * A global ist of functions to dynamically generate {@link
+   * SelectableDimension} for items in the workbench. This is useful for
+   * plugins to extend the workbench controls from outside.
+   *
+   * Use {@link WorkbenchItemControls.addControl} instead of updating directly.
+   */
+  @observable
+  readonly workbenchItemControlGenerators: ((
+    item: BaseModel
+  ) => SelectableDimension | undefined)[] = [];
 
   @action
   setSelectedTrainerItem(trainerItem: string) {
