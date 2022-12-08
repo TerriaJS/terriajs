@@ -1,11 +1,11 @@
-import ViewState from "../../ReactViewModels/ViewState";
-import { NavigationItemLocation } from "./MapNavigationModel";
-import MapNavigationItemController from "./MapNavigationItemController";
-import Terria from "../../Models/Terria";
-import { IconGlyph } from "../../Styled/Icon";
-import ViewerMode from "../../Models/ViewerMode";
-import TerriaError from "../../Core/TerriaError";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import TerriaError from "../../Core/TerriaError";
+import Terria from "../../Models/Terria";
+import ViewerMode from "../../Models/ViewerMode";
+import ViewState from "../../ReactViewModels/ViewState";
+import { IconGlyph } from "../../Styled/Icon";
+import MapNavigationItemController from "./MapNavigationItemController";
+import { NavigationItemLocation } from "./MapNavigationModel";
 
 interface SimpleButton {
   /**
@@ -45,7 +45,7 @@ interface ModeButtonOptions extends BaseButtonOptions {
   onUserCloseMode: () => void;
 }
 
-interface BaseButtonOptions {
+export interface BaseButtonOptions {
   /**
    * Button text
    */
@@ -278,3 +278,5 @@ class ModalButtonController extends MapNavigationItemController {
     super.deactivate();
   }
 }
+
+export { addToolButton, ToolButton, ToolButtonOptions } from "./ToolButton";
