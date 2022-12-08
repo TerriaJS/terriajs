@@ -130,7 +130,7 @@ export default class ViewState {
   readonly featureInfoPanelButtonGenerators: FeatureInfoPanelButtonGenerator[] =
     [];
 
-   * A global ist of functions to dynamically generate {@link
+  /* A global ist of functions to dynamically generate {@link
    * SelectableDimension} for items in the workbench. This is useful for
    * plugins to extend the workbench controls from outside.
    *
