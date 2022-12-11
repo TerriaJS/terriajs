@@ -1322,6 +1322,10 @@ describe("FeatureInfoSection", function () {
   describe("feature info panel buttons", function () {
     it("renders buttons added using FeatureInfoPanel.addFeatureButton", function () {
       FeatureInfoPanel.addFeatureButton(viewState, ({ feature, item }) => {
+        if (!(item instanceof TestModel)) {
+          return;
+        }
+
         const materialUsed = feature.properties?.getValue(JulianDate.now())[
           "material"
         ];
