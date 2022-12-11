@@ -12,7 +12,7 @@ describe("UploadDataTypes", function () {
   });
 
   describe("addRemoteUploadType", function () {
-    it("should add the given upload type to lofcalDataType list", function () {
+    it("should add the given upload type to localDataType list", function () {
       UploadDataTypes.addRemoteUploadType({
         value: "foo42",
         name: "Foo type",
@@ -28,7 +28,7 @@ describe("UploadDataTypes", function () {
   });
 
   describe("addLocalUploadType", function () {
-    it("should add the given upload type to lofcalDataType list", function () {
+    it("should add the given upload type to localDataType list", function () {
       UploadDataTypes.addLocalUploadType({
         value: "foo42",
         name: "Foo type",
