@@ -12,18 +12,18 @@ describe("UploadDataTypes", function () {
   });
 
   describe("addRemoteUploadType", function () {
-    it("should add the given upload type to localDataType list", function () {
+    it("should add the given upload type to remoteDataType list", function () {
       UploadDataTypes.addRemoteUploadType({
         value: "foo42",
         name: "Foo type",
-        description: "Foo files"
+        description: "Foo data"
       });
       const fooType = UploadDataTypes.getDataTypes().remoteDataType.find(
         (type) => type.value === "foo42"
       );
       expect(fooType).toBeDefined();
       expect(fooType?.name).toEqual("Foo type");
-      expect(fooType?.description).toEqual("Foo files");
+      expect(fooType?.description).toEqual("Foo data");
     });
   });
 
