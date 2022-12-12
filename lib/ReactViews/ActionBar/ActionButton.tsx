@@ -27,8 +27,8 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
   return (
     <StyledButton
       className={className}
-      backgroundColor={isActive ? "#DD6E0F" : theme.darkLighter}
-      hoverBackgroundColor={warning ? "red" : "#DD6E0F"}
+      backgroundColor={isActive ? theme.colorPrimary : theme.darkLighter}
+      hoverBackgroundColor={warning ? "red" : theme.colorPrimary}
       renderIcon={
         icon
           ? () => (
