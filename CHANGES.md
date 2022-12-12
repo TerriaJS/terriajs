@@ -9,6 +9,7 @@
   - Small improvement to move interaction that prevents the box from locking up when trying to move at a camera angle parallel to the ground
   - Restore modified map state to the previous setting when interaction stops
 - Add `UploadDataTypes` API for extending the supported local and remote upload data types.
+- Refactor `Cesium3dTileMixin`.
 - [The next improvement]
 
 #### 8.2.22 - 2022-12-02
