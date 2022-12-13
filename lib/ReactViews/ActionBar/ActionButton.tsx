@@ -1,5 +1,6 @@
 import React from "react";
 import { useTheme } from "styled-components";
+import AnimatedSpinnerIcon from "../../Styled/AnimatedSpinnerIcon";
 import { ButtonProps } from "../../Styled/Button";
 import { IconGlyph, StyledIcon } from "../../Styled/Icon";
 import StyledButton from "./StyledButton";
@@ -11,6 +12,7 @@ export interface ActionButtonProps
   > {
   className?: string;
   icon?: IconGlyph;
+  showProcessingIcon?: boolean;
 }
 
 /**
@@ -19,6 +21,7 @@ export interface ActionButtonProps
 export const ActionButton: React.FC<ActionButtonProps> = ({
   className,
   icon,
+  showProcessingIcon,
   warning,
   isActive,
   ...props
@@ -30,7 +33,9 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
       backgroundColor={isActive ? theme.colorPrimary : theme.darkLighter}
       hoverBackgroundColor={warning ? "red" : theme.colorPrimary}
       renderIcon={
-        icon
+        showProcessingIcon
+          ? () => <AnimatedSpinnerIcon styledWidth="20px" styledHeight="20px" />
+          : icon
           ? () => (
               <StyledIcon
                 light
