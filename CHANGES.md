@@ -11,6 +11,8 @@
 - GltfMixin changes:
   - Refactors code to use stable `DataSource` and `Entity` values instead of re-creating them everytime `mapItems` is recomputed.
   - Disable zoom to for the item when position is unknown.
+- Add `UploadDataTypes` API for extending the supported local and remote upload data types.
+- Refactor `Cesium3dTileMixin`.
 - [The next improvement]
 
 #### 8.2.22 - 2022-12-02
