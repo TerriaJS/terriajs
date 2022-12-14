@@ -840,6 +840,23 @@
       "missingExteriorRing": "Al polígono GML le falta el anillo exterior.",
       "missingPosList": "Al anillo exterior del polígono GML le falta una posLista.",
       "containsUnsupportedFeatureType": "GML contiene un tipo de característica no compatible: {{tipo}}"
+    },
+    "w3cToGeoJson": {
+      "containsUnsupportedFeatureType": "GeoRSS contiene un tipo de característica no compatible: {{tipo}}"
+    },
+    "gnafAddressGeocoder": {
+      "lon": "Lon",
+      "noAddresses2": "Aunque la tabla estructurada informa de que tiene una columna de dirección, no tiene direcciones",
+      "noAddresses": "Esta tabla estructurada no tiene direcciones!",
+      "suburb": "Suburbio",
+      "score": "Puntuación",
+      "state": "Estado",
+      "matchedAddresses": "Dirección correspondiente",
+      "postcode": "Código postal",
+      "lat": "Lat"
+    },
+    "geoRssToGeoJson": {
+      "containsUnsupportedFeatureType": "GeoRSS contiene un tipo de característica no compatible: {{tipo}}"
     }
   }
 }
