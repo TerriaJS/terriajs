@@ -272,54 +272,6 @@ const RCStoryPanel = createReactClass({
                     </div>
                   </Link>
                 </Medium>
-                <If condition={terriaStories.length >= 2}>
-                  <div className={Styles.navBtn}>
-                    {terriaStories.map((selectedPage, pageIndex) => (
-                      <Tooltip
-                        content={selectedPage.pageTitle}
-                        direction="top"
-                        delay="100"
-                        key={selectedPage.id}
-                      >
-                        <Link to={`/sector/${routedSectorName}/story/${routedStoryID}/page/${pageIndex}`}>
-                          <button
-                            title={t("story.navBtn", { title: selectedPage.pageTitle })}
-                            type="button"
-                          >
-                            <Icon
-                              style={{ fill: "currentColor" }}
-                              className={`opacity-40 hover:opacity-100 ${pageIndex ===
-                                routedStoryID &&
-                                "opacity-100"}
-                              ${
-                                selectedPage.section === "SCOPE"
-                                  ? "text-red-600"
-                                  : selectedPage.section === "HOTSPOTS"
-                                  ? "text-blue-600"
-                                  : selectedPage.section === "CONNECTION"
-                                  ? "text-purple-600"
-                                  : selectedPage.section === "EU_IMPACT"
-                                  ? "text-green-600"
-                                  : selectedPage.section === "CLIMATE_SCENARIOS"
-                                  ? "text-orange-600"
-                                  : selectedPage.section === "SOC_ECON_SCENARIOS"
-                                  ? "text-amber-600"
-                                  : selectedPage.section === "COMPARISON" &&
-                                    "text-lime-600"
-                              }
-                              `}
-                              glyph={
-                                pageIndex === routedStoryID
-                                  ? Icon.GLYPHS.circleFull
-                                  : Icon.GLYPHS.circleFull
-                              }
-                            />
-                          </button>
-                        </Link>
-                      </Tooltip>
-                    ))}
-                  </div>
-                </If>
                 <Medium>                
                   <Link to={nextURL}>
                     <div className={Styles.right}>                    
