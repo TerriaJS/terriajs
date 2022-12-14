@@ -117,6 +117,35 @@ const RCStoryPanel = createReactClass({
       return `/sector/${routedSectorName}/story/${routedStoryID}/page/${pageIndex}`;
     }
 
+    function isPageFirstOfSection(pageIndex) {
+      if (pageIndex == 0) {
+        return true;
+      }
+      if (terriaStories[pageIndex].section === terriaStories[pageIndex-1].section) {
+        return false;
+      }
+      return true;
+    }
+
+    function selectColorForSection(section = "") {
+      if (section === "SCOPE") {
+        return "red"
+      } else if (section === "HOTSPOTS") {
+        return "blue"
+      } else if (section === "CONNECTION") {
+        return "purple"
+      } else if (section === "EU_IMPACT") {
+        return "green"
+      } else if (section === "CLIMATE_SCENARIOS") {
+        return "orange"
+      } else if (section === "SOC_ECON_SCENARIOS") {
+        return "amber"
+      } else if (section === "COMPARISON") {
+        return "lime"
+      }
+    }
+
+
     const prevURL = `/sector/${routedSectorName}/story/${routedStoryID}/page/${routedPageIndex == 0 ? 0 : routedPageIndex-1}`; 
     const nextURL = `/sector/${routedSectorName}/story/${routedStoryID}/page/${routedPageIndex == terriaStories.length-1 ? terriaStories.length-1 : routedPageIndex+1}`;
 
@@ -153,57 +182,57 @@ const RCStoryPanel = createReactClass({
               <br />
               {/* Sections buttons for story panel*/}
               <div className="flex flex-wrap gap-2 mb-3">
-                <Link to={findFirstPageURLOfSection("SCOPE")}>
-                  <div className={`btn btn-xs rounded-none border-0 text-black bg-red-100    ${selectedPage.section ===
-                      "SCOPE" && "bg-red-400"}          hover:bg-red-400`}
-                  >
-                    Scope
+
+                {terriaStories.map((storyPage, pageIndex) => (
+                  <> {/* This empty tag is needed for the <If> and <Link> blocks to work within the terriaStories.map() */}
+                  <If condition={pageIndex > 0}>
+                  <div>
+                    <svg height="25" width="100%" viewBox="0 0 50 80">
+                    <Link to={`/sector/${routedSectorName}/story/${routedStoryID}/page/${pageIndex-1}`}>
+                        <polygon points="0,0 20,40 0,80"
+                                 className={`btn btn-xs rounded-none border-0
+                                             fill-${selectColorForSection(terriaStories[pageIndex-1].section)}-${terriaStories[pageIndex-1] == selectedPage ? "400" : "100"}
+                                             hover:fill-${selectColorForSection(terriaStories[pageIndex-1].section)}-400
+                        `}/>
+                      </Link>
+                      <Link to={`/sector/${routedSectorName}/story/${routedStoryID}/page/${pageIndex}`}>
+                        <polygon points="10,0 50,0 50,80 10,80 30,40"
+                                 className={`btn btn-xs rounded-none border-0
+                                             fill-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
+                                             hover:fill-${selectColorForSection(storyPage.section)}-400
+                        `}/>
+                      </Link>
+                    </svg>
                   </div>
-                </Link>
-                <Link to={findFirstPageURLOfSection("HOTSPOTS")}>
-                  <div className={`btn btn-xs rounded-none border-0 text-black bg-blue-100   ${selectedPage.section ===
-                      "HOTSPOTS" && "bg-blue-400"}           hover:bg-blue-400`}
-                  >
-                    Hotspots
-                  </div>
-                </Link>
-                <Link to={findFirstPageURLOfSection("CONNECTION")}>
-                  <div className={`btn btn-xs rounded-none border-0 text-black bg-purple-100 ${selectedPage.section ===
-                      "CONNECTION" && "bg-purple-400"}      hover:bg-purple-400`}
-                  >
-                    Connection
-                  </div>
-                </Link>
-                <Link to={findFirstPageURLOfSection("EU_IMPACT")}>
-                  <div className={`btn btn-xs rounded-none border-0 text-black bg-green-100  ${selectedPage.section ===
-                      "EU_IMPACT" && "bg-green-400"}        hover:bg-green-400`}
-                  >
-                    EU impact
-                  </div>
-                </Link>
-                <Link to={findFirstPageURLOfSection("CLIMATE_SCENARIOS")}>
-                  <div className={`btn btn-xs rounded-none border-0 text-black bg-orange-100 ${selectedPage.section ===
-                      "CLIMATE_SCENARIOS" &&
-                      "bg-orange-400"}  hover:bg-orange-400`}
-                  >
-                    Climate scenarios
-                  </div>
-                </Link>
-                <Link to={findFirstPageURLOfSection("SOC_ECON_SCENARIOS")}>
-                <div className={`btn btn-xs rounded-none border-0 text-black bg-amber-100  ${selectedPage.section ===
-                    "SOC_ECON_SCENARIOS" &&
-                    "bg-amber-400"}           hover:bg-amber-400`}
-                >
-                  Socio-economic scenarios
-                </div>
-                </Link>
-                <Link to={findFirstPageURLOfSection("COMPARISON")}>
-                <div className={`btn btn-xs rounded-none border-0 text-black bg-lime-100   ${selectedPage.section ===
-                    "COMPARISON" && "bg-lime-400"}        hover:bg-lime-400`}
-                >
-                  Comparison
-                </div>
-                </Link>
+                  </If>
+
+                  <Link to={`/sector/${routedSectorName}/story/${routedStoryID}/page/${pageIndex}`}>
+                    <div className={`btn btn-xs rounded-none border-0 text-black
+                                     bg-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
+                                     hover:bg-${selectColorForSection(storyPage.section)}-400
+                    `}>
+                      {
+                        !isPageFirstOfSection(pageIndex)
+                          ? " "
+                          : storyPage.section === "SCOPE"
+                          ? "Scope"
+                          : storyPage.section === "HOTSPOTS"
+                          ? "Hotspots"
+                          : storyPage.section === "CONNECTION"
+                          ? "Connection"
+                          : storyPage.section === "EU_IMPACT"
+                          ? "EU impact"
+                          : storyPage.section === "CLIMATE_SCENARIOS"
+                          ? "Climate scenarios"
+                          : storyPage.section === "SOC_ECON_SCENARIOS"
+                          ? "Socio-economic scenarios"
+                          : storyPage.section === "COMPARISON" &&
+                            "Comparison"
+                      }
+                    </div>
+                  </Link>
+                  </>
+                ))}
               </div>
             </div>
 
