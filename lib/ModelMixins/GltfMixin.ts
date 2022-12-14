@@ -46,6 +46,8 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
     // Create stable instances of DataSource and Entity instead
     // of generating a new one each time the traits change and mobx recomputes.
     // This vastly improves the performance.
+    //
+    // Note that these are private instances and must not be modified outside the Mixin
     private readonly _dataSource = new CustomDataSource("glTF Model");
     private readonly _modelEntity = new Entity({ name: "glTF Model Entity" });
 
