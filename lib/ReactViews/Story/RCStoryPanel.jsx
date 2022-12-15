@@ -173,7 +173,7 @@ const RCStoryPanel = createReactClass({
               <Link to="/">
                 <button
                   className="buttonClose"
-                  title={t("story.exitBtn")}                  
+                  title={t("story.exitBtn")}
                 >
                   <Icon width={20} glyph={Icon.GLYPHS.close} />
                 </button>
@@ -241,7 +241,7 @@ const RCStoryPanel = createReactClass({
 
             {/* DO NOT DELETE THIS DIV - It's making sure the story is rendered at the correct height (for some reason, god I hate CSS) */}
             <div />
-            
+
             <div className={Styles.RCSummaryCard}>
               <div
                 className={classNames(Styles.storyContainer, {
@@ -249,11 +249,11 @@ const RCStoryPanel = createReactClass({
                 })}
               >
                 {selectedPage.text && (
-                  <div className={Styles.body}>                    
+                  <div className={Styles.body}>
                     {typeof selectedPage?.text === "string" &&
                       parseCustomHtmlToReact(selectedPage.text)}
                     {typeof selectedPage?.text === "object" &&
-                      parseCustomHtmlToReact(selectedPage.text[scenario])}                    
+                      parseCustomHtmlToReact(selectedPage.text[scenario])}
                   </div>
                 )}
               </div>
@@ -275,9 +275,10 @@ const RCStoryPanel = createReactClass({
                     </div>
                   </Link>
                 </Medium>
-                <Medium>                
+                <h3>{routedPageIndex+1} / {terriaStories.length}</h3>
+                <Medium>
                   <Link to={nextURL}>
-                    <div className={Styles.right}>                    
+                    <div className={Styles.right}>
                       <button
                         disabled={terriaStories.length <= 1}
                         className={Styles.nextBtn}
