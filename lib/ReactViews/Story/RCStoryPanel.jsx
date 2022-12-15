@@ -181,35 +181,26 @@ const RCStoryPanel = createReactClass({
 
               <br />
               {/* Sections buttons for story panel*/}
-              <div className="flex flex-wrap gap-2 mb-3">
+              <div className="flex flex-wrap mb-3">
 
                 {terriaStories.map((storyPage, pageIndex) => (
                   <> {/* This empty tag is needed for the <If> and <Link> blocks to work within the terriaStories.map() */}
-                  <If condition={pageIndex > 0}>
-                  <div>
-                    <svg height="25" width="100%" viewBox="0 0 50 80">
-                    <Link to={`/sector/${routedSectorName}/story/${routedStoryID}/page/${pageIndex-1}`}>
-                        <polygon points="0,0 20,40 0,80"
-                                 className={`btn btn-xs rounded-none border-0
-                                             fill-${selectColorForSection(terriaStories[pageIndex-1].section)}-${terriaStories[pageIndex-1] == selectedPage ? "400" : "100"}
-                                             hover:fill-${selectColorForSection(terriaStories[pageIndex-1].section)}-400
-                        `}/>
-                      </Link>
-                      <Link to={`/sector/${routedSectorName}/story/${routedStoryID}/page/${pageIndex}`}>
-                        <polygon points="10,0 50,0 50,80 10,80 30,40"
-                                 className={`btn btn-xs rounded-none border-0
-                                             fill-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
-                                             hover:fill-${selectColorForSection(storyPage.section)}-400
-                        `}/>
-                      </Link>
-                    </svg>
-                  </div>
-                  </If>
-
                   <Link to={`/sector/${routedSectorName}/story/${routedStoryID}/page/${pageIndex}`}>
+                  <div className="flex">
+                    <If condition={pageIndex != 0}>
+                    <div>
+                      <svg height="24" width="100%" viewBox="0 0 50 80">
+                          <polygon points="10,0 50,0 50,80 10,80 30,40"
+                                  className={`btn btn-xs rounded-none border-0
+                                              fill-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
+                                              hover:fill-${selectColorForSection(storyPage.section)}-400
+                          `}/>
+                      </svg>
+                    </div>
+                    </If>
                     <div className={`btn btn-xs rounded-none border-0 text-black
-                                     bg-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
-                                     hover:bg-${selectColorForSection(storyPage.section)}-400
+                                    bg-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
+                                    hover:bg-${selectColorForSection(storyPage.section)}-400
                     `}>
                       {
                         !isPageFirstOfSection(pageIndex)
@@ -230,6 +221,17 @@ const RCStoryPanel = createReactClass({
                             "Comparison"
                       }
                     </div>
+                    <If condition={pageIndex != terriaStories.length}>
+                    <div>
+                      <svg height="24" width="100%" viewBox="0 0 50 80">
+                          <polygon points="0,0 20,40 0,80"
+                                  className={`fill-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
+                                              hover:fill-${selectColorForSection(storyPage.section)}-400
+                          `}/>
+                      </svg>
+                    </div>
+                    </If>
+                  </div>
                   </Link>
                   </>
                 ))}
