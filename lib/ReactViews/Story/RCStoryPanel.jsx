@@ -189,10 +189,9 @@ const RCStoryPanel = createReactClass({
                   <div className="flex">
                     <If condition={pageIndex != 0}>
                     <div>
-                      <svg height="24" width="100%" viewBox="0 0 50 80">
-                          <polygon points="10,0 50,0 50,80 10,80 30,40"
-                                  className={`btn btn-xs rounded-none border-0
-                                              fill-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
+                      <svg height="24" width="100%" viewBox="0 0 40 80">
+                          <polygon points="0,0 40,0 40,80 0,80 20,40"
+                                  className={`fill-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
                                               hover:fill-${selectColorForSection(storyPage.section)}-400
                           `}/>
                       </svg>
@@ -223,7 +222,7 @@ const RCStoryPanel = createReactClass({
                     </div>
                     <If condition={pageIndex != terriaStories.length}>
                     <div>
-                      <svg height="24" width="100%" viewBox="0 0 50 80">
+                      <svg height="24" width="100%" viewBox="0 0 20 80">
                           <polygon points="0,0 20,40 0,80"
                                   className={`fill-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
                                               hover:fill-${selectColorForSection(storyPage.section)}-400
