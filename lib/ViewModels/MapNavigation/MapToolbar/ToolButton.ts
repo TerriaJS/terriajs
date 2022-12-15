@@ -1,10 +1,10 @@
 import { action, computed } from "mobx";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import TerriaError from "../../Core/TerriaError";
-import ViewerMode from "../../Models/ViewerMode";
-import ViewState from "../../ReactViewModels/ViewState";
-import MapNavigationItemController from "./MapNavigationItemController";
-import { BaseButtonOptions } from "./MapToolbar";
+import TerriaError from "../../../Core/TerriaError";
+import ViewerMode from "../../../Models/ViewerMode";
+import ViewState from "../../../ReactViewModels/ViewState";
+import MapNavigationItemController from "../MapNavigationItemController";
+import { BaseButtonOptions } from "./Buttons";
 
 export interface ToolButtonOptions<ToolProps = any> extends BaseButtonOptions {
   tool: {
@@ -55,22 +55,19 @@ export function addToolButton<ToolProps = any>(
     button: ToolButton<ToolProps>
   ) => ToolButtonOptions<ToolProps>
 ): ToolButton<ToolProps> {
-  let controller: ToolButtonController<ToolProps> | undefined = undefined;
-  const toolButton = {
-    removeButton: () => terria.mapNavigationModel.remove(id),
-    closeTool: () => controller?.closeTool(),
-    openTool: (props?: Partial<ToolProps>) => {
-      const navigationItem = terria.mapNavigationModel.findItem(id);
-      const controller = navigationItem?.controller;
-      if (controller instanceof ToolButtonController) {
-        controller.openTool(props);
-      }
-    }
+  const terria = viewState.terria;
+  const getController = () => {
+    const controller = terria.mapNavigationModel.findItem(id)?.controller;
+    return controller instanceof ToolButtonController ? controller : undefined;
   };
 
+  const toolButton = {
+    removeButton: () => terria.mapNavigationModel.remove(id),
+    closeTool: () => getController()?.closeTool(),
+    openTool: (props?: Partial<ToolProps>) => getController()?.openTool(props)
+  };
   const options = buttonOptionsGenerator(toolButton);
-  controller = new ToolButtonController(viewState, options);
-  const terria = viewState.terria;
+  const controller = new ToolButtonController(viewState, options);
   const id = createGuid();
 
   terria.mapNavigationModel.addItem({
