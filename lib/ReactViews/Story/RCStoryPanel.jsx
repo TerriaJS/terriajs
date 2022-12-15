@@ -190,16 +190,17 @@ const RCStoryPanel = createReactClass({
                     <If condition={pageIndex != 0}>
                     <div>
                       <svg height="24" width="100%" viewBox="0 0 40 80">
-                          <polygon points="0,0 40,0 40,80 0,80 20,40"
-                                  className={`fill-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
-                                              hover:fill-${selectColorForSection(storyPage.section)}-400
-                          `}/>
+                        <polyline points="40,0 0,0 20,40 0,80 40,80" stroke="black" stroke-width="3" fill="transparent"/>
+                        <polygon points="0,0 40,0 40,80 0,80 20,40"
+                                className={`fill-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
+                                            hover:fill-${selectColorForSection(storyPage.section)}-400
+                        `}/>
                       </svg>
                     </div>
                     </If>
                     <div className={`btn btn-xs rounded-none border-0 text-black
-                                    bg-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
-                                    hover:bg-${selectColorForSection(storyPage.section)}-400
+                                     bg-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
+                                     hover:bg-${selectColorForSection(storyPage.section)}-400
                     `}>
                       {
                         !isPageFirstOfSection(pageIndex)
@@ -220,13 +221,14 @@ const RCStoryPanel = createReactClass({
                             "Comparison"
                       }
                     </div>
-                    <If condition={pageIndex != terriaStories.length}>
+                    <If condition={pageIndex != terriaStories.length-1}>
                     <div>
                       <svg height="24" width="100%" viewBox="0 0 20 80">
-                          <polygon points="0,0 20,40 0,80"
-                                  className={`fill-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
-                                              hover:fill-${selectColorForSection(storyPage.section)}-400
-                          `}/>
+                        <polyline points="0,0 20,40 0,80" stroke="black" stroke-width="3" fill="transparent"/>
+                        <polygon points="0,0 20,40 0,80"
+                                className={`fill-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
+                                            hover:fill-${selectColorForSection(storyPage.section)}-400
+                        `}/>
                       </svg>
                     </div>
                     </If>
