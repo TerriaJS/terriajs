@@ -2,10 +2,10 @@ name: npm-publish
 on:
   push:
     branches:
-      - main
+      - release/v8.2.23-alpha.0
 
 env:
-  NPM_TAG: latest
+  NPM_TAG: alpha
 
 jobs:
   publish:
