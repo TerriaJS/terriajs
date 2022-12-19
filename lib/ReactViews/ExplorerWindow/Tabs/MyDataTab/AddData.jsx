@@ -120,17 +120,16 @@ const AddData = createReactClass({
         this.state.remoteDataType.value
       );
     } else if (this.state.remoteDataType.value === "json") {
-      promise = loadJson(this.state.remoteUrl)
-        .then((data) => {
-          if (data.error) {
-            return Promise.reject(data.error);
-          }
-          this.props.terria.catalog.group
+      promise = loadJson(this.state.remoteUrl).then((data) => {
+        if (data.error) {
+          return Promise.reject(data.error);
+        }
+        this.props.terria.catalog.group
           .addMembersFromJson(CommonStrata.user, data.catalog)
           .raiseError(this.props.terria, "Failed to load catalog from file");
-          
-          return Promise.resolve();
-        });
+
+        return Promise.resolve();
+      });
       this.setState({
         isLoading: false
       });
