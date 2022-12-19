@@ -37,7 +37,7 @@ const Tabs = observer(
     },
 
     async onUrlAddFinished() {
-      const result = await this.props.viewState.viewCatalogMember();
+      await this.props.viewState.viewCatalogMember();
     },
 
     getTabs() {
