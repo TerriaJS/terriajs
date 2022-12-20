@@ -35,7 +35,7 @@ const RCMenuBar = props => {
     >
       <ul className={Styles.menu}>
         <li className={Styles.menuItem}>
-          <Branding terria={terria} viewState={viewState} />
+          {/* <Branding terria={terria} viewState={viewState} /> */}
         </li>
         {/*
           <If condition={showButton}>

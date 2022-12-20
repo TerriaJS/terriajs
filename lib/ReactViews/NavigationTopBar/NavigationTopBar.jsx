@@ -11,7 +11,8 @@ import { Medium } from "../Generic/Responsive";
 import Icon from "../Icon.jsx";
 import ObserveModelMixin from "../ObserveModelMixin";
 import Tooltip from "../RCTooltip/RCTooltip";
-import Styles from "./NavigationTopBar";
+import Styles from "./NavigationTopBar.scss";
+import Branding from "../StandardUserInterface/Branding";
 
 const NavigationTopBar = createReactClass({
   displayName: "NavigationTopBar",
@@ -111,6 +112,9 @@ const NavigationTopBar = createReactClass({
     // this.props.viewState.selectedPageIndex = routedPageIndex;
     // this.props.viewState.selectedScenario = scenario;
 
+    const prevURL = `/sector/${routedSectorName}/story/${routedStoryID}/page/${routedPageIndex == 0 ? 0 : routedPageIndex-1}`;
+    const nextURL = `/sector/${routedSectorName}/story/${routedStoryID}/page/${routedPageIndex == terriaStories.length-1 ? terriaStories.length-1 : routedPageIndex+1}`;
+
     function isPageFirstOfSection(pageIndex) {
       if (pageIndex == 0) {
         return true;
@@ -141,24 +145,35 @@ const NavigationTopBar = createReactClass({
 
     return (
       <React.Fragment>
+        <Swipeable
+          onSwipedLeft={() => history.push(nextURL)}
+          onSwipedRight={() => history.push(prevURL)}
+        >
 
           {selectedPage? (<div className={Styles.RCHotspotSummary}>
             <div className={Styles.titleGroup}>
-              {/* Icon disabled because it's SUPER big and I can't reduce it */}
               <div>
-              {/* {selectedPage.sector && (<Icon
-                  width={20}
-                  glyph={Icon.GLYPHS[selectedPage.sector + "Simple"]}
-                  className={Styles.icon}
-                />
-              )} */}
+                <ul className={Styles.logo}>
+                  <li className={Styles.logoItem}>
+                    <Branding viewState={this.props.viewState} />
+                  </li>
+                </ul>
               </div>
 
-              <h3>
-                {selectedPage.storyTitle && selectedPage.storyTitle.length > 0
-                  ? selectedPage.storyTitle
-                  : t("story.untitled")}
-              </h3>
+              <div className="flex align:center">
+                {selectedPage.sector && (<Icon
+                    width={20}
+                    glyph={Icon.GLYPHS[selectedPage.sector + "Simple"]}
+                    className={Styles.icon}
+                  />
+                )}
+
+                <h3>
+                  {selectedPage.storyTitle && selectedPage.storyTitle.length > 0
+                    ? selectedPage.storyTitle
+                    : t("story.untitled")}
+                </h3>
+              </div>
 
               <Link to="/">
                 <button
@@ -239,6 +254,7 @@ const NavigationTopBar = createReactClass({
 
 
           </div>) : (<div>{routedPageIndex}</div>)}
+        </Swipeable>
       </React.Fragment>
     );
   }
