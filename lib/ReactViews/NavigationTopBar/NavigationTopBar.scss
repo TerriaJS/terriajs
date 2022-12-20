@@ -1,0 +1,278 @@
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
+
+.story {
+  display: grid;
+  max-width: 100%;
+  width: 100%;
+  grid-template-rows: 1fr auto;
+}
+
+.RCHotspotSummary {
+  padding: 16px 16px 0px 16px;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  height: 150px;
+  box-sizing: border-box;
+  @media (max-width: $xs) {
+    height: 100px;
+    overflow-y: auto;
+  }
+
+  h3 {
+    margin-top: 0px;
+    font-size: 1rem;
+    line-height: 1.2rem;
+  }
+}
+
+.RCSummaryCard {
+  background: #ffffff;
+  box-shadow: 0px -8px 40px rgba(17, 8, 114, 0.0869565);
+  border-radius: 8px;
+  padding: 6px;
+  position: relative;
+}
+
+.titleGroup {
+  display: grid;
+  align-items: flex-start;
+  grid-template-columns: 40px 1fr 30px;
+}
+
+.icon {
+  cursor: default !important;
+  width: 50px;
+  height: auto;
+  margin: -10px 0px 0px -8px;
+}
+
+.exitBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  margin-right: 10px;
+  margin-top: 7px;
+
+  &:not([disabled]):hover {
+    svg {
+      fill: $color-primary;
+    }
+  }
+
+  svg {
+    fill: #888888;
+    width: 16px;
+  }
+}
+
+.storyHeader {
+  display: flex;
+  max-width: 100%;
+  overflow: hidden;
+  padding: $padding 0;
+  align-items: center;
+
+  h3 {
+    margin: $padding-small;
+    font-size: 1.2rem;
+    color: $dark;
+    flex: 2;
+    @media (max-width: $sm) {
+      flex-grow: 2;
+    }
+  }
+}
+
+.isCentered {
+  padding-left: 20px;
+  // when changing to full screen, the story panel should move to center slower
+  // than side panel slide in/out
+  transition-delay: 0.5s;
+}
+
+.story-container {
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+
+  &.is-mounted {
+    opacity: 1;
+    @include transform(none);
+  }
+
+  @include transform(translateY(20%));
+  @include transition(all 0.3s);
+  opacity: 0;
+  pointer-events: auto;
+  display: flex;
+  opacity: 0;
+  background-color: transparent;
+  color: $text-dark;
+  text-align: left;
+  box-sizing: border-box;
+  border-radius: 2px;
+}
+
+.storyBottomNavigationItems {
+  display: grid;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.isPushedUp {
+  bottom: 350px;
+}
+
+.relative {
+  position: relative;
+}
+.absoluteRight {
+  position: absolute;
+  right: 0;
+}
+
+.body {
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  color: $dark;
+  font-size: 14px;
+  line-height: 1.5;
+  font-family: $font-base;
+  height: 100%;
+  overflow-y: auto;
+
+  img {
+    max-width: 100%;
+  }
+  * {
+    max-width: 100%;
+    /* These are technically the same, but use both */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    -ms-word-break: break-all;
+    /* This is the dangerous one in WebKit, as it breaks things wherever */
+    word-break: break-all;
+    /* Instead use this non-standard one: */
+    word-break: break-word;
+
+    /* Adds a hyphen where the word breaks, if supported (No Blink) */
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+}
+
+.locationBtn,
+.exitBtn,
+.nextBtn,
+.previousBtn {
+  z-index: 999;
+  composes: btn from "../../Sass/common/_buttons.scss";
+  display: block;
+  padding: 0 8px;
+  &:not([disabled]):hover {
+    svg {
+      fill: $color-primary;
+    }
+  }
+  svg {
+    fill: #888888;
+    width: 15px;
+  }
+}
+.nextBtn,
+.previousBtn {
+  height: calc(100% - 51px);
+  svg {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+.locationBtn {
+  border-right: 1px solid $field-border;
+
+  svg {
+    width: 18px;
+  }
+}
+
+.exitBtn,
+.locationBtn {
+  svg {
+    height: 31px;
+  }
+}
+
+.navs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.navBtn {
+  height: 30px;
+
+  button {
+    background: transparent;
+    border: 0;
+    box-shadow: 0;
+    margin-top: 10px;
+  }
+  svg {
+    fill: #888888;
+    float: right;
+    width: 10px;
+    height: 10px;
+  }
+}
+.navBtnMobile {
+  display: flex;
+  width: 100%;
+  bottom: -25px;
+  position: absolute;
+}
+.mobileNavBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  background: #ffffff;
+  color: $text-dark;
+  padding: 2px 8px;
+  border-right: 1px solid #dddddd;
+  border-top: 1px solid #dddddd;
+  &.isActive {
+    background: $color-primary;
+    color: #ffffff;
+  }
+}
+
+:global {
+  .story.tjs-notification-window__wrapper {
+    @media (min-width: $md) {
+      left: $work-bench-width;
+    }
+    .tjs-notification-window__notification {
+      background-color: $color-primary;
+      color: #ffffff;
+      border: 1px solid rgba(#ffffff, 0.1);
+      text-align: center;
+    }
+    .tjs-notification-window__footer {
+      display: flex;
+      border-top: 1px solid rgba(#ffffff, 0.8);
+      button {
+        background-color: transparent;
+        font-weight: bold;
+        &:first-of-type {
+          border-right: 1px solid rgba(#ffffff, 0.8);
+        }
+      }
+    }
+  }
+}

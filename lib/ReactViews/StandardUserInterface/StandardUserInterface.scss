@@ -46,11 +46,16 @@
   flex-basis: 100%;
 }
 
+.topbar {
+  width: 100%;
+  background: $light;
+}
+
 .ui {
   overflow: hidden;
   background: $light;
   width: 100%;
-  height: 100vh;
+  // height: 100vh;
 }
 
 .explorerPanelIsVisible {

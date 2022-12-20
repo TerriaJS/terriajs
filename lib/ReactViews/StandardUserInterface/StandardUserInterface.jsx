@@ -20,6 +20,7 @@ import MapNavigation from "./../Map/MapNavigation.jsx";
 import RCMenuBar from "./../Map/RCMenuBar.jsx";
 import MobileHeader from "./../Mobile/MobileHeader.jsx";
 import MapInteractionWindow from "./../Notification/MapInteractionWindow.jsx";
+import NavigationTopBar from "../NavigationTopBar/NavigationTopBar";
 import Notification from "./../Notification/Notification.jsx";
 import ObserveModelMixin from "./../ObserveModelMixin";
 import RCHotspotSummary from "./../RCHotspotSummary/RCHotspotSummary.jsx";
@@ -194,6 +195,30 @@ const StandardUserInterface = createReactClass({
           ref={w => (this._wrapper = w)}
         >
           <div className={Styles.ui}>
+
+            <Switch>
+              <Route exact path="/">
+                <div className={Styles.tabsContainer}>
+                  <SidePanelSectorTabs terria={terria} viewState={viewState}/>
+                </div>
+              </Route>
+
+              <Route exact path={`/sector/:sectorName`}>
+                <div className={Styles.tabsContainer}>
+                  <SidePanelSectorTabs terria={terria} viewState={viewState}/>
+                </div>
+              </Route>
+
+              <Route exact path={`/sector/:sectorName/story/:storyID/page/:pageIndex`}>
+                <div className={Styles.topbar}>
+                  {/* <React.StrictMode> */}
+                    <NavigationTopBar terria={terria} viewState={viewState}/>
+                  {/* </React.StrictMode> */}
+                </div>
+              </Route>
+            </Switch>
+
+
             <div className={Styles.uiInner}>
               {/* Moved side panel to left */}
               <If
