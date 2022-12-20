@@ -6,11 +6,9 @@ import { Link, withRouter } from "react-router-dom";
 import { withTranslation } from "react-i18next";
 import { Swipeable } from "react-swipeable";
 import { setSelectedStory, activateStory } from "../../Models/Receipt";
-import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import { Medium } from "../Generic/Responsive";
 import Icon from "../Icon.jsx";
 import ObserveModelMixin from "../ObserveModelMixin";
-import Tooltip from "../RCTooltip/RCTooltip";
 import Styles from "./NavigationTopBar.scss";
 import Branding from "../StandardUserInterface/Branding";
 
@@ -32,9 +30,7 @@ const NavigationTopBar = createReactClass({
     };
   },
   componentDidMount() {
-    //
     // Navigate to the story page coming from the url params
-    //
     this.slideIn();
 
     this.changeScenarioListener = e => {
@@ -57,9 +53,6 @@ const NavigationTopBar = createReactClass({
 
   componentDidUpdate() {
     activateStory(this.props.viewState, true, true);
-
-    // console.log(`RCStoryPanel didupdate`);
-    // setSelectedStory(this.props.match.params, this.props.viewState);
   },
 
   slideIn() {
@@ -105,12 +98,6 @@ const NavigationTopBar = createReactClass({
 
     const terriaStories = this.props.terria.stories || [];
     const selectedPage = terriaStories[routedPageIndex];
-
-    // const scenario = this.props.viewState.selectedScenario || 0;
-
-    // this.props.viewState.selectedStoryID = routedStoryID;
-    // this.props.viewState.selectedPageIndex = routedPageIndex;
-    // this.props.viewState.selectedScenario = scenario;
 
     const prevURL = `/sector/${routedSectorName}/story/${routedStoryID}/page/${routedPageIndex == 0 ? 0 : routedPageIndex-1}`;
     const nextURL = `/sector/${routedSectorName}/story/${routedStoryID}/page/${routedPageIndex == terriaStories.length-1 ? terriaStories.length-1 : routedPageIndex+1}`;
@@ -186,14 +173,13 @@ const NavigationTopBar = createReactClass({
 
               <br />
 
-              {/* Sections buttons for story panel*/}
+              {/* Section/page buttons for story panel*/}
               <div className="flex flex-wrap mb-3">
 
                 {terriaStories.map((storyPage, pageIndex) => (
-                  <div key={pageIndex}> {/* This empty tag is needed for the <If> and <Link> blocks to work within the terriaStories.map() */}
+                  <div key={pageIndex}> {/* This outer div is needed for the <Link> block to work within the terriaStories.map() */}
                   <Link to={`/sector/${routedSectorName}/story/${routedStoryID}/page/${pageIndex}`}>
                   <div className="flex">
-                    <If condition={pageIndex != 0}>
                     <div>
                       <svg height="24" width="100%" viewBox="0 0 20 80">
                         <polyline points="20,0 0,0 20,40 0,80 20,80" stroke="black" strokeWidth="3" fill="transparent"/>
@@ -203,7 +189,6 @@ const NavigationTopBar = createReactClass({
                         `}/>
                       </svg>
                     </div>
-                    </If>
                     <div className={`btn btn-xs rounded-none border-0 text-black
                                      bg-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
                                      hover:bg-${selectColorForSection(storyPage.section)}-400
@@ -227,7 +212,6 @@ const NavigationTopBar = createReactClass({
                             "Comparison"
                       }
                     </div>
-                    <If condition={pageIndex != terriaStories.length-1}>
                     <div>
                       <svg height="24" width="100%" viewBox="0 0 20 80">
                         <polyline points="0,0 20,40 0,80" stroke="black" strokeWidth="3" fill="transparent"/>
@@ -237,21 +221,12 @@ const NavigationTopBar = createReactClass({
                         `}/>
                       </svg>
                     </div>
-                    </If>
                   </div>
                   </Link>
                   </div>
                 ))}
               </div>
-
-              {/* <Link to="/">
-                <button className="buttonClose" title={t("story.exitBtn")}>
-                <Icon width={20} glyph={Icon.GLYPHS.close} />
-                </button>
-              </Link> */}
-
             </div>
-
 
           </div>) : (<div>{routedPageIndex}</div>)}
         </Swipeable>
