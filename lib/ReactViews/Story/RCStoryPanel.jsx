@@ -205,7 +205,12 @@ const RCStoryPanel = createReactClass({
                 </Medium>
               </div>
             </div>
-          </div>) : (<div>Loading story page failed.</div>)}
+          </div>) : (<div className={Styles.ldsDefault}>
+            {/* these div's define the dots of the spinner */}
+            <div></div><div></div><div></div><div></div>
+            <div></div><div></div><div></div><div></div>
+            <div></div><div></div><div></div><div></div>
+          </div>)}
         </Swipeable>
       </React.Fragment>
     );
