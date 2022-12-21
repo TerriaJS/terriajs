@@ -13,6 +13,7 @@
   - Disable zoom to for the item when position is unknown.
 - Add `UploadDataTypes` API for extending the supported local and remote upload data types.
 - Refactor `Cesium3dTileMixin`.
+- Updated related maps to fit mobile screens.
 - [The next improvement]
 
 #### 8.2.22 - 2022-12-02
