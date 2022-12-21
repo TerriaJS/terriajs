@@ -9,7 +9,7 @@ import { setSelectedStory, activateStory } from "../../Models/Receipt";
 import { Medium } from "../Generic/Responsive";
 import Icon from "../Icon.jsx";
 import ObserveModelMixin from "../ObserveModelMixin";
-import Styles from "./NavigationTopBar.scss";
+import Styles from "./NavigationBars.scss";
 import Branding from "../StandardUserInterface/Branding";
 
 const NavigationTopBar = createReactClass({

@@ -51,8 +51,15 @@
   width: 100%;
   background: $light;
 }
+.bottombar {
+  width: 100%;
+  // height: 55px;
+  background: $light;
+}
 
 .ui {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
   overflow: hidden;
   background: $light;
   width: 100%;
@@ -208,7 +215,7 @@
   .uiInner {
     display: flex;
     flex: 1;
-    height: 100%;
+    // height: 70vh;
     flex-direction: column;
   }
 }
@@ -218,14 +225,14 @@
     display: flex;
     overflow: hidden;
     flex-direction: row;
-    height: 100%;
+    height: 75vh;
   }
   .sidePanel {
     vertical-align: top;
   }
   .map {
     position: relative;
-    height: 100vh;
+    height: 75vh;
     top: auto;
     bottom: auto;
     left: auto;

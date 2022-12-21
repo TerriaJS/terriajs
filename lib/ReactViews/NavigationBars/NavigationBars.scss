@@ -31,10 +31,10 @@
   padding: 16px 16px 0px 16px;
   display: grid;
   grid-template-rows: auto auto 1fr auto;
-  height: 100px;
+  // height: 100px;
   box-sizing: border-box;
   @media (max-width: $xs) {
-    height: 100px;
+    // height: 100px;
     overflow-y: auto;
   }
 
@@ -235,6 +235,14 @@
   align-items: center;
   justify-content: center;
   text-align: center;
+
+  h3 {
+    margin-top: 6px;
+    margin-bottom: 8px;
+    // font-size: 1rem;
+    // line-height: 1.2rem;
+  }
+
 }
 
 .navBtn {
