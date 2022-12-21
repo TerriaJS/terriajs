@@ -29,7 +29,7 @@ interface ITextWeight {
   extraBold?: boolean;
 }
 
-interface ITextPropsBase {
+export interface ITextPropsBase {
   displayBlock?: boolean;
   isLink?: boolean;
   nunito?: boolean;
