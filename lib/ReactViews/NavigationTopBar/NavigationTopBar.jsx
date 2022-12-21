@@ -228,7 +228,12 @@ const NavigationTopBar = createReactClass({
               </div>
             </div>
 
-          </div>) : (<div>{routedPageIndex}</div>)}
+          </div>) : (<div className={Styles.ldsDefault}>
+            {/* these div's define the dots of the spinner */}
+            <div></div><div></div><div></div><div></div>
+            <div></div><div></div><div></div><div></div>
+            <div></div><div></div><div></div><div></div>
+          </div>)}
         </Swipeable>
       </React.Fragment>
     );
