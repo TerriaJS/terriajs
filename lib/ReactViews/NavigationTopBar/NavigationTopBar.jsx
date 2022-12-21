@@ -147,7 +147,7 @@ const NavigationTopBar = createReactClass({
                 </ul>
               </div>
 
-              <div className="flex align:center">
+              <div className="flex">
                 {selectedPage.sector && (<Icon
                     width={20}
                     glyph={Icon.GLYPHS[selectedPage.sector + "Simple"]}
