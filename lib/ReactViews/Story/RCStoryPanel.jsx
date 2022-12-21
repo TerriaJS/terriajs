@@ -173,38 +173,6 @@ const RCStoryPanel = createReactClass({
               </div>
             </div>
 
-            {/* Footer */}
-            <div className={Styles.storyBottomNavigationItems}>
-              <div className={Styles.navs}>
-                <Medium>
-                  <Link to={prevURL}>
-                    <div className={Styles.left}>
-                      <button
-                        className={Styles.previousBtn}
-                        disabled={terriaStories.length <= 1}
-                        title={t("story.previousBtn")}
-                      >
-                        <Icon glyph={Icon.GLYPHS.left} />
-                      </button>
-                    </div>
-                  </Link>
-                </Medium>
-                <h3>{routedPageIndex+1} / {terriaStories.length}</h3>
-                <Medium>
-                  <Link to={nextURL}>
-                    <div className={Styles.right}>
-                      <button
-                        disabled={terriaStories.length <= 1}
-                        className={Styles.nextBtn}
-                        title={t("story.nextBtn")}
-                      >
-                        <Icon glyph={Icon.GLYPHS.right} />
-                      </button>
-                    </div>
-                  </Link>
-                </Medium>
-              </div>
-            </div>
           </div>) : (<div className={Styles.ldsDefault}>
             {/* these div's define the dots of the spinner */}
             <div></div><div></div><div></div><div></div>
