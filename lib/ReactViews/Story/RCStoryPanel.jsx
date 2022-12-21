@@ -49,12 +49,12 @@ const RCStoryPanel = createReactClass({
 
     // Activate the story (page)
     const promise = setSelectedStory(this.props.match.params, this.props.viewState);
-    promise.then(() => 
+    promise.then(() =>
       activateStory(this.props.viewState, true, true)
     )
   },
 
-  componentDidUpdate() {    
+  componentDidUpdate() {
     activateStory(this.props.viewState, true, true);
 
     // console.log(`RCStoryPanel didupdate`);
@@ -73,7 +73,7 @@ const RCStoryPanel = createReactClass({
     this.slideOutTimer = setTimeout(() => {
       this.setState({
         inView: false
-      });    
+      });
     }, 300);
   },
 
@@ -102,9 +102,9 @@ const RCStoryPanel = createReactClass({
     const routedStoryID = this.props.match.params.storyID;
     const routedPageIndex = Number(this.props.match.params.pageIndex);
 
-    const terriaStories = this.props.terria.stories || [];    
+    const terriaStories = this.props.terria.stories || [];
     const selectedPage = terriaStories[routedPageIndex];
-    
+
     const scenario = this.props.viewState.selectedScenario || 0;
 
     this.props.viewState.selectedStoryID = routedStoryID;
@@ -146,7 +146,7 @@ const RCStoryPanel = createReactClass({
     }
 
 
-    const prevURL = `/sector/${routedSectorName}/story/${routedStoryID}/page/${routedPageIndex == 0 ? 0 : routedPageIndex-1}`; 
+    const prevURL = `/sector/${routedSectorName}/story/${routedStoryID}/page/${routedPageIndex == 0 ? 0 : routedPageIndex-1}`;
     const nextURL = `/sector/${routedSectorName}/story/${routedStoryID}/page/${routedPageIndex == terriaStories.length-1 ? terriaStories.length-1 : routedPageIndex+1}`;
 
     return (
@@ -155,93 +155,7 @@ const RCStoryPanel = createReactClass({
           onSwipedLeft={() => history.push(nextURL)}
           onSwipedRight={() => history.push(prevURL)}
         >
-          
           {selectedPage? (<div className={Styles.RCHotspotSummary}>
-            <div className={Styles.titleGroup}>
-              {selectedPage.sector && (<Icon
-                  glyph={Icon.GLYPHS[selectedPage.sector + "Simple"]}
-                  className={Styles.icon}
-                />
-              )}
-
-              <h3>
-                {selectedPage.storyTitle && selectedPage.storyTitle.length > 0
-                  ? selectedPage.storyTitle
-                  : t("story.untitled")}
-              </h3>
-
-              <Link to="/">
-                <button
-                  className="buttonClose"
-                  title={t("story.exitBtn")}
-                >
-                  <Icon width={20} glyph={Icon.GLYPHS.close} />
-                </button>
-              </Link>
-
-              <br />
-              {/* Sections buttons for story panel*/}
-              <div className="flex flex-wrap mb-3">
-
-                {terriaStories.map((storyPage, pageIndex) => (
-                  <div key={pageIndex}> {/* This empty tag is needed for the <If> and <Link> blocks to work within the terriaStories.map() */}
-                  <Link to={`/sector/${routedSectorName}/story/${routedStoryID}/page/${pageIndex}`}>
-                  <div className="flex">
-                    <If condition={pageIndex != 0}>
-                    <div>
-                      <svg height="24" width="100%" viewBox="0 0 20 80">
-                        <polyline points="20,0 0,0 20,40 0,80 20,80" stroke="black" strokeWidth="3" fill="transparent"/>
-                        <polygon points="0,0 20,0 20,80 0,80 20,40"
-                                className={`fill-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
-                                            hover:fill-${selectColorForSection(storyPage.section)}-400
-                        `}/>
-                      </svg>
-                    </div>
-                    </If>
-                    <div className={`btn btn-xs rounded-none border-0 text-black
-                                     bg-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
-                                     hover:bg-${selectColorForSection(storyPage.section)}-400
-                    `}>
-                      {
-                        !isPageFirstOfSection(pageIndex)
-                          ? " "
-                          : storyPage.section === "SCOPE"
-                          ? "Scope"
-                          : storyPage.section === "HOTSPOTS"
-                          ? "Hotspots"
-                          : storyPage.section === "CONNECTION"
-                          ? "Connection"
-                          : storyPage.section === "EU_IMPACT"
-                          ? "EU impact"
-                          : storyPage.section === "CLIMATE_SCENARIOS"
-                          ? "Climate scenarios"
-                          : storyPage.section === "SOC_ECON_SCENARIOS"
-                          ? "Socio-economic scenarios"
-                          : storyPage.section === "COMPARISON" &&
-                            "Comparison"
-                      }
-                    </div>
-                    <If condition={pageIndex != terriaStories.length-1}>
-                    <div>
-                      <svg height="24" width="100%" viewBox="0 0 20 80">
-                        <polyline points="0,0 20,40 0,80" stroke="black" strokeWidth="3" fill="transparent"/>
-                        <polygon points="0,0 20,40 0,80"
-                                className={`fill-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
-                                            hover:fill-${selectColorForSection(storyPage.section)}-400
-                        `}/>
-                      </svg>
-                    </div>
-                    </If>
-                  </div>
-                  </Link>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* DO NOT DELETE THIS DIV - It's making sure the story is rendered at the correct height (for some reason, god I hate CSS) */}
-            <div />
-
             <div className={Styles.RCSummaryCard}>
               <div
                 className={classNames(Styles.storyContainer, {
