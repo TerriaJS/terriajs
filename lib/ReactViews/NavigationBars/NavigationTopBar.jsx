@@ -144,84 +144,82 @@ const NavigationTopBar = createReactClass({
                 <Branding viewState={this.props.viewState} />
               </div>
 
-              <div className="flex">
-                {selectedPage.sector && (<Icon
-                    width={20}
-                    glyph={Icon.GLYPHS[selectedPage.sector + "Simple"]}
-                    className={Styles.icon}
-                  />
-                )}
+              <div className={Styles.tabsContainer}>
+                <div className={`flex ${Styles.iconTitle}`}>
+                  {selectedPage.sector && (<Icon
+                      width={20}
+                      glyph={Icon.GLYPHS[selectedPage.sector + "Simple"]}
+                      className={Styles.icon}
+                    />
+                  )}
 
-                <h3>
-                  {selectedPage.storyTitle && selectedPage.storyTitle.length > 0
-                    ? selectedPage.storyTitle
-                    : t("story.untitled")}
-                </h3>
-              </div>
+                  <h3>
+                    {selectedPage.storyTitle && selectedPage.storyTitle.length > 0
+                      ? selectedPage.storyTitle
+                      : t("story.untitled")}
+                  </h3>
 
-              <Link to="/">
-                <button
-                  className="buttonClose"
-                  title={t("story.exitBtn")}
-                >
-                  <Icon width={20} glyph={Icon.GLYPHS.close} />
-                </button>
-              </Link>
+                  <Link to="/">
+                    <button className="buttonClose" title={t("story.exitBtn")}>
+                      <Icon width={20} glyph={Icon.GLYPHS.close} />
+                    </button>
+                  </Link>
 
-              <br />
+                </div>
 
-              {/* Section/page buttons for story panel*/}
-              <div className="flex flex-wrap mb-3">
+                {/* Section/page buttons for story panel*/}
+                <div className="flex flex-wrap mb-1">
 
                 {terriaStories.map((storyPage, pageIndex) => (
                   <div key={pageIndex}> {/* This outer div is needed for the <Link> block to work within the terriaStories.map() */}
-                  <Link to={`/sector/${routedSectorName}/story/${routedStoryID}/page/${pageIndex}`}>
-                  <div className="flex">
-                    <div>
-                      <svg height="24" width="100%" viewBox="0 0 20 80">
-                        <polyline points="20,0 0,0 20,40 0,80 20,80" stroke="black" strokeWidth="3" fill="transparent"/>
-                        <polygon points="0,0 20,0 20,80 0,80 20,40"
-                                className={`fill-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
-                                            hover:fill-${selectColorForSection(storyPage.section)}-400
-                        `}/>
-                      </svg>
+                    <Link to={`/sector/${routedSectorName}/story/${routedStoryID}/page/${pageIndex}`}>
+                    <div className="flex">
+                      <div>
+                        <svg height="24" width="100%" viewBox="0 0 20 80">
+                          <polyline points="20,0 0,0 20,40 0,80 20,80" stroke="black" strokeWidth="3" fill="transparent"/>
+                          <polygon points="0,0 20,0 20,80 0,80 20,40"
+                                  className={`fill-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
+                                              hover:fill-${selectColorForSection(storyPage.section)}-400
+                          `}/>
+                        </svg>
+                      </div>
+                      <div className={`btn btn-xs rounded-none border-0 text-black
+                                       bg-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
+                                       hover:bg-${selectColorForSection(storyPage.section)}-400
+                      `}>
+                        {
+                          !isPageFirstOfSection(pageIndex)
+                            ? " "
+                            : storyPage.section === "SCOPE"
+                            ? "Scope"
+                            : storyPage.section === "HOTSPOTS"
+                            ? "Hotspots"
+                            : storyPage.section === "CONNECTION"
+                            ? "Connection"
+                            : storyPage.section === "EU_IMPACT"
+                            ? "EU impact"
+                            : storyPage.section === "CLIMATE_SCENARIOS"
+                            ? "Climate scenarios"
+                            : storyPage.section === "SOC_ECON_SCENARIOS"
+                            ? "Socio-economic scenarios"
+                            : storyPage.section === "COMPARISON" &&
+                              "Comparison"
+                        }
+                      </div>
+                      <div>
+                        <svg height="24" width="100%" viewBox="0 0 20 80">
+                          <polyline points="0,0 20,40 0,80" stroke="black" strokeWidth="3" fill="transparent"/>
+                          <polygon points="0,0 20,40 0,80"
+                                  className={`fill-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
+                                              hover:fill-${selectColorForSection(storyPage.section)}-400
+                          `}/>
+                        </svg>
+                      </div>
                     </div>
-                    <div className={`btn btn-xs rounded-none border-0 text-black
-                                     bg-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
-                                     hover:bg-${selectColorForSection(storyPage.section)}-400
-                    `}>
-                      {
-                        !isPageFirstOfSection(pageIndex)
-                          ? " "
-                          : storyPage.section === "SCOPE"
-                          ? "Scope"
-                          : storyPage.section === "HOTSPOTS"
-                          ? "Hotspots"
-                          : storyPage.section === "CONNECTION"
-                          ? "Connection"
-                          : storyPage.section === "EU_IMPACT"
-                          ? "EU impact"
-                          : storyPage.section === "CLIMATE_SCENARIOS"
-                          ? "Climate scenarios"
-                          : storyPage.section === "SOC_ECON_SCENARIOS"
-                          ? "Socio-economic scenarios"
-                          : storyPage.section === "COMPARISON" &&
-                            "Comparison"
-                      }
-                    </div>
-                    <div>
-                      <svg height="24" width="100%" viewBox="0 0 20 80">
-                        <polyline points="0,0 20,40 0,80" stroke="black" strokeWidth="3" fill="transparent"/>
-                        <polygon points="0,0 20,40 0,80"
-                                className={`fill-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
-                                            hover:fill-${selectColorForSection(storyPage.section)}-400
-                        `}/>
-                      </svg>
-                    </div>
-                  </div>
-                  </Link>
+                    </Link>
                   </div>
                 ))}
+                </div>
               </div>
             </div>
 
