@@ -12,6 +12,18 @@
   }
 }
 
+.logo {
+  float: left;
+  margin-top: 26px;
+}
+
+.topbar {
+  padding: 0px 16px 0px 16px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  box-sizing: border-box;
+}
+
 .tabsContainer {
   display: flex;
   justify-content: space-evenly;

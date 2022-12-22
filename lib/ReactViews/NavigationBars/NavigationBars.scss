@@ -52,7 +52,7 @@
 .titleGroup {
   display: grid;
   align-items: flex-start;
-  grid-template-columns: 160px 1fr;
+  grid-template-columns: auto 1fr;
 }
 
 .icon {

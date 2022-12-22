@@ -6,6 +6,8 @@ import Tooltip from "../RCTooltip/RCTooltip";
 import Styles from "./SidePanelSectorTabs.scss";
 import sectors from "../../Data/Sectors.js";
 import { getSectorHotspotsList, filterHotspots } from "../../Models/Receipt";
+import Branding from "../StandardUserInterface/Branding"
+
 class SidePanelSectorTabs extends React.Component {
   constructor(props) {
     super(props);
@@ -40,21 +42,26 @@ class SidePanelSectorTabs extends React.Component {
           //
         }
         {isTopBar && (
-          <div className={Styles.tabsContainer}>
-            {sectors.map((sector, id) => {
-              return (
-                <div key={`sidePanelSectorTabs/sector/${sector.id}`}>
-                  <Tooltip content={sector.title} direction="bottom" delay="100">
-                    <Link to={`/sector/${sector.id}`}>
-                      <Icon
-                        glyph={selectedSectorId === id ? sector.iconHover : sector.icon}
-                        className={selectedSectorId === id ? Styles.selectedTab : ""}
-                      />
-                    </Link>
-                  </Tooltip>
-                </div>
-              );
-            })}
+          <div className={Styles.topbar}>
+            <div className={Styles.logo}>
+              <Branding viewState={this.props.viewState} />
+            </div>
+            <div className={Styles.tabsContainer}>
+              {sectors.map((sector, id) => {
+                return (
+                  <div key={`sidePanelSectorTabs/sector/${sector.id}`}>
+                    <Tooltip content={sector.title} direction="bottom" delay="100">
+                      <Link to={`/sector/${sector.id}`}>
+                        <Icon
+                          glyph={selectedSectorId === id ? sector.iconHover : sector.icon}
+                          className={selectedSectorId === id ? Styles.selectedTab : ""}
+                        />
+                      </Link>
+                    </Tooltip>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
         {
