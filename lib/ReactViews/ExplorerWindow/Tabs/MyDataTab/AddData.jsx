@@ -21,7 +21,6 @@ import Styles from "./add-data.scss";
 import FileInput from "./FileInput";
 import { parseCustomMarkdownToReactWithOptions } from "../../../Custom/parseCustomMarkdownToReact";
 import loadJson from "../../../../Core/loadJson";
-import Result from "../../../../Core/Result";
 
 /**
  * Add data panel in modal window -> My data tab
@@ -131,8 +130,12 @@ const AddData = createReactClass({
       );
     } else if (this.state.remoteDataType.value === "json") {
       this.props.terria.catalog.group
-          .addMembersFromJson(CommonStrata.user, await this.getUrlJson())
-          .raiseError(this.props.terria, `An error occurred trying to add data from URL: ${this.state.remoteUrl}`, true);
+        .addMembersFromJson(CommonStrata.user, await this.getUrlJson())
+        .raiseError(
+          this.props.terria,
+          `An error occurred trying to add data from URL: ${this.state.remoteUrl}`,
+          true
+        );
 
       this.setState({
         isLoading: false
