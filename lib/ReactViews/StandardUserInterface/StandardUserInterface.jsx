@@ -200,13 +200,19 @@ const StandardUserInterface = createReactClass({
             <Switch>
               <Route exact path="/">
                 <div className={Styles.tabsContainer}>
-                  <SidePanelSectorTabs terria={terria} viewState={viewState}/>
+                  <SidePanelSectorTabs terria={terria} viewState={viewState} isTopBar={true}/>
                 </div>
               </Route>
 
               <Route exact path={`/sector/:sectorName`}>
                 <div className={Styles.tabsContainer}>
-                  <SidePanelSectorTabs terria={terria} viewState={viewState}/>
+                  <SidePanelSectorTabs terria={terria} viewState={viewState} isTopBar={true}/>
+                </div>
+              </Route>
+
+              <Route exact path={`/sector/:sectorName/story/:storyID`}>
+                <div className={Styles.storyPanelWrapper}>
+                  <SidePanelSectorTabs terria={terria} viewState={viewState} isTopBar={true}/>
                 </div>
               </Route>
 
@@ -304,44 +310,29 @@ const StandardUserInterface = createReactClass({
                     <Switch>
                       <Route exact path="/">
                         <div className={Styles.tabsContainer}>
-                          <SidePanelSectorTabs
-                            terria={terria}
-                            viewState={viewState}
-                          />
+                          <SidePanelSectorTabs terria={terria} viewState={viewState} isTopBar={false}/>
                         </div>
                       </Route>
 
                       <Route exact path={`/sector/:sectorName`}>
                         <div className={Styles.tabsContainer}>
-                          <SidePanelSectorTabs
-                            terria={terria}
-                            viewState={viewState}
-                          />
+                          <SidePanelSectorTabs terria={terria} viewState={viewState} isTopBar={false}/>
                         </div>
                       </Route>
 
                       <Route exact path={`/sector/:sectorName/story/:storyID`}>
                         <div className={Styles.storyPanelWrapper}>
-                          <RCHotspotSummary
-                            terria={terria}
-                            viewState={viewState}
-                          />
+                          <RCHotspotSummary terria={terria} viewState={viewState}/>
                         </div>
                       </Route>
 
-                      <Route
-                        exact
-                        path={`/sector/:sectorName/story/:storyID/page/:pageIndex`}
-                      >
+                      <Route exact path={`/sector/:sectorName/story/:storyID/page/:pageIndex`}>
                         <div className={Styles.storyPanelWrapper}>
                           <RCStoryPanel terria={terria} viewState={viewState} />
                         </div>
                       </Route>
 
-                      <Route
-                        exact
-                        path={`/sector/:sectorName/story/:storyID/microstory/:microstoryID`}
-                      >
+                      <Route exact path={`/sector/:sectorName/story/:storyID/microstory/:microstoryID`}>
                         <div className={Styles.storyPanelWrapper}>
                           <RCStoryPanel terria={terria} viewState={viewState} />
                         </div>
@@ -442,38 +433,23 @@ const StandardUserInterface = createReactClass({
 
                     <Switch>
                       <Route exact path="/">
-                        <SidePanelSectorTabs
-                          terria={terria}
-                          viewState={viewState}
-                        />
+                        <SidePanelSectorTabs terria={terria} viewState={viewState} isTopBar={false}/>
                       </Route>
 
                       <Route exact path={`/sector/:sectorName`}>
-                        <SidePanelSectorTabs
-                          terria={terria}
-                          viewState={viewState}
-                        />
+                        <SidePanelSectorTabs terria={terria} viewState={viewState} isTopBar={false}/>
                       </Route>
 
                       <Route exact path={`/sector/:sectorName/story/:storyID`}>
-                        <RCHotspotSummary
-                          terria={terria}
-                          viewState={viewState}
-                        />
+                        <RCHotspotSummary terria={terria} viewState={viewState}/>
                       </Route>
 
-                      <Route
-                        exact
-                        path={`/sector/:sectorName/story/:storyID/page/:pageIndex`}
-                      >
-                        <RCStoryPanel terria={terria} viewState={viewState} />
+                      <Route exact path={`/sector/:sectorName/story/:storyID/page/:pageIndex`}>
+                        <RCStoryPanel terria={terria} viewState={viewState}/>
                       </Route>
 
-                      <Route
-                        exact
-                        path={`/sector/:sectorName/story/:storyID/microstory/:microstoryID`}
-                      >
-                        <RCStoryPanel terria={terria} viewState={viewState} />
+                      <Route exact path={`/sector/:sectorName/story/:storyID/microstory/:microstoryID`}>
+                        <RCStoryPanel terria={terria} viewState={viewState}/>
                       </Route>
 
                       <Route path="/builder">
