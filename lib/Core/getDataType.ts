@@ -120,6 +120,10 @@ const builtinRemoteDataTypes: RemoteDataType[] = [
   {
     value: "gltf",
     name: "core.dataType.gltf"
+  },
+  {
+    value: "json",
+    name: "core.dataType.json"
   }
   // Add next builtin remote upload type
 ];

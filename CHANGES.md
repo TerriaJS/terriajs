@@ -12,6 +12,7 @@
   - Refactors code to use stable `DataSource` and `Entity` values instead of re-creating them everytime `mapItems` is recomputed.
   - Disable zoom to for the item when position is unknown.
 - Add `UploadDataTypes` API for extending the supported local and remote upload data types.
+- Add option to upload terria web data (via url to json file/service)
 - Refactor `Cesium3dTileMixin`.
 - Updated related maps to fit mobile screens.
 - [The next improvement]

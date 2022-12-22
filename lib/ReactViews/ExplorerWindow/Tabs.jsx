@@ -38,6 +38,10 @@ const Tabs = observer(
       this.props.viewState.myDataIsUploadView = false;
     },
 
+    async onUrlAddFinished() {
+      this.props.viewState.openAddData();
+    },
+
     getTabs() {
       const { t } = this.props;
       // This can be passed in as prop
@@ -54,6 +58,7 @@ const Tabs = observer(
             terria={this.props.terria}
             viewState={this.props.viewState}
             onFileAddFinished={(files) => this.onFileAddFinished(files)}
+            onUrlAddFinished={this.onUrlAddFinished}
           />
         )
       };
