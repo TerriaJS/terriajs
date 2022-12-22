@@ -10,6 +10,7 @@ import { Medium } from "../Generic/Responsive";
 import Icon from "../Icon.jsx";
 import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./NavigationBars.scss";
+import Loader from "../Loader"
 
 const NavigationBottomBar = createReactClass({
   displayName: "NavigationBottomBar",
@@ -140,19 +141,7 @@ const NavigationBottomBar = createReactClass({
                   </Link>
                 </Medium>
               </div>
-            </div> : (<div className={Styles.ldsDefault}>
-            {/* these div's define the dots of the spinner */}
-            <div></div><div></div><div></div><div></div>
-            <div></div><div></div><div></div><div></div>
-            <div></div><div></div><div></div><div></div>
-          </div>)}
-
-          {/* </div>) : (<div className={Styles.ldsDefault}> */}
-            {/* these div's define the dots of the spinner */}
-            {/* <div></div><div></div><div></div><div></div>
-            <div></div><div></div><div></div><div></div>
-            <div></div><div></div><div></div><div></div>
-          </div>)} */}
+            </div> : (<Loader/>)}
         </Swipeable>
       </React.Fragment>
     );

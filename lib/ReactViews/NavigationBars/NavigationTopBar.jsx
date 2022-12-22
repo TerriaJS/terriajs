@@ -11,6 +11,7 @@ import Icon from "../Icon.jsx";
 import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./NavigationBars.scss";
 import Branding from "../StandardUserInterface/Branding";
+import Loader from "../Loader"
 
 const NavigationTopBar = createReactClass({
   displayName: "NavigationTopBar",
@@ -228,12 +229,7 @@ const NavigationTopBar = createReactClass({
               </div>
             </div>
 
-          </div>) : (<div className={Styles.ldsDefault}>
-            {/* these div's define the dots of the spinner */}
-            <div></div><div></div><div></div><div></div>
-            <div></div><div></div><div></div><div></div>
-            <div></div><div></div><div></div><div></div>
-          </div>)}
+          </div>) : (<Loader/>)}
         </Swipeable>
       </React.Fragment>
     );

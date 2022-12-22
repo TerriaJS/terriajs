@@ -12,6 +12,7 @@ import Icon from "../Icon.jsx";
 import ObserveModelMixin from "../ObserveModelMixin";
 import Tooltip from "../RCTooltip/RCTooltip";
 import Styles from "./story-panel.scss";
+import Loader from "../Loader"
 
 const RCStoryPanel = createReactClass({
   displayName: "RCStoryPanel",
@@ -173,12 +174,7 @@ const RCStoryPanel = createReactClass({
               </div>
             </div>
 
-          </div>) : (<div className={Styles.ldsDefault}>
-            {/* these div's define the dots of the spinner */}
-            <div></div><div></div><div></div><div></div>
-            <div></div><div></div><div></div><div></div>
-            <div></div><div></div><div></div><div></div>
-          </div>)}
+          </div>) : (<Loader/>)}
         </Swipeable>
       </React.Fragment>
     );
