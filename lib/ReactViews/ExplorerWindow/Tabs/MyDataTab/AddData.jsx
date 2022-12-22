@@ -21,6 +21,7 @@ import Styles from "./add-data.scss";
 import FileInput from "./FileInput";
 import { parseCustomMarkdownToReactWithOptions } from "../../../Custom/parseCustomMarkdownToReact";
 import loadJson from "../../../../Core/loadJson";
+import Result from "../../../../Core/Result";
 
 /**
  * Add data panel in modal window -> My data tab
@@ -100,6 +101,15 @@ const AddData = createReactClass({
     });
   },
 
+  async getUrlJson() {
+    try {
+      const data = await loadJson(this.state.remoteUrl);
+      return data.catalog;
+    } catch (e) {
+      return;
+    }
+  },
+
   async handleUrl(e) {
     const url = this.state.remoteUrl;
     e.preventDefault();
@@ -120,16 +130,10 @@ const AddData = createReactClass({
         this.state.remoteDataType.value
       );
     } else if (this.state.remoteDataType.value === "json") {
-      promise = loadJson(this.state.remoteUrl).then((data) => {
-        if (data.error) {
-          return Promise.reject(data.error);
-        }
-        this.props.terria.catalog.group
-          .addMembersFromJson(CommonStrata.user, data.catalog)
-          .raiseError(this.props.terria, "Failed to load catalog from file");
+      this.props.terria.catalog.group
+          .addMembersFromJson(CommonStrata.user, await this.getUrlJson())
+          .raiseError(this.props.terria, `An error occurred trying to add data from URL: ${this.state.remoteUrl}`, true);
 
-        return Promise.resolve();
-      });
       this.setState({
         isLoading: false
       });
