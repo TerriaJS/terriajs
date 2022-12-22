@@ -123,5 +123,10 @@
   },
   "languagePanel": {
     "changeLanguage": "언어 변경"
+  },
+  "core": {
+    "dataType": {
+      "assimp-local": "3D 파일 변환기 (zip) (실험용)"
+    }
   }
 }
