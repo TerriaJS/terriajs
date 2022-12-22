@@ -2,39 +2,15 @@
 @import "../../Sass/common/mixins";
 
 .logo {
-  composes: list-reset from "../../Sass/common/_base.scss";
-  composes: clearfix from "../../Sass/common/_base.scss";
-
-  /* Align About button with compass */
-  margin-right: 7px;
-}
-
-.logo-item {
-  // position: relative;
-  // display: block;
   float: left;
-  margin-right: $padding;
-
-  &:last-child {
-    margin-right: 0;
-  }
-}
-
-.story {
-  display: grid;
-  max-width: 100%;
-  width: 100%;
-  grid-template-rows: 1fr auto;
 }
 
 .RCHotspotSummary {
   padding: 16px 16px 0px 16px;
   display: grid;
   grid-template-rows: auto auto 1fr auto;
-  // height: 100px;
   box-sizing: border-box;
   @media (max-width: $xs) {
-    // height: 100px;
     overflow-y: auto;
   }
 
@@ -102,46 +78,10 @@
   }
 }
 
-.isCentered {
-  padding-left: 20px;
-  // when changing to full screen, the story panel should move to center slower
-  // than side panel slide in/out
-  transition-delay: 0.5s;
-}
-
-.story-container {
-  position: absolute;
-  right: 0;
-  left: 0;
-  top: 0;
-  bottom: 0;
-
-  &.is-mounted {
-    opacity: 1;
-    @include transform(none);
-  }
-
-  @include transform(translateY(20%));
-  @include transition(all 0.3s);
-  opacity: 0;
-  pointer-events: auto;
-  display: flex;
-  opacity: 0;
-  background-color: transparent;
-  color: $text-dark;
-  text-align: left;
-  box-sizing: border-box;
-  border-radius: 2px;
-}
-
 .storyBottomNavigationItems {
   display: grid;
   align-items: center;
   padding: 4px 0;
-}
-
-.isPushedUp {
-  bottom: 350px;
 }
 
 .relative {
@@ -150,42 +90,6 @@
 .absoluteRight {
   position: absolute;
   right: 0;
-}
-
-.body {
-  position: absolute;
-  right: 0;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  color: $dark;
-  font-size: 14px;
-  line-height: 1.5;
-  font-family: $font-base;
-  height: 100%;
-  overflow-y: auto;
-
-  img {
-    max-width: 100%;
-  }
-  * {
-    max-width: 100%;
-    /* These are technically the same, but use both */
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-
-    -ms-word-break: break-all;
-    /* This is the dangerous one in WebKit, as it breaks things wherever */
-    word-break: break-all;
-    /* Instead use this non-standard one: */
-    word-break: break-word;
-
-    /* Adds a hyphen where the word breaks, if supported (No Blink) */
-    -ms-hyphens: auto;
-    -moz-hyphens: auto;
-    -webkit-hyphens: auto;
-    hyphens: auto;
-  }
 }
 
 .locationBtn,
@@ -279,7 +183,6 @@
     color: #ffffff;
   }
 }
-
 
 :global {
   .story.tjs-notification-window__wrapper {

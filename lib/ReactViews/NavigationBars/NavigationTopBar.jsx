@@ -140,12 +140,8 @@ const NavigationTopBar = createReactClass({
 
           {selectedPage? (<div className={Styles.RCHotspotSummary}>
             <div className={Styles.titleGroup}>
-              <div>
-                <ul className={Styles.logo}>
-                  <li className={Styles.logoItem}>
-                    <Branding viewState={this.props.viewState} />
-                  </li>
-                </ul>
+              <div className={Styles.logo}>
+                <Branding viewState={this.props.viewState} />
               </div>
 
               <div className="flex">

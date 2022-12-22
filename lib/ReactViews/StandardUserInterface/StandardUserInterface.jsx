@@ -218,9 +218,7 @@ const StandardUserInterface = createReactClass({
 
               <Route exact path={`/sector/:sectorName/story/:storyID/page/:pageIndex`}>
                 <div className={Styles.topbar}>
-                  {/* <React.StrictMode> */}
                     <NavigationTopBar terria={terria} viewState={viewState}/>
-                  {/* </React.StrictMode> */}
                 </div>
               </Route>
             </Switch>
