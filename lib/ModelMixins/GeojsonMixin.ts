@@ -1254,9 +1254,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
     protected viewingControlsOverride(traitValue: ViewingControl[]) {
       return !this.useTableStylingAndProtomaps
-        ? traitValue.filter(
-            (v) => v.id !== TableStylingWorkflow.type
-          )
+        ? traitValue.filter((v) => v.id !== TableStylingWorkflow.type)
         : traitValue;
     }
   }

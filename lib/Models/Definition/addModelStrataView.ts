@@ -37,7 +37,7 @@ export default function addModelStrataView<
       get: function () {
         const value = trait.getValue(this);
         const valueOrDefault = value === undefined ? defaultValue : value;
-        const overrideName = traitName + 'Override';
+        const overrideName = traitName + "Override";
         if (this[overrideName] !== undefined) {
           return this[overrideName](valueOrDefault);
         } else {

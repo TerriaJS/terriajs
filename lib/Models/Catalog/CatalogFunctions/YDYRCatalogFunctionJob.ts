@@ -17,7 +17,7 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
 ) {
   get typeName() {
     return "YourDataYourRegions Job";
-  } 
+  }
 
   static readonly type = "ydyr-job";
   get type() {

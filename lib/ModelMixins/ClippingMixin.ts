@@ -31,9 +31,7 @@ type InstanceType = BaseType & {
   clippingMapItems: CustomDataSource[];
 };
 
-function ClippingMixin<T extends AbstractConstructor<BaseType>>(
-  Base: T
-) {
+function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class MixedClass extends Base implements InstanceType {
     private _clippingBoxDrawing?: BoxDrawing;
     abstract clippingPlanesOriginMatrix(): Matrix4;

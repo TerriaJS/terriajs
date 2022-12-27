@@ -70,7 +70,9 @@ export function setShow(mapItem: MapItem, show: boolean) {
   }
 }
 
-function MappableMixin<T extends AbstractConstructor<Model<MappableTraits>>>(Base: T) {
+function MappableMixin<T extends AbstractConstructor<Model<MappableTraits>>>(
+  Base: T
+) {
   abstract class MappableMixin extends Base {
     initialMessageShown: boolean = false;
     get isMappable() {

@@ -543,9 +543,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   protected selectableDimensionsOverride(traitValue: SelectableDimension[]) {
     return filterOutUndefined([
       // Filter out proceduresSelector - as it duplicates TableMixin.styleDimensions
-      ...traitValue.filter(
-        (dim) => dim.id !== this.proceduresSelector?.id
-      ),
+      ...traitValue.filter((dim) => dim.id !== this.proceduresSelector?.id),
       this.proceduresSelector,
       this.observablesSelector
     ]);

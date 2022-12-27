@@ -382,7 +382,9 @@ interface StyledLabelProps {
   spacingBottom?: boolean;
 }
 
-const StyledLabel: React.FC<StyledLabelProps> = (props: StyledLabelProps): ReactElement<any, any> | null => {
+const StyledLabel: React.FC<StyledLabelProps> = (
+  props: StyledLabelProps
+): ReactElement<any, any> | null => {
   const { viewState, label, textProps } = props;
   const id = useUID();
   const childrenWithId = React.Children.map(props.children, (child) => {

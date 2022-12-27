@@ -21,7 +21,9 @@ import ReferenceMixin from "./ReferenceMixin";
 
 type CatalogMember = Model<CatalogMemberTraits>;
 
-function CatalogMemberMixin<T extends AbstractConstructor<CatalogMember>>(Base: T) {
+function CatalogMemberMixin<T extends AbstractConstructor<CatalogMember>>(
+  Base: T
+) {
   abstract class CatalogMemberMixin
     extends AccessControlMixin(Base)
     implements SelectableDimensions, ViewingControls
