@@ -336,9 +336,9 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     }
   }
 
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
+  protected cacheDurationOverride(traitValue: string | undefined) {
+    if (isDefined(traitValue)) {
+      return traitValue;
     }
     return "0d";
   }
@@ -540,11 +540,10 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     return valueTitle;
   }
 
-  @computed
-  get selectableDimensions() {
+  protected selectableDimensionsOverride(traitValue: SelectableDimension[]) {
     return filterOutUndefined([
       // Filter out proceduresSelector - as it duplicates TableMixin.styleDimensions
-      ...super.selectableDimensions.filter(
+      ...traitValue.filter(
         (dim) => dim.id !== this.proceduresSelector?.id
       ),
       this.proceduresSelector,

@@ -358,10 +358,9 @@ export default class ArcGisPortalCatalogGroup extends UrlMixin(
     return i18next.t("models.arcgisPortal.nameGroup");
   }
 
-  @computed
-  get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
+  protected cacheDurationOverride(traitValue: string | undefined) {
+    if (isDefined(traitValue)) {
+      return traitValue;
     }
     return "0d";
   }

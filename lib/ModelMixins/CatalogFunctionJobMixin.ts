@@ -126,7 +126,7 @@ function CatalogFunctionJobMixin<
      *
      * @returns true for FINISHED, false for RUNNING (will then call pollForResults)
      */
-    protected abstract async _invoke(): Promise<boolean>;
+    protected abstract _invoke(): Promise<boolean>;
 
     public async invoke() {
       this.setTrait(CommonStrata.user, "jobStatus", "running");

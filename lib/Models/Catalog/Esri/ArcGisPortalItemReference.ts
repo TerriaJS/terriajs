@@ -240,10 +240,9 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
     );
   }
 
-  @computed
-  get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
+  protected cacheDurationOverride(traitValue: string | undefined) {
+    if (isDefined(traitValue)) {
+      return traitValue;
     } else if (isDefined(this._arcgisPortalCatalogGroup)) {
       return this._arcgisPortalCatalogGroup.cacheDuration;
     }

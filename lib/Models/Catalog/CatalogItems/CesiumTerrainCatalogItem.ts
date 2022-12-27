@@ -23,8 +23,7 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
     return CesiumTerrainCatalogItem.type;
   }
 
-  @computed
-  get disableZoomTo() {
+  protected disableZoomToOverride(traitValue: boolean | undefined) {
     return true;
   }
 
@@ -33,13 +32,12 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
     return this.terria.terrainProvider === this.terrainProvider;
   }
 
-  @computed
-  get shortReport() {
-    if (super.shortReport === undefined) {
+  protected shortReportOverride(traitValue: string | undefined) {
+    if (traitValue === undefined) {
       const status = this.isTerrainActive ? "In use" : "Not in use";
       return `Terrain status: ${status}`;
     }
-    return super.shortReport;
+    return traitValue;
   }
 
   /**

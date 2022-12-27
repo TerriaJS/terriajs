@@ -74,9 +74,11 @@ export default class CsvCatalogItem
     );
   }
 
-  @computed
-  get cacheDuration() {
-    return super.cacheDuration || "1d";
+  protected cacheDurationOverride(traitValue: string | undefined) {
+    if (isDefined(traitValue)) {
+      return traitValue;
+    }
+    return "1d";
   }
 
   protected async _exportData() {

@@ -55,8 +55,7 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
       return true;
     }
 
-    @computed
-    get disableZoomTo() {
+    protected disableZoomToOverride(traitValue: boolean) {
       const { latitude, longitude, height } = this.origin;
       return (
         latitude === undefined ||
@@ -164,12 +163,11 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
       return Promise.resolve();
     }
 
-    @computed
-    get shortReport(): string | undefined {
+    protected shortReportOverride(traitValue: string | undefined) {
       if (this.terria.currentViewer.type === "Leaflet") {
         return i18next.t("models.commonModelErrors.3dTypeIn2dMode", this);
       }
-      return super.shortReport;
+      return traitValue;
     }
 
     @computed

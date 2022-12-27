@@ -461,8 +461,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
     }
   }
 
-  @computed
-  get shortReport(): string | undefined {
+  protected shortReportOverride(traitValue: string | undefined) {
     // Show notice if reached
     if (
       this.readyData?.features !== undefined &&
@@ -473,7 +472,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
         this
       );
     }
-    return undefined;
+    return traitValue;
   }
 }
 

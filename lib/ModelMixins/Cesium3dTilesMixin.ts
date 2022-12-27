@@ -293,12 +293,11 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       return [this.tileset, ...this.clippingMapItems];
     }
 
-    @computed
-    get shortReport(): string | undefined {
+    protected shortReportOverride(traitValue: string | undefined) {
       if (this.terria.currentViewer.type === "Leaflet") {
         return i18next.t("models.commonModelErrors.3dTypeIn2dMode", this);
       }
-      return super.shortReport;
+      return traitValue;
     }
 
     @computed get optionsObj() {

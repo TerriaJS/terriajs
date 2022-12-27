@@ -675,11 +675,10 @@ export default class OpenDataSoftCatalogItem
     }
   }
 
-  @computed
-  get selectableDimensions() {
+  protected selectableDimensionsOverride(traitValue: SelectableDimension[]) {
     return filterOutUndefined([
       this.availableFieldsDimension,
-      ...super.selectableDimensions.filter(
+      ...traitValue.filter(
         (s) => !this.availableFieldsDimension || s.id !== "activeStyle"
       )
     ]);
