@@ -235,8 +235,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       });
     }
 
-    @computed
-    get disableZoomTo() {
+    protected disableZoomOverride(traitValue: boolean) {
       // Disable zoom if only showing imagery parts  (eg region mapping) and no rectangle is defined
       if (
         !this.mapItems.find(
@@ -246,7 +245,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       ) {
         return true;
       }
-      return super.disableZoomTo;
+      return traitValue;
     }
 
     /** Is showing regions (instead of points) */

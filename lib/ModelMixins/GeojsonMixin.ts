@@ -327,16 +327,17 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return true;
     }
 
-    @computed get name() {
+    protected nameOverride(traitValue: string | undefined) {
+      const superValue = super.nameOverride(traitValue);
       if (CatalogMemberMixin.isMixedInto(this.sourceReference)) {
-        return super.name || this.sourceReference.name;
+        return superValue || this.sourceReference.name;
       }
-      return super.name;
+      return superValue;
     }
 
-    @computed get cacheDuration(): string {
-      if (isDefined(super.cacheDuration)) {
-        return super.cacheDuration;
+    protected cacheDurationOverride(traitValue: string | undefined) {
+      if (isDefined(traitValue)) {
+        return traitValue;
       }
       return "1d";
     }
