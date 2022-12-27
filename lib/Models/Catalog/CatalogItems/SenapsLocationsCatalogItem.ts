@@ -5,7 +5,7 @@ import isDefined from "../../../Core/isDefined";
 import { JsonObject } from "../../../Core/Json";
 import loadJson from "../../../Core/loadJson";
 import TerriaError from "../../../Core/TerriaError";
-import MappableMixin from "../../../ModelMixins/MappableMixin";
+import MappableMixin, { setShow } from "../../../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import { FeatureInfoTemplateTraits } from "../../../Traits/TraitsClasses/FeatureInfoTraits";
@@ -262,7 +262,7 @@ class SenapsLocationsCatalogItem extends MappableMixin(
   @computed get mapItems() {
     if (isDefined(this.geoJsonItem)) {
       return this.geoJsonItem.mapItems.map((mapItem) => {
-        mapItem.show = this.show;
+        setShow(mapItem, this.show);
         return mapItem;
       });
     }

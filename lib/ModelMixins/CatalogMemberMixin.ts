@@ -6,6 +6,7 @@ import isDefined from "../Core/isDefined";
 import { isJsonObject, isJsonString, JsonObject } from "../Core/Json";
 import Result from "../Core/Result";
 import hasTraits from "../Models/Definition/hasTraits";
+import { Mixin } from "../Models/Definition/Mixin";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {

@@ -40,6 +40,10 @@ export namespace ImageryParts {
   }
 }
 
+export function isImagery(mapItem: MapItem): mapItem is AbstractPrimitive {
+  return ImageryParts.is(mapItem);
+}
+
 export function isPrimitive(mapItem: MapItem): mapItem is AbstractPrimitive {
   return "isDestroyed" in mapItem;
 }

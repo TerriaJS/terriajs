@@ -2,7 +2,10 @@ import i18next from "i18next";
 import { configure, runInAction } from "mobx";
 import Color from "terriajs-cesium/Source/Core/Color";
 import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
-import { isDataSource } from "../../../../lib/ModelMixins/MappableMixin";
+import {
+  isDataSource,
+  isImagery
+} from "../../../../lib/ModelMixins/MappableMixin";
 import ArcGisFeatureServerCatalogItem, {
   convertEsriPointSizeToPixels
 } from "../../../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogItem";
@@ -224,10 +227,9 @@ describe("ArcGisFeatureServerCatalogItem", function () {
       await item.loadMapItems();
 
       expect(item.mapItems.length).toEqual(1);
-      const dataSource = item.mapItems[0];
-      expect(
-        !isDataSource(dataSource) && dataSource.imageryProvider
-      ).toBeTruthy();
+      const mapItem = item.mapItems[0];
+      expect(isDataSource(mapItem)).toBeFalsy();
+      expect(isImagery(mapItem)).toBeTruthy();
       expect(item.featureCounts.line).toEqual(13);
     });
 
