@@ -20,6 +20,6 @@ describe("initializeErrorServiceProvider", function () {
     } catch (e) {
       error = e;
     }
-    expect(error.message).toBe(`Unknown error service provider: foo`);
+    expect((error as any).message).toBe(`Unknown error service provider: foo`);
   });
 });

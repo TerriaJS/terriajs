@@ -320,7 +320,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
       } catch (error) {
         expect(error).toBeDefined();
         expect(error instanceof TerriaError).toBeTruthy();
-        expect(error.message).toBe(
+        expect((error as any).message).toBe(
           "One of the identifiers passed does not match with any of the processes offered by this server"
         );
       }
