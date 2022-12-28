@@ -31,7 +31,8 @@
       "urijs",
       "styled-components" // eventually it will be required anyway for SSR.
       //"react"
-    ]
+    ],
+    "skipLibCheck": true
   },
   "include": [
     "./lib/Core/**/*",
