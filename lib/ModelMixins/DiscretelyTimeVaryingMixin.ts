@@ -3,7 +3,7 @@ import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
@@ -27,7 +27,7 @@ export interface DiscreteTimeAsJS {
 }
 
 function DiscretelyTimeVaryingMixin<
-  T extends Constructor<Model<DiscretelyTimeVaryingTraits>>
+  T extends AbstractConstructor<Model<DiscretelyTimeVaryingTraits>>
 >(Base: T) {
   abstract class DiscretelyTimeVaryingMixin
     extends ChartableMixin(Base)

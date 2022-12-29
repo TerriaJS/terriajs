@@ -304,7 +304,7 @@ class GetObservationRequest {
 }
 
 export default class SensorObservationServiceCatalogItem extends TableMixin(
-  CatalogMemberMixin(CreateModel(SensorObservationServiceCatalogItemTraits))
+  CreateModel(SensorObservationServiceCatalogItemTraits)
 ) {
   static readonly type = "sos";
   static defaultRequestTemplate = require("./SensorObservationServiceRequestTemplate.xml");
@@ -540,10 +540,14 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     return valueTitle;
   }
 
-  protected selectableDimensionsOverride(traitValue: SelectableDimension[]) {
+  @computed
+  get selectableDimensions(): SelectableDimension[] {
+    super.selectableDimensions;
     return filterOutUndefined([
       // Filter out proceduresSelector - as it duplicates TableMixin.styleDimensions
-      ...traitValue.filter((dim) => dim.id !== this.proceduresSelector?.id),
+      ...super.selectableDimensions.filter(
+        (dim) => dim.id !== this.proceduresSelector?.id
+      ),
       this.proceduresSelector,
       this.observablesSelector
     ]);

@@ -219,7 +219,7 @@ interface FeatureCounts {
 
 function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
   abstract class GeoJsonMixin extends TableMixin(
-    FeatureInfoUrlTemplateMixin(UrlMixin(CatalogMemberMixin(Base)))
+    FeatureInfoUrlTemplateMixin(UrlMixin(Base))
   ) {
     @observable
     private _dataSource:
@@ -1252,10 +1252,12 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return undefined;
     }
 
-    protected viewingControlsOverride(traitValue: ViewingControl[]) {
+    @computed get viewingControls(): ViewingControl[] {
       return !this.useTableStylingAndProtomaps
-        ? traitValue.filter((v) => v.id !== TableStylingWorkflow.type)
-        : traitValue;
+        ? super.viewingControls.filter(
+            (v) => v.id !== TableStylingWorkflow.type
+          )
+        : super.viewingControls;
     }
   }
   return GeoJsonMixin;

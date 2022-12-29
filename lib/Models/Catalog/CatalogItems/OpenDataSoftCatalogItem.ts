@@ -534,9 +534,7 @@ StratumOrder.addLoadStratum(OpenDataSoftDatasetStratum.stratumName);
 
 export default class OpenDataSoftCatalogItem
   extends TableMixin(
-    AutoRefreshingMixin(
-      UrlMixin(CatalogMemberMixin(CreateModel(OpenDataSoftCatalogItemTraits)))
-    )
+    AutoRefreshingMixin(UrlMixin(CreateModel(OpenDataSoftCatalogItemTraits)))
   )
   implements SelectableDimensions
 {
@@ -675,10 +673,10 @@ export default class OpenDataSoftCatalogItem
     }
   }
 
-  protected selectableDimensionsOverride(traitValue: SelectableDimension[]) {
+  @computed get selectableDimensions(): SelectableDimension[] {
     return filterOutUndefined([
       this.availableFieldsDimension,
-      ...traitValue.filter(
+      ...super.selectableDimensions.filter(
         (s) => !this.availableFieldsDimension || s.id !== "activeStyle"
       )
     ]);

@@ -114,7 +114,7 @@ export default class SdmxJsonCatalogItem
    */
   @computed
   get baseUrl(): string | undefined {
-    return super.url;
+    return this.traits["url"].getValue(this);
   }
 
   protected urlOverride(traitValue: string | undefined) {
