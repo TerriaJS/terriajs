@@ -1,17 +1,16 @@
-import { VectorTileFeature } from "@mapbox/vector-tile";
 import bbox from "@turf/bbox";
 import i18next from "i18next";
 import { clone } from "lodash-es";
-import { action, computed, observable, runInAction } from "mobx";
+import { computed, observable, runInAction } from "mobx";
 import { ImageryLayerFeatureInfo as ImageryLayerFeatureInfo } from "cesium";
 import {
+  GeomType,
   json_style,
   LabelRule,
   LineSymbolizer,
   PolygonSymbolizer,
   Rule as PaintRule
 } from "protomaps";
-import isDefined from "../../../Core/isDefined";
 import { JsonObject } from "../../../Core/Json";
 import loadJson from "../../../Core/loadJson";
 import TerriaError from "../../../Core/TerriaError";
@@ -83,6 +82,7 @@ class MapboxVectorTileLoadableStratum extends LoadableStratum(
           createStratumInstance(LegendItemTraits, {
             color: this.item.fillColor,
             outlineColor: this.item.lineColor,
+            outlineWidth: this.item.lineColor ? 1 : undefined,
             title: this.item.name
           })
         ]
@@ -153,7 +153,9 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
           dataLayer: this.layer,
           symbolizer: new PolygonSymbolizer({ fill: this.fillColor }),
           minzoom: this.minimumZoom,
-          maxzoom: this.maximumZoom
+          maxzoom: this.maximumZoom,
+          // Only apply polygon/fill symbolizer to polygon features (otherwise it will also apply to line features)
+          filter: (z, f) => f.geomType === GeomType.Polygon
         });
       }
       if (this.lineColor) {
@@ -197,8 +199,8 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
       maximumZoom: this.maximumZoom,
       credit: this.attribution,
       paintRules: this.paintRules,
-      labelRules: this.labelRules
-      // featureInfoFunc: this.featureInfoFromFeature,
+      labelRules: this.labelRules,
+      idProperty: this.idProperty
     });
   }
 
@@ -222,19 +224,6 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
           : undefined
       }
     ];
-  }
-
-  @action.bound
-  featureInfoFromFeature(feature: VectorTileFeature) {
-    const featureInfo = new ImageryLayerFeatureInfo();
-    if (isDefined(this.nameProperty)) {
-      featureInfo.name = feature.properties[this.nameProperty];
-    }
-    (featureInfo as any).properties = clone(feature.properties);
-    featureInfo.data = {
-      id: feature.properties[this.idProperty]
-    }; // For highlight
-    return featureInfo;
   }
 }
 

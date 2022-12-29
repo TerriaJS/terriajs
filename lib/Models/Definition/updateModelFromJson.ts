@@ -10,7 +10,7 @@ import { BaseModel } from "./Model";
 export default function updateModelFromJson(
   model: BaseModel,
   stratumName: string,
-  json: ModelJson,
+  json: Partial<ModelJson>,
   replaceStratum: boolean = false
 ): Result<undefined> {
   const traits = model.traits;

@@ -23,6 +23,7 @@ const MyDataTab = observer(
       terria: PropTypes.object,
       viewState: PropTypes.object,
       onFileAddFinished: PropTypes.func.isRequired,
+      onUrlAddFinished: PropTypes.func.isRequired,
       localDataTypes: PropTypes.arrayOf(PropTypes.object),
       remoteDataTypes: PropTypes.arrayOf(PropTypes.object),
       t: PropTypes.func.isRequired
@@ -158,6 +159,7 @@ const MyDataTab = observer(
                 activeTab={this.state.activeTab}
                 resetTab={this.resetTab}
                 onFileAddFinished={this.props.onFileAddFinished}
+                onUrlAddFinished={this.props.onUrlAddFinished}
                 localDataTypes={this.props.localDataTypes}
                 remoteDataTypes={this.props.remoteDataTypes}
               />

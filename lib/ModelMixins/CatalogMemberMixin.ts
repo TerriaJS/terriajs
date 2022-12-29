@@ -1,7 +1,7 @@
 import { action, computed, isObservableArray, runInAction, toJS } from "mobx";
 import Mustache from "mustache";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import AsyncLoader from "../Core/AsyncLoader";
-import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import { isJsonObject, isJsonString, JsonObject } from "../Core/Json";
 import Result from "../Core/Result";
@@ -21,7 +21,9 @@ import ReferenceMixin from "./ReferenceMixin";
 
 type CatalogMember = Model<CatalogMemberTraits>;
 
-function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
+function CatalogMemberMixin<T extends AbstractConstructor<CatalogMember>>(
+  Base: T
+) {
   abstract class CatalogMemberMixin
     extends AccessControlMixin(Base)
     implements SelectableDimensions, ViewingControls
@@ -98,14 +100,12 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       return this.terria.workbench.contains(this);
     }
 
-    @computed
-    get name(): string | undefined {
-      return super.name || this.uniqueId;
+    protected nameOverride(traitValue: string | undefined) {
+      return traitValue || this.uniqueId;
     }
 
-    @computed
-    get nameInCatalog(): string | undefined {
-      return super.nameInCatalog || this.name;
+    protected nameInCatalogOverride(traitValue: string | undefined) {
+      return traitValue || this.name;
     }
 
     @computed

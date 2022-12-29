@@ -6,7 +6,9 @@ import { LabelGraphics as LabelGraphics } from "cesium";
 import { PathGraphics as PathGraphics } from "cesium";
 import { PointGraphics as PointGraphics } from "cesium";
 import { Property as Property } from "cesium";
+import { HorizontalOrigin as HorizontalOrigin } from "cesium";
 import { LabelStyle as LabelStyle } from "cesium";
+import { VerticalOrigin as Verticalorigin } from "cesium";
 import { getMakiIcon, isMakiIcon } from "../Map/Icons/Maki/MakiIcons";
 import TableStyle from "./TableStyle";
 import { isConstantStyleMap } from "./TableStyleMap";
@@ -65,6 +67,8 @@ export type SupportedLabelGraphics = Pick<
   | "outlineColor"
   | "outlineWidth"
   | "pixelOffset"
+  | "horizontalOrigin"
+  | "verticalOrigin"
 >;
 
 /** For given TableStyle and rowId, return feature styling in a "cesium-friendly" format.
@@ -205,7 +209,21 @@ export function getFeatureStyle(style: TableStyle, rowId: number) {
         pixelOffset: new Cartesian2(
           labelStyle.pixelOffset[0],
           labelStyle.pixelOffset[1]
-        )
+        ),
+        verticalOrigin:
+          labelStyle.verticalOrigin === "TOP"
+            ? VerticalOrigin.TOP
+            : labelStyle.verticalOrigin === "BOTTOM"
+            ? VerticalOrigin.BOTTOM
+            : labelStyle.verticalOrigin === "BASELINE"
+            ? VerticalOrigin.BASELINE
+            : VerticalOrigin.CENTER,
+        horizontalOrigin:
+          labelStyle.horizontalOrigin === "CENTER"
+            ? HorizontalOrigin.CENTER
+            : labelStyle.horizontalOrigin === "RIGHT"
+            ? HorizontalOrigin.RIGHT
+            : HorizontalOrigin.LEFT
       }
     : undefined;
 
@@ -216,7 +234,9 @@ export function getFeatureStyle(style: TableStyle, rowId: number) {
     pathGraphicsSolidColorOptions,
     pathGraphicsPolylineGlowOptions,
     billboardGraphicsOptions,
-    /** Use PointGraphics instead of BillboardGraphics, if not using maki icon. */
-    usePointGraphics: !isMakiIcon(pointStyle?.marker)
+    /** Use PointGraphics instead of BillboardGraphics, if not using maki icon AND not using image marker. */
+    usePointGraphics:
+      !isMakiIcon(pointStyle?.marker) &&
+      !pointStyle?.marker?.startsWith("data:image")
   };
 }

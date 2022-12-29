@@ -111,7 +111,7 @@ describe("YDYRCatalogFunctionJob", function () {
 
     it("polls twice - and creates 2 log entries", async function () {
       // Wait until job finished
-      await new Promise((resolve) => {
+      await new Promise<void>((resolve) => {
         reaction(
           () => job.jobStatus,
           (status) => (status === "finished" ? resolve() : undefined)
@@ -128,7 +128,7 @@ describe("YDYRCatalogFunctionJob", function () {
     });
     it("downloads results and creates CSVCatalogItem", async function () {
       // Wait until job finished downloading results
-      await new Promise((resolve) => {
+      await new Promise<void>((resolve) => {
         reaction(
           () => job.downloadedResults,
           (downloadedResults) => (downloadedResults ? resolve() : undefined)

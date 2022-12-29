@@ -1,7 +1,7 @@
 import TableMixin from "../ModelMixins/TableMixin";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import { BaseModel } from "../Models/Definition/Model";
-import TableTraits from "../Traits/TraitsClasses/TableTraits";
+import TableTraits from "../Traits/TraitsClasses/Table/TableTraits";
 import { computed } from "mobx";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import { FeatureInfoTemplateTraits } from "../Traits/TraitsClasses/FeatureInfoTraits";

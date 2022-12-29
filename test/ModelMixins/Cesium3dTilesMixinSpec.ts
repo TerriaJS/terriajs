@@ -8,6 +8,7 @@ import { Color as Color } from "cesium";
 import { Matrix4 as Matrix4 } from "cesium";
 import { Cesium3DTileset as Cesium3DTileset } from "cesium";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 
 describe("Cesium3dTilesMixin", function () {
   let terria: Terria;
@@ -132,6 +133,26 @@ describe("Cesium3dTilesMixin", function () {
           );
         }
       });
+    });
+  });
+
+  describe("getSelectorForFeature", function () {
+    it("returns a style expression for selecting the given feature if it can be constructed", function () {
+      const item = new Cesium3DTilesCatalogItem("test", terria);
+      item.setTrait(CommonStrata.user, "featureIdProperties", [
+        "locality",
+        "building-no"
+      ]);
+      const fakeTileFeature = new Cesium3DTileFeature();
+      spyOn(fakeTileFeature, "getProperty").and.callFake((property: string) =>
+        property === "locality"
+          ? "foo"
+          : property === "building-no"
+          ? 4242
+          : undefined
+      );
+      const selector = item.getSelectorForFeature(fakeTileFeature);
+      expect(selector).toBe('${building-no} === 4242 && ${locality} === "foo"');
     });
   });
 });

@@ -3,7 +3,7 @@ import { binarySearch as binarySearch } from "cesium";
 import { JulianDate as JulianDate } from "cesium";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
@@ -27,7 +27,7 @@ export interface DiscreteTimeAsJS {
 }
 
 function DiscretelyTimeVaryingMixin<
-  T extends Constructor<Model<DiscretelyTimeVaryingTraits>>
+  T extends AbstractConstructor<Model<DiscretelyTimeVaryingTraits>>
 >(Base: T) {
   abstract class DiscretelyTimeVaryingMixin
     extends ChartableMixin(Base)
@@ -407,7 +407,7 @@ function toJulianDate(time: string | undefined): JulianDate | undefined {
   const julianDate = JulianDate.fromIso8601(time);
 
   // Don't return an invalid JulianDate
-  if (julianDate.secondsOfDay === NaN || julianDate.dayNumber === NaN)
+  if (isNaN(julianDate.secondsOfDay) || isNaN(julianDate.dayNumber))
     return undefined;
 
   return julianDate;

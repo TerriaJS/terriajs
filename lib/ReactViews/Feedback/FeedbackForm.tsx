@@ -1,6 +1,6 @@
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React, { useEffect, useRef } from "react";
+import React, { ReactElement, useEffect, useRef } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { useUID } from "react-uid";
 import styled, { DefaultTheme, withTheme } from "styled-components";
@@ -382,13 +382,15 @@ interface StyledLabelProps {
   spacingBottom?: boolean;
 }
 
-const StyledLabel: React.FC<StyledLabelProps> = (props: StyledLabelProps) => {
+const StyledLabel: React.FC<StyledLabelProps> = (
+  props: StyledLabelProps
+): ReactElement<any, any> | null => {
   const { viewState, label, textProps } = props;
   const id = useUID();
   const childrenWithId = React.Children.map(props.children, (child) => {
     // checking isValidElement is the safe way and avoids a typescript error too
     if (React.isValidElement(child)) {
-      return React.cloneElement(child, { id: id });
+      return React.cloneElement(child, { id: id } as any);
     }
     return child;
   });

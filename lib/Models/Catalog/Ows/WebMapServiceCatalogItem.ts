@@ -153,15 +153,14 @@ class WebMapServiceCatalogItem
     return WebMapServiceCatalogItem.type;
   }
 
-  @computed
-  get shortReport(): string | undefined {
+  protected shortReportOverride(traitValue: string | undefined) {
     if (
       this.tilingScheme instanceof GeographicTilingScheme &&
       this.terria.currentViewer.type === "Leaflet"
     ) {
       return i18next.t("map.cesium.notWebMercatorTilingScheme", this);
     }
-    return super.shortReport;
+    return traitValue;
   }
 
   @computed
@@ -208,9 +207,9 @@ class WebMapServiceCatalogItem
     });
   }
 
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
+  protected cacheDurationOverride(traitValue: string | undefined) {
+    if (isDefined(traitValue)) {
+      return traitValue;
     }
     return "0d";
   }

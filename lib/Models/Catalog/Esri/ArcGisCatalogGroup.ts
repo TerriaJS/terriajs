@@ -251,9 +251,9 @@ export default class ArcGisCatalogGroup extends UrlMixin(
     return i18next.t("models.arcGisService.name");
   }
 
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
+  protected cacheDurationOverride(traitValue: string | undefined) {
+    if (isDefined(traitValue)) {
+      return traitValue;
     }
     return "1d";
   }

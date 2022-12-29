@@ -65,7 +65,7 @@
     "title": "クリック＋ドラッグでカメラを回転",
     "guidanceBtnText": "コンパスの詳しい使い方を見る",
     "guidanceBtnTitle": "ジャイロスコープの使い方",
-    "description": "・内側の円：視点の自由移動.\n・外側の輪：地図を回転.\n・ダブルクリック：ホームポジションに戻る.\n簡便操作：Ctrlキーと地図のドラッグ操作で視点移動.",
+    "description": "・外側の輪：地図を回転 （Nが北）\n・内側の円：視点の自由な移動\n・ダブルクリック：ホームポジションに戻る\n回転の簡便操作：Ctrlキーと地図のドラッグ操作で視点の自由な移動が可能",
     "guidance": {
       "ctrlDragDescription": "CTRLキーを押しながらドラッグしても地図を傾けたり回したりできます。",
       "dismissText": "閉じて今後は表示しない",
@@ -241,7 +241,7 @@
   "catalogItem": {
     "removeFromMap": "マップから削除する",
     "trash": "カタログから削除",
-    "add": "マップに追加する",
+    "add": "マップに追加",
     "remove": "削除",
     "loading": "読み込み中...",
     "privateIndicatorTitle": "プライベートデータセット",
@@ -565,7 +565,7 @@
     "webTitle": "ウェブからデータを追加する",
     "localTitle": "ローカルのデータを追加する",
     "browse": "ブラウズ...",
-    "urlInputBtn": "マップに追加する",
+    "urlInputBtn": "マップに追加",
     "localFile": "<0>ステップ2</0>：ファイルを選択",
     "webFile": "<0>ステップ2</0>：データファイルまたはウェブサービスのURLを入力",
     "webFileType": "<0>ステップ1</0>：ファイルまたはウェブサービスタイプを選択",
@@ -628,7 +628,7 @@
       "auto": "ファイルタイプ",
       "shp": "Shapefile",
       "gltf": "glTF",
-      "carto": "Carto",
+      "carto": "Carto V1",
       "json": "Terriaカタログ",
       "gpx": "GPX",
       "czml": "CZML",
@@ -643,7 +643,8 @@
       "ifc": "IFC",
       "assimp-local": "3Dファイルコンバーター (zip) (試験的機能)",
       "assimp-local-description": "**警告:** 3D ファイルコンバータは試験的機能です。  \n[サポートされる形式のリスト](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nファイルは必ずZIPしてください。",
-      "assimp-remote": "3Dファイルコンバータ（試験的機能）"
+      "assimp-remote": "3Dファイルコンバータ（試験的機能）",
+      "carto-v3": "CARTO V3"
     },
     "dataUri": {
       "errorMessage": "残念ながら、Microsoftのブラウザ（全てのバージョンのInternet ExplorerとEdge）では、データをファイルとしてダウンロードするのに必要となるdata URI機能がサポートされていません。ダウンロードするには、次のURLを $t(browsers.chrome), $t(browsers.firefox), $t(browsers.safari)など別のブラウザにコピーしてください。{{href}}",
@@ -1521,7 +1522,9 @@
       "unusalTilingScheme": "このデータセットは特殊なタイル化方式を使用しているため、2Dのマップでは表示できません。",
       "notWebMercatorTilingScheme": "このデータセットはウェブメルカトル（EPSG:3857）図法をサポートしていないため、2Dのマップでは表示できません。",
       "failedToObtain": "画像タイル X: {{x}} Y: {{y}} Level: {{level}} の取得に失敗しました。",
-      "devError": "cesiumが必須です。"
+      "devError": "cesiumが必須です。",
+      "stoppedRenderingTitle": "3D地図の描画に失敗しました",
+      "stoppedRenderingMessage": "先程ワークベンチに追加したデータが原因で問題が起きているかもしれません - データを削除してください。それでも問題が解決しない場合は {{appName}}を再読込してみてください。"
     },
     "regionProvider": {
       "csvRegionMappingMessageLoadError": "リージョン{{regionName}}のリージョン境界を読み込めませんでした。{{exception}}",

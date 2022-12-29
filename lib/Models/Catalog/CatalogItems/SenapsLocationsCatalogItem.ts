@@ -5,7 +5,7 @@ import isDefined from "../../../Core/isDefined";
 import { JsonObject } from "../../../Core/Json";
 import loadJson from "../../../Core/loadJson";
 import TerriaError from "../../../Core/TerriaError";
-import MappableMixin from "../../../ModelMixins/MappableMixin";
+import MappableMixin, { setShow } from "../../../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import { FeatureInfoTemplateTraits } from "../../../Traits/TraitsClasses/FeatureInfoTraits";
@@ -212,10 +212,14 @@ export class SenapsLocationsStratum extends LoadableStratum(
         geojsonCatalogItem
       );
     } catch (e) {
+      const statusCode =
+        e instanceof Error && "statusCode" in e
+          ? (e as any).statusCode
+          : undefined;
       throw TerriaError.from(e, {
         title: i18next.t("models.senaps.retrieveErrorTitle"),
         message: i18next.t(
-          e.statusCode === 401
+          statusCode === 401
             ? "models.senaps.missingKeyErrorMessage"
             : "models.senaps.generalErrorMessage"
         )
@@ -262,7 +266,7 @@ class SenapsLocationsCatalogItem extends MappableMixin(
   @computed get mapItems() {
     if (isDefined(this.geoJsonItem)) {
       return this.geoJsonItem.mapItems.map((mapItem) => {
-        mapItem.show = this.show;
+        setShow(mapItem, this.show);
         return mapItem;
       });
     }

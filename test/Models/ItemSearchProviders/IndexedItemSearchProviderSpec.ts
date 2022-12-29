@@ -88,7 +88,7 @@ describe("IndexedItemSearchProvider", function () {
       } catch (e) {
         error = e;
       }
-      expect(error?.message).toContain(
+      expect((error as any)?.message).toContain(
         "indexedItemSearchProvider.errorParsingIndexRoot"
       );
     });

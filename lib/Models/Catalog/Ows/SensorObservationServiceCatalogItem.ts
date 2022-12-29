@@ -15,9 +15,9 @@ import xml2json from "../../../ThirdParty/xml2json";
 import SensorObservationServiceCatalogItemTraits from "../../../Traits/TraitsClasses/SensorObservationCatalogItemTraits";
 import TableChartStyleTraits, {
   TableChartLineStyleTraits
-} from "../../../Traits/TraitsClasses/TableChartStyleTraits";
-import TablePointSizeStyleTraits from "../../../Traits/TraitsClasses/TablePointSizeStyleTraits";
-import TableStyleTraits from "../../../Traits/TraitsClasses/TableStyleTraits";
+} from "../../../Traits/TraitsClasses/Table/ChartStyleTraits";
+import TablePointSizeStyleTraits from "../../../Traits/TraitsClasses/Table/PointSizeStyleTraits";
+import TableStyleTraits from "../../../Traits/TraitsClasses/Table/StyleTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
@@ -304,7 +304,7 @@ class GetObservationRequest {
 }
 
 export default class SensorObservationServiceCatalogItem extends TableMixin(
-  CatalogMemberMixin(CreateModel(SensorObservationServiceCatalogItemTraits))
+  CreateModel(SensorObservationServiceCatalogItemTraits)
 ) {
   static readonly type = "sos";
   static defaultRequestTemplate = require("./SensorObservationServiceRequestTemplate.xml");
@@ -336,9 +336,9 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     }
   }
 
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
+  protected cacheDurationOverride(traitValue: string | undefined) {
+    if (isDefined(traitValue)) {
+      return traitValue;
     }
     return "0d";
   }
@@ -541,7 +541,8 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   }
 
   @computed
-  get selectableDimensions() {
+  get selectableDimensions(): SelectableDimension[] {
+    super.selectableDimensions;
     return filterOutUndefined([
       // Filter out proceduresSelector - as it duplicates TableMixin.styleDimensions
       ...super.selectableDimensions.filter(

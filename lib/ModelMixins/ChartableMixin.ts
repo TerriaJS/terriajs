@@ -1,5 +1,5 @@
 import { maxBy, minBy } from "lodash-es";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import LatLonHeight from "../Core/LatLonHeight";
 import Model from "../Models/Definition/Model";
 import { GlyphStyle } from "../ReactViews/Custom/Chart/Glyphs";
@@ -65,7 +65,9 @@ export interface ChartItem {
   glyphStyle?: GlyphStyle;
 }
 
-function ChartableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
+function ChartableMixin<T extends AbstractConstructor<Model<MappableTraits>>>(
+  Base: T
+) {
   abstract class ChartableMixin extends MappableMixin(Base) {
     get isChartable() {
       return true;

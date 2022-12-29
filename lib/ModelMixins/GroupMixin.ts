@@ -165,7 +165,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      *
      * {@see AsyncLoader}
      */
-    protected abstract async forceLoadMembers(): Promise<void>;
+    protected abstract forceLoadMembers(): Promise<void>;
 
     @action
     toggleOpen(stratumId: string) {

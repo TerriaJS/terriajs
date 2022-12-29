@@ -192,9 +192,9 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     return "Web Processing Service (WPS)";
   }
 
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
+  protected cacheDurationOverride(traitValue: string | undefined) {
+    if (isDefined(traitValue)) {
+      return traitValue;
     }
     return "0d";
   }

@@ -389,6 +389,9 @@
         "oauth_scope": null,
         "federated": false,
         "license_url": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "custom": {
+        "update_frequency": "10 minutes"
       }
     },
     "features": ["geo", "analyze", "timeserie"]

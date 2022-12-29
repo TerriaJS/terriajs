@@ -1,7 +1,8 @@
 import i18next, { ReactOptions } from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
+import HttpApi, { RequestCallback } from "i18next-http-backend";
 import { initReactI18next } from "react-i18next";
-import HttpApi from "i18next-http-backend";
+import isDefined from "../Core/isDefined";
 
 export interface I18nBackendOptions {
   /**
@@ -12,12 +13,16 @@ export interface I18nBackendOptions {
    *  */
   crossDomain?: boolean;
   loadPath?: string;
-  parse?: (data: any, languages: string | [string], namespaces: string) => void;
+  parse?: (
+    data: any,
+    languages: string | [string],
+    namespaces: string
+  ) => { [key: string]: any };
   request?: (
     options: any,
     url: string,
     payload: any,
-    callback: () => void
+    callback: RequestCallback
   ) => void;
 }
 
@@ -33,6 +38,12 @@ export interface LanguageConfiguration {
   languages: Object;
   fallbackLanguage: string;
   changeLanguageOnStartWhen: string[];
+
+  /** Base URL for override namespace translation files. If set, this makes up the base URL for translation override files. Should end in /
+   *
+   * For example, if `overridesBaseUrl = "test/path/"`, then the full path for translation override files will be `"test/path/{{lng}}.json"`
+   **/
+  overridesBaseUrl?: string;
 }
 const defaultLanguageConfiguration = {
   enabled: false,
@@ -90,7 +101,6 @@ class Internationalization {
         // whitelist: Object.keys(languageConfig.languages),
         // deprecated
         supportedLngs: Object.keys(languageConfig.languages),
-
         // to allow en-US when only en is on the whitelist - nonExplicitWhitelist must be set to true
         /**
          * for anyone else confused as I was, `nonExplicitSupportedLngs` &&
@@ -105,23 +115,20 @@ class Internationalization {
          *
          *  */
         nonExplicitSupportedLngs: true,
-
         // to not look into a folder like /locals/en-US/... when en-US is detected, use load: "languageOnly" to avoid using Country-Code in path
         load: "languageOnly",
         // send not translated keys to endpoint
         saveMissing: false,
         // allow loading of internal trnaslation files and backend files
         partialBundledLanguages: true,
-
         /*
-          This setting adds a posibility for users to override translations using their own translation json file stored in
-          `TerriaMap/wwwroot/languages/{{lng}}/languageOverrides.json`
-          It will first look in defaultNS for translation and then check the fallbackNS
-        */
+            This setting adds a posibility for users to override translations using their own translation json file stored in
+            `TerriaMap/wwwroot/languages/{{lng}}/languageOverrides.json`
+            It will first look in defaultNS for translation and then check the fallbackNS
+          */
         ns: ["translation", "languageOverrides"],
         defaultNS: "languageOverrides",
         fallbackNS: "translation",
-
         backend: Object.assign(
           {
             // Loads translation files from either a TerriaMap's languages assets or from TerriaJS' assets
@@ -130,28 +137,31 @@ class Internationalization {
               [_lng]: string[],
               [namespace]: string[]
             ) {
-              return namespace === "translation"
-                ? `${terriajsResourcesBaseUrl}languages/{{lng}}/{{ns}}.json`
-                : "languages/{{lng}}/{{ns}}.json";
+              if (namespace === "translation")
+                return `${terriajsResourcesBaseUrl}languages/{{lng}}/{{ns}}.json`;
+              // Apply languageConfig.overridesBaseUrl to path for "languageOverrides" namespace if defined
+              if (
+                namespace === "languageOverrides" &&
+                isDefined(languageConfig.overridesBaseUrl)
+              ) {
+                return `${languageConfig.overridesBaseUrl}{{lng}}.json`;
+              }
+              return "languages/{{lng}}/{{ns}}.json";
             },
             crossDomain: false
           },
           { ...i18StartOptions?.backend }
         ),
-
         detection: {
           // order and from where user language should be detected
           order: languageConfig.changeLanguageOnStartWhen,
-
           // keys or params to lookup language from
           lookupQuerystring: "lng",
           lookupCookie: "i18next",
           lookupLocalStorage: "i18nextLng",
-
           // cache user language on
           caches: ["localStorage"],
           excludeCacheFor: ["cimode"] // languages to not persist (cookie, localStorage)
-
           // optional expire and domain for set cookie
           // cookieMinutes: 10,
           // cookieDomain: "myDomain",

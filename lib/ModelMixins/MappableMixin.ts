@@ -6,7 +6,7 @@ import { DataSource as DataSource } from "cesium";
 import { Cesium3DTileset as Cesium3DTileset } from "cesium";
 import { ImageryProvider as ImageryProvider } from "cesium";
 import AsyncLoader from "../Core/AsyncLoader";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import Result from "../Core/Result";
 import Model from "../Models/Definition/Model";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
@@ -40,6 +40,10 @@ export namespace ImageryParts {
   }
 }
 
+export function isImagery(mapItem: MapItem): mapItem is AbstractPrimitive {
+  return ImageryParts.is(mapItem);
+}
+
 export function isPrimitive(mapItem: MapItem): mapItem is AbstractPrimitive {
   return "isDestroyed" in mapItem;
 }
@@ -60,7 +64,15 @@ export function isDataSource(object: MapItem): object is DataSource {
   return "entities" in object;
 }
 
-function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
+export function setShow(mapItem: MapItem, show: boolean) {
+  if ("show" in mapItem) {
+    mapItem.show = show;
+  }
+}
+
+function MappableMixin<T extends AbstractConstructor<Model<MappableTraits>>>(
+  Base: T
+) {
   abstract class MappableMixin extends Base {
     initialMessageShown: boolean = false;
     get isMappable() {
@@ -162,7 +174,7 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      *
      * {@see AsyncLoader}
      */
-    protected abstract async forceLoadMapItems(): Promise<void>;
+    protected abstract forceLoadMapItems(): Promise<void>;
 
     /**
      * Array of MapItems to show on the map/chart when Catalog Member is shown

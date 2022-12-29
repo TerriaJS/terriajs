@@ -28,6 +28,7 @@ import Terria from "../Models/Terria";
 import { ViewingControl } from "../Models/ViewingControls";
 import { SATELLITE_HELP_PROMPT_KEY } from "../ReactViews/HelpScreens/SatelliteHelpPrompt";
 import { animationDuration } from "../ReactViews/StandardUserInterface/StandardUserInterface";
+import { FeatureInfoPanelButtonGenerator } from "../ViewModels/FeatureInfoPanel";
 import {
   defaultTourPoints,
   RelativePosition,
@@ -116,6 +117,14 @@ export default class ViewState {
   readonly globalViewingControlOptions: ((
     item: CatalogMemberMixin.Instance
   ) => ViewingControl | undefined)[] = [];
+
+  /**
+   * A global list of generator functions for showing buttons in feature info panel.
+   * Use {@link FeatureInfoPanelButton.addButton} instead of updating directly.
+   */
+  @observable
+  readonly featureInfoPanelButtonGenerators: FeatureInfoPanelButtonGenerator[] =
+    [];
 
   @action
   setSelectedTrainerItem(trainerItem: string) {

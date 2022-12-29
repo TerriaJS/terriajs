@@ -10,6 +10,7 @@ import {
   CapabilitiesGeographicBoundingBox,
   CapabilitiesService
 } from "./WebMapServiceCapabilities";
+import { isJsonString } from "../../../Core/Json";
 
 export interface FeatureType {
   readonly Name?: string;
@@ -162,10 +163,13 @@ function getSrsNames(json: any): SrsNamesForLayer[] | undefined {
  */
 function buildSrsNameObject(layer: any): SrsNamesForLayer {
   let srsNames: string[] = [];
-  srsNames.push(layer.DefaultSRS);
-  layer.OtherSRS?.forEach((item: string) => {
-    srsNames.push(item);
-  });
+
+  if (isJsonString(layer.DefaultSRS)) srsNames.push(layer.DefaultSRS);
+  if (Array.isArray(layer.OtherSRS))
+    layer.OtherSRS.forEach((item: string) => {
+      if (isJsonString(item)) srsNames.push(item);
+    });
+  else if (isJsonString(layer.OtherSRS)) srsNames.push(layer.OtherSRS);
   return { layerName: layer.Name, srsArray: srsNames };
 }
 

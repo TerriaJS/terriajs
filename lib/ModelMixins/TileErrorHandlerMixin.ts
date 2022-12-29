@@ -267,8 +267,9 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
           } catch (error) {
             // This attempt failed. We'll either retry (for 500s) or give up
             // depending on the status code.
-            const e: Error & { statusCode?: number } = error || {};
-            if (e.statusCode === undefined) {
+            const e = error ?? {};
+            const statusCode = (e as any).statusCode;
+            if (statusCode === undefined) {
               if (runInAction(() => ignoreUnknownTileErrors)) {
                 tellMapToSilentlyGiveUp();
               } else if ((e as any).target !== undefined) {
@@ -302,18 +303,18 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
                   )
                 });
               }
-            } else if (e.statusCode >= 400 && e.statusCode < 500) {
-              if (e.statusCode === 403 && treat403AsError === false) {
+            } else if (statusCode >= 400 && statusCode < 500) {
+              if (statusCode === 403 && treat403AsError === false) {
                 tellMapToSilentlyGiveUp();
-              } else if (e.statusCode === 404 && treat404AsError === false) {
+              } else if (statusCode === 404 && treat404AsError === false) {
                 tellMapToSilentlyGiveUp();
               } else {
-                failTile(e);
+                failTile(e as Error);
               }
-            } else if (e.statusCode >= 500 && e.statusCode < 600) {
-              retryWithBackoff(e);
+            } else if (statusCode >= 500 && statusCode < 600) {
+              retryWithBackoff(e as Error);
             } else {
-              failTile(e);
+              failTile(e as Error);
             }
           }
         })

@@ -11,7 +11,7 @@ import { Transforms as Transforms } from "cesium";
 import { CustomDataSource as CustomDataSource } from "cesium";
 import { ClippingPlane as ClippingPlane } from "cesium";
 import { ClippingPlaneCollection as ClippingPlaneCollection } from "cesium";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import BoxDrawing from "../Models/BoxDrawing";
 import CommonStrata from "../Models/Definition/CommonStrata";
@@ -31,9 +31,7 @@ type InstanceType = BaseType & {
   clippingMapItems: CustomDataSource[];
 };
 
-function ClippingMixin<T extends Constructor<BaseType>>(
-  Base: T
-): T & Constructor<InstanceType> {
+function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class MixedClass extends Base implements InstanceType {
     private _clippingBoxDrawing?: BoxDrawing;
     abstract clippingPlanesOriginMatrix(): Matrix4;

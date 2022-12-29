@@ -63,6 +63,6 @@ export default async function addUserCatalogMember(
       title: i18next.t("models.userData.addingDataErrorTitle"),
       message: i18next.t("models.userData.addingDataErrorTitle")
     });
-    return e;
+    return undefined;
   }
 }

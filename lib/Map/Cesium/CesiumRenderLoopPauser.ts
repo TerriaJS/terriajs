@@ -96,7 +96,7 @@ export default class CesiumRenderLoopPauser {
     if ("onwheel" in canvas) {
       // spec event type
       this._wheelEvent = "wheel";
-    } else if (defined(globalThis.onmousewheel)) {
+    } else if (defined((globalThis as any).onmousewheel)) {
       // legacy event type
       this._wheelEvent = "mousewheel";
     } else {

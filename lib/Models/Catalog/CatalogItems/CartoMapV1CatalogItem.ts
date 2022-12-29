@@ -135,9 +135,9 @@ export default class CartoMapV1CatalogItem extends MappableMixin(
     });
   }
 
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
+  protected cacheDurationOverride(traitValue: string | undefined) {
+    if (isDefined(traitValue)) {
+      return traitValue;
     }
     return "1d";
   }

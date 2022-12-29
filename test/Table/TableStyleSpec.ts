@@ -9,11 +9,11 @@ import Terria from "../../lib/Models/Terria";
 import LegendTraits, {
   LegendItemTraits
 } from "../../lib/Traits/TraitsClasses/LegendTraits";
-import TableColorStyleTraits from "../../lib/Traits/TraitsClasses/TableColorStyleTraits";
+import TableColorStyleTraits from "../../lib/Traits/TraitsClasses/Table/ColorStyleTraits";
 import TableColumnTraits, {
   ColumnTransformationTraits
-} from "../../lib/Traits/TraitsClasses/TableColumnTraits";
-import TableStyleTraits from "../../lib/Traits/TraitsClasses/TableStyleTraits";
+} from "../../lib/Traits/TraitsClasses/Table/ColumnTraits";
+import TableStyleTraits from "../../lib/Traits/TraitsClasses/Table/StyleTraits";
 
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")

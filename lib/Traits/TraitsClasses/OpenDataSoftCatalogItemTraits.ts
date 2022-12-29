@@ -1,14 +1,16 @@
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
+import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import EnumDimensionTraits from "./DimensionTraits";
 import FeatureInfoUrlTemplateTraits from "./FeatureInfoTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
-import TableTraits from "./TableTraits";
+import TableTraits from "./Table/TableTraits";
 import UrlTraits from "./UrlTraits";
 
 export default class OpenDataSoftCatalogItemTraits extends mixTraits(
+  AutoRefreshingTraits,
   TableTraits,
   FeatureInfoUrlTemplateTraits,
   UrlTraits,
@@ -78,4 +80,12 @@ export default class OpenDataSoftCatalogItemTraits extends mixTraits(
       "Aggregate time values (eg 1 day). See https://help.opendatasoft.com/apis/ods-search-v2/#group-by-clause"
   })
   aggregateTime?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Refresh interval template",
+    description:
+      'Template used to calculate refresh interval based on Opendatasoft dataset object. This template is rendered using dataset JSON object as view. For example `"{{metas.custom.update-frequency}}"` will use `"update-frequency"` custom metadata property. This supports "human readable" time strings - for example "15 minutes" and "60 sec".'
+  })
+  refreshIntervalTemplate?: string;
 }

@@ -150,9 +150,12 @@ class PreSampledPositionProperty {
 export default function createLongitudeLatitudeFeaturePerId(
   style: RequiredTableStyle
 ): TerriaFeature[] {
-  const features = style.rowGroups.map(([featureId, rowIds]) =>
-    createFeature(featureId, rowIds, style)
-  );
+  const features: TerriaFeature[] = [];
+  for (let i = 0; i < style.rowGroups.length; i++) {
+    const [featureId, rowIds] = style.rowGroups[i];
+    features.push(createFeature(featureId, rowIds, style));
+  }
+
   return features;
 }
 
@@ -249,7 +252,9 @@ function createFeature(
         fillColor: createProperty(Color, interpolate),
         outlineColor: createProperty(Color, interpolate),
         outlineWidth: createProperty(Number, interpolate),
-        pixelOffset: createProperty(Cartesian2, interpolate)
+        pixelOffset: createProperty(Cartesian2, interpolate),
+        verticalOrigin: new TimeIntervalCollectionProperty(),
+        horizontalOrigin: new TimeIntervalCollectionProperty()
       }
     : undefined;
 
@@ -266,13 +271,15 @@ function createFeature(
   /** use `PointGraphics` or `BillboardGraphics`. This wil be false if any pointTraits.marker !== "point", as then we use images as billboards */
   let usePointGraphicsForId = true;
 
-  rowIds.forEach((rowId) => {
+  for (let i = 0; i < rowIds.length; i++) {
+    const rowId = rowIds[i];
+
     const longitude = longitudes[rowId];
     const latitude = latitudes[rowId];
     const interval = timeIntervals[rowId];
 
     if (longitude === null || latitude === null || !interval) {
-      return;
+      continue;
     }
 
     addSampleOrInterval(
@@ -381,7 +388,7 @@ function createFeature(
       interval
     );
     availability.addInterval(interval);
-  });
+  }
 
   const show = calculateShow(availability);
   const feature = new TerriaFeature({

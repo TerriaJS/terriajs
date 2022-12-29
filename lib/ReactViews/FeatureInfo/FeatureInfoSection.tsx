@@ -1,17 +1,20 @@
 import classNames from "classnames";
 import { TFunction } from "i18next";
-import { merge } from "lodash-es";
+import { isEmpty, merge } from "lodash-es";
 import { action, computed, observable, reaction, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
 import Mustache from "mustache";
 import React from "react";
 import { withTranslation } from "react-i18next";
+import styled from "styled-components";
 import { Cartesian3 as Cartesian3 } from "cesium";
 import { Ellipsoid as Ellipsoid } from "cesium";
 import { JulianDate as JulianDate } from "cesium";
 import { Math as CesiumMath } from "cesium";
+import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
+import TerriaError from "../../Core/TerriaError";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../../ModelMixins/DiscretelyTimeVaryingMixin";
 import MappableMixin from "../../ModelMixins/MappableMixin";
@@ -19,6 +22,7 @@ import TimeVarying from "../../ModelMixins/TimeVarying";
 import TerriaFeature from "../../Models/Feature/Feature";
 import FeatureInfoContext from "../../Models/Feature/FeatureInfoContext";
 import Icon from "../../Styled/Icon";
+import { FeatureInfoPanelButton as FeatureInfoPanelButtonModel } from "../../ViewModels/FeatureInfoPanel";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import {
   withViewState,
@@ -26,6 +30,7 @@ import {
 } from "../StandardUserInterface/ViewStateContext";
 import Styles from "./feature-info-section.scss";
 import FeatureInfoDownload from "./FeatureInfoDownload";
+import FeatureInfoPanelButton from "./FeatureInfoPanelButton";
 import { generateCesiumInfoHTMLFromProperties } from "./generateCesiumInfoHTMLFromProperties";
 import getFeatureProperties from "./getFeatureProperties";
 import {
@@ -338,11 +343,49 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
 
     return {
       data:
-        this.featureProperties && this.featureProperties !== {}
+        this.featureProperties && !isEmpty(this.featureProperties)
           ? this.featureProperties
           : undefined,
       fileName
     };
+  }
+
+  @computed
+  get generatedButtons(): FeatureInfoPanelButtonModel[] {
+    const { feature, catalogItem } = this.props;
+    const buttons = filterOutUndefined(
+      this.props.viewState.featureInfoPanelButtonGenerators.map((generator) => {
+        try {
+          const dim = generator({ feature, item: catalogItem });
+          return dim;
+        } catch (error) {
+          TerriaError.from(error).log();
+        }
+      })
+    );
+    return buttons;
+  }
+
+  renderButtons() {
+    const { t } = this.props;
+    return (
+      <ButtonsContainer>
+        {/* If we have templated feature info (and not in print mode) - render "show raw data" button */}
+        {!this.props.printView && this.templatedFeatureInfoReactNode && (
+          <FeatureInfoPanelButton
+            onClick={this.toggleRawData.bind(this)}
+            text={
+              this.showRawData
+                ? t("featureInfo.showCuratedData")
+                : t("featureInfo.showRawData")
+            }
+          />
+        )}
+        {this.generatedButtons.map((button, i) => (
+          <FeatureInfoPanelButton key={i} {...button} />
+        ))}
+      </ButtonsContainer>
+    );
   }
 
   render() {
@@ -413,18 +456,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
         {titleElement}
         {this.props.isOpen ? (
           <section className={Styles.content}>
-            {/* If we have templated feature info (and not in print mode) - render "show raw data" button */}
-            {!this.props.printView && this.templatedFeatureInfoReactNode ? (
-              <button
-                type="button"
-                className={Styles.rawDataButton}
-                onClick={this.toggleRawData.bind(this)}
-              >
-                {this.showRawData
-                  ? t("featureInfo.showCuratedData")
-                  : t("featureInfo.showRawData")}
-              </button>
-            ) : null}
+            {this.renderButtons()}
             <div>
               {this.props.feature.loadingFeatureInfoUrl ? (
                 "Loading"
@@ -474,5 +506,11 @@ function contains(text: string, number: number, precision: number) {
     text.indexOf(fixed(Math.ceil, number)) !== -1
   );
 }
+
+const ButtonsContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  padding: 7px 0 10px 0;
+`;
 
 export default withTranslation()(withViewState(FeatureInfoSection));

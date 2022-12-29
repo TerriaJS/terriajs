@@ -79,7 +79,7 @@ describe("TileErrorHandlerMixin", function () {
   // that waits for its completion.
   function onTileLoadError(item: TestCatalogItem, error: TileProviderError) {
     item.onTileLoadError(error);
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       const retry: { then?: any; otherwise: any } = error.retry as any;
       if (retry && retry.then) {
         retry.then(resolve).catch(reject);

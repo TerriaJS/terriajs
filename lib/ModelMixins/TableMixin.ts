@@ -14,7 +14,7 @@ import { DataSource as DataSource } from "cesium";
 import { ImageryProvider as ImageryProvider } from "cesium";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
@@ -47,7 +47,7 @@ import { tableFeatureInfoContext } from "../Table/tableFeatureInfoContext";
 import TableFeatureInfoStratum from "../Table/TableFeatureInfoStratum";
 import { TableAutomaticLegendStratum } from "../Table/TableLegendStratum";
 import TableStyle from "../Table/TableStyle";
-import TableTraits from "../Traits/TraitsClasses/TableTraits";
+import TableTraits from "../Traits/TraitsClasses/Table/TableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import { calculateDomain, ChartAxis, ChartItem } from "./ChartableMixin";
 import DiscretelyTimeVaryingMixin, {
@@ -56,7 +56,9 @@ import DiscretelyTimeVaryingMixin, {
 import ExportableMixin, { ExportData } from "./ExportableMixin";
 import { ImageryParts } from "./MappableMixin";
 
-function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
+function TableMixin<T extends AbstractConstructor<Model<TableTraits>>>(
+  Base: T
+) {
   abstract class TableMixin
     extends ExportableMixin(
       DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base))
@@ -235,8 +237,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       });
     }
 
-    @computed
-    get disableZoomTo() {
+    protected disableZoomOverride(traitValue: boolean) {
       // Disable zoom if only showing imagery parts  (eg region mapping) and no rectangle is defined
       if (
         !this.mapItems.find(
@@ -246,7 +247,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       ) {
         return true;
       }
-      return super.disableZoomTo;
+      return traitValue;
     }
 
     /** Is showing regions (instead of points) */
