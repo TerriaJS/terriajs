@@ -4,7 +4,6 @@ import { EasingFunction as EasingFunction } from "cesium";
 import { Ellipsoid as Ellipsoid } from "cesium";
 import { TweenCollection } from "cesium";
 import L from "leaflet";
-import { requestAnimationFrame as cesiumRequestAnimationFrame } from "cesium";
 import isDefined from "../../Core/isDefined";
 
 import Leaflet from "../../Models/Leaflet";
@@ -171,7 +170,7 @@ export default class LeafletSelectionIndicator {
       this._tweens.length !== 0 ||
       (isDefined(feature) && isDefined(feature.position))
     ) {
-      cesiumRequestAnimationFrame(() => {
+      requestAnimationFrame(() => {
         this._startTweens();
       });
     }

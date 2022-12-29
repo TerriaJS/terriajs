@@ -2,7 +2,6 @@ import i18next from "i18next";
 import { GridLayer } from "leaflet";
 import { action, autorun, computed, observable, runInAction } from "mobx";
 import { computedFn } from "mobx-utils";
-import { cancelAnimationFrame as cesiumCancelAnimationFrame } from "cesium";
 import { Cartesian2 as Cartesian2 } from "cesium";
 import { Cartesian3 as Cartesian3 } from "cesium";
 import { Cartographic as Cartographic } from "cesium";
@@ -12,7 +11,6 @@ import { Ellipsoid as Ellipsoid } from "cesium";
 import { EventHelper as EventHelper } from "cesium";
 import { Math as CesiumMath } from "cesium";
 import { Rectangle as Rectangle } from "cesium";
-import { requestAnimationFrame as cesiumRequestAnimationFrame } from "cesium";
 import { DataSource as DataSource } from "cesium";
 import { DataSourceCollection as DataSourceCollection } from "cesium";
 import { Entity as Entity } from "cesium";
@@ -176,7 +174,7 @@ export default class Leaflet extends GlobeOrMap {
     const ticker = () => {
       if (!this._stopRequestAnimationFrame) {
         this.terria.timelineClock.tick();
-        this._cesiumReqAnimFrameId = cesiumRequestAnimationFrame(ticker);
+        this._cesiumReqAnimFrameId = requestAnimationFrame(ticker);
       }
     };
 
@@ -329,7 +327,7 @@ export default class Leaflet extends GlobeOrMap {
     // synchronously as a result of timelineClock ticking due to ticker()
     this._stopRequestAnimationFrame = true;
     if (isDefined(this._cesiumReqAnimFrameId)) {
-      cesiumCancelAnimationFrame(this._cesiumReqAnimFrameId);
+      cancelAnimationFrame(this._cesiumReqAnimFrameId);
     }
     this.dataSourceDisplay.destroy();
     this.map.off("move");
