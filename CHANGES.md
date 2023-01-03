@@ -15,6 +15,7 @@
 - Add option to upload terria web data (via url to json file/service)
 - Refactor `Cesium3dTileMixin`.
 - Updated related maps to fit mobile screens.
+- Extend `responseDataPath` trait of `ApiTableCatalogItem` with support for mapping over arrays and collecting nested object values.
 - [The next improvement]
 
 #### 8.2.22 - 2022-12-02
