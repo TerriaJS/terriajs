@@ -1,5 +1,5 @@
 import dateFormat from "dateformat";
-import { get as _get } from "lodash";
+import { get as _get, map as _map } from "lodash";
 import { computed, observable, runInAction } from "mobx";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
@@ -98,7 +98,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
           api.postRequestDataAsFormData
         );
         if (api.responseDataPath !== undefined) {
-          data = _get(data, api.responseDataPath);
+          data = getResponseDataPath(data, api.responseDataPath);
         }
         return Promise.resolve({
           data,
@@ -251,6 +251,30 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
 
     return uri.toString();
   }
+}
+
+/**
+ * Return the value at json path of the data object.
+ *
+ * This works exactly like the lodash.get() function but adds support for
+ * traversing array objects.  For eg, the lodash.get() does not support a path
+ * like: `a.users[].name`, but this function will correctly return a `{name}[]`
+ * array if they exist. The particular syntax for array traversal
+ * is borrowed from `jq` CLI tool.
+ */
+function getResponseDataPath(data: any, jsonPath: string) {
+  // Split the path at `[].` or `[]`
+  const pathSegments = jsonPath.split(/\[\]\.?/);
+  const getPath = (data: any, path: string) =>
+    path === ""
+      ? data
+      : Array.isArray(data)
+      ? _map(data, path)
+      : _get(data, path);
+  return pathSegments.reduce(
+    (nextData, segment) => getPath(nextData, segment),
+    data
+  );
 }
 
 StratumOrder.addLoadStratum(TableAutomaticStylesStratum.stratumName);
