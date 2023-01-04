@@ -1,6 +1,23 @@
 # Change Log
 
-#### next release (8.2.22)
+#### next release (8.2.23)
+
+- Only add groups to `CatalogIndex` if they aren't empty
+- `BoxDrawing` improvements:
+  - Added option `drawNonUniformScaleGrips` to enable/disable uniform-scaling
+  - Set limit on the size of scaling grips relative to the size of the box
+  - Small improvement to move interaction that prevents the box from locking up when trying to move at a camera angle parallel to the ground
+  - Restore modified map state to the previous setting when interaction stops
+- GltfMixin changes:
+  - Refactors code to use stable `DataSource` and `Entity` values instead of re-creating them everytime `mapItems` is recomputed.
+  - Disable zoom to for the item when position is unknown.
+- Add `UploadDataTypes` API for extending the supported local and remote upload data types.
+- Add option to upload terria web data (via url to json file/service)
+- Refactor `Cesium3dTileMixin`.
+- Updated related maps to fit mobile screens.
+- [The next improvement]
+
+#### 8.2.22 - 2022-12-02
 
 - Protomaps Polygon features now only use `PolygonSymbolizer` (instead of `PolygonSymbolizer` and `LineSymbolizer`)
 - Add `horizontalOrigin` and `verticalOrigin` to `TableLabelTraits`
@@ -24,7 +41,6 @@
 - Add `maximumNativeZoom` to `ProtomapsImageryProvider`
 - Fix image markers (eg `marker = "data:image/png;base64,..."`)
 - Fix `AssimpCatalogItem` to correctly handle zip archives that contain files inside a root folder.
-- [The next improvement]
 
 #### 8.2.21 - 2022-11-10
 
