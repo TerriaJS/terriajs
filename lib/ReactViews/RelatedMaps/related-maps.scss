@@ -1,7 +1,13 @@
+@import "~terriajs-variables";
+
 .dropdown-inner {
-  width: 600px;
   padding: 10px;
   font-size: 0.9rem;
+  width: 600px;
+
+  @media (max-width: $mobile) {
+    max-width: fit-content;
+  }
 }
 
 .section {

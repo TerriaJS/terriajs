@@ -30,10 +30,16 @@ const Tabs = observer(
         if (result.error) {
           result.raiseError(this.props.terria);
         } else {
-          this.props.terria.currentViewer.zoomTo(file, 1);
+          if (!file.disableZoomTo) {
+            this.props.terria.currentViewer.zoomTo(file, 1);
+          }
         }
       }
       this.props.viewState.myDataIsUploadView = false;
+    },
+
+    async onUrlAddFinished() {
+      this.props.viewState.openAddData();
     },
 
     getTabs() {
@@ -52,6 +58,7 @@ const Tabs = observer(
             terria={this.props.terria}
             viewState={this.props.viewState}
             onFileAddFinished={(files) => this.onFileAddFinished(files)}
+            onUrlAddFinished={this.onUrlAddFinished}
           />
         )
       };
