@@ -57,6 +57,7 @@ export function addToolButton<ToolProps = any>(
 ): ToolButton<ToolProps> {
   const terria = viewState.terria;
   const getController = () => {
+    // Retreive controller through mapNavigationModel to ensure the button hasn't been removed
     const controller = terria.mapNavigationModel.findItem(id)?.controller;
     return controller instanceof ToolButtonController ? controller : undefined;
   };
