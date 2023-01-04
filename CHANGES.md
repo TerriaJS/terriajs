@@ -8,6 +8,7 @@
   - Set limit on the size of scaling grips relative to the size of the box
   - Small improvement to move interaction that prevents the box from locking up when trying to move at a camera angle parallel to the ground
   - Restore modified map state to the previous setting when interaction stops
+- Fix bug in Cesium and Leaflet maps that resulted in `DataSource`s getting rendered even after their parent items are removed from the workbench.
 - GltfMixin changes:
   - Refactors code to use stable `DataSource` and `Entity` values instead of re-creating them everytime `mapItems` is recomputed.
   - Disable zoom to for the item when position is unknown.
