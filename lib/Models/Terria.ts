@@ -14,7 +14,11 @@ import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import URI from "urijs";
-import { Category, LaunchAction, DataSourceAction } from "../Core/AnalyticEvents/analyticEvents";
+import {
+  Category,
+  LaunchAction,
+  DataSourceAction
+} from "../Core/AnalyticEvents/analyticEvents";
 import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import ConsoleAnalytics from "../Core/ConsoleAnalytics";
@@ -1735,7 +1739,7 @@ export default class Terria {
         DataSourceAction.addFromShareUrl,
         getPath(item)
       );
-    })
+    });
 
     runInAction(() => (this.workbench.items = newItems));
 
