@@ -15,6 +15,7 @@
 - Add option to upload terria web data (via url to json file/service)
 - Refactor `Cesium3dTileMixin`.
 - Updated related maps to fit mobile screens.
+- Layers shown via a share URL are now logged as a Google Analytics event
 - [The next improvement]
 
 #### 8.2.22 - 2022-12-02
