@@ -157,7 +157,7 @@ const WorkbenchItemControls: React.FC<WorkbenchItemControlsProps> = observer(
 function generateControls(viewState: ViewState, item: BaseModel) {
   const generatedControls: SelectableDimension[] = [];
   const errors: TerriaError[] = [];
-  viewState.workbenchItemControlGenerators.forEach((generator) => {
+  viewState.workbenchItemInputGenerators.forEach((generator) => {
     try {
       const control = generator(item);
       control && generatedControls.push(control);
