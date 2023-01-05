@@ -1,6 +1,10 @@
 # Change Log
 
-#### next release (8.2.23)
+#### next release (8.2.24)
+
+- [The next improvement]
+
+#### 8.2.23 - 2023-01-06
 
 - Only add groups to `CatalogIndex` if they aren't empty
 - `BoxDrawing` improvements:
@@ -19,7 +23,6 @@
 - Extend `responseDataPath` trait of `ApiTableCatalogItem` with support for mapping over arrays and collecting nested object values.
 - Add `MapToolbar.addToolButton()` API for adding a tool button to the map navigation menu.
 - Add `ActionBar` component for showing a floating menu bar at the bottom of the map.
-- [The next improvement]
 
 #### 8.2.22 - 2022-12-02
 
