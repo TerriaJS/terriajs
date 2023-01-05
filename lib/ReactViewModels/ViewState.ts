@@ -175,11 +175,6 @@ export default class ViewState {
     this.currentTrainerStepIndex = index;
   }
 
-  @action
-  setActionBarVisible(visible: boolean) {
-    this.isActionBarVisible = visible;
-  }
-
   /**
    * Bottom dock state & action
    */
