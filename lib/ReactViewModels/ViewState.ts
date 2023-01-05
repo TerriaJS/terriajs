@@ -24,6 +24,7 @@ import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import { BaseModel } from "../Models/Definition/Model";
 import getAncestors from "../Models/getAncestors";
+import { SelectableDimension } from "../Models/SelectableDimensions/SelectableDimensions";
 import Terria from "../Models/Terria";
 import { ViewingControl } from "../Models/ViewingControls";
 import { SATELLITE_HELP_PROMPT_KEY } from "../ReactViews/HelpScreens/SatelliteHelpPrompt";
@@ -123,6 +124,18 @@ export default class ViewState {
   readonly globalViewingControlOptions: ((
     item: CatalogMemberMixin.Instance
   ) => ViewingControl | undefined)[] = [];
+
+  /**
+   * A global list of hooks for generating input controls for items in the workbench.
+   * The hooks in this list gets called once for each item in shown in the workbench.
+   * This is a mechanism for plugins to extend workbench input controls by adding new ones.
+   *
+   * Use {@link WorkbenchItem.Inputs.addInput} instead of updating directly.
+   */
+  @observable
+  readonly workbenchItemInputGenerators: ((
+    item: BaseModel
+  ) => SelectableDimension | undefined)[] = [];
 
   /**
    * A global list of generator functions for showing buttons in feature info panel.
