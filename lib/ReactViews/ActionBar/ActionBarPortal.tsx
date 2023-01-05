@@ -1,14 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import ViewState from "../../ReactViewModels/ViewState";
 import { Portal } from "../StandardUserInterface/Portal";
-import { withViewState } from "../StandardUserInterface/ViewStateContext";
 
 export const ActionBarPortalId = "action-bar-ui-portal";
 
 interface PropsType {
-  viewState: ViewState;
-
   /**
    * Toggles portal visibility.
    *
@@ -20,11 +16,11 @@ interface PropsType {
 /**
  * A Portal to show ActionBar UI.
  */
-const ActionBarPortal: React.FC<PropsType> = ({ viewState, show }) => {
-  return <Container viewState={viewState} id={ActionBarPortalId} show={show} />;
+const ActionBarPortal: React.FC<PropsType> = ({ show }) => {
+  return <StyledPortal id={ActionBarPortalId} show={show} />;
 };
 
-const Container = styled(Portal)<{ show: boolean }>`
+const StyledPortal = styled(Portal)<{ show: boolean }>`
   display: flex;
   position: absolute;
   height: 56px;
@@ -40,4 +36,4 @@ const Container = styled(Portal)<{ show: boolean }>`
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 `;
 
-export default withViewState(ActionBarPortal);
+export default ActionBarPortal;

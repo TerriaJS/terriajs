@@ -6,8 +6,6 @@ import ViewState from "../../ReactViewModels/ViewState";
 import { useViewState } from "./ViewStateContext";
 
 type PortalProps = {
-  viewState: ViewState;
-
   /**
    * id of the new portal.
    *
@@ -22,14 +20,16 @@ type PortalProps = {
 /**
  * Defines a portal with given id that can be attached by calling <PortalChild portalId={id} />
  */
-export const Portal: React.FC<PortalProps> = ({ viewState, id, className }) => {
+export const Portal: React.FC<PortalProps> = ({ id, className }) => {
+  const viewState = useViewState();
   useEffect(
     action(() => {
       viewState.portals.set(id, document.getElementById(id));
       return action(() => {
         viewState.portals.delete(id);
       });
-    })
+    }),
+    [id, className]
   );
   return <div id={id} className={className} />;
 };
