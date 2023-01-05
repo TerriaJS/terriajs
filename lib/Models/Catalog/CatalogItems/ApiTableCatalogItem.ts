@@ -22,6 +22,7 @@ import saveModelToJson from "../../Definition/saveModelToJson";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import JsonValue from "../../../Core/Json";
 
 export class ApiTableStratum extends LoadableStratum(
   ApiTableCatalogItemTraits
@@ -262,10 +263,10 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
  * array if they exist. The particular syntax for array traversal
  * is borrowed from `jq` CLI tool.
  */
-function getResponseDataPath(data: any, jsonPath: string) {
+function getResponseDataPath(data: JsonValue, jsonPath: string) {
   // Split the path at `[].` or `[]`
   const pathSegments = jsonPath.split(/\[\]\.?/);
-  const getPath = (data: any, path: string) =>
+  const getPath = (data: JsonValue, path: string) =>
     path === ""
       ? data
       : Array.isArray(data)
