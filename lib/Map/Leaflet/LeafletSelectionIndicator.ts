@@ -8,8 +8,8 @@ import isDefined from "../../Core/isDefined";
 
 import Leaflet from "../../Models/Leaflet";
 
-const TweenCollection = require("terriajs-cesium/Source/Scene/TweenCollection")
-  .default;
+const TweenCollection =
+  require("terriajs-cesium/Source/Scene/TweenCollection").default;
 const selectionIndicatorUrl = require("../../../wwwroot/images/NM-LocationTarget.svg");
 
 interface Tween {
@@ -85,15 +85,15 @@ export default class LeafletSelectionIndicator {
       },
       duration: 0.8,
       easingFunction: EasingFunction.EXPONENTIAL_OUT,
-      update: function(value: any) {
+      update: function (value: any) {
         style.opacity = value.opacity;
         style.transform =
           "scale(" + value.scale + ") rotate(" + value.rotate + "deg)";
       },
-      complete: function() {
+      complete: function () {
         that._selectionIndicatorTween = undefined;
       },
-      cancel: function() {
+      cancel: function () {
         that._selectionIndicatorTween = undefined;
       }
     });
@@ -127,14 +127,14 @@ export default class LeafletSelectionIndicator {
       },
       duration: 0.8,
       easingFunction: EasingFunction.EXPONENTIAL_OUT,
-      update: function(value: any) {
+      update: function (value: any) {
         style.opacity = value.opacity;
         style.transform = "scale(" + value.scale + ") rotate(0deg)";
       },
-      complete: function() {
+      complete: function () {
         that._selectionIndicatorTween = undefined;
       },
-      cancel: function() {
+      cancel: function () {
         that._selectionIndicatorTween = undefined;
       }
     });

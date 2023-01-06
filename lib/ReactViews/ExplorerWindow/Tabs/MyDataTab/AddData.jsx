@@ -20,6 +20,8 @@ import Loader from "../../../Loader";
 import Styles from "./add-data.scss";
 import FileInput from "./FileInput";
 import { parseCustomMarkdownToReactWithOptions } from "../../../Custom/parseCustomMarkdownToReact";
+import loadJson from "../../../../Core/loadJson";
+import TerriaError from "../../../../Core/TerriaError";
 
 /**
  * Add data panel in modal window -> My data tab
@@ -38,14 +40,23 @@ const AddData = createReactClass({
     localDataTypes: PropTypes.arrayOf(PropTypes.object),
     remoteDataTypes: PropTypes.arrayOf(PropTypes.object),
     onFileAddFinished: PropTypes.func.isRequired,
+    onUrlAddFinished: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired
   },
 
   getInitialState() {
     const remoteDataTypes =
       this.props.remoteDataTypes ?? getDataType().remoteDataType;
-    const localDataTypes =
-      this.props.localDataTypes ?? getDataType().localDataType;
+
+    // Automatically suffix supported extension types to localDataType names
+    const localDataTypes = (
+      this.props.localDataTypes ?? getDataType().localDataType
+    ).map((dataType) => {
+      const extensions = dataType.extensions?.length
+        ? ` (${buildExtensionsList(dataType.extensions)})`
+        : "";
+      return { ...dataType, name: `${dataType.name}${extensions}` };
+    });
 
     return {
       remoteDataTypes,
@@ -78,7 +89,7 @@ const AddData = createReactClass({
       this.props.terria,
       this.props.viewState,
       this.state.localDataType
-    ).then(addedCatalogItems => {
+    ).then((addedCatalogItems) => {
       if (addedCatalogItems && addedCatalogItems.length > 0) {
         this.props.onFileAddFinished(addedCatalogItems);
       }
@@ -109,6 +120,30 @@ const AddData = createReactClass({
         this.state.remoteUrl,
         this.state.remoteDataType.value
       );
+    } else if (this.state.remoteDataType.value === "json") {
+      promise = loadJson(this.state.remoteUrl)
+        .then((data) => {
+          if (data.error) {
+            return Promise.reject(data.error);
+          }
+          this.props.terria.catalog.group
+            .addMembersFromJson(CommonStrata.user, data.catalog)
+            .raiseError(this.props.terria, "Failed to load catalog from file");
+        })
+        .then(() => {
+          this.props.onUrlAddFinished();
+        })
+        .catch((error) =>
+          TerriaError.from(error).raiseError(
+            this.props.terria,
+            `An error occurred trying to add data from URL: ${this.state.remoteUrl}`
+          )
+        )
+        .finally(() => {
+          this.setState({
+            isLoading: false
+          });
+        });
     } else {
       try {
         const newItem = upsertModelFromJson(
@@ -122,7 +157,7 @@ const AddData = createReactClass({
           message: `An error occurred trying to add data from URL: ${url}`
         });
         newItem.setTrait(CommonStrata.user, "url", url);
-        promise = newItem.loadMetadata().then(result => {
+        promise = newItem.loadMetadata().then((result) => {
           if (result.error) {
             return Promise.reject(result.error);
           }
@@ -133,7 +168,7 @@ const AddData = createReactClass({
         promise = Promise.reject(e);
       }
     }
-    addUserCatalogMember(this.props.terria, promise).then(addedItem => {
+    addUserCatalogMember(this.props.terria, promise).then((addedItem) => {
       if (addedItem) {
         this.props.onFileAddFinished([addedItem]);
         if (TimeVarying.is(addedItem)) {
@@ -165,13 +200,13 @@ const AddData = createReactClass({
       icon: <Icon glyph={Icon.GLYPHS.opened} />
     };
 
-    const dataTypes = this.state.localDataTypes.reduce(function(
+    const dataTypes = this.state.localDataTypes.reduce(function (
       result,
       currentDataType
     ) {
       if (currentDataType.extensions) {
         return result.concat(
-          currentDataType.extensions.map(extension => "." + extension)
+          currentDataType.extensions.map((extension) => "." + extension)
         );
       } else {
         return result;
@@ -186,7 +221,7 @@ const AddData = createReactClass({
           <section className={Styles.tabPanel}>
             <label className={Styles.label}>
               <Trans i18nKey="addData.localFileType">
-                <strong>Step 1:</strong> Select file type (optional)
+                <strong>Step 1:</strong> Select file type
               </Trans>
             </label>
             <Dropdown
@@ -218,7 +253,7 @@ const AddData = createReactClass({
           <section className={Styles.tabPanel}>
             <label className={Styles.label}>
               <Trans i18nKey="addData.webFileType">
-                <strong>Step 1:</strong> Select file type (optional)
+                <strong>Step 1:</strong> Select file or web service type
               </Trans>
             </label>
             <Dropdown
@@ -266,5 +301,13 @@ const AddData = createReactClass({
     return <div className={Styles.inner}>{this.renderPanels()}</div>;
   }
 });
+
+/**
+ * @param extensions - string[]
+ * @returns Comma separated string of extensions
+ */
+function buildExtensionsList(extensions) {
+  return extensions.map((ext) => `.${ext}`).join(", ");
+}
 
 module.exports = withTranslation()(AddData);

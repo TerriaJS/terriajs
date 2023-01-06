@@ -10,7 +10,7 @@ import { BaseModel } from "./Model";
 export default function updateModelFromJson(
   model: BaseModel,
   stratumName: string,
-  json: ModelJson,
+  json: Partial<ModelJson>,
   replaceStratum: boolean = false
 ): Result<undefined> {
   const traits = model.traits;
@@ -22,7 +22,7 @@ export default function updateModelFromJson(
       model.strata.set(stratumName, createStratumInstance(model));
     }
 
-    Object.keys(json).forEach(propertyName => {
+    Object.keys(json).forEach((propertyName) => {
       if (
         propertyName === "id" ||
         propertyName === "type" ||
@@ -37,8 +37,9 @@ export default function updateModelFromJson(
         errors.push(
           new TerriaError({
             title: "Unknown property",
-            message: `The property \`${propertyName}\` is not valid for type \`${model.type ??
-              json.type}\`.`
+            message: `The property \`${propertyName}\` is not valid for type \`${
+              model.type ?? json.type
+            }\`.`
           })
         );
         return;
@@ -86,7 +87,7 @@ function mergeWithExistingMembers(
   const existingTrait = model.getTrait(stratumName, propertyName);
   if (existingTrait !== undefined && isObservableArray(existingTrait)) {
     existingTrait.push(
-      ...uniq(newTrait).filter(id => !existingTrait.includes(id))
+      ...uniq(newTrait).filter((id) => !existingTrait.includes(id))
     );
     return existingTrait;
   }

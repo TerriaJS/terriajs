@@ -73,8 +73,8 @@ const SideBarDatasetSearchResults = observer(
                 clickAction={this.searchInDataCatalog}
                 icon="data"
                 name={t("search.search", {
-                  searchText: this.props.viewState.searchState
-                    .locationSearchText
+                  searchText:
+                    this.props.viewState.searchState.locationSearchText
                 })}
               />
             )}

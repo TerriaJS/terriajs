@@ -43,9 +43,7 @@
       "maxScale": 3000001
     }
   ],
-  "tables": [
-    
-  ],
+  "tables": [],
   "spatialReference": {
     "wkid": 3112,
     "latestWkid": 3112

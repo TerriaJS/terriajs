@@ -131,8 +131,8 @@ export default class Legend extends React.Component<{
                     ? "100%"
                     : undefined
               }}
-              onError={evt => this.onImageLoad.bind(this, evt, legend)()}
-              onLoad={evt => this.onImageLoad.bind(this, evt, legend)()}
+              onError={(evt) => this.onImageLoad.bind(this, evt, legend)()}
+              onLoad={(evt) => this.onImageLoad.bind(this, evt, legend)()}
             />
           </a>
         </li>
@@ -173,20 +173,24 @@ export default class Legend extends React.Component<{
       imageUrl =
         getMakiIcon(
           legendItem.marker,
-          legendItem.color ?? "#fff",
-          legendItem.outlineWidth ?? 1,
-          legendItem.outlineColor ?? "#000",
+          legendItem.color ?? "#fff", // We have to have a fallback color here for `getMakiIcon`
+          legendItem.outlineWidth,
+          legendItem.outlineColor,
           legendItem.imageHeight,
           legendItem.imageWidth
-        ) ?? legendItem.marker;
+        ) ??
+        // If getMakiIcons returns nothing, we assume legendItem.marker is a URL
+        legendItem.marker;
     }
 
+    // Set boxStyle border to solid black if we aren't showing an image AND this legend item has space above it
     let boxStyle: any = {
       border:
         !imageUrl && legendItem.addSpacingAbove ? "1px solid black" : undefined
     };
 
-    if (!imageUrl && legendItem.outlineColor) {
+    // Override the boxStyle border if we have outlineColor and outlineWidth defined for this legend item
+    if (!imageUrl && legendItem.outlineColor && legendItem.outlineWidth) {
       boxStyle.border = `${legendItem.outlineWidth}px solid ${legendItem.outlineColor}`;
     }
 
@@ -226,9 +230,9 @@ export default class Legend extends React.Component<{
         };
       } else {
         boxStyle = {
-          border: `${legendItem.outlineWidth}px solid ${legendItem.outlineColor}`,
           backgroundColor: legendItem.color,
-          minWidth: "20px"
+          minWidth: "20px",
+          ...boxStyle
         };
       }
     }
@@ -318,29 +322,31 @@ export default class Legend extends React.Component<{
             className={Styles.legendInner}
             css={{ position: "relative", " li": { backgroundColor } }}
           >
-            {// Show temporary "legend button" - if custom styling has been applied
-            TableMixin.isMixedInto(this.props.item) &&
-            this.props.item.legendButton ? (
-              <Button
-                primary
-                shortMinHeight
-                css={{ position: "absolute", top: 10, right: 0 }}
-                renderIcon={() => (
-                  <StyledIcon
-                    light={true}
-                    glyph={Icon.GLYPHS.menuDotted}
-                    styledWidth="12px"
-                  />
-                )}
-                rightIcon
-                iconProps={{ css: { marginRight: 0, marginLeft: 4 } }}
-                onClick={this.props.item.legendButton.onClick.bind(
-                  this.props.item
-                )}
-              >
-                {this.props.item.legendButton.title}
-              </Button>
-            ) : null}
+            {
+              // Show temporary "legend button" - if custom styling has been applied
+              TableMixin.isMixedInto(this.props.item) &&
+              this.props.item.legendButton ? (
+                <Button
+                  primary
+                  shortMinHeight
+                  css={{ position: "absolute", top: 10, right: 0 }}
+                  renderIcon={() => (
+                    <StyledIcon
+                      light={true}
+                      glyph={Icon.GLYPHS.menuDotted}
+                      styledWidth="12px"
+                    />
+                  )}
+                  rightIcon
+                  iconProps={{ css: { marginRight: 0, marginLeft: 4 } }}
+                  onClick={this.props.item.legendButton.onClick.bind(
+                    this.props.item
+                  )}
+                >
+                  {this.props.item.legendButton.title}
+                </Button>
+              ) : null
+            }
 
             {(this.props.item.legends as Model<LegendTraits>[]).map(
               (legend, i: number) => (

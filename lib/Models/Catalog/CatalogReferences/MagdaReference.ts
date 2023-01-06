@@ -43,83 +43,82 @@ export interface MagdaReferenceHeaders {
 export default class MagdaReference extends AccessControlMixin(
   UrlMixin(ReferenceMixin(CreateModel(MagdaReferenceTraits)))
 ) {
-  static readonly defaultDistributionFormats: StratumFromTraits<
-    MagdaDistributionFormatTraits
-  >[] = [
-    createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "WMS",
-      formatRegex: "^wms$",
-      definition: {
-        type: "wms"
-      }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "WMS-GROUP",
-      formatRegex: "^wms-group$",
-      definition: {
-        type: "wms-group"
-      }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "EsriMapServer",
-      formatRegex: "^esri (mapserver|map server|rest|tiled map service)$",
-      urlRegex: "MapServer",
-      definition: {
-        type: "esri-mapServer"
-      }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "CSV",
-      formatRegex: "^csv(-geo-)?",
-      definition: {
-        type: "csv"
-      }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "CZML",
-      formatRegex: "^czml$",
-      definition: {
-        type: "czml"
-      }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "KML",
-      formatRegex: "^km[lz]$",
-      definition: {
-        type: "kml"
-      }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "GeoJSON",
-      formatRegex: "^geojson$",
-      definition: {
-        type: "geojson"
-      }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "WFS",
-      formatRegex: "^wfs$",
-      definition: {
-        type: "wfs"
-      }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "EsriFeatureServer",
-      formatRegex: "ESRI (MAPSERVER|FEATURESERVER)", // We still allow `ESRI MAPSERVER` to be considered for compatibility reason
-      urlRegex: "FeatureServer$|FeatureServer/$", // url Regex will exclude MapServer urls
-      definition: {
-        type: "esri-featureServer-group"
-      }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "EsriFeatureServer",
-      formatRegex: "ESRI (MAPSERVER|FEATURESERVER)", // We still allow `ESRI MAPSERVER` to be considered for compatibility reason
-      urlRegex: "FeatureServer/d",
-      definition: {
-        type: "esri-featureServer"
-      }
-    })
-  ];
+  static readonly defaultDistributionFormats: StratumFromTraits<MagdaDistributionFormatTraits>[] =
+    [
+      createStratumInstance(MagdaDistributionFormatTraits, {
+        id: "WMS",
+        formatRegex: "^wms$",
+        definition: {
+          type: "wms"
+        }
+      }),
+      createStratumInstance(MagdaDistributionFormatTraits, {
+        id: "WMS-GROUP",
+        formatRegex: "^wms-group$",
+        definition: {
+          type: "wms-group"
+        }
+      }),
+      createStratumInstance(MagdaDistributionFormatTraits, {
+        id: "EsriMapServer",
+        formatRegex: "^esri (mapserver|map server|rest|tiled map service)$",
+        urlRegex: "MapServer",
+        definition: {
+          type: "esri-mapServer"
+        }
+      }),
+      createStratumInstance(MagdaDistributionFormatTraits, {
+        id: "CSV",
+        formatRegex: "^csv(-geo-)?",
+        definition: {
+          type: "csv"
+        }
+      }),
+      createStratumInstance(MagdaDistributionFormatTraits, {
+        id: "CZML",
+        formatRegex: "^czml$",
+        definition: {
+          type: "czml"
+        }
+      }),
+      createStratumInstance(MagdaDistributionFormatTraits, {
+        id: "KML",
+        formatRegex: "^km[lz]$",
+        definition: {
+          type: "kml"
+        }
+      }),
+      createStratumInstance(MagdaDistributionFormatTraits, {
+        id: "GeoJSON",
+        formatRegex: "^geojson$",
+        definition: {
+          type: "geojson"
+        }
+      }),
+      createStratumInstance(MagdaDistributionFormatTraits, {
+        id: "WFS",
+        formatRegex: "^wfs$",
+        definition: {
+          type: "wfs"
+        }
+      }),
+      createStratumInstance(MagdaDistributionFormatTraits, {
+        id: "EsriFeatureServer",
+        formatRegex: "ESRI (MAPSERVER|FEATURESERVER)", // We still allow `ESRI MAPSERVER` to be considered for compatibility reason
+        urlRegex: "FeatureServer$|FeatureServer/$", // url Regex will exclude MapServer urls
+        definition: {
+          type: "esri-featureServer-group"
+        }
+      }),
+      createStratumInstance(MagdaDistributionFormatTraits, {
+        id: "EsriFeatureServer",
+        formatRegex: "ESRI (MAPSERVER|FEATURESERVER)", // We still allow `ESRI MAPSERVER` to be considered for compatibility reason
+        urlRegex: "FeatureServer/d",
+        definition: {
+          type: "esri-featureServer"
+        }
+      })
+    ];
 
   static readonly type = "magda";
 
@@ -206,8 +205,8 @@ export default class MagdaReference extends AccessControlMixin(
           "dataset-format"
         ],
         dereference: true,
-        magdaReferenceHeaders: this.terria.configParameters
-          .magdaReferenceHeaders
+        magdaReferenceHeaders:
+          this.terria.configParameters.magdaReferenceHeaders
       });
 
       return MagdaReference.createMemberFromRecord(
@@ -262,7 +261,7 @@ export default class MagdaReference extends AccessControlMixin(
 
     if (isJsonObject(aspects.group) && Array.isArray(aspects.group.members)) {
       const members = aspects.group.members;
-      if (members.every(member => isJsonObject(member))) {
+      if (members.every((member) => isJsonObject(member))) {
         // Every member has been dereferenced, so we're good to go.
         return MagdaReference.createGroupFromRecord(
           terria,
@@ -315,7 +314,7 @@ export default class MagdaReference extends AccessControlMixin(
       }
 
       distributions = datasetDistributions.distributions;
-      if (!distributions.every(distribution => isJsonObject(distribution))) {
+      if (!distributions.every((distribution) => isJsonObject(distribution))) {
         // Some of the distributions are not dereferenced.
         return undefined;
       }
@@ -393,7 +392,7 @@ export default class MagdaReference extends AccessControlMixin(
 
     if (isJsonObject(aspects.group) && Array.isArray(aspects.group.members)) {
       const members = aspects.group.members;
-      const ids = members.map(member => {
+      const ids = members.map((member) => {
         if (!isJsonObject(member) || !isJsonString(member.id)) {
           return undefined;
         }
@@ -403,7 +402,7 @@ export default class MagdaReference extends AccessControlMixin(
         let overriddenMember: JsonObject | undefined;
         if (override && Array.isArray(override.members)) {
           overriddenMember = override.members.find(
-            member => isJsonObject(member) && member.id === memberId
+            (member) => isJsonObject(member) && member.id === memberId
           ) as JsonObject | undefined;
         }
 
@@ -499,7 +498,7 @@ export default class MagdaReference extends AccessControlMixin(
 
     if (isJsonObject(aspects.terria, false)) {
       const terriaAspect = aspects.terria;
-      Object.keys(terriaAspect).forEach(key => {
+      Object.keys(terriaAspect).forEach((key) => {
         const terriaStratum = terriaAspect[key];
         if (
           key === "id" ||
@@ -509,12 +508,17 @@ export default class MagdaReference extends AccessControlMixin(
         ) {
           return;
         }
-        updateModelFromJson(group, key, terriaStratum, true);
+        updateModelFromJson(group, key, terriaStratum, true).logError();
       });
     }
 
     if (override) {
-      updateModelFromJson(group, CommonStrata.override, override, true);
+      updateModelFromJson(
+        group,
+        CommonStrata.override,
+        override,
+        true
+      ).logError();
     }
 
     return group;
@@ -560,7 +564,7 @@ export default class MagdaReference extends AccessControlMixin(
       result.setTrait(magdaRecordStratum, "name", record.name);
     }
 
-    Object.keys(terriaAspect).forEach(key => {
+    Object.keys(terriaAspect).forEach((key) => {
       const terriaStratum = terriaAspect[key];
       if (
         key === "id" ||
@@ -570,13 +574,21 @@ export default class MagdaReference extends AccessControlMixin(
       ) {
         return;
       }
-      updateModelFromJson(result, key, terriaStratum, true).catchError(error =>
-        result.setTrait(CommonStrata.underride, "isExperiencingIssues", true)
+      updateModelFromJson(result, key, terriaStratum, true).catchError(
+        (error) => {
+          error.log();
+          result.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
+        }
       );
     });
 
     if (override) {
-      updateModelFromJson(result, CommonStrata.override, override, true);
+      updateModelFromJson(
+        result,
+        CommonStrata.override,
+        override,
+        true
+      ).logError();
     }
 
     return result;
@@ -680,12 +692,22 @@ export default class MagdaReference extends AccessControlMixin(
           name: datasetRecord.name
         },
         true
-      );
+      ).logError();
 
-    updateModelFromJson(result, CommonStrata.definition, definition, true);
+    updateModelFromJson(
+      result,
+      CommonStrata.definition,
+      definition,
+      true
+    ).logError();
 
     if (override) {
-      updateModelFromJson(result, CommonStrata.override, override, true);
+      updateModelFromJson(
+        result,
+        CommonStrata.override,
+        override,
+        true
+      ).logError();
     }
 
     return result;

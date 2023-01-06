@@ -5,7 +5,9 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
+import ActionBarPortal from "../ActionBar/ActionBarPortal";
 import BottomDock from "../BottomDock/BottomDock";
+import { MapCredits } from "../Credits";
 import Loader from "../Loader";
 import BottomLeftBar from "../Map/BottomLeftBar/BottomLeftBar";
 import DistanceLegend from "../Map/Legend/DistanceLegend";
@@ -16,6 +18,7 @@ import TerriaViewerWrapper from "../Map/TerriaViewerWrapper";
 import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
 import Styles from "./map-column.scss";
 import Toast from "./Toast";
+import { withViewState } from "./ViewStateContext";
 
 const chromeVersion = FeatureDetection.chromeVersion();
 
@@ -28,7 +31,6 @@ const MapColumn = observer(
     displayName: "MapColumn",
 
     propTypes: {
-      terria: PropTypes.object.isRequired,
       viewState: PropTypes.object.isRequired,
       customFeedbacks: PropTypes.array.isRequired,
       allBaseMaps: PropTypes.array.isRequired,
@@ -65,23 +67,23 @@ const MapColumn = observer(
                 <div
                   css={`
                     ${this.props.viewState.explorerPanelIsVisible &&
-                      "opacity: 0.3;"}
+                    "opacity: 0.3;"}
                   `}
                 >
                   <MenuBar
-                    terria={this.props.terria}
-                    viewState={this.props.viewState}
                     allBaseMaps={this.props.allBaseMaps}
                     menuItems={customElements.menu}
                     menuLeftItems={customElements.menuLeft}
                     animationDuration={this.props.animationDuration}
-                    elementConfig={this.props.terria.elements.get("menu-bar")}
+                    elementConfig={this.props.viewState.terria.elements.get(
+                      "menu-bar"
+                    )}
                   />
                   <MapNavigation
-                    terria={this.props.terria}
+                    terria={this.props.viewState.terria}
                     viewState={this.props.viewState}
                     navItems={customElements.nav}
-                    elementConfig={this.props.terria.elements.get(
+                    elementConfig={this.props.viewState.terria.elements.get(
                       "map-navigation"
                     )}
                   />
@@ -94,14 +96,17 @@ const MapColumn = observer(
                 }}
               >
                 <TerriaViewerWrapper
-                  terria={this.props.terria}
+                  terria={this.props.viewState.terria}
                   viewState={this.props.viewState}
                 />
               </div>
               <If condition={!this.props.viewState.hideMapUi}>
                 <BottomLeftBar
-                  terria={this.props.terria}
+                  terria={this.props.viewState.terria}
                   viewState={this.props.viewState}
+                />
+                <ActionBarPortal
+                  show={this.props.viewState.isActionBarVisible}
                 />
                 <SlideUpFadeIn isVisible={this.props.viewState.isMapZooming}>
                   <Toast>
@@ -115,26 +120,38 @@ const MapColumn = observer(
                     />
                   </Toast>
                 </SlideUpFadeIn>
+                <MapCredits
+                  hideTerriaLogo={
+                    !!this.props.viewState.terria.configParameters
+                      .hideTerriaLogo
+                  }
+                  credits={this.props.viewState.terria.configParameters.extraCreditLinks?.slice()}
+                  currentViewer={
+                    this.props.viewState.terria.mainViewer.currentViewer
+                  }
+                />
                 <div className={Styles.locationDistance}>
                   <LocationBar
-                    terria={this.props.terria}
-                    mouseCoords={this.props.terria.currentViewer.mouseCoords}
+                    terria={this.props.viewState.terria}
+                    mouseCoords={
+                      this.props.viewState.terria.currentViewer.mouseCoords
+                    }
                   />
-                  <DistanceLegend terria={this.props.terria} />
+                  <DistanceLegend terria={this.props.viewState.terria} />
                 </div>
               </If>
               {/* TODO: re-implement/support custom feedbacks */}
               {/* <If
                 condition={
                   !this.props.customFeedbacks.length &&
-                  this.props.terria.configParameters.feedbackUrl &&
+                  this.props.viewState.terria.configParameters.feedbackUrl &&
                   !this.props.viewState.hideMapUi
                 }
               >
                 <div
                   className={classNames(Styles.feedbackButtonWrapper, {
                     [Styles.withTimeSeriesControls]: defined(
-                      this.props.terria.timelineStack.top
+                      this.props.viewState.terria.timelineStack.top
                     )
                   })}
                 >
@@ -148,7 +165,7 @@ const MapColumn = observer(
               <If
                 condition={
                   this.props.customFeedbacks.length &&
-                  this.props.terria.configParameters.feedbackUrl &&
+                  this.props.viewState.terria.configParameters.feedbackUrl &&
                   !this.props.viewState.hideMapUi
                 }
               >
@@ -161,13 +178,23 @@ const MapColumn = observer(
                 </For>
               </If>
             </div>
-            <If condition={this.props.terria.configParameters.printDisclaimer}>
+            <If
+              condition={
+                this.props.viewState.terria.configParameters.printDisclaimer
+              }
+            >
               <div className={classNames(Styles.mapCell, "print")}>
                 <a
                   className={Styles.printDisclaimer}
-                  href={this.props.terria.configParameters.printDisclaimer.url}
+                  href={
+                    this.props.viewState.terria.configParameters.printDisclaimer
+                      .url
+                  }
                 >
-                  {this.props.terria.configParameters.printDisclaimer.text}
+                  {
+                    this.props.viewState.terria.configParameters.printDisclaimer
+                      .text
+                  }
                 </a>
               </div>
             </If>
@@ -176,9 +203,11 @@ const MapColumn = observer(
             <div className={Styles.mapRow}>
               <div className={mapCellClass}>
                 <BottomDock
-                  terria={this.props.terria}
+                  terria={this.props.viewState.terria}
                   viewState={this.props.viewState}
-                  elementConfig={this.props.terria.elements.get("bottom-dock")}
+                  elementConfig={this.props.viewState.terria.elements.get(
+                    "bottom-dock"
+                  )}
                 />
               </div>
             </div>
@@ -189,4 +218,4 @@ const MapColumn = observer(
   })
 );
 
-export default withTranslation()(MapColumn);
+export default withTranslation()(withViewState(MapColumn));

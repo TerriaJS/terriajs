@@ -3,19 +3,19 @@ import Terria from "../../../../lib/Models/Terria";
 import { runInAction } from "mobx";
 import i18next from "i18next";
 
-describe("WebMapTileServiceCatalogGroup", function() {
+describe("WebMapTileServiceCatalogGroup", function () {
   let terria: Terria;
   let wmts: WebMapTileServiceCatalogGroup;
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria();
     wmts = new WebMapTileServiceCatalogGroup("test", terria);
   });
 
-  it("has a type", function() {
+  it("has a type", function () {
     expect(wmts.type).toBe("wmts-group");
   });
 
-  it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specifiied", function() {
+  it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specifiied", function () {
     wmts.setTrait("definition", "url", "http://www.example.com");
     expect(wmts.url).toBeDefined();
     expect(
@@ -24,19 +24,19 @@ describe("WebMapTileServiceCatalogGroup", function() {
     ).toBeTruthy();
   });
 
-  describe("after loading capabilities", function() {
-    beforeEach(async function() {
+  describe("after loading capabilities", function () {
+    beforeEach(async function () {
       runInAction(() => {
         wmts.setTrait("definition", "url", "test/WMTS/with_tilematrix.xml");
       });
     });
 
-    it("defines name", async function() {
+    it("defines name", async function () {
       await wmts.loadMetadata();
       expect(wmts.name).toBe("Test WMTS");
     });
 
-    it("doesn't override user set name", async function() {
+    it("doesn't override user set name", async function () {
       const userDefinedName = "user defined name";
       runInAction(() => {
         wmts.setTrait("definition", "name", userDefinedName);
@@ -45,7 +45,7 @@ describe("WebMapTileServiceCatalogGroup", function() {
       expect(wmts.name).toBe(userDefinedName);
     });
 
-    it("defines info", async function() {
+    it("defines info", async function () {
       await wmts.loadMetadata();
       const abstract = i18next.t(
         "models.webMapTileServiceCatalogGroup.abstract"
@@ -68,15 +68,15 @@ describe("WebMapTileServiceCatalogGroup", function() {
     });
   });
 
-  describe("load members", function() {
-    beforeEach(async function() {
+  describe("load members", function () {
+    beforeEach(async function () {
       runInAction(() => {
         wmts.setTrait("definition", "url", "test/WMTS/with_tilematrix.xml");
       });
       await wmts.loadMembers();
     });
 
-    it("loads", async function() {
+    it("loads", async function () {
       expect(wmts.members.length).toEqual(3);
       expect(wmts.memberModels.length).toEqual(3);
     });

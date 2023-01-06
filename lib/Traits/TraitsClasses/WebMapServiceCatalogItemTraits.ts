@@ -10,14 +10,13 @@ import { traitClass } from "../Trait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import DiffableTraits from "./DiffableTraits";
 import ExportWebCoverageServiceTraits from "./ExportWebCoverageServiceTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
+import ImageryProviderTraits from "./ImageryProviderTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import LegendTraits from "./LegendTraits";
 import MappableTraits from "./MappableTraits";
 import { MinMaxLevelTraits } from "./MinMaxLevelTraits";
-import ImageryProviderTraits from "./ImageryProviderTraits";
 import UrlTraits from "./UrlTraits";
 
 export const SUPPORTED_CRS_3857 = ["EPSG:3857", "EPSG:900913"];
@@ -169,7 +168,6 @@ export class GetFeatureInfoFormat extends ModelTraits {
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
   ExportWebCoverageServiceTraits,
   DiffableTraits,
-  FeatureInfoTraits,
   LayerOrderingTraits,
   GetCapabilitiesTraits,
   ImageryProviderTraits,
@@ -229,7 +227,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   @anyTrait({
     name: "Parameters",
     description:
-      "Additional parameters to pass to the MapServer when requesting images. Style parameters are stored as CSV in `styles`, dimension parameters are stored in `dimensions`."
+      "Additional parameters to pass WMS `GetMap` and `GetFeatureInfo` requests. Style parameters are stored as CSV in `styles`, dimension parameters are stored in `dimensions`."
   })
   parameters?: JsonObject;
 
@@ -311,14 +309,6 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   colorScaleMaximum: number = 50;
 
   @primitiveTrait({
-    type: "number",
-    name: "Maximum shown feature infos",
-    description:
-      'The maximum number of "feature infos" that can be displayed in feature info panel.'
-  })
-  maximumShownFeatureInfos?: number;
-
-  @primitiveTrait({
     type: "boolean",
     name: "Use WMS version 1.3.0",
     description:
@@ -333,4 +323,19 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       'Format parameter to pass to GetFeatureInfo requests. Defaults to "application/json", "application/vnd.ogc.gml", "text/html" or "text/plain" - depending on GetCapabilities response'
   })
   getFeatureInfoFormat?: GetFeatureInfoFormat;
+
+  @primitiveTrait({
+    type: "string",
+    name: "GetFeatureInfo URL",
+    description:
+      "If defined, this URL will be used for `GetFeatureInfo` requests instead of `url`."
+  })
+  getFeatureInfoUrl?: string;
+
+  @anyTrait({
+    name: "Parameters",
+    description:
+      "Additional parameters to pass WMS `GetFeatureInfo` requests. If `parameters` trait is also defined, this is applied on top. Dimension parameters are stored in `dimensions`."
+  })
+  getFeatureInfoParameters?: JsonObject;
 }

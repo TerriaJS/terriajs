@@ -39,7 +39,7 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
       domain: catalogGroup.url
     });
 
-    let datasets: ValidDataset[] | undefined;
+    let datasets: ValidDataset[] = [];
     let facets: ValidFacet[] | undefined;
 
     // If no facetFilters, try to get some facets
@@ -48,16 +48,21 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
       catalogGroup.facetFilters.length === 0 &&
       !catalogGroup.flatten
     ) {
-      facets = (await client.get(fromCatalog().facets())).facets?.filter(f =>
+      facets = (await client.get(fromCatalog().facets())).facets?.filter((f) =>
         isValidFacet(f)
       ) as ValidFacet[];
     }
 
     // If no facets (or we have facetFiles) - get datasets
     if (!facets || facets.length === 0) {
+      // We can only fetch datasets in batch of 100
+      let offset = 0;
+      let totalDatasets: number | undefined;
+      const limit = 100;
+
       let q = fromCatalog()
         .datasets()
-        .limit(100)
+        .limit(limit)
         .orderBy("title asc")
         // Filter dataset with 'geo' or 'timeserie' features.
         // Possible values: calendar, geo, image, apiproxy, timeserie, and aggregate
@@ -66,16 +71,25 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
       // If facet filters, use them to filter datasets
       if (catalogGroup.facetFilters && catalogGroup.facetFilters.length > 0) {
         q = q.refine(
-          catalogGroup.facetFilters.map(f => `${f.name}:${f.value}`).join(",")
+          catalogGroup.facetFilters.map((f) => `${f.name}:${f.value}`).join(",")
         );
       }
 
-      const catalog = await client.get(q);
+      while (!isDefined(totalDatasets) || offset < totalDatasets) {
+        q = q.offset(offset);
 
-      datasets = filterOutUndefined(
-        catalog.datasets?.map(d => d.dataset).filter(d => isValidDataset(d)) ??
-          []
-      ) as ValidDataset[];
+        const catalog = await client.get(q);
+
+        totalDatasets = catalog.total_count ?? 0;
+
+        catalog.datasets?.forEach((response) => {
+          if (isValidDataset(response.dataset)) {
+            datasets.push(response.dataset);
+          }
+        });
+
+        offset += limit;
+      }
     }
 
     return new OpenDataSoftCatalogStratum(
@@ -106,14 +120,14 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
   @computed
   get members(): ModelReference[] {
     return [
-      ...this.facets.map(f => this.getFacetId(f)),
-      ...this.datasets.map(d => this.getDatasetId(d))
+      ...this.facets.map((f) => this.getFacetId(f)),
+      ...this.datasets.map((d) => this.getDatasetId(d))
     ];
   }
 
   createMembers() {
-    this.facets.forEach(facet => this.createGroupFromFacet(facet));
-    this.datasets.forEach(dataset => this.createMemberFromDataset(dataset));
+    this.facets.forEach((facet) => this.createGroupFromFacet(facet));
+    this.datasets.forEach((dataset) => this.createMemberFromDataset(dataset));
   }
 
   /** Turn facet into OpenDataSoftCatalogGroup */

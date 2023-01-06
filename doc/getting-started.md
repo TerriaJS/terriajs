@@ -1,4 +1,4 @@
-The easiest way to get started with TerriaJS is to use [TerriaMap](https://github.com/TerriaJS/TerriaMap).  TerriaMap is a full-featured application built on TerriaJS, ready to be customized with your own branding and catalog.  It is also a great starting point for more in-depth customization.
+The easiest way to get started with TerriaJS is to use [TerriaMap](https://github.com/TerriaJS/TerriaMap). TerriaMap is a full-featured application built on TerriaJS, ready to be customized with your own branding and catalog. It is also a great starting point for more in-depth customization.
 
 This guide explains how to build and run TerriaMap locally using docker. See:
 * [Building TerriaMap](customizing/building-terriamap.md) to learn how to 
@@ -14,7 +14,7 @@ To customise
 
 
 
-### Having trouble? 
+### Having trouble?
 
 Checkout the [Problems and Solutions](contributing/problems-and-solutions.md) page to see if we have them covered. You are also welcome to post your problem on the [TerriaJS Discussions](https://github.com/TerriaJS/terriajs/discussions) forum and we'll be happy to help!
 

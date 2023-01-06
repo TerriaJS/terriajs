@@ -23,6 +23,7 @@ const MyDataTab = observer(
       terria: PropTypes.object,
       viewState: PropTypes.object,
       onFileAddFinished: PropTypes.func.isRequired,
+      onUrlAddFinished: PropTypes.func.isRequired,
       localDataTypes: PropTypes.arrayOf(PropTypes.object),
       remoteDataTypes: PropTypes.arrayOf(PropTypes.object),
       t: PropTypes.func.isRequired
@@ -74,13 +75,13 @@ const MyDataTab = observer(
                   [Styles.isActive]: this.state.activeTab === tab.id
                 })}
                 css={`
-                  color: ${p => p.theme.colorPrimary};
+                  color: ${(p) => p.theme.colorPrimary};
                   &:hover,
                   &:focus {
-                    color: ${p => p.theme.grey};
+                    color: ${(p) => p.theme.grey};
                   }
                   svg {
-                    fill: ${p => p.theme.colorPrimary};
+                    fill: ${(p) => p.theme.colorPrimary};
                   }
                 `}
               >
@@ -139,13 +140,13 @@ const MyDataTab = observer(
                 onClick={this.resetTab}
                 className={Styles.btnBackToMyData}
                 css={`
-                  color: ${p => p.theme.colorPrimary};
+                  color: ${(p) => p.theme.colorPrimary};
                   &:hover,
                   &:focus {
-                    border: 1px solid ${p => p.theme.colorPrimary};
+                    border: 1px solid ${(p) => p.theme.colorPrimary};
                   }
                   svg {
-                    fill: ${p => p.theme.colorPrimary};
+                    fill: ${(p) => p.theme.colorPrimary};
                   }
                 `}
               >
@@ -158,6 +159,7 @@ const MyDataTab = observer(
                 activeTab={this.state.activeTab}
                 resetTab={this.resetTab}
                 onFileAddFinished={this.props.onFileAddFinished}
+                onUrlAddFinished={this.props.onUrlAddFinished}
                 localDataTypes={this.props.localDataTypes}
                 remoteDataTypes={this.props.remoteDataTypes}
               />

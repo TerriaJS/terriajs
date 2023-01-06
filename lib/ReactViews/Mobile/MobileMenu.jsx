@@ -9,7 +9,6 @@ import classNames from "classnames";
 import MobileMenuItem from "./MobileMenuItem";
 import SettingPanel from "../Map/Panels/SettingPanel";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel";
-// import HelpMenuPanelBasic from "../HelpScreens/HelpMenuPanelBasic";
 import { withTranslation } from "react-i18next";
 
 import Styles from "./mobile-menu.scss";
@@ -42,8 +41,8 @@ const MobileMenu = observer(
 
     toggleMenu() {
       runInAction(() => {
-        this.props.viewState.mobileMenuVisible = !this.props.viewState
-          .mobileMenuVisible;
+        this.props.viewState.mobileMenuVisible =
+          !this.props.viewState.mobileMenuVisible;
       });
     },
 

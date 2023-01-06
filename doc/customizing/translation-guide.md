@@ -10,8 +10,9 @@ For the translations TerriaJS uses [react-i18next](https://react.i18next.com/) t
 If you are an advanced user or expert, we recommend reading the short and concise react-i18next documentation.
 
 The following i18next plugins are used:
-* [i18next-browser-languagedetector](https://github.com/i18next/i18next-browser-languageDetector) to detect the browser language, use the localStorage and react to URL query
-* [i18next-http-backend](https://github.com/i18next/i18next-http-backend) to enable loading translations from editable language files
+
+- [i18next-browser-languagedetector](https://github.com/i18next/i18next-browser-languageDetector) to detect the browser language, use the localStorage and react to URL query
+- [i18next-http-backend](https://github.com/i18next/i18next-http-backend) to enable loading translations from editable language files
 
 ### Languages
 
@@ -19,9 +20,9 @@ Currently, the only available language is English, and it is configured as the d
 
 **List of available languages**
 
-|Abbreviation|Language|
-|------------|--------|
-|en|english|
+| Abbreviation | Language |
+| ------------ | -------- |
+| en           | english  |
 
 ### Configuration
 
@@ -30,6 +31,7 @@ Language configuration is done within [`config.json`]. See the [config.json docu
 ## Language files
 
 Language files are translation core. To add an additional language, a separate language file is needed for it. Translations can be provided using two files:
+
 1. translation
 2. languageOverrides
 
@@ -41,6 +43,8 @@ The translation language file contains all translations used throughout the Terr
 
 The languageOverrides language file is used to override the translation language file's translations without rebuilding the application and specifying the additional translations needed. This file is located in `/wwwroot/languages/{abbreviation}/languageOverrides.json` inside the root folder of TerriaMap (where the abbreviation is a short name of the language specified in the config). A namespace for this translation file is `languageOverrides`.
 
+Note the base URL to overrides language files can be changed by setting `LanguageConfiguration.overridesBaseUrl`. See [config.json documentation](../customizing/client-side-config.md#LanguageConfiguration)
+
 ## Best practice
 
 This section describes how to use i18next to provide a translation of TerriaJS.
@@ -51,6 +55,7 @@ To translate configurable elements, the value itself must be formatted correctly
 The translation key must be prefixed with `"translate#"`, so the structure of the key is `translate#[path.to.key]`, resulting in e.g. `translate#help.gettingstarted.content`
 
 **Translation file**
+
 ```json
 {
   "help": {
@@ -65,6 +70,7 @@ The translation key must be prefixed with `"translate#"`, so the structure of th
 ```
 
 **Translateable content**
+
 ```json
 "helpContent": [
   {
@@ -85,6 +91,7 @@ To override the translation of an already translated element you need to overrid
 
 **Example**
 Button MapSetting has a name specified using key `settingPanel.btnText`:
+
 ```json5
 "settingPanel": {
   "btnText": "Map Settings",
@@ -92,7 +99,8 @@ Button MapSetting has a name specified using key `settingPanel.btnText`:
 }
 ```
 
-Defining the following in the language overrides language file will override the name of the map settings button and it will be named *Map Configuration*:
+Defining the following in the language overrides language file will override the name of the map settings button and it will be named _Map Configuration_:
+
 ```json5
 "settingPanel": {
   "btnText": "Map Configuration"

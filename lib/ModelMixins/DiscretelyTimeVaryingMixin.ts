@@ -14,7 +14,7 @@ import ChartableMixin, {
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
 import DiscretelyTimeVaryingTraits from "../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
-import TimeVarying from "./TimeVarying";
+import TimeVarying, { DATE_SECONDS_PRECISION } from "./TimeVarying";
 
 export interface AsJulian {
   time: JulianDate;
@@ -29,8 +29,10 @@ export interface DiscreteTimeAsJS {
 function DiscretelyTimeVaryingMixin<
   T extends Constructor<Model<DiscretelyTimeVaryingTraits>>
 >(Base: T) {
-  abstract class DiscretelyTimeVaryingMixin extends ChartableMixin(Base)
-    implements TimeVarying {
+  abstract class DiscretelyTimeVaryingMixin
+    extends ChartableMixin(Base)
+    implements TimeVarying
+  {
     get hasDiscreteTimes() {
       return true;
     }
@@ -41,7 +43,7 @@ function DiscretelyTimeVaryingMixin<
       const time = super.currentTime;
       if (time === undefined || time === null) {
         if (this.initialTimeSource === "now") {
-          return JulianDate.toIso8601(JulianDate.now());
+          return JulianDate.toIso8601(JulianDate.now(), DATE_SECONDS_PRECISION);
         } else if (this.initialTimeSource === "start") {
           return this.startTime;
         } else if (this.initialTimeSource === "stop") {
@@ -83,7 +85,7 @@ function DiscretelyTimeVaryingMixin<
         return { index: [], dates: [] };
       }
 
-      const jsDates = this.discreteTimesAsSortedJulianDates.map(julianDate =>
+      const jsDates = this.discreteTimesAsSortedJulianDates.map((julianDate) =>
         JulianDate.toDate(julianDate.time)
       );
 
@@ -241,7 +243,8 @@ function DiscretelyTimeVaryingMixin<
         this.discreteTimesAsSortedJulianDates.length > 0
       ) {
         return JulianDate.toIso8601(
-          this.discreteTimesAsSortedJulianDates[0].time
+          this.discreteTimesAsSortedJulianDates[0].time,
+          DATE_SECONDS_PRECISION
         );
       }
       return time;
@@ -258,7 +261,8 @@ function DiscretelyTimeVaryingMixin<
         return JulianDate.toIso8601(
           this.discreteTimesAsSortedJulianDates[
             this.discreteTimesAsSortedJulianDates.length - 1
-          ].time
+          ].time,
+          DATE_SECONDS_PRECISION
         );
       }
       return time;
@@ -302,7 +306,10 @@ function DiscretelyTimeVaryingMixin<
       this.setTrait(
         stratumId,
         "currentTime",
-        JulianDate.toIso8601(this.discreteTimesAsSortedJulianDates![index].time)
+        JulianDate.toIso8601(
+          this.discreteTimesAsSortedJulianDates![index].time,
+          DATE_SECONDS_PRECISION
+        )
       );
     }
 
@@ -315,7 +322,10 @@ function DiscretelyTimeVaryingMixin<
       this.setTrait(
         stratumId,
         "currentTime",
-        JulianDate.toIso8601(this.discreteTimesAsSortedJulianDates![index].time)
+        JulianDate.toIso8601(
+          this.discreteTimesAsSortedJulianDates![index].time,
+          DATE_SECONDS_PRECISION
+        )
       );
     }
 
@@ -323,7 +333,7 @@ function DiscretelyTimeVaryingMixin<
       if (!this.showInChartPanel || !this.discreteTimesAsSortedJulianDates)
         return;
       const points: ChartPoint[] = this.discreteTimesAsSortedJulianDates.map(
-        dt => ({
+        (dt) => ({
           x: JulianDate.toDate(dt.time),
           y: 0.5,
           isSelected:

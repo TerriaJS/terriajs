@@ -2,6 +2,7 @@ import { runInAction } from "mobx";
 import OpenDataSoftCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/OpenDataSoftCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import fetchMock from "fetch-mock";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 
 const dataset = JSON.stringify(
   require("../../../../wwwroot/test/ods/weather-station-dataset.json")
@@ -19,11 +20,11 @@ const regionMapping = JSON.stringify(
   require("../../../../wwwroot/data/regionMapping.json")
 );
 
-describe("OpenDataSoftCatalogItem", function() {
+describe("OpenDataSoftCatalogItem", function () {
   let terria: Terria;
   let odsItem: OpenDataSoftCatalogItem;
 
-  beforeEach(function() {
+  beforeEach(function () {
     fetchMock.mock(
       "https://example.com/api/v2/catalog/datasets/weather-stations/",
       { body: dataset }
@@ -49,29 +50,41 @@ describe("OpenDataSoftCatalogItem", function() {
     odsItem = new OpenDataSoftCatalogItem("test", terria, undefined);
   });
 
-  afterEach(function() {
+  afterEach(function () {
     jasmine.Ajax.uninstall();
     fetchMock.restore();
   });
 
-  it("has a type", function() {
+  it("has a type", function () {
     expect(odsItem.type).toBe("opendatasoft-item");
   });
 
-  describe("loads dataset", function() {
-    beforeEach(async function() {
+  describe("loads dataset", function () {
+    beforeEach(async function () {
       runInAction(() => {
         odsItem.setTrait("definition", "url", "https://example.com");
         odsItem.setTrait("definition", "datasetId", "weather-stations");
       });
     });
 
-    it("load map items", async function() {
+    it("load map items", async function () {
       await odsItem.loadMapItems();
 
       expect(odsItem.name).toBe("Environmental sensors");
       expect(odsItem.description?.length).toBe(244);
       expect(odsItem.datasetId).toBe("weather-stations");
+    });
+
+    it("sets refreshInterval from refreshIntervalTemplate", async function () {
+      odsItem.setTrait(
+        CommonStrata.definition,
+        "refreshIntervalTemplate",
+        "{{metas.custom.update_frequency}}"
+      );
+      await odsItem.loadMapItems();
+
+      // metametas.custom.update_frequency = "10 min"
+      expect(odsItem.refreshInterval).toBe(10 * 60);
     });
   });
 });

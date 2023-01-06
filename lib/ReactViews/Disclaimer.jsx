@@ -2,17 +2,17 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import { withTheme } from "styled-components";
-import Box from "../Styled/Box";
-import Text from "../Styled/Text";
-import Spacing from "../Styled/Spacing";
 // if we must use a placeholder image,
 // do not bundle in the full res `wwwroot/images/bing-aerial-labels-wide.png`
 // image as it's a 1.4mb png
 // import bingAerialBackground from "../../wwwroot/images/bing-aerial-labels-wide-low-quality.jpg";
-import styled from "styled-components";
-import parseCustomMarkdownToReact from "./Custom/parseCustomMarkdownToReact";
+import styled, { withTheme } from "styled-components";
+import Box from "../Styled/Box";
 import Button from "../Styled/Button";
+import Spacing from "../Styled/Spacing";
+import Text from "../Styled/Text";
+import parseCustomMarkdownToReact from "./Custom/parseCustomMarkdownToReact";
+import { withViewState } from "./StandardUserInterface/ViewStateContext";
 import FadeIn from "./Transitions/FadeIn/FadeIn";
 
 const TopElementBox = styled(Box)`
@@ -38,7 +38,7 @@ const DisclaimerButton = styled(Button).attrs({
   },
   rounded: true
 })`
-  width: ${props => (props.fullWidth ? "100%" : "280px")};
+  width: ${(props) => (props.fullWidth ? "100%" : "280px")};
 `;
 
 @observer
@@ -77,8 +77,8 @@ class Disclaimer extends React.Component {
     const disclaimerDeny = disclaimer?.denyText || "Cancel";
     const disclaimerMessage =
       disclaimer?.message || "Disclaimer text goes here";
-    const useSmallScreenInterface = this.props.viewState
-      .useSmallScreenInterface;
+    const useSmallScreenInterface =
+      this.props.viewState.useSmallScreenInterface;
     const renderDenyButton = !!disclaimer?.denyAction;
     return disclaimer ? (
       <FadeIn isVisible={this.props.viewState.disclaimerVisible}>
@@ -98,6 +98,7 @@ class Disclaimer extends React.Component {
             left
             styledWidth={useSmallScreenInterface ? "100%" : "613px"}
             paddedRatio={4}
+            scroll
             css={`
               max-height: 100%;
               overflow: auto;
@@ -115,7 +116,7 @@ class Disclaimer extends React.Component {
             <Text
               styledLineHeight={"18px"}
               textLight
-              css={props =>
+              css={(props) =>
                 `
                 // not sure of the ideal way to deal with this
                 a {
@@ -166,4 +167,4 @@ class Disclaimer extends React.Component {
   }
 }
 
-export default withTranslation()(withTheme(Disclaimer));
+export default withTranslation()(withViewState(withTheme(Disclaimer)));

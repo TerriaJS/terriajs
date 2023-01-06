@@ -5,6 +5,12 @@ import URI from "urijs";
 
 const zip = require("terriajs-cesium/Source/ThirdParty/zip").default;
 
+interface ZipEntries {
+  fileName: string;
+  isDirectory: boolean;
+  data: Uint8Array;
+}
+
 export default function loadBlob(
   urlOrResource: string,
   headers?: any,
@@ -62,13 +68,13 @@ function getZipReader(blob: Blob): any {
 export function parseZipJsonBlob(blob: Blob): Promise<JsonValue> {
   const reader = getZipReader(blob);
 
-  return reader.getEntries().then(function(entries: any) {
+  return reader.getEntries().then(function (entries: any) {
     for (let i = 0; i < entries.length; i++) {
       const entry = entries[i];
       if (isJson(entry.filename)) {
         return entry
           .getData(new zip.Data64URIWriter())
-          .then(function(uri: string) {
+          .then(function (uri: string) {
             return loadJson(uri);
           });
       }
@@ -78,9 +84,7 @@ export function parseZipJsonBlob(blob: Blob): Promise<JsonValue> {
 }
 
 /** Parse zip Blob and return array of files (as UInt8Array) */
-export async function parseZipArrayBuffers(
-  blob: Blob
-): Promise<{ fileName: string; data: Uint8Array }[]> {
+export async function parseZipArrayBuffers(blob: Blob): Promise<ZipEntries[]> {
   const reader = getZipReader(blob);
 
   const entries = await reader.getEntries();
@@ -88,7 +92,11 @@ export async function parseZipArrayBuffers(
   return await Promise.all(
     entries.map(async (entry: any) => {
       const data = await entry.getData(new zip.Uint8ArrayWriter());
-      return { fileName: entry.filename, data };
+      return {
+        fileName: entry.filename,
+        isDirectory: entry.directory === true,
+        data
+      };
     })
   );
 }

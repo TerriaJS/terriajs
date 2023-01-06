@@ -123,10 +123,17 @@ type ScalePointStyle = {
  */
 type InteractionState =
   | { is: "none" }
-  | { is: "picked"; entity: Entity & Interactable }
+  | {
+      is: "picked";
+      entity: Entity & Interactable;
+      beforePickState: {
+        isFeaturePickingPaused: boolean;
+        enableInputs: boolean;
+      };
+    }
   | { is: "hovering"; entity: Entity & Interactable };
 
-type OnChangeParams = {
+export type BoxDrawingChangeParams = {
   /**
    * The modelMatrix of the box
    */
@@ -155,7 +162,13 @@ type BoxDrawingOptions = {
   /**
    * A callback method to call when box parameters change.
    */
-  onChange?: (params: OnChangeParams) => void;
+  onChange?: (params: BoxDrawingChangeParams) => void;
+
+  /**
+   * When set to `false`, do not draw the scale grips on the box faces, used for non-uniform scaling.
+   * Defaults to `true`, i.e draws the non-uniform scaling grips.
+   */
+  drawNonUniformScaleGrips?: boolean;
 };
 
 // The 6 box sides defined as planes in local coordinate space.
@@ -219,6 +232,10 @@ export default class BoxDrawing {
 
   public keepBoxAboveGround: boolean;
 
+  private drawNonUniformScaleGrips: boolean;
+
+  public onChange?: (params: BoxDrawingChangeParams) => void;
+
   // An external transform to convert the box in local coordinates to world coordinates
   private readonly worldTransform: Matrix4 = Matrix4.IDENTITY.clone();
 
@@ -248,10 +265,12 @@ export default class BoxDrawing {
   private constructor(
     readonly cesium: Cesium,
     transform: Matrix4,
-    readonly options: BoxDrawingOptions
+    options: BoxDrawingOptions
   ) {
     this.scene = cesium.scene;
     this.keepBoxAboveGround = options.keepBoxAboveGround ?? false;
+    this.drawNonUniformScaleGrips = options.drawNonUniformScaleGrips ?? true;
+    this.onChange = options.onChange;
     this.dataSource = new Proxy(new CustomDataSource(), {
       set: (target, prop, value) => {
         if (prop === "show") {
@@ -260,7 +279,6 @@ export default class BoxDrawing {
         return Reflect.set(target, prop, value);
       }
     });
-
     this.setTransform(transform);
     this.drawBox();
     this.setBoxAboveGround();
@@ -454,9 +472,8 @@ export default class BoxDrawing {
     };
 
     // Camera event disposer
-    const disposeCameraEvent = this.scene.camera.changed.addEventListener(
-      onCameraChange
-    );
+    const disposeCameraEvent =
+      this.scene.camera.changed.addEventListener(onCameraChange);
 
     // Disposer for map interactions & camera events
     this.interactionsDisposer = () => {
@@ -479,14 +496,14 @@ export default class BoxDrawing {
    */
   private updateBox() {
     Matrix4.fromTranslationRotationScale(this.trs, this.modelMatrix);
-    this.dataSource.entities.values.forEach(entity => {
+    this.dataSource.entities.values.forEach((entity) => {
       if (isUpdatable(entity)) entity.update();
     });
   }
 
   private updateEntitiesOnOrientationChange() {
-    this.sides.forEach(side => side.updateOnCameraChange());
-    this.scalePoints.forEach(scalePoint => scalePoint.updateOnCameraChange());
+    this.sides.forEach((side) => side.updateOnCameraChange());
+    this.scalePoints.forEach((scalePoint) => scalePoint.updateOnCameraChange());
   }
 
   /**
@@ -520,22 +537,31 @@ export default class BoxDrawing {
         return;
       }
 
-      this.cesium.isFeaturePickingPaused = true;
-      scene.screenSpaceCameraController.enableInputs = false;
       if (state.is === "hovering") {
         state.entity.onMouseOut({
           startPosition: click.position,
           endPosition: click.position
         });
       }
-      state = { is: "picked", entity };
+      state = {
+        is: "picked",
+        entity,
+        beforePickState: {
+          isFeaturePickingPaused: this.cesium.isFeaturePickingPaused,
+          enableInputs: scene.screenSpaceCameraController.enableInputs
+        }
+      };
+      this.cesium.isFeaturePickingPaused = true;
+      scene.screenSpaceCameraController.enableInputs = false;
       entity.onPick(click);
     };
 
     const handleRelease = (click: MouseClick) => {
       if (state.is === "picked") {
-        this.cesium.isFeaturePickingPaused = false;
-        scene.screenSpaceCameraController.enableInputs = true;
+        this.cesium.isFeaturePickingPaused =
+          state.beforePickState.isFeaturePickingPaused;
+        scene.screenSpaceCameraController.enableInputs =
+          state.beforePickState.enableInputs;
         state.entity.onRelease(click);
         state = { is: "none" };
       }
@@ -614,7 +640,7 @@ export default class BoxDrawing {
    * Draw sides of the box.
    */
   private drawSides() {
-    SIDE_PLANES.forEach(sideLocal => {
+    SIDE_PLANES.forEach((sideLocal) => {
       const side = this.createSide(sideLocal);
       this.dataSource.entities.add(side);
       this.sides.push(side);
@@ -638,7 +664,7 @@ export default class BoxDrawing {
       localEdges.push(verticalEdge, topEdge, bottomEdge);
     });
 
-    localEdges.forEach(localEdge => {
+    localEdges.forEach((localEdge) => {
       const edge = this.createEdge(localEdge);
       this.dataSource.entities.add(edge);
       //this.edges.push(edge);
@@ -649,7 +675,12 @@ export default class BoxDrawing {
    * Draw the scale grip points.
    */
   private drawScalePoints() {
-    SCALE_POINT_VECTORS.forEach(vector => {
+    const scalePointVectors = [
+      ...CORNER_POINT_VECTORS,
+      ...(this.drawNonUniformScaleGrips ? FACE_POINT_VECTORS : [])
+    ];
+
+    scalePointVectors.forEach((vector) => {
       const pointLocal1 = vector;
       const pointLocal2 = Cartesian3.multiplyByScalar(
         vector,
@@ -815,16 +846,35 @@ export default class BoxDrawing {
         mouseMove.startPosition.y = surfacePoint2d.y;
         mouseMove.endPosition.y = surfacePoint2d.y + yDiff;
 
-        const previousPosition = screenToGlobePosition(
-          scene,
-          mouseMove.startPosition,
-          scratchPreviousPosition
-        );
-        const endPosition = screenToGlobePosition(
-          scene,
-          mouseMove.endPosition,
-          scratchEndPosition
-        );
+        // Fallback to simple ellipsoid pick when globe pick returns undefined
+        // (i.e there is no intersection of camera ray with globe tiles). This
+        // probably works only because ellipsoid might below the terrain so
+        // there is an intersection between the camera ray and ellipsoid.
+        // Although it could work, it doesn't truly fix the camera ray parallel
+        // to surface issue.
+        const previousPosition =
+          screenToGlobePosition(
+            scene,
+            mouseMove.startPosition,
+            scratchPreviousPosition
+          ) ??
+          scene.camera.pickEllipsoid(
+            mouseMove.startPosition,
+            undefined,
+            scratchPreviousPosition
+          );
+
+        const endPosition =
+          screenToGlobePosition(
+            scene,
+            mouseMove.endPosition,
+            scratchEndPosition
+          ) ??
+          scene.camera.pickEllipsoid(
+            mouseMove.endPosition,
+            undefined,
+            scratchEndPosition
+          );
 
         if (!previousPosition || !endPosition) {
           return;
@@ -836,7 +886,7 @@ export default class BoxDrawing {
       this.updateTerrainHeightEstimate();
       this.moveBoxWithClamping(moveStep);
       this.updateBox();
-      this.options.onChange?.({
+      this.onChange?.({
         isFinished: false,
         modelMatrix: this.modelMatrix,
         translationRotationScale: this.trs
@@ -852,9 +902,9 @@ export default class BoxDrawing {
     };
 
     const highlightAllSides = () =>
-      this.sides.forEach(side => side.highlight());
+      this.sides.forEach((side) => side.highlight());
     const unHighlightAllSides = () =>
-      this.sides.forEach(side => side.unHighlight());
+      this.sides.forEach((side) => side.unHighlight());
 
     const onMouseOver = () => {
       highlightAllSides();
@@ -875,7 +925,7 @@ export default class BoxDrawing {
       this.setBoxAboveGround();
       unHighlightAllSides();
       setCanvasCursor(scene, "auto");
-      this.options.onChange?.({
+      this.onChange?.({
         modelMatrix: this.modelMatrix,
         translationRotationScale: this.trs,
         isFinished: true
@@ -975,7 +1025,7 @@ export default class BoxDrawing {
       if (isDraggableEdge) {
         isHighlighted = false;
         setCanvasCursor(scene, "auto");
-        this.options.onChange?.({
+        this.onChange?.({
           isFinished: true,
           modelMatrix: this.modelMatrix,
           translationRotationScale: this.trs
@@ -1006,7 +1056,7 @@ export default class BoxDrawing {
 
       this.updateBox();
       this.updateEntitiesOnOrientationChange();
-      this.options.onChange?.({
+      this.onChange?.({
         isFinished: false,
         modelMatrix: this.modelMatrix,
         translationRotationScale: this.trs
@@ -1060,6 +1110,12 @@ export default class BoxDrawing {
       model: {
         uri: require("file-loader!../../wwwroot/models/Box.glb"),
         minimumPixelSize: 12,
+        maximumScale: new CallbackProperty(
+          // Clamp the maximum size of the scale grip to the 0.15 times the
+          // size of the minimum side
+          () => 0.15 * Cartesian3.minimumComponent(this.trs.scale),
+          false
+        ),
         shadows: ShadowMode.DISABLED,
         color: new CallbackProperty(() => getColor(), false),
         // Forces the above color ignoring the color specified in gltf material
@@ -1097,7 +1153,7 @@ export default class BoxDrawing {
     const onRelease = () => {
       scalePoint.axisLine.show = false;
       unHighlightScalePoint();
-      this.options.onChange?.({
+      this.onChange?.({
         modelMatrix: this.modelMatrix,
         translationRotationScale: this.trs,
         isFinished: true
@@ -1222,21 +1278,21 @@ export default class BoxDrawing {
       this.moveBoxWithClamping(moveStep);
 
       this.updateBox();
-      this.options.onChange?.({
+      this.onChange?.({
         isFinished: false,
         modelMatrix: this.modelMatrix,
         translationRotationScale: this.trs
       });
     };
 
-    const adjacentSides = this.sides.filter(side => {
+    const adjacentSides = this.sides.filter((side) => {
       const plane = side.plane.plane?.getValue(JulianDate.now());
       const isAdjacent = Cartesian3.dot(plane.normal, axisLocal) < 0;
       return isAdjacent;
     });
 
     const updateOnCameraChange = () => {
-      isFacingCamera = adjacentSides.some(side => side.isFacingCamera);
+      isFacingCamera = adjacentSides.some((side) => side.isFacingCamera);
     };
 
     const highlightScalePoint = () => {

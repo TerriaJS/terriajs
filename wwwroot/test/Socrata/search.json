@@ -35,9 +35,7 @@
         "publication_date": "2014-07-25T05:20:35.000Z"
       },
       "classification": {
-        "categories": [
-          "environment"
-        ],
+        "categories": ["environment"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -279,10 +277,7 @@
         "publication_date": "2015-11-18T05:01:38.000Z"
       },
       "classification": {
-        "categories": [
-          "environment",
-          "demographics"
-        ],
+        "categories": ["environment", "demographics"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -785,10 +780,7 @@
         "publication_date": "2015-01-20T23:48:54.000Z"
       },
       "classification": {
-        "categories": [
-          "environment",
-          "infrastructure"
-        ],
+        "categories": ["environment", "infrastructure"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -874,10 +866,7 @@
         "publication_date": "2015-10-16T00:46:42.000Z"
       },
       "classification": {
-        "categories": [
-          "infrastructure",
-          "recreation"
-        ],
+        "categories": ["infrastructure", "recreation"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -1032,10 +1021,7 @@
         "publication_date": "2020-06-02T23:49:29.000Z"
       },
       "classification": {
-        "categories": [
-          "environment",
-          "infrastructure"
-        ],
+        "categories": ["environment", "infrastructure"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -1118,9 +1104,7 @@
         "publication_date": "2017-03-02T03:23:00.000Z"
       },
       "classification": {
-        "categories": [
-          "environment"
-        ],
+        "categories": ["environment"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -1245,10 +1229,7 @@
         "publication_date": "2020-06-12T00:02:06.000Z"
       },
       "classification": {
-        "categories": [
-          "recreation",
-          "environment"
-        ],
+        "categories": ["recreation", "environment"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -1649,10 +1630,7 @@
         "publication_date": "2017-05-19T03:30:09.000Z"
       },
       "classification": {
-        "categories": [
-          "demographics",
-          "health"
-        ],
+        "categories": ["demographics", "health"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -1735,10 +1713,7 @@
         "publication_date": "2015-11-17T06:21:03.000Z"
       },
       "classification": {
-        "categories": [
-          "environment",
-          "demographics"
-        ],
+        "categories": ["environment", "demographics"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -1911,9 +1886,7 @@
         "publication_date": "2015-01-20T23:55:28.000Z"
       },
       "classification": {
-        "categories": [
-          "environment"
-        ],
+        "categories": ["environment"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -1986,36 +1959,21 @@
           "page_views_last_month_log": 3.8073549220576037,
           "page_views_total_log": 11.109177703355275
         },
-        "columns_name": [
-          "Shape Area",
-          "OBJECTID",
-          "Shape Length",
-          "the_geom"
-        ],
+        "columns_name": ["Shape Area", "OBJECTID", "Shape Length", "the_geom"],
         "columns_field_name": [
           "shape_area",
           "objectid",
           "shape_leng",
           "the_geom"
         ],
-        "columns_datatype": [
-          "Number",
-          "Number",
-          "Number",
-          "MultiPolygon"
-        ],
+        "columns_datatype": ["Number", "Number", "Number", "MultiPolygon"],
         "columns_description": [
           "System generated area measurement for polygon",
           "system generated unique identifier for each polygon ",
           "System generated length measurement for polygon",
           ""
         ],
-        "columns_format": [
-          {},
-          {},
-          {},
-          {}
-        ],
+        "columns_format": [{}, {}, {}, {}],
         "download_count": 1080,
         "provenance": "official",
         "lens_view_type": "tabular",
@@ -2024,9 +1982,7 @@
         "publication_date": "2019-02-19T05:58:27.000Z"
       },
       "classification": {
-        "categories": [
-          "environment"
-        ],
+        "categories": ["environment"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -2113,9 +2069,7 @@
         "publication_date": "2014-07-09T05:04:16.000Z"
       },
       "classification": {
-        "categories": [
-          "environment"
-        ],
+        "categories": ["environment"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -2197,9 +2151,7 @@
         "publication_date": "2014-07-09T04:36:55.000Z"
       },
       "classification": {
-        "categories": [
-          "transportation"
-        ],
+        "categories": ["transportation"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -2308,19 +2260,7 @@
           "Text",
           "Number"
         ],
-        "columns_description": [
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          ""
-        ],
+        "columns_description": ["", "", "", "", "", "", "", "", "", "", ""],
         "columns_format": [
           {},
           {
@@ -2348,9 +2288,7 @@
         "publication_date": "2017-05-18T04:26:54.000Z"
       },
       "classification": {
-        "categories": [
-          "demographics"
-        ],
+        "categories": ["demographics"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -2555,9 +2493,7 @@
         "publication_date": "2017-05-04T05:40:20.000Z"
       },
       "classification": {
-        "categories": [
-          "environment"
-        ],
+        "categories": ["environment"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -3059,9 +2995,7 @@
         "publication_date": "2018-05-08T00:12:07.000Z"
       },
       "classification": {
-        "categories": [
-          "environment"
-        ],
+        "categories": ["environment"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -3303,9 +3237,7 @@
         "publication_date": "2017-05-19T01:57:58.000Z"
       },
       "classification": {
-        "categories": [
-          "demographics"
-        ],
+        "categories": ["demographics"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -3695,11 +3627,7 @@
         "publication_date": "2021-06-28T01:57:30.000Z"
       },
       "classification": {
-        "categories": [
-          "environment",
-          "infrastructure",
-          "transportation"
-        ],
+        "categories": ["environment", "infrastructure", "transportation"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -3768,18 +3696,9 @@
           "page_views_last_month_log": 4.700439718141093,
           "page_views_total_log": 9.930737337562887
         },
-        "columns_name": [
-          "the_geom",
-          "ID"
-        ],
-        "columns_field_name": [
-          "the_geom",
-          "id"
-        ],
-        "columns_datatype": [
-          "Polygon",
-          "Number"
-        ],
+        "columns_name": ["the_geom", "ID"],
+        "columns_field_name": ["the_geom", "id"],
+        "columns_datatype": ["Polygon", "Number"],
         "columns_description": [
           "Geometry of the Tree Canopy",
           "An arbitrary value"
@@ -3798,9 +3717,7 @@
         "publication_date": "2019-11-26T22:56:44.000Z"
       },
       "classification": {
-        "categories": [
-          "environment"
-        ],
+        "categories": ["environment"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -3894,17 +3811,10 @@
         "publication_date": "2014-07-10T00:24:44.000Z"
       },
       "classification": {
-        "categories": [
-          "environment"
-        ],
+        "categories": ["environment"],
         "tags": [],
         "domain_category": "Environment",
-        "domain_tags": [
-          "forest",
-          "tree",
-          "#urbanforest",
-          "urban forest"
-        ],
+        "domain_tags": ["forest", "tree", "#urbanforest", "urban forest"],
         "domain_metadata": [
           {
             "key": "Quality_Update-frequency",
@@ -3973,10 +3883,7 @@
         "publication_date": "2017-03-27T00:19:26.000Z"
       },
       "classification": {
-        "categories": [
-          "environment",
-          "demographics"
-        ],
+        "categories": ["environment", "demographics"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -4248,11 +4155,7 @@
         "publication_date": "2019-01-08T22:48:50.000Z"
       },
       "classification": {
-        "categories": [
-          "transportation",
-          "demographics",
-          "health"
-        ],
+        "categories": ["transportation", "demographics", "health"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -4337,12 +4240,7 @@
         "categories": [],
         "tags": [],
         "domain_category": "Environment",
-        "domain_tags": [
-          "historic",
-          "#urbanforest",
-          "urban forest",
-          "water"
-        ],
+        "domain_tags": ["historic", "#urbanforest", "urban forest", "water"],
         "domain_metadata": [
           {
             "key": "Quality_Update-frequency",
@@ -4398,36 +4296,21 @@
           "page_views_last_month_log": 3.5849625007211565,
           "page_views_total_log": 9.779719355143405
         },
-        "columns_name": [
-          "OBJECTID",
-          "Shape Area",
-          "Shape Length",
-          "the_geom"
-        ],
+        "columns_name": ["OBJECTID", "Shape Area", "Shape Length", "the_geom"],
         "columns_field_name": [
           "objectid",
           "shape_area",
           "shape_leng",
           "the_geom"
         ],
-        "columns_datatype": [
-          "Number",
-          "Number",
-          "Number",
-          "MultiPolygon"
-        ],
+        "columns_datatype": ["Number", "Number", "Number", "MultiPolygon"],
         "columns_description": [
           "System generated unique object ID",
           "System generated value representing object area",
           "System generated value representing object length",
           ""
         ],
-        "columns_format": [
-          {},
-          {},
-          {},
-          {}
-        ],
+        "columns_format": [{}, {}, {}, {}],
         "download_count": 620,
         "provenance": "official",
         "lens_view_type": "tabular",
@@ -4436,9 +4319,7 @@
         "publication_date": "2019-02-19T23:04:54.000Z"
       },
       "classification": {
-        "categories": [
-          "environment"
-        ],
+        "categories": ["environment"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -4528,10 +4409,7 @@
         "publication_date": "2017-03-30T00:44:49.000Z"
       },
       "classification": {
-        "categories": [
-          "environment",
-          "demographics"
-        ],
+        "categories": ["environment", "demographics"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -4621,10 +4499,7 @@
         "publication_date": "2017-03-26T23:15:15.000Z"
       },
       "classification": {
-        "categories": [
-          "environment",
-          "demographics"
-        ],
+        "categories": ["environment", "demographics"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -4873,10 +4748,7 @@
         "publication_date": "2017-03-30T00:09:30.000Z"
       },
       "classification": {
-        "categories": [
-          "environment",
-          "demographics"
-        ],
+        "categories": ["environment", "demographics"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -5076,17 +4948,10 @@
         "publication_date": "2017-05-22T05:41:49.000Z"
       },
       "classification": {
-        "categories": [
-          "environment"
-        ],
+        "categories": ["environment"],
         "tags": [],
         "domain_category": "Environment",
-        "domain_tags": [
-          "dsrf",
-          "organic",
-          "recycling",
-          "waste"
-        ],
+        "domain_tags": ["dsrf", "organic", "recycling", "waste"],
         "domain_metadata": [
           {
             "key": "Quality_Update-frequency",
@@ -5158,10 +5023,7 @@
         "publication_date": "2017-03-30T00:37:45.000Z"
       },
       "classification": {
-        "categories": [
-          "environment",
-          "demographics"
-        ],
+        "categories": ["environment", "demographics"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -5329,9 +5191,7 @@
         "publication_date": "2017-05-12T06:23:24.000Z"
       },
       "classification": {
-        "categories": [
-          "environment"
-        ],
+        "categories": ["environment"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -5423,24 +5283,8 @@
           "Number",
           "Text"
         ],
-        "columns_description": [
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          ""
-        ],
-        "columns_format": [
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {}
-        ],
+        "columns_description": ["", "", "", "", "", "", ""],
+        "columns_format": [{}, {}, {}, {}, {}, {}, {}],
         "download_count": 829,
         "provenance": "official",
         "lens_view_type": "tabular",
@@ -5449,17 +5293,10 @@
         "publication_date": "2017-05-12T06:23:25.000Z"
       },
       "classification": {
-        "categories": [
-          "environment"
-        ],
+        "categories": ["environment"],
         "tags": [],
         "domain_category": "Environment",
-        "domain_tags": [
-          "dsrf",
-          "organic",
-          "recycling",
-          "waste"
-        ],
+        "domain_tags": ["dsrf", "organic", "recycling", "waste"],
         "domain_metadata": [
           {
             "key": "Quality_Update-frequency",
@@ -5527,9 +5364,7 @@
         "publication_date": "2017-05-04T05:40:23.000Z"
       },
       "classification": {
-        "categories": [
-          "environment"
-        ],
+        "categories": ["environment"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -5606,9 +5441,7 @@
         "publication_date": "2017-05-04T05:40:22.000Z"
       },
       "classification": {
-        "categories": [
-          "environment"
-        ],
+        "categories": ["environment"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -5709,30 +5542,8 @@
           "Calendar date",
           "Text"
         ],
-        "columns_description": [
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          ""
-        ],
-        "columns_format": [
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {}
-        ],
+        "columns_description": ["", "", "", "", "", "", "", "", "", ""],
+        "columns_format": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
         "download_count": 804,
         "provenance": "official",
         "lens_view_type": "tabular",
@@ -5741,17 +5552,10 @@
         "publication_date": "2017-05-12T06:23:29.000Z"
       },
       "classification": {
-        "categories": [
-          "environment"
-        ],
+        "categories": ["environment"],
         "tags": [],
         "domain_category": "Environment",
-        "domain_tags": [
-          "dsrf",
-          "polystyrene",
-          "recycling",
-          "waste"
-        ],
+        "domain_tags": ["dsrf", "polystyrene", "recycling", "waste"],
         "domain_metadata": [
           {
             "key": "Quality_Update-frequency",
@@ -5885,10 +5689,7 @@
         "publication_date": "2020-04-01T01:43:33.000Z"
       },
       "classification": {
-        "categories": [
-          "finance",
-          "infrastructure"
-        ],
+        "categories": ["finance", "infrastructure"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -5974,10 +5775,7 @@
         "publication_date": "2017-03-27T05:38:18.000Z"
       },
       "classification": {
-        "categories": [
-          "demographics",
-          "environment"
-        ],
+        "categories": ["demographics", "environment"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -6067,10 +5865,7 @@
         "publication_date": "2017-03-27T05:54:12.000Z"
       },
       "classification": {
-        "categories": [
-          "demographics",
-          "environment"
-        ],
+        "categories": ["demographics", "environment"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -6160,10 +5955,7 @@
         "publication_date": "2017-03-27T06:04:18.000Z"
       },
       "classification": {
-        "categories": [
-          "demographics",
-          "environment"
-        ],
+        "categories": ["demographics", "environment"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -6264,22 +6056,8 @@
           "Text",
           "Text"
         ],
-        "columns_description": [
-          "",
-          "",
-          "",
-          "",
-          "",
-          ""
-        ],
-        "columns_format": [
-          {},
-          {},
-          {},
-          {},
-          {},
-          {}
-        ],
+        "columns_description": ["", "", "", "", "", ""],
+        "columns_format": [{}, {}, {}, {}, {}, {}],
         "download_count": 732,
         "provenance": "official",
         "lens_view_type": "tabular",
@@ -6288,9 +6066,7 @@
         "publication_date": "2017-05-12T06:13:42.000Z"
       },
       "classification": {
-        "categories": [
-          "environment"
-        ],
+        "categories": ["environment"],
         "tags": [],
         "domain_category": "Environment",
         "domain_tags": [
@@ -6390,30 +6166,8 @@
           "Number",
           "Number"
         ],
-        "columns_description": [
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          ""
-        ],
-        "columns_format": [
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {}
-        ],
+        "columns_description": ["", "", "", "", "", "", "", "", "", ""],
+        "columns_format": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
         "download_count": 777,
         "provenance": "official",
         "lens_view_type": "tabular",
@@ -6422,18 +6176,10 @@
         "publication_date": "2017-05-12T06:23:19.000Z"
       },
       "classification": {
-        "categories": [
-          "environment"
-        ],
+        "categories": ["environment"],
         "tags": [],
         "domain_category": "Environment",
-        "domain_tags": [
-          "bales",
-          "cardboard",
-          "dsrf",
-          "recycling",
-          "waste"
-        ],
+        "domain_tags": ["bales", "cardboard", "dsrf", "recycling", "waste"],
         "domain_metadata": [
           {
             "key": "Quality_Update-frequency",
@@ -6530,34 +6276,8 @@
           "Text",
           "Text"
         ],
-        "columns_description": [
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          ""
-        ],
-        "columns_format": [
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {}
-        ],
+        "columns_description": ["", "", "", "", "", "", "", "", "", "", "", ""],
+        "columns_format": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
         "download_count": 777,
         "provenance": "official",
         "lens_view_type": "tabular",
@@ -6566,17 +6286,10 @@
         "publication_date": "2017-05-12T06:20:11.000Z"
       },
       "classification": {
-        "categories": [
-          "environment"
-        ],
+        "categories": ["environment"],
         "tags": [],
         "domain_category": "Environment",
-        "domain_tags": [
-          "commingled",
-          "dsrf",
-          "recycling",
-          "waste"
-        ],
+        "domain_tags": ["commingled", "dsrf", "recycling", "waste"],
         "domain_metadata": [
           {
             "key": "Quality_Update-frequency",
@@ -6734,9 +6447,6 @@
   "resultSetSize": 48,
   "timings": {
     "serviceMillis": 54,
-    "searchMillis": [
-      21,
-      12
-    ]
+    "searchMillis": [21, 12]
   }
 }

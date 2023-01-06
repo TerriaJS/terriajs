@@ -6,21 +6,21 @@ import Terria from "../../../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import DateTimePicker from "../../../../lib/ReactViews/BottomDock/Timeline/DateTimePicker";
 
-const GridRow = require("../../../../lib/ReactViews/BottomDock/Timeline/DateTimePicker")
-  .GridRow;
+const GridRow =
+  require("../../../../lib/ReactViews/BottomDock/Timeline/DateTimePicker").GridRow;
 
-describe("DateTimePicker", function() {
+describe("DateTimePicker", function () {
   let terria: Terria;
   let wmsItem: WebMapServiceCatalogItem;
   let testRenderer: ReactTestRenderer;
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     terria = new Terria({
       baseUrl: "./"
     });
   });
 
-  it("A datetime selector is rendered for WMS with not many dates", async function() {
+  it("A datetime selector is rendered for WMS with not many dates", async function () {
     wmsItem = new WebMapServiceCatalogItem("mywms", terria);
     wmsItem.setTrait("definition", "url", "/test/WMS/comma_sep_datetimes.xml");
     wmsItem.setTrait("definition", "layers", "13_intervals");

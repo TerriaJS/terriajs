@@ -23,7 +23,7 @@ const CesiumTimeline = createReactClass({
       this.props.terria.timelineClock
     );
 
-    this.cesiumTimeline.makeLabel = time => {
+    this.cesiumTimeline.makeLabel = (time) => {
       if (defined(this.props.terria.timelineStack.top)) {
         const layer = this.props.terria.timelineStack.top;
         if (
@@ -52,7 +52,7 @@ const CesiumTimeline = createReactClass({
 
     this.cesiumTimeline.addEventListener(
       "settime",
-      e => {
+      (e) => {
         const clock = e.clock;
         clock.currentTime = e.timeJulian;
         clock.shouldAnimate = false;
@@ -97,7 +97,7 @@ const CesiumTimeline = createReactClass({
     return (
       <div
         className={Styles.cesiumTimeline}
-        ref={ref => {
+        ref={(ref) => {
           this.timelineContainer = ref;
         }}
       />

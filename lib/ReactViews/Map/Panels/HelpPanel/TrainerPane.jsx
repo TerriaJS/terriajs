@@ -17,7 +17,7 @@ import { applyTranslationIfExists } from "../../../../Language/languageHelpers";
 const UlTrainerItems = styled(Box).attrs({
   as: "ul"
 })`
-  ${p => p.theme.removeListStyles()}
+  ${(p) => p.theme.removeListStyles()}
 `;
 
 const TrainerButton = styled(Button)``;

@@ -16,12 +16,12 @@ import {
 } from "../../../../lib/Traits/TraitsClasses/MappableTraits";
 import createStratumInstance from "../../../../lib/Models/Definition/createStratumInstance";
 
-describe("Ideal Zoom", function() {
+describe("Ideal Zoom", function () {
   let terria: Terria;
   let theItem: Cesium3DTilesCatalogItem;
   let testRenderer: ReactTestRenderer;
   let viewState: ViewState;
-  beforeEach(async function() {
+  beforeEach(async function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -36,7 +36,7 @@ describe("Ideal Zoom", function() {
     viewState = new ViewState(options);
   });
 
-  it("should use default camera view if no parameters are given.", async function() {
+  it("should use default camera view if no parameters are given.", async function () {
     await theItem.loadMapItems();
 
     act(() => {
@@ -65,7 +65,7 @@ describe("Ideal Zoom", function() {
     expect(theCameraView.rectangle?.west).toBeCloseTo(rectangle.west, 6);
   });
 
-  it("should customise camera view if the given lookAt parameters are valid.", async function() {
+  it("should customise camera view if the given lookAt parameters are valid.", async function () {
     const lookAtValues = {
       targetLongitude: 150.60832,
       targetLatitude: -34.19483,
@@ -125,7 +125,7 @@ describe("Ideal Zoom", function() {
     expect(theCameraView.rectangle?.west).toBeCloseTo(rectangle.west, 6);
   });
 
-  it("should override the using home camera rule.", async function() {
+  it("should override the using home camera rule.", async function () {
     // Using home camera rule might kick in given the wrapped rectangle.
     const wrappedRectangle = {
       east: 511,
@@ -195,7 +195,7 @@ describe("Ideal Zoom", function() {
     expect(theCameraView.rectangle?.west).toBeCloseTo(rectangle.west, 6);
   });
 
-  it("should use default camera view if the given lookAt parameters are invalid.", async function() {
+  it("should use default camera view if the given lookAt parameters are invalid.", async function () {
     const lookAtValues = {
       targetLongitude: undefined,
       targetLatitude: -34.19483,
@@ -225,7 +225,7 @@ describe("Ideal Zoom", function() {
     expect(theCameraView.up).toBe(undefined);
   });
 
-  it("should customise camera view if the given camera parameters are complete.", async function() {
+  it("should customise camera view if the given camera parameters are complete.", async function () {
     const cameraValues = {
       west: 143.85665964592238,
       south: -37.5588985189224,
@@ -293,7 +293,7 @@ describe("Ideal Zoom", function() {
     );
   });
 
-  it("should use given rectangle if any other values are missing in camera.", async function() {
+  it("should use given rectangle if any other values are missing in camera.", async function () {
     const cameraValues = {
       west: 143.85665964592238,
       south: -37.5588985189224,
@@ -353,7 +353,7 @@ describe("Ideal Zoom", function() {
     );
   });
 
-  it("should use default camera view if missing any required rectagle parameters in camera.", async function() {
+  it("should use default camera view if missing any required rectagle parameters in camera.", async function () {
     const cameraValues = {
       west: undefined,
       south: -37.5588985189224,
@@ -408,7 +408,7 @@ describe("Ideal Zoom", function() {
     expect(theCameraView.rectangle?.west).toBeCloseTo(rectangle.west, 6);
   });
 
-  it("should custimise camera view based on the given lookAt parameters when camera parameters also exist.", async function() {
+  it("should custimise camera view based on the given lookAt parameters when camera parameters also exist.", async function () {
     const lookAtValues = {
       targetLongitude: 150.60832,
       targetLatitude: -34.19483,

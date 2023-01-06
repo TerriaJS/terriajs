@@ -29,7 +29,7 @@ export class LeafletAttribution extends L.Control.Attribution {
     this._container = L.DomUtil.create("div", "leaflet-control-attribution");
     L.DomEvent.disableClickPropagation(this._container);
 
-    map.eachLayer(layer => {
+    map.eachLayer((layer) => {
       if (layer.getAttribution) {
         const att = layer.getAttribution();
         if (att) this.addAttribution(att);

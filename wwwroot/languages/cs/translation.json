@@ -85,7 +85,10 @@
     },
     "toggleSplitterToolTitle": "Porovnat",
     "toggleSplitterTool": "Povolit porovnání dvou různých sad dat vedle sebe",
-    "toggleSplitterToolDisabled": "Chcete-li povolit standardní porovnávání, vypněte ostatní funkce porovnávání vedle sebe"
+    "toggleSplitterToolDisabled": "Chcete-li povolit standardní porovnávání, vypněte ostatní funkce porovnávání vedle sebe",
+    "errorTitle": "Nepodařilo se porovnat položku katalogu.",
+    "duplicateModelErrorMessage": "Při rozdělování položky katalogu `\"{{name}}\"` došlo k chybě. Tato položka katalogu nemusí podporovat funkci \"porovnat\"",
+    "modelNotFoundErrorMessage": "ID modelu `\"{{id}}\"` nebylo nalezeno"
   },
   "zoomCotrol": {
     "zoomIn": "Přiblížit",
@@ -202,7 +205,7 @@
     "printViewButton": "Zobrazení náhledu tisku",
     "creatingPrintView": "Vytvoření tiskového náhledu...",
     "btnAdvanced": "Pokročilé možnosti",
-    "embedTitle": "Chcete-li mapu vložit, zkopírujte tento kód a vložte ji do stránky HTML:",
+    "embedTitle": "Vložit mapu",
     "shortenUsingService": "Zkrácení URL pro sdílení pomocí webové služby",
     "btnCatalogShareText": "Sdílet",
     "btnStoryShareText": "Sdílet",
@@ -220,7 +223,8 @@
     "shortLinkShortening": "Zkracování...",
     "downloadMap": "Stáhnout mapu (png)",
     "convertNotificationMessage": "Tento odkaz na sdílení je založen na starší verzi softwaru TerriaJS, který pohání tuto webovou mapu. Přestože se snažíme odkaz zachovat, můžete se setkat s problémy při vizualizaci dat.  \n\nPokud jste uživatelem sdíleného odkazu, klikněte na tlačítko OK, aby varovná zpráva zmizela, a pokračujte v přístupu k datům.",
-    "getShareSaveHelpMessage": "Jak přidat do záložek sdílené odkazy"
+    "getShareSaveHelpMessage": "Jak přidat do záložek sdílené odkazy",
+    "embedDescription": "Chcete-li mapu vložit, zkopírujte tento kód a vložte ji do stránky HTML:"
   },
   "countDatasets": {
     "btnText": "Spustit",
@@ -327,7 +331,7 @@
   "featureInfo": {
     "catalogItem": {
       "moreThanMax": "Bylo nalezeno více než {{maximum}} {{catalogItemName}} funkcí.",
-      "featuresFound": "{{featCount}} {catalogItemName} funkcí bylo nalezeno.",
+      "featuresFound": "Bylo nalezeno {{featCount}} funkcí v {{catalogItemName}} .",
       "featureInfoShown": "První {{maximum}} jsou uvedeny níže."
     },
     "download": "Stáhnout tuto tabulku",
@@ -441,7 +445,7 @@
     "searchPlaceholderWhole": "Vyhledávání v celém katalogu",
     "searchPlaceholder": "Vyhledávání v katalogu",
     "localAdd": "Přidat místní soubor",
-    "localFileType": "<0>Krok 1:</0> Výběr typu souboru (nepovinné)",
+    "localFileType": "<0>Krok 1:</0> Vybrat typ souboru",
     "localFile": "<0>Krok 2:</0> Vybrat soubor",
     "webAdd": "Přidat webová data",
     "webFile": "<0>Krok 2:</0> Zadejte adresu URL datového souboru nebo webové služby",
@@ -453,7 +457,7 @@
     "urlInputBtn": "Přidat",
     "back": "Zpět",
     "browse": "Procházet...",
-    "webFileType": "<0>Krok 1:</0> Výběr typu souboru (nepovinné)"
+    "webFileType": "<0>Krok 1:</0> Výběr typu souboru nebo webové služby"
   },
   "search": {
     "resultsLabel": "Výsledky hledání",
@@ -695,7 +699,7 @@
       "errorMessage": "Prohlížeče společnosti Microsoft (včetně všech verzí prohlížečů Internet Explorer a Edge) bohužel nepodporují funkci uri potřebnou ke stažení dat jako souboru. Chcete-li stáhnout data, zkopírujte následující uri do jiného prohlížeče, například $t(browsers.chrome), $t(browsers.firefox) nebo $t(browsers.safari): {{href}}"
     },
     "dataType": {
-      "auto": "Automatická detekce (doporučeno)",
+      "auto": "Typ souboru",
       "wms-group": "Web Map Service (WMS) Server",
       "wmts-group": "Web Map Tile Service (WMTS) Server",
       "wfs-group": "Web Feature Service (WFS) Server",
@@ -712,13 +716,19 @@
       "csv": "CSV",
       "czml": "CZML",
       "gpx": "GPX",
-      "json": "JSON",
-      "carto": "Carto",
-      "shp": "Shapefile (zip)",
+      "json": "Katalog Terria",
+      "carto": "Carto V1",
+      "shp": "Shapefile",
       "other": "Ostatní (použijte konverzní službu)",
       "open-street-map": "Open Street Map Server",
-      "gltf": "GLTF",
-      "socrata-group": "Socrata Server"
+      "gltf": "glTF",
+      "socrata-group": "Socrata Server",
+      "ifc": "IFC",
+      "assimp-local": "Konvertor 3D souborů (zip) (experimentální)",
+      "assimp-local-description": "**Upozornění:** Konvertor 3D souborů je experimentální.  \nViz seznam [podporovaných formátů](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nSoubory musí být zazipovány.",
+      "assimp-remote": "Převodník 3D souborů (experimentální)",
+      "assimp-remote-description": "**Upozornění:** Konvertor 3D souborů je experimentální.  \nViz seznam [podporovaných formátů](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nPodporovány jsou také soubory Zip",
+      "carto-v3": "Carto V3"
     },
     "printWindow": {
       "errorTitle": "Chyba tisku",
@@ -757,6 +767,12 @@
     },
     "serverConfig": {
       "failedToGet": "Nepodařilo se získat konfiguraci serveru z {{serverConfigUrl}}. To znamená, že služby jako proxy, konverze a zkracování URL nemusí fungovat."
+    },
+    "unverifiedExternalLink": {
+      "denyText": "Zrušit",
+      "title": "Upozornění: neověřený odkaz",
+      "message": "Chystáte se otevřít: \n\n`{{url}}`  \n\nTento odkaz není ověřený a může být nebezpečný.",
+      "confirmText": "Otevřít na nové kartě"
     }
   },
   "map": {
@@ -767,7 +783,9 @@
       "devError": "cesium je vyžadováno.",
       "failedToObtain": "Nepodařilo se získat obrazovou dlaždici X: {{x}} Y: {{y}} Úroveň: {{level}}.",
       "notWebMercatorTilingScheme": "Tuto datovou sadu nelze zobrazit na 2D mapě, protože nepodporuje projekci Web Mercator (EPSG:3857).",
-      "unusalTilingScheme": "Tuto datovou sadu nelze zobrazit na 2D mapě, protože používá neobvyklé schéma dlaždic, které není podporováno."
+      "unusalTilingScheme": "Tuto datovou sadu nelze zobrazit na 2D mapě, protože používá neobvyklé schéma dlaždic, které není podporováno.",
+      "stoppedRenderingTitle": "3D mapu se nepodařilo vykreslit",
+      "stoppedRenderingMessage": "Příčinou může být datová sada právě přidaná do pracovního stolu - zkuste ji odstranit. Pokud se tím problém nevyřeší, bude možná nutné znovu načíst {{appName}}."
     },
     "displayVariablesConcept": {
       "defaultName": "Zobrazit proměnnou"
@@ -816,7 +834,8 @@
     "extraCreditLinks": {
       "dataAttribution": "Připsání dat",
       "disclaimer": "Odmítnutí odpovědnosti",
-      "basemap": "Základní mapa"
+      "basemap": "Základní mapa",
+      "dataProvider": "Data poskytl:"
     },
     "computeRingWindingOrder": {
       "devError": "Očekávané body typu {x:number, y:number}"

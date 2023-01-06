@@ -1,29 +1,25 @@
+import { observer } from "mobx-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
-
-import ViewState from "../../../ReactViewModels/ViewState";
 import Icon from "../../../Styled/Icon";
 import Text from "../../../Styled/Text";
 import Prompt from "../../Generic/Prompt";
+import { useViewState } from "../../StandardUserInterface/ViewStateContext";
 
 import Styles from "./help-button.scss";
-import { runInAction } from "mobx";
 
-interface Props {
-  viewState: ViewState;
-}
-
-export default (props: Props) => {
+const HelpButton = observer(() => {
   const { t } = useTranslation();
+  const viewState = useViewState();
 
   return (
     <div>
       <button
         className={Styles.helpBtn}
-        onClick={evt => {
+        onClick={(evt) => {
           evt.preventDefault();
           evt.stopPropagation();
-          props.viewState.showHelpPanel();
+          viewState.showHelpPanel();
         }}
       >
         <Icon glyph={Icon.GLYPHS.helpThick} />
@@ -39,19 +35,17 @@ export default (props: Props) => {
         }
         displayDelay={500}
         dismissText={t("helpPanel.dismissText")}
-        dismissAction={() => {
-          runInAction(() =>
-            props.viewState.toggleFeaturePrompt("help", false, true)
-          );
-        }}
+        dismissAction={() => viewState.toggleFeaturePrompt("help", false, true)}
         caretTopOffset={-8}
         caretLeftOffset={130}
         caretSize={15}
         promptWidth={273}
         promptTopOffset={50}
         promptLeftOffset={-100}
-        isVisible={props.viewState.featurePrompts.indexOf("help") >= 0}
+        isVisible={viewState.featurePrompts.indexOf("help") >= 0}
       />
     </div>
   );
-};
+});
+
+export default HelpButton;

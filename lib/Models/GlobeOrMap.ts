@@ -1,4 +1,4 @@
-import { action, observable, runInAction, computed } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -11,8 +11,10 @@ import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/Constan
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import isDefined from "../Core/isDefined";
+import { isJsonObject } from "../Core/Json";
 import LatLonHeight from "../Core/LatLonHeight";
 import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
@@ -21,19 +23,19 @@ import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import MouseCoords from "../ReactViewModels/MouseCoords";
-import TableColorStyleTraits from "../Traits/TraitsClasses/TableColorStyleTraits";
+import TableColorStyleTraits from "../Traits/TraitsClasses/Table/ColorStyleTraits";
 import TableOutlineStyleTraits, {
   OutlineSymbolTraits
-} from "../Traits/TraitsClasses/TableOutlineStyleTraits";
-import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
+} from "../Traits/TraitsClasses/Table/OutlineStyleTraits";
+import TableStyleTraits from "../Traits/TraitsClasses/Table/StyleTraits";
 import CameraView from "./CameraView";
 import Cesium3DTilesCatalogItem from "./Catalog/CatalogItems/Cesium3DTilesCatalogItem";
 import CommonStrata from "./Definition/CommonStrata";
 import createStratumInstance from "./Definition/createStratumInstance";
-import Feature from "./Feature";
+import TerriaFeature from "./Feature/Feature";
 import Terria from "./Terria";
 
-require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
+require("./Feature/ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
 
 export default abstract class GlobeOrMap {
   abstract readonly type: string;
@@ -127,7 +129,7 @@ export default abstract class GlobeOrMap {
   abstract pickFromLocation(
     latLngHeight: LatLonHeight,
     providerCoords: ProviderCoordsMap,
-    existingFeatures: Feature[]
+    existingFeatures: TerriaFeature[]
   ): void;
 
   /**
@@ -149,7 +151,7 @@ export default abstract class GlobeOrMap {
   protected _createFeatureFromImageryLayerFeature(
     imageryFeature: ImageryLayerFeatureInfo
   ) {
-    const feature = new Feature({
+    const feature = new TerriaFeature({
       id: imageryFeature.name
     });
     feature.name = imageryFeature.name;
@@ -221,7 +223,7 @@ export default abstract class GlobeOrMap {
     rectangle: Rectangle
   ): () => void;
 
-  async _highlightFeature(feature: Feature | undefined) {
+  async _highlightFeature(feature: TerriaFeature | undefined) {
     if (isDefined(this._removeHighlightCallback)) {
       await this._removeHighlightCallback();
       this._removeHighlightCallback = undefined;
@@ -263,7 +265,7 @@ export default abstract class GlobeOrMap {
           ? defaultColor
           : highlightColor;
 
-        this._removeHighlightCallback = function() {
+        this._removeHighlightCallback = function () {
           if (
             isDefined(feature._cesium3DTileFeature) &&
             !feature._cesium3DTileFeature.tileset.isDestroyed()
@@ -294,7 +296,7 @@ export default abstract class GlobeOrMap {
           )
         );
 
-        this._removeHighlightCallback = function() {
+        this._removeHighlightCallback = function () {
           if (cesiumPolygon.polygon) {
             cesiumPolygon.polygon.outline = polygonOutline;
             cesiumPolygon.polygon.outlineColor = polygonOutlineColor;
@@ -314,7 +316,7 @@ export default abstract class GlobeOrMap {
           Color.LIGHTGRAY;
         cesiumPolyline.polyline!.width = new ConstantProperty(2);
 
-        this._removeHighlightCallback = function() {
+        this._removeHighlightCallback = function () {
           if (cesiumPolyline.polyline) {
             cesiumPolyline.polyline.material = polylineMaterial;
             cesiumPolyline.polyline.width = polylineWidth;
@@ -326,37 +328,40 @@ export default abstract class GlobeOrMap {
         let vectorTileHighlightCreated = false;
         // Feature from MapboxVectorTileImageryProvider
         if (
-          feature.imageryLayer &&
-          feature.imageryLayer.imageryProvider instanceof
-            MapboxVectorTileImageryProvider
+          feature.imageryLayer?.imageryProvider instanceof
+          MapboxVectorTileImageryProvider
         ) {
           const featureId =
-            feature.data?.id ?? feature.properties?.id?.getValue?.();
+            (isJsonObject(feature.data) ? feature.data?.id : undefined) ??
+            feature.properties?.id?.getValue?.();
           if (isDefined(featureId)) {
-            const highlightImageryProvider = feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
-              featureId
-            );
-            this._removeHighlightCallback = this.terria.currentViewer._addVectorTileHighlight(
-              highlightImageryProvider,
-              feature.imageryLayer.imageryProvider.rectangle
-            );
+            const highlightImageryProvider =
+              feature.imageryLayer?.imageryProvider.createHighlightImageryProvider(
+                featureId
+              );
+            this._removeHighlightCallback =
+              this.terria.currentViewer._addVectorTileHighlight(
+                highlightImageryProvider,
+                feature.imageryLayer.imageryProvider.rectangle
+              );
           }
           vectorTileHighlightCreated = true;
         }
         // Feature from ProtomapsImageryProvider (replacement for MapboxVectorTileImageryProvider)
         else if (
-          feature.imageryLayer &&
-          feature.imageryLayer.imageryProvider instanceof
-            ProtomapsImageryProvider
+          feature.imageryLayer?.imageryProvider instanceof
+          ProtomapsImageryProvider
         ) {
-          const highlightImageryProvider = feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
-            feature
-          );
-          if (highlightImageryProvider)
-            this._removeHighlightCallback = this.terria.currentViewer._addVectorTileHighlight(
-              highlightImageryProvider,
-              feature.imageryLayer.imageryProvider.rectangle
+          const highlightImageryProvider =
+            feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
+              feature
             );
+          if (highlightImageryProvider)
+            this._removeHighlightCallback =
+              this.terria.currentViewer._addVectorTileHighlight(
+                highlightImageryProvider,
+                feature.imageryLayer.imageryProvider.rectangle
+              );
           vectorTileHighlightCreated = true;
         }
 
@@ -368,7 +373,7 @@ export default abstract class GlobeOrMap {
           // Don't show points; the targeting cursor is sufficient.
           if (geoJson) {
             geoJson.features = geoJson.features.filter(
-              f => f.geometry.type !== "Point"
+              (f) => f.geometry.type !== "Point"
             );
 
             let catalogItem = this.terria.getModelById(
@@ -432,7 +437,7 @@ export default abstract class GlobeOrMap {
                     catalogItem.setTrait(CommonStrata.user, "show", false);
                   }
                 })
-                .catch(function() {});
+                .catch(function () {});
             });
 
             (await catalogItem.loadMapItems()).logError(
@@ -448,7 +453,7 @@ export default abstract class GlobeOrMap {
 
             this._highlightPromise = this.terria.overlays
               .add(catalogItem)
-              .then(r => r.throwIfError());
+              .then((r) => r.throwIfError());
           }
         }
       }

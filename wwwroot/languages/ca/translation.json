@@ -74,7 +74,10 @@
       "goright": "Dreta",
       "copyName": "{{name}} (còpia)",
       "goleft": "Esquerra"
-    }
+    },
+    "modelNotFoundErrorMessage": "No s'ha pogut trobar l'identificador del model `\"{{id}}\"`",
+    "errorTitle": "No s'ha pogut comparar l'element del catàleg.",
+    "duplicateModelErrorMessage": "S'ha produït un error en dividir l'element del catàleg `\"{{name}}\"`. És possible que aquest element del catàleg no admeti la funcionalitat de \"comparació\""
   },
   "zoomCotrol": {
     "zoomIn": "Zoom +",
@@ -187,7 +190,7 @@
     "zone": "ZONA",
     "e": "E",
     "n": "N",
-    "elev": "Elev"
+    "elev": "Alt."
   },
   "languagePanel": {
     "changeLanguage": "Canviar idioma"
@@ -200,7 +203,7 @@
     "printButton": "Imprimir",
     "printViewButton": "Mostra la vista d'impressió",
     "btnAdvanced": "Opcions avançades",
-    "embedTitle": "Per embed, copieu aquest codi per inserir aquest mapa en una pàgina HTML:",
+    "embedTitle": "Inserir mapa",
     "shortenUsingService": "Escurceu l'URL per compartir mitjançant un servei web",
     "btnStoryShareText": "Compartir",
     "btnMapShareText": "Compartir / Imprimir",
@@ -220,7 +223,8 @@
     "convertNotificationMessage": "Aquest enllaç per compartir es basa en una versió anterior de TerriaJS, el programari que alimenta aquest mapa web. Tot i que es fan els millors esforços per preservar l'enllaç, és possible que tingueu problemes amb la visualització de les dades.\n\nSi sou usuari de l'enllaç per compartir, feu clic a D'acord per tal que el missatge d'advertència desaparegui i continueu accedint a les dades.",
     "convertErrorMessage": "Aquest enllaç per compartir es basa en una versió anterior de TerriaJS, el programari que alimenta aquest mapa web. S'ha produït un error en intentar actualitzar les dades compartides.",
     "downloadMap": "Descarregar mapa (png)",
-    "getShareSaveHelpMessage": "Com desar enllaços compartits"
+    "getShareSaveHelpMessage": "Com desar enllaços compartits",
+    "embedDescription": "Per inserir, copieu aquest codi per inserir aquest mapa en una pàgina HTML:"
   },
   "countDatasets": {
     "btnText": "Començar",
@@ -301,7 +305,7 @@
     "satelliteSuggestionBtn": "Mostra {{catalogItemName}} en aquesta ubicació",
     "catalogItem": {
       "moreThanMax": "S'han trobat més de {{maximum}} {{catalogItemName}} elements.",
-      "featuresFound": "{{featCount}} {catalogItemName} elements trobats.",
+      "featuresFound": "{{featCount}} {{catalogItemName}} elements trobats.",
       "featureInfoShown": "Els primers {{maximum}} es mostren a continuació."
     },
     "download": "Descarrega aquesta Taula",
@@ -410,9 +414,9 @@
     "searchPlaceholder": "Cerca el catàleg",
     "localAdd": "Afegeix un arxiu local",
     "localFile": "<0>Pas 2:</0> Seleccioneu l'arxiu",
-    "localFileType": "<0>Pas 1:</0> Seleccioneu el tipus d'arxiu(opcional)",
+    "localFileType": "<0>Pas 1:</0> Seleccioneu el tipus d'arxiu",
     "webAdd": "Afegiu dades web",
-    "webFileType": "<0>Pas 1:</0> Seleccioneu el tipus d'arxiu (opcional)",
+    "webFileType": "<0>Pas 1:</0> Seleccioneu el tipus d'arxiu o servei web",
     "urlInputBtn": "Afegir",
     "browse": "Navegar...",
     "localTitle": "Afegir dades locals",
@@ -668,7 +672,7 @@
       "errorMessage": "Malauradament els navegadors de Microsoft (incloses totes les versions d'Internet Explorer i Edge) no admeten la funcionalitat d'uri de dades necessària per descarregar dades com un arxiu. Per baixar-lo copieu l'uri següent a un altre navegador, com ara $t(browsers.chrome), $t(browsers.firefox), o $t(browsers.safari): {{href}}"
     },
     "dataType": {
-      "auto": "Detecció automàtica (recomanat)",
+      "auto": "Tipus d'arxiu",
       "wms-group": "Servidor del servei de mapes web (WMS)",
       "wmts-group": "Servidor del servei de mapes tessel·lats (WMTS)",
       "wfs-group": "Servidor del servei web de funcions (WFS)",
@@ -686,12 +690,18 @@
       "csv": "CSV",
       "czml": "CZML",
       "gpx": "GPX",
-      "json": "JSON",
-      "carto": "Carto",
-      "gltf": "GLTF",
-      "shp": "Shapefile (zip)",
+      "json": "Catàleg Terria",
+      "carto": "Carto V1",
+      "gltf": "gLTF",
+      "shp": "Shapefile",
       "other": "Altres (utilitza el servei de conversió)",
-      "socrata-group": "Servidor Socrata"
+      "socrata-group": "Servidor Socrata",
+      "ifc": "IFC",
+      "assimp-local": "Convertidor de fitxers 3D (zip) (experimental)",
+      "assimp-local-description": "**Avís:** el convertidor de fitxers 3D és experimental.\nConsulteu la llista de [formats admesos](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).\nEls fitxers s'han de comprimir.",
+      "assimp-remote": "Convertidor de fitxers 3D (experimental)",
+      "assimp-remote-description": "**Avís:** el convertidor de fitxers 3D és experimental.\nConsulteu la llista de [formats admesos](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).\nTambé s'admeten fitxers zip",
+      "carto-v3": "Carto V3"
     },
     "printWindow": {
       "errorTitle": "Error d'impressió",
@@ -727,6 +737,12 @@
     },
     "serverConfig": {
       "failedToGet": "No s'ha pogut obtenir la configuració del servidor de {{serverConfigUrl}}. Això vol dir que és possible que serveis com ara el proxy, la conversió i l'escurçament d'URL no funcionin."
+    },
+    "unverifiedExternalLink": {
+      "title": "Avís: enllaç no verificat",
+      "message": "Estàs a punt d'obrir:\n\n`{{url}}`\n\nAquest enllaç no està verificat i pot ser insegur.",
+      "denyText": "Cancel·lar",
+      "confirmText": "Obre en una pestanya nova"
     }
   },
   "map": {
@@ -737,7 +753,9 @@
       "devError": "es requereix Cesium.",
       "failedToObtain": "No s'ha pogut obtenir la tessel·la X: {{x}} Y: {{y}} Nivell: {{level}}.",
       "notWebMercatorTilingScheme": "Aquest conjunt de dades no es pot mostrar al mapa 2D perquè no admet la projecció Web Mercator (EPSG:3857).",
-      "unusalTilingScheme": "Aquest conjunt de dades no es pot mostrar al mapa 2D perquè utilitza un esquema de mosaic inusual que no és compatible."
+      "unusalTilingScheme": "Aquest conjunt de dades no es pot mostrar al mapa 2D perquè utilitza un esquema de mosaic inusual que no és compatible.",
+      "stoppedRenderingTitle": "El mapa 3D no s'ha pogut renderitzar",
+      "stoppedRenderingMessage": "Això pot haver estat causat per un conjunt de dades que s'acaba d'afegir a l'espai de treball, proveu d'eliminar-lo. Si això no resol el vostre problema, és possible que ho hàgiu de tornar a carregar {{appName}}."
     },
     "computeRingWindingOrder": {
       "devError": "Punts esperats del tipus {x:nombre, y:nombre}"

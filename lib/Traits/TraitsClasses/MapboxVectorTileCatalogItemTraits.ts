@@ -3,16 +3,14 @@ import anyTrait from "../Decorators/anyTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
+import ImageryProviderTraits from "./ImageryProviderTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
-import ImageryProviderTraits from "./ImageryProviderTraits";
 import UrlTraits from "./UrlTraits";
 
 export default class MapboxVectorTileCatalogItemTraits extends mixTraits(
   LayerOrderingTraits,
-  FeatureInfoTraits,
   UrlTraits,
   MappableTraits,
   CatalogMemberTraits,
@@ -23,7 +21,7 @@ export default class MapboxVectorTileCatalogItemTraits extends mixTraits(
     type: "string",
     name: "lineColor",
     description:
-      "This propery exists for backward compatibility. The outline color of the features, specified as a CSS color string. This will only be used if `layer` trait has been set. For more complex styling - see `style` trait."
+      "This property exists for backward compatibility. The outline color of the features, specified as a CSS color string. This will only be used if `layer` trait has been set. For more complex styling - see `style` trait."
   })
   lineColor?: string;
 
@@ -31,7 +29,7 @@ export default class MapboxVectorTileCatalogItemTraits extends mixTraits(
     type: "string",
     name: "fillColor",
     description:
-      "This propery exists for backward compatibility. The fill color of the features, specified as a CSS color string. This will only be used if `layer` trait has been set. For more complex styling - see `style` trait."
+      "This property exists for backward compatibility. The fill color of the features, specified as a CSS color string. This will only be used if `layer` trait has been set. For more complex styling - see `style` trait."
   })
   fillColor?: string;
 
@@ -39,7 +37,7 @@ export default class MapboxVectorTileCatalogItemTraits extends mixTraits(
     type: "string",
     name: "layer",
     description:
-      "This propery exists for backward compatibility. It can be used to only show a particular layer in the tileset."
+      "This property exists for backward compatibility. It can be used to only show a particular layer in the tileset."
   })
   layer?: string;
 
@@ -58,6 +56,14 @@ For example:
       "source-layer": "buildings",
       "paint": {
         "fill-color": "black"
+      }
+    },
+    {
+      "type": "line",
+      "source-layer": "buildings",
+      "paint": {
+        "line-color": "red",
+        "line-width": 1
       }
     },
     {

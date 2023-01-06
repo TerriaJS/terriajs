@@ -34,7 +34,7 @@ import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
-import Feature from "../Models/Feature";
+import TerriaFeature from "../Models/Feature/Feature";
 import Cesium3DTilesCatalogItemTraits from "../Traits/TraitsClasses/Cesium3DTilesCatalogItemTraits";
 import Cesium3dTilesTraits, {
   OptionsTraits
@@ -93,6 +93,10 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       runInAction(() => {
         this.strata.set(Cesium3dTilesStratum.name, new Cesium3dTilesStratum());
       });
+    }
+
+    get hasCesium3dTilesMixin() {
+      return true;
     }
 
     // Just a variable to save the original tileset.root.transform if it exists
@@ -240,9 +244,10 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
      */
     @computed
     get modelMatrix(): Matrix4 {
-      const modelMatrixFromTraits = this.computeModelMatrixFromTransformationTraits(
-        this.originalRootTransform
-      );
+      const modelMatrixFromTraits =
+        this.computeModelMatrixFromTransformationTraits(
+          this.originalRootTransform
+        );
       return modelMatrixFromTraits;
     }
 
@@ -281,7 +286,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       this.tileset.modelMatrix = this.modelMatrix;
 
       this.tileset.clippingPlanes = toJS(this.clippingPlaneCollection)!;
-      this.clippingMapItems.forEach(mapItem => {
+      this.clippingMapItems.forEach((mapItem) => {
         mapItem.show = this.show;
       });
 
@@ -299,7 +304,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
     @computed get optionsObj() {
       const options: any = {};
       if (isDefined(this.options)) {
-        Object.keys(OptionsTraits.traits).forEach(name => {
+        Object.keys(OptionsTraits.traits).forEach((name) => {
           options[name] = (<any>this.options)[name];
         });
       }
@@ -345,7 +350,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       if (!isDefined(this.filters)) {
         return;
       }
-      const terms = this.filters.map(filter => {
+      const terms = this.filters.map((filter) => {
         if (!isDefined(filter.property)) {
           return "";
         }
@@ -366,10 +371,10 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
             ? property + " <= " + filter.maximumShown
             : "";
 
-        return [min, max].filter(x => x.length > 0).join(" && ");
+        return [min, max].filter((x) => x.length > 0).join(" && ");
       });
 
-      const showExpression = terms.filter(x => x.length > 0).join("&&");
+      const showExpression = terms.filter((x) => x.length > 0).join("&&");
       if (showExpression.length > 0) {
         return showExpression;
       }
@@ -433,20 +438,26 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       return new Cesium3DTileStyle(style);
     }
 
+    /**
+     * This function should return null if allowFeaturePicking = false
+     * @param _screenPosition
+     * @param pickResult
+     */
     buildFeatureFromPickResult(
       _screenPosition: Cartesian2 | undefined,
       pickResult: any
     ) {
       if (
-        pickResult instanceof Cesium3DTileFeature ||
-        pickResult instanceof Cesium3DTilePointFeature
+        this.allowFeaturePicking &&
+        (pickResult instanceof Cesium3DTileFeature ||
+          pickResult instanceof Cesium3DTilePointFeature)
       ) {
         const properties: { [name: string]: unknown } = {};
-        pickResult.getPropertyNames().forEach(name => {
+        pickResult.getPropertyNames().forEach((name) => {
           properties[name] = pickResult.getProperty(name);
         });
 
-        const result = new Feature({
+        const result = new TerriaFeature({
           properties
         });
 
@@ -467,17 +478,19 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       if (this.featureIdProperties) return this.featureIdProperties.slice();
       const propretyNamedId = feature
         .getPropertyNames()
-        .find(name => name.toLowerCase() === "id");
+        .find((name) => name.toLowerCase() === "id");
       return propretyNamedId ? [propretyNamedId] : [];
     }
 
     /**
-     * Modifies the style traits to show/hide a 3d tile feature
+     * Returns a selector that can be used for filtering or styling the given
+     * feature.  For this to work, the feature should have a property called
+     * `id` or the catalog item should have the trait `featureIdProperties` defined.
      *
+     * @returns Selector string or `undefined` when no unique selector can be constructed for the feature
      */
-    @action
-    setFeatureVisibility(feature: Cesium3DTileFeature, visibiltiy: boolean) {
-      const idProperties = this.getIdPropertiesForFeature(feature)?.sort();
+    getSelectorForFeature(feature: Cesium3DTileFeature): string | undefined {
+      const idProperties = this.getIdPropertiesForFeature(feature).sort();
       if (idProperties.length === 0) {
         return;
       }
@@ -485,12 +498,28 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       const terms = idProperties.map(
         (p: string) => `\${${p}} === ${JSON.stringify(feature.getProperty(p))}`
       );
-      const showExpr = terms.join(" && ");
-      if (showExpr) {
+      const selector = terms.join(" && ");
+      return selector ? selector : undefined;
+    }
+
+    setVisibilityForMatchingFeature(expression: string, visibility: boolean) {
+      if (expression) {
         const style = this.style || {};
         const show = normalizeShowExpression(style?.show);
-        show.conditions.unshift([showExpr, visibiltiy]);
+        show.conditions.unshift([expression, visibility]);
         this.setTrait(CommonStrata.user, "style", { ...style, show });
+      }
+    }
+
+    /**
+     * Modifies the style traits to show/hide a 3d tile feature
+     *
+     */
+    @action
+    setFeatureVisibility(feature: Cesium3DTileFeature, visibility: boolean) {
+      const showExpr = this.getSelectorForFeature(feature);
+      if (showExpr) {
+        this.setVisibilityForMatchingFeature(showExpr, visibility);
       }
     }
 
@@ -524,7 +553,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       if (!isObservableArray(show.conditions)) return;
       const conditions = show.conditions
         .slice()
-        .filter(e => e[0] !== condition);
+        .filter((e) => e[0] !== condition);
       this.setTrait(CommonStrata.user, "style", {
         ...this.style,
         show: {
@@ -548,7 +577,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       const style = this.style || {};
       const color = normalizeColorExpression(style?.color);
       color.conditions.unshift([newColorExpr.condition, newColorExpr.value]);
-      if (!color.conditions.find(c => c[0] === "true")) {
+      if (!color.conditions.find((c) => c[0] === "true")) {
         color.conditions.push(["true", "color('#ffffff')"]); // ensure there is a default color
       }
       this.setTrait(CommonStrata.user, "style", {
@@ -567,7 +596,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       if (!isObservableArray(color.conditions)) return;
       const conditions = color.conditions
         .slice()
-        .filter(e => e[0] !== condition);
+        .filter((e) => e[0] !== condition);
       this.setTrait(CommonStrata.user, "style", {
         ...this.style,
         color: {
@@ -590,11 +619,17 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
   return Cesium3dTilesMixin;
 }
 
+namespace Cesium3dTilesMixin {
+  export interface Instance
+    extends InstanceType<ReturnType<typeof Cesium3dTilesMixin>> {}
+  export function isMixedInto(model: any): model is Instance {
+    return model && model.hasCesium3dTilesMixin;
+  }
+}
+
 export default Cesium3dTilesMixin;
 
-function normalizeShowExpression(
-  show: any
-): {
+function normalizeShowExpression(show: any): {
   conditions: [string, boolean][];
 } {
   let conditions;
@@ -608,9 +643,7 @@ function normalizeShowExpression(
   return { ...show, conditions };
 }
 
-function normalizeColorExpression(
-  expr: any
-): {
+function normalizeColorExpression(expr: any): {
   expression?: string;
   conditions: [string, string][];
 } {

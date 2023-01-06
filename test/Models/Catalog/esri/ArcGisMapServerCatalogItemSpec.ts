@@ -20,18 +20,18 @@ interface ExtendedLoadWithXhr {
 
 const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
 
-describe("ArcGisMapServerCatalogItem", function() {
+describe("ArcGisMapServerCatalogItem", function () {
   const mapServerUrl =
     "http://www.example.com/Dynamic_National_Map_Hydrography_and_Marine/MapServer";
   const singleLayerUrl = mapServerUrl + "/31";
 
   let item: ArcGisMapServerCatalogItem;
 
-  beforeEach(function() {
+  beforeEach(function () {
     item = new ArcGisMapServerCatalogItem("test", new Terria());
     const realLoadWithXhr = loadWithXhr.load;
     // We replace calls to GA's servers with pre-captured JSON files so our testing is isolated, but reflects real data.
-    spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
+    spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
       let url = args[0];
       url = url.replace("http://example.com/42/", "");
       if (url.match("Dynamic_National_Map_Hydrography_and_Marine/MapServer")) {
@@ -58,27 +58,27 @@ describe("ArcGisMapServerCatalogItem", function() {
     });
   });
 
-  it("has a type and type name", function() {
+  it("has a type and type name", function () {
     expect(ArcGisMapServerCatalogItem.type).toBe("esri-mapServer");
     expect(item.typeName).toBe(
       i18next.t("models.arcGisMapServerCatalogItem.name")
     );
   });
 
-  it("supports splitting", function() {
+  it("supports splitting", function () {
     expect(item.disableSplitter).toBeFalsy();
   });
 
-  it("supports zooming to extent", function() {
+  it("supports zooming to extent", function () {
     expect(item.disableZoomTo).toBeFalsy();
   });
 
-  it("supports preview", function() {
+  it("supports preview", function () {
     expect(item.disableAboutData).toBeFalsy();
   });
 
-  describe("loadMapItems", function() {
-    it("can load all layers", async function() {
+  describe("loadMapItems", function () {
+    it("can load all layers", async function () {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
         item.setTrait(CommonStrata.definition, "url", mapServerUrl);
@@ -87,7 +87,7 @@ describe("ArcGisMapServerCatalogItem", function() {
       expect(item.allSelectedLayers.length).toBe(74);
     });
 
-    it("can load specific layers", async function() {
+    it("can load specific layers", async function () {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
         item.setTrait(CommonStrata.definition, "url", mapServerUrl);
@@ -97,7 +97,7 @@ describe("ArcGisMapServerCatalogItem", function() {
       expect(item.allSelectedLayers.length).toBe(2);
     });
 
-    it("can load a single layer given in the URL", async function() {
+    it("can load a single layer given in the URL", async function () {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
         item.setTrait(CommonStrata.definition, "url", singleLayerUrl);
@@ -107,7 +107,7 @@ describe("ArcGisMapServerCatalogItem", function() {
       expect(item.layers).toBe("31");
     });
 
-    describe("when tokenUrl is set", function() {
+    describe("when tokenUrl is set", function () {
       beforeEach(() => {
         runInAction(() => {
           item = new ArcGisMapServerCatalogItem("test", new Terria());
@@ -120,14 +120,14 @@ describe("ArcGisMapServerCatalogItem", function() {
         });
       });
 
-      it("fetches the token", async function() {
+      it("fetches the token", async function () {
         await item.loadMapItems();
         expect(loadWithXhr.load.calls.argsFor(0)[0]).toBe(
           "http://example.com/token"
         );
       });
 
-      it("adds the token to subsequent requests", async function() {
+      it("adds the token to subsequent requests", async function () {
         await item.loadMapItems();
         const tokenre = /token=fakeToken/;
         expect(tokenre.test(loadWithXhr.load.calls.argsFor(1)[0])).toBeTruthy();
@@ -135,7 +135,7 @@ describe("ArcGisMapServerCatalogItem", function() {
         expect(tokenre.test(loadWithXhr.load.calls.argsFor(3)[0])).toBeTruthy();
       });
 
-      it("passess the token to the imageryProvider", async function() {
+      it("passess the token to the imageryProvider", async function () {
         await item.loadMapItems();
         const imageryProvider: any = item.mapItems[0].imageryProvider;
         expect(imageryProvider.token).toBe("fakeToken");
@@ -143,8 +143,8 @@ describe("ArcGisMapServerCatalogItem", function() {
     });
   });
 
-  describe("after loading", function() {
-    beforeEach(async function() {
+  describe("after loading", function () {
+    beforeEach(async function () {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
         item.setTrait(CommonStrata.definition, "url", mapServerUrl);
@@ -152,29 +152,29 @@ describe("ArcGisMapServerCatalogItem", function() {
       await item.loadMapItems();
     });
 
-    it("returns exactly one mapItems", function() {
+    it("returns exactly one mapItems", function () {
       expect(item.mapItems.length).toBe(1);
     });
 
-    describe("the mapItem", function() {
-      it("correctly sets `alpha`", function() {
+    describe("the mapItem", function () {
+      it("correctly sets `alpha`", function () {
         runInAction(() =>
           item.setTrait(CommonStrata.definition, "opacity", 0.42)
         );
         expect(item.mapItems[0].alpha).toBe(0.42);
       });
 
-      it("correctly sets `show`", function() {
+      it("correctly sets `show`", function () {
         runInAction(() =>
           item.setTrait(CommonStrata.definition, "show", false)
         );
         expect(item.mapItems[0].show).toBe(false);
       });
 
-      describe("imageryProvider", function() {
+      describe("imageryProvider", function () {
         let imageryProvider: ArcGisMapServerImageryProvider;
 
-        beforeEach(function() {
+        beforeEach(function () {
           runInAction(() => {
             item.setTrait(CommonStrata.definition, "layers", "31");
             item.setTrait(CommonStrata.definition, "parameters", {
@@ -192,21 +192,21 @@ describe("ArcGisMapServerCatalogItem", function() {
             .imageryProvider as ArcGisMapServerImageryProvider;
         });
 
-        it("should be an ArcGisMapServerImageryProvider", function() {
+        it("should be an ArcGisMapServerImageryProvider", function () {
           expect(
             imageryProvider instanceof ArcGisMapServerImageryProvider
           ).toBeTruthy();
         });
 
-        it("sets the URL correctly", function() {
+        it("sets the URL correctly", function () {
           expect(imageryProvider.url).toBe(mapServerUrl + "/");
         });
 
-        it("sets the layers correctly", function() {
+        it("sets the layers correctly", function () {
           expect(imageryProvider.layers).toBe("31");
         });
 
-        it("converts layer names to layer ids when constructing imagery provider", function() {
+        it("converts layer names to layer ids when constructing imagery provider", function () {
           item.setTrait(
             CommonStrata.definition,
             "layers",
@@ -217,25 +217,25 @@ describe("ArcGisMapServerCatalogItem", function() {
           expect(imageryProvider.layers).toBe("31");
         });
 
-        it("tilingScheme should be a WebMercatorTilingScheme", function() {
+        it("tilingScheme should be a WebMercatorTilingScheme", function () {
           expect(
             imageryProvider.tilingScheme instanceof WebMercatorTilingScheme
           ).toBeTruthy();
         });
 
-        it("sets the maximumLevel", function() {
+        it("sets the maximumLevel", function () {
           expect(imageryProvider.maximumLevel).toBe(13);
         });
 
-        it("passes on request parameters", function() {
+        it("passes on request parameters", function () {
           expect(imageryProvider.parameters).toEqual(item.parameters);
         });
 
-        it("correctly sets enablePickFeatures", function() {
+        it("correctly sets enablePickFeatures", function () {
           expect(imageryProvider.enablePickFeatures).toBe(true);
         });
 
-        it("show scaleWorkbenchInfo when hideLayerAfterMinScaleDenominator", function() {
+        it("show scaleWorkbenchInfo when hideLayerAfterMinScaleDenominator", function () {
           item.setTrait(
             CommonStrata.definition,
             "hideLayerAfterMinScaleDenominator",
@@ -248,17 +248,17 @@ describe("ArcGisMapServerCatalogItem", function() {
       });
     });
 
-    it("defines the name", function() {
+    it("defines the name", function () {
       expect(item.name).toBe(
         "Australia 250K Topographic Hydrography and Marine Layers"
       );
     });
 
-    it("defines the dataCustodian", function() {
+    it("defines the dataCustodian", function () {
       expect(item.dataCustodian).toBe("Geoscience Australia");
     });
 
-    it("defines a rectangle", function() {
+    it("defines a rectangle", function () {
       expect(item.rectangle).toBeDefined();
       expect(item.rectangle.west).toEqual(97.90759300700006);
       expect(item.rectangle.south).toEqual(-54.25906877199998);
@@ -266,7 +266,7 @@ describe("ArcGisMapServerCatalogItem", function() {
       expect(item.rectangle.north).toEqual(0.9835908000000587);
     });
 
-    it("defines info", function() {
+    it("defines info", function () {
       expect(item.info.map(({ name, content }) => [name, content])).toEqual([
         [
           i18next.t("models.arcGisMapServerCatalogItem.dataDescription"),
@@ -283,7 +283,7 @@ describe("ArcGisMapServerCatalogItem", function() {
       ]);
     });
 
-    it("defines legends", function() {
+    it("defines legends", function () {
       expect(item.legends).toBeDefined();
       if (isDefined(item.legends)) {
         expect(item.legends.length).toBe(1);
@@ -294,8 +294,8 @@ describe("ArcGisMapServerCatalogItem", function() {
     });
   });
 
-  describe("time-enabled layer", function() {
-    it("can load a time-enabled layer", async function() {
+  describe("time-enabled layer", function () {
+    it("can load a time-enabled layer", async function () {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
         item.setTrait(
@@ -308,8 +308,8 @@ describe("ArcGisMapServerCatalogItem", function() {
       if (item.discreteTimes !== undefined) {
         expect(item.discreteTimes.length).toBe(781);
       }
-      expect(item.startTime).toBe("2004-11-26T09:43:22Z");
-      expect(item.stopTime).toBe("2019-11-03T14:00:00Z");
+      expect(item.startTime).toBe("2004-11-26T09:43:22.000000000Z");
+      expect(item.stopTime).toBe("2019-11-03T14:00:00.000000000Z");
     });
   });
 });

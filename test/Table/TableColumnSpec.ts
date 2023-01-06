@@ -3,21 +3,21 @@ import createStratumInstance from "../../lib/Models/Definition/createStratumInst
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import TableColumn from "../../lib/Table/TableColumn";
-import TableColumnTraits from "../../lib/Traits/TraitsClasses/TableColumnTraits";
+import TableColumnTraits from "../../lib/Traits/TraitsClasses/Table/ColumnTraits";
 import TableColumnType from "../../lib/Table/TableColumnType";
 
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")
 );
 
-describe("TableColumn", function() {
+describe("TableColumn", function () {
   let tableModel: CsvCatalogItem;
 
-  beforeEach(function() {
+  beforeEach(function () {
     tableModel = new CsvCatalogItem("test", new Terria(), undefined);
   });
 
-  describe("title", function() {
+  describe("title", function () {
     it("prettify titles", async () => {
       tableModel.setTrait(
         "user",
@@ -32,7 +32,7 @@ describe("TableColumn", function() {
       expect(tableModel.tableColumns[3].title).toBe("Trimmed Name");
     });
 
-    it("correctly resolves the title", function() {
+    it("correctly resolves the title", function () {
       const x = tableModel.addObject(CommonStrata.user, "columns", "Column0");
       x?.setTrait(CommonStrata.user, "title", "Time");
       const y = tableModel.addObject(CommonStrata.user, "columns", "Column1");
@@ -43,7 +43,7 @@ describe("TableColumn", function() {
       expect(tableColumn2.title).toBe("Speed");
     });
 
-    it("can resolve title from the `tableModel.columnTitles` if set", function() {
+    it("can resolve title from the `tableModel.columnTitles` if set", function () {
       tableModel.setTrait(CommonStrata.user, "columnTitles", ["Time", "Speed"]);
       const tableColumn1 = new TableColumn(tableModel, 0);
       const tableColumn2 = new TableColumn(tableModel, 1);
@@ -52,8 +52,8 @@ describe("TableColumn", function() {
     });
   });
 
-  describe("type", function() {
-    describe("by name", function() {
+  describe("type", function () {
+    describe("by name", function () {
       it("id - scalar", async () => {
         tableModel.setTrait(CommonStrata.user, "csvString", "id\n1\n2\n3\n4\n");
         await tableModel.loadMapItems();
@@ -282,7 +282,7 @@ describe("TableColumn", function() {
       });
     });
 
-    describe("by values", function() {
+    describe("by values", function () {
       it("scalar", async () => {
         /** For scalar we need
          * - At least one number
@@ -328,8 +328,8 @@ describe("TableColumn", function() {
     });
   });
 
-  describe("units", function() {
-    it("correctly resolves the units", function() {
+  describe("units", function () {
+    it("correctly resolves the units", function () {
       const x = tableModel.addObject(CommonStrata.user, "columns", "Column0");
       x?.setTrait(CommonStrata.user, "units", "ms");
       const y = tableModel.addObject(CommonStrata.user, "columns", "Column1");
@@ -340,7 +340,7 @@ describe("TableColumn", function() {
       expect(tableColumn2.units).toBe("kmph");
     });
 
-    it("can resolve unit from the `tableModel.columnUnits` if set", function() {
+    it("can resolve unit from the `tableModel.columnUnits` if set", function () {
       tableModel.setTrait(CommonStrata.user, "columnUnits", ["ms", "kmph"]);
       const tableColumn1 = new TableColumn(tableModel, 0);
       const tableColumn2 = new TableColumn(tableModel, 1);
@@ -349,19 +349,19 @@ describe("TableColumn", function() {
     });
   });
 
-  describe("valuesAsDates", function() {
-    beforeEach(function() {
+  describe("valuesAsDates", function () {
+    beforeEach(function () {
       jasmine.Ajax.install();
       jasmine.Ajax.stubRequest(
         "build/TerriaJS/data/regionMapping.json"
       ).andReturn({ responseText: regionMapping });
     });
 
-    afterEach(function() {
+    afterEach(function () {
       jasmine.Ajax.uninstall();
     });
 
-    it("defaults to dd/mm/yyyy dates", async function() {
+    it("defaults to dd/mm/yyyy dates", async function () {
       tableModel.setTrait(
         CommonStrata.user,
         "csvString",
@@ -370,15 +370,15 @@ describe("TableColumn", function() {
       await tableModel.loadMapItems();
       const tableColumn1 = new TableColumn(tableModel, 0);
       expect(
-        tableColumn1.valuesAsDates.values.map(d => d && d.toISOString())
+        tableColumn1.valuesAsDates.values.map((d) => d && d.toISOString())
       ).toEqual(
-        [new Date("2004/03/01"), new Date("1999/12/12")].map(d =>
+        [new Date("2004/03/01"), new Date("1999/12/12")].map((d) =>
           d.toISOString()
         )
       );
     });
 
-    it("can convert d-m-yy dates", async function() {
+    it("can convert d-m-yy dates", async function () {
       tableModel.setTrait(
         CommonStrata.user,
         "csvString",
@@ -387,15 +387,15 @@ describe("TableColumn", function() {
       await tableModel.loadMapItems();
       const tableColumn1 = new TableColumn(tableModel, 0);
       expect(
-        tableColumn1.valuesAsDates.values.map(d => d && d.toISOString())
+        tableColumn1.valuesAsDates.values.map((d) => d && d.toISOString())
       ).toEqual(
-        [new Date("1995/07/15"), new Date("2020/07/03")].map(d =>
+        [new Date("1995/07/15"), new Date("2020/07/03")].map((d) =>
           d.toISOString()
         )
       );
     });
 
-    it("converts all dates to mm/dd/yyyy in a column if one doesn't fit dd/mm/yyyy", async function() {
+    it("converts all dates to mm/dd/yyyy in a column if one doesn't fit dd/mm/yyyy", async function () {
       tableModel.setTrait(
         CommonStrata.user,
         "csvString",
@@ -404,15 +404,15 @@ describe("TableColumn", function() {
       await tableModel.loadMapItems();
       const tableColumn1 = new TableColumn(tableModel, 0);
       expect(
-        tableColumn1.valuesAsDates.values.map(d => d && d.toISOString())
+        tableColumn1.valuesAsDates.values.map((d) => d && d.toISOString())
       ).toEqual(
-        [new Date("2004/06/20"), new Date("1999/03/10")].map(d =>
+        [new Date("2004/06/20"), new Date("1999/03/10")].map((d) =>
           d.toISOString()
         )
       );
     });
 
-    it("can convert yyyy-Qx dates", async function() {
+    it("can convert yyyy-Qx dates", async function () {
       tableModel.setTrait(
         CommonStrata.user,
         "csvString",
@@ -421,7 +421,7 @@ describe("TableColumn", function() {
       await tableModel.loadMapItems();
       const tableColumn1 = new TableColumn(tableModel, 0);
       expect(
-        tableColumn1.valuesAsDates.values.map(d => d && d.toISOString())
+        tableColumn1.valuesAsDates.values.map((d) => d && d.toISOString())
       ).toEqual(
         [
           new Date("1983/04/01"),
@@ -432,11 +432,11 @@ describe("TableColumn", function() {
           new Date("1984/07/01"),
           new Date("1984/10/01"),
           new Date("1985/01/01")
-        ].map(d => d.toISOString())
+        ].map((d) => d.toISOString())
       );
     });
 
-    it("attempts to convert all dates using new Date if one date fails parsing with dd/mm/yyyy and mm/dd/yyyy", async function() {
+    it("attempts to convert all dates using new Date if one date fails parsing with dd/mm/yyyy and mm/dd/yyyy", async function () {
       tableModel.setTrait(
         CommonStrata.user,
         "csvString",
@@ -445,9 +445,9 @@ describe("TableColumn", function() {
       await tableModel.loadMapItems();
       const tableColumn1 = new TableColumn(tableModel, 0);
       expect(
-        tableColumn1.valuesAsDates.values.map(d => d && d.toISOString())
+        tableColumn1.valuesAsDates.values.map((d) => d && d.toISOString())
       ).toEqual([
-        ...[new Date("2004/06/06"), new Date("1999/03/10")].map(d =>
+        ...[new Date("2004/06/06"), new Date("1999/03/10")].map((d) =>
           d.toISOString()
         ),
         null
@@ -455,19 +455,19 @@ describe("TableColumn", function() {
     });
   });
 
-  describe("column transformation", function() {
-    beforeEach(function() {
+  describe("column transformation", function () {
+    beforeEach(function () {
       jasmine.Ajax.install();
       jasmine.Ajax.stubRequest(
         "build/TerriaJS/data/regionMapping.json"
       ).andReturn({ responseText: regionMapping });
     });
 
-    afterEach(function() {
+    afterEach(function () {
       jasmine.Ajax.uninstall();
     });
 
-    it("simple expression", async function() {
+    it("simple expression", async function () {
       tableModel.setTrait(CommonStrata.user, "csvString", "num\n1\n2\n3\n4\n");
       tableModel.setTrait(CommonStrata.user, "columns", [
         createStratumInstance(TableColumnTraits, {
@@ -484,7 +484,7 @@ describe("TableColumn", function() {
       expect(tableColumn1.valuesAsNumbers.values).toEqual([11, 12, 13, 14]);
     });
 
-    it("expression with dependency", async function() {
+    it("expression with dependency", async function () {
       tableModel.setTrait(
         CommonStrata.user,
         "csvString",
@@ -512,7 +512,7 @@ describe("TableColumn", function() {
       ]);
     });
 
-    it("expressions with dependencies (nested)", async function() {
+    it("expressions with dependencies (nested)", async function () {
       tableModel.setTrait(
         CommonStrata.user,
         "csvString",

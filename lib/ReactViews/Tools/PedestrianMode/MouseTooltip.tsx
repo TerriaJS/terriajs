@@ -9,7 +9,7 @@ type MouseTooltipProps = {
   text: string;
 };
 
-const MouseTooltip: React.FC<MouseTooltipProps> = props => {
+const MouseTooltip: React.FC<MouseTooltipProps> = (props) => {
   const { scene, text } = props;
   const tooltipText = createRef<typeof TooltipText>();
 
@@ -19,9 +19,9 @@ const MouseTooltip: React.FC<MouseTooltipProps> = props => {
         const width = tooltipText.current.clientWidth;
         const height = tooltipText.current.clientHeight;
         (tooltipText.current.style as any).left = `${position.x - width / 2}px`;
-        (tooltipText.current.style as any).top = `${position.y -
-          height -
-          10}px`;
+        (tooltipText.current.style as any).top = `${
+          position.y - height - 10
+        }px`;
       }
     };
     setTooltipPosition({
@@ -53,7 +53,7 @@ const TooltipText = styled(Text).attrs({
   position: absolute;
   width: 200px;
   padding: 0.7em;
-  border-radius: ${p => p.theme.radiusSmall};
+  border-radius: ${(p) => p.theme.radiusSmall};
   border: 1px solid grey;
   background-color: #ffffff;
 `;

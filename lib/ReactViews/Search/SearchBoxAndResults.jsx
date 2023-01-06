@@ -40,7 +40,7 @@ export function SearchInDataCatalog({ viewState, handleClick }) {
         <Text textAlignLeft textLight large fullWidth>
           <Trans
             i18nKey="search.searchInDataCatalog"
-            locationSearchText={locationSearchText}
+            values={{ locationSearchText }}
           >
             Search <strong>{locationSearchText}</strong> in the Data Catalogue
           </Trans>
@@ -58,7 +58,7 @@ SearchInDataCatalog.propTypes = {
 const PresentationBox = styled(Box).attrs({
   fullWidth: true
 })`
-  ${props =>
+  ${(props) =>
     props.highlightBottom &&
     `
       // styled-components doesn't seem to prefix linear-gradient.. soo
@@ -172,10 +172,10 @@ export class SearchBoxAndResultsRaw extends React.Component {
               column
               css={`
                 top: 100%;
-                background-color: ${props => props.theme.greyLightest};
+                background-color: ${(props) => props.theme.greyLightest};
                 max-height: calc(100vh - 120px);
-                border-radius: 0 0 ${props => props.theme.radius40Button}px
-                  ${props => props.theme.radius40Button}px;
+                border-radius: 0 0 ${(props) => props.theme.radius40Button}px
+                  ${(props) => props.theme.radius40Button}px;
               `}
             >
               {/* search {searchterm} in data catalog */}
@@ -207,7 +207,7 @@ export class SearchBoxAndResultsRaw extends React.Component {
                     viewState={this.props.viewState}
                     search={search}
                     locationSearchText={locationSearchText}
-                    onLocationClick={result => {
+                    onLocationClick={(result) => {
                       addMarker(this.props.terria, result);
                       result.clickAction();
                       runInAction(() => {

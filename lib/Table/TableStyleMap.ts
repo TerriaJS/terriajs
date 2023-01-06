@@ -8,11 +8,12 @@ import {
   EnumStyleTraits,
   TableStyleMapSymbolTraits,
   TableStyleMapTraits
-} from "../Traits/TraitsClasses/TableStyleMapTraits";
-import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
+} from "../Traits/TraitsClasses/Table/StyleMapTraits";
+import TableStyleTraits from "../Traits/TraitsClasses/Table/StyleTraits";
 import TableColumnType from "./TableColumnType";
 
 export interface TableStyleMapModel<T extends TableStyleMapSymbolTraits> {
+  enabled?: boolean;
   mapType: StyleMapType | undefined;
   column: string | undefined;
 
@@ -69,7 +70,9 @@ export default class TableStyleMap<T extends TableStyleMapSymbolTraits> {
     return this.styleTraits[this.key];
   }
 
-  /** Get all trait values for this TableStyleMapModel */
+  /** Get all trait values for this TableStyleMapModel.
+   * This is a JSON object
+   */
   @computed get traitValues() {
     return this.styleTraits.traits[this.key].toJson(
       this.traits
@@ -79,7 +82,7 @@ export default class TableStyleMap<T extends TableStyleMapSymbolTraits> {
   @computed get column() {
     return this.traitValues.column
       ? this.tableModel.tableColumns.find(
-          column => column.name === this.traitValues.column
+          (column) => column.name === this.traitValues.column
         )
       : undefined;
   }
@@ -98,7 +101,7 @@ export default class TableStyleMap<T extends TableStyleMapSymbolTraits> {
     ) {
       return {
         type: "bin",
-        mapValueToStyle: rowId => {
+        mapValueToStyle: (rowId) => {
           const value = this.column?.valuesForType[rowId];
           if (typeof value !== "number") {
             return this.traitValues.null;
@@ -127,9 +130,9 @@ export default class TableStyleMap<T extends TableStyleMapSymbolTraits> {
     ) {
       return {
         type: "enum",
-        mapValueToStyle: rowId => {
+        mapValueToStyle: (rowId) => {
           const style = this.traitValues.enum!.find(
-            enumStyle =>
+            (enumStyle) =>
               enumStyle.value !== null &&
               enumStyle.value === this.column?.values[rowId]
           );

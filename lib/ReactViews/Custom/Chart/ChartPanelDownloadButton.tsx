@@ -37,16 +37,16 @@ function synthesizeNameAndValueArrays(items: TableMixin.Instance[]) {
       // Only add yColumns if `TableChartLineStyleTraits.isSelectedInWorkbench` is true
       // i.e. the columns which are actually showing in chart
       const yColumns = lineTraits
-        .filter(line => line.isSelectedInWorkbench)
-        .map(line => item.findColumnByName(line.yAxisColumn))
+        .filter((line) => line.isSelectedInWorkbench)
+        .map((line) => item.findColumnByName(line.yAxisColumn))
         .filter(isDefined);
 
       if (yColumns.length > 0) {
         columns = columns.concat(yColumns);
         // Use typed array if possible so we can pass by pointer to the web worker.
         // Create a new array otherwise because if values are a knockout observable, they cannot be serialised for the web worker.
-        valueArrays.push(columns.map(column => toJS(column.values)));
-        yColumns.forEach(column => {
+        valueArrays.push(columns.map((column) => toJS(column.values)));
+        yColumns.forEach((column) => {
           names.push(item.name + " " + column.name);
         });
       }
@@ -59,7 +59,7 @@ async function download(items: TableMixin.Instance[]) {
   if (items.length === 0) return;
 
   const loadMapResults = Result.combine(
-    await Promise.all(items.map(model => model.loadMapItems())),
+    await Promise.all(items.map((model) => model.loadMapItems())),
     "Failed to load catalog items"
   );
 
@@ -96,7 +96,7 @@ export const ChartPanelDownloadButton = observer(
         FeatureDetection.supportsWebWorkers();
 
       const isExportDisabled = props.chartableItems.some(
-        item =>
+        (item) =>
           hasTraits(item, ExportableTraits, "disableExport") &&
           item.disableExport === true
       );

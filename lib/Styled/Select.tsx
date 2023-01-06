@@ -1,6 +1,6 @@
 /**
  * sample usage:
- * 
+ *
 
 <Select>
   <option>one</option>
@@ -38,29 +38,29 @@ const StyledSelect = styled.select<SelectProps>`
   width: 100%;
 
   border: none;
-  border-radius: ${p => p.theme.radiusSmall};
-  padding-left: ${p => p.paddingForLeftIcon || "10px"};
+  border-radius: ${(p) => p.theme.radiusSmall};
+  padding-left: ${(p) => p.paddingForLeftIcon || "10px"};
   padding-right: 30px; // For icon
 
-  color: ${p => p.theme.textLight};
-  background: ${p => p.theme.overlay};
+  color: ${(p) => p.theme.textLight};
+  background: ${(p) => p.theme.overlay};
 
   & option {
-    color: ${p => p.theme.textBlack};
+    color: ${(p) => p.theme.textBlack};
   }
 
-  ${props =>
+  ${(props) =>
     props.light &&
     `
     color: ${props.theme.textBlack};
     background: ${props.theme.overlayInvert};
   `}
 
-  ${props => props.disabled && `opacity: 0.3;`}
+  ${(props) => props.disabled && `opacity: 0.3;`}
 `;
 
 const ArrowPositioning = styled.div`
-  ${props => props.theme.verticalAlign("absolute")}
+  ${(props) => props.theme.verticalAlign("absolute")}
   right: 10px;
 
   // Stops presentational icon preventing select activation via mouse
@@ -68,13 +68,13 @@ const ArrowPositioning = styled.div`
 `;
 
 const LeftIconPositioning = styled.div`
-  ${props => props.theme.verticalAlign("absolute")}
+  ${(props) => props.theme.verticalAlign("absolute")}
 
   // Stops presentational icon preventing select activation via mouse
   pointer-events: none;
 `;
 
-interface SelectProps {
+export interface SelectProps {
   boxProps?: any;
   dropdownIconProps?: any;
   light?: boolean;
@@ -84,7 +84,7 @@ interface SelectProps {
   [spread: string]: any;
 }
 
-const Select: React.FC<SelectProps> = props => {
+const Select: React.FC<SelectProps> = (props) => {
   const {
     leftIcon,
     children,

@@ -59,7 +59,7 @@ export default class WebProcessingServiceCapabilities {
   ) {}
 
   static fromUrl(url: string): Promise<WebProcessingServiceCapabilities> {
-    return Promise.resolve(loadXML(url)).then(function(capabilitiesXml) {
+    return Promise.resolve(loadXML(url)).then(function (capabilitiesXml) {
       const capabilities = parseCapabilities(xml2json(capabilitiesXml));
 
       if (capabilities === undefined) {
@@ -124,7 +124,7 @@ function parseServiceIdentification(
     ? [json.ServiceTypeVersion]
     : Array.isArray(json.ServiceTypeVersion)
     ? filterOutUndefined(
-        json.ServiceTypeVersion.map(s => (isJsonString(s) ? s : undefined))
+        json.ServiceTypeVersion.map((s) => (isJsonString(s) ? s : undefined))
       )
     : undefined;
 

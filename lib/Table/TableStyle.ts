@@ -17,13 +17,15 @@ import TableMixin from "../ModelMixins/TableMixin";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import createCombinedModel from "../Models/Definition/createCombinedModel";
 import Model from "../Models/Definition/Model";
-import TableChartStyleTraits from "../Traits/TraitsClasses/TableChartStyleTraits";
-import TableColorStyleTraits from "../Traits/TraitsClasses/TableColorStyleTraits";
-import { OutlineSymbolTraits } from "../Traits/TraitsClasses/TableOutlineStyleTraits";
-import TablePointSizeStyleTraits from "../Traits/TraitsClasses/TablePointSizeStyleTraits";
-import { PointSymbolTraits } from "../Traits/TraitsClasses/TablePointStyleTraits";
-import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
-import TableTimeStyleTraits from "../Traits/TraitsClasses/TableTimeStyleTraits";
+import TableChartStyleTraits from "../Traits/TraitsClasses/Table/ChartStyleTraits";
+import TableColorStyleTraits from "../Traits/TraitsClasses/Table/ColorStyleTraits";
+import { LabelSymbolTraits } from "../Traits/TraitsClasses/Table/LabelStyleTraits";
+import { OutlineSymbolTraits } from "../Traits/TraitsClasses/Table/OutlineStyleTraits";
+import TablePointSizeStyleTraits from "../Traits/TraitsClasses/Table/PointSizeStyleTraits";
+import { PointSymbolTraits } from "../Traits/TraitsClasses/Table/PointStyleTraits";
+import { TrailSymbolTraits } from "../Traits/TraitsClasses/Table/TrailStyleTraits";
+import TableStyleTraits from "../Traits/TraitsClasses/Table/StyleTraits";
+import TableTimeStyleTraits from "../Traits/TraitsClasses/Table/TimeStyleTraits";
 import TableColorMap from "./TableColorMap";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
@@ -60,7 +62,7 @@ export default class TableStyle {
       this.colorColumn,
       this.pointSizeColumn,
       ...(this.idColumns ?? [])
-    ]).every(col => col.ready);
+    ]).every((col) => col.ready);
   }
 
   /**
@@ -80,7 +82,7 @@ export default class TableStyle {
   get title(): string {
     return (
       this.styleTraits.title ??
-      this.tableModel.tableColumns.find(col => col.name === this.id)?.title ??
+      this.tableModel.tableColumns.find((col) => col.name === this.id)?.title ??
       this.id
     );
   }
@@ -123,19 +125,25 @@ export default class TableStyle {
   /** Is style "custom" - that is - has the style been created/modified by the user (either directly, or indirectly through a share link).
    */
   @computed get isCustom() {
-    const userStrata = this.colorTraits.strata.get(CommonStrata.user);
-    if (!userStrata) return false;
+    const colorTraits = this.colorTraits.strata.get(CommonStrata.user);
+    const pointSizeTraits = this.pointSizeTraits.strata.get(CommonStrata.user);
+    const styleTraits = this.styleTraits.strata.get(CommonStrata.user);
 
     return (
-      (userStrata.binColors ?? [])?.length > 0 ||
-      (userStrata.binMaximums ?? [])?.length > 0 ||
-      (userStrata.enumColors ?? [])?.length > 0 ||
-      isDefined(userStrata.numberOfBins) ||
-      isDefined(userStrata.minimumValue) ||
-      isDefined(userStrata.maximumValue) ||
-      isDefined(userStrata.regionColor) ||
-      isDefined(userStrata.nullColor) ||
-      isDefined(userStrata.outlierColor)
+      (colorTraits?.binColors ?? [])?.length > 0 ||
+      (colorTraits?.binMaximums ?? [])?.length > 0 ||
+      (colorTraits?.enumColors ?? [])?.length > 0 ||
+      isDefined(colorTraits?.numberOfBins) ||
+      isDefined(colorTraits?.minimumValue) ||
+      isDefined(colorTraits?.maximumValue) ||
+      isDefined(colorTraits?.regionColor) ||
+      isDefined(colorTraits?.nullColor) ||
+      isDefined(colorTraits?.outlierColor) ||
+      pointSizeTraits ||
+      styleTraits?.point ||
+      styleTraits?.outline ||
+      styleTraits?.label ||
+      styleTraits?.trail
     );
   }
 
@@ -260,7 +268,7 @@ export default class TableStyle {
   get idColumns(): TableColumn[] | undefined {
     const idColumns = filterOutUndefined(
       this.timeTraits.idColumns
-        ? this.timeTraits.idColumns.map(name => this.resolveColumn(name))
+        ? this.timeTraits.idColumns.map((name) => this.resolveColumn(name))
         : []
     );
     return idColumns.length > 0 ? idColumns : undefined;
@@ -393,6 +401,22 @@ export default class TableStyle {
     );
   }
 
+  @computed get trailStyleMap() {
+    return new TableStyleMap<TrailSymbolTraits>(
+      this.tableModel,
+      this.styleTraits,
+      "trail"
+    );
+  }
+
+  @computed get labelStyleMap() {
+    return new TableStyleMap<LabelSymbolTraits>(
+      this.tableModel,
+      this.styleTraits,
+      "label"
+    );
+  }
+
   @computed
   get pointSizeMap(): PointSizeMap {
     const pointSizeColumn = this.pointSizeColumn;
@@ -456,13 +480,13 @@ export default class TableStyle {
   @computed get moreThanOneTimeInterval() {
     if (this.timeIntervals) {
       // Find first non-null time interval
-      const firstInterval = this.timeIntervals?.find(t => t) as
+      const firstInterval = this.timeIntervals?.find((t) => t) as
         | TimeInterval
         | undefined;
       if (firstInterval) {
         // Does there exist an interval which is different from firstInterval (that is to say, does there exist at least two unique intervals)
         return !!this.timeIntervals?.find(
-          t =>
+          (t) =>
             t &&
             (!firstInterval.start.equals(t.start) ||
               !firstInterval.stop.equals(t.stop))
@@ -504,7 +528,7 @@ export default class TableStyle {
       if (this.timeTraits.spreadStartTime) {
         // Find row ID with earliest date in this rowGroup
         const firstRowId = rowIds
-          .filter(id => filteredStartDates[id])
+          .filter((id) => filteredStartDates[id])
           .sort((idA, idB) =>
             JulianDate.compare(
               filteredStartDates[idA]!,
@@ -560,13 +584,13 @@ export default class TableStyle {
     for (let i = 0; i < this.rowGroups.length; i++) {
       const rowIds = this.rowGroups[i][1];
       const sortedStartDates = sortedUniqueDates(
-        rowIds.map(id => timeColumn.valuesAsJulianDates.values[id])
+        rowIds.map((id) => timeColumn.valuesAsJulianDates.values[id])
       );
       const finalDuration =
         estimateFinalDurationSeconds(sortedStartDates) ??
         DEFAULT_FINAL_DURATION_SECONDS;
 
-      const startDatesForGroup = rowIds.map(id => startDates[id]);
+      const startDatesForGroup = rowIds.map((id) => startDates[id]);
       const finishDatesForGroup = this.calculateFinishDatesFromStartDates(
         startDatesForGroup,
         finalDuration
@@ -598,9 +622,9 @@ export default class TableStyle {
 
     return (
       Object.entries(
-        groupBy(tableRowIds, rowId =>
+        groupBy(tableRowIds, (rowId) =>
           groupByCols!
-            .map(col => {
+            .map((col) => {
               // If using region column as ID - only use valid regions
               if (col.type === TableColumnType.region) {
                 return col.valuesAsRegions.regionIds[rowId];
@@ -611,7 +635,7 @@ export default class TableStyle {
         )
       )
         // Filter out bad IDs
-        .filter(value => value[0] !== "")
+        .filter((value) => value[0] !== "")
     );
   }
 
@@ -716,7 +740,7 @@ export default class TableStyle {
     if (name === undefined) {
       return undefined;
     }
-    return this.tableModel.tableColumns.find(column => column.name === name);
+    return this.tableModel.tableColumns.find((column) => column.name === name);
   }
 }
 

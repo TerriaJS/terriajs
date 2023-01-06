@@ -1,7 +1,8 @@
 import i18next, { ReactOptions } from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
-import { initReactI18next } from "react-i18next";
 import HttpApi from "i18next-http-backend";
+import { initReactI18next } from "react-i18next";
+import isDefined from "../Core/isDefined";
 
 export interface I18nBackendOptions {
   /**
@@ -33,6 +34,12 @@ export interface LanguageConfiguration {
   languages: Object;
   fallbackLanguage: string;
   changeLanguageOnStartWhen: string[];
+
+  /** Base URL for override namespace translation files. If set, this makes up the base URL for translation override files. Should end in /
+   *
+   * For example, if `overridesBaseUrl = "test/path/"`, then the full path for translation override files will be `"test/path/{{lng}}.json"`
+   **/
+  overridesBaseUrl?: string;
 }
 const defaultLanguageConfiguration = {
   enabled: false,
@@ -82,6 +89,8 @@ class Internationalization {
       .use(LanguageDetector)
       .use(initReactI18next)
       .init({
+        // use i18next-json-v3 as weblate still doesn't support v4
+        compatibilityJSON: "v3",
         debug: languageConfig.debug,
         react: languageConfig.react,
         fallbackLng: languageConfig.fallbackLanguage,
@@ -128,9 +137,18 @@ class Internationalization {
               [_lng]: string[],
               [namespace]: string[]
             ) {
-              return namespace === "translation"
-                ? `${terriajsResourcesBaseUrl}languages/{{lng}}/{{ns}}.json`
-                : "languages/{{lng}}/{{ns}}.json";
+              if (namespace === "translation")
+                return `${terriajsResourcesBaseUrl}languages/{{lng}}/{{ns}}.json`;
+
+              // Apply languageConfig.overridesBaseUrl to path for "languageOverrides" namespace if defined
+              if (
+                namespace === "languageOverrides" &&
+                isDefined(languageConfig.overridesBaseUrl)
+              ) {
+                return `${languageConfig.overridesBaseUrl}{{lng}}.json`;
+              }
+
+              return "languages/{{lng}}/{{ns}}.json";
             },
             crossDomain: false
           },
@@ -148,14 +166,11 @@ class Internationalization {
 
           // cache user language on
           caches: ["localStorage"],
-          excludeCacheFor: ["cimode"], // languages to not persist (cookie, localStorage)
+          excludeCacheFor: ["cimode"] // languages to not persist (cookie, localStorage)
 
           // optional expire and domain for set cookie
           // cookieMinutes: 10,
           // cookieDomain: "myDomain",
-
-          // only detect languages that are in the whitelist
-          checkWhitelist: true
         },
         interpolation: {
           escapeValue: false // not needed for react as it escapes by default and not needed in node

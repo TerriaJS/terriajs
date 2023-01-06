@@ -6,11 +6,11 @@ const view = JSON.stringify(
   require("../../../../wwwroot/test/Socrata/view.json")
 );
 
-describe("SocrataMapViewCatalogItem", function() {
+describe("SocrataMapViewCatalogItem", function () {
   let terria: Terria;
   let socrataItem: SocrataMapViewCatalogItem;
 
-  beforeEach(function() {
+  beforeEach(function () {
     jasmine.Ajax.install();
     jasmine.Ajax.stubRequest("http://example.com/views/y79a-us3f").andReturn({
       responseText: view
@@ -25,15 +25,15 @@ describe("SocrataMapViewCatalogItem", function() {
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     jasmine.Ajax.uninstall();
   });
 
-  it("has a type", function() {
+  it("has a type", function () {
     expect(socrataItem.type).toBe("socrata-map-item");
   });
 
-  it("loads view metadata", async function() {
+  it("loads view metadata", async function () {
     await socrataItem.loadMetadata();
 
     expect(socrataItem.geojsonUrl).toBe(

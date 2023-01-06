@@ -114,7 +114,7 @@ export default function upsertModelFromJson(
       stratumName,
       json,
       options.replaceStratum
-    ).catchError(error => {
+    ).catchError((error) => {
       errors.push(error);
       model!.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
     });

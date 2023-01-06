@@ -19,19 +19,19 @@ import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTr
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import TableColorStyleTraits, {
   EnumColorTraits
-} from "../../../Traits/TraitsClasses/TableColorStyleTraits";
+} from "../../../Traits/TraitsClasses/Table/ColorStyleTraits";
 import TableOutlineStyleTraits, {
   BinOutlineSymbolTraits,
   EnumOutlineSymbolTraits,
   OutlineSymbolTraits
-} from "../../../Traits/TraitsClasses/TableOutlineStyleTraits";
-import TablePointSizeStyleTraits from "../../../Traits/TraitsClasses/TablePointSizeStyleTraits";
+} from "../../../Traits/TraitsClasses/Table/OutlineStyleTraits";
+import TablePointSizeStyleTraits from "../../../Traits/TraitsClasses/Table/PointSizeStyleTraits";
 import TablePointStyleTraits, {
   BinPointSymbolTraits,
   EnumPointSymbolTraits,
   PointSymbolTraits
-} from "../../../Traits/TraitsClasses/TablePointStyleTraits";
-import TableStyleTraits from "../../../Traits/TraitsClasses/TableStyleTraits";
+} from "../../../Traits/TraitsClasses/Table/PointStyleTraits";
+import TableStyleTraits from "../../../Traits/TraitsClasses/Table/StyleTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
@@ -341,7 +341,7 @@ class FeatureServerStratum extends LoadableStratum(
     } else if (rendererType === "uniqueValue") {
       const uniqueValueRenderer = <UniqueValueRenderer>renderer;
 
-      const symbolStyles = uniqueValueRenderer.uniqueValueInfos.map(v => {
+      const symbolStyles = uniqueValueRenderer.uniqueValueInfos.map((v) => {
         return esriSymbolToTableStyle(v.symbol, v.label);
       });
 
@@ -351,7 +351,7 @@ class FeatureServerStratum extends LoadableStratum(
 
       // Only include color if there are any styles which aren't esriPMS
       const includeColor = !!uniqueValueRenderer.uniqueValueInfos.find(
-        u => u.symbol?.type !== "esriPMS"
+        (u) => u.symbol?.type !== "esriPMS"
       );
 
       if (uniqueValueRenderer.field2 || uniqueValueRenderer.field3) {
@@ -405,7 +405,7 @@ class FeatureServerStratum extends LoadableStratum(
     } else {
       const classBreaksRenderer = <ClassBreaksRenderer>renderer;
 
-      const symbolStyles = classBreaksRenderer.classBreakInfos.map(c =>
+      const symbolStyles = classBreaksRenderer.classBreakInfos.map((c) =>
         esriSymbolToTableStyle(c.symbol, c.label)
       );
 
@@ -415,7 +415,7 @@ class FeatureServerStratum extends LoadableStratum(
 
       // Only include color if there are any styles which aren't esriPMS
       const includeColor = !!classBreaksRenderer.classBreakInfos.find(
-        u => u.symbol?.type !== "esriPMS"
+        (u) => u.symbol?.type !== "esriPMS"
       );
 
       return [
@@ -425,9 +425,9 @@ class FeatureServerStratum extends LoadableStratum(
           color: includeColor
             ? createStratumInstance(TableColorStyleTraits, {
                 colorColumn: classBreaksRenderer.field,
-                binColors: symbolStyles.map(s => s.color ?? ""),
+                binColors: symbolStyles.map((s) => s.color ?? ""),
                 binMaximums: classBreaksRenderer.classBreakInfos.map(
-                  c => c.classMaxValue
+                  (c) => c.classMaxValue
                 ),
                 nullColor: defaultSymbolStyle.color
               })
@@ -542,7 +542,7 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
         break;
       }
 
-      newIds.forEach(id => seenIDs.add(id));
+      newIds.forEach((id) => seenIDs.add(id));
       combinedEsriLayerJson.features = combinedEsriLayerJson.features.concat(
         newEsriLayerJson.features
       );

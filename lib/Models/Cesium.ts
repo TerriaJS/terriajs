@@ -5,6 +5,7 @@ import {
   computed,
   IObservableArray,
   observable,
+  reaction,
   runInAction
 } from "mobx";
 import { computedFn } from "mobx-utils";
@@ -68,6 +69,7 @@ import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryPro
 import PickedFeatures, {
   ProviderCoordsMap
 } from "../Map/PickedFeatures/PickedFeatures";
+import FeatureInfoUrlTemplateMixin from "../ModelMixins/FeatureInfoUrlTemplateMixin";
 import MappableMixin, {
   ImageryParts,
   isCesium3DTileset,
@@ -81,7 +83,7 @@ import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
 import hasTraits from "./Definition/hasTraits";
-import Feature from "./Feature";
+import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
@@ -154,7 +156,8 @@ export default class Cesium extends GlobeOrMap {
     this.terria = terriaViewer.terria;
 
     if (this.terria.configParameters.cesiumIonAccessToken !== undefined) {
-      Ion.defaultAccessToken = this.terria.configParameters.cesiumIonAccessToken;
+      Ion.defaultAccessToken =
+        this.terria.configParameters.cesiumIonAccessToken;
     }
 
     //An arbitrary base64 encoded image used to populate the placeholder SingleTileImageryProvider
@@ -251,6 +254,8 @@ export default class Cesium extends GlobeOrMap {
 
     this.scene.globe.depthTestAgainstTerrain = false;
 
+    this.scene.renderError.addEventListener(this.onRenderError.bind(this));
+
     const inputHandler = this.cesiumWidget.screenSpaceEventHandler;
 
     // // Add double click zoom
@@ -266,12 +271,12 @@ export default class Cesium extends GlobeOrMap {
     //     ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT);
 
     // Handle mouse move
-    inputHandler.setInputAction(e => {
+    inputHandler.setInputAction((e) => {
       this.mouseCoords.updateCoordinatesFromCesium(this.terria, e.endPosition);
     }, ScreenSpaceEventType.MOUSE_MOVE);
 
     inputHandler.setInputAction(
-      e => {
+      (e) => {
         this.mouseCoords.updateCoordinatesFromCesium(
           this.terria,
           e.endPosition
@@ -282,7 +287,7 @@ export default class Cesium extends GlobeOrMap {
     );
 
     // Handle left click by picking objects from the map.
-    inputHandler.setInputAction(e => {
+    inputHandler.setInputAction((e) => {
       if (!this.isFeaturePickingPaused)
         this.pickFromScreenPosition(e.position, false);
     }, ScreenSpaceEventType.LEFT_CLICK);
@@ -291,7 +296,7 @@ export default class Cesium extends GlobeOrMap {
 
     // Handle zooming on SHIFT + MOUSE DOWN
     inputHandler.setInputAction(
-      e => {
+      (e) => {
         if (!this.isFeaturePickingPaused && !isDefined(zoomUserDrawing)) {
           this.pauseMapInteraction();
 
@@ -355,7 +360,7 @@ export default class Cesium extends GlobeOrMap {
     // Handle SHIFT + CLICK for zooming
 
     inputHandler.setInputAction(
-      e => {
+      (e) => {
         if (isDefined(zoomUserDrawing)) {
           this.pickFromScreenPosition(e.position, false);
         }
@@ -402,21 +407,24 @@ export default class Cesium extends GlobeOrMap {
 
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
     this._disposeTerrainReaction = autorun(() => {
-      this.scene.globe.terrainProvider = this._terrainProvider;
+      this.scene.globe.terrainProvider = this.terrainProvider;
       this.scene.globe.splitDirection = this.terria.showSplitter
         ? this.terria.terrainSplitDirection
         : SplitDirection.NONE;
-      this.scene.globe.depthTestAgainstTerrain = this.terria.depthTestAgainstTerrainEnabled;
+      this.scene.globe.depthTestAgainstTerrain =
+        this.terria.depthTestAgainstTerrainEnabled;
       if (this.scene.skyAtmosphere) {
-        this.scene.skyAtmosphere.splitDirection = this.scene.globe.splitDirection;
+        this.scene.skyAtmosphere.splitDirection =
+          this.scene.globe.splitDirection;
       }
     });
     this._disposeSplitterReaction = this._reactToSplitterChanges();
 
     this._disposeResolutionReaction = autorun(() => {
-      (this.cesiumWidget as any).useBrowserRecommendedResolution = !this.terria
-        .useNativeResolution;
-      this.cesiumWidget.scene.globe.maximumScreenSpaceError = this.terria.baseMaximumScreenSpaceError;
+      (this.cesiumWidget as any).useBrowserRecommendedResolution =
+        !this.terria.useNativeResolution;
+      this.cesiumWidget.scene.globe.maximumScreenSpaceError =
+        this.terria.baseMaximumScreenSpaceError;
     });
   }
 
@@ -526,9 +534,31 @@ export default class Cesium extends GlobeOrMap {
     }
   }
 
+  private previousRenderError: string | undefined;
+
+  /** Show error message to user if Cesium stops rendering. */
+  private onRenderError(scene: Scene, error: unknown) {
+    // This function can be called many times with the same error
+    // So we do a rudimentary check to only show the error message once
+    // - by comparing error.toString() to this.previousRenderError
+    if (typeof error === "object" && error !== null) {
+      const newError = error.toString();
+      if (newError !== this.previousRenderError) {
+        this.previousRenderError = error.toString();
+        this.terria.raiseErrorToUser(error, {
+          title: i18next.t("map.cesium.stoppedRenderingTitle"),
+          message: i18next.t("map.cesium.stoppedRenderingMessage", {
+            appName: this.terria.appName
+          })
+        });
+      }
+    }
+  }
+
   destroy() {
     // Port old Cesium.prototype.destroy stuff
     // this._enableSelectExtent(cesiumWidget.scene, false);
+    this.scene.renderError.removeEventListener(this.onRenderError);
 
     const inputHandler = this.cesiumWidget.screenSpaceEventHandler;
     inputHandler.removeInputAction(ScreenSpaceEventType.MOUSE_MOVE);
@@ -585,9 +615,9 @@ export default class Cesium extends GlobeOrMap {
     ];
     return flatten(
       filterOutUndefined(
-        catalogItems.map(item => {
+        catalogItems.map((item) => {
           if (isDefined(item) && MappableMixin.isMixedInto(item))
-            return item.mapItems.map(mapItem => ({ mapItem, item }));
+            return item.mapItems.map((mapItem) => ({ mapItem, item }));
         })
       )
     );
@@ -598,35 +628,81 @@ export default class Cesium extends GlobeOrMap {
     return this._allMappables.map(({ mapItem }) => mapItem);
   }
 
+  @computed
+  private get availableDataSources(): DataSource[] {
+    return this._allMapItems.filter(isDataSource);
+  }
+
+  /**
+   * Syncs the `dataSources` collection against the latest `availableDataSources`.
+   *
+   * @return Promise for finishing the sync
+   */
+  private async syncDataSourceCollection(
+    availableDataSources: DataSource[],
+    dataSources: DataSourceCollection
+  ): Promise<void> {
+    // 1. Remove deleted data sources
+    // Iterate backwards because we're removing items.
+    for (let i = dataSources.length - 1; i >= 0; i--) {
+      const d = dataSources.get(i);
+      if (availableDataSources.indexOf(d) === -1) {
+        dataSources.remove(d);
+      }
+    }
+
+    // 2. Add new data sources
+    for (let ds of availableDataSources) {
+      if (!dataSources.contains(ds)) {
+        await dataSources.add(ds);
+      }
+    }
+
+    // 3. Ensure stacking order matches order in `availableDataSources` - first item appears on top.
+    runInAction(() =>
+      availableDataSources.forEach((ds) => {
+        // There is a buggy/un-intended side-effect when calling raiseToTop() with
+        // a source that doesn't exist in the collection. Doing this will replace
+        // the last entry in the collection with the new one. So we should be
+        // careful to raiseToTop() only if the DS already exists in the collection.
+        // Relevant code:
+        //   https://github.com/CesiumGS/cesium/blob/dbd452328a48bfc4e192146862a9f8fa15789dc8/packages/engine/Source/DataSources/DataSourceCollection.js#L298-L299
+        dataSources.contains(ds) && dataSources.raiseToTop(ds);
+      })
+    );
+  }
+
   private observeModelLayer() {
+    // Setup reaction to sync datSources collection with availableDataSources
+    //
+    // To avoid buggy concurrent syncs, we have to ensure that even when
+    // multiple sync reactions are triggered, we run them one after the
+    // other. To do this, we make each run of the reaction wait for the
+    // previous `syncDataSourcesPromise` to finish before starting itself.
+    let syncDataSourcesPromise: Promise<void> = Promise.resolve();
+    const reactionDisposer = reaction(
+      () => this.availableDataSources,
+      () => {
+        syncDataSourcesPromise = syncDataSourcesPromise
+          .then(async () => {
+            await this.syncDataSourceCollection(
+              this.availableDataSources,
+              this.dataSources
+            );
+            this.notifyRepaintRequired();
+          })
+          .catch(console.error);
+      },
+      { fireImmediately: true }
+    );
+
     let prevMapItems: MapItem[] = [];
-    return autorun(() => {
+    const autorunDisposer = autorun(() => {
       // TODO: Look up the type in a map and call the associated function.
       //       That way the supported types of map items is extensible.
-      const allDataSources = this._allMapItems.filter(isDataSource);
-
-      let dataSources = this.dataSources;
-      // Remove deleted data sources
-      // Iterate backwards because we're removing items.
-      for (let i = dataSources.length - 1; i >= 0; i--) {
-        const d = dataSources.get(i);
-        if (allDataSources.indexOf(d) === -1) {
-          dataSources.remove(d);
-        }
-      }
-
-      // Add new data sources
-      allDataSources.forEach(d => {
-        if (!dataSources.contains(d)) {
-          dataSources.add(d);
-        }
-      });
-
-      // Ensure stacking order matches order in allDataSources - first item appears on top.
-      allDataSources.forEach(d => dataSources.raiseToTop(d));
 
       const allImageryParts = this._allMappables
-        .map(m =>
+        .map((m) =>
           ImageryParts.is(m.mapItem)
             ? this._makeImageryLayerFromParts(m.mapItem, m.item)
             : undefined
@@ -669,13 +745,13 @@ export default class Cesium extends GlobeOrMap {
       const primitives = this.scene.primitives;
 
       // Remove deleted primitives
-      prevPrimitives.forEach(primitive => {
+      prevPrimitives.forEach((primitive) => {
         if (!allPrimitives.includes(primitive)) {
           if (isCesium3DTileset(primitive)) {
             // Remove all event listeners from any Cesium3DTilesets by running stored remover functions
             const fnArray = this._3dTilesetEventListeners.get(primitive);
             try {
-              fnArray?.forEach(fn => fn()); // Run the remover functions
+              fnArray?.forEach((fn) => fn()); // Run the remover functions
             } catch (error) {}
 
             this._3dTilesetEventListeners.delete(primitive); // Remove the item for this tileset from our eventListener reference storage array
@@ -686,7 +762,7 @@ export default class Cesium extends GlobeOrMap {
       });
 
       // Add new primitives
-      allPrimitives.forEach(primitive => {
+      allPrimitives.forEach((primitive) => {
         if (!primitives.contains(primitive)) {
           primitives.add(primitive);
 
@@ -713,6 +789,11 @@ export default class Cesium extends GlobeOrMap {
       prevMapItems = this._allMapItems;
       this.notifyRepaintRequired();
     });
+
+    return () => {
+      reactionDisposer();
+      autorunDisposer();
+    };
   }
 
   stopObserving() {
@@ -731,12 +812,10 @@ export default class Cesium extends GlobeOrMap {
         // target is a Rectangle
 
         // Work out the destination that the camera would naturally fly to
-        const destinationCartesian = camera.getRectangleCameraCoordinates(
-          target
-        );
-        const destination = Ellipsoid.WGS84.cartesianToCartographic(
-          destinationCartesian
-        );
+        const destinationCartesian =
+          camera.getRectangleCameraCoordinates(target);
+        const destination =
+          Ellipsoid.WGS84.cartesianToCartographic(destinationCartesian);
         const terrainProvider = this.scene.globe.terrainProvider;
         // A sufficiently coarse tile level that still has approximately accurate height
         const level = 6;
@@ -859,7 +938,7 @@ export default class Cesium extends GlobeOrMap {
     const disposeSplitDirectionChange = autorun(() => {
       const items = this.terria.mainViewer.items.get();
       const showSplitter = this.terria.showSplitter;
-      items.forEach(item => {
+      items.forEach((item) => {
         if (
           MappableMixin.isMixedInto(item) &&
           hasTraits(item, SplitterTraits, "splitDirection")
@@ -867,7 +946,7 @@ export default class Cesium extends GlobeOrMap {
           const splittableItems = this.getSplittableMapItems(item);
           const splitDirection = item.splitDirection;
 
-          splittableItems.forEach(splittableItem => {
+          splittableItems.forEach((splittableItem) => {
             if (showSplitter) {
               splittableItem.splitDirection = splitDirection;
             } else {
@@ -879,7 +958,7 @@ export default class Cesium extends GlobeOrMap {
       this.notifyRepaintRequired();
     });
 
-    return function() {
+    return function () {
       disposeSplitPositionChange();
       disposeSplitDirectionChange();
     };
@@ -1004,7 +1083,7 @@ export default class Cesium extends GlobeOrMap {
   }
 
   @computed
-  private get _firstMapItemTerrainProviders(): TerrainProvider | undefined {
+  private get _firstMapItemTerrainProvider(): TerrainProvider | undefined {
     // Get the top map item that is a terrain provider, if any are
     return this._allMapItems.find(isTerrainProvider);
   }
@@ -1016,31 +1095,30 @@ export default class Cesium extends GlobeOrMap {
     credit?: Credit;
   } {
     if (!this.terriaViewer.viewerOptions.useTerrain) {
+      // Terrain mode is off, use the ellipsoidal terrain (aka 3d-smooth)
       return { terrain: new EllipsoidTerrainProvider() };
-    }
-    if (this.terria.configParameters.cesiumTerrainAssetId !== undefined) {
+    } else if (this._firstMapItemTerrainProvider) {
+      // If there's a TerrainProvider in map items/workbench then use it
+      return { terrain: this._firstMapItemTerrainProvider };
+    } else if (
+      this.terria.configParameters.cesiumTerrainAssetId !== undefined
+    ) {
+      // Load the terrain provider from Ion
       return {
-        terrain: new CesiumTerrainProvider({
-          url: IonResource.fromAssetId(
-            this.terria.configParameters.cesiumTerrainAssetId,
-            {
-              accessToken: this.terria.configParameters.cesiumIonAccessToken
-            }
-          )
-        })
+        terrain: this.createTerrainProviderFromIonAssetId(
+          this.terria.configParameters.cesiumTerrainAssetId,
+          this.terria.configParameters.cesiumIonAccessToken
+        )
       };
-    }
-    if (this.terria.configParameters.cesiumTerrainUrl) {
+    } else if (this.terria.configParameters.cesiumTerrainUrl) {
+      // Load the terrain provider from the given URL
       return {
-        terrain: new CesiumTerrainProvider({
-          url: this.terria.configParameters.cesiumTerrainUrl
-        })
+        terrain: this.createTerrainProviderFromUrl(
+          this.terria.configParameters.cesiumTerrainUrl
+        )
       };
-    }
-    // Check if there's a TerrainProvider in map items and use that if there is
-    else if (this._firstMapItemTerrainProviders) {
-      return { terrain: this._firstMapItemTerrainProviders };
     } else if (this.terria.configParameters.useCesiumIonTerrain) {
+      // Use Cesium ION world Terrain
       const logo = require("terriajs-cesium/Source/Assets/Images/ion-credit.png");
       const ionCredit = new Credit(
         '<a href="https://cesium.com/" target="_blank" rel="noopener noreferrer"><img src="' +
@@ -1049,15 +1127,53 @@ export default class Cesium extends GlobeOrMap {
         true
       );
       return {
-        terrain: createWorldTerrain({}),
+        terrain: this.createWorldTerrain(),
         credit: ionCredit
       };
+    } else {
+      // Default to ellipsoid/3d-smooth
+      return { terrain: new EllipsoidTerrainProvider() };
     }
-    return { terrain: new EllipsoidTerrainProvider() };
+  }
+
+  /**
+   * Returns terrainProvider from `configParameters.cesiumTerrainAssetId` when set or `undefined`.
+   *
+   * Used for spying in specs
+   */
+  private createTerrainProviderFromIonAssetId(
+    assetId: number,
+    accessToken?: string
+  ): CesiumTerrainProvider {
+    return new CesiumTerrainProvider({
+      url: IonResource.fromAssetId(assetId, {
+        accessToken
+      })
+    });
+  }
+
+  /**
+   * Returns terrainProvider from `configParameters.cesiumTerrainAssetId` when set or `undefined`.
+   *
+   * Used for spying in specs
+   */
+  private createTerrainProviderFromUrl(url: string): CesiumTerrainProvider {
+    return new CesiumTerrainProvider({
+      url
+    });
+  }
+
+  /**
+   * Creates cesium-world-terrain.
+   *
+   * Used for spying in specs
+   */
+  private createWorldTerrain(): CesiumTerrainProvider {
+    return createWorldTerrain({});
   }
 
   @computed
-  private get _terrainProvider(): TerrainProvider {
+  get terrainProvider(): TerrainProvider {
     return this._terrainWithCredits.terrain;
   }
 
@@ -1077,7 +1193,7 @@ export default class Cesium extends GlobeOrMap {
     const vectorFeatures = this.pickVectorFeatures(screenPosition);
 
     const providerCoords = this._attachProviderCoordHooks();
-    var pickRasterPromise =
+    const pickRasterPromise =
       this.terria.allowFeatureInfoRequests && isDefined(pickRay)
         ? this.scene.imageryLayers.pickImageryLayerFeatures(pickRay, this.scene)
         : undefined;
@@ -1087,7 +1203,6 @@ export default class Cesium extends GlobeOrMap {
       pickPosition,
       vectorFeatures,
       pickRasterPromise ? [pickRasterPromise] : [],
-      undefined,
       pickPositionCartographic ? pickPositionCartographic.height : 0.0,
       ignoreSplitter
     );
@@ -1110,7 +1225,7 @@ export default class Cesium extends GlobeOrMap {
   pickFromLocation(
     latLngHeight: LatLonHeight,
     providerCoords: ProviderCoordsMap,
-    existingFeatures: Feature[]
+    existingFeatures: TerriaFeature[]
   ) {
     const pickPosition = this.scene.globe.ellipsoid.cartographicToCartesian(
       Cartographic.fromDegrees(
@@ -1119,44 +1234,18 @@ export default class Cesium extends GlobeOrMap {
         latLngHeight.height
       )
     );
-    const pickPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(
-      pickPosition
-    );
+    const pickPositionCartographic =
+      Ellipsoid.WGS84.cartesianToCartographic(pickPosition);
 
-    const promises: (Promise<ImageryLayerFeatureInfo[]> | undefined)[] = [];
-    const imageryLayers: ImageryLayer[] = [];
+    const promises = this.terria.allowFeatureInfoRequests
+      ? this.pickImageryLayerFeatures(pickPositionCartographic, providerCoords)
+      : [];
 
-    if (this.terria.allowFeatureInfoRequests) {
-      for (let i = this.scene.imageryLayers.length - 1; i >= 0; i--) {
-        const imageryLayer = this.scene.imageryLayers.get(i);
-        const imageryProvider = imageryLayer.imageryProvider;
-
-        function hasUrl(o: any): o is { url: string } {
-          return typeof o?.url === "string";
-        }
-
-        if (hasUrl(imageryProvider) && providerCoords[imageryProvider.url]) {
-          var coords = providerCoords[imageryProvider.url];
-          promises.push(
-            imageryProvider.pickFeatures(
-              coords.x,
-              coords.y,
-              coords.level,
-              pickPositionCartographic.longitude,
-              pickPositionCartographic.latitude
-            )
-          );
-          imageryLayers.push(imageryLayer);
-        }
-      }
-    }
-
-    const result = this._buildPickedFeatures(
+    const pickedFeatures = this._buildPickedFeatures(
       providerCoords,
       pickPosition,
       existingFeatures,
       filterOutUndefined(promises),
-      imageryLayers,
       pickPositionCartographic.height,
       false
     );
@@ -1168,9 +1257,9 @@ export default class Cesium extends GlobeOrMap {
     ) {
       mapInteractionModeStack[
         mapInteractionModeStack.length - 1
-      ].pickedFeatures = result;
+      ].pickedFeatures = pickedFeatures;
     } else {
-      this.terria.pickedFeatures = result;
+      this.terria.pickedFeatures = pickedFeatures;
     }
   }
 
@@ -1182,8 +1271,9 @@ export default class Cesium extends GlobeOrMap {
    */
   async getFeaturesAtLocation(
     latLngHeight: LatLonHeight,
-    providerCoords: ProviderCoordsMap
-  ): Promise<Entity[]> {
+    providerCoords: ProviderCoordsMap,
+    existingFeatures: TerriaFeature[] = []
+  ) {
     const pickPosition = this.scene.globe.ellipsoid.cartographicToCartesian(
       Cartographic.fromDegrees(
         latLngHeight.longitude,
@@ -1191,47 +1281,63 @@ export default class Cesium extends GlobeOrMap {
         latLngHeight.height
       )
     );
-    const pickPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(
-      pickPosition
-    );
+    const pickPositionCartographic =
+      Ellipsoid.WGS84.cartesianToCartographic(pickPosition);
 
-    const promises = [];
-    const imageryLayers: ImageryLayer[] = [];
-
-    for (let i = this.scene.imageryLayers.length - 1; i >= 0; i--) {
-      const imageryLayer = <ImageryLayer>this.scene.imageryLayers.get(i);
-      const imageryProvider = imageryLayer.imageryProvider;
-      // @ts-ignore
-      const imageryProviderUrl = imageryProvider.url;
-      if (imageryProviderUrl && providerCoords[imageryProviderUrl]) {
-        var tileCoords = providerCoords[imageryProviderUrl];
-        const pickPromise = imageryProvider.pickFeatures(
-          tileCoords.x,
-          tileCoords.y,
-          tileCoords.level,
-          pickPositionCartographic.longitude,
-          pickPositionCartographic.latitude
-        );
-
-        if (pickPromise) {
-          promises.push(pickPromise);
-        }
-        imageryLayers.push(imageryLayer);
-      }
-    }
+    const promises = this.terria.allowFeatureInfoRequests
+      ? this.pickImageryLayerFeatures(pickPositionCartographic, providerCoords)
+      : [];
 
     const pickedFeatures = this._buildPickedFeatures(
       providerCoords,
       pickPosition,
-      [],
-      promises,
-      imageryLayers,
+      existingFeatures,
+      filterOutUndefined(promises),
       pickPositionCartographic.height,
-      true
+      false
     );
 
     await pickedFeatures.allFeaturesAvailablePromise;
     return pickedFeatures.features;
+  }
+
+  private pickImageryLayerFeatures(
+    pickPosition: Cartographic,
+    providerCoords: ProviderCoordsMap
+  ) {
+    const promises: (Promise<ImageryLayerFeatureInfo[]> | undefined)[] = [];
+
+    for (let i = this.scene.imageryLayers.length - 1; i >= 0; i--) {
+      const imageryLayer = this.scene.imageryLayers.get(i);
+      const imageryProvider = imageryLayer.imageryProvider;
+
+      function hasUrl(o: any): o is { url: string } {
+        return typeof o?.url === "string";
+      }
+
+      if (hasUrl(imageryProvider) && providerCoords[imageryProvider.url]) {
+        var coords = providerCoords[imageryProvider.url];
+        promises.push(
+          imageryProvider
+            .pickFeatures(
+              coords.x,
+              coords.y,
+              coords.level,
+              pickPosition.longitude,
+              pickPosition.latitude
+            )
+            // Make sure all features have imageryLayer
+            ?.then((features) =>
+              features.map((f) => {
+                f.imageryLayer = imageryLayer;
+                return f;
+              })
+            )
+        );
+      }
+    }
+
+    return filterOutUndefined(promises);
   }
 
   /**
@@ -1241,7 +1347,7 @@ export default class Cesium extends GlobeOrMap {
    * @param screenPosition position on the screen to look for features
    * @returns The features found.
    */
-  pickVectorFeatures(screenPosition: Cartesian2) {
+  private pickVectorFeatures(screenPosition: Cartesian2) {
     // Pick vector features
     const vectorFeatures = [];
     const pickedList = this.scene.drillPick(screenPosition);
@@ -1262,13 +1368,18 @@ export default class Cesium extends GlobeOrMap {
         id = picked.primitive.id;
       }
 
-      // Try to find catalogItem for picked feature, and use catalogItem.getFeaturesFromPickResult() if it exists - this is used by FeatureInfoMixin
+      // Try to find catalogItem for picked feature, and use catalogItem.getFeaturesFromPickResult() if it exists - this is used by FeatureInfoUrlTemplateMixin
       const catalogItem = picked?.primitive?._catalogItem ?? id?._catalogItem;
 
-      if (typeof catalogItem?.getFeaturesFromPickResult === "function") {
+      if (
+        FeatureInfoUrlTemplateMixin.isMixedInto(catalogItem) &&
+        typeof catalogItem?.getFeaturesFromPickResult === "function" &&
+        this.terria.allowFeatureInfoRequests
+      ) {
         const result = catalogItem.getFeaturesFromPickResult.bind(catalogItem)(
           screenPosition,
-          picked
+          picked,
+          vectorFeatures.length < catalogItem.maxRequests
         );
         if (result) {
           if (Array.isArray(result)) {
@@ -1278,7 +1389,7 @@ export default class Cesium extends GlobeOrMap {
           }
         }
       } else if (id instanceof Entity && vectorFeatures.indexOf(id) === -1) {
-        const feature = Feature.fromEntityCollectionOrEntity(id);
+        const feature = TerriaFeature.fromEntityCollectionOrEntity(id);
         if (picked.primitive) {
           feature.cesiumPrimitive = picked.primitive;
         }
@@ -1301,7 +1412,7 @@ export default class Cesium extends GlobeOrMap {
   private _attachProviderCoordHooks() {
     const providerCoords: ProviderCoordsMap = {};
 
-    const pickFeaturesHook = function(
+    const pickFeaturesHook = function (
       imageryProvider: ImageryProvider,
       oldPick: (
         x: number,
@@ -1316,26 +1427,35 @@ export default class Cesium extends GlobeOrMap {
       longitude: number,
       latitude: number
     ) {
-      const featuresPromise = oldPick.call(
-        imageryProvider,
-        x,
-        y,
-        level,
-        longitude,
-        latitude
-      );
+      const url = (<any>imageryProvider).url;
 
-      // Use url to uniquely identify providers because what else can we do?
-      if ((<any>imageryProvider).url) {
-        providerCoords[(<any>imageryProvider).url] = {
-          x: x,
-          y: y,
-          level: level
-        };
+      try {
+        const featuresPromise = oldPick.call(
+          imageryProvider,
+          x,
+          y,
+          level,
+          longitude,
+          latitude
+        );
+
+        // Use url to uniquely identify providers because what else can we do?
+        if (url) {
+          providerCoords[url] = {
+            x: x,
+            y: y,
+            level: level
+          };
+        }
+
+        imageryProvider.pickFeatures = oldPick;
+        return featuresPromise;
+      } catch (e) {
+        TerriaError.from(
+          e,
+          `An error ocurred while hooking into \`ImageryProvider#.pickFeatures\`. \`ImageryProvider.url = ${url}\``
+        ).log();
       }
-
-      imageryProvider.pickFeatures = oldPick;
-      return featuresPromise;
     };
 
     for (let j = 0; j < this.scene.imageryLayers.length; j++) {
@@ -1369,7 +1489,6 @@ export default class Cesium extends GlobeOrMap {
     pickPosition: Cartesian3 | undefined,
     existingFeatures: Entity[],
     featurePromises: Promise<ImageryLayerFeatureInfo[]>[],
-    imageryLayers: ImageryLayer[] | undefined,
     defaultHeight: number,
     ignoreSplitter: boolean
   ): PickedFeatures {
@@ -1379,7 +1498,7 @@ export default class Cesium extends GlobeOrMap {
     result.pickPosition = pickPosition;
 
     result.allFeaturesAvailablePromise = Promise.all(featurePromises)
-      .then(allFeatures => {
+      .then((allFeatures) => {
         runInAction(() => {
           result.isLoading = false;
           result.features = allFeatures.reduce(
@@ -1388,11 +1507,7 @@ export default class Cesium extends GlobeOrMap {
                 return resultFeaturesSoFar;
               }
 
-              let features = imageryLayerFeatures.map(feature => {
-                if (isDefined(imageryLayers)) {
-                  (<any>feature).imageryLayer = imageryLayers[i];
-                }
-
+              let features = imageryLayerFeatures.map((feature) => {
                 if (!isDefined(feature.position)) {
                   feature.position =
                     pickPosition &&
@@ -1421,13 +1536,11 @@ export default class Cesium extends GlobeOrMap {
                 const screenPosition = this._computePositionOnScreen(
                   result.pickPosition
                 );
-                const pickedSide = this._getSplitterSideForScreenPosition(
-                  screenPosition
-                );
+                const pickedSide =
+                  this._getSplitterSideForScreenPosition(screenPosition);
 
-                features = features.filter(feature => {
-                  const splitDirection = (<any>feature).imageryLayer
-                    .splitDirection;
+                features = features.filter((feature) => {
+                  const splitDirection = feature.imageryLayer?.splitDirection;
                   return (
                     splitDirection === pickedSide ||
                     splitDirection === SplitDirection.NONE
@@ -1441,7 +1554,8 @@ export default class Cesium extends GlobeOrMap {
           );
         });
       })
-      .catch(() => {
+      .catch((e) => {
+        console.log(TerriaError.from(e, "Failed to pick features"));
         runInAction(() => {
           result.isLoading = false;
           result.error = "An unknown error occurred while picking features.";
@@ -1455,7 +1569,7 @@ export default class Cesium extends GlobeOrMap {
     item: MappableMixin.Instance
   ): (ImageryLayer | Cesium3DTileset)[] {
     return filterOutUndefined(
-      item.mapItems.map(m => {
+      item.mapItems.map((m) => {
         if (ImageryParts.is(m)) {
           return this._makeImageryLayerFromParts(m, item) as ImageryLayer;
         } else if (isCesium3DTileset(m)) {
@@ -1575,7 +1689,7 @@ export default class Cesium extends GlobeOrMap {
     const scene = this.scene;
     scene.imageryLayers.add(result);
 
-    return function() {
+    return function () {
       scene.imageryLayers.remove(result);
     };
   }
@@ -1590,7 +1704,7 @@ function zoomToDataSource(
 ): Promise<void> {
   let flyToPromise: Promise<void> | undefined;
   const pollPromise = pollToPromise(
-    function() {
+    function () {
       const dataSourceDisplay = cesium.dataSourceDisplay;
       if (dataSourceDisplay === undefined) {
         return false;
@@ -1621,9 +1735,8 @@ function zoomToDataSource(
 
       // Test if boundingSpheres is empty to avoid zooming to nowhere
       if (boundingSpheres.length > 0 && _lastZoomTarget === target) {
-        var boundingSphere = BoundingSphere.fromBoundingSpheres(
-          boundingSpheres
-        );
+        var boundingSphere =
+          BoundingSphere.fromBoundingSpheres(boundingSpheres);
         flyToPromise = flyToBoundingSpherePromise(
           cesium.scene.camera,
           boundingSphere,

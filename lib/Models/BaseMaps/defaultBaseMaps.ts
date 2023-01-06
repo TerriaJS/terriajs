@@ -84,8 +84,9 @@ export function defaultBaseMaps(terria: Terria): BaseMapJson[] {
       id: "basemap-natural-earth-II",
       name: "Natural Earth II",
       type: "url-template-imagery",
-      url:
-        "https://storage.googleapis.com/terria-datasets-public/basemaps/natural-earth-tiles/{z}/{x}/{reverseY}.png",
+      url: "https://storage.googleapis.com/terria-datasets-public/basemaps/natural-earth-tiles/{z}/{x}/{reverseY}.png",
+      attribution:
+        "<a href='https://www.naturalearthdata.com/downloads/10m-raster-data/10m-natural-earth-2/'>Natural Earth II</a> - From Natural Earth. <a href='https://www.naturalearthdata.com/about/terms-of-use/'>Public Domain</a>.",
       maximumLevel: 7,
       opacity: 1.0
     },
@@ -98,8 +99,9 @@ export function defaultBaseMaps(terria: Terria): BaseMapJson[] {
       id: "basemap-black-marble",
       name: "NASA Black Marble",
       type: "wms",
-      url:
-        "http://geoserver.nationalmap.nicta.com.au/imagery/nasa-black-marble/wms",
+      url: "http://geoserver.nationalmap.nicta.com.au/imagery/nasa-black-marble/wms",
+      attribution:
+        "<a href='https://earthobservatory.nasa.gov/Features/NightLights'>Black Marble</a> - From NASA's Earth Observatory. <a href='https://earthobservatory.nasa.gov/image-use-policy'>Use Policy</a>.",
       layers: "nasa-black-marble:dnb_land_ocean_ice.2012.54000x27000_geo",
       opacity: 1.0
     },

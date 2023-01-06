@@ -181,17 +181,18 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
       // This method `isRemoval` and `idProperty="index"` into account.
       else {
         let maxIndex = -1;
-        this.strata.forEach(s =>
+        this.strata.forEach((s) =>
           (s[traitId] as Array<unknown> | undefined)?.forEach(
             (e, idx) => (maxIndex = idx > maxIndex ? idx : maxIndex)
           )
         );
 
-        // We need to make sure that the array in this stratum is as long as in every
+        // Make array in this stratum the same length as largest array across all strata
         for (let i = array.length; i <= maxIndex; i++) {
           array[i] = createStratumInstance(nestedTraitsClass);
         }
 
+        // Add new object at the end of the array
         array[maxIndex + 1] = newStratum;
 
         // Return newly created model
@@ -211,7 +212,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
         ...model.knownContainerUniqueIds,
         ...flatten(
           filterOutUndefined(
-            model.knownContainerUniqueIds.map(parentId => {
+            model.knownContainerUniqueIds.map((parentId) => {
               const parent = this.terria.getModelById(BaseModel, parentId);
               if (parent) {
                 return findContainers(parent);

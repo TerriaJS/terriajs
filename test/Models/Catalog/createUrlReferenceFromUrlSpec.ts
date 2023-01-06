@@ -22,17 +22,17 @@ const Water_Network = {
   )
 };
 
-describe("createUrlReferenceFromUrl", function() {
+describe("createUrlReferenceFromUrl", function () {
   let terria: Terria;
   let viewState: ViewState;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
   });
 
-  it("should create an item of the first registered type (WMSGroup)", async function() {
+  it("should create an item of the first registered type (WMSGroup)", async function () {
     const url = "test/WMS/single_metadata_url.xml";
     const item = await createUrlReferenceFromUrl(url, terria, true);
     expect(item).toBeDefined();
@@ -45,7 +45,7 @@ describe("createUrlReferenceFromUrl", function() {
     }
   });
 
-  it("should create an item of the second registered type (GeoJSON)", async function() {
+  it("should create an item of the second registered type (GeoJSON)", async function () {
     const url = "test/geoJSON/bike_racks.geojson";
 
     const item = await createUrlReferenceFromUrl(url, terria, true);
@@ -58,7 +58,7 @@ describe("createUrlReferenceFromUrl", function() {
     }
   });
 
-  it("should create an catalog item (CSVCatalogItem) from Url without specifying a dataType", async function() {
+  it("should create an catalog item (CSVCatalogItem) from Url without specifying a dataType", async function () {
     const url = "test/csv/lat_lon_val.csv";
 
     const item = await createCatalogItemFromFileOrUrl(terria, viewState, url);
@@ -68,7 +68,7 @@ describe("createUrlReferenceFromUrl", function() {
     }
   });
 
-  it("should create an catalog item (CSVCatalogItem) from File (csv) without specifying a dataType", async function() {
+  it("should create an catalog item (CSVCatalogItem) from File (csv) without specifying a dataType", async function () {
     const fileUrl = "test/csv/lat_lon_val.csv";
 
     const blob = await loadBlob(fileUrl);
@@ -83,7 +83,7 @@ describe("createUrlReferenceFromUrl", function() {
     }
   });
 
-  it("should create an item that has the USER_ADDED_CATEGORY_ID in its knownContainerUniqueIds", async function() {
+  it("should create an item that has the USER_ADDED_CATEGORY_ID in its knownContainerUniqueIds", async function () {
     const url = "test/csv/lat_lon_val.csv";
     const item = await createUrlReferenceFromUrl(url, terria, true);
     expect(item).toBeDefined();
@@ -92,12 +92,12 @@ describe("createUrlReferenceFromUrl", function() {
     }
   });
 
-  describe("with a FeatureServer URL", function() {
+  describe("with a FeatureServer URL", function () {
     const featureServerUrl =
       "http://example.com/arcgis/rest/services/Water_Network/FeatureServer/2";
 
     let reference: UrlReference;
-    beforeEach(async function() {
+    beforeEach(async function () {
       jasmine.Ajax.install();
       // Fail all requests by default.
       jasmine.Ajax.stubRequest(/.*/).andError({});
@@ -120,16 +120,16 @@ describe("createUrlReferenceFromUrl", function() {
       reference = tempReference;
     });
 
-    afterEach(function() {
+    afterEach(function () {
       jasmine.Ajax.uninstall();
     });
 
-    it("has a name and url on the reference", function() {
+    it("has a name and url on the reference", function () {
       expect(reference.name).toBe(featureServerUrl);
       expect(reference.url).toBe(featureServerUrl);
     });
 
-    it("resolves to an ArcGisFeatureServerCatalogItem which can load map items", async function() {
+    it("resolves to an ArcGisFeatureServerCatalogItem which can load map items", async function () {
       expect(reference.target).toBeDefined();
       if (isDefined(reference.target)) {
         expect(

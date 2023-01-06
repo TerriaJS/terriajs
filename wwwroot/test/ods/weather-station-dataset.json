@@ -57,12 +57,8 @@
         "name": "metadata_time",
         "annotations": {
           "facet": [],
-          "facetsort": [
-            "-alphanum"
-          ],
-          "timeserie_precision": [
-            "hour"
-          ]
+          "facetsort": ["-alphanum"],
+          "timeserie_precision": ["hour"]
         }
       },
       {
@@ -71,12 +67,8 @@
         "type": "double",
         "name": "heat_stress_index",
         "annotations": {
-          "decimals": [
-            1
-          ],
-          "facetsort": [
-            "-count"
-          ]
+          "decimals": [1],
+          "facetsort": ["-count"]
         }
       },
       {
@@ -85,9 +77,7 @@
         "type": "double",
         "name": "payload_fields_uvindex",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -96,9 +86,7 @@
         "type": "double",
         "name": "payload_fields_wshumidity",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -107,9 +95,7 @@
         "type": "double",
         "name": "payload_fields_wstemperature",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -118,9 +104,7 @@
         "type": "double",
         "name": "payload_fields_airpressure",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -129,9 +113,7 @@
         "type": "double",
         "name": "payload_fields_brightness",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -140,9 +122,7 @@
         "type": "double",
         "name": "payload_fields_gustdirection",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -151,9 +131,7 @@
         "type": "double",
         "name": "payload_fields_gustspeed",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -162,9 +140,7 @@
         "type": "double",
         "name": "payload_fields_precip",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -173,9 +149,7 @@
         "type": "double",
         "name": "payload_fields_precipint",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -184,9 +158,7 @@
         "type": "double",
         "name": "payload_fields_radiation",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -195,9 +167,7 @@
         "type": "double",
         "name": "payload_fields_winddirection",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -206,9 +176,7 @@
         "type": "double",
         "name": "payload_fields_windspeed",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -217,9 +185,7 @@
         "type": "double",
         "name": "payload_fields_averagespl",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -228,9 +194,7 @@
         "type": "double",
         "name": "payload_fields_carbonmonoxide",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -239,9 +203,7 @@
         "type": "double",
         "name": "payload_fields_humidity",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -250,9 +212,7 @@
         "type": "double",
         "name": "payload_fields_ibatt",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -261,9 +221,7 @@
         "type": "double",
         "name": "payload_fields_nitrogendioxide",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -272,9 +230,7 @@
         "type": "double",
         "name": "payload_fields_ozone",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -283,9 +239,7 @@
         "type": "double",
         "name": "payload_fields_particulateserr",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -294,9 +248,7 @@
         "type": "double",
         "name": "payload_fields_particulatesvsn",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -305,9 +257,7 @@
         "type": "double",
         "name": "payload_fields_peakspl",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -316,9 +266,7 @@
         "type": "double",
         "name": "payload_fields_pm1",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -327,9 +275,7 @@
         "type": "double",
         "name": "payload_fields_pm10",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -338,9 +284,7 @@
         "type": "double",
         "name": "payload_fields_pm25",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -349,9 +293,7 @@
         "type": "double",
         "name": "payload_fields_temperature",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -360,9 +302,7 @@
         "type": "double",
         "name": "payload_fields_vbatt",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -371,9 +311,7 @@
         "type": "double",
         "name": "payload_fields_vpanel",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -382,9 +320,7 @@
         "type": "double",
         "name": "payload_fields_fixstatus",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -393,9 +329,7 @@
         "type": "double",
         "name": "payload_fields_hdop",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -404,9 +338,7 @@
         "type": "double",
         "name": "payload_fields_nsat",
         "annotations": {
-          "facetsort": [
-            "-count"
-          ]
+          "facetsort": ["-count"]
         }
       },
       {
@@ -430,27 +362,17 @@
         "modified": "2020-12-07T05:27:41+00:00",
         "source_domain_address": null,
         "references": null,
-        "keyword": [
-          "weather"
-        ],
+        "keyword": ["weather"],
         "source_domain_title": null,
-        "geographic_reference": [
-          "au_80_11978",
-          "au_80_10780"
-        ],
+        "geographic_reference": ["au_80_11978", "au_80_10780"],
         "timezone": null,
         "title": "Environmental sensors",
         "parent_domain": "westernparklands",
-        "theme": [
-          "Environmental Protection"
-        ],
+        "theme": ["Environmental Protection"],
         "modified_updates_on_data_change": false,
         "metadata_processed": "2021-06-18T06:00:13.031000+00:00",
         "data_processed": "2021-06-18T05:50:48+00:00",
-        "territory": [
-          "Ingleburn",
-          "Campbelltown (NSW)"
-        ],
+        "territory": ["Ingleburn", "Campbelltown (NSW)"],
         "description": "<p>Two environmental monitoring stations (EMS) were installed in December 2020. The EMS measures: particulate matter (PM 1.0, PM 2.5, PM 10), Nitrogen Dioxide, Carbon Monoxide, Ozone, temperature, relative humidity, and ambient noise.\u00a0<br/></p>",
         "modified_updates_on_metadata_change": false,
         "shared_catalog": null,
@@ -463,18 +385,15 @@
         "language": "en",
         "license": "CC BY",
         "source_dataset": null,
-        "metadata_languages": [
-          "en"
-        ],
+        "metadata_languages": ["en"],
         "oauth_scope": null,
         "federated": false,
         "license_url": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "custom": {
+        "update_frequency": "10 minutes"
       }
     },
-    "features": [
-      "geo",
-      "analyze",
-      "timeserie"
-    ]
+    "features": ["geo", "analyze", "timeserie"]
   }
 }

@@ -21,7 +21,7 @@ interface ExtendedLoadWithXhr {
 
 const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
 
-describe("ArcGisFeatureServerCatalogItem", function() {
+describe("ArcGisFeatureServerCatalogItem", function () {
   const featureServerUrl =
     "http://example.com/arcgis/rest/services/Water_Network/FeatureServer/2";
 
@@ -39,7 +39,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
 
   let xhrSpy: jasmine.Spy;
 
-  beforeEach(function() {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -87,26 +87,26 @@ describe("ArcGisFeatureServerCatalogItem", function() {
     });
   });
 
-  it("has a type and typeName", function() {
+  it("has a type and typeName", function () {
     expect(item.type).toBe("esri-featureServer");
     expect(item.typeName).toBe(
       i18next.t("models.arcGisFeatureServerCatalogItem.name")
     );
   });
 
-  it("supports show info", function() {
+  it("supports show info", function () {
     expect(item.disableAboutData).toBeFalsy();
   });
 
-  describe("after loading metadata", function() {
-    beforeEach(async function() {
+  describe("after loading metadata", function () {
+    beforeEach(async function () {
       runInAction(() => {
         item.setTrait("definition", "url", featureServerUrl);
       });
       await item.loadMetadata();
     });
 
-    it("defines a rectangle", function() {
+    it("defines a rectangle", function () {
       expect(item.rectangle).toBeDefined();
       if (item.rectangle) {
         expect(item.rectangle.west).toEqual(-179.999987937519);
@@ -116,11 +116,11 @@ describe("ArcGisFeatureServerCatalogItem", function() {
       }
     });
 
-    it("supports zooming to extent", async function() {
+    it("supports zooming to extent", async function () {
       expect(item.disableZoomTo).toBeFalsy();
     });
 
-    it("defines info", function() {
+    it("defines info", function () {
       const dataDescription = i18next.t(
         "models.arcGisMapServerCatalogItem.dataDescription"
       );
@@ -139,8 +139,8 @@ describe("ArcGisFeatureServerCatalogItem", function() {
     });
   });
 
-  describe("loadMapItems", function() {
-    it("properly loads a single layer", async function() {
+  describe("loadMapItems", function () {
+    it("properly loads a single layer", async function () {
       runInAction(() => {
         item.setTrait(CommonStrata.definition, "url", featureServerUrl);
         item.setTrait(CommonStrata.definition, "maxFeatures", 20);
@@ -161,7 +161,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
       expect(xhrSpy).toHaveBeenCalledTimes(2);
     });
 
-    it("properly loads a single layer with multiple requests", async function() {
+    it("properly loads a single layer with multiple requests", async function () {
       runInAction(() => {
         item.setTrait(CommonStrata.definition, "url", featureServerUrlMulti);
         item.setTrait(CommonStrata.definition, "featuresPerRequest", 10);
@@ -182,8 +182,8 @@ describe("ArcGisFeatureServerCatalogItem", function() {
     });
   });
 
-  describe("updateEntityWithEsriStyle", function() {
-    it("correctly uses symbol.outline.color to style polyline.", async function() {
+  describe("updateEntityWithEsriStyle", function () {
+    it("correctly uses symbol.outline.color to style polyline.", async function () {
       runInAction(() => {
         item.setTrait(CommonStrata.definition, "url", featureServerUrl2);
         item.setTrait(CommonStrata.definition, "maxFeatures", 20);
@@ -211,8 +211,8 @@ describe("ArcGisFeatureServerCatalogItem", function() {
     });
   });
 
-  describe("esriSLS", function() {
-    it("properly loads features", async function() {
+  describe("esriSLS", function () {
+    it("properly loads features", async function () {
       runInAction(() => {
         item.setTrait(
           CommonStrata.definition,
@@ -231,7 +231,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
       expect(item.featureCounts.line).toEqual(13);
     });
 
-    it("properly styles features", async function() {
+    it("properly styles features", async function () {
       runInAction(() => {
         item.setTrait(
           CommonStrata.definition,
@@ -249,7 +249,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
       expect(tableStyle.colorColumn?.name).toBe("id1");
       expect(tableStyle.colorTraits.nullColor).toBe("rgb(252,146,31)");
       expect(
-        tableStyle.colorTraits.enumColors.map(col => ({
+        tableStyle.colorTraits.enumColors.map((col) => ({
           value: col.value,
           color: col.color
         }))
@@ -310,7 +310,8 @@ describe("ArcGisFeatureServerCatalogItem", function() {
         marker: "point",
         pixelOffset: [0, 0],
         width: 6,
-        height: 16
+        height: 16,
+        rotation: 0
       });
 
       expect(tableStyle.pointStyleMap.traitValues.enum).toEqual([
@@ -320,7 +321,8 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           pixelOffset: [0, 0],
           width: 2,
           height: 16,
-          value: "1"
+          value: "1",
+          rotation: 0
         },
         {
           legendTitle: "2",
@@ -328,7 +330,8 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           pixelOffset: [0, 0],
           width: 2,
           height: 16,
-          value: "2"
+          value: "2",
+          rotation: 0
         },
         {
           legendTitle: "3",
@@ -336,7 +339,8 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           pixelOffset: [0, 0],
           width: 2,
           height: 16,
-          value: "3"
+          value: "3",
+          rotation: 0
         },
         {
           legendTitle: "4",
@@ -344,7 +348,8 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           pixelOffset: [0, 0],
           width: 2,
           height: 16,
-          value: "4"
+          value: "4",
+          rotation: 0
         },
         {
           legendTitle: "5",
@@ -352,7 +357,8 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           pixelOffset: [0, 0],
           width: 2,
           height: 16,
-          value: "5"
+          value: "5",
+          rotation: 0
         },
         {
           legendTitle: "6",
@@ -360,7 +366,8 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           pixelOffset: [0, 0],
           width: 2,
           height: 16,
-          value: "6"
+          value: "6",
+          rotation: 0
         },
         {
           legendTitle: "7",
@@ -368,7 +375,8 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           pixelOffset: [0, 0],
           width: 2,
           height: 16,
-          value: "7"
+          value: "7",
+          rotation: 0
         },
         {
           legendTitle: "8",
@@ -376,7 +384,8 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           pixelOffset: [0, 0],
           width: 2,
           height: 16,
-          value: "8"
+          value: "8",
+          rotation: 0
         },
         {
           legendTitle: "9",
@@ -384,7 +393,8 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           pixelOffset: [0, 0],
           width: 2,
           height: 16,
-          value: "9"
+          value: "9",
+          rotation: 0
         },
         {
           legendTitle: "10",
@@ -392,7 +402,8 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           pixelOffset: [0, 0],
           width: 2,
           height: 16,
-          value: "10"
+          value: "10",
+          rotation: 0
         },
         {
           legendTitle: "11",
@@ -400,7 +411,8 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           pixelOffset: [0, 0],
           width: 2,
           height: 16,
-          value: "11"
+          value: "11",
+          rotation: 0
         },
         {
           legendTitle: "12",
@@ -408,7 +420,8 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           pixelOffset: [0, 0],
           width: 2,
           height: 16,
-          value: "12"
+          value: "12",
+          rotation: 0
         }
       ]);
 

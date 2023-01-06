@@ -1,12 +1,11 @@
+import i18next from "i18next";
+import objectArrayTrait from "../Decorators/objectArrayTrait";
+import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
-import UrlTraits from "./UrlTraits";
-import TableTraits from "./TableTraits";
-import objectArrayTrait from "../Decorators/objectArrayTrait";
 import ModelTraits from "../ModelTraits";
-import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
-import FeatureInfoTraits from "./FeatureInfoTraits";
-import i18next from "i18next";
+import TableTraits from "./Table/TableTraits";
+import UrlTraits from "./UrlTraits";
 
 export class ObservablePropertyTraits extends ModelTraits {
   @primitiveTrait({
@@ -43,7 +42,6 @@ export class ObservablePropertyTraits extends ModelTraits {
 export class ProcedureTraits extends mixTraits(ObservablePropertyTraits) {}
 
 export default class SensorObservationCatalogItemTraits extends mixTraits(
-  FeatureInfoTraits,
   TableTraits,
   UrlTraits
 ) {

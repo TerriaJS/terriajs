@@ -64,7 +64,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
       this.tableStyle.colorMap instanceof DiscreteColorMap ||
       this.tableStyle.colorMap instanceof EnumColorMap
     )
-      return this.tableStyle.title;
+      return this.tableStyle.colorColumn?.title ?? this.tableStyle.title;
   }
 
   @computed
@@ -283,9 +283,8 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     value: number,
     format: Intl.NumberFormatOptions | JsonObject | undefined
   ): string {
-    return (format?.maximumFractionDigits
-      ? value
-      : Math.round(value)
+    return (
+      format?.maximumFractionDigits ? value : Math.round(value)
     ).toLocaleString(undefined, format);
   }
 }

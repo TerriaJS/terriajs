@@ -83,7 +83,7 @@ export default class CkanDefaultFormatsStratum extends LoadableStratum(
           type: "kml"
         }
       }
-    ].map(format => createStratumInstance(CkanResourceFormatTraits, format));
+    ].map((format) => createStratumInstance(CkanResourceFormatTraits, format));
   }
 }
 

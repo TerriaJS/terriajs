@@ -18,7 +18,8 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 class GeoJsonCatalogItem
   extends GeoJsonMixin(CreateModel(GeoJsonCatalogItemTraits))
-  implements HasLocalData {
+  implements HasLocalData
+{
   static readonly type = "geojson";
   get type() {
     return GeoJsonCatalogItem.type;
@@ -67,7 +68,11 @@ class GeoJsonCatalogItem
           throw fileApiNotSupportedError(this.terria);
         }
         const body = this.requestData ? toJS(this.requestData) : undefined;
-        const blob = await loadBlob(this.url, undefined, body);
+        const blob = await loadBlob(
+          proxyCatalogItemUrl(this, this.url),
+          undefined,
+          body
+        );
         jsonData = await parseZipJsonBlob(blob);
       } else {
         jsonData = await loadJson(
@@ -89,7 +94,7 @@ class GeoJsonCatalogItem
     if (Array.isArray(jsonData)) {
       // Array that isn't a feature collection
       const fc = toFeatureCollection(
-        jsonData.map(item => {
+        jsonData.map((item) => {
           let geojson: any = item;
 
           if (this.responseGeoJsonPath !== undefined) {
