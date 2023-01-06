@@ -20,12 +20,12 @@ If you run into trouble or want more explanation, read on.
 
 ### Prerequisites
 
-TerriaJS can be built and run on almost any macOS, Linux, or Windows system.  The following are required to build TerriaJS:
+TerriaJS can be built and run on almost any macOS, Linux, or Windows system. The following are required to build TerriaJS:
 
-* The Bash command shell. On macOS or Linux you almost certainly already have this. On Windows, you can easily get it by installing [Git for Windows](https://gitforwindows.org/). In the instructions below, we assume you're using a Bash command prompt.
-* [Node.js](https://nodejs.org) v12.0 or later.  You can check your node version by running `node --version` on the command-line.
-* [npm](https://www.npmjs.com/) v6.0 or later.  npm is usually installed automatically alongside the above.  You can check your npm version by running `npm --version`.
-* [yarn](https://yarnpkg.com/) v1.19.0 or later. This can be installed using `npm install -g yarn@^1.19.0`
+- The Bash command shell. On macOS or Linux you almost certainly already have this. On Windows, you can easily get it by installing [Git for Windows](https://gitforwindows.org/). In the instructions below, we assume you're using a Bash command prompt.
+- [Node.js](https://nodejs.org) v12.0 or later. You can check your node version by running `node --version` on the command-line.
+- [npm](https://www.npmjs.com/) v6.0 or later. npm is usually installed automatically alongside the above. You can check your npm version by running `npm --version`.
+- [yarn](https://yarnpkg.com/) v1.19.0 or later. This can be installed using `npm install -g yarn@^1.19.0`
 
 ### Cloning TerriaMap
 
@@ -37,7 +37,7 @@ git clone https://github.com/TerriaJS/TerriaMap.git
 cd TerriaMap
 ```
 
-If you're unable to use git, you can also [download a ZIP file](https://github.com/TerriaJS/TerriaMap/archive/main.zip) and extract it somewhere on your system.  We recommend using git, though, because it makes it much easier to update to later versions in the future.
+If you're unable to use git, you can also [download a ZIP file](https://github.com/TerriaJS/TerriaMap/archive/main.zip) and extract it somewhere on your system. We recommend using git, though, because it makes it much easier to update to later versions in the future.
 
 ### Increase NodeJS memory limit
 
@@ -55,7 +55,7 @@ All of the dependencies required to build and run TerriaMap, other than the prer
 yarn install
 ```
 
-The dependencies are installed in the `node_modules` subdirectory.  No global changes are made to your system.
+The dependencies are installed in the `node_modules` subdirectory. No global changes are made to your system.
 
 ### Building TerriaMap
 
@@ -83,7 +83,7 @@ The full set of `gulp` tasks can be found on the [Development Environment](contr
 
 ### Running TerriaMap
 
-TerriaMap includes a simple Node.js-based web server, called [terriajs-server](https://github.com/TerriaJS/terriajs-server).  To start it, run:
+TerriaMap includes a simple Node.js-based web server, called [terriajs-server](https://github.com/TerriaJS/terriajs-server). To start it, run:
 
 ```bash
 yarn start
@@ -93,9 +93,9 @@ Then, open a web browser on `http://localhost:3001` to use TerriaMap.
 
 ### Keeping up with Updates
 
-If you're building an application by using TerriaMap as a starting point, you will want to keep in sync as TerriaMap is improved and updated to use new versions of TerriaJS.  Forking the TerriaMap repo and using git to keep it in sync is outside the scope of this document, but GitHub has a [nice explanation](https://help.github.com/articles/fork-a-repo/).
+If you're building an application by using TerriaMap as a starting point, you will want to keep in sync as TerriaMap is improved and updated to use new versions of TerriaJS. Forking the TerriaMap repo and using git to keep it in sync is outside the scope of this document, but GitHub has a [nice explanation](https://help.github.com/articles/fork-a-repo/).
 
-After pulling new changes, you will need to run `yarn install` again to pick up any changed dependencies and then build TerriaMap.  If you have problems building or running, it is sometimes helpful to remove and reinstall the dependencies from npm:
+After pulling new changes, you will need to run `yarn install` again to pick up any changed dependencies and then build TerriaMap. If you have problems building or running, it is sometimes helpful to remove and reinstall the dependencies from npm:
 
 ```bash
 rm -rf node_modules
