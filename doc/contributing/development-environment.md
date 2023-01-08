@@ -37,7 +37,7 @@ git clone https://github.com/TerriaJS/terriajs.git
 cd ..
 ```
 
-This will give you the `master` branch of TerriaJS. While we strive to keep `master` stable and usable at all times, you must be aware that `master` is less tested than actual releases, and it may not be commpatible with the `master` branch of TerriaMap. So, you may want to check out the actual version of TerriaJS that you're using before you start making changes. To do that:
+This will give you the `main` branch of TerriaJS. While we strive to keep `main` stable and usable at all times, you must be aware that `main` is less tested than actual releases, and it may not be commpatible with the `main` branch of TerriaMap. So, you may want to check out the actual version of TerriaJS that you're using before you start making changes. To do that:
 
 ```
 grep terriajs package.json
@@ -84,7 +84,7 @@ yarn install
 
 If you make changes to TerriaJS and TerriaMap together, here's the process for getting them to production.
 
-First, commit your TerriaJS changes to a branch and open a pull request to merge that branch to master. Simultaneously, you may want to make a branch of TerriaMap that uses your modified version of TerriaJS. To do that, modify TerriaMap's `package.json`. Where it has a line like:
+First, commit your TerriaJS changes to a branch and open a pull request to merge that branch to main. Simultaneously, you may want to make a branch of TerriaMap that uses your modified version of TerriaJS. To do that, modify TerriaMap's `package.json`. Where it has a line like:
 
 ```
 "terriajs": "^4.5.0",
@@ -100,9 +100,15 @@ Replace `branchName` with the name of the TerriaJS branch you want to use. You m
 
 Once your TerriaJS pull request has been merged and a new version of the `terriajs` npm module has been published, please remember to update `package.json` to point to an official `terriajs` version instead of a branch in a GitHub repo.
 
-The `package.json` in the `master` branch of TerriaMap should point to official releases of `terriajs` on npm, NOT GitHub branches. In other words, it is ok to commit a package.json with a git URL to a branch, but do _not_ merge it to master.
+The `package.json` in the `main` branch of TerriaMap should point to official releases of `terriajs` on npm, NOT GitHub branches. In other words, it is ok to commit a package.json with a git URL to a branch, but do _not_ merge it to main.
 
 ## Documentation
+
+You need a standalone install of MkDocs and the `mkdocs-material` theme in order to build the user guide. Install these by running:
+
+```
+pip install -r doc/requirements.txt
+```
 
 Documentation is automatically generated from the source via JSDoc (reference) and MkDocs (user guide) by running:
 
@@ -111,12 +117,6 @@ yarn gulp docs
 ```
 
 It will be placed in the `wwwroot/doc` folder.
-
-You need a standalone install of MkDocs and the `mkdocs-material` theme in order to build the user guide. Install these by running:
-
-```
-pip install -r doc/requirements.txt
-```
 
 ## Tests / Specs
 
