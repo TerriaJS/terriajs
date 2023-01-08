@@ -15,6 +15,7 @@ nav:
       - Client-side Config: customizing/client-side-config.md
       - Initialization Files: customizing/initialization-files.md
       - Server-side Config: customizing/server-side-config.md
+      - Cloning and Building: customizing/cloning-and-building.md
       - Skinning: customizing/skinning.md
       - Translation guide: customizing/translation-guide.md
   - Connecting to Data:
