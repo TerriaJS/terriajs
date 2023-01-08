@@ -33,7 +33,6 @@ nav:
   - Deploying:
       - Overview: deploying/README.md
       - Deploying TerriaMap: deploying/deploying-terriamap.md
-      - Deploying to AWS: deploying/deploying-to-aws.md
       - Deploying with Kubernetes: deploying/deploying-with-kubernetes.md
       - Setting Up a Region Mapping Server: deploying/setting-up-a-region-mapping-server.md
       - (Deprecated) Setting Up WMS Region Mapping: deploying/deprecated-wms-region-mapping.md
