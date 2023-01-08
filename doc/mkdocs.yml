@@ -7,6 +7,8 @@ site_dir: ../wwwroot/doc/guide
 markdown_extensions:
   - markdown.extensions.admonition
 strict: false
+extra_javascript:
+  - js/rewrite-links.js
 nav:
   - Home: README.md
   - Getting Started: getting-started.md
