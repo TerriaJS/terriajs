@@ -77,7 +77,7 @@ yarn gulp watch
 
 `yarn gulp` simply runs `gulp`, so you can use that directly if you prefer (run `npm install -g gulp-cli` to install it globally).
 
-The full set of `gulp` tasks can be found on the [Development Environment](contributing/development-environment.md#terriamap-gulp-tasks) page.
+The full set of `gulp` tasks can be found on the [Development Environment](../contributing/development-environment.md#terriamap-gulp-tasks) page.
 
 ### Running TerriaMap
 
@@ -102,4 +102,4 @@ yarn install
 
 ### Having trouble?
 
-Checkout the [Problems and Solutions](contributing/problems-and-solutions.md) page to see if we have them covered. You are also welcome to post your problem on the [TerriaJS Discussions](https://github.com/TerriaJS/terriajs/discussions) forum and we'll be happy to help!
+Checkout the [Problems and Solutions](../contributing/problems-and-solutions.md) page to see if we have them covered. You are also welcome to post your problem on the [TerriaJS Discussions](https://github.com/TerriaJS/terriajs/discussions) forum and we'll be happy to help!

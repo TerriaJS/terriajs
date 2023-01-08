@@ -38,7 +38,6 @@ nav:
       - Deploying TerriaMap: deploying/deploying-terriamap.md
       - Deploying with Kubernetes: deploying/deploying-with-kubernetes.md
       - Setting Up a Region Mapping Server: deploying/setting-up-a-region-mapping-server.md
-      - (Deprecated) Setting Up WMS Region Mapping: deploying/deprecated-wms-region-mapping.md
       - Setting Up Geoserver: deploying/setting-up-geoserver.md
       - Using as a CKAN Previewer: deploying/using-as-a-ckan-previewer.md
       - Controlling with URL Parameters: deploying/controlling-with-url-parameters.md
@@ -52,6 +51,7 @@ nav:
       - Problems and Solutions: contributing/problems-and-solutions.md
       - New model layer documentation: contributing/model-layer.md
       - Traits in depth: contributing/traits-in-depth.md
+      - Strata Examples: contributing/strata-examples.md
       - Init sources: contributing/init-sources.md
       - Frontend style guide: contributing/frontend-style-guide.md
       - Version 8 migration guide: contributing/migration-guide.md

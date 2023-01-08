@@ -1,6 +1,6 @@
 # Indexed item search provider
 
-The [IndexedItemSearchProvider](../../lib/Models/ItemSearchProviders/IndexedItemSearchProvider.ts) provides the ability to search a large dataset using a statically generated index. This is for example useful for searching buildings in a [cesium 3D tileset](../catalog-type-details/3d-tiles.md). We currently have an implementation for indexing and searching 3d-tiles using `IndexedItemSearchProvider`.
+The [IndexedItemSearchProvider](../../../lib/Models/ItemSearchProviders/IndexedItemSearchProvider.ts) provides the ability to search a large dataset using a statically generated index. This is for example useful for searching buildings in a [cesium 3D tileset](../catalog-type-details/3d-tiles.md). We currently have an implementation for indexing and searching 3d-tiles using `IndexedItemSearchProvider`.
 
 Read more about the [IndexedItemSearchProvider design](./indexed-item-search-provider-design-notes.md).
 

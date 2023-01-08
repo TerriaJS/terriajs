@@ -12,7 +12,7 @@ It is a work in progress.
 
 ## Related docs
 
-- [Feature Info Template](/doc/connecting-to-data/customizing-data-appearance/feature-info-template.md)
+- [Feature Info Template](../../doc/connecting-to-data/customizing-data-appearance/feature-info-template.md)
 
 ## Outline
 

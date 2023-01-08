@@ -127,4 +127,4 @@ As the computed value is updated, other parts of the UI that observe that value 
 
 ## Strata examples
 
-See [doc/contributing/strata-examples.md](/doc/contributing/strata-examples.md)
+See [doc/contributing/strata-examples.md](../../doc/contributing/strata-examples.md)
