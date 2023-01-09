@@ -59,7 +59,7 @@
 
 .ui {
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: 1fr auto;
   overflow: hidden;
   background: $light;
   width: 100%;
@@ -225,14 +225,14 @@
     display: flex;
     overflow: hidden;
     flex-direction: row;
-    height: 75vh;
+    height: 85vh;
   }
   .sidePanel {
     vertical-align: top;
   }
   .map {
     position: relative;
-    height: 75vh;
+    height: 85vh;
     top: auto;
     bottom: auto;
     left: auto;

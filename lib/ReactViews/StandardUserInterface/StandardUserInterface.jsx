@@ -218,7 +218,7 @@ const StandardUserInterface = createReactClass({
 
               <Route exact path={`/sector/:sectorName/story/:storyID/page/:pageIndex`}>
                 <div className={Styles.topbar}>
-                    <NavigationTopBar terria={terria} viewState={viewState}/>
+                  <NavigationTopBar terria={terria} viewState={viewState}/>
                 </div>
               </Route>
             </Switch>
@@ -485,17 +485,6 @@ const StandardUserInterface = createReactClass({
                 </div>
               </Medium>
             </div>
-
-
-            <Switch>
-              <Route exact path={`/sector/:sectorName/story/:storyID/page/:pageIndex`}>
-                <div className={Styles.bottombar}>
-                  {/* <React.StrictMode> */}
-                    <NavigationBottomBar terria={terria} viewState={viewState}/>
-                  {/* </React.StrictMode> */}
-                </div>
-              </Route>
-            </Switch>
 
           </div>
 
