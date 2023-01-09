@@ -53,7 +53,6 @@
 }
 .bottombar {
   width: 100%;
-  // height: 55px;
   background: $light;
 }
 
@@ -63,7 +62,7 @@
   overflow: hidden;
   background: $light;
   width: 100%;
-  // height: 100vh;
+  height: 100vh;
 }
 
 .explorerPanelIsVisible {
@@ -215,7 +214,6 @@
   .uiInner {
     display: flex;
     flex: 1;
-    // height: 70vh;
     flex-direction: column;
   }
 }
@@ -225,14 +223,12 @@
     display: flex;
     overflow: hidden;
     flex-direction: row;
-    height: 85vh;
   }
   .sidePanel {
     vertical-align: top;
   }
   .map {
     position: relative;
-    height: 85vh;
     top: auto;
     bottom: auto;
     left: auto;
