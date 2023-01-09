@@ -1,6 +1,10 @@
 # Change Log
 
-#### next release (8.2.23)
+#### next release (8.2.24)
+- Layers shown via a share URL are now logged as a Google Analytics event
+- [The next improvement]
+
+#### 8.2.23 - 2023-01-06
 
 - Only add groups to `CatalogIndex` if they aren't empty
 - `BoxDrawing` improvements:
@@ -8,6 +12,7 @@
   - Set limit on the size of scaling grips relative to the size of the box
   - Small improvement to move interaction that prevents the box from locking up when trying to move at a camera angle parallel to the ground
   - Restore modified map state to the previous setting when interaction stops
+- Fix bug in Cesium and Leaflet maps that resulted in `DataSource`s getting rendered even after their parent items are removed from the workbench.
 - GltfMixin changes:
   - Refactors code to use stable `DataSource` and `Entity` values instead of re-creating them everytime `mapItems` is recomputed.
   - Disable zoom to for the item when position is unknown.
@@ -15,8 +20,9 @@
 - Add option to upload terria web data (via url to json file/service)
 - Refactor `Cesium3dTileMixin`.
 - Updated related maps to fit mobile screens.
-- Layers shown via a share URL are now logged as a Google Analytics event
-- [The next improvement]
+- Extend `responseDataPath` trait of `ApiTableCatalogItem` with support for mapping over arrays and collecting nested object values.
+- Add `MapToolbar.addToolButton()` API for adding a tool button to the map navigation menu.
+- Add `ActionBar` component for showing a floating menu bar at the bottom of the map.
 
 #### 8.2.22 - 2022-12-02
 
