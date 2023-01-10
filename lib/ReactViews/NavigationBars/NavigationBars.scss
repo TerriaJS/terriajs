@@ -77,57 +77,6 @@
   padding: 4px 0;
 }
 
-.relative {
-  position: relative;
-}
-.absoluteRight {
-  position: absolute;
-  right: 0;
-}
-
-.nextBtn,
-.previousBtn {
-  height: calc(100% - 51px);
-  svg {
-    width: 50px;
-    height: 50px;
-  }
-}
-
-.navBtn {
-  height: 30px;
-
-  button {
-    background: transparent;
-    border: 0;
-    box-shadow: 0;
-    margin-top: 10px;
-  }
-  svg {
-    fill: #888888;
-    float: right;
-    width: 10px;
-    height: 10px;
-  }
-}
-.navBtnMobile {
-  display: flex;
-  width: 100%;
-  bottom: -25px;
-  position: absolute;
-}
-.mobileNavBtn {
-  composes: btn from "../../Sass/common/_buttons.scss";
-  background: #ffffff;
-  color: $text-dark;
-  padding: 2px 8px;
-  border-right: 1px solid #dddddd;
-  border-top: 1px solid #dddddd;
-  &.isActive {
-    background: $color-primary;
-    color: #ffffff;
-  }
-}
 
 :global {
   .story.tjs-notification-window__wrapper {
