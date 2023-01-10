@@ -1,9 +1,18 @@
 @import "~terriajs-variables";
 @import "../../Sass/common/mixins";
 
+
+.logoOuter {  // to vertically center the logo, based on https://stackoverflow.com/a/6182661/1044698
+  display: table;
+  top: 0;
+  height: 100%;
+}
 .logo {
-  float: left;
-  margin-top: 26px;
+  display: table-cell;
+  vertical-align: middle;
+}
+.logoInner {
+  margin-top: 10px;  // compensate for Branding 'claiming' 10px at bottom of logo
 }
 
 .iconTitle {

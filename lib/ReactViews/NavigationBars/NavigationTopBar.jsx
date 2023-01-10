@@ -139,8 +139,12 @@ const NavigationTopBar = createReactClass({
         >
 
           {selectedPage? (<div className={Styles.titleGroup}>
-            <div className={Styles.logo}>
-              <Branding viewState={this.props.viewState} />
+            <div className={Styles.logoOuter}>
+              <div className={Styles.logo}>
+                <div className={Styles.logoInner}>
+                  <Branding viewState={this.props.viewState} />
+                </div>
+              </div>
             </div>
 
             <div className={Styles.tabsContainer}>
