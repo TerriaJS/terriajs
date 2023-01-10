@@ -61,7 +61,7 @@
 }
 
 
-$arrow-point-size: 10px;
+$arrow-point-size: 8px;
 $arrow-border-offset: 1.5px;  // border for the diagonal parts of the arrow
 .sectionBtn {
   border-radius: 0;
@@ -117,49 +117,49 @@ $arrow-border-offset: 1.5px;  // border for the diagonal parts of the arrow
 .SCOPE {  // bg-red-100
   background: #fee2e2;
 }
-.SCOPE:hover, .SCOPE-selected {  // bg-red-400
+.SCOPE:hover, .SCOPE-selected, .SCOPE-selected:hover {  // bg-red-400
   background: #f87171;
 }
 
 .HOTSPOTS { // bg-blue-100
   background: #dbeafe;
 }
-.HOTSPOTS:hover, .HOTSPOTS-selected { // bg-blue-400
+.HOTSPOTS:hover, .HOTSPOTS-selected, .HOTSPOTS-selected:hover { // bg-blue-400
   background: #60a5fa;
 }
 
 .CONNECTION {  // bg-purple-100
   background: #f3e8ff;
 }
-.CONNECTION:hover, .CONNECTION-selected{  // bg-purple-400
-  background: #f3e8ff;
+.CONNECTION:hover, .CONNECTION-selected, .CONNECTION-selected:hover {  // bg-purple-400
+  background: #c084fc;
 }
 
 .EU_IMPACT {  // bg-green-100
   background: #dcfce7;
 }
-.EU_IMPACT:hover, .EU_IMPACT-selected {  // bg-green-400
+.EU_IMPACT:hover, .EU_IMPACT-selected, .EU_IMPACT-selected:hover {  // bg-green-400
   background: #4ade80;
 }
 
 .CLIMATE_SCENARIOS {  // bg-orange-100
   background: #ffedd5;
 }
-.CLIMATE_SCENARIOS:hover, .CLIMATE_SCENARIOS-selected {  // bg-orange-400
+.CLIMATE_SCENARIOS:hover, .CLIMATE_SCENARIOS-selected, .CLIMATE_SCENARIOS-selected:hover {  // bg-orange-400
   background: #fb923c;
 }
 
 .SOC_ECON_SCENARIOS {  // bg-amber-100
   background: #fef3c7;
 }
-.SOC_ECON_SCENARIOS:hover, .SOC_ECON_SCENARIOS-selected {  // bg-amber-400
+.SOC_ECON_SCENARIOS:hover, .SOC_ECON_SCENARIOS-selected, .SOC_ECON_SCENARIOS-selected:hover {  // bg-amber-400
   background: #fbbf24;
 }
 
 .COMPARISON {  // bg-lime-100
   background: #ecfccb;
 }
-.COMPARISON:hover, .COMPARISON-selected {  // bg-lime-400
+.COMPARISON:hover, .COMPARISON-selected, .COMPARISON-selected:hover {  // bg-lime-400
   background: #a3e635;
 }
 
