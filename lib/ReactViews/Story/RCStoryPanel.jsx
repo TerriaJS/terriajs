@@ -174,6 +174,28 @@ const RCStoryPanel = createReactClass({
               </div>
             </div>
 
+            {/* Footer */}
+            <div className={Styles.pageNavigation}>
+              <div className={Styles.prevBtn}>
+                <Link to={prevURL}>
+                  <button>
+                    Previous
+                  </button>
+                </Link>
+              </div>
+              <span className={Styles.pageNum}>
+                {routedPageIndex+1} / {terriaStories.length}
+              </span>
+              <div className={Styles.nextBtn}>
+                <Link to={nextURL}>
+                  <button>
+                    Next
+                  </button>
+                </Link>
+              </div>
+            </div>
+
+
           </div>) : (<Loader/>)}
         </Swipeable>
       </React.Fragment>

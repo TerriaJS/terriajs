@@ -114,14 +114,17 @@
   border-radius: 2px;
 }
 
-.storyBottomNavigationItems {
+.pageNavigation {
   display: grid;
-  align-items: center;
-  padding: 4px 0;
-}
-
-.isPushedUp {
-  bottom: 350px;
+  grid-template-columns: 1fr 1fr 1fr;
+  margin: 8px 24px 8px 24px;
+  .pageNum {
+    text-align: center;
+  }
+  .nextBtn {
+    display: flex;
+    justify-content: flex-end;
+  }
 }
 
 .relative {
@@ -144,6 +147,7 @@
   font-family: $font-base;
   height: 100%;
   overflow-y: auto;
+  padding-bottom: 24px;
 
   img {
     max-width: 100%;
