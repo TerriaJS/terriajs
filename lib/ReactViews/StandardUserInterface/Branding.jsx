@@ -1,7 +1,6 @@
 import React from "react";
 import Styles from "./Branding.scss";
 import { useHistory } from "react-router-dom";
-import { RCChangeUrlParams } from "../../Models/Receipt";
 import PropTypes from "prop-types";
 
 const Branding = props => {
@@ -13,8 +12,6 @@ const Branding = props => {
    */
   const goHome = async () => {
     history.push("/");
-    await new Promise(resolve => setTimeout(resolve, 50));
-    RCChangeUrlParams("", props.viewState);
   };
 
   return (

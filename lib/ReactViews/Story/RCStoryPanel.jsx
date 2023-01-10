@@ -2,51 +2,16 @@ import classNames from "classnames";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import React from "react";
+import { Link, withRouter } from "react-router-dom";
 import { withTranslation } from "react-i18next";
 import { Swipeable } from "react-swipeable";
-import defined from "terriajs-cesium/Source/Core/defined";
-import when from "terriajs-cesium/Source/ThirdParty/when";
-import { objectParamsToURL, RCChangeUrlParams } from "../../Models/Receipt";
+import { setSelectedStory, activateStory } from "../../Models/Receipt";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import { Medium } from "../Generic/Responsive";
 import Icon from "../Icon.jsx";
 import ObserveModelMixin from "../ObserveModelMixin";
 import Tooltip from "../RCTooltip/RCTooltip";
-import RCScenarioTabs from "../Story/RCScenarioTabs";
 import Styles from "./story-panel.scss";
-
-export function activateStory(
-  story,
-  terria,
-  scenarioIndex = 0,
-  resetZoom = true
-) {
-  if (story.mapScenarios && story.mapScenarios[scenarioIndex]) {
-    const initSources = story.mapScenarios[scenarioIndex].initSources;
-
-    const promises = initSources.map(initSource =>
-      terria.addInitSource(initSource, true, resetZoom)
-    );
-    when.all(promises).then(() => {
-      const nowViewingPaths = initSources.reduce((p, c) => {
-        if (c.sharedCatalogMembers) {
-          return p.concat(Object.keys(c.sharedCatalogMembers));
-        }
-        return p;
-      }, []);
-      const nowViewing = terria.nowViewing.items;
-      nowViewing.slice().forEach(item => {
-        const itemToCheck = defined(item.creatorCatalogItem)
-          ? item.creatorCatalogItem
-          : item;
-        const path = itemToCheck.uniqueId;
-        if (nowViewingPaths.indexOf(path) < 0) {
-          itemToCheck.isEnabled = false;
-        }
-      });
-    });
-  }
-}
 
 const RCStoryPanel = createReactClass({
   displayName: "RCStoryPanel",
@@ -65,64 +30,35 @@ const RCStoryPanel = createReactClass({
       inView: false
     };
   },
-  /* eslint-disable-next-line camelcase */
-  UNSAFE_componentWillMount() {
-    const stories = this.props.terria.stories || [];
-    if (
-      this.props.viewState.currentStoryId > stories.length - 1 ||
-      this.props.viewState.currentStoryId < 0
-    ) {
-      this.props.viewState.currentStoryId = 0;
-    }
-    this.activateStory(stories[this.props.viewState.currentStoryId]);
-  },
   componentDidMount() {
     //
     // Navigate to the story page coming from the url params
     //
-    const urlParams = new URLSearchParams(window.location.search);
-    const page = parseInt(urlParams.get("page"));
-    if (page && this.props.viewState.currentStoryId !== page) {
-      this.navigateStory(this.props.viewState.currentStoryId + page - 1);
-    }
-
     this.slideIn();
-    this.escKeyListener = e => {
-      if (e.keyCode === 27) {
-        this.exitStory();
-      }
-    };
 
     this.changeScenarioListener = e => {
-      this.props.viewState.currentScenario = e.detail.scenarioID;
-
-      const story = this.props.viewState.currentStoryId
-        ? this.props.terria.stories[this.props.viewState.currentStoryId]
-        : this.props.terria.stories[0];
-
-      activateStory(
-        story,
-        this.props.terria,
-        this.props.viewState.currentScenario,
-        false // don't reset zoom to initial/home
-      );
-
+      this.props.viewState.selectedScenario = e.detail.scenarioID;
       this.setState({ state: this.state });
     };
 
-    window.addEventListener("keydown", this.escKeyListener, true);
     window.document.addEventListener(
       "changeScenario",
       this.changeScenarioListener,
       false
     );
+
+    // Activate the story (page)
+    const promise = setSelectedStory(this.props.match.params, this.props.viewState);
+    promise.then(() => 
+      activateStory(this.props.viewState, true, true)
+    )
   },
 
-  componentDidUpdate() {
-    // Make hotspots visible when zoomed in
-    const stories = this.props.terria.stories || [];
-    const story = stories[this.props.viewState.currentStoryId];
-    this.props.terria.updateFromStartData(story.mapScenarios);
+  componentDidUpdate() {    
+    activateStory(this.props.viewState, true, true);
+
+    // console.log(`RCStoryPanel didupdate`);
+    // setSelectedStory(this.props.match.params, this.props.viewState);
   },
 
   slideIn() {
@@ -134,11 +70,10 @@ const RCStoryPanel = createReactClass({
   },
 
   slideOut() {
-    this.slideOutTimer = this.setState({
-      inView: false
-    });
-    setTimeout(() => {
-      this.exitStory();
+    this.slideOutTimer = setTimeout(() => {
+      this.setState({
+        inView: false
+      });    
     }, 300);
   },
 
@@ -154,214 +89,139 @@ const RCStoryPanel = createReactClass({
     }
   },
 
-  navigateStory(index) {
-    this.currentScenario = undefined;
-    if (index < 0) {
-      index = this.props.terria.stories.length - 1;
-    } else if (index >= this.props.terria.stories.length) {
-      index = 0;
+  onCenterScene(selectedPage) {
+    if (selectedPage.mapScenarios) {
+      this.props.terria.updateFromStartData(selectedPage.mapScenarios);
     }
-    if (index !== this.props.viewState.currentStoryId) {
-      this.props.viewState.currentStoryId = index;
-      if (index < (this.props.terria.stories || []).length) {
-        this.activateStory(this.props.terria.stories[index]);
-      }
-    }
-    this.changeUrlPageParameter(index);
-  },
-
-  // This is in StoryPanel and StoryBuilder
-  activateStory(_story) {
-    const story = _story ? _story : this.props.terria.stories[0];
-
-    activateStory(story, this.props.terria);
-  },
-
-  onCenterScene(story) {
-    if (story.mapScenarios) {
-      this.props.terria.updateFromStartData(story.mapScenarios);
-    }
-  },
-
-  changeUrlPageParameter(page) {
-    const urlParams = new URLSearchParams(window.location.search);
-    window.history.pushState(
-      null,
-      null,
-      objectParamsToURL({
-        sector: urlParams.get("sector"),
-        story: urlParams.get("story"),
-        page: page + 1 // +1 because the page number starts with 0
-      })
-    );
-  },
-  goToPrevStory() {
-    this.navigateStory(this.props.viewState.currentStoryId - 1);
-    this.changeUrlPageParameter(this.props.viewState.currentStoryId);
-  },
-
-  goToNextStory() {
-    this.navigateStory(this.props.viewState.currentStoryId + 1);
-    this.changeUrlPageParameter(this.props.viewState.currentStoryId);
-  },
-
-  exitStory() {
-    const urlParams = new URLSearchParams(window.location.search);
-    // Open story summary page
-    RCChangeUrlParams(
-      {
-        sector: urlParams.get("sector"),
-        story: urlParams.get("story")
-      },
-      this.props.viewState
-    );
-  },
-
-  //TODO: is this still used? Possibly related to old-style scenarios?
-  scenarioChanged(scenarioId) {
-    //TODO: use some kind of identifier for scenario
-    this.props.viewState.currentScenario = scenarioId.toString();
-
-    this.activateStory(this.props.viewState.currentStoryId);
-    this.setState({ state: this.state });
   },
 
   render() {
-    const { t } = this.props;
-    const stories = this.props.terria.stories || [];
-    const story = stories[this.props.viewState.currentStoryId];
-    const scenario = this.props.viewState.currentScenario || 0;
+    const { t, history } = this.props;
+
+    const routedSectorName = this.props.match.params.sectorName;
+    const routedStoryID = this.props.match.params.storyID;
+    const routedPageIndex = Number(this.props.match.params.pageIndex);
+
+    const terriaStories = this.props.terria.stories || [];    
+    const selectedPage = terriaStories[routedPageIndex];
+    
+    const scenario = this.props.viewState.selectedScenario || 0;
+
+    this.props.viewState.selectedStoryID = routedStoryID;
+    this.props.viewState.selectedPageIndex = routedPageIndex;
+    this.props.viewState.selectedScenario = scenario;
 
     // find the first page with the section
-    function findFirstPageOfSection(section = "") {
-      return stories.findIndex(story => story.section === section);
+    function findFirstPageURLOfSection(section = "") {
+      const pageIndex = terriaStories.findIndex(page => page.section === section);
+      return `/sector/${routedSectorName}/story/${routedStoryID}/page/${pageIndex}`;
     }
+
+    const prevURL = `/sector/${routedSectorName}/story/${routedStoryID}/page/${routedPageIndex == 0 ? 0 : routedPageIndex-1}`; 
+    const nextURL = `/sector/${routedSectorName}/story/${routedStoryID}/page/${routedPageIndex == terriaStories.length-1 ? terriaStories.length-1 : routedPageIndex+1}`;
 
     return (
       <React.Fragment>
         <Swipeable
-          onSwipedLeft={this.goToNextStory}
-          onSwipedRight={this.goToPrevStory}
+          onSwipedLeft={() => history.push(nextURL)}
+          onSwipedRight={() => history.push(prevURL)}
         >
-          <div className={Styles.RCHotspotSummary}>
+          
+          {selectedPage? (<div className={Styles.RCHotspotSummary}>
             <div className={Styles.titleGroup}>
-              {story.sector ? (
-                <Icon
-                  glyph={Icon.GLYPHS[story.sector + "Simple"]}
+              {selectedPage.sector && (<Icon
+                  glyph={Icon.GLYPHS[selectedPage.sector + "Simple"]}
                   className={Styles.icon}
                 />
-              ) : (
-                <div />
               )}
 
               <h3>
-                {story.storyTitle && story.storyTitle.length > 0
-                  ? story.storyTitle
+                {selectedPage.storyTitle && selectedPage.storyTitle.length > 0
+                  ? selectedPage.storyTitle
                   : t("story.untitled")}
               </h3>
 
-              <button
-                className="buttonClose"
-                title={t("story.exitBtn")}
-                onClick={this.slideOut}
-              >
-                <Icon width={20} glyph={Icon.GLYPHS.close} />
-              </button>
+              <Link to="/">
+                <button
+                  className="buttonClose"
+                  title={t("story.exitBtn")}                  
+                >
+                  <Icon width={20} glyph={Icon.GLYPHS.close} />
+                </button>
+              </Link>
+
               <br />
               {/* Sections buttons for story panel*/}
               <div className="flex flex-wrap gap-2 mb-3">
-                <div
-                  onClick={() =>
-                    this.navigateStory(findFirstPageOfSection("SCOPE"))
-                  }
-                  className={`btn btn-xs rounded-none border-0 text-black bg-red-100    ${story.section ===
-                    "SCOPE" && "bg-red-400"}          hover:bg-red-400`}
-                >
-                  Scope
-                </div>
-                <div
-                  onClick={() =>
-                    this.navigateStory(findFirstPageOfSection("HOTSPOTS"))
-                  }
-                  className={`btn btn-xs rounded-none border-0 text-black bg-blue-100   ${story.section ===
-                    "HOTSPOTS" && "bg-blue-400"}           hover:bg-blue-400`}
-                >
-                  Hotspots
-                </div>
-                <div
-                  onClick={() =>
-                    this.navigateStory(findFirstPageOfSection("CONNECTION"))
-                  }
-                  className={`btn btn-xs rounded-none border-0 text-black bg-purple-100 ${story.section ===
-                    "CONNECTION" && "bg-purple-400"}      hover:bg-purple-400`}
-                >
-                  Connection
-                </div>
-                <div
-                  onClick={() =>
-                    this.navigateStory(findFirstPageOfSection("EU_IMPACT"))
-                  }
-                  className={`btn btn-xs rounded-none border-0 text-black bg-green-100  ${story.section ===
-                    "EU_IMPACT" && "bg-green-400"}        hover:bg-green-400`}
-                >
-                  EU impact
-                </div>
-                <div
-                  onClick={() =>
-                    this.navigateStory(
-                      findFirstPageOfSection("CLIMATE_SCENARIOS")
-                    )
-                  }
-                  className={`btn btn-xs rounded-none border-0 text-black bg-orange-100 ${story.section ===
-                    "CLIMATE_SCENARIOS" &&
-                    "bg-orange-400"}  hover:bg-orange-400`}
-                >
-                  Climate scenarios
-                </div>
-                <div
-                  onClick={() =>
-                    this.navigateStory(
-                      findFirstPageOfSection("SOC_ECON_SCENARIOS")
-                    )
-                  }
-                  className={`btn btn-xs rounded-none border-0 text-black bg-amber-100  ${story.section ===
+                <Link to={findFirstPageURLOfSection("SCOPE")}>
+                  <div className={`btn btn-xs rounded-none border-0 text-black bg-red-100    ${selectedPage.section ===
+                      "SCOPE" && "bg-red-400"}          hover:bg-red-400`}
+                  >
+                    Scope
+                  </div>
+                </Link>
+                <Link to={findFirstPageURLOfSection("HOTSPOTS")}>
+                  <div className={`btn btn-xs rounded-none border-0 text-black bg-blue-100   ${selectedPage.section ===
+                      "HOTSPOTS" && "bg-blue-400"}           hover:bg-blue-400`}
+                  >
+                    Hotspots
+                  </div>
+                </Link>
+                <Link to={findFirstPageURLOfSection("CONNECTION")}>
+                  <div className={`btn btn-xs rounded-none border-0 text-black bg-purple-100 ${selectedPage.section ===
+                      "CONNECTION" && "bg-purple-400"}      hover:bg-purple-400`}
+                  >
+                    Connection
+                  </div>
+                </Link>
+                <Link to={findFirstPageURLOfSection("EU_IMPACT")}>
+                  <div className={`btn btn-xs rounded-none border-0 text-black bg-green-100  ${selectedPage.section ===
+                      "EU_IMPACT" && "bg-green-400"}        hover:bg-green-400`}
+                  >
+                    EU impact
+                  </div>
+                </Link>
+                <Link to={findFirstPageURLOfSection("CLIMATE_SCENARIOS")}>
+                  <div className={`btn btn-xs rounded-none border-0 text-black bg-orange-100 ${selectedPage.section ===
+                      "CLIMATE_SCENARIOS" &&
+                      "bg-orange-400"}  hover:bg-orange-400`}
+                  >
+                    Climate scenarios
+                  </div>
+                </Link>
+                <Link to={findFirstPageURLOfSection("SOC_ECON_SCENARIOS")}>
+                <div className={`btn btn-xs rounded-none border-0 text-black bg-amber-100  ${selectedPage.section ===
                     "SOC_ECON_SCENARIOS" &&
                     "bg-amber-400"}           hover:bg-amber-400`}
                 >
                   Socio-economic scenarios
                 </div>
-                <div
-                  onClick={() =>
-                    this.navigateStory(findFirstPageOfSection("COMPARISON"))
-                  }
-                  className={`btn btn-xs rounded-none border-0 text-black bg-lime-100   ${story.section ===
+                </Link>
+                <Link to={findFirstPageURLOfSection("COMPARISON")}>
+                <div className={`btn btn-xs rounded-none border-0 text-black bg-lime-100   ${selectedPage.section ===
                     "COMPARISON" && "bg-lime-400"}        hover:bg-lime-400`}
                 >
                   Comparison
                 </div>
+                </Link>
               </div>
             </div>
 
-            <div>
-              {typeof story.text === "object" && (
-                <RCScenarioTabs
-                  story={story}
-                  onScenarioChange={this.scenarioChanged}
-                />
-              )}
-            </div>
+            {/* DO NOT DELETE THIS DIV - It's making sure the story is rendered at the correct height (for some reason, god I hate CSS) */}
+            <div />
+            
             <div className={Styles.RCSummaryCard}>
               <div
                 className={classNames(Styles.storyContainer, {
                   [Styles.isMounted]: this.state.inView
                 })}
               >
-                {story.text && (
-                  <div className={Styles.body}>
-                    {typeof story?.text === "string" &&
-                      parseCustomHtmlToReact(story.text)}
-                    {typeof story?.text === "object" &&
-                      parseCustomHtmlToReact(story.text[scenario])}
+                {selectedPage.text && (
+                  <div className={Styles.body}>                    
+                    {typeof selectedPage?.text === "string" &&
+                      parseCustomHtmlToReact(selectedPage.text)}
+                    {typeof selectedPage?.text === "object" &&
+                      parseCustomHtmlToReact(selectedPage.text[scenario])}                    
                   </div>
                 )}
               </div>
@@ -371,83 +231,91 @@ const RCStoryPanel = createReactClass({
             <div className={Styles.storyBottomNavigationItems}>
               <div className={Styles.navs}>
                 <Medium>
-                  <div className={Styles.left}>
-                    <button
-                      className={Styles.previousBtn}
-                      disabled={this.props.terria.stories.length <= 1}
-                      title={t("story.previousBtn")}
-                      onClick={this.goToPrevStory}
-                    >
-                      <Icon glyph={Icon.GLYPHS.left} />
-                    </button>
-                  </div>
+                  <Link to={prevURL}>
+                    <div className={Styles.left}>
+                      <button
+                        className={Styles.previousBtn}
+                        disabled={terriaStories.length <= 1}
+                        title={t("story.previousBtn")}
+                      >
+                        <Icon glyph={Icon.GLYPHS.left} />
+                      </button>
+                    </div>
+                  </Link>
                 </Medium>
-                <If condition={this.props.terria.stories.length >= 2}>
+                <If condition={terriaStories.length >= 2}>
                   <div className={Styles.navBtn}>
-                    {stories.map((story, i) => (
+                    {terriaStories.map((selectedPage, pageIndex) => (
                       <Tooltip
-                        content={story.pageTitle}
+                        content={selectedPage.pageTitle}
                         direction="top"
                         delay="100"
-                        key={story.id}
+                        key={selectedPage.id}
                       >
-                        <button
-                          title={t("story.navBtn", { title: story.pageTitle })}
-                          type="button"
-                          onClick={() => this.navigateStory(i)}
-                        >
-                          <Icon
-                            style={{ fill: "currentColor" }}
-                            className={`opacity-40 hover:opacity-100 ${i ===
-                              this.props.viewState.currentStoryId &&
-                              "opacity-100"}
-                            ${
-                              story.section === "SCOPE"
-                                ? "text-red-600"
-                                : story.section === "HOTSPOTS"
-                                ? "text-blue-600"
-                                : story.section === "CONNECTION"
-                                ? "text-purple-600"
-                                : story.section === "EU_IMPACT"
-                                ? "text-green-600"
-                                : story.section === "CLIMATE_SCENARIOS"
-                                ? "text-orange-600"
-                                : story.section === "SOC_ECON_SCENARIOS"
-                                ? "text-amber-600"
-                                : story.section === "COMPARISON" &&
-                                  "text-lime-600"
-                            }
-                            `}
-                            glyph={
-                              i === this.props.viewState.currentStoryId
-                                ? Icon.GLYPHS.circleFull
-                                : Icon.GLYPHS.circleFull
-                            }
-                          />
-                        </button>
+                        <Link to={`/sector/${routedSectorName}/story/${routedStoryID}/page/${pageIndex}`}>
+                          <button
+                            title={t("story.navBtn", { title: selectedPage.pageTitle })}
+                            type="button"
+                          >
+                            <Icon
+                              style={{ fill: "currentColor" }}
+                              className={`opacity-40 hover:opacity-100 ${pageIndex ===
+                                routedStoryID &&
+                                "opacity-100"}
+                              ${
+                                selectedPage.section === "SCOPE"
+                                  ? "text-red-600"
+                                  : selectedPage.section === "HOTSPOTS"
+                                  ? "text-blue-600"
+                                  : selectedPage.section === "CONNECTION"
+                                  ? "text-purple-600"
+                                  : selectedPage.section === "EU_IMPACT"
+                                  ? "text-green-600"
+                                  : selectedPage.section === "CLIMATE_SCENARIOS"
+                                  ? "text-orange-600"
+                                  : selectedPage.section === "SOC_ECON_SCENARIOS"
+                                  ? "text-amber-600"
+                                  : selectedPage.section === "COMPARISON" &&
+                                    "text-lime-600"
+                              }
+                              `}
+                              glyph={
+                                pageIndex === routedStoryID
+                                  ? Icon.GLYPHS.circleFull
+                                  : Icon.GLYPHS.circleFull
+                              }
+                            />
+                          </button>
+                        </Link>
                       </Tooltip>
                     ))}
                   </div>
                 </If>
-                <Medium>
-                  <div className={Styles.right}>
-                    <button
-                      disabled={this.props.terria.stories.length <= 1}
-                      className={Styles.nextBtn}
-                      title={t("story.nextBtn")}
-                      onClick={this.goToNextStory}
-                    >
-                      <Icon glyph={Icon.GLYPHS.right} />
-                    </button>
-                  </div>
+                <Medium>                
+                  <Link to={nextURL}>
+                    <div className={Styles.right}>                    
+                      <button
+                        disabled={terriaStories.length <= 1}
+                        className={Styles.nextBtn}
+                        title={t("story.nextBtn")}
+                      >
+                        <Icon glyph={Icon.GLYPHS.right} />
+                      </button>
+                    </div>
+                  </Link>
                 </Medium>
               </div>
             </div>
-          </div>
+          </div>) : (<div className={Styles.ldsDefault}>
+            {/* these div's define the dots of the spinner */}
+            <div></div><div></div><div></div><div></div>
+            <div></div><div></div><div></div><div></div>
+            <div></div><div></div><div></div><div></div>
+          </div>)}
         </Swipeable>
       </React.Fragment>
     );
   }
 });
 
-export default withTranslation()(RCStoryPanel);
+export default withTranslation()(withRouter(RCStoryPanel));

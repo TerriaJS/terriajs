@@ -5,13 +5,11 @@ import "inobounce";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import { Link, Route, Switch } from "react-router-dom";
+import { Link, Route, Switch, withRouter } from "react-router-dom";
 import awsconfig from "../../aws-exports";
 import arrayContains from "../../Core/arrayContains";
-import { RCChangeUrlParams } from "../../Models/Receipt";
 import { Medium, Small } from "../Generic/Responsive";
 import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
-// import InternetExplorerOverlay from "../InternetExplorerOverlay/InternetExplorerOverlay.jsx";
 import ProgressBar from "../Map/ProgressBar.jsx";
 import RCBuilder from "../RCBuilder/RCBuilder";
 import RCLogin from "../RCLogin/RCLogin";
@@ -20,7 +18,6 @@ import WelcomeMessage from "../WelcomeMessage/WelcomeMessage.jsx";
 import ExplorerWindow from "./../ExplorerWindow/ExplorerWindow.jsx";
 import MapNavigation from "./../Map/MapNavigation.jsx";
 import RCMenuBar from "./../Map/RCMenuBar.jsx";
-//import MenuBar from "./../Map/MenuBar.jsx";
 import MobileHeader from "./../Mobile/MobileHeader.jsx";
 import MapInteractionWindow from "./../Notification/MapInteractionWindow.jsx";
 import Notification from "./../Notification/Notification.jsx";
@@ -31,24 +28,23 @@ import SidePanel from "./../SidePanel/SidePanel.jsx";
 import RCStoryPanel from "./../Story/RCStoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 import ToolPanel from "./../ToolPanel.jsx";
-
 import Legend from "../Workbench/Controls/Legend";
-
-// import FeatureInfoPanel from "../FeatureInfo/FeatureInfoPanel.jsx";
 import MapColumn from "./MapColumn.jsx";
 import processCustomElements from "./processCustomElements";
 import Styles from "./StandardUserInterface.scss";
+import { loadInitialTerriaState, resetTerriaState } from "../../Models/Receipt";
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);
 
-export const showStoryPrompt = (viewState, terria) => {
-  terria.configParameters.showFeaturePrompts &&
-    terria.configParameters.storyEnabled &&
-    terria.stories.length === 0 &&
-    viewState.toggleFeaturePrompt("story", true);
-};
-const animationDuration = 250;
+// export const showStoryPrompt = (viewState, terria) => {
+//   terria.configParameters.showFeaturePrompts &&
+//     terria.configParameters.storyEnabled &&
+//     terria.stories.length === 0 &&
+//     viewState.toggleFeaturePrompt("story", true);
+// };
+// const animationDuration = 250;
+
 const StandardUserInterface = createReactClass({
   displayName: "StandardUserInterface",
   mixins: [ObserveModelMixin],
@@ -125,21 +121,21 @@ const StandardUserInterface = createReactClass({
     }
   },
 
-  async componentDidMount() {
-    // this.props.viewState.isHotspotsFiltered = false;
+  componentDidMount() {
     this._wrapper.addEventListener("dragover", this.dragOverListener, false);
-    showStoryPrompt(this.props.viewState, this.props.terria);
-    //
-    // First web enters, read the params
-    // Wait for router-dom to set before loading the init params: async
-    //
-    await new Promise(resolve => setTimeout(resolve, 500));
-    RCChangeUrlParams(undefined, this.props.viewState);
+    // showStoryPrompt(this.props.viewState, this.props.terria);
+    loadInitialTerriaState(this.props.viewState);
   },
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.resizeListener, false);
     document.removeEventListener("dragover", this.dragOverListener, false);
+  },
+
+  componentDidUpdate() {
+    if (this.props.location.pathname === `/`) {
+      resetTerriaState(this.props.viewState);
+    }
   },
 
   acceptDragDropFile() {
@@ -170,6 +166,7 @@ const StandardUserInterface = createReactClass({
 
   render() {
     const { t, viewState, terria } = this.props;
+
     const customElements = processCustomElements(
       viewState.useSmallScreenInterface,
       this.props.children
@@ -185,8 +182,6 @@ const StandardUserInterface = createReactClass({
       viewState.storyShown &&
       !viewState.explorerPanelIsVisible &&
       !viewState.storyBuilderShown;
-
-    const showHotspotSummary = viewState.hotspotSummaryEnabled;
 
     return (
       <div className={Styles.storyWrapper}>
@@ -280,24 +275,52 @@ const StandardUserInterface = createReactClass({
                       )}
                     </section>
 
-                    {showStoryPanel ? (
-                      <div className={Styles.storyPanelWrapper}>
-                        <RCStoryPanel terria={terria} viewState={viewState} />
-                      </div>
-                    ) : null}
+                    <Switch>
+                      <Route exact path="/">
+                        <div className={Styles.tabsContainer}>
+                          <SidePanelSectorTabs
+                            terria={terria}
+                            viewState={viewState}
+                          />
+                        </div>
+                      </Route>
 
-                    {!(showStoryPanel || showHotspotSummary) && (
-                      <div className={Styles.tabsContainer}>
-                        <SidePanelSectorTabs
-                          terria={terria}
-                          viewState={viewState}
-                        />
-                      </div>
-                    )}
+                      <Route exact path={`/sector/:sectorName`}>
+                        <div className={Styles.tabsContainer}>
+                          <SidePanelSectorTabs
+                            terria={terria}
+                            viewState={viewState}
+                          />
+                        </div>
+                      </Route>
 
-                    {showHotspotSummary && (
-                      <RCHotspotSummary viewState={viewState} />
-                    )}
+                      <Route exact path={`/sector/:sectorName/story/:storyID`}>
+                        <div className={Styles.storyPanelWrapper}>
+                          <RCHotspotSummary
+                            terria={terria}
+                            viewState={viewState}
+                          />
+                        </div>
+                      </Route>
+
+                      <Route
+                        exact
+                        path={`/sector/:sectorName/story/:storyID/page/:pageIndex`}
+                      >
+                        <div className={Styles.storyPanelWrapper}>
+                          <RCStoryPanel terria={terria} viewState={viewState} />
+                        </div>
+                      </Route>
+
+                      <Route
+                        exact
+                        path={`/sector/:sectorName/story/:storyID/microstory/:microstoryID`}
+                      >
+                        <div className={Styles.storyPanelWrapper}>
+                          <RCStoryPanel terria={terria} viewState={viewState} />
+                        </div>
+                      </Route>
+                    </Switch>
                   </div>
                 </Small>
 
@@ -393,19 +416,38 @@ const StandardUserInterface = createReactClass({
 
                     <Switch>
                       <Route exact path="/">
-                        {showHotspotSummary && (
-                          <RCHotspotSummary viewState={viewState} />
-                        )}
+                        <SidePanelSectorTabs
+                          terria={terria}
+                          viewState={viewState}
+                        />
+                      </Route>
 
-                        {!(showStoryPanel || showHotspotSummary) && (
-                          <SidePanelSectorTabs
-                            terria={terria}
-                            viewState={viewState}
-                          />
-                        )}
-                        {showStoryPanel ? (
-                          <RCStoryPanel terria={terria} viewState={viewState} />
-                        ) : null}
+                      <Route exact path={`/sector/:sectorName`}>
+                        <SidePanelSectorTabs
+                          terria={terria}
+                          viewState={viewState}
+                        />
+                      </Route>
+
+                      <Route exact path={`/sector/:sectorName/story/:storyID`}>
+                        <RCHotspotSummary
+                          terria={terria}
+                          viewState={viewState}
+                        />
+                      </Route>
+
+                      <Route
+                        exact
+                        path={`/sector/:sectorName/story/:storyID/page/:pageIndex`}
+                      >
+                        <RCStoryPanel terria={terria} viewState={viewState} />
+                      </Route>
+
+                      <Route
+                        exact
+                        path={`/sector/:sectorName/story/:storyID/microstory/:microstoryID`}
+                      >
+                        <RCStoryPanel terria={terria} viewState={viewState} />
                       </Route>
 
                       <Route path="/builder">
@@ -416,20 +458,6 @@ const StandardUserInterface = createReactClass({
                         <RCLogin viewState={viewState} />
                       </Route>
                     </Switch>
-
-                    {/*{showHotspotSummary && (*/}
-                    {/*  <RCHotspotSummary viewState={viewState} />*/}
-                    {/*)}*/}
-
-                    {/*{!(showStoryPanel || showHotspotSummary) && (*/}
-                    {/*  <SidePanelSectorTabs*/}
-                    {/*    terria={terria}*/}
-                    {/*    viewState={viewState}*/}
-                    {/*  />*/}
-                    {/*)}*/}
-                    {/*{showStoryPanel ? (*/}
-                    {/*  <RCStoryPanel terria={terria} viewState={viewState} />*/}
-                    {/*) : null}*/}
                   </div>
                 </Medium>
               </If>
@@ -447,13 +475,13 @@ const StandardUserInterface = createReactClass({
                       .viewState.isMapFullScreen
                   })}
                 >
-                  <FullScreenButton
+                  {/* <FullScreenButton
                     terria={terria}
                     viewState={viewState}
                     minified={false}
                     btnText={t("sui.showWorkbench")}
                     animationDuration={animationDuration}
-                  />
+                  /> */}
                 </div>
               </Medium>
             </div>
@@ -524,14 +552,14 @@ const StandardUserInterface = createReactClass({
             t={this.props.t}
           /> */}
         </div>
-        {terria.configParameters.storyEnabled && (
+        {/* {terria.configParameters.storyEnabled && (
           <StoryBuilder
             isVisible={showStoryBuilder}
             terria={terria}
             viewState={viewState}
             animationDuration={animationDuration}
           />
-        )}
+        )} */}
       </div>
     );
   }
@@ -539,5 +567,5 @@ const StandardUserInterface = createReactClass({
 
 export const StandardUserInterfaceWithoutTranslation = StandardUserInterface;
 
-export default withTranslation()(StandardUserInterface);
+export default withTranslation()(withRouter(StandardUserInterface));
 // export default withTranslation()(StandardUserInterface);

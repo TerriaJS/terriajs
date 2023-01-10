@@ -79,7 +79,7 @@ const RCPageContent = forwardRef((props, ref) => {
   const defaultCatalogItems = ["EU Lines!- Mapbox Style", "hotspots"];
 
   const captureEnabledCatalogItems = scenario => {
-    const enabledItems = viewState.terria.nowViewing.items
+    const enabledItems = viewState.terria.catalog.group.items
       .filter(item => item.isShown)
       .map(item => item.name);
     scenario.enabled_catalog_items = enabledItems;
@@ -89,7 +89,7 @@ const RCPageContent = forwardRef((props, ref) => {
     if (!Array.isArray(scenario.enabled_catalog_items)) {
       scenario.enabled_catalog_items = defaultCatalogItems;
     }
-    viewState.terria.nowViewing.items.forEach(item => {
+    viewState.terria.catalog.group.items.forEach(item => {
       item.isShown = scenario.enabled_catalog_items.includes(item.name);
     });
   };

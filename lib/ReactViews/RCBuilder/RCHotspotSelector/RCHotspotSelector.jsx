@@ -46,7 +46,7 @@ function RCHotspotSelector(props) {
   // Place hotspot marker on map
   useEffect(() => {
     const { terria } = props.viewState;
-    const catalogItem = terria.nowViewing.items.find(
+    const catalogItem = terria.catalog.group.items.find(
       item => item.name === "hotspots"
     );
     if (catalogItem !== undefined) {
