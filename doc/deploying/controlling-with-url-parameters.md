@@ -2,9 +2,9 @@
 
 Many aspects of TerriaJS (and hence TerriaMap, NationalMap, and others) can be configured by the end user by passing URL parameters. Combine them like this:
 
-- The base URL, then a `#`
-- Then the first parameter
-- Then repeatedly: a `&`, and the next parameter
+-   The base URL, then a `#`
+-   Then the first parameter
+-   Then repeatedly: a `&`, and the next parameter
 
 For example: [http://nationalmap.gov.au#test&map=2d](http://nationalmap.gov.au#test&map=2d)
 

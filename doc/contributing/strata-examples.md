@@ -4,36 +4,36 @@
 
 **Bold** items are not `CommonStrata`
 
-- Defaults
-  - `default`
-  - **`magda-record`**
-- Loadable
-  - **`getCapabilities`**
-- Definition
-  - `underride`
-  - `definition`
-  - `override`
-- User
-  - `user`
+-   Defaults
+    -   `default`
+    -   **`magda-record`**
+-   Loadable
+    -   **`getCapabilities`**
+-   Definition
+    -   `underride`
+    -   `definition`
+    -   `override`
+-   User
+    -   `user`
 
 ### Example Magda record
 
 ```json
 {
-  "aspects": {
-    "terria": {
-      "definition": {
-        "url": "some-wms-server.com/layer"
-      },
-      "underride": {
-        "name": "A WMS layer name that has been updated by Magda Minion"
-      },
-      "id": "wms-layer-id",
-      "type": "wms"
-    }
-  },
-  "id": "wms-layer-id",
-  "name": "WMS layer name in Magda"
+    "aspects": {
+        "terria": {
+            "definition": {
+                "url": "some-wms-server.com/layer"
+            },
+            "underride": {
+                "name": "A WMS layer name that has been updated by Magda Minion"
+            },
+            "id": "wms-layer-id",
+            "type": "wms"
+        }
+    },
+    "id": "wms-layer-id",
+    "name": "WMS layer name in Magda"
 }
 ```
 
@@ -51,7 +51,7 @@ Will contain properties loaded from WMS `GetCapabilities` request. For example:
 
 ```json
 {
-  "name": "A WMS layer name provided by WMS GetCapabilities"
+    "name": "A WMS layer name provided by WMS GetCapabilities"
 }
 ```
 
@@ -63,7 +63,7 @@ In provided example, this would be:
 
 ```json
 {
-  "name": "A WMS layer name that has been updated by Magda Minion"
+    "name": "A WMS layer name that has been updated by Magda Minion"
 }
 ```
 
@@ -75,7 +75,7 @@ In provided example, this would be:
 
 ```json
 {
-  "url": "some-wms-server.com/layer"
+    "url": "some-wms-server.com/layer"
 }
 ```
 
@@ -83,7 +83,7 @@ In provided example, this would be:
 
 ```json
 {
-  "name": "A WMS layer name that has been updated by Magda Minion",
-  "url": "some-wms-server.com/layer"
+    "name": "A WMS layer name that has been updated by Magda Minion",
+    "url": "some-wms-server.com/layer"
 }
 ```

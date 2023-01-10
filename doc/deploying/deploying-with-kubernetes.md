@@ -19,23 +19,23 @@ E.g.
 
 ```yaml
 global:
-  rollingUpdate:
-    maxUnavailable: 1
-  image:
-    tag: "0.0.1"
+    rollingUpdate:
+        maxUnavailable: 1
+    image:
+        tag: "0.0.1"
 terriamap:
-  clientConfig:
-    parameters:
-      disclaimer:
-      text: "This is a disclaimer"
-  serverConfig:
-    port: 8080
-  initConfig:
-    camera:
-      north: "1"
-      east: "2"
-      south: "3"
-      west: "4"
+    clientConfig:
+        parameters:
+            disclaimer:
+            text: "This is a disclaimer"
+    serverConfig:
+        port: 8080
+    initConfig:
+        camera:
+            north: "1"
+            east: "2"
+            south: "3"
+            west: "4"
 ```
 
 # Building Your Own Image
