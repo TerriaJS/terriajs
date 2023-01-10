@@ -176,19 +176,9 @@ const NavigationTopBar = createReactClass({
               {terriaStories.map((storyPage, pageIndex) => (
                 <div key={pageIndex}> {/* This outer div is needed for the <Link> block to work within the terriaStories.map() */}
                   <Link to={`/sector/${routedSectorName}/story/${routedStoryID}/page/${pageIndex}`}>
-                  <div className="flex">
-                    <div>
-                      <svg height="24" width="100%" viewBox="0 0 20 80">
-                        <polyline points="20,0 0,0 20,40 0,80 20,80" stroke="black" strokeWidth="3" fill="transparent"/>
-                        <polygon points="0,0 20,0 20,80 0,80 20,40"
-                                className={`fill-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
-                                            hover:fill-${selectColorForSection(storyPage.section)}-400
-                        `}/>
-                      </svg>
-                    </div>
-                    <div className={`btn btn-xs rounded-none border-0 text-black
-                                      bg-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
-                                      hover:bg-${selectColorForSection(storyPage.section)}-400
+                  <div className={`btn btn-xs ${Styles.sectionBtnBorder}`}>
+                    <div className={`btn btn-xs ${Styles.sectionBtn}
+                                     ${Styles[storyPage.section]}${storyPage == selectedPage ? "-selected" : ""}
                     `}>
                       {
                         !isPageFirstOfSection(pageIndex)
@@ -208,15 +198,6 @@ const NavigationTopBar = createReactClass({
                           : storyPage.section === "COMPARISON" &&
                             "Comparison"
                       }
-                    </div>
-                    <div>
-                      <svg height="24" width="100%" viewBox="0 0 20 80">
-                        <polyline points="0,0 20,40 0,80" stroke="black" strokeWidth="3" fill="transparent"/>
-                        <polygon points="0,0 20,40 0,80"
-                                className={`fill-${selectColorForSection(storyPage.section)}-${storyPage == selectedPage ? "400" : "100"}
-                                            hover:fill-${selectColorForSection(storyPage.section)}-400
-                        `}/>
-                      </svg>
                     </div>
                   </div>
                   </Link>
