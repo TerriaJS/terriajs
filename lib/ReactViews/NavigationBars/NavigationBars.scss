@@ -54,23 +54,6 @@
   margin: -10px 0px -10px -10px;
 }
 
-.exitBtn {
-  composes: btn from "../../Sass/common/_buttons.scss";
-  margin-right: 10px;
-  margin-top: 7px;
-
-  &:not([disabled]):hover {
-    svg {
-      fill: $color-primary;
-    }
-  }
-
-  svg {
-    fill: #888888;
-    width: 16px;
-  }
-}
-
 .storyBottomNavigationItems {
   display: grid;
   align-items: center;
