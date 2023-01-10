@@ -114,6 +114,7 @@ $arrow-border-offset: 1.5px;  // border for the diagonal parts of the arrow
 
 
 // colors from tailwind: https://tailwindcss.com/docs/fill
+// *-selected:hover is included to prevent overwrite by other classes such as `btn`
 .SCOPE {  // bg-red-100
   background: #fee2e2;
 }
