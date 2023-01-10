@@ -12,7 +12,7 @@
   padding: 16px 16px 0px 16px;
   display: grid;
   grid-template-rows: 1fr auto;
-  height: 73vh;
+  height: 100%;
   box-sizing: border-box;
   @media (max-width: $xs) {
     height: 60vh;

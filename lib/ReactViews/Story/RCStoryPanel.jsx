@@ -152,7 +152,7 @@ const RCStoryPanel = createReactClass({
 
     return (
       <React.Fragment>
-        <Swipeable
+        <Swipeable style={{height: 100+'%'}}
           onSwipedLeft={() => history.push(nextURL)}
           onSwipedRight={() => history.push(prevURL)}
         >
