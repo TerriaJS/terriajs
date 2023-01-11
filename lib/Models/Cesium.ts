@@ -87,6 +87,7 @@ import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
+import { setViewerMode } from "./ViewerMode";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
@@ -149,6 +150,7 @@ export default class Cesium extends GlobeOrMap {
     });
   });
 
+  private _terrainMessageViewed: boolean = false;
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
     super();
 
@@ -229,26 +231,6 @@ export default class Cesium extends GlobeOrMap {
     (<any>this.scene).highDynamicRange = false;
 
     this.scene.imageryLayers.removeAll();
-
-    //catch Cesium terrain provider down and switch to Ellipsoid
-    //     terrainProvider.errorEvent.addEventListener(function(err) {
-    //         console.log('Terrain provider error.  ', err.message);
-    //         if (viewer.scene.terrainProvider instanceof CesiumTerrainProvider) {
-    //             console.log('Switching to EllipsoidTerrainProvider.');
-    //             that.terria.viewerMode = ViewerMode.CesiumEllipsoid;
-    //             if (!defined(that.TerrainMessageViewed)) {
-    //                 that.terria.raiseErrorToUser({
-    //                     title : 'Terrain Server Not Responding',
-    //                     message : '\
-    // The terrain server is not responding at the moment.  You can still use all the features of '+that.terria.appName+' \
-    // but there will be no terrain detail in 3D mode.  We\'re sorry for the inconvenience.  Please try \
-    // again later and the terrain server should be responding as expected.  If the issue persists, please contact \
-    // us via email at '+that.terria.supportEmail+'.'
-    //                 });
-    //                 that.TerrainMessageViewed = true;
-    //             }
-    //         }
-    //     });
 
     this.updateCredits(container);
 
@@ -425,6 +407,34 @@ export default class Cesium extends GlobeOrMap {
         !this.terria.useNativeResolution;
       this.cesiumWidget.scene.globe.maximumScreenSpaceError =
         this.terria.baseMaximumScreenSpaceError;
+    });
+  }
+
+  private catchTerrainProviderDown(terrainProvider: TerrainProvider) {
+    //catch Cesium terrain provider down and switch to Ellipsoid
+    return terrainProvider.errorEvent.addEventListener((err) => {
+      console.log("Terrain provider error.  ");
+      // console.log("Terrain provider error.  ", err.message); // TODO: reinstate this line, commented out for testing
+      if (this.scene.terrainProvider instanceof CesiumTerrainProvider) {
+        console.log("Switching to EllipsoidTerrainProvider.");
+        setViewerMode("3dsmooth", this.terria.mainViewer);
+        if (!this._terrainMessageViewed) {
+          this.terria.raiseErrorToUser({
+            title: "Terrain Server Not Responding",
+            message:
+              "\
+  The terrain server is not responding at the moment.  You can still use all the features of " +
+              this.terria.appName +
+              " \
+  but there will be no terrain detail in 3D mode.  We're sorry for the inconvenience.  Please try \
+  again later and the terrain server should be responding as expected.  If the issue persists, please contact \
+  us via email at " +
+              this.terria.supportEmail +
+              "."
+          });
+          this._terrainMessageViewed = true;
+        }
+      }
     });
   }
 
@@ -1174,6 +1184,8 @@ export default class Cesium extends GlobeOrMap {
 
   @computed
   get terrainProvider(): TerrainProvider {
+    // Add the event handler to the TerrianProvider...
+    this.catchTerrainProviderDown(this._terrainWithCredits.terrain);
     return this._terrainWithCredits.terrain;
   }
 
