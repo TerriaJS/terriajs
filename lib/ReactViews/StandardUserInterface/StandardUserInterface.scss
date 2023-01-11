@@ -32,9 +32,8 @@
   padding: $padding;
   display: flex;
   flex-direction: column;
-  position: fixed;
+  position: absolute;
   top: 0;
-  margin-top: 117px;  // TODO: temporary fix, matches NavigationTopBar.RCHotspotSummary.height
 }
 
 .ui-root {

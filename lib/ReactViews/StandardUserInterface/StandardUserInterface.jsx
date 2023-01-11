@@ -257,6 +257,22 @@ const StandardUserInterface = createReactClass({
                         viewState={viewState}
                         customFeedbacks={customElements.feedback}
                       />
+                      <If condition={!viewState.hideMapUi()}>
+                        <div
+                          className={classNames({
+                            [Styles.explorerPanelIsVisible]:
+                              viewState.explorerPanelIsVisible,
+                            [Styles.NavigationMap]: true
+                          })}
+                        >
+                          <RCMenuBar terria={terria} viewState={viewState} />
+                          <MapNavigation
+                            terria={terria}
+                            viewState={viewState}
+                            navItems={customElements.nav}
+                          />
+                        </div>
+                      </If>
 
                       {/* Mobile LEGEND*/}
                       {this.removeDuplicateLegends(
@@ -367,6 +383,22 @@ const StandardUserInterface = createReactClass({
                       viewState={viewState}
                       customFeedbacks={customElements.feedback}
                     />
+                    <If condition={!viewState.hideMapUi()}>
+                      <div
+                        className={classNames({
+                          [Styles.explorerPanelIsVisible]:
+                            viewState.explorerPanelIsVisible,
+                          [Styles.NavigationMap]: true
+                        })}
+                      >
+                        <RCMenuBar terria={terria} viewState={viewState} />
+                        <MapNavigation
+                          terria={terria}
+                          viewState={viewState}
+                          navItems={customElements.nav}
+                        />
+                      </div>
+                    </If>
                     <main>
                       <ExplorerWindow
                         terria={terria}
@@ -487,32 +519,6 @@ const StandardUserInterface = createReactClass({
             </div>
 
           </div>
-
-          <If condition={!viewState.hideMapUi()}>
-            <Medium>
-              <div
-                className={classNames({
-                  [Styles.explorerPanelIsVisible]:
-                    viewState.explorerPanelIsVisible,
-                  [Styles.NavigationMap]: true
-                })}
-              >
-                {/* <MenuBar
-                    terria={terria}
-                    viewState={viewState}
-                    allBaseMaps={allBaseMaps}
-                    menuItems={customElements.menu}
-                    animationDuration={animationDuration}
-                  /> */}
-                <RCMenuBar terria={terria} viewState={viewState} />
-                <MapNavigation
-                  terria={terria}
-                  viewState={viewState}
-                  navItems={customElements.nav}
-                />
-              </div>
-            </Medium>
-          </If>
 
           <Notification viewState={viewState} />
           <SatelliteGuide terria={terria} viewState={viewState} />
