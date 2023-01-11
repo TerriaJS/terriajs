@@ -410,32 +410,49 @@ export default class Cesium extends GlobeOrMap {
     });
   }
 
-  private catchTerrainProviderDown(terrainProvider: TerrainProvider) {
-    //catch Cesium terrain provider down and switch to Ellipsoid
-    return terrainProvider.errorEvent.addEventListener((err) => {
-      console.log("Terrain provider error.  ");
-      // console.log("Terrain provider error.  ", err.message); // TODO: reinstate this line, commented out for testing
-      if (this.scene.terrainProvider instanceof CesiumTerrainProvider) {
-        console.log("Switching to EllipsoidTerrainProvider.");
-        setViewerMode("3dsmooth", this.terria.mainViewer);
-        if (!this._terrainMessageViewed) {
-          this.terria.raiseErrorToUser({
-            title: "Terrain Server Not Responding",
-            message:
-              "\
-  The terrain server is not responding at the moment.  You can still use all the features of " +
-              this.terria.appName +
-              " \
-  but there will be no terrain detail in 3D mode.  We're sorry for the inconvenience.  Please try \
-  again later and the terrain server should be responding as expected.  If the issue persists, please contact \
-  us via email at " +
-              this.terria.supportEmail +
-              "."
-          });
-          this._terrainMessageViewed = true;
-        }
-      }
+  /** Add an event listener to a TerrainProvider.
+   * If we get an error when trying to load the terrain, then switch to smooth mode, and notify the user.
+   * Finally, remove the listener, so failed tiles do not trigger the error as these can be common and are not a problem. */
+  private async catchTerrainProviderDown(terrainProvider: TerrainProvider) {
+    // Some network errors are not rejected through readyPromise, so we have to
+    // listen to them using the error event and dispose it later
+    let networkErrorListener: (err: any) => void;
+    const networkErrorPromise = new Promise((_resolve, reject) => {
+      networkErrorListener = reject;
+      terrainProvider.errorEvent.addEventListener(networkErrorListener);
     });
+
+    const isReady = await Promise.race([
+      networkErrorPromise,
+      terrainProvider.readyPromise
+    ])
+      .catch((err) => {
+        console.log("Terrain provider error.  ", err.message); // TODO: reinstate this line, commented out for testing
+        if (this.scene.terrainProvider instanceof CesiumTerrainProvider) {
+          console.log("Switching to EllipsoidTerrainProvider.");
+          setViewerMode("3dsmooth", this.terria.mainViewer);
+          if (!this._terrainMessageViewed) {
+            this.terria.raiseErrorToUser(err, {
+              title: "Terrain Server Not Responding",
+              message:
+                "\
+    The terrain server is not responding at the moment.  You can still use all the features of " +
+                this.terria.appName +
+                " \
+    but there will be no terrain detail in 3D mode.  We're sorry for the inconvenience.  Please try \
+    again later and the terrain server should be responding as expected.  If the issue persists, please contact \
+    us via email at " +
+                this.terria.supportEmail +
+                "."
+            });
+
+            this._terrainMessageViewed = true;
+          }
+        }
+      })
+      .finally(() =>
+        terrainProvider.errorEvent.removeEventListener(networkErrorListener)
+      );
   }
 
   private updateCredits(container: string | HTMLElement) {
@@ -1179,13 +1196,15 @@ export default class Cesium extends GlobeOrMap {
    * Used for spying in specs
    */
   private createWorldTerrain(): CesiumTerrainProvider {
-    return createWorldTerrain({});
+    const terrainProvider = createWorldTerrain({});
+    this.catchTerrainProviderDown(terrainProvider);
+    return terrainProvider;
   }
 
   @computed
   get terrainProvider(): TerrainProvider {
     // Add the event handler to the TerrianProvider...
-    this.catchTerrainProviderDown(this._terrainWithCredits.terrain);
+    // this.catchTerrainProviderDown(this._terrainWithCredits.terrain);
     return this._terrainWithCredits.terrain;
   }
 
