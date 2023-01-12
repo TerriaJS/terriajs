@@ -49,10 +49,11 @@ const RCStoryPanel = createReactClass({
     );
 
     // Activate the story (page)
-    const promise = setSelectedStory(this.props.match.params, this.props.viewState);
-    promise.then(() =>
-      activateStory(this.props.viewState, true, true)
-    )
+    const promise = setSelectedStory(
+      this.props.match.params,
+      this.props.viewState
+    );
+    promise.then(() => activateStory(this.props.viewState, true, true));
   },
 
   componentDidUpdate() {
@@ -114,7 +115,9 @@ const RCStoryPanel = createReactClass({
 
     // find the first page with the section
     function findFirstPageURLOfSection(section = "") {
-      const pageIndex = terriaStories.findIndex(page => page.section === section);
+      const pageIndex = terriaStories.findIndex(
+        page => page.section === section
+      );
       return `/sector/${routedSectorName}/story/${routedStoryID}/page/${pageIndex}`;
     }
 
@@ -128,27 +131,15 @@ const RCStoryPanel = createReactClass({
       return true;
     }
 
-    function selectColorForSection(section = "") {
-      if (section === "SCOPE") {
-        return "red"
-      } else if (section === "HOTSPOTS") {
-        return "blue"
-      } else if (section === "CONNECTION") {
-        return "purple"
-      } else if (section === "EU_IMPACT") {
-        return "green"
-      } else if (section === "CLIMATE_SCENARIOS") {
-        return "orange"
-      } else if (section === "SOC_ECON_SCENARIOS") {
-        return "amber"
-      } else if (section === "COMPARISON") {
-        return "lime"
-      }
-    }
 
-
-    const prevURL = `/sector/${routedSectorName}/story/${routedStoryID}/page/${routedPageIndex == 0 ? 0 : routedPageIndex-1}`;
-    const nextURL = `/sector/${routedSectorName}/story/${routedStoryID}/page/${routedPageIndex == terriaStories.length-1 ? terriaStories.length-1 : routedPageIndex+1}`;
+    const prevURL = `/sector/${routedSectorName}/story/${routedStoryID}/page/${
+      routedPageIndex == 0 ? 0 : routedPageIndex - 1
+    }`;
+    const nextURL = `/sector/${routedSectorName}/story/${routedStoryID}/page/${
+      routedPageIndex == terriaStories.length - 1
+        ? terriaStories.length - 1
+        : routedPageIndex + 1
+    }`;
 
     return (
       <React.Fragment>

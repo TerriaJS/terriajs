@@ -115,24 +115,6 @@ const NavigationTopBar = createReactClass({
       return true;
     }
 
-    function selectColorForSection(section = "") {
-      if (section === "SCOPE") {
-        return "red"
-      } else if (section === "HOTSPOTS") {
-        return "blue"
-      } else if (section === "CONNECTION") {
-        return "purple"
-      } else if (section === "EU_IMPACT") {
-        return "green"
-      } else if (section === "CLIMATE_SCENARIOS") {
-        return "orange"
-      } else if (section === "SOC_ECON_SCENARIOS") {
-        return "amber"
-      } else if (section === "COMPARISON") {
-        return "lime"
-      }
-    }
-
     return (
       <React.Fragment>
         <Swipeable
@@ -192,17 +174,20 @@ const NavigationTopBar = createReactClass({
                           : storyPage.section === "SCOPE"
                           ? "Scope"
                           : storyPage.section === "HOTSPOTS"
-                          ? "Hotspots"
+                          ? "Remote climate"
                           : storyPage.section === "CONNECTION"
-                          ? "Connection"
+                          ? "Relevance to EU"
                           : storyPage.section === "EU_IMPACT"
                           ? "EU impact"
                           : storyPage.section === "CLIMATE_SCENARIOS"
-                          ? "Climate scenarios"
+                          ? "Climate change"
                           : storyPage.section === "SOC_ECON_SCENARIOS"
-                          ? "Socio-economic scenarios"
-                          : storyPage.section === "COMPARISON" &&
-                            "Comparison"
+                          ? "Socio-economic change"
+                          : storyPage.section === "COMPARISON"
+                          ? "Comparison"
+                          : storyPage.section === "CONCLUSION" &&
+                            "Conclusions"
+
                       }
                     </div>
                   </div>

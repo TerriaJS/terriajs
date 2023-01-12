@@ -163,6 +163,13 @@ $arrow-border-offset: 1.5px;  // border for the diagonal parts of the arrow
   background: #a3e635;
 }
 
+.CONCLUSION { // bg-pink-100
+  background: #fce7f3;
+}
+.CONCLUSION:hover, .CONCLUSION-selected, .CONCLUSION-selected:hover {  // bg-pink-400
+  background: #f472b6;
+}
+
 
 :global {
   .story.tjs-notification-window__wrapper {
