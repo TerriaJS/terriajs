@@ -12,6 +12,7 @@ import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./NavigationBars.scss";
 import Branding from "../StandardUserInterface/Branding";
 import Loader from "../Loader"
+import sectors from "../../Data/Sectors.js";
 
 const NavigationTopBar = createReactClass({
   displayName: "NavigationTopBar",
@@ -99,6 +100,7 @@ const NavigationTopBar = createReactClass({
 
     const terriaStories = this.props.terria.stories || [];
     const selectedPage = terriaStories[routedPageIndex];
+    const sector = sectors.find(sector => sector.id === routedSectorName);
 
     const prevURL = `/sector/${routedSectorName}/story/${routedStoryID}/page/${routedPageIndex == 0 ? 0 : routedPageIndex-1}`;
     const nextURL = `/sector/${routedSectorName}/story/${routedStoryID}/page/${routedPageIndex == terriaStories.length-1 ? terriaStories.length-1 : routedPageIndex+1}`;
@@ -149,12 +151,16 @@ const NavigationTopBar = createReactClass({
 
             <div className={Styles.tabsContainer}>
               <div className={`flex ${Styles.iconTitle}`}>
-                {selectedPage.sector && (<Icon
-                    width={20}
-                    glyph={Icon.GLYPHS[selectedPage.sector + "Simple"]}
-                    className={Styles.icon}
-                  />
-                )}
+                <Link to={`/sector/${routedSectorName}`}>
+                  <button title={sector.title}>
+                    {selectedPage.sector && (<Icon
+                        width={20}
+                        glyph={Icon.GLYPHS[selectedPage.sector + "Simple"]}
+                        className={Styles.icon}
+                      />
+                    )}
+                  </button>
+                </Link>
 
                 <h3>
                   {selectedPage.storyTitle && selectedPage.storyTitle.length > 0

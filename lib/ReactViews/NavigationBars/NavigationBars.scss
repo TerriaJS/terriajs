@@ -14,7 +14,6 @@
 .logoInner {
   margin-top: 10px;  // compensate for Branding 'claiming' 10px at bottom of logo
 }
-
 .iconTitle {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -48,7 +47,7 @@
 }
 
 .icon {
-  cursor: default !important;
+  cursor: pointer;
   width: 50px;
   height: auto;
   margin: -10px 0px -10px -10px;
