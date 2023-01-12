@@ -21,7 +21,6 @@ import RCMenuBar from "./../Map/RCMenuBar.jsx";
 import MobileHeader from "./../Mobile/MobileHeader.jsx";
 import MapInteractionWindow from "./../Notification/MapInteractionWindow.jsx";
 import NavigationTopBar from "../NavigationBars/NavigationTopBar";
-import NavigationBottomBar from "../NavigationBars/NavigationBottomBar";
 import Notification from "./../Notification/Notification.jsx";
 import ObserveModelMixin from "./../ObserveModelMixin";
 import RCHotspotSummary from "./../RCHotspotSummary/RCHotspotSummary.jsx";
