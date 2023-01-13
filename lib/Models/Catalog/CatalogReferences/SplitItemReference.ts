@@ -50,10 +50,13 @@ export default class SplitItemReference extends ReferenceMixin(
       });
     }
 
-
     try {
-      // Ensure the target we create is a concrete item
-      if (previousTarget !== undefined && sourceItem.uniqueId === this.splitSourceItemId) return previousTarget;
+      // Ensure the target we create is a concrete item and check if we can return previousTarget
+      if (
+        previousTarget !== undefined &&
+        sourceItem.uniqueId === this.splitSourceItemId
+      )
+        return previousTarget;
       sourceItem = getDereferencedIfExists(sourceItem);
       return sourceItem.duplicateModel(this.uniqueId, this);
     } catch (e) {
