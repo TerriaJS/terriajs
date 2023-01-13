@@ -30,6 +30,10 @@ export default class TestCatalogItem
   }
 
   get selectableDimensions() {
+    return this.createSelectableDimensions();
+  }
+
+  createSelectableDimensions() {
     return this.selectableDimensionsValue;
   }
 

@@ -99,10 +99,9 @@ export default class SdmxJsonCatalogItem
     });
   }
 
-  @computed
-  get selectableDimensions(): SelectableDimension[] {
+  createSlectableDimensions(): SelectableDimension[] {
     return filterOutUndefined([
-      ...super.selectableDimensions.filter(
+      ...super.createSelectableDimensions().filter(
         (d) => d.id !== this.styleDimensions?.id
       ),
       ...this.sdmxSelectableDimensions

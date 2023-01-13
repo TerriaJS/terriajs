@@ -251,14 +251,13 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return this._clippingBoxDrawing;
     }
 
-    @computed
-    get selectableDimensions(): SelectableDimension[] {
+    createSelectableDimensions(): SelectableDimension[] {
       if (!this.clippingBox.enableFeature) {
-        return super.selectableDimensions;
+        return super.createSelectableDimensions();
       }
 
       return [
-        ...super.selectableDimensions,
+        ...super.createSelectableDimensions(),
         {
           type: "checkbox-group",
           id: "clipping-box",

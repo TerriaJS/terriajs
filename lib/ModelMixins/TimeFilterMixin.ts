@@ -91,6 +91,10 @@ function TimeFilterMixin<T extends Constructor<Model<TimeFilterTraits>>>(
 
     @computed
     get canFilterTimeByFeature(): boolean {
+      return this.canFilterTimeByFeatureOverride();
+    }
+
+    protected canFilterTimeByFeatureOverride() {
       return this.timeFilterPropertyName !== undefined;
     }
 
@@ -134,11 +138,10 @@ function TimeFilterMixin<T extends Constructor<Model<TimeFilterTraits>>>(
       );
     }
 
-    @computed
-    get discreteTimesAsSortedJulianDates() {
+    protected createDiscreteTimesAsSortedJulianDates() {
       const featureTimes = this.featureTimesAsJulianDates;
       if (featureTimes === undefined) {
-        return super.discreteTimesAsSortedJulianDates;
+        return super.createDiscreteTimesAsSortedJulianDates();
       }
 
       return super.discreteTimesAsSortedJulianDates?.filter((dt) =>

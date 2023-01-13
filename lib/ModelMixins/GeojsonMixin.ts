@@ -1158,14 +1158,13 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return dataSource;
     }
 
-    @computed
-    get discreteTimes(): DiscreteTimeAsJS[] | undefined {
+    protected createDiscreteTimes(): DiscreteTimeAsJS[] | undefined {
       if (this.readyData === undefined) {
         return undefined;
       }
 
       // If we are using mvt (mapbox vector tiles / protomaps imagery provider) return TableMixin.discreteTimes
-      if (this.useTableStylingAndProtomaps) return super.discreteTimes;
+      if (this.useTableStylingAndProtomaps) return super.createDiscreteTimes();
 
       // If using timeProperty - get discrete times from that
       if (this.timeProperty) {
@@ -1252,12 +1251,12 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return undefined;
     }
 
-    @computed get viewingControls(): ViewingControl[] {
+    protected createViewingControls(): ViewingControl[] {
       return !this.useTableStylingAndProtomaps
-        ? super.viewingControls.filter(
+        ? super.createViewingControls().filter(
             (v) => v.id !== TableStylingWorkflow.type
           )
-        : super.viewingControls;
+        : super.createViewingControls();
     }
   }
   return GeoJsonMixin;

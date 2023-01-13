@@ -58,8 +58,6 @@ class Cesium3dTilesStratum extends LoadableStratum(Cesium3dTilesTraits) {
 // Register the Cesium3dTilesStratum
 StratumOrder.instance.addLoadStratum(Cesium3dTilesStratum.name);
 
-const DEFAULT_HIGHLIGHT_COLOR = "#ff3f00";
-
 interface Cesium3DTilesCatalogItemIface
   extends InstanceType<ReturnType<typeof Cesium3dTilesMixin>> {}
 
@@ -603,15 +601,6 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
           conditions
         }
       });
-    }
-
-    /**
-     * The color to use for highlighting features in this catalog item.
-     *
-     */
-    @computed
-    get highlightColor(): string {
-      return super.highlightColor || DEFAULT_HIGHLIGHT_COLOR;
     }
   }
 

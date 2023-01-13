@@ -166,9 +166,15 @@ function CatalogMemberMixin<T extends AbstractConstructor<CatalogMember>>(
 
     /** Converts modelDimensions to selectableDimensions
      * This will apply modelDimension JSON value to user stratum
+     *
+     * Don't override this property. Instead, override {@link createSelectableDimensions}.
      */
     @computed
     get selectableDimensions(): SelectableDimension[] {
+      return this.createSelectableDimensions();
+    }
+
+    createSelectableDimensions(): SelectableDimension[] {
       return (
         this.modelDimensions.map((dim) => ({
           id: dim.id,
@@ -208,6 +214,10 @@ function CatalogMemberMixin<T extends AbstractConstructor<CatalogMember>>(
     }
 
     @computed get viewingControls(): ViewingControl[] {
+      return this.createViewingControls();
+    }
+
+    protected createViewingControls(): ViewingControl[] {
       return [];
     }
 

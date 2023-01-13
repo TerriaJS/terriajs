@@ -12,11 +12,9 @@ function GetCapabilitiesMixin<T extends Constructor<CapabilitiesModel>>(
   abstract class GetCapabilitiesMixin extends Base {
     protected abstract get defaultGetCapabilitiesUrl(): string | undefined;
 
-    @computed
-    get getCapabilitiesUrl(): string | undefined {
-      const getCapabilitiesUrl = super.getCapabilitiesUrl;
-      if (getCapabilitiesUrl !== undefined) {
-        return getCapabilitiesUrl;
+    protected getCapabilitiesUrlOverride(traitValue: string | undefined) {
+      if (traitValue !== undefined) {
+        return traitValue;
       } else {
         return this.defaultGetCapabilitiesUrl;
       }

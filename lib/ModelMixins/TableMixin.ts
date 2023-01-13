@@ -440,9 +440,9 @@ function TableMixin<T extends AbstractConstructor<Model<TableTraits>>>(
       ]);
     }
 
-    @computed get viewingControls(): ViewingControl[] {
+    protected createViewingControls(): ViewingControl[] {
       return filterOutUndefined([
-        ...super.viewingControls,
+        ...super.createViewingControls(),
         {
           id: TableStylingWorkflow.type,
           name: "Edit Style",
@@ -461,11 +461,10 @@ function TableMixin<T extends AbstractConstructor<Model<TableTraits>>>(
       return tableFeatureInfoContext(this);
     }
 
-    @computed
-    get selectableDimensions(): SelectableDimension[] {
+    createSelectableDimensions(): SelectableDimension[] {
       return filterOutUndefined([
         this.timeDisableDimension,
-        ...super.selectableDimensions,
+        ...super.createSelectableDimensions(),
         this.enableManualRegionMapping
           ? this.regionMappingDimensions
           : undefined,
@@ -680,9 +679,11 @@ function TableMixin<T extends AbstractConstructor<Model<TableTraits>>>(
     }
 
     @computed
-    get discreteTimes():
-      | { time: string; tag: string | undefined }[]
-      | undefined {
+    get discreteTimes() {
+      return this.createDiscreteTimes();
+    }
+
+    protected createDiscreteTimes(): DiscreteTimeAsJS[] | undefined {
       if (!this.activeTableStyle.moreThanOneTimeInterval) return;
       const dates = this.activeTableStyle.timeColumn?.valuesAsDates.values;
       if (dates === undefined) {

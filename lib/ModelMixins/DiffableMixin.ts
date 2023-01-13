@@ -89,11 +89,10 @@ function DiffableMixin<T extends Constructor<Model<DiffableTraits>>>(Base: T) {
       secondDate?: JulianDate
     ): string;
 
-    @computed
-    get canFilterTimeByFeature() {
+    protected canFilterTimeByFeatureOverride() {
       // Hides the SatelliteImageryTimeFilterSection for the item if it is
       // currently showing difference image
-      return super.canFilterTimeByFeature && !this.isShowingDiff;
+      return super.canFilterTimeByFeatureOverride() && !this.isShowingDiff;
     }
   }
 

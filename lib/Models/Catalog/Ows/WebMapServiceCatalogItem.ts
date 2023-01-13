@@ -723,14 +723,13 @@ class WebMapServiceCatalogItem
     return dimensions;
   }
 
-  @computed
-  get selectableDimensions() {
+  createSelectableDimensions() {
     if (this.disableDimensionSelectors) {
       return super.selectableDimensions;
     }
 
     return filterOutUndefined([
-      ...super.selectableDimensions,
+      ...super.createSelectableDimensions(),
       ...this.wmsDimensionSelectableDimensions,
       ...this.styleSelectableDimensions
     ]);

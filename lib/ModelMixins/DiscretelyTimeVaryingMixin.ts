@@ -38,10 +38,8 @@ function DiscretelyTimeVaryingMixin<
     }
     abstract get discreteTimes(): DiscreteTimeAsJS[] | undefined;
 
-    @computed
-    get currentTime(): string | undefined {
-      const time = super.currentTime;
-      if (time === undefined || time === null) {
+    protected currentTimeOverride(traitValue: string | null | undefined) {
+      if (traitValue === undefined || traitValue === null) {
         if (this.initialTimeSource === "now") {
           return JulianDate.toIso8601(JulianDate.now(), DATE_SECONDS_PRECISION);
         } else if (this.initialTimeSource === "start") {
@@ -61,12 +59,12 @@ function DiscretelyTimeVaryingMixin<
           });
         }
       }
-      return time;
+      return traitValue;
     }
 
     @computed({ equals: JulianDate.equals })
     get currentTimeAsJulianDate() {
-      return toJulianDate(this.currentTime);
+      return toJulianDate(this.currentTime ?? undefined);
     }
 
     @computed({ equals: JulianDate.equals })
@@ -94,6 +92,10 @@ function DiscretelyTimeVaryingMixin<
 
     @computed
     get discreteTimesAsSortedJulianDates(): AsJulian[] | undefined {
+      return this.createDiscreteTimesAsSortedJulianDates();
+    }
+
+    protected createDiscreteTimesAsSortedJulianDates() {
       const discreteTimes = this.discreteTimes;
       if (discreteTimes === undefined) {
         return undefined;
@@ -234,11 +236,9 @@ function DiscretelyTimeVaryingMixin<
       return this.nextDiscreteTimeIndex !== undefined;
     }
 
-    @computed
-    get startTime(): string | undefined {
-      const time = super.startTime;
+    protected startTimeOverride(traitValue: string | undefined) {
       if (
-        time === undefined &&
+        traitValue === undefined &&
         this.discreteTimesAsSortedJulianDates &&
         this.discreteTimesAsSortedJulianDates.length > 0
       ) {
@@ -247,14 +247,12 @@ function DiscretelyTimeVaryingMixin<
           DATE_SECONDS_PRECISION
         );
       }
-      return time;
+      return traitValue;
     }
 
-    @computed
-    get stopTime(): string | undefined {
-      const time = super.stopTime;
+    protected stopTimeOverride(traitValue: string | undefined) {
       if (
-        time === undefined &&
+        traitValue === undefined &&
         this.discreteTimesAsSortedJulianDates &&
         this.discreteTimesAsSortedJulianDates.length > 0
       ) {
@@ -265,15 +263,14 @@ function DiscretelyTimeVaryingMixin<
           DATE_SECONDS_PRECISION
         );
       }
-      return time;
+      return traitValue;
     }
 
     /**
      * Try to calculate a multiplier which results in a new time step every {this.multiplierDefaultDeltaStep} seconds. For example, if {this.multiplierDefaultDeltaStep = 5} it would set the `multiplier` so that a new time step (of this dataset) would appear every five seconds (on average) if the timeline is playing.
      */
-    @computed
-    get multiplier() {
-      if (super.multiplier) return super.multiplier;
+    protected multiplierOverride(traitValue: number | undefined) {
+      if (traitValue) return traitValue;
 
       if (
         !isDefined(this.startTimeAsJulianDate) ||
@@ -281,7 +278,7 @@ function DiscretelyTimeVaryingMixin<
         !isDefined(this.multiplierDefaultDeltaStep) ||
         !isDefined(this.discreteTimesAsSortedJulianDates)
       )
-        return;
+        return undefined;
 
       const dSeconds =
         (this.stopTimeAsJulianDate.dayNumber -
