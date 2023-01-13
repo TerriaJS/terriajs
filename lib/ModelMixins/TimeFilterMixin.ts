@@ -144,7 +144,7 @@ function TimeFilterMixin<T extends Constructor<Model<TimeFilterTraits>>>(
         return super.createDiscreteTimesAsSortedJulianDates();
       }
 
-      return super.discreteTimesAsSortedJulianDates?.filter((dt) =>
+      return super.createDiscreteTimesAsSortedJulianDates()?.filter((dt) =>
         featureTimes.some((d) => d.equals(dt.time))
       );
     }
