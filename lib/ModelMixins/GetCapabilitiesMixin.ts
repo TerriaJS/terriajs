@@ -1,6 +1,6 @@
-import { computed } from "mobx";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Definition/Model";
+import { TraitOverrides } from "../Models/Definition/ModelPropertiesFromTraits";
 import StratumOrder from "../Models/Definition/StratumOrder";
 import GetCapabilitiesTraits from "../Traits/TraitsClasses/GetCapabilitiesTraits";
 
@@ -10,15 +10,22 @@ function GetCapabilitiesMixin<T extends Constructor<CapabilitiesModel>>(
   Base: T
 ) {
   abstract class GetCapabilitiesMixin extends Base {
-    protected abstract get defaultGetCapabilitiesUrl(): string | undefined;
-
-    protected getCapabilitiesUrlOverride(traitValue: string | undefined) {
-      if (traitValue !== undefined) {
-        return traitValue;
-      } else {
-        return this.defaultGetCapabilitiesUrl;
-      }
+    get _createTraitOverrides(): TraitOverrides<GetCapabilitiesTraits> {
+      const superOverrides = super._createTraitOverrides;
+      return {
+        ...superOverrides,
+        getCapabilitiesUrl: () => {
+          const value = superOverrides.getCapabilitiesUrl();
+          if (value !== undefined) {
+            return value;
+          } else {
+            return this.defaultGetCapabilitiesUrl;
+          }
+        }
+      };
     }
+
+    protected abstract get defaultGetCapabilitiesUrl(): string | undefined;
   }
   return GetCapabilitiesMixin;
 }

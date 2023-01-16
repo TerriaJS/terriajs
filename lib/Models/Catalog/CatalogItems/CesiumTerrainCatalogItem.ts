@@ -7,6 +7,7 @@ import UrlMixin from "../../../ModelMixins/UrlMixin";
 import CesiumTerrainCatalogItemTraits from "../../../Traits/TraitsClasses/CesiumTerrainCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import TerriaError from "../../../Core/TerriaError";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 
 export default class CesiumTerrainCatalogItem extends UrlMixin(
   MappableMixin(CatalogMemberMixin(CreateModel(CesiumTerrainCatalogItemTraits)))
@@ -23,21 +24,27 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
     return CesiumTerrainCatalogItem.type;
   }
 
-  protected disableZoomToOverride(traitValue: boolean | undefined) {
-    return true;
+  get _createTraitOverrides(): TraitOverrides<CesiumTerrainCatalogItemTraits> {
+    const superOverrides = super._createTraitOverrides;
+    return {
+      ...superOverrides,
+      disableZoomTo: () => {
+        return true;
+      },
+      shortReport: () => {
+        const value = superOverrides.shortReport();
+        if (value === undefined) {
+          const status = this.isTerrainActive ? "In use" : "Not in use";
+          return `Terrain status: ${status}`;
+        }
+        return value;
+      }
+    };
   }
 
   @computed
   private get isTerrainActive() {
     return this.terria.terrainProvider === this.terrainProvider;
-  }
-
-  protected shortReportOverride(traitValue: string | undefined) {
-    if (traitValue === undefined) {
-      const status = this.isTerrainActive ? "In use" : "Not in use";
-      return `Terrain status: ${status}`;
-    }
-    return traitValue;
   }
 
   /**

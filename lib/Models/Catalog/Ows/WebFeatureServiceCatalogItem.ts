@@ -24,6 +24,7 @@ import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import WebFeatureServiceCapabilities, {
@@ -461,18 +462,24 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
     }
   }
 
-  protected shortReportOverride(traitValue: string | undefined) {
-    // Show notice if reached
-    if (
-      this.readyData?.features !== undefined &&
-      this.readyData!.features.length >= this.maxFeatures
-    ) {
-      return i18next.t(
-        "models.webFeatureServiceCatalogItem.reachedMaxFeatureLimit",
-        this
-      );
-    }
-    return traitValue;
+  get _createTraitOverrides(): TraitOverrides<WebFeatureServiceCatalogItemTraits> {
+    const superOverrides = super._createTraitOverrides;
+    return {
+      ...superOverrides,
+      shortReport: () => {
+        // Show notice if reached
+        if (
+          this.readyData?.features !== undefined &&
+          this.readyData!.features.length >= this.maxFeatures
+        ) {
+          return i18next.t(
+            "models.webFeatureServiceCatalogItem.reachedMaxFeatureLimit",
+            this
+          );
+        }
+        return superOverrides.shortReport();
+      }
+    };
   }
 }
 

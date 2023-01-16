@@ -32,6 +32,7 @@ import WebMapTileServiceCapabilities, {
   WmtsCapabilitiesLegend,
   WmtsLayer
 } from "./WebMapTileServiceCapabilities";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 
 interface UsableTileMatrixSets {
   identifiers: string[];
@@ -461,11 +462,18 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     });
   }
 
-  protected cacheDurationOverride(traitValue: string | undefined) {
-    if (isDefined(traitValue)) {
-      return traitValue;
-    }
-    return "1d";
+  get _createTraitOverrides(): TraitOverrides<WebMapTileServiceCatalogItemTraits> {
+    const superOverrides = super._createTraitOverrides;
+    return {
+      ...superOverrides,
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        }
+        return "1d";
+      }
+    };
   }
 
   @computed

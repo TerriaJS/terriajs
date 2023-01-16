@@ -11,6 +11,7 @@ import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStra
 import CsvCatalogItemTraits from "../../../Traits/TraitsClasses/CsvCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import { BaseModel } from "../../Definition/Model";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import HasLocalData from "../../HasLocalData";
 import Terria from "../../Terria";
@@ -74,11 +75,18 @@ export default class CsvCatalogItem
     );
   }
 
-  protected cacheDurationOverride(traitValue: string | undefined) {
-    if (isDefined(traitValue)) {
-      return traitValue;
-    }
-    return "1d";
+  get _createTraitOverrides(): TraitOverrides<CsvCatalogItemTraits> {
+    const superOverrides = super._createTraitOverrides;
+    return {
+      ...superOverrides,
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        }
+        return "1d";
+      }
+    };
   }
 
   protected async _exportData() {

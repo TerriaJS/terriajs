@@ -22,6 +22,7 @@ import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 
 interface DocumentInfo {
   Title?: string;
@@ -97,13 +98,6 @@ export class FeatureServerStratum extends LoadableStratum(
         content: this._featureServer.copyrightText
       })
     ];
-  }
-
-  protected cacheDurationOverride(traitValue: string | undefined) {
-    if (isDefined(traitValue)) {
-      return traitValue;
-    }
-    return "1d";
   }
 
   @computed get dataCustodian() {
@@ -227,6 +221,20 @@ export default class ArcGisFeatureServerCatalogGroup extends UrlMixin(
 
   get typeName() {
     return i18next.t("models.arcGisFeatureServerCatalogGroup.name");
+  }
+
+  get _createTraitOverrides(): TraitOverrides<ArcGisFeatureServerCatalogGroupTraits> {
+    const superOverrides = super._createTraitOverrides;
+    return {
+      ...superOverrides,
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        }
+        return "1d";
+      }
+    };
   }
 
   protected forceLoadMetadata(): Promise<void> {

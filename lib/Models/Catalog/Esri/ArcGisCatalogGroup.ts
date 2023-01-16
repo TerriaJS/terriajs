@@ -24,6 +24,7 @@ import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 
 interface DocumentInfo {
   Title?: string;
@@ -251,11 +252,18 @@ export default class ArcGisCatalogGroup extends UrlMixin(
     return i18next.t("models.arcGisService.name");
   }
 
-  protected cacheDurationOverride(traitValue: string | undefined) {
-    if (isDefined(traitValue)) {
-      return traitValue;
-    }
-    return "1d";
+  get _createTraitOverrides(): TraitOverrides<ArcGisCatalogGroupTraits> {
+    const superOverrides = super._createTraitOverrides;
+    return {
+      ...superOverrides,
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        }
+        return "1d";
+      }
+    };
   }
 
   protected forceLoadMetadata(): Promise<void> {

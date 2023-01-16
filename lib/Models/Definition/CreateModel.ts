@@ -1,4 +1,4 @@
-import { action, computed, observable, runInAction, toJS } from "mobx";
+import { action, computed, decorate, observable, runInAction, toJS } from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import flatten from "../../Core/flatten";
 import isDefined from "../../Core/isDefined";
@@ -18,6 +18,7 @@ import ModelType, {
   ModelConstructor,
   ModelInterface
 } from "./Model";
+import { TraitOverrides } from "./ModelPropertiesFromTraits";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 
@@ -34,6 +35,32 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     readonly traits = Traits.traits;
     readonly TraitsClass: TraitsConstructor<InstanceType<T>> = <any>Traits;
     readonly strata: Map<string, StratumTraits>;
+
+    @computed
+    get traitOverrides(): TraitOverrides<Traits> {
+      return this._createTraitOverrides;
+    }
+
+    get _createTraitOverrides(): TraitOverrides<Traits> {
+      // In the base class, the trait override functions get the trait
+      // value from the strata.
+      const result: any = {};
+
+      const traits = Traits.traits;
+      const traitsInstance: any = new Traits();
+
+      Object.keys(traits).forEach((traitName) => {
+        const trait = traits[traitName];
+        const defaultValue = traitsInstance[traitName];
+
+        result[traitName] = () => {
+          const value = trait.getValue(this);
+          return value === undefined ? defaultValue : value;
+        };
+      });
+
+      return <TraitOverrides<Traits>>result;
+    }
 
     /**
      * Babel transpiles this & correctly assigns undefined to this property as

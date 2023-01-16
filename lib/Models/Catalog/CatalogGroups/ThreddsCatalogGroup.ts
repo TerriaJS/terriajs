@@ -15,6 +15,7 @@ import { BaseModel } from "../../Definition/Model";
 import { proxyCatalogItemBaseUrl } from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
 import ThreddsItemReference from "../CatalogReferences/ThreddsItemReference";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 
 interface ThreddsCatalog {
   id: string;
@@ -190,11 +191,18 @@ export default class ThreddsCatalogGroup extends UrlMixin(
     return i18next.t("models.thredds.nameGroup");
   }
 
-  protected cacheDurationOverride(traitValue: string | undefined) {
-    if (isDefined(traitValue)) {
-      return traitValue;
-    }
-    return "1d";
+  get _createTraitOverrides(): TraitOverrides<ThreddsCatalogGroupTraits> {
+    const superOverrides = super._createTraitOverrides;
+    return {
+      ...superOverrides,
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        }
+        return "1d";
+      }
+    };
   }
 
   protected async forceLoadMetadata(): Promise<void> {

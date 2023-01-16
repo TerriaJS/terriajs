@@ -32,17 +32,9 @@ export default function addModelStrataView<
   const traitsInstance: any = new Traits();
   Object.keys(traits).forEach((traitName) => {
     const trait = traits[traitName];
-    const defaultValue = traitsInstance[traitName];
     Object.defineProperty(propertyTarget, traitName, {
       get: function () {
-        const value = trait.getValue(this);
-        const valueOrDefault = value === undefined ? defaultValue : value;
-        const overrideName = traitName + "Override";
-        if (this[overrideName] !== undefined) {
-          return this[overrideName](valueOrDefault);
-        } else {
-          return valueOrDefault;
-        }
+        this.traitOverrides[traitName](this);
       },
       enumerable: true,
       configurable: true

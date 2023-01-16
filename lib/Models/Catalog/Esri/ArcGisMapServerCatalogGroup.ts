@@ -18,6 +18,7 @@ import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import ArcGisCatalogGroup from "./ArcGisCatalogGroup";
@@ -260,11 +261,18 @@ export default class ArcGisMapServerCatalogGroup extends UrlMixin(
     return i18next.t("models.arcGisMapServerCatalogGroup.name");
   }
 
-  protected cacheDurationOverride(traitValue: string | undefined) {
-    if (isDefined(traitValue)) {
-      return traitValue;
-    }
-    return "1d";
+  get _createTraitOverrides(): TraitOverrides<ArcGisMapServerCatalogGroupTraits> {
+    const superOverrides = super._createTraitOverrides;
+    return {
+      ...superOverrides,
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        }
+        return "1d";
+      }
+    };
   }
 
   protected forceLoadMetadata(): Promise<void> {

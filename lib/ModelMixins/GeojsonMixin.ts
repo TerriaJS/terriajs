@@ -82,6 +82,7 @@ import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
+import { TraitOverrides } from "../Models/Definition/ModelPropertiesFromTraits";
 import StratumOrder from "../Models/Definition/StratumOrder";
 import TerriaFeature from "../Models/Feature/Feature";
 import { ViewingControl } from "../Models/ViewingControls";
@@ -327,19 +328,17 @@ function GeoJsonMixin<T extends AbstractConstructor<Model<GeoJsonTraits>>>(Base:
       return true;
     }
 
-    protected nameOverride(traitValue: string | undefined) {
-      const superValue = super.nameOverride(traitValue);
-      if (CatalogMemberMixin.isMixedInto(this.sourceReference)) {
-        return superValue || this.sourceReference.name;
-      }
-      return superValue;
-    }
-
-    protected cacheDurationOverride(traitValue: string | undefined) {
-      if (isDefined(traitValue)) {
-        return traitValue;
-      }
-      return "1d";
+    get _createTraitOverrides(): TraitOverrides<GeoJsonTraits> {
+      const superOverrides = super._createTraitOverrides;
+      return {
+        ...superOverrides,
+        name: () => {
+          if (CatalogMemberMixin.isMixedInto(this.sourceReference)) {
+            return superOverrides.name() || this.sourceReference.name;
+          }
+          return superOverrides.name();
+        }
+      };
     }
 
     /**

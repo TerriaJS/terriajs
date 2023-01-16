@@ -23,7 +23,7 @@ import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import { BaseModel } from "../../Definition/Model";
-import ModelPropertiesFromTraits from "../../Definition/ModelPropertiesFromTraits";
+import ModelPropertiesFromTraits, { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import updateModelFromJson from "../../Definition/updateModelFromJson";
@@ -788,11 +788,18 @@ export default class MagdaReference extends AccessControlMixin(
     return undefined;
   }
 
-  protected cacheDurationOverride(traitValue: string | undefined) {
-    if (isDefined(traitValue)) {
-      return traitValue;
-    }
-    return "0d";
+  get _createTraitOverrides(): TraitOverrides<MagdaReferenceTraits> {
+    const superOverrides = super._createTraitOverrides;
+    return {
+      ...superOverrides,
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        }
+        return "0d";
+      }
+    };
   }
 
   protected loadMagdaRecord(options: RecordOptions): Promise<JsonObject> {

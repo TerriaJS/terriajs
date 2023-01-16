@@ -7,6 +7,7 @@ import { isJsonObject, isJsonString, JsonObject } from "../Core/Json";
 import Result from "../Core/Result";
 import hasTraits from "../Models/Definition/hasTraits";
 import Model, { BaseModel } from "../Models/Definition/Model";
+import { TraitOverrides } from "../Models/Definition/ModelPropertiesFromTraits";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
   SelectableDimension
@@ -95,17 +96,46 @@ function CatalogMemberMixin<T extends AbstractConstructor<CatalogMember>>(
       return true;
     }
 
+    // static TraitOverrides = class extends super.TraitOverrides {
+    //   static nameI(instance: CatalogMemberMixin): string | undefined {
+    //     return super.nameI(instance) || instance.uniqueId;
+    //   }
+    // }
+
     @computed
     get inWorkbench() {
       return this.terria.workbench.contains(this);
     }
 
-    protected nameOverride(traitValue: string | undefined) {
-      return traitValue || this.uniqueId;
-    }
+    // static catalogMemberMixinTraitOverrides(
+    //   superOverrides: Constructor<TraitOverrides<CatalogMemberTraits>>
+    // ): TraitOverrides<CatalogMemberTraits> {
+    //   class Overrides extends superOverrides {
+    //     name(instance: CatalogMemberMixin) {
+    //       return super.name() || instance.uniqueId;
+    //     }
+    //   }
+    //   const overrides = Object.create(superOverrides);
+    //   overrides.name = function (this: CatalogMemberMixin) {
+    //     return super.name() || this.uniqueId;
+    //   };
+    //   overrides.nameInCatalog = function (this: CatalogMemberMixin) {
+    //     return super.nameInCatalog() || this.name;
+    //   };
+    //   return overrides;
+    // }
 
-    protected nameInCatalogOverride(traitValue: string | undefined) {
-      return traitValue || this.name;
+    get _createTraitOverrides(): TraitOverrides<CatalogMemberTraits> {
+      const superOverrides = super._createTraitOverrides;
+      return {
+        ...superOverrides,
+        name: () => {
+          return superOverrides.name() || this.uniqueId;
+        },
+        nameInCatalog: () => {
+          return superOverrides.nameInCatalog() || this.name;
+        }
+      };
     }
 
     @computed

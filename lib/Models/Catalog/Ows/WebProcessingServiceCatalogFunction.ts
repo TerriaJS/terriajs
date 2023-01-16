@@ -15,6 +15,7 @@ import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import updateModelFromJson from "../../Definition/updateModelFromJson";
 import BooleanParameter from "../../FunctionParameters/BooleanParameter";
@@ -192,11 +193,18 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     return "Web Processing Service (WPS)";
   }
 
-  protected cacheDurationOverride(traitValue: string | undefined) {
-    if (isDefined(traitValue)) {
-      return traitValue;
-    }
-    return "0d";
+  get _createTraitOverrides(): TraitOverrides<WebProcessingServiceCatalogFunctionTraits> {
+    const superOverrides = super._createTraitOverrides;
+    return {
+      ...superOverrides,
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        }
+        return "0d";
+      }
+    };
   }
 
   /**

@@ -21,7 +21,7 @@ import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import ModelPropertiesFromTraits from "../../Definition/ModelPropertiesFromTraits";
+import ModelPropertiesFromTraits, { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
@@ -240,13 +240,20 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
     );
   }
 
-  protected cacheDurationOverride(traitValue: string | undefined) {
-    if (isDefined(traitValue)) {
-      return traitValue;
-    } else if (isDefined(this._arcgisPortalCatalogGroup)) {
-      return this._arcgisPortalCatalogGroup.cacheDuration;
-    }
-    return "0d";
+  get _createTraitOverrides(): TraitOverrides<ArcGisPortalItemTraits> {
+    const superOverrides = super._createTraitOverrides;
+    return {
+      ...superOverrides,
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        } else if (isDefined(this._arcgisPortalCatalogGroup)) {
+          return this._arcgisPortalCatalogGroup.cacheDuration;
+        }
+        return "0d";
+      }
+    };
   }
 
   @computed

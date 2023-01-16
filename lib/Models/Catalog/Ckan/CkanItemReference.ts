@@ -18,7 +18,7 @@ import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import ModelPropertiesFromTraits from "../../Definition/ModelPropertiesFromTraits";
+import ModelPropertiesFromTraits, { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
@@ -314,11 +314,18 @@ export default class CkanItemReference extends UrlMixin(
     );
   }
 
-  protected cacheDurationOverride(traitValue: string | undefined) {
-    if (isDefined(traitValue)) {
-      return traitValue;
-    }
-    return "1d";
+  get _createTraitOverrides(): TraitOverrides<CkanItemReferenceTraits> {
+    const superOverrides = super._createTraitOverrides;
+    return {
+      ...superOverrides,
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        }
+        return "1d";
+      }
+    };
   }
 
   // We will first attach this to the CkanItemReference

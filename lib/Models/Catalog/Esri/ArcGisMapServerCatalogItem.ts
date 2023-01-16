@@ -37,6 +37,7 @@ import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import MinMaxLevelMixin from "./../../../ModelMixins/MinMaxLevelMixin";
 import { scaleDenominatorToLevel } from "../../../Core/scaleToDenominator";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 
 const proj4 = require("proj4").default;
 
@@ -388,11 +389,18 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     return Promise.resolve();
   }
 
-  protected cacheDurationOverride(traitValue: string | undefined) {
-    if (isDefined(traitValue)) {
-      return traitValue;
-    }
-    return "1d";
+  get _createTraitOverrides(): TraitOverrides<ArcGisMapServerCatalogItemTraits> {
+    const superOverrides = super._createTraitOverrides;
+    return {
+      ...superOverrides,
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        }
+        return "1d";
+      }
+    };
   }
 
   @computed

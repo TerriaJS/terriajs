@@ -26,6 +26,7 @@ import { BaseModel } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 
 export class ArcGisPortalStratum extends LoadableStratum(
   ArcGisPortalCatalogGroupTraits
@@ -358,11 +359,19 @@ export default class ArcGisPortalCatalogGroup extends UrlMixin(
     return i18next.t("models.arcgisPortal.nameGroup");
   }
 
-  protected cacheDurationOverride(traitValue: string | undefined) {
-    if (isDefined(traitValue)) {
-      return traitValue;
-    }
-    return "0d";
+  
+  get _createTraitOverrides(): TraitOverrides<ArcGisPortalCatalogGroupTraits> {
+    const superOverrides = super._createTraitOverrides;
+    return {
+      ...superOverrides,
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        }
+        return "0d";
+      }
+    };
   }
 
   protected forceLoadMetadata(): Promise<void> {
