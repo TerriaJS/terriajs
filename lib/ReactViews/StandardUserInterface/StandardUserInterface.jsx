@@ -20,6 +20,7 @@ import MapNavigation from "./../Map/MapNavigation.jsx";
 import RCMenuBar from "./../Map/RCMenuBar.jsx";
 import MobileHeader from "./../Mobile/MobileHeader.jsx";
 import MapInteractionWindow from "./../Notification/MapInteractionWindow.jsx";
+import NavigationTopBar from "../NavigationBars/NavigationTopBar";
 import Notification from "./../Notification/Notification.jsx";
 import ObserveModelMixin from "./../ObserveModelMixin";
 import RCHotspotSummary from "./../RCHotspotSummary/RCHotspotSummary.jsx";
@@ -194,6 +195,34 @@ const StandardUserInterface = createReactClass({
           ref={w => (this._wrapper = w)}
         >
           <div className={Styles.ui}>
+
+            <Switch>
+              <Route exact path="/">
+                <div className={Styles.tabsContainer}>
+                  <SidePanelSectorTabs terria={terria} viewState={viewState} isTopBar={true}/>
+                </div>
+              </Route>
+
+              <Route exact path={`/sector/:sectorName`}>
+                <div className={Styles.tabsContainer}>
+                  <SidePanelSectorTabs terria={terria} viewState={viewState} isTopBar={true}/>
+                </div>
+              </Route>
+
+              <Route exact path={`/sector/:sectorName/story/:storyID`}>
+                <div className={Styles.storyPanelWrapper}>
+                  <SidePanelSectorTabs terria={terria} viewState={viewState} isTopBar={true}/>
+                </div>
+              </Route>
+
+              <Route exact path={`/sector/:sectorName/story/:storyID/page/:pageIndex`}>
+                <div className={Styles.topbar}>
+                  <NavigationTopBar terria={terria} viewState={viewState}/>
+                </div>
+              </Route>
+            </Switch>
+
+
             <div className={Styles.uiInner}>
               {/* Moved side panel to left */}
               <If
@@ -227,6 +256,22 @@ const StandardUserInterface = createReactClass({
                         viewState={viewState}
                         customFeedbacks={customElements.feedback}
                       />
+                      <If condition={!viewState.hideMapUi()}>
+                        <div
+                          className={classNames({
+                            [Styles.explorerPanelIsVisible]:
+                              viewState.explorerPanelIsVisible,
+                            [Styles.NavigationMap]: true
+                          })}
+                        >
+                          <RCMenuBar terria={terria} viewState={viewState} />
+                          <MapNavigation
+                            terria={terria}
+                            viewState={viewState}
+                            navItems={customElements.nav}
+                          />
+                        </div>
+                      </If>
 
                       {/* Mobile LEGEND*/}
                       {this.removeDuplicateLegends(
@@ -278,44 +323,29 @@ const StandardUserInterface = createReactClass({
                     <Switch>
                       <Route exact path="/">
                         <div className={Styles.tabsContainer}>
-                          <SidePanelSectorTabs
-                            terria={terria}
-                            viewState={viewState}
-                          />
+                          <SidePanelSectorTabs terria={terria} viewState={viewState} isTopBar={false}/>
                         </div>
                       </Route>
 
                       <Route exact path={`/sector/:sectorName`}>
                         <div className={Styles.tabsContainer}>
-                          <SidePanelSectorTabs
-                            terria={terria}
-                            viewState={viewState}
-                          />
+                          <SidePanelSectorTabs terria={terria} viewState={viewState} isTopBar={false}/>
                         </div>
                       </Route>
 
                       <Route exact path={`/sector/:sectorName/story/:storyID`}>
                         <div className={Styles.storyPanelWrapper}>
-                          <RCHotspotSummary
-                            terria={terria}
-                            viewState={viewState}
-                          />
+                          <RCHotspotSummary terria={terria} viewState={viewState}/>
                         </div>
                       </Route>
 
-                      <Route
-                        exact
-                        path={`/sector/:sectorName/story/:storyID/page/:pageIndex`}
-                      >
+                      <Route exact path={`/sector/:sectorName/story/:storyID/page/:pageIndex`}>
                         <div className={Styles.storyPanelWrapper}>
                           <RCStoryPanel terria={terria} viewState={viewState} />
                         </div>
                       </Route>
 
-                      <Route
-                        exact
-                        path={`/sector/:sectorName/story/:storyID/microstory/:microstoryID`}
-                      >
+                      <Route exact path={`/sector/:sectorName/story/:storyID/microstory/:microstoryID`}>
                         <div className={Styles.storyPanelWrapper}>
                           <RCStoryPanel terria={terria} viewState={viewState} />
                         </div>
@@ -352,6 +382,22 @@ const StandardUserInterface = createReactClass({
                       viewState={viewState}
                       customFeedbacks={customElements.feedback}
                     />
+                    <If condition={!viewState.hideMapUi()}>
+                      <div
+                        className={classNames({
+                          [Styles.explorerPanelIsVisible]:
+                            viewState.explorerPanelIsVisible,
+                          [Styles.NavigationMap]: true
+                        })}
+                      >
+                        <RCMenuBar terria={terria} viewState={viewState} />
+                        <MapNavigation
+                          terria={terria}
+                          viewState={viewState}
+                          navItems={customElements.nav}
+                        />
+                      </div>
+                    </If>
                     <main>
                       <ExplorerWindow
                         terria={terria}
@@ -416,38 +462,23 @@ const StandardUserInterface = createReactClass({
 
                     <Switch>
                       <Route exact path="/">
-                        <SidePanelSectorTabs
-                          terria={terria}
-                          viewState={viewState}
-                        />
+                        <SidePanelSectorTabs terria={terria} viewState={viewState} isTopBar={false}/>
                       </Route>
 
                       <Route exact path={`/sector/:sectorName`}>
-                        <SidePanelSectorTabs
-                          terria={terria}
-                          viewState={viewState}
-                        />
+                        <SidePanelSectorTabs terria={terria} viewState={viewState} isTopBar={false}/>
                       </Route>
 
                       <Route exact path={`/sector/:sectorName/story/:storyID`}>
-                        <RCHotspotSummary
-                          terria={terria}
-                          viewState={viewState}
-                        />
+                        <RCHotspotSummary terria={terria} viewState={viewState}/>
                       </Route>
 
-                      <Route
-                        exact
-                        path={`/sector/:sectorName/story/:storyID/page/:pageIndex`}
-                      >
-                        <RCStoryPanel terria={terria} viewState={viewState} />
+                      <Route exact path={`/sector/:sectorName/story/:storyID/page/:pageIndex`}>
+                        <RCStoryPanel terria={terria} viewState={viewState}/>
                       </Route>
 
-                      <Route
-                        exact
-                        path={`/sector/:sectorName/story/:storyID/microstory/:microstoryID`}
-                      >
-                        <RCStoryPanel terria={terria} viewState={viewState} />
+                      <Route exact path={`/sector/:sectorName/story/:storyID/microstory/:microstoryID`}>
+                        <RCStoryPanel terria={terria} viewState={viewState}/>
                       </Route>
 
                       <Route path="/builder">
@@ -485,33 +516,8 @@ const StandardUserInterface = createReactClass({
                 </div>
               </Medium>
             </div>
-          </div>
 
-          <If condition={!viewState.hideMapUi()}>
-            <Medium>
-              <div
-                className={classNames({
-                  [Styles.explorerPanelIsVisible]:
-                    viewState.explorerPanelIsVisible,
-                  [Styles.NavigationMap]: true
-                })}
-              >
-                {/* <MenuBar
-                    terria={terria}
-                    viewState={viewState}
-                    allBaseMaps={allBaseMaps}
-                    menuItems={customElements.menu}
-                    animationDuration={animationDuration}
-                  /> */}
-                <RCMenuBar terria={terria} viewState={viewState} />
-                <MapNavigation
-                  terria={terria}
-                  viewState={viewState}
-                  navItems={customElements.nav}
-                />
-              </div>
-            </Medium>
-          </If>
+          </div>
 
           <Notification viewState={viewState} />
           <SatelliteGuide terria={terria} viewState={viewState} />

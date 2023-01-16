@@ -32,7 +32,7 @@
   padding: $padding;
   display: flex;
   flex-direction: column;
-  position: fixed;
+  position: absolute;
   top: 0;
 }
 
@@ -46,7 +46,18 @@
   flex-basis: 100%;
 }
 
+.topbar {
+  width: 100%;
+  background: $light;
+}
+.bottombar {
+  width: 100%;
+  background: $light;
+}
+
 .ui {
+  display: grid;
+  grid-template-rows: 1fr auto;
   overflow: hidden;
   background: $light;
   width: 100%;
@@ -202,7 +213,6 @@
   .uiInner {
     display: flex;
     flex: 1;
-    height: 100%;
     flex-direction: column;
   }
 }
@@ -212,14 +222,12 @@
     display: flex;
     overflow: hidden;
     flex-direction: row;
-    height: 100%;
   }
   .sidePanel {
     vertical-align: top;
   }
   .map {
     position: relative;
-    height: 100vh;
     top: auto;
     bottom: auto;
     left: auto;

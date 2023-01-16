@@ -6,11 +6,13 @@ import Tooltip from "../RCTooltip/RCTooltip";
 import Styles from "./SidePanelSectorTabs.scss";
 import sectors from "../../Data/Sectors.js";
 import { getSectorHotspotsList, filterHotspots } from "../../Models/Receipt";
+import Branding from "../StandardUserInterface/Branding"
+
 class SidePanelSectorTabs extends React.Component {
   constructor(props) {
-    super(props);    
+    super(props);
   }
-  
+
   state = {
     selectedHotspotsList: null,
     selectedId: -1
@@ -26,6 +28,7 @@ class SidePanelSectorTabs extends React.Component {
 
   render() {
     const routedSectorName = this.props.match.params.sectorName;
+    const isTopBar = this.props.isTopBar;
 
     const selectedSectorId = sectors.findIndex(sector => sector.id === routedSectorName);
     const sector = sectors.find(sector => sector.id === routedSectorName);
@@ -38,34 +41,41 @@ class SidePanelSectorTabs extends React.Component {
           //  Sector Selector
           //
         }
-        <div className={Styles.tabsContainer}>
-          {sectors.map((sector, id) => {
-            return (
-              <div key={`sidePanelSectorTabs/sector/${sector.id}`}>
-                <Tooltip content={sector.title} direction="bottom" delay="100">
-                  <Link to={`/sector/${sector.id}`}>
-                    <Icon
-                      glyph={selectedSectorId === id ? sector.iconHover : sector.icon}
-                      className={selectedSectorId === id ? Styles.selectedTab : ""}
-                    />
-                  </Link>
-                </Tooltip>
-              </div>
-            );
-          })}
-        </div>
+        {isTopBar && (
+          <div className={Styles.topbar}>
+            <div className={Styles.logo}>
+              <Branding viewState={this.props.viewState} />
+            </div>
+            <div className={Styles.tabsContainer}>
+              {sectors.map((sector, id) => {
+                return (
+                  <div key={`sidePanelSectorTabs/sector/${sector.id}`}>
+                    <Tooltip content={sector.title} direction="bottom" delay="100">
+                      <Link to={`/sector/${sector.id}`}>
+                        <Icon
+                          glyph={selectedSectorId === id ? sector.iconHover : sector.icon}
+                          className={selectedSectorId === id ? Styles.selectedTab : ""}
+                        />
+                      </Link>
+                    </Tooltip>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
         {
           //
           // Sector info tab
           //
         }
-        {!!sector && (
+        {!!sector && !isTopBar && (
           <div className={Styles.panel}>
             <div className={Styles.panelBarTitle}>
               <h3 style={{ marginTop: 0 }}>{sector.title}</h3>
               <Link to={`/`}>
                 <button
-                  className={Styles.exitBtn}                
+                  className={Styles.exitBtn}
                 >
                   <Icon glyph={Icon.GLYPHS.close} />
                 </button>
@@ -110,7 +120,7 @@ class SidePanelSectorTabs extends React.Component {
           // Welcome tab
           //
         }
-        {!sector && (
+        {!sector && !isTopBar && (
           <div className={Styles.panel}>
             <h2 style={{ marginTop: 0 }}>Welcome</h2>
             <div className="rc-card">

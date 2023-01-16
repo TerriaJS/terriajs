@@ -11,8 +11,8 @@
 .RCHotspotSummary {
   padding: 16px 16px 0px 16px;
   display: grid;
-  grid-template-rows: auto auto 1fr auto;
-  height: 100vh;
+  grid-template-rows: 1fr auto;
+  height: 100%;
   box-sizing: border-box;
   @media (max-width: $xs) {
     height: 60vh;
@@ -114,14 +114,17 @@
   border-radius: 2px;
 }
 
-.storyBottomNavigationItems {
+.pageNavigation {
   display: grid;
-  align-items: center;
-  padding: 4px 0;
-}
-
-.isPushedUp {
-  bottom: 350px;
+  grid-template-columns: 1fr 1fr 1fr;
+  margin: 8px 24px 8px 24px;
+  .pageNum {
+    text-align: center;
+  }
+  .nextBtn {
+    display: flex;
+    justify-content: flex-end;
+  }
 }
 
 .relative {
@@ -144,6 +147,7 @@
   font-family: $font-base;
   height: 100%;
   overflow-y: auto;
+  padding-bottom: 24px;
 
   img {
     max-width: 100%;
@@ -165,174 +169,6 @@
     -moz-hyphens: auto;
     -webkit-hyphens: auto;
     hyphens: auto;
-  }
-}
-
-.locationBtn,
-.exitBtn,
-.nextBtn,
-.previousBtn {
-  z-index: 999;
-  composes: btn from "../../Sass/common/_buttons.scss";
-  display: block;
-  padding: 0 8px;
-  &:not([disabled]):hover {
-    svg {
-      fill: $color-primary;
-    }
-  }
-  svg {
-    fill: #888888;
-    width: 15px;
-  }
-}
-.nextBtn,
-.previousBtn {
-  height: calc(100% - 51px);
-  svg {
-    width: 15px;
-    height: 15px;
-  }
-}
-
-.locationBtn {
-  border-right: 1px solid $field-border;
-
-  svg {
-    width: 18px;
-  }
-}
-
-.exitBtn,
-.locationBtn {
-  svg {
-    height: 31px;
-  }
-}
-
-.navs {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.navBtn {
-  height: 30px;
-
-  button {
-    background: transparent;
-    border: 0;
-    box-shadow: 0;
-    margin-top: 10px;
-  }
-  svg {
-    fill: #888888;
-    float: right;
-    width: 10px;
-    height: 10px;
-  }
-}
-.navBtnMobile {
-  display: flex;
-  width: 100%;
-  bottom: -25px;
-  position: absolute;
-}
-.mobileNavBtn {
-  composes: btn from "../../Sass/common/_buttons.scss";
-  background: #ffffff;
-  color: $text-dark;
-  padding: 2px 8px;
-  border-right: 1px solid #dddddd;
-  border-top: 1px solid #dddddd;
-  &.isActive {
-    background: $color-primary;
-    color: #ffffff;
-  }
-}
-
-// Thanks to https://loading.io/css/
-.ldsDefault {
-  display: inline-block;
-  position: relative;
-  width: 80px;
-  height: 80px;
-}
-.ldsDefault div {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background: rgb(148, 148, 148);
-  border-radius: 50%;
-  animation: ldsDefault 1.2s linear infinite;
-}
-.ldsDefault div:nth-child(1) {
-  animation-delay: 0s;
-  top: 37px;
-  left: 66px;
-}
-.ldsDefault div:nth-child(2) {
-  animation-delay: -0.1s;
-  top: 22px;
-  left: 62px;
-}
-.ldsDefault div:nth-child(3) {
-  animation-delay: -0.2s;
-  top: 11px;
-  left: 52px;
-}
-.ldsDefault div:nth-child(4) {
-  animation-delay: -0.3s;
-  top: 7px;
-  left: 37px;
-}
-.ldsDefault div:nth-child(5) {
-  animation-delay: -0.4s;
-  top: 11px;
-  left: 22px;
-}
-.ldsDefault div:nth-child(6) {
-  animation-delay: -0.5s;
-  top: 22px;
-  left: 11px;
-}
-.ldsDefault div:nth-child(7) {
-  animation-delay: -0.6s;
-  top: 37px;
-  left: 7px;
-}
-.ldsDefault div:nth-child(8) {
-  animation-delay: -0.7s;
-  top: 52px;
-  left: 11px;
-}
-.ldsDefault div:nth-child(9) {
-  animation-delay: -0.8s;
-  top: 62px;
-  left: 22px;
-}
-.ldsDefault div:nth-child(10) {
-  animation-delay: -0.9s;
-  top: 66px;
-  left: 37px;
-}
-.ldsDefault div:nth-child(11) {
-  animation-delay: -1s;
-  top: 62px;
-  left: 52px;
-}
-.ldsDefault div:nth-child(12) {
-  animation-delay: -1.1s;
-  top: 52px;
-  left: 62px;
-}
-@keyframes ldsDefault {
-  0%, 20%, 80%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.5);
   }
 }
 
