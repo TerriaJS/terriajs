@@ -7,5 +7,5 @@ export default class ReferenceTraits extends mixTraits(ItemPropertiesTraits) {
     name: "Is catalog item open in workbench",
     description: "Whether the item in the workbench open or collapsed."
   })
-  isOpenInWorkbench?: boolean = true;
+  isOpenInWorkbench: boolean = true;
 }

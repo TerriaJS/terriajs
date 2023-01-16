@@ -56,7 +56,7 @@ import PolygonGraphics from "terriajs-cesium/Source/DataSources/PolygonGraphics"
 import PolylineGraphics from "terriajs-cesium/Source/DataSources/PolylineGraphics";
 import Property from "terriajs-cesium/Source/DataSources/Property";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import formatPropertyValue from "../Core/formatPropertyValue";
 import hashFromString from "../Core/hashFromString";
@@ -217,7 +217,7 @@ interface FeatureCounts {
   total: number;
 }
 
-function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
+function GeoJsonMixin<T extends AbstractConstructor<Model<GeoJsonTraits>>>(Base: T) {
   abstract class GeoJsonMixin extends TableMixin(
     FeatureInfoUrlTemplateMixin(UrlMixin(Base))
   ) {

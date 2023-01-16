@@ -3,7 +3,7 @@ import { action, computed, runInAction } from "mobx";
 import clone from "terriajs-cesium/Source/Core/clone";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import AsyncLoader from "../Core/AsyncLoader";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
@@ -25,7 +25,7 @@ naturalSort.insensitive = true;
 
 const MERGED_GROUP_ID_PREPEND = "__merged__";
 
-function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
+function GroupMixin<T extends AbstractConstructor<Model<GroupTraits>>>(Base: T) {
   abstract class Klass extends Base implements Group {
     private _memberLoader = new AsyncLoader(this.forceLoadMembers.bind(this));
 

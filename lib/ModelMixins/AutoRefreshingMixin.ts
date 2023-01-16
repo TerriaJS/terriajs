@@ -6,7 +6,7 @@ import {
   reaction
 } from "mobx";
 import { now } from "mobx-utils";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import Model from "../Models/Definition/Model";
 import AutoRefreshingTraits from "../Traits/TraitsClasses/AutoRefreshingTraits";
 import MappableMixin from "./MappableMixin";
@@ -14,7 +14,7 @@ import MappableMixin from "./MappableMixin";
 type AutoRefreshing = Model<AutoRefreshingTraits>;
 
 export default function AutoRefreshingMixin<
-  T extends Constructor<AutoRefreshing>
+  T extends AbstractConstructor<AutoRefreshing>
 >(Base: T) {
   abstract class AutoRefreshingMixin extends MappableMixin(Base) {
     private autoRefreshDisposer: IReactionDisposer | undefined;
