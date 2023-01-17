@@ -75,8 +75,8 @@ export default class CsvCatalogItem
     );
   }
 
-  get _createTraitOverrides(): TraitOverrides<CsvCatalogItemTraits> {
-    const superOverrides = super._createTraitOverrides;
+  _createTraitOverrides(): TraitOverrides<CsvCatalogItemTraits> {
+    const superOverrides = super._createTraitOverrides();
     return {
       ...superOverrides,
       cacheDuration: () => {

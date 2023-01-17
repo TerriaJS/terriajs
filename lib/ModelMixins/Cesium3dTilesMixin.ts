@@ -292,8 +292,8 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       return [this.tileset, ...this.clippingMapItems];
     }
 
-    get _createTraitOverrides(): TraitOverrides<Cesium3dTilesTraits> {
-      const superOverrides = super._createTraitOverrides;
+    _createTraitOverrides(): TraitOverrides<Cesium3dTilesTraits> {
+      const superOverrides = super._createTraitOverrides();
       return {
         ...superOverrides,
         shortReport: () => {

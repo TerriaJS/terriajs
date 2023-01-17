@@ -337,8 +337,8 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     }
   }
 
-  get _createTraitOverrides(): TraitOverrides<SensorObservationServiceCatalogItemTraits> {
-    const superOverrides = super._createTraitOverrides;
+  _createTraitOverrides(): TraitOverrides<SensorObservationServiceCatalogItemTraits> {
+    const superOverrides = super._createTraitOverrides();
     return {
       ...superOverrides,
       cacheDuration: () => {
@@ -551,9 +551,9 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   createSelectableDimensions(): SelectableDimension[] {
     return filterOutUndefined([
       // Filter out proceduresSelector - as it duplicates TableMixin.styleDimensions
-      ...super.createSelectableDimensions().filter(
-        (dim) => dim.id !== this.proceduresSelector?.id
-      ),
+      ...super
+        .createSelectableDimensions()
+        .filter((dim) => dim.id !== this.proceduresSelector?.id),
       this.proceduresSelector,
       this.observablesSelector
     ]);

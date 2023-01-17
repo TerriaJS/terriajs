@@ -73,8 +73,8 @@ class GpxCatalogItem extends GeoJsonMixin(
     return Promise.resolve();
   }
 
-  get _createTraitOverrides(): TraitOverrides<GpxCatalogItemTraits> {
-    const superOverrides = super._createTraitOverrides;
+  _createTraitOverrides(): TraitOverrides<GpxCatalogItemTraits> {
+    const superOverrides = super._createTraitOverrides();
     return {
       ...superOverrides,
       name: () => {

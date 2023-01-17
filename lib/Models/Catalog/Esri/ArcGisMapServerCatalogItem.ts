@@ -389,8 +389,8 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     return Promise.resolve();
   }
 
-  get _createTraitOverrides(): TraitOverrides<ArcGisMapServerCatalogItemTraits> {
-    const superOverrides = super._createTraitOverrides;
+  _createTraitOverrides(): TraitOverrides<ArcGisMapServerCatalogItemTraits> {
+    const superOverrides = super._createTraitOverrides();
     return {
       ...superOverrides,
       cacheDuration: () => {

@@ -56,8 +56,8 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
       return true;
     }
 
-    get _createTraitOverrides(): TraitOverrides<GltfTraits> {
-      const superOverrides = super._createTraitOverrides;
+    _createTraitOverrides(): TraitOverrides<GltfTraits> {
+      const superOverrides = super._createTraitOverrides();
       return {
         ...superOverrides,
         disableZoomTo: () => {

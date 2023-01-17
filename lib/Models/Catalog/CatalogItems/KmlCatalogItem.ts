@@ -48,8 +48,8 @@ class KmlCatalogItem
     return isDefined(this._kmlFile);
   }
 
-  get _createTraitOverrides(): TraitOverrides<KmlCatalogItemTraits> {
-    const superOverrides = super._createTraitOverrides;
+  _createTraitOverrides(): TraitOverrides<KmlCatalogItemTraits> {
+    const superOverrides = super._createTraitOverrides();
     return {
       ...superOverrides,
       cacheDuration: () => {

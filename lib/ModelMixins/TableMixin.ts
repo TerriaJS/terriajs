@@ -238,8 +238,8 @@ function TableMixin<T extends AbstractConstructor<Model<TableTraits>>>(
       });
     }
 
-    get _createTraitOverrides(): TraitOverrides<TableTraits> {
-      const superOverrides = super._createTraitOverrides;
+    _createTraitOverrides(): TraitOverrides<TableTraits> {
+      const superOverrides = super._createTraitOverrides();
       return {
         ...superOverrides,
         disableZoomTo: () => {

@@ -191,8 +191,8 @@ export default class ThreddsCatalogGroup extends UrlMixin(
     return i18next.t("models.thredds.nameGroup");
   }
 
-  get _createTraitOverrides(): TraitOverrides<ThreddsCatalogGroupTraits> {
-    const superOverrides = super._createTraitOverrides;
+  _createTraitOverrides(): TraitOverrides<ThreddsCatalogGroupTraits> {
+    const superOverrides = super._createTraitOverrides();
     return {
       ...superOverrides,
       cacheDuration: () => {

@@ -240,8 +240,8 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
     );
   }
 
-  get _createTraitOverrides(): TraitOverrides<ArcGisPortalItemTraits> {
-    const superOverrides = super._createTraitOverrides;
+  _createTraitOverrides(): TraitOverrides<ArcGisPortalItemTraits> {
+    const superOverrides = super._createTraitOverrides();
     return {
       ...superOverrides,
       cacheDuration: () => {

@@ -38,10 +38,10 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
 
     @computed
     get traitOverrides(): TraitOverrides<Traits> {
-      return this._createTraitOverrides;
+      return this._createTraitOverrides();
     }
 
-    get _createTraitOverrides(): TraitOverrides<Traits> {
+    _createTraitOverrides(): TraitOverrides<Traits> {
       // In the base class, the trait override functions get the trait
       // value from the strata.
       const result: any = {};

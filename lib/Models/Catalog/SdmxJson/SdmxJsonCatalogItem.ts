@@ -59,8 +59,8 @@ export default class SdmxJsonCatalogItem
     return SdmxJsonCatalogItem.type;
   }
 
-  get _createTraitOverrides(): TraitOverrides<SdmxCatalogItemTraits> {
-    const superOverrides = super._createTraitOverrides;
+  _createTraitOverrides(): TraitOverrides<SdmxCatalogItemTraits> {
+    const superOverrides = super._createTraitOverrides();
     return {
       ...superOverrides,
       cacheDuration: () => {
@@ -73,10 +73,10 @@ export default class SdmxJsonCatalogItem
       url: () => {
         const value = superOverrides.url();
         if (!value) return undefined;
-    
+
         // Get dataKey - this is used to filter dataflows by dimension values - it must be compliant with the KeyType defined in the SDMX WADL (period separated dimension values) - dimension order is very important!
         // We must sort the dimensions by position as traits lose their order across strata
-    
+
         const dataKey = this.dimensions
           .slice()
           .sort(
@@ -92,7 +92,7 @@ export default class SdmxJsonCatalogItem
               : ""
           )
           .join(".");
-    
+
         return `${value}/data/${this.dataflowId}/${dataKey}`;
       }
     };

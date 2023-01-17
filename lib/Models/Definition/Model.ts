@@ -85,7 +85,7 @@ export interface ModelInterface<T extends ModelTraits> {
   // This is a property rather than a method because TypeScript does not merge the
   // return values of parameterless methods in subclasses the way it does the
   // return values of properties.
-  readonly _createTraitOverrides: TraitOverrides<T>;
+  _createTraitOverrides(): TraitOverrides<T>;
 
   /**
    * The model whose {@link ReferenceMixin} references this model.

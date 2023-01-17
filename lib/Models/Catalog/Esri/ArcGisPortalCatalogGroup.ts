@@ -360,8 +360,8 @@ export default class ArcGisPortalCatalogGroup extends UrlMixin(
   }
 
   
-  get _createTraitOverrides(): TraitOverrides<ArcGisPortalCatalogGroupTraits> {
-    const superOverrides = super._createTraitOverrides;
+  _createTraitOverrides(): TraitOverrides<ArcGisPortalCatalogGroupTraits> {
+    const superOverrides = super._createTraitOverrides();
     return {
       ...superOverrides,
       cacheDuration: () => {

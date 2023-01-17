@@ -125,8 +125,8 @@ function CatalogMemberMixin<T extends AbstractConstructor<CatalogMember>>(
     //   return overrides;
     // }
 
-    get _createTraitOverrides(): TraitOverrides<CatalogMemberTraits> {
-      const superOverrides = super._createTraitOverrides;
+    _createTraitOverrides(): TraitOverrides<CatalogMemberTraits> {
+      const superOverrides = super._createTraitOverrides();
       return {
         ...superOverrides,
         name: () => {
