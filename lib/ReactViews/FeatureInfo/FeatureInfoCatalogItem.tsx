@@ -1,3 +1,4 @@
+import { observer } from "mobx-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";
@@ -15,7 +16,7 @@ interface Props {
   printView?: boolean;
 }
 
-export default (props: Props) => {
+export default observer((props: Props) => {
   const { t } = useTranslation();
   const features = props.features;
   const catalogItem = props.catalogItem;
@@ -76,4 +77,4 @@ export default (props: Props) => {
       </ul>
     </li>
   );
-};
+});

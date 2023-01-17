@@ -5,6 +5,7 @@ import {
   computed,
   IObservableArray,
   observable,
+  reaction,
   runInAction
 } from "mobx";
 import { computedFn } from "mobx-utils";
@@ -627,32 +628,78 @@ export default class Cesium extends GlobeOrMap {
     return this._allMappables.map(({ mapItem }) => mapItem);
   }
 
+  @computed
+  private get availableDataSources(): DataSource[] {
+    return this._allMapItems.filter(isDataSource);
+  }
+
+  /**
+   * Syncs the `dataSources` collection against the latest `availableDataSources`.
+   *
+   * @return Promise for finishing the sync
+   */
+  private async syncDataSourceCollection(
+    availableDataSources: DataSource[],
+    dataSources: DataSourceCollection
+  ): Promise<void> {
+    // 1. Remove deleted data sources
+    // Iterate backwards because we're removing items.
+    for (let i = dataSources.length - 1; i >= 0; i--) {
+      const d = dataSources.get(i);
+      if (availableDataSources.indexOf(d) === -1) {
+        dataSources.remove(d);
+      }
+    }
+
+    // 2. Add new data sources
+    for (let ds of availableDataSources) {
+      if (!dataSources.contains(ds)) {
+        await dataSources.add(ds);
+      }
+    }
+
+    // 3. Ensure stacking order matches order in `availableDataSources` - first item appears on top.
+    runInAction(() =>
+      availableDataSources.forEach((ds) => {
+        // There is a buggy/un-intended side-effect when calling raiseToTop() with
+        // a source that doesn't exist in the collection. Doing this will replace
+        // the last entry in the collection with the new one. So we should be
+        // careful to raiseToTop() only if the DS already exists in the collection.
+        // Relevant code:
+        //   https://github.com/CesiumGS/cesium/blob/dbd452328a48bfc4e192146862a9f8fa15789dc8/packages/engine/Source/DataSources/DataSourceCollection.js#L298-L299
+        dataSources.contains(ds) && dataSources.raiseToTop(ds);
+      })
+    );
+  }
+
   private observeModelLayer() {
+    // Setup reaction to sync datSources collection with availableDataSources
+    //
+    // To avoid buggy concurrent syncs, we have to ensure that even when
+    // multiple sync reactions are triggered, we run them one after the
+    // other. To do this, we make each run of the reaction wait for the
+    // previous `syncDataSourcesPromise` to finish before starting itself.
+    let syncDataSourcesPromise: Promise<void> = Promise.resolve();
+    const reactionDisposer = reaction(
+      () => this.availableDataSources,
+      () => {
+        syncDataSourcesPromise = syncDataSourcesPromise
+          .then(async () => {
+            await this.syncDataSourceCollection(
+              this.availableDataSources,
+              this.dataSources
+            );
+            this.notifyRepaintRequired();
+          })
+          .catch(console.error);
+      },
+      { fireImmediately: true }
+    );
+
     let prevMapItems: MapItem[] = [];
-    return autorun(() => {
+    const autorunDisposer = autorun(() => {
       // TODO: Look up the type in a map and call the associated function.
       //       That way the supported types of map items is extensible.
-      const allDataSources = this._allMapItems.filter(isDataSource);
-
-      let dataSources = this.dataSources;
-      // Remove deleted data sources
-      // Iterate backwards because we're removing items.
-      for (let i = dataSources.length - 1; i >= 0; i--) {
-        const d = dataSources.get(i);
-        if (allDataSources.indexOf(d) === -1) {
-          dataSources.remove(d);
-        }
-      }
-
-      // Add new data sources
-      allDataSources.forEach((d) => {
-        if (!dataSources.contains(d)) {
-          dataSources.add(d);
-        }
-      });
-
-      // Ensure stacking order matches order in allDataSources - first item appears on top.
-      allDataSources.forEach((d) => dataSources.raiseToTop(d));
 
       const allImageryParts = this._allMappables
         .map((m) =>
@@ -742,6 +789,11 @@ export default class Cesium extends GlobeOrMap {
       prevMapItems = this._allMapItems;
       this.notifyRepaintRequired();
     });
+
+    return () => {
+      reactionDisposer();
+      autorunDisposer();
+    };
   }
 
   stopObserving() {

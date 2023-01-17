@@ -6,7 +6,7 @@ import CatalogMemberTraits from "./CatalogMemberTraits";
 import EnumDimensionTraits from "./DimensionTraits";
 import FeatureInfoUrlTemplateTraits from "./FeatureInfoTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
-import TableTraits from "./TableTraits";
+import TableTraits from "./Table/TableTraits";
 import UrlTraits from "./UrlTraits";
 
 export default class OpenDataSoftCatalogItemTraits extends mixTraits(

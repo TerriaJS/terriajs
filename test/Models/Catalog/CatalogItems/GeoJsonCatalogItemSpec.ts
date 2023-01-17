@@ -728,9 +728,7 @@ describe("GeoJsonCatalogItemSpec", () => {
 
       const polygonSymbol = protomaps.paintRules[0]
         .symbolizer as PolygonSymbolizer;
-      const polygonLineSymbol = protomaps.paintRules[1]
-        .symbolizer as LineSymbolizer;
-      const polylineSymbol = protomaps.paintRules[2]
+      const polylineSymbol = protomaps.paintRules[1]
         .symbolizer as LineSymbolizer;
 
       const testFeature = {
@@ -764,12 +762,23 @@ describe("GeoJsonCatalogItemSpec", () => {
         ).toBe(col);
 
         expect(
-          polygonLineSymbol.color.get(1, {
+          polygonSymbol.stroke.get(1, {
             ...testFeature,
             geomType: GeomType.Polygon,
             props: { _id_: rowId }
           })
         ).toBe(getColor(terria.baseMapContrastColor).toCssHexString());
+
+        expect(
+          polygonSymbol.width.get(1, {
+            ...testFeature,
+            geomType: GeomType.Polygon,
+            props: { _id_: rowId }
+          })
+        ).toBe(
+          geojson.activeTableStyle.outlineStyleMap.traitValues.null.width ??
+            Infinity
+        );
 
         expect(
           polylineSymbol.color.get(1, {

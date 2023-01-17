@@ -95,6 +95,10 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       });
     }
 
+    get hasCesium3dTilesMixin() {
+      return true;
+    }
+
     // Just a variable to save the original tileset.root.transform if it exists
     @observable
     private originalRootTransform: Matrix4 = Matrix4.IDENTITY.clone();
@@ -480,12 +484,14 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
     }
 
     /**
-     * Modifies the style traits to show/hide a 3d tile feature
+     * Returns a selector that can be used for filtering or styling the given
+     * feature.  For this to work, the feature should have a property called
+     * `id` or the catalog item should have the trait `featureIdProperties` defined.
      *
+     * @returns Selector string or `undefined` when no unique selector can be constructed for the feature
      */
-    @action
-    setFeatureVisibility(feature: Cesium3DTileFeature, visibiltiy: boolean) {
-      const idProperties = this.getIdPropertiesForFeature(feature)?.sort();
+    getSelectorForFeature(feature: Cesium3DTileFeature): string | undefined {
+      const idProperties = this.getIdPropertiesForFeature(feature).sort();
       if (idProperties.length === 0) {
         return;
       }
@@ -493,12 +499,28 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       const terms = idProperties.map(
         (p: string) => `\${${p}} === ${JSON.stringify(feature.getProperty(p))}`
       );
-      const showExpr = terms.join(" && ");
-      if (showExpr) {
+      const selector = terms.join(" && ");
+      return selector ? selector : undefined;
+    }
+
+    setVisibilityForMatchingFeature(expression: string, visibility: boolean) {
+      if (expression) {
         const style = this.style || {};
         const show = normalizeShowExpression(style?.show);
-        show.conditions.unshift([showExpr, visibiltiy]);
+        show.conditions.unshift([expression, visibility]);
         this.setTrait(CommonStrata.user, "style", { ...style, show });
+      }
+    }
+
+    /**
+     * Modifies the style traits to show/hide a 3d tile feature
+     *
+     */
+    @action
+    setFeatureVisibility(feature: Cesium3DTileFeature, visibility: boolean) {
+      const showExpr = this.getSelectorForFeature(feature);
+      if (showExpr) {
+        this.setVisibilityForMatchingFeature(showExpr, visibility);
       }
     }
 
@@ -596,6 +618,14 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
   }
 
   return Cesium3dTilesMixin;
+}
+
+namespace Cesium3dTilesMixin {
+  export interface Instance
+    extends InstanceType<ReturnType<typeof Cesium3dTilesMixin>> {}
+  export function isMixedInto(model: any): model is Instance {
+    return model && model.hasCesium3dTilesMixin;
+  }
 }
 
 export default Cesium3dTilesMixin;

@@ -158,6 +158,8 @@ async function loadReference(
  * @param excludeIdsCsv CSV of model IDs to exclude from catalog index (eg "some-id-1,some-id-2")
  *
  * @param basicAuth basic auth token to add to requests which include `baseUrl` (or `proxy/`)
+
+ * Example usage: node ./build/generateCatalogIndex.js http://localhost:3001/config.json http://localhost:3001/
  */
 export default async function generateCatalogIndex(
   configUrl: string,
@@ -314,15 +316,17 @@ export default async function generateCatalogIndex(
         }
       }
 
+      // Add catalog group to index (if it isn't empty)
+      // Note: this needs to happen after recursively loading group members - as after each member is loaded, the reference is removed.
+      // This would result in memberModels being empty!
+      if (member.memberModels.length > 0) indexModel(terria, index, member);
+
       // Recursively load group members
       await Promise.all(
         shuffle(member.memberModels).map((child) => {
           return loadAndIndexMember(terria, child);
         })
       );
-
-      // Add catalog group to index
-      indexModel(terria, index, member);
     } else if (CatalogMemberMixin.isMixedInto(member)) {
       // Add catalog member to index
       indexModel(terria, index, member);

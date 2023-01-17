@@ -47,7 +47,7 @@ import { tableFeatureInfoContext } from "../Table/tableFeatureInfoContext";
 import TableFeatureInfoStratum from "../Table/TableFeatureInfoStratum";
 import { TableAutomaticLegendStratum } from "../Table/TableLegendStratum";
 import TableStyle from "../Table/TableStyle";
-import TableTraits from "../Traits/TraitsClasses/TableTraits";
+import TableTraits from "../Traits/TraitsClasses/Table/TableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import { calculateDomain, ChartAxis, ChartItem } from "./ChartableMixin";
 import DiscretelyTimeVaryingMixin, {
