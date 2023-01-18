@@ -21,7 +21,7 @@ interface TraitOverrides {
   name: string | undefined;
 }
 
-declare class TraitOverrides {}
+class TraitOverrides {}
 
 class GpxCatalogItem extends WithTraitOverrides(
   GeoJsonMixin(UrlMixin(CatalogMemberMixin(CreateModel(GpxCatalogItemTraits)))),

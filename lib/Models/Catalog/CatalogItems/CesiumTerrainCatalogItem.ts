@@ -14,7 +14,7 @@ interface TraitOverrides {
   shortReport: string | undefined;
 }
 
-declare class TraitOverrides {}
+class TraitOverrides {}
 
 export default class CesiumTerrainCatalogItem extends WithTraitOverrides(
   UrlMixin(

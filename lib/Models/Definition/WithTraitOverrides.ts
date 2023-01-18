@@ -13,7 +13,7 @@ import Model, { ModelConstructor } from "./Model";
  *
  *   // We merge the interface and class, so that we can pass the type as an argument to WithTraitOverrides()
  *   // There might be other ways of acheiving this
- *   declare class TraitOverrides {}
+ *   class TraitOverrides {}
  *
  *   class SomeCatalogMember extends WithTraitOverrides(
  *     CatalogMemberMixin(CreateModel(CatalogMemberTraits)),

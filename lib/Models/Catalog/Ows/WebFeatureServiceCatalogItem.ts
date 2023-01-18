@@ -307,7 +307,7 @@ interface TraitOverrides {
   shortReport: string | undefined;
 }
 
-declare class TraitOverrides {}
+class TraitOverrides {}
 
 class WebFeatureServiceCatalogItem extends WithTraitOverrides(
   GetCapabilitiesMixin(
