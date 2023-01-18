@@ -33,6 +33,12 @@ export default function addModelStrataView<
   Object.keys(traits).forEach((traitName) => {
     const trait = traits[traitName];
     const defaultValue = traitsInstance[traitName];
+
+    // For each trait, we define a hidden trait property that gets decorated
+    // using @computed. This lets us define a (non-computed) getter property
+    // with traitName can be overriden by child classes. This way, we can
+    // workaround the mobx of limitiation of not being able to override
+    // computed properties.
     const hiddenTraitProperty = `_trait${traitName}`;
     Object.defineProperty(propertyTarget, hiddenTraitProperty, {
       get: function () {
