@@ -30,6 +30,7 @@ import WebFeatureServiceCapabilities, {
   FeatureType,
   getRectangleFromLayer
 } from "./WebFeatureServiceCapabilities";
+import WithTraitOverrides from "../../Definition/WithTraitOverrides";
 
 export class GetCapabilitiesStratum extends LoadableStratum(
   WebFeatureServiceCatalogItemTraits
@@ -302,8 +303,17 @@ export class GetCapabilitiesStratum extends LoadableStratum(
   }
 }
 
-class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
-  UrlMixin(GeoJsonMixin(CreateModel(WebFeatureServiceCatalogItemTraits)))
+interface TraitOverrides {
+  shortReport: string | undefined;
+}
+
+declare class TraitOverrides {}
+
+class WebFeatureServiceCatalogItem extends WithTraitOverrides(
+  GetCapabilitiesMixin(
+    UrlMixin(GeoJsonMixin(CreateModel(WebFeatureServiceCatalogItemTraits)))
+  ),
+  TraitOverrides
 ) {
   /**
    * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere
@@ -462,7 +472,6 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
   }
 
   @computed
-  // @ts-ignore
   get shortReport(): string | undefined {
     // Show notice if reached
     if (

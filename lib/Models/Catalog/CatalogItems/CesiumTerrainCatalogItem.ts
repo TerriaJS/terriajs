@@ -1,15 +1,28 @@
-import { action, computed, observable, runInAction } from "mobx";
+import { computed, observable, runInAction } from "mobx";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
+import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import CesiumTerrainCatalogItemTraits from "../../../Traits/TraitsClasses/CesiumTerrainCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
-import TerriaError from "../../../Core/TerriaError";
+import WithTraitOverrides from "../../Definition/WithTraitOverrides";
 
-export default class CesiumTerrainCatalogItem extends UrlMixin(
-  MappableMixin(CatalogMemberMixin(CreateModel(CesiumTerrainCatalogItemTraits)))
+interface TraitOverrides {
+  disableZoomTo: boolean;
+  shortReport: string | undefined;
+}
+
+declare class TraitOverrides {}
+
+export default class CesiumTerrainCatalogItem extends WithTraitOverrides(
+  UrlMixin(
+    MappableMixin(
+      CatalogMemberMixin(CreateModel(CesiumTerrainCatalogItemTraits))
+    )
+  ),
+  TraitOverrides
 ) {
   static type = "cesium-terrain";
 
@@ -24,7 +37,6 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
   }
 
   @computed
-  // @ts-ignore
   get disableZoomTo() {
     return true;
   }
@@ -35,7 +47,6 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
   }
 
   @computed
-  // @ts-ignore
   get shortReport() {
     if (super.shortReport === undefined) {
       const status = this.isTerrainActive ? "In use" : "Not in use";

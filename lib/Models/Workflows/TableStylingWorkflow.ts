@@ -482,9 +482,9 @@ export default class TableStylingWorkflow
             .filter(
               (item) =>
                 ViewingControls.is(item) &&
-                item.viewingControls.find(
-                  (control) => control.id === TableStylingWorkflow.type
-                )
+                item
+                  .viewingControls()
+                  .find((control) => control.id === TableStylingWorkflow.type)
             )
             .map((item) => ({
               id: item.uniqueId,
@@ -497,9 +497,9 @@ export default class TableStylingWorkflow
             if (item && TableMixin.isMixedInto(item)) {
               // Trigger new TableStylingWorkflow
               if (
-                item.viewingControls.find(
-                  (control) => control.id === TableStylingWorkflow.type
-                )
+                item
+                  .viewingControls()
+                  .find((control) => control.id === TableStylingWorkflow.type)
               ) {
                 item.terria.selectableDimensionWorkflow =
                   new TableStylingWorkflow(item);

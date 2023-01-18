@@ -1,4 +1,5 @@
 import { computed } from "mobx";
+import Constructor from "../../../Core/Constructor";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import CatalogFunctionMixin from "../../../ModelMixins/CatalogFunctionMixin";
@@ -175,9 +176,14 @@ export const ALGORITHMS: [string, boolean][] = [
   // ["Ridge Regressor", false]
 ];
 
-export default class YDYRCatalogFunction extends CatalogFunctionMixin(
-  CreateModel(YDYRCatalogFunctionTraits)
-) {
+const _Base = CatalogFunctionMixin(CreateModel(YDYRCatalogFunctionTraits));
+const Base: typeof _Base & Constructor<TraitOverrides> = _Base;
+
+interface TraitOverrides {
+  description: string | undefined;
+}
+
+export default class YDYRCatalogFunction extends Base {
   static readonly type = "ydyr";
   get type(): string {
     return YDYRCatalogFunction.type;
@@ -198,7 +204,6 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   }
 
   @computed
-  // @ts-ignore
   get description() {
     return (
       super.description ??

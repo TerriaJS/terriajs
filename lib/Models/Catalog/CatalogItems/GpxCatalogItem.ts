@@ -12,12 +12,20 @@ import GeoJsonMixin, {
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import GpxCatalogItemTraits from "../../../Traits/TraitsClasses/GpxCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
+import WithTraitOverrides from "../../Definition/WithTraitOverrides";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 const toGeoJSON = require("@mapbox/togeojson");
 
-class GpxCatalogItem extends GeoJsonMixin(
-  UrlMixin(CatalogMemberMixin(CreateModel(GpxCatalogItemTraits)))
+interface TraitOverrides {
+  name: string | undefined;
+}
+
+declare class TraitOverrides {}
+
+class GpxCatalogItem extends WithTraitOverrides(
+  GeoJsonMixin(UrlMixin(CatalogMemberMixin(CreateModel(GpxCatalogItemTraits)))),
+  TraitOverrides
 ) {
   static readonly type = "gpx";
 
@@ -73,7 +81,6 @@ class GpxCatalogItem extends GeoJsonMixin(
   }
 
   @computed
-  // @ts-ignore
   get name() {
     if (this.url && super.name === this.url) {
       return getFilenameFromUri(this.url);
