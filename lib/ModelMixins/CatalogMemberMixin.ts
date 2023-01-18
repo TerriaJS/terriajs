@@ -98,12 +98,10 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       return this.terria.workbench.contains(this);
     }
 
-    @computed
     get name(): string | undefined {
       return super.name || this.uniqueId;
     }
 
-    @computed
     get nameInCatalog(): string | undefined {
       return super.nameInCatalog || this.name;
     }

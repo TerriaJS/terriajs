@@ -56,7 +56,13 @@ import DiscretelyTimeVaryingMixin, {
 import ExportableMixin, { ExportData } from "./ExportableMixin";
 import { ImageryParts } from "./MappableMixin";
 
-function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
+interface TraitOverrides {
+  disableZoomTo: boolean;
+}
+
+function TableMixin<T extends Constructor<Model<TableTraits> & TraitOverrides>>(
+  Base: T
+) {
   abstract class TableMixin
     extends ExportableMixin(
       DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base))
@@ -236,7 +242,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     @computed
-    // @ts-ignore
     get disableZoomTo() {
       // Disable zoom if only showing imagery parts  (eg region mapping) and no rectangle is defined
       if (

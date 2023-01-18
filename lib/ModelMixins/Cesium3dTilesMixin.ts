@@ -80,9 +80,13 @@ class ObservableCesium3DTileset extends Cesium3DTileset {
   }
 }
 
-function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
-  Base: T
-) {
+interface TraitOverrides {
+  shortReport: string | undefined;
+}
+
+function Cesium3dTilesMixin<
+  T extends Constructor<Model<Cesium3dTilesTraits> & TraitOverrides>
+>(Base: T) {
   abstract class Cesium3dTilesMixin extends ClippingMixin(
     ShadowMixin(MappableMixin(CatalogMemberMixin(Base)))
   ) {
@@ -294,7 +298,6 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
     }
 
     @computed
-    // @ts-ignore
     get shortReport(): string | undefined {
       if (this.terria.currentViewer.type === "Leaflet") {
         return i18next.t("models.commonModelErrors.3dTypeIn2dMode", this);

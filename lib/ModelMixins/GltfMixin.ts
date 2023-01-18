@@ -23,7 +23,12 @@ import ShadowMixin from "./ShadowMixin";
 // we still maintain the type checking, without TS screaming with errors
 const Axis: Axis = require("terriajs-cesium/Source/Scene/Axis").default;
 
-type GltfModel = Model<GltfTraits>;
+type GltfModel = Model<GltfTraits> & TraitOverrides;
+
+interface TraitOverrides {
+  disableZoomTo: boolean | undefined;
+  shortReport: string | undefined;
+}
 
 export interface GltfTransformationJson {
   origin: {
@@ -164,8 +169,6 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
       return Promise.resolve();
     }
 
-    @computed
-    // @ts-ignore
     get shortReport(): string | undefined {
       if (this.terria.currentViewer.type === "Leaflet") {
         return i18next.t("models.commonModelErrors.3dTypeIn2dMode", this);

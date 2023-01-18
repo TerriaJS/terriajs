@@ -217,7 +217,13 @@ interface FeatureCounts {
   total: number;
 }
 
-function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
+interface TraitOverrides {
+  name: string | undefined;
+}
+
+function GeoJsonMixin<
+  T extends Constructor<Model<GeoJsonTraits> & TraitOverrides>
+>(Base: T) {
   abstract class GeoJsonMixin extends TableMixin(
     FeatureInfoUrlTemplateMixin(UrlMixin(CatalogMemberMixin(Base)))
   ) {
@@ -328,7 +334,6 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     }
 
     @computed
-    // @ts-ignore
     get name() {
       if (CatalogMemberMixin.isMixedInto(this.sourceReference)) {
         return super.name || this.sourceReference.name;

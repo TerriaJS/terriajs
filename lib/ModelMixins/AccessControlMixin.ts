@@ -19,7 +19,6 @@ function AccessControlMixin<T extends Constructor<AccessControlModel>>(
      * Returns the accessType for this model, default is public
      * Models can override this method to return access type differently
      */
-    @computed
     get accessType(): string {
       if (this._accessType) return this._accessType;
 
