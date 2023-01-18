@@ -683,7 +683,6 @@ function TableMixin<T extends Constructor<Model<TableTraits> & TraitOverrides>>(
       return this.activeTableStyle.isSampled;
     }
 
-    @computed
     get discreteTimes():
       | { time: string; tag: string | undefined }[]
       | undefined {

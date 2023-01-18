@@ -701,7 +701,9 @@ describe("GeoJsonCatalogItemSpec", () => {
     it("Creates ProtomapsImageryProvider - with table styles", async () => {
       geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/height.geojson");
 
-      await geojson.loadMapItems();
+      const result = await geojson.loadMapItems();
+      console.log("**error**");
+      result.logError();
 
       const mapItem = geojson.mapItems[0];
 

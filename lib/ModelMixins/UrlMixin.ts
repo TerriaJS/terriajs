@@ -6,7 +6,13 @@ import UrlTraits from "../Traits/TraitsClasses/UrlTraits";
 
 type UrlModel = Model<UrlTraits>;
 
-function UrlMixin<T extends Constructor<UrlModel>>(Base: T) {
+interface OverridableTraits {
+  cacheDuration: string | undefined;
+}
+
+function UrlMixin<T extends Constructor<UrlModel & OverridableTraits>>(
+  Base: T
+) {
   class UrlMixin extends Base {
     get hasUrlMixin() {
       return true;

@@ -89,7 +89,6 @@ function TimeFilterMixin<T extends Constructor<Model<TimeFilterTraits>>>(
       return true;
     }
 
-    @computed
     get canFilterTimeByFeature(): boolean {
       return this.timeFilterPropertyName !== undefined;
     }

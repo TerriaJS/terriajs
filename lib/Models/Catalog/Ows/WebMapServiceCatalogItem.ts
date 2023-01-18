@@ -154,7 +154,6 @@ class WebMapServiceCatalogItem
   }
 
   @computed
-  // @ts-ignore
   get shortReport(): string | undefined {
     if (
       this.tilingScheme instanceof GeographicTilingScheme &&

@@ -7,22 +7,9 @@ import MappableMixin from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import CesiumTerrainCatalogItemTraits from "../../../Traits/TraitsClasses/CesiumTerrainCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
-import WithTraitOverrides from "../../Definition/WithTraitOverrides";
 
-interface TraitOverrides {
-  disableZoomTo: boolean;
-  shortReport: string | undefined;
-}
-
-class TraitOverrides {}
-
-export default class CesiumTerrainCatalogItem extends WithTraitOverrides(
-  UrlMixin(
-    MappableMixin(
-      CatalogMemberMixin(CreateModel(CesiumTerrainCatalogItemTraits))
-    )
-  ),
-  TraitOverrides
+export default class CesiumTerrainCatalogItem extends UrlMixin(
+  MappableMixin(CatalogMemberMixin(CreateModel(CesiumTerrainCatalogItemTraits)))
 ) {
   static type = "cesium-terrain";
 

@@ -92,7 +92,6 @@ function DiscretelyTimeVaryingMixin<
       return objectifyDates(jsDates);
     }
 
-    @computed
     get discreteTimesAsSortedJulianDates(): AsJulian[] | undefined {
       const discreteTimes = this.discreteTimes;
       if (discreteTimes === undefined) {

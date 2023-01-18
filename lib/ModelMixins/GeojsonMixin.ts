@@ -218,11 +218,11 @@ interface FeatureCounts {
 }
 
 interface TraitOverrides {
-  name: string | undefined;
+  name?: string;
 }
 
 function GeoJsonMixin<
-  T extends Constructor<Model<GeoJsonTraits> & TraitOverrides>
+  T extends Constructor<Model<GeoJsonTraits & TraitOverrides>>
 >(Base: T) {
   abstract class GeoJsonMixin extends TableMixin(
     FeatureInfoUrlTemplateMixin(UrlMixin(CatalogMemberMixin(Base)))
@@ -333,12 +333,18 @@ function GeoJsonMixin<
       return true;
     }
 
-    @computed
     get name() {
       if (CatalogMemberMixin.isMixedInto(this.sourceReference)) {
         return super.name || this.sourceReference.name;
       }
       return super.name;
+    }
+
+    get cacheDuration(): string {
+      if (isDefined(super.cacheDuration)) {
+        return super.cacheDuration;
+      }
+      return "1d";
     }
 
     /**
@@ -1157,7 +1163,6 @@ function GeoJsonMixin<
       return dataSource;
     }
 
-    @computed
     get discreteTimes(): DiscreteTimeAsJS[] | undefined {
       if (this.readyData === undefined) {
         return undefined;

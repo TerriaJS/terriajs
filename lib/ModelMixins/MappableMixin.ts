@@ -61,9 +61,13 @@ export function isDataSource(object: MapItem): object is DataSource {
   return "entities" in object;
 }
 
-function MappableMixin<T extends AbstractConstructor<Model<MappableTraits>>>(
-  Base: T
-) {
+interface OverridableTraits {
+  disableZoomTo: boolean;
+}
+
+function MappableMixin<
+  T extends AbstractConstructor<Model<MappableTraits> & OverridableTraits>
+>(Base: T) {
   abstract class MappableMixin extends Base {
     initialMessageShown: boolean = false;
     get isMappable() {
