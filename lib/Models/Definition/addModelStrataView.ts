@@ -33,7 +33,8 @@ export default function addModelStrataView<
   Object.keys(traits).forEach((traitName) => {
     const trait = traits[traitName];
     const defaultValue = traitsInstance[traitName];
-    Object.defineProperty(propertyTarget, traitName, {
+    const hiddenTraitProperty = `_trait${traitName}`;
+    Object.defineProperty(propertyTarget, hiddenTraitProperty, {
       get: function () {
         const value = trait.getValue(this);
         return value === undefined ? defaultValue : value;
@@ -42,7 +43,15 @@ export default function addModelStrataView<
       configurable: true
     });
 
-    decorators[traitName] = trait.decoratorForFlattened || computed;
+    Object.defineProperty(propertyTarget, traitName, {
+      get: function () {
+        return this[hiddenTraitProperty];
+      },
+      enumerable: true,
+      configurable: true
+    });
+
+    decorators[hiddenTraitProperty] = trait.decoratorForFlattened || computed;
   });
 
   decorate(model, decorators);
