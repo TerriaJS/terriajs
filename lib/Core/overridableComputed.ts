@@ -1,7 +1,7 @@
 import { computed, IComputedValue } from "mobx";
 
 /**
- * Store for overridable computed getters
+ * Store mobx computed() values for overridable getters
  */
 const computedProps: WeakMap<
   any,
