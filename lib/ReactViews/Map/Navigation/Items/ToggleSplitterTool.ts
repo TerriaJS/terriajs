@@ -1,4 +1,5 @@
-import { action, computed } from "mobx";
+import { action } from "mobx";
+import overridableComputed from "../../../../Core/overridableComputed";
 import ViewerMode from "../../../../Models/ViewerMode";
 import ViewState from "../../../../ReactViewModels/ViewState";
 import Icon from "../../../../Styled/Icon";
@@ -22,19 +23,19 @@ export class ToggleSplitterController extends MapNavigationItemController {
     return undefined;
   }
 
-  @computed
+  @overridableComputed
   get visible() {
     return super.visible && this.viewState.terria.currentViewer.canShowSplitter;
   }
 
-  @computed
+  @overridableComputed
   get disabled() {
     const toolIsDifference =
       this.viewState.currentTool?.toolName === "Difference";
     return this.viewState.isToolOpen && toolIsDifference;
   }
 
-  @computed
+  @overridableComputed
   get active(): boolean {
     return this.viewState.terria.showSplitter;
   }

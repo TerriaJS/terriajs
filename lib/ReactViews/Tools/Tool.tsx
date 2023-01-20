@@ -1,7 +1,7 @@
 import i18next, { WithT } from "i18next";
-import { computed } from "mobx";
 import React, { Suspense, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import overridableComputed from "../../Core/overridableComputed";
 import TerriaError from "../../Core/TerriaError";
 import {
   applyTranslationIfExists,
@@ -92,7 +92,7 @@ export class ToolButtonController extends MapNavigationItemController {
     );
   }
 
-  @computed
+  @overridableComputed
   get active() {
     const currentTool = this.props.viewState.currentTool;
     return (

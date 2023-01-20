@@ -20,6 +20,7 @@ import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
+import overridableComputed from "../Core/overridableComputed";
 import TerriaError from "../Core/TerriaError";
 import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
 import RegionProvider from "../Map/Region/RegionProvider";
@@ -460,7 +461,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return tableFeatureInfoContext(this);
     }
 
-    @computed
+    @overridableComputed
     get selectableDimensions(): SelectableDimension[] {
       return filterOutUndefined([
         this.timeDisableDimension,
@@ -678,7 +679,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return this.activeTableStyle.isSampled;
     }
 
-    @computed
+    @overridableComputed
     get discreteTimes():
       | { time: string; tag: string | undefined }[]
       | undefined {

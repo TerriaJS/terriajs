@@ -4,6 +4,8 @@ import Stratified from "../../Traits/Stratified";
 import TraitsConstructor from "../../Traits/TraitsConstructor";
 import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
 
+const computedTraits: WeakMap<any, any> = new WeakMap();
+
 /**
  * Adds a set of traits to a model. The values of the traits will be derived
  * from the model's strata.
@@ -25,7 +27,7 @@ export default function addModelStrataView<
 >(model: any, Traits: T): ModelPropertiesFromTraits<InstanceType<T>> {
   const traits = Traits.traits;
 
-  const decorators: { [id: string]: PropertyDecorator } = {};
+  //const decorators: { [id: string]: PropertyDecorator } = {};
 
   const propertyTarget = typeof model === "function" ? model.prototype : model;
 
@@ -42,10 +44,10 @@ export default function addModelStrataView<
       configurable: true
     });
 
-    decorators[traitName] = trait.decoratorForFlattened || computed;
+    //decorators[traitName] = trait.decoratorForFlattened || computed;
   });
 
-  decorate(model, decorators);
+  //decorate(model, decorators);
 
   return model;
 }

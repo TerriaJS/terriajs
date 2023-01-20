@@ -1,6 +1,7 @@
 import { computed } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Constructor from "../Core/Constructor";
+import overridableComputed from "../Core/overridableComputed";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
@@ -89,7 +90,7 @@ function DiffableMixin<T extends Constructor<Model<DiffableTraits>>>(Base: T) {
       secondDate?: JulianDate
     ): string;
 
-    @computed
+    @overridableComputed
     get canFilterTimeByFeature() {
       // Hides the SatelliteImageryTimeFilterSection for the item if it is
       // currently showing difference image

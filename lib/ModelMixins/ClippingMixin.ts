@@ -13,6 +13,7 @@ import ClippingPlane from "terriajs-cesium/Source/Scene/ClippingPlane";
 import ClippingPlaneCollection from "terriajs-cesium/Source/Scene/ClippingPlaneCollection";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import overridableComputed from "../Core/overridableComputed";
 import BoxDrawing from "../Models/BoxDrawing";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
@@ -246,7 +247,7 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return this._clippingBoxDrawing;
     }
 
-    @computed
+    @overridableComputed
     get selectableDimensions(): SelectableDimension[] {
       if (!this.clippingBox.enableFeature) {
         return super.selectableDimensions;

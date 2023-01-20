@@ -1,5 +1,6 @@
 import { action, computed, observable } from "mobx";
 import AbstractConstructor from "../Core/AbstractConstructor";
+import overridableComputed from "../Core/overridableComputed";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import ModelTraits from "../Traits/ModelTraits";
 
@@ -19,7 +20,7 @@ function AccessControlMixin<T extends AbstractConstructor<AccessControlModel>>(
      * Returns the accessType for this model, default is public
      * Models can override this method to return access type differently
      */
-    @computed
+    @overridableComputed
     get accessType(): string {
       if (this._accessType) return this._accessType;
 

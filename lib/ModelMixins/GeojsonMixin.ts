@@ -68,6 +68,7 @@ import {
   JsonObject
 } from "../Core/Json";
 import { isJson } from "../Core/loadBlob";
+import overridableComputed from "../Core/overridableComputed";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError, { networkRequestError } from "../Core/TerriaError";
 import ProtomapsImageryProvider, {
@@ -333,7 +334,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return true;
     }
 
-    @computed get name() {
+    @overridableComputed
+    get name() {
       if (CatalogMemberMixin.isMixedInto(this.sourceReference)) {
         return super.name || this.sourceReference.name;
       }
@@ -1163,7 +1165,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return dataSource;
     }
 
-    @computed
+    @overridableComputed
     get discreteTimes(): DiscreteTimeAsJS[] | undefined {
       if (this.readyData === undefined) {
         return undefined;

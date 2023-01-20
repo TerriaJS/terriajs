@@ -1,6 +1,7 @@
-import { computed, observable, action } from "mobx";
-import ViewerMode from "../../Models/ViewerMode";
+import { action, observable } from "mobx";
 import React from "react";
+import overridableComputed from "../../Core/overridableComputed";
+import ViewerMode from "../../Models/ViewerMode";
 
 export interface ICompositeBarItemController {
   readonly id: string;
@@ -34,7 +35,7 @@ export abstract class CompositeBarItemController
   /**
    * Gets the {@link this._disabled}
    */
-  @computed
+  @overridableComputed
   get disabled(): boolean {
     return this._disabled;
   }
@@ -57,7 +58,7 @@ export abstract class CompositeBarItemController
   /**
    * Gets the {@this._collapsed}
    */
-  @computed
+  @overridableComputed
   get collapsed(): boolean {
     return this._collapsed;
   }
@@ -79,7 +80,7 @@ export abstract class CompositeBarItemController
   /**
    * Gets the {@link this._active}
    */
-  @computed
+  @overridableComputed
   get active(): boolean {
     return !this.disabled && this._active;
   }
@@ -94,7 +95,7 @@ export abstract class CompositeBarItemController
   /**
    * Gets the {@link this._pinned}
    */
-  @computed
+  @overridableComputed
   get pinned() {
     return this._pinned;
   }
@@ -116,7 +117,7 @@ export abstract class CompositeBarItemController
   /**
    * Gets the {@link this._visible}
    */
-  @computed
+  @overridableComputed
   get visible(): boolean {
     return this._visible;
   }

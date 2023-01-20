@@ -6,6 +6,7 @@ import getChartColorForId from "../Charts/getChartColorForId";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
+import overridableComputed from "../Core/overridableComputed";
 import TerriaError from "../Core/TerriaError";
 import ChartableMixin, {
   calculateDomain,
@@ -92,7 +93,7 @@ function DiscretelyTimeVaryingMixin<
       return objectifyDates(jsDates);
     }
 
-    @computed
+    @overridableComputed
     get discreteTimesAsSortedJulianDates(): AsJulian[] | undefined {
       const discreteTimes = this.discreteTimes;
       if (discreteTimes === undefined) {

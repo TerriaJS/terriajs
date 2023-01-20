@@ -4,6 +4,7 @@ import AbstractConstructor from "../Core/AbstractConstructor";
 import AsyncLoader from "../Core/AsyncLoader";
 import isDefined from "../Core/isDefined";
 import { isJsonObject, isJsonString, JsonObject } from "../Core/Json";
+import overridableComputed from "../Core/overridableComputed";
 import Result from "../Core/Result";
 import hasTraits from "../Models/Definition/hasTraits";
 import Model, { BaseModel } from "../Models/Definition/Model";
@@ -100,12 +101,12 @@ function CatalogMemberMixin<T extends AbstractConstructor<CatalogMember>>(
       return this.terria.workbench.contains(this);
     }
 
-    @computed
+    @overridableComputed
     get name(): string | undefined {
       return super.name || this.uniqueId;
     }
 
-    @computed
+    @overridableComputed
     get nameInCatalog(): string | undefined {
       return super.nameInCatalog || this.name;
     }
@@ -169,7 +170,7 @@ function CatalogMemberMixin<T extends AbstractConstructor<CatalogMember>>(
     /** Converts modelDimensions to selectableDimensions
      * This will apply modelDimension JSON value to user stratum
      */
-    @computed
+    @overridableComputed
     get selectableDimensions(): SelectableDimension[] {
       return (
         this.modelDimensions.map((dim) => ({
@@ -209,7 +210,8 @@ function CatalogMemberMixin<T extends AbstractConstructor<CatalogMember>>(
       );
     }
 
-    @computed get viewingControls(): ViewingControl[] {
+    @overridableComputed
+    get viewingControls(): ViewingControl[] {
       return [];
     }
 

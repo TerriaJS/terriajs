@@ -6,6 +6,7 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import LatLonHeight from "../Core/LatLonHeight";
+import overridableComputed from "../Core/overridableComputed";
 import runLater from "../Core/runLater";
 import {
   ProviderCoords,
@@ -89,7 +90,7 @@ function TimeFilterMixin<T extends Constructor<Model<TimeFilterTraits>>>(
       return true;
     }
 
-    @computed
+    @overridableComputed
     get canFilterTimeByFeature(): boolean {
       return this.timeFilterPropertyName !== undefined;
     }
@@ -134,7 +135,7 @@ function TimeFilterMixin<T extends Constructor<Model<TimeFilterTraits>>>(
       );
     }
 
-    @computed
+    @overridableComputed
     get discreteTimesAsSortedJulianDates() {
       const featureTimes = this.featureTimesAsJulianDates;
       if (featureTimes === undefined) {

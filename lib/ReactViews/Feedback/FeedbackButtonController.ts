@@ -1,5 +1,6 @@
-import { action, computed } from "mobx";
+import { action } from "mobx";
 import isDefined from "../../Core/isDefined";
+import overridableComputed from "../../Core/overridableComputed";
 import ViewState from "../../ReactViewModels/ViewState";
 import { GLYPHS } from "../../Styled/Icon";
 import MapNavigationItemController from "../../ViewModels/MapNavigation/MapNavigationItemController";
@@ -29,7 +30,7 @@ export class FeedbackButtonController extends MapNavigationItemController {
     super.deactivate();
   }
 
-  @computed
+  @overridableComputed
   get visible() {
     return (
       isDefined(this.viewState.terria.configParameters.feedbackUrl) &&
@@ -38,7 +39,7 @@ export class FeedbackButtonController extends MapNavigationItemController {
     );
   }
 
-  @computed
+  @overridableComputed
   get active() {
     return this.viewState.feedbackFormIsVisible;
   }
