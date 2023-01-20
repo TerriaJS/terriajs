@@ -211,7 +211,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
         senapsLocationsCatalogItem,
         geojsonCatalogItem
       );
-    } catch (e) {
+    } catch (e: any) {
       throw TerriaError.from(e, {
         title: i18next.t("models.senaps.retrieveErrorTitle"),
         message: i18next.t(

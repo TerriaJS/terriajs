@@ -15,7 +15,9 @@ import { ALGORITHMS, DATASETS } from "./YDYRCatalogFunction";
 export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
   CreateModel(YDYRCatalogFunctionJobTraits)
 ) {
-  readonly typeName = "YourDataYourRegions Job";
+  get typeName(): string {
+    return "YourDataYourRegions Job";
+  }
 
   static readonly type = "ydyr-job";
   get type() {

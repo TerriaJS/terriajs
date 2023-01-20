@@ -264,7 +264,7 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
               // - the ImageryCatalogItem looked at the error and said we should try again.
               tellMapToRetry();
             }
-          } catch (error) {
+          } catch (error: any) {
             // This attempt failed. We'll either retry (for 500s) or give up
             // depending on the status code.
             const e: Error & { statusCode?: number } = error || {};
