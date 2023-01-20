@@ -1,7 +1,12 @@
 import ModelTraits from "../ModelTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
 
-export default class UrlTraits extends ModelTraits {
+interface UrlTraits {
+  url?: string;
+  cacheDuration?: string;
+}
+
+class UrlTraits extends ModelTraits implements UrlTraits {
   @primitiveTrait({
     type: "string",
     name: "URL",
@@ -24,3 +29,5 @@ export default class UrlTraits extends ModelTraits {
   })
   cacheDuration?: string;
 }
+
+export default UrlTraits;

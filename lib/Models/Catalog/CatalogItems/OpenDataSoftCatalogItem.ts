@@ -27,9 +27,7 @@ import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
-import SelectableDimensions, {
-  SelectableDimension
-} from "../../SelectableDimensions/SelectableDimensions";
+import { SelectableDimension } from "../../SelectableDimensions/SelectableDimensions";
 import Terria from "../../Terria";
 import {
   isValidDataset,
@@ -532,14 +530,17 @@ function getTimeField(dataset: Dataset) {
 
 StratumOrder.addLoadStratum(OpenDataSoftDatasetStratum.stratumName);
 
-export default class OpenDataSoftCatalogItem
-  extends TableMixin(
-    AutoRefreshingMixin(
-      UrlMixin(CatalogMemberMixin(CreateModel(OpenDataSoftCatalogItemTraits)))
-    )
+interface BaseClass {
+  selectableDimensions: SelectableDimension[];
+}
+
+abstract class BaseClass extends TableMixin(
+  AutoRefreshingMixin(
+    UrlMixin(CatalogMemberMixin(CreateModel(OpenDataSoftCatalogItemTraits)))
   )
-  implements SelectableDimensions
-{
+) {}
+
+class OpenDataSoftCatalogItem extends BaseClass {
   static readonly type = "opendatasoft-item";
 
   constructor(
@@ -685,5 +686,7 @@ export default class OpenDataSoftCatalogItem
     ]);
   }
 }
+
+export default OpenDataSoftCatalogItem;
 
 StratumOrder.addLoadStratum(TableAutomaticStylesStratum.stratumName);

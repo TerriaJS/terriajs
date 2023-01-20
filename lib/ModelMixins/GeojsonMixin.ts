@@ -218,9 +218,15 @@ interface FeatureCounts {
 }
 
 function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
-  abstract class GeoJsonMixin extends TableMixin(
+  interface BaseClass {
+    viewingControls: ViewingControl[];
+  }
+
+  abstract class BaseClass extends TableMixin(
     FeatureInfoUrlTemplateMixin(UrlMixin(CatalogMemberMixin(Base)))
-  ) {
+  ) {}
+
+  abstract class GeoJsonMixin extends BaseClass {
     @observable
     private _dataSource:
       | CustomDataSource

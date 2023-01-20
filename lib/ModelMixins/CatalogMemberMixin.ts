@@ -1,7 +1,7 @@
 import { action, computed, isObservableArray, runInAction, toJS } from "mobx";
 import Mustache from "mustache";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import AsyncLoader from "../Core/AsyncLoader";
-import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import { isJsonObject, isJsonString, JsonObject } from "../Core/Json";
 import Result from "../Core/Result";
@@ -21,7 +21,9 @@ import ReferenceMixin from "./ReferenceMixin";
 
 type CatalogMember = Model<CatalogMemberTraits>;
 
-function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
+function CatalogMemberMixin<T extends AbstractConstructor<CatalogMember>>(
+  Base: T
+) {
   abstract class CatalogMemberMixin
     extends AccessControlMixin(Base)
     implements SelectableDimensions, ViewingControls

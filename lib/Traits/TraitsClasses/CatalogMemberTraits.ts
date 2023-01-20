@@ -100,7 +100,13 @@ export class ShortReportTraits extends ModelTraits {
   show = true;
 }
 
-export default class CatalogMemberTraits extends ModelTraits {
+interface CatalogMemberTraits {
+  name?: string;
+  description?: string;
+  shortReport?: string;
+}
+
+class CatalogMemberTraits extends ModelTraits implements CatalogMemberTraits {
   @primitiveTrait({
     type: "string",
     name: "Name",
@@ -231,3 +237,5 @@ export default class CatalogMemberTraits extends ModelTraits {
   })
   disableAboutData: boolean = false;
 }
+
+export default CatalogMemberTraits;

@@ -199,7 +199,14 @@ export class InitialMessageTraits extends ModelTraits {
   height?: number;
 }
 
-export default class MappableTraits extends mixTraits(AttributionTraits) {
+interface MappableTraits {
+  disableZoomTo: boolean;
+}
+
+class MappableTraits
+  extends mixTraits(AttributionTraits)
+  implements MappableTraits
+{
   @objectTrait({
     type: RectangleTraits,
     name: "Rectangle",
@@ -279,3 +286,5 @@ export default class MappableTraits extends mixTraits(AttributionTraits) {
   })
   maximumShownFeatureInfos?: number;
 }
+
+export default MappableTraits;
