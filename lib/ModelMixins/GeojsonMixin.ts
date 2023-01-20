@@ -342,7 +342,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return super.name;
     }
 
-    @computed get cacheDuration(): string {
+    @overridableComputed
+    get cacheDuration(): string {
       if (isDefined(super.cacheDuration)) {
         return super.cacheDuration;
       }

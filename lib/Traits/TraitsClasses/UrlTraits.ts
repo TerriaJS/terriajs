@@ -1,12 +1,12 @@
-import ModelTraits from "../ModelTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import ModelTraits from "../ModelTraits";
 
 interface UrlTraits {
   url?: string;
   cacheDuration?: string;
 }
 
-class UrlTraits extends ModelTraits implements UrlTraits {
+class UrlTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
     name: "URL",

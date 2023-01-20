@@ -106,7 +106,7 @@ interface CatalogMemberTraits {
   shortReport?: string;
 }
 
-class CatalogMemberTraits extends ModelTraits implements CatalogMemberTraits {
+class CatalogMemberTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
     name: "Name",
