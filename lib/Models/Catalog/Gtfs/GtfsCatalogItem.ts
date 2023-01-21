@@ -84,7 +84,9 @@ StratumOrder.addLoadStratum(GtfsStratum.stratumName);
  */
 export default class GtfsCatalogItem extends MappableMixin(
   UrlMixin(
-    AutoRefreshingMixin(CatalogMemberMixin(CreateModel(GtfsCatalogItemTraits)))
+    AutoRefreshingMixin(
+      MappableMixin(CatalogMemberMixin(CreateModel(GtfsCatalogItemTraits)))
+    )
   )
 ) {
   disposer: IReactionDisposer | undefined;

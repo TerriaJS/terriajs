@@ -1,13 +1,13 @@
 import { computed } from "mobx";
 import URI from "urijs";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import Model from "../Models/Definition/Model";
 import UrlTraits from "../Traits/TraitsClasses/UrlTraits";
 
-type UrlModel = Model<UrlTraits>;
+type BaseType = Model<UrlTraits>;
 
-function UrlMixin<T extends Constructor<UrlModel>>(Base: T) {
-  class UrlMixin extends Base {
+function UrlMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
+  abstract class UrlMixin extends Base {
     get hasUrlMixin() {
       return true;
     }

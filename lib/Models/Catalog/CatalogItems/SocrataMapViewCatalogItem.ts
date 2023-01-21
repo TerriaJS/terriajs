@@ -132,7 +132,7 @@ StratumOrder.addLoadStratum(SocrataMapViewStratum.stratumName);
  * This mimics how Socrata portal map visualisation works - it isn't an official API
  */
 export default class SocrataMapViewCatalogItem extends GeoJsonMixin(
-  CatalogMemberMixin(CreateModel(SocrataMapViewCatalogItemTraits))
+  CreateModel(SocrataMapViewCatalogItemTraits)
 ) {
   static readonly type = "socrata-map-item";
 

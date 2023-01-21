@@ -5,8 +5,8 @@ import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import AsyncLoader from "../Core/AsyncLoader";
-import Constructor from "../Core/Constructor";
 import Result from "../Core/Result";
 import Model from "../Models/Definition/Model";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
@@ -60,7 +60,9 @@ export function isDataSource(object: MapItem): object is DataSource {
   return "entities" in object;
 }
 
-function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
+type BaseType = Model<MappableTraits>;
+
+function MappableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class MappableMixin extends Base {
     initialMessageShown: boolean = false;
     get isMappable() {

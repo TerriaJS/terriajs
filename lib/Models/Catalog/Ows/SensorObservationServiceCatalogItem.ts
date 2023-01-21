@@ -304,7 +304,7 @@ class GetObservationRequest {
 }
 
 export default class SensorObservationServiceCatalogItem extends TableMixin(
-  CatalogMemberMixin(CreateModel(SensorObservationServiceCatalogItemTraits))
+  CreateModel(SensorObservationServiceCatalogItemTraits)
 ) {
   static readonly type = "sos";
   static defaultRequestTemplate = require("./SensorObservationServiceRequestTemplate.xml");

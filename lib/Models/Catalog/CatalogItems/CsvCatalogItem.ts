@@ -27,10 +27,8 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 // - points, no ID, time -> "blips" with a duration (perhaps provided by another column)
 //
 export default class CsvCatalogItem
-  extends TableMixin(
-    AutoRefreshingMixin(
-      UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
-    )
+  extends AutoRefreshingMixin(
+    TableMixin(UrlMixin(CreateModel(CsvCatalogItemTraits)))
   )
   implements HasLocalData
 {

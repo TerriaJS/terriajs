@@ -303,7 +303,7 @@ export class GetCapabilitiesStratum extends LoadableStratum(
 }
 
 class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
-  UrlMixin(GeoJsonMixin(CreateModel(WebFeatureServiceCatalogItemTraits)))
+  GeoJsonMixin(CreateModel(WebFeatureServiceCatalogItemTraits))
 ) {
   /**
    * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere

@@ -58,7 +58,7 @@ StratumOrder.addLoadStratum(ApiTableStratum.stratumName);
  * single API to get positions from.
  */
 export class ApiTableCatalogItem extends AutoRefreshingMixin(
-  TableMixin(CatalogMemberMixin(CreateModel(ApiTableCatalogItemTraits)))
+  TableMixin(CreateModel(ApiTableCatalogItemTraits))
 ) {
   static readonly type = "api-table";
 

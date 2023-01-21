@@ -23,11 +23,12 @@ import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin, {
   getName
 } from "../../../ModelMixins/CatalogMemberMixin";
-import ChartableMixin from "../../../ModelMixins/ChartableMixin";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import ExportWebCoverageServiceMixin from "../../../ModelMixins/ExportWebCoverageServiceMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
-import { ImageryParts } from "../../../ModelMixins/MappableMixin";
+import MappableMixin, {
+  ImageryParts
+} from "../../../ModelMixins/MappableMixin";
 import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
 import TileErrorHandlerMixin from "../../../ModelMixins/TileErrorHandlerMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -83,7 +84,9 @@ class WebMapServiceCatalogItem
         MinMaxLevelMixin(
           GetCapabilitiesMixin(
             UrlMixin(
-              CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+              MappableMixin(
+                CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+              )
             )
           )
         )

@@ -124,9 +124,7 @@ class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
 StratumOrder.addLoadStratum(GeoRssStratum.stratumName);
 
 export default class GeoRssCatalogItem
-  extends GeoJsonMixin(
-    UrlMixin(CatalogMemberMixin(CreateModel(GeoRssCatalogItemTraits)))
-  )
+  extends GeoJsonMixin(CreateModel(GeoRssCatalogItemTraits))
   implements HasLocalData
 {
   static readonly type = "georss";

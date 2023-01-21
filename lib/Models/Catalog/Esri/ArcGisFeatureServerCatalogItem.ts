@@ -464,9 +464,7 @@ class FeatureServerStratum extends LoadableStratum(
 StratumOrder.addLoadStratum(FeatureServerStratum.stratumName);
 
 export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
-  UrlMixin(
-    CatalogMemberMixin(CreateModel(ArcGisFeatureServerCatalogItemTraits))
-  )
+  CreateModel(ArcGisFeatureServerCatalogItemTraits)
 ) {
   static readonly type = "esri-featureServer";
 

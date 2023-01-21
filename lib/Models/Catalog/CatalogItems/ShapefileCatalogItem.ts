@@ -28,9 +28,7 @@ export function isJsonArrayOrDeepArrayOfObjects(
 }
 
 class ShapefileCatalogItem
-  extends GeoJsonMixin(
-    CatalogMemberMixin(CreateModel(ShapefileCatalogItemTraits))
-  )
+  extends GeoJsonMixin(CreateModel(ShapefileCatalogItemTraits))
   implements HasLocalData
 {
   static readonly type = "shp";

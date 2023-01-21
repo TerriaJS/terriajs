@@ -111,7 +111,7 @@ function CatalogFunctionJobMixin<
   T extends Constructor<CatalogFunctionJobMixin>
 >(Base: T) {
   abstract class CatalogFunctionJobMixin extends GroupMixin(
-    AutoRefreshingMixin(CatalogMemberMixin(Base))
+    AutoRefreshingMixin(MappableMixin(CatalogMemberMixin(Base)))
   ) {
     constructor(...args: any[]) {
       super(...args);

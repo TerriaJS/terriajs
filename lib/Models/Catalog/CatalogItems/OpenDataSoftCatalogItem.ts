@@ -533,10 +533,8 @@ function getTimeField(dataset: Dataset) {
 StratumOrder.addLoadStratum(OpenDataSoftDatasetStratum.stratumName);
 
 export default class OpenDataSoftCatalogItem
-  extends TableMixin(
-    AutoRefreshingMixin(
-      UrlMixin(CatalogMemberMixin(CreateModel(OpenDataSoftCatalogItemTraits)))
-    )
+  extends AutoRefreshingMixin(
+    TableMixin(UrlMixin(CreateModel(OpenDataSoftCatalogItemTraits)))
   )
   implements SelectableDimensions
 {

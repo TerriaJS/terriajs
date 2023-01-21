@@ -22,7 +22,10 @@ export default class RectangleParameter extends FunctionParameter<RectangleCoord
 
   readonly crs: string;
 
-  constructor(catalogFunction: CatalogFunctionMixin, options: Options) {
+  constructor(
+    catalogFunction: CatalogFunctionMixin.Instance,
+    options: Options
+  ) {
     super(catalogFunction, options);
     this.crs = defaultValue(options.crs, Reproject.TERRIA_CRS);
   }

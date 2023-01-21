@@ -1,11 +1,5 @@
 import i18next from "i18next";
-import {
-  action,
-  computed,
-  isObservableArray,
-  observable,
-  runInAction
-} from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import { createTransformer, ITransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -14,7 +8,7 @@ import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
@@ -50,16 +44,16 @@ import TableStyle from "../Table/TableStyle";
 import TableTraits from "../Traits/TraitsClasses/Table/TableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import { calculateDomain, ChartAxis, ChartItem } from "./ChartableMixin";
-import DiscretelyTimeVaryingMixin, {
-  DiscreteTimeAsJS
-} from "./DiscretelyTimeVaryingMixin";
+import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
 import ExportableMixin, { ExportData } from "./ExportableMixin";
-import { ImageryParts } from "./MappableMixin";
+import MappableMixin, { ImageryParts } from "./MappableMixin";
 
-function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
+type BaseType = Model<TableTraits>;
+
+function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class TableMixin
     extends ExportableMixin(
-      DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base))
+      DiscretelyTimeVaryingMixin(MappableMixin(CatalogMemberMixin(Base)))
     )
     implements SelectableDimensions, ViewingControls, FeatureInfoContext
   {
@@ -233,6 +227,11 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         sender: this,
         message: "No data available to download."
       });
+    }
+
+    @computed
+    get name() {
+      return super.name;
     }
 
     @computed

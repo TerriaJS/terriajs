@@ -364,7 +364,9 @@ StratumOrder.addLoadStratum(MapServerStratum.stratumName);
 export default class ArcGisMapServerCatalogItem extends UrlMixin(
   DiscretelyTimeVaryingMixin(
     MinMaxLevelMixin(
-      CatalogMemberMixin(CreateModel(ArcGisMapServerCatalogItemTraits))
+      CatalogMemberMixin(
+        MappableMixin(CreateModel(ArcGisMapServerCatalogItemTraits))
+      )
     )
   )
 ) {

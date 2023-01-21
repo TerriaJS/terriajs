@@ -1,6 +1,6 @@
 import { computed } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
@@ -56,7 +56,9 @@ class DiffStratum extends LoadableStratum(DiffableTraits) {
   }
 }
 
-function DiffableMixin<T extends Constructor<Model<DiffableTraits>>>(Base: T) {
+type BaseType = Model<DiffableTraits>;
+
+function DiffableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class DiffableMixin extends TimeFilterMixin(Base) {
     constructor(...args: any[]) {
       super(...args);

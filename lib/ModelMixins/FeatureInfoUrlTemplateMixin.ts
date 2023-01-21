@@ -5,7 +5,7 @@ import Resource from "terriajs-cesium/Source/Core/Resource";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
@@ -16,9 +16,11 @@ import FeatureInfoUrlTemplateTraits from "../Traits/TraitsClasses/FeatureInfoTra
 import MappableMixin from "./MappableMixin";
 import TimeVarying from "./TimeVarying";
 
-type Target = Model<FeatureInfoUrlTemplateTraits>;
+type BaseType = Model<FeatureInfoUrlTemplateTraits>;
 
-function FeatureInfoUrlTemplateMixin<T extends Constructor<Target>>(Base: T) {
+function FeatureInfoUrlTemplateMixin<T extends AbstractConstructor<BaseType>>(
+  Base: T
+) {
   abstract class FeatureInfoUrlTemplateMixin extends Base {
     get hasFeatureInfoUrlTemplateMixin() {
       return true;

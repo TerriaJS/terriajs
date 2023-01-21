@@ -23,7 +23,7 @@ import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeatur
 import Cesium3DTilePointFeature from "terriajs-cesium/Source/Scene/Cesium3DTilePointFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import isDefined from "../Core/isDefined";
 import { isJsonObject, JsonObject } from "../Core/Json";
 import runLater from "../Core/runLater";
@@ -80,9 +80,9 @@ class ObservableCesium3DTileset extends Cesium3DTileset {
   }
 }
 
-function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
-  Base: T
-) {
+type BaseType = Model<Cesium3dTilesTraits>;
+
+function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class Cesium3dTilesMixin extends ClippingMixin(
     ShadowMixin(MappableMixin(CatalogMemberMixin(Base)))
   ) {

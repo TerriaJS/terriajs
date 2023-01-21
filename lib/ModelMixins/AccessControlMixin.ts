@@ -1,14 +1,12 @@
 import { action, computed, observable } from "mobx";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import ModelTraits from "../Traits/ModelTraits";
 
-type AccessControlModel = Model<ModelTraits>;
+type BaseType = Model<ModelTraits>;
 
-function AccessControlMixin<T extends Constructor<AccessControlModel>>(
-  Base: T
-) {
-  class Klass extends Base {
+function AccessControlMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
+  abstract class _AccessControlMixin extends Base {
     @observable private _accessType: string | undefined;
 
     get hasAccessControlMixin() {
@@ -60,7 +58,7 @@ function AccessControlMixin<T extends Constructor<AccessControlModel>>(
     }
   }
 
-  return Klass;
+  return _AccessControlMixin;
 }
 
 namespace AccessControlMixin {
