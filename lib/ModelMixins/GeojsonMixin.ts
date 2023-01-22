@@ -218,7 +218,9 @@ interface FeatureCounts {
   total: number;
 }
 
-function GeoJsonMixin<T extends AbstractConstructor<Model<GeoJsonTraits>>>(Base: T) {
+function GeoJsonMixin<T extends AbstractConstructor<Model<GeoJsonTraits>>>(
+  Base: T
+) {
   abstract class GeoJsonMixin extends TableMixin(
     FeatureInfoUrlTemplateMixin(UrlMixin(Base))
   ) {
@@ -337,6 +339,13 @@ function GeoJsonMixin<T extends AbstractConstructor<Model<GeoJsonTraits>>>(Base:
             return superOverrides.name() || this.sourceReference.name;
           }
           return superOverrides.name();
+        },
+        cacheDuration: () => {
+          const value = superOverrides.cacheDuration();
+          if (isDefined(value)) {
+            return value;
+          }
+          return "1d";
         }
       };
     }
@@ -1252,9 +1261,9 @@ function GeoJsonMixin<T extends AbstractConstructor<Model<GeoJsonTraits>>>(Base:
 
     protected createViewingControls(): ViewingControl[] {
       return !this.useTableStylingAndProtomaps
-        ? super.createViewingControls().filter(
-            (v) => v.id !== TableStylingWorkflow.type
-          )
+        ? super
+            .createViewingControls()
+            .filter((v) => v.id !== TableStylingWorkflow.type)
         : super.createViewingControls();
     }
   }

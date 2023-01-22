@@ -132,7 +132,7 @@ export default class SdmxJsonCatalogItem
     });
   }
 
-  createSlectableDimensions(): SelectableDimension[] {
+  createSelectableDimensions(): SelectableDimension[] {
     return filterOutUndefined([
       ...super
         .createSelectableDimensions()

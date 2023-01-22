@@ -732,7 +732,7 @@ class WebMapServiceCatalogItem
 
   createSelectableDimensions() {
     if (this.disableDimensionSelectors) {
-      return super.selectableDimensions;
+      return super.createSelectableDimensions();
     }
 
     return filterOutUndefined([
