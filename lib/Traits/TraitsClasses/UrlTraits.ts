@@ -1,7 +1,14 @@
 import ModelTraits from "../ModelTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
 
-export default class UrlTraits extends ModelTraits {
+interface UrlTraits {
+  // Add traits here that you want to override from some Mixin or Model class
+  // without generating TS2611 type error.
+  url?: string;
+  cacheDuration?: string;
+}
+
+class UrlTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
     name: "URL",
@@ -24,3 +31,5 @@ export default class UrlTraits extends ModelTraits {
   })
   cacheDuration?: string;
 }
+
+export default UrlTraits;
