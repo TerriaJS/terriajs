@@ -193,8 +193,8 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     return "Web Processing Service (WPS)";
   }
 
-  get _createTraitOverrides(): TraitOverrides<WebProcessingServiceCatalogFunctionTraits> {
-    const superOverrides = super._createTraitOverrides;
+  get _newTraitOverrides(): TraitOverrides<WebProcessingServiceCatalogFunctionTraits> {
+    const superOverrides = super._newTraitOverrides;
     return {
       ...superOverrides,
       cacheDuration: () => {

@@ -462,8 +462,8 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
     }
   }
 
-  get _createTraitOverrides(): TraitOverrides<WebFeatureServiceCatalogItemTraits> {
-    const superOverrides = super._createTraitOverrides;
+  get _newTraitOverrides(): TraitOverrides<WebFeatureServiceCatalogItemTraits> {
+    const superOverrides = super._newTraitOverrides;
     return {
       ...superOverrides,
       shortReport: () => {

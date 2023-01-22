@@ -442,8 +442,8 @@ export default class CkanCatalogGroup extends UrlMixin(
     return i18next.t("models.ckan.nameServer");
   }
 
-  get _createTraitOverrides(): TraitOverrides<CkanCatalogGroupTraits> {
-    const superOverrides = super._createTraitOverrides;
+  get _newTraitOverrides(): TraitOverrides<CkanCatalogGroupTraits> {
+    const superOverrides = super._newTraitOverrides;
     return {
       ...superOverrides,
       cacheDuration: () => {

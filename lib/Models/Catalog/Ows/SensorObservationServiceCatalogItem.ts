@@ -337,8 +337,8 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     }
   }
 
-  get _createTraitOverrides(): TraitOverrides<SensorObservationServiceCatalogItemTraits> {
-    const superOverrides = super._createTraitOverrides;
+  get _newTraitOverrides(): TraitOverrides<SensorObservationServiceCatalogItemTraits> {
+    const superOverrides = super._newTraitOverrides;
     return {
       ...superOverrides,
       cacheDuration: () => {

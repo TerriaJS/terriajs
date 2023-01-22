@@ -223,8 +223,8 @@ export default class ArcGisFeatureServerCatalogGroup extends UrlMixin(
     return i18next.t("models.arcGisFeatureServerCatalogGroup.name");
   }
 
-  get _createTraitOverrides(): TraitOverrides<ArcGisFeatureServerCatalogGroupTraits> {
-    const superOverrides = super._createTraitOverrides;
+  get _newTraitOverrides(): TraitOverrides<ArcGisFeatureServerCatalogGroupTraits> {
+    const superOverrides = super._newTraitOverrides;
     return {
       ...superOverrides,
       cacheDuration: () => {

@@ -154,8 +154,8 @@ class WebMapServiceCatalogItem
     return WebMapServiceCatalogItem.type;
   }
 
-  get _createTraitOverrides(): TraitOverrides<WebMapServiceCatalogItemTraits> {
-    const superOverrides = super._createTraitOverrides;
+  get _newTraitOverrides(): TraitOverrides<WebMapServiceCatalogItemTraits> {
+    const superOverrides = super._newTraitOverrides;
     return {
       ...superOverrides,
       shortReport: () => {

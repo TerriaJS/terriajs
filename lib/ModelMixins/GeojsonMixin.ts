@@ -328,8 +328,8 @@ function GeoJsonMixin<T extends AbstractConstructor<Model<GeoJsonTraits>>>(Base:
       return true;
     }
 
-    get _createTraitOverrides(): TraitOverrides<GeoJsonTraits> {
-      const superOverrides = super._createTraitOverrides;
+    get _newTraitOverrides(): TraitOverrides<GeoJsonTraits> {
+      const superOverrides = super._newTraitOverrides;
       return {
         ...superOverrides,
         name: () => {

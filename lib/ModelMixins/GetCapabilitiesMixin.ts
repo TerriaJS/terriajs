@@ -10,8 +10,8 @@ function GetCapabilitiesMixin<T extends Constructor<CapabilitiesModel>>(
   Base: T
 ) {
   abstract class GetCapabilitiesMixin extends Base {
-    get _createTraitOverrides(): TraitOverrides<GetCapabilitiesTraits> {
-      const superOverrides = super._createTraitOverrides;
+    get _newTraitOverrides(): TraitOverrides<GetCapabilitiesTraits> {
+      const superOverrides = super._newTraitOverrides;
       return {
         ...superOverrides,
         getCapabilitiesUrl: () => {

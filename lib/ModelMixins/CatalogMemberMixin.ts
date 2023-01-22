@@ -107,26 +107,8 @@ function CatalogMemberMixin<T extends AbstractConstructor<CatalogMember>>(
       return this.terria.workbench.contains(this);
     }
 
-    // static catalogMemberMixinTraitOverrides(
-    //   superOverrides: Constructor<TraitOverrides<CatalogMemberTraits>>
-    // ): TraitOverrides<CatalogMemberTraits> {
-    //   class Overrides extends superOverrides {
-    //     name(instance: CatalogMemberMixin) {
-    //       return super.name() || instance.uniqueId;
-    //     }
-    //   }
-    //   const overrides = Object.create(superOverrides);
-    //   overrides.name = function (this: CatalogMemberMixin) {
-    //     return super.name() || this.uniqueId;
-    //   };
-    //   overrides.nameInCatalog = function (this: CatalogMemberMixin) {
-    //     return super.nameInCatalog() || this.name;
-    //   };
-    //   return overrides;
-    // }
-
-    get _createTraitOverrides(): TraitOverrides<CatalogMemberTraits> {
-      const superOverrides = super._createTraitOverrides;
+    get _newTraitOverrides() {
+      const superOverrides = super._newTraitOverrides;
       return {
         ...superOverrides,
         name: () => {

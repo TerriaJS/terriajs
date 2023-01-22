@@ -462,8 +462,8 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     });
   }
 
-  get _createTraitOverrides(): TraitOverrides<WebMapTileServiceCatalogItemTraits> {
-    const superOverrides = super._createTraitOverrides;
+  get _newTraitOverrides(): TraitOverrides<WebMapTileServiceCatalogItemTraits> {
+    const superOverrides = super._newTraitOverrides;
     return {
       ...superOverrides,
       cacheDuration: () => {

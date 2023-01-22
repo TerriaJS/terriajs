@@ -78,14 +78,9 @@ export interface ModelInterface<T extends ModelTraits> {
   readonly knownContainerUniqueIds: string[];
   readonly completeKnownContainerUniqueIds: string[];
 
-  // This will be a MobX computed property and should not be overridden.
+  // This is initialized by calling _newTraitOverrides from the constructor,
+  // and should not be overridden.
   readonly traitOverrides: TraitOverrides<T>;
-
-  // Override this to property to add new trait overrides to a subclass.
-  // This is a property rather than a method because TypeScript does not merge the
-  // return values of parameterless methods in subclasses the way it does the
-  // return values of properties.
-  readonly _createTraitOverrides: TraitOverrides<T>;
 
   /**
    * The model whose {@link ReferenceMixin} references this model.
@@ -96,6 +91,12 @@ export interface ModelInterface<T extends ModelTraits> {
 
   readonly strataTopToBottom: ReadonlyMap<string, StratumFromTraits<T>>;
   readonly strataBottomToTop: ReadonlyMap<string, StratumFromTraits<T>>;
+
+  // Override this to property to add new trait overrides to a subclass.
+  // This is a property rather than a method because TypeScript does not merge the
+  // return values of parameterless methods in subclasses the way it does the
+  // return values of properties.
+  get _newTraitOverrides(): TraitOverrides<T>;
 
   dispose(): void;
 

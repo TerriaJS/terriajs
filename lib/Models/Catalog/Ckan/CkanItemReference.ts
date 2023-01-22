@@ -314,8 +314,8 @@ export default class CkanItemReference extends UrlMixin(
     );
   }
 
-  get _createTraitOverrides(): TraitOverrides<CkanItemReferenceTraits> {
-    const superOverrides = super._createTraitOverrides;
+  get _newTraitOverrides(): TraitOverrides<CkanItemReferenceTraits> {
+    const superOverrides = super._newTraitOverrides;
     return {
       ...superOverrides,
       cacheDuration: () => {

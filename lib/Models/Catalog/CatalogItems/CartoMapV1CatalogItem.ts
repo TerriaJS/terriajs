@@ -136,8 +136,8 @@ export default class CartoMapV1CatalogItem extends MappableMixin(
     });
   }
 
-  get _createTraitOverrides(): TraitOverrides<CartoMapV1CatalogItemTraits> {
-    const superOverrides = super._createTraitOverrides;
+  get _newTraitOverrides(): TraitOverrides<CartoMapV1CatalogItemTraits> {
+    const superOverrides = super._newTraitOverrides;
     return {
       ...superOverrides,
       cacheDuration: () => {

@@ -1,4 +1,11 @@
-import { action, computed, decorate, observable, runInAction, toJS } from "mobx";
+import {
+  action,
+  computed,
+  decorate,
+  observable,
+  runInAction,
+  toJS
+} from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import flatten from "../../Core/flatten";
 import isDefined from "../../Core/isDefined";
@@ -35,13 +42,9 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     readonly traits = Traits.traits;
     readonly TraitsClass: TraitsConstructor<InstanceType<T>> = <any>Traits;
     readonly strata: Map<string, StratumTraits>;
+    readonly traitOverrides: TraitOverrides<Traits>;
 
-    @computed
-    get traitOverrides(): TraitOverrides<Traits> {
-      return this._createTraitOverrides;
-    }
-
-    get _createTraitOverrides(): TraitOverrides<Traits> {
+    get _newTraitOverrides(): TraitOverrides<Traits> {
       // In the base class, the trait override functions get the trait
       // value from the strata.
       const result: any = {};
@@ -103,6 +106,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     ) {
       super(id, terria, sourceReference);
       this.strata = strata || observable.map<string, StratumTraits>();
+      this.traitOverrides = this._newTraitOverrides;
     }
 
     dispose() {}

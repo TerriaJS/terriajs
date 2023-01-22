@@ -59,8 +59,8 @@ export default class SdmxJsonCatalogItem
     return SdmxJsonCatalogItem.type;
   }
 
-  get _createTraitOverrides(): TraitOverrides<SdmxCatalogItemTraits> {
-    const superOverrides = super._createTraitOverrides;
+  get _newTraitOverrides(): TraitOverrides<SdmxCatalogItemTraits> {
+    const superOverrides = super._newTraitOverrides;
     return {
       ...superOverrides,
       cacheDuration: () => {

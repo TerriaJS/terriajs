@@ -198,8 +198,8 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
     // https://github.com/TerriaJS/terriajs/issues/4943
   }
 
-  get _createTraitOverrides(): TraitOverrides<YDYRCatalogFunctionTraits> {
-    const superOverrides = super._createTraitOverrides;
+  get _newTraitOverrides(): TraitOverrides<YDYRCatalogFunctionTraits> {
+    const superOverrides = super._newTraitOverrides;
     return {
       ...superOverrides,
       description: () => {

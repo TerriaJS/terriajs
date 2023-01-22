@@ -39,8 +39,8 @@ function DiscretelyTimeVaryingMixin<
     }
     abstract get discreteTimes(): DiscreteTimeAsJS[] | undefined;
 
-    get _createTraitOverrides(): TraitOverrides<DiscretelyTimeVaryingTraits> {
-      const superOverrides = super._createTraitOverrides;
+    get _newTraitOverrides(): TraitOverrides<DiscretelyTimeVaryingTraits> {
+      const superOverrides = super._newTraitOverrides;
       return {
         ...superOverrides,
         currentTime: () => {

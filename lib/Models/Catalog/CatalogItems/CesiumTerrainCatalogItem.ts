@@ -24,8 +24,8 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
     return CesiumTerrainCatalogItem.type;
   }
 
-  get _createTraitOverrides(): TraitOverrides<CesiumTerrainCatalogItemTraits> {
-    const superOverrides = super._createTraitOverrides;
+  get _newTraitOverrides(): TraitOverrides<CesiumTerrainCatalogItemTraits> {
+    const superOverrides = super._newTraitOverrides;
     return {
       ...superOverrides,
       disableZoomTo: () => {

@@ -788,8 +788,8 @@ export default class MagdaReference extends AccessControlMixin(
     return undefined;
   }
 
-  get _createTraitOverrides(): TraitOverrides<MagdaReferenceTraits> {
-    const superOverrides = super._createTraitOverrides;
+  get _newTraitOverrides(): TraitOverrides<MagdaReferenceTraits> {
+    const superOverrides = super._newTraitOverrides;
     return {
       ...superOverrides,
       cacheDuration: () => {

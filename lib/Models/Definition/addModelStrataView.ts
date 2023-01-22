@@ -34,7 +34,7 @@ export default function addModelStrataView<
     const trait = traits[traitName];
     Object.defineProperty(propertyTarget, traitName, {
       get: function () {
-        this.traitOverrides[traitName](this);
+        return this.traitOverrides[traitName]();
       },
       enumerable: true,
       configurable: true
