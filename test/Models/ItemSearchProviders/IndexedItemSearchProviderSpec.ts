@@ -85,7 +85,7 @@ describe("IndexedItemSearchProvider", function () {
       let error;
       try {
         await provider.initialize();
-      } catch (e) {
+      } catch (e: any) {
         error = e;
       }
       expect(error?.message).toContain(

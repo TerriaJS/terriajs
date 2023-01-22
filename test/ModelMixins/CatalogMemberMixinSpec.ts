@@ -3,10 +3,7 @@ import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapService
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
-import {
-  SelectableDimensionEnum,
-  isEnum
-} from "../../lib/Models/SelectableDimensions/SelectableDimensions";
+import { isEnum } from "../../lib/Models/SelectableDimensions/SelectableDimensions";
 import Terria from "../../lib/Models/Terria";
 import EnumDimensionTraits, {
   DimensionOptionTraits
@@ -110,7 +107,7 @@ describe("CatalogMemberMixin", function () {
       let dispose: IReactionDisposer | undefined;
 
       // Wait for isLoadingMapItems to be true -> then check isLoadingMetadata and isLoading
-      await new Promise((resolve) => {
+      await new Promise<void>((resolve) => {
         dispose = reaction(
           () => wmsItem.isLoadingMapItems,
           () => {

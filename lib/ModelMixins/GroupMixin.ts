@@ -167,7 +167,7 @@ function GroupMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      *
      * {@see AsyncLoader}
      */
-    protected abstract async forceLoadMembers(): Promise<void>;
+    protected abstract forceLoadMembers(): Promise<void>;
 
     @action
     toggleOpen(stratumId: string) {

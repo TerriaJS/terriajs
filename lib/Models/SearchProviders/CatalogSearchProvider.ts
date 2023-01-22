@@ -50,7 +50,7 @@ export function loadAndSearchCatalogRecursively(
           runInAction(() => {
             searchResults.results.push(
               new SearchResult({
-                name: name,
+                name: modelToSave.name,
                 catalogItem: modelToSave
               })
             );

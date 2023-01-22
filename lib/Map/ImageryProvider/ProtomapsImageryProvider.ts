@@ -4,7 +4,7 @@ import booleanIntersects from "@turf/boolean-intersects";
 import circle from "@turf/circle";
 import { Feature } from "@turf/helpers";
 import i18next from "i18next";
-import { cloneDeep } from "lodash-es";
+import { cloneDeep, isEmpty } from "lodash-es";
 import { action, observable, runInAction } from "mobx";
 import {
   Bbox,
@@ -507,7 +507,7 @@ export default class ProtomapsImageryProvider
             // Only create FeatureInfo for visible features with properties
             if (
               !f.feature.props ||
-              f.feature.props === {} ||
+              isEmpty(f.feature.props) ||
               !renderedLayers.includes(f.layerName)
             )
               return;

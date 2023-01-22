@@ -8,6 +8,7 @@ import StratumOrder from "../Models/Definition/StratumOrder";
 import { SelectableDimensionEnum } from "../Models/SelectableDimensions/SelectableDimensions";
 import DiffableTraits from "../Traits/TraitsClasses/DiffableTraits";
 import LegendTraits from "../Traits/TraitsClasses/LegendTraits";
+import MappableMixin from "./MappableMixin";
 import TimeFilterMixin from "./TimeFilterMixin";
 
 class DiffStratum extends LoadableStratum(DiffableTraits) {
@@ -56,7 +57,7 @@ class DiffStratum extends LoadableStratum(DiffableTraits) {
   }
 }
 
-type BaseType = Model<DiffableTraits>;
+type BaseType = Model<DiffableTraits> & MappableMixin.Instance;
 
 function DiffableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class DiffableMixin extends TimeFilterMixin(Base) {

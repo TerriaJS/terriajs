@@ -1,6 +1,7 @@
 import { action, computed } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import DiffableMixin from "../../lib/ModelMixins/DiffableMixin";
+import MappableMixin from "../../lib/ModelMixins/MappableMixin";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import CreateModel from "../../lib/Models/Definition/CreateModel";
 import Terria from "../../lib/Models/Terria";
@@ -39,7 +40,9 @@ describe("DiffableMixin", function () {
 });
 
 class TestDiffableItem extends DiffableMixin(
-  CreateModel(mixTraits(DiffableTraits, CatalogMemberTraits, SplitterTraits))
+  MappableMixin(
+    CreateModel(mixTraits(DiffableTraits, CatalogMemberTraits, SplitterTraits))
+  )
 ) {
   protected async forceLoadMapItems() {}
   styleSelectableDimensions = [];

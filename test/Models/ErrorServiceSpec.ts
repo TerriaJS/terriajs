@@ -17,7 +17,7 @@ describe("initializeErrorServiceProvider", function () {
         provider: "foo",
         configuration: undefined
       });
-    } catch (e) {
+    } catch (e: any) {
       error = e;
     }
     expect(error.message).toBe(`Unknown error service provider: foo`);

@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { TFunction } from "i18next";
-import { merge } from "lodash-es";
+import { isEmpty, merge } from "lodash-es";
 import { action, computed, observable, reaction, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
@@ -343,7 +343,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
 
     return {
       data:
-        this.featureProperties && this.featureProperties !== {}
+        this.featureProperties && !isEmpty(this.featureProperties)
           ? this.featureProperties
           : undefined,
       fileName

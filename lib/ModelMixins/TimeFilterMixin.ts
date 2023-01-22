@@ -4,7 +4,6 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import AbstractConstructor from "../Core/AbstractConstructor";
-import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import LatLonHeight from "../Core/LatLonHeight";
 import runLater from "../Core/runLater";
@@ -22,7 +21,7 @@ import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
 import MappableMixin, { ImageryParts } from "./MappableMixin";
 import TimeVarying from "./TimeVarying";
 
-type BaseType = Model<TimeFilterTraits>;
+type BaseType = Model<TimeFilterTraits> & MappableMixin.Instance;
 
 /**
  * A Mixin for filtering the dates for which imagery is available at a location

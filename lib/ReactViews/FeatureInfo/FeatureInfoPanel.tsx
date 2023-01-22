@@ -290,7 +290,7 @@ class FeatureInfoPanel extends React.Component<Props> {
             ? featureMap.get(catalogItem.uniqueId)
             : undefined) ?? [];
         return {
-          catalogItem: catalogItem as TimeFilterMixin.Instance,
+          catalogItem: catalogItem,
           feature: isDefined(features[0]) ? features[0] : undefined
         };
       })

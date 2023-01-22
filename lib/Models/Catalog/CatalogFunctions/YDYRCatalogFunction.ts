@@ -183,7 +183,9 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
     return YDYRCatalogFunction.type;
   }
 
-  readonly typeName = "YourDataYourRegions";
+  get typeName(): string {
+    return "YourDataYourRegions";
+  }
 
   protected async createJob(id: string) {
     return new YDYRCatalogFunctionJob(id, this.terria);
