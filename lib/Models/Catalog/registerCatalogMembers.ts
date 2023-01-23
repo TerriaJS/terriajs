@@ -389,6 +389,10 @@ export default function registerCatalogMembers() {
     ArcGisFeatureServerCatalogGroup.type,
     true
   );
+  UrlToCatalogMemberMapping.register(
+    matchesExtension("glb"),
+    GltfCatalogItem.type
+  );
 }
 
 function matchesUrl(regex: RegExp) {
