@@ -95,6 +95,9 @@ const GLYPHS = {
   coastalInfrastructureHover: require("../../wwwroot/images/icons/receipt/sector-icons/coastal_infrastructure_hover.svg"),
   financeHover: require("../../wwwroot/images/icons/receipt/sector-icons/finance_hover.svg"),
 
+  about: require("../../wwwroot/images/icons/receipt/sector-icons/about.svg"),
+  aboutHover: require("../../wwwroot/images/icons/receipt/sector-icons/about_hover.svg"),
+
   info: require("../../wwwroot/images/icons/receipt/info.svg"),
   back: require("../../wwwroot/images/icons/receipt/backTo.svg"),
   roundedPlay: require("../../wwwroot/images/icons/receipt/rounded-play.svg"),

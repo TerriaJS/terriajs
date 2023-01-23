@@ -51,6 +51,16 @@ class SidePanelSectorTabs extends React.Component {
               </div>
             </div>
             <div className={Styles.tabsContainer}>
+              <div key={`welcome`}>
+                <Tooltip content="About" direction="bottom" delay="100">
+                  <Link to="/">
+                    <Icon
+                      glyph={selectedSectorId === -1 ? Icon.GLYPHS['aboutHover'] : Icon.GLYPHS['about']}
+                      className={selectedSectorId === -1 ? Styles.selectedTab : ""}
+                    />
+                  </Link>
+                </Tooltip>
+              </div>
               {sectors.map((sector, id) => {
                 return (
                   <div key={`sidePanelSectorTabs/sector/${sector.id}`}>
