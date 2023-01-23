@@ -43,8 +43,12 @@ class SidePanelSectorTabs extends React.Component {
         }
         {isTopBar && (
           <div className={Styles.topbar}>
-            <div className={Styles.logo}>
-              <Branding viewState={this.props.viewState} />
+            <div className={Styles.logoOuter}>
+              <div className={Styles.logo}>
+                <div className={Styles.logoInner}>
+                  <Branding viewState={this.props.viewState} />
+                </div>
+              </div>
             </div>
             <div className={Styles.tabsContainer}>
               {sectors.map((sector, id) => {

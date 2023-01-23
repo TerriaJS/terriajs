@@ -12,10 +12,23 @@
   }
 }
 
-.logo {
-  float: left;
-  margin-top: 26px;
+.logoOuter {  // to vertically center the logo, based on https://stackoverflow.com/a/6182661/1044698
+  display: table;
+  top: 0;
+  height: 100%;
 }
+.logo {
+  display: table-cell;
+  vertical-align: middle;
+}
+.logoInner {
+  margin-top: 10px;  // compensate for Branding 'claiming' 10px at bottom of logo
+}
+
+// .logo {
+//   float: left;
+//   margin-top: 26px;
+// }
 
 .topbar {
   padding: 0px 16px 0px 16px;
