@@ -1,11 +1,10 @@
 import { runInAction, toJS } from "mobx";
-import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
 import CommonStrata from "../Models/Definition/CommonStrata";
-import FunctionParameter from "../Models/FunctionParameters/FunctionParameter";
 import Model from "../Models/Definition/Model";
+import FunctionParameter from "../Models/FunctionParameters/FunctionParameter";
 import CatalogFunctionTraits from "../Traits/TraitsClasses/CatalogFunctionTraits";
 import CatalogFunctionJobMixin from "./CatalogFunctionJobMixin";
 import CatalogMemberMixin from "./CatalogMemberMixin";

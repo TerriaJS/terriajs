@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, toJS, makeObservable } from "mobx";
+import { computed, toJS, makeObservable, override } from "mobx";
 import { createTransformer } from "mobx-utils";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
@@ -23,7 +23,9 @@ import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import { BaseModel } from "../../Definition/Model";
-import ModelPropertiesFromTraits, { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
+import ModelPropertiesFromTraits, {
+  TraitOverrides
+} from "../../Definition/ModelPropertiesFromTraits";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import updateModelFromJson from "../../Definition/updateModelFromJson";
@@ -160,7 +162,7 @@ export default class MagdaReference extends AccessControlMixin(
     );
   }
 
-  @computed
+  @override
   get accessType(): string {
     const access = getAccessTypeFromMagdaRecord(this.magdaRecord);
     return access || super.accessType;

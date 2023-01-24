@@ -1,4 +1,4 @@
-import { computed, observable, reaction, makeObservable } from "mobx";
+import { computed, observable, reaction, makeObservable, override } from "mobx";
 import isDefined from "../../Core/isDefined";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import CommonStrata from "../Definition/CommonStrata";
@@ -39,7 +39,7 @@ export default class EnumerationParameter extends FunctionParameter<string> {
     );
   }
 
-  @computed
+  @override
   get isValid(): boolean {
     if (!isDefined(this.value)) {
       return !this.isRequired;

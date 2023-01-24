@@ -1,5 +1,11 @@
 import { get as _get } from "lodash-es";
-import { computed, IReactionDisposer, observable, runInAction, makeObservable } from "mobx";
+import {
+  computed,
+  IReactionDisposer,
+  observable,
+  runInAction,
+  makeObservable
+} from "mobx";
 import { createTransformer, ITransformer } from "mobx-utils";
 import Pbf from "pbf";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -83,9 +89,9 @@ StratumOrder.addLoadStratum(GtfsStratum.stratumName);
  * For displaying realtime transport data. See [here](https://developers.google.com/transit/gtfs-realtime/reference/)
  * for the spec.
  */
-export default class GtfsCatalogItem extends MappableMixin(
-  UrlMixin(
-    AutoRefreshingMixin(CatalogMemberMixin(CreateModel(GtfsCatalogItemTraits)))
+export default class GtfsCatalogItem extends UrlMixin(
+  AutoRefreshingMixin(
+    MappableMixin(CatalogMemberMixin(CreateModel(GtfsCatalogItemTraits)))
   )
 ) {
   disposer: IReactionDisposer | undefined;

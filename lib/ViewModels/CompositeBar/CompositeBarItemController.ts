@@ -1,6 +1,6 @@
-import { computed, observable, action, makeObservable } from "mobx";
-import ViewerMode from "../../Models/ViewerMode";
+import { makeObservable, observable, runInAction } from "mobx";
 import React from "react";
+import ViewerMode from "../../Models/ViewerMode";
 
 export interface ICompositeBarItemController {
   readonly id: string;
@@ -17,131 +17,127 @@ export interface ICompositeBarItemController {
 export abstract class CompositeBarItemController
   implements ICompositeBarItemController
 {
- static id: string;
- itemRef: React.RefObject<HTMLDivElement> = React.createRef();
+  static id: string;
+  itemRef: React.RefObject<HTMLDivElement> = React.createRef();
 
- constructor() {
-  makeObservable(this);
- }
+  constructor() {
+    makeObservable(this);
+  }
 
- get id() {
-   return CompositeBarItemController.id;
- }
+  get id() {
+    return CompositeBarItemController.id;
+  }
 
- /**
-  * Whether this item is disabled
-  * @private
-  */
- @observable
- private _disabled: boolean = false;
+  /**
+   * Whether this item is disabled
+   * @private
+   */
+  @observable
+  private _disabled: boolean = false;
 
- /**
-  * Gets the {@link this._disabled}
-  */
- @computed
- get disabled(): boolean {
-   return this._disabled;
- }
+  /**
+   * Gets the {@link this._disabled}
+   */
+  get disabled(): boolean {
+    return this._disabled;
+  }
 
- /**
-  * Sets the {@link this._disabled}
-  * @param value
-  */
- set disabled(value: boolean) {
-   this._disabled = value;
- }
+  /**
+   * Sets the {@link this._disabled}
+   * @param value
+   */
+  set disabled(value: boolean) {
+    this._disabled = value;
+  }
 
- /**
-  * Whether this item is collapsed
-  * @private
-  */
- @observable
- private _collapsed: boolean = false;
+  /**
+   * Whether this item is collapsed
+   * @private
+   */
+  @observable
+  private _collapsed: boolean = false;
 
- /**
-  * Gets the {@this._collapsed}
-  */
- @computed
- get collapsed(): boolean {
-   return this._collapsed;
- }
+  /**
+   * Gets the {@this._collapsed}
+   */
+  get collapsed(): boolean {
+    return this._collapsed;
+  }
 
- /**
-  * Sets the {@this._collapsed}
-  */
- set collapsed(value: boolean) {
-   this._collapsed = value;
- }
+  /**
+   * Sets the {@this._collapsed}
+   */
+  set collapsed(value: boolean) {
+    this._collapsed = value;
+  }
 
- /**
-  * Whether this item is active
-  * @protected
-  */
- @observable
- protected _active: boolean = false;
+  /**
+   * Whether this item is active
+   * @protected
+   */
+  @observable
+  protected _active: boolean = false;
 
- /**
-  * Gets the {@link this._active}
-  */
- @computed
- get active(): boolean {
-   return !this.disabled && this._active;
- }
+  /**
+   * Gets the {@link this._active}
+   */
+  get active(): boolean {
+    return !this.disabled && this._active;
+  }
 
- /**
-  * Whether this item is pinned, if item is pinned it will be always visible on screen.
-  * @private
-  */
- @observable
- private _pinned: boolean = false;
+  /**
+   * Whether this item is pinned, if item is pinned it will be always visible on screen.
+   * @private
+   */
+  @observable
+  private _pinned: boolean = false;
 
- /**
-  * Gets the {@link this._pinned}
-  */
- @computed
- get pinned() {
-   return this._pinned;
- }
+  /**
+   * Gets the {@link this._pinned}
+   */
+  get pinned() {
+    return this._pinned;
+  }
 
- /**
-  * Sets the {@link this._pinned}
-  */
- set pinned(value: boolean) {
-   this._pinned = value;
- }
+  /**
+   * Sets the {@link this._pinned}
+   */
+  set pinned(value: boolean) {
+    this._pinned = value;
+  }
 
- /**
-  * Whether this item is visible on the screen.
-  * @private
-  */
- @observable
- private _visible: boolean = true;
+  /**
+   * Whether this item is visible on the screen.
+   * @private
+   */
+  @observable
+  private _visible: boolean = true;
 
- /**
-  * Gets the {@link this._visible}
-  */
- @computed
- get visible(): boolean {
-   return this._visible;
- }
+  /**
+   * Gets the {@link this._visible}
+   */
+  get visible(): boolean {
+    return this._visible;
+  }
 
- @action
- setVisible(v: boolean) {
-   this._visible = v;
- }
+  setVisible(v: boolean) {
+    runInAction(() => {
+      this._visible = v;
+    });
+  }
 
- /**
-  * Glyph to be shown with this item.
-  */
- abstract get glyph(): { id: string };
+  /**
+   * Glyph to be shown with this item.
+   */
+  abstract get glyph(): { id: string };
 
- /**
-  * Get viewer on which this item should be visible. If undefined item will be visible in both viewers.
-  */
- abstract get viewerMode(): ViewerMode | undefined;
+  /**
+   * Get viewer on which this item should be visible. If undefined item will be visible in both viewers.
+   */
+  abstract get viewerMode(): ViewerMode | undefined;
 
- /**
-  * What should happen after clicking on this item.
-  */
- abstract handleClick(): void;
+  /**
+   * What should happen after clicking on this item.
+   */
+  abstract handleClick(): void;
 }

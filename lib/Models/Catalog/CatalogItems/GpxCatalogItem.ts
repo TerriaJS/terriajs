@@ -5,22 +5,18 @@ import isDefined from "../../../Core/isDefined";
 import loadText from "../../../Core/loadText";
 import readText from "../../../Core/readText";
 import { networkRequestError } from "../../../Core/TerriaError";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GeoJsonMixin, {
   FeatureCollectionWithCrs
 } from "../../../ModelMixins/GeojsonMixin";
-import UrlMixin from "../../../ModelMixins/UrlMixin";
 import GpxCatalogItemTraits from "../../../Traits/TraitsClasses/GpxCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
-import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 import { ModelConstructorParameters } from "../../Definition/Model";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 const toGeoJSON = require("@mapbox/togeojson");
 
-class GpxCatalogItem extends GeoJsonMixin(
-  UrlMixin(CatalogMemberMixin(CreateModel(GpxCatalogItemTraits)))
-) {
+class GpxCatalogItem extends GeoJsonMixin(CreateModel(GpxCatalogItemTraits)) {
   static readonly type = "gpx";
 
   constructor(...args: ModelConstructorParameters) {

@@ -1,7 +1,7 @@
 import { ApiClient, fromCatalog } from "@opendatasoft/api-client";
 import { Dataset } from "@opendatasoft/api-client/dist/client/types";
 import i18next from "i18next";
-import { computed, runInAction, makeObservable } from "mobx";
+import { computed, makeObservable, runInAction } from "mobx";
 import ms from "ms";
 import Mustache from "mustache";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -12,7 +12,6 @@ import isDefined from "../../../Core/isDefined";
 import { isJsonObject, isJsonString } from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStratum";
@@ -534,8 +533,8 @@ function getTimeField(dataset: Dataset) {
 StratumOrder.addLoadStratum(OpenDataSoftDatasetStratum.stratumName);
 
 export default class OpenDataSoftCatalogItem
-  extends TableMixin(
-    AutoRefreshingMixin(UrlMixin(CreateModel(OpenDataSoftCatalogItemTraits)))
+  extends AutoRefreshingMixin(
+    TableMixin(UrlMixin(CreateModel(OpenDataSoftCatalogItemTraits)))
   )
   implements SelectableDimensions
 {
@@ -678,9 +677,9 @@ export default class OpenDataSoftCatalogItem
   createSelectableDimensions(): SelectableDimension[] {
     return filterOutUndefined([
       this.availableFieldsDimension,
-      ...super.createSelectableDimensions().filter(
-        (s) => !this.availableFieldsDimension || s.id !== "activeStyle"
-      )
+      ...super
+        .createSelectableDimensions()
+        .filter((s) => !this.availableFieldsDimension || s.id !== "activeStyle")
     ]);
   }
 }

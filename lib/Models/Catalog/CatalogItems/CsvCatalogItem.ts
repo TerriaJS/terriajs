@@ -1,9 +1,8 @@
 import i18next from "i18next";
-import { computed, runInAction, makeObservable } from "mobx";
+import { computed, makeObservable, override, runInAction } from "mobx";
 import isDefined from "../../../Core/isDefined";
 import TerriaError from "../../../Core/TerriaError";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import Csv from "../../../Table/Csv";
@@ -28,10 +27,8 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 // - points, no ID, time -> "blips" with a duration (perhaps provided by another column)
 //
 export default class CsvCatalogItem
-  extends TableMixin(
-    AutoRefreshingMixin(
-      UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
-    )
+  extends AutoRefreshingMixin(
+    TableMixin(UrlMixin(CreateModel(CsvCatalogItemTraits)))
   )
   implements HasLocalData
 {
@@ -67,7 +64,7 @@ export default class CsvCatalogItem
     return isDefined(this._csvFile);
   }
 
-  @computed
+  @override
   get _canExportData() {
     return (
       isDefined(this._csvFile) ||

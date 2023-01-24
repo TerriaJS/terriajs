@@ -1,13 +1,12 @@
 import classNames from "classnames";
 import { TFunction } from "i18next";
-import { action, reaction, runInAction, makeObservable } from "mobx";
+import { action, makeObservable, reaction, runInAction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import flatten from "../../Core/flatten";
 import isDefined from "../../Core/isDefined";
@@ -21,7 +20,6 @@ import TerriaFeature from "../../Models/Feature/Feature";
 import {
   addMarker,
   isMarkerVisible,
-  LOCATION_MARKER_DATA_SOURCE_NAME,
   removeMarker
 } from "../../Models/LocationMarkerUtils";
 import Terria from "../../Models/Terria";
@@ -295,7 +293,7 @@ class FeatureInfoPanel extends React.Component<Props> {
             ? featureMap.get(catalogItem.uniqueId)
             : undefined) ?? [];
         return {
-          catalogItem: catalogItem as TimeFilterMixin.Instance,
+          catalogItem: catalogItem,
           feature: isDefined(features[0]) ? features[0] : undefined
         };
       })

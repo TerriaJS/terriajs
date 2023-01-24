@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, isObservableArray, runInAction, makeObservable } from "mobx";
+import { computed, makeObservable, runInAction } from "mobx";
 import combine from "terriajs-cesium/Source/Core/combine";
 import containsAny from "../../../Core/containsAny";
 import isDefined from "../../../Core/isDefined";
@@ -12,22 +12,20 @@ import GeoJsonMixin, {
   toFeatureCollection
 } from "../../../ModelMixins/GeojsonMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
-import UrlMixin from "../../../ModelMixins/UrlMixin";
 import xml2json from "../../../ThirdParty/xml2json";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import WebFeatureServiceCatalogItemTraits, {
-  SUPPORTED_CRS_4326,
-  SUPPORTED_CRS_3857
+  SUPPORTED_CRS_3857,
+  SUPPORTED_CRS_4326
 } from "../../../Traits/TraitsClasses/WebFeatureServiceCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import { ModelConstructorParameters } from "../../Definition/Model";
 import WebFeatureServiceCapabilities, {
   FeatureType,
   getRectangleFromLayer
@@ -306,7 +304,7 @@ export class GetCapabilitiesStratum extends LoadableStratum(
 }
 
 class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
-  UrlMixin(GeoJsonMixin(CreateModel(WebFeatureServiceCatalogItemTraits)))
+  GeoJsonMixin(CreateModel(WebFeatureServiceCatalogItemTraits))
 ) {
   /**
    * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere

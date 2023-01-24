@@ -6,15 +6,14 @@ import isDefined from "../../../Core/isDefined";
 import JsonValue, { isJsonObject, JsonArray } from "../../../Core/Json";
 import loadBlob, { isZip } from "../../../Core/loadBlob";
 import TerriaError from "../../../Core/TerriaError";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GeoJsonMixin, {
   FeatureCollectionWithCrs
 } from "../../../ModelMixins/GeojsonMixin";
 import ShapefileCatalogItemTraits from "../../../Traits/TraitsClasses/ShapefileCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import HasLocalData from "../../HasLocalData";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import { ModelConstructorParameters } from "../../Definition/Model";
 import { fileApiNotSupportedError } from "./GeoJsonCatalogItem";
 
 export function isJsonArrayOrDeepArrayOfObjects(
@@ -29,9 +28,7 @@ export function isJsonArrayOrDeepArrayOfObjects(
 }
 
 class ShapefileCatalogItem
-  extends GeoJsonMixin(
-    CatalogMemberMixin(CreateModel(ShapefileCatalogItemTraits))
-  )
+  extends GeoJsonMixin(CreateModel(ShapefileCatalogItemTraits))
   implements HasLocalData
 {
   static readonly type = "shp";

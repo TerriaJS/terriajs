@@ -1,11 +1,12 @@
 import i18next from "i18next";
-import { computed, runInAction, makeObservable } from "mobx";
+import { computed, makeObservable, runInAction } from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import URI from "urijs";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import AsyncLoader from "../Core/AsyncLoader";
-import Constructor from "../Core/Constructor";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import loadBlob from "../Core/loadBlob";
 import loadXML from "../Core/loadXML";
@@ -26,7 +27,6 @@ import ExportWebCoverageServiceTraits, {
 } from "../Traits/TraitsClasses/ExportWebCoverageServiceTraits";
 import { getName } from "./CatalogMemberMixin";
 import ExportableMixin from "./ExportableMixin";
-import filterOutUndefined from "../Core/filterOutUndefined";
 
 type Coverage = {
   CoverageId: string;
@@ -182,9 +182,11 @@ class WebCoverageServiceDescribeCoverageStratum extends LoadableStratum(
   }
 }
 
-function ExportWebCoverageServiceMixin<
-  T extends Constructor<Model<ExportWebCoverageServiceTraits>>
->(Base: T) {
+type BaseType = Model<ExportWebCoverageServiceTraits>;
+
+function ExportWebCoverageServiceMixin<T extends AbstractConstructor<BaseType>>(
+  Base: T
+) {
   abstract class ExportWebCoverageServiceMixin extends ExportableMixin(Base) {
     private _wcsCapabilitiesLoader = new AsyncLoader(
       this.loadWcsCapabilities.bind(this)

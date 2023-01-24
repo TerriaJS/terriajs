@@ -7,6 +7,7 @@ import {
   runInAction,
   toJS,
   makeObservable,
+  override
 } from "mobx";
 import Mustache from "mustache";
 import URI from "urijs";
@@ -383,7 +384,8 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     return results;
   }
 
-  @computed get mapItems() {
+  @override
+  get mapItems() {
     if (isDefined(this.geoJsonItem)) {
       return this.geoJsonItem.mapItems.map((mapItem) => {
         setShow(mapItem, this.show);

@@ -1,10 +1,14 @@
-import { action, computed, observable, runInAction, makeObservable } from "mobx";
-import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
-import Constructor from "../Core/Constructor";
+import {
+  action,
+  computed,
+  makeObservable,
+  observable,
+  runInAction
+} from "mobx";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
-import MappableMixin, { MapItem } from "./MappableMixin";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
@@ -15,6 +19,7 @@ import { InfoSectionTraits } from "../Traits/TraitsClasses/CatalogMemberTraits";
 import AutoRefreshingMixin from "./AutoRefreshingMixin";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import GroupMixin from "./GroupMixin";
+import MappableMixin, { MapItem } from "./MappableMixin";
 
 class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
   constructor(readonly catalogFunctionJob: CatalogFunctionJobMixin.Instance) {
@@ -109,10 +114,10 @@ class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
 type CatalogFunctionJobMixin = Model<CatalogFunctionJobTraits>;
 
 function CatalogFunctionJobMixin<
-  T extends Constructor<CatalogFunctionJobMixin>
+  T extends AbstractConstructor<CatalogFunctionJobMixin>
 >(Base: T) {
   abstract class CatalogFunctionJobMixin extends GroupMixin(
-    AutoRefreshingMixin(CatalogMemberMixin(Base))
+    AutoRefreshingMixin(MappableMixin(CatalogMemberMixin(Base)))
   ) {
     constructor(...args: any[]) {
       super(...args);

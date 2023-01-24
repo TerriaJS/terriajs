@@ -5,7 +5,8 @@ import {
   observable,
   reaction,
   runInAction,
-  makeObservable
+  makeObservable,
+  override
 } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -189,7 +190,8 @@ export default class UserDrawing extends MappableMixin(
     return svgDataDeclare + svgString;
   }
 
-  @computed get cesiumRectangle(): Rectangle | undefined {
+  @override
+  get cesiumRectangle(): Rectangle | undefined {
     return this.getRectangleForShape();
   }
 

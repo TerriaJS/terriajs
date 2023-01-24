@@ -72,7 +72,7 @@ class Chart extends React.Component {
     margin: { left: 20, right: 30, top: 10, bottom: 50 }
   };
 
-  @observable zoomedXScale;
+  @observable.ref zoomedXScale;
   @observable mouseCoords;
 
   constructor(props) {

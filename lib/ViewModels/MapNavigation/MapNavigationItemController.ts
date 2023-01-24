@@ -1,4 +1,4 @@
-import { action, makeObservable } from "mobx";
+import { action, makeObservable, runInAction } from "mobx";
 import ViewerMode from "../../Models/ViewerMode";
 import {
   CompositeBarItemController,
@@ -23,18 +23,20 @@ export default abstract class MapNavigationItemController extends CompositeBarIt
    * Set this item to active state. If used it's recommended to override this method and a proper logic
    * for activating this item, so it's easier to programmatically control the item from other places.
    */
-  @action
   activate() {
-    this._active = true;
+    runInAction(() => {
+      this._active = true;
+    });
   }
 
   /**
    * Set this item to inactive state. If used it's recommended to override this method and a proper logic
    * for deactivating this item, so it's easier to programmatically control the item from other places.
    */
-  @action
   deactivate() {
-    this._active = false;
+    runInAction(() => {
+      this._active = false;
+    });
   }
 
   get width(): number | undefined {

@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction, makeObservable } from "mobx";
+import { action, computed, makeObservable, override, runInAction } from "mobx";
 import Mustache from "mustache";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -7,7 +7,6 @@ import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import loadWithXhr from "../../../Core/loadWithXhr";
 import TerriaError from "../../../Core/TerriaError";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStratum";
 import TableColumnType from "../../../Table/TableColumnType";
@@ -92,11 +91,11 @@ class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
     return new SosAutomaticStylesStratum(newModel) as this;
   }
 
-  @computed get activeStyle() {
+  @override get activeStyle() {
     return this.catalogItem.procedures[0]?.identifier;
   }
 
-  @computed
+  @override
   get styles(): StratumFromTraits<TableStyleTraits>[] {
     return this.catalogItem.procedures.map((p) => {
       return createStratumInstance(TableStyleTraits, {
@@ -113,7 +112,7 @@ class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
     });
   }
 
-  @computed
+  @override
   get defaultChartStyle() {
     const timeColumn = this.catalogItem.tableColumns.find(
       (column) => column.type === TableColumnType.time
@@ -557,9 +556,9 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   createSelectableDimensions(): SelectableDimension[] {
     return filterOutUndefined([
       // Filter out proceduresSelector - as it duplicates TableMixin.styleDimensions
-      ...super.createSelectableDimensions().filter(
-        (dim) => dim.id !== this.proceduresSelector?.id
-      ),
+      ...super
+        .createSelectableDimensions()
+        .filter((dim) => dim.id !== this.proceduresSelector?.id),
       this.proceduresSelector,
       this.observablesSelector
     ]);

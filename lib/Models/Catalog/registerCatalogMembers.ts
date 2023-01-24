@@ -401,3 +401,13 @@ export function matchesExtension(extension: string) {
     return Boolean(url.match(regex));
   };
 }
+
+// CatalogMemberFactory._constructors.entries(([type, ctor]) => {
+//   const prototypes = [];
+//   let proto = ctor;
+//   while (proto) {
+//     prototypes.push(ctor);
+//     proto = ctor.prototype;
+//   }
+//   console.log(type, prototypes);
+// });

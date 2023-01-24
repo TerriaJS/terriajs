@@ -25,6 +25,7 @@ import {
   runInAction,
   toJS,
   makeObservable,
+  override
 } from "mobx";
 import { createTransformer } from "mobx-utils";
 import {
@@ -361,7 +362,7 @@ function GeoJsonMixin<T extends AbstractConstructor<Model<GeoJsonTraits>>>(
       return this._readyData;
     }
 
-    @computed
+    @override
     get _canExportData() {
       return isDefined(this.readyData);
     }
@@ -384,7 +385,8 @@ function GeoJsonMixin<T extends AbstractConstructor<Model<GeoJsonTraits>>>(
       });
     }
 
-    @computed get mapItems() {
+    @override
+    get mapItems() {
       if (this.isLoadingMapItems) {
         return [];
       }
@@ -445,7 +447,8 @@ function GeoJsonMixin<T extends AbstractConstructor<Model<GeoJsonTraits>>>(
     }
 
     /** Remove chart items from TableMixin.chartItems */
-    @computed get chartItems() {
+    @override
+    get chartItems() {
       return [];
     }
 
@@ -1207,7 +1210,7 @@ function GeoJsonMixin<T extends AbstractConstructor<Model<GeoJsonTraits>>>(
      * This enables all TableMixin functionality - which is used for styling vector tiles.
      * If this returns an empty array, TableMixin will effectively be disabled
      */
-    @computed
+    @override
     get dataColumnMajor() {
       if (!this.readyData || !this.useTableStylingAndProtomaps) return [];
 

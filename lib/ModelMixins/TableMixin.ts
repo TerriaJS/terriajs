@@ -6,6 +6,7 @@ import {
   observable,
   runInAction,
   makeObservable,
+  override
 } from "mobx";
 import { createTransformer, ITransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
@@ -56,14 +57,14 @@ import DiscretelyTimeVaryingMixin, {
   DiscreteTimeAsJS
 } from "./DiscretelyTimeVaryingMixin";
 import ExportableMixin, { ExportData } from "./ExportableMixin";
-import { ImageryParts } from "./MappableMixin";
+import MappableMixin, { ImageryParts } from "./MappableMixin";
 
 function TableMixin<T extends AbstractConstructor<Model<TableTraits>>>(
   Base: T
 ) {
   abstract class TableMixin
     extends ExportableMixin(
-      DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base))
+      DiscretelyTimeVaryingMixin(MappableMixin(CatalogMemberMixin(Base)))
     )
     implements SelectableDimensions, ViewingControls, FeatureInfoContext
   {
@@ -436,7 +437,7 @@ function TableMixin<T extends AbstractConstructor<Model<TableTraits>>>(
       );
     }
 
-    @computed
+    @override
     get chartItems() {
       // Wait for activeTableStyle to be ready
       if (!this.activeTableStyle.ready || this.isLoadingMapItems) return [];

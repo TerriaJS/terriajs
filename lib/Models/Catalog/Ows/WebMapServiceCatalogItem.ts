@@ -8,7 +8,7 @@
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
 import i18next from "i18next";
-import { computed, runInAction, makeObservable } from "mobx";
+import { computed, makeObservable, runInAction } from "mobx";
 import combine from "terriajs-cesium/Source/Core/combine";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -23,11 +23,12 @@ import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin, {
   getName
 } from "../../../ModelMixins/CatalogMemberMixin";
-import ChartableMixin from "../../../ModelMixins/ChartableMixin";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import ExportWebCoverageServiceMixin from "../../../ModelMixins/ExportWebCoverageServiceMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
-import { ImageryParts } from "../../../ModelMixins/MappableMixin";
+import MappableMixin, {
+  ImageryParts
+} from "../../../ModelMixins/MappableMixin";
 import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
 import TileErrorHandlerMixin from "../../../ModelMixins/TileErrorHandlerMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -85,7 +86,9 @@ class WebMapServiceCatalogItem
         MinMaxLevelMixin(
           GetCapabilitiesMixin(
             UrlMixin(
-              CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+              MappableMixin(
+                CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+              )
             )
           )
         )

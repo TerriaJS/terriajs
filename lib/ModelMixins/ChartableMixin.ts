@@ -68,7 +68,7 @@ export interface ChartItem {
 function ChartableMixin<T extends AbstractConstructor<Model<MappableTraits>>>(
   Base: T
 ) {
-  abstract class ChartableMixin extends MappableMixin(Base) {
+  abstract class ChartableMixin extends Base {
     get isChartable() {
       return true;
     }

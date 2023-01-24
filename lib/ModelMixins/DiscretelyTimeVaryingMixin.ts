@@ -390,7 +390,8 @@ function DiscretelyTimeVaryingMixin<
       };
     }
 
-    @computed get chartItems(): ChartItem[] {
+    @computed
+    get chartItems(): ChartItem[] {
       return filterOutUndefined([this.momentChart]);
     }
   }
