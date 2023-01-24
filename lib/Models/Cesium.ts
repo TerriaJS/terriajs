@@ -1172,11 +1172,14 @@ us via email at " +
     assetId: number,
     accessToken?: string
   ): CesiumTerrainProvider {
-    return new CesiumTerrainProvider({
+    const terrainProvider = new CesiumTerrainProvider({
       url: IonResource.fromAssetId(assetId, {
         accessToken
       })
     });
+    // Add the event handler to the TerrainProvider
+    this.catchTerrainProviderDown(terrainProvider);
+    return terrainProvider;
   }
 
   /**
@@ -1185,9 +1188,12 @@ us via email at " +
    * Used for spying in specs
    */
   private createTerrainProviderFromUrl(url: string): CesiumTerrainProvider {
-    return new CesiumTerrainProvider({
+    const terrainProvider = new CesiumTerrainProvider({
       url
     });
+    // Add the event handler to the TerrainProvider
+    this.catchTerrainProviderDown(terrainProvider);
+    return terrainProvider;
   }
 
   /**
@@ -1197,14 +1203,13 @@ us via email at " +
    */
   private createWorldTerrain(): CesiumTerrainProvider {
     const terrainProvider = createWorldTerrain({});
+    // Add the event handler to the TerrainProvider
     this.catchTerrainProviderDown(terrainProvider);
     return terrainProvider;
   }
 
   @computed
   get terrainProvider(): TerrainProvider {
-    // Add the event handler to the TerrianProvider...
-    // this.catchTerrainProviderDown(this._terrainWithCredits.terrain);
     return this._terrainWithCredits.terrain;
   }
 
