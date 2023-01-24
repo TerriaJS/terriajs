@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable } from "mobx";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import Model from "../Models/Definition/Model";
@@ -12,6 +12,11 @@ type BaseType = Model<ShadowTraits> & SelectableDimensions;
 
 function ShadowMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class ShadowMixin extends Base {
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
+
     get hasShadows() {
       return true;
     }

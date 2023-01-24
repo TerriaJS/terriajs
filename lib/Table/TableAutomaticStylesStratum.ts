@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { uniq } from "lodash-es";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import TableMixin from "../ModelMixins/TableMixin";
@@ -30,6 +30,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   static readonly stratumName = "automaticTableStyles";
   constructor(readonly catalogItem: TableCatalogItem) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {

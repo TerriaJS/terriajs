@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import CatalogFunctionMixin from "../../../ModelMixins/CatalogFunctionMixin";
@@ -13,6 +13,7 @@ import EnumerationParameter from "../../FunctionParameters/EnumerationParameter"
 import FunctionParameter from "../../FunctionParameters/FunctionParameter";
 import InfoParameter from "../../FunctionParameters/InfoParameter";
 import StringParameter from "../../FunctionParameters/StringParameter";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import YDYRCatalogFunctionJob from "./YDYRCatalogFunctionJob";
 
 export const DATASETS: {
@@ -180,6 +181,12 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   CreateModel(YDYRCatalogFunctionTraits)
 ) {
   static readonly type = "ydyr";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get type(): string {
     return YDYRCatalogFunction.type;
   }

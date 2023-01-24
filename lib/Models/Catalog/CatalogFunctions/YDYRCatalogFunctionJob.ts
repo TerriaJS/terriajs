@@ -1,4 +1,4 @@
-import { action, runInAction } from "mobx";
+import { action, runInAction, makeObservable } from "mobx";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
@@ -10,11 +10,17 @@ import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import CsvCatalogItem from "../CatalogItems/CsvCatalogItem";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import { ALGORITHMS, DATASETS } from "./YDYRCatalogFunction";
 
 export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
   CreateModel(YDYRCatalogFunctionJobTraits)
 ) {
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get typeName() {
     return "YourDataYourRegions Job";
   }

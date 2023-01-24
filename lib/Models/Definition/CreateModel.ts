@@ -1,10 +1,10 @@
 import {
   action,
   computed,
-  decorate,
   observable,
   runInAction,
-  toJS
+  toJS,
+  makeObservable
 } from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import flatten from "../../Core/flatten";
@@ -105,6 +105,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
       strata: Map<string, StratumTraits> | undefined
     ) {
       super(id, terria, sourceReference);
+      makeObservable(this);
       this.strata = strata || observable.map<string, StratumTraits>();
       this.traitOverrides = this._newTraitOverrides;
     }

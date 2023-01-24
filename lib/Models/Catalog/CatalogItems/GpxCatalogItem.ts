@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import getFilenameFromUri from "terriajs-cesium/Source/Core/getFilenameFromUri";
 import isDefined from "../../../Core/isDefined";
 import loadText from "../../../Core/loadText";
@@ -13,6 +13,7 @@ import UrlMixin from "../../../ModelMixins/UrlMixin";
 import GpxCatalogItemTraits from "../../../Traits/TraitsClasses/GpxCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 const toGeoJSON = require("@mapbox/togeojson");
@@ -21,6 +22,11 @@ class GpxCatalogItem extends GeoJsonMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(GpxCatalogItemTraits)))
 ) {
   static readonly type = "gpx";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   get type() {
     return GpxCatalogItem.type;

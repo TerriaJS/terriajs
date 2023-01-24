@@ -1,4 +1,4 @@
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -23,6 +23,11 @@ class DataCatalogTab extends React.Component {
     theme: PropTypes.object,
     t: PropTypes.func.isRequired
   };
+
+  constructor(props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed
   get searchPlaceholder() {

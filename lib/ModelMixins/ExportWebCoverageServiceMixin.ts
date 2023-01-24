@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable } from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
@@ -164,6 +164,7 @@ class WebCoverageServiceDescribeCoverageStratum extends LoadableStratum(
     }
   ) {
     super();
+    makeObservable(this);
   }
 
   @computed get linkedWcsParameters() {
@@ -192,6 +193,11 @@ function ExportWebCoverageServiceMixin<
     private _wcsDescribeCoverageLoader = new AsyncLoader(
       this.loadWcsDescribeCoverage.bind(this)
     );
+
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
 
     @computed
     get isLoadingWcsMetadata(): boolean {

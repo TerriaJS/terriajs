@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -20,6 +20,7 @@ import KmlCatalogItemTraits from "../../../Traits/TraitsClasses/KmlCatalogItemTr
 import CreateModel from "../../Definition/CreateModel";
 import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 import HasLocalData from "../../HasLocalData";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 const kmzRegex = /\.kmz$/i;
@@ -31,6 +32,12 @@ class KmlCatalogItem
   implements HasLocalData
 {
   static readonly type = "kml";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get type() {
     return KmlCatalogItem.type;
   }

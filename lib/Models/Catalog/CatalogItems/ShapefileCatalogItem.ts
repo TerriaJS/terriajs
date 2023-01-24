@@ -1,6 +1,6 @@
 import * as geoJsonMerge from "@mapbox/geojson-merge";
 import i18next from "i18next";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import * as shp from "shpjs";
 import isDefined from "../../../Core/isDefined";
 import JsonValue, { isJsonObject, JsonArray } from "../../../Core/Json";
@@ -14,6 +14,7 @@ import ShapefileCatalogItemTraits from "../../../Traits/TraitsClasses/ShapefileC
 import CreateModel from "../../Definition/CreateModel";
 import HasLocalData from "../../HasLocalData";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import { fileApiNotSupportedError } from "./GeoJsonCatalogItem";
 
 export function isJsonArrayOrDeepArrayOfObjects(
@@ -34,6 +35,12 @@ class ShapefileCatalogItem
   implements HasLocalData
 {
   static readonly type = "shp";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get type() {
     return ShapefileCatalogItem.type;
   }

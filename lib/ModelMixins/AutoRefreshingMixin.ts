@@ -3,7 +3,8 @@ import {
   IReactionDisposer,
   onBecomeObserved,
   onBecomeUnobserved,
-  reaction
+  reaction,
+  makeObservable,
 } from "mobx";
 import { now } from "mobx-utils";
 import AbstractConstructor from "../Core/AbstractConstructor";
@@ -28,6 +29,7 @@ export default function AutoRefreshingMixin<
 
     constructor(...args: any[]) {
       super(...args);
+      makeObservable(this);
       // We should only poll when our map items have consumers
       onBecomeObserved(this, "mapItems", this.startAutoRefresh.bind(this));
       onBecomeUnobserved(this, "mapItems", this.stopAutoRefresh.bind(this));

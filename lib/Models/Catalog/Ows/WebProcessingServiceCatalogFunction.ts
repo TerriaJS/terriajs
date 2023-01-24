@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import flatten from "lodash-es/flatten";
-import { action, computed, isObservableArray, runInAction } from "mobx";
+import { action, computed, isObservableArray, runInAction, makeObservable } from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
@@ -36,6 +36,7 @@ import RegionParameter from "../../FunctionParameters/RegionParameter";
 import RegionTypeParameter from "../../FunctionParameters/RegionTypeParameter";
 import StringParameter from "../../FunctionParameters/StringParameter";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
 
 type AllowedValues = {
@@ -104,6 +105,7 @@ class WpsLoadableStratum extends LoadableStratum(
     readonly processDescription: ProcessDescription
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -185,6 +187,12 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
   CatalogFunctionMixin(CreateModel(WebProcessingServiceCatalogFunctionTraits))
 ) {
   static readonly type = "wps";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get type() {
     return WebProcessingServiceCatalogFunction.type;
   }

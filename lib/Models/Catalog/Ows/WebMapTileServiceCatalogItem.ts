@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable } from "mobx";
 import defined from "terriajs-cesium/Source/Core/defined";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import WebMapTileServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider";
@@ -32,6 +32,7 @@ import WebMapTileServiceCapabilities, {
   WmtsCapabilitiesLegend,
   WmtsLayer
 } from "./WebMapTileServiceCapabilities";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 
 interface UsableTileMatrixSets {
@@ -75,6 +76,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     readonly capabilities: WebMapTileServiceCapabilities
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -436,6 +438,11 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
   ];
 
   static readonly type = "wmts";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   get type() {
     return WebMapTileServiceCatalogItem.type;

@@ -49,7 +49,7 @@ export function selectOnMap(
 
   reaction(
     () => pickPolygonMode.pickedFeatures,
-    async (pickedFeatures, reaction) => {
+    async (pickedFeatures, _prev, reaction) => {
       pickedFeaturesSubscription = reaction;
       if (pickedFeatures?.allFeaturesAvailablePromise) {
         await pickedFeatures.allFeaturesAvailablePromise;

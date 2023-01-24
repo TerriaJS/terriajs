@@ -1,4 +1,4 @@
-import { action, computed } from "mobx";
+import { action, computed, makeObservable } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import isDefined from "../../Core/isDefined";
 import { isJsonObject, JsonObject } from "../../Core/Json";
@@ -17,6 +17,7 @@ import ModelPropertiesFromTraits from "../Definition/ModelPropertiesFromTraits";
 import updateModelFromJson from "../Definition/updateModelFromJson";
 import Terria from "../Terria";
 import { defaultBaseMaps } from "./defaultBaseMaps";
+import { ModelConstructorParameters } from "../Definition/Model";
 import MappableMixin from "../../ModelMixins/MappableMixin";
 
 export class BaseMapModel extends CreateModel(BaseMapTraits) {}
@@ -39,6 +40,11 @@ export interface BaseMapItem {
 }
 
 export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   /**
    * List of the basemaps to show in setting panel
    */

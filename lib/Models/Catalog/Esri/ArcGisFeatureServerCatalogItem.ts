@@ -1,6 +1,6 @@
 import { Geometry, GeometryCollection, Properties } from "@turf/helpers";
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable } from "mobx";
 import Color from "terriajs-cesium/Source/Core/Color";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
@@ -38,6 +38,7 @@ import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 const proj4 = require("proj4").default;
@@ -183,6 +184,7 @@ class FeatureServerStratum extends LoadableStratum(
     private _esriJson?: any
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -469,6 +471,11 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
   )
 ) {
   static readonly type = "esri-featureServer";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   get type(): string {
     return ArcGisFeatureServerCatalogItem.type;

@@ -1,5 +1,5 @@
 import { Feature } from "@turf/helpers";
-import { computed, observable } from "mobx";
+import { computed, observable, makeObservable } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import { JsonObject } from "../../Core/Json";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
@@ -50,6 +50,7 @@ export default class GeoJsonParameter
 
   constructor(catalogFunction: CatalogFunctionMixin, options: Options) {
     super(catalogFunction, options);
+    makeObservable(this);
     this.regionParameter = options.regionParameter;
   }
 

@@ -5,7 +5,8 @@ import {
   isObservableArray,
   observable,
   runInAction,
-  toJS
+  toJS,
+  makeObservable
 } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -46,6 +47,11 @@ import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
 
 class Cesium3dTilesStratum extends LoadableStratum(Cesium3dTilesTraits) {
+  constructor(...args: any[]) {
+    super(...args);
+    makeObservable(this);
+  }
+
   duplicateLoadableStratum(model: BaseModel): this {
     return new Cesium3dTilesStratum() as this;
   }
@@ -65,6 +71,11 @@ interface Cesium3DTilesCatalogItemIface
 class ObservableCesium3DTileset extends Cesium3DTileset {
   _catalogItem?: Cesium3DTilesCatalogItemIface;
   @observable destroyed = false;
+
+  constructor(...args: ConstructorParameters<typeof Cesium3DTileset>) {
+    super(...args);
+    makeObservable(this);
+  }
 
   destroy() {
     super.destroy();
@@ -89,6 +100,7 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
 
     constructor(...args: any[]) {
       super(...args);
+      makeObservable(this);
       runInAction(() => {
         this.strata.set(Cesium3dTilesStratum.name, new Cesium3dTilesStratum());
       });

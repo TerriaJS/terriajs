@@ -1,5 +1,5 @@
 import { uniq } from "lodash-es";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, runInAction, makeObservable } from "mobx";
 import clone from "terriajs-cesium/Source/Core/clone";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import AsyncLoader from "../Core/AsyncLoader";
@@ -28,6 +28,11 @@ const MERGED_GROUP_ID_PREPEND = "__merged__";
 function GroupMixin<T extends AbstractConstructor<Model<GroupTraits>>>(Base: T) {
   abstract class Klass extends Base implements Group {
     private _memberLoader = new AsyncLoader(this.forceLoadMembers.bind(this));
+
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
 
     get isGroup() {
       return true;

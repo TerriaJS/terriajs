@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, isObservableArray, runInAction } from "mobx";
+import { computed, isObservableArray, runInAction, makeObservable } from "mobx";
 import combine from "terriajs-cesium/Source/Core/combine";
 import containsAny from "../../../Core/containsAny";
 import isDefined from "../../../Core/isDefined";
@@ -27,6 +27,7 @@ import { BaseModel } from "../../Definition/Model";
 import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import WebFeatureServiceCapabilities, {
   FeatureType,
   getRectangleFromLayer
@@ -65,6 +66,7 @@ export class GetCapabilitiesStratum extends LoadableStratum(
     readonly capabilities: WebFeatureServiceCapabilities
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -322,6 +324,11 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
   ];
 
   static readonly type = "wfs";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   get type() {
     return WebFeatureServiceCatalogItem.type;

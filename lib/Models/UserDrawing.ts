@@ -4,7 +4,8 @@ import {
   IReactionDisposer,
   observable,
   reaction,
-  runInAction
+  runInAction,
+  makeObservable
 } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -80,6 +81,8 @@ export default class UserDrawing extends MappableMixin(
 
   constructor(options: Options) {
     super(createGuid(), options.terria);
+
+    makeObservable(this);
 
     /**
      * Text that appears at the top of the dialog when drawmode is active.
@@ -300,7 +303,7 @@ export default class UserDrawing extends MappableMixin(
     const pickPointMode = this.addMapInteractionMode();
     this.disposePickedFeatureSubscription = reaction(
       () => pickPointMode.pickedFeatures,
-      async (pickedFeatures, reaction) => {
+      async (pickedFeatures, _prev, reaction) => {
         if (isDefined(pickedFeatures)) {
           if (isDefined(pickedFeatures.allFeaturesAvailablePromise)) {
             await pickedFeatures.allFeaturesAvailablePromise;
@@ -414,7 +417,7 @@ export default class UserDrawing extends MappableMixin(
     const pickPointMode = this.addMapInteractionMode();
     this.disposePickedFeatureSubscription = reaction(
       () => pickPointMode.pickedFeatures,
-      async (pickedFeatures, reaction) => {
+      async (pickedFeatures, _prev, reaction) => {
         if (isDefined(pickedFeatures)) {
           if (isDefined(pickedFeatures.allFeaturesAvailablePromise)) {
             await pickedFeatures.allFeaturesAvailablePromise;

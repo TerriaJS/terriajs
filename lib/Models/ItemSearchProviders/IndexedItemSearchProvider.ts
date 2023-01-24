@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import loadCsv from "../../Core/loadCsv";
 import loadJson5 from "../../Core/loadJson5";
 import { SearchParameterTraits } from "../../Traits/TraitsClasses/SearchableItemTraits";
@@ -32,6 +32,7 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
    */
   constructor(options: any, parameterOptions: SearchParameterTraits[]) {
     super(options, parameterOptions);
+    makeObservable(this);
     const indexRootUrl = options?.indexRootUrl;
     if (typeof indexRootUrl !== "string")
       throw new Error(t("indexedItemSearchProvider.missingOptionIndexRootUrl"));

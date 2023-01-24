@@ -5,7 +5,9 @@ import {
   computed,
   IObservableArray,
   observable,
-  runInAction
+  runInAction,
+  makeObservable,
+  toJS
 } from "mobx";
 import { computedFn } from "mobx-utils";
 import AssociativeArray from "terriajs-cesium/Source/Core/AssociativeArray";
@@ -150,6 +152,8 @@ export default class Cesium extends GlobeOrMap {
 
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
     super();
+
+    makeObservable(this);
 
     this.terriaViewer = terriaViewer;
     this.terria = terriaViewer.terria;
@@ -481,7 +485,7 @@ export default class Cesium extends GlobeOrMap {
           })
           .map(({ credit }) => credit.html);
 
-        if (isEqual(credits, this.cesiumDataAttributions.toJS())) return;
+        if (isEqual(credits, toJS(this.cesiumDataAttributions))) return;
 
         // first remove ones that are not on the map anymore
         // Iterate backwards because we're removing items.
@@ -504,7 +508,11 @@ export default class Cesium extends GlobeOrMap {
             this.cesiumDataAttributions.splice(index, 0, credit);
           } else {
             // it is on the list but not in the right place so we move it
-            this.cesiumDataAttributions.move(attributionIndex, index);
+            this.cesiumDataAttributions.splice(
+              index,
+              0,
+              this.cesiumDataAttributions.splice(attributionIndex, 1)[0]
+            );
           }
         }
       });

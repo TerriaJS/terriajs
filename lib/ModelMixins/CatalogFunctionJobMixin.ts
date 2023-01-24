@@ -1,4 +1,4 @@
-import { action, computed, observable, runInAction } from "mobx";
+import { action, computed, observable, runInAction, makeObservable } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
@@ -19,6 +19,7 @@ import GroupMixin from "./GroupMixin";
 class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
   constructor(readonly catalogFunctionJob: CatalogFunctionJobMixin.Instance) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -115,6 +116,8 @@ function CatalogFunctionJobMixin<
   ) {
     constructor(...args: any[]) {
       super(...args);
+
+      makeObservable(this);
 
       // Add FunctionJobStratum to strata
       runInAction(() => {

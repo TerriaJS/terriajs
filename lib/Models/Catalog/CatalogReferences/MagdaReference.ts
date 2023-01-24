@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, toJS } from "mobx";
+import { computed, toJS, makeObservable } from "mobx";
 import { createTransformer } from "mobx-utils";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
@@ -133,6 +133,8 @@ export default class MagdaReference extends AccessControlMixin(
     strata?: Map<string, StratumFromTraits<ModelTraits>>
   ) {
     super(id, terria, sourceReference, strata);
+
+    makeObservable(this);
 
     this.setTrait(
       CommonStrata.defaults,
