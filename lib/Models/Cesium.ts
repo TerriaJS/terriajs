@@ -426,8 +426,16 @@ export default class Cesium extends GlobeOrMap {
       networkErrorPromise,
       terrainProvider.readyPromise
     ])
+      .then(() => {
+        /** Need to throw an error if incorrect `cesiumTerrainUrl` has been specified.
+        The terrainProvider.readyPromise will still be fulfulled, but the map will not load correctly
+        So we check for terrainProvider.availability */
+        if (!terrainProvider.availability) {
+          throw new Error();
+        }
+      })
       .catch((err) => {
-        console.log("Terrain provider error.  ", err.message); // TODO: reinstate this line, commented out for testing
+        console.log("Terrain provider error.  ", err.message);
         if (this.scene.terrainProvider instanceof CesiumTerrainProvider) {
           console.log("Switching to EllipsoidTerrainProvider.");
           setViewerMode("3dsmooth", this.terria.mainViewer);
@@ -1191,6 +1199,7 @@ us via email at " +
     const terrainProvider = new CesiumTerrainProvider({
       url
     });
+
     // Add the event handler to the TerrainProvider
     this.catchTerrainProviderDown(terrainProvider);
     return terrainProvider;
