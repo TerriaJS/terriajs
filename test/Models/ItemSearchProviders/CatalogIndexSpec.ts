@@ -235,7 +235,9 @@ describe("CatalogIndex - with shareKeys", function () {
   });
 
   it("loads shareKeys", async function () {
-    expect(terria.catalogIndex!.shareKeysMap.toJSON()).toEqual({
+    expect(
+      Object.fromEntries(terria.catalogIndex!.shareKeysMap.toJSON())
+    ).toEqual({
       "test-nested-dynamic-group-sharekey": "test-nested-dynamic-group",
       "test-item-3-sharekey": "test-item-3",
       "Test item without ID-sharekey":
@@ -260,7 +262,7 @@ describe("CatalogIndex - with shareKeys", function () {
         ?.loadReference()
     )?.logError();
 
-    expect(terria.shareKeysMap.toJSON()).toEqual({
+    expect(Object.fromEntries(terria.shareKeysMap.toJSON())).toEqual({
       "test-nested-dynamic-group-sharekey": "test-nested-dynamic-group",
       "test-item-3-sharekey": "test-item-3",
       "Test item without ID-sharekey":

@@ -6,9 +6,12 @@ import i18next from "i18next";
 import registerCatalogMembers from "../lib/Models/Catalog/registerCatalogMembers";
 
 configure({
-  enforceActions: true,
+  enforceActions: "always",
   computedRequiresReaction: true,
-  computedConfigurable: true // so that we can spy on computed items
+  // Turn off safeDescriptors required for spying on computed items
+  // TODO: mobx docs says this should only be enabled when need and not globally,
+  // see if we can remove this global setting
+  safeDescriptors: false
 });
 
 registerCatalogMembers();

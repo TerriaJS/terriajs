@@ -357,7 +357,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
 
     // Create geojson catalog item for input features
     const geojsonFeatures = runInAction(() => this.geojsonFeatures);
-    if (isJsonObject(geojsonFeatures, false)) {
+    if (Array.isArray(geojsonFeatures) || isObservableArray(geojsonFeatures)) {
       runInAction(() => {
         this.geoJsonItem = new GeoJsonCatalogItem(createGuid(), this.terria);
         updateModelFromJson(this.geoJsonItem, CommonStrata.user, {

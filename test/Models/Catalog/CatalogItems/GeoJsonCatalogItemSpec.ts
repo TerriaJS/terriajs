@@ -865,32 +865,32 @@ describe("GeoJsonCatalogItemSpec", () => {
 
       await geojson.loadMapItems();
 
-      expect(
-        "imageryProvider" in geojson.mapItems[0] &&
-          geojson.mapItems[0].imageryProvider instanceof
-            ProtomapsImageryProvider
-      ).toBeTruthy();
+      runInAction(() => {
+        expect(
+          "imageryProvider" in geojson.mapItems[0] &&
+            geojson.mapItems[0].imageryProvider instanceof
+              ProtomapsImageryProvider
+        ).toBeTruthy();
 
-      geojson.setTrait("user", "activeStyle", "");
+        geojson.setTrait("user", "activeStyle", "");
 
-      expect(geojson.legends.length).toBe(1);
-      expect(geojson.legends[0].items.length).toBe(1);
-      expect(geojson.legends[0].items.map((i) => i.color)).toEqual([
-        "rgb(102,194,165)"
-      ]);
+        expect(geojson.legends.length).toBe(1);
+        expect(geojson.legends[0].items.length).toBe(1);
+        expect(geojson.legends[0].items.map((i) => i.color)).toEqual([
+          "rgb(102,194,165)"
+        ]);
 
-      runInAction(() =>
         updateModelFromJson(geojson, CommonStrata.definition, {
           legends: [
             {
               url: "some-url"
             }
           ]
-        })
-      );
+        });
 
-      expect(geojson.legends.length).toBe(1);
-      expect(geojson.legends[0].url).toBe("some-url");
+        expect(geojson.legends.length).toBe(1);
+        expect(geojson.legends[0].url).toBe("some-url");
+      });
     });
 
     it("correctly builds `Feature` from picked Entity", function () {

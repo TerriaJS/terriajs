@@ -7,7 +7,7 @@ import WebMapServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebMapServic
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 
 configure({
-  enforceActions: true,
+  enforceActions: "always",
   computedRequiresReaction: true
 });
 

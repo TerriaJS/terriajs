@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import React from "react";
 import { ReactTestRenderer } from "react-test-renderer";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -20,6 +20,7 @@ import CzmlCatalogItem from "../../lib/Models/Catalog/CatalogItems/CzmlCatalogIt
 import CatalogMemberFactory from "../../lib/Models/Catalog/CatalogMemberFactory";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import CreateModel from "../../lib/Models/Definition/CreateModel";
+import { ModelConstructorParameters } from "../../lib/Models/Definition/Model";
 import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson";
 import TerriaFeature from "../../lib/Models/Feature/Feature";
 import Terria from "../../lib/Models/Terria";
@@ -1365,6 +1366,11 @@ class TestModelTraits extends mixTraits(
 class TestModel extends MappableMixin(
   DiscretelyTimeVaryingMixin(CatalogMemberMixin(CreateModel(TestModelTraits)))
 ) {
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get mapItems(): MapItem[] {
     throw new Error("Method not implemented.");
   }

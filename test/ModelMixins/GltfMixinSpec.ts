@@ -1,5 +1,4 @@
-import { action, observable } from "mobx";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import { action, makeObservable, observable } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -7,6 +6,7 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import GltfMixin from "../../lib/ModelMixins/GltfMixin";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import CreateModel from "../../lib/Models/Definition/CreateModel";
+import { ModelConstructorParameters } from "../../lib/Models/Definition/Model";
 import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
 import Terria from "../../lib/Models/Terria";
 import GltfTraits from "../../lib/Traits/TraitsClasses/GltfTraits";
@@ -108,4 +108,9 @@ describe("GltfMixin", function () {
 
 class TestGltfItem extends GltfMixin(CreateModel(GltfTraits)) {
   @observable gltfModelUrl: string | undefined = undefined;
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 }

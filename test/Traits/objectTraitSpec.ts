@@ -7,7 +7,7 @@ import Terria from "../../lib/Models/Terria";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 
 configure({
-  enforceActions: true,
+  enforceActions: "always",
   computedRequiresReaction: true
 });
 
