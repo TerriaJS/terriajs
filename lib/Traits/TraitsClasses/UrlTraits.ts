@@ -6,6 +6,7 @@ interface UrlTraits {
   // without generating TS2611 type error.
   url?: string;
   cacheDuration?: string;
+  forceProxy?: boolean;
 }
 
 class UrlTraits extends ModelTraits {
@@ -21,7 +22,7 @@ class UrlTraits extends ModelTraits {
     name: "Force proxy",
     description: "Force the default proxy to be used for all network requests."
   })
-  forceProxy = false;
+  forceProxy?: boolean;
 
   @primitiveTrait({
     type: "string",

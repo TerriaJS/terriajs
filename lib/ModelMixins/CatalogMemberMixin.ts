@@ -1,4 +1,12 @@
-import { action, computed, isObservableArray, runInAction, toJS } from "mobx";
+import {
+  action,
+  computed,
+  isObservableArray,
+  runInAction,
+  toJS,
+  makeObservable,
+  override
+} from "mobx";
 import Mustache from "mustache";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import AsyncLoader from "../Core/AsyncLoader";
@@ -31,6 +39,11 @@ function CatalogMemberMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     // The names of items in the CatalogMember's info array that contain details of the source of this CatalogMember's data.
     // This should be overridden by children of this class. For an example see the WebMapServiceCatalogItem
     _sourceInfoItemNames: string[] | undefined = undefined;
+
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
 
     get typeName(): string | undefined {
       return;
@@ -98,12 +111,12 @@ function CatalogMemberMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return this.terria.workbench.contains(this);
     }
 
-    @computed
+    @override
     get name() {
       return super.name || this.uniqueId;
     }
 
-    @computed
+    @override
     get nameInCatalog(): string | undefined {
       return super.nameInCatalog || this.name;
     }

@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed } from "mobx";
+import { computed, makeObservable, override } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -19,6 +19,7 @@ import UrlMixin from "../../../ModelMixins/UrlMixin";
 import KmlCatalogItemTraits from "../../../Traits/TraitsClasses/KmlCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import HasLocalData from "../../HasLocalData";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 const kmzRegex = /\.kmz$/i;
@@ -30,6 +31,12 @@ class KmlCatalogItem
   implements HasLocalData
 {
   static readonly type = "kml";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get type() {
     return KmlCatalogItem.type;
   }
@@ -47,7 +54,8 @@ class KmlCatalogItem
     return isDefined(this._kmlFile);
   }
 
-  @computed get cacheDuration(): string {
+  @override
+  get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }

@@ -5,7 +5,9 @@ import {
   observable,
   ObservableMap,
   reaction,
-  runInAction
+  runInAction,
+  makeObservable,
+  override
 } from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
@@ -111,6 +113,7 @@ export default class TableStylingWorkflow
   private activeStyleDisposer: IReactionDisposer;
 
   constructor(readonly item: TableMixin.Instance) {
+    makeObservable(this);
     // We need to reset colorSchemeType every time Table.activeStyle changes
     this.activeStyleDisposer = reaction(
       () => this.item.activeStyle,
@@ -2262,7 +2265,8 @@ export default class TableStylingWorkflow
   }
 
   /** All of the dimensions! */
-  @computed get selectableDimensions(): SelectableDimensionWorkflowGroup[] {
+  @computed
+  get selectableDimensions(): SelectableDimensionWorkflowGroup[] {
     return filterOutUndefined([
       this.tableStyleSelectableDim,
 

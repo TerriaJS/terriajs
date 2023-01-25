@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, toJS } from "mobx";
+import { computed, toJS, makeObservable, override } from "mobx";
 import { createTransformer } from "mobx-utils";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
@@ -134,6 +134,8 @@ export default class MagdaReference extends AccessControlMixin(
   ) {
     super(id, terria, sourceReference, strata);
 
+    makeObservable(this);
+
     this.setTrait(
       CommonStrata.defaults,
       "distributionFormats",
@@ -158,7 +160,7 @@ export default class MagdaReference extends AccessControlMixin(
     );
   }
 
-  @computed
+  @override
   get accessType(): string {
     const access = getAccessTypeFromMagdaRecord(this.magdaRecord);
     return access || super.accessType;
@@ -788,7 +790,8 @@ export default class MagdaReference extends AccessControlMixin(
     return undefined;
   }
 
-  @computed get cacheDuration(): string {
+  @override
+  get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }

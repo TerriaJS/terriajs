@@ -1,6 +1,6 @@
-import { computed, observable, action } from "mobx";
-import ViewerMode from "../../Models/ViewerMode";
+import { makeObservable, observable, runInAction } from "mobx";
 import React from "react";
+import ViewerMode from "../../Models/ViewerMode";
 
 export interface ICompositeBarItemController {
   readonly id: string;
@@ -20,6 +20,10 @@ export abstract class CompositeBarItemController
   static id: string;
   itemRef: React.RefObject<HTMLDivElement> = React.createRef();
 
+  constructor() {
+    makeObservable(this);
+  }
+
   get id() {
     return CompositeBarItemController.id;
   }
@@ -34,7 +38,6 @@ export abstract class CompositeBarItemController
   /**
    * Gets the {@link this._disabled}
    */
-  @computed
   get disabled(): boolean {
     return this._disabled;
   }
@@ -57,7 +60,6 @@ export abstract class CompositeBarItemController
   /**
    * Gets the {@this._collapsed}
    */
-  @computed
   get collapsed(): boolean {
     return this._collapsed;
   }
@@ -79,7 +81,6 @@ export abstract class CompositeBarItemController
   /**
    * Gets the {@link this._active}
    */
-  @computed
   get active(): boolean {
     return !this.disabled && this._active;
   }
@@ -94,7 +95,6 @@ export abstract class CompositeBarItemController
   /**
    * Gets the {@link this._pinned}
    */
-  @computed
   get pinned() {
     return this._pinned;
   }
@@ -116,14 +116,14 @@ export abstract class CompositeBarItemController
   /**
    * Gets the {@link this._visible}
    */
-  @computed
   get visible(): boolean {
     return this._visible;
   }
 
-  @action
   setVisible(v: boolean) {
-    this._visible = v;
+    runInAction(() => {
+      this._visible = v;
+    });
   }
 
   /**

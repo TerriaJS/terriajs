@@ -237,7 +237,7 @@ class CatalogMemberTraits extends ModelTraits {
     name: "Disable about data",
     description: "Disables the 'About Data' button in the workbench."
   })
-  disableAboutData: boolean = false;
+  disableAboutData?: boolean;
 }
 
 export default CatalogMemberTraits;

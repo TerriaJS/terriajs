@@ -1,4 +1,4 @@
-import { action, computed } from "mobx";
+import { action, computed, makeObservable } from "mobx";
 import isDefined from "../../Core/isDefined";
 import ViewState from "../../ReactViewModels/ViewState";
 import { GLYPHS } from "../../Styled/Icon";
@@ -9,6 +9,7 @@ export const FEEDBACK_TOOL_ID = "feedback";
 export class FeedbackButtonController extends MapNavigationItemController {
   constructor(private viewState: ViewState) {
     super();
+    makeObservable(this);
   }
   get glyph(): any {
     return GLYPHS.feedback;

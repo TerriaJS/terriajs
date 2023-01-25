@@ -1,7 +1,7 @@
 import { ApiClient, fromCatalog } from "@opendatasoft/api-client";
 import { Dataset } from "@opendatasoft/api-client/dist/client/types";
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, makeObservable, override, runInAction } from "mobx";
 import ms from "ms";
 import Mustache from "mustache";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -12,7 +12,6 @@ import isDefined from "../../../Core/isDefined";
 import { isJsonObject, isJsonString } from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStratum";
@@ -143,6 +142,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     private readonly pointTimeSeries?: PointTimeSeries[]
   ) {
     super();
+    makeObservable(this);
   }
 
   @computed get name() {
@@ -546,6 +546,7 @@ export default class OpenDataSoftCatalogItem
     sourceReference: BaseModel | undefined
   ) {
     super(id, terria, sourceReference);
+    makeObservable(this);
     this.strata.set(
       TableAutomaticStylesStratum.stratumName,
       new TableAutomaticStylesStratum(this)
@@ -673,7 +674,7 @@ export default class OpenDataSoftCatalogItem
     }
   }
 
-  @computed
+  @override
   get selectableDimensions() {
     return filterOutUndefined([
       this.availableFieldsDimension,

@@ -6,7 +6,8 @@ import {
   computed,
   observable,
   reaction,
-  runInAction
+  runInAction,
+  makeObservable,
 } from "mobx";
 import { computedFn } from "mobx-utils";
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
@@ -149,6 +150,7 @@ export default class Leaflet extends GlobeOrMap {
 
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
     super();
+    makeObservable(this);
     this.terria = terriaViewer.terria;
     this.terriaViewer = terriaViewer;
     this.map = L.map(container, {

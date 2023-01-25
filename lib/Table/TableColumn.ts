@@ -1,6 +1,6 @@
 import countBy from "lodash-es/countBy";
 import Mexp from "math-expression-evaluator";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
@@ -81,6 +81,7 @@ export default class TableColumn {
   readonly tableModel: TableMixin.Instance;
 
   constructor(tableModel: TableMixin.Instance, columnNumber: number) {
+    makeObservable(this);
     this.columnNumber = columnNumber;
     this.tableModel = tableModel;
   }
@@ -604,20 +605,18 @@ export default class TableColumn {
 
   @computed
   get title(): string {
-    return (
-      this.tableModel.columnTitles[this.columnNumber] ??
-      this.traits.title ??
-      // If no title set, use `name` and:
-      // - un-camel case
-      // - remove underscores
-      // - capitalise
-      this.name
-        .replace(/[A-Z][a-z]/g, (letter) => ` ${letter.toLowerCase()}`)
-        .replace(/_/g, " ")
-        .trim()
-        .toLowerCase()
-        .replace(/(^\w|\s\w)/g, (m) => m.toUpperCase())
-    );
+    return this.tableModel.columnTitles[this.columnNumber] ??
+    this.traits.title ??
+    // If no title set, use `name` and:
+    // - un-camel case
+    // - remove underscores
+    // - capitalise
+    this.name
+      .replace(/[A-Z][a-z]/g, (letter) => ` ${letter.toLowerCase()}`)
+      .replace(/_/g, " ")
+      .trim()
+      .toLowerCase()
+      .replace(/(^\w|\s\w)/g, (m) => m.toUpperCase());
   }
 
   @computed

@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { TFunction } from "i18next";
 import { isEmpty, merge } from "lodash-es";
-import { action, computed, observable, reaction, runInAction } from "mobx";
+import { action, computed, observable, reaction, runInAction, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
 import Mustache from "mustache";
@@ -77,6 +77,11 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
 
   /** See `setFeatureChangedCounter` */
   @observable featureChangedCounter = 0;
+
+  constructor(props: FeatureInfoProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     this.templateReactionDisposer = reaction(

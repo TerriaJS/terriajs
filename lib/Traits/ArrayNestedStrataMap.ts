@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import StratumFromTraits from "../Models/Definition/StratumFromTraits";
 import ModelTraits from "./ModelTraits";
@@ -19,7 +19,9 @@ export default class ArrayNestedStrataMap<T extends ModelTraits>
     readonly objectIdProperty: string | number | symbol,
     readonly objectId: string,
     readonly merge: boolean
-  ) {}
+  ) {
+    makeObservable(this);
+  }
 
   clear(): void {
     this.parentModel.strata.forEach((value: any, key: string) => {

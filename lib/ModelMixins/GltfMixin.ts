@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed } from "mobx";
+import { computed, makeObservable, override } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
@@ -51,11 +51,16 @@ function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     private readonly _dataSource = new CustomDataSource("glTF Model");
     private readonly _modelEntity = new Entity({ name: "glTF Model Entity" });
 
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
+
     get hasGltfMixin() {
       return true;
     }
 
-    @computed
+    @override
     get disableZoomTo() {
       const { latitude, longitude, height } = this.origin;
       return (
@@ -164,7 +169,7 @@ function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return Promise.resolve();
     }
 
-    @computed
+    @override
     get shortReport(): string | undefined {
       if (this.terria.currentViewer.type === "Leaflet") {
         return i18next.t("models.commonModelErrors.3dTypeIn2dMode", this);

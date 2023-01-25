@@ -1,6 +1,10 @@
 import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 
-export default class ResultPendingCatalogItemTraits extends mixTraits(
-  CatalogMemberTraits
-) {}
+interface ResultPendingCatalogItemTraits {
+  disableAboutData: boolean;
+}
+
+class ResultPendingCatalogItemTraits extends mixTraits(CatalogMemberTraits) {}
+
+export default ResultPendingCatalogItemTraits;

@@ -1,4 +1,4 @@
-import { action, computed, observable, runInAction } from "mobx";
+import { action, computed, observable, runInAction, makeObservable } from "mobx";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
@@ -18,6 +18,7 @@ import MappableMixin, { MapItem } from "./MappableMixin";
 class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
   constructor(readonly catalogFunctionJob: CatalogFunctionJobMixin.Instance) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -114,6 +115,8 @@ function CatalogFunctionJobMixin<
   ) {
     constructor(...args: any[]) {
       super(...args);
+
+      makeObservable(this);
 
       // Add FunctionJobStratum to strata
       runInAction(() => {

@@ -1,4 +1,4 @@
-import { action, computed } from "mobx";
+import { action, computed, makeObservable } from "mobx";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import TerriaError from "../../../Core/TerriaError";
 import ViewerMode from "../../../Models/ViewerMode";
@@ -91,6 +91,7 @@ export class ToolButtonController<
     readonly options: ToolButtonOptions<ToolProps>
   ) {
     super();
+    makeObservable(this);
   }
 
   get glyph(): { id: string } {

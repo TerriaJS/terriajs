@@ -1,4 +1,4 @@
-import { action, observable, runInAction } from "mobx";
+import { action, observable, runInAction, makeObservable } from "mobx";
 import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import loadArrayBuffer from "../../../Core/loadArrayBuffer";
@@ -11,6 +11,7 @@ import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import HasLocalData from "../../HasLocalData";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import { GlTf } from "./GLTF";
 
 // List of supported image formats from https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types
@@ -38,6 +39,11 @@ export default class AssImpCatalogItem
   protected gltfModelUrl: string | undefined;
 
   static readonly type = "assimp";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   get type() {
     return AssImpCatalogItem.type;

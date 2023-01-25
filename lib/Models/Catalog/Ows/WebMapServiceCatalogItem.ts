@@ -8,7 +8,7 @@
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable, override } from "mobx";
 import combine from "terriajs-cesium/Source/Core/combine";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -57,6 +57,7 @@ export class WebMapServiceUrlStratum extends LoadableStratum(
   static stratumName = "wms-url-stratum";
   constructor(readonly catalogItem: WebMapServiceCatalogItem) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -146,6 +147,7 @@ class WebMapServiceCatalogItem
     sourceReference?: BaseModel | undefined
   ) {
     super(id, terria, sourceReference);
+    makeObservable(this);
     this.strata.set(
       WebMapServiceUrlStratum.stratumName,
       new WebMapServiceUrlStratum(this)
@@ -156,7 +158,7 @@ class WebMapServiceCatalogItem
     return WebMapServiceCatalogItem.type;
   }
 
-  @computed
+  @override
   get shortReport(): string | undefined {
     if (
       this.tilingScheme instanceof GeographicTilingScheme &&
@@ -211,7 +213,8 @@ class WebMapServiceCatalogItem
     });
   }
 
-  @computed get cacheDuration(): string {
+  @override
+  get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }
@@ -727,7 +730,7 @@ class WebMapServiceCatalogItem
     return dimensions;
   }
 
-  @computed
+  @override
   get selectableDimensions() {
     if (this.disableDimensionSelectors) {
       return super.selectableDimensions;

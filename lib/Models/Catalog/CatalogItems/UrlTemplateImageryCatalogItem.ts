@@ -1,10 +1,11 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import UrlTemplateImageryCatalogItemTraits from "../../../Traits/TraitsClasses/UrlTemplateImageryCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 /** See https://cesium.com/learn/cesiumjs/ref-doc/UrlTemplateImageryProvider.html#url for available keywords:
@@ -17,6 +18,11 @@ export default class UrlTemplateImageryCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(UrlTemplateImageryCatalogItemTraits))
 ) {
   static readonly type = "url-template-imagery";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   get type() {
     return UrlTemplateImageryCatalogItem.type;

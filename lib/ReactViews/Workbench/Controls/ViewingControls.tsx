@@ -1,5 +1,5 @@
 import { sortBy, uniqBy } from "lodash";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, runInAction, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
@@ -104,6 +104,8 @@ class ViewingControls extends React.Component<
   constructor(props: any) {
     // Required step: always call the parent class' constructor
     super(props);
+
+    makeObservable(this);
 
     // Set the state directly. Use props if necessary.
     this.state = {

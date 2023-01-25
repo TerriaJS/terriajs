@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTilePointFeature from "terriajs-cesium/Source/Scene/Cesium3DTilePointFeature";
@@ -34,6 +34,7 @@ export default class TerriaFeature extends Entity {
 
   constructor(options: Entity.ConstructorOptions) {
     super(options);
+    makeObservable(this);
     addCustomFeatureProperties(this);
   }
 

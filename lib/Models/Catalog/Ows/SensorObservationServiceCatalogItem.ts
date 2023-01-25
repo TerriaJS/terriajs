@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, makeObservable, override, runInAction } from "mobx";
 import Mustache from "mustache";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -7,7 +7,6 @@ import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import loadWithXhr from "../../../Core/loadWithXhr";
 import TerriaError from "../../../Core/TerriaError";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStratum";
 import TableColumnType from "../../../Table/TableColumnType";
@@ -82,6 +81,7 @@ StratumOrder.addLoadStratum(TableAutomaticStylesStratum.stratumName);
 class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
   constructor(readonly catalogItem: SensorObservationServiceCatalogItem) {
     super(catalogItem);
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(
@@ -90,11 +90,12 @@ class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
     return new SosAutomaticStylesStratum(newModel) as this;
   }
 
-  @computed get activeStyle() {
+  @override
+  get activeStyle() {
     return this.catalogItem.procedures[0]?.identifier;
   }
 
-  @computed
+  @override
   get styles(): StratumFromTraits<TableStyleTraits>[] {
     return this.catalogItem.procedures.map((p) => {
       return createStratumInstance(TableStyleTraits, {
@@ -111,7 +112,7 @@ class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
     });
   }
 
-  @computed
+  @override
   get defaultChartStyle() {
     const timeColumn = this.catalogItem.tableColumns.find(
       (column) => column.type === TableColumnType.time
@@ -140,7 +141,9 @@ class GetFeatureOfInterestRequest {
   constructor(
     readonly catalogItem: SensorObservationServiceCatalogItem,
     readonly requestTemplate: string
-  ) {}
+  ) {
+    makeObservable(this);
+  }
 
   @computed
   get url() {
@@ -192,7 +195,9 @@ class GetObservationRequest {
   constructor(
     readonly catalogItem: SensorObservationServiceCatalogItem,
     readonly foiIdentifier: string
-  ) {}
+  ) {
+    makeObservable(this);
+  }
 
   @computed
   get url() {
@@ -315,6 +320,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     sourceReference?: BaseModel
   ) {
     super(id, terria, sourceReference);
+    makeObservable(this);
     this.strata.set(
       TableAutomaticStylesStratum.stratumName,
       new SosAutomaticStylesStratum(this)
@@ -336,7 +342,8 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     }
   }
 
-  @computed get cacheDuration(): string {
+  @override
+  get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }
@@ -540,7 +547,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     return valueTitle;
   }
 
-  @computed
+  @override
   get selectableDimensions() {
     return filterOutUndefined([
       // Filter out proceduresSelector - as it duplicates TableMixin.styleDimensions
@@ -600,7 +607,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     };
   }
 
-  @computed
+  @override
   get selectedObservableId() {
     return (
       super.selectedObservableId || this.observableProperties[0]?.identifier

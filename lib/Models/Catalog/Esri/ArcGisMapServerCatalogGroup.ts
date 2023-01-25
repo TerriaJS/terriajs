@@ -1,27 +1,27 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, makeObservable, override, runInAction } from "mobx";
 import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import runLater from "../../../Core/runLater";
-import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
+import { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
+import ModelReference from "../../../Traits/ModelReference";
 import ArcGisMapServerCatalogGroupTraits from "../../../Traits/TraitsClasses/ArcGisMapServerCatalogGroupTraits";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
-import ModelReference from "../../../Traits/ModelReference";
-import ArcGisCatalogGroup from "./ArcGisCatalogGroup";
-import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import ArcGisCatalogGroup from "./ArcGisCatalogGroup";
+import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
 
 interface DocumentInfo {
   Title?: string;
@@ -60,6 +60,7 @@ export class MapServerStratum extends LoadableStratum(
     private readonly _mapServer: MapServer
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -252,6 +253,11 @@ export default class ArcGisMapServerCatalogGroup extends UrlMixin(
 ) {
   static readonly type = "esri-mapServer-group";
 
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get type() {
     return ArcGisMapServerCatalogGroup.type;
   }
@@ -260,7 +266,8 @@ export default class ArcGisMapServerCatalogGroup extends UrlMixin(
     return i18next.t("models.arcGisMapServerCatalogGroup.name");
   }
 
-  @computed get cacheDuration(): string {
+  @override
+  get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }

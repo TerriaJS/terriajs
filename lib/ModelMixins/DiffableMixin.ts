@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, makeObservable, override } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
@@ -15,6 +15,7 @@ class DiffStratum extends LoadableStratum(DiffableTraits) {
   static stratumName = "diffStratum";
   constructor(readonly catalogItem: DiffableMixin.Instance) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -64,6 +65,8 @@ function DiffableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     constructor(...args: any[]) {
       super(...args);
 
+      makeObservable(this);
+
       const diffStratum = new DiffStratum(this);
       this.strata.set(DiffStratum.stratumName, diffStratum);
     }
@@ -92,7 +95,7 @@ function DiffableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       secondDate?: JulianDate
     ): string;
 
-    @computed
+    @override
     get canFilterTimeByFeature() {
       // Hides the SatelliteImageryTimeFilterSection for the item if it is
       // currently showing difference image

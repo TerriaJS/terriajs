@@ -1,10 +1,8 @@
 import i18next from "i18next";
 import uniqWith from "lodash-es/uniqWith";
-import { computed, runInAction } from "mobx";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import { computed, makeObservable, override, runInAction } from "mobx";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import URI from "urijs";
 import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";
 import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
@@ -12,6 +10,7 @@ import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
+import { scaleDenominatorToLevel } from "../../../Core/scaleToDenominator";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import proj4definitions from "../../../Map/Vector/Proj4Definitions";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -29,14 +28,13 @@ import LegendTraits, {
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import getToken from "../../getToken";
 import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
+import getToken from "../../getToken";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import MinMaxLevelMixin from "./../../../ModelMixins/MinMaxLevelMixin";
-import { scaleDenominatorToLevel } from "../../../Core/scaleToDenominator";
 
 const proj4 = require("proj4").default;
 
@@ -115,6 +113,7 @@ class MapServerStratum extends LoadableStratum(
     readonly token: string | undefined
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -371,6 +370,12 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
   )
 ) {
   static readonly type = "esri-mapServer";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get typeName() {
     return i18next.t("models.arcGisMapServerCatalogItem.name");
   }
@@ -390,7 +395,8 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     return Promise.resolve();
   }
 
-  @computed get cacheDuration(): string {
+  @override
+  get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }
@@ -512,7 +518,8 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     return result;
   }
 
-  @computed get layers() {
+  @override
+  get layers() {
     if (super.layers) {
       return super.layers;
     }

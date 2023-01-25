@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, isObservableArray, runInAction } from "mobx";
+import { computed, makeObservable, override, runInAction } from "mobx";
 import combine from "terriajs-cesium/Source/Core/combine";
 import containsAny from "../../../Core/containsAny";
 import isDefined from "../../../Core/isDefined";
@@ -12,18 +12,17 @@ import GeoJsonMixin, {
   toFeatureCollection
 } from "../../../ModelMixins/GeojsonMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
-import UrlMixin from "../../../ModelMixins/UrlMixin";
 import xml2json from "../../../ThirdParty/xml2json";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import WebFeatureServiceCatalogItemTraits, {
-  SUPPORTED_CRS_4326,
-  SUPPORTED_CRS_3857
+  SUPPORTED_CRS_3857,
+  SUPPORTED_CRS_4326
 } from "../../../Traits/TraitsClasses/WebFeatureServiceCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import WebFeatureServiceCapabilities, {
@@ -64,6 +63,7 @@ export class GetCapabilitiesStratum extends LoadableStratum(
     readonly capabilities: WebFeatureServiceCapabilities
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -322,6 +322,11 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
 
   static readonly type = "wfs";
 
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get type() {
     return WebFeatureServiceCatalogItem.type;
   }
@@ -461,7 +466,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
     }
   }
 
-  @computed
+  @override
   get shortReport(): string | undefined {
     // Show notice if reached
     if (

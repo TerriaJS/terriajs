@@ -1,8 +1,12 @@
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import { fromPromise } from "mobx-utils";
 import SearchProviderResults from "./SearchProviderResults";
 
 export default abstract class SearchProvider {
+  constructor() {
+    makeObservable(this);
+  }
+
   /** If search results are References to models in terria.models - set this to true.
    * This is so groups/references are opened and loaded properly
    */
