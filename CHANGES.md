@@ -2,7 +2,7 @@
 
 #### next release (8.2.24)
 
-- [The next improvement]
+- Reimplement error message and default to 3d smooth mode when Cesium Ion Access Token is invalid.
 
 #### 8.2.23 - 2023-01-06
 
