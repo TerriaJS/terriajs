@@ -87,8 +87,8 @@ class DragDropFile extends React.Component<PropsType> {
         ).raiseError(props.viewState.terria);
 
         // Zoom to first item
-        const firstZoomableItem = mappableItems.find((i) =>
-          isDefined(i.rectangle)
+        const firstZoomableItem = mappableItems.find(
+          (i) => isDefined(i.rectangle) && i.disableZoomTo === false
         );
 
         isDefined(firstZoomableItem) &&

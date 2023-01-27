@@ -1,5 +1,4 @@
 import classNames from "classnames";
-import createReactClass from "create-react-class";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
@@ -13,15 +12,14 @@ import WorkbenchList from "../Workbench/WorkbenchList";
 import Styles from "./mobile-modal-window.scss";
 import MobileSearch from "./MobileSearch";
 
-const MobileModalWindow = observer(
-  createReactClass({
-    displayName: "MobileModalWindow",
+@observer
+class MobileModalWindow extends React.Component {
 
-    propTypes: {
+    static propTypes = {
       terria: PropTypes.object,
       viewState: PropTypes.object.isRequired,
       t: PropTypes.func.isRequired
-    },
+    }
 
     renderModalContent() {
       const viewState = this.props.viewState;
@@ -69,7 +67,7 @@ const MobileModalWindow = observer(
         default:
           return null;
       }
-    },
+    }
 
     onClearMobileUI() {
       runInAction(() => {
@@ -79,7 +77,7 @@ const MobileModalWindow = observer(
         this.props.viewState.searchState.showMobileCatalogSearch = false;
         this.props.viewState.searchState.catalogSearchText = "";
       });
-    },
+    }
 
     /* eslint-disable-next-line camelcase */
     UNSAFE_componentWillReceiveProps() {
@@ -94,13 +92,13 @@ const MobileModalWindow = observer(
           this.props.viewState.explorerPanelIsVisible = false;
         });
       }
-    },
+    }
 
     goBack() {
       this.props.viewState.switchMobileView(
         this.props.viewState.mobileViewOptions.data
       );
-    },
+    }
 
     render() {
       const modalClass = classNames(Styles.mobileModal, {
@@ -123,7 +121,7 @@ const MobileModalWindow = observer(
                 <button
                   type="button"
                   className={Styles.doneButton}
-                  onClick={this.onClearMobileUI}
+                  onClick={() => this.onClearMobileUI()}
                 >
                   {t("mobile.doneBtnText")}
                 </button>
@@ -138,7 +136,7 @@ const MobileModalWindow = observer(
                     mobileView !==
                     this.props.viewState.mobileViewOptions.preview
                 })}
-                onClick={this.goBack}
+                onClick={() => this.goBack()}
               >
                 <Icon className={Styles.iconBack} glyph={Icon.GLYPHS.left} />
               </button>
@@ -149,6 +147,5 @@ const MobileModalWindow = observer(
         </div>
       );
     }
-  })
-);
+}
 module.exports = withTranslation()(MobileModalWindow);

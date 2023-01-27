@@ -1,5 +1,4 @@
 import React from "react";
-import createReactClass from "create-react-class";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 
@@ -12,15 +11,14 @@ import { withTranslation } from "react-i18next";
 import Styles from "./mobile-search.scss";
 
 // A Location item when doing Bing map searvh or Gazetter search
-const MobileSearch = observer(
-  createReactClass({
-    displayName: "MobileSearch",
+@observer
+class MobileSearch extends React.Component {
 
-    propTypes: {
+    static propTypes = {
       viewState: PropTypes.object,
       terria: PropTypes.object,
       t: PropTypes.func.isRequired
-    },
+    }
 
     onLocationClick(result) {
       runInAction(() => {
@@ -32,7 +30,7 @@ const MobileSearch = observer(
         this.props.viewState.switchMobileView(null);
         this.props.viewState.searchState.showMobileLocationSearch = false;
       });
-    },
+    }
 
     searchInDataCatalog() {
       const { searchState } = this.props.viewState;
@@ -42,7 +40,7 @@ const MobileSearch = observer(
         searchState.catalogSearchText = searchState.locationSearchText;
       });
       this.props.viewState.searchInCatalog(searchState.locationSearchText);
-    },
+    }
 
     render() {
       const theme = "light";
@@ -54,7 +52,7 @@ const MobileSearch = observer(
           </div>
         </div>
       );
-    },
+    }
 
     renderSearchInCatalogLink(theme) {
       const { t } = this.props;
@@ -65,7 +63,7 @@ const MobileSearch = observer(
             <ul className={Styles.btnList}>
               {searchState.catalogSearchProvider && (
                 <SearchResult
-                  clickAction={this.searchInDataCatalog}
+                  clickAction={() => this.searchInDataCatalog()}
                   icon={null}
                   locationSearchText={searchState.locationSearchText}
                   name={t("search.search", {
@@ -78,7 +76,7 @@ const MobileSearch = observer(
           </div>
         </If>
       );
-    },
+    }
 
     renderLocationResult(theme) {
       const searchState = this.props.viewState.searchState;
@@ -89,13 +87,12 @@ const MobileSearch = observer(
           viewState={this.props.viewState}
           search={search}
           locationSearchText={searchState.locationSearchText}
-          onLocationClick={this.onLocationClick}
+          onLocationClick={this.onLocationClick.bind(this)}
           isWaitingForSearchToStart={searchState.isWaitingToStartLocationSearch}
           theme={theme}
         />
       ));
     }
-  })
-);
+}
 
 module.exports = withTranslation()(MobileSearch);

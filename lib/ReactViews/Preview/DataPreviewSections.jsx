@@ -1,4 +1,3 @@
-import createReactClass from "create-react-class";
 import naturalSort from "javascript-natural-sort";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
@@ -24,14 +23,13 @@ Mustache.escape = function (string) {
  * CatalogItem-defined sections that sit within the preview description. These are ordered according to the catalog item's
  * order if available.
  */
-const DataPreviewSections = observer(
-  createReactClass({
-    displayName: "DataPreviewSections",
+@observer
+class DataPreviewSections extends React.Component {
 
-    propTypes: {
+    static propTypes = {
       metadataItem: PropTypes.object.isRequired,
       t: PropTypes.func.isRequired
-    },
+    }
 
     sortInfoSections(items) {
       const infoSectionOrder = this.props.metadataItem.infoSectionOrder;
@@ -55,7 +53,7 @@ const DataPreviewSections = observer(
           (item.content ?? item.contentAsObject) !== null &&
           item.content !== ""
       );
-    },
+    }
 
     clickInfoSection(reportName, isOpen) {
       const info = this.props.metadataItem.info;
@@ -67,7 +65,7 @@ const DataPreviewSections = observer(
         });
       }
       return false;
-    },
+    }
 
     render() {
       const metadataItem = this.props.metadataItem;
@@ -120,7 +118,6 @@ const DataPreviewSections = observer(
         </div>
       );
     }
-  })
-);
+}
 
 export default withTranslation()(DataPreviewSections);
