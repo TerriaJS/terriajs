@@ -1,7 +1,15 @@
 import classNames from "classnames";
 import { TFunction } from "i18next";
 import { isEmpty, merge } from "lodash-es";
-import { action, computed, observable, reaction, runInAction, makeObservable } from "mobx";
+import {
+  action,
+  computed,
+  makeObservable,
+  observable,
+  reaction,
+  runInAction,
+  toJS
+} from "mobx";
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
 import Mustache from "mustache";
@@ -477,7 +485,9 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
                 </>
               ) : (
                 // Show templated feature info
-                this.templatedFeatureInfoReactNode
+                // Calling toJS() because when passing a parsed node to react,
+                // it calls Object.freeze() on some values which triggers an error from mobx6
+                toJS(this.templatedFeatureInfoReactNode)
               )}
               {
                 // Show FeatureInfoDownload

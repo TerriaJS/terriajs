@@ -1,13 +1,14 @@
 import i18next from "i18next";
 import { isEqual } from "lodash-es";
 import {
+  action,
   autorun,
   computed,
   IObservableArray,
+  makeObservable,
   observable,
   reaction,
   runInAction,
-  makeObservable,
   toJS
 } from "mobx";
 import { computedFn } from "mobx-utils";
@@ -1190,6 +1191,7 @@ export default class Cesium extends GlobeOrMap {
    * specified and set terria.pickedFeatures based on this.
    *
    */
+  @action
   pickFromScreenPosition(screenPosition: Cartesian2, ignoreSplitter: boolean) {
     const pickRay = this.scene.camera.getPickRay(screenPosition);
     const pickPosition = isDefined(pickRay)
