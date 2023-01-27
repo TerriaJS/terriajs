@@ -169,8 +169,9 @@ class Description extends React.Component {
               >
                 <p key="wms-layers">
                   {t("description.layerName")}
-                  {(catalogItem.layers || "").split(",").length > 1 ? "s" : ""}:{" "}
-                  {catalogItem.layers}
+                  {(catalogItem.layers || "").split(",").length > 1
+                    ? "s"
+                    : ""}: {catalogItem.layers}
                 </p>
               </When>
               <When condition={catalogItem.type === "wfs"}>
