@@ -1,4 +1,4 @@
-import { observable, runInAction } from "mobx";
+import { makeObservable, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
