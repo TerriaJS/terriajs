@@ -1736,7 +1736,7 @@ export default class Terria {
       // fire the google analytics event
       this.analytics?.logEvent(
         Category.dataSource,
-        DataSourceAction.addFromShareUrl,
+        DataSourceAction.addFromShareOrInit,
         getPath(item)
       );
     });
@@ -2178,7 +2178,6 @@ async function interpretStartData(
         // Note startData.initSources can be an initUrl (string) or initData (InitDataSource/JsonObject)
         // Terria.initSources are different to startData.initSources
         // They need to be transformed into appropriate `InitSource`
-
         runInAction(() => {
           terria.initSources.push(
             ...startDataV8!.initSources.map((initSource) =>

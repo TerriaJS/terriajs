@@ -52,7 +52,7 @@ export enum DataSourceAction {
   removeFromWorkbench = "Remove from workbench",
   removeAllFromWorkbench = "Remove all from workbench",
   addFromDragAndDrop = "Add from Drag and Drop",
-  addFromShareUrl = "Add from share URL"
+  addFromShareOrInit = "Add from share or init source"
 }
 
 export enum DatatabAction {
