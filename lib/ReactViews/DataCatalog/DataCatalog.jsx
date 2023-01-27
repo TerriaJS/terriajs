@@ -1,7 +1,6 @@
 import React from "react";
 import { observer } from "mobx-react";
 
-import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
 import { withTranslation } from "react-i18next";
@@ -14,18 +13,17 @@ import SearchHeader from "../Search/SearchHeader";
 import Styles from "./data-catalog.scss";
 
 // Displays the data catalog.
-export const DataCatalog = observer(
-  createReactClass({
-    displayName: "DataCatalog",
+@observer
+export class DataCatalog extends React.Component {
 
-    propTypes: {
+    static propTypes = {
       terria: PropTypes.object,
       viewState: PropTypes.object,
       items: PropTypes.array,
       onActionButtonClicked: PropTypes.func,
       removable: PropTypes.bool,
       t: PropTypes.func.isRequired
-    },
+    }
 
     render() {
       const searchState = this.props.viewState.searchState;
@@ -73,7 +71,6 @@ export const DataCatalog = observer(
         </ul>
       );
     }
-  })
-);
+}
 
 export default withTranslation()(DataCatalog);

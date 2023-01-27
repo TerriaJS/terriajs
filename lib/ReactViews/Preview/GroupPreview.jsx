@@ -1,6 +1,5 @@
 import React from "react";
 
-import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
@@ -17,21 +16,20 @@ import WarningBox from "./WarningBox";
 /**
  * A "preview" for CatalogGroup.
  */
-const GroupPreview = observer(
-  createReactClass({
-    displayName: "GroupPreview",
+@observer
+class GroupPreview extends React.Component {
 
-    propTypes: {
+    static propTypes = {
       previewed: PropTypes.object.isRequired,
       terria: PropTypes.object.isRequired,
       viewState: PropTypes.object.isRequired,
       widthFromMeasureElementHOC: PropTypes.number,
       t: PropTypes.func.isRequired
-    },
+    }
 
     backToMap() {
       this.props.viewState.explorerPanelIsVisible = false;
-    },
+    }
 
     render() {
       const metadataItem =
@@ -109,7 +107,6 @@ const GroupPreview = observer(
         </div>
       );
     }
-  })
-);
+}
 
 export default withTranslation()(measureElement(GroupPreview));

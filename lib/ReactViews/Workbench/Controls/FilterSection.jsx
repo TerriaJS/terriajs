@@ -1,4 +1,3 @@
-import createReactClass from "create-react-class";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
@@ -7,13 +6,12 @@ import React from "react";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import Styles from "./filter-section.scss";
 
-const FilterSection = observer(
-  createReactClass({
-    displayName: "FilterSection",
+@observer
+class FilterSection extends React.Component {
 
-    propTypes: {
+    static propTypes = {
       item: PropTypes.object.isRequired
-    },
+    }
 
     change(filter, values) {
       runInAction(() => {
@@ -21,7 +19,7 @@ const FilterSection = observer(
         filter.setTrait(CommonStrata.user, "maximumShown", values[1]);
       });
       this.props.item.terria.currentViewer.notifyRepaintRequired();
-    },
+    }
 
     render() {
       const item = this.props.item;
@@ -33,7 +31,7 @@ const FilterSection = observer(
           {item.filters.map(this.renderFilter)}
         </div>
       );
-    },
+    }
 
     renderFilter(filter) {
       const values = [filter.minimumShown, filter.maximumShown];
@@ -52,7 +50,6 @@ const FilterSection = observer(
         </div>
       );
     }
-  })
-);
+}
 
 export default FilterSection;

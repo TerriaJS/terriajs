@@ -1,4 +1,3 @@
-import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -13,18 +12,17 @@ import { runInAction, reaction } from "mobx";
 
 import Styles from "./satellite-imagery-time-filter-section.scss";
 
-const SatelliteImageryTimeFilterSection = observer(
-  createReactClass({
-    displayName: "SatelliteImageryTimeFilterSection",
+@observer
+class SatelliteImageryTimeFilterSection extends React.Component {
 
-    propTypes: {
+    static propTypes = {
       item: PropTypes.object,
       t: PropTypes.func.isRequired
-    },
+    }
 
     removeFilter() {
       this.props.item.removeTimeFilterFeature();
-    },
+    }
 
     zoomTo() {
       const feature = this.props.item.timeFilterFeature;
@@ -43,7 +41,7 @@ const SatelliteImageryTimeFilterSection = observer(
           )
         );
       }
-    },
+    }
 
     newLocation() {
       const { t } = this.props;
@@ -106,7 +104,7 @@ const SatelliteImageryTimeFilterSection = observer(
           disposer();
         }
       );
-    },
+    }
 
     render() {
       if (!this.props.item.canFilterTimeByFeature) {
@@ -119,20 +117,20 @@ const SatelliteImageryTimeFilterSection = observer(
       } else {
         return this.renderFeatureSelected(feature);
       }
-    },
+    }
 
     renderNoFeatureSelected() {
       const { t } = this.props;
       return (
         <div className={Styles.inactive}>
           <div className={Styles.btnGroup}>
-            <button className={Styles.btn} onClick={this.newLocation}>
+            <button className={Styles.btn} onClick={() => this.newLocation()}>
               {t("satellite.filterByLocation")}
             </button>
           </div>
         </div>
       );
-    },
+    }
 
     renderFeatureSelected(feature) {
       const { t } = this.props;
@@ -154,20 +152,19 @@ const SatelliteImageryTimeFilterSection = observer(
             <LocationItem position={position} />
           </div>
           <div className={Styles.btnGroup}>
-            <button className={Styles.btn} onClick={this.removeFilter}>
+            <button className={Styles.btn} onClick={() => this.removeFilter()}>
               {t("satellite.removeFilter")}
             </button>
-            <button className={Styles.btn} onClick={this.zoomTo}>
+            <button className={Styles.btn} onClick={() => this.zoomTo()}>
               {t("satellite.zoomTo")}
             </button>
-            <button className={Styles.btn} onClick={this.newLocation}>
+            <button className={Styles.btn} onClick={() => this.newLocation()}>
               {t("satellite.newLocation")}
             </button>
           </div>
         </div>
       );
     }
-  })
-);
+}
 
 export default withTranslation()(SatelliteImageryTimeFilterSection);

@@ -1,6 +1,5 @@
 "use strict";
 // import Chart from "../Custom/Chart/Chart";
-import createReactClass from "create-react-class";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
@@ -19,22 +18,21 @@ import WarningBox from "./WarningBox";
 /**
  * Data preview section, for the preview map see DataPreviewMap
  */
-const DataPreview = observer(
-  createReactClass({
-    displayName: "DataPreview",
+@observer
+class DataPreview extends React.Component {
 
-    propTypes: {
+    static propTypes = {
       terria: PropTypes.object.isRequired,
       viewState: PropTypes.object,
       previewed: PropTypes.object,
       t: PropTypes.func.isRequired
-    },
+    }
 
     backToMap() {
       runInAction(() => {
         this.props.viewState.explorerPanelIsVisible = false;
       });
-    },
+    }
 
     render() {
       const { t } = this.props;
@@ -114,7 +112,7 @@ const DataPreview = observer(
                   <p>- OR -</p>
                   <button
                     className={Styles.btnBackToMap}
-                    onClick={this.backToMap}
+                    onClick={() => this.backToMap()}
                   >
                     Go to the map
                   </button>
@@ -124,7 +122,7 @@ const DataPreview = observer(
           </Choose>
         </div>
       );
-    },
+    }
 
     renderUnloadedReference() {
       const isLoading = this.props.previewed.isLoadingReference;
@@ -157,7 +155,6 @@ const DataPreview = observer(
         </div>
       );
     }
-  })
-);
+}
 
 module.exports = withTranslation()(DataPreview);

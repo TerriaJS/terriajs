@@ -1,4 +1,3 @@
-import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -17,15 +16,14 @@ import WarningBox from "./WarningBox";
 /**
  * CatalogItem description.
  */
-const Description = observer(
-  createReactClass({
-    displayName: "Description",
+@observer
+class Description extends React.Component {
 
-    propTypes: {
+    static propTypes = {
       item: PropTypes.object.isRequired,
       printView: PropTypes.bool,
       t: PropTypes.func.isRequired
-    },
+    }
 
     render() {
       const { t } = this.props;
@@ -296,7 +294,6 @@ const Description = observer(
         </div>
       );
     }
-  })
-);
+}
 
 export default withTranslation()(Description);
