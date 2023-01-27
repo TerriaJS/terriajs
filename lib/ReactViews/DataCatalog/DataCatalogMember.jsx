@@ -13,7 +13,7 @@ import DataCatalogReference from "./DataCatalogReference";
  * Component that is either a {@link CatalogItem} or a {@link DataCatalogMember} and encapsulated this choosing logic.
  */
 @observer
-export default class extends React.Component {
+export default class DataCatalogMember extends React.Component {
   static propTypes = {
     member: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
