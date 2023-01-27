@@ -1,14 +1,6 @@
 import ModelTraits from "../ModelTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
 
-interface UrlTraits {
-  // Add traits here that you want to override from some Mixin or Model class
-  // without generating TS2611 type error.
-  url?: string;
-  cacheDuration?: string;
-  forceProxy?: boolean;
-}
-
 class UrlTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
@@ -31,6 +23,14 @@ class UrlTraits extends ModelTraits {
       "The cache duration to use for proxied URLs for this catalog member. If undefined, proxied URLs are effectively cachable forever. The duration is expressed as a Varnish-like duration string, such as '1d' (one day) or '10000s' (ten thousand seconds)."
   })
   cacheDuration?: string;
+}
+
+interface UrlTraits {
+  // Add traits here that you want to override from some Mixin or Model class
+  // without generating TS2611 type error.
+  url?: UrlTraits["url"];
+  cacheDuration?: UrlTraits["cacheDuration"];
+  forceProxy?: UrlTraits["forceProxy"];
 }
 
 export default UrlTraits;
