@@ -1,5 +1,4 @@
-import createReactClass from "create-react-class";
-import { observable, runInAction, makeObservable } from "mobx";
+import { observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -44,6 +43,7 @@ class ParameterViewModel {
   }
 }
 
+@observer
 class InvokeFunction extends React.Component {
   static propTypes = {
     terria: PropTypes.object,
