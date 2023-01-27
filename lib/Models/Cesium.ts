@@ -438,7 +438,7 @@ export default class Cesium extends GlobeOrMap {
         console.log("Terrain provider error.  ", err.message);
         if (this.scene.terrainProvider instanceof CesiumTerrainProvider) {
           console.log("Switching to EllipsoidTerrainProvider.");
-          setViewerMode("3dsmooth", this.terria.mainViewer);
+          setViewerMode("3dsmooth", this.terriaViewer);
           if (!this._terrainMessageViewed) {
             this.terria.raiseErrorToUser(err, {
               title: "Terrain Server Not Responding",
@@ -971,7 +971,7 @@ us via email at " +
     });
 
     const disposeSplitDirectionChange = autorun(() => {
-      const items = this.terria.mainViewer.items.get();
+      const items = this.terriaViewer.items.get();
       const showSplitter = this.terria.showSplitter;
       items.forEach((item) => {
         if (
