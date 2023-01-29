@@ -14,7 +14,7 @@ import Styles from "./timeline.scss";
 import TimelineControls from "./TimelineControls";
 
 @observer
-export class Timeline extends React.Component {
+class Timeline extends React.Component {
   static propTypes = {
     terria: PropTypes.object.isRequired,
     locale: PropTypes.object,

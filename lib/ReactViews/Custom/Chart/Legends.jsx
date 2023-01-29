@@ -9,7 +9,7 @@ import styled from "styled-components";
 import { observer } from "mobx-react";
 
 @observer
-export default class Legends extends React.PureComponent {
+class Legends extends React.PureComponent {
   static propTypes = {
     chartItems: PropTypes.array.isRequired,
     width: PropTypes.number.isRequired
@@ -41,6 +41,8 @@ export default class Legends extends React.PureComponent {
     );
   }
 }
+
+export default Legends;
 
 class Legend extends React.PureComponent {
   static propTypes = {
