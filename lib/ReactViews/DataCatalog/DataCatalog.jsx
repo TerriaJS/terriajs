@@ -13,7 +13,7 @@ import Styles from "./data-catalog.scss";
 
 // Displays the data catalog.
 @observer
-export class DataCatalog extends React.Component {
+class DataCatalog extends React.Component {
   static propTypes = {
     terria: PropTypes.object,
     viewState: PropTypes.object,

@@ -6,7 +6,7 @@ import Styles from "./search-header.scss";
 
 /** Renders either a loader or a message based off search state. */
 @observer
-export default class SearchHeader extends React.Component {
+class SearchHeader extends React.Component {
   static propTypes = {
     searchResults: PropTypes.object.isRequired,
     isWaitingForSearchToStart: PropTypes.bool
@@ -33,3 +33,5 @@ export default class SearchHeader extends React.Component {
     }
   }
 }
+
+export default SearchHeader;
