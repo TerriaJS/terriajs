@@ -2,6 +2,7 @@
 
 #### next release (8.2.24)
 
+- Layers shown via a share URL are now logged as a Google Analytics event
 - [The next improvement]
 
 #### 8.2.23 - 2023-01-06
