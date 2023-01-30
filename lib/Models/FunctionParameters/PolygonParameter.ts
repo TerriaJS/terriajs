@@ -1,7 +1,9 @@
 import { Feature, Polygon } from "@turf/helpers";
 import { computed, makeObservable } from "mobx";
 import isDefined from "../../Core/isDefined";
-import FunctionParameter from "./FunctionParameter";
+import FunctionParameter, {
+  FunctionConstructorParameters
+} from "./FunctionParameter";
 import { GeoJsonFunctionParameter } from "./GeoJsonParameter";
 
 type Coordinates = number[];
@@ -15,9 +17,9 @@ export default class PolygonParameter
   static readonly type = "polygon";
   readonly type = "polygon";
 
-  constructor() {
+  constructor(...args: FunctionConstructorParameters) {
     // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
-    super();
+    super(...args);
 
     makeObservable(this);
   }

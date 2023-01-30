@@ -13,6 +13,7 @@ import ChartableMixin, {
 } from "../ModelMixins/ChartableMixin";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
+import { TraitOverrides } from "../Models/Definition/ModelPropertiesFromTraits";
 import DiscretelyTimeVaryingTraits from "../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import TimeVarying, { DATE_SECONDS_PRECISION } from "./TimeVarying";
 
@@ -43,35 +44,101 @@ function DiscretelyTimeVaryingMixin<
     }
     abstract get discreteTimes(): DiscreteTimeAsJS[] | undefined;
 
-    @computed
-    get currentTime(): string | undefined {
-      const time = super.currentTime;
-      if (time === undefined || time === null) {
-        if (this.initialTimeSource === "now") {
-          return JulianDate.toIso8601(JulianDate.now(), DATE_SECONDS_PRECISION);
-        } else if (this.initialTimeSource === "start") {
-          return this.startTime;
-        } else if (this.initialTimeSource === "stop") {
-          return this.stopTime;
-        } else if (this.initialTimeSource === "none") {
-          return undefined;
-        } else {
-          throw new TerriaError({
-            sender: this,
-            title: "Invalid initialTime value",
-            message:
-              "The `initialTime` property has an invalid value: `" +
-              this.initialTimeSource +
-              "`."
-          });
+    get _newTraitOverrides(): TraitOverrides<DiscretelyTimeVaryingTraits> {
+      const superOverrides = super._newTraitOverrides;
+      return {
+        ...superOverrides,
+        currentTime: () => {
+          const time = superOverrides.currentTime();
+          if (time === undefined || time === null) {
+            if (this.initialTimeSource === "now") {
+              return JulianDate.toIso8601(
+                JulianDate.now(),
+                DATE_SECONDS_PRECISION
+              );
+            } else if (this.initialTimeSource === "start") {
+              return this.startTime;
+            } else if (this.initialTimeSource === "stop") {
+              return this.stopTime;
+            } else if (this.initialTimeSource === "none") {
+              return undefined;
+            } else {
+              throw new TerriaError({
+                sender: this,
+                title: "Invalid initialTime value",
+                message:
+                  "The `initialTime` property has an invalid value: `" +
+                  this.initialTimeSource +
+                  "`."
+              });
+            }
+          }
+          return time;
+        },
+        startTime: () => {
+          const time = superOverrides.startTime();
+          if (
+            time === undefined &&
+            this.discreteTimesAsSortedJulianDates &&
+            this.discreteTimesAsSortedJulianDates.length > 0
+          ) {
+            return JulianDate.toIso8601(
+              this.discreteTimesAsSortedJulianDates[0].time,
+              DATE_SECONDS_PRECISION
+            );
+          }
+          return time;
+        },
+        stopTime: () => {
+          const time = superOverrides.stopTime();
+          if (
+            time === undefined &&
+            this.discreteTimesAsSortedJulianDates &&
+            this.discreteTimesAsSortedJulianDates.length > 0
+          ) {
+            return JulianDate.toIso8601(
+              this.discreteTimesAsSortedJulianDates[
+                this.discreteTimesAsSortedJulianDates.length - 1
+              ].time,
+              DATE_SECONDS_PRECISION
+            );
+          }
+          return time;
+        },
+        multiplier: () => {
+          // Try to calculate a multiplier which results in a new time step every {this.multiplierDefaultDeltaStep} seconds.
+          // For example, if {this.multiplierDefaultDeltaStep = 5} it would set the `multiplier` so that a new time step
+          // (of this dataset) would appear every five seconds (on average) if the timeline is playing.
+          const multiplier = superOverrides.multiplier();
+          if (multiplier) return multiplier;
+
+          if (
+            !isDefined(this.startTimeAsJulianDate) ||
+            !isDefined(this.stopTimeAsJulianDate) ||
+            !isDefined(this.multiplierDefaultDeltaStep) ||
+            !isDefined(this.discreteTimesAsSortedJulianDates)
+          )
+            return undefined;
+
+          const dSeconds =
+            (this.stopTimeAsJulianDate.dayNumber -
+              this.startTimeAsJulianDate.dayNumber) *
+              24 *
+              60 *
+              60 +
+            this.stopTimeAsJulianDate.secondsOfDay -
+            this.startTimeAsJulianDate.secondsOfDay;
+          const meanDSeconds =
+            dSeconds / this.discreteTimesAsSortedJulianDates.length;
+
+          return meanDSeconds / this.multiplierDefaultDeltaStep;
         }
-      }
-      return time;
+      };
     }
 
     @computed({ equals: JulianDate.equals })
     get currentTimeAsJulianDate() {
-      return toJulianDate(this.currentTime);
+      return toJulianDate(this.currentTime ?? undefined);
     }
 
     @computed({ equals: JulianDate.equals })
@@ -237,69 +304,6 @@ function DiscretelyTimeVaryingMixin<
     @computed
     get isNextDiscreteTimeAvailable(): boolean {
       return this.nextDiscreteTimeIndex !== undefined;
-    }
-
-    @computed
-    get startTime(): string | undefined {
-      const time = super.startTime;
-      if (
-        time === undefined &&
-        this.discreteTimesAsSortedJulianDates &&
-        this.discreteTimesAsSortedJulianDates.length > 0
-      ) {
-        return JulianDate.toIso8601(
-          this.discreteTimesAsSortedJulianDates[0].time,
-          DATE_SECONDS_PRECISION
-        );
-      }
-      return time;
-    }
-
-    @computed
-    get stopTime(): string | undefined {
-      const time = super.stopTime;
-      if (
-        time === undefined &&
-        this.discreteTimesAsSortedJulianDates &&
-        this.discreteTimesAsSortedJulianDates.length > 0
-      ) {
-        return JulianDate.toIso8601(
-          this.discreteTimesAsSortedJulianDates[
-            this.discreteTimesAsSortedJulianDates.length - 1
-          ].time,
-          DATE_SECONDS_PRECISION
-        );
-      }
-      return time;
-    }
-
-    /**
-     * Try to calculate a multiplier which results in a new time step every {this.multiplierDefaultDeltaStep} seconds. For example, if {this.multiplierDefaultDeltaStep = 5} it would set the `multiplier` so that a new time step (of this dataset) would appear every five seconds (on average) if the timeline is playing.
-     */
-    @computed
-    get multiplier() {
-      if (super.multiplier) return super.multiplier;
-
-      if (
-        !isDefined(this.startTimeAsJulianDate) ||
-        !isDefined(this.stopTimeAsJulianDate) ||
-        !isDefined(this.multiplierDefaultDeltaStep) ||
-        !isDefined(this.discreteTimesAsSortedJulianDates)
-      )
-        return;
-
-      const dSeconds =
-        (this.stopTimeAsJulianDate.dayNumber -
-          this.startTimeAsJulianDate.dayNumber) *
-          24 *
-          60 *
-          60 +
-        this.stopTimeAsJulianDate.secondsOfDay -
-        this.startTimeAsJulianDate.secondsOfDay;
-      const meanDSeconds =
-        dSeconds / this.discreteTimesAsSortedJulianDates.length;
-
-      return meanDSeconds / this.multiplierDefaultDeltaStep;
     }
 
     @action

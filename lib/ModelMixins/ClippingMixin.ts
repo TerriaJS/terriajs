@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, toJS, makeObservable } from "mobx";
+import { action, computed, toJS, makeObservable, override } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import clone from "terriajs-cesium/Source/Core/clone";
@@ -251,7 +251,7 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return this._clippingBoxDrawing;
     }
 
-    @computed
+    @override
     get selectableDimensions(): SelectableDimension[] {
       if (!this.clippingBox.enableFeature) {
         return super.selectableDimensions;

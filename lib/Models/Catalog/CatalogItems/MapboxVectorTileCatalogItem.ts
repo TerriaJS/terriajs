@@ -30,6 +30,7 @@ import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 
 class MapboxVectorTileLoadableStratum extends LoadableStratum(
   MapboxVectorTileCatalogItemTraits
@@ -112,9 +113,6 @@ StratumOrder.addLoadStratum(MapboxVectorTileLoadableStratum.stratumName);
 class MapboxVectorTileCatalogItem extends MappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(MapboxVectorTileCatalogItemTraits)))
 ) {
-  @observable
-  public readonly forceProxy = true;
-
   static readonly type = "mvt";
 
   constructor(...args: ModelConstructorParameters) {
@@ -128,6 +126,14 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
 
   get typeName() {
     return i18next.t("models.mapboxVectorTile.name");
+  }
+
+  get _newTraitOverrides(): TraitOverrides<MapboxVectorTileCatalogItemTraits> {
+    const superOverrides = super._newTraitOverrides;
+    return {
+      ...superOverrides,
+      forceProxy: () => true
+    };
   }
 
   async forceLoadMetadata() {

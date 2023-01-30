@@ -6,7 +6,8 @@ import {
   observable,
   runInAction,
   toJS,
-  makeObservable
+  makeObservable,
+  override
 } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -628,7 +629,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      * The color to use for highlighting features in this catalog item.
      *
      */
-    @computed
+    @override
     get highlightColor(): string {
       return super.highlightColor || DEFAULT_HIGHLIGHT_COLOR;
     }

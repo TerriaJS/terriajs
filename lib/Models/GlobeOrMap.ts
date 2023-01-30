@@ -1,4 +1,4 @@
-import { action, computed, observable, runInAction, makeObservable } from "mobx";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -11,7 +11,6 @@ import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/Constan
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import isDefined from "../Core/isDefined";
 import { isJsonObject } from "../Core/Json";
@@ -69,10 +68,6 @@ export default abstract class GlobeOrMap {
     flightDurationSeconds: number
   ): Promise<void>;
 
-  constructor() {
-    makeObservable(this);
-  }
-
   /**
    * Zoom map to a dataset or the given bounds.
    *
@@ -119,7 +114,6 @@ export default abstract class GlobeOrMap {
   /**
    * List of the attributions (credits) for data currently displayed on map.
    */
-  @computed
   get attributions(): string[] {
     return [];
   }

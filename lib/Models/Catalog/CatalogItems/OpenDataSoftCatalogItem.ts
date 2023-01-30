@@ -1,7 +1,7 @@
 import { ApiClient, fromCatalog } from "@opendatasoft/api-client";
 import { Dataset } from "@opendatasoft/api-client/dist/client/types";
 import i18next from "i18next";
-import { computed, runInAction, makeObservable } from "mobx";
+import { computed, makeObservable, override, runInAction } from "mobx";
 import ms from "ms";
 import Mustache from "mustache";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -12,7 +12,6 @@ import isDefined from "../../../Core/isDefined";
 import { isJsonObject, isJsonString } from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStratum";
@@ -675,7 +674,7 @@ export default class OpenDataSoftCatalogItem
     }
   }
 
-  @computed
+  @override
   get selectableDimensions() {
     return filterOutUndefined([
       this.availableFieldsDimension,

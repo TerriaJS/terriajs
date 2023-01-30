@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, runInAction, makeObservable } from "mobx";
+import { computed, runInAction, makeObservable, override } from "mobx";
 import isDefined from "../../../Core/isDefined";
 import TerriaError from "../../../Core/TerriaError";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
@@ -64,7 +64,7 @@ export default class CsvCatalogItem
     return isDefined(this._csvFile);
   }
 
-  @computed
+  @override
   get _canExportData() {
     return (
       isDefined(this._csvFile) ||
@@ -121,7 +121,8 @@ export default class CsvCatalogItem
   /*
    * Called by AutoRefreshingMixin to get the polling interval
    */
-  @computed get refreshInterval() {
+  @override
+  get refreshInterval() {
     if (this.refreshUrl) {
       return this.polling.seconds;
     }

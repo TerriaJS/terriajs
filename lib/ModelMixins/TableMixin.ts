@@ -1,5 +1,12 @@
 import i18next from "i18next";
-import { action, computed, observable, runInAction, makeObservable } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  runInAction,
+  makeObservable,
+  override
+} from "mobx";
 import { createTransformer, ITransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -427,7 +434,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       );
     }
 
-    @computed
+    @override
     get chartItems() {
       // Wait for activeTableStyle to be ready
       if (!this.activeTableStyle.ready || this.isLoadingMapItems) return [];
@@ -441,7 +448,8 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       ]);
     }
 
-    @computed get viewingControls(): ViewingControl[] {
+    @override
+    get viewingControls(): ViewingControl[] {
       return filterOutUndefined([
         ...super.viewingControls,
         {
@@ -462,7 +470,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return tableFeatureInfoContext(this);
     }
 
-    @computed
+    @override
     get selectableDimensions(): SelectableDimension[] {
       return filterOutUndefined([
         this.timeDisableDimension,

@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import uniqWith from "lodash-es/uniqWith";
-import { computed, runInAction, makeObservable } from "mobx";
+import { computed, runInAction, makeObservable, override } from "mobx";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
 import URI from "urijs";
@@ -526,7 +526,8 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     return result;
   }
 
-  @computed get layers() {
+  @override
+  get layers() {
     if (super.layers) {
       return super.layers;
     }

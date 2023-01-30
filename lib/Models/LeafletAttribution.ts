@@ -1,4 +1,9 @@
-import { IObservableArray, runInAction, observable, makeObservable } from "mobx";
+import {
+  IObservableArray,
+  runInAction,
+  observable,
+  makeObservable
+} from "mobx";
 import L from "leaflet";
 import Terria from "./Terria";
 
@@ -10,7 +15,6 @@ export class LeafletAttribution extends L.Control.Attribution {
   dataAttributions: IObservableArray<string>;
 
   constructor(terria: Terria) {
-    makeObservable(this);
     const options: L.Control.AttributionOptions = {
       position: "bottomleft"
     };
@@ -18,6 +22,7 @@ export class LeafletAttribution extends L.Control.Attribution {
       options.prefix = terria.configParameters.leafletAttributionPrefix;
     }
     super(options);
+    makeObservable(this);
 
     this._attributions = {};
     this.dataAttributions = observable([]);

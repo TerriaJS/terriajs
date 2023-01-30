@@ -2,11 +2,11 @@ import {
   action,
   computed,
   IReactionDisposer,
+  makeObservable,
   observable,
   ObservableMap,
   reaction,
-  runInAction,
-  makeObservable,
+  runInAction
 } from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
@@ -2264,7 +2264,8 @@ export default class TableStylingWorkflow
   }
 
   /** All of the dimensions! */
-  @computed get selectableDimensions(): SelectableDimensionWorkflowGroup[] {
+  @computed
+  get selectableDimensions(): SelectableDimensionWorkflowGroup[] {
     return filterOutUndefined([
       this.tableStyleSelectableDim,
 

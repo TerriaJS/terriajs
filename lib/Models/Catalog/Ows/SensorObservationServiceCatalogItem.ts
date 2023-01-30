@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction, makeObservable } from "mobx";
+import { action, computed, runInAction, makeObservable, override } from "mobx";
 import Mustache from "mustache";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -92,11 +92,12 @@ class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
     return new SosAutomaticStylesStratum(newModel) as this;
   }
 
-  @computed get activeStyle() {
+  @override
+  get activeStyle() {
     return this.catalogItem.procedures[0]?.identifier;
   }
 
-  @computed
+  @override
   get styles(): StratumFromTraits<TableStyleTraits>[] {
     return this.catalogItem.procedures.map((p) => {
       return createStratumInstance(TableStyleTraits, {
@@ -113,7 +114,7 @@ class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
     });
   }
 
-  @computed
+  @override
   get defaultChartStyle() {
     const timeColumn = this.catalogItem.tableColumns.find(
       (column) => column.type === TableColumnType.time
@@ -554,7 +555,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     return valueTitle;
   }
 
-  @computed
+  @override
   get selectableDimensions() {
     return filterOutUndefined([
       // Filter out proceduresSelector - as it duplicates TableMixin.styleDimensions
@@ -614,7 +615,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     };
   }
 
-  @computed
+  @override
   get selectedObservableId() {
     return (
       super.selectedObservableId || this.observableProperties[0]?.identifier

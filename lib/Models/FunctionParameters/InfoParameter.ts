@@ -1,4 +1,4 @@
-import { computed, observable, makeObservable } from "mobx";
+import { makeObservable, observable, override } from "mobx";
 import isDefined from "../../Core/isDefined";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import FunctionParameter, {
@@ -37,12 +37,12 @@ export default class InfoParameter extends FunctionParameter<string> {
     }
   }
 
-  @computed
+  @override
   get isValid() {
     return !this._errorMessage;
   }
 
-  @computed
+  @override
   get value(): string | undefined {
     return this._value;
   }

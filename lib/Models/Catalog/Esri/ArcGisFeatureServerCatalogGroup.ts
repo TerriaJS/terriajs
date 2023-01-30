@@ -209,11 +209,9 @@ export class FeatureServerStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(FeatureServerStratum.stratumName);
 
-export default class ArcGisFeatureServerCatalogGroup extends UrlMixin(
-  GroupMixin(
-    UrlMixin(
-      CatalogMemberMixin(CreateModel(ArcGisFeatureServerCatalogGroupTraits))
-    )
+export default class ArcGisFeatureServerCatalogGroup extends GroupMixin(
+  UrlMixin(
+    CatalogMemberMixin(CreateModel(ArcGisFeatureServerCatalogGroupTraits))
   )
 ) {
   static readonly type = "esri-featureServer-group";

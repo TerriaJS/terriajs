@@ -3,7 +3,9 @@ import { computed, makeObservable } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import isDefined from "../../Core/isDefined";
-import FunctionParameter from "./FunctionParameter";
+import FunctionParameter, {
+  FunctionConstructorParameters
+} from "./FunctionParameter";
 import { GeoJsonFunctionParameter } from "./GeoJsonParameter";
 
 export type CartographicPoint = {
@@ -19,9 +21,9 @@ export default class PointParameter
   static readonly type = "point";
   readonly type = "point";
 
-  constructor() {
+  constructor(...args: FunctionConstructorParameters) {
     // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
-    super();
+    super(...args);
 
     makeObservable(this);
   }

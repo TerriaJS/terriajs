@@ -12,6 +12,10 @@ export interface Options {
   isRequired?: boolean;
 }
 
+export type FunctionConstructorParameters = ConstructorParameters<
+  typeof FunctionParameter
+>;
+
 export default abstract class FunctionParameter<
   T extends JsonValue | undefined = JsonValue
 > {

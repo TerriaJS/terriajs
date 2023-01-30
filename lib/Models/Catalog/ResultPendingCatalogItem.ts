@@ -3,12 +3,11 @@ import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 import ResultPendingCatalogItemTraits from "../../Traits/TraitsClasses/ResultPendingCatalogItemTraits";
 import { ModelConstructorParameters } from "../Definition/Model";
 import CreateModel from "../Definition/CreateModel";
+import { TraitOverrides } from "../Definition/ModelPropertiesFromTraits";
 
 export default class ResultPendingCatalogItem extends CatalogMemberMixin(
   CreateModel(ResultPendingCatalogItemTraits)
 ) {
-  @observable disableAboutData = true;
-
   loadPromise: Promise<any> = Promise.resolve();
 
   constructor(...args: ModelConstructorParameters) {
@@ -18,5 +17,13 @@ export default class ResultPendingCatalogItem extends CatalogMemberMixin(
 
   protected forceLoadMetadata() {
     return this.loadPromise;
+  }
+
+  get _newTraitOverrides(): TraitOverrides<ResultPendingCatalogItemTraits> {
+    const superOverrides = super._newTraitOverrides;
+    return {
+      ...superOverrides,
+      disableAboutData: () => true
+    };
   }
 }

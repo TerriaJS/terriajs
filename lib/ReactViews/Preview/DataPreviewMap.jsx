@@ -20,7 +20,7 @@ import Styles from "./data-preview-map.scss";
 class AdaptForPreviewMap extends MappableMixin(CreateModel(MappableTraits)) {
   previewed;
 
-  constructor(...args: ModelConstructorParameters) {
+  constructor(...args) {
     super(...args);
     makeObservable(this);
   }

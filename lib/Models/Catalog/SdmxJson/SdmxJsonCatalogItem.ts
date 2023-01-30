@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, runInAction, makeObservable } from "mobx";
+import { computed, runInAction, makeObservable, override } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
@@ -133,7 +133,7 @@ export default class SdmxJsonCatalogItem
     });
   }
 
-  @computed
+  @override
   get selectableDimensions(): SelectableDimension[] {
     return filterOutUndefined([
       ...super.selectableDimensions.filter(

@@ -1,4 +1,11 @@
-import { action, computed, observable, onBecomeObserved, makeObservable } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  onBecomeObserved,
+  makeObservable,
+  override
+} from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
@@ -136,7 +143,7 @@ function TimeFilterMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       );
     }
 
-    @computed
+    @override
     get discreteTimesAsSortedJulianDates() {
       const featureTimes = this.featureTimesAsJulianDates;
       if (featureTimes === undefined) {

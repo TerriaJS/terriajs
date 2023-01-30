@@ -1,4 +1,4 @@
-import { computed, makeObservable } from "mobx";
+import { makeObservable, override } from "mobx";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import Model from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
@@ -17,7 +17,7 @@ function GetCapabilitiesMixin<T extends AbstractConstructor<BaseType>>(
       makeObservable(this);
     }
 
-    @computed
+    @override
     get getCapabilitiesUrl(): string | undefined {
       const getCapabilitiesUrl = super.getCapabilitiesUrl;
       if (getCapabilitiesUrl !== undefined) {
