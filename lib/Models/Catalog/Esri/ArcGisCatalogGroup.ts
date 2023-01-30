@@ -6,24 +6,25 @@ import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import runLater from "../../../Core/runLater";
-import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
+import { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
-import ArcGisCatalogGroupTraits from "../../../Traits/TraitsClasses/ArcGisMapServerCatalogGroupTraits";
 import ModelReference from "../../../Traits/ModelReference";
+import ArcGisCatalogGroupTraits from "../../../Traits/TraitsClasses/ArcGisMapServerCatalogGroupTraits";
+import CommonStrata from "../../Definition/CommonStrata";
+import CreateModel from "../../Definition/CreateModel";
+import LoadableStratum from "../../Definition/LoadableStratum";
+import { BaseModel } from "../../Definition/Model";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
+import StratumOrder from "../../Definition/StratumOrder";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import ArcGisFeatureServerCatalogGroup, {
   FeatureServerStratum
 } from "./ArcGisFeatureServerCatalogGroup";
 import ArcGisMapServerCatalogGroup, {
   MapServerStratum
 } from "./ArcGisMapServerCatalogGroup";
-import CommonStrata from "../../Definition/CommonStrata";
-import CreateModel from "../../Definition/CreateModel";
-import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import StratumOrder from "../../Definition/StratumOrder";
 
 interface DocumentInfo {
   Title?: string;
@@ -251,11 +252,18 @@ export default class ArcGisCatalogGroup extends UrlMixin(
     return i18next.t("models.arcGisService.name");
   }
 
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    }
-    return "1d";
+  get _newTraitOverrides(): TraitOverrides<ArcGisCatalogGroupTraits> {
+    const superOverrides = super._newTraitOverrides;
+    return {
+      ...superOverrides,
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        }
+        return "1d";
+      }
+    };
   }
 
   protected forceLoadMetadata(): Promise<void> {

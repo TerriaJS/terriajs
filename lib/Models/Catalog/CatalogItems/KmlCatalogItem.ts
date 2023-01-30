@@ -18,6 +18,7 @@ import MappableMixin from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import KmlCatalogItemTraits from "../../../Traits/TraitsClasses/KmlCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 import HasLocalData from "../../HasLocalData";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
@@ -47,11 +48,18 @@ class KmlCatalogItem
     return isDefined(this._kmlFile);
   }
 
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    }
-    return "1d";
+  get _newTraitOverrides(): TraitOverrides<KmlCatalogItemTraits> {
+    const superOverrides = super._newTraitOverrides;
+    return {
+      ...superOverrides,
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        }
+        return "1d";
+      }
+    };
   }
 
   protected forceLoadMapItems(): Promise<void> {

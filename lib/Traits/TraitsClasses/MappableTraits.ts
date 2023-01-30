@@ -199,12 +199,6 @@ export class InitialMessageTraits extends ModelTraits {
   height?: number;
 }
 
-interface MappableTraits {
-  // Add traits here that you want to override from some Mixin or Model class
-  // without generating TS2611 type error.
-  disableZoomTo: boolean;
-}
-
 class MappableTraits extends mixTraits(AttributionTraits) {
   @objectTrait({
     type: RectangleTraits,

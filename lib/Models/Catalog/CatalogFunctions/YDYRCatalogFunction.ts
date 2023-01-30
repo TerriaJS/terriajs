@@ -7,6 +7,7 @@ import TableMixin from "../../../ModelMixins/TableMixin";
 import TableColumnType from "../../../Table/TableColumnType";
 import YDYRCatalogFunctionTraits from "../../../Traits/TraitsClasses/YDYRCatalogFunctionTraits";
 import CreateModel from "../../Definition/CreateModel";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 import BooleanParameter from "../../FunctionParameters/BooleanParameter";
 import EnumerationParameter from "../../FunctionParameters/EnumerationParameter";
 import FunctionParameter from "../../FunctionParameters/FunctionParameter";
@@ -197,12 +198,17 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
     // https://github.com/TerriaJS/terriajs/issues/4943
   }
 
-  @computed
-  get description() {
-    return (
-      super.description ??
-      `Your Data Your Regions (YDYR) is an API for the conversion of data between different Australian geographic boundaries. See <a href="https://ydyr.info">ydyr.info</a> for more information`
-    );
+  get _newTraitOverrides(): TraitOverrides<YDYRCatalogFunctionTraits> {
+    const superOverrides = super._newTraitOverrides;
+    return {
+      ...superOverrides,
+      description: () => {
+        return (
+          superOverrides.description() ??
+          `Your Data Your Regions (YDYR) is an API for the conversion of data between different Australian geographic boundaries. See <a href="https://ydyr.info">ydyr.info</a> for more information`
+        );
+      }
+    };
   }
 
   @computed

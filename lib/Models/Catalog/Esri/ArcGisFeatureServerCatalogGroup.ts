@@ -6,22 +6,23 @@ import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import runLater from "../../../Core/runLater";
-import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
+import { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
+import ModelReference from "../../../Traits/ModelReference";
 import ArcGisFeatureServerCatalogGroupTraits from "../../../Traits/TraitsClasses/ArcGisFeatureServerCatalogGroupTraits";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
-import ModelReference from "../../../Traits/ModelReference";
-import ArcGisCatalogGroup from "./ArcGisCatalogGroup";
-import ArcGisFeatureServerCatalogItem from "./ArcGisFeatureServerCatalogItem";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import ArcGisCatalogGroup from "./ArcGisCatalogGroup";
+import ArcGisFeatureServerCatalogItem from "./ArcGisFeatureServerCatalogItem";
 
 interface DocumentInfo {
   Title?: string;
@@ -97,13 +98,6 @@ export class FeatureServerStratum extends LoadableStratum(
         content: this._featureServer.copyrightText
       })
     ];
-  }
-
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    }
-    return "1d";
   }
 
   @computed get dataCustodian() {
@@ -216,7 +210,9 @@ StratumOrder.addLoadStratum(FeatureServerStratum.stratumName);
 
 export default class ArcGisFeatureServerCatalogGroup extends UrlMixin(
   GroupMixin(
-    CatalogMemberMixin(CreateModel(ArcGisFeatureServerCatalogGroupTraits))
+    UrlMixin(
+      CatalogMemberMixin(CreateModel(ArcGisFeatureServerCatalogGroupTraits))
+    )
   )
 ) {
   static readonly type = "esri-featureServer-group";
@@ -227,6 +223,20 @@ export default class ArcGisFeatureServerCatalogGroup extends UrlMixin(
 
   get typeName() {
     return i18next.t("models.arcGisFeatureServerCatalogGroup.name");
+  }
+
+  get _newTraitOverrides(): TraitOverrides<ArcGisFeatureServerCatalogGroupTraits> {
+    const superOverrides = super._newTraitOverrides;
+    return {
+      ...superOverrides,
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        }
+        return "1d";
+      }
+    };
   }
 
   protected forceLoadMetadata(): Promise<void> {

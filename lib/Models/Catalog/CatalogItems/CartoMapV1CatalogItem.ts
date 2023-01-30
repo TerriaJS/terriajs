@@ -12,6 +12,7 @@ import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 
 export class CartoLoadableStratum extends LoadableStratum(
   CartoMapV1CatalogItemTraits
@@ -135,11 +136,18 @@ export default class CartoMapV1CatalogItem extends MappableMixin(
     });
   }
 
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    }
-    return "1d";
+  get _newTraitOverrides(): TraitOverrides<CartoMapV1CatalogItemTraits> {
+    const superOverrides = super._newTraitOverrides;
+    return {
+      ...superOverrides,
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        }
+        return "1d";
+      }
+    };
   }
 
   @computed get imageryProvider() {

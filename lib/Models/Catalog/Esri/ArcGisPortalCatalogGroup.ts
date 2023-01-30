@@ -4,13 +4,22 @@ import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import runLater from "../../../Core/runLater";
-import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
+import { networkRequestError } from "../../../Core/TerriaError";
 import AccessControlMixin from "../../../ModelMixins/AccessControlMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
-import ArcGisPortalCatalogGroupTraits from "../../../Traits/TraitsClasses/ArcGisPortalCatalogGroupTraits";
 import ModelReference from "../../../Traits/ModelReference";
+import ArcGisPortalCatalogGroupTraits from "../../../Traits/TraitsClasses/ArcGisPortalCatalogGroupTraits";
+import CommonStrata from "../../Definition/CommonStrata";
+import CreateModel from "../../Definition/CreateModel";
+import LoadableStratum from "../../Definition/LoadableStratum";
+import { BaseModel } from "../../Definition/Model";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
+import StratumOrder from "../../Definition/StratumOrder";
+import Terria from "../../Terria";
+import CatalogGroup from "../CatalogGroup";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import {
   ArcGisItem,
   ArcGisPortalGroup,
@@ -18,14 +27,6 @@ import {
   ArcGisPortalSearchResponse
 } from "./ArcGisPortalDefinitions";
 import ArcGisPortalItemReference from "./ArcGisPortalItemReference";
-import CatalogGroup from "../CatalogGroup";
-import CommonStrata from "../../Definition/CommonStrata";
-import CreateModel from "../../Definition/CreateModel";
-import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import StratumOrder from "../../Definition/StratumOrder";
-import Terria from "../../Terria";
 
 export class ArcGisPortalStratum extends LoadableStratum(
   ArcGisPortalCatalogGroupTraits
@@ -358,12 +359,18 @@ export default class ArcGisPortalCatalogGroup extends UrlMixin(
     return i18next.t("models.arcgisPortal.nameGroup");
   }
 
-  @computed
-  get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    }
-    return "0d";
+  get _newTraitOverrides(): TraitOverrides<ArcGisPortalCatalogGroupTraits> {
+    const superOverrides = super._newTraitOverrides;
+    return {
+      ...superOverrides,
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        }
+        return "0d";
+      }
+    };
   }
 
   protected forceLoadMetadata(): Promise<void> {

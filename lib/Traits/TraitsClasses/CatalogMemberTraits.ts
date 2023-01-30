@@ -100,14 +100,6 @@ export class ShortReportTraits extends ModelTraits {
   show = true;
 }
 
-interface CatalogMemberTraits {
-  // Add traits here that you want to override from some Mixin or Model class
-  // without generating TS2611 type error.
-  name?: string;
-  shortReport?: string;
-  description?: string;
-}
-
 class CatalogMemberTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",

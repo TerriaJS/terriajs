@@ -10,6 +10,7 @@ import GeoJsonMixin, {
 } from "../../../ModelMixins/GeojsonMixin";
 import GpxCatalogItemTraits from "../../../Traits/TraitsClasses/GpxCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 const toGeoJSON = require("@mapbox/togeojson");
@@ -68,11 +69,18 @@ class GpxCatalogItem extends GeoJsonMixin(CreateModel(GpxCatalogItemTraits)) {
     return Promise.resolve();
   }
 
-  @computed get name() {
-    if (this.url && super.name === this.url) {
-      return getFilenameFromUri(this.url);
-    }
-    return super.name;
+  get _newTraitOverrides(): TraitOverrides<GpxCatalogItemTraits> {
+    const superOverrides = super._newTraitOverrides;
+    return {
+      ...superOverrides,
+      name: () => {
+        const value = superOverrides.name();
+        if (this.url && value === this.url) {
+          return getFilenameFromUri(this.url);
+        }
+        return value;
+      }
+    };
   }
 }
 

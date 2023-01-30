@@ -40,6 +40,7 @@ import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import SelectableDimensions, {
   SelectableDimensionEnum
@@ -156,15 +157,27 @@ class WebMapServiceCatalogItem
     return WebMapServiceCatalogItem.type;
   }
 
-  @computed
-  get shortReport(): string | undefined {
-    if (
-      this.tilingScheme instanceof GeographicTilingScheme &&
-      this.terria.currentViewer.type === "Leaflet"
-    ) {
-      return i18next.t("map.cesium.notWebMercatorTilingScheme", this);
-    }
-    return super.shortReport;
+  get _newTraitOverrides(): TraitOverrides<WebMapServiceCatalogItemTraits> {
+    const superOverrides = super._newTraitOverrides;
+    return {
+      ...superOverrides,
+      shortReport: () => {
+        if (
+          this.tilingScheme instanceof GeographicTilingScheme &&
+          this.terria.currentViewer.type === "Leaflet"
+        ) {
+          return i18next.t("map.cesium.notWebMercatorTilingScheme", this);
+        }
+        return superOverrides.shortReport();
+      },
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        }
+        return "0d";
+      }
+    };
   }
 
   @computed
@@ -209,13 +222,6 @@ class WebMapServiceCatalogItem
     runInAction(() => {
       this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
     });
-  }
-
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    }
-    return "0d";
   }
 
   @computed

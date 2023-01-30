@@ -12,6 +12,7 @@ import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStra
 import SdmxCatalogItemTraits from "../../../Traits/TraitsClasses/SdmxCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import { BaseModel } from "../../Definition/Model";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import SelectableDimensions, {
   filterEnums,
@@ -58,9 +59,43 @@ export default class SdmxJsonCatalogItem
     return SdmxJsonCatalogItem.type;
   }
 
-  @computed
-  get cacheDuration() {
-    return super.cacheDuration || "1d";
+  get _newTraitOverrides(): TraitOverrides<SdmxCatalogItemTraits> {
+    const superOverrides = super._newTraitOverrides;
+    return {
+      ...superOverrides,
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        }
+        return "1d";
+      },
+      url: () => {
+        const value = superOverrides.url();
+        if (!value) return undefined;
+
+        // Get dataKey - this is used to filter dataflows by dimension values - it must be compliant with the KeyType defined in the SDMX WADL (period separated dimension values) - dimension order is very important!
+        // We must sort the dimensions by position as traits lose their order across strata
+
+        const dataKey = this.dimensions
+          .slice()
+          .sort(
+            (a, b) =>
+              (isDefined(a.position) ? a.position : this.dimensions.length) -
+              (isDefined(b.position) ? b.position : this.dimensions.length)
+          )
+          // If a dimension is disabled, use empty string (which is wildcard)
+          .map((dim) =>
+            !dim.disable &&
+            this.columns.find((col) => col.name === dim.id)?.type !== "region"
+              ? dim.selectedId
+              : ""
+          )
+          .join(".");
+
+        return `${value}/data/${this.dataflowId}/${dataKey}`;
+      }
+    };
   }
 
   /**
@@ -112,33 +147,7 @@ export default class SdmxJsonCatalogItem
    */
   @computed
   get baseUrl(): string | undefined {
-    return super.url;
-  }
-
-  @computed
-  get url() {
-    if (!super.url) return;
-
-    // Get dataKey - this is used to filter dataflows by dimension values - it must be compliant with the KeyType defined in the SDMX WADL (period separated dimension values) - dimension order is very important!
-    // We must sort the dimensions by position as traits lose their order across strata
-
-    const dataKey = this.dimensions
-      .slice()
-      .sort(
-        (a, b) =>
-          (isDefined(a.position) ? a.position : this.dimensions.length) -
-          (isDefined(b.position) ? b.position : this.dimensions.length)
-      )
-      // If a dimension is disabled, use empty string (which is wildcard)
-      .map((dim) =>
-        !dim.disable &&
-        this.columns.find((col) => col.name === dim.id)?.type !== "region"
-          ? dim.selectedId
-          : ""
-      )
-      .join(".");
-
-    return `${super.url}/data/${this.dataflowId}/${dataKey}`;
+    return this.traits["url"].getValue(this);
   }
 
   protected async forceLoadTableData() {

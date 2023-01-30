@@ -13,6 +13,7 @@ import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import Model from "../Models/Definition/Model";
+import { TraitOverrides } from "../Models/Definition/ModelPropertiesFromTraits";
 import GltfTraits from "../Traits/TraitsClasses/GltfTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import MappableMixin from "./MappableMixin";
@@ -55,14 +56,25 @@ function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return true;
     }
 
-    @computed
-    get disableZoomTo() {
-      const { latitude, longitude, height } = this.origin;
-      return (
-        latitude === undefined ||
-        longitude === undefined ||
-        height === undefined
-      );
+    get _newTraitOverrides(): TraitOverrides<GltfTraits> {
+      const superOverrides = super._newTraitOverrides;
+      return {
+        ...superOverrides,
+        disableZoomTo: () => {
+          const { latitude, longitude, height } = this.origin;
+          return (
+            latitude === undefined ||
+            longitude === undefined ||
+            height === undefined
+          );
+        },
+        shortReport: () => {
+          if (this.terria.currentViewer.type === "Leaflet") {
+            return i18next.t("models.commonModelErrors.3dTypeIn2dMode", this);
+          }
+          return superOverrides.shortReport();
+        }
+      };
     }
 
     @computed
@@ -162,14 +174,6 @@ function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     protected forceLoadMapItems(): Promise<void> {
       return Promise.resolve();
-    }
-
-    @computed
-    get shortReport(): string | undefined {
-      if (this.terria.currentViewer.type === "Leaflet") {
-        return i18next.t("models.commonModelErrors.3dTypeIn2dMode", this);
-      }
-      return super.shortReport;
     }
 
     @computed

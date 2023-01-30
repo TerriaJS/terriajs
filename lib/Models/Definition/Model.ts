@@ -3,7 +3,7 @@ import ModelTraits from "../../Traits/ModelTraits";
 import Trait from "../../Traits/Trait";
 import TraitsConstructor from "../../Traits/TraitsConstructor";
 import Terria from "../Terria";
-import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
+import ModelPropertiesFromTraits, { TraitOverrides } from "./ModelPropertiesFromTraits";
 import StratumFromTraits from "./StratumFromTraits";
 
 export interface ModelConstructor<T> {
@@ -78,6 +78,10 @@ export interface ModelInterface<T extends ModelTraits> {
   readonly knownContainerUniqueIds: string[];
   readonly completeKnownContainerUniqueIds: string[];
 
+  // This is initialized by calling _newTraitOverrides from the constructor,
+  // and should not be overridden.
+  readonly traitOverrides: TraitOverrides<T>;
+
   /**
    * The model whose {@link ReferenceMixin} references this model.
    * This instance will also be that model's {@link ReferenceMixin#target}
@@ -87,6 +91,12 @@ export interface ModelInterface<T extends ModelTraits> {
 
   readonly strataTopToBottom: ReadonlyMap<string, StratumFromTraits<T>>;
   readonly strataBottomToTop: ReadonlyMap<string, StratumFromTraits<T>>;
+
+  // Override this to property to add new trait overrides to a subclass.
+  // This is a property rather than a method because TypeScript does not merge the
+  // return values of parameterless methods in subclasses the way it does the
+  // return values of properties.
+  get _newTraitOverrides(): TraitOverrides<T>;
 
   dispose(): void;
 

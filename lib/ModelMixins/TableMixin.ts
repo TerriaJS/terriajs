@@ -20,6 +20,7 @@ import RegionProvider from "../Map/Region/RegionProvider";
 import RegionProviderList from "../Map/Region/RegionProviderList";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
+import { TraitOverrides } from "../Models/Definition/ModelPropertiesFromTraits";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import TerriaFeature from "../Models/Feature/Feature";
 import FeatureInfoContext from "../Models/Feature/FeatureInfoContext";
@@ -229,23 +230,23 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       });
     }
 
-    @computed
-    get name() {
-      return super.name;
-    }
-
-    @computed
-    get disableZoomTo() {
-      // Disable zoom if only showing imagery parts  (eg region mapping) and no rectangle is defined
-      if (
-        !this.mapItems.find(
-          (m) => m instanceof DataSource || m instanceof CustomDataSource
-        ) &&
-        !isDefined(this.cesiumRectangle)
-      ) {
-        return true;
-      }
-      return super.disableZoomTo;
+    get _newTraitOverrides(): TraitOverrides<TableTraits> {
+      const superOverrides = super._newTraitOverrides;
+      return {
+        ...superOverrides,
+        disableZoomTo: () => {
+          // Disable zoom if only showing imagery parts  (eg region mapping) and no rectangle is defined
+          if (
+            !this.mapItems.find(
+              (m) => m instanceof DataSource || m instanceof CustomDataSource
+            ) &&
+            !isDefined(this.cesiumRectangle)
+          ) {
+            return true;
+          }
+          return superOverrides.disableZoomTo();
+        }
+      };
     }
 
     /** Is showing regions (instead of points) */

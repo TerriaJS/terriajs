@@ -3,7 +3,6 @@ import { computed, runInAction } from "mobx";
 import isDefined from "../../../Core/isDefined";
 import TerriaError from "../../../Core/TerriaError";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import Csv from "../../../Table/Csv";
@@ -11,6 +10,7 @@ import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStra
 import CsvCatalogItemTraits from "../../../Traits/TraitsClasses/CsvCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import { BaseModel } from "../../Definition/Model";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import HasLocalData from "../../HasLocalData";
 import Terria from "../../Terria";
@@ -72,9 +72,18 @@ export default class CsvCatalogItem
     );
   }
 
-  @computed
-  get cacheDuration() {
-    return super.cacheDuration || "1d";
+  get _newTraitOverrides(): TraitOverrides<CsvCatalogItemTraits> {
+    const superOverrides = super._newTraitOverrides;
+    return {
+      ...superOverrides,
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        }
+        return "1d";
+      }
+    };
   }
 
   protected async _exportData() {

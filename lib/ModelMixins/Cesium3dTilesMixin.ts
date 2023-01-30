@@ -33,6 +33,7 @@ import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
+import { TraitOverrides } from "../Models/Definition/ModelPropertiesFromTraits";
 import StratumOrder from "../Models/Definition/StratumOrder";
 import TerriaFeature from "../Models/Feature/Feature";
 import Cesium3DTilesCatalogItemTraits from "../Traits/TraitsClasses/Cesium3DTilesCatalogItemTraits";
@@ -293,12 +294,17 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return [this.tileset, ...this.clippingMapItems];
     }
 
-    @computed
-    get shortReport(): string | undefined {
-      if (this.terria.currentViewer.type === "Leaflet") {
-        return i18next.t("models.commonModelErrors.3dTypeIn2dMode", this);
-      }
-      return super.shortReport;
+    get _newTraitOverrides(): TraitOverrides<Cesium3dTilesTraits> {
+      const superOverrides = super._newTraitOverrides;
+      return {
+        ...superOverrides,
+        shortReport: () => {
+          if (this.terria.currentViewer.type === "Leaflet") {
+            return i18next.t("models.commonModelErrors.3dTypeIn2dMode", this);
+          }
+          return superOverrides.shortReport();
+        }
+      };
     }
 
     @computed get optionsObj() {

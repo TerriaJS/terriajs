@@ -8,6 +8,7 @@ import isDefined from "../../../Core/isDefined";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import Reproject from "../../../Map/Vector/Reproject";
 import CatalogFunctionMixin from "../../../ModelMixins/CatalogFunctionMixin";
+import UrlMixin from "../../../ModelMixins/UrlMixin";
 import XmlRequestMixin from "../../../ModelMixins/XmlRequestMixin";
 import xml2json from "../../../ThirdParty/xml2json";
 import WebProcessingServiceCatalogFunctionTraits from "../../../Traits/TraitsClasses/WebProcessingServiceCatalogFunctionTraits";
@@ -15,6 +16,7 @@ import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import updateModelFromJson from "../../Definition/updateModelFromJson";
 import BooleanParameter from "../../FunctionParameters/BooleanParameter";
@@ -181,7 +183,9 @@ class WpsLoadableStratum extends LoadableStratum(
 StratumOrder.addLoadStratum(WpsLoadableStratum.stratumName);
 
 export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin(
-  CatalogFunctionMixin(CreateModel(WebProcessingServiceCatalogFunctionTraits))
+  CatalogFunctionMixin(
+    UrlMixin(CreateModel(WebProcessingServiceCatalogFunctionTraits))
+  )
 ) {
   static readonly type = "wps";
   get type() {
@@ -192,11 +196,18 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     return "Web Processing Service (WPS)";
   }
 
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    }
-    return "0d";
+  get _newTraitOverrides(): TraitOverrides<WebProcessingServiceCatalogFunctionTraits> {
+    const superOverrides = super._newTraitOverrides;
+    return {
+      ...superOverrides,
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        }
+        return "0d";
+      }
+    };
   }
 
   /**

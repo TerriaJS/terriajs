@@ -9,23 +9,25 @@ import loadJson from "../../../Core/loadJson";
 import AccessControlMixin from "../../../ModelMixins/AccessControlMixin";
 import ReferenceMixin from "../../../ModelMixins/ReferenceMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
+import ModelTraits from "../../../Traits/ModelTraits";
 import ArcGisPortalItemFormatTraits from "../../../Traits/TraitsClasses/ArcGisPortalItemFormatTraits";
 import ArcGisPortalItemTraits from "../../../Traits/TraitsClasses/ArcGisPortalItemTraits";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
-import ModelTraits from "../../../Traits/ModelTraits";
-import ArcGisPortalCatalogGroup from "./ArcGisPortalCatalogGroup";
-import { ArcGisItem } from "./ArcGisPortalDefinitions";
-import CatalogMemberFactory from "../CatalogMemberFactory";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import ModelPropertiesFromTraits from "../../Definition/ModelPropertiesFromTraits";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import ModelPropertiesFromTraits, {
+  TraitOverrides
+} from "../../Definition/ModelPropertiesFromTraits";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
+import CatalogMemberFactory from "../CatalogMemberFactory";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import ArcGisPortalCatalogGroup from "./ArcGisPortalCatalogGroup";
+import { ArcGisItem } from "./ArcGisPortalDefinitions";
 
 export class ArcGisPortalItemStratum extends LoadableStratum(
   ArcGisPortalItemTraits
@@ -240,14 +242,20 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
     );
   }
 
-  @computed
-  get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    } else if (isDefined(this._arcgisPortalCatalogGroup)) {
-      return this._arcgisPortalCatalogGroup.cacheDuration;
-    }
-    return "0d";
+  get _newTraitOverrides(): TraitOverrides<ArcGisPortalItemTraits> {
+    const superOverrides = super._newTraitOverrides;
+    return {
+      ...superOverrides,
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        } else if (isDefined(this._arcgisPortalCatalogGroup)) {
+          return this._arcgisPortalCatalogGroup.cacheDuration;
+        }
+        return "0d";
+      }
+    };
   }
 
   @computed

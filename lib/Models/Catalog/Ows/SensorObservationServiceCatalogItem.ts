@@ -7,8 +7,8 @@ import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import loadWithXhr from "../../../Core/loadWithXhr";
 import TerriaError from "../../../Core/TerriaError";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
+import UrlMixin from "../../../ModelMixins/UrlMixin";
 import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStratum";
 import TableColumnType from "../../../Table/TableColumnType";
 import xml2json from "../../../ThirdParty/xml2json";
@@ -22,6 +22,7 @@ import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import { BaseModel } from "../../Definition/Model";
+import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import { SelectableDimension } from "../../SelectableDimensions/SelectableDimensions";
@@ -304,7 +305,7 @@ class GetObservationRequest {
 }
 
 export default class SensorObservationServiceCatalogItem extends TableMixin(
-  CreateModel(SensorObservationServiceCatalogItemTraits)
+  UrlMixin(CreateModel(SensorObservationServiceCatalogItemTraits))
 ) {
   static readonly type = "sos";
   static defaultRequestTemplate = require("./SensorObservationServiceRequestTemplate.xml");
@@ -336,11 +337,18 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     }
   }
 
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    }
-    return "0d";
+  get _newTraitOverrides(): TraitOverrides<SensorObservationServiceCatalogItemTraits> {
+    const superOverrides = super._newTraitOverrides;
+    return {
+      ...superOverrides,
+      cacheDuration: () => {
+        const value = superOverrides.cacheDuration();
+        if (isDefined(value)) {
+          return value;
+        }
+        return "0d";
+      }
+    };
   }
 
   @action

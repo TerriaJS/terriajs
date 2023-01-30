@@ -22,12 +22,16 @@ type ArrayTrait<TTrait, TElement> = ReadonlyArray<SingleTrait<TElement>>;
 type ModelPropertiesFromTraits<TDefinition extends ModelTraits> =
   ModelPropertiesFromCompleteTraits<Complete<TDefinition>>;
 
+type ModelTraitType<T> = NotUndefined<T> extends Array<infer TElement>
+  ? ArrayTrait<NotUndefined<T>, TElement>
+  : SingleTrait<T>;
+
 type ModelPropertiesFromCompleteTraits<TDefinition> = {
-  readonly [P in keyof TDefinition]: NotUndefined<TDefinition[P]> extends Array<
-    infer TElement
-  >
-    ? ArrayTrait<NotUndefined<TDefinition[P]>, TElement>
-    : SingleTrait<TDefinition[P]>;
+  readonly [P in keyof TDefinition]-?: ModelTraitType<TDefinition[P]>;
+};
+
+export type TraitOverrides<TDefinition> = {
+  readonly [P in keyof TDefinition]-?: () => ModelTraitType<TDefinition[P]>;
 };
 
 export default ModelPropertiesFromTraits;

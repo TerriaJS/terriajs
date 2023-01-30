@@ -98,14 +98,17 @@ function CatalogMemberMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return this.terria.workbench.contains(this);
     }
 
-    @computed
-    get name() {
-      return super.name || this.uniqueId;
-    }
-
-    @computed
-    get nameInCatalog(): string | undefined {
-      return super.nameInCatalog || this.name;
+    get _newTraitOverrides() {
+      const superOverrides = super._newTraitOverrides;
+      return {
+        ...superOverrides,
+        name: () => {
+          return superOverrides.name() || this.uniqueId;
+        },
+        nameInCatalog: () => {
+          return superOverrides.nameInCatalog() || this.name;
+        }
+      };
     }
 
     @computed
