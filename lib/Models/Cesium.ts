@@ -8,7 +8,8 @@ import {
   reaction,
   runInAction,
   makeObservable,
-  toJS
+  toJS,
+  action
 } from "mobx";
 import { computedFn } from "mobx-utils";
 import AssociativeArray from "terriajs-cesium/Source/Core/AssociativeArray";
@@ -1190,6 +1191,7 @@ export default class Cesium extends GlobeOrMap {
    * specified and set terria.pickedFeatures based on this.
    *
    */
+  @action
   pickFromScreenPosition(screenPosition: Cartesian2, ignoreSplitter: boolean) {
     const pickRay = this.scene.camera.getPickRay(screenPosition);
     const pickPosition = isDefined(pickRay)
