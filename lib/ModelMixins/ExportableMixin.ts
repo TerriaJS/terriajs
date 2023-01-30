@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import Model from "../Models/Definition/Model";
 import ExportableTraits from "../Traits/TraitsClasses/ExportableTraits";
@@ -10,6 +10,11 @@ function ExportableMixin<
 >(Base: T) {
   abstract class ExportableMixin extends Base {
     protected abstract get _canExportData(): boolean;
+
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
 
     /**
      * Indicates if model is able to export data (will turn on/off UI elements)

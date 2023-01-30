@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
@@ -15,6 +15,7 @@ class DiffStratum extends LoadableStratum(DiffableTraits) {
   static stratumName = "diffStratum";
   constructor(readonly catalogItem: DiffableMixin.Instance) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -63,6 +64,8 @@ function DiffableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class DiffableMixin extends TimeFilterMixin(Base) {
     constructor(...args: any[]) {
       super(...args);
+
+      makeObservable(this);
 
       const diffStratum = new DiffStratum(this);
       this.strata.set(DiffStratum.stratumName, diffStratum);

@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
@@ -51,6 +51,11 @@ function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     // Note that these are private instances and must not be modified outside the Mixin
     private readonly _dataSource = new CustomDataSource("glTF Model");
     private readonly _modelEntity = new Entity({ name: "glTF Model Entity" });
+
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
 
     get hasGltfMixin() {
       return true;

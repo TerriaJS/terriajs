@@ -6,7 +6,8 @@ import {
   IObservableArray,
   observable,
   reaction,
-  runInAction
+  runInAction,
+  makeObservable,
 } from "mobx";
 import { computedFn } from "mobx-utils";
 import AssociativeArray from "terriajs-cesium/Source/Core/AssociativeArray";
@@ -151,6 +152,8 @@ export default class Cesium extends GlobeOrMap {
 
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
     super();
+
+    makeObservable(this);
 
     this.terriaViewer = terriaViewer;
     this.terria = terriaViewer.terria;

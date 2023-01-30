@@ -3,7 +3,9 @@ import ModelTraits from "../../Traits/ModelTraits";
 import Trait from "../../Traits/Trait";
 import TraitsConstructor from "../../Traits/TraitsConstructor";
 import Terria from "../Terria";
-import ModelPropertiesFromTraits, { TraitOverrides } from "./ModelPropertiesFromTraits";
+import ModelPropertiesFromTraits, {
+  TraitOverrides
+} from "./ModelPropertiesFromTraits";
 import StratumFromTraits from "./StratumFromTraits";
 
 export interface ModelConstructor<T> {
@@ -16,6 +18,10 @@ export interface ModelConstructor<T> {
   prototype: T;
   TraitsClass: TraitsConstructor<ModelTraits>;
 }
+
+export type ModelConstructorParameters = ConstructorParameters<
+  ModelConstructor<any>
+>;
 
 export abstract class BaseModel {
   abstract get type(): string;

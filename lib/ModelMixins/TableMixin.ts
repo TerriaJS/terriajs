@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, observable, runInAction } from "mobx";
+import { action, computed, observable, runInAction, makeObservable } from "mobx";
 import { createTransformer, ITransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -66,6 +66,8 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     constructor(...args: any[]) {
       super(...args);
+
+      makeObservable(this);
 
       // Create default TableStyle and set TableAutomaticLegendStratum
       this.defaultTableStyle = new TableStyle(this);

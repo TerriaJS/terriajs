@@ -1,11 +1,5 @@
 // import CatalogItemNameSearchProviderViewModel from "../ViewModels/CatalogItemNameSearchProviderViewModel";
-import {
-  observable,
-  reaction,
-  IReactionDisposer,
-  computed,
-  action
-} from "mobx";
+import { observable, reaction, IReactionDisposer, computed, action, makeObservable } from "mobx";
 import Terria from "../Models/Terria";
 import SearchProviderResults from "../Models/SearchProviders/SearchProviderResults";
 import SearchProvider from "../Models/SearchProviders/SearchProvider";
@@ -46,6 +40,7 @@ export default class SearchState {
   private _unifiedSearchDisposer: IReactionDisposer;
 
   constructor(options: SearchStateOptions) {
+    makeObservable(this);
     this.catalogSearchProvider =
       options.catalogSearchProvider ||
       new CatalogSearchProvider({ terria: options.terria });

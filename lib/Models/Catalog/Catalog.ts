@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { autorun, observable } from "mobx";
+import { autorun, observable, makeObservable } from "mobx";
 import { USER_ADDED_CATEGORY_ID } from "../../Core/addedByUser";
 import CatalogGroup from "./CatalogGroup";
 import CommonStrata from "../Definition/CommonStrata";
@@ -17,6 +17,7 @@ export default class Catalog {
   private _disposeCreateUserAddedGroup: () => void;
 
   constructor(terria: Terria) {
+    makeObservable(this);
     this.terria = terria;
     this.group = new CatalogGroup("/", this.terria);
     this.terria.addModel(this.group);

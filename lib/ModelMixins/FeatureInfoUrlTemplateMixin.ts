@@ -1,4 +1,4 @@
-import { action, runInAction } from "mobx";
+import { action, runInAction, makeObservable } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Resource from "terriajs-cesium/Source/Core/Resource";
@@ -22,6 +22,11 @@ function FeatureInfoUrlTemplateMixin<T extends AbstractConstructor<BaseType>>(
   Base: T
 ) {
   abstract class FeatureInfoUrlTemplateMixin extends Base {
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
+
     get hasFeatureInfoUrlTemplateMixin() {
       return true;
     }

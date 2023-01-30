@@ -1,4 +1,4 @@
-import { action, computed } from "mobx";
+import { action, computed, makeObservable } from "mobx";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import Model from "../Models/Definition/Model";
 import ItemSearchProvider, {
@@ -43,6 +43,11 @@ function SearchableItemMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      *
      */
     abstract zoomToItemSearchResult(result: ItemSearchResult): void;
+
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
 
     /**
      * Returns true if this item is searchable and has a valid item search provider defined.

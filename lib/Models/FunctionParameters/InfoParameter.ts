@@ -1,4 +1,4 @@
-import { computed, observable } from "mobx";
+import { computed, observable, makeObservable } from "mobx";
 import isDefined from "../../Core/isDefined";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import FunctionParameter, {
@@ -25,6 +25,8 @@ export default class InfoParameter extends FunctionParameter<string> {
     options: Options
   ) {
     super(catalogFunction, options);
+
+    makeObservable(this);
 
     if (isDefined(options.value)) {
       this._value = options.value;

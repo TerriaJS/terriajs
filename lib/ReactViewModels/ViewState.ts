@@ -4,7 +4,8 @@ import {
   IReactionDisposer,
   observable,
   reaction,
-  runInAction
+  runInAction,
+  makeObservable,
 } from "mobx";
 import { Ref } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -370,6 +371,7 @@ export default class ViewState {
   private _disclaimerHandler: DisclaimerHandler;
 
   constructor(options: ViewStateOptions) {
+    makeObservable(this);
     const terria = options.terria;
     this.searchState = new SearchState({
       terria: terria,

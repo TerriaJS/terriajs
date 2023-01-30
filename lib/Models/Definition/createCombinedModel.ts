@@ -4,7 +4,7 @@ import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import traitsClassToModelClass from "../../Traits/traitsClassToModelClass";
 import StratumFromTraits from "./StratumFromTraits";
 import createStratumInstance from "./createStratumInstance";
-import { computed, decorate } from "mobx";
+import { computed, makeObservable } from "mobx";
 import TraitsConstructor from "../../Traits/TraitsConstructor";
 
 /**
@@ -74,7 +74,9 @@ export function extractBottomModel(model: BaseModel): BaseModel | undefined {
 }
 
 class CombinedStrata implements Map<string, StratumFromTraits<ModelTraits>> {
-  constructor(readonly top: BaseModel, readonly bottom: BaseModel) {}
+  constructor(readonly top: BaseModel, readonly bottom: BaseModel) {
+    makeObservable(this);
+  }
 
   clear(): void {
     this.top.strata.clear();
@@ -229,7 +231,7 @@ function createCombinedStratum<T extends ModelTraits>(
     decorators[traitName] = trait.decoratorForFlattened || computed;
   });
 
-  decorate(result, decorators);
+  makeObservable(result, decorators);
 
   return <StratumFromTraits<T>>(<unknown>result);
 }

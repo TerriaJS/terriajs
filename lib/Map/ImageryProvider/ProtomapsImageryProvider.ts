@@ -5,7 +5,7 @@ import circle from "@turf/circle";
 import { Feature } from "@turf/helpers";
 import i18next from "i18next";
 import { cloneDeep, isEmpty } from "lodash-es";
-import { action, observable, runInAction } from "mobx";
+import { action, observable, runInAction, makeObservable } from "mobx";
 import {
   Bbox,
   Feature as ProtomapsFeature,
@@ -123,6 +123,7 @@ export class GeojsonSource implements TileSource {
   tileIndex: Promise<any> | undefined;
 
   constructor(url: string | FeatureCollectionWithCrs) {
+    makeObservable(this);
     this.data = url;
     if (!(typeof url === "string")) {
       this.geojsonObject = url;
@@ -297,6 +298,7 @@ export default class ProtomapsImageryProvider
   readonly labelRules: LabelRule[];
 
   constructor(options: Options) {
+    makeObservable(this);
     this.data = options.data;
     this.terria = options.terria;
     this.tilingScheme = new WebMercatorTilingScheme();

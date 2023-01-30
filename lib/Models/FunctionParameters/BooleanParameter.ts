@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import FunctionParameter, {
   Options as FunctionParameterOptions
@@ -41,6 +41,7 @@ export default class BooleanParameter
     options: Options
   ) {
     super(catalogFunction, options);
+    makeObservable(this);
     this.trueName = options.trueName;
     this.trueDescription = options.trueDescription;
     this.falseName = options.falseName;

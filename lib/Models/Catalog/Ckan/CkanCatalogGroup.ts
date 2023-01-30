@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, observable, runInAction } from "mobx";
+import { action, computed, observable, runInAction, makeObservable } from "mobx";
 import URI from "urijs";
 import flatten from "../../../Core/flatten";
 import isDefined from "../../../Core/isDefined";
@@ -73,6 +73,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     private readonly _ckanResponse: CkanServerResponse
   ) {
     super();
+    makeObservable(this);
     this.datasets = this.getDatasets();
     this.filteredDatasets = this.getFilteredDatasets();
     this.groups = this.getGroups();

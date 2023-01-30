@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, runInAction, makeObservable } from "mobx";
 import Mustache from "mustache";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -83,6 +83,7 @@ StratumOrder.addLoadStratum(TableAutomaticStylesStratum.stratumName);
 class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
   constructor(readonly catalogItem: SensorObservationServiceCatalogItem) {
     super(catalogItem);
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(
@@ -141,7 +142,9 @@ class GetFeatureOfInterestRequest {
   constructor(
     readonly catalogItem: SensorObservationServiceCatalogItem,
     readonly requestTemplate: string
-  ) {}
+  ) {
+    makeObservable(this);
+  }
 
   @computed
   get url() {
@@ -193,7 +196,9 @@ class GetObservationRequest {
   constructor(
     readonly catalogItem: SensorObservationServiceCatalogItem,
     readonly foiIdentifier: string
-  ) {}
+  ) {
+    makeObservable(this);
+  }
 
   @computed
   get url() {
@@ -316,6 +321,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     sourceReference?: BaseModel
   ) {
     super(id, terria, sourceReference);
+    makeObservable(this);
     this.strata.set(
       TableAutomaticStylesStratum.stratumName,
       new SosAutomaticStylesStratum(this)

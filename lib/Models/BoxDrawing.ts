@@ -1,5 +1,5 @@
 import throttle from "lodash-es/throttle";
-import { observable, onBecomeObserved, onBecomeUnobserved } from "mobx";
+import { observable, onBecomeObserved, onBecomeUnobserved, makeObservable } from "mobx";
 import ArcType from "terriajs-cesium/Source/Core/ArcType";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -267,6 +267,7 @@ export default class BoxDrawing {
     transform: Matrix4,
     options: BoxDrawingOptions
   ) {
+    makeObservable(this);
     this.scene = cesium.scene;
     this.keepBoxAboveGround = options.keepBoxAboveGround ?? false;
     this.drawNonUniformScaleGrips = options.drawNonUniformScaleGrips ?? true;

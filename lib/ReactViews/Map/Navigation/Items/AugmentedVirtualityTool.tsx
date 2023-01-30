@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -49,6 +49,7 @@ export class AugmentedVirtualityController extends MapNavigationItemController {
 
   constructor(private props: IProps) {
     super();
+    makeObservable(this);
   }
 
   @computed
@@ -113,6 +114,7 @@ export class AugmentedVirtualityRealignController extends MapNavigationItemContr
 
   constructor(private props: IProps) {
     super();
+    makeObservable(this);
     this.augmentedVirtuality = props.augmentedVirtuality;
   }
 
@@ -201,6 +203,7 @@ export const AugmentedVirtualityRealign: React.FC<{
 export class AugmentedVirtualityHoverController extends MapNavigationItemController {
   constructor(private props: IAugmentedVirtuality) {
     super();
+    makeObservable(this);
   }
 
   get glyph(): { id: string } {

@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, observable, runInAction, toJS, when } from "mobx";
+import { action, computed, observable, runInAction, toJS, when, makeObservable } from "mobx";
 import { createTransformer } from "mobx-utils";
 import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
 import Clock from "terriajs-cesium/Source/Core/Clock";
@@ -647,6 +647,7 @@ export default class Terria {
   errorService: ErrorServiceProvider = new StubErrorServiceProvider();
 
   constructor(options: TerriaOptions = {}) {
+    makeObservable(this);
     if (options.appBaseHref) {
       this.appBaseHref = new URL(
         options.appBaseHref,

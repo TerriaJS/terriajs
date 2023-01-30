@@ -1,4 +1,4 @@
-import { action, computed, observable, runInAction } from "mobx";
+import { action, computed, observable, runInAction, makeObservable } from "mobx";
 import Result from "./Result";
 import TerriaError from "./TerriaError";
 
@@ -87,7 +87,9 @@ export default class AsyncLoader {
     /** {@see AsyncLoader} */
     readonly loadCallback: () => Promise<void>,
     readonly disposeCallback?: () => Promise<void>
-  ) {}
+  ) {
+    makeObservable(this);
+  }
 
   /**
    * Gets a value indicating whether we are currently loading.

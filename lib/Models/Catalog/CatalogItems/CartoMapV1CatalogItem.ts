@@ -1,4 +1,4 @@
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable } from "mobx";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
 import isDefined from "../../../Core/isDefined";
@@ -12,6 +12,7 @@ import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import { TraitOverrides } from "../../Definition/ModelPropertiesFromTraits";
 
 export class CartoLoadableStratum extends LoadableStratum(
@@ -107,6 +108,11 @@ export default class CartoMapV1CatalogItem extends MappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(CartoMapV1CatalogItemTraits)))
 ) {
   static readonly type = "carto";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   get type() {
     return CartoMapV1CatalogItem.type;

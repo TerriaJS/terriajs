@@ -1,7 +1,6 @@
-"use strict";
-
+"use strict";;
 import classNames from "classnames";
-import { action, autorun, computed, observable, runInAction } from "mobx";
+import { action, autorun, computed, observable, runInAction, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -15,10 +14,16 @@ import GeoJsonCatalogItem from "../../Models/Catalog/CatalogItems/GeoJsonCatalog
 import ViewerMode from "../../Models/ViewerMode";
 import MappableTraits from "../../Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../ViewModels/TerriaViewer";
+import { ModelConstructorParameters } from "../../Models/Definition/Model";
 import Styles from "./data-preview-map.scss";
 
 class AdaptForPreviewMap extends MappableMixin(CreateModel(MappableTraits)) {
   previewed;
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   async forceLoadMapItems() {}
 
@@ -90,6 +95,8 @@ class DataPreviewMap extends React.Component {
 
   constructor(props) {
     super(props);
+
+    makeObservable(this);
 
     /**
      * @param {HTMLElement | null} container

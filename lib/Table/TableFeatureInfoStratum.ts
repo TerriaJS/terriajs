@@ -2,7 +2,7 @@ import TableMixin from "../ModelMixins/TableMixin";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import { BaseModel } from "../Models/Definition/Model";
 import TableTraits from "../Traits/TraitsClasses/Table/TableTraits";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import { FeatureInfoTemplateTraits } from "../Traits/TraitsClasses/FeatureInfoTraits";
 import StratumOrder from "../Models/Definition/StratumOrder";
@@ -13,6 +13,7 @@ export default class TableFeatureInfoStratum extends LoadableStratum(
   static stratumName = "tableFeatureInfo";
   constructor(readonly catalogItem: TableMixin.Instance) {
     super();
+    makeObservable(this);
   }
 
   static load(item: TableMixin.Instance) {

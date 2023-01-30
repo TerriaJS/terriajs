@@ -1,4 +1,4 @@
-import { computed, observable, reaction } from "mobx";
+import { computed, observable, reaction, makeObservable } from "mobx";
 import isDefined from "../../Core/isDefined";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import CommonStrata from "../Definition/CommonStrata";
@@ -23,6 +23,7 @@ export default class EnumerationParameter extends FunctionParameter<string> {
     options: Options
   ) {
     super(catalogFunction, options);
+    makeObservable(this);
     this.options = options.options;
 
     // Set value to something useful if undefined (and a value isRequired)

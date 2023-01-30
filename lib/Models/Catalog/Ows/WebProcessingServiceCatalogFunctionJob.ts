@@ -5,7 +5,8 @@ import {
   isObservableArray,
   observable,
   runInAction,
-  toJS
+  toJS,
+  makeObservable,
 } from "mobx";
 import Mustache from "mustache";
 import URI from "urijs";
@@ -30,6 +31,7 @@ import updateModelFromJson from "../../Definition/updateModelFromJson";
 import upsertModelFromJson from "../../Definition/upsertModelFromJson";
 import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
 import CatalogMemberFactory from "../CatalogMemberFactory";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
@@ -43,6 +45,7 @@ class WpsLoadableStratum extends LoadableStratum(
 
   constructor(readonly item: WebProcessingServiceCatalogFunctionJob) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -144,6 +147,11 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
   )
 ) {
   static readonly type = "wps-result";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   get type() {
     return WebProcessingServiceCatalogFunctionJob.type;

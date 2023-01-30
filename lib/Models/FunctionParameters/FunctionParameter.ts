@@ -1,4 +1,4 @@
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable } from "mobx";
 import combine from "terriajs-cesium/Source/Core/combine";
 import isDefined from "../../Core/isDefined";
 import JsonValue, { JsonObject } from "../../Core/Json";
@@ -26,6 +26,7 @@ export default abstract class FunctionParameter<
     protected readonly catalogFunction: CatalogFunctionMixin.Instance,
     options: Options
   ) {
+    makeObservable(this);
     this.id = options.id;
     this.name = options.name || this.id;
     this.description = options.description || "";

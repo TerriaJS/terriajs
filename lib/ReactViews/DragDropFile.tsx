@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { action, runInAction } from "mobx";
+import { action, runInAction, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { Trans, withTranslation, WithTranslation } from "react-i18next";
@@ -24,6 +24,11 @@ interface PropsType extends WithTranslation, WithViewState {}
 @observer
 class DragDropFile extends React.Component<PropsType> {
   target: EventTarget | undefined;
+
+  constructor(props: PropsType) {
+    super(props);
+    makeObservable(this);
+  }
 
   async handleDrop(e: React.DragEvent) {
     e.preventDefault();

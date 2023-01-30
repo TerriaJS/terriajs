@@ -1,4 +1,4 @@
-import { computed, decorate } from "mobx";
+import { computed } from "mobx";
 import ModelTraits from "../../Traits/ModelTraits";
 import Stratified from "../../Traits/Stratified";
 import TraitsConstructor from "../../Traits/TraitsConstructor";
@@ -45,4 +45,13 @@ export default function addModelStrataView<
   decorate(model, decorators);
 
   return model;
+}
+
+function decorate(
+  target: any,
+  decorators: { [id: string]: PropertyDecorator }
+) {
+  Object.entries(decorators).forEach(([prop, decorator]) => {
+    decorator(target.prototype, prop);
+  });
 }

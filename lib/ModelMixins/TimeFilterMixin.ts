@@ -1,4 +1,4 @@
-import { action, computed, observable, onBecomeObserved } from "mobx";
+import { action, computed, observable, onBecomeObserved, makeObservable } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
@@ -39,6 +39,8 @@ function TimeFilterMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     constructor(...args: any[]) {
       super(...args);
+
+      makeObservable(this);
 
       // Try to resolve the timeFilterFeature from the co-ordinates that might
       // be stored in the traits. We only have to resolve the time filter
