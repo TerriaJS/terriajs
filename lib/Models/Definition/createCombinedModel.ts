@@ -231,9 +231,18 @@ function createCombinedStratum<T extends ModelTraits>(
     decorators[traitName] = trait.decoratorForFlattened || computed;
   });
 
-  makeObservable(result, decorators);
+  decorate(result, decorators);
 
   return <StratumFromTraits<T>>(<unknown>result);
+}
+
+function decorate(
+  target: any,
+  decorators: { [id: string]: PropertyDecorator }
+) {
+  Object.entries(decorators).forEach(([prop, decorator]) => {
+    decorator(target, prop);
+  });
 }
 
 function unwrapCombinedStratumFromModel(value: BaseModel) {
