@@ -1,4 +1,4 @@
-import { action, observable, makeObservable } from "mobx";
+import { action, observable, makeObservable, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
@@ -25,40 +25,42 @@ export default class PointOnMap extends React.Component<PropsType> {
     makeObservable(this);
   }
 
-  @action
   componentDidMount() {
-    const props = this.props;
-    const pointItem = new GeoJsonCatalogItem(createGuid(), props.terria);
-    pointItem.setTrait(
-      CommonStrata.user,
-      "style",
-      createStratumInstance(StyleTraits, {
-        "stroke-width": 3,
-        "marker-size": "30",
-        stroke: "#ffffff",
-        "marker-color": props.color,
-        "marker-opacity": 1
-      })
-    );
-    pointItem.setTrait(CommonStrata.user, "geoJsonData", {
-      type: "Feature",
-      properties: {},
-      geometry: {
-        type: "Point",
-        coordinates: [props.point.longitude, props.point.latitude]
-      }
+    runInAction(() => {
+      const props = this.props;
+      const pointItem = new GeoJsonCatalogItem(createGuid(), props.terria);
+      pointItem.setTrait(
+        CommonStrata.user,
+        "style",
+        createStratumInstance(StyleTraits, {
+          "stroke-width": 3,
+          "marker-size": "30",
+          stroke: "#ffffff",
+          "marker-color": props.color,
+          "marker-opacity": 1
+        })
+      );
+      pointItem.setTrait(CommonStrata.user, "geoJsonData", {
+        type: "Feature",
+        properties: {},
+        geometry: {
+          type: "Point",
+          coordinates: [props.point.longitude, props.point.latitude]
+        }
+      });
+      props.terria.addModel(pointItem);
+      props.terria.overlays.add(pointItem);
+      this.pointItem = pointItem;
     });
-    props.terria.addModel(pointItem);
-    props.terria.overlays.add(pointItem);
-    this.pointItem = pointItem;
   }
 
-  @action
   componentWillUnmount() {
-    if (this.pointItem) {
-      this.props.terria.overlays.remove(this.pointItem);
-      this.props.terria.removeModelReferences(this.pointItem);
-    }
+    runInAction(() => {
+      if (this.pointItem) {
+        this.props.terria.overlays.remove(this.pointItem);
+        this.props.terria.removeModelReferences(this.pointItem);
+      }
+    });
   }
 
   render() {

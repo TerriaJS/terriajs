@@ -1,13 +1,13 @@
-import { configure, runInAction, autorun } from "mobx";
-import primitiveTrait from "../../lib/Traits/Decorators/primitiveTrait";
-import objectTrait from "../../lib/Traits/Decorators/objectTrait";
-import ModelTraits from "../../lib/Traits/ModelTraits";
+import { configure, runInAction } from "mobx";
 import CreateModel from "../../lib/Models/Definition/CreateModel";
-import Terria from "../../lib/Models/Terria";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
+import Terria from "../../lib/Models/Terria";
+import objectTrait from "../../lib/Traits/Decorators/objectTrait";
+import primitiveTrait from "../../lib/Traits/Decorators/primitiveTrait";
+import ModelTraits from "../../lib/Traits/ModelTraits";
 
 configure({
-  enforceActions: true,
+  enforceActions: "always",
   computedRequiresReaction: true
 });
 

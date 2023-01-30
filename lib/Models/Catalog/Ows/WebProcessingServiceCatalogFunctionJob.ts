@@ -3,16 +3,16 @@ import {
   action,
   computed,
   isObservableArray,
-  observable,
-  runInAction,
-  toJS,
   makeObservable,
-  override
+  observable,
+  override,
+  runInAction,
+  toJS
 } from "mobx";
 import Mustache from "mustache";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
-import { JsonObject, isJsonObject } from "../../../Core/Json";
+import { JsonObject } from "../../../Core/Json";
 import TerriaError from "../../../Core/TerriaError";
 import CatalogFunctionJobMixin from "../../../ModelMixins/CatalogFunctionJobMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -25,14 +25,13 @@ import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import updateModelFromJson from "../../Definition/updateModelFromJson";
 import upsertModelFromJson from "../../Definition/upsertModelFromJson";
 import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
 import CatalogMemberFactory from "../CatalogMemberFactory";
-import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
@@ -357,7 +356,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
 
     // Create geojson catalog item for input features
     const geojsonFeatures = runInAction(() => this.geojsonFeatures);
-    if (isJsonObject(geojsonFeatures, false)) {
+    if (Array.isArray(geojsonFeatures) || isObservableArray(geojsonFeatures)) {
       runInAction(() => {
         this.geoJsonItem = new GeoJsonCatalogItem(createGuid(), this.terria);
         updateModelFromJson(this.geoJsonItem, CommonStrata.user, {
