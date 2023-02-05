@@ -6,7 +6,8 @@ import {
   IObservableArray,
   observable,
   reaction,
-  runInAction
+  runInAction,
+  IAutorunOptions
 } from "mobx";
 import { computedFn } from "mobx-utils";
 import AssociativeArray from "terriajs-cesium/Source/Core/AssociativeArray";
@@ -388,18 +389,24 @@ export default class Cesium extends GlobeOrMap {
     });
 
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
-    this._disposeTerrainReaction = autorun(() => {
-      this.scene.globe.terrainProvider = this.terrainProvider;
-      this.scene.globe.splitDirection = this.terria.showSplitter
-        ? this.terria.terrainSplitDirection
-        : SplitDirection.NONE;
-      this.scene.globe.depthTestAgainstTerrain =
-        this.terria.depthTestAgainstTerrainEnabled;
-      if (this.scene.skyAtmosphere) {
-        this.scene.skyAtmosphere.splitDirection =
-          this.scene.globe.splitDirection;
-      }
-    });
+    // TODO: use `fireImmediately = true` here to avoid weird timing issues for tests?
+    this._disposeTerrainReaction = reaction(
+      () => {
+        this.scene.globe.terrainProvider = this.terrainProvider;
+      },
+      () => {
+        this.scene.globe.splitDirection = this.terria.showSplitter
+          ? this.terria.terrainSplitDirection
+          : SplitDirection.NONE;
+        this.scene.globe.depthTestAgainstTerrain =
+          this.terria.depthTestAgainstTerrainEnabled;
+        if (this.scene.skyAtmosphere) {
+          this.scene.skyAtmosphere.splitDirection =
+            this.scene.globe.splitDirection;
+        }
+      },
+      { fireImmediately: true }
+    );
     this._disposeSplitterReaction = this._reactToSplitterChanges();
 
     this._disposeResolutionReaction = autorun(() => {
@@ -430,7 +437,9 @@ export default class Cesium extends GlobeOrMap {
         /** Need to throw an error if incorrect `cesiumTerrainUrl` has been specified.
         The terrainProvider.readyPromise will still be fulfulled, but the map will not load correctly
         So we check for terrainProvider.availability */
+
         if (!terrainProvider.availability) {
+          debugger;
           throw new Error();
         }
       })
