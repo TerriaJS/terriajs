@@ -298,7 +298,7 @@ describeIfSupported("Cesium Model", function () {
   });
 
   describe("Cesium Terrain Extra Tests", function () {
-    // declare different variables here, we need new instances to test
+    // declare different variables here, we need new instances to test because we are changing config values and want to instantiate with these different values
     let terria2: Terria;
     let terriaViewer2: TerriaViewer;
     let container2: HTMLElement;

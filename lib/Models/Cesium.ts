@@ -439,7 +439,6 @@ export default class Cesium extends GlobeOrMap {
         So we check for terrainProvider.availability */
 
         if (!terrainProvider.availability) {
-          debugger;
           throw new Error();
         }
       })
