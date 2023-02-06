@@ -3,6 +3,8 @@
 #### next release (8.2.24)
 
 - Reimplement error message and default to 3d smooth mode when Cesium Ion Access Token is invalid.
+- Layers shown via a share URL are now logged as a Google Analytics event
+- [The next improvement]
 
 #### 8.2.23 - 2023-01-06
 
