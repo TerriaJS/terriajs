@@ -322,7 +322,7 @@ describeIfSupported("Cesium Model", function () {
       document.body.removeChild(container2);
     });
 
-    it("should thow an warning when cesiumIonAccessToken is invalid", async function () {
+    it("should thow a warning when cesiumIonAccessToken is invalid", async function () {
       runInAction(() => {
         // Set an invalid token for the test
         terria2.configParameters.cesiumIonAccessToken = "expired_token";
@@ -364,7 +364,7 @@ describeIfSupported("Cesium Model", function () {
       ).toBe(true);
     });
 
-    it("should thow an warning when `cesiumIonAccessToken` is invalid and `cesiumTerrainAssetId` is present", async function () {
+    it("should thow a warning when `cesiumIonAccessToken` is invalid and `cesiumTerrainAssetId` is present", async function () {
       runInAction(() => {
         // Set an invalid token for the test
         terria2.configParameters.cesiumIonAccessToken = "expired_token";
@@ -389,7 +389,7 @@ describeIfSupported("Cesium Model", function () {
       );
     });
 
-    it("should thow an warning when 'cesiumTerrainUrl' is invalid", async function () {
+    it("should thow a warning when 'cesiumTerrainUrl' is invalid", async function () {
       runInAction(() => {
         terria2.configParameters.cesiumTerrainUrl =
           "https://storage.googleapis.com/vic-datasets-public/xxxxxxx-xxxx-xxxx-xxxx-xxxxxxx/v1"; // An invalid url
