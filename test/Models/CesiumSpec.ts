@@ -341,7 +341,9 @@ describeIfSupported("Cesium Model", function () {
           ? terria2.notificationState.currentNotification?.title
           : terria2.notificationState.currentNotification?.title();
 
-      expect(currentNotificationTitle).toBe("Terrain Server Not Responding");
+      expect(currentNotificationTitle).toBe(
+        "map.cesium.terrainServerErrorTitle"
+      );
     });
 
     it("should revert to 3dSmooth mode when cesiumIonAccessToken is invalid", async function () {
@@ -385,7 +387,9 @@ describeIfSupported("Cesium Model", function () {
           ? terria2.notificationState.currentNotification?.title
           : terria2.notificationState.currentNotification?.title();
 
-      expect(currentNotificationTitle).toBe("Terrain Server Not Responding");
+      expect(currentNotificationTitle).toBe(
+        "map.cesium.terrainServerErrorTitle"
+      );
     });
 
     it("should thow an warning when 'cesiumTerrainUrl' is invalid", async function () {
@@ -407,7 +411,9 @@ describeIfSupported("Cesium Model", function () {
           ? terria2.notificationState.currentNotification?.title
           : terria2.notificationState.currentNotification?.title();
 
-      expect(currentNotificationTitle).toBe("Terrain Server Not Responding");
+      expect(currentNotificationTitle).toBe(
+        "map.cesium.terrainServerErrorTitle"
+      );
     });
   });
 });
