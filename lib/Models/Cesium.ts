@@ -450,17 +450,11 @@ export default class Cesium extends GlobeOrMap {
           setViewerMode("3dsmooth", this.terriaViewer);
           if (!this._terrainMessageViewed) {
             this.terria.raiseErrorToUser(err, {
-              title: "Terrain Server Not Responding",
-              message:
-                "\
-The terrain server is not responding at the moment.  You can still use all the features of " +
-                this.terria.appName +
-                " \
-but there will be no terrain detail in 3D mode.  We're sorry for the inconvenience.  Please try \
-again later and the terrain server should be responding as expected.  If the issue persists, please contact \
-us via email at " +
-                this.terria.supportEmail +
-                "."
+              title: i18next.t("map.cesium.terrainServerErrorTitle"),
+              message: i18next.t("map.cesium.terrainServerErrorMessage", {
+                appName: this.terria.appName,
+                supportEmail: this.terria.supportEmail
+              })
             });
 
             this._terrainMessageViewed = true;
