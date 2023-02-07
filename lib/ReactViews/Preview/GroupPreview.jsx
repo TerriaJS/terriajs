@@ -16,6 +16,7 @@ import WarningBox from "./WarningBox";
 import Box from "../../Styled/Box";
 import Button from "../../Styled/Button";
 import toggleItemOnMapFromCatalog from "../DataCatalog/toggleItemOnMapFromCatalog";
+import MappableMixin from "../../ModelMixins/MappableMixin";
 
 /**
  * A "preview" for CatalogGroup.
@@ -39,7 +40,8 @@ const GroupPreview = observer(
     addRemoveButtonClicked() {
       this.props.previewed.loadMembers().then(() => {
         this.props.previewed.memberModels.forEach(async (memberModel) => {
-          if (memberModel.isMappable) {
+          // if (memberModel.isMappable) {
+          if (MappableMixin.isMixedInto(memberModel)) {
             await toggleItemOnMapFromCatalog(
               this.props.viewState,
               memberModel,
