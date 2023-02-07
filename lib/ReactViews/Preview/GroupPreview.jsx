@@ -13,6 +13,8 @@ import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel";
 import { withTranslation } from "react-i18next";
 import WarningBox from "./WarningBox";
+import Box from "../../Styled/Box";
+import Button from "../../Styled/Button";
 
 /**
  * A "preview" for CatalogGroup.
@@ -44,6 +46,20 @@ const GroupPreview = observer(
             ref={(component) => (this.refToMeasure = component)}
           >
             <h3>{this.props.previewed.name}</h3>
+
+            {/* If this is a display group, show the "Add/Remove All" button */}
+            {this.props.previewed.traits.displayGroup && (
+              <Box>
+                <Button
+                  primary
+                  textProps={{ large: true }}
+                  onClick={console.log("Clicked Add All")}
+                >
+                  {t("models.catalog.addAll")}
+                </Button>
+              </Box>
+            )}
+
             <div className={Styles.shareLinkWrapper}>
               <SharePanel
                 catalogShare
