@@ -15,6 +15,7 @@ import { withTranslation } from "react-i18next";
 import WarningBox from "./WarningBox";
 import Box from "../../Styled/Box";
 import Button from "../../Styled/Button";
+import toggleItemOnMapFromCatalog from "../DataCatalog/toggleItemOnMapFromCatalog";
 
 /**
  * A "preview" for CatalogGroup.
@@ -35,6 +36,22 @@ const GroupPreview = observer(
       this.props.viewState.explorerPanelIsVisible = false;
     },
 
+    addRemoveButtonClicked() {
+      this.props.previewed.loadMembers().then(() => {
+        this.props.previewed.memberModels.forEach(async (memberModel) => {
+          if (memberModel.isMappable) {
+            await toggleItemOnMapFromCatalog(
+              this.props.viewState,
+              memberModel,
+              false,
+              {}
+            );
+          }
+        });
+      });
+      // For each member, toggle it on
+    },
+
     render() {
       const metadataItem =
         this.props.previewed.nowViewingCatalogItem || this.props.previewed;
@@ -53,9 +70,13 @@ const GroupPreview = observer(
                 <Button
                   primary
                   textProps={{ large: true }}
-                  onClick={console.log("Clicked Add All")}
+                  onClick={this.addRemoveButtonClicked}
                 >
                   {t("models.catalog.addAll")}
+                  {/* This is the logic we will use when we have access to all children */}
+                  {/* {this.props.terria.workbench.contains(allGroupItems)
+                    ? t("models.catalog.addAll")
+                    : t("models.catalog.removeAll")} */}
                 </Button>
               </Box>
             )}
