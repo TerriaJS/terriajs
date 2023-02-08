@@ -1,10 +1,7 @@
 import React from "react";
-
 import createReactClass from "create-react-class";
-
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
-
 import DataPreviewSections from "./DataPreviewSections";
 import DataPreviewUrl from "./DataPreviewUrl";
 import measureElement from "../HOCs/measureElement";
@@ -17,6 +14,8 @@ import Box from "../../Styled/Box";
 import Button from "../../Styled/Button";
 import toggleItemOnMapFromCatalog from "../DataCatalog/toggleItemOnMapFromCatalog";
 import MappableMixin from "../../ModelMixins/MappableMixin";
+import { BaseModel } from "../../Models/Definition/Model";
+import { runInAction } from "mobx";
 
 /**
  * A "preview" for CatalogGroup.
@@ -37,21 +36,37 @@ const GroupPreview = observer(
       this.props.viewState.explorerPanelIsVisible = false;
     },
 
+    allMappableMembersInWorkbench() {
+      const workbenchItems = this.props.terria.workbench.itemIds;
+      const groupItems = this.props.previewed.members;
+
+      // Check if all the mappable items from our group are already loaded in the workbench
+      let checker = (workbenchArr, target) =>
+        target.every(
+          (member) =>
+            !MappableMixin.isMixedInto(
+              this.props.terria.getModelById(BaseModel, member)
+            ) || workbenchArr.includes(member)
+        );
+      return checker(workbenchItems, groupItems);
+    },
+
     addRemoveButtonClicked() {
-      this.props.previewed.loadMembers().then(() => {
-        this.props.previewed.memberModels.forEach(async (memberModel) => {
-          // if (memberModel.isMappable) {
-          if (MappableMixin.isMixedInto(memberModel)) {
-            await toggleItemOnMapFromCatalog(
-              this.props.viewState,
-              memberModel,
-              false,
-              {}
-            );
-          }
+      runInAction(() => {
+        this.props.previewed.loadMembers().then(() => {
+          this.props.previewed.memberModels.forEach(async (memberModel) => {
+            // if (memberModel.isMappable) {
+            if (MappableMixin.isMixedInto(memberModel)) {
+              await toggleItemOnMapFromCatalog(
+                this.props.viewState,
+                memberModel,
+                false,
+                {} // TODO: Add analytics, maybe a new one for adding an entire group (put oputside this loop), then make sure individuals are fired too.
+              );
+            }
+          });
         });
       });
-      // For each member, toggle it on
     },
 
     render() {
@@ -74,11 +89,9 @@ const GroupPreview = observer(
                   textProps={{ large: true }}
                   onClick={this.addRemoveButtonClicked}
                 >
-                  {t("models.catalog.addAll")}
-                  {/* This is the logic we will use when we have access to all children */}
-                  {/* {this.props.terria.workbench.contains(allGroupItems)
-                    ? t("models.catalog.addAll")
-                    : t("models.catalog.removeAll")} */}
+                  {this.allMappableMembersInWorkbench()
+                    ? t("models.catalog.removeAll")
+                    : t("models.catalog.addAll")}
                 </Button>
               </Box>
             )}
