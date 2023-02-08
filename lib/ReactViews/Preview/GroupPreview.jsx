@@ -67,7 +67,7 @@ const GroupPreview = observer(
             <h3>{this.props.previewed.name}</h3>
 
             {/* If this is a display group, show the "Add/Remove All" button */}
-            {this.props.previewed.traits.displayGroup && (
+            {this.props.previewed.displayGroup === true && (
               <Box>
                 <Button
                   primary
