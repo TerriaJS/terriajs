@@ -4,14 +4,10 @@ import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { observer } from "mobx-react";
-
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
-
 import Loader from "../Loader";
 import Icon from "../../Styled/Icon";
-
 import Styles from "./data-catalog-group.scss";
-
 import Box from "../../Styled/Box";
 import Text from "../../Styled/Text";
 
@@ -78,6 +74,7 @@ function CatalogGroup(props) {
                   <Icon glyph={Icon.GLYPHS.closed} />
                 )}
               </span>
+              {/* This next button is for user added data, and perhaps should be called 'trashable' instead of 'removable' */}
               <If condition={props.removable}>
                 <button
                   type="button"
@@ -91,6 +88,35 @@ function CatalogGroup(props) {
             </Box>
           </Box>
         </CatalogGroupButton>
+        {/* If this is a display group, show the "PlusList" button */}
+        {/* TODO: This should be superimposed on the above button. 
+        We cannot have a button within a button, so maybe use z-values and superimpose */}
+        {/* TODO: Maybe this should be a component with a 'mode' flag. 
+        With a different appearance and onClick function depending on the mode */}
+        {props.displayGroup === true && (
+          <Box>
+            <button
+              type="button"
+              // TODO: apply unique styles
+              className={Styles.trashGroup}
+              title={
+                props.checkAllItemsLoadedFunction
+                  ? t("models.catalog.removeAll")
+                  : t("models.catalog.addAll")
+              }
+              // onClick should call addAll function which I should move out of GroupPreview to separate service file
+              onClick={props.addRemoveButtonFunction}
+            >
+              <Icon
+                glyph={
+                  props.checkAllItemsLoadedFunction
+                    ? Icon.GLYPHS.minusList
+                    : Icon.GLYPHS.plusList
+                }
+              />
+            </button>
+          </Box>
+        )}
       </Text>
       <If condition={props.open}>
         <ul

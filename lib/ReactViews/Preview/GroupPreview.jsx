@@ -10,12 +10,10 @@ import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel";
 import { withTranslation } from "react-i18next";
 import WarningBox from "./WarningBox";
-import Box from "../../Styled/Box";
-import Button from "../../Styled/Button";
-import toggleItemOnMapFromCatalog from "../DataCatalog/toggleItemOnMapFromCatalog";
-import MappableMixin from "../../ModelMixins/MappableMixin";
-import { BaseModel } from "../../Models/Definition/Model";
-import { runInAction } from "mobx";
+import {
+  addRemoveButtonClicked,
+  allMappableMembersInWorkbench
+} from "../DataCatalog/DisplayGroupService";
 
 /**
  * A "preview" for CatalogGroup.
@@ -36,39 +34,6 @@ const GroupPreview = observer(
       this.props.viewState.explorerPanelIsVisible = false;
     },
 
-    allMappableMembersInWorkbench() {
-      const workbenchItems = this.props.terria.workbench.itemIds;
-      const groupItems = this.props.previewed.members;
-
-      // Check if all the mappable items from our group are already loaded in the workbench
-      let checker = (workbenchArr, target) =>
-        target.every(
-          (member) =>
-            !MappableMixin.isMixedInto(
-              this.props.terria.getModelById(BaseModel, member)
-            ) || workbenchArr.includes(member)
-        );
-      return checker(workbenchItems, groupItems);
-    },
-
-    addRemoveButtonClicked() {
-      runInAction(() => {
-        this.props.previewed.loadMembers().then(() => {
-          this.props.previewed.memberModels.forEach(async (memberModel) => {
-            // if (memberModel.isMappable) {
-            if (MappableMixin.isMixedInto(memberModel)) {
-              await toggleItemOnMapFromCatalog(
-                this.props.viewState,
-                memberModel,
-                false,
-                {} // TODO: Add analytics, maybe a new one for adding an entire group (put oputside this loop), then make sure individuals are fired too.
-              );
-            }
-          });
-        });
-      });
-    },
-
     render() {
       const metadataItem =
         this.props.previewed.nowViewingCatalogItem || this.props.previewed;
@@ -86,10 +51,19 @@ const GroupPreview = observer(
               {this.props.previewed.displayGroup === true && (
                 <button
                   type="button"
-                  onClick={this.addRemoveButtonClicked}
+                  onClick={() => {
+                    addRemoveButtonClicked(
+                      this.props.previewed,
+                      this.props.viewState
+                    );
+                  }}
                   className={Styles.btnAddAll}
                 >
-                  {this.allMappableMembersInWorkbench()
+                  {allMappableMembersInWorkbench(
+                    this.props.terria.workbench.itemIds,
+                    this.props.previewed.members,
+                    this.props.terria
+                  )
                     ? t("models.catalog.removeAll")
                     : t("models.catalog.addAll")}
                 </button>

@@ -9,6 +9,10 @@ import getPath from "../../Core/getPath";
 import removeUserAddedData from "../../Models/Catalog/removeUserAddedData";
 import CatalogGroup from "./CatalogGroup";
 import DataCatalogMember from "./DataCatalogMember";
+import {
+  addRemoveButtonClicked,
+  allMappableMembersInWorkbench
+} from "./DisplayGroupService";
 
 const DataCatalogGroup = observer(
   createReactClass({
@@ -118,6 +122,15 @@ const DataCatalogGroup = observer(
             this.props.group
           )}
           selected={this.isSelected()}
+          displayGroup={group.displayGroup}
+          addRemoveButtonFunction={() => {
+            addRemoveButtonClicked(this.props.group, this.props.viewState);
+          }}
+          checkAllItemsLoadedFunction={allMappableMembersInWorkbench(
+            this.props.terria.workbench.itemIds,
+            this.props.group.members,
+            this.props.terria
+          )}
         >
           <If condition={this.isOpen()}>
             <For each="item" of={group.memberModels}>
