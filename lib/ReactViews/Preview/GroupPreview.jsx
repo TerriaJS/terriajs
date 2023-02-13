@@ -54,7 +54,8 @@ const GroupPreview = observer(
                   onClick={() => {
                     addRemoveButtonClicked(
                       this.props.previewed,
-                      this.props.viewState
+                      this.props.viewState,
+                      this.props.terria
                     );
                   }}
                   className={Styles.btnAddAll}

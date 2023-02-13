@@ -38,6 +38,35 @@ function CatalogGroup(props) {
   return (
     <li className={Styles.root}>
       <Text fullWidth primary={!props.selected && props.isPrivate}>
+        {/* If this is a display group, show the "PlusList" button */}
+        {/* TODO: This should be superimposed on the above button. 
+        We cannot have a button within a button, so maybe use z-values and superimpose */}
+        {/* TODO: Maybe this should be a component with a 'mode' flag. 
+        With a different appearance and onClick function depending on the mode */}
+        {props.displayGroup === true && (
+          <Box>
+            <button
+              type="button"
+              // TODO: apply unique styles
+              className={Styles.addRemoveButton}
+              title={
+                props.checkAllItemsLoadedFunction
+                  ? t("models.catalog.removeAll")
+                  : t("models.catalog.addAll")
+              }
+              // onClick should call addAll function which I should move out of GroupPreview to separate service file
+              onClick={props.addRemoveButtonFunction}
+            >
+              <Icon
+                glyph={
+                  props.checkAllItemsLoadedFunction
+                    ? Icon.GLYPHS.minusList
+                    : Icon.GLYPHS.plusList
+                }
+              />
+            </button>
+          </Box>
+        )}
         <CatalogGroupButton
           type="button"
           className={classNames(
@@ -88,35 +117,6 @@ function CatalogGroup(props) {
             </Box>
           </Box>
         </CatalogGroupButton>
-        {/* If this is a display group, show the "PlusList" button */}
-        {/* TODO: This should be superimposed on the above button. 
-        We cannot have a button within a button, so maybe use z-values and superimpose */}
-        {/* TODO: Maybe this should be a component with a 'mode' flag. 
-        With a different appearance and onClick function depending on the mode */}
-        {props.displayGroup === true && (
-          <Box>
-            <button
-              type="button"
-              // TODO: apply unique styles
-              className={Styles.trashGroup}
-              title={
-                props.checkAllItemsLoadedFunction
-                  ? t("models.catalog.removeAll")
-                  : t("models.catalog.addAll")
-              }
-              // onClick should call addAll function which I should move out of GroupPreview to separate service file
-              onClick={props.addRemoveButtonFunction}
-            >
-              <Icon
-                glyph={
-                  props.checkAllItemsLoadedFunction
-                    ? Icon.GLYPHS.minusList
-                    : Icon.GLYPHS.plusList
-                }
-              />
-            </button>
-          </Box>
-        )}
       </Text>
       <If condition={props.open}>
         <ul

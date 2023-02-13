@@ -48,9 +48,20 @@ export default async function toggleItemOnMapFromCatalog(
   analyticsEvents: {
     [Op.Add]: DataSourceAction;
     [Op.Remove]: DataSourceAction;
-  }
+  },
+  forceState?: boolean
 ) {
-  const op = viewState.terria.workbench.contains(item) ? Op.Remove : Op.Add;
+  // If forceState is defined, use that, otherwise toggle the existing state of the item
+  // TODO: this could be more elegant, but it is at least clear
+  let op;
+  if (forceState !== undefined) {
+    op = forceState ? Op.Add : Op.Remove;
+  } else {
+    op =
+      forceState || viewState.terria.workbench.contains(item)
+        ? Op.Remove
+        : Op.Add;
+  }
 
   if (op === Op.Add) {
     (await viewState.terria.workbench.add(item)).raiseError(
