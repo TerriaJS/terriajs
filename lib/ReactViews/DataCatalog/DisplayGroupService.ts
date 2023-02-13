@@ -37,23 +37,36 @@ export function addRemoveButtonClicked(
       terria
     );
     previewedGroup.loadMembers().then(() => {
-      previewedGroup.memberModels.forEach(async (memberModel: BaseModel) => {
-        // if (memberModel.isMappable) {
-        if (MappableMixin.isMixedInto(memberModel)) {
-          await toggleItemOnMapFromCatalog(
-            viewState,
-            memberModel,
-            false,
-            {
-              [ToggleOnMapOp.Add]:
-                DataSourceAction.addDisplayGroupFromAddAllButton,
-              [ToggleOnMapOp.Remove]:
-                DataSourceAction.removeDisplayGroupFromRemoveAllButton
-            },
-            forceState
-          );
-        }
-      });
+      for (
+        let index = previewedGroup.memberModels.length - 1;
+        index >= 0;
+        index--
+      ) {
+        const memberModel = previewedGroup.memberModels[index];
+        addOrRemoveMember(memberModel, viewState, forceState);
+      }
     });
   });
 }
+
+// TODO: Combine this function into addRemoveButtonClicked or remove unnecessary complexity
+const addOrRemoveMember = async (
+  memberModel: BaseModel,
+  viewState: ViewState,
+  forceState: boolean
+) => {
+  // if (memberModel.isMappable) {
+  if (MappableMixin.isMixedInto(memberModel)) {
+    await toggleItemOnMapFromCatalog(
+      viewState,
+      memberModel,
+      false,
+      {
+        [ToggleOnMapOp.Add]: DataSourceAction.addDisplayGroupFromAddAllButton,
+        [ToggleOnMapOp.Remove]:
+          DataSourceAction.removeDisplayGroupFromRemoveAllButton
+      },
+      forceState
+    );
+  }
+};
