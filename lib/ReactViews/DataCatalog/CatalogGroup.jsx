@@ -161,7 +161,10 @@ CatalogGroup.propTypes = {
   ]),
   selected: PropTypes.bool,
   removable: PropTypes.bool,
-  removeUserAddedData: PropTypes.func
+  removeUserAddedData: PropTypes.func,
+  displayGroup: PropTypes.bool,
+  checkAllItemsLoadedFunction: PropTypes.func,
+  addRemoveButtonFunction: PropTypes.func
 };
 
 export default observer(CatalogGroup);
