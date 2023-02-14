@@ -51,11 +51,12 @@ const GroupPreview = observer(
               {this.props.previewed.displayGroup === true && (
                 <button
                   type="button"
-                  onClick={() => {
+                  onClick={(event) => {
                     addRemoveButtonClicked(
                       this.props.previewed,
                       this.props.viewState,
-                      this.props.terria
+                      this.props.terria,
+                      event.shiftKey || event.ctrlKey
                     );
                   }}
                   className={Styles.btnAddAll}

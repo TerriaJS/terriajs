@@ -122,12 +122,14 @@ const DataCatalogGroup = observer(
             this.props.group
           )}
           selected={this.isSelected()}
+          // Pass these next three props down to deal with displayGroup functionality
           displayGroup={group.displayGroup}
-          addRemoveButtonFunction={() => {
+          addRemoveButtonFunction={(event) => {
             addRemoveButtonClicked(
               this.props.group,
               this.props.viewState,
-              this.props.terria
+              this.props.terria,
+              event.shiftKey || event.ctrlKey
             );
           }}
           checkAllItemsLoadedFunction={allMappableMembersInWorkbench(
