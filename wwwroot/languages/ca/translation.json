@@ -755,7 +755,9 @@
       "notWebMercatorTilingScheme": "Aquest conjunt de dades no es pot mostrar al mapa 2D perquè no admet la projecció Web Mercator (EPSG:3857).",
       "unusalTilingScheme": "Aquest conjunt de dades no es pot mostrar al mapa 2D perquè utilitza un esquema de mosaic inusual que no és compatible.",
       "stoppedRenderingTitle": "El mapa 3D no s'ha pogut renderitzar",
-      "stoppedRenderingMessage": "Això pot haver estat causat per un conjunt de dades que s'acaba d'afegir a l'espai de treball, proveu d'eliminar-lo. Si això no resol el vostre problema, és possible que ho hàgiu de tornar a carregar {{appName}}."
+      "stoppedRenderingMessage": "Això pot haver estat causat per un conjunt de dades que s'acaba d'afegir a l'espai de treball, proveu d'eliminar-lo. Si això no resol el vostre problema, és possible que ho hàgiu de tornar a carregar {{appName}}.",
+      "terrainServerErrorMessage": " El servidor de terrenys no respon en aquest moment. Encara podeu utilitzar totes les funcions de {{appName}}, però no hi haurà cap detall del terreny en mode 3D. Lamentem les molèsties. Torneu-ho a provar més tard i el servidor de terrenys hauria de respondre com s'espera. Si el problema continua, poseu-vos en contacte amb nosaltres per correu electrònic a {{supportEmail}}.",
+      "terrainServerErrorTitle": "El servidor de terrenys no contesta"
     },
     "computeRingWindingOrder": {
       "devError": "Punts esperats del tipus {x:nombre, y:nombre}"
