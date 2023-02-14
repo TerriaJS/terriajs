@@ -61,7 +61,6 @@ const GroupPreview = observer(
                   className={Styles.btnAddAll}
                 >
                   {allMappableMembersInWorkbench(
-                    this.props.terria.workbench.itemIds,
                     this.props.previewed.members,
                     this.props.terria
                   )

@@ -9,18 +9,20 @@ import toggleItemOnMapFromCatalog, {
 } from "./toggleItemOnMapFromCatalog";
 
 export function allMappableMembersInWorkbench(
-  workbenchItems: any,
-  groupItems: any,
-  terria: { getModelById: (arg0: typeof BaseModel, arg1: any) => any }
+  groupItems: string[],
+  terria: Terria
 ) {
   // Check if all the mappable items from our group are already loaded in the workbench
-  let checker = (workbenchArr: string | any[], target: any[]) =>
-    target.every(
+  const checkAllMappablesInWorkbench = (
+    workbenchArr: readonly string[],
+    groupItemsArray: string[]
+  ) =>
+    groupItemsArray.every(
       (member: any) =>
         !MappableMixin.isMixedInto(terria.getModelById(BaseModel, member)) ||
         workbenchArr.includes(member)
     );
-  return checker(workbenchItems, groupItems);
+  return checkAllMappablesInWorkbench(terria.workbench.itemIds, groupItems);
 }
 
 export function addRemoveButtonClicked(
@@ -30,9 +32,7 @@ export function addRemoveButtonClicked(
 ) {
   runInAction(() => {
     // Force items to be loaded or removed depending on state of entire group.
-    // TODO: What happens if we try to load an item in the workbench twice?
     const forceState = !allMappableMembersInWorkbench(
-      terria.workbench.itemIds,
       previewedGroup.members,
       terria
     );
@@ -49,13 +49,11 @@ export function addRemoveButtonClicked(
   });
 }
 
-// TODO: Combine this function into addRemoveButtonClicked or remove unnecessary complexity
 const addOrRemoveMember = async (
   memberModel: BaseModel,
   viewState: ViewState,
   forceState: boolean
 ) => {
-  // if (memberModel.isMappable) {
   if (MappableMixin.isMixedInto(memberModel)) {
     await toggleItemOnMapFromCatalog(
       viewState,

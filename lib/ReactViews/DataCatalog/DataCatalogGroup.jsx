@@ -131,7 +131,6 @@ const DataCatalogGroup = observer(
             );
           }}
           checkAllItemsLoadedFunction={allMappableMembersInWorkbench(
-            this.props.terria.workbench.itemIds,
             this.props.group.members,
             this.props.terria
           )}

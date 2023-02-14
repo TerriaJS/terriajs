@@ -81,11 +81,7 @@
 .btn--add-all {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn-primary from "../../Sass/common/_buttons.scss";
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
-
+  padding: 8px;
   @media (min-width: $sm) {
     display: inline-block;
     width: inherit;
