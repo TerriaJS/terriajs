@@ -12,11 +12,11 @@ Change the `appName`, `brandBarElements`, etc. See [Client-side Config](client-s
 
 `lib/Styles/variables.scss`
 
-Uncomment and tweak the SASS variables to set the main colors and fonts used throughout the application. You will need to [rebuild TerriaMap](../getting-started.md#building-terriamap) after changing this file.
+Uncomment and tweak the SASS variables to set the main colors and fonts used throughout the application. You will need to [rebuild TerriaMap](./cloning-and-building.md) after changing this file.
 
 `lib/Views/global.scss`
 
-**_(The following is no longer supported in version 8. Please discuss alternatives in [this issue](https://github.com/TerriaJS/terriajs/issues/5169))_** ~~In this file, you can override any of TerriaJS's CSS. It contains some commented-out examples of some things you might like to change. You can also use your browser's DOM inspector to look at elements in the TerriaJS UI and which CSS classes they use, and then override those classes as desired in this file. You will need to [rebuild TerriaMap](../getting-started.md#building-terriamap) after changing this file.~~
+**_(The following is no longer supported in version 8. Please discuss alternatives in [this issue](https://github.com/TerriaJS/terriajs/issues/5169))_** ~~In this file, you can override any of TerriaJS's CSS. It contains some commented-out examples of some things you might like to change. You can also use your browser's DOM inspector to look at elements in the TerriaJS UI and which CSS classes they use, and then override those classes as desired in this file. You will need to [rebuild TerriaMap](./cloning-and-building.md) after changing this file.~~
 
 `lib/Views/UserInterface.jsx`
 
@@ -63,8 +63,8 @@ export default function UserInterface(props) {
 }
 ```
 
-You will need to [rebuild TerriaMap](../getting-started.md#building-terriamap) after changing this file.
+You will need to [rebuild TerriaMap](./cloning-and-building.md) after changing this file.
 
 `index.js`
 
-It's not usually necessary to change this file, but it is the main entry point for TerriaMap, so you can add any extra initialization that your application needs here. You will need to [rebuild TerriaMap](../getting-started.md#building-terriamap) after changing this file.
+It's not usually necessary to change this file, but it is the main entry point for TerriaMap, so you can add any extra initialization that your application needs here. You will need to [rebuild TerriaMap](./cloning-and-building.md) after changing this file.

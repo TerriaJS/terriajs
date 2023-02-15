@@ -6,3 +6,4 @@ This section explains the various ways to customize a TerriaJS application. It a
 -   [Initialization Files](initialization-files.md): TerriaJS init files describe the catalog that will be presented to the user, the initial map view, and more. Init files let you connect TerriaJS to your servers and data.
 -   [Server-side Config](server-side-config.md): Configure which domains the server will proxy for (to avoid [Cross-Origin Resource Sharing (CORS) problems](../connecting-to-data/cross-origin-resource-sharing.md)), persistence of sharing data, and more.
 -   [Skinning](skinning.md): Customize the look and feel of a TerriaJS application.
+-   [Cloning and Building](cloning-and-building.md): Build TerriaMap locally to customize your application further

@@ -1,10 +1,10 @@
-First, read [Getting Started](../getting-started.md).
+First, read [Cloning and Building](../customizing/cloning-and-building.md).
 
 ## Building a TerriaMap against a modified TerriaJS
 
 What if you need to make changes to [TerriaJS](https://github.com/TerriaJS/terriajs) while working on a site that depends on it?
 
-In the process described in [Getting Started](../getting-started.md), the [TerriaJS package](https://www.npmjs.com/package/terriajs) is installed to the `node_modules` directory by `yarn install`. Please do not edit TerriaJS directly in the `node_modules` directory, because changes will be clobbered the next time you run `yarn install`.
+In the process described in [Cloning and Building](../customizing/cloning-and-building.md), the [TerriaJS package](https://www.npmjs.com/package/terriajs) is installed to the `node_modules` directory by `yarn install`. Please do not edit TerriaJS directly in the `node_modules` directory, because changes will be clobbered the next time you run `yarn install`.
 
 Instead, we want to clone TerriaJS from its [GitHub repo](https://github.com/TerriaJS/terriajs) and use that in our TerriaMap build. Traditionally, `npm link` is the way to do this. However, we do not recommend use of `npm link` because it frequently leads to multiple copies of some libraries being installed, which in turn leads to all sorts of frustrating build problems. Instead, we recommend [yarn](https://yarnpkg.com) and its [workspaces](https://yarnpkg.com/lang/en/docs/workspaces/) feature. `yarn` workspaces let us safely clone a git repo into the `packages` directory and wire it into any other packages that use it.
 
