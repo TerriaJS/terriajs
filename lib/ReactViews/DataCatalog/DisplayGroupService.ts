@@ -16,20 +16,15 @@ import toggleItemOnMapFromCatalog, {
  * A check to see if all members of a group are already loaded in the workbench. Only checks for mappable items.
  */
 export function allMappableMembersInWorkbench(
-  groupItems: string[],
+  groupItemsArray: string[],
   terria: Terria
 ) {
-  // Check if all the mappable items from our group are already loaded in the workbench
-  const checkAllMappablesInWorkbench = (
-    workbenchArr: readonly string[],
-    groupItemsArray: string[]
-  ) =>
-    groupItemsArray.every(
-      (member: any) =>
-        !MappableMixin.isMixedInto(terria.getModelById(BaseModel, member)) ||
-        workbenchArr.includes(member)
-    );
-  return checkAllMappablesInWorkbench(terria.workbench.itemIds, groupItems);
+  const workbenchItemsArray = terria.workbench.itemIds;
+  return groupItemsArray.every(
+    (member: any) =>
+      !MappableMixin.isMixedInto(terria.getModelById(BaseModel, member)) ||
+      workbenchItemsArray.includes(member)
+  );
 }
 
 /**
