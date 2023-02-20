@@ -132,7 +132,7 @@ const DataCatalogGroup = observer(
               event.shiftKey || event.ctrlKey
             );
           }}
-          checkAllItemsLoadedFunction={allMappableMembersInWorkbench(
+          allItemsLoaded={allMappableMembersInWorkbench(
             this.props.group.members,
             this.props.terria
           )}

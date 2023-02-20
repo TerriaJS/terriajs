@@ -50,7 +50,7 @@ function CatalogGroup(props) {
               // TODO: apply unique styles
               className={Styles.addRemoveButton}
               title={
-                props.checkAllItemsLoadedFunction
+                props.allItemsLoaded
                   ? t("models.catalog.removeAll")
                   : t("models.catalog.addAll")
               }
@@ -59,7 +59,7 @@ function CatalogGroup(props) {
             >
               <Icon
                 glyph={
-                  props.checkAllItemsLoadedFunction
+                  props.allItemsLoaded
                     ? Icon.GLYPHS.remove
                     : Icon.GLYPHS.plusList
                 }
@@ -163,7 +163,7 @@ CatalogGroup.propTypes = {
   removable: PropTypes.bool,
   removeUserAddedData: PropTypes.func,
   displayGroup: PropTypes.bool,
-  checkAllItemsLoadedFunction: PropTypes.func,
+  allItemsLoaded: PropTypes.bool,
   addRemoveButtonFunction: PropTypes.func
 };
 
