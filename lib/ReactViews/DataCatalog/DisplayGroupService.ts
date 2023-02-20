@@ -40,8 +40,7 @@ export function addRemoveButtonClicked(
   keepCatalogOpen: boolean
 ) {
   runInAction(() => {
-    // Force items to be loaded or removed depending on state of entire group.
-    const forceState = !allMappableMembersInWorkbench(
+    const allItemsLoaded = allMappableMembersInWorkbench(
       previewedGroup.members,
       terria
     );
@@ -52,7 +51,12 @@ export function addRemoveButtonClicked(
         index--
       ) {
         const memberModel = previewedGroup.memberModels[index];
-        addOrRemoveMember(memberModel, viewState, forceState, keepCatalogOpen);
+        const itemLoaded = terria.workbench.contains(memberModel);
+        if (allItemsLoaded) {
+          addOrRemoveMember(memberModel, viewState, keepCatalogOpen);
+        } else if (!allItemsLoaded && !itemLoaded) {
+          addOrRemoveMember(memberModel, viewState, keepCatalogOpen);
+        }
       }
     });
   });
@@ -61,20 +65,13 @@ export function addRemoveButtonClicked(
 const addOrRemoveMember = async (
   memberModel: BaseModel,
   viewState: ViewState,
-  forceState: boolean,
   keepCatalogOpen: boolean
 ) => {
   if (MappableMixin.isMixedInto(memberModel)) {
-    await toggleItemOnMapFromCatalog(
-      viewState,
-      memberModel,
-      keepCatalogOpen,
-      {
-        [ToggleOnMapOp.Add]: DataSourceAction.addDisplayGroupFromAddAllButton,
-        [ToggleOnMapOp.Remove]:
-          DataSourceAction.removeDisplayGroupFromRemoveAllButton
-      },
-      forceState
-    );
+    await toggleItemOnMapFromCatalog(viewState, memberModel, keepCatalogOpen, {
+      [ToggleOnMapOp.Add]: DataSourceAction.addDisplayGroupFromAddAllButton,
+      [ToggleOnMapOp.Remove]:
+        DataSourceAction.removeDisplayGroupFromRemoveAllButton
+    });
   }
 };
