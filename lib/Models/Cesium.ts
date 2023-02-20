@@ -6,8 +6,7 @@ import {
   IObservableArray,
   observable,
   reaction,
-  runInAction,
-  IAutorunOptions
+  runInAction
 } from "mobx";
 import { computedFn } from "mobx-utils";
 import AssociativeArray from "terriajs-cesium/Source/Core/AssociativeArray";
@@ -389,24 +388,18 @@ export default class Cesium extends GlobeOrMap {
     });
 
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
-    // TODO: use `fireImmediately = true` here to avoid weird timing issues for tests?
-    this._disposeTerrainReaction = reaction(
-      () => {
-        this.scene.globe.terrainProvider = this.terrainProvider;
-      },
-      () => {
-        this.scene.globe.splitDirection = this.terria.showSplitter
-          ? this.terria.terrainSplitDirection
-          : SplitDirection.NONE;
-        this.scene.globe.depthTestAgainstTerrain =
-          this.terria.depthTestAgainstTerrainEnabled;
-        if (this.scene.skyAtmosphere) {
-          this.scene.skyAtmosphere.splitDirection =
-            this.scene.globe.splitDirection;
-        }
-      },
-      { fireImmediately: true }
-    );
+    this._disposeTerrainReaction = autorun(() => {
+      this.scene.globe.terrainProvider = this.terrainProvider;
+      this.scene.globe.splitDirection = this.terria.showSplitter
+        ? this.terria.terrainSplitDirection
+        : SplitDirection.NONE;
+      this.scene.globe.depthTestAgainstTerrain =
+        this.terria.depthTestAgainstTerrainEnabled;
+      if (this.scene.skyAtmosphere) {
+        this.scene.skyAtmosphere.splitDirection =
+          this.scene.globe.splitDirection;
+      }
+    });
     this._disposeSplitterReaction = this._reactToSplitterChanges();
 
     this._disposeResolutionReaction = autorun(() => {
