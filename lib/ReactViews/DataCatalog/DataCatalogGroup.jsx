@@ -12,7 +12,7 @@ import DataCatalogMember from "./DataCatalogMember";
 import {
   addRemoveButtonClicked,
   allMappableMembersInWorkbench
-} from "./DisplayGroupService";
+} from "./DisplayGroupHelper";
 
 const DataCatalogGroup = observer(
   createReactClass({

@@ -13,7 +13,7 @@ import WarningBox from "./WarningBox";
 import {
   addRemoveButtonClicked,
   allMappableMembersInWorkbench
-} from "../DataCatalog/DisplayGroupService";
+} from "../DataCatalog/DisplayGroupHelper";
 
 /**
  * A "preview" for CatalogGroup.
