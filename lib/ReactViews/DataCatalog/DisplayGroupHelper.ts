@@ -52,11 +52,18 @@ export function addRemoveButtonClicked(
       ) {
         const memberModel = previewedGroup.memberModels[index];
         const itemLoaded = terria.workbench.contains(memberModel);
+
         if (allItemsLoaded) {
+          // If all items are loaded, then we can just call the toggle function for all
+          // they will all be removed
           addOrRemoveMember(memberModel, viewState, keepCatalogOpen);
         } else if (!allItemsLoaded && !itemLoaded) {
+          // If we have a partially loaded group, and our current item of interest is not loaded,
+          // then we toggle it, which will add it
           addOrRemoveMember(memberModel, viewState, keepCatalogOpen);
         }
+        // All other cases we do nothing. There is only one other case not accounted for:
+        // !allItemsLoaded && itemLoaded - thats fine, do nothing
       }
     });
   });
