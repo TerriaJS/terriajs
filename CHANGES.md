@@ -4,6 +4,7 @@
 
 - Reimplement error message and default to 3d smooth mode when Cesium Ion Access Token is invalid.
 - Layers shown via a share URL are now logged as a Google Analytics event
+- Show an Add All / Remove All button for catalog groups when an optional `displayGroup` trait is true
 - [The next improvement]
 
 #### 8.2.23 - 2023-01-06

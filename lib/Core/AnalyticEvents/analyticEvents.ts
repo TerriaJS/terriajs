@@ -52,7 +52,11 @@ export enum DataSourceAction {
   removeFromWorkbench = "Remove from workbench",
   removeAllFromWorkbench = "Remove all from workbench",
   addFromDragAndDrop = "Add from Drag and Drop",
-  addFromShareOrInit = "Add from share or init source"
+  addFromShareOrInit = "Add from share or init source",
+  addDisplayGroupFromCatalogue = "Add display group from catalogue",
+  removeDisplayGroupFromCatalogue = "Remove display group from catalogue",
+  addDisplayGroupFromAddAllButton = "Add display group via Add All button",
+  removeDisplayGroupFromRemoveAllButton = "Remove display group via Remove All button"
 }
 
 export enum DatatabAction {

@@ -981,7 +981,9 @@
       "mustHaveType": "Each item must have a type.",
       "compositesError": "Composites cannot include composite items.",
       "convertErrorTitle": "Could not upgrade catalog to V8",
-      "convertErrorMessage": "This catalog file is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the catalog data for {{url}}."
+      "convertErrorMessage": "This catalog file is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the catalog data for {{url}}.",
+      "addAll": "Add All",
+      "removeAll": "Remove All"
     },
     "createParameter": {
       "unsupportedErrorTitle": "Unsupported function parameter type",
