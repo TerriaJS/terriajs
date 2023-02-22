@@ -972,7 +972,9 @@
       "mustHaveType": "Cada element ha de tenir un tipus.",
       "compositesError": "Els compostos no poden incloure elements compostos.",
       "convertErrorTitle": "No s'ha pogut actualitzar el catàleg a V8",
-      "convertErrorMessage": "Aquest arxiu de catàleg es basa en una versió anterior de TerriaJS, el programari que mou aquest mapa web. S'ha produït un error en intentar actualitzar les dades del catàleg per a {{url}}."
+      "convertErrorMessage": "Aquest arxiu de catàleg es basa en una versió anterior de TerriaJS, el programari que mou aquest mapa web. S'ha produït un error en intentar actualitzar les dades del catàleg per a {{url}}.",
+      "removeAll": "Elimina-ho tot",
+      "addAll": "Afegeix-ho tot"
     },
     "userData": {
       "addingDataErrorTitle": "No s'ha pogut afegir les dades",
