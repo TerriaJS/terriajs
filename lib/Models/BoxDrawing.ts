@@ -169,6 +169,12 @@ type BoxDrawingOptions = {
    * Defaults to `true`, i.e draws the non-uniform scaling grips.
    */
   drawNonUniformScaleGrips?: boolean;
+
+  /**
+   * When set to `true`, disable dragging of top and bottom planes to change the box height.
+   * Defaults to `false`, i.e top and bottom sides are draggable and dragging them changes the box height.
+   */
+  disableVerticalMovement?: boolean;
 };
 
 // The 6 box sides defined as planes in local coordinate space.
@@ -234,6 +240,8 @@ export default class BoxDrawing {
 
   private drawNonUniformScaleGrips: boolean;
 
+  public disableVerticalMovement: boolean;
+
   public onChange?: (params: BoxDrawingChangeParams) => void;
 
   // An external transform to convert the box in local coordinates to world coordinates
@@ -270,6 +278,7 @@ export default class BoxDrawing {
     this.scene = cesium.scene;
     this.keepBoxAboveGround = options.keepBoxAboveGround ?? false;
     this.drawNonUniformScaleGrips = options.drawNonUniformScaleGrips ?? true;
+    this.disableVerticalMovement = options.disableVerticalMovement ?? false;
     this.onChange = options.onChange;
     this.dataSource = new Proxy(new CustomDataSource(), {
       set: (target, prop, value) => {
@@ -901,8 +910,9 @@ export default class BoxDrawing {
       isHighlighted = false;
     };
 
-    const highlightAllSides = () =>
+    const highlightAllSides = () => {
       this.sides.forEach((side) => side.highlight());
+    };
     const unHighlightAllSides = () =>
       this.sides.forEach((side) => side.unHighlight());
 
@@ -919,6 +929,10 @@ export default class BoxDrawing {
     const onPick = () => {
       highlightAllSides();
       setCanvasCursor(scene, "grabbing");
+    };
+
+    const onPickDisabled = () => {
+      setCanvasCursor(scene, "not-allowed");
     };
 
     const onRelease = () => {
@@ -948,11 +962,25 @@ export default class BoxDrawing {
         Cartesian3.dot(normalWc, scene.camera.direction) >= 0;
     };
 
-    side.onMouseOver = onMouseOver;
-    side.onMouseOut = onMouseOut;
-    side.onPick = onPick;
-    side.onDrag = moveBoxOnDragSide;
-    side.onRelease = onRelease;
+    const isTopOrBottomSide = axis === Axis.Z;
+
+    // Call enabledFn only if movement is is allowed for this side, otherwise call disabledFn
+    const ifActionEnabled = (
+      enabledFn: (...args: any[]) => any,
+      disabledFn?: (...args: any[]) => any
+    ) => {
+      return (...args: any[]) => {
+        return this.disableVerticalMovement && isTopOrBottomSide
+          ? disabledFn?.apply(this, args)
+          : enabledFn.apply(this, args);
+      };
+    };
+
+    side.onMouseOver = ifActionEnabled(onMouseOver);
+    side.onMouseOut = ifActionEnabled(onMouseOut);
+    side.onPick = ifActionEnabled(onPick, onPickDisabled);
+    side.onDrag = ifActionEnabled(moveBoxOnDragSide);
+    side.onRelease = ifActionEnabled(onRelease);
     side.highlight = highlightSide;
     side.unHighlight = unHighlightSide;
     side.isFacingCamera = false;
