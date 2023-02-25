@@ -374,6 +374,7 @@ export default class BoxDrawing {
         moveStep,
         scratchNewPosition
       );
+
       if (this.keepBoxAboveGround) {
         const cartographic = Cartographic.fromCartesian(
           nextPosition,
@@ -785,6 +786,38 @@ export default class BoxDrawing {
     const scratchMoveStep = new Cartesian3();
     const scratchSurfacePoint = new Cartesian3();
     const scratchSurfacePoint2d = new Cartesian2();
+    const scratchNextStep = new Cartesian3();
+    const scratchNextCartographic = new Cartographic();
+
+    const keepHeightSteady = (
+      currentPosition: Cartesian3,
+      moveStep: Cartesian3
+    ) => {
+      const nextPosition = Cartesian3.add(
+        currentPosition,
+        moveStep,
+        scratchNextStep
+      );
+      const currentCartographic = Cartographic.fromCartesian(
+        this.trs.translation,
+        undefined,
+        scratchCartographic
+      );
+      const nextCartographic = Cartographic.fromCartesian(
+        nextPosition,
+        undefined,
+        scratchNextCartographic
+      );
+      // Keep height steady
+      nextCartographic.height = currentCartographic.height;
+      Cartographic.toCartesian(nextCartographic, undefined, nextPosition);
+      const steadyStep = Cartesian3.subtract(
+        nextPosition,
+        currentPosition,
+        moveStep
+      );
+      return steadyStep;
+    };
 
     /**
      * Moves the box when dragging a side.
@@ -888,7 +921,11 @@ export default class BoxDrawing {
         if (!previousPosition || !endPosition) {
           return;
         }
-        moveStep = Cartesian3.subtract(endPosition, previousPosition, moveStep);
+
+        moveStep = keepHeightSteady(
+          this.trs.translation,
+          Cartesian3.subtract(endPosition, previousPosition, moveStep)
+        );
       }
 
       // Update box position and fire change event
