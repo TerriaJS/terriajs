@@ -543,7 +543,11 @@ export default class BoxDrawing {
     const handlePick = (click: MouseClick) => {
       const pick = scene.pick(click.position);
       const entity = pick?.id;
-      if (entity === undefined || !isInteractable(entity)) {
+      if (
+        entity === undefined ||
+        !isInteractable(entity) ||
+        !this.dataSource.entities.contains(entity)
+      ) {
         return;
       }
 
