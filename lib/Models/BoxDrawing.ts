@@ -864,34 +864,7 @@ export default class BoxDrawing {
         // we find the ellipsoidal points for the previous mouse position and
         // current mouse position and translate the box position by the difference amount.
         //
-        // When the box is tall and the horizon is in view, using the mouse
-        // coordinates to derive the pick ray results in a pick ray almost
-        // tangential to the ellipsoid, giving an ellipsoidal point that is very
-        // far away. This causes large jumps in box position. To avoid this we
-        // angle the pick ray to the ellipsoid surface by first projecting the mouse
-        // points to the ellipsoid surface.
-
-        // The box origin
-        const origin = this.trs.translation;
-
-        // Box origin projected on the ellipsoid surface.
-        const surfacePoint = projectPointToSurface(origin, scratchSurfacePoint);
-        // Surface point in screen coordinates
-        const surfacePoint2d = scene.cartesianToCanvasCoordinates(
-          surfacePoint,
-          scratchSurfacePoint2d
-        );
-
-        if (!surfacePoint2d) {
-          // cartesianToCanvasCoordinates can unexpectedly return undefined.
-          return;
-        }
-
-        // Floor the startPosition and endPosition above the ellipsoid.
-        const yDiff = mouseMove.endPosition.y - mouseMove.startPosition.y;
-        mouseMove.startPosition.y = surfacePoint2d.y;
-        mouseMove.endPosition.y = surfacePoint2d.y + yDiff;
-
+        //
         // Fallback to simple ellipsoid pick when globe pick returns undefined
         // (i.e there is no intersection of camera ray with globe tiles). This
         // probably works only because ellipsoid might below the terrain so
@@ -926,10 +899,10 @@ export default class BoxDrawing {
           return;
         }
 
-        moveStep = keepHeightSteady(
-          this.trs.translation,
-          Cartesian3.subtract(endPosition, previousPosition, moveStep)
-        );
+        moveStep = Cartesian3.subtract(endPosition, previousPosition, moveStep);
+
+        const currentPosition = this.trs.translation;
+        moveStep = keepHeightSteady(currentPosition, moveStep);
       }
 
       // Update box position and fire change event
