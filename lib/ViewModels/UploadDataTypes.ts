@@ -1,7 +1,7 @@
 export {
   default as getDataTypes,
-  addLocalUploadType,
-  addRemoteUploadType,
+  addOrReplaceLocalFileUploadType,
+  addOrReplaceRemoteFileUploadType,
   LocalDataType,
   RemoteDataType
 } from "../Core/getDataType";
