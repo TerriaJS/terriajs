@@ -11,6 +11,7 @@ import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
+import TrustedServers from "terriajs-cesium/Source/Core/TrustedServers";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import URI from "urijs";
@@ -929,6 +930,10 @@ export default class Terria {
   }
 
   async start(options: StartOptions) {
+    TrustedServers.add('vic.digitaltwin.terria.io', 443);
+    TrustedServers.add('nsw.digitaltwin.terria.io', 443);
+    TrustedServers.add('qld.digitaltwin.terria.io', 443);
+
     // Some hashProperties need to be set before anything else happens
     const hashProperties = queryToObject(new URI(window.location).fragment());
 
