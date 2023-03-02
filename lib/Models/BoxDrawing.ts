@@ -5,8 +5,10 @@ import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Color from "terriajs-cesium/Source/Core/Color";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
+import IntersectionTests from "terriajs-cesium/Source/Core/IntersectionTests";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
@@ -785,43 +787,10 @@ export default class BoxDrawing {
 
     const scratchDirection = new Cartesian3();
     const scratchMoveVector = new Cartesian3();
-    const scratchPreviousPosition = new Cartesian3();
-    const scratchEndPosition = new Cartesian3();
+    const scratchEllipsoid = new Ellipsoid();
+    const scratchCartographic = new Cartographic();
+    const scratchCartesian = new Cartesian3();
     const scratchMoveStep = new Cartesian3();
-    const scratchSurfacePoint = new Cartesian3();
-    const scratchSurfacePoint2d = new Cartesian2();
-    const scratchNextStep = new Cartesian3();
-    const scratchNextCartographic = new Cartographic();
-
-    const keepHeightSteady = (
-      currentPosition: Cartesian3,
-      moveStep: Cartesian3
-    ) => {
-      const nextPosition = Cartesian3.add(
-        currentPosition,
-        moveStep,
-        scratchNextStep
-      );
-      const currentCartographic = Cartographic.fromCartesian(
-        this.trs.translation,
-        undefined,
-        scratchCartographic
-      );
-      const nextCartographic = Cartographic.fromCartesian(
-        nextPosition,
-        undefined,
-        scratchNextCartographic
-      );
-      // Keep height steady
-      nextCartographic.height = currentCartographic.height;
-      Cartographic.toCartesian(nextCartographic, undefined, nextPosition);
-      const steadyStep = Cartesian3.subtract(
-        nextPosition,
-        currentPosition,
-        moveStep
-      );
-      return steadyStep;
-    };
 
     /**
      * Moves the box when dragging a side.
@@ -860,49 +829,72 @@ export default class BoxDrawing {
 
         moveStep = moveVector;
       } else {
-        // Move along the globe surface when dragging any other side. To do this
-        // we find the ellipsoidal points for the previous mouse position and
-        // current mouse position and translate the box position by the difference amount.
-        //
-        //
-        // Fallback to simple ellipsoid pick when globe pick returns undefined
-        // (i.e there is no intersection of camera ray with globe tiles). This
-        // probably works only because ellipsoid might below the terrain so
-        // there is an intersection between the camera ray and ellipsoid.
-        // Although it could work, it doesn't truly fix the camera ray parallel
-        // to surface issue.
-        const previousPosition =
-          screenToGlobePosition(
-            scene,
-            mouseMove.startPosition,
-            scratchPreviousPosition
-          ) ??
-          scene.camera.pickEllipsoid(
-            mouseMove.startPosition,
-            undefined,
-            scratchPreviousPosition
-          );
+        // Move the box laterally on the globe while keeping the height
+        // steady. To do this we derive a new ellipsoid from the globe's
+        // ellipsoid by enlarging it so that the current box center falls on
+        // its surface. Then we find the intersection point of the camera ray
+        // through the latest mouse cursor position with this enlarged
+        // ellipsoid. The resulting point should be roughly the same height as
+        // the previous point and will also lie on the vector from the camera
+        // through the mouse cursor.
 
-        const endPosition =
-          screenToGlobePosition(
-            scene,
-            mouseMove.endPosition,
-            scratchEndPosition
-          ) ??
-          scene.camera.pickEllipsoid(
-            mouseMove.endPosition,
-            undefined,
-            scratchEndPosition
-          );
-
-        if (!previousPosition || !endPosition) {
+        const cameraRay = scene.camera.getPickRay(
+          mouseMove.endPosition,
+          new Ray()
+        );
+        if (!cameraRay) {
           return;
         }
 
-        moveStep = Cartesian3.subtract(endPosition, previousPosition, moveStep);
+        // Current globe ellipsoid
+        const ellipsoid = scene.globe.ellipsoid;
 
+        // Current height of the model above the ellipsoid
         const currentPosition = this.trs.translation;
-        moveStep = keepHeightSteady(currentPosition, moveStep);
+        const currentHeight = Cartographic.fromCartesian(
+          currentPosition,
+          ellipsoid,
+          scratchCartographic
+        ).height;
+
+        // Get an enlarged ellipsoid that will have the current box center on its surface
+        const ellipsoidThroughPosition = enlargeEllipsoid(
+          ellipsoid,
+          currentHeight,
+          scratchEllipsoid
+        );
+
+        // Get the intersection between the camera ray and then enlarged ellipsoid
+        const rayEllipsoidIntersectionPoint = intersectRayEllipsoid(
+          cameraRay,
+          ellipsoidThroughPosition,
+          scratchCartesian
+        );
+        if (!rayEllipsoidIntersectionPoint) {
+          // there is no intersection point
+          return;
+        }
+
+        // Find the next position in cartographic
+        const nextCartographic = Cartographic.fromCartesian(
+          rayEllipsoidIntersectionPoint,
+          ellipsoid,
+          scratchCartographic
+        );
+
+        // There will be some slight discrepancy in height value of the new position (not sure why)
+        // We adjust that by forcing it to the previous height
+        nextCartographic.height = currentHeight;
+
+        // Convert back to cartesian
+        const nextPosition = Cartographic.toCartesian(
+          nextCartographic,
+          ellipsoid,
+          scratchCartesian
+        );
+
+        // Set the move step
+        moveStep = Cartesian3.subtract(nextPosition, currentPosition, moveStep);
       }
 
       // Update box position and fire change event
@@ -1557,6 +1549,36 @@ function setPlaneDimensions(
     planeDimensions.x = boxDimensions.x;
     planeDimensions.y = boxDimensions.y;
   }
+}
+
+const scratchRadii = new Cartesian3();
+
+function enlargeEllipsoid(
+  ellipsoid: Ellipsoid,
+  radiiIncrease: number,
+  result: Ellipsoid
+): Ellipsoid {
+  const newRadii = ellipsoid.radii.clone(scratchRadii);
+  newRadii.x += radiiIncrease;
+  newRadii.y += radiiIncrease;
+  newRadii.z += radiiIncrease;
+  const enlargedEllipsoid = Ellipsoid.fromCartesian3(newRadii, result);
+  return enlargedEllipsoid;
+}
+
+function intersectRayEllipsoid(
+  ray: Ray,
+  ellipsoid: Ellipsoid,
+  result: Cartesian3
+): Cartesian3 | undefined {
+  const interval = IntersectionTests.rayEllipsoid(ray, ellipsoid);
+  if (!interval) {
+    // there is no intersection point
+    return;
+  }
+
+  const intersectionPoint = Ray.getPoint(ray, interval.start, result);
+  return intersectionPoint;
 }
 
 const scratchViewRectangle = new Rectangle();
