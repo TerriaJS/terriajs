@@ -390,7 +390,7 @@
     "nativeResolutionHeader": "Use a resolução nativa do dispositivo",
     "qualityLabel": "Qualidade",
     "nativeResolutionLabel": "Pressione para parar de usar a resolução {{resolution1}} e começar a usar a resolução {{resolution2}}",
-    "mapQuality": "Qualidade do mapa raster:"
+    "mapQuality": "Qualidade do mapa:"
   },
   "toolsPanel": {
     "btnText": "Ferramenta",
@@ -924,7 +924,9 @@
       "useConversion": "Usar serviço de conversão?",
       "compositesError": "Os compostos não podem incluir itens compostos.",
       "convertErrorTitle": "Não foi possível atualizar o catálogo para V8",
-      "convertErrorMessage": "Este arquivo de catálogo é baseado em uma versão mais antiga do TerriaJS - o software que alimenta este mapa web. Ocorreu um erro ao tentar atualizar os dados do catálogo para {{url}}."
+      "convertErrorMessage": "Este arquivo de catálogo é baseado em uma versão mais antiga do TerriaJS - o software que alimenta este mapa web. Ocorreu um erro ao tentar atualizar os dados do catálogo para {{url}}.",
+      "addAll": "Adicionar todos",
+      "removeAll": "Remover todos"
     },
     "ckan": {
       "idsNotSpecifiedTitle": "id de recursos ou conjunto de dados devem ser especificados",
