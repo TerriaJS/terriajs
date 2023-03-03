@@ -262,7 +262,7 @@
     "baseMap": "Mapa Base",
     "imageOptimisation": "Optimització de la imatge",
     "nativeResolutionHeader": "Utilitzeu la resolució original del dispositiu",
-    "mapQuality": "Qualitat del mapa ràster:",
+    "mapQuality": "Qualitat del mapa:",
     "timeline": {
       "title": "Cronologia",
       "alwaysShow": "Mostra sempre",
