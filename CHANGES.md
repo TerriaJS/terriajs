@@ -10,6 +10,9 @@
 - Layers shown via a share URL are now logged as a Google Analytics event
 - Show an Add All / Remove All button for catalog groups when an optional `displayGroup` trait is true
 - Rename the Map Settings "Raster Map Quality" slider to be just "Map Quality" as it also affects other things than raster data.
+- Dragn-n-drop should respect disableZoomTo setting
+- Fixed #6702 Terrain Hides Underground Features not working
+- Add className prop for MyData tab so that it can be styled externally
 
 #### 8.2.23 - 2023-01-06
 
