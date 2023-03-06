@@ -244,6 +244,8 @@ export default class BoxDrawing {
 
   public disableVerticalMovement: boolean;
 
+  public keepHeightSteadyWhenMovingLaterally = true;
+
   public onChange?: (params: BoxDrawingChangeParams) => void;
 
   // An external transform to convert the box in local coordinates to world coordinates
@@ -788,7 +790,9 @@ export default class BoxDrawing {
     const scratchDirection = new Cartesian3();
     const scratchMoveVector = new Cartesian3();
     const scratchEllipsoid = new Ellipsoid();
+    const scratchRay = new Ray();
     const scratchCartographic = new Cartographic();
+    const scratchPreviousPosition = new Cartesian3();
     const scratchCartesian = new Cartesian3();
     const scratchMoveStep = new Cartesian3();
 
@@ -828,7 +832,7 @@ export default class BoxDrawing {
         );
 
         moveStep = moveVector;
-      } else {
+      } else if (this.keepHeightSteadyWhenMovingLaterally) {
         // Move the box laterally on the globe while keeping the height
         // steady. To do this we derive a new ellipsoid from the globe's
         // ellipsoid by enlarging it so that the current box center falls on
@@ -840,7 +844,7 @@ export default class BoxDrawing {
 
         const cameraRay = scene.camera.getPickRay(
           mouseMove.endPosition,
-          new Ray()
+          scratchRay
         );
         if (!cameraRay) {
           return;
@@ -895,6 +899,42 @@ export default class BoxDrawing {
 
         // Set the move step
         moveStep = Cartesian3.subtract(nextPosition, currentPosition, moveStep);
+      } else {
+        // Move box laterally by picking a next position that lies somewhere on
+        // the globe surface.
+        const previousPosition =
+          screenToGlobePosition(
+            scene,
+            mouseMove.startPosition,
+            scratchPreviousPosition
+          ) ??
+          scene.camera.pickEllipsoid(
+            mouseMove.startPosition,
+            undefined,
+            scratchPreviousPosition
+          );
+
+        const nextPosition =
+          screenToGlobePosition(
+            scene,
+            mouseMove.endPosition,
+            scratchCartesian
+          ) ??
+          scene.camera.pickEllipsoid(
+            mouseMove.endPosition,
+            undefined,
+            scratchCartesian
+          );
+
+        if (!previousPosition || !nextPosition) {
+          return;
+        }
+
+        moveStep = Cartesian3.subtract(
+          nextPosition,
+          previousPosition,
+          moveStep
+        );
       }
 
       // Update box position and fire change event
