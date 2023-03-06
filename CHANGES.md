@@ -2,6 +2,7 @@
 
 #### next release (8.2.25)
 
+- Fix location point ideal zoom bug in 3D mode map.
 - [The next improvement]
 
 #### 8.2.24 - 2023-03-06
