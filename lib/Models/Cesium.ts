@@ -9,6 +9,7 @@ import {
   runInAction
 } from "mobx";
 import { computedFn } from "mobx-utils";
+import { CaughtException } from "mobx/lib/internal";
 import AssociativeArray from "terriajs-cesium/Source/Core/AssociativeArray";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -832,6 +833,49 @@ export default class Cesium extends GlobeOrMap {
     }
   }
 
+  async zoomToRectangle(
+    target: Rectangle,
+    camera: Camera,
+    flightDurationSeconds = 3.0
+  ): Promise<void> {
+    // Work out the destination that the camera would naturally fly to
+    const destinationCartesian = camera.getRectangleCameraCoordinates(target);
+    const destination =
+      Ellipsoid.WGS84.cartesianToCartographic(destinationCartesian);
+    const terrainProvider = this.scene.globe.terrainProvider;
+    // A sufficiently coarse tile level that still has approximately accurate height
+    const level = 6;
+    const center = Rectangle.center(target);
+
+    // Perform an elevation query at the centre of the rectangle
+    let terrainSample: Cartographic;
+    try {
+      [terrainSample] = await sampleTerrain(terrainProvider, level, [center]);
+    } catch (e) {
+      // if the request fails just use center with height=0
+      terrainSample = center;
+    }
+
+    if (this._lastZoomTarget !== target) {
+      return;
+    }
+
+    const finalDestinationCartographic = new Cartographic(
+      destination.longitude,
+      destination.latitude,
+      destination.height + terrainSample.height
+    );
+
+    const finalDestination = Ellipsoid.WGS84.cartographicToCartesian(
+      finalDestinationCartographic
+    );
+
+    return flyToPromise(camera, {
+      duration: flightDurationSeconds,
+      destination: finalDestination
+    });
+  }
+
   doZoomTo(target: any, flightDurationSeconds = 3.0): Promise<void> {
     this._lastZoomTarget = target;
 
@@ -839,47 +883,11 @@ export default class Cesium extends GlobeOrMap {
       const camera = this.scene.camera;
 
       if (target instanceof Rectangle) {
-        // target is a Rectangle
-
-        // Work out the destination that the camera would naturally fly to
-        const destinationCartesian =
-          camera.getRectangleCameraCoordinates(target);
-        const destination =
-          Ellipsoid.WGS84.cartesianToCartographic(destinationCartesian);
-        const terrainProvider = this.scene.globe.terrainProvider;
-        // A sufficiently coarse tile level that still has approximately accurate height
-        const level = 6;
-        const center = Rectangle.center(target);
-
-        // Perform an elevation query at the centre of the rectangle
-        let terrainSample: Cartographic;
-        try {
-          [terrainSample] = await sampleTerrain(terrainProvider, level, [
-            center
-          ]);
-        } catch {
-          // if the request fails just use center with height=0
-          terrainSample = center;
-        }
-
-        if (this._lastZoomTarget !== target) {
-          return;
-        }
-
-        const finalDestinationCartographic = new Cartographic(
-          destination.longitude,
-          destination.latitude,
-          destination.height + terrainSample.height
+        return await this.zoomToRectangle(
+          target,
+          camera,
+          flightDurationSeconds
         );
-
-        const finalDestination = Ellipsoid.WGS84.cartographicToCartesian(
-          finalDestinationCartographic
-        );
-
-        return flyToPromise(camera, {
-          duration: flightDurationSeconds,
-          destination: finalDestination
-        });
       } else if (defined(target.entities)) {
         // target is some DataSource
         return waitForDataSourceToLoad(target).then(() => {
@@ -925,10 +933,11 @@ export default class Cesium extends GlobeOrMap {
       } else if (MappableMixin.isMixedInto(target)) {
         // target is a Mappable
         if (isDefined(target.cesiumRectangle)) {
-          return flyToPromise(camera, {
-            duration: flightDurationSeconds,
-            destination: target.cesiumRectangle
-          });
+          return await this.zoomToRectangle(
+            target.cesiumRectangle,
+            camera,
+            flightDurationSeconds
+          );
         } else if (target.mapItems.length > 0) {
           // Zoom to the first item!
           return this.doZoomTo(target.mapItems[0], flightDurationSeconds);

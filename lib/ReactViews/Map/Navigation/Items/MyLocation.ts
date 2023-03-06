@@ -14,6 +14,10 @@ import ViewerMode from "../../../../Models/ViewerMode";
 import { GLYPHS } from "../../../../Styled/Icon";
 import StyleTraits from "../../../../Traits/TraitsClasses/StyleTraits";
 import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
+import {
+  LookAtTraits,
+  IdealZoomTraits
+} from "../../../../Traits/TraitsClasses/MappableTraits";
 
 interface PropTypes {
   terria: Terria;
@@ -125,6 +129,20 @@ class MyLocation extends MapNavigationItemController {
           latitude: latitude
         }
       });
+
+      // Let ideal zoom in 3D mode be a close-up view.
+      const lookAt = createStratumInstance(LookAtTraits, {
+        targetLongitude: longitude,
+        targetLatitude: latitude,
+        targetHeight: 100,
+        heading: 0,
+        pitch: 90,
+        range: 200
+      });
+      const idealZoom = createStratumInstance(IdealZoomTraits);
+      idealZoom.lookAt = lookAt;
+      this._marker.setTrait(CommonStrata.user, "idealZoom", idealZoom);
+
       this._marker.setTrait(
         CommonStrata.user,
         "style",
