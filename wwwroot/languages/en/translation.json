@@ -264,7 +264,7 @@
     "baseMap": "Base Map",
     "imageOptimisation": "Image Optimisation",
     "nativeResolutionHeader": "Use native device resolution",
-    "mapQuality": "Raster Map Quality:",
+    "mapQuality": "Map Quality:",
     "qualityLabel": "Quality",
     "performanceLabel": "Performance",
     "timeline": {
