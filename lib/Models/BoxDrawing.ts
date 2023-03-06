@@ -1553,6 +1553,12 @@ function setPlaneDimensions(
 
 const scratchRadii = new Cartesian3();
 
+/**
+ * Increases the radii of the given ellipsoid by the value given by radiiIncrease.
+ *
+ * Note that it is not clear whether the resulting shape obtained by adding the
+ * offset is a true ellipsoid. However, this works out ok for our purpose.
+ */
 function enlargeEllipsoid(
   ellipsoid: Ellipsoid,
   radiiIncrease: number,
@@ -1566,6 +1572,10 @@ function enlargeEllipsoid(
   return enlargedEllipsoid;
 }
 
+/**
+ * Returns the nearest point of intersection between the ray and the ellipsoid
+ * that lies on the ellipsoid.
+ */
 function intersectRayEllipsoid(
   ray: Ray,
   ellipsoid: Ellipsoid,
