@@ -1577,7 +1577,13 @@ function intersectRayEllipsoid(
     return;
   }
 
-  const intersectionPoint = Ray.getPoint(ray, interval.start, result);
+  // start=0 means ray origin is inside the ellipsoid
+  // in which case there is only a single intersection
+  // which is given by stop.
+  // This can happen, for eg, when moving the box while the camera
+  // is below the box.
+  const t = interval.start !== 0 ? interval.start : interval.stop;
+  const intersectionPoint = Ray.getPoint(ray, t, result);
   return intersectionPoint;
 }
 
