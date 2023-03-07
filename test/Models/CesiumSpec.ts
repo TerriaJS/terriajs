@@ -296,6 +296,122 @@ describeIfSupported("Cesium Model", function () {
       );
     });
   });
+
+  describe("Cesium Terrain Extra Tests", function () {
+    // declare different variables here, we need new instances to test because we are changing config values and want to instantiate with these different values
+    let terria2: Terria;
+    let terriaViewer2: TerriaViewer;
+    let container2: HTMLElement;
+    let cesium2: Cesium;
+
+    beforeEach(function () {
+      terria2 = new Terria({
+        baseUrl: "./"
+      });
+      terriaViewer2 = new TerriaViewer(
+        terria2,
+        computed(() => [])
+      );
+      container2 = document.createElement("div");
+      container2.id = "container2";
+      document.body.appendChild(container2);
+    });
+
+    afterEach(function () {
+      cesium2?.destroy();
+      document.body.removeChild(container2);
+    });
+
+    it("should thow a warning when cesiumIonAccessToken is invalid", async function () {
+      runInAction(() => {
+        // Set an invalid token for the test
+        terria2.configParameters.cesiumIonAccessToken = "expired_token";
+      });
+      // Instantiate Cesium object with the invalid token
+      cesium2 = new Cesium(terriaViewer2, container2);
+
+      await cesium2.terrainProvider.readyPromise.catch(() => {});
+      // Wait a few ticks to allow for delay in adding event listener to terrainProvider in Cesium.ts
+      await runLater(() => {}, 5);
+
+      // We should then get an error about the terrain server
+      const currentNotificationTitle =
+        typeof terria2.notificationState.currentNotification?.title === "string"
+          ? terria2.notificationState.currentNotification?.title
+          : terria2.notificationState.currentNotification?.title();
+
+      expect(currentNotificationTitle).toBe(
+        "map.cesium.terrainServerErrorTitle"
+      );
+    });
+
+    it("should revert to 3dSmooth mode when cesiumIonAccessToken is invalid", async function () {
+      runInAction(() => {
+        // Set an invalid token for the test
+        terria2.configParameters.cesiumIonAccessToken = "expired_token";
+      });
+
+      // Instantiate Cesium object with the invalid token
+      cesium2 = new Cesium(terriaViewer2, container2);
+
+      await cesium2.terrainProvider.readyPromise.catch(() => {});
+      // Wait a few ticks to allow for delay in adding event listener to terrainProvider in Cesium.ts
+      await runLater(() => {}, 5);
+
+      expect(terriaViewer2.viewerOptions.useTerrain).toBe(false);
+      expect(
+        cesium2.scene.terrainProvider instanceof EllipsoidTerrainProvider
+      ).toBe(true);
+    });
+
+    it("should thow a warning when `cesiumIonAccessToken` is invalid and `cesiumTerrainAssetId` is present", async function () {
+      runInAction(() => {
+        // Set an invalid token for the test
+        terria2.configParameters.cesiumIonAccessToken = "expired_token";
+        // Set a valid asset id
+        terria2.configParameters.cesiumTerrainAssetId = 480278;
+      });
+      // Instantiate Cesium object with the invalid token and valid asset id
+      cesium2 = new Cesium(terriaViewer2, container2);
+
+      await cesium2.terrainProvider.readyPromise.catch(() => {});
+      // Wait a few ticks to allow for delay in adding event listener to terrainProvider in Cesium.ts
+      await runLater(() => {}, 5);
+
+      // We should then get an error about the terrain server
+      const currentNotificationTitle =
+        typeof terria2.notificationState.currentNotification?.title === "string"
+          ? terria2.notificationState.currentNotification?.title
+          : terria2.notificationState.currentNotification?.title();
+
+      expect(currentNotificationTitle).toBe(
+        "map.cesium.terrainServerErrorTitle"
+      );
+    });
+
+    it("should thow a warning when 'cesiumTerrainUrl' is invalid", async function () {
+      runInAction(() => {
+        terria2.configParameters.cesiumTerrainUrl =
+          "https://storage.googleapis.com/vic-datasets-public/xxxxxxx-xxxx-xxxx-xxxx-xxxxxxx/v1"; // An invalid url
+      });
+      // Instantiate Cesium object with the invalid terrain url
+      cesium2 = new Cesium(terriaViewer2, container2);
+
+      await cesium2.terrainProvider.readyPromise.catch(() => {});
+      // Wait a few ticks to allow for delay in adding event listener to terrainProvider in Cesium.ts
+      await runLater(() => {}, 5);
+
+      // We should then get an error about the terrain server
+      const currentNotificationTitle =
+        typeof terria2.notificationState.currentNotification?.title === "string"
+          ? terria2.notificationState.currentNotification?.title
+          : terria2.notificationState.currentNotification?.title();
+
+      expect(currentNotificationTitle).toBe(
+        "map.cesium.terrainServerErrorTitle"
+      );
+    });
+  });
 });
 
 /**

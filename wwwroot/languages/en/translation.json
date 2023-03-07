@@ -264,7 +264,7 @@
     "baseMap": "Base Map",
     "imageOptimisation": "Image Optimisation",
     "nativeResolutionHeader": "Use native device resolution",
-    "mapQuality": "Raster Map Quality:",
+    "mapQuality": "Map Quality:",
     "qualityLabel": "Quality",
     "performanceLabel": "Performance",
     "timeline": {
@@ -769,7 +769,9 @@
       "devError": "cesium is required.",
       "failedToObtain": "Failed to obtain image tile X: {{x}} Y: {{y}} Level: {{level}}.",
       "notWebMercatorTilingScheme": "This dataset cannot be displayed on the 2D map because it does not support the Web Mercator (EPSG:3857) projection.",
-      "unusalTilingScheme": "This dataset cannot be displayed on the 2D map because it uses an unusual tiling scheme that is not supported."
+      "unusalTilingScheme": "This dataset cannot be displayed on the 2D map because it uses an unusual tiling scheme that is not supported.",
+      "terrainServerErrorTitle": "Terrain Server Not Responding",
+      "terrainServerErrorMessage": " The terrain server is not responding at the moment.  You can still use all the features of {{appName}} but there will be no terrain detail in 3D mode.  We're sorry for the inconvenience.  Please try again later and the terrain server should be responding as expected.  If the issue persists, please contact us via email at {{supportEmail}}."
     },
     "computeRingWindingOrder": {
       "devError": "Expected points of type {x:number, y:number}"
@@ -979,7 +981,9 @@
       "mustHaveType": "Each item must have a type.",
       "compositesError": "Composites cannot include composite items.",
       "convertErrorTitle": "Could not upgrade catalog to V8",
-      "convertErrorMessage": "This catalog file is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the catalog data for {{url}}."
+      "convertErrorMessage": "This catalog file is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the catalog data for {{url}}.",
+      "addAll": "Add All",
+      "removeAll": "Remove All"
     },
     "createParameter": {
       "unsupportedErrorTitle": "Unsupported function parameter type",

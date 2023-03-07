@@ -43,4 +43,12 @@ export default class GroupTraits extends mixTraits(ItemPropertiesTraits) {
     factory: CatalogMemberFactory
   })
   members?: ModelReference[];
+
+  @primitiveTrait({
+    name: "Display group",
+    description:
+      "Allow adding all members to the workbench with one click. Show Add All / Remove All button",
+    type: "boolean"
+  })
+  displayGroup?: boolean;
 }

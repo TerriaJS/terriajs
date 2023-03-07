@@ -23,6 +23,7 @@ class MyDataTab extends React.Component {
     onUrlAddFinished: PropTypes.func.isRequired,
     localDataTypes: PropTypes.arrayOf(PropTypes.object),
     remoteDataTypes: PropTypes.arrayOf(PropTypes.object),
+    className: PropTypes.string,
     t: PropTypes.func.isRequired
   };
 
@@ -123,9 +124,13 @@ class MyDataTab extends React.Component {
 
   render() {
     const showTwoColumn = this.hasUserAddedData() & !this.state.activeTab;
-    const { t } = this.props;
+    const { t, className } = this.props;
     return (
-      <Box className={Styles.root}>
+      <Box
+        className={classNames(Styles.root, {
+          [className]: className !== undefined
+        })}
+      >
         <div
           className={classNames({
             [Styles.leftCol]: showTwoColumn,

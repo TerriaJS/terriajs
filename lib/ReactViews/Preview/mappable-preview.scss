@@ -77,3 +77,13 @@
 .metadata {
   padding-top: 10px;
 }
+
+.btn--add-all {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
+  padding: 8px;
+  @media (min-width: $sm) {
+    display: inline-block;
+    width: inherit;
+  }
+}

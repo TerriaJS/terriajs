@@ -136,7 +136,9 @@ export const GLYPHS = {
   compareLeftPanel: require("../../wwwroot/images/icons/compare-left-panel.svg"),
   compareRightPanel: require("../../wwwroot/images/icons/compare-right-panel.svg"),
   compareBothPanels: require("../../wwwroot/images/icons/compare-both-panels.svg"),
-  closeCircle: require("../../wwwroot/images/icons/close-circle.svg")
+  closeCircle: require("../../wwwroot/images/icons/close-circle.svg"),
+  plusList: require("../../wwwroot/images/icons/plus-list-20.svg"),
+  minusList: require("../../wwwroot/images/icons/close-circle-20.svg")
 };
 
 export interface IconGlyph {

@@ -1,15 +1,17 @@
-import React from "react";
-
-import PropTypes from "prop-types";
 import { observer } from "mobx-react";
-
+import PropTypes from "prop-types";
+import React from "react";
+import { withTranslation } from "react-i18next";
+import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
+import {
+  addRemoveButtonClicked,
+  allMappableMembersInWorkbench
+} from "../DataCatalog/DisplayGroupHelper";
+import measureElement from "../HOCs/measureElement";
+import SharePanel from "../Map/Panels/SharePanel/SharePanel";
 import DataPreviewSections from "./DataPreviewSections";
 import DataPreviewUrl from "./DataPreviewUrl";
-import measureElement from "../HOCs/measureElement";
 import Styles from "./mappable-preview.scss";
-import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
-import SharePanel from "../Map/Panels/SharePanel/SharePanel";
-import { withTranslation } from "react-i18next";
 import WarningBox from "./WarningBox";
 
 /**
@@ -40,7 +42,30 @@ class GroupPreview extends React.Component {
           ref={(component) => (this.refToMeasure = component)}
         >
           <h3>{this.props.previewed.name}</h3>
+
           <div className={Styles.shareLinkWrapper}>
+            {/* If this is a display group, show the "Add/Remove All" button next to the shareLink */}
+            {this.props.previewed.displayGroup === true && (
+              <button
+                type="button"
+                onClick={(event) => {
+                  addRemoveButtonClicked(
+                    this.props.previewed,
+                    this.props.viewState,
+                    this.props.terria,
+                    event.shiftKey || event.ctrlKey
+                  );
+                }}
+                className={Styles.btnAddAll}
+              >
+                {allMappableMembersInWorkbench(
+                  this.props.previewed.members,
+                  this.props.terria
+                )
+                  ? t("models.catalog.removeAll")
+                  : t("models.catalog.addAll")}
+              </button>
+            )}
             <SharePanel
               catalogShare
               modalWidth={this.props.widthFromMeasureElementHOC}

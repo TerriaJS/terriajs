@@ -8,6 +8,10 @@ import getPath from "../../Core/getPath";
 import removeUserAddedData from "../../Models/Catalog/removeUserAddedData";
 import CatalogGroup from "./CatalogGroup";
 import DataCatalogMember from "./DataCatalogMember";
+import {
+  addRemoveButtonClicked,
+  allMappableMembersInWorkbench
+} from "./DisplayGroupHelper";
 
 @observer
 class DataCatalogGroup extends React.Component {
@@ -114,6 +118,20 @@ class DataCatalogGroup extends React.Component {
           this.props.group
         )}
         selected={this.isSelected()}
+        // Pass these next three props down to deal with displayGroup functionality
+        displayGroup={group.displayGroup}
+        addRemoveButtonFunction={(event) => {
+          addRemoveButtonClicked(
+            this.props.group,
+            this.props.viewState,
+            this.props.terria,
+            event.shiftKey || event.ctrlKey
+          );
+        }}
+        allItemsLoaded={allMappableMembersInWorkbench(
+          this.props.group.members,
+          this.props.terria
+        )}
       >
         <If condition={this.isOpen()}>
           <For each="item" of={group.memberModels}>
