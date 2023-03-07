@@ -7,8 +7,7 @@ import {
   makeObservable,
   observable,
   reaction,
-  runInAction,
-  toJS
+  runInAction
 } from "mobx";
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
@@ -76,7 +75,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
    * - A CsvChartCustomComponent will create a new CsvCatalogItem and set traits
    * See `rawDataReactNode` for rendered raw data
    */
-  @observable private templatedFeatureInfoReactNode:
+  @observable.ref private templatedFeatureInfoReactNode:
     | React.ReactNode
     | undefined = undefined;
 
@@ -485,9 +484,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
                 </>
               ) : (
                 // Show templated feature info
-                // Calling toJS() because when passing a parsed node to react,
-                // it calls Object.freeze() on some values which triggers an error from mobx6
-                toJS(this.templatedFeatureInfoReactNode)
+                this.templatedFeatureInfoReactNode
               )}
               {
                 // Show FeatureInfoDownload
