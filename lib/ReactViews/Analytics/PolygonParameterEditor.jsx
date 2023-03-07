@@ -44,12 +44,12 @@ class PolygonParameterEditor extends React.Component {
         <input
           className={Styles.field}
           type="text"
-          onChange={this.setValueFromText}
+          onChange={this.setValueFromText.bind(this)}
           value={getDisplayValue(this.props.parameter.value)}
         />
         <button
           type="button"
-          onClick={this.selectPolygonOnMap}
+          onClick={this.selectPolygonOnMap.bind(this)}
           className={Styles.btnSelector}
         >
           {t("analytics.clickToDrawPolygon")}
