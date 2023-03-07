@@ -38,6 +38,14 @@ class Splitter extends React.Component {
     padding: 0
   };
 
+  constructor(props) {
+    super(props);
+    this.forceRefresh = this.forceRefresh.bind(this);
+    this.drag = this.drag.bind(this);
+    this.startDrag = this.startDrag.bind(this);
+    this.stopDrag = this.stopDrag.bind(this);
+  }
+
   componentDidMount() {
     const that = this;
     window.addEventListener("resize", function () {
