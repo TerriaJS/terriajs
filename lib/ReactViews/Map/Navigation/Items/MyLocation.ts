@@ -90,9 +90,8 @@ class MyLocation extends MapNavigationItemController {
 
   async zoomToMyLocation(position: Position) {
     const t = i18next.t.bind(i18next);
-    // Hard test location to be removed. This testing location has terrain height about 500m.
-    const longitude = 146.45227; //position.coords.longitude;
-    const latitude = -38.36869; // position.coords.latitude;
+    const longitude = position.coords.longitude;
+    const latitude = position.coords.latitude;
 
     // west, south, east, north, result
     const rectangle = Rectangle.fromDegrees(
@@ -134,7 +133,7 @@ class MyLocation extends MapNavigationItemController {
         }
       });
 
-      const terrainProvider = this.terria.cesium?.scene.globe.terrainProvider;
+      const terrainProvider = this.terria.terrainProvider;
       // A sufficiently coarse tile level that still has approximately accurate height for most of 3D close up view.
       // If the terrain height changes rapidly, might need to increase the level.
       const level = 9;
