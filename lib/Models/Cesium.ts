@@ -883,7 +883,7 @@ export default class Cesium extends GlobeOrMap {
       const camera = this.scene.camera;
 
       if (target instanceof Rectangle) {
-        return await this.zoomToRectangle(
+        return this.zoomToRectangle(
           target,
           camera,
           flightDurationSeconds
@@ -933,11 +933,17 @@ export default class Cesium extends GlobeOrMap {
       } else if (MappableMixin.isMixedInto(target)) {
         // target is a Mappable
         if (isDefined(target.cesiumRectangle)) {
-          return await this.zoomToRectangle(
-            target.cesiumRectangle,
-            camera,
-            flightDurationSeconds
-          );
+          // If using this code path, ideal zoom will not zoom to a 3D model.
+          // return this.zoomToRectangle(
+          //   target.cesiumRectangle,
+          //   camera,
+          //   flightDurationSeconds
+          // );
+          return flyToPromise(
+            camera, {
+              duration: flightDurationSeconds,
+              destination: target.cesiumRectangle
+            });
         } else if (target.mapItems.length > 0) {
           // Zoom to the first item!
           return this.doZoomTo(target.mapItems[0], flightDurationSeconds);
