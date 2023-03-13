@@ -91,8 +91,8 @@ class MyLocation extends MapNavigationItemController {
   async zoomToMyLocation(position: Position) {
     const t = i18next.t.bind(i18next);
     // Hard test location to be removed. This testing location has terrain height about 500m.
-    const longitude = 146.45227;//position.coords.longitude;
-    const latitude = -38.36869;// position.coords.latitude;
+    const longitude = 146.45227; //position.coords.longitude;
+    const latitude = -38.36869; // position.coords.latitude;
 
     // west, south, east, north, result
     const rectangle = Rectangle.fromDegrees(
@@ -144,7 +144,9 @@ class MyLocation extends MapNavigationItemController {
         try {
           let terrainSample: Cartographic;
           // Sample the elevation at the centre of the rectangle
-          [terrainSample] = await sampleTerrain(terrainProvider, level, [center]);
+          [terrainSample] = await sampleTerrain(terrainProvider, level, [
+            center
+          ]);
           terrainHeight = terrainSample.height;
         } catch (e) {
           // if the request fails just use center with terrainHeight = 0

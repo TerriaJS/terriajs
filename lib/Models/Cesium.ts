@@ -883,11 +883,7 @@ export default class Cesium extends GlobeOrMap {
       const camera = this.scene.camera;
 
       if (target instanceof Rectangle) {
-        return this.zoomToRectangle(
-          target,
-          camera,
-          flightDurationSeconds
-        );
+        return this.zoomToRectangle(target, camera, flightDurationSeconds);
       } else if (defined(target.entities)) {
         // target is some DataSource
         return waitForDataSourceToLoad(target).then(() => {
@@ -939,11 +935,10 @@ export default class Cesium extends GlobeOrMap {
           //   camera,
           //   flightDurationSeconds
           // );
-          return flyToPromise(
-            camera, {
-              duration: flightDurationSeconds,
-              destination: target.cesiumRectangle
-            });
+          return flyToPromise(camera, {
+            duration: flightDurationSeconds,
+            destination: target.cesiumRectangle
+          });
         } else if (target.mapItems.length > 0) {
           // Zoom to the first item!
           return this.doZoomTo(target.mapItems[0], flightDurationSeconds);
