@@ -18,8 +18,7 @@ import {
   LookAtTraits,
   IdealZoomTraits
 } from "../../../../Traits/TraitsClasses/MappableTraits";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import { sampleTerrain } from "terriajs-cesium";
+import sampleTerrain from "terriajs-cesium/Source/Core/sampleTerrain";
 
 interface PropTypes {
   terria: Terria;
@@ -133,22 +132,19 @@ class MyLocation extends MapNavigationItemController {
         }
       });
 
+      let terrainSample: CesiumCartographic = new CesiumCartographic();
       const terrainProvider = this.terria.terrainProvider;
       // A sufficiently coarse tile level that still has approximately accurate height for most of 3D close up view.
       // If the terrain height changes rapidly, might need to increase the level.
       const level = 9;
       const center = Rectangle.center(rectangle);
-      let terrainHeight = 0;
       if (terrainProvider) {
         try {
-          let terrainSample: Cartographic;
-          // Sample the elevation at the centre of the rectangle
           [terrainSample] = await sampleTerrain(terrainProvider, level, [
             center
           ]);
-          terrainHeight = terrainSample.height;
         } catch (e) {
-          // if the request fails just use center with terrainHeight = 0
+          // if the request fails terrainSample.height will still be undefined.
         }
       }
 
@@ -156,7 +152,7 @@ class MyLocation extends MapNavigationItemController {
       const lookAt = createStratumInstance(LookAtTraits, {
         targetLongitude: longitude,
         targetLatitude: latitude,
-        targetHeight: terrainHeight + 100, // Treat it as the camera height.
+        targetHeight: (terrainSample.height ?? 0) + 100, // Treat it as the camera height.
         heading: 0,
         pitch: 90,
         range: 1
