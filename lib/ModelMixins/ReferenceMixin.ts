@@ -1,4 +1,10 @@
-import { computed, observable, runInAction, untracked, makeObservable } from "mobx";
+import {
+  computed,
+  observable,
+  runInAction,
+  untracked,
+  makeObservable
+} from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import AsyncLoader from "../Core/AsyncLoader";

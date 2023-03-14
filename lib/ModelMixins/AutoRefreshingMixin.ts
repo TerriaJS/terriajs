@@ -4,7 +4,7 @@ import {
   onBecomeObserved,
   onBecomeUnobserved,
   reaction,
-  makeObservable,
+  makeObservable
 } from "mobx";
 import { now } from "mobx-utils";
 import AbstractConstructor from "../Core/AbstractConstructor";

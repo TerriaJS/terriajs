@@ -10,11 +10,7 @@ import Styles from "./parameter-editors.scss";
 export default class BooleanParameterEditor extends React.Component<{
   parameter: BooleanParameter;
 }> {
-  constructor(
-    props: {
-      parameter: BooleanParameter;
-    }
-  ) {
+  constructor(props: { parameter: BooleanParameter }) {
     super(props);
     makeObservable(this);
   }

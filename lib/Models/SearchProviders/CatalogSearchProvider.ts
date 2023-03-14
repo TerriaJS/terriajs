@@ -1,4 +1,10 @@
-import { autorun, computed, observable, runInAction, makeObservable } from "mobx";
+import {
+  autorun,
+  computed,
+  observable,
+  runInAction,
+  makeObservable
+} from "mobx";
 import { fromPromise } from "mobx-utils";
 import {
   Category,

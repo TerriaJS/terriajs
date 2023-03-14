@@ -605,18 +605,20 @@ export default class TableColumn {
 
   @computed
   get title(): string {
-    return this.tableModel.columnTitles[this.columnNumber] ??
-    this.traits.title ??
-    // If no title set, use `name` and:
-    // - un-camel case
-    // - remove underscores
-    // - capitalise
-    this.name
-      .replace(/[A-Z][a-z]/g, (letter) => ` ${letter.toLowerCase()}`)
-      .replace(/_/g, " ")
-      .trim()
-      .toLowerCase()
-      .replace(/(^\w|\s\w)/g, (m) => m.toUpperCase());
+    return (
+      this.tableModel.columnTitles[this.columnNumber] ??
+      this.traits.title ??
+      // If no title set, use `name` and:
+      // - un-camel case
+      // - remove underscores
+      // - capitalise
+      this.name
+        .replace(/[A-Z][a-z]/g, (letter) => ` ${letter.toLowerCase()}`)
+        .replace(/_/g, " ")
+        .trim()
+        .toLowerCase()
+        .replace(/(^\w|\s\w)/g, (m) => m.toUpperCase())
+    );
   }
 
   @computed

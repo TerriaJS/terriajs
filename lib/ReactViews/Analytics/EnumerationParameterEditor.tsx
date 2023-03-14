@@ -11,11 +11,7 @@ import isDefined from "../../Core/isDefined";
 export default class EnumerationParameterEditor extends React.Component<{
   parameter: EnumerationParameter;
 }> {
-  constructor(
-    props: {
-      parameter: EnumerationParameter;
-    }
-  ) {
+  constructor(props: { parameter: EnumerationParameter }) {
     super(props);
     makeObservable(this);
   }

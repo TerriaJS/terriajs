@@ -1,4 +1,10 @@
-import { action, computed, observable, runInAction, makeObservable } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  runInAction,
+  makeObservable
+} from "mobx";
 import CesiumCartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";

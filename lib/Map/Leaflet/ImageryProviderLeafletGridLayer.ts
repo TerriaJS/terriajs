@@ -1,5 +1,11 @@
 import L, { TileEvent } from "leaflet";
-import { autorun, computed, IReactionDisposer, observable, makeObservable } from "mobx";
+import {
+  autorun,
+  computed,
+  IReactionDisposer,
+  observable,
+  makeObservable
+} from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";

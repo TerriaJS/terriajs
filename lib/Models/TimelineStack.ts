@@ -1,4 +1,11 @@
-import { action, autorun, computed, IReactionDisposer, observable, makeObservable } from "mobx";
+import {
+  action,
+  autorun,
+  computed,
+  IReactionDisposer,
+  observable,
+  makeObservable
+} from "mobx";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import ClockRange from "terriajs-cesium/Source/Core/ClockRange";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";

@@ -5,7 +5,7 @@ import {
   IReactionDisposer,
   observable,
   runInAction,
-  makeObservable,
+  makeObservable
 } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";

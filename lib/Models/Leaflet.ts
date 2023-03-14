@@ -7,7 +7,7 @@ import {
   observable,
   reaction,
   runInAction,
-  makeObservable,
+  makeObservable
 } from "mobx";
 import { computedFn } from "mobx-utils";
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";

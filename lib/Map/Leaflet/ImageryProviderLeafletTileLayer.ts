@@ -1,6 +1,12 @@
 import i18next from "i18next";
 import L, { TileEvent } from "leaflet";
-import { autorun, computed, IReactionDisposer, observable, makeObservable } from "mobx";
+import {
+  autorun,
+  computed,
+  IReactionDisposer,
+  observable,
+  makeObservable
+} from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumCredit from "terriajs-cesium/Source/Core/Credit";

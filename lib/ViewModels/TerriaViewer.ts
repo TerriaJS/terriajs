@@ -9,7 +9,7 @@ import {
   reaction,
   runInAction,
   untracked,
-  makeObservable,
+  makeObservable
 } from "mobx";
 import { fromPromise, FULFILLED } from "mobx-utils";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";

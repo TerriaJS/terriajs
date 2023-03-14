@@ -1,4 +1,10 @@
-import { action, computed, observable, runInAction, makeObservable } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  runInAction,
+  makeObservable
+} from "mobx";
 import Result from "./Result";
 import TerriaError from "./TerriaError";
 

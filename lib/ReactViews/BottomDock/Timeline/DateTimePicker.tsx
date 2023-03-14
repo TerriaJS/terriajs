@@ -4,7 +4,7 @@ import {
   observable,
   reaction,
   runInAction,
-  makeObservable,
+  makeObservable
 } from "mobx";
 import { observer } from "mobx-react";
 import moment from "moment";

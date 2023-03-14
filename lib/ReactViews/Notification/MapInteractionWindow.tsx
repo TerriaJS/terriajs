@@ -40,11 +40,7 @@ class MapInteractionWindow extends React.Component<{
 
   @observable currentInteractionMode?: MapInteractionMode;
 
-  constructor(
-    props: {
-      viewState: ViewState;
-    }
-  ) {
+  constructor(props: { viewState: ViewState }) {
     super(props);
     makeObservable(this);
   }

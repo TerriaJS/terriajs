@@ -10,11 +10,7 @@ import CommonStrata from "../../Models/Definition/CommonStrata";
 export default class GenericParameterEditor extends React.Component<{
   parameter: FunctionParameter;
 }> {
-  constructor(
-    props: {
-      parameter: FunctionParameter;
-    }
-  ) {
+  constructor(props: { parameter: FunctionParameter }) {
     super(props);
     makeObservable(this);
   }
