@@ -2,7 +2,7 @@
 
 #### next release (8.2.25)
 
-- [The next improvement]
+- Change icon used for display group remove button
 
 #### 8.2.24 - 2023-03-06
 
