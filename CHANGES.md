@@ -2,6 +2,7 @@
 
 #### next release (8.2.25)
 
+- Refactored TerriaViewer to expose a promise `terriaViewer.viewerLoadPromise` for async loading of viewers.
 - [The next improvement]
 
 #### 8.2.24 - 2023-03-06
