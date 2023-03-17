@@ -432,21 +432,6 @@ describe("MagdaReference", function () {
       done();
     });
 
-    it("returns 'public' when magda v1 does not have access control aspect.", function (done) {
-      const terria = new Terria();
-      const reference = new MagdaReference("magda-reference", terria);
-      reference.setTrait(CommonStrata.definition, "recordId", "test id");
-      reference.setTrait(CommonStrata.definition, "magdaRecord", {
-        id: "test id",
-        name: "Test",
-        aspects: {
-          "some other aspect": {}
-        }
-      });
-      expect(reference.accessType === "public").toBeTruthy();
-      done();
-    });
-
     it("does not return 'public' when magda v2 access control says the record belongs to an org unit.", function (done) {
       const terria = new Terria();
       const reference = new MagdaReference("magda-reference", terria);
@@ -509,6 +494,36 @@ describe("MagdaReference", function () {
           "access-control": {
             someOtherProperty: "something else"
           }
+        }
+      });
+      expect(reference.accessType === "public").toBeTruthy();
+
+      reference.setTrait(CommonStrata.definition, "magdaRecord", {
+        id: "test id",
+        name: "Test",
+        aspects: {
+          "esri-access-control": {
+            access: "public"
+          },
+          "access-control": {
+            orgUnitId: "some org id"
+          }
+        }
+      });
+      expect(reference.accessType === "public").toBeFalsy();
+
+      done();
+    });
+
+    it("returns 'public' when there are no any access control aspects.", function (done) {
+      const terria = new Terria();
+      const reference = new MagdaReference("magda-reference", terria);
+      reference.setTrait(CommonStrata.definition, "recordId", "test id");
+      reference.setTrait(CommonStrata.definition, "magdaRecord", {
+        id: "test id",
+        name: "Test",
+        aspects: {
+          "some other aspect": {}
         }
       });
       expect(reference.accessType === "public").toBeTruthy();
