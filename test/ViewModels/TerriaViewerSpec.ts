@@ -10,12 +10,13 @@ const mockAfterViewerChanges = jasmine.createSpy("", () => {});
 describe("TerriaViewer", function () {
   let terria: Terria;
   let terriaViewer: TerriaViewer;
+  let container: HTMLElement;
 
   beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
-    const container = document.createElement("div");
+    container = document.createElement("div");
     document.body.appendChild(container);
     terria.mainViewer.attach(container);
     terriaViewer = terria.mainViewer;
@@ -36,6 +37,11 @@ describe("TerriaViewer", function () {
     });
     mockBeforeViewerChanges.calls.reset();
     mockAfterViewerChanges.calls.reset();
+  });
+
+  afterEach(() => {
+    terriaViewer.destroy();
+    document.body.removeChild(container);
   });
 
   describe("viewer change", () => {

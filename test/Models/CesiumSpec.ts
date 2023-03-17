@@ -1,6 +1,7 @@
 import range from "lodash-es/range";
 import { action, computed, observable, runInAction } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
@@ -23,7 +24,6 @@ import MappableTraits, {
   RectangleTraits
 } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
-import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 
 const supportsWebGL = require("../../lib/Core/supportsWebGL");
 
@@ -127,68 +127,75 @@ describeIfSupported("Cesium Model", function () {
       new MappablePrimitiveItem("2", terria),
       new MappablePrimitiveItem("3", terria)
     ]);
-    container = document.createElement("div");
-    container.id = "cesium-test-container";
-    document.body.appendChild(container);
 
-    const cesium = new Cesium(
-      new TerriaViewer(
-        terria,
-        computed(() => items)
-      ),
-      container
+    const container2 = document.createElement("div");
+    container2.id = "cesium-test-container";
+    document.body.appendChild(container2);
+
+    const terriaViewer2 = new TerriaViewer(
+      terria,
+      computed(() => items)
     );
 
-    // Return urls of all tilesets in the scene
-    const tilesetUrls = () =>
-      filterOutUndefined(
-        range(cesium.scene.primitives.length).map((i) => {
-          const prim = cesium.scene.primitives.get(i);
-          return prim.allTilesLoaded && prim._url;
-        })
-      );
+    const cesium2 = new Cesium(terriaViewer2, container2);
 
-    // Return names of all datasources in the scene
-    const dataSourceNames = () =>
-      range(cesium.dataSources.length).map(
-        (i) => cesium.dataSources.get(i).name
-      );
+    try {
+      // Return urls of all tilesets in the scene
+      const tilesetUrls = () =>
+        filterOutUndefined(
+          range(cesium2.scene.primitives.length).map((i) => {
+            const prim = cesium2.scene.primitives.get(i);
+            return prim.allTilesLoaded && prim._url;
+          })
+        );
 
-    // Return urls of all imagery providers in the scene
-    const imageryProviderUrls = () =>
-      range(cesium.scene.imageryLayers.length)
-        .map(
-          (i) => (cesium.scene.imageryLayers.get(i).imageryProvider as any).url
-        )
-        .reverse();
+      // Return names of all datasources in the scene
+      const dataSourceNames = () =>
+        range(cesium2.dataSources.length).map(
+          (i) => cesium2.dataSources.get(i).name
+        );
 
-    await runLater(() => {});
+      // Return urls of all imagery providers in the scene
+      const imageryProviderUrls = () =>
+        range(cesium2.scene.imageryLayers.length)
+          .map(
+            (i) =>
+              (cesium2.scene.imageryLayers.get(i).imageryProvider as any).url
+          )
+          .reverse();
 
-    // Test that we have added the correct items
-    expect(dataSourceNames()).toEqual(["ds1", "ds2", "ds3"]);
-    expect(tilesetUrls()).toEqual(["prim1", "prim2", "prim3"]);
-    expect(imageryProviderUrls()).toEqual(["img1", "img2", "img3"]);
+      await runLater(() => {});
 
-    runInAction(() => items.splice(0, 2));
-    await runLater(() => {});
+      // Test that we have added the correct items
+      expect(dataSourceNames()).toEqual(["ds1", "ds2", "ds3"]);
+      expect(tilesetUrls()).toEqual(["prim1", "prim2", "prim3"]);
+      expect(imageryProviderUrls()).toEqual(["img1", "img2", "img3"]);
 
-    // Test that we have removed the correct items
-    expect(dataSourceNames()).toEqual(["ds3"]);
-    expect(tilesetUrls()).toEqual(["prim3"]);
-    expect(imageryProviderUrls()).toEqual(["img3"]);
+      runInAction(() => items.splice(0, 2));
+      await runLater(() => {});
+
+      // Test that we have removed the correct items
+      expect(dataSourceNames()).toEqual(["ds3"]);
+      expect(tilesetUrls()).toEqual(["prim3"]);
+      expect(imageryProviderUrls()).toEqual(["img3"]);
+    } finally {
+      cesium2.destroy();
+      document.body.removeChild(container2);
+    }
   });
 
   describe("Terrain provider selection", function () {
     let workbenchTerrainItem: CesiumTerrainCatalogItem;
     let scene: Scene;
+    let cesium2: Cesium;
 
     beforeEach(
       action(async function () {
         // We need a cesium instance bound to terria.mainViewer for workbench
         // changes to be reflected in these specs
-        cesium = new Cesium(terria.mainViewer, container);
-        scene = cesium.scene;
-        cesium.terriaViewer.viewerOptions.useTerrain = true;
+        cesium2 = new Cesium(terria.mainViewer, container);
+        scene = cesium2.scene;
+        cesium2.terriaViewer.viewerOptions.useTerrain = true;
         terria.configParameters.cesiumTerrainAssetId = 123;
         terria.configParameters.cesiumTerrainUrl =
           "https://cesium-terrain.example.com/";
@@ -213,16 +220,20 @@ describeIfSupported("Cesium Model", function () {
         ).and.returnValue(
           Promise.resolve(new CesiumTerrainProvider({ url: "some/url" }))
         );
-        await terria.workbench.add(workbenchTerrainItem);
+        (await terria.workbench.add(workbenchTerrainItem)).throwIfError();
       })
     );
+
+    afterEach(() => {
+      cesium2.destroy();
+    });
 
     it("should use Elliposidal/3d-smooth terrain when `useTerrain` is `false`", function () {
       expect(scene.terrainProvider instanceof EllipsoidTerrainProvider).toBe(
         false
       );
       runInAction(() => {
-        cesium.terriaViewer.viewerOptions.useTerrain = false;
+        cesium2.terriaViewer.viewerOptions.useTerrain = false;
       });
       expect(scene.terrainProvider instanceof EllipsoidTerrainProvider).toBe(
         true
@@ -238,7 +249,7 @@ describeIfSupported("Cesium Model", function () {
 
     it("should otherwise use the ION terrain specified by configParameters.cesiumTerrainAssetId", function () {
       const createSpy = spyOn(
-        cesium as any,
+        cesium2 as any,
         "createTerrainProviderFromIonAssetId"
       ).and.callThrough();
       runInAction(() => terria.workbench.removeAll());
@@ -250,7 +261,7 @@ describeIfSupported("Cesium Model", function () {
 
     it("should otherwise use the terrain specified by configParameters.cesiumTerrainUrl", function () {
       const createSpy = spyOn(
-        cesium as any,
+        cesium2 as any,
         "createTerrainProviderFromUrl"
       ).and.callThrough();
 
@@ -266,7 +277,7 @@ describeIfSupported("Cesium Model", function () {
 
     it("should otherwise use cesium-world-terrain when `configParameters.useCesiumIonTerrain` is true", function () {
       const createSpy = spyOn(
-        cesium as any,
+        cesium2 as any,
         "createWorldTerrain"
       ).and.callThrough();
 

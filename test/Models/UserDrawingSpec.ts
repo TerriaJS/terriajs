@@ -6,39 +6,42 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import pollToPromise from "../../lib/Core/pollToPromise";
 import supportsWebGL from "../../lib/Core/supportsWebGL";
 import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
+import TerriaFeature from "../../lib/Models/Feature/Feature";
 import Terria from "../../lib/Models/Terria";
 import UserDrawing from "../../lib/Models/UserDrawing";
-import TerriaFeature from "../../lib/Models/Feature/Feature";
 
 const describeIfSupported = supportsWebGL() ? describe : xdescribe;
 
 describeIfSupported("UserDrawing that requires WebGL", function () {
-  it("changes cursor to crosshair when entering drawing mode", function (done) {
-    const terria = new Terria();
-    const container = document.createElement("div");
+  let terria: Terria;
+  let container: HTMLElement;
+
+  beforeEach(() => {
+    terria = new Terria();
+    container = document.createElement("div");
     document.body.appendChild(container);
     terria.mainViewer.attach(container);
+  });
 
+  afterEach(() => {
+    terria.mainViewer.destroy();
+    document.body.removeChild(container);
+  });
+
+  it("changes cursor to crosshair when entering drawing mode", async function () {
+    await terria.mainViewer.viewerLoadPromise;
     const userDrawing = new UserDrawing({ terria });
-    pollToPromise(() => {
-      return userDrawing.terria.cesium !== undefined;
-    })
-      .then(() => {
-        const cesium = userDrawing.terria.cesium;
-        expect(cesium).toBeDefined();
-        if (cesium) {
-          expect(cesium.cesiumWidget.canvas.style.cursor).toEqual("");
-          userDrawing.enterDrawMode();
-          expect(cesium.cesiumWidget.canvas.style.cursor).toEqual("crosshair");
-          (<any>userDrawing).cleanUp();
-          expect(cesium.cesiumWidget.canvas.style.cursor).toEqual("auto");
-        }
-      })
-      .then(done)
-      .catch(done.fail);
+    const cesium = terria.cesium;
+    expect(cesium).toBeDefined();
+    if (cesium) {
+      expect(cesium.cesiumWidget.canvas.style.cursor).toEqual("");
+      userDrawing.enterDrawMode();
+      expect(cesium.cesiumWidget.canvas.style.cursor).toEqual("crosshair");
+      (<any>userDrawing).cleanUp();
+      expect(cesium.cesiumWidget.canvas.style.cursor).toEqual("auto");
+    }
   });
 });
 

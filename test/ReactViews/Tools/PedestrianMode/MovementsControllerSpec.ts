@@ -23,7 +23,7 @@ describe("MovementsController", function () {
     const terria = new Terria();
     const container = document.createElement("div");
     terria.mainViewer.attach(container);
-    await (terria.mainViewer as any)._cesiumPromise;
+    await terria.mainViewer.viewerLoadPromise;
     cesium = terria.cesium!;
     controller = new MovementsController(
       cesium,

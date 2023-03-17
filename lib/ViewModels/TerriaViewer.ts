@@ -10,7 +10,7 @@ import {
   runInAction,
   untracked
 } from "mobx";
-import { fromPromise, FULFILLED } from "mobx-utils";
+import { fromPromise, FULFILLED, IPromiseBasedObservable } from "mobx-utils";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
@@ -23,40 +23,17 @@ import ViewerMode from "../Models/ViewerMode";
 
 // Async loading of Leaflet and Cesium
 
-const leafletFromPromise = computed(() =>
-  fromPromise(import("../Models/Leaflet").then((Leaflet) => Leaflet.default))
-);
-const leafletIfLoaded = computed(
-  () => {
-    const leafletObservable = leafletFromPromise.get();
-    if (leafletObservable.state === FULFILLED) {
-      return leafletObservable.value;
-    } else {
-      // TODO: Handle error loading Leaflet. What do you do if a bundle doesn't load?
-      return NoViewer;
-    }
-  },
+const leafletFromPromise = computed(
+  () =>
+    fromPromise(import("../Models/Leaflet").then((Leaflet) => Leaflet.default)),
   { keepAlive: true }
 );
 
-const cesiumFromPromise = computed(() =>
-  fromPromise(import("../Models/Cesium").then((Cesium) => Cesium.default))
-);
-const cesiumIfLoaded = computed(
-  () => {
-    const cesiumObservable = cesiumFromPromise.get();
-    if (cesiumObservable.state === FULFILLED) {
-      return cesiumObservable.value;
-    } else {
-      // TODO: Handle error loading Cesium. What do you do if a bundle doesn't load?
-      return NoViewer;
-    }
-  },
+const cesiumFromPromise = computed(
+  () =>
+    fromPromise(import("../Models/Cesium").then((Cesium) => Cesium.default)),
   { keepAlive: true }
 );
-
-// A class that deals with initialising, destroying and switching between viewers
-// Each map-view should have it's own TerriaViewer
 
 // Viewer options. Designed to be easily serialisable
 interface ViewerOptions {
@@ -67,7 +44,10 @@ interface ViewerOptions {
 const viewerOptionsDefaults: ViewerOptions = {
   useTerrain: true
 };
-
+/**
+ * A class that deals with initialising, destroying and switching between viewers
+ * Each map-view should have it's own TerriaViewer (main viewer, preview map, etc.)
+ */
 export default class TerriaViewer {
   readonly terria: Terria;
 
@@ -81,23 +61,21 @@ export default class TerriaViewer {
   async setBaseMap(baseMap?: MappableMixin.Instance) {
     if (!baseMap) return;
 
-    if (baseMap) {
-      const result = await baseMap.loadMapItems();
-      if (result.error) {
-        result.raiseError(this.terria, {
-          title: {
-            key: "models.terria.loadingBaseMapErrorTitle",
-            parameters: {
-              name:
-                (CatalogMemberMixin.isMixedInto(baseMap)
-                  ? baseMap.name
-                  : baseMap.uniqueId) ?? "Unknown item"
-            }
+    const result = await baseMap.loadMapItems();
+    if (result.error) {
+      result.raiseError(this.terria, {
+        title: {
+          key: "models.terria.loadingBaseMapErrorTitle",
+          parameters: {
+            name:
+              (CatalogMemberMixin.isMixedInto(baseMap)
+                ? baseMap.name
+                : baseMap.uniqueId) ?? "Unknown item"
           }
-        });
-      } else {
-        runInAction(() => (this._baseMap = baseMap));
-      }
+        }
+      });
+    } else {
+      runInAction(() => (this._baseMap = baseMap));
     }
   }
 
@@ -164,6 +142,39 @@ export default class TerriaViewer {
 
   viewerChangeTracker: IReactionDisposer | undefined = undefined;
 
+  /**
+   * Promise for async loading of current `viewerMode`
+   * Starts when TerriaViewer is attached to a div and `viewerMode` is set
+   */
+  @computed
+  get viewerLoadPromise(): Promise<void> {
+    return Promise.resolve(this._currentViewerConstructorPromise).then(
+      () => {}
+    );
+  }
+
+  /**
+   * Get a mobx-utils promise to a constructor for currentViewer. Start loading
+   * Leaflet or Cesium depending on `viewerMode` if attached to a div
+   */
+  @computed
+  get _currentViewerConstructorPromise() {
+    let viewerFromPromise: IPromiseBasedObservable<
+      new (
+        terriaViewer: TerriaViewer,
+        container: string | HTMLElement
+      ) => GlobeOrMap
+    > = fromPromise.resolve(NoViewer) as IPromiseBasedObservable<
+      typeof NoViewer
+    >;
+    if (this.attached && this.viewerMode === ViewerMode.Leaflet) {
+      viewerFromPromise = leafletFromPromise.get();
+    } else if (this.attached && this.viewerMode === ViewerMode.Cesium) {
+      viewerFromPromise = cesiumFromPromise.get();
+    }
+    return viewerFromPromise;
+  }
+
   @computed({
     keepAlive: true
   })
@@ -177,16 +188,13 @@ export default class TerriaViewer {
 
     let newViewer: GlobeOrMap;
     try {
-      if (this.attached && this.viewerMode === ViewerMode.Leaflet) {
-        const LeafletOrNoViewer = leafletIfLoaded.get();
-        newViewer = untracked(
-          () => new LeafletOrNoViewer(this, this.mapContainer!)
-        );
-      } else if (this.attached && this.viewerMode === ViewerMode.Cesium) {
-        const CesiumOrNoViewer = cesiumIfLoaded.get();
-        newViewer = untracked(
-          () => new CesiumOrNoViewer(this, this.mapContainer!)
-        );
+      // If a div is attached and a viewer is ready, use it
+      if (
+        this.attached &&
+        this._currentViewerConstructorPromise.state === FULFILLED
+      ) {
+        const SomeViewer = this._currentViewerConstructorPromise.value;
+        newViewer = untracked(() => new SomeViewer(this, this.mapContainer!));
       } else {
         newViewer = untracked(() => new NoViewer(this));
       }
