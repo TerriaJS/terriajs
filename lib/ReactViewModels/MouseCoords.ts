@@ -1,5 +1,5 @@
 import debounce from "lodash-es/debounce";
-import { observable, action, runInAction } from "mobx";
+import { action, observable, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
@@ -78,7 +78,9 @@ export default class MouseCoords {
     const camera = scene.camera;
     const pickRay = camera.getPickRay(position);
     const globe = scene.globe;
-    const pickedTriangle = (<any>globe).pickTriangle(pickRay, scene);
+    const pickedTriangle = isDefined(pickRay)
+      ? (<any>globe).pickTriangle(pickRay, scene)
+      : undefined;
     if (isDefined(pickedTriangle)) {
       // Get a fast, accurate-ish height every time the mouse moves.
       const ellipsoid = globe.ellipsoid;
