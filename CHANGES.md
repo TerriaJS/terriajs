@@ -2,6 +2,8 @@
 
 #### next release (8.2.25)
 
+- Upgraded to terriajs-server 4.0.0.
+- Added new `gulp dev` task that runs terriajs-server and `gulp watch` (incremental specs build) at the same time.
 - [The next improvement]
 
 #### 8.2.24 - 2023-03-06
