@@ -251,8 +251,11 @@ gulp.task("terriajs-server", function (done) {
       )
     );
   });
-  // Intercept SIGINT and SIGTERM, cleanup terriajs-server and re-send signal
-  // May not work on Windows
+  // Intercept SIGINT, SIGTERM and SIGHUP, cleanup terriajs-server and re-send signal
+  // May fail to catch some relevant signals on Windows
+  // SIGINT: ctrl+c
+  // SIGTERM: kill <pid>
+  // SIGHUP: terminal closed
   process.once("SIGINT", () => {
     child.kill("SIGTERM");
     process.kill(process.pid, "SIGINT");
@@ -260,6 +263,10 @@ gulp.task("terriajs-server", function (done) {
   process.once("SIGTERM", () => {
     child.kill("SIGTERM");
     process.kill(process.pid, "SIGTERM");
+  });
+  process.once("SIGHUP", () => {
+    child.kill("SIGTERM");
+    process.kill(process.pid, "SIGHUP");
   });
 });
 
