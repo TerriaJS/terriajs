@@ -213,8 +213,59 @@ gulp.task(
   })
 );
 
+gulp.task("terriajs-server", function (done) {
+  // E.g. gulp terriajs-server --terriajsServerArg port=4000 --terriajsServerArg verbose=true
+  //  or gulp dev --terriajsServerArg port=3000
+  const { spawn } = require("child_process");
+  const fs = require("fs");
+  const minimist = require("minimist");
+
+  const knownOptions = {
+    string: ["terriajsServerArg"],
+    default: {
+      terriajsServerArg: []
+    }
+  };
+  const options = minimist(process.argv.slice(2), knownOptions);
+
+  const logFile = fs.openSync("./terriajs-server.log", "a");
+  const serverArgs = Array.isArray(options.terriajsServerArg)
+    ? options.terriajsServerArg
+    : [options.terriajsServerArg];
+  const child = spawn(
+    "node",
+    [
+      "./node_modules/.bin/terriajs-server",
+      "--port=3002",
+      ...serverArgs.map((arg) => `--${arg}`)
+    ],
+    { detached: true, stdio: ["ignore", logFile, logFile] }
+  );
+  child.on("exit", (exitCode, signal) => {
+    done(
+      new Error(
+        "terriajs-server quit" +
+          (exitCode !== null ? ` with exit code: ${exitCode}` : "") +
+          (signal ? ` from signal: ${signal}` : "") +
+          "\nCheck terriajs-server.log for more information."
+      )
+    );
+  });
+  // Intercept SIGINT and SIGTERM, cleanup terriajs-server and re-send signal
+  // May not work on Windows
+  process.once("SIGINT", () => {
+    child.kill("SIGTERM");
+    process.kill(process.pid, "SIGINT");
+  });
+  process.once("SIGTERM", () => {
+    child.kill("SIGTERM");
+    process.kill(process.pid, "SIGTERM");
+  });
+});
+
 gulp.task("build", gulp.series("copy-cesium-assets", "build-specs"));
 gulp.task("release", gulp.series("copy-cesium-assets", "release-specs"));
 gulp.task("watch", gulp.series("copy-cesium-assets", "watch-specs"));
+gulp.task("dev", gulp.parallel("terriajs-server", "watch"));
 gulp.task("post-npm-install", gulp.series("copy-cesium-assets"));
 gulp.task("default", gulp.series("lint", "build"));
