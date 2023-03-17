@@ -10,9 +10,6 @@
     "type": "git",
     "url": "http://github.com/TerriaJS/terriajs"
   },
-  "config": {
-    "docRepo": "git@github.com:TerriaJS/Documentation.git"
-  },
   "resolutions": {
     "colors": "1.4.0"
   },
@@ -192,7 +189,6 @@
     "fork-ts-checker-notifier-webpack-plugin": "^3.0.0",
     "fork-ts-checker-webpack-plugin": "^5.0.7",
     "fs-extra": "^7.0.1",
-    "generate-terriajs-schema": "^1.5.0",
     "glob-all": "^3.0.1",
     "husky": "^8.0.1",
     "istanbul-instrumenter-loader": "^3.0.1",
@@ -232,14 +228,11 @@
     "postpublish": "bash -c \"if [ -z \"$GITHUB_ACTION\" ]; then git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}; fi \"",
     "postinstall": "gulp post-npm-install",
     "gulp": "gulp",
-    "make-schema": "gulp make-schema",
     "start": "terriajs-server --port 3002",
-    "dev": "webpack-dev-server --inline --config buildprocess/webpack.config.dev.js --host 0.0.0.0",
     "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.hot.js --hot --host 0.0.0.0",
     "build-tools": "webpack --config buildprocess/webpack-tools.config.js",
     "watch-tools": "webpack --watch --config buildprocess/webpack-tools.config.js",
     "build-docs": "yarn build-tools && node build/generateDocs.js",
-    "publish-doc": "bash -c \"rm -rf wwwroot/doc && mkdir wwwroot/doc && cp doc/index-built.html wwwroot/doc/index.html && cp doc/CNAME wwwroot/doc/CNAME && gulp docs && cd wwwroot/doc && git init && git remote add origin $npm_package_config_docRepo && git add . && git commit -m 'Generate Documentation' && git push -f origin HEAD:gh-pages\"",
     "prettier": "prettier --write .",
     "pretty-quick": "pretty-quick",
     "prettier-check": "prettier --check .",

@@ -42,18 +42,6 @@ gulp.task("watch-specs", function (done) {
   watchWebpack(webpack, webpackConfig, done);
 });
 
-gulp.task("make-schema", function () {
-  var genSchema = require("generate-terriajs-schema");
-  var schemaSourceGlob = require("./buildprocess/schemaSourceGlob");
-
-  return genSchema({
-    sourceGlob: schemaSourceGlob,
-    dest: "wwwroot/schema",
-    noversionsubdir: true,
-    quiet: true
-  });
-});
-
 gulp.task("lint", function (done) {
   var runExternalModule = require("./buildprocess/runExternalModule");
 
@@ -172,11 +160,7 @@ gulp.task("build-for-doc-generation", function buildForDocGeneration(done) {
 gulp.task(
   "user-guide",
   gulp.series(
-    gulp.parallel(
-      "make-schema",
-      "code-attribution",
-      "build-for-doc-generation"
-    ),
+    gulp.parallel("code-attribution", "build-for-doc-generation"),
     function userGuide(done) {
       var fse = require("fs-extra");
       var PluginError = require("plugin-error");
