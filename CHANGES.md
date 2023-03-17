@@ -2,6 +2,7 @@
 
 #### next release (8.2.25)
 
+- Make access control UI compatible to Magda v1 and v2 with v2 overriding v1.
 - [The next improvement]
 
 #### 8.2.24 - 2023-03-06
