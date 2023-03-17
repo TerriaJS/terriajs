@@ -21,6 +21,40 @@ import NoViewer from "../Models/NoViewer";
 import Terria from "../Models/Terria";
 import ViewerMode from "../Models/ViewerMode";
 
+// Async loading of Leaflet and Cesium
+
+const leafletFromPromise = computed(() =>
+  fromPromise(import("../Models/Leaflet").then((Leaflet) => Leaflet.default))
+);
+const leafletIfLoaded = computed(
+  () => {
+    const leafletObservable = leafletFromPromise.get();
+    if (leafletObservable.state === FULFILLED) {
+      return leafletObservable.value;
+    } else {
+      // TODO: Handle error loading Leaflet. What do you do if a bundle doesn't load?
+      return NoViewer;
+    }
+  },
+  { keepAlive: true }
+);
+
+const cesiumFromPromise = computed(() =>
+  fromPromise(import("../Models/Cesium").then((Cesium) => Cesium.default))
+);
+const cesiumIfLoaded = computed(
+  () => {
+    const cesiumObservable = cesiumFromPromise.get();
+    if (cesiumObservable.state === FULFILLED) {
+      return cesiumObservable.value;
+    } else {
+      // TODO: Handle error loading Cesium. What do you do if a bundle doesn't load?
+      return NoViewer;
+    }
+  },
+  { keepAlive: true }
+);
+
 // A class that deals with initialising, destroying and switching between viewers
 // Each map-view should have it's own TerriaViewer
 
@@ -144,12 +178,12 @@ export default class TerriaViewer {
     let newViewer: GlobeOrMap;
     try {
       if (this.attached && this.viewerMode === ViewerMode.Leaflet) {
-        const LeafletOrNoViewer = this._getLeafletIfLoaded();
+        const LeafletOrNoViewer = leafletIfLoaded.get();
         newViewer = untracked(
           () => new LeafletOrNoViewer(this, this.mapContainer!)
         );
       } else if (this.attached && this.viewerMode === ViewerMode.Cesium) {
-        const CesiumOrNoViewer = this._getCesiumIfLoaded();
+        const CesiumOrNoViewer = cesiumIfLoaded.get();
         newViewer = untracked(
           () => new CesiumOrNoViewer(this, this.mapContainer!)
         );
@@ -180,46 +214,6 @@ export default class TerriaViewer {
     newViewer.zoomTo(currentView || untracked(() => this.homeCamera), 0.0);
 
     return newViewer;
-  }
-
-  @computed({
-    keepAlive: true
-  })
-  private get _cesiumPromise() {
-    return fromPromise(
-      import("../Models/Cesium").then((Cesium) => Cesium.default)
-    );
-  }
-
-  private _getCesiumIfLoaded():
-    | typeof import("../Models/Cesium").default
-    | typeof NoViewer {
-    if (this._cesiumPromise.state === FULFILLED) {
-      return this._cesiumPromise.value;
-    } else {
-      // TODO: Handle error loading Cesium. What do you do if a bundle doesn't load?
-      return NoViewer;
-    }
-  }
-
-  @computed({
-    keepAlive: true
-  })
-  private get _leafletPromise() {
-    return fromPromise(
-      import("../Models/Leaflet").then((Leaflet) => Leaflet.default)
-    );
-  }
-
-  private _getLeafletIfLoaded():
-    | typeof import("../Models/Leaflet").default
-    | typeof NoViewer {
-    if (this._leafletPromise.state === FULFILLED) {
-      return this._leafletPromise.value;
-    } else {
-      // TODO: Handle error loading Leaflet. What do you do if a bundle doesn't load?
-      return NoViewer;
-    }
   }
 
   // Pull out attaching logic into it's own step. This allows constructing a TerriaViewer
