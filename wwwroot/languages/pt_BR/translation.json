@@ -817,7 +817,8 @@
       "devError": "cesium é necessário.",
       "failedToObtain": "Falha ao obter o bloco de imagem X: {{x}} Y: {{y}} Nível: {{level}}.",
       "notWebMercatorTilingScheme": "Este conjunto de dados não pode ser exibido no mapa 2D porque não suporta a projeção Web Mercator (EPSG: 3857).",
-      "unusalTilingScheme": "Este conjunto de dados não pode ser exibido no mapa 2D porque ele usa um esquema de tiling incomum que não é compatível."
+      "unusalTilingScheme": "Este conjunto de dados não pode ser exibido no mapa 2D porque ele usa um esquema de tiling incomum que não é compatível.",
+      "terrainServerErrorTitle": "Servidor Terrain não está respondendo"
     },
     "computeRingWindingOrder": {
       "devError": "Pontos esperados do tipo {x: número, y: número}"
