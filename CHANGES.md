@@ -2,6 +2,7 @@
 
 #### next release (8.2.25)
 
+- Export `registerUrlHandlerForCatalogMemberType` for registering new url handler for catalog types.
 - BoxDrawing changes:
     - Adds a new option called disableVerticalMovement to BoxDrawing which if set to true disables up/down motion of the box when dragging the top/bottom sides of the box.
     - Keeps height (mostly) steady when moving the box laterally on the map. Previously the height of the box used to change wrt to the ellipsoid/surface.
