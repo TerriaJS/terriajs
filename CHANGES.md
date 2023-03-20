@@ -4,10 +4,10 @@
 
 - Export `registerUrlHandlerForCatalogMemberType` for registering new url handler for catalog types.
 - BoxDrawing changes:
-    - Adds a new option called disableVerticalMovement to BoxDrawing which if set to true disables up/down motion of the box when dragging the top/bottom sides of the box.
-    - Keeps height (mostly) steady when moving the box laterally on the map. Previously the height of the box used to change wrt to the ellipsoid/surface.
-    - Fixes a bug that caused map panning and zooming to break when interacting with multiple active BoxDrawings.
-    - Removed some code that was causing too much drift between mouse cursor and model when moving the model laterally on the map.
+  - Adds a new option called disableVerticalMovement to BoxDrawing which if set to true disables up/down motion of the box when dragging the top/bottom sides of the box.
+  - Keeps height (mostly) steady when moving the box laterally on the map. Previously the height of the box used to change wrt to the ellipsoid/surface.
+  - Fixes a bug that caused map panning and zooming to break when interacting with multiple active BoxDrawings.
+  - Removed some code that was causing too much drift between mouse cursor and model when moving the model laterally on the map.
 - Replaces addRemoteUploadType and addLocalUploadType with addOrReplaceRemoteFileUploadType and addOrReplaceLocalFileUploadType.
 - [The next improvement]
 
