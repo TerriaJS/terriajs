@@ -1524,7 +1524,9 @@
       "failedToObtain": "画像タイル X: {{x}} Y: {{y}} Level: {{level}} の取得に失敗しました。",
       "devError": "cesiumが必須です。",
       "stoppedRenderingTitle": "3D地図の描画に失敗しました",
-      "stoppedRenderingMessage": "先程ワークベンチに追加したデータが原因で問題が起きているかもしれません - データを削除してください。それでも問題が解決しない場合は {{appName}}を再読込してみてください。"
+      "stoppedRenderingMessage": "先程ワークベンチに追加したデータが原因で問題が起きているかもしれません - データを削除してください。それでも問題が解決しない場合は {{appName}}を再読込してみてください。",
+      "terrainServerErrorTitle": "地形配信サーバが反応しません",
+      "terrainServerErrorMessage": " 地形配信サーバが反応しません。   {{appName}} のすべての機能は使えますが、3Dモードで地形が表示できません。  ご迷惑をおかけします。  しばらくしてからもう一度お試し下さい。  もし問題が解決していないようでしたら、以下までメールでご連絡下さい。 {{supportEmail}}."
     },
     "regionProvider": {
       "csvRegionMappingMessageLoadError": "リージョン{{regionName}}のリージョン境界を読み込めませんでした。{{exception}}",
