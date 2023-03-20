@@ -1,10 +1,8 @@
 import i18next from "i18next";
 import uniqWith from "lodash-es/uniqWith";
 import { computed, runInAction } from "mobx";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import URI from "urijs";
 import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";
 import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
@@ -12,13 +10,12 @@ import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
+import { scaleDenominatorToLevel } from "../../../Core/scaleToDenominator";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
-import proj4definitions from "../../../Map/Vector/Proj4Definitions";
+import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
-import MappableMixin, {
-  ImageryParts
-} from "../../../ModelMixins/MappableMixin";
+import { ImageryParts } from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import ArcGisMapServerCatalogItemTraits from "../../../Traits/TraitsClasses/ArcGisMapServerCatalogItemTraits";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
@@ -29,14 +26,13 @@ import LegendTraits, {
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import getToken from "../../getToken";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
+import getToken from "../../getToken";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import MinMaxLevelMixin from "./../../../ModelMixins/MinMaxLevelMixin";
-import { scaleDenominatorToLevel } from "../../../Core/scaleToDenominator";
 
 const proj4 = require("proj4").default;
 
@@ -385,7 +381,7 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
   }
 
   protected forceLoadMapItems(): Promise<void> {
-    return Promise.resolve();
+    return this.forceLoadMetadata();
   }
 
   @computed get cacheDuration(): string {
@@ -619,11 +615,11 @@ function getRectangleFromLayer(extent: Extent, rectangle: RectangleExtent) {
 
     const wkid = "EPSG:" + wkidCode;
 
-    if (!isDefined((proj4definitions as any)[wkid])) {
+    if (!isDefined((Proj4Definitions as any)[wkid])) {
       return;
     }
 
-    const source = new proj4.Proj((proj4definitions as any)[wkid]);
+    const source = new proj4.Proj((Proj4Definitions as any)[wkid]);
     const dest = new proj4.Proj("EPSG:4326");
 
     let p = proj4(source, dest, [extent.xmin, extent.ymin]);

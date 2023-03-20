@@ -312,4 +312,45 @@ describe("ArcGisMapServerCatalogItem", function () {
       expect(item.stopTime).toBe("2019-11-03T14:00:00.000000000Z");
     });
   });
+
+  describe("rectangle", function () {
+    beforeEach(function () {
+      jasmine.Ajax.install();
+    });
+
+    afterEach(function () {
+      jasmine.Ajax.uninstall();
+    });
+
+    it("can generate rectangle from an extent in CRS EPSG:7844", async function () {
+      const mapServerJson = require("../../../../wwwroot/test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/mapserver.json");
+      mapServerJson.fullExtent.spatialReference.wkid = 7844;
+
+      jasmine.Ajax.stubRequest(/.*?\/foo\/MapServer.*/).andReturn({
+        responseText: JSON.stringify(mapServerJson)
+      });
+
+      runInAction(() => {
+        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item.setTrait(
+          CommonStrata.definition,
+          "url",
+          "http://example.com/foo/MapServer"
+        );
+      });
+
+      await item.loadMapItems();
+
+      runInAction(() => {
+        expect(round4(item.rectangle.east)).toBe(169.1615);
+        expect(round4(item.rectangle.west)).toBe(100.1444);
+        expect(round4(item.rectangle.north)).toBe(-2.3883);
+        expect(round4(item.rectangle.south)).toBe(-49.9841);
+      });
+    });
+  });
 });
+
+const digits4 = Math.pow(10, 4);
+const round4 = (num: number | undefined) =>
+  num !== undefined ? Math.floor(num * digits4) / digits4 : undefined;

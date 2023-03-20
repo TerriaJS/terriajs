@@ -1,6 +1,4 @@
-"use strict";
-
-var Reproject = require("../../lib/Map/Vector/Reproject");
+import Reproject from "../../lib/Map/Vector/Reproject";
 
 describe("Reproject", function () {
   it("function crsStringToCode translates CRS strings to Proj4 codes", function () {
@@ -33,7 +31,7 @@ describe("Reproject", function () {
       "EPSG:3006",
       "EPSG:4326"
     );
-    expect(result[0]).toBeCloseTo(11.965261850080005, 8);
-    expect(result[1]).toBeCloseTo(57.70450563701629, 8);
+    expect(result?.[0]).toBeCloseTo(11.965261850080005, 8);
+    expect(result?.[1]).toBeCloseTo(57.70450563701629, 8);
   });
 });
