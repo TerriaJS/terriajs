@@ -187,15 +187,15 @@ describeIfSupported("Cesium Model", function () {
   describe("Terrain provider selection", function () {
     let workbenchTerrainItem: CesiumTerrainCatalogItem;
     let scene: Scene;
-    let cesium2: Cesium;
 
     beforeEach(
       action(async function () {
         // We need a cesium instance bound to terria.mainViewer for workbench
         // changes to be reflected in these specs
-        cesium2 = new Cesium(terria.mainViewer, container);
-        scene = cesium2.scene;
-        cesium2.terriaViewer.viewerOptions.useTerrain = true;
+        cesium.destroy();
+        cesium = new Cesium(terria.mainViewer, container);
+        scene = cesium.scene;
+        cesium.terriaViewer.viewerOptions.useTerrain = true;
         terria.configParameters.cesiumTerrainAssetId = 123;
         terria.configParameters.cesiumTerrainUrl =
           "https://cesium-terrain.example.com/";
@@ -224,16 +224,12 @@ describeIfSupported("Cesium Model", function () {
       })
     );
 
-    afterEach(() => {
-      cesium2.destroy();
-    });
-
     it("should use Elliposidal/3d-smooth terrain when `useTerrain` is `false`", function () {
       expect(scene.terrainProvider instanceof EllipsoidTerrainProvider).toBe(
         false
       );
       runInAction(() => {
-        cesium2.terriaViewer.viewerOptions.useTerrain = false;
+        cesium.terriaViewer.viewerOptions.useTerrain = false;
       });
       expect(scene.terrainProvider instanceof EllipsoidTerrainProvider).toBe(
         true
@@ -249,7 +245,7 @@ describeIfSupported("Cesium Model", function () {
 
     it("should otherwise use the ION terrain specified by configParameters.cesiumTerrainAssetId", function () {
       const createSpy = spyOn(
-        cesium2 as any,
+        cesium as any,
         "createTerrainProviderFromIonAssetId"
       ).and.callThrough();
       runInAction(() => terria.workbench.removeAll());
@@ -261,7 +257,7 @@ describeIfSupported("Cesium Model", function () {
 
     it("should otherwise use the terrain specified by configParameters.cesiumTerrainUrl", function () {
       const createSpy = spyOn(
-        cesium2 as any,
+        cesium as any,
         "createTerrainProviderFromUrl"
       ).and.callThrough();
 
@@ -277,7 +273,7 @@ describeIfSupported("Cesium Model", function () {
 
     it("should otherwise use cesium-world-terrain when `configParameters.useCesiumIonTerrain` is true", function () {
       const createSpy = spyOn(
-        cesium2 as any,
+        cesium as any,
         "createWorldTerrain"
       ).and.callThrough();
 
