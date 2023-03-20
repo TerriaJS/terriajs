@@ -1,11 +1,24 @@
 # Change Log
 
-#### next release (8.2.24)
+#### next release (8.2.25)
+
+- BoxDrawing changes:
+    - Adds a new option called disableVerticalMovement to BoxDrawing which if set to true disables up/down motion of the box when dragging the top/bottom sides of the box.
+    - Keeps height (mostly) steady when moving the box laterally on the map. Previously the height of the box used to change wrt to the ellipsoid/surface.
+    - Fixes a bug that caused map panning and zooming to break when interacting with multiple active BoxDrawings.
+    - Removed some code that was causing too much drift between mouse cursor and model when moving the model laterally on the map.
+- Replaces addRemoteUploadType and addLocalUploadType with addOrReplaceRemoteFileUploadType and addOrReplaceLocalFileUploadType.
+- [The next improvement]
+
+#### 8.2.24 - 2023-03-06
 
 - Reimplement error message and default to 3d smooth mode when Cesium Ion Access Token is invalid.
 - Layers shown via a share URL are now logged as a Google Analytics event
 - Show an Add All / Remove All button for catalog groups when an optional `displayGroup` trait is true
-- [The next improvement]
+- Rename the Map Settings "Raster Map Quality" slider to be just "Map Quality" as it also affects other things than raster data.
+- Dragn-n-drop should respect disableZoomTo setting
+- Fixed #6702 Terrain Hides Underground Features not working
+- Add className prop for MyData tab so that it can be styled externally
 
 #### 8.2.23 - 2023-01-06
 

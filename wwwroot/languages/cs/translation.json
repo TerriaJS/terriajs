@@ -785,7 +785,9 @@
       "notWebMercatorTilingScheme": "Tuto datovou sadu nelze zobrazit na 2D mapě, protože nepodporuje projekci Web Mercator (EPSG:3857).",
       "unusalTilingScheme": "Tuto datovou sadu nelze zobrazit na 2D mapě, protože používá neobvyklé schéma dlaždic, které není podporováno.",
       "stoppedRenderingTitle": "3D mapu se nepodařilo vykreslit",
-      "stoppedRenderingMessage": "Příčinou může být datová sada právě přidaná do pracovního stolu - zkuste ji odstranit. Pokud se tím problém nevyřeší, bude možná nutné znovu načíst {{appName}}."
+      "stoppedRenderingMessage": "Příčinou může být datová sada právě přidaná do pracovního stolu - zkuste ji odstranit. Pokud se tím problém nevyřeší, bude možná nutné znovu načíst {{appName}}.",
+      "terrainServerErrorMessage": " Terrain server momentálně neodpovídá.  Stále můžete používat všechny funkce {{appName}}, ale v režimu 3D nebudou k dispozici žádné detaily terénu.  Omlouváme se za nepříjemnosti.  Zkuste to prosím později a terrain server by měl reagovat podle očekávání.  Pokud problém přetrvává, kontaktujte nás prosím e-mailem na adrese {{supportEmail}}.",
+      "terrainServerErrorTitle": "Terrain Server neodpovídá"
     },
     "displayVariablesConcept": {
       "defaultName": "Zobrazit proměnnou"
