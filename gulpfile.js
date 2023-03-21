@@ -232,6 +232,8 @@ gulp.task("terriajs-server", function (done) {
   const serverArgs = Array.isArray(options.terriajsServerArg)
     ? options.terriajsServerArg
     : [options.terriajsServerArg];
+  // Spawn detached - attached does not make terriajs-server
+  //  quit when the gulp task is stopped
   const child = spawn(
     "node",
     [
