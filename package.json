@@ -139,7 +139,7 @@
     "point-in-polygon": "^1.0.1",
     "proj4": "^2.4.4",
     "prop-types": "^15.6.0",
-    "protomaps": "1.19.0",
+    "protomaps": "1.23.0",
     "raw-loader": "^1.0.0",
     "rc-slider": "^9.7.2",
     "react": "^16.14.0",
