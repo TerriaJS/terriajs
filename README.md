@@ -101,7 +101,7 @@ Get in touch!
 - Bump the version number in `package.json`.
 - Review and edit CHANGES.md.
   - Ensure that entries for new changes are written in the right section by diffing against the last version. Make sure the section name matches the version you set in `package.json` above.
-  - e.g. `git diff HEAD 8.2.25 -- CHANGES.md` (where `8.2.25` is the previous published version)
+  - e.g. `git diff 8.2.25 HEAD -- CHANGES.md` (where `8.2.25` is the previous published version)
   - Or using GitHub web interface https://github.com/TerriaJS/terriajs/compare/8.2.25...main (change the version and master/next to match the previous release and branch)
   - Finalise the heading of the version to be released with version number and date.
   - Add a heading above for upcoming changes to be documented under.
