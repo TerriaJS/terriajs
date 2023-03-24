@@ -10,6 +10,7 @@ import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerra
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import IntersectionTests from "terriajs-cesium/Source/Core/IntersectionTests";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import KeyboardEventModifier from "terriajs-cesium/Source/Core/KeyboardEventModifier";
 import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Plane from "terriajs-cesium/Source/Core/Plane";
@@ -619,6 +620,19 @@ export default class BoxDrawing {
     const eventHandler = new ScreenSpaceEventHandler(this.scene.canvas);
     eventHandler.setInputAction(handlePick, ScreenSpaceEventType.LEFT_DOWN);
     eventHandler.setInputAction(handleRelease, ScreenSpaceEventType.LEFT_UP);
+    Object.values(KeyboardEventModifier).forEach(
+      // Bind the release action to all LEFT_UP + any modifier. This is
+      // required because we want the release to happen even if the user is by
+      // chance pressing down on some other key. In such cases Cesium will not
+      // trigger a LEFT_UP event unless we explicitly pass a modifier.
+      (modifier) =>
+        eventHandler.setInputAction(
+          handleRelease,
+          ScreenSpaceEventType.LEFT_UP,
+          modifier as any
+        )
+    );
+
     eventHandler.setInputAction(
       handleMouseMove,
       ScreenSpaceEventType.MOUSE_MOVE
