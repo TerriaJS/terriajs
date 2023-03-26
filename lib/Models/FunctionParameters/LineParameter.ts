@@ -17,9 +17,7 @@ export default class LineParameter
   readonly type = "line";
 
   constructor(...args: FunctionConstructorParameters) {
-    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
     super(...args);
-
     makeObservable(this);
   }
 

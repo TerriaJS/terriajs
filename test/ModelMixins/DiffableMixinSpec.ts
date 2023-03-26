@@ -46,9 +46,7 @@ class TestDiffableItem extends DiffableMixin(
   )
 ) {
   constructor(...args: ModelConstructorParameters) {
-    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
     super(...args);
-
     makeObservable(this);
   }
 

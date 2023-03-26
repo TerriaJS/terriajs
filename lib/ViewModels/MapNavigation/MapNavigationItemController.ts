@@ -13,9 +13,7 @@ export interface IMapNavigationItemController
 
 export default abstract class MapNavigationItemController extends CompositeBarItemController {
   constructor() {
-    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
     super();
-
     makeObservable(this);
   }
 
