@@ -4,7 +4,7 @@ import {
 } from "../../lib/Core/getDataType";
 import * as UploadDataTypes from "../../lib/ViewModels/UploadDataTypes";
 
-fdescribe("UploadDataTypes", function () {
+describe("UploadDataTypes", function () {
   afterEach(function () {
     customLocalDataTypes.clear();
     customRemoteDataTypes.clear();
