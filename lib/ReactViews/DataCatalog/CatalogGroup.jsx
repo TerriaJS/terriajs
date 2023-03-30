@@ -60,7 +60,7 @@ function CatalogGroup(props) {
               <Icon
                 glyph={
                   props.allItemsLoaded
-                    ? Icon.GLYPHS.remove
+                    ? Icon.GLYPHS.minusList
                     : Icon.GLYPHS.plusList
                 }
               />
