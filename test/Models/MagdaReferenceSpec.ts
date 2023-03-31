@@ -432,7 +432,7 @@ describe("MagdaReference", function () {
       done();
     });
 
-    it("does not return 'public' when magda v2 access control says the record belongs to an org unit.", function (done) {
+    it("does not return 'public' when magda v2 access control says the record belongs to an org unit without constraint exemption being set.", function (done) {
       const terria = new Terria();
       const reference = new MagdaReference("magda-reference", terria);
       reference.setTrait(CommonStrata.definition, "recordId", "test id");
@@ -442,6 +442,42 @@ describe("MagdaReference", function () {
         aspects: {
           "access-control": {
             orgUnitId: "some org id"
+          }
+        }
+      });
+      expect(reference.accessType === "public").toBeFalsy();
+      done();
+    });
+
+    it("returns 'public' when magda v2 access control says the record belongs to an org unit with constraint exemption being set to true.", function (done) {
+      const terria = new Terria();
+      const reference = new MagdaReference("magda-reference", terria);
+      reference.setTrait(CommonStrata.definition, "recordId", "test id");
+      reference.setTrait(CommonStrata.definition, "magdaRecord", {
+        id: "test id",
+        name: "Test",
+        aspects: {
+          "access-control": {
+            orgUnitId: "some org id",
+            constraintExemption: true
+          }
+        }
+      });
+      expect(reference.accessType === "public").toBeTruthy();
+      done();
+    });
+
+    it("does not return 'public' when magda v2 access control says the record belongs to an org unit with constraint exemption being set to false.", function (done) {
+      const terria = new Terria();
+      const reference = new MagdaReference("magda-reference", terria);
+      reference.setTrait(CommonStrata.definition, "recordId", "test id");
+      reference.setTrait(CommonStrata.definition, "magdaRecord", {
+        id: "test id",
+        name: "Test",
+        aspects: {
+          "access-control": {
+            orgUnitId: "some org id",
+            constraintExemption: false
           }
         }
       });
