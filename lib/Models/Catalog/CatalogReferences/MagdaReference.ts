@@ -863,8 +863,17 @@ const prepareDistributionFormat = createTransformer(
 
 function getAccessTypeFromMagdaRecord(magdaRecord: any): string {
   const record = toJS(magdaRecord);
-  const accessControl: any =
-    record && record.aspects && record.aspects["esri-access-control"];
-  const access = accessControl && accessControl.access;
-  return access;
+
+  // Magda V2 access control has higher priority.
+  if (record?.aspects?.["access-control"]) {
+    return record.aspects["access-control"].orgUnitId
+      ? record.aspects["access-control"].constraintExemption
+        ? "public"
+        : "non-public"
+      : "public";
+  } else if (record?.aspects?.["esri-access-control"]) {
+    return record.aspects["esri-access-control"].access;
+  } else {
+    return "public";
+  }
 }
