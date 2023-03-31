@@ -5,8 +5,10 @@ import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Color from "terriajs-cesium/Source/Core/Color";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
+import IntersectionTests from "terriajs-cesium/Source/Core/IntersectionTests";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
@@ -169,6 +171,12 @@ type BoxDrawingOptions = {
    * Defaults to `true`, i.e draws the non-uniform scaling grips.
    */
   drawNonUniformScaleGrips?: boolean;
+
+  /**
+   * When set to `true`, disable dragging of top and bottom planes to change the box height.
+   * Defaults to `false`, i.e top and bottom sides are draggable and dragging them changes the box height.
+   */
+  disableVerticalMovement?: boolean;
 };
 
 // The 6 box sides defined as planes in local coordinate space.
@@ -234,6 +242,10 @@ export default class BoxDrawing {
 
   private drawNonUniformScaleGrips: boolean;
 
+  public disableVerticalMovement: boolean;
+
+  public keepHeightSteadyWhenMovingLaterally = true;
+
   public onChange?: (params: BoxDrawingChangeParams) => void;
 
   // An external transform to convert the box in local coordinates to world coordinates
@@ -270,6 +282,7 @@ export default class BoxDrawing {
     this.scene = cesium.scene;
     this.keepBoxAboveGround = options.keepBoxAboveGround ?? false;
     this.drawNonUniformScaleGrips = options.drawNonUniformScaleGrips ?? true;
+    this.disableVerticalMovement = options.disableVerticalMovement ?? false;
     this.onChange = options.onChange;
     this.dataSource = new Proxy(new CustomDataSource(), {
       set: (target, prop, value) => {
@@ -365,6 +378,7 @@ export default class BoxDrawing {
         moveStep,
         scratchNewPosition
       );
+
       if (this.keepBoxAboveGround) {
         const cartographic = Cartographic.fromCartesian(
           nextPosition,
@@ -533,7 +547,11 @@ export default class BoxDrawing {
     const handlePick = (click: MouseClick) => {
       const pick = scene.pick(click.position);
       const entity = pick?.id;
-      if (entity === undefined || !isInteractable(entity)) {
+      if (
+        entity === undefined ||
+        !isInteractable(entity) ||
+        !this.dataSource.entities.contains(entity)
+      ) {
         return;
       }
 
@@ -771,11 +789,12 @@ export default class BoxDrawing {
 
     const scratchDirection = new Cartesian3();
     const scratchMoveVector = new Cartesian3();
+    const scratchEllipsoid = new Ellipsoid();
+    const scratchRay = new Ray();
+    const scratchCartographic = new Cartographic();
     const scratchPreviousPosition = new Cartesian3();
-    const scratchEndPosition = new Cartesian3();
+    const scratchCartesian = new Cartesian3();
     const scratchMoveStep = new Cartesian3();
-    const scratchSurfacePoint = new Cartesian3();
-    const scratchSurfacePoint2d = new Cartesian2();
 
     /**
      * Moves the box when dragging a side.
@@ -813,45 +832,76 @@ export default class BoxDrawing {
         );
 
         moveStep = moveVector;
-      } else {
-        // Move along the globe surface when dragging any other side. To do this
-        // we find the ellipsoidal points for the previous mouse position and
-        // current mouse position and translate the box position by the difference amount.
-        //
-        // When the box is tall and the horizon is in view, using the mouse
-        // coordinates to derive the pick ray results in a pick ray almost
-        // tangential to the ellipsoid, giving an ellipsoidal point that is very
-        // far away. This causes large jumps in box position. To avoid this we
-        // angle the pick ray to the ellipsoid surface by first projecting the mouse
-        // points to the ellipsoid surface.
+      } else if (this.keepHeightSteadyWhenMovingLaterally) {
+        // Move the box laterally on the globe while keeping the height
+        // steady. To do this we derive a new ellipsoid from the globe's
+        // ellipsoid by enlarging it so that the current box center falls on
+        // its surface. Then we find the intersection point of the camera ray
+        // through the latest mouse cursor position with this enlarged
+        // ellipsoid. The resulting point should be roughly the same height as
+        // the previous point and will also lie on the vector from the camera
+        // through the mouse cursor.
 
-        // The box origin
-        const origin = this.trs.translation;
-
-        // Box origin projected on the ellipsoid surface.
-        const surfacePoint = projectPointToSurface(origin, scratchSurfacePoint);
-        // Surface point in screen coordinates
-        const surfacePoint2d = scene.cartesianToCanvasCoordinates(
-          surfacePoint,
-          scratchSurfacePoint2d
+        const cameraRay = scene.camera.getPickRay(
+          mouseMove.endPosition,
+          scratchRay
         );
-
-        if (!surfacePoint2d) {
-          // cartesianToCanvasCoordinates can unexpectedly return undefined.
+        if (!cameraRay) {
           return;
         }
 
-        // Floor the startPosition and endPosition above the ellipsoid.
-        const yDiff = mouseMove.endPosition.y - mouseMove.startPosition.y;
-        mouseMove.startPosition.y = surfacePoint2d.y;
-        mouseMove.endPosition.y = surfacePoint2d.y + yDiff;
+        // Current globe ellipsoid
+        const ellipsoid = scene.globe.ellipsoid;
 
-        // Fallback to simple ellipsoid pick when globe pick returns undefined
-        // (i.e there is no intersection of camera ray with globe tiles). This
-        // probably works only because ellipsoid might below the terrain so
-        // there is an intersection between the camera ray and ellipsoid.
-        // Although it could work, it doesn't truly fix the camera ray parallel
-        // to surface issue.
+        // Current height of the model above the ellipsoid
+        const currentPosition = this.trs.translation;
+        const currentHeight = Cartographic.fromCartesian(
+          currentPosition,
+          ellipsoid,
+          scratchCartographic
+        ).height;
+
+        // Get an enlarged ellipsoid that will have the current box center on its surface
+        const ellipsoidThroughPosition = enlargeEllipsoid(
+          ellipsoid,
+          currentHeight,
+          scratchEllipsoid
+        );
+
+        // Get the intersection between the camera ray and then enlarged ellipsoid
+        const rayEllipsoidIntersectionPoint = intersectRayEllipsoid(
+          cameraRay,
+          ellipsoidThroughPosition,
+          scratchCartesian
+        );
+        if (!rayEllipsoidIntersectionPoint) {
+          // there is no intersection point
+          return;
+        }
+
+        // Find the next position in cartographic
+        const nextCartographic = Cartographic.fromCartesian(
+          rayEllipsoidIntersectionPoint,
+          ellipsoid,
+          scratchCartographic
+        );
+
+        // There will be some slight discrepancy in height value of the new position (not sure why)
+        // We adjust that by forcing it to the previous height
+        nextCartographic.height = currentHeight;
+
+        // Convert back to cartesian
+        const nextPosition = Cartographic.toCartesian(
+          nextCartographic,
+          ellipsoid,
+          scratchCartesian
+        );
+
+        // Set the move step
+        moveStep = Cartesian3.subtract(nextPosition, currentPosition, moveStep);
+      } else {
+        // Move box laterally by picking a next position that lies somewhere on
+        // the globe surface.
         const previousPosition =
           screenToGlobePosition(
             scene,
@@ -864,22 +914,27 @@ export default class BoxDrawing {
             scratchPreviousPosition
           );
 
-        const endPosition =
+        const nextPosition =
           screenToGlobePosition(
             scene,
             mouseMove.endPosition,
-            scratchEndPosition
+            scratchCartesian
           ) ??
           scene.camera.pickEllipsoid(
             mouseMove.endPosition,
             undefined,
-            scratchEndPosition
+            scratchCartesian
           );
 
-        if (!previousPosition || !endPosition) {
+        if (!previousPosition || !nextPosition) {
           return;
         }
-        moveStep = Cartesian3.subtract(endPosition, previousPosition, moveStep);
+
+        moveStep = Cartesian3.subtract(
+          nextPosition,
+          previousPosition,
+          moveStep
+        );
       }
 
       // Update box position and fire change event
@@ -901,8 +956,9 @@ export default class BoxDrawing {
       isHighlighted = false;
     };
 
-    const highlightAllSides = () =>
+    const highlightAllSides = () => {
       this.sides.forEach((side) => side.highlight());
+    };
     const unHighlightAllSides = () =>
       this.sides.forEach((side) => side.unHighlight());
 
@@ -919,6 +975,10 @@ export default class BoxDrawing {
     const onPick = () => {
       highlightAllSides();
       setCanvasCursor(scene, "grabbing");
+    };
+
+    const onPickDisabled = () => {
+      setCanvasCursor(scene, "not-allowed");
     };
 
     const onRelease = () => {
@@ -948,11 +1008,25 @@ export default class BoxDrawing {
         Cartesian3.dot(normalWc, scene.camera.direction) >= 0;
     };
 
-    side.onMouseOver = onMouseOver;
-    side.onMouseOut = onMouseOut;
-    side.onPick = onPick;
-    side.onDrag = moveBoxOnDragSide;
-    side.onRelease = onRelease;
+    const isTopOrBottomSide = axis === Axis.Z;
+
+    // Call enabledFn only if movement is is allowed for this side, otherwise call disabledFn
+    const ifActionEnabled = (
+      enabledFn: (...args: any[]) => any,
+      disabledFn?: (...args: any[]) => any
+    ) => {
+      return (...args: any[]) => {
+        return this.disableVerticalMovement && isTopOrBottomSide
+          ? disabledFn?.apply(this, args)
+          : enabledFn.apply(this, args);
+      };
+    };
+
+    side.onMouseOver = ifActionEnabled(onMouseOver);
+    side.onMouseOut = ifActionEnabled(onMouseOut);
+    side.onPick = ifActionEnabled(onPick, onPickDisabled);
+    side.onDrag = ifActionEnabled(moveBoxOnDragSide);
+    side.onRelease = ifActionEnabled(onRelease);
     side.highlight = highlightSide;
     side.unHighlight = unHighlightSide;
     side.isFacingCamera = false;
@@ -1515,6 +1589,52 @@ function setPlaneDimensions(
     planeDimensions.x = boxDimensions.x;
     planeDimensions.y = boxDimensions.y;
   }
+}
+
+const scratchRadii = new Cartesian3();
+
+/**
+ * Increases the radii of the given ellipsoid by the value given by radiiIncrease.
+ *
+ * Note that it is not clear whether the resulting shape obtained by adding the
+ * offset is a true ellipsoid. However, this works out ok for our purpose.
+ */
+function enlargeEllipsoid(
+  ellipsoid: Ellipsoid,
+  radiiIncrease: number,
+  result: Ellipsoid
+): Ellipsoid {
+  const newRadii = ellipsoid.radii.clone(scratchRadii);
+  newRadii.x += radiiIncrease;
+  newRadii.y += radiiIncrease;
+  newRadii.z += radiiIncrease;
+  const enlargedEllipsoid = Ellipsoid.fromCartesian3(newRadii, result);
+  return enlargedEllipsoid;
+}
+
+/**
+ * Returns the nearest point of intersection between the ray and the ellipsoid
+ * that lies on the ellipsoid.
+ */
+function intersectRayEllipsoid(
+  ray: Ray,
+  ellipsoid: Ellipsoid,
+  result: Cartesian3
+): Cartesian3 | undefined {
+  const interval = IntersectionTests.rayEllipsoid(ray, ellipsoid);
+  if (!interval) {
+    // there is no intersection point
+    return;
+  }
+
+  // start=0 means ray origin is inside the ellipsoid
+  // in which case there is only a single intersection
+  // which is given by stop.
+  // This can happen, for eg, when moving the box while the camera
+  // is below the box.
+  const t = interval.start !== 0 ? interval.start : interval.stop;
+  const intersectionPoint = Ray.getPoint(ray, t, result);
+  return intersectionPoint;
 }
 
 const scratchViewRectangle = new Rectangle();
