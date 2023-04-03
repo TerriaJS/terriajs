@@ -4,6 +4,7 @@
 
 - Change icon used for display group remove button
 - Make access control UI compatible to Magda v1 and v2 with v2 overriding v1.
+- Remove karma-sauce-launcher dependency
 - [The next improvement]
 
 #### 8.2.26 - 2023-03-21
