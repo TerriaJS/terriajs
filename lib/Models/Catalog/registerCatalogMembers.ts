@@ -10,6 +10,7 @@ import CartoMapV1CatalogItem from "./CatalogItems/CartoMapV1CatalogItem";
 import CartoMapV3CatalogItem from "./CatalogItems/CartoMapV3CatalogItem";
 import Cesium3DTilesCatalogItem from "./CatalogItems/Cesium3DTilesCatalogItem";
 import CesiumTerrainCatalogItem from "./CatalogItems/CesiumTerrainCatalogItem";
+import CogCatalogItem from "./CatalogItems/CogCatalogItem";
 import CompositeCatalogItem from "./CatalogItems/CompositeCatalogItem";
 import CsvCatalogItem from "./CatalogItems/CsvCatalogItem";
 import CzmlCatalogItem from "./CatalogItems/CzmlCatalogItem";
@@ -234,6 +235,7 @@ export default function registerCatalogMembers() {
     UrlTemplateImageryCatalogItem
   );
   CatalogMemberFactory.register(AssImpCatalogItem.type, AssImpCatalogItem);
+  CatalogMemberFactory.register(CogCatalogItem.type, CogCatalogItem);
 
   UrlToCatalogMemberMapping.register(
     matchesExtension("csv"),
