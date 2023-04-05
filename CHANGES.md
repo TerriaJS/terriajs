@@ -2,6 +2,7 @@
 
 #### next release (8.2.28)
 
+- Fix ideal zoom bug for single point map item of geojson type.
 - [The next improvement]
 
 #### 8.2.27 - 2023-04-05
