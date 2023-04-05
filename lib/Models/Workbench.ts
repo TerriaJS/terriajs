@@ -12,6 +12,11 @@ import LayerOrderingTraits from "../Traits/TraitsClasses/LayerOrderingTraits";
 import CommonStrata from "./Definition/CommonStrata";
 import hasTraits from "./Definition/hasTraits";
 import { BaseModel } from "./Definition/Model";
+import GeoJsonCatalogItem from "./Catalog/CatalogItems/GeoJsonCatalogItem";
+import { isPoint } from "../ModelMixins/GeojsonMixin";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import { Point } from "@turf/helpers";
+import { JsonArray, JsonObject } from "protomaps";
 
 const keepOnTop = (model: BaseModel) =>
   hasTraits(model, LayerOrderingTraits, "keepOnTop") && model.keepOnTop;
@@ -177,6 +182,48 @@ export default class Workbench {
         message: i18next.t("workbench.addItemErrorMessage"),
         importance: -1
       });
+    }
+
+    // Always define a rectangle for a single point item in order for its ideal zoom (close up) to work properly.
+    if (item.type === "geojson") {
+      const theItem = item as GeoJsonCatalogItem;
+      const theFeatures = theItem.geoJsonData?.features as JsonArray;
+      const isSingleFeature = theFeatures && theFeatures.length === 1;
+      const isSinglePoint = isPoint(theItem.geoJsonData);
+      const isSingleFeaturePoint = isSingleFeature && isPoint(theFeatures[0]);
+      const hasNoRectangle = !(
+        theItem.rectangle?.west &&
+        theItem.rectangle?.east &&
+        theItem.rectangle?.south &&
+        theItem.rectangle?.north
+      );
+      const theCoordinates: number[] = [];
+      if (hasNoRectangle) {
+        if (isSinglePoint) {
+          const thePoint = theItem.geoJsonData?.geometry as unknown as Point;
+          theCoordinates.push(thePoint.coordinates[0]);
+          theCoordinates.push(thePoint.coordinates[1]);
+        } else if (isSingleFeaturePoint) {
+          const singleFeatureJson = theFeatures[0] as JsonObject;
+          const thePoint = singleFeatureJson.geometry as unknown as Point;
+          theCoordinates.push(thePoint.coordinates[0]);
+          theCoordinates.push(thePoint.coordinates[1]);
+        }
+
+        if (theCoordinates.length === 2) {
+          const range = 0.01;
+          item.setTrait(
+            CommonStrata.user,
+            "rectangle",
+            new Rectangle(
+              theCoordinates[0] - range,
+              theCoordinates[1] - range,
+              theCoordinates[0] + range,
+              theCoordinates[1] + range
+            )
+          );
+        }
+      }
     }
 
     this.insertItem(item);
