@@ -1,0 +1,71 @@
+{
+  "layers": [
+    {
+      "id": 0,
+      "name": "New Group Layer",
+      "parentLayerId": -1,
+      "defaultVisibility": true,
+      "subLayerIds": [1, 2, 3, 4, 5],
+      "minScale": 0,
+      "maxScale": 0,
+      "type": "Group Layer",
+      "supportsDynamicLegends": false
+    },
+    {
+      "id": 1,
+      "name": "some-raster-layer-1",
+      "parentLayerId": 0,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 0,
+      "type": "Raster Layer",
+      "supportsDynamicLegends": true
+    },
+    {
+      "id": 2,
+      "name": "some-raster-layer-2",
+      "parentLayerId": 0,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 0,
+      "type": "Raster Layer",
+      "supportsDynamicLegends": true
+    },
+    {
+      "id": 3,
+      "name": "some-raster-layer-3",
+      "parentLayerId": 0,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 0,
+      "type": "Raster Layer",
+      "supportsDynamicLegends": true
+    },
+    {
+      "id": 4,
+      "name": "some-raster-layer-4",
+      "parentLayerId": 0,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 0,
+      "type": "Raster Layer",
+      "supportsDynamicLegends": true
+    },
+    {
+      "id": 5,
+      "name": "some-raster-layer-5",
+      "parentLayerId": 0,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 0,
+      "type": "Raster Layer",
+      "supportsDynamicLegends": true
+    }
+  ],
+  "tables": []
+}

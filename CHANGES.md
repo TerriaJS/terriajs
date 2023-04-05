@@ -1,9 +1,37 @@
 # Change Log
 
-#### next release (8.2.25)
+#### next release (8.2.28)
 
 - Fix location point ideal zoom bug in 3D mode map.
 - [The next improvement]
+
+#### 8.2.27 - 2023-04-05
+
+- Change icon used for display group remove button
+- Make access control UI compatible to Magda v1 and v2 with v2 overriding v1.
+- Remove karma-sauce-launcher dependency
+- Add method `addFileDragDropListener` for receiving callbacks when user drags-n-drops a file.
+- Improve `BoxDrawing` drag interaction.
+- Fix a bug where `BoxDrawing` sometimes causes the map to loose pan and zoom interactivity.
+- Optimize `LocationBar` component to reduce number of renders on mouse move.
+- Optimize `Compass` component to reduce renders on each frame.
+- Add `children` optional property to StandardUserInterfaceProps interface
+- Add support for ArcGis MapServer with `TileOnly` capability - for example layers served from ArcGis Online. This is supported through `ArcGisMapServerCatalogItem`, `ArcGisMapServerCatalogGroup` and `ArcGisCatalogGroup`.
+
+#### 8.2.26 - 2023-03-21
+
+- Upgraded to terriajs-server 4.0.0.
+- Added new `gulp dev` task that runs terriajs-server and `gulp watch` (incremental specs build) at the same time.
+
+#### 8.2.25 - 2023-03-20
+
+- Export `registerUrlHandlerForCatalogMemberType` for registering new url handler for catalog types.
+- BoxDrawing changes:
+  - Adds a new option called disableVerticalMovement to BoxDrawing which if set to true disables up/down motion of the box when dragging the top/bottom sides of the box.
+  - Keeps height (mostly) steady when moving the box laterally on the map. Previously the height of the box used to change wrt to the ellipsoid/surface.
+  - Fixes a bug that caused map panning and zooming to break when interacting with multiple active BoxDrawings.
+  - Removed some code that was causing too much drift between mouse cursor and model when moving the model laterally on the map.
+- Replaces addRemoteUploadType and addLocalUploadType with addOrReplaceRemoteFileUploadType and addOrReplaceLocalFileUploadType.
 
 #### 8.2.24 - 2023-03-06
 
