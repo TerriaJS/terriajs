@@ -1,17 +1,16 @@
+import i18next from "i18next";
 import { configure, runInAction } from "mobx";
 import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
-import Terria from "../../../../lib/Models/Terria";
 import ArcGisCatalogGroup from "../../../../lib/Models/Catalog/Esri/ArcGisCatalogGroup";
-import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
-import i18next from "i18next";
-import ArcGisMapServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
-import TerriaError from "../../../../lib/Core/TerriaError";
-import ArcGisMapServerCatalogGroup, {
-  MapServerStratum
-} from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogGroup";
 import ArcGisFeatureServerCatalogGroup, {
   FeatureServerStratum
 } from "../../../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogGroup";
+import ArcGisMapServerCatalogGroup, {
+  MapServerStratum
+} from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogGroup";
+import ArcGisMapServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
+import Terria from "../../../../lib/Models/Terria";
 
 configure({
   enforceActions: "observed",
@@ -44,6 +43,7 @@ describe("ArcGisCatalogGroup", function () {
     // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
     spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
       let url = args[0];
+
       if (url.match("Redlands_Emergency_Vehicles/MapServer")) {
         url = url.replace(/^.*\/MapServer/, "MapServer");
         url = url.replace(/MapServer\/?\?f=json$/i, "mapServer.json");
@@ -82,6 +82,12 @@ describe("ArcGisCatalogGroup", function () {
           "CommunityAddressingMS.json"
         );
         args[0] = "test/ArcGisServer/sampleserver6/" + url;
+      } else if (url.match("SingleFusedMapCache/MapServer")) {
+        url = url.replace(/^.*\/MapServer/, "MapServer");
+        url = url.replace(/MapServer\/?\?.*/i, "mapserver.json");
+        url = url.replace(/MapServer\/Legend\/?\?.*/i, "legend.json");
+        url = url.replace(/MapServer\/Layers\/?\?.*/i, "layers.json");
+        args[0] = "test/ArcGisMapServer/SingleFusedMapCache/" + url;
       }
 
       return realLoadWithXhr(...args);
@@ -221,6 +227,32 @@ describe("ArcGisCatalogGroup", function () {
       );
       expect(arcgisServerStratum).toBeDefined();
       expect(arcgisServerStratum instanceof FeatureServerStratum).toBeTruthy();
+    });
+  });
+
+  describe("Supports MapServer with TilesOnly single fused map cache", function () {
+    beforeEach(async () => {
+      runInAction(() => {
+        group.setTrait(
+          CommonStrata.definition,
+          "url",
+          "http://www.example.com/SingleFusedMapCache/MapServer"
+        );
+      });
+      (await group.loadMembers()).throwIfError();
+    });
+
+    it('Creates a single item called "models.arcGisMapServerCatalogGroup.singleFusedMapCacheLayerName"', async function () {
+      expect(group.memberModels.length).toBe(1);
+      expect(
+        group.memberModels[0] instanceof ArcGisMapServerCatalogItem
+      ).toBeTruthy();
+      const item = group.memberModels[0] as ArcGisMapServerCatalogItem;
+      expect(item.name).toBe(
+        "models.arcGisMapServerCatalogGroup.singleFusedMapCacheLayerName"
+      );
+      expect(item.layers).toBeUndefined();
+      expect(item.layersArray.length).toBe(0);
     });
   });
 });
