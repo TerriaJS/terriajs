@@ -232,6 +232,7 @@ function createCombinedStratum<T extends ModelTraits>(
   });
 
   decorate(result, decorators);
+  makeObservable(result);
 
   return <StratumFromTraits<T>>(<unknown>result);
 }
