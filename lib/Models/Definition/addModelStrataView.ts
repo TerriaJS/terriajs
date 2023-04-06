@@ -50,6 +50,15 @@ export default function addModelStrataView<
   return model;
 }
 
+/**
+ * Decorate the target class.
+ *
+ * Note that we assume that the class constructor calls `makeObservable(this)`
+ * to correctly setup the mobx properties.
+ *
+ * @param target Target class to decorate
+ * @param decorators Properties of the class that must be decorated
+ */
 function decorate(
   target: any,
   decorators: { [id: string]: PropertyDecorator }
