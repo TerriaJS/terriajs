@@ -14,11 +14,6 @@ import ViewerMode from "../../../../Models/ViewerMode";
 import { GLYPHS } from "../../../../Styled/Icon";
 import StyleTraits from "../../../../Traits/TraitsClasses/StyleTraits";
 import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
-import {
-  LookAtTraits,
-  IdealZoomTraits
-} from "../../../../Traits/TraitsClasses/MappableTraits";
-import sampleTerrain from "terriajs-cesium/Source/Core/sampleTerrain";
 
 interface PropTypes {
   terria: Terria;
@@ -87,18 +82,10 @@ class MyLocation extends MapNavigationItemController {
     }
   }
 
-  async zoomToMyLocation(position: Position) {
+  zoomToMyLocation(position: Position) {
     const t = i18next.t.bind(i18next);
     const longitude = position.coords.longitude;
     const latitude = position.coords.latitude;
-
-    // west, south, east, north, result
-    const rectangle = Rectangle.fromDegrees(
-      longitude - 0.1,
-      latitude - 0.1,
-      longitude + 0.1,
-      latitude + 0.1
-    );
 
     if (this.augmentedVirtualityEnabled()) {
       // Note: Specifying the value of 27500m here enables this function to approximately mimic the behaviour of
@@ -113,10 +100,17 @@ class MyLocation extends MapNavigationItemController {
       );
       this.flown = true;
     } else {
+      // west, south, east, north, result
+      const rectangle = Rectangle.fromDegrees(
+        longitude - 0.1,
+        latitude - 0.1,
+        longitude + 0.1,
+        latitude + 0.1
+      );
       this.terria.currentViewer.zoomTo(rectangle);
     }
 
-    runInAction(async () => {
+    runInAction(() => {
       const name = t("location.myLocation");
       this._marker.setTrait(CommonStrata.user, "name", name);
       this._marker.setTrait(CommonStrata.user, "geoJsonData", {
@@ -131,36 +125,18 @@ class MyLocation extends MapNavigationItemController {
           latitude: latitude
         }
       });
-
-      let terrainSample: CesiumCartographic = new CesiumCartographic();
-      const terrainProvider = this.terria.terrainProvider;
-      // A sufficiently coarse tile level that still has approximately accurate height for most of 3D close up view.
-      // If the terrain height changes rapidly, might need to increase the level.
-      const level = 9;
-      const center = Rectangle.center(rectangle);
-      if (terrainProvider) {
-        try {
-          [terrainSample] = await sampleTerrain(terrainProvider, level, [
-            center
-          ]);
-        } catch (e) {
-          // if the request fails terrainSample.height will still be undefined.
-        }
-      }
-
-      // Let ideal zoom in 3D mode be a close-up view.
-      const lookAt = createStratumInstance(LookAtTraits, {
-        targetLongitude: longitude,
-        targetLatitude: latitude,
-        targetHeight: (terrainSample.height ?? 0) + 100, // Treat it as the camera height.
-        heading: 0,
-        pitch: 90,
-        range: 1
-      });
-      const idealZoom = createStratumInstance(IdealZoomTraits);
-      idealZoom.lookAt = lookAt;
-      this._marker.setTrait(CommonStrata.user, "idealZoom", idealZoom);
-
+      // Need to specify rectangle for ideal zoom to work properly in 3D map.
+      const closeUpRange = 0.002;
+      this._marker.setTrait(
+        CommonStrata.user,
+        "rectangle",
+        new Rectangle(
+          longitude - closeUpRange,
+          latitude - closeUpRange,
+          longitude + closeUpRange,
+          latitude + closeUpRange
+        )
+      );
       this._marker.setTrait(
         CommonStrata.user,
         "style",
