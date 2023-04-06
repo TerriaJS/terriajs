@@ -18,6 +18,7 @@ import {
   WithViewState,
   withViewState
 } from "./StandardUserInterface/ViewStateContext";
+import { raiseFileDragDropEvent } from "../ViewModels/FileDragDropListener";
 
 interface PropsType extends WithTranslation, WithViewState {}
 
@@ -31,6 +32,7 @@ class DragDropFile extends React.Component<PropsType> {
   }
 
   async handleDrop(e: React.DragEvent) {
+    e.persist();
     e.preventDefault();
     e.stopPropagation();
 
@@ -85,6 +87,11 @@ class DragDropFile extends React.Component<PropsType> {
           await Promise.all(mappableItems.map((f) => f.loadMapItems())),
           "Failed to load uploaded files"
         ).raiseError(props.viewState.terria);
+
+        raiseFileDragDropEvent({
+          addedItems: mappableItems,
+          mouseCoordinates: { clientX: e.clientX, clientY: e.clientY }
+        });
 
         // Zoom to first item
         const firstZoomableItem = mappableItems.find(

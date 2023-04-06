@@ -1,13 +1,16 @@
 {
   "catalog": [
     {
-      "name": "Cesium 3D Tiles",
+      "name": "Cesium 3D Tiles example",
       "type": "group",
-      "items": [
+      "description": "This group has Cesium 3DTiles dataset examples",
+      "isOpen": true,
+      "members": [
         {
-          "name": "Brisbane 3D city model (aero3Dpro)",
+          "name": "3DTiles test dataset (click Ideal Zoom to see)",
           "type": "3d-tiles",
-          "url": "https://sample.aero3dpro.com.au/BrisbaneCBD/Scene/recon_h_3DTiles.json",
+          "url": "https://qld.digitaltwin.terria.io/api/v0/data/2eeeadde-42a9-4372-aaec-abba6275a504/NPB/tileset.json",
+          "zoomOnAddToWorkbench": true,
           "options": {
             "maximumScreenSpaceError": 1,
             "maximumNumberOfLoadedTiles": 1000

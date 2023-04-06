@@ -1,10 +1,13 @@
 import debounce from "lodash-es/debounce";
-import { observable, action, runInAction, makeObservable } from "mobx";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import Intersections2D from "terriajs-cesium/Source/Core/Intersections2D";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Ray from "terriajs-cesium/Source/Core/Ray";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import isDefined from "../Core/isDefined";
 import JSEarthGravityModel1996 from "../Map/Vector/EarthGravityModel1996";
@@ -24,6 +27,14 @@ interface Cancelable {
   cancel: () => void;
 }
 
+const scratchRay = new Ray();
+const scratchV0 = new Cartographic();
+const scratchV1 = new Cartographic();
+const scratchV2 = new Cartographic();
+const scratchIntersection = new Cartographic();
+const scratchBarycentric = new Cartesian3();
+const scratchCartographic = new Cartographic();
+
 export default class MouseCoords {
   readonly geoidModel: EarthGravityModel1996;
   readonly proj4Projection: string;
@@ -37,14 +48,17 @@ export default class MouseCoords {
     Cancelable;
   tileRequestInFlight?: unknown;
 
-  @observable elevation?: string;
-  @observable utmZone?: unknown;
-  @observable latitude?: string;
-  @observable longitude?: string;
-  @observable north?: unknown;
-  @observable east?: unknown;
-  @observable cartographic?: Cartographic;
+  elevation?: string;
+  utmZone?: string;
+  latitude?: string;
+  longitude?: string;
+  north?: string;
+  east?: string;
+  cartographic?: Cartographic;
+
   @observable useProjection = false;
+
+  updateEvent = new CesiumEvent();
 
   constructor() {
     makeObservable(this);
@@ -68,6 +82,7 @@ export default class MouseCoords {
   @action
   toggleUseProjection() {
     this.useProjection = !this.useProjection;
+    this.updateEvent.raiseEvent();
   }
 
   updateCoordinatesFromCesium(terria: Terria, position: Cartesian2) {
@@ -77,18 +92,28 @@ export default class MouseCoords {
 
     const scene = terria.cesium.scene;
     const camera = scene.camera;
-    const pickRay = camera.getPickRay(position);
+    const pickRay = camera.getPickRay(position, scratchRay);
     const globe = scene.globe;
     const pickedTriangle = (<any>globe).pickTriangle(pickRay, scene);
     if (isDefined(pickedTriangle)) {
       // Get a fast, accurate-ish height every time the mouse moves.
       const ellipsoid = globe.ellipsoid;
 
-      const v0 = ellipsoid.cartesianToCartographic(pickedTriangle.v0);
-      const v1 = ellipsoid.cartesianToCartographic(pickedTriangle.v1);
-      const v2 = ellipsoid.cartesianToCartographic(pickedTriangle.v2);
+      const v0 = ellipsoid.cartesianToCartographic(
+        pickedTriangle.v0,
+        scratchV0
+      );
+      const v1 = ellipsoid.cartesianToCartographic(
+        pickedTriangle.v1,
+        scratchV1
+      );
+      const v2 = ellipsoid.cartesianToCartographic(
+        pickedTriangle.v2,
+        scratchV2
+      );
       const intersection = ellipsoid.cartesianToCartographic(
-        pickedTriangle.intersection
+        pickedTriangle.intersection,
+        scratchIntersection
       );
       let errorBar;
 
@@ -103,7 +128,8 @@ export default class MouseCoords {
           v1.longitude,
           v1.latitude,
           v2.longitude,
-          v2.latitude
+          v2.latitude,
+          scratchBarycentric
         );
 
         if (
@@ -155,6 +181,7 @@ export default class MouseCoords {
         this.north = undefined;
         this.east = undefined;
       });
+      this.updateEvent.raiseEvent();
     }
   }
 
@@ -164,14 +191,19 @@ export default class MouseCoords {
     }
 
     const latLng = terria.leaflet.map.mouseEventToLatLng(mouseMoveEvent);
-    const coordinates = Cartographic.fromDegrees(latLng.lng, latLng.lat);
+    const coordinates = Cartographic.fromDegrees(
+      latLng.lng,
+      latLng.lat,
+      undefined,
+      scratchCartographic
+    );
     coordinates.height = <any>undefined;
     this.cartographicToFields(coordinates);
   }
 
   @action
   cartographicToFields(coordinates: Cartographic, errorBar?: number) {
-    this.cartographic = Cartographic.clone(coordinates);
+    this.cartographic = Cartographic.clone(coordinates, scratchCartographic);
 
     const latitude = CesiumMath.toDegrees(coordinates.latitude);
     const longitude = CesiumMath.toDegrees(coordinates.longitude);
@@ -196,6 +228,7 @@ export default class MouseCoords {
     this.latitude = prettyCoordinate.latitude;
     this.longitude = prettyCoordinate.longitude;
     this.elevation = prettyCoordinate.elevation;
+    this.updateEvent.raiseEvent();
   }
 
   sampleAccurateHeight(

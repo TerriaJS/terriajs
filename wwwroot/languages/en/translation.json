@@ -881,7 +881,8 @@
       "invalidServiceTitle": "Invalid ArcGIS Map Service",
       "invalidServiceMessage": "An error occurred while invoking the ArcGIS Map Service.  The server's response does not appear to be a valid Map Service document.",
       "groupNotAvailableTitle": "Group is not available",
-      "groupNotAvailableMessage": "An error occurred while invoking the ArcGIS Map Service."
+      "groupNotAvailableMessage": "An error occurred while invoking the ArcGIS Map Service.",
+      "singleFusedMapCacheLayerName": "All layers"
     },
     "arcGisMapServerCatalogItem": {
       "name": "Esri ArcGIS MapServer",

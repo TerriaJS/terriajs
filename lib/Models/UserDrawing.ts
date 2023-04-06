@@ -1,12 +1,11 @@
 import i18next from "i18next";
 import {
   computed,
-  IReactionDisposer,
-  observable,
-  reaction,
-  runInAction,
   makeObservable,
-  override
+  observable,
+  override,
+  reaction,
+  runInAction
 } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -78,7 +77,6 @@ export default class UserDrawing extends MappableMixin(
   private drawRectangle: boolean;
 
   private mousePointEntity?: Entity;
-  private mouseMoveDispose?: IReactionDisposer;
 
   constructor(options: Options) {
     super(createGuid(), options.terria);
@@ -383,21 +381,21 @@ export default class UserDrawing extends MappableMixin(
       onEnable: (viewState: ViewState) => {
         runInAction(() => (viewState.explorerPanelIsVisible = false));
 
-        if (this.drawRectangle) {
-          this.mouseMoveDispose = reaction(
-            () => this.terria.currentViewer.mouseCoords.cartographic,
-            (mouseCoordsCartographic) => {
-              if (!isDefined(mouseCoordsCartographic)) return;
-
-              if (isDefined(this.mousePointEntity)) {
-                this.mousePointEntity.position = new ConstantPositionProperty(
-                  Ellipsoid.WGS84.cartographicToCartesian(
-                    mouseCoordsCartographic
-                  )
-                );
-              }
+        if (this.drawRectangle && this.mousePointEntity) {
+          const scratchPosition = new Cartesian3();
+          this.mousePointEntity.position = new CallbackProperty(() => {
+            const cartographicMouseCoords =
+              this.terria.currentViewer.terria.currentViewer.mouseCoords
+                .cartographic;
+            let mousePosition = undefined;
+            if (cartographicMouseCoords) {
+              mousePosition = Ellipsoid.WGS84.cartographicToCartesian(
+                cartographicMouseCoords,
+                scratchPosition
+              );
             }
-          );
+            return mousePosition;
+          }, false) as any;
         }
       },
       invisible: this.invisible
@@ -539,10 +537,6 @@ export default class UserDrawing extends MappableMixin(
       if (container !== null) {
         container.setAttribute("style", "cursor: auto");
       }
-    }
-
-    if (isDefined(this.mouseMoveDispose)) {
-      this.mouseMoveDispose();
     }
 
     // Allow client to clean up too
