@@ -883,7 +883,8 @@
       "copyrightText": "Text dels drets d'autor",
       "invalidServiceTitle": "Servei de mapes d'ArcGIS no vàlid",
       "invalidServiceMessage": "Error en invocar el servei de mapes d'ArcGIS. La resposta del servidor no sembla ser un document vàlid del servei de mapes.",
-      "groupNotAvailableMessage": "Error en invocar el servei de mapes d'ArcGIS."
+      "groupNotAvailableMessage": "Error en invocar el servei de mapes d'ArcGIS.",
+      "singleFusedMapCacheLayerName": "Totes les capes"
     },
     "arcGisMapServerCatalogItem": {
       "invalidUrlMessage": "No s'ha pogut carregar el punt d'accés de l'ArcGis MapServer perquè l'element del catàleg no té una \"url\".",
