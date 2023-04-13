@@ -133,12 +133,15 @@ function configureWebpack(
             "babel-plugin-jsx-control-statements",
             "@babel/plugin-transform-modules-commonjs",
             ["@babel/plugin-proposal-decorators", { legacy: true }],
-            "@babel/proposal-class-properties",
+            "@babel/plugin-proposal-class-properties",
             "@babel/proposal-object-rest-spread",
             "babel-plugin-styled-components",
             require.resolve("@babel/plugin-syntax-dynamic-import"),
             "babel-plugin-lodash"
-          ]
+          ],
+          assumptions: {
+            setPublicClassFields: false
+          }
         }
       }
       // Re-enable this if we need to observe any differences in the

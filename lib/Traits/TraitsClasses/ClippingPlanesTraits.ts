@@ -1,11 +1,11 @@
-import ModelTraits from "../ModelTraits";
-import primitiveTrait from "../Decorators/primitiveTrait";
-import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
+import BoxDrawingTraits from "../BoxDrawingTraits";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import objectTrait from "../Decorators/objectTrait";
-import LatLonHeightTraits from "./LatLonHeightTraits";
-import BoxDrawingTraits, { CornerPointsStyleTraits } from "../BoxDrawingTraits";
+import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
+import ModelTraits from "../ModelTraits";
+import LatLonHeightTraits from "./LatLonHeightTraits";
 
 export class ClippingPlaneDefinitionTraits extends ModelTraits {
   @primitiveTrait({
@@ -133,7 +133,7 @@ export class ClippingBoxTraits extends mixTraits(BoxDrawingTraits) {
     description:
       "Latitude, longitude and height of the clipping box. When not set, the box is positioned at the center of the screen."
   })
-  position?: LatLonHeightTraits;
+  position?: LatLonHeightTraits = undefined;
 
   @objectTrait({
     type: ClippingBoxDimensionTraits,
