@@ -1,4 +1,4 @@
-import JsonValue, { JsonObject } from "../../Core/Json";
+import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
@@ -52,7 +52,7 @@ export default class WebProcessingServiceCatalogJobTraits extends mixTraits(
     name: "Geojson features",
     description: "Geojson feature collection of input features."
   })
-  geojsonFeatures?: JsonValue[];
+  geojsonFeatures?: JsonObject[];
 
   @primitiveTrait({
     type: "string",
