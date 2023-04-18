@@ -901,7 +901,8 @@
       "invalidServiceTitle": "Neplatná mapová služba ArcGIS",
       "groupNotAvailableTitle": "Skupina není k dispozici",
       "groupNotAvailableMessage": "Při vyvolání mapové služby ArcGIS došlo k chybě.",
-      "invalidServiceMessage": "Při vyvolání mapové služby ArcGIS došlo k chybě.  Odpověď serveru se nezdá být platným dokumentem mapové služby."
+      "invalidServiceMessage": "Při vyvolání mapové služby ArcGIS došlo k chybě.  Odpověď serveru se nezdá být platným dokumentem mapové služby.",
+      "singleFusedMapCacheLayerName": "Všechny vrstvy"
     },
     "arcGisMapServerCatalogItem": {
       "name": "Esri ArcGIS MapServer",
