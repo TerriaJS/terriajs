@@ -125,6 +125,18 @@ class MyLocation extends MapNavigationItemController {
           latitude: latitude
         }
       });
+      // Need to specify rectangle for ideal zoom to work properly in 3D map.
+      const closeUpRange = 0.002;
+      this._marker.setTrait(
+        CommonStrata.user,
+        "rectangle",
+        new Rectangle(
+          longitude - closeUpRange,
+          latitude - closeUpRange,
+          longitude + closeUpRange,
+          latitude + closeUpRange
+        )
+      );
       this._marker.setTrait(
         CommonStrata.user,
         "style",
