@@ -12,10 +12,9 @@
     "jsx": "react",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "useDefineForClassFields": true,
     "outDir": "dist",
     "resolveJsonModule": true,
-    // "composite": true,
-    // "declaration": true,
     "typeRoots": [
       "./lib/ThirdParty"
       //"./node_modules/@types",
