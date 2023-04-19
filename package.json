@@ -11,7 +11,8 @@
     "url": "http://github.com/TerriaJS/terriajs"
   },
   "resolutions": {
-    "colors": "1.4.0"
+    "colors": "1.4.0",
+    "@types/node": "^18.15.11"
   },
   "dependencies": {
     "@babel/core": "^7.16.0",
