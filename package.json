@@ -180,7 +180,8 @@
     "worker-loader": "^2.0.0",
     "fetch-mock": "^9.11.0",
     "fs-extra": "^7.0.1",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "bottleneck": "^2.19.5"
   },
   "devDependencies": {
     "@types/webpack": "4.41.33",
@@ -189,7 +190,6 @@
     "@types/dateformat": "^3.0.1",
     "@types/node": "^18.15.11",
     "babel-plugin-styled-components": "^1.10.7",
-    "bottleneck": "^2.19.5",
     "eslint": "^7.20.0",
     "eslint-plugin-jsx-control-statements": "^2.2.1",
     "eslint-plugin-react": "^7.19.0",
