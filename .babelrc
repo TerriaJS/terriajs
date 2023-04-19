@@ -20,7 +20,7 @@
     "@babel/plugin-syntax-dynamic-import",
     "babel-plugin-lodash"
   ],
-  assumptions: {
-    setPublicClassFields: false
+  "assumptions": {
+    "setPublicClassFields": false
   }
 }
