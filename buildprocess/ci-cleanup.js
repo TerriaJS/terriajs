@@ -59,7 +59,7 @@ function createIngress(branches) {
     apiVersion: "networking.k8s.io/v1",
     kind: "Ingress",
     metadata: {
-      name: "terriajs-ci-ing",
+      name: "ci-terria-io",
       annotations: {
         "ingress.kubernetes.io/ssl-redirect": "false",
         "ingress.kubernetes.io/force-ssl-redirect": "false",
@@ -69,6 +69,7 @@ function createIngress(branches) {
     spec: {
       rules: [
         {
+          host: "ci.terria.io",
           http: {
             paths: branches.map((branch) => ({
               path: "/" + branch.name + "/",
