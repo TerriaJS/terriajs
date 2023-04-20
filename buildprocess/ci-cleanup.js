@@ -63,7 +63,8 @@ function createIngress(branches) {
       annotations: {
         "ingress.kubernetes.io/ssl-redirect": "false",
         "ingress.kubernetes.io/force-ssl-redirect": "false",
-        "ingress.kubernetes.io/rewrite-target": "/$2"
+        "nginx.ingress.kubernetes.io/use-regex": "true",
+        "nginx.ingress.kubernetes.io/rewrite-target": "/$2"
       }
     },
     spec: {
