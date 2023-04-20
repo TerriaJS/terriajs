@@ -67,6 +67,7 @@ function createIngress(branches) {
       }
     },
     spec: {
+      ingressClassName: "nginx-two",
       rules: [
         {
           host: "ci.terria.io",
