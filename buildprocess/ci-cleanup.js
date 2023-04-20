@@ -71,7 +71,7 @@ function createIngress(branches) {
       ingressClassName: "nginx-two",
       rules: [
         {
-          host: "ci.terria.io",
+          host: "ci-two.terria.io",
           http: {
             paths: branches.map((branch) => ({
               path: "/" + branch.name + "(/|$)(.*)",
