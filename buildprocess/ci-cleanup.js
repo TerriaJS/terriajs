@@ -63,7 +63,7 @@ function createIngress(branches) {
       annotations: {
         "ingress.kubernetes.io/ssl-redirect": "false",
         "ingress.kubernetes.io/force-ssl-redirect": "false",
-        "ingress.kubernetes.io/rewrite-target": "/"
+        "ingress.kubernetes.io/rewrite-target": "/$2"
       }
     },
     spec: {
@@ -73,7 +73,7 @@ function createIngress(branches) {
           host: "ci.terria.io",
           http: {
             paths: branches.map((branch) => ({
-              path: "/" + branch.name + "/",
+              path: "/" + branch.name + "(/|$)(.*)",
               pathType: "ImplementationSpecific",
               backend: {
                 service: {
