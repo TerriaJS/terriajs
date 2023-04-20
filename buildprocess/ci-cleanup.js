@@ -76,7 +76,9 @@ function createIngress(branches) {
               backend: {
                 service: {
                   name: "terriajs-" + makeSafeName(branch.name) + "-terriamap",
-                  port: "http"
+                  port: {
+                    name: "http"
+                  }
                 }
               }
             }))
