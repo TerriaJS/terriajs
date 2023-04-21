@@ -3,6 +3,8 @@
 #### next release (8.2.28)
 
 - Fix location point ideal zoom bug in 3D mode map.
+- Add `EPSG:7844` to `Proj4Definitions`.
+- TSify `Proj4Definitions` and `Reproject` modules.
 - [The next improvement]
 
 #### 8.2.27 - 2023-04-05

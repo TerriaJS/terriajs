@@ -12,7 +12,7 @@ import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import { scaleDenominatorToLevel } from "../../../Core/scaleToDenominator";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
-import proj4definitions from "../../../Map/Vector/Proj4Definitions";
+import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
 import { ImageryParts } from "../../../ModelMixins/MappableMixin";
@@ -349,7 +349,7 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
   }
 
   protected forceLoadMapItems(): Promise<void> {
-    return Promise.resolve();
+    return this.forceLoadMetadata();
   }
 
   @computed get cacheDuration(): string {
@@ -568,11 +568,11 @@ function getRectangleFromLayer(extent: Extent, rectangle: RectangleExtent) {
 
     const wkid = "EPSG:" + wkidCode;
 
-    if (!isDefined((proj4definitions as any)[wkid])) {
+    if (!isDefined(Proj4Definitions[wkid])) {
       return;
     }
 
-    const source = new proj4.Proj((proj4definitions as any)[wkid]);
+    const source = new proj4.Proj(Proj4Definitions[wkid]);
     const dest = new proj4.Proj("EPSG:4326");
 
     let p = proj4(source, dest, [extent.xmin, extent.ymin]);
