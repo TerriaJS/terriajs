@@ -6,6 +6,7 @@
 - Add `EPSG:7844` to `Proj4Definitions`.
 - TSify `Proj4Definitions` and `Reproject` modules.
 - Update the docs for `excludeMembers`: mention the group/item id support
+- Simplified `MapToolbar` API.
 - [The next improvement]
 
 #### 8.2.27 - 2023-04-05
