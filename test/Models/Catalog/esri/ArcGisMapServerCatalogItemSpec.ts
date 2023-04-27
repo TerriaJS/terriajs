@@ -2,7 +2,6 @@ import i18next from "i18next";
 import { configure, runInAction } from "mobx";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
-import isDefined from "../../../../lib/Core/isDefined";
 import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import ArcGisMapServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
@@ -23,6 +22,7 @@ const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
 describe("ArcGisMapServerCatalogItem", function () {
   const mapServerUrl =
     "http://www.example.com/Dynamic_National_Map_Hydrography_and_Marine/MapServer";
+
   const singleLayerUrl = mapServerUrl + "/31";
 
   let item: ArcGisMapServerCatalogItem;
@@ -34,6 +34,7 @@ describe("ArcGisMapServerCatalogItem", function () {
     spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
       let url = args[0];
       url = url.replace("http://example.com/42/", "");
+
       if (url.match("Dynamic_National_Map_Hydrography_and_Marine/MapServer")) {
         url = url.replace(/^.*\/MapServer/, "MapServer");
         url = url.replace(/MapServer\/?\?.*/i, "mapserver.json");
@@ -43,6 +44,12 @@ describe("ArcGisMapServerCatalogItem", function () {
         args[0] =
           "test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/" +
           url;
+      } else if (url.match("SingleFusedMapCache/MapServer")) {
+        url = url.replace(/^.*\/MapServer/, "MapServer");
+        url = url.replace(/MapServer\/?\?.*/i, "mapserver.json");
+        url = url.replace(/MapServer\/Legend\/?\?.*/i, "legend.json");
+        url = url.replace(/MapServer\/Layers\/?\?.*/i, "layers.json");
+        args[0] = "test/ArcGisMapServer/SingleFusedMapCache/" + url;
       } else if (url.match("/token")) {
         args[0] =
           "test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/token.json";
@@ -84,7 +91,7 @@ describe("ArcGisMapServerCatalogItem", function () {
         item.setTrait(CommonStrata.definition, "url", mapServerUrl);
       });
       await item.loadMapItems();
-      expect(item.allSelectedLayers.length).toBe(74);
+      expect(item.layersArray.length).toBe(74);
     });
 
     it("can load specific layers", async function () {
@@ -94,7 +101,17 @@ describe("ArcGisMapServerCatalogItem", function () {
         item.setTrait(CommonStrata.definition, "layers", "31,32");
       });
       await item.loadMapItems();
-      expect(item.allSelectedLayers.length).toBe(2);
+      expect(item.layersArray.length).toBe(2);
+    });
+
+    it("can load specific layers - and ignore invalid layers", async function () {
+      runInAction(() => {
+        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item.setTrait(CommonStrata.definition, "url", mapServerUrl);
+        item.setTrait(CommonStrata.definition, "layers", "31,32,ahhhh,200");
+      });
+      await item.loadMapItems();
+      expect(item.layersArray.length).toBe(2);
     });
 
     it("can load a single layer given in the URL", async function () {
@@ -103,7 +120,7 @@ describe("ArcGisMapServerCatalogItem", function () {
         item.setTrait(CommonStrata.definition, "url", singleLayerUrl);
       });
       await item.loadMapItems();
-      expect(item.allSelectedLayers.length).toBe(1);
+      expect(item.layersArray.length).toBe(1);
       expect(item.layers).toBe("31");
     });
 
@@ -248,7 +265,22 @@ describe("ArcGisMapServerCatalogItem", function () {
       });
     });
 
-    it("defines the name", function () {
+    it("defines the name - with no layers specified", function () {
+      // Using name from MapServer metadata
+      expect(item.name).toBe(
+        "Australia 250K Topographic Hydrography and Marine Layers"
+      );
+    });
+
+    it("defines the name - with single layer specified", function () {
+      item.setTrait(CommonStrata.definition, "layers", "21");
+      // Using name from layer 21 metadata
+      expect(item.name).toBe("Watercourses All Rivers Labels");
+    });
+
+    it("defines the name - with multiple layers specified", function () {
+      item.setTrait(CommonStrata.definition, "layers", "21,22");
+      // Using name from MapServer metadata - we don't support combining names across multiple layers
       expect(item.name).toBe(
         "Australia 250K Topographic Hydrography and Marine Layers"
       );
@@ -258,7 +290,34 @@ describe("ArcGisMapServerCatalogItem", function () {
       expect(item.dataCustodian).toBe("Geoscience Australia");
     });
 
-    it("defines a rectangle", function () {
+    it("defines maximum scale - with no layers specified", function () {
+      // With no layer specified, we expect rectangle to be calculated using all layer metadata
+
+      expect(item.maximumScale).toBeDefined();
+      expect(item.maximumScale).toEqual(0);
+    });
+
+    it("defines maximum scale - with single layer specified", function () {
+      // With a single layer specified, we expect rectangle to be calculated using layer metadata
+
+      item.setTrait(CommonStrata.definition, "layers", "3");
+
+      expect(item.maximumScale).toBeDefined();
+      expect(item.maximumScale).toEqual(70000);
+    });
+
+    it("defines maximum scale - with multiple layers specified", function () {
+      // With a multiple layers specified, we expect rectangle to be a union of all calculated rectangles from each layer metadata.
+
+      item.setTrait(CommonStrata.definition, "layers", "19,20");
+
+      expect(item.maximumScale).toBeDefined();
+      expect(item.maximumScale).toEqual(300001);
+    });
+
+    it("defines a rectangle - with no layers specified", function () {
+      // With no layer specified, we expect rectangle to be calculated using MapServer metadata
+
       expect(item.rectangle).toBeDefined();
       expect(item.rectangle.west).toEqual(97.90759300700006);
       expect(item.rectangle.south).toEqual(-54.25906877199998);
@@ -266,7 +325,47 @@ describe("ArcGisMapServerCatalogItem", function () {
       expect(item.rectangle.north).toEqual(0.9835908000000587);
     });
 
-    it("defines info", function () {
+    it("defines a rectangle - with single layer specified", function () {
+      // With a single layer specified, we expect rectangle to be calculated using layer metadata
+
+      item.setTrait(CommonStrata.definition, "layers", "3");
+
+      expect(item.rectangle).toBeDefined();
+      expect(item.rectangle.west).toEqual(113.11904000000004);
+      expect(item.rectangle.south).toEqual(-43.66633999999999);
+      expect(item.rectangle.east).toEqual(153.62995);
+      expect(item.rectangle.north).toEqual(-9.063350000000014);
+    });
+
+    it("defines a rectangle - with multiple layers specified", function () {
+      // With a multiple layers specified, we expect rectangle to be a union of all calculated rectangles from each layer metadata.
+
+      item.setTrait(CommonStrata.definition, "layers", "4,5");
+
+      expect(item.rectangle).toBeDefined();
+      expect(item.rectangle.west).toEqual(112.92034999999998);
+      expect(item.rectangle.south).toEqual(-43.65735999999998);
+      expect(item.rectangle.east).toEqual(153.63570000000004);
+      expect(item.rectangle.north).toEqual(-8.99857000000003);
+    });
+
+    it("defines info - no layer specified", function () {
+      // With no layer specified, we expect to only get description and copyright text from MapServer metadata
+      expect(item.info.map(({ name, content }) => [name, content])).toEqual([
+        [
+          i18next.t("models.arcGisMapServerCatalogItem.serviceDescription"),
+          "This service has been created specifically for display in the National Map and the symbology displayed may not suit other mapping applications. The AusHydro dataset represents the Australia's surface hydrology at a national scale. It includes natural and man-made geographic features such as: watercourse areas, swamps, reservoirs, canals, etc. This product presents hydrology polygon, point and line features which topologically connect and forms a complete flow path network for the entire continent of Australia. The GEODATA 250K data are best suited to graphical applications. These data may vary greatly in quality depending on the method of capture and digitising specifications in place at the time of capture. These features include the culture, drainage, hydrography, waterbodies and marine themes. Some datasets reflects the increasing data from scale to scale. The data is sourced from Geoscience Australia 250K Topographic data and AusHydro_V_2_0 data."
+        ],
+        [
+          i18next.t("models.arcGisMapServerCatalogItem.copyrightText"),
+          "Geoscience Australia, AusHydro Contributors (Geoscience Australia, NSW Department Land and Property Information, Queensland Department of National Resources and Mines, Victorian Department of Environment, Land, Water and Planning, South Australia Department for Environment, Water and Natural Resources, Tasmanian Department of Primary Industries, Parks, Water and Environment and Western Australian Land Information Authority (Landgate) )"
+        ]
+      ]);
+    });
+
+    it("defines info - with single layer specified", function () {
+      // With a single layer specified, we expect to get description and copyright text from Layer metadata (in addition to description from MapServer metadata)
+      item.setTrait(CommonStrata.definition, "layers", "0");
       expect(item.info.map(({ name, content }) => [name, content])).toEqual([
         [
           i18next.t("models.arcGisMapServerCatalogItem.dataDescription"),
@@ -283,14 +382,71 @@ describe("ArcGisMapServerCatalogItem", function () {
       ]);
     });
 
-    it("defines legends", function () {
+    it("defines info - with multiple layers specified", function () {
+      // With a multiple layers specified, we expect to only get description and copyright text from MapServer metadata.
+      // We currently don't support showing description and copyright text if more than 1 layer is specified
+      item.setTrait(CommonStrata.definition, "layers", "0,1");
+      expect(item.info.map(({ name, content }) => [name, content])).toEqual([
+        [
+          i18next.t("models.arcGisMapServerCatalogItem.serviceDescription"),
+          "This service has been created specifically for display in the National Map and the symbology displayed may not suit other mapping applications. The AusHydro dataset represents the Australia's surface hydrology at a national scale. It includes natural and man-made geographic features such as: watercourse areas, swamps, reservoirs, canals, etc. This product presents hydrology polygon, point and line features which topologically connect and forms a complete flow path network for the entire continent of Australia. The GEODATA 250K data are best suited to graphical applications. These data may vary greatly in quality depending on the method of capture and digitising specifications in place at the time of capture. These features include the culture, drainage, hydrography, waterbodies and marine themes. Some datasets reflects the increasing data from scale to scale. The data is sourced from Geoscience Australia 250K Topographic data and AusHydro_V_2_0 data."
+        ],
+        [
+          i18next.t("models.arcGisMapServerCatalogItem.copyrightText"),
+          "Geoscience Australia, AusHydro Contributors (Geoscience Australia, NSW Department Land and Property Information, Queensland Department of National Resources and Mines, Victorian Department of Environment, Land, Water and Planning, South Australia Department for Environment, Water and Natural Resources, Tasmanian Department of Primary Industries, Parks, Water and Environment and Western Australian Land Information Authority (Landgate) )"
+        ]
+      ]);
+    });
+
+    it("defines legends - with no layers specified", function () {
       expect(item.legends).toBeDefined();
-      if (isDefined(item.legends)) {
-        expect(item.legends.length).toBe(1);
-        if (isDefined(item.legends[0].items)) {
-          expect(item.legends[0].items.length).toBe(30);
-        }
-      }
+      expect(item.legends?.length).toBe(1);
+      expect(item.legends[0].items.length).toBe(30);
+      expect(item.legends[0].items[0].imageUrl).toBe(
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAANQTFRF/v//pgZx/wAAAAF0Uk5TAEDm2GYAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAAPSURBVCiRY2AYBaNgqAIAAr4AAU6byIwAAAAASUVORK5CYII="
+      );
+    });
+
+    it("defines legends - with single layer specified - with duplicate legends", async function () {
+      item.setTrait(CommonStrata.definition, "layers", "61");
+
+      expect(item.legends).toBeDefined();
+
+      expect(item.legends?.length).toBe(1);
+      expect(item.legends[0].items.length).toBe(2); // Note we expect 2 legends here instead of 3 because there are two legends with the same imageUrl
+      expect(item.legends[0].items[0].imageUrl).toBe(
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAAlQTFRF/v//dLP/z9roPw4QXgAAAAN0Uk5TAP//RFDWIQAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABxJREFUKJFjYCATMGIFECkmLGBUalQKf7IhAwAAvwYDdd8LbKYAAAAASUVORK5CYII="
+      );
+      expect(item.legends[0].items[1].imageUrl).toBe(
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAAlQTFRF/v//vtL/4+XainG3SQAAAAN0Uk5TAP//RFDWIQAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABxJREFUKJFjYCATMGIFECkmLGBUalQKf7IhAwAAvwYDdd8LbKYAAAAASUVORK5CYII="
+      );
+    });
+
+    it("defines legends - with single layer specified - with unique legends", async function () {
+      item.setTrait(CommonStrata.definition, "layers", "67");
+
+      expect(item.legends).toBeDefined();
+
+      expect(item.legends?.length).toBe(1);
+      expect(item.legends[0].items.length).toBe(2);
+      expect(item.legends[0].items[0].imageUrl).toBe(
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAAZQTFRF/v//a5HBXiVtZwAAAAJ0Uk5TAP9bkSK1AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAFklEQVQokWNgGAVUAIxYASGpUUAhAAA/EgAtc3XmGwAAAABJRU5ErkJggg=="
+      );
+      expect(item.legends[0].items[1].imageUrl).toBe(
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAAZQTFRF/v//a5HBXiVtZwAAAAJ0Uk5TAP9bkSK1AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAFUlEQVQokWNgGAW0BYxYwUC7angAAB+/ABeuicGgAAAAAElFTkSuQmCC"
+      );
+    });
+
+    it("defines legends - with multiple layers specified", async function () {
+      item.setTrait(
+        CommonStrata.definition,
+        "layers",
+        "58,59,60,61,62,63,64,65,66,67"
+      );
+
+      expect(item.legends).toBeDefined();
+      expect(item.legends?.length).toBe(1);
+      expect(item.legends[0].items.length).toBe(6);
     });
   });
 
@@ -312,4 +468,99 @@ describe("ArcGisMapServerCatalogItem", function () {
       expect(item.stopTime).toBe("2019-11-03T14:00:00.000000000Z");
     });
   });
+
+  describe("TilesOnly + single fused map cache server", function () {
+    beforeEach(async () => {
+      runInAction(() => {
+        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item.setTrait(
+          CommonStrata.definition,
+          "url",
+          "http://www.example.com/SingleFusedMapCache/MapServer"
+        );
+      });
+      (await item.loadMapItems()).throwIfError();
+    });
+
+    it("doesn't request specific layers", async function () {
+      expect(item.layers).toBeUndefined();
+      expect(item.layersArray.length).toBe(0);
+    });
+
+    it("defines legends", async function () {
+      expect(item.legends.length).toBe(1);
+      expect(item.legends[0].items.length).toBe(3);
+    });
+
+    it("defines name", async function () {
+      expect(item.name).toBe("Layers");
+    });
+
+    it("defines info", function () {
+      expect(item.info.map(({ name, content }) => [name, content])).toEqual([
+        [
+          i18next.t("models.arcGisMapServerCatalogItem.serviceDescription"),
+          "Some test description"
+        ],
+        [
+          i18next.t("models.arcGisMapServerCatalogItem.copyrightText"),
+          "Some copyright"
+        ]
+      ]);
+    });
+
+    it("defines maximum scale", function () {
+      expect(item.maximumScale).toBeDefined();
+      expect(item.maximumScale).toEqual(0);
+    });
+
+    it("defines a rectangle", function () {
+      expect(item.rectangle).toBeDefined();
+      expect(item.rectangle.west).toEqual(140.9657708472755);
+      expect(item.rectangle.south).toEqual(-38.86193867467817);
+      expect(item.rectangle.east).toEqual(149.47499857774622);
+      expect(item.rectangle.north).toEqual(-34.124254130456116);
+    });
+  });
+
+  describe("rectangle", function () {
+    beforeEach(function () {
+      jasmine.Ajax.install();
+    });
+
+    afterEach(function () {
+      jasmine.Ajax.uninstall();
+    });
+
+    it("can generate rectangle from an extent in CRS EPSG:7844", async function () {
+      const mapServerJson = require("../../../../wwwroot/test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/mapserver.json");
+      mapServerJson.fullExtent.spatialReference.wkid = 7844;
+
+      jasmine.Ajax.stubRequest(/.*?\/foo\/MapServer.*/).andReturn({
+        responseText: JSON.stringify(mapServerJson)
+      });
+
+      runInAction(() => {
+        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item.setTrait(
+          CommonStrata.definition,
+          "url",
+          "http://example.com/foo/MapServer"
+        );
+      });
+
+      await item.loadMapItems();
+
+      runInAction(() => {
+        expect(round4(item.rectangle.east)).toBe(169.1615);
+        expect(round4(item.rectangle.west)).toBe(100.1444);
+        expect(round4(item.rectangle.north)).toBe(-2.3883);
+        expect(round4(item.rectangle.south)).toBe(-49.9841);
+      });
+    });
+  });
 });
+
+const digits4 = Math.pow(10, 4);
+const round4 = (num: number | undefined) =>
+  num !== undefined ? Math.floor(num * digits4) / digits4 : undefined;

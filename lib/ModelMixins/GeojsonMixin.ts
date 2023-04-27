@@ -1455,13 +1455,15 @@ function reprojectPointList(
 ): Coordinates | Coordinates[] {
   if (!code) return [];
   if (!Array.isArray(pts[0])) {
-    return Reproject.reprojectPoint(pts, code, "EPSG:4326");
+    return Reproject.reprojectPoint(pts as any, code, "EPSG:4326") ?? [];
   }
   const pts_out = [];
   for (let i = 0; i < pts.length; i++) {
     const pt = pts[i];
     if (Array.isArray(pt))
-      pts_out.push(Reproject.reprojectPoint(pt, code, "EPSG:4326"));
+      pts_out.push(
+        Reproject.reprojectPoint(pt as any, code, "EPSG:4326") ?? []
+      );
   }
   return pts_out;
 }

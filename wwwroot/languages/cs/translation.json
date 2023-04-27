@@ -264,7 +264,7 @@
     "baseMap": "Základní mapa",
     "imageOptimisation": "Optimalizace obrázků",
     "nativeResolutionHeader": "Použití nativního rozlišení zařízení",
-    "mapQuality": "Kvalita rastrové mapy:",
+    "mapQuality": "Kvalita mapy:",
     "qualityLabel": "Kvalita",
     "performanceLabel": "Výkon",
     "timeline": {
@@ -901,7 +901,8 @@
       "invalidServiceTitle": "Neplatná mapová služba ArcGIS",
       "groupNotAvailableTitle": "Skupina není k dispozici",
       "groupNotAvailableMessage": "Při vyvolání mapové služby ArcGIS došlo k chybě.",
-      "invalidServiceMessage": "Při vyvolání mapové služby ArcGIS došlo k chybě.  Odpověď serveru se nezdá být platným dokumentem mapové služby."
+      "invalidServiceMessage": "Při vyvolání mapové služby ArcGIS došlo k chybě.  Odpověď serveru se nezdá být platným dokumentem mapové služby.",
+      "singleFusedMapCacheLayerName": "Všechny vrstvy"
     },
     "arcGisMapServerCatalogItem": {
       "name": "Esri ArcGIS MapServer",
@@ -1006,7 +1007,9 @@
       "unsupportedFileTypeMessage": "Tento formát souboru aplikace {{appName}} nepodporuje. Mezi podporované formáty souborů patří: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (v {{link}})</li><li>Shapefile (.zip)</li></ul>",
       "compositesError": "Kompozity nemohou obsahovat složené položky.",
       "mustHaveType": "Každá položka musí mít typ.",
-      "convertErrorMessage": "Tento katalogový soubor je založen na starší verzi softwaru TerriaJS, který pohání tuto webovou mapu. Při pokusu o aktualizaci katalogových dat pro {{url}} došlo k chybě."
+      "convertErrorMessage": "Tento katalogový soubor je založen na starší verzi softwaru TerriaJS, který pohání tuto webovou mapu. Při pokusu o aktualizaci katalogových dat pro {{url}} došlo k chybě.",
+      "addAll": "Přidat vše",
+      "removeAll": "Odstranit vše"
     },
     "createParameter": {
       "unsupportedErrorTitle": "Nepodporovaný typ parametru funkce",
