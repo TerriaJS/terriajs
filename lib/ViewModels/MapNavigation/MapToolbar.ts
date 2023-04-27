@@ -93,7 +93,8 @@ export { default as ViewerMode } from "../../Models/ViewerMode";
  *
  * Example:
  * const toolId = addTool(viewState, {
- *   toolComponent: React.lazy(() => import("./XTool.tsx")),
+ *   name: "X Tool",
+ *   toolComponentLoader: () => import("./XTool.tsx"),
  *   toolButton: {
  *        text: "Open X tool",
  *        tooltip: "X Tool",
