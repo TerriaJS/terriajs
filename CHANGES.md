@@ -2,6 +2,7 @@
 
 #### next release (8.2.28)
 
+- Refactored TerriaViewer to expose a promise `terriaViewer.viewerLoadPromise` for async loading of viewers.
 - Fix location point ideal zoom bug in 3D mode map.
 - Add `EPSG:7844` to `Proj4Definitions`.
 - TSify `Proj4Definitions` and `Reproject` modules.

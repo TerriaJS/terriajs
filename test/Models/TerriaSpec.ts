@@ -1596,12 +1596,18 @@ describe("Terria", function () {
   });
 
   describe("loadPickedFeatures", function () {
+    let container: HTMLElement;
     beforeEach(async function () {
       // Attach cesium viewer and wait for it to be loaded
-      const container = document.createElement("div");
+      container = document.createElement("div");
       document.body.appendChild(container);
       terria.mainViewer.attach(container);
-      return (terria.mainViewer as any)._cesiumPromise;
+      return terria.mainViewer.viewerLoadPromise;
+    });
+
+    afterEach(() => {
+      terria.mainViewer.destroy();
+      document.body.removeChild(container);
     });
 
     it("sets the pickCoords", async function () {
