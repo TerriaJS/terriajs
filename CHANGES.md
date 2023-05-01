@@ -1,6 +1,10 @@
 # Change Log
 
-#### next release (8.2.28)
+#### next release (8.2.29)
+
+- [The next improvement]
+
+#### 8.2.28 - 2023-04-28
 
 - Refactored TerriaViewer to expose a promise `terriaViewer.viewerLoadPromise` for async loading of viewers.
 - Fix location point ideal zoom bug in 3D mode map.
@@ -8,7 +12,6 @@
 - TSify `Proj4Definitions` and `Reproject` modules.
 - Update the docs for `excludeMembers`: mention the group/item id support
 - Simplified `MapToolbar` API.
-- [The next improvement]
 
 #### 8.2.27 - 2023-04-05
 
