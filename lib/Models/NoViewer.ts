@@ -11,16 +11,14 @@ import CameraView from "./CameraView";
 import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
-import { observable } from "mobx";
 
 class NoViewer extends GlobeOrMap {
   readonly type = "none";
   readonly terria: Terria;
   readonly canShowSplitter = false;
   private _currentView: CameraView = new CameraView(Rectangle.MAX_VALUE);
-  readonly dataAttributions = observable([]);
 
-  constructor(terriaViewer: TerriaViewer) {
+  constructor(terriaViewer: TerriaViewer, _container?: string | HTMLElement) {
     super();
     this.terria = terriaViewer.terria;
   }
