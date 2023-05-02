@@ -2,6 +2,7 @@
 
 #### next release (8.2.29)
 
+- Fix app crash when rendering feature info with a custom title.
 - [The next improvement]
 
 #### 8.2.28 - 2023-04-28
