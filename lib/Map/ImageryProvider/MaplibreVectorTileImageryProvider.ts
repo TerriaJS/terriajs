@@ -327,7 +327,7 @@ export default class MaplibreVectorTileImageryProvider
 
     if (!data) return;
 
-    return new ProtomapsImageryProvider({
+    return new MaplibreVectorTileImageryProvider({
       terria: options?.terria ?? this.terria,
       data,
       minimumZoom: options?.minimumZoom ?? this.minimumLevel,
@@ -344,7 +344,7 @@ export default class MaplibreVectorTileImageryProvider
   @action
   createHighlightImageryProvider(
     feature: TerriaFeature
-  ): ProtomapsImageryProvider | undefined {
+  ): MaplibreVectorTileImageryProvider | undefined {
     // Depending on this.source, feature IDs might be FID (for actual vector tile sources) or they will use GEOJSON_FEATURE_ID_PROP
     let featureProp: string | undefined;
     // Similarly, feature layer name will be LAYER_NAME_PROP for mvt, whereas GeoJSON features will use the constant GEOJSON_SOURCE_LAYER_NAME
