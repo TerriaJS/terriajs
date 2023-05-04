@@ -305,6 +305,7 @@ describe("FeatureInfoSection", function () {
     feature = new Entity({
       name: "Vapid"
     });
+
     const section = (
       <FeatureInfoSection
         catalogItem={catalogItem}
@@ -325,6 +326,27 @@ describe("FeatureInfoSection", function () {
       result.root.findAll((node) => (node as any)._fiber.key === "no-info")
         .length
     ).toEqual(1);
+  });
+
+  it("does not break when a template name needs to be rendered but no properties are set", function () {
+    catalogItem.featureInfoTemplate.setTrait(
+      CommonStrata.user,
+      "name",
+      "Title {{name}}"
+    );
+
+    feature = new Entity();
+    const section = (
+      <FeatureInfoSection
+        catalogItem={catalogItem}
+        feature={feature}
+        isOpen={true}
+        viewState={viewState}
+        t={() => {}}
+      />
+    );
+    const result = createWithContexts(viewState, section);
+    expect(findWithText(result, "Title ").length).toEqual(1);
   });
 
   it("shows properties if no description", function () {
