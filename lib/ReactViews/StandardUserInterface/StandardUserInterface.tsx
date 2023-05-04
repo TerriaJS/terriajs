@@ -2,7 +2,7 @@ import classNames from "classnames";
 import "inobounce";
 import { action } from "mobx";
 import { observer } from "mobx-react";
-import React, { useEffect } from "react";
+import React, { useEffect, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { DefaultTheme } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
@@ -41,7 +41,7 @@ import processCustomElements from "./processCustomElements";
 import SidePanelContainer from "./SidePanelContainer";
 import Styles from "./standard-user-interface.scss";
 import { terriaTheme } from "./StandardTheme";
-import WorkflowPanelContainer from "./WorkflowPanelContainer";
+import WorkflowPanelPortal from "../Workflow/WorkflowPanelPortal";
 
 export const animationDuration = 250;
 
@@ -51,6 +51,7 @@ interface StandardUserInterfaceProps {
   themeOverrides?: Partial<DefaultTheme>;
   minimumLargeScreenWidth?: number;
   version: string;
+  children?: ReactNode;
 }
 
 const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
@@ -178,7 +179,7 @@ const StandardUserInterfaceBase: React.FC<StandardUserInterfaceProps> =
                     </Small>
                     <Medium>
                       <>
-                        <WorkflowPanelContainer
+                        <WorkflowPanelPortal
                           show={props.terria.isWorkflowPanelActive}
                         />
                         <SidePanelContainer

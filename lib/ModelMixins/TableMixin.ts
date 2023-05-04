@@ -11,7 +11,6 @@ import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
@@ -19,6 +18,7 @@ import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
+import { JsonObject } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
 import TerriaError from "../Core/TerriaError";
 import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
@@ -27,6 +27,8 @@ import RegionProviderList from "../Map/Region/RegionProviderList";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
+import TerriaFeature from "../Models/Feature/Feature";
+import FeatureInfoContext from "../Models/Feature/FeatureInfoContext";
 import SelectableDimensions, {
   SelectableDimension,
   SelectableDimensionEnum,
@@ -41,9 +43,11 @@ import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitu
 import createRegionMappedImageryProvider from "../Table/createRegionMappedImageryProvider";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
+import { tableFeatureInfoContext } from "../Table/tableFeatureInfoContext";
+import TableFeatureInfoStratum from "../Table/TableFeatureInfoStratum";
 import { TableAutomaticLegendStratum } from "../Table/TableLegendStratum";
 import TableStyle from "../Table/TableStyle";
-import TableTraits from "../Traits/TraitsClasses/TableTraits";
+import TableTraits from "../Traits/TraitsClasses/Table/TableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import { calculateDomain, ChartAxis, ChartItem } from "./ChartableMixin";
 import DiscretelyTimeVaryingMixin, {
@@ -57,7 +61,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     extends ExportableMixin(
       DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base))
     )
-    implements SelectableDimensions, ViewingControls
+    implements SelectableDimensions, ViewingControls, FeatureInfoContext
   {
     /**
      * The default {@link TableStyle}, which is used for styling
@@ -70,6 +74,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
       // Create default TableStyle and set TableAutomaticLegendStratum
       this.defaultTableStyle = new TableStyle(this);
+
       if (
         this.strata.get(TableAutomaticLegendStratum.stratumName) === undefined
       ) {
@@ -77,6 +82,16 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           this.strata.set(
             TableAutomaticLegendStratum.stratumName,
             TableAutomaticLegendStratum.load(this)
+          );
+        });
+      }
+
+      // Create TableFeatureInfoStratum
+      if (this.strata.get(TableFeatureInfoStratum.stratumName) === undefined) {
+        runInAction(() => {
+          this.strata.set(
+            TableFeatureInfoStratum.stratumName,
+            TableFeatureInfoStratum.load(this)
           );
         });
       }
@@ -155,45 +170,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         return [];
       }
       return this.styles.map((_, i) => this.getTableStyle(i));
-    }
-
-    /**
-     * Gets the {@link TableStyleTraits#id} of the currently-active style.
-     * Note that this is a trait so there is no guarantee that a style
-     * with this ID actually exists. If no active style is explicitly
-     * specified, return first style with a scalar color column (if none is found then find first style with enum, text and then region)
-     *
-     */
-    @computed
-    get activeStyle(): string | undefined {
-      const value = super.activeStyle;
-      if (value !== undefined) {
-        return value;
-      } else if (this.styles && this.styles.length > 0) {
-        // Find default active style in this order:
-        // - First scalar style
-        // - First enum style
-        // - First text style
-        // - First region style
-
-        const types = [
-          TableColumnType.scalar,
-          TableColumnType.enum,
-          TableColumnType.text,
-          TableColumnType.region
-        ];
-
-        const firstStyleOfEachType = types.map(
-          (columnType) =>
-            this.styles.find(
-              (s) =>
-                this.findColumnByName(s.color.colorColumn)?.type === columnType
-            )?.id
-        );
-
-        return filterOutUndefined(firstStyleOfEachType)[0];
-      }
-      return undefined;
     }
 
     /**
@@ -480,6 +456,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       ]);
     }
 
+    @computed get featureInfoContext(): (f: TerriaFeature) => JsonObject {
+      return tableFeatureInfoContext(this);
+    }
+
     @computed
     get selectableDimensions(): SelectableDimension[] {
       return filterOutUndefined([
@@ -643,7 +623,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             defaultStyle: {
               color: { zScoreFilterEnabled: value === "true" }
             }
-          });
+          }).logError("Failed to update zScoreFilterEnabled");
         },
         placement: "belowLegend",
         type: "checkbox"
@@ -707,25 +687,22 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       if (dates === undefined) {
         return;
       }
-      const times = filterOutUndefined(
-        dates.map((d) =>
-          d ? { time: d.toISOString(), tag: undefined } : undefined
-        )
-      ).reduce(
-        // is it correct for discrete times to remove duplicates?
-        // see discussion on https://github.com/TerriaJS/terriajs/pull/4577
-        // duplicates will mess up the indexing problem as our `<DateTimePicker />`
-        // will eliminate duplicates on the UI front, so given the datepicker
-        // expects uniques, return uniques here
-        (acc: DiscreteTimeAsJS[], time) =>
-          !acc.some(
-            (accTime) => accTime.time === time.time && accTime.tag === time.tag
-          )
-            ? [...acc, time]
-            : acc,
-        []
-      );
-      return times;
+
+      // is it correct for discrete times to remove duplicates?
+      // see discussion on https://github.com/TerriaJS/terriajs/pull/4577
+      // duplicates will mess up the indexing problem as our `<DateTimePicker />`
+      // will eliminate duplicates on the UI front, so given the datepicker
+      // expects uniques, return uniques here
+      const times = new Set<string>();
+
+      for (let i = 0; i < dates.length; i++) {
+        const d = dates[i];
+        if (d) {
+          times.add(d.toISOString());
+        }
+      }
+
+      return Array.from(times).map((time) => ({ time, tag: undefined }));
     }
 
     /** This is a temporary button which shows in the Legend in the Workbench, if custom styling has been applied. */
@@ -850,7 +827,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         const dataSource = new CustomDataSource(this.name || "Table");
         dataSource.entities.suspendEvents();
 
-        let features: Entity[];
+        let features: TerriaFeature[];
         if (style.isTimeVaryingPointsWithId()) {
           features = createLongitudeLatitudeFeaturePerId(style);
         } else {
@@ -859,7 +836,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
         // _catalogItem property is needed for some feature picking functions (eg `featureInfoTemplate`)
         features.forEach((f) => {
-          (f as any)._catalogItem = this;
+          f._catalogItem = this;
           dataSource.entities.add(f);
         });
         dataSource.show = this.show;

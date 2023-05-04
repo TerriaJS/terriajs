@@ -14,7 +14,11 @@ import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import URI from "urijs";
-import { Category, LaunchAction } from "../Core/AnalyticEvents/analyticEvents";
+import {
+  Category,
+  LaunchAction,
+  DataSourceAction
+} from "../Core/AnalyticEvents/analyticEvents";
 import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import ConsoleAnalytics from "../Core/ConsoleAnalytics";
@@ -22,6 +26,7 @@ import CorsProxy from "../Core/CorsProxy";
 import ensureSuffix from "../Core/ensureSuffix";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
+import getPath from "../Core/getPath";
 import GoogleAnalytics from "../Core/GoogleAnalytics";
 import hashEntity from "../Core/hashEntity";
 import instanceOf from "../Core/instanceOf";
@@ -30,7 +35,6 @@ import {
   isJsonBoolean,
   isJsonNumber,
   isJsonObject,
-  isJsonObjectArray,
   isJsonString,
   JsonArray,
   JsonObject
@@ -84,18 +88,18 @@ import {
   initializeErrorServiceProvider
 } from "./ErrorServiceProviders/ErrorService";
 import StubErrorServiceProvider from "./ErrorServiceProviders/StubErrorServiceProvider";
-import Feature from "./Feature";
+import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import IElementConfig from "./IElementConfig";
 import InitSource, {
   InitSourceData,
+  InitSourceFromData,
   isInitFromData,
   isInitFromDataPromise,
   isInitFromOptions,
   isInitFromUrl,
   ShareInitSourceData,
-  StoryData,
-  InitSourceFromData
+  StoryData
 } from "./InitSource";
 import Internationalization, {
   I18nStartOptions,
@@ -103,6 +107,7 @@ import Internationalization, {
 } from "./Internationalization";
 import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
+import { defaultRelatedMaps, RelatedMap } from "./RelatedMaps";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
 import ShareDataService from "./ShareDataService";
 import { StoryVideoSettings } from "./StoryVideoSettings";
@@ -318,6 +323,15 @@ interface ConfigParameters {
    * Options for Google Analytics
    */
   googleAnalyticsOptions?: unknown;
+
+  relatedMaps?: RelatedMap[];
+
+  /**
+   * Optional plugin configuration
+   */
+  plugins?: Record<string, any>;
+
+  aboutButtonHrefUrl?: string | null;
 }
 
 interface StartOptions {
@@ -527,14 +541,17 @@ export default class Terria {
     printDisclaimer: undefined,
     storyRouteUrlPrefix: undefined,
     enableConsoleAnalytics: undefined,
-    googleAnalyticsOptions: undefined
+    googleAnalyticsOptions: undefined,
+    relatedMaps: defaultRelatedMaps,
+    aboutButtonHrefUrl: "about.html",
+    plugins: undefined
   };
 
   @observable
   pickedFeatures: PickedFeatures | undefined;
 
   @observable
-  selectedFeature: Feature | undefined;
+  selectedFeature: TerriaFeature | undefined;
 
   @observable
   allowFeatureInfoRequests: boolean = true;
@@ -780,7 +797,7 @@ export default class Terria {
     if (pickedFeatures) {
       // Remove picked features that belong to the catalog item
       pickedFeatures.features.forEach((feature, i) => {
-        if (featureBelongsToCatalogItem(<Feature>feature, model)) {
+        if (featureBelongsToCatalogItem(<TerriaFeature>feature, model)) {
           pickedFeatures?.features.splice(i, 1);
           if (this.selectedFeature === feature)
             this.selectedFeature = undefined;
@@ -1715,6 +1732,15 @@ export default class Terria {
       }
     }
 
+    newItems.forEach((item) => {
+      // fire the google analytics event
+      this.analytics?.logEvent(
+        Category.dataSource,
+        DataSourceAction.addFromShareOrInit,
+        getPath(item)
+      );
+    });
+
     runInAction(() => (this.workbench.items = newItems));
 
     // For ids that don't correspond to models resolve an id by share keys
@@ -1881,8 +1907,8 @@ export default class Terria {
 
   @action
   async loadPickedFeatures(pickedFeatures: JsonObject): Promise<void> {
-    let vectorFeatures: Entity[] = [];
-    let featureIndex: Record<number, Entity[] | undefined> = {};
+    let vectorFeatures: TerriaFeature[] = [];
+    let featureIndex: Record<number, TerriaFeature[] | undefined> = {};
 
     if (Array.isArray(pickedFeatures.entities)) {
       // Build index of terria features by a hash of their properties.
@@ -1899,8 +1925,9 @@ export default class Terria {
           .reduce((arr: Entity[], ds) => arr.concat(ds.entities.values), []);
 
         entities.forEach((entity) => {
-          const hash = hashEntity(entity, this.timelineClock);
-          const feature = Feature.fromEntityCollectionOrEntity(entity);
+          const feature = TerriaFeature.fromEntityCollectionOrEntity(entity);
+          const hash = hashEntity(feature, this);
+
           featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
         });
       });
@@ -1932,7 +1959,7 @@ export default class Terria {
       this.currentViewer.pickFromLocation(
         pickCoords,
         pickedFeatures.providerCoords,
-        vectorFeatures as Feature[]
+        vectorFeatures as TerriaFeature[]
       );
     }
 
@@ -1942,23 +1969,21 @@ export default class Terria {
     }
 
     runInAction(() => {
-      this.pickedFeatures?.features.forEach((entity: Entity) => {
-        const hash = hashEntity(entity, this.timelineClock);
-        const feature = entity;
+      this.pickedFeatures?.features.forEach((feature) => {
+        const hash = hashEntity(feature, this);
         featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
       });
 
+      // Find picked feature by matching feature hash
+      // Also try to match name if defined
       const current = pickedFeatures.current;
-      if (
-        isJsonObject(current) &&
-        typeof current.hash === "number" &&
-        typeof current.name === "string"
-      ) {
-        const selectedFeature = (featureIndex[current.hash] || []).find(
-          (feature) => feature.name === current.name
-        );
+      if (isJsonObject(current) && typeof current.hash === "number") {
+        const selectedFeature =
+          (featureIndex[current.hash] || []).find(
+            (feature) => feature.name === current.name
+          ) ?? featureIndex[current.hash]?.[0];
         if (selectedFeature) {
-          this.selectedFeature = selectedFeature as Feature;
+          this.selectedFeature = selectedFeature;
         }
       }
     });
@@ -1973,10 +1998,6 @@ export default class Terria {
       this.configParameters.corsProxyBaseUrl,
       []
     );
-  }
-
-  getUserProperty(key: string) {
-    return undefined;
   }
 
   getLocalProperty(key: string): string | boolean | null {
@@ -2116,12 +2137,9 @@ async function interpretStartData(
   errorSeverity?: TerriaErrorSeverity,
   showConversionWarning = true
 ) {
-  const containsStory = (initSource: InitSourceData) =>
-    Array.isArray(initSource.stories) && initSource.stories.length;
   if (isJsonObject(startData, false)) {
     // Convert startData to v8 if necessary
     let startDataV8: ShareInitSourceData | null;
-
     try {
       if (
         // If startData.version has version 0.x.x - user catalog-converter to convert startData
@@ -2146,25 +2164,50 @@ async function interpretStartData(
           version: isJsonString(startData.version)
             ? startData.version
             : SHARE_VERSION,
-          initSources: isJsonObjectArray(startData.initSources)
-            ? startData.initSources
+          initSources: Array.isArray(startData.initSources)
+            ? (startData.initSources.filter(
+                (initSource) =>
+                  isJsonString(initSource) || isJsonObject(initSource)
+              ) as (string | JsonObject)[])
             : []
         };
       }
 
       if (startDataV8 !== null && Array.isArray(startDataV8.initSources)) {
+        // Push startData.initSources to terria.initSources array
+        // Note startData.initSources can be an initUrl (string) or initData (InitDataSource/JsonObject)
+        // Terria.initSources are different to startData.initSources
+        // They need to be transformed into appropriate `InitSource`
         runInAction(() => {
           terria.initSources.push(
-            ...startDataV8!.initSources.map((initSource: unknown) => {
-              return {
-                name,
-                data: isJsonObject(initSource, false) ? initSource : {},
-                errorSeverity
-              };
-            })
+            ...startDataV8!.initSources.map((initSource) =>
+              isJsonString(initSource)
+                ? // InitSourceFromUrl if string
+                  {
+                    name,
+                    initUrl: initSource,
+                    errorSeverity
+                  }
+                : // InitSourceFromData if Json Object
+                  {
+                    name,
+                    data: initSource,
+                    errorSeverity
+                  }
+            )
           );
         });
-        if (startDataV8.initSources.some(containsStory)) {
+
+        // If initSources contain story - we disable the welcome message so there aren't too many modals/popups
+        // We only check JSON share initSources - as URLs will be loaded in `forceLoadInitSources`
+        if (
+          startDataV8.initSources.some(
+            (initSource) =>
+              isJsonObject(initSource) &&
+              Array.isArray(initSource.stories) &&
+              initSource.stories.length
+          )
+        ) {
           terria.configParameters.showWelcomeMessage = false;
         }
       }

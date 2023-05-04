@@ -10,7 +10,7 @@ export default class GroupTraits extends mixTraits(ItemPropertiesTraits) {
   @primitiveArrayTrait({
     name: "Exclude members",
     type: "string",
-    description: `An array of strings of excluded group and item names. A group or item name that appears in this list will not be shown to the user. This is case-insensitive and will also apply to all child/nested groups`
+    description: `An array of strings of excluded group and item names (or ids). A group or item name (or id) that appears in this list will not be shown to the user. This is case-insensitive and will also apply to all child/nested groups`
   })
   excludeMembers?: string[];
 
@@ -21,6 +21,13 @@ export default class GroupTraits extends mixTraits(ItemPropertiesTraits) {
     type: "boolean"
   })
   isOpen: boolean = false;
+
+  @primitiveTrait({
+    name: "Merge by name",
+    description: "Merge member groups by name.",
+    type: "boolean"
+  })
+  mergeGroupsByName: boolean = false;
 
   @primitiveTrait({
     name: "Sort members by",
@@ -36,4 +43,12 @@ export default class GroupTraits extends mixTraits(ItemPropertiesTraits) {
     factory: CatalogMemberFactory
   })
   members?: ModelReference[];
+
+  @primitiveTrait({
+    name: "Display group",
+    description:
+      "Allow adding all members to the workbench with one click. Show Add All / Remove All button",
+    type: "boolean"
+  })
+  displayGroup?: boolean;
 }

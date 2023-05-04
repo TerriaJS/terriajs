@@ -20,6 +20,8 @@ import Loader from "../../../Loader";
 import Styles from "./add-data.scss";
 import FileInput from "./FileInput";
 import { parseCustomMarkdownToReactWithOptions } from "../../../Custom/parseCustomMarkdownToReact";
+import loadJson from "../../../../Core/loadJson";
+import TerriaError from "../../../../Core/TerriaError";
 
 /**
  * Add data panel in modal window -> My data tab
@@ -38,6 +40,7 @@ const AddData = createReactClass({
     localDataTypes: PropTypes.arrayOf(PropTypes.object),
     remoteDataTypes: PropTypes.arrayOf(PropTypes.object),
     onFileAddFinished: PropTypes.func.isRequired,
+    onUrlAddFinished: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired
   },
 
@@ -117,6 +120,30 @@ const AddData = createReactClass({
         this.state.remoteUrl,
         this.state.remoteDataType.value
       );
+    } else if (this.state.remoteDataType.value === "json") {
+      promise = loadJson(this.state.remoteUrl)
+        .then((data) => {
+          if (data.error) {
+            return Promise.reject(data.error);
+          }
+          this.props.terria.catalog.group
+            .addMembersFromJson(CommonStrata.user, data.catalog)
+            .raiseError(this.props.terria, "Failed to load catalog from file");
+        })
+        .then(() => {
+          this.props.onUrlAddFinished();
+        })
+        .catch((error) =>
+          TerriaError.from(error).raiseError(
+            this.props.terria,
+            `An error occurred trying to add data from URL: ${this.state.remoteUrl}`
+          )
+        )
+        .finally(() => {
+          this.setState({
+            isLoading: false
+          });
+        });
     } else {
       try {
         const newItem = upsertModelFromJson(

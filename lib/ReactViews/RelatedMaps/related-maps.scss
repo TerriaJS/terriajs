@@ -1,0 +1,29 @@
+@import "~terriajs-variables";
+
+.dropdown-inner {
+  padding: 10px;
+  font-size: 0.9rem;
+  width: 600px;
+
+  @media (max-width: $mobile) {
+    max-width: fit-content;
+  }
+}
+
+.section {
+  composes: clearfix from "~terriajs/lib/Sass/common/_base.scss";
+  margin-bottom: 10px;
+  padding: 0;
+}
+
+.image {
+  float: left;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  width: 200px;
+  height: 150px;
+}
+
+.link {
+  composes: link from "~terriajs/lib/Sass/common/_base.scss";
+}

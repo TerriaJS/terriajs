@@ -72,7 +72,7 @@ const FooterBar = ({
           />
         </FooterButton>
         <Box paddedRatio={3}>
-          <Text>
+          <Text noWrap>
             {currentHumanIndex} / {totalStories}
           </Text>
         </Box>

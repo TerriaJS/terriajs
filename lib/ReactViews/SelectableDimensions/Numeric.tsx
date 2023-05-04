@@ -1,13 +1,16 @@
 import { runInAction } from "mobx";
-import React from "react";
+import React, { useState } from "react";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import { SelectableDimensionNumeric as SelectableDimensionNumericModel } from "../../Models/SelectableDimensions/SelectableDimensions";
 import Input from "../../Styled/Input";
+import { observer } from "mobx-react";
 
 export const SelectableDimensionNumeric: React.FC<{
   id: string;
   dim: SelectableDimensionNumericModel;
-}> = ({ id, dim }) => {
+}> = observer(({ id, dim }) => {
+  const [value, setValue] = useState(dim.value?.toString());
+
   return (
     <Input
       styledHeight={"34px"}
@@ -15,14 +18,17 @@ export const SelectableDimensionNumeric: React.FC<{
       border
       type="number"
       name={id}
-      value={dim.value}
+      value={value}
       min={dim.min}
       max={dim.max}
+      invalidValue={Number.isNaN(parseFloat(value ?? ""))}
       onChange={(evt) => {
-        runInAction(() =>
-          dim.setDimensionValue(CommonStrata.user, parseFloat(evt.target.value))
-        );
+        setValue(evt.target.value);
+        const number = parseFloat(evt.target.value);
+        if (!Number.isNaN(number)) {
+          runInAction(() => dim.setDimensionValue(CommonStrata.user, number));
+        }
       }}
     />
   );
-};
+});

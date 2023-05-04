@@ -19,19 +19,19 @@ import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTr
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import TableColorStyleTraits, {
   EnumColorTraits
-} from "../../../Traits/TraitsClasses/TableColorStyleTraits";
+} from "../../../Traits/TraitsClasses/Table/ColorStyleTraits";
 import TableOutlineStyleTraits, {
   BinOutlineSymbolTraits,
   EnumOutlineSymbolTraits,
   OutlineSymbolTraits
-} from "../../../Traits/TraitsClasses/TableOutlineStyleTraits";
-import TablePointSizeStyleTraits from "../../../Traits/TraitsClasses/TablePointSizeStyleTraits";
+} from "../../../Traits/TraitsClasses/Table/OutlineStyleTraits";
+import TablePointSizeStyleTraits from "../../../Traits/TraitsClasses/Table/PointSizeStyleTraits";
 import TablePointStyleTraits, {
   BinPointSymbolTraits,
   EnumPointSymbolTraits,
   PointSymbolTraits
-} from "../../../Traits/TraitsClasses/TablePointStyleTraits";
-import TableStyleTraits from "../../../Traits/TraitsClasses/TableStyleTraits";
+} from "../../../Traits/TraitsClasses/Table/PointStyleTraits";
+import TableStyleTraits from "../../../Traits/TraitsClasses/Table/StyleTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";

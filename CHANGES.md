@@ -1,16 +1,193 @@
 # Change Log
 
-#### next release (8.2.13)
+#### next release (8.2.29)
+
+- [The next improvement]
+
+#### 8.2.28 - 2023-04-28
+
+- Refactored TerriaViewer to expose a promise `terriaViewer.viewerLoadPromise` for async loading of viewers.
+- Fix location point ideal zoom bug in 3D mode map.
+- Add `EPSG:7844` to `Proj4Definitions`.
+- TSify `Proj4Definitions` and `Reproject` modules.
+- Update the docs for `excludeMembers`: mention the group/item id support
+- Simplified `MapToolbar` API.
+
+#### 8.2.27 - 2023-04-05
+
+- Change icon used for display group remove button
+- Make access control UI compatible to Magda v1 and v2 with v2 overriding v1.
+- Remove karma-sauce-launcher dependency
+- Add method `addFileDragDropListener` for receiving callbacks when user drags-n-drops a file.
+- Improve `BoxDrawing` drag interaction.
+- Fix a bug where `BoxDrawing` sometimes causes the map to loose pan and zoom interactivity.
+- Optimize `LocationBar` component to reduce number of renders on mouse move.
+- Optimize `Compass` component to reduce renders on each frame.
+- Add `children` optional property to StandardUserInterfaceProps interface
+- Add support for ArcGis MapServer with `TileOnly` capability - for example layers served from ArcGis Online. This is supported through `ArcGisMapServerCatalogItem`, `ArcGisMapServerCatalogGroup` and `ArcGisCatalogGroup`.
+
+#### 8.2.26 - 2023-03-21
+
+- Upgraded to terriajs-server 4.0.0.
+- Added new `gulp dev` task that runs terriajs-server and `gulp watch` (incremental specs build) at the same time.
+
+#### 8.2.25 - 2023-03-20
+
+- Export `registerUrlHandlerForCatalogMemberType` for registering new url handler for catalog types.
+- BoxDrawing changes:
+  - Adds a new option called disableVerticalMovement to BoxDrawing which if set to true disables up/down motion of the box when dragging the top/bottom sides of the box.
+  - Keeps height (mostly) steady when moving the box laterally on the map. Previously the height of the box used to change wrt to the ellipsoid/surface.
+  - Fixes a bug that caused map panning and zooming to break when interacting with multiple active BoxDrawings.
+  - Removed some code that was causing too much drift between mouse cursor and model when moving the model laterally on the map.
+- Replaces addRemoteUploadType and addLocalUploadType with addOrReplaceRemoteFileUploadType and addOrReplaceLocalFileUploadType.
+
+#### 8.2.24 - 2023-03-06
+
+- Reimplement error message and default to 3d smooth mode when Cesium Ion Access Token is invalid.
+- Layers shown via a share URL are now logged as a Google Analytics event
+- Show an Add All / Remove All button for catalog groups when an optional `displayGroup` trait is true
+- Rename the Map Settings "Raster Map Quality" slider to be just "Map Quality" as it also affects other things than raster data.
+- Dragn-n-drop should respect disableZoomTo setting
+- Fixed #6702 Terrain Hides Underground Features not working
+- Add className prop for MyData tab so that it can be styled externally
+
+#### 8.2.23 - 2023-01-06
+
+- Only add groups to `CatalogIndex` if they aren't empty
+- `BoxDrawing` improvements:
+  - Added option `drawNonUniformScaleGrips` to enable/disable uniform-scaling
+  - Set limit on the size of scaling grips relative to the size of the box
+  - Small improvement to move interaction that prevents the box from locking up when trying to move at a camera angle parallel to the ground
+  - Restore modified map state to the previous setting when interaction stops
+- Fix bug in Cesium and Leaflet maps that resulted in `DataSource`s getting rendered even after their parent items are removed from the workbench.
+- GltfMixin changes:
+  - Refactors code to use stable `DataSource` and `Entity` values instead of re-creating them everytime `mapItems` is recomputed.
+  - Disable zoom to for the item when position is unknown.
+- Add `UploadDataTypes` API for extending the supported local and remote upload data types.
+- Add option to upload terria web data (via url to json file/service)
+- Refactor `Cesium3dTileMixin`.
+- Updated related maps to fit mobile screens.
+- Extend `responseDataPath` trait of `ApiTableCatalogItem` with support for mapping over arrays and collecting nested object values.
+- Add `MapToolbar.addToolButton()` API for adding a tool button to the map navigation menu.
+- Add `ActionBar` component for showing a floating menu bar at the bottom of the map.
+
+#### 8.2.22 - 2022-12-02
+
+- Protomaps Polygon features now only use `PolygonSymbolizer` (instead of `PolygonSymbolizer` and `LineSymbolizer`)
+- Add `horizontalOrigin` and `verticalOrigin` to `TableLabelTraits`
+- `TableStylingWorkflow` improvements:
+  - Add more options to advanced mode (style title, hide style, long/lat column, time properties)
+  - "Style" dropdown now shows `TableStyles` instead of `TableColumns`
+  - Show "Variable" in "Fill color" if color column name doesn't match style name (eg style isn't generated by `TableAutomaticStylesStratum`)
+  - Add symbology dropdown to advanced mode (was only showing in basic mode)
+  - Add label and trail styling
+  - When creating a new `bin` or `enum` value, the `null` ("default") values will be copied across.
+- Move all Table related Traits to `lib/Traits/TraitsClasses/Table/` directory
+- Handle errors thrown in `Cesium._attachProviderCoordHooks`. This fixes a bug where some WMTS layers break feature picking.
+- Fix `Legend` outline bug - where invalid `boxStyle` meant old legend styles may be visible
+- Fix `baseMapContrastColor` reactivity in `GeojsonMixin` - mvt was not updating when the basemap changes
+- Add `SelectableDimensionMultiEnum` - A enum SelectableDimension that allows multiple values to be selected
+- Fix `SelectableDimensionNumeric` handling of invalid values
+- `ColorStyleLegend` will use `colorColumn` title by default. It will fallback to `TableStyle.title`
+- Add `children` optional property to StandardUserInterfaceProps interface
+- Fix `MapboxVectorTileCatalogItem` feature highlighting - this requires use of `idProperty` trait (also added `idProperty` to `ProtomapsImageryProvider`)
+- Fix `MapboxVectorTileCatalogItem` `fillColor` also applying to Line features
+- Add `maximumNativeZoom` to `ProtomapsImageryProvider`
+- Fix image markers (eg `marker = "data:image/png;base64,..."`)
+- Fix `AssimpCatalogItem` to correctly handle zip archives that contain files inside a root folder.
+
+#### 8.2.21 - 2022-11-10
+
+- Add check for WFS `layer.OtherSRS` in `buildSrsNameObject`
+- Add `overridesBaseUrl` to `LanguageOptions`. This can be used to set the base URL for language override namespace translation files (see [client-side-config.md#LanguageConfiguration](./doc/customizing/client-side-config.md#LanguageConfiguration))
+- Add `aboutButtonHrefUrl` to `configParameters`. Defaults to `"about.html"`. If set to `null`, then the About button will not be shown.
+- Add `refreshIntervalTemplate` to `OpenDataSoftCatalogItemTraits` - this can be used to set `refreshInterval` using Mustache template rendered on ODS Dataset JSON object
+- Add `plugins` property to `ConfigParameters` type
+- Add more supported 4326 and 3857 CRS strings for WFS (eg `"urn:ogc:def:crs:EPSG::3857"` and `"urn:x-ogc:def:crs:EPSG:3857"`)
+
+#### 8.2.20 - 2022-10-20
+
+- Handle errors thrown in `ImageryProviderLeafletTileLayer.pickFeatures`. This fixes a bug where some WMTS layers break feature picking (in Leaflet/2D mode)
+
+#### 8.2.19 - 2022-10-20
+
+- Handle errors thrown in `Cesium._attachProviderCoordHooks`. This fixes a bug where some WMTS layers break feature picking.
+
+#### 8.2.18 - 2022-10-19
+
+- Fix `RelatedMaps` default broken URLs
+- Add `mergeGroupsByName` trait to `GroupTraits` - this will merge all group members with the same name
+- Fix bug with "propagate `knownContainerUniqueIds` across references and their target" - missing `runInAction`
+- Add Carto v3 Maps API support for `table` and `query` endpoint (only GeoJSON - not MVT yet)
+- Moved `activeStyle` default from `TableMixin` to `TableAutomaticStyleStratum`. The default `activeStyle` will now not pick a `hidden` `TableStyle`.
+- Pin `flexsearch` version to `0.7.21` - as incorrect types are shipped in version `0.7.31`
+- Only preload next timestep of timeseries rasters (WMS & ArcGIS MapServer) when animating the item on the map.
+- Added error message if cesium stops rendering
+- Add `enabled` to `TableStyleMapTraits` - which defaults to `true`
+- Add `TableLabelStyleTraits` - this can be used to add `LabelGraphics` to point features (table or geojson)
+- Add `TableTrailStyleTraits` - this can be used to add `PathGraphics` to time-series point features (table or geojson)
+- Added missing `proxyCatalogItemUrl` to GeoJson, Shapefile, Gltf and AssImp catalog items.
+- Added support for `OpenDataSoftCatalogGroup` with more than 100 datasets.
+- Added `refreshIntervalTemplate` to `OpenDataSoftCatalogItemTraits` - this can be used to set `refreshInterval` using Mustache template rendered on ODS Dataset JSON object.
+- Performance optimisation for time-series `TableMixin`
+- Tweak `generateCatalogIndex` to use less memory. (+ add `diffCatalogIndex.js` script to show added/removed members between two catalog index files)
+- Migrated `/#tools=1` to version 8.
+- Removed dummy function `Terria.getUserProperty`.
+- Removed unused version 7 React components.
+- Fix Cesium `stoppedRenderingMessage`
+
+#### 8.2.17 - 2022-09-23
+
+- Fix region mapping feature `rowIds` incorrect type.
+
+#### 8.2.16 - 2022-09-23
+
+- Make srsName and outputFormat for WFS requests dynamic
+- Added `excludeInactiveDatasets` to `CkanCatalogGroup` (`true` by default). This will filter out CKAN Datasets which have `state` or `data_state` (data.gov.au specific) **not** set to `"active"`.
+- Fix `isTerriaFeatureData` bug - not checking `isJsonObject`
+- Add `.logError()` to all usage of `updateModelFromJson` where the `Result` object is ignored
+- Move `RelatedMaps` to terriajs. They are now generated from `configParameters` (see [`doc/customizing/client-side-config.md`](./doc/customizing/client-side-config.md#relatedmap))
+
+#### 8.2.15 - 2022-09-16
+
+- Fix bug with "propagate `knownContainerUniqueIds` across references and their target" - missing `runInAction`
+
+#### 8.2.14 - 2022-09-15
+
+- Moved map credits to map column so it don't get hidden by chart panel.
+- TSified `FeatureInfo*.tsx`
+  - `describeFromProperties` is now `generateCesiumInfoHTMLFromProperties`
+  - `FeatureInfoSection` has been split up into `FeatureInfoSection.tsx`, `getFeatureProperties`, `mustacheExpressions` and `generateCesiumInfoHTMLFromProperties`
+- Fix `{{terria.currentTime}}` in feature info template
+- Add `{{terria.rawDataTable}}` in feature info template - to show raw data HTML table
+- Added `TableFeatureInfoStratum` - which adds default feature info template to `TableMixin`
+- Add `FeatureInfoContext` - used to inject properties into `FeatureInfoSections` context. These properties will be accessible from `featureInfoTemplate` mustache template.
+  - `tableFeatureInfoContext` adds time series chart properties using `FeatureInfoContext` (`getChartDetails` has been removed)
+- Move `maximumShownFeatureInfos` from `WebMapServiceCatalogItemTraits` to `MappableTraits`
+- Remove `featureInfoUrlTemplate` from `OpenDataSoftCatalogItem` - as it is incompatible with time varying datasets
+- Removed `formatNumberForLocale` - we now use `Number.toLocaleString`
+- Rename `Feature` to `TerriaFeature` - improve typing and usage across code-base
+  - Added `data: TerriaFeatureData` - which is used to pass Terria-specific properties around (eg `rowIds`)
+- Added `loadingFeatureInfoUrl` to `FeatureInfoUrlTemplateMixin`
+- Move `Cesium.ts` `ImageryLayer` feature picking to `cesium.pickImageryLayerFeatures()`
+- Move `lib/Core/propertyGetTimeValues.js` into `lib/ReactViews/FeatureInfo/getFeatureProperties.ts`
+- Add `showFeatureInfoDownloadWithTemplate` to `FeatureInfoTraits` - Toggle to show feature info download **if** a `template` has been provided. If no `template` is provided, then download will always show.
+- Fix support for `initUrls` in `startData.initSources`
+- Propagate `knownContainerUniqueIds` across references and their target.
+- Show scrollbar for story content in Safari iOS.
+- Use `document.baseURI` for building share links instead of `window.location`.
+
+#### 8.2.13 - 2022-09-01
 
 - Fix pedestrian drop behaviour so that the camera heading stays unchanged even after the drop
 - Fixed a bug causing incorrect loading of EPSG:4326 layers in WMS v1.3.0 by sending wrong `bbox` in GetMap requests.
-- Fix pedestrian drop behaviour so that the camera heading stays unchanged even after the drop
 - Improve the CKAN model robustness by removing leading and trailing spaces in wms layer names.
 - Load all `InitSources` sequentially instead of asyncronosly
 - Fix `DOMPurify.sanitize` call in `PrintView`
-- [The next improvement]
+- Fix warning for WFS item exceeding max displayable features
+- Upgrade prettier to version 2.7.1
 
-#### release 8.2.12 - 2022-08-10
+#### 8.2.12 - 2022-08-10
 
 - Dropped "optional" from the prompt text in file upload modal for both local and web data.
 - Changed the text for the first file upload option from "Auto-detect (recommended)" to simply "File type" for local files and "File or web service type" for web urls.
@@ -18,7 +195,7 @@
 - Removed IFC from upload file type (until further testing).
 - Move `CkanCatalogGroup` "ungrouped" group to end of members
 
-#### release 8.2.11 - 2022-08-08
+#### 8.2.11 - 2022-08-08
 
 - Add ability to customise the getting started video in the StoryBuilder panel
 - Set cesium base URL by default so that cesium assets are resolved correctly
@@ -41,7 +218,7 @@
 - Move map credits to map column so it don't get hidden by chart panel
 - [The next improvement]
 
-#### release 8.2.10 - 2022-08-02
+#### 8.2.10 - 2022-08-02
 
 - **Breaking changes:**
   - **Minimum NodeJS version is now 14**
@@ -90,8 +267,6 @@
 - Rename `FeatureInfoMixin` to `FeatureInfoUrlTemplateMixin`
 - Move `featureInfoTemplate` and `showStringIfPropertyValueIsNull` from `FeatureInfoTraits` to `MappableTraits` (all mappable catalog items)
 - Remove `FeatureInfoUrlTemplateTraits` from all models that don't use `FeatureInfoUrlTemplateMixin`
-- Upgrade prettier to version 2.7.1
-- [The next improvement]
 - Fix "Regions: xxx" short report showing for non region mapped items
 - Fix `showInChartPanel` default for mappable items
 
@@ -2860,7 +3035,7 @@
   - `RegionMapping`: Used instead of TableDataSource for region-mapped csvs.
   - `DataTable` and `DataVariable` have been replaced with new classes, `TableStructure` and `TableColumn`.
   - `RegionProvider`: `loadRegionsFromWfs`, `processRegionIds`, `applyReplacements`, `findRegionIndex` have been made internal functions.
-  - `RegionProviderList`: `chooseRegionProvider` has been changed and renamed `getRegionDetails `.
+  - `RegionProviderList`: `chooseRegionProvider` has been changed and renamed `getRegionDetails`.
   - `ColorMap`: `fromArray` and `fromString` have been removed, with the constructor taking on that functionality.
   - `LegendUrl` has been moved to the `Map` directory.
   - `TableStyle`: `loadColorMap` and `chooseColorMap` have been removed. Moved from `Map` to `Models` directory.

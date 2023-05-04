@@ -23,8 +23,10 @@ const MyDataTab = observer(
       terria: PropTypes.object,
       viewState: PropTypes.object,
       onFileAddFinished: PropTypes.func.isRequired,
+      onUrlAddFinished: PropTypes.func.isRequired,
       localDataTypes: PropTypes.arrayOf(PropTypes.object),
       remoteDataTypes: PropTypes.arrayOf(PropTypes.object),
+      className: PropTypes.string,
       t: PropTypes.func.isRequired
     },
 
@@ -124,9 +126,13 @@ const MyDataTab = observer(
 
     render() {
       const showTwoColumn = this.hasUserAddedData() & !this.state.activeTab;
-      const { t } = this.props;
+      const { t, className } = this.props;
       return (
-        <Box className={Styles.root}>
+        <Box
+          className={classNames(Styles.root, {
+            [className]: className !== undefined
+          })}
+        >
           <div
             className={classNames({
               [Styles.leftCol]: showTwoColumn,
@@ -158,6 +164,7 @@ const MyDataTab = observer(
                 activeTab={this.state.activeTab}
                 resetTab={this.resetTab}
                 onFileAddFinished={this.props.onFileAddFinished}
+                onUrlAddFinished={this.props.onUrlAddFinished}
                 localDataTypes={this.props.localDataTypes}
                 remoteDataTypes={this.props.remoteDataTypes}
               />

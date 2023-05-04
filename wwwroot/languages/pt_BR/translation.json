@@ -236,9 +236,9 @@
     "dataCatalogue": "Catálogo de Dados",
     "searchPlaceholder": "Pesquise o catálogo",
     "localAdd": "Adicionar arquivo local",
-    "localFileType": "<0> Etapa 1: </0> Selecione o tipo de arquivo (opcional)",
+    "localFileType": "<0>Etapa 1:</0> Selecione o tipo de arquivo",
     "webAdd": "Adicionar dados da web",
-    "webFileType": "<0> Etapa 1: </0> Selecione o tipo de arquivo (opcional)",
+    "webFileType": "<0>Etapa 1:</0> Selecione arquivo ou tipo de serviço web",
     "urlInputBtn": "Adic.",
     "localTitle": "Adicionar dados locais",
     "dragDrop": "Arrastar e Soltar",
@@ -390,7 +390,7 @@
     "nativeResolutionHeader": "Use a resolução nativa do dispositivo",
     "qualityLabel": "Qualidade",
     "nativeResolutionLabel": "Pressione para parar de usar a resolução {{resolution1}} e começar a usar a resolução {{resolution2}}",
-    "mapQuality": "Qualidade do mapa raster:"
+    "mapQuality": "Qualidade do mapa:"
   },
   "toolsPanel": {
     "btnText": "Ferramenta",
@@ -655,15 +655,15 @@
     "dataType": {
       "kml": "KML ou KMZ",
       "czml": "CZML",
-      "shp": "Shapefile (zip)",
+      "shp": "Shapefile",
       "sdmx-group": "SDMX-JSON",
       "geojson": "GeoJSON",
       "open-street-map": "Servidor Open Street Map",
       "gpx": "GPX",
       "geoRss": "GeoRSS",
       "csv": "CSV",
-      "carto": "Carto",
-      "auto": "Detecção automática (recomendada)",
+      "carto": "Carto V1",
+      "auto": "Tipo de arquivo",
       "wms-group": "Servidor do Serviço de Mapas Web (WMS)",
       "wmts-group": "Servidor Web Map Tile Service (WMTS)",
       "wfs-group": "Servidor WFS (Web Feature Service, serviço de recursos da Web)",
@@ -673,7 +673,7 @@
       "esri-featureServer": "Esri ArcGIS FeatureServer (camada única)",
       "3d-tiles": "3D Tiles",
       "opendatasoft-group": "Portal Opendatasoft",
-      "json": "JSON",
+      "json": "Catálogo Terria",
       "gltf": "glTF",
       "other": "Outro (usar serviço de conversão)",
       "socrata-group": "Servidor Socrata",
@@ -681,7 +681,8 @@
       "assimp-remote-description": "**Aviso:** o conversor de arquivos 3D é experimental.\nVeja a lista de [formatos suportados](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).\nArquivos zip também são suportados",
       "ifc": "IFC",
       "assimp-local-description": "**Aviso:** o conversor de arquivos 3D é experimental.\nVeja a lista de [formatos suportados](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).\nOs arquivos devem ser compactados.",
-      "assimp-remote": "Conversor de arquivos 3D (experimental)"
+      "assimp-remote": "Conversor de arquivos 3D (experimental)",
+      "carto-v3": "Carto V3"
     },
     "printWindow": {
       "onbeforeprint": "onbeforeprint",
@@ -726,7 +727,12 @@
       "tooDeepAddedByUser": "Atingiu 100 itens de catálogo ao verificar AddedByUser e pousou em ID: \"{{memberId}}\"? Verifique se você não tem um grupo de catálogo recursivo."
     },
     "userAddedData": "Dados adicionados pelo usuário",
-    "chartData": "Dados do gráfico"
+    "chartData": "Dados do gráfico",
+    "unverifiedExternalLink": {
+      "title": "Alerta: link não verificado",
+      "denyText": "Cancelar",
+      "confirmText": "Abrir em uma nova aba"
+    }
   },
   "analytics": {
     "point": "Ponto (lat/lon)",
@@ -811,7 +817,8 @@
       "devError": "cesium é necessário.",
       "failedToObtain": "Falha ao obter o bloco de imagem X: {{x}} Y: {{y}} Nível: {{level}}.",
       "notWebMercatorTilingScheme": "Este conjunto de dados não pode ser exibido no mapa 2D porque não suporta a projeção Web Mercator (EPSG: 3857).",
-      "unusalTilingScheme": "Este conjunto de dados não pode ser exibido no mapa 2D porque ele usa um esquema de tiling incomum que não é compatível."
+      "unusalTilingScheme": "Este conjunto de dados não pode ser exibido no mapa 2D porque ele usa um esquema de tiling incomum que não é compatível.",
+      "terrainServerErrorTitle": "Servidor Terrain não está respondendo"
     },
     "computeRingWindingOrder": {
       "devError": "Pontos esperados do tipo {x: número, y: número}"
@@ -918,7 +925,9 @@
       "useConversion": "Usar serviço de conversão?",
       "compositesError": "Os compostos não podem incluir itens compostos.",
       "convertErrorTitle": "Não foi possível atualizar o catálogo para V8",
-      "convertErrorMessage": "Este arquivo de catálogo é baseado em uma versão mais antiga do TerriaJS - o software que alimenta este mapa web. Ocorreu um erro ao tentar atualizar os dados do catálogo para {{url}}."
+      "convertErrorMessage": "Este arquivo de catálogo é baseado em uma versão mais antiga do TerriaJS - o software que alimenta este mapa web. Ocorreu um erro ao tentar atualizar os dados do catálogo para {{url}}.",
+      "addAll": "Adicionar todos",
+      "removeAll": "Remover todos"
     },
     "ckan": {
       "idsNotSpecifiedTitle": "id de recursos ou conjunto de dados devem ser especificados",

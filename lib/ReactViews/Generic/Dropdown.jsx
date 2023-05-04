@@ -59,11 +59,11 @@ const Dropdown = createReactClass({
 
   removeListeners() {
     document.body.removeEventListener("click", this.hideList);
-    this.buttonElement.removeEventListener("click", this.nativeButtonListener);
+    this.buttonElement?.removeEventListener("click", this.nativeButtonListener);
     this.nativeButtonListener = undefined;
 
     (this.scrollListeners || []).forEach((listenerElement) =>
-      listenerElement.removeEventListener("scroll", this.hideList)
+      listenerElement?.removeEventListener("scroll", this.hideList)
     );
     this.scrollListeners = undefined;
   },

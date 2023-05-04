@@ -14,8 +14,8 @@ import LegendOwnerTraits from "../Traits/TraitsClasses/LegendOwnerTraits";
 import LegendTraits, {
   LegendItemTraits
 } from "../Traits/TraitsClasses/LegendTraits";
-import { OutlineSymbolTraits } from "../Traits/TraitsClasses/TableOutlineStyleTraits";
-import { PointSymbolTraits } from "../Traits/TraitsClasses/TablePointStyleTraits";
+import { OutlineSymbolTraits } from "../Traits/TraitsClasses/Table/OutlineStyleTraits";
+import { PointSymbolTraits } from "../Traits/TraitsClasses/Table/PointStyleTraits";
 import { ColorStyleLegend } from "./ColorStyleLegend";
 import { MergedStyleMapLegend } from "./MergedStyleMapLegend";
 import { StyleMapLegend } from "./StyleMapLegend";

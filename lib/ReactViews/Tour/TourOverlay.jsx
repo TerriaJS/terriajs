@@ -15,11 +15,6 @@ import defined from "terriajs-cesium/Source/Core/defined";
  * to grey out the rest of the screen. A fifth panel, which is clear, covers the whole screen to prevent the highlighted
  * element from being selectable.
  */
-// displayName: "ObscureOverlay",
-// mixins: [ObserverModelMixin],
-// propTypes: {
-//   helpViewState: PropTypes.object;
-// }
 const TourOverlay = ({ rectangle, onCancel }) => {
   const advance = () => {
     // this.props.helpViewState.advance = true;

@@ -22,7 +22,10 @@ function runWebpack(webpack, config, doneCallback) {
         //require('fs').writeFileSync('./stats.json', JSON.stringify(jsonStats));
 
         if (jsonStats.errors && jsonStats.errors.length > 0) {
-          err = new PluginError("build-specs", "Build has errors (see above).");
+          err = new PluginError(
+            "terriajs-runWebpack",
+            "Build has errors (see above)."
+          );
         }
       }
     }

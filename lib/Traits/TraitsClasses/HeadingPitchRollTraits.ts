@@ -69,6 +69,6 @@ export default class HeadingPitchRollTraits extends ModelTraits {
       heading: CesiumMath.toDegrees(hpr.heading),
       pitch: CesiumMath.toDegrees(hpr.pitch),
       roll: CesiumMath.toDegrees(hpr.roll)
-    });
+    }).logError("Error ocurred while setting heading, pitch and roll");
   }
 }

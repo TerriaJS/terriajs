@@ -571,4 +571,43 @@ describe("CkanCatalogGroup", function () {
       expect(group1).toBeUndefined();
     });
   });
+
+  describe("excludeInactiveDatasets", () => {
+    beforeEach(async function () {
+      runInAction(() => {
+        ckanCatalogGroup.setTrait(
+          "definition",
+          "url",
+          "test/CKAN/search-result.json"
+        );
+      });
+    });
+
+    it("excludeInactiveDatasets = true (default)", async function () {
+      await ckanCatalogGroup.loadMembers();
+      ckanServerStratum = <CkanServerStratum>(
+        ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
+      );
+
+      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+
+      expect(group1.memberModels.length).toBe(9);
+    });
+
+    it("excludeInactiveDatasets = false", async function () {
+      ckanCatalogGroup.setTrait(
+        CommonStrata.definition,
+        "excludeInactiveDatasets",
+        false
+      );
+      await ckanCatalogGroup.loadMembers();
+      ckanServerStratum = <CkanServerStratum>(
+        ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
+      );
+
+      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+
+      expect(group1.memberModels.length).toBe(13);
+    });
+  });
 });

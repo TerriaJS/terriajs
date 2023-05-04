@@ -234,7 +234,7 @@ function ClippingMixin<T extends Constructor<BaseType>>(
                     width: dimensions.y,
                     height: dimensions.z
                   }
-                );
+                ).logError("Failed to update clipping box dimensions");
 
                 const rotationMatrix = Matrix3.getRotation(
                   Matrix4.getMatrix3(modelMatrix, new Matrix3()),

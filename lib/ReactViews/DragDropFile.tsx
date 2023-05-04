@@ -15,6 +15,7 @@ import addUserFiles from "../Models/Catalog/addUserFiles";
 import { BaseModel } from "../Models/Definition/Model";
 import Styles from "./drag-drop-file.scss";
 import { WithViewState, withViewState } from "./Context";
+import { raiseFileDragDropEvent } from "../ViewModels/FileDragDropListener";
 
 interface PropsType extends WithTranslation, WithViewState {}
 
@@ -23,6 +24,7 @@ class DragDropFile extends React.Component<PropsType> {
   target: EventTarget | undefined;
 
   async handleDrop(e: React.DragEvent) {
+    e.persist();
     e.preventDefault();
     e.stopPropagation();
 
@@ -78,9 +80,14 @@ class DragDropFile extends React.Component<PropsType> {
           "Failed to load uploaded files"
         ).raiseError(props.viewState.terria);
 
+        raiseFileDragDropEvent({
+          addedItems: mappableItems,
+          mouseCoordinates: { clientX: e.clientX, clientY: e.clientY }
+        });
+
         // Zoom to first item
-        const firstZoomableItem = mappableItems.find((i) =>
-          isDefined(i.rectangle)
+        const firstZoomableItem = mappableItems.find(
+          (i) => isDefined(i.rectangle) && i.disableZoomTo === false
         );
 
         isDefined(firstZoomableItem) &&

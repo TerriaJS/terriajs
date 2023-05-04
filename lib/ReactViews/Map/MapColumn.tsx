@@ -2,6 +2,7 @@ import { observer } from "mobx-react";
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import Box from "../../Styled/Box";
+import ActionBarPortal from "../ActionBar/ActionBarPortal";
 import BottomDock from "../BottomDock/BottomDock";
 import { useViewState } from "../Context";
 import Loader from "../Loader";
@@ -56,8 +57,6 @@ export const MapColumn: FC<IMapColumnProps> = observer(
             <>
               <MenuBar
                 // @ts-ignore
-                terria={viewState.terria}
-                viewState={viewState}
                 menuItems={customElements.menu}
                 menuLeftItems={customElements.menuLeft}
                 animationDuration={animationDuration}
@@ -81,6 +80,7 @@ export const MapColumn: FC<IMapColumnProps> = observer(
           {!viewState.hideMapUi && (
             <>
               <BottomLeftBar />
+              <ActionBarPortal show={viewState.isActionBarVisible} />
               <SlideUpFadeIn isVisible={viewState.isMapZooming}>
                 <Toast>
                   <Loader

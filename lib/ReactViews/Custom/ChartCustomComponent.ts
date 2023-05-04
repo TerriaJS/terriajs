@@ -14,7 +14,7 @@ import CommonStrata from "../../Models/Definition/CommonStrata";
 import createStratumInstance from "../../Models/Definition/createStratumInstance";
 import hasTraits from "../../Models/Definition/hasTraits";
 import { BaseModel } from "../../Models/Definition/Model";
-import Feature from "../../Models/Feature";
+import TerriaFeature from "../../Models/Feature/Feature";
 import ChartPointOnMapTraits from "../../Traits/TraitsClasses/ChartPointOnMapTraits";
 import DiscretelyTimeVaryingTraits from "../../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import LatLonHeightTraits from "../../Traits/TraitsClasses/LatLonHeightTraits";
@@ -592,7 +592,7 @@ function getInsertedTitle(node: DomElement) {
   }
 }
 
-function getFeaturePosition(feature?: Feature): LatLonHeight | undefined {
+function getFeaturePosition(feature?: TerriaFeature): LatLonHeight | undefined {
   const cartesian = feature?.position?.getValue(JulianDate.now());
   if (cartesian) {
     const carto = Ellipsoid.WGS84.cartesianToCartographic(cartesian);

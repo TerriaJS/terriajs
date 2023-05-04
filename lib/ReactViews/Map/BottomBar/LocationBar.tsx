@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import React, { FC } from "react";
+import React, { FC, RefObject, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
 import MouseCoords from "../../../ReactViewModels/MouseCoords";
@@ -15,19 +15,41 @@ const Section = styled(Box).attrs({
   paddedHorizontally: true
 })``;
 
-const StyledText = styled(TextSpan).attrs({
-  textLight: true,
-  mono: true,
-  noWrap: true
-})`
+const StyledText = styled.span`
+  font-family: ${(props) => props.theme.fontMono};
+  color: ${(props) => props.theme.textLight};
+  white-space: nowrap;
   font-size: 0.7rem;
   padding: 0 5px 0 5px;
 `;
+
+const setInnerText = (ref: RefObject<HTMLElement>, value: string) => {
+  if (ref.current) ref.current.innerText = value;
+};
 
 export const LocationBar: FC<ILocationBarProps> = observer(
   ({ mouseCoords }) => {
     const theme = useTheme();
     const { t } = useTranslation();
+
+    const elevationRef = useRef<HTMLElement>(null);
+    const longitudeRef = useRef<HTMLElement>(null);
+    const latitudeRef = useRef<HTMLElement>(null);
+    const utmZoneRef = useRef<HTMLElement>(null);
+    const eastRef = useRef<HTMLElement>(null);
+    const northRef = useRef<HTMLElement>(null);
+
+    useEffect(() => {
+      const disposer = mouseCoords.updateEvent.addEventListener(() => {
+        setInnerText(elevationRef, mouseCoords.elevation ?? "");
+        setInnerText(longitudeRef, mouseCoords.longitude ?? "");
+        setInnerText(latitudeRef, mouseCoords.latitude ?? "");
+        setInnerText(utmZoneRef, mouseCoords.utmZone ?? "");
+        setInnerText(eastRef, mouseCoords.east ?? "");
+        setInnerText(northRef, mouseCoords.north ?? "");
+      });
+      return disposer;
+    });
 
     return (
       <Box
@@ -54,32 +76,36 @@ export const LocationBar: FC<ILocationBarProps> = observer(
             <>
               <Section centered>
                 <StyledText>{t("legend.lat")}</StyledText>
-                <StyledText>{mouseCoords.latitude}</StyledText>
+                <StyledText ref={latitudeRef}>
+                  {mouseCoords.latitude}
+                </StyledText>
               </Section>
               <Section centered>
                 <StyledText>{t("legend.lon")}</StyledText>
-                <StyledText>{mouseCoords.longitude}</StyledText>
+                <StyledText ref={longitudeRef}>
+                  {mouseCoords.longitude}
+                </StyledText>
               </Section>
             </>
           ) : (
             <>
               <Section>
                 <StyledText>{t("legend.zone")}</StyledText>
-                <StyledText>{mouseCoords.utmZone}</StyledText>
+                <StyledText ref={utmZoneRef}>{mouseCoords.utmZone}</StyledText>
               </Section>
               <Section>
                 <StyledText>{t("legend.e")}</StyledText>
-                <StyledText>{mouseCoords.east}</StyledText>
+                <StyledText ref={eastRef}>{mouseCoords.east}</StyledText>
               </Section>
               <Section>
                 <StyledText>{t("legend.n")}</StyledText>
-                <StyledText>{mouseCoords.north}</StyledText>
+                <StyledText ref={northRef}>{mouseCoords.north}</StyledText>
               </Section>
             </>
           )}
           <Section>
             <StyledText>{t("legend.elev")}</StyledText>
-            <StyledText>{mouseCoords.elevation}</StyledText>
+            <StyledText ref={elevationRef}>{mouseCoords.elevation}</StyledText>
           </Section>
         </RawButton>
       </Box>

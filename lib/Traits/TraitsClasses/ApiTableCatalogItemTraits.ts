@@ -5,7 +5,7 @@ import ApiRequestTraits from "./ApiRequestTraits";
 import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import LegendOwnerTraits from "./LegendOwnerTraits";
-import TableTraits from "./TableTraits";
+import TableTraits from "./Table/TableTraits";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 
 export class ApiTableRequestTraits extends mixTraits(ApiRequestTraits) {

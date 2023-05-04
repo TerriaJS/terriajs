@@ -6,7 +6,8 @@ import Box from "../../../Styled/Box";
 import Text from "../../../Styled/Text";
 
 const StoryContainer = styled(Box).attrs((props: { isCollapsed: boolean }) => ({
-  paddedVertically: props.isCollapsed ? 0 : 2
+  paddedVertically: props.isCollapsed ? 0 : 2,
+  scroll: true
 }))<{ isCollapsed: boolean }>`
   padding-top: 0;
   max-height: ${(props) => (props.isCollapsed ? 0 : "100px")};
@@ -17,8 +18,9 @@ const StoryContainer = styled(Box).attrs((props: { isCollapsed: boolean }) => ({
     max-height: ${(props) => (props.isCollapsed ? 0 : "400px")};
   }
 
-  transition: max-height 0.2s, padding 0.2s;
   overflow-y: auto;
+
+  transition: max-height 0.2s, padding 0.2s;
 
   img {
     max-width: 100%;

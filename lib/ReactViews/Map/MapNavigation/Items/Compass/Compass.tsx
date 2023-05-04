@@ -11,6 +11,7 @@
 //
 import { TFunction } from "i18next";
 import { computed, runInAction, when } from "mobx";
+import debounce from "lodash-es/debounce";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
@@ -22,6 +23,7 @@ import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Ray from "terriajs-cesium/Source/Core/Ray";
+import Scene from "terriajs-cesium/Source/Scene/Scene";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import isDefined from "../../../../../Core/isDefined";
 import Terria from "../../../../../Models/Terria";
@@ -37,7 +39,7 @@ const CameraFlightPath =
 
 export const COMPASS_LOCAL_PROPERTY_KEY = "CompassHelpPrompted";
 
-// Map CompassBase
+// Map Compass
 //
 // Markup:
 // <StyledCompass>
@@ -63,7 +65,7 @@ const StyledCompass = styled.div<StyledCompassProps>`
 `;
 
 /**
- * Take a compassbase width and scale it up 10px, instead of hardcoding values like:
+ * Take a compass width and scale it up 10px, instead of hardcoding values like:
  * // const compassScaleRatio = 66 / 56;
  */
 const getCompassScaleRatio = (compassWidth: string) =>
@@ -80,7 +82,7 @@ const getCompassScaleRatio = (compassWidth: string) =>
  * - chrome (not even another webkit browser)
  * - "default browser zoom" (doesn't happen when you are even at 110%, but will
  *   when shrunk down enough)
- * - the way our compassbase is composed
+ * - the way our compass is composed
  *
  * The action of triggering the 'active' state (scaled up to
  * `getCompassScaleRatio()`) & back down means that the "InnerRing" will look
@@ -88,10 +90,10 @@ const getCompassScaleRatio = (compassWidth: string) =>
  * chrome will decide to render it in the correct position.
  *
  * I haven't dug further to the root cause as doing it like this means wew now
- * have a beautiful animating compassbase.
+ * have a beautiful animating compass.
  *
  * So please leave scale(0.9999) alone unless you can fix the rendering issue in
- * chrome, or if you want to develop a burning hatred for the compassbase 🙏🔥
+ * chrome, or if you want to develop a burning hatred for the compass 🙏🔥
  *
  **/
 const StyledCompassOuterRing = styled.div<StyledCompassProps>`
@@ -149,8 +151,8 @@ type IStateTypes = {
   activeForTransition: boolean;
 };
 
-// the compassbase on map
-class CompassBase extends React.Component<PropTypes, IStateTypes> {
+// the compass on map
+class Compass extends React.PureComponent<PropTypes, IStateTypes> {
   _unsubscribeFromPostRender: any;
   _unsubscribeFromAnimationFrame: any;
   private _unsubscribeFromViewerChange?: CesiumEvent.RemoveCallback;
@@ -326,7 +328,7 @@ class CompassBase extends React.Component<PropTypes, IStateTypes> {
     };
     const { t } = this.props;
     const active = this.state.active;
-    const description = t("compassbase.description");
+    const description = t("compass.description");
     const showGuidance = !this.props.viewState.terria.getLocalProperty(
       COMPASS_LOCAL_PROPERTY_KEY
     );
@@ -369,7 +371,7 @@ class CompassBase extends React.Component<PropTypes, IStateTypes> {
         </StyledCompassOuterRing>
 
         {/* "Center circle icon" */}
-        <StyledCompassInnerRing title={t("compassbase.title")}>
+        <StyledCompassInnerRing title={t("compass.title")}>
           <StyledIcon
             fillColor={this.props.theme.darkWithOverlay}
             glyph={
@@ -444,7 +446,7 @@ const windowPositionScratch = new Cartesian2();
 const pickRayScratch = new Ray();
 
 function rotate(
-  viewModel: CompassBase,
+  viewModel: Compass,
   compassElement: Element,
   cursorVector: Cartesian2
 ) {
@@ -569,7 +571,7 @@ function rotate(
 }
 
 function orbit(
-  viewModel: CompassBase,
+  viewModel: Compass,
   compassElement: Element,
   cursorVector: Cartesian2
 ) {
@@ -733,7 +735,7 @@ function orbit(
   );
 }
 
-function subscribeToAnimationFrame(viewModel: CompassBase) {
+function subscribeToAnimationFrame(viewModel: Compass) {
   viewModel._unsubscribeFromAnimationFrame = (
     (id) => () =>
       cancelAnimationFrame(id)
@@ -747,7 +749,7 @@ function subscribeToAnimationFrame(viewModel: CompassBase) {
   );
 }
 
-function viewerChange(viewModel: CompassBase) {
+function viewerChange(viewModel: Compass) {
   runInAction(() => {
     if (isDefined(viewModel.props.terria.cesium)) {
       if (viewModel._unsubscribeFromPostRender) {
@@ -757,13 +759,21 @@ function viewerChange(viewModel: CompassBase) {
 
       viewModel._unsubscribeFromPostRender =
         viewModel.props.terria.cesium.scene.postRender.addEventListener(
-          function () {
-            runInAction(() => {
-              viewModel.setState({
-                heading: viewModel.props.terria.cesium!.scene.camera.heading
-              });
-            });
-          }
+          debounce(
+            function (scene: Scene) {
+              if ((scene as any).view) {
+                viewModel.setState({
+                  heading: scene.camera.heading
+                });
+              }
+            },
+            200,
+            {
+              maxWait: 200,
+              leading: true,
+              trailing: true
+            }
+          )
         );
     } else {
       if (viewModel._unsubscribeFromPostRender) {
@@ -776,7 +786,7 @@ function viewerChange(viewModel: CompassBase) {
 }
 
 export const COMPASS_NAME = "MapNavigationCompassOuterRing";
-export const COMPASS_TOOL_ID = "compassbase";
-export const Compass = withTranslation()(
-  withTheme(withTerriaRef(CompassBase, COMPASS_NAME))
+export const COMPASS_TOOL_ID = "compass";
+export default withTranslation()(
+  withTheme(withTerriaRef(Compass, COMPASS_NAME))
 );

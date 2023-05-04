@@ -13,6 +13,7 @@ import GeoJsonMixin, {
 import ShapefileCatalogItemTraits from "../../../Traits/TraitsClasses/ShapefileCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import HasLocalData from "../../HasLocalData";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { fileApiNotSupportedError } from "./GeoJsonCatalogItem";
 
 export function isJsonArrayOrDeepArrayOfObjects(
@@ -63,7 +64,7 @@ class ShapefileCatalogItem
         if (typeof FileReader === "undefined") {
           throw fileApiNotSupportedError(this.terria);
         }
-        const blob = await loadBlob(this.url);
+        const blob = await loadBlob(proxyCatalogItemUrl(this, this.url));
         return await parseShapefile(blob);
       } else {
         throw TerriaError.from(

@@ -508,12 +508,17 @@ export default class MagdaReference extends AccessControlMixin(
         ) {
           return;
         }
-        updateModelFromJson(group, key, terriaStratum, true);
+        updateModelFromJson(group, key, terriaStratum, true).logError();
       });
     }
 
     if (override) {
-      updateModelFromJson(group, CommonStrata.override, override, true);
+      updateModelFromJson(
+        group,
+        CommonStrata.override,
+        override,
+        true
+      ).logError();
     }
 
     return group;
@@ -570,13 +575,20 @@ export default class MagdaReference extends AccessControlMixin(
         return;
       }
       updateModelFromJson(result, key, terriaStratum, true).catchError(
-        (error) =>
-          result.setTrait(CommonStrata.underride, "isExperiencingIssues", true)
+        (error) => {
+          error.log();
+          result.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
+        }
       );
     });
 
     if (override) {
-      updateModelFromJson(result, CommonStrata.override, override, true);
+      updateModelFromJson(
+        result,
+        CommonStrata.override,
+        override,
+        true
+      ).logError();
     }
 
     return result;
@@ -680,12 +692,22 @@ export default class MagdaReference extends AccessControlMixin(
           name: datasetRecord.name
         },
         true
-      );
+      ).logError();
 
-    updateModelFromJson(result, CommonStrata.definition, definition, true);
+    updateModelFromJson(
+      result,
+      CommonStrata.definition,
+      definition,
+      true
+    ).logError();
 
     if (override) {
-      updateModelFromJson(result, CommonStrata.override, override, true);
+      updateModelFromJson(
+        result,
+        CommonStrata.override,
+        override,
+        true
+      ).logError();
     }
 
     return result;
@@ -841,8 +863,17 @@ const prepareDistributionFormat = createTransformer(
 
 function getAccessTypeFromMagdaRecord(magdaRecord: any): string {
   const record = toJS(magdaRecord);
-  const accessControl: any =
-    record && record.aspects && record.aspects["esri-access-control"];
-  const access = accessControl && accessControl.access;
-  return access;
+
+  // Magda V2 access control has higher priority.
+  if (record?.aspects?.["access-control"]) {
+    return record.aspects["access-control"].orgUnitId
+      ? record.aspects["access-control"].constraintExemption
+        ? "public"
+        : "non-public"
+      : "public";
+  } else if (record?.aspects?.["esri-access-control"]) {
+    return record.aspects["esri-access-control"].access;
+  } else {
+    return "public";
+  }
 }
