@@ -25,19 +25,23 @@ import CatalogMemberMixin from "../../../../../ModelMixins/CatalogMemberMixin";
 import { SelectDataType } from "./SelectDataType";
 import Input from "../../../../../Styled/Input";
 import { Button } from "../../../../../Styled/Button";
+import loadJson from "../../../../../Core/loadJson";
+import TerriaError from "../../../../../Core/TerriaError";
 
 interface IAddWebDataProps {
   viewState: ViewState;
   goBack: () => void;
   dataTypes?: IRemoteDataType[];
-  onDataAddFinished: (item: BaseModel[]) => void;
+  onFileAddFinished: (item: BaseModel[]) => void;
+  onUrlAddFinished: () => void;
 }
 
 export const AddWebData: FC<IAddWebDataProps> = ({
   viewState,
   goBack,
   dataTypes,
-  onDataAddFinished
+  onFileAddFinished,
+  onUrlAddFinished
 }) => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -59,7 +63,7 @@ export const AddWebData: FC<IAddWebDataProps> = ({
     const url = remoteUrl;
     terria.analytics?.logEvent(Category.dataTab, DatatabAction.addDataUrl, url);
     setIsLoading(true);
-    let promise;
+    let promise: Promise<BaseModel | undefined>;
     if (selectedRemoteDataType.value === "auto") {
       promise = createCatalogItemFromFileOrUrl(
         terria,
@@ -67,6 +71,30 @@ export const AddWebData: FC<IAddWebDataProps> = ({
         remoteUrl,
         selectedRemoteDataType.value
       );
+    } else if (selectedRemoteDataType.value === "json") {
+      promise = loadJson(remoteUrl)
+        .then((data) => {
+          if (data.error) {
+            return Promise.reject(data.error);
+          }
+          terria.catalog.group
+            .addMembersFromJson(CommonStrata.user, data.catalog)
+            .raiseError(terria, "Failed to load catalog from file");
+        })
+        .then(() => {
+          onUrlAddFinished();
+          return undefined;
+        })
+        .catch((error) => {
+          TerriaError.from(error).raiseError(
+            terria,
+            `An error occurred trying to add data from URL: ${remoteUrl}`
+          );
+          return undefined;
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     } else {
       try {
         const newItem = upsertModelFromJson(
@@ -83,7 +111,6 @@ export const AddWebData: FC<IAddWebDataProps> = ({
         if (!CatalogMemberMixin.isMixedInto(newItem)) {
           throw new Error(`${newItem.type} is not a CatalogMemberMixin`);
         }
-        console.log(newItem);
         // @ts-ignore
         promise = newItem.loadMetadata().then((result) => {
           if (result.error) {
@@ -98,7 +125,7 @@ export const AddWebData: FC<IAddWebDataProps> = ({
     }
     addUserCatalogMember(terria, promise).then((addedItem) => {
       if (addedItem) {
-        onDataAddFinished([addedItem]);
+        onFileAddFinished([addedItem]);
         if (TimeVarying.is(addedItem)) {
           viewState.terria.timelineStack.addToTop(addedItem);
         }

@@ -264,7 +264,7 @@
     "baseMap": "Základní mapa",
     "imageOptimisation": "Optimalizace obrázků",
     "nativeResolutionHeader": "Použití nativního rozlišení zařízení",
-    "mapQuality": "Kvalita rastrové mapy:",
+    "mapQuality": "Kvalita mapy:",
     "qualityLabel": "Kvalita",
     "performanceLabel": "Výkon",
     "timeline": {
@@ -717,7 +717,7 @@
       "czml": "CZML",
       "gpx": "GPX",
       "json": "Katalog Terria",
-      "carto": "Carto",
+      "carto": "Carto V1",
       "shp": "Shapefile",
       "other": "Ostatní (použijte konverzní službu)",
       "open-street-map": "Open Street Map Server",
@@ -727,7 +727,8 @@
       "assimp-local": "Konvertor 3D souborů (zip) (experimentální)",
       "assimp-local-description": "**Upozornění:** Konvertor 3D souborů je experimentální.  \nViz seznam [podporovaných formátů](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nSoubory musí být zazipovány.",
       "assimp-remote": "Převodník 3D souborů (experimentální)",
-      "assimp-remote-description": "**Upozornění:** Konvertor 3D souborů je experimentální.  \nViz seznam [podporovaných formátů](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nPodporovány jsou také soubory Zip"
+      "assimp-remote-description": "**Upozornění:** Konvertor 3D souborů je experimentální.  \nViz seznam [podporovaných formátů](https://github.com/assimp/assimp/blob/master/doc/Fileformats.md).  \nPodporovány jsou také soubory Zip",
+      "carto-v3": "Carto V3"
     },
     "printWindow": {
       "errorTitle": "Chyba tisku",
@@ -782,7 +783,11 @@
       "devError": "cesium je vyžadováno.",
       "failedToObtain": "Nepodařilo se získat obrazovou dlaždici X: {{x}} Y: {{y}} Úroveň: {{level}}.",
       "notWebMercatorTilingScheme": "Tuto datovou sadu nelze zobrazit na 2D mapě, protože nepodporuje projekci Web Mercator (EPSG:3857).",
-      "unusalTilingScheme": "Tuto datovou sadu nelze zobrazit na 2D mapě, protože používá neobvyklé schéma dlaždic, které není podporováno."
+      "unusalTilingScheme": "Tuto datovou sadu nelze zobrazit na 2D mapě, protože používá neobvyklé schéma dlaždic, které není podporováno.",
+      "stoppedRenderingTitle": "3D mapu se nepodařilo vykreslit",
+      "stoppedRenderingMessage": "Příčinou může být datová sada právě přidaná do pracovního stolu - zkuste ji odstranit. Pokud se tím problém nevyřeší, bude možná nutné znovu načíst {{appName}}.",
+      "terrainServerErrorMessage": " Terrain server momentálně neodpovídá.  Stále můžete používat všechny funkce {{appName}}, ale v režimu 3D nebudou k dispozici žádné detaily terénu.  Omlouváme se za nepříjemnosti.  Zkuste to prosím později a terrain server by měl reagovat podle očekávání.  Pokud problém přetrvává, kontaktujte nás prosím e-mailem na adrese {{supportEmail}}.",
+      "terrainServerErrorTitle": "Terrain Server neodpovídá"
     },
     "displayVariablesConcept": {
       "defaultName": "Zobrazit proměnnou"
@@ -896,7 +901,8 @@
       "invalidServiceTitle": "Neplatná mapová služba ArcGIS",
       "groupNotAvailableTitle": "Skupina není k dispozici",
       "groupNotAvailableMessage": "Při vyvolání mapové služby ArcGIS došlo k chybě.",
-      "invalidServiceMessage": "Při vyvolání mapové služby ArcGIS došlo k chybě.  Odpověď serveru se nezdá být platným dokumentem mapové služby."
+      "invalidServiceMessage": "Při vyvolání mapové služby ArcGIS došlo k chybě.  Odpověď serveru se nezdá být platným dokumentem mapové služby.",
+      "singleFusedMapCacheLayerName": "Všechny vrstvy"
     },
     "arcGisMapServerCatalogItem": {
       "name": "Esri ArcGIS MapServer",
@@ -1001,7 +1007,9 @@
       "unsupportedFileTypeMessage": "Tento formát souboru aplikace {{appName}} nepodporuje. Mezi podporované formáty souborů patří: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (v {{link}})</li><li>Shapefile (.zip)</li></ul>",
       "compositesError": "Kompozity nemohou obsahovat složené položky.",
       "mustHaveType": "Každá položka musí mít typ.",
-      "convertErrorMessage": "Tento katalogový soubor je založen na starší verzi softwaru TerriaJS, který pohání tuto webovou mapu. Při pokusu o aktualizaci katalogových dat pro {{url}} došlo k chybě."
+      "convertErrorMessage": "Tento katalogový soubor je založen na starší verzi softwaru TerriaJS, který pohání tuto webovou mapu. Při pokusu o aktualizaci katalogových dat pro {{url}} došlo k chybě.",
+      "addAll": "Přidat vše",
+      "removeAll": "Odstranit vše"
     },
     "createParameter": {
       "unsupportedErrorTitle": "Nepodporovaný typ parametru funkce",

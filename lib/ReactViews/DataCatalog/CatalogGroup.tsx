@@ -1,4 +1,4 @@
-import React, { FC, useRef, useEffect } from "react";
+import React, { FC, useRef, useEffect, MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
 import { observer } from "mobx-react";
@@ -6,7 +6,7 @@ import { observer } from "mobx-react";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
 
 import Loader from "../Loader";
-import { StyledIcon, GLYPHS } from "../../Styled/Icon";
+import Icon, { StyledIcon, GLYPHS } from "../../Styled/Icon";
 import Box, { BoxSpan } from "../../Styled/Box";
 import Text, { TextSpan } from "../../Styled/Text";
 import Ul, { Li } from "../../Styled/List";
@@ -59,6 +59,10 @@ interface ICatalogGroupProps {
 
   trashable?: boolean;
   onTrashClick?: () => void;
+
+  displayGroup: boolean;
+  allItemsLoaded?: boolean;
+  addRemoveButtonFunction?: (event: MouseEvent<HTMLButtonElement>) => void;
 }
 
 const FolderIcon: FC<{ open: boolean }> = ({ open }) => {
@@ -93,7 +97,10 @@ const CatalogGroup: FC<ICatalogGroupProps> = (props) => {
     selected,
     children,
     loading,
-    emptyMessage
+    emptyMessage,
+    displayGroup,
+    allItemsLoaded,
+    addRemoveButtonFunction
   } = props;
 
   useEffect(() => {
@@ -118,20 +125,38 @@ const CatalogGroup: FC<ICatalogGroupProps> = (props) => {
             <TextSpan semiBold primary={!selected && props.isPrivate}>
               {props.text}
             </TextSpan>
-            <BoxSpan centered>
+            <BoxSpan centered gap={2} pr={2}>
               {props.isPrivate && <PrivateIndicator />}
+              {displayGroup === true && (
+                <RawButton
+                  type="button"
+                  onClick={
+                    addRemoveButtonFunction ? addRemoveButtonFunction : () => {}
+                  }
+                  title={
+                    allItemsLoaded
+                      ? t("models.catalog.removeAll")
+                      : t("models.catalog.addAll")
+                  }
+                >
+                  <StyledIcon
+                    glyph={
+                      allItemsLoaded
+                        ? Icon.GLYPHS.minusList
+                        : Icon.GLYPHS.plusList
+                    }
+                    styledWidth="20px"
+                  />
+                </RawButton>
+              )}
               <BoxSpan>
                 <GroupCaret open={open} />
-                <Spacing right={2} />
               </BoxSpan>
               {trashable && (
                 <RawButton
                   type="button"
                   onClick={props.onTrashClick}
                   title={t("dataCatalog.groupRemove")}
-                  css={`
-                    margin: 5px;
-                  `}
                 >
                   <StyledIcon glyph={GLYPHS.trashcan} styledWidth="20px" />
                 </RawButton>

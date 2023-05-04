@@ -42,7 +42,7 @@ import processCustomElements from "./processCustomElements";
 import SidePanelContainer from "./SidePanelContainer";
 import Styles from "./standard-user-interface.scss";
 import { terriaTheme } from "./StandardTheme";
-import WorkflowPanelContainer from "./WorkflowPanelContainer";
+import WorkflowPanelPortal from "../Workflow/WorkflowPanelPortal";
 
 export const animationDuration = 250;
 
@@ -183,7 +183,7 @@ const StandardUserInterface: React.FC<StandardUserInterfaceProps> = observer(
                     </Small>
                     <Medium>
                       <>
-                        <WorkflowPanelContainer
+                        <WorkflowPanelPortal
                           show={props.terria.isWorkflowPanelActive}
                         />
                         <SidePanelContainer

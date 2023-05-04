@@ -3,6 +3,7 @@ import React, { FC, useState } from "react";
 import { observer } from "mobx-react";
 import { Trans, useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
+import classNames from "classnames";
 
 import { BaseModel } from "../../../../Models/Definition/Model";
 import ViewState from "../../../../ReactViewModels/ViewState";
@@ -22,6 +23,8 @@ interface IMyDataTabProps {
   localDataTypes?: any[];
   remoteDataTypes?: any[];
   onFileAddFinished: (item: BaseModel[]) => void;
+  onUrlAddFinished: () => void;
+  className?: string;
 }
 
 export interface ITab {
@@ -30,7 +33,14 @@ export interface ITab {
 }
 
 export const MyDataTab: FC<IMyDataTabProps> = observer(
-  ({ viewState, localDataTypes, remoteDataTypes, onFileAddFinished }) => {
+  ({
+    viewState,
+    localDataTypes,
+    remoteDataTypes,
+    onFileAddFinished,
+    onUrlAddFinished,
+    className
+  }) => {
     const [activeTabId, setActiveTabId] = useState<string>();
     const theme = useTheme();
 
@@ -55,6 +65,7 @@ export const MyDataTab: FC<IMyDataTabProps> = observer(
           localDataTypes={localDataTypes}
           remoteDataTypes={remoteDataTypes}
           onFileAddFinished={onFileAddFinished}
+          onUrlAddFinished={onUrlAddFinished}
         />
       );
     }
@@ -67,7 +78,7 @@ export const MyDataTab: FC<IMyDataTabProps> = observer(
     }
 
     return (
-      <Box fullWidth>
+      <Box fullWidth className={className ?? ""}>
         <Box
           flexShrinkZero
           column

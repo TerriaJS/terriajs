@@ -17,7 +17,11 @@ import ViewState from "../../ReactViewModels/ViewState";
 import CatalogGroup from "./CatalogGroup";
 import { DataCatalogMember } from "./DataCatalogMember";
 import AccessControlMixin from "../../ModelMixins/AccessControlMixin";
-
+import {
+  addRemoveButtonClicked,
+  allMappableMembersInWorkbench
+} from "./DisplayGroupHelper";
+import { ModelId } from "../../Traits/ModelReference";
 interface IDataCatalogGroupProps {
   viewState: ViewState;
   terria: Terria;
@@ -90,6 +94,20 @@ export const DataCatalogGroup: FC<IDataCatalogGroupProps> = observer(
         trashable={removable}
         onTrashClick={onTrashClicked}
         selected={isSelected}
+        // Pass these next three props down to deal with displayGroup functionality
+        displayGroup={group.displayGroup}
+        addRemoveButtonFunction={(event) => {
+          addRemoveButtonClicked(
+            group,
+            viewState,
+            terria,
+            event.shiftKey || event.ctrlKey
+          );
+        }}
+        allItemsLoaded={allMappableMembersInWorkbench(
+          group.members as unknown as ModelId[],
+          terria
+        )}
       >
         {isGroupOpen &&
           group.memberModels.map((item) => (

@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
+import ActionBarPortal from "../ActionBar/ActionBarPortal";
 import BottomDock from "../BottomDock/BottomDock";
 import { MapCredits } from "../Credits";
 import Loader from "../Loader";
@@ -103,6 +104,9 @@ const MapColumn = observer(
                 <BottomLeftBar
                   terria={this.props.viewState.terria}
                   viewState={this.props.viewState}
+                />
+                <ActionBarPortal
+                  show={this.props.viewState.isActionBarVisible}
                 />
                 <SlideUpFadeIn isVisible={this.props.viewState.isMapZooming}>
                   <Toast>

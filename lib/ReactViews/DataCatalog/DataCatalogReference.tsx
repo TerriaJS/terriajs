@@ -90,6 +90,7 @@ export default observer(function DataCatalogReference({
           topLevel={isTopLevel}
           loading={reference.isLoadingReference}
           open={reference.isLoadingReference}
+          displayGroup={false}
         />
       ) : (
         <CatalogItem

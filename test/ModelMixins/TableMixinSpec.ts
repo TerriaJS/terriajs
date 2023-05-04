@@ -32,6 +32,9 @@ import TableTrailStyleTraits, {
   EnumTrailSymbolTraits
 } from "../../lib/Traits/TraitsClasses/Table/TrailStyleTraits";
 
+import HorizontalOrigin from "terriajs-cesium/Source/Scene/HorizontalOrigin";
+import VerticalOrigin from "terriajs-cesium/Source/Scene/VerticalOrigin";
+
 const LatLonValCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_val.csv");
 const LatLonEnumCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum.csv");
 const LatLonValCsvDuplicate = require("raw-loader!../../wwwroot/test/csv/lat_lon_val_with_duplicate_row.csv");
@@ -1358,7 +1361,9 @@ describe("TableMixin", function () {
                 style: "FILL",
                 scale: 1.5,
                 fillColor: "#ff00ff",
-                pixelOffset: [0, 0]
+                pixelOffset: [0, 0],
+                horizontalOrigin: "LEFT",
+                verticalOrigin: "TOP"
               }),
               createStratumInstance(EnumLabelSymbolTraits, {
                 value: "boots",
@@ -1369,7 +1374,9 @@ describe("TableMixin", function () {
                 fillColor: "#0000ff",
                 outlineColor: "#00ff00",
                 outlineWidth: 1,
-                pixelOffset: [1, 1]
+                pixelOffset: [1, 1],
+                horizontalOrigin: "CENTER",
+                verticalOrigin: "CENTER"
               }),
               createStratumInstance(EnumLabelSymbolTraits, {
                 value: "frogs",
@@ -1379,7 +1386,9 @@ describe("TableMixin", function () {
                 scale: 3,
                 outlineColor: "#ff0000",
                 outlineWidth: 2,
-                pixelOffset: [2, 2]
+                pixelOffset: [2, 2],
+                horizontalOrigin: "RIGHT",
+                verticalOrigin: "BOTTOM"
               })
             ]
           })
@@ -1402,7 +1411,9 @@ describe("TableMixin", function () {
           style: LabelStyle.FILL,
           scale: 1.5,
           fillColor: "rgb(255,0,255)",
-          pixelOffset: "(0, 0)" // Cartesian2.toString()
+          pixelOffset: "(0, 0)", // Cartesian2.toString()
+          horizontalOrigin: HorizontalOrigin.LEFT,
+          verticalOrigin: VerticalOrigin.TOP
         },
         {
           value: "boots",
@@ -1413,7 +1424,9 @@ describe("TableMixin", function () {
           fillColor: "rgb(0,0,255)",
           outlineColor: "rgb(0,255,0)",
           outlineWidth: 1,
-          pixelOffset: "(1, 1)" // Cartesian2.toString()
+          pixelOffset: "(1, 1)", // Cartesian2.toString()
+          horizontalOrigin: HorizontalOrigin.CENTER,
+          verticalOrigin: VerticalOrigin.CENTER
         },
         {
           value: "frogs",
@@ -1423,7 +1436,9 @@ describe("TableMixin", function () {
           scale: 3,
           outlineColor: "rgb(255,0,0)",
           outlineWidth: 2,
-          pixelOffset: "(2, 2)" // Cartesian2.toString()
+          pixelOffset: "(2, 2)", // Cartesian2.toString()
+          horizontalOrigin: HorizontalOrigin.RIGHT,
+          verticalOrigin: VerticalOrigin.BOTTOM
         }
       ];
 
@@ -1462,6 +1477,18 @@ describe("TableMixin", function () {
             ?.getValue(item.terria.timelineClock.currentTime)
             ?.toString()
         ).toBe(style.pixelOffset, failMessage("pixelOffset"));
+
+        expect(
+          feature.label?.verticalOrigin?.getValue(
+            item.terria.timelineClock.currentTime
+          )
+        ).toBe(style.verticalOrigin, failMessage("verticalOrigin"));
+
+        expect(
+          feature.label?.horizontalOrigin?.getValue(
+            item.terria.timelineClock.currentTime
+          )
+        ).toBe(style.horizontalOrigin, failMessage("horizontalOrigin"));
 
         if (style.fillColor)
           expect(

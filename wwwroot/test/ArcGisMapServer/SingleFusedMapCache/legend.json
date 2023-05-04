@@ -1,0 +1,218 @@
+{
+  "layers": [
+    {
+      "id": 0,
+      "name": "New Group Layer",
+      "parentLayerId": -1,
+      "defaultVisibility": true,
+      "subLayerIds": [1, 2, 3, 4, 5],
+      "minScale": 0,
+      "maxScale": 0,
+      "type": "Group Layer",
+      "supportsDynamicLegends": false,
+      "layerId": 0,
+      "layerName": "New Group Layer",
+      "layerType": null
+    },
+    {
+      "id": 1,
+      "name": "some-raster-layer-1",
+      "parentLayerId": 0,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 0,
+      "type": "Raster Layer",
+      "supportsDynamicLegends": true,
+      "legend": [
+        {
+          "label": "Red:   Red",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAOklEQVQ4jWNhoDJgoZmB/8GIfMAIRrR0IbUAC9VMgoJRAykHLFQwAwWMGkg5YBnBBjJCyzOqGUgtAABgfwJTnasaYgAAAABJRU5ErkJggg==",
+          "contentType": "image/png",
+          "groupId": "0",
+          "height": 20,
+          "width": 20
+        },
+        {
+          "label": "Green: Green",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAPElEQVQ4je3UoQ0AMBBCUS5h/5WvpkmDhjr+AE8gIMLxH7hYSxqMgqFY0I4+oRX0Y8CQCvq9De+f5cBQB19+AlPZl25RAAAAAElFTkSuQmCC",
+          "contentType": "image/png",
+          "groupId": "0",
+          "height": 20,
+          "width": 20
+        },
+        {
+          "label": "Blue:  Blue",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAPElEQVQ4jWNhoDJgoaGB//9TZhQjI5qB1AEsowZSDFgoNwIVjBpIOWChghkoYNRAygFSGELKMyoaSB0AAF59AlO8NYpcAAAAAElFTkSuQmCC",
+          "contentType": "image/png",
+          "groupId": "0",
+          "height": 20,
+          "width": 20
+        }
+      ],
+      "layerId": 1,
+      "layerName": "some-raster-layer-1",
+      "layerType": null
+    },
+    {
+      "id": 2,
+      "name": "some-raster-layer-2",
+      "parentLayerId": 0,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 0,
+      "type": "Raster Layer",
+      "supportsDynamicLegends": true,
+      "legend": [
+        {
+          "label": "Red:   Red",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAOklEQVQ4jWNhoDJgoZmB/8GIfMAIRrR0IbUAC9VMgoJRAykHLFQwAwWMGkg5YBnBBjJCyzOqGUgtAABgfwJTnasaYgAAAABJRU5ErkJggg==",
+          "contentType": "image/png",
+          "groupId": "0",
+          "height": 20,
+          "width": 20
+        },
+        {
+          "label": "Green: Green",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAPElEQVQ4je3UoQ0AMBBCUS5h/5WvpkmDhjr+AE8gIMLxH7hYSxqMgqFY0I4+oRX0Y8CQCvq9De+f5cBQB19+AlPZl25RAAAAAElFTkSuQmCC",
+          "contentType": "image/png",
+          "groupId": "0",
+          "height": 20,
+          "width": 20
+        },
+        {
+          "label": "Blue:  Blue",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAPElEQVQ4jWNhoDJgoaGB//9TZhQjI5qB1AEsowZSDFgoNwIVjBpIOWChghkoYNRAygFSGELKMyoaSB0AAF59AlO8NYpcAAAAAElFTkSuQmCC",
+          "contentType": "image/png",
+          "groupId": "0",
+          "height": 20,
+          "width": 20
+        }
+      ],
+      "layerId": 2,
+      "layerName": "some-raster-layer-2",
+      "layerType": null
+    },
+    {
+      "id": 3,
+      "name": "some-raster-layer-3",
+      "parentLayerId": 0,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 0,
+      "type": "Raster Layer",
+      "supportsDynamicLegends": true,
+      "legend": [
+        {
+          "label": "Red:   Red",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAOklEQVQ4jWNhoDJgoZmB/8GIfMAIRrR0IbUAC9VMgoJRAykHLFQwAwWMGkg5YBnBBjJCyzOqGUgtAABgfwJTnasaYgAAAABJRU5ErkJggg==",
+          "contentType": "image/png",
+          "groupId": "0",
+          "height": 20,
+          "width": 20
+        },
+        {
+          "label": "Green: Green",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAPElEQVQ4je3UoQ0AMBBCUS5h/5WvpkmDhjr+AE8gIMLxH7hYSxqMgqFY0I4+oRX0Y8CQCvq9De+f5cBQB19+AlPZl25RAAAAAElFTkSuQmCC",
+          "contentType": "image/png",
+          "groupId": "0",
+          "height": 20,
+          "width": 20
+        },
+        {
+          "label": "Blue:  Blue",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAPElEQVQ4jWNhoDJgoaGB//9TZhQjI5qB1AEsowZSDFgoNwIVjBpIOWChghkoYNRAygFSGELKMyoaSB0AAF59AlO8NYpcAAAAAElFTkSuQmCC",
+          "contentType": "image/png",
+          "groupId": "0",
+          "height": 20,
+          "width": 20
+        }
+      ],
+      "layerId": 3,
+      "layerName": "some-raster-layer-3",
+      "layerType": null
+    },
+    {
+      "id": 4,
+      "name": "some-raster-layer-2",
+      "parentLayerId": 0,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 0,
+      "type": "Raster Layer",
+      "supportsDynamicLegends": true,
+      "legend": [
+        {
+          "label": "Red:   Red",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAOklEQVQ4jWNhoDJgoZmB/8GIfMAIRrR0IbUAC9VMgoJRAykHLFQwAwWMGkg5YBnBBjJCyzOqGUgtAABgfwJTnasaYgAAAABJRU5ErkJggg==",
+          "contentType": "image/png",
+          "groupId": "0",
+          "height": 20,
+          "width": 20
+        },
+        {
+          "label": "Green: Green",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAPElEQVQ4je3UoQ0AMBBCUS5h/5WvpkmDhjr+AE8gIMLxH7hYSxqMgqFY0I4+oRX0Y8CQCvq9De+f5cBQB19+AlPZl25RAAAAAElFTkSuQmCC",
+          "contentType": "image/png",
+          "groupId": "0",
+          "height": 20,
+          "width": 20
+        },
+        {
+          "label": "Blue:  Blue",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAPElEQVQ4jWNhoDJgoaGB//9TZhQjI5qB1AEsowZSDFgoNwIVjBpIOWChghkoYNRAygFSGELKMyoaSB0AAF59AlO8NYpcAAAAAElFTkSuQmCC",
+          "contentType": "image/png",
+          "groupId": "0",
+          "height": 20,
+          "width": 20
+        }
+      ],
+      "layerId": 4,
+      "layerName": "some-raster-layer-4",
+      "layerType": null
+    },
+    {
+      "id": 5,
+      "name": "some-raster-layer-5",
+      "parentLayerId": 0,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 0,
+      "type": "Raster Layer",
+      "supportsDynamicLegends": true,
+      "legend": [
+        {
+          "label": "Red:   Red",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAOklEQVQ4jWNhoDJgoZmB/8GIfMAIRrR0IbUAC9VMgoJRAykHLFQwAwWMGkg5YBnBBjJCyzOqGUgtAABgfwJTnasaYgAAAABJRU5ErkJggg==",
+          "contentType": "image/png",
+          "groupId": "0",
+          "height": 20,
+          "width": 20
+        },
+        {
+          "label": "Green: Green",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAPElEQVQ4je3UoQ0AMBBCUS5h/5WvpkmDhjr+AE8gIMLxH7hYSxqMgqFY0I4+oRX0Y8CQCvq9De+f5cBQB19+AlPZl25RAAAAAElFTkSuQmCC",
+          "contentType": "image/png",
+          "groupId": "0",
+          "height": 20,
+          "width": 20
+        },
+        {
+          "label": "Blue:  Blue",
+          "imageData": "iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAPElEQVQ4jWNhoDJgoaGB//9TZhQjI5qB1AEsowZSDFgoNwIVjBpIOWChghkoYNRAygFSGELKMyoaSB0AAF59AlO8NYpcAAAAAElFTkSuQmCC",
+          "contentType": "image/png",
+          "groupId": "0",
+          "height": 20,
+          "width": 20
+        }
+      ],
+      "layerId": 5,
+      "layerName": "some-raster-layer-5",
+      "layerType": null
+    }
+  ]
+}

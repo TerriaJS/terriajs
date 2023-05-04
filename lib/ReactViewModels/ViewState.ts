@@ -24,10 +24,12 @@ import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import { BaseModel } from "../Models/Definition/Model";
 import getAncestors from "../Models/getAncestors";
+import { SelectableDimension } from "../Models/SelectableDimensions/SelectableDimensions";
 import Terria from "../Models/Terria";
 import { ViewingControl } from "../Models/ViewingControls";
 import { SATELLITE_HELP_PROMPT_KEY } from "../ReactViews/HelpScreens/SatelliteHelpPrompt";
 import { animationDuration } from "../ReactViews/StandardUserInterface/StandardUserInterface";
+import { FeatureInfoPanelButtonGenerator } from "../ViewModels/FeatureInfoPanel";
 import {
   defaultTourPoints,
   RelativePosition,
@@ -81,7 +83,7 @@ export default class ViewState {
   @observable mobileMenuVisible: boolean = false;
   @observable explorerPanelAnimating: boolean = false;
   @observable topElement: string = "FeatureInfo";
-  // Map for storing react portal containers created by <PortalContainer> component.
+  // Map for storing react portal containers created by <Portal> component.
   @observable portals: Map<string, HTMLElement | null> = new Map();
   @observable lastUploadedFiles: any[] = [];
   @observable storyBuilderShown: boolean = false;
@@ -106,6 +108,12 @@ export default class ViewState {
   @observable printWindow: Window | null = null;
 
   /**
+   * Toggles ActionBar visibility. Do not set manually, it is
+   * automatically set when rendering <ActionBar>
+   */
+  @observable isActionBarVisible = false;
+
+  /**
    * A global list of functions that generate a {@link ViewingControl} option
    * for the given catalog item instance.  This is useful for plugins to extend
    * the viewing control menu across catalog items.
@@ -116,6 +124,26 @@ export default class ViewState {
   readonly globalViewingControlOptions: ((
     item: CatalogMemberMixin.Instance
   ) => ViewingControl | undefined)[] = [];
+
+  /**
+   * A global list of hooks for generating input controls for items in the workbench.
+   * The hooks in this list gets called once for each item in shown in the workbench.
+   * This is a mechanism for plugins to extend workbench input controls by adding new ones.
+   *
+   * Use {@link WorkbenchItem.Inputs.addInput} instead of updating directly.
+   */
+  @observable
+  readonly workbenchItemInputGenerators: ((
+    item: BaseModel
+  ) => SelectableDimension | undefined)[] = [];
+
+  /**
+   * A global list of generator functions for showing buttons in feature info panel.
+   * Use {@link FeatureInfoPanelButton.addButton} instead of updating directly.
+   */
+  @observable
+  readonly featureInfoPanelButtonGenerators: FeatureInfoPanelButtonGenerator[] =
+    [];
 
   @action
   setSelectedTrainerItem(trainerItem: string) {
@@ -145,6 +173,11 @@ export default class ViewState {
   @action
   setCurrentTrainerStepIndex(index: number) {
     this.currentTrainerStepIndex = index;
+  }
+
+  @action
+  setActionBarVisible(visible: boolean) {
+    this.isActionBarVisible = visible;
   }
 
   /**

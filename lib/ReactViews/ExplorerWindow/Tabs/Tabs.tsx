@@ -36,6 +36,10 @@ export const Tabs: FC<ITabsProps> = observer(({ viewState, onClose }) => {
 
   const { terria } = viewState;
 
+  const onUrlAddFinished = async () => {
+    viewState.openAddData();
+  };
+
   useEffect(() => {
     const myDataTab = {
       title: "my-data",
@@ -45,6 +49,7 @@ export const Tabs: FC<ITabsProps> = observer(({ viewState, onClose }) => {
         <MyDataTab
           viewState={viewState}
           onFileAddFinished={onFileAddFinished}
+          onUrlAddFinished={onUrlAddFinished}
         />
       )
     };
@@ -111,7 +116,9 @@ export const Tabs: FC<ITabsProps> = observer(({ viewState, onClose }) => {
       if (result.error) {
         result.raiseError(terria);
       } else {
-        terria.currentViewer.zoomTo(file, 1);
+        if (!file.disableZoomTo) {
+          terria.currentViewer.zoomTo(file, 1);
+        }
       }
     }
     viewState.myDataIsUploadView = false;

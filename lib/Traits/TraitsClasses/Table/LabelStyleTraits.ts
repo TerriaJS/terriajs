@@ -87,6 +87,22 @@ export class LabelSymbolTraits extends mixTraits(TableStyleMapSymbolTraits) {
     type: "number"
   })
   pixelOffset = [0, 0];
+
+  @primitiveTrait({
+    name: "Horizontal origin",
+    description:
+      'The horizontal location of an origin relative to an object. For example, LEFT will place the label on the right of the point. Possible values are `"LEFT"`, `"CENTER"` and `"RIGHT"`. Default is `"RIGHT"`.',
+    type: "string"
+  })
+  horizontalOrigin: string = "LEFT";
+
+  @primitiveTrait({
+    name: "Vertical origin",
+    description:
+      'The vertical location of an origin relative to an object. For example, TOP will place the label above the point. Possible values are `"TOP"`, `"CENTER"`, `"BASELINE"` and `"BOTTOM"`. Default is `"CENTER"`.',
+    type: "string"
+  })
+  verticalOrigin: string = "CENTER";
 }
 
 export class EnumLabelSymbolTraits extends mixTraits(

@@ -14,7 +14,11 @@ import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import URI from "urijs";
-import { Category, LaunchAction } from "../Core/AnalyticEvents/analyticEvents";
+import {
+  Category,
+  LaunchAction,
+  DataSourceAction
+} from "../Core/AnalyticEvents/analyticEvents";
 import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import ConsoleAnalytics from "../Core/ConsoleAnalytics";
@@ -22,6 +26,7 @@ import CorsProxy from "../Core/CorsProxy";
 import ensureSuffix from "../Core/ensureSuffix";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
+import getPath from "../Core/getPath";
 import GoogleAnalytics from "../Core/GoogleAnalytics";
 import hashEntity from "../Core/hashEntity";
 import instanceOf from "../Core/instanceOf";
@@ -1727,6 +1732,15 @@ export default class Terria {
       }
     }
 
+    newItems.forEach((item) => {
+      // fire the google analytics event
+      this.analytics?.logEvent(
+        Category.dataSource,
+        DataSourceAction.addFromShareOrInit,
+        getPath(item)
+      );
+    });
+
     runInAction(() => (this.workbench.items = newItems));
 
     // For ids that don't correspond to models resolve an id by share keys
@@ -2126,7 +2140,6 @@ async function interpretStartData(
   if (isJsonObject(startData, false)) {
     // Convert startData to v8 if necessary
     let startDataV8: ShareInitSourceData | null;
-
     try {
       if (
         // If startData.version has version 0.x.x - user catalog-converter to convert startData

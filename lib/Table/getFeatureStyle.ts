@@ -6,7 +6,9 @@ import LabelGraphics from "terriajs-cesium/Source/DataSources/LabelGraphics";
 import PathGraphics from "terriajs-cesium/Source/DataSources/PathGraphics";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import Property from "terriajs-cesium/Source/DataSources/Property";
+import HorizontalOrigin from "terriajs-cesium/Source/Scene/HorizontalOrigin";
 import LabelStyle from "terriajs-cesium/Source/Scene/LabelStyle";
+import VerticalOrigin from "terriajs-cesium/Source/Scene/VerticalOrigin";
 import { getMakiIcon, isMakiIcon } from "../Map/Icons/Maki/MakiIcons";
 import TableStyle from "./TableStyle";
 import { isConstantStyleMap } from "./TableStyleMap";
@@ -65,6 +67,8 @@ export type SupportedLabelGraphics = Pick<
   | "outlineColor"
   | "outlineWidth"
   | "pixelOffset"
+  | "horizontalOrigin"
+  | "verticalOrigin"
 >;
 
 /** For given TableStyle and rowId, return feature styling in a "cesium-friendly" format.
@@ -205,7 +209,21 @@ export function getFeatureStyle(style: TableStyle, rowId: number) {
         pixelOffset: new Cartesian2(
           labelStyle.pixelOffset[0],
           labelStyle.pixelOffset[1]
-        )
+        ),
+        verticalOrigin:
+          labelStyle.verticalOrigin === "TOP"
+            ? VerticalOrigin.TOP
+            : labelStyle.verticalOrigin === "BOTTOM"
+            ? VerticalOrigin.BOTTOM
+            : labelStyle.verticalOrigin === "BASELINE"
+            ? VerticalOrigin.BASELINE
+            : VerticalOrigin.CENTER,
+        horizontalOrigin:
+          labelStyle.horizontalOrigin === "CENTER"
+            ? HorizontalOrigin.CENTER
+            : labelStyle.horizontalOrigin === "RIGHT"
+            ? HorizontalOrigin.RIGHT
+            : HorizontalOrigin.LEFT
       }
     : undefined;
 

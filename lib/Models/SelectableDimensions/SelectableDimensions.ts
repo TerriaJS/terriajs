@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import isDefined from "../../Core/isDefined";
+import { IconGlyph } from "../../Styled/Icon";
 
 /** `Dimension` (and child interfaces - eg `EnumDimension`, `NumericalDimension`, ...) are Trait/JSON friendly interfaces. They are used as base to the `SelectableDimension` interfaces.
  *
@@ -52,6 +53,7 @@ export interface ColorDimension extends Dimension {
 
 export interface ButtonDimension extends Dimension {
   readonly value?: string;
+  readonly icon?: IconGlyph;
 }
 
 export type SelectableDimensionType =

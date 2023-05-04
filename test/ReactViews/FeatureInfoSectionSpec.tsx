@@ -23,11 +23,13 @@ import CreateModel from "../../lib/Models/Definition/CreateModel";
 import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson";
 import TerriaFeature from "../../lib/Models/Feature/Feature";
 import Terria from "../../lib/Models/Terria";
+import ViewState from "../../lib/ReactViewModels/ViewState";
 import { FeatureInfoSection } from "../../lib/ReactViews/FeatureInfo/FeatureInfoSection";
 import mixTraits from "../../lib/Traits/mixTraits";
 import DiscretelyTimeVaryingTraits from "../../lib/Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import FeatureInfoUrlTemplateTraits from "../../lib/Traits/TraitsClasses/FeatureInfoTraits";
 import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
+import * as FeatureInfoPanel from "../../lib/ViewModels/FeatureInfoPanel";
 import { createWithContexts } from "./withContext";
 
 let separator = ",";
@@ -61,7 +63,11 @@ describe("FeatureInfoSection", function () {
     });
     catalogItem = new TestModel("test", terria);
 
-    viewState = {}; // Not important for tests, but is a required prop.
+    viewState = new ViewState({
+      terria,
+      catalogSearchProvider: undefined,
+      locationSearchProviders: []
+    });
     const properties = {
       name: "Kay",
       foo: "bar",
@@ -1310,6 +1316,38 @@ describe("FeatureInfoSection", function () {
       result = createWithContexts(viewState, section);
       expect(findWithText(result, "ABC").length).toEqual(0);
       expect(findWithText(result, "DEF").length).toEqual(1);
+    });
+  });
+
+  describe("feature info panel buttons", function () {
+    it("renders buttons added using FeatureInfoPanel.addFeatureButton", function () {
+      FeatureInfoPanel.addFeatureButton(viewState, ({ feature, item }) => {
+        if (!(item instanceof TestModel)) {
+          return;
+        }
+
+        const materialUsed = feature.properties?.getValue(JulianDate.now())[
+          "material"
+        ];
+        return materialUsed
+          ? {
+              text: `More info on ${materialUsed}`,
+              title: "Show more info on material used",
+              onClick() {}
+            }
+          : undefined;
+      });
+      const result = createWithContexts(
+        viewState,
+        <FeatureInfoSection
+          catalogItem={catalogItem}
+          feature={feature}
+          isOpen={true}
+          viewState={viewState}
+          t={() => {}}
+        />
+      );
+      expect(findWithText(result, "More info on steel").length).toEqual(1);
     });
   });
 });

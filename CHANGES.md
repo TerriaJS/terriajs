@@ -1,8 +1,80 @@
 # Change Log
 
-#### next release (8.2.22)
+#### next release (8.2.29)
+
+- [The next improvement]
+
+#### 8.2.28 - 2023-04-28
+
+- Refactored TerriaViewer to expose a promise `terriaViewer.viewerLoadPromise` for async loading of viewers.
+- Fix location point ideal zoom bug in 3D mode map.
+- Add `EPSG:7844` to `Proj4Definitions`.
+- TSify `Proj4Definitions` and `Reproject` modules.
+- Update the docs for `excludeMembers`: mention the group/item id support
+- Simplified `MapToolbar` API.
+
+#### 8.2.27 - 2023-04-05
+
+- Change icon used for display group remove button
+- Make access control UI compatible to Magda v1 and v2 with v2 overriding v1.
+- Remove karma-sauce-launcher dependency
+- Add method `addFileDragDropListener` for receiving callbacks when user drags-n-drops a file.
+- Improve `BoxDrawing` drag interaction.
+- Fix a bug where `BoxDrawing` sometimes causes the map to loose pan and zoom interactivity.
+- Optimize `LocationBar` component to reduce number of renders on mouse move.
+- Optimize `Compass` component to reduce renders on each frame.
+- Add `children` optional property to StandardUserInterfaceProps interface
+- Add support for ArcGis MapServer with `TileOnly` capability - for example layers served from ArcGis Online. This is supported through `ArcGisMapServerCatalogItem`, `ArcGisMapServerCatalogGroup` and `ArcGisCatalogGroup`.
+
+#### 8.2.26 - 2023-03-21
+
+- Upgraded to terriajs-server 4.0.0.
+- Added new `gulp dev` task that runs terriajs-server and `gulp watch` (incremental specs build) at the same time.
+
+#### 8.2.25 - 2023-03-20
+
+- Export `registerUrlHandlerForCatalogMemberType` for registering new url handler for catalog types.
+- BoxDrawing changes:
+  - Adds a new option called disableVerticalMovement to BoxDrawing which if set to true disables up/down motion of the box when dragging the top/bottom sides of the box.
+  - Keeps height (mostly) steady when moving the box laterally on the map. Previously the height of the box used to change wrt to the ellipsoid/surface.
+  - Fixes a bug that caused map panning and zooming to break when interacting with multiple active BoxDrawings.
+  - Removed some code that was causing too much drift between mouse cursor and model when moving the model laterally on the map.
+- Replaces addRemoteUploadType and addLocalUploadType with addOrReplaceRemoteFileUploadType and addOrReplaceLocalFileUploadType.
+
+#### 8.2.24 - 2023-03-06
+
+- Reimplement error message and default to 3d smooth mode when Cesium Ion Access Token is invalid.
+- Layers shown via a share URL are now logged as a Google Analytics event
+- Show an Add All / Remove All button for catalog groups when an optional `displayGroup` trait is true
+- Rename the Map Settings "Raster Map Quality" slider to be just "Map Quality" as it also affects other things than raster data.
+- Dragn-n-drop should respect disableZoomTo setting
+- Fixed #6702 Terrain Hides Underground Features not working
+- Add className prop for MyData tab so that it can be styled externally
+
+#### 8.2.23 - 2023-01-06
+
+- Only add groups to `CatalogIndex` if they aren't empty
+- `BoxDrawing` improvements:
+  - Added option `drawNonUniformScaleGrips` to enable/disable uniform-scaling
+  - Set limit on the size of scaling grips relative to the size of the box
+  - Small improvement to move interaction that prevents the box from locking up when trying to move at a camera angle parallel to the ground
+  - Restore modified map state to the previous setting when interaction stops
+- Fix bug in Cesium and Leaflet maps that resulted in `DataSource`s getting rendered even after their parent items are removed from the workbench.
+- GltfMixin changes:
+  - Refactors code to use stable `DataSource` and `Entity` values instead of re-creating them everytime `mapItems` is recomputed.
+  - Disable zoom to for the item when position is unknown.
+- Add `UploadDataTypes` API for extending the supported local and remote upload data types.
+- Add option to upload terria web data (via url to json file/service)
+- Refactor `Cesium3dTileMixin`.
+- Updated related maps to fit mobile screens.
+- Extend `responseDataPath` trait of `ApiTableCatalogItem` with support for mapping over arrays and collecting nested object values.
+- Add `MapToolbar.addToolButton()` API for adding a tool button to the map navigation menu.
+- Add `ActionBar` component for showing a floating menu bar at the bottom of the map.
+
+#### 8.2.22 - 2022-12-02
 
 - Protomaps Polygon features now only use `PolygonSymbolizer` (instead of `PolygonSymbolizer` and `LineSymbolizer`)
+- Add `horizontalOrigin` and `verticalOrigin` to `TableLabelTraits`
 - `TableStylingWorkflow` improvements:
   - Add more options to advanced mode (style title, hide style, long/lat column, time properties)
   - "Style" dropdown now shows `TableStyles` instead of `TableColumns`
@@ -22,7 +94,7 @@
 - Fix `MapboxVectorTileCatalogItem` `fillColor` also applying to Line features
 - Add `maximumNativeZoom` to `ProtomapsImageryProvider`
 - Fix image markers (eg `marker = "data:image/png;base64,..."`)
-- [The next improvement]
+- Fix `AssimpCatalogItem` to correctly handle zip archives that contain files inside a root folder.
 
 #### 8.2.21 - 2022-11-10
 

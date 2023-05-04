@@ -23,6 +23,7 @@ interface IAddDataSectionProps {
   localDataTypes?: ILocalDataType[];
   remoteDataTypes?: IRemoteDataType[];
   onFileAddFinished: (item: BaseModel[]) => void;
+  onUrlAddFinished: () => void;
 }
 
 export const AddDataSection: FC<IAddDataSectionProps> = ({
@@ -31,6 +32,7 @@ export const AddDataSection: FC<IAddDataSectionProps> = ({
   localDataTypes,
   remoteDataTypes,
   onFileAddFinished,
+  onUrlAddFinished,
   goBack
 }) => {
   const { t } = useTranslation();
@@ -78,7 +80,8 @@ export const AddDataSection: FC<IAddDataSectionProps> = ({
           viewState={viewState}
           goBack={goBack}
           dataTypes={remoteDataTypes}
-          onDataAddFinished={onFileAddFinished}
+          onFileAddFinished={onFileAddFinished}
+          onUrlAddFinished={onUrlAddFinished}
         />
       )}
     </MyDataTabContainer>
