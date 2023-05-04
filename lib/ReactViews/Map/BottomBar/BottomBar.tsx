@@ -1,7 +1,7 @@
-import React, { VFC } from "react";
+import { VFC } from "react";
 import Box from "../../../Styled/Box";
-import { MapCredits } from "./Credits";
 import { useViewState } from "../../Context";
+import { MapCredits } from "./Credits";
 import { DistanceLegend } from "./DistanceLegend";
 import { LocationBar } from "./LocationBar";
 

@@ -1,11 +1,10 @@
 import { observer } from "mobx-react";
-import React, { FC, RefObject, useEffect, useRef } from "react";
+import { FC, RefObject, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
 import MouseCoords from "../../../ReactViewModels/MouseCoords";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
-import { TextSpan } from "../../../Styled/Text";
 
 interface ILocationBarProps {
   mouseCoords: MouseCoords;
