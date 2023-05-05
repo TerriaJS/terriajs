@@ -33,7 +33,6 @@
   overflow-x: auto;
   composes: scrollbars from "../../Sass/common/_base.scss";
 
-  margin: 0 $padding-small;
   padding: $padding * 2;
   position: relative;
   box-sizing: border-box;
