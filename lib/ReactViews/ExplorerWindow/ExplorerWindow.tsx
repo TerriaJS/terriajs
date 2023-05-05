@@ -4,7 +4,7 @@ import React from "react";
 import { useViewState } from "../StandardUserInterface/ViewStateContext";
 import ModalPopup from "./ModalPopup";
 import Box from "../../Styled/Box";
-import { Tabs } from "./Tabs/Tabs";
+import { Tabs } from "./Tabs";
 
 export const ExplorerWindowElementName = "AddData";
 

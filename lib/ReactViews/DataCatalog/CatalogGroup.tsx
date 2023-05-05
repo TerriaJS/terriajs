@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
 import { observer } from "mobx-react";
 
-import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
+import { PrivateIndicator } from "../Generic/PrivateIndicator";
 
 import Loader from "../Loader";
 import Icon, { StyledIcon, GLYPHS } from "../../Styled/Icon";
@@ -14,7 +14,7 @@ import { RawButton } from "../../Styled/Button";
 
 import Spacing from "../../Styled/Spacing";
 
-const CatalogGroupBox = styled(Box).attrs({
+const CatalogGroupTitle = styled(Box).attrs({
   centered: true,
   fullWidth: true,
   gap: true,
@@ -115,7 +115,7 @@ const CatalogGroup: FC<ICatalogGroupProps> = (props) => {
   return (
     <Li ref={elementRef as any}>
       <Text>
-        <CatalogGroupBox
+        <CatalogGroupTitle
           title={props.title}
           onClick={props.onClick}
           selected={selected ?? false}
@@ -130,9 +130,10 @@ const CatalogGroup: FC<ICatalogGroupProps> = (props) => {
               {displayGroup === true && (
                 <RawButton
                   type="button"
-                  onClick={
-                    addRemoveButtonFunction ? addRemoveButtonFunction : () => {}
-                  }
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    addRemoveButtonFunction?.(event);
+                  }}
                   title={
                     allItemsLoaded
                       ? t("models.catalog.removeAll")
@@ -149,9 +150,7 @@ const CatalogGroup: FC<ICatalogGroupProps> = (props) => {
                   />
                 </RawButton>
               )}
-              <BoxSpan>
-                <GroupCaret open={open} />
-              </BoxSpan>
+              <GroupCaret open={open} />
               {trashable && (
                 <RawButton
                   type="button"
@@ -163,7 +162,7 @@ const CatalogGroup: FC<ICatalogGroupProps> = (props) => {
               )}
             </BoxSpan>
           </BoxSpan>
-        </CatalogGroupBox>
+        </CatalogGroupTitle>
       </Text>
       {props.open && (
         <Ul

@@ -23,7 +23,7 @@ import { Li } from "../../Styled/List";
 import Spacing from "../../Styled/Spacing";
 import { TextSpan } from "../../Styled/Text";
 import Loader from "../Loader";
-import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
+import { PrivateIndicator } from "../Generic/PrivateIndicator";
 import WorkbenchItemControls from "./Controls/WorkbenchItemControls";
 
 interface IProps extends WithTranslation {
@@ -147,27 +147,17 @@ class WorkbenchItemRaw extends React.Component<IProps> {
             </Box>
           </Box>
           {CatalogMemberMixin.isMixedInto(item) ? (
-            <Box centered paddedHorizontally>
+            <Box centered paddedHorizontally gap={2}>
+              {item.isPrivate && <PrivateIndicator />}
               <RawButton onClick={() => this.toggleDisplay()}>
-                {item.isPrivate && (
-                  <BoxSpan paddedHorizontally>
-                    <PrivateIndicator inWorkbench />
-                  </BoxSpan>
-                )}
                 <BoxSpan padded>
-                  {this.isOpen ? (
-                    <StyledIcon
-                      styledHeight={"8px"}
-                      light
-                      glyph={Icon.GLYPHS.opened}
-                    />
-                  ) : (
-                    <StyledIcon
-                      styledHeight={"8px"}
-                      light
-                      glyph={Icon.GLYPHS.closed}
-                    />
-                  )}
+                  <StyledIcon
+                    styledHeight={"8px"}
+                    light
+                    glyph={
+                      this.isOpen ? Icon.GLYPHS.opened : Icon.GLYPHS.closed
+                    }
+                  />
                 </BoxSpan>
               </RawButton>
             </Box>

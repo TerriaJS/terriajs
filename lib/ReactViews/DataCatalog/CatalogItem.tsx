@@ -7,7 +7,7 @@ import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 import Icon from "../../Styled/Icon";
 import Text from "../../Styled/Text";
-import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
+import { PrivateIndicator } from "../Generic/PrivateIndicator";
 import { ActionButton } from "./ActionButton";
 import { Li } from "../../Styled/List";
 
@@ -83,7 +83,7 @@ function CatalogItem(props: Props) {
           {props.text}
         </ItemTitleButton>
       </Text>
-      <Box>
+      <Box gap={2} centered>
         {props.isPrivate && <PrivateIndicator />}
         <ActionButton
           type="button"
