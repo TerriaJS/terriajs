@@ -40,6 +40,43 @@ export const Tabs: FC<ITabsProps> = observer(({ viewState, onClose }) => {
     viewState.openAddData();
   };
 
+  const onFileAddFinished = async (files: BaseModel[]) => {
+    const file = files.find((f) =>
+      MappableMixin.isMixedInto(f)
+    ) as unknown as MappableMixin.Instance;
+    if (file) {
+      const result = await viewState.viewCatalogMember(file);
+      if (result.error) {
+        result.raiseError(terria);
+      } else {
+        if (!file.disableZoomTo) {
+          terria.currentViewer.zoomTo(file, 1);
+        }
+      }
+    }
+    viewState.myDataIsUploadView = false;
+  };
+
+  const activateTab = async (category: string, idInCategory: string) => {
+    runInAction(() => {
+      viewState.activeTabCategory = category;
+      if (terria.configParameters.tabbedCatalog) {
+        viewState.activeTabIdInCategory = idInCategory;
+        if (category === "data-catalog") {
+          const member = terria.catalog.group.memberModels.filter(
+            (m) => m.uniqueId === idInCategory
+          )[0];
+          // If member was found and member can be opened, open it (causes CkanCatalogGroups to fetch etc.)
+          if (isDefined(member)) {
+            viewState
+              .viewCatalogMember(member)
+              .then((result) => result.raiseError(terria));
+          }
+        }
+      }
+    });
+  };
+
   useEffect(() => {
     const myDataTab = {
       title: "my-data",
@@ -59,14 +96,12 @@ export const Tabs: FC<ITabsProps> = observer(({ viewState, onClose }) => {
         ([] as any[]).concat(
           terria.catalog.group.memberModels
             .filter(
-              (member) =>
+              (member): member is CatalogMemberMixin.Instance =>
                 member !== terria.catalog.userAddedDataGroup &&
                 CatalogMemberMixin.isMixedInto(member)
             )
             .map((member, i) => ({
-              //@ts-ignore
-              name: member.nameInCatalog,
-              //@ts-ignore
+              name: member.nameInCatalog!,
               title: `data-catalog-${member.name}`,
               category: "data-catalog",
               idInCategory: member.uniqueId,
@@ -107,46 +142,10 @@ export const Tabs: FC<ITabsProps> = observer(({ viewState, onClose }) => {
     }
   }, []);
 
-  const onFileAddFinished = async (files: BaseModel[]) => {
-    const file = files.find((f) =>
-      MappableMixin.isMixedInto(f)
-    ) as unknown as MappableMixin.Instance;
-    if (file) {
-      const result = await viewState.viewCatalogMember(file);
-      if (result.error) {
-        result.raiseError(terria);
-      } else {
-        if (!file.disableZoomTo) {
-          terria.currentViewer.zoomTo(file, 1);
-        }
-      }
-    }
-    viewState.myDataIsUploadView = false;
-  };
-
-  const activateTab = async (category: string, idInCategory: string) => {
-    runInAction(() => {
-      viewState.activeTabCategory = category;
-      if (terria.configParameters.tabbedCatalog) {
-        viewState.activeTabIdInCategory = idInCategory;
-        if (category === "data-catalog") {
-          const member = terria.catalog.group.memberModels.filter(
-            (m) => m.uniqueId === idInCategory
-          )[0];
-          // If member was found and member can be opened, open it (causes CkanCatalogGroups to fetch etc.)
-          if (isDefined(member)) {
-            viewState
-              .viewCatalogMember(member)
-              .then((result) => result.raiseError(terria));
-          }
-        }
-      }
-    });
-  };
-
   const sameCategory = tabs.filter(
     (t) => t.category === viewState.activeTabCategory
   );
+
   const currentTab =
     sameCategory.filter(
       (t) => t.idInCategory === viewState.activeTabIdInCategory
