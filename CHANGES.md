@@ -1,6 +1,12 @@
 # Change Log
 
-#### next release (8.2.29)
+### 8.3.0-rc.2
+
+- **Breaking changes:**
+  - Upgrades to Typescript `v4.9.x`
+  - Upgrades to Mobx `v6.7.x`
+
+#### next release (8.2.9)
 
 - Fix app crash when rendering feature info with a custom title.
 - [The next improvement]
