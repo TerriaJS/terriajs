@@ -49,9 +49,9 @@ class TimerSection extends React.Component {
   // Ticks down the countdown clock
   countdown() {
     if (this.state.secondsLeft > 0) {
-      this.setState(() => {
+      this.setState((state) => {
         return {
-          secondsLeft: this.state.secondsLeft - 1
+          secondsLeft: state.secondsLeft - 1
         };
       });
     } else {
@@ -64,7 +64,7 @@ class TimerSection extends React.Component {
     this.setState({
       secondsLeft: this.getCountdownDuration()
     });
-    this.interval = setInterval(() => this.countdown, 1000);
+    this.interval = setInterval(() => this.countdown(), 1000);
   }
 
   getCountdownString() {
