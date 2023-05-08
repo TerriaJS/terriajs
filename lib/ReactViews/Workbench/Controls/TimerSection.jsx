@@ -64,7 +64,7 @@ class TimerSection extends React.Component {
     this.setState({
       secondsLeft: this.getCountdownDuration()
     });
-    this.interval = setInterval(this.countdown, 1000);
+    this.interval = setInterval(() => this.countdown, 1000);
   }
 
   getCountdownString() {
