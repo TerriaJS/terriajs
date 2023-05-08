@@ -1,5 +1,12 @@
 # Change Log
 
+### 8.3.0-rc.2
+
+- **Breaking changes:**
+  - Upgrades to Typescript `v4.9.x`
+  - Upgrades to Mobx `v6.7.x`
+  - Fix bug when rendering interval timer (`TimerSection`).
+
 #### next release (8.2.29)
 
 - Fix app crash when rendering feature info with a custom title.

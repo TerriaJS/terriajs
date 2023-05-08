@@ -5,3 +5,7 @@ Cesium/Apps/
 Cesium/Documentation/
 Cesium/launches/
 Cesium/Specs/
+
+# Environment files
+.envrc
+default.nix

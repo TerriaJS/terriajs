@@ -18,5 +18,9 @@ package-lock.json
 dist
 .history/
 
+# Environment files
+.envrc
+default.nix
+
 # Catalog index generation files
 catalog-index*.json
