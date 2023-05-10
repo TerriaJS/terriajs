@@ -6,6 +6,7 @@
   - Upgrades to Typescript `v4.9.x`
   - Upgrades to Mobx `v6.7.x`
   - Fix bug when rendering interval timer (`TimerSection`).
+  - Fix error when launching DiffTool.
 
 #### next release (8.2.29)
 
