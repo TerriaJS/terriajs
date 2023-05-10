@@ -464,23 +464,24 @@ class Main extends React.Component<MainPropsType> {
     }
   }
 
-  @action
-  async componentDidMount() {
-    if (this.location === undefined) {
-      const { latitude, longitude, height } =
-        this.diffItem.timeFilterCoordinates;
-      if (latitude !== undefined && longitude !== undefined) {
-        this.location = {
-          latitude,
-          longitude,
-          height
-        };
-        // remove any active search location marker to avoid showing two markers
-        removeMarker(this.props.terria);
-      } else {
-        await this.setLocationFromActiveSearch();
+  componentDidMount() {
+    runInAction(() => {
+      if (this.location === undefined) {
+        const { latitude, longitude, height } =
+          this.diffItem.timeFilterCoordinates;
+        if (latitude !== undefined && longitude !== undefined) {
+          this.location = {
+            latitude,
+            longitude,
+            height
+          };
+          // remove any active search location marker to avoid showing two markers
+          removeMarker(this.props.terria);
+        } else {
+          this.setLocationFromActiveSearch();
+        }
       }
-    }
+    });
   }
 
   // i want to restructure the render so that there's 2 distinct "showing diff"
