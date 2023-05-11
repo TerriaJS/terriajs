@@ -396,7 +396,8 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
     if (this.props.catalogItem.featureInfoTemplate.name) {
       title = Mustache.render(
         this.props.catalogItem.featureInfoTemplate.name,
-        this.featureProperties
+        this.mustacheContextData,
+        this.props.catalogItem.featureInfoTemplate.partials
       );
     } else
       title =
