@@ -637,6 +637,19 @@ describe("CkanCatalogGroup", function () {
       );
     });
 
+    it("ensures that the generated resource-id does not contain `/` character (to avoid clashing with id path character)", async function () {
+      ckanCatalogGroup.setTrait(
+        CommonStrata.definition,
+        "resourceIdTemplate",
+        "{{resource.name}}-{{resource.format}}/something"
+      );
+      await ckanCatalogGroup.loadMembers();
+      const group = ckanCatalogGroup.memberModels[0] as GroupMixin.Instance;
+      expect(group.memberModels[0].uniqueId).toBe(
+        "test/3245ad6c-cc00-4404-ba1f-476c07b5f762/WMS (OGC)-WMSsomething"
+      );
+    });
+
     describe("when `restrictResourceIdTemplateToOrgsWithNames` is given", function () {
       it("uses `resourceIdTemplate` for generating resource id for organizations in the list", async function () {
         ckanCatalogGroup.setTrait(
