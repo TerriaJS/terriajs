@@ -3,6 +3,7 @@
 #### next release (8.2.29)
 
 - Fix app crash when rendering feature info with a custom title.
+- Fixed bug where sharelinks created with no visible horizon would default to homeCamera view
 - [The next improvement]
 
 #### 8.2.28 - 2023-04-28
