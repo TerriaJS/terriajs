@@ -3,6 +3,7 @@
 #### next release (8.2.29)
 
 - Fix app crash when rendering feature info with a custom title.
+- Added new `CkanCatalogGroup` traits `resourceIdTemplate` and `restrictResourceIdTemplateToOrgsWithNames` to generate custom resource IDs for CKAN resources with unstable IDs.
 - [The next improvement]
 
 #### 8.2.28 - 2023-04-28
