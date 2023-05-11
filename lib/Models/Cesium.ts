@@ -1004,13 +1004,23 @@ export default class Cesium extends GlobeOrMap {
     const centerOfScreen = new Cartesian2(width / 2.0, height / 2.0);
     const pickRay = scene.camera.getPickRay(centerOfScreen);
     const center = isDefined(pickRay)
-      ? scene.globe.pick(pickRay, scene)
+      ? scene.globe.pick(pickRay, scene) // will be undefined if we are facing above the horizon
       : undefined;
 
     if (!center) {
-      // TODO: binary search to find the horizon point and use that as the center.
-      return this.terriaViewer.homeCamera; // This is just a random rectangle. Replace it when there's a home view available
-      // return this.terria.homeView.rectangle;
+      /** TODO: binary search to find the horizon point and use that as the center. 
+      This will give a real `center` for camera views where the horizon is visible.
+      But this will not be possible if camera is facing upwards and the horizon is not visible. 
+      So we need to return a useful CameraView that works in 3D mode and 2D mode.
+      In this case return the correct definition for the cesium camera, with position, direction, and up, 
+      but for the required `rectangle` property, that will only be used when switching to 2D mode, provide the homeCamera view extent. 
+      **/
+      return new CameraView(
+        this.terriaViewer.homeCamera.rectangle,
+        camera.positionWC,
+        camera.directionWC,
+        camera.upWC
+      );
     }
 
     const ellipsoid = this.scene.globe.ellipsoid;
