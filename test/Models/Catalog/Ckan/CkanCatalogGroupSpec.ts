@@ -1,9 +1,9 @@
 import i18next from "i18next";
 import { configure, runInAction } from "mobx";
-import { CatalogMemberMixin } from "terriajs-plugin-api";
 import URI from "urijs";
 import { JsonObject } from "../../../../lib/Core/Json";
 import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
+import CatalogMemberMixin from "../../../../lib/ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../../lib/ModelMixins/GroupMixin";
 import CatalogGroup from "../../../../lib/Models/Catalog/CatalogGroup";
 import CkanCatalogGroup, {
