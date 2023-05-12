@@ -88,6 +88,7 @@ import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
 import { setViewerMode } from "./ViewerMode";
+import { clone } from "terriajs-cesium";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
@@ -994,6 +995,22 @@ export default class Cesium extends GlobeOrMap {
     };
   }
 
+  /**
+   * Helper method to clone a camera object
+   * @param camera
+   * @returns Camera
+   */
+  cloneCamera(camera: Camera): Camera {
+    let result = new Camera(this.scene);
+    Cartesian3.clone(camera.position, result.position);
+    Cartesian3.clone(camera.direction, result.direction);
+    Cartesian3.clone(camera.up, result.up);
+    Cartesian3.clone(camera.right, result.right);
+    Matrix4.clone(camera.transform, result.transform);
+    result.frustum = camera.frustum.clone();
+    return result;
+  }
+
   getCurrentCameraView(): CameraView {
     const scene = this.scene;
     const camera = scene.camera;
@@ -1015,8 +1032,26 @@ export default class Cesium extends GlobeOrMap {
       In this case return the correct definition for the cesium camera, with position, direction, and up, 
       but for the required `rectangle` property, that will only be used when switching to 2D mode, provide the homeCamera view extent. 
       **/
+
+      // Create a dummy Camera
+      const cameraClone = this.cloneCamera(camera);
+
+      // Rotate Camera straight down
+      cameraClone.setView({
+        orientation: {
+          heading: 0.0,
+          pitch: -CesiumMath.PI_OVER_TWO,
+          roll: 0.0
+        }
+      });
+
+      // Compute the bounding box on the ellipsoid
+      const rectangleFor2dView = cameraClone.computeViewRectangle(
+        this.scene.globe.ellipsoid
+      );
+
       return new CameraView(
-        this.terriaViewer.homeCamera.rectangle,
+        rectangleFor2dView || this.terriaViewer.homeCamera.rectangle, //TODO: Is this fallback appropriate?
         camera.positionWC,
         camera.directionWC,
         camera.upWC
