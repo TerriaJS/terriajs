@@ -3,6 +3,7 @@
 #### next release (8.2.29)
 
 - Fix app crash when rendering feature info with a custom title.
+- Fix `acessType` resolution for `MagdaReference` so that it uses the default terria resolution strategy when `magdaRecord` is not defined.
 - [The next improvement]
 
 #### 8.2.28 - 2023-04-28
