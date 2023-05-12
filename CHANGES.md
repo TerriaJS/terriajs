@@ -5,6 +5,7 @@
 - Fix app crash when rendering feature info with a custom title.
 - Fixed bug where sharelinks created with no visible horizon would default to homeCamera view
 - Improved calculation of 2D view from 3D view when no horizon visible
+- Fix `acessType` resolution for `MagdaReference` so that it uses the default terria resolution strategy when `magdaRecord` is not defined.
 - [The next improvement]
 
 #### 8.2.28 - 2023-04-28
