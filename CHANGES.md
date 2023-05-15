@@ -4,6 +4,7 @@
 
 - Fix app crash when rendering feature info with a custom title.
 - Fixed bug where sharelinks created with no visible horizon would default to homeCamera view
+- Improved calculation of 2D view from 3D view when no horizon visible
 - [The next improvement]
 
 #### 8.2.28 - 2023-04-28
