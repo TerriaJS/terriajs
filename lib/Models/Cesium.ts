@@ -1025,18 +1025,19 @@ export default class Cesium extends GlobeOrMap {
       : undefined;
 
     if (!center) {
-      /** TODO: binary search to find the horizon point and use that as the center. 
-      This will give a real `center` for camera views where the horizon is visible.
-      But this will not be possible if camera is facing upwards and the horizon is not visible. 
-      So we need to return a useful CameraView that works in 3D mode and 2D mode.
-      In this case return the correct definition for the cesium camera, with position, direction, and up, 
-      but for the required `rectangle` property, that will only be used when switching to 2D mode, provide the homeCamera view extent. 
+      debugger;
+      /** In cases where the horizon is not visible, we cannot calculate a center using a pick ray, 
+      but we need to return a useful CameraView that works in 3D mode and 2D mode.
+      In this case we can return the correct definition for the cesium camera, with position, direction, and up, 
+      but we need to calculate a bounding box on the ellipsoid too to be used in 2D mode.
+      
+      To do this we clone the camera, rotate it to point straight down, and project the camera view from that position onto the ellipsoid.
       **/
 
-      // Create a dummy Camera
+      // Clone the camera
       const cameraClone = this.cloneCamera(camera);
 
-      // Rotate Camera straight down
+      // Rotate camera straight down
       cameraClone.setView({
         orientation: {
           heading: 0.0,
@@ -1050,6 +1051,7 @@ export default class Cesium extends GlobeOrMap {
         this.scene.globe.ellipsoid
       );
 
+      // Return the combined CameraView object
       return new CameraView(
         rectangleFor2dView || this.terriaViewer.homeCamera.rectangle, //TODO: Is this fallback appropriate?
         camera.positionWC,
