@@ -160,8 +160,14 @@ export default class MagdaReference extends AccessControlMixin(
 
   @computed
   get accessType(): string {
-    const access = getAccessTypeFromMagdaRecord(this.magdaRecord);
-    return access || super.accessType;
+    return this.magdaRecordAcessType ?? super.accessType;
+  }
+
+  @computed
+  private get magdaRecordAcessType(): string | undefined {
+    return this.magdaRecord
+      ? getAccessTypeFromMagdaRecord(this.magdaRecord)
+      : undefined;
   }
 
   protected async forceLoadReference(
@@ -861,10 +867,21 @@ const prepareDistributionFormat = createTransformer(
   }
 );
 
-function getAccessTypeFromMagdaRecord(magdaRecord: any): string {
+function getAccessTypeFromMagdaRecord(
+  magdaRecord: Record<string, any>
+): string {
   const record = toJS(magdaRecord);
-  const accessControl: any =
-    record && record.aspects && record.aspects["esri-access-control"];
-  const access = accessControl && accessControl.access;
-  return access;
+
+  // Magda V2 access control has higher priority.
+  if (record?.aspects?.["access-control"]) {
+    return record.aspects["access-control"].orgUnitId
+      ? record.aspects["access-control"].constraintExemption
+        ? "public"
+        : "non-public"
+      : "public";
+  } else if (record?.aspects?.["esri-access-control"]) {
+    return record.aspects["esri-access-control"].access;
+  } else {
+    return "public";
+  }
 }

@@ -10,6 +10,7 @@ import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerra
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import IntersectionTests from "terriajs-cesium/Source/Core/IntersectionTests";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import KeyboardEventModifier from "terriajs-cesium/Source/Core/KeyboardEventModifier";
 import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Plane from "terriajs-cesium/Source/Core/Plane";
@@ -596,7 +597,13 @@ export default class BoxDrawing {
       entity.onMouseOver(mouseMove);
     }, 200);
 
-    const handleMouseMove = (mouseMove: MouseMove) => {
+    const scratchEndPosition = new Cartesian2();
+    const scratchStartPosition = new Cartesian2();
+    const handleMouseMove = (_mouseMove: MouseMove) => {
+      const mouseMove = {
+        endPosition: _mouseMove.endPosition.clone(scratchEndPosition),
+        startPosition: _mouseMove.startPosition.clone(scratchStartPosition)
+      };
       if (state.is === "none") {
         detectHover(mouseMove);
       } else if (state.is === "hovering") {
@@ -619,6 +626,19 @@ export default class BoxDrawing {
     const eventHandler = new ScreenSpaceEventHandler(this.scene.canvas);
     eventHandler.setInputAction(handlePick, ScreenSpaceEventType.LEFT_DOWN);
     eventHandler.setInputAction(handleRelease, ScreenSpaceEventType.LEFT_UP);
+    Object.values(KeyboardEventModifier).forEach(
+      // Bind the release action to all LEFT_UP + any modifier. This is
+      // required because we want the release to happen even if the user is by
+      // chance pressing down on some other key. In such cases Cesium will not
+      // trigger a LEFT_UP event unless we explicitly pass a modifier.
+      (modifier) =>
+        eventHandler.setInputAction(
+          handleRelease,
+          ScreenSpaceEventType.LEFT_UP,
+          modifier as any
+        )
+    );
+
     eventHandler.setInputAction(
       handleMouseMove,
       ScreenSpaceEventType.MOUSE_MOVE
@@ -754,6 +774,7 @@ export default class BoxDrawing {
       Plane.transform(planeLocal, scaleMatrix, plane);
     };
 
+    const scratchOutlineColor = new Color();
     const side: Side = new Entity({
       position: new CallbackProperty(() => this.trs.translation, false) as any,
       orientation: new CallbackProperty(() => this.trs.rotation, false) as any,
@@ -774,7 +795,7 @@ export default class BoxDrawing {
             (isHighlighted
               ? style.highlightOutlineColor
               : style.outlineColor
-            ).withAlpha(side.isFacingCamera ? 1 : 0.2),
+            ).withAlpha(side.isFacingCamera ? 1 : 0.2, scratchOutlineColor),
           false
         ),
         outlineWidth: 1
@@ -794,7 +815,14 @@ export default class BoxDrawing {
     const scratchCartographic = new Cartographic();
     const scratchPreviousPosition = new Cartesian3();
     const scratchCartesian = new Cartesian3();
+    const scratchCurrentPosition = new Cartesian3();
     const scratchMoveStep = new Cartesian3();
+    const scratchPickPosition = new Cartesian3();
+
+    const moveStartPos = new Cartesian2();
+    const pickedPointOffset = new Cartesian3();
+    let dragStart = false;
+    let resetPosition = false;
 
     /**
      * Moves the box when dragging a side.
@@ -833,75 +861,94 @@ export default class BoxDrawing {
 
         moveStep = moveVector;
       } else if (this.keepHeightSteadyWhenMovingLaterally) {
-        // Move the box laterally on the globe while keeping the height
-        // steady. To do this we derive a new ellipsoid from the globe's
-        // ellipsoid by enlarging it so that the current box center falls on
-        // its surface. Then we find the intersection point of the camera ray
-        // through the latest mouse cursor position with this enlarged
-        // ellipsoid. The resulting point should be roughly the same height as
-        // the previous point and will also lie on the vector from the camera
-        // through the mouse cursor.
+        // Move the box laterally on the globe while keeping its height (almost) steady.
+        // To do this:
+        //   1. Find the exact point on the box surface mouse pick landed.
+        //   2. Derive a new ellipsoid such that the picked point on the box
+        //      lies on the new ellipsoid surface.
+        //   3. Find the point where the camera ray intersects this new
+        //      ellipsoid. This intersection point will have the same height as
+        //      that of the picked point while also visually coinciding with
+        //      the mouse cursor.
+        //   4. Use this intersection point to compute the box moveStep
 
+        if (dragStart) {
+          // 1. Find the pick position.
+          // When starting to drag, find the position on the box surface where
+          // the user clicked and remember its distance from the box center.
+
+          const pickedPosition = pickScenePosition(
+            scene,
+            mouseMove.endPosition,
+            scratchPickPosition
+          );
+          if (!pickedPosition) {
+            return;
+          }
+          // Offset of the pick position from the center of the box
+          Cartesian3.subtract(
+            pickedPosition,
+            this.trs.translation,
+            pickedPointOffset
+          );
+          dragStart = false;
+        }
+
+        // 2. Derive a new ellipsoid containing the pick position
+
+        // Current cartesian position of the mouse pointer on the box surface
+        const pickedPosition = Cartesian3.add(
+          this.trs.translation,
+          pickedPointOffset,
+          scratchCurrentPosition
+        );
+
+        const ellipsoid = scene.globe.ellipsoid;
+        const pickedCartographicPosition = Cartographic.fromCartesian(
+          pickedPosition,
+          ellipsoid,
+          scratchCartographic
+        );
+        const pickedHeight = pickedCartographicPosition.height;
+
+        // Derive an ellipsoid that passes through the pickedPoint
+        const pickedPointEllipsoid = deriveEllipsoid(
+          ellipsoid,
+          pickedCartographicPosition,
+          scratchEllipsoid
+        );
+
+        // 3. Find the point where the camera ray intersects with the derived ellipsoid
         const cameraRay = scene.camera.getPickRay(
           mouseMove.endPosition,
           scratchRay
         );
+
         if (!cameraRay) {
           return;
         }
 
-        // Current globe ellipsoid
-        const ellipsoid = scene.globe.ellipsoid;
-
-        // Current height of the model above the ellipsoid
-        const currentPosition = this.trs.translation;
-        const currentHeight = Cartographic.fromCartesian(
-          currentPosition,
-          ellipsoid,
-          scratchCartographic
-        ).height;
-
-        // Get an enlarged ellipsoid that will have the current box center on its surface
-        const ellipsoidThroughPosition = enlargeEllipsoid(
-          ellipsoid,
-          currentHeight,
-          scratchEllipsoid
-        );
-
-        // Get the intersection between the camera ray and then enlarged ellipsoid
-        const rayEllipsoidIntersectionPoint = intersectRayEllipsoid(
+        // Get the intersection between the camera ray and the derived ellipsoid
+        // This will be the next position where the picked point should be
+        const nextPosition = intersectRayEllipsoid(
           cameraRay,
-          ellipsoidThroughPosition,
+          pickedPointEllipsoid,
           scratchCartesian
         );
-        if (!rayEllipsoidIntersectionPoint) {
+        if (!nextPosition) {
           // there is no intersection point
           return;
         }
 
-        // Find the next position in cartographic
-        const nextCartographic = Cartographic.fromCartesian(
-          rayEllipsoidIntersectionPoint,
-          ellipsoid,
-          scratchCartographic
-        );
+        // Force the height of the nextPosition to the height of the picked point
+        // This avoids small errors in height from accumulating
+        setEllipsoidalHeight(nextPosition, pickedHeight, ellipsoid);
 
-        // There will be some slight discrepancy in height value of the new position (not sure why)
-        // We adjust that by forcing it to the previous height
-        nextCartographic.height = currentHeight;
-
-        // Convert back to cartesian
-        const nextPosition = Cartographic.toCartesian(
-          nextCartographic,
-          ellipsoid,
-          scratchCartesian
-        );
-
-        // Set the move step
-        moveStep = Cartesian3.subtract(nextPosition, currentPosition, moveStep);
+        // 4. Calculate the offset to move the box.
+        moveStep = Cartesian3.subtract(nextPosition, pickedPosition, moveStep);
       } else {
-        // Move box laterally by picking a next position that lies somewhere on
-        // the globe surface.
+        // Move box laterally by picking a next position that lies on the globe
+        // surface and along the camera ray.
         const previousPosition =
           screenToGlobePosition(
             scene,
@@ -926,15 +973,23 @@ export default class BoxDrawing {
             scratchCartesian
           );
 
-        if (!previousPosition || !nextPosition) {
+        if (!nextPosition || !previousPosition) {
+          // We couldn't resolve a globe position, maybe because the mouse
+          // cursor is pointing up in the sky. Reset the box position when we
+          // can find the globe position again.
+          resetPosition = true;
           return;
         }
 
-        moveStep = Cartesian3.subtract(
-          nextPosition,
-          previousPosition,
-          moveStep
-        );
+        if (nextPosition && previousPosition) {
+          if (resetPosition) {
+            Cartesian3.clone(nextPosition, this.trs.translation);
+            moveStep = Cartesian3.clone(Cartesian3.ZERO, moveStep);
+            resetPosition = false;
+          } else {
+            Cartesian3.subtract(nextPosition, previousPosition, moveStep);
+          }
+        }
       }
 
       // Update box position and fire change event
@@ -972,7 +1027,9 @@ export default class BoxDrawing {
       setCanvasCursor(scene, "auto");
     };
 
-    const onPick = () => {
+    const onPick = (click: MouseClick) => {
+      Cartesian2.clone(click.position, moveStartPos);
+      dragStart = true;
       highlightAllSides();
       setCanvasCursor(scene, "grabbing");
     };
@@ -1594,22 +1651,23 @@ function setPlaneDimensions(
 const scratchRadii = new Cartesian3();
 
 /**
- * Increases the radii of the given ellipsoid by the value given by radiiIncrease.
+ * Derives a new ellipsoid with surface containing the given position.
  *
  * Note that it is not clear whether the resulting shape obtained by adding the
- * offset is a true ellipsoid. However, this works out ok for our purpose.
+ * height is a true ellipsoid. However, this works out ok for our purpose.
  */
-function enlargeEllipsoid(
+function deriveEllipsoid(
   ellipsoid: Ellipsoid,
-  radiiIncrease: number,
+  cartographicPosition: Cartographic,
   result: Ellipsoid
 ): Ellipsoid {
+  const height = cartographicPosition.height;
   const newRadii = ellipsoid.radii.clone(scratchRadii);
-  newRadii.x += radiiIncrease;
-  newRadii.y += radiiIncrease;
-  newRadii.z += radiiIncrease;
-  const enlargedEllipsoid = Ellipsoid.fromCartesian3(newRadii, result);
-  return enlargedEllipsoid;
+  newRadii.x += height;
+  newRadii.y += height;
+  newRadii.z += height;
+  const derivedEllipsoid = Ellipsoid.fromCartesian3(newRadii, result);
+  return derivedEllipsoid;
 }
 
 /**
@@ -1644,4 +1702,38 @@ function computeViewRectangle(scene: Scene) {
 
 function setCanvasCursor(scene: Scene, cursorType: string) {
   scene.canvas.style.cursor = cursorType;
+}
+
+/**
+ *  Returns the Cartesian position for the window position.
+ */
+function pickScenePosition(
+  scene: Scene,
+  windowPosition: Cartesian2,
+  result: Cartesian3
+): Cartesian3 | undefined {
+  if (!scene.pickPositionSupported) {
+    return undefined;
+  }
+  const savedPickTranslucentDepth = scene.pickTranslucentDepth;
+  scene.pickTranslucentDepth = true;
+  const pickPosition = scene.pickPosition(windowPosition, result);
+  scene.pickTranslucentDepth = savedPickTranslucentDepth;
+  return pickPosition;
+}
+
+const scratchCartographicPos = new Cartographic();
+function setEllipsoidalHeight(
+  position: Cartesian3,
+  height: number | ((currentHeight: number) => number),
+  ellipsoid: Ellipsoid
+) {
+  const cartographicPos = Cartographic.fromCartesian(
+    position,
+    ellipsoid,
+    scratchCartographicPos
+  );
+  cartographicPos.height =
+    typeof height === "function" ? height(cartographicPos.height) : height;
+  Cartographic.toCartesian(cartographicPos, ellipsoid, position);
 }

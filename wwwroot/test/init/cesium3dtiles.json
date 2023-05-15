@@ -1,17 +1,172 @@
 {
   "catalog": [
     {
-      "name": "Cesium 3D Tiles",
+      "name": "Cesium 3D Tiles example",
       "type": "group",
-      "items": [
+      "description": "This group has Cesium 3DTiles dataset examples",
+      "isOpen": true,
+      "members": [
         {
-          "name": "Brisbane 3D city model (aero3Dpro)",
+          "name": "3DTiles test dataset (click Ideal Zoom to see)",
           "type": "3d-tiles",
-          "url": "https://sample.aero3dpro.com.au/BrisbaneCBD/Scene/recon_h_3DTiles.json",
+          "url": "https://qld.digitaltwin.terria.io/api/v0/data/2eeeadde-42a9-4372-aaec-abba6275a504/NPB/tileset.json",
+          "zoomOnAddToWorkbench": true,
           "options": {
             "maximumScreenSpaceError": 1,
             "maximumNumberOfLoadedTiles": 1000
-          }
+          },
+          "modelDimensions": [
+            {
+              "name": "Select Floor",
+              "selectedId": "Show all",
+              "options": [
+                {
+                  "id": "Show all",
+                  "value": {
+                    "style": {
+                      "show": "true"
+                    }
+                  }
+                },
+                {
+                  "id": "Floor O",
+                  "value": {
+                    "style": {
+                      "show": "${Level} === 'O'"
+                    }
+                  }
+                },
+                {
+                  "id": "Floor N",
+                  "value": {
+                    "style": {
+                      "show": "${Level} === 'N'"
+                    }
+                  }
+                },
+                {
+                  "id": "Floor M",
+                  "value": {
+                    "style": {
+                      "show": "${Level} === 'M'"
+                    }
+                  }
+                },
+                {
+                  "id": "Floor L",
+                  "value": {
+                    "style": {
+                      "show": "${Level} === 'L'"
+                    }
+                  }
+                },
+                {
+                  "id": "Floor K",
+                  "value": {
+                    "style": {
+                      "show": "${Level} === 'K'"
+                    }
+                  }
+                },
+                {
+                  "id": "Floor J",
+                  "value": {
+                    "style": {
+                      "show": "${Level} === 'J'"
+                    }
+                  }
+                },
+                {
+                  "id": "Floor I",
+                  "value": {
+                    "style": {
+                      "show": "${Level} === 'I'"
+                    }
+                  }
+                },
+                {
+                  "id": "Floor H",
+                  "value": {
+                    "style": {
+                      "show": "${Level} === 'H'"
+                    }
+                  }
+                },
+                {
+                  "id": "Floor G",
+                  "value": {
+                    "style": {
+                      "show": "${Level} === 'G'"
+                    }
+                  }
+                },
+                {
+                  "id": "Floor F",
+                  "value": {
+                    "style": {
+                      "show": "${Level} === 'F'"
+                    }
+                  }
+                },
+                {
+                  "id": "Floor E",
+                  "value": {
+                    "style": {
+                      "show": "${Level} === 'E'"
+                    }
+                  }
+                },
+                {
+                  "id": "Floor D",
+                  "value": {
+                    "style": {
+                      "show": "${Level} === 'D'"
+                    }
+                  }
+                },
+                {
+                  "id": "Floor C",
+                  "value": {
+                    "style": {
+                      "show": "${Level} === 'C'"
+                    }
+                  }
+                },
+                {
+                  "id": "Floor B",
+                  "value": {
+                    "style": {
+                      "show": "${Level} === 'B'"
+                    }
+                  }
+                },
+                {
+                  "id": "Floor A",
+                  "value": {
+                    "style": {
+                      "show": "${Level} === 'A'"
+                    }
+                  }
+                },
+                {
+                  "id": "Only Underground (A and B)",
+                  "value": {
+                    "style": {
+                      "show": "${Level} === 'A' || ${Level} === 'B'"
+                    }
+                  }
+                },
+                {
+                  "id": "Common property, Lifts, and Stairs",
+                  "value": {
+                    "style": {
+                      "show": "${Room} === 'Common property' || ${Room} === 'Lifts' || ${Room} === 'Stairs' "
+                    }
+                  }
+                }
+              ]
+            }
+          ]
         }
       ]
     }

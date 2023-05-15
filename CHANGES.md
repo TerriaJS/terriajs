@@ -1,8 +1,32 @@
 # Change Log
 
-#### next release (8.2.27)
+#### next release (8.2.29)
+
+- Fix app crash when rendering feature info with a custom title.
+- Fix `acessType` resolution for `MagdaReference` so that it uses the default terria resolution strategy when `magdaRecord` is not defined.
+- [The next improvement]
+
+#### 8.2.28 - 2023-04-28
+
+- Refactored TerriaViewer to expose a promise `terriaViewer.viewerLoadPromise` for async loading of viewers.
+- Fix location point ideal zoom bug in 3D mode map.
+- Add `EPSG:7844` to `Proj4Definitions`.
+- TSify `Proj4Definitions` and `Reproject` modules.
+- Update the docs for `excludeMembers`: mention the group/item id support
+- Simplified `MapToolbar` API.
+
+#### 8.2.27 - 2023-04-05
 
 - Change icon used for display group remove button
+- Make access control UI compatible to Magda v1 and v2 with v2 overriding v1.
+- Remove karma-sauce-launcher dependency
+- Add method `addFileDragDropListener` for receiving callbacks when user drags-n-drops a file.
+- Improve `BoxDrawing` drag interaction.
+- Fix a bug where `BoxDrawing` sometimes causes the map to loose pan and zoom interactivity.
+- Optimize `LocationBar` component to reduce number of renders on mouse move.
+- Optimize `Compass` component to reduce renders on each frame.
+- Add `children` optional property to StandardUserInterfaceProps interface
+- Add support for ArcGis MapServer with `TileOnly` capability - for example layers served from ArcGis Online. This is supported through `ArcGisMapServerCatalogItem`, `ArcGisMapServerCatalogGroup` and `ArcGisCatalogGroup`.
 
 #### 8.2.26 - 2023-03-21
 
