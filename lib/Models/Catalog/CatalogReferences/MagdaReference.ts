@@ -160,8 +160,14 @@ export default class MagdaReference extends AccessControlMixin(
 
   @computed
   get accessType(): string {
-    const access = getAccessTypeFromMagdaRecord(this.magdaRecord);
-    return access || super.accessType;
+    return this.magdaRecordAcessType ?? super.accessType;
+  }
+
+  @computed
+  private get magdaRecordAcessType(): string | undefined {
+    return this.magdaRecord
+      ? getAccessTypeFromMagdaRecord(this.magdaRecord)
+      : undefined;
   }
 
   protected async forceLoadReference(
@@ -861,7 +867,9 @@ const prepareDistributionFormat = createTransformer(
   }
 );
 
-function getAccessTypeFromMagdaRecord(magdaRecord: any): string {
+function getAccessTypeFromMagdaRecord(
+  magdaRecord: Record<string, any>
+): string {
   const record = toJS(magdaRecord);
 
   // Magda V2 access control has higher priority.
