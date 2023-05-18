@@ -1,5 +1,9 @@
 // @ts-nocheck
 
+/** This file has been taken from https://github.com/hongfaqiu/TIFFImageryProvider and modified by the Terria team.
+ * We diverge from that repo as of commit d7cc3cbd889cf78ed544e2e8df11667861497d59
+ */
+
 import Event from "terriajs-cesium/Source/Core/Event";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import Credit from "terriajs-cesium/Source/Core/Credit";
