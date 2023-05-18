@@ -1,14 +1,14 @@
 import { computed } from "mobx";
-// import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import CogCatalogItemTraits from "../../../Traits/TraitsClasses/CogCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import TIFFImageryProvider from "tiff-imagery-provider";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-
+import TIFFImageryProvider from "../../../ThirdParty/tiff-imagery-provider";
+import Credit from "terriajs-cesium/Source/Core/Credit";
+import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
+import Reproject from "../../../Map/Vector/Reproject";
 const proj4 = require("proj4").default;
 
 /** See https://cesium.com/learn/cesiumjs/ref-doc/UrlTemplateImageryProvider.html#url for available keywords:
@@ -48,76 +48,77 @@ export default class CogCatalogItem extends MappableMixin(
     ];
   }
 
+  /**
+   * Handle all different possible projections of COGs
+   * @param code Should be a number representing an EPSG code
+   * @returns a Promise that resolves to a proj reprojection function
+   */
+  projFunc = (code: number) => {
+    const sourceEpsgCode = `EPSG:${code}`;
+    // Add the projection to our proj4 defs if we dont already have it:
+    return Reproject.checkProjection(
+      this.terria.configParameters.proj4ServiceBaseUrl,
+      sourceEpsgCode
+    )
+      .then(() => {
+        const sourceDef =
+          sourceEpsgCode in Proj4Definitions
+            ? new proj4.Proj(Proj4Definitions[sourceEpsgCode])
+            : undefined;
+
+        return proj4(sourceDef, "EPSG:4326").forward;
+      })
+      .catch((err) => {
+        // TODO: Should we handle the error more formally as per Terria patterns?
+        console.log(err);
+      });
+  };
+
   @computed get imageryProvider() {
+    // TODO: What is this for?
     if (!isDefined(this.url)) {
       return;
     }
 
-    // TODO: TIFFImageryProvider does not requrie everything we need for ImageryProvider type. Extra properties added at the end but not neat.
-    let tifImageryProvider: any = new TIFFImageryProvider({
+    let tifImageryProvider: CogImageryProvider = new CogImageryProvider({
       url: proxyCatalogItemUrl(this, this.url),
-      projFunc: (code) => {
-        if (code === 32751) {
-          proj4.defs(
-            "EPSG:32751",
-            "+proj=utm +zone=51 +south +datum=WGS84 +units=m +no_defs +type=crs"
-          );
-          return proj4("EPSG:32751", "EPSG:4326").forward;
-        }
-      },
+      projFunc: this.projFunc,
       renderOptions: {
         /** nodata value, default read from tiff meta */
         nodata: 0
-      },
-      // subdomains: this.subdomains.slice(),
-      credit: this.attribution,
-      maximumLevel: this.maximumLevel,
-      minimumLevel: this.minimumLevel,
-      // tileHeight: this.tileHeight,
-      // tileWidth: this.tileWidth,
-      // pickFeaturesUrl: this.pickFeaturesUrl,
-      enablePickFeatures: this.allowFeaturePicking
+      }
     });
-
-    // Set values to please poor cesium types
-    tifImageryProvider.defaultNightAlpha = undefined;
-    tifImageryProvider.defaultNightAlpha = undefined;
-    tifImageryProvider.defaultDayAlpha = undefined;
-    tifImageryProvider.hasAlphaChannel = true;
-    tifImageryProvider.defaultAlpha = <any>undefined;
-    tifImageryProvider.defaultBrightness = <any>undefined;
-    tifImageryProvider.defaultContrast = <any>undefined;
-    tifImageryProvider.defaultGamma = <any>undefined;
-    tifImageryProvider.defaultHue = <any>undefined;
-    tifImageryProvider.defaultSaturation = <any>undefined;
-    tifImageryProvider.defaultMagnificationFilter = undefined as any;
-    tifImageryProvider.defaultMinificationFilter = undefined as any;
-    tifImageryProvider.proxy = <any>undefined;
-    tifImageryProvider.tileDiscardPolicy = <any>undefined;
 
     return tifImageryProvider;
   }
 }
 
-// class CogImageryProvider
-//   extends TIFFImageryProvider
-// {
-//  constructor() {
-//   super();
-//   // Set values to please poor cesium types
-//   defaultNightAlpha = undefined;
-//   defaultDayAlpha = undefined;
-//   hasAlphaChannel = true;
-//   defaultAlpha = <any>undefined;
-//   defaultBrightness = <any>undefined;
-//   defaultContrast = <any>undefined;
-//   defaultGamma = <any>undefined;
-//   defaultHue = <any>undefined;
-//   defaultSaturation = <any>undefined;
-//   defaultMagnificationFilter = undefined as any;
-//   defaultMinificationFilter = undefined as any;
-//   proxy = <any>undefined;
-//   tileDiscardPolicy = <any>undefined;
-//  }
+export class CogImageryProvider extends TIFFImageryProvider {
+  // Set values to please poor cesium types
+  defaultNightAlpha = undefined;
+  defaultDayAlpha = undefined;
+  hasAlphaChannel = true;
+  defaultAlpha = <any>undefined;
+  defaultBrightness = <any>undefined;
+  defaultContrast = <any>undefined;
+  defaultGamma = <any>undefined;
+  defaultHue = <any>undefined;
+  defaultSaturation = <any>undefined;
+  defaultMagnificationFilter = undefined as any;
+  defaultMinificationFilter = undefined as any;
+  proxy = <any>undefined;
+  tileDiscardPolicy = <any>undefined;
 
-// }
+  getTileCredits(x: number, y: number, level: number): Credit[] {
+    return [];
+  }
+
+  // // TODO: Do we need to implement this?
+  // // Do we need to conform to `ImageryProviderWithGridLayerSupport` to be able to use in 2D mode?
+  // requestImageForCanvas: (
+  //   x: number,
+  //   y: number,
+  //   level: number,
+  //   canvas: HTMLCanvasElement
+  // ) => Promise<HTMLCanvasElement>;
+}

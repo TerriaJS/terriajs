@@ -29,13 +29,13 @@ export interface SingleBandRenderOptions {
    */
   colorScale?: ColorScaleNames;
 
-  /** custom interpolate colors, [stopValue(0 - 1), color] or [color], if the latter, means equal distribution
+  /** custom interpolate colors, [stopValue(0 -1), color] or [color], if the latter, means equal distribution
    * @example
    * [[0, 'red'], [0.6, 'green'], [1, 'blue']]
    */
   colors?: [number, string][] | string[];
 
-  /** defaults to continuous */
+  /** defaults to continuous*/
   type?: "continuous" | "discrete";
 
   /**
@@ -76,7 +76,7 @@ export interface SingleBandRenderOptions {
 }
 
 export interface MultiBandRenderOptions {
-  /** Band value starts from 1 */
+  /** Band value starts from 1*/
   r?: {
     band: number;
     min?: number;
@@ -95,13 +95,13 @@ export interface MultiBandRenderOptions {
 }
 
 export type TIFFImageryProviderRenderOptions = {
-  /** nodata value, default read from tiff meta */
+  /** nodata value, default read from tiff meta*/
   nodata?: number;
-  /** try to render multi band cog to RGB, priority 1 */
+  /** try to render multi band cog to RGB, priority 1*/
   convertToRGB?: boolean;
-  /** priority 2 */
+  /** priority 2*/
   multi?: MultiBandRenderOptions;
-  /** priority 3 */
+  /** priority 3*/
   single?: SingleBandRenderOptions;
 };
 
@@ -114,16 +114,22 @@ export interface TIFFImageryProviderOptions {
   enablePickFeatures?: boolean;
   hasAlphaChannel?: boolean;
   renderOptions?: TIFFImageryProviderRenderOptions;
-  /** projection function, convert [lon, lat] position to EPSG:4326 */
-  projFunc?: (code: number) => ((pos: number[]) => number[]) | void;
-  /** cache survival time, defaults to 60 * 1000 ms */
+  /** projection function, convert [lon, lat] position to EPSG:4326*/
+  // MODIFIED FROM SOURCE by Terria - We want to accept a Promise for the projFunc
+  projFunc?: (
+    code: number
+  ) =>
+    | ((pos: number[]) => number[])
+    | Promise<(pos: number[]) => number[]>
+    | void;
+  /** cache survival time, defaults to 60 *1000 ms*/
   cache?: number;
-  /** geotiff resample method, defaults to nearest */
+  /** geotiff resample method, defaults to nearest*/
   resampleMethod?: "nearest" | "bilinear" | "linear";
 }
 const canvas = document.createElement("canvas");
 
-let workerPool: Pool;
+let workerPool: Pool | undefined;
 function getWorkerPool() {
   if (!workerPool) {
     workerPool = new Pool();
@@ -145,7 +151,7 @@ export class TIFFImageryProvider {
   minimumLevel: number;
   credit: Credit;
   private _error: Event;
-  readyPromise: Promise<void>;
+  readyPromise: Promise<boolean>;
   private _destroyed = false;
   _source!: GeoTIFF;
   private _imageCount!: number;
@@ -154,7 +160,8 @@ export class TIFFImageryProvider {
     string,
     {
       time: number;
-      data: ImageData | HTMLCanvasElement | HTMLImageElement;
+      data: HTMLCanvasElement | HTMLImageElement;
+      // MODIFIED FROM SOURCE by Terria: data: ImageData | HTMLCanvasElement | HTMLImageElement;
     }
   > = {};
   bands: Record<
@@ -195,17 +202,17 @@ export class TIFFImageryProvider {
       this.tileSize = this.tileWidth =
         options.tileSize || image.getTileWidth() || 512;
       this.tileHeight = options.tileSize || image.getTileHeight() || 512;
-      // 获取合适的COG层级
+      // Get the appropriate cog level
       this.cogLevels = await this._getCogLevels();
 
-      // 获取波段数
+      // Get the number of bands
       const samples = image.getSamplesPerPixel();
       this.renderOptions = options.renderOptions ?? {};
-      // 获取nodata值
+      // Get nodata value
       const noData = image.getGDALNoData();
       this.noData = this.renderOptions.nodata ?? noData;
 
-      // 赋初值
+      // assign initial value
       if (samples < 3 && this.renderOptions.convertToRGB) {
         const error = new DeveloperError(
           "Can not render the image as RGB, please check the convertToRGB parameter"
@@ -245,7 +252,7 @@ export class TIFFImageryProvider {
         this.readSamples = findAndSortBandNumbers(single.expression);
       }
 
-      // 获取波段最大最小值信息
+      // Get band maximum and minimum value information
       const bands: Record<
         number,
         {
@@ -301,7 +308,7 @@ export class TIFFImageryProvider {
             }
 
             if (!single?.expression && !bands[bandNum]) {
-              // 尝试获取波段最大最小值
+              // Try to get band max and min
               console.warn(
                 `Can not get band${bandNum} min/max, try to calculate min/max values, or setting ${
                   single ? "domain" : "min / max"
@@ -322,7 +329,7 @@ export class TIFFImageryProvider {
       );
       this.bands = bands;
 
-      // 获取空间范围
+      // Get the spatial range
       const bbox = image.getBoundingBox();
       const [west, south, east, north] = bbox;
 
@@ -331,7 +338,8 @@ export class TIFFImageryProvider {
         image.geoKeys.GeographicTypeGeoKey
       );
       const { projFunc } = options;
-      const proj = projFunc?.(prjCode);
+      const proj = await projFunc?.(prjCode); // MODIFIED FROM SOURCE by Terria: to accept projFunc as a Promise
+
       if (typeof proj === "function") {
         const leftBottom = proj([west, south]);
         const rightTop = proj([east, north]);
@@ -350,7 +358,7 @@ export class TIFFImageryProvider {
         throw error;
       }
 
-      // 处理跨180度经线的情况
+      // Handles cases across 180 degrees of longitude
       // https://github.com/CesiumGS/cesium/blob/da00d26473f663db180cacd8e662ca4309e09560/packages/engine/Source/Core/TileAvailability.js#L195
       if (this.rectangle.east < this.rectangle.west) {
         this.rectangle.east += CMath.TWO_PI;
@@ -365,7 +373,7 @@ export class TIFFImageryProvider {
         this.maximumLevel > maxCogLevel ? maxCogLevel : this.maximumLevel;
       this._images = new Array(this._imageCount).fill(null);
 
-      // 如果是单通道渲染, 则构建plot对象
+      // If it is single-pass rendering, construct the plot object
       try {
         if (this.renderOptions.single) {
           const band = this.bands[single.band];
@@ -395,6 +403,8 @@ export class TIFFImageryProvider {
       }
 
       this.ready = true;
+      // MODIFIED FROM SOURCE by Terria: we want to return a boolean to conform to our Interface.
+      return this.ready;
     });
   }
 
@@ -423,7 +433,7 @@ export class TIFFImageryProvider {
       const height = image.getHeight();
       const size = Math.max(width, height);
 
-      // 如果第一张瓦片的image tileSize大于512，则顺位后延，以减少请求量
+      // If the image tileSize of the first tile is greater than 512, it will be delayed sequentially to reduce the amount of requests
       if (i === this._imageCount - 1) {
         const firstImageLevel = Math.ceil(
           (size - this.tileSize) / this.tileSize
@@ -445,7 +455,7 @@ export class TIFFImageryProvider {
   }
 
   /**
-   * 获取瓦片数据
+   * Get tile data
    * @param x
    * @param y
    * @param z
@@ -499,14 +509,20 @@ export class TIFFImageryProvider {
     }
   }
 
-  async requestImage(x: number, y: number, z: number) {
+  async requestImage(
+    x: number,
+    y: number,
+    z: number
+  ): Promise<HTMLCanvasElement | HTMLImageElement> {
     if (!this.ready) {
       throw new DeveloperError(
         "requestImage must not be called before the imagery provider is ready."
       );
     }
 
-    if (z < this.minimumLevel || z > this.maximumLevel) return undefined;
+    // MODIFIED FROM SOURCE by Terria:
+    // TODO: Is it OK to remove this? It messes with the type of ImageryProvider and should be handled alsewhere.
+    // if (z < this.minimumLevel || z > this.maximumLevel) return undefined;
     if (this._cacheTime && this._imagesCache[`${x}_${y}_${z}`])
       return this._imagesCache[`${x}_${y}_${z}`].data;
 
@@ -518,8 +534,9 @@ export class TIFFImageryProvider {
         return undefined;
       }
 
-      let result: ImageData | HTMLImageElement;
-
+      // MODIFIED FROM SOURCE by Terria: No longer accept 'ImageData' for result type here
+      let result: HTMLImageElement;
+      x;
       if (multi || convertToRGB) {
         const opts = {
           width,
@@ -600,7 +617,9 @@ export class TIFFImageryProvider {
     longitude: number,
     latitude: number
   ) {
-    if (!this.options.enablePickFeatures) return undefined;
+    // MODIFIED FROM SOURCE by Terria:
+    // TODO: Is it safe to remove this? Messes with types.
+    // if (!this.options.enablePickFeatures) return undefined;
 
     const z = zoom > this.maximumLevel ? this.maximumLevel : zoom;
     const index = this.cogLevels[z];
@@ -612,7 +631,7 @@ export class TIFFImageryProvider {
     const width = image.getWidth();
     const height = image.getHeight();
     let lonGap = longitude - west;
-    // 处理跨180°经线的情况
+    // Handles cases across 180° meridians
     if (longitude < west) {
       lonGap += CMath.TWO_PI;
     }
