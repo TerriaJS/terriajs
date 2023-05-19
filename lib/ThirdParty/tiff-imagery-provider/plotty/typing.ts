@@ -1,4 +1,4 @@
-import { SingleBandRenderOptions } from "src/TIFFImageryProvider";
+import { SingleBandRenderOptions } from "../TIFFImageryProvider";
 import { colorscales } from "./colorscales";
 
 export type TypedArray =
