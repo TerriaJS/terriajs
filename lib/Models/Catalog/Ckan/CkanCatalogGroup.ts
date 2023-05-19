@@ -2,18 +2,20 @@ import i18next from "i18next";
 import {
   action,
   computed,
-  observable,
-  runInAction,
+  isObservableArray,
   makeObservable,
-  override
+  observable,
+  override,
+  runInAction
 } from "mobx";
+import Mustache from "mustache";
 import URI from "urijs";
+import { JsonObject } from "../../../Core/Json";
+import { networkRequestError } from "../../../Core/TerriaError";
 import flatten from "../../../Core/flatten";
 import isDefined from "../../../Core/isDefined";
-import { JsonObject } from "../../../Core/Json";
 import loadJson from "../../../Core/loadJson";
 import runLater from "../../../Core/runLater";
-import { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -38,9 +40,9 @@ import {
 } from "./CkanDefinitions";
 import CkanItemReference, {
   CkanResourceWithFormat,
+  PreparedSupportedFormat,
   getCkanItemName,
   getSupportedFormats,
-  PreparedSupportedFormat,
   prepareSupportedFormat
 } from "./CkanItemReference";
 
@@ -354,7 +356,6 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
       const { resource, format } = filteredResources[i];
 
       const itemId = this.getItemId(ckanDataset, resource);
-
       let item = this._catalogGroup.terria.getModelById(
         CkanItemReference,
         itemId
@@ -417,7 +418,50 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
 
   @action
   getItemId(ckanDataset: CkanDataset, resource: CkanResource) {
-    return `${this._catalogGroup.uniqueId}/${ckanDataset.id}/${resource.id}`;
+    const resourceId = this.buildResourceId(ckanDataset, resource);
+    return `${this._catalogGroup.uniqueId}/${ckanDataset.id}/${resourceId}`;
+  }
+
+  /**
+   * Build an ID for the given resource using the `resourceIdTemplate` if available.
+   */
+  private buildResourceId(ckanDataset: CkanDataset, resource: CkanResource) {
+    const resourceIdTemplate = this.resourceIdTemplateForOrg(
+      ckanDataset.organization?.name
+    );
+    const resourceId = resourceIdTemplate
+      ? // Use mustache to construct the resource id from template. Also delete any `/`
+        // character in the resulting ID to avoid conflict with the path separator.
+        Mustache.render(resourceIdTemplate, { resource }).replace("/", "")
+      : resource.id;
+    return resourceId;
+  }
+
+  /**
+   * Returns a template for constructing alternate resourceId for the given
+   * organisation or `undefined` when no template is defined.
+   */
+  private resourceIdTemplateForOrg(
+    orgName: string | undefined
+  ): string | undefined {
+    const template = this._catalogGroup.resourceIdTemplate;
+    // No template defined
+    if (!template) {
+      return undefined;
+    }
+
+    const restrictedOrgNames =
+      this._catalogGroup.restrictResourceIdTemplateToOrgsWithNames;
+    if (
+      Array.isArray(restrictedOrgNames) ||
+      isObservableArray(restrictedOrgNames)
+    ) {
+      // Use of template restricted by org names - return template only if this org is in the list
+      return restrictedOrgNames.includes(orgName) ? template : undefined;
+    }
+
+    // Template usage has no restrictions - return template for any org
+    return template;
   }
 }
 

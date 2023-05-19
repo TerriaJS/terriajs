@@ -1,14 +1,12 @@
 import { runInAction } from "mobx";
 import CatalogGroup from "../../lib/Models/Catalog/CatalogGroup";
-import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import GeoJsonCatalogItem from "../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import MagdaReference from "../../lib/Models/Catalog/CatalogReferences/MagdaReference";
-import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
-import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson";
-import CatalogMemberFactory from "../../lib/Models/Catalog/CatalogMemberFactory";
+import Terria from "../../lib/Models/Terria";
 
 describe("MagdaReference", function () {
   const recordGroupWithOneCsv = {
@@ -564,6 +562,28 @@ describe("MagdaReference", function () {
       });
       expect(reference.accessType === "public").toBeTruthy();
       done();
+    });
+
+    it("returns `super.accessType` when magdaRecord is unset", function () {
+      const terria = new Terria();
+      const reference = new MagdaReference("magda-reference", terria);
+      reference.setAccessType("foo-doesnt-matter");
+      reference.setTrait(CommonStrata.definition, "recordId", "test id");
+      reference.setTrait(CommonStrata.definition, "magdaRecord", {
+        id: "test id",
+        name: "Test",
+        aspects: {
+          "access-control": {
+            orgUnitId: "some org id",
+            constraintExemption: false
+          }
+        }
+      });
+      // Picks up the access type from magdaRecord settings
+      expect(reference.accessType).toBe("non-public");
+      reference.setTrait(CommonStrata.definition, "magdaRecord", undefined);
+      // Reverts to whatever accessType value is returned by super.accessType
+      expect(reference.accessType).toBe("foo-doesnt-matter");
     });
   });
 });
