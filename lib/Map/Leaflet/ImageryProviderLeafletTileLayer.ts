@@ -7,29 +7,23 @@ import {
   observable,
   makeObservable
 } from "mobx";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import CesiumCredit from "terriajs-cesium/Source/Core/Credit";
-import defined from "terriajs-cesium/Source/Core/defined";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import TileProviderError from "terriajs-cesium/Source/Core/TileProviderError";
-import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
+import { Cartesian2 } from "cesium";
+import { Cartographic } from "cesium";
+import { Credit as CesiumCredit } from "cesium";
+import { defined } from "cesium";
+import { Event as CesiumEvent } from "cesium";
+import { Math as CesiumMath } from "cesium";
+import { TileProviderError } from "cesium";
+import { WebMercatorTilingScheme } from "cesium";
+import { ImageryLayerFeatureInfo } from "cesium";
+import { ImageryProvider } from "cesium";
+import { SplitDirection } from "cesium";
 import isDefined from "../../Core/isDefined";
 import pollToPromise from "../../Core/pollToPromise";
 import TerriaError from "../../Core/TerriaError";
 import Leaflet from "../../Models/Leaflet";
 import getUrlForImageryTile from "../ImageryProvider/getUrlForImageryTile";
 import { ProviderCoords } from "../PickedFeatures/PickedFeatures";
-
-// We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
-// and import doesn't allows us to do that, so instead we use require + type casting to ensure
-// we still maintain the type checking, without TS screaming with errors
-const FeatureDetection: FeatureDetection =
-  require("terriajs-cesium/Source/Core/FeatureDetection").default;
 
 const swScratch = new Cartographic();
 const neScratch = new Cartographic();

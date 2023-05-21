@@ -1,11 +1,5 @@
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined } from "cesium";
 import URI from "urijs";
-
-// We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
-// and import doesn't allows us to do that, so instead we use require + type casting to ensure
-// we still maintain the type checking, without TS screaming with errors
-const FeatureDetection: FeatureDetection =
-  require("terriajs-cesium/Source/Core/FeatureDetection").default;
 
 /**
  * Rewrites URLs so that they're resolved via the TerriaJS-Server proxy rather than going direct. This is most useful
@@ -41,12 +35,9 @@ export default class CorsProxy {
   corsDomains: string[] = [];
 
   /**
-   * Whether the proxy should be used regardless of whether the domain supports CORS or not. This defaults to true
-   * on IE<10.
+   * Whether the proxy should be used regardless of whether the domain supports CORS or not.
    */
-  alwaysUseProxy: boolean =
-    FeatureDetection.isInternetExplorer() &&
-    FeatureDetection.internetExplorerVersion()[0] < 10; // IE versions prior to 10 don't support CORS, so always use the proxy.
+  alwaysUseProxy: boolean = false;
 
   /**
    * Whether the page that Terria is running on is HTTPS. This is relevant because calling an HTTP domain from HTTPS

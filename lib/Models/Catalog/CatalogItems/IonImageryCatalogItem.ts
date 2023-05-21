@@ -1,5 +1,5 @@
 import { computed, makeObservable } from "mobx";
-import IonImageryProvider from "terriajs-cesium/Source/Scene/IonImageryProvider";
+import { IonImageryProvider } from "cesium";
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";

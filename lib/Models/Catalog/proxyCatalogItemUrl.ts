@@ -1,6 +1,6 @@
 "use strict";
 
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
+import { defaultValue } from "cesium";
 import isDefined from "../../Core/isDefined";
 import UrlMixin from "../../ModelMixins/UrlMixin";
 import { BaseModel } from "../Definition/Model";

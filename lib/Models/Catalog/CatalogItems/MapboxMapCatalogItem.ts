@@ -1,5 +1,5 @@
 import { computed, makeObservable } from "mobx";
-import MapboxImageryProvider from "terriajs-cesium/Source/Scene/MapboxImageryProvider";
+import { MapboxImageryProvider } from "cesium";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import MapboxMapCatalogItemTraits from "../../../Traits/TraitsClasses/MapboxMapCatalogItemTraits";

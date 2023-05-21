@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { computed, runInAction, makeObservable, override } from "mobx";
-import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
-import Resource from "terriajs-cesium/Source/Core/Resource";
+import { RequestErrorEvent } from "cesium";
+import { Resource } from "cesium";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import TerriaError, { TerriaErrorSeverity } from "../../../Core/TerriaError";

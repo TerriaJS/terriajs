@@ -5,39 +5,39 @@ import {
   onBecomeUnobserved,
   makeObservable
 } from "mobx";
-import ArcType from "terriajs-cesium/Source/Core/ArcType";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import Color from "terriajs-cesium/Source/Core/Color";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
-import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
-import IntersectionTests from "terriajs-cesium/Source/Core/IntersectionTests";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import KeyboardEventModifier from "terriajs-cesium/Source/Core/KeyboardEventModifier";
-import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
-import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
-import Plane from "terriajs-cesium/Source/Core/Plane";
-import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
-import Ray from "terriajs-cesium/Source/Core/Ray";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
-import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
-import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
-import TranslationRotationScale from "terriajs-cesium/Source/Core/TranslationRotationScale";
-import CallbackProperty from "terriajs-cesium/Source/DataSources/CallbackProperty";
-import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
-import PlaneGraphics from "terriajs-cesium/Source/DataSources/PlaneGraphics";
-import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
-import PositionProperty from "terriajs-cesium/Source/DataSources/PositionProperty";
-import Axis from "terriajs-cesium/Source/Scene/Axis";
-import ColorBlendMode from "terriajs-cesium/Source/Scene/ColorBlendMode";
-import Scene from "terriajs-cesium/Source/Scene/Scene";
-import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
+import { ArcType } from "cesium";
+import { Cartesian2 } from "cesium";
+import { Cartesian3 } from "cesium";
+import { Cartographic } from "cesium";
+import { Color } from "cesium";
+import { Ellipsoid } from "cesium";
+import { EllipsoidTerrainProvider } from "cesium";
+import { HeadingPitchRoll } from "cesium";
+import { IntersectionTests } from "cesium";
+import { JulianDate } from "cesium";
+import { KeyboardEventModifier } from "cesium";
+import { Matrix3 } from "cesium";
+import { Matrix4 } from "cesium";
+import { Plane } from "cesium";
+import { Quaternion } from "cesium";
+import { Ray } from "cesium";
+import { Rectangle } from "cesium";
+import { sampleTerrainMostDetailed } from "cesium";
+import { ScreenSpaceEventHandler } from "cesium";
+import { ScreenSpaceEventType } from "cesium";
+import { TranslationRotationScale } from "cesium";
+import { CallbackProperty } from "cesium";
+import { ColorMaterialProperty } from "cesium";
+import { CustomDataSource } from "cesium";
+import { Entity } from "cesium";
+import { ModelGraphics } from "cesium";
+import { PlaneGraphics } from "cesium";
+import { PolylineDashMaterialProperty } from "cesium";
+import { PositionProperty } from "cesium";
+import { Axis } from "cesium";
+import { ColorBlendMode } from "cesium";
+import { Scene } from "cesium";
+import { ShadowMode } from "cesium";
 import isDefined from "../Core/isDefined";
 import Cesium from "./Cesium";
 
@@ -1245,7 +1245,7 @@ export default class BoxDrawing {
         false
       ) as any,
       model: {
-        uri: require("file-loader!../../wwwroot/models/Box.glb"),
+        uri: require("../../wwwroot/models/Box.glb"),
         minimumPixelSize: 12,
         maximumScale: new CallbackProperty(
           // Clamp the maximum size of the scale grip to the 0.15 times the

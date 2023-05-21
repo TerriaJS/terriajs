@@ -2,10 +2,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import L from "leaflet";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import defined from "terriajs-cesium/Source/Core/defined";
-import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
-import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
+import { Cartesian2 } from "cesium";
+import { defined } from "cesium";
+import { EllipsoidGeodesic } from "cesium";
+import { getTimestamp } from "cesium";
 import Styles from "./legend.scss";
 import { observer, disposeOnUnmount } from "mobx-react";
 import { autorun, runInAction } from "mobx";

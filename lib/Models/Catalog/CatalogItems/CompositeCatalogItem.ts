@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { action, autorun, computed, runInAction, makeObservable } from "mobx";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import { DeveloperError } from "cesium";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import Result from "../../../Core/Result";

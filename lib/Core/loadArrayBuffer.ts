@@ -1,4 +1,4 @@
-import Resource from "terriajs-cesium/Source/Core/Resource";
+import { Resource } from "cesium";
 
 export default function loadArrayBuffer(
   urlOrResource: string,
@@ -6,5 +6,3 @@ export default function loadArrayBuffer(
 ): Promise<ArrayBuffer> {
   return Resource.fetchArrayBuffer({ url: urlOrResource, headers: headers })!;
 }
-
-export default loadArrayBuffer;

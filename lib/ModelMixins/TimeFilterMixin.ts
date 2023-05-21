@@ -6,10 +6,10 @@ import {
   makeObservable,
   override
 } from "mobx";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import { Ellipsoid } from "cesium";
+import { JulianDate } from "cesium";
+import { Math as CesiumMath } from "cesium";
+import { Entity } from "cesium";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import LatLonHeight from "../Core/LatLonHeight";

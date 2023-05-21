@@ -10,22 +10,20 @@ import {
   makeObservable
 } from "mobx";
 import { computedFn } from "mobx-utils";
-import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import Clock from "terriajs-cesium/Source/Core/Clock";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnimationFrame";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
-import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
+import { Cartesian2 } from "cesium";
+import { Cartesian3 } from "cesium";
+import { Cartographic } from "cesium";
+import { Clock } from "cesium";
+import { defaultValue } from "cesium";
+import { Ellipsoid } from "cesium";
+import { EventHelper } from "cesium";
+import { Math as CesiumMath } from "cesium";
+import { Rectangle } from "cesium";
+import { DataSource } from "cesium";
+import { DataSourceCollection } from "cesium";
+import { Entity } from "cesium";
+import { ImageryProvider } from "cesium";
+import { SplitDirection } from "cesium";
 import html2canvas from "terriajs-html2canvas";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
@@ -63,12 +61,6 @@ import GlobeOrMap from "./GlobeOrMap";
 import { LeafletAttribution } from "./LeafletAttribution";
 import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
-
-// We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
-// and import doesn't allows us to do that, so instead we use require + type casting to ensure
-// we still maintain the type checking, without TS screaming with errors
-const FeatureDetection: FeatureDetection =
-  require("terriajs-cesium/Source/Core/FeatureDetection").default;
 
 // This class is an observer. It probably won't contain any observables itself
 
@@ -189,7 +181,7 @@ export default class Leaflet extends GlobeOrMap {
     const ticker = () => {
       if (!this._stopRequestAnimationFrame) {
         this.terria.timelineClock.tick();
-        this._cesiumReqAnimFrameId = cesiumRequestAnimationFrame(ticker);
+        this._cesiumReqAnimFrameId = requestAnimationFrame(ticker);
       }
     };
 
@@ -342,7 +334,7 @@ export default class Leaflet extends GlobeOrMap {
     // synchronously as a result of timelineClock ticking due to ticker()
     this._stopRequestAnimationFrame = true;
     if (isDefined(this._cesiumReqAnimFrameId)) {
-      cesiumCancelAnimationFrame(this._cesiumReqAnimFrameId);
+      cancelAnimationFrame(this._cesiumReqAnimFrameId);
     }
     this.dataSourceDisplay.destroy();
     this.map.off("move");

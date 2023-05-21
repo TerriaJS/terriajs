@@ -8,23 +8,24 @@ import {
 } from "mobx";
 import { createTransformer, ITransformer } from "mobx-utils";
 import Pbf from "pbf";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Color from "terriajs-cesium/Source/Core/Color";
-import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import NearFarScalar from "terriajs-cesium/Source/Core/NearFarScalar";
-import Transforms from "terriajs-cesium/Source/Core/Transforms";
-import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
-import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
-import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
-import DataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
-import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
-import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
-import ColorBlendMode from "terriajs-cesium/Source/Scene/ColorBlendMode";
-import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
-import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
+import { Axis } from "cesium";
+import { Cartesian3 } from "cesium";
+import { Color } from "cesium";
+import { HeadingPitchRoll } from "cesium";
+import { JulianDate } from "cesium";
+import { NearFarScalar } from "cesium";
+import { Transforms } from "cesium";
+import { BillboardGraphics } from "cesium";
+import { ConstantPositionProperty } from "cesium";
+import { ConstantProperty } from "cesium";
+import { DataSource } from "cesium";
+import { Entity } from "cesium";
+import { ModelGraphics } from "cesium";
+import { PointGraphics } from "cesium";
+import { PropertyBag } from "cesium";
+import { ColorBlendMode } from "cesium";
+import { HeightReference } from "cesium";
+import { ShadowMode } from "cesium";
 import isDefined from "../../../Core/isDefined";
 import loadArrayBuffer from "../../../Core/loadArrayBuffer";
 import TerriaError from "../../../Core/TerriaError";
@@ -48,11 +49,6 @@ import {
 } from "./GtfsRealtimeProtoBufReaders";
 import prettyPrintGtfsEntityField from "./prettyPrintGtfsEntityField";
 import VehicleData from "./VehicleData";
-
-// We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
-// and import doesn't allows us to do that, so instead we use require + type casting to ensure
-// we still maintain the type checking, without TS screaming with errors
-const Axis: Axis = require("terriajs-cesium/Source/Scene/Axis").default;
 
 interface RectangleExtent {
   east: number;

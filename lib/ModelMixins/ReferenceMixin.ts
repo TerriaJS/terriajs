@@ -5,7 +5,7 @@ import {
   untracked,
   makeObservable
 } from "mobx";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import { DeveloperError } from "cesium";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import AsyncLoader from "../Core/AsyncLoader";
 import Result from "../Core/Result";

@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
+import { FeatureDetection } from "cesium";
 import ActionBarPortal from "../ActionBar/ActionBarPortal";
 import BottomDock from "../BottomDock/BottomDock";
 import { MapCredits } from "../Credits";

@@ -1,5 +1,5 @@
 import React from "react";
-import defined from "terriajs-cesium/Source/Core/defined";
+import { defined } from "cesium";
 import { observer } from "mobx-react";
 
 import PropTypes from "prop-types";

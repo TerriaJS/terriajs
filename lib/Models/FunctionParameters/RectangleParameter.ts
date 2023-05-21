@@ -1,4 +1,4 @@
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
+import { defaultValue } from "cesium";
 import FunctionParameter, {
   Options as FunctionParameterOptions
 } from "./FunctionParameter";

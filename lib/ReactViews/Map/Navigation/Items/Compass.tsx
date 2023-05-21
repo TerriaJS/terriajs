@@ -14,15 +14,15 @@ import { computed, runInAction, when, makeObservable } from "mobx";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
-import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
-import Ray from "terriajs-cesium/Source/Core/Ray";
-import Transforms from "terriajs-cesium/Source/Core/Transforms";
+import { Cartesian2 } from "cesium";
+import { Cartesian3 } from "cesium";
+import { Ellipsoid } from "cesium";
+import { Event as CesiumEvent } from "cesium";
+import { getTimestamp } from "cesium";
+import { Math as CesiumMath } from "cesium";
+import { Matrix4 } from "cesium";
+import { Ray } from "cesium";
+import { Transforms } from "cesium";
 import isDefined from "../../../../Core/isDefined";
 import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
@@ -32,11 +32,9 @@ import GyroscopeGuidance from "../../../GyroscopeGuidance/GyroscopeGuidance";
 import { withTerriaRef } from "../../../HOCs/withTerriaRef";
 import FadeIn from "../../../Transitions/FadeIn/FadeIn";
 import debounce from "lodash-es/debounce";
-import Scene from "terriajs-cesium/Source/Scene/Scene";
+import { Scene } from "cesium";
 
-const CameraFlightPath =
-  require("terriajs-cesium/Source/Scene/CameraFlightPath").default;
-
+import { CameraFlightPath } from "cesium";
 export const COMPASS_LOCAL_PROPERTY_KEY = "CompassHelpPrompted";
 
 // Map Compass

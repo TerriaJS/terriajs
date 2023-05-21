@@ -1,15 +1,16 @@
 import i18next from "i18next";
 import { computed, makeObservable, override } from "mobx";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
-import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
-import Transforms from "terriajs-cesium/Source/Core/Transforms";
-import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
-import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
-import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import { Axis } from "cesium";
+import { Cartesian3 } from "cesium";
+import { HeadingPitchRoll } from "cesium";
+import { Quaternion } from "cesium";
+import { Transforms } from "cesium";
+import { ConstantPositionProperty } from "cesium";
+import { ConstantProperty } from "cesium";
+import { CustomDataSource } from "cesium";
+import { Entity } from "cesium";
+import { ModelGraphics } from "cesium";
+import { HeightReference } from "cesium";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import Model from "../Models/Definition/Model";
@@ -17,11 +18,6 @@ import GltfTraits from "../Traits/TraitsClasses/GltfTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
-
-// We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
-// and import doesn't allows us to do that, so instead we use require + type casting to ensure
-// we still maintain the type checking, without TS screaming with errors
-const Axis: Axis = require("terriajs-cesium/Source/Scene/Axis").default;
 
 type BaseType = Model<GltfTraits>;
 

@@ -1,20 +1,19 @@
-import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
-import BoundingSphereState from "terriajs-cesium/Source/DataSources/BoundingSphereState";
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
-import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import EntityCluster from "terriajs-cesium/Source/DataSources/EntityCluster";
-import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
+import { BoundingSphere } from "cesium";
+import { BoundingSphereState } from "cesium";
+import { CustomDataSource } from "cesium";
+import { DataSource } from "cesium";
+import { DataSourceCollection } from "cesium";
+import { defaultValue } from "cesium";
+import { Entity } from "cesium";
+import { EntityCluster } from "cesium";
+import { EventHelper } from "cesium";
 import isDefined from "../../Core/isDefined";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import { JulianDate } from "cesium";
 import L from "leaflet";
 import LeafletScene from "./LeafletScene";
 
-const createGuid = require("terriajs-cesium/Source/Core/createGuid").default;
-const destroyObject =
-  require("terriajs-cesium/Source/Core/destroyObject").default;
+import { createGuid } from "cesium";
+import { destroyObject } from "cesium";
 
 interface Visualizer {
   update(time: JulianDate): boolean;

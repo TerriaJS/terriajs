@@ -1,6 +1,6 @@
 import { action, observable, runInAction, makeObservable } from "mobx";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import { defaultValue } from "cesium";
+import { DeveloperError } from "cesium";
 import CorsProxy from "../../Core/CorsProxy";
 import isDefined from "../../Core/isDefined";
 import loadJson from "../../Core/loadJson";

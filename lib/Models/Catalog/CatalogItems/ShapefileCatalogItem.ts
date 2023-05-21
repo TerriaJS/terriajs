@@ -1,4 +1,5 @@
-import * as geoJsonMerge from "@mapbox/geojson-merge";
+//TODO esbuild
+//import * as geoJsonMerge from "@mapbox/geojson-merge";
 import i18next from "i18next";
 import { computed, makeObservable } from "mobx";
 import * as shp from "shpjs";
@@ -90,7 +91,8 @@ async function parseShapefile(blob: Blob): Promise<FeatureCollectionWithCrs> {
   json = await shp.parseZip(asAb);
   if (isJsonArrayOrDeepArrayOfObjects(json)) {
     // There were multiple shapefiles in this zip file. Merge them.
-    json = geoJsonMerge.merge(json);
+    //TODO esbuild
+    //json = geoJsonMerge.merge(json);
   }
   return json;
 }

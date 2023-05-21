@@ -1,5 +1,5 @@
 import { observable, makeObservable } from "mobx";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import { Cartesian3 } from "cesium";
 import MappableMixin, { ImageryParts } from "../../ModelMixins/MappableMixin";
 import { BaseModel } from "../../Models/Definition/Model";
 import TerriaFeature from "../../Models/Feature/Feature";

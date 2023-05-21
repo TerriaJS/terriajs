@@ -1,4 +1,4 @@
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
+import { defaultValue } from "cesium";
 
 export default function runLater<T>(
   functionToRunLater: () => T,

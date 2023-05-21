@@ -2,12 +2,12 @@ import { TFunction } from "i18next";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import IntersectionTests from "terriajs-cesium/Source/Core/IntersectionTests";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Ray from "terriajs-cesium/Source/Core/Ray";
-import Scene from "terriajs-cesium/Source/Scene/Scene";
+import { Cartesian3 } from "cesium";
+import { Ellipsoid } from "cesium";
+import { IntersectionTests } from "cesium";
+import { Math as CesiumMath } from "cesium";
+import { Ray } from "cesium";
+import { Scene } from "cesium";
 import {
   Category,
   ViewAction
@@ -19,7 +19,7 @@ import Icon, { GLYPHS } from "../../../../Styled/Icon";
 import Ul, { Li } from "../../../../Styled/List";
 import Terria from "./../../../../Models/Terria";
 
-const Tween = require("terriajs-cesium/Source/ThirdParty/Tween").default;
+import { Tween } from "cesium";
 
 interface PropTypes extends WithTranslation {
   terria: Terria;

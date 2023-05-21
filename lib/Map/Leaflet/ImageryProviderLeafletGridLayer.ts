@@ -6,12 +6,12 @@ import {
   observable,
   makeObservable
 } from "mobx";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
+import { Cartographic } from "cesium";
+import { Event as CesiumEvent } from "cesium";
+import { Math as CesiumMath } from "cesium";
+import { SplitDirection } from "cesium";
 import Leaflet from "../../Models/Leaflet";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import { ImageryProvider } from "cesium";
 
 export interface ImageryProviderWithGridLayerSupport extends ImageryProvider {
   requestImageForCanvas: (

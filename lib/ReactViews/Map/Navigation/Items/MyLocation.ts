@@ -1,9 +1,9 @@
 import i18next from "i18next";
 import { action, observable, runInAction, makeObservable } from "mobx";
 import React from "react";
-import CesiumCartographic from "terriajs-cesium/Source/Core/Cartographic";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import { Cartographic as CesiumCartographic } from "cesium";
+import { createGuid } from "cesium";
+import { Rectangle } from "cesium";
 import isDefined from "../../../../Core/isDefined";
 import TerriaError from "../../../../Core/TerriaError";
 import GeoJsonCatalogItem from "../../../../Models/Catalog/CatalogItems/GeoJsonCatalogItem";

@@ -1,4 +1,4 @@
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
+import { defaultValue } from "cesium";
 import PickedFeatures from "../Map/PickedFeatures/PickedFeatures";
 import { observable, makeObservable } from "mobx";
 import ViewState from "../ReactViewModels/ViewState";

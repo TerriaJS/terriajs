@@ -6,10 +6,10 @@ import {
   observable,
   makeObservable
 } from "mobx";
-import Clock from "terriajs-cesium/Source/Core/Clock";
-import ClockRange from "terriajs-cesium/Source/Core/ClockRange";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import { Clock } from "cesium";
+import { ClockRange } from "cesium";
+import { Event as CesiumEvent } from "cesium";
+import { JulianDate } from "cesium";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying, {

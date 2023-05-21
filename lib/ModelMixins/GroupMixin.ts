@@ -1,7 +1,7 @@
 import { uniq } from "lodash-es";
 import { action, computed, runInAction, makeObservable } from "mobx";
-import clone from "terriajs-cesium/Source/Core/clone";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import { clone } from "cesium";
+import { DeveloperError } from "cesium";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import AsyncLoader from "../Core/AsyncLoader";
 import filterOutUndefined from "../Core/filterOutUndefined";

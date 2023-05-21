@@ -1,6 +1,6 @@
 import * as d3Scale from "d3-scale-chromatic";
 import { computed, makeObservable } from "mobx";
-import Color from "terriajs-cesium/Source/Core/Color";
+import { Color } from "cesium";
 import createColorForIdTransformer from "../Core/createColorForIdTransformer";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";

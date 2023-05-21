@@ -1,16 +1,13 @@
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import EasingFunction from "terriajs-cesium/Source/Core/EasingFunction";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import { Cartographic } from "cesium";
+import { Math as CesiumMath } from "cesium";
+import { EasingFunction } from "cesium";
+import { Ellipsoid } from "cesium";
 import L from "leaflet";
-import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnimationFrame";
 import isDefined from "../../Core/isDefined";
 
 import Leaflet from "../../Models/Leaflet";
 
-const TweenCollection =
-  require("terriajs-cesium/Source/Scene/TweenCollection").default;
-const selectionIndicatorUrl = require("../../../wwwroot/images/NM-LocationTarget.svg");
+import { TweenCollection } from "cesium";const selectionIndicatorUrl = require("../../../wwwroot/images/NM-LocationTarget.svg");
 
 interface Tween {
   cancelTween(): void;
@@ -169,7 +166,7 @@ export default class LeafletSelectionIndicator {
       this._tweens.length !== 0 ||
       (isDefined(feature) && isDefined(feature.position))
     ) {
-      cesiumRequestAnimationFrame(() => {
+      requestAnimationFrame(() => {
         this._startTweens();
       });
     }

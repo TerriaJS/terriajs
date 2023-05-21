@@ -1,4 +1,4 @@
-import Color from "terriajs-cesium/Source/Core/Color";
+import { Color } from "cesium";
 
 export default abstract class ColorMap {
   abstract mapValueToColor(

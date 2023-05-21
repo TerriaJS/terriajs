@@ -1,5 +1,5 @@
 import { computed, makeObservable } from "mobx";
-import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
+import { UrlTemplateImageryProvider } from "cesium";
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";

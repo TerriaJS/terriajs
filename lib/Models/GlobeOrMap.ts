@@ -5,20 +5,20 @@ import {
   runInAction,
   makeObservable
 } from "mobx";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Color from "terriajs-cesium/Source/Core/Color";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
-import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
-import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
+import { Cartesian2 } from "cesium";
+import { Cartesian3 } from "cesium";
+import { Color } from "cesium";
+import { createGuid } from "cesium";
+import { DeveloperError } from "cesium";
+import { Ellipsoid } from "cesium";
+import { Rectangle } from "cesium";
+import { ColorMaterialProperty } from "cesium";
+import { ConstantPositionProperty } from "cesium";
+import { ConstantProperty } from "cesium";
+import { Entity } from "cesium";
+import { ImageryLayerFeatureInfo } from "cesium";
+import { ImageryProvider } from "cesium";
+import { SplitDirection } from "cesium";
 import isDefined from "../Core/isDefined";
 import { isJsonObject } from "../Core/Json";
 import LatLonHeight from "../Core/LatLonHeight";

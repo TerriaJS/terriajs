@@ -1,5 +1,5 @@
-import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import { BoundingSphere } from "cesium";
+import { Cartographic } from "cesium";
 import { SearchParameterTraits } from "../../Traits/TraitsClasses/SearchableItemTraits";
 
 export type ItemSearchParameter =

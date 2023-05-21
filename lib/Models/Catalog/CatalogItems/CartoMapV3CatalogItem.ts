@@ -1,7 +1,7 @@
 import { featureCollection, Geometry, GeometryCollection } from "@turf/helpers";
 import i18next from "i18next";
 import { computed, observable, runInAction, makeObservable } from "mobx";
-import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
+import { RequestErrorEvent } from "cesium";
 import URI from "urijs";
 import JsonValue, {
   isJsonNumber,

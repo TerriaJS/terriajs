@@ -1,8 +1,8 @@
 import i18next from "i18next";
 import uniqWith from "lodash-es/uniqWith";
 import { computed, makeObservable, override, runInAction } from "mobx";
-import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
-import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
+import { WebMercatorTilingScheme } from "cesium";
+import { ArcGisMapServerImageryProvider } from "cesium";
 import URI from "urijs";
 import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";
 import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";

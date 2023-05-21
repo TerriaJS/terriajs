@@ -1,28 +1,26 @@
-import AssociativeArray from "terriajs-cesium/Source/Core/AssociativeArray";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Color from "terriajs-cesium/Source/Core/Color";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollection";
-import EntityCluster from "terriajs-cesium/Source/DataSources/EntityCluster";
+import { AssociativeArray } from "cesium";
+import { Cartesian2 } from "cesium";
+import { Cartesian3 } from "cesium";
+import { Math as CesiumMath } from "cesium";
+import { Color } from "cesium";
+import { DataSource } from "cesium";
+import { Ellipsoid } from "cesium";
+import { Entity } from "cesium";
+import { EntityCollection } from "cesium";
+import { EntityCluster } from "cesium";
 import isDefined from "../../Core/isDefined";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import { JulianDate } from "cesium";
 import L, { LatLngBounds, PolylineOptions, LatLngBoundsLiteral } from "leaflet";
 import LeafletScene from "./LeafletScene";
-import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
-import PolylineGlowMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineGlowMaterialProperty";
-import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
-import Property from "terriajs-cesium/Source/DataSources/Property";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import { PolygonHierarchy } from "cesium";
+import { PolylineGlowMaterialProperty } from "cesium";
+import { PolylineDashMaterialProperty } from "cesium";
+import { Property } from "cesium";
+import { Rectangle } from "cesium";
 import { getLineStyleLeaflet } from "../../Models/Catalog/Esri/esriLineStyle";
 
-const destroyObject =
-  require("terriajs-cesium/Source/Core/destroyObject").default;
-const writeTextToCanvas =
-  require("terriajs-cesium/Source/Core/writeTextToCanvas").default;
+import { destroyObject } from "cesium";
+import { writeTextToCanvas } from "cesium";
 
 interface PointDetails {
   layer?: L.CircleMarker;

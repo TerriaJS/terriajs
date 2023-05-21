@@ -1,8 +1,8 @@
 import { observable, makeObservable } from "mobx";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
-import Cesium3DTilePointFeature from "terriajs-cesium/Source/Scene/Cesium3DTilePointFeature";
-import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
+import { Entity } from "cesium";
+import { Cesium3DTileFeature } from "cesium";
+import { Cesium3DTilePointFeature } from "cesium";
+import { ImageryLayer } from "cesium";
 import { JsonObject } from "../../Core/Json";
 import { BaseModel } from "../Definition/Model";
 import { TerriaFeatureData } from "./FeatureData";

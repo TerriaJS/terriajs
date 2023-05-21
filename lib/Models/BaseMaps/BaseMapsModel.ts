@@ -1,5 +1,5 @@
 import { action, computed, makeObservable } from "mobx";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import { DeveloperError } from "cesium";
 import isDefined from "../../Core/isDefined";
 import { isJsonObject, JsonObject } from "../../Core/Json";
 import Result from "../../Core/Result";

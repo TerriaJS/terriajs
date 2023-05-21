@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { computed, runInAction, makeObservable, override } from "mobx";
-import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
+import { ShadowMode } from "cesium";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import Model from "../Models/Definition/Model";
 import SelectableDimensions, {

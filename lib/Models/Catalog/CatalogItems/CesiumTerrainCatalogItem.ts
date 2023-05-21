@@ -5,8 +5,8 @@ import {
   override,
   runInAction
 } from "mobx";
-import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
-import IonResource from "terriajs-cesium/Source/Core/IonResource";
+import { CesiumTerrainProvider } from "cesium";
+import { IonResource } from "cesium";
 import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../../../ModelMixins/MappableMixin";

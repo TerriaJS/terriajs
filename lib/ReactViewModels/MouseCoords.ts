@@ -1,14 +1,14 @@
 import debounce from "lodash-es/debounce";
 import { action, makeObservable, observable, runInAction } from "mobx";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
-import Intersections2D from "terriajs-cesium/Source/Core/Intersections2D";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Ray from "terriajs-cesium/Source/Core/Ray";
-import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
+import { Cartesian2 } from "cesium";
+import { Cartesian3 } from "cesium";
+import { Cartographic } from "cesium";
+import { EllipsoidTerrainProvider } from "cesium";
+import { Event as CesiumEvent } from "cesium";
+import { Intersections2D } from "cesium";
+import { Math as CesiumMath } from "cesium";
+import { Ray } from "cesium";
+import { TerrainProvider } from "cesium";
 import isDefined from "../Core/isDefined";
 import JSEarthGravityModel1996 from "../Map/Vector/EarthGravityModel1996";
 import prettifyCoordinates from "../Map/Vector/prettifyCoordinates";
@@ -20,8 +20,7 @@ import Terria from "../Models/Terria";
 // This is a dodgy workaround.
 class EarthGravityModel1996 extends JSEarthGravityModel1996 {}
 
-const sampleTerrainMostDetailed =
-  require("terriajs-cesium/Source/Core/sampleTerrainMostDetailed").default;
+import { sampleTerrainMostDetailed } from "cesium";
 
 interface Cancelable {
   cancel: () => void;
@@ -63,7 +62,7 @@ export default class MouseCoords {
   constructor() {
     makeObservable(this);
     this.geoidModel = new EarthGravityModel1996(
-      require("file-loader!../../wwwroot/data/WW15MGH.DAC")
+      require("../../wwwroot/data/WW15MGH.DAC")
     );
     this.proj4Projection = "+proj=utm +ellps=GRS80 +units=m +no_defs";
     this.projectionUnits = "m";

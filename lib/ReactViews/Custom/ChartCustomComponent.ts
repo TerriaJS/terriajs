@@ -1,10 +1,10 @@
 import { action, runInAction } from "mobx";
 import React, { ReactElement } from "react";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import { createGuid } from "cesium";
+import { DeveloperError } from "cesium";
+import { Ellipsoid } from "cesium";
+import { JulianDate } from "cesium";
+import { Math as CesiumMath } from "cesium";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import LatLonHeight from "../../Core/LatLonHeight";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";

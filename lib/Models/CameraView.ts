@@ -1,15 +1,15 @@
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import HeadingPitchRange from "terriajs-cesium/Source/Core/HeadingPitchRange";
-import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
-import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
-import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import Transforms from "terriajs-cesium/Source/Core/Transforms";
+import { Cartesian3 } from "cesium";
+import { Cartographic } from "cesium";
+import { DeveloperError } from "cesium";
+import { Ellipsoid } from "cesium";
+import { HeadingPitchRange } from "cesium";
+import { HeadingPitchRoll } from "cesium";
+import { Math as CesiumMath } from "cesium";
+import { Matrix3 } from "cesium";
+import { Matrix4 } from "cesium";
+import { Quaternion } from "cesium";
+import { Rectangle } from "cesium";
+import { Transforms } from "cesium";
 import JsonValue, {
   isJsonNumber,
   isJsonObject,
