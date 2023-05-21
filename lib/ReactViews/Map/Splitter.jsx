@@ -228,4 +228,4 @@ class Splitter extends React.Component {
   }
 }
 
-module.exports = withTranslation()(Splitter);
+export default withTranslation()(Splitter);

@@ -178,4 +178,4 @@ const Dropdown = createReactClass({
   }
 });
 
-module.exports = Dropdown;
+export default Dropdown;

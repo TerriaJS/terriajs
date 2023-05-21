@@ -205,4 +205,4 @@ class MyDataTab extends React.Component {
   }
 }
 
-module.exports = withTranslation()(MyDataTab);
+export default withTranslation()(MyDataTab);

@@ -118,4 +118,4 @@ Timer.propTypes = {
   tooltipText: PropTypes.string
 };
 
-module.exports = Timer;
+export default Timer;

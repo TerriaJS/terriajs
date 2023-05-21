@@ -177,4 +177,4 @@ class LocationSearchResults extends React.Component {
   }
 }
 
-module.exports = withTranslation()(LocationSearchResults);
+export default withTranslation()(LocationSearchResults);

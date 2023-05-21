@@ -151,4 +151,4 @@ class DataCatalogGroup extends React.Component {
   }
 }
 
-module.exports = withTranslation()(DataCatalogGroup);
+export default withTranslation()(DataCatalogGroup);

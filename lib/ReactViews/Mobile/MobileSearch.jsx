@@ -94,4 +94,4 @@ class MobileSearch extends React.Component {
   }
 }
 
-module.exports = withTranslation()(MobileSearch);
+export default withTranslation()(MobileSearch);

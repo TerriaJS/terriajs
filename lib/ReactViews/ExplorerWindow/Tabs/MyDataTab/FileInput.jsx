@@ -58,4 +58,4 @@ const FileInput = createReactClass({
   }
 });
 
-module.exports = withTranslation()(FileInput);
+export default withTranslation()(FileInput);

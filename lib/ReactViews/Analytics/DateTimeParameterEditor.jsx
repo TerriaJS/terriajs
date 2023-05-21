@@ -88,4 +88,4 @@ const DateTimeParameterEditor = createReactClass({
   }
 });
 
-module.exports = DateTimeParameterEditor;
+export default DateTimeParameterEditor;

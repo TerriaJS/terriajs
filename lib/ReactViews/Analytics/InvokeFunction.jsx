@@ -156,4 +156,4 @@ class InvokeFunction extends React.Component {
   }
 }
 
-module.exports = withTranslation()(InvokeFunction);
+export default withTranslation()(InvokeFunction);

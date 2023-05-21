@@ -71,4 +71,4 @@ export default function printWindow(windowToPrint: Window): Promise<void> {
   return deferred;
 }
 
-module.exports = printWindow;
+export default printWindow;

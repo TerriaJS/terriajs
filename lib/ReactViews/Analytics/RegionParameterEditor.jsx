@@ -83,4 +83,4 @@ RegionParameterEditor.selectOnMap = function (viewState, parameter, previewed) {
   viewState.explorerPanelIsVisible = false;
 };
 
-module.exports = RegionParameterEditor;
+export default RegionParameterEditor;

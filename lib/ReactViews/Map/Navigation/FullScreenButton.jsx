@@ -57,4 +57,4 @@ const FullScreenButton = createReactClass({
     );
   }
 });
-module.exports = FullScreenButton;
+export default FullScreenButton;

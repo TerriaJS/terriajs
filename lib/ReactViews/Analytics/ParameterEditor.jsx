@@ -392,4 +392,4 @@ ParameterEditor.parameterTypeConverters = [
   }
 ];
 
-module.exports = ParameterEditor;
+export default ParameterEditor;

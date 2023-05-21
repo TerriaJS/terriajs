@@ -153,4 +153,4 @@ class DataPreview extends React.Component {
   }
 }
 
-module.exports = withTranslation()(DataPreview);
+export default withTranslation()(DataPreview);

@@ -122,4 +122,4 @@ const BooleanParameterGroupEditor = createReactClass({
     return <div>{this.renderCheckboxGroup()}</div>;
   }
 });
-module.exports = BooleanParameterGroupEditor;
+export default BooleanParameterGroupEditor;

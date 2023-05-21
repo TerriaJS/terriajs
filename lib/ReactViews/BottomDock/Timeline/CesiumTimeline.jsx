@@ -105,4 +105,4 @@ const CesiumTimeline = createReactClass({
   }
 });
 
-module.exports = CesiumTimeline;
+export default CesiumTimeline;

@@ -64,4 +64,4 @@ const RegionTypeParameterEditor = createReactClass({
   }
 });
 
-module.exports = RegionTypeParameterEditor;
+export default RegionTypeParameterEditor;

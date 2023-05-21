@@ -130,4 +130,4 @@
 //   }
 // });
 
-// module.exports = withTranslation()(RectangleParameterEditor);
+// export default withTranslation()(RectangleParameterEditor);
