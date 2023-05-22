@@ -5,7 +5,8 @@
 - **Breaking changes:**
   - **Upgraded Mobx to version 6.7.x**
   - **Upgrade Typescript to version 4.9.x**
-  These may require changes to the your custom fork of terriajs or terriamap.
+  
+  These changes may require modifications to the your custom fork of terriajs or terriamap.
 - [The next improvement]
 
 #### 8.2.29 - 2023-05-18
