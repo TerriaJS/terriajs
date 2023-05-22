@@ -5,7 +5,7 @@
 - **Breaking changes:**
 
   - **Upgraded Mobx to version 6.7.x**
-  - **Upgrade Typescript to version 4.9.x**
+  - **Upgraded Typescript to version 4.9.x**
 
 - [The next improvement]
 
