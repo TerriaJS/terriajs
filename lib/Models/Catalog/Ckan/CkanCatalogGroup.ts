@@ -2,18 +2,20 @@ import i18next from "i18next";
 import {
   action,
   computed,
+  isObservableArray,
+  makeObservable,
   observable,
-  runInAction,
-  isObservableArray
+  override,
+  runInAction
 } from "mobx";
 import Mustache from "mustache";
 import URI from "urijs";
+import { JsonObject } from "../../../Core/Json";
+import { networkRequestError } from "../../../Core/TerriaError";
 import flatten from "../../../Core/flatten";
 import isDefined from "../../../Core/isDefined";
-import { JsonObject } from "../../../Core/Json";
 import loadJson from "../../../Core/loadJson";
 import runLater from "../../../Core/runLater";
-import { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -38,9 +40,9 @@ import {
 } from "./CkanDefinitions";
 import CkanItemReference, {
   CkanResourceWithFormat,
+  PreparedSupportedFormat,
   getCkanItemName,
   getSupportedFormats,
-  PreparedSupportedFormat,
   prepareSupportedFormat
 } from "./CkanItemReference";
 
@@ -79,6 +81,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     private readonly _ckanResponse: CkanServerResponse
   ) {
     super();
+    makeObservable(this);
     this.datasets = this.getDatasets();
     this.filteredDatasets = this.getFilteredDatasets();
     this.groups = this.getGroups();
@@ -476,6 +479,8 @@ export default class CkanCatalogGroup extends UrlMixin(
   ) {
     super(uniqueId, terria, sourceReference);
 
+    makeObservable(this);
+
     this.strata.set(
       CkanDefaultFormatsStratum.stratumName,
       new CkanDefaultFormatsStratum()
@@ -490,7 +495,8 @@ export default class CkanCatalogGroup extends UrlMixin(
     return i18next.t("models.ckan.nameServer");
   }
 
-  @computed get cacheDuration(): string {
+  @override
+  get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }

@@ -2,8 +2,6 @@
 
 import React from "react";
 
-import createReactClass from "create-react-class";
-
 import PropTypes from "prop-types";
 
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -18,51 +16,48 @@ import { observer } from "mobx-react";
 import { runInAction } from "mobx";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 
-const PolygonParameterEditor = observer(
-  createReactClass({
-    displayName: "PolygonParameterEditor",
+@observer
+class PolygonParameterEditor extends React.Component {
+  static propTypes = {
+    previewed: PropTypes.object,
+    parameter: PropTypes.object,
+    viewState: PropTypes.object,
+    t: PropTypes.func.isRequired
+  };
 
-    propTypes: {
-      previewed: PropTypes.object,
-      parameter: PropTypes.object,
-      viewState: PropTypes.object,
-      t: PropTypes.func.isRequired
-    },
+  setValueFromText(e) {
+    PolygonParameterEditor.setValueFromText(e, this.props.parameter);
+  }
 
-    setValueFromText(e) {
-      PolygonParameterEditor.setValueFromText(e, this.props.parameter);
-    },
+  selectPolygonOnMap() {
+    selectOnMap(
+      this.props.previewed.terria,
+      this.props.viewState,
+      this.props.parameter
+    );
+  }
 
-    selectPolygonOnMap() {
-      selectOnMap(
-        this.props.previewed.terria,
-        this.props.viewState,
-        this.props.parameter
-      );
-    },
-
-    render() {
-      const { t } = this.props;
-      return (
-        <div>
-          <input
-            className={Styles.field}
-            type="text"
-            onChange={this.setValueFromText}
-            value={getDisplayValue(this.props.parameter.value)}
-          />
-          <button
-            type="button"
-            onClick={this.selectPolygonOnMap}
-            className={Styles.btnSelector}
-          >
-            {t("analytics.clickToDrawPolygon")}
-          </button>
-        </div>
-      );
-    }
-  })
-);
+  render() {
+    const { t } = this.props;
+    return (
+      <div>
+        <input
+          className={Styles.field}
+          type="text"
+          onChange={this.setValueFromText.bind(this)}
+          value={getDisplayValue(this.props.parameter.value)}
+        />
+        <button
+          type="button"
+          onClick={this.selectPolygonOnMap.bind(this)}
+          className={Styles.btnSelector}
+        >
+          {t("analytics.clickToDrawPolygon")}
+        </button>
+      </div>
+    );
+  }
+}
 
 /**
  * Triggered when user types value directly into field.

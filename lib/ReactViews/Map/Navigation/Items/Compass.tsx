@@ -10,7 +10,7 @@
  */
 //
 import { TFunction } from "i18next";
-import { computed, runInAction, when } from "mobx";
+import { computed, runInAction, when, makeObservable } from "mobx";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
@@ -178,6 +178,7 @@ class Compass extends React.PureComponent<PropTypes, IStateTypes> {
    */
   constructor(props: PropTypes) {
     super(props);
+    makeObservable(this);
     this.state = {
       orbitCursorAngle: 0,
       heading: 0.0,

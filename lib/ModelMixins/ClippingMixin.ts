@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, toJS } from "mobx";
+import { action, computed, toJS, makeObservable, override } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import clone from "terriajs-cesium/Source/Core/clone";
@@ -11,7 +11,7 @@ import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import ClippingPlane from "terriajs-cesium/Source/Scene/ClippingPlane";
 import ClippingPlaneCollection from "terriajs-cesium/Source/Scene/ClippingPlaneCollection";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import BoxDrawing from "../Models/BoxDrawing";
 import CommonStrata from "../Models/Definition/CommonStrata";
@@ -25,20 +25,18 @@ import HeadingPitchRollTraits from "../Traits/TraitsClasses/HeadingPitchRollTrai
 import LatLonHeightTraits from "../Traits/TraitsClasses/LatLonHeightTraits";
 
 type BaseType = Model<ClippingPlanesTraits> & SelectableDimensions;
-type InstanceType = BaseType & {
-  clippingPlanesOriginMatrix(): Matrix4;
-  clippingPlaneCollection: ClippingPlaneCollection | undefined;
-  clippingMapItems: CustomDataSource[];
-};
 
-function ClippingMixin<T extends Constructor<BaseType>>(
-  Base: T
-): T & Constructor<InstanceType> {
-  abstract class MixedClass extends Base implements InstanceType {
+function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
+  abstract class ClippingMixin extends Base {
     private _clippingBoxDrawing?: BoxDrawing;
     abstract clippingPlanesOriginMatrix(): Matrix4;
 
     private clippingPlaneModelMatrix: Matrix4 = Matrix4.IDENTITY.clone();
+
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
 
     @computed
     get inverseClippingPlanesOriginMatrix(): Matrix4 {
@@ -253,7 +251,7 @@ function ClippingMixin<T extends Constructor<BaseType>>(
       return this._clippingBoxDrawing;
     }
 
-    @computed
+    @override
     get selectableDimensions(): SelectableDimension[] {
       if (!this.clippingBox.enableFeature) {
         return super.selectableDimensions;
@@ -359,7 +357,7 @@ function ClippingMixin<T extends Constructor<BaseType>>(
     }
   }
 
-  return MixedClass;
+  return ClippingMixin;
 }
 
 export default ClippingMixin;

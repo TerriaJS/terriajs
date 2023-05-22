@@ -1,7 +1,13 @@
-import { computed, observable, runInAction, untracked } from "mobx";
+import {
+  computed,
+  observable,
+  runInAction,
+  untracked,
+  makeObservable
+} from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import AsyncLoader from "../Core/AsyncLoader";
-import Constructor from "../Core/Constructor";
 import Result from "../Core/Result";
 import Model, { BaseModel, ModelInterface } from "../Models/Definition/Model";
 import ReferenceTraits from "../Traits/TraitsClasses/ReferenceTraits";
@@ -13,6 +19,9 @@ interface ReferenceInterface extends ModelInterface<ReferenceTraits> {
   readonly target: BaseModel | undefined;
   loadReference(): Promise<Result<void>>;
 }
+
+type BaseType = Model<ReferenceTraits>;
+
 /**
  * A mixin for a Model that acts as a "reference" to another Model, which is its "true"
  * representation. The reference is "dereferenced" to obtain the other model, but only
@@ -21,9 +30,7 @@ interface ReferenceInterface extends ModelInterface<ReferenceTraits> {
  * loaded, the `CkanCatalogItem` may be dereferenced to obtain the `WebMapServiceCatalogItem`,
  * `GeoJsonCatalogItem`, or whatever else representing the dataset.
  */
-function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
-  Base: T
-) {
+function ReferenceMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class ReferenceMixinClass
     extends Base
     implements ReferenceInterface
@@ -61,6 +68,11 @@ function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
         this._target = target;
       });
     });
+
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
 
     get loadReferenceResult() {
       return this._referenceLoader.result;

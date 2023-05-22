@@ -199,7 +199,7 @@ export class InitialMessageTraits extends ModelTraits {
   height?: number;
 }
 
-export default class MappableTraits extends mixTraits(AttributionTraits) {
+class MappableTraits extends mixTraits(AttributionTraits) {
   @objectTrait({
     type: RectangleTraits,
     name: "Rectangle",
@@ -279,3 +279,11 @@ export default class MappableTraits extends mixTraits(AttributionTraits) {
   })
   maximumShownFeatureInfos?: number;
 }
+
+interface MappableTraits {
+  // Add traits here that you want to override from some Mixin or Model class
+  // without generating TS2611 type error.
+  disableZoomTo: MappableTraits["disableZoomTo"];
+}
+
+export default MappableTraits;

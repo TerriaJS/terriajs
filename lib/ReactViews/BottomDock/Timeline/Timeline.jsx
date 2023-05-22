@@ -1,4 +1,3 @@
-import createReactClass from "create-react-class";
 import dateFormat from "dateformat";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
@@ -14,125 +13,121 @@ import DateTimePicker from "./DateTimePicker";
 import Styles from "./timeline.scss";
 import TimelineControls from "./TimelineControls";
 
-export const Timeline = observer(
-  createReactClass({
-    displayName: "Timeline",
+@observer
+class Timeline extends React.Component {
+  static propTypes = {
+    terria: PropTypes.object.isRequired,
+    locale: PropTypes.object,
+    t: PropTypes.func.isRequired
+  };
 
-    propTypes: {
-      terria: PropTypes.object.isRequired,
-      locale: PropTypes.object,
-      t: PropTypes.func.isRequired
-    },
+  constructor(props) {
+    super(props);
+    this.state = {
+      isPickerOpen: false
+    };
+  }
 
-    getInitialState() {
-      return {
-        isPickerOpen: false
-      };
-    },
+  componentDidMount() {
+    this.props.terria.timelineStack.activate();
+  }
 
-    componentDidMount() {
-      this.props.terria.timelineStack.activate();
-    },
+  componentWillUnmount() {
+    this.props.terria.timelineStack.deactivate();
+  }
 
-    componentWillUnmount() {
-      this.props.terria.timelineStack.deactivate();
-    },
+  changeDateTime(time) {
+    this.props.terria.timelineClock.currentTime = JulianDate.fromDate(
+      new Date(time)
+    );
+    this.props.terria.timelineStack.syncToClock(CommonStrata.user);
+    this.props.terria.currentViewer.notifyRepaintRequired();
+  }
 
-    changeDateTime(time) {
-      this.props.terria.timelineClock.currentTime = JulianDate.fromDate(
-        new Date(time)
+  onOpenPicker() {
+    this.setState({
+      isPickerOpen: true
+    });
+  }
+
+  onClosePicker() {
+    this.setState({
+      isPickerOpen: false
+    });
+  }
+
+  render() {
+    const terria = this.props.terria;
+    const catalogItem = terria.timelineStack.top;
+    if (
+      !defined(catalogItem) ||
+      !defined(catalogItem.currentTimeAsJulianDate)
+    ) {
+      return null;
+    }
+    const { t } = this.props;
+
+    const jsDate = JulianDate.toDate(catalogItem.currentTimeAsJulianDate);
+    const timelineStack = this.props.terria.timelineStack;
+    let currentTime;
+    if (defined(timelineStack.top) && defined(timelineStack.top.dateFormat)) {
+      currentTime = dateFormat(
+        jsDate,
+        this.props.terria.timelineStack.top.dateFormat
       );
-      this.props.terria.timelineStack.syncToClock(CommonStrata.user);
-      this.props.terria.currentViewer.notifyRepaintRequired();
-    },
+    } else {
+      currentTime = formatDateTime(jsDate, this.props.locale);
+    }
 
-    onOpenPicker() {
-      this.setState({
-        isPickerOpen: true
-      });
-    },
+    const discreteTimes = catalogItem.discreteTimesAsSortedJulianDates;
+    const objectifiedDates = catalogItem.objectifiedDates;
+    const currentDiscreteJulianDate = catalogItem.currentDiscreteJulianDate;
 
-    onClosePicker() {
-      this.setState({
-        isPickerOpen: false
-      });
-    },
-
-    render() {
-      const terria = this.props.terria;
-      const catalogItem = terria.timelineStack.top;
-      if (
-        !defined(catalogItem) ||
-        !defined(catalogItem.currentTimeAsJulianDate)
-      ) {
-        return null;
-      }
-      const { t } = this.props;
-
-      const jsDate = JulianDate.toDate(catalogItem.currentTimeAsJulianDate);
-      const timelineStack = this.props.terria.timelineStack;
-      let currentTime;
-      if (defined(timelineStack.top) && defined(timelineStack.top.dateFormat)) {
-        currentTime = dateFormat(
-          jsDate,
-          this.props.terria.timelineStack.top.dateFormat
-        );
-      } else {
-        currentTime = formatDateTime(jsDate, this.props.locale);
-      }
-
-      const discreteTimes = catalogItem.discreteTimesAsSortedJulianDates;
-      const objectifiedDates = catalogItem.objectifiedDates;
-      const currentDiscreteJulianDate = catalogItem.currentDiscreteJulianDate;
-
-      return (
-        <div className={Styles.timeline}>
+    return (
+      <div className={Styles.timeline}>
+        <div
+          className={Styles.textRow}
+          css={`
+            background: ${(p) => p.theme.dark};
+          `}
+        >
           <div
-            className={Styles.textRow}
-            css={`
-              background: ${(p) => p.theme.dark};
-            `}
+            className={Styles.textCell}
+            title={t("dateTime.timeline.textCell")}
           >
-            <div
-              className={Styles.textCell}
-              title={t("dateTime.timeline.textCell")}
-            >
-              <div className={Styles.layerNameTruncated}>
-                {catalogItem.name}
-              </div>
-              {currentTime}
-            </div>
-          </div>
-          <div className={Styles.controlsRow}>
-            <TimelineControls
-              clock={terria.timelineClock}
-              analytics={terria.analytics}
-              currentViewer={terria.currentViewer}
-            />
-            <If
-              condition={
-                defined(discreteTimes) &&
-                discreteTimes.length !== 0 &&
-                defined(currentDiscreteJulianDate)
-              }
-            >
-              <DateTimePicker
-                currentDate={JulianDate.toDate(currentDiscreteJulianDate)}
-                dates={objectifiedDates}
-                onChange={this.changeDateTime}
-                openDirection="up"
-                isOpen={this.state.isPickerOpen}
-                onOpen={this.onOpenPicker}
-                onClose={this.onClosePicker}
-                dateFormat={catalogItem.dateFormat}
-              />
-            </If>
-            <CesiumTimeline terria={terria} />
+            <div className={Styles.layerNameTruncated}>{catalogItem.name}</div>
+            {currentTime}
           </div>
         </div>
-      );
-    }
-  })
-);
+        <div className={Styles.controlsRow}>
+          <TimelineControls
+            clock={terria.timelineClock}
+            analytics={terria.analytics}
+            currentViewer={terria.currentViewer}
+          />
+          <If
+            condition={
+              defined(discreteTimes) &&
+              discreteTimes.length !== 0 &&
+              defined(currentDiscreteJulianDate)
+            }
+          >
+            <DateTimePicker
+              currentDate={JulianDate.toDate(currentDiscreteJulianDate)}
+              dates={objectifiedDates}
+              onChange={() => this.changeDateTime()}
+              openDirection="up"
+              isOpen={this.state.isPickerOpen}
+              onOpen={() => this.onOpenPicker()}
+              onClose={() => this.onClosePicker()}
+              dateFormat={catalogItem.dateFormat}
+            />
+          </If>
+          <CesiumTimeline terria={terria} />
+        </div>
+      </div>
+    );
+  }
+}
 
 export default withControlledVisibility(withTranslation()(Timeline));
