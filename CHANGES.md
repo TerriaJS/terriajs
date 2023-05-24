@@ -2,6 +2,7 @@
 
 #### next release (8.3.1)
 
+- Improve WMS and WFS error messages when requested layer names or type names are not present in GetCapabilities.
 - [The next improvement]
 
 #### 8.3.0 - 2023-05-22
