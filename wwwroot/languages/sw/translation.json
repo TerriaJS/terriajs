@@ -1,1 +1,32 @@
-{}
+{
+  "general": {
+    "close": "Funga",
+    "open": "Fungua",
+    "prev": "Kilichotangulia",
+    "next": "Kinachofuata",
+    "back": "Rudia",
+    "skip": "Rukia",
+    "delete": "Ondoa",
+    "cancel": "Katisha",
+    "confirm": "Thibitisha"
+  },
+  "browsers": {
+    "chrome": "Google Chrome",
+    "firefox": "Mozilla Firefox",
+    "edge": "Microsoft Edge",
+    "safari": "Apple Safari"
+  },
+  "trainer": {
+    "showAllSteps": "Onyesha kila hatua",
+    "hideAllSteps": "Ficha kila hatua",
+    "expandTrainer": "Onyesha maelesho zaidi",
+    "collapseTrainer": "Ficha maelesho zaidi"
+  },
+  "tour": {
+    "preface": {
+      "title": "Chukua safari",
+      "start": "Anza safari"
+    },
+    "finish": "Maliza"
+  }
+}
