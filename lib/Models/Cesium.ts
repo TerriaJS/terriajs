@@ -463,7 +463,12 @@ export default class Cesium extends GlobeOrMap {
   }
 
   private updateCredits(container: string | HTMLElement) {
-    const containerElement = getElement(container);
+    let containerElement: HTMLElement | null;
+    if (typeof container === 'string') {
+      containerElement = document.getElementById(container);
+    } else {
+      containerElement = container;
+    }
     const creditsElement =
       containerElement &&
       (containerElement.getElementsByClassName(

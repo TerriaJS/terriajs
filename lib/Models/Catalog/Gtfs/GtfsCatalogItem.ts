@@ -18,7 +18,7 @@ import { Transforms } from "cesium";
 import { BillboardGraphics } from "cesium";
 import { ConstantPositionProperty } from "cesium";
 import { ConstantProperty } from "cesium";
-import { DataSource } from "cesium";
+import { CustomDataSource, DataSource } from "cesium";
 import { Entity } from "cesium";
 import { ModelGraphics } from "cesium";
 import { PointGraphics } from "cesium";
@@ -103,7 +103,7 @@ export default class GtfsCatalogItem extends UrlMixin(
    *
    * We cache it because recreating it reactively is computationally expensive, so we modify it reactively instead.
    */
-  protected _dataSource: DataSource = new DataSource("billboard");
+  protected _dataSource: DataSource = new CustomDataSource("billboard");
 
   protected static readonly FEATURE_INFO_TEMPLATE_FIELDS: string[] = [
     "route_short_name",
