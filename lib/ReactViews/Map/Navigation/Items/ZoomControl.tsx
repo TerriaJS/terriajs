@@ -19,7 +19,7 @@ import Icon, { GLYPHS } from "../../../../Styled/Icon";
 import Ul, { Li } from "../../../../Styled/List";
 import Terria from "./../../../../Models/Terria";
 
-import { Tween } from "cesium";
+import { Tween } from "@tweenjs/tween.js";
 
 interface PropTypes extends WithTranslation {
   terria: Terria;

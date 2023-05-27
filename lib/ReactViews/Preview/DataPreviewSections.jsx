@@ -8,7 +8,7 @@ import { withTranslation } from "react-i18next";
 import isDefined from "../../Core/isDefined";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import Box from "../../Styled/Box";
-import { item } from "../Custom/Chart/tooltip.scss";
+import * as _ from "../Custom/Chart/tooltip.scss";
 import Collapsible from "../Custom/Collapsible/Collapsible";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import MetadataTable from "./MetadataTable";
