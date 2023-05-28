@@ -187,7 +187,7 @@
     "worker-loader": "^2.0.0"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.12.16",
+    "@babel/eslint-parser": "^7.21.8",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@types/dateformat": "^3.0.1",
     "@types/node": "^18.15.11",
