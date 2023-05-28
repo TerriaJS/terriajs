@@ -222,7 +222,7 @@ function createCombinedStratum<T extends ModelTraits>(
         return traitValue;
       },
       set: function (value) {
-        (<any>top)[traitName] = value;
+        (top as any)[traitName] = value;
       },
       enumerable: true,
       configurable: true
@@ -234,7 +234,7 @@ function createCombinedStratum<T extends ModelTraits>(
   decorate(result, decorators);
   makeObservable(result);
 
-  return <StratumFromTraits<T>>(<unknown>result);
+  return result as unknown as StratumFromTraits<T>;
 }
 
 function decorate(

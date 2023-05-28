@@ -185,7 +185,7 @@ export default class MapboxVectorTileImageryProvider
   get credit(): Credit {
     let credit = this._credit;
     if (credit === undefined) {
-      return <any>undefined;
+      return undefined as any;
     } else if (typeof credit === "string") {
       credit = new Credit(credit);
     }
@@ -193,27 +193,27 @@ export default class MapboxVectorTileImageryProvider
   }
 
   get defaultAlpha(): number {
-    return <any>undefined;
+    return undefined as any;
   }
 
   get defaultBrightness(): number {
-    return <any>undefined;
+    return undefined as any;
   }
 
   get defaultContrast(): number {
-    return <any>undefined;
+    return undefined as any;
   }
 
   get defaultGamma(): number {
-    return <any>undefined;
+    return undefined as any;
   }
 
   get defaultHue(): number {
-    return <any>undefined;
+    return undefined as any;
   }
 
   get defaultSaturation(): number {
-    return <any>undefined;
+    return undefined as any;
   }
 
   get defaultMagnificationFilter(): any {
@@ -225,7 +225,7 @@ export default class MapboxVectorTileImageryProvider
   }
 
   get proxy(): DefaultProxy {
-    return <any>undefined;
+    return undefined as any;
   }
 
   get readyPromise(): Promise<boolean> {
@@ -233,7 +233,7 @@ export default class MapboxVectorTileImageryProvider
   }
 
   get tileDiscardPolicy(): TileDiscardPolicy {
-    return <any>undefined;
+    return undefined as any;
   }
 
   getTileCredits(x: number, y: number, level: number): Credit[] {
@@ -326,7 +326,7 @@ export default class MapboxVectorTileImageryProvider
 
     let pos;
 
-    let extentFactor = canvas.width / (<any>layer).extent; // Vector tile works with extent [0, 4095], but canvas is only [0,255]
+    let extentFactor = canvas.width / (layer as any).extent; // Vector tile works with extent [0, 4095], but canvas is only [0,255]
 
     // Features
     for (let i = 0; i < layer.length; i++) {

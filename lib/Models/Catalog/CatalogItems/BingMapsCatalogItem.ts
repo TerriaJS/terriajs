@@ -42,15 +42,15 @@ export default class BingMapsCatalogItem extends MappableMixin(
   _createImageryProvider() {
     const result = new BingMapsImageryProvider({
       url: "//dev.virtualearth.net",
-      mapStyle: <any>this.mapStyle,
+      mapStyle: this.mapStyle as any,
       key: this.key!
     });
 
     if (this.attribution) {
-      (<any>result)._credit = this.attribution;
+      (result as any)._credit = this.attribution;
     } else {
       // open in a new window
-      (<any>result)._credit = new Credit(
+      (result as any)._credit = new Credit(
         '<a href="http://www.bing.com" target="_blank">Bing</a>'
       );
     }

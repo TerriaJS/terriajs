@@ -507,9 +507,9 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     (
       timeParams: TimeParams | undefined
     ): ArcGisMapServerImageryProvider | undefined => {
-      const stratum = <MapServerStratum>(
-        this.strata.get(MapServerStratum.stratumName)
-      );
+      const stratum = this.strata.get(
+        MapServerStratum.stratumName
+      ) as MapServerStratum;
 
       if (!isDefined(this.url) || !isDefined(stratum)) {
         return;
@@ -581,9 +581,9 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
 
   /** Return array of MapServer layers from `layers` trait (which is CSV of layer IDs) - this will only return **valid** MapServer layers.*/
   @computed get layersArray() {
-    const stratum = <MapServerStratum | undefined>(
-      this.strata.get(MapServerStratum.stratumName)
-    );
+    const stratum = this.strata.get(MapServerStratum.stratumName) as
+      | MapServerStratum
+      | undefined;
     if (!stratum) return [];
 
     return filterOutUndefined(findLayers(stratum.allLayers, this.layers));

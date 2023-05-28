@@ -54,7 +54,7 @@ function markdownToHtml(
     // (typeof string === 'string').  So if this isn't a string primitive, call toString
     // on it in order to make it one.
     if (markdownString && typeof markdownString !== "string") {
-      stringToParse = (<any>markdownString).toString();
+      stringToParse = (markdownString as any).toString();
     }
     if (markdownOptions.injectTermsAsTooltips && markdownOptions.tooltipTerms) {
       stringToParse = injectTerms(stringToParse, markdownOptions.tooltipTerms);

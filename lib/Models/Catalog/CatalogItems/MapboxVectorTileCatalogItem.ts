@@ -183,7 +183,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
 
     if (this.parsedJsonStyle) {
       rules.push(
-        ...((<unknown>this.parsedJsonStyle.paint_rules) as PaintRule[])
+        ...(this.parsedJsonStyle.paint_rules as unknown as PaintRule[])
       );
     }
 
@@ -193,7 +193,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
   @computed
   get labelRules(): LabelRule[] {
     if (this.parsedJsonStyle) {
-      return (<unknown>this.parsedJsonStyle.label_rules) as LabelRule[];
+      return this.parsedJsonStyle.label_rules as unknown as LabelRule[];
     }
     return [];
   }

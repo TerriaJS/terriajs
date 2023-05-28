@@ -239,9 +239,9 @@ export default class ArcGisFeatureServerCatalogGroup extends UrlMixin(
   }
 
   protected async forceLoadMembers() {
-    const featureServerStratum = <FeatureServerStratum | undefined>(
-      this.strata.get(FeatureServerStratum.stratumName)
-    );
+    const featureServerStratum = this.strata.get(
+      FeatureServerStratum.stratumName
+    ) as FeatureServerStratum | undefined;
     if (featureServerStratum) {
       await runLater(() => featureServerStratum.createMembersFromLayers());
     }

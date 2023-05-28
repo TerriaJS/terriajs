@@ -50,7 +50,9 @@ export default class LeafletSelectionIndicator {
     });
 
     this._marker.addTo(this._leaflet.map);
-    this._selectionIndicatorDomElement = (<any>this._marker)._icon.children[0];
+    this._selectionIndicatorDomElement = (
+      this._marker as any
+    )._icon.children[0];
   }
 
   setLatLng(latlng: L.LatLng) {

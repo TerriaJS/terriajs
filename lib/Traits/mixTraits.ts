@@ -73,7 +73,7 @@ export default function mixTraits<
     return result.concat(
       Object.keys(traitsInstance).map((property) => ({
         key: property,
-        value: (<any>traitsInstance)[property]
+        value: (traitsInstance as any)[property]
       }))
     );
   }, [] as Array<{ key: string; value: any }>);
@@ -83,7 +83,7 @@ export default function mixTraits<
     constructor() {
       super();
       keysValues.forEach((kv) => {
-        (<any>this)[kv.key] = kv.value;
+        (this as any)[kv.key] = kv.value;
       });
     }
   }
@@ -94,5 +94,5 @@ export default function mixTraits<
     });
   });
 
-  return <any>Mixed;
+  return Mixed as any;
 }

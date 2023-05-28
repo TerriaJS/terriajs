@@ -283,9 +283,9 @@ export default class OpenDataSoftCatalogGroup extends UrlMixin(
   }
 
   protected async forceLoadMembers() {
-    const opendatasoftServerStratum = <OpenDataSoftCatalogStratum | undefined>(
-      this.strata.get(OpenDataSoftCatalogStratum.stratumName)
-    );
+    const opendatasoftServerStratum = this.strata.get(
+      OpenDataSoftCatalogStratum.stratumName
+    ) as OpenDataSoftCatalogStratum | undefined;
     if (opendatasoftServerStratum) {
       await runLater(() => opendatasoftServerStratum.createMembers());
     }
