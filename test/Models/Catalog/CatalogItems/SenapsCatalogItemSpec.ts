@@ -12,7 +12,7 @@ interface ExtendedLoadWithXhr {
   load: { (...args: any[]): any; calls: any };
 }
 
-const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
+const loadWithXhr: ExtendedLoadWithXhr = _loadWithXhr as any;
 
 describe("SenapsLocationsCatalogItem", function () {
   let terria: Terria;

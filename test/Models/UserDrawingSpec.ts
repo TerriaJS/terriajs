@@ -39,7 +39,7 @@ describeIfSupported("UserDrawing that requires WebGL", function () {
       expect(cesium.cesiumWidget.canvas.style.cursor).toEqual("");
       userDrawing.enterDrawMode();
       expect(cesium.cesiumWidget.canvas.style.cursor).toEqual("crosshair");
-      (<any>userDrawing).cleanUp();
+      (userDrawing as any).cleanUp();
       expect(cesium.cesiumWidget.canvas.style.cursor).toEqual("auto");
     }
   });
@@ -274,11 +274,11 @@ describe("UserDrawing", function () {
     expect(userDrawing.pointEntities.entities.values.length).toEqual(1);
     expect(userDrawing.otherEntities.entities.values.length).toEqual(1);
 
-    (<any>userDrawing).cleanUp();
+    (userDrawing as any).cleanUp();
     expect(userDrawing.pointEntities.entities.values.length).toEqual(0);
     expect(userDrawing.otherEntities.entities.values.length).toEqual(0);
-    expect((<any>userDrawing).inDrawMode).toBeFalsy();
-    expect((<any>userDrawing).closeLoop).toBeFalsy();
+    expect((userDrawing as any).inDrawMode).toBeFalsy();
+    expect((userDrawing as any).closeLoop).toBeFalsy();
   });
 
   it("ensures onCleanUp callback is called when clean up occurs", function () {
@@ -286,7 +286,7 @@ describe("UserDrawing", function () {
     const userDrawing = new UserDrawing({ terria, onCleanUp });
     userDrawing.enterDrawMode();
     expect(onCleanUp).not.toHaveBeenCalled();
-    (<any>userDrawing).cleanUp();
+    (userDrawing as any).cleanUp();
     expect(onCleanUp).toHaveBeenCalled();
   });
 
@@ -337,7 +337,7 @@ describe("UserDrawing", function () {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures =
         pickedFeatures;
     });
-    expect((<any>userDrawing).closeLoop).toBeFalsy();
+    expect((userDrawing as any).closeLoop).toBeFalsy();
 
     // Now pick the first point
     pickedFeatures.pickPosition = pt1CartesianPosition;
@@ -350,7 +350,7 @@ describe("UserDrawing", function () {
         pickedFeatures;
     });
 
-    expect((<any>userDrawing).closeLoop).toBeTruthy();
+    expect((userDrawing as any).closeLoop).toBeTruthy();
     expect(userDrawing.pointEntities.entities.values.length).toEqual(3);
   });
 
@@ -402,7 +402,7 @@ describe("UserDrawing", function () {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures =
         pickedFeatures;
     });
-    expect((<any>userDrawing).closeLoop).toBeFalsy();
+    expect((userDrawing as any).closeLoop).toBeFalsy();
 
     // Now pick the first point
     pickedFeatures.pickPosition = pt1CartesianPosition;
@@ -415,7 +415,7 @@ describe("UserDrawing", function () {
         pickedFeatures;
     });
 
-    expect((<any>userDrawing).closeLoop).toBeFalsy();
+    expect((userDrawing as any).closeLoop).toBeFalsy();
     expect(userDrawing.pointEntities.entities.values.length).toEqual(2);
   });
 
@@ -466,7 +466,7 @@ describe("UserDrawing", function () {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures =
         pickedFeatures;
     });
-    expect((<any>userDrawing).closeLoop).toBeFalsy();
+    expect((userDrawing as any).closeLoop).toBeFalsy();
     expect(userDrawing.otherEntities.entities.values.length).toEqual(1);
 
     // Now pick the first point
@@ -479,7 +479,7 @@ describe("UserDrawing", function () {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures =
         pickedFeatures;
     });
-    expect((<any>userDrawing).closeLoop).toBeTruthy();
+    expect((userDrawing as any).closeLoop).toBeTruthy();
     expect(userDrawing.otherEntities.entities.values.length).toEqual(2);
 
     // Another point. Polygon is still closed.
@@ -496,7 +496,7 @@ describe("UserDrawing", function () {
         pickedFeatures;
     });
 
-    expect((<any>userDrawing).closeLoop).toBeTruthy();
+    expect((userDrawing as any).closeLoop).toBeTruthy();
     expect(userDrawing.otherEntities.entities.values.length).toEqual(2);
   });
 
@@ -548,7 +548,7 @@ describe("UserDrawing", function () {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures =
         pickedFeatures;
     });
-    expect((<any>userDrawing).closeLoop).toBeFalsy();
+    expect((userDrawing as any).closeLoop).toBeFalsy();
 
     // Now pick the second point
     pickedFeatures.pickPosition = pt2CartesianPosition;
