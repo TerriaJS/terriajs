@@ -1,5 +1,5 @@
-@import "~terriajs-variables";
-@import "mixins";
+@import "terriajs/lib/Sass/common/_variables.scss";
+@import "terriajs/lib/Sass/common/_mixins.scss";
 
 .clearfix {
   @extend %clearfix;

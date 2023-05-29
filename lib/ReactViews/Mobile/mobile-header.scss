@@ -1,4 +1,5 @@
-@import "~terriajs-variables";
+@use "sass:math";
+@import "terriajs/lib/Sass/common/_variables.scss";
 @import "../../Sass/common/mixins";
 
 .ui {
@@ -47,7 +48,7 @@
   svg {
     position: absolute;
     top: $padding;
-    left: $padding/2;
+    left: math.div($padding, 2);
     fill: #ffffff;
   }
 }

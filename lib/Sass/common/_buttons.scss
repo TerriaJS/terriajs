@@ -1,4 +1,4 @@
-@import "~terriajs-variables";
+@import "terriajs/lib/Sass/common/_variables.scss";
 
 $btn-setting-size: 35px;
 
@@ -144,7 +144,7 @@ $btn-setting-size: 35px;
 }
 
 .btn--close-modal {
-  @extend .btn--secondary;
+  @composes: btn--secondary;
   font-size: $font-size-small;
   padding: 4px 10px;
   margin: 5px;

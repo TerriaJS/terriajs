@@ -1,4 +1,5 @@
-@import "~terriajs-variables";
+@use "sass:math";
+@import "terriajs/lib/Sass/common/_variables.scss";
 @import "../../Sass/common/mixins";
 
 // NOTE: When changing this file with hot-reloading on you might see the globe in the map disappear. Don't panic! This
@@ -81,7 +82,7 @@
   // In between, it may be up to 90% of the largest mobile screen ($sm), minus a bit to leave room
   // for the map controls on the right.  This is computed in $feature-info-medium-max-size.
   $feature-info-medium-max-size: $sm * 0.9 - $feature-info-right-margin * 0.5;
-  $feature-info-forty-percent-size: $feature-info-medium-max-size * 100 / 40;
+  $feature-info-forty-percent-size: math.div($feature-info-medium-max-size * 100, 40);
 
   z-index: $front-component-z-index - 20;
   position: absolute;
