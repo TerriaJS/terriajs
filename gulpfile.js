@@ -78,13 +78,13 @@ gulp.task("copy-cesium-assets", function () {
 
   var cesiumPackage = require.resolve("cesium/package.json");
   var cesiumRoot = path.dirname(cesiumPackage);
-  var cesiumWebRoot = path.join(cesiumRoot, "wwwroot");
+  var cesiumWebRoot = path.join(cesiumRoot, "Build");
 
   return gulp
     .src([path.join(cesiumWebRoot, "**")], {
       base: cesiumWebRoot
     })
-    .pipe(gulp.dest("wwwroot/build/Cesium"));
+    .pipe(gulp.dest("wwwroot/build/Cesium/build"));
 });
 
 gulp.task("test-browserstack", function (done) {

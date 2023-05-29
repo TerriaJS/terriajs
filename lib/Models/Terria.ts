@@ -673,7 +673,7 @@ export default class Terria {
     }
 
     this.cesiumBaseUrl = ensureSuffix(
-      options.cesiumBaseUrl ?? `${this.baseUrl}build/Cesium/build/`,
+      options.cesiumBaseUrl ?? `${this.baseUrl}build/Cesium/build/Cesium`,
       "/"
     );
     // Casting to `any` as `setBaseUrl` method is not part of the Cesiums' type definitions
