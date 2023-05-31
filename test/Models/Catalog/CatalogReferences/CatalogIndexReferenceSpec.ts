@@ -1,6 +1,7 @@
-import { CommonStrata, updateModelFromJson } from "terriajs-plugin-api";
 import CatalogIndexReference from "../../../../lib/Models/Catalog/CatalogReferences/CatalogIndexReference";
 import MagdaReference from "../../../../lib/Models/Catalog/CatalogReferences/MagdaReference";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
+import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 import Terria from "../../../../lib/Models/Terria";
 
 describe("CatalogIndexReference", function () {
