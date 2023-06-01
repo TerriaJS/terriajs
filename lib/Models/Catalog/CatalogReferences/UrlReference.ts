@@ -144,3 +144,23 @@ export class UrlMapping {
 }
 
 export const UrlToCatalogMemberMapping = new UrlMapping();
+
+/**
+ * Register a url handler for a specific catalog member type.
+ *
+ * When a user uploads a url or drags-n-drops a particular file, the matchers
+ * are tried in order and when there is a match we try and create a catalog
+ * member of that type.
+ *
+ * @param catalogMemberType The type string identifying the catalog member
+ * @param matcher The matcher definition
+ * @param requiresLoad Should be set to `true` if in addition to URL matching we must also try and load
+ *    the item successfully for it to be a valid match. Eg WMS/WFS groups that require enumeration.
+ */
+export function registerUrlHandlerForCatalogMemberType(
+  catalogMemberType: string,
+  matcher: Matcher,
+  requiresLoad?: boolean
+): void {
+  UrlToCatalogMemberMapping.register(matcher, catalogMemberType, requiresLoad);
+}

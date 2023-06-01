@@ -1,4 +1,4 @@
-import { configure, reaction, runInAction } from "mobx";
+import { action, configure, reaction, runInAction } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import isDefined from "../../../../lib/Core/isDefined";
@@ -145,7 +145,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
       let dispose: any;
       job = (await wps.submitJob()) as WebProcessingServiceCatalogFunctionJob;
 
-      await new Promise((resolve, reject) => {
+      await new Promise<void>((resolve, reject) => {
         dispose = reaction(
           () => job.downloadedResults,
           () => {
@@ -211,7 +211,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
       let dispose2: any;
 
       // Wait for job to finish polling, then check if finished
-      await new Promise((resolve, reject) => {
+      await new Promise<void>((resolve, reject) => {
         dispose2 = reaction(
           () => job.refreshEnabled,
           () => {
@@ -289,7 +289,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
       let dispose2: any;
 
       // Wait for job to finish polling, then check if failed
-      await new Promise((resolve, reject) => {
+      await new Promise<void>((resolve, reject) => {
         dispose2 = reaction(
           () => job.refreshEnabled,
           () => {
@@ -317,7 +317,7 @@ describe("WebProcessingServiceCatalogFunction", function () {
       try {
         const job = await wps.submitJob();
         expect(job).toBeUndefined();
-      } catch (error) {
+      } catch (error: any) {
         expect(error).toBeDefined();
         expect(error instanceof TerriaError).toBeTruthy();
         expect(error.message).toBe(

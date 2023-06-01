@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, runInAction, makeObservable } from "mobx";
 import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import { isJsonObject } from "../../../Core/Json";
@@ -23,6 +23,7 @@ import StratumFromTraits from "../../Definition/StratumFromTraits";
 import WebProcessingServiceCapabilities, {
   Process
 } from "./WebProcessingServiceCapabilities";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
 
 class GetCapabilitiesStratum extends LoadableStratum(
@@ -33,6 +34,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     readonly capabilities: WebProcessingServiceCapabilities
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -215,6 +217,11 @@ export default class WebProcessingServiceCatalogGroup extends GroupMixin(
   )
 ) {
   static readonly type = "wps-getCapabilities";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   get type() {
     return WebProcessingServiceCatalogGroup.type;

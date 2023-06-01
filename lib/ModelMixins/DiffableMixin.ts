@@ -1,6 +1,6 @@
-import { computed } from "mobx";
+import { computed, makeObservable, override } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
@@ -8,12 +8,14 @@ import StratumOrder from "../Models/Definition/StratumOrder";
 import { SelectableDimensionEnum } from "../Models/SelectableDimensions/SelectableDimensions";
 import DiffableTraits from "../Traits/TraitsClasses/DiffableTraits";
 import LegendTraits from "../Traits/TraitsClasses/LegendTraits";
+import MappableMixin from "./MappableMixin";
 import TimeFilterMixin from "./TimeFilterMixin";
 
 class DiffStratum extends LoadableStratum(DiffableTraits) {
   static stratumName = "diffStratum";
   constructor(readonly catalogItem: DiffableMixin.Instance) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -56,10 +58,14 @@ class DiffStratum extends LoadableStratum(DiffableTraits) {
   }
 }
 
-function DiffableMixin<T extends Constructor<Model<DiffableTraits>>>(Base: T) {
+type BaseType = Model<DiffableTraits> & MappableMixin.Instance;
+
+function DiffableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class DiffableMixin extends TimeFilterMixin(Base) {
     constructor(...args: any[]) {
       super(...args);
+
+      makeObservable(this);
 
       const diffStratum = new DiffStratum(this);
       this.strata.set(DiffStratum.stratumName, diffStratum);
@@ -89,7 +95,7 @@ function DiffableMixin<T extends Constructor<Model<DiffableTraits>>>(Base: T) {
       secondDate?: JulianDate
     ): string;
 
-    @computed
+    @override
     get canFilterTimeByFeature() {
       // Hides the SatelliteImageryTimeFilterSection for the item if it is
       // currently showing difference image

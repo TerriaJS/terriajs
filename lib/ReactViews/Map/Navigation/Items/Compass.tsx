@@ -10,7 +10,7 @@
  */
 //
 import { TFunction } from "i18next";
-import { computed, runInAction, when } from "mobx";
+import { computed, runInAction, when, makeObservable } from "mobx";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
@@ -31,6 +31,8 @@ import Icon, { StyledIcon } from "../../../../Styled/Icon";
 import GyroscopeGuidance from "../../../GyroscopeGuidance/GyroscopeGuidance";
 import { withTerriaRef } from "../../../HOCs/withTerriaRef";
 import FadeIn from "../../../Transitions/FadeIn/FadeIn";
+import debounce from "lodash-es/debounce";
+import Scene from "terriajs-cesium/Source/Scene/Scene";
 
 const CameraFlightPath =
   require("terriajs-cesium/Source/Scene/CameraFlightPath").default;
@@ -150,7 +152,7 @@ type IStateTypes = {
 };
 
 // the compass on map
-class Compass extends React.Component<PropTypes, IStateTypes> {
+class Compass extends React.PureComponent<PropTypes, IStateTypes> {
   _unsubscribeFromPostRender: any;
   _unsubscribeFromAnimationFrame: any;
   private _unsubscribeFromViewerChange?: CesiumEvent.RemoveCallback;
@@ -176,6 +178,7 @@ class Compass extends React.Component<PropTypes, IStateTypes> {
    */
   constructor(props: PropTypes) {
     super(props);
+    makeObservable(this);
     this.state = {
       orbitCursorAngle: 0,
       heading: 0.0,
@@ -757,13 +760,21 @@ function viewerChange(viewModel: Compass) {
 
       viewModel._unsubscribeFromPostRender =
         viewModel.props.terria.cesium.scene.postRender.addEventListener(
-          function () {
-            runInAction(() => {
-              viewModel.setState({
-                heading: viewModel.props.terria.cesium!.scene.camera.heading
-              });
-            });
-          }
+          debounce(
+            function (scene: Scene) {
+              if ((scene as any).view) {
+                viewModel.setState({
+                  heading: scene.camera.heading
+                });
+              }
+            },
+            200,
+            {
+              maxWait: 200,
+              leading: true,
+              trailing: true
+            }
+          )
         );
     } else {
       if (viewModel._unsubscribeFromPostRender) {

@@ -1,10 +1,14 @@
-import { action, computed, observable, runInAction } from "mobx";
-import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
+import {
+  action,
+  computed,
+  observable,
+  runInAction,
+  makeObservable
+} from "mobx";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
-import MappableMixin, { MapItem } from "./MappableMixin";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
@@ -15,10 +19,12 @@ import { InfoSectionTraits } from "../Traits/TraitsClasses/CatalogMemberTraits";
 import AutoRefreshingMixin from "./AutoRefreshingMixin";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import GroupMixin from "./GroupMixin";
+import MappableMixin, { MapItem } from "./MappableMixin";
 
 class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
   constructor(readonly catalogFunctionJob: CatalogFunctionJobMixin.Instance) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -111,10 +117,12 @@ function CatalogFunctionJobMixin<
   T extends Constructor<CatalogFunctionJobMixin>
 >(Base: T) {
   abstract class CatalogFunctionJobMixin extends GroupMixin(
-    AutoRefreshingMixin(CatalogMemberMixin(Base))
+    AutoRefreshingMixin(MappableMixin(CatalogMemberMixin(Base)))
   ) {
     constructor(...args: any[]) {
       super(...args);
+
+      makeObservable(this);
 
       // Add FunctionJobStratum to strata
       runInAction(() => {
@@ -126,7 +134,7 @@ function CatalogFunctionJobMixin<
      *
      * @returns true for FINISHED, false for RUNNING (will then call pollForResults)
      */
-    protected abstract async _invoke(): Promise<boolean>;
+    protected abstract _invoke(): Promise<boolean>;
 
     public async invoke() {
       this.setTrait(CommonStrata.user, "jobStatus", "running");
@@ -245,9 +253,7 @@ function CatalogFunctionJobMixin<
      * Called in {@link CatalogFunctionJobMixin#onJobFinish}
      * @returns catalog members to add to workbench
      */
-    abstract async downloadResults(): Promise<
-      CatalogMemberMixin.Instance[] | void
-    >;
+    abstract downloadResults(): Promise<CatalogMemberMixin.Instance[] | void>;
 
     @action
     protected setOnError(error: unknown, raiseToUser: boolean = true) {

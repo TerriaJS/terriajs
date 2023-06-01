@@ -1,7 +1,9 @@
 import { Feature, LineString } from "@turf/helpers";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import isDefined from "../../Core/isDefined";
-import FunctionParameter from "./FunctionParameter";
+import FunctionParameter, {
+  FunctionConstructorParameters
+} from "./FunctionParameter";
 import { GeoJsonFunctionParameter } from "./GeoJsonParameter";
 
 type Coordinates = number[];
@@ -13,6 +15,11 @@ export default class LineParameter
 {
   static readonly type = "line";
   readonly type = "line";
+
+  constructor(...args: FunctionConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   static formatValueForUrl(value: Line) {
     return JSON.stringify({

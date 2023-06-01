@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, toJS } from "mobx";
+import { computed, toJS, makeObservable, override } from "mobx";
 import { createTransformer } from "mobx-utils";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
@@ -134,6 +134,8 @@ export default class MagdaReference extends AccessControlMixin(
   ) {
     super(id, terria, sourceReference, strata);
 
+    makeObservable(this);
+
     this.setTrait(
       CommonStrata.defaults,
       "distributionFormats",
@@ -158,10 +160,16 @@ export default class MagdaReference extends AccessControlMixin(
     );
   }
 
-  @computed
+  @override
   get accessType(): string {
-    const access = getAccessTypeFromMagdaRecord(this.magdaRecord);
-    return access || super.accessType;
+    return this.magdaRecordAcessType ?? super.accessType;
+  }
+
+  @computed
+  private get magdaRecordAcessType(): string | undefined {
+    return this.magdaRecord
+      ? getAccessTypeFromMagdaRecord(this.magdaRecord)
+      : undefined;
   }
 
   protected async forceLoadReference(
@@ -788,7 +796,8 @@ export default class MagdaReference extends AccessControlMixin(
     return undefined;
   }
 
-  @computed get cacheDuration(): string {
+  @override
+  get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }
@@ -861,10 +870,21 @@ const prepareDistributionFormat = createTransformer(
   }
 );
 
-function getAccessTypeFromMagdaRecord(magdaRecord: any): string {
+function getAccessTypeFromMagdaRecord(
+  magdaRecord: Record<string, any>
+): string {
   const record = toJS(magdaRecord);
-  const accessControl: any =
-    record && record.aspects && record.aspects["esri-access-control"];
-  const access = accessControl && accessControl.access;
-  return access;
+
+  // Magda V2 access control has higher priority.
+  if (record?.aspects?.["access-control"]) {
+    return record.aspects["access-control"].orgUnitId
+      ? record.aspects["access-control"].constraintExemption
+        ? "public"
+        : "non-public"
+      : "public";
+  } else if (record?.aspects?.["esri-access-control"]) {
+    return record.aspects["esri-access-control"].access;
+  } else {
+    return "public";
+  }
 }

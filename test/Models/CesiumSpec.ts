@@ -1,6 +1,7 @@
 import range from "lodash-es/range";
 import { action, computed, observable, runInAction } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
@@ -23,7 +24,6 @@ import MappableTraits, {
   RectangleTraits
 } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
-import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 
 const supportsWebGL = require("../../lib/Core/supportsWebGL");
 
@@ -127,55 +127,61 @@ describeIfSupported("Cesium Model", function () {
       new MappablePrimitiveItem("2", terria),
       new MappablePrimitiveItem("3", terria)
     ]);
-    container = document.createElement("div");
-    container.id = "cesium-test-container";
-    document.body.appendChild(container);
 
-    const cesium = new Cesium(
-      new TerriaViewer(
-        terria,
-        computed(() => items)
-      ),
-      container
+    const container2 = document.createElement("div");
+    container2.id = "cesium-test-container";
+    document.body.appendChild(container2);
+
+    const terriaViewer2 = new TerriaViewer(
+      terria,
+      computed(() => items)
     );
 
-    // Return urls of all tilesets in the scene
-    const tilesetUrls = () =>
-      filterOutUndefined(
-        range(cesium.scene.primitives.length).map((i) => {
-          const prim = cesium.scene.primitives.get(i);
-          return prim.allTilesLoaded && prim._url;
-        })
-      );
+    const cesium2 = new Cesium(terriaViewer2, container2);
 
-    // Return names of all datasources in the scene
-    const dataSourceNames = () =>
-      range(cesium.dataSources.length).map(
-        (i) => cesium.dataSources.get(i).name
-      );
+    try {
+      // Return urls of all tilesets in the scene
+      const tilesetUrls = () =>
+        filterOutUndefined(
+          range(cesium2.scene.primitives.length).map((i) => {
+            const prim = cesium2.scene.primitives.get(i);
+            return prim.allTilesLoaded && prim._url;
+          })
+        );
 
-    // Return urls of all imagery providers in the scene
-    const imageryProviderUrls = () =>
-      range(cesium.scene.imageryLayers.length)
-        .map(
-          (i) => (cesium.scene.imageryLayers.get(i).imageryProvider as any).url
-        )
-        .reverse();
+      // Return names of all datasources in the scene
+      const dataSourceNames = () =>
+        range(cesium2.dataSources.length).map(
+          (i) => cesium2.dataSources.get(i).name
+        );
 
-    await runLater(() => {});
+      // Return urls of all imagery providers in the scene
+      const imageryProviderUrls = () =>
+        range(cesium2.scene.imageryLayers.length)
+          .map(
+            (i) =>
+              (cesium2.scene.imageryLayers.get(i).imageryProvider as any).url
+          )
+          .reverse();
 
-    // Test that we have added the correct items
-    expect(dataSourceNames()).toEqual(["ds1", "ds2", "ds3"]);
-    expect(tilesetUrls()).toEqual(["prim1", "prim2", "prim3"]);
-    expect(imageryProviderUrls()).toEqual(["img1", "img2", "img3"]);
+      await runLater(() => {});
 
-    runInAction(() => items.splice(0, 2));
-    await runLater(() => {});
+      // Test that we have added the correct items
+      expect(dataSourceNames()).toEqual(["ds1", "ds2", "ds3"]);
+      expect(tilesetUrls()).toEqual(["prim1", "prim2", "prim3"]);
+      expect(imageryProviderUrls()).toEqual(["img1", "img2", "img3"]);
 
-    // Test that we have removed the correct items
-    expect(dataSourceNames()).toEqual(["ds3"]);
-    expect(tilesetUrls()).toEqual(["prim3"]);
-    expect(imageryProviderUrls()).toEqual(["img3"]);
+      runInAction(() => items.splice(0, 2));
+      await runLater(() => {});
+
+      // Test that we have removed the correct items
+      expect(dataSourceNames()).toEqual(["ds3"]);
+      expect(tilesetUrls()).toEqual(["prim3"]);
+      expect(imageryProviderUrls()).toEqual(["img3"]);
+    } finally {
+      cesium2.destroy();
+      document.body.removeChild(container2);
+    }
   });
 
   describe("Terrain provider selection", function () {
@@ -186,6 +192,7 @@ describeIfSupported("Cesium Model", function () {
       action(async function () {
         // We need a cesium instance bound to terria.mainViewer for workbench
         // changes to be reflected in these specs
+        cesium.destroy();
         cesium = new Cesium(terria.mainViewer, container);
         scene = cesium.scene;
         cesium.terriaViewer.viewerOptions.useTerrain = true;
@@ -213,7 +220,7 @@ describeIfSupported("Cesium Model", function () {
         ).and.returnValue(
           Promise.resolve(new CesiumTerrainProvider({ url: "some/url" }))
         );
-        await terria.workbench.add(workbenchTerrainItem);
+        (await terria.workbench.add(workbenchTerrainItem)).throwIfError();
       })
     );
 
@@ -293,6 +300,122 @@ describeIfSupported("Cesium Model", function () {
 
       expect(scene.terrainProvider instanceof EllipsoidTerrainProvider).toBe(
         true
+      );
+    });
+  });
+
+  describe("Cesium Terrain Extra Tests", function () {
+    // declare different variables here, we need new instances to test because we are changing config values and want to instantiate with these different values
+    let terria2: Terria;
+    let terriaViewer2: TerriaViewer;
+    let container2: HTMLElement;
+    let cesium2: Cesium;
+
+    beforeEach(function () {
+      terria2 = new Terria({
+        baseUrl: "./"
+      });
+      terriaViewer2 = new TerriaViewer(
+        terria2,
+        computed(() => [])
+      );
+      container2 = document.createElement("div");
+      container2.id = "container2";
+      document.body.appendChild(container2);
+    });
+
+    afterEach(function () {
+      cesium2?.destroy();
+      document.body.removeChild(container2);
+    });
+
+    it("should thow a warning when cesiumIonAccessToken is invalid", async function () {
+      runInAction(() => {
+        // Set an invalid token for the test
+        terria2.configParameters.cesiumIonAccessToken = "expired_token";
+      });
+      // Instantiate Cesium object with the invalid token
+      cesium2 = new Cesium(terriaViewer2, container2);
+
+      await cesium2.terrainProvider.readyPromise.catch(() => {});
+      // Wait a few ticks to allow for delay in adding event listener to terrainProvider in Cesium.ts
+      await runLater(() => {}, 5);
+
+      // We should then get an error about the terrain server
+      const currentNotificationTitle =
+        typeof terria2.notificationState.currentNotification?.title === "string"
+          ? terria2.notificationState.currentNotification?.title
+          : terria2.notificationState.currentNotification?.title();
+
+      expect(currentNotificationTitle).toBe(
+        "map.cesium.terrainServerErrorTitle"
+      );
+    });
+
+    it("should revert to 3dSmooth mode when cesiumIonAccessToken is invalid", async function () {
+      runInAction(() => {
+        // Set an invalid token for the test
+        terria2.configParameters.cesiumIonAccessToken = "expired_token";
+      });
+
+      // Instantiate Cesium object with the invalid token
+      cesium2 = new Cesium(terriaViewer2, container2);
+
+      await cesium2.terrainProvider.readyPromise.catch(() => {});
+      // Wait a few ticks to allow for delay in adding event listener to terrainProvider in Cesium.ts
+      await runLater(() => {}, 5);
+
+      expect(terriaViewer2.viewerOptions.useTerrain).toBe(false);
+      expect(
+        cesium2.scene.terrainProvider instanceof EllipsoidTerrainProvider
+      ).toBe(true);
+    });
+
+    it("should thow a warning when `cesiumIonAccessToken` is invalid and `cesiumTerrainAssetId` is present", async function () {
+      runInAction(() => {
+        // Set an invalid token for the test
+        terria2.configParameters.cesiumIonAccessToken = "expired_token";
+        // Set a valid asset id
+        terria2.configParameters.cesiumTerrainAssetId = 480278;
+      });
+      // Instantiate Cesium object with the invalid token and valid asset id
+      cesium2 = new Cesium(terriaViewer2, container2);
+
+      await cesium2.terrainProvider.readyPromise.catch(() => {});
+      // Wait a few ticks to allow for delay in adding event listener to terrainProvider in Cesium.ts
+      await runLater(() => {}, 5);
+
+      // We should then get an error about the terrain server
+      const currentNotificationTitle =
+        typeof terria2.notificationState.currentNotification?.title === "string"
+          ? terria2.notificationState.currentNotification?.title
+          : terria2.notificationState.currentNotification?.title();
+
+      expect(currentNotificationTitle).toBe(
+        "map.cesium.terrainServerErrorTitle"
+      );
+    });
+
+    it("should thow a warning when 'cesiumTerrainUrl' is invalid", async function () {
+      runInAction(() => {
+        terria2.configParameters.cesiumTerrainUrl =
+          "https://storage.googleapis.com/vic-datasets-public/xxxxxxx-xxxx-xxxx-xxxx-xxxxxxx/v1"; // An invalid url
+      });
+      // Instantiate Cesium object with the invalid terrain url
+      cesium2 = new Cesium(terriaViewer2, container2);
+
+      await cesium2.terrainProvider.readyPromise.catch(() => {});
+      // Wait a few ticks to allow for delay in adding event listener to terrainProvider in Cesium.ts
+      await runLater(() => {}, 5);
+
+      // We should then get an error about the terrain server
+      const currentNotificationTitle =
+        typeof terria2.notificationState.currentNotification?.title === "string"
+          ? terria2.notificationState.currentNotification?.title
+          : terria2.notificationState.currentNotification?.title();
+
+      expect(currentNotificationTitle).toBe(
+        "map.cesium.terrainServerErrorTitle"
       );
     });
   });

@@ -1,6 +1,6 @@
 import DOMPurify from "dompurify";
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable, override } from "mobx";
 import { createTransformer } from "mobx-utils";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
@@ -39,6 +39,7 @@ export class ArcGisPortalItemStratum extends LoadableStratum(
       | undefined
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -233,6 +234,7 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
     strata?: Map<string, StratumFromTraits<ModelTraits>>
   ) {
     super(id, terria, sourceReference, strata);
+    makeObservable(this);
     this.setTrait(
       CommonStrata.defaults,
       "supportedFormats",
@@ -240,7 +242,7 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
     );
   }
 
-  @computed
+  @override
   get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;

@@ -388,7 +388,7 @@ const StyledLabel: React.FC<StyledLabelProps> = (props: StyledLabelProps) => {
   const childrenWithId = React.Children.map(props.children, (child) => {
     // checking isValidElement is the safe way and avoids a typescript error too
     if (React.isValidElement(child)) {
-      return React.cloneElement(child, { id: id });
+      return React.cloneElement(child, { id: id } as any);
     }
     return child;
   });

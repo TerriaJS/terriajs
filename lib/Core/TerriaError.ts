@@ -1,7 +1,7 @@
 "use strict";
 
 import i18next from "i18next";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Terria from "../Models/Terria";
 import { Notification } from "../ReactViewModels/NotificationState";
@@ -247,6 +247,7 @@ export default class TerriaError {
   }
 
   constructor(options: TerriaErrorOptions) {
+    makeObservable(this);
     this._message = options.message;
     this._title = options.title ?? { key: "core.terriaError.defaultTitle" };
     this.sender = options.sender;

@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, observable, runInAction } from "mobx";
+import { action, observable, runInAction, makeObservable } from "mobx";
 import React from "react";
 import CesiumCartographic from "terriajs-cesium/Source/Core/Cartographic";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
@@ -30,6 +30,7 @@ class MyLocation extends MapNavigationItemController {
 
   constructor(props: PropTypes) {
     super();
+    makeObservable(this);
     this.terria = props.terria;
     this._marker = new GeoJsonCatalogItem(createGuid(), props.terria);
     this.zoomToMyLocation = this.zoomToMyLocation.bind(this);
@@ -82,7 +83,7 @@ class MyLocation extends MapNavigationItemController {
     }
   }
 
-  zoomToMyLocation(position: Position) {
+  zoomToMyLocation(position: GeolocationPosition) {
     const t = i18next.t.bind(i18next);
     const longitude = position.coords.longitude;
     const latitude = position.coords.latitude;
@@ -125,6 +126,18 @@ class MyLocation extends MapNavigationItemController {
           latitude: latitude
         }
       });
+      // Need to specify rectangle for ideal zoom to work properly in 3D map.
+      const closeUpRange = 0.002;
+      this._marker.setTrait(
+        CommonStrata.user,
+        "rectangle",
+        new Rectangle(
+          longitude - closeUpRange,
+          latitude - closeUpRange,
+          longitude + closeUpRange,
+          latitude + closeUpRange
+        )
+      );
       this._marker.setTrait(
         CommonStrata.user,
         "style",

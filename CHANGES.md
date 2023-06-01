@@ -1,8 +1,68 @@
 # Change Log
 
-#### next release (8.2.24)
+#### next release (8.3.1)
 
 - [The next improvement]
+
+#### 8.3.0 - 2023-05-22
+
+- **Breaking changes:**
+
+  - **Upgraded Mobx to version 6.7.x**
+  - **Upgraded Typescript to version 4.9.x**
+
+#### 8.2.29 - 2023-05-18
+
+- Fix app crash when rendering feature info with a custom title.
+- Added new `CkanCatalogGroup` traits `resourceIdTemplate` and `restrictResourceIdTemplateToOrgsWithNames` to generate custom resource IDs for CKAN resources with unstable IDs.
+- Fix `acessType` resolution for `MagdaReference` so that it uses the default terria resolution strategy when `magdaRecord` is not defined.
+
+#### 8.2.28 - 2023-04-28
+
+- Refactored TerriaViewer to expose a promise `terriaViewer.viewerLoadPromise` for async loading of viewers.
+- Fix location point ideal zoom bug in 3D mode map.
+- Add `EPSG:7844` to `Proj4Definitions`.
+- TSify `Proj4Definitions` and `Reproject` modules.
+- Update the docs for `excludeMembers`: mention the group/item id support
+- Simplified `MapToolbar` API.
+
+#### 8.2.27 - 2023-04-05
+
+- Change icon used for display group remove button
+- Make access control UI compatible to Magda v1 and v2 with v2 overriding v1.
+- Remove karma-sauce-launcher dependency
+- Add method `addFileDragDropListener` for receiving callbacks when user drags-n-drops a file.
+- Improve `BoxDrawing` drag interaction.
+- Fix a bug where `BoxDrawing` sometimes causes the map to loose pan and zoom interactivity.
+- Optimize `LocationBar` component to reduce number of renders on mouse move.
+- Optimize `Compass` component to reduce renders on each frame.
+- Add `children` optional property to StandardUserInterfaceProps interface
+- Add support for ArcGis MapServer with `TileOnly` capability - for example layers served from ArcGis Online. This is supported through `ArcGisMapServerCatalogItem`, `ArcGisMapServerCatalogGroup` and `ArcGisCatalogGroup`.
+
+#### 8.2.26 - 2023-03-21
+
+- Upgraded to terriajs-server 4.0.0.
+- Added new `gulp dev` task that runs terriajs-server and `gulp watch` (incremental specs build) at the same time.
+
+#### 8.2.25 - 2023-03-20
+
+- Export `registerUrlHandlerForCatalogMemberType` for registering new url handler for catalog types.
+- BoxDrawing changes:
+  - Adds a new option called disableVerticalMovement to BoxDrawing which if set to true disables up/down motion of the box when dragging the top/bottom sides of the box.
+  - Keeps height (mostly) steady when moving the box laterally on the map. Previously the height of the box used to change wrt to the ellipsoid/surface.
+  - Fixes a bug that caused map panning and zooming to break when interacting with multiple active BoxDrawings.
+  - Removed some code that was causing too much drift between mouse cursor and model when moving the model laterally on the map.
+- Replaces addRemoteUploadType and addLocalUploadType with addOrReplaceRemoteFileUploadType and addOrReplaceLocalFileUploadType.
+
+#### 8.2.24 - 2023-03-06
+
+- Reimplement error message and default to 3d smooth mode when Cesium Ion Access Token is invalid.
+- Layers shown via a share URL are now logged as a Google Analytics event
+- Show an Add All / Remove All button for catalog groups when an optional `displayGroup` trait is true
+- Rename the Map Settings "Raster Map Quality" slider to be just "Map Quality" as it also affects other things than raster data.
+- Dragn-n-drop should respect disableZoomTo setting
+- Fixed #6702 Terrain Hides Underground Features not working
+- Add className prop for MyData tab so that it can be styled externally
 
 #### 8.2.23 - 2023-01-06
 
@@ -363,20 +423,6 @@
 - Added `ModelJson` interface - which provides loose type hints for Model JSON.
 - Added `settings` object to `InitSourceData` - provides `baseMaximumScreenSpaceError, useNativeResolution, alwaysShowTimeline, baseMapId, terrainSplitDirection, depthTestAgainstTerrainEnabled` - these properties are now saved in share links/stories.
 - Moved `setAlwaysShowTimeline` logic from `SettingsPanel` to `TimelineStack.ts`.
-
-* **Breaking changes:**
-  - Multiple changes to `GtfsCatalogItem`:
-    - Removed `apiKey` in favour of more general `headers`
-    - Removed unused `bearingDirectionProperty` & `compassDirectionProperty`
-    - `image` is no longer resolved relative to the TerriaJS asset folder. This will allow using relative URLs for assets that aren't inside the TerriaJS asset folder. Any relative `image` urls should now have "build/TerriaJS/" prepended (the value of `terria.baseUrl`).
-* Added `colorModelsByProperty` to `GtfsCatalogItem` which will colour 1 model differently for different vehichles based on properties matched by regular expression. E.g. colour a vehicle model by which train line the vehicle is travelling on.
-* Fixed a bug where cross-origin billboard images threw errors in Leaflet mode when trying to recolour the image.
-* Changed rounding of the numbers of the countdown timer in the workbench UI for items that use polling. The timer wil now show 00:00 for at most 500ms (instead of a full second). This means that for timers that are a multiple of 1000ms the timer will now show 00:01 for the last second before polling, instead of 00:00.
-* TSified `BuildShareLink`, `InitSourceData` and `ShareData`.
-* Added `HasLocalData` interface - which has `hasLocalData` property to implement.
-* Added `ModelJson` interface - which provides loose type hints for Model JSON.
-* Added `settings` object to `InitSourceData` - provides `baseMaximumScreenSpaceError, useNativeResolution, alwaysShowTimeline, baseMapId, terrainSplitDirection, depthTestAgainstTerrainEnabled` - these properties are now saved in share links/stories.
-* Moved `setAlwaysShowTimeline` logic from `SettingsPanel` to `TimelineStack.ts`.
 
 #### 8.1.27 - 2022-04-08
 

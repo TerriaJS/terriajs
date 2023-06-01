@@ -1,18 +1,23 @@
-import { computed } from "mobx";
-import Constructor from "../Core/Constructor";
+import { computed, makeObservable, override } from "mobx";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import Model from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
 import GetCapabilitiesTraits from "../Traits/TraitsClasses/GetCapabilitiesTraits";
 
-type CapabilitiesModel = Model<GetCapabilitiesTraits>;
+type BaseType = Model<GetCapabilitiesTraits>;
 
-function GetCapabilitiesMixin<T extends Constructor<CapabilitiesModel>>(
+function GetCapabilitiesMixin<T extends AbstractConstructor<BaseType>>(
   Base: T
 ) {
   abstract class GetCapabilitiesMixin extends Base {
     protected abstract get defaultGetCapabilitiesUrl(): string | undefined;
 
-    @computed
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
+
+    @override
     get getCapabilitiesUrl(): string | undefined {
       const getCapabilitiesUrl = super.getCapabilitiesUrl;
       if (getCapabilitiesUrl !== undefined) {

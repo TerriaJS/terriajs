@@ -1,4 +1,11 @@
-import { action, computed, observable, runInAction, toJS } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  runInAction,
+  toJS,
+  makeObservable
+} from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import flatten from "../../Core/flatten";
 import isDefined from "../../Core/isDefined";
@@ -75,6 +82,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
       strata: Map<string, StratumTraits> | undefined
     ) {
       super(id, terria, sourceReference);
+      makeObservable(this);
       this.strata = strata || observable.map<string, StratumTraits>();
     }
 

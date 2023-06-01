@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable } from "mobx";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import { JsonObject } from "../../../Core/Json";
@@ -17,6 +17,7 @@ import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 
 export interface SenapsFeature {
@@ -211,7 +212,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
         senapsLocationsCatalogItem,
         geojsonCatalogItem
       );
-    } catch (e) {
+    } catch (e: any) {
       throw TerriaError.from(e, {
         title: i18next.t("models.senaps.retrieveErrorTitle"),
         message: i18next.t(
@@ -234,6 +235,11 @@ class SenapsLocationsCatalogItem extends MappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(SenapsLocationsCatalogItemTraits)))
 ) {
   static readonly type = "senaps-locations";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   get type() {
     return SenapsLocationsCatalogItem.type;

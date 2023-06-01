@@ -5,7 +5,7 @@ import React from "react";
 import { observer } from "mobx-react";
 
 @observer
-export default class LineChart extends React.PureComponent {
+class LineChart extends React.PureComponent {
   static propTypes = {
     id: PropTypes.string.isRequired,
     chartItem: PropTypes.object.isRequired,
@@ -39,3 +39,5 @@ export default class LineChart extends React.PureComponent {
     );
   }
 }
+
+export default LineChart;

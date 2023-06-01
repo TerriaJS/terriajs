@@ -127,3 +127,22 @@
 .label--no-results {
   composes: label;
 }
+
+.add-remove-button {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  position: absolute;
+  z-index: 9;
+  right: 30px;
+  top: 5px;
+  color: $color-primary;
+  margin-right: 3px;
+  @media (max-width: $sm) {
+    top: 10px;
+  }
+  svg {
+    height: 18px;
+    width: 18px;
+    margin: 3px;
+    fill: $charcoal-grey;
+  }
+}

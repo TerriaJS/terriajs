@@ -2,7 +2,9 @@
 // Please do not change this file!
 interface CssExports {
   'btn--add': string;
+  'btn--add-all': string;
   'btnAdd': string;
+  'btnAddAll': string;
   'description': string;
   'error': string;
   'field': string;

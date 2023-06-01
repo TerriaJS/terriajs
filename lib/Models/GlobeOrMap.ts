@@ -1,4 +1,10 @@
-import { action, computed, observable, runInAction } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  runInAction,
+  makeObservable
+} from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -60,7 +66,7 @@ export default abstract class GlobeOrMap {
   // Avoid duplicate mousemove events.  Why would we get duplicate mousemove events?  I'm glad you asked:
   // http://stackoverflow.com/questions/17818493/mousemove-event-repeating-every-second/17819113
   // I (Kevin Ring) see this consistently on my laptop when Windows Media Player is running.
-  @observable mouseCoords: MouseCoords = new MouseCoords();
+  mouseCoords: MouseCoords = new MouseCoords();
 
   abstract destroy(): void;
 
@@ -68,6 +74,10 @@ export default abstract class GlobeOrMap {
     target: CameraView | Rectangle | MappableMixin.Instance,
     flightDurationSeconds: number
   ): Promise<void>;
+
+  constructor() {
+    makeObservable(this);
+  }
 
   /**
    * Zoom map to a dataset or the given bounds.
@@ -115,7 +125,6 @@ export default abstract class GlobeOrMap {
   /**
    * List of the attributions (credits) for data currently displayed on map.
    */
-  @computed
   get attributions(): string[] {
     return [];
   }

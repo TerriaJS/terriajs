@@ -1,52 +1,31 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, makeObservable, override, runInAction } from "mobx";
 import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import runLater from "../../../Core/runLater";
-import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
+import { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
+import ModelReference from "../../../Traits/ModelReference";
 import ArcGisMapServerCatalogGroupTraits from "../../../Traits/TraitsClasses/ArcGisMapServerCatalogGroupTraits";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
-import ModelReference from "../../../Traits/ModelReference";
-import ArcGisCatalogGroup from "./ArcGisCatalogGroup";
-import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import ArcGisCatalogGroup from "./ArcGisCatalogGroup";
+import { Layer, MapServer } from "./ArcGisInterfaces";
+import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
 
-interface DocumentInfo {
-  Title?: string;
-  Author?: string;
-}
-
-interface Layer {
-  id: number;
-  name?: string;
-  parentLayerId: number;
-  description?: string;
-  copyrightText?: string;
-  type?: string;
-  subLayerIds?: number[] | null;
-}
-
-export interface MapServer {
-  documentInfo?: DocumentInfo;
-  name?: string;
-  serviceDescription?: string;
-  description?: string;
-  copyrightText?: string;
-  layers?: Layer[];
-  subLayers?: Layer[];
-}
+/** The ID we add to our "All layers" ArcGisMapServerCatalogItem if MapServer.singleFusedMapCache is true */
+const SINGLE_FUSED_MAP_CACHE_ID = "all-layers";
 
 export class MapServerStratum extends LoadableStratum(
   ArcGisMapServerCatalogGroupTraits
@@ -60,6 +39,7 @@ export class MapServerStratum extends LoadableStratum(
     private readonly _mapServer: MapServer
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -67,10 +47,6 @@ export class MapServerStratum extends LoadableStratum(
       model as ArcGisMapServerCatalogGroup,
       this._mapServer
     ) as this;
-  }
-
-  get mapServerData() {
-    return this._mapServer;
   }
 
   @computed get name() {
@@ -115,40 +91,40 @@ export class MapServerStratum extends LoadableStratum(
   static async load(
     catalogGroup: ArcGisMapServerCatalogGroup | ArcGisCatalogGroup
   ): Promise<MapServerStratum> {
-    var terria = catalogGroup.terria;
-    var uri = new URI(catalogGroup.url).addQuery("f", "json");
+    const uri = new URI(catalogGroup.url).addQuery("f", "json");
 
-    return loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString()))
-      .then((mapServer: MapServer) => {
-        // Is this really a MapServer REST response?
-        if (!mapServer || (!mapServer.layers && !mapServer.subLayers)) {
-          throw networkRequestError({
-            title: i18next.t(
-              "models.arcGisMapServerCatalogGroup.invalidServiceTitle"
-            ),
-            message: i18next.t(
-              "models.arcGisMapServerCatalogGroup.invalidServiceMessage"
-            )
-          });
-        }
-        const stratum = new MapServerStratum(catalogGroup, mapServer);
-        return stratum;
-      })
-      .catch(() => {
-        throw networkRequestError({
-          sender: catalogGroup,
-          title: i18next.t(
-            "models.arcGisMapServerCatalogGroup.groupNotAvailableTitle"
-          ),
-          message: i18next.t(
-            "models.arcGisMapServerCatalogGroup.groupNotAvailableMessage"
-          )
-        });
+    const mapServer: MapServer | undefined = await loadJson(
+      proxyCatalogItemUrl(catalogGroup, uri.toString())
+    );
+
+    // Is this really a MapServer REST response?
+    if (!mapServer || (!mapServer.layers && !mapServer.subLayers)) {
+      throw networkRequestError({
+        title: i18next.t(
+          "models.arcGisMapServerCatalogGroup.invalidServiceTitle"
+        ),
+        message: i18next.t(
+          "models.arcGisMapServerCatalogGroup.invalidServiceMessage"
+        )
       });
+    }
+    const stratum = new MapServerStratum(catalogGroup, mapServer);
+    return stratum;
+  }
+
+  @computed get tilesOnly() {
+    return (
+      this._mapServer.singleFusedMapCache &&
+      this._mapServer.capabilities?.includes("TilesOnly")
+    );
   }
 
   @computed
   get members(): ModelReference[] {
+    if (this.tilesOnly) {
+      return [`${this._catalogGroup.uniqueId}/${SINGLE_FUSED_MAP_CACHE_ID}`];
+    }
+
     return filterOutUndefined(
       this.layers
         .map((layer) => {
@@ -168,23 +144,47 @@ export class MapServerStratum extends LoadableStratum(
     );
   }
 
-  @computed
-  get layers(): readonly Layer[] {
+  private get layers() {
     return this._mapServer.layers || [];
   }
 
-  @computed
-  get subLayers(): readonly Layer[] {
+  private get subLayers() {
     return this._mapServer.subLayers || [];
   }
 
   @action
   createMembersFromLayers() {
-    this.layers.forEach((layer) => this.createMemberFromLayer(layer));
+    if (this.tilesOnly) this.createMemberForSingleFusedMapCache();
+    else this.layers.forEach((layer) => this.createMemberFromLayer(layer));
   }
 
   @action
-  createMemberFromLayer(layer: Layer) {
+  private createMemberForSingleFusedMapCache() {
+    const id = `${this._catalogGroup.uniqueId}/${SINGLE_FUSED_MAP_CACHE_ID}`;
+    let model = this._catalogGroup.terria.getModelById(
+      ArcGisMapServerCatalogItem,
+      id
+    );
+    if (model === undefined) {
+      model = new ArcGisMapServerCatalogItem(id, this._catalogGroup.terria);
+      this._catalogGroup.terria.addModel(model);
+    }
+
+    // Replace the stratum inherited from the parent group.
+    model.strata.delete(CommonStrata.definition);
+
+    model.setTrait(
+      CommonStrata.definition,
+      "name",
+      i18next
+        .t("models.arcGisMapServerCatalogGroup.singleFusedMapCacheLayerName")
+        .toString()
+    );
+    model.setTrait(CommonStrata.definition, "url", this._catalogGroup.url);
+  }
+
+  @action
+  private createMemberFromLayer(layer: Layer) {
     if (!isDefined(layer.id)) {
       return;
     }
@@ -240,7 +240,7 @@ export class MapServerStratum extends LoadableStratum(
       replaceUnderscores(layer.name)
     );
 
-    var uri = new URI(this._catalogGroup.url).segment(layer.id + ""); // Convert layer id to string as segment(0) means sthg different.
+    const uri = new URI(this._catalogGroup.url).segment(layer.id.toString()); // Convert layer id to string as segment(0) means something different.
     model.setTrait(CommonStrata.definition, "url", uri.toString());
   }
 }
@@ -252,6 +252,11 @@ export default class ArcGisMapServerCatalogGroup extends UrlMixin(
 ) {
   static readonly type = "esri-mapServer-group";
 
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get type() {
     return ArcGisMapServerCatalogGroup.type;
   }
@@ -260,18 +265,18 @@ export default class ArcGisMapServerCatalogGroup extends UrlMixin(
     return i18next.t("models.arcGisMapServerCatalogGroup.name");
   }
 
-  @computed get cacheDuration(): string {
+  @override
+  get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }
     return "1d";
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return MapServerStratum.load(this).then((stratum) => {
-      runInAction(() => {
-        this.strata.set(MapServerStratum.stratumName, stratum);
-      });
+  protected async forceLoadMetadata(): Promise<void> {
+    const stratum = await MapServerStratum.load(this);
+    runInAction(() => {
+      this.strata.set(MapServerStratum.stratumName, stratum);
     });
   }
 

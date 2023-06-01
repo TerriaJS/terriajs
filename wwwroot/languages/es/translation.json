@@ -853,10 +853,18 @@
       "state": "Estado",
       "matchedAddresses": "Dirección correspondiente",
       "postcode": "Código postal",
-      "lat": "Lat"
+      "lat": "Lat",
+      "postOfficeBox": "apartado de correos",
+      "poBox": "caja po"
     },
     "geoRssToGeoJson": {
       "containsUnsupportedFeatureType": "GeoRSS contiene un tipo de característica no compatible: {{tipo}}"
+    },
+    "imageryProviderHooks": {
+      "devError": "No hay contexto para la recoloracion de imágenes"
+    },
+    "mapboxVectorTileImageryProvider": {
+      "requireLayerName": "CajademapaVectorTileProveedorimagenes requiere un nombre de capa pasado como options.normbrecapa"
     }
   }
 }

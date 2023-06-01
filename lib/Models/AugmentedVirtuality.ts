@@ -1,4 +1,10 @@
-import { action, computed, observable, runInAction } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  runInAction,
+  makeObservable
+} from "mobx";
 import CesiumCartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
@@ -62,7 +68,9 @@ export default class AugmentedVirtuality {
   // (and increment) we cycle and go to the first height.
   @observable hoverLevel = AugmentedVirtuality.PRESET_HEIGHTS.length - 1;
 
-  constructor(readonly terria: Terria) {}
+  constructor(readonly terria: Terria) {
+    makeObservable(this);
+  }
 
   toggleEnabled() {
     if (this.active) {
