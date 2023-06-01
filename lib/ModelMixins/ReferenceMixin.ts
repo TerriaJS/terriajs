@@ -145,13 +145,13 @@ function ReferenceMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      * @param maxDepth The maximum depth up to which the references should be resolved.
      * @returns A promise that is fulfilled with a Result value when all the references have been loaded.
      */
-    async recursivelyLoadReference(depth: number): Promise<Result<void>> {
+    async recursivelyLoadReference(maxDepth: number): Promise<Result<void>> {
       let currentTarget: BaseModel | undefined = this;
       const errors: TerriaError[] = [];
-      while (depth > 0 && ReferenceMixin.isMixedInto(currentTarget)) {
+      while (maxDepth > 0 && ReferenceMixin.isMixedInto(currentTarget)) {
         (await currentTarget.loadReference()).pushErrorTo(errors);
         currentTarget = currentTarget.target;
-        depth -= 1;
+        maxDepth -= 1;
       }
       const result = TerriaError.combine(
         errors,
