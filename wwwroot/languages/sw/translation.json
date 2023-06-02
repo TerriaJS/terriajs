@@ -25,8 +25,15 @@
   "tour": {
     "preface": {
       "title": "Chukua safari",
-      "start": "Anza safari"
+      "start": "Anza safari",
+      "close": "Labda baadae"
     },
-    "finish": "Maliza"
+    "finish": "Maliza",
+    "locationSearchInput": {
+      "content": "## Tafuta mahali\n\nWeka mahali au anwani ili kupata eneo bila shida kwenye ramani."
+    },
+    "exploreMapDataButton": {
+      "content": "## Chagua ramani\n\nVinjaria katlogi kwa kupata data na ongeza kwenye ramani hapa. Unaweza kuongeza data zaidi ya moja kwa wakati mmoja, na utaona zinaonyeshwa chini ndani ya Benchi la kazi (Workbench)."
+    }
   }
 }
