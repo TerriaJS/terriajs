@@ -6,15 +6,13 @@
 -   [Deploying](deploying/README.md): Deploy a TerriaJS application in simple and advanced scenarios.
 -   [Contributing](contributing/README.md): Add new features to TerriaJS, be part of the TerriaJS development team, set up a development environment, write tests, and perform code reviews.
 
-Looking for help using a TerriaJS-based site? Try the [Terria Platforms User Guide](https://userguide.terria.io/).
-
 !!! note
 
-    The documentation on this site is for applications using TerriaJS version 8. If you are still maintaining an application using TerriaJS version 7 or lower go to [docs-v7.terria.io](https://docs-v7.terria.io).
+    Looking for help using a TerriaJS-based site? Try the [Terria Platforms User Guide](https://userguide.terria.io/).
 
-This documentation is maintained at [github.com/TerriaJS/TerriaJS/tree/main/doc](https://github.com/TerriaJS/TerriaJS/tree/main/doc).
+_The documentation on this site is for applications using TerriaJS version 8. If you are still maintaining an application using TerriaJS version 7 or lower go to [docs-v7.terria.io](https://docs-v7.terria.io)._
 
-It can be viewed at [docs.terria.io](https://docs.terria.io).
+_This documentation is maintained at [github.com/TerriaJS/TerriaJS/tree/main/doc](https://github.com/TerriaJS/TerriaJS/tree/main/doc). It can be viewed at [docs.terria.io](https://docs.terria.io)._
 
 <a href="https://www.netlify.com">
   <img src="https://www.netlify.com/img/global/badges/netlify-color-accent.svg" alt="Deploys by Netlify" />

@@ -107,7 +107,7 @@ The `package.json` in the `main` branch of TerriaMap should point to official re
 You need a standalone install of MkDocs and the `mkdocs-material` theme in order to build the user guide. Install these by running:
 
 ```
-pip install -r doc/requirements.txt
+pip install -r requirements.txt
 ```
 
 Documentation is automatically generated from the source via JSDoc (reference) and MkDocs (user guide) by running:

@@ -32,10 +32,8 @@ Some more advanced customizations will require rebuilding TerriaMap. To do these
 
 ### Deploying TerriaMap
 
-Deploy the container you've made using Docker Compose, Kubernetes, or a cloud provider service that will run containers.
+Deploy the container you've made using Kubernetes, and/or a cloud provider service that will run containers.
 
-TODO: Update above sentence after updating Deploying section (and point to new section)
-
-## Without Docker
+### Without Docker
 
 Follow the [Cloning and Building](customizing/cloning-and-building.md) guide to get started with TerriaMap without docker.
