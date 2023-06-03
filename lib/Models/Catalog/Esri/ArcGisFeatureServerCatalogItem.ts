@@ -40,8 +40,7 @@ import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-
-const proj4 = require("proj4").default;
+import proj4 from "proj4";
 
 interface DocumentInfo {
   Author?: string;
@@ -262,15 +261,15 @@ class FeatureServerStratum extends LoadableStratum(
         return undefined;
       }
 
-      const source = new proj4.Proj((proj4definitions as any)[wkid]);
-      const dest = new proj4.Proj("EPSG:4326");
+      const source = proj4.Proj((proj4definitions as any)[wkid]);
+      const dest = proj4.Proj("EPSG:4326");
 
-      let p = proj4(source, dest, [extent.xmin, extent.ymin]);
+      let p = proj4.transform(source, dest, [extent.xmin, extent.ymin]);
 
       const west = p[0];
       const south = p[1];
 
-      p = proj4(source, dest, [extent.xmax, extent.ymax]);
+      p = proj4.transform(source, dest, [extent.xmax, extent.ymax]);
 
       const east = p[0];
       const north = p[1];

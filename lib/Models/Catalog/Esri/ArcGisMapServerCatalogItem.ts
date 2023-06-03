@@ -36,8 +36,7 @@ import getToken from "../../getToken";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import MinMaxLevelMixin from "./../../../ModelMixins/MinMaxLevelMixin";
 import { Extent, Layer, MapServer } from "./ArcGisInterfaces";
-
-const proj4 = require("proj4").default;
+import proj4 from "proj4";
 
 interface RectangleExtent {
   east: number;
@@ -584,15 +583,15 @@ function getRectangleFromLayer(extent: Extent, rectangle: RectangleExtent) {
       return;
     }
 
-    const source = new proj4.Proj(Proj4Definitions[wkid]);
-    const dest = new proj4.Proj("EPSG:4326");
+    const source = proj4.Proj(Proj4Definitions[wkid]);
+    const dest = proj4.Proj("EPSG:4326");
 
-    let p = proj4(source, dest, [extent.xmin, extent.ymin]);
+    let p = proj4.transform(source, dest, [extent.xmin, extent.ymin]);
 
     const west = p[0];
     const south = p[1];
 
-    p = proj4(source, dest, [extent.xmax, extent.ymax]);
+    p = proj4.transform(source, dest, [extent.xmax, extent.ymax]);
 
     const east = p[0];
     const north = p[1];

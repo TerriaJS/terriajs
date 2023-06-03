@@ -55,6 +55,7 @@
     "@types/mustache": "^0.8.32",
     "@types/papaparse": "^4.5.9",
     "@types/pbf": "^3.0.1",
+    "@types/proj4": "^2.4.4",
     "@types/rbush": "^3.0.0",
     "@types/rc-slider": "^8.6.6",
     "@types/react": "^17.0.3",

@@ -1,8 +1,8 @@
 import { defined } from "cesium";
 import Proj4Definitions from "./Proj4Definitions";
 import urijs from "urijs";
+import proj4 from "proj4";
 
-const proj4 = require("proj4").default;
 const loadText = require("../../Core/loadText");
 
 export default {
@@ -60,16 +60,16 @@ export default {
   ): [number, number] | undefined {
     const source =
       sourceCode in Proj4Definitions
-        ? new proj4.Proj(Proj4Definitions[sourceCode])
+        ? proj4.Proj(Proj4Definitions[sourceCode])
         : undefined;
     var dest =
       destCode in Proj4Definitions
-        ? new proj4.Proj(Proj4Definitions[destCode])
+        ? proj4.Proj(Proj4Definitions[destCode])
         : undefined;
-    if (!sourceCode || !destCode) {
+    if (!source || !dest) {
       return;
     }
-    return proj4(source, dest, coordinates);
+    return proj4.transform(source, dest, coordinates);
   },
 
   /**
