@@ -14,6 +14,7 @@ import JSEarthGravityModel1996 from "../Map/Vector/EarthGravityModel1996";
 import prettifyCoordinates from "../Map/Vector/prettifyCoordinates";
 import prettifyProjection from "../Map/Vector/prettifyProjection";
 import Terria from "../Models/Terria";
+import pickTriangle, { PickTriangleResult } from "../Map/Cesium/pickTriangle";
 
 // TypeScript 3.6.3 can't tell JSEarthGravityModel1996 is a class and reports
 //   Cannot use namespace 'JSEarthGravityModel1996' as a type.ts(2709)
@@ -33,6 +34,13 @@ const scratchV2 = new Cartographic();
 const scratchIntersection = new Cartographic();
 const scratchBarycentric = new Cartesian3();
 const scratchCartographic = new Cartographic();
+const pickedTriangleScratch: PickTriangleResult = {
+  tile: undefined,
+  intersection: new Cartesian3(),
+  v0: new Cartesian3(),
+  v1: new Cartesian3(),
+  v2: new Cartesian3()
+};
 
 export default class MouseCoords {
   readonly geoidModel: EarthGravityModel1996;
@@ -94,7 +102,7 @@ export default class MouseCoords {
     const pickRay = camera.getPickRay(position, scratchRay);
     const globe = scene.globe;
     const pickedTriangle = isDefined(pickRay)
-      ? (<any>globe).pickTriangle(pickRay, scene)
+      ? pickTriangle(pickRay, scene, true, pickedTriangleScratch)
       : undefined;
     if (isDefined(pickedTriangle)) {
       // Get a fast, accurate-ish height every time the mouse moves.
