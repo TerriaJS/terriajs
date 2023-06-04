@@ -69,7 +69,7 @@ export default class ViewState {
   readonly terria: Terria;
   readonly relativePosition = RelativePosition;
 
-  @observable private _previewedItem: BaseModel | undefined;
+  @observable private _previewedItem: BaseModel | undefined = undefined;
   get previewedItem() {
     return this._previewedItem;
   }
@@ -373,7 +373,6 @@ export default class ViewState {
   private _disclaimerHandler: DisclaimerHandler;
 
   constructor(options: ViewStateOptions) {
-    makeObservable(this);
     const terria = options.terria;
     this.searchState = new SearchState({
       terria: terria,
@@ -385,6 +384,8 @@ export default class ViewState {
       ? options.errorHandlingProvider
       : null;
     this.terria = terria;
+
+    makeObservable(this);
 
     // When features are picked, show the feature info panel.
     this._pickedFeaturesSubscription = reaction(
