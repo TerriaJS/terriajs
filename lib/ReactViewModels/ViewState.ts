@@ -73,7 +73,7 @@ export default class ViewState {
   get previewedItem() {
     return this._previewedItem;
   }
-  @observable userDataPreviewedItem: BaseModel | undefined;
+  @observable userDataPreviewedItem: BaseModel | undefined = undefined;
   @observable explorerPanelIsVisible: boolean = false;
   @observable activeTabCategory: string = DATA_CATALOG_NAME;
   @observable activeTabIdInCategory: string | undefined = undefined;

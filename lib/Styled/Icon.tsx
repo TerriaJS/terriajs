@@ -146,22 +146,24 @@ export interface IconGlyph {
 }
 
 export interface IconProps {
-  glyph: IconGlyph;
+  glyph: any; //IconGlyph;
   style?: any;
   className?: string;
   rotation?: number;
 }
 export const Icon: React.FC<IconProps> = (props: IconProps) => {
-  return (
-    <svg
-      viewBox="0 0 100 100"
-      className={classNames("icon", props.className)}
-      style={props.style}
-      transform={`rotate(${props.rotation ?? 0})`}
-    >
-      <use xlinkHref={"#" + props.glyph?.id} />
-    </svg>
-  );
+  const Glyph = props.glyph.default ? props.glyph.default : props.glyph;
+  return <Glyph className={classNames("icon", props.className)} />;
+  // return (
+  //   <svg
+  //     viewBox="0 0 100 100"
+  //     className={classNames("icon", props.className)}
+  //     style={props.style}
+  //     transform={`rotate(${props.rotation ?? 0})`}
+  //   >
+  //     <use xlinkHref={props.glyph + "#foo"} />
+  //   </svg>
+  // );
 };
 
 export interface IStyledIconProps {
