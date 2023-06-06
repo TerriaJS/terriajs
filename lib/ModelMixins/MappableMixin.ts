@@ -31,6 +31,11 @@ export interface ImageryParts {
   clippingRectangle: Rectangle | undefined;
   imageryProvider: ImageryProvider;
   show: boolean;
+  // overrideCreateLeafletLayer?: DEFINE IT HERE return a promise of new GeoRasterLayer
+  // overrideCreateLeafletLayer?: (
+  //   ip: ImageryProvider,
+  //   clippingRectangle: Rectangle | undefined
+  // ) => GridLayer
 }
 
 // This discriminator only discriminates between ImageryParts and DataSource

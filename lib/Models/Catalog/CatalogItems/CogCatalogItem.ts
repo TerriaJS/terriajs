@@ -1,22 +1,27 @@
-import { computed } from "mobx";
+import { computed, runInAction } from "mobx";
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import CogCatalogItemTraits from "../../../Traits/TraitsClasses/CogCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import TIFFImageryProvider from "../../../ThirdParty/tiff-imagery-provider";
+import TIFFImageryProvider, {
+  TIFFImageryProviderOptions
+} from "../../../ThirdParty/tiff-imagery-provider";
 import Credit from "terriajs-cesium/Source/Core/Credit";
 import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
 import Reproject from "../../../Map/Vector/Reproject";
+import StratumOrder from "../../Definition/StratumOrder";
+import LoadableStratum from "../../Definition/LoadableStratum";
+import i18next from "i18next";
+import { BaseModel } from "../../Definition/Model";
+import { TerriaError } from "terriajs-plugin-api";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
+import createStratumInstance from "../../Definition/createStratumInstance";
+import { ImageryProviderWithGridLayerSupport } from "../../../Map/Leaflet/ImageryProviderLeafletGridLayer";
 const proj4 = require("proj4").default;
 
-/** See https://cesium.com/learn/cesiumjs/ref-doc/UrlTemplateImageryProvider.html#url for available keywords:
- * - {z}: The level of the tile in the tiling scheme. Level zero is the root of the quadtree pyramid.
- * - {x}: The tile X coordinate in the tiling scheme, where 0 is the Westernmost tile.
- * - {y}: The tile Y coordinate in the tiling scheme, where 0 is the Northernmost tile.
- * - {s}: One of the available subdomains, used to overcome browser limits on the number of simultaneous requests per host.
- */
 export default class CogCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(CogCatalogItemTraits))
 ) {
@@ -26,14 +31,42 @@ export default class CogCatalogItem extends MappableMixin(
     return CogCatalogItem.type;
   }
 
-  protected forceLoadMapItems(): Promise<void> {
+  // // Creating the Leaflet Layer
+  // // TODO: Dont have this here, instead all Mappables should implement our new function createLeafletLayer(imageryProvider, clippingRectangle)
+  // private _createImageryLayer: (
+  //   ip: ImageryProvider,
+  //   clippingRectangle: Rectangle | undefined
+  // ) => GridLayer = computedFn((ip, clippingRectangle) => {
+  //   const layerOptions = {
+  //     bounds: clippingRectangle && rectangleToLatLngBounds(clippingRectangle)
+  //   };
+
+  //   // TODO: instantiate a new GeorasterLayer, pass in the rectabnlge in the options
+  //   const geoRasterLayer = new GeorasterLayer...
+
+  //   return geoRasterLayer
+  // });
+
+  // imageryProvider: CogImageryProvider;
+
+  // protected async forceLoadMetadata(): Promise<void> {
+  //   const stratum = await CogStratum.load(this);
+  //   runInAction(() => {
+  //     this.strata.set(CogStratum.stratumName, stratum);
+  //   });
+  // }
+
+  protected async forceLoadMapItems(): Promise<void> {
+    // return this.forceLoadMetadata();
+    await this.imageryProvider?.readyPromise;
+
     return Promise.resolve();
   }
 
   @computed get mapItems(): MapItem[] {
     const imageryProvider = this.imageryProvider;
 
-    if (!isDefined(imageryProvider)) {
+    if (!isDefined(imageryProvider) || this.isLoadingMapItems) {
       return [];
     }
     return [
@@ -75,12 +108,11 @@ export default class CogCatalogItem extends MappableMixin(
   };
 
   @computed get imageryProvider() {
-    // TODO: What is this for?
     if (!isDefined(this.url)) {
       return;
     }
 
-    let tifImageryProvider: CogImageryProvider = new CogImageryProvider({
+    let cogImageryProvider: CogImageryProvider = new CogImageryProvider({
       url: proxyCatalogItemUrl(this, this.url),
       projFunc: this.projFunc,
       renderOptions: {
@@ -89,11 +121,14 @@ export default class CogCatalogItem extends MappableMixin(
       }
     });
 
-    return tifImageryProvider;
+    return cogImageryProvider;
   }
 }
 
-export class CogImageryProvider extends TIFFImageryProvider {
+export class CogImageryProvider
+  extends TIFFImageryProvider
+  implements ImageryProviderWithGridLayerSupport
+{
   // Set values to please poor cesium types
   defaultNightAlpha = undefined;
   defaultDayAlpha = undefined;
@@ -113,12 +148,9 @@ export class CogImageryProvider extends TIFFImageryProvider {
     return [];
   }
 
-  // // TODO: Do we need to implement this?
-  // // Do we need to conform to `ImageryProviderWithGridLayerSupport` to be able to use in 2D mode?
-  // requestImageForCanvas: (
-  //   x: number,
-  //   y: number,
-  //   level: number,
-  //   canvas: HTMLCanvasElement
-  // ) => Promise<HTMLCanvasElement>;
+  constructor(options: TIFFImageryProviderOptions) {
+    super(options);
+
+    // We can extend the constructor here if needed
+  }
 }

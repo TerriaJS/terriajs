@@ -12,7 +12,7 @@ import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import { default as CMath } from "terriajs-cesium/Source/Core/Math";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import GeoTIFF, { Pool, fromUrl as tiffFromUrl, GeoTIFFImage } from "geotiff";
+import { Pool, fromUrl as tiffFromUrl, GeoTIFFImage } from "geotiff";
 
 import { addColorScale, plot } from "./plotty";
 import WorkerFarm from "./worker-farm";
@@ -131,7 +131,7 @@ export interface TIFFImageryProviderOptions {
   /** geotiff resample method, defaults to nearest*/
   resampleMethod?: "nearest" | "bilinear" | "linear";
 }
-const canvas = document.createElement("canvas");
+// const canvas = document.createElement("canvas");
 
 let workerPool: Pool | undefined;
 function getWorkerPool() {
@@ -377,34 +377,35 @@ export class TIFFImageryProvider {
         this.maximumLevel > maxCogLevel ? maxCogLevel : this.maximumLevel;
       this._images = new Array(this._imageCount).fill(null);
 
-      // If it is single-pass rendering, construct the plot object
-      try {
-        if (this.renderOptions.single) {
-          const band = this.bands[single.band];
-          if (!single.expression && !band) {
-            throw new DeveloperError(`Invalid band${single.band}`);
-          }
-          this.plot = new plot({
-            canvas,
-            ...single,
-            domain: single.domain ?? [band.min, band.max]
-          });
-          this.plot.setNoDataValue(this.noData);
+      // TODO: I dont think we ever reach this code path, commenting out for now
+      // // If it is single-pass rendering, construct the plot object
+      // try {
+      //   if (this.renderOptions.single) {
+      //     const band = this.bands[single.band];
+      //     if (!single.expression && !band) {
+      //       throw new DeveloperError(`Invalid band${single.band}`);
+      //     }
+      //     this.plot = new plot({
+      //       canvas,
+      //       ...single,
+      //       domain: single.domain ?? [band.min, band.max]
+      //     });
+      //     this.plot.setNoDataValue(this.noData);
 
-          const { expression, colors } = single;
-          this.plot.setExpression(expression);
-          if (colors) {
-            const colorScale = generateColorScale(colors);
-            addColorScale("temp", colorScale.colors, colorScale.positions);
-            this.plot.setColorScale("temp" as any);
-          } else {
-            this.plot.setColorScale(single?.colorScale ?? "blackwhite");
-          }
-        }
-      } catch (e) {
-        console.error(e);
-        this._error.raiseEvent(e);
-      }
+      //     const { expression, colors } = single;
+      //     this.plot.setExpression(expression);
+      //     if (colors) {
+      //       const colorScale = generateColorScale(colors);
+      //       addColorScale("temp", colorScale.colors, colorScale.positions);
+      //       this.plot.setColorScale("temp" as any);
+      //     } else {
+      //       this.plot.setColorScale(single?.colorScale ?? "blackwhite");
+      //     }
+      //   }
+      // } catch (e) {
+      //   console.error(e);
+      //   this._error.raiseEvent(e);
+      // }
 
       this.ready = true;
       // MODIFIED FROM SOURCE by Terria: we want to return a boolean to conform to our Interface.
@@ -513,11 +514,26 @@ export class TIFFImageryProvider {
     }
   }
 
-  async requestImage(
+  /** We need both a `requestImage` method and a `requestImageForCanvas` method.
+   * Refactor so that `requestImage` calls `requestImageforCanvas` and passes the created canvas.
+   * In `requestImageForCanvas` we use the canvas provided by leaflet.
+   * TODO: `requestImageForCanvas` could be moved outside to the COGImageryProbvider class,
+   * but is difficult because it needs access to private properties **/
+
+  async requestImage(x: number, y: number, level: number) {
+    const canvas = document.createElement("canvas");
+    canvas.width = this.tileWidth;
+    canvas.height = this.tileHeight;
+    return await this.requestImageForCanvas(x, y, level, canvas);
+  }
+
+  // MODIFIED FROM SOURCE by Terria: Accept a provided canvas instead of that created in constructor.
+  async requestImageForCanvas(
     x: number,
     y: number,
-    z: number
-  ): Promise<HTMLCanvasElement | HTMLImageElement> {
+    z: number,
+    canvas: HTMLCanvasElement
+  ): Promise<HTMLCanvasElement> {
     if (!this.ready) {
       throw new DeveloperError(
         "requestImage must not be called before the imagery provider is ready."
@@ -581,6 +597,7 @@ export class TIFFImageryProvider {
         }
 
         const image = new Image();
+        // TODO: If we are passing in a canvas, is this.plot.canvas still relevant?
         if (this.plot.canvas instanceof HTMLCanvasElement) {
           image.src = this.plot.canvas.toDataURL();
         } else {
