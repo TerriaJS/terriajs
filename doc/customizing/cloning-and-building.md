@@ -103,3 +103,7 @@ yarn install
 ### Having trouble?
 
 Checkout the [Problems and Solutions](../contributing/problems-and-solutions.md) page to see if we have them covered. You are also welcome to post your problem on the [TerriaJS Discussions](https://github.com/TerriaJS/terriajs/discussions) forum and we'll be happy to help!
+
+### Next Steps
+
+Now that you have a working local build of TerriaMap, you may want to [customize it](customizing/README.md) or [deploy it](deploying/README.md) for others to use.

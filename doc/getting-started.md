@@ -1,6 +1,6 @@
 The easiest way to get started with TerriaJS is to use [TerriaMap](https://github.com/TerriaJS/TerriaMap). TerriaMap is a full-featured application built on TerriaJS, ready to be customized with your own branding and catalog. It is also a great starting point for more in-depth customization.
 
-Use docker to start a TerriaMap container:
+Use [Docker](https://www.docker.com/) to start a TerriaMap container:
 
 ```bash
 docker run -d -p 3001:3001 ghcr.io/terriajs/terriamap
@@ -32,7 +32,7 @@ Some more advanced customizations will require rebuilding TerriaMap. To do these
 
 ### Deploying TerriaMap
 
-Deploy the container you've made using Kubernetes, and/or a cloud provider service that will run containers.
+You can deploy the container you've made using a container service from a cloud provider or Kubernetes. See [Deploying TerriaMap](deploying/README.md) for more information.
 
 ### Without Docker
 

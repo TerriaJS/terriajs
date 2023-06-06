@@ -1,9 +1,11 @@
-This section explains how to deploy and maintain production (and production-ish) versions of TerriaJS applications like TerriaMap. Before tackling this section, read [Getting Started](../getting-started.md) to learn how to build and run TerriaMap locally.
+This section explains how to deploy and maintain production (and production-ish) versions of TerriaJS applications like TerriaMap. Before tackling this section, read [Getting Started](../getting-started.md) and [Cloning and Building](../customizing/cloning-and-building.md) to learn how to build and run TerriaMap locally.
+
+The simplest way to deploy a production ready TerriaMap is to use a cloud provider container service or Kubernetes.
 
 Deploying TerriaMap itself:
 
--   [Deploying TerriaMap](deploying-terriamap.md): General instructions for deploying TerriaMap in almost any environment.
 -   [Deploying with Kubernetes](deploying-with-kubernetes.md): Deploy TerriaMap using [Docker](https://www.docker.com/) and [Kubernetes](https://kubernetes.io/).
+-   [Deploying TerriaMap](deploying-terriamap.md): General instructions for deploying TerriaMap in almost any environment.
 
 Deploying other services for use with TerriaJS:
 
@@ -12,7 +14,6 @@ Deploying other services for use with TerriaJS:
 
 Using a TerriaMap in other applications:
 
--   [Using as a CKAN Previewer](using-as-a-ckan-previewer.md): Use TerriaJS as a previewer for geospatial data in a [CKAN](http://ckan.org/) site.
 -   [Controlling with URL Parameters](controlling-with-url-parameters.md): Control a TerriaJS application by passing it URL parameters. This is powerful because it enables another site to launch or embed a customized map with little or no code to write.
 -   [Controlling in an &lt;iframe&gt; or Popup](controlling-in-an-iframe-or-popup.md): Embed a TerriaJS application in iframe or pop it up in a separate window, and control it by posting it cross-window messages.
 
