@@ -141,11 +141,11 @@ function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
         currentTarget = currentTarget.target;
         maxDepth -= 1;
       }
-      const result = TerriaError.combine(
+      const maybeError = TerriaError.combine(
         errors,
         "Failed to recursively load reference `${this.uniqueId}`"
       );
-      return Result.error(result);
+      return Result.none(maybeError);
     }
 
     /**
