@@ -2,6 +2,7 @@
 
 #### next release (8.3.1)
 
+- Fix error when adding deeply nested references in search results.
 - [The next improvement]
 
 #### 8.3.0 - 2023-05-22
