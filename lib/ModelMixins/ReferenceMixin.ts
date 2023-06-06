@@ -153,11 +153,11 @@ function ReferenceMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         currentTarget = currentTarget.target;
         maxDepth -= 1;
       }
-      const result = TerriaError.combine(
+      const maybeError = TerriaError.combine(
         errors,
         "Failed to recursively load reference `${this.uniqueId}`"
       );
-      return Result.error(result);
+      return Result.none(maybeError);
     }
 
     /**
