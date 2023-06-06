@@ -71,11 +71,15 @@ export default class CatalogIndexReference extends ReferenceMixin(
         }
 
         if (ReferenceMixin.isMixedInto(container)) {
-          (await container.loadReference()).pushErrorTo(
+          // Recursively load references up to a depth of 5. This is so that we
+          // correctly resolve the final target item when we have a chain of
+          // references like: MagdaReference -> TerriaReference -> ... -> SomeItem
+          // We limit to a depth of 5 to avoid looping forever.
+          (await container.recursivelyLoadReference(5)).pushErrorTo(
             errors,
             `Failed to load reference ${container.uniqueId}`
           );
-          container = container.target ?? container;
+          container = container.nestedTarget ?? container;
         }
 
         if (GroupMixin.isMixedInto(container)) {
