@@ -62,6 +62,7 @@ import GlobeOrMap from "./GlobeOrMap";
 import { LeafletAttribution } from "./LeafletAttribution";
 import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
+import { isUndefined } from "lodash-es";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
@@ -109,21 +110,29 @@ export default class Leaflet extends GlobeOrMap {
 
   private _createImageryLayer: (
     ip: ImageryProvider,
-    clippingRectangle: Rectangle | undefined
-  ) => GridLayer = computedFn((ip, clippingRectangle) => {
-    const layerOptions = {
-      bounds: clippingRectangle && rectangleToLatLngBounds(clippingRectangle)
-    };
-    // We have two different kinds of ImageryProviderLeaflet layers
-    // - Grid layer will use the ImageryProvider in the more traditional way - calling `requestImage` to draw the image on to a canvas
-    // - Tile layer will pass tile URLs to leaflet objects - which is a bit more "Leaflety" than Grid layer
-    // Tile layer is preferred. Grid layer mainly exists for custom Imagery Providers which aren't just a tile of image URLs
-    if (supportsImageryProviderGridLayer(ip)) {
-      return new ImageryProviderLeafletGridLayer(this, ip, layerOptions);
-    } else {
-      return new ImageryProviderLeafletTileLayer(this, ip, layerOptions);
+    clippingRectangle: Rectangle | undefined,
+    overrideCreateLeafletLayerFn: any
+  ) => GridLayer = computedFn(
+    (ip, clippingRectangle, overrideCreateLeafletLayerFn) => {
+      const layerOptions = {
+        bounds: clippingRectangle && rectangleToLatLngBounds(clippingRectangle)
+      };
+      // We have two different kinds of ImageryProviderLeaflet layers
+      // - Grid layer will use the ImageryProvider in the more traditional way - calling `requestImage` to draw the image on to a canvas
+      // - Tile layer will pass tile URLs to leaflet objects - which is a bit more "Leaflety" than Grid layer
+      // Tile layer is preferred. Grid layer mainly exists for custom Imagery Providers which aren't just a tile of image URLs
+      // Also, some kinds of Imagery Providers cannot create Leaflet layers appropriately, e.g. the COG Imagery Provider.
+      // In this case, the Catalog Item should specify an `overrideCreateLeafletLayer` property.
+      // If the Catalog Item defines `overrideCreateLeafletLayer` then use that, otherwise follow the logic below.
+      if (overrideCreateLeafletLayerFn) {
+        return overrideCreateLeafletLayerFn(ip, layerOptions);
+      } else if (supportsImageryProviderGridLayer(ip)) {
+        return new ImageryProviderLeafletGridLayer(this, ip, layerOptions);
+      } else {
+        return new ImageryProviderLeafletTileLayer(this, ip, layerOptions);
+      }
     }
-  });
+  );
 
   private _makeImageryLayerFromParts(
     parts: ImageryParts,
@@ -143,7 +152,8 @@ export default class Leaflet extends GlobeOrMap {
     }
     return this._createImageryLayer(
       parts.imageryProvider,
-      parts.clippingRectangle
+      parts.clippingRectangle,
+      parts.overrideCreateLeafletLayer
     );
   }
 
@@ -438,6 +448,14 @@ export default class Leaflet extends GlobeOrMap {
       // Add layer and update its zIndex
       let zIndex = 100; // Start at an arbitrary value
       allImagery.reverse().forEach(({ parts, layer }) => {
+        if (!isDefined(layer)) {
+          // TODO: Should we filter out undefined layers before this point in the code?
+          console.log(
+            `Layer is undefined, and will fail when trying to set Opacity. Skipping layer ${layer}`
+          );
+          return;
+        }
+
         if (parts.show) {
           layer.setOpacity(parts.alpha);
           layer.setZIndex(zIndex);
@@ -528,7 +546,15 @@ export default class Leaflet extends GlobeOrMap {
           return this.doZoomTo(target.mapItems[0], flightDurationSeconds);
         }
       } else {
-        extent = target.rectangle;
+        /** TODO: THIS PATH IS FOLLOWED FOR COGS. Need to define target.rectangle...
+         * Needed to get the layer extent. Now storing this in clippingRectangle property of target, for COGs.
+         * TODO: Is that appropriate? **/
+
+        // Changed from:
+        // extent = target.rectangle;
+        extent = isDefined(target.rectangle)
+          ? target.rectangle
+          : target.clippingRectangle;
       }
 
       // Account for a bounding box crossing the date line.
@@ -921,15 +947,16 @@ export default class Leaflet extends GlobeOrMap {
 
   getImageryLayersForItem(
     item: MappableMixin.Instance
-  ): (ImageryProviderLeafletTileLayer | ImageryProviderLeafletGridLayer)[] {
+  ): (
+    | ImageryProviderLeafletTileLayer
+    | ImageryProviderLeafletGridLayer
+    | GridLayer
+  )[] {
     return filterOutUndefined(
       item.mapItems.map((m) => {
         if (ImageryParts.is(m)) {
           const layer = this._makeImageryLayerFromParts(m, item);
-          return layer instanceof ImageryProviderLeafletTileLayer ||
-            layer instanceof ImageryProviderLeafletGridLayer
-            ? layer
-            : undefined;
+          return layer ?? undefined;
         }
       })
     );

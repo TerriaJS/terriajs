@@ -1,4 +1,4 @@
-import { computed, runInAction } from "mobx";
+import { computed } from "mobx";
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
@@ -11,17 +11,13 @@ import TIFFImageryProvider, {
 import Credit from "terriajs-cesium/Source/Core/Credit";
 import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
 import Reproject from "../../../Map/Vector/Reproject";
-import StratumOrder from "../../Definition/StratumOrder";
-import LoadableStratum from "../../Definition/LoadableStratum";
-import i18next from "i18next";
-import { BaseModel } from "../../Definition/Model";
-import { TerriaError } from "terriajs-plugin-api";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
-import createStratumInstance from "../../Definition/createStratumInstance";
-import { ImageryProviderWithGridLayerSupport } from "../../../Map/Leaflet/ImageryProviderLeafletGridLayer";
+import { ImageryProvider } from "terriajs-cesium";
+import { GridLayer } from "leaflet";
 const proj4 = require("proj4").default;
-
+const parseGeoRaster = require("georaster");
+import GeoRasterLayer, { GeoRaster } from "georaster-layer-for-leaflet";
+import { IPromiseBasedObservable, fromPromise } from "mobx-utils";
 export default class CogCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(CogCatalogItemTraits))
 ) {
@@ -30,31 +26,6 @@ export default class CogCatalogItem extends MappableMixin(
   get type() {
     return CogCatalogItem.type;
   }
-
-  // // Creating the Leaflet Layer
-  // // TODO: Dont have this here, instead all Mappables should implement our new function createLeafletLayer(imageryProvider, clippingRectangle)
-  // private _createImageryLayer: (
-  //   ip: ImageryProvider,
-  //   clippingRectangle: Rectangle | undefined
-  // ) => GridLayer = computedFn((ip, clippingRectangle) => {
-  //   const layerOptions = {
-  //     bounds: clippingRectangle && rectangleToLatLngBounds(clippingRectangle)
-  //   };
-
-  //   // TODO: instantiate a new GeorasterLayer, pass in the rectabnlge in the options
-  //   const geoRasterLayer = new GeorasterLayer...
-
-  //   return geoRasterLayer
-  // });
-
-  // imageryProvider: CogImageryProvider;
-
-  // protected async forceLoadMetadata(): Promise<void> {
-  //   const stratum = await CogStratum.load(this);
-  //   runInAction(() => {
-  //     this.strata.set(CogStratum.stratumName, stratum);
-  //   });
-  // }
 
   protected async forceLoadMapItems(): Promise<void> {
     // return this.forceLoadMetadata();
@@ -74,12 +45,50 @@ export default class CogCatalogItem extends MappableMixin(
         show: this.show,
         alpha: this.opacity,
         imageryProvider,
-        clippingRectangle: this.clipToRectangle
-          ? this.cesiumRectangle
-          : undefined
+        // TODO: Properly define the rectangle here, no matter whether leaflet or cesium mode...
+        // clippingRectangle: this.clipToRectangle
+        //   ? this.cesiumRectangle
+        //   : undefined,
+        clippingRectangle: imageryProvider.rectangle,
+        // Define our method for generating a leaflet layer in a different way, here
+        overrideCreateLeafletLayer: this.createGeoRasterLayer
       }
     ];
   }
+
+  // TODO: Should we move this to a separate file?
+  @computed get georasterLayer(): IPromiseBasedObservable<
+    GridLayer | undefined
+  > {
+    return fromPromise(
+      // parseGeoRaster will request for external .ovr file, most likely will receive a 404 error. This is not a problem.
+      parseGeoRaster(this.url)
+        .then((georaster: GeoRaster) => {
+          return new GeoRasterLayer({
+            georaster: georaster,
+            opacity: 0.8,
+            // Example pixel reclassification function:
+            // pixelValuesToColorFn: (values) => {
+            //   return mapElevationToRgbaSmoothed(values, 0);
+            // },
+            resolution: 256,
+            debugLevel: 0
+          });
+        })
+        .catch((error: Error) => {
+          this.terria.raiseErrorToUser(error);
+        })
+    );
+  }
+
+  createGeoRasterLayer = (
+    ip: ImageryProvider,
+    clippingRectangle: Rectangle | undefined
+  ): GridLayer | undefined => {
+    return this.url && this.georasterLayer.state === "fulfilled"
+      ? this.georasterLayer.value
+      : undefined;
+  };
 
   /**
    * Handle all different possible projections of COGs
@@ -101,9 +110,8 @@ export default class CogCatalogItem extends MappableMixin(
 
         return proj4(sourceDef, "EPSG:4326").forward;
       })
-      .catch((err) => {
-        // TODO: Should we handle the error more formally as per Terria patterns?
-        console.log(err);
+      .catch((error: Error) => {
+        this.terria.raiseErrorToUser(error);
       });
   };
 
@@ -125,10 +133,8 @@ export default class CogCatalogItem extends MappableMixin(
   }
 }
 
-export class CogImageryProvider
-  extends TIFFImageryProvider
-  implements ImageryProviderWithGridLayerSupport
-{
+export class CogImageryProvider extends TIFFImageryProvider {
+  // implements ImageryProviderWithGridLayerSupport
   // Set values to please poor cesium types
   defaultNightAlpha = undefined;
   defaultDayAlpha = undefined;
