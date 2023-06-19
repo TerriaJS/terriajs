@@ -12,19 +12,19 @@ export interface MeasureElementProps {
   widthFromMeasureElementHOC: number | null;
 }
 
-interface MeasureElementComponent<P>
+export interface MeasureElementComponent<P>
   extends React.Component<P & MeasureElementProps> {
   refToMeasure: React.RefObject<HTMLElement> | HTMLElement | null;
 }
 
-interface MeasureElementClass<P> {
+export interface MeasureElementClass<P> {
   new (
     props: P & MeasureElementProps,
     context?: any
   ): MeasureElementComponent<P>;
 }
 
-interface IState {
+export interface IState {
   height: number | null;
   width: number | null;
 }

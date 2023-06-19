@@ -5,7 +5,7 @@ import Box from "../Styled/Box";
 import { TextSpan } from "../Styled/Text";
 import AnimatedSpinnerIcon from "../Styled/AnimatedSpinnerIcon";
 
-interface PropsType extends WithTranslation {
+export interface PropsType extends WithTranslation {
   message?: string;
   boxProps?: any;
   textProps?: any;

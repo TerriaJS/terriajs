@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import ViewState from "../../ReactViewModels/ViewState";
 import Terria from "../../Models/Terria";
 
-interface WithFallbackProps {
+export interface WithFallbackProps {
   terria: Terria;
   viewState: ViewState;
 }

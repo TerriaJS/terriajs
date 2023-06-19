@@ -4,7 +4,7 @@
 // are still settling, we will need to use this liberally
 import styled from "styled-components";
 
-interface ISpacingProps {
+export interface ISpacingProps {
   marginRight?: number;
   marginBottom?: number;
   right?: number;

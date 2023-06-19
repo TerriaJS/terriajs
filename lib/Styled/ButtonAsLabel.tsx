@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Box from "./Box";
 
-interface IButtonAsLabelProps {
+export interface IButtonAsLabelProps {
   light?: boolean;
 }
 

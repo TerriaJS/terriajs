@@ -2,7 +2,7 @@ import styled, { css } from "styled-components";
 import Box from "./Box";
 
 export const Li = styled.li``;
-interface IUlProps {
+export interface IUlProps {
   spaced?: boolean;
   lined?: boolean;
 }

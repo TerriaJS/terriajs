@@ -2,7 +2,7 @@ import { Ref } from "react";
 import styled from "styled-components";
 import { OneKeyFrom, Overflow, WhiteSpace, WordBreak } from "./Styled.types";
 
-interface Column {
+export interface Column {
   col1?: boolean;
   col2?: boolean;
   col3?: boolean;

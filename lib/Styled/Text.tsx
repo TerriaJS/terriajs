@@ -2,7 +2,7 @@ import { ComponentProps } from "react";
 import styled from "styled-components";
 import { OneKeyFrom } from "./Styled.types";
 
-interface ITextSize {
+export interface ITextSize {
   noFontSize?: boolean;
   mini?: boolean;
   small?: boolean;
@@ -15,14 +15,14 @@ interface ITextSize {
   styledFontSize?: string;
 }
 
-interface ITextColor {
+export interface ITextColor {
   textLight?: boolean;
   textLightDimmed?: boolean;
   textDark?: boolean;
   textDarker?: boolean;
 }
 
-interface ITextWeight {
+export interface ITextWeight {
   light?: boolean;
   bold?: boolean;
   semiBold?: boolean;

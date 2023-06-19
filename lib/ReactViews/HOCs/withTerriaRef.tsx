@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import ViewState from "../../ReactViewModels/ViewState";
 import { useRefForTerria } from "../Hooks/useRefForTerria";
 
-interface WithTerriaRefProps {
+export interface WithTerriaRefProps {
   viewState: ViewState;
 }
 

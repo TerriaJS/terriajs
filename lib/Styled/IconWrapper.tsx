@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-interface IconWrapperProps {
+export interface IconWrapperProps {
   width?: number;
   marginRight?: boolean;
   wide?: boolean;
