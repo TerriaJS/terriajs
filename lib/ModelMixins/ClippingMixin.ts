@@ -127,7 +127,7 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @computed
-    private get clippingBoxDrawing(): BoxDrawing | undefined {
+    get clippingBoxDrawing(): BoxDrawing | undefined {
       const options = this.clippingBox;
       const cesium = this.terria.cesium;
       if (
