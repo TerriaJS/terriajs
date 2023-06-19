@@ -356,7 +356,7 @@ export default class GtfsCatalogItem extends UrlMixin(
     return Promise.resolve();
   }
 
-  protected forceLoadMapItems(): Promise<void> {
+  protected override forceLoadMapItems(): Promise<void> {
     if (this.strata.get(GtfsStratum.stratumName) === undefined) {
       GtfsStratum.load(this).then((stratum) => {
         runInAction(() => {

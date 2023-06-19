@@ -133,7 +133,7 @@ export default class CartoMapV1CatalogItem extends MappableMixin(
     return [];
   }
 
-  protected forceLoadMapItems(): Promise<void> {
+  protected override forceLoadMapItems(): Promise<void> {
     return CartoLoadableStratum.load(this).then((stratum) => {
       runInAction(() => {
         this.strata.set(CartoLoadableStratum.stratumName, stratum);

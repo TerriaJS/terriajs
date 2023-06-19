@@ -58,7 +58,7 @@ export default class AssImpCatalogItem
     this.hasLocalData = true;
   }
 
-  protected async forceLoadMapItems(): Promise<void> {
+  protected override async forceLoadMapItems(): Promise<void> {
     const urls =
       this.urls.length > 0 ? this.urls : filterOutUndefined([this.url]);
     if (urls.length === 0) return;

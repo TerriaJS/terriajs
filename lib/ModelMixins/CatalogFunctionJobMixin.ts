@@ -293,7 +293,7 @@ function CatalogFunctionJobMixin<
     get mapItems(): MapItem[] {
       return [];
     }
-    protected async forceLoadMapItems() {}
+    protected override async forceLoadMapItems() {}
 
     protected async forceLoadMetadata() {
       if (this.jobStatus === "finished" && !this.downloadedResults) {

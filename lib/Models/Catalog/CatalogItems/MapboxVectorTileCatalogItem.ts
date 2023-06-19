@@ -217,7 +217,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
     });
   }
 
-  protected forceLoadMapItems(): Promise<void> {
+  protected override forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
 

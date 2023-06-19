@@ -50,7 +50,7 @@ class TestDiffableItem extends DiffableMixin(
     makeObservable(this);
   }
 
-  protected async forceLoadMapItems() {}
+  protected override async forceLoadMapItems() {}
   styleSelectableDimensions = [];
 
   get canDiffImages() {

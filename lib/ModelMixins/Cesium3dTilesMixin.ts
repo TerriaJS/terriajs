@@ -132,7 +132,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return Matrix4.IDENTITY.clone();
     }
 
-    protected async forceLoadMapItems() {
+    protected override async forceLoadMapItems() {
       try {
         this.loadTileset();
         if (this.tileset) {

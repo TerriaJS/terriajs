@@ -652,7 +652,7 @@ export default class Cesium extends GlobeOrMap {
   }
 
   @computed
-  get attributions() {
+  override get attributions() {
     return this.cesiumDataAttributions;
   }
 
@@ -1696,7 +1696,7 @@ export default class Cesium extends GlobeOrMap {
     this._selectionIndicator.update();
   }
 
-  captureScreenshot(): Promise<string> {
+  override captureScreenshot(): Promise<string> {
     const deferred: Promise<string> = new Promise((resolve, reject) => {
       const removeCallback = this.scene.postRender.addEventListener(() => {
         removeCallback();

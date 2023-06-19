@@ -402,7 +402,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     });
   }
 
-  protected async forceLoadMapItems(): Promise<void> {
+  protected override async forceLoadMapItems(): Promise<void> {
     if (isDefined(this.geoJsonItem)) {
       const geoJsonItem = this.geoJsonItem;
       (await geoJsonItem.loadMapItems()).throwIfError();

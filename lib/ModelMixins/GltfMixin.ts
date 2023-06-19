@@ -161,7 +161,7 @@ function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return Promise.resolve();
     }
 
-    protected forceLoadMapItems(): Promise<void> {
+    protected override forceLoadMapItems(): Promise<void> {
       return Promise.resolve();
     }
 

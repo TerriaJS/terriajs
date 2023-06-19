@@ -211,7 +211,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
   }
 
   @computed
-  get members(): ModelReference[] {
+  override get members(): ModelReference[] {
     // Find first node in tree which has more than 1 child
     const findRootGroup = (node: DataflowTreeNode): DataflowTreeNode => {
       const children: DataflowTreeNode[] | undefined = isDefined(node?.members)

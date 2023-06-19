@@ -153,15 +153,18 @@ export default class UserDrawing extends MappableMixin(
     this.invisible = options.invisible;
 
     // helper for dragging points around
-    this.dragHelper = new DragPoints(options.terria, (customDataSource) => {
-      if (typeof this.onPointMoved === "function") {
-        this.onPointMoved(customDataSource);
+    this.dragHelper = new DragPoints(
+      options.terria,
+      (customDataSource: CustomDataSource) => {
+        if (typeof this.onPointMoved === "function") {
+          this.onPointMoved(customDataSource);
+        }
+        this.prepareToAddNewPoint();
       }
-      this.prepareToAddNewPoint();
-    });
+    );
   }
 
-  protected forceLoadMapItems(): Promise<void> {
+  protected override forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
 

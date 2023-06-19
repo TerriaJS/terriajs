@@ -62,7 +62,7 @@ class KmlCatalogItem
     return "1d";
   }
 
-  protected forceLoadMapItems(): Promise<void> {
+  protected override forceLoadMapItems(): Promise<void> {
     return new Promise<string | Resource | Document | Blob>((resolve) => {
       if (isDefined(this.kmlString)) {
         const parser = new DOMParser();

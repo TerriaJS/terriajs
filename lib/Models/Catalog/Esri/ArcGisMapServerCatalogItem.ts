@@ -358,7 +358,7 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     });
   }
 
-  protected forceLoadMapItems(): Promise<void> {
+  protected override forceLoadMapItems(): Promise<void> {
     return this.forceLoadMetadata();
   }
 

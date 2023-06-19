@@ -43,7 +43,7 @@ export default class SdmxJsonCatalogItem
     );
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  protected override async forceLoadMetadata(): Promise<void> {
     // Load SdmxJsonDataflowStratum if needed
     if (!this.strata.has(SdmxJsonDataflowStratum.stratumName)) {
       const stratum = await SdmxJsonDataflowStratum.load(this);
@@ -60,7 +60,7 @@ export default class SdmxJsonCatalogItem
   }
 
   @override
-  get cacheDuration() {
+  override get cacheDuration() {
     return super.cacheDuration || "1d";
   }
 
@@ -99,7 +99,7 @@ export default class SdmxJsonCatalogItem
   }
 
   @override
-  get selectableDimensions(): SelectableDimension[] {
+  override get selectableDimensions(): SelectableDimension[] {
     return filterOutUndefined([
       ...super.selectableDimensions.filter(
         (d) => d.id !== this.styleDimensions?.id
@@ -117,7 +117,7 @@ export default class SdmxJsonCatalogItem
   }
 
   @override
-  get url() {
+  override get url() {
     if (!super.url) return;
 
     // Get dataKey - this is used to filter dataflows by dimension values - it must be compliant with the KeyType defined in the SDMX WADL (period separated dimension values) - dimension order is very important!

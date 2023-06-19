@@ -21,7 +21,7 @@ export default class BingMapsCatalogItem extends MappableMixin(
     return BingMapsCatalogItem.type;
   }
 
-  protected forceLoadMapItems(): Promise<void> {
+  protected override forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
 

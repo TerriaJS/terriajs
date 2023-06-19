@@ -472,7 +472,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      *    - More than 50% of GeoJSON features have simply-style properties (eg "fill-color")
      *    - MultiPoint features are in GeoJSON (not supported by Table styling)
      */
-    protected async forceLoadMapItems(): Promise<void> {
+    protected override async forceLoadMapItems(): Promise<void> {
       const czmlTemplate = this.czmlTemplate;
       const filterByProperties = this.filterByProperties;
 

@@ -189,7 +189,7 @@ class WebMapServiceCatalogItem
     });
   }
 
-  protected async forceLoadMapItems(): Promise<void> {
+  protected override async forceLoadMapItems(): Promise<void> {
     if (this.invalidLayers.length > 0)
       throw new TerriaError({
         sender: this,

@@ -739,7 +739,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         : undefined;
     }
 
-    protected async forceLoadMapItems() {
+    protected override async forceLoadMapItems() {
       try {
         const dataColumnMajor = await this.forceLoadTableData();
 

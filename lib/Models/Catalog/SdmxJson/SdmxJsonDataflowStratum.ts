@@ -139,7 +139,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   }
 
   @computed
-  get description() {
+  override get description() {
     return this.sdmxJsonDataflow.dataflow.description;
   }
 
@@ -148,7 +148,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    * - ${title}|${url}|${imageUrl}
    * - EG "Metadata|http://purl.org/spc/digilib/doc/7thdz|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
    */
-  @computed get metadataUrls() {
+  @computed override get metadataUrls() {
     return filterOutUndefined(
       this.sdmxJsonDataflow?.dataflow.annotations
         ?.filter((a) => a.type === "EXT_RESOURCE" && a.text)
@@ -191,7 +191,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    * If we get a dataflow with a single value (and not region-mapped), show the exact value in a short report
    */
   @computed
-  get shortReportSections() {
+  override get shortReportSections() {
     if (this.catalogItem.mapItems.length !== 0 || this.catalogItem.isLoading)
       return;
 
@@ -248,7 +248,9 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    * - @see ModelOverrideTraits
    */
   @computed
-  get dimensions(): StratumFromTraits<SdmxDimensionTraits>[] | undefined {
+  override get dimensions():
+    | StratumFromTraits<SdmxDimensionTraits>[]
+    | undefined {
     // Constraint contains allowed dimension values for a given dataflow
     // Get 'actual' constraints (rather than 'allowed' constraints)
     const constraints = this.sdmxJsonDataflow.contentConstraints?.filter(
@@ -353,7 +355,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    * - `FREQ` (see `this.unitMeasure`)
    */
   @computed
-  get modelOverrides() {
+  override get modelOverrides() {
     return filterOutUndefined(
       // Map through all dimensions and attributes to find ones which use common concepts
       [...this.sdmxDimensions, ...this.sdmxAttributes].map((dimAttr) => {
@@ -391,7 +393,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    *
    */
   @computed
-  get unitMeasure(): string | undefined {
+  override get unitMeasure(): string | undefined {
     // Find tableColumns which have corresponding modelOverride with type `unit-measure`
     // We will only use columns if they have a single unique value
     const unitMeasure = filterOutUndefined(
@@ -616,7 +618,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    * Munge all columns together
    */
   @computed
-  get columns() {
+  override get columns() {
     return filterOutUndefined([
       this.primaryMeasureColumn,
       ...this.dimensionColumns,
@@ -691,7 +693,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    * - `regionColumn` set to region dimension name (if one exists)
    */
   @computed
-  get styles() {
+  override get styles() {
     if (this.primaryMeasureColumn) {
       return [
         createStratumInstance(TableStyleTraits, {
@@ -736,7 +738,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    * Set active table style to primary measure column
    */
   @computed
-  get activeStyle() {
+  override get activeStyle() {
     return this.primaryMeasureColumn?.name;
   }
 
@@ -744,7 +746,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    * Set default time to last time of dataset
    */
   @computed
-  get initialTimeSource() {
+  override get initialTimeSource() {
     return "stop";
   }
 
@@ -757,7 +759,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    * - Time-series chart
    */
   @computed
-  get featureInfoTemplate() {
+  override get featureInfoTemplate() {
     const regionType = this.resolvedRegionColumn?.regionType;
     if (!regionType) return;
 
