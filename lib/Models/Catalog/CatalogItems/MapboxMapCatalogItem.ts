@@ -43,7 +43,7 @@ export default class MapboxMapCatalogItem extends CatalogMemberMixin(
     return imageryProvider;
   }
 
-  forceLoadMapItems() {
+  protected forceLoadMapItems() {
     return Promise.resolve();
   }
 

@@ -1257,7 +1257,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     /** We don't need to use TableMixin forceLoadTableData
      * We implement `get dataColumnMajor()` instead
      */
-    async forceLoadTableData() {
+    protected async forceLoadTableData() {
       return undefined;
     }
 

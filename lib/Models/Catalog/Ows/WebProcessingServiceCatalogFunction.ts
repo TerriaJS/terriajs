@@ -233,7 +233,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     return proxyCatalogItemUrl(this, uri.toString());
   }
 
-  async forceLoadMetadata() {
+  protected async forceLoadMetadata() {
     if (!this.strata.has(WpsLoadableStratum.stratumName)) {
       const stratum = await WpsLoadableStratum.load(this);
       if (isDefined(stratum)) {

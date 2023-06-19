@@ -426,7 +426,7 @@ describeIfSupported("Cesium Model", function () {
  * items.
  */
 class MappablePrimitiveItem extends MappableMixin(CreateModel(MappableTraits)) {
-  async forceLoadMapItems() {}
+  protected async forceLoadMapItems() {}
 
   get mapItems() {
     return [

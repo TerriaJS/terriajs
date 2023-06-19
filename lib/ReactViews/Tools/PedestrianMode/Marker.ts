@@ -56,7 +56,7 @@ export default class Marker extends MappableMixin(CreateModel(MappableTraits)) {
     }
   }
 
-  async forceLoadMapItems() {}
+  protected async forceLoadMapItems() {}
 
   get mapItems() {
     return [this.dataSource];

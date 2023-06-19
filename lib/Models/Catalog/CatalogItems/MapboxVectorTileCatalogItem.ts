@@ -138,7 +138,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
     return true;
   }
 
-  async forceLoadMetadata() {
+  protected async forceLoadMetadata() {
     const stratum = await MapboxVectorTileLoadableStratum.load(this);
     runInAction(() => {
       this.strata.set(MapboxVectorTileLoadableStratum.stratumName, stratum);

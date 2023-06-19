@@ -63,7 +63,7 @@ export default class CompositeCatalogItem extends MappableMixin(
     ).throwIfError();
   }
 
-  async forceLoadMapItems(): Promise<void> {
+  protected async forceLoadMapItems(): Promise<void> {
     const members = this.memberModels.filter(MappableMixin.isMixedInto);
     // Avoid calling loadX functions in a computed context
     await Promise.resolve();
