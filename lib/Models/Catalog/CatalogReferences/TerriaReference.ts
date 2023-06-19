@@ -37,7 +37,7 @@ export default class TerriaReference extends UrlMixin(
     return TerriaReference.type;
   }
 
-  protected forceLoadReference = flow(function* (
+  _protected_forceLoadReference = flow(function* (
     this: TerriaReference,
     _previousTarget: BaseModel | undefined
   ) {

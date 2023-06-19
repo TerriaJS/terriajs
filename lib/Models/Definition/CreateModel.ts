@@ -88,7 +88,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
 
     override dispose() {}
 
-    private getOrCreateStratum(id: string): StratumTraits {
+    _private_getOrCreateStratum(id: string): StratumTraits {
       let result = this.strata.get(id);
       if (!result) {
         const newStratum = createStratumInstance(Traits);
@@ -144,14 +144,14 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
       trait: Key,
       value: StratumTraits[Key]
     ): void {
-      this.getOrCreateStratum(stratumId)[trait] = value;
+      this._private_getOrCreateStratum(stratumId)[trait] = value;
     }
 
     getTrait<Key extends keyof StratumTraits>(
       stratumId: string,
       trait: Key
     ): StratumTraits[Key] {
-      return this.getOrCreateStratum(stratumId)[trait];
+      return this._private_getOrCreateStratum(stratumId)[trait];
     }
 
     addObject<Key extends keyof ArrayElementTypes<Traits>>(
@@ -165,7 +165,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
       const nestedTraitsClass = trait.type;
       const newStratum = createStratumInstance(nestedTraitsClass);
 
-      const stratum: any = this.getOrCreateStratum(stratumId);
+      const stratum: any = this._private_getOrCreateStratum(stratumId);
       let array = stratum[traitId];
       if (array === undefined) {
         stratum[traitId] = [];

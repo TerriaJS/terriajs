@@ -308,7 +308,7 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
     });
   }
 
-  protected async forceLoadReference(
+  async _protected_forceLoadReference(
     previousTarget: BaseModel | undefined
   ): Promise<BaseModel | undefined> {
     // So when we first crawl we'll get this far

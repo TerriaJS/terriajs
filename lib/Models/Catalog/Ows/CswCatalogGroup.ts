@@ -696,7 +696,7 @@ export default class CswCatalogGroup extends UrlMixin(
     return CswCatalogGroup.type;
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async _protected_forceLoadMetadata(): Promise<void> {
     if (this.strata.get(CswStratum.stratumName) !== undefined) return;
     const stratum = await CswStratum.load(this);
     runInAction(() => {
@@ -704,7 +704,7 @@ export default class CswCatalogGroup extends UrlMixin(
     });
   }
 
-  protected async forceLoadMembers(): Promise<void> {
+  async _protected_forceLoadMembers(): Promise<void> {
     const cswStratum = <CswStratum | undefined>(
       this.strata.get(CswStratum.stratumName)
     );

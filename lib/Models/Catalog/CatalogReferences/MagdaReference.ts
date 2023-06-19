@@ -162,17 +162,17 @@ export default class MagdaReference extends AccessControlMixin(
 
   @override
   get accessType(): string {
-    return this.magdaRecordAcessType ?? super.accessType;
+    return this._private_magdaRecordAcessType ?? super.accessType;
   }
 
   @computed
-  private get magdaRecordAcessType(): string | undefined {
+  get _private_magdaRecordAcessType(): string | undefined {
     return this.magdaRecord
       ? getAccessTypeFromMagdaRecord(this.magdaRecord)
       : undefined;
   }
 
-  protected async forceLoadReference(
+  async _protected_forceLoadReference(
     previousTarget: BaseModel | undefined
   ): Promise<BaseModel | undefined> {
     const existingRecord = this.magdaRecord
@@ -202,7 +202,7 @@ export default class MagdaReference extends AccessControlMixin(
         return target;
       }
 
-      const record = await this.loadMagdaRecord({
+      const record = await this._protected_loadMagdaRecord({
         id: this.recordId,
         optionalAspects: [
           "terria",
@@ -231,7 +231,7 @@ export default class MagdaReference extends AccessControlMixin(
     });
   }
 
-  private static overrideRecordAspects(
+  static _private_overrideRecordAspects(
     record: JsonObject | undefined,
     override: JsonObject | undefined
   ) {
@@ -260,7 +260,7 @@ export default class MagdaReference extends AccessControlMixin(
       return undefined;
     }
 
-    this.overrideRecordAspects(record, addOrOverrideAspects);
+    this._private_overrideRecordAspects(record, addOrOverrideAspects);
 
     const aspects = record.aspects;
     if (!isJsonObject(aspects)) {
@@ -271,7 +271,7 @@ export default class MagdaReference extends AccessControlMixin(
       const members = aspects.group.members;
       if (members.every((member) => isJsonObject(member))) {
         // Every member has been dereferenced, so we're good to go.
-        return MagdaReference.createGroupFromRecord(
+        return MagdaReference._private_createGroupFromRecord(
           terria,
           sourceReference,
           distributionFormats,
@@ -296,7 +296,7 @@ export default class MagdaReference extends AccessControlMixin(
         // If we had a dereferenced group aspect, we would have returned above.
         return undefined;
       } else {
-        return MagdaReference.createMemberFromTerriaAspect(
+        return MagdaReference._private_createMemberFromTerriaAspect(
           terria,
           sourceReference,
           magdaUri,
@@ -335,7 +335,7 @@ export default class MagdaReference extends AccessControlMixin(
     }
 
     if (distributions) {
-      const match = MagdaReference.findPreparedDistributionFormat(
+      const match = MagdaReference._private_findPreparedDistributionFormat(
         distributionFormats,
         distributions
       );
@@ -344,7 +344,7 @@ export default class MagdaReference extends AccessControlMixin(
         match.format.definition &&
         isJsonString(match.format.definition.type)
       ) {
-        return MagdaReference.createMemberFromDistributionFormat(
+        return MagdaReference._private_createMemberFromDistributionFormat(
           terria,
           sourceReference,
           magdaUri,
@@ -361,7 +361,7 @@ export default class MagdaReference extends AccessControlMixin(
     return undefined;
   }
 
-  private static createGroupFromRecord(
+  static _private_createGroupFromRecord(
     terria: Terria,
     sourceReference: BaseModel | undefined,
     distributionFormats: readonly PreparedDistributionFormat[],
@@ -532,7 +532,7 @@ export default class MagdaReference extends AccessControlMixin(
     return group;
   }
 
-  private static createMemberFromTerriaAspect(
+  static _private_createMemberFromTerriaAspect(
     terria: Terria,
     sourceReference: BaseModel | undefined,
     magdaUri: uri.URI | undefined,
@@ -602,7 +602,7 @@ export default class MagdaReference extends AccessControlMixin(
     return result;
   }
 
-  private static createMemberFromDistributionFormat(
+  static _private_createMemberFromDistributionFormat(
     terria: Terria,
     sourceReference: BaseModel | undefined,
     magdaUri: uri.URI | undefined,
@@ -721,7 +721,7 @@ export default class MagdaReference extends AccessControlMixin(
     return result;
   }
 
-  private static findPreparedDistributionFormat(
+  static _private_findPreparedDistributionFormat(
     distributionFormats: readonly PreparedDistributionFormat[],
     distributions: JsonArray
   ):
@@ -804,8 +804,8 @@ export default class MagdaReference extends AccessControlMixin(
     return "0d";
   }
 
-  protected loadMagdaRecord(options: RecordOptions): Promise<JsonObject> {
-    const recordUri = this.buildMagdaRecordUri(options);
+  _protected_loadMagdaRecord(options: RecordOptions): Promise<JsonObject> {
+    const recordUri = this._protected_buildMagdaRecordUri(options);
     if (recordUri === undefined) {
       return Promise.reject(
         new TerriaError({
@@ -820,7 +820,7 @@ export default class MagdaReference extends AccessControlMixin(
     return loadJson(proxiedUrl, options.magdaReferenceHeaders);
   }
 
-  protected buildMagdaRecordUri(options: RecordOptions): uri.URI | undefined {
+  _protected_buildMagdaRecordUri(options: RecordOptions): uri.URI | undefined {
     const registryUri = this.registryUri;
     if (options.id === undefined || registryUri === undefined) {
       return undefined;

@@ -104,7 +104,7 @@ function TimeFilterMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @computed
-    private get imageryUrls() {
+    get _private_imageryUrls() {
       if (!MappableMixin.isMixedInto(this)) return [];
       return filterOutUndefined(
         this.mapItems.map(
@@ -176,7 +176,7 @@ function TimeFilterMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       const position = feature.position.getValue(this.currentTimeAsJulianDate);
       if (position === undefined) return;
       const cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
-      const featureImageryUrl = this.imageryUrls.find(
+      const featureImageryUrl = this._private_imageryUrls.find(
         (url) => providerCoords[url]
       );
       const tileCoords = featureImageryUrl && providerCoords[featureImageryUrl];

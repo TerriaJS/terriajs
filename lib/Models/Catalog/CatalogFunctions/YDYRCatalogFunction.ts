@@ -194,12 +194,12 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
     return "YourDataYourRegions";
   }
 
-  protected async createJob(id: string) {
+  async _protected_createJob(id: string) {
     return new YDYRCatalogFunctionJob(id, this.terria);
   }
 
-  protected async forceLoadMetadata() {
-    return super.forceLoadMetadata();
+  async _protected_forceLoadMetadata() {
+    return super._protected_forceLoadMetadata();
     // TODO: load capabilities from https://ydyr.info/api/v1/capability?format=json
     // https://github.com/TerriaJS/terriajs/issues/4943
   }

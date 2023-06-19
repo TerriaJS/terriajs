@@ -186,12 +186,12 @@ function ExportWebCoverageServiceMixin<
   T extends Constructor<Model<ExportWebCoverageServiceTraits>>
 >(Base: T) {
   abstract class ExportWebCoverageServiceMixin extends ExportableMixin(Base) {
-    private _wcsCapabilitiesLoader = new AsyncLoader(
-      this.loadWcsCapabilities.bind(this)
+    _private_wcsCapabilitiesLoader = new AsyncLoader(
+      this._private_loadWcsCapabilities.bind(this)
     );
 
-    private _wcsDescribeCoverageLoader = new AsyncLoader(
-      this.loadWcsDescribeCoverage.bind(this)
+    _private_wcsDescribeCoverageLoader = new AsyncLoader(
+      this._private_loadWcsDescribeCoverage.bind(this)
     );
 
     constructor(...args: any[]) {
@@ -202,8 +202,8 @@ function ExportWebCoverageServiceMixin<
     @computed
     get isLoadingWcsMetadata(): boolean {
       return (
-        this._wcsCapabilitiesLoader.isLoading ||
-        this._wcsDescribeCoverageLoader.isLoading
+        this._private_wcsCapabilitiesLoader.isLoading ||
+        this._private_wcsDescribeCoverageLoader.isLoading
       );
     }
 
@@ -211,7 +211,7 @@ function ExportWebCoverageServiceMixin<
       const results = await Promise.all([
         // Disable GetCapabilities loader until we need it
         // this._wcsCapabilitiesLoader.load(force),
-        this._wcsDescribeCoverageLoader.load(force)
+        this._private_wcsDescribeCoverageLoader.load(force)
       ]);
 
       return Result.combine(results, {
@@ -222,7 +222,7 @@ function ExportWebCoverageServiceMixin<
       });
     }
 
-    private async loadWcsCapabilities() {
+    async _private_loadWcsCapabilities() {
       const capabilities = await WebCoverageServiceCapabilitiesStratum.load(
         this
       );
@@ -234,7 +234,7 @@ function ExportWebCoverageServiceMixin<
         )
       );
     }
-    private async loadWcsDescribeCoverage() {
+    async _private_loadWcsDescribeCoverage() {
       const describeCoverage =
         await WebCoverageServiceDescribeCoverageStratum.load(this);
       runInAction(() =>
@@ -247,11 +247,11 @@ function ExportWebCoverageServiceMixin<
 
     // ExportableMixin overrides
     @computed
-    get _canExportData() {
+    get _protected_canExportData() {
       return isDefined(this.linkedWcsCoverage) && isDefined(this.linkedWcsUrl);
     }
 
-    _exportData(): Promise<undefined | { name: string; file: Blob }> {
+    _protected_exportData(): Promise<undefined | { name: string; file: Blob }> {
       return new Promise((resolve, reject) => {
         const terria = this.terria;
         runInAction(() => (terria.pickedFeatures = undefined));
@@ -513,8 +513,8 @@ function ExportWebCoverageServiceMixin<
 
     dispose() {
       super.dispose();
-      this._wcsCapabilitiesLoader.dispose();
-      this._wcsDescribeCoverageLoader.dispose();
+      this._private_wcsCapabilitiesLoader.dispose();
+      this._private_wcsDescribeCoverageLoader.dispose();
     }
   }
 

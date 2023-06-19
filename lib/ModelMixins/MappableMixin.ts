@@ -109,19 +109,19 @@ function MappableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return false;
     }
 
-    private _mapItemsLoader = new AsyncLoader(
-      this.forceLoadMapItems.bind(this)
+    _private_mapItemsLoader = new AsyncLoader(
+      this._protected_forceLoadMapItems.bind(this)
     );
 
     get loadMapItemsResult() {
-      return this._mapItemsLoader.result;
+      return this._private_mapItemsLoader.result;
     }
 
     /**
      * Gets a value indicating whether map items are currently loading.
      */
     get isLoadingMapItems(): boolean {
-      return this._mapItemsLoader.isLoading;
+      return this._private_mapItemsLoader.isLoading;
     }
 
     /**
@@ -147,7 +147,7 @@ function MappableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         if (CatalogMemberMixin.isMixedInto(this))
           (await this.loadMetadata()).throwIfError();
 
-        (await this._mapItemsLoader.load(force)).throwIfError();
+        (await this._private_mapItemsLoader.load(force)).throwIfError();
       } catch (e) {
         return Result.error(e, {
           message: `Failed to load \`${getName(this)}\` mapItems`,
@@ -170,7 +170,7 @@ function MappableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      *
      * {@see AsyncLoader}
      */
-    protected abstract forceLoadMapItems(): Promise<void>;
+    abstract _protected_forceLoadMapItems(): Promise<void>;
 
     /**
      * Array of MapItems to show on the map/chart when Catalog Member is shown
@@ -198,7 +198,7 @@ function MappableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     dispose() {
       super.dispose();
-      this._mapItemsLoader.dispose();
+      this._private_mapItemsLoader.dispose();
     }
   }
 

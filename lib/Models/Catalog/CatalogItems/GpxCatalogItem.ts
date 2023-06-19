@@ -31,28 +31,28 @@ class GpxCatalogItem extends GeoJsonMixin(CreateModel(GpxCatalogItemTraits)) {
     return i18next.t("models.gpx.name");
   }
 
-  private _gpxFile?: File;
+  _private_gpxFile?: File;
 
   setFileInput(file: File) {
-    this._gpxFile = file;
+    this._private_gpxFile = file;
   }
 
   @computed
   get hasLocalData(): boolean {
-    return isDefined(this._gpxFile);
+    return isDefined(this._private_gpxFile);
   }
 
-  private loadGpxText(text: string) {
+  _private_loadGpxText(text: string) {
     var dom = new DOMParser().parseFromString(text, "text/xml");
     return toGeoJSON.gpx(dom);
   }
 
-  protected async forceLoadGeojsonData(): Promise<FeatureCollectionWithCrs> {
+  async _protected_forceLoadGeojsonData(): Promise<FeatureCollectionWithCrs> {
     let data: string | undefined;
     if (isDefined(this.gpxString)) {
       data = this.gpxString;
-    } else if (isDefined(this._gpxFile)) {
-      data = await readText(this._gpxFile);
+    } else if (isDefined(this._private_gpxFile)) {
+      data = await readText(this._private_gpxFile);
     } else if (isDefined(this.url)) {
       data = await loadText(proxyCatalogItemUrl(this, this.url));
     }
@@ -67,10 +67,10 @@ class GpxCatalogItem extends GeoJsonMixin(CreateModel(GpxCatalogItemTraits)) {
       });
     }
 
-    return this.loadGpxText(data);
+    return this._private_loadGpxText(data);
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  _protected_forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 

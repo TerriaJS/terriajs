@@ -231,14 +231,14 @@ export default class WebProcessingServiceCatalogGroup extends GroupMixin(
     return i18next.t("models.webProcessingServiceCatalogGroup.typeName");
   }
 
-  protected override async forceLoadMetadata(): Promise<void> {
+  override async _protected_forceLoadMetadata(): Promise<void> {
     const stratum = await GetCapabilitiesStratum.load(this);
     runInAction(() => {
       this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
     });
   }
 
-  protected async forceLoadMembers(): Promise<void> {
+  async _protected_forceLoadMembers(): Promise<void> {
     const getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
     );
@@ -248,7 +248,7 @@ export default class WebProcessingServiceCatalogGroup extends GroupMixin(
   }
 
   @computed
-  get defaultGetCapabilitiesUrl(): string | undefined {
+  get _protected_defaultGetCapabilitiesUrl(): string | undefined {
     return this.url === undefined
       ? undefined
       : new URI(this.url)

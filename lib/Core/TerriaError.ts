@@ -293,8 +293,8 @@ export default class TerriaError {
   get shouldRaiseToUser() {
     return (
       // Return this.overrideRaiseToUser override if it is defined
-      this.overrideRaiseToUser ??
       // Otherwise, we should raise the error if it hasn't already been raised and the severity is ERROR
+      this.overrideRaiseToUser ??
       (!this.raisedToUser &&
         (typeof this.severity === "function"
           ? this.severity()

@@ -36,7 +36,7 @@ export default class AssImpCatalogItem
   implements HasLocalData
 {
   @observable
-  protected gltfModelUrl: string | undefined;
+  _protected_gltfModelUrl: string | undefined;
 
   static readonly type = "assimp";
 
@@ -58,7 +58,7 @@ export default class AssImpCatalogItem
     this.hasLocalData = true;
   }
 
-  protected override async forceLoadMapItems(): Promise<void> {
+  override async _protected_forceLoadMapItems(): Promise<void> {
     const urls =
       this.urls.length > 0 ? this.urls : filterOutUndefined([this.url]);
     if (urls.length === 0) return;
@@ -290,7 +290,7 @@ export default class AssImpCatalogItem
     }
 
     runInAction(() => {
-      this.gltfModelUrl = gltfModelUrl;
+      this._protected_gltfModelUrl = gltfModelUrl;
     });
 
     if (unsupportedTextures.length > 0)

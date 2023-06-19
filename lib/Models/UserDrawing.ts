@@ -54,30 +54,30 @@ interface Options {
 export default class UserDrawing extends MappableMixin(
   CreateModel(MappableTraits)
 ) {
-  private readonly messageHeader: string | (() => string);
-  private readonly allowPolygon: boolean;
-  private readonly onMakeDialogMessage?: () => string;
-  private readonly buttonText?: string;
-  private readonly onPointClicked?: (dataSource: CustomDataSource) => void;
-  private readonly onPointMoved?: (dataSource: CustomDataSource) => void;
-  private readonly onDrawingComplete?: (
+  readonly _private_messageHeader: string | (() => string);
+  readonly _private_allowPolygon: boolean;
+  readonly _private_onMakeDialogMessage?: () => string;
+  readonly _private_buttonText?: string;
+  readonly _private_onPointClicked?: (dataSource: CustomDataSource) => void;
+  readonly _private_onPointMoved?: (dataSource: CustomDataSource) => void;
+  readonly _private_onDrawingComplete?: (
     params: OnDrawingCompleteParams
   ) => void;
-  private readonly onCleanUp?: () => void;
-  private readonly invisible?: boolean;
-  private readonly dragHelper: DragPoints;
+  readonly _private_onCleanUp?: () => void;
+  readonly _private_invisible?: boolean;
+  readonly _private_dragHelper: DragPoints;
 
   pointEntities: CustomDataSource;
   otherEntities: CustomDataSource;
   polygon?: Entity;
 
   @observable
-  private inDrawMode: boolean;
+  _private_inDrawMode: boolean;
   closeLoop: boolean;
-  private disposePickedFeatureSubscription?: () => void;
-  private drawRectangle: boolean;
+  _private_disposePickedFeatureSubscription?: () => void;
+  _private_drawRectangle: boolean;
 
-  private mousePointEntity?: Entity;
+  _private_mousePointEntity?: Entity;
 
   constructor(options: Options) {
     super(createGuid(), options.terria);
@@ -87,7 +87,7 @@ export default class UserDrawing extends MappableMixin(
     /**
      * Text that appears at the top of the dialog when drawmode is active.
      */
-    this.messageHeader = defaultValue(
+    this._private_messageHeader = defaultValue(
       options.messageHeader,
       i18next.t("models.userDrawing.messageHeader")
     );
@@ -95,25 +95,25 @@ export default class UserDrawing extends MappableMixin(
     /**
      * If true, user can click on first point to close the line, turning it into a polygon.
      */
-    this.allowPolygon = defaultValue(options.allowPolygon, true);
+    this._private_allowPolygon = defaultValue(options.allowPolygon, true);
 
     /**
      * Callback that occurs when the dialog is redrawn, to add additional information to dialog.
      */
-    this.onMakeDialogMessage = options.onMakeDialogMessage;
+    this._private_onMakeDialogMessage = options.onMakeDialogMessage;
 
-    this.buttonText = options.buttonText;
+    this._private_buttonText = options.buttonText;
 
     /**
      * Callback that occurs when point is clicked (may be added or removed). Function takes a CustomDataSource which is
      * a list of PointEntities.
      */
-    this.onPointClicked = options.onPointClicked;
+    this._private_onPointClicked = options.onPointClicked;
 
     /**
      * Callback that occurs when point is moved. Function takes a CustomDataSource which is a list of PointEntities.
      */
-    this.onPointMoved = options.onPointMoved;
+    this._private_onPointMoved = options.onPointMoved;
 
     /**
      * Callback that occurs when a drawing is complete. This is called when the
@@ -121,12 +121,12 @@ export default class UserDrawing extends MappableMixin(
      * The callback function will receive the points in the shape and a rectangle
      * if `drawRectangle` was set to `true`.
      */
-    this.onDrawingComplete = options.onDrawingComplete;
+    this._private_onDrawingComplete = options.onDrawingComplete;
 
     /**
      * Callback that occurs on clean up, i.e. when drawing is done or cancelled.
      */
-    this.onCleanUp = options.onCleanUp;
+    this._private_onCleanUp = options.onCleanUp;
 
     /**
      * Storage for points that will be drawn
@@ -141,36 +141,36 @@ export default class UserDrawing extends MappableMixin(
     /**
      * Whether to interpret user clicks as drawing
      */
-    this.inDrawMode = false;
+    this._private_inDrawMode = false;
 
     /**
      * Whether the first and last point in the user drawing are the same
      */
     this.closeLoop = false;
 
-    this.drawRectangle = defaultValue(options.drawRectangle, false);
+    this._private_drawRectangle = defaultValue(options.drawRectangle, false);
 
-    this.invisible = options.invisible;
+    this._private_invisible = options.invisible;
 
     // helper for dragging points around
-    this.dragHelper = new DragPoints(
+    this._private_dragHelper = new DragPoints(
       options.terria,
       (customDataSource: CustomDataSource) => {
-        if (typeof this.onPointMoved === "function") {
-          this.onPointMoved(customDataSource);
+        if (typeof this._private_onPointMoved === "function") {
+          this._private_onPointMoved(customDataSource);
         }
-        this.prepareToAddNewPoint();
+        this._private_prepareToAddNewPoint();
       }
     );
   }
 
-  protected override forceLoadMapItems(): Promise<void> {
+  override _protected_forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
 
   @computed get mapItems() {
     // Don't show points if drawing rectangle
-    return this.drawRectangle
+    return this._private_drawRectangle
       ? [this.otherEntities]
       : [this.pointEntities, this.otherEntities];
   }
@@ -198,16 +198,16 @@ export default class UserDrawing extends MappableMixin(
   }
 
   enterDrawMode() {
-    this.dragHelper.setUp();
+    this._private_dragHelper.setUp();
 
     // If we have finished a polygon, don't allow more points to be drawn. In future, perhaps support multiple polygons.
-    if (this.inDrawMode || this.closeLoop) {
+    if (this._private_inDrawMode || this.closeLoop) {
       // Do nothing
       return;
     }
 
     runInAction(() => {
-      this.inDrawMode = true;
+      this._private_inDrawMode = true;
     });
 
     if (isDefined(this.terria.cesium)) {
@@ -230,8 +230,8 @@ export default class UserDrawing extends MappableMixin(
     const that = this;
 
     // Rectangle will show up once user has a point.
-    if (this.drawRectangle) {
-      this.mousePointEntity = new Entity({
+    if (this._private_drawRectangle) {
+      this._private_mousePointEntity = new Entity({
         id: "mousePoint",
         position: undefined
       });
@@ -261,7 +261,7 @@ export default class UserDrawing extends MappableMixin(
                 (this.pointEntities.entities.values?.[1]?.position?.getValue(
                   time
                 ) as Cartesian3) ||
-                this.mousePointEntity?.position?.getValue(time);
+                this._private_mousePointEntity?.position?.getValue(time);
 
               return (
                 point1 &&
@@ -304,8 +304,8 @@ export default class UserDrawing extends MappableMixin(
     this.terria.overlays.add(this);
 
     // Listen for user clicks on map
-    const pickPointMode = this.addMapInteractionMode();
-    this.disposePickedFeatureSubscription = reaction(
+    const pickPointMode = this._private_addMapInteractionMode();
+    this._private_disposePickedFeatureSubscription = reaction(
       () => pickPointMode.pickedFeatures,
       async (pickedFeatures, _previousValue, reaction) => {
         if (isDefined(pickedFeatures)) {
@@ -314,9 +314,9 @@ export default class UserDrawing extends MappableMixin(
           }
           if (isDefined(pickedFeatures.pickPosition)) {
             const pickedPoint = pickedFeatures.pickPosition;
-            this.addPointToPointEntities("First Point", pickedPoint);
+            this._private_addPointToPointEntities("First Point", pickedPoint);
             reaction.dispose();
-            this.prepareToAddNewPoint();
+            this._private_prepareToAddNewPoint();
           }
         }
       }
@@ -326,7 +326,7 @@ export default class UserDrawing extends MappableMixin(
   /**
    * Add new point to list of pointEntities
    */
-  private addPointToPointEntities(name: string, position: Cartesian3) {
+  _private_addPointToPointEntities(name: string, position: Cartesian3) {
     var pointEntity = new Entity({
       name: name,
       position: new ConstantPositionProperty(position),
@@ -338,19 +338,22 @@ export default class UserDrawing extends MappableMixin(
     // Remove the existing points if we are in drawRectangle mode and the user
     // has picked a 3rd point. This lets the user draw new rectangle that
     // replaces the current one.
-    if (this.drawRectangle && this.pointEntities.entities.values.length === 2) {
+    if (
+      this._private_drawRectangle &&
+      this.pointEntities.entities.values.length === 2
+    ) {
       this.pointEntities.entities.removeAll();
     }
     this.pointEntities.entities.add(pointEntity);
-    this.dragHelper.updateDraggableObjects(this.pointEntities);
-    if (isDefined(this.onPointClicked)) {
-      this.onPointClicked(this.pointEntities);
+    this._private_dragHelper.updateDraggableObjects(this.pointEntities);
+    if (isDefined(this._private_onPointClicked)) {
+      this._private_onPointClicked(this.pointEntities);
     }
   }
 
   endDrawing() {
-    if (this.disposePickedFeatureSubscription) {
-      this.disposePickedFeatureSubscription();
+    if (this._private_disposePickedFeatureSubscription) {
+      this._private_disposePickedFeatureSubscription();
     }
     runInAction(() => {
       this.terria.mapInteractionModeStack.pop();
@@ -361,19 +364,19 @@ export default class UserDrawing extends MappableMixin(
   /**
    * Updates the MapInteractionModeStack with a listener for a new point.
    */
-  private addMapInteractionMode() {
+  _private_addMapInteractionMode() {
     const pickPointMode = new MapInteractionMode({
       message: this.getDialogMessage(),
       buttonText: this.getButtonText(),
       onCancel: () => {
         runInAction(() => {
-          if (this.onDrawingComplete) {
+          if (this._private_onDrawingComplete) {
             const isDrawingComplete =
               this.pointEntities.entities.values.length >= 2;
             const points = this.getPointsForShape();
 
             if (isDrawingComplete && points) {
-              this.onDrawingComplete({
+              this._private_onDrawingComplete({
                 points: filterOutUndefined(points),
                 rectangle: this.getRectangleForShape()
               });
@@ -385,9 +388,9 @@ export default class UserDrawing extends MappableMixin(
       onEnable: (viewState: ViewState) => {
         runInAction(() => (viewState.explorerPanelIsVisible = false));
 
-        if (this.drawRectangle && this.mousePointEntity) {
+        if (this._private_drawRectangle && this._private_mousePointEntity) {
           const scratchPosition = new Cartesian3();
-          this.mousePointEntity.position = new CallbackProperty(() => {
+          this._private_mousePointEntity.position = new CallbackProperty(() => {
             const cartographicMouseCoords =
               this.terria.currentViewer.terria.currentViewer.mouseCoords
                 .cartographic;
@@ -402,7 +405,7 @@ export default class UserDrawing extends MappableMixin(
           }, false) as any;
         }
       },
-      invisible: this.invisible
+      invisible: this._private_invisible
     });
     runInAction(() => {
       this.terria.mapInteractionModeStack.push(pickPointMode);
@@ -413,13 +416,13 @@ export default class UserDrawing extends MappableMixin(
   /**
    * Called after a point has been added, prepares to add and draw another point, as well as updating the dialog.
    */
-  private prepareToAddNewPoint() {
+  _private_prepareToAddNewPoint() {
     runInAction(() => {
       this.terria.mapInteractionModeStack.pop();
     });
 
-    const pickPointMode = this.addMapInteractionMode();
-    this.disposePickedFeatureSubscription = reaction(
+    const pickPointMode = this._private_addMapInteractionMode();
+    this._private_disposePickedFeatureSubscription = reaction(
       () => pickPointMode.pickedFeatures,
       async (pickedFeatures, _previousValue, reaction) => {
         if (isDefined(pickedFeatures)) {
@@ -432,18 +435,21 @@ export default class UserDrawing extends MappableMixin(
             // getDragCount helps us determine if the point was actually dragged rather than clicked. If it was
             // dragged, we shouldn't treat it as a clicked-existing-point scenario.
             if (
-              this.dragHelper.getDragCount() < 10 &&
-              !this.clickedExistingPoint(pickedFeatures.features)
+              this._private_dragHelper.getDragCount() < 10 &&
+              !this._private_clickedExistingPoint(pickedFeatures.features)
             ) {
               // No existing point was picked, so add a new point
-              this.addPointToPointEntities("Another Point", pickedPoint);
+              this._private_addPointToPointEntities(
+                "Another Point",
+                pickedPoint
+              );
             } else {
-              this.dragHelper.resetDragCount();
+              this._private_dragHelper.resetDragCount();
             }
             reaction.dispose();
 
-            if (this.inDrawMode) {
-              this.prepareToAddNewPoint();
+            if (this._private_inDrawMode) {
+              this._private_prepareToAddNewPoint();
             }
           }
         }
@@ -454,7 +460,7 @@ export default class UserDrawing extends MappableMixin(
   /**
    * Find out if user clicked an existing point and handle appropriately.
    */
-  private clickedExistingPoint(features: Entity[]) {
+  _private_clickedExistingPoint(features: Entity[]) {
     let userClickedExistingPoint = false;
 
     if (features.length < 1) {
@@ -476,7 +482,7 @@ export default class UserDrawing extends MappableMixin(
       if (index === -1) {
         // Probably a layer or feature that has nothing to do with what we're drawing.
         return;
-      } else if (index === 0 && !this.closeLoop && this.allowPolygon) {
+      } else if (index === 0 && !this.closeLoop && this._private_allowPolygon) {
         // Index is zero if it's the first point, meaning we have a closed shape
         this.polygon = <Entity>this.otherEntities.entities.add(<any>{
           name: "User polygon",
@@ -491,8 +497,8 @@ export default class UserDrawing extends MappableMixin(
         });
         this.closeLoop = true;
         // A point has not been added, but conceptually it has because the first point is now also the last point.
-        if (typeof that.onPointClicked === "function") {
-          that.onPointClicked(that.pointEntities);
+        if (typeof that._private_onPointClicked === "function") {
+          that._private_onPointClicked(that.pointEntities);
         }
         userClickedExistingPoint = true;
         return;
@@ -505,8 +511,8 @@ export default class UserDrawing extends MappableMixin(
           this.polygon && this.otherEntities.entities.remove(this.polygon);
         }
         // Also let client of UserDrawing know if a point has been removed.
-        if (typeof that.onPointClicked === "function") {
-          that.onPointClicked(that.pointEntities);
+        if (typeof that._private_onPointClicked === "function") {
+          that._private_onPointClicked(that.pointEntities);
         }
         userClickedExistingPoint = true;
         return;
@@ -526,7 +532,7 @@ export default class UserDrawing extends MappableMixin(
     this.terria.allowFeatureInfoRequests = true;
 
     runInAction(() => {
-      this.inDrawMode = false;
+      this._private_inDrawMode = false;
     });
     this.closeLoop = false;
 
@@ -544,8 +550,8 @@ export default class UserDrawing extends MappableMixin(
     }
 
     // Allow client to clean up too
-    if (typeof this.onCleanUp === "function") {
-      this.onCleanUp();
+    if (typeof this._private_onCleanUp === "function") {
+      this._private_onCleanUp();
     }
   }
 
@@ -560,19 +566,22 @@ export default class UserDrawing extends MappableMixin(
   getDialogMessage() {
     let message =
       "<strong>" +
-      (typeof this.messageHeader === "function"
-        ? this.messageHeader()
-        : this.messageHeader) +
+      (typeof this._private_messageHeader === "function"
+        ? this._private_messageHeader()
+        : this._private_messageHeader) +
       "</strong></br>";
-    let innerMessage = isDefined(this.onMakeDialogMessage)
-      ? this.onMakeDialogMessage()
+    let innerMessage = isDefined(this._private_onMakeDialogMessage)
+      ? this._private_onMakeDialogMessage()
       : "";
 
     if (innerMessage !== "") {
       message += innerMessage + "</br>";
     }
 
-    if (this.drawRectangle && this.pointEntities.entities.values.length >= 2) {
+    if (
+      this._private_drawRectangle &&
+      this.pointEntities.entities.values.length >= 2
+    ) {
       message +=
         "<i>" + i18next.t("models.userDrawing.clickToRedrawRectangle") + "</i>";
     } else if (this.pointEntities.entities.values.length > 0) {
@@ -591,7 +600,7 @@ export default class UserDrawing extends MappableMixin(
    */
   getButtonText() {
     return defaultValue(
-      this.buttonText,
+      this._private_buttonText,
       this.pointEntities.entities.values.length >= 2
         ? i18next.t("models.userDrawing.btnDone")
         : i18next.t("models.userDrawing.btnCancel")
@@ -620,7 +629,7 @@ export default class UserDrawing extends MappableMixin(
   }
 
   getRectangleForShape(): Rectangle | undefined {
-    if (!this.drawRectangle) {
+    if (!this._private_drawRectangle) {
       return undefined;
     }
 

@@ -9,7 +9,7 @@ function ExportableMixin<
   T extends AbstractConstructor<Model<ExportableTraits>>
 >(Base: T) {
   abstract class ExportableMixin extends Base {
-    protected abstract get _canExportData(): boolean;
+    abstract get _protected_canExportData(): boolean;
 
     constructor(...args: any[]) {
       super(...args);
@@ -20,17 +20,17 @@ function ExportableMixin<
      * Indicates if model is able to export data (will turn on/off UI elements)
      */
     @computed get canExportData() {
-      return !this.disableExport && this._canExportData;
+      return !this.disableExport && this._protected_canExportData;
     }
 
-    protected abstract _exportData(): Promise<ExportData | undefined>;
+    abstract _protected_exportData(): Promise<ExportData | undefined>;
 
     /**
      * @returns an async function which returns a URL (to download) or a Blob with filename
      */
     exportData() {
       if (this.canExportData) {
-        return this._exportData();
+        return this._protected_exportData();
       }
     }
   }

@@ -205,7 +205,7 @@ export default class ThreddsCatalogGroup extends UrlMixin(
     return "1d";
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async _protected_forceLoadMetadata(): Promise<void> {
     if (!this.strata.get(ThreddsStratum.stratumName)) {
       const stratum = await ThreddsStratum.load(this);
       if (stratum === undefined) return;
@@ -216,7 +216,7 @@ export default class ThreddsCatalogGroup extends UrlMixin(
     }
   }
 
-  protected async forceLoadMembers() {
+  async _protected_forceLoadMembers() {
     const stratum = this.strata.get(
       ThreddsStratum.stratumName
     ) as ThreddsStratum;

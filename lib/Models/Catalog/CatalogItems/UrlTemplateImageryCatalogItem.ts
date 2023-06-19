@@ -28,7 +28,7 @@ export default class UrlTemplateImageryCatalogItem extends MappableMixin(
     return UrlTemplateImageryCatalogItem.type;
   }
 
-  protected override forceLoadMapItems(): Promise<void> {
+  override _protected_forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
 

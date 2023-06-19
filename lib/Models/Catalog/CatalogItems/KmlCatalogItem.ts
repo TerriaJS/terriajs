@@ -41,17 +41,17 @@ class KmlCatalogItem
     return KmlCatalogItem.type;
   }
 
-  private _dataSource: KmlDataSource | undefined;
+  _private_dataSource: KmlDataSource | undefined;
 
-  private _kmlFile?: File;
+  _private_kmlFile?: File;
 
   setFileInput(file: File) {
-    this._kmlFile = file;
+    this._private_kmlFile = file;
   }
 
   @computed
   get hasLocalData(): boolean {
-    return isDefined(this._kmlFile);
+    return isDefined(this._private_kmlFile);
   }
 
   @override
@@ -62,16 +62,19 @@ class KmlCatalogItem
     return "1d";
   }
 
-  protected override forceLoadMapItems(): Promise<void> {
+  override _protected_forceLoadMapItems(): Promise<void> {
     return new Promise<string | Resource | Document | Blob>((resolve) => {
       if (isDefined(this.kmlString)) {
         const parser = new DOMParser();
         resolve(parser.parseFromString(this.kmlString, "text/xml"));
-      } else if (isDefined(this._kmlFile)) {
-        if (this._kmlFile.name && this._kmlFile.name.match(kmzRegex)) {
-          resolve(this._kmlFile);
+      } else if (isDefined(this._private_kmlFile)) {
+        if (
+          this._private_kmlFile.name &&
+          this._private_kmlFile.name.match(kmzRegex)
+        ) {
+          resolve(this._private_kmlFile);
         } else {
-          resolve(readXml(this._kmlFile));
+          resolve(readXml(this._private_kmlFile));
         }
       } else if (isDefined(this.url)) {
         resolve(proxyCatalogItemUrl(this, this.url));
@@ -87,8 +90,8 @@ class KmlCatalogItem
         return KmlDataSource.load(kmlLoadInput);
       })
       .then((dataSource) => {
-        this._dataSource = dataSource;
-        this.doneLoading(dataSource); // Unsure if this is necessary
+        this._private_dataSource = dataSource;
+        this._private_doneLoading(dataSource); // Unsure if this is necessary
       })
       .catch((e) => {
         throw networkRequestError(
@@ -105,18 +108,18 @@ class KmlCatalogItem
 
   @computed
   get mapItems() {
-    if (this.isLoadingMapItems || this._dataSource === undefined) {
+    if (this.isLoadingMapItems || this._private_dataSource === undefined) {
       return [];
     }
-    this._dataSource.show = this.show;
-    return [this._dataSource];
+    this._private_dataSource.show = this.show;
+    return [this._private_dataSource];
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  _protected_forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 
-  private doneLoading(kmlDataSource: KmlDataSource) {
+  _private_doneLoading(kmlDataSource: KmlDataSource) {
     // Clamp features to terrain.
     if (isDefined(this.terria.cesium)) {
       const positionsToSample: Cartographic[] = [];

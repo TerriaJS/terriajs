@@ -333,14 +333,14 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     return "sos";
   }
 
-  protected override async forceLoadMetadata() {}
+  override async _protected_forceLoadMetadata() {}
 
   @action
-  protected async forceLoadTableData() {
+  async _protected_forceLoadTableData() {
     if (this.showAsChart === true) {
-      return this.loadChartData();
+      return this._private_loadChartData();
     } else {
-      return this.loadFeaturesData();
+      return this._private_loadFeaturesData();
     }
   }
 
@@ -353,7 +353,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   }
 
   @action
-  private async loadFeaturesData() {
+  async _private_loadFeaturesData() {
     const request = new GetFeatureOfInterestRequest(
       this,
       this.requestTemplate ||
@@ -444,7 +444,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   }
 
   @action
-  private async loadChartData() {
+  async _private_loadChartData() {
     const foiIdentifier = this.chartFeatureOfInterestIdentifier;
     if (foiIdentifier === undefined) {
       return [];

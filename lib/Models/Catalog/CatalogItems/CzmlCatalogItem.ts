@@ -87,26 +87,26 @@ export default class CzmlCatalogItem
   }
 
   @observable _dataSource: CzmlDataSource | undefined;
-  private _czmlFile?: File;
+  _private_czmlFile?: File;
 
   setFileInput(file: File) {
-    this._czmlFile = file;
+    this._private_czmlFile = file;
   }
 
   @computed
   get hasLocalData(): boolean {
-    return isDefined(this._czmlFile);
+    return isDefined(this._private_czmlFile);
   }
 
-  protected override forceLoadMapItems(): Promise<void> {
+  override _protected_forceLoadMapItems(): Promise<void> {
     const attribution = this.attribution;
     let loadableData: any = undefined;
     if (isDefined(this.czmlData)) {
       loadableData = toJS(this.czmlData);
     } else if (isDefined(this.czmlString)) {
       loadableData = JSON.parse(this.czmlString);
-    } else if (isDefined(this._czmlFile)) {
-      loadableData = readJson(this._czmlFile);
+    } else if (isDefined(this._private_czmlFile)) {
+      loadableData = readJson(this._private_czmlFile);
     } else if (isDefined(this.url)) {
       loadableData = proxyCatalogItemUrl(this, this.url, this.cacheDuration);
     }
@@ -144,7 +144,7 @@ export default class CzmlCatalogItem
       });
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  _protected_forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 

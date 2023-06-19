@@ -67,8 +67,10 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     return ApiTableCatalogItem.type;
   }
 
-  @observable private apiResponses: any[] = [];
-  @observable private hasData: boolean = false;
+  @observable
+  _private_apiResponses: any[] = [];
+  @observable
+  _private_hasData: boolean = false;
 
   constructor(id: string | undefined, terria: Terria) {
     super(id, terria);
@@ -82,10 +84,10 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
 
   @computed
   get apiDataIsLoaded(): boolean {
-    return this.apiResponses.length > 0;
+    return this._private_apiResponses.length > 0;
   }
 
-  protected loadDataFromApis() {
+  _protected_loadDataFromApis() {
     const apisWithUrl = this.apis.filter((api) => api.url);
     const apiUrls = apisWithUrl.map((api) =>
       proxyCatalogItemUrl(this, api.url!)
@@ -139,7 +141,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
           });
 
         if (columnMajorData.size !== 0) {
-          this.apiResponses = Array.from(columnMajorData.values());
+          this._private_apiResponses = Array.from(columnMajorData.values());
           return;
         }
 
@@ -165,24 +167,26 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
             )
           );
 
-        this.apiResponses = perRowData;
+        this._private_apiResponses = perRowData;
       });
     });
   }
 
-  protected makeTableColumns(addHeaders: boolean) {
+  _protected_makeTableColumns(addHeaders: boolean) {
     return this.columns.map((col) => (addHeaders ? [col.name ?? ""] : []));
   }
 
-  protected apiResponseToTable() {
-    const columnMajorTable = this.makeTableColumns(!this.hasData);
+  _protected_apiResponseToTable() {
+    const columnMajorTable = this._protected_makeTableColumns(
+      !this._private_hasData
+    );
 
     if (!this.apiDataIsLoaded) {
       // No data yet, just return the headers
       return columnMajorTable;
     }
     // Fill in column values from the API response
-    this.apiResponses.forEach((response) => {
+    this._private_apiResponses.forEach((response) => {
       this.columns.forEach((col, mappingIdx) => {
         if (!isDefined(col.name)) return;
         // Append the new value to the correct column
@@ -193,28 +197,28 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     return columnMajorTable;
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async _protected_forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 
-  protected async forceLoadTableData(): Promise<string[][] | undefined> {
-    return this.loadDataFromApis()
+  async _protected_forceLoadTableData(): Promise<string[][] | undefined> {
+    return this._protected_loadDataFromApis()
       .then(() => {
         runInAction(() => {
-          const newTableData = this.apiResponseToTable();
+          const newTableData = this._protected_apiResponseToTable();
           this.shouldAppendNewData
             ? this.append(newTableData)
             : (this.dataColumnMajor = newTableData);
-          this.hasData = true;
+          this._private_hasData = true;
         });
       })
       .then(() => undefined);
   }
 
   refreshData(): void {
-    this.loadDataFromApis().then(() => {
+    this._protected_loadDataFromApis().then(() => {
       runInAction(() => {
-        const newTableData = this.apiResponseToTable();
+        const newTableData = this._protected_apiResponseToTable();
         this.shouldAppendNewData
           ? this.append(newTableData)
           : (this.dataColumnMajor = newTableData);
@@ -222,7 +226,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     });
   }
 
-  protected addQueryParams(api: Model<ApiRequestTraits>): string {
+  _protected_addQueryParams(api: Model<ApiRequestTraits>): string {
     const uri = new URI(api.url);
 
     const substituteDateTimesInQueryParam = (param: string) => {
@@ -235,7 +239,8 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     };
 
     // Add common query parameters
-    let useUpdateParams = this.hasData && this.updateQueryParameters.length > 0;
+    let useUpdateParams =
+      this._private_hasData && this.updateQueryParameters.length > 0;
     const commonQueryParameters = useUpdateParams
       ? this.updateQueryParameters
       : this.queryParameters;
@@ -244,7 +249,8 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     });
 
     // Add API-specific query parameters
-    useUpdateParams = this.hasData && api.updateQueryParameters.length > 0;
+    useUpdateParams =
+      this._private_hasData && api.updateQueryParameters.length > 0;
     const specificQueryParameters = useUpdateParams
       ? api.updateQueryParameters
       : api.queryParameters;

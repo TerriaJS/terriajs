@@ -295,9 +295,10 @@ export class GetCapabilitiesStratum extends LoadableStratum(
     );
 
     return (
+      // Default to urn identifier for WGS84 if we cant find something better. Sometimes WFS service will support this even if not specified in GetCapabilities response.
       layerSrsArray?.srsArray.find((srsName) =>
         SUPPORTED_CRS_4326.includes(srsName)
-      ) ?? "urn:ogc:def:crs:EPSG::4326" // Default to urn identifier for WGS84 if we cant find something better. Sometimes WFS service will support this even if not specified in GetCapabilities response.
+      ) ?? "urn:ogc:def:crs:EPSG::4326"
     );
   }
 }
@@ -331,7 +332,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
     return WebFeatureServiceCatalogItem.type;
   }
 
-  protected get defaultGetCapabilitiesUrl(): string | undefined {
+  get _protected_defaultGetCapabilitiesUrl(): string | undefined {
     if (this.uri) {
       return this.uri
         .clone()
@@ -355,7 +356,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
     });
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async _protected_forceLoadMetadata(): Promise<void> {
     if (
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
       undefined
@@ -367,7 +368,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
     });
   }
 
-  protected async forceLoadGeojsonData(): Promise<FeatureCollectionWithCrs> {
+  async _protected_forceLoadGeojsonData(): Promise<FeatureCollectionWithCrs> {
     const getCapabilitiesStratum: GetCapabilitiesStratum | undefined =
       this.strata.get(
         GetCapabilitiesMixin.getCapabilitiesStratumName

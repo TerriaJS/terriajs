@@ -607,8 +607,7 @@ export default class TableColumn {
   get title(): string {
     return (
       this.tableModel.columnTitles[this.columnNumber] ??
-      this.traits.title ??
-      // If no title set, use `name` and:
+      this.traits.title ?? // If no title set, use `name` and:
       // - un-camel case
       // - remove underscores
       // - capitalise

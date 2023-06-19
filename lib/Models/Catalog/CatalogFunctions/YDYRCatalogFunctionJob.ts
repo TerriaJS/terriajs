@@ -31,7 +31,7 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
   }
 
   @action
-  async _invoke() {
+  async _protected_invoke() {
     if (!isDefined(this.parameters)) {
       throw "Parameters have not been set";
     }

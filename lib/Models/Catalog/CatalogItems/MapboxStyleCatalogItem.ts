@@ -20,7 +20,7 @@ export default class MapboxStyleCatalogItem extends MappableMixin(
     makeObservable(this);
   }
 
-  protected forceLoadMapItems() {
+  _protected_forceLoadMapItems() {
     return Promise.resolve();
   }
 

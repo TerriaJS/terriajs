@@ -189,7 +189,7 @@ class WebMapServiceCatalogItem
     });
   }
 
-  protected override async forceLoadMapItems(): Promise<void> {
+  override async _protected_forceLoadMapItems(): Promise<void> {
     if (this.invalidLayers.length > 0)
       throw new TerriaError({
         sender: this,
@@ -201,7 +201,7 @@ class WebMapServiceCatalogItem
       });
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async _protected_forceLoadMetadata(): Promise<void> {
     if (
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
       undefined
@@ -280,7 +280,7 @@ class WebMapServiceCatalogItem
     return getCapabilitiesStratum?.discreteTimes;
   }
 
-  protected get defaultGetCapabilitiesUrl(): string | undefined {
+  get _protected_defaultGetCapabilitiesUrl(): string | undefined {
     if (this.uri) {
       return this.uri
         .clone()
@@ -359,17 +359,19 @@ class WebMapServiceCatalogItem
     if (this.invalidLayers.length > 0) return [];
 
     if (this.isShowingDiff === true) {
-      return this._diffImageryParts ? [this._diffImageryParts] : [];
+      return this._private_diffImageryParts
+        ? [this._private_diffImageryParts]
+        : [];
     }
 
     const result = [];
 
-    const current = this._currentImageryParts;
+    const current = this._private_currentImageryParts;
     if (current) {
       result.push(current);
     }
 
-    const next = this._nextImageryParts;
+    const next = this._private_nextImageryParts;
     if (next) {
       result.push(next);
     }
@@ -390,8 +392,8 @@ class WebMapServiceCatalogItem
   }
 
   @computed
-  private get _currentImageryParts(): ImageryParts | undefined {
-    const imageryProvider = this._createImageryProvider(
+  get _private_currentImageryParts(): ImageryParts | undefined {
+    const imageryProvider = this._private_createImageryProvider(
       this.currentDiscreteTimeTag
     );
     if (imageryProvider === undefined) {
@@ -409,13 +411,13 @@ class WebMapServiceCatalogItem
   }
 
   @computed
-  private get _nextImageryParts(): ImageryParts | undefined {
+  get _private_nextImageryParts(): ImageryParts | undefined {
     if (
       this.terria.timelineStack.contains(this) &&
       !this.isPaused &&
       this.nextDiscreteTimeTag
     ) {
-      const imageryProvider = this._createImageryProvider(
+      const imageryProvider = this._private_createImageryProvider(
         this.nextDiscreteTimeTag
       );
       if (imageryProvider === undefined) {
@@ -438,7 +440,7 @@ class WebMapServiceCatalogItem
   }
 
   @computed
-  private get _diffImageryParts(): ImageryParts | undefined {
+  get _private_diffImageryParts(): ImageryParts | undefined {
     const diffStyleId = this.diffStyleId;
     if (
       this.firstDiffDate === undefined ||
@@ -448,7 +450,7 @@ class WebMapServiceCatalogItem
       return;
     }
     const time = `${this.firstDiffDate},${this.secondDiffDate}`;
-    const imageryProvider = this._createImageryProvider(time);
+    const imageryProvider = this._private_createImageryProvider(time);
     if (imageryProvider) {
       return {
         imageryProvider,
@@ -474,7 +476,7 @@ class WebMapServiceCatalogItem
       : undefined;
   }
 
-  private _createImageryProvider = createTransformerAllowUndefined(
+  _private_createImageryProvider = createTransformerAllowUndefined(
     (time: string | undefined): WebMapServiceImageryProvider | undefined => {
       // Don't show anything on the map until GetCapabilities finishes loading.
       if (this.isLoadingMetadata) {
@@ -596,7 +598,7 @@ class WebMapServiceCatalogItem
       }
 
       const imageryProvider = new WebMapServiceImageryProvider(imageryOptions);
-      return this.updateRequestImage(imageryProvider);
+      return this._protected_updateRequestImage(imageryProvider);
     }
   );
 

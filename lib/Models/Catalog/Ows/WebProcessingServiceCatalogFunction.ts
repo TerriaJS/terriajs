@@ -233,7 +233,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     return proxyCatalogItemUrl(this, uri.toString());
   }
 
-  protected async forceLoadMetadata() {
+  async _protected_forceLoadMetadata() {
     if (!this.strata.has(WpsLoadableStratum.stratumName)) {
       const stratum = await WpsLoadableStratum.load(this);
       if (isDefined(stratum)) {
@@ -269,7 +269,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     });
   }
 
-  protected async createJob(id: string) {
+  async _protected_createJob(id: string) {
     const job = new WebProcessingServiceCatalogFunctionJob(id, this.terria);
 
     let dataInputs = filterOutUndefined(

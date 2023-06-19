@@ -36,7 +36,7 @@ export default class ArcGisTerrainCatalogItem extends UrlMixin(
     return [];
   }
 
-  protected override forceLoadMapItems(): Promise<void> {
+  override _protected_forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
 }

@@ -144,18 +144,18 @@ export default class GeoRssCatalogItem
     return i18next.t("models.georss.name");
   }
 
-  private _georssFile?: File;
+  _private_georssFile?: File;
 
   setFileInput(file: File) {
-    this._georssFile = file;
+    this._private_georssFile = file;
   }
 
   @computed
   get hasLocalData(): boolean {
-    return isDefined(this._georssFile);
+    return isDefined(this._private_georssFile);
   }
 
-  private parseGeorss(xmlData: Document): JsonObject | never {
+  _private_parseGeorss(xmlData: Document): JsonObject | never {
     const documentElement = xmlData.documentElement;
     let json: JsonObject;
     let metadata: Feed;
@@ -178,13 +178,13 @@ export default class GeoRssCatalogItem
     return json;
   }
 
-  protected async forceLoadGeojsonData(): Promise<any> {
+  async _protected_forceLoadGeojsonData(): Promise<any> {
     let data: Document | undefined;
     if (isDefined(this.geoRssString)) {
       const parser = new DOMParser();
       data = parser.parseFromString(this.geoRssString, "text/xml");
-    } else if (isDefined(this._georssFile)) {
-      data = await readXml(this._georssFile);
+    } else if (isDefined(this._private_georssFile)) {
+      data = await readXml(this._private_georssFile);
     } else if (isDefined(this.url)) {
       data = await loadXML(proxyCatalogItemUrl(this, this.url));
     }
@@ -199,10 +199,10 @@ export default class GeoRssCatalogItem
       });
     }
 
-    return this.parseGeorss(data);
+    return this._private_parseGeorss(data);
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  _protected_forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 }

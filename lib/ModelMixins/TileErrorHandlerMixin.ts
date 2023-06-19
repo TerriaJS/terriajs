@@ -33,7 +33,7 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
 ) {
   abstract class TileErrorHandlerMixin extends Base {
     tileFailures = 0;
-    private readonly tileRetriesByMap: Map<string, number> = new Map();
+    readonly _private_tileRetriesByMap: Map<string, number> = new Map();
 
     tileRetryOptions: retry.OperationOptions = {
       retries: 8,
@@ -209,7 +209,7 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
       if (tileProviderError.timesRetried === 0) {
         // There was an intervening success, so restart our count of the tile failures.
         this.tileFailures = 0;
-        this.tileRetriesByMap.clear();
+        this._private_tileRetriesByMap.clear();
       }
 
       operation.attempt(
@@ -239,8 +239,8 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
             await maybeXhr;
             const key = getTileKey(tile);
             const retriesByMap =
-              this.tileRetriesByMap
-                .set(key, (this.tileRetriesByMap.get(key) || 0) + 1)
+              this._private_tileRetriesByMap
+                .set(key, (this._private_tileRetriesByMap.get(key) || 0) + 1)
                 .get(key) || 0;
 
             if (retriesByMap > 5) {

@@ -23,12 +23,12 @@ export default class OpenStreetMapCatalogItem extends MappableMixin(
     return OpenStreetMapCatalogItem.type;
   }
 
-  protected override forceLoadMapItems(): Promise<void> {
+  override _protected_forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
 
   @computed get mapItems(): MapItem[] {
-    const imageryProvider = this.imageryProvider;
+    const imageryProvider = this._private_imageryProvider;
     if (!isDefined(imageryProvider)) {
       return [];
     }
@@ -44,7 +44,8 @@ export default class OpenStreetMapCatalogItem extends MappableMixin(
     ];
   }
 
-  @computed private get imageryProvider() {
+  @computed
+  get _private_imageryProvider() {
     if (!isDefined(this.templateUrl)) {
       return;
     }

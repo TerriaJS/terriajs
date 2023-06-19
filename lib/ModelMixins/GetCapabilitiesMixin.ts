@@ -10,7 +10,7 @@ function GetCapabilitiesMixin<T extends AbstractConstructor<BaseType>>(
   Base: T
 ) {
   abstract class GetCapabilitiesMixin extends Base {
-    protected abstract get defaultGetCapabilitiesUrl(): string | undefined;
+    abstract get _protected_defaultGetCapabilitiesUrl(): string | undefined;
 
     constructor(...args: any[]) {
       super(...args);
@@ -23,7 +23,7 @@ function GetCapabilitiesMixin<T extends AbstractConstructor<BaseType>>(
       if (getCapabilitiesUrl !== undefined) {
         return getCapabilitiesUrl;
       } else {
-        return this.defaultGetCapabilitiesUrl;
+        return this._protected_defaultGetCapabilitiesUrl;
       }
     }
   }

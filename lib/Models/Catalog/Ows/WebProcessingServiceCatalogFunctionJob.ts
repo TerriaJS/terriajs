@@ -167,7 +167,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
   @observable
   public geoJsonItem?: GeoJsonCatalogItem;
 
-  private get executeUrlParameters() {
+  get _private_executeUrlParameters() {
     return {
       service: "WPS",
       request: "Execute",
@@ -183,12 +183,12 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
       return;
     }
 
-    const uri = new URI(this.url).query(this.executeUrlParameters);
+    const uri = new URI(this.url).query(this._private_executeUrlParameters);
 
     return proxyCatalogItemUrl(this, uri.toString(), this.proxyCacheDuration);
   }
 
-  async _invoke() {
+  async _protected_invoke() {
     if (
       !isDefined(this.identifier) ||
       !isDefined(this.executeUrl) ||
@@ -201,7 +201,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     const executeUrl = this.executeUrl;
 
     const parameters = {
-      ...this.executeUrlParameters,
+      ...this._private_executeUrlParameters,
       Identifier: htmlEscapeText(identifier),
       DataInputs: toJS(this.wpsParameters),
       storeExecuteResponse: toJS(this.storeSupported),
@@ -338,7 +338,9 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
         ) {
           // Create a catalog member from the embedded json
           const json = JSON.parse(output.Data.ComplexData.text);
-          const catalogItem = await this.createCatalogItemFromJson(json);
+          const catalogItem = await this._private_createCatalogItemFromJson(
+            json
+          );
           if (isDefined(catalogItem)) {
             if (CatalogMemberMixin.isMixedInto(catalogItem))
               results.push(catalogItem);
@@ -394,15 +396,15 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     return [];
   }
 
-  protected async forceLoadMetadata() {
-    await super.forceLoadMetadata();
+  async _protected_forceLoadMetadata() {
+    await super._protected_forceLoadMetadata();
     const stratum = await WpsLoadableStratum.load(this);
     runInAction(() => {
       this.strata.set(WpsLoadableStratum.stratumName, stratum);
     });
   }
 
-  protected override async forceLoadMapItems(): Promise<void> {
+  override async _protected_forceLoadMapItems(): Promise<void> {
     if (isDefined(this.geoJsonItem)) {
       const geoJsonItem = this.geoJsonItem;
       (await geoJsonItem.loadMapItems()).throwIfError();
@@ -428,7 +430,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     );
   }
 
-  private async createCatalogItemFromJson(json: any) {
+  async _private_createCatalogItemFromJson(json: any) {
     let itemJson = json;
     try {
       if (

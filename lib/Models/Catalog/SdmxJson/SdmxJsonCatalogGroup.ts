@@ -16,7 +16,7 @@ export default class SdmxCatalogGroup extends UrlMixin(
     return SdmxCatalogGroup.type;
   }
 
-  protected override async forceLoadMetadata(): Promise<void> {
+  override async _protected_forceLoadMetadata(): Promise<void> {
     if (!this.strata.has(SdmxServerStratum.stratumName)) {
       const stratum = await SdmxServerStratum.load(this);
       runInAction(() => {
@@ -25,7 +25,7 @@ export default class SdmxCatalogGroup extends UrlMixin(
     }
   }
 
-  protected async forceLoadMembers() {
+  async _protected_forceLoadMembers() {
     const sdmxServerStratum = <SdmxServerStratum | undefined>(
       this.strata.get(SdmxServerStratum.stratumName)
     );

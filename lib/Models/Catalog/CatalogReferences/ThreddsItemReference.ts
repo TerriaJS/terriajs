@@ -109,7 +109,7 @@ export default class ThreddsItemReference extends UrlMixin(
     });
   }
 
-  async forceLoadReference(
+  async _protected_forceLoadReference(
     previousTarget: BaseModel | undefined
   ): Promise<BaseModel | undefined> {
     this.setThreddsStrata(this);

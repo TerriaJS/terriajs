@@ -19,14 +19,14 @@ import { BaseModel } from "../../Definition/Model";
 export default class CatalogIndexReference extends ReferenceMixin(
   CreateModel(CatalogIndexReferenceTraits)
 ) {
-  protected readonly weakReference = true;
+  readonly _protected_weakReference = true;
   static readonly type = "catalog-index-reference";
 
   get type() {
     return CatalogIndexReference.type;
   }
 
-  protected async forceLoadReference(
+  async _protected_forceLoadReference(
     previousTarget: BaseModel | undefined
   ): Promise<BaseModel | undefined> {
     if (this.uniqueId === undefined) {

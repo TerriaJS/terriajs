@@ -249,7 +249,7 @@ class SenapsLocationsCatalogItem extends MappableMixin(
     return i18next.t("models.senaps.name");
   }
 
-  protected override forceLoadMapItems(): Promise<void> {
+  override _protected_forceLoadMapItems(): Promise<void> {
     return SenapsLocationsStratum.load(this).then((stratum) => {
       if (stratum === undefined) return;
       runInAction(() => {
@@ -275,7 +275,7 @@ class SenapsLocationsCatalogItem extends MappableMixin(
     return [];
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  _protected_forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 

@@ -103,9 +103,9 @@ export default class GtfsCatalogItem extends UrlMixin(
    *
    * We cache it because recreating it reactively is computationally expensive, so we modify it reactively instead.
    */
-  protected _dataSource: DataSource = new CustomDataSource("billboard");
+  _private_dataSource: DataSource = new CustomDataSource("billboard");
 
-  protected static readonly FEATURE_INFO_TEMPLATE_FIELDS: string[] = [
+  static readonly _protected_FEATURE_INFO_TEMPLATE_FIELDS: string[] = [
     "route_short_name",
     "occupancy_status#str",
     "speed#km",
@@ -122,9 +122,9 @@ export default class GtfsCatalogItem extends UrlMixin(
   }
 
   @observable
-  protected gtfsFeedEntities: FeedEntity[] = [];
+  _protected_gtfsFeedEntities: FeedEntity[] = [];
 
-  protected convertManyFeedEntitiesToBillboardData: ITransformer<
+  _protected_convertManyFeedEntitiesToBillboardData: ITransformer<
     FeedEntity[],
     VehicleData[]
   > = createTransformer((feedEntities: FeedEntity[]) => {
@@ -135,7 +135,8 @@ export default class GtfsCatalogItem extends UrlMixin(
     const vehicleMap = new Map();
     for (var i = 0; i < feedEntities.length; ++i) {
       const entity: FeedEntity = feedEntities[i];
-      const item: VehicleData = this.convertFeedEntityToBillboardData(entity);
+      const item: VehicleData =
+        this._protected_convertFeedEntityToBillboardData(entity);
 
       if (item && item.position && item.featureInfo) {
         const vehicleInfo = item.featureInfo.get("entity").vehicle.vehicle;
@@ -153,23 +154,24 @@ export default class GtfsCatalogItem extends UrlMixin(
   });
 
   @computed
-  protected get dataSource(): DataSource {
-    this._dataSource.entities.suspendEvents();
+  get _protected_dataSource(): DataSource {
+    this._private_dataSource.entities.suspendEvents();
 
     // Convert the GTFS protobuf into a more useful shape
     const vehicleData: VehicleData[] =
-      this.convertManyFeedEntitiesToBillboardData(this.gtfsFeedEntities);
+      this._protected_convertManyFeedEntitiesToBillboardData(
+        this._protected_gtfsFeedEntities
+      );
     for (let data of vehicleData) {
       if (data.sourceId === undefined) {
         continue;
       }
 
-      const entity: Entity = this._dataSource.entities.getOrCreateEntity(
-        data.sourceId
-      );
+      const entity: Entity =
+        this._private_dataSource.entities.getOrCreateEntity(data.sourceId);
 
       if (!entity.model) {
-        if (this._coloredModels) {
+        if (this._private_coloredModels) {
           const gtfsEntity: FeedEntity = data.featureInfo?.get("entity");
           const value = _get(
             gtfsEntity,
@@ -183,14 +185,14 @@ export default class GtfsCatalogItem extends UrlMixin(
                   new RegExp(colorGroup.regExp).test(value)
               );
             if (index !== -1) {
-              entity.model = this._coloredModels[index];
+              entity.model = this._private_coloredModels[index];
             }
             entity.point = undefined;
           } else {
-            entity.model = this._model;
+            entity.model = this._private_model;
           }
-        } else if (this._model) {
-          entity.model = this._model;
+        } else if (this._private_model) {
+          entity.model = this._private_model;
         }
       }
 
@@ -257,31 +259,31 @@ export default class GtfsCatalogItem extends UrlMixin(
     }
 
     // remove entities that no longer exist
-    if (this._dataSource.entities.values.length > vehicleData.length) {
+    if (this._private_dataSource.entities.values.length > vehicleData.length) {
       const idSet = new Set(vehicleData.map((val) => val.sourceId));
 
-      this._dataSource.entities.values
+      this._private_dataSource.entities.values
         .filter((entity) => !idSet.has(entity.id))
-        .forEach((entity) => this._dataSource.entities.remove(entity));
+        .forEach((entity) => this._private_dataSource.entities.remove(entity));
     }
 
-    this._dataSource.entities.resumeEvents();
+    this._private_dataSource.entities.resumeEvents();
 
-    return this._dataSource;
+    return this._private_dataSource;
   }
 
   refreshData() {
-    this.forceLoadMapItems();
+    this._protected_forceLoadMapItems();
   }
 
   @computed
   get mapItems(): DataSource[] {
-    this._dataSource.show = this.show;
-    return [this.dataSource];
+    this._private_dataSource.show = this.show;
+    return [this._protected_dataSource];
   }
 
   @computed
-  private get _cesiumUpAxis() {
+  get _private_cesiumUpAxis() {
     if (this.model.upAxis === undefined) {
       return Axis.Y;
     }
@@ -289,7 +291,7 @@ export default class GtfsCatalogItem extends UrlMixin(
   }
 
   @computed
-  private get _cesiumForwardAxis() {
+  get _private_cesiumForwardAxis() {
     if (this.model.forwardAxis === undefined) {
       return Axis.Z;
     }
@@ -297,15 +299,15 @@ export default class GtfsCatalogItem extends UrlMixin(
   }
 
   @computed
-  private get _model() {
+  get _private_model() {
     if (this.model.url === undefined) {
       return undefined;
     }
 
     const options = {
       uri: new ConstantProperty(this.model.url),
-      upAxis: new ConstantProperty(this._cesiumUpAxis),
-      forwardAxis: new ConstantProperty(this._cesiumForwardAxis),
+      upAxis: new ConstantProperty(this._private_cesiumUpAxis),
+      forwardAxis: new ConstantProperty(this._private_cesiumForwardAxis),
       scale: new ConstantProperty(this.model.scale ?? 1),
       heightReference: new ConstantProperty(HeightReference.RELATIVE_TO_GROUND),
       distanceDisplayCondition: new ConstantProperty({
@@ -321,9 +323,9 @@ export default class GtfsCatalogItem extends UrlMixin(
   }
 
   @computed
-  private get _coloredModels() {
+  get _private_coloredModels() {
     const colorGroups = this.model?.colorModelsByProperty?.colorGroups;
-    const model = this._model;
+    const model = this._private_model;
     if (
       !isDefined(model) ||
       !isDefined(this.model?.colorModelsByProperty?.property) ||
@@ -352,11 +354,11 @@ export default class GtfsCatalogItem extends UrlMixin(
     makeObservable(this);
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  _protected_forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 
-  protected override forceLoadMapItems(): Promise<void> {
+  override _protected_forceLoadMapItems(): Promise<void> {
     if (this.strata.get(GtfsStratum.stratumName) === undefined) {
       GtfsStratum.load(this).then((stratum) => {
         runInAction(() => {
@@ -364,11 +366,11 @@ export default class GtfsCatalogItem extends UrlMixin(
         });
       });
     }
-    const promise: Promise<void> = this.retrieveData()
+    const promise: Promise<void> = this._protected_retrieveData()
       .then((data: FeedMessage) => {
         runInAction(() => {
           if (data.entity !== undefined && data.entity !== null) {
-            this.gtfsFeedEntities = data.entity;
+            this._protected_gtfsFeedEntities = data.entity;
             this.terria.currentViewer.notifyRepaintRequired();
           }
         });
@@ -384,7 +386,7 @@ export default class GtfsCatalogItem extends UrlMixin(
     return promise;
   }
 
-  protected retrieveData(): Promise<FeedMessage> {
+  _protected_retrieveData(): Promise<FeedMessage> {
     // These headers work for the Transport for NSW APIs. Presumably, other services will require different headers.
     const headers: any = {
       "Content-Type": "application/x-google-protobuf;charset=UTF-8",
@@ -409,7 +411,7 @@ export default class GtfsCatalogItem extends UrlMixin(
     }
   }
 
-  protected convertFeedEntityToBillboardData(entity: FeedEntity): VehicleData {
+  _protected_convertFeedEntityToBillboardData(entity: FeedEntity): VehicleData {
     if (entity.id == undefined) {
       return {};
     }
@@ -448,7 +450,7 @@ export default class GtfsCatalogItem extends UrlMixin(
     }
 
     // Add the values that the feature info template gets populated with
-    for (let field of GtfsCatalogItem.FEATURE_INFO_TEMPLATE_FIELDS) {
+    for (let field of GtfsCatalogItem._protected_FEATURE_INFO_TEMPLATE_FIELDS) {
       featureInfo.set(field, prettyPrintGtfsEntityField(field, entity));
     }
     featureInfo.set("entity", entity);

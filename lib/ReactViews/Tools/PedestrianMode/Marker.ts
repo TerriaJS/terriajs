@@ -9,10 +9,10 @@ import Terria from "../../../Models/Terria";
 import MappableTraits from "../../../Traits/TraitsClasses/MappableTraits";
 
 export default class Marker extends MappableMixin(CreateModel(MappableTraits)) {
-  private dataSource: CustomDataSource;
-  private icon: RotatableIcon;
+  _private_dataSource: CustomDataSource;
+  _private_icon: RotatableIcon;
 
-  private currentRotation = 0;
+  _private_currentRotation = 0;
   position: Cartesian3;
 
   /**
@@ -29,19 +29,21 @@ export default class Marker extends MappableMixin(CreateModel(MappableTraits)) {
   ) {
     super(undefined, terria);
     this.position = position;
-    this.dataSource = new CustomDataSource();
+    this._private_dataSource = new CustomDataSource();
 
-    this.icon = new RotatableIcon(iconUrl, 24, 24);
-    this.icon.loadPromise.then(() => this.icon.rotate(rotation));
+    this._private_icon = new RotatableIcon(iconUrl, 24, 24);
+    this._private_icon.loadPromise.then(() =>
+      this._private_icon.rotate(rotation)
+    );
 
     const entity = new Entity({
       billboard: new BillboardGraphics({
-        image: this.icon.canvas
+        image: this._private_icon.canvas
       }),
       position: new CallbackProperty(() => this.position, false) as any
     });
 
-    this.dataSource.entities.add(entity);
+    this._private_dataSource.entities.add(entity);
   }
 
   /**
@@ -50,16 +52,16 @@ export default class Marker extends MappableMixin(CreateModel(MappableTraits)) {
   set rotation(rotation: number) {
     // round to 2 decimal places to minimize rotation updates
     const newRotation = Math.round(rotation * 100) / 100;
-    if (this.currentRotation !== newRotation) {
-      this.icon.rotate(newRotation);
-      this.currentRotation = newRotation;
+    if (this._private_currentRotation !== newRotation) {
+      this._private_icon.rotate(newRotation);
+      this._private_currentRotation = newRotation;
     }
   }
 
-  protected async forceLoadMapItems() {}
+  async _protected_forceLoadMapItems() {}
 
   get mapItems() {
-    return [this.dataSource];
+    return [this._private_dataSource];
   }
 }
 

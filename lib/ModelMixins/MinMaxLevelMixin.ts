@@ -30,7 +30,7 @@ function MinMaxLevelMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return scaleDenominatorToLevel(this.minScaleDenominator, false, ows);
     }
 
-    protected updateRequestImage<T extends ImageryProvider>(
+    _protected_updateRequestImage<T extends ImageryProvider>(
       imageryProvider: T,
       ows: boolean = true
     ) {

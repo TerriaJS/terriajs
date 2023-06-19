@@ -134,22 +134,22 @@ function CatalogFunctionJobMixin<
      *
      * @returns true for FINISHED, false for RUNNING (will then call pollForResults)
      */
-    protected abstract _invoke(): Promise<boolean>;
+    abstract _protected_invoke(): Promise<boolean>;
 
     public async invoke() {
       this.setTrait(CommonStrata.user, "jobStatus", "running");
       try {
-        const finished = await runInAction(() => this._invoke());
+        const finished = await runInAction(() => this._protected_invoke());
         if (finished) {
           this.setTrait(CommonStrata.user, "jobStatus", "finished");
-          await this.onJobFinish(true);
+          await this._private_onJobFinish(true);
         } else {
           this.setTrait(CommonStrata.user, "refreshEnabled", true);
         }
       } catch (error) {
         this.setTrait(CommonStrata.user, "jobStatus", "error");
         // Note: we set raiseToUser argument as false here, as it is handled in CatalogFunctionMixin.submitJob()
-        this.setOnError(error, false);
+        this._protected_setOnError(error, false);
         throw error;
       }
     }
@@ -158,7 +158,7 @@ function CatalogFunctionJobMixin<
       return 2;
     }
 
-    private pollingForResults = false;
+    _private_pollingForResults = false;
 
     /**
      * Called every refreshInterval
@@ -174,11 +174,11 @@ function CatalogFunctionJobMixin<
      */
     @action
     refreshData() {
-      if (this.pollingForResults) {
+      if (this._private_pollingForResults) {
         return;
       }
 
-      this.pollingForResults = true;
+      this._private_pollingForResults = true;
 
       (async () => {
         try {
@@ -189,21 +189,21 @@ function CatalogFunctionJobMixin<
               this.setTrait(CommonStrata.user, "jobStatus", "finished");
               this.setTrait(CommonStrata.user, "refreshEnabled", false);
             });
-            await this.onJobFinish(true);
+            await this._private_onJobFinish(true);
           }
-          this.pollingForResults = false;
+          this._private_pollingForResults = false;
         } catch (error) {
           runInAction(() => {
             this.setTrait(CommonStrata.user, "jobStatus", "error");
             this.setTrait(CommonStrata.user, "refreshEnabled", false);
-            this.setOnError(error);
+            this._protected_setOnError(error);
           });
-          this.pollingForResults = false;
+          this._private_pollingForResults = false;
         }
       })();
     }
 
-    private downloadingResults = false;
+    _private_downloadingResults = false;
 
     /**
      * This handles downloading job results, it can be triggered three ways:
@@ -211,14 +211,14 @@ function CatalogFunctionJobMixin<
      * - `pollForResults` returns true {@link CatalogFunctionJobMixin#refreshData}
      * - on `loadMetadata` if `jobStatus` is "finished", and `!downloadedResults`  {@link CatalogFunctionJobMixin#forceLoadMetadata}
      */
-    private async onJobFinish(addResultsToWorkbench = this.inWorkbench) {
+    async _private_onJobFinish(addResultsToWorkbench = this.inWorkbench) {
       // Download results when finished
       if (
         this.jobStatus === "finished" &&
         !this.downloadedResults &&
-        !this.downloadingResults
+        !this._private_downloadingResults
       ) {
-        this.downloadingResults = true;
+        this._private_downloadingResults = true;
         this.results = (await this.downloadResults()) || [];
         this.results.forEach((result) => {
           if (MappableMixin.isMixedInto(result))
@@ -239,7 +239,7 @@ function CatalogFunctionJobMixin<
           );
           this.setTrait(CommonStrata.user, "downloadedResults", true);
         });
-        this.downloadingResults = false;
+        this._private_downloadingResults = false;
       }
     }
 
@@ -256,7 +256,7 @@ function CatalogFunctionJobMixin<
     abstract downloadResults(): Promise<CatalogMemberMixin.Instance[] | void>;
 
     @action
-    protected setOnError(error: unknown, raiseToUser: boolean = true) {
+    _protected_setOnError(error: unknown, raiseToUser: boolean = true) {
       const terriaError = TerriaError.from(error, {
         title: "Job failed",
         message: `An error has occurred while executing \`${this.name}\` job`,
@@ -293,15 +293,15 @@ function CatalogFunctionJobMixin<
     get mapItems(): MapItem[] {
       return [];
     }
-    protected override async forceLoadMapItems() {}
+    override async _protected_forceLoadMapItems() {}
 
-    protected async forceLoadMetadata() {
+    async _protected_forceLoadMetadata() {
       if (this.jobStatus === "finished" && !this.downloadedResults) {
-        await this.onJobFinish();
+        await this._private_onJobFinish();
       }
     }
 
-    protected async forceLoadMembers() {}
+    async _protected_forceLoadMembers() {}
 
     get hasCatalogFunctionJobMixin() {
       return true;

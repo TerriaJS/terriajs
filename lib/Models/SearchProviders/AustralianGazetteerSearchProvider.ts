@@ -141,8 +141,7 @@ const featureToSearchResultFunction = function (feature: any): SearchResult {
 const searchResultFilterFunction = function (feature: any): boolean {
   return (
     // search results with state ID of N/A seem to be poor quality
-    feature.Gazetteer_of_Australia.State_ID !== "N/A" &&
-    // filter out trig stations
+    feature.Gazetteer_of_Australia.State_ID !== "N/A" && // filter out trig stations
     feature.Gazetteer_of_Australia.Feature_code !== "TRIG"
   );
 };

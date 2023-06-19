@@ -227,16 +227,16 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     FeatureInfoUrlTemplateMixin(UrlMixin(Base))
   ) {
     @observable
-    private _dataSource:
+    _private_dataSource:
       | CustomDataSource
       | CzmlDataSource
       | GeoJsonDataSource
       | undefined;
 
     @observable
-    private _imageryProvider: ProtomapsImageryProvider | undefined;
+    _private_imageryProvider: ProtomapsImageryProvider | undefined;
 
-    private tableStyleReactionDisposer: IReactionDisposer | undefined;
+    _private_tableStyleReactionDisposer: IReactionDisposer | undefined;
 
     /** Geojson FeatureCollection in WGS84 */
     @observable.ref _readyData?: FeatureCollectionWithCrs;
@@ -279,19 +279,19 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       onBecomeObserved(
         this,
         "mapItems",
-        this.startTableStyleReaction.bind(this)
+        this._private_startTableStyleReaction.bind(this)
       );
       onBecomeUnobserved(
         this,
         "mapItems",
-        this.stopTableStyleReaction.bind(this)
+        this._private_stopTableStyleReaction.bind(this)
       );
     }
 
-    private startTableStyleReaction() {
-      if (!this.tableStyleReactionDisposer) {
+    _private_startTableStyleReaction() {
+      if (!this._private_tableStyleReactionDisposer) {
         // Update protomaps imagery provider if activeTableStyle changes
-        this.tableStyleReactionDisposer = reaction(
+        this._private_tableStyleReactionDisposer = reaction(
           () => [
             this.useTableStylingAndProtomaps,
             this.readyData,
@@ -305,14 +305,13 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           ],
           () => {
             if (
-              this._imageryProvider &&
+              this._private_imageryProvider &&
               this.readyData &&
               this.useTableStylingAndProtomaps
             ) {
               runInAction(() => {
-                this._imageryProvider = this.createProtomapsImageryProvider(
-                  this.readyData!
-                );
+                this._private_imageryProvider =
+                  this._private_createProtomapsImageryProvider(this.readyData!);
               });
             }
           },
@@ -322,10 +321,10 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       }
     }
 
-    private stopTableStyleReaction() {
-      if (this.tableStyleReactionDisposer) {
-        this.tableStyleReactionDisposer();
-        this.tableStyleReactionDisposer = undefined;
+    _private_stopTableStyleReaction() {
+      if (this._private_tableStyleReactionDisposer) {
+        this._private_tableStyleReactionDisposer();
+        this._private_tableStyleReactionDisposer = undefined;
       }
     }
 
@@ -358,11 +357,11 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @override
-    get _canExportData() {
+    get _protected_canExportData() {
       return isDefined(this.readyData);
     }
 
-    protected async _exportData(): Promise<ExportData | undefined> {
+    async _protected_exportData(): Promise<ExportData | undefined> {
       if (isDefined(this.readyData)) {
         let name = this.name || this.uniqueId || "data.geojson";
         if (!isJson(name)) {
@@ -385,9 +384,11 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       if (this.isLoadingMapItems) {
         return [];
       }
-      this._dataSource ? (this._dataSource.show = this.show) : null;
+      this._private_dataSource
+        ? (this._private_dataSource.show = this.show)
+        : null;
       let points = this.useTableStylingAndProtomaps
-        ? this.createPoints(this.activeTableStyle)
+        ? this._private_createPoints(this.activeTableStyle)
         : undefined;
 
       points = points?.entities.values.length === 0 ? undefined : points;
@@ -395,10 +396,10 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       points ? (points.show = this.show) : null;
       return filterOutUndefined([
         points,
-        this._dataSource,
-        this._imageryProvider
+        this._private_dataSource,
+        this._private_imageryProvider
           ? {
-              imageryProvider: this._imageryProvider,
+              imageryProvider: this._private_imageryProvider,
               show: this.show,
               alpha: this.opacity,
               clippingRectangle: undefined
@@ -457,7 +458,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      *
      * Errors can be thrown here.
      */
-    protected abstract forceLoadGeojsonData(): Promise<
+    abstract _protected_forceLoadGeojsonData(): Promise<
       FeatureCollectionWithCrs | undefined
     >;
 
@@ -472,14 +473,14 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      *    - More than 50% of GeoJSON features have simply-style properties (eg "fill-color")
      *    - MultiPoint features are in GeoJSON (not supported by Table styling)
      */
-    protected override async forceLoadMapItems(): Promise<void> {
+    override async _protected_forceLoadMapItems(): Promise<void> {
       const czmlTemplate = this.czmlTemplate;
       const filterByProperties = this.filterByProperties;
 
       let geoJson: FeatureCollectionWithCrs | undefined;
 
       try {
-        geoJson = await this.forceLoadGeojsonData();
+        geoJson = await this._protected_forceLoadGeojsonData();
         if (geoJson === undefined) {
           return;
         }
@@ -561,24 +562,28 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         });
 
         if (isDefined(czmlTemplate)) {
-          const dataSource = await this.loadCzmlDataSource(geoJsonWgs84);
+          const dataSource = await this._private_loadCzmlDataSource(
+            geoJsonWgs84
+          );
           runInAction(() => {
-            this._dataSource = dataSource;
-            this._imageryProvider = undefined;
+            this._private_dataSource = dataSource;
+            this._private_imageryProvider = undefined;
           });
         } else if (runInAction(() => this.useTableStylingAndProtomaps)) {
           runInAction(() => {
-            this._imageryProvider =
-              this.createProtomapsImageryProvider(geoJsonWgs84);
+            this._private_imageryProvider =
+              this._private_createProtomapsImageryProvider(geoJsonWgs84);
           });
         } else {
-          const dataSource = await this.loadGeoJsonDataSource(geoJsonWgs84);
+          const dataSource = await this._protected_loadGeoJsonDataSource(
+            geoJsonWgs84
+          );
           runInAction(() => {
-            this._dataSource = dataSource;
-            this._imageryProvider = undefined;
+            this._private_dataSource = dataSource;
+            this._private_imageryProvider = undefined;
           });
         }
-        this._dataSource?.entities.values.forEach(
+        this._private_dataSource?.entities.values.forEach(
           (entity) => ((entity as any)._catalogItem = this)
         );
       } catch (e) {
@@ -592,7 +597,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @action
-    private addPerPropertyStyleToGeoJson(fc: FeatureCollectionWithCrs) {
+    _private_addPerPropertyStyleToGeoJson(fc: FeatureCollectionWithCrs) {
       for (let i = 0; i < fc.features.length; i++) {
         const featureProperties = fc.features[i].properties;
         if (featureProperties === null) {
@@ -634,7 +639,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     // Create point features using TableMixin.createLongitudeLatitudeFeaturePerRow
     // Used with table styling
     // Line and Polygon features are handled by Protomaps
-    private readonly createPoints = createTransformer(
+    readonly _private_createPoints = createTransformer(
       (style: TableStyle): DataSource | undefined => {
         if (!this.readyData) return;
 
@@ -673,7 +678,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     );
 
     @action
-    private createProtomapsImageryProvider(geoJson: FeatureCollectionWithCrs) {
+    _private_createProtomapsImageryProvider(geoJson: FeatureCollectionWithCrs) {
       // Don't need protomaps unless we have lines and polygons to show
       // Points are handled by this.createPoints()
       if (this.featureCounts.line + this.featureCounts.polygon === 0) return;
@@ -748,11 +753,11 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       // Are we creating a protomaps imagery provider with the same geojson data (readyData)?
       // If so we can copy GeojsonSource over to save running geojson-vt again
       if (
-        this._imageryProvider instanceof ProtomapsImageryProvider &&
-        this._imageryProvider.source instanceof GeojsonSource &&
-        this._imageryProvider.source.geojsonObject === this.readyData
+        this._private_imageryProvider instanceof ProtomapsImageryProvider &&
+        this._private_imageryProvider.source instanceof GeojsonSource &&
+        this._private_imageryProvider.source.geojsonObject === this.readyData
       ) {
-        protomapsData = this._imageryProvider.source;
+        protomapsData = this._private_imageryProvider.source;
       }
 
       let provider = new ProtomapsImageryProvider({
@@ -807,7 +812,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return provider;
     }
 
-    private async loadCzmlDataSource(
+    async _private_loadCzmlDataSource(
       geoJson: FeatureCollectionWithCrs
     ): Promise<CzmlDataSource> {
       const czmlTemplate = runInAction(() => toJS(this.czmlTemplate));
@@ -999,7 +1004,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return toJS(options);
     }
 
-    protected async loadGeoJsonDataSource(
+    async _protected_loadGeoJsonDataSource(
       geoJson: FeatureCollectionWithCrs
     ): Promise<GeoJsonDataSource> {
       /* Style information is applied as follows, in decreasing priority:
@@ -1010,7 +1015,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
             See https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0
       */
 
-      this.addPerPropertyStyleToGeoJson(geoJson);
+      this._private_addPerPropertyStyleToGeoJson(geoJson);
 
       const now = JulianDate.now();
 
@@ -1257,7 +1262,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     /** We don't need to use TableMixin forceLoadTableData
      * We implement `get dataColumnMajor()` instead
      */
-    protected async forceLoadTableData() {
+    async _protected_forceLoadTableData() {
       return undefined;
     }
 

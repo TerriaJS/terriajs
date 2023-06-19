@@ -32,14 +32,14 @@ export default class UrlReference extends UrlMixin(
     super(id, terria, sourceReference, strata);
   }
 
-  protected forceLoadReference(
+  _protected_forceLoadReference(
     previousTarget: BaseModel | undefined
   ): Promise<BaseModel | undefined> {
     if (this.url === undefined || this.uniqueId === undefined) {
       return Promise.resolve(undefined);
     }
 
-    const target = UrlReference.createCatalogMemberFromUrlReference(
+    const target = UrlReference._private_createCatalogMemberFromUrlReference(
       this,
       this.uniqueId,
       this.url,
@@ -50,7 +50,7 @@ export default class UrlReference extends UrlMixin(
     return Promise.resolve(target);
   }
 
-  private static async createCatalogMemberFromUrlReference(
+  static async _private_createCatalogMemberFromUrlReference(
     sourceReference: BaseModel,
     id: string,
     url: string,
@@ -71,7 +71,7 @@ export default class UrlReference extends UrlMixin(
       (UrlToCatalogMemberMapping.mapping[index].requiresLoad && !allowLoad)
     ) {
       // Nope, try the mapping at the next index.
-      return UrlReference.createCatalogMemberFromUrlReference(
+      return UrlReference._private_createCatalogMemberFromUrlReference(
         sourceReference,
         id,
         url,
@@ -90,7 +90,7 @@ export default class UrlReference extends UrlMixin(
 
       if (item === undefined) {
         // Creating the model failed, try the mapping at the next index
-        return UrlReference.createCatalogMemberFromUrlReference(
+        return UrlReference._private_createCatalogMemberFromUrlReference(
           sourceReference,
           id,
           url,
@@ -108,7 +108,7 @@ export default class UrlReference extends UrlMixin(
       if (allowLoad && CatalogMemberMixin.isMixedInto(item)) {
         const loadMetadataResult = await item.loadMetadata();
         if (loadMetadataResult.error) {
-          return UrlReference.createCatalogMemberFromUrlReference(
+          return UrlReference._private_createCatalogMemberFromUrlReference(
             sourceReference,
             id,
             url,

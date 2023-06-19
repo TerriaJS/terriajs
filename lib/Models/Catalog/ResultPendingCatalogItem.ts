@@ -19,7 +19,7 @@ export default class ResultPendingCatalogItem extends CatalogMemberMixin(
     return super.disableAboutData ?? true;
   }
 
-  protected override forceLoadMetadata() {
+  override _protected_forceLoadMetadata() {
     return this.loadPromise;
   }
 }

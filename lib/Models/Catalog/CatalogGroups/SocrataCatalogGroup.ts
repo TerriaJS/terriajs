@@ -479,7 +479,7 @@ export default class SocrataCatalogGroup extends UrlMixin(
     return SocrataCatalogGroup.type;
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async _protected_forceLoadMetadata(): Promise<void> {
     try {
       if (!this.strata.has(SocrataCatalogStratum.stratumName)) {
         const stratum = await SocrataCatalogStratum.load(this);
@@ -496,7 +496,7 @@ export default class SocrataCatalogGroup extends UrlMixin(
     }
   }
 
-  protected async forceLoadMembers() {
+  async _protected_forceLoadMembers() {
     const socrataServerStratum = <SocrataCatalogStratum | undefined>(
       this.strata.get(SocrataCatalogStratum.stratumName)
     );

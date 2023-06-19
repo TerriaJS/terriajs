@@ -106,7 +106,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     // Always use the getter and setter for this
     @observable
-    protected _dataColumnMajor: string[][] | undefined;
+    _protected_dataColumnMajor: string[][] | undefined;
 
     /**
      * The list of region providers to be used with this table.
@@ -120,7 +120,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      */
     @computed
     get dataColumnMajor(): string[][] | undefined {
-      const dataColumnMajor = this._dataColumnMajor;
+      const dataColumnMajor = this._protected_dataColumnMajor;
       if (
         this.removeDuplicateRows &&
         dataColumnMajor !== undefined &&
@@ -149,7 +149,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     set dataColumnMajor(newDataColumnMajor: string[][] | undefined) {
-      this._dataColumnMajor = newDataColumnMajor;
+      this._protected_dataColumnMajor = newDataColumnMajor;
     }
 
     /**
@@ -160,7 +160,9 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       if (this.dataColumnMajor === undefined) {
         return [];
       }
-      return this.dataColumnMajor.map((_, i) => this.getTableColumn(i));
+      return this.dataColumnMajor.map((_, i) =>
+        this._private_getTableColumn(i)
+      );
     }
 
     /**
@@ -172,7 +174,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       if (this.styles === undefined) {
         return [];
       }
-      return this.styles.map((_, i) => this.getTableStyle(i));
+      return this.styles.map((_, i) => this._private_getTableStyle(i));
     }
 
     /**
@@ -207,11 +209,11 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @computed
-    get _canExportData() {
+    get _protected_canExportData() {
       return isDefined(this.dataColumnMajor);
     }
 
-    protected async _exportData(): Promise<ExportData | undefined> {
+    async _protected_exportData(): Promise<ExportData | undefined> {
       if (isDefined(this.dataColumnMajor)) {
         // I am assuming all columns have the same length -> so use first column
         let csvString = this.dataColumnMajor[0]
@@ -294,9 +296,10 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           this.activeTableStyle.colorMap instanceof ConstantColorMap) ||
         numPoints > numRegions
       ) {
-        const pointsDataSource = this.createLongitudeLatitudeDataSource(
-          this.activeTableStyle
-        );
+        const pointsDataSource =
+          this._private_createLongitudeLatitudeDataSource(
+            this.activeTableStyle
+          );
 
         // Make sure there are actually more points than regions
         if (
@@ -324,7 +327,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @computed get regionMappedImageryProvider() {
-      return this.createRegionMappedImageryProvider({
+      return this._private_createRegionMappedImageryProvider({
         style: this.activeTableStyle,
         currentTime: this.currentDiscreteJulianDate
       });
@@ -356,7 +359,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      *
      */
     @computed
-    private get tableChartItems(): ChartItem[] {
+    get _private_tableChartItems(): ChartItem[] {
       const style = this.activeTableStyle;
       if (style === undefined || !style.isChart()) {
         return [];
@@ -443,7 +446,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         this.activeTableStyle.isRegions() && this.discreteTimes?.length
           ? this.momentChart
           : undefined,
-        ...this.tableChartItems
+        ...this._private_tableChartItems
       ]);
     }
 
@@ -739,9 +742,9 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         : undefined;
     }
 
-    protected override async forceLoadMapItems() {
+    override async _protected_forceLoadMapItems() {
       try {
-        const dataColumnMajor = await this.forceLoadTableData();
+        const dataColumnMajor = await this._protected_forceLoadTableData();
 
         // We need to make sure the region provider is loaded before loading
         // region mapped tables.
@@ -775,7 +778,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      *
      * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
      */
-    protected abstract forceLoadTableData(): Promise<string[][] | undefined>;
+    abstract _protected_forceLoadTableData(): Promise<string[][] | undefined>;
 
     /** Load all region provider lists
      * These are loaded from terria.configParameters.regionMappingDefinitionsUrl
@@ -827,7 +830,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       this.dataColumnMajor = appended;
     }
 
-    private readonly createLongitudeLatitudeDataSource = createTransformer(
+    readonly _private_createLongitudeLatitudeDataSource = createTransformer(
       (style: TableStyle): DataSource | undefined => {
         if (!style.isPoints()) {
           return undefined;
@@ -854,7 +857,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       }
     );
 
-    private readonly createRegionMappedImageryProvider = createTransformer(
+    readonly _private_createRegionMappedImageryProvider = createTransformer(
       (input: {
         style: TableStyle;
         currentTime: JulianDate | undefined;
@@ -862,12 +865,12 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         createRegionMappedImageryProvider(input.style, input.currentTime)
     );
 
-    private readonly getTableColumn: ITransformer<number, TableColumn> =
+    readonly _private_getTableColumn: ITransformer<number, TableColumn> =
       createTransformer((index: number) => {
         return new TableColumn(this, index);
       });
 
-    private readonly getTableStyle: ITransformer<number, TableStyle> =
+    readonly _private_getTableStyle: ITransformer<number, TableStyle> =
       createTransformer((index: number) => {
         return new TableStyle(this, index);
       });

@@ -347,7 +347,7 @@ export default class CkanItemReference extends UrlMixin(
     );
   }
 
-  async forceLoadReference(
+  async _protected_forceLoadReference(
     previousTarget: BaseModel | undefined
   ): Promise<BaseModel | undefined> {
     await this.setCkanStrata(this);

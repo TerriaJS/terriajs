@@ -29,7 +29,9 @@ type BaseType = Model<GroupTraits>;
 
 function GroupMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class _GroupMixin extends Base implements Group {
-    private _memberLoader = new AsyncLoader(this.forceLoadMembers.bind(this));
+    _private_memberLoader = new AsyncLoader(
+      this._protected_forceLoadMembers.bind(this)
+    );
 
     constructor(...args: any[]) {
       super(...args);
@@ -44,11 +46,11 @@ function GroupMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      * Gets a value indicating whether the set of members is currently loading.
      */
     get isLoadingMembers(): boolean {
-      return this._memberLoader.isLoading;
+      return this._private_memberLoader.isLoading;
     }
 
     get loadMembersResult() {
-      return this._memberLoader.result;
+      return this._private_memberLoader.result;
     }
 
     /** Get merged excludeMembers from all parent groups. This will go through all knownContainerUniqueIds and merge all excludeMembers arrays */
@@ -141,7 +143,7 @@ function GroupMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           (await this.loadMetadata()).throwIfError();
 
         // Call Group AsyncLoader if no errors occurred while loading metadata
-        (await this._memberLoader.load()).throwIfError();
+        (await this._private_memberLoader.load()).throwIfError();
 
         // Order here is important, as mergeGroupMembersByName will create models and the following functions will be applied on memberModels
         this.mergeGroupMembersByName();
@@ -172,7 +174,7 @@ function GroupMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      *
      * {@see AsyncLoader}
      */
-    protected abstract forceLoadMembers(): Promise<void>;
+    abstract _protected_forceLoadMembers(): Promise<void>;
 
     @action
     toggleOpen(stratumId: string) {
@@ -415,7 +417,7 @@ function GroupMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     dispose() {
       super.dispose();
-      this._memberLoader.dispose();
+      this._private_memberLoader.dispose();
     }
   }
 

@@ -51,7 +51,7 @@ export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
   highlightFeaturesFromItemSearchResults(
     results: ItemSearchResult[]
   ): ItemSelectionDisposer {
-    const tileset = this.tileset;
+    const tileset = this._protected_tileset;
     if (tileset === undefined || results.length === 0) {
       return () => {}; // empty disposer
     }
@@ -62,7 +62,7 @@ export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
     let disposeFeatureInfoPanel: (() => void) | undefined;
 
     // Tag newly visible features with SEARCH_RESULT_TAG
-    const disposeWatch = this._watchForNewTileFeatures(
+    const disposeWatch = this._private_watchForNewTileFeatures(
       tileset,
       (feature: Cesium3DTileFeature) => {
         const featureId = feature.getProperty(idPropertyName);
@@ -119,7 +119,7 @@ export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
   @action hideFeaturesNotInItemSearchResults(
     results: ItemSearchResult[]
   ): ItemSelectionDisposer {
-    const tileset = this.tileset;
+    const tileset = this._protected_tileset;
     if (tileset === undefined || results.length == 0) {
       return () => {}; // empty disposer
     }
@@ -129,7 +129,7 @@ export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
     const hiddenFeatures: Set<Cesium3DTileFeature> = new Set();
 
     // Tag newly visible features with SEARCH_RESULT_TAG
-    const disposeWatch = this._watchForNewTileFeatures(
+    const disposeWatch = this._private_watchForNewTileFeatures(
       tileset,
       (feature: Cesium3DTileFeature) => {
         const featureId = feature.getProperty(idPropertyName);
@@ -169,7 +169,7 @@ export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
    * @param callback The function to callback receiving the feature as its parameter
    * @return A disposer function cancelling the watch
    */
-  private _watchForNewTileFeatures(
+  _private_watchForNewTileFeatures(
     tileset: Cesium3DTileset,
     callback: (feature: Cesium3DTileFeature) => void
   ): () => void {

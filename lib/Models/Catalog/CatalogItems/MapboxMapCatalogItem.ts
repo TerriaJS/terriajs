@@ -22,7 +22,7 @@ export default class MapboxMapCatalogItem extends CatalogMemberMixin(
   }
 
   @computed
-  private get imageryProvider(): MapboxImageryProvider | undefined {
+  get _private_imageryProvider(): MapboxImageryProvider | undefined {
     const mapId = this.mapId;
     const accessToken = this.accessToken;
     if (mapId === undefined || accessToken === undefined) {
@@ -31,7 +31,7 @@ export default class MapboxMapCatalogItem extends CatalogMemberMixin(
 
     const url =
       this.url === undefined ? undefined : proxyCatalogItemUrl(this, this.url);
-    const imageryProvider = new MapboxImageryProvider({
+    const _private_imageryProvider = new MapboxImageryProvider({
       url,
       mapId,
       accessToken,
@@ -40,16 +40,16 @@ export default class MapboxMapCatalogItem extends CatalogMemberMixin(
       minimumLevel: this.minimumLevel,
       format: this.format
     });
-    return imageryProvider;
+    return _private_imageryProvider;
   }
 
-  protected forceLoadMapItems() {
+  _protected_forceLoadMapItems() {
     return Promise.resolve();
   }
 
   @computed
   get mapItems(): MapItem[] {
-    const imageryProvider = this.imageryProvider;
+    const imageryProvider = this._private_imageryProvider;
     if (imageryProvider === undefined) {
       return [];
     }

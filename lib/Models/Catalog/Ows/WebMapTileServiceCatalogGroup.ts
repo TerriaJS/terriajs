@@ -226,7 +226,7 @@ export default class WebMapTileServiceCatalogGroup extends GetCapabilitiesMixin(
     return WebMapTileServiceCatalogGroup.type;
   }
 
-  protected async forceLoadMetadata() {
+  async _protected_forceLoadMetadata() {
     if (
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
       undefined
@@ -238,7 +238,7 @@ export default class WebMapTileServiceCatalogGroup extends GetCapabilitiesMixin(
     });
   }
 
-  protected async forceLoadMembers(): Promise<void> {
+  async _protected_forceLoadMembers(): Promise<void> {
     const getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
     );
@@ -247,7 +247,7 @@ export default class WebMapTileServiceCatalogGroup extends GetCapabilitiesMixin(
     }
   }
 
-  protected get defaultGetCapabilitiesUrl(): string | undefined {
+  get _protected_defaultGetCapabilitiesUrl(): string | undefined {
     if (this.uri) {
       return this.uri
         .clone()

@@ -25,7 +25,7 @@ export default class StubCatalogItem extends CatalogMemberMixin(
     return StubCatalogItem.type;
   }
 
-  protected forceLoadMetadata() {
+  _protected_forceLoadMetadata() {
     return Promise.resolve();
   }
 }

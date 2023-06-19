@@ -48,20 +48,20 @@ class ShapefileCatalogItem
     return i18next.t("models.shapefile.name");
   }
 
-  protected _file?: File;
+  _protected_file?: File;
 
   setFileInput(file: File) {
-    this._file = file;
+    this._protected_file = file;
   }
 
   @computed get hasLocalData(): boolean {
-    return isDefined(this._file);
+    return isDefined(this._protected_file);
   }
 
-  protected async forceLoadGeojsonData() {
+  async _protected_forceLoadGeojsonData() {
     // ShapefileCatalogItem._file
-    if (this._file) {
-      return await parseShapefile(this._file);
+    if (this._protected_file) {
+      return await parseShapefile(this._protected_file);
     }
     // GeojsonTraits.url
     else if (this.url) {

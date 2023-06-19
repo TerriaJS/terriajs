@@ -19,7 +19,8 @@ type BaseType = Model<ModelTraits>;
  */
 function AccessControlMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class _AccessControlMixin extends Base {
-    @observable private _accessType: string | undefined;
+    @observable
+    _private_accessType: string | undefined;
 
     constructor(...args: any[]) {
       super(...args);
@@ -40,8 +41,8 @@ function AccessControlMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     @computed
     get accessType(): string {
       // Return the explicitly set accessType
-      if (this._accessType) {
-        return this._accessType;
+      if (this._private_accessType) {
+        return this._private_accessType;
       }
 
       // Return the accessType of the referrer.
@@ -65,7 +66,7 @@ function AccessControlMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     @action
     setAccessType(accessType: string) {
-      this._accessType = accessType;
+      this._private_accessType = accessType;
     }
 
     /**

@@ -372,7 +372,7 @@ export default class ArcGisPortalCatalogGroup extends UrlMixin(
     return "0d";
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  _protected_forceLoadMetadata(): Promise<void> {
     const portalStratum = <ArcGisPortalStratum | undefined>(
       this.strata.get(ArcGisPortalStratum.stratumName)
     );
@@ -388,7 +388,7 @@ export default class ArcGisPortalCatalogGroup extends UrlMixin(
     }
   }
 
-  protected async forceLoadMembers() {
+  async _protected_forceLoadMembers() {
     const portalStratum = <ArcGisPortalStratum | undefined>(
       this.strata.get(ArcGisPortalStratum.stratumName)
     );

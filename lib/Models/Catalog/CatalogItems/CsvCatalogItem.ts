@@ -35,7 +35,7 @@ export default class CsvCatalogItem
     return "csv";
   }
 
-  private _csvFile?: File;
+  _private_csvFile?: File;
 
   constructor(
     id: string | undefined,
@@ -55,18 +55,18 @@ export default class CsvCatalogItem
   }
 
   setFileInput(file: File) {
-    this._csvFile = file;
+    this._private_csvFile = file;
   }
 
   @computed
   get hasLocalData(): boolean {
-    return isDefined(this._csvFile);
+    return isDefined(this._private_csvFile);
   }
 
   @override
-  get _canExportData() {
+  get _protected_canExportData() {
     return (
-      isDefined(this._csvFile) ||
+      isDefined(this._private_csvFile) ||
       isDefined(this.csvString) ||
       isDefined(this.url)
     );
@@ -77,11 +77,11 @@ export default class CsvCatalogItem
     return super.cacheDuration || "1d";
   }
 
-  protected async _exportData() {
-    if (isDefined(this._csvFile)) {
+  async _protected_exportData() {
+    if (isDefined(this._private_csvFile)) {
       return {
         name: (this.name || this.uniqueId)!,
-        file: this._csvFile
+        file: this._private_csvFile
       };
     }
     if (isDefined(this.csvString)) {
@@ -145,16 +145,16 @@ export default class CsvCatalogItem
     });
   }
 
-  protected forceLoadTableData(): Promise<string[][]> {
+  _protected_forceLoadTableData(): Promise<string[][]> {
     if (this.csvString !== undefined) {
       return Csv.parseString(
         this.csvString,
         true,
         this.ignoreRowsStartingWithComment
       );
-    } else if (this._csvFile !== undefined) {
+    } else if (this._private_csvFile !== undefined) {
       return Csv.parseFile(
-        this._csvFile,
+        this._private_csvFile,
         true,
         this.ignoreRowsStartingWithComment
       );

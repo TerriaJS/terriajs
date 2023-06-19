@@ -351,15 +351,15 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     return ArcGisMapServerCatalogItem.type;
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async _protected_forceLoadMetadata(): Promise<void> {
     const stratum = await MapServerStratum.load(this);
     runInAction(() => {
       this.strata.set(MapServerStratum.stratumName, stratum);
     });
   }
 
-  protected override forceLoadMapItems(): Promise<void> {
-    return this.forceLoadMetadata();
+  override _protected_forceLoadMapItems(): Promise<void> {
+    return this._protected_forceLoadMetadata();
   }
 
   @override
@@ -393,13 +393,13 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
   }
 
   @computed
-  private get _currentImageryParts(): ImageryParts | undefined {
+  get _private_currentImageryParts(): ImageryParts | undefined {
     const dateAsUnix: string | undefined =
       this.currentDiscreteTimeTag === undefined
         ? undefined
         : new Date(this.currentDiscreteTimeTag).getTime().toString();
 
-    const imageryProvider = this._createImageryProvider(dateAsUnix);
+    const imageryProvider = this._private_createImageryProvider(dateAsUnix);
     if (imageryProvider === undefined) {
       return undefined;
     }
@@ -412,14 +412,14 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
   }
 
   @computed
-  private get _nextImageryParts(): ImageryParts | undefined {
+  get _private_nextImageryParts(): ImageryParts | undefined {
     if (
       this.terria.timelineStack.contains(this) &&
       !this.isPaused &&
       this.nextDiscreteTimeTag
     ) {
       const dateAsUnix: number = new Date(this.nextDiscreteTimeTag).getTime();
-      const imageryProvider = this._createImageryProvider(
+      const imageryProvider = this._private_createImageryProvider(
         dateAsUnix.toString()
       );
       if (imageryProvider === undefined) {
@@ -441,7 +441,7 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     }
   }
 
-  private _createImageryProvider = createTransformerAllowUndefined(
+  _private_createImageryProvider = createTransformerAllowUndefined(
     (time: string | undefined): ArcGisMapServerImageryProvider | undefined => {
       const stratum = <MapServerStratum>(
         this.strata.get(MapServerStratum.stratumName)
@@ -482,7 +482,7 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         credit: this.attribution
       });
 
-      return this.updateRequestImage(imageryProvider, false);
+      return this._protected_updateRequestImage(imageryProvider, false);
     }
   );
 
@@ -490,12 +490,12 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
   get mapItems() {
     const result = [];
 
-    const current = this._currentImageryParts;
+    const current = this._private_currentImageryParts;
     if (current) {
       result.push(current);
     }
 
-    const next = this._nextImageryParts;
+    const next = this._private_nextImageryParts;
     if (next) {
       result.push(next);
     }

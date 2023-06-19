@@ -23,7 +23,7 @@ export default class GltfCatalogItem
   }
 
   @computed
-  get gltfModelUrl() {
+  get _protected_gltfModelUrl() {
     return this.url;
   }
 

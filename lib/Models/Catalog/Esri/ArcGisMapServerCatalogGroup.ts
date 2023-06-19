@@ -273,14 +273,14 @@ export default class ArcGisMapServerCatalogGroup extends UrlMixin(
     return "1d";
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async _protected_forceLoadMetadata(): Promise<void> {
     const stratum = await MapServerStratum.load(this);
     runInAction(() => {
       this.strata.set(MapServerStratum.stratumName, stratum);
     });
   }
 
-  protected async forceLoadMembers() {
+  async _protected_forceLoadMembers() {
     const mapServerStratum = <MapServerStratum | undefined>(
       this.strata.get(MapServerStratum.stratumName)
     );

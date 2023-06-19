@@ -227,7 +227,7 @@ export default class WebFeatureServiceCatalogGroup extends GetCapabilitiesMixin(
     return WebFeatureServiceCatalogGroup.type;
   }
 
-  protected override async forceLoadMetadata(): Promise<void> {
+  override async _protected_forceLoadMetadata(): Promise<void> {
     if (
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
       undefined
@@ -239,7 +239,7 @@ export default class WebFeatureServiceCatalogGroup extends GetCapabilitiesMixin(
     });
   }
 
-  protected async forceLoadMembers(): Promise<void> {
+  async _protected_forceLoadMembers(): Promise<void> {
     const getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
     );
@@ -248,7 +248,7 @@ export default class WebFeatureServiceCatalogGroup extends GetCapabilitiesMixin(
     }
   }
 
-  protected get defaultGetCapabilitiesUrl(): string | undefined {
+  get _protected_defaultGetCapabilitiesUrl(): string | undefined {
     if (this.uri) {
       return this.uri
         .clone()

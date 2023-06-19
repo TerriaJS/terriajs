@@ -98,7 +98,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class Cesium3dTilesMixin extends ClippingMixin(
     ShadowMixin(MappableMixin(CatalogMemberMixin(Base)))
   ) {
-    protected tileset?: ObservableCesium3DTileset;
+    _protected_tileset?: ObservableCesium3DTileset;
 
     constructor(...args: any[]) {
       super(...args);
@@ -114,38 +114,40 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     // Just a variable to save the original tileset.root.transform if it exists
     @observable
-    private originalRootTransform: Matrix4 = Matrix4.IDENTITY.clone();
+    _private_originalRootTransform: Matrix4 = Matrix4.IDENTITY.clone();
 
     // An observable tracker for tileset.ready
     @observable
     isTilesetReady: boolean = false;
 
     clippingPlanesOriginMatrix(): Matrix4 {
-      if (this.tileset && this.isTilesetReady) {
+      if (this._protected_tileset && this.isTilesetReady) {
         // clippingPlanesOriginMatrix is private.
         // We need it to find the position where cesium centers the clipping plane for the tileset.
         // See if we can find another way to get it.
-        if ((this.tileset as any).clippingPlanesOriginMatrix) {
-          return (this.tileset as any).clippingPlanesOriginMatrix.clone();
+        if ((this._protected_tileset as any).clippingPlanesOriginMatrix) {
+          return (
+            this._protected_tileset as any
+          ).clippingPlanesOriginMatrix.clone();
         }
       }
       return Matrix4.IDENTITY.clone();
     }
 
-    protected override async forceLoadMapItems() {
+    override async _protected_forceLoadMapItems() {
       try {
-        this.loadTileset();
-        if (this.tileset) {
-          const tileset = await this.tileset.readyPromise;
+        this._private_loadTileset();
+        if (this._protected_tileset) {
+          const _protected_tileset = await this._protected_tileset.readyPromise;
           if (
-            tileset.extras !== undefined &&
-            tileset.extras.style !== undefined
+            _protected_tileset.extras !== undefined &&
+            _protected_tileset.extras.style !== undefined
           ) {
             runInAction(() => {
               this.strata.set(
                 CommonStrata.defaults,
                 createStratumInstance(Cesium3DTilesCatalogItemTraits, {
-                  style: tileset.extras.style
+                  style: _protected_tileset.extras.style
                 })
               );
             });
@@ -156,20 +158,20 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       }
     }
 
-    private loadTileset() {
+    _private_loadTileset() {
       if (!isDefined(this.url) && !isDefined(this.ionAssetId)) {
         throw `\`url\` and \`ionAssetId\` are not defined for ${getName(this)}`;
       }
 
       let resource = undefined;
       if (isDefined(this.ionAssetId)) {
-        resource = this.createResourceFromIonId(
+        resource = this._private_createResourceFromIonId(
           this.ionAssetId,
           this.ionAccessToken,
           this.ionServer
         );
       } else if (isDefined(this.url)) {
-        resource = this.createResourceFromUrl(
+        resource = this._private_createResourceFromUrl(
           proxyCatalogItemUrl(this, this.url)
         );
       }
@@ -178,31 +180,32 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         return;
       }
 
-      const tileset = new ObservableCesium3DTileset({
+      const _protected_tileset = new ObservableCesium3DTileset({
         ...this.optionsObj,
         url: resource
       });
 
-      tileset._catalogItem = this;
+      _protected_tileset._catalogItem = this;
       runLater(
         action(() => {
-          this.isTilesetReady = tileset.ready;
+          this.isTilesetReady = _protected_tileset.ready;
         })
       );
-      if (!tileset.destroyed) {
-        this.tileset = tileset;
+      if (!_protected_tileset.destroyed) {
+        this._protected_tileset = _protected_tileset;
       }
 
       // Save the original root tile transform and set its value to an identity
       // matrix This lets us control the whole model transformation using just
       // tileset.modelMatrix We later derive a tilset.modelMatrix by combining
       // the root transform and transformation traits in mapItems.
-      tileset.readyPromise.then(
+      _protected_tileset.readyPromise.then(
         action(() => {
-          this.isTilesetReady = tileset.ready;
-          if (tileset.root !== undefined) {
-            this.originalRootTransform = tileset.root.transform.clone();
-            tileset.root.transform = Matrix4.IDENTITY.clone();
+          this.isTilesetReady = _protected_tileset.ready;
+          if (_protected_tileset.root !== undefined) {
+            this._private_originalRootTransform =
+              _protected_tileset.root.transform.clone();
+            _protected_tileset.root.transform = Matrix4.IDENTITY.clone();
           }
         })
       );
@@ -212,7 +215,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      * Computes a new model matrix by combining the given matrix with the
      * origin, rotation & scale trait values
      */
-    private computeModelMatrixFromTransformationTraits(modelMatrix: Matrix4) {
+    _private_computeModelMatrixFromTransformationTraits(modelMatrix: Matrix4) {
       let scale = Matrix4.getScale(modelMatrix, new Cartesian3());
       let position = Matrix4.getTranslation(modelMatrix, new Cartesian3());
       let orientation = Quaternion.fromRotationMatrix(
@@ -258,32 +261,32 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     @computed
     get modelMatrix(): Matrix4 {
       const modelMatrixFromTraits =
-        this.computeModelMatrixFromTransformationTraits(
-          this.originalRootTransform
+        this._private_computeModelMatrixFromTransformationTraits(
+          this._private_originalRootTransform
         );
       return modelMatrixFromTraits;
     }
 
     @computed
     get mapItems() {
-      if (this.isLoadingMapItems || !isDefined(this.tileset)) {
+      if (this.isLoadingMapItems || !isDefined(this._protected_tileset)) {
         return [];
       }
 
-      if (this.tileset.destroyed) {
+      if (this._protected_tileset.destroyed) {
         this.loadMapItems(true);
       }
 
-      this.tileset.style = toJS(this.cesiumTileStyle);
-      this.tileset.shadows = this.cesiumShadows;
-      this.tileset.show = this.show;
+      this._protected_tileset.style = toJS(this.cesiumTileStyle);
+      this._protected_tileset.shadows = this.cesiumShadows;
+      this._protected_tileset.show = this.show;
 
       const key = this
         .colorBlendMode as keyof typeof Cesium3DTileColorBlendMode;
       const colorBlendMode = Cesium3DTileColorBlendMode[key];
       if (colorBlendMode !== undefined)
-        this.tileset.colorBlendMode = colorBlendMode;
-      this.tileset.colorBlendAmount = this.colorBlendAmount;
+        this._protected_tileset.colorBlendMode = colorBlendMode;
+      this._protected_tileset.colorBlendAmount = this.colorBlendAmount;
 
       // default is 16 (baseMaximumScreenSpaceError @ 2)
       // we want to reduce to 8 for higher levels of quality
@@ -293,17 +296,19 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         this.options.maximumScreenSpaceError !== undefined
           ? this.options.maximumScreenSpaceError / 2.0
           : 8;
-      this.tileset.maximumScreenSpaceError =
+      this._protected_tileset.maximumScreenSpaceError =
         tilesetBaseSse * this.terria.baseMaximumScreenSpaceError;
 
-      this.tileset.modelMatrix = this.modelMatrix;
+      this._protected_tileset.modelMatrix = this.modelMatrix;
 
-      this.tileset.clippingPlanes = toJS(this.clippingPlaneCollection)!;
+      this._protected_tileset.clippingPlanes = toJS(
+        this.clippingPlaneCollection
+      )!;
       this.clippingMapItems.forEach((mapItem) => {
         mapItem.show = this.show;
       });
 
-      return [this.tileset, ...this.clippingMapItems];
+      return [this._protected_tileset, ...this.clippingMapItems];
     }
 
     @override
@@ -324,7 +329,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return options;
     }
 
-    private createResourceFromUrl(url: Resource | string) {
+    _private_createResourceFromUrl(url: Resource | string) {
       if (!isDefined(url)) {
         return;
       }
@@ -339,7 +344,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return resource;
     }
 
-    private async createResourceFromIonId(
+    async _private_createResourceFromIonId(
       ionAssetId: number | undefined,
       ionAccessToken: string | undefined,
       ionServer: string | undefined

@@ -95,7 +95,7 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
     return i18next.t("models.carto-v3.name");
   }
 
-  protected async forceLoadMetadata() {
+  async _protected_forceLoadMetadata() {
     let response: JsonObject | undefined;
 
     // If cartoQuery is defined - use Query API (https://api-docs.carto.com/#8f2020d9-edf3-4b50-ae58-9edeaa34613c)
@@ -167,7 +167,7 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
     });
   }
 
-  protected async forceLoadGeojsonData() {
+  async _protected_forceLoadGeojsonData() {
     if (this.geoJsonUrls.length === 0)
       throw TerriaError.from("No GeoJSON URL found for Carto table");
 

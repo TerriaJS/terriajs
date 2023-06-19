@@ -49,19 +49,19 @@ function CatalogMemberMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return;
     }
 
-    private _metadataLoader = new AsyncLoader(
-      this.forceLoadMetadata.bind(this)
+    _private_metadataLoader = new AsyncLoader(
+      this._protected_forceLoadMetadata.bind(this)
     );
 
     get loadMetadataResult() {
-      return this._metadataLoader.result;
+      return this._private_metadataLoader.result;
     }
 
     /**
      * Gets a value indicating whether metadata is currently loading.
      */
     get isLoadingMetadata(): boolean {
-      return this._metadataLoader.isLoading;
+      return this._private_metadataLoader.isLoading;
     }
 
     @computed
@@ -84,7 +84,7 @@ function CatalogMemberMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      * {@see AsyncLoader}
      */
     async loadMetadata(): Promise<Result<void>> {
-      return (await this._metadataLoader.load()).clone({
+      return (await this._private_metadataLoader.load()).clone({
         message: `Failed to load \`${getName(this)}\` metadata`,
         importance: -1
       });
@@ -100,7 +100,7 @@ function CatalogMemberMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      *
      * {@see AsyncLoader}
      */
-    protected async forceLoadMetadata() {}
+    async _protected_forceLoadMetadata() {}
 
     get hasCatalogMemberMixin() {
       return true;
@@ -226,7 +226,7 @@ function CatalogMemberMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     dispose() {
       super.dispose();
-      this._metadataLoader.dispose();
+      this._private_metadataLoader.dispose();
     }
   }
 

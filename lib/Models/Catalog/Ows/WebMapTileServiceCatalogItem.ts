@@ -456,7 +456,7 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     });
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async _protected_forceLoadMetadata(): Promise<void> {
     if (
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
       undefined
@@ -631,7 +631,7 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     };
   }
 
-  protected override forceLoadMapItems(): Promise<void> {
+  override _protected_forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
 
@@ -652,7 +652,7 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     return [];
   }
 
-  protected get defaultGetCapabilitiesUrl(): string | undefined {
+  get _protected_defaultGetCapabilitiesUrl(): string | undefined {
     if (this.uri) {
       return this.uri
         .clone()

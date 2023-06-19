@@ -138,7 +138,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
     return true;
   }
 
-  protected async forceLoadMetadata() {
+  async _protected_forceLoadMetadata() {
     const stratum = await MapboxVectorTileLoadableStratum.load(this);
     runInAction(() => {
       this.strata.set(MapboxVectorTileLoadableStratum.stratumName, stratum);
@@ -217,7 +217,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
     });
   }
 
-  protected override forceLoadMapItems(): Promise<void> {
+  override _protected_forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
 

@@ -18,7 +18,7 @@ export default class CompositeCatalogItem extends MappableMixin(
 ) {
   static readonly type = "composite";
 
-  private _visibilityDisposer = autorun(() => {
+  _private_visibilityDisposer = autorun(() => {
     this.syncVisibilityToMembers();
   });
 
@@ -51,7 +51,7 @@ export default class CompositeCatalogItem extends MappableMixin(
     );
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  async _protected_forceLoadMetadata(): Promise<void> {
     const members = this.memberModels.filter(CatalogMemberMixin.isMixedInto);
     // Avoid calling loadX functions in a computed context
     await Promise.resolve();
@@ -63,7 +63,7 @@ export default class CompositeCatalogItem extends MappableMixin(
     ).throwIfError();
   }
 
-  protected async forceLoadMapItems(): Promise<void> {
+  async _protected_forceLoadMapItems(): Promise<void> {
     const members = this.memberModels.filter(MappableMixin.isMixedInto);
     // Avoid calling loadX functions in a computed context
     await Promise.resolve();
@@ -112,6 +112,6 @@ export default class CompositeCatalogItem extends MappableMixin(
 
   dispose() {
     super.dispose();
-    this._visibilityDisposer();
+    this._private_visibilityDisposer();
   }
 }

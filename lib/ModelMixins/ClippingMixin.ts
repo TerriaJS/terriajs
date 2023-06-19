@@ -28,10 +28,10 @@ type BaseType = Model<ClippingPlanesTraits> & SelectableDimensions;
 
 function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class ClippingMixin extends Base {
-    private _clippingBoxDrawing?: BoxDrawing;
+    _private_clippingBoxDrawing?: BoxDrawing;
     abstract clippingPlanesOriginMatrix(): Matrix4;
 
-    private clippingPlaneModelMatrix: Matrix4 = Matrix4.IDENTITY.clone();
+    _private_clippingPlaneModelMatrix: Matrix4 = Matrix4.IDENTITY.clone();
 
     constructor(...args: any[]) {
       super(...args);
@@ -44,7 +44,7 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @computed
-    private get simpleClippingPlaneCollection() {
+    get _private_simpleClippingPlaneCollection() {
       if (!this.clippingPlanes) {
         return;
       }
@@ -110,14 +110,16 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         unionClippingRegions: this.clippingBox.clipDirection === "outside",
         enabled: this.clippingBox.clipModel
       });
-      clippingPlaneCollection.modelMatrix = this.clippingPlaneModelMatrix;
+      clippingPlaneCollection.modelMatrix =
+        this._private_clippingPlaneModelMatrix;
       return clippingPlaneCollection;
     }
 
     @computed
     get clippingPlaneCollection(): ClippingPlaneCollection | undefined {
       return (
-        this.simpleClippingPlaneCollection ?? this.clippingBoxPlaneCollection
+        this._private_simpleClippingPlaneCollection ??
+        this.clippingBoxPlaneCollection
       );
     }
 
@@ -136,8 +138,8 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         !options.clipModel ||
         !options.showClippingBox
       ) {
-        if (this._clippingBoxDrawing) {
-          this._clippingBoxDrawing = undefined;
+        if (this._private_clippingBoxDrawing) {
+          this._private_clippingBoxDrawing = undefined;
         }
         return;
       }
@@ -191,15 +193,15 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       Matrix4.multiply(
         this.inverseClippingPlanesOriginMatrix,
         boxTransform,
-        this.clippingPlaneModelMatrix
+        this._private_clippingPlaneModelMatrix
       );
 
-      if (this._clippingBoxDrawing) {
-        this._clippingBoxDrawing.setTransform(boxTransform);
-        this._clippingBoxDrawing.keepBoxAboveGround =
+      if (this._private_clippingBoxDrawing) {
+        this._private_clippingBoxDrawing.setTransform(boxTransform);
+        this._private_clippingBoxDrawing.keepBoxAboveGround =
           this.clippingBox.keepBoxAboveGround;
       } else {
-        this._clippingBoxDrawing = BoxDrawing.fromTransform(
+        this._private_clippingBoxDrawing = BoxDrawing.fromTransform(
           cesium,
           boxTransform,
           {
@@ -208,7 +210,7 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
               Matrix4.multiply(
                 this.inverseClippingPlanesOriginMatrix,
                 modelMatrix,
-                this.clippingPlaneModelMatrix
+                this._private_clippingPlaneModelMatrix
               );
               if (isFinished) {
                 const position = Matrix4.getTranslation(
@@ -248,7 +250,7 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           }
         );
       }
-      return this._clippingBoxDrawing;
+      return this._private_clippingBoxDrawing;
     }
 
     @override

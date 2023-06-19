@@ -265,7 +265,7 @@ export default class ArcGisCatalogGroup extends UrlMixin(
     return "1d";
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  _protected_forceLoadMetadata(): Promise<void> {
     const url = this.url || "";
     if (/\/MapServer(\/?.*)?$/i.test(url)) {
       return MapServerStratum.load(this).then((stratum) => {
@@ -288,7 +288,7 @@ export default class ArcGisCatalogGroup extends UrlMixin(
     }
   }
 
-  protected async forceLoadMembers() {
+  async _protected_forceLoadMembers() {
     const arcgisServerStratum = <
       ArcGisServerStratum | MapServerStratum | FeatureServerStratum | undefined
     >(this.strata.get(ArcGisServerStratum.stratumName) ||

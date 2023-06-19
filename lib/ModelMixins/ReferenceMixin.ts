@@ -37,14 +37,14 @@ function ReferenceMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   {
     /** A "weak" reference has a target which doesn't include the `sourceReference` property.
      * This means the reference is treated more like a shortcut to the target. So share links, for example, will use the target instead of sourceReference. */
-    protected readonly weakReference: boolean = false;
+    readonly _protected_weakReference: boolean = false;
 
     @observable
-    private _target: BaseModel | undefined;
+    _private_target: BaseModel | undefined;
 
-    private _referenceLoader = new AsyncLoader(async () => {
-      const previousTarget = untracked(() => this._target);
-      const target = await this.forceLoadReference(previousTarget);
+    _private_referenceLoader = new AsyncLoader(async () => {
+      const previousTarget = untracked(() => this._private_target);
+      const target = await this._protected_forceLoadReference(previousTarget);
 
       if (!target) {
         throw new DeveloperError("Failed to create reference");
@@ -54,18 +54,18 @@ function ReferenceMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           "The model returned by `forceLoadReference` must be constructed with its `uniqueId` set to the same value as the Reference model."
         );
       }
-      if (!this.weakReference && target?.sourceReference !== this) {
+      if (!this._protected_weakReference && target?.sourceReference !== this) {
         throw new DeveloperError(
           "The model returned by `forceLoadReference` must be constructed with its `sourceReference` set to the Reference model."
         );
       }
-      if (this.weakReference && target?.sourceReference) {
+      if (this._protected_weakReference && target?.sourceReference) {
         throw new DeveloperError(
           'This is a "weak" reference, so the model returned by `forceLoadReference` must not have a `sourceReference` set.'
         );
       }
       runInAction(() => {
-        this._target = target;
+        this._private_target = target;
       });
     });
 
@@ -75,7 +75,7 @@ function ReferenceMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     get loadReferenceResult() {
-      return this._referenceLoader.result;
+      return this._private_referenceLoader.result;
     }
 
     /**
@@ -83,14 +83,14 @@ function ReferenceMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      * {@link ModelMixin#target} may be undefined or stale.
      */
     get isLoadingReference(): boolean {
-      return this._referenceLoader.isLoading;
+      return this._private_referenceLoader.isLoading;
     }
 
     /**
      * Gets the target model of the reference. This model must have the same `id` as this model.
      */
     get target(): BaseModel | undefined {
-      return this._target;
+      return this._private_target;
     }
 
     /**
@@ -98,9 +98,9 @@ function ReferenceMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      */
     @computed
     get nestedTarget(): BaseModel | undefined {
-      return ReferenceMixin.isMixedInto(this._target)
-        ? this._target.nestedTarget
-        : this._target;
+      return ReferenceMixin.isMixedInto(this._private_target)
+        ? this._private_target.nestedTarget
+        : this._private_target;
     }
 
     /**
@@ -115,9 +115,9 @@ function ReferenceMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      * {@see AsyncLoader}
      */
     async loadReference(forceReload: boolean = false): Promise<Result<void>> {
-      const result = (await this._referenceLoader.load(forceReload)).clone(
-        `Failed to load reference \`${getName(this)}\``
-      );
+      const result = (
+        await this._private_referenceLoader.load(forceReload)
+      ).clone(`Failed to load reference \`${getName(this)}\``);
 
       if (!result.error && this.target) {
         runInAction(() => {
@@ -145,13 +145,13 @@ function ReferenceMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      *
      * {@see AsyncLoader}
      */
-    protected abstract forceLoadReference(
+    abstract _protected_forceLoadReference(
       previousTarget: BaseModel | undefined
     ): Promise<BaseModel | undefined>;
 
     dispose() {
       super.dispose();
-      this._referenceLoader.dispose();
+      this._private_referenceLoader.dispose();
     }
   }
 

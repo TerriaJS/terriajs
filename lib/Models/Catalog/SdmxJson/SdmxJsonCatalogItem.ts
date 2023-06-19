@@ -43,7 +43,7 @@ export default class SdmxJsonCatalogItem
     );
   }
 
-  protected override async forceLoadMetadata(): Promise<void> {
+  override async _protected_forceLoadMetadata(): Promise<void> {
     // Load SdmxJsonDataflowStratum if needed
     if (!this.strata.has(SdmxJsonDataflowStratum.stratumName)) {
       const stratum = await SdmxJsonDataflowStratum.load(this);
@@ -142,7 +142,7 @@ export default class SdmxJsonCatalogItem
     return `${super.url}/data/${this.dataflowId}/${dataKey}`;
   }
 
-  protected async forceLoadTableData() {
+  async _protected_forceLoadTableData() {
     if (!this.url) return;
 
     try {

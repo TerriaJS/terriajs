@@ -44,8 +44,8 @@ function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     // This vastly improves the performance.
     //
     // Note that these are private instances and must not be modified outside the Mixin
-    private readonly _dataSource = new CustomDataSource("glTF Model");
-    private readonly _modelEntity = new Entity({ name: "glTF Model Entity" });
+    readonly _private_dataSource = new CustomDataSource("glTF Model");
+    readonly _private_modelEntity = new Entity({ name: "glTF Model Entity" });
 
     constructor(...args: any[]) {
       super(...args);
@@ -83,7 +83,7 @@ function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @computed
-    private get cesiumHeightReference() {
+    get _private_cesiumHeightReference() {
       const heightReference: HeightReference =
         // @ts-ignore
         HeightReference[this.heightReference] || HeightReference.NONE;
@@ -139,29 +139,33 @@ function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       };
     }
 
-    protected abstract get gltfModelUrl(): string | undefined;
+    abstract get _protected_gltfModelUrl(): string | undefined;
 
     @computed
-    private get modelGraphics() {
-      if (this.gltfModelUrl === undefined) {
+    get _private_modelGraphics() {
+      if (this._protected_gltfModelUrl === undefined) {
         return undefined;
       }
       const options = {
-        uri: new ConstantProperty(proxyCatalogItemUrl(this, this.gltfModelUrl)),
+        uri: new ConstantProperty(
+          proxyCatalogItemUrl(this, this._protected_gltfModelUrl)
+        ),
         upAxis: new ConstantProperty(this.cesiumUpAxis),
         forwardAxis: new ConstantProperty(this.cesiumForwardAxis),
         scale: new ConstantProperty(this.scale !== undefined ? this.scale : 1),
         shadows: new ConstantProperty(this.cesiumShadows),
-        heightReference: new ConstantProperty(this.cesiumHeightReference)
+        heightReference: new ConstantProperty(
+          this._private_cesiumHeightReference
+        )
       };
       return new ModelGraphics(options);
     }
 
-    protected forceLoadMetadata(): Promise<void> {
+    _protected_forceLoadMetadata(): Promise<void> {
       return Promise.resolve();
     }
 
-    protected override forceLoadMapItems(): Promise<void> {
+    override _protected_forceLoadMapItems(): Promise<void> {
       return Promise.resolve();
     }
 
@@ -175,24 +179,25 @@ function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     @computed
     get modelEntity(): Entity {
-      const entity = this._modelEntity;
+      const entity = this._private_modelEntity;
       entity.position = new ConstantPositionProperty(this.cesiumPosition);
       entity.orientation = new ConstantProperty(this.cesiumRotation);
-      entity.model = this.modelGraphics;
+      entity.model = this._private_modelGraphics;
       return entity;
     }
 
     @computed
     get mapItems() {
       const modelEntity = this.modelEntity;
-      const modelGraphics = this.modelGraphics;
-      const dataSource = this._dataSource;
-      if (modelGraphics === undefined) {
+      const _private_modelGraphics = this._private_modelGraphics;
+      const dataSource = this._private_dataSource;
+      if (_private_modelGraphics === undefined) {
         return [];
       }
 
       dataSource.show = this.show;
-      if (modelGraphics) modelGraphics.show = new ConstantProperty(this.show);
+      if (_private_modelGraphics)
+        _private_modelGraphics.show = new ConstantProperty(this.show);
       if (this.name) {
         dataSource.name = this.name;
         modelEntity.name = this.name;

@@ -18,8 +18,8 @@ export default function AutoRefreshingMixin<
   T extends AbstractConstructor<BaseType>
 >(Base: T) {
   abstract class AutoRefreshingMixin extends Base {
-    private autoRefreshDisposer: IReactionDisposer | undefined;
-    private autorunRefreshEnableDisposer: IReactionDisposer | undefined;
+    _private_autoRefreshDisposer: IReactionDisposer | undefined;
+    _private_autorunRefreshEnableDisposer: IReactionDisposer | undefined;
 
     /** Return the interval in seconds to poll for updates. */
     abstract get refreshInterval(): number | undefined;
@@ -31,27 +31,35 @@ export default function AutoRefreshingMixin<
       super(...args);
       makeObservable(this);
       // We should only poll when our map items have consumers
-      onBecomeObserved(this, "mapItems", this.startAutoRefresh.bind(this));
-      onBecomeUnobserved(this, "mapItems", this.stopAutoRefresh.bind(this));
+      onBecomeObserved(
+        this,
+        "mapItems",
+        this._private_startAutoRefresh.bind(this)
+      );
+      onBecomeUnobserved(
+        this,
+        "mapItems",
+        this._private_stopAutoRefresh.bind(this)
+      );
     }
 
-    private startAutoRefresh() {
-      if (!this.autorunRefreshEnableDisposer) {
+    _private_startAutoRefresh() {
+      if (!this._private_autorunRefreshEnableDisposer) {
         // Toggle autorefresh when `refreshEnabled` trait changes
-        this.autorunRefreshEnableDisposer = reaction(
+        this._private_autorunRefreshEnableDisposer = reaction(
           () => this.refreshEnabled,
           () => {
             if (this.refreshEnabled) {
-              this.startAutoRefresh();
+              this._private_startAutoRefresh();
             } else {
-              this.stopAutoRefresh();
+              this._private_stopAutoRefresh();
             }
           }
         );
       }
-      if (!this.autoRefreshDisposer && this.refreshEnabled) {
-        this.autoRefreshDisposer = reaction(
-          () => this._pollingTimer,
+      if (!this._private_autoRefreshDisposer && this.refreshEnabled) {
+        this._private_autoRefreshDisposer = reaction(
+          () => this._private_pollingTimer,
           () => {
             if (this.show) this.refreshData();
           }
@@ -59,19 +67,19 @@ export default function AutoRefreshingMixin<
       }
     }
 
-    private stopAutoRefresh() {
-      if (this.autorunRefreshEnableDisposer) {
-        this.autorunRefreshEnableDisposer();
-        this.autorunRefreshEnableDisposer = undefined;
+    _private_stopAutoRefresh() {
+      if (this._private_autorunRefreshEnableDisposer) {
+        this._private_autorunRefreshEnableDisposer();
+        this._private_autorunRefreshEnableDisposer = undefined;
       }
-      if (this.autoRefreshDisposer) {
-        this.autoRefreshDisposer();
-        this.autoRefreshDisposer = undefined;
+      if (this._private_autoRefreshDisposer) {
+        this._private_autoRefreshDisposer();
+        this._private_autoRefreshDisposer = undefined;
       }
     }
 
     @computed
-    private get _pollingTimer(): number | undefined {
+    get _private_pollingTimer(): number | undefined {
       if (this.refreshInterval !== undefined) {
         return now(this.refreshInterval * 1000);
       } else {
@@ -81,17 +89,19 @@ export default function AutoRefreshingMixin<
 
     @computed
     get isPolling() {
-      return this._pollingTimer !== undefined;
+      return this._private_pollingTimer !== undefined;
     }
 
     @computed
     get nextScheduledUpdateTime(): Date | undefined {
       if (
         this.refreshEnabled &&
-        this._pollingTimer !== undefined &&
+        this._private_pollingTimer !== undefined &&
         this.refreshInterval !== undefined
       ) {
-        return new Date(this._pollingTimer + this.refreshInterval * 1000);
+        return new Date(
+          this._private_pollingTimer + this.refreshInterval * 1000
+        );
       } else {
         return undefined;
       }

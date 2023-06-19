@@ -24,7 +24,7 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
    * An observable terrain provider instance set by forceLoadMapItems()
    */
   @observable
-  private terrainProvider: CesiumTerrainProvider | undefined = undefined;
+  _private_terrainProvider: CesiumTerrainProvider | undefined = undefined;
 
   constructor(...args: ModelConstructorParameters) {
     super(...args);
@@ -41,14 +41,14 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
   }
 
   @computed
-  private get isTerrainActive() {
-    return this.terria.terrainProvider === this.terrainProvider;
+  get _private_isTerrainActive() {
+    return this.terria.terrainProvider === this._private_terrainProvider;
   }
 
   @override
   get shortReport() {
     if (super.shortReport === undefined) {
-      const status = this.isTerrainActive ? "In use" : "Not in use";
+      const status = this._private_isTerrainActive ? "In use" : "Not in use";
       return `Terrain status: ${status}`;
     }
     return super.shortReport;
@@ -57,7 +57,7 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
   /**
    * Returns a Promise to load the terrain provider
    */
-  private async loadTerrainProvider(): Promise<
+  async _private_loadTerrainProvider(): Promise<
     CesiumTerrainProvider | undefined
   > {
     const resource =
@@ -74,7 +74,7 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
       return undefined;
     }
 
-    const terrainProvider = new CesiumTerrainProvider({
+    const _private_terrainProvider = new CesiumTerrainProvider({
       url: resource,
       credit: this.attribution
     });
@@ -84,32 +84,38 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
     let networkErrorListener: (err: any) => void;
     const networkErrorPromise = new Promise((_resolve, reject) => {
       networkErrorListener = reject;
-      terrainProvider.errorEvent.addEventListener(networkErrorListener);
+      _private_terrainProvider.errorEvent.addEventListener(
+        networkErrorListener
+      );
     });
 
     const isReady = await Promise.race([
       networkErrorPromise,
-      terrainProvider.readyPromise
+      _private_terrainProvider.readyPromise
     ])
       .catch(() => false)
       .finally(() =>
-        terrainProvider.errorEvent.removeEventListener(networkErrorListener)
+        _private_terrainProvider.errorEvent.removeEventListener(
+          networkErrorListener
+        )
       );
 
     return isReady
-      ? terrainProvider
+      ? _private_terrainProvider
       : Promise.reject(TerriaError.from("Failed to load terrain provider"));
   }
 
-  protected override async forceLoadMapItems(): Promise<void> {
-    const terrainProvider = await this.loadTerrainProvider();
+  override async _protected_forceLoadMapItems(): Promise<void> {
+    const _private_terrainProvider = await this._private_loadTerrainProvider();
     runInAction(() => {
-      this.terrainProvider = terrainProvider;
+      this._private_terrainProvider = _private_terrainProvider;
     });
   }
 
   @computed
   get mapItems() {
-    return this.show && this.terrainProvider ? [this.terrainProvider] : [];
+    return this.show && this._private_terrainProvider
+      ? [this._private_terrainProvider]
+      : [];
   }
 }

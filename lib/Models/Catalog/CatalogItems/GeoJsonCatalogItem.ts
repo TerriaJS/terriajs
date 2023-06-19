@@ -36,17 +36,17 @@ class GeoJsonCatalogItem
     return i18next.t("models.geoJson.name");
   }
 
-  protected _file?: File;
+  _protected_file?: File;
 
   setFileInput(file: File) {
-    this._file = file;
+    this._protected_file = file;
   }
 
   @computed get hasLocalData(): boolean {
-    return isDefined(this._file);
+    return isDefined(this._protected_file);
   }
 
-  protected async forceLoadGeojsonData() {
+  async _protected_forceLoadGeojsonData() {
     let jsonData: JsonValue | undefined = undefined;
 
     // GeoJsonCatalogItemTraits.geoJsonData
@@ -59,12 +59,15 @@ class GeoJsonCatalogItem
       // GeojsonCatalogItem._file
     }
     // Zipped file
-    else if (this._file) {
-      if (isDefined(this._file.name) && isZip(this._file.name)) {
-        const asAb = await this._file.arrayBuffer();
+    else if (this._protected_file) {
+      if (
+        isDefined(this._protected_file.name) &&
+        isZip(this._protected_file.name)
+      ) {
+        const asAb = await this._protected_file.arrayBuffer();
         jsonData = await parseZipJsonBlob(new Blob([asAb]));
       } else {
-        jsonData = await readJson(this._file);
+        jsonData = await readJson(this._protected_file);
       }
     }
     // GeojsonTraits.url
