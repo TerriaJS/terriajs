@@ -240,7 +240,6 @@ export class ToolController extends MapNavigationItemController {
     this.openTool();
   }
 
-  
   override deactivate() {
     this.closeTool();
   }

@@ -147,7 +147,10 @@ export default abstract class ChartCustomComponent<
 
   abstract override get name(): string;
 
-  override shouldProcessNode(context: ProcessNodeContext, node: DomElement): boolean {
+  override shouldProcessNode(
+    context: ProcessNodeContext,
+    node: DomElement
+  ): boolean {
     return (
       this.isChart(node) ||
       this.isFirstColumnOfChartRow(node) ||

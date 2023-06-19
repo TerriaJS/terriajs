@@ -79,7 +79,9 @@ interface MeasurementTimeValuePair {
 StratumOrder.addLoadStratum(TableAutomaticStylesStratum.stratumName);
 
 class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
-  constructor(override readonly catalogItem: SensorObservationServiceCatalogItem) {
+  constructor(
+    override readonly catalogItem: SensorObservationServiceCatalogItem
+  ) {
     super(catalogItem);
     makeObservable(this);
   }
