@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed } from "mobx";
+import { computed, makeObservable, override } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
@@ -10,7 +10,7 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import Model from "../Models/Definition/Model";
 import GltfTraits from "../Traits/TraitsClasses/GltfTraits";
@@ -23,7 +23,7 @@ import ShadowMixin from "./ShadowMixin";
 // we still maintain the type checking, without TS screaming with errors
 const Axis: Axis = require("terriajs-cesium/Source/Scene/Axis").default;
 
-type GltfModel = Model<GltfTraits>;
+type BaseType = Model<GltfTraits>;
 
 export interface GltfTransformationJson {
   origin: {
@@ -39,7 +39,7 @@ export interface GltfTransformationJson {
   scale?: number;
 }
 
-function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
+function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class GltfMixin extends ShadowMixin(
     CatalogMemberMixin(MappableMixin(Base))
   ) {
@@ -51,11 +51,16 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
     private readonly _dataSource = new CustomDataSource("glTF Model");
     private readonly _modelEntity = new Entity({ name: "glTF Model Entity" });
 
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
+
     get hasGltfMixin() {
       return true;
     }
 
-    @computed
+    @override
     get disableZoomTo() {
       const { latitude, longitude, height } = this.origin;
       return (
@@ -164,7 +169,7 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
       return Promise.resolve();
     }
 
-    @computed
+    @override
     get shortReport(): string | undefined {
       if (this.terria.currentViewer.type === "Leaflet") {
         return i18next.t("models.commonModelErrors.3dTypeIn2dMode", this);

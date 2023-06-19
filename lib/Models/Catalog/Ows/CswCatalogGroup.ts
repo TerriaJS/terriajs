@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { flatten } from "lodash-es";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, runInAction, makeObservable } from "mobx";
 import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
@@ -338,6 +338,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
     readonly records: Records
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {

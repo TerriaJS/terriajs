@@ -2,6 +2,7 @@ import React, {
   ChangeEvent,
   forwardRef,
   memo,
+  ReactElement,
   Ref,
   useCallback,
   useState
@@ -57,11 +58,18 @@ const Checkbox = memo(
       // Checking isValidElement is the safe way and avoids a typescript
       // error too.
       if (React.isValidElement(child)) {
-        return React.cloneElement(child, {
-          isDisabled,
-          isChecked,
-          style: { fontSize: "inherit" }
-        });
+        return React.cloneElement(
+          child as ReactElement<{
+            isDisabled: boolean;
+            isChecked: boolean;
+            style: any;
+          }>,
+          {
+            isDisabled,
+            isChecked,
+            style: { fontSize: "inherit" }
+          }
+        );
       }
       return child;
     });

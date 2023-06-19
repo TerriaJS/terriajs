@@ -1,12 +1,19 @@
-import { action, computed, observable, runInAction } from "mobx";
+import {
+  computed,
+  makeObservable,
+  observable,
+  override,
+  runInAction
+} from "mobx";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
+import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import CesiumTerrainCatalogItemTraits from "../../../Traits/TraitsClasses/CesiumTerrainCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
-import TerriaError from "../../../Core/TerriaError";
+import { ModelConstructorParameters } from "../../Definition/Model";
 
 export default class CesiumTerrainCatalogItem extends UrlMixin(
   MappableMixin(CatalogMemberMixin(CreateModel(CesiumTerrainCatalogItemTraits)))
@@ -19,11 +26,16 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
   @observable
   private terrainProvider: CesiumTerrainProvider | undefined = undefined;
 
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get type() {
     return CesiumTerrainCatalogItem.type;
   }
 
-  @computed
+  @override
   get disableZoomTo() {
     return true;
   }
@@ -33,7 +45,7 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
     return this.terria.terrainProvider === this.terrainProvider;
   }
 
-  @computed
+  @override
   get shortReport() {
     if (super.shortReport === undefined) {
       const status = this.isTerrainActive ? "In use" : "Not in use";

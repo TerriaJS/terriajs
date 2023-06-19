@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, autorun, computed, runInAction } from "mobx";
+import { action, autorun, computed, runInAction, makeObservable } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
@@ -10,6 +10,7 @@ import ModelReference from "../../../Traits/ModelReference";
 import CompositeCatalogItemTraits from "../../../Traits/TraitsClasses/CompositeCatalogItemTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import { BaseModel } from "../../Definition/Model";
 
 export default class CompositeCatalogItem extends MappableMixin(
@@ -20,6 +21,11 @@ export default class CompositeCatalogItem extends MappableMixin(
   private _visibilityDisposer = autorun(() => {
     this.syncVisibilityToMembers();
   });
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   get type() {
     return CompositeCatalogItem.type;

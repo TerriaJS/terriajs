@@ -1,7 +1,14 @@
 import classNames from "classnames";
 import { TFunction } from "i18next";
-import { merge } from "lodash-es";
-import { action, computed, observable, reaction, runInAction } from "mobx";
+import { isEmpty, merge } from "lodash-es";
+import {
+  action,
+  computed,
+  makeObservable,
+  observable,
+  reaction,
+  runInAction
+} from "mobx";
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
 import Mustache from "mustache";
@@ -68,7 +75,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
    * - A CsvChartCustomComponent will create a new CsvCatalogItem and set traits
    * See `rawDataReactNode` for rendered raw data
    */
-  @observable private templatedFeatureInfoReactNode:
+  @observable.ref private templatedFeatureInfoReactNode:
     | React.ReactNode
     | undefined = undefined;
 
@@ -77,6 +84,11 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
 
   /** See `setFeatureChangedCounter` */
   @observable featureChangedCounter = 0;
+
+  constructor(props: FeatureInfoProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     this.templateReactionDisposer = reaction(
@@ -343,7 +355,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
 
     return {
       data:
-        this.featureProperties && this.featureProperties !== {}
+        this.featureProperties && !isEmpty(this.featureProperties)
           ? this.featureProperties
           : undefined,
       fileName

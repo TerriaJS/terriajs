@@ -1,8 +1,8 @@
 import { AxisBottom, AxisLeft } from "@visx/axis";
 import { Group } from "@visx/group";
-import { withParentSize } from "@vx/responsive";
+import { withParentSize } from "@visx/responsive";
 import { scaleLinear, scaleTime } from "@visx/scale";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -32,6 +32,11 @@ class FeatureInfoPanelChart extends React.Component {
     baseColor: "#efefef",
     margin: { top: 5, left: 5, right: 5, bottom: 5 }
   };
+
+  constructor(props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed
   get chartItem() {
@@ -107,6 +112,11 @@ class Chart extends React.Component {
 
   xAxisHeight = 30;
   yAxisWidth = 10;
+
+  constructor(props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed
   get plot() {

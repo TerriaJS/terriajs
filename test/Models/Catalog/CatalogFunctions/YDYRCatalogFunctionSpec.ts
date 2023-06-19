@@ -92,7 +92,7 @@ describe("YDYRCatalogFunction", function () {
     });
 
     // A few reactions will happen, while setting default values for functionParameters
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
       reaction(
         () => ydyr.functionParameters,
         () => {
@@ -168,7 +168,7 @@ describe("YDYRCatalogFunction", function () {
 
     it("polls twice - and creates 2 log entries", async function () {
       // Wait until job finished
-      await new Promise((resolve) => {
+      await new Promise<void>((resolve) => {
         reaction(
           () => job.jobStatus,
           (status) => (status === "finished" ? resolve() : undefined)
@@ -185,7 +185,7 @@ describe("YDYRCatalogFunction", function () {
     });
     it("downloads results and creates CSVCatalogItem", async function () {
       // Wait until job finished downloading results
-      await new Promise((resolve) => {
+      await new Promise<void>((resolve) => {
         reaction(
           () => job.downloadedResults,
           (downloadedResults) => (downloadedResults ? resolve() : undefined)

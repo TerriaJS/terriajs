@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import Result from "../Core/Result";
 import TerriaError, { TerriaErrorSeverity } from "../Core/TerriaError";
@@ -21,6 +21,10 @@ const supportsReordering = (model: BaseModel) =>
 
 export default class Workbench {
   private readonly _items = observable.array<BaseModel>();
+
+  constructor() {
+    makeObservable(this);
+  }
 
   /**
    * Gets or sets the list of items on the workbench.

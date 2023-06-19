@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { Tooltip as VisxTooltip } from "@visx/tooltip";
 import { CSSTransition } from "react-transition-group";
 import PropTypes from "prop-types";
@@ -19,6 +19,11 @@ class Tooltip extends React.Component {
   };
 
   prevItems = [];
+
+  constructor(props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed
   get items() {

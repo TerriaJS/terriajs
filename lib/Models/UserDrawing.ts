@@ -1,5 +1,12 @@
 import i18next from "i18next";
-import { computed, observable, reaction, runInAction } from "mobx";
+import {
+  computed,
+  makeObservable,
+  observable,
+  override,
+  reaction,
+  runInAction
+} from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -73,6 +80,8 @@ export default class UserDrawing extends MappableMixin(
 
   constructor(options: Options) {
     super(createGuid(), options.terria);
+
+    makeObservable(this);
 
     /**
      * Text that appears at the top of the dialog when drawmode is active.
@@ -179,7 +188,8 @@ export default class UserDrawing extends MappableMixin(
     return svgDataDeclare + svgString;
   }
 
-  @computed get cesiumRectangle(): Rectangle | undefined {
+  @override
+  get cesiumRectangle(): Rectangle | undefined {
     return this.getRectangleForShape();
   }
 
@@ -293,7 +303,7 @@ export default class UserDrawing extends MappableMixin(
     const pickPointMode = this.addMapInteractionMode();
     this.disposePickedFeatureSubscription = reaction(
       () => pickPointMode.pickedFeatures,
-      async (pickedFeatures, reaction) => {
+      async (pickedFeatures, _previousValue, reaction) => {
         if (isDefined(pickedFeatures)) {
           if (isDefined(pickedFeatures.allFeaturesAvailablePromise)) {
             await pickedFeatures.allFeaturesAvailablePromise;
@@ -407,7 +417,7 @@ export default class UserDrawing extends MappableMixin(
     const pickPointMode = this.addMapInteractionMode();
     this.disposePickedFeatureSubscription = reaction(
       () => pickPointMode.pickedFeatures,
-      async (pickedFeatures, reaction) => {
+      async (pickedFeatures, _previousValue, reaction) => {
         if (isDefined(pickedFeatures)) {
           if (isDefined(pickedFeatures.allFeaturesAvailablePromise)) {
             await pickedFeatures.allFeaturesAvailablePromise;
