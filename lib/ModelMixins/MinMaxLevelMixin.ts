@@ -1,5 +1,5 @@
 import { observable, makeObservable } from "mobx";
-import { ImageryProvider } from "cesium";
+import { ImageryProvider, Request, ImageryTypes } from "cesium";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import isDefined from "../Core/isDefined";
 import Model from "../Models/Definition/Model";
@@ -41,10 +41,20 @@ function MinMaxLevelMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         (isDefined(maximumLevel) && this.hideLayerAfterMinScaleDenominator) ||
         isDefined(minimumLevel)
       ) {
-        imageryProvider.requestImage = (
+        // TODO: The cast is necessary because the type Cesium declares for
+        // `requestImage` is incorrect. It is missing `CompressedTextureBuffer`
+        // as a possible return type.
+        type ExpectedCesiumRequestImageType = (
           x: number,
           y: number,
-          level: number
+          level: number,
+          request?: Request
+        ) => Promise<ImageryTypes> | undefined;
+        imageryProvider.requestImage = <ExpectedCesiumRequestImageType>((
+          x: number,
+          y: number,
+          level: number,
+          request: Request | undefined
         ) => {
           if (
             (maximumLevel && level > maximumLevel) ||
@@ -81,7 +91,7 @@ function MinMaxLevelMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
             (<any>imageryProvider).enablePickFeatures = true;
           }
           return realRequestImage.call(imageryProvider, x, y, level);
-        };
+        });
       }
       return imageryProvider;
     }

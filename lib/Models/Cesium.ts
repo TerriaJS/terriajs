@@ -54,6 +54,7 @@ import { ImageryLayerFeatureInfo } from "cesium";
 import { ImageryProvider } from "cesium";
 import { Scene } from "cesium";
 import { SceneTransforms } from "cesium";
+import { ScreenSpaceEventHandler } from "cesium";
 import { SingleTileImageryProvider } from "cesium";
 import { SplitDirection } from "cesium";
 import { CesiumWidget } from "cesium";
@@ -257,12 +258,12 @@ export default class Cesium extends GlobeOrMap {
     //     ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT);
 
     // Handle mouse move
-    inputHandler.setInputAction((e) => {
+    inputHandler.setInputAction((e: ScreenSpaceEventHandler.MotionEvent) => {
       this.mouseCoords.updateCoordinatesFromCesium(this.terria, e.endPosition);
     }, ScreenSpaceEventType.MOUSE_MOVE);
 
     inputHandler.setInputAction(
-      (e) => {
+      (e: ScreenSpaceEventHandler.MotionEvent) => {
         this.mouseCoords.updateCoordinatesFromCesium(
           this.terria,
           e.endPosition
@@ -273,16 +274,19 @@ export default class Cesium extends GlobeOrMap {
     );
 
     // Handle left click by picking objects from the map.
-    inputHandler.setInputAction((e) => {
-      if (!this.isFeaturePickingPaused)
-        this.pickFromScreenPosition(e.position, false);
-    }, ScreenSpaceEventType.LEFT_CLICK);
+    inputHandler.setInputAction(
+      (e: ScreenSpaceEventHandler.PositionedEvent) => {
+        if (!this.isFeaturePickingPaused)
+          this.pickFromScreenPosition(e.position, false);
+      },
+      ScreenSpaceEventType.LEFT_CLICK
+    );
 
     let zoomUserDrawing: UserDrawing | undefined;
 
     // Handle zooming on SHIFT + MOUSE DOWN
     inputHandler.setInputAction(
-      (e) => {
+      (e: ScreenSpaceEventHandler.PositionedEvent) => {
         if (!this.isFeaturePickingPaused && !isDefined(zoomUserDrawing)) {
           this.pauseMapInteraction();
 
@@ -346,7 +350,7 @@ export default class Cesium extends GlobeOrMap {
     // Handle SHIFT + CLICK for zooming
 
     inputHandler.setInputAction(
-      (e) => {
+      (e: ScreenSpaceEventHandler.PositionedEvent) => {
         if (isDefined(zoomUserDrawing)) {
           this.pickFromScreenPosition(e.position, false);
         }
@@ -394,15 +398,16 @@ export default class Cesium extends GlobeOrMap {
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
     this._disposeTerrainReaction = autorun(() => {
       this.scene.globe.terrainProvider = this.terrainProvider;
-      this.scene.globe.splitDirection = this.terria.showSplitter
-        ? this.terria.terrainSplitDirection
-        : SplitDirection.NONE;
+      // TODO: bring over globe and atmosphere splitting support from terriajs-cesium
+      // this.scene.globe.splitDirection = this.terria.showSplitter
+      //   ? this.terria.terrainSplitDirection
+      //   : SplitDirection.NONE;
       this.scene.globe.depthTestAgainstTerrain =
         this.terria.depthTestAgainstTerrainEnabled;
-      if (this.scene.skyAtmosphere) {
-        this.scene.skyAtmosphere.splitDirection =
-          this.scene.globe.splitDirection;
-      }
+      // if (this.scene.skyAtmosphere) {
+      //   this.scene.skyAtmosphere.splitDirection =
+      //     this.scene.globe.splitDirection;
+      // }
     });
     this._disposeSplitterReaction = this._reactToSplitterChanges();
 
@@ -464,7 +469,7 @@ export default class Cesium extends GlobeOrMap {
 
   private updateCredits(container: string | HTMLElement) {
     let containerElement: HTMLElement | null;
-    if (typeof container === 'string') {
+    if (typeof container === "string") {
       containerElement = document.getElementById(container);
     } else {
       containerElement = container;

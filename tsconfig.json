@@ -14,12 +14,12 @@
     "outDir": "ts-out",
     "resolveJsonModule": true,
     "typeRoots": ["./lib/ThirdParty/**/*.d.ts"],
-    "types": ["terriajs-cesium"]
+    "types": ["cesium"]
   },
   "include": [
-    "./lib/**/*",
-    "./test/**/*",
-    "./buildprocess/generateDocs.ts",
-    "./buildprocess/**/*"
+    "./lib/**/*"
+    //"./test/**/*",
+    //"./buildprocess/generateDocs.ts",
+    //"./buildprocess/**/*"
   ]
 }

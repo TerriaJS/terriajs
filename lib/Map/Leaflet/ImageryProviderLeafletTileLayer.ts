@@ -43,7 +43,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
   private _usable = false;
   private _delayedUpdate?: number;
   private _zSubtract = 0;
-  private _requestImageError?: TileProviderError;
+  private _requestImageError: TileProviderError | undefined;
   private _previousCredits: Credit[] = [];
   private _leafletUpdateInterval: number;
 
@@ -182,16 +182,17 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
         y: coords.y,
         level: level
       });
-      this._requestImageError = TileProviderError.handleError(
-        <any>this._requestImageError,
+      this._requestImageError = TileProviderError.reportError(
+        this._requestImageError!, // TODO: Cesium type definitions incorrectly forbid undefined
         this.imageryProvider,
-        <any>this.imageryProvider.errorEvent,
+        this.imageryProvider.errorEvent,
         message,
         coords.x,
         coords.y,
         level,
-        doRequest,
         <any>e
+        // TODO: bring terriajs-cesium retry logic to cesium
+        //doRequest
       );
     });
 

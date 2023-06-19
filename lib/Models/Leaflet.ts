@@ -965,8 +965,15 @@ export default class Leaflet extends GlobeOrMap {
 
     if (isDefined(feature) && isDefined(feature.position)) {
       const cartographicScratch = new Cartographic();
+      const cartesianPosition = feature.position.getValue(
+        this.terria.timelineClock.currentTime
+      );
+      if (cartesianPosition === undefined) {
+        this._selectionIndicator.animateSelectionIndicatorDepart();
+        return;
+      }
       const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
-        feature.position.getValue(this.terria.timelineClock.currentTime),
+        cartesianPosition,
         cartographicScratch
       );
       this._selectionIndicator.setLatLng(

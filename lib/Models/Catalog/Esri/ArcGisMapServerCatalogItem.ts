@@ -469,13 +469,15 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         maximumLevel: maximumLevel,
         tileHeight: this.tileHeight,
         tileWidth: this.tileWidth,
-        parameters: params,
+        // TODO: bring over parameters option from terriajs-cesium
+        //parameters: params,
         enablePickFeatures: this.allowFeaturePicking,
         /** Only used "pre-cached" tiles if we aren't requesting any specific layers
          * If the `layersArray` property is specified, we request individual dynamic layers and ignore the fused map cache.
          */
         usePreCachedTilesIfAvailable: this.layersArray.length == 0,
-        mapServerData: stratum.mapServer,
+        // TODO: bring over mapServerData option from terriajs-cesium
+        //mapServerData: stratum.mapServer,
         token: stratum.token,
         credit: this.attribution
       });

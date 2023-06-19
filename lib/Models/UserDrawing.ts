@@ -30,6 +30,7 @@ import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import CreateModel from "./Definition/CreateModel";
 import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
+import filterOutUndefined from "../Core/filterOutUndefined";
 
 interface OnDrawingCompleteParams {
   points: Cartesian3[];
@@ -370,7 +371,7 @@ export default class UserDrawing extends MappableMixin(
 
             if (isDrawingComplete && points) {
               this.onDrawingComplete({
-                points,
+                points: filterOutUndefined(points),
                 rectangle: this.getRectangleForShape()
               });
             }
@@ -606,7 +607,9 @@ export default class UserDrawing extends MappableMixin(
           const position = obj.position.getValue(
             this.terria.timelineClock.currentTime
           );
-          pos.push(position);
+          if (position !== undefined) {
+            pos.push(position);
+          }
         }
       }
       return pos;

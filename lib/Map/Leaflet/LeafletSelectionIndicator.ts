@@ -4,20 +4,10 @@ import { EasingFunction } from "cesium";
 import { Ellipsoid } from "cesium";
 import L from "leaflet";
 import isDefined from "../../Core/isDefined";
-
 import Leaflet from "../../Models/Leaflet";
+import { Tween, TweenCollection } from "cesium";
 
-import { TweenCollection } from "cesium";const selectionIndicatorUrl = require("../../../wwwroot/images/NM-LocationTarget.svg");
-
-interface Tween {
-  cancelTween(): void;
-}
-
-interface TweenCollection {
-  length: number;
-  add(args: any): Tween;
-  update(): void;
-}
+const selectionIndicatorUrl = require("../../../wwwroot/images/NM-LocationTarget.svg");
 
 const cartographicScratch = new Cartographic();
 
@@ -146,16 +136,19 @@ export default class LeafletSelectionIndicator {
 
     var feature = this._leaflet.terria.selectedFeature;
     if (isDefined(feature) && isDefined(feature.position)) {
-      var cartographic = Ellipsoid.WGS84.cartesianToCartographic(
-        feature.position.getValue(
-          this._leaflet.terria.timelineClock.currentTime
-        ),
-        cartographicScratch
+      const positionValue = feature.position.getValue(
+        this._leaflet.terria.timelineClock.currentTime
       );
-      this._marker.setLatLng([
-        CesiumMath.toDegrees(cartographic.latitude),
-        CesiumMath.toDegrees(cartographic.longitude)
-      ]);
+      if (isDefined(positionValue)) {
+        var cartographic = Ellipsoid.WGS84.cartesianToCartographic(
+          positionValue,
+          cartographicScratch
+        );
+        this._marker.setLatLng([
+          CesiumMath.toDegrees(cartographic.latitude),
+          CesiumMath.toDegrees(cartographic.longitude)
+        ]);
+      }
     }
 
     if (this._tweens.length > 0) {

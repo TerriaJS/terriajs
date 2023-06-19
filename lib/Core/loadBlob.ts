@@ -79,7 +79,7 @@ export function parseZipJsonBlob(blob: Blob): Promise<JsonValue> {
       const entry = entries[i];
       if (isJson(entry.filename)) {
         return entry
-          .getData(new zip.Data64URIWriter())
+          .getData(new ZipData64URIWriter())
           .then(function (uri: string) {
             return loadJson(uri);
           });
@@ -97,7 +97,7 @@ export async function parseZipArrayBuffers(blob: Blob): Promise<ZipEntries[]> {
 
   return await Promise.all(
     entries.map(async (entry: any) => {
-      const data = await entry.getData(new zip.Uint8ArrayWriter());
+      const data = await entry.getData(new ZipUint8ArrayWriter());
       return {
         fileName: entry.filename,
         isDirectory: entry.directory === true,

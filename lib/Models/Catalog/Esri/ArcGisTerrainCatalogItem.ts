@@ -28,7 +28,11 @@ export default class ArcGisTerrainCatalogItem extends UrlMixin(
     const item = new ArcGISTiledElevationTerrainProvider({
       url: this.url
     });
-    if (this.attribution) item.credit = new Credit(this.attribution);
+
+    // ArcGISTiledElevationTerrainProvider has no official way to override the
+    // credit, so we write directly to the private field here.
+    if (this.attribution) (<any>item)._credit = new Credit(this.attribution);
+
     return [];
   }
 

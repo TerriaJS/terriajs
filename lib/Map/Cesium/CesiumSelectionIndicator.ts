@@ -10,20 +10,9 @@ import {
 import { Cartesian2 } from "cesium";
 import { Cartesian3 } from "cesium";
 import { EasingFunction } from "cesium";
-import { CreditDisplay } from "cesium";
 import { Scene } from "cesium";
 import { SceneTransforms } from "cesium";
-import { TweenCollection } from "cesium";
 import isDefined from "../../Core/isDefined";
-
-declare module "terriajs-cesium/Source/Scene/Scene" {
-  export default interface Scene {
-    tweens: TweenCollection;
-    frameState: {
-      creditDisplay: CreditDisplay;
-    };
-  }
-}
 
 var screenSpacePos = new Cartesian2();
 var offScreen = "-1000px";

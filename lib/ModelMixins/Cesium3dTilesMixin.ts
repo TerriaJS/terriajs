@@ -466,7 +466,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           pickResult instanceof Cesium3DTilePointFeature)
       ) {
         const properties: { [name: string]: unknown } = {};
-        pickResult.getPropertyNames().forEach((name) => {
+        pickResult.getPropertyIds().forEach((name) => {
           properties[name] = pickResult.getProperty(name);
         });
 
@@ -490,7 +490,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       // a property named `id` return it.
       if (this.featureIdProperties) return this.featureIdProperties.slice();
       const propretyNamedId = feature
-        .getPropertyNames()
+        .getPropertyIds()
         .find((name) => name.toLowerCase() === "id");
       return propretyNamedId ? [propretyNamedId] : [];
     }

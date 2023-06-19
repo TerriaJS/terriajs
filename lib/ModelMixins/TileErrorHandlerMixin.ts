@@ -203,7 +203,8 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
       // By setting retry to a promise, we tell cesium/leaflet to
       // reload the tile if the promise resolves successfully
       // https://github.com/TerriaJS/cesium/blob/terriajs/Source/Core/TileProviderError.js#L161
-      tileProviderError.retry = promise;
+      // TODO: Cesium does not support promise-based retry. Need to bring this over from terriajs-cesium
+      //tileProviderError.retry = promise;
 
       if (tileProviderError.timesRetried === 0) {
         // There was an intervening success, so restart our count of the tile failures.
