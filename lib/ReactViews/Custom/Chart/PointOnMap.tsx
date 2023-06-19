@@ -25,7 +25,7 @@ export default class PointOnMap extends React.Component<PropsType> {
     makeObservable(this);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     runInAction(() => {
       const props = this.props;
       const pointItem = new GeoJsonCatalogItem(createGuid(), props.terria);
@@ -54,7 +54,7 @@ export default class PointOnMap extends React.Component<PropsType> {
     });
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     runInAction(() => {
       if (this.pointItem) {
         this.props.terria.overlays.remove(this.pointItem);
@@ -63,7 +63,7 @@ export default class PointOnMap extends React.Component<PropsType> {
     });
   }
 
-  render() {
+  override render() {
     return null;
   }
 }

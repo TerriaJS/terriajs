@@ -141,7 +141,7 @@ export class TableAutomaticLegendStratum extends LoadableStratum(
     ]);
   }
 
-  @computed get legends(): StratumFromTraits<LegendTraits>[] {
+  @computed override get legends(): StratumFromTraits<LegendTraits>[] {
     if (
       this._item.mapItems.length === 0 ||
       (this._item.dataColumnMajor ?? []).length === 0

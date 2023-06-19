@@ -19,7 +19,7 @@ export default class ApiTableChartCustomComponent extends ChartCustomComponent<A
     return "api-chart";
   }
 
-  get attributes(): string[] {
+  override get attributes(): string[] {
     return ["api-table-catalog-item-json"];
   }
 
@@ -56,7 +56,7 @@ export default class ApiTableChartCustomComponent extends ChartCustomComponent<A
     );
   }
 
-  protected parseNodeAttrs(nodeAttrs: {
+  protected override parseNodeAttrs(nodeAttrs: {
     [name: string]: string | undefined;
   }): ApiTableCustomChartComponentAttributes {
     const parsed: ApiTableCustomChartComponentAttributes = super.parseNodeAttrs(

@@ -241,7 +241,7 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   @computed
-  get attributions() {
+  override get attributions() {
     return this._attributionControl.dataAttributions;
   }
 
@@ -1020,7 +1020,7 @@ export default class Leaflet extends GlobeOrMap {
     );
   }
 
-  captureScreenshot(): Promise<string> {
+  override captureScreenshot(): Promise<string> {
     // Temporarily hide the map credits.
     this._attributionControl.remove();
 

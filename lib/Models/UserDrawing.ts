@@ -193,7 +193,7 @@ export default class UserDrawing extends MappableMixin(
   }
 
   @override
-  get cesiumRectangle(): Rectangle | undefined {
+  override get cesiumRectangle(): Rectangle | undefined {
     return this.getRectangleForShape();
   }
 

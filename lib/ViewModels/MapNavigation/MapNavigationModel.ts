@@ -38,7 +38,7 @@ export default class MapNavigationModel extends CompositeBarModel<IMapNavigation
     super.add(newItem, requestedIndex);
   }
 
-  protected createCompositeBarItem(
+  protected override createCompositeBarItem(
     item: IMapNavigationItem
   ): IMapNavigationItem {
     return item;

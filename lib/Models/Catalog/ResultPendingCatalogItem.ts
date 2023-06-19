@@ -15,11 +15,11 @@ export default class ResultPendingCatalogItem extends CatalogMemberMixin(
   }
 
   @override
-  get disableAboutData() {
+  override get disableAboutData() {
     return super.disableAboutData ?? true;
   }
 
-  protected forceLoadMetadata() {
+  protected override forceLoadMetadata() {
     return this.loadPromise;
   }
 }

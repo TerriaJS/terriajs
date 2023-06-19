@@ -38,20 +38,20 @@ export default class InfoParameter extends FunctionParameter<string> {
   }
 
   @override
-  get isValid() {
+  override get isValid() {
     return !this._errorMessage;
   }
 
   @override
-  get value(): string | undefined {
+  override get value(): string | undefined {
     return this._value;
   }
 
-  setValue(strataId: string, v: string) {
+  override setValue(strataId: string, v: string) {
     this._value = v;
   }
 
-  clearValue(strataId: string) {
+  override clearValue(strataId: string) {
     this._value = undefined;
   }
 }

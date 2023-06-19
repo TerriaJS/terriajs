@@ -30,7 +30,7 @@ export default function modelReferenceArrayTrait<T>(
 }
 
 export class ModelReferenceArrayTrait extends Trait {
-  readonly decoratorForFlattened = computed.struct;
+  override readonly decoratorForFlattened = computed.struct;
   private factory: ModelFactory | undefined;
 
   constructor(id: string, options: ModelArrayTraitOptions, parent: any) {

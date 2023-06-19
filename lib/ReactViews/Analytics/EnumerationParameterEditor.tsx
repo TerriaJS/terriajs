@@ -21,7 +21,7 @@ export default class EnumerationParameterEditor extends React.Component<{
     this.props.parameter.setValue(CommonStrata.user, e.target.value);
   }
 
-  render() {
+  override render() {
     const value = this.props.parameter.value;
     return (
       <select

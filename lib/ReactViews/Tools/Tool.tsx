@@ -94,7 +94,7 @@ export class ToolButtonController extends MapNavigationItemController {
   }
 
   @computed
-  get active() {
+  override get active() {
     const currentTool = this.props.viewState.currentTool;
     return (
       super.active ||
@@ -103,7 +103,7 @@ export class ToolButtonController extends MapNavigationItemController {
     );
   }
 
-  activate() {
+  override activate() {
     this.props.viewState.openTool({
       toolName: this.props.toolName,
       getToolComponent: this.props.getToolComponent,
@@ -113,7 +113,7 @@ export class ToolButtonController extends MapNavigationItemController {
     super.activate();
   }
 
-  deactivate() {
+  override deactivate() {
     this.props.viewState.closeTool();
     super.deactivate();
   }
@@ -129,13 +129,13 @@ class ToolErrorBoundary extends React.Component<
   ToolErrorBoundaryProps,
   { hasError: boolean }
 > {
-  state = { hasError: false };
+  override state = { hasError: false };
 
   static getDerivedStateFromError() {
     return { hasError: true };
   }
 
-  componentDidCatch() {
+  override componentDidCatch() {
     const { terria, toolName, t } = this.props;
     terria.raiseErrorToUser(
       new TerriaError({
@@ -146,7 +146,7 @@ class ToolErrorBoundary extends React.Component<
     this.setState({ hasError: true });
   }
 
-  render() {
+  override render() {
     return this.state.hasError === true ? null : this.props.children;
   }
 }

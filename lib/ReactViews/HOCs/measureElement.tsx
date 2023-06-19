@@ -68,14 +68,14 @@ const measureElement = <P extends React.ComponentProps<any>>(
         200
       );
     }
-    componentDidMount() {
+    override componentDidMount() {
       window.addEventListener("resize", this.checkAndUpdateSizingWithDebounce);
       this.checkAndUpdateSizing();
     }
-    componentDidUpdate() {
+    override componentDidUpdate() {
       this.checkAndUpdateSizing();
     }
-    componentWillUnmount() {
+    override componentWillUnmount() {
       window.removeEventListener(
         "resize",
         this.checkAndUpdateSizingWithDebounce
@@ -123,7 +123,7 @@ const measureElement = <P extends React.ComponentProps<any>>(
         }
       }
     }
-    render() {
+    override render() {
       return (
         <WrappedComponent
           {...this.props}

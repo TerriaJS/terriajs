@@ -41,7 +41,7 @@ export class StyleMapLegend<
     return this.catalogItem.activeTableStyle;
   }
 
-  @computed get title() {
+  @computed override get title() {
     if (
       this.styleMap.styleMap.type !== "constant" &&
       this.styleMap.column &&
@@ -52,7 +52,7 @@ export class StyleMapLegend<
   }
 
   @computed
-  get items(): StratumFromTraits<LegendItemTraits>[] {
+  override get items(): StratumFromTraits<LegendItemTraits>[] {
     let items: StratumFromTraits<LegendItemTraits>[] = [];
 
     if (this.styleMap.styleMap.type === "bin") {

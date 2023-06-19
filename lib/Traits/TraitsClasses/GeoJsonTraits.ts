@@ -49,7 +49,7 @@ export class GeoJsonTraits extends mixTraits(
       "If enabled, there will be controls to set region column and region type.",
     type: "boolean"
   })
-  enableManualRegionMapping: false = false;
+  override enableManualRegionMapping: false = false;
 
   @primitiveTrait({
     name: "Use outline color for line features",

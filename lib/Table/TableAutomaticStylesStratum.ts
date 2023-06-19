@@ -40,12 +40,12 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   }
 
   @computed
-  get rectangle() {
+  override get rectangle() {
     return this.catalogItem.activeTableStyle.rectangle;
   }
 
   @computed
-  get disableOpacityControl() {
+  override get disableOpacityControl() {
     // disable opacity control for point tables - or if no mapItems
     return this.catalogItem.activeTableStyle.isPoints() ||
       this.catalogItem.mapItems.length === 0
@@ -54,7 +54,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   }
 
   @computed
-  get disableSplitter() {
+  override get disableSplitter() {
     return !isDefined(this.catalogItem.activeTableStyle.regionColumn)
       ? true
       : undefined;
@@ -64,7 +64,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
    * Set default activeStyle to first style with a scalar color column (if none is found then find first style with enum, text and then region)
    * Ignores styles with `hidden: true`
    */
-  @computed get activeStyle() {
+  @computed override get activeStyle() {
     if (this.catalogItem.styles && this.catalogItem.styles.length > 0) {
       // Find default active style in this order:
       // - First scalar style
@@ -95,7 +95,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   }
 
   @computed
-  get defaultStyle(): StratumFromTraits<TableStyleTraits> {
+  override get defaultStyle(): StratumFromTraits<TableStyleTraits> {
     // Use the default style to select the spatial key (lon/lat, region, none i.e. chart)
     // for all styles.
     const longitudeColumn = this.catalogItem.findFirstColumnByType(
@@ -171,7 +171,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   }
 
   @computed
-  get styles(): StratumFromTraits<TableStyleTraits>[] {
+  override get styles(): StratumFromTraits<TableStyleTraits>[] {
     // If no styles for scalar, enum - show styles using region columns
     const showRegionStyles = this.catalogItem.tableColumns.every(
       (column) =>
@@ -208,7 +208,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   }
 
   @computed
-  get disableDateTimeSelector() {
+  override get disableDateTimeSelector() {
     if (
       this.catalogItem.mapItems.length === 0 ||
       !this.catalogItem.activeTableStyle.moreThanOneTimeInterval
@@ -216,7 +216,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
       return true;
   }
 
-  @computed get showDisableTimeOption() {
+  @computed override get showDisableTimeOption() {
     // Return nothing if no row groups or if time column doesn't have at least one interval
     if (
       this.catalogItem.activeTableStyle.rowGroups.length === 0 ||
@@ -252,21 +252,21 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   }
 
   @computed
-  get initialTimeSource() {
+  override get initialTimeSource() {
     return "start";
   }
 
   /** Return title of timeColumn if defined
    * This will be displayed on DateTimeSelectorSection in the workbench
    */
-  @computed get timeLabel() {
+  @computed override get timeLabel() {
     if (this.catalogItem.activeTableStyle.timeColumn) {
       return `${this.catalogItem.activeTableStyle.timeColumn.title}: `;
     }
   }
 
   @computed
-  get shortReport() {
+  override get shortReport() {
     return this.catalogItem.mapItems.length === 0 &&
       this.catalogItem.chartItems.length === 0 &&
       !this.catalogItem.isLoading
@@ -275,7 +275,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   }
 
   /** Show "Regions: xxx" short report for region-mapping */
-  @computed get shortReportSections() {
+  @computed override get shortReportSections() {
     const regionCol = this.catalogItem.activeTableStyle.regionColumn;
 
     const regionType = regionCol?.regionType;
@@ -291,7 +291,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   }
 
   /** Show chart by default - if not loading and no mappable items */
-  @computed get showInChartPanel() {
+  @computed override get showInChartPanel() {
     return (
       this.catalogItem.show &&
       !this.catalogItem.isLoading &&

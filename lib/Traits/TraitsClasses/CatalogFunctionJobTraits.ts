@@ -41,7 +41,7 @@ export default class CatalogFunctionJobTraits extends mixTraits(
       "Toggle for enabling auto refresh. (This overrides Trait in AutoRefreshingTraits)",
     type: "boolean"
   })
-  refreshEnabled: boolean = false;
+  override refreshEnabled: boolean = false;
 
   @primitiveTrait({
     name: "Refresh interval",
@@ -49,5 +49,5 @@ export default class CatalogFunctionJobTraits extends mixTraits(
       "How often the job will poll for results, in seconds. (This overrides `AutoRefreshingTraits`)",
     type: "number"
   })
-  refreshInterval = 1;
+  override refreshInterval = 1;
 }

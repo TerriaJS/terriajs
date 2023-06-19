@@ -18,7 +18,7 @@ interface PropsType extends WithTranslation {
 
 @observer
 class SelectableDimensionSection extends React.Component<PropsType> {
-  render() {
+  override render() {
     const item = this.props.item;
     if (!SelectableDimensions.is(item)) {
       return null;

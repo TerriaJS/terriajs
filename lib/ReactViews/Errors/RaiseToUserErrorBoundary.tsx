@@ -12,7 +12,7 @@ type PropsType = {
  * An error boundary that raises the error to the user.
  */
 export default class RaiseToUserErrorBoundary extends React.Component<PropsType> {
-  state = { hasError: false };
+  override state = { hasError: false };
 
   static getDerivedStateFromError(error: any) {
     return {
@@ -20,14 +20,14 @@ export default class RaiseToUserErrorBoundary extends React.Component<PropsType>
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.props.viewState.terria.raiseErrorToUser(
       error,
       this.props.terriaErrorOptions
     );
   }
 
-  render() {
+  override render() {
     return this.state.hasError ? null : this.props.children;
   }
 }

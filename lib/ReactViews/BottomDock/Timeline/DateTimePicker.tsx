@@ -178,7 +178,7 @@ class DateTimePicker extends React.Component<PropsType> {
     makeObservable(this);
   }
 
-  componentWillMount() {
+  override componentWillMount() {
     const datesObject = this.props.dates;
     let defaultCentury: number | undefined;
     let defaultYear: number | undefined;
@@ -251,7 +251,7 @@ class DateTimePicker extends React.Component<PropsType> {
     );
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.currentDateAutorunDisposer && this.currentDateAutorunDisposer();
     window.removeEventListener("click", this.closePickerEventHandler);
   }
@@ -636,7 +636,7 @@ class DateTimePicker extends React.Component<PropsType> {
     }
   }
 
-  render() {
+  override render() {
     if (this.props.dates) {
       const datesObject = this.props.dates;
       return (

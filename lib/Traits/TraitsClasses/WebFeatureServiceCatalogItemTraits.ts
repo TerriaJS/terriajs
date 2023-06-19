@@ -73,5 +73,5 @@ export default class WebFeatureServiceCatalogItemTraits extends mixTraits(
     description:
       "Styling rules that follow [simplestyle-spec](https://github.com/mapbox/simplestyle-spec)"
   })
-  style?: StyleTraits = undefined;
+  override style?: StyleTraits = undefined;
 }

@@ -129,7 +129,7 @@ export default class TableLabelStyleTraits
     description: "True to enable. False by default",
     type: "boolean"
   })
-  enabled = false;
+  override enabled = false;
 
   @objectArrayTrait({
     name: "Enum Colors",

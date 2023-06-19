@@ -88,7 +88,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     ) as this;
   }
 
-  @computed get metadataUrls() {
+  @computed override get metadataUrls() {
     const metadataUrls: MetadataURL[] = [];
 
     Array.from(this.capabilitiesLayers.values()).forEach((layer) => {
@@ -108,7 +108,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get layers(): string | undefined {
+  override get layers(): string | undefined {
     let layers: string | undefined;
 
     if (this.catalogItem.uri !== undefined) {
@@ -127,7 +127,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     return layers;
   }
 
-  @computed get tileWidth() {
+  @computed override get tileWidth() {
     const queryParams: any = this.catalogItem.uri?.query(true) ?? {};
 
     if (isDefined(queryParams.width ?? queryParams.WIDTH)) {
@@ -135,7 +135,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     }
   }
 
-  @computed get tileHeight() {
+  @computed override get tileHeight() {
     const queryParams: any = this.catalogItem.uri?.query(true) ?? {};
 
     if (isDefined(queryParams.height ?? queryParams.HEIGHT)) {
@@ -151,7 +151,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   4. If server supports `GetLegendGraphic`, we can request a legend (with or without `style` parameter)
  */
   @computed
-  get legends(): StratumFromTraits<LegendTraits>[] | undefined {
+  override get legends(): StratumFromTraits<LegendTraits>[] | undefined {
     const availableStyles = this.catalogItem.availableStyles || [];
     const layers = this.catalogItem.layersArray;
     const styles = this.catalogItem.stylesArray;
@@ -297,7 +297,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     return Array.from(layerCrs);
   }
 
-  @computed get crs() {
+  @computed override get crs() {
     // Note order is important here, the first one found will be used
     const supportedCrs = [...SUPPORTED_CRS_3857, ...SUPPORTED_CRS_4326];
 
@@ -315,7 +315,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get availableDimensions(): StratumFromTraits<WebMapServiceAvailableLayerDimensionsTraits>[] {
+  override get availableDimensions(): StratumFromTraits<WebMapServiceAvailableLayerDimensionsTraits>[] {
     const result: StratumFromTraits<WebMapServiceAvailableLayerDimensionsTraits>[] =
       [];
 
@@ -356,7 +356,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get availableStyles(): StratumFromTraits<WebMapServiceAvailableLayerStylesTraits>[] {
+  override get availableStyles(): StratumFromTraits<WebMapServiceAvailableLayerStylesTraits>[] {
     const result: StratumFromTraits<WebMapServiceAvailableLayerStylesTraits>[] =
       [];
 
@@ -416,7 +416,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
    * If !supportsGetLegendGraphic - we have to just use the first available style (for each layer)
    * This is because, to request a "default" legend we need GetLegendGraphics
    **/
-  @computed get styles() {
+  @computed override get styles() {
     if (this.catalogItem.uri !== undefined) {
       // Try to extract a styles from the URL
       const query: any = this.catalogItem.uri.query(true) ?? {};
@@ -437,7 +437,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get info(): StratumFromTraits<InfoSectionTraits>[] {
+  override get info(): StratumFromTraits<InfoSectionTraits>[] {
     const result: StratumFromTraits<InfoSectionTraits>[] = [];
 
     let firstDataDescription: string | undefined;
@@ -574,7 +574,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get infoSectionOrder(): string[] {
+  override get infoSectionOrder(): string[] {
     let layerDescriptions = [`Web Map Service Layer Description`];
 
     // If more than one layer, push layer description titles for each applicable layer
@@ -618,7 +618,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get shortReport() {
+  override get shortReport() {
     const catalogItem = this.catalogItem;
     if (catalogItem.isShowingDiff) {
       const format = "yyyy/mm/dd";
@@ -629,7 +629,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get rectangle(): StratumFromTraits<RectangleTraits> | undefined {
+  override get rectangle(): StratumFromTraits<RectangleTraits> | undefined {
     const layers: CapabilitiesLayer[] = [...this.capabilitiesLayers.values()]
       .filter((layer) => layer !== undefined)
       .map((l) => l!);
@@ -670,7 +670,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get isGeoServer(): boolean | undefined {
+  override get isGeoServer(): boolean | undefined {
     const keyword = this.capabilities?.Service?.KeywordList?.Keyword;
     return (
       (isReadOnlyArray(keyword) && keyword.indexOf("GEOSERVER") >= 0) ||
@@ -681,7 +681,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
 
   // TODO - There is possibly a better way to do this
   @computed
-  get isThredds(): boolean {
+  override get isThredds(): boolean {
     if (
       this.catalogItem.url &&
       (this.catalogItem.url.indexOf("thredds") > -1 ||
@@ -694,20 +694,20 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
 
   // TODO - Geoserver also support NCWMS via a plugin, just need to work out how to detect that
   @computed
-  get isNcWMS(): boolean {
+  override get isNcWMS(): boolean {
     if (this.catalogItem.isThredds) return true;
     return false;
   }
 
   @computed
-  get isEsri(): boolean {
+  override get isEsri(): boolean {
     if (this.catalogItem.url !== undefined)
       return this.catalogItem.url.indexOf("MapServer/WMSServer") > -1;
     return false;
   }
 
   @computed
-  get supportsGetLegendGraphic(): boolean {
+  override get supportsGetLegendGraphic(): boolean {
     return (
       isDefined(this.capabilities?.json?.["xmlns:sld"]) ||
       isDefined(
@@ -719,7 +719,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get supportsColorScaleRange(): boolean {
+  override get supportsColorScaleRange(): boolean {
     return this.catalogItem.isNcWMS;
   }
 
@@ -785,11 +785,11 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     return result;
   }
 
-  @computed get initialTimeSource() {
+  @computed override get initialTimeSource() {
     return "now";
   }
 
-  @computed get currentTime() {
+  @computed override get currentTime() {
     // Get default times for all layers
     const defaultTimes = filterOutUndefined(
       Array.from(this.capabilitiesLayers).map(([layerName, layer]) => {
@@ -828,7 +828,8 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
    *
    * If no matching format can be found in GetCapabilities, then Cesium will use defaults (see `WebMapServiceImageryProvider.DefaultGetFeatureInfoFormats`)
    */
-  @computed get getFeatureInfoFormat():
+
+  @computed override get getFeatureInfoFormat():
     | StratumFromTraits<GetFeatureInfoFormat>
     | undefined {
     const formats: string | string[] | undefined =
@@ -850,7 +851,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       return { format: "text/plain", type: "text" };
   }
 
-  @computed get linkedWcsParameters() {
+  @computed override get linkedWcsParameters() {
     // Get outputCrs
     // Note: this will be overridden by `WebCoverageServiceDescribeCoverageStratum` if a better outputCrs is found
     let outputCrs = this.availableCrs[0];

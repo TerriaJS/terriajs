@@ -70,7 +70,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get name(): string | undefined {
+  override get name(): string | undefined {
     const title = this.capabilities.ServiceIdentification.Title;
     if (title !== undefined) {
       return replaceUnderscores(title);
@@ -78,7 +78,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get info() {
+  override get info() {
     const result: StratumFromTraits<InfoSectionTraits>[] = [];
     const service = this.capabilities.ServiceIdentification;
 
@@ -144,7 +144,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get members(): ModelReference[] {
+  override get members(): ModelReference[] {
     return filterOutUndefined(
       this.capabilities.ProcessOfferings?.map((process) =>
         this.getProcessId(process)
@@ -227,11 +227,11 @@ export default class WebProcessingServiceCatalogGroup extends GroupMixin(
     return WebProcessingServiceCatalogGroup.type;
   }
 
-  get typeName() {
+  override get typeName() {
     return i18next.t("models.webProcessingServiceCatalogGroup.typeName");
   }
 
-  async forceLoadMetadata(): Promise<void> {
+  override async forceLoadMetadata(): Promise<void> {
     const stratum = await GetCapabilitiesStratum.load(this);
     runInAction(() => {
       this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);

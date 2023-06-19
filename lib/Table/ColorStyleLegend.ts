@@ -44,21 +44,21 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     return this.tableStyle.colorTraits.legend;
   }
 
-  @computed get url() {
+  @computed override get url() {
     return this.oldLegendTraits.url;
   }
-  @computed get imageScaling() {
+  @computed override get imageScaling() {
     return this.oldLegendTraits.imageScaling;
   }
-  @computed get urlMimeType() {
+  @computed override get urlMimeType() {
     return this.oldLegendTraits.urlMimeType;
   }
-  @computed get backgroundColor() {
+  @computed override get backgroundColor() {
     return this.oldLegendTraits.backgroundColor;
   }
 
   /** Add column title as legend title if showing a Discrete or Enum ColorMap */
-  @computed get title() {
+  @computed override get title() {
     if (this.oldLegendTraits.title) return this.oldLegendTraits.title;
     if (
       this.tableStyle.colorMap instanceof ContinuousColorMap ||
@@ -69,7 +69,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
   }
 
   @computed
-  get items(): StratumFromTraits<LegendItemTraits>[] {
+  override get items(): StratumFromTraits<LegendItemTraits>[] {
     // This is a bit dodgy - but should be fine until we deprecate LegendTraits in TableColorStyleTraits
     if (this.oldLegendTraits.items && this.oldLegendTraits.items.length > 0)
       return this.oldLegendTraits.traits.items.toJson(

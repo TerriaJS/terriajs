@@ -79,24 +79,24 @@ interface MeasurementTimeValuePair {
 StratumOrder.addLoadStratum(TableAutomaticStylesStratum.stratumName);
 
 class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
-  constructor(readonly catalogItem: SensorObservationServiceCatalogItem) {
+  constructor(override readonly catalogItem: SensorObservationServiceCatalogItem) {
     super(catalogItem);
     makeObservable(this);
   }
 
-  duplicateLoadableStratum(
+  override duplicateLoadableStratum(
     newModel: SensorObservationServiceCatalogItem
   ): this {
     return new SosAutomaticStylesStratum(newModel) as this;
   }
 
   @override
-  get activeStyle() {
+  override get activeStyle() {
     return this.catalogItem.procedures[0]?.identifier;
   }
 
   @override
-  get styles(): StratumFromTraits<TableStyleTraits>[] {
+  override get styles(): StratumFromTraits<TableStyleTraits>[] {
     return this.catalogItem.procedures.map((p) => {
       return createStratumInstance(TableStyleTraits, {
         id: p.identifier,
@@ -113,7 +113,7 @@ class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
   }
 
   @override
-  get defaultChartStyle() {
+  override get defaultChartStyle() {
     const timeColumn = this.catalogItem.tableColumns.find(
       (column) => column.type === TableColumnType.time
     );
@@ -331,7 +331,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     return "sos";
   }
 
-  protected async forceLoadMetadata() {}
+  protected override async forceLoadMetadata() {}
 
   @action
   protected async forceLoadTableData() {
@@ -343,7 +343,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   }
 
   @override
-  get cacheDuration(): string {
+  override get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }
@@ -548,7 +548,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   }
 
   @override
-  get selectableDimensions() {
+  override get selectableDimensions() {
     return filterOutUndefined([
       // Filter out proceduresSelector - as it duplicates TableMixin.styleDimensions
       ...super.selectableDimensions.filter(
@@ -608,7 +608,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   }
 
   @override
-  get selectedObservableId() {
+  override get selectedObservableId() {
     return (
       super.selectedObservableId || this.observableProperties[0]?.identifier
     );

@@ -92,7 +92,7 @@ export class GenericMapNavigationItemController extends MapNavigationItemControl
   }
 
   @action.bound
-  activate() {
+  override activate() {
     if (this.options?.activate) {
       this.options.activate();
     }
@@ -100,14 +100,14 @@ export class GenericMapNavigationItemController extends MapNavigationItemControl
   }
 
   @action.bound
-  deactivate() {
+  override deactivate() {
     if (this.options?.deactivate) {
       this.options.deactivate();
     }
     super.deactivate();
   }
 
-  handleClick(): void {
+  override handleClick(): void {
     if (this.options?.handleClick) {
       this.options.handleClick();
     } else {

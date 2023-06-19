@@ -133,7 +133,7 @@ export class ClippingBoxTraits extends mixTraits(BoxDrawingTraits) {
     description:
       "Latitude, longitude and height of the clipping box. When not set, the box is positioned at the center of the screen."
   })
-  position?: LatLonHeightTraits = undefined;
+  override position?: LatLonHeightTraits = undefined;
 
   @objectTrait({
     type: ClippingBoxDimensionTraits,

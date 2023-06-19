@@ -75,7 +75,7 @@ export default class BooleanParameterEditor extends React.Component<{
     );
   }
 
-  render() {
+  override render() {
     return (
       <div>
         {!this.props.parameter.hasNamedStates && this.renderCheckbox()}

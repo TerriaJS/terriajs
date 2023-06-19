@@ -114,11 +114,11 @@ class ViewingControls extends React.Component<
   }
 
   /* eslint-disable-next-line camelcase */
-  UNSAFE_componentWillMount() {
+  override UNSAFE_componentWillMount() {
     window.addEventListener("click", this.hideMenu.bind(this));
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     window.removeEventListener("click", this.hideMenu.bind(this));
   }
 
@@ -475,7 +475,7 @@ class ViewingControls extends React.Component<
     );
   }
 
-  render() {
+  override render() {
     const viewState = this.props.viewState;
     const item = this.props.item;
     const { t } = this.props;

@@ -5,7 +5,7 @@ import Icon from "../../../../Styled/Icon";
 import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
 
 export class ToggleSplitterController extends MapNavigationItemController {
-  static id = "split-tool";
+  static override id = "split-tool";
 
   constructor(private viewState: ViewState) {
     super();
@@ -24,30 +24,30 @@ export class ToggleSplitterController extends MapNavigationItemController {
   }
 
   @computed
-  get visible() {
+  override get visible() {
     return super.visible && this.viewState.terria.currentViewer.canShowSplitter;
   }
 
   @computed
-  get disabled() {
+  override get disabled() {
     const toolIsDifference =
       this.viewState.currentTool?.toolName === "Difference";
     return this.viewState.isToolOpen && toolIsDifference;
   }
 
   @computed
-  get active(): boolean {
+  override get active(): boolean {
     return this.viewState.terria.showSplitter;
   }
 
   @action
-  activate() {
+  override activate() {
     this.viewState.terria.showSplitter = true;
     super.activate();
   }
 
   @action
-  deactivate() {
+  override deactivate() {
     this.viewState.terria.showSplitter = false;
     super.deactivate();
   }

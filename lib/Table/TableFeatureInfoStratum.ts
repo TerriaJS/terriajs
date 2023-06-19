@@ -25,7 +25,7 @@ export default class TableFeatureInfoStratum extends LoadableStratum(
   }
 
   @computed
-  get featureInfoTemplate() {
+  override get featureInfoTemplate() {
     let template = '<table class="cesium-infoBox-defaultTable">';
 
     template += this.catalogItem.tableColumns

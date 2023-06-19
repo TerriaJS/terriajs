@@ -40,7 +40,7 @@ export default function objectTrait<T extends ModelTraits>(
 export class ObjectTrait<T extends ModelTraits> extends Trait {
   readonly type: TraitsConstructor<T>;
   readonly isNullable: boolean;
-  readonly decoratorForFlattened = computed.struct;
+  override readonly decoratorForFlattened = computed.struct;
   readonly modelClass: ModelConstructor<Model<T>>;
 
   constructor(id: string, options: ObjectTraitOptions<T>, parent: any) {

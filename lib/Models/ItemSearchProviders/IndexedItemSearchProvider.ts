@@ -131,7 +131,7 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
    * Pre-emptively load the index while the user is entering input for the
    * parameter.
    */
-  loadParameterHint = (parameterId: string, valueHint: any) => {
+  override loadParameterHint = (parameterId: string, valueHint: any) => {
     const parameter = this.parameters.get(parameterId);
     if (parameter) {
       parameter.index.load(this.indexRootUrl, valueHint);

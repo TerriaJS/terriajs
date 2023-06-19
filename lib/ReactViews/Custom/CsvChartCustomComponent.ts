@@ -40,7 +40,7 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<CsvCat
     return "chart";
   }
 
-  get attributes(): string[] {
+  override get attributes(): string[] {
     return super.attributes.concat([
       "poll-seconds",
       "poll-sources",
@@ -176,11 +176,11 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<CsvCat
     }
   }
 
-  setTraitsFromBody = (item: CsvCatalogItem, csvString: string) => {
+  override setTraitsFromBody = (item: CsvCatalogItem, csvString: string) => {
     item.setTrait(CommonStrata.user, "csvString", csvString);
   };
 
-  protected parseNodeAttrs(nodeAttrs: {
+  protected override parseNodeAttrs(nodeAttrs: {
     [name: string]: string | undefined;
   }): CsvChartCustomComponentAttributes {
     const parsed: CsvChartCustomComponentAttributes = super.parseNodeAttrs(
@@ -195,7 +195,7 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<CsvCat
     return parsed;
   }
 
-  constructDownloadUrlFromBody = (body: string) => {
+  override constructDownloadUrlFromBody = (body: string) => {
     const blob = new Blob([body], { type: "text/csv;charset=utf-8" });
     return URL.createObjectURL(blob);
   };

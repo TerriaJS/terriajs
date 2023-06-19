@@ -35,7 +35,7 @@ class FeatureInfoDownload extends React.Component<{
     ]);
   }
 
-  render() {
+  override render() {
     const { t } = this.props;
     const links = this.getLinks();
 

@@ -45,7 +45,7 @@ class MapInteractionWindow extends React.Component<{
     makeObservable(this);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     // this.removeContextItem();
     if (typeof this.currentInteractionMode?.onEnable === "function") {
       this.currentInteractionMode.onEnable(this.props.viewState);
@@ -54,7 +54,7 @@ class MapInteractionWindow extends React.Component<{
     this.disposeMapInteractionObserver && this.disposeMapInteractionObserver();
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.disposeMapInteractionObserver = reaction(
       () =>
         this.props.viewState.terria.mapInteractionModeStack.length > 0 &&
@@ -106,7 +106,7 @@ class MapInteractionWindow extends React.Component<{
   //   }
   // }
 
-  render() {
+  override render() {
     const isActive =
       isDefined(this.currentInteractionMode) &&
       !this.currentInteractionMode.invisible;

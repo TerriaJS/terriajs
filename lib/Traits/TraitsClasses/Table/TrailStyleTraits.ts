@@ -141,7 +141,7 @@ export default class TableTrailStyleTraits
     description: "True to enable. False by default",
     type: "boolean"
   })
-  enabled = false;
+  override enabled = false;
 
   @primitiveTrait({
     name: "Material type",

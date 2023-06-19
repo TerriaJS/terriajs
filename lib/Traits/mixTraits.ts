@@ -79,7 +79,7 @@ export default function mixTraits<
   }, [] as Array<{ key: string; value: any }>);
 
   class Mixed extends ModelTraits {
-    static readonly traits: any = {};
+     static override  readonly traits: any = {};
     constructor() {
       super();
       keysValues.forEach((kv) => {

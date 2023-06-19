@@ -43,7 +43,7 @@ export default class EnumerationParameter extends FunctionParameter<string> {
   }
 
   @override
-  get isValid(): boolean {
+  override get isValid(): boolean {
     if (!isDefined(this.value)) {
       return !this.isRequired;
     }

@@ -88,17 +88,17 @@ class ChartExpandAndDownloadButtons extends React.Component<PropsType> {
     );
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.resolveSourceItems();
   }
 
-  componentDidUpdate(prevProps: PropsType) {
+  override componentDidUpdate(prevProps: PropsType) {
     if (this.props.sourceItems !== prevProps.sourceItems) {
       this.resolveSourceItems();
     }
   }
 
-  render() {
+  override render() {
     if (this.sourceItems.length === 0) {
       return null;
     }

@@ -35,7 +35,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
   type StratumTraits = StratumFromTraits<Traits>;
 
   abstract class Model extends BaseModel implements ModelInterface<Traits> {
-    abstract get type(): string;
+    abstract override get type(): string;
     static readonly TraitsClass = Traits;
     static readonly traits = Traits.traits;
     readonly traits = Traits.traits;
@@ -86,7 +86,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
       this.strata = strata || observable.map<string, StratumTraits>();
     }
 
-    dispose() {}
+    override dispose() {}
 
     private getOrCreateStratum(id: string): StratumTraits {
       let result = this.strata.get(id);

@@ -20,7 +20,7 @@ export default class GenericParameterEditor extends React.Component<{
     this.props.parameter.setValue(CommonStrata.user, e.target.value);
   }
 
-  render() {
+  override render() {
     const value = (this.props.parameter.value || "") as string;
     return (
       <input

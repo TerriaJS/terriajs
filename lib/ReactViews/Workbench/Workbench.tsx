@@ -57,7 +57,7 @@ class Workbench extends React.Component<IProps> {
     (this.props.terria.timelineStack.items as any).clear();
   }
 
-  render() {
+  override render() {
     const { t } = this.props;
     const shouldExpandAll = this.props.terria.workbench.shouldExpandAll;
     return (

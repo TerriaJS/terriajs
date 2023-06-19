@@ -210,7 +210,7 @@ export class ToolController extends MapNavigationItemController {
   }
 
   @computed
-  get active(): boolean {
+  override get active(): boolean {
     return super.active && this.isToolOpen;
   }
 
@@ -236,11 +236,12 @@ export class ToolController extends MapNavigationItemController {
     super.activate();
   }
 
-  activate() {
+  override activate() {
     this.openTool();
   }
 
-  deactivate() {
+  
+  override deactivate() {
     this.closeTool();
   }
 
