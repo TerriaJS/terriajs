@@ -156,7 +156,7 @@ class SettingPanel extends React.Component<PropTypes> {
     );
   }
 
-  render() {
+  override render() {
     if (!this.props.terria.mainViewer) {
       return null;
     }

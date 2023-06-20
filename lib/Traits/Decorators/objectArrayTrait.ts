@@ -48,7 +48,7 @@ export default function objectArrayTrait<T extends ModelTraits>(
 export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
   readonly type: TraitsConstructorWithRemoval<T>;
   readonly idProperty: keyof T | "index";
-  readonly decoratorForFlattened = computed.struct;
+  override readonly decoratorForFlattened = computed.struct;
   readonly modelClass: ModelConstructor<Model<T>>;
   readonly merge: boolean;
 

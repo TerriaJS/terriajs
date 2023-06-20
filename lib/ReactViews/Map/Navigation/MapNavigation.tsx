@@ -123,13 +123,13 @@ class MapNavigation extends React.Component<PropTypes> {
     );
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.computeSizes();
     this.updateNavigation();
     window.addEventListener("resize", this.resizeListener, false);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     window.removeEventListener("resize", this.resizeListener);
     if (this.viewerModeReactionDisposer) {
       this.viewerModeReactionDisposer();
@@ -259,7 +259,7 @@ class MapNavigation extends React.Component<PropTypes> {
     });
   }
 
-  render() {
+  override render() {
     const { viewState, t } = this.props;
     const terria = viewState.terria;
     let items = terria.mapNavigationModel.visibleItems.filter(

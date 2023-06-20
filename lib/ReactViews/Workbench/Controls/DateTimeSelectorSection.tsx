@@ -28,7 +28,7 @@ interface IProps extends WithTranslation {
 
 @observer
 class DateTimeSelectorSection extends React.Component<IProps, IState> {
-  state: IState = {
+  override state: IState = {
     isOpen: false
   };
 
@@ -127,7 +127,7 @@ class DateTimeSelectorSection extends React.Component<IProps, IState> {
     event.stopPropagation();
   }
 
-  render() {
+  override render() {
     const { t } = this.props;
     let discreteTime;
     let format;

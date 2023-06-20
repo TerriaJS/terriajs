@@ -283,7 +283,7 @@ export default class Legend extends React.Component<{
     );
   }
 
-  render() {
+  override render() {
     if (
       (!hasTraits(this.props.item, LegendOwnerTraits, "legends") ||
         !hasTraits(

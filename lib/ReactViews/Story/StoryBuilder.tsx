@@ -254,7 +254,7 @@ class StoryBuilder extends React.Component<
     this.props.viewState.terria.stories = sortedArray;
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.clearRecaptureSuccessTimeout?.();
   }
 
@@ -462,7 +462,7 @@ class StoryBuilder extends React.Component<
     this.props.viewState.toggleFeaturePrompt("story", false, true);
   };
 
-  render() {
+  override render() {
     const { t } = this.props;
     const hasStories = this.props.viewState.terria.stories.length > 0;
     return (

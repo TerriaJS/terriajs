@@ -53,7 +53,7 @@ export class AugmentedVirtualityController extends MapNavigationItemController {
   }
 
   @computed
-  get active(): boolean {
+  override get active(): boolean {
     return this.props.augmentedVirtuality.active;
   }
 
@@ -66,7 +66,7 @@ export class AugmentedVirtualityController extends MapNavigationItemController {
   }
 
   @action.bound
-  activate() {
+  override activate() {
     // Make the AugmentedVirtuality module avaliable elsewhere.
     this.props.terria.augmentedVirtuality = this.props.augmentedVirtuality;
     // feature detect for new ios 13
@@ -101,7 +101,7 @@ export class AugmentedVirtualityController extends MapNavigationItemController {
     this.props.augmentedVirtuality.activate();
   }
 
-  deactivate() {
+  override deactivate() {
     this.props.augmentedVirtuality.deactivate();
   }
 }
@@ -130,11 +130,11 @@ export class AugmentedVirtualityRealignController extends MapNavigationItemContr
   }
 
   @computed
-  get visible(): boolean {
+  override get visible(): boolean {
     return this.props.augmentedVirtuality.active && super.visible;
   }
 
-  handleClick(): void {
+  override handleClick(): void {
     if (!this.augmentedVirtuality.manualAlignmentSet) {
       this.handleClickRealign();
     } else if (!this.augmentedVirtuality.manualAlignment) {
@@ -226,11 +226,11 @@ export class AugmentedVirtualityHoverController extends MapNavigationItemControl
   }
 
   @computed
-  get visible(): boolean {
+  override get visible(): boolean {
     return this.props.augmentedVirtuality.active && super.visible;
   }
 
-  handleClick(): void {
+  override handleClick(): void {
     this.props.augmentedVirtuality.toggleHoverHeight();
   }
 }

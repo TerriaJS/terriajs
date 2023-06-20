@@ -20,7 +20,7 @@ export default function anyTrait(options: TraitOptions) {
 }
 
 export class AnyTrait extends Trait {
-  readonly decoratorForFlattened = computed.struct;
+  override readonly decoratorForFlattened = computed.struct;
 
   constructor(id: string, options: AnyTraitOptions, parent: any) {
     super(id, options, parent);

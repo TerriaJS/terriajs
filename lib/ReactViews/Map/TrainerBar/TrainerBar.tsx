@@ -151,7 +151,7 @@ class StepAccordionRaw extends React.Component<
   StepAccordionState
 > {
   refToMeasure: any;
-  render() {
+  override render() {
     const {
       viewState,
       selectedTrainerSteps,

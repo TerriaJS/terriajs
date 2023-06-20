@@ -28,7 +28,7 @@ export class LeafletAttribution extends L.Control.Attribution {
     this.dataAttributions = observable([]);
   }
 
-  onAdd(map: L.Map) {
+  override onAdd(map: L.Map) {
     map.attributionControl = this;
     this.map = map;
 
@@ -45,7 +45,7 @@ export class LeafletAttribution extends L.Control.Attribution {
     return this._container;
   }
 
-  onRemove() {
+  override onRemove() {
     this.map = undefined;
   }
 
@@ -63,7 +63,7 @@ export class LeafletAttribution extends L.Control.Attribution {
     }
   }
 
-  addAttribution(text: string) {
+  override addAttribution(text: string) {
     super.addAttribution(text);
     if (this.map) {
       runInAction(() => {
@@ -73,7 +73,7 @@ export class LeafletAttribution extends L.Control.Attribution {
     return this;
   }
 
-  removeAttribution(text: string) {
+  override removeAttribution(text: string) {
     super.removeAttribution(text);
     if (this.map) {
       runInAction(() => {

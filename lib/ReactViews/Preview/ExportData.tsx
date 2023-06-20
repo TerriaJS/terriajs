@@ -37,7 +37,7 @@ class ExportData extends React.Component<PropsType> {
     });
   }
 
-  render() {
+  override render() {
     const catalogItem = this.props.item;
 
     if (

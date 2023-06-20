@@ -22,7 +22,7 @@ export default class Marker extends MappableMixin(CreateModel(MappableTraits)) {
    * @param rotation Initial rotation of the marker icon
    */
   constructor(
-    readonly terria: Terria,
+    override readonly terria: Terria,
     readonly iconUrl: string,
     position: Cartesian3,
     rotation: number

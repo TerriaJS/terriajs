@@ -20,10 +20,10 @@ interface PropTypes {
 }
 
 class MyLocation extends MapNavigationItemController {
-  static id = "my-location";
+  static override id = "my-location";
   static displayName = "MyLocation";
   readonly terria: Terria;
-  itemRef: React.RefObject<HTMLDivElement> = React.createRef();
+  override itemRef: React.RefObject<HTMLDivElement> = React.createRef();
   private readonly _marker: GeoJsonCatalogItem;
   @observable private watchId: number | undefined;
   @observable private flown: boolean | undefined;
@@ -192,7 +192,7 @@ class MyLocation extends MapNavigationItemController {
     }
   }
 
-  handleClick() {
+  override handleClick() {
     if (this.followMeEnabled()) {
       this.disableFollowMe();
     } else {

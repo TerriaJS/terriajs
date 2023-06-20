@@ -60,7 +60,7 @@ class WpsLoadableStratum extends LoadableStratum(
     return new WpsLoadableStratum(item);
   }
 
-  @computed get shortReportSections() {
+  @computed override get shortReportSections() {
     const reports = this.item.outputs
       .map((output) => {
         let report;
@@ -77,7 +77,7 @@ class WpsLoadableStratum extends LoadableStratum(
     return reports;
   }
 
-  @computed get featureInfoTemplate() {
+  @computed override get featureInfoTemplate() {
     const template = [
       "#### Inputs\n\n" +
         this.item.info.find((info) => info.name === "Inputs")?.content,
@@ -135,7 +135,7 @@ class WpsLoadableStratum extends LoadableStratum(
     return outputsSection;
   }
 
-  @computed get rectangle() {
+  @computed override get rectangle() {
     return this.item.geoJsonItem?.rectangle;
   }
 }
@@ -158,7 +158,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     return WebProcessingServiceCatalogFunctionJob.type;
   }
 
-  get typeName() {
+  override get typeName() {
     return i18next.t("models.webProcessingService.wpsResult");
   }
 
@@ -280,7 +280,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     return false;
   }
 
-  async pollForResults() {
+  override async pollForResults() {
     if (!isDefined(this.wpsResponseUrl)) {
       return true;
     }
@@ -384,7 +384,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
   }
 
   @override
-  get mapItems() {
+  override get mapItems() {
     if (isDefined(this.geoJsonItem)) {
       return this.geoJsonItem.mapItems.map((mapItem) => {
         mapItem.show = this.show;
@@ -394,7 +394,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     return [];
   }
 
-  protected async forceLoadMetadata() {
+  protected override async forceLoadMetadata() {
     await super.forceLoadMetadata();
     const stratum = await WpsLoadableStratum.load(this);
     runInAction(() => {

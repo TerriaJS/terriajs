@@ -35,7 +35,7 @@ class OpacitySection extends React.Component<OpacitySectionProps> {
     }
   }
 
-  render() {
+  override render() {
     const item = this.props.item;
     const { t } = this.props;
     if (

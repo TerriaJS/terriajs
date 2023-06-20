@@ -90,7 +90,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
     makeObservable(this);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.templateReactionDisposer = reaction(
       () => [
         this.props.feature,
@@ -122,14 +122,14 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
     this.setFeatureChangedCounter(this.props.feature);
   }
 
-  componentDidUpdate(prevProps: FeatureInfoProps) {
+  override componentDidUpdate(prevProps: FeatureInfoProps) {
     if (prevProps.feature !== this.props.feature) {
       this.setFeatureChangedCounter(this.props.feature);
     }
   }
 
   /** Dispose of reaction and cesium feature change event listener */
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.templateReactionDisposer?.();
     this.removeFeatureChangedSubscription?.();
   }
@@ -400,7 +400,7 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
     );
   }
 
-  render() {
+  override render() {
     const { t } = this.props;
 
     let title: string;

@@ -99,7 +99,7 @@ class StoryPanel extends React.Component<Props, State> {
     this.slideRef = React.createRef();
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const stories = this.props.viewState.terria.stories || [];
     if (
       this.props.viewState.currentStoryId > stories.length - 1 ||
@@ -156,7 +156,7 @@ class StoryPanel extends React.Component<Props, State> {
     });
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.keydownListener) {
       window.removeEventListener("keydown", this.keydownListener, true);
     }
@@ -206,7 +206,7 @@ class StoryPanel extends React.Component<Props, State> {
     this.slideOut();
   }
 
-  render() {
+  override render() {
     const stories = this.props.viewState.terria.stories || [];
     const story = stories[this.props.viewState.currentStoryId];
 

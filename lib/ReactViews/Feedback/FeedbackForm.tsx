@@ -39,7 +39,7 @@ interface IState {
 class FeedbackForm extends React.Component<IProps, IState> {
   static displayName = "FeedbackForm";
 
-  state: IState = {
+  override state: IState = {
     isSending: false,
     sendShareURL: true,
     name: "",
@@ -74,7 +74,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     window.addEventListener("keydown", this.escKeyListener, true);
     this.setState({
       commentIsValid:
@@ -82,7 +82,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
     });
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     window.removeEventListener("keydown", this.escKeyListener, true);
   }
 
@@ -165,7 +165,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
     }
   }
 
-  render() {
+  override render() {
     const { t, i18n, viewState, theme } = this.props;
     const preamble = parseCustomMarkdownToReact(
       applyTranslationIfExists(

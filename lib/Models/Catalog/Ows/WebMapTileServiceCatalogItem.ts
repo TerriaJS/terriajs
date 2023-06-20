@@ -86,7 +86,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get layer(): string | undefined {
+  override get layer(): string | undefined {
     let layer: string | undefined;
 
     if (this.catalogItem.uri !== undefined) {
@@ -98,7 +98,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get info(): StratumFromTraits<InfoSectionTraits>[] {
+  override get info(): StratumFromTraits<InfoSectionTraits>[] {
     const result: StratumFromTraits<InfoSectionTraits>[] = [
       createStratumInstance(InfoSectionTraits, {
         name: i18next.t(
@@ -205,7 +205,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get infoSectionOrder(): string[] {
+  override get infoSectionOrder(): string[] {
     return [
       i18next.t("preview.disclaimer"),
       i18next.t("models.webMapTileServiceCatalogItem.noUsableTileMatrixTitle"),
@@ -230,7 +230,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get shortReport() {
+  override get shortReport() {
     return !isDefined(this.catalogItem.tileMatrixSet)
       ? `${i18next.t(
           "models.webMapTileServiceCatalogItem.noUsableTileMatrixTitle"
@@ -241,7 +241,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get legends() {
+  override get legends() {
     const layerAvailableStyles = this.catalogItem.availableStyles.find(
       (candidate) => candidate.layerName === this.capabilitiesLayer?.Identifier
     )?.styles;
@@ -269,7 +269,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get availableStyles(): StratumFromTraits<WebMapTileServiceAvailableLayerStylesTraits>[] {
+  override get availableStyles(): StratumFromTraits<WebMapTileServiceAvailableLayerStylesTraits>[] {
     const result: any = [];
     if (!this.capabilities) {
       return result;
@@ -382,7 +382,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get rectangle(): StratumFromTraits<RectangleTraits> | undefined {
+  override get rectangle(): StratumFromTraits<RectangleTraits> | undefined {
     const layer: WmtsLayer | undefined = this.capabilitiesLayer;
     if (!layer) {
       return;
@@ -400,7 +400,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     }
   }
 
-  @computed get style(): string | undefined {
+  @computed override get style(): string | undefined {
     if (!isDefined(this.catalogItem.layer)) return;
 
     const layerAvailableStyles = this.availableStyles.find(
@@ -432,7 +432,7 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
   ];
 
   // hide elements in the info section which might show information about the datasource
-  _sourceInfoItemNames = [
+  override _sourceInfoItemNames = [
     i18next.t("models.webMapTileServiceCatalogItem.getCapabilitiesUrl")
   ];
 
@@ -456,7 +456,7 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     });
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  protected override async forceLoadMetadata(): Promise<void> {
     if (
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
       undefined
@@ -469,7 +469,7 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
   }
 
   @override
-  get cacheDuration(): string {
+  override get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }

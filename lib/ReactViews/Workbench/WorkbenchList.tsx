@@ -44,7 +44,7 @@ class WorkbenchList extends React.Component<IProps> {
     );
   }
 
-  render() {
+  override render() {
     return (
       <StyledUl
         overflowY="auto"

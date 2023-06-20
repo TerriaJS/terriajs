@@ -24,7 +24,7 @@ class MapNavigationItem extends React.Component<PropTypes> {
     super(props);
   }
 
-  render() {
+  override render() {
     const { closeTool = true, item, expandInPlace, i18n } = this.props;
     if (item.render)
       return (
