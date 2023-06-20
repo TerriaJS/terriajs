@@ -91,7 +91,6 @@ import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
 import { setViewerMode } from "./ViewerMode";
-import { clone } from "terriajs-cesium";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
@@ -1009,7 +1008,7 @@ export default class Cesium extends GlobeOrMap {
    * @param camera
    * @returns Camera
    */
-  cloneCamera(camera: Camera): Camera {
+  private cloneCamera(camera: Camera): Camera {
     let result = new Camera(this.scene);
     Cartesian3.clone(camera.position, result.position);
     Cartesian3.clone(camera.direction, result.direction);
@@ -1034,7 +1033,6 @@ export default class Cesium extends GlobeOrMap {
       : undefined;
 
     if (!center) {
-      debugger;
       /** In cases where the horizon is not visible, we cannot calculate a center using a pick ray, 
       but we need to return a useful CameraView that works in 3D mode and 2D mode.
       In this case we can return the correct definition for the cesium camera, with position, direction, and up, 
