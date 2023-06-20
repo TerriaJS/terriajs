@@ -13,11 +13,15 @@ import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
 import Reproject from "../../../Map/Vector/Reproject";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import { ImageryProvider } from "terriajs-cesium";
-import { GridLayer } from "leaflet";
+import { GridLayer, LatLngBounds } from "leaflet";
 const proj4 = require("proj4").default;
 const parseGeoRaster = require("georaster");
-import GeoRasterLayer, { GeoRaster } from "georaster-layer-for-leaflet";
+import GeoRasterLayer, {
+  GeoRaster,
+  GeoRasterLayerOptions
+} from "georaster-layer-for-leaflet";
 import { IPromiseBasedObservable, fromPromise } from "mobx-utils";
+import GeorasterLayerWithSplitterSupport from "../../../Map/Leaflet/GeorasterLayerWithSplitterSupport";
 export default class CogCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(CogCatalogItemTraits))
 ) {
@@ -64,7 +68,8 @@ export default class CogCatalogItem extends MappableMixin(
       // parseGeoRaster will request for external .ovr file, most likely will receive a 404 error. This is not a problem.
       parseGeoRaster(this.url)
         .then((georaster: GeoRaster) => {
-          return new GeoRasterLayer({
+          // TODO: We have extended GeoRasterLayer
+          return new GeorasterLayerWithSplitterSupport({
             georaster: georaster,
             opacity: 0.8,
             // Example pixel reclassification function:
@@ -83,7 +88,7 @@ export default class CogCatalogItem extends MappableMixin(
 
   createGeoRasterLayer = (
     ip: ImageryProvider,
-    clippingRectangle: Rectangle | undefined
+    clippingRectangle: LatLngBounds
   ): GridLayer | undefined => {
     return this.url && this.georasterLayer.state === "fulfilled"
       ? this.georasterLayer.value

@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { GridLayer } from "leaflet";
+import { GridLayer, LatLngBounds } from "leaflet";
 import {
   action,
   autorun,
@@ -63,6 +63,7 @@ import { LeafletAttribution } from "./LeafletAttribution";
 import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
 import { isUndefined } from "lodash-es";
+import GeorasterLayerWithSplitterSupport from "../Map/Leaflet/GeorasterLayerWithSplitterSupport";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
@@ -111,8 +112,11 @@ export default class Leaflet extends GlobeOrMap {
   private _createImageryLayer: (
     ip: ImageryProvider,
     clippingRectangle: Rectangle | undefined,
-    overrideCreateLeafletLayerFn: any
-  ) => GridLayer = computedFn(
+    overrideCreateLeafletLayerFn: (
+      ip: ImageryProvider,
+      bounds: LatLngBounds | undefined
+    ) => GeorasterLayerWithSplitterSupport
+  ) => GeorasterLayerWithSplitterSupport = computedFn(
     (ip, clippingRectangle, overrideCreateLeafletLayerFn) => {
       const layerOptions = {
         bounds: clippingRectangle && rectangleToLatLngBounds(clippingRectangle)
@@ -125,7 +129,7 @@ export default class Leaflet extends GlobeOrMap {
       // In this case, the Catalog Item should specify an `overrideCreateLeafletLayer` property.
       // If the Catalog Item defines `overrideCreateLeafletLayer` then use that, otherwise follow the logic below.
       if (overrideCreateLeafletLayerFn) {
-        return overrideCreateLeafletLayerFn(ip, layerOptions);
+        return overrideCreateLeafletLayerFn(ip, layerOptions.bounds);
       } else if (supportsImageryProviderGridLayer(ip)) {
         return new ImageryProviderLeafletGridLayer(this, ip, layerOptions);
       } else {
@@ -950,7 +954,7 @@ export default class Leaflet extends GlobeOrMap {
   ): (
     | ImageryProviderLeafletTileLayer
     | ImageryProviderLeafletGridLayer
-    | GridLayer
+    | GeorasterLayerWithSplitterSupport
   )[] {
     return filterOutUndefined(
       item.mapItems.map((m) => {

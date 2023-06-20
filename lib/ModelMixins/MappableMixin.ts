@@ -11,7 +11,8 @@ import Result from "../Core/Result";
 import Model from "../Models/Definition/Model";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
-import { GridLayer } from "leaflet";
+import { GridLayer, LatLngBounds } from "leaflet";
+import GeorasterLayerWithSplitterSupport from "../Map/Leaflet/GeorasterLayerWithSplitterSupport";
 
 // Unfortunately Cesium does not declare a single interface that represents a primitive,
 // but here is what primitives have in common:
@@ -34,8 +35,8 @@ export interface ImageryParts {
   show: boolean;
   overrideCreateLeafletLayer?: (
     ip: ImageryProvider,
-    clippingRectangle: Rectangle | undefined
-  ) => GridLayer | undefined;
+    clippingRectangle: LatLngBounds
+  ) => GeorasterLayerWithSplitterSupport | undefined;
 }
 
 // This discriminator only discriminates between ImageryParts and DataSource
