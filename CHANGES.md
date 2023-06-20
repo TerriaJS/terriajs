@@ -3,6 +3,8 @@
 #### next release (8.3.1)
 
 - Fix error when adding deeply nested references in search results.
+- Fixed bug where sharelinks created with no visible horizon would default to homeCamera view
+- Improved calculation of 2D view from 3D view when no horizon visible
 - [The next improvement]
 
 #### 8.3.0 - 2023-05-22
