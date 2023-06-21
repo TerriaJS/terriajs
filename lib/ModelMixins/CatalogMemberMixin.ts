@@ -1,7 +1,15 @@
-import { action, computed, isObservableArray, runInAction, toJS } from "mobx";
+import {
+  action,
+  computed,
+  isObservableArray,
+  runInAction,
+  toJS,
+  makeObservable,
+  override
+} from "mobx";
 import Mustache from "mustache";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import AsyncLoader from "../Core/AsyncLoader";
-import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import { isJsonObject, isJsonString, JsonObject } from "../Core/Json";
 import Result from "../Core/Result";
@@ -19,9 +27,9 @@ import GroupMixin from "./GroupMixin";
 import MappableMixin from "./MappableMixin";
 import ReferenceMixin from "./ReferenceMixin";
 
-type CatalogMember = Model<CatalogMemberTraits>;
+type BaseType = Model<CatalogMemberTraits>;
 
-function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
+function CatalogMemberMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class CatalogMemberMixin
     extends AccessControlMixin(Base)
     implements SelectableDimensions, ViewingControls
@@ -31,6 +39,11 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
     // The names of items in the CatalogMember's info array that contain details of the source of this CatalogMember's data.
     // This should be overridden by children of this class. For an example see the WebMapServiceCatalogItem
     _sourceInfoItemNames: string[] | undefined = undefined;
+
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
 
     get typeName(): string | undefined {
       return;
@@ -98,12 +111,12 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       return this.terria.workbench.contains(this);
     }
 
-    @computed
-    get name(): string | undefined {
+    @override
+    get name() {
       return super.name || this.uniqueId;
     }
 
-    @computed
+    @override
     get nameInCatalog(): string | undefined {
       return super.nameInCatalog || this.name;
     }

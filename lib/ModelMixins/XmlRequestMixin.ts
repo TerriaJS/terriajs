@@ -1,12 +1,14 @@
 import URI from "urijs";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import isDefined from "../Core/isDefined";
 
 const loadXML = require("../Core/loadXML");
 const loadWithXhr = require("../Core/loadWithXhr");
 
-export default function XmlRequestMixin<T extends Constructor<any>>(Base: T) {
-  class XmlRequestMixin extends Base {
+export default function XmlRequestMixin<T extends AbstractConstructor<any>>(
+  Base: T
+) {
+  abstract class XmlRequestMixin extends Base {
     getXml(url: string, parameters?: any) {
       if (isDefined(parameters)) {
         url = new URI(url).query(parameters).toString();

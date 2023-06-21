@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import SearchResult from "./SearchResult";
 import { IPromiseBasedObservable, fromPromise } from "mobx-utils";
 import SearchProvider from "./SearchProvider";
@@ -11,7 +11,9 @@ export default class SearchProviderResults {
     Promise.resolve()
   );
 
-  constructor(readonly searchProvider: SearchProvider) {}
+  constructor(readonly searchProvider: SearchProvider) {
+    makeObservable(this);
+  }
 
   get isSearching() {
     return this.resultsCompletePromise.state === "pending";

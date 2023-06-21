@@ -8,7 +8,7 @@
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable, override } from "mobx";
 import combine from "terriajs-cesium/Source/Core/combine";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -23,11 +23,12 @@ import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin, {
   getName
 } from "../../../ModelMixins/CatalogMemberMixin";
-import ChartableMixin from "../../../ModelMixins/ChartableMixin";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import ExportWebCoverageServiceMixin from "../../../ModelMixins/ExportWebCoverageServiceMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
-import { ImageryParts } from "../../../ModelMixins/MappableMixin";
+import MappableMixin, {
+  ImageryParts
+} from "../../../ModelMixins/MappableMixin";
 import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
 import TileErrorHandlerMixin from "../../../ModelMixins/TileErrorHandlerMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -56,6 +57,7 @@ export class WebMapServiceUrlStratum extends LoadableStratum(
   static stratumName = "wms-url-stratum";
   constructor(readonly catalogItem: WebMapServiceCatalogItem) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -83,7 +85,9 @@ class WebMapServiceCatalogItem
         MinMaxLevelMixin(
           GetCapabilitiesMixin(
             UrlMixin(
-              CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+              MappableMixin(
+                CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+              )
             )
           )
         )
@@ -143,6 +147,7 @@ class WebMapServiceCatalogItem
     sourceReference?: BaseModel | undefined
   ) {
     super(id, terria, sourceReference);
+    makeObservable(this);
     this.strata.set(
       WebMapServiceUrlStratum.stratumName,
       new WebMapServiceUrlStratum(this)
@@ -153,7 +158,7 @@ class WebMapServiceCatalogItem
     return WebMapServiceCatalogItem.type;
   }
 
-  @computed
+  @override
   get shortReport(): string | undefined {
     if (
       this.tilingScheme instanceof GeographicTilingScheme &&
@@ -208,7 +213,8 @@ class WebMapServiceCatalogItem
     });
   }
 
-  @computed get cacheDuration(): string {
+  @override
+  get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }
@@ -724,7 +730,7 @@ class WebMapServiceCatalogItem
     return dimensions;
   }
 
-  @computed
+  @override
   get selectableDimensions() {
     if (this.disableDimensionSelectors) {
       return super.selectableDimensions;

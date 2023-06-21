@@ -1,0 +1,39 @@
+{
+  "general": {
+    "close": "Funga",
+    "open": "Fungua",
+    "prev": "Kilichotangulia",
+    "next": "Kinachofuata",
+    "back": "Rudia",
+    "skip": "Rukia",
+    "delete": "Ondoa",
+    "cancel": "Katisha",
+    "confirm": "Thibitisha"
+  },
+  "browsers": {
+    "chrome": "Google Chrome",
+    "firefox": "Mozilla Firefox",
+    "edge": "Microsoft Edge",
+    "safari": "Apple Safari"
+  },
+  "trainer": {
+    "showAllSteps": "Onyesha kila hatua",
+    "hideAllSteps": "Ficha kila hatua",
+    "expandTrainer": "Onyesha maelesho zaidi",
+    "collapseTrainer": "Ficha maelesho zaidi"
+  },
+  "tour": {
+    "preface": {
+      "title": "Chukua safari",
+      "start": "Anza safari",
+      "close": "Labda baadae"
+    },
+    "finish": "Maliza",
+    "locationSearchInput": {
+      "content": "## Tafuta mahali\n\nWeka mahali au anwani ili kupata eneo bila shida kwenye ramani."
+    },
+    "exploreMapDataButton": {
+      "content": "## Chagua ramani\n\nVinjaria katlogi kwa kupata data na ongeza kwenye ramani hapa. Unaweza kuongeza data zaidi ya moja kwa wakati mmoja, na utaona zinaonyeshwa chini ndani ya Benchi la kazi (Workbench)."
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, makeObservable, override, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
@@ -47,6 +47,7 @@ export class CkanDatasetStratum extends LoadableStratum(
     private readonly ckanCatalogGroup: CkanCatalogGroup | undefined
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -265,6 +266,7 @@ export default class CkanItemReference extends UrlMixin(
     strata?: Map<string, StratumFromTraits<ModelTraits>>
   ) {
     super(id, terria, sourceReference, strata);
+    makeObservable(this);
     this.strata.set(
       CkanDefaultFormatsStratum.stratumName,
       new CkanDefaultFormatsStratum()
@@ -314,7 +316,8 @@ export default class CkanItemReference extends UrlMixin(
     );
   }
 
-  @computed get cacheDuration(): string {
+  @override
+  get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }

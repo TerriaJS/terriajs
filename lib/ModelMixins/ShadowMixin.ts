@@ -1,7 +1,7 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable, override } from "mobx";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import Model from "../Models/Definition/Model";
 import SelectableDimensions, {
   SelectableDimension
@@ -10,8 +10,13 @@ import ShadowTraits from "../Traits/TraitsClasses/ShadowTraits";
 
 type BaseType = Model<ShadowTraits> & SelectableDimensions;
 
-function ShadowMixin<T extends Constructor<BaseType>>(Base: T) {
+function ShadowMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class ShadowMixin extends Base {
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
+
     get hasShadows() {
       return true;
     }
@@ -32,7 +37,7 @@ function ShadowMixin<T extends Constructor<BaseType>>(Base: T) {
     }
 
     /** Shadow SelectableDimension. This has to be added to a catalog member's `selectableDimension` array */
-    @computed
+    @override
     get selectableDimensions(): SelectableDimension[] {
       return [
         ...super.selectableDimensions,

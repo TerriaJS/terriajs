@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import uniqWith from "lodash-es/uniqWith";
-import { computed, runInAction } from "mobx";
+import { computed, makeObservable, override, runInAction } from "mobx";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
 import URI from "urijs";
@@ -15,7 +15,9 @@ import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
-import { ImageryParts } from "../../../ModelMixins/MappableMixin";
+import MappableMixin, {
+  ImageryParts
+} from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import ArcGisMapServerCatalogItemTraits from "../../../Traits/TraitsClasses/ArcGisMapServerCatalogItemTraits";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
@@ -27,7 +29,7 @@ import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import getToken from "../../getToken";
@@ -69,6 +71,7 @@ class MapServerStratum extends LoadableStratum(
     readonly token: string | undefined
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -328,11 +331,19 @@ StratumOrder.addLoadStratum(MapServerStratum.stratumName);
 export default class ArcGisMapServerCatalogItem extends UrlMixin(
   DiscretelyTimeVaryingMixin(
     MinMaxLevelMixin(
-      CatalogMemberMixin(CreateModel(ArcGisMapServerCatalogItemTraits))
+      CatalogMemberMixin(
+        MappableMixin(CreateModel(ArcGisMapServerCatalogItemTraits))
+      )
     )
   )
 ) {
   static readonly type = "esri-mapServer";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get typeName() {
     return i18next.t("models.arcGisMapServerCatalogItem.name");
   }
@@ -352,7 +363,8 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     return this.forceLoadMetadata();
   }
 
-  @computed get cacheDuration(): string {
+  @override
+  get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }

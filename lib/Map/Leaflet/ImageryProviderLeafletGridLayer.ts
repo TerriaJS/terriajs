@@ -1,5 +1,11 @@
 import L, { TileEvent } from "leaflet";
-import { autorun, computed, IReactionDisposer, observable } from "mobx";
+import {
+  autorun,
+  computed,
+  IReactionDisposer,
+  observable,
+  makeObservable
+} from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
@@ -39,6 +45,8 @@ export default class ImageryProviderLeafletGridLayer extends L.GridLayer {
     options: L.GridLayerOptions
   ) {
     super(Object.assign(options, { async: true, tileSize: 256 }));
+
+    makeObservable(this);
 
     // Handle splitter rection (and disposing reaction)
     let disposeSplitterReaction: IReactionDisposer | undefined;

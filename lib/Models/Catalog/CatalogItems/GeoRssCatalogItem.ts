@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable } from "mobx";
 import getFilenameFromUri from "terriajs-cesium/Source/Core/getFilenameFromUri";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import isDefined from "../../../Core/isDefined";
@@ -23,6 +23,7 @@ import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import HasLocalData from "../../HasLocalData";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 enum GeoRssFormat {
@@ -57,6 +58,7 @@ class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
     private readonly _feed?: Feed
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -124,12 +126,16 @@ class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
 StratumOrder.addLoadStratum(GeoRssStratum.stratumName);
 
 export default class GeoRssCatalogItem
-  extends GeoJsonMixin(
-    UrlMixin(CatalogMemberMixin(CreateModel(GeoRssCatalogItemTraits)))
-  )
+  extends GeoJsonMixin(CreateModel(GeoRssCatalogItemTraits))
   implements HasLocalData
 {
   static readonly type = "georss";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get type() {
     return GeoRssCatalogItem.type;
   }

@@ -1,6 +1,6 @@
 import i18next, { ReactOptions } from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
-import HttpApi from "i18next-http-backend";
+import HttpApi, { RequestCallback } from "i18next-http-backend";
 import { initReactI18next } from "react-i18next";
 import isDefined from "../Core/isDefined";
 
@@ -13,12 +13,16 @@ export interface I18nBackendOptions {
    *  */
   crossDomain?: boolean;
   loadPath?: string;
-  parse?: (data: any, languages: string | [string], namespaces: string) => void;
+  parse?: (
+    data: any,
+    languages: string | [string],
+    namespaces: string
+  ) => { [key: string]: any };
   request?: (
     options: any,
     url: string,
     payload: any,
-    callback: () => void
+    callback: RequestCallback
   ) => void;
 }
 

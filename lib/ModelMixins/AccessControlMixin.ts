@@ -1,9 +1,9 @@
-import { action, computed, observable } from "mobx";
-import Constructor from "../Core/Constructor";
+import { action, computed, observable, makeObservable } from "mobx";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import ModelTraits from "../Traits/ModelTraits";
 
-type AccessControlModel = Model<ModelTraits>;
+type BaseType = Model<ModelTraits>;
 
 /**
  * API for setting an access type for the model. Note that the intended use of
@@ -17,11 +17,14 @@ type AccessControlModel = Model<ModelTraits>;
  * models overriding this mixin are free to choose any other string valued
  * access type for their own purpose.
  */
-function AccessControlMixin<T extends Constructor<AccessControlModel>>(
-  Base: T
-) {
-  class Klass extends Base {
+function AccessControlMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
+  abstract class _AccessControlMixin extends Base {
     @observable private _accessType: string | undefined;
+
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
 
     get hasAccessControlMixin() {
       return true;
@@ -84,7 +87,7 @@ function AccessControlMixin<T extends Constructor<AccessControlModel>>(
     }
   }
 
-  return Klass;
+  return _AccessControlMixin;
 }
 
 namespace AccessControlMixin {

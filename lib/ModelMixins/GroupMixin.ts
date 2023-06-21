@@ -1,9 +1,9 @@
 import { uniq } from "lodash-es";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, runInAction, makeObservable } from "mobx";
 import clone from "terriajs-cesium/Source/Core/clone";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import AsyncLoader from "../Core/AsyncLoader";
-import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
@@ -25,9 +25,16 @@ naturalSort.insensitive = true;
 
 const MERGED_GROUP_ID_PREPEND = "__merged__";
 
-function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
-  abstract class Klass extends Base implements Group {
+type BaseType = Model<GroupTraits>;
+
+function GroupMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
+  abstract class _GroupMixin extends Base implements Group {
     private _memberLoader = new AsyncLoader(this.forceLoadMembers.bind(this));
+
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
 
     get isGroup() {
       return true;
@@ -165,7 +172,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      *
      * {@see AsyncLoader}
      */
-    protected abstract async forceLoadMembers(): Promise<void>;
+    protected abstract forceLoadMembers(): Promise<void>;
 
     @action
     toggleOpen(stratumId: string) {
@@ -412,7 +419,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
     }
   }
 
-  return Klass;
+  return _GroupMixin;
 }
 
 namespace GroupMixin {
