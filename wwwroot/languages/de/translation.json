@@ -178,7 +178,7 @@
       "bothTitle": "Auf beiden Seiten anzeigen",
       "copyName": "{{name}} (kopieren)"
     },
-    "toggleSplitterToolTitle": "Vergleichen",
+    "toggleSplitterToolTitle": "Vergleich",
     "toggleSplitterToolDisabled": "Bitte deaktivieren Sie andere Funktionen für den Side-by-Side-Vergleich, um den Standardvergleich zu aktivieren",
     "toggleSplitterTool": "Ermöglicht einen Seite-an-Seite-Vergleich zwischen zwei verschiedenen Datensätzen",
     "title": "Ziehen Sie nach links oder rechts, um die Ansichten anzupassen",
@@ -661,7 +661,7 @@
       "serviceErrorMessage": "Zu diesem Dienst sind keine Einzelheiten verfügbar.",
       "stubCreationFailure": "Katalogelement {{item}} konnte nicht gelöscht werden",
       "addAll": "Alle hinzufügen",
-      "removeAll": "Alle entfernen",
+      "removeAll": "Entferne alle",
       "unsupportedFileTypeMessage": "Dieses Dateiformat wird nicht unterstützt von {{appName}}. Folgende Dateiformate werden unterstützt: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li><li>Shapefile (.zip)</li></ul>",
       "convertErrorMessage": "Diese Katalogdatei basiert auf einer älteren Version von TerriaJS - der Software, die diese Webkarte betreibt. Beim Versuch, die Katalogdaten für {{url}} zu aktualisieren, ist ein Fehler aufgetreten.",
       "chartDataGroup": "Gruppe für Diagrammdaten.",
@@ -966,7 +966,7 @@
   "workbench": {
     "diffImageTitle": "Bildunterschiede zwischen zwei Daten anzeigen",
     "colorScaleUpdateRange": "Aktualisieren",
-    "previewItem": "Dateninformationen",
+    "previewItem": "Informationen",
     "colorScaleRange": "Farbskala-Bereich",
     "colorScaleRangeTitle": "Ungültiger Farbskalenbereich",
     "colorScaleRangeMin": "Der Minimalwert muss eine Zahl sein.",
@@ -975,7 +975,7 @@
     "splitScreenMode": "SPLITSCREEN-MODUS",
     "openFeature": "Zoomen auf",
     "splitItem": "Vergleichen",
-    "removeAll": "Alle entfernen",
+    "removeAll": "Entferne alle",
     "expandAll": "Alle ausklappen",
     "colorScaleRangeMinSmallerThanMax": "Der Minimalwert des Farbskalenbereichs muss kleiner als der Höchstwert sein.",
     "splitItemTitle": "Duplizieren und Splitter anzeigen",
@@ -986,7 +986,7 @@
     "zoomToTitle": "Zoom auf Ausdehnung",
     "diffImage": "Differenz",
     "exportDataTitle": "Kartendaten exportieren",
-    "collapseAll": "Alles einklappen",
+    "collapseAll": "Alle einklappen",
     "dimensionsSelector": {
       "undefinedLabel": "Keine Angabe"
     },
@@ -997,10 +997,10 @@
     "exportData": "Exportieren",
     "label": "Datensätze",
     "searchItem": "Suche",
-    "previewItemTitle": "Dateninformationen",
+    "previewItemTitle": "Informationen",
     "rangeMax": "Maximum:",
     "displayPercent": "Anzeige als Prozentsatz der regionalen Gesamtsumme",
-    "zoomTo": "Idealer Zoom",
+    "zoomTo": "Zoom",
     "openFeatureTitle": "Auf Daten zoomen"
   },
   "trainer": {
@@ -1126,7 +1126,7 @@
     "chooseDifference": "Wählen Sie eine Differenz-Output"
   },
   "story": {
-    "removeAllStories": "Alle entfernen",
+    "removeAllStories": "Entfernen alle",
     "editor": {
       "saveBtn": "speichern",
       "saveStory": "Speichern",
