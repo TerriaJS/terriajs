@@ -170,10 +170,10 @@
   },
   "splitterTool": {
     "workbench": {
-      "goright": "Rechts",
+      "goright": "rechts",
       "goleft": "links",
       "gorightTitle": "Auf der rechten Seite anzeigen",
-      "both": "Beide",
+      "both": "beide",
       "goleftTitle": "Auf der linken Seite anzeigen",
       "bothTitle": "Auf beiden Seiten anzeigen",
       "copyName": "{{name}} (kopieren)"
@@ -928,7 +928,7 @@
   },
   "compare": {
     "dateButton": {
-      "right": "Rechts",
+      "right": "rechts",
       "select": "Datum wählen",
       "left": "links"
     },
@@ -954,7 +954,7 @@
       "sendAllToBack": "Alle in den Hintergrund",
       "hideAll": "Alle ausblenden"
     },
-    "title": "Vergleichen",
+    "title": "Vergleich",
     "dataset": {
       "label": "Datensatz",
       "selectOne": "Datensatz wählen"
@@ -1011,7 +1011,7 @@
   },
   "tour": {
     "preface": {
-      "title": "Starten den Tour",
+      "title": "Starten der Tour",
       "content": "Sie wissen nicht, wo Sie anfangen sollen? Machen Sie einen kurzen Rundgang durch die Hauptmerkmale unserer Software und lernen Sie einige der wichtigsten Funktionen kennen, die Ihnen den Einstieg erleichtern.",
       "close": "Vielleicht später",
       "start": "Tour Starten"
@@ -1294,7 +1294,7 @@
     "btnText": "Hilfe",
     "dismissText": "Verstanden, danke!",
     "promptMessage": "Die Tour, Anleitungsvideos und andere Hilfsinhalte finden Sie hier",
-    "takeTour": "Starten den Tour",
+    "takeTour": "Starten der Tour",
     "mapUserGuide": "Benutzerhandbuch der Karte",
     "menuPaneBody": "Nützliche Tipps zur Verwendung von TerriaJS finden Sie entweder in den folgenden Anleitungen oder Sie können das Team unter [{{supportEmail}}]({{supportEmail}}) kontaktieren",
     "menuPaneTitle": "Wir sind für Sie da"
@@ -1408,7 +1408,7 @@
     "helpBtnText": "Ich benötige Hilfe",
     "dismissText": "Schließen die Nachricht und zeigen sie nicht mehr an",
     "welcomeMessage": "Interessieren Sie sich für die Erkundung und Erforschung von Daten?<br/>Stürzen Sie sich hinein und fangen Sie an oder schauen Sie sich die folgenden Hilfsoptionen an.",
-    "tourBtnText": "Starten den Tour"
+    "tourBtnText": "Starten der Tour"
   },
   "satelliteGuidance": {
     "prevI": "Nein danke",
