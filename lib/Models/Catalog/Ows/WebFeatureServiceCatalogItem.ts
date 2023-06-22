@@ -1,12 +1,13 @@
 import i18next from "i18next";
 import { computed, makeObservable, override, runInAction } from "mobx";
 import combine from "terriajs-cesium/Source/Core/combine";
+import TerriaError from "../../../Core/TerriaError";
 import containsAny from "../../../Core/containsAny";
 import isDefined from "../../../Core/isDefined";
 import isReadOnlyArray from "../../../Core/isReadOnlyArray";
 import loadText from "../../../Core/loadText";
-import TerriaError from "../../../Core/TerriaError";
 import gmlToGeoJson from "../../../Map/Vector/gmlToGeoJson";
+import { getName } from "../../../ModelMixins/CatalogMemberMixin";
 import GeoJsonMixin, {
   FeatureCollectionWithCrs,
   toFeatureCollection
@@ -20,10 +21,10 @@ import WebFeatureServiceCatalogItemTraits, {
   SUPPORTED_CRS_4326
 } from "../../../Traits/TraitsClasses/WebFeatureServiceCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
-import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
+import createStratumInstance from "../../Definition/createStratumInstance";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import WebFeatureServiceCapabilities, {
   FeatureType,
@@ -386,7 +387,8 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
 
     // Check if layers exist
     const missingLayers = this.typeNamesArray.filter(
-      (layer) => !getCapabilitiesStratum.capabilitiesFeatureTypes.has(layer)
+      (layer) =>
+        !isDefined(getCapabilitiesStratum.capabilitiesFeatureTypes.get(layer))
     );
     if (missingLayers.length > 0) {
       throw new TerriaError({
@@ -396,7 +398,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
         ),
         message: i18next.t(
           "models.webFeatureServiceCatalogItem.noLayerFoundMessage",
-          this
+          { name: getName(this), typeNames: missingLayers.join(", ") }
         )
       });
     }
@@ -431,6 +433,14 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
         errorMessage = xml2json(getFeatureResponse).Exception?.ExceptionText;
       } catch {}
 
+      const originalError = isDefined(errorMessage)
+        ? new TerriaError({
+            sender: this,
+            title: "Exception from service",
+            message: errorMessage
+          })
+        : undefined;
+
       throw new TerriaError({
         sender: this,
         title: i18next.t(
@@ -438,8 +448,9 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
         ),
         message: `${i18next.t(
           "models.webFeatureServiceCatalogItem.missingDataMessage",
-          this
-        )} ${isDefined(errorMessage) ? `<br/>Error: ${errorMessage}` : ""}`
+          { name: getName(this) }
+        )}`,
+        originalError
       });
     }
 
