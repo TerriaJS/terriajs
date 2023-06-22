@@ -35,5 +35,15 @@
     "exploreMapDataButton": {
       "content": "## Chagua ramani\n\nVinjaria katlogi kwa kupata data na ongeza kwenye ramani hapa. Unaweza kuongeza data zaidi ya moja kwa wakati mmoja, na utaona zinaonyeshwa chini ndani ya Benchi la kazi (Workbench)."
     }
+  },
+  "measure": {
+    "measureTool": "Zana ya kupima",
+    "measureToolTitle": "Pima Mstari",
+    "measureDistance": "Pima umbali kati ya maeneo"
+  },
+  "location": {
+    "location": "Mahali",
+    "errorGettingLocation": "Kosa kupata maeneo",
+    "myLocation": "Mahali yangu"
   }
 }
