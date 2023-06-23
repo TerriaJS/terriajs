@@ -53,7 +53,7 @@ class DiffStratum extends LoadableStratum(DiffableTraits) {
   }
 
   @computed
-  get disableDateTimeSelector() {
+  override get disableDateTimeSelector() {
     return this.catalogItem.isShowingDiff;
   }
 }
@@ -96,7 +96,7 @@ function DiffableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     ): string;
 
     @override
-    get canFilterTimeByFeature() {
+    override get canFilterTimeByFeature() {
       // Hides the SatelliteImageryTimeFilterSection for the item if it is
       // currently showing difference image
       return super.canFilterTimeByFeature && !this.isShowingDiff;

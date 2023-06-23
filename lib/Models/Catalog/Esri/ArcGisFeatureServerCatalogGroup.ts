@@ -69,7 +69,7 @@ export class FeatureServerStratum extends LoadableStratum(
     return this._featureServer;
   }
 
-  @computed get name() {
+  @computed override get name() {
     if (
       this._featureServer.documentInfo &&
       this._featureServer.documentInfo.Title &&
@@ -79,7 +79,7 @@ export class FeatureServerStratum extends LoadableStratum(
     }
   }
 
-  @computed get info() {
+  @computed override get info() {
     return [
       createStratumInstance(InfoSectionTraits, {
         name: i18next.t(
@@ -100,14 +100,14 @@ export class FeatureServerStratum extends LoadableStratum(
     ];
   }
 
-  @computed get cacheDuration(): string {
+  @computed override get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }
     return "1d";
   }
 
-  @computed get dataCustodian() {
+  @computed override get dataCustodian() {
     if (
       this._featureServer.documentInfo &&
       this._featureServer.documentInfo.Author &&
@@ -154,7 +154,7 @@ export class FeatureServerStratum extends LoadableStratum(
   }
 
   @computed
-  get members(): ModelReference[] {
+  override get members(): ModelReference[] {
     return filterOutUndefined(
       this.layers.map((layer) => {
         if (!isDefined(layer.id)) {
@@ -226,11 +226,11 @@ export default class ArcGisFeatureServerCatalogGroup extends UrlMixin(
     return ArcGisFeatureServerCatalogGroup.type;
   }
 
-  get typeName() {
+  override get typeName() {
     return i18next.t("models.arcGisFeatureServerCatalogGroup.name");
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  protected override forceLoadMetadata(): Promise<void> {
     return FeatureServerStratum.load(this).then((stratum) => {
       runInAction(() => {
         this.strata.set(FeatureServerStratum.stratumName, stratum);

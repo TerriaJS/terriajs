@@ -105,7 +105,7 @@ export class SocrataMapViewStratum extends LoadableStratum(
     return new SocrataMapViewStratum(catalogGroup, viewResponse as View);
   }
 
-  @computed get geojsonUrl() {
+  @computed override get geojsonUrl() {
     if (this.view?.childViews?.[0])
       return `${this.catalogItem.url}/resource/${this.view.childViews[0]}.geojson?$limit=10000`;
   }
@@ -141,7 +141,7 @@ export default class SocrataMapViewCatalogItem extends GeoJsonMixin(
     return SocrataMapViewCatalogItem.type;
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  protected override async forceLoadMetadata(): Promise<void> {
     if (!this.strata.has(SocrataMapViewStratum.stratumName)) {
       const stratum = await SocrataMapViewStratum.load(this);
       runInAction(() => {

@@ -149,7 +149,7 @@ function ReferenceMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       previousTarget: BaseModel | undefined
     ): Promise<BaseModel | undefined>;
 
-    dispose() {
+    override dispose() {
       super.dispose();
       this._referenceLoader.dispose();
     }

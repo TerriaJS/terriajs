@@ -32,7 +32,7 @@ class GeoJsonCatalogItem
     return GeoJsonCatalogItem.type;
   }
 
-  get typeName() {
+  override get typeName() {
     return i18next.t("models.geoJson.name");
   }
 

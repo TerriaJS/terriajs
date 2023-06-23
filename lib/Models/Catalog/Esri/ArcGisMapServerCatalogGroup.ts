@@ -49,7 +49,7 @@ export class MapServerStratum extends LoadableStratum(
     ) as this;
   }
 
-  @computed get name() {
+  @computed override get name() {
     if (
       this._mapServer.documentInfo &&
       this._mapServer.documentInfo.Title &&
@@ -59,7 +59,7 @@ export class MapServerStratum extends LoadableStratum(
     }
   }
 
-  @computed get info() {
+  @computed override get info() {
     return [
       createStratumInstance(InfoSectionTraits, {
         name: i18next.t(
@@ -78,7 +78,7 @@ export class MapServerStratum extends LoadableStratum(
     ];
   }
 
-  @computed get dataCustodian() {
+  @computed override get dataCustodian() {
     if (
       this._mapServer.documentInfo &&
       this._mapServer.documentInfo.Author &&
@@ -120,7 +120,7 @@ export class MapServerStratum extends LoadableStratum(
   }
 
   @computed
-  get members(): ModelReference[] {
+  override get members(): ModelReference[] {
     if (this.tilesOnly) {
       return [`${this._catalogGroup.uniqueId}/${SINGLE_FUSED_MAP_CACHE_ID}`];
     }
@@ -261,19 +261,19 @@ export default class ArcGisMapServerCatalogGroup extends UrlMixin(
     return ArcGisMapServerCatalogGroup.type;
   }
 
-  get typeName() {
+  override get typeName() {
     return i18next.t("models.arcGisMapServerCatalogGroup.name");
   }
 
   @override
-  get cacheDuration(): string {
+  override get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }
     return "1d";
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  protected override async forceLoadMetadata(): Promise<void> {
     const stratum = await MapServerStratum.load(this);
     runInAction(() => {
       this.strata.set(MapServerStratum.stratumName, stratum);

@@ -150,7 +150,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
   }
 
   @computed
-  get members(): ModelReference[] {
+  override get members(): ModelReference[] {
     // When data is grouped (most circumstances) return group id's
     // for those which have content
     if (
@@ -491,19 +491,19 @@ export default class CkanCatalogGroup extends UrlMixin(
     return CkanCatalogGroup.type;
   }
 
-  get typeName() {
+  override get typeName() {
     return i18next.t("models.ckan.nameServer");
   }
 
   @override
-  get cacheDuration(): string {
+  override get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }
     return "1d";
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  protected override async forceLoadMetadata(): Promise<void> {
     const ckanServerStratum = <CkanServerStratum | undefined>(
       this.strata.get(CkanServerStratum.stratumName)
     );

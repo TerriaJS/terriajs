@@ -69,7 +69,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get name() {
+  override get name() {
     if (
       this.capabilities &&
       this.capabilities.ServiceIdentification &&
@@ -80,7 +80,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get info() {
+  override get info() {
     const result: StratumFromTraits<InfoSectionTraits>[] = [];
     const service = this.capabilities.ServiceIdentification;
     if (!isDefined(service)) {
@@ -131,7 +131,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   // Show the Access Constraints if it isn't "none" (because that's the default, and usually a lie).
 
   @computed
-  get members(): ModelReference[] {
+  override get members(): ModelReference[] {
     return filterOutUndefined(
       this.capabilities.layers.map((layer) => this.getLayerId(layer))
     );
@@ -226,7 +226,7 @@ export default class WebMapTileServiceCatalogGroup extends GetCapabilitiesMixin(
     return WebMapTileServiceCatalogGroup.type;
   }
 
-  protected async forceLoadMetadata() {
+  protected override async forceLoadMetadata() {
     if (
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
       undefined

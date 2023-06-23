@@ -123,7 +123,7 @@ export default class CatalogSearchProvider extends SearchProvider {
     this.name = "Catalog Items";
   }
 
-  @computed get resultsAreReferences() {
+  @computed override get resultsAreReferences() {
     return (
       isDefined(this.terria.catalogIndex?.loadPromise) &&
       fromPromise(this.terria.catalogIndex!.loadPromise).state === "fulfilled"

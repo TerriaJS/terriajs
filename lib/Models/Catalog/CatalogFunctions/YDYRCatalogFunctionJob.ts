@@ -21,7 +21,7 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
     makeObservable(this);
   }
 
-  get typeName(): string {
+  override get typeName(): string {
     return "YourDataYourRegions Job";
   }
 
@@ -189,7 +189,7 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
     return false;
   }
 
-  async pollForResults() {
+  override async pollForResults() {
     if (!isDefined(this.jobId)) {
       console.log("NO JOB ID");
       return true;

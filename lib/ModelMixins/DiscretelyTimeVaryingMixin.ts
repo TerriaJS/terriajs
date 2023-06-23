@@ -44,7 +44,7 @@ function DiscretelyTimeVaryingMixin<
     abstract get discreteTimes(): DiscreteTimeAsJS[] | undefined;
 
     @override
-    get currentTime(): string | undefined {
+    override get currentTime(): string | undefined {
       const time = super.currentTime;
       if (time === undefined || time === null) {
         if (this.initialTimeSource === "now") {
@@ -240,7 +240,7 @@ function DiscretelyTimeVaryingMixin<
     }
 
     @override
-    get startTime(): string | undefined {
+    override get startTime(): string | undefined {
       const time = super.startTime;
       if (
         time === undefined &&
@@ -256,7 +256,7 @@ function DiscretelyTimeVaryingMixin<
     }
 
     @override
-    get stopTime(): string | undefined {
+    override get stopTime(): string | undefined {
       const time = super.stopTime;
       if (
         time === undefined &&
@@ -277,7 +277,7 @@ function DiscretelyTimeVaryingMixin<
      * Try to calculate a multiplier which results in a new time step every {this.multiplierDefaultDeltaStep} seconds. For example, if {this.multiplierDefaultDeltaStep = 5} it would set the `multiplier` so that a new time step (of this dataset) would appear every five seconds (on average) if the timeline is playing.
      */
     @override
-    get multiplier() {
+    override get multiplier() {
       if (super.multiplier) return super.multiplier;
 
       if (

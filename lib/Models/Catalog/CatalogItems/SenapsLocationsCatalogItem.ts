@@ -245,7 +245,7 @@ class SenapsLocationsCatalogItem extends MappableMixin(
     return SenapsLocationsCatalogItem.type;
   }
 
-  get typeName() {
+  override get typeName() {
     return i18next.t("models.senaps.name");
   }
 
@@ -275,7 +275,7 @@ class SenapsLocationsCatalogItem extends MappableMixin(
     return [];
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  protected override forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 

@@ -91,19 +91,19 @@ export class ArcGisPortalItemStratum extends LoadableStratum(
     return uri.toString();
   }
 
-  @computed get url() {
+  @computed override get url() {
     if (this.arcgisPortalItem === undefined) return undefined;
     if (this.arcgisPortalItem.type === "Scene Service")
       return `/i3s-to-3dtiles/${this.arcgisPortalItem.url}`;
     return this.arcgisPortalItem.url;
   }
 
-  @computed get name() {
+  @computed override get name() {
     if (this.arcgisPortalItem === undefined) return undefined;
     return this.arcgisPortalItem.title;
   }
 
-  @computed get description() {
+  @computed override get description() {
     if (this.arcgisPortalItem === undefined) return undefined;
     // return this.arcgisPortalItem.description
     return DOMPurify.sanitize(this.arcgisPortalItem.description, {
@@ -214,7 +214,7 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
 
   static readonly type = "arcgis-portal-item";
 
-  get type() {
+  override get type() {
     return ArcGisPortalItemReference.type;
   }
 
@@ -243,7 +243,7 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
   }
 
   @override
-  get cacheDuration(): string {
+  override get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     } else if (isDefined(this._arcgisPortalCatalogGroup)) {

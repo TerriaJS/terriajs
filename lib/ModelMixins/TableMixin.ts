@@ -239,12 +239,12 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @override
-    get name() {
+    override get name() {
       return super.name;
     }
 
     @override
-    get disableZoomTo() {
+    override get disableZoomTo() {
       // Disable zoom if only showing imagery parts  (eg region mapping) and no rectangle is defined
       if (
         !this.mapItems.find(
@@ -434,7 +434,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @override
-    get chartItems() {
+    override get chartItems() {
       // Wait for activeTableStyle to be ready
       if (!this.activeTableStyle.ready || this.isLoadingMapItems) return [];
 
@@ -448,7 +448,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @override
-    get viewingControls(): ViewingControl[] {
+    override get viewingControls(): ViewingControl[] {
       return filterOutUndefined([
         ...super.viewingControls,
         {
@@ -470,7 +470,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @override
-    get selectableDimensions(): SelectableDimension[] {
+    override get selectableDimensions(): SelectableDimension[] {
       return filterOutUndefined([
         this.timeDisableDimension,
         ...super.selectableDimensions,

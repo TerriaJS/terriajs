@@ -22,7 +22,7 @@ export default function AutoRefreshingMixin<
     private autorunRefreshEnableDisposer: IReactionDisposer | undefined;
 
     /** Return the interval in seconds to poll for updates. */
-    abstract get refreshInterval(): number | undefined;
+    abstract override get refreshInterval(): number | undefined;
 
     /** Call hook for refreshing the item */
     abstract refreshData(): void;

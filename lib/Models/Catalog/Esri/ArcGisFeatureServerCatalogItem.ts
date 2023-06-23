@@ -213,7 +213,7 @@ class FeatureServerStratum extends LoadableStratum(
   }
 
   @computed
-  get shortReport(): string | undefined {
+  override get shortReport(): string | undefined {
     // Show notice if reached
     if (
       this._item.readyData?.features !== undefined &&
@@ -231,7 +231,7 @@ class FeatureServerStratum extends LoadableStratum(
     return this._featureServer?.maxScale;
   }
 
-  @computed get name(): string | undefined {
+  @computed override get name(): string | undefined {
     if (
       this._featureServer?.name !== undefined &&
       this._featureServer.name.length > 0
@@ -240,7 +240,7 @@ class FeatureServerStratum extends LoadableStratum(
     }
   }
 
-  @computed get dataCustodian(): string | undefined {
+  @computed override get dataCustodian(): string | undefined {
     if (
       this._featureServer?.documentInfo &&
       this._featureServer?.documentInfo.Author &&
@@ -250,7 +250,7 @@ class FeatureServerStratum extends LoadableStratum(
     }
   }
 
-  @computed get rectangle(): StratumFromTraits<RectangleTraits> | undefined {
+  @computed override get rectangle(): StratumFromTraits<RectangleTraits> | undefined {
     const extent = this._featureServer?.extent;
     const wkidCode =
       extent?.spatialReference?.latestWkid ?? extent?.spatialReference?.wkid;
@@ -281,7 +281,7 @@ class FeatureServerStratum extends LoadableStratum(
     return undefined;
   }
 
-  @computed get info() {
+  @computed override get info() {
     return [
       createStratumInstance(InfoSectionTraits, {
         name: i18next.t("models.arcGisMapServerCatalogItem.dataDescription"),
@@ -294,7 +294,7 @@ class FeatureServerStratum extends LoadableStratum(
     ];
   }
 
-  @computed get supportsPagination(): boolean {
+  @computed override get supportsPagination(): boolean {
     if (
       this._featureServer === undefined ||
       this._featureServer.advancedQueryCapabilities === undefined
@@ -305,11 +305,11 @@ class FeatureServerStratum extends LoadableStratum(
     return !!this._featureServer.advancedQueryCapabilities.supportsPagination;
   }
 
-  @computed get activeStyle() {
+  @computed override get activeStyle() {
     return "ESRI";
   }
 
-  @computed get styles() {
+  @computed override get styles() {
     const renderer = this._featureServer?.drawingInfo?.renderer;
 
     if (!renderer) return [];
@@ -478,11 +478,11 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
     return ArcGisFeatureServerCatalogItem.type;
   }
 
-  get typeName(): string {
+  override get typeName(): string {
     return i18next.t("models.arcGisFeatureServerCatalogItem.name");
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  protected override async forceLoadMetadata(): Promise<void> {
     if (this.strata.get(FeatureServerStratum.stratumName) === undefined) {
       const stratum = await FeatureServerStratum.load(this);
       runInAction(() => {

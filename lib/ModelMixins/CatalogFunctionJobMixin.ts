@@ -34,7 +34,7 @@ class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
   }
 
   @computed
-  get shortReportSections() {
+  override get shortReportSections() {
     if (this.catalogFunctionJob.logs.length === 0) return;
     return [
       {
@@ -46,7 +46,7 @@ class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
   }
 
   @computed
-  get shortReport() {
+  override get shortReport() {
     let content = "";
     if (this.catalogFunctionJob.jobStatus === "inactive") {
       content = "Job is inactive";
@@ -70,13 +70,13 @@ class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
   }
 
   @computed
-  get description() {
+  override get description() {
     if (this.catalogFunctionJob.jobStatus === "finished")
       return `This is the result of invoking ${this.catalogFunctionJob.name} with the input parameters below.`;
   }
 
   @computed
-  get info() {
+  override get info() {
     if (
       isDefined(this.catalogFunctionJob.parameters) &&
       Object.values(this.catalogFunctionJob.parameters).length > 0
@@ -295,7 +295,7 @@ function CatalogFunctionJobMixin<
     }
     protected override async forceLoadMapItems() {}
 
-    protected async forceLoadMetadata() {
+    protected override async forceLoadMetadata() {
       if (this.jobStatus === "finished" && !this.downloadedResults) {
         await this.onJobFinish();
       }

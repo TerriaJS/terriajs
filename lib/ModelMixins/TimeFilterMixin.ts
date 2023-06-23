@@ -144,7 +144,7 @@ function TimeFilterMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @override
-    get discreteTimesAsSortedJulianDates() {
+    override get discreteTimesAsSortedJulianDates() {
       const featureTimes = this.featureTimesAsJulianDates;
       if (featureTimes === undefined) {
         return super.discreteTimesAsSortedJulianDates;

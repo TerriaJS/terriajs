@@ -19,10 +19,10 @@ import { BaseModel } from "../../Definition/Model";
 export default class CatalogIndexReference extends ReferenceMixin(
   CreateModel(CatalogIndexReferenceTraits)
 ) {
-  protected readonly weakReference = true;
+  protected override readonly weakReference = true;
   static readonly type = "catalog-index-reference";
 
-  get type() {
+  override get type() {
     return CatalogIndexReference.type;
   }
 

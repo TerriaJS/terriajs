@@ -14,7 +14,7 @@ export default class CkanDefaultFormatsStratum extends LoadableStratum(
     return new CkanDefaultFormatsStratum() as this;
   }
 
-  get supportedResourceFormats() {
+  override get supportedResourceFormats() {
     return [
       {
         id: "GeoJson",

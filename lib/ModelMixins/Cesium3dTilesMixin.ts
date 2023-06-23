@@ -57,7 +57,7 @@ class Cesium3dTilesStratum extends LoadableStratum(Cesium3dTilesTraits) {
   }
 
   @computed
-  get opacity() {
+  override get opacity() {
     return 1.0;
   }
 }
@@ -79,7 +79,7 @@ class ObservableCesium3DTileset extends Cesium3DTileset {
     makeObservable(this);
   }
 
-  destroy() {
+  override destroy() {
     super.destroy();
     // TODO: we are running later to prevent this
     // modification from happening in some computed up the call chain.
@@ -307,7 +307,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @override
-    get shortReport(): string | undefined {
+    override get shortReport(): string | undefined {
       if (this.terria.currentViewer.type === "Leaflet") {
         return i18next.t("models.commonModelErrors.3dTypeIn2dMode", this);
       }
@@ -624,7 +624,7 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      *
      */
     @override
-    get highlightColor(): string {
+    override get highlightColor(): string {
       return super.highlightColor || DEFAULT_HIGHLIGHT_COLOR;
     }
   }

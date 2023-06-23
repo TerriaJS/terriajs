@@ -115,15 +115,15 @@ export class CkanDatasetStratum extends LoadableStratum(
     return this.ckanItemReference._ckanResource;
   }
 
-  @computed get url() {
+  @computed override get url() {
     return getCkanItemResourceUrl(this.ckanItemReference);
   }
 
-  @computed get name() {
+  @computed override get name() {
     return getCkanItemName(this.ckanItemReference);
   }
 
-  @computed get rectangle() {
+  @computed override get rectangle() {
     if (this.ckanDataset === undefined) return undefined;
     if (this.ckanDataset.extras !== undefined) {
       const out: number[] = [];
@@ -242,7 +242,7 @@ export class CkanDatasetStratum extends LoadableStratum(
   }
 
   /** Set isGroup = true if this turns into WMS Group (See CkanItemReference.forceLoadReference for more info) */
-  @computed get isGroup() {
+  @computed override get isGroup() {
     if (
       this.ckanItemReference._supportedFormat?.definition?.type ===
         WebMapServiceCatalogItem.type &&
@@ -273,7 +273,7 @@ export default class CkanItemReference extends UrlMixin(
     );
   }
 
-  get type() {
+  override get type() {
     return CkanItemReference.type;
   }
 
@@ -317,7 +317,7 @@ export default class CkanItemReference extends UrlMixin(
   }
 
   @override
-  get cacheDuration(): string {
+  override get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }

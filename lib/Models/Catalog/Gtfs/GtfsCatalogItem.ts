@@ -74,7 +74,7 @@ class GtfsStratum extends LoadableStratum(GtfsCatalogItemTraits) {
   }
 
   @computed
-  get rectangle() {
+  override get rectangle() {
     return createStratumInstance(RectangleTraits, this._item._bbox);
   }
 }
@@ -352,7 +352,7 @@ export default class GtfsCatalogItem extends UrlMixin(
     makeObservable(this);
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  protected override forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 

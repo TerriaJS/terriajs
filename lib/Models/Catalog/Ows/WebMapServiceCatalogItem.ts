@@ -66,7 +66,7 @@ export class WebMapServiceUrlStratum extends LoadableStratum(
     ) as this;
   }
 
-  @computed get useWmsVersion130() {
+  @computed override get useWmsVersion130() {
     if (
       this.catalogItem.url?.toLowerCase().includes("version=1.1.0") ||
       this.catalogItem.url?.toLowerCase().includes("version=1.1.1")
@@ -104,7 +104,7 @@ class WebMapServiceCatalogItem
   static abstractsToIgnore = ["A compliant implementation of WMS"];
 
   // hide elements in the info section which might show information about the datasource
-  _sourceInfoItemNames = [
+  override _sourceInfoItemNames = [
     i18next.t("models.webMapServiceCatalogItem.getCapabilitiesUrl")
   ];
 
@@ -159,7 +159,7 @@ class WebMapServiceCatalogItem
   }
 
   @override
-  get shortReport(): string | undefined {
+  override get shortReport(): string | undefined {
     if (
       this.tilingScheme instanceof GeographicTilingScheme &&
       this.terria.currentViewer.type === "Leaflet"
@@ -201,7 +201,7 @@ class WebMapServiceCatalogItem
       });
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  protected override async forceLoadMetadata(): Promise<void> {
     if (
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
       undefined
@@ -214,7 +214,7 @@ class WebMapServiceCatalogItem
   }
 
   @override
-  get cacheDuration(): string {
+  override get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }
@@ -731,7 +731,7 @@ class WebMapServiceCatalogItem
   }
 
   @override
-  get selectableDimensions() {
+  override get selectableDimensions() {
     if (this.disableDimensionSelectors) {
       return super.selectableDimensions;
     }

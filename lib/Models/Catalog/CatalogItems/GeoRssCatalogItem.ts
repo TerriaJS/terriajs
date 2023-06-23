@@ -65,14 +65,14 @@ class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
     return new GeoRssStratum(newModel as GeoRssCatalogItem, this._feed) as this;
   }
 
-  @computed get name(): string | undefined {
+  @computed override get name(): string | undefined {
     if (this._feed && this._feed.title && this._feed.title.length > 0) {
       return replaceUnderscores(this._feed.title);
     }
     return super.name;
   }
 
-  @computed get dataCustodian(): string | undefined {
+  @computed override get dataCustodian(): string | undefined {
     if (
       this._feed &&
       this._feed.author &&
@@ -83,7 +83,7 @@ class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
     }
   }
 
-  @computed get info() {
+  @computed override get info() {
     if (!this._feed) {
       return [];
     }
@@ -140,7 +140,7 @@ export default class GeoRssCatalogItem
     return GeoRssCatalogItem.type;
   }
 
-  get typeName() {
+  override get typeName() {
     return i18next.t("models.georss.name");
   }
 
@@ -202,7 +202,7 @@ export default class GeoRssCatalogItem
     return this.parseGeorss(data);
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  protected override forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 }

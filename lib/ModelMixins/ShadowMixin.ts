@@ -38,7 +38,7 @@ function ShadowMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     /** Shadow SelectableDimension. This has to be added to a catalog member's `selectableDimension` array */
     @override
-    get selectableDimensions(): SelectableDimension[] {
+    override get selectableDimensions(): SelectableDimension[] {
       return [
         ...super.selectableDimensions,
         {

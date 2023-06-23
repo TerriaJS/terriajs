@@ -145,15 +145,15 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     makeObservable(this);
   }
 
-  @computed get name() {
+  @computed override get name() {
     return this.dataset.metas?.default?.title ?? this.dataset.dataset_id;
   }
 
-  @computed get description() {
+  @computed override get description() {
     return this.dataset.metas?.default?.description;
   }
 
-  @computed get metadataUrls() {
+  @computed override get metadataUrls() {
     return [
       createStratumInstance(MetadataUrlTraits, {
         title: i18next.t("models.openDataSoft.viewDatasetPage"),
@@ -168,7 +168,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
    * - First of type "int"
    * - First of type "text"
    */
-  @computed get colorFieldName() {
+  @computed override get colorFieldName() {
     return (
       this.usefulFields.find((f) => f.type === "double") ??
       this.usefulFields.find((f) => f.type === "int") ??
@@ -176,15 +176,15 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     )?.name;
   }
 
-  @computed get geoPoint2dFieldName() {
+  @computed override get geoPoint2dFieldName() {
     return getGeoPointField(this.dataset);
   }
 
-  @computed get timeFieldName() {
+  @computed override get timeFieldName() {
     return getTimeField(this.dataset);
   }
 
-  @computed get regionFieldName() {
+  @computed override get regionFieldName() {
     // Find first field which matches a region type
     return this.dataset.fields?.find(
       (f) =>
@@ -224,7 +224,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     );
   }
 
-  @computed get selectFields() {
+  @computed override get selectFields() {
     if (this.selectAllFields) {
       // Filter out fields with GeoJSON and fields which could be lat/lon as all point information is provided with field types "geo_point" (See `getGeoPointField()`)
       return filterOutUndefined(
@@ -252,7 +252,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     ]).join(", ");
   }
 
-  @computed get groupByFields() {
+  @computed override get groupByFields() {
     // If aggregating time - use RANGE group by clause to average values over a date range (eg `aggregateTime = "1 day"`)
     // See https://help.opendatasoft.com/apis/ods-search-v2/#group-by-clause
     if (this.aggregateTime && this.timeFieldName && this.geoPoint2dFieldName) {
@@ -332,7 +332,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     );
   }
 
-  @computed get columns() {
+  @computed override get columns() {
     return filterOutUndefined([
       this.timeColumn,
       this.colorColumn,
@@ -344,7 +344,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
 
   /** Set default style traits for points (lat/lon) and time */
   @computed
-  get defaultStyle() {
+  override get defaultStyle() {
     return createStratumInstance(TableStyleTraits, {
       regionColumn: this.regionFieldName,
       latitudeColumn:
@@ -377,7 +377,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
    * As we are fetching the last 1000 records, there may be time intervals which are incomplete. Ideally we want to see all sensors with some data by default.
    */
   @computed
-  get currentTime() {
+  override get currentTime() {
     if (!this.pointTimeSeries && this.catalogItem.geoPoint2dFieldName) return;
 
     const lastDate =
@@ -446,7 +446,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     return lastDate.toString();
   }
 
-  @computed get refreshInterval() {
+  @computed override get refreshInterval() {
     if (!this.catalogItem.refreshIntervalTemplate) return;
 
     try {
@@ -490,7 +490,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   /** Convert usefulFields to a Dimension (which gets turned into a SelectableDimension in OpenDataSoftCatalogItem).
    * This means we can chose which field to "select" when downloading data.
    */
-  @computed get availableFields() {
+  @computed override get availableFields() {
     if (!this.selectAllFields)
       return createStratumInstance(EnumDimensionTraits, {
         id: "available-fields",
@@ -504,7 +504,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
       });
   }
 
-  @computed get activeStyle() {
+  @computed override get activeStyle() {
     return this.catalogItem.colorFieldName;
   }
 }
@@ -557,7 +557,7 @@ export default class OpenDataSoftCatalogItem
     return OpenDataSoftCatalogItem.type;
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  protected override async forceLoadMetadata(): Promise<void> {
     if (!this.strata.has(OpenDataSoftDatasetStratum.stratumName)) {
       const stratum = await OpenDataSoftDatasetStratum.load(this);
       runInAction(() => {
@@ -675,7 +675,7 @@ export default class OpenDataSoftCatalogItem
   }
 
   @override
-  get selectableDimensions() {
+  override get selectableDimensions() {
     return filterOutUndefined([
       this.availableFieldsDimension,
       ...super.selectableDimensions.filter(

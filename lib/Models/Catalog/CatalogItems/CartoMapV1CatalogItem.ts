@@ -142,7 +142,7 @@ export default class CartoMapV1CatalogItem extends MappableMixin(
   }
 
   @override
-  get cacheDuration(): string {
+  override get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }

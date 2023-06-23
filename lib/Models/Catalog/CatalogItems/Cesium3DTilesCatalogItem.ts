@@ -34,7 +34,7 @@ export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
     makeObservable(this);
   }
 
-  get typeName() {
+  override get typeName() {
     return i18next.t("models.cesiumTerrain.name3D");
   }
 
