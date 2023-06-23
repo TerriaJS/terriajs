@@ -1532,7 +1532,6 @@ export default class Cesium extends GlobeOrMap {
       latitude: number
     ) {
       const url = (<any>imageryProvider).url;
-
       try {
         const featuresPromise = oldPick.call(
           imageryProvider,

@@ -9,8 +9,15 @@ import GeoRasterLayer, {
 } from "georaster-layer-for-leaflet";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 
-export default class GeorasterLayerWithSplitterSupport extends GeoRasterLayer {
+// TODO: Cannot extend GeoRasterLayerOptions why?
+// interface GeoRasterTerriaLayerOptions extends GeoRasterLayerOptions {
+//   imageryProvider: ImageryProvider;
+// }
+
+//@ts-ignore
+export default class GeorasterTerriaLayer extends GeoRasterLayer {
   readonly errorEvent: CesiumEvent = new CesiumEvent();
   readonly initialized: boolean = false;
   readonly _usable: boolean = false;
@@ -23,9 +30,11 @@ export default class GeorasterLayerWithSplitterSupport extends GeoRasterLayer {
 
   constructor(
     // private leaflet: Leaflet,
-    options: GeoRasterLayerOptions
+    options: GeoRasterLayerOptions,
+    imageryProvider: ImageryProvider
   ) {
     super(Object.assign(options, { async: true, tileSize: 256 }));
+    this.imageryProvider = imageryProvider; // TODO: add to Options instead?
 
     // Handle splitter rection (and disposing reaction)
     let disposeSplitterReaction: IReactionDisposer | undefined;
@@ -119,12 +128,18 @@ export default class GeorasterLayerWithSplitterSupport extends GeoRasterLayer {
   //   return canvas; // Not yet drawn on, but Leaflet requires the tile
   // }
 
+  /** Currently uses the Cesium Imagery Provider to get the raster values.
+   * TODO: Need to consider the efficiency fo this versus operating on the raster values loaded in GeoRasterLayer...
+   * TODO: Need to weight up keeping most logic in Cesium side for code efficiency, versus duplicating the logic for more data efficiency.
+   *
+   * Another concern is - do we want the real raw raster value, or the display/render value?
+   * This is discussed in https://github.com/GeoTIFF/georaster-layer-for-leaflet/issues/104
+   * */
   getFeaturePickingCoords(
     map: L.Map,
     longitudeRadians: number,
     latitudeRadians: number
   ) {
-    // TODO: Is this code ever reached?
     const ll = new Cartographic(
       CesiumMath.negativePiToPi(longitudeRadians),
       latitudeRadians,
@@ -151,6 +166,9 @@ export default class GeorasterLayerWithSplitterSupport extends GeoRasterLayer {
     latitudeRadians: number
   ) {
     // TODO: Is this code ever reached?
+    // TODO: We COULD use the Cesium imaery provider to do the feature picking...
+    // Otherwise if its easy with Georaster layer for leaflet, could do that...
+    debugger;
     return this.imageryProvider.readyPromise.then(() => {
       return this.imageryProvider.pickFeatures(
         x,

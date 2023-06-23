@@ -64,7 +64,7 @@ import { LeafletAttribution } from "./LeafletAttribution";
 import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
 import { isUndefined } from "lodash-es";
-import GeorasterLayerWithSplitterSupport from "../Map/Leaflet/GeorasterLayerWithSplitterSupport";
+import GeorasterTerriaLayer from "../Map/Leaflet/GeorasterTerriaLayer";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
@@ -113,11 +113,8 @@ export default class Leaflet extends GlobeOrMap {
   private _createImageryLayer: (
     ip: ImageryProvider,
     clippingRectangle: Rectangle | undefined,
-    overrideCreateLeafletLayerFn: (
-      ip: ImageryProvider,
-      bounds: LatLngBounds | undefined
-    ) => GeorasterLayerWithSplitterSupport
-  ) => GeorasterLayerWithSplitterSupport = computedFn(
+    overrideCreateLeafletLayerFn: ImageryParts["overrideCreateLeafletLayer"]
+  ) => GridLayer | undefined = computedFn(
     (ip, clippingRectangle, overrideCreateLeafletLayerFn) => {
       const layerOptions = {
         bounds: clippingRectangle && rectangleToLatLngBounds(clippingRectangle)
@@ -427,16 +424,24 @@ export default class Leaflet extends GlobeOrMap {
           )
       );
 
-      const allImagery = allImageryMapItems.map(({ item, parts }) => {
-        if (hasTraits(item, ImageryProviderTraits, "leafletUpdateInterval")) {
-          (parts.imageryProvider as any)._leafletUpdateInterval =
-            item.leafletUpdateInterval;
-        }
-        return {
-          parts: parts,
-          layer: this._makeImageryLayerFromParts(parts, item)
-        };
-      });
+      const allImagery = filterOutUndefined(
+        allImageryMapItems.map(({ item, parts }) => {
+          if (hasTraits(item, ImageryProviderTraits, "leafletUpdateInterval")) {
+            (parts.imageryProvider as any)._leafletUpdateInterval =
+              item.leafletUpdateInterval;
+          }
+
+          const layer = this._makeImageryLayerFromParts(parts, item);
+          if (isDefined(layer)) {
+            return {
+              parts: parts,
+              layer: layer
+            };
+          } else {
+            return undefined;
+          }
+        })
+      );
 
       // Delete imagery layers no longer in the model
       this.map.eachLayer((mapLayer) => {
@@ -457,8 +462,9 @@ export default class Leaflet extends GlobeOrMap {
         if (!isDefined(layer)) {
           // TODO: Should we filter out undefined layers before this point in the code?
           console.log(
-            `Layer is undefined, and will fail when trying to set Opacity. Skipping layer ${layer}`
+            `Layer is undefined, and will fail when trying to set Opacity. Skipping layer ${parts}`
           );
+          debugger;
           return;
         }
 
@@ -798,7 +804,7 @@ export default class Leaflet extends GlobeOrMap {
       Ellipsoid.WGS84.cartographicToCartesian(pickedLocation);
 
     const imageryFeaturePromises = imageryLayers.map(async (imageryLayer) => {
-      const imageryLayerUrl = (<any>imageryLayer.imageryProvider).url;
+      const imageryLayerUrl = (<any>imageryLayer.imageryProvider)?.url;
       const longRadians = CesiumMath.toRadians(latlng.lng);
       const latRadians = CesiumMath.toRadians(latlng.lat);
 
@@ -956,7 +962,7 @@ export default class Leaflet extends GlobeOrMap {
   ): (
     | ImageryProviderLeafletTileLayer
     | ImageryProviderLeafletGridLayer
-    | GeorasterLayerWithSplitterSupport
+    | GeorasterTerriaLayer
   )[] {
     return filterOutUndefined(
       item.mapItems.map((m) => {
@@ -1166,7 +1172,7 @@ export default class Leaflet extends GlobeOrMap {
 function isImageryLayer(
   someLayer: L.Layer
 ): someLayer is ImageryProviderLeafletTileLayer {
-  return "imageryProvider" in someLayer;
+  return "pickFeatures" in someLayer;
 }
 
 function isDataSource(object: MapItem): object is DataSource {

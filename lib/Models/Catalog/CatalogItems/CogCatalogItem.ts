@@ -21,7 +21,8 @@ import GeoRasterLayer, {
   GeoRasterLayerOptions
 } from "georaster-layer-for-leaflet";
 import { IPromiseBasedObservable, fromPromise } from "mobx-utils";
-import GeorasterLayerWithSplitterSupport from "../../../Map/Leaflet/GeorasterLayerWithSplitterSupport";
+import GeorasterTerriaLayer from "../../../Map/Leaflet/GeorasterTerriaLayer";
+
 export default class CogCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(CogCatalogItemTraits))
 ) {
@@ -66,23 +67,27 @@ export default class CogCatalogItem extends MappableMixin(
   > {
     return fromPromise(
       // parseGeoRaster will request for external .ovr file, most likely will receive a 404 error. This is not a problem.
-      parseGeoRaster(this.url)
-        .then((georaster: GeoRaster) => {
-          // TODO: We have extended GeoRasterLayer
-          return new GeorasterLayerWithSplitterSupport({
-            georaster: georaster,
-            opacity: 0.8,
-            // Example pixel reclassification function:
-            // pixelValuesToColorFn: (values) => {
-            //   return mapElevationToRgbaSmoothed(values, 0);
-            // },
-            resolution: 256,
-            debugLevel: 0
-          });
-        })
-        .catch((error: Error) => {
-          this.terria.raiseErrorToUser(error);
-        })
+      isDefined(this.imageryProvider) &&
+        parseGeoRaster(this.url)
+          .then((georaster: GeoRaster) => {
+            // TODO: We have extended GeoRasterLayer
+            return new GeorasterTerriaLayer(
+              {
+                georaster: georaster,
+                opacity: 0.8,
+                // Example pixel reclassification function:
+                // pixelValuesToColorFn: (values) => {
+                //   return mapElevationToRgbaSmoothed(values, 0);
+                // },
+                resolution: 256,
+                debugLevel: 0
+              },
+              this.imageryProvider
+            );
+          })
+          .catch((error: Error) => {
+            this.terria.raiseErrorToUser(error);
+          })
     );
   }
 
@@ -125,14 +130,21 @@ export default class CogCatalogItem extends MappableMixin(
       return;
     }
 
-    let cogImageryProvider: CogImageryProvider = new CogImageryProvider({
+    // TODO: Where should we decalre these?
+    // TODO: Should we make these applicable to both new CogImageryProvider() and new GeorasterLayer()?
+    const cogOptions: TIFFImageryProviderOptions = {
       url: proxyCatalogItemUrl(this, this.url),
       projFunc: this.projFunc,
       renderOptions: {
         /** nodata value, default read from tiff meta */
         nodata: 0
-      }
-    });
+      },
+      enablePickFeatures: this.allowFeaturePicking
+    };
+
+    let cogImageryProvider: CogImageryProvider = new CogImageryProvider(
+      cogOptions
+    );
 
     return cogImageryProvider;
   }

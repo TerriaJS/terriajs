@@ -635,10 +635,8 @@ export class TIFFImageryProvider {
     longitude: number,
     latitude: number
   ) {
-    // MODIFIED FROM SOURCE by Terria:
-    // TODO: Is it safe to remove this? Messes with types.
-    // if (!this.options.enablePickFeatures) return undefined;
-
+    // MODIFIED FROM SOURCE by Terria, return empty array instead of undefined
+    if (!this.options.enablePickFeatures) return [];
     const z = zoom > this.maximumLevel ? this.maximumLevel : zoom;
     const index = this.cogLevels[z];
     let image = this._images[index];
