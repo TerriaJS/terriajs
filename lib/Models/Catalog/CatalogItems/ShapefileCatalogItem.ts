@@ -44,7 +44,7 @@ class ShapefileCatalogItem
     return ShapefileCatalogItem.type;
   }
 
-  get typeName() {
+  override get typeName() {
     return i18next.t("models.shapefile.name");
   }
 

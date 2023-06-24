@@ -156,15 +156,15 @@ class DiffTool extends React.Component<PropsType> {
     }
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.enterDiffTool();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.leaveDiffTool();
   }
 
-  render() {
+  override render() {
     if (this.leftItem && this.rightItem) {
       return (
         <Main
@@ -464,7 +464,7 @@ class Main extends React.Component<MainPropsType> {
     }
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     runInAction(() => {
       if (this.location === undefined) {
         const { latitude, longitude, height } =
@@ -487,7 +487,7 @@ class Main extends React.Component<MainPropsType> {
   // i want to restructure the render so that there's 2 distinct "showing diff"
   // or not states, right now intertwining them means way too many conditionals
   // that confuse the required spacing etc.
-  render() {
+  override render() {
     const { terria, viewState, sourceItem, t, theme } = this.props;
     const isShowingDiff = this.diffItem.isShowingDiff;
     const datesSelected = this.leftDate && this.rightDate;

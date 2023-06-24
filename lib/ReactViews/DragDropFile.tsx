@@ -138,7 +138,7 @@ class DragDropFile extends React.Component<PropsType> {
     this.props.viewState.isDraggingDroppingFile = false;
   }
 
-  render() {
+  override render() {
     return (
       <div
         onDrop={this.handleDrop.bind(this)}

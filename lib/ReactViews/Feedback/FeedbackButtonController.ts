@@ -19,19 +19,19 @@ export class FeedbackButtonController extends MapNavigationItemController {
   }
 
   @action.bound
-  activate() {
+  override activate() {
     this.viewState.feedbackFormIsVisible = true;
     super.activate();
   }
 
   @action.bound
-  deactivate() {
+  override deactivate() {
     this.viewState.feedbackFormIsVisible = false;
     super.deactivate();
   }
 
   @computed
-  get visible() {
+  override get visible() {
     return (
       isDefined(this.viewState.terria.configParameters.feedbackUrl) &&
       !this.viewState.hideMapUi &&
@@ -40,7 +40,7 @@ export class FeedbackButtonController extends MapNavigationItemController {
   }
 
   @computed
-  get active() {
+  override get active() {
     return this.viewState.feedbackFormIsVisible;
   }
 }

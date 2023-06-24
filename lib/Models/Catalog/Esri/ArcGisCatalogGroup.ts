@@ -96,7 +96,7 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
   }
 
   @computed
-  get members(): ModelReference[] {
+  override get members(): ModelReference[] {
     return filterOutUndefined(
       this.folders
         .map((folder) => {
@@ -253,19 +253,19 @@ export default class ArcGisCatalogGroup extends UrlMixin(
     return ArcGisCatalogGroup.type;
   }
 
-  get typeName() {
+  override get typeName() {
     return i18next.t("models.arcGisService.name");
   }
 
   @override
-  get cacheDuration(): string {
+  override get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }
     return "1d";
   }
 
-  _protected_forceLoadMetadata(): Promise<void> {
+  override _protected_forceLoadMetadata(): Promise<void> {
     const url = this.url || "";
     if (/\/MapServer(\/?.*)?$/i.test(url)) {
       return MapServerStratum.load(this).then((stratum) => {

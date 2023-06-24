@@ -350,7 +350,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
   }
 
   @computed
-  get members(): ModelReference[] {
+  override get members(): ModelReference[] {
     // If no metadataGroups - return flat list of record ids
     if (this.metadataGroups.length === 0) {
       return this.records.map(
@@ -696,7 +696,7 @@ export default class CswCatalogGroup extends UrlMixin(
     return CswCatalogGroup.type;
   }
 
-  async _protected_forceLoadMetadata(): Promise<void> {
+  override async _protected_forceLoadMetadata(): Promise<void> {
     if (this.strata.get(CswStratum.stratumName) !== undefined) return;
     const stratum = await CswStratum.load(this);
     runInAction(() => {

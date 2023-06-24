@@ -415,7 +415,7 @@ function GroupMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       }
     }
 
-    dispose() {
+    override dispose() {
       super.dispose();
       this._private_memberLoader.dispose();
     }

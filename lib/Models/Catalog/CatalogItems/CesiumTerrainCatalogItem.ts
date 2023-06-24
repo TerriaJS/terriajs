@@ -36,7 +36,7 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
   }
 
   @override
-  get disableZoomTo() {
+  override get disableZoomTo() {
     return true;
   }
 
@@ -46,7 +46,7 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
   }
 
   @override
-  get shortReport() {
+  override get shortReport() {
     if (super.shortReport === undefined) {
       const status = this._private_isTerrainActive ? "In use" : "Not in use";
       return `Terrain status: ${status}`;

@@ -18,7 +18,7 @@ function GetCapabilitiesMixin<T extends AbstractConstructor<BaseType>>(
     }
 
     @override
-    get getCapabilitiesUrl(): string | undefined {
+    override get getCapabilitiesUrl(): string | undefined {
       const getCapabilitiesUrl = super.getCapabilitiesUrl;
       if (getCapabilitiesUrl !== undefined) {
         return getCapabilitiesUrl;

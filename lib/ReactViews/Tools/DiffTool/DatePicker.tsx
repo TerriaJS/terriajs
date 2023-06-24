@@ -109,20 +109,20 @@ class DatePicker extends React.Component<PropsType> {
     );
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.registerExternalButtonClick();
   }
 
-  componentDidUpdate(prevProps: PropsType) {
+  override componentDidUpdate(prevProps: PropsType) {
     this.unregisterExternalButtonClick(prevProps.externalOpenButton);
     this.registerExternalButtonClick();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.unregisterExternalButtonClick(this.props.externalOpenButton);
   }
 
-  render() {
+  override render() {
     const { heading, item, t } = this.props;
     return (
       <Box column centered flex={1}>

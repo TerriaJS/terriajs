@@ -112,7 +112,7 @@ class SharePanel extends React.Component<PropTypes, SharePanelState> {
     }
   }
 
-  render() {
+  override render() {
     const { t } = this.props;
     const { catalogShare, storyShare, catalogShareWithoutText, modalWidth } =
       this.props;

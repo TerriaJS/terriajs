@@ -119,7 +119,7 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
   }
 
   @computed
-  get members(): ModelReference[] {
+  override get members(): ModelReference[] {
     return [
       ...this.facets.map((f) => this.getFacetId(f)),
       ...this.datasets.map((d) => this.getDatasetId(d))
@@ -273,7 +273,7 @@ export default class OpenDataSoftCatalogGroup extends UrlMixin(
     return OpenDataSoftCatalogGroup.type;
   }
 
-  async _protected_forceLoadMetadata(): Promise<void> {
+  override async _protected_forceLoadMetadata(): Promise<void> {
     if (!this.strata.has(OpenDataSoftCatalogStratum.stratumName)) {
       const stratum = await OpenDataSoftCatalogStratum.load(this);
       runInAction(() => {

@@ -114,7 +114,7 @@ export default class ImageryProviderLeafletGridLayer extends L.GridLayer {
     };
   }
 
-  createTile(tilePoint: L.Coords, done: L.DoneCallback) {
+  override createTile(tilePoint: L.Coords, done: L.DoneCallback) {
     const canvas = <HTMLCanvasElement>(
       L.DomUtil.create("canvas", "leaflet-tile")
     );

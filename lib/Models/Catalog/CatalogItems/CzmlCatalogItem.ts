@@ -42,25 +42,25 @@ class CzmlTimeVaryingStratum extends LoadableStratum(CzmlCatalogItemTraits) {
   }
 
   @computed
-  get currentTime(): string | undefined {
+  override get currentTime(): string | undefined {
     const currentTime = this.clock?.currentTime;
     return currentTime ? JulianDate.toIso8601(currentTime) : undefined;
   }
 
   @computed
-  get startTime(): string | undefined {
+  override get startTime(): string | undefined {
     const startTime = this.clock?.startTime;
     return startTime ? JulianDate.toIso8601(startTime) : undefined;
   }
 
   @computed
-  get stopTime() {
+  override get stopTime() {
     const stopTime = this.clock?.stopTime;
     return stopTime ? JulianDate.toIso8601(stopTime) : undefined;
   }
 
   @computed
-  get multiplier(): number | undefined {
+  override get multiplier(): number | undefined {
     return this.clock?.multiplier;
   }
 }
@@ -144,7 +144,7 @@ export default class CzmlCatalogItem
       });
   }
 
-  _protected_forceLoadMetadata(): Promise<void> {
+  override _protected_forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 

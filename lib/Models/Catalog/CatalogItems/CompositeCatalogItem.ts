@@ -31,7 +31,7 @@ export default class CompositeCatalogItem extends MappableMixin(
     return CompositeCatalogItem.type;
   }
 
-  get typeName() {
+  override get typeName() {
     return i18next.t("models.composite.name");
   }
 
@@ -51,7 +51,7 @@ export default class CompositeCatalogItem extends MappableMixin(
     );
   }
 
-  async _protected_forceLoadMetadata(): Promise<void> {
+  override async _protected_forceLoadMetadata(): Promise<void> {
     const members = this.memberModels.filter(CatalogMemberMixin.isMixedInto);
     // Avoid calling loadX functions in a computed context
     await Promise.resolve();
@@ -110,7 +110,7 @@ export default class CompositeCatalogItem extends MappableMixin(
     }
   }
 
-  dispose() {
+  override dispose() {
     super.dispose();
     this._private_visibilityDisposer();
   }

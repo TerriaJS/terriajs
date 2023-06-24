@@ -141,11 +141,11 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     };
   }
 
-  _tileOnError(_done: unknown, _tile: unknown, _e: unknown) {
+  override _tileOnError(_done: unknown, _tile: unknown, _e: unknown) {
     // Do nothing, we'll handle tile errors separately.
   }
 
-  createTile(coords: L.Coords, done: L.DoneCallback) {
+  override createTile(coords: L.Coords, done: L.DoneCallback) {
     // Create a tile (Image) as normal.
     const tile = <HTMLImageElement>super.createTile(coords, done);
 
@@ -199,7 +199,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     return tile;
   }
 
-  getTileUrl(tilePoint: L.Coords): string {
+  override getTileUrl(tilePoint: L.Coords): string {
     const level = this._getLevelFromZ(tilePoint);
     const errorTileUrl = this.options.errorTileUrl || "";
     if (level < 0) {
@@ -447,7 +447,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     }
   }
 
-  onRemove(map: L.Map) {
+  override onRemove(map: L.Map) {
     if (this._delayedUpdate) {
       clearTimeout(this._delayedUpdate);
       this._delayedUpdate = undefined;

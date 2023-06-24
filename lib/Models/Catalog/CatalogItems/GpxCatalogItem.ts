@@ -27,7 +27,7 @@ class GpxCatalogItem extends GeoJsonMixin(CreateModel(GpxCatalogItemTraits)) {
     return GpxCatalogItem.type;
   }
 
-  get typeName() {
+  override get typeName() {
     return i18next.t("models.gpx.name");
   }
 
@@ -70,12 +70,12 @@ class GpxCatalogItem extends GeoJsonMixin(CreateModel(GpxCatalogItemTraits)) {
     return this._private_loadGpxText(data);
   }
 
-  _protected_forceLoadMetadata(): Promise<void> {
+  override _protected_forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 
   @override
-  get name() {
+  override get name() {
     if (this.url && super.name === this.url) {
       return getFilenameFromUri(this.url);
     }

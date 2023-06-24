@@ -27,7 +27,7 @@ export default function modelReferenceTrait<T>(options: ModelTraitOptions) {
 }
 
 export class ModelReferenceTrait extends Trait {
-  readonly decoratorForFlattened = computed.struct;
+  override readonly decoratorForFlattened = computed.struct;
   private readonly factory: ModelFactory | undefined;
   private readonly modelParentId: string | undefined;
 

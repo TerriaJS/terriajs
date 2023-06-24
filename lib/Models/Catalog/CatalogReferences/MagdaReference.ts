@@ -122,7 +122,7 @@ export default class MagdaReference extends AccessControlMixin(
 
   static readonly type = "magda";
 
-  get type() {
+  override get type() {
     return MagdaReference.type;
   }
 
@@ -161,7 +161,7 @@ export default class MagdaReference extends AccessControlMixin(
   }
 
   @override
-  get accessType(): string {
+  override get accessType(): string {
     return this._private_magdaRecordAcessType ?? super.accessType;
   }
 
@@ -797,7 +797,7 @@ export default class MagdaReference extends AccessControlMixin(
   }
 
   @override
-  get cacheDuration(): string {
+  override get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }

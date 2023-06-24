@@ -167,7 +167,7 @@ class WebCoverageServiceDescribeCoverageStratum extends LoadableStratum(
     makeObservable(this);
   }
 
-  @computed get linkedWcsParameters() {
+  @computed override get linkedWcsParameters() {
     return createStratumInstance(WebCoverageServiceParameterTraits, {
       outputCrs: this.coverage.nativeCrs,
       outputFormat: this.coverage.nativeFormat
@@ -511,7 +511,7 @@ function ExportWebCoverageServiceMixin<
       }
     }
 
-    dispose() {
+    override dispose() {
       super.dispose();
       this._private_wcsCapabilitiesLoader.dispose();
       this._private_wcsDescribeCoverageLoader.dispose();

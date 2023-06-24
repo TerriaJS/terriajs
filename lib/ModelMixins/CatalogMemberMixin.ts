@@ -34,7 +34,7 @@ function CatalogMemberMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     extends AccessControlMixin(Base)
     implements SelectableDimensions, ViewingControls
   {
-    abstract get type(): string;
+    abstract override get type(): string;
 
     // The names of items in the CatalogMember's info array that contain details of the source of this CatalogMember's data.
     // This should be overridden by children of this class. For an example see the WebMapServiceCatalogItem
@@ -112,12 +112,12 @@ function CatalogMemberMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @override
-    get name() {
+    override get name() {
       return super.name || this.uniqueId;
     }
 
     @override
-    get nameInCatalog(): string | undefined {
+    override get nameInCatalog(): string | undefined {
       return super.nameInCatalog || this.name;
     }
 
@@ -224,7 +224,7 @@ function CatalogMemberMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return [];
     }
 
-    dispose() {
+    override dispose() {
       super.dispose();
       this._private_metadataLoader.dispose();
     }

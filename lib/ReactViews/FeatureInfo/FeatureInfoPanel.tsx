@@ -47,7 +47,7 @@ class FeatureInfoPanel extends React.Component<Props> {
     makeObservable(this);
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const { t } = this.props;
     const terria = this.props.viewState.terria;
 
@@ -263,7 +263,7 @@ class FeatureInfoPanel extends React.Component<Props> {
     );
   }
 
-  render() {
+  override render() {
     const { t } = this.props;
     const terria = this.props.viewState.terria;
     const viewState = this.props.viewState;

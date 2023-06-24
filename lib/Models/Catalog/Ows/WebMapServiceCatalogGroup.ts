@@ -66,7 +66,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     ) as this;
   }
 
-  @computed get name() {
+  @computed override get name() {
     if (
       this.capabilities &&
       this.capabilities.Service &&
@@ -76,7 +76,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     }
   }
 
-  @computed get info() {
+  @computed override get info() {
     const result: StratumFromTraits<InfoSectionTraits>[] = [];
 
     const service = this.capabilities && this.capabilities.Service;
@@ -129,7 +129,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get members(): ModelReference[] {
+  override get members(): ModelReference[] {
     return filterOutUndefined(
       this.topLevelLayers.map((layer) => this.getLayerId(layer))
     );
@@ -359,7 +359,7 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(
     return WebMapServiceCatalogGroup.type;
   }
 
-  async _protected_forceLoadMetadata(): Promise<void> {
+  override async _protected_forceLoadMetadata(): Promise<void> {
     let getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
     );

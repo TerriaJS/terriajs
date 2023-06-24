@@ -72,15 +72,15 @@ class MapboxVectorTileLoadableStratum extends LoadableStratum(
     return new MapboxVectorTileLoadableStratum(item, styleJson);
   }
 
-  get style() {
+  override get style() {
     return this.styleJson;
   }
 
-  get opacity() {
+  override get opacity() {
     return 1;
   }
 
-  @computed get legends() {
+  @computed override get legends() {
     if (!this.item.fillColor && !this.item.lineColor) return [];
     return [
       createStratumInstance(LegendTraits, {
@@ -97,7 +97,7 @@ class MapboxVectorTileLoadableStratum extends LoadableStratum(
   }
 
   @computed
-  get rectangle() {
+  override get rectangle() {
     if (
       this.item.imageryProvider?.source instanceof GeojsonSource &&
       this.item.imageryProvider.source.geojsonObject
@@ -129,16 +129,16 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
     return MapboxVectorTileCatalogItem.type;
   }
 
-  get typeName() {
+  override get typeName() {
     return i18next.t("models.mapboxVectorTile.name");
   }
 
   @override
-  get forceProxy() {
+  override get forceProxy() {
     return true;
   }
 
-  async _protected_forceLoadMetadata() {
+  override async _protected_forceLoadMetadata() {
     const stratum = await MapboxVectorTileLoadableStratum.load(this);
     runInAction(() => {
       this.strata.set(MapboxVectorTileLoadableStratum.stratumName, stratum);

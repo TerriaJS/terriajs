@@ -33,7 +33,7 @@ export default class TerriaReference extends UrlMixin(
 ) {
   static readonly type = "terria-reference";
 
-  get type() {
+  override get type() {
     return TerriaReference.type;
   }
 

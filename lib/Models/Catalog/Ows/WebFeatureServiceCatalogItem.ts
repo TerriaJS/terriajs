@@ -82,7 +82,7 @@ export class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get info(): StratumFromTraits<InfoSectionTraits>[] {
+  override get info(): StratumFromTraits<InfoSectionTraits>[] {
     const result: StratumFromTraits<InfoSectionTraits>[] = [
       createStratumInstance(InfoSectionTraits, {
         name: i18next.t(
@@ -160,7 +160,7 @@ export class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get infoSectionOrder(): string[] {
+  override get infoSectionOrder(): string[] {
     let layerDescriptions = [
       i18next.t("models.webFeatureServiceCatalogItem.abstract")
     ];
@@ -208,7 +208,7 @@ export class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get rectangle(): StratumFromTraits<RectangleTraits> | undefined {
+  override get rectangle(): StratumFromTraits<RectangleTraits> | undefined {
     const layers: FeatureType[] = [
       ...this.capabilitiesFeatureTypes.values()
     ].filter(isDefined);
@@ -250,7 +250,7 @@ export class GetCapabilitiesStratum extends LoadableStratum(
 
   // Find which GML formats are supported, choose the one most suited to Terria. If not available, default to "gml3"
   @computed
-  get outputFormat(): string | undefined {
+  override get outputFormat(): string | undefined {
     const supportsGeojson =
       this.hasJsonOutputFormat(this.capabilities.outputTypes) ||
       [...this.capabilitiesFeatureTypes.values()].reduce<boolean>(
@@ -277,7 +277,7 @@ export class GetCapabilitiesStratum extends LoadableStratum(
    * e.g. "urn:ogc:def:crs:EPSG::4326" or "EPSG:4326"
    **/
   @computed
-  get srsName(): string | undefined {
+  override get srsName(): string | undefined {
     // First check to see if URL has CRS or SRS
     const supportedCrs = [...SUPPORTED_CRS_3857, ...SUPPORTED_CRS_4326];
     const queryParams: any = this.catalogItem.uri?.query(true) ?? {};
@@ -317,7 +317,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
   ];
 
   // hide elements in the info section which might show information about the datasource
-  _sourceInfoItemNames = [
+  override _sourceInfoItemNames = [
     i18next.t("models.webFeatureServiceCatalogItem.getCapabilitiesUrl")
   ];
 
@@ -356,7 +356,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
     });
   }
 
-  async _protected_forceLoadMetadata(): Promise<void> {
+  override async _protected_forceLoadMetadata(): Promise<void> {
     if (
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
       undefined
@@ -468,7 +468,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
   }
 
   @override
-  get shortReport(): string | undefined {
+  override get shortReport(): string | undefined {
     // Show notice if reached
     if (
       this.readyData?.features !== undefined &&

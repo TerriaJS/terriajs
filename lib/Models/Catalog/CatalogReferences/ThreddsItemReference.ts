@@ -43,12 +43,12 @@ export class ThreddsDatasetStratum extends LoadableStratum(
     return new ThreddsDatasetStratum(threddsItemReference, threddsDataset);
   }
 
-  get name() {
+  override get name() {
     if (this.threddsDataset === undefined) return undefined;
     return this.threddsDataset.name;
   }
 
-  get url() {
+  override get url() {
     if (this.threddsDataset === undefined) return undefined;
     return this.threddsDataset.wmsUrl;
   }
@@ -61,7 +61,7 @@ export default class ThreddsItemReference extends UrlMixin(
 ) {
   static readonly type = "thredds-item";
 
-  get type() {
+  override get type() {
     return ThreddsItemReference.type;
   }
 

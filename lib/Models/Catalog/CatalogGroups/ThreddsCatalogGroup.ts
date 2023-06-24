@@ -66,7 +66,7 @@ export class ThreddsStratum extends LoadableStratum(ThreddsCatalogGroupTraits) {
   }
 
   @computed
-  get members(): ModelReference[] {
+  override get members(): ModelReference[] {
     if (this.threddsCatalog === undefined) return [];
 
     const memberIds: ModelReference[] = [];
@@ -193,19 +193,19 @@ export default class ThreddsCatalogGroup extends UrlMixin(
     return ThreddsCatalogGroup.type;
   }
 
-  get typeName() {
+  override get typeName() {
     return i18next.t("models.thredds.nameGroup");
   }
 
   @override
-  get cacheDuration(): string {
+  override get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }
     return "1d";
   }
 
-  async _protected_forceLoadMetadata(): Promise<void> {
+  override async _protected_forceLoadMetadata(): Promise<void> {
     if (!this.strata.get(ThreddsStratum.stratumName)) {
       const stratum = await ThreddsStratum.load(this);
       if (stratum === undefined) return;

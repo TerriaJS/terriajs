@@ -19,7 +19,7 @@ export default class UrlReference extends UrlMixin(
 ) {
   static readonly type = "url-reference";
 
-  get type() {
+  override get type() {
     return UrlReference.type;
   }
 

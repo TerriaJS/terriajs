@@ -190,7 +190,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
     return YDYRCatalogFunction.type;
   }
 
-  get typeName(): string {
+  override get typeName(): string {
     return "YourDataYourRegions";
   }
 
@@ -198,14 +198,14 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
     return new YDYRCatalogFunctionJob(id, this.terria);
   }
 
-  async _protected_forceLoadMetadata() {
+  override async _protected_forceLoadMetadata() {
     return super._protected_forceLoadMetadata();
     // TODO: load capabilities from https://ydyr.info/api/v1/capability?format=json
     // https://github.com/TerriaJS/terriajs/issues/4943
   }
 
   @override
-  get description() {
+  override get description() {
     return (
       super.description ??
       `Your Data Your Regions (YDYR) is an API for the conversion of data between different Australian geographic boundaries. See <a href="https://ydyr.info">ydyr.info</a> for more information`

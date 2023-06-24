@@ -44,7 +44,7 @@ export default class ShortReport extends React.Component<{
     return false;
   }
 
-  render() {
+  override render() {
     if (!CatalogMemberMixin.isMixedInto(this.props.item)) return null;
 
     const item = this.props.item;

@@ -39,7 +39,7 @@ export class ApiTableStratum extends LoadableStratum(
   }
 
   // Set time id columns to `idKey`
-  @computed get defaultStyle() {
+  @computed override get defaultStyle() {
     return createStratumInstance(TableStyleTraits, {
       time: createStratumInstance(TableTimeStyleTraits, {
         idColumns: this.catalogItem.idKey ? [this.catalogItem.idKey] : undefined
@@ -197,7 +197,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     return columnMajorTable;
   }
 
-  async _protected_forceLoadMetadata(): Promise<void> {
+  override async _protected_forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 

@@ -178,11 +178,11 @@ class WpsLoadableStratum extends LoadableStratum(
     return inputs;
   }
 
-  get storeSupported() {
+  override get storeSupported() {
     return Boolean(this.processDescription.storeSupported);
   }
 
-  get statusSupported() {
+  override get statusSupported() {
     return Boolean(this.processDescription.statusSupported);
   }
 }
@@ -203,12 +203,12 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     return WebProcessingServiceCatalogFunction.type;
   }
 
-  get typeName() {
+  override get typeName() {
     return "Web Processing Service (WPS)";
   }
 
   @override
-  get cacheDuration(): string {
+  override get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }
@@ -233,7 +233,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     return proxyCatalogItemUrl(this, uri.toString());
   }
 
-  async _protected_forceLoadMetadata() {
+  override async _protected_forceLoadMetadata() {
     if (!this.strata.has(WpsLoadableStratum.stratumName)) {
       const stratum = await WpsLoadableStratum.load(this);
       if (isDefined(stratum)) {

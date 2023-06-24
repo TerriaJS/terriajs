@@ -177,7 +177,7 @@ class MapServerStratum extends LoadableStratum(
     return stratum;
   }
 
-  @computed get maximumScale() {
+  @computed override get maximumScale() {
     if (this._item.layersArray.length === 0) {
       return this.mapServer.maxScale;
     }
@@ -189,7 +189,7 @@ class MapServerStratum extends LoadableStratum(
     );
   }
 
-  @computed get layers() {
+  @computed override get layers() {
     /** Try to pull out MapServer layer from URL
      * eg https://exmaple.com/arcgis/rest/services/MapServer/{layer}
      */
@@ -201,7 +201,7 @@ class MapServerStratum extends LoadableStratum(
     }
   }
 
-  @computed get name() {
+  @computed override get name() {
     // single layer
     if (
       this._item.layersArray.length === 1 &&
@@ -223,7 +223,7 @@ class MapServerStratum extends LoadableStratum(
     }
   }
 
-  @computed get dataCustodian() {
+  @computed override get dataCustodian() {
     if (
       this.mapServer.documentInfo &&
       this.mapServer.documentInfo.Author &&
@@ -233,7 +233,7 @@ class MapServerStratum extends LoadableStratum(
     }
   }
 
-  @computed get rectangle() {
+  @computed override get rectangle() {
     const rectangle: RectangleExtent = {
       west: Infinity,
       south: Infinity,
@@ -255,7 +255,7 @@ class MapServerStratum extends LoadableStratum(
     return createStratumInstance(RectangleTraits, rectangle);
   }
 
-  @computed get info() {
+  @computed override get info() {
     // If we are requesting a single layer, use it to populate InfoSections
     // If we are requesting multiple layers - we only show MapServer metadata (not metadata per layer)
     const singleLayer =
@@ -283,7 +283,7 @@ class MapServerStratum extends LoadableStratum(
     ]);
   }
 
-  @computed get legends() {
+  @computed override get legends() {
     const layers = this._item.layersArray;
     const noDataRegex = /^No[\s_-]?Data$/i;
     const labelsRegex = /_Labels$/;
@@ -343,7 +343,7 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     makeObservable(this);
   }
 
-  get typeName() {
+  override get typeName() {
     return i18next.t("models.arcGisMapServerCatalogItem.name");
   }
 
@@ -351,7 +351,7 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     return ArcGisMapServerCatalogItem.type;
   }
 
-  async _protected_forceLoadMetadata(): Promise<void> {
+  override async _protected_forceLoadMetadata(): Promise<void> {
     const stratum = await MapServerStratum.load(this);
     runInAction(() => {
       this.strata.set(MapServerStratum.stratumName, stratum);
@@ -363,7 +363,7 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
   }
 
   @override
-  get cacheDuration(): string {
+  override get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }

@@ -156,7 +156,7 @@ class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
   }
 
   @computed
-  get rectangle() {
+  override get rectangle() {
     if (this._item._readyData) {
       try {
         const geojsonBbox = bbox(this._item._readyData);
@@ -172,27 +172,27 @@ class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
     }
   }
 
-  get opacity() {
+  override get opacity() {
     return 1;
   }
 
   @computed
-  get disableSplitter() {
+  override get disableSplitter() {
     // Disable splitter if mapItems has any datasources
     return this._item.mapItems.find(isDataSource) ? true : undefined;
   }
 
   @computed
-  get disableOpacityControl() {
+  override get disableOpacityControl() {
     // Disable opacity if mapItems has any datasources
     return this._item.mapItems.find(isDataSource) ? true : undefined;
   }
 
-  get showDisableStyleOption() {
+  override get showDisableStyleOption() {
     return true;
   }
 
-  @computed get forceCesiumPrimitives() {
+  @computed override get forceCesiumPrimitives() {
     // Disable TableStyling for the following:
     // If MultiPoint features exist
     // If more than 50% of features have simple style properties - disable table styling
@@ -333,7 +333,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @override
-    get name() {
+    override get name() {
       if (CatalogMemberMixin.isMixedInto(this.sourceReference)) {
         return super.name || this.sourceReference.name;
       }
@@ -341,7 +341,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @override
-    get cacheDuration(): string {
+    override get cacheDuration(): string {
       if (isDefined(super.cacheDuration)) {
         return super.cacheDuration;
       }
@@ -357,11 +357,11 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @override
-    get _protected_canExportData() {
+    override get _protected_canExportData() {
       return isDefined(this.readyData);
     }
 
-    async _protected_exportData(): Promise<ExportData | undefined> {
+    override async _protected_exportData(): Promise<ExportData | undefined> {
       if (isDefined(this.readyData)) {
         let name = this.name || this.uniqueId || "data.geojson";
         if (!isJson(name)) {
@@ -380,7 +380,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @override
-    get mapItems() {
+    override get mapItems() {
       if (this.isLoadingMapItems) {
         return [];
       }
@@ -444,7 +444,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     /** Remove chart items from TableMixin.chartItems */
     @override
-    get chartItems() {
+    override get chartItems() {
       return [];
     }
 
@@ -1173,7 +1173,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @override
-    get discreteTimes(): DiscreteTimeAsJS[] | undefined {
+    override get discreteTimes(): DiscreteTimeAsJS[] | undefined {
       if (this.readyData === undefined) {
         return undefined;
       }
@@ -1212,7 +1212,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      * If this returns an empty array, TableMixin will effectively be disabled
      */
     @override
-    get dataColumnMajor() {
+    override get dataColumnMajor() {
       if (!this.readyData || !this.useTableStylingAndProtomaps) return [];
 
       // Map from property name (column name) to column index
@@ -1267,7 +1267,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @override
-    get viewingControls(): ViewingControl[] {
+    override get viewingControls(): ViewingControl[] {
       return !this.useTableStylingAndProtomaps
         ? super.viewingControls.filter(
             (v) => v.id !== TableStylingWorkflow.type

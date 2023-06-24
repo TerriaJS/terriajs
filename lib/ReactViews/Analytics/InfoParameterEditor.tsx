@@ -8,7 +8,7 @@ import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 export default class InfoParameterEditor extends React.Component<{
   parameter: InfoParameter;
 }> {
-  render() {
+  override render() {
     return (
       <div>
         {this.props.parameter.value &&

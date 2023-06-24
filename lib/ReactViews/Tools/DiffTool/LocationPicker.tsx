@@ -81,20 +81,20 @@ export default class LocationPicker extends React.Component<PropsType> {
     this.pickDisposer = undefined;
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     this.setupPicker();
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     this.destroyPicker();
     this.setupPicker();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     this.destroyPicker();
   }
 
-  render() {
+  override render() {
     return null;
   }
 }

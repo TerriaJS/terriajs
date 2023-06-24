@@ -55,7 +55,7 @@ class KmlCatalogItem
   }
 
   @override
-  get cacheDuration(): string {
+  override get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }
@@ -115,7 +115,7 @@ class KmlCatalogItem
     return [this._private_dataSource];
   }
 
-  _protected_forceLoadMetadata(): Promise<void> {
+  override _protected_forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 

@@ -48,12 +48,12 @@ type State = {
 class TooltipWrapperRaw extends React.Component<Props, State> {
   rootRef = React.createRef<HTMLDivElement>();
   tooltipTextElementRef = React.createRef<HTMLSpanElement>();
-  state = {
+  override state = {
     offset: 0,
     open: !!this.props.startOpen
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     if (!this.props.disableEventListeners) {
       document.addEventListener("mousedown", this.dismiss);
       document.addEventListener("touchstart", this.dismiss);
@@ -62,11 +62,11 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
     this.adjustOffset();
   }
 
-  componentDidUpdate() {
+  override componentDidUpdate() {
     this.adjustOffset();
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (!this.props.disableEventListeners) {
       document.removeEventListener("mousedown", this.dismiss);
       document.removeEventListener("touchstart", this.dismiss);
@@ -136,7 +136,7 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
     });
   };
 
-  render() {
+  override render() {
     const { orientation, theme, innerElementStyles } = this.props;
     const orientationBelow = orientation === "below";
     // default to above

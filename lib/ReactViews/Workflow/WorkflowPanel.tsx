@@ -75,17 +75,17 @@ type ErrorBoundaryProps = {
 };
 
 class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
-  state = { hasError: false };
+  override state = { hasError: false };
 
   static getDerivedStateFromError() {
     return { hasError: true };
   }
 
-  componentDidCatch(error: unknown) {
+  override componentDidCatch(error: unknown) {
     this.props.viewState.terria.raiseErrorToUser(error);
   }
 
-  render() {
+  override render() {
     return this.state.hasError ? (
       <Error>
         An error occurred when running the workflow. Please try re-loading the

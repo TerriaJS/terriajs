@@ -254,7 +254,7 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @override
-    get selectableDimensions(): SelectableDimension[] {
+    override get selectableDimensions(): SelectableDimension[] {
       if (!this.clippingBox.enableFeature) {
         return super.selectableDimensions;
       }

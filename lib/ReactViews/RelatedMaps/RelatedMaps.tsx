@@ -30,7 +30,7 @@ class RelatedMaps extends React.Component<PropTypes> {
     super(props);
   }
 
-  render() {
+  override render() {
     const dropdownTheme = {
       inner: Styles.dropdownInner,
       icon: "gallery"

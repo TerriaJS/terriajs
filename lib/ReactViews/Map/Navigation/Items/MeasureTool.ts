@@ -23,7 +23,7 @@ interface MeasureToolOptions {
 }
 
 export default class MeasureTool extends MapNavigationItemController {
-  static id = "measure-tool";
+  static override id = "measure-tool";
   static displayName = "MeasureTool";
 
   private readonly terria: Terria;
@@ -32,7 +32,7 @@ export default class MeasureTool extends MapNavigationItemController {
   private userDrawing: UserDrawing;
 
   onClose: () => void;
-  itemRef: React.RefObject<HTMLDivElement> = React.createRef();
+  override itemRef: React.RefObject<HTMLDivElement> = React.createRef();
 
   constructor(props: MeasureToolOptions) {
     super();
@@ -239,7 +239,7 @@ export default class MeasureTool extends MapNavigationItemController {
   /**
    * @overrides
    */
-  deactivate() {
+  override deactivate() {
     this.userDrawing.endDrawing();
     super.deactivate();
   }
@@ -247,7 +247,7 @@ export default class MeasureTool extends MapNavigationItemController {
   /**
    * @overrides
    */
-  activate() {
+  override activate() {
     this.userDrawing.enterDrawMode();
     super.activate();
   }

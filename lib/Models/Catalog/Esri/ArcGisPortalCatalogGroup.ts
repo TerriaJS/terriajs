@@ -210,7 +210,7 @@ export class ArcGisPortalStratum extends LoadableStratum(
   }
 
   @computed
-  get members(): ModelReference[] {
+  override get members(): ModelReference[] {
     if (this.filteredGroups.length > 0) {
       const groupIds: ModelReference[] = [];
       this.filteredGroups.forEach((g) => {
@@ -360,19 +360,19 @@ export default class ArcGisPortalCatalogGroup extends UrlMixin(
     return ArcGisPortalCatalogGroup.type;
   }
 
-  get typeName() {
+  override get typeName() {
     return i18next.t("models.arcgisPortal.nameGroup");
   }
 
   @override
-  get cacheDuration(): string {
+  override get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }
     return "0d";
   }
 
-  _protected_forceLoadMetadata(): Promise<void> {
+  override _protected_forceLoadMetadata(): Promise<void> {
     const portalStratum = <ArcGisPortalStratum | undefined>(
       this.strata.get(ArcGisPortalStratum.stratumName)
     );

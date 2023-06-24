@@ -25,7 +25,7 @@ class BottomDock extends React.Component<PropsType> {
     });
   }
 
-  componentDidUpdate(prevProps: PropsType) {
+  override componentDidUpdate(prevProps: PropsType) {
     if (
       prevProps.heightFromMeasureElementHOC !==
       this.props.heightFromMeasureElementHOC
@@ -36,7 +36,7 @@ class BottomDock extends React.Component<PropsType> {
     }
   }
 
-  render() {
+  override render() {
     const { terria } = this.props;
     const top = terria.timelineStack.top;
 

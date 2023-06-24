@@ -19,7 +19,7 @@ export default class SplitItemReference extends ReferenceMixin(
 ) {
   static readonly type = "split-reference";
 
-  get type() {
+  override get type() {
     return SplitItemReference.type;
   }
 

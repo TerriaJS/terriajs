@@ -15,7 +15,7 @@ export default class SOSChartCustomComponent extends ChartCustomComponent<Sensor
     return "sos-chart";
   }
 
-  get attributes() {
+  override get attributes() {
     let attributes = super.attributes;
     attributes.push("name");
     return attributes;
@@ -31,7 +31,7 @@ export default class SOSChartCustomComponent extends ChartCustomComponent<Sensor
       | undefined;
   }
 
-  constructShareableCatalogItem = async (
+  override constructShareableCatalogItem = async (
     id: string | undefined,
     context: ProcessNodeContext,
     sourceReference: BaseModel | undefined
@@ -61,7 +61,7 @@ export default class SOSChartCustomComponent extends ChartCustomComponent<Sensor
       ?.setTrait(CommonStrata.user, "units", units);
   }
 
-  protected parseNodeAttrs(nodeAttrs: {
+  protected override parseNodeAttrs(nodeAttrs: {
     [name: string]: string | undefined;
   }): SOSChartCustomComponentAttributes {
     const parsed: SOSChartCustomComponentAttributes = super.parseNodeAttrs(

@@ -204,7 +204,7 @@ class Compass extends React.PureComponent<PropTypes, IStateTypes> {
     viewerChange(this);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.orbitMouseMoveFunction) {
       document.removeEventListener(
         "mousemove",
@@ -313,7 +313,7 @@ class Compass extends React.PureComponent<PropTypes, IStateTypes> {
     });
   }
 
-  render() {
+  override render() {
     const rotationMarkerStyle = {
       transform: "rotate(-" + this.state.orbitCursorAngle + "rad)",
       WebkitTransform: "rotate(-" + this.state.orbitCursorAngle + "rad)",

@@ -213,7 +213,7 @@ export class SocrataCatalogStratum extends LoadableStratum(
   }
 
   @computed
-  get members(): ModelReference[] {
+  override get members(): ModelReference[] {
     // If we only have one facet, return it's children instead of a single facet group
     if (this.facets.length === 1)
       return this.facets[0].values.map(
@@ -479,7 +479,7 @@ export default class SocrataCatalogGroup extends UrlMixin(
     return SocrataCatalogGroup.type;
   }
 
-  async _protected_forceLoadMetadata(): Promise<void> {
+  override async _protected_forceLoadMetadata(): Promise<void> {
     try {
       if (!this.strata.has(SocrataCatalogStratum.stratumName)) {
         const stratum = await SocrataCatalogStratum.load(this);

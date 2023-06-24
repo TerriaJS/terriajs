@@ -75,7 +75,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
     return this.props.item.isOpenInWorkbench;
   }
 
-  render() {
+  override render() {
     const { item, t } = this.props;
 
     const isLoading =

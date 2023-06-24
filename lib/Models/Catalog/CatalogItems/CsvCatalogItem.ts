@@ -64,7 +64,7 @@ export default class CsvCatalogItem
   }
 
   @override
-  get _protected_canExportData() {
+  override get _protected_canExportData() {
     return (
       isDefined(this._private_csvFile) ||
       isDefined(this.csvString) ||
@@ -73,11 +73,11 @@ export default class CsvCatalogItem
   }
 
   @override
-  get cacheDuration() {
+  override get cacheDuration() {
     return super.cacheDuration || "1d";
   }
 
-  async _protected_exportData() {
+  override async _protected_exportData() {
     if (isDefined(this._private_csvFile)) {
       return {
         name: (this.name || this.uniqueId)!,

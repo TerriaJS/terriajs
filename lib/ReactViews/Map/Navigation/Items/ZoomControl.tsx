@@ -180,7 +180,7 @@ class ZoomControl extends React.Component<PropTypes> {
     );
   }
 
-  render() {
+  override render() {
     const { t, theme } = this.props;
     return (
       <StyledZoomControl>

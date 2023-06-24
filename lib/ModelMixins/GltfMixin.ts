@@ -57,7 +57,7 @@ function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @override
-    get disableZoomTo() {
+    override get disableZoomTo() {
       const { latitude, longitude, height } = this.origin;
       return (
         latitude === undefined ||
@@ -161,7 +161,7 @@ function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return new ModelGraphics(options);
     }
 
-    _protected_forceLoadMetadata(): Promise<void> {
+    override _protected_forceLoadMetadata(): Promise<void> {
       return Promise.resolve();
     }
 
@@ -170,7 +170,7 @@ function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @override
-    get shortReport(): string | undefined {
+    override get shortReport(): string | undefined {
       if (this.terria.currentViewer.type === "Leaflet") {
         return i18next.t("models.commonModelErrors.3dTypeIn2dMode", this);
       }
