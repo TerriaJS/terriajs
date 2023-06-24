@@ -1,9 +1,9 @@
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import MoreOrLess from "../Generic/MoreOrLess.jsx";
+import MoreOrLess from "../Generic/MoreOrLess";
 
-import BooleanParameterEditor from "./BooleanParameterEditor.tsx";
+import BooleanParameterEditor from "./BooleanParameterEditor";
 
 import Styles from "./parameter-editors.scss";
 

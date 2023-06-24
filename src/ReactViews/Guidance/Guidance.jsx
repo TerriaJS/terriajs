@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import Styles from "./guidance.scss";
 import Text from "../../Styled/Text";
 
-import GuidanceDot from "./GuidanceDot.jsx";
+import GuidanceDot from "./GuidanceDot";
 
 const GuidanceProgress = (props) => {
   const countArray = Array.from(Array(props.max).keys()).map((e) => e++);

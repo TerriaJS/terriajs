@@ -650,7 +650,7 @@ export default class Terria {
 
   readonly notificationState: NotificationState = new NotificationState();
 
-  readonly developmentEnv = process?.env?.NODE_ENV === "development";
+  readonly developmentEnv = process.env.NODE_ENV === "development";
 
   /**
    * An error service instance. The instance can be configured by setting the

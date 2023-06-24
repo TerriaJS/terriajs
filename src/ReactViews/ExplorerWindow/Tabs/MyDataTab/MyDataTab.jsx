@@ -6,9 +6,9 @@ import Icon from "../../../../Styled/Icon";
 import Box from "../../../../Styled/Box";
 import PropTypes from "prop-types";
 
-import DataCatalog from "../../../DataCatalog/DataCatalog.jsx";
-import DataPreview from "../../../Preview/DataPreview.jsx";
-import AddData from "./AddData.jsx";
+import DataCatalog from "../../../DataCatalog/DataCatalog";
+import DataPreview from "../../../Preview/DataPreview";
+import AddData from "./AddData";
 import { withTranslation, Trans } from "react-i18next";
 
 import Styles from "./my-data-tab.scss";

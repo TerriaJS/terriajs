@@ -33,7 +33,7 @@ import {
 } from "../StandardUserInterface/ViewStateContext";
 import Story from "./Story";
 import Styles from "./story-builder.scss";
-import StoryEditor from "./StoryEditor.jsx";
+import StoryEditor from "./StoryEditor";
 const dataStoriesImg = require("../../../wwwroot/images/data-stories-getting-started.jpg");
 
 const STORY_VIDEO = "storyVideo";

@@ -8,18 +8,18 @@
     "strict": true,
     "noImplicitOverride": true,
     "allowJs": true,
-    "jsx": "react",
+    "jsx": "preserve",
     "declaration": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "useDefineForClassFields": true, // required for mobx6 - https://mobx.js.org/installation.html#use-spec-compliant-transpilation-for-class-properties
-    "outDir": "ts-out",
+    "outDir": "lib",
     "resolveJsonModule": true,
-    "typeRoots": ["./lib/ThirdParty/**/*.d.ts"],
+    "typeRoots": ["./src/ThirdParty/**/*.d.ts"],
     "types": ["cesium"]
   },
   "include": [
-    "./lib/**/*"
+    "./src/**/*"
     //"./test/**/*",
     //"./buildprocess/generateDocs.ts",
     //"./buildprocess/**/*"

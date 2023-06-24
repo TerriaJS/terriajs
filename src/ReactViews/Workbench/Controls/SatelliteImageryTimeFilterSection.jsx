@@ -5,7 +5,7 @@ import { Ellipsoid } from "cesium";
 import { Rectangle } from "cesium";
 import MapInteractionMode from "../../../Models/MapInteractionMode";
 import Loader from "../../Loader";
-import LocationItem from "../../LocationItem.jsx";
+import LocationItem from "../../LocationItem";
 import { withTranslation } from "react-i18next";
 import { observer } from "mobx-react";
 import { runInAction, reaction } from "mobx";
