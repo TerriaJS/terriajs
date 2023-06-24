@@ -5,7 +5,7 @@ import {
   runInAction,
   makeObservable
 } from "mobx";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
@@ -111,11 +111,13 @@ class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
   }
 }
 
-type CatalogFunctionJobMixin = Model<CatalogFunctionJobTraits>;
+StratumOrder.addLoadStratum(FunctionJobStratum.name);
 
-function CatalogFunctionJobMixin<
-  T extends Constructor<CatalogFunctionJobMixin>
->(Base: T) {
+type BaseType = Model<CatalogFunctionJobTraits>;
+
+function CatalogFunctionJobMixin<T extends AbstractConstructor<BaseType>>(
+  Base: T
+) {
   abstract class CatalogFunctionJobMixin extends GroupMixin(
     AutoRefreshingMixin(MappableMixin(CatalogMemberMixin(Base)))
   ) {
@@ -312,7 +314,6 @@ function CatalogFunctionJobMixin<
 }
 
 namespace CatalogFunctionJobMixin {
-  StratumOrder.addLoadStratum(FunctionJobStratum.name);
   export interface Instance
     extends InstanceType<ReturnType<typeof CatalogFunctionJobMixin>> {}
   export function isMixedInto(model: any): model is Instance {

@@ -208,7 +208,7 @@ class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
 
 StratumOrder.addLoadStratum(GeoJsonStratum.stratumName);
 
-interface FeatureCounts {
+export interface FeatureCounts {
   point: number;
   multiPoint: number;
   /** Line includes MultiLine features */

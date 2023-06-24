@@ -67,7 +67,7 @@ StratumOrder.instance.addLoadStratum(Cesium3dTilesStratum.name);
 
 const DEFAULT_HIGHLIGHT_COLOR = "#ff3f00";
 
-interface Cesium3DTilesCatalogItemIface
+export interface Cesium3DTilesCatalogItemIface
   extends InstanceType<ReturnType<typeof Cesium3dTilesMixin>> {}
 
 class ObservableCesium3DTileset extends Cesium3DTileset {

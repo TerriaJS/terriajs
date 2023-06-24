@@ -29,7 +29,9 @@ function CatalogFunctionMixin<T extends AbstractConstructor<BaseType>>(
      *
      * Other job traits can be set in this function, as long as they aren't related to function parameters - for example the `url` and `processIdentier` trait for WPS are copied from the WPSCatalogFunction.
      */
-    abstract _protected_createJob(id: string): Promise<CatalogFunctionJobMixin>;
+    abstract _protected_createJob(
+      id: string
+    ): Promise<CatalogFunctionJobMixin.Instance>;
 
     /**
      * Submit job:
@@ -47,7 +49,9 @@ function CatalogFunctionMixin<T extends AbstractConstructor<BaseType>>(
         );
 
         if (!CatalogFunctionJobMixin.isMixedInto(newJob)) {
-          throw `Error creating job catalog item - ${newJob.type} is not a valid jobType`;
+          const newJobAny: any = newJob;
+          const newJobType = newJobAny.type ?? "unknown";
+          throw `Error creating job catalog item - ${newJobType} is not a valid jobType`;
         }
 
         // Give default name if needed

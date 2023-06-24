@@ -269,7 +269,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     });
   }
 
-  async _protected_createJob(id: string) {
+  override async _protected_createJob(id: string) {
     const job = new WebProcessingServiceCatalogFunctionJob(id, this.terria);
 
     let dataInputs = filterOutUndefined(

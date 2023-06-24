@@ -194,7 +194,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
     return "YourDataYourRegions";
   }
 
-  async _protected_createJob(id: string) {
+  override async _protected_createJob(id: string) {
     return new YDYRCatalogFunctionJob(id, this.terria);
   }
 
