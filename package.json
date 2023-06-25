@@ -12,7 +12,9 @@
   },
   "resolutions": {
     "colors": "1.4.0",
-    "@types/node": "^18.15.11"
+    "@types/node": "^18.15.11",
+    "@types/react": "^17.0.3",
+    "@types/react-dom": "^17.0.2"
   },
   "dependencies": {
     "@babel/core": "^7.16.0",
