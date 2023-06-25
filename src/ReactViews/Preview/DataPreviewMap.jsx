@@ -31,7 +31,7 @@ class AdaptForPreviewMap extends MappableMixin(CreateModel(MappableTraits)) {
     makeObservable(this);
   }
 
-  async forceLoadMapItems() {}
+  /*override*/ async _protected_forceLoadMapItems() {}
 
   // Make all imagery 0 or 100% opacity
   @computed

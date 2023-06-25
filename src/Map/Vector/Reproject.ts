@@ -58,18 +58,14 @@ export default {
     sourceCode: string,
     destCode: string
   ): [number, number] | undefined {
-    const source =
-      sourceCode in Proj4Definitions
-        ? proj4.Proj(Proj4Definitions[sourceCode])
-        : undefined;
-    var dest =
-      destCode in Proj4Definitions
-        ? proj4.Proj(Proj4Definitions[destCode])
-        : undefined;
+    const source = Proj4Definitions[sourceCode];
+    const dest = Proj4Definitions[destCode];
     if (!source || !dest) {
       return;
     }
-    return proj4.transform(source, dest, coordinates);
+
+    const converter = proj4(source, dest);
+    return converter.forward(coordinates);
   },
 
   /**
