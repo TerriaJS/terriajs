@@ -1,6 +1,7 @@
 #!/bin/sh -x
 
 set -e
+set -x
 
 GITHUB_BRANCH=${GITHUB_REF##*/}
 
