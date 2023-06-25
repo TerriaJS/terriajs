@@ -19,12 +19,19 @@ npm install -g https://github.com/terriajs/sync-dependencies
 npm install request@^2.83.0
 npm install -g yarn@^1.19.0
 
+# Install terriajs dependencies and build it
+yarn install
+yarn build
+rm -rf node_modules
+
 # Clone and build TerriaMap, using this version of TerriaJS
 TERRIAJS_COMMIT_HASH=$(git rev-parse HEAD)
-git clone -b main https://github.com/TerriaJS/TerriaMap.git
+cd ..
+git clone -b build-just-terriajs https://github.com/TerriaJS/TerriaMap.git
 cd TerriaMap
+
 TERRIAMAP_COMMIT_HASH=$(git rev-parse HEAD)
-sed -i -e 's@"terriajs": ".*"@"terriajs": "'$GITHUB_REPOSITORY'#'${GITHUB_BRANCH}'"@g' package.json
+sed -i -e 's@"terriajs": ".*"@"terriajs": "../terriajs"@g' package.json
 sync-dependencies --source terriajs
 git config --global user.email "info@terria.io"
 git config --global user.name "GitHub Actions"
@@ -32,8 +39,8 @@ git commit -a -m 'temporary commit' # so the version doesn't indicate local modi
 git tag -a "TerriaMap-$TERRIAMAP_COMMIT_HASH--TerriaJS-$TERRIAJS_COMMIT_HASH" -m 'temporary tag'
 rm yarn.lock # because TerriaMap's yarn.lock won't reflect terriajs dependencies
 yarn install
-yarn add -W moment@2.24.0
-yarn gulp build --baseHref="/${SAFE_BRANCH_NAME}/"
+yarn gulp copy-terriajs-assets render-index write-version
+node buildprocess/bundle.js
 
 pwd
 
