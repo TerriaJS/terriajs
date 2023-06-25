@@ -51,6 +51,7 @@ docker push "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NA
 helm upgrade --install --recreate-pods -f ${GITHUB_WORKSPACE}/buildprocess/ci-values.yml --set global.exposeNodePorts=true --set "terriamap.image.full=asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME" --set "terriamap.serverConfig.shareUrlPrefixes.s.accessKeyId=$SHARE_S3_ACCESS_KEY_ID" --set "terriamap.serverConfig.shareUrlPrefixes.s.secretAccessKey=$SHARE_S3_SECRET_ACCESS_KEY" --set "terriamap.serverConfig.feedback.accessToken=$FEEDBACK_GITHUB_TOKEN" "terriajs-$SAFE_BRANCH_NAME" deploy/helm/terria
 
 cd ${GITHUB_WORKSPACE}
+npm install -g request@^2.83.0
 node buildprocess/ci-cleanup.js
 
 gh api /repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA} -f state=success -f context=deployment -f target_url=http://ci.terria.io/${SAFE_BRANCH_NAME}/
