@@ -20,6 +20,7 @@ npm install request@^2.83.0
 npm install -g yarn@^1.19.0
 
 # Install terriajs dependencies and build it
+rm yarn.lock
 yarn install
 yarn build
 rm -rf node_modules
