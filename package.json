@@ -242,6 +242,6 @@
     "prettier-check": "prettier --check .",
     "build-for-node": "tsc -b tsconfig-node.json",
     "prepare": "husky install",
-    "build": "tsc && pushd src && find . -name '*.scss' -exec cp --parents \\{\\} ../lib \\; && find . -name '*.css' -exec cp --parents \\{\\} ../lib \\; && find . -name '*.xml' -exec cp --parents \\{\\} ../lib \\; && popd"
+    "build": "tsc && cd src && find . -name '*.scss' -exec cp --parents \\{\\} ../lib \\; && find . -name '*.css' -exec cp --parents \\{\\} ../lib \\; && find . -name '*.xml' -exec cp --parents \\{\\} ../lib \\; && cd .."
   }
 }
