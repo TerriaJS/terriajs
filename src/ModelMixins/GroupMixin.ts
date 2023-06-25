@@ -432,8 +432,8 @@ namespace GroupMixin {
       model &&
       "isGroup" in model &&
       model.isGroup &&
-      "forceLoadMembers" in model &&
-      typeof model.forceLoadMembers === "function"
+      "_protected_forceLoadMembers" in model &&
+      typeof model._protected_forceLoadMembers === "function"
     );
   }
 }

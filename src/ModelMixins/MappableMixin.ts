@@ -212,8 +212,8 @@ namespace MappableMixin {
     return (
       model &&
       model.isMappable &&
-      "forceLoadMapItems" in model &&
-      typeof model.forceLoadMapItems === "function"
+      "_protected_forceLoadMapItems" in model &&
+      typeof model._protected_forceLoadMapItems === "function"
     );
   }
 }
