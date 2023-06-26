@@ -5,6 +5,7 @@
 - Fix error when adding deeply nested references in search results.
 - Fixed bug where sharelinks created with no visible horizon would default to homeCamera view
 - Improved calculation of 2D view from 3D view when no horizon visible
+- Improve WMS and WFS error messages when requested layer names or type names are not present in GetCapabilities.
 - [The next improvement]
 
 #### 8.3.0 - 2023-05-22
@@ -13,6 +14,7 @@
 
   - **Upgraded Mobx to version 6.7.x**
   - **Upgraded Typescript to version 4.9.x**
+  - See https://github.com/TerriaJS/terriajs/discussions/6787 for how to upgrade your map
 
 #### 8.2.29 - 2023-05-18
 
