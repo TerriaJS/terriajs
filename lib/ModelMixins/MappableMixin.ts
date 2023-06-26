@@ -11,8 +11,9 @@ import Result from "../Core/Result";
 import Model from "../Models/Definition/Model";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
-import { GridLayer, LatLngBounds } from "leaflet";
+import { LatLngBounds } from "leaflet";
 import GeorasterTerriaLayer from "../Map/Leaflet/GeorasterTerriaLayer";
+import { TerriaLeafletLayer } from "../Models/Leaflet";
 
 // Unfortunately Cesium does not declare a single interface that represents a primitive,
 // but here is what primitives have in common:
@@ -36,7 +37,7 @@ export interface ImageryParts {
   overrideCreateLeafletLayer?: (
     ip: ImageryProvider,
     clippingRectangle: LatLngBounds | undefined
-  ) => GridLayer | undefined; // TODO: This should be a new interface 'TerriaEnhanced' that has GridLayer and the other extra Terria stuff from ImageryProviderLeafletGridLayer etc.
+  ) => TerriaLeafletLayer | undefined;
 }
 
 // This discriminator only discriminates between ImageryParts and DataSource

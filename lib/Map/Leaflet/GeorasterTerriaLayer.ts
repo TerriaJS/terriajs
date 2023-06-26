@@ -2,21 +2,23 @@ import L from "leaflet";
 import { autorun, computed, IReactionDisposer, observable } from "mobx";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
-import Leaflet from "../../Models/Leaflet";
 import GeoRasterLayer, {
-  GeoRaster,
   GeoRasterLayerOptions
 } from "georaster-layer-for-leaflet";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import { identify } from "geoblaze";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import Proj4Definitions from "../Vector/Proj4Definitions";
+const proj4 = require("proj4").default;
 
 // TODO: Cannot extend GeoRasterLayerOptions why?
 // interface GeoRasterTerriaLayerOptions extends GeoRasterLayerOptions {
 //   imageryProvider: ImageryProvider;
 // }
 
+// We have to ts-ignore here as the type of GeoRasterLayer is expressed in an incompatible way
 //@ts-ignore
+
 export default class GeorasterTerriaLayer extends GeoRasterLayer {
   readonly errorEvent: CesiumEvent = new CesiumEvent();
   readonly initialized: boolean = false;
@@ -31,7 +33,7 @@ export default class GeorasterTerriaLayer extends GeoRasterLayer {
   constructor(
     // private leaflet: Leaflet,
     options: GeoRasterLayerOptions,
-    imageryProvider: ImageryProvider
+    imageryProvider: ImageryProvider | undefined
   ) {
     super(Object.assign(options, { async: true, tileSize: 256 }));
     this.imageryProvider = imageryProvider; // TODO: add to Options instead?
@@ -102,81 +104,120 @@ export default class GeorasterTerriaLayer extends GeoRasterLayer {
     };
   }
 
-  // createTile(tilePoint: L.Coords, done: L.DoneCallback) {
-  //   const canvas = <HTMLCanvasElement>(
-  //     L.DomUtil.create("canvas", "leaflet-tile")
-  //   );
-  //   const size = this.getTileSize();
-  //   canvas.width = size.x;
-  //   canvas.height = size.y;
-
-  //   this.imageryProvider.readyPromise
-  //     .then(() => {
-  //       const n = this.imageryProvider.tilingScheme.getNumberOfXTilesAtLevel(
-  //         tilePoint.z
-  //       );
-  //       return this.imageryProvider.requestImageForCanvas(
-  //         CesiumMath.mod(tilePoint.x, n),
-  //         tilePoint.y,
-  //         tilePoint.z,
-  //         canvas
-  //       );
-  //     })
-  //     .then(function (canvas) {
-  //       done(undefined, canvas);
-  //     });
-  //   return canvas; // Not yet drawn on, but Leaflet requires the tile
-  // }
-
-  /** Currently uses the Cesium Imagery Provider to get the raster values.
-   * TODO: Need to consider the efficiency fo this versus operating on the raster values loaded in GeoRasterLayer...
-   * TODO: Need to weight up keeping most logic in Cesium side for code efficiency, versus duplicating the logic for more data efficiency.
-   *
-   * Another concern is - do we want the real raw raster value, or the display/render value?
-   * This is discussed in https://github.com/GeoTIFF/georaster-layer-for-leaflet/issues/104
-   * */
+  // Transform the feature picking coordinates to the native projection of the Georaster layer.
   getFeaturePickingCoords(
     map: L.Map,
     longitudeRadians: number,
     latitudeRadians: number
   ) {
-    const ll = new Cartographic(
-      CesiumMath.negativePiToPi(longitudeRadians),
-      latitudeRadians,
-      0.0
-    );
+    // get Georaster projection
+    const projection = this.extent.srs;
+    const reprojectFn = this.reprojectToSourceFn(projection);
+
+    // convert long and lat radians to x and y in native projection
+    const lat = (latitudeRadians / Math.PI) * 180;
+    const lon = (longitudeRadians / Math.PI) * 180;
+    const nativeCoords = reprojectFn([lon, lat]);
+
+    // Also include zoom level to fit previous implmentations
     const level = Math.round(map.getZoom());
 
-    return this.imageryProvider.readyPromise.then(() => {
-      const tilingScheme = this.imageryProvider.tilingScheme;
-      const coords = tilingScheme.positionToTileXY(ll, level);
-      return {
-        x: coords.x,
-        y: coords.y,
-        level: level
-      };
-    });
+    return {
+      x: nativeCoords[0],
+      y: nativeCoords[1],
+      level: level
+    };
   }
 
-  pickFeatures(
+  reprojectToSourceFn = (sourceEpsgCode: string) => {
+    const sourceDef =
+      sourceEpsgCode in Proj4Definitions
+        ? new proj4.Proj(Proj4Definitions[sourceEpsgCode])
+        : undefined;
+
+    return proj4("EPSG:4326", sourceDef).forward;
+  };
+
+  /** Use the Geoblaze library to get pixel values by operating on the GeoRaster object.
+   * TODO: Is this giving the display values at that point, or the raw values of the full resolution raster at those coordinates?
+   * This is discussed in https://github.com/GeoTIFF/georaster-layer-for-leaflet/issues/104
+   * Currenlty his function is costly - `geoblaze.identify` takes time and appears to download the highest resolution tile for the area clicked.
+   * This is probably the only way if we want to get the actual raw pixel values at that point.
+   **/
+  async pickFeatures(
     x: number,
     y: number,
     level: number,
     longitudeRadians: number,
     latitudeRadians: number
   ) {
-    // TODO: Is this code ever reached?
-    // TODO: We COULD use the Cesium imaery provider to do the feature picking...
-    // Otherwise if its easy with Georaster layer for leaflet, could do that...
-    debugger;
-    return this.imageryProvider.readyPromise.then(() => {
-      return this.imageryProvider.pickFeatures(
-        x,
-        y,
-        level,
-        longitudeRadians,
-        latitudeRadians
-      );
+    const res = await identify(this.georasters[0], [x, y]); // Must await this one
+
+    // Transform the result in the usual format, this copied from TIFFImageryProvider
+    const featureInfo = new ImageryLayerFeatureInfo();
+    featureInfo.name = `lon:${((longitudeRadians / Math.PI) * 180).toFixed(
+      6
+    )}, lat:${((latitudeRadians / Math.PI) * 180).toFixed(6)}`;
+    const data: {
+      [index: number]: any;
+    } = {};
+    res.forEach((item: any, index: number): void => {
+      data[index] = item;
     });
+    featureInfo.data = data;
+    if (res) {
+      featureInfo.configureDescriptionFromProperties(data);
+    }
+    return [featureInfo];
   }
+
+  /** SUPERSEDED: These functions are alternative that do the feature picking using the TIFFImageryProvider.
+   * This is what the 3D Cesium map uses, but in the case of COG layers we are using a different layer for Leaflet 2D mode.
+   * It is more efficient to directly query the raster data fetched by Georaster Layer for Leaflet, that we are using on the 2D side.
+   * It can also work to query the pixel values using TIFFImageryProvider, but this requires downloading the tiles using that provider, and is inefficient.
+   * These functions have been retained during the testing phase of this new functionality, in case they offer other alternative.
+   */
+
+  //   // will get the coords in the tiling scheme provided by the TIFFImageryProvider
+  //   getFeaturePickingCoords(
+  //     map: L.Map,
+  //     longitudeRadians: number,
+  //     latitudeRadians: number
+  //   ) {
+  //     const ll = new Cartographic(
+  //       CesiumMath.negativePiToPi(longitudeRadians),
+  //       latitudeRadians,
+  //       0.0
+  //     );
+  //     const level = Math.round(map.getZoom());
+
+  //     return this.imageryProvider.readyPromise.then(() => {
+  //       const tilingScheme = this.imageryProvider.tilingScheme;
+  //       const coords = tilingScheme.positionToTileXY(ll, level);
+  //       return {
+  //         x: coords.x,
+  //         y: coords.y,
+  //         level: level
+  //       };
+  //     });
+  //   }
+
+  //   // THIS VERSION USES THE IMAGERY PROVIDER to get the values
+  //   pickFeatures(
+  //     x: number,
+  //     y: number,
+  //     level: number,
+  //     longitudeRadians: number,
+  //     latitudeRadians: number
+  //   ) {
+  //     return this.imageryProvider.readyPromise.then(() => {
+  //       return this.imageryProvider.pickFeatures(
+  //         x,
+  //         y,
+  //         level,
+  //         longitudeRadians,
+  //         latitudeRadians
+  //       );
+  //     });
+  //   }
 }

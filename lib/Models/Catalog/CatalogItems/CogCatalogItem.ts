@@ -11,17 +11,15 @@ import TIFFImageryProvider, {
 import Credit from "terriajs-cesium/Source/Core/Credit";
 import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
 import Reproject from "../../../Map/Vector/Reproject";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+
 import { ImageryProvider } from "terriajs-cesium";
-import { GridLayer, LatLngBounds } from "leaflet";
+import { LatLngBounds } from "leaflet";
 const proj4 = require("proj4").default;
 const parseGeoRaster = require("georaster");
-import GeoRasterLayer, {
-  GeoRaster,
-  GeoRasterLayerOptions
-} from "georaster-layer-for-leaflet";
+import { GeoRaster } from "georaster-layer-for-leaflet";
 import { IPromiseBasedObservable, fromPromise } from "mobx-utils";
 import GeorasterTerriaLayer from "../../../Map/Leaflet/GeorasterTerriaLayer";
+import { mapElevationToRgbaSmoothed } from "../../../Core/colourMappings";
 
 export default class CogCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(CogCatalogItemTraits))
@@ -50,10 +48,6 @@ export default class CogCatalogItem extends MappableMixin(
         show: this.show,
         alpha: this.opacity,
         imageryProvider,
-        // TODO: Properly define the rectangle here, no matter whether leaflet or cesium mode...
-        // clippingRectangle: this.clipToRectangle
-        //   ? this.cesiumRectangle
-        //   : undefined,
         clippingRectangle: imageryProvider.rectangle,
         // Define our method for generating a leaflet layer in a different way, here
         overrideCreateLeafletLayer: this.createGeoRasterLayer
@@ -61,9 +55,8 @@ export default class CogCatalogItem extends MappableMixin(
     ];
   }
 
-  // TODO: Should we move this to a separate file?
   @computed get georasterLayer(): IPromiseBasedObservable<
-    GridLayer | undefined
+    GeorasterTerriaLayer | undefined
   > {
     return fromPromise(
       // parseGeoRaster will request for external .ovr file, most likely will receive a 404 error. This is not a problem.
@@ -76,9 +69,9 @@ export default class CogCatalogItem extends MappableMixin(
                 georaster: georaster,
                 opacity: 0.8,
                 // Example pixel reclassification function:
-                // pixelValuesToColorFn: (values) => {
-                //   return mapElevationToRgbaSmoothed(values, 0);
-                // },
+                pixelValuesToColorFn: (values) => {
+                  return mapElevationToRgbaSmoothed(values, 0);
+                },
                 resolution: 256,
                 debugLevel: 0
               },
@@ -93,8 +86,8 @@ export default class CogCatalogItem extends MappableMixin(
 
   createGeoRasterLayer = (
     ip: ImageryProvider,
-    clippingRectangle: LatLngBounds
-  ): GridLayer | undefined => {
+    clippingRectangle: LatLngBounds | undefined
+  ): GeorasterTerriaLayer | undefined => {
     return this.url && this.georasterLayer.state === "fulfilled"
       ? this.georasterLayer.value
       : undefined;
@@ -130,7 +123,7 @@ export default class CogCatalogItem extends MappableMixin(
       return;
     }
 
-    // TODO: Where should we decalre these?
+    // TODO: Where should we declare these?
     // TODO: Should we make these applicable to both new CogImageryProvider() and new GeorasterLayer()?
     const cogOptions: TIFFImageryProviderOptions = {
       url: proxyCatalogItemUrl(this, this.url),
@@ -151,7 +144,6 @@ export default class CogCatalogItem extends MappableMixin(
 }
 
 export class CogImageryProvider extends TIFFImageryProvider {
-  // implements ImageryProviderWithGridLayerSupport
   // Set values to please poor cesium types
   defaultNightAlpha = undefined;
   defaultDayAlpha = undefined;

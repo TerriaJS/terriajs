@@ -1,5 +1,4 @@
 import i18next from "i18next";
-import { GridLayer, LatLngBounds } from "leaflet";
 import {
   action,
   autorun,
@@ -72,8 +71,12 @@ import GeorasterTerriaLayer from "../Map/Leaflet/GeorasterTerriaLayer";
 const FeatureDetection: FeatureDetection =
   require("terriajs-cesium/Source/Core/FeatureDetection").default;
 
-// This class is an observer. It probably won't contain any observables itself
+export type TerriaLeafletLayer =
+  | GeorasterTerriaLayer
+  | ImageryProviderLeafletGridLayer
+  | ImageryProviderLeafletTileLayer;
 
+// This class is an observer. It probably won't contain any observables itself
 export default class Leaflet extends GlobeOrMap {
   readonly type = "Leaflet";
   readonly terria: Terria;
@@ -114,7 +117,7 @@ export default class Leaflet extends GlobeOrMap {
     ip: ImageryProvider,
     clippingRectangle: Rectangle | undefined,
     overrideCreateLeafletLayerFn: ImageryParts["overrideCreateLeafletLayer"]
-  ) => GridLayer | undefined = computedFn(
+  ) => TerriaLeafletLayer | undefined = computedFn(
     (ip, clippingRectangle, overrideCreateLeafletLayerFn) => {
       const layerOptions = {
         bounds: clippingRectangle && rectangleToLatLngBounds(clippingRectangle)
@@ -472,11 +475,14 @@ export default class Leaflet extends GlobeOrMap {
           layer.setOpacity(parts.alpha);
           layer.setZIndex(zIndex);
           zIndex++;
-
+          // NB: these ts-ignores are because the type of GeoRaster is not well defined. It does implement the requires methods.
+          // @ts-ignore
           if (!this.map.hasLayer(layer)) {
+            // @ts-ignore
             this.map.addLayer(layer);
           }
         } else {
+          // @ts-ignore
           this.map.removeLayer(layer);
         }
       });
