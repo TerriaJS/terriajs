@@ -69,9 +69,9 @@ export default class CogCatalogItem extends MappableMixin(
                 georaster: georaster,
                 opacity: 0.8,
                 // Example pixel reclassification function:
-                pixelValuesToColorFn: (values) => {
-                  return mapElevationToRgbaSmoothed(values, 0);
-                },
+                // pixelValuesToColorFn: (values) => {
+                //   return mapElevationToRgbaSmoothed(values, 0);
+                // },
                 resolution: 256,
                 debugLevel: 0
               },
