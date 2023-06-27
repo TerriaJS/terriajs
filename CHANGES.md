@@ -2,6 +2,8 @@
 
 #### next release (8.3.1)
 
+- **Breaking changes:**
+  - Switched GoogleAnalytics to use Google Analytics 4 properties. Google's Universal properties no longer accept data from 01/07/2023, so migration is necessary anyway.
 - Fix error when adding deeply nested references in search results.
 - Fixed bug where sharelinks created with no visible horizon would default to homeCamera view
 - Improved calculation of 2D view from 3D view when no horizon visible

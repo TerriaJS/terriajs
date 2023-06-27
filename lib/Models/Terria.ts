@@ -126,7 +126,7 @@ import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow
 
 // import overrides from "../Overrides/defaults.jsx";
 
-interface ConfigParameters {
+export interface ConfigParameters {
   /**
    * TerriaJS uses this name whenever it needs to display the name of the application.
    */
@@ -364,7 +364,7 @@ interface StartOptions {
   beforeRestoreAppState?: () => Promise<void> | void;
 }
 
-interface Analytics {
+export interface Analytics {
   start: (
     configParameters: Partial<{
       enableConsoleAnalytics: boolean;
@@ -376,7 +376,7 @@ interface Analytics {
     category: string,
     action: string,
     label?: string,
-    value?: string
+    value?: number
   ) => void;
 }
 
