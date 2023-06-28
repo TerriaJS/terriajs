@@ -67,13 +67,13 @@ export default class CogCatalogItem extends MappableMixin(
             return new GeorasterTerriaLayer(
               {
                 georaster: georaster,
-                opacity: 0.8,
+                opacity: 1,
                 // Example pixel reclassification function:
                 // pixelValuesToColorFn: (values) => {
                 //   return mapElevationToRgbaSmoothed(values, 0);
                 // },
-                resolution: 256,
-                debugLevel: 0
+                resolution: 256
+                // debugLevel: 0
               },
               this.imageryProvider
             );
