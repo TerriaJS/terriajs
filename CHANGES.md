@@ -5,6 +5,7 @@
 - **Breaking changes:**
   - Switched GoogleAnalytics to use Google Analytics 4 properties. Google's Universal properties no longer accept data from 01/07/2023, so migration is necessary anyway.
 - Fix error when adding deeply nested references in search results.
+- Add new option `focusWorkbenchItems` to `initialCamera` setting to focus the camera on workbench items when the app loads.
 - Fixed bug where sharelinks created with no visible horizon would default to homeCamera view
 - Improved calculation of 2D view from 3D view when no horizon visible
 - Improve WMS and WFS error messages when requested layer names or type names are not present in GetCapabilities.
