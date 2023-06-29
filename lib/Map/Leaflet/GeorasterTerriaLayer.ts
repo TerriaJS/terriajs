@@ -1,5 +1,11 @@
 import L from "leaflet";
-import { autorun, computed, IReactionDisposer, observable } from "mobx";
+import {
+  autorun,
+  computed,
+  IReactionDisposer,
+  makeObservable,
+  observable
+} from "mobx";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import GeoRasterLayer, {
@@ -9,6 +15,7 @@ import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import { identify } from "geoblaze";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import Proj4Definitions from "../Vector/Proj4Definitions";
+import Leaflet from "../../Models/Leaflet";
 const proj4 = require("proj4").default;
 
 // TODO: Cannot extend GeoRasterLayerOptions why?
@@ -31,12 +38,14 @@ export default class GeorasterTerriaLayer extends GeoRasterLayer {
   @observable splitPosition: number = 0.5;
 
   constructor(
-    // private leaflet: Leaflet,
+    private leaflet: Leaflet | undefined,
     options: GeoRasterLayerOptions,
     imageryProvider: ImageryProvider | undefined
   ) {
     super(Object.assign(options, { async: true, tileSize: 256 }));
     this.imageryProvider = imageryProvider; // TODO: add to Options instead?
+
+    makeObservable(this);
 
     // Handle splitter rection (and disposing reaction)
     let disposeSplitterReaction: IReactionDisposer | undefined;
@@ -79,7 +88,8 @@ export default class GeorasterTerriaLayer extends GeoRasterLayer {
     let clipPositionWithinMap;
     let clipX;
 
-    if (this.leaflet.size && this.leaflet.nw && this.leaflet.se) {
+    // TODO: Error in here - some undefined stuff
+    if (this.leaflet?.size && this.leaflet.nw && this.leaflet.se) {
       clipPositionWithinMap = this.leaflet.size.x * this.splitPosition;
       clipX = Math.round(this.leaflet.nw.x + clipPositionWithinMap);
       clipLeft =
