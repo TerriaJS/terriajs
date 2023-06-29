@@ -1090,6 +1090,9 @@ export default class Terria {
       // items. So here wait for a valid viewer to become available before
       // attempting to zoom to the mappable item.
       const isViewerAvailable = () => this.currentViewer.type !== NoViewer.type;
+      // Note: In some situations the following use of when() can result in
+      // a hanging promise if a valid viewer never becomes available, 
+      // for eg: when react is not rendered - `currentViewer` will always be `NoViewer`.
       await when(isViewerAvailable);
       await this.currentViewer.zoomTo(firstMappableItem, 0.0);
     }
