@@ -26,7 +26,8 @@
     "preface": {
       "title": "Chukua safari",
       "start": "Anza safari",
-      "close": "Labda baadae"
+      "close": "Labda baadae",
+      "content": "Umeshindwa mahali ya kuanza ? Chukua safari ya haraka ya huduma kuu za programu yetu, na ujifunze kuhusu baadhi ya kazi muhimu kukusaidia kupata njia yako."
     },
     "finish": "Maliza",
     "locationSearchInput": {
@@ -44,6 +45,71 @@
   "location": {
     "location": "Mahali",
     "errorGettingLocation": "Kosa kupata maeneo",
-    "myLocation": "Mahali yangu"
+    "myLocation": "Mahali yangu",
+    "browserCannotProvide": "Kivinjari chako hakiwezi kutoa mahali pako.",
+    "originError": "Kivinjari chako kinaweza kutoa mahali kutumia https. Tafadhali ujaribu {{secureUrl}} badala yake.",
+    "centreMap": "Songeza ramani katika eneo lako la sasa"
+  },
+  "core": {
+    "unverifiedExternalLink": {
+      "denyText": "Katisha"
+    }
+  },
+  "helpPanel": {
+    "takeTour": "Chukua safari"
+  },
+  "sui": {
+    "notifications": {
+      "denyText": "Labda baadae"
+    }
+  },
+  "story": {
+    "next": "Kinachofuata",
+    "deleteStory": "Ondoa",
+    "editor": {
+      "cancelBtn": "Katisha",
+      "cancelEditing": "Katisha"
+    },
+    "delete": "Ondoa",
+    "prev": "Kilichotangulia"
+  },
+  "models": {
+    "userDrawing": {
+      "btnCancel": "Katisha"
+    }
+  },
+  "splitterTool": {
+    "workbench": {
+      "bothTitle": "Onyesha kwa pande zote",
+      "goleftTitle": "Onyesha kwa upande wa kushoto",
+      "goleft": "Kushoto",
+      "both": "Vyote",
+      "gorightTitle": "Onyesha kwa upande wa kulia",
+      "goright": "Kulia"
+    },
+    "toggleSplitterTool": "Wezesha kulinganisha upande kwa upande seti mbili tofauti za data",
+    "title": "Vuruta kushoto au kulia ili kurekebisha maoni"
+  },
+  "feedback": {
+    "cancel": "Katisha"
+  },
+  "welcomeMessage": {
+    "tourBtnText": "Chukua safari"
+  },
+  "addData": {
+    "back": "Rudia"
+  },
+  "concept": {
+    "inactive": {
+      "cancel": "Katisha"
+    }
+  },
+  "deltaTool": {
+    "cancelBtn": "Katisha"
+  },
+  "compare": {
+    "dateLocationFilter": {
+      "cancel": "Katisha"
+    }
   }
 }
