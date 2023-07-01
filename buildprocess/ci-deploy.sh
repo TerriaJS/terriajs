@@ -40,7 +40,7 @@ git commit -a -m 'temporary commit' # so the version doesn't indicate local modi
 git tag -a "TerriaMap-$TERRIAMAP_COMMIT_HASH--TerriaJS-$TERRIAJS_COMMIT_HASH" -m 'temporary tag'
 rm yarn.lock # because TerriaMap's yarn.lock won't reflect terriajs dependencies
 yarn install
-yarn gulp copy-terriajs-assets render-index write-version
+yarn gulp copy-terriajs-assets render-index write-version --baseHref="/${SAFE_BRANCH_NAME}/"
 node buildprocess/bundle.js
 
 pwd
