@@ -27,6 +27,9 @@ jobs:
       - name: Check formatting with prettier
         run: yarn prettier-check
 
+      - name: Build TerriaJS
+        run: yarn build
+
       - name: Build TerriaJS tests
         run: yarn gulp lint release -- --continue
         env:
