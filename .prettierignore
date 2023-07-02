@@ -19,6 +19,7 @@ terriajs.pid
 package-lock.json
 *.swp
 dist
+lib
 .history/
 
 # Catalog index generation files

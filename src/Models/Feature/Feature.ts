@@ -80,7 +80,10 @@ export default class TerriaFeature extends Entity {
 function addCustomFeatureProperties(entity: Entity) {
   for (let i = 0; i < customProperties.length; i++) {
     const propertyName = customProperties[i];
-    if (entity.propertyNames.indexOf(propertyName) === -1 && !(propertyName in entity)) {
+    if (
+      entity.propertyNames.indexOf(propertyName) === -1 &&
+      !(propertyName in entity)
+    ) {
       entity.addProperty(customProperties[i]);
     }
   }
