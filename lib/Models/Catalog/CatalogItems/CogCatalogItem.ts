@@ -63,7 +63,6 @@ export default class CogCatalogItem extends MappableMixin(
       isDefined(this.imageryProvider) &&
         parseGeoRaster(this.url)
           .then((georaster: GeoRaster) => {
-            // TODO: We have extended GeoRasterLayer
             return new GeorasterTerriaLayer(
               this.terria.leaflet,
               {

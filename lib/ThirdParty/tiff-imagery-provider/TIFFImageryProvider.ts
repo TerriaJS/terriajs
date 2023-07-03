@@ -333,6 +333,7 @@ export class TIFFImageryProvider {
       );
       this.bands = bands;
 
+      // TODO: Fix the reprojection here
       // Get the spatial range
       const bbox = image.getBoundingBox();
       const [west, south, east, north] = bbox;
@@ -513,20 +514,6 @@ export class TIFFImageryProvider {
     }
   }
 
-  // /** We need both a `requestImage` method and a `requestImageForCanvas` method.
-  //  * Refactor so that `requestImage` calls `requestImageforCanvas` and passes the created canvas.
-  //  * In `requestImageForCanvas` we use the canvas provided by leaflet.
-  //  * TODO: `requestImageForCanvas` could be moved outside to the COGImageryProbvider class,
-  //  * but is difficult because it needs access to private properties **/
-
-  // async requestImage(x: number, y: number, level: number) {
-  //   const canvas = document.createElement("canvas");
-  //   canvas.width = this.tileWidth;
-  //   canvas.height = this.tileHeight;
-  //   return await this.requestImageForCanvas(x, y, level, canvas);
-  // }
-
-  // MODIFIED FROM SOURCE by Terria: Accept a provided canvas instead of that created in constructor.
   async requestImage(
     x: number,
     y: number,

@@ -52,3 +52,22 @@ export function mapElevationToRgbaSmoothed(
     return "";
   }
 }
+
+export function rgbFromSeparateBands(red: number, green: number, blue: number) {
+  // Trying to map values from Int16 to 0-255...
+  // const max = Math.pow(2, 14);
+  const max = Math.pow(2, 14) / 16; // TODO: Had to divie by 16 to make it look right...  Why?
+  red = Math.round((255 * red) / max);
+  green = Math.round((255 * green) / max);
+  blue = Math.round((255 * blue) / max);
+
+  // make sure no values exceed 255
+  red = Math.min(red, 255);
+  green = Math.min(green, 255);
+  blue = Math.min(blue, 255);
+
+  // treat all black as no data
+  if (red === 0 && green === 0 && blue === 0) return null;
+
+  return `rgb(${red}, ${green}, ${blue})`;
+}
