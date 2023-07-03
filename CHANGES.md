@@ -1,10 +1,32 @@
 # Change Log
 
-#### next release (8.2.29)
+#### next release (8.3.2)
+
+- [The next improvement]
+
+#### 8.3.1 - 2023-06-29
+
+- **Breaking changes:**
+  - Switched GoogleAnalytics to use Google Analytics 4 properties. Google's Universal properties no longer accept data from 01/07/2023, so migration is necessary anyway.
+- Fix error when adding deeply nested references in search results.
+- Add new option `focusWorkbenchItems` to `initialCamera` setting to focus the camera on workbench items when the app loads.
+- Fixed bug where sharelinks created with no visible horizon would default to homeCamera view
+- Improved calculation of 2D view from 3D view when no horizon visible
+- Improve WMS and WFS error messages when requested layer names or type names are not present in GetCapabilities.
+
+#### 8.3.0 - 2023-05-22
+
+- **Breaking changes:**
+
+  - **Upgraded Mobx to version 6.7.x**
+  - **Upgraded Typescript to version 4.9.x**
+  - See https://github.com/TerriaJS/terriajs/discussions/6787 for how to upgrade your map
+
+#### 8.2.29 - 2023-05-18
 
 - Fix app crash when rendering feature info with a custom title.
+- Added new `CkanCatalogGroup` traits `resourceIdTemplate` and `restrictResourceIdTemplateToOrgsWithNames` to generate custom resource IDs for CKAN resources with unstable IDs.
 - Fix `acessType` resolution for `MagdaReference` so that it uses the default terria resolution strategy when `magdaRecord` is not defined.
-- [The next improvement]
 
 #### 8.2.28 - 2023-04-28
 

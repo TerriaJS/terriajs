@@ -2,9 +2,10 @@ import i18next from "i18next";
 import {
   action,
   computed,
-  isObservableArray,
   observable,
-  runInAction
+  runInAction,
+  makeObservable,
+  override
 } from "mobx";
 import { createTransformer, ITransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
@@ -14,7 +15,7 @@ import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
@@ -50,16 +51,16 @@ import TableStyle from "../Table/TableStyle";
 import TableTraits from "../Traits/TraitsClasses/Table/TableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import { calculateDomain, ChartAxis, ChartItem } from "./ChartableMixin";
-import DiscretelyTimeVaryingMixin, {
-  DiscreteTimeAsJS
-} from "./DiscretelyTimeVaryingMixin";
+import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
 import ExportableMixin, { ExportData } from "./ExportableMixin";
-import { ImageryParts } from "./MappableMixin";
+import MappableMixin, { ImageryParts } from "./MappableMixin";
 
-function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
+type BaseType = Model<TableTraits>;
+
+function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class TableMixin
     extends ExportableMixin(
-      DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base))
+      DiscretelyTimeVaryingMixin(MappableMixin(CatalogMemberMixin(Base)))
     )
     implements SelectableDimensions, ViewingControls, FeatureInfoContext
   {
@@ -71,6 +72,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     constructor(...args: any[]) {
       super(...args);
+
+      makeObservable(this);
 
       // Create default TableStyle and set TableAutomaticLegendStratum
       this.defaultTableStyle = new TableStyle(this);
@@ -235,7 +238,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       });
     }
 
-    @computed
+    @override
+    get name() {
+      return super.name;
+    }
+
+    @override
     get disableZoomTo() {
       // Disable zoom if only showing imagery parts  (eg region mapping) and no rectangle is defined
       if (
@@ -425,7 +433,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       );
     }
 
-    @computed
+    @override
     get chartItems() {
       // Wait for activeTableStyle to be ready
       if (!this.activeTableStyle.ready || this.isLoadingMapItems) return [];
@@ -439,7 +447,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       ]);
     }
 
-    @computed get viewingControls(): ViewingControl[] {
+    @override
+    get viewingControls(): ViewingControl[] {
       return filterOutUndefined([
         ...super.viewingControls,
         {
@@ -460,7 +469,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return tableFeatureInfoContext(this);
     }
 
-    @computed
+    @override
     get selectableDimensions(): SelectableDimension[] {
       return filterOutUndefined([
         this.timeDisableDimension,

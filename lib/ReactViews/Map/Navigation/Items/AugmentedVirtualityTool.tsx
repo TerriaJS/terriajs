@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -24,11 +24,32 @@ interface IProps extends IAugmentedVirtuality {
 
 export const AR_TOOL_ID = "AR_TOOL";
 
+async function requestDeviceMotionPermission(): Promise<"granted" | "denied"> {
+  const requestPermission: () => Promise<"granted" | "denied"> =
+    window.DeviceMotionEvent &&
+    typeof (DeviceMotionEvent as any).requestPermission === "function"
+      ? (DeviceMotionEvent as any).requestPermission
+      : () => Promise.resolve("granted");
+  return requestPermission();
+}
+
+async function requestDeviceOrientationPermission(): Promise<
+  "granted" | "denied"
+> {
+  const requestPermission: () => Promise<"granted" | "denied"> =
+    window.DeviceOrientationEvent &&
+    typeof (DeviceOrientationEvent as any).requestPermission === "function"
+      ? (DeviceOrientationEvent as any).requestPermission
+      : () => Promise.resolve("granted");
+  return requestPermission();
+}
+
 export class AugmentedVirtualityController extends MapNavigationItemController {
   @observable experimentalWarningShown = false;
 
   constructor(private props: IProps) {
     super();
+    makeObservable(this);
   }
 
   @computed
@@ -51,32 +72,22 @@ export class AugmentedVirtualityController extends MapNavigationItemController {
     // feature detect for new ios 13
     // it seems you don't need to ask for both, but who knows, ios 14 / something
     // could change again
-    if (
-      window.DeviceMotionEvent &&
-      // exists on window by now?
-      typeof DeviceMotionEvent.requestPermission === "function"
-    ) {
-      DeviceMotionEvent.requestPermission()
-        .then((permissionState) => {
-          if (permissionState !== "granted") {
-            console.error("couldn't get access for motion events");
-          }
-        })
-        .catch(console.error);
-    }
-    if (
-      window.DeviceOrientationEvent &&
-      // exists on window by now?
-      typeof DeviceOrientationEvent.requestPermission === "function"
-    ) {
-      DeviceOrientationEvent.requestPermission()
-        .then((permissionState) => {
-          if (permissionState !== "granted") {
-            console.error("couldn't get access for orientation events");
-          }
-        })
-        .catch(console.error);
-    }
+    requestDeviceMotionPermission()
+      .then((permissionState) => {
+        if (permissionState !== "granted") {
+          console.error("couldn't get access for motion events");
+        }
+      })
+      .catch(console.error);
+
+    requestDeviceOrientationPermission()
+      .then((permissionState) => {
+        if (permissionState !== "granted") {
+          console.error("couldn't get access for orientation events");
+        }
+      })
+      .catch(console.error);
+
     const { experimentalWarning = true } = this.props;
 
     if (experimentalWarning !== false && !this.experimentalWarningShown) {
@@ -103,6 +114,7 @@ export class AugmentedVirtualityRealignController extends MapNavigationItemContr
 
   constructor(private props: IProps) {
     super();
+    makeObservable(this);
     this.augmentedVirtuality = props.augmentedVirtuality;
   }
 
@@ -191,6 +203,7 @@ export const AugmentedVirtualityRealign: React.FC<{
 export class AugmentedVirtualityHoverController extends MapNavigationItemController {
   constructor(private props: IAugmentedVirtuality) {
     super();
+    makeObservable(this);
   }
 
   get glyph(): { id: string } {

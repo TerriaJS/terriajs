@@ -1,4 +1,10 @@
-import { action, computed, observable, runInAction } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  runInAction,
+  makeObservable
+} from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -69,6 +75,10 @@ export default abstract class GlobeOrMap {
     flightDurationSeconds: number
   ): Promise<void>;
 
+  constructor() {
+    makeObservable(this);
+  }
+
   /**
    * Zoom map to a dataset or the given bounds.
    *
@@ -115,7 +125,6 @@ export default abstract class GlobeOrMap {
   /**
    * List of the attributions (credits) for data currently displayed on map.
    */
-  @computed
   get attributions(): string[] {
     return [];
   }
