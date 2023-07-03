@@ -1,12 +1,6 @@
 import L from "leaflet";
-import { computed } from "mobx";
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import CommonStrata from "../../lib/Models/Definition/CommonStrata";
-import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import Leaflet from "../../lib/Models/Leaflet";
 import Terria from "../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
-import { RectangleTraits } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 
 describe("Leaflet Model", function () {
@@ -22,12 +16,11 @@ describe("Leaflet Model", function () {
     terria = new Terria({
       baseUrl: "./"
     });
-    terriaViewer = new TerriaViewer(
-      terria,
-      computed(() => [])
-    );
+    terriaViewer = terria.mainViewer;
     container = document.createElement("div");
     container.id = "container";
+    container.style.width = "1410px";
+    container.style.height = "670px";
     document.body.appendChild(container);
 
     terriaProgressEvt = spyOn(terria.tileLoadProgressEvent, "raiseEvent");
@@ -46,10 +39,7 @@ describe("Leaflet Model", function () {
   });
 
   afterEach(function () {
-    // TODO: calling destroy on our mobx leaflet model results in a tile error
-    try {
-      leaflet.destroy();
-    } catch {}
+    leaflet.destroy();
     document.body.removeChild(container);
   });
 
@@ -75,17 +65,18 @@ describe("Leaflet Model", function () {
 
   it("should trigger a tileLoadProgressEvent with the total number of tiles to be loaded for all layers", function () {
     initLeaflet();
+    const el = document.createElement("img");
     layers[0]._tiles = {
-      1: { loaded: undefined },
-      2: { loaded: undefined },
-      a: { loaded: +new Date() }, // This is how Leaflet marks loaded tiles
-      b: { loaded: undefined }
+      1: { loaded: undefined, el },
+      2: { loaded: undefined, el },
+      a: { loaded: +new Date(), el }, // This is how Leaflet marks loaded tiles
+      b: { loaded: undefined, el }
     };
     layers[1]._tiles = {
-      3: { loaded: +new Date() },
-      4: { loaded: undefined },
-      c: { loaded: +new Date() },
-      d: { loaded: undefined }
+      3: { loaded: +new Date(), el },
+      4: { loaded: undefined, el },
+      c: { loaded: +new Date(), el },
+      d: { loaded: undefined, el }
     };
 
     layers[1].fire("tileload");
@@ -123,35 +114,13 @@ describe("Leaflet Model", function () {
     function changeTileLoadingCount(count: number) {
       var tiles: any = {};
       // Add loading tiles
+      const el = document.createElement("img");
       for (var i = 0; i < count; i++) {
-        tiles["tile " + i] = { loaded: undefined };
+        tiles["tile " + i] = { loaded: undefined, el };
       }
       layers[0]._tiles = tiles;
       layers[1]._tiles = {};
       layers[0].fire("tileload");
     }
-  });
-
-  describe("zoomTo", function () {
-    describe("if the target is a TimeVarying item", function () {
-      it("sets the target item as the timeline source", async function () {
-        const targetItem = new WebMapServiceCatalogItem("test", terria);
-        targetItem.setTrait(
-          CommonStrata.user,
-          "rectangle",
-          createStratumInstance(RectangleTraits, {
-            east: 0,
-            west: 0,
-            north: 0,
-            south: 0
-          })
-        );
-        spyOn(terria.timelineStack, "promoteToTop");
-        await leaflet.zoomTo(targetItem, 0);
-        expect(terria.timelineStack.promoteToTop).toHaveBeenCalledWith(
-          targetItem
-        );
-      });
-    });
   });
 });

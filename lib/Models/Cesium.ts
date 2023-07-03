@@ -64,6 +64,7 @@ import TerriaError from "../Core/TerriaError";
 import waitForDataSourceToLoad from "../Core/waitForDataSourceToLoad";
 import CesiumRenderLoopPauser from "../Map/Cesium/CesiumRenderLoopPauser";
 import CesiumSelectionIndicator from "../Map/Cesium/CesiumSelectionIndicator";
+import Zooming from "../Map/Cesium/Zooming";
 import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
 import PickedFeatures, {
@@ -127,6 +128,9 @@ export default class Cesium extends GlobeOrMap {
     | /*TODO Cesium.Cesium3DTileset*/ any;
 
   private cesiumDataAttributions: IObservableArray<string> = observable([]);
+
+  // Zoom behaviour implementation
+  private zooming: Zooming;
 
   // When true, feature picking is paused. This is useful for temporarily
   // disabling feature picking when some other interaction mode wants to take
@@ -220,6 +224,8 @@ export default class Cesium extends GlobeOrMap {
     ) => {
       this.dataSourceDisplay.update(clock.currentTime);
     }));
+
+    this.zooming = new Zooming(this);
 
     // Progress
     this._eventHelper.add(this.scene.globe.tileLoadProgressEvent, <any>(
@@ -833,124 +839,7 @@ export default class Cesium extends GlobeOrMap {
   }
 
   doZoomTo(target: any, flightDurationSeconds = 3.0): Promise<void> {
-    this._lastZoomTarget = target;
-
-    const _zoom: () => Promise<void> = async () => {
-      const camera = this.scene.camera;
-
-      if (target instanceof Rectangle) {
-        // target is a Rectangle
-
-        // Work out the destination that the camera would naturally fly to
-        const destinationCartesian =
-          camera.getRectangleCameraCoordinates(target);
-        const destination =
-          Ellipsoid.WGS84.cartesianToCartographic(destinationCartesian);
-        const terrainProvider = this.scene.globe.terrainProvider;
-        // A sufficiently coarse tile level that still has approximately accurate height
-        const level = 6;
-        const center = Rectangle.center(target);
-
-        // Perform an elevation query at the centre of the rectangle
-        let terrainSample: Cartographic;
-        try {
-          [terrainSample] = await sampleTerrain(terrainProvider, level, [
-            center
-          ]);
-        } catch {
-          // if the request fails just use center with height=0
-          terrainSample = center;
-        }
-
-        if (this._lastZoomTarget !== target) {
-          return;
-        }
-
-        const finalDestinationCartographic = new Cartographic(
-          destination.longitude,
-          destination.latitude,
-          destination.height + terrainSample.height
-        );
-
-        const finalDestination = Ellipsoid.WGS84.cartographicToCartesian(
-          finalDestinationCartographic
-        );
-
-        return flyToPromise(camera, {
-          duration: flightDurationSeconds,
-          destination: finalDestination
-        });
-      } else if (defined(target.entities)) {
-        // target is some DataSource
-        return waitForDataSourceToLoad(target).then(() => {
-          if (this._lastZoomTarget === target) {
-            return zoomToDataSource(this, target, flightDurationSeconds);
-          }
-        });
-      } else if (
-        // check for readyPromise first because cesium raises an exception when
-        // accessing `.boundingSphere` before ready
-        defined(target.readyPromise) ||
-        defined(target.boundingSphere)
-      ) {
-        // target is some object like a Model with boundingSphere and possibly a readyPromise
-        return Promise.resolve(target.readyPromise).then(() => {
-          if (this._lastZoomTarget === target) {
-            return flyToBoundingSpherePromise(camera, target.boundingSphere, {
-              offset: new HeadingPitchRange(
-                0,
-                -0.5,
-                // To avoid getting too close to models less than 100m radius, let
-                // cesium calculate an appropriate zoom distance. For the rest
-                // use the radius as the zoom distance because the offset
-                // distance cesium calculates for large models is often too far away.
-                target.boundingSphere.radius < 100
-                  ? undefined
-                  : target.boundingSphere.radius
-              ),
-              duration: flightDurationSeconds
-            });
-          }
-        });
-      } else if (target.position instanceof Cartesian3) {
-        // target is a CameraView or an Entity
-        return flyToPromise(camera, {
-          duration: flightDurationSeconds,
-          destination: target.position,
-          orientation: {
-            direction: target.direction,
-            up: target.up
-          }
-        });
-      } else if (MappableMixin.isMixedInto(target)) {
-        // target is a Mappable
-        if (isDefined(target.cesiumRectangle)) {
-          return flyToPromise(camera, {
-            duration: flightDurationSeconds,
-            destination: target.cesiumRectangle
-          });
-        } else if (target.mapItems.length > 0) {
-          // Zoom to the first item!
-          return this.doZoomTo(target.mapItems[0], flightDurationSeconds);
-        } else {
-          return Promise.resolve();
-        }
-      } else if (defined(target.rectangle)) {
-        // target has a rectangle
-        return flyToPromise(camera, {
-          duration: flightDurationSeconds,
-          destination: target.rectangle
-        });
-      } else {
-        return Promise.resolve();
-      }
-    };
-
-    // we call notifyRepaintRequired before and after the zoom
-    // to wake the cesium render loop which might pause itself after
-    // some idle time
-    this.notifyRepaintRequired();
-    return _zoom().finally(() => this.notifyRepaintRequired());
+    return this.zooming.zoomTo(target, flightDurationSeconds);
   }
 
   notifyRepaintRequired() {
@@ -1763,7 +1652,6 @@ function zoomToDataSource(
             boundingSphereScratch
           );
         } catch (e) {}
-
         if (state === BoundingSphereState.PENDING) {
           return false;
         } else if (state !== BoundingSphereState.FAILED) {

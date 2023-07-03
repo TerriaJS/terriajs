@@ -8,6 +8,7 @@ import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import Result from "../Core/Result";
+import CameraView from "../Models/CameraView";
 import Model from "../Models/Definition/Model";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
@@ -38,6 +39,10 @@ export namespace ImageryParts {
   export function is(object: MapItem): object is ImageryParts {
     return "imageryProvider" in object;
   }
+}
+
+export function isImageryParts(object: MapItem): object is ImageryParts {
+  return ImageryParts.is(object);
 }
 
 export function isPrimitive(mapItem: MapItem): mapItem is AbstractPrimitive {
@@ -84,6 +89,23 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
         );
       }
       return undefined;
+    }
+
+    @computed
+    get idealZoomCameraView(): CameraView | undefined {
+      const { lookAt, camera } = this.traits.idealZoom.toJson(this.idealZoom);
+      // We need to parse `lookAt` and `camera` independently because `toJson`
+      // returns partial `lookAt` with default values even when it was not
+      // defined. If we then pass the partial `lookAt` definition to `fromJson`
+      // below it will throw an error without trying to parse the rest of the
+      // definition. In that case we need to also try and parse `camera`
+      // separately.
+      try {
+        return CameraView.fromJson({ lookAt });
+      } catch (err) {}
+      try {
+        return CameraView.fromJson(camera);
+      } catch (err) {}
     }
 
     get shouldShowInitialMessage(): boolean {

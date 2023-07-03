@@ -82,7 +82,7 @@ function GltfMixin<T extends Constructor<GltfModel>>(Base: T) {
     }
 
     @computed
-    private get cesiumHeightReference() {
+    get cesiumHeightReference() {
       const heightReference: HeightReference =
         // @ts-ignore
         HeightReference[this.heightReference] || HeightReference.NONE;

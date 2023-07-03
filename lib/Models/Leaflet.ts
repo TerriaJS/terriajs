@@ -40,12 +40,14 @@ import LeafletDataSourceDisplay from "../Map/Leaflet/LeafletDataSourceDisplay";
 import LeafletScene from "../Map/Leaflet/LeafletScene";
 import LeafletSelectionIndicator from "../Map/Leaflet/LeafletSelectionIndicator";
 import LeafletVisualizer from "../Map/Leaflet/LeafletVisualizer";
+import Zooming from "../Map/Leaflet/Zooming";
 import L from "../Map/LeafletPatched";
 import PickedFeatures, {
   ProviderCoords,
   ProviderCoordsMap
 } from "../Map/PickedFeatures/PickedFeatures";
 import rectangleToLatLngBounds from "../Map/Vector/rectangleToLatLngBounds";
+import { ZoomTarget } from "../Map/ZoomTarget";
 import FeatureInfoUrlTemplateMixin from "../ModelMixins/FeatureInfoUrlTemplateMixin";
 import MappableMixin, {
   ImageryParts,
@@ -80,6 +82,10 @@ export default class Leaflet extends GlobeOrMap {
   readonly dataSources: DataSourceCollection = new DataSourceCollection();
   readonly dataSourceDisplay: LeafletDataSourceDisplay;
   readonly canShowSplitter = true;
+
+  // Zoom behaviour implementation
+  private readonly zooming: Zooming;
+
   private readonly _attributionControl: LeafletAttribution;
   private readonly _leafletVisualizer: LeafletVisualizer;
   private readonly _eventHelper: EventHelper;
@@ -175,6 +181,8 @@ export default class Leaflet extends GlobeOrMap {
       dataSourceCollection: this.dataSources,
       visualizersCallback: <any>this._leafletVisualizer.visualizersCallback // TODO: fix type error
     });
+
+    this.zooming = new Zooming(this);
 
     this._eventHelper = new EventHelper();
 
@@ -329,6 +337,7 @@ export default class Leaflet extends GlobeOrMap {
     }
   }
 
+  @action
   destroy() {
     this._disposeSelectedFeatureSubscription &&
       this._disposeSelectedFeatureSubscription();
@@ -497,56 +506,11 @@ export default class Leaflet extends GlobeOrMap {
     );
   }
 
-  doZoomTo(
-    target: CameraView | Rectangle | DataSource | MappableMixin.Instance | any,
+  async doZoomTo(
+    target: ZoomTarget,
     flightDurationSeconds: number = 3.0
   ): Promise<void> {
-    if (!isDefined(target)) {
-      return Promise.resolve();
-      //throw new DeveloperError("target is required.");
-    }
-    let bounds;
-
-    // Target is a KML data source
-    if (isDefined(target.entities)) {
-      if (isDefined(this.dataSourceDisplay)) {
-        bounds = this.dataSourceDisplay.getLatLngBounds(target);
-      }
-    } else {
-      let extent;
-
-      if (target instanceof Rectangle) {
-        extent = target;
-      } else if (target instanceof CameraView) {
-        extent = target.rectangle;
-      } else if (MappableMixin.isMixedInto(target)) {
-        if (isDefined(target.cesiumRectangle)) {
-          extent = target.cesiumRectangle;
-        }
-        if (!isDefined(extent)) {
-          // Zoom to the first item!
-          return this.doZoomTo(target.mapItems[0], flightDurationSeconds);
-        }
-      } else {
-        extent = target.rectangle;
-      }
-
-      // Account for a bounding box crossing the date line.
-      if (extent.east < extent.west) {
-        extent = Rectangle.clone(extent);
-        extent.east += CesiumMath.TWO_PI;
-      }
-      bounds = rectangleToLatLngBounds(extent);
-    }
-
-    if (isDefined(bounds)) {
-      this.map.flyToBounds(bounds, {
-        animate: flightDurationSeconds > 0.0,
-        duration: flightDurationSeconds
-      });
-    }
-
-    return Promise.resolve();
+    return this.zooming.zoomTo(target, flightDurationSeconds);
   }
 
   getCurrentCameraView(): CameraView {
