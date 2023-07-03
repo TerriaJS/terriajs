@@ -1,16 +1,17 @@
-"use strict";
+import defined from "terriajs-cesium/Source/Core/defined";
 
-var defined = require("terriajs-cesium/Source/Core/defined").default;
+// TODO: figure out how to correctly type this
+type CustomMatcherFactories = any;
 
-function equals(util, customEqualityTesters, a, b) {
+function equals(util: any, customEqualityTesters: any, a: any, b: any) {
   return util.equals(a, b, customEqualityTesters);
 }
 
-module.exports = {
-  toEqualEpsilon: function (util, customEqualityTesters) {
+const CustomMatchers: CustomMatcherFactories = {
+  toEqualEpsilon: function (util: any, customEqualityTesters: any) {
     return {
-      compare: function (actual, expected, epsilon) {
-        function equalityTester(a, b) {
+      compare: function (actual: any, expected: any, epsilon: any) {
+        function equalityTester(a: any, b: any) {
           var to_run;
           if (defined(a)) {
             if (typeof a.equalsEpsilon === "function") {
@@ -50,3 +51,5 @@ module.exports = {
     };
   }
 };
+
+export default CustomMatchers;

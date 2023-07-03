@@ -1,0 +1,26 @@
+{
+  "name": "Trees",
+  "type": "geojson",
+  "url": "example.org/trees.json",
+  "czmlTemplate": {
+    "billboard": {
+      "disableDepthTestDistance": 0,
+      "height": {
+        "reference": "#properties.max_height"
+      },
+      "heightReference": "CLAMP_TO_GROUND",
+      "horizontalOrigin": "CENTER",
+      "image": "/api/v0/data/f4e3307a-e805-49ad-8036-ce3be7890b36/tree.png",
+      "scale": 1,
+      "scaleByDistance": {
+        "nearFarScalar": [0, 1, 10000, 0.0001]
+      },
+      "show": true,
+      "sizeInMeters": true,
+      "verticalOrigin": "BOTTOM",
+      "width": {
+        "reference": "#properties.diameter"
+      }
+    }
+  }
+}

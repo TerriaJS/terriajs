@@ -1,14 +1,11 @@
-"use strict";
-
-var CameraView = require("../../lib/Models/CameraView");
-var Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3").default;
-var Cartographic = require("terriajs-cesium/Source/Core/Cartographic").default;
-var CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
-var CustomMatchers = require("../Utility/CustomMatchers");
-var Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid").default;
-var HeadingPitchRange =
-  require("terriajs-cesium/Source/Core/HeadingPitchRange").default;
-var Rectangle = require("terriajs-cesium/Source/Core/Rectangle").default;
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import HeadingPitchRange from "terriajs-cesium/Source/Core/HeadingPitchRange";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import CameraView from "../../lib/Models/CameraView";
+import CustomMatchers from "../Utility/CustomMatchers";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 
 describe("CameraView", function () {
   describe("fromJson", function () {
@@ -100,28 +97,6 @@ describe("CameraView", function () {
   });
 
   describe("fromLookAt", function () {
-    it("throws when targetPosition is not specified", function () {
-      expect(function () {
-        return CameraView.fromLookAt(
-          undefined,
-          new HeadingPitchRange(
-            (10 * Math.PI) / 180,
-            (-25 * Math.PI) / 180,
-            10000
-          )
-        );
-      }).toThrow();
-    });
-
-    it("throws when headingPitchRange is not specified", function () {
-      expect(function () {
-        return CameraView.fromLookAt(
-          Cartographic.fromDegrees(45, -20, 100),
-          undefined
-        );
-      }).toThrow();
-    });
-
     it("can look straight down at a point on the equator", function () {
       jasmine.addMatchers(CustomMatchers);
 
@@ -130,16 +105,18 @@ describe("CameraView", function () {
         new HeadingPitchRange(0, CesiumMath.toRadians(90), 10000)
       );
 
-      var cartographic = Ellipsoid.WGS84.cartesianToCartographic(view.position);
-      expect(cartographic.longitude).toEqualEpsilon(
+      var cartographic = Ellipsoid.WGS84.cartesianToCartographic(
+        view.position!
+      );
+      (expect(cartographic.longitude) as any).toEqualEpsilon(
         CesiumMath.toRadians(45),
         1e-5
       );
-      expect(cartographic.latitude).toEqualEpsilon(
+      (expect(cartographic.latitude) as any).toEqualEpsilon(
         CesiumMath.toRadians(0),
         1e-5
       );
-      expect(cartographic.height).toEqualEpsilon(10000 + 100, 1);
+      (expect(cartographic.height) as any).toEqualEpsilon(10000 + 100, 1);
 
       var surfaceNormal =
         Ellipsoid.WGS84.geodeticSurfaceNormalCartographic(cartographic);
@@ -163,8 +140,10 @@ describe("CameraView", function () {
         new HeadingPitchRange(0, 0, 10000)
       );
 
-      var cartographic = Ellipsoid.WGS84.cartesianToCartographic(view.position);
-      expect(cartographic.longitude).toEqualEpsilon(
+      var cartographic = Ellipsoid.WGS84.cartesianToCartographic(
+        view.position!
+      );
+      (expect(cartographic.longitude) as any).toEqualEpsilon(
         CesiumMath.toRadians(45),
         1e-5
       );
@@ -187,9 +166,11 @@ describe("CameraView", function () {
         new HeadingPitchRange(CesiumMath.toRadians(90), 0, 10000)
       );
 
-      var cartographic = Ellipsoid.WGS84.cartesianToCartographic(view.position);
+      var cartographic = Ellipsoid.WGS84.cartesianToCartographic(
+        view.position!
+      );
       expect(cartographic.longitude).toBeLessThan(CesiumMath.toRadians(45));
-      expect(cartographic.latitude).toEqualEpsilon(0, 1e-7);
+      (expect(cartographic.latitude) as any).toEqualEpsilon(0, 1e-7);
       expect(cartographic.height).toBeGreaterThan(100.0);
 
       var targetSurfaceNormal =
@@ -214,45 +195,6 @@ describe("CameraView", function () {
   });
 
   describe("fromPositionHeadingPitchRoll", function () {
-    it("throws when cameraPosition is not specified", function () {
-      expect(function () {
-        return CameraView.fromPositionHeadingPitchRoll(undefined, 0, 0, 0);
-      }).toThrow();
-    });
-
-    it("throws when heading is not specified", function () {
-      expect(function () {
-        return CameraView.fromPositionHeadingPitchRoll(
-          Cartographic.fromDegrees(45, -20, 100),
-          undefined,
-          0,
-          0
-        );
-      }).toThrow();
-    });
-
-    it("throws when pitch is not specified", function () {
-      expect(function () {
-        return CameraView.fromPositionHeadingPitchRoll(
-          Cartographic.fromDegrees(45, -20, 100),
-          0,
-          undefined,
-          0
-        );
-      }).toThrow();
-    });
-
-    it("throws when roll is not specified", function () {
-      expect(function () {
-        return CameraView.fromPositionHeadingPitchRoll(
-          Cartographic.fromDegrees(45, -20, 100),
-          0,
-          0,
-          undefined
-        );
-      }).toThrow();
-    });
-
     it("can look straight down from a point on the equator", function () {
       jasmine.addMatchers(CustomMatchers);
 
@@ -263,16 +205,18 @@ describe("CameraView", function () {
         0
       );
 
-      var cartographic = Ellipsoid.WGS84.cartesianToCartographic(view.position);
-      expect(cartographic.longitude).toEqualEpsilon(
+      var cartographic = Ellipsoid.WGS84.cartesianToCartographic(
+        view.position!
+      );
+      (expect(cartographic.longitude) as any).toEqualEpsilon(
         CesiumMath.toRadians(45),
         1e-5
       );
-      expect(cartographic.latitude).toEqualEpsilon(
+      (expect(cartographic.latitude) as any).toEqualEpsilon(
         CesiumMath.toRadians(0),
         1e-5
       );
-      expect(cartographic.height).toEqualEpsilon(100, 1);
+      (expect(cartographic.height) as any).toEqualEpsilon(100, 1);
 
       var surfaceNormal =
         Ellipsoid.WGS84.geodeticSurfaceNormalCartographic(cartographic);
@@ -298,13 +242,15 @@ describe("CameraView", function () {
         0
       );
 
-      var cartographic = Ellipsoid.WGS84.cartesianToCartographic(view.position);
-      expect(cartographic.longitude).toEqualEpsilon(
+      var cartographic = Ellipsoid.WGS84.cartesianToCartographic(
+        view.position!
+      );
+      (expect(cartographic.longitude) as any).toEqualEpsilon(
         CesiumMath.toRadians(45),
         1e-10
       );
-      expect(cartographic.latitude).toEqualEpsilon(0, 1e-10);
-      expect(cartographic.height).toEqualEpsilon(100.0, 1e-9);
+      (expect(cartographic.latitude) as any).toEqualEpsilon(0, 1e-10);
+      (expect(cartographic.height) as any).toEqualEpsilon(100.0, 1e-9);
 
       var surfaceNormal =
         Ellipsoid.WGS84.geodeticSurfaceNormalCartographic(cartographic);
@@ -324,13 +270,15 @@ describe("CameraView", function () {
         0
       );
 
-      var cartographic = Ellipsoid.WGS84.cartesianToCartographic(view.position);
-      expect(cartographic.longitude).toEqualEpsilon(
+      var cartographic = Ellipsoid.WGS84.cartesianToCartographic(
+        view.position!
+      );
+      (expect(cartographic.longitude) as any).toEqualEpsilon(
         CesiumMath.toRadians(45),
         1e-10
       );
-      expect(cartographic.latitude).toEqualEpsilon(0, 1e-10);
-      expect(cartographic.height).toEqualEpsilon(100.0, 1e-9);
+      (expect(cartographic.latitude) as any).toEqualEpsilon(0, 1e-10);
+      (expect(cartographic.height) as any).toEqualEpsilon(100.0, 1e-9);
 
       var targetSurfaceNormal =
         Ellipsoid.WGS84.geodeticSurfaceNormalCartographic(

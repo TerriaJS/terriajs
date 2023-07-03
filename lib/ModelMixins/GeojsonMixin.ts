@@ -758,6 +758,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       let provider = new ProtomapsImageryProvider({
         terria: this.terria,
         data: protomapsData,
+        rectangle: this.cesiumRectangle,
         paintRules: [
           // Polygon features
           {

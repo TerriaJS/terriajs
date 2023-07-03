@@ -1080,10 +1080,10 @@ export default class Terria {
 
     // TODO: modify this to zoom to a view that shows all workbench items
     // instead of just zooming to the first workbench item!
-    const firstMappableItem = this.workbench.items.find((item) =>
+    const mappables = this.workbench.items.filter((item) =>
       MappableMixin.isMixedInto(item)
-    ) as MappableMixin.Instance | undefined;
-    if (firstMappableItem) {
+    ) as MappableMixin.Instance[];
+    if (mappables.length > 0) {
       // When the app loads, Cesium/Leaflet viewers are loaded
       // asynchronously. Until they become available, a stub viewer called
       // `NoViewer` is used. `NoViewer` does not implement zooming to mappable
@@ -1094,7 +1094,7 @@ export default class Terria {
       // a hanging promise if a valid viewer never becomes available,
       // for eg: when react is not rendered - `currentViewer` will always be `NoViewer`.
       await when(isViewerAvailable);
-      await this.currentViewer.zoomTo(firstMappableItem, 0.0);
+      await this.currentViewer.zoomTo(mappables, 0.0);
     }
   }
 
