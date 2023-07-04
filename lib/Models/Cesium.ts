@@ -13,7 +13,6 @@ import {
 } from "mobx";
 import { computedFn } from "mobx-utils";
 import AssociativeArray from "terriajs-cesium/Source/Core/AssociativeArray";
-import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -29,7 +28,6 @@ import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerra
 import Event from "terriajs-cesium/Source/Core/Event";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
-import HeadingPitchRange from "terriajs-cesium/Source/Core/HeadingPitchRange";
 import Ion from "terriajs-cesium/Source/Core/Ion";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
 import KeyboardEventModifier from "terriajs-cesium/Source/Core/KeyboardEventModifier";
@@ -37,11 +35,9 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import PerspectiveFrustum from "terriajs-cesium/Source/Core/PerspectiveFrustum";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import sampleTerrain from "terriajs-cesium/Source/Core/sampleTerrain";
 import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
-import BoundingSphereState from "terriajs-cesium/Source/DataSources/BoundingSphereState";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
 import DataSourceDisplay from "terriajs-cesium/Source/DataSources/DataSourceDisplay";
@@ -62,9 +58,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
 import LatLonHeight from "../Core/LatLonHeight";
-import pollToPromise from "../Core/pollToPromise";
 import TerriaError from "../Core/TerriaError";
-import waitForDataSourceToLoad from "../Core/waitForDataSourceToLoad";
 import CesiumRenderLoopPauser from "../Map/Cesium/CesiumRenderLoopPauser";
 import CesiumSelectionIndicator from "../Map/Cesium/CesiumSelectionIndicator";
 import Zooming from "../Map/Cesium/Zooming";
@@ -123,12 +117,6 @@ export default class Cesium extends GlobeOrMap {
     Event.RemoveCallback[]
   >(); // eventListener reference storage
   private _pauseMapInteractionCount = 0;
-  private _lastZoomTarget:
-    | CameraView
-    | Rectangle
-    | DataSource
-    | MappableMixin.Instance
-    | /*TODO Cesium.Cesium3DTileset*/ any;
 
   private cesiumDataAttributions: IObservableArray<string> = observable([]);
 
@@ -922,11 +910,11 @@ export default class Cesium extends GlobeOrMap {
       : undefined;
 
     if (!center) {
-      /** In cases where the horizon is not visible, we cannot calculate a center using a pick ray, 
+      /** In cases where the horizon is not visible, we cannot calculate a center using a pick ray,
       but we need to return a useful CameraView that works in 3D mode and 2D mode.
-      In this case we can return the correct definition for the cesium camera, with position, direction, and up, 
+      In this case we can return the correct definition for the cesium camera, with position, direction, and up,
       but we need to calculate a bounding box on the ellipsoid too to be used in 2D mode.
-      
+
       To do this we clone the camera, rotate it to point straight down, and project the camera view from that position onto the ellipsoid.
       **/
 
@@ -1677,103 +1665,4 @@ export default class Cesium extends GlobeOrMap {
       scene.imageryLayers.remove(result);
     };
   }
-}
-
-var boundingSphereScratch = new BoundingSphere();
-
-function zoomToDataSource(
-  cesium: Cesium,
-  target: DataSource,
-  flightDurationSeconds?: number
-): Promise<void> {
-  let flyToPromise: Promise<void> | undefined;
-  const pollPromise = pollToPromise(
-    function () {
-      const dataSourceDisplay = cesium.dataSourceDisplay;
-      if (dataSourceDisplay === undefined) {
-        return false;
-      }
-
-      var entities = target.entities.values;
-
-      var boundingSpheres = [];
-      for (var i = 0, len = entities.length; i < len; i++) {
-        var state = BoundingSphereState.PENDING;
-        try {
-          // TODO: missing Cesium type info
-          state = (<any>dataSourceDisplay).getBoundingSphere(
-            entities[i],
-            false,
-            boundingSphereScratch
-          );
-        } catch (e) {}
-        if (state === BoundingSphereState.PENDING) {
-          return false;
-        } else if (state !== BoundingSphereState.FAILED) {
-          boundingSpheres.push(BoundingSphere.clone(boundingSphereScratch));
-        }
-      }
-
-      const _lastZoomTarget = (cesium as any)._lastZoomTarget;
-
-      // Test if boundingSpheres is empty to avoid zooming to nowhere
-      if (boundingSpheres.length > 0 && _lastZoomTarget === target) {
-        var boundingSphere =
-          BoundingSphere.fromBoundingSpheres(boundingSpheres);
-        flyToPromise = flyToBoundingSpherePromise(
-          cesium.scene.camera,
-          boundingSphere,
-          {
-            duration: flightDurationSeconds,
-            offset: new HeadingPitchRange(
-              0,
-              -0.5,
-              // To avoid getting too close to models less than 100m radius, let
-              // cesium calculate an appropriate zoom distance. For the rest
-              // use the radius as the zoom distance because the offset
-              // distance cesium calculates for large models is often too far away.
-              boundingSphere.radius < 100 ? undefined : boundingSphere.radius
-            )
-          }
-        );
-        cesium.scene.camera.lookAtTransform(Matrix4.IDENTITY);
-      }
-      return true;
-    },
-    {
-      pollInterval: 100,
-      timeout: 30000
-    }
-  );
-  return pollPromise.then(() => flyToPromise);
-}
-
-type FlyToOptions = Parameters<InstanceType<typeof Camera>["flyTo"]>[0];
-
-function flyToPromise(camera: Camera, options: FlyToOptions): Promise<void> {
-  return new Promise((complete, cancel) => {
-    camera.flyTo({
-      ...options,
-      complete,
-      cancel
-    });
-  });
-}
-
-type FlyToBoundingSphereOptions = Parameters<
-  InstanceType<typeof Camera>["flyToBoundingSphere"]
->[1];
-
-function flyToBoundingSpherePromise(
-  camera: Camera,
-  boundingSphere: BoundingSphere,
-  options: FlyToBoundingSphereOptions
-): Promise<void> {
-  return new Promise((complete, cancel) => {
-    camera.flyToBoundingSphere(boundingSphere, {
-      ...options,
-      complete,
-      cancel
-    });
-  });
 }

@@ -15,7 +15,7 @@ import Leaflet from "../../Models/Leaflet";
 import { ZoomTarget } from "../ZoomTarget";
 
 /**
- * Result of {@link compute2dZoomView} function.
+ * Result of {@link compute2dZoomView} function. Something that can be zoomed to in 2D.
  */
 export type ZoomView2d = L.LatLngBounds;
 
@@ -35,9 +35,9 @@ export default async function compute2dZoomView(
   } else if (target instanceof CameraView) {
     return computeBoundsForCameraView(target);
   } else if (MappableMixin.isMixedInto(target)) {
-    return computeBoundsForSingleMappable(target, leaflet);
+    return computeBoundsForMappable(target, leaflet);
   } else if (Array.isArray(target) || isObservableArray(target)) {
-    return computeBoundsForMappables(target, leaflet);
+    return computeBoundsForAllMappables(target, leaflet);
   }
 }
 
@@ -50,7 +50,7 @@ export default async function compute2dZoomView(
  *   2. The union of bounds of all 2D `mapItems`.
  *   3. Otherwise returns `undefined`.
  */
-function computeBoundsForSingleMappable(
+function computeBoundsForMappable(
   mappable: MappableMixin.Instance,
   leaflet: Leaflet
 ): L.LatLngBounds | undefined {
@@ -69,13 +69,16 @@ function computeBoundsForSingleMappable(
   );
 }
 
-function computeBoundsForMappables(
+/**
+ * Compute a single bound covering all the given mappables.
+ */
+function computeBoundsForAllMappables(
   mappables: MappableMixin.Instance[],
   leaflet: Leaflet
 ): L.LatLngBounds | undefined {
   return unionBounds(
     filterOutUndefined(
-      mappables.map((m) => computeBoundsForSingleMappable(m, leaflet))
+      mappables.map((m) => computeBoundsForMappable(m, leaflet))
     )
   );
 }

@@ -29,6 +29,9 @@ export default class Zooming {
       : Promise.resolve();
   }
 
+  /**
+   * Zoom to the given LatLngBounds.
+   */
   private zoomToBounds(
     bounds: L.LatLngBounds,
     flightDurationSeconds: number
@@ -46,9 +49,9 @@ export default class Zooming {
         // that breaks our specs.
         animate: true,
         duration:
-          // Leaflet treats duration=0 equivalent to not-set, so
-          // instead set it to a very low value close to 0. We can't use
-          // animate=false for the reason stated above.
+          // Leaflet treats duration=0 equivalent to not-set and uses a default
+          // duration, so instead set it to a very low value close to 0. We can't
+          // use animate=false for the reason stated above.
           flightDurationSeconds === 0
             ? CesiumMath.EPSILON21
             : flightDurationSeconds

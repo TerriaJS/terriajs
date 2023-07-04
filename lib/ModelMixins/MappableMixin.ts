@@ -41,6 +41,12 @@ export namespace ImageryParts {
   }
 }
 
+/**
+ * Type assertion that checks if the given `MapItem` is an `ImagerParts`
+ *
+ * @param object MapItem
+ * @returns true if the given object is an `ImagerParts`
+ */
 export function isImageryParts(object: MapItem): object is ImageryParts {
   return ImageryParts.is(object);
 }
@@ -99,15 +105,20 @@ function MappableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return undefined;
     }
 
+    /**
+     * An instance of `CameraView` computed from the `idealZoom` traits.
+     */
     @computed
     get idealZoomCameraView(): CameraView | undefined {
       const { lookAt, camera } = this.traits.idealZoom.toJson(this.idealZoom);
-      // We need to parse `lookAt` and `camera` independently because `toJson`
+      // We need to parse `lookAt` and `camera` separately because `toJson`
       // returns partial `lookAt` with default values even when it was not
       // defined. If we then pass the partial `lookAt` definition to `fromJson`
       // below it will throw an error without trying to parse the rest of the
-      // definition. In that case we need to also try and parse `camera`
+      // definition. In that case we also need to try and parse `camera`
       // separately.
+      //
+      // TODO: see if we can improve this by changing how fromJson behaves
       try {
         return CameraView.fromJson({ lookAt });
       } catch (err) {}

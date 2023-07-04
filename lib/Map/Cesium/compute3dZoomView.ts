@@ -25,7 +25,9 @@ import Cesium from "../../Models/Cesium";
 import { ZoomTarget } from "../ZoomTarget";
 
 /**
- * Result of {@link compute3dZoomView} function.
+ * Result of {@link compute3dZoomView} function. Something which can be zoomed to in 3D.
+ *
+ * TODO: Can we can simplify by reducing everything to just CameraView?
  */
 export type ZoomView3d = BoundingSphere | Cartesian3 | CameraView;
 
@@ -49,7 +51,7 @@ export default async function compute3dZoomView(
   } else if (Array.isArray(target) || isObservableArray(target)) {
     // When we are given an array of mappables, we ignore other zoom settings
     // for the individual mappables and just compute an overall BoundingSphere
-    return computeBoundingSphereForMappables(
+    return computeBoundingSphereForAllMappables(
       target.filter(MappableMixin.isMixedInto),
       cesium
     );
@@ -66,8 +68,9 @@ async function computeViewForRectangle(
   cesium: Cesium
 ): Promise<Cartesian3> {
   const scene = cesium.scene;
-  // Work out the destination that the camera would naturally fly to
-  // i.e the camera position needed to view the rectangle on the ellipsoid
+  // Work out the destination that the camera would naturally fly to. i.e the
+  // camera position needed to view the rectangle on the ellipsoid which Cesium
+  // computes if we were to pass it just a rectangle.
   const destinationCartesian =
     scene.camera.getRectangleCameraCoordinates(rectangle);
   const destination =
@@ -99,20 +102,24 @@ async function computeViewForRectangle(
 
 /**
  * Compute 3D view for the given mappable item
+ *
  */
 async function computeViewForMappable(
   mappable: MappableMixin.Instance,
   cesium: Cesium
 ): Promise<BoundingSphere | Cartesian3 | CameraView | undefined> {
   if (mappable.idealZoomCameraView) {
+    // idealZoom settings has the highest preference
     return mappable.idealZoomCameraView;
   }
 
   if (mappable.cesiumRectangle instanceof Rectangle) {
+    // rectangle settings has the next preference
     return computeViewForRectangle(mappable.cesiumRectangle, cesium);
   }
 
-  const boundingSphere = await computeBoundingSphereForOneMappable(
+  // No explicit zoom settings for this mappable item, so compute one
+  const boundingSphere = await computeBoundingSphereForMappable(
     mappable,
     cesium
   );
@@ -122,7 +129,7 @@ async function computeViewForMappable(
 /**
  * Compute a bounding sphere for the given mappable
  */
-async function computeBoundingSphereForOneMappable(
+async function computeBoundingSphereForMappable(
   mappable: MappableMixin.Instance,
   cesium: Cesium
 ): Promise<BoundingSphere | undefined> {
@@ -138,13 +145,13 @@ async function computeBoundingSphereForOneMappable(
 /**
  * Compute a single bounding sphere for all the given mappables
  */
-async function computeBoundingSphereForMappables(
+async function computeBoundingSphereForAllMappables(
   mappables: MappableMixin.Instance[],
   cesium: Cesium
 ): Promise<BoundingSphere | undefined> {
   const boundingSpheres = filterOutUndefined(
     await Promise.all(
-      mappables.map((m) => computeBoundingSphereForOneMappable(m, cesium))
+      mappables.map((m) => computeBoundingSphereForMappable(m, cesium))
     )
   );
   return unionBoundingSpheres(boundingSpheres);
@@ -185,10 +192,14 @@ async function computeBoundingSphereForDataSource(
   dataSource: DataSource,
   cesium: Cesium
 ) {
+  // Wait for the DataSource to load
   await dataSourceLoadedPromise(dataSource);
 
-  const pollInterval = 200;
-  const timeout = 30000; // 30 seconds
+  // Cesium API for getting bounding spheres is asynchronous, so we have to
+  // poll until we have resolved the bounding spheres for all the entities in
+  // the datasource.
+  const pollInterval = 200; // msecs
+  const timeout = 15000; // Give up in 15 seconds
 
   const entitiesToResolve = new Set<Entity>();
   for (let entity of dataSource.entities.values) {
@@ -217,7 +228,7 @@ async function computeBoundingSphereForDataSource(
           entitiesToResolve.delete(entity);
           boundingSpheres.push(scratchBoundingSphere.clone());
         } else {
-          // unsuccessfully resolved bounding sphere
+          // failed to resolve bounding sphere
           entitiesToResolve.delete(entity);
         }
       }

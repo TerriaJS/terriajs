@@ -758,6 +758,9 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       let provider = new ProtomapsImageryProvider({
         terria: this.terria,
         data: protomapsData,
+        // `rectangle` setting is required to correctly compute a bounding view
+        // for this imageryprovider that we can zoom to - for eg see
+        // compute3dZoomView.ts
         rectangle: this.cesiumRectangle,
         paintRules: [
           // Polygon features

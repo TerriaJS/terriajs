@@ -50,6 +50,9 @@ export default class Zooming {
     }
   }
 
+  /**
+   * Zoom to the given Cartesian position
+   */
   private async zoomToPosition(
     position: Cartesian3,
     flightDurationSeconds: number
@@ -64,6 +67,9 @@ export default class Zooming {
     });
   }
 
+  /**
+   * Zoom to the given camera view
+   */
   private async zoomToCameraView(
     cameraView: CameraView,
     flightDurationSeconds: number
@@ -87,6 +93,9 @@ export default class Zooming {
     });
   }
 
+  /**
+   * Zoom to the given bounding sphere
+   */
   private async zoomToBoundingSphere(
     boundingSphere: BoundingSphere,
     flightDurationSeconds: number
