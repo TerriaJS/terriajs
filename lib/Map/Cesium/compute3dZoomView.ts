@@ -237,9 +237,12 @@ async function computeBoundingSphereForDataSource(
 
   const boundingSphere = unionBoundingSpheres(boundingSpheres);
   if (boundingSphere && isAnyEntityClampedToGround) {
-    // If any entity of this datasource is clamped to ground, then we sample
-    // the terrain and the clamp the whole bounding sphere to ground so that we
-    // zoom to a more precise location.
+    // When zooming to clamped entities from a far away point, because the high
+    // LOD terrain tiles have not yet been loaded, the computed bounding sphere
+    // will be inaccurate and the resulting zoom might be far off from where
+    // the entity is actually placed. To get a better focus on clamped
+    // entities, we sample the terrain in highest detail to precisely clamp the
+    // bounding sphere to the terrain before we zoom to it.
     await preciselyClampBoundingSphereToGround(
       boundingSphere,
       cesium,
@@ -284,6 +287,10 @@ function dataSourceLoadedPromise(dataSource: DataSource): Promise<DataSource> {
   });
 }
 
+/**
+ * Small hack using an empty Entity to get all the graphic properties of an
+ * entity. Eg `model`, `billboard`, `point` etc.
+ */
 const graphicProperties: (keyof Entity)[] = [
   ...new Entity().propertyNames
 ] as any;
@@ -291,8 +298,8 @@ const graphicProperties: (keyof Entity)[] = [
 /**
  * Returns true if an graphic property of the entity is clamped to ground.
  *
- * This checks if one of the graphic property like `billboard`, `point`,
- * `model` etc. is `heightReference`d as `CLAMP_TO_GROUND`.
+ * This checks if any one of the graphic property like `model`, `billboard`,
+ * `point`, etc. is `heightReference`d as `CLAMP_TO_GROUND`.
  */
 function isEntityClampedToGround(entity: Entity): boolean {
   const isClamped = graphicProperties.some(
