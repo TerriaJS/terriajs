@@ -2,6 +2,8 @@
 
 #### next release (8.3.2)
 
+- Refactor 3D & 2D zoom code path.
+- Improve zooming to clamped items in 3D.
 - [The next improvement]
 
 #### 8.3.1 - 2023-06-29
