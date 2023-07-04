@@ -41,16 +41,16 @@ export const removeListStyles = () => `
   margin: 0;
 `;
 
-export const borderRadiusTop = (radius: number) => `
+export const borderRadiusTop = (radius: string) => `
   border-radius: ${radius}px ${radius}px 0 0;
 `;
-export const borderRadiusRight = (radius: number) => `
+export const borderRadiusRight = (radius: string) => `
   border-radius: 0 ${radius}px ${radius}px 0;
 `;
-export const borderRadiusBottom = (radius: number) => `
+export const borderRadiusBottom = (radius: string) => `
 border-radius: 0 0 ${radius}px ${radius}px;
 `;
-export const borderRadiusLeft = (radius: number) => `
+export const borderRadiusLeft = (radius: string) => `
   border-radius: ${radius}px 0 0 ${radius}px;
 `;
 
