@@ -61,7 +61,7 @@ describe("ChartCustomComponent", function () {
 
   it("creates shareable chart items for the expand menu", function () {
     const TestComponentWithShareableChartItem = class extends TestChartCustomComponent {
-      constructShareableCatalogItem = (
+      override constructShareableCatalogItem = (
         id: string | undefined,
         context: ProcessNodeContext,
         sourceReference: BaseModel | undefined
@@ -123,12 +123,6 @@ class TestChartCustomComponent extends ChartCustomComponent<ChartableMixin.Insta
 class TestCatalogItem extends ChartableMixin(
   CreateModel(mixTraits(UrlTraits, MappableTraits))
 ) {
-  get mapItems() {
-    return [];
-  }
-  protected override forceLoadMapItems(): Promise<void> {
-    return Promise.resolve();
-  }
   get chartItems() {
     return [];
   }

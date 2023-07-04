@@ -1,24 +1,13 @@
 import "../../../SpecMain";
 import { reaction, runInAction } from "mobx";
 import i18next from "i18next";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import IonResource from "terriajs-cesium/Source/Core/IonResource";
-import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
-import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
-import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
-import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
-import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
+import { Cartesian2, IonResource, Cesium3DTileFeature, Cesium3DTileset, Cesium3DTileStyle, Cesium3DTileColorBlendMode, ShadowMode, Matrix4, Quaternion, Matrix3, HeadingPitchRoll, Cartesian3 } from "cesium";
 import Cesium3DTilesCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/Cesium3DTilesCatalogItem";
 import createStratumInstance from "../../../../lib/Models/Definition/createStratumInstance";
 import Terria from "../../../../lib/Models/Terria";
-import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import HeadingPitchRollTraits from "../../../../lib/Traits/TraitsClasses/HeadingPitchRollTraits";
 import LatLonHeightTraits from "../../../../lib/Traits/TraitsClasses/LatLonHeightTraits";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
-import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
-import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
-import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import {
   OptionsTraits,
   FilterTraits
@@ -312,7 +301,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
 
   it("correctly builds `Feature` from picked Cesium3DTileFeature", function () {
     const picked = new Cesium3DTileFeature();
-    spyOn(picked, "getPropertyNames").and.returnValue([]);
+    spyOn(picked, "getPropertyIds").and.returnValue([]);
     const feature = item.buildFeatureFromPickResult(Cartesian2.ZERO, picked);
     expect(feature).toBeDefined();
     if (feature) {

@@ -29,7 +29,7 @@ export default class TestCatalogItem
     return "test";
   }
 
-  get selectableDimensions() {
+  override get selectableDimensions() {
     return this.selectableDimensionsValue;
   }
 

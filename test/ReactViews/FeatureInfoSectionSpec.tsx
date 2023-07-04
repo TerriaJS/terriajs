@@ -2,14 +2,7 @@ import i18next from "i18next";
 import { observable, makeObservable } from "mobx";
 import React from "react";
 import { ReactTestRenderer } from "react-test-renderer";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
-import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
-import TimeIntervalCollectionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty";
+import { Cartographic, Ellipsoid, JulianDate, TimeInterval, ConstantProperty, Entity, PropertyBag, TimeIntervalCollectionProperty } from "cesium";
 import loadJson from "../../lib/Core/loadJson";
 import CatalogMemberMixin, {
   getName
@@ -1396,7 +1389,7 @@ class TestModel extends MappableMixin(
   get mapItems(): MapItem[] {
     throw new Error("Method not implemented.");
   }
-  protected override forceLoadMapItems(): Promise<void> {
+  override _protected_forceLoadMapItems(): Promise<void> {
     throw new Error("Method not implemented.");
   }
 

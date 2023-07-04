@@ -14,7 +14,7 @@ function configureWebpack(
   disableStyleLoader
 ) {
   const cesiumDir = path.dirname(
-    require.resolve("terriajs-cesium/package.json")
+    require.resolve("cesium/package.json")
   );
   // const fontAwesomeDir = path.resolve(path.dirname(require.resolve('font-awesome/package.json')));
   // const reactMdeDir = path.resolve(path.dirname(require.resolve('react-mde/package.json')));
@@ -45,11 +45,11 @@ function configureWebpack(
 
   config.module.rules.push({
     test: /\.js?$/,
-    include: path.dirname(require.resolve("terriajs-cesium")),
+    include: path.dirname(require.resolve("cesium")),
     exclude: [
-      require.resolve("terriajs-cesium/Source/ThirdParty/zip"),
-      require.resolve("terriajs-cesium/Source/Core/buildModuleUrl"),
-      require.resolve("terriajs-cesium/Source/Core/TaskProcessor")
+      require.resolve("cesium/Source/ThirdParty/zip"),
+      require.resolve("cesium/Source/Core/buildModuleUrl"),
+      require.resolve("cesium/Source/Core/TaskProcessor")
     ],
     loader: StringReplacePlugin.replace({
       replacements: [
@@ -198,7 +198,7 @@ function configureWebpack(
   config.module.rules.push({
     test: /\.js$/,
     include: path.resolve(
-      path.dirname(require.resolve("terriajs-cesium/package.json")),
+      path.dirname(require.resolve("cesium/package.json")),
       "Source"
     ),
     loader: require.resolve("./removeCesiumDebugPragmas")
@@ -206,13 +206,13 @@ function configureWebpack(
 
   // Don't let Cesium's `buildModuleUrl` see require - only the AMD version is relevant.
   config.module.rules.push({
-    test: require.resolve("terriajs-cesium/Source/Core/buildModuleUrl"),
+    test: require.resolve("cesium/Source/Core/buildModuleUrl"),
     loader: "imports-loader?require=>false"
   });
 
   // Don't let Cesium's `crunch.js` see require - only the AMD version is relevant.
   // config.module.rules.push({
-  //     test: require.resolve('terriajs-cesium/Source/ThirdParty/crunch'),
+  //     test: require.resolve('cesium/Source/ThirdParty/crunch'),
   //     loader: 'imports-loader?require=>false'
   // });
 

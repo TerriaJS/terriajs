@@ -1,6 +1,6 @@
 import L from "leaflet";
 import { computed } from "mobx";
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import { CustomDataSource } from "cesium";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import Leaflet from "../../lib/Models/Leaflet";

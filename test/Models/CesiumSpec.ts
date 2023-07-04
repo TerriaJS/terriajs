@@ -1,16 +1,9 @@
 import range from "lodash-es/range";
 import { action, computed, observable, runInAction } from "mobx";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
-import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
-import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
-import Scene from "terriajs-cesium/Source/Scene/Scene";
-import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
+import { Cartesian3, CesiumTerrainProvider, EllipsoidTerrainProvider, Rectangle, GeoJsonDataSource, Cesium3DTileset, Scene, WebMapServiceImageryProvider } from "cesium";
 import filterOutUndefined from "../../lib/Core/filterOutUndefined";
 import runLater from "../../lib/Core/runLater";
-import MappableMixin from "../../lib/ModelMixins/MappableMixin";
+import MappableMixin, { MapItem } from "../../lib/ModelMixins/MappableMixin";
 import CesiumTerrainCatalogItem from "../../lib/Models/Catalog/CatalogItems/CesiumTerrainCatalogItem";
 import CatalogMemberFactory from "../../lib/Models/Catalog/CatalogMemberFactory";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
@@ -24,6 +17,7 @@ import MappableTraits, {
   RectangleTraits
 } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
+import isDefined from "../../lib/Core/isDefined";
 
 const supportsWebGL = require("../../lib/Core/supportsWebGL");
 
@@ -426,13 +420,23 @@ describeIfSupported("Cesium Model", function () {
  * items.
  */
 class MappablePrimitiveItem extends MappableMixin(CreateModel(MappableTraits)) {
-  protected async forceLoadMapItems() {}
+  private _private_tileset: Cesium3DTileset | undefined = undefined;
 
-  get mapItems() {
-    return [
-      new Cesium3DTileset({ url: `prim${this.uniqueId}` }),
-      new GeoJsonDataSource(`ds${this.uniqueId}`),
-      {
+  override async _protected_forceLoadMapItems() {
+    const tileset = await Cesium3DTileset.fromUrl(`prim${this.uniqueId}`);
+
+    runInAction(() => {
+      this._private_tileset = tileset;
+    });
+  }
+
+  override get mapItems() {
+    const result: MapItem[] = [];
+    if (isDefined(this._private_tileset)) {
+      result.push(this._private_tileset);
+    }
+    result.push(new GeoJsonDataSource(`ds${this.uniqueId}`));
+    result.push({
         alpha: 1,
         imageryProvider: new WebMapServiceImageryProvider({
           url: `img${this.uniqueId}`,
@@ -440,7 +444,7 @@ class MappablePrimitiveItem extends MappableMixin(CreateModel(MappableTraits)) {
         }),
         show: true,
         clippingRectangle: undefined
-      }
-    ];
+      });
+    return result;
   }
 }

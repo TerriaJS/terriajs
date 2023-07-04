@@ -41,7 +41,7 @@ class TestTimeFilterableItem extends TimeFilterMixin(
     makeObservable(this);
   }
 
-  protected override async forceLoadMapItems(): Promise<void> {}
+  override async _protected_forceLoadMapItems(): Promise<void> {}
   get discreteTimes() {
     return undefined;
   }

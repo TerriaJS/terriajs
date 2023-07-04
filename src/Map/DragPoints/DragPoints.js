@@ -1,4 +1,4 @@
-import { defined } from "cesium";
+import { CustomDataSource, defined } from "cesium";
 import CesiumDragPoints from "./CesiumDragPoints";
 import LeafletDragPoints from "./LeafletDragPoints";
 import ViewerMode from "../../Models/ViewerMode";

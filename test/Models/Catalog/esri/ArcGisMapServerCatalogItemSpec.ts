@@ -1,7 +1,6 @@
 import i18next from "i18next";
 import { configure, runInAction } from "mobx";
-import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
-import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
+import { WebMercatorTilingScheme, ArcGisMapServerImageryProvider } from "cesium";
 import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import ArcGisMapServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
@@ -245,7 +244,8 @@ describe("ArcGisMapServerCatalogItem", function () {
         });
 
         it("passes on request parameters", function () {
-          expect(imageryProvider.parameters).toEqual(item.parameters);
+          // TODO
+          expect((imageryProvider as any).parameters).toEqual(item.parameters);
         });
 
         it("correctly sets enablePickFeatures", function () {

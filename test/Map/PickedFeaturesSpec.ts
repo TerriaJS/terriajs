@@ -1,6 +1,4 @@
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
-import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
+import { CustomDataSource, ImageryLayer, WebMapServiceImageryProvider } from "cesium";
 import { featureBelongsToCatalogItem } from "../../lib/Map/PickedFeatures/PickedFeatures";
 import TerriaFeature from "../../lib/Models/Feature/Feature";
 import Terria from "../../lib/Models/Terria";
@@ -32,7 +30,7 @@ describe("featureBelongsToCatalogItem", function () {
       url: "test",
       layers: "test"
     });
-    feature.imageryLayer = new ImageryLayer(imageryProvider);
+    feature.imageryLayer = new ImageryLayer(imageryProvider, {});
 
     expect(featureBelongsToCatalogItem(feature, item)).toBe(false);
     item.mapItems = [

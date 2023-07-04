@@ -1,7 +1,4 @@
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Transforms from "terriajs-cesium/Source/Core/Transforms";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import { JulianDate, Math as CesiumMath, Transforms, Entity } from "cesium";
 import MappableMixin from "../../../../lib/ModelMixins/MappableMixin";
 import GltfCatalogItem from "../../../../lib/Models/Catalog/Gltf/GltfCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";

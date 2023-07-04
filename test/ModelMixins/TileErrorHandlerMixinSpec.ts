@@ -1,9 +1,5 @@
 import i18next from "i18next";
-import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
-import Resource from "terriajs-cesium/Source/Core/Resource";
-import TileProviderError from "terriajs-cesium/Source/Core/TileProviderError";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
+import { RequestErrorEvent, Resource, TileProviderError, ImageryProvider, WebMapServiceImageryProvider } from "cesium";
 import MappableMixin, { MapItem } from "../../lib/ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../../lib/ModelMixins/TileErrorHandlerMixin";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
@@ -42,7 +38,7 @@ class TestCatalogItem extends TileErrorHandlerMixin(
     };
   }
 
-  protected override forceLoadMapItems(): Promise<void> {
+  override _protected_forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
 

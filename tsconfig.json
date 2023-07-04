@@ -1,27 +1,9 @@
 {
-  "compilerOptions": {
-    "target": "es2019",
-    "experimentalDecorators": true,
-    "module": "esNext",
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "strict": true,
-    "noImplicitOverride": true,
-    "allowJs": true,
-    "jsx": "preserve",
-    "declaration": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "useDefineForClassFields": true, // required for mobx6 - https://mobx.js.org/installation.html#use-spec-compliant-transpilation-for-class-properties
-    "outDir": "lib",
-    "resolveJsonModule": true,
-    "typeRoots": ["./src/ThirdParty/**/*.d.ts"],
-    "types": ["cesium"]
-  },
-  "include": [
-    "./src/**/*"
-    //"./test/**/*",
-    //"./buildprocess/generateDocs.ts",
-    //"./buildprocess/**/*"
-  ]
+  "extends": "./tsconfig-common.json",
+  "references": [
+    { "path": "./src/tsconfig.json" },
+    { "path": "./test" }
+  ],
+  "files": [],
+  "include": []
 }

@@ -1,5 +1,5 @@
 import { action, computed, makeObservable } from "mobx";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import { JulianDate } from "cesium";
 import DiffableMixin from "../../lib/ModelMixins/DiffableMixin";
 import MappableMixin from "../../lib/ModelMixins/MappableMixin";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
@@ -50,7 +50,7 @@ class TestDiffableItem extends DiffableMixin(
     makeObservable(this);
   }
 
-  protected override async forceLoadMapItems() {}
+  override async _protected_forceLoadMapItems() {}
   styleSelectableDimensions = [];
 
   get canDiffImages() {

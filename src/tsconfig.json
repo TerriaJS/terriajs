@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig-common.json",
+  "compilerOptions": {
+    "outDir": "../lib"
+  },
+  "include": [
+    "./**/*",
+    "./Map/Icons/Maki/iconset-all_maki_icons.json"
+  ]
+}

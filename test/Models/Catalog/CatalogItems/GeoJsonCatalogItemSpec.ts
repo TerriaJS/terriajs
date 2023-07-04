@@ -1,14 +1,6 @@
 import { runInAction } from "mobx";
 import { GeomType, LineSymbolizer, PolygonSymbolizer } from "protomaps";
-import { CustomDataSource } from "terriajs-cesium";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
-import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import { CustomDataSource, Cartesian2, Cartesian3, createGuid, Iso8601, JulianDate, Entity, GeoJsonDataSource, HeightReference } from "cesium";
 import { JsonObject } from "../../../../lib/Core/Json";
 import loadJson from "../../../../lib/Core/loadJson";
 import loadText from "../../../../lib/Core/loadText";
@@ -98,7 +90,7 @@ describe("GeoJsonCatalogItemSpec", () => {
         expect(
           (geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position
             ?.getValue(JulianDate.now())
-            .equalsEpsilon(Cartesian3.fromDegrees(148.0, -31.3), 0.0001)
+            ?.equalsEpsilon(Cartesian3.fromDegrees(148.0, -31.3), 0.0001)
         ).toBeTruthy("Doesn't match first location");
 
         geojson.setTrait(
@@ -117,7 +109,7 @@ describe("GeoJsonCatalogItemSpec", () => {
         expect(
           (geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position
             ?.getValue(JulianDate.now())
-            .equalsEpsilon(Cartesian3.fromDegrees(151.0, -33.8), 0.0001)
+            ?.equalsEpsilon(Cartesian3.fromDegrees(151.0, -33.8), 0.0001)
         ).toBeTruthy("Doesn't match updated location");
       });
     });

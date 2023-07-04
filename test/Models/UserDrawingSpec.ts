@@ -1,11 +1,6 @@
 import i18next from "i18next";
 import { runInAction } from "mobx";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import { Cartesian3, Cartographic, Ellipsoid, Math as CesiumMath, Rectangle, Entity } from "cesium";
 import supportsWebGL from "../../lib/Core/supportsWebGL";
 import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
 import TerriaFeature from "../../lib/Models/Feature/Feature";
@@ -173,9 +168,9 @@ describe("UserDrawing", function () {
       let currentPointPos = currentPoint.position.getValue(
         terria.timelineClock.currentTime
       );
-      expect(currentPointPos.x).toEqual(x);
-      expect(currentPointPos.y).toEqual(y);
-      expect(currentPointPos.z).toEqual(z);
+      expect(currentPointPos?.x).toEqual(x);
+      expect(currentPointPos?.y).toEqual(y);
+      expect(currentPointPos?.z).toEqual(z);
     }
 
     // Check line as well
@@ -213,9 +208,9 @@ describe("UserDrawing", function () {
       let newPointPos = newPoint.position.getValue(
         terria.timelineClock.currentTime
       );
-      expect(newPointPos.x).toEqual(newX);
-      expect(newPointPos.y).toEqual(newY);
-      expect(newPointPos.z).toEqual(newZ);
+      expect(newPointPos?.x).toEqual(newX);
+      expect(newPointPos?.y).toEqual(newY);
+      expect(newPointPos?.z).toEqual(newZ);
     }
 
     // Check line as well

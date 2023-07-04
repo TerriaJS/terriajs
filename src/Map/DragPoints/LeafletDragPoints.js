@@ -38,7 +38,7 @@ class LeafletDragPoints {
 
     /**
      * Whether user is currently dragging point.
-     * @type {Bool}
+     * @type {boolean}
      */
     this._dragInProgress = false;
 

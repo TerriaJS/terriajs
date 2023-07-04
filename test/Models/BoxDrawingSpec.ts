@@ -3,10 +3,7 @@ import Cesium from "../../lib/Models/Cesium";
 import Terria from "../../lib/Models/Terria";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 import BoxDrawing from "../../lib/Models/BoxDrawing";
-import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
-import TranslationRotationScale from "terriajs-cesium/Source/Core/TranslationRotationScale";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
+import { Matrix4, TranslationRotationScale, Cartesian3, Quaternion } from "cesium";
 
 describe("BoxDrawing", function () {
   let terria: Terria;
