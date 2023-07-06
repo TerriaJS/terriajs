@@ -30,7 +30,7 @@ export default class CogCompositeCatalogItem extends MappableMixin(
 ) {
   static readonly type = "cog-composite";
 
-  selectedStyleIndex: number = 1; // Set the default style index from the style array which is provided as traits
+  selectedStyleIndex: number = 0; // Set the default style index from the style array which is provided as traits
 
   get type() {
     return CogCompositeCatalogItem.type;

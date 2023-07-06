@@ -151,35 +151,10 @@ export default class GeorasterTerriaLayer extends GeoRasterLayer {
   /** Use the Geoblaze library to get pixel values by operating on the GeoRaster object.
    * TODO: Is this giving the display values at that point, or the raw values of the full resolution raster at those coordinates?
    * This is discussed in https://github.com/GeoTIFF/georaster-layer-for-leaflet/issues/104
-   * Currenlty his function is costly - `geoblaze.identify` takes time and appears to download the highest resolution tile for the area clicked.
+   * Currently his function is costly - `geoblaze.identify` takes time and appears to download the highest resolution tile for the area clicked.
    * This is probably the only way if we want to get the actual raw pixel values at that point.
    **/
-  // async pickFeatures(
-  //   x: number,
-  //   y: number,
-  //   level: number,
-  //   longitudeRadians: number,
-  //   latitudeRadians: number
-  // ) {
-  //   const res = await identify(this.georasters[0], [x, y]); // Must await this one
 
-  //   // Transform the result in the usual format, this copied from TIFFImageryProvider
-  //   const featureInfo = new ImageryLayerFeatureInfo();
-  //   featureInfo.name = `lon:${((longitudeRadians / Math.PI) * 180).toFixed(
-  //     6
-  //   )}, lat:${((latitudeRadians / Math.PI) * 180).toFixed(6)}`;
-  //   const data: {
-  //     [index: number]: any;
-  //   } = {};
-  //   res.forEach((item: any, index: number): void => {
-  //     data[index] = item;
-  //   });
-  //   featureInfo.data = data;
-  //   if (res) {
-  //     featureInfo.configureDescriptionFromProperties(data);
-  //   }
-  //   return [featureInfo];
-  // }
   async pickFeatures(
     x: number,
     y: number,
@@ -196,11 +171,10 @@ export default class GeorasterTerriaLayer extends GeoRasterLayer {
     for (let i = 0; i < this.georasters.length; i++) {
       const res = await identify(this.georasters[i], [x, y]);
 
-      res.forEach((item: any, index: number): void => {
-        data[i * this.georasters.length + index] = item;
-      });
-
       if (res) {
+        res.forEach((item: any): void => {
+          data[i] = item;
+        });
         featureInfo.configureDescriptionFromProperties(data);
       }
     }
