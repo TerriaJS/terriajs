@@ -67,7 +67,47 @@ export function rgbFromSeparateBands(red: number, green: number, blue: number) {
   blue = Math.min(blue, 255);
 
   // treat all black as no data
-  if (red === 0 && green === 0 && blue === 0) return null;
-
+  if (red === 0 && green === 0 && blue === 0) return "";
   return `rgb(${red}, ${green}, ${blue})`;
+}
+
+export function trueColour(red: number, green: number, blue: number) {
+  // Trying to map values from Int16 to 0-255...
+  // const max = Math.pow(2, 14);
+  const max = Math.pow(2, 14) / 16; // TODO: Had to divie by 16 to make it look right...  Why?
+  red = Math.round((255 * red) / max);
+  green = Math.round((255 * green) / max);
+  blue = Math.round((255 * blue) / max);
+
+  // make sure no values exceed 255
+  red = Math.min(red, 255);
+  green = Math.min(green, 255);
+  blue = Math.min(blue, 255);
+
+  // treat all black as no data
+  if (red === 0 && green === 0 && blue === 0) return "";
+  return `rgb(${red}, ${green}, ${blue})`;
+}
+
+const scale = chroma
+  .scale(["#C7BB95", "#FEFEE1", "#6E9F62", "#032816", "black"])
+  .domain([0, 0.2, 0.4, 0.6, 0.8]);
+
+export function ndvi(red: number, nir: number) {
+  const dividend = nir - red;
+  const divisor = nir + red;
+  let result;
+  if (dividend === 0 && divisor === 0) {
+    // probably no reading here
+    return "rgba(0,0,0,0)";
+  }
+  if (dividend === 0 || divisor === 0) {
+    result = 0;
+  } else {
+    result = dividend === 0 ? 0 : dividend / divisor;
+  }
+  if (result <= 0.1) return "blue";
+  if (result >= 0.8) return "black";
+
+  return scale(result).hex();
 }
