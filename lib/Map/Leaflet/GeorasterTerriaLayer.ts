@@ -154,6 +154,32 @@ export default class GeorasterTerriaLayer extends GeoRasterLayer {
    * Currenlty his function is costly - `geoblaze.identify` takes time and appears to download the highest resolution tile for the area clicked.
    * This is probably the only way if we want to get the actual raw pixel values at that point.
    **/
+  // async pickFeatures(
+  //   x: number,
+  //   y: number,
+  //   level: number,
+  //   longitudeRadians: number,
+  //   latitudeRadians: number
+  // ) {
+  //   const res = await identify(this.georasters[0], [x, y]); // Must await this one
+
+  //   // Transform the result in the usual format, this copied from TIFFImageryProvider
+  //   const featureInfo = new ImageryLayerFeatureInfo();
+  //   featureInfo.name = `lon:${((longitudeRadians / Math.PI) * 180).toFixed(
+  //     6
+  //   )}, lat:${((latitudeRadians / Math.PI) * 180).toFixed(6)}`;
+  //   const data: {
+  //     [index: number]: any;
+  //   } = {};
+  //   res.forEach((item: any, index: number): void => {
+  //     data[index] = item;
+  //   });
+  //   featureInfo.data = data;
+  //   if (res) {
+  //     featureInfo.configureDescriptionFromProperties(data);
+  //   }
+  //   return [featureInfo];
+  // }
   async pickFeatures(
     x: number,
     y: number,
@@ -161,23 +187,25 @@ export default class GeorasterTerriaLayer extends GeoRasterLayer {
     longitudeRadians: number,
     latitudeRadians: number
   ) {
-    const res = await identify(this.georasters[0], [x, y]); // Must await this one
-
-    // Transform the result in the usual format, this copied from TIFFImageryProvider
     const featureInfo = new ImageryLayerFeatureInfo();
     featureInfo.name = `lon:${((longitudeRadians / Math.PI) * 180).toFixed(
       6
     )}, lat:${((latitudeRadians / Math.PI) * 180).toFixed(6)}`;
-    const data: {
-      [index: number]: any;
-    } = {};
-    res.forEach((item: any, index: number): void => {
-      data[index] = item;
-    });
-    featureInfo.data = data;
-    if (res) {
-      featureInfo.configureDescriptionFromProperties(data);
+    const data: { [index: number]: any } = {};
+
+    for (let i = 0; i < this.georasters.length; i++) {
+      const res = await identify(this.georasters[i], [x, y]);
+
+      res.forEach((item: any, index: number): void => {
+        data[i * this.georasters.length + index] = item;
+      });
+
+      if (res) {
+        featureInfo.configureDescriptionFromProperties(data);
+      }
     }
+
+    featureInfo.data = data;
     return [featureInfo];
   }
 

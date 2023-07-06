@@ -15,20 +15,4 @@ export default class CogCatalogItemTraits extends mixTraits(
   MappableTraits,
   CatalogMemberTraits,
   LegendOwnerTraits
-) {
-  @primitiveTrait({
-    type: "string",
-    name: "Pick features URL",
-    description:
-      "URL template to use to use to pick features. See URL template to use to use to pick features for list of keywords. "
-  })
-  pickFeaturesUrl?: string;
-
-  @primitiveArrayTrait({
-    name: "Subdomains",
-    description:
-      "Array of subdomains, one of which will be prepended to each tile URL. This is useful for overcoming browser limit on the number of simultaneous requests per host. Subdomains will be substituted for ${s} keyword",
-    type: "string"
-  })
-  subdomains: string[] = [];
-}
+) {}
