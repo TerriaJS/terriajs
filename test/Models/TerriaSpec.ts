@@ -1,5 +1,6 @@
-import { action, runInAction, toJS } from "mobx";
+import { action, runInAction, toJS, when } from "mobx";
 import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
@@ -19,7 +20,6 @@ import ArcGisFeatureServerCatalogItem from "../../lib/Models/Catalog/Esri/ArcGis
 import ArcGisMapServerCatalogItem from "../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
 import WebMapServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
-import Cesium from "../../lib/Models/Cesium";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import { BaseModel } from "../../lib/Models/Definition/Model";
 import TerriaFeature from "../../lib/Models/Feature/Feature";
@@ -1611,6 +1611,7 @@ describe("Terria", function () {
     });
 
     it("sets the pickCoords", async function () {
+      const Cesium = (await import("../../lib/Models/Cesium")).default;
       expect(terria.currentViewer instanceof Cesium).toBeTruthy();
       await terria.loadPickedFeatures({
         pickCoords: {
@@ -1680,5 +1681,179 @@ describe("Terria", function () {
     )}`;
     await terria.start({ configUrl, i18nOptions });
     expect(RequestScheduler.requestsByServer["test.domain:333"]).toBe(12);
+  });
+
+  describe("initial zoom", function () {
+    describe("behaviour of `initialCamera.focusWorkbenchItems`", function () {
+      let container: HTMLElement;
+
+      beforeEach(async function () {
+        jasmine.Ajax.install();
+
+        // Attach cesium viewer and wait for it to be loaded
+        container = document.createElement("div");
+        document.body.appendChild(container);
+        terria.mainViewer.viewerOptions.useTerrain = false;
+        terria.mainViewer.attach(container);
+
+        const configJson = JSON.stringify({
+          initializationUrls: ["focus-workbench-items.json"]
+        });
+
+        // An init source with a pre-loaded workbench item
+        const initJson = JSON.stringify({
+          initialCamera: { focusWorkbenchItems: true },
+          catalog: [
+            {
+              id: "points",
+              type: "geojson",
+              name: "Points",
+              geoJsonData: {
+                type: "Feature",
+                bbox: [-10.0, -10.0, 10.0, 10.0],
+                properties: {
+                  foo: "hi",
+                  bar: "bye"
+                },
+                geometry: {
+                  type: "Polygon",
+                  coordinates: [
+                    [
+                      [100.0, 0.0],
+                      [101.0, 0.0],
+                      [101.0, 1.0],
+                      [100.0, 1.0],
+                      [100.0, 0.0]
+                    ],
+                    [
+                      [100.2, 0.2],
+                      [100.8, 0.2],
+                      [100.8, 0.8],
+                      [100.2, 0.8],
+                      [100.2, 0.2]
+                    ]
+                  ]
+                }
+              }
+            }
+          ],
+          workbench: ["points"]
+        });
+        jasmine.Ajax.stubRequest("serverconfig/").andReturn({
+          responseText: "{}"
+        });
+        jasmine.Ajax.stubRequest("test-config.json").andReturn({
+          responseText: configJson
+        });
+        jasmine.Ajax.stubRequest("focus-workbench-items.json").andReturn({
+          responseText: initJson
+        });
+      });
+
+      afterEach(() => {
+        terria.mainViewer.destroy();
+        document.body.removeChild(container);
+        jasmine.Ajax.uninstall();
+      });
+
+      it("zooms the map to focus on the workbench items", async function () {
+        await terria.start({ configUrl: "test-config.json" });
+        await terria.loadInitSources();
+        await when(() => terria.currentViewer.type === "Cesium");
+
+        const cameraPos = terria.cesium?.scene.camera.positionCartographic;
+        expect(cameraPos).toBeDefined();
+        const { longitude, latitude, height } = cameraPos!;
+        expect(CesiumMath.toDegrees(longitude)).toBeCloseTo(100.5);
+        expect(CesiumMath.toDegrees(latitude)).toBeCloseTo(0.5);
+        expect(height).toBeCloseTo(191276.7939);
+      });
+
+      it("works correctly even when there is a delay in a Cesium/Leaflet viewer becoming available", async function () {
+        // Start with NoViewer
+        runInAction(() => {
+          terria.mainViewer.viewerMode = undefined;
+        });
+        await terria.start({ configUrl: "test-config.json" });
+        await terria.loadInitSources();
+        expect(terria.currentViewer.type).toEqual("none");
+        // Switch to Cesium viewer
+        runInAction(() => {
+          terria.mainViewer.viewerMode = ViewerMode.Cesium;
+        });
+        // Wait for the switch to happen
+        await when(() => terria.mainViewer.currentViewer.type === "Cesium");
+        // Ensure that the camera position is correctly updated after the switch
+        const cameraPos = terria.cesium?.scene.camera.positionCartographic;
+        const { longitude, latitude, height } = cameraPos!;
+        expect(CesiumMath.toDegrees(longitude)).toBeCloseTo(100.5);
+        expect(CesiumMath.toDegrees(latitude)).toBeCloseTo(0.5);
+        expect(height).toBeCloseTo(191276.7939);
+      });
+
+      it("is not applied if subsequent init sources override the initialCamera settings", async function () {
+        await terria.start({ configUrl: "test-config.json" });
+        terria.initSources.push({
+          data: {
+            initialCamera: {
+              west: 42,
+              east: 44,
+              north: 44,
+              south: 42,
+              zoomDuration: 0
+            }
+          }
+        });
+
+        // Terria uses a 2 second flight duration when zooming to CameraView.
+        // Here we re-define zoomTo() to ignore duration and zoom to the target
+        // immediately so that we can observe the effects without delay.
+        const originalZoomTo = terria.currentViewer.zoomTo.bind(
+          terria.currentViewer
+        );
+        terria.currentViewer.zoomTo = (target, _duration) =>
+          originalZoomTo(target, 0.0);
+
+        await terria.loadInitSources();
+        await when(() => terria.currentViewer.type === "Cesium");
+
+        const cameraPos = terria.cesium?.scene.camera.positionCartographic;
+        expect(cameraPos).toBeDefined();
+        const { longitude, latitude, height } = cameraPos!;
+        expect(CesiumMath.toDegrees(longitude)).toBeCloseTo(43);
+        expect(CesiumMath.toDegrees(latitude)).toBeCloseTo(43);
+        expect(height).toBeCloseTo(384989.3092);
+      });
+
+      it("is not applied when share URL specifies a different initialCamera setting", async function () {
+        // Terria uses a 2 second flight duration when zooming to CameraView.
+        // Here we re-define zoomTo() to ignore duration and zoom to the target
+        // immediately so that we can observe the effects without delay.
+        await when(() => terria.currentViewer.type === "Cesium");
+        const originalZoomTo = terria.currentViewer.zoomTo.bind(
+          terria.currentViewer
+        );
+        terria.currentViewer.zoomTo = (target, _duration) =>
+          originalZoomTo(target, 0.0);
+
+        await terria.start({
+          configUrl: "test-config.json",
+          applicationUrl: {
+            // A share URL with a different `initialCamera` setting
+            href: "http://localhost:3001/#start=%7B%22version%22%3A%228.0.0%22%2C%22initSources%22%3A%5B%7B%22stratum%22%3A%22user%22%2C%22initialCamera%22%3A%7B%22east%22%3A80.48324442836365%2C%22west%22%3A74.16912021554141%2C%22north%22%3A10.82936711956377%2C%22south%22%3A7.882086009700934%7D%2C%22workbench%22%3A%5B%22points%22%5D%7D%5D%7D"
+          } as Location
+        });
+
+        await terria.loadInitSources();
+        await when(() => terria.currentViewer.type === "Cesium");
+
+        const cameraPos = terria.cesium?.scene.camera.positionCartographic;
+        expect(cameraPos).toBeDefined();
+        const { longitude, latitude, height } = cameraPos!;
+        expect(CesiumMath.toDegrees(longitude)).toBeCloseTo(77.3261);
+        expect(CesiumMath.toDegrees(latitude)).toBeCloseTo(9.3557);
+        expect(height).toBeCloseTo(591140.7251);
+      });
+    });
   });
 });
