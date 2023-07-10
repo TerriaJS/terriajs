@@ -76,7 +76,9 @@ class Timeline extends React.Component {
         this.props.terria.timelineStack.top.dateFormat
       );
     } else {
-      currentTime = formatDateTime(jsDate, this.props.locale);
+      console.log(this.props.locale);
+      // currentTime = formatDateTime(jsDate, this.props.locale);
+      currentTime = dateFormat(jsDate, "isoDate");
     }
 
     const discreteTimes = catalogItem.discreteTimesAsSortedJulianDates;

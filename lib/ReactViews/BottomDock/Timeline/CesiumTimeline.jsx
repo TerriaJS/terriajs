@@ -30,6 +30,7 @@ const CesiumTimeline = createReactClass({
           defined(layer.dateFormat) &&
           defined(layer.dateFormat.timelineTic)
         ) {
+          console.log("layer.dateFormat", layer.dateFormat);
           return dateFormat(
             JulianDate.toDate(time),
             layer.dateFormat.timelineTic

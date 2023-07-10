@@ -53,6 +53,7 @@ class DateTimeSelectorSection extends React.Component<IProps, IState> {
 
     runInAction(() => {
       // Set the time on the item, set it to use its own clock, update the imagery and repaint.
+      console.log(item);
       item.setTrait(
         CommonStrata.user,
         "currentTime",
@@ -149,7 +150,10 @@ class DateTimeSelectorSection extends React.Component<IProps, IState> {
         format = item.dateFormat;
         discreteTime = dateFormat(time, item.dateFormat);
       } else {
-        discreteTime = formatDateTime(time);
+        // discreteTime = formatDateTime(time);
+        // we have no idea what the format is, so just use isoDate, introducing time is
+        // adding complexity
+        discreteTime = dateFormat(time, "isoDate");
       }
     }
 
