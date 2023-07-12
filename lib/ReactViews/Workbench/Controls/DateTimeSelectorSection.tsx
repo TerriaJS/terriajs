@@ -128,6 +128,13 @@ class DateTimeSelectorSection extends React.Component<IProps, IState> {
     event.stopPropagation();
   }
 
+  getOffsetMinutes(timeZone: string) {
+    const [hoursString, minutesString] = timeZone.split(":");
+    const hours = parseInt(hoursString);
+    const minutes = parseInt(minutesString);
+    return hours * 60 + minutes;
+  }
+
   render() {
     const { t } = this.props;
     let discreteTime;
@@ -145,14 +152,22 @@ class DateTimeSelectorSection extends React.Component<IProps, IState> {
     }
 
     if (isDefined(item.currentDiscreteJulianDate)) {
-      const time = JulianDate.toDate(item.currentDiscreteJulianDate);
+      let time = JulianDate.toDate(item.currentDiscreteJulianDate);
+      if (isDefined(item.timeZone)) {
+        const offset = this.getOffsetMinutes(item.timeZone);
+        const offsetTime = new JulianDate();
+        const adjTime = JulianDate.addMinutes(
+          item.currentDiscreteJulianDate,
+          offset,
+          offsetTime
+        );
+        time = JulianDate.toDate(adjTime);
+      }
+
       if (isDefined(item.dateFormat)) {
         format = item.dateFormat;
         discreteTime = dateFormat(time, item.dateFormat);
       } else {
-        // discreteTime = formatDateTime(time);
-        // we have no idea what the format is, so just use isoDate, introducing time is
-        // adding complexity
         discreteTime = dateFormat(time, "isoDate");
       }
     }

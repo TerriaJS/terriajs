@@ -8,7 +8,7 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import withControlledVisibility from "../../HOCs/withControlledVisibility";
 import CesiumTimeline from "./CesiumTimeline";
-import { formatDateTime } from "./DateFormats";
+// import { formatDateTime } from "./DateFormats";
 import DateTimePicker from "./DateTimePicker";
 import Styles from "./timeline.scss";
 import TimelineControls from "./TimelineControls";
@@ -76,7 +76,7 @@ class Timeline extends React.Component {
         this.props.terria.timelineStack.top.dateFormat
       );
     } else {
-      console.log(this.props.locale);
+      console.log(catalogItem.timeZone);
       // currentTime = formatDateTime(jsDate, this.props.locale);
       currentTime = dateFormat(jsDate, "isoDate");
     }
