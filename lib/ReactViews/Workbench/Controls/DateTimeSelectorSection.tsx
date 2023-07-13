@@ -173,7 +173,7 @@ class DateTimeSelectorSection extends React.Component<IProps, IState> {
           {item.timeLabel ?? t("dateTime.selectorLabel")}
         </Text>
         <Spacing bottom={1} />
-        <Box fullWidth justifySpaceBetween styledHeight={"30px"} gap>
+        <Box fullWidth justifySpaceBetween gap>
           <Box
             backgroundColor="rgba(250, 250, 250, 0.2)"
             css={`
