@@ -8,6 +8,7 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import withControlledVisibility from "../../HOCs/withControlledVisibility";
 import CesiumTimeline from "./CesiumTimeline";
+import { getOffsetMinutes } from "../../../Core/DateUtils";
 // import { formatDateTime } from "./DateFormats";
 import DateTimePicker from "./DateTimePicker";
 import Styles from "./timeline.scss";
@@ -67,7 +68,26 @@ class Timeline extends React.Component {
     }
     const { t } = this.props;
 
-    const jsDate = JulianDate.toDate(catalogItem.currentTimeAsJulianDate);
+    let jsDate;
+
+    if (defined(catalogItem.timeZone)) {
+      try {
+        const offset = getOffsetMinutes(catalogItem.timeZone);
+        const offsetTime = new JulianDate();
+        const adjTime = JulianDate.addMinutes(
+          catalogItem.currentDiscreteJulianDate,
+          offset,
+          offsetTime
+        );
+        jsDate = JulianDate.toDate(adjTime);
+      } catch (e) {
+        console.log(e);
+        jsDate = JulianDate.toDate(catalogItem.currentTimeAsJulianDate);
+      }
+    } else {
+      jsDate = JulianDate.toDate(catalogItem.currentTimeAsJulianDate);
+    }
+
     const timelineStack = this.props.terria.timelineStack;
     let currentTime;
     if (defined(timelineStack.top) && defined(timelineStack.top.dateFormat)) {
@@ -76,9 +96,23 @@ class Timeline extends React.Component {
         this.props.terria.timelineStack.top.dateFormat
       );
     } else {
-      console.log(catalogItem.timeZone);
-      // currentTime = formatDateTime(jsDate, this.props.locale);
-      currentTime = dateFormat(jsDate, "isoDate");
+      if (defined(catalogItem.timeZone)) {
+        const offset = getOffsetMinutes(catalogItem.timeZone);
+        const offsetTime = new JulianDate();
+        const adjTime = JulianDate.addMinutes(
+          catalogItem.currentDiscreteJulianDate,
+          offset,
+          offsetTime
+        );
+        if (defined(catalogItem.dateFormat)) {
+          console.log("adjusted dateFormat", catalogItem.dateFormat);
+          currentTime = dateFormat(adjTime, catalogItem.dateFormat);
+        } else {
+          currentTime = dateFormat(adjTime, "isoDate");
+        }
+      } else {
+        currentTime = dateFormat(jsDate, "isoDate");
+      }
     }
 
     const discreteTimes = catalogItem.discreteTimesAsSortedJulianDates;

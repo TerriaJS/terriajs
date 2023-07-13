@@ -15,6 +15,7 @@ import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Spacing from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
 import { formatDateTime } from "../../BottomDock/Timeline/DateFormats";
+import { getOffsetMinutes } from "../../../Core/DateUtils";
 import DateTimePicker from "../../BottomDock/Timeline/DateTimePicker";
 
 interface IState {
@@ -128,13 +129,6 @@ class DateTimeSelectorSection extends React.Component<IProps, IState> {
     event.stopPropagation();
   }
 
-  getOffsetMinutes(timeZone: string) {
-    const [hoursString, minutesString] = timeZone.split(":");
-    const hours = parseInt(hoursString);
-    const minutes = parseInt(minutesString);
-    return hours * 60 + minutes;
-  }
-
   render() {
     const { t } = this.props;
     let discreteTime;
@@ -154,7 +148,7 @@ class DateTimeSelectorSection extends React.Component<IProps, IState> {
     if (isDefined(item.currentDiscreteJulianDate)) {
       let time = JulianDate.toDate(item.currentDiscreteJulianDate);
       if (isDefined(item.timeZone)) {
-        const offset = this.getOffsetMinutes(item.timeZone);
+        const offset = getOffsetMinutes(item.timeZone);
         const offsetTime = new JulianDate();
         const adjTime = JulianDate.addMinutes(
           item.currentDiscreteJulianDate,
@@ -165,7 +159,6 @@ class DateTimeSelectorSection extends React.Component<IProps, IState> {
       }
 
       if (isDefined(item.dateFormat)) {
-        format = item.dateFormat;
         discreteTime = dateFormat(time, item.dateFormat);
       } else {
         discreteTime = dateFormat(time, "isoDate");
