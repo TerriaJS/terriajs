@@ -1,8 +1,12 @@
 # Change Log
 
-#### next release (8.3.2)
+#### next release (8.3.3)
 
 - [The next improvement]
+
+#### 8.3.2 - 2023-07-14
+
+- Add 2 traits for WMS layers `dateFormat` and `timeZone` to enable control over display of Date/Time
 
 #### 8.3.1 - 2023-06-29
 
