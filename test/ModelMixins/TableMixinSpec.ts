@@ -1,5 +1,11 @@
 import { runInAction } from "mobx";
-import { JulianDate, CustomDataSource, LabelStyle, HorizontalOrigin, VerticalOrigin } from "cesium";
+import {
+  JulianDate,
+  CustomDataSource,
+  LabelStyle,
+  HorizontalOrigin,
+  VerticalOrigin
+} from "cesium";
 import { getMakiIcon } from "../../lib/Map/Icons/Maki/MakiIcons";
 import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
@@ -30,15 +36,15 @@ import TableTrailStyleTraits, {
   EnumTrailSymbolTraits
 } from "../../lib/Traits/TraitsClasses/Table/TrailStyleTraits";
 
-const LatLonValCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_val.csv");
-const LatLonEnumCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum.csv");
-const LatLonValCsvDuplicate = require("raw-loader!../../wwwroot/test/csv/lat_lon_val_with_duplicate_row.csv");
-const LatLonEnumDateIdCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum_date_id.csv");
-const LatLonEnumDateIdWithRegionCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum_date_id_with_regions.csv");
-const LgaWithDisambigCsv = require("raw-loader!../../wwwroot/test/csv/lga_state_disambig.csv");
-const ParkingSensorDataCsv = require("raw-loader!../../wwwroot/test/csv/parking-sensor-data.csv");
-const LegendDecimalPlacesCsv = require("raw-loader!../../wwwroot/test/csv/legend-decimal-places.csv");
-const BadDatesCsv = require("raw-loader!../../wwwroot/test/csv/bad-dates.csv");
+const LatLonValCsv = require("../../wwwroot/test/csv/lat_lon_val.csv");
+const LatLonEnumCsv = require("../../wwwroot/test/csv/lat_lon_enum.csv");
+const LatLonValCsvDuplicate = require("../../wwwroot/test/csv/lat_lon_val_with_duplicate_row.csv");
+const LatLonEnumDateIdCsv = require("../../wwwroot/test/csv/lat_lon_enum_date_id.csv");
+const LatLonEnumDateIdWithRegionCsv = require("../../wwwroot/test/csv/lat_lon_enum_date_id_with_regions.csv");
+const LgaWithDisambigCsv = require("../../wwwroot/test/csv/lga_state_disambig.csv");
+const ParkingSensorDataCsv = require("../../wwwroot/test/csv/parking-sensor-data.csv");
+const LegendDecimalPlacesCsv = require("../../wwwroot/test/csv/legend-decimal-places.csv");
+const BadDatesCsv = require("../../wwwroot/test/csv/bad-dates.csv");
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")
 );

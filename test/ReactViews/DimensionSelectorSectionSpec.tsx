@@ -178,7 +178,7 @@ describe("DimensionSelectorSection", function () {
     });
 
     jasmine.Ajax.stubRequest("test/csv/lga_code_2015.csv").andReturn({
-      responseText: require("raw-loader!../../wwwroot/test/csv/lga_code_2015.csv")
+      responseText: require("../../wwwroot/test/csv/lga_code_2015.csv")
     });
 
     const csvItem = new CsvCatalogItem("some-csv", terria, undefined);

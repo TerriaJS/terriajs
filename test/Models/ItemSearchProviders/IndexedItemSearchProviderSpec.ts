@@ -3,9 +3,9 @@ import JsonValue from "../../../lib/Core/Json";
 import IndexedItemSearchProvider from "../../../lib/Models/ItemSearchProviders/IndexedItemSearchProvider";
 import Csv from "../../../lib/Table/Csv";
 
-const resultsDataCsv = require("raw-loader!../../../wwwroot/test/IndexedItemSearchProvider/resultsData.csv");
-const heightCsv = require("raw-loader!../../../wwwroot/test/IndexedItemSearchProvider/0.csv");
-const areaCsv = require("raw-loader!../../../wwwroot/test/IndexedItemSearchProvider/1.csv");
+const resultsDataCsv = require("../../../wwwroot/test/IndexedItemSearchProvider/resultsData.csv");
+const heightCsv = require("../../../wwwroot/test/IndexedItemSearchProvider/0.csv");
+const areaCsv = require("../../../wwwroot/test/IndexedItemSearchProvider/1.csv");
 
 const validIndexRoot = {
   resultsDataUrl: "resultsData.csv",

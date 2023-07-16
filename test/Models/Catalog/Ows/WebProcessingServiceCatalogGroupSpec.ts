@@ -5,7 +5,7 @@ import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../../lib/Models/Terria";
 import "../../../SpecMain";
 
-const GetCapabilitiesXml = require("raw-loader!../../../../wwwroot/test/WPS/GetCapabilities.xml");
+const GetCapabilitiesXml = require("../../../../wwwroot/test/WPS/GetCapabilities.xml");
 
 describe("WebProcessingServiceCatalogGroup", function () {
   let terria: Terria;

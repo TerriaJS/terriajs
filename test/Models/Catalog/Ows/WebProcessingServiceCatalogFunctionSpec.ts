@@ -27,13 +27,13 @@ configure({
   computedRequiresReaction: true
 });
 
-const processDescriptionsXml = require("raw-loader!../../../../wwwroot/test/WPS/ProcessDescriptions.xml");
+const processDescriptionsXml = require("../../../../wwwroot/test/WPS/ProcessDescriptions.xml");
 
-const executeResponseXml = require("raw-loader!../../../../wwwroot/test/WPS/ExecuteResponse.xml");
+const executeResponseXml = require("../../../../wwwroot/test/WPS/ExecuteResponse.xml");
 
-const failedExecuteResponseXml = require("raw-loader!../../../../wwwroot/test/WPS/FailedExecuteResponse.xml");
+const failedExecuteResponseXml = require("../../../../wwwroot/test/WPS/FailedExecuteResponse.xml");
 
-const pendingExecuteResponseXml = require("raw-loader!../../../../wwwroot/test/WPS/PendingExecuteResponse.xml");
+const pendingExecuteResponseXml = require("../../../../wwwroot/test/WPS/PendingExecuteResponse.xml");
 
 describe("WebProcessingServiceCatalogFunction", function () {
   let wps: WebProcessingServiceCatalogFunction;

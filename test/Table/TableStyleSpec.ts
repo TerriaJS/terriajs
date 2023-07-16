@@ -29,9 +29,9 @@ const Sa4Names = JSON.stringify(
   require("../../wwwroot/data/regionids/region_map-SA4_2016_AUST_SA4_NAME16.json")
 );
 
-const LatLonCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum_date_id.csv");
-const SedCsv = require("raw-loader!../../wwwroot/test/csv/SED_2018_SED_CODE18.csv");
-const YouthUnEmployCsv = require("raw-loader!../../wwwroot/test/csv/youth-unemployment-rate-2018.csv");
+const LatLonCsv = require("../../wwwroot/test/csv/lat_lon_enum_date_id.csv");
+const SedCsv = require("../../wwwroot/test/csv/SED_2018_SED_CODE18.csv");
+const YouthUnEmployCsv = require("../../wwwroot/test/csv/youth-unemployment-rate-2018.csv");
 
 describe("TableStyle", function () {
   let terria: Terria;

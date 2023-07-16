@@ -6,10 +6,10 @@ import SimpleCatalogItem from "../../../Helpers/SimpleCatalogItem";
 import TableAutomaticStylesStratum from "../../../../lib/Table/TableAutomaticStylesStratum";
 import { isEnum } from "../../../../lib/Models/SelectableDimensions/SelectableDimensions";
 
-const GetFeatureOfInterestResponse = require("raw-loader!../../../../wwwroot/test/sos/GetFeatureOfInterestResponse.xml");
-const EmptyGetFeatureOfInterestResponse = require("raw-loader!../../../../wwwroot/test/sos/GetFeatureOfInterestResponse_NoMembers.xml");
-const GetObservationResponseDaily = require("raw-loader!../../../../wwwroot/test/sos/GetObservationResponse_Daily.xml");
-const GetObservationResponseYearly = require("raw-loader!../../../../wwwroot/test/sos/GetObservationResponse_Yearly.xml");
+const GetFeatureOfInterestResponse = require("../../../../wwwroot/test/sos/GetFeatureOfInterestResponse.xml");
+const EmptyGetFeatureOfInterestResponse = require("../../../../wwwroot/test/sos/GetFeatureOfInterestResponse_NoMembers.xml");
+const GetObservationResponseDaily = require("../../../../wwwroot/test/sos/GetObservationResponse_Daily.xml");
+const GetObservationResponseYearly = require("../../../../wwwroot/test/sos/GetObservationResponse_Yearly.xml");
 
 const regionMapping = JSON.stringify(
   require("../../../../wwwroot/data/regionMapping.json")

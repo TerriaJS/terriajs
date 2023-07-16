@@ -1,4 +1,4 @@
-@import "terriajs/lib/Sass/common/_variables.scss";
+@import "./_variables.scss";
 
 @mixin transition($transition...) {
   -moz-transition: $transition;

@@ -9,7 +9,7 @@ const fs = require("fs");
 
 const includePaths = [
   // Support resolving paths like "terriajs/..."
-  path.resolve(path.dirname(require.resolve("terriajs/package.json")), ".."),
+  path.resolve(path.dirname(require.resolve("../package.json")), ".."),
   path.resolve(path.dirname(require.resolve("rc-slider/package.json")), ".."),
   path.resolve(
     path.dirname(require.resolve("react-anything-sortable/package.json")),
@@ -18,13 +18,13 @@ const includePaths = [
 ];
 
 const testFiles = klawSync("./test", {
-  nodir: true,
+  nodir: true
 });
 
 const testRoot = path.resolve("./test");
 console.log(testRoot);
 fs.mkdirSync(testRoot, { recursive: true });
-fs.writeFileSync("./lib/test/index.js", "", { encoding: "utf-8" });
+fs.writeFileSync("./test-lib/index.js", "", { encoding: "utf-8" });
 
 for (const testFile of testFiles) {
   const name = testFile.path;
@@ -34,25 +34,16 @@ for (const testFile of testFiles) {
   const noExtension = name.substring(0, name.length - extension.length);
   const relativePath = path.relative(testRoot, noExtension);
 
-  fs.appendFileSync("./lib/test/index.js", `import "${relativePath}";\n`, { encoding: "utf-8" });
+  fs.appendFileSync("./test-lib/index.js", `import "./${relativePath}";\n`, {
+    encoding: "utf-8"
+  });
 }
-
-throw 1;
-
-const testGlob = [
-  "./test/SpecMain.ts",
-  "./test/**/*Spec.ts",
-  "./test/**/*Spec.tsx",
-  "./test/Models/Experiment.ts"
-];
-
-glob.sync(testGlob)
 
 esbuild
   .build({
-    entryPoints: ["index.js"],
+    entryPoints: ["./test-lib/index.js"],
     bundle: true,
-    outfile: "wwwroot/esbuild/TerriaMap.js",
+    outfile: "wwwroot/esbuild/TerriaJS-specs.js",
     publicPath: "/build-just-terriajs/esbuild",
     jsx: "transform",
     define: {
@@ -93,7 +84,8 @@ esbuild
       ".html": "text",
       ".glb": "file",
       ".xml": "file",
-      ".DAC": "file"
+      ".DAC": "file",
+      ".csv": "file"
     },
     external: [
       // Don't try to load node-only modules and other unnecessary stuff

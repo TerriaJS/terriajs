@@ -3,7 +3,7 @@ import createAustralianGazetteerSearchProvider from "../../lib/Models/SearchProv
 import Terria from "../../lib/Models/Terria";
 import WebFeatureServiceSearchProvider from "../../lib/Models/Catalog/Ows/WebFeatureServiceSearchProvider";
 
-const wfsResponseXml = require("raw-loader!../../wwwroot/test/WFS/getWithFilter.xml");
+const wfsResponseXml = require("../../wwwroot/test/WFS/getWithFilter.xml");
 
 configure({
   enforceActions: "observed",
