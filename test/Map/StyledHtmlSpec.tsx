@@ -6,7 +6,7 @@ import { act } from "react-dom/test-utils";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
-import { StyledHtmlRaw } from "../../lib/ReactViews/Map/Panels/HelpPanel/StyledHtml";
+import StyledHtml from "../../lib/ReactViews/Map/Panels/HelpPanel/StyledHtml";
 import { TooltipWithButtonLauncher } from "../../lib/ReactViews/Generic/TooltipWrapper";
 import registerCustomComponentTypes from "../../lib/ReactViews/Custom/registerCustomComponentTypes";
 
@@ -32,7 +32,7 @@ describe("StyledHtml", function () {
       act(() => {
         testRenderer = create(
           <ThemeProvider theme={terriaTheme}>
-            <StyledHtmlRaw
+            <StyledHtml
               markdown={"something something spatial data mochi"}
               viewState={viewState}
             />
@@ -60,7 +60,7 @@ describe("StyledHtml", function () {
       act(() => {
         testRenderer = create(
           <ThemeProvider theme={terriaTheme}>
-            <StyledHtmlRaw
+            <StyledHtml
               markdown={"something something spatial data mochi"}
               viewState={viewState}
             />

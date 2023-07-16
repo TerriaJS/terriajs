@@ -1,6 +1,5 @@
 import { observer } from "mobx-react";
 import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
 import isDefined from "../../../Core/isDefined";
 import { BaseModel } from "../../../Models/Definition/Model";
 import SelectableDimensions, {
@@ -10,23 +9,22 @@ import SelectableDimensions, {
 import Box from "../../../Styled/Box";
 import SelectableDimension from "../../SelectableDimensions/SelectableDimension";
 
-interface PropsType extends WithTranslation {
+interface PropsType {
   item: BaseModel;
   /** Placement used to filter selectableDimensions.placement (eg 'belowLegend) */
   placement: Placement;
 }
 
-@observer
-class SelectableDimensionSection extends React.Component<PropsType> {
-  override render() {
-    const item = this.props.item;
+const SelectableDimensionSection: React.FC<PropsType> = observer(
+  (props: PropsType) => {
+    const item = props.item;
     if (!SelectableDimensions.is(item)) {
       return null;
     }
 
-    const selectableDimensions = filterSelectableDimensions(
-      this.props.placement
-    )(item.selectableDimensions);
+    const selectableDimensions = filterSelectableDimensions(props.placement)(
+      item.selectableDimensions
+    );
 
     if (!isDefined(selectableDimensions) || selectableDimensions.length === 0) {
       return null;
@@ -44,6 +42,6 @@ class SelectableDimensionSection extends React.Component<PropsType> {
       </Box>
     );
   }
-}
+);
 
-export default withTranslation()(SelectableDimensionSection);
+export default SelectableDimensionSection;

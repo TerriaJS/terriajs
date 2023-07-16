@@ -42,12 +42,12 @@ class TestTimeFilterableItem extends TimeFilterMixin(
   }
 
   override async _protected_forceLoadMapItems(): Promise<void> {}
-  get discreteTimes() {
+  override get discreteTimes() {
     return undefined;
   }
 
   @computed
-  get mapItems() {
+  override get mapItems() {
     return [];
   }
 }

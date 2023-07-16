@@ -123,7 +123,7 @@ class TestChartCustomComponent extends ChartCustomComponent<ChartableMixin.Insta
 class TestCatalogItem extends ChartableMixin(
   CreateModel(mixTraits(UrlTraits, MappableTraits))
 ) {
-  get chartItems() {
+  override get chartItems() {
     return [];
   }
 }

@@ -1,4 +1,4 @@
-import { WithT } from "i18next";
+import { TFunction, WithT } from "i18next";
 import isEmpty from "lodash-es/isEmpty";
 import React, { useEffect, useState } from "react";
 import {
@@ -26,14 +26,16 @@ import Loading from "./Loading";
 import Text from "../../../Styled/Text";
 import Box from "../../../Styled/Box";
 import Button from "../../../Styled/Button";
+import workingWithTranslation from "../../workingWithTranslation";
 
-export interface SearchFormProps extends WithTranslation {
+export interface SearchFormProps {
   itemSearchProvider: ItemSearchProvider;
   parameters: ItemSearchParameter[];
   query: ItemSearchQuery;
   onResults: (query: ItemSearchQuery, results: ItemSearchResult[]) => void;
   onValueChange?: (parameterId: string, value: any) => void;
   afterLoad?: () => void;
+  t: TFunction;
 }
 
 type State =
@@ -336,4 +338,4 @@ const Select = styled(ReactSelect).attrs({
   }
 `;
 
-export default withTranslation()(SearchForm);
+export default workingWithTranslation(SearchForm);

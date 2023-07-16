@@ -1,5 +1,10 @@
 import { action, runInAction, toJS } from "mobx";
-import { buildModuleUrl, RequestScheduler, CustomDataSource, Entity } from "cesium";
+import {
+  buildModuleUrl,
+  RequestScheduler,
+  CustomDataSource,
+  Entity
+} from "cesium";
 import { SplitDirection } from "cesium";
 import hashEntity from "../../lib/Core/hashEntity";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
@@ -1635,7 +1640,7 @@ describe("Terria", function () {
       const ds = new CustomDataSource("ds");
       const entity = new Entity({ name: "foo" });
       ds.entities.add(entity);
-      testItem.mapItems = [ds];
+      testItem._private_mapItems = [ds];
       await terria.workbench.add(testItem);
       const entityHash = hashEntity(entity, terria);
       await terria.loadPickedFeatures({

@@ -17,12 +17,15 @@ import ErrorComponent from "./ErrorComponent";
 import Loading from "./Loading";
 import SearchForm from "./SearchForm";
 import SearchResults from "./SearchResults";
+import workingWithTranslation from "../../workingWithTranslation";
+import { TFunction } from "i18next";
 
-export interface PropsType extends WithTranslation {
+export interface PropsType {
   item: SearchableItemMixin.Instance;
   itemSearchProvider: ItemSearchProvider;
   viewState: ViewState;
   afterLoad?: () => void;
+  t: TFunction;
 }
 
 type State =
@@ -156,4 +159,4 @@ function onItemDisabledOrRemovedFromWorkbench(
   return disposer;
 }
 
-export default withTranslation()(ItemSearchTool);
+export default workingWithTranslation(ItemSearchTool);

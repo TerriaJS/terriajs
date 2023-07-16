@@ -3,7 +3,7 @@ import { TFunction } from "i18next";
 import { action, reaction, runInAction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
-import { withTranslation } from "react-i18next";
+import { useTranslation, withTranslation } from "react-i18next";
 import { Cartesian3 } from "cesium";
 import { Ellipsoid } from "cesium";
 import { Math as CesiumMath } from "cesium";
@@ -33,6 +33,7 @@ import { withViewState } from "../StandardUserInterface/ViewStateContext";
 import Styles from "./feature-info-panel.scss";
 import FeatureInfoCatalogItem from "./FeatureInfoCatalogItem";
 import DragWrapper from "../DragWrapper";
+import workingWithTranslation from "../workingWithTranslation";
 
 interface Props {
   viewState: ViewState;
@@ -465,4 +466,4 @@ function recurseIntoMembers(catalogItem: BaseModel): BaseModel[] {
 }
 
 export { FeatureInfoPanel };
-export default withTranslation()(withViewState(FeatureInfoPanel));
+export default workingWithTranslation(withViewState(FeatureInfoPanel));

@@ -1,6 +1,14 @@
 import { autorun, runInAction } from "mobx";
-import { GeographicTilingScheme, Resource, WebMercatorTilingScheme, WebMapServiceImageryProvider } from "cesium";
-import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
+import {
+  GeographicTilingScheme,
+  Resource,
+  WebMercatorTilingScheme,
+  WebMapServiceImageryProvider
+} from "cesium";
+import {
+  ImageryParts,
+  MapItem
+} from "../../../../lib/ModelMixins/MappableMixin";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../../lib/Models/Terria";
@@ -123,24 +131,28 @@ describe("WebMapServiceCatalogItem", function () {
       wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
       wms.setTrait("definition", "layers", "single_period");
     });
-    let mapItems: ImageryParts[] = [];
+    let mapItems: MapItem[] = [];
     const cleanup = autorun(() => {
       mapItems = wms.mapItems.slice();
     });
     try {
       await wms.loadMetadata();
       expect(mapItems.length).toBe(1);
-      expect(mapItems[0].alpha).toBeCloseTo(0.8);
+      expect((mapItems[0] as ImageryParts).alpha).toBeCloseTo(0.8);
       expect(
-        mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider
+        (mapItems[0] as ImageryParts).imageryProvider instanceof
+          WebMapServiceImageryProvider
       ).toBeTruthy();
-      if (mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider) {
-        expect(mapItems[0].imageryProvider.url).toBe(
+      if (
+        (mapItems[0] as ImageryParts).imageryProvider instanceof
+        WebMapServiceImageryProvider
+      ) {
+        expect((mapItems[0] as any).imageryProvider.url).toBe(
           "test/WMS/single_metadata_url.xml"
         );
 
         const tileProviderResource: Resource = (
-          mapItems[0].imageryProvider as any
+          (mapItems[0] as ImageryParts).imageryProvider as any
         )._tileProvider._resource;
 
         expect(tileProviderResource.queryParameters.version).toBe("1.3.0");
@@ -152,7 +164,7 @@ describe("WebMapServiceCatalogItem", function () {
         expect(tileProviderResource.queryParameters.format).toBe("image/png");
 
         const getFeatureInfoResource: Resource = (
-          mapItems[0].imageryProvider as any
+          (mapItems[0] as ImageryParts).imageryProvider as any
         )._pickFeaturesResource;
 
         expect(getFeatureInfoResource.queryParameters.version).toBe("1.3.0");
@@ -166,8 +178,12 @@ describe("WebMapServiceCatalogItem", function () {
           terria.configParameters.defaultMaximumShownFeatureInfos + 1
         );
 
-        expect(mapItems[0].imageryProvider.tileHeight).toBe(256);
-        expect(mapItems[0].imageryProvider.tileWidth).toBe(256);
+        expect((mapItems[0] as ImageryParts).imageryProvider.tileHeight).toBe(
+          256
+        );
+        expect((mapItems[0] as ImageryParts).imageryProvider.tileWidth).toBe(
+          256
+        );
       }
     } finally {
       cleanup();
@@ -183,22 +199,28 @@ describe("WebMapServiceCatalogItem", function () {
       wms.setTrait("definition", "useWmsVersion130", false);
       wms.setTrait("definition", "layers", "IDZ10004");
     });
-    let mapItems: ImageryParts[] = [];
+    let mapItems: MapItem[] = [];
     const cleanup = autorun(() => {
       mapItems = wms.mapItems.slice();
     });
     try {
       await wms.loadMetadata();
       expect(mapItems.length).toBe(1);
-      expect(mapItems[0].alpha).toBeCloseTo(0.8);
+      expect((mapItems[0] as ImageryParts).alpha).toBeCloseTo(0.8);
       expect(
-        mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider
+        (mapItems[0] as ImageryParts).imageryProvider instanceof
+          WebMapServiceImageryProvider
       ).toBeTruthy();
-      if (mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider) {
-        expect(mapItems[0].imageryProvider.url).toBe("test/WMS/wms_1_1_1.xml");
+      if (
+        (mapItems[0] as ImageryParts).imageryProvider instanceof
+        WebMapServiceImageryProvider
+      ) {
+        expect((mapItems[0] as any).imageryProvider.url).toBe(
+          "test/WMS/wms_1_1_1.xml"
+        );
 
         const tileProviderResource: Resource = (
-          mapItems[0].imageryProvider as any
+          (mapItems[0] as ImageryParts).imageryProvider as any
         )._tileProvider._resource;
 
         expect(tileProviderResource.queryParameters.version).toBe("1.1.1");
@@ -213,7 +235,7 @@ describe("WebMapServiceCatalogItem", function () {
         expect(tileProviderResource.queryParameters.transparent).toBeTruthy();
 
         const getFeatureInfoResource: Resource = (
-          mapItems[0].imageryProvider as any
+          (mapItems[0] as ImageryParts).imageryProvider as any
         )._pickFeaturesResource;
 
         expect(getFeatureInfoResource.queryParameters.version).toBe("1.1.1");
@@ -230,8 +252,12 @@ describe("WebMapServiceCatalogItem", function () {
           terria.configParameters.defaultMaximumShownFeatureInfos + 1
         );
 
-        expect(mapItems[0].imageryProvider.tileHeight).toBe(256);
-        expect(mapItems[0].imageryProvider.tileWidth).toBe(256);
+        expect((mapItems[0] as ImageryParts).imageryProvider.tileHeight).toBe(
+          256
+        );
+        expect((mapItems[0] as ImageryParts).imageryProvider.tileWidth).toBe(
+          256
+        );
       }
     } finally {
       cleanup();
@@ -254,24 +280,28 @@ describe("WebMapServiceCatalogItem", function () {
       });
       wms.setTrait("definition", "getFeatureInfoUrl", "another/url");
     });
-    let mapItems: ImageryParts[] = [];
+    let mapItems: MapItem[] = [];
     const cleanup = autorun(() => {
       mapItems = wms.mapItems.slice();
     });
     try {
       await wms.loadMetadata();
       expect(mapItems.length).toBe(1);
-      expect(mapItems[0].alpha).toBeCloseTo(0.8);
+      expect((mapItems[0] as ImageryParts).alpha).toBeCloseTo(0.8);
       expect(
-        mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider
+        (mapItems[0] as ImageryParts).imageryProvider instanceof
+          WebMapServiceImageryProvider
       ).toBeTruthy();
-      if (mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider) {
-        expect(mapItems[0].imageryProvider.url).toBe(
+      if (
+        (mapItems[0] as ImageryParts).imageryProvider instanceof
+        WebMapServiceImageryProvider
+      ) {
+        expect((mapItems[0] as any).imageryProvider.url).toBe(
           "test/WMS/single_metadata_url.xml"
         );
 
         const tileProviderResource: Resource = (
-          mapItems[0].imageryProvider as any
+          (mapItems[0] as ImageryParts).imageryProvider as any
         )._tileProvider._resource;
 
         expect(tileProviderResource.queryParameters.version).toBe("1.3.0");
@@ -285,7 +315,7 @@ describe("WebMapServiceCatalogItem", function () {
         expect(tileProviderResource.queryParameters.another).toBe("value");
 
         const getFeatureInfoResource: Resource = (
-          mapItems[0].imageryProvider as any
+          (mapItems[0] as ImageryParts).imageryProvider as any
         )._pickFeaturesResource;
 
         expect(getFeatureInfoResource.queryParameters.version).toBe("1.3.0");
@@ -301,8 +331,12 @@ describe("WebMapServiceCatalogItem", function () {
         expect(getFeatureInfoResource.queryParameters.some).toBe("thing else");
         expect(getFeatureInfoResource.queryParameters.another).toBe("value");
 
-        expect(mapItems[0].imageryProvider.tileHeight).toBe(256);
-        expect(mapItems[0].imageryProvider.tileWidth).toBe(256);
+        expect((mapItems[0] as ImageryParts).imageryProvider.tileHeight).toBe(
+          256
+        );
+        expect((mapItems[0] as ImageryParts).imageryProvider.tileWidth).toBe(
+          256
+        );
       }
     } finally {
       cleanup();
@@ -321,7 +355,7 @@ describe("WebMapServiceCatalogItem", function () {
         "Landsat 30+ Barest Earth 25m albers (Combined Landsat)"
       );
     });
-    let mapItems: ImageryParts[] = [];
+    let mapItems: MapItem[] = [];
     const cleanup = autorun(() => {
       mapItems = wms.mapItems.slice();
     });
@@ -382,18 +416,26 @@ describe("WebMapServiceCatalogItem", function () {
       wms.setTrait("definition", "tileWidth", 512);
       wms.setTrait("definition", "tileHeight", 512);
     });
-    let mapItems: ImageryParts[] = [];
+    let mapItems: MapItem[] = [];
     const cleanup = autorun(() => {
       mapItems = wms.mapItems.slice();
     });
     try {
       await wms.loadMetadata();
       expect(
-        mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider
+        (mapItems[0] as ImageryParts).imageryProvider instanceof
+          WebMapServiceImageryProvider
       ).toBeTruthy();
-      if (mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider) {
-        expect(mapItems[0].imageryProvider.tileHeight).toBe(512);
-        expect(mapItems[0].imageryProvider.tileWidth).toBe(512);
+      if (
+        (mapItems[0] as ImageryParts).imageryProvider instanceof
+        WebMapServiceImageryProvider
+      ) {
+        expect((mapItems[0] as ImageryParts).imageryProvider.tileHeight).toBe(
+          512
+        );
+        expect((mapItems[0] as ImageryParts).imageryProvider.tileWidth).toBe(
+          512
+        );
       }
     } finally {
       cleanup();
@@ -823,7 +865,7 @@ describe("WebMapServiceCatalogItem", function () {
           true
         );
       });
-      imageryProvider = item.mapItems[0]
+      imageryProvider = (item.mapItems[0] as ImageryParts)
         .imageryProvider as WebMapServiceImageryProvider;
     });
 
@@ -890,7 +932,9 @@ describe("WebMapServiceCatalogItem", function () {
 function getWebMapServiceImageryProvider(
   item: WebMapServiceCatalogItem
 ): WebMapServiceImageryProvider | undefined {
-  const imageryProvider = runInAction(() => item.mapItems[0])?.imageryProvider;
+  const imageryProvider = runInAction(
+    () => item.mapItems[0] as ImageryParts
+  )?.imageryProvider;
   return imageryProvider instanceof WebMapServiceImageryProvider
     ? imageryProvider
     : undefined;

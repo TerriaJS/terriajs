@@ -14,6 +14,7 @@ import getAncestors from "../../Models/getAncestors";
 import getDereferencedIfExists from "../../Core/getDereferencedIfExists";
 import { runInAction } from "mobx";
 import CommonStrata from "../../Models/Definition/CommonStrata";
+import workingWithTranslation from "../workingWithTranslation";
 
 const RawButtonAndUnderline = styled(RawButton)`
   ${(props) => `
@@ -114,4 +115,4 @@ class Breadcrumbs extends React.Component {
   }
 }
 
-export default withTranslation()(withTheme(Breadcrumbs));
+export default workingWithTranslation(withTheme(Breadcrumbs));

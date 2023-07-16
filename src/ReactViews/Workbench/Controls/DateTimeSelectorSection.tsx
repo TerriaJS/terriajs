@@ -16,12 +16,13 @@ import Spacing from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
 import { formatDateTime } from "../../BottomDock/Timeline/DateFormats";
 import DateTimePicker from "../../BottomDock/Timeline/DateTimePicker";
+import workingWithTranslation from "../../workingWithTranslation";
 
 interface IState {
   isOpen: boolean;
 }
 
-interface IProps extends WithTranslation {
+interface IProps {
   item: DiscretelyTimeVaryingMixin.Instance;
   t: TFunction;
 }
@@ -282,4 +283,4 @@ const TimelineButton = styled(RawButton)<{ active: boolean }>`
   `}
 `;
 
-export default withTranslation()(DateTimeSelectorSection);
+export default workingWithTranslation(DateTimeSelectorSection);

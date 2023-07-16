@@ -1,5 +1,11 @@
 import i18next from "i18next";
-import { RequestErrorEvent, Resource, TileProviderError, ImageryProvider, WebMapServiceImageryProvider } from "cesium";
+import {
+  RequestErrorEvent,
+  Resource,
+  TileProviderError,
+  ImageryProvider,
+  WebMapServiceImageryProvider
+} from "cesium";
 import MappableMixin, { MapItem } from "../../lib/ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../../lib/ModelMixins/TileErrorHandlerMixin";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
@@ -42,7 +48,7 @@ class TestCatalogItem extends TileErrorHandlerMixin(
     return Promise.resolve();
   }
 
-  get mapItems(): MapItem[] {
+  override get mapItems(): MapItem[] {
     return [
       {
         imageryProvider: this.imageryProvider,

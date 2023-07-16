@@ -22,7 +22,9 @@ describe("CzmlCatalogItem", function () {
     it("works by URL", async function () {
       czml.setTrait(CommonStrata.user, "url", "test/CZML/verysimple.czml");
       await czml.loadMapItems();
-      expect(czml.mapItems[0].entities.values.length).toBeGreaterThan(0);
+      expect(
+        (czml.mapItems[0] as CzmlDataSource).entities.values.length
+      ).toBeGreaterThan(0);
     });
 
     it("proxies URLs", async function () {
@@ -39,21 +41,27 @@ describe("CzmlCatalogItem", function () {
       const czmlString = await loadText("test/CZML/verysimple.czml");
       czml.setTrait(CommonStrata.user, "czmlString", czmlString);
       await czml.loadMapItems();
-      expect(czml.mapItems[0].entities.values.length).toBeGreaterThan(0);
+      expect(
+        (czml.mapItems[0] as CzmlDataSource).entities.values.length
+      ).toBeGreaterThan(0);
     });
 
     it("works by json object", async function () {
       const czmlJson = await loadJson("test/CZML/verysimple.czml");
       czml.setTrait(CommonStrata.user, "czmlData", czmlJson);
       await czml.loadMapItems();
-      expect(czml.mapItems[0].entities.values.length).toBeGreaterThan(0);
+      expect(
+        (czml.mapItems[0] as CzmlDataSource).entities.values.length
+      ).toBeGreaterThan(0);
     });
 
     it("works by blob", async function () {
       const blob = (await loadBlob("test/CZML/verysimple.czml")) as File;
       czml.setFileInput(blob);
       await czml.loadMapItems();
-      expect(czml.mapItems[0].entities.values.length).toBeGreaterThan(0);
+      expect(
+        (czml.mapItems[0] as CzmlDataSource).entities.values.length
+      ).toBeGreaterThan(0);
     });
   });
 
@@ -61,28 +69,36 @@ describe("CzmlCatalogItem", function () {
     it("works by URL", async function () {
       czml.setTrait(CommonStrata.user, "url", "test/CZML/Vehicle.czml");
       await czml.loadMapItems();
-      expect(czml.mapItems[0].entities.values.length).toBeGreaterThan(0);
+      expect(
+        (czml.mapItems[0] as CzmlDataSource).entities.values.length
+      ).toBeGreaterThan(0);
     });
 
     it("works by string", async function () {
-      const czmlString = await loadText("test/CZML/Vehicle.czml");
+      const czmlString = await loadText("test/CZML/Vehicle.czml", undefined);
       czml.setTrait(CommonStrata.user, "czmlString", czmlString);
       await czml.loadMapItems();
-      expect(czml.mapItems[0].entities.values.length).toBeGreaterThan(0);
+      expect(
+        (czml.mapItems[0] as CzmlDataSource).entities.values.length
+      ).toBeGreaterThan(0);
     });
 
     it("works by blob", async function () {
       const blob = (await loadBlob("test/CZML/Vehicle.czml")) as File;
       czml.setFileInput(blob);
       await czml.loadMapItems();
-      expect(czml.mapItems[0].entities.values.length).toBeGreaterThan(0);
+      expect(
+        (czml.mapItems[0] as CzmlDataSource).entities.values.length
+      ).toBeGreaterThan(0);
     });
   });
 
   it("can load a CZML file with multiple moving and static objects", async function () {
     czml.setTrait(CommonStrata.user, "url", "test/CZML/simple.czml");
     await czml.loadMapItems();
-    expect(czml.mapItems[0].entities.values.length).toBeGreaterThan(0);
+    expect(
+      (czml.mapItems[0] as CzmlDataSource).entities.values.length
+    ).toBeGreaterThan(0);
   });
 
   describe("Time varying traits", function () {

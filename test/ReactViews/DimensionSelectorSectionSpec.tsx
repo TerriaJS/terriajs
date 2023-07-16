@@ -25,7 +25,7 @@ export default class TestCatalogItem
   implements SelectableDimensions
 {
   static readonly type = "stub";
-  get type() {
+  override get type() {
     return "test";
   }
 

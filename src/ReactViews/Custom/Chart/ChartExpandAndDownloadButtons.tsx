@@ -11,10 +11,11 @@ import Terria from "../../../Models/Terria";
 import Icon from "../../../Styled/Icon";
 import UrlTraits from "../../../Traits/TraitsClasses/UrlTraits";
 import Styles from "./chart-expand-and-download-buttons.scss";
+import workingWithTranslation from "../../workingWithTranslation";
 
 const Dropdown = require("../../Generic/Dropdown");
 
-interface PropsType extends WithTranslation {
+interface PropsType {
   terria: Terria;
   sourceItems: Promise<ChartableMixin.Instance | undefined>[]; // Array of items or Promise returning item
   sourceNames?: string[];
@@ -212,4 +213,4 @@ const ExpandAndDownloadButtons = function (props: {
   );
 };
 
-export default withTranslation()(ChartExpandAndDownloadButtons);
+export default workingWithTranslation(ChartExpandAndDownloadButtons);

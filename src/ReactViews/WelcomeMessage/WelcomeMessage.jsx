@@ -56,8 +56,7 @@ class WelcomeMessage extends React.Component {
 
   static propTypes = {
     viewState: PropTypes.object,
-    theme: PropTypes.object,
-    t: PropTypes.func.isRequired
+    theme: PropTypes.object
   };
 
   constructor(props) {
@@ -356,4 +355,4 @@ WelcomeMessagePure.propTypes = {
   viewState: PropTypes.object.isRequired
 };
 
-export default withTranslation()(withViewState(withTheme(WelcomeMessage)));
+export default withViewState(withTheme(WelcomeMessage));

@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
-import { Trans, withTranslation } from "react-i18next";
+import { Trans } from "react-i18next";
 import { defined } from "cesium";
 import Box from "../../Styled/Box";
 import Button from "../../Styled/Button";
@@ -12,6 +12,7 @@ import ExportData from "./ExportData";
 import Styles from "./mappable-preview.scss";
 import MetadataTable from "./MetadataTable";
 import WarningBox from "./WarningBox";
+import workingWithTranslation from "../workingWithTranslation";
 
 /**
  * CatalogItem description.
@@ -294,4 +295,4 @@ class Description extends React.Component {
   }
 }
 
-export default withTranslation()(Description);
+export default workingWithTranslation(Description);

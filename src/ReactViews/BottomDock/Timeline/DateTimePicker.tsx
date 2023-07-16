@@ -9,7 +9,7 @@ import {
 import { observer } from "mobx-react";
 import moment from "moment";
 import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import { TFunction } from "react-i18next";
 import styled from "styled-components";
 import isDefined from "../../../Core/isDefined";
 import {
@@ -21,6 +21,7 @@ import { scrollBars } from "../../../Styled/mixins";
 import Spacing from "../../../Styled/Spacing";
 import Icon from "../../../Styled/Icon";
 import { formatDateTime } from "./DateFormats";
+import workingWithTranslation from "../../workingWithTranslation";
 
 const dateFormat = require("dateformat");
 const DatePicker = require("react-datepicker").default;
@@ -141,7 +142,7 @@ export const DateButton = styled(Button).attrs({
   border-radius: 4px;
 `;
 
-interface PropsType extends WithTranslation {
+interface PropsType {
   dates: ObjectifiedDates;
   currentDate?: Date; // JS Date object - must be an element of props.dates, or null/undefined.
   onChange: (date: Date) => void;
@@ -150,6 +151,7 @@ interface PropsType extends WithTranslation {
   onOpen: () => void;
   onClose: () => void;
   dateFormat?: string;
+  t: TFunction;
 }
 
 type Granularity = "century" | "year" | "month" | "day" | "time" | "hour";
@@ -732,4 +734,4 @@ class DateTimePicker extends React.Component<PropsType> {
   }
 }
 
-export default withTranslation()(DateTimePicker);
+export default workingWithTranslation(DateTimePicker);

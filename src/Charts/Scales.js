@@ -14,11 +14,11 @@ const Scales = {
   /**
    * Calculates the appropriate d3 scales.
    *
-   * @param  {Size} size Dimensions of plot area, as returned by Size class.
-   * @param  {Object} [domain] Optional, object containing [minimum, maximum] arrays for each axis.
+   * @param  {Object} size Dimensions of plot area, as returned by Size class.
+   * @param  {Object} domain Optional, object containing [minimum, maximum] arrays for each axis.
    * @param  {Number[]} domain.x [x-minimum, x-maximum].
    * @param  {Object} domain.y An object whose keys are units ("undefined" for unknown), values being [y-minimum, y-maximum].
-   * @param  {ChartData[]} data The data for each line. This is required to extract units. Also if no domain is provided, it is calculated from the data.
+   * @param  {Object[]} data The data for each line. This is required to extract units. Also if no domain is provided, it is calculated from the data.
    * @return {Object} {x, y: { [unit1], [unit2] ... }} where values are D3-scale objects.
    */
   calculate(size, domain, data, xPadding = 0) {
@@ -172,8 +172,8 @@ const Scales = {
 
   /**
    * Return the automatically-generated tick values, but with the last one removed if it is too close to the end.
-   * @param  {d3.scale} scale The scale along which to calculate the tick values.
-   * @param  {Integer} numberOfTicks Number of ticks.
+   * @param  {Object} scale The scale along which to calculate the tick values.
+   * @param  {Number} numberOfTicks Number of ticks.
    * @return {Array} Tick values.
    */
   truncatedTickValues(scale, numberOfTicks) {

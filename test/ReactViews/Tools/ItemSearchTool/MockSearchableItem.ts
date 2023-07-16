@@ -8,11 +8,11 @@ import SearchableItemTraits from "../../../../lib/Traits/TraitsClasses/Searchabl
 export default class MockSearchableItem extends SearchableItemMixin(
   CreateModel(mixTraits(SearchableItemTraits, MappableTraits))
 ) {
-  highlightFeaturesFromItemSearchResults(results: ItemSearchResult[]) {
+  override highlightFeaturesFromItemSearchResults(results: ItemSearchResult[]) {
     return () => {};
   }
-  hideFeaturesNotInItemSearchResults(results: ItemSearchResult[]) {
+  override hideFeaturesNotInItemSearchResults(results: ItemSearchResult[]) {
     return () => {};
   }
-  zoomToItemSearchResult(result: ItemSearchResult) {}
+  override zoomToItemSearchResult(result: ItemSearchResult) {}
 }

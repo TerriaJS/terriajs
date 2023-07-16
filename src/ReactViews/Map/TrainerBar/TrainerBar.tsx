@@ -1,7 +1,7 @@
-import { TFunction } from "i18next";
+import { TFunction, i18n } from "i18next";
 import { observer } from "mobx-react";
 import React from "react";
-import { Translation, WithTranslation, withTranslation } from "react-i18next";
+import { Translation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import {
   HelpContentItem,
@@ -22,6 +22,7 @@ import {
   withViewState
 } from "../../StandardUserInterface/ViewStateContext";
 import { applyTranslationIfExists } from "./../../../Language/languageHelpers";
+import workingWithTranslation from "../../workingWithTranslation";
 
 const StyledHtml: any =
   require("../../Map/Panels/HelpPanel/StyledHtml").default;
@@ -147,7 +148,7 @@ interface StepAccordionState {
 
 // Originally written as a SFC but measureElement only supports class components at the moment
 class StepAccordionRaw extends React.Component<
-  StepAccordionProps & MeasureElementProps & WithTranslation & WithViewState,
+  StepAccordionProps & MeasureElementProps & WithViewState,
   StepAccordionState
 > {
   refToMeasure: any;
@@ -298,12 +299,13 @@ class StepAccordionRaw extends React.Component<
     );
   }
 }
-const StepAccordion = withTranslation()(
+const StepAccordion = workingWithTranslation(
   withViewState(measureElement(StepAccordionRaw))
 );
 
-interface TrainerBarProps extends WithTranslation, WithViewState {
+interface TrainerBarProps extends WithViewState {
   t: TFunction;
+  i18n: i18n;
   theme: DefaultTheme;
 }
 
@@ -467,4 +469,4 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
   );
 });
 
-export default withTranslation()(withViewState(withTheme(TrainerBar)));
+export default workingWithTranslation(withViewState(withTheme(TrainerBar)));

@@ -2,7 +2,7 @@ import { sortBy, uniqBy } from "lodash";
 import { action, computed, runInAction, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import { TFunction, withTranslation, WithTranslation } from "react-i18next";
 import styled from "styled-components";
 import { createGuid } from "cesium";
 import { defined } from "cesium";
@@ -47,6 +47,7 @@ import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
 import { exportData } from "../../Preview/ExportData";
 import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
 import WorkbenchButton from "../WorkbenchButton";
+import workingWithTranslation from "../../workingWithTranslation";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -91,9 +92,10 @@ const ViewingControlMenuButton = styled(RawButton).attrs({
   }
 `;
 
-interface PropsType extends WithTranslation {
+interface PropsType {
   viewState: ViewState;
   item: BaseModel;
+  t: TFunction;
 }
 
 @observer
@@ -574,4 +576,4 @@ class ViewingControls extends React.Component<
   }
 }
 
-export default withTranslation()(ViewingControls);
+export default workingWithTranslation(ViewingControls);

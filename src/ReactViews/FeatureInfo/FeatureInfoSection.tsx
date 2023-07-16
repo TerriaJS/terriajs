@@ -48,6 +48,8 @@ import {
   mustacheURLEncodeText,
   mustacheURLEncodeTextComponent
 } from "./mustacheExpressions";
+import workingWithTranslation from "../workingWithTranslation";
+import ViewState from "../../ReactViewModels/ViewState";
 
 // We use Mustache templates inside React views, where React does the escaping; don't escape twice, or eg. " => &quot;
 Mustache.escape = function (string) {
@@ -526,4 +528,4 @@ const ButtonsContainer = styled.div`
   padding: 7px 0 10px 0;
 `;
 
-export default withTranslation()(withViewState(FeatureInfoSection));
+export default workingWithTranslation(withViewState(FeatureInfoSection));

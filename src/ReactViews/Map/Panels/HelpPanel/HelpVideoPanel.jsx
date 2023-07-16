@@ -12,6 +12,7 @@ import VideoGuide from "./VideoGuide";
 import TrainerPane from "./TrainerPane";
 import StyledHtml from "./StyledHtml";
 import SatelliteGuide from "../../../Guide/SatelliteGuide";
+import workingWithTranslation from "../../../workingWithTranslation";
 
 const HELP_VIDEO_NAME = "helpVideo";
 
@@ -127,4 +128,4 @@ class HelpVideoPanel extends React.Component {
   }
 }
 
-export default withTranslation()(withTheme(HelpVideoPanel));
+export default workingWithTranslation(withTheme(HelpVideoPanel));

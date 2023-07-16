@@ -7,6 +7,8 @@ import Box from "../../../../Styled/Box";
 import styled, { withTheme, DefaultTheme } from "../../../../Styled/styled";
 import { i18n, TFunction } from "i18next";
 import ViewState from "../../../../ReactViewModels/ViewState";
+import { useTranslation } from "react-i18next";
+import { useTheme } from "styled-components";
 
 import { applyTranslationIfExists } from "../../../../Language/languageHelpers";
 import { parseCustomMarkdownToReactWithOptions } from "../../../Custom/parseCustomMarkdownToReact";
@@ -22,6 +24,13 @@ const Numbers = styled(Text)<{ darkBg: boolean }>`
   border-radius: 50%;
   background-color: ${(props) => props.theme.textDarker};
 `;
+
+interface PropsType {
+  markdown: string;
+  viewState: ViewState;
+  styledTextProps?: any;
+  injectTooltips?: boolean;
+}
 
 const renderOrderedList = function (contents: any) {
   return contents.map((content: any, i: number) => {
@@ -40,16 +49,6 @@ const renderOrderedList = function (contents: any) {
     );
   });
 };
-
-interface PropsType extends WithTranslationProps, WithViewState {
-  markdown: string;
-  viewState: ViewState;
-  theme?: DefaultTheme;
-  styledTextProps?: any;
-  injectTooltips?: boolean;
-  t: TFunction;
-  i18n: i18n;
-}
 
 function renderContentItem(props: PropsType, item: any, i: number) {
   if (!item) return item;
@@ -85,40 +84,30 @@ function renderContentItem(props: PropsType, item: any, i: number) {
   }
 }
 
-@observer
-export class StyledHtmlRaw extends React.Component<PropsType> {
-  static displayName = "StyledHtml";
+const StyledHtml: React.FC<PropsType> = observer((props: PropsType) => {
+  const { i18n } = useTranslation();
+  const theme = useTheme();
 
-  static defaultProps = {
-    injectTooltips: true
-  };
+  const { viewState, injectTooltips } = props;
+  const styledTextProps = props.styledTextProps || {};
 
-  constructor(props: PropsType) {
-    super(props);
-  }
+  const markdownToParse = applyTranslationIfExists(props.markdown, i18n);
 
-  override render() {
-    const { viewState, injectTooltips, i18n } = this.props;
-    const styledTextProps = this.props.styledTextProps || {};
+  const parsed = parseCustomMarkdownToReactWithOptions(markdownToParse, {
+    injectTermsAsTooltips: injectTooltips,
+    tooltipTerms: viewState.terria.configParameters.helpContentTerms
+  });
+  const content = Array.isArray(parsed.props.children)
+    ? parsed.props.children
+    : [parsed.props.children];
 
-    const markdownToParse = applyTranslationIfExists(this.props.markdown, i18n);
+  return (
+    <div>
+      {content?.map((item: any, i: number) =>
+        renderContentItem(props, item, i)
+      )}
+    </div>
+  );
+});
 
-    const parsed = parseCustomMarkdownToReactWithOptions(markdownToParse, {
-      injectTermsAsTooltips: injectTooltips,
-      tooltipTerms: viewState.terria.configParameters.helpContentTerms
-    });
-    const content = Array.isArray(parsed.props.children)
-      ? parsed.props.children
-      : [parsed.props.children];
-
-    return (
-      <div>
-        {content?.map((item: any, i: number) =>
-          renderContentItem(this.props, item, i)
-        )}
-      </div>
-    );
-  }
-}
-
-export default withTranslation()(withTheme(StyledHtmlRaw));
+export default StyledHtml;

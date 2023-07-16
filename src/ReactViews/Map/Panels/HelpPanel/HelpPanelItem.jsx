@@ -12,6 +12,7 @@ import Icon, { StyledIcon } from "../../../../Styled/Icon";
 import Text from "../../../../Styled/Text";
 import { applyTranslationIfExists } from "./../../../../Language/languageHelpers";
 import HelpVideoPanel from "./HelpVideoPanel";
+import workingWithTranslation from "../../../workingWithTranslation";
 
 @observer
 class HelpPanelItem extends React.Component {
@@ -135,4 +136,4 @@ const MenuItemText = styled(Text).attrs({
   text-align: left;
 `;
 
-export default withTranslation()(withTheme(HelpPanelItem));
+export default workingWithTranslation(withTheme(HelpPanelItem));

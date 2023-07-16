@@ -12,6 +12,7 @@ import { formatDateTime } from "./DateFormats";
 import DateTimePicker from "./DateTimePicker";
 import Styles from "./timeline.scss";
 import TimelineControls from "./TimelineControls";
+import workingWithTranslation from "../../workingWithTranslation";
 
 @observer
 class Timeline extends React.Component {
@@ -130,4 +131,4 @@ class Timeline extends React.Component {
   }
 }
 
-export default withControlledVisibility(withTranslation()(Timeline));
+export default withControlledVisibility(workingWithTranslation(Timeline));

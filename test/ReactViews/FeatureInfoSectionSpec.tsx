@@ -2,7 +2,17 @@ import i18next from "i18next";
 import { observable, makeObservable } from "mobx";
 import React from "react";
 import { ReactTestRenderer } from "react-test-renderer";
-import { Cartographic, Ellipsoid, JulianDate, TimeInterval, ConstantProperty, Entity, PropertyBag, TimeIntervalCollectionProperty } from "cesium";
+import {
+  Cartographic,
+  DataSource,
+  Ellipsoid,
+  JulianDate,
+  TimeInterval,
+  ConstantProperty,
+  Entity,
+  PropertyBag,
+  TimeIntervalCollectionProperty
+} from "cesium";
 import loadJson from "../../lib/Core/loadJson";
 import CatalogMemberMixin, {
   getName
@@ -1252,7 +1262,7 @@ describe("FeatureInfoSection", function () {
 
       const czmlData = czmlItem.mapItems;
       expect(czmlData.length).toBeGreaterThan(0);
-      const czmlFeature = czmlData[0].entities.values[0];
+      const czmlFeature = (czmlData[0] as DataSource).entities.values[0];
       const section = (
         <FeatureInfoSection
           catalogItem={catalogItem}
@@ -1291,7 +1301,7 @@ describe("FeatureInfoSection", function () {
 
       const czmlData = czmlItem.mapItems;
       expect(czmlData.length).toBeGreaterThan(0);
-      const czmlFeature = czmlData[0].entities.values[0];
+      const czmlFeature = (czmlData[0] as DataSource).entities.values[0];
       czmlItem.setTrait(CommonStrata.user, "currentTime", "2010-02-02");
       let section = (
         <FeatureInfoSection
@@ -1386,7 +1396,7 @@ class TestModel extends MappableMixin(
     makeObservable(this);
   }
 
-  get mapItems(): MapItem[] {
+  override get mapItems(): MapItem[] {
     throw new Error("Method not implemented.");
   }
   override _protected_forceLoadMapItems(): Promise<void> {
@@ -1394,7 +1404,7 @@ class TestModel extends MappableMixin(
   }
 
   @observable _discreteTimes: string[] = [];
-  get discreteTimes() {
+  override get discreteTimes() {
     return this._discreteTimes.map((t) => ({ time: t, tag: undefined }));
   }
 }
