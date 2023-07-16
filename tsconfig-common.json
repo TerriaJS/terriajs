@@ -16,7 +16,7 @@
     "allowSyntheticDefaultImports": true,
     "useDefineForClassFields": true, // required for mobx6 - https://mobx.js.org/installation.html#use-spec-compliant-transpilation-for-class-properties
     "resolveJsonModule": true,
-    "typeRoots": ["./src/ThirdParty"],
+    "typeRoots": ["./src/ThirdParty", "./node_modules"],
     "types": [
       "cesium",
       "assimpjs",
@@ -26,9 +26,9 @@
       "pmtiles",
       "react-anything-sortable",
       "react-shallow-testutils",
-      "styled-components",
+      // "styled-components",
       "thredds-catalog-crawler",
       "urijs"
-    ],
+    ]
   }
 }

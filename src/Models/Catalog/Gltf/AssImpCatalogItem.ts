@@ -36,7 +36,11 @@ export default class AssImpCatalogItem
   implements HasLocalData
 {
   @observable
-  _protected_gltfModelUrl: string | undefined;
+  _private_gltfModelUrl: string | undefined;
+
+  override get _protected_gltfModelUrl(): string | undefined {
+    return this._private_gltfModelUrl;
+  }
 
   static readonly type = "assimp";
 
@@ -290,7 +294,7 @@ export default class AssImpCatalogItem
     }
 
     runInAction(() => {
-      this._protected_gltfModelUrl = gltfModelUrl;
+      this._private_gltfModelUrl = gltfModelUrl;
     });
 
     if (unsupportedTextures.length > 0)

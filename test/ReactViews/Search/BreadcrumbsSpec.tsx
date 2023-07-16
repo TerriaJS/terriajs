@@ -8,7 +8,7 @@ import Breadcrumbs from "../../../lib/ReactViews/Search/Breadcrumbs";
 const DataCatalogTab: any =
   require("../../../lib/ReactViews/ExplorerWindow/Tabs/DataCatalogTab").default;
 import Icon from "../../../lib/Styled/Icon";
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "../../../lib/Styled/styled";
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import { runInAction } from "mobx";
 

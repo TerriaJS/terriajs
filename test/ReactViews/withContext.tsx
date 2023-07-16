@@ -1,6 +1,6 @@
 import React from "react";
 import { create, TestRendererOptions } from "react-test-renderer";
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "../../lib/Styled/styled";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import { ViewStateProvider } from "../../lib/ReactViews/StandardUserInterface/ViewStateContext";

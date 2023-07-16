@@ -58,7 +58,7 @@ class DiffStratum extends LoadableStratum(DiffableTraits) {
   }
 }
 
-type BaseType = Model<DiffableTraits> & MappableMixin.Instance;
+type BaseType = Model<DiffableTraits>;
 
 function DiffableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class DiffableMixin extends TimeFilterMixin(Base) {

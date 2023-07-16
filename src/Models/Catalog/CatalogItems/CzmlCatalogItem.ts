@@ -8,7 +8,7 @@ import readJson from "../../../Core/readJson";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import MappableMixin from "../../../ModelMixins/MappableMixin";
+import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import TimeVarying from "../../../ModelMixins/TimeVarying";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import CzmlCatalogItemTraits from "../../../Traits/TraitsClasses/CzmlCatalogItemTraits";
@@ -149,7 +149,7 @@ export default class CzmlCatalogItem
   }
 
   @computed
-  get mapItems() {
+  get mapItems(): MapItem[] {
     if (this.isLoadingMapItems || this._dataSource === undefined) {
       return [];
     }

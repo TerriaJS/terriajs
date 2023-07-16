@@ -51,25 +51,27 @@ class TestDiffableItem extends DiffableMixin(
   }
 
   override async _protected_forceLoadMapItems() {}
-  styleSelectableDimensions = [];
+  override get styleSelectableDimensions() {
+    return [];
+  }
 
-  get canDiffImages() {
+  override get canDiffImages() {
     return true;
   }
 
-  get discreteTimes() {
+  override get discreteTimes() {
     return undefined;
   }
 
-  showDiffImage(
+  override showDiffImage(
     firstDate: JulianDate,
     secondDate: JulianDate,
     diffStyleId: string
   ) {}
 
-  clearDiffImage() {}
+  override clearDiffImage() {}
 
-  getLegendUrlForStyle(
+  override getLegendUrlForStyle(
     diffStyleId: string,
     firstDate: JulianDate,
     secondDate: JulianDate
@@ -78,7 +80,7 @@ class TestDiffableItem extends DiffableMixin(
   }
 
   @computed
-  get mapItems() {
+  override get mapItems() {
     return [];
   }
 }

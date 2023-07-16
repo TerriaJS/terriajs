@@ -2,7 +2,7 @@ import { runInAction } from "mobx";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import { create, ReactTestRenderer } from "react-test-renderer";
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "../../../lib/Styled/styled";
 import Terria from "../../../lib/Models/Terria";
 import updateModelFromJson from "../../../lib/Models/Definition/updateModelFromJson";
 import WebMapServiceCatalogItem from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";

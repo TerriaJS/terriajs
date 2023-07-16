@@ -1595,6 +1595,11 @@
   resolved "https://registry.yarnpkg.com/@types/css-font-loading-module/-/css-font-loading-module-0.0.7.tgz#2f98ede46acc0975de85c0b7b0ebe06041d24601"
   integrity sha512-nl09VhutdjINdWyXxHWN/w9zlNCfr60JUqJbd24YXUuCwgeL0TpFSdElCwb6cxfB6ybE19Gjj4g0jsgkXxKv1Q==
 
+"@types/css-font-loading-module@^0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@types/css-font-loading-module/-/css-font-loading-module-0.0.8.tgz#ad4c785098c6d198cb12eb7aa0c4c400df05e6e0"
+  integrity sha512-PdJeLlCJj/ShOA+c0dXdZ/e1P0Cdjhip+dRBtPaigOqwKd0DiFx3NeO6T2E7AQ5JszSR3dub3YkQjc2hcQyxSw==
+
 "@types/d3-array@^2.0.0":
   version "2.12.4"
   resolved "https://registry.yarnpkg.com/@types/d3-array/-/d3-array-2.12.4.tgz#a8f4e8483d8c1bb9ac12c28803be1cda18ff2999"
@@ -12463,10 +12468,9 @@ typedarray@~0.0.5:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.7.tgz#799207136a37f3b3efb8c66c40010d032714dc73"
   integrity sha512-ueeb9YybpjhivjbHP2LdFDAjbS948fGEPj+ACAMs4xCMmh72OCOMQWBQKlaN4ZNQ04yfLSDLSx1tGRIoWimObQ==
 
-typescript@^4.9.5:
-  version "4.9.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.5.tgz#095979f9bcc0d09da324d58d03ce8f8374cbe65a"
-  integrity sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==
+"typescript@https://typescript.visualstudio.com/cf7ac146-d525-443c-b23c-0d58337efebc/_apis/build/builds/155831/artifacts?artifactName=tgz&fileId=AAAE80ED9A1C752EF39808F7899F2B7E2322BFCA09CC0DFE65C15EADC9CB0AB902&fileName=/typescript-5.2.0-insiders.20230709.tgz":
+  version "5.2.0-insiders.20230709"
+  resolved "https://typescript.visualstudio.com/cf7ac146-d525-443c-b23c-0d58337efebc/_apis/build/builds/155831/artifacts?artifactName=tgz&fileId=AAAE80ED9A1C752EF39808F7899F2B7E2322BFCA09CC0DFE65C15EADC9CB0AB902&fileName=/typescript-5.2.0-insiders.20230709.tgz#c5141060cd651c0c8a8bcb859cf27b99efe26ea7"
 
 uc.micro@^1.0.1, uc.micro@^1.0.5:
   version "1.0.6"

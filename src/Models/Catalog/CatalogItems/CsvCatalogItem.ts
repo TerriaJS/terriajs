@@ -112,7 +112,7 @@ export default class CsvCatalogItem
    * Called by AutoRefreshingMixin to get the polling interval
    */
   @override
-  get refreshInterval() {
+  override get refreshInterval(): number | undefined {
     if (this.refreshUrl) {
       return this.polling.seconds;
     }

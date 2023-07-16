@@ -1,3 +1,4 @@
+import { observable } from "mobx";
 import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../lib/ModelMixins/MappableMixin";
 import CreateModel from "../../lib/Models/Definition/CreateModel";
@@ -11,8 +12,13 @@ export default class SimpleCatalogItem extends CatalogMemberMixin(
     CreateModel(mixTraits(UrlTraits, MappableTraits, CatalogMemberTraits))
   )
 ) {
+  @observable _private_mapItems: MapItem[] = [];
+
   override _protected_forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
-  mapItems: MapItem[] = [];
+
+  override get mapItems(): MapItem[] {
+    return this._private_mapItems;
+  }
 }

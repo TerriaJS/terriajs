@@ -1,7 +1,7 @@
 import { create } from "react-test-renderer";
 import React from "react";
 import { runInAction } from "mobx";
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "../../lib/Styled/styled";
 import { act } from "react-dom/test-utils";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";

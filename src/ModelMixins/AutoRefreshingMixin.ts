@@ -12,7 +12,7 @@ import Model from "../Models/Definition/Model";
 import AutoRefreshingTraits from "../Traits/TraitsClasses/AutoRefreshingTraits";
 import MappableMixin from "./MappableMixin";
 
-type BaseType = Model<AutoRefreshingTraits> & MappableMixin.Instance;
+type BaseType = Model<AutoRefreshingTraits>;
 
 export default function AutoRefreshingMixin<
   T extends AbstractConstructor<BaseType>

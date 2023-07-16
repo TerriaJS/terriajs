@@ -4,7 +4,7 @@ import React from "react";
 import { act } from "react-dom/test-utils";
 import Terria from "../../../../../lib/Models/Terria";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "../../../../../lib/Styled/styled";
 import { terriaTheme } from "../../../../../lib/ReactViews/StandardUserInterface/StandardTheme";
 // import Compass from "../../../../../lib/ReactViews/Map/Navigation/Compass";
 const Compass: any =

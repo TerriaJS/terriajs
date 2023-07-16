@@ -18,11 +18,15 @@ import ImageryProviderTraits from "../Traits/TraitsClasses/ImageryProviderTraits
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
 import MappableMixin from "./MappableMixin";
+import mixTraits from "../Traits/mixTraits";
 
-type ModelType = Model<
-  MappableTraits & ImageryProviderTraits & CatalogMemberTraits
-> &
-  MappableMixin.Instance;
+export class TileErrorHandlerTraits extends mixTraits(
+  MappableTraits,
+  ImageryProviderTraits,
+  CatalogMemberTraits
+) {}
+
+type ModelType = Model<TileErrorHandlerTraits>;
 
 /**
  * A mixin for handling tile errors in raster layers
@@ -106,7 +110,9 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
       if (
         isTileOutsideExtent(
           tile,
-          runInAction(() => this.cesiumRectangle),
+          runInAction(() =>
+            MappableMixin.isMixedInto(this) ? this.cesiumRectangle : undefined
+          ),
           imageryProvider
         )
       ) {

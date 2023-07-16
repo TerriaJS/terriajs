@@ -1,7 +1,7 @@
 const create: any = require("react-test-renderer").create;
 import React from "react";
 import { act } from "react-dom/test-utils";
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "../../lib/Styled/styled";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import Clipboard from "../../lib/ReactViews/Clipboard";
 import Input from "../../lib/Styled/Input";

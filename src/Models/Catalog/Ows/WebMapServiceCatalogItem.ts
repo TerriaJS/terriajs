@@ -27,7 +27,8 @@ import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import ExportWebCoverageServiceMixin from "../../../ModelMixins/ExportWebCoverageServiceMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
 import MappableMixin, {
-  ImageryParts
+  ImageryParts,
+  MapItem
 } from "../../../ModelMixins/MappableMixin";
 import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
 import TileErrorHandlerMixin from "../../../ModelMixins/TileErrorHandlerMixin";
@@ -353,7 +354,7 @@ class WebMapServiceCatalogItem
   }
 
   @computed
-  get mapItems() {
+  get mapItems(): MapItem[] {
     // Don't return anything if there are invalid layers
     // See forceLoadMapItems for error message
     if (this.invalidLayers.length > 0) return [];

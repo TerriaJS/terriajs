@@ -7,7 +7,7 @@ import ViewState from "../../../lib/ReactViewModels/ViewState";
 import SearchBoxAndResults, {
   SearchInDataCatalog
 } from "../../../lib/ReactViews/Search/SearchBoxAndResults";
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "../../../lib/Styled/styled";
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface/StandardTheme";
 
 describe("SearchBoxAndResults", function () {

@@ -1,4 +1,8 @@
-import { CustomDataSource, ImageryLayer, WebMapServiceImageryProvider } from "cesium";
+import {
+  CustomDataSource,
+  ImageryLayer,
+  WebMapServiceImageryProvider
+} from "cesium";
 import { featureBelongsToCatalogItem } from "../../lib/Map/PickedFeatures/PickedFeatures";
 import TerriaFeature from "../../lib/Models/Feature/Feature";
 import Terria from "../../lib/Models/Terria";
@@ -19,7 +23,7 @@ describe("featureBelongsToCatalogItem", function () {
     const dataSource = new CustomDataSource("testData");
     dataSource.entities.add(feature);
     expect(featureBelongsToCatalogItem(feature, item)).toBe(false);
-    item.mapItems = [dataSource];
+    item._private_mapItems = [dataSource];
     expect(featureBelongsToCatalogItem(feature, item)).toBe(true);
   });
 
@@ -33,7 +37,7 @@ describe("featureBelongsToCatalogItem", function () {
     feature.imageryLayer = new ImageryLayer(imageryProvider, {});
 
     expect(featureBelongsToCatalogItem(feature, item)).toBe(false);
-    item.mapItems = [
+    item._private_mapItems = [
       { imageryProvider, alpha: 0, show: false, clippingRectangle: undefined }
     ];
     expect(featureBelongsToCatalogItem(feature, item)).toBe(true);

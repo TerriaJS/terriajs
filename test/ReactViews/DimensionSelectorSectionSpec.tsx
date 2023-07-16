@@ -2,7 +2,7 @@ import { runInAction } from "mobx";
 import React from "react";
 import ReactSelect from "react-select";
 import TestRenderer from "react-test-renderer";
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "../../lib/Styled/styled";
 import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";

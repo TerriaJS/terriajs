@@ -1,6 +1,8 @@
 import { defined } from "cesium";
 import { Cartesian3 } from "cesium";
 import { CustomDataSource } from "cesium";
+import { Entity } from "cesium";
+import { LeafletMouseEvent } from "leaflet";
 
 /**
  * Callback for when a point is moved.
@@ -106,7 +108,7 @@ class LeafletDragPoints {
   /**
    * Function that is called when the mouse moves.
    *
-   * @param {Leaflet.MouseEvent} move Information about the move such as the final position of the mouse.
+   * @param {LeafletMouseEvent} move Information about the move such as the final position of the mouse.
    */
   _onMouseMove(move) {
     if (!this._dragInProgress) {
@@ -124,7 +126,7 @@ class LeafletDragPoints {
   /**
    * Function that is called when the user releases the mousedown click.
    *
-   * @param {Leaflet.MouseEvent} e Information about where the event occurred.
+   * @param {LeafletMouseEvent} e Information about where the event occurred.
    */
   _onMouseUp(e) {
     if (

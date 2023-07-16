@@ -28,7 +28,7 @@ import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
 import MappableMixin, { ImageryParts } from "./MappableMixin";
 import TimeVarying from "./TimeVarying";
 
-type BaseType = Model<TimeFilterTraits> & MappableMixin.Instance;
+type BaseType = Model<TimeFilterTraits>;
 
 /**
  * A Mixin for filtering the dates for which imagery is available at a location

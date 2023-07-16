@@ -22,3 +22,4 @@ test-lib/
 
 # Catalog index generation files
 catalog-index*.json
+tsconfig.tsbuildinfo

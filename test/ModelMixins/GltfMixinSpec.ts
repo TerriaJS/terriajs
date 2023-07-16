@@ -1,5 +1,10 @@
 import { action, makeObservable, observable } from "mobx";
-import { Cartographic, HeadingPitchRoll, JulianDate, Math as CesiumMath } from "cesium";
+import {
+  Cartographic,
+  HeadingPitchRoll,
+  JulianDate,
+  Math as CesiumMath
+} from "cesium";
 import GltfMixin from "../../lib/ModelMixins/GltfMixin";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import CreateModel from "../../lib/Models/Definition/CreateModel";
@@ -20,7 +25,7 @@ describe("GltfMixin", function () {
     action(function () {
       const testItem = new TestGltfItem("test", terria);
       expect(testItem.mapItems).toEqual([]);
-      testItem._protected_gltfModelUrl = "http://example.org/test.glb";
+      testItem._private_gltfModelUrl = "http://example.org/test.glb";
       const dataSource = testItem.mapItems[0];
       expect(dataSource).toBeDefined();
       const entity = dataSource.entities.values[0];
@@ -35,7 +40,7 @@ describe("GltfMixin", function () {
     action(function () {
       const testItem = new TestGltfItem("test", terria);
       expect(testItem.mapItems).toEqual([]);
-      testItem._protected_gltfModelUrl = "http://example.org/test.glb";
+      testItem._private_gltfModelUrl = "http://example.org/test.glb";
       updateModelFromJson(testItem, CommonStrata.user, {
         origin: {
           latitude: 42,
@@ -104,7 +109,12 @@ describe("GltfMixin", function () {
 });
 
 class TestGltfItem extends GltfMixin(CreateModel(GltfTraits)) {
-  @observable override _protected_gltfModelUrl: string | undefined = undefined;
+  @observable
+  _private_gltfModelUrl: string | undefined;
+
+  override get _protected_gltfModelUrl(): string | undefined {
+    return this._private_gltfModelUrl;
+  }
 
   constructor(...args: ModelConstructorParameters) {
     super(...args);

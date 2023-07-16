@@ -153,7 +153,7 @@ export default class TableStylingWorkflow
         this.showAdvancedOptions
           ? {
               text: "Copy user stratum to clipboard",
-              onSelect: () => {
+              onSelect: (): void => {
                 const stratum = JSON.stringify(
                   this.item.strata.get(CommonStrata.user)
                 );
