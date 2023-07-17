@@ -1,6 +1,13 @@
 import hoistStatics from "hoist-non-react-statics";
 import { TFunction } from "i18next";
-import { action, computed, observable, reaction, runInAction } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  reaction,
+  runInAction,
+  makeObservable
+} from "mobx";
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
 import React, { useState } from "react";
@@ -66,6 +73,11 @@ class DiffTool extends React.Component<PropsType> {
 
   private splitterItemsDisposer?: IDisposer;
   private originalSettings: any;
+
+  constructor(props: PropsType) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed
   get sourceItem(): DiffableItem {
@@ -189,6 +201,7 @@ class Main extends React.Component<MainPropsType> {
 
   constructor(props: MainPropsType) {
     super(props);
+    makeObservable(this);
   }
 
   @computed
@@ -451,23 +464,24 @@ class Main extends React.Component<MainPropsType> {
     }
   }
 
-  @action
-  async componentDidMount() {
-    if (this.location === undefined) {
-      const { latitude, longitude, height } =
-        this.diffItem.timeFilterCoordinates;
-      if (latitude !== undefined && longitude !== undefined) {
-        this.location = {
-          latitude,
-          longitude,
-          height
-        };
-        // remove any active search location marker to avoid showing two markers
-        removeMarker(this.props.terria);
-      } else {
-        await this.setLocationFromActiveSearch();
+  componentDidMount() {
+    runInAction(() => {
+      if (this.location === undefined) {
+        const { latitude, longitude, height } =
+          this.diffItem.timeFilterCoordinates;
+        if (latitude !== undefined && longitude !== undefined) {
+          this.location = {
+            latitude,
+            longitude,
+            height
+          };
+          // remove any active search location marker to avoid showing two markers
+          removeMarker(this.props.terria);
+        } else {
+          this.setLocationFromActiveSearch();
+        }
       }
-    }
+    });
   }
 
   // i want to restructure the render so that there's 2 distinct "showing diff"

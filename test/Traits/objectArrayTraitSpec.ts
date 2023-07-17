@@ -7,7 +7,7 @@ import primitiveTrait from "../../lib/Traits/Decorators/primitiveTrait";
 import ModelTraits from "../../lib/Traits/ModelTraits";
 
 configure({
-  enforceActions: true,
+  enforceActions: "always",
   computedRequiresReaction: true
 });
 

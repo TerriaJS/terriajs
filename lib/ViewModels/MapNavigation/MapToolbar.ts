@@ -1,4 +1,4 @@
-import { action, computed } from "mobx";
+import { action, computed, makeObservable } from "mobx";
 import React from "react";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import TerriaError from "../../Core/TerriaError";
@@ -193,6 +193,7 @@ export class ToolController extends MapNavigationItemController {
     readonly toolConfig: ToolConfig
   ) {
     super();
+    makeObservable(this);
   }
 
   get glyph(): { id: string } {

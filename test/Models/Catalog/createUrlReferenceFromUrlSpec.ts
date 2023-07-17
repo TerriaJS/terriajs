@@ -75,7 +75,7 @@ describe("createUrlReferenceFromUrl", function () {
     let file: File = Object.assign(blob, {
       lastModified: 0,
       name: "lat_lon_val.csv"
-    });
+    }) as File;
     const item = await createCatalogItemFromFileOrUrl(terria, viewState, file);
     expect(item).toBeDefined();
     if (item !== undefined) {

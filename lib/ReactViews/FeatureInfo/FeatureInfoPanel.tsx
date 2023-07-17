@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { TFunction } from "i18next";
-import { action, reaction, runInAction } from "mobx";
+import { action, reaction, runInAction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { withTranslation } from "react-i18next";
@@ -43,6 +43,11 @@ interface Props {
 
 @observer
 class FeatureInfoPanel extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   componentDidMount() {
     const { t } = this.props;
     const terria = this.props.viewState.terria;
@@ -290,7 +295,7 @@ class FeatureInfoPanel extends React.Component<Props> {
             ? featureMap.get(catalogItem.uniqueId)
             : undefined) ?? [];
         return {
-          catalogItem: catalogItem as TimeFilterMixin.Instance,
+          catalogItem: catalogItem,
           feature: isDefined(features[0]) ? features[0] : undefined
         };
       })

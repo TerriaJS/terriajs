@@ -1,12 +1,12 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, makeObservable, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import AsyncLoader from "../Core/AsyncLoader";
-import Constructor from "../Core/Constructor";
 import Result from "../Core/Result";
 import Model from "../Models/Definition/Model";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
@@ -60,9 +60,17 @@ export function isDataSource(object: MapItem): object is DataSource {
   return "entities" in object;
 }
 
-function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
+type BaseType = Model<MappableTraits>;
+
+function MappableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class MappableMixin extends Base {
     initialMessageShown: boolean = false;
+
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
+
     get isMappable() {
       return true;
     }
@@ -162,7 +170,7 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      *
      * {@see AsyncLoader}
      */
-    protected abstract async forceLoadMapItems(): Promise<void>;
+    protected abstract forceLoadMapItems(): Promise<void>;
 
     /**
      * Array of MapItems to show on the map/chart when Catalog Member is shown

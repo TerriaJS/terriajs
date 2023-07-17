@@ -17,6 +17,10 @@ export interface ModelConstructor<T> {
   TraitsClass: TraitsConstructor<ModelTraits>;
 }
 
+export type ModelConstructorParameters = ConstructorParameters<
+  ModelConstructor<any>
+>;
+
 export abstract class BaseModel {
   abstract get type(): string;
   abstract get traits(): {

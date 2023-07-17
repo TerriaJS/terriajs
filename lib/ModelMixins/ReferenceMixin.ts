@@ -1,8 +1,15 @@
-import { computed, observable, runInAction, untracked } from "mobx";
+import {
+  computed,
+  observable,
+  runInAction,
+  untracked,
+  makeObservable
+} from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import AsyncLoader from "../Core/AsyncLoader";
-import Constructor from "../Core/Constructor";
 import Result from "../Core/Result";
+import TerriaError from "../Core/TerriaError";
 import Model, { BaseModel, ModelInterface } from "../Models/Definition/Model";
 import ReferenceTraits from "../Traits/TraitsClasses/ReferenceTraits";
 import { getName } from "./CatalogMemberMixin";
@@ -13,6 +20,9 @@ interface ReferenceInterface extends ModelInterface<ReferenceTraits> {
   readonly target: BaseModel | undefined;
   loadReference(): Promise<Result<void>>;
 }
+
+type BaseType = Model<ReferenceTraits>;
+
 /**
  * A mixin for a Model that acts as a "reference" to another Model, which is its "true"
  * representation. The reference is "dereferenced" to obtain the other model, but only
@@ -21,9 +31,7 @@ interface ReferenceInterface extends ModelInterface<ReferenceTraits> {
  * loaded, the `CkanCatalogItem` may be dereferenced to obtain the `WebMapServiceCatalogItem`,
  * `GeoJsonCatalogItem`, or whatever else representing the dataset.
  */
-function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
-  Base: T
-) {
+function ReferenceMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class ReferenceMixinClass
     extends Base
     implements ReferenceInterface
@@ -61,6 +69,11 @@ function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
         this._target = target;
       });
     });
+
+    constructor(...args: any[]) {
+      super(...args);
+      makeObservable(this);
+    }
 
     get loadReferenceResult() {
       return this._referenceLoader.result;
@@ -121,6 +134,30 @@ function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
       }
 
       return result;
+    }
+
+    /**
+     * Recursively load a nested chain of references till the given maxDepth.
+     *
+     * If this reference points to another reference and so on.. then this
+     * method will load them all up to the given depth.
+     *
+     * @param maxDepth The maximum depth up to which the references should be resolved.
+     * @returns A promise that is fulfilled with a Result value when all the references have been loaded.
+     */
+    async recursivelyLoadReference(maxDepth: number): Promise<Result<void>> {
+      let currentTarget: BaseModel | undefined = this;
+      const errors: TerriaError[] = [];
+      while (maxDepth > 0 && ReferenceMixin.isMixedInto(currentTarget)) {
+        (await currentTarget.loadReference()).pushErrorTo(errors);
+        currentTarget = currentTarget.target;
+        maxDepth -= 1;
+      }
+      const maybeError = TerriaError.combine(
+        errors,
+        "Failed to recursively load reference `${this.uniqueId}`"
+      );
+      return Result.none(maybeError);
     }
 
     /**

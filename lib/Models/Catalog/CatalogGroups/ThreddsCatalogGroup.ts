@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, runInAction, makeObservable, override } from "mobx";
 import threddsCrawler from "thredds-catalog-crawler/src/entryBrowser";
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -14,6 +14,7 @@ import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import { proxyCatalogItemBaseUrl } from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import ThreddsItemReference from "../CatalogReferences/ThreddsItemReference";
 
 interface ThreddsCatalog {
@@ -51,6 +52,7 @@ export class ThreddsStratum extends LoadableStratum(ThreddsCatalogGroupTraits) {
 
   constructor(readonly _catalogGroup: ThreddsCatalogGroup) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -182,6 +184,11 @@ export default class ThreddsCatalogGroup extends UrlMixin(
 ) {
   static readonly type = "thredds-group";
 
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get type() {
     return ThreddsCatalogGroup.type;
   }
@@ -190,7 +197,7 @@ export default class ThreddsCatalogGroup extends UrlMixin(
     return i18next.t("models.thredds.nameGroup");
   }
 
-  @computed
+  @override
   get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;

@@ -1,4 +1,4 @@
-import { action, toJS } from "mobx";
+import { action, toJS, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import Sortable from "react-anything-sortable";
@@ -71,6 +71,7 @@ class StoryBuilder extends React.Component<
     props: IProps & MeasureElementProps & WithTranslation & WithViewState
   ) {
     super(props);
+    makeObservable(this);
     this.state = {
       editingMode: false,
       currentStory: undefined,

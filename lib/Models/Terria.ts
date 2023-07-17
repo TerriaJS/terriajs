@@ -1,5 +1,13 @@
 import i18next from "i18next";
-import { action, computed, observable, runInAction, toJS, when } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  runInAction,
+  toJS,
+  when,
+  makeObservable
+} from "mobx";
 import { createTransformer } from "mobx-utils";
 import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
 import Clock from "terriajs-cesium/Source/Core/Clock";
@@ -118,7 +126,7 @@ import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow
 
 // import overrides from "../Overrides/defaults.jsx";
 
-interface ConfigParameters {
+export interface ConfigParameters {
   /**
    * TerriaJS uses this name whenever it needs to display the name of the application.
    */
@@ -356,7 +364,7 @@ interface StartOptions {
   beforeRestoreAppState?: () => Promise<void> | void;
 }
 
-interface Analytics {
+export interface Analytics {
   start: (
     configParameters: Partial<{
       enableConsoleAnalytics: boolean;
@@ -368,7 +376,7 @@ interface Analytics {
     category: string,
     action: string,
     label?: string,
-    value?: string
+    value?: number
   ) => void;
 }
 
@@ -569,6 +577,16 @@ export default class Terria {
   @observable
   selectableDimensionWorkflow?: SelectableDimensionWorkflow;
 
+  /**
+   * Flag for zooming to workbench items after all init sources have been loaded.
+   *
+   * This is automatically enabled when your init file has the following settings:
+   * ```
+   *    {"initialCamera": {"focusWorkbenchItems": true}}
+   * ```
+   */
+  private focusWorkbenchItemsAfterLoadingInitSources: boolean = false;
+
   @computed
   get baseMapContrastColor() {
     return (
@@ -652,6 +670,7 @@ export default class Terria {
   errorService: ErrorServiceProvider = new StubErrorServiceProvider();
 
   constructor(options: TerriaOptions = {}) {
+    makeObservable(this);
     if (options.appBaseHref) {
       this.appBaseHref = new URL(
         options.appBaseHref,
@@ -1044,6 +1063,41 @@ export default class Terria {
     this.loadPersistedMapSettings();
   }
 
+  /**
+   * Zoom to workbench items if `focusWorkbenchItemsAfterLoadingInitSources` is `true`.
+   *
+   * Note that the current behaviour is to zoom to the first item of the
+   * workbench, however in the future we should modify it to zoom to a view
+   * which shows all the workbench items.
+   *
+   * If a Cesium or Leaflet viewer is not available,
+   * we wait for it to load before triggering the zoom.
+   */
+  private async doZoomToWorkbenchItems() {
+    if (!this.focusWorkbenchItemsAfterLoadingInitSources) {
+      return;
+    }
+
+    // TODO: modify this to zoom to a view that shows all workbench items
+    // instead of just zooming to the first workbench item!
+    const firstMappableItem = this.workbench.items.find((item) =>
+      MappableMixin.isMixedInto(item)
+    ) as MappableMixin.Instance | undefined;
+    if (firstMappableItem) {
+      // When the app loads, Cesium/Leaflet viewers are loaded
+      // asynchronously. Until they become available, a stub viewer called
+      // `NoViewer` is used. `NoViewer` does not implement zooming to mappable
+      // items. So here wait for a valid viewer to become available before
+      // attempting to zoom to the mappable item.
+      const isViewerAvailable = () => this.currentViewer.type !== NoViewer.type;
+      // Note: In some situations the following use of when() can result in
+      // a hanging promise if a valid viewer never becomes available,
+      // for eg: when react is not rendered - `currentViewer` will always be `NoViewer`.
+      await when(isViewerAvailable);
+      await this.currentViewer.zoomTo(firstMappableItem, 0.0);
+    }
+  }
+
   loadPersistedMapSettings(): void {
     const persistViewerMode = this.configParameters.persistViewerMode;
     const hashViewerMode = this.userProperties.get("map");
@@ -1329,6 +1383,11 @@ export default class Terria {
         this.loadPersistedOrInitBaseMap();
       }
     });
+
+    // Zoom to workbench items if any of the init sources specifically requested it
+    if (this.focusWorkbenchItemsAfterLoadingInitSources) {
+      this.doZoomToWorkbenchItems();
+    }
 
     if (errors.length > 0) {
       // Note - this will get wrapped up in a Result object because it is called in AsyncLoader
@@ -1629,8 +1688,25 @@ export default class Terria {
     }
 
     if (isJsonObject(initData.initialCamera)) {
-      const initialCamera = CameraView.fromJson(initData.initialCamera);
-      this.currentViewer.zoomTo(initialCamera, 2.0);
+      // When initialCamera is set:
+      // - try to construct a CameraView and zoom to it
+      // - otherwise, if `initialCamera.focusWorkbenchItems` is `true` flag it
+      //   so that we can zoom after the workbench items are loaded.
+      // - If there are multiple initSources, the setting from the last source takes effect
+      try {
+        const initialCamera = CameraView.fromJson(initData.initialCamera);
+        this.currentViewer.zoomTo(initialCamera, 2.0);
+        // reset in case this was enabled by a previous initSource
+        this.focusWorkbenchItemsAfterLoadingInitSources = false;
+      } catch (error) {
+        // Not a CameraView but does it specify focusWorkbenchItems?
+        if (typeof initData.initialCamera.focusWorkbenchItems === "boolean") {
+          this.focusWorkbenchItemsAfterLoadingInitSources =
+            initData.initialCamera.focusWorkbenchItems;
+        } else {
+          throw error;
+        }
+      }
     }
 
     if (isJsonBoolean(initData.showSplitter)) {

@@ -1,4 +1,4 @@
-import { action, computed } from "mobx";
+import { action, computed, makeObservable } from "mobx";
 import ViewerMode from "../../../../Models/ViewerMode";
 import ViewState from "../../../../ReactViewModels/ViewState";
 import Icon from "../../../../Styled/Icon";
@@ -9,6 +9,7 @@ export class ToggleSplitterController extends MapNavigationItemController {
 
   constructor(private viewState: ViewState) {
     super();
+    makeObservable(this);
   }
 
   get glyph(): any {

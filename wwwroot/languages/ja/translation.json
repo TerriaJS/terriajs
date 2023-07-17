@@ -435,7 +435,7 @@
   "settingPanel": {
     "performanceLabel": "パフォーマンス",
     "qualityLabel": "質",
-    "mapQuality": "ラスターデータの質:",
+    "mapQuality": "地図の質:",
     "nativeResolutionHeader": "デバイスの解像度を適用",
     "imageOptimisation": "画像の最適化",
     "baseMap": "ベースマップ",
@@ -811,7 +811,9 @@
       "readyToUpload": "{{appName}}の変換サービスにアップロードする準備はできていますか？",
       "getConfirmationMessage": "このファイルは{{appName}}では直接サポートされていません。\n\n{{appName}}の変換サービスにアップロードしますか？ファイルサイズが小さく、かつzip化されたEsri ShapeファイルやMapInfo Tabファイルであればこの方法で表示できる可能性があります。",
       "unsupportedFileTypeMessageII": "このファイルフォーマットは{{appName}}ではサポートされていません。直接サポートされているフォーマットは <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>  です。オンライン変換サービスを通してサポートされているファイルフォーマットは <ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>その他の {{linkII}}</li></ul> などです。",
-      "stubCreationFailure": "カタログアイテム {{item}} を消すことができません"
+      "stubCreationFailure": "カタログアイテム {{item}} を消すことができません",
+      "addAll": "全てを追加",
+      "removeAll": "全てを削除"
     },
     "ckan": {
       "idsNotSpecifiedMessage": "CkanCatalogItemではresourceIdかdatasetIdのどちらかが指定されている必要があります。",
@@ -905,7 +907,7 @@
       "badlyFormatedMessage": "'{{name}}' データセットは、周期性の点で正しくフォーマットされていません '{{isoSegments}}'。データセットの情報ボタンをクリックするとデータセットとデータを管理する主体の情報が得られます。",
       "badlyFormatedTitle": "周期性が正しくフォーマットされていません",
       "datasetScaleErrorTitle": "このスケールではデータセットは表示されません",
-      "noLayerFoundMessage": "WMS データセット'{{name}}' に '{{layers}}'に該当するレイヤがありません。 {{suggested}} {{line}}{{line}}カタログファイルが正しく設定されていないかWMSサーバーが変更された可能性があります。",
+      "noLayerFoundMessage": "WMS データセット'{{name}}' に '{{layers}}'に該当するレイヤがありません。 カタログファイルが正しく設定されていないかWMSサーバーが変更された可能性があります。",
       "noLayerFoundTitle": "レイヤが一つも見つかりません",
       "defaultStyleLabel": "デフォルトのスタイル",
       "getCapabilitiesUrl": "GetCapabilities URL",
@@ -920,9 +922,9 @@
       "reachedMaxFeatureLimit": "警告: このレイヤはWFSフィーチャの限度 ({{maxFeatures}}) に達しました",
       "missingUrlMessage": "Web Feature Service (WFS) の GetCapabilities ドキュメントを読めませんでした。語るぐアイテムに `url`がないためです。",
       "missingUrlTitle": "GetCapabilities を読めませんでした",
-      "missingDataMessage": "WFS データセット '{{name}}' は何もデータを返しません。{{line}}{{line}}カタログが正しく設定されていないかサーバーのアドレスが変わったかもしれません。",
+      "missingDataMessage": "WFS データセット '{{name}}' は何もデータを返しません。カタログが正しく設定されていないかサーバーのアドレスが変わったかもしれません。",
       "missingDataTitle": "見つからないデータ",
-      "noLayerFoundMessage": "WFS データセット'{{name}}' には '{{typeNames}}' に該当するレイヤがありません。 {{suggested}} {{line}}{{line}}カタログファイルが正しく設定されていないか、WFSサーバーが変更されたと思われます。",
+      "noLayerFoundMessage": "WFS データセット'{{name}}' には '{{typeNames}}' に該当するレイヤがありません。 カタログファイルが正しく設定されていないか、WFSサーバーが変更されたと思われます。",
       "noLayerFoundTitle": "レイヤがありません",
       "getCapabilitiesUrl": "GetCapabilities URL",
       "serviceContact": "サービスに関する連絡先",
@@ -952,7 +954,8 @@
       "invalidServiceTitle": "無効なArcGISマップサービス",
       "name": "ArcGIS マップサーバーグループ",
       "groupNotAvailableMessage": "ArcGIS Map Serviceの呼び出し中にエラーが発生しました。",
-      "invalidServiceMessage": "ArcGIS Map Serviceの呼び出し中にエラーが発生しました。サーバーの応答が有効なMap Serviceドキュメントではないようです。"
+      "invalidServiceMessage": "ArcGIS Map Serviceの呼び出し中にエラーが発生しました。サーバーの応答が有効なMap Serviceドキュメントではないようです。",
+      "singleFusedMapCacheLayerName": "全レイヤ"
     },
     "georss": {
       "copyrightText": "著作権",
@@ -1467,7 +1470,7 @@
       "loadingInitSourceError2Message": "以下から初期化情報を読み込む際にエラー発生:  \n*`{{loadSource}}`*.",
       "loadingInitSourceErrorMessage": "`{{fragment}}` から初期化情報を読み込めませんでした。initFragmentPaths が定義されていません。",
       "loadingInitSourceErrorTitle": "初期化リソース読み込み時エラー",
-      "loadingInitSourcesErrorMessage": "{{appName}} 地図設定の読み込み時エラー &mdash; ただ指示表示されないかもしれません。地図を再読み込みしてください。もし問題が解決しない場合、 {{email}} にエラーを報告しするか、下のボタンを押してください。",
+      "loadingInitSourcesErrorMessage": "{{appName}} 地図設定の読み込み時エラー &mdash; 正しく表示されないかもしれません。地図を再読み込みしてください。もし問題が解決しない場合、 {{email}} にエラーを報告するか、下のボタンを押してください。",
       "loadingInitSourcesErrorTitle": "地図設定読み込み時のエラー",
       "loadingMagdaInitSourceErrorMessage": "Magda レコード `{{url}}` から初期化情報を読み込み時にエラー発生。",
       "loadingMagdaInitSourceErrorTitle": "Magdaの初期化ソース読み込み時のエラー",

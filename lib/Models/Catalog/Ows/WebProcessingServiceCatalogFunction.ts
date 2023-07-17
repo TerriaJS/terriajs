@@ -1,6 +1,13 @@
 import i18next from "i18next";
 import flatten from "lodash-es/flatten";
-import { action, computed, isObservableArray, runInAction } from "mobx";
+import {
+  action,
+  computed,
+  isObservableArray,
+  runInAction,
+  makeObservable,
+  override
+} from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
@@ -35,6 +42,7 @@ import RegionParameter from "../../FunctionParameters/RegionParameter";
 import RegionTypeParameter from "../../FunctionParameters/RegionTypeParameter";
 import StringParameter from "../../FunctionParameters/StringParameter";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
 
 type AllowedValues = {
@@ -85,7 +93,7 @@ export type WpsInputData = {
 
 type ParameterConverter = {
   inputToParameter: (
-    catalogFunction: CatalogFunctionMixin,
+    catalogFunction: CatalogFunctionMixin.Instance,
     input: Input,
     options: FunctionParameterOptions
   ) => FunctionParameter | undefined;
@@ -103,6 +111,7 @@ class WpsLoadableStratum extends LoadableStratum(
     readonly processDescription: ProcessDescription
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -184,6 +193,12 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
   CatalogFunctionMixin(CreateModel(WebProcessingServiceCatalogFunctionTraits))
 ) {
   static readonly type = "wps";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get type() {
     return WebProcessingServiceCatalogFunction.type;
   }
@@ -192,7 +207,8 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     return "Web Processing Service (WPS)";
   }
 
-  @computed get cacheDuration(): string {
+  @override
+  get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }
@@ -291,7 +307,10 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     return job;
   }
 
-  convertInputToParameter(catalogFunction: CatalogFunctionMixin, input: Input) {
+  convertInputToParameter(
+    catalogFunction: CatalogFunctionMixin.Instance,
+    input: Input
+  ) {
     if (!isDefined(input.Identifier)) {
       return;
     }
@@ -335,7 +354,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
 
 const LiteralDataConverter = {
   inputToParameter: function (
-    catalogFunction: CatalogFunctionMixin,
+    catalogFunction: CatalogFunctionMixin.Instance,
     input: Input,
     options: FunctionParameterOptions
   ) {
@@ -408,7 +427,7 @@ const LiteralDataConverter = {
 
 const ComplexDateConverter = {
   inputToParameter: function (
-    catalogFunction: CatalogFunctionMixin,
+    catalogFunction: CatalogFunctionMixin.Instance,
     input: Input,
     options: FunctionParameterOptions
   ) {
@@ -441,7 +460,7 @@ const ComplexDateConverter = {
 
 const ComplexDateTimeConverter = {
   inputToParameter: function (
-    catalogFunction: CatalogFunctionMixin,
+    catalogFunction: CatalogFunctionMixin.Instance,
     input: Input,
     options: FunctionParameterOptions
   ) {
@@ -484,7 +503,7 @@ const PolygonConverter = simpleGeoJsonDataConverter(
 
 const RectangleConverter = {
   inputToParameter: function (
-    catalogFunction: CatalogFunctionMixin,
+    catalogFunction: CatalogFunctionMixin.Instance,
     input: Input,
     options: FunctionParameterOptions
   ) {
@@ -573,7 +592,7 @@ const RectangleConverter = {
 
 const GeoJsonGeometryConverter = {
   inputToParameter: function (
-    catalogFunction: CatalogFunctionMixin,
+    catalogFunction: CatalogFunctionMixin.Instance,
     input: Input,
     options: FunctionParameterOptions
   ) {
@@ -624,7 +643,7 @@ const GeoJsonGeometryConverter = {
 function simpleGeoJsonDataConverter(schemaType: string, klass: any) {
   return {
     inputToParameter: function (
-      catalogFunction: CatalogFunctionMixin,
+      catalogFunction: CatalogFunctionMixin.Instance,
       input: Input,
       options: FunctionParameterOptions
     ) {

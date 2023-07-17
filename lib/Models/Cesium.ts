@@ -1,12 +1,15 @@
 import i18next from "i18next";
 import { isEqual } from "lodash-es";
 import {
+  action,
   autorun,
   computed,
   IObservableArray,
+  makeObservable,
   observable,
   reaction,
-  runInAction
+  runInAction,
+  toJS
 } from "mobx";
 import { computedFn } from "mobx-utils";
 import AssociativeArray from "terriajs-cesium/Source/Core/AssociativeArray";
@@ -153,6 +156,8 @@ export default class Cesium extends GlobeOrMap {
   private _terrainMessageViewed: boolean = false;
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
     super();
+
+    makeObservable(this);
 
     this.terriaViewer = terriaViewer;
     this.terria = terriaViewer.terria;
@@ -512,7 +517,7 @@ export default class Cesium extends GlobeOrMap {
           })
           .map(({ credit }) => credit.html);
 
-        if (isEqual(credits, this.cesiumDataAttributions.toJS())) return;
+        if (isEqual(credits, toJS(this.cesiumDataAttributions))) return;
 
         // first remove ones that are not on the map anymore
         // Iterate backwards because we're removing items.
@@ -535,7 +540,11 @@ export default class Cesium extends GlobeOrMap {
             this.cesiumDataAttributions.splice(index, 0, credit);
           } else {
             // it is on the list but not in the right place so we move it
-            this.cesiumDataAttributions.move(attributionIndex, index);
+            this.cesiumDataAttributions.splice(
+              index,
+              0,
+              this.cesiumDataAttributions.splice(attributionIndex, 1)[0]
+            );
           }
         }
       });
@@ -994,6 +1003,22 @@ export default class Cesium extends GlobeOrMap {
     };
   }
 
+  /**
+   * Helper method to clone a camera object
+   * @param camera
+   * @returns Camera
+   */
+  private cloneCamera(camera: Camera): Camera {
+    let result = new Camera(this.scene);
+    Cartesian3.clone(camera.position, result.position);
+    Cartesian3.clone(camera.direction, result.direction);
+    Cartesian3.clone(camera.up, result.up);
+    Cartesian3.clone(camera.right, result.right);
+    Matrix4.clone(camera.transform, result.transform);
+    result.frustum = camera.frustum.clone();
+    return result;
+  }
+
   getCurrentCameraView(): CameraView {
     const scene = this.scene;
     const camera = scene.camera;
@@ -1004,13 +1029,42 @@ export default class Cesium extends GlobeOrMap {
     const centerOfScreen = new Cartesian2(width / 2.0, height / 2.0);
     const pickRay = scene.camera.getPickRay(centerOfScreen);
     const center = isDefined(pickRay)
-      ? scene.globe.pick(pickRay, scene)
+      ? scene.globe.pick(pickRay, scene) // will be undefined if we are facing above the horizon
       : undefined;
 
     if (!center) {
-      // TODO: binary search to find the horizon point and use that as the center.
-      return this.terriaViewer.homeCamera; // This is just a random rectangle. Replace it when there's a home view available
-      // return this.terria.homeView.rectangle;
+      /** In cases where the horizon is not visible, we cannot calculate a center using a pick ray, 
+      but we need to return a useful CameraView that works in 3D mode and 2D mode.
+      In this case we can return the correct definition for the cesium camera, with position, direction, and up, 
+      but we need to calculate a bounding box on the ellipsoid too to be used in 2D mode.
+      
+      To do this we clone the camera, rotate it to point straight down, and project the camera view from that position onto the ellipsoid.
+      **/
+
+      // Clone the camera
+      const cameraClone = this.cloneCamera(camera);
+
+      // Rotate camera straight down
+      cameraClone.setView({
+        orientation: {
+          heading: 0.0,
+          pitch: -CesiumMath.PI_OVER_TWO,
+          roll: 0.0
+        }
+      });
+
+      // Compute the bounding box on the ellipsoid
+      const rectangleFor2dView = cameraClone.computeViewRectangle(
+        this.scene.globe.ellipsoid
+      );
+
+      // Return the combined CameraView object
+      return new CameraView(
+        rectangleFor2dView || this.terriaViewer.homeCamera.rectangle, //TODO: Is this fallback appropriate?
+        camera.positionWC,
+        camera.directionWC,
+        camera.upWC
+      );
     }
 
     const ellipsoid = this.scene.globe.ellipsoid;
@@ -1222,6 +1276,7 @@ export default class Cesium extends GlobeOrMap {
    * specified and set terria.pickedFeatures based on this.
    *
    */
+  @action
   pickFromScreenPosition(screenPosition: Cartesian2, ignoreSplitter: boolean) {
     const pickRay = this.scene.camera.getPickRay(screenPosition);
     const pickPosition = isDefined(pickRay)

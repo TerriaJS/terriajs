@@ -1,5 +1,5 @@
 import debounce from "lodash-es/debounce";
-import { action, observable, runInAction } from "mobx";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -61,6 +61,7 @@ export default class MouseCoords {
   updateEvent = new CesiumEvent();
 
   constructor() {
+    makeObservable(this);
     this.geoidModel = new EarthGravityModel1996(
       require("file-loader!../../wwwroot/data/WW15MGH.DAC")
     );

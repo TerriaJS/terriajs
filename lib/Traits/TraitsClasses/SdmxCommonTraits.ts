@@ -51,7 +51,7 @@ export class ModelOverrideTraits extends mixTraits(EnumDimensionTraits) {
     description:
       "Concept ID (full URN form - urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_C16_COMMON(1.0.0).REGION)"
   })
-  id?: string;
+  id?: string = undefined;
 
   @primitiveTrait({
     type: "string",

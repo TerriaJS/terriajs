@@ -3,6 +3,8 @@ import { configure, runInAction } from "mobx";
 import URI from "urijs";
 import { JsonObject } from "../../../../lib/Core/Json";
 import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
+import CatalogMemberMixin from "../../../../lib/ModelMixins/CatalogMemberMixin";
+import GroupMixin from "../../../../lib/ModelMixins/GroupMixin";
 import CatalogGroup from "../../../../lib/Models/Catalog/CatalogGroup";
 import CkanCatalogGroup, {
   CkanServerStratum
@@ -608,6 +610,102 @@ describe("CkanCatalogGroup", function () {
       let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
       expect(group1.memberModels.length).toBe(13);
+    });
+  });
+
+  describe("when `resourceIdTemplate` is given", function () {
+    beforeEach(async function () {
+      runInAction(() => {
+        ckanCatalogGroup.setTrait(
+          "definition",
+          "url",
+          "test/CKAN/search-result.json"
+        );
+      });
+    });
+
+    it("uses it for generating a custom item id for the resource item", async function () {
+      ckanCatalogGroup.setTrait(
+        CommonStrata.definition,
+        "resourceIdTemplate",
+        "{{resource.name}}-{{resource.format}}"
+      );
+      await ckanCatalogGroup.loadMembers();
+      const group = ckanCatalogGroup.memberModels[0] as GroupMixin.Instance;
+      expect(group.memberModels[0].uniqueId).toBe(
+        "test/3245ad6c-cc00-4404-ba1f-476c07b5f762/WMS (OGC)-WMS"
+      );
+    });
+
+    it("ensures that the generated resource-id does not contain `/` character (to avoid clashing with id path character)", async function () {
+      ckanCatalogGroup.setTrait(
+        CommonStrata.definition,
+        "resourceIdTemplate",
+        "{{resource.name}}-{{resource.format}}/something"
+      );
+      await ckanCatalogGroup.loadMembers();
+      const group = ckanCatalogGroup.memberModels[0] as GroupMixin.Instance;
+      expect(group.memberModels[0].uniqueId).toBe(
+        "test/3245ad6c-cc00-4404-ba1f-476c07b5f762/WMS (OGC)-WMSsomething"
+      );
+    });
+
+    describe("when `restrictResourceIdTemplateToOrgsWithNames` is given", function () {
+      it("uses `resourceIdTemplate` for generating resource id for organizations in the list", async function () {
+        ckanCatalogGroup.setTrait(
+          CommonStrata.definition,
+          "resourceIdTemplate",
+          "{{resource.name}}-{{resource.format}}"
+        );
+        ckanCatalogGroup.setTrait(
+          CommonStrata.definition,
+          "restrictResourceIdTemplateToOrgsWithNames",
+          ["doee"] // apply template only for DOEE org
+        );
+        ckanCatalogGroup.setTrait("definition", "groupBy", "organization");
+        await ckanCatalogGroup.loadMembers();
+
+        const doeeGroup = ckanCatalogGroup
+          .memberModels[0] as GroupMixin.Instance & CatalogMemberMixin.Instance;
+        expect(doeeGroup).toBeDefined();
+        expect(doeeGroup.name).toBe("Department of the Environment and Energy");
+        // Template used for generating ID for DOEE resource
+        expect(doeeGroup.memberModels[0].uniqueId).toBe(
+          "test/3245ad6c-cc00-4404-ba1f-476c07b5f762/WMS (OGC)-WMS"
+        );
+        const anotherGroup = ckanCatalogGroup
+          .memberModels[1] as GroupMixin.Instance & CatalogMemberMixin.Instance;
+        expect(anotherGroup).toBeDefined();
+        // Template not used for generating ID for MDBA resource
+        expect(anotherGroup.name).toBe("Murray-Darling Basin Authority");
+        expect(anotherGroup.memberModels[0].uniqueId).toBe(
+          "test/7b0c274f-7f12-4062-9e54-5b8227ca20c4/49e8da1c-1ce6-4008-bdcb-af8552a305c2"
+        );
+      });
+
+      it("does NOT uses `resourceIdTemplate` for generating resource id for organizations NOT in the list", async function () {
+        ckanCatalogGroup.setTrait(
+          CommonStrata.definition,
+          "resourceIdTemplate",
+          "{{resource.name}}-{{resource.format}}"
+        );
+        ckanCatalogGroup.setTrait(
+          CommonStrata.definition,
+          "restrictResourceIdTemplateToOrgsWithNames",
+          ["doee"] // apply template only for DOEE org
+        );
+        ckanCatalogGroup.setTrait("definition", "groupBy", "organization");
+        await ckanCatalogGroup.loadMembers();
+
+        const mdbaGroup = ckanCatalogGroup
+          .memberModels[1] as GroupMixin.Instance & CatalogMemberMixin.Instance;
+        expect(mdbaGroup).toBeDefined();
+        // Template not used for generating ID for MDBA resource
+        expect(mdbaGroup.name).toBe("Murray-Darling Basin Authority");
+        expect(mdbaGroup.memberModels[0].uniqueId).toBe(
+          "test/7b0c274f-7f12-4062-9e54-5b8227ca20c4/49e8da1c-1ce6-4008-bdcb-af8552a305c2"
+        );
+      });
     });
   });
 });

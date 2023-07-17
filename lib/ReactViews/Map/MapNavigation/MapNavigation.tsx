@@ -6,7 +6,8 @@ import {
   IReactionDisposer,
   observable,
   reaction,
-  runInAction
+  runInAction,
+  makeObservable
 } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
@@ -98,6 +99,7 @@ class MapNavigationBase extends React.Component<PropTypes> {
 
   constructor(props: PropTypes) {
     super(props);
+    makeObservable(this);
     registerMapNavigations(props.viewState);
     this.viewState = props.viewState;
     this.model = props.viewState.terria.mapNavigationModel;
