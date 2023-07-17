@@ -6,7 +6,7 @@ import Terria from "../../../../../lib/Models/Terria";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
 import { ThemeProvider } from "styled-components";
 import { terriaTheme } from "../../../../../lib/ReactViews/StandardUserInterface";
-import { Compass } from "../../../../../lib/ReactViews/Map/MapNavigation/Items/Compass/Compass";
+import Compass from "../../../../../lib/ReactViews/Map/MapNavigation/Items/Compass/Compass";
 import { StyledIcon } from "../../../../../lib/Styled/Icon";
 
 describe("Compass", function () {
