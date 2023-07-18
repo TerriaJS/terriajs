@@ -1,5 +1,5 @@
 import React, { VFC, useCallback, useEffect, useMemo, useState } from "react";
-import styled, { keyframes, useTheme } from "styled-components";
+import styled, { css, keyframes, useTheme } from "styled-components";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import { useViewState } from "../Context";
 
@@ -16,7 +16,7 @@ export const ProgressBar: VFC = () => {
     setLoadPercentage(sanitisedPercentage);
   }, []);
 
-  const setMode = (mode: any) => {
+  const setMode = (mode: boolean) => {
     setIndeterminateLoading(mode);
   };
 
@@ -37,7 +37,7 @@ export const ProgressBar: VFC = () => {
       terria.baseMapContrastColor === "#ffffff"
         ? "#ffffff"
         : theme.colorPrimary,
-    []
+    [terria.baseMapContrastColor]
   );
 
   const allComplete = loadPercentage === 100 && !indeterminateLoading;
@@ -70,11 +70,11 @@ const StyledProgressBar = styled.div<IStyledProgressBarProps>`
 
   ${(props) =>
     props.indeterminate &&
-    `
-    width: 100%;
-    animation: ${indeterminateAnimation} 1.2s infinite linear;
-    transform-origin: 0% 50%;
-  `}
+    css`
+      width: 100%;
+      animation: ${indeterminateAnimation} 1.2s infinite linear;
+      transform-origin: 0% 50%;
+    `}
 `;
 
 const indeterminateAnimation = keyframes`
