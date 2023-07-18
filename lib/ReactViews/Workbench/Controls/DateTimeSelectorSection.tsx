@@ -54,7 +54,6 @@ class DateTimeSelectorSection extends React.Component<IProps, IState> {
 
     runInAction(() => {
       // Set the time on the item, set it to use its own clock, update the imagery and repaint.
-      console.log(item);
       item.setTrait(
         CommonStrata.user,
         "currentTime",
