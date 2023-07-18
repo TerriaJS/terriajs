@@ -9,7 +9,6 @@ import CommonStrata from "../../../Models/Definition/CommonStrata";
 import withControlledVisibility from "../../HOCs/withControlledVisibility";
 import CesiumTimeline from "./CesiumTimeline";
 import { getOffsetMinutes } from "../../../Core/DateUtils";
-// import { formatDateTime } from "./DateFormats";
 import DateTimePicker from "./DateTimePicker";
 import Styles from "./timeline.scss";
 import TimelineControls from "./TimelineControls";
@@ -105,7 +104,6 @@ class Timeline extends React.Component {
           offsetTime
         );
         if (defined(catalogItem.dateFormat)) {
-          console.log("adjusted dateFormat", catalogItem.dateFormat);
           currentTime = dateFormat(adjTime, catalogItem.dateFormat);
         } else {
           currentTime = dateFormat(adjTime, "isoDate");
