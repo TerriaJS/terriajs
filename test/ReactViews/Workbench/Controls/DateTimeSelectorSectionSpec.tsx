@@ -101,7 +101,7 @@ describe("DateTimeSelectorSection", function () {
     );
   });
 
-  it("A datetime selector can be formatted with a timeZone +11", async function () {
+  it("A datetime selector will default to isoDate if an invalid timeZone is entered", async function () {
     wmsItem.setTrait("definition", "timeZone", "+ee");
     expect(buttons).toBeDefined();
     expect(buttons.length).toEqual(5);
