@@ -73,4 +73,40 @@ describe("DateTimeSelectorSection", function () {
     expect(buttons.length).toEqual(5);
     expect(currentDateBtn.children[0].children[0].children[0]).toEqual("2014");
   });
+
+  it("A datetime selector can be formatted with a named option", async function () {
+    wmsItem.setTrait("definition", "dateFormat", "isoDateTime");
+    expect(buttons).toBeDefined();
+    expect(buttons.length).toEqual(5);
+    expect(currentDateBtn.children[0].children[0].children[0]).toEqual(
+      "2014-01-01T10:00:00+1000"
+    );
+  });
+
+  it("A datetime selector can be formatted with a timeZone -03:00", async function () {
+    wmsItem.setTrait("definition", "timeZone", "-03:00");
+    expect(buttons).toBeDefined();
+    expect(buttons.length).toEqual(5);
+    expect(currentDateBtn.children[0].children[0].children[0]).toEqual(
+      "2014-01-01T07:00:00+1000"
+    );
+  });
+
+  it("A datetime selector can be formatted with a timeZone +11", async function () {
+    wmsItem.setTrait("definition", "timeZone", "+11");
+    expect(buttons).toBeDefined();
+    expect(buttons.length).toEqual(5);
+    expect(currentDateBtn.children[0].children[0].children[0]).toEqual(
+      "2014-01-01T21:00:00+1000"
+    );
+  });
+
+  it("A datetime selector can be formatted with a timeZone +11", async function () {
+    wmsItem.setTrait("definition", "timeZone", "+ee");
+    expect(buttons).toBeDefined();
+    expect(buttons.length).toEqual(5);
+    expect(currentDateBtn.children[0].children[0].children[0]).toEqual(
+      "2014-01-01"
+    );
+  });
 });
