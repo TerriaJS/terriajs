@@ -79,7 +79,7 @@ describe("DateTimeSelectorSection", function () {
     expect(buttons).toBeDefined();
     expect(buttons.length).toEqual(5);
     expect(currentDateBtn.children[0].children[0].children[0]).toEqual(
-      "2014-01-01T10:00:00+1000"
+      "2014-01-01T00:00:00+0000"
     );
   });
 
@@ -88,16 +88,17 @@ describe("DateTimeSelectorSection", function () {
     expect(buttons).toBeDefined();
     expect(buttons.length).toEqual(5);
     expect(currentDateBtn.children[0].children[0].children[0]).toEqual(
-      "2014-01-01T07:00:00+1000"
+      "2013-12-31"
     );
   });
 
   it("A datetime selector can be formatted with a timeZone +11", async function () {
     wmsItem.setTrait("definition", "timeZone", "+11");
+    wmsItem.setTrait("definition", "dateFormat", "isoDateTime");
     expect(buttons).toBeDefined();
     expect(buttons.length).toEqual(5);
     expect(currentDateBtn.children[0].children[0].children[0]).toEqual(
-      "2014-01-01T21:00:00+1000"
+      "2014-01-01T11:00:00+0000"
     );
   });
 
