@@ -13,7 +13,9 @@ import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
 
 class NoViewer extends GlobeOrMap {
-  readonly type = "none";
+  static readonly type = "none";
+  readonly type = NoViewer.type;
+
   readonly terria: Terria;
   readonly canShowSplitter = false;
   private _currentView: CameraView = new CameraView(Rectangle.MAX_VALUE);
