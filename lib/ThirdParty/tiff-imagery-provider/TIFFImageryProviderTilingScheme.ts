@@ -1,4 +1,4 @@
-import { Math as CMath } from "terriajs-cesium";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -18,12 +18,15 @@ class TIFFImageryProviderTilingScheme extends WebMercatorTilingScheme {
   }) {
     super(options);
 
+    // @ts-ignore
     const { project, unproject } = options;
     if (project) {
       // @ts-ignore
       this._projection.project = function (cartographic: Cartographic) {
         const [x, y] = unproject(
-          [cartographic.longitude, cartographic.latitude].map(CMath.toDegrees)
+          [cartographic.longitude, cartographic.latitude].map(
+            CesiumMath.toDegrees
+          )
         );
         const z = cartographic.height;
         return new Cartesian3(x, y, z);
@@ -33,7 +36,7 @@ class TIFFImageryProviderTilingScheme extends WebMercatorTilingScheme {
       // @ts-ignore
       this._projection.unproject = function (cartesian: Cartesian3) {
         const [longitude, latitude] = project([cartesian.x, cartesian.y]).map(
-          CMath.toRadians
+          CesiumMath.toRadians
         );
         const height = cartesian.z;
         return new Cartographic(longitude, latitude, height);

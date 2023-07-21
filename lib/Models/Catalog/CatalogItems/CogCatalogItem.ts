@@ -6,12 +6,11 @@ import CogCatalogItemTraits from "../../../Traits/TraitsClasses/CogCatalogItemTr
 import CreateModel from "../../Definition/CreateModel";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import TIFFImageryProvider, {
-  TIFFImageryProviderOptions
+  TIFFImageryProviderOptionsWithUrl
 } from "../../../ThirdParty/tiff-imagery-provider";
 import Credit from "terriajs-cesium/Source/Core/Credit";
 import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
 import Reproject from "../../../Map/Vector/Reproject";
-
 import { ImageryProvider } from "terriajs-cesium";
 import { LatLngBounds } from "leaflet";
 const proj4 = require("proj4").default;
@@ -98,10 +97,11 @@ export default class CogCatalogItem extends MappableMixin(
    * @param code Should be a number representing an EPSG code
    * @returns a Promise that resolves to a proj reprojection function
    */
+  // TODO: This needs to return an object with a project and an unproject function
   projFunc = (code: number) => {
     const sourceEpsgCode = `EPSG:${code}`;
     // Add the projection to our proj4 defs if we dont already have it:
-    return Reproject.checkProjection(
+    const project = Reproject.checkProjection(
       this.terria.configParameters.proj4ServiceBaseUrl,
       sourceEpsgCode
     )
@@ -116,6 +116,24 @@ export default class CogCatalogItem extends MappableMixin(
       .catch((error: Error) => {
         this.terria.raiseErrorToUser(error);
       });
+
+    const unproject = Reproject.checkProjection(
+      this.terria.configParameters.proj4ServiceBaseUrl,
+      sourceEpsgCode
+    )
+      .then(() => {
+        const sourceDef =
+          sourceEpsgCode in Proj4Definitions
+            ? new proj4.Proj(Proj4Definitions[sourceEpsgCode])
+            : undefined;
+
+        return proj4(sourceDef, "EPSG:4326").reverse;
+      })
+      .catch((error: Error) => {
+        this.terria.raiseErrorToUser(error);
+      });
+
+    return { project, unproject };
   };
 
   @computed get imageryProvider() {
@@ -123,9 +141,10 @@ export default class CogCatalogItem extends MappableMixin(
       return;
     }
 
+    debugger;
     // TODO: Where should we declare these?
     // TODO: Should we make these applicable to both new CogImageryProvider() and new GeorasterLayer()?
-    const cogOptions: TIFFImageryProviderOptions = {
+    const cogOptions: TIFFImageryProviderOptionsWithUrl = {
       url: proxyCatalogItemUrl(this, this.url),
       projFunc: this.projFunc,
       renderOptions: {
@@ -163,7 +182,7 @@ export class CogImageryProvider extends TIFFImageryProvider {
     return [];
   }
 
-  constructor(options: TIFFImageryProviderOptions) {
+  constructor(options: TIFFImageryProviderOptionsWithUrl) {
     super(options);
 
     // We can extend the constructor here if needed

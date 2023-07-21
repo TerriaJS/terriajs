@@ -18,6 +18,17 @@ import { getMinMax, generateColorScale, findAndSortBandNumbers } from "./utils";
 import { ColorScaleNames, TypedArray } from "./plotty/typing";
 import TIFFImageryProviderTilingScheme from "./TIFFImageryProviderTilingScheme";
 
+// MODIFIED FROM SOURCE By Terria: Added this exported type
+export type TIFFImageryProviderOptionsWithUrl = TIFFImageryProviderOptions & {
+  /**
+   * Deprecated
+   *
+   * You can use fromUrl instead
+   * @example
+   * const provider = await TIFFImageryProvider.fromUrl(url)
+   */
+  url: string | File | Blob;
+};
 export interface SingleBandRenderOptions {
   /** band index start from 1, defaults to 1 */
   band?: number;
@@ -131,13 +142,9 @@ export interface TIFFImageryProviderOptions {
   projFunc?: (code: number) =>
     | {
         /** projection function, convert [lon, lat] position to EPSG:4326 */
-        project: (
-          pos: number[]
-        ) => number[] | Promise<(pos: number[]) => number[]>;
+        project: Promise<(pos: number[]) => number[]>;
         /** unprojection function */
-        unproject: (
-          pos: number[]
-        ) => number[] | Promise<(pos: number[]) => number[]>;
+        unproject: Promise<(pos: number[]) => number[]>;
       }
     | undefined;
   /** cache survival time, defaults to 60 * 1000 ms */
@@ -202,20 +209,17 @@ export class TIFFImageryProvider {
     unproject: (pos: number[]) => number[];
   };
   constructor(
-    private readonly options: TIFFImageryProviderOptions
-  ) // MODIFIED FROM SOURCE by Terria: The second part of this type has been removed as it was not in the version we used before and is marked as Deprecated
-  //  &
-  //   {
-  //     /**
-  //      * Deprecated
-  //      *
-  //      * You can use fromUrl instead
-  //      * @example
-  //      * const provider = await TIFFImageryProvider.fromUrl(url)
-  //      */
-  //     url: string | File | Blob;
-  //   }
-  {
+    private readonly options: TIFFImageryProviderOptions & {
+      /**
+       * Deprecated
+       *
+       * You can use fromUrl instead
+       * @example
+       * const provider = await TIFFImageryProvider.fromUrl(url)
+       */
+      url: string | File | Blob;
+    }
+  ) {
     this.hasAlphaChannel = options.hasAlphaChannel ?? true;
     this.maximumLevel = options.maximumLevel ?? 18;
     this.minimumLevel = options.minimumLevel ?? 0;
