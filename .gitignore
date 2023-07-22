@@ -12,6 +12,7 @@ terriajs.pid
 /wwwroot/doc/
 /wwwroot/schema/
 /wwwroot/user-guide/
+/wwwroot/esbuild/
 /coverage/
 package-lock.json
 *.swp

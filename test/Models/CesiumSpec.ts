@@ -1,6 +1,15 @@
 import range from "lodash-es/range";
 import { action, computed, observable, runInAction } from "mobx";
-import { Cartesian3, CesiumTerrainProvider, EllipsoidTerrainProvider, Rectangle, GeoJsonDataSource, Cesium3DTileset, Scene, WebMapServiceImageryProvider } from "cesium";
+import {
+  Cartesian3,
+  CesiumTerrainProvider,
+  EllipsoidTerrainProvider,
+  Rectangle,
+  GeoJsonDataSource,
+  Cesium3DTileset,
+  Scene,
+  WebMapServiceImageryProvider
+} from "cesium";
 import filterOutUndefined from "../../lib/Core/filterOutUndefined";
 import runLater from "../../lib/Core/runLater";
 import MappableMixin, { MapItem } from "../../lib/ModelMixins/MappableMixin";
@@ -18,8 +27,7 @@ import MappableTraits, {
 } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 import isDefined from "../../lib/Core/isDefined";
-
-const supportsWebGL = require("../../lib/Core/supportsWebGL");
+import supportsWebGL from "../../lib/Core/supportsWebGL";
 
 const describeIfSupported = supportsWebGL() ? describe : xdescribe;
 
@@ -437,14 +445,14 @@ class MappablePrimitiveItem extends MappableMixin(CreateModel(MappableTraits)) {
     }
     result.push(new GeoJsonDataSource(`ds${this.uniqueId}`));
     result.push({
-        alpha: 1,
-        imageryProvider: new WebMapServiceImageryProvider({
-          url: `img${this.uniqueId}`,
-          layers: this.uniqueId!
-        }),
-        show: true,
-        clippingRectangle: undefined
-      });
+      alpha: 1,
+      imageryProvider: new WebMapServiceImageryProvider({
+        url: `img${this.uniqueId}`,
+        layers: this.uniqueId!
+      }),
+      show: true,
+      clippingRectangle: undefined
+    });
     return result;
   }
 }

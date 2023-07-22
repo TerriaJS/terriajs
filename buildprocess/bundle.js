@@ -24,11 +24,13 @@ const testFiles = klawSync("./test", {
 const testRoot = path.resolve("./test");
 console.log(testRoot);
 fs.mkdirSync(testRoot, { recursive: true });
-fs.writeFileSync("./test-lib/index.js", "", { encoding: "utf-8" });
+fs.writeFileSync("./test-lib/index.js", `import "./SpecMain";\n`, {
+  encoding: "utf-8"
+});
 
 for (const testFile of testFiles) {
   const name = testFile.path;
-  if (!name.match(/\/SpecMain\.ts$/) && !name.match(/Spec.tsx?$/)) continue;
+  if (!name.match(/Spec\.tsx?$/)) continue;
 
   const extension = path.extname(name);
   const noExtension = name.substring(0, name.length - extension.length);
@@ -44,7 +46,7 @@ esbuild
     entryPoints: ["./test-lib/index.js"],
     bundle: true,
     outfile: "wwwroot/esbuild/TerriaJS-specs.js",
-    publicPath: "/build-just-terriajs/esbuild",
+    publicPath: "/esbuild",
     jsx: "transform",
     define: {
       "process.env.NODE_ENV":
@@ -53,7 +55,7 @@ esbuild
       global: "globalThis"
     },
     sourcemap: true,
-    target: "es2019",
+    target: "es2020",
     plugins: [
       terriaSassModulesPlugin({ includePaths }),
       svgr({
