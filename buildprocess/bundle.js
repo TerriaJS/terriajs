@@ -6,6 +6,7 @@ const path = require("path");
 const svgr = require("esbuild-plugin-svgr");
 const klawSync = require("klaw-sync");
 const fs = require("fs");
+const selectLoaderPlugin = require("./selectLoaderPlugin");
 
 const includePaths = [
   // Support resolving paths like "terriajs/..."
@@ -57,6 +58,18 @@ esbuild
     sourcemap: true,
     target: "es2020",
     plugins: [
+      selectLoaderPlugin({
+        loaders: [
+          {
+            filter: /^raw-loader!(.*)$/,
+            loader: "text"
+          },
+          {
+            filter: /^file-loader!(.*)$/,
+            loader: "file"
+          }
+        ]
+      }),
       terriaSassModulesPlugin({ includePaths }),
       svgr({
         plugins: ["@svgr/plugin-jsx"],
