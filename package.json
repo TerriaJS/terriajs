@@ -257,6 +257,8 @@
     "build-for-node": "tsc -b tsconfig-node.json",
     "prepare": "husky install",
     "copy-scss": "cd src && find . -name '*.scss' -exec cp --parents \\{\\} ../lib \\; && find . -name '*.css' -exec cp --parents \\{\\} ../lib \\; && find . -name '*.xml' -exec cp --parents \\{\\} ../lib \\; && cd ..",
-    "build": "tsc && npm run copy-scss"
+    "compile-typescript": "tsc -b",
+    "bundle-tests": "node ./buildprocess/bundle.js",
+    "build": "npm run compile-typescript && npm run copy-scss && npm run bundle-tests"
   }
 }

@@ -16,7 +16,7 @@ module.exports = function (config) {
 
     // list of files / patterns to load in the browser
     files: [
-      "build/TerriaJS-specs.js",
+      "esbuild/TerriaJS-specs.js",
       {
         pattern: "**/*",
         included: false,

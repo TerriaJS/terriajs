@@ -30,10 +30,10 @@ jobs:
       - name: Build TerriaJS
         run: yarn build
 
-      - name: Build TerriaJS tests
-        run: yarn gulp lint release -- --continue
-        env:
-          NODE_OPTIONS: --max_old_space_size=4096
+      # - name: Build TerriaJS tests
+      #   run: yarn gulp lint release -- --continue
+      #   env:
+      #     NODE_OPTIONS: --max_old_space_size=4096
 
       - name: Run tests using xvfb
         uses: GabrielBB/xvfb-action@v1
