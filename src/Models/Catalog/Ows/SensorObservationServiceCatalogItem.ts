@@ -26,6 +26,7 @@ import StratumOrder from "../../Definition/StratumOrder";
 import { SelectableDimension } from "../../SelectableDimensions/SelectableDimensions";
 import Terria from "../../Terria";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import loadText from "../../../Core/loadText";
 
 interface GetFeatureOfInterestResponse {
   featureMember?: FeatureMember[] | FeatureMember;
@@ -207,14 +208,6 @@ class GetObservationRequest {
   }
 
   @computed
-  get requestTemplate() {
-    return (
-      this.catalogItem.requestTemplate ||
-      SensorObservationServiceCatalogItem.defaultRequestTemplate
-    );
-  }
-
-  @computed
   get parameters() {
     const foiIdentifier = this.catalogItem.chartFeatureOfInterestIdentifier;
     const observableProperty = this.catalogItem.selectedObservable;
@@ -302,7 +295,8 @@ class GetObservationRequest {
     const response = await loadSoapBody(
       this.catalogItem,
       this.url,
-      this.requestTemplate,
+      this.catalogItem.requestTemplate ||
+        (await this.catalogItem._private_getDefaultRequestTemplate()),
       templateContext
     );
 
@@ -314,7 +308,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   CreateModel(SensorObservationServiceCatalogItemTraits)
 ) {
   static readonly type = "sos";
-  static defaultRequestTemplate = require("./SensorObservationServiceRequestTemplate.xml");
+  static defaultRequestTemplate: string | undefined = undefined;
 
   constructor(
     id: string | undefined,
@@ -352,12 +346,21 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     return "0d";
   }
 
+  async _private_getDefaultRequestTemplate() {
+    if (!SensorObservationServiceCatalogItem.defaultRequestTemplate) {
+      const defaultRequestTemplateUrl = require("./SensorObservationServiceRequestTemplate.xml");
+      SensorObservationServiceCatalogItem.defaultRequestTemplate =
+        await loadText(defaultRequestTemplateUrl);
+    }
+
+    return SensorObservationServiceCatalogItem.defaultRequestTemplate!;
+  }
+
   @action
   async _private_loadFeaturesData() {
     const request = new GetFeatureOfInterestRequest(
       this,
-      this.requestTemplate ||
-        SensorObservationServiceCatalogItem.defaultRequestTemplate
+      this.requestTemplate || (await this._private_getDefaultRequestTemplate())
     );
     const response = await request.perform();
     if (response === undefined) {

@@ -110,4 +110,8 @@ const StyledHtml: React.FC<PropsType> = observer((props: PropsType) => {
   );
 });
 
+StyledHtml.defaultProps = {
+  injectTooltips: true
+};
+
 export default StyledHtml;

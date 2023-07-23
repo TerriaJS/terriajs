@@ -14,7 +14,8 @@ const babelPlugin = (options = {}) => ({
         caller: {
           name: "esbuild-plugin-babel",
           supportsStaticESM: true
-        }
+        },
+        inputSourceMap: true
       });
       if (!babelOptions) return { contents };
 

@@ -3,6 +3,7 @@ import "../lib/Core/prerequisites";
 import "jasmine-ajax";
 import { configure, spy } from "mobx";
 import i18next from "i18next";
+import { initReactI18next } from "react-i18next";
 import registerCatalogMembers from "../lib/Models/Catalog/registerCatalogMembers";
 
 configure({
@@ -24,7 +25,7 @@ spy((event) => {
 });
 
 beforeAll(async function () {
-  await i18next.init({
+  await i18next.use(initReactI18next).init({
     lng: "cimode",
     debug: false,
     resources: {}

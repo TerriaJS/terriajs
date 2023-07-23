@@ -25,9 +25,16 @@ describe("SensorObservationServiceCatalogItem", function () {
       test: (xhr) => /^application\/soap\+xml/.test(xhr.contentType()),
       parse: (paramString) => paramString
     });
-    jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionMapping.json"
-    ).andReturn({ responseText: regionMapping });
+
+    async function completeActualRequest(request: JasmineAjaxRequest) {
+      const response = await fetch(request.url);
+      request.respondWith({
+        responseText: await response.text()
+      });
+    }
+
+    jasmine.Ajax.stubRequest(/^esbuild/).andCallFunction(completeActualRequest);
+    jasmine.Ajax.stubRequest(/^\//).andCallFunction(completeActualRequest);
 
     item = new SensorObservationServiceCatalogItem("test", new Terria());
     item.setTrait(CommonStrata.user, "url", "https://sos.example.com");

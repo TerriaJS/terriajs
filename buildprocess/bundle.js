@@ -65,6 +65,7 @@ esbuild
       babelPlugin({
         filter: /\.[jt]sx$/,
         config: {
+          sourceMaps: true,
           plugins: [
             //"babel-plugin-jsx-control-statements",
             transformJsxControlStatements,
@@ -87,7 +88,7 @@ esbuild
       ".glb": "file",
       ".xml": "file",
       ".DAC": "file",
-      ".csv": "file"
+      ".csv": "text"
     },
     external: [
       // Don't try to load node-only modules and other unnecessary stuff
