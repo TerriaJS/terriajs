@@ -127,7 +127,7 @@ export default class CogCatalogItem extends MappableMixin(
             ? new proj4.Proj(Proj4Definitions[sourceEpsgCode])
             : undefined;
 
-        return proj4(sourceDef, "EPSG:4326").reverse;
+        return proj4("EPSG:4326", sourceDef).forward;
       })
       .catch((error: Error) => {
         this.terria.raiseErrorToUser(error);
@@ -141,7 +141,6 @@ export default class CogCatalogItem extends MappableMixin(
       return;
     }
 
-    debugger;
     // TODO: Where should we declare these?
     // TODO: Should we make these applicable to both new CogImageryProvider() and new GeorasterLayer()?
     const cogOptions: TIFFImageryProviderOptionsWithUrl = {

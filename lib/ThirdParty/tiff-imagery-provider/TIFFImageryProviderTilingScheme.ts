@@ -1,5 +1,5 @@
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
-
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";

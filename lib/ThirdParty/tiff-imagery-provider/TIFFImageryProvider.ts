@@ -11,12 +11,15 @@ import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import { default as CMath } from "terriajs-cesium/Source/Core/Math";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import { Pool, fromUrl as tiffFromUrl, GeoTIFFImage } from "geotiff";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
+import GeoTIFF, { Pool, fromUrl, fromBlob, GeoTIFFImage } from "geotiff";
+
 import { addColorScale, plot } from "./plotty";
 import WorkerFarm from "./worker-farm";
 import { getMinMax, generateColorScale, findAndSortBandNumbers } from "./utils";
 import { ColorScaleNames, TypedArray } from "./plotty/typing";
 import TIFFImageryProviderTilingScheme from "./TIFFImageryProviderTilingScheme";
+import defined from "terriajs-cesium/Source/Core/defined";
 
 // MODIFIED FROM SOURCE By Terria: Added this exported type
 export type TIFFImageryProviderOptionsWithUrl = TIFFImageryProviderOptions & {
@@ -260,7 +263,14 @@ export class TIFFImageryProvider {
     const prjCode = +(
       image.geoKeys.ProjectedCSTypeGeoKey ?? image.geoKeys.GeographicTypeGeoKey
     );
-    this._proj = await projFunc?.(prjCode); // MODIFIED FROM SOURCE by Terria: to accept projFunc as a Promise
+
+    // this._proj = projFunc?.(prjCode); // The following block MODIFIED FROM SOURCE by Terria: to accept projFunc as a Promise. We need to call Promise.all on both proerties of the projFunc object
+    const [project, unproject] = await Promise.all([
+      projFunc?.(prjCode)?.project ?? Promise.resolve(),
+      projFunc?.(prjCode)?.unproject ?? Promise.resolve()
+    ]);
+    this._proj = { project, unproject };
+
     if (
       typeof this._proj?.project === "function" &&
       typeof this._proj?.unproject === "function"
