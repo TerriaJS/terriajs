@@ -1802,7 +1802,10 @@ export default class Terria {
     while (true) {
       const model = newItemsRaw.shift();
       if (model) {
-        await this.pushAndLoadMapItems(model, newItems, errors);
+        // check if model is already in the newItems list by uniqueId
+        if (!newItems.find((item) => item.uniqueId === model.uniqueId)) {
+          await this.pushAndLoadMapItems(model, newItems, errors);
+        }
       } else {
         break;
       }

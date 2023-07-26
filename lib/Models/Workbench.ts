@@ -12,7 +12,6 @@ import LayerOrderingTraits from "../Traits/TraitsClasses/LayerOrderingTraits";
 import CommonStrata from "./Definition/CommonStrata";
 import hasTraits from "./Definition/hasTraits";
 import { BaseModel } from "./Definition/Model";
-import { uniqueId } from "lodash-es";
 
 const keepOnTop = (model: BaseModel) =>
   hasTraits(model, LayerOrderingTraits, "keepOnTop") && model.keepOnTop;
@@ -35,13 +34,7 @@ export default class Workbench {
     return this._items.map(dereferenceModel);
   }
   set items(items: readonly BaseModel[]) {
-    console.log(items);
-
-    // remove duplicate items from items based on uniqueId
-    const uniqueItems = items.filter((item, index, self) => {
-      return index === self.findIndex((t) => t.uniqueId === item.uniqueId);
-    });
-    this._items.spliceWithArray(0, this._items.length, uniqueItems.slice());
+    this._items.spliceWithArray(0, this._items.length, items.slice());
   }
 
   /**
