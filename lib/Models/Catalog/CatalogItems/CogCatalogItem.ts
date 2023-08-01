@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { computed } from "mobx";
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -57,31 +58,66 @@ export default class CogCatalogItem extends MappableMixin(
   @computed get georasterLayer(): IPromiseBasedObservable<
     GeorasterTerriaLayer | undefined
   > {
-    return fromPromise(
+    return fromPromise<GeorasterTerriaLayer | undefined>(
       // parseGeoRaster will request for external .ovr file, most likely will receive a 404 error. This is not a problem.
       isDefined(this.imageryProvider) &&
-        parseGeoRaster(this.url)
-          .then((georaster: GeoRaster) => {
-            return new GeorasterTerriaLayer(
-              this.terria.leaflet,
-              {
-                georaster: georaster,
-                opacity: 1,
-                // Example pixel reclassification function:
-                // pixelValuesToColorFn: (values) => {
-                //   return mapElevationToRgbaSmoothed(values, 0);
-                // },
-                resolution: 256
-                // debugLevel: 0
-              },
-              this.imageryProvider
-            );
+        fetch(this.url)
+          .then((response) => {
+            // Add an if statement to check for response status
+            if (!response.ok) {
+              throw new Error("Error: No response from fetch");
+            }
+            return response.arrayBuffer();
           })
-          .catch((error: Error) => {
-            this.terria.raiseErrorToUser(error);
+          .then((arrayBuffer) => {
+            parseGeoRaster(arrayBuffer)
+              .then((georaster: GeoRaster) => {
+                return new GeorasterTerriaLayer(
+                  this.terria.leaflet,
+                  {
+                    georaster: georaster,
+                    opacity: 1,
+                    resolution: 256,
+                    debugLevel: 5
+                  },
+                  this.imageryProvider
+                );
+              })
+              .catch((error: Error) => {
+                this.terria.raiseErrorToUser(error);
+              });
           })
     );
   }
+
+  // @computed get georasterLayer(): IPromiseBasedObservable<
+  //   GeorasterTerriaLayer | undefined
+  // > {
+  //   return fromPromise(
+  //     // parseGeoRaster will request for external .ovr file, most likely will receive a 404 error. This is not a problem.
+  //     isDefined(this.imageryProvider) &&
+  //       parseGeoRaster(this.url)
+  //         .then((georaster: GeoRaster) => {
+  //           return new GeorasterTerriaLayer(
+  //             this.terria.leaflet,
+  //             {
+  //               georaster: georaster,
+  //               opacity: 1,
+  //               // Example pixel reclassification function:
+  //               // pixelValuesToColorFn: (values) => {
+  //               //   return mapElevationToRgbaSmoothed(values, 0);
+  //               // },
+  //               resolution: 256
+  //               // debugLevel: 0
+  //             },
+  //             this.imageryProvider
+  //           );
+  //         })
+  //         .catch((error: Error) => {
+  //           this.terria.raiseErrorToUser(error);
+  //         })
+  //   );
+  // }
 
   createGeoRasterLayer = (
     ip: ImageryProvider,
