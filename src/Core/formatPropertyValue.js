@@ -1,6 +1,6 @@
 "use strict";
 
-var linkifyContent = require("./linkifyContent");
+var linkifyContent = require("./linkifyContent").default;
 
 /**
  * Format the value for the description, used by the Feature Info Panel.

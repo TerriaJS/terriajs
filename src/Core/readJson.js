@@ -1,7 +1,7 @@
 "use strict";
 
 const json5 = require("json5");
-const readText = require("./readText");
+const readText = require("./readText").default;
 
 /**
  * Try to read the file as JSON. If that fails, try JSON5.

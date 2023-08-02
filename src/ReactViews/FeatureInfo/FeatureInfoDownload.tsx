@@ -9,7 +9,7 @@ import Icon from "../../Styled/Icon";
 import { withViewState } from "../StandardUserInterface/ViewStateContext";
 import Styles from "./feature-info-download.scss";
 
-const Dropdown = require("../Generic/Dropdown");
+const Dropdown = require("../Generic/Dropdown").default;
 
 class FeatureInfoDownload extends React.Component<{
   data: JsonObject;

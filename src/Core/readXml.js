@@ -1,7 +1,7 @@
 "use strict";
 
 import i18next from "i18next";
-var readText = require("./readText");
+var readText = require("./readText").default;
 
 import { RuntimeError } from "cesium";
 
