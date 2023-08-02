@@ -109,7 +109,7 @@ describe("TableMixin", function () {
       expect(dataSource instanceof CustomDataSource).toBe(true);
     });
 
-    it("creates one entity per id", async function () {
+    it("creates one entity per id", function () {
       expect(item.activeTableStyle.rowGroups.length).toBe(4);
       if (dataSource instanceof CustomDataSource) {
         expect(dataSource.entities.values.length).toBe(4);

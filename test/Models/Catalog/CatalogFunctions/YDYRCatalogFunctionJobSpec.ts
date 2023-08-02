@@ -92,7 +92,7 @@ describe("YDYRCatalogFunctionJob", function () {
     expect(job.typeName).toBe("YourDataYourRegions Job");
   });
 
-  describe("start polling after added to workbench", async function () {
+  describe("start polling after added to workbench", function () {
     let dispose: () => void;
     beforeEach(() => {
       terria.workbench.add(job);

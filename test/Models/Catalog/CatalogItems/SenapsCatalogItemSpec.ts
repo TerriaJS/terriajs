@@ -95,7 +95,7 @@ describe("SenapsLocationsCatalogItem", function () {
     expect(item.disableAboutData).toBeFalsy();
   });
 
-  describe("Can not get any items without base url", async function () {
+  describe("Can not get any items without base url", function () {
     beforeEach(async function () {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());
@@ -131,7 +131,7 @@ describe("SenapsLocationsCatalogItem", function () {
     });
   });
 
-  describe("Can get all items via implicitly specified proxy", async function () {
+  describe("Can get all items via implicitly specified proxy", function () {
     beforeEach(async function () {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());
@@ -182,7 +182,7 @@ describe("SenapsLocationsCatalogItem", function () {
     });
   });
 
-  describe("Can get all items via default proxy", async function () {
+  describe("Can get all items via default proxy", function () {
     beforeEach(async function () {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());
@@ -233,7 +233,7 @@ describe("SenapsLocationsCatalogItem", function () {
     });
   });
 
-  describe("Can get filtered items via default proxy", async function () {
+  describe("Can get filtered items via default proxy", function () {
     beforeEach(async function () {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());
@@ -278,7 +278,7 @@ describe("SenapsLocationsCatalogItem", function () {
     });
   });
 
-  describe("Can get filtered items via implicitly specified alternative proxy", async function () {
+  describe("Can get filtered items via implicitly specified alternative proxy", function () {
     beforeEach(async function () {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());

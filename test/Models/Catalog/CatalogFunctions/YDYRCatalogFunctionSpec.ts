@@ -111,7 +111,7 @@ describe("YDYRCatalogFunction", function () {
     expect(ydyr.typeName).toBe("YourDataYourRegions");
   });
 
-  describe("when loading", async function () {
+  describe("when loading", function () {
     it("should correctly render functionParameters", function () {
       expect(ydyr.functionParameters.map(({ type }) => type)).toEqual([
         "string",
@@ -141,7 +141,7 @@ describe("YDYRCatalogFunction", function () {
     });
   });
 
-  describe("when submitted", async function () {
+  describe("when submitted", function () {
     let job: YDYRCatalogFunctionJob;
     let dispose: () => void;
     beforeEach(async () => {

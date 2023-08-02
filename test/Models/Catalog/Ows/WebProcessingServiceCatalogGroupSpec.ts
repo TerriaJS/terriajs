@@ -31,7 +31,7 @@ describe("WebProcessingServiceCatalogGroup", function () {
     );
   });
 
-  describe("loadMembers", async function () {
+  describe("loadMembers", function () {
     it("fetches the getCapabilities XML", async function () {
       wpsGroup.setTrait(CommonStrata.user, "url", "http://test/wps");
       jasmine.Ajax.stubRequest(

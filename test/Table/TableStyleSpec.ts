@@ -397,7 +397,7 @@ describe("TableStyle", function () {
       expect(activeStyle.colorMap instanceof EnumColorMap).toBeTruthy();
     });
 
-    describe(" - applies zScoreFilter, outlierColor and minimumValue/maximumValue correctly", async function () {
+    describe(" - applies zScoreFilter, outlierColor and minimumValue/maximumValue correctly", function () {
       beforeEach(async function () {
         updateModelFromJson(csvItem, CommonStrata.definition, {
           csvString: SedCsv,
