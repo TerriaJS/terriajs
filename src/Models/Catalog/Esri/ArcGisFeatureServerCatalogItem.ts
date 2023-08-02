@@ -266,15 +266,15 @@ class FeatureServerStratum extends LoadableStratum(
       const source = proj4.Proj((proj4definitions as any)[wkid]);
       const dest = proj4.Proj("EPSG:4326");
 
-      let p = proj4.transform(source, dest, [extent.xmin, extent.ymin]);
+      let p = proj4.transform(source, dest, { x: extent.xmin, y: extent.ymin });
 
-      const west = p[0];
-      const south = p[1];
+      const west = p.x;
+      const south = p.y;
 
-      p = proj4.transform(source, dest, [extent.xmax, extent.ymax]);
+      p = proj4.transform(source, dest, { x: extent.xmax, y: extent.ymax });
 
-      const east = p[0];
-      const north = p[1];
+      const east = p.x;
+      const north = p.y;
 
       const rectangle = { west: west, south: south, east: east, north: north };
       return createStratumInstance(RectangleTraits, rectangle);
