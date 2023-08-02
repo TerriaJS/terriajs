@@ -120,7 +120,7 @@ export const MapColumn: FC<IMapColumnProps> = observer(
           )}
         </Box>
         <div>
-          {true && (
+          {!viewState.hideMapUi && (
             <BottomDock
               terria={viewState.terria}
               viewState={viewState}
