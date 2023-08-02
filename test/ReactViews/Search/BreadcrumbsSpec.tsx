@@ -47,7 +47,7 @@ describe("Breadcrumbs", function () {
       const breadcrumbs = testRenderer.root.findByType(Breadcrumbs);
       expect(breadcrumbs).toBeDefined();
       const icon = breadcrumbs.findByType(Icon);
-      expect(icon.props.glyph.id).toBe("globe");
+      expect(icon.props.glyph).toBe(Icon.GLYPHS.globe);
     });
   });
 

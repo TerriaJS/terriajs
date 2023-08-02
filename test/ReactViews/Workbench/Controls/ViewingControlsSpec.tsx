@@ -29,7 +29,7 @@ describe("ViewingControls", function () {
     });
     ViewingControlsMenu.addMenuItem(viewState, (item) => ({
       name: "View details",
-      icon: Icon.GLYPHS.eye,
+      icon: { glyph: Icon.GLYPHS.eye },
       iconTitle: "View more details",
       onClick: () => {}
     }));
