@@ -54,7 +54,11 @@ export const MapColumn: FC<IMapColumnProps> = observer(
             <ProgressBar />
           </div>
           {!viewState.hideMapUi && (
-            <>
+            <div
+              css={`
+                ${viewState.explorerPanelIsVisible && "opacity: 0.3;"}
+              `}
+            >
               <MenuBar
                 // @ts-ignore
                 menuItems={customElements.menu}
@@ -67,7 +71,7 @@ export const MapColumn: FC<IMapColumnProps> = observer(
                 navItems={customElements.nav}
                 elementConfig={viewState.terria.elements.get("map-navigation")}
               />
-            </>
+            </div>
           )}
           <Box
             position="absolute"
