@@ -124,10 +124,15 @@ describeIfSupported("Cesium Model", function () {
   });
 
   it("correctly removes all the primitives from the scene when they are removed from the viewer", async function () {
+    const tilesets = [
+      await Cesium3DTileset.fromUrl("test/Cesium3DTiles/tileset.json?id=1"),
+      await Cesium3DTileset.fromUrl("test/Cesium3DTiles/tileset.json?id=2"),
+      await Cesium3DTileset.fromUrl("test/Cesium3DTiles/tileset.json?id=3")
+    ];
     const items = observable([
-      new MappablePrimitiveItem("1", terria),
-      new MappablePrimitiveItem("2", terria),
-      new MappablePrimitiveItem("3", terria)
+      new MappablePrimitiveItem("1", terria, tilesets[0]),
+      new MappablePrimitiveItem("2", terria, tilesets[1]),
+      new MappablePrimitiveItem("3", terria, tilesets[2])
     ]);
 
     const container2 = document.createElement("div");
@@ -170,7 +175,11 @@ describeIfSupported("Cesium Model", function () {
 
       // Test that we have added the correct items
       expect(dataSourceNames()).toEqual(["ds1", "ds2", "ds3"]);
-      expect(tilesetUrls()).toEqual(["prim1", "prim2", "prim3"]);
+      expect(tilesetUrls()).toEqual([
+        "test/Cesium3DTiles/tileset.json?id=1",
+        "test/Cesium3DTiles/tileset.json?id=2",
+        "test/Cesium3DTiles/tileset.json?id=3"
+      ]);
       expect(imageryProviderUrls()).toEqual(["img1", "img2", "img3"]);
 
       runInAction(() => items.splice(0, 2));
@@ -178,7 +187,7 @@ describeIfSupported("Cesium Model", function () {
 
       // Test that we have removed the correct items
       expect(dataSourceNames()).toEqual(["ds3"]);
-      expect(tilesetUrls()).toEqual(["prim3"]);
+      expect(tilesetUrls()).toEqual(["test/Cesium3DTiles/tileset.json?id=3"]);
       expect(imageryProviderUrls()).toEqual(["img3"]);
     } finally {
       cesium2.destroy();
@@ -428,21 +437,15 @@ describeIfSupported("Cesium Model", function () {
  * items.
  */
 class MappablePrimitiveItem extends MappableMixin(CreateModel(MappableTraits)) {
-  private _private_tileset: Cesium3DTileset | undefined = undefined;
-
-  override async _protected_forceLoadMapItems() {
-    const tileset = await Cesium3DTileset.fromUrl(`prim${this.uniqueId}`);
-
-    runInAction(() => {
-      this._private_tileset = tileset;
-    });
+  constructor(id: string, terria: Terria, readonly tileset: Cesium3DTileset) {
+    super(id, terria);
   }
+
+  override async _protected_forceLoadMapItems() {}
 
   override get mapItems() {
     const result: MapItem[] = [];
-    if (isDefined(this._private_tileset)) {
-      result.push(this._private_tileset);
-    }
+    result.push(this.tileset);
     result.push(new GeoJsonDataSource(`ds${this.uniqueId}`));
     result.push({
       alpha: 1,
