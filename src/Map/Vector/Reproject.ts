@@ -1,9 +1,8 @@
 import { defined } from "cesium";
-import Proj4Definitions from "./Proj4Definitions";
-import urijs from "urijs";
 import proj4 from "proj4";
-
-const loadText = require("../../Core/loadText");
+import urijs from "urijs";
+import loadText from "../../Core/loadText";
+import Proj4Definitions from "./Proj4Definitions";
 
 export default {
   TERRIA_CRS: "EPSG:4326",

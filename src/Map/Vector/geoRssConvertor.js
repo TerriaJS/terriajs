@@ -1,9 +1,7 @@
-"use strict";
-
 import { defined } from "cesium";
-var geoJsonGeometryFromGeoRssSimpleGeometry = require("./geoJsonGeometryFromGeoRssSimpleGeometry");
-var geoJsonGeometryFromGmlGeometry = require("./geoJsonGeometryFromGmlGeometry");
-var geoJsonGeometryFromW3cGeometry = require("./geoJsonGeometryFromW3cGeometry");
+import geoJsonGeometryFromGeoRssSimpleGeometry from "./geoJsonGeometryFromGeoRssSimpleGeometry";
+import geoJsonGeometryFromGmlGeometry from "./geoJsonGeometryFromGmlGeometry";
+import geoJsonGeometryFromW3cGeometry from "./geoJsonGeometryFromW3cGeometry";
 
 /**
  * Converts a GeoRss v2.0 document to GeoJSON.

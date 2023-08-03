@@ -1,5 +1,5 @@
 import { defined } from "cesium";
-const loadWithXhr = require("../Core/loadWithXhr");
+const loadWithXhr = require("../Core/loadWithXhr").default;
 const TerriaError = require("../Core/TerriaError").default;
 var i18next = require("i18next").default;
 

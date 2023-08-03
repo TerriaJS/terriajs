@@ -1,29 +1,25 @@
+import { RuntimeError, getFilenameFromUri } from "cesium";
 import i18next from "i18next";
-import { computed, runInAction, makeObservable } from "mobx";
-import { getFilenameFromUri } from "cesium";
-import { RuntimeError } from "cesium";
-import isDefined from "../../../Core/isDefined";
+import { computed, makeObservable, runInAction } from "mobx";
 import { JsonObject } from "../../../Core/Json";
+import { networkRequestError } from "../../../Core/TerriaError";
+import isDefined from "../../../Core/isDefined";
 import loadXML from "../../../Core/loadXML";
 import readXml from "../../../Core/readXml";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
-import { networkRequestError } from "../../../Core/TerriaError";
 import {
   geoRss2ToGeoJson,
   geoRssAtomToGeoJson
 } from "../../../Map/Vector/geoRssConvertor";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GeoJsonMixin from "../../../ModelMixins/GeojsonMixin";
-import UrlMixin from "../../../ModelMixins/UrlMixin";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import GeoRssCatalogItemTraits from "../../../Traits/TraitsClasses/GeoRssCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
-import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
+import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
+import createStratumInstance from "../../Definition/createStratumInstance";
 import HasLocalData from "../../HasLocalData";
-import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 enum GeoRssFormat {
