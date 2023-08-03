@@ -1,9 +1,6 @@
 {
   "extends": "./tsconfig-common.json",
-  "references": [
-    { "path": "./src/tsconfig.json" },
-    { "path": "./test" }
-  ],
+  "references": [{ "path": "./src/tsconfig.json" }, { "path": "./test" }],
   "files": [],
   "include": []
 }

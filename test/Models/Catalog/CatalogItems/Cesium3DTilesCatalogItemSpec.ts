@@ -1,7 +1,20 @@
 import "../../../SpecMain";
 import { reaction, runInAction } from "mobx";
 import i18next from "i18next";
-import { Cartesian2, IonResource, Cesium3DTileFeature, Cesium3DTileset, Cesium3DTileStyle, Cesium3DTileColorBlendMode, ShadowMode, Matrix4, Quaternion, Matrix3, HeadingPitchRoll, Cartesian3 } from "cesium";
+import {
+  Cartesian2,
+  IonResource,
+  Cesium3DTileFeature,
+  Cesium3DTileset,
+  Cesium3DTileStyle,
+  Cesium3DTileColorBlendMode,
+  ShadowMode,
+  Matrix4,
+  Quaternion,
+  Matrix3,
+  HeadingPitchRoll,
+  Cartesian3
+} from "cesium";
 import Cesium3DTilesCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/Cesium3DTilesCatalogItem";
 import createStratumInstance from "../../../../lib/Models/Definition/createStratumInstance";
 import Terria from "../../../../lib/Models/Terria";

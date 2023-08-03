@@ -1,6 +1,13 @@
 import i18next from "i18next";
 import { runInAction } from "mobx";
-import { Cartesian3, Cartographic, Ellipsoid, Math as CesiumMath, Rectangle, Entity } from "cesium";
+import {
+  Cartesian3,
+  Cartographic,
+  Ellipsoid,
+  Math as CesiumMath,
+  Rectangle,
+  Entity
+} from "cesium";
 import supportsWebGL from "../../lib/Core/supportsWebGL";
 import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
 import TerriaFeature from "../../lib/Models/Feature/Feature";

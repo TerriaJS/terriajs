@@ -13,9 +13,7 @@ function configureWebpack(
   MiniCssExtractPlugin,
   disableStyleLoader
 ) {
-  const cesiumDir = path.dirname(
-    require.resolve("cesium/package.json")
-  );
+  const cesiumDir = path.dirname(require.resolve("cesium/package.json"));
   // const fontAwesomeDir = path.resolve(path.dirname(require.resolve('font-awesome/package.json')));
   // const reactMdeDir = path.resolve(path.dirname(require.resolve('react-mde/package.json')));
   // console.log(fontAwesomeDir);

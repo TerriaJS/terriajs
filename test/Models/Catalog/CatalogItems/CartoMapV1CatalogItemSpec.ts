@@ -1,5 +1,5 @@
 import { configure, runInAction } from "mobx";
-import { Rectangle, UrlTemplateImageryProvider} from "cesium";
+import { Rectangle, UrlTemplateImageryProvider } from "cesium";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import CartoMapV1CatalogItem, {
   CartoLoadableStratum

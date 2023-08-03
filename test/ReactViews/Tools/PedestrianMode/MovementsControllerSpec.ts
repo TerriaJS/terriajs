@@ -1,5 +1,11 @@
 import { action } from "mobx";
-import { Cartesian3, Cartographic, Math as CesiumMath, Camera, Scene } from "cesium";
+import {
+  Cartesian3,
+  Cartographic,
+  Math as CesiumMath,
+  Camera,
+  Scene
+} from "cesium";
 import LatLonHeight from "../../../../lib/Core/LatLonHeight";
 import Cesium from "../../../../lib/Models/Cesium";
 import Terria from "../../../../lib/Models/Terria";

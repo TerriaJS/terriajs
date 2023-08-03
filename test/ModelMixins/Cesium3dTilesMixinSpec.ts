@@ -1,7 +1,15 @@
 import { runInAction } from "mobx";
 import Terria from "../../lib/Models/Terria";
 import Cesium3DTilesCatalogItem from "../../lib/Models/Catalog/CatalogItems/Cesium3DTilesCatalogItem";
-import { ClippingPlaneCollection, ClippingPlane, Cartesian3, Color, Matrix4, Cesium3DTileset, Cesium3DTileFeature } from "cesium";
+import {
+  ClippingPlaneCollection,
+  ClippingPlane,
+  Cartesian3,
+  Color,
+  Matrix4,
+  Cesium3DTileset,
+  Cesium3DTileFeature
+} from "cesium";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 
 describe("Cesium3dTilesMixin", function () {
