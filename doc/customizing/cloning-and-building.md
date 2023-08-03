@@ -106,4 +106,4 @@ Checkout the [Problems and Solutions](../contributing/problems-and-solutions.md)
 
 ### Next Steps
 
-Now that you have a working local build of TerriaMap, you may want to [customize it](customizing/README.md) or [deploy it](deploying/README.md) for others to use.
+Now that you have a working local build of TerriaMap, you may want to [customize it](./README.md) or [deploy it](../deploying/README.md) for others to use.
