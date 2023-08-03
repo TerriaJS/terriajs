@@ -1,9 +1,6 @@
-"use strict";
-
 import { ImageryLayerFeatureInfo } from "cesium";
 import { defined } from "cesium";
-
-var formatPropertyValue = require("../../Core/formatPropertyValue");
+import formatPropertyValue from "../../Core/formatPropertyValue";
 
 /**
  * Configures the description of this feature by creating an HTML table of properties and their values.
