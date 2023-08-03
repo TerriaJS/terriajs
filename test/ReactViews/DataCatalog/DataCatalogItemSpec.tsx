@@ -126,7 +126,7 @@ describe("DataCatalogItem", () => {
     describe("btnState prop as", () => {
       it('"loading" if item is loading', () => {
         runInAction(() => {
-          (wmsItem as any)._metadataLoader._isLoading = true;
+          (wmsItem as any)._private_metadataLoader._isLoading = true;
         });
         viewState.useSmallScreenInterface = true;
         expect(getRenderedProp("btnState")).toBe(ButtonState.Loading);
