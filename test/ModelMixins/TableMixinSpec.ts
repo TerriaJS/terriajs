@@ -76,7 +76,8 @@ describe("TableMixin", function () {
 
     jasmine.Ajax.install();
     jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionMapping.json"
+      // Using a regex because esbuild will add a unique id to the file name
+      /regionMapping.*.json$/
     ).andReturn({ responseText: regionMapping });
 
     jasmine.Ajax.stubRequest(
