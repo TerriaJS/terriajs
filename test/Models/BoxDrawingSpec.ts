@@ -3,7 +3,12 @@ import Cesium from "../../lib/Models/Cesium";
 import Terria from "../../lib/Models/Terria";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 import BoxDrawing from "../../lib/Models/BoxDrawing";
-import { Matrix4, TranslationRotationScale, Cartesian3, Quaternion } from "cesium";
+import {
+  Matrix4,
+  TranslationRotationScale,
+  Cartesian3,
+  Quaternion
+} from "cesium";
 
 describe("BoxDrawing", function () {
   let terria: Terria;
@@ -43,7 +48,7 @@ describe("BoxDrawing", function () {
         new TranslationRotationScale(
           Cartesian3.ZERO,
           Quaternion.IDENTITY,
-          Cartesian3.ZERO
+          Cartesian3.ONE
         )
       );
       expect(boxDrawing).toBeDefined();

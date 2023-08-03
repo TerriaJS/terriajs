@@ -754,7 +754,8 @@ export default class BoxDrawing {
    */
   private createSide(planeLocal: Plane): Side {
     const scene = this.scene;
-    const plane = new Plane(new Cartesian3(), 0);
+    // initialize plane with some value - we'll set a correct value during update()
+    const plane = new Plane(Cartesian3.UNIT_X.clone(), 0);
     const planeDimensions = new Cartesian3();
     const normalAxis = planeLocal.normal.x
       ? Axis.X
