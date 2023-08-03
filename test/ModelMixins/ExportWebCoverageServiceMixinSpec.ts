@@ -3,8 +3,8 @@ import { Rectangle } from "cesium";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Terria from "../../lib/Models/Terria";
 
-const describeCoverageXml = require("../../wwwroot/test/WCS/DescribeCoverage.xml");
-const wmsGetCapabilitiesXml = require("../../wwwroot/test/WMS/wms_crs.xml");
+const describeCoverageXml = require("raw-loader!../../wwwroot/test/WCS/DescribeCoverage.xml");
+const wmsGetCapabilitiesXml = require("raw-loader!../../wwwroot/test/WMS/wms_crs.xml");
 
 describe("ExportWebCoverageServiceMixin", function () {
   let terria: Terria;
