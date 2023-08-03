@@ -30,7 +30,8 @@ module.exports = function (config) {
       "/data": "/base/data",
       "/images": "/base/images",
       "/test": "/base/test",
-      "/build": "/base/build"
+      "/build": "/base/build",
+      "/esbuild": "/base/esbuild"
     },
 
     // list of files to exclude
