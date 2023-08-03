@@ -218,7 +218,7 @@ describeIfSupported("Cesium Model", function () {
         ).throwIfUndefined() as CesiumTerrainCatalogItem;
         spyOn(
           workbenchTerrainItem as any,
-          "loadTerrainProvider"
+          "_private_loadTerrainProvider"
         ).and.returnValue(
           Promise.resolve(new CesiumTerrainProvider({ url: "some/url" }))
         );
