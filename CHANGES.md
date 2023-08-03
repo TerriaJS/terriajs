@@ -1,8 +1,12 @@
 # Change Log
 
-#### next release (8.3.2)
+#### next release (8.3.3)
 
 - [The next improvement]
+
+#### 8.3.2
+
+- Fix WPS duplicate display of analysis results when loaded through a share URL
 
 #### 8.3.1 - 2023-06-29
 
