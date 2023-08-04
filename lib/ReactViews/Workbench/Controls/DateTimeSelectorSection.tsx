@@ -154,7 +154,16 @@ class DateTimeSelectorSection extends React.Component<IProps, IState> {
           offset,
           offsetTime
         );
+
         time = JulianDate.toDate(adjTime);
+      }
+
+      if (isDefined(item.isStaticDate)) {
+        if (item.isStaticDate) {
+          time = new Date(
+            time.getTime() + time.getTimezoneOffset() * 60 * 1000
+          );
+        }
       }
 
       if (isDefined(item.dateFormat)) {

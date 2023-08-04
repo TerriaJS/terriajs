@@ -18,6 +18,13 @@ export class DateTimeTraits extends ModelTraits {
       "See available formats here https://github.com/felixge/node-dateformat"
   })
   dateFormat?: string;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Static date",
+    description: "Do not transform date/time values to users local time."
+  })
+  isStaticDate?: boolean;
 }
 
 export default DateTimeTraits;
