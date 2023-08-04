@@ -1358,44 +1358,6 @@ export default class Cesium extends GlobeOrMap {
     }
   }
 
-  /**
-   * Return features at a latitude, longitude and (optionally) height for the given imagery layers.
-   * @param latLngHeight The position on the earth to pick
-   * @param tileCoords A map of imagery provider urls to the tile coords used to get features for those imagery
-   * @returns A flat array of all the features for the given tiles that are currently on the map
-   */
-  async getFeaturesAtLocation(
-    latLngHeight: LatLonHeight,
-    providerCoords: ProviderCoordsMap,
-    existingFeatures: TerriaFeature[] = []
-  ) {
-    const pickPosition = this.scene.globe.ellipsoid.cartographicToCartesian(
-      Cartographic.fromDegrees(
-        latLngHeight.longitude,
-        latLngHeight.latitude,
-        latLngHeight.height
-      )
-    );
-    const pickPositionCartographic =
-      Ellipsoid.WGS84.cartesianToCartographic(pickPosition);
-
-    const promises = this.terria.allowFeatureInfoRequests
-      ? this.pickImageryLayerFeatures(pickPositionCartographic, providerCoords)
-      : [];
-
-    const pickedFeatures = this._buildPickedFeatures(
-      providerCoords,
-      pickPosition,
-      existingFeatures,
-      filterOutUndefined(promises),
-      pickPositionCartographic.height,
-      false
-    );
-
-    await pickedFeatures.allFeaturesAvailablePromise;
-    return pickedFeatures.features;
-  }
-
   private pickImageryLayerFeatures(
     pickPosition: Cartographic,
     providerCoords: ProviderCoordsMap

@@ -1,5 +1,3 @@
-"use strict";
-
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import LatLonHeight from "../Core/LatLonHeight";
 import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVectorTileImageryProvider";
@@ -45,17 +43,6 @@ class NoViewer extends GlobeOrMap {
     latLngHeight: LatLonHeight,
     providerCoords: ProviderCoordsMap,
     existingFeatures: TerriaFeature[]
-  ) {}
-
-  /**
-   * Return features at a latitude, longitude and (optionally) height for the given imageryLayer
-   * @param latLngHeight The position on the earth to pick
-   * @param providerCoords A map of imagery provider urls to the tile coords used to get features for those imagery
-   * @returns A flat array of all the features for the given tiles that are currently on the map
-   */
-  getFeaturesAtLocation(
-    latLngHeight: LatLonHeight,
-    providerCoords: ProviderCoordsMap
   ) {}
 
   getCurrentCameraView(): CameraView {
