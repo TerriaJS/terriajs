@@ -486,7 +486,10 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         }
       );
 
-      return this._protected_updateRequestImageAsync(imageryProviderPromise, false);
+      return this._protected_updateRequestImageAsync(
+        imageryProviderPromise,
+        false
+      );
     }
   );
 

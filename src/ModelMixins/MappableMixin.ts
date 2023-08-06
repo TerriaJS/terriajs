@@ -33,10 +33,10 @@ export class ImageryParts {
   show: boolean = true;
 
   static fromAsync(options: {
-    imageryProviderPromise: Promise<ImageryProvider | undefined>,
-    alpha?: number,
-    clippingRectangle?: Rectangle,
-    show?: boolean
+    imageryProviderPromise: Promise<ImageryProvider | undefined>;
+    alpha?: number;
+    clippingRectangle?: Rectangle;
+    show?: boolean;
   }): ImageryParts {
     const result = new ImageryParts({
       imageryProvider: undefined,
@@ -55,10 +55,10 @@ export class ImageryParts {
   }
 
   constructor(options: {
-    imageryProvider: ImageryProvider | undefined,
-    alpha?: number,
-    clippingRectangle?: Rectangle,
-    show?: boolean
+    imageryProvider: ImageryProvider | undefined;
+    alpha?: number;
+    clippingRectangle?: Rectangle;
+    show?: boolean;
   }) {
     this.imageryProvider = options.imageryProvider;
     this.alpha = options.alpha ?? 0.8;

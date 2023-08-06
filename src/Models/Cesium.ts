@@ -179,7 +179,9 @@ export default class Cesium extends GlobeOrMap {
       clock: this.terria.timelineClock,
       // TODO: cast is needed because Cesium's return type for SingleTileImageryProvider.fromUrl is wrong.
       baseLayer: ImageryLayer.fromProviderAsync(
-        SingleTileImageryProvider.fromUrl(img) as unknown as Promise<ImageryProvider>,
+        SingleTileImageryProvider.fromUrl(
+          img
+        ) as unknown as Promise<ImageryProvider>,
         {}
       ),
       scene3DOnly: true,

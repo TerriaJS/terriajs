@@ -5,6 +5,7 @@ docs/
 node_modules/
 .idea/
 build/
+esbuild/
 error.log
 output.log
 npm-debug.log
