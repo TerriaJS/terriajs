@@ -2,6 +2,7 @@
 
 #### next release (8.3.3)
 
+- Fixed a bug when restoring timefilter from a share link having more than one imagery item with the same base URL (but different layer names).
 - [The next improvement]
 
 #### 8.3.2

@@ -1,13 +1,12 @@
-import i18next from "i18next";
 import { GridLayer } from "leaflet";
 import {
   action,
   autorun,
   computed,
+  makeObservable,
   observable,
   reaction,
-  runInAction,
-  makeObservable
+  runInAction
 } from "mobx";
 import { computedFn } from "mobx-utils";
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
@@ -61,7 +60,6 @@ import hasTraits from "./Definition/hasTraits";
 import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import { LeafletAttribution } from "./LeafletAttribution";
-import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
@@ -581,46 +579,6 @@ export default class Leaflet extends GlobeOrMap {
       providerCoords,
       existingFeatures
     );
-  }
-
-  /**
-   * Return features at a latitude, longitude and (optionally) height for the given imageryLayer.
-   * @param latLngHeight The position on the earth to pick
-   * @param providerCoords A map of imagery provider urls to the tile coords used to get features for those imagery
-   * @returns A flat array of all the features for the given tiles that are currently on the map
-   */
-  @action
-  async getFeaturesAtLocation(
-    latLngHeight: LatLonHeight,
-    providerCoords: ProviderCoordsMap
-  ) {
-    const pickMode = new MapInteractionMode({
-      message: i18next.t("models.imageryLayer.resolvingAvailability"),
-      onCancel: () => {
-        this.terria.mapInteractionModeStack.pop();
-      }
-    });
-    this.terria.mapInteractionModeStack.push(pickMode);
-    this._pickFeatures(
-      L.latLng({
-        lat: latLngHeight.latitude,
-        lng: latLngHeight.longitude,
-        alt: latLngHeight.height
-      }),
-      providerCoords,
-      [],
-      true
-    );
-
-    if (pickMode.pickedFeatures) {
-      const pickedFeatures = pickMode.pickedFeatures;
-      await pickedFeatures.allFeaturesAvailablePromise;
-    }
-
-    return runInAction(() => {
-      this.terria.mapInteractionModeStack.pop();
-      return pickMode.pickedFeatures?.features;
-    });
   }
 
   /*
