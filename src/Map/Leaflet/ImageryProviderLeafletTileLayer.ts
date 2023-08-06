@@ -221,16 +221,6 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
   }
 
   _update() {
-    if (!this.imageryProvider.ready) {
-      if (!this._delayedUpdate) {
-        this._delayedUpdate = <any>setTimeout(() => {
-          this._delayedUpdate = undefined;
-          this._update();
-        }, this._leafletUpdateInterval);
-      }
-      return;
-    }
-
     if (!this.initialized) {
       this.initialized = true;
 
@@ -396,7 +386,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     this._previousCredits = nextCredits;
   }
 
-  getFeaturePickingCoords(
+  async getFeaturePickingCoords(
     map: L.Map,
     longitudeRadians: number,
     latitudeRadians: number
@@ -408,17 +398,13 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     );
     const level = Math.round(map.getZoom());
 
-    return pollToPromise(() => {
-      return this.imageryProvider.ready;
-    }).then(() => {
-      const tilingScheme = this.imageryProvider.tilingScheme;
-      const coords = tilingScheme.positionToTileXY(ll, level);
-      return {
-        x: coords.x,
-        y: coords.y,
-        level: level
-      };
-    });
+    const tilingScheme = this.imageryProvider.tilingScheme;
+    const coords = tilingScheme.positionToTileXY(ll, level);
+    return {
+      x: coords.x,
+      y: coords.y,
+      level: level
+    };
   }
 
   async pickFeatures(
@@ -428,7 +414,6 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     longitudeRadians: number,
     latitudeRadians: number
   ): Promise<ImageryLayerFeatureInfo[] | undefined> {
-    await pollToPromise(() => this.imageryProvider.ready);
     try {
       return await this.imageryProvider.pickFeatures(
         x,

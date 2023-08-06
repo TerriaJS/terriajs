@@ -37,6 +37,7 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import MinMaxLevelMixin from "./../../../ModelMixins/MinMaxLevelMixin";
 import { Extent, Layer, MapServer } from "./ArcGisInterfaces";
 import proj4 from "proj4";
+import { ImageryProvider } from "cesium";
 
 interface RectangleExtent {
   east: number;
@@ -399,16 +400,17 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         ? undefined
         : new Date(this.currentDiscreteTimeTag).getTime().toString();
 
-    const imageryProvider = this._private_createImageryProvider(dateAsUnix);
-    if (imageryProvider === undefined) {
+    const imageryProviderPromise =
+      this._private_createImageryProvider(dateAsUnix);
+    if (imageryProviderPromise === undefined) {
       return undefined;
     }
-    return {
-      imageryProvider,
+    return ImageryParts.fromAsync({
+      imageryProviderPromise: imageryProviderPromise,
       alpha: this.opacity,
       show: this.show,
       clippingRectangle: this.clipToRectangle ? this.cesiumRectangle : undefined
-    };
+    });
   }
 
   @computed
@@ -419,36 +421,35 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
       this.nextDiscreteTimeTag
     ) {
       const dateAsUnix: number = new Date(this.nextDiscreteTimeTag).getTime();
-      const imageryProvider = this._private_createImageryProvider(
+      const imageryProviderPromise = this._private_createImageryProvider(
         dateAsUnix.toString()
-      );
-      if (imageryProvider === undefined) {
-        return undefined;
-      }
+      ).then((imageryProvider) => {
+        if (imageryProvider instanceof ArcGisMapServerImageryProvider)
+          imageryProvider.enablePickFeatures = false;
+        return imageryProvider;
+      });
 
-      imageryProvider.enablePickFeatures = false;
-
-      return {
-        imageryProvider,
+      return ImageryParts.fromAsync({
+        imageryProviderPromise: imageryProviderPromise,
         alpha: 0.0,
         show: true,
         clippingRectangle: this.clipToRectangle
           ? this.cesiumRectangle
           : undefined
-      };
+      });
     } else {
       return undefined;
     }
   }
 
   _private_createImageryProvider = createTransformerAllowUndefined(
-    (time: string | undefined): ArcGisMapServerImageryProvider | undefined => {
+    (time: string | undefined): Promise<ImageryProvider | undefined> => {
       const stratum = <MapServerStratum>(
         this.strata.get(MapServerStratum.stratumName)
       );
 
       if (!isDefined(this.url) || !isDefined(stratum)) {
-        return;
+        return Promise.resolve(undefined);
       }
 
       const params: any = Object.assign({}, this.parameters);
@@ -462,27 +463,30 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         false
       );
 
-      const imageryProvider = new ArcGisMapServerImageryProvider({
-        url: cleanAndProxyUrl(this, getBaseURI(this).toString()),
-        layers: this.layersArray.map((l) => l.id).join(","),
-        tilingScheme: new WebMercatorTilingScheme(),
-        maximumLevel: maximumLevel,
-        tileHeight: this.tileHeight,
-        tileWidth: this.tileWidth,
-        // TODO: bring over parameters option from terriajs-cesium
-        //parameters: params,
-        enablePickFeatures: this.allowFeaturePicking,
-        /** Only used "pre-cached" tiles if we aren't requesting any specific layers
-         * If the `layersArray` property is specified, we request individual dynamic layers and ignore the fused map cache.
-         */
-        usePreCachedTilesIfAvailable: this.layersArray.length == 0,
-        // TODO: bring over mapServerData option from terriajs-cesium
-        //mapServerData: stratum.mapServer,
-        token: stratum.token,
-        credit: this.attribution
-      });
+      const imageryProviderPromise = ArcGisMapServerImageryProvider.fromUrl(
+        cleanAndProxyUrl(this, getBaseURI(this).toString()),
+        {
+          layers: this.layersArray.map((l) => l.id).join(","),
+          tilingScheme: new WebMercatorTilingScheme(),
+          maximumLevel: maximumLevel,
+          tileHeight: this.tileHeight,
+          tileWidth: this.tileWidth,
+          // TODO: bring over parameters option from terriajs-cesium
+          //parameters: params,
+          enablePickFeatures: this.allowFeaturePicking,
+          /** Only used "pre-cached" tiles if we aren't requesting any specific layers
+           * If the `layersArray` property is specified, we request individual dynamic layers and ignore the fused map cache.
+           */
+          usePreCachedTilesIfAvailable: this.layersArray.length == 0,
+          // TODO: bring over mapServerData option from terriajs-cesium
+          //mapServerData: stratum.mapServer,
+          // TODO: add missing token parameter to Cesium's typescript definitions
+          //token: stratum.token,
+          credit: this.attribution
+        }
+      );
 
-      return this._protected_updateRequestImage(imageryProvider, false);
+      return this._protected_updateRequestImageAsync(imageryProviderPromise, false);
     }
   );
 

@@ -30,15 +30,16 @@ function MinMaxLevelMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return scaleDenominatorToLevel(this.minScaleDenominator, false, ows);
     }
 
-    _protected_updateRequestImage<T extends ImageryProvider>(
+    static _private_updateRequestImageInternal<T extends ImageryProvider>(
+      mixin: MinMaxLevelMixin,
       imageryProvider: T,
-      ows: boolean = true
-    ) {
-      const maximumLevel = this.getMaximumLevel(ows);
-      const minimumLevel = this.getMinimumLevel(ows);
+      minimumLevel: number | undefined,
+      maximumLevel: number | undefined,
+      hideLayerAfterMinScaleDenominator: boolean
+    ): T {
       const realRequestImage = imageryProvider.requestImage;
       if (
-        (isDefined(maximumLevel) && this.hideLayerAfterMinScaleDenominator) ||
+        (isDefined(maximumLevel) && hideLayerAfterMinScaleDenominator) ||
         isDefined(minimumLevel)
       ) {
         // TODO: The cast is necessary because the type Cesium declares for
@@ -66,15 +67,15 @@ function MinMaxLevelMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
             if (
               maximumLevel &&
               level > maximumLevel &&
-              this.hideLayerAfterMinScaleDenominator
+              hideLayerAfterMinScaleDenominator
             ) {
-              this.setTrait(
+              mixin.setTrait(
                 CommonStrata.defaults,
                 "scaleWorkbenchInfo",
                 "translate#models.scaleDatasetNotVisible.scaleZoomOut"
               );
             } else if (minimumLevel && level < minimumLevel) {
-              this.setTrait(
+              mixin.setTrait(
                 CommonStrata.defaults,
                 "scaleWorkbenchInfo",
                 "translate#models.scaleDatasetNotVisible.scaleZoomIn"
@@ -82,11 +83,15 @@ function MinMaxLevelMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
             }
             return ImageryProvider.loadImage(
               imageryProvider,
-              `${this.terria.baseUrl}images/blank.png`
+              `${mixin.terria.baseUrl}images/blank.png`
             );
           }
 
-          this.setTrait(CommonStrata.defaults, "scaleWorkbenchInfo", undefined);
+          mixin.setTrait(
+            CommonStrata.defaults,
+            "scaleWorkbenchInfo",
+            undefined
+          );
           if (isDefined((<any>imageryProvider).enablePickFeatures)) {
             (<any>imageryProvider).enablePickFeatures = true;
           }
@@ -94,6 +99,43 @@ function MinMaxLevelMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         });
       }
       return imageryProvider;
+    }
+
+    _protected_updateRequestImage<T extends ImageryProvider>(
+      imageryProvider: T,
+      ows: boolean = true
+    ): T {
+      const maximumLevel = this.getMaximumLevel(ows);
+      const minimumLevel = this.getMinimumLevel(ows);
+      const hideLayerAfterMinScaleDenominator =
+        this.hideLayerAfterMinScaleDenominator;
+      return MinMaxLevelMixin._private_updateRequestImageInternal(
+        this,
+        imageryProvider,
+        minimumLevel,
+        maximumLevel,
+        hideLayerAfterMinScaleDenominator
+      );
+    }
+
+    _protected_updateRequestImageAsync<T extends ImageryProvider>(
+      imageryProviderPromise: Promise<T>,
+      ows: boolean = true
+    ): Promise<T> {
+      const maximumLevel = this.getMaximumLevel(ows);
+      const minimumLevel = this.getMinimumLevel(ows);
+      const hideLayerAfterMinScaleDenominator =
+        this.hideLayerAfterMinScaleDenominator;
+
+      return imageryProviderPromise.then((imageryProvider) => {
+        return MinMaxLevelMixin._private_updateRequestImageInternal(
+          this,
+          imageryProvider,
+          minimumLevel,
+          maximumLevel,
+          hideLayerAfterMinScaleDenominator
+        );
+      });
     }
   }
 

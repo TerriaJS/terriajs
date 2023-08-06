@@ -57,7 +57,7 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
   /**
    * Returns a Promise to load the terrain provider
    */
-  async _private_loadTerrainProvider(): Promise<
+  _private_loadTerrainProvider(): Promise<
     CesiumTerrainProvider | undefined
   > {
     const resource =
@@ -71,38 +71,12 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
         : this.url;
 
     if (resource === undefined) {
-      return undefined;
+      return Promise.resolve(undefined);
     }
 
-    const _private_terrainProvider = new CesiumTerrainProvider({
-      url: resource,
+    return CesiumTerrainProvider.fromUrl(resource, {
       credit: this.attribution
     });
-
-    // Some network errors are not rejected through readyPromise, so we have to
-    // listen to them using the error event and dispose it later
-    let networkErrorListener: (err: any) => void;
-    const networkErrorPromise = new Promise((_resolve, reject) => {
-      networkErrorListener = reject;
-      _private_terrainProvider.errorEvent.addEventListener(
-        networkErrorListener
-      );
-    });
-
-    const isReady = await Promise.race([
-      networkErrorPromise,
-      _private_terrainProvider.readyPromise
-    ])
-      .catch(() => false)
-      .finally(() =>
-        _private_terrainProvider.errorEvent.removeEventListener(
-          networkErrorListener
-        )
-      );
-
-    return isReady
-      ? _private_terrainProvider
-      : Promise.reject(TerriaError.from("Failed to load terrain provider"));
   }
 
   override async _protected_forceLoadMapItems(): Promise<void> {

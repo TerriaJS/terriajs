@@ -122,18 +122,16 @@ export default class ImageryProviderLeafletGridLayer extends L.GridLayer {
     canvas.width = size.x;
     canvas.height = size.y;
 
-    this.imageryProvider.readyPromise
-      .then(() => {
-        const n = this.imageryProvider.tilingScheme.getNumberOfXTilesAtLevel(
-          tilePoint.z
-        );
-        return this.imageryProvider.requestImageForCanvas(
-          CesiumMath.mod(tilePoint.x, n),
-          tilePoint.y,
-          tilePoint.z,
-          canvas
-        );
-      })
+    const n = this.imageryProvider.tilingScheme.getNumberOfXTilesAtLevel(
+      tilePoint.z
+    );
+    this.imageryProvider
+      .requestImageForCanvas(
+        CesiumMath.mod(tilePoint.x, n),
+        tilePoint.y,
+        tilePoint.z,
+        canvas
+      )
       .then(function (canvas) {
         done(undefined, canvas);
       });
@@ -152,15 +150,13 @@ export default class ImageryProviderLeafletGridLayer extends L.GridLayer {
     );
     const level = Math.round(map.getZoom());
 
-    return this.imageryProvider.readyPromise.then(() => {
-      const tilingScheme = this.imageryProvider.tilingScheme;
-      const coords = tilingScheme.positionToTileXY(ll, level);
-      return {
-        x: coords.x,
-        y: coords.y,
-        level: level
-      };
-    });
+    const tilingScheme = this.imageryProvider.tilingScheme;
+    const coords = tilingScheme.positionToTileXY(ll, level);
+    return {
+      x: coords.x,
+      y: coords.y,
+      level: level
+    };
   }
 
   pickFeatures(
@@ -170,14 +166,12 @@ export default class ImageryProviderLeafletGridLayer extends L.GridLayer {
     longitudeRadians: number,
     latitudeRadians: number
   ) {
-    return this.imageryProvider.readyPromise.then(() => {
-      return this.imageryProvider.pickFeatures(
-        x,
-        y,
-        level,
-        longitudeRadians,
-        latitudeRadians
-      );
-    });
+    return this.imageryProvider.pickFeatures(
+      x,
+      y,
+      level,
+      longitudeRadians,
+      latitudeRadians
+    );
   }
 }

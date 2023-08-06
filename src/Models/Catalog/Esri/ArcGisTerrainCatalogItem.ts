@@ -1,4 +1,4 @@
-import { computed, makeObservable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 import { ArcGISTiledElevationTerrainProvider } from "cesium";
 import { Credit } from "cesium";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
@@ -12,6 +12,9 @@ export default class ArcGisTerrainCatalogItem extends UrlMixin(
   MappableMixin(CatalogMemberMixin(CreateModel(ArcGisTerrainCatalogItemTraits)))
 ) {
   static type = "arcgis-terrain";
+  @observable _private_terrainProvider:
+    | ArcGISTiledElevationTerrainProvider
+    | undefined = undefined;
 
   constructor(...args: ModelConstructorParameters) {
     super(...args);
@@ -24,19 +27,24 @@ export default class ArcGisTerrainCatalogItem extends UrlMixin(
 
   @computed
   get mapItems() {
-    if (this.url === undefined) return [];
-    const item = new ArcGISTiledElevationTerrainProvider({
-      url: this.url
-    });
-
-    // ArcGISTiledElevationTerrainProvider has no official way to override the
-    // credit, so we write directly to the private field here.
-    if (this.attribution) (<any>item)._credit = new Credit(this.attribution);
-
-    return [];
+    const provider = this._private_terrainProvider;
+    if (provider) {
+      // ArcGISTiledElevationTerrainProvider has no official way to override the
+      // credit, so we write directly to the private field here.
+      if (this.attribution)
+        (<any>provider)._credit = new Credit(this.attribution);
+      return [provider];
+    } else {
+      return [];
+    }
   }
 
   override _protected_forceLoadMapItems(): Promise<void> {
-    return Promise.resolve();
+    if (this.url === undefined) return Promise.resolve();
+    return ArcGISTiledElevationTerrainProvider.fromUrl(this.url).then(
+      (terrainProvider) => {
+        this._private_terrainProvider = terrainProvider;
+      }
+    );
   }
 }

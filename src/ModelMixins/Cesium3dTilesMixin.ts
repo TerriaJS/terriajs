@@ -136,18 +136,18 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     override async _protected_forceLoadMapItems() {
       try {
-        this._private_loadTileset();
+        await this._private_loadTileset();
         if (this._protected_tileset) {
-          const _protected_tileset = await this._protected_tileset.readyPromise;
+          const tileset = this._protected_tileset;
           if (
-            _protected_tileset.extras !== undefined &&
-            _protected_tileset.extras.style !== undefined
+            tileset.extras !== undefined &&
+            tileset.extras.style !== undefined
           ) {
             runInAction(() => {
               this.strata.set(
                 CommonStrata.defaults,
                 createStratumInstance(Cesium3DTilesCatalogItemTraits, {
-                  style: _protected_tileset.extras.style
+                  style: tileset.extras.style
                 })
               );
             });
@@ -180,35 +180,55 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         return;
       }
 
-      const _protected_tileset = new ObservableCesium3DTileset({
-        ...this.optionsObj,
-        url: resource
-      });
-
-      _protected_tileset._catalogItem = this;
-      runLater(
-        action(() => {
-          this.isTilesetReady = _protected_tileset.ready;
-        })
-      );
-      if (!_protected_tileset.destroyed) {
-        this._protected_tileset = _protected_tileset;
-      }
-
       // Save the original root tile transform and set its value to an identity
       // matrix This lets us control the whole model transformation using just
       // tileset.modelMatrix We later derive a tilset.modelMatrix by combining
       // the root transform and transformation traits in mapItems.
-      _protected_tileset.readyPromise.then(
-        action(() => {
-          this.isTilesetReady = _protected_tileset.ready;
-          if (_protected_tileset.root !== undefined) {
-            this._private_originalRootTransform =
-              _protected_tileset.root.transform.clone();
-            _protected_tileset.root.transform = Matrix4.IDENTITY.clone();
-          }
-        })
-      );
+      return Promise.resolve(resource).then((resource) => {
+        if (resource === undefined) return;
+
+        const tilesetPromise = Cesium3DTileset.fromUrl(resource, {
+          ...this.optionsObj
+        });
+        return tilesetPromise.then((tileset) => {
+          // Hackily turn the Cesium3DTileset into an ObservableCesium3DTileset
+          const anyTileset: any = tileset;
+          anyTileset._catalogItem = this;
+          anyTileset.destroyed = tileset.isDestroyed();
+          const superDestroy = anyTileset.destroy;
+          anyTileset.destroy = function () {
+            superDestroy.call(this);
+            // TODO: we are running later to prevent this
+            // modification from happening in some computed up the call chain.
+            // Figure out why that is happening and fix it.
+            runLater(() => {
+              runInAction(() => {
+                this.destroyed = true;
+              });
+            });
+          };
+
+          makeObservable(anyTileset, {
+            destroyed: observable
+          });
+
+          const observableTileset: ObservableCesium3DTileset = anyTileset;
+
+          action(() => {
+            observableTileset._catalogItem = this;
+            if (!observableTileset.destroyed) {
+              runInAction(() => {
+                this._protected_tileset = observableTileset;
+              });
+              if (observableTileset.root !== undefined) {
+                this._private_originalRootTransform =
+                  observableTileset.root.transform.clone();
+                observableTileset.root.transform = Matrix4.IDENTITY.clone();
+              }
+            }
+          });
+        });
+      });
     }
 
     /**

@@ -18,7 +18,7 @@ import { Event as CesiumEvent } from "cesium";
 import { queryToObject } from "cesium";
 import { RequestScheduler } from "cesium";
 import { RuntimeError } from "cesium";
-import { TerrainProvider } from "cesium";
+import { Terrain } from "cesium";
 import { Entity } from "cesium";
 import { SplitDirection } from "cesium";
 import URI from "urijs";
@@ -739,7 +739,7 @@ export default class Terria {
    * @returns The currently active `TerrainProvider` or `undefined`.
    */
   @computed
-  get terrainProvider(): TerrainProvider | undefined {
+  get terrainProvider(): Terrain | undefined {
     return this.cesium?.terrainProvider;
   }
 

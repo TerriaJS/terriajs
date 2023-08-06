@@ -1,4 +1,4 @@
-import { computed, makeObservable } from "mobx";
+import { computed, observable, makeObservable, runInAction } from "mobx";
 import { Credit } from "cesium";
 import { BingMapsImageryProvider } from "cesium";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -11,6 +11,7 @@ export default class BingMapsCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(BingMapsCatalogItemTraits))
 ) {
   static readonly type = "bing-maps";
+  @observable _private_imageryProvider: BingMapsImageryProvider | undefined;
 
   constructor(...args: ModelConstructorParameters) {
     super(...args);
@@ -21,12 +22,23 @@ export default class BingMapsCatalogItem extends MappableMixin(
     return BingMapsCatalogItem.type;
   }
 
-  override _protected_forceLoadMapItems(): Promise<void> {
-    return Promise.resolve();
+  override async _protected_forceLoadMapItems(): Promise<void> {
+    const provider = await BingMapsImageryProvider.fromUrl(
+      "//dev.virtualearth.net",
+      {
+        mapStyle: <any>this.mapStyle,
+        key: this.key!
+      }
+    );
+    runInAction(() => {
+      this._private_imageryProvider = provider;
+    });
   }
 
   @computed get mapItems(): MapItem[] {
     const imageryProvider = this._createImageryProvider();
+    if (imageryProvider === undefined) return [];
+
     return [
       {
         imageryProvider,
@@ -40,11 +52,8 @@ export default class BingMapsCatalogItem extends MappableMixin(
   }
 
   _createImageryProvider() {
-    const result = new BingMapsImageryProvider({
-      url: "//dev.virtualearth.net",
-      mapStyle: <any>this.mapStyle,
-      key: this.key!
-    });
+    const result = this._private_imageryProvider;
+    if (result === undefined) return result;
 
     if (this.attribution) {
       (<any>result)._credit = this.attribution;
@@ -54,7 +63,6 @@ export default class BingMapsCatalogItem extends MappableMixin(
         '<a href="http://www.bing.com" target="_blank">Bing</a>'
       );
     }
-    result.defaultGamma = 1.0;
 
     return result;
   }
