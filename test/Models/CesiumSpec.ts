@@ -228,9 +228,7 @@ describeIfSupported("Cesium Model", function () {
         spyOn(
           workbenchTerrainItem as any,
           "_private_loadTerrainProvider"
-        ).and.returnValue(
-          Promise.resolve(new CesiumTerrainProvider({ url: "some/url" }))
-        );
+        ).and.returnValue(CesiumTerrainProvider.fromUrl("some/url"));
         (await terria.workbench.add(workbenchTerrainItem)).throwIfError();
       })
     );
@@ -348,7 +346,6 @@ describeIfSupported("Cesium Model", function () {
       // Instantiate Cesium object with the invalid token
       cesium2 = new Cesium(terriaViewer2, container2);
 
-      await cesium2.terrainProvider.readyPromise.catch(() => {});
       // Wait a few ticks to allow for delay in adding event listener to terrainProvider in Cesium.ts
       await runLater(() => {}, 5);
 
@@ -372,7 +369,6 @@ describeIfSupported("Cesium Model", function () {
       // Instantiate Cesium object with the invalid token
       cesium2 = new Cesium(terriaViewer2, container2);
 
-      await cesium2.terrainProvider.readyPromise.catch(() => {});
       // Wait a few ticks to allow for delay in adding event listener to terrainProvider in Cesium.ts
       await runLater(() => {}, 5);
 
@@ -392,7 +388,6 @@ describeIfSupported("Cesium Model", function () {
       // Instantiate Cesium object with the invalid token and valid asset id
       cesium2 = new Cesium(terriaViewer2, container2);
 
-      await cesium2.terrainProvider.readyPromise.catch(() => {});
       // Wait a few ticks to allow for delay in adding event listener to terrainProvider in Cesium.ts
       await runLater(() => {}, 5);
 
@@ -415,7 +410,6 @@ describeIfSupported("Cesium Model", function () {
       // Instantiate Cesium object with the invalid terrain url
       cesium2 = new Cesium(terriaViewer2, container2);
 
-      await cesium2.terrainProvider.readyPromise.catch(() => {});
       // Wait a few ticks to allow for delay in adding event listener to terrainProvider in Cesium.ts
       await runLater(() => {}, 5);
 

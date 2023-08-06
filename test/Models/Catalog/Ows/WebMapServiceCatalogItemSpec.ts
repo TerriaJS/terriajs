@@ -178,12 +178,12 @@ describe("WebMapServiceCatalogItem", function () {
           terria.configParameters.defaultMaximumShownFeatureInfos + 1
         );
 
-        expect((mapItems[0] as ImageryParts).imageryProvider.tileHeight).toBe(
-          256
-        );
-        expect((mapItems[0] as ImageryParts).imageryProvider.tileWidth).toBe(
-          256
-        );
+        const imageryProvider = (mapItems[0] as ImageryParts).imageryProvider;
+        expect(imageryProvider).not.toBeUndefined();
+        if (imageryProvider) {
+          expect(imageryProvider.tileHeight).toBe(256);
+          expect(imageryProvider.tileWidth).toBe(256);
+        }
       }
     } finally {
       cleanup();
@@ -252,12 +252,12 @@ describe("WebMapServiceCatalogItem", function () {
           terria.configParameters.defaultMaximumShownFeatureInfos + 1
         );
 
-        expect((mapItems[0] as ImageryParts).imageryProvider.tileHeight).toBe(
-          256
-        );
-        expect((mapItems[0] as ImageryParts).imageryProvider.tileWidth).toBe(
-          256
-        );
+        const imageryProvider = (mapItems[0] as ImageryParts).imageryProvider;
+        expect(imageryProvider).not.toBeUndefined();
+        if (imageryProvider) {
+          expect(imageryProvider.tileHeight).toBe(256);
+          expect(imageryProvider.tileWidth).toBe(256);
+        }
       }
     } finally {
       cleanup();
@@ -331,12 +331,12 @@ describe("WebMapServiceCatalogItem", function () {
         expect(getFeatureInfoResource.queryParameters.some).toBe("thing else");
         expect(getFeatureInfoResource.queryParameters.another).toBe("value");
 
-        expect((mapItems[0] as ImageryParts).imageryProvider.tileHeight).toBe(
-          256
-        );
-        expect((mapItems[0] as ImageryParts).imageryProvider.tileWidth).toBe(
-          256
-        );
+        const imageryProvider = (mapItems[0] as ImageryParts).imageryProvider;
+        expect(imageryProvider).not.toBeUndefined();
+        if (imageryProvider) {
+          expect(imageryProvider.tileHeight).toBe(256);
+          expect(imageryProvider.tileWidth).toBe(256);
+        }
       }
     } finally {
       cleanup();
@@ -430,12 +430,12 @@ describe("WebMapServiceCatalogItem", function () {
         (mapItems[0] as ImageryParts).imageryProvider instanceof
         WebMapServiceImageryProvider
       ) {
-        expect((mapItems[0] as ImageryParts).imageryProvider.tileHeight).toBe(
-          512
-        );
-        expect((mapItems[0] as ImageryParts).imageryProvider.tileWidth).toBe(
-          512
-        );
+        const imageryProvider = (mapItems[0] as ImageryParts).imageryProvider;
+        expect(imageryProvider).not.toBeUndefined();
+        if (imageryProvider) {
+          expect(imageryProvider.tileHeight).toBe(512);
+          expect(imageryProvider.tileWidth).toBe(512);
+        }
       }
     } finally {
       cleanup();

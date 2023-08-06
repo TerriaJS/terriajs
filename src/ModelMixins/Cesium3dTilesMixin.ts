@@ -214,12 +214,10 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
           const observableTileset: ObservableCesium3DTileset = anyTileset;
 
-          action(() => {
+          runInAction(() => {
             observableTileset._catalogItem = this;
             if (!observableTileset.destroyed) {
-              runInAction(() => {
-                this._protected_tileset = observableTileset;
-              });
+              this._protected_tileset = observableTileset;
               if (observableTileset.root !== undefined) {
                 this._private_originalRootTransform =
                   observableTileset.root.transform.clone();
