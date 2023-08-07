@@ -1,13 +1,10 @@
 # Change Log
 
-#### next release (8.3.3)
-
-- [The next improvement]
-
-#### 8.3.2
+#### next release 8.3.2
 
 - Fixed a bug when restoring timefilter from a share link having more than one imagery item with the same base URL (but different layer names).
 - Fix WPS duplicate display of analysis results when loaded through a share URL
+- [The next improvement]
 
 #### 8.3.1 - 2023-06-29
 
