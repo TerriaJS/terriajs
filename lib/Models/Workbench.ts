@@ -34,6 +34,7 @@ export default class Workbench {
     return this._items.map(dereferenceModel);
   }
   set items(items: readonly BaseModel[]) {
+    // Run items through a set to remove duplicates.
     const setItems = new Set(items);
     this._items.spliceWithArray(
       0,
