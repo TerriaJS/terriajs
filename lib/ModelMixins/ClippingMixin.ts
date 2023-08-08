@@ -43,6 +43,9 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class ClippingMixin extends Base {
     private _clippingBoxDrawing?: BoxDrawing;
 
+    /**
+     * Indicates whether we are currently zooming to the clipping box
+     */
     @observable
     _isZoomingToClippingBox: boolean = false;
 
