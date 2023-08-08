@@ -14,8 +14,6 @@ import { BaseModel } from "../../Definition/Model";
 import updateModelFromJson from "../../Definition/updateModelFromJson";
 import CatalogMemberFactory from "../CatalogMemberFactory";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import { CatalogMemberTraits } from "terriajs-plugin-api";
-import CatalogGroup from "../../../ReactViews/DataCatalog/CatalogGroup";
 
 /**
  * A reference to another terria catalog.
