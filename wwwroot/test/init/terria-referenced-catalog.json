@@ -1,0 +1,1302 @@
+{
+  "catalog": [
+    {
+      "id": "natmap-energy",
+      "type": "group",
+      "name": "Energy",
+      "description": "For testing",
+      "members": [
+        {
+          "id": "eHkIfX",
+          "type": "group",
+          "name": "Electric Vehicle",
+          "members": [
+            {
+              "type": "csv",
+              "name": "EV registrations by postcode",
+              "url": "https://ev-infrastructure-mapping.s3-ap-southeast-2.amazonaws.com/chargers_by_postcode_prototype.csv",
+              "initialTimeSource": "stop",
+              "columns": [
+                {
+                  "name": "1964",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1971",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1980",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1981",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1982",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1984",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1985",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1986",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1987",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1990",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1991",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1992",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1993",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1994",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1995",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1996",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1998",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1999",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2000",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2001",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2002",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2003",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2004",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2005",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2006",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2007",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2008",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2009",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2010",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2011",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2012",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2013",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2014",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2015",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2016",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2017",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2018",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2019",
+                  "type": "hidden"
+                },
+                {
+                  "name": "RNAULT",
+                  "type": "hidden"
+                },
+                {
+                  "name": "RNAULT_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "census_quickstats_link",
+                  "type": "hidden"
+                },
+                {
+                  "name": "TESLA",
+                  "type": "hidden"
+                },
+                {
+                  "name": "TESLA_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "HINO",
+                  "type": "hidden"
+                },
+                {
+                  "name": "HINO_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "BEVHYU",
+                  "type": "hidden"
+                },
+                {
+                  "name": "BEVHYU_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "UBCO",
+                  "type": "hidden"
+                },
+                {
+                  "name": "UBCO_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "CARBRI",
+                  "type": "hidden"
+                },
+                {
+                  "name": "CARBRI_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "CLUBCR",
+                  "type": "hidden"
+                },
+                {
+                  "name": "CLUBCR_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "SUZUKI",
+                  "type": "hidden"
+                },
+                {
+                  "name": "SUZUKI_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "BMW",
+                  "type": "hidden"
+                },
+                {
+                  "name": "BMW_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "MITSU",
+                  "type": "hidden"
+                },
+                {
+                  "name": "MITSU_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "LEX",
+                  "type": "hidden"
+                },
+                {
+                  "name": "LEX_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "SWAP",
+                  "type": "hidden"
+                },
+                {
+                  "name": "SWAP_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "VOLKSW",
+                  "type": "hidden"
+                },
+                {
+                  "name": "VOLKSW_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "BZOOMA",
+                  "type": "hidden"
+                },
+                {
+                  "name": "BZOOMA_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "BYD",
+                  "type": "hidden"
+                },
+                {
+                  "name": "BYD_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "SMART",
+                  "type": "hidden"
+                },
+                {
+                  "name": "SMART_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "DAIHAT",
+                  "type": "hidden"
+                },
+                {
+                  "name": "DAIHAT_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "TAILG",
+                  "type": "hidden"
+                },
+                {
+                  "name": "TAILG_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "HOLDEN",
+                  "type": "hidden"
+                },
+                {
+                  "name": "HOLDEN_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "FRETER",
+                  "type": "hidden"
+                },
+                {
+                  "name": "FRETER_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "ELECTR",
+                  "type": "hidden"
+                },
+                {
+                  "name": "ELECTR_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "KWSAKI",
+                  "type": "hidden"
+                },
+                {
+                  "name": "KWSAKI_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "SANYOU",
+                  "type": "hidden"
+                },
+                {
+                  "name": "SANYOU_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "GEMILA",
+                  "type": "hidden"
+                },
+                {
+                  "name": "GEMILA_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "E-MAX",
+                  "type": "hidden"
+                },
+                {
+                  "name": "E-MAX_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "HONDA",
+                  "type": "hidden"
+                },
+                {
+                  "name": "HONDA_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "CTROEN",
+                  "type": "hidden"
+                },
+                {
+                  "name": "CTROEN_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "EVT",
+                  "type": "hidden"
+                },
+                {
+                  "name": "EVT_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "JAGUAR",
+                  "type": "hidden"
+                },
+                {
+                  "name": "JAGUAR_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "VOLVO",
+                  "type": "hidden"
+                },
+                {
+                  "name": "VOLVO_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "HYUNDA",
+                  "type": "hidden"
+                },
+                {
+                  "name": "HYUNDA_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "KYBURZ",
+                  "type": "hidden"
+                },
+                {
+                  "name": "KYBURZ_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "FORD",
+                  "type": "hidden"
+                },
+                {
+                  "name": "FORD_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "TUKTUA",
+                  "type": "hidden"
+                },
+                {
+                  "name": "TUKTUA_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "PORSC",
+                  "type": "hidden"
+                },
+                {
+                  "name": "PORSC_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "FONZAR",
+                  "type": "hidden"
+                },
+                {
+                  "name": "FONZAR_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "ERIDER",
+                  "type": "hidden"
+                },
+                {
+                  "name": "ERIDER_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "SUR-RO",
+                  "type": "hidden"
+                },
+                {
+                  "name": "SUR-RO_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "HUASHA",
+                  "type": "hidden"
+                },
+                {
+                  "name": "HUASHA_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "VICTOA",
+                  "type": "hidden"
+                },
+                {
+                  "name": "VICTOA_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "YUTONG",
+                  "type": "hidden"
+                },
+                {
+                  "name": "YUTONG_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "VMOTOA",
+                  "type": "hidden"
+                },
+                {
+                  "name": "VMOTOA_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "ECOSPI",
+                  "type": "hidden"
+                },
+                {
+                  "name": "ECOSPI_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "CITRON",
+                  "type": "hidden"
+                },
+                {
+                  "name": "CITRON_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "LEYLND",
+                  "type": "hidden"
+                },
+                {
+                  "name": "LEYLND_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "IVECO",
+                  "type": "hidden"
+                },
+                {
+                  "name": "IVECO_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "LIFAN",
+                  "type": "hidden"
+                },
+                {
+                  "name": "LIFAN_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "VECTRI",
+                  "type": "hidden"
+                },
+                {
+                  "name": "VECTRI_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "DELRAN",
+                  "type": "hidden"
+                },
+                {
+                  "name": "DELRAN_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "MER",
+                  "type": "hidden"
+                },
+                {
+                  "name": "MER_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "MAZDA",
+                  "type": "hidden"
+                },
+                {
+                  "name": "MAZDA_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "LANBAG",
+                  "type": "hidden"
+                },
+                {
+                  "name": "LANBAG_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "SUB",
+                  "type": "hidden"
+                },
+                {
+                  "name": "SUB_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "TOYOTA",
+                  "type": "hidden"
+                },
+                {
+                  "name": "TOYOTA_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "ISUZU",
+                  "type": "hidden"
+                },
+                {
+                  "name": "ISUZU_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "SURRON",
+                  "type": "hidden"
+                },
+                {
+                  "name": "SURRON_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "ALFROM",
+                  "type": "hidden"
+                },
+                {
+                  "name": "ALFROM_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "UNEEDA",
+                  "type": "hidden"
+                },
+                {
+                  "name": "UNEEDA_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "ZERO",
+                  "type": "hidden"
+                },
+                {
+                  "name": "ZERO_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "NISSAN",
+                  "type": "hidden"
+                },
+                {
+                  "name": "NISSAN_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "KTM",
+                  "type": "hidden"
+                },
+                {
+                  "name": "KTM_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "KIA",
+                  "type": "hidden"
+                },
+                {
+                  "name": "KIA_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "PANEL VAN WITH SIDE WINDOWS",
+                  "type": "hidden"
+                },
+                {
+                  "name": "PANEL VAN WITH SIDE WINDOWS_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "TIPPER",
+                  "type": "hidden"
+                },
+                {
+                  "name": "TIPPER_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "AGRICULTURAL PLANT",
+                  "type": "hidden"
+                },
+                {
+                  "name": "AGRICULTURAL PLANT_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "TABLE TOP WITHOUT FITTINGS",
+                  "type": "hidden"
+                },
+                {
+                  "name": "TABLE TOP WITHOUT FITTINGS_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "MOTOR CYCLE",
+                  "type": "hidden"
+                },
+                {
+                  "name": "MOTOR CYCLE_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "CONVERTIBLE",
+                  "type": "hidden"
+                },
+                {
+                  "name": "CONVERTIBLE_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "COUPE",
+                  "type": "hidden"
+                },
+                {
+                  "name": "COUPE_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "TABLE TOP WITH FITTINGS",
+                  "type": "hidden"
+                },
+                {
+                  "name": "TABLE TOP WITH FITTINGS_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "FORK-LIFT",
+                  "type": "hidden"
+                },
+                {
+                  "name": "FORK-LIFT_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "REFRIGERATED VAN",
+                  "type": "hidden"
+                },
+                {
+                  "name": "REFRIGERATED VAN_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "LOW LOADER TRAILER",
+                  "type": "hidden"
+                },
+                {
+                  "name": "LOW LOADER TRAILER_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "PANEL VAN WITH WINDOWS & SEAT/S - 4WD",
+                  "type": "hidden"
+                },
+                {
+                  "name": "PANEL VAN WITH WINDOWS & SEAT/S - 4WD_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "INDUSTRIAL PLANT",
+                  "type": "hidden"
+                },
+                {
+                  "name": "INDUSTRIAL PLANT_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "ANIMAL CARRIER TRAILER",
+                  "type": "hidden"
+                },
+                {
+                  "name": "ANIMAL CARRIER TRAILER_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "THREE WHEEL CAR",
+                  "type": "hidden"
+                },
+                {
+                  "name": "THREE WHEEL CAR_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "UTILITY",
+                  "type": "hidden"
+                },
+                {
+                  "name": "UTILITY_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "VAN",
+                  "type": "hidden"
+                },
+                {
+                  "name": "VAN_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "PANEL VAN",
+                  "type": "hidden"
+                },
+                {
+                  "name": "PANEL VAN_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "BUS",
+                  "type": "hidden"
+                },
+                {
+                  "name": "BUS_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "STATION WAGON",
+                  "type": "hidden"
+                },
+                {
+                  "name": "STATION WAGON_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "PANEL VAN WITH WINDOWS & SEAT/S",
+                  "type": "hidden"
+                },
+                {
+                  "name": "PANEL VAN WITH WINDOWS & SEAT/S_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "SEDAN",
+                  "type": "hidden"
+                },
+                {
+                  "name": "SEDAN_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "0-254Kg",
+                  "type": "hidden"
+                },
+                {
+                  "name": "0-254Kg_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "255-764Kg",
+                  "type": "hidden"
+                },
+                {
+                  "name": "255-764Kg_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "765-975Kg",
+                  "type": "hidden"
+                },
+                {
+                  "name": "765-975Kg_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "976-1154Kg",
+                  "type": "hidden"
+                },
+                {
+                  "name": "976-1154Kg_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1155-1504Kg",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1155-1504Kg_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1505-2504Kg",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1505-2504Kg_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2505-3500Kg",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2505-3500Kg_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "3501-4500Kg",
+                  "type": "hidden"
+                },
+                {
+                  "name": "3501-4500Kg_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "4500+Kg",
+                  "type": "hidden"
+                },
+                {
+                  "name": "4500+Kg_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "BUSINESS - GENERAL",
+                  "type": "hidden"
+                },
+                {
+                  "name": "BUSINESS - GENERAL_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "HIRE CAR",
+                  "type": "hidden"
+                },
+                {
+                  "name": "HIRE CAR_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "CHARTER / AIRWAYS BUS USAGE - LET FOR HIRE",
+                  "type": "hidden"
+                },
+                {
+                  "name": "CHARTER / AIRWAYS BUS USAGE - LET FOR HIRE_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "HELD FOR RE-SALE BY A LICENSED MOTOR DEALER",
+                  "type": "hidden"
+                },
+                {
+                  "name": "HELD FOR RE-SALE BY A LICENSED MOTOR DEALER_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "PRIMARY PRODUCER GENERAL",
+                  "type": "hidden"
+                },
+                {
+                  "name": "PRIMARY PRODUCER GENERAL_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "ROAD CONSTRUCTION/MAINTENANCE CONCESSION - DECLARATION REQD",
+                  "type": "hidden"
+                },
+                {
+                  "name": "ROAD CONSTRUCTION/MAINTENANCE CONCESSION - DECLARATION REQD_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "GENERAL PRIVATE",
+                  "type": "hidden"
+                },
+                {
+                  "name": "GENERAL PRIVATE_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "GENERAL PURPOSE PLANT",
+                  "type": "hidden"
+                },
+                {
+                  "name": "GENERAL PURPOSE PLANT_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "RENTAL VEHICLE",
+                  "type": "hidden"
+                },
+                {
+                  "name": "RENTAL VEHICLE_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "PENSIONER CONCESSION",
+                  "type": "hidden"
+                },
+                {
+                  "name": "PENSIONER CONCESSION_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "BUS/TOURIST VEHICLE USED FOR HIRE",
+                  "type": "hidden"
+                },
+                {
+                  "name": "BUS/TOURIST VEHICLE USED FOR HIRE_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "DEMONSTRATOR VEHICLE USED BY A LICENSED MOTOR DEALER",
+                  "type": "hidden"
+                },
+                {
+                  "name": "DEMONSTRATOR VEHICLE USED BY A LICENSED MOTOR DEALER_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "USED FOR CHARITABLE PURPOSES",
+                  "type": "hidden"
+                },
+                {
+                  "name": "USED FOR CHARITABLE PURPOSES_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2003_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2007_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2005_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2002_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2008_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2017_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1998_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2011_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1984_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2013_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1994_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1990_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1982_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1993_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1995_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2012_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2015_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2014_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2016_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1971_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1992_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2009_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1986_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1987_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1980_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2006_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1991_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1996_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2001_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1964_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2000_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1999_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2018_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2010_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2004_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1981_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "2019_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "1985_under_3",
+                  "type": "hidden"
+                },
+                {
+                  "name": "Registrations",
+                  "title": "Total Registrations per postcode"
+                }
+              ],
+              "styles": [
+                {
+                  "id": "Registrations",
+                  "color": {
+                    "colorPalette": "Blues"
+                  }
+                }
+              ],
+              "activeStyle": "Registrations",
+              "id": "5TzyDs"
+            },
+            {
+              "id": "nNFBgZ",
+              "type": "group",
+              "name": "Electricity Infrastructure",
+              "members": [
+                {
+                  "type": "wms",
+                  "name": "Distribution Cables",
+                  "url": "https://dt-geoserver.terria.io/geoserver/ows",
+                  "cacheDuration": "1d",
+                  "opacity": 1,
+                  "layers": "cite:Cables_20210415",
+                  "id": "X8HQPf"
+                },
+                {
+                  "type": "wms",
+                  "name": "Distribution Substations",
+                  "url": "https://dt-geoserver.terria.io/geoserver/ows",
+                  "cacheDuration": "1d",
+                  "opacity": 1,
+                  "layers": "cite:Substations_20210415",
+                  "id": "yrTH6i"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "tS1qKt",
+          "type": "group",
+          "name": "Electricity Infrastructure",
+          "members": [
+            {
+              "id": "q4PAvF",
+              "type": "group",
+              "name": "Generation",
+              "members": [
+                {
+                  "id": "HcL1LD",
+                  "type": "group",
+                  "name": "Current Power Generation - NEM",
+                  "members": [
+                    {
+                      "type": "csv",
+                      "name": "All generation types",
+                      "id": "54a553b4",
+                      "url": "https://services.aremi.data61.io/aemo/v6/csv/all",
+                      "cacheDuration": "5m",
+                      "rectangle": {
+                        "west": 134,
+                        "south": -47,
+                        "east": 155,
+                        "north": -13
+                      },
+                      "polling": {
+                        "seconds": 300,
+                        "shouldReplaceData": true
+                      },
+                      "columns": [
+                        {
+                          "name": "Station Name",
+                          "type": "hidden"
+                        },
+                        {
+                          "name": "Participant",
+                          "type": "hidden"
+                        },
+                        {
+                          "name": "Physical Unit No.",
+                          "type": "hidden"
+                        },
+                        {
+                          "name": "Aggregation",
+                          "type": "hidden"
+                        },
+                        {
+                          "name": "DUID",
+                          "type": "hidden"
+                        },
+                        {
+                          "name": "CSV for last 24h",
+                          "type": "hidden"
+                        },
+                        {
+                          "name": "CSV for all data",
+                          "type": "hidden"
+                        },
+                        {
+                          "name": "Latest 24h generation",
+                          "type": "hidden"
+                        },
+                        {
+                          "name": "Unit Size (MW)",
+                          "type": "hidden"
+                        }
+                      ],
+                      "activeStyle": "Current % of Max Cap",
+                      "defaultColumn": {
+                        "replaceWithNullValues": ["-"]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "catalog": [
+    {
+      "isGroup": true,
+      "name": "Terria Reference With Path",
+      "path": ["natmap-energy"],
+      "itemPropertiesByType": [
+        {
+          "type": "terria-reference",
+          "itemProperties": {
+            "excludeMembers": ["X8HQPf"]
+          }
+        }
+      ],
+
+      "url": "test/init/terria-referenced-catalog.json",
+      "id": "terria-reference-with-path",
+      "type": "terria-reference"
+    }
+  ]
+}

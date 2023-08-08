@@ -1,9 +1,15 @@
+import { JsonObject } from "../../../../lib/Core/Json";
+import loadJson5 from "../../../../lib/Core/loadJson5";
 import GroupMixin from "../../../../lib/ModelMixins/GroupMixin";
 import CatalogGroup from "../../../../lib/Models/Catalog/CatalogGroup";
+import CatalogMemberFactory from "../../../../lib/Models/Catalog/CatalogMemberFactory";
 import TerriaReference from "../../../../lib/Models/Catalog/CatalogReferences/TerriaReference";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
+import { BaseModel } from "../../../../lib/Models/Definition/Model";
 import hasTraits from "../../../../lib/Models/Definition/hasTraits";
+import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
+import upsertModelFromJson from "../../../../lib/Models/Definition/upsertModelFromJson";
 import Terria from "../../../../lib/Models/Terria";
 import CatalogMemberTraits from "../../../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 
@@ -118,5 +124,43 @@ describe("TerriaReference", function () {
     const target = ref.target;
     expect(target?.knownContainerUniqueIds.length).toBe(1);
     expect(target?.knownContainerUniqueIds[0]).toBe("some-id");
+  });
+
+  it("supports exclusion filtering when a path is given", async function () {
+    const json: any = require("test/init/terria-reference-with-path.json");
+    const refJson = json.catalog[0];
+    const terria = new Terria(); // this instance is required for all catalog items.
+    let ref = new TerriaReference("an item ID", terria);
+    updateModelFromJson(ref, CommonStrata.definition, refJson);
+    await ref.loadReference();
+    const target = ref.target as CatalogGroup;
+    await target.loadMembers();
+    expect(target.members.length).toBe(2);
+    const nestedGroup = target.memberModels[0] as CatalogGroup;
+    await nestedGroup.loadMembers();
+    expect(nestedGroup.members.length).toBe(2);
+    const filteredGroup = nestedGroup.memberModels[1] as CatalogGroup;
+    expect(filteredGroup.members.length).toBe(1);
+    expect(filteredGroup.members[0]).toBe("yrTH6i");
+  });
+
+  it("supports exclusion filtering when a path is NOT given", async function () {
+    const json: any = require("test/init/terria-reference-without-path.json");
+    const refJson = json.catalog[0];
+    const terria = new Terria(); // this instance is required for all catalog items.
+    let ref = new TerriaReference("an item ID", terria);
+    updateModelFromJson(ref, CommonStrata.definition, refJson);
+    await ref.loadReference();
+    const target = ref.target as CatalogGroup;
+    await target.loadMembers();
+    expect(target.members.length).toBe(1);
+    const nestedGroup = target.memberModels[0] as CatalogGroup;
+    await nestedGroup.loadMembers();
+    expect(nestedGroup.members.length).toBe(2);
+    const anotherNestedGroup = nestedGroup.memberModels[0] as CatalogGroup;
+    expect(anotherNestedGroup.members.length).toBe(2);
+    const filteredGroup = anotherNestedGroup.memberModels[1] as CatalogGroup;
+    expect(filteredGroup.members.length).toBe(1);
+    expect(filteredGroup.members[0]).toBe("yrTH6i");
   });
 });
