@@ -14,6 +14,8 @@ import { BaseModel } from "../../Definition/Model";
 import updateModelFromJson from "../../Definition/updateModelFromJson";
 import CatalogMemberFactory from "../CatalogMemberFactory";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { CatalogMemberTraits } from "terriajs-plugin-api";
+import CatalogGroup from "../../../ReactViews/DataCatalog/CatalogGroup";
 
 /**
  * A reference to another terria catalog.
@@ -54,16 +56,18 @@ export default class TerriaReference extends UrlMixin(
     }
 
     let targetJson: any;
-    if (this.path) {
-      // Find the group/item to load at the path
-      targetJson = findCatalogMemberJson(initJson.catalog, this.path.slice());
-    } else {
-      // Load the entire catalog members as a group
-      targetJson = {
-        type: "group",
-        members: initJson.catalog,
-        name: this.name
-      };
+    const excludedMembers =
+      (this.itemPropertiesByType?.find(
+        (itemProps) => itemProps.type === TerriaReference.type
+      )?.itemProperties?.excludeMembers as string[]) ?? [];
+
+    const path = this.path ? this.path.slice() : undefined;
+
+    // Load the entire catalog members as a group or find the group/item to load at the path
+    targetJson = findCatalogMemberJson(initJson.catalog, path, excludedMembers);
+    if (this.path === undefined) {
+      targetJson.type = "group";
+      targetJson.name = this.name;
     }
 
     if (typeof targetJson?.type === "string") {
@@ -122,22 +126,47 @@ export default class TerriaReference extends UrlMixin(
   });
 }
 
+function filterMembers(members: any, excludeMembers: string[]) {
+  members.forEach((member: any) => {
+    if (member.type === "group") {
+      member.members = member.members.filter(
+        (m: any) => !excludeMembers.includes(m.id)
+      );
+      filterMembers(member.members, excludeMembers);
+    }
+  });
+}
+
 /**
- * Returns a catalog member JSON at the specified path or undefined if it doesn't exist.
+ * Returns a filtered catalog member JSON at the specified path or all if the path doesn't exist.
  */
 function findCatalogMemberJson(
   catalogMembers: any[],
-  path: string[]
+  path: string[] | undefined,
+  excludeMembers: string[]
 ): JsonObject | undefined {
-  const member = path.reduce(
-    (group, id) => {
-      if (Array.isArray(group?.members)) {
-        return group.members.find((m) => m?.id === id);
-      } else {
-        return undefined;
-      }
-    },
-    { members: catalogMembers }
-  );
+  const member = path
+    ? path.reduce(
+        (group, id) => {
+          if (Array.isArray(group?.members)) {
+            return group.members.find((m) => m?.id === id);
+          } else {
+            return undefined;
+          }
+        },
+        { members: catalogMembers }
+      )
+    : { members: catalogMembers };
+
+  // Exclude unwanted items in terria reference catalog.
+  const filteredMembers =
+    excludeMembers.length > 0
+      ? member.members.filter((m) => !excludeMembers.includes(m.id))
+      : member.members;
+
+  // Exclude unwanted members in dereferenced groups.
+  if (excludeMembers.length > 0) filterMembers(filteredMembers, excludeMembers);
+
+  member.members = filteredMembers;
   return member;
 }
