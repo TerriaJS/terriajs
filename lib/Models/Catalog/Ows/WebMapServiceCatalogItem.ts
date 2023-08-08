@@ -484,8 +484,6 @@ class WebMapServiceCatalogItem
         return undefined;
       }
 
-      console.log(`Creating new ImageryProvider for time ${time}`);
-
       // Set dimensionParameters
       const dimensionParameters = formatDimensionsForOws(this.dimensions);
       if (time !== undefined) {

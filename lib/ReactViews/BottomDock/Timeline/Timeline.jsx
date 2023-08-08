@@ -8,7 +8,7 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import withControlledVisibility from "../../HOCs/withControlledVisibility";
 import CesiumTimeline from "./CesiumTimeline";
-import { getOffsetMinutes } from "../../../Core/DateUtils";
+import { getAdjustedTime } from "../../../Core/DateUtils";
 import DateTimePicker from "./DateTimePicker";
 import Styles from "./timeline.scss";
 import TimelineControls from "./TimelineControls";
@@ -80,7 +80,6 @@ class Timeline extends React.Component {
         );
         jsDate = JulianDate.toDate(adjTime);
       } catch (e) {
-        console.log(e);
         jsDate = JulianDate.toDate(catalogItem.currentTimeAsJulianDate);
       }
     } else {
@@ -89,28 +88,9 @@ class Timeline extends React.Component {
 
     const timelineStack = this.props.terria.timelineStack;
     let currentTime;
-    if (defined(timelineStack.top) && defined(timelineStack.top.dateFormat)) {
-      currentTime = dateFormat(
-        jsDate,
-        this.props.terria.timelineStack.top.dateFormat
-      );
-    } else {
-      if (defined(catalogItem.timeZone)) {
-        const offset = getOffsetMinutes(catalogItem.timeZone);
-        const offsetTime = new JulianDate();
-        const adjTime = JulianDate.addMinutes(
-          catalogItem.currentDiscreteJulianDate,
-          offset,
-          offsetTime
-        );
-        if (defined(catalogItem.dateFormat)) {
-          currentTime = dateFormat(adjTime, catalogItem.dateFormat);
-        } else {
-          currentTime = dateFormat(adjTime, "isoDate");
-        }
-      } else {
-        currentTime = dateFormat(jsDate, "isoDate");
-      }
+
+    if (defined(catalogItem.currentDiscreteJulianDate)) {
+      currentTime = getAdjustedTime(catalogItem);
     }
 
     const discreteTimes = catalogItem.discreteTimesAsSortedJulianDates;

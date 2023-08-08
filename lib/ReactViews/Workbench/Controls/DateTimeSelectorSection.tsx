@@ -15,7 +15,7 @@ import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Spacing from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
 import { formatDateTime } from "../../BottomDock/Timeline/DateFormats";
-import { getOffsetMinutes } from "../../../Core/DateUtils";
+import { getAdjustedTime } from "../../../Core/DateUtils";
 import DateTimePicker from "../../BottomDock/Timeline/DateTimePicker";
 
 interface IState {
@@ -145,32 +145,7 @@ class DateTimeSelectorSection extends React.Component<IProps, IState> {
     }
 
     if (isDefined(item.currentDiscreteJulianDate)) {
-      let time = JulianDate.toDate(item.currentDiscreteJulianDate);
-      if (isDefined(item.timeZone)) {
-        const offset = getOffsetMinutes(item.timeZone);
-        const offsetTime = new JulianDate();
-        const adjTime = JulianDate.addMinutes(
-          item.currentDiscreteJulianDate,
-          offset,
-          offsetTime
-        );
-
-        time = JulianDate.toDate(adjTime);
-      }
-
-      if (isDefined(item.isStaticDate)) {
-        if (item.isStaticDate) {
-          time = new Date(
-            time.getTime() + time.getTimezoneOffset() * 60 * 1000
-          );
-        }
-      }
-
-      if (isDefined(item.dateFormat)) {
-        discreteTime = dateFormat(time, item.dateFormat);
-      } else {
-        discreteTime = dateFormat(time, "isoDate");
-      }
+      discreteTime = getAdjustedTime(item);
     }
 
     const attachedToTimeline = item.terria.timelineStack.contains(item);
