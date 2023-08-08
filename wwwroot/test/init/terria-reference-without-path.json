@@ -2,7 +2,7 @@
   "catalog": [
     {
       "isGroup": true,
-      "name": "Terria Reference With Path",
+      "name": "Terria Reference Without Path",
       "itemPropertiesByType": [
         {
           "type": "terria-reference",
@@ -13,7 +13,7 @@
       ],
 
       "url": "test/init/terria-referenced-catalog.json",
-      "id": "terria-reference-with-path",
+      "id": "terria-reference-without-path",
       "type": "terria-reference"
     }
   ]
