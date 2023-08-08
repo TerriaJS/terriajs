@@ -53,7 +53,9 @@ export interface ColorDimension extends Dimension {
 
 export interface ButtonDimension extends Dimension {
   readonly value?: string;
-  readonly icon?: IconGlyph;
+  readonly icon?:
+    | IconGlyph // Any Icon glyph
+    | "spinner"; // Animated spinner icon
 }
 
 export type SelectableDimensionType =

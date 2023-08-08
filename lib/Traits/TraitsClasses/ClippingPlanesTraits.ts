@@ -125,7 +125,7 @@ export class ClippingBoxTraits extends mixTraits(BoxDrawingTraits) {
     name: "Keep clipping box above ground",
     description: "When true, prevents the box from going underground."
   })
-  keepBoxAboveGround = true;
+  keepBoxAboveGround = false;
 
   @objectTrait({
     type: LatLonHeightTraits,
