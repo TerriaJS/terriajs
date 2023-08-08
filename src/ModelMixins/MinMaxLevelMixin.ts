@@ -67,7 +67,7 @@ function MinMaxLevelMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
             if (
               maximumLevel &&
               level > maximumLevel &&
-              hideLayerAfterMinScaleDenominator
+              mixin.hideLayerAfterMinScaleDenominator
             ) {
               mixin.setTrait(
                 CommonStrata.defaults,
