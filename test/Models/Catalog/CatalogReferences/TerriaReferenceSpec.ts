@@ -1,15 +1,10 @@
-import { JsonObject } from "../../../../lib/Core/Json";
-import loadJson5 from "../../../../lib/Core/loadJson5";
 import GroupMixin from "../../../../lib/ModelMixins/GroupMixin";
 import CatalogGroup from "../../../../lib/Models/Catalog/CatalogGroup";
-import CatalogMemberFactory from "../../../../lib/Models/Catalog/CatalogMemberFactory";
 import TerriaReference from "../../../../lib/Models/Catalog/CatalogReferences/TerriaReference";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
-import { BaseModel } from "../../../../lib/Models/Definition/Model";
 import hasTraits from "../../../../lib/Models/Definition/hasTraits";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
-import upsertModelFromJson from "../../../../lib/Models/Definition/upsertModelFromJson";
 import Terria from "../../../../lib/Models/Terria";
 import CatalogMemberTraits from "../../../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 
