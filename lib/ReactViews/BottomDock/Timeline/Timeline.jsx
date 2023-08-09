@@ -1,4 +1,3 @@
-import dateFormat from "dateformat";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -67,26 +66,6 @@ class Timeline extends React.Component {
     }
     const { t } = this.props;
 
-    let jsDate;
-
-    if (defined(catalogItem.timeZone)) {
-      try {
-        const offset = getOffsetMinutes(catalogItem.timeZone);
-        const offsetTime = new JulianDate();
-        const adjTime = JulianDate.addMinutes(
-          catalogItem.currentDiscreteJulianDate,
-          offset,
-          offsetTime
-        );
-        jsDate = JulianDate.toDate(adjTime);
-      } catch (e) {
-        jsDate = JulianDate.toDate(catalogItem.currentTimeAsJulianDate);
-      }
-    } else {
-      jsDate = JulianDate.toDate(catalogItem.currentTimeAsJulianDate);
-    }
-
-    const timelineStack = this.props.terria.timelineStack;
     let currentTime;
 
     if (defined(catalogItem.currentDiscreteJulianDate)) {
