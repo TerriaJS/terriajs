@@ -1,3 +1,52 @@
+import {
+  AssociativeArray,
+  BoundingSphere,
+  BoundingSphereState,
+  Camera,
+  Cartesian2,
+  Cartesian3,
+  Cartographic,
+  Cesium3DTileset,
+  CesiumTerrainProvider,
+  CesiumWidget,
+  Clock,
+  createWorldTerrainAsync,
+  Credit,
+  CreditDisplay,
+  DataSource,
+  DataSourceCollection,
+  DataSourceDisplay,
+  defaultValue,
+  defined,
+  destroyObject,
+  Ellipsoid,
+  EllipsoidTerrainProvider,
+  Entity,
+  Event,
+  EventHelper,
+  FeatureDetection,
+  HeadingPitchRange,
+  ImageryLayer,
+  ImageryLayerFeatureInfo,
+  ImageryProvider,
+  Ion,
+  IonResource,
+  KeyboardEventModifier,
+  Math as CesiumMath,
+  Matrix4,
+  PerspectiveFrustum,
+  Rectangle,
+  sampleTerrain,
+  Scene,
+  SceneTransforms,
+  ScreenSpaceEventHandler,
+  ScreenSpaceEventType,
+  SingleTileImageryProvider,
+  SplitDirection,
+  Terrain,
+  TerrainProvider,
+  Transforms
+} from "cesium";
 import i18next from "i18next";
 import { isEqual } from "lodash-es";
 import {
@@ -12,53 +61,6 @@ import {
   toJS
 } from "mobx";
 import { computedFn } from "mobx-utils";
-import { AssociativeArray } from "cesium";
-import { BoundingSphere } from "cesium";
-import { Cartesian2 } from "cesium";
-import { Cartesian3 } from "cesium";
-import { Cartographic } from "cesium";
-import { CesiumTerrainProvider } from "cesium";
-import { Clock } from "cesium";
-import { createWorldTerrainAsync } from "cesium";
-import { Credit } from "cesium";
-import { defaultValue } from "cesium";
-import { defined } from "cesium";
-import { destroyObject } from "cesium";
-import { Ellipsoid } from "cesium";
-import { EllipsoidTerrainProvider } from "cesium";
-import { Event } from "cesium";
-import { EventHelper } from "cesium";
-import { FeatureDetection } from "cesium";
-import { HeadingPitchRange } from "cesium";
-import { Ion } from "cesium";
-import { IonResource } from "cesium";
-import { KeyboardEventModifier } from "cesium";
-import { Math as CesiumMath } from "cesium";
-import { Matrix4 } from "cesium";
-import { PerspectiveFrustum } from "cesium";
-import { Rectangle } from "cesium";
-import { sampleTerrain } from "cesium";
-import { ScreenSpaceEventType } from "cesium";
-import { Terrain } from "cesium";
-import { TerrainProvider } from "cesium";
-import { Transforms } from "cesium";
-import { BoundingSphereState } from "cesium";
-import { DataSource } from "cesium";
-import { DataSourceCollection } from "cesium";
-import { DataSourceDisplay } from "cesium";
-import { Entity } from "cesium";
-import { Camera } from "cesium";
-import { Cesium3DTileset } from "cesium";
-import { CreditDisplay } from "cesium";
-import { ImageryLayer } from "cesium";
-import { ImageryLayerFeatureInfo } from "cesium";
-import { ImageryProvider } from "cesium";
-import { Scene } from "cesium";
-import { SceneTransforms } from "cesium";
-import { ScreenSpaceEventHandler } from "cesium";
-import { SingleTileImageryProvider } from "cesium";
-import { SplitDirection } from "cesium";
-import { CesiumWidget } from "cesium";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
@@ -404,7 +406,7 @@ export default class Cesium extends GlobeOrMap {
 
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
     this._disposeTerrainReaction = autorun(() => {
-      this.scene.setTerrain(this.terrainProvider);
+      this.scene.setTerrain(this.terrain);
       // TODO: bring over globe and atmosphere splitting support from terriajs-cesium
       // this.scene.globe.splitDirection = this.terria.showSplitter
       //   ? this.terria.terrainSplitDirection
@@ -446,22 +448,19 @@ export default class Cesium extends GlobeOrMap {
       })
       .catch((err) => {
         console.log("Terrain provider error.  ", err.message);
-        if (this.scene.terrainProvider instanceof CesiumTerrainProvider) {
-          console.log("Switching to EllipsoidTerrainProvider.");
-          setViewerMode("3dsmooth", this.terriaViewer);
-          if (!this._terrainMessageViewed) {
-            this.terria.raiseErrorToUser(err, {
-              title: i18next.t("map.cesium.terrainServerErrorTitle"),
-              message: i18next.t("map.cesium.terrainServerErrorMessage", {
-                appName: this.terria.appName,
-                supportEmail: this.terria.supportEmail
-              })
-            });
+        console.log("Switching to EllipsoidTerrainProvider.");
+        setViewerMode("3dsmooth", this.terriaViewer);
+        if (!this._terrainMessageViewed) {
+          this.terria.raiseErrorToUser(err, {
+            title: i18next.t("map.cesium.terrainServerErrorTitle"),
+            message: i18next.t("map.cesium.terrainServerErrorMessage", {
+              appName: this.terria.appName,
+              supportEmail: this.terria.supportEmail
+            })
+          });
 
-            this._terrainMessageViewed = true;
-          }
+          this._terrainMessageViewed = true;
         }
-
         return new EllipsoidTerrainProvider();
       });
   }
@@ -1229,9 +1228,19 @@ export default class Cesium extends GlobeOrMap {
     );
   }
 
+  /**
+   * Active Terrain
+   */
   @computed
-  get terrainProvider(): Terrain {
+  private get terrain(): Terrain {
     return this._terrainWithCredits.terrain;
+  }
+
+  /**
+   * Returns the currently active TerrainProvider
+   */
+  get terrainProvider(): TerrainProvider {
+    return this.scene.terrainProvider;
   }
 
   /**

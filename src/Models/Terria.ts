@@ -1,31 +1,33 @@
+import {
+  buildModuleUrl,
+  Clock,
+  defaultValue,
+  defined,
+  DeveloperError,
+  Entity,
+  Event as CesiumEvent,
+  queryToObject,
+  RequestScheduler,
+  RuntimeError,
+  SplitDirection,
+  TerrainProvider
+} from "cesium";
 import i18next from "i18next";
 import {
   action,
   computed,
+  makeObservable,
   observable,
   runInAction,
   toJS,
-  when,
-  makeObservable
+  when
 } from "mobx";
 import { createTransformer } from "mobx-utils";
-import { buildModuleUrl } from "cesium";
-import { Clock } from "cesium";
-import { defaultValue } from "cesium";
-import { defined } from "cesium";
-import { DeveloperError } from "cesium";
-import { Event as CesiumEvent } from "cesium";
-import { queryToObject } from "cesium";
-import { RequestScheduler } from "cesium";
-import { RuntimeError } from "cesium";
-import { Terrain } from "cesium";
-import { Entity } from "cesium";
-import { SplitDirection } from "cesium";
 import URI from "urijs";
 import {
   Category,
-  LaunchAction,
-  DataSourceAction
+  DataSourceAction,
+  LaunchAction
 } from "../Core/AnalyticEvents/analyticEvents";
 import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
@@ -739,7 +741,7 @@ export default class Terria {
    * @returns The currently active `TerrainProvider` or `undefined`.
    */
   @computed
-  get terrainProvider(): Terrain | undefined {
+  get terrainProvider(): TerrainProvider | undefined {
     return this.cesium?.terrainProvider;
   }
 
