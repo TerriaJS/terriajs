@@ -18,7 +18,7 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 /**
  * A reference to another terria catalog.
  *
- * Terria reference can be used to load a group, an item or all members of
+ * Terria reference can be used to load a group, an item or all members (with or without exclusions) of
  * another terria catalog (also known as an init file).
  *
  * If `path`:
@@ -26,6 +26,38 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
  *   - is not specified, we show all members of the catalog under the reference item.
  *
  * `isGroup` must be set to `true` if the target item is a group.
+ *
+ * For exclusion filtering, specify their IDs as array in 
+ *   `catalog.itemPropertiesByType[0].itemProperties.excludeMembers`
+ * and set `catalog.itemPropertiesByType[0].itemProperties.type` to "terria-reference". 
+ * The filtering parameters can be put anywhere in the array of 
+ * `catalog.itemPropertiesByType`. Any members with the specified IDs will be filtered out, regardless how deep
+ * they are nested in the catalog structure.
+ * 
+ * E.g., the following json will let terria to load a group with ID of "natmap-energy" from the root of the 
+ * referenced catalog at url of "test/init/terria-referenced-catalog.json", excluding any members with ID of
+ * "X8HQPf".
+ * 
+    {
+      "catalog": [
+        {
+          "isGroup": true,
+          "name": "Terria Reference With Path",
+          "path": ["natmap-energy"],
+          "itemPropertiesByType": [
+            {
+              "type": "terria-reference",
+              "itemProperties": {
+                "excludeMembers": ["X8HQPf"]
+              }
+            }
+          ],
+          "url": "test/init/terria-referenced-catalog.json",
+          "id": "terria-reference-with-path",
+          "type": "terria-reference"
+        }
+      ]
+    }
  *
  */
 export default class TerriaReference extends UrlMixin(
