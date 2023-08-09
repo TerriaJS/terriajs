@@ -1,14 +1,9 @@
 # Change Log
 
-#### next release (8.3.3)
 #### next release 8.3.2
 
 - Fixed a bug when restoring timefilter from a share link having more than one imagery item with the same base URL (but different layer names).
 - Fix WPS duplicate display of analysis results when loaded through a share URL
-- [The next improvement]
-
-#### 8.3.2 - 2023-07-14
-
 - Add 2 traits for WMS layers `dateFormat` and `timeZone` to enable control over display of Date/Time
 
 #### 8.3.1 - 2023-06-29
