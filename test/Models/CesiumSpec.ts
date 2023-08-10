@@ -194,7 +194,7 @@ describeIfSupported("Cesium Model", function () {
     }
   });
 
-  fdescribe("Terrain provider selection", function () {
+  describe("Terrain provider selection", function () {
     let workbenchTerrainItem: CesiumTerrainCatalogItem;
     let scene: Scene;
 
