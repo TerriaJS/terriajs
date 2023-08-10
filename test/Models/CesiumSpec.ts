@@ -251,6 +251,7 @@ describeIfSupported("Cesium Model", function () {
         runInAction(() => {
           cesium.terriaViewer.viewerOptions.useTerrain = true;
         });
+        await terrainLoadPromise(cesium);
         expect(scene.terrainProvider).toBe(workbenchTerrainItem.mapItems[0]);
       })
     );
@@ -269,16 +270,6 @@ describeIfSupported("Cesium Model", function () {
       });
 
       await terrainLoadPromise(cesium);
-      runInAction(() => {
-        console.log(
-          "**state**",
-          //cesium.isTerrainLoading,
-          cesium.terriaViewer.viewerOptions.useTerrain,
-          cesium.terria.configParameters.cesiumTerrainAssetId,
-          (cesium as any)._firstMapItemTerrainProvider,
-          cesium.terria.configParameters.cesiumTerrainUrl
-        );
-      });
 
       expect(createSpy).toHaveBeenCalledTimes(1);
       expect(scene.terrainProvider).toEqual(fakeIonTerrainProvider);
