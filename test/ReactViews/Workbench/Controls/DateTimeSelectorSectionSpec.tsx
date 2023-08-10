@@ -5,6 +5,7 @@ import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapS
 import Terria from "../../../../lib/Models/Terria";
 import { formatDateTime } from "../../../../lib/ReactViews/BottomDock/Timeline/DateFormats";
 import DateTimeSelectorSection from "../../../../lib/ReactViews/Workbench/Controls/DateTimeSelectorSection";
+import { getAdjustedTime } from "../../../../lib/Core/DateUtils";
 
 describe("DateTimeSelectorSection", function () {
   let terria: Terria;
@@ -75,16 +76,20 @@ describe("DateTimeSelectorSection", function () {
   });
 
   it("A datetime selector can be formatted with a named option", async function () {
-    wmsItem.setTrait("definition", "dateFormat", "isoDateTime");
+    wmsItem.setTrait("definition", "dateFormat", "fullDate");
+    wmsItem.setTrait("definition", "isStaticDate", true);
+    const expectedDateStr = getAdjustedTime(wmsItem);
     expect(buttons).toBeDefined();
     expect(buttons.length).toEqual(5);
     expect(currentDateBtn.children[0].children[0].children[0]).toEqual(
-      "2014-01-01T00:00:00+0000"
+      expectedDateStr
     );
   });
 
   it("A datetime selector can be formatted with a timeZone -03:00", async function () {
     wmsItem.setTrait("definition", "timeZone", "-03:00");
+    wmsItem.setTrait("definition", "isStaticDate", true);
+    const expectedDateStr = getAdjustedTime(wmsItem);
     expect(buttons).toBeDefined();
     expect(buttons.length).toEqual(5);
     expect(currentDateBtn.children[0].children[0].children[0]).toEqual(
@@ -94,11 +99,17 @@ describe("DateTimeSelectorSection", function () {
 
   it("A datetime selector can be formatted with a timeZone +11", async function () {
     wmsItem.setTrait("definition", "timeZone", "+11");
-    wmsItem.setTrait("definition", "dateFormat", "isoDateTime");
+    wmsItem.setTrait(
+      "definition",
+      "dateFormat",
+      "dddd, mmmm dS, yyyy, h:MM:ss TT"
+    );
+    wmsItem.setTrait("definition", "isStaticDate", true);
+    const expectedDateStr = getAdjustedTime(wmsItem);
     expect(buttons).toBeDefined();
     expect(buttons.length).toEqual(5);
     expect(currentDateBtn.children[0].children[0].children[0]).toEqual(
-      "2014-01-01T11:00:00+0000"
+      expectedDateStr
     );
   });
 
