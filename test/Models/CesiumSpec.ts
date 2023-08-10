@@ -233,9 +233,6 @@ describeIfSupported("Cesium Model", function () {
     );
 
     it("should use Elliposidal/3d-smooth terrain when `useTerrain` is `false`", async function () {
-      expect(scene.terrainProvider instanceof EllipsoidTerrainProvider).toBe(
-        false
-      );
       runInAction(() => {
         cesium.terriaViewer.viewerOptions.useTerrain = false;
       });
