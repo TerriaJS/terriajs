@@ -1,5 +1,11 @@
 import i18next from "i18next";
-import { configure, runInAction } from "mobx";
+import {
+  configure,
+  IReactionDisposer,
+  reaction,
+  runInAction,
+  when
+} from "mobx";
 import {
   WebMercatorTilingScheme,
   ArcGisMapServerImageryProvider
@@ -127,6 +133,8 @@ describe("ArcGisMapServerCatalogItem", function () {
     });
 
     describe("when tokenUrl is set", function () {
+      let disposeReaction: IReactionDisposer;
+
       beforeEach(() => {
         runInAction(() => {
           item = new ArcGisMapServerCatalogItem("test", new Terria());
@@ -137,6 +145,22 @@ describe("ArcGisMapServerCatalogItem", function () {
             "http://example.com/token"
           );
         });
+
+        // We need to create a reaction that watches the mapItems to prevent
+        // `mobx` from suspending the computed value for `mapItems`. If the
+        // value gets suspended each access to `.mapItems` will create a new
+        // `ArcGisMapServerImageryProvider`. `ArcGisMapServerImageryProvider`
+        // creation is asynchronous, so `mapItems` will return an empty array
+        // until the imagery provider is available and will break our specs
+        // breaking.
+        disposeReaction = reaction(
+          () => item.mapItems,
+          () => {}
+        );
+      });
+
+      afterEach(function () {
+        disposeReaction();
       });
 
       it("fetches the token", async function () {
@@ -163,12 +187,31 @@ describe("ArcGisMapServerCatalogItem", function () {
   });
 
   describe("after loading", function () {
+    let disposeReaction: IReactionDisposer;
+
     beforeEach(async function () {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
         item.setTrait(CommonStrata.definition, "url", mapServerUrl);
       });
       await item.loadMapItems();
+
+      // We need to create a reaction that watches the mapItems to prevent
+      // `mobx` from suspending the computed value for `mapItems`. If the
+      // value gets suspended each access to `.mapItems` will create a new
+      // `ArcGisMapServerImageryProvider`. `ArcGisMapServerImageryProvider`
+      // creation is asynchronous, so `mapItems` will return an empty array
+      // until the imagery provider is available and will break our specs
+      // breaking.
+      disposeReaction = reaction(
+        () => item.mapItems,
+        () => {}
+      );
+      await when(() => item.mapItems.length > 0);
+    });
+
+    afterEach(function () {
+      disposeReaction();
     });
 
     it("returns exactly one mapItems", function () {
@@ -193,7 +236,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       describe("imageryProvider", function () {
         let imageryProvider: ArcGisMapServerImageryProvider;
 
-        beforeEach(function () {
+        beforeEach(async function () {
           runInAction(() => {
             item.setTrait(CommonStrata.definition, "layers", "31");
             item.setTrait(CommonStrata.definition, "parameters", {
@@ -207,6 +250,7 @@ describe("ArcGisMapServerCatalogItem", function () {
             );
           });
 
+          await when(() => item.mapItems.length > 0);
           imageryProvider = item.mapItems[0]
             .imageryProvider as ArcGisMapServerImageryProvider;
         });
@@ -225,12 +269,14 @@ describe("ArcGisMapServerCatalogItem", function () {
           expect(imageryProvider.layers).toBe("31");
         });
 
-        it("converts layer names to layer ids when constructing imagery provider", function () {
+        it("converts layer names to layer ids when constructing imagery provider", async function () {
           item.setTrait(
             CommonStrata.definition,
             "layers",
             "Offshore_Rocks_And_Wrecks"
           );
+          // changing layer definition re-creates the imageryProvider, wait for it to become available
+          await when(() => item.mapItems.length > 0);
           const imageryProvider = item.mapItems[0]
             .imageryProvider as ArcGisMapServerImageryProvider;
           expect(imageryProvider.layers).toBe("31");

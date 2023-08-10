@@ -1,8 +1,13 @@
+import {
+  ArcGisMapServerImageryProvider,
+  ImageryProvider,
+  WebMercatorTilingScheme
+} from "cesium";
 import i18next from "i18next";
 import uniqWith from "lodash-es/uniqWith";
 import { computed, makeObservable, override, runInAction } from "mobx";
-import { WebMercatorTilingScheme } from "cesium";
-import { ArcGisMapServerImageryProvider } from "cesium";
+import { fromPromise, IPromiseBasedObservable } from "mobx-utils";
+import proj4 from "proj4";
 import URI from "urijs";
 import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";
 import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
@@ -36,8 +41,6 @@ import getToken from "../../getToken";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import MinMaxLevelMixin from "./../../../ModelMixins/MinMaxLevelMixin";
 import { Extent, Layer, MapServer } from "./ArcGisInterfaces";
-import proj4 from "proj4";
-import { ImageryProvider } from "cesium";
 
 interface RectangleExtent {
   east: number;
@@ -400,17 +403,24 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         ? undefined
         : new Date(this.currentDiscreteTimeTag).getTime().toString();
 
-    const imageryProviderPromise =
+    const imageryProviderObservablePromise =
       this._private_createImageryProvider(dateAsUnix);
-    if (imageryProviderPromise === undefined) {
-      return undefined;
-    }
-    return ImageryParts.fromAsync({
-      imageryProviderPromise: imageryProviderPromise,
-      alpha: this.opacity,
-      show: this.show,
-      clippingRectangle: this.clipToRectangle ? this.cesiumRectangle : undefined
-    });
+
+    // Return an ImageryPart when the the promise is fulfilled with a valid imageryProvider
+    const imageryPart =
+      imageryProviderObservablePromise.value instanceof
+      ArcGisMapServerImageryProvider
+        ? {
+            imageryProvider: imageryProviderObservablePromise.value,
+            alpha: this.opacity,
+            show: this.show,
+            clippingRectangle: this.clipToRectangle
+              ? this.cesiumRectangle
+              : undefined
+          }
+        : undefined;
+
+    return imageryPart;
   }
 
   @computed
@@ -421,35 +431,46 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
       this.nextDiscreteTimeTag
     ) {
       const dateAsUnix: number = new Date(this.nextDiscreteTimeTag).getTime();
-      const imageryProviderPromise = this._private_createImageryProvider(
-        dateAsUnix.toString()
-      ).then((imageryProvider) => {
-        if (imageryProvider instanceof ArcGisMapServerImageryProvider)
-          imageryProvider.enablePickFeatures = false;
-        return imageryProvider;
+      const imageryProviderObservablePromise =
+        this._private_createImageryProvider(dateAsUnix.toString());
+
+      imageryProviderObservablePromise.case({
+        fulfilled: (imageryProvider) => {
+          // Disable feature picking for the next imagery layer
+          if (imageryProvider instanceof ArcGisMapServerImageryProvider)
+            imageryProvider.enablePickFeatures = false;
+        }
       });
 
-      return ImageryParts.fromAsync({
-        imageryProviderPromise: imageryProviderPromise,
-        alpha: 0.0,
-        show: true,
-        clippingRectangle: this.clipToRectangle
-          ? this.cesiumRectangle
-          : undefined
-      });
+      // Return an ImageryPart when the the promise is fulfilled with a valid imageryProvider
+      const imageryPart =
+        imageryProviderObservablePromise.value instanceof
+        ArcGisMapServerImageryProvider
+          ? {
+              imageryProvider: imageryProviderObservablePromise.value,
+              alpha: 0.0,
+              show: true,
+              clippingRectangle: this.clipToRectangle
+                ? this.cesiumRectangle
+                : undefined
+            }
+          : undefined;
+      return imageryPart;
     } else {
       return undefined;
     }
   }
 
   _private_createImageryProvider = createTransformerAllowUndefined(
-    (time: string | undefined): Promise<ImageryProvider | undefined> => {
+    (
+      time: string | undefined
+    ): IPromiseBasedObservable<ImageryProvider | undefined> => {
       const stratum = <MapServerStratum>(
         this.strata.get(MapServerStratum.stratumName)
       );
 
       if (!isDefined(this.url) || !isDefined(stratum)) {
-        return Promise.resolve(undefined);
+        return fromPromise(Promise.resolve(undefined));
       }
 
       const params: any = Object.assign({}, this.parameters);
@@ -486,9 +507,8 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         }
       );
 
-      return this._protected_updateRequestImageAsync(
-        imageryProviderPromise,
-        false
+      return fromPromise(
+        this._protected_updateRequestImageAsync(imageryProviderPromise, false)
       );
     }
   );
