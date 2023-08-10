@@ -252,7 +252,7 @@ describeIfSupported("Cesium Model", function () {
       })
     );
 
-    it("should otherwise use the ION terrain specified by configParameters.cesiumTerrainAssetId", async function () {
+    fit("should otherwise use the ION terrain specified by configParameters.cesiumTerrainAssetId", async function () {
       const fakeIonTerrainProvider = new CesiumTerrainProvider();
       const createSpy = spyOn(
         cesium as any,
@@ -262,6 +262,16 @@ describeIfSupported("Cesium Model", function () {
       runInAction(() => terria.workbench.removeAll());
 
       await terrainLoadPromise(cesium);
+      runInAction(() => {
+        console.log(
+          "**state**",
+          cesium.isTerrainLoading,
+          cesium.terriaViewer.viewerOptions.useTerrain,
+          cesium.terria.configParameters.cesiumTerrainAssetId,
+          (cesium as any)._firstMapItemTerrainProvider,
+          cesium.terria.configParameters.cesiumTerrainUrl
+        );
+      });
       expect(createSpy).toHaveBeenCalledTimes(1);
       expect(scene.terrainProvider).toEqual(fakeIonTerrainProvider);
     });
