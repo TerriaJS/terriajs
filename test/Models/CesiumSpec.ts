@@ -254,24 +254,29 @@ describeIfSupported("Cesium Model", function () {
 
     it("should otherwise use the ION terrain specified by configParameters.cesiumTerrainAssetId", async function () {
       const fakeIonTerrainProvider = new CesiumTerrainProvider();
+      fakeIonTerrainProvider.availability;
       const createSpy = spyOn(
         cesium as any,
         "createTerrainProviderFromIonAssetId"
       ).and.returnValue(Promise.resolve(fakeIonTerrainProvider));
 
-      runInAction(() => terria.workbench.removeAll());
+      runInAction(() => {
+        cesium.terriaViewer.viewerOptions.useTerrain = true;
+        terria.workbench.removeAll();
+      });
 
       await terrainLoadPromise(cesium);
       runInAction(() => {
         console.log(
           "**state**",
-          cesium.isTerrainLoading,
+          //cesium.isTerrainLoading,
           cesium.terriaViewer.viewerOptions.useTerrain,
           cesium.terria.configParameters.cesiumTerrainAssetId,
           (cesium as any)._firstMapItemTerrainProvider,
           cesium.terria.configParameters.cesiumTerrainUrl
         );
       });
+
       expect(createSpy).toHaveBeenCalledTimes(1);
       expect(scene.terrainProvider).toEqual(fakeIonTerrainProvider);
     });
@@ -284,6 +289,7 @@ describeIfSupported("Cesium Model", function () {
       ).and.returnValue(Promise.resolve(fakeUrlTerrainProvider));
 
       runInAction(() => {
+        cesium.terriaViewer.viewerOptions.useTerrain = true;
         terria.workbench.removeAll();
         terria.configParameters.cesiumTerrainAssetId = undefined;
       });
@@ -301,6 +307,7 @@ describeIfSupported("Cesium Model", function () {
       ).and.returnValue(Promise.resolve(fakeCesiumWorldTerrainProvider));
 
       runInAction(() => {
+        cesium.terriaViewer.viewerOptions.useTerrain = true;
         terria.workbench.removeAll();
         terria.configParameters.cesiumTerrainAssetId = undefined;
         terria.configParameters.cesiumTerrainUrl = undefined;
@@ -314,6 +321,7 @@ describeIfSupported("Cesium Model", function () {
 
     it("should otherwise fallback to Elliposidal/3d-smooth", async function () {
       runInAction(() => {
+        cesium.terriaViewer.viewerOptions.useTerrain = true;
         terria.workbench.removeAll();
         terria.configParameters.cesiumTerrainAssetId = undefined;
         terria.configParameters.cesiumTerrainUrl = undefined;
