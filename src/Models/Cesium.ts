@@ -43,7 +43,6 @@ import {
   ScreenSpaceEventType,
   SingleTileImageryProvider,
   SplitDirection,
-  Terrain,
   TerrainProvider,
   Transforms
 } from "cesium";
@@ -60,7 +59,7 @@ import {
   runInAction,
   toJS
 } from "mobx";
-import { computedFn } from "mobx-utils";
+import { computedFn, fromPromise, IPromiseBasedObservable } from "mobx-utils";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
@@ -157,6 +156,7 @@ export default class Cesium extends GlobeOrMap {
   });
 
   private _terrainMessageViewed: boolean = false;
+
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
     super();
 
@@ -406,7 +406,7 @@ export default class Cesium extends GlobeOrMap {
 
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
     this._disposeTerrainReaction = autorun(() => {
-      this.scene.setTerrain(this.terrain);
+      this.scene.globe.terrainProvider = this.terrainProvider;
       // TODO: bring over globe and atmosphere splitting support from terriajs-cesium
       // this.scene.globe.splitDirection = this.terria.showSplitter
       //   ? this.terria.terrainSplitDirection
@@ -1137,25 +1137,27 @@ export default class Cesium extends GlobeOrMap {
   // It's nice to co-locate creation of Ion TerrainProvider and Credit, but not necessary
   @computed
   private get _terrainWithCredits(): {
-    terrain: Terrain;
+    terrainProviderPromise: Promise<TerrainProvider>;
     credit?: Credit;
   } {
     if (!this.terriaViewer.viewerOptions.useTerrain) {
       // Terrain mode is off, use the ellipsoidal terrain (aka 3d-smooth)
       return {
-        terrain: new Terrain(Promise.resolve(new EllipsoidTerrainProvider()))
+        terrainProviderPromise: Promise.resolve(new EllipsoidTerrainProvider())
       };
     } else if (this._firstMapItemTerrainProvider) {
       // If there's a TerrainProvider in map items/workbench then use it
       return {
-        terrain: new Terrain(Promise.resolve(this._firstMapItemTerrainProvider))
+        terrainProviderPromise: Promise.resolve(
+          this._firstMapItemTerrainProvider
+        )
       };
     } else if (
       this.terria.configParameters.cesiumTerrainAssetId !== undefined
     ) {
       // Load the terrain provider from Ion
       return {
-        terrain: this.createTerrainProviderFromIonAssetId(
+        terrainProviderPromise: this.createTerrainProviderFromIonAssetId(
           this.terria.configParameters.cesiumTerrainAssetId,
           this.terria.configParameters.cesiumIonAccessToken
         )
@@ -1163,7 +1165,7 @@ export default class Cesium extends GlobeOrMap {
     } else if (this.terria.configParameters.cesiumTerrainUrl) {
       // Load the terrain provider from the given URL
       return {
-        terrain: this.createTerrainProviderFromUrl(
+        terrainProviderPromise: this.createTerrainProviderFromUrl(
           this.terria.configParameters.cesiumTerrainUrl
         )
       };
@@ -1177,13 +1179,13 @@ export default class Cesium extends GlobeOrMap {
         true
       );
       return {
-        terrain: this.createWorldTerrain(),
+        terrainProviderPromise: this.createWorldTerrain(),
         credit: ionCredit
       };
     } else {
       // Default to ellipsoid/3d-smooth
       return {
-        terrain: new Terrain(Promise.resolve(new EllipsoidTerrainProvider()))
+        terrainProviderPromise: Promise.resolve(new EllipsoidTerrainProvider())
       };
     }
   }
@@ -1196,14 +1198,14 @@ export default class Cesium extends GlobeOrMap {
   private createTerrainProviderFromIonAssetId(
     assetId: number,
     accessToken?: string
-  ): Terrain {
+  ): Promise<TerrainProvider> {
     const terrainProvider = CesiumTerrainProvider.fromUrl(
       IonResource.fromAssetId(assetId, {
         accessToken
       })
     );
     // Add the event handler to the TerrainProvider
-    return new Terrain(this.catchTerrainProviderDown(terrainProvider));
+    return this.catchTerrainProviderDown(terrainProvider);
   }
 
   /**
@@ -1211,10 +1213,8 @@ export default class Cesium extends GlobeOrMap {
    *
    * Used for spying in specs
    */
-  private createTerrainProviderFromUrl(url: string): Terrain {
-    return new Terrain(
-      this.catchTerrainProviderDown(CesiumTerrainProvider.fromUrl(url))
-    );
+  private createTerrainProviderFromUrl(url: string): Promise<TerrainProvider> {
+    return this.catchTerrainProviderDown(CesiumTerrainProvider.fromUrl(url));
   }
 
   /**
@@ -1222,25 +1222,41 @@ export default class Cesium extends GlobeOrMap {
    *
    * Used for spying in specs
    */
-  private createWorldTerrain(): Terrain {
-    return new Terrain(
-      this.catchTerrainProviderDown(createWorldTerrainAsync({}))
-    );
+  private createWorldTerrain(): Promise<TerrainProvider> {
+    return this.catchTerrainProviderDown(createWorldTerrainAsync({}));
   }
 
   /**
-   * Active Terrain
+   * An observable terrain provider promise
    */
   @computed
-  private get terrain(): Terrain {
-    return this._terrainWithCredits.terrain;
+  private get observableTerrainProviderPromise(): IPromiseBasedObservable<TerrainProvider> {
+    return fromPromise(this._terrainWithCredits.terrainProviderPromise);
   }
 
   /**
    * Returns the currently active TerrainProvider
    */
+  @computed
   get terrainProvider(): TerrainProvider {
-    return this.scene.terrainProvider;
+    return this.observableTerrainProviderPromise.case({
+      // Return the current provider from the scene instance if the promise is pending or rejected
+      pending: () => this.scene.terrainProvider,
+      rejected: () => this.scene.terrainProvider,
+      // When promise is fulfilled, return the new terrainProvider
+      fulfilled: (terrainProvider) => terrainProvider
+    });
+  }
+
+  /**
+   * Returns `true` if loading of a new TerrainProvider is in progress
+   *
+   * Note that until the loading is fully complete, `this.terrainProvider` will
+   * return the existing TerrainProvider.
+   */
+  @computed
+  get isTerrainLoading(): boolean {
+    return this.observableTerrainProviderPromise.state === "pending";
   }
 
   /**
