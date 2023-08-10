@@ -194,7 +194,7 @@ describeIfSupported("Cesium Model", function () {
     }
   });
 
-  describe("Terrain provider selection", function () {
+  fdescribe("Terrain provider selection", function () {
     let workbenchTerrainItem: CesiumTerrainCatalogItem;
     let scene: Scene;
 
@@ -252,7 +252,7 @@ describeIfSupported("Cesium Model", function () {
       })
     );
 
-    fit("should otherwise use the ION terrain specified by configParameters.cesiumTerrainAssetId", async function () {
+    it("should otherwise use the ION terrain specified by configParameters.cesiumTerrainAssetId", async function () {
       const fakeIonTerrainProvider = new CesiumTerrainProvider();
       const createSpy = spyOn(
         cesium as any,
