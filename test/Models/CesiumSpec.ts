@@ -248,6 +248,9 @@ describeIfSupported("Cesium Model", function () {
     it(
       "should otherwise use the first terrain provider from the workbench or overlay",
       action(async function () {
+        runInAction(() => {
+          cesium.terriaViewer.viewerOptions.useTerrain = true;
+        });
         expect(scene.terrainProvider).toBe(workbenchTerrainItem.mapItems[0]);
       })
     );
