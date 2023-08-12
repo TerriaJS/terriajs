@@ -6,8 +6,6 @@ import {
   GeoJsonDataSource,
   Rectangle,
   Scene,
-  Terrain,
-  TerrainProvider,
   WebMapServiceImageryProvider
 } from "cesium";
 import range from "lodash-es/range";
@@ -235,14 +233,10 @@ describeIfSupported("Cesium Model", function () {
     );
 
     it("should use Elliposidal/3d-smooth terrain when `useTerrain` is `false`", async function () {
-      expect(scene.terrainProvider instanceof EllipsoidTerrainProvider).toBe(
-        false
-      );
-      const setTerrainPromise = watchSceneSetTerrain(scene);
       runInAction(() => {
         cesium.terriaViewer.viewerOptions.useTerrain = false;
       });
-      await setTerrainPromise;
+      await terrainLoadPromise(cesium);
       expect(scene.terrainProvider instanceof EllipsoidTerrainProvider).toBe(
         true
       );
@@ -251,82 +245,81 @@ describeIfSupported("Cesium Model", function () {
     it(
       "should otherwise use the first terrain provider from the workbench or overlay",
       action(async function () {
+        runInAction(() => {
+          cesium.terriaViewer.viewerOptions.useTerrain = true;
+        });
+        await terrainLoadPromise(cesium);
         expect(scene.terrainProvider).toBe(workbenchTerrainItem.mapItems[0]);
       })
     );
 
     it("should otherwise use the ION terrain specified by configParameters.cesiumTerrainAssetId", async function () {
-      const fakeIonTerrain = new Terrain(
-        Promise.resolve(new CesiumTerrainProvider())
-      );
+      const fakeIonTerrainProvider = new CesiumTerrainProvider();
+      fakeIonTerrainProvider.availability;
       const createSpy = spyOn(
         cesium as any,
         "createTerrainProviderFromIonAssetId"
-      ).and.returnValue(fakeIonTerrain);
+      ).and.returnValue(Promise.resolve(fakeIonTerrainProvider));
 
-      const setTerrainPromise = watchSceneSetTerrain(cesium.scene);
-      runInAction(() => terria.workbench.removeAll());
+      runInAction(() => {
+        cesium.terriaViewer.viewerOptions.useTerrain = true;
+        terria.workbench.removeAll();
+      });
 
-      await setTerrainPromise;
+      await terrainLoadPromise(cesium);
+
       expect(createSpy).toHaveBeenCalledTimes(1);
-      const ionAssetTerrain = createSpy.calls.mostRecent().returnValue;
-      expect(scene.terrainProvider).toEqual(ionAssetTerrain.provider);
+      expect(scene.terrainProvider).toEqual(fakeIonTerrainProvider);
     });
 
     it("should otherwise use the terrain specified by configParameters.cesiumTerrainUrl", async function () {
-      const fakeUrlTerrain = new Terrain(
-        Promise.resolve(new CesiumTerrainProvider())
-      );
+      const fakeUrlTerrainProvider = new CesiumTerrainProvider();
       const createSpy = spyOn(
         cesium as any,
         "createTerrainProviderFromUrl"
-      ).and.returnValue(fakeUrlTerrain);
-      const setTerrainPromise = watchSceneSetTerrain(cesium.scene);
+      ).and.returnValue(Promise.resolve(fakeUrlTerrainProvider));
 
       runInAction(() => {
+        cesium.terriaViewer.viewerOptions.useTerrain = true;
         terria.workbench.removeAll();
         terria.configParameters.cesiumTerrainAssetId = undefined;
       });
 
-      await setTerrainPromise;
+      await terrainLoadPromise(cesium);
       expect(createSpy).toHaveBeenCalledTimes(1);
-      const urlTerrain = createSpy.calls.mostRecent().returnValue;
-      expect(scene.terrainProvider).toEqual(urlTerrain.provider);
+      expect(scene.terrainProvider).toEqual(fakeUrlTerrainProvider);
     });
 
     it("should otherwise use cesium-world-terrain when `configParameters.useCesiumIonTerrain` is true", async function () {
-      const fakeCesiumWorldTerrain = new Terrain(
-        Promise.resolve(new CesiumTerrainProvider())
-      );
+      const fakeCesiumWorldTerrainProvider = new CesiumTerrainProvider();
       const createSpy = spyOn(
         cesium as any,
         "createWorldTerrain"
-      ).and.returnValue(fakeCesiumWorldTerrain);
+      ).and.returnValue(Promise.resolve(fakeCesiumWorldTerrainProvider));
 
-      const setTerrainPromise = watchSceneSetTerrain(cesium.scene);
       runInAction(() => {
+        cesium.terriaViewer.viewerOptions.useTerrain = true;
         terria.workbench.removeAll();
         terria.configParameters.cesiumTerrainAssetId = undefined;
         terria.configParameters.cesiumTerrainUrl = undefined;
       });
 
-      await setTerrainPromise;
+      await terrainLoadPromise(cesium);
       expect(terria.configParameters.useCesiumIonTerrain).toBe(true);
       expect(createSpy).toHaveBeenCalledTimes(1);
-      const cesiumWorldTerrain = createSpy.calls.mostRecent().returnValue;
-      expect(scene.terrainProvider).toEqual(cesiumWorldTerrain.provider);
+      expect(scene.terrainProvider).toEqual(fakeCesiumWorldTerrainProvider);
     });
 
     it("should otherwise fallback to Elliposidal/3d-smooth", async function () {
-      const setTerrainPromise = watchSceneSetTerrain(cesium.scene);
       runInAction(() => {
+        cesium.terriaViewer.viewerOptions.useTerrain = true;
         terria.workbench.removeAll();
         terria.configParameters.cesiumTerrainAssetId = undefined;
         terria.configParameters.cesiumTerrainUrl = undefined;
         terria.configParameters.useCesiumIonTerrain = false;
       });
 
-      await setTerrainPromise;
+      await terrainLoadPromise(cesium);
       expect(scene.terrainProvider instanceof EllipsoidTerrainProvider).toBe(
         true
       );
@@ -383,7 +376,7 @@ describeIfSupported("Cesium Model", function () {
     });
 
     it("should revert to 3dSmooth mode when cesiumIonAccessToken is invalid", async function () {
-      expect(terriaViewer2.viewerOptions.useTerrain).toBe(true);
+      expect(terriaViewer2.viewerOptions.useTerrain).toBe(true, "1");
       runInAction(() => {
         // Set an invalid token for the test
         terria2.configParameters.cesiumIonAccessToken = "expired_token";
@@ -392,13 +385,12 @@ describeIfSupported("Cesium Model", function () {
       // Instantiate Cesium object with the invalid token
       cesium2 = new Cesium(terriaViewer2, container2);
 
-      // Wait for scene.setTerrain() to be called when the Cesium tries to fallback to EllipsoidTerrainProvider
-      await watchSceneSetTerrain(cesium2.scene);
+      await terrainLoadPromise(cesium2);
 
-      expect(terriaViewer2.viewerOptions.useTerrain).toBe(false);
+      expect(terriaViewer2.viewerOptions.useTerrain).toBe(false, "2");
       expect(
         cesium2.scene.terrainProvider instanceof EllipsoidTerrainProvider
-      ).toBe(true);
+      ).toBe(true, "3");
     });
 
     it("should throw a warning when `cesiumIonAccessToken` is invalid and `cesiumTerrainAssetId` is present", async function () {
@@ -411,8 +403,7 @@ describeIfSupported("Cesium Model", function () {
       // Instantiate Cesium object with the invalid token and valid asset id
       cesium2 = new Cesium(terriaViewer2, container2);
 
-      // Wait for scene.setTerrain() to be called when the Cesium tries to fallback to EllipsoidTerrainProvider
-      await watchSceneSetTerrain(cesium2.scene);
+      await terrainLoadPromise(cesium2);
 
       // We should then get an error about the terrain server
       const currentNotificationTitle =
@@ -433,8 +424,7 @@ describeIfSupported("Cesium Model", function () {
       // Instantiate Cesium object with the invalid terrain url
       cesium2 = new Cesium(terriaViewer2, container2);
 
-      // Wait for scene.setTerrain() to be called when the Cesium tries to fallback to EllipsoidTerrainProvider
-      await watchSceneSetTerrain(cesium2.scene);
+      await terrainLoadPromise(cesium2);
 
       // We should then get an error about the terrain server
       const currentNotificationTitle =
@@ -477,24 +467,9 @@ class MappablePrimitiveItem extends MappableMixin(CreateModel(MappableTraits)) {
   }
 }
 
-function watchSceneSetTerrain(scene: Scene): Promise<TerrainProvider> {
-  const callOriginalSetTerrain = scene.setTerrain.bind(scene);
-  return new Promise((resolve, reject) =>
-    spyOn(scene, "setTerrain").and.callFake((terrain: Terrain) => {
-      callOriginalSetTerrain(terrain);
-      let removeReadyCallback: undefined | (() => void);
-      let removeErrorCallback: undefined | (() => void);
-      removeReadyCallback = terrain.readyEvent.addEventListener((provider) => {
-        removeReadyCallback?.();
-        removeErrorCallback?.();
-        resolve(provider);
-      });
-      removeErrorCallback = terrain.errorEvent.addEventListener((error) => {
-        removeReadyCallback?.();
-        removeErrorCallback?.();
-        reject(error);
-      });
-      return terrain;
-    })
-  );
+/**
+ * Returns a promise that fulfills when terrain provider has finished loading.
+ */
+async function terrainLoadPromise(cesium: Cesium): Promise<void> {
+  return when(() => cesium.isTerrainLoading === false);
 }
