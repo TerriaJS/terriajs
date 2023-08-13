@@ -133,8 +133,6 @@ describe("ArcGisMapServerCatalogItem", function () {
     });
 
     describe("when tokenUrl is set", function () {
-      let disposeReaction: IReactionDisposer;
-
       beforeEach(() => {
         runInAction(() => {
           item = new ArcGisMapServerCatalogItem("test", new Terria());
@@ -145,22 +143,6 @@ describe("ArcGisMapServerCatalogItem", function () {
             "http://example.com/token"
           );
         });
-
-        // We need to create a reaction that watches the mapItems to prevent
-        // `mobx` from suspending the computed value for `mapItems`. If the
-        // value gets suspended each access to `.mapItems` will create a new
-        // `ArcGisMapServerImageryProvider`. `ArcGisMapServerImageryProvider`
-        // creation is asynchronous, so `mapItems` will return an empty array
-        // until the imagery provider is available and will break our specs
-        // breaking.
-        disposeReaction = reaction(
-          () => item.mapItems,
-          () => {}
-        );
-      });
-
-      afterEach(function () {
-        disposeReaction();
       });
 
       it("fetches the token", async function () {
@@ -187,31 +169,13 @@ describe("ArcGisMapServerCatalogItem", function () {
   });
 
   describe("after loading", function () {
-    let disposeReaction: IReactionDisposer;
-
     beforeEach(async function () {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
         item.setTrait(CommonStrata.definition, "url", mapServerUrl);
       });
       await item.loadMapItems();
-
-      // We need to create a reaction that watches the mapItems to prevent
-      // `mobx` from suspending the computed value for `mapItems`. If the
-      // value gets suspended each access to `.mapItems` will create a new
-      // `ArcGisMapServerImageryProvider`. `ArcGisMapServerImageryProvider`
-      // creation is asynchronous, so `mapItems` will return an empty array
-      // until the imagery provider is available and will break our specs
-      // breaking.
-      disposeReaction = reaction(
-        () => item.mapItems,
-        () => {}
-      );
       await when(() => item.mapItems.length > 0);
-    });
-
-    afterEach(function () {
-      disposeReaction();
     });
 
     it("returns exactly one mapItems", function () {

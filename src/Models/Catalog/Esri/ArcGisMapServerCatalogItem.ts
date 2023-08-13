@@ -363,7 +363,10 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
   }
 
   override _protected_forceLoadMapItems(): Promise<void> {
-    return this._protected_forceLoadMetadata();
+    return Promise.all([
+      this._private_currentImageryPromise,
+      this._private_nextImageryPromise
+    ]).then(() => {});
   }
 
   @override
@@ -397,14 +400,19 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
   }
 
   @computed
-  get _private_currentImageryParts(): ImageryParts | undefined {
+  get _private_currentImageryPromise() {
     const dateAsUnix: string | undefined =
       this.currentDiscreteTimeTag === undefined
         ? undefined
         : new Date(this.currentDiscreteTimeTag).getTime().toString();
 
+    return this._private_createImageryProvider(dateAsUnix);
+  }
+
+  @computed
+  get _private_currentImageryParts(): ImageryParts | undefined {
     const imageryProviderObservablePromise =
-      this._private_createImageryProvider(dateAsUnix);
+      this._private_currentImageryPromise;
 
     // Return an ImageryPart when the the promise is fulfilled with a valid imageryProvider
     const imageryPart =
@@ -424,16 +432,23 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
   }
 
   @computed
-  get _private_nextImageryParts(): ImageryParts | undefined {
+  get _private_nextImageryPromise() {
     if (
       this.terria.timelineStack.contains(this) &&
       !this.isPaused &&
       this.nextDiscreteTimeTag
     ) {
       const dateAsUnix: number = new Date(this.nextDiscreteTimeTag).getTime();
-      const imageryProviderObservablePromise =
-        this._private_createImageryProvider(dateAsUnix.toString());
+      return this._private_createImageryProvider(dateAsUnix.toString());
+    } else {
+      return undefined;
+    }
+  }
 
+  @computed
+  get _private_nextImageryParts(): ImageryParts | undefined {
+    const imageryProviderObservablePromise = this._private_nextImageryPromise;
+    if (isDefined(imageryProviderObservablePromise)) {
       imageryProviderObservablePromise.case({
         fulfilled: (imageryProvider) => {
           // Disable feature picking for the next imagery layer
@@ -492,17 +507,14 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
           maximumLevel: maximumLevel,
           tileHeight: this.tileHeight,
           tileWidth: this.tileWidth,
-          // TODO: bring over parameters option from terriajs-cesium
-          //parameters: params,
+          parameters: params,
           enablePickFeatures: this.allowFeaturePicking,
           /** Only used "pre-cached" tiles if we aren't requesting any specific layers
            * If the `layersArray` property is specified, we request individual dynamic layers and ignore the fused map cache.
            */
           usePreCachedTilesIfAvailable: this.layersArray.length == 0,
-          // TODO: bring over mapServerData option from terriajs-cesium
-          //mapServerData: stratum.mapServer,
-          // TODO: add missing token parameter to Cesium's typescript definitions
-          //token: stratum.token,
+          mapServerData: stratum.mapServer,
+          token: stratum.token,
           credit: this.attribution
         }
       );
