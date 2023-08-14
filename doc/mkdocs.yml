@@ -7,6 +7,8 @@ site_dir: ../wwwroot/doc/guide
 markdown_extensions:
   - markdown.extensions.admonition
 strict: false
+extra_javascript:
+  - js/rewrite-links.js
 nav:
   - Home: README.md
   - Getting Started: getting-started.md
@@ -15,6 +17,7 @@ nav:
       - Client-side Config: customizing/client-side-config.md
       - Initialization Files: customizing/initialization-files.md
       - Server-side Config: customizing/server-side-config.md
+      - Cloning and Building: customizing/cloning-and-building.md
       - Skinning: customizing/skinning.md
       - Translation guide: customizing/translation-guide.md
   - Connecting to Data:
@@ -33,10 +36,8 @@ nav:
   - Deploying:
       - Overview: deploying/README.md
       - Deploying TerriaMap: deploying/deploying-terriamap.md
-      - Deploying to AWS: deploying/deploying-to-aws.md
       - Deploying with Kubernetes: deploying/deploying-with-kubernetes.md
       - Setting Up a Region Mapping Server: deploying/setting-up-a-region-mapping-server.md
-      - (Deprecated) Setting Up WMS Region Mapping: deploying/deprecated-wms-region-mapping.md
       - Setting Up Geoserver: deploying/setting-up-geoserver.md
       - Using as a CKAN Previewer: deploying/using-as-a-ckan-previewer.md
       - Controlling with URL Parameters: deploying/controlling-with-url-parameters.md
@@ -50,6 +51,7 @@ nav:
       - Problems and Solutions: contributing/problems-and-solutions.md
       - New model layer documentation: contributing/model-layer.md
       - Traits in depth: contributing/traits-in-depth.md
+      - Strata Examples: contributing/strata-examples.md
       - Init sources: contributing/init-sources.md
       - Frontend style guide: contributing/frontend-style-guide.md
       - Version 8 migration guide: contributing/migration-guide.md

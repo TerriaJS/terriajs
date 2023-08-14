@@ -158,19 +158,21 @@ gulp.task("build-for-doc-generation", function buildForDocGeneration(done) {
 });
 
 gulp.task(
-  "user-guide",
+  "render-guide",
   gulp.series(
-    gulp.parallel("code-attribution", "build-for-doc-generation"),
-    function userGuide(done) {
-      var fse = require("fs-extra");
-      var PluginError = require("plugin-error");
-      var spawnSync = require("child_process").spawnSync;
-
+    function copyToBuild(done) {
+      const fse = require("fs-extra");
       fse.copySync("doc", "build/doc");
+      done();
+    },
+    function generateMemberPages(done) {
+      const fse = require("fs-extra");
+      const PluginError = require("plugin-error");
+      const spawnSync = require("child_process").spawnSync;
 
       fse.mkdirpSync("build/doc/connecting-to-data/catalog-type-details");
 
-      var result = spawnSync("node", ["generateDocs.js"], {
+      const result = spawnSync("node", ["generateDocs.js"], {
         cwd: "build",
         stdio: "inherit",
         shell: false
@@ -183,8 +185,13 @@ gulp.task(
           { showStack: false }
         );
       }
+      done();
+    },
+    function mkdocs(done) {
+      const PluginError = require("plugin-error");
+      const spawnSync = require("child_process").spawnSync;
 
-      result = spawnSync(
+      const result = spawnSync(
         "mkdocs",
         ["build", "--clean", "--config-file", "mkdocs.yml"],
         {
@@ -194,11 +201,14 @@ gulp.task(
         }
       );
       if (result.status !== 0) {
-        throw new PluginError("user-doc", "Mkdocs exited with an error.", {
-          showStack: false
-        });
+        throw new PluginError(
+          "user-doc",
+          `Mkdocs exited with an error. Maybe you didn't install mkdocs and other python dependencies in requirements.txt - see https://docs.terria.io/guide/contributing/development-environment/#documentation?`,
+          {
+            showStack: false
+          }
+        );
       }
-
       done();
     }
   )
@@ -206,11 +216,15 @@ gulp.task(
 
 gulp.task(
   "docs",
-  gulp.series("user-guide", function docs(done) {
-    var fse = require("fs-extra");
-    fse.copySync("doc/index-built.html", "wwwroot/doc/index.html");
-    done();
-  })
+  gulp.series(
+    gulp.parallel("code-attribution", "build-for-doc-generation"),
+    "render-guide",
+    function docs(done) {
+      var fse = require("fs-extra");
+      fse.copySync("doc/index-redirect.html", "wwwroot/doc/index.html");
+      done();
+    }
+  )
 );
 
 gulp.task("terriajs-server", function (done) {

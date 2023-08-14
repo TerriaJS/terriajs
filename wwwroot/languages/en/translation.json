@@ -62,7 +62,7 @@
     "browserCannotProvide": "Your browser cannot provide your location.",
     "myLocation": "My Location",
     "location": "Location",
-    "originError": "Your browser can only provide your location when using https. You may be able to use {{secureUrl}} instead.",
+    "originError": "Your browser can only provide your location when using HTTPS. You may be able to use {{secureUrl}} instead.",
     "centreMap": "Centre map at your current location"
   },
   "splitterTool": {
@@ -609,7 +609,6 @@
   "loader": {
     "loadingMessage": "Loading"
   },
-  "emptyWorkbenchMessage": "<0><0>Your workbench is empty</0><1><strong>Click '$t(addData.addDataBtnText)' above to </strong></1><2><0>Browse the Data Catalogue</0><1>Load your own data onto the map</1></2><3><0></0><strong>TIP.</strong><2>All your active data sets will be listed here</2></3></0>",
   "emptyWorkbench": {
     "emptyArea": "Your workbench is empty",
     "helpfulHints": "Helpful hints",
