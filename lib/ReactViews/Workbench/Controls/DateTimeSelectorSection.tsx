@@ -15,6 +15,7 @@ import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Spacing from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
 import { formatDateTime } from "../../BottomDock/Timeline/DateFormats";
+import { getAdjustedTime } from "../../../Core/DateUtils";
 import DateTimePicker from "../../BottomDock/Timeline/DateTimePicker";
 
 interface IState {
@@ -144,13 +145,7 @@ class DateTimeSelectorSection extends React.Component<IProps, IState> {
     }
 
     if (isDefined(item.currentDiscreteJulianDate)) {
-      const time = JulianDate.toDate(item.currentDiscreteJulianDate);
-      if (isDefined(item.dateFormat)) {
-        format = item.dateFormat;
-        discreteTime = dateFormat(time, item.dateFormat);
-      } else {
-        discreteTime = formatDateTime(time);
-      }
+      discreteTime = getAdjustedTime(item);
     }
 
     const attachedToTimeline = item.terria.timelineStack.contains(item);
@@ -161,7 +156,7 @@ class DateTimeSelectorSection extends React.Component<IProps, IState> {
           {item.timeLabel ?? t("dateTime.selectorLabel")}
         </Text>
         <Spacing bottom={1} />
-        <Box fullWidth justifySpaceBetween styledHeight={"30px"} gap>
+        <Box fullWidth justifySpaceBetween gap>
           <Box
             backgroundColor="rgba(250, 250, 250, 0.2)"
             css={`

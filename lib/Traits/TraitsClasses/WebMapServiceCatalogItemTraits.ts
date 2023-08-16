@@ -8,6 +8,7 @@ import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
 import { traitClass } from "../Trait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import { DateTimeTraits } from "./DateTimeTraits";
 import DiffableTraits from "./DiffableTraits";
 import ExportWebCoverageServiceTraits from "./ExportWebCoverageServiceTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
@@ -175,7 +176,8 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   MappableTraits,
   CatalogMemberTraits,
   LegendOwnerTraits,
-  MinMaxLevelTraits
+  MinMaxLevelTraits,
+  DateTimeTraits
 ) {
   @primitiveTrait({
     type: "string",

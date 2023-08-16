@@ -1,4 +1,3 @@
-import dateFormat from "dateformat";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -8,7 +7,7 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import withControlledVisibility from "../../HOCs/withControlledVisibility";
 import CesiumTimeline from "./CesiumTimeline";
-import { formatDateTime } from "./DateFormats";
+import { getAdjustedTime } from "../../../Core/DateUtils";
 import DateTimePicker from "./DateTimePicker";
 import Styles from "./timeline.scss";
 import TimelineControls from "./TimelineControls";
@@ -67,16 +66,10 @@ class Timeline extends React.Component {
     }
     const { t } = this.props;
 
-    const jsDate = JulianDate.toDate(catalogItem.currentTimeAsJulianDate);
-    const timelineStack = this.props.terria.timelineStack;
     let currentTime;
-    if (defined(timelineStack.top) && defined(timelineStack.top.dateFormat)) {
-      currentTime = dateFormat(
-        jsDate,
-        this.props.terria.timelineStack.top.dateFormat
-      );
-    } else {
-      currentTime = formatDateTime(jsDate, this.props.locale);
+
+    if (defined(catalogItem.currentDiscreteJulianDate)) {
+      currentTime = getAdjustedTime(catalogItem);
     }
 
     const discreteTimes = catalogItem.discreteTimesAsSortedJulianDates;
