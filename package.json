@@ -12,6 +12,8 @@
   },
   "resolutions": {
     "colors": "1.4.0",
+    "@types/react": "^17.0.3",
+    "@types/lodash": "4.14.182",
     "@types/node": "^18.15.11"
   },
   "dependencies": {
