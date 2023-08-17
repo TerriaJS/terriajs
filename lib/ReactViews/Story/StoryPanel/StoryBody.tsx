@@ -63,9 +63,15 @@ const StoryBody = ({
           `}
           medium
         >
-          {parseCustomHtmlToReact(story.text, {
-            showExternalLinkWarning: true
-          })}
+          {parseCustomHtmlToReact(
+            story.text,
+            { showExternalLinkWarning: true },
+            false,
+            {
+              ALLOWED_TAGS: ["iframe"],
+              ALLOWED_ATTR: ["src", "width", "height"]
+            }
+          )}
         </Text>
       </StoryContainer>
     ) : null}
