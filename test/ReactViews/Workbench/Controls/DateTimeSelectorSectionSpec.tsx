@@ -39,9 +39,7 @@ describe("DateTimeSelectorSection", function () {
     expect(buttons).toBeDefined();
     expect(buttons.length).toEqual(5);
     // Need to do it the longer way because Travis runs in a diff locale
-    const expectedDateStr = formatDateTime(
-      new Date("2014-01-01T00:00:00.000Z")
-    );
+    const expectedDateStr = formatDateTime(new Date("2014-01-01"));
 
     expect(currentDateBtn.children[0].children[0].children[0]).toEqual(
       expectedDateStr
