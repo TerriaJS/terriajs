@@ -10,7 +10,7 @@ import {
 describe("StoryBody", function () {
   let testRenderer: ReactTestRenderer;
 
-  it("should include embedded video using allowed tag and ignore unallowed attributes", function () {
+  it("should include embedded media using iframe tag, using allowed attributes only", function () {
     const theStory = {
       id: "some id",
       title: "test",
@@ -43,7 +43,7 @@ describe("StoryBody", function () {
     expect(theIframeInstance.props.height).toBe("315");
   });
 
-  it("should exclude embedded video using unknown tag", function () {
+  it("should exclude embedded media using tags other than iframe", function () {
     const theStory = {
       id: "some id",
       title: "test",
