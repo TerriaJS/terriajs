@@ -10,7 +10,7 @@ import {
 describe("StoryBody", function () {
   let testRenderer: ReactTestRenderer;
 
-  it("should include embedded media using iframe tag, using allowed attributes only", function () {
+  it("should include embedded media using iframe tag with allowed attributes only", function () {
     const theStory = {
       id: "some id",
       title: "test",
