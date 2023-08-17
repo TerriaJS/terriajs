@@ -31,6 +31,7 @@
   "rules": {
     "jsx-control-statements/jsx-use-if-tag": 0,
     "react/jsx-no-undef": 0,
+    "react/no-unknown-property": ["error", { "ignore": ["css", "isStory", "isOpen", "showDropdownAsModal"] }],
 
     /*Possible Errors */
     "no-cond-assign": [1, "except-parens"],
