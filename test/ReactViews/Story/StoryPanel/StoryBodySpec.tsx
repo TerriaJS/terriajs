@@ -1,11 +1,15 @@
 import React from "react";
 import StoryBody from "../../../../lib/ReactViews/Story/StoryPanel/StoryBody";
 import { act } from "react-dom/test-utils";
-import TestRenderer, { ReactTestInstance, create } from "react-test-renderer";
-import Box from "../../../../lib/Styled/Box";
-import { exp } from "protomaps";
+import {
+  ReactTestInstance,
+  ReactTestRenderer,
+  create
+} from "react-test-renderer";
 
 describe("StoryBody", function () {
+  let testRenderer: ReactTestRenderer;
+
   it("should include embedded video using allowed tag and ignore unallowed attributes", function () {
     const theStory = {
       id: "some id",
@@ -13,14 +17,8 @@ describe("StoryBody", function () {
       text: 'Story with video. <iframe title="Special Title" width="560" height="315" src="https://some.video.link"></iframe>'
     };
 
-    let testRenderer: ReturnType<typeof create> = TestRenderer.create(
-      <StoryBody isCollapsed={false} story={theStory} />
-    );
-
     act(() => {
-      testRenderer = TestRenderer.create(
-        <StoryBody isCollapsed={false} story={theStory} />
-      );
+      testRenderer = create(<StoryBody isCollapsed={false} story={theStory} />);
     });
 
     const storyBody = testRenderer.root.findAllByType(StoryBody);
@@ -33,10 +31,11 @@ describe("StoryBody", function () {
       ).children[0] as ReactTestInstance
     ).children[0] as ReactTestInstance;
 
-    const theIframeInstance = theInstance.children[1] as ReactTestInstance;
-
     expect(theInstance.children.length === 2);
+
     expect(theInstance.children[0] as string).toEqual("Story with video. ");
+
+    const theIframeInstance = theInstance.children[1] as ReactTestInstance;
     expect(theIframeInstance.type).toBe("iframe");
     expect(theIframeInstance.props.title).toBe(undefined);
     expect(theIframeInstance.props.src).toBe("https://some.video.link");
@@ -51,14 +50,8 @@ describe("StoryBody", function () {
       text: 'Story with video. <iframe2 width="560" height="315" src="https://some.video.link"></iframe2>'
     };
 
-    let testRenderer: ReturnType<typeof create> = TestRenderer.create(
-      <StoryBody isCollapsed={false} story={theStory} />
-    );
-
     act(() => {
-      testRenderer = TestRenderer.create(
-        <StoryBody isCollapsed={false} story={theStory} />
-      );
+      testRenderer = create(<StoryBody isCollapsed={false} story={theStory} />);
     });
 
     const storyBody = testRenderer.root.findAllByType(StoryBody);
