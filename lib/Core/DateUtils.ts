@@ -1,11 +1,11 @@
 import dateFormat from "dateformat";
-import { JulianDate } from "terriajs-cesium";
 import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 
 /**
  * Returns the offset in minutes from UTC for a given timeZone string.
- * @param timeZone - String in the format +/-HH:MM or +/-HH offset from UTC Zulu time.
- * @returns The offset in minutes from UTC. as a number.
+ * param timeZone - String in the format +/-HH:MM or +/-HH offset from UTC Zulu time.
+ * returns The offset in minutes from UTC. as a number.
  */
 
 export function getOffsetMinutes(timeZone: string): number {
@@ -40,8 +40,8 @@ export function getOffsetMinutes(timeZone: string): number {
  * https://github.com/felixge/node-dateformat for explanation of available formats.
  * isStaticDate: trait is a boolean that determines whether to adjust the time to the
  * users local time. if true, the time is not transformed to the local time.
- * @param item - DiscretelyTimeVaryingMixin.Instance being loaded into workbench.
- * @returns The adjusted time as string.
+ * param item - DiscretelyTimeVaryingMixin.Instance being loaded into workbench.
+ * returns The adjusted time as string.
  */
 
 export function getAdjustedTime(
