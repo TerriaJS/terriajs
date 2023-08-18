@@ -68,8 +68,7 @@ const StoryBody = ({
             { showExternalLinkWarning: true },
             false,
             {
-              ALLOWED_TAGS: ["iframe"],
-              ALLOWED_ATTR: ["src", "width", "height"]
+              ADD_TAGS: ["iframe"]
             }
           )}
         </Text>

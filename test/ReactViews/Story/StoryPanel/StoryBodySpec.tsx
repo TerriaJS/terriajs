@@ -10,11 +10,11 @@ import {
 describe("StoryBody", function () {
   let testRenderer: ReactTestRenderer;
 
-  it("should include embedded media using iframe tag with allowed attributes only", function () {
+  it("should include embedded media using iframe tag", function () {
     const theStory = {
       id: "some id",
       title: "test",
-      text: 'Story with video. <iframe title="Special Title" width="560" height="315" src="https://some.video.link"></iframe>'
+      text: 'Story with video. <iframe title="My Title" width="560" height="315" src="https://some.video.link"></iframe>'
     };
 
     act(() => {
@@ -37,13 +37,13 @@ describe("StoryBody", function () {
 
     const theIframeInstance = theInstance.children[1] as ReactTestInstance;
     expect(theIframeInstance.type).toBe("iframe");
-    expect(theIframeInstance.props.title).toBe(undefined);
+    expect(theIframeInstance.props.title).toBe("My Title");
     expect(theIframeInstance.props.src).toBe("https://some.video.link");
     expect(theIframeInstance.props.width).toBe("560");
     expect(theIframeInstance.props.height).toBe("315");
   });
 
-  it("should exclude embedded media using tags other than iframe", function () {
+  it("should exclude embedded media using tags other unsafe tag", function () {
     const theStory = {
       id: "some id",
       title: "test",
