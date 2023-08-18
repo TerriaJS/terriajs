@@ -43,7 +43,7 @@ describe("StoryBody", function () {
     expect(theIframeInstance.props.height).toBe("315");
   });
 
-  it("should exclude embedded media using tags other unsafe tag", function () {
+  it("should exclude embedded media using unsafe tag", function () {
     const theStory = {
       id: "some id",
       title: "test",
