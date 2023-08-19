@@ -160,7 +160,11 @@ export default class AssImpCatalogItem
 
     // Init assimpjs
     const assimpjs = (await import("assimpjs")).default;
-    const ajs = await assimpjs();
+    const ajs = await assimpjs({
+      locateFile: function (path: any, scriptDirectory: any) {
+        return require("assimpjs/dist/assimpjs.wasm");
+      }
+    });
 
     // Create assimpjs FileList object, and add the files
     let fileList = new ajs.FileList();
@@ -277,7 +281,7 @@ export default class AssImpCatalogItem
         }
 
         // Turn GlTf back into array buffer - this overwrites existing GlTf
-        arrayBuffer = Buffer.from(JSON.stringify(gltfJson));
+        arrayBuffer = new TextEncoder().encode(JSON.stringify(gltfJson));
       }
 
       // Convert assimp output file to blob and create object URL

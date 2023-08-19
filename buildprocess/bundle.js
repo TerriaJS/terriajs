@@ -101,7 +101,8 @@ esbuild
       ".glb": "file",
       ".xml": "file",
       ".DAC": "file",
-      ".csv": "text"
+      ".csv": "text",
+      ".wasm": "file"
     },
     external: [
       // Don't try to load node-only modules and other unnecessary stuff
