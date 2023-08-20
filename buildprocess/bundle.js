@@ -7,6 +7,8 @@ const svgr = require("esbuild-plugin-svgr");
 const klawSync = require("klaw-sync");
 const fs = require("fs");
 const selectLoaderPlugin = require("./selectLoaderPlugin");
+const nodeModulesPolyfillPlugin =
+  require("esbuild-plugins-node-modules-polyfill").nodeModulesPolyfillPlugin;
 
 const includePaths = [
   // Support resolving paths like "terriajs/..."
@@ -58,6 +60,11 @@ esbuild
     sourcemap: true,
     target: "es2020",
     plugins: [
+      nodeModulesPolyfillPlugin({
+        globals: {
+          Buffer: true
+        }
+      }),
       selectLoaderPlugin({
         loaders: [
           {
