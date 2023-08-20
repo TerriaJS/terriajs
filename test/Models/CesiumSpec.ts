@@ -227,7 +227,7 @@ describeIfSupported("Cesium Model", function () {
         spyOn(
           workbenchTerrainItem as any,
           "_private_loadTerrainProvider"
-        ).and.returnValue(CesiumTerrainProvider.fromUrl("some/url"));
+        ).and.returnValue(new CesiumTerrainProvider());
         (await terria.workbench.add(workbenchTerrainItem)).throwIfError();
       })
     );
