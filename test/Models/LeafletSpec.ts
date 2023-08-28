@@ -1,11 +1,11 @@
 import L from "leaflet";
 import { action, computed, when } from "mobx";
-import { ViewerMode } from "terriajs-plugin-api";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import Leaflet from "../../lib/Models/Leaflet";
 import Terria from "../../lib/Models/Terria";
+import ViewerMode from "../../lib/Models/ViewerMode";
 import { RectangleTraits } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 
