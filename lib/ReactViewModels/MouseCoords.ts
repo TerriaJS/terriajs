@@ -196,10 +196,9 @@ export default class MouseCoords {
     const coordinates = Cartographic.fromDegrees(
       latLng.lng,
       latLng.lat,
-      undefined,
+      0,
       scratchCartographic
     );
-    coordinates.height = <any>undefined;
     this.cartographicToFields(coordinates);
   }
 
