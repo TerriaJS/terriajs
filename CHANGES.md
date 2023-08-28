@@ -2,7 +2,8 @@
 
 #### next release (8.3.3)
 
-- Fixes broken point dragging interaction for user drawing in 3d-mode.
+- Fixed broken point dragging interaction for user drawing in 3D mode.
+- Fixed rectangle drawing in 2D mode.
 - [The next improvement]
 
 #### 8.3.2 - 2023-08-11
