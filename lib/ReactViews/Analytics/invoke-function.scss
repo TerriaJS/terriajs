@@ -31,7 +31,9 @@
   }
 }
 
-@include empty-module("description") .btn {
+@include empty-module("description");
+
+.btn {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn-primary from "../../Sass/common/_buttons.scss";
 }
