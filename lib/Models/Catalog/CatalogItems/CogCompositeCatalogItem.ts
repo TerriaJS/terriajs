@@ -162,7 +162,7 @@ export default class CogCompositeCatalogItem extends MappableMixin(
             ? new proj4.Proj(Proj4Definitions[sourceEpsgCode])
             : undefined;
 
-        return proj4(sourceDef, "EPSG:4326").reverse;
+        return proj4("EPSG:4326", sourceDef).forward;
       })
       .catch((error: Error) => {
         this.terria.raiseErrorToUser(error);
