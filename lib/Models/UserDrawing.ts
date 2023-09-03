@@ -385,8 +385,7 @@ export default class UserDrawing extends MappableMixin(
           const scratchPosition = new Cartesian3();
           this.mousePointEntity.position = new CallbackProperty(() => {
             const cartographicMouseCoords =
-              this.terria.currentViewer.terria.currentViewer.mouseCoords
-                .cartographic;
+              this.terria.currentViewer.mouseCoords.cartographic;
             let mousePosition = undefined;
             if (cartographicMouseCoords) {
               mousePosition = Ellipsoid.WGS84.cartographicToCartesian(
