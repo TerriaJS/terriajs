@@ -186,13 +186,20 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         const cartographic = Cartographic.fromCartesian(
           Matrix4.getTranslation(clippingPlanesOriginMatrix, new Cartesian3())
         );
-        cartographic.height = dimensions.z / 2;
-        position = Cartographic.toCartesian(
-          cartographic,
-          cesium.scene.globe.ellipsoid,
-          new Cartesian3()
-        );
+        // If the translation is at the center of the ellipsoid then this cartographic could be undefined.
+        // Although it is not reflected in the typescript type.
+        if (cartographic) {
+          cartographic.height = dimensions.z / 2;
+          position = Cartographic.toCartesian(
+            cartographic,
+            cesium.scene.globe.ellipsoid,
+            new Cartesian3()
+          );
+        }
       }
+
+      // Nothing we can do - assign to zero
+      position ??= Cartesian3.ZERO.clone();
 
       let hpr: HeadingPitchRoll | undefined;
       if (
