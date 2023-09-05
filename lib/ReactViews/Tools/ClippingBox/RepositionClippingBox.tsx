@@ -7,16 +7,14 @@ import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
 import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
-import {
-  BoxDrawing,
-  CatalogMemberMixin,
-  CommonStrata,
-  LatLonHeightTraits,
-  ViewState
-} from "terriajs-plugin-api";
+import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import ClippingMixin from "../../../ModelMixins/ClippingMixin";
+import BoxDrawing from "../../../Models/BoxDrawing";
 import Cesium from "../../../Models/Cesium";
+import CommonStrata from "../../../Models/Definition/CommonStrata";
+import ViewState from "../../../ReactViewModels/ViewState";
 import Text from "../../../Styled/Text";
+import LatLonHeightTraits from "../../../Traits/TraitsClasses/LatLonHeightTraits";
 
 type ItemType = ClippingMixin.Instance &
   CatalogMemberMixin.Instance & { clippingBoxDrawing: BoxDrawing };

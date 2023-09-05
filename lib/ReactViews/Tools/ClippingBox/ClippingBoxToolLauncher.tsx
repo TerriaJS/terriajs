@@ -1,8 +1,8 @@
 import { action } from "mobx";
 import { observer } from "mobx-react";
 import React, { useEffect } from "react";
-import { BoxDrawing } from "terriajs-plugin-api";
 import ClippingMixin from "../../../ModelMixins/ClippingMixin";
+import BoxDrawing from "../../../Models/BoxDrawing";
 import Workbench from "../../../Models/Workbench";
 import ViewState from "../../../ReactViewModels/ViewState";
 import { zoomAndRepositioningEnabled } from "./featureFlags";
