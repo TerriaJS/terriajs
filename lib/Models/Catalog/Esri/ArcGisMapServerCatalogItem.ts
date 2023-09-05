@@ -328,6 +328,13 @@ class MapServerStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(MapServerStratum.stratumName);
 
+interface TimeParms {
+  time: string | undefined;
+  interval: number | undefined;
+  timeUnit: string | undefined;
+  isForward: boolean | undefined;
+}
+
 export default class ArcGisMapServerCatalogItem extends UrlMixin(
   DiscretelyTimeVaryingMixin(
     MinMaxLevelMixin(
@@ -393,6 +400,37 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     return result;
   }
 
+  private getTimeIntervalFromDimensions() {
+    const selectedId = this.modelDimensions[0].selectedId;
+    if (this.modelDimensions.length < 1 && selectedId === undefined) {
+      return undefined;
+    } else {
+      const dimOptions = this.modelDimensions[0].options.filter(
+        (opt) => opt.id === selectedId
+      );
+      if (dimOptions.length < 1) {
+        return undefined;
+      }
+      const selected = dimOptions[0] as any;
+      const interval: number | undefined = selected.value.interval;
+      const timeUnit: string | undefined = selected.value.timeUnit;
+      const isForward: boolean = selected.value.isForward;
+      if (
+        selected === undefined ||
+        interval === undefined ||
+        timeUnit === undefined
+      ) {
+        return undefined;
+      } else {
+        return {
+          interval,
+          timeUnit,
+          isForward
+        };
+      }
+    }
+  }
+
   @computed
   private get _currentImageryParts(): ImageryParts | undefined {
     const dateAsUnix: string | undefined =
@@ -400,7 +438,13 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         ? undefined
         : new Date(this.currentDiscreteTimeTag).getTime().toString();
 
-    const imageryProvider = this._createImageryProvider(dateAsUnix);
+    const ti = this.getTimeIntervalFromDimensions();
+    const imageryProvider = this._createImageryProvider({
+      time: dateAsUnix,
+      interval: ti?.interval,
+      timeUnit: ti?.timeUnit,
+      isForward: ti?.isForward
+    });
     if (imageryProvider === undefined) {
       return undefined;
     }
@@ -420,9 +464,13 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
       this.nextDiscreteTimeTag
     ) {
       const dateAsUnix: number = new Date(this.nextDiscreteTimeTag).getTime();
-      const imageryProvider = this._createImageryProvider(
-        dateAsUnix.toString()
-      );
+      const ti = this.getTimeIntervalFromDimensions();
+      const imageryProvider = this._createImageryProvider({
+        time: dateAsUnix.toString(),
+        interval: ti?.interval,
+        timeUnit: ti?.timeUnit,
+        isForward: ti?.isForward
+      });
       if (imageryProvider === undefined) {
         return undefined;
       }
@@ -443,7 +491,9 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
   }
 
   private _createImageryProvider = createTransformerAllowUndefined(
-    (time: string | undefined): ArcGisMapServerImageryProvider | undefined => {
+    (
+      timeParams: TimeParms | undefined
+    ): ArcGisMapServerImageryProvider | undefined => {
       const stratum = <MapServerStratum>(
         this.strata.get(MapServerStratum.stratumName)
       );
@@ -452,9 +502,55 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         return;
       }
 
+      function intervalInMs(
+        interval: number | undefined,
+        timeUnit: string | undefined
+      ): number | undefined {
+        if (interval === undefined) {
+          return undefined;
+        }
+        const msInOneHour = 3600 * 1000;
+        const theUnit = timeUnit ? timeUnit.toLowerCase() : "day";
+        if (theUnit === "year") return interval * 365 * 24 * msInOneHour;
+        else if (theUnit === "month") return interval * 30 * 24 * msInOneHour;
+        else if (theUnit === "week") return interval * 7 * 24 * msInOneHour;
+        else if (theUnit === "day") return interval * 24 * msInOneHour;
+        else if (theUnit === "hour") return interval * msInOneHour;
+        else if (theUnit === "minute") return interval * 60 * 1000;
+        else if (theUnit === "second") return interval * 1000;
+        else return undefined;
+      }
+
+      function getTimeQueryString(
+        currentTime: string,
+        interval: number,
+        isForward: boolean = true
+      ) {
+        if (isForward) {
+          const endTime = Number(currentTime) + interval;
+          return currentTime + "," + endTime;
+        } else {
+          const startTime = Number(currentTime) - interval;
+          return "" + startTime + "," + currentTime;
+        }
+      }
+
       const params: any = Object.assign({}, this.parameters);
-      if (time !== undefined) {
-        params.time = time;
+      const currentTime = timeParams?.time;
+      if (currentTime !== undefined) {
+        const interval = intervalInMs(
+          timeParams?.interval,
+          timeParams?.timeUnit
+        );
+        if (interval !== undefined) {
+          params.time = getTimeQueryString(
+            currentTime,
+            interval,
+            timeParams?.isForward
+          );
+        } else {
+          params.time = currentTime;
+        }
       }
 
       const maximumLevel = scaleDenominatorToLevel(

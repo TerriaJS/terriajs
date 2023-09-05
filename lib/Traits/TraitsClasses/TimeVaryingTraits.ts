@@ -71,4 +71,34 @@ export default class TimeVaryingTraits extends mixTraits(CatalogMemberTraits) {
     type: "string"
   })
   dateFormat?: string;
+
+  @primitiveTrait({
+    name: "Time Interval",
+    description:
+      "Specify a time interval from the current time (forward or backward, depending on `Is Forward`) that this dataset is available.",
+    type: "number"
+  })
+  interval?: number;
+
+  @primitiveTrait({
+    name: "Time Unit",
+    description:
+      "The time unit for the `Time Interval`. Valid values are <br/>" +
+      " * `year` <br/>" +
+      " * `month` <br/>" +
+      " * `day` <br/>" +
+      " * `hour` <br/>" +
+      " * `minute` <br/>" +
+      " * `second` <br/>",
+    type: "string"
+  })
+  timeUnit?: string;
+
+  @primitiveTrait({
+    name: "Is Forward",
+    description:
+      "If true, the interval is current time forward. Otherwise backward. Default to true (forward).",
+    type: "boolean"
+  })
+  isForward: boolean = true;
 }
