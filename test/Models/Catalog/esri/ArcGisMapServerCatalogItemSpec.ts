@@ -6,6 +6,7 @@ import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import ArcGisMapServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import CommonStrata from "./../../../../lib/Models/Definition/CommonStrata";
+import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 
 configure({
   enforceActions: "observed",
@@ -466,6 +467,119 @@ describe("ArcGisMapServerCatalogItem", function () {
       }
       expect(item.startTime).toBe("2004-11-26T09:43:22.000000000Z");
       expect(item.stopTime).toBe("2019-11-03T14:00:00.000000000Z");
+    });
+
+    it("can load a time-enabled layer with default current time", async function () {
+      runInAction(() => {
+        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item.setTrait(
+          CommonStrata.definition,
+          "url",
+          "http://example.com/cadastre_history/MapServer"
+        );
+      });
+
+      const modelDimensions = {
+        modelDimensions: [
+          {
+            id: "Select time frame",
+            name: "Select time frame",
+            options: [
+              {
+                id: "no time frame",
+                value: {}
+              }
+            ],
+            selectedId: "no time frame"
+          }
+        ]
+      };
+      updateModelFromJson(item, CommonStrata.definition, modelDimensions);
+      await item.loadMapItems();
+      const expectedTimeQueryString = "1572789600000"; // from json file
+      const imageryProvider = item.mapItems[0]
+        .imageryProvider as ArcGisMapServerImageryProvider;
+      expect(imageryProvider.parameters.time).toBe(expectedTimeQueryString);
+    });
+
+    it("can load a time-enabled layer with selected current time and interval", async function () {
+      runInAction(() => {
+        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item.setTrait(
+          CommonStrata.definition,
+          "url",
+          "http://example.com/cadastre_history/MapServer"
+        );
+      });
+
+      const selectedCurrentTimeStr = "2020-01-01";
+      const selectedCurrentTime = new Date(selectedCurrentTimeStr).getTime();
+      const modelDimensions = {
+        modelDimensions: [
+          {
+            id: "Select time frame",
+            name: "Select time frame",
+            options: [
+              {
+                id: "1 year",
+                value: {
+                  interval: 1,
+                  timeUnit: "year",
+                  time: selectedCurrentTime
+                }
+              }
+            ],
+            selectedId: "1 year"
+          }
+        ]
+      };
+      updateModelFromJson(item, CommonStrata.definition, modelDimensions);
+      const toTime =
+        new Date(selectedCurrentTimeStr).getTime() + 365 * 24 * 3600 * 1000;
+      await item.loadMapItems();
+      const expectedTimeQueryString = `${selectedCurrentTime},${toTime}`;
+      const imageryProvider = item.mapItems[0]
+        .imageryProvider as ArcGisMapServerImageryProvider;
+      expect(imageryProvider.parameters.time).toBe(expectedTimeQueryString);
+    });
+
+    it("can load a time-enabled layer with default current time and selected interval", async function () {
+      runInAction(() => {
+        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item.setTrait(
+          CommonStrata.definition,
+          "url",
+          "http://example.com/cadastre_history/MapServer"
+        );
+      });
+      const modelDimensions = {
+        modelDimensions: [
+          {
+            id: "Select time frame",
+            name: "Select time frame",
+            options: [
+              {
+                id: "2 weeks",
+                value: {
+                  interval: 2,
+                  timeUnit: "week",
+                  isForward: false
+                }
+              }
+            ],
+            selectedId: "2 weeks"
+          }
+        ]
+      };
+      updateModelFromJson(item, CommonStrata.definition, modelDimensions);
+      const defaultCurrentTime = 1572789600000; // from json file
+      const twoWeekTime = 14 * 24 * 3600 * 1000;
+      const fromTime = defaultCurrentTime - twoWeekTime;
+      await item.loadMapItems();
+      const expectedTimeQueryString = `${fromTime},${defaultCurrentTime}`;
+      const imageryProvider = item.mapItems[0]
+        .imageryProvider as ArcGisMapServerImageryProvider;
+      expect(imageryProvider.parameters.time).toBe(expectedTimeQueryString);
     });
   });
 

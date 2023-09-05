@@ -400,7 +400,13 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     return result;
   }
 
-  private getTimeIntervalFromDimensions() {
+  private getTimeIntervalFromDimensions(): TimeParams | undefined {
+    if (
+      this.modelDimensions.length < 1 ||
+      this.modelDimensions[0].selectedId === undefined
+    ) {
+      return undefined;
+    }
     const selectedId = this.modelDimensions[0].selectedId;
     if (this.modelDimensions.length < 1 && selectedId === undefined) {
       return undefined;
@@ -412,6 +418,9 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         return undefined;
       }
       const selected = dimOptions[0] as any;
+      const time: string | undefined = selected.value.time
+        ? new Date(selected.value.time).getTime().toString()
+        : undefined;
       const interval: number | undefined = selected.value.interval;
       const timeUnit: string | undefined = selected.value.timeUnit;
       const isForward: boolean = selected.value.isForward;
@@ -423,6 +432,7 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         return undefined;
       } else {
         return {
+          time,
           interval,
           timeUnit,
           isForward
@@ -431,16 +441,29 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     }
   }
 
+  private getCurrentTime(timeParams: TimeParams | undefined) {
+    if (timeParams?.time === undefined) {
+      const dateAsUnix: string | undefined =
+        this.currentDiscreteTimeTag === undefined
+          ? undefined
+          : new Date(this.currentDiscreteTimeTag).getTime().toString();
+
+      return dateAsUnix;
+    } else {
+      return timeParams.time.toString();
+    }
+  }
+
   @computed
   private get _currentImageryParts(): ImageryParts | undefined {
-    const dateAsUnix: string | undefined =
-      this.currentDiscreteTimeTag === undefined
-        ? undefined
-        : new Date(this.currentDiscreteTimeTag).getTime().toString();
-
     const ti = this.getTimeIntervalFromDimensions();
+    // const dateAsUnix: string | undefined =
+    //   this.currentDiscreteTimeTag === undefined
+    //     ? undefined
+    //     : new Date(this.currentDiscreteTimeTag).getTime().toString();
+
     const imageryProvider = this._createImageryProvider({
-      time: dateAsUnix,
+      time: this.getCurrentTime(ti),
       interval: ti?.interval,
       timeUnit: ti?.timeUnit,
       isForward: ti?.isForward
@@ -463,10 +486,9 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
       !this.isPaused &&
       this.nextDiscreteTimeTag
     ) {
-      const dateAsUnix: number = new Date(this.nextDiscreteTimeTag).getTime();
       const ti = this.getTimeIntervalFromDimensions();
       const imageryProvider = this._createImageryProvider({
-        time: dateAsUnix.toString(),
+        time: this.getCurrentTime(ti),
         interval: ti?.interval,
         timeUnit: ti?.timeUnit,
         isForward: ti?.isForward
