@@ -506,11 +506,11 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         interval: number | undefined,
         timeUnit: string | undefined
       ): number | undefined {
-        if (interval === undefined) {
+        if (interval === undefined || timeUnit === undefined) {
           return undefined;
         }
         const msInOneHour = 3600 * 1000;
-        const theUnit = timeUnit ? timeUnit.toLowerCase() : "day";
+        const theUnit = timeUnit.toLowerCase();
         if (theUnit === "year") return interval * 365 * 24 * msInOneHour;
         else if (theUnit === "month") return interval * 30 * 24 * msInOneHour;
         else if (theUnit === "week") return interval * 7 * 24 * msInOneHour;
