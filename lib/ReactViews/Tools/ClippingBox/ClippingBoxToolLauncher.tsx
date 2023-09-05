@@ -17,7 +17,7 @@ const TOOL_NAME = "reposition-clipping-box";
 /**
  * A component that launches the clipping box repositioning tool when it gets
  *  triggerred by the user.
-*/
+ */
 const ClippingBoxToolLauncher: React.FC<PropsType> = observer(
   ({ viewState }) => {
     const item = zoomAndRepositioningEnabled(viewState.terria)
@@ -25,19 +25,20 @@ const ClippingBoxToolLauncher: React.FC<PropsType> = observer(
       : undefined;
 
     const cesium = viewState.terria.cesium;
-    useEffect(function init() {
-      if (!item || !cesium) {
-        return;
-      }
+    useEffect(
+      function init() {
+        if (!item || !cesium) {
+          return;
+        }
 
-      viewState.openTool({
-        toolName: TOOL_NAME,
-        getToolComponent: () => RepositionClippingBox,
-        params: { viewState, item, cesium },
-        showCloseButton: false
-      });
+        viewState.openTool({
+          toolName: TOOL_NAME,
+          getToolComponent: () => RepositionClippingBox,
+          params: { viewState, item, cesium },
+          showCloseButton: false
+        });
 
-      return action(function cleanup() {
+        return action(function cleanup() {
           const currentTool = viewState.currentTool;
           if (
             currentTool &&
@@ -47,8 +48,10 @@ const ClippingBoxToolLauncher: React.FC<PropsType> = observer(
             item.repositionClippingBoxTrigger = false;
             viewState.closeTool();
           }
-      })
-    }, [item, cesium]);
+        });
+      },
+      [item, cesium]
+    );
 
     return null;
   }
@@ -56,13 +59,18 @@ const ClippingBoxToolLauncher: React.FC<PropsType> = observer(
 
 /**
  * Find a workbench item that requires clipping box respositioning
-*/
+ */
 function findItemRequiringRepositioning(
   workbench: Workbench
-): ClippingMixin.Instance & {clippingBoxDrawing: BoxDrawing} | undefined {
+): (ClippingMixin.Instance & { clippingBoxDrawing: BoxDrawing }) | undefined {
   return workbench.items.find(
-    (it) => ClippingMixin.isMixedInto(it) && it.clippingBoxDrawing && it.repositionClippingBoxTrigger
-  ) as ClippingMixin.Instance & {clippingBoxDrawing: BoxDrawing} | undefined;
+    (it) =>
+      ClippingMixin.isMixedInto(it) &&
+      it.clippingBoxDrawing &&
+      it.repositionClippingBoxTrigger
+  ) as
+    | (ClippingMixin.Instance & { clippingBoxDrawing: BoxDrawing })
+    | undefined;
 }
 
 export default ClippingBoxToolLauncher;
