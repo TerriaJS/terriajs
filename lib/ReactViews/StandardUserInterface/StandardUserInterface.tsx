@@ -2,7 +2,7 @@ import classNames from "classnames";
 import "inobounce";
 import { action } from "mobx";
 import { observer } from "mobx-react";
-import React, { useEffect, ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { DefaultTheme } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
@@ -31,10 +31,12 @@ import FullScreenButton from "../SidePanel/FullScreenButton";
 import SidePanel from "../SidePanel/SidePanel";
 import StoryBuilder from "../Story/StoryBuilder";
 import StoryPanel from "../Story/StoryPanel/StoryPanel";
+import ClippingBoxToolLauncher from "../Tools/ClippingBox/ClippingBoxToolLauncher";
 import Tool from "../Tools/Tool";
 import TourPortal from "../Tour/TourPortal";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
 import SelectableDimensionWorkflow from "../Workflow/SelectableDimensionWorkflow";
+import WorkflowPanelPortal from "../Workflow/WorkflowPanelPortal";
 import ContextProviders from "./ContextProviders";
 import { GlobalTerriaStyles } from "./GlobalTerriaStyles";
 import MapColumn from "./MapColumn";
@@ -42,7 +44,6 @@ import processCustomElements from "./processCustomElements";
 import SidePanelContainer from "./SidePanelContainer";
 import Styles from "./standard-user-interface.scss";
 import { terriaTheme } from "./StandardTheme";
-import WorkflowPanelPortal from "../Workflow/WorkflowPanelPortal";
 
 export const animationDuration = 250;
 
@@ -306,6 +307,7 @@ const StandardUserInterface: React.FC<StandardUserInterfaceProps> = observer(
             closeCallback={() => props.viewState.setPrintWindow(null)}
           />
         )}
+        <ClippingBoxToolLauncher viewState={props.viewState} />
       </ContextProviders>
     );
   }

@@ -404,6 +404,19 @@ export default class BoxDrawing {
   })();
 
   /**
+   * Set the box position
+   */
+  setPosition(position: Cartesian3) {
+    const moveStep = Cartesian3.subtract(
+      position,
+      this.trs.translation,
+      new Cartesian3()
+    );
+    this.moveBoxWithClamping(moveStep);
+    this.updateBox();
+  }
+
+  /**
    * Update the terrain height estimate at the current box position.
    *
    * If the terrainProvider is the `EllipsoidTerrainProvider` this simply sets

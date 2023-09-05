@@ -2,11 +2,10 @@ import i18next from "i18next";
 import {
   action,
   computed,
-  toJS,
   makeObservable,
+  observable,
   override,
-  runInAction,
-  observable
+  toJS
 } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -32,6 +31,7 @@ import SelectableDimensions, {
   SelectableDimension,
   SelectableDimensionCheckboxGroup
 } from "../Models/SelectableDimensions/SelectableDimensions";
+import { zoomAndRepositioningEnabled } from "../ReactViews/Tools/ClippingBox/featureFlags";
 import Icon from "../Styled/Icon";
 import ClippingPlanesTraits from "../Traits/TraitsClasses/ClippingPlanesTraits";
 import HeadingPitchRollTraits from "../Traits/TraitsClasses/HeadingPitchRollTraits";
@@ -40,7 +40,7 @@ import LatLonHeightTraits from "../Traits/TraitsClasses/LatLonHeightTraits";
 type BaseType = Model<ClippingPlanesTraits> & SelectableDimensions;
 
 function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
-  abstract class ClippingMixin extends Base {
+  abstract class ClippingMixinBase extends Base {
     private _clippingBoxDrawing?: BoxDrawing;
 
     /**
@@ -49,6 +49,12 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     @observable
     _isZoomingToClippingBox: boolean = false;
 
+    /**
+     * A trigger for activating the clipping box repositioning UI for this item.
+     */
+    @observable
+    repositionClippingBoxTrigger = false;
+
     abstract clippingPlanesOriginMatrix(): Matrix4;
 
     private clippingPlaneModelMatrix: Matrix4 = Matrix4.IDENTITY.clone();
@@ -56,6 +62,10 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     constructor(...args: any[]) {
       super(...args);
       makeObservable(this);
+    }
+
+    get hasClippingMixin() {
+      return true;
     }
 
     @computed
@@ -147,7 +157,7 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @computed
-    private get clippingBoxDrawing(): BoxDrawing | undefined {
+    get clippingBoxDrawing(): BoxDrawing | undefined {
       const options = this.clippingBox;
       const cesium = this.terria.cesium;
       if (
@@ -354,23 +364,7 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
               this.clippingBox.setTrait(stratumId, "clipDirection", value);
             }
           },
-          {
-            // Button to zoom to clipping box
-            id: "zoom-to-clipping-box-button",
-            type: "button",
-            value: "Zoom to clipping box",
-            icon: this._isZoomingToClippingBox
-              ? "spinner"
-              : Icon.GLYPHS.geolocation,
-            disable:
-              this.clippingBox.clipModel === false ||
-              this.clippingBoxDrawing === undefined,
-            setDimensionValue: () => {
-              if (!this._isZoomingToClippingBox) {
-                this._zoomToClippingBox();
-              }
-            }
-          }
+          ...this.repositioningAndZoomingDimensions
         ];
 
       return [
@@ -393,13 +387,79 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           setDimensionValue: action((stratumId, value) => {
             const clipModel = value === "true";
             this.clippingBox.setTrait(stratumId, "clipModel", clipModel);
-            if (clipModel) {
-              this._zoomToClippingBox();
+
+            // Trigger clipping box repositioning UI if the feature is enabled
+            // and a box position is not already set.
+            const triggerClippingBoxRepositioning =
+              zoomAndRepositioningEnabled(this.terria) &&
+              this.clippingBox.position.longitude === undefined;
+
+            if (triggerClippingBoxRepositioning) {
+              this.repositionClippingBoxTrigger = true;
             }
           }),
           selectableDimensions: checkboxGroupInputs
         }
       ];
+    }
+
+    /**
+     * Returns controls for repositioning and zooming to clipping box. Note
+     * that these are temporary features that are enabled through a feature
+     * flag. It will get removed once we switch to a new design for a global
+     * clipping box.
+     */
+    @computed
+    private get repositioningAndZoomingDimensions(): SelectableDimensionCheckboxGroup["selectableDimensions"] {
+      if (!zoomAndRepositioningEnabled(this.terria)) {
+        return [];
+      }
+
+      const repositioningAndZoomingInputs: SelectableDimensionCheckboxGroup["selectableDimensions"] =
+        [
+          {
+            // Button to zoom to clipping box
+            id: "zoom-to-clipping-box-button",
+            type: "button",
+            value: "Zoom to clipping box&nbsp;&nbsp;&nbsp;&nbsp;",
+            icon: this._isZoomingToClippingBox
+              ? "spinner"
+              : Icon.GLYPHS.geolocation,
+            disable:
+              this.clippingBox.clipModel === false ||
+              this.clippingBoxDrawing === undefined,
+            setDimensionValue: () => {
+              if (!this._isZoomingToClippingBox) {
+                this._zoomToClippingBox();
+              }
+            }
+          },
+          {
+            id: "reposition-clipping-box",
+            type: "button",
+            value: "Reposition clipping box",
+            icon: Icon.GLYPHS.cube,
+            disable:
+              this.clippingBox.clipModel === false ||
+              this.clippingBoxDrawing === undefined,
+            setDimensionValue: action(() => {
+              // Disable repositioning tool if already active
+              if (this.repositionClippingBoxTrigger) {
+                this.repositionClippingBoxTrigger = false;
+                return;
+              }
+
+              // Enable repositioning tool, but first disable it for other workbench items
+              this.terria.workbench.items.forEach((it) => {
+                if (ClippingMixin.isMixedInto(it)) {
+                  it.repositionClippingBoxTrigger = false;
+                }
+              });
+              this.repositionClippingBoxTrigger = true;
+            })
+          }
+        ];
+      return repositioningAndZoomingInputs;
     }
 
     /**
@@ -433,7 +493,7 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
   }
 
-  return ClippingMixin;
+  return ClippingMixinBase;
 }
 
 /**
@@ -464,6 +524,15 @@ function zoomToDataSourceWithTimeout(
       );
       runLater(removeListener, timeoutMilliseconds).then(reject);
     });
+  }
+}
+
+namespace ClippingMixin {
+  export interface Instance
+    extends InstanceType<ReturnType<typeof ClippingMixin>> {}
+
+  export function isMixedInto(model: any): model is Instance {
+    return model?.hasClippingMixin === true;
   }
 }
 
