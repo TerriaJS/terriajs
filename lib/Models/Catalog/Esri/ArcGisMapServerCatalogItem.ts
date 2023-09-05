@@ -328,7 +328,7 @@ class MapServerStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(MapServerStratum.stratumName);
 
-interface TimeParms {
+interface TimeParams {
   time: string | undefined;
   interval: number | undefined;
   timeUnit: string | undefined;
@@ -492,7 +492,7 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
 
   private _createImageryProvider = createTransformerAllowUndefined(
     (
-      timeParams: TimeParms | undefined
+      timeParams: TimeParams | undefined
     ): ArcGisMapServerImageryProvider | undefined => {
       const stratum = <MapServerStratum>(
         this.strata.get(MapServerStratum.stratumName)
