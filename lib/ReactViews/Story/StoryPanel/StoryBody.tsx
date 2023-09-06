@@ -46,7 +46,7 @@ const StoryContainer = styled(Box).attrs((props: { isCollapsed: boolean }) => ({
   }
 `;
 
-function areSourcesAllowed(story: Story) {
+function sourcesAreAllowed(story: Story) {
   let result = true;
   const parser = new DOMParser();
   const parsedDocument = parser.parseFromString(story.text, "text/html");
@@ -61,7 +61,7 @@ function areSourcesAllowed(story: Story) {
 }
 
 function sourceBasedParse(story: Story) {
-  if (areSourcesAllowed(story)) {
+  if (sourcesAreAllowed(story)) {
     return parseCustomHtmlToReact(
       story.text,
       { showExternalLinkWarning: true },
