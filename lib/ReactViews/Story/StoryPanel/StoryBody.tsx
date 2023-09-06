@@ -4,7 +4,6 @@ import parseCustomHtmlToReact from "../../Custom/parseCustomHtmlToReact";
 import styled from "styled-components";
 import Box from "../../../Styled/Box";
 import Text from "../../../Styled/Text";
-import URI from "urijs";
 
 const StoryContainer = styled(Box).attrs((props: { isCollapsed: boolean }) => ({
   paddedVertically: props.isCollapsed ? 0 : 2,
