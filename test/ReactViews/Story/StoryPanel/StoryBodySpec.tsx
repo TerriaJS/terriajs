@@ -49,7 +49,7 @@ describe("StoryBody", function () {
     const theStory = {
       id: "some id",
       title: "test",
-      text: 'Story with video. <iframe src="https://www.youtube.com/embed/ title="My Title" width="560" height="315""></iframe> <iframe src="https://some.video.link" width="560" height="315" "></iframe>'
+      text: 'Story with video. <iframe src="https://www.youtube.com/embed/1234" width="560" height="315"></iframe><iframe src="https://some.video.link" width="560" height="315"></iframe>'
     };
 
     act(() => {
