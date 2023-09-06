@@ -69,4 +69,28 @@ describe("StoryBody", function () {
     expect(theInstance.children.length === 1);
     expect(theInstance.children[0] as string).toEqual("Story with video. ");
   });
+  it("should not add iframe tag if there is no iframe in the story text", function () {
+    const theStory = {
+      id: "some id",
+      title: "test",
+      text: 'Story with video. <iframe2 src="https://www.youtube.com/embed/1234" width="560" height="315"></iframe2>'
+    };
+
+    act(() => {
+      testRenderer = create(<StoryBody isCollapsed={false} story={theStory} />);
+    });
+
+    const storyBody = testRenderer.root.findAllByType(StoryBody);
+    expect(storyBody.length === 1);
+
+    const theInstance = (
+      (
+        (storyBody[0].children[0] as ReactTestInstance)
+          .children[0] as ReactTestInstance
+      ).children[0] as ReactTestInstance
+    ).children[0] as ReactTestInstance;
+
+    expect(theInstance.children.length === 1);
+    expect(theInstance.children[0] as string).toEqual("Story with video. ");
+  });
 });

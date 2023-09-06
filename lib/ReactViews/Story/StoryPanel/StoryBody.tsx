@@ -46,11 +46,12 @@ const StoryContainer = styled(Box).attrs((props: { isCollapsed: boolean }) => ({
   }
 `;
 
-function sourcesAreAllowed(story: Story) {
-  let result = true;
+function shouldAddIframeTag(story: Story) {
   const parser = new DOMParser();
   const parsedDocument = parser.parseFromString(story.text, "text/html");
   const iframes = parsedDocument.getElementsByTagName("iframe");
+  if (iframes.length < 1) return false;
+  let result = true;
   for (let iframe of iframes) {
     if (!iframe.src?.startsWith("https://www.youtube.com/embed/")) {
       result = false;
@@ -61,7 +62,7 @@ function sourcesAreAllowed(story: Story) {
 }
 
 function sourceBasedParse(story: Story) {
-  if (sourcesAreAllowed(story)) {
+  if (shouldAddIframeTag(story)) {
     return parseCustomHtmlToReact(
       story.text,
       { showExternalLinkWarning: true },
