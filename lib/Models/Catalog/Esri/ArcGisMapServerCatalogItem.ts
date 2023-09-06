@@ -329,7 +329,7 @@ class MapServerStratum extends LoadableStratum(
 StratumOrder.addLoadStratum(MapServerStratum.stratumName);
 
 interface TimeParams {
-  time: string | undefined;
+  currentTime: number | undefined;
   interval: number | undefined;
   timeUnit: string | undefined;
   isForward: boolean | undefined;
@@ -400,7 +400,7 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     return result;
   }
 
-  private getTimeParamsFromDimensions(): TimeParams | undefined {
+  private getIntervalParamsFromDimensions() {
     if (
       this.modelDimensions.length < 1 ||
       this.modelDimensions[0].selectedId === undefined
@@ -418,9 +418,6 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         return undefined;
       }
       const selected = dimOptions[0] as any;
-      const time: string | undefined = selected.value.time
-        ? new Date(selected.value.time).getTime().toString()
-        : undefined;
       const interval: number | undefined = selected.value.interval;
       const timeUnit: string | undefined = selected.value.timeUnit;
       const isForward: boolean = selected.value.isForward;
@@ -432,7 +429,6 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         return undefined;
       } else {
         return {
-          time,
           interval,
           timeUnit,
           isForward
@@ -441,28 +437,25 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     }
   }
 
-  private getCurrentTime(timeParams: TimeParams | undefined) {
-    if (timeParams?.time === undefined) {
-      const dateAsUnix: string | undefined =
-        this.currentDiscreteTimeTag === undefined
-          ? undefined
-          : new Date(this.currentDiscreteTimeTag).getTime().toString();
+  private getCurrentTime() {
+    const dateAsUnix: number | undefined =
+      this.currentDiscreteTimeTag === undefined
+        ? undefined
+        : new Date(this.currentDiscreteTimeTag).getTime();
+    return dateAsUnix;
+  }
 
-      return dateAsUnix;
-    } else {
-      return timeParams.time.toString();
-    }
+  private getTimeParams(): TimeParams {
+    const intervalParams = this.getIntervalParamsFromDimensions();
+    const currentTime = this.getCurrentTime();
+    const timeParams = { currentTime, ...intervalParams } as TimeParams;
+    return timeParams;
   }
 
   @computed
   private get _currentImageryParts(): ImageryParts | undefined {
-    const timeParams = this.getTimeParamsFromDimensions();
-    const imageryProvider = this._createImageryProvider({
-      time: this.getCurrentTime(timeParams),
-      interval: timeParams?.interval,
-      timeUnit: timeParams?.timeUnit,
-      isForward: timeParams?.isForward
-    });
+    const timeParams = this.getTimeParams();
+    const imageryProvider = this._createImageryProvider(timeParams);
     if (imageryProvider === undefined) {
       return undefined;
     }
@@ -481,13 +474,8 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
       !this.isPaused &&
       this.nextDiscreteTimeTag
     ) {
-      const timeParams = this.getTimeParamsFromDimensions();
-      const imageryProvider = this._createImageryProvider({
-        time: this.getCurrentTime(timeParams),
-        interval: timeParams?.interval,
-        timeUnit: timeParams?.timeUnit,
-        isForward: timeParams?.isForward
-      });
+      const timeParams = this.getTimeParams();
+      const imageryProvider = this._createImageryProvider(timeParams);
       if (imageryProvider === undefined) {
         return undefined;
       }
@@ -538,8 +526,8 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         else return undefined;
       }
 
-      function getTimeQueryString(
-        currentTime: string,
+      function getIntervalQueryString(
+        currentTime: number,
         interval: number,
         isForward: boolean = true
       ) {
@@ -553,14 +541,14 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
       }
 
       const params: any = Object.assign({}, this.parameters);
-      const currentTime = timeParams?.time;
+      const currentTime = timeParams?.currentTime;
       if (currentTime !== undefined) {
         const interval = intervalInMs(
           timeParams?.interval,
           timeParams?.timeUnit
         );
         if (interval !== undefined) {
-          params.time = getTimeQueryString(
+          params.time = getIntervalQueryString(
             currentTime,
             interval,
             timeParams?.isForward

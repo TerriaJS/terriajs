@@ -469,7 +469,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       expect(item.stopTime).toBe("2019-11-03T14:00:00.000000000Z");
     });
 
-    it("can load a time-enabled layer with default current time", async function () {
+    it("can load a time-enabled layer without interval specified by model dimensions", async function () {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
         item.setTrait(
@@ -479,30 +479,30 @@ describe("ArcGisMapServerCatalogItem", function () {
         );
       });
 
-      const modelDimensions = {
+      const modelJson = {
         modelDimensions: [
           {
-            id: "Select time frame",
-            name: "Select time frame",
+            id: "Select time interval",
+            name: "Select time interval",
             options: [
               {
-                id: "no time frame",
+                id: "no time interval",
                 value: {}
               }
             ],
-            selectedId: "no time frame"
+            selectedId: "no time interval"
           }
         ]
       };
-      updateModelFromJson(item, CommonStrata.definition, modelDimensions);
+      updateModelFromJson(item, CommonStrata.definition, modelJson);
       await item.loadMapItems();
-      const expectedTimeQueryString = "1572789600000"; // from json file
+      const expectedTimeQueryString = 1572789600000; // from json file
       const imageryProvider = item.mapItems[0]
         .imageryProvider as ArcGisMapServerImageryProvider;
       expect(imageryProvider.parameters.time).toBe(expectedTimeQueryString);
     });
 
-    it("can load a time-enabled layer with selected current time and interval", async function () {
+    it("can load a time-enabled layer with current time and forward interval specified by model dimensions", async function () {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
         item.setTrait(
@@ -511,39 +511,36 @@ describe("ArcGisMapServerCatalogItem", function () {
           "http://example.com/cadastre_history/MapServer"
         );
       });
-
-      const selectedCurrentTimeStr = "2020-01-01";
-      const selectedCurrentTime = new Date(selectedCurrentTimeStr).getTime();
-      const modelDimensions = {
+      const modelJson = {
         modelDimensions: [
           {
-            id: "Select time frame",
-            name: "Select time frame",
+            id: "Select time interval",
+            name: "Select time interval",
             options: [
               {
-                id: "1 year",
+                id: "2 weeks",
                 value: {
-                  interval: 1,
-                  timeUnit: "year",
-                  time: selectedCurrentTime
+                  interval: 2,
+                  timeUnit: "week"
                 }
               }
             ],
-            selectedId: "1 year"
+            selectedId: "2 weeks"
           }
         ]
       };
-      updateModelFromJson(item, CommonStrata.definition, modelDimensions);
-      const toTime =
-        new Date(selectedCurrentTimeStr).getTime() + 365 * 24 * 3600 * 1000;
+      updateModelFromJson(item, CommonStrata.definition, modelJson);
+      const defaultCurrentTime = 1572789600000; // from json file
+      const twoWeekTime = 14 * 24 * 3600 * 1000;
+      const toTime = defaultCurrentTime + twoWeekTime;
       await item.loadMapItems();
-      const expectedTimeQueryString = `${selectedCurrentTime},${toTime}`;
+      const expectedTimeQueryString = `${defaultCurrentTime},${toTime}`;
       const imageryProvider = item.mapItems[0]
         .imageryProvider as ArcGisMapServerImageryProvider;
       expect(imageryProvider.parameters.time).toBe(expectedTimeQueryString);
     });
 
-    it("can load a time-enabled layer with default current time and selected interval", async function () {
+    it("can load a time-enabled layer with current time and backward interval specified by model iimensions", async function () {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
         item.setTrait(
@@ -552,11 +549,11 @@ describe("ArcGisMapServerCatalogItem", function () {
           "http://example.com/cadastre_history/MapServer"
         );
       });
-      const modelDimensions = {
+      const modelJson = {
         modelDimensions: [
           {
-            id: "Select time frame",
-            name: "Select time frame",
+            id: "Select time interval",
+            name: "Select time interval",
             options: [
               {
                 id: "2 weeks",
@@ -571,7 +568,7 @@ describe("ArcGisMapServerCatalogItem", function () {
           }
         ]
       };
-      updateModelFromJson(item, CommonStrata.definition, modelDimensions);
+      updateModelFromJson(item, CommonStrata.definition, modelJson);
       const defaultCurrentTime = 1572789600000; // from json file
       const twoWeekTime = 14 * 24 * 3600 * 1000;
       const fromTime = defaultCurrentTime - twoWeekTime;
