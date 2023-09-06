@@ -46,38 +46,17 @@ const StoryContainer = styled(Box).attrs((props: { isCollapsed: boolean }) => ({
   }
 `;
 
-const allowedStoryBodyIframeSources = ["https://www.youtube.com"];
-
-function extractIframeSources(text: string): string[] {
-  const startString = '<iframe src="';
-  const endString = " ";
-  const regexPattern = new RegExp(`${startString}(.*?)${endString}`, "g");
-  const matches = text.match(regexPattern);
-  const sources = [];
-
-  if (matches) {
-    for (const match of matches) {
-      const substring = match.substring(
-        startString.length,
-        match.length - endString.length
-      );
-      const uri = new URI(substring);
-      sources.push(uri.protocol() + "://" + uri.hostname());
+function areSourcesAllowed(story: Story) {
+  let result = true;
+  const parser = new DOMParser();
+  const parsedDocument = parser.parseFromString(story.text, "text/html");
+  const iframes = parsedDocument.getElementsByTagName("iframe");
+  for (let iframe of iframes) {
+    if (!iframe.src?.startsWith("https://www.youtube.com/embed/")) {
+      result = false;
+      break;
     }
   }
-
-  return sources;
-}
-
-function areSourcesAllowed(story: Story) {
-  const text = story.text;
-  const sources = extractIframeSources(text);
-  let result = true;
-  for (let source of sources) {
-    if (!allowedStoryBodyIframeSources.includes(source)) result = false;
-    break;
-  }
-
   return result;
 }
 
