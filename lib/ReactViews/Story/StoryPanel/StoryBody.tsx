@@ -4,6 +4,7 @@ import parseCustomHtmlToReact from "../../Custom/parseCustomHtmlToReact";
 import styled from "styled-components";
 import Box from "../../../Styled/Box";
 import Text from "../../../Styled/Text";
+import URI from "urijs";
 
 const StoryContainer = styled(Box).attrs((props: { isCollapsed: boolean }) => ({
   paddedVertically: props.isCollapsed ? 0 : 2,
@@ -45,6 +46,61 @@ const StoryContainer = styled(Box).attrs((props: { isCollapsed: boolean }) => ({
   }
 `;
 
+const allowedStoryBodyIframeSources = ["https://www.youtube.com"];
+
+function extractIframeSources(text: string): string[] {
+  const startString = '<iframe src="';
+  const endString = " ";
+  const regexPattern = new RegExp(`${startString}(.*?)${endString}`, "g");
+  const matches = text.match(regexPattern);
+  const sources = [];
+
+  if (matches) {
+    for (const match of matches) {
+      const substring = match.substring(
+        startString.length,
+        match.length - endString.length
+      );
+      const uri = new URI(substring);
+      sources.push(uri.protocol() + "://" + uri.hostname());
+    }
+  }
+
+  return sources;
+}
+
+function areSourcesAllowed(story: Story) {
+  const text = story.text;
+  const sources = extractIframeSources(text);
+  let result = true;
+  for (let source of sources) {
+    if (!allowedStoryBodyIframeSources.includes(source)) result = false;
+    break;
+  }
+
+  return result;
+}
+
+function sourceBasedParse(story: Story) {
+  if (areSourcesAllowed(story)) {
+    return parseCustomHtmlToReact(
+      story.text,
+      { showExternalLinkWarning: true },
+      false,
+      {
+        ADD_TAGS: ["iframe"]
+      }
+    );
+  } else {
+    return parseCustomHtmlToReact(
+      story.text,
+      { showExternalLinkWarning: true },
+      false,
+      {}
+    );
+  }
+}
+
 const StoryBody = ({
   isCollapsed,
   story
@@ -63,14 +119,7 @@ const StoryBody = ({
           `}
           medium
         >
-          {parseCustomHtmlToReact(
-            story.text,
-            { showExternalLinkWarning: true },
-            false,
-            {
-              ADD_TAGS: ["iframe"]
-            }
-          )}
+          {sourceBasedParse(story)}
         </Text>
       </StoryContainer>
     ) : null}

@@ -10,11 +10,12 @@ import {
 describe("StoryBody", function () {
   let testRenderer: ReactTestRenderer;
 
-  it("should include embedded media using iframe tag", function () {
+  it("should include embedded media using iframe tag with allowed source", function () {
+    // Story editor will only save embedded video with source, width and height.
     const theStory = {
       id: "some id",
       title: "test",
-      text: 'Story with video. <iframe title="My Title" width="560" height="315" src="https://some.video.link"></iframe>'
+      text: 'Story with video. <iframe src="https://www.youtube.com/embed/1234" width="560" height="315"></iframe>'
     };
 
     act(() => {
@@ -37,17 +38,18 @@ describe("StoryBody", function () {
 
     const theIframeInstance = theInstance.children[1] as ReactTestInstance;
     expect(theIframeInstance.type).toBe("iframe");
-    expect(theIframeInstance.props.title).toBe("My Title");
-    expect(theIframeInstance.props.src).toBe("https://some.video.link");
+    expect(theIframeInstance.props.src).toBe(
+      "https://www.youtube.com/embed/1234"
+    );
     expect(theIframeInstance.props.width).toBe("560");
     expect(theIframeInstance.props.height).toBe("315");
   });
 
-  it("should exclude embedded media using unsafe tag", function () {
+  it("should exclude embedded media using iframe tag with any forbidden sources", function () {
     const theStory = {
       id: "some id",
       title: "test",
-      text: 'Story with video. <iframe2 width="560" height="315" src="https://some.video.link"></iframe2>'
+      text: 'Story with video. <iframe src="https://www.youtube.com/embed/ title="My Title" width="560" height="315""></iframe> <iframe src="https://some.video.link" width="560" height="315" "></iframe>'
     };
 
     act(() => {
