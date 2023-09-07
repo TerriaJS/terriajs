@@ -1,5 +1,9 @@
 # Change Log
 
+#### next release (8.3.4)
+
+- [The next improvement]
+
 #### next release (8.3.3)
 
 - Fixed broken point dragging interaction for user drawing in 3D mode.
