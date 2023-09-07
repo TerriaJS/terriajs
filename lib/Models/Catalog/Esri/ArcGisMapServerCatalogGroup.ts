@@ -49,6 +49,7 @@ export class MapServerStratum extends LoadableStratum(
     ) as this;
   }
 
+  /** returns an array of the parent layers id's */
   findParentLayers(layerId: number): number[] {
     const parentLayerIds: number[] = [];
     const layer = this.layers.find((l) => l.id === layerId);
@@ -201,12 +202,13 @@ export class MapServerStratum extends LoadableStratum(
       return;
     }
     const id = this._catalogGroup.uniqueId;
-    //if parent layer is not -1 then this is sublayer so we define its ID like that
-    let layerId =
-      id +
-      "/" +
-      (layer.parentLayerId !== -1 ? layer.parentLayerId + "/" : "") +
-      layer.id;
+    let layerId = id + "/" + layer.id;
+
+    const parentLayers = this.findParentLayers(layer.id);
+
+    if (parentLayers.length > 0) {
+      layerId = id + "/" + parentLayers.reverse().join("/");
+    }
 
     let model: ArcGisMapServerCatalogItem | ArcGisMapServerCatalogGroup;
 
@@ -235,12 +237,6 @@ export class MapServerStratum extends LoadableStratum(
       );
 
       if (existingModel === undefined) {
-        const parentLayers = this.findParentLayers(layer.id);
-
-        if (parentLayers.length > 0) {
-          layerId = id + "/" + parentLayers.reverse().join("/");
-        }
-
         model = new ArcGisMapServerCatalogItem(
           layerId,
           this._catalogGroup.terria
