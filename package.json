@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "8.3.1",
+  "version": "8.3.3",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
@@ -15,14 +15,14 @@
     "@types/node": "^18.15.11"
   },
   "dependencies": {
-    "@babel/core": "^7.16.0",
-    "@babel/parser": "^7.12.14",
+    "@babel/core": "^7.22.9",
+    "@babel/parser": "^7.22.7",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
-    "@babel/plugin-proposal-decorators": "^7.10.4",
+    "@babel/plugin-proposal-decorators": "^7.22.7",
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
-    "@babel/preset-env": "^7.10.4",
-    "@babel/preset-react": "^7.0.0",
-    "@babel/preset-typescript": "^7.10.4",
+    "@babel/preset-env": "^7.22.9",
+    "@babel/preset-react": "^7.22.5",
+    "@babel/preset-typescript": "^7.22.5",
     "@mapbox/geojson-merge": "^1.1.1",
     "@mapbox/point-geometry": "^0.1.0",
     "@mapbox/togeojson": "^0.16.0",

@@ -42,12 +42,12 @@ An init file is a [JSON file](https://en.wikipedia.org/wiki/JSON) with this basi
 
 Key points:
 
-- `catalog` is an array.
-- Every element of that array must have a `type` (corresponding to a value recognised by TerriaJS) and a `name`.
-- The three major categories of catalog member types are:
-  - [Catalog Group](../connecting-to-data/catalog-groups.md): A group (folder) of items. Different group types allow the contents to be manually specified or to be automatically determined by querying various types of server.
-  - [Catalog Item](../connecting-to-data/catalog-items.md): Actual geospatial or chart data from a file or service, in various formats.
-  - [(Docs not yet available) Catalog Function](../connecting-to-data/catalog-functions.md): A parameterized service, such as a Web Processing Service (WPS). The user supplies the parameters and gets back some result.
+-   `catalog` is an array.
+-   Every element of that array must have a `type` (corresponding to a value recognised by TerriaJS) and a `name`.
+-   The three major categories of catalog member types are:
+    -   [Catalog Group](../connecting-to-data/catalog-groups.md): A group (folder) of items. Different group types allow the contents to be manually specified or to be automatically determined by querying various types of server.
+    -   [Catalog Item](../connecting-to-data/catalog-items.md): Actual geospatial or chart data from a file or service, in various formats.
+    -   [(Docs not yet available) Catalog Function](../connecting-to-data/catalog-functions.md): A parameterized service, such as a Web Processing Service (WPS). The user supplies the parameters and gets back some result.
 
 Most of the other properties of each layer depend on the specific type. See the links above for details of each type.
 
@@ -56,7 +56,7 @@ Most of the other properties of each layer depend on the specific type. See the 
 There are four ways to load an init file into a TerriaJS application:
 
 1. Store it in Terria Map's `wwwroot/init` directory, and refer to it in the `initializationUrls` section of the [`config.json`](../customizing/client-side-config.md) file. It is loaded automatically when you visit the webpage. This is how `wwwroot/init/terria.json` is loaded in the default TerriaMap setup.
-2. Store it in Terria Maps's `wwwroot/init` directory, without adding it to config.json. Add the init file name (without `.json`) to the URL after `#`. For instance, `example.com/terria#mycatalog`. See [Controlling with URL Parameters](../deploying/controlling-with-url-parameters.md) for more information. This method is useful when developing a catalog that is not quite ready for public access, but it is helpful to show it to interested stakeholders.
+2. Store it in Terria Maps's `wwwroot/init` directory, without adding it to config.json. Add the init file name (without `.json`) to the URL after `#`. For instance, `terria.example.com/#mycatalog`. See [Controlling with URL Parameters](../deploying/controlling-with-url-parameters.md) for more information. This method is useful when developing a catalog that is not quite ready for public access, but it is helpful to show it to interested stakeholders.
 3. Store it anywhere on the web (on a [CORS-enabled](../connecting-to-data/cross-origin-resource-sharing.md) server). Add the complete URL (including `.json`) to the URL, after `#`. For instance, `http://nationalmap.gov.au/#http://example.com/mycatalog.json`. This method is useful when developing services for a TerriaJS instance which you don't directly control, and for rapidly previewing changes which you can also share with people.
 4. Store it locally, then drag and drop it into the Terria Map window.
 
