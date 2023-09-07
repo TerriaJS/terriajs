@@ -523,10 +523,9 @@ class WebMapServiceCatalogItem
         parameters.COLORSCALERANGE = this.colorScaleRange;
       }
 
-      if (isDefined(this.styles)) {
-        parameters.styles = this.styles;
-        getFeatureInfoParameters.styles = this.styles;
-      }
+      // Styles parameter is mandatory (for GetMap and GetFeatureInfo requests), but can be empty string to use default style
+      parameters.styles = this.styles ?? "";
+      getFeatureInfoParameters.styles = this.styles ?? "";
 
       Object.assign(parameters, diffModeParameters);
 
