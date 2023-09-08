@@ -9,6 +9,8 @@
 - Fixed broken point dragging interaction for user drawing in 3D mode.
 - Fixed rectangle drawing in 2D mode.
 - Added EPSG:7855 to `Proj4Definitions`.
+- Fix multi level nesting in ArcGIS Mapserver.
+- [The next improvement]
 
 #### 8.3.2 - 2023-08-11
 
