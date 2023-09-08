@@ -330,9 +330,8 @@ StratumOrder.addLoadStratum(MapServerStratum.stratumName);
 
 interface TimeParams {
   currentTime: number | undefined;
-  interval: number | undefined;
+  timeWindowDuration: number | undefined;
   timeUnit: string | undefined;
-  isForward: boolean | undefined;
 }
 
 export default class ArcGisMapServerCatalogItem extends UrlMixin(
@@ -400,7 +399,7 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     return result;
   }
 
-  private getIntervalParamsFromDimensions() {
+  private getTimeWindowDurationFromDimensions() {
     if (
       this.modelDimensions.length < 1 ||
       this.modelDimensions[0].selectedId === undefined
@@ -418,20 +417,20 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         return undefined;
       }
       const selected = dimOptions[0] as any;
-      const interval: number | undefined = selected.value.interval;
+      const timeWindowDuration: number | undefined =
+        selected.value.timeWindowDuration;
       const timeUnit: string | undefined = selected.value.timeUnit;
-      const isForward: boolean = selected.value.isForward;
+
       if (
         selected === undefined ||
-        interval === undefined ||
+        timeWindowDuration === undefined ||
         timeUnit === undefined
       ) {
         return undefined;
       } else {
         return {
-          interval,
-          timeUnit,
-          isForward
+          timeWindowDuration,
+          timeUnit
         };
       }
     }
@@ -446,9 +445,9 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
   }
 
   private getTimeParams(): TimeParams {
-    const intervalParams = this.getIntervalParamsFromDimensions();
+    const timeWindowDuration = this.getTimeWindowDurationFromDimensions();
     const currentTime = this.getCurrentTime();
-    const timeParams = { currentTime, ...intervalParams } as TimeParams;
+    const timeParams = { currentTime, ...timeWindowDuration } as TimeParams;
     return timeParams;
   }
 
@@ -507,52 +506,48 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         return;
       }
 
-      function intervalInMs(
-        interval: number | undefined,
+      function windowDurationInMs(
+        windowDuration: number | undefined,
         timeUnit: string | undefined
       ): number | undefined {
-        if (interval === undefined || timeUnit === undefined) {
+        if (windowDuration === undefined || timeUnit === undefined) {
           return undefined;
         }
         const msInOneHour = 3600 * 1000;
         const theUnit = timeUnit.toLowerCase();
-        if (theUnit === "year") return interval * 365 * 24 * msInOneHour;
-        else if (theUnit === "month") return interval * 30 * 24 * msInOneHour;
-        else if (theUnit === "week") return interval * 7 * 24 * msInOneHour;
-        else if (theUnit === "day") return interval * 24 * msInOneHour;
-        else if (theUnit === "hour") return interval * msInOneHour;
-        else if (theUnit === "minute") return interval * 60 * 1000;
-        else if (theUnit === "second") return interval * 1000;
+        if (theUnit === "year") return windowDuration * 365 * 24 * msInOneHour;
+        else if (theUnit === "month")
+          return windowDuration * 30 * 24 * msInOneHour;
+        else if (theUnit === "week")
+          return windowDuration * 7 * 24 * msInOneHour;
+        else if (theUnit === "day") return windowDuration * 24 * msInOneHour;
+        else if (theUnit === "hour") return windowDuration * msInOneHour;
+        else if (theUnit === "minute") return windowDuration * 60 * 1000;
+        else if (theUnit === "second") return windowDuration * 1000;
         else return undefined;
       }
 
-      function getIntervalQueryString(
+      function getTimeWindowQueryString(
         currentTime: number,
-        interval: number,
-        isForward: boolean = true
+        windowDuration: number
       ) {
-        if (isForward) {
-          const endTime = Number(currentTime) + interval;
-          return currentTime + "," + endTime;
+        const timeBound = Number(currentTime) + windowDuration;
+        if (windowDuration >= 0) {
+          return currentTime + "," + timeBound;
         } else {
-          const startTime = Number(currentTime) - interval;
-          return "" + startTime + "," + currentTime;
+          return "" + timeBound + "," + currentTime;
         }
       }
 
       const params: any = Object.assign({}, this.parameters);
       const currentTime = timeParams?.currentTime;
       if (currentTime !== undefined) {
-        const interval = intervalInMs(
-          timeParams?.interval,
+        const windowDuration = windowDurationInMs(
+          timeParams?.timeWindowDuration,
           timeParams?.timeUnit
         );
-        if (interval !== undefined) {
-          params.time = getIntervalQueryString(
-            currentTime,
-            interval,
-            timeParams?.isForward
-          );
+        if (windowDuration !== undefined) {
+          params.time = getTimeWindowQueryString(currentTime, windowDuration);
         } else {
           params.time = currentTime;
         }

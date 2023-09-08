@@ -73,12 +73,12 @@ export default class TimeVaryingTraits extends mixTraits(CatalogMemberTraits) {
   dateFormat?: string;
 
   @primitiveTrait({
-    name: "Time Interval",
+    name: "Time Window Duration",
     description:
-      "Specify a time interval from the current time (forward or backward, depending on `Is Forward`) that this dataset is available.",
+      "Specify a time window duration from the current time that this dataset is available. Positive: forward; negative: backward.",
     type: "number"
   })
-  interval?: number;
+  timeWindowDuration?: number;
 
   @primitiveTrait({
     name: "Time Unit",
@@ -93,12 +93,4 @@ export default class TimeVaryingTraits extends mixTraits(CatalogMemberTraits) {
     type: "string"
   })
   timeUnit?: string;
-
-  @primitiveTrait({
-    name: "Is Forward",
-    description:
-      "If true, the interval is current time forward. Otherwise backward. Default to true (forward).",
-    type: "boolean"
-  })
-  isForward: boolean = true;
 }

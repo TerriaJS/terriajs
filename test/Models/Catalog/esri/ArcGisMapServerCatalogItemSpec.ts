@@ -482,15 +482,15 @@ describe("ArcGisMapServerCatalogItem", function () {
       const modelJson = {
         modelDimensions: [
           {
-            id: "Select time interval",
-            name: "Select time interval",
+            id: "Select time window duration",
+            name: "Select time window duration",
             options: [
               {
-                id: "no time interval",
+                id: "no time window duration",
                 value: {}
               }
             ],
-            selectedId: "no time interval"
+            selectedId: "no time window duration"
           }
         ]
       };
@@ -514,13 +514,13 @@ describe("ArcGisMapServerCatalogItem", function () {
       const modelJson = {
         modelDimensions: [
           {
-            id: "Select time interval",
-            name: "Select time interval",
+            id: "Select a forward time window duration",
+            name: "Select a forward time window duration",
             options: [
               {
                 id: "2 weeks",
                 value: {
-                  interval: 2,
+                  timeWindowDuration: 2,
                   timeUnit: "week"
                 }
               }
@@ -552,15 +552,14 @@ describe("ArcGisMapServerCatalogItem", function () {
       const modelJson = {
         modelDimensions: [
           {
-            id: "Select time interval",
-            name: "Select time interval",
+            id: "Select a backward time window duration",
+            name: "Select a backward time window duration",
             options: [
               {
                 id: "2 weeks",
                 value: {
-                  interval: 2,
-                  timeUnit: "week",
-                  isForward: false
+                  timeWindowDuration: -2,
+                  timeUnit: "week"
                 }
               }
             ],
