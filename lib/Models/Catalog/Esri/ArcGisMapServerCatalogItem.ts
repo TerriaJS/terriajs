@@ -400,47 +400,6 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     return result;
   }
 
-  private getTimeWindowDurationFromDimensions() {
-    if (
-      this.modelDimensions.length < 1 ||
-      this.modelDimensions[0].selectedId === undefined
-    ) {
-      return undefined;
-    }
-    const selectedId = this.modelDimensions[0].selectedId;
-    if (this.modelDimensions.length < 1 && selectedId === undefined) {
-      return undefined;
-    } else {
-      const dimOptions = this.modelDimensions[0].options.filter(
-        (opt) => opt.id === selectedId
-      );
-      if (dimOptions.length < 1) {
-        return undefined;
-      }
-      const selected = dimOptions[0] as {
-        value: {
-          timeWindowDuration?: number;
-          timeUnit?: string;
-        };
-      };
-      const timeWindowDuration = selected.value.timeWindowDuration;
-      const timeUnit = selected.value.timeUnit;
-
-      if (
-        selected === undefined ||
-        timeWindowDuration === undefined ||
-        timeUnit === undefined
-      ) {
-        return undefined;
-      } else {
-        return {
-          timeWindowDuration,
-          timeUnit
-        };
-      }
-    }
-  }
-
   private getCurrentTime() {
     const dateAsUnix: number | undefined =
       this.currentDiscreteTimeTag === undefined
@@ -450,9 +409,14 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
   }
 
   private getTimeParams(): TimeParams {
-    const timeWindowDuration = this.getTimeWindowDurationFromDimensions();
     const currentTime = this.getCurrentTime();
-    const timeParams = { currentTime, ...timeWindowDuration } as TimeParams;
+    const timeWindowDuration = this.timeWindowDuration;
+    const timeUnit = this.timeUnit;
+    const timeParams = {
+      currentTime,
+      timeWindowDuration,
+      timeUnit
+    } as TimeParams;
     return timeParams;
   }
 

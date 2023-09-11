@@ -479,22 +479,6 @@ describe("ArcGisMapServerCatalogItem", function () {
         );
       });
 
-      const modelJson = {
-        modelDimensions: [
-          {
-            id: "Select time window duration",
-            name: "Select time window duration",
-            options: [
-              {
-                id: "no time window duration",
-                value: {}
-              }
-            ],
-            selectedId: "no time window duration"
-          }
-        ]
-      };
-      updateModelFromJson(item, CommonStrata.definition, modelJson);
       await item.loadMapItems();
       const expectedTimeQueryString = 1572789600000; // from json file
       const imageryProvider = item.mapItems[0]
@@ -510,26 +494,9 @@ describe("ArcGisMapServerCatalogItem", function () {
           "url",
           "http://example.com/cadastre_history/MapServer"
         );
+        item.setTrait(CommonStrata.user, "timeWindowDuration", 2);
+        item.setTrait(CommonStrata.user, "timeUnit", "week");
       });
-      const modelJson = {
-        modelDimensions: [
-          {
-            id: "Select a forward time window duration",
-            name: "Select a forward time window duration",
-            options: [
-              {
-                id: "2 weeks",
-                value: {
-                  timeWindowDuration: 2,
-                  timeUnit: "week"
-                }
-              }
-            ],
-            selectedId: "2 weeks"
-          }
-        ]
-      };
-      updateModelFromJson(item, CommonStrata.definition, modelJson);
       const defaultCurrentTime = 1572789600000; // from json file
       const twoWeekTime = 14 * 24 * 3600 * 1000;
       const toTime = defaultCurrentTime + twoWeekTime;
@@ -548,26 +515,9 @@ describe("ArcGisMapServerCatalogItem", function () {
           "url",
           "http://example.com/cadastre_history/MapServer"
         );
+        item.setTrait(CommonStrata.user, "timeWindowDuration", -2);
+        item.setTrait(CommonStrata.user, "timeUnit", "week");
       });
-      const modelJson = {
-        modelDimensions: [
-          {
-            id: "Select a backward time window duration",
-            name: "Select a backward time window duration",
-            options: [
-              {
-                id: "2 weeks",
-                value: {
-                  timeWindowDuration: -2,
-                  timeUnit: "week"
-                }
-              }
-            ],
-            selectedId: "2 weeks"
-          }
-        ]
-      };
-      updateModelFromJson(item, CommonStrata.definition, modelJson);
       const defaultCurrentTime = 1572789600000; // from json file
       const twoWeekTime = 14 * 24 * 3600 * 1000;
       const fromTime = defaultCurrentTime - twoWeekTime;
