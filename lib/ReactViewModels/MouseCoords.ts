@@ -121,7 +121,7 @@ export default class MouseCoords {
       let errorBar;
 
       if (globe.terrainProvider instanceof EllipsoidTerrainProvider) {
-        intersection.height = <any>undefined;
+        intersection.height = 0;
       } else {
         const barycentric = Intersections2D.computeBarycentricCoordinates(
           intersection.longitude,
@@ -198,10 +198,9 @@ export default class MouseCoords {
     const coordinates = Cartographic.fromDegrees(
       latLng.lng,
       latLng.lat,
-      undefined,
+      0,
       scratchCartographic
     );
-    coordinates.height = <any>undefined;
     this.cartographicToFields(coordinates);
   }
 

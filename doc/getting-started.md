@@ -1,117 +1,39 @@
 The easiest way to get started with TerriaJS is to use [TerriaMap](https://github.com/TerriaJS/TerriaMap). TerriaMap is a full-featured application built on TerriaJS, ready to be customized with your own branding and catalog. It is also a great starting point for more in-depth customization.
 
-This guide explains how to build and run TerriaMap locally. See [Deploying](deploying/README.md) to learn how to deploy it for use by others.
-
-You may also be interested in how to [make your own map without writing any code](http://stevebennett.me/2015/07/02/your-own-personal-national-map-with-terriajs-no-coding-and-nothing-to-deploy/).
-
-### Quick Start
-
-If you've done this sort of thing before, you'll find it easy to clone and build TerriaMap with these quick instructions:
+Use [Docker](https://www.docker.com/) to start a TerriaMap container:
 
 ```bash
-git clone https://github.com/TerriaJS/TerriaMap.git
-
-cd TerriaMap
-
-export NODE_OPTIONS=--max_old_space_size=4096
-
-npm install -g yarn
-
-yarn install && yarn gulp && yarn start
-
-# Open at http://localhost:3001
+docker run -d -p 3001:3001 ghcr.io/terriajs/terriamap
 ```
 
-If you run into trouble or want more explanation, read on.
+You should now be able to access TerriaMap at [`http://localhost:3001/`](http://localhost:3001/).
 
-### Prerequisites
-
-TerriaJS can be built and run on almost any macOS, Linux, or Windows system. The following are required to build TerriaJS:
-
-- The Bash command shell. On macOS or Linux you almost certainly already have this. On Windows, you can easily get it by installing [Git for Windows](https://gitforwindows.org/). In the instructions below, we assume you're using a Bash command prompt.
-- [Node.js](https://nodejs.org) v14.0 or later. You can check your node version by running `node --version` on the command-line.
-- [npm](https://www.npmjs.com/) v6.0 or later. npm is usually installed automatically alongside the above. You can check your npm version by running `npm --version`.
-- [yarn](https://yarnpkg.com/) v1.19.0 or later. This can be installed using `npm install -g yarn@^1.19.0`
-
-### Cloning TerriaMap
-
-The latest version of TerriaMap is on [GitHub](https://github.com), and the preferred way to get it is by using `git`:
+To clean up and delete the container, you can run:
 
 ```bash
-git clone https://github.com/TerriaJS/TerriaMap.git
-
-cd TerriaMap
+docker rm -f [id given by docker run command]
 ```
 
-If you're unable to use git, you can also [download a ZIP file](https://github.com/TerriaJS/TerriaMap/archive/main.zip) and extract it somewhere on your system. We recommend using git, though, because it makes it much easier to update to later versions in the future.
+### Customizing TerriaMap
 
-### Increase NodeJS memory limit
+Learn about many customization options in [Customizing TerriaMap](customizing/README.md).
 
-To avoid running out of memory when installing dependencies and building TerriaMap, increase the memory limit of node:
+For customisations that don't require rebuilding TerriaMap, you can apply changes by mounting your own files into the docker container. E.g. to mount a custom `config.json` file, custom catalog file `my-catalog.json` and a custom `serverconfig.json` file, run the following instead of the above `docker run` command:
 
 ```bash
-export NODE_OPTIONS=--max_old_space_size=4096
+docker run -d -p 3001:3001 \
+--mount type=bind,source=$(pwd)/config.json,destination=/app/wwwroot/config.json \
+--mount type=bind,source=$(pwd)/my-catalog.json,destination=/app/wwwroot/init/simple.json \
+--mount type=bind,source=$(pwd)/serverconfig.json,destination=/app/serverconfig.json \
+ghcr.io/terriajs/terriamap
 ```
 
-### Installing Dependencies
+Some more advanced customizations will require rebuilding TerriaMap. To do these you will have to follow the [Cloning and Building](customizing/cloning-and-building.md) guide.
 
-All of the dependencies required to build and run TerriaMap, other than the prerequisites listed above, are installed using `yarn`:
+### Deploying TerriaMap
 
-```bash
-yarn install
-```
+You can deploy the container you've made using a container service from a cloud provider or Kubernetes. See [Deploying TerriaMap](deploying/README.md) for more information.
 
-The dependencies are installed in the `node_modules` subdirectory. No global changes are made to your system.
+### Without Docker
 
-### Building TerriaMap
-
-Do a standard build of TerriaMap with:
-
-```bash
-yarn gulp
-```
-
-Or, you can create a minified release build with:
-
-```bash
-yarn gulp release
-```
-
-To watch for changes and automatically do an incremental build when any are detected, use:
-
-```bash
-yarn gulp watch
-```
-
-`yarn gulp` simply runs `gulp`, so you can use that directly if you prefer (run `npm install -g gulp-cli` to install it globally).
-
-The full set of `gulp` tasks can be found on the [Development Environment](contributing/development-environment.md#terriamap-gulp-tasks) page.
-
-### Running TerriaMap
-
-TerriaMap includes a simple Node.js-based web server, called [terriajs-server](https://github.com/TerriaJS/terriajs-server). To start it, run:
-
-```bash
-yarn start
-```
-
-Then, open a web browser on `http://localhost:3001` to use TerriaMap.
-
-### Keeping up with Updates
-
-If you're building an application by using TerriaMap as a starting point, you will want to keep in sync as TerriaMap is improved and updated to use new versions of TerriaJS. Forking the TerriaMap repo and using git to keep it in sync is outside the scope of this document, but GitHub has a [nice explanation](https://help.github.com/articles/fork-a-repo/).
-
-After pulling new changes, you will need to run `yarn install` again to pick up any changed dependencies and then build TerriaMap. If you have problems building or running, it is sometimes helpful to remove and reinstall the dependencies from npm:
-
-```bash
-rm -rf node_modules
-yarn install
-```
-
-### Having trouble?
-
-Checkout the [Problems and Solutions](contributing/problems-and-solutions.md) page to see if we have them covered. You are also welcome to post your problem on the [TerriaJS Discussions](https://github.com/TerriaJS/terriajs/discussions) forum and we'll be happy to help!
-
-### Next Steps
-
-Now that you have a working local build of TerriaMap, you may want to [customize it](customizing/README.md) or [deploy it](deploying/README.md) for others to use.
+Follow the [Cloning and Building](customizing/cloning-and-building.md) guide to get started with TerriaMap without docker.

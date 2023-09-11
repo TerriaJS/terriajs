@@ -1,8 +1,22 @@
 # Change Log
 
-#### next release (8.3.2)
+#### next release (8.3.4)
 
 - [The next improvement]
+
+#### next release (8.3.3)
+
+- Fixed broken point dragging interaction for user drawing in 3D mode.
+- Fixed rectangle drawing in 2D mode.
+- Added EPSG:7855 to `Proj4Definitions`.
+- Fix multi level nesting in ArcGIS Mapserver.
+- [The next improvement]
+
+#### 8.3.2 - 2023-08-11
+
+- Fixed a bug when restoring timefilter from a share link having more than one imagery item with the same base URL (but different layer names).
+- Fix WPS duplicate display of analysis results when loaded through a share URL
+- Upgraded babel packages.
 
 #### 8.3.1 - 2023-06-29
 
@@ -427,7 +441,7 @@
   - Multiple changes to `GtfsCatalogItem`:
     - Removed `apiKey` in favour of more general `headers`
     - Removed unused `bearingDirectionProperty` & `compassDirectionProperty`
-    - `image` is no longer resolved relative to the TerriaJS asset folder. This will allow using relative URLs for assets that aren't inside the TerriaJS asset folder. Any relative `image` urls should now have "build/TerriaJS/" prepended (the value of `terria.baseUrl`).
+    - `image` is no longer resolved relative to the TerriaJS asset folder. This will allow using relative URLs for assets that aren't inside the TerriaJS asset folder. Prepend "build/TerriaJS/" (the value of `terria.baseUrl`) to any existing relative `image` urls.
 - Added `colorModelsByProperty` to `GtfsCatalogItem` which will colour 1 model differently for different vehichles based on properties matched by regular expression. E.g. colour a vehicle model by which train line the vehicle is travelling on.
 - Fixed a bug where cross-origin billboard images threw errors in Leaflet mode when trying to recolour the image.
 - Changed rounding of the numbers of the countdown timer in the workbench UI for items that use polling. The timer wil now show 00:00 for at most 500ms (instead of a full second). This means that for timers that are a multiple of 1000ms the timer will now show 00:01 for the last second before polling, instead of 00:00.

@@ -6,7 +6,7 @@ TerriaJS provides an `ItemSearchProvider` API for defining custom search provide
 
 ## Available search providers
 
-- [Indexed item search provider](item-search/indexed-item-search.md)
+-   [Indexed item search provider](item-search/indexed-item-search.md)
 
 ## Configuring the catalog item for searching
 
@@ -50,8 +50,8 @@ The search tool can be opened from the expand menu for the catalog item in the w
 
 ## Future implementations
 
-- GeoJSON search provider, for searching inside a geojson catalog item using its properties.
-- WPS search provider, for searching any item using a remote server.
+-   GeoJSON search provider, for searching inside a geojson catalog item using its properties.
+-   WPS search provider, for searching any item using a remote server.
 
 ## Implementing your own search provider
 
