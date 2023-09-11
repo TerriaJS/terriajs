@@ -479,14 +479,22 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         windowDuration: number | undefined,
         timeUnit: string | undefined
       ): number | undefined {
-        if (windowDuration === undefined || timeUnit === undefined) {
+        if (
+          windowDuration === undefined ||
+          windowDuration === 0 ||
+          timeUnit === undefined
+        ) {
           return undefined;
         }
 
         const rawTimeWindowData: any = {};
         rawTimeWindowData[timeUnit] = windowDuration;
-        const duration = moment.duration(rawTimeWindowData);
-        return duration.asMilliseconds();
+        const duration = moment.duration(rawTimeWindowData).asMilliseconds();
+        if (duration === 0) {
+          return undefined;
+        } else {
+          return duration;
+        }
       }
 
       function getTimeWindowQueryString(

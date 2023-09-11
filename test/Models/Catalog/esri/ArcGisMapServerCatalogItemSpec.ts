@@ -452,7 +452,7 @@ describe("ArcGisMapServerCatalogItem", function () {
   });
 
   describe("time-enabled layer", function () {
-    it("can load a time-enabled layer", async function () {
+    it("can load a layer, querying time without window", async function () {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
         item.setTrait(
@@ -467,9 +467,13 @@ describe("ArcGisMapServerCatalogItem", function () {
       }
       expect(item.startTime).toBe("2004-11-26T09:43:22.000000000Z");
       expect(item.stopTime).toBe("2019-11-03T14:00:00.000000000Z");
+      const expectedTimeQueryString = 1572789600000; // from json file
+      const imageryProvider = item.mapItems[0]
+        .imageryProvider as ArcGisMapServerImageryProvider;
+      expect(imageryProvider.parameters.time).toBe(expectedTimeQueryString);
     });
 
-    it("can load a time-enabled layer without interval specified by model dimensions", async function () {
+    it("can load a layer, querying time without window if timeWindowDuration is not defined", async function () {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
         item.setTrait(
@@ -477,16 +481,35 @@ describe("ArcGisMapServerCatalogItem", function () {
           "url",
           "http://example.com/cadastre_history/MapServer"
         );
+        item.setTrait(CommonStrata.user, "timeUnit", "year");
       });
-
+      const defaultCurrentTime = 1572789600000; // from json file
       await item.loadMapItems();
-      const expectedTimeQueryString = 1572789600000; // from json file
+      const expectedTimeQueryString = defaultCurrentTime;
       const imageryProvider = item.mapItems[0]
         .imageryProvider as ArcGisMapServerImageryProvider;
       expect(imageryProvider.parameters.time).toBe(expectedTimeQueryString);
     });
 
-    it("can load a time-enabled layer with current time and forward interval specified by model dimensions", async function () {
+    it("can load a layer, querying time without window if timeUnit is not defined", async function () {
+      runInAction(() => {
+        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item.setTrait(
+          CommonStrata.definition,
+          "url",
+          "http://example.com/cadastre_history/MapServer"
+        );
+        item.setTrait(CommonStrata.user, "timeWindowDuration", 2);
+      });
+      const defaultCurrentTime = 1572789600000; // from json file
+      await item.loadMapItems();
+      const expectedTimeQueryString = defaultCurrentTime;
+      const imageryProvider = item.mapItems[0]
+        .imageryProvider as ArcGisMapServerImageryProvider;
+      expect(imageryProvider.parameters.time).toBe(expectedTimeQueryString);
+    });
+
+    it("can load a layer, querying time with forward window", async function () {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
         item.setTrait(
@@ -507,7 +530,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       expect(imageryProvider.parameters.time).toBe(expectedTimeQueryString);
     });
 
-    it("can load a time-enabled layer with current time and backward interval specified by model iimensions", async function () {
+    it("can load a layer, querying time with backward time window", async function () {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
         item.setTrait(
@@ -526,6 +549,42 @@ describe("ArcGisMapServerCatalogItem", function () {
       const imageryProvider = item.mapItems[0]
         .imageryProvider as ArcGisMapServerImageryProvider;
       expect(imageryProvider.parameters.time).toBe(expectedTimeQueryString);
+    });
+
+    it("can load a layer, querying time without window if timeWindowDuration is 0", async function () {
+      runInAction(() => {
+        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item.setTrait(
+          CommonStrata.definition,
+          "url",
+          "http://example.com/cadastre_history/MapServer"
+        );
+        item.setTrait(CommonStrata.user, "timeWindowDuration", 0);
+        item.setTrait(CommonStrata.user, "timeUnit", "year");
+      });
+      const defaultCurrentTime = 1572789600000; // from json file
+      await item.loadMapItems();
+      const imageryProvider = item.mapItems[0]
+        .imageryProvider as ArcGisMapServerImageryProvider;
+      expect(imageryProvider.parameters.time).toBe(defaultCurrentTime);
+    });
+
+    it("can load a layer, querying time without window if timeUnit is invalid", async function () {
+      runInAction(() => {
+        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item.setTrait(
+          CommonStrata.definition,
+          "url",
+          "http://example.com/cadastre_history/MapServer"
+        );
+        item.setTrait(CommonStrata.user, "timeWindowDuration", 2);
+        item.setTrait(CommonStrata.user, "timeUnit", "fortnight");
+      });
+      const defaultCurrentTime = 1572789600000; // from json file
+      await item.loadMapItems();
+      const imageryProvider = item.mapItems[0]
+        .imageryProvider as ArcGisMapServerImageryProvider;
+      expect(imageryProvider.parameters.time).toBe(defaultCurrentTime);
     });
   });
 
