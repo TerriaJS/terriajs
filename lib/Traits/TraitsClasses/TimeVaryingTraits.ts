@@ -71,26 +71,4 @@ export default class TimeVaryingTraits extends mixTraits(CatalogMemberTraits) {
     type: "string"
   })
   dateFormat?: string;
-
-  @primitiveTrait({
-    name: "Time Window Duration",
-    description:
-      "Specify a time window duration from the current time that this dataset is available. Positive: forward; negative: backward.",
-    type: "number"
-  })
-  timeWindowDuration?: number;
-
-  @primitiveTrait({
-    name: "Time Unit",
-    description:
-      "The time unit for the `Time Interval`. Valid values are <br/>" +
-      " * `year` <br/>" +
-      " * `month` <br/>" +
-      " * `day` <br/>" +
-      " * `hour` <br/>" +
-      " * `minute` <br/>" +
-      " * `second` <br/>",
-    type: "string"
-  })
-  timeUnit?: string;
 }

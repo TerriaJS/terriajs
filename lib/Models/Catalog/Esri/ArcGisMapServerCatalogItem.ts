@@ -36,6 +36,7 @@ import getToken from "../../getToken";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import MinMaxLevelMixin from "./../../../ModelMixins/MinMaxLevelMixin";
 import { Extent, Layer, MapServer } from "./ArcGisInterfaces";
+import moment from "moment";
 
 const proj4 = require("proj4").default;
 
@@ -416,10 +417,14 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
       if (dimOptions.length < 1) {
         return undefined;
       }
-      const selected = dimOptions[0] as any;
-      const timeWindowDuration: number | undefined =
-        selected.value.timeWindowDuration;
-      const timeUnit: string | undefined = selected.value.timeUnit;
+      const selected = dimOptions[0] as {
+        value: {
+          timeWindowDuration?: number;
+          timeUnit?: string;
+        };
+      };
+      const timeWindowDuration = selected.value.timeWindowDuration;
+      const timeUnit = selected.value.timeUnit;
 
       if (
         selected === undefined ||
@@ -513,18 +518,11 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         if (windowDuration === undefined || timeUnit === undefined) {
           return undefined;
         }
-        const msInOneHour = 3600 * 1000;
-        const theUnit = timeUnit.toLowerCase();
-        if (theUnit === "year") return windowDuration * 365 * 24 * msInOneHour;
-        else if (theUnit === "month")
-          return windowDuration * 30 * 24 * msInOneHour;
-        else if (theUnit === "week")
-          return windowDuration * 7 * 24 * msInOneHour;
-        else if (theUnit === "day") return windowDuration * 24 * msInOneHour;
-        else if (theUnit === "hour") return windowDuration * msInOneHour;
-        else if (theUnit === "minute") return windowDuration * 60 * 1000;
-        else if (theUnit === "second") return windowDuration * 1000;
-        else return undefined;
+
+        const rawTimeWindowData: any = {};
+        rawTimeWindowData[timeUnit] = windowDuration;
+        const duration = moment.duration(rawTimeWindowData);
+        return duration.asMilliseconds();
       }
 
       function getTimeWindowQueryString(

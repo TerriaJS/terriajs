@@ -1,3 +1,4 @@
+import { objectTrait } from "terriajs-plugin-api";
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
@@ -57,4 +58,20 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
       "date range when layer in time-enabled."
   })
   maxRefreshIntervals: number = 1000;
+
+  @primitiveTrait({
+    name: "Time Window Duration",
+    description:
+      "Specify a time window duration from the current time that this dataset is available. Positive: forward; negative: backward.",
+    type: "number"
+  })
+  timeWindowDuration?: number;
+
+  @primitiveTrait({
+    name: "Time Unit",
+    description:
+      "The time unit for the `Time Interval`. Any units supported by `moment` module are valid, such as, `year`, `month`, `week`, `day`, `hour`, etc.",
+    type: "string"
+  })
+  timeUnit?: string;
 }
