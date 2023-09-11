@@ -1,4 +1,3 @@
-import { objectTrait } from "terriajs-plugin-api";
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
