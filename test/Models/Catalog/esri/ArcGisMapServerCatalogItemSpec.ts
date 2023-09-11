@@ -6,7 +6,6 @@ import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import ArcGisMapServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import CommonStrata from "./../../../../lib/Models/Definition/CommonStrata";
-import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 
 configure({
   enforceActions: "observed",
