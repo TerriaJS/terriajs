@@ -2,6 +2,8 @@
 
 #### next release (8.3.4)
 
+- Move map credits to map column so it don't get hidden by chart panel
+- TSify `MapColumn` module and reorganize components directory structure.
 - [The next improvement]
 
 #### next release (8.3.3)
@@ -10,7 +12,6 @@
 - Fixed rectangle drawing in 2D mode.
 - Added EPSG:7855 to `Proj4Definitions`.
 - Fix multi level nesting in ArcGIS Mapserver.
-- [The next improvement]
 
 #### 8.3.2 - 2023-08-11
 
@@ -253,8 +254,6 @@
 - Fix `SearchBoxAndResults` Trans values
 - Fix `generateCatalogIndex` for nested references
 - Fix `SearchBox` handling of `searchWithDebounce` when `debounceDuration` prop changes. It now fushes instead of cancels.
-- Move map credits to map column so it don't get hidden by chart panel
-- [The next improvement]
 
 #### 8.2.10 - 2022-08-02
 
