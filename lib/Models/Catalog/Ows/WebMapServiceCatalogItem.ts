@@ -50,6 +50,8 @@ import WebMapServiceCapabilities from "./WebMapServiceCapabilities";
 import WebMapServiceCapabilitiesStratum from "./WebMapServiceCapabilitiesStratum";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+
 /** This LoadableStratum is responsible for setting WMS version based on CatalogItem.url */
 export class WebMapServiceUrlStratum extends LoadableStratum(
   WebMapServiceCatalogItemTraits
@@ -512,7 +514,10 @@ class WebMapServiceCatalogItem
             this.terria.configParameters.defaultMaximumShownFeatureInfos),
         ...this.parameters,
         ...this.getFeatureInfoParameters,
-        ...dimensionParameters
+        ...dimensionParameters,
+        request: "GetTimeseries",
+        info_format: "image/png",
+        time: ""
       };
 
       const diffModeParameters = this.isShowingDiff
@@ -580,10 +585,13 @@ class WebMapServiceCatalogItem
 
       if (isDefined(this.getFeatureInfoFormat?.type)) {
         imageryOptions.getFeatureInfoFormats = [
-          new GetFeatureInfoFormat(
-            this.getFeatureInfoFormat.type,
-            this.getFeatureInfoFormat.format
-          )
+          new GetFeatureInfoFormat("image", "blob", (something: Blob) => {
+            const featureInfo = new ImageryLayerFeatureInfo();
+            const text = `![GetFeatureInfo](${URL.createObjectURL(something)})`;
+            featureInfo.description = text;
+            featureInfo.data = text;
+            return [featureInfo];
+          })
         ];
       }
 
