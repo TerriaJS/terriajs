@@ -14,7 +14,7 @@ import Icon, { StyledIcon } from "../../../../Styled/Icon";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToReact";
-import { withViewState } from "../../../StandardUserInterface/ViewStateContext";
+import { withViewState } from "../../../Context";
 import HelpPanelItem from "./HelpPanelItem";
 
 export const HELP_PANEL_ID = "help";

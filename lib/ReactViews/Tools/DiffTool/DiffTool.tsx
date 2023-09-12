@@ -51,7 +51,7 @@ import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Loader from "../../Loader";
 import DatePicker from "./DatePicker";
 import LocationPicker from "./LocationPicker";
-import { CLOSE_TOOL_ID } from "../../Map/Navigation/registerMapNavigations";
+import { CLOSE_TOOL_ID } from "../../Map/MapNavigation/registerMapNavigations";
 
 const dateFormat = require("dateformat");
 
@@ -843,7 +843,6 @@ const CloseDifferenceButton = styled(Button)`
   left: 50%;
   transform: translateX(-50%);
   top: 18px;
-
   padding: 0 20px;
 `;
 

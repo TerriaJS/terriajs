@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import ViewState from "../../ReactViewModels/ViewState";
-import { useViewState } from "./ViewStateContext";
+import { useViewState } from "../Context";
 
 type PortalProps = {
   /**

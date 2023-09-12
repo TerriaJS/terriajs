@@ -31,10 +31,7 @@ import FeatureInfoContext from "../../Models/Feature/FeatureInfoContext";
 import Icon from "../../Styled/Icon";
 import { FeatureInfoPanelButton as FeatureInfoPanelButtonModel } from "../../ViewModels/FeatureInfoPanel";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
-import {
-  withViewState,
-  WithViewState
-} from "../StandardUserInterface/ViewStateContext";
+import { withViewState, WithViewState } from "../Context";
 import Styles from "./feature-info-section.scss";
 import FeatureInfoDownload from "./FeatureInfoDownload";
 import FeatureInfoPanelButton from "./FeatureInfoPanelButton";
