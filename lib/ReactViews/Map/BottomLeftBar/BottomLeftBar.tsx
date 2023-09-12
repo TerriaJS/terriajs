@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 
 import ViewState from "../../../ReactViewModels/ViewState";
@@ -10,47 +10,43 @@ import MapDataCount from "../../BottomDock/MapDataCount";
 import Terria from "../../../Models/Terria";
 import MapIconButton from "../../MapIconButton/MapIconButton";
 import defined from "terriajs-cesium/Source/Core/defined";
-
-interface Props {
-  terria: Terria;
-  viewState: ViewState;
-}
+import { useViewState } from "../../Context";
 
 const BottomLeftContainer = styled(Box)`
   position: absolute;
   bottom: 40px;
-
   @media (max-width: ${(props) => props.theme.mobile}px) {
     bottom: 35px;
   }
 `;
-const shouldShowPlayStoryButton = (props: Props) =>
-  props.terria.configParameters.storyEnabled &&
-  defined(props.terria.stories) &&
-  props.terria.stories.length > 0 &&
-  props.viewState.useSmallScreenInterface;
+const shouldShowPlayStoryButton = (viewState: ViewState) =>
+  viewState.terria.configParameters.storyEnabled &&
+  defined(viewState.terria.stories) &&
+  viewState.terria.stories.length > 0 &&
+  viewState.useSmallScreenInterface;
 
-const BottomLeftBar = (props: Props) => {
+const BottomLeftBar: FC = () => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const viewState = useViewState();
 
   const isNotificationActive =
-    props.terria.notificationState.currentNotification;
+    viewState.terria.notificationState.currentNotification;
 
   return (
     <BottomLeftContainer theme={theme}>
       <MapDataCount
-        terria={props.terria}
-        viewState={props.viewState}
-        elementConfig={props.terria.elements.get("map-data-count")}
+        terria={viewState.terria}
+        viewState={viewState}
+        elementConfig={viewState.terria.elements.get("map-data-count")}
       />
-      {shouldShowPlayStoryButton(props) ? (
+      {shouldShowPlayStoryButton(viewState) ? (
         <Box paddedHorizontally={2}>
           <MapIconButton
             title={t("story.playStory")}
             neverCollapse={true}
             iconElement={() => <Icon glyph={Icon.GLYPHS.playStory} />}
-            onClick={() => props.viewState.runStories()}
+            onClick={() => viewState.runStories()}
             primary={!isNotificationActive}
           >
             {t("story.playStory")}
