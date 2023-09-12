@@ -332,7 +332,7 @@ StratumOrder.addLoadStratum(MapServerStratum.stratumName);
 interface TimeParams {
   currentTime: number | undefined;
   timeWindowDuration: number | undefined;
-  timeUnit: string | undefined;
+  timeWindowUnit: string | undefined;
 }
 
 export default class ArcGisMapServerCatalogItem extends UrlMixin(
@@ -411,11 +411,11 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
   private getTimeParams(): TimeParams {
     const currentTime = this.getCurrentTime();
     const timeWindowDuration = this.timeWindowDuration;
-    const timeUnit = this.timeUnit;
+    const timeWindowUnit = this.timeWindowUnit;
     const timeParams = {
       currentTime,
       timeWindowDuration,
-      timeUnit
+      timeWindowUnit
     } as TimeParams;
     return timeParams;
   }
@@ -514,7 +514,7 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
       if (currentTime !== undefined) {
         const windowDuration = windowDurationInMs(
           timeParams?.timeWindowDuration,
-          timeParams?.timeUnit
+          timeParams?.timeWindowUnit
         );
         if (windowDuration !== undefined) {
           params.time = getTimeWindowQueryString(currentTime, windowDuration);

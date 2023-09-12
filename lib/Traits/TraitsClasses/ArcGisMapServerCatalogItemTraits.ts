@@ -61,16 +61,16 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
   @primitiveTrait({
     name: "Time Window Duration",
     description:
-      "Specify a time window duration from the current time that this dataset is available. Positive: forward; negative: backward.",
+      "Specify a time window duration when querying a time-enabled layer. A positive value for forward window from current time; A negative value for backward window.",
     type: "number"
   })
   timeWindowDuration?: number;
 
   @primitiveTrait({
-    name: "Time Unit",
+    name: "Time Window Unit",
     description:
-      "The time unit for the `Time Interval`. Any units supported by `moment` module are valid, such as, `year`, `month`, `week`, `day`, `hour`, etc.",
+      "The time window unit for the `Time Window Duration`. Any units supported by `moment` module are valid, such as, `year`, `month`, `week`, `day`, `hour`, etc. Will not query time with window if the unit is invalid or undefined.",
     type: "string"
   })
-  timeUnit?: string;
+  timeWindowUnit?: string;
 }

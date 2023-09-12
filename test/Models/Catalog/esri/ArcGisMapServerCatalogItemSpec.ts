@@ -480,7 +480,7 @@ describe("ArcGisMapServerCatalogItem", function () {
           "url",
           "http://example.com/cadastre_history/MapServer"
         );
-        item.setTrait(CommonStrata.user, "timeUnit", "year");
+        item.setTrait(CommonStrata.user, "timeWindowUnit", "year");
       });
       const defaultCurrentTime = 1572789600000; // from json file
       await item.loadMapItems();
@@ -517,7 +517,7 @@ describe("ArcGisMapServerCatalogItem", function () {
           "http://example.com/cadastre_history/MapServer"
         );
         item.setTrait(CommonStrata.user, "timeWindowDuration", 2);
-        item.setTrait(CommonStrata.user, "timeUnit", "week");
+        item.setTrait(CommonStrata.user, "timeWindowUnit", "week");
       });
       const defaultCurrentTime = 1572789600000; // from json file
       const twoWeekTime = 14 * 24 * 3600 * 1000;
@@ -538,7 +538,7 @@ describe("ArcGisMapServerCatalogItem", function () {
           "http://example.com/cadastre_history/MapServer"
         );
         item.setTrait(CommonStrata.user, "timeWindowDuration", -2);
-        item.setTrait(CommonStrata.user, "timeUnit", "week");
+        item.setTrait(CommonStrata.user, "timeWindowUnit", "week");
       });
       const defaultCurrentTime = 1572789600000; // from json file
       const twoWeekTime = 14 * 24 * 3600 * 1000;
@@ -559,7 +559,7 @@ describe("ArcGisMapServerCatalogItem", function () {
           "http://example.com/cadastre_history/MapServer"
         );
         item.setTrait(CommonStrata.user, "timeWindowDuration", 0);
-        item.setTrait(CommonStrata.user, "timeUnit", "year");
+        item.setTrait(CommonStrata.user, "timeWindowUnit", "year");
       });
       const defaultCurrentTime = 1572789600000; // from json file
       await item.loadMapItems();
@@ -577,7 +577,7 @@ describe("ArcGisMapServerCatalogItem", function () {
           "http://example.com/cadastre_history/MapServer"
         );
         item.setTrait(CommonStrata.user, "timeWindowDuration", 2);
-        item.setTrait(CommonStrata.user, "timeUnit", "fortnight");
+        item.setTrait(CommonStrata.user, "timeWindowUnit", "fortnight");
       });
       const defaultCurrentTime = 1572789600000; // from json file
       await item.loadMapItems();
