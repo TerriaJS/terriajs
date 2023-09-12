@@ -132,7 +132,7 @@ type Mutable<T> = { -readonly [P in keyof T]: T[P] };
 export function getRectangleFromLayer(
   layer: CapabilitiesLayer
 ): StratumFromTraits<RectangleTraits> | undefined {
-  var egbb = layer?.EX_GeographicBoundingBox; // required in WMS 1.3.0
+  var egbb = layer.EX_GeographicBoundingBox; // required in WMS 1.3.0
   if (egbb) {
     return {
       west: egbb.westBoundLongitude,
@@ -141,7 +141,7 @@ export function getRectangleFromLayer(
       north: egbb.northBoundLatitude
     };
   } else {
-    var llbb = layer?.LatLonBoundingBox; // required in WMS 1.0.0 through 1.1.1
+    var llbb = layer.LatLonBoundingBox; // required in WMS 1.0.0 through 1.1.1
     if (llbb) {
       return {
         west: llbb.minx,
@@ -153,7 +153,7 @@ export function getRectangleFromLayer(
   }
 
   // Work way through ancestors until we get a rectangle.
-  if (layer?._parent) return getRectangleFromLayer(layer._parent);
+  if (layer._parent) return getRectangleFromLayer(layer._parent);
 
   return undefined;
 }
