@@ -2,7 +2,7 @@
 
 #### next release (8.3.3)
 
-- Allow a story to use iframe tag if the source is Youtube.
+- Allow a story to use iframe tag if the source is youtube, youtube-nocookie or vimeo.
 - [The next improvement]
 
 #### 8.3.2 - 2023-08-11
