@@ -490,7 +490,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       expect(imageryProvider.parameters.time).toBe(expectedTimeQueryString);
     });
 
-    it("can load a layer, querying time without window if timeUnit is not defined", async function () {
+    it("can load a layer, querying time without window if timeWindowUnit is not defined", async function () {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
         item.setTrait(
@@ -568,7 +568,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       expect(imageryProvider.parameters.time).toBe(defaultCurrentTime);
     });
 
-    it("can load a layer, querying time without window if timeUnit is invalid", async function () {
+    it("can load a layer, querying time without window if timeWindowUnit is invalid", async function () {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
         item.setTrait(

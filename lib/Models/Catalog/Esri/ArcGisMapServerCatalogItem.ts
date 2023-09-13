@@ -477,18 +477,18 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
 
       function windowDurationInMs(
         windowDuration: number | undefined,
-        timeUnit: string | undefined
+        timeWindowUnit: string | undefined
       ): number | undefined {
         if (
           windowDuration === undefined ||
           windowDuration === 0 ||
-          timeUnit === undefined
+          timeWindowUnit === undefined
         ) {
           return undefined;
         }
 
         const rawTimeWindowData: any = {};
-        rawTimeWindowData[timeUnit] = windowDuration;
+        rawTimeWindowData[timeWindowUnit] = windowDuration;
         const duration = moment.duration(rawTimeWindowData).asMilliseconds();
         if (duration === 0) {
           return undefined;
