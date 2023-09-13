@@ -52,7 +52,13 @@ function shouldAddIframeTag(story: Story) {
   if (iframes.length < 1) return false;
   let result = true;
   for (let iframe of iframes) {
-    if (!iframe.src?.startsWith("https://www.youtube.com/embed/")) {
+    if (
+      !(
+        iframe.src?.startsWith("https://www.youtube.com/embed/") ||
+        iframe.src?.startsWith("https://www.youtube-nocookie.com/embed/") ||
+        iframe.src?.startsWith("https://player.vimeo.com/video/")
+      )
+    ) {
       result = false;
       break;
     }
@@ -67,7 +73,8 @@ function sourceBasedParse(story: Story) {
       { showExternalLinkWarning: true },
       false,
       {
-        ADD_TAGS: ["iframe"]
+        ADD_TAGS: ["iframe"],
+        ALLOWED_ATTR: ["src", "width", "height"]
       }
     );
   } else {
