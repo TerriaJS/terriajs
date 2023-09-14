@@ -1,7 +1,5 @@
 TerriaJS can be configured to accept messages posted to it by its parent window. This is useful when embedding a TerriaJS app in an iframe and when the parent wants to send more data to the embedded app than can be reasonably included in a URL.
 
-Click [here](http://terriajs.github.io/embedded-natmap/) to see a demo, which also sizes the iframe to fill the available space.
-
 First, the TerriaJS app must include a line like this:
 
 ```js
