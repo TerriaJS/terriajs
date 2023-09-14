@@ -10,7 +10,7 @@ import isDefined from "../../Core/isDefined";
 import MapInteractionMode, { UIMode } from "../../Models/MapInteractionMode";
 import ViewState from "../../ReactViewModels/ViewState";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
-import { withViewState } from "../StandardUserInterface/ViewStateContext";
+import { withViewState } from "../Context";
 import Styles from "./map-interaction-window.scss";
 
 const MapInteractionWindowWrapper = styled.div<{ isDiffTool: boolean }>`

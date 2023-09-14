@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";
 import { filterSelectableDimensions } from "../../Models/SelectableDimensions/SelectableDimensions";
 import SelectableDimension from "../SelectableDimensions/SelectableDimension";
-import { useViewState } from "../StandardUserInterface/ViewStateContext";
+import { useViewState } from "../Context";
 import WorkbenchItemControls, {
   hideAllControls
 } from "../Workbench/Controls/WorkbenchItemControls";

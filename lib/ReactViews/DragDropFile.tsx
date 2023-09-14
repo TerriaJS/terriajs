@@ -14,10 +14,7 @@ import MappableMixin from "../ModelMixins/MappableMixin";
 import addUserFiles from "../Models/Catalog/addUserFiles";
 import { BaseModel } from "../Models/Definition/Model";
 import Styles from "./drag-drop-file.scss";
-import {
-  WithViewState,
-  withViewState
-} from "./StandardUserInterface/ViewStateContext";
+import { WithViewState, withViewState } from "./Context";
 import { raiseFileDragDropEvent } from "../ViewModels/FileDragDropListener";
 
 interface PropsType extends WithTranslation, WithViewState {}

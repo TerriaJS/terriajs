@@ -11,7 +11,7 @@ import { RawButton } from "../../Styled/Button";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import SearchBox from "../Search/SearchBox";
 import Branding from "../SidePanel/Branding";
-import { withViewState } from "../StandardUserInterface/ViewStateContext";
+import { withViewState } from "../Context";
 import Styles from "./mobile-header.scss";
 import MobileMenu from "./MobileMenu";
 import MobileModalWindow from "./MobileModalWindow";
@@ -260,7 +260,6 @@ class MobileHeader extends React.Component {
           menuItems={this.props.menuItems}
           menuLeftItems={this.props.menuLeftItems}
           viewState={this.props.viewState}
-          allBaseMaps={this.props.allBaseMaps}
           terria={this.props.viewState.terria}
           showFeedback={
             !!this.props.viewState.terria.configParameters.feedbackUrl
@@ -300,7 +299,6 @@ const HamburgerButton = styled(RawButton)`
 
 MobileHeader.propTypes = {
   viewState: PropTypes.object.isRequired,
-  allBaseMaps: PropTypes.array,
   version: PropTypes.string,
   menuLeftItems: PropTypes.array,
   menuItems: PropTypes.array,

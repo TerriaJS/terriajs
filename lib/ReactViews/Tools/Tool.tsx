@@ -11,7 +11,7 @@ import Terria from "../../Models/Terria";
 import ViewerMode from "../../Models/ViewerMode";
 import ViewState from "../../ReactViewModels/ViewState";
 import MapNavigationItemController from "../../ViewModels/MapNavigation/MapNavigationItemController";
-import { useViewState } from "../StandardUserInterface/ViewStateContext";
+import { useViewState } from "../Context";
 
 interface ToolProps {
   toolName: string;
