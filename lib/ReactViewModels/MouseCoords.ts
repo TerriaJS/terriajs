@@ -79,12 +79,13 @@ export default class MouseCoords {
     );
   }
 
-  @action
+  @action.bound
   toggleUseProjection() {
     this.useProjection = !this.useProjection;
     this.updateEvent.raiseEvent();
   }
 
+  @action
   updateCoordinatesFromCesium(terria: Terria, position: Cartesian2) {
     if (!terria.cesium) {
       return;
@@ -187,6 +188,7 @@ export default class MouseCoords {
     }
   }
 
+  @action
   updateCoordinatesFromLeaflet(terria: Terria, mouseMoveEvent: MouseEvent) {
     if (!terria.leaflet) {
       return;

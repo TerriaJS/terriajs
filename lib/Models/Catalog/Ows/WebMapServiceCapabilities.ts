@@ -151,6 +151,10 @@ export function getRectangleFromLayer(
       };
     }
   }
+
+  // Work way through ancestors until we get a rectangle.
+  if (layer._parent) return getRectangleFromLayer(layer._parent);
+
   return undefined;
 }
 

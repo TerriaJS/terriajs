@@ -6,10 +6,7 @@ import { RelatedMap } from "../../Models/RelatedMaps";
 import Box from "../../Styled/Box";
 import { ExternalLinkIcon } from "../Custom/ExternalLink";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
-import {
-  withViewState,
-  WithViewState
-} from "../StandardUserInterface/ViewStateContext";
+import { withViewState, WithViewState } from "../Context";
 import Styles from "./related-maps.scss";
 
 const MenuPanel =
