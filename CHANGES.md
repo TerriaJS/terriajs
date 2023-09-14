@@ -2,6 +2,7 @@
 
 #### next release (8.3.4)
 
+- Add `timeWindowDuration`, `timeWindowUnit` and `isForwardTimeWindow` traits to esri-mapServer type to support time window query.
 - Move map credits to map column so it don't get hidden by chart panel
 - TSify `MapColumn` module and reorganize components directory structure.
 - Add null check to `WebMapServiceCatalogItem` `rectangle` calculation - and now we ascend tree of WMS `Layers` until we find a rectangle.
