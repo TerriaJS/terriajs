@@ -409,7 +409,8 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     return dateAsUnix;
   }
 
-  private getTimeParams(): TimeParams {
+  @computed
+  private get timeParams(): TimeParams {
     const currentTime = this.getCurrentTime();
     const timeWindowDuration = this.timeWindowDuration;
     const timeWindowUnit = this.timeWindowUnit;
@@ -425,7 +426,7 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
 
   @computed
   private get _currentImageryParts(): ImageryParts | undefined {
-    const timeParams = this.getTimeParams();
+    const timeParams = this.timeParams;
     const imageryProvider = this._createImageryProvider(timeParams);
     if (imageryProvider === undefined) {
       return undefined;
@@ -445,7 +446,7 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
       !this.isPaused &&
       this.nextDiscreteTimeTag
     ) {
-      const timeParams = this.getTimeParams();
+      const timeParams = this.timeParams;
       const imageryProvider = this._createImageryProvider(timeParams);
       if (imageryProvider === undefined) {
         return undefined;
