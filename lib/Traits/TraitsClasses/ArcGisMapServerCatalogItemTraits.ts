@@ -61,7 +61,7 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
   @primitiveTrait({
     name: "Time Window Duration",
     description:
-      "Specify a time window duration when querying a time-enabled layer. A positive value for forward window from current time; A negative value for backward window.",
+      "Specify a time window duration when querying a time-enabled layer. Will not query with time window for non-positive value",
     type: "number"
   })
   timeWindowDuration?: number;
@@ -73,4 +73,12 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
     type: "string"
   })
   timeWindowUnit?: string;
+
+  @primitiveTrait({
+    name: "Is Forward Time Window",
+    description:
+      "If true, the time window is forward from the current time. Otherwise backward. Default to forward window.",
+    type: "boolean"
+  })
+  isForwardTimeWindow: boolean = true;
 }

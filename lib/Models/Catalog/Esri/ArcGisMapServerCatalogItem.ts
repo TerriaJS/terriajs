@@ -333,6 +333,7 @@ interface TimeParams {
   currentTime: number | undefined;
   timeWindowDuration: number | undefined;
   timeWindowUnit: string | undefined;
+  isForwardTimeWindow: boolean;
 }
 
 export default class ArcGisMapServerCatalogItem extends UrlMixin(
@@ -412,10 +413,12 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     const currentTime = this.getCurrentTime();
     const timeWindowDuration = this.timeWindowDuration;
     const timeWindowUnit = this.timeWindowUnit;
+    const isForwardTimeWindow = this.isForwardTimeWindow;
     const timeParams = {
       currentTime,
       timeWindowDuration,
-      timeWindowUnit
+      timeWindowUnit,
+      isForwardTimeWindow
     } as TimeParams;
     return timeParams;
   }
@@ -463,6 +466,42 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     }
   }
 
+  private windowDurationInMs(
+    rawTimeWindowDuration: number | undefined,
+    timeWindowUnit: string | undefined
+  ): number | undefined {
+    if (
+      rawTimeWindowDuration === undefined ||
+      rawTimeWindowDuration === 0 ||
+      timeWindowUnit === undefined
+    ) {
+      return undefined;
+    }
+
+    const rawTimeWindowData: any = {};
+    rawTimeWindowData[timeWindowUnit] = rawTimeWindowDuration;
+    const duration = moment.duration(rawTimeWindowData).asMilliseconds();
+    if (duration === 0) {
+      return undefined;
+    } else {
+      return duration;
+    }
+  }
+
+  private getTimeWindowQueryString(
+    currentTime: number,
+    duration: number,
+    isForward: boolean = true
+  ) {
+    if (isForward) {
+      const toTime = Number(currentTime) + duration;
+      return currentTime + "," + toTime;
+    } else {
+      const fromTime = Number(currentTime) - duration;
+      return "" + fromTime + "," + currentTime;
+    }
+  }
+
   private _createImageryProvider = createTransformerAllowUndefined(
     (
       timeParams: TimeParams | undefined
@@ -475,49 +514,20 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         return;
       }
 
-      function windowDurationInMs(
-        windowDuration: number | undefined,
-        timeWindowUnit: string | undefined
-      ): number | undefined {
-        if (
-          windowDuration === undefined ||
-          windowDuration === 0 ||
-          timeWindowUnit === undefined
-        ) {
-          return undefined;
-        }
-
-        const rawTimeWindowData: any = {};
-        rawTimeWindowData[timeWindowUnit] = windowDuration;
-        const duration = moment.duration(rawTimeWindowData).asMilliseconds();
-        if (duration === 0) {
-          return undefined;
-        } else {
-          return duration;
-        }
-      }
-
-      function getTimeWindowQueryString(
-        currentTime: number,
-        windowDuration: number
-      ) {
-        const timeBound = Number(currentTime) + windowDuration;
-        if (windowDuration >= 0) {
-          return currentTime + "," + timeBound;
-        } else {
-          return "" + timeBound + "," + currentTime;
-        }
-      }
-
       const params: any = Object.assign({}, this.parameters);
       const currentTime = timeParams?.currentTime;
       if (currentTime !== undefined) {
-        const windowDuration = windowDurationInMs(
+        const windowDuration = this.windowDurationInMs(
           timeParams?.timeWindowDuration,
           timeParams?.timeWindowUnit
         );
+
         if (windowDuration !== undefined) {
-          params.time = getTimeWindowQueryString(currentTime, windowDuration);
+          params.time = this.getTimeWindowQueryString(
+            currentTime,
+            windowDuration,
+            timeParams?.isForwardTimeWindow
+          );
         } else {
           params.time = currentTime;
         }

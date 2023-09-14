@@ -508,7 +508,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       expect(imageryProvider.parameters.time).toBe(expectedTimeQueryString);
     });
 
-    it("can load a layer, querying time with forward window", async function () {
+    it("can load a layer, querying time with default forward window", async function () {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
         item.setTrait(
@@ -529,6 +529,28 @@ describe("ArcGisMapServerCatalogItem", function () {
       expect(imageryProvider.parameters.time).toBe(expectedTimeQueryString);
     });
 
+    it("can load a layer, querying time with explicit forward window", async function () {
+      runInAction(() => {
+        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item.setTrait(
+          CommonStrata.definition,
+          "url",
+          "http://example.com/cadastre_history/MapServer"
+        );
+        item.setTrait(CommonStrata.user, "timeWindowDuration", 2);
+        item.setTrait(CommonStrata.user, "timeWindowUnit", "week");
+        item.setTrait(CommonStrata.user, "isForwardTimeWindow", true);
+      });
+      const defaultCurrentTime = 1572789600000; // from json file
+      const twoWeekTime = 14 * 24 * 3600 * 1000;
+      const toTime = defaultCurrentTime + twoWeekTime;
+      await item.loadMapItems();
+      const expectedTimeQueryString = `${defaultCurrentTime},${toTime}`;
+      const imageryProvider = item.mapItems[0]
+        .imageryProvider as ArcGisMapServerImageryProvider;
+      expect(imageryProvider.parameters.time).toBe(expectedTimeQueryString);
+    });
+
     it("can load a layer, querying time with backward time window", async function () {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
@@ -537,8 +559,9 @@ describe("ArcGisMapServerCatalogItem", function () {
           "url",
           "http://example.com/cadastre_history/MapServer"
         );
-        item.setTrait(CommonStrata.user, "timeWindowDuration", -2);
+        item.setTrait(CommonStrata.user, "timeWindowDuration", 2);
         item.setTrait(CommonStrata.user, "timeWindowUnit", "week");
+        item.setTrait(CommonStrata.user, "isForwardTimeWindow", false);
       });
       const defaultCurrentTime = 1572789600000; // from json file
       const twoWeekTime = 14 * 24 * 3600 * 1000;
