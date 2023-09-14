@@ -79,12 +79,13 @@ export default class MouseCoords {
     );
   }
 
-  @action
+  @action.bound
   toggleUseProjection() {
     this.useProjection = !this.useProjection;
     this.updateEvent.raiseEvent();
   }
 
+  @action
   updateCoordinatesFromCesium(terria: Terria, position: Cartesian2) {
     if (!terria.cesium) {
       return;
@@ -120,7 +121,7 @@ export default class MouseCoords {
       let errorBar;
 
       if (globe.terrainProvider instanceof EllipsoidTerrainProvider) {
-        intersection.height = <any>undefined;
+        intersection.height = 0;
       } else {
         const barycentric = Intersections2D.computeBarycentricCoordinates(
           intersection.longitude,
@@ -187,6 +188,7 @@ export default class MouseCoords {
     }
   }
 
+  @action
   updateCoordinatesFromLeaflet(terria: Terria, mouseMoveEvent: MouseEvent) {
     if (!terria.leaflet) {
       return;
@@ -196,10 +198,9 @@ export default class MouseCoords {
     const coordinates = Cartographic.fromDegrees(
       latLng.lng,
       latLng.lat,
-      undefined,
+      0,
       scratchCartographic
     );
-    coordinates.height = <any>undefined;
     this.cartographicToFields(coordinates);
   }
 

@@ -1,9 +1,19 @@
 # Change Log
 
-#### next release (8.3.3)
+#### next release (8.3.4)
 
 - Allow a story to use iframe tag if the source is youtube, youtube-nocookie or vimeo.
+- Move map credits to map column so it don't get hidden by chart panel
+- TSify `MapColumn` module and reorganize components directory structure.
+- Add null check to `WebMapServiceCatalogItem` `rectangle` calculation - and now we ascend tree of WMS `Layers` until we find a rectangle.
 - [The next improvement]
+
+#### next release (8.3.3)
+
+- Fixed broken point dragging interaction for user drawing in 3D mode.
+- Fixed rectangle drawing in 2D mode.
+- Added EPSG:7855 to `Proj4Definitions`.
+- Fix multi level nesting in ArcGIS Mapserver.
 
 #### 8.3.2 - 2023-08-11
 
