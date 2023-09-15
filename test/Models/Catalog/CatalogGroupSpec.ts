@@ -1,16 +1,16 @@
-import CatalogMemberMixin from "../../../lib/ModelMixins/CatalogMemberMixin";
+import { runInAction } from "mobx";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import { getName } from "../../../lib/ModelMixins/CatalogMemberMixin";
 import CatalogGroup from "../../../lib/Models/Catalog/CatalogGroup";
 import GeoJsonCatalogItem from "../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import StubCatalogItem from "../../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
 import CatalogMemberFactory from "../../../lib/Models/Catalog/CatalogMemberFactory";
-import { getUniqueStubName } from "../../../lib/Models/Catalog/createStubCatalogItem";
+import SplitItemReference from "../../../lib/Models/Catalog/CatalogReferences/SplitItemReference";
 import WebMapServiceCatalogItem from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import { getUniqueStubName } from "../../../lib/Models/Catalog/createStubCatalogItem";
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import upsertModelFromJson from "../../../lib/Models/Definition/upsertModelFromJson";
 import Terria from "../../../lib/Models/Terria";
-import SplitItemReference from "../../../lib/Models/Catalog/CatalogReferences/SplitItemReference";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import { runInAction } from "mobx";
 
 describe("CatalogGroup", function () {
   let terria: Terria, json: any, catalogGroup: CatalogGroup;
@@ -245,6 +245,95 @@ describe("CatalogGroup", function () {
       "grandchild4",
       "grandchild1",
       "parent3"
+    ]);
+  });
+
+  it("only includes items/groups with includeMembersRegex", async function () {
+    json = {
+      type: "group",
+      id: "test",
+      includeMembersRegex: ".+(1|2)",
+      members: [
+        {
+          type: "group",
+          id: "grandchild1"
+        },
+        {
+          type: "group",
+          id: "grandchild2"
+        },
+        {
+          type: "group",
+          id: "grandchild3"
+        },
+        {
+          type: "group",
+          id: "grandchild4"
+        }
+      ]
+    };
+    upsertModelFromJson(
+      CatalogMemberFactory,
+      terria,
+      "",
+      "definition",
+      json,
+      {}
+    ).throwIfUndefined();
+
+    const item = <CatalogGroup>terria.getModelById(CatalogGroup, "test");
+
+    await item.loadMembers();
+
+    expect(item.includeMembersRegex).toEqual(".+(1|2)");
+    expect(item.memberModels.map((member) => getName(member))).toEqual([
+      "grandchild1",
+      "grandchild2"
+    ]);
+  });
+
+  it("combines includeMembersRegex and excludeMembers", async function () {
+    json = {
+      type: "group",
+      id: "test",
+      includeMembersRegex: ".+(1|2)",
+      excludeMembers: ["grandchild1"],
+      members: [
+        {
+          type: "group",
+          id: "grandchild1"
+        },
+        {
+          type: "group",
+          id: "grandchild2"
+        },
+        {
+          type: "group",
+          id: "grandchild3"
+        },
+        {
+          type: "group",
+          id: "grandchild4"
+        }
+      ]
+    };
+    upsertModelFromJson(
+      CatalogMemberFactory,
+      terria,
+      "",
+      "definition",
+      json,
+      {}
+    ).throwIfUndefined();
+
+    const item = <CatalogGroup>terria.getModelById(CatalogGroup, "test");
+
+    await item.loadMembers();
+
+    expect(item.includeMembersRegex).toEqual(".+(1|2)");
+    expect(item.mergedExcludeMembers).toEqual(["grandchild1"]);
+    expect(item.memberModels.map((member) => getName(member))).toEqual([
+      "grandchild2"
     ]);
   });
 
