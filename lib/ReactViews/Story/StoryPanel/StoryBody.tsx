@@ -73,8 +73,7 @@ function sourceBasedParse(story: Story) {
       { showExternalLinkWarning: true },
       false,
       {
-        ADD_TAGS: ["iframe"],
-        ALLOWED_ATTR: ["src", "width", "height"]
+        ADD_TAGS: ["iframe"]
       }
     );
   } else {

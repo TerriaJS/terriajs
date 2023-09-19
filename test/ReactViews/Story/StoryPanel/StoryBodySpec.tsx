@@ -22,7 +22,7 @@ describe("StoryBody", function () {
     });
 
     const storyBody = testRenderer.root.findAllByType(StoryBody);
-    expect(storyBody.length === 1);
+    expect(storyBody.length).toBe(1);
 
     const theInstance = (
       (
@@ -31,13 +31,13 @@ describe("StoryBody", function () {
       ).children[0] as ReactTestInstance
     ).children[0] as ReactTestInstance;
 
-    expect(theInstance.children.length === 4);
+    expect(theInstance.children.length).toBe(4);
 
     expect(theInstance.children[0] as string).toEqual("Story with video. ");
 
     let theIframeInstance = theInstance.children[1] as ReactTestInstance;
     expect(theIframeInstance.type).toBe("iframe");
-    expect(Object.keys(theIframeInstance.props).length).toBe(3);
+    expect(Object.keys(theIframeInstance.props).length).toBe(4);
     expect(theIframeInstance.props.src).toBe(
       "https://www.youtube.com/embed/1234"
     );
@@ -46,7 +46,7 @@ describe("StoryBody", function () {
 
     theIframeInstance = theInstance.children[2] as ReactTestInstance;
     expect(theIframeInstance.type).toBe("iframe");
-    expect(Object.keys(theIframeInstance.props).length).toBe(3);
+    expect(Object.keys(theIframeInstance.props).length).toBe(4);
     expect(theIframeInstance.props.src).toBe(
       "https://www.youtube-nocookie.com/embed/1234"
     );
@@ -55,7 +55,7 @@ describe("StoryBody", function () {
 
     theIframeInstance = theInstance.children[3] as ReactTestInstance;
     expect(theIframeInstance.type).toBe("iframe");
-    expect(Object.keys(theIframeInstance.props).length).toBe(3);
+    expect(Object.keys(theIframeInstance.props).length).toBe(4);
     expect(theIframeInstance.props.src).toBe(
       "https://player.vimeo.com/video/1234"
     );
@@ -75,7 +75,7 @@ describe("StoryBody", function () {
     });
 
     const storyBody = testRenderer.root.findAllByType(StoryBody);
-    expect(storyBody.length === 1);
+    expect(storyBody.length).toBe(1);
 
     const theInstance = (
       (
@@ -84,9 +84,10 @@ describe("StoryBody", function () {
       ).children[0] as ReactTestInstance
     ).children[0] as ReactTestInstance;
 
-    expect(theInstance.children.length === 1);
+    expect(theInstance.children.length).toBe(1);
     expect(theInstance.children[0] as string).toEqual("Story with video. ");
   });
+
   it("should not add iframe tag if there is no iframe in the story text", function () {
     const theStory = {
       id: "some id",
