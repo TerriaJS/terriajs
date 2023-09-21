@@ -1,6 +1,5 @@
-import { CatalogMemberMixin } from "terriajs-plugin-api";
 import { JsonObject } from "../Core/Json";
-import { getName } from "../ModelMixins/CatalogMemberMixin";
+import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import TerriaFeature from "../Models/Feature/Feature";
 import { isTerriaFeatureData } from "../Models/Feature/FeatureData";
