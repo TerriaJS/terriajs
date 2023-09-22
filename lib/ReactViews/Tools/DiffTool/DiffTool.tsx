@@ -9,8 +9,8 @@ import {
 } from "mobx";
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
-import { useState } from "react";
 import * as React from "react";
+import { useState } from "react";
 import ReactDOM from "react-dom";
 import {
   WithTranslation,
@@ -54,7 +54,7 @@ import ImageryProviderTraits from "../../../Traits/TraitsClasses/ImageryProvider
 import { useViewState } from "../../Context";
 import { parseCustomMarkdownToReactWithOptions } from "../../Custom/parseCustomMarkdownToReact";
 import Loader from "../../Loader";
-import { CLOSE_TOOL_ID } from "../../Map/Navigation/registerMapNavigations";
+import { CLOSE_TOOL_ID } from "../../Map/MapNavigation/registerMapNavigations";
 import DatePicker from "./DatePicker";
 import LocationPicker from "./LocationPicker";
 

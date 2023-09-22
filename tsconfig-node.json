@@ -16,9 +16,11 @@
     "outDir": "dist",
     "resolveJsonModule": true,
     "typeRoots": [
-      "./lib/ThirdParty"
-      //"./node_modules/@types",
-      //"../node_modules/@types"
+      "./lib/ThirdParty",
+      "./node_modules/",
+      "../node_modules/"
+      // "./node_modules/@types",
+      // "../node_modules/@types"
     ],
     "types": [
       "terriajs-cesium",
