@@ -277,6 +277,3 @@ This file will have to be re-generated manually every time the catalog structure
 
 For more details see [/buildprocess/generateCatalogIndex.ts](/buildprocess/generateCatalogIndex.ts)
 
-```
-
-```
