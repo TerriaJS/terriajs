@@ -1,6 +1,7 @@
 import { action } from "mobx";
 import { observer } from "mobx-react";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import * as React from "react";
 import ReactDOM from "react-dom";
 import ViewState from "../../ReactViewModels/ViewState";
 import { useViewState } from "../Context";

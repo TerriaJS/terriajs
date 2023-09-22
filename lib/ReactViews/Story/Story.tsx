@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { TFunction } from "i18next";
-import React, { MouseEventHandler, useEffect, useRef } from "react";
+import { MouseEventHandler, useEffect, useRef } from "react";
+import * as React from "react";
 import { sortable } from "react-anything-sortable";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";

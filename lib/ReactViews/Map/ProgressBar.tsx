@@ -1,4 +1,4 @@
-import React, { VFC, useCallback, useEffect, useMemo, useState } from "react";
+import { VFC, useCallback, useEffect, useMemo, useState } from "react";
 import styled, { css, keyframes, useTheme } from "styled-components";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import { useViewState } from "../Context";

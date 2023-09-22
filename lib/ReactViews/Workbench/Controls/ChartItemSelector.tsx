@@ -1,6 +1,6 @@
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "styled-components";
 import ChartView from "../../../Charts/ChartView";

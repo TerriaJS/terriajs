@@ -1,4 +1,4 @@
-import React from "react";
+import { Component } from "react";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 
@@ -12,7 +12,7 @@ import Styles from "./mobile-search.scss";
 
 // A Location item when doing Bing map searvh or Gazetter search
 @observer
-class MobileSearch extends React.Component {
+class MobileSearch extends Component {
   static propTypes = {
     viewState: PropTypes.object,
     terria: PropTypes.object,

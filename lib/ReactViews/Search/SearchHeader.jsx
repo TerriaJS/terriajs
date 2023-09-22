@@ -1,12 +1,12 @@
 import Loader from "../Loader";
 import { observer } from "mobx-react";
-import React from "react";
+import { Component } from "react";
 import PropTypes from "prop-types";
 import Styles from "./search-header.scss";
 
 /** Renders either a loader or a message based off search state. */
 @observer
-class SearchHeader extends React.Component {
+class SearchHeader extends Component {
   static propTypes = {
     searchResults: PropTypes.object.isRequired,
     isWaitingForSearchToStart: PropTypes.bool

@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 
 export interface HiddenCheckboxProps extends React.HTMLProps<HTMLInputElement> {
   disabled?: boolean;

@@ -1,5 +1,5 @@
 import { TFunction } from "i18next";
-import React from "react";
+import { Component } from "react";
 import { withTranslation } from "react-i18next";
 import DataUri from "../../Core/DataUri";
 import filterOutUndefined from "../../Core/filterOutUndefined";
@@ -11,7 +11,7 @@ import Styles from "./feature-info-download.scss";
 
 const Dropdown = require("../Generic/Dropdown");
 
-class FeatureInfoDownload extends React.Component<{
+class FeatureInfoDownload extends Component<{
   data: JsonObject;
   name: string;
   viewState: ViewState;

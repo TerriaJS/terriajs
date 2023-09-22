@@ -6,7 +6,7 @@
  */
 
 import { observer } from "mobx-react";
-import React from "react";
+import { Component } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { withTranslation } from "react-i18next";
@@ -36,7 +36,7 @@ const RawButtonAndHighlight = styled(RawButton)`
 const MAX_RESULTS_BEFORE_TRUNCATING = 5;
 
 @observer
-class LocationSearchResults extends React.Component {
+class LocationSearchResults extends Component {
   static propTypes = {
     viewState: PropTypes.object.isRequired,
     isWaitingForSearchToStart: PropTypes.bool,

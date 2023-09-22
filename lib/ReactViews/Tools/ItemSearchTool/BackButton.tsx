@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { useTheme } from "styled-components";
 import { BoxSpan } from "../../../Styled/Box";
 import Button from "../../../Styled/Button";

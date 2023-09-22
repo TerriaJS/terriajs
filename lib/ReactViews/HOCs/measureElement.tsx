@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import debounce from "lodash-es/debounce";
 
 const getDisplayName = <P extends React.ComponentProps<any>>(

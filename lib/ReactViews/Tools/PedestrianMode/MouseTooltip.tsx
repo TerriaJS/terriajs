@@ -1,4 +1,5 @@
-import React, { createRef, useEffect } from "react";
+import { createRef, useEffect } from "react";
+import * as React from "react";
 import styled from "styled-components";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Scene from "terriajs-cesium/Source/Scene/Scene";

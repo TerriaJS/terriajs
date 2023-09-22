@@ -8,7 +8,8 @@ import {
 } from "mobx";
 import { observer } from "mobx-react";
 import Slider from "rc-slider";
-import React, { ChangeEvent, ComponentProps, MouseEvent } from "react";
+import { ChangeEvent, ComponentProps, MouseEvent } from "react";
+import * as React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
