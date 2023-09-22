@@ -43,7 +43,8 @@ export default class BingMapsCatalogItem extends MappableMixin(
     const result = new BingMapsImageryProvider({
       url: "//dev.virtualearth.net",
       mapStyle: <any>this.mapStyle,
-      key: this.key!
+      key: this.key!,
+      culture: this.culture
     });
 
     if (this.attribution) {

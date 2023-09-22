@@ -27,4 +27,11 @@ export default class BingMapsCatalogItemTraits extends mixTraits(
     description: "The Bing Maps key"
   })
   key?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Culture",
+    description: "The Bing Maps culture code"
+  })
+  culture?: string;
 }
