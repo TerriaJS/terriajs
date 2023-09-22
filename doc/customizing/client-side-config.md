@@ -276,4 +276,3 @@ This file will have to be re-generated manually every time the catalog structure
 -   dynamic groups are updated (for example, WMS server publishes new layers)
 
 For more details see [/buildprocess/generateCatalogIndex.ts](/buildprocess/generateCatalogIndex.ts)
-
