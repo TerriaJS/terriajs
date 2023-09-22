@@ -25,7 +25,7 @@ import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson
 import TerriaFeature from "../../lib/Models/Feature/Feature";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
-import { FeatureInfoSection } from "../../lib/ReactViews/FeatureInfo/FeatureInfoSection";
+import FeatureInfoSection from "../../lib/ReactViews/FeatureInfo/FeatureInfoSection";
 import mixTraits from "../../lib/Traits/mixTraits";
 import DiscretelyTimeVaryingTraits from "../../lib/Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import FeatureInfoUrlTemplateTraits from "../../lib/Traits/TraitsClasses/FeatureInfoTraits";
@@ -97,8 +97,6 @@ describe("FeatureInfoSection", function () {
         catalogItem={catalogItem}
         feature={feature}
         isOpen={true}
-        viewState={viewState}
-        t={() => {}}
       />
     );
     const result = createWithContexts(viewState, section);
@@ -116,8 +114,6 @@ describe("FeatureInfoSection", function () {
         catalogItem={catalogItem}
         feature={feature}
         isOpen={true}
-        viewState={viewState}
-        t={() => {}}
       />
     );
     const result = createWithContexts(viewState, section);
@@ -155,8 +151,6 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen={true}
         catalogItem={catalogItem}
-        viewState={viewState}
-        t={() => {}}
       />
     );
     const result = createWithContexts(viewState, section);
@@ -182,8 +176,6 @@ describe("FeatureInfoSection", function () {
         feature={feature}
         isOpen={true}
         catalogItem={catalogItem}
-        viewState={viewState}
-        t={() => {}}
       />
     );
     const result2 = createWithContexts(viewState, section2);
@@ -201,8 +193,6 @@ describe("FeatureInfoSection", function () {
         catalogItem={catalogItem}
         feature={feature}
         isOpen={true}
-        viewState={viewState}
-        t={() => {}}
       />
     );
     const result = createWithContexts(viewState, section);
@@ -224,8 +214,6 @@ describe("FeatureInfoSection", function () {
         catalogItem={catalogItem}
         feature={feature}
         isOpen={true}
-        viewState={viewState}
-        t={() => {}}
       />
     );
     const result = createWithContexts(viewState, section);
@@ -247,8 +235,6 @@ describe("FeatureInfoSection", function () {
         catalogItem={catalogItem}
         feature={feature}
         isOpen={true}
-        viewState={viewState}
-        t={() => {}}
       />
     );
     const result = createWithContexts(viewState, section);
@@ -266,8 +252,6 @@ describe("FeatureInfoSection", function () {
         catalogItem={catalogItem}
         feature={feature}
         isOpen={true}
-        viewState={viewState}
-        t={() => {}}
       />
     );
     const result = createWithContexts(viewState, section);
@@ -291,8 +275,6 @@ describe("FeatureInfoSection", function () {
         catalogItem={catalogItem}
         feature={feature}
         isOpen={true}
-        viewState={viewState}
-        t={() => {}}
       />
     );
     const result = createWithContexts(viewState, section);
@@ -312,8 +294,6 @@ describe("FeatureInfoSection", function () {
         catalogItem={catalogItem}
         feature={feature}
         isOpen={true}
-        viewState={viewState}
-        t={() => {}}
       />
     );
     const result = createWithContexts(viewState, section);
@@ -342,8 +322,6 @@ describe("FeatureInfoSection", function () {
         catalogItem={catalogItem}
         feature={feature}
         isOpen={true}
-        viewState={viewState}
-        t={() => {}}
       />
     );
     const result = createWithContexts(viewState, section);
@@ -368,8 +346,6 @@ describe("FeatureInfoSection", function () {
         catalogItem={catalogItem}
         feature={feature}
         isOpen={true}
-        viewState={viewState}
-        t={() => {}}
       />
     );
     const result = createWithContexts(viewState, section);
@@ -395,8 +371,6 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           feature={feature}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -416,8 +390,6 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           feature={feature}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -439,8 +411,6 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           feature={feature}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -463,8 +433,6 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           feature={feature}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -494,8 +462,6 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           feature={feature}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -525,8 +491,6 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           catalogItem={catalogItem}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -559,8 +523,6 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           catalogItem={catalogItem}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -586,8 +548,6 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           catalogItem={catalogItem}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -613,8 +573,6 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           catalogItem={catalogItem}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -635,8 +593,6 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           catalogItem={catalogItem}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -670,8 +626,6 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           catalogItem={catalogItem}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -716,8 +670,6 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           catalogItem={catalogItem}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -751,8 +703,6 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           catalogItem={catalogItem}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -773,8 +723,6 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           catalogItem={catalogItem}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -795,8 +743,6 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           catalogItem={catalogItem}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -817,8 +763,6 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           catalogItem={catalogItem}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -837,8 +781,6 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           catalogItem={catalogItem}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -859,8 +801,6 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           catalogItem={catalogItem}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -882,8 +822,6 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           catalogItem={catalogItem}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -908,8 +846,6 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           catalogItem={catalogItem}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -932,8 +868,6 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           catalogItem={catalogItem}
           isOpen={false}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -958,9 +892,7 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           feature={feature}
           isOpen={true}
-          viewState={viewState}
           position={position}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -990,8 +922,6 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           feature={feature} // feature.properties.name === "Kay";
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       let result = createWithContexts(viewState, section);
@@ -1004,8 +934,6 @@ describe("FeatureInfoSection", function () {
           feature={feature}
           catalogItem={catalogItem}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       result = createWithContexts(viewState, section);
@@ -1034,8 +962,6 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           feature={feature} // feature.properties.name === "Kay";
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -1064,8 +990,6 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           feature={feature} // feature.properties.name === "Kay";
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -1115,9 +1039,7 @@ describe("FeatureInfoSection", function () {
         <FeatureInfoSection
           feature={feature}
           isOpen={true}
-          viewState={viewState}
           catalogItem={catalogItem}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -1182,8 +1104,6 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           feature={feature}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -1203,8 +1123,6 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           feature={feature}
           isOpen={true}
-          viewState={viewState}
-          t={i18next.t}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -1227,8 +1145,6 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           feature={feature}
           isOpen={true}
-          viewState={viewState}
-          t={i18next.getFixedT("cimode")}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -1265,8 +1181,6 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           feature={czmlFeature}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       const result = createWithContexts(viewState, section);
@@ -1305,8 +1219,6 @@ describe("FeatureInfoSection", function () {
           feature={czmlFeature}
           isOpen={true}
           catalogItem={czmlItem}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       let result = createWithContexts(viewState, section);
@@ -1318,8 +1230,6 @@ describe("FeatureInfoSection", function () {
           feature={czmlFeature}
           isOpen={true}
           catalogItem={czmlItem}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       result = createWithContexts(viewState, section);
@@ -1332,8 +1242,6 @@ describe("FeatureInfoSection", function () {
           feature={czmlFeature}
           isOpen={true}
           catalogItem={czmlItem}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       result = createWithContexts(viewState, section);
@@ -1366,8 +1274,6 @@ describe("FeatureInfoSection", function () {
           catalogItem={catalogItem}
           feature={feature}
           isOpen={true}
-          viewState={viewState}
-          t={() => {}}
         />
       );
       expect(findWithText(result, "More info on steel").length).toEqual(1);

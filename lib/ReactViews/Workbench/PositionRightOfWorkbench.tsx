@@ -6,6 +6,7 @@ import ViewState from "../../ReactViewModels/ViewState";
 type PositionRightOfWorkbenchProps = {
   viewState: ViewState;
   className?: string;
+  children: React.ReactNode;
 };
 
 /**
@@ -21,8 +22,8 @@ type PositionRightOfWorkbenchProps = {
  *    `;
  *
  */
-const PositionRightOfWorkbench: React.FC<PositionRightOfWorkbenchProps> =
-  observer((props) => {
+const PositionRightOfWorkbench = observer(
+  (props: PositionRightOfWorkbenchProps) => {
     return (
       <Container
         className={props.className}
@@ -31,7 +32,8 @@ const PositionRightOfWorkbench: React.FC<PositionRightOfWorkbenchProps> =
         {props.children}
       </Container>
     );
-  });
+  }
+);
 
 const Container = styled.div<{ isMapFullScreen: boolean }>`
   position: absolute;

@@ -37,6 +37,7 @@ export const Portal: React.FC<PortalProps> = ({ id, className }) => {
 export type PortalChildProps = {
   viewState: ViewState;
   portalId: string;
+  children: React.ReactNode;
 };
 
 /**

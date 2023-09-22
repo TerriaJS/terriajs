@@ -12,8 +12,8 @@ import {
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
 import Mustache from "mustache";
-import React from "react";
-import { withTranslation } from "react-i18next";
+import * as React from "react";
+import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -51,14 +51,13 @@ Mustache.escape = function (string) {
   return string;
 };
 
-interface FeatureInfoProps extends WithViewState {
+interface FeatureInfoProps extends WithViewState, WithTranslation {
   feature: TerriaFeature;
   position?: Cartesian3;
   catalogItem: MappableMixin.Instance; // Note this may not be known (eg. WFS).
   isOpen: boolean;
   onClickHeader?: (feature: TerriaFeature) => void;
   printView?: boolean;
-  t: TFunction;
 }
 
 @observer
