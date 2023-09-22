@@ -13,7 +13,17 @@
     "useDefineForClassFields": true, // required for mobx6 - https://mobx.js.org/installation.html#use-spec-compliant-transpilation-for-class-properties
     "outDir": "ts-out",
     "resolveJsonModule": true,
-    "typeRoots": ["./lib/ThirdParty/**/*.d.ts"],
+    "typeRoots": [
+      "./lib/ThirdParty/",
+      "./node_modules/",
+      "./node_modules/@types/",
+      "../node_modules/",
+      "../node_modules/@types/",
+      "../../node_modules/",
+      "../../node_modules/@types/",
+      "../../../node_modules/",
+      "../../../node_modules/@types/"
+    ],
     "types": ["terriajs-cesium"]
   },
   "include": [
