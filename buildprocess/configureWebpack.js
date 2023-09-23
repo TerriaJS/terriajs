@@ -45,27 +45,27 @@ function configureWebpack(
 
   config.module.rules.push({
     test: /\.js?$/,
-    include: path.dirname(require.resolve("terriajs-cesium")),
+    include: path.dirname(require.resolve("terriajs-cesium/README.md")),
     exclude: [
-      require.resolve("terriajs-cesium/Source/ThirdParty/zip"),
-      require.resolve("terriajs-cesium/Source/Core/buildModuleUrl"),
-      require.resolve("terriajs-cesium/Source/Core/TaskProcessor")
+      // require.resolve("terriajs-cesium/Source/ThirdParty/zip"),
+      // require.resolve("terriajs-cesium/Source/Core/buildModuleUrl"),
+      // require.resolve("terriajs-cesium/Source/Core/TaskProcessor")
     ],
     loader: StringReplacePlugin.replace({
       replacements: [
-        {
-          pattern: /buildModuleUrl\([\'|\"|\`](.*)[\'|\"|\`]\)/gi,
-          replacement: function (match, p1, offset, string) {
-            let p1_modified = p1.replace(/\\/g, "\\\\");
-            return (
-              "require(`" +
-              cesiumDir.replace(/\\/g, "\\\\") +
-              "/Source/" +
-              p1_modified +
-              "`)"
-            );
-          }
-        },
+        // {
+        //   pattern: /buildModuleUrl\([\'|\"|\`](.*)[\'|\"|\`]\)/gi,
+        //   replacement: function (match, p1, offset, string) {
+        //     let p1_modified = p1.replace(/\\/g, "\\\\");
+        //     return (
+        //       "require(`" +
+        //       cesiumDir.replace(/\\/g, "\\\\") +
+        //       "/Source/" +
+        //       p1_modified +
+        //       "`)"
+        //     );
+        //   }
+        // },
         {
           pattern: /Please assign <i>Cesium.Ion.defaultAccessToken<\/i>/g,
           replacement: function () {
