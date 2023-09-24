@@ -6,10 +6,7 @@ import {
   WithTranslation,
   withTranslation
 } from "react-i18next";
-import ReactSelect, {
-  ActionMeta,
-  OnChangeValue
-} from "react-select";
+import ReactSelect, { ActionMeta, OnChangeValue } from "react-select";
 import styled from "styled-components";
 import ItemSearchProvider, {
   EnumItemSearchParameter,
@@ -216,10 +213,7 @@ interface EnumParameterProps {
   disabled: boolean;
 }
 
-type SelectOnChangeHandler<
-  OptionType,
-  IsMulti extends boolean
-> = (
+type SelectOnChangeHandler<OptionType, IsMulti extends boolean> = (
   value: OnChangeValue<OptionType, IsMulti>,
   actionMeta: ActionMeta<OptionType>
 ) => void;
