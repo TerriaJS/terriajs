@@ -542,11 +542,11 @@ class LeafletGeomVisualizer {
       CesiumMath.toDegrees(cart.latitude),
       CesiumMath.toDegrees(cart.longitude)
     );
-    const text = getValue(labelGraphics.text, time);
-    const font = getValue(labelGraphics.font as unknown as Property, time);
+    const text = getValue<string>(labelGraphics.text, time);
+    const font = getValue<string>(labelGraphics.font, time);
     const scale = getValueOrDefault(labelGraphics.scale, time, 1.0);
     const fillColor = getValueOrDefault(
-      labelGraphics.fillColor as unknown as Property,
+      labelGraphics.fillColor,
       time,
       defaultColor
     );
@@ -600,7 +600,7 @@ class LeafletGeomVisualizer {
       }
     }
 
-    if (redrawLabel) {
+    if (redrawLabel && isDefined(text)) {
       const drawBillboard = function (
         image: HTMLImageElement,
         dataurl: string
@@ -621,13 +621,15 @@ class LeafletGeomVisualizer {
         fillColor: fillColor,
         font: font
       });
-      const imageUrl = canvas.toDataURL();
+      if (isDefined(canvas)) {
+        const imageUrl = canvas.toDataURL();
 
-      const img = new Image();
-      img.onload = function () {
-        drawBillboard(img, imageUrl);
-      };
-      img.src = imageUrl;
+        const img = new Image();
+        img.onload = function () {
+          drawBillboard(img, imageUrl);
+        };
+        img.src = imageUrl;
+      }
     }
   }
 

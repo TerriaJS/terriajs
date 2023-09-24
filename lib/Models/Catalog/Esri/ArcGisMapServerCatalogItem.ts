@@ -37,6 +37,7 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import MinMaxLevelMixin from "./../../../ModelMixins/MinMaxLevelMixin";
 import { Extent, Layer, MapServer } from "./ArcGisInterfaces";
 import moment from "moment";
+import { IPromiseBasedObservable, fromPromise } from "mobx-utils";
 
 const proj4 = require("proj4").default;
 
@@ -368,7 +369,10 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
   }
 
   protected forceLoadMapItems(): Promise<void> {
-    return this.forceLoadMetadata();
+    return Promise.all([
+      this._currentImageryPromise,
+      this._nextImageryPromise
+    ]).then(() => {});
   }
 
   @override
@@ -425,43 +429,70 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
   }
 
   @computed
-  private get _currentImageryParts(): ImageryParts | undefined {
+  private get _currentImageryPromise() {
     const timeParams = this.timeParams;
-    const imageryProvider = this._createImageryProvider(timeParams);
-    if (imageryProvider === undefined) {
-      return undefined;
-    }
-    return {
-      imageryProvider,
-      alpha: this.opacity,
-      show: this.show,
-      clippingRectangle: this.clipToRectangle ? this.cesiumRectangle : undefined
-    };
+    return this._createImageryProvider(timeParams);
+  }
+
+  private get _currentImageryParts(): ImageryParts | undefined {
+    const imageryProviderObservablePromise = this._currentImageryPromise;
+
+    // Return an ImageryPart when the the promise is fulfilled with a valid imageryProvider
+    const imageryPart =
+      imageryProviderObservablePromise.value instanceof
+      ArcGisMapServerImageryProvider
+        ? {
+            imageryProvider: imageryProviderObservablePromise.value,
+            alpha: this.opacity,
+            show: this.show,
+            clippingRectangle: this.clipToRectangle
+              ? this.cesiumRectangle
+              : undefined
+          }
+        : undefined;
+
+    return imageryPart;
   }
 
   @computed
-  private get _nextImageryParts(): ImageryParts | undefined {
+  private get _nextImageryPromise() {
     if (
       this.terria.timelineStack.contains(this) &&
       !this.isPaused &&
       this.nextDiscreteTimeTag
     ) {
       const timeParams = this.timeParams;
-      const imageryProvider = this._createImageryProvider(timeParams);
-      if (imageryProvider === undefined) {
-        return undefined;
-      }
+      return this._createImageryProvider(timeParams);
+    } else {
+      return undefined;
+    }
+  }
 
-      imageryProvider.enablePickFeatures = false;
-
-      return {
-        imageryProvider,
-        alpha: 0.0,
-        show: true,
-        clippingRectangle: this.clipToRectangle
-          ? this.cesiumRectangle
-          : undefined
-      };
+  @computed
+  get _nextImageryParts(): ImageryParts | undefined {
+    const imageryProviderObservablePromise = this._nextImageryPromise;
+    if (isDefined(imageryProviderObservablePromise)) {
+      imageryProviderObservablePromise.case({
+        fulfilled: (imageryProvider) => {
+          // Disable feature picking for the next imagery layer
+          if (imageryProvider instanceof ArcGisMapServerImageryProvider)
+            imageryProvider.enablePickFeatures = false;
+        }
+      });
+      // Return an ImageryPart when the the promise is fulfilled with a valid imageryProvider
+      const imageryPart =
+        imageryProviderObservablePromise.value instanceof
+        ArcGisMapServerImageryProvider
+          ? {
+              imageryProvider: imageryProviderObservablePromise.value,
+              alpha: 0.0,
+              show: true,
+              clippingRectangle: this.clipToRectangle
+                ? this.cesiumRectangle
+                : undefined
+            }
+          : undefined;
+      return imageryPart;
     } else {
       return undefined;
     }
@@ -506,13 +537,13 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
   private _createImageryProvider = createTransformerAllowUndefined(
     (
       timeParams: TimeParams | undefined
-    ): ArcGisMapServerImageryProvider | undefined => {
+    ): IPromiseBasedObservable<ArcGisMapServerImageryProvider | undefined> => {
       const stratum = <MapServerStratum>(
         this.strata.get(MapServerStratum.stratumName)
       );
 
       if (!isDefined(this.url) || !isDefined(stratum)) {
-        return;
+        return fromPromise(Promise.resolve(undefined));
       }
 
       const params: any = Object.assign({}, this.parameters);
@@ -540,25 +571,29 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
         false
       );
 
-      const imageryProvider = new ArcGisMapServerImageryProvider({
-        url: cleanAndProxyUrl(this, getBaseURI(this).toString()),
-        layers: this.layersArray.map((l) => l.id).join(","),
-        tilingScheme: new WebMercatorTilingScheme(),
-        maximumLevel: maximumLevel,
-        tileHeight: this.tileHeight,
-        tileWidth: this.tileWidth,
-        parameters: params,
-        enablePickFeatures: this.allowFeaturePicking,
-        /** Only used "pre-cached" tiles if we aren't requesting any specific layers
-         * If the `layersArray` property is specified, we request individual dynamic layers and ignore the fused map cache.
-         */
-        usePreCachedTilesIfAvailable: this.layersArray.length == 0,
-        mapServerData: stratum.mapServer,
-        token: stratum.token,
-        credit: this.attribution
-      });
+      const imageryProviderPromise = ArcGisMapServerImageryProvider.fromUrl(
+        cleanAndProxyUrl(this, getBaseURI(this).toString()),
+        {
+          layers: this.layersArray.map((l) => l.id).join(","),
+          tilingScheme: new WebMercatorTilingScheme(),
+          maximumLevel: maximumLevel,
+          tileHeight: this.tileHeight,
+          tileWidth: this.tileWidth,
+          parameters: params,
+          enablePickFeatures: this.allowFeaturePicking,
+          /** Only used "pre-cached" tiles if we aren't requesting any specific layers
+           * If the `layersArray` property is specified, we request individual dynamic layers and ignore the fused map cache.
+           */
+          usePreCachedTilesIfAvailable: this.layersArray.length == 0,
+          mapServerData: stratum.mapServer,
+          token: stratum.token,
+          credit: this.attribution
+        }
+      );
 
-      return this.updateRequestImage(imageryProvider, false);
+      return fromPromise(
+        this.updateRequestImageAsync(imageryProviderPromise, false)
+      );
     }
   );
 

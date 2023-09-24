@@ -9,7 +9,6 @@ import {
   runInAction
 } from "mobx";
 import { computedFn } from "mobx-utils";
-import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -19,7 +18,6 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnimationFrame";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
@@ -187,7 +185,7 @@ export default class Leaflet extends GlobeOrMap {
     const ticker = () => {
       if (!this._stopRequestAnimationFrame) {
         this.terria.timelineClock.tick();
-        this._cesiumReqAnimFrameId = cesiumRequestAnimationFrame(ticker);
+        this._cesiumReqAnimFrameId = requestAnimationFrame(ticker);
       }
     };
 
@@ -340,7 +338,7 @@ export default class Leaflet extends GlobeOrMap {
     // synchronously as a result of timelineClock ticking due to ticker()
     this._stopRequestAnimationFrame = true;
     if (isDefined(this._cesiumReqAnimFrameId)) {
-      cesiumCancelAnimationFrame(this._cesiumReqAnimFrameId);
+      cancelAnimationFrame(this._cesiumReqAnimFrameId);
     }
     this.dataSourceDisplay.destroy();
     this.map.off("move");
@@ -931,8 +929,15 @@ export default class Leaflet extends GlobeOrMap {
 
     if (isDefined(feature) && isDefined(feature.position)) {
       const cartographicScratch = new Cartographic();
+      const cartesianPosition = feature.position.getValue(
+        this.terria.timelineClock.currentTime
+      );
+      if (cartesianPosition === undefined) {
+        this._selectionIndicator.animateSelectionIndicatorDepart();
+        return;
+      }
       const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
-        feature.position.getValue(this.terria.timelineClock.currentTime),
+        cartesianPosition,
         cartographicScratch
       );
       this._selectionIndicator.setLatLng(

@@ -11,7 +11,7 @@ import {
   runInAction,
   toJS
 } from "mobx";
-import { computedFn } from "mobx-utils";
+import { computedFn, fromPromise, IPromiseBasedObservable } from "mobx-utils";
 import AssociativeArray from "terriajs-cesium/Source/Core/AssociativeArray";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -19,7 +19,7 @@ import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 import Clock from "terriajs-cesium/Source/Core/Clock";
-import createWorldTerrain from "terriajs-cesium/Source/Core/createWorldTerrain";
+import createWorldTerrainAsync from "terriajs-cesium/Source/Core/createWorldTerrainAsync";
 import Credit from "terriajs-cesium/Source/Core/Credit";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -56,7 +56,7 @@ import Scene from "terriajs-cesium/Source/Scene/Scene";
 import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
 import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
-import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
+import CesiumWidget from "terriajs-cesium/Source/Widget/CesiumWidget";
 import getElement from "terriajs-cesium/Source/Widgets/getElement";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
@@ -91,6 +91,7 @@ import GlobeOrMap from "./GlobeOrMap";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
 import { setViewerMode } from "./ViewerMode";
+import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
@@ -176,7 +177,10 @@ export default class Cesium extends GlobeOrMap {
     const options = {
       dataSources: this.dataSources,
       clock: this.terria.timelineClock,
-      imageryProvider: new SingleTileImageryProvider({ url: img }),
+      baseLayer: ImageryLayer.fromProviderAsync(
+        SingleTileImageryProvider.fromUrl(img),
+        {}
+      ),
       scene3DOnly: true,
       shadows: true,
       useBrowserRecommendedResolution: !this.terria.useNativeResolution
@@ -258,12 +262,12 @@ export default class Cesium extends GlobeOrMap {
     //     ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT);
 
     // Handle mouse move
-    inputHandler.setInputAction((e) => {
+    inputHandler.setInputAction((e: ScreenSpaceEventHandler.MotionEvent) => {
       this.mouseCoords.updateCoordinatesFromCesium(this.terria, e.endPosition);
     }, ScreenSpaceEventType.MOUSE_MOVE);
 
     inputHandler.setInputAction(
-      (e) => {
+      (e: ScreenSpaceEventHandler.MotionEvent) => {
         this.mouseCoords.updateCoordinatesFromCesium(
           this.terria,
           e.endPosition
@@ -274,16 +278,19 @@ export default class Cesium extends GlobeOrMap {
     );
 
     // Handle left click by picking objects from the map.
-    inputHandler.setInputAction((e) => {
-      if (!this.isFeaturePickingPaused)
-        this.pickFromScreenPosition(e.position, false);
-    }, ScreenSpaceEventType.LEFT_CLICK);
+    inputHandler.setInputAction(
+      (e: ScreenSpaceEventHandler.PositionedEvent) => {
+        if (!this.isFeaturePickingPaused)
+          this.pickFromScreenPosition(e.position, false);
+      },
+      ScreenSpaceEventType.LEFT_CLICK
+    );
 
     let zoomUserDrawing: UserDrawing | undefined;
 
     // Handle zooming on SHIFT + MOUSE DOWN
     inputHandler.setInputAction(
-      (e) => {
+      (e: ScreenSpaceEventHandler.PositionedEvent) => {
         if (!this.isFeaturePickingPaused && !isDefined(zoomUserDrawing)) {
           this.pauseMapInteraction();
 
@@ -347,7 +354,7 @@ export default class Cesium extends GlobeOrMap {
     // Handle SHIFT + CLICK for zooming
 
     inputHandler.setInputAction(
-      (e) => {
+      (e: ScreenSpaceEventHandler.PositionedEvent) => {
         if (isDefined(zoomUserDrawing)) {
           this.pickFromScreenPosition(e.position, false);
         }
@@ -395,15 +402,16 @@ export default class Cesium extends GlobeOrMap {
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
     this._disposeTerrainReaction = autorun(() => {
       this.scene.globe.terrainProvider = this.terrainProvider;
-      this.scene.globe.splitDirection = this.terria.showSplitter
-        ? this.terria.terrainSplitDirection
-        : SplitDirection.NONE;
+      // TODO: bring over globe and atmosphere splitting support from terriajs-cesium
+      // this.scene.globe.splitDirection = this.terria.showSplitter
+      //   ? this.terria.terrainSplitDirection
+      //   : SplitDirection.NONE;
       this.scene.globe.depthTestAgainstTerrain =
         this.terria.depthTestAgainstTerrainEnabled;
-      if (this.scene.skyAtmosphere) {
-        this.scene.skyAtmosphere.splitDirection =
-          this.scene.globe.splitDirection;
-      }
+      // if (this.scene.skyAtmosphere) {
+      //   this.scene.skyAtmosphere.splitDirection =
+      //     this.scene.globe.splitDirection;
+      // }
     });
     this._disposeSplitterReaction = this._reactToSplitterChanges();
 
@@ -418,20 +426,11 @@ export default class Cesium extends GlobeOrMap {
   /** Add an event listener to a TerrainProvider.
    * If we get an error when trying to load the terrain, then switch to smooth mode, and notify the user.
    * Finally, remove the listener, so failed tiles do not trigger the error as these can be common and are not a problem. */
-  private async catchTerrainProviderDown(terrainProvider: TerrainProvider) {
-    // Some network errors are not rejected through readyPromise, so we have to
-    // listen to them using the error event and dispose it later
-    let networkErrorListener: (err: any) => void;
-    const networkErrorPromise = new Promise((_resolve, reject) => {
-      networkErrorListener = reject;
-      terrainProvider.errorEvent.addEventListener(networkErrorListener);
-    });
-
-    const isReady = await Promise.race([
-      networkErrorPromise,
-      terrainProvider.readyPromise
-    ])
-      .then(() => {
+  private async catchTerrainProviderDown(
+    terrainProviderPromise: Promise<TerrainProvider>
+  ): Promise<TerrainProvider> {
+    return terrainProviderPromise
+      .then((terrainProvider: TerrainProvider) => {
         /** Need to throw an error if incorrect `cesiumTerrainUrl` has been specified.
         The terrainProvider.readyPromise will still be fulfulled, but the map will not load correctly
         So we check for terrainProvider.availability */
@@ -439,28 +438,27 @@ export default class Cesium extends GlobeOrMap {
         if (!terrainProvider.availability) {
           throw new Error();
         }
+
+        return terrainProvider;
       })
       .catch((err) => {
         console.log("Terrain provider error.  ", err.message);
-        if (this.scene.terrainProvider instanceof CesiumTerrainProvider) {
-          console.log("Switching to EllipsoidTerrainProvider.");
-          setViewerMode("3dsmooth", this.terriaViewer);
-          if (!this._terrainMessageViewed) {
-            this.terria.raiseErrorToUser(err, {
-              title: i18next.t("map.cesium.terrainServerErrorTitle"),
-              message: i18next.t("map.cesium.terrainServerErrorMessage", {
-                appName: this.terria.appName,
-                supportEmail: this.terria.supportEmail
-              })
-            });
+        console.log("Switching to EllipsoidTerrainProvider.");
+        setViewerMode("3dsmooth", this.terriaViewer);
+        if (!this._terrainMessageViewed) {
+          this.terria.raiseErrorToUser(err, {
+            title: i18next.t("map.cesium.terrainServerErrorTitle"),
+            message: i18next.t("map.cesium.terrainServerErrorMessage", {
+              appName: this.terria.appName,
+              supportEmail: this.terria.supportEmail
+            })
+          });
 
-            this._terrainMessageViewed = true;
-          }
+          this._terrainMessageViewed = true;
         }
-      })
-      .finally(() =>
-        terrainProvider.errorEvent.removeEventListener(networkErrorListener)
-      );
+
+        return new EllipsoidTerrainProvider();
+      });
   }
 
   private updateCredits(container: string | HTMLElement) {
@@ -1033,11 +1031,11 @@ export default class Cesium extends GlobeOrMap {
       : undefined;
 
     if (!center) {
-      /** In cases where the horizon is not visible, we cannot calculate a center using a pick ray, 
+      /** In cases where the horizon is not visible, we cannot calculate a center using a pick ray,
       but we need to return a useful CameraView that works in 3D mode and 2D mode.
-      In this case we can return the correct definition for the cesium camera, with position, direction, and up, 
+      In this case we can return the correct definition for the cesium camera, with position, direction, and up,
       but we need to calculate a bounding box on the ellipsoid too to be used in 2D mode.
-      
+
       To do this we clone the camera, rotate it to point straight down, and project the camera view from that position onto the ellipsoid.
       **/
 
@@ -1175,21 +1173,27 @@ export default class Cesium extends GlobeOrMap {
   // It's nice to co-locate creation of Ion TerrainProvider and Credit, but not necessary
   @computed
   private get _terrainWithCredits(): {
-    terrain: TerrainProvider;
+    terrainProviderPromise: Promise<TerrainProvider>;
     credit?: Credit;
   } {
     if (!this.terriaViewer.viewerOptions.useTerrain) {
       // Terrain mode is off, use the ellipsoidal terrain (aka 3d-smooth)
-      return { terrain: new EllipsoidTerrainProvider() };
+      return {
+        terrainProviderPromise: Promise.resolve(new EllipsoidTerrainProvider())
+      };
     } else if (this._firstMapItemTerrainProvider) {
       // If there's a TerrainProvider in map items/workbench then use it
-      return { terrain: this._firstMapItemTerrainProvider };
+      return {
+        terrainProviderPromise: Promise.resolve(
+          this._firstMapItemTerrainProvider
+        )
+      };
     } else if (
       this.terria.configParameters.cesiumTerrainAssetId !== undefined
     ) {
       // Load the terrain provider from Ion
       return {
-        terrain: this.createTerrainProviderFromIonAssetId(
+        terrainProviderPromise: this.createTerrainProviderFromIonAssetId(
           this.terria.configParameters.cesiumTerrainAssetId,
           this.terria.configParameters.cesiumIonAccessToken
         )
@@ -1197,7 +1201,7 @@ export default class Cesium extends GlobeOrMap {
     } else if (this.terria.configParameters.cesiumTerrainUrl) {
       // Load the terrain provider from the given URL
       return {
-        terrain: this.createTerrainProviderFromUrl(
+        terrainProviderPromise: this.createTerrainProviderFromUrl(
           this.terria.configParameters.cesiumTerrainUrl
         )
       };
@@ -1211,12 +1215,14 @@ export default class Cesium extends GlobeOrMap {
         true
       );
       return {
-        terrain: this.createWorldTerrain(),
+        terrainProviderPromise: this.createWorldTerrain(),
         credit: ionCredit
       };
     } else {
       // Default to ellipsoid/3d-smooth
-      return { terrain: new EllipsoidTerrainProvider() };
+      return {
+        terrainProviderPromise: Promise.resolve(new EllipsoidTerrainProvider())
+      };
     }
   }
 
@@ -1228,15 +1234,14 @@ export default class Cesium extends GlobeOrMap {
   private createTerrainProviderFromIonAssetId(
     assetId: number,
     accessToken?: string
-  ): CesiumTerrainProvider {
-    const terrainProvider = new CesiumTerrainProvider({
-      url: IonResource.fromAssetId(assetId, {
+  ): Promise<TerrainProvider> {
+    const terrainProvider = CesiumTerrainProvider.fromUrl(
+      IonResource.fromAssetId(assetId, {
         accessToken
       })
-    });
+    );
     // Add the event handler to the TerrainProvider
-    this.catchTerrainProviderDown(terrainProvider);
-    return terrainProvider;
+    return this.catchTerrainProviderDown(terrainProvider);
   }
 
   /**
@@ -1244,14 +1249,8 @@ export default class Cesium extends GlobeOrMap {
    *
    * Used for spying in specs
    */
-  private createTerrainProviderFromUrl(url: string): CesiumTerrainProvider {
-    const terrainProvider = new CesiumTerrainProvider({
-      url
-    });
-
-    // Add the event handler to the TerrainProvider
-    this.catchTerrainProviderDown(terrainProvider);
-    return terrainProvider;
+  private createTerrainProviderFromUrl(url: string): Promise<TerrainProvider> {
+    return this.catchTerrainProviderDown(CesiumTerrainProvider.fromUrl(url));
   }
 
   /**
@@ -1259,16 +1258,41 @@ export default class Cesium extends GlobeOrMap {
    *
    * Used for spying in specs
    */
-  private createWorldTerrain(): CesiumTerrainProvider {
-    const terrainProvider = createWorldTerrain({});
-    // Add the event handler to the TerrainProvider
-    this.catchTerrainProviderDown(terrainProvider);
-    return terrainProvider;
+  private createWorldTerrain(): Promise<TerrainProvider> {
+    return this.catchTerrainProviderDown(createWorldTerrainAsync({}));
   }
 
+  /**
+   * An observable terrain provider promise
+   */
+  @computed
+  private get observableTerrainProviderPromise(): IPromiseBasedObservable<TerrainProvider> {
+    return fromPromise(this._terrainWithCredits.terrainProviderPromise);
+  }
+
+  /**
+   * Returns the currently active TerrainProvider
+   */
   @computed
   get terrainProvider(): TerrainProvider {
-    return this._terrainWithCredits.terrain;
+    return this.observableTerrainProviderPromise.case({
+      // Return the current provider from the scene instance if the promise is pending or rejected
+      pending: () => this.scene.terrainProvider,
+      rejected: () => this.scene.terrainProvider,
+      // When promise is fulfilled, return the new terrainProvider
+      fulfilled: (terrainProvider) => terrainProvider
+    });
+  }
+
+  /**
+   * Returns `true` if loading of a new TerrainProvider is in progress
+   *
+   * Note that until the loading is fully complete, `this.terrainProvider` will
+   * return the existing TerrainProvider.
+   */
+  @computed
+  get isTerrainLoading(): boolean {
+    return this.observableTerrainProviderPromise.state === "pending";
   }
 
   /**
@@ -1640,7 +1664,9 @@ export default class Cesium extends GlobeOrMap {
   private _makeImageryLayerFromParts(
     parts: ImageryParts,
     item: MappableMixin.Instance
-  ): ImageryLayer {
+  ): ImageryLayer | undefined {
+    if (parts.imageryProvider === undefined) return undefined;
+
     const layer = this._createImageryLayer(
       parts.imageryProvider,
       parts.clippingRectangle

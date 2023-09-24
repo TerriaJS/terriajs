@@ -1,3 +1,7 @@
+// This program generates typescript declarations for individual Cesium source
+// files. Its output is meant to be pasted into the end of
+// `lib/ThirdParty/terriajs-cesium-extra/index.d.ts`.
+
 const fs = require("fs");
 const path = require("path");
 const glob = require("glob-all");
@@ -27,7 +31,7 @@ const sourceFiles = [
   "Source/WorkersES6/createTaskProcessorWorker.js",
   "!Source/ThirdParty/Workers/**",
   "!Source/ThirdParty/google-earth-dbroot-parser.js",
-  "!Source/ThirdParty/_*",
+  "!Source/ThirdParty/_*"
 ];
 
 function filePathToModuleId(moduleId) {
@@ -47,7 +51,7 @@ glob.sync(sourceFiles, { cwd: cesiumDirectory }).forEach(function (file) {
   const assignmentName = path.basename(file, path.extname(file));
   if (publicModules.has(assignmentName)) {
     publicModules.delete(assignmentName);
-    source += `declare module "terriajs-cesium/Source/${moduleId}" { import { ${assignmentName} } from '@cesium/engine'; export default ${assignmentName}; }\n`;
+    source += `declare module "terriajs-cesium/Source/${moduleId}" { import { ${assignmentName} } from 'terriajs-cesium'; export default ${assignmentName}; }\n`;
   }
 });
 
