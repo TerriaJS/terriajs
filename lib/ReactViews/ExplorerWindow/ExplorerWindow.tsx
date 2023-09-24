@@ -1,11 +1,11 @@
 import { action } from "mobx";
 import { observer } from "mobx-react";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useViewState } from "../StandardUserInterface/ViewStateContext";
-import ModalPopup from "./ModalPopup";
-import Box from "../../Styled/Box";
-import { Tabs } from "./Tabs";
+import React, { useEffect, useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
+import Box from "../../Styled/Box";
+import { useViewState } from "../Context";
+import ModalPopup from "./ModalPopup";
+import { Tabs } from "./Tabs";
 
 const fadeIn = keyframes`
   from {

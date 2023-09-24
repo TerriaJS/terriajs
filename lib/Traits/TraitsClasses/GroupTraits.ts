@@ -15,6 +15,13 @@ export default class GroupTraits extends mixTraits(ItemPropertiesTraits) {
   excludeMembers?: string[];
 
   @primitiveTrait({
+    name: "Include members by regular expression",
+    type: "string",
+    description: `A regular expression that is matched against the member names and ids. Only members (groups and items) that match against the regular expression will be shown to the user. This is case-insensitive and will only apply to the first level of members (not in nested groups). This is applied before excludeMembers.`
+  })
+  includeMembersRegex?: string;
+
+  @primitiveTrait({
     name: "Is Open",
     description:
       "True if this group is open and its contents are visible; otherwise, false.",

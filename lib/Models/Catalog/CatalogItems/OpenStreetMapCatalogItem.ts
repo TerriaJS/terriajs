@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
@@ -6,12 +6,18 @@ import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import OpenStreetMapCatalogItemTraits from "../../../Traits/TraitsClasses/OpenStreetMapCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 export default class OpenStreetMapCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(OpenStreetMapCatalogItemTraits))
 ) {
   static readonly type = "open-street-map";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   get type() {
     return OpenStreetMapCatalogItem.type;

@@ -12,7 +12,7 @@ import CatalogMemberMixin from "../../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../../ModelMixins/GroupMixin";
 import ReferenceMixin from "../../../../ModelMixins/ReferenceMixin";
 import Loader from "../../../Loader";
-import { useViewState } from "../../../StandardUserInterface/ViewStateContext";
+import { useViewState } from "../../../Context";
 import Styles from "./tools-panel.scss";
 
 // let countValue = 1;

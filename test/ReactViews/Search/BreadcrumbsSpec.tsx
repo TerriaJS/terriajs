@@ -7,7 +7,7 @@ import ViewState from "../../../lib/ReactViewModels/ViewState";
 import Breadcrumbs from "../../../lib/ReactViews/Search/Breadcrumbs";
 import Icon from "../../../lib/Styled/Icon";
 import { ThemeProvider } from "styled-components";
-import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface/StandardTheme";
+import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
 import { runInAction } from "mobx";
 import { DataCatalogTab } from "../../../lib/ReactViews/ExplorerWindow/Tabs/DataCatalogTab";
 

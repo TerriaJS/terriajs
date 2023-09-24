@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { withTranslation } from "react-i18next";
 import Guide from "./Guide.jsx";
 import satelliteGuideData from "./satelliteGuideData.js";
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 
 export const SATELLITE_GUIDE_KEY = "satelliteGuidance";
@@ -18,6 +18,7 @@ class SatelliteGuide extends React.Component {
 
   constructor() {
     super();
+    makeObservable(this);
   }
 
   @action.bound

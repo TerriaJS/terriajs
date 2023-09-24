@@ -1,9 +1,19 @@
-import { action, computed, observable, onBecomeObserved } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  onBecomeObserved,
+  makeObservable,
+  override
+} from "mobx";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import Constructor from "../Core/Constructor";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import LatLonHeight from "../Core/LatLonHeight";
 import runLater from "../Core/runLater";
@@ -14,12 +24,15 @@ import {
 import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import Model from "../Models/Definition/Model";
+import TerriaFeature from "../Models/Feature/Feature";
 import TimeFilterTraits, {
   TimeFilterCoordinates
 } from "../Traits/TraitsClasses/TimeFilterTraits";
 import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
 import MappableMixin, { ImageryParts } from "./MappableMixin";
 import TimeVarying from "./TimeVarying";
+
+type BaseType = Model<TimeFilterTraits> & MappableMixin.Instance;
 
 /**
  * A Mixin for filtering the dates for which imagery is available at a location
@@ -31,14 +44,14 @@ import TimeVarying from "./TimeVarying";
  * Mixin is used to implement the Location filter feature for Satellite
  * Imagery.
  */
-function TimeFilterMixin<T extends Constructor<Model<TimeFilterTraits>>>(
-  Base: T
-) {
+function TimeFilterMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class TimeFilterMixin extends DiscretelyTimeVaryingMixin(Base) {
     @observable _currentTimeFilterFeature?: Entity;
 
     constructor(...args: any[]) {
       super(...args);
+
+      makeObservable(this);
 
       // Try to resolve the timeFilterFeature from the co-ordinates that might
       // be stored in the traits. We only have to resolve the time filter
@@ -61,28 +74,78 @@ function TimeFilterMixin<T extends Constructor<Model<TimeFilterTraits>>>(
       });
     }
 
+    /**
+     * Loads the time filter by querying the imagery layers at the given
+     * co-ordinates.
+     *
+     * @param coordinates.position The lat, lon, height of the location to pick in degrees
+     * @param coordinates.tileCoords the x, y, level co-ordinates of the tile to pick
+     * @returns Promise that fulfills when the picking is complete.
+     *   The promise resolves to `false` if the filter could not be set for some reason.
+     */
     @action
     async setTimeFilterFromLocation(coordinates: {
       position: LatLonHeight;
       tileCoords: ProviderCoords;
     }): Promise<boolean> {
-      const propertyName = this.timeFilterPropertyName;
-      if (propertyName === undefined || !MappableMixin.isMixedInto(this)) {
+      const timeProperty = this.timeFilterPropertyName;
+      if (
+        this.terria.allowFeatureInfoRequests === false ||
+        timeProperty === undefined ||
+        !MappableMixin.isMixedInto(this)
+      ) {
         return false;
       }
 
-      const resolved = await resolveFeature(
-        this,
-        propertyName,
-        coordinates.position,
-        coordinates.tileCoords
+      const pickTileCoordinates = coordinates.tileCoords;
+      const pickCartographicPosition = Cartographic.fromDegrees(
+        coordinates.position.longitude,
+        coordinates.position.latitude,
+        coordinates.position.height
       );
 
-      if (resolved) {
-        this.setTimeFilterFeature(resolved.feature, resolved.providers);
-        return true;
+      // Pick all imagery provider for this item
+      const imageryProviders = filterOutUndefined(
+        this.mapItems.map((mapItem) =>
+          ImageryParts.is(mapItem) ? mapItem.imageryProvider : undefined
+        )
+      );
+      const picks = await pickImageryProviders(
+        imageryProviders,
+        pickTileCoordinates,
+        pickCartographicPosition
+      );
+
+      // Find the first imageryProvider and feature with a matching time property
+      let timeFeature: TerriaFeature | undefined;
+      let imageryUrl: string | undefined;
+      for (let i = 0; i < picks.length; i++) {
+        const pick = picks[i];
+        const imageryFeature = pick.imageryFeatures.find(
+          (f) => f.properties[timeProperty] !== undefined
+        );
+        imageryUrl = (pick.imageryProvider as any).url;
+        if (imageryFeature && imageryUrl) {
+          imageryFeature.position =
+            imageryFeature.position ?? pickCartographicPosition;
+          timeFeature =
+            TerriaFeature.fromImageryLayerFeatureInfo(imageryFeature);
+          break;
+        }
       }
-      return false;
+
+      if (!timeFeature || !imageryUrl) {
+        return false;
+      }
+
+      // Update time filter
+      this.setTimeFilterFeature(timeFeature, {
+        [imageryUrl]: {
+          ...coordinates.position,
+          ...coordinates.tileCoords
+        }
+      });
+      return true;
     }
 
     get hasTimeFilterMixin() {
@@ -134,7 +197,7 @@ function TimeFilterMixin<T extends Constructor<Model<TimeFilterTraits>>>(
       );
     }
 
-    @computed
+    @override
     get discreteTimesAsSortedJulianDates() {
       const featureTimes = this.featureTimesAsJulianDates;
       if (featureTimes === undefined) {
@@ -204,43 +267,35 @@ namespace TimeFilterMixin {
 }
 
 /**
- * Return the feature at position containing the time filter property.
+ * Picks all the imagery providers at the given coordinates and return a
+ * promise that resolves to the (imageryProvider, imageryFeatures) pairs.
  */
-const resolveFeature = action(async function (
-  model: MappableMixin.Instance & TimeVarying,
-  propertyName: string,
-  position: LatLonHeight,
-  tileCoords: ProviderCoords
-) {
-  const { latitude, longitude, height } = position;
-  const { x, y, level } = tileCoords;
-  const providers: ProviderCoordsMap = {};
-  model.mapItems.forEach((mapItem) => {
-    if (ImageryParts.is(mapItem)) {
-      // @ts-ignore
-      providers[mapItem.imageryProvider.url] = { x, y, level };
-    }
-  });
-  const viewer = model.terria.mainViewer.currentViewer;
-  const features = await viewer.getFeaturesAtLocation(
-    { latitude, longitude, height },
-    providers
+async function pickImageryProviders(
+  imageryProviders: ImageryProvider[],
+  pickCoordinates: ProviderCoords,
+  pickPosition: Cartographic
+): Promise<
+  {
+    imageryProvider: ImageryProvider;
+    imageryFeatures: ImageryLayerFeatureInfo[];
+  }[]
+> {
+  return filterOutUndefined(
+    await Promise.all(
+      imageryProviders.map((imageryProvider) =>
+        imageryProvider
+          .pickFeatures(
+            pickCoordinates.x,
+            pickCoordinates.y,
+            pickCoordinates.level,
+            pickPosition.longitude,
+            pickPosition.latitude
+          )
+          ?.then((imageryFeatures) => ({ imageryProvider, imageryFeatures }))
+      )
+    )
   );
-
-  const feature = (features || []).find((feature) => {
-    if (!feature.properties) {
-      return false;
-    }
-
-    const prop = feature.properties[propertyName];
-    const times = prop?.getValue(model.currentTimeAsJulianDate);
-    return Array.isArray(times) && times.length > 0;
-  });
-
-  if (feature) {
-    return { feature, providers };
-  }
-});
+}
 
 function coordinatesFromTraits(traits: Model<TimeFilterCoordinates>) {
   const {

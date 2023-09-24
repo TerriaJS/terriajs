@@ -248,7 +248,9 @@
     "title": "Faites glisser vers la gauche ou la droite pour ajuster les vues",
     "toggleSplitterTool": "Activer la comparaison côte à côte entre deux ensembles de données différents",
     "toggleSplitterToolDisabled": "Veuillez désactiver les autres fonctionnalités de comparaison côte à côte afin d'activer la comparaison standard",
-    "toggleSplitterToolTitle": "Comparer"
+    "toggleSplitterToolTitle": "Comparer",
+    "duplicateModelErrorMessage": "Une erreur s'est produite lors du fractionnement de l'élément de catalogue `\"{{name}}\"`. Cet élément ne peut pas supporter la fonctionnalité \"compare\" peut etre",
+    "errorTitle": "Impossible de comparer l'élément de catalogue."
   },
   "location": {
     "centreMap": "Centrer la carte sur votre position actuelle",
@@ -1567,5 +1569,11 @@
     "pickLocation": "Pour visualiser les images disponibles, veuillez sélectionner le lieu qui vous intéresse sur la carte ci-contre.",
     "description": "Cet outil permet de visualiser la différence entre des images capturées à deux moments distincts dans le temps.",
     "titlePrefix": "Détection de changement"
+  },
+  "browsers": {
+    "firefox": "Mozilla Firefox",
+    "chrome": "Google Chrome",
+    "edge": "Microsoft Edge",
+    "safari": "Apple Safari"
   }
 }

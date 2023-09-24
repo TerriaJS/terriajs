@@ -1,6 +1,12 @@
 import bbox from "@turf/bbox";
 import i18next from "i18next";
-import { computed, observable, runInAction } from "mobx";
+import {
+  computed,
+  observable,
+  runInAction,
+  makeObservable,
+  override
+} from "mobx";
 import {
   GeomType,
   json_style,
@@ -28,6 +34,7 @@ import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 class MapboxVectorTileLoadableStratum extends LoadableStratum(
@@ -40,6 +47,7 @@ class MapboxVectorTileLoadableStratum extends LoadableStratum(
     readonly styleJson: JsonObject | undefined
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -110,10 +118,12 @@ StratumOrder.addLoadStratum(MapboxVectorTileLoadableStratum.stratumName);
 class MapboxVectorTileCatalogItem extends MappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(MapboxVectorTileCatalogItemTraits)))
 ) {
-  @observable
-  public readonly forceProxy = true;
-
   static readonly type = "mvt";
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   get type() {
     return MapboxVectorTileCatalogItem.type;
@@ -121,6 +131,11 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
 
   get typeName() {
     return i18next.t("models.mapboxVectorTile.name");
+  }
+
+  @override
+  get forceProxy() {
+    return true;
   }
 
   async forceLoadMetadata() {

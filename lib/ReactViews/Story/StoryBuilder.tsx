@@ -1,4 +1,4 @@
-import { action, toJS } from "mobx";
+import { action, toJS, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import Sortable from "react-anything-sortable";
@@ -27,10 +27,7 @@ import measureElement, { MeasureElementProps } from "../HOCs/measureElement";
 import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
 import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel";
-import {
-  WithViewState,
-  withViewState
-} from "../StandardUserInterface/ViewStateContext";
+import { WithViewState, withViewState } from "../Context";
 import Story from "./Story";
 import Styles from "./story-builder.scss";
 import StoryEditor from "./StoryEditor.jsx";
@@ -74,6 +71,7 @@ class StoryBuilder extends React.Component<
     props: IProps & MeasureElementProps & WithTranslation & WithViewState
   ) {
     super(props);
+    makeObservable(this);
     this.state = {
       editingMode: false,
       currentStory: undefined,

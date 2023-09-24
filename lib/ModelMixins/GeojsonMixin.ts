@@ -23,7 +23,9 @@ import {
   onBecomeUnobserved,
   reaction,
   runInAction,
-  toJS
+  toJS,
+  makeObservable,
+  override
 } from "mobx";
 import { createTransformer } from "mobx-utils";
 import {
@@ -56,7 +58,7 @@ import PolygonGraphics from "terriajs-cesium/Source/DataSources/PolygonGraphics"
 import PolylineGraphics from "terriajs-cesium/Source/DataSources/PolylineGraphics";
 import Property from "terriajs-cesium/Source/DataSources/Property";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
-import Constructor from "../Core/Constructor";
+import AbstractConstructor from "../Core/AbstractConstructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import formatPropertyValue from "../Core/formatPropertyValue";
 import hashFromString from "../Core/hashFromString";
@@ -142,6 +144,7 @@ class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
   static stratumName = "geojson";
   constructor(private readonly _item: GeoJsonMixin.Instance) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -217,9 +220,11 @@ interface FeatureCounts {
   total: number;
 }
 
-function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
+type BaseType = Model<GeoJsonTraits>;
+
+function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
   abstract class GeoJsonMixin extends TableMixin(
-    FeatureInfoUrlTemplateMixin(UrlMixin(CatalogMemberMixin(Base)))
+    FeatureInfoUrlTemplateMixin(UrlMixin(Base))
   ) {
     @observable
     private _dataSource:
@@ -248,6 +253,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
     constructor(...args: any[]) {
       super(...args);
+      makeObservable(this);
       // Add GeoJsonStratum
       if (this.strata.get(GeoJsonStratum.stratumName) === undefined) {
         runInAction(() => {
@@ -327,14 +333,16 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return true;
     }
 
-    @computed get name() {
+    @override
+    get name() {
       if (CatalogMemberMixin.isMixedInto(this.sourceReference)) {
         return super.name || this.sourceReference.name;
       }
       return super.name;
     }
 
-    @computed get cacheDuration(): string {
+    @override
+    get cacheDuration(): string {
       if (isDefined(super.cacheDuration)) {
         return super.cacheDuration;
       }
@@ -349,7 +357,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return this._readyData;
     }
 
-    @computed
+    @override
     get _canExportData() {
       return isDefined(this.readyData);
     }
@@ -372,7 +380,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       });
     }
 
-    @computed get mapItems() {
+    @override
+    get mapItems() {
       if (this.isLoadingMapItems) {
         return [];
       }
@@ -433,7 +442,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     }
 
     /** Remove chart items from TableMixin.chartItems */
-    @computed get chartItems() {
+    @override
+    get chartItems() {
       return [];
     }
 
@@ -1157,7 +1167,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return dataSource;
     }
 
-    @computed
+    @override
     get discreteTimes(): DiscreteTimeAsJS[] | undefined {
       if (this.readyData === undefined) {
         return undefined;
@@ -1196,7 +1206,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
      * This enables all TableMixin functionality - which is used for styling vector tiles.
      * If this returns an empty array, TableMixin will effectively be disabled
      */
-    @computed
+    @override
     get dataColumnMajor() {
       if (!this.readyData || !this.useTableStylingAndProtomaps) return [];
 
@@ -1251,7 +1261,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return undefined;
     }
 
-    @computed get viewingControls(): ViewingControl[] {
+    @override
+    get viewingControls(): ViewingControl[] {
       return !this.useTableStylingAndProtomaps
         ? super.viewingControls.filter(
             (v) => v.id !== TableStylingWorkflow.type

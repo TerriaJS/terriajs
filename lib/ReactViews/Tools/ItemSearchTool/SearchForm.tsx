@@ -8,8 +8,7 @@ import {
 } from "react-i18next";
 import ReactSelect, {
   ActionMeta,
-  OptionTypeBase,
-  ValueType
+  OnChangeValue
 } from "react-select";
 import styled from "styled-components";
 import ItemSearchProvider, {
@@ -218,10 +217,10 @@ interface EnumParameterProps {
 }
 
 type SelectOnChangeHandler<
-  OptionType extends OptionTypeBase,
+  OptionType,
   IsMulti extends boolean
 > = (
-  value: ValueType<OptionType, IsMulti>,
+  value: OnChangeValue<OptionType, IsMulti>,
   actionMeta: ActionMeta<OptionType>
 ) => void;
 
@@ -252,7 +251,7 @@ const EnumParameter: React.FC<EnumParameterProps> = (props) => {
           isMulti
           value={value}
           menuPosition="fixed"
-          onChange={onChange}
+          onChange={onChange as never}
           isDisabled={disabled}
         />
       </Label>

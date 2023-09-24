@@ -1,4 +1,4 @@
-import { computed, observable } from "mobx";
+import { makeObservable, observable, override } from "mobx";
 import isDefined from "../../Core/isDefined";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import FunctionParameter, {
@@ -20,8 +20,13 @@ export default class InfoParameter extends FunctionParameter<string> {
   @observable _value: string | undefined;
   _errorMessage = false;
 
-  constructor(catalogFunction: CatalogFunctionMixin, options: Options) {
+  constructor(
+    catalogFunction: CatalogFunctionMixin.Instance,
+    options: Options
+  ) {
     super(catalogFunction, options);
+
+    makeObservable(this);
 
     if (isDefined(options.value)) {
       this._value = options.value;
@@ -32,12 +37,12 @@ export default class InfoParameter extends FunctionParameter<string> {
     }
   }
 
-  @computed
+  @override
   get isValid() {
     return !this._errorMessage;
   }
 
-  @computed
+  @override
   get value(): string | undefined {
     return this._value;
   }

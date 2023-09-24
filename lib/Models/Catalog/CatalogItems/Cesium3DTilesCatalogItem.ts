@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -8,7 +8,6 @@ import Cesium3DTile from "terriajs-cesium/Source/Scene/Cesium3DTile";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import PickedFeatures from "../../../Map/PickedFeatures/PickedFeatures";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import Cesium3dTilesMixin from "../../../ModelMixins/Cesium3dTilesMixin";
 import FeatureInfoUrlTemplateMixin from "../../../ModelMixins/FeatureInfoUrlTemplateMixin";
 import SearchableItemMixin, {
@@ -16,6 +15,7 @@ import SearchableItemMixin, {
 } from "../../../ModelMixins/SearchableItemMixin";
 import Cesium3DTilesCatalogItemTraits from "../../../Traits/TraitsClasses/Cesium3DTilesCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import { ItemSearchResult } from "../../ItemSearchProviders/ItemSearchProvider";
 
 // A property name used for tagging a search result feature for highlighting/hiding.
@@ -23,13 +23,17 @@ const SEARCH_RESULT_TAG = "terriajs_search_result";
 
 export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
   FeatureInfoUrlTemplateMixin(
-    Cesium3dTilesMixin(
-      CatalogMemberMixin(CreateModel(Cesium3DTilesCatalogItemTraits))
-    )
+    Cesium3dTilesMixin(CreateModel(Cesium3DTilesCatalogItemTraits))
   )
 ) {
   static readonly type = "3d-tiles";
   readonly type = Cesium3DTilesCatalogItem.type;
+
+  constructor(...args: ModelConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
+
   get typeName() {
     return i18next.t("models.cesiumTerrain.name3D");
   }

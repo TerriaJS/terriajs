@@ -8,7 +8,7 @@ import SearchBoxAndResults, {
   SearchInDataCatalog
 } from "../../../lib/ReactViews/Search/SearchBoxAndResults";
 import { ThemeProvider } from "styled-components";
-import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface/StandardTheme";
+import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
 
 describe("SearchBoxAndResults", function () {
   let terria: Terria;

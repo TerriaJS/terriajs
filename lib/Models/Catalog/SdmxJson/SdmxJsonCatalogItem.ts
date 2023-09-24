@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable, override } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
@@ -36,6 +36,7 @@ export default class SdmxJsonCatalogItem
     sourceReference: BaseModel | undefined
   ) {
     super(id, terria, sourceReference);
+    makeObservable(this);
     this.strata.set(
       TableAutomaticStylesStratum.stratumName,
       new TableAutomaticStylesStratum(this)
@@ -58,7 +59,7 @@ export default class SdmxJsonCatalogItem
     return SdmxJsonCatalogItem.type;
   }
 
-  @computed
+  @override
   get cacheDuration() {
     return super.cacheDuration || "1d";
   }
@@ -97,7 +98,7 @@ export default class SdmxJsonCatalogItem
     });
   }
 
-  @computed
+  @override
   get selectableDimensions(): SelectableDimension[] {
     return filterOutUndefined([
       ...super.selectableDimensions.filter(
@@ -115,7 +116,7 @@ export default class SdmxJsonCatalogItem
     return super.url;
   }
 
-  @computed
+  @override
   get url() {
     if (!super.url) return;
 

@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { action, runInAction } from "mobx";
+import { action, runInAction, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { Trans, withTranslation, WithTranslation } from "react-i18next";
@@ -14,10 +14,7 @@ import MappableMixin from "../ModelMixins/MappableMixin";
 import addUserFiles from "../Models/Catalog/addUserFiles";
 import { BaseModel } from "../Models/Definition/Model";
 import Styles from "./drag-drop-file.scss";
-import {
-  WithViewState,
-  withViewState
-} from "./StandardUserInterface/ViewStateContext";
+import { WithViewState, withViewState } from "./Context";
 import { raiseFileDragDropEvent } from "../ViewModels/FileDragDropListener";
 
 interface PropsType extends WithTranslation, WithViewState {}
@@ -25,6 +22,11 @@ interface PropsType extends WithTranslation, WithViewState {}
 @observer
 class DragDropFile extends React.Component<PropsType> {
   target: EventTarget | undefined;
+
+  constructor(props: PropsType) {
+    super(props);
+    makeObservable(this);
+  }
 
   async handleDrop(e: React.DragEvent) {
     e.persist();

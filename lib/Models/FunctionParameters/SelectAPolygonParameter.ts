@@ -1,7 +1,9 @@
 import { Feature, Polygon } from "@turf/helpers";
-import { computed, isObservableArray } from "mobx";
+import { computed, isObservableArray, makeObservable } from "mobx";
 import { JsonObject } from "../../Core/Json";
-import FunctionParameter from "./FunctionParameter";
+import FunctionParameter, {
+  FunctionConstructorParameters
+} from "./FunctionParameter";
 import { GeoJsonFunctionParameter } from "./GeoJsonParameter";
 /**
  * A parameter that specifies an arbitrary polygon on the globe, which has been selected from a different layer.
@@ -11,6 +13,11 @@ export default class SelectAPolygonParameter
   implements GeoJsonFunctionParameter
 {
   readonly type = "polygon";
+
+  constructor(...args: FunctionConstructorParameters) {
+    super(...args);
+    makeObservable(this);
+  }
 
   static formatValueForUrl(value: Feature[]) {
     if (!(Array.isArray(value) || isObservableArray(value))) {
