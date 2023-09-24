@@ -154,15 +154,12 @@ export const Tabs: FC<ITabsProps> = observer(({ viewState, onClose }) => {
     tabs[0];
 
   return (
-    <Box flex="1" column>
+    <Box flex="1" column overflow="hidden" rounded>
       <Box
         fullWidth
         justifySpaceBetween
         backgroundColor={theme.colorPrimary}
         paddedRatio={2}
-        css={`
-          border-radius: ${theme.radiusLarge} ${theme.radiusLarge} 0 0;
-        `}
       >
         <Ul role="tablist" gap={2}>
           {tabs.map((item, i) => (
