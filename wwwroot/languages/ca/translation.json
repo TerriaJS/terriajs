@@ -58,7 +58,7 @@
     "browserCannotProvide": "El vostre navegador no pot proporcionar la vostra ubicació.",
     "myLocation": "La meva posició",
     "location": "Posició",
-    "originError": "El vostre navegador només pot proporcionar la vostra ubicació quan feu servir https. És possible que pugueu utilitzar {{secureUrl}}.",
+    "originError": "El vostre navegador només pot proporcionar la vostra ubicació quan feu servir HTTPS. És possible que pugueu utilitzar {{secureUrl}}.",
     "centreMap": "Centreu el mapa a la vostra ubicació actual"
   },
   "splitterTool": {
