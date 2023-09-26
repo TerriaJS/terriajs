@@ -2,6 +2,7 @@
 
 #### next release (8.3.5)
 
+- Allow a story to use iframe tag if the source is youtube, youtube-nocookie or vimeo.
 - Add `includeMembersRegex` to `GroupTraits`. This can be used to filter group members by id/name using a regular expression.
 - [The next improvement]
 
