@@ -71,10 +71,9 @@ const NotificationWindow = createReactClass({
       <div className={classNames(Styles.wrapper, `${type}`)}>
         <div
           className={Styles.notification}
-          isStory={isStory}
           css={`
             background: ${(p) =>
-              p.isStory ? p.theme.colorPrimary : p.theme.dark};
+              isStory ? p.theme.colorPrimary : p.theme.dark};
             a,
             a:visited {
               color: ${(p) => p.theme.primary};

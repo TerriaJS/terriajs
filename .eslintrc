@@ -2,6 +2,7 @@
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
     "plugin:jsx-control-statements/recommended"
   ],
   "parser": "@babel/eslint-parser",
@@ -31,6 +32,9 @@
   "rules": {
     "jsx-control-statements/jsx-use-if-tag": 0,
     "react/jsx-no-undef": 0,
+
+    /* Ignore styled-components css property */
+    "react/no-unknown-property": ["error", { "ignore": ["css"] }],
 
     /*Possible Errors */
     "no-cond-assign": [1, "except-parens"],

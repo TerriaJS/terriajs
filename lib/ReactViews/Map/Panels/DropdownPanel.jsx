@@ -85,6 +85,8 @@ const DropdownPanel = createReactClass({
       iconGlyph = this.props.theme.icon;
     }
 
+    const panelIsOpen = this.isOpen();
+
     return (
       <div className={classNames(Styles.panel, this.props.theme.outer)}>
         <button
@@ -97,10 +99,9 @@ const DropdownPanel = createReactClass({
           ref={
             this.props.btnRef || ((element) => (this.buttonElement = element))
           }
-          isOpen={this.isOpen()}
           css={`
             ${(p) =>
-              p.isOpen &&
+              panelIsOpen &&
               `&:not(.foo) {
                 background: ${p.theme.colorPrimary};
                 svg {
