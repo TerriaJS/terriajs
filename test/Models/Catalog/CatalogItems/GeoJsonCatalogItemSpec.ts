@@ -497,9 +497,6 @@ describe("GeoJsonCatalogItemSpec", () => {
         expect(entities.length).toEqual(1);
 
         const entity1 = entities[0];
-        console.log(
-          entity1.properties?.getValue(terria.timelineClock.currentTime).year
-        );
         expect(
           entity1.properties?.getValue(terria.timelineClock.currentTime).year
         ).toBe(2019);

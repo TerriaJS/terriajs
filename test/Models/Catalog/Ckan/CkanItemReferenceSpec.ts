@@ -208,8 +208,6 @@ describe("CkanItemReference", function () {
         "http://data.gov.au/geoserver/taxation-statistics-2011-12/wms?request=GetCapabilities"
       );
       expect(ckanItemTarget.info.length).toBe(0);
-
-      console.log(ckanItemTarget);
     });
   });
 

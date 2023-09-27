@@ -150,8 +150,6 @@ describe("ArcGisFeatureServerCatalogItem", function () {
 
       expect(item.mapItems.length).toEqual(1);
       const mapItem = item.mapItems[0];
-
-      console.log(item.mapItems);
       expect(isDataSource(mapItem)).toBeTruthy();
       expect(
         isDataSource(mapItem) ? mapItem.entities.values.length : 0

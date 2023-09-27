@@ -209,8 +209,6 @@ describe("DimensionSelectorSection", function () {
 
     const groups = section.root.findAllByType(SelectableDimensionGroup);
     expect(groups.length).toBe(1);
-
-    console.log(groups[0].props);
     expect(groups[0].props.dim.id).toBe(csvItem.selectableDimensions[0].id);
 
     done();
