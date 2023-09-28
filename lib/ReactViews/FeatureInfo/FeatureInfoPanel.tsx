@@ -1,13 +1,11 @@
 import classNames from "classnames";
-import { TFunction } from "i18next";
-import { action, reaction, runInAction, makeObservable } from "mobx";
+import { action, makeObservable, reaction, runInAction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Component } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import flatten from "../../Core/flatten";
 import isDefined from "../../Core/isDefined";
@@ -21,17 +19,16 @@ import TerriaFeature from "../../Models/Feature/Feature";
 import {
   addMarker,
   isMarkerVisible,
-  LOCATION_MARKER_DATA_SOURCE_NAME,
   removeMarker
 } from "../../Models/LocationMarkerUtils";
 import Terria from "../../Models/Terria";
 import Workbench from "../../Models/Workbench";
 import ViewState from "../../ReactViewModels/ViewState";
 import Icon from "../../Styled/Icon";
-import Loader from "../Loader";
 import { withViewState } from "../Context";
-import Styles from "./feature-info-panel.scss";
+import Loader from "../Loader";
 import FeatureInfoCatalogItem from "./FeatureInfoCatalogItem";
+import Styles from "./feature-info-panel.scss";
 
 const DragWrapper = require("../DragWrapper");
 
@@ -105,7 +102,8 @@ class FeatureInfoPanel extends Component<Props> {
               });
             }
           }
-        }
+        },
+        { fireImmediately: true }
       )
     );
   }
