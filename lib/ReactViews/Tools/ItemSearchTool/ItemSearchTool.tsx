@@ -1,7 +1,7 @@
 import { autorun } from "mobx";
 import { observer } from "mobx-react";
-import { useEffect, useState } from "react";
 import * as React from "react";
+import { useEffect, useState } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
@@ -10,8 +10,8 @@ import ItemSearchProvider, {
   ItemSearchParameterType,
   ItemSearchResult
 } from "../../../Models/ItemSearchProviders/ItemSearchProvider";
-import ViewState from "../../../ReactViewModels/ViewState";
 import Box from "../../../Styled/Box";
+import { useViewState } from "../../Context";
 import { Frame, Main } from "../ToolModal";
 import BackButton from "./BackButton";
 import ErrorComponent from "./ErrorComponent";
@@ -22,7 +22,6 @@ import SearchResults from "./SearchResults";
 export interface PropsType extends WithTranslation {
   item: SearchableItemMixin.Instance;
   itemSearchProvider: ItemSearchProvider;
-  viewState: ViewState;
   afterLoad?: () => void;
 }
 
@@ -40,7 +39,8 @@ export type ItemSearchResults = ItemSearchResult[];
 export type ActiveSelectionDisposer = () => void | undefined;
 
 const ItemSearchTool: React.FC<PropsType> = observer((props) => {
-  const { viewState, item, itemSearchProvider, t } = props;
+  const { item, itemSearchProvider, t } = props;
+  const viewState = useViewState();
   const itemName = CatalogMemberMixin.isMixedInto(item) ? item.name : "Item";
 
   const [state, setState] = useState<State>({ is: "loadingParameters" });

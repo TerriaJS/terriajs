@@ -50,7 +50,9 @@ describe("WorkflowPanel", function () {
       );
     });
     expect(viewState.terria.isWorkflowPanelActive).toBe(true);
-    testRenderer.unmount();
+    act(() => {
+      testRenderer.unmount();
+    });
     expect(viewState.terria.isWorkflowPanelActive).toBe(false);
   });
 });

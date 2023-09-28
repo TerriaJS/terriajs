@@ -1,11 +1,5 @@
-import "../../../SpecMain";
-import {
-  act,
-  create,
-  ReactTestInstance,
-  ReactTestRenderer
-} from "react-test-renderer";
-import { assertObject } from "../../../../lib/Core/Json";
+import i18next from "i18next";
+import { act, ReactTestInstance, ReactTestRenderer } from "react-test-renderer";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import ItemSearchProvider, {
   ItemSearchParameter,
@@ -21,9 +15,8 @@ import ItemSearchTool, {
 import Loading from "../../../../lib/ReactViews/Tools/ItemSearchTool/Loading";
 import SearchForm from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchForm";
 import SearchResults from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchResults";
-import { withThemeContext } from "../../withContext";
+import { createWithContexts } from "../../withContext";
 import MockSearchableItem from "./MockSearchableItem";
-import i18next from "i18next";
 
 class TestItemSearchProvider extends ItemSearchProvider {
   async initialize(): Promise<void> {
@@ -78,7 +71,10 @@ describe("ItemSearchTool", function () {
 
   it("can be rendered", function () {
     act(() => {
-      rendered = render({ item, itemSearchProvider, viewState });
+      rendered = createWithContexts(
+        viewState,
+        <ItemSearchTool item={item} itemSearchProvider={itemSearchProvider} />
+      );
     });
     const component = rendered.root.findByType(ItemSearchTool);
     expect(component).toBeDefined();
@@ -88,11 +84,10 @@ describe("ItemSearchTool", function () {
     spyOn(itemSearchProvider, "initialize").and.callThrough();
     spyOn(itemSearchProvider, "describeParameters").and.callThrough();
     await act(() => {
-      rendered = render({
-        item,
-        itemSearchProvider,
-        viewState
-      });
+      rendered = createWithContexts(
+        viewState,
+        <ItemSearchTool item={item} itemSearchProvider={itemSearchProvider} />
+      );
     });
     expect(itemSearchProvider.initialize).toHaveBeenCalledTimes(1);
     expect(itemSearchProvider.describeParameters).toHaveBeenCalledTimes(1);
@@ -101,11 +96,10 @@ describe("ItemSearchTool", function () {
   describe("loading", function () {
     it("shows a Loading component while loading", function () {
       act(() => {
-        rendered = render({
-          item,
-          itemSearchProvider,
-          viewState
-        });
+        rendered = createWithContexts(
+          viewState,
+          <ItemSearchTool item={item} itemSearchProvider={itemSearchProvider} />
+        );
       });
       const progressText = rendered.root.findByType(Loading);
       expect(progressText).toBeDefined();
@@ -119,10 +113,11 @@ describe("ItemSearchTool", function () {
         Promise.reject(new Error(`Something happened`))
       );
 
-      rendered = await renderAndLoad({
-        item,
-        itemSearchProvider,
-        viewState
+      await act(() => {
+        rendered = createWithContexts(
+          viewState,
+          <ItemSearchTool item={item} itemSearchProvider={itemSearchProvider} />
+        );
       });
 
       const error = rendered.root.findByType(ErrorComponent);
@@ -143,10 +138,9 @@ describe("ItemSearchTool", function () {
           }
         ])
       );
-      rendered = await renderAndLoad({
+      rendered = await renderAndLoad(viewState, {
         item,
-        itemSearchProvider,
-        viewState
+        itemSearchProvider
       });
       const searchForm = rendered.root.findByType(SearchForm);
       expect(searchForm).toBeDefined();
@@ -157,10 +151,9 @@ describe("ItemSearchTool", function () {
         Promise.resolve([])
       );
 
-      const { root } = await renderAndLoad({
+      const { root } = await renderAndLoad(viewState, {
         item,
-        itemSearchProvider,
-        viewState
+        itemSearchProvider
       });
       await submitForm(root);
       const searchResults = root.findByType(SearchResults);
@@ -169,19 +162,16 @@ describe("ItemSearchTool", function () {
   });
 });
 
-function render(props: Omit<PropsType, "i18n" | "t" | "tReady">) {
-  return create(withThemeContext(<ItemSearchTool {...props} />));
-}
-
 function renderAndLoad(
+  viewState: ViewState,
   props: Omit<PropsType, "i18n" | "t" | "tReady">
 ): Promise<ReactTestRenderer> {
   return new Promise((resolve) => {
     act(() => {
-      const rendered = render({
-        ...props,
-        afterLoad: () => resolve(rendered)
-      });
+      const rendered = createWithContexts(
+        viewState,
+        <ItemSearchTool {...props} afterLoad={() => resolve(rendered)} />
+      );
     });
   });
 }

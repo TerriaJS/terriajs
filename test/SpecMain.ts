@@ -39,3 +39,6 @@ jasmine.getEnv().addReporter({
 });
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
+
+// Required from React 18
+(globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;

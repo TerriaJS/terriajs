@@ -1,10 +1,11 @@
 import i18next from "i18next";
-import { Suspense } from "react";
 import * as React from "react";
+import { Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
+import { useViewState } from "../../Context";
 import RaiseToUserErrorBoundary from "../../Errors/RaiseToUserErrorBoundary";
 import { Frame, Main } from "../ToolModal";
 import { PropsType } from "./ItemSearchTool";
@@ -15,7 +16,8 @@ const ItemSearchTool = React.lazy(() => import("./ItemSearchTool"));
  * Lazily loads the item search tool while showing a the search window and an animated spinner.
  */
 const LazyItemSearchTool: React.FC<PropsType> = (props) => {
-  const { viewState, item } = props;
+  const { item } = props;
+  const viewState = useViewState();
   const itemName = CatalogMemberMixin.isMixedInto(item) ? item.name : "Item";
   const [t] = useTranslation();
 

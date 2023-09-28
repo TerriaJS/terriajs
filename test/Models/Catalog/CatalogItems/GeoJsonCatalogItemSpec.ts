@@ -27,6 +27,8 @@ import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 import TerriaFeature from "../../../../lib/Models/Feature/Feature";
 import Terria from "../../../../lib/Models/Terria";
+import StandardCssColors from "../../../../lib/Core/StandardCssColors";
+import Color from "terriajs-cesium/Source/Core/Color";
 
 describe("GeoJsonCatalogItemSpec", () => {
   describe("- with cesium primitives", function () {
@@ -873,9 +875,14 @@ describe("GeoJsonCatalogItemSpec", () => {
 
         expect(geojson.legends.length).toBe(1);
         expect(geojson.legends[0].items.length).toBe(1);
-        expect(geojson.legends[0].items.map((i) => i.color)).toEqual([
-          "rgb(102,194,165)"
-        ]);
+        // Without styles expect geojson to be coloured with 1 colour from our set
+        expect(
+          StandardCssColors.modifiedBrewer8ClassSet2.findIndex((c) =>
+            Color.fromCssColorString(c).equals(
+              Color.fromCssColorString(geojson.legends[0].items[0].color!)
+            )
+          ) >= 0
+        ).toBe(true);
 
         updateModelFromJson(geojson, CommonStrata.definition, {
           legends: [

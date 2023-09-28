@@ -2,15 +2,24 @@
 // proptypes are in mixin
 /* eslint react/prop-types:0*/
 
-import createReactClass from "create-react-class";
 import classNames from "classnames";
+import createReactClass from "create-react-class";
+import { css } from "styled-components";
+import defined from "terriajs-cesium/Source/Core/defined";
 import Icon from "../../../Styled/Icon";
-import InnerPanel from "./InnerPanel";
 import BaseOuterPanel from "./BaseOuterPanel";
-
+import InnerPanel from "./InnerPanel";
 import Styles from "./panel.scss";
 
-import defined from "terriajs-cesium/Source/Core/defined";
+const buttonStyle = (p, panelIsOpen) => css`
+  ${panelIsOpen &&
+  `&:not(.foo) {
+    background: ${p.theme.colorPrimary};
+    svg {
+      fill: ${p.theme.textLight};
+    }
+  `};
+`;
 
 const DropdownPanel = createReactClass({
   displayName: "DropdownPanel",
@@ -99,16 +108,7 @@ const DropdownPanel = createReactClass({
           ref={
             this.props.btnRef || ((element) => (this.buttonElement = element))
           }
-          css={`
-            ${(p) =>
-              panelIsOpen &&
-              `&:not(.foo) {
-                background: ${p.theme.colorPrimary};
-                svg {
-                  fill: ${p.theme.textLight};
-                }
-              }`}
-          `}
+          css={buttonStyle(this.props, panelIsOpen)}
         >
           <If condition={this.props.theme.icon}>
             <Icon glyph={iconGlyph} />
