@@ -20,6 +20,7 @@ export function allMappableMembersInWorkbench(
   terria: Terria
 ) {
   const workbenchItemsArray = terria.workbench.itemIds;
+  // If groupItemsArray is empty, groupItemsArray.every(...) will always return true.
   if (groupItemsArray.length === 0) {
     return false;
   } else {
