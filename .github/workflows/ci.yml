@@ -28,11 +28,14 @@ jobs:
         run: yarn prettier-check
 
       - name: Build TerriaJS tests
-        run: yarn gulp lint release -- --continue
+        id: lint_build_spec
+        run: yarn gulp lint build -- --continue
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
+      # Run on failure of gulp lint build, in case it's a lint failure
       - name: Run tests using xvfb
         uses: GabrielBB/xvfb-action@v1
+        if: ${{success() || steps.lint_build_spec.outcome == 'failure'}}
         with:
           run: yarn gulp test-firefox
