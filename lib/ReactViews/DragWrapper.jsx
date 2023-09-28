@@ -1,6 +1,7 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import interact from "interactjs";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 
 class DragWrapper extends Component {
   constructor(props) {
@@ -10,6 +11,13 @@ class DragWrapper extends Component {
 
   componentDidMount() {
     const node = this.node;
+    if (node === null) {
+      // Allow only in test environment
+      if (globalThis.IS_REACT_ACT_ENVIRONMENT !== true) {
+        throw new DeveloperError("node of DragWrapper must not be null");
+      }
+      return;
+    }
 
     const dragMoveListener = (event) => {
       const target = event.target;
