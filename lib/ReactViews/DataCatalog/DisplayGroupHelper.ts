@@ -20,11 +20,15 @@ export function allMappableMembersInWorkbench(
   terria: Terria
 ) {
   const workbenchItemsArray = terria.workbench.itemIds;
-  return groupItemsArray.every(
-    (member: any) =>
-      !MappableMixin.isMixedInto(terria.getModelById(BaseModel, member)) ||
-      workbenchItemsArray.includes(member)
-  );
+  if (groupItemsArray.length === 0) {
+    return false;
+  } else {
+    return groupItemsArray.every(
+      (member: any) =>
+        !MappableMixin.isMixedInto(terria.getModelById(BaseModel, member)) ||
+        workbenchItemsArray.includes(member)
+    );
+  }
 }
 
 /**
