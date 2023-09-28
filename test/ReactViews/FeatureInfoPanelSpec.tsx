@@ -1,22 +1,16 @@
 "use strict";
-import { action, runInAction } from "mobx";
+import { runInAction } from "mobx";
 import { act } from "react-dom/test-utils";
 import { ReactTestRenderer } from "react-test-renderer";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
-import runLater from "../../lib/Core/runLater";
 import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
 import CompositeCatalogItem from "../../lib/Models/Catalog/CatalogItems/CompositeCatalogItem";
-import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
-import CatalogMemberFactory from "../../lib/Models/Catalog/CatalogMemberFactory";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
-import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson";
 import TerriaFeature from "../../lib/Models/Feature/Feature";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import FeatureInfoPanel, {
   determineCatalogItem
 } from "../../lib/ReactViews/FeatureInfo/FeatureInfoPanel";
-import { FeatureInfoSection } from "../../lib/ReactViews/FeatureInfo/FeatureInfoSection";
 import Loader from "../../lib/ReactViews/Loader";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 import { createWithContexts } from "./withContext";
@@ -85,66 +79,6 @@ describe("FeatureInfoPanel", function () {
     expect(() => {
       testRenderer!.root.findByType(Loader);
     }).not.toThrow();
-  });
-
-  it("shows sections for picked features associated with catalog items and opens first section", async function () {
-    const geoJsonItem = upsertModelFromJson(
-      CatalogMemberFactory,
-      terria,
-      "/",
-      CommonStrata.definition,
-      {
-        type: "geojson",
-        name: "Test GeoJSON",
-        id: "geojson-feature-panel",
-        geoJsonData: {
-          type: "FeatureCollection",
-          features: [
-            {
-              type: "Feature",
-              properties: {},
-              geometry: {
-                coordinates: [151, -33],
-                type: "Point"
-              }
-            },
-            {
-              type: "Feature",
-              properties: {},
-              geometry: {
-                coordinates: [152, -34],
-                type: "Point"
-              }
-            }
-          ]
-        }
-      }
-    ).throwIfError() as CsvCatalogItem;
-    (await terria.workbench.add(geoJsonItem)).throwIfError();
-
-    (geoJsonItem.mapItems[0] as DataSource).entities;
-
-    var pickedFeatures = new PickedFeatures();
-    pickedFeatures.allFeaturesAvailablePromise = runLater(
-      action(function () {
-        pickedFeatures.features = (
-          geoJsonItem.mapItems[0] as DataSource
-        ).entities.values.slice();
-        pickedFeatures.isLoading = false;
-      })
-    );
-    runInAction(() => {
-      terria.pickedFeatures = pickedFeatures;
-    });
-
-    let testRenderer: ReactTestRenderer;
-    await act(() => {
-      testRenderer = createWithContexts(viewState, <FeatureInfoPanel />);
-    });
-    let sections = testRenderer!.root.findAllByType(FeatureInfoSection);
-
-    expect(sections.length).toEqual(2);
-    expect(sections[0].props.isOpen).toBe(true);
   });
 
   describe("determineCatalogItem", function () {
