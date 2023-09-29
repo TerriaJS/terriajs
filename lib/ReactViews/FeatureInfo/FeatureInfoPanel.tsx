@@ -29,7 +29,7 @@ import Workbench from "../../Models/Workbench";
 import ViewState from "../../ReactViewModels/ViewState";
 import Icon from "../../Styled/Icon";
 import Loader from "../Loader";
-import { withViewState } from "../StandardUserInterface/ViewStateContext";
+import { withViewState } from "../Context";
 import Styles from "./feature-info-panel.scss";
 import FeatureInfoCatalogItem from "./FeatureInfoCatalogItem";
 

@@ -9,7 +9,7 @@ const DataCatalogTab: any =
   require("../../../lib/ReactViews/ExplorerWindow/Tabs/DataCatalogTab").default;
 import Icon from "../../../lib/Styled/Icon";
 import { ThemeProvider } from "styled-components";
-import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface/StandardTheme";
+import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
 import { runInAction } from "mobx";
 
 describe("Breadcrumbs", function () {

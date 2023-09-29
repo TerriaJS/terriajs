@@ -10,7 +10,7 @@ import {
 import { isJsonString } from "../../../../Core/Json";
 import Icon, { StyledIcon } from "../../../../Styled/Icon";
 import Text from "../../../../Styled/Text";
-import { applyTranslationIfExists } from "./../../../../Language/languageHelpers";
+import { applyTranslationIfExists } from "../../../../Language/languageHelpers";
 import HelpVideoPanel from "./HelpVideoPanel";
 
 @observer

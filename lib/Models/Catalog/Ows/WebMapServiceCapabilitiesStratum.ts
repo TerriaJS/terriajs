@@ -638,17 +638,27 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       (unionRectangle, layer) => {
         // Convert to cesium Rectangle (so we can use Rectangle.union)
         const latLonRect = getRectangleFromLayer(layer);
-        const ceisumRect = Rectangle.fromDegrees(
+
+        if (
+          !isDefined(latLonRect?.west) ||
+          !isDefined(latLonRect?.south) ||
+          !isDefined(latLonRect?.east) ||
+          !isDefined(latLonRect?.north)
+        )
+          return;
+
+        const cesiumRectangle = Rectangle.fromDegrees(
           latLonRect?.west,
           latLonRect?.south,
           latLonRect?.east,
           latLonRect?.north
         );
+
         if (!unionRectangle) {
-          return ceisumRect;
+          return cesiumRectangle;
         }
 
-        return Rectangle.union(unionRectangle, ceisumRect);
+        return Rectangle.union(unionRectangle, cesiumRectangle);
       },
       undefined
     );
