@@ -1,10 +1,15 @@
 # Change Log
 
-#### next release (8.3.5)
+#### next release (8.3.6)
 
-- Add `includeMembersRegex` to `GroupTraits`. This can be used to filter group members by id/name using a regular expression.
 - Add `GetTimeseries` support to `WebMapServiceCatalogItem`. This adds a new `supportsGetTimeseries` trait, which when true will replace `GetFeatureInfo` with `GetTimeseries` requests. It will also change `info_format` to `text/csv`, and show a chart in the feature info panel. Servers which advertise `GetTimeseries` capability will have this trait set to true by default. `GetTimeseries` requests will have `time = ""`.
+- Fixed a bug where incorrect "Remove all" icon is shown when the trait `displayGroup` of some group types (e.g.`wms-group`) is set to `true` but the members have not been populated yet.
 - [The next improvement]
+
+#### 8.3.5 - 2023-09-26
+
+- Allow a story to use iframe tag if the source is youtube, youtube-nocookie or vimeo.
+- Add `includeMembersRegex` to `GroupTraits`. This can be used to filter group members by id/name using a regular expression.
 
 #### 8.3.4 - 2023-09-15
 
