@@ -175,7 +175,7 @@ describe("CatalogGroup", function () {
       type: "group",
       id: "grandmama",
       name: "Test Group",
-      excludeMembers: ["grandchild1", "parent3", "some name"]
+      excludeMembers: ["grandchild1", "PARENT3", "some name"]
     };
     upsertModelFromJson(
       CatalogMemberFactory,
@@ -223,18 +223,18 @@ describe("CatalogGroup", function () {
       },
       {
         type: "group",
-        id: "parent3"
+        id: "PARENT3"
       }
     ]);
 
     expect(item.excludeMembers).toEqual([
       "grandchild1",
-      "parent3",
+      "PARENT3",
       "some name"
     ]);
     expect(item.mergedExcludeMembers).toEqual([
       "grandchild1",
-      "parent3",
+      "PARENT3",
       "some name"
     ]);
 
@@ -257,7 +257,7 @@ describe("CatalogGroup", function () {
     expect(parent1.mergedExcludeMembers).toEqual([
       "grandchild4",
       "grandchild1",
-      "parent3",
+      "PARENT3",
       "some name"
     ]);
   });
