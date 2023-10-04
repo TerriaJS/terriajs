@@ -12,15 +12,13 @@ import Text, { TextSpan } from "../../Styled/Text";
 import Ul, { Li } from "../../Styled/List";
 import { RawButton } from "../../Styled/Button";
 
-import Spacing from "../../Styled/Spacing";
-
 const CatalogGroupTitle = styled(Box).attrs({
   centered: true,
   fullWidth: true,
   gap: true,
   paddedRatio: 1.6,
   pr: 0
-})<{ selected: boolean }>`
+})<{ selected: boolean; open: boolean; topLevel: boolean }>`
   &:hover,
   &:focus {
     cursor: pointer;
@@ -32,6 +30,15 @@ const CatalogGroupTitle = styled(Box).attrs({
     `
       color: ${props.theme.textLight};
       background-color: ${props.theme.modalHighlight};
+    `}
+
+  ${(props) =>
+    props.topLevel &&
+    !props.selected &&
+    props.open &&
+    `
+      margin-bottom: -1px;
+      border-bottom: 1px solid ${props.theme.greyLighter};
     `}
   text-align: left;
   word-break: normal;
@@ -117,12 +124,14 @@ const CatalogGroup: FC<ICatalogGroupProps> = (props) => {
       <Text>
         <CatalogGroupTitle
           title={props.title}
+          open={open}
           onClick={props.onClick}
+          topLevel={topLevel}
           selected={selected ?? false}
         >
           {!topLevel ? <FolderIcon open={open} /> : null}
           <BoxSpan justifySpaceBetween flex={1} verticalCenter>
-            <TextSpan semiBold primary={!selected && props.isPrivate}>
+            <TextSpan bold primary={!selected && props.isPrivate}>
               {props.text}
             </TextSpan>
             <BoxSpan centered gap={2} pr={2}>
@@ -169,8 +178,13 @@ const CatalogGroup: FC<ICatalogGroupProps> = (props) => {
           column
           pt
           css={`
-            border-left: ${theme.greyLighter};
             padding-left: 10px;
+            ${!topLevel &&
+            `
+              border-left: 1px solid ${theme.greyLighter};
+              margin-left: 13px;
+              padding-left: 5px;
+            `}
           `}
         >
           {loading && (
