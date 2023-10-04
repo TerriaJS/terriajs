@@ -1,10 +1,32 @@
 # Change Log
 
-#### next release (8.3.3)
+#### next release (8.3.7)
 
-- Fixes broken point dragging interaction for user drawing in 3d-mode.
-- Added EPSG:7855 to `Proj4Definitions`.
 - [The next improvement]
+
+#### 8.3.6 - 2023-10-03
+
+- Fixed a bug where incorrect "Remove all" icon is shown when the trait `displayGroup` of some group types (e.g.`wms-group`) is set to `true` but the members have not been populated yet.
+- Fix regression in `excludeMembers`, `id` and `name` should be lower-case for comparing.
+
+#### 8.3.5 - 2023-09-26
+
+- Allow a story to use iframe tag if the source is youtube, youtube-nocookie or vimeo.
+- Add `includeMembersRegex` to `GroupTraits`. This can be used to filter group members by id/name using a regular expression.
+
+#### 8.3.4 - 2023-09-15
+
+- Add `timeWindowDuration`, `timeWindowUnit` and `isForwardTimeWindow` traits to esri-mapServer type to support time window query.
+- Move map credits to map column so it don't get hidden by chart panel
+- TSify `MapColumn` module and reorganize components directory structure.
+- Add null check to `WebMapServiceCatalogItem` `rectangle` calculation - and now we ascend tree of WMS `Layers` until we find a rectangle.
+- Fix multi level nesting in ArcGIS Mapserver.
+
+#### 8.3.3 - 2023-09-07
+
+- Fixed broken point dragging interaction for user drawing in 3D mode.
+- Fixed rectangle drawing in 2D mode.
+- Added EPSG:7855 to `Proj4Definitions`.
 
 #### 8.3.2 - 2023-08-11
 

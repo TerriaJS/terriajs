@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
-import { useViewState } from "../../../StandardUserInterface/ViewStateContext";
+import { useViewState } from "../../../Context";
 import DropdownStyles from "../panel.scss";
 import CountDatasets from "./CountDatasets";
 import Styles from "./tools-panel.scss";

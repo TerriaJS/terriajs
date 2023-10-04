@@ -101,6 +101,7 @@ class DataCatalogGroup extends React.Component {
   render() {
     const group = this.props.group;
     const { t } = this.props;
+
     return (
       <CatalogGroup
         text={this.getNameOrPrettyUrl()}

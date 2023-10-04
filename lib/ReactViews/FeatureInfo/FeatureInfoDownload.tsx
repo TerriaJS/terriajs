@@ -6,7 +6,7 @@ import filterOutUndefined from "../../Core/filterOutUndefined";
 import JsonValue, { JsonObject } from "../../Core/Json";
 import ViewState from "../../ReactViewModels/ViewState";
 import Icon from "../../Styled/Icon";
-import { withViewState } from "../StandardUserInterface/ViewStateContext";
+import { withViewState } from "../Context";
 import Styles from "./feature-info-download.scss";
 
 const Dropdown = require("../Generic/Dropdown");

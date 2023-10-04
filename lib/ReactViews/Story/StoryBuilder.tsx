@@ -27,10 +27,7 @@ import measureElement, { MeasureElementProps } from "../HOCs/measureElement";
 import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
 import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel";
-import {
-  WithViewState,
-  withViewState
-} from "../StandardUserInterface/ViewStateContext";
+import { WithViewState, withViewState } from "../Context";
 import Story from "./Story";
 import Styles from "./story-builder.scss";
 import StoryEditor from "./StoryEditor.jsx";

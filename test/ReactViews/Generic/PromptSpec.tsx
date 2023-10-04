@@ -5,7 +5,7 @@ import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import { runInAction } from "mobx";
 const Prompt: any = require("../../../lib/ReactViews/Generic/Prompt").default;
-import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface/StandardTheme";
+import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
 import Caret from "../../../lib/ReactViews/Generic/Caret";
 
 describe("HelpPrompt", function () {
