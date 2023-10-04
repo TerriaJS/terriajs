@@ -1,16 +1,17 @@
-import React, { FC } from "react";
 import { observer } from "mobx-react";
+import React, { FC } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { DataCatalogMember } from "./DataCatalogMember";
 import SearchHeader from "../Search/SearchHeader";
+import { DataCatalogMember } from "./DataCatalogMember";
 
-import ViewState from "../../ReactViewModels/ViewState";
-import Terria from "../../Models/Terria";
-import { BaseModel } from "../../Models/Definition/Model";
-import Ul from "../../Styled/List";
 import isDefined from "../../Core/isDefined";
+import { BaseModel } from "../../Models/Definition/Model";
+import Terria from "../../Models/Terria";
+import ViewState from "../../ReactViewModels/ViewState";
+import Box from "../../Styled/Box";
+import Ul from "../../Styled/List";
 import Text from "../../Styled/Text";
 
 interface IDataCatalogProps {
@@ -54,7 +55,9 @@ export const DataCatalog: FC<IDataCatalogProps> = observer(
       >
         {isSearching && catalogSearchProvider ? (
           <>
-            <Text small>{t("search.resultsLabel")}</Text>
+            <Box paddedRatio={1.6}>
+              <Text small>{t("search.resultsLabel")}</Text>
+            </Box>
             <SearchHeader
               searchResults={catalogSearchProvider}
               isWaitingForSearchToStart={
