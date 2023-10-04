@@ -37,7 +37,7 @@ terriamap:
 
 # Building Your Own Image
 
-You can build your own TerriaMap image
+You can build your own TerriaMap image. Choose your own `app-name` and `tag` (e.g. `awesome-map:1.0.0`) and put them into the command below:
 
 ```bash
 docker build -t app-name:tag .
@@ -52,14 +52,12 @@ If you want to run a local version of TerriaMap using Kubernetes then you can tr
 
 Or try a tool recommended in the [official Kuberntes setup documentation](https://kubernetes.io/docs/setup/).
 
-Then run:
+Then, using the same `app-name` & `tag` that you chose when building the image, run:
 
 ```bash
 docker build -t app-name:tag .
 
 helm upgrade --install -f deploy/helm/example-prod.yml terria deploy/helm/terria --set terriamap.image.full=app-name:tag --set global.image.pullPolicy=Never
 ```
-
-using the same `app-name` & `tag` in both.
 
 You can repeat the command `docker build -t app-name:tag .` and delete the terria-terriamap pod to update it, and you can run the above `helm upgrade` command after modifying or copying `example-prod.yml` to change the config.

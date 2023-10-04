@@ -1,9 +1,18 @@
 # Change Log
 
-#### next release (8.3.5)
+#### next release (8.3.7)
 
-- Add `includeMembersRegex` to `GroupTraits`. This can be used to filter group members by id/name using a regular expression.
 - [The next improvement]
+
+#### 8.3.6 - 2023-10-03
+
+- Fixed a bug where incorrect "Remove all" icon is shown when the trait `displayGroup` of some group types (e.g.`wms-group`) is set to `true` but the members have not been populated yet.
+- Fix regression in `excludeMembers`, `id` and `name` should be lower-case for comparing.
+
+#### 8.3.5 - 2023-09-26
+
+- Allow a story to use iframe tag if the source is youtube, youtube-nocookie or vimeo.
+- Add `includeMembersRegex` to `GroupTraits`. This can be used to filter group members by id/name using a regular expression.
 
 #### 8.3.4 - 2023-09-15
 
