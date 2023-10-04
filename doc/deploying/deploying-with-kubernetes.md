@@ -37,7 +37,7 @@ terriamap:
 
 # Building Your Own Image
 
-You can build your own TerriaMap image
+You can build your own TerriaMap image. Choose your own `app-name` and `tag` - e.g. `awesome-map:1.0.0` - and put them into the command below:
 
 ```bash
 docker build -t app-name:tag .
