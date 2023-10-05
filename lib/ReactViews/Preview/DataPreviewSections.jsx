@@ -89,7 +89,7 @@ class DataPreviewSections extends React.Component {
 
     return (
       <div>
-        <For each="item" index="i" of={this.sortInfoSections(items)}>
+        {this.sortInfoSections(items).map((item, i) => (
           <Box paddedVertically displayInlineBlock fullWidth key={i}>
             <Collapsible
               key={i}
@@ -113,7 +113,7 @@ class DataPreviewSections extends React.Component {
               </Choose>
             </Collapsible>
           </Box>
-        </For>
+        ))}
       </div>
     );
   }

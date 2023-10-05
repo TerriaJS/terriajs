@@ -116,14 +116,14 @@ class MobileMenu extends React.Component {
             [Styles.mobileNavHidden]: !this.props.viewState.mobileMenuVisible
           })}
         >
-          <For each="menuItem" of={this.props.menuLeftItems}>
+          {this.props.menuLeftItems.map((menuItem) => (
             <div
               onClick={() => this.hideMenu()}
               key={menuItem ? menuItem.key : undefined}
             >
               {menuItem}
             </div>
-          </For>
+          ))}
           <div onClick={() => this.hideMenu()}>
             <SettingPanel
               terria={this.props.terria}
@@ -136,14 +136,14 @@ class MobileMenu extends React.Component {
               viewState={this.props.viewState}
             />
           </div>
-          <For each="menuItem" of={this.props.menuItems}>
+          {this.props.menuItems.map((menuItem) => (
             <div
               onClick={() => this.hideMenu()}
               key={menuItem ? menuItem.key : undefined}
             >
               {menuItem}
             </div>
-          </For>
+          ))}
           {mapUserGuide && <MobileMenuItem {...mapUserGuide} />}
           {this.props.showFeedback && (
             <MobileMenuItem

@@ -36,7 +36,7 @@ const MetadataTable = createReactClass({
                 )}
               </When>
               <When condition={keys.length > 0 && !isArr}>
-                <For each="key" index="i" of={keys}>
+                {keys.map((key, i) => (
                   <tr key={i}>
                     <th className={Styles.name}>{key}</th>
                     <td className={Styles.value}>
@@ -59,7 +59,7 @@ const MetadataTable = createReactClass({
                       </Choose>
                     </td>
                   </tr>
-                </For>
+                ))}
               </When>
             </Choose>
           </tbody>

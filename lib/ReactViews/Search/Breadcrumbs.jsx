@@ -69,45 +69,46 @@ class Breadcrumbs extends React.Component {
         />
         <Spacing right={1.2} />
         <Box flexWrap>
-          {parentGroups && (
-            <For each="parent" index="i" of={parentGroups}>
-              <Choose>
-                {/* No link when it's the current member */}
-                <When condition={i === parentGroups.length - 1}>
-                  <Text small textDark>
-                    {parent}
-                  </Text>
-                </When>
-                {/* The first and last two groups use the full name */}
-                <When condition={i <= 1 || i >= parentGroups.length - 2}>
-                  <RawButtonAndUnderline
-                    type="button"
-                    onClick={() =>
-                      this.openInCatalog(ancestors.slice(i, i + 1))
-                    }
-                  >
-                    <TextSpan small textDark>
+          {parentGroups &&
+            parentGroups.map((parent, i) => (
+              <>
+                <Choose>
+                  {/* No link when it's the current member */}
+                  <When condition={i === parentGroups.length - 1}>
+                    <Text small textDark>
                       {parent}
-                    </TextSpan>
-                  </RawButtonAndUnderline>
-                </When>
-                {/* The remainder are just '..' to prevent/minimise overflowing */}
-                <When condition={i > 1 && i < parentGroups.length - 2}>
-                  <Text small textDark>
-                    {"..."}
-                  </Text>
-                </When>
-              </Choose>
+                    </Text>
+                  </When>
+                  {/* The first and last two groups use the full name */}
+                  <When condition={i <= 1 || i >= parentGroups.length - 2}>
+                    <RawButtonAndUnderline
+                      type="button"
+                      onClick={() =>
+                        this.openInCatalog(ancestors.slice(i, i + 1))
+                      }
+                    >
+                      <TextSpan small textDark>
+                        {parent}
+                      </TextSpan>
+                    </RawButtonAndUnderline>
+                  </When>
+                  {/* The remainder are just '..' to prevent/minimise overflowing */}
+                  <When condition={i > 1 && i < parentGroups.length - 2}>
+                    <Text small textDark>
+                      {"..."}
+                    </Text>
+                  </When>
+                </Choose>
 
-              {i !== parentGroups.length - 1 && (
-                <Box paddedHorizontally={1}>
-                  <Text small textDark>
-                    {">"}
-                  </Text>
-                </Box>
-              )}
-            </For>
-          )}
+                {i !== parentGroups.length - 1 && (
+                  <Box paddedHorizontally={1}>
+                    <Text small textDark>
+                      {">"}
+                    </Text>
+                  </Box>
+                )}
+              </>
+            ))}
         </Box>
       </Box>
     );

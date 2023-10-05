@@ -56,13 +56,12 @@ const MenuBar = observer((props) => {
               <ToolsPanel />
             </li>
           )}
-          {!viewState.useSmallScreenInterface && (
-            <For each="element" of={props.menuLeftItems} index="i">
+          {!viewState.useSmallScreenInterface &&
+            props.menuLeftItems.map((element, i) => (
               <li className={Styles.menuItem} key={i}>
                 {element}
               </li>
-            </For>
-          )}
+            ))}
         </ul>
       </section>
       <section className={classNames(Styles.flex)}>
@@ -103,13 +102,12 @@ const MenuBar = observer((props) => {
             />
           </li>
         </ul>
-        {!viewState.useSmallScreenInterface && (
-          <For each="element" of={menuItems} index="i">
+        {!viewState.useSmallScreenInterface &&
+          menuItems.map((element, i) => (
             <li className={Styles.menuItem} key={i}>
               {element}
             </li>
-          </For>
-        )}
+          ))}
       </section>
     </StyledMenuBar>
   );
