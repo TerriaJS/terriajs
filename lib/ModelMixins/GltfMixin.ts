@@ -87,7 +87,7 @@ function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     }
 
     @computed
-    private get cesiumHeightReference() {
+    get cesiumHeightReference() {
       const heightReference: HeightReference =
         // @ts-ignore
         HeightReference[this.heightReference] || HeightReference.NONE;

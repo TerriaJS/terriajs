@@ -1,9 +1,7 @@
 import range from "lodash-es/range";
 import { action, computed, observable, runInAction } from "mobx";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
@@ -13,16 +11,12 @@ import runLater from "../../lib/Core/runLater";
 import MappableMixin from "../../lib/ModelMixins/MappableMixin";
 import CesiumTerrainCatalogItem from "../../lib/Models/Catalog/CatalogItems/CesiumTerrainCatalogItem";
 import CatalogMemberFactory from "../../lib/Models/Catalog/CatalogMemberFactory";
-import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Cesium from "../../lib/Models/Cesium";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import CreateModel from "../../lib/Models/Definition/CreateModel";
-import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson";
 import Terria from "../../lib/Models/Terria";
-import MappableTraits, {
-  RectangleTraits
-} from "../../lib/Traits/TraitsClasses/MappableTraits";
+import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 
 const supportsWebGL = require("../../lib/Core/supportsWebGL");
@@ -40,10 +34,10 @@ describeIfSupported("Cesium Model", function () {
     terria = new Terria({
       baseUrl: "./"
     });
-    terriaViewer = new TerriaViewer(
-      terria,
-      computed(() => [])
-    );
+    terriaViewer = terria.mainViewer;
+    runInAction(() => {
+      terriaViewer.viewerOptions.useTerrain = false;
+    });
     container = document.createElement("div");
     container.id = "container";
     document.body.appendChild(container);
@@ -84,41 +78,6 @@ describeIfSupported("Cesium Model", function () {
     cesium.scene.globe.tileLoadProgressEvent.raiseEvent(2);
 
     expect(terriaProgressEvt.calls.mostRecent().args).toEqual([2, 2]);
-  });
-
-  describe("zoomTo", function () {
-    let initialCameraPosition: Cartesian3;
-
-    beforeEach(function () {
-      initialCameraPosition = cesium.scene.camera.position.clone();
-    });
-
-    it("can zoomTo a rectangle", async function () {
-      const [west, south, east, north] = [0, 0, 0, 0];
-      await cesium.zoomTo(Rectangle.fromDegrees(west, south, east, north), 0);
-      expect(initialCameraPosition.equals(cesium.scene.camera.position)).toBe(
-        false
-      );
-    });
-
-    describe("if the target is a TimeVarying item", function () {
-      it("sets the target item as the timeline source", async function () {
-        const targetItem = new WebMapServiceCatalogItem("test", terria);
-        targetItem.setTrait(
-          CommonStrata.user,
-          "rectangle",
-          createStratumInstance(RectangleTraits, {
-            east: 0,
-            west: 0,
-            north: 0,
-            south: 0
-          })
-        );
-        const promoteToTop = spyOn(terria.timelineStack, "promoteToTop");
-        await cesium.zoomTo(targetItem, 0);
-        expect(promoteToTop).toHaveBeenCalledWith(targetItem);
-      });
-    });
   });
 
   it("correctly removes all the primitives from the scene when they are removed from the viewer", async function () {

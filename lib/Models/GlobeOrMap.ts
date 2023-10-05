@@ -18,6 +18,7 @@ import MapboxVectorTileImageryProvider from "../Map/ImageryProvider/MapboxVector
 import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryProvider";
 import featureDataToGeoJson from "../Map/PickedFeatures/featureDataToGeoJson";
 import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
+import { ZoomTarget } from "../Map/ZoomTarget";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import MouseCoords from "../ReactViewModels/MouseCoords";
@@ -63,7 +64,7 @@ export default abstract class GlobeOrMap {
   abstract destroy(): void;
 
   abstract doZoomTo(
-    target: CameraView | Rectangle | MappableMixin.Instance,
+    target: ZoomTarget,
     flightDurationSeconds: number
   ): Promise<void>;
 
@@ -79,8 +80,8 @@ export default abstract class GlobeOrMap {
    * @returns A promise that resolves when the zoom animation is complete
    */
   @action
-  zoomTo(
-    target: CameraView | Rectangle | MappableMixin.Instance,
+  async zoomTo(
+    target: ZoomTarget,
     flightDurationSeconds: number = 3.0
   ): Promise<void> {
     this.isMapZooming = true;

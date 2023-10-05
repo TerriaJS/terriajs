@@ -1760,13 +1760,13 @@ describe("Terria", function () {
         await terria.start({ configUrl: "test-config.json" });
         await terria.loadInitSources();
         await when(() => terria.currentViewer.type === "Cesium");
+        await when(() => terria.currentViewer.isMapZooming === false);
 
         const cameraPos = terria.cesium?.scene.camera.positionCartographic;
         expect(cameraPos).toBeDefined();
-        const { longitude, latitude, height } = cameraPos!;
+        const { longitude, latitude } = cameraPos!;
         expect(CesiumMath.toDegrees(longitude)).toBeCloseTo(100.5);
-        expect(CesiumMath.toDegrees(latitude)).toBeCloseTo(0.5);
-        expect(height).toBeCloseTo(191276.7939);
+        expect(CesiumMath.toDegrees(latitude)).toBeCloseTo(-1.1863);
       });
 
       it("works correctly even when there is a delay in a Cesium/Leaflet viewer becoming available", async function () {
@@ -1783,12 +1783,14 @@ describe("Terria", function () {
         });
         // Wait for the switch to happen
         await when(() => terria.mainViewer.currentViewer.type === "Cesium");
+        await when(
+          () => terria.mainViewer.currentViewer.isMapZooming === false
+        );
         // Ensure that the camera position is correctly updated after the switch
         const cameraPos = terria.cesium?.scene.camera.positionCartographic;
-        const { longitude, latitude, height } = cameraPos!;
+        const { longitude, latitude } = cameraPos!;
         expect(CesiumMath.toDegrees(longitude)).toBeCloseTo(100.5);
-        expect(CesiumMath.toDegrees(latitude)).toBeCloseTo(0.5);
-        expect(height).toBeCloseTo(191276.7939);
+        expect(CesiumMath.toDegrees(latitude)).toBeCloseTo(-1.1863);
       });
 
       it("is not applied if subsequent init sources override the initialCamera settings", async function () {

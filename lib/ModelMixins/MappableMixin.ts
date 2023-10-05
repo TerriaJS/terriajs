@@ -8,6 +8,7 @@ import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import AsyncLoader from "../Core/AsyncLoader";
 import Result from "../Core/Result";
+import CameraView from "../Models/CameraView";
 import Model from "../Models/Definition/Model";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
@@ -38,6 +39,16 @@ export namespace ImageryParts {
   export function is(object: MapItem): object is ImageryParts {
     return "imageryProvider" in object;
   }
+}
+
+/**
+ * Type assertion that checks if the given `MapItem` is an `ImagerParts`
+ *
+ * @param object MapItem
+ * @returns true if the given object is an `ImagerParts`
+ */
+export function isImageryParts(object: MapItem): object is ImageryParts {
+  return ImageryParts.is(object);
 }
 
 export function isPrimitive(mapItem: MapItem): mapItem is AbstractPrimitive {
@@ -92,6 +103,28 @@ function MappableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         );
       }
       return undefined;
+    }
+
+    /**
+     * An instance of `CameraView` computed from the `idealZoom` traits.
+     */
+    @computed
+    get idealZoomCameraView(): CameraView | undefined {
+      const { lookAt, camera } = this.traits.idealZoom.toJson(this.idealZoom);
+      // We need to parse `lookAt` and `camera` separately because `toJson`
+      // returns partial `lookAt` with default values even when it was not
+      // defined. If we then pass the partial `lookAt` definition to `fromJson`
+      // below it will throw an error without trying to parse the rest of the
+      // definition. In that case we also need to try and parse `camera`
+      // separately.
+      //
+      // TODO: see if we can improve this by changing how fromJson behaves
+      try {
+        return CameraView.fromJson({ lookAt });
+      } catch (err) {}
+      try {
+        return CameraView.fromJson(camera);
+      } catch (err) {}
     }
 
     get shouldShowInitialMessage(): boolean {
