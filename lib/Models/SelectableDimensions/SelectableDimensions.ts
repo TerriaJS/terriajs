@@ -119,6 +119,11 @@ export interface SelectableDimensionCheckboxGroup
     EnumDimension<"true" | "false"> {
   type: "checkbox-group";
 
+  /**
+   * Text to show if the group is empty
+   */
+  emptyText?: string;
+
   // We don't allow nested groups for now to keep the UI simple
   readonly selectableDimensions: Exclude<
     SelectableDimension,

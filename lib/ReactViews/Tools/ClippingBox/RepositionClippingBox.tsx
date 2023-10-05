@@ -122,8 +122,13 @@ const RepositionClippingBox: React.FC<PropsType> = observer(
     useEffect(
       action(function init() {
         const canvas = cesium.scene.canvas;
-        (item.clippingBoxDrawing as any).stopInteractions();
-        setCursor(canvas, "move");
+
+        const boxDrawing = item.clippingBoxDrawing;
+        (boxDrawing as any).stopInteractions();
+        boxDrawing.enableScaling = false;
+        boxDrawing.enableRotation = false;
+
+        setCursor(canvas, "crosshair");
         cesium.isFeaturePickingPaused = true;
         if (promptRef.current) setCursor(promptRef.current, "grabbing");
 
@@ -146,7 +151,7 @@ const RepositionClippingBox: React.FC<PropsType> = observer(
           inputHandler.destroy();
           setCursor(canvas, "auto");
           if (promptRef.current) setCursor(promptRef.current, "auto");
-          if (item.clippingBoxDrawing.dataSource.show) {
+          if (item.clippingBoxDrawing?.dataSource?.show) {
             (item.clippingBoxDrawing as any).startInteractions();
           }
           document.removeEventListener("keydown", escapeKeyHandler);
@@ -159,13 +164,14 @@ const RepositionClippingBox: React.FC<PropsType> = observer(
 
     const initialX = window.innerWidth / 2;
     const initualY = window.innerHeight / 2;
-    const name = truncate(item.name ?? "", 10);
     return (
       <CursorPrompt ref={promptRef} x={initialX} y={initualY}>
-        <Text medium>
-          Click on map to place clipping box for model "{name}"
+        <Text medium bold style={{ marginBottom: "5px" }}>
+          Click on map to position clipping box
         </Text>
-        <Text small>(Press Esc to cancel)</Text>
+        <Text small textAlignCenter>
+          Press ESC to cancel
+        </Text>
       </CursorPrompt>
     );
   }
@@ -186,9 +192,11 @@ const CursorPrompt = styled.div.attrs<CursorPromptProps>(({ x, y }) => ({
   overflow: visible;
   white-space: nowrap;
   max-width: 500px;
-  background-color: rgba(255, 165, 0, 0.7);
-  padding: 7px;
-  border: 1px solid white;
+  background-color: #2563eb;
+  color: white;
+  padding: 12px;
+  border-radius: 6px;
+  box-shadow: 0px 10px 15px -3px #0000001a;
 `;
 
 function setCursor(el: HTMLElement, cursorName: string) {

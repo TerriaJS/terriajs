@@ -5,12 +5,14 @@ import {
   makeObservable,
   observable,
   override,
-  toJS
+  toJS,
+  untracked
 } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
@@ -31,7 +33,6 @@ import SelectableDimensions, {
   SelectableDimension,
   SelectableDimensionCheckboxGroup
 } from "../Models/SelectableDimensions/SelectableDimensions";
-import { zoomAndRepositioningEnabled } from "../ReactViews/Tools/ClippingBox/featureFlags";
 import Icon from "../Styled/Icon";
 import ClippingPlanesTraits from "../Traits/TraitsClasses/ClippingPlanesTraits";
 import HeadingPitchRollTraits from "../Traits/TraitsClasses/HeadingPitchRollTraits";
@@ -140,6 +141,14 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         unionClippingRegions: this.clippingBox.clipDirection === "outside",
         enabled: this.clippingBox.clipModel
       });
+
+      untracked(() => {
+        Matrix4.multiply(
+          this.inverseClippingPlanesOriginMatrix,
+          this.clippingBoxTransform,
+          this.clippingPlaneModelMatrix
+        );
+      });
       clippingPlaneCollection.modelMatrix = this.clippingPlaneModelMatrix;
       return clippingPlaneCollection;
     }
@@ -154,6 +163,69 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     @computed
     get clippingMapItems(): CustomDataSource[] {
       return filterOutUndefined([this.clippingBoxDrawing?.dataSource]);
+    }
+
+    @computed
+    private get clippingBoxDimensions(): Cartesian3 {
+      const dimensions = new Cartesian3(
+        this.clippingBox.dimensions.length ?? 100,
+        this.clippingBox.dimensions.width ?? 100,
+        this.clippingBox.dimensions.height ?? 100
+      );
+      return dimensions;
+    }
+
+    @computed
+    private get clippingBoxHpr(): HeadingPitchRoll | undefined {
+      const { heading, pitch, roll } = this.clippingBox.rotation;
+      return heading !== undefined && pitch !== undefined && roll !== undefined
+        ? HeadingPitchRoll.fromDegrees(heading, pitch, roll)
+        : undefined;
+    }
+
+    @computed
+    private get clippingBoxPosition(): Cartesian3 {
+      const dimensions = this.clippingBoxDimensions;
+
+      const clippingPlanesOriginMatrix = this.clippingPlanesOriginMatrix();
+      let position = LatLonHeightTraits.toCartesian(this.clippingBox.position);
+      if (!position) {
+        // Use clipping plane origin as position but height set to 0 so that the box is grounded.
+        const cartographic = Cartographic.fromCartesian(
+          Matrix4.getTranslation(clippingPlanesOriginMatrix, new Cartesian3())
+        );
+        // If the translation is at the center of the ellipsoid then this cartographic could be undefined.
+        // Although it is not reflected in the typescript type.
+        if (cartographic) {
+          cartographic.height = dimensions.z / 2;
+          position = Ellipsoid.WGS84.cartographicToCartesian(
+            cartographic,
+            new Cartesian3()
+          );
+        }
+      }
+
+      // Nothing we can do - assign to zero
+      position ??= Cartesian3.ZERO.clone();
+      return position;
+    }
+
+    @computed
+    private get clippingBoxTransform(): Matrix4 {
+      const hpr = this.clippingBoxHpr;
+      const position = this.clippingBoxPosition;
+      const dimensions = this.clippingBoxDimensions;
+      const boxTransform = Matrix4.multiply(
+        hpr
+          ? Matrix4.fromRotationTranslation(
+              Matrix3.fromHeadingPitchRoll(hpr),
+              position
+            )
+          : Transforms.eastNorthUpToFixedFrame(position),
+        Matrix4.fromScale(dimensions, new Matrix4()),
+        new Matrix4()
+      );
+      return boxTransform;
     }
 
     @computed
@@ -172,59 +244,7 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         return;
       }
 
-      const clippingPlanesOriginMatrix = this.clippingPlanesOriginMatrix();
-
-      const dimensions = new Cartesian3(
-        this.clippingBox.dimensions.length ?? 100,
-        this.clippingBox.dimensions.width ?? 100,
-        this.clippingBox.dimensions.height ?? 100
-      );
-
-      let position = LatLonHeightTraits.toCartesian(this.clippingBox.position);
-      if (!position) {
-        // Use clipping plane origin as position but height set to 0 so that the box is grounded.
-        const cartographic = Cartographic.fromCartesian(
-          Matrix4.getTranslation(clippingPlanesOriginMatrix, new Cartesian3())
-        );
-        // If the translation is at the center of the ellipsoid then this cartographic could be undefined.
-        // Although it is not reflected in the typescript type.
-        if (cartographic) {
-          cartographic.height = dimensions.z / 2;
-          position = Cartographic.toCartesian(
-            cartographic,
-            cesium.scene.globe.ellipsoid,
-            new Cartesian3()
-          );
-        }
-      }
-
-      // Nothing we can do - assign to zero
-      position ??= Cartesian3.ZERO.clone();
-
-      let hpr: HeadingPitchRoll | undefined;
-      if (
-        this.clippingBox.rotation.heading !== undefined &&
-        this.clippingBox.rotation.pitch !== undefined &&
-        this.clippingBox.rotation.roll !== undefined
-      ) {
-        hpr = HeadingPitchRoll.fromDegrees(
-          this.clippingBox.rotation.heading,
-          this.clippingBox.rotation.pitch,
-          this.clippingBox.rotation.roll
-        );
-      }
-
-      const boxTransform = Matrix4.multiply(
-        hpr
-          ? Matrix4.fromRotationTranslation(
-              Matrix3.fromHeadingPitchRoll(hpr),
-              position
-            )
-          : Transforms.eastNorthUpToFixedFrame(position),
-        Matrix4.fromScale(dimensions, new Matrix4()),
-        new Matrix4()
-      );
-
+      const boxTransform = this.clippingBoxTransform;
       Matrix4.multiply(
         this.inverseClippingPlanesOriginMatrix,
         boxTransform,
@@ -288,6 +308,16 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return this._clippingBoxDrawing;
     }
 
+    @computed
+    private get isClippingBoxPlaced() {
+      const { longitude, latitude, height } = this.clippingBox.position;
+      return (
+        longitude !== undefined &&
+        latitude !== undefined &&
+        height !== undefined
+      );
+    }
+
     @override
     get selectableDimensions(): SelectableDimension[] {
       if (!this.clippingBox.enableFeature) {
@@ -295,84 +325,92 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       }
 
       const checkboxGroupInputs: SelectableDimensionCheckboxGroup["selectableDimensions"] =
-        [
-          {
-            // Checkbox to show/hide clipping box
-            id: "show-clip-editor-ui",
-            type: "checkbox",
-            selectedId: this.clippingBox.showClippingBox ? "true" : "false",
-            disable: this.clippingBox.clipModel === false,
-            options: [
+        this.repositionClippingBoxTrigger
+          ? [
+              /* don't show options when repositioning clipping box */
+            ]
+          : [
               {
-                id: "true",
-                name: i18next.t("models.clippingBox.showClippingBox")
+                // Checkbox to show/hide clipping box
+                id: "show-clip-editor-ui",
+                type: "checkbox",
+                selectedId: this.clippingBox.showClippingBox ? "true" : "false",
+                disable: this.clippingBox.clipModel === false,
+                options: [
+                  {
+                    id: "true",
+                    name: i18next.t("models.clippingBox.showClippingBox")
+                  },
+                  {
+                    id: "false",
+                    name: i18next.t("models.clippingBox.showClippingBox")
+                  }
+                ],
+                setDimensionValue: (stratumId, value) => {
+                  this.clippingBox.setTrait(
+                    stratumId,
+                    "showClippingBox",
+                    value === "true"
+                  );
+                }
               },
               {
-                id: "false",
-                name: i18next.t("models.clippingBox.showClippingBox")
-              }
-            ],
-            setDimensionValue: (stratumId, value) => {
-              this.clippingBox.setTrait(
-                stratumId,
-                "showClippingBox",
-                value === "true"
-              );
-            }
-          },
-          {
-            // Checkbox to clamp/unclamp box to ground
-            id: "clamp-box-to-ground",
-            type: "checkbox",
-            selectedId: this.clippingBox.keepBoxAboveGround ? "true" : "false",
-            disable:
-              this.clippingBox.clipModel === false ||
-              this.clippingBox.showClippingBox === false,
-            options: [
-              {
-                id: "true",
-                name: i18next.t("models.clippingBox.keepBoxAboveGround")
+                // Checkbox to clamp/unclamp box to ground
+                id: "clamp-box-to-ground",
+                type: "checkbox",
+                selectedId: this.clippingBox.keepBoxAboveGround
+                  ? "true"
+                  : "false",
+                disable:
+                  this.clippingBox.clipModel === false ||
+                  this.clippingBox.showClippingBox === false,
+                options: [
+                  {
+                    id: "true",
+                    name: i18next.t("models.clippingBox.keepBoxAboveGround")
+                  },
+                  {
+                    id: "false",
+                    name: i18next.t("models.clippingBox.keepBoxAboveGround")
+                  }
+                ],
+                setDimensionValue: (stratumId, value) => {
+                  this.clippingBox.setTrait(
+                    stratumId,
+                    "keepBoxAboveGround",
+                    value === "true"
+                  );
+                }
               },
               {
-                id: "false",
-                name: i18next.t("models.clippingBox.keepBoxAboveGround")
-              }
-            ],
-            setDimensionValue: (stratumId, value) => {
-              this.clippingBox.setTrait(
-                stratumId,
-                "keepBoxAboveGround",
-                value === "true"
-              );
-            }
-          },
-          {
-            // Dropdown to change the clipping direction
-            id: "clip-direction",
-            name: i18next.t("models.clippingBox.clipDirection.name"),
-            type: "select",
-            selectedId: this.clippingBox.clipDirection,
-            disable: this.clippingBox.clipModel === false,
-            options: [
-              {
-                id: "inside",
-                name: i18next.t(
-                  "models.clippingBox.clipDirection.options.inside"
-                )
+                // Dropdown to change the clipping direction
+                id: "clip-direction",
+                name: i18next.t("models.clippingBox.clipDirection.name"),
+                type: "select",
+                selectedId: this.clippingBox.clipDirection,
+                disable:
+                  this.clippingBox.clipModel === false ||
+                  this.clippingBox.showClippingBox === false,
+                options: [
+                  {
+                    id: "inside",
+                    name: i18next.t(
+                      "models.clippingBox.clipDirection.options.inside"
+                    )
+                  },
+                  {
+                    id: "outside",
+                    name: i18next.t(
+                      "models.clippingBox.clipDirection.options.outside"
+                    )
+                  }
+                ],
+                setDimensionValue: (stratumId, value) => {
+                  this.clippingBox.setTrait(stratumId, "clipDirection", value);
+                }
               },
-              {
-                id: "outside",
-                name: i18next.t(
-                  "models.clippingBox.clipDirection.options.outside"
-                )
-              }
-            ],
-            setDimensionValue: (stratumId, value) => {
-              this.clippingBox.setTrait(stratumId, "clipDirection", value);
-            }
-          },
-          ...this.repositioningAndZoomingDimensions
-        ];
+              ...this.repositioningAndZoomingDimensions
+            ];
 
       return [
         ...super.selectableDimensions,
@@ -391,15 +429,14 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
               name: i18next.t("models.clippingBox.clipModel")
             }
           ],
+          emptyText: "Click on map to position clipping box",
           setDimensionValue: action((stratumId, value) => {
             const clipModel = value === "true";
             this.clippingBox.setTrait(stratumId, "clipModel", clipModel);
 
             // Trigger clipping box repositioning UI if the feature is enabled
             // and a box position is not already set.
-            const triggerClippingBoxRepositioning =
-              zoomAndRepositioningEnabled(this.terria) &&
-              this.clippingBox.position.longitude === undefined;
+            const triggerClippingBoxRepositioning = !this.isClippingBoxPlaced;
 
             if (triggerClippingBoxRepositioning) {
               this.repositionClippingBoxTrigger = true;
@@ -418,20 +455,14 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
      */
     @computed
     private get repositioningAndZoomingDimensions(): SelectableDimensionCheckboxGroup["selectableDimensions"] {
-      if (!zoomAndRepositioningEnabled(this.terria)) {
-        return [];
-      }
-
       const repositioningAndZoomingInputs: SelectableDimensionCheckboxGroup["selectableDimensions"] =
         [
           {
             // Button to zoom to clipping box
             id: "zoom-to-clipping-box-button",
             type: "button",
-            value: "Zoom to clipping box&nbsp;&nbsp;&nbsp;&nbsp;",
-            icon: this._isZoomingToClippingBox
-              ? "spinner"
-              : Icon.GLYPHS.geolocation,
+            value: "Zoom to&nbsp;&nbsp;&nbsp;",
+            icon: this._isZoomingToClippingBox ? "spinner" : Icon.GLYPHS.search,
             disable:
               this.clippingBox.clipModel === false ||
               this.clippingBoxDrawing === undefined,
@@ -444,8 +475,8 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           {
             id: "reposition-clipping-box",
             type: "button",
-            value: "Reposition clipping box",
-            icon: Icon.GLYPHS.cube,
+            value: "Reposition",
+            icon: Icon.GLYPHS.geolocation,
             disable:
               this.clippingBox.clipModel === false ||
               this.clippingBoxDrawing === undefined,

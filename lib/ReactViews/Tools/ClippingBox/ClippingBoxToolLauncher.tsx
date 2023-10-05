@@ -5,7 +5,6 @@ import ClippingMixin from "../../../ModelMixins/ClippingMixin";
 import BoxDrawing from "../../../Models/BoxDrawing";
 import Workbench from "../../../Models/Workbench";
 import ViewState from "../../../ReactViewModels/ViewState";
-import { zoomAndRepositioningEnabled } from "./featureFlags";
 import RepositionClippingBox from "./RepositionClippingBox";
 
 interface PropsType {
@@ -20,10 +19,7 @@ const TOOL_NAME = "reposition-clipping-box";
  */
 const ClippingBoxToolLauncher: React.FC<PropsType> = observer(
   ({ viewState }) => {
-    const item = zoomAndRepositioningEnabled(viewState.terria)
-      ? findItemRequiringRepositioning(viewState.terria.workbench)
-      : undefined;
-
+    const item = findItemRequiringRepositioning(viewState.terria.workbench);
     const cesium = viewState.terria.cesium;
     useEffect(
       function init() {
