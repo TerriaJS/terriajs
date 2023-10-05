@@ -105,24 +105,20 @@ class Timeline extends React.Component {
             analytics={terria.analytics}
             currentViewer={terria.currentViewer}
           />
-          <If
-            condition={
-              defined(discreteTimes) &&
-              discreteTimes.length !== 0 &&
-              defined(currentDiscreteJulianDate)
-            }
-          >
-            <DateTimePicker
-              currentDate={JulianDate.toDate(currentDiscreteJulianDate)}
-              dates={objectifiedDates}
-              onChange={() => this.changeDateTime()}
-              openDirection="up"
-              isOpen={this.state.isPickerOpen}
-              onOpen={() => this.onOpenPicker()}
-              onClose={() => this.onClosePicker()}
-              dateFormat={catalogItem.dateFormat}
-            />
-          </If>
+          {defined(discreteTimes) &&
+            discreteTimes.length !== 0 &&
+            defined(currentDiscreteJulianDate) && (
+              <DateTimePicker
+                currentDate={JulianDate.toDate(currentDiscreteJulianDate)}
+                dates={objectifiedDates}
+                onChange={() => this.changeDateTime()}
+                openDirection="up"
+                isOpen={this.state.isPickerOpen}
+                onOpen={() => this.onOpenPicker()}
+                onClose={() => this.onClosePicker()}
+                dateFormat={catalogItem.dateFormat}
+              />
+            )}
           <CesiumTimeline terria={terria} />
         </div>
       </div>

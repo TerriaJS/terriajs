@@ -56,13 +56,13 @@ const MenuBar = observer((props) => {
               <ToolsPanel />
             </li>
           )}
-          <If condition={!viewState.useSmallScreenInterface}>
+          {!viewState.useSmallScreenInterface && (
             <For each="element" of={props.menuLeftItems} index="i">
               <li className={Styles.menuItem} key={i}>
                 {element}
               </li>
             </For>
-          </If>
+          )}
         </ul>
       </section>
       <section className={classNames(Styles.flex)}>
@@ -83,7 +83,7 @@ const MenuBar = observer((props) => {
             </li>
           ) : null}
         </ul>
-        <If condition={storyEnabled}>
+        {storyEnabled && (
           <ul className={classNames(Styles.menu)}>
             <li className={Styles.menuItem}>
               <StoryButton
@@ -93,7 +93,7 @@ const MenuBar = observer((props) => {
               />
             </li>
           </ul>
-        </If>
+        )}
         <ul className={classNames(Styles.menu)}>
           <li className={Styles.menuItem}>
             <SharePanel
@@ -103,13 +103,13 @@ const MenuBar = observer((props) => {
             />
           </li>
         </ul>
-        <If condition={!viewState.useSmallScreenInterface}>
+        {!viewState.useSmallScreenInterface && (
           <For each="element" of={menuItems} index="i">
             <li className={Styles.menuItem} key={i}>
               {element}
             </li>
           </For>
-        </If>
+        )}
       </section>
     </StyledMenuBar>
   );

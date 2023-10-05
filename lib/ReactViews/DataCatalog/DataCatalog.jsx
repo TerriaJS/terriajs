@@ -39,15 +39,17 @@ class DataCatalog extends React.Component {
     const { t } = this.props;
     return (
       <ul className={Styles.dataCatalog}>
-        <If condition={isSearching && catalogSearchProvider}>
-          <label className={Styles.label}>{t("search.resultsLabel")}</label>
-          <SearchHeader
-            searchResults={catalogSearchProvider}
-            isWaitingForSearchToStart={
-              searchState.isWaitingToStartCatalogSearch
-            }
-          />
-        </If>
+        {isSearching && catalogSearchProvider && (
+          <>
+            <label className={Styles.label}>{t("search.resultsLabel")}</label>
+            <SearchHeader
+              searchResults={catalogSearchProvider}
+              isWaitingForSearchToStart={
+                searchState.isWaitingToStartCatalogSearch
+              }
+            />
+          </>
+        )}
         <For each="item" of={items}>
           {item !== this.props.terria.catalog.userAddedDataGroup && (
             <DataCatalogMember

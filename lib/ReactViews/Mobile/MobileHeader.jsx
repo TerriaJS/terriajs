@@ -194,7 +194,7 @@ class MobileHeader extends React.Component {
                     styledHeight="20px"
                   />
                 </button>
-                <If condition={nowViewingLength > 0}>
+                {nowViewingLength > 0 && (
                   <button
                     type="button"
                     className={Styles.btnNowViewing}
@@ -209,7 +209,7 @@ class MobileHeader extends React.Component {
                       {nowViewingLength}
                     </span>
                   </button>
-                </If>
+                )}
                 <button
                   className={Styles.btnSearch}
                   type="button"

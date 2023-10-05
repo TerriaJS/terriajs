@@ -134,7 +134,7 @@ class DataCatalogGroup extends React.Component {
           this.props.terria
         )}
       >
-        <If condition={this.isOpen()}>
+        {this.isOpen() && (
           <For each="item" of={group.memberModels}>
             <DataCatalogMember
               key={item.uniqueId}
@@ -146,7 +146,7 @@ class DataCatalogGroup extends React.Component {
               onActionButtonClicked={this.props.onActionButtonClicked}
             />
           </For>
-        </If>
+        )}
       </CatalogGroup>
     );
   }

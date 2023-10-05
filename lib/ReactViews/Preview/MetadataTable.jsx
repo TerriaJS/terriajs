@@ -29,15 +29,11 @@ const MetadataTable = createReactClass({
           <tbody>
             <Choose>
               <When condition={isArr}>
-                <If
-                  condition={
-                    metadataItem.length > 0 && isJoinable(metadataItem)
-                  }
-                >
+                {metadataItem.length > 0 && isJoinable(metadataItem) && (
                   <tr>
                     <td>{metadataItem.join(", ")}</td>
                   </tr>
-                </If>
+                )}
               </When>
               <When condition={keys.length > 0 && !isArr}>
                 <For each="key" index="i" of={keys}>
@@ -54,14 +50,10 @@ const MetadataTable = createReactClass({
                             isObservableArray(metadataItem[key])
                           }
                         >
-                          <If
-                            condition={
-                              metadataItem[key].length > 0 &&
-                              isJoinable(metadataItem[key])
-                            }
-                          >
-                            {metadataItem[key].join(", ")}
-                          </If>
+                          {metadataItem[key].length > 0 &&
+                          isJoinable(metadataItem[key])
+                            ? metadataItem[key].join(", ")
+                            : null}
                         </When>
                         <Otherwise>{metadataItem[key]}</Otherwise>
                       </Choose>

@@ -99,13 +99,13 @@ class Breadcrumbs extends React.Component {
                 </When>
               </Choose>
 
-              <If condition={i !== parentGroups.length - 1}>
+              {i !== parentGroups.length - 1 && (
                 <Box paddedHorizontally={1}>
                   <Text small textDark>
                     {">"}
                   </Text>
                 </Box>
-              </If>
+              )}
             </For>
           )}
         </Box>
