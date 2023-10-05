@@ -138,7 +138,7 @@ const Dropdown = createReactClass({
             [isOpenStyle]: this.state.isOpen
           })}
         >
-          <For each="option" of={this.props.options} index="index">
+          {this.props.options.map((option, i) => (
             <li key={option[this.props.textProperty]}>
               <Choose>
                 <When condition={option.href}>
@@ -164,14 +164,14 @@ const Dropdown = createReactClass({
                       this.props.theme.btnOption || "",
                       { [Styles.isSelected]: option === this.props.selected }
                     )}
-                    onClick={() => this.select(option, index)}
+                    onClick={() => this.select(option, i)}
                   >
                     {option[this.props.textProperty]}
                   </button>
                 </Otherwise>
               </Choose>
             </li>
-          </For>
+          ))}
         </ul>
       </div>
     );

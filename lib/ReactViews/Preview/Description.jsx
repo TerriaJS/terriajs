@@ -64,7 +64,7 @@ class Description extends React.Component {
         {metadataUrls && metadataUrls.length > 0 && (
           <>
             <h4 className={Styles.h4}>{t("description.metadataUrls")}</h4>
-            <For each="metadataUrl" index="i" of={metadataUrls}>
+            {metadataUrls.map((metadataUrl, i) => (
               <Box paddedVertically key={metadataUrl.url}>
                 <a
                   href={metadataUrl.url}
@@ -81,7 +81,7 @@ class Description extends React.Component {
                   {!metadataUrl.title ? metadataUrl.url : null}
                 </a>
               </Box>
-            </For>
+            ))}
           </>
         )}
 
@@ -183,18 +183,19 @@ class Description extends React.Component {
             {dataUrls && dataUrls.length > 0 && (
               <>
                 <h4 className={Styles.h4}>{t("description.dataUrl")}</h4>
-                <For each="dataUrl" index="i" of={dataUrls}>
-                  <Choose>
-                    <When
-                      condition={
-                        dataUrl.type?.startsWith("wfs") ||
-                        dataUrl.type?.startsWith("wcs")
-                      }
-                    >
-                      {dataUrl.type?.startsWith("wfs") &&
-                        parseCustomMarkdownToReact(
-                          t("description.useLinkBelow", {
-                            link: `
+                {dataUrls.map((dataUrl, i) => (
+                  <>
+                    <Choose>
+                      <When
+                        condition={
+                          dataUrl.type?.startsWith("wfs") ||
+                          dataUrl.type?.startsWith("wcs")
+                        }
+                      >
+                        {dataUrl.type?.startsWith("wfs") &&
+                          parseCustomMarkdownToReact(
+                            t("description.useLinkBelow", {
+                              link: `
                           <a
                             href="http://docs.geoserver.org/latest/en/user/services/wfs/reference.html"
                             target="_blank"
@@ -204,12 +205,12 @@ class Description extends React.Component {
                             Web Feature Service (WFS) documentation
                           </a>
                         `
-                          })
-                        )}
-                      {dataUrl.type?.startsWith("wcs") &&
-                        parseCustomMarkdownToReact(
-                          t("description.useLinkBelow", {
-                            link: `
+                            })
+                          )}
+                        {dataUrl.type?.startsWith("wcs") &&
+                          parseCustomMarkdownToReact(
+                            t("description.useLinkBelow", {
+                              link: `
                           <a
                             href="http://docs.geoserver.org/latest/en/user/services/wcs/reference.html"
                             target="_blank"
@@ -219,27 +220,28 @@ class Description extends React.Component {
                             Web Coverage Service (WCS) documentation
                           </a>
                         `
-                          })
+                            })
+                          )}
+                      </When>
+                    </Choose>
+                    <Box paddedVertically key={dataUrl.url}>
+                      <a
+                        href={dataUrl.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`${Styles.link} description-dataUrls`}
+                        css={`
+                          color: ${(p) => p.theme.colorPrimary};
+                        `}
+                      >
+                        {dataUrl.title && (
+                          <Button primary={true}>{dataUrl.title}</Button>
                         )}
-                    </When>
-                  </Choose>
-                  <Box paddedVertically key={dataUrl.url}>
-                    <a
-                      href={dataUrl.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`${Styles.link} description-dataUrls`}
-                      css={`
-                        color: ${(p) => p.theme.colorPrimary};
-                      `}
-                    >
-                      {dataUrl.title && (
-                        <Button primary={true}>{dataUrl.title}</Button>
-                      )}
-                      {!dataUrl.title ? dataUrl.url : null}
-                    </a>
-                  </Box>
-                </For>
+                        {!dataUrl.title ? dataUrl.url : null}
+                      </a>
+                    </Box>{" "}
+                  </>
+                ))}
               </>
             )}
 

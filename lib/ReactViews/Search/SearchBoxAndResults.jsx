@@ -197,28 +197,27 @@ export class SearchBoxAndResultsRaw extends React.Component {
                   overflow-y: auto;
                 `}
               >
-                <For
-                  each="search"
-                  of={this.props.viewState.searchState.locationSearchResults}
-                >
-                  <LocationSearchResults
-                    key={search.searchProvider.name}
-                    terria={this.props.terria}
-                    viewState={this.props.viewState}
-                    search={search}
-                    locationSearchText={locationSearchText}
-                    onLocationClick={(result) => {
-                      addMarker(this.props.terria, result);
-                      result.clickAction();
-                      runInAction(() => {
-                        searchState.showLocationSearchResults = false;
-                      });
-                    }}
-                    isWaitingForSearchToStart={
-                      searchState.isWaitingToStartLocationSearch
-                    }
-                  />
-                </For>
+                {this.props.viewState.searchState.locationSearchResults.map(
+                  (search) => (
+                    <LocationSearchResults
+                      key={search.searchProvider.name}
+                      terria={this.props.terria}
+                      viewState={this.props.viewState}
+                      search={search}
+                      locationSearchText={locationSearchText}
+                      onLocationClick={(result) => {
+                        addMarker(this.props.terria, result);
+                        result.clickAction();
+                        runInAction(() => {
+                          searchState.showLocationSearchResults = false;
+                        });
+                      }}
+                      isWaitingForSearchToStart={
+                        searchState.isWaitingToStartLocationSearch
+                      }
+                    />
+                  )
+                )}
               </Box>
             </Box>
           )}

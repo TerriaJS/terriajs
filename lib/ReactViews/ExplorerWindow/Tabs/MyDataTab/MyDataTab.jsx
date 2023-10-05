@@ -64,7 +64,7 @@ class MyDataTab extends React.Component {
     ];
     return (
       <ul className={Styles.tabList}>
-        <For each="tab" of={tabs}>
+        {tabs.map((tab) => (
           <li className={Styles.tabListItem} key={tab.id}>
             <button
               type="button"
@@ -88,7 +88,7 @@ class MyDataTab extends React.Component {
               {tab.caption}
             </button>
           </li>
-        </For>
+        ))}
       </ul>
     );
   }

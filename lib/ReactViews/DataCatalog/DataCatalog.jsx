@@ -50,24 +50,25 @@ class DataCatalog extends React.Component {
             />
           </>
         )}
-        <For each="item" of={items}>
-          {item !== this.props.terria.catalog.userAddedDataGroup && (
-            <DataCatalogMember
-              viewState={this.props.viewState}
-              member={item}
-              // manage group `isOpen` flag locally if searching through models dynamically (i.e. not using catalog index)
-              // This must be false if resultsAreReferences - so group references open correctly in the search
-              manageIsOpenLocally={
-                isSearching && !catalogSearchProvider.resultsAreReferences
-              }
-              key={item.uniqueId}
-              onActionButtonClicked={this.props.onActionButtonClicked}
-              removable={this.props.removable}
-              terria={this.props.terria}
-              isTopLevel={true}
-            />
-          )}
-        </For>
+        {items.map(
+          (item) =>
+            item !== this.props.terria.catalog.userAddedDataGroup && (
+              <DataCatalogMember
+                viewState={this.props.viewState}
+                member={item}
+                // manage group `isOpen` flag locally if searching through models dynamically (i.e. not using catalog index)
+                // This must be false if resultsAreReferences - so group references open correctly in the search
+                manageIsOpenLocally={
+                  isSearching && !catalogSearchProvider.resultsAreReferences
+                }
+                key={item.uniqueId}
+                onActionButtonClicked={this.props.onActionButtonClicked}
+                removable={this.props.removable}
+                terria={this.props.terria}
+                isTopLevel={true}
+              />
+            )
+        )}
       </ul>
     );
   }

@@ -85,7 +85,7 @@ class MomentPointsChart extends React.Component {
     const Glyph = Glyphs[glyph] ?? GlyphCircle;
     return (
       <g id={id}>
-        <For each="p" index="i" of={this.points}>
+        {this.points.map((p, i) => (
           <Glyph
             key={`${baseKey}-${i}`}
             left={scales.x(p.x)}
@@ -95,7 +95,7 @@ class MomentPointsChart extends React.Component {
             fillOpacity={p.isSelected ? 1.0 : 0.3}
             {...clickProps(p)}
           />
-        </For>
+        ))}
       </g>
     );
   }
