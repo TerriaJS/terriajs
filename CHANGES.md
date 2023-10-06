@@ -2,6 +2,8 @@
 
 #### next release (8.3.7)
 
+- **Breaking change:** Replaced `node-sass` with (dart) `sass`
+  - You will need to update your `TerriaMap` to use `sass` instead of `node-sass`.
 - [The next improvement]
 
 #### 8.3.6 - 2023-10-03
