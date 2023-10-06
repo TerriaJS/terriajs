@@ -2,6 +2,7 @@
 
 #### next release (8.3.7)
 
+- Fix `WebMapServiceCatalogItem` `allowFeaturePicking`
 - [The next improvement]
 
 #### 8.3.6 - 2023-10-03
