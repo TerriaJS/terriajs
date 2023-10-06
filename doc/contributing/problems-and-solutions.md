@@ -79,24 +79,3 @@ Then run the following to install NodeJS v16 and use it:
 nvm install 16
 nvm use 16
 ```
-
----
-
-### Problem
-
-Python errors when building NodeJS dependencies (eg `node-sass`). This is common on M1/M2 macs.
-
-### Solution
-
-You may need to install Python2 to build NodeJS dependencies (like `node-sass`)
-
-We recommend using [`pyenv`](https://github.com/pyenv/pyenv#installation) to install Python2.
-
-Follow installation instructions [here](https://github.com/pyenv/pyenv#installation).
-
-Then run the following to install Python 2.7.18 and use it:
-
-```bash
-pyenv install 2.7.18
-pyenv shell 2.7.18
-```
