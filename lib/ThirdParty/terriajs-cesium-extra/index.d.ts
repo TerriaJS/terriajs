@@ -42,6 +42,8 @@ declare module "terriajs-cesium/Source/Widgets/getElement" {
 
 declare module "terriajs-cesium/Source/Core/PolygonGeometryLibrary";
 
+declare module "terriajs-cesium/Source/DataSources/getElement";
+
 declare interface Axis {
   X: number;
   Y: number;
