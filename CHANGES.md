@@ -1,9 +1,14 @@
 # Change Log
 
-#### next release (8.3.6)
+#### next release (8.3.7)
 
 - `BingMapsCatalogItem` now supports Bing's `culture` parameter.
 - [The next improvement]
+
+#### 8.3.6 - 2023-10-03
+
+- Fixed a bug where incorrect "Remove all" icon is shown when the trait `displayGroup` of some group types (e.g.`wms-group`) is set to `true` but the members have not been populated yet.
+- Fix regression in `excludeMembers`, `id` and `name` should be lower-case for comparing.
 
 #### 8.3.5 - 2023-09-26
 
