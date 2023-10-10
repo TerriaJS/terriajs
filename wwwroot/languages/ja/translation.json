@@ -1535,7 +1535,7 @@
             "name": "データセット"
           },
           "tableStyle": {
-            "dataset": "スタイル"
+            "name": "スタイル"
           },
           "tableStyleType": {
             "name": "シンボル設定",
@@ -1896,8 +1896,12 @@
       "outline": {
         "name": "線",
         "selectableDimensions": {
-          "color": "色",
-          "width": "太さ"
+          "color": {
+            "name": "色"
+          },
+          "width": {
+            "name": "太さ"
+          }
         }
       },
       "label": {

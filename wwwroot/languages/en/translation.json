@@ -1536,7 +1536,7 @@
             "name": "Dataset"
           },
           "tableStyle": {
-            "dataset": "Style"
+            "name": "Style"
           },
           "tableStyleType": {
             "name": "Symbology",
@@ -1897,8 +1897,12 @@
       "outline": {
         "name": "Outline style",
         "selectableDimensions": {
-          "color": "Color",
-          "width": "Width"
+          "color": {
+            "name": "Color"
+          },
+          "width": {
+            "name": "Width"
+          }
         }
       },
       "label": {
