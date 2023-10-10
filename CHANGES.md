@@ -2,6 +2,7 @@
 
 #### next release (8.3.7)
 
+- Allow translation of TableStylingWorkflow.
 - Fix "Remove all" not removing selected/picked features
 - [The next improvement]
 
