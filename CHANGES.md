@@ -4,6 +4,8 @@
 
 - **Breaking change:** Replaced `node-sass` with (dart) `sass`
   - You will need to update your `TerriaMap` to use `sass` instead of `node-sass`.
+- Allow translation of TableStylingWorkflow.
+- Fix "Remove all" not removing selected/picked features
 - [The next improvement]
 
 #### 8.3.6 - 2023-10-03

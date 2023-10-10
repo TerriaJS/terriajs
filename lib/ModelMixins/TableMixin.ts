@@ -453,7 +453,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         ...super.viewingControls,
         {
           id: TableStylingWorkflow.type,
-          name: "Edit Style",
+          name: i18next.t("models.tableData.editStyle"),
           onClick: action((viewState) =>
             SelectableDimensionWorkflow.runWorkflow(
               viewState,
@@ -493,7 +493,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return {
         type: "select",
         id: "activeStyle",
-        name: "Display Variable",
+        name: i18next.t("models.tableData.activeStyle"),
         options: this.tableStyles
           .filter((style) => !style.hidden || this.activeStyle === style.id)
           .map((style) => {
@@ -531,7 +531,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
       return {
         id: "regionMapping",
-        name: "Region Mapping",
+        name: i18next.t("models.tableData.regionMapping"),
         options: allRegionProviders.map((regionProvider) => {
           return {
             name: regionProvider.description,
@@ -577,7 +577,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
       return {
         id: "regionColumn",
-        name: "Region Column",
+        name: i18next.t("models.tableData.regionColumn"),
         options: this.tableColumns.map((col) => {
           return {
             name: col.name,
@@ -596,7 +596,8 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     @computed get regionMappingDimensions(): SelectableDimensionGroup {
       return {
-        id: "Manual Region Mapping",
+        id: "manual-region-mapping",
+        name: i18next.t("models.tableData.manualRegionMapping"),
         type: "group",
         selectableDimensions: filterOutUndefined([
           this.regionColumnDimensions,
@@ -718,7 +719,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     @computed get legendButton() {
       return this.activeTableStyle.isCustom
         ? {
-            title: "Custom",
+            title: i18next.t("models.tableData.custom"),
             onClick: action(() => {
               SelectableDimensionWorkflow.runWorkflow(
                 this.terria,
