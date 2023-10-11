@@ -4,6 +4,7 @@
 
 - Allow translation of TableStylingWorkflow.
 - Fix "Remove all" not removing selected/picked features
+- Fix WMS `GetMap`/`GetFeatureInfo` requests not having `styles` parameter (will use empty string instead of `undefined`)
 - [The next improvement]
 
 #### 8.3.6 - 2023-10-03
