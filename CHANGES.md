@@ -4,6 +4,10 @@
 
 - Allow translation of TableStylingWorkflow.
 - Fix "Remove all" not removing selected/picked features
+- WMS `isEsri` default value will now check for case-insensitive `mapserver/wmsserver` (instead of `MapServer/WMSServer`)
+- Tweak ArcGis MapServer WMS `GetFeatureInfo` default behaviour
+  - Add `application/geo+json` and `application/vnd.geo+json` default `GetFeatureInfo` (after `application/json` in priority list)
+  - Add `application/xml` default `GetFeatureInfo`. (if `isEsri` is true, then this will be used before `text/html`)
 - [The next improvement]
 
 #### 8.3.6 - 2023-10-03
