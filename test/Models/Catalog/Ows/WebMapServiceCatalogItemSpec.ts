@@ -375,6 +375,38 @@ describe("WebMapServiceCatalogItem", function () {
     });
   });
 
+  describe("rectangle - nested groups", () => {
+    const terria = new Terria();
+    const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
+
+    beforeEach(() => {
+      runInAction(() => {
+        wmsItem.setTrait(CommonStrata.definition, "url", "http://example.com");
+        wmsItem.setTrait(
+          CommonStrata.definition,
+          "getCapabilitiesUrl",
+          "test/WMS/wms_nested_groups.xml"
+        );
+      });
+    });
+
+    it("correctly uses parent rectangle", async () => {
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "layers",
+        "landsat_barest_earth"
+      );
+
+      (await wmsItem.loadMetadata()).throwIfError();
+
+      // This will use the top level EX_GeographicBoundingBox ("Digital Earth Australia - OGC Web Services" Layer)
+      expect(wmsItem.rectangle.west).toBe(100);
+      expect(wmsItem.rectangle.east).toBe(160);
+      expect(wmsItem.rectangle.south).toBe(-50);
+      expect(wmsItem.rectangle.north).toBe(-10);
+    });
+  });
+
   it("uses tileWidth and tileHeight", async function () {
     let wms: WebMapServiceCatalogItem;
     const terria = new Terria();
