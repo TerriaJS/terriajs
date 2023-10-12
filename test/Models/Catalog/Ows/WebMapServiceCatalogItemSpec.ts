@@ -595,24 +595,22 @@ describe("WebMapServiceCatalogItem", function () {
     expect(wmsItem.mapItems.length).toBe(2);
     expect(wmsItem.isPaused).toBe(false);
 
-    const currentImageryProvider = wmsItem.mapItems[0].imageryProvider;
+    const currentImageryProvider = wmsItem.mapItems[0]
+      .imageryProvider as WebMapServiceImageryProvider;
     expect(currentImageryProvider instanceof WebMapServiceImageryProvider).toBe(
       true
     );
-    if (currentImageryProvider instanceof WebMapServiceImageryProvider) {
-      expect(currentImageryProvider.enablePickFeatures).toBe(true);
-    }
+    expect(currentImageryProvider.enablePickFeatures).toBe(false);
 
     const nextMapItem = wmsItem.mapItems[1];
-    const nextImageryProvider = nextMapItem.imageryProvider;
+    const nextImageryProvider =
+      nextMapItem.imageryProvider as WebMapServiceImageryProvider;
     expect(nextImageryProvider instanceof WebMapServiceImageryProvider).toBe(
       true
     );
-    if (nextImageryProvider instanceof WebMapServiceImageryProvider) {
-      expect(nextImageryProvider.enablePickFeatures).toBe(false);
-      expect(nextMapItem.alpha).toBe(0);
-      expect(nextMapItem.show).toBe(true);
-    }
+    expect(nextImageryProvider.enablePickFeatures).toBe(false);
+    expect(nextMapItem.alpha).toBe(0);
+    expect(nextMapItem.show).toBe(true);
   });
 
   it("sets enableFeaturePicking to false", async function () {
@@ -634,13 +632,13 @@ describe("WebMapServiceCatalogItem", function () {
     expect(wmsItem.mapItems.length).toBe(1);
     expect(wmsItem.allowFeaturePicking).toBe(false);
 
-    const imageryProvider = wmsItem.mapItems[0].imageryProvider;
+    const imageryProvider = wmsItem.mapItems[0]
+      .imageryProvider as WebMapServiceImageryProvider;
     expect(
       imageryProvider instanceof WebMapServiceImageryProvider
     ).toBeTruthy();
-    if (imageryProvider instanceof WebMapServiceImageryProvider) {
-      expect(imageryProvider.enablePickFeatures).toBe(false);
-    }
+
+    expect(imageryProvider.enablePickFeatures).toBe(false);
   });
 
   it("dimensions and styles for a 'real' WMS layer", function (done) {
