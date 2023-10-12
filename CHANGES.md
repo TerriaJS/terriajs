@@ -3,6 +3,7 @@
 #### next release (8.3.7)
 
 - [The next improvement]
+- Remove `jsx-control-statements` dependency
 
 #### 8.3.6 - 2023-10-03
 

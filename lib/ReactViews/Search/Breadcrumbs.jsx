@@ -105,7 +105,7 @@ class Breadcrumbs extends React.Component {
         <Box flexWrap>
           {parentGroups &&
             parentGroups.map((parent, i) => (
-              <>
+              <React.Fragment key={i}>
                 {this.renderCrumb(parent, i, parentGroups)}
                 {i !== parentGroups.length - 1 && (
                   <Box paddedHorizontally={1}>
@@ -114,7 +114,7 @@ class Breadcrumbs extends React.Component {
                     </Text>
                   </Box>
                 )}
-              </>
+              </React.Fragment>
             ))}
         </Box>
       </Box>
