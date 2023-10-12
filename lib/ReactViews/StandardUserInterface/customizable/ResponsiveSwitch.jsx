@@ -9,15 +9,10 @@ import PropTypes from "prop-types";
 export default (LargeScreenComponent, SmallScreenComponent) => {
   // eslint-disable-next-line require-jsdoc
   function ResponsiveSwitch(props) {
-    return (
-      <Choose>
-        <When condition={props.smallScreen}>
-          <SmallScreenComponent {...props} />
-        </When>
-        <Otherwise>
-          <LargeScreenComponent {...props} />
-        </Otherwise>
-      </Choose>
+    return props.smallScreen ? (
+      <SmallScreenComponent {...props} />
+    ) : (
+      <LargeScreenComponent {...props} />
     );
   }
 

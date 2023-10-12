@@ -100,16 +100,13 @@ class DataPreviewSections extends React.Component {
               }
               bodyTextProps={{ medium: true }}
             >
-              <Choose>
-                <When condition={item.content?.length > 0}>
-                  {renderSection(item)}
-                </When>
-                <When condition={item.contentAsObject !== undefined}>
-                  <Box paddedVertically={3} fullWidth>
-                    <MetadataTable metadataItem={item.contentAsObject} />
-                  </Box>
-                </When>
-              </Choose>
+              {item.content?.length > 0
+                ? renderSection(item)
+                : item.contentAsObject !== undefined && (
+                    <Box paddedVertically={3} fullWidth>
+                      <MetadataTable metadataItem={item.contentAsObject} />
+                    </Box>
+                  )}
             </Collapsible>
           </Box>
         ))}
