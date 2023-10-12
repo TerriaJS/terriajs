@@ -600,7 +600,7 @@ describe("WebMapServiceCatalogItem", function () {
     expect(currentImageryProvider instanceof WebMapServiceImageryProvider).toBe(
       true
     );
-    expect(currentImageryProvider.enablePickFeatures).toBe(false);
+    expect(currentImageryProvider.enablePickFeatures).toBe(true);
 
     const nextMapItem = wmsItem.mapItems[1];
     const nextImageryProvider =
