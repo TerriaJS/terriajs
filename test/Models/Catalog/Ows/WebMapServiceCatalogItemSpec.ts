@@ -562,6 +562,85 @@ describe("WebMapServiceCatalogItem", function () {
     );
   });
 
+  it('creates "next" imagery provider when animating', async function () {
+    const terria = new Terria();
+    const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
+    runInAction(() => {
+      wmsItem.setTrait(CommonStrata.definition, "url", "http://example.com");
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "getCapabilitiesUrl",
+        "test/WMS/styles_and_dimensions.xml"
+      );
+      wmsItem.setTrait(CommonStrata.definition, "layers", "C");
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "currentTime",
+        "2002-01-01T00:00:00.000Z"
+      );
+    });
+
+    terria.timelineStack.addToTop(wmsItem);
+    terria.timelineStack.activate();
+
+    (await wmsItem.loadMapItems()).throwIfError();
+
+    expect(wmsItem.mapItems.length).toBe(1);
+    expect(wmsItem.isPaused).toBe(true);
+
+    runInAction(() => {
+      wmsItem.setTrait(CommonStrata.definition, "isPaused", false);
+    });
+
+    expect(wmsItem.mapItems.length).toBe(2);
+    expect(wmsItem.isPaused).toBe(false);
+
+    const currentImageryProvider = wmsItem.mapItems[0]
+      .imageryProvider as WebMapServiceImageryProvider;
+    expect(currentImageryProvider instanceof WebMapServiceImageryProvider).toBe(
+      true
+    );
+    expect(currentImageryProvider.enablePickFeatures).toBe(true);
+
+    const nextMapItem = wmsItem.mapItems[1];
+    const nextImageryProvider =
+      nextMapItem.imageryProvider as WebMapServiceImageryProvider;
+    expect(nextImageryProvider instanceof WebMapServiceImageryProvider).toBe(
+      true
+    );
+    expect(nextImageryProvider.enablePickFeatures).toBe(false);
+    expect(nextMapItem.alpha).toBe(0);
+    expect(nextMapItem.show).toBe(true);
+  });
+
+  it("sets enableFeaturePicking to false", async function () {
+    const terria = new Terria();
+    const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
+    runInAction(() => {
+      wmsItem.setTrait(CommonStrata.definition, "url", "http://example.com");
+      wmsItem.setTrait(CommonStrata.definition, "allowFeaturePicking", false);
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "getCapabilitiesUrl",
+        "test/WMS/styles_and_dimensions.xml"
+      );
+      wmsItem.setTrait(CommonStrata.definition, "layers", "C");
+    });
+
+    (await wmsItem.loadMetadata()).throwIfError();
+
+    expect(wmsItem.mapItems.length).toBe(1);
+    expect(wmsItem.allowFeaturePicking).toBe(false);
+
+    const imageryProvider = wmsItem.mapItems[0]
+      .imageryProvider as WebMapServiceImageryProvider;
+    expect(
+      imageryProvider instanceof WebMapServiceImageryProvider
+    ).toBeTruthy();
+
+    expect(imageryProvider.enablePickFeatures).toBe(false);
+  });
+
   it("dimensions and styles for a 'real' WMS layer", function (done) {
     const terria = new Terria();
     const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
