@@ -44,13 +44,47 @@ class Breadcrumbs extends React.Component {
     this.props.viewState.changeSearchState("");
   }
 
+  renderCrumb(parent, i, parentGroups) {
+    const ancestors = getAncestors(this.props.previewed).map((ancestor) =>
+      getDereferencedIfExists(ancestor)
+    );
+
+    /* No link when it's the current member */
+    if (i === parentGroups.length - 1) {
+      return (
+        <Text small textDark>
+          {parent}
+        </Text>
+      );
+      /* The first and last two groups use the full name */
+    } else if (i <= 1 || i >= parentGroups.length - 2) {
+      return (
+        <RawButtonAndUnderline
+          type="button"
+          onClick={() => this.openInCatalog(ancestors.slice(i, i + 1))}
+        >
+          <TextSpan small textDark>
+            {parent}
+          </TextSpan>
+        </RawButtonAndUnderline>
+      );
+      /* The remainder are just '..' to prevent/minimise overflowing */
+    } else if (i > 1 && i < parentGroups.length - 2) {
+      return (
+        <Text small textDark>
+          {"..."}
+        </Text>
+      );
+    }
+
+    return null;
+  }
+
   render() {
     const parentGroups = this.props.previewed
       ? getParentGroups(this.props.previewed)
       : undefined;
-    const ancestors = getAncestors(this.props.previewed).map((ancestor) =>
-      getDereferencedIfExists(ancestor)
-    );
+
     return (
       // Note: should it reset the text if a person deletes current search and starts a new search?
       <Box
@@ -72,34 +106,7 @@ class Breadcrumbs extends React.Component {
           {parentGroups &&
             parentGroups.map((parent, i) => (
               <>
-                <Choose>
-                  {/* No link when it's the current member */}
-                  <When condition={i === parentGroups.length - 1}>
-                    <Text small textDark>
-                      {parent}
-                    </Text>
-                  </When>
-                  {/* The first and last two groups use the full name */}
-                  <When condition={i <= 1 || i >= parentGroups.length - 2}>
-                    <RawButtonAndUnderline
-                      type="button"
-                      onClick={() =>
-                        this.openInCatalog(ancestors.slice(i, i + 1))
-                      }
-                    >
-                      <TextSpan small textDark>
-                        {parent}
-                      </TextSpan>
-                    </RawButtonAndUnderline>
-                  </When>
-                  {/* The remainder are just '..' to prevent/minimise overflowing */}
-                  <When condition={i > 1 && i < parentGroups.length - 2}>
-                    <Text small textDark>
-                      {"..."}
-                    </Text>
-                  </When>
-                </Choose>
-
+                {this.renderCrumb(parent, i, parentGroups)}
                 {i !== parentGroups.length - 1 && (
                   <Box paddedHorizontally={1}>
                     <Text small textDark>

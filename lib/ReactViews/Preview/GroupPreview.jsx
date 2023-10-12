@@ -88,13 +88,8 @@ class GroupPreview extends React.Component {
         )}
         <div className={Styles.previewedInfo}>
           <div className={Styles.url}>
-            <Choose>
-              <When
-                condition={
-                  this.props.previewed.description &&
-                  this.props.previewed.description.length > 0
-                }
-              >
+            {this.props.previewed.description &&
+              this.props.previewed.description.length > 0 && (
                 <div>
                   <h4 className={Styles.h4}>{t("description.name")}</h4>
                   {parseCustomMarkdownToReact(
@@ -102,9 +97,7 @@ class GroupPreview extends React.Component {
                     { catalogItem: this.props.previewed }
                   )}
                 </div>
-              </When>
-            </Choose>
-
+              )}
             <DataPreviewSections metadataItem={metadataItem} />
 
             {metadataItem.dataCustodian && (
