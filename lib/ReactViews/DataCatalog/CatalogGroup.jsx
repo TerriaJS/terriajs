@@ -124,21 +124,22 @@ function CatalogGroup(props) {
             [Styles.catalogGroupLowerLevel]: !props.topLevel
           })}
         >
-          <Choose>
-            <When condition={props.loading}>
-              <li key="loader">
-                <Loader />
-              </li>
-            </When>
-            <When condition={props.children.length === 0 && props.emptyMessage}>
+          {props.loading && (
+            <li key="loader">
+              <Loader />
+            </li>
+          )}
+          {props.loading === false &&
+            props.children.length === 0 &&
+            props.emptyMessage && (
               <li
                 className={classNames(Styles.label, Styles.labelNoResults)}
                 key="empty"
               >
                 {props.emptyMessage}
               </li>
-            </When>
-          </Choose>
+            )}
+
           {props.children}
         </ul>
       )}

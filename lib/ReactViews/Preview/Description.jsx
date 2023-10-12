@@ -24,6 +24,45 @@ class Description extends React.Component {
     t: PropTypes.func.isRequired
   };
 
+  renderDescription(catalogItem) {
+    if (catalogItem.type === "wms") {
+      return (
+        <p key="wms-description">
+          <Trans i18nKey="description.wms">
+            This is a
+            <a
+              href="https://en.wikipedia.org/wiki/Web_Map_Service"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              WMS service
+            </a>
+            , which generates map images on request. It can be used in GIS
+            software with this URL:
+          </Trans>
+        </p>
+      );
+    } else if (catalogItem.type === "wfs") {
+      return (
+        <p key="wfs-description">
+          <Trans i18nKey="description.wfs">
+            This is a
+            <a
+              href="https://en.wikipedia.org/wiki/Web_Feature_Service"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              WFS service
+            </a>
+            , which transfers raw spatial data on request. It can be used in GIS
+            software with this URL:
+          </Trans>
+        </p>
+      );
+    }
+    return null;
+  }
+
   render() {
     const { t } = this.props;
     const catalogItem = this.props.item;
@@ -101,97 +140,53 @@ class Description extends React.Component {
             {catalogItem.url && (
               <>
                 <h4 className={Styles.h4}>{catalogItem.typeName} URL</h4>
-                <Choose>
-                  <When condition={catalogItem.type === "wms"}>
-                    <p key="wms-description">
-                      <Trans i18nKey="description.wms">
-                        This is a
-                        <a
-                          href="https://en.wikipedia.org/wiki/Web_Map_Service"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          WMS service
-                        </a>
-                        , which generates map images on request. It can be used
-                        in GIS software with this URL:
-                      </Trans>
-                    </p>
-                  </When>
-                  <When condition={catalogItem.type === "wfs"}>
-                    <p key="wfs-description">
-                      <Trans i18nKey="description.wfs">
-                        This is a
-                        <a
-                          href="https://en.wikipedia.org/wiki/Web_Feature_Service"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          WFS service
-                        </a>
-                        , which transfers raw spatial data on request. It can be
-                        used in GIS software with this URL:
-                      </Trans>
-                    </p>
-                  </When>
-                </Choose>
 
-                <Choose>
-                  <When condition={this.props.printView}>
-                    <code>{catalogItem.url}</code>
-                  </When>
-                  <Otherwise>
-                    <input
-                      readOnly
-                      className={Styles.field}
-                      type="text"
-                      value={catalogItem.url}
-                      onClick={(e) => e.target.select()}
-                    />
-                  </Otherwise>
-                </Choose>
+                {this.renderDescription(catalogItem)}
 
-                <Choose>
-                  <When
-                    condition={
-                      catalogItem.type === "wms" ||
-                      (catalogItem.type === "esri-mapServer" &&
-                        defined(catalogItem.layers))
-                    }
-                  >
-                    <p key="wms-layers">
-                      {t("description.layerName")}
-                      {(catalogItem.layers || "").split(",").length > 1
-                        ? "s"
-                        : ""}
-                      : {catalogItem.layers}
-                    </p>
-                  </When>
-                  <When condition={catalogItem.type === "wfs"}>
-                    <p key="wfs-typeNames">
-                      {t("description.typeName")}
-                      {(catalogItem.typeNames || "").split(",").length > 1
-                        ? "s"
-                        : ""}
-                      : {catalogItem.typeNames}
-                    </p>
-                  </When>
-                </Choose>
+                {this.props.printView ? (
+                  <code>{catalogItem.url}</code>
+                ) : (
+                  <input
+                    readOnly
+                    className={Styles.field}
+                    type="text"
+                    value={catalogItem.url}
+                    onClick={(e) => e.target.select()}
+                  />
+                )}
+
+                {catalogItem.type === "wms" ||
+                  (catalogItem.type === "esri-mapServer" &&
+                    defined(catalogItem.layers) && (
+                      <p key="wms-layers">
+                        {t("description.layerName")}
+                        {(catalogItem.layers || "").split(",").length > 1
+                          ? "s"
+                          : ""}
+                        : {catalogItem.layers}
+                      </p>
+                    ))}
+
+                {catalogItem.type === "wfs" && (
+                  <p key="wfs-typeNames">
+                    {t("description.typeName")}
+                    {(catalogItem.typeNames || "").split(",").length > 1
+                      ? "s"
+                      : ""}
+                    : {catalogItem.typeNames}
+                  </p>
+                )}
               </>
             )}
 
             {dataUrls && dataUrls.length > 0 && (
               <>
                 <h4 className={Styles.h4}>{t("description.dataUrl")}</h4>
-                {dataUrls.map((dataUrl, i) => (
-                  <>
-                    <Choose>
-                      <When
-                        condition={
-                          dataUrl.type?.startsWith("wfs") ||
-                          dataUrl.type?.startsWith("wcs")
-                        }
-                      >
+                {dataUrls.map(
+                  (dataUrl, i) =>
+                    (dataUrl.type?.startsWith("wfs") ||
+                      dataUrl.type?.startsWith("wcs")) && (
+                      <>
                         {dataUrl.type?.startsWith("wfs") &&
                           parseCustomMarkdownToReact(
                             t("description.useLinkBelow", {
@@ -222,26 +217,25 @@ class Description extends React.Component {
                         `
                             })
                           )}
-                      </When>
-                    </Choose>
-                    <Box paddedVertically key={dataUrl.url}>
-                      <a
-                        href={dataUrl.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`${Styles.link} description-dataUrls`}
-                        css={`
-                          color: ${(p) => p.theme.colorPrimary};
-                        `}
-                      >
-                        {dataUrl.title && (
-                          <Button primary={true}>{dataUrl.title}</Button>
-                        )}
-                        {!dataUrl.title ? dataUrl.url : null}
-                      </a>
-                    </Box>{" "}
-                  </>
-                ))}
+                        <Box paddedVertically key={dataUrl.url}>
+                          <a
+                            href={dataUrl.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`${Styles.link} description-dataUrls`}
+                            css={`
+                              color: ${(p) => p.theme.colorPrimary};
+                            `}
+                          >
+                            {dataUrl.title && (
+                              <Button primary={true}>{dataUrl.title}</Button>
+                            )}
+                            {!dataUrl.title ? dataUrl.url : null}
+                          </a>
+                        </Box>{" "}
+                      </>
+                    )
+                )}
               </>
             )}
 
