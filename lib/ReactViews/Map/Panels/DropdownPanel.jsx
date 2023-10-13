@@ -4,21 +4,22 @@
 
 import classNames from "classnames";
 import createReactClass from "create-react-class";
-import { css } from "styled-components";
+import styled from "styled-components";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Icon from "../../../Styled/Icon";
 import BaseOuterPanel from "./BaseOuterPanel";
 import InnerPanel from "./InnerPanel";
 import Styles from "./panel.scss";
 
-const buttonStyle = (p, panelIsOpen) => css`
-  ${panelIsOpen &&
-  `&:not(.foo) {
-    background: ${p.theme.colorPrimary};
-    svg {
-      fill: ${p.theme.textLight};
-    }
-  `};
+const DropdownButton = styled.button`
+  ${(p) =>
+    p.isOpen &&
+    `&:not(.foo) {
+      background: ${p.theme.colorPrimary};
+      svg {
+        fill: ${p.theme.textLight};
+      }
+    }`}
 `;
 
 const DropdownPanel = createReactClass({
@@ -94,11 +95,9 @@ const DropdownPanel = createReactClass({
       iconGlyph = this.props.theme.icon;
     }
 
-    const panelIsOpen = this.isOpen();
-
     return (
       <div className={classNames(Styles.panel, this.props.theme.outer)}>
-        <button
+        <DropdownButton
           onClick={this.openWithUserClick}
           type="button"
           className={classNames(Styles.button, this.props.theme.btn, {
@@ -108,7 +107,7 @@ const DropdownPanel = createReactClass({
           ref={
             this.props.btnRef || ((element) => (this.buttonElement = element))
           }
-          css={buttonStyle(this.props, panelIsOpen)}
+          isOpen={this.isOpen()}
         >
           <If condition={this.props.theme.icon}>
             <Icon glyph={iconGlyph} />
@@ -116,7 +115,7 @@ const DropdownPanel = createReactClass({
           <If condition={this.props.btnText}>
             <span>{this.props.btnText}</span>
           </If>
-        </button>
+        </DropdownButton>
         <If condition={this.isOpen()}>
           <InnerPanel
             showDropdownInCenter={this.props.showDropdownInCenter}

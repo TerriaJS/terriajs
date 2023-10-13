@@ -1,12 +1,24 @@
 import classNames from "classnames";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-
 import { withTranslation } from "react-i18next";
+import styled from "styled-components";
 import defined from "terriajs-cesium/Source/Core/defined";
-
 import Icon from "../../../Styled/Icon";
 import Styles from "./panel.scss";
+
+const CloseButton = styled.button`
+  svg {
+    fill: ${(p) => (p.showDropdownAsModal ? p.theme.grey : p.theme.textLight)};
+  }
+
+  &:hover,
+  &:focus {
+    svg {
+      fill: ${(p) => p.theme.colorPrimary};
+    }
+  }
+`;
 
 const InnerPanel = createReactClass({
   propTypes: {
@@ -135,7 +147,7 @@ const InnerPanel = createReactClass({
             : caretOffset && `${caretOffset} top`
         }}
       >
-        <button
+        <CloseButton
           type="button"
           className={classNames(
             // Until we break these few components out of sass, we'll use regular ol classnames
@@ -148,27 +160,10 @@ const InnerPanel = createReactClass({
           onClick={this.forceClose}
           title={t("general.close")}
           aria-label={t("general.close")}
-          css={`
-            svg {
-              fill: ${(p) => p.theme.textLight};
-            }
-            &:hover,
-            &:focus {
-              svg {
-                fill: ${(p) => p.theme.colorPrimary};
-              }
-            }
-            ${(p) =>
-              showDropdownAsModal &&
-              `
-                svg {
-                  fill: ${p.theme.grey};
-                }
-            `}
-          `}
+          showDropdownAsModal={this.props.showDropdownAsModal}
         >
           <Icon glyph={Icon.GLYPHS.close} />
-        </button>
+        </CloseButton>
         <If condition={defined(caretOffset) && !showDropdownAsModal}>
           <span
             className={classNames(Styles.caret, "tjs-sc-InnerPanel__caret")}
