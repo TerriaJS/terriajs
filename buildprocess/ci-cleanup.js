@@ -74,7 +74,7 @@ function createIngress(branches) {
           host: "ci.terria.io",
           http: {
             paths: branches.map((branch) => ({
-              path: "/" + branch.name + "(/|$)(.*)",
+              path: "/" + makeSafeName(branch.name) + "(/|$)(.*)",
               pathType: "ImplementationSpecific",
               backend: {
                 service: {
