@@ -4,6 +4,7 @@ import { observer } from "mobx-react";
 import { useState } from "react";
 import * as React from "react";
 import { ChromePicker } from "react-color";
+import { useTranslation } from "react-i18next";
 import isDefined from "../../Core/isDefined";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import { SelectableDimensionColor as SelectableDimensionColorModel } from "../../Models/SelectableDimensions/SelectableDimensions";
@@ -25,6 +26,7 @@ export const SelectableDimensionColor: React.FC<{
   dim: SelectableDimensionColorModel;
 }> = observer(({ id, dim }) => {
   const [open, setIsOpen] = useState(false);
+  const { t } = useTranslation();
   return (
     <div>
       {dim.value ? (
@@ -63,7 +65,7 @@ export const SelectableDimensionColor: React.FC<{
             fullHeight
           >
             <TextSpan textLight small light css={{ margin: 0 }}>
-              Add
+              {t("selectableDimensions.colorAdd")}
             </TextSpan>
           </RawButton>
         </>
@@ -82,7 +84,7 @@ export const SelectableDimensionColor: React.FC<{
             fullHeight
           >
             <TextSpan textLight small light css={{ margin: 0 }}>
-              Clear
+              {t("selectableDimensions.colorRemove")}
             </TextSpan>
           </RawButton>
         </>

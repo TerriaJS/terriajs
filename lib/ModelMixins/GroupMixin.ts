@@ -83,10 +83,10 @@ function GroupMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
             // Get model name, apply includeMemberRegex and excludeMembers
             const modelName = CatalogMemberMixin.isMixedInto(model)
-              ? model.name?.trim()
+              ? model.name?.toLowerCase().trim()
               : undefined;
 
-            const modelId = model?.uniqueId?.trim();
+            const modelId = model?.uniqueId?.toLowerCase().trim();
             if (
               model &&
               // Does includeMemberRegex match model ID or model name

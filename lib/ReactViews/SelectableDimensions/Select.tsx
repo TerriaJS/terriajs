@@ -21,8 +21,7 @@ export const SelectableDimensionEnum: React.FC<{
   const undefinedOption = {
     value: undefined,
     label:
-      dim.undefinedLabel ??
-      i18next.t("workbench.dimensionsSelector.undefinedLabel")
+      dim.undefinedLabel ?? i18next.t("selectableDimensions.undefinedLabel")
   };
 
   let options = dim.options?.map((option) => ({
