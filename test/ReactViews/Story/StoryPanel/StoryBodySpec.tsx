@@ -1,11 +1,10 @@
-import React from "react";
-import StoryBody from "../../../../lib/ReactViews/Story/StoryPanel/StoryBody";
 import { act } from "react-dom/test-utils";
 import {
   ReactTestInstance,
   ReactTestRenderer,
   create
 } from "react-test-renderer";
+import StoryBody from "../../../../lib/ReactViews/Story/StoryPanel/StoryBody";
 
 describe("StoryBody", function () {
   let testRenderer: ReactTestRenderer;
