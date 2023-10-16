@@ -51,7 +51,8 @@ function makeSafeName(name) {
   return name
     .toLowerCase()
     .replace(/[^-a-z0-9]/g, "-")
-    .substring(0, 32);
+    .substring(0, 32)
+    .replace(/-*$/, "");
 }
 
 function createIngress(branches) {
