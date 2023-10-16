@@ -10,7 +10,7 @@ if [[ $GITHUB_BRANCH =~ ^greenkeeper/ ]]; then
 fi
 
 # A version of the branch name that can be used as a DNS name once we prepend and append some stuff.
-SAFE_BRANCH_NAME=$(printf '%s' "${GITHUB_BRANCH,,:0:40}" | sed 's/[^-a-z0-9]/-/g')
+SAFE_BRANCH_NAME=$(printf '%s' "${GITHUB_BRANCH:0:40}" | sed -e 's/./\L&/g' -e 's/[^-a-z0-9]/-/g')
 
 gh api /repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA} -f state=pending -f context=deployment -f target_url=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
 
