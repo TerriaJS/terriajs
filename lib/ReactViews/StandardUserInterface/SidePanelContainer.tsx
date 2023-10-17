@@ -35,9 +35,4 @@ const SidePanelContainer = styled.div.attrs<PropsType>(({ viewState }) => ({
   margin-left: ${(p) => (p.show ? "0px" : `-${p.theme.workbenchWidth}px`)};
 `;
 
-// Styled components seems to make children prop not be visible through withViewState. Explicitly type the component to make it work.
-export default withViewState(
-  SidePanelContainer as React.ComponentType<
-    PropsType & React.HTMLAttributes<HTMLDivElement>
-  >
-);
+export default withViewState(SidePanelContainer);
