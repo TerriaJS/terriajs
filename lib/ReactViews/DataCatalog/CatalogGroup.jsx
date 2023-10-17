@@ -129,16 +129,14 @@ function CatalogGroup(props) {
               <Loader />
             </li>
           )}
-          {props.loading === false &&
-            props.children.length === 0 &&
-            props.emptyMessage && (
-              <li
-                className={classNames(Styles.label, Styles.labelNoResults)}
-                key="empty"
-              >
-                {props.emptyMessage}
-              </li>
-            )}
+          {!props.loading && props.children.length === 0 && props.emptyMessage && (
+            <li
+              className={classNames(Styles.label, Styles.labelNoResults)}
+              key="empty"
+            >
+              {props.emptyMessage}
+            </li>
+          )}
 
           {props.children}
         </ul>
