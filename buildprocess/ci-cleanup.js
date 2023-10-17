@@ -51,7 +51,8 @@ function makeSafeName(name) {
   return name
     .toLowerCase()
     .replace(/[^-a-z0-9]/g, "-")
-    .substring(0, 40);
+    .substring(0, 32)
+    .replace(/-*$/, "");
 }
 
 function createIngress(branches) {
@@ -73,7 +74,7 @@ function createIngress(branches) {
           host: "ci.terria.io",
           http: {
             paths: branches.map((branch) => ({
-              path: "/" + branch.name + "(/|$)(.*)",
+              path: "/" + makeSafeName(branch.name) + "(/|$)(.*)",
               pathType: "ImplementationSpecific",
               backend: {
                 service: {
