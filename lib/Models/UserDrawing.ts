@@ -22,6 +22,7 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PolylineGlowMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineGlowMaterialProperty";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import DragPoints from "../Map/DragPoints/DragPoints";
 import MappableMixin from "../ModelMixins/MappableMixin";
@@ -370,7 +371,7 @@ export default class UserDrawing extends MappableMixin(
 
             if (isDrawingComplete && points) {
               this.onDrawingComplete({
-                points,
+                points: filterOutUndefined(points),
                 rectangle: this.getRectangleForShape()
               });
             }
@@ -605,7 +606,9 @@ export default class UserDrawing extends MappableMixin(
           const position = obj.position.getValue(
             this.terria.timelineClock.currentTime
           );
-          pos.push(position);
+          if (position !== undefined) {
+            pos.push(position);
+          }
         }
       }
       return pos;

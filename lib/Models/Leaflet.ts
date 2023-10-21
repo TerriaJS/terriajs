@@ -126,6 +126,8 @@ export default class Leaflet extends GlobeOrMap {
     parts: ImageryParts,
     item: MappableMixin.Instance
   ) {
+    if (parts.imageryProvider === undefined) return undefined;
+
     if (TileErrorHandlerMixin.isMixedInto(item)) {
       // because this code path can run multiple times, make sure we remove the
       // handler if it is already registered
@@ -436,7 +438,7 @@ export default class Leaflet extends GlobeOrMap {
       // Add layer and update its zIndex
       let zIndex = 100; // Start at an arbitrary value
       allImagery.reverse().forEach(({ parts, layer }) => {
-        if (parts.show) {
+        if (layer && parts.show) {
           layer.setOpacity(parts.alpha);
           layer.setZIndex(zIndex);
           zIndex++;
@@ -444,7 +446,7 @@ export default class Leaflet extends GlobeOrMap {
           if (!this.map.hasLayer(layer)) {
             this.map.addLayer(layer);
           }
-        } else {
+        } else if (layer) {
           this.map.removeLayer(layer);
         }
       });

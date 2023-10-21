@@ -58,6 +58,12 @@ declare interface FeatureDetection {
   chromeVersion(): number[];
 }
 
+// This is a workaround for Cesium's incorrect type declaration for raiseEvent.
+declare module "terriajs-cesium" {
+  export interface Event {
+    raiseEvent(...arguments: any[]): void;
+  }
+}
 
 // Begin Generated Declarations
 declare module "terriajs-cesium/Source/Core/ArcGISTiledElevationTerrainProvider" { import { ArcGISTiledElevationTerrainProvider } from 'terriajs-cesium'; export default ArcGISTiledElevationTerrainProvider; }

@@ -551,7 +551,8 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
       tilingScheme: new WebMercatorTilingScheme(),
       format,
       credit: this.attribution,
-      enablePickFeatures: this.allowFeaturePicking
+      // TODO: implement picking for WebMapTileServiceImageryProvider
+      //enablePickFeatures: this.allowFeaturePicking
     });
     return imageryProvider;
   }
