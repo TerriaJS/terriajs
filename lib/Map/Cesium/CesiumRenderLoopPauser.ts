@@ -162,7 +162,10 @@ export default class CesiumRenderLoopPauser {
         transferableObjects
       );
 
-      if (!defined(this._originalWorkerMessageSinkRepaint)) {
+      if (
+        !defined(this._originalWorkerMessageSinkRepaint) &&
+        defined(this._worker.onmessage)
+      ) {
         this._originalWorkerMessageSinkRepaint = this._worker.onmessage;
 
         var taskProcessor = this;

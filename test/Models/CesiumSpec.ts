@@ -226,7 +226,7 @@ describeIfSupported("Cesium Model", function () {
         spyOn(
           workbenchTerrainItem as any,
           "loadTerrainProvider"
-        ).and.returnValue(Promise.resolve(new CesiumTerrainProvider()));
+        ).and.returnValue(new CesiumTerrainProvider());
         (await terria.workbench.add(workbenchTerrainItem)).throwIfError();
       })
     );
