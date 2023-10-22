@@ -98,7 +98,7 @@ describe("GeoJsonCatalogItemSpec", () => {
         expect(
           (geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position
             ?.getValue(JulianDate.now())
-            .equalsEpsilon(Cartesian3.fromDegrees(148.0, -31.3), 0.0001)
+            ?.equalsEpsilon(Cartesian3.fromDegrees(148.0, -31.3), 0.0001)
         ).toBeTruthy("Doesn't match first location");
 
         geojson.setTrait(
@@ -117,7 +117,7 @@ describe("GeoJsonCatalogItemSpec", () => {
         expect(
           (geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position
             ?.getValue(JulianDate.now())
-            .equalsEpsilon(Cartesian3.fromDegrees(151.0, -33.8), 0.0001)
+            ?.equalsEpsilon(Cartesian3.fromDegrees(151.0, -33.8), 0.0001)
         ).toBeTruthy("Doesn't match updated location");
       });
     });
