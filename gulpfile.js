@@ -300,7 +300,10 @@ gulp.task("terriajs-server", function (done) {
   });
 });
 
-gulp.task("copy-cesium-assets", gulp.series("copy-cesium-source-assets", "copy-cesium-workers"));
+gulp.task(
+  "copy-cesium-assets",
+  gulp.series("copy-cesium-source-assets", "copy-cesium-workers")
+);
 gulp.task("build", gulp.series("copy-cesium-assets", "build-specs"));
 gulp.task("release", gulp.series("copy-cesium-assets", "release-specs"));
 gulp.task("watch", gulp.series("copy-cesium-assets", "watch-specs"));
