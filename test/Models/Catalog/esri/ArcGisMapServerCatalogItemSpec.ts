@@ -191,7 +191,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       describe("imageryProvider", function () {
         let imageryProvider: ArcGisMapServerImageryProvider;
 
-        beforeEach(function () {
+        beforeEach(async function () {
           runInAction(() => {
             item.setTrait(CommonStrata.definition, "layers", "31");
             item.setTrait(CommonStrata.definition, "parameters", {
@@ -205,6 +205,7 @@ describe("ArcGisMapServerCatalogItem", function () {
             );
           });
 
+          await item.loadMapItems();
           imageryProvider = item.mapItems[0]
             .imageryProvider as ArcGisMapServerImageryProvider;
         });
@@ -223,12 +224,13 @@ describe("ArcGisMapServerCatalogItem", function () {
           expect(imageryProvider.layers).toBe("31");
         });
 
-        it("converts layer names to layer ids when constructing imagery provider", function () {
+        it("converts layer names to layer ids when constructing imagery provider", async function () {
           item.setTrait(
             CommonStrata.definition,
             "layers",
             "Offshore_Rocks_And_Wrecks"
           );
+          await item.loadMapItems();
           const imageryProvider = item.mapItems[0]
             .imageryProvider as ArcGisMapServerImageryProvider;
           expect(imageryProvider.layers).toBe("31");
