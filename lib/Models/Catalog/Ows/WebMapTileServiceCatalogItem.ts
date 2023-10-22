@@ -550,7 +550,7 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
         this.tileHeight ?? this.minimumLevel ?? tileMatrixSet.tileHeight,
       tilingScheme: new WebMercatorTilingScheme(),
       format,
-      credit: this.attribution,
+      credit: this.attribution
       // TODO: implement picking for WebMapTileServiceImageryProvider
       //enablePickFeatures: this.allowFeaturePicking
     });

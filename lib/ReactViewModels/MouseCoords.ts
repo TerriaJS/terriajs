@@ -104,7 +104,7 @@ export default class MouseCoords {
     const pickRay = camera.getPickRay(position, scratchRay);
     const globe = scene.globe;
     const pickedTriangle = isDefined(pickRay)
-    ? pickTriangle(pickRay, scene, true, pickedTriangleScratch)
+      ? pickTriangle(pickRay, scene, true, pickedTriangleScratch)
       : undefined;
     if (isDefined(pickedTriangle)) {
       // Get a fast, accurate-ish height every time the mouse moves.

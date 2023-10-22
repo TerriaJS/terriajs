@@ -39,7 +39,10 @@ function configureWebpack(
   config.resolve.alias = {
     // @cesium/widgets will import from @cesium/engine. We need to make sure it ends up with
     // the terriajs-cesium fork instead of upstream cesium.
-    "@cesium/engine": path.resolve(require.resolve("terriajs-cesium/package.json"), ".."),
+    "@cesium/engine": path.resolve(
+      require.resolve("terriajs-cesium/package.json"),
+      ".."
+    ),
     ...config.resolve.alias
   };
   config.resolve.modules = config.resolve.modules || [];
@@ -108,20 +111,18 @@ function configureWebpack(
     })
   });
 
-  const zipJsDir = path.dirname(
-    require.resolve("@zip.js/zip.js/package.json")
-  );
+  const zipJsDir = path.dirname(require.resolve("@zip.js/zip.js/package.json"));
 
   config.module.rules.push({
     test: /\.js$/,
     include: zipJsDir,
-    loader: require.resolve('@open-wc/webpack-import-meta-loader'),
+    loader: require.resolve("@open-wc/webpack-import-meta-loader")
   });
 
   config.module.rules.push({
     test: /buildModuleUrl.js$/,
     include: path.resolve(cesiumDir, "Source", "Core"),
-    loader: require.resolve('@open-wc/webpack-import-meta-loader'),
+    loader: require.resolve("@open-wc/webpack-import-meta-loader")
   });
 
   const babelLoader = {
@@ -225,10 +226,7 @@ function configureWebpack(
       path.dirname(require.resolve("terriajs-cesium/package.json")),
       "Source"
     ),
-    use: [
-      babelLoader,
-      require.resolve("./removeCesiumDebugPragmas")
-    ]
+    use: [babelLoader, require.resolve("./removeCesiumDebugPragmas")]
   });
 
   // Don't let Cesium's `buildModuleUrl` see require - only the AMD version is relevant.

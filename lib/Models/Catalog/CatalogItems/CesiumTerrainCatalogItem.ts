@@ -57,9 +57,7 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
   /**
    * Returns a Promise to load the terrain provider
    */
-  private loadTerrainProvider(): Promise<
-    CesiumTerrainProvider | undefined
-  > {
+  private loadTerrainProvider(): Promise<CesiumTerrainProvider | undefined> {
     const resource =
       this.ionAssetId !== undefined
         ? IonResource.fromAssetId(this.ionAssetId, {
