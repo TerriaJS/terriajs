@@ -87,6 +87,20 @@ gulp.task("copy-cesium-workers", function () {
     .pipe(gulp.dest("wwwroot/build/Cesium/build/Workers"));
 });
 
+gulp.task("copy-cesium-thirdparty", function () {
+  var path = require("path");
+
+  var cesiumPackage = require.resolve("terriajs-cesium/package.json");
+  var cesiumRoot = path.dirname(cesiumPackage);
+  var cesiumThirdPartyRoot = path.join(cesiumRoot, "Build", "ThirdParty");
+
+  return gulp
+    .src([path.join(cesiumThirdPartyRoot, "**")], {
+      base: cesiumThirdPartyRoot
+    })
+    .pipe(gulp.dest("wwwroot/build/Cesium/build/ThirdParty"));
+});
+
 gulp.task("copy-cesium-source-assets", function () {
   var path = require("path");
 
@@ -302,7 +316,11 @@ gulp.task("terriajs-server", function (done) {
 
 gulp.task(
   "copy-cesium-assets",
-  gulp.series("copy-cesium-source-assets", "copy-cesium-workers")
+  gulp.series(
+    "copy-cesium-source-assets",
+    "copy-cesium-workers",
+    "copy-cesium-thirdparty"
+  )
 );
 gulp.task("build", gulp.series("copy-cesium-assets", "build-specs"));
 gulp.task("release", gulp.series("copy-cesium-assets", "release-specs"));
