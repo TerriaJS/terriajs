@@ -96,6 +96,10 @@ interface Options {
 
   /** The name of the property that is a unique ID for features */
   idProperty?: string;
+
+  processPickedFeatures?: (
+    features: ImageryLayerFeatureInfo[]
+  ) => Promise<ImageryLayerFeatureInfo[]>;
 }
 
 /** Buffer (in pixels) used when rendering (and generating - through geojson-vt) vector tiles */
@@ -288,11 +292,14 @@ export default class ProtomapsImageryProvider
   // Protomaps properties
   /** Data object from constructor options (this is transformed into `source`) */
   private readonly data: ProtomapsData;
-  readonly maximumNativeZoom: number;
   private readonly labelers: Labelers;
   private readonly view: View | undefined;
-  readonly idProperty: string;
+  private readonly processPickedFeatures?: (
+    features: ImageryLayerFeatureInfo[]
+  ) => Promise<ImageryLayerFeatureInfo[]>;
 
+  readonly maximumNativeZoom: number;
+  readonly idProperty: string;
   readonly source: Source;
   readonly paintRules: PaintRule[];
   readonly labelRules: LabelRule[];
@@ -399,6 +406,8 @@ export default class ProtomapsImageryProvider
       16,
       () => undefined
     );
+
+    this.processPickedFeatures = options.processPickedFeatures;
   }
 
   getTileCredits(x: number, y: number, level: number): Credit[] {
@@ -490,6 +499,7 @@ export default class ProtomapsImageryProvider
     longitude: number,
     latitude: number
   ): Promise<ImageryLayerFeatureInfo[]> {
+    const featureInfos: ImageryLayerFeatureInfo[] = [];
     // If view is set - this means we are using actual vector tiles (that is not GeoJson object)
     // So we use this.view.queryFeatures
     if (this.view) {
@@ -498,37 +508,36 @@ export default class ProtomapsImageryProvider
         (r) => r.dataLayer
       );
 
-      return filterOutUndefined(
-        this.view
-          .queryFeatures(
-            CesiumMath.toDegrees(longitude),
-            CesiumMath.toDegrees(latitude),
-            level
+      this.view
+        .queryFeatures(
+          CesiumMath.toDegrees(longitude),
+          CesiumMath.toDegrees(latitude),
+          level
+        )
+        .forEach((f) => {
+          // Only create FeatureInfo for visible features with properties
+          if (
+            !f.feature.props ||
+            isEmpty(f.feature.props) ||
+            !renderedLayers.includes(f.layerName)
           )
-          .map((f) => {
-            // Only create FeatureInfo for visible features with properties
-            if (
-              !f.feature.props ||
-              isEmpty(f.feature.props) ||
-              !renderedLayers.includes(f.layerName)
-            )
-              return;
+            return;
 
-            const featureInfo = new ImageryLayerFeatureInfo();
+          const featureInfo = new ImageryLayerFeatureInfo();
 
-            // Add Layer name property
-            featureInfo.properties = Object.assign(
-              { [LAYER_NAME_PROP]: f.layerName },
-              f.feature.props ?? {}
-            );
-            featureInfo.position = new Cartographic(longitude, latitude);
+          // Add Layer name property
+          featureInfo.properties = Object.assign(
+            { [LAYER_NAME_PROP]: f.layerName },
+            f.feature.props ?? {}
+          );
+          featureInfo.position = new Cartographic(longitude, latitude);
 
-            featureInfo.configureDescriptionFromProperties(f.feature.props);
-            featureInfo.configureNameFromProperties(f.feature.props);
+          featureInfo.configureDescriptionFromProperties(f.feature.props);
+          featureInfo.configureNameFromProperties(f.feature.props);
 
-            return featureInfo;
-          })
-      );
+          featureInfos.push(featureInfo);
+        });
+
       // No view is set and we have geoJSON object
       // So we pick features manually
     } else if (
@@ -556,12 +565,12 @@ export default class ProtomapsImageryProvider
       const bufferBbox = bbox(buffer);
 
       // Get array of all features
-      let features: Feature[] = this.source.geojsonObject.features;
+      let geojsonFeatures: Feature[] = this.source.geojsonObject.features;
 
       const pickedFeatures: Feature[] = [];
 
-      for (let index = 0; index < features.length; index++) {
-        const feature = features[index];
+      for (let index = 0; index < geojsonFeatures.length; index++) {
+        const feature = geojsonFeatures[index];
         if (!feature.bbox) {
           feature.bbox = bbox(feature);
         }
@@ -591,7 +600,7 @@ export default class ProtomapsImageryProvider
       }
 
       // Convert pickedFeatures to ImageryLayerFeatureInfos
-      return pickedFeatures.map((f) => {
+      pickedFeatures.forEach((f) => {
         const featureInfo = new ImageryLayerFeatureInfo();
 
         featureInfo.data = f;
@@ -611,10 +620,15 @@ export default class ProtomapsImageryProvider
         featureInfo.configureDescriptionFromProperties(f.properties);
         featureInfo.configureNameFromProperties(f.properties);
 
-        return featureInfo;
+        featureInfos.push(featureInfo);
       });
     }
-    return [];
+
+    if (this.processPickedFeatures) {
+      return await this.processPickedFeatures(featureInfos);
+    }
+
+    return featureInfos;
   }
 
   private clone(options?: Partial<Options>) {
@@ -655,7 +669,9 @@ export default class ProtomapsImageryProvider
       rectangle: options?.rectangle ?? this.rectangle,
       credit: options?.credit ?? this.credit,
       paintRules: options?.paintRules ?? this.paintRules,
-      labelRules: options?.labelRules ?? this.labelRules
+      labelRules: options?.labelRules ?? this.labelRules,
+      processPickedFeatures:
+        options?.processPickedFeatures ?? this.processPickedFeatures
     });
   }
 
