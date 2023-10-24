@@ -88,6 +88,7 @@ import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
 import TerriaFeature from "../Models/Feature/Feature";
+import { TerriaFeatureData } from "../Models/Feature/FeatureData";
 import { ViewingControl } from "../Models/ViewingControls";
 import TableStylingWorkflow from "../Models/Workflows/TableStylingWorkflow";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
@@ -102,7 +103,6 @@ import { ExportData } from "./ExportableMixin";
 import FeatureInfoUrlTemplateMixin from "./FeatureInfoUrlTemplateMixin";
 import { isDataSource } from "./MappableMixin";
 import TableMixin from "./TableMixin";
-import { TerriaFeatureData } from "../Models/Feature/FeatureData";
 
 export const FEATURE_ID_PROP = "_id_";
 
@@ -775,6 +775,8 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       let provider = new ProtomapsImageryProvider({
         terria: this.terria,
         data: protomapsData,
+        // Note: this URL is only used for Terria feature picking (see PickedFeatures.ProviderCoordsMap)
+        id: this.uniqueId,
         paintRules: [
           // Polygon features
           {
