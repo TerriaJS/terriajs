@@ -298,7 +298,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           () => [
             this.useTableStylingAndProtomaps,
             this.readyData,
-            this.currentDiscreteTimeIndex,
+            this.currentDiscreteJulianDate,
             this.activeTableStyle.timeIntervals,
             this.activeTableStyle.colorMap,
             this.activeTableStyle.pointSizeMap,
