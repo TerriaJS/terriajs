@@ -14,7 +14,7 @@
       "nameProp": "STATE_NAME_2021",
       "aliases": ["ste_code_2021", "ste_code", "ste"],
       "description": "States and Territories 2021",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "ILOC_2021": {
       "layerName": "ILOC_2021",
@@ -29,7 +29,7 @@
       "nameProp": "ILO_NAME21",
       "aliases": ["iloc_code_2021", "iloc_code", "iloc"],
       "description": "Indigenous Locations 2021",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "ILOC_NAME_2021": {
       "layerName": "ILOC_2021",
@@ -44,7 +44,7 @@
       "nameProp": "ILO_NAME21",
       "aliases": ["iloc_name_2021", "iloc_name"],
       "description": "Indigenous Locations 2021",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "IARE_2021": {
       "layerName": "IARE_2021",
@@ -59,7 +59,7 @@
       "nameProp": "IAR_NAME21",
       "aliases": ["iare_code_2021", "iare_code", "iare"],
       "description": "Indigenous Areas 2021",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "IARE_NAME_2021": {
       "layerName": "IARE_2021",
@@ -74,7 +74,7 @@
       "nameProp": "IAR_NAME21",
       "aliases": ["iare_name_2021", "iare_name"],
       "description": "Indigenous Areas 2021",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "IREG_2021": {
       "layerName": "IREG_2021",
@@ -89,7 +89,7 @@
       "nameProp": "IRE_NAME21",
       "aliases": ["ireg_code_2021", "ireg_code", "ireg"],
       "description": "Indigenous Regions 2021",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "IREG_NAME_2021": {
       "layerName": "IREG_2021",
@@ -104,7 +104,7 @@
       "nameProp": "IRE_NAME21",
       "aliases": ["ireg_name_2021", "ireg_name"],
       "description": "Indigenous Regions 2021",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "RA_2021": {
       "layerName": "RA_2021",
@@ -119,7 +119,7 @@
       "nameProp": "RA_NAME21",
       "aliases": ["ra_code_2021", "ra_code", "ra"],
       "description": "Remoteness Areas 2021",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "SAL_2021": {
       "layerName": "SAL_2021",
@@ -134,7 +134,7 @@
       "nameProp": "SAL_NAME_2021",
       "aliases": ["sal_code_2021", "sal_code", "sal"],
       "description": "Suburbs and Localities 2021",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "ADD_2021": {
       "layerName": "ADD_2021",
@@ -149,7 +149,7 @@
       "nameProp": "ADD_NAME_2021",
       "aliases": ["add_code_2021", "add_code", "add"],
       "description": "Australian Drainage Divisions 2021",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "ADD_NAME_2021": {
       "layerName": "ADD_2021",
@@ -164,7 +164,7 @@
       "nameProp": "ADD_NAME_2021",
       "aliases": ["add_name_2021", "add_name"],
       "description": "Australian Drainage Divisions 2021",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "DZN_2021": {
       "layerName": "DZN_2021",
@@ -179,7 +179,7 @@
       "nameProp": "DZN_CODE_2021",
       "aliases": ["dzn_code_2021", "dzn_code", "dzn"],
       "description": "Destination Zones 2021",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "LGA_2022": {
       "layerName": "LGA_2022",
@@ -194,7 +194,7 @@
       "nameProp": "LGA_NAME_2022",
       "aliases": ["lga_code_2022"],
       "description": "Local Government Areas 2022",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "LGA_2023": {
       "layerName": "LGA_2023",
@@ -209,7 +209,7 @@
       "nameProp": "LGA_NAME_2023",
       "aliases": ["lga_code_2023", "lga_code", "lga"],
       "description": "Local Government Areas 2023",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "SED_2021": {
       "layerName": "SED_2021",
@@ -224,7 +224,7 @@
       "nameProp": "SED_NAME_2021",
       "aliases": ["sed_code_2021"],
       "description": "State Electoral Divisions 2021 (ABS)",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "SED_NAME_2021": {
       "layerName": "SED_2021",
@@ -239,7 +239,7 @@
       "nameProp": "SED_NAME_2021",
       "aliases": ["sed_name_2021"],
       "description": "State Electoral Divisions 2021 (ABS)",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "SED_2022": {
       "layerName": "SED_2022",
@@ -254,7 +254,7 @@
       "nameProp": "SED_NAME_2022",
       "aliases": ["sed_code_2022", "sed_code", "sed"],
       "description": "State Electoral Divisions 2022 (ABS)",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "SED_NAME_2022": {
       "layerName": "SED_2022",
@@ -269,7 +269,7 @@
       "nameProp": "SED_NAME_2022",
       "aliases": ["sed_name_2022", "sed_name"],
       "description": "State Electoral Divisions 2022 (ABS)",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "CED_2021": {
       "layerName": "CED_2021",
@@ -284,7 +284,7 @@
       "nameProp": "CED_NAME_2021",
       "aliases": ["ced_code_2021", "ced_code", "ced"],
       "description": "Commonwealth Electoral Divisions 2021 (ABS)",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "CED_NAME_2021": {
       "layerName": "CED_2021",
@@ -299,7 +299,7 @@
       "nameProp": "CED_NAME_2021",
       "aliases": ["ced_name_2021", "ced_name"],
       "description": "Commonwealth Electoral Divisions 2021 (ABS)",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "POA_2021": {
       "layerName": "POA_2021",
@@ -320,7 +320,7 @@
         "postcode"
       ],
       "description": "Postal Areas 2021 (ABS)",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "TR_2021": {
       "layerName": "TR_2021",
@@ -335,7 +335,7 @@
       "nameProp": "TR_NAME_2021",
       "aliases": ["tr_code_2021", "tr_code", "tr"],
       "description": "Tourism Regions 2021",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "TR_NAME_2021": {
       "layerName": "TR_2021",
@@ -350,7 +350,7 @@
       "nameProp": "TR_NAME_2021",
       "aliases": ["tr_name_2021", "tr_name"],
       "description": "Tourism Regions 2021",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "SUA_2021": {
       "layerName": "SUA_2021",
@@ -365,7 +365,7 @@
       "nameProp": "SUA_NAME_2021",
       "aliases": ["sua_code_2021", "sua_code", "sua"],
       "description": "Significant Urban Areas 2021",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "SUA_NAME_2021": {
       "layerName": "SUA_2021",
@@ -380,7 +380,7 @@
       "nameProp": "SUA_NAME_2021",
       "aliases": ["sua_name_2022", "sua_name"],
       "description": "Significant Urban Areas 2021",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "UCL_2021": {
       "layerName": "UCL_2021",
@@ -395,7 +395,7 @@
       "nameProp": "UCL_NAME_2021",
       "aliases": ["ucl_code_2021", "ucl_code", "ucl"],
       "description": "Urban Centres and Localities 2021",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "UCL_NAME_2021": {
       "layerName": "UCL_2021",
@@ -410,7 +410,7 @@
       "nameProp": "UCL_NAME_2021",
       "aliases": ["ucl_name_2021", "ucl_name"],
       "description": "Urban Centres and Localities 2021",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "SOS_2021": {
       "layerName": "SOS_2021",
@@ -425,7 +425,7 @@
       "nameProp": "SOS_NAME_2021",
       "aliases": ["sos_code_2021", "sos_code", "sos"],
       "description": "Section of State 2021",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "SOSR_2021": {
       "layerName": "SOSR_2021",
@@ -440,7 +440,7 @@
       "nameProp": "SOSR_NAME_2021",
       "aliases": ["sosr_code_2021", "sosr_code", "sosr"],
       "description": "Section of State Range 2021",
-      "bbox": [96.81, -43.74, 168, -9.14]
+      "bbox": [96.81, -43.74, 168.0, -9.14]
     },
     "SA1_2011": {
       "layerName": "FID_SA1_2011_AUST",
@@ -457,10 +457,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.74050960300003, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "SA1_7DIG11"
     },
     "SA1_7DIGIT_2011": {
@@ -478,10 +475,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.74050960300003, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "SA1_7DIG11"
     },
     "SA1_2016": {
@@ -492,10 +486,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694139400007, -43.74050960299996, 167.99803499600006,
-        -9.142175976999962
-      ],
+      "bbox": [96.81, -43.75, 168.0, -9.14],
       "regionProp": "SA1_MAIN16",
       "aliases": ["sa1_code_2016", "sa1_maincode_2016"],
       "nameProp": "SA1_7DIG16",
@@ -510,10 +501,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694139400007, -43.74050960299996, 167.99803499600006,
-        -9.142175976999962
-      ],
+      "bbox": [96.81, -43.75, 168.0, -9.14],
       "regionProp": "SA1_7DIG16",
       "aliases": ["sa1_7digitcode", "sa1_7digitcode_2016"],
       "nameProp": "SA1_7DIG16",
@@ -532,7 +520,7 @@
       "nameProp": "SA1_CODE21",
       "aliases": ["sa1_code_2021", "sa1_maincode_2021", "sa1", "sa1_code"],
       "description": "Statistical Area Level 1 2021 (ABS)",
-      "bbox": [96.81, -43.75, 168, -9.14]
+      "bbox": [96.81, -43.75, 168.0, -9.14]
     },
     "SA4_2011": {
       "layerName": "FID_SA4_2011_AUST",
@@ -549,10 +537,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.74050960300003, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "SA4_NAME11"
     },
     "SA4_NAME_2011": {
@@ -569,10 +554,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.74050960300003, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "SA4_NAME11"
     },
     "SA4_2016": {
@@ -583,10 +565,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694139400007, -43.74050960299996, 167.99803499600006,
-        -9.142175976999962
-      ],
+      "bbox": [96.81, -43.75, 168.0, -9.14],
       "regionProp": "SA4_CODE16",
       "aliases": ["sa4_maincode_2016", "sa4_code_2016"],
       "nameProp": "SA4_NAME16",
@@ -601,10 +580,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694139400007, -43.74050960299996, 167.99803499600006,
-        -9.142175976999962
-      ],
+      "bbox": [96.81, -43.75, 168.0, -9.14],
       "regionProp": "SA4_NAME16",
       "aliases": ["sa4_name_2016"],
       "nameProp": "SA4_NAME16",
@@ -623,7 +599,7 @@
       "nameProp": "SA4_NAME21",
       "aliases": ["sa4_code_2021", "sa4_maincode_2021", "sa4", "sa4_code"],
       "description": "Statistical Area Level 4 2021 by code (ABS)",
-      "bbox": [96.81, -43.75, 168, -9.14]
+      "bbox": [96.81, -43.75, 168.0, -9.14]
     },
     "SA4_NAME_2021": {
       "layerName": "SA4_2021",
@@ -637,7 +613,7 @@
       "nameProp": "SA4_NAME21",
       "aliases": ["sa4_name_2021", "sa4_name"],
       "description": "Statistical Area Level 4 2021 by name (ABS)",
-      "bbox": [96.81, -43.75, 168, -9.14]
+      "bbox": [96.81, -43.75, 168.0, -9.14]
     },
     "SA3_2011": {
       "layerName": "FID_SA3_2011_AUST",
@@ -654,10 +630,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.74050960300003, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "SA3_NAME11"
     },
     "SA3_NAME_2011": {
@@ -675,10 +648,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.74050960300003, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "SA3_NAME11"
     },
     "SA3_2016": {
@@ -689,10 +659,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694139400007, -43.74050960299996, 167.99803499600006,
-        -9.142175976999962
-      ],
+      "bbox": [96.81, -43.75, 168.0, -9.14],
       "regionProp": "SA3_CODE16",
       "aliases": ["sa3_code_2016", "sa3_maincode_2016"],
       "nameProp": "SA3_NAME16",
@@ -707,10 +674,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694139400007, -43.74050960299996, 167.99803499600006,
-        -9.142175976999962
-      ],
+      "bbox": [96.81, -43.75, 168.0, -9.14],
       "regionProp": "SA3_NAME16",
       "aliases": ["sa3_name_2016"],
       "nameProp": "SA3_NAME16",
@@ -729,7 +693,7 @@
       "nameProp": "SA3_NAME21",
       "aliases": ["sa3_code_2021", "sa3_maincode_2021", "sa3", "sa3_code"],
       "description": "Statistical Area Level 3 2021 by code (ABS)",
-      "bbox": [96.81, -43.75, 168, -9.14]
+      "bbox": [96.81, -43.75, 168.0, -9.14]
     },
     "SA3_NAME_2021": {
       "layerName": "SA3_2021",
@@ -743,7 +707,7 @@
       "nameProp": "SA3_NAME21",
       "aliases": ["sa3_name_2021", "sa3_name"],
       "description": "Statistical Area Level 3 2021 by name (ABS)",
-      "bbox": [96.81, -43.75, 168, -9.14]
+      "bbox": [96.81, -43.75, 168.0, -9.14]
     },
     "SA2_2011": {
       "layerName": "FID_SA2_2011_AUST",
@@ -760,10 +724,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.74050960300003, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "SA2_NAME11"
     },
     "SA2_5DIG_2011": {
@@ -781,10 +742,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.74050960300003, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "SA2_NAME11"
     },
     "SA2_NAME_2011": {
@@ -801,10 +759,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.74050960300003, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "SA2_NAME11"
     },
     "SA2_2016": {
@@ -815,10 +770,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694139400007, -43.74050960299996, 167.99803499600006,
-        -9.142175976999962
-      ],
+      "bbox": [96.81, -43.75, 168.0, -9.14],
       "regionProp": "SA2_MAIN16",
       "aliases": ["sa2_code_2016", "sa2_maincode_2016"],
       "nameProp": "SA2_NAME16",
@@ -833,10 +785,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694139400007, -43.74050960299996, 167.99803499600006,
-        -9.142175976999962
-      ],
+      "bbox": [96.81, -43.75, 168.0, -9.14],
       "regionProp": "SA2_5DIG16",
       "aliases": ["sa2_5digitcode", "sa2_5digitcode_2016"],
       "nameProp": "SA2_NAME16",
@@ -851,10 +800,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694139400007, -43.74050960299996, 167.99803499600006,
-        -9.142175976999962
-      ],
+      "bbox": [96.81, -43.75, 168.0, -9.14],
       "regionProp": "SA2_NAME16",
       "aliases": ["sa2_name_2016"],
       "nameProp": "SA2_NAME16",
@@ -873,7 +819,7 @@
       "nameProp": "SA2_NAME21",
       "aliases": ["sa2_code_2021", "sa2_maincode_2021", "sa2", "sa2_code"],
       "description": "Statistical Area Level 2 2021 by code (ABS)",
-      "bbox": [96.81, -43.75, 168, -9.14]
+      "bbox": [96.81, -43.75, 168.0, -9.14]
     },
     "SA2_NAME_2021": {
       "layerName": "SA2_2021",
@@ -887,7 +833,7 @@
       "nameProp": "SA2_NAME21",
       "aliases": ["sa2_name_2021", "sa2_name"],
       "description": "Statistical Area Level 2 2021 by name (ABS)",
-      "bbox": [96.81, -43.75, 168, -9.14]
+      "bbox": [96.81, -43.75, 168.0, -9.14]
     },
     "SSC": {
       "layerName": "FID_SSC_2011_AUST",
@@ -904,10 +850,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "SSC_NAME"
     },
     "SSC_NAME": {
@@ -924,10 +867,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "SSC_NAME"
     },
     "SSC_2016": {
@@ -938,10 +878,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694139400007, -43.74050960299996, 167.99803499600006,
-        -9.142175976999962
-      ],
+      "bbox": [96.81, -43.75, 168.0, -9.14],
       "regionProp": "SSC_CODE16",
       "aliases": ["ssc_code_2016", "ssc_code", "ssc"],
       "nameProp": "SSC_NAME16",
@@ -956,10 +893,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694139400007, -43.74050960299996, 167.99803499600006,
-        -9.142175976999962
-      ],
+      "bbox": [96.81, -43.75, 168.0, -9.14],
       "regionProp": "SSC_NAME16",
       "aliases": ["ssc_name_2016", "ssc_name", "suburb"],
       "nameProp": "SSC_NAME16",
@@ -978,7 +912,7 @@
       "nameProp": "LGA_NAME21",
       "aliases": ["lga_code_2021", "lga_code_2020"],
       "description": "Local Government Areas 2021 by code (ABS)",
-      "bbox": [96.81, -43.75, 168, -9.14]
+      "bbox": [96.81, -43.75, 168.0, -9.14]
     },
     "LGA_2019": {
       "layerName": "LGA_2019",
@@ -992,7 +926,7 @@
       "nameProp": "LGA_NAME19",
       "aliases": ["lga_code_2019"],
       "description": "Local Government Areas 2019 by code (ABS)",
-      "bbox": [96.81, -43.75, 168, -9.14]
+      "bbox": [96.81, -43.75, 168.0, -9.14]
     },
     "LGA_2018": {
       "layerName": "LGA_2018_AUST",
@@ -1000,10 +934,7 @@
       "serverType": "MVT",
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694139400008, -43.74050960205758, 167.99803499600011,
-        -9.142175976703571
-      ],
+      "bbox": [96.81, -43.75, 168.0, -9.14],
       "uniqueIdProp": "FID",
       "regionProp": "LGA_CODE18",
       "nameProp": "LGA_NAME18",
@@ -1017,10 +948,7 @@
       "serverType": "MVT",
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694139400008, -43.74050960205758, 167.99803499600011,
-        -9.142175976703571
-      ],
+      "bbox": [96.81, -43.75, 168.0, -9.14],
       "uniqueIdProp": "FID",
       "regionProp": "LGA_CODE17",
       "nameProp": "LGA_NAME17",
@@ -1036,10 +964,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694139400007, -43.74050960299996, 167.99803499600006,
-        -9.142175976999962
-      ],
+      "bbox": [96.81, -43.75, 168.0, -9.14],
       "regionProp": "LGA_CODE16",
       "aliases": ["lga_code_2016"],
       "nameProp": "LGA_NAME16",
@@ -1061,10 +986,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "LGA_NAME15"
     },
     "LGA_2013": {
@@ -1082,10 +1004,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "LGA_NAME13"
     },
     "LGA_2011": {
@@ -1103,10 +1022,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        112.92111395999996, -43.74050957999999, 153.63872711999997,
-        -9.142175969999997
-      ],
+      "bbox": [112.92, -43.75, 153.64, -9.14],
       "nameProp": "LGA_NAME11"
     },
     "LGA_NAME_2011": {
@@ -1151,10 +1067,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        112.92111395999996, -43.74050957999999, 153.63872711999997,
-        -9.142175969999997
-      ],
+      "bbox": [112.92, -43.75, 153.64, -9.14],
       "nameProp": "LGA_NAME11"
     },
     "POA": {
@@ -1165,10 +1078,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694139400007, -43.74050960299996, 167.99803499600006,
-        -9.142175976999962
-      ],
+      "bbox": [96.81, -43.75, 168.0, -9.14],
       "regionProp": "POA_CODE16",
       "aliases": ["poa_code_2016", "postcode_2016"],
       "digits": 4,
@@ -1198,10 +1108,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.59821500299999, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.6, 159.11, -9.14],
       "nameProp": "POA_NAME"
     },
     "CED_CODE18": {
@@ -1216,7 +1123,7 @@
       "nameProp": "CED_NAME18",
       "aliases": ["ced_2018", "ced_code_2018"],
       "description": "Commonwealth electoral divisions 2018 by code (ABS)",
-      "bbox": [96.82, -43.74, 159.11, -9.14]
+      "bbox": [96.82, -43.74, 159.12, -9.14]
     },
     "CED_NAME18": {
       "layerName": "CED_2018",
@@ -1231,7 +1138,7 @@
       "nameProp": "CED_NAME18",
       "aliases": ["ced_name_2018"],
       "description": "Commonwealth electoral divisions 2018 by name (ABS)",
-      "bbox": [96.82, -43.74, 159.11, -9.14]
+      "bbox": [96.82, -43.74, 159.12, -9.14]
     },
     "CED_CODE_2016": {
       "layerName": "FID_CED_2016_AUST",
@@ -1248,10 +1155,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.74050960300003, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "CED_NAME16"
     },
     "CED_NAME_2016": {
@@ -1268,10 +1172,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.74050960300003, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "CED_NAME16"
     },
     "CED_CODE_2013": {
@@ -1289,10 +1190,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "CED_NAME13"
     },
     "CED_NAME_2013": {
@@ -1309,10 +1207,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "CED_NAME13"
     },
     "CED_CODE_2011": {
@@ -1330,10 +1225,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "CED_NAME",
       "regionIdsFile": "https://tiles.terria.io/region-mapping/regionids/region_map-FID_CED_2011_AUST_CED_CODE.json"
     },
@@ -1351,10 +1243,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "CED_NAME"
     },
     "COM_ELB_ID_2016": {
@@ -1372,10 +1261,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81676599999997, -43.740509999999986, 159.1092189999999,
-        -9.142175999999996
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "SORTNAME"
     },
     "ELB_2021": {
@@ -1390,7 +1276,7 @@
       "nameProp": "Elect_div",
       "aliases": ["com_elb_name_2021", "com_elb_name", "divisionnm"],
       "description": "Commonwealth electoral districts 2021 by name (AEC)",
-      "bbox": [96.81, -43.73, 168, -9.1]
+      "bbox": [96.81, -43.73, 168.0, -9.1]
     },
     "ELB_2019": {
       "layerName": "ELB_2019",
@@ -1403,10 +1289,7 @@
       "nameProp": "Sortname",
       "aliases": ["com_elb_name_2019"],
       "description": "Commonwealth electoral districts 2019 by name (AEC)",
-      "bbox": [
-        96.81694140799998, -43.74050960300003, 159.10921900799997,
-        -9.142175976999999
-      ]
+      "bbox": [96.81, -43.75, 159.11, -9.14]
     },
     "COM_ELB_NAME_2016": {
       "layerName": "FID_COM20160509_ELB",
@@ -1423,10 +1306,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81676599999997, -43.740509999999986, 159.1092189999999,
-        -9.142175999999996
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "SORTNAME"
     },
     "COM_ELB_NAME_2011": {
@@ -1444,10 +1324,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81676599999999, -43.74050999999999, 159.10921899999994,
-        -9.142175999999997
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "SORTNAME"
     },
     "COM_ELB_ID_2013": {
@@ -1456,7 +1333,7 @@
       "serverType": "MVT",
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [96.816766, -43.74051, 159.109219, -9.142176],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "uniqueIdProp": "FID",
       "regionProp": "ced_code_2013",
       "nameProp": "ced_name_2013",
@@ -1470,7 +1347,7 @@
       "serverType": "MVT",
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [96.816766, -43.74051, 159.109219, -9.142176],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "uniqueIdProp": "FID",
       "regionProp": "ced_name_2013",
       "nameProp": "ced_name_2013",
@@ -1484,7 +1361,7 @@
       "serverType": "MVT",
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [96.816766, -43.74051, 159.109219, -9.142176],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "uniqueIdProp": "FID",
       "regionProp": "ced_code_2010",
       "nameProp": "ced_name_2010",
@@ -1498,7 +1375,7 @@
       "serverType": "MVT",
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [96.816766, -43.74051, 159.109219, -9.142176],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "uniqueIdProp": "FID",
       "regionProp": "ced_name_2010",
       "nameProp": "ced_name_2010",
@@ -1512,7 +1389,7 @@
       "serverType": "MVT",
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [96.817997, -43.74051, 159.105442, -9.142186],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "uniqueIdProp": "FID",
       "regionProp": "ced_code_2007",
       "nameProp": "ced_name_2007",
@@ -1526,7 +1403,7 @@
       "serverType": "MVT",
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [96.817997, -43.74051, 159.105442, -9.142186],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "uniqueIdProp": "FID",
       "regionProp": "ced_name_2007",
       "nameProp": "ced_name_2007",
@@ -1546,7 +1423,7 @@
       "nameProp": "SED_NAME18",
       "aliases": ["sed_2018", "sed_code_2018"],
       "description": "State electoral divisions 2018 by code (ABS)",
-      "bbox": [96.82, -43.74, 159.11, -9.14]
+      "bbox": [96.82, -43.74, 159.12, -9.14]
     },
     "SED_NAME18": {
       "layerName": "SED_2018",
@@ -1560,7 +1437,7 @@
       "nameProp": "SED_NAME18",
       "aliases": ["sed_name_2018"],
       "description": "State electoral divisions 2018 by name (ABS)",
-      "bbox": [96.82, -43.74, 159.11, -9.14]
+      "bbox": [96.82, -43.74, 159.12, -9.14]
     },
     "SED_CODE16": {
       "layerName": "SED_2016",
@@ -1574,7 +1451,7 @@
       "nameProp": "SED_NAME16",
       "aliases": ["sed_2016", "sed_code_2016", "sed_code16"],
       "description": "State electoral divisions 2016 by code (ABS)",
-      "bbox": [96.82, -43.74, 159.11, -9.14]
+      "bbox": [96.82, -43.74, 159.12, -9.14]
     },
     "SED_NAME16": {
       "layerName": "SED_2016",
@@ -1588,7 +1465,7 @@
       "nameProp": "SED_NAME16",
       "aliases": ["sed_name_2016", "sed_name16"],
       "description": "State electoral divisions 2016 by code (ABS)",
-      "bbox": [96.82, -43.74, 159.11, -9.14]
+      "bbox": [96.82, -43.74, 159.12, -9.14]
     },
     "SED_CODE11": {
       "layerName": "FID_SED_2011_AUST",
@@ -1605,10 +1482,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        112.92111395199997, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [112.92, -43.75, 159.11, -9.14],
       "nameProp": "SED_NAME"
     },
     "SED_NAME11": {
@@ -1625,10 +1499,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        112.92111395199997, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [112.92, -43.75, 159.11, -9.14],
       "nameProp": "SED_NAME"
     },
     "GCCSA_2011": {
@@ -1646,10 +1517,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.74050960300003, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "GCC_NAME11"
     },
     "GCCSA_NAME_2011": {
@@ -1666,10 +1534,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.74050960300003, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "GCC_NAME11"
     },
     "GCCSA_2016": {
@@ -1680,10 +1545,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694139400007, -43.74050960299996, 167.99803499600006,
-        -9.142175976999962
-      ],
+      "bbox": [96.81, -43.75, 168.0, -9.14],
       "regionProp": "GCC_CODE16",
       "aliases": ["gccsa_code_2016"],
       "nameProp": "GCC_NAME16",
@@ -1698,10 +1560,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694139400007, -43.74050960299996, 167.99803499600006,
-        -9.142175976999962
-      ],
+      "bbox": [96.81, -43.75, 168.0, -9.14],
       "regionProp": "GCC_NAME16",
       "aliases": ["gccsa_name_2016"],
       "nameProp": "GCC_NAME16",
@@ -1720,7 +1579,7 @@
       "nameProp": "GCC_NAME21",
       "aliases": ["gccsa_code_2021", "gccsa_code", "gccsa"],
       "description": "Greater capital city statistical areas 2021 by code (ABS)",
-      "bbox": [96.81, -43.75, 168, -9.14]
+      "bbox": [96.81, -43.75, 168.0, -9.14]
     },
     "GCCSA_NAME_2021": {
       "layerName": "GCCSA_2021",
@@ -1734,7 +1593,7 @@
       "nameProp": "GCC_NAME21",
       "aliases": ["gccsa_name_2021", "gccsa_name"],
       "description": "Greater capital city statistical areas 2021 by name (ABS)",
-      "bbox": [96.81, -43.75, 168, -9.14]
+      "bbox": [96.81, -43.75, 168.0, -9.14]
     },
     "SUA": {
       "layerName": "FID_SUA_2011_AUST",
@@ -1751,10 +1610,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "SUA_NAME11"
     },
     "SUA_NAME": {
@@ -1773,10 +1629,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "SUA_NAME11"
     },
     "STE_2011": {
@@ -1794,10 +1647,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.74050960300003, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "STE_NAME11"
     },
     "STE_2016": {
@@ -1808,10 +1658,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694139400007, -43.74050960299996, 167.99803499600006,
-        -9.142175976999962
-      ],
+      "bbox": [96.81, -43.75, 168.0, -9.14],
       "regionProp": "STE_CODE16",
       "aliases": [
         "ste_code_2016",
@@ -1839,10 +1686,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "SOS_NAME11"
     },
     "SOSR": {
@@ -1860,10 +1704,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "SSR_NAME11"
     },
     "UCL": {
@@ -1881,10 +1722,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "UCL_NAME11"
     },
     "IREG": {
@@ -1902,10 +1740,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "IR_NAME11"
     },
     "ILOC": {
@@ -1923,10 +1758,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "IL_NAME11"
     },
     "IARE": {
@@ -1944,10 +1776,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "IA_NAME11"
     },
     "RA": {
@@ -1965,10 +1794,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "RA_NAME11"
     },
     "TR": {
@@ -1986,10 +1812,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        112.92111395199997, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [112.92, -43.75, 159.11, -9.14],
       "nameProp": "TR_NAME15"
     },
     "TR_2013": {
@@ -2007,10 +1830,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        112.92111395199997, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [112.92, -43.75, 159.11, -9.14],
       "nameProp": "TR_NAME13"
     },
     "NRMR": {
@@ -2028,10 +1848,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799995, -43.74050960299998, 159.10921900799994,
-        -9.142175976999997
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "NRMR_NAME"
     },
     "NRMR_NAME": {
@@ -2048,10 +1865,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799995, -43.74050960299998, 159.10921900799994,
-        -9.142175976999997
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "NRMR_NAME"
     },
     "ADD": {
@@ -2069,10 +1883,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        112.92111395199994, -43.74050960299998, 159.10921900799994,
-        -9.142175976999997
-      ],
+      "bbox": [112.92, -43.75, 159.11, -9.14],
       "nameProp": "ADD_NAME"
     },
     "ADD_NAME": {
@@ -2089,10 +1900,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        112.92111395199994, -43.74050960299998, 159.10921900799994,
-        -9.142175976999997
-      ],
+      "bbox": [112.92, -43.75, 159.11, -9.14],
       "nameProp": "ADD_NAME"
     },
     "ADD_2016": {
@@ -2103,10 +1911,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694139400007, -43.74050960299996, 167.99803499600006,
-        -9.142175976999962
-      ],
+      "bbox": [96.81, -43.75, 168.0, -9.14],
       "regionProp": "ADD_CODE16",
       "aliases": ["add_code_2016"],
       "nameProp": "ADD_NAME16",
@@ -2121,10 +1926,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694139400007, -43.74050960299996, 167.99803499600006,
-        -9.142175976999962
-      ],
+      "bbox": [96.81, -43.75, 168.0, -9.14],
       "regionProp": "ADD_NAME16",
       "aliases": ["add_name_2016"],
       "nameProp": "ADD_NAME16",
@@ -2146,10 +1948,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140800003, -43.74050960299996, 159.10921900800005,
-        -9.142175976999962
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "PHN_Name"
     },
     "STE_NAME_2011": {
@@ -2185,10 +1984,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.74050960300003, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "STE_NAME11"
     },
     "STE_NAME_2016": {
@@ -2199,10 +1995,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694139400007, -43.74050960299996, 167.99803499600006,
-        -9.142175976999962
-      ],
+      "bbox": [96.81, -43.75, 168.0, -9.14],
       "regionProp": "STE_NAME16",
       "aliases": ["state", "ste_name", "ste_name_2016", "ste_name_2021"],
       "nameProp": "STE_NAME16",
@@ -2249,10 +2042,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81676569599999, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "regionIdsFile": "https://tiles.terria.io/region-mapping/regionids/region_map-fid_asgc06_sla_SLA_CODE06.json"
     },
     "SLA_5DIGITCODE": {
@@ -2270,10 +2060,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81676569599999, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "regionIdsFile": "https://tiles.terria.io/region-mapping/regionids/region_map-fid_asgc06_sla_SLA_5DIGIT.json"
     },
     "SLA_NAME": {
@@ -2290,10 +2077,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81676569599999, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "regionIdsFile": "https://tiles.terria.io/region-mapping/regionids/region_map-fid_asgc06_sla_SLA_NAME06.json"
     },
     "CD": {
@@ -2310,10 +2094,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.76945846399997, -43.740509602999985, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.76, -43.75, 159.11, -9.14],
       "nameProp": "CD_CODE06",
       "regionIdsFile": "https://tiles.terria.io/region-mapping/regionids/region_map-fid_asgc06_cd_CD_CODE06.json"
     },
@@ -2332,10 +2113,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 10,
       "serverMaxZoom": 28,
-      "bbox": [
-        -179.99999999999994, -85.05109999999998, 179.99999999999994,
-        83.62359600000005
-      ],
+      "bbox": [-180.0, -85.06, 180.0, 83.63],
       "nameProp": "NAME"
     },
     "CNT3": {
@@ -2353,10 +2131,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 10,
       "serverMaxZoom": 28,
-      "bbox": [
-        -179.99999999999994, -85.05109999999998, 179.99999999999994,
-        83.62359600000005
-      ],
+      "bbox": [-180.0, -85.06, 180.0, 83.63],
       "nameProp": "NAME"
     },
     "COUNTRY": {
@@ -2373,10 +2148,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 10,
       "serverMaxZoom": 28,
-      "bbox": [
-        -179.99999999999994, -85.05109999999998, 179.99999999999994,
-        83.62359600000005
-      ],
+      "bbox": [-180.0, -85.06, 180.0, 83.63],
       "nameProp": "NAME"
     },
     "AUS": {
@@ -2403,10 +2175,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81694140799998, -43.74050960300003, 159.10921900799997,
-        -9.142175976999999
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "nameProp": "AUS_NAME"
     },
     "ESA_09": {
@@ -2417,10 +2186,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81676599999999, -43.74050999999999, 159.10921899999994,
-        -9.142175999999997
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "regionProp": "ESA_CODE",
       "aliases": ["esa", "esa_code", "esa_code_2009"],
       "nameProp": "ESA_NAME",
@@ -2435,10 +2201,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        96.81676599999999, -43.74050999999999, 159.10921899999994,
-        -9.142175999999997
-      ],
+      "bbox": [96.81, -43.75, 159.11, -9.14],
       "regionProp": "ESA_NAME",
       "aliases": ["esa_name", "esa_name_2009"],
       "nameProp": "ESA_NAME",
@@ -2453,10 +2216,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        72.57737629065888, -54.776992953536805, 167.9981399159851,
-        -9.141289999999968
-      ],
+      "bbox": [72.57, -54.78, 168.0, -9.14],
       "regionProp": "REG_CODE_7",
       "aliases": ["ibra7_reg", "ibra7_reg_code"],
       "nameProp": "REG_NAME_7",
@@ -2471,10 +2231,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        72.57737629065888, -54.776992953536805, 167.9981399159851,
-        -9.141289999999968
-      ],
+      "bbox": [72.57, -54.78, 168.0, -9.14],
       "regionProp": "REG_NAME_7",
       "aliases": ["ibra7_reg_name"],
       "nameProp": "REG_NAME_7",
@@ -2489,10 +2246,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        72.57737629065888, -54.77699295353692, 167.9981399159851,
-        -9.141289999999968
-      ],
+      "bbox": [72.57, -54.78, 168.0, -9.14],
       "regionProp": "SUB_CODE_7",
       "aliases": ["ibra7_sub", "ibra7_sub_code"],
       "nameProp": "SUB_NAME_7",
@@ -2507,10 +2261,7 @@
       "serverMinZoom": 0,
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        72.57737629065888, -54.77699295353692, 167.9981399159851,
-        -9.141289999999968
-      ],
+      "bbox": [72.57, -54.78, 168.0, -9.14],
       "regionProp": "SUB_NAME_7",
       "aliases": ["ibra7_sub_name"],
       "nameProp": "SUB_NAME_7",
@@ -2523,10 +2274,7 @@
       "serverType": "MVT",
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        -176.89314232298426, -47.28999251282331, 178.57724348546415,
-        -34.392630183116
-      ],
+      "bbox": [-176.9, -47.29, 178.58, -34.39],
       "uniqueIdProp": "FID",
       "regionProp": "AU2017",
       "nameProp": "AU2017_NAM",
@@ -2540,10 +2288,7 @@
       "serverType": "MVT",
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        -176.89314232298426, -47.28999251282331, 178.57724348546415,
-        -34.392630183116
-      ],
+      "bbox": [-176.9, -47.29, 178.58, -34.39],
       "uniqueIdProp": "FID",
       "regionProp": "AU2017_NAM",
       "nameProp": "AU2017_NAM",
@@ -2557,10 +2302,7 @@
       "serverType": "MVT",
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [
-        -176.89314232298426, -47.28999251282331, 178.57724348546415,
-        -34.392630183116
-      ],
+      "bbox": [-176.9, -47.29, 178.58, -34.39],
       "uniqueIdProp": "FID",
       "regionProp": "MB2017",
       "nameProp": "MB2017",
@@ -2574,7 +2316,7 @@
       "serverType": "MVT",
       "serverMaxNativeZoom": 12,
       "serverMaxZoom": 28,
-      "bbox": [96.816941, -43.74051, 167.99803499600011, -9.142176],
+      "bbox": [96.81, -43.75, 168.0, -9.14],
       "uniqueIdProp": "FID",
       "regionProp": "FED_ABB",
       "nameProp": "FED_DIV",
@@ -2594,10 +2336,7 @@
       "nameProp": "RRA_Name",
       "aliases": ["RRA_NAME", "RRA"],
       "description": "Bushfire Regional Recovery Areas",
-      "bbox": [
-        96.81694140799998, -43.74050960300003, 159.10921900799997,
-        -9.142175976999999
-      ]
+      "bbox": [96.81, -43.75, 159.11, -9.14]
     },
     "ABARES_CODE": {
       "layerName": "ABARES_Ag_Regions",
@@ -2611,10 +2350,7 @@
       "nameProp": "AbaresName",
       "aliases": ["abares_code", "abares_region_code"],
       "description": "ABARES regions, farm survey statistical aggregation areas",
-      "bbox": [
-        96.81694140799998, -43.74050960300003, 159.10921900799997,
-        -9.142175976999999
-      ]
+      "bbox": [96.81, -43.75, 159.11, -9.14]
     },
     "ABARES_NAME": {
       "layerName": "ABARES_Ag_Regions",
@@ -2628,10 +2364,7 @@
       "nameProp": "AbaresName",
       "description": "ABARES regions, farm survey statistical aggregation areas",
       "aliases": ["abares_name", "abares_region_name"],
-      "bbox": [
-        96.81694140799998, -43.74050960300003, 159.10921900799997,
-        -9.142175976999999
-      ]
+      "bbox": [96.81, -43.75, 159.11, -9.14]
     },
     "City_of_Melbourne_CLUE": {
       "layerName": "City_of_Melbourne_CLUE",
@@ -2645,7 +2378,7 @@
       "regionProp": "block_id",
       "nameProp": "clue_area",
       "description": "City of Melbourne Census of Land Use and Employment",
-      "bbox": [144.88, -37.86, 145, -37.77]
+      "bbox": [144.88, -37.86, 145.0, -37.77]
     }
   }
 }
