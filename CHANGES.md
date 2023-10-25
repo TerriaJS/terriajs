@@ -5,6 +5,12 @@
 - Fix `WebMapServiceCatalogItem` `allowFeaturePicking`
 - Allow translation of TableStylingWorkflow.
 - Fix "Remove all" not removing selected/picked features
+- Fix crash on empty GeoJSON features
+- Add `tableFeatureInfoContext` support to `GeoJsonMixin.createProtomapsImageryProvider`
+- Fix `GeoJsonMixin` timeline animation for lines/polygons
+- Fix bug in mismatched GeoJSON Feature `_id_` and TableMixin `rowId` - this was causing incorrect styling when using `filterByProperties` or features had `null` geometry
+- Fix splitter for `GeoJsonMixin` (lines and polygon features only)
+- Fix share links with picked features from `ProtomapsImageryProvider`
 - [The next improvement]
 
 #### 8.3.6 - 2023-10-03
