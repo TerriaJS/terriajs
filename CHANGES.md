@@ -11,6 +11,10 @@
 - Fix bug in mismatched GeoJSON Feature `_id_` and TableMixin `rowId` - this was causing incorrect styling when using `filterByProperties` or features had `null` geometry
 - Fix splitter for `GeoJsonMixin` (lines and polygon features only)
 - Fix share links with picked features from `ProtomapsImageryProvider`
+- Added many remaining ASGS 2021 region types to region mapping (STE_2021,ILOC_2021,IARE_2021,IREG_2021,RA_2021,SAL_2021,ADD_2021,DZN_2021,LGA_2022,LGA_2023,SED_2021,SED_2022,
+  CED_2021,POA_2021,TR_2021,SUA_2021,UCL_2021,SOS_2021,SOSR_2021).
+  - See [ASGS 2021](https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026/access-and-downloads/digital-boundary-files)
+- Added [Melbourne CLUE blocks](https://data.melbourne.vic.gov.au/pages/clue/) to region mapping.
 - [The next improvement]
 
 #### 8.3.6 - 2023-10-03
