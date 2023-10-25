@@ -63,6 +63,8 @@ const regionIdsLgaNameStates = JSON.stringify(
   require("../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json")
 );
 
+const NUMBER_OF_REGION_MAPPING_TYPES = 144;
+
 describe("TableMixin", function () {
   let item: CsvCatalogItem;
   let terria: Terria;
@@ -591,7 +593,9 @@ describe("TableMixin", function () {
 
       (await item.loadMapItems()).throwIfError();
 
-      expect(item.regionProviderLists?.[0]?.regionProviders.length).toBe(143);
+      expect(item.regionProviderLists?.[0]?.regionProviders.length).toBe(
+        NUMBER_OF_REGION_MAPPING_TYPES
+      );
     });
 
     it("loads regionProviderLists on loadMapItems - with multiple regionMappingDefinitionsUrl", async function () {
@@ -620,7 +624,9 @@ describe("TableMixin", function () {
       expect(item.regionProviderLists?.length).toBe(2);
 
       expect(item.regionProviderLists?.[0]?.regionProviders.length).toBe(2);
-      expect(item.regionProviderLists?.[1]?.regionProviders.length).toBe(143);
+      expect(item.regionProviderLists?.[1]?.regionProviders.length).toBe(
+        NUMBER_OF_REGION_MAPPING_TYPES
+      );
 
       // Item region provider should match from "additionalRegion.json" (as it comes before "build/TerriaJS/data/regionMapping.json")
       expect(item.activeTableStyle.regionColumn?.regionType?.description).toBe(
@@ -654,7 +660,9 @@ describe("TableMixin", function () {
 
       expect(item.regionProviderLists?.length).toBe(1);
 
-      expect(item.regionProviderLists?.[0]?.regionProviders.length).toBe(143);
+      expect(item.regionProviderLists?.[0]?.regionProviders.length).toBe(
+        NUMBER_OF_REGION_MAPPING_TYPES
+      );
 
       // Item region provider should match from "build/TerriaJS/data/regionMapping.json"
       expect(item.activeTableStyle.regionColumn?.regionType?.description).toBe(
