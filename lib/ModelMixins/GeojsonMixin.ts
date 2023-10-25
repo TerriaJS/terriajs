@@ -775,7 +775,6 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       let provider = new ProtomapsImageryProvider({
         terria: this.terria,
         data: protomapsData,
-        // Note: this URL is only used for Terria feature picking (see PickedFeatures.ProviderCoordsMap)
         id: this.uniqueId,
         paintRules: [
           // Polygon features
