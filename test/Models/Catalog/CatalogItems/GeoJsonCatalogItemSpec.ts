@@ -1,11 +1,11 @@
-import { runInAction } from "mobx";
+import { reaction, runInAction } from "mobx";
 import { GeomType, LineSymbolizer, PolygonSymbolizer } from "protomaps";
 import { CustomDataSource } from "terriajs-cesium";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
@@ -20,12 +20,19 @@ import {
   FEATURE_ID_PROP,
   getColor
 } from "../../../../lib/ModelMixins/GeojsonMixin";
-import { isDataSource } from "../../../../lib/ModelMixins/MappableMixin";
+import {
+  ImageryParts,
+  isDataSource
+} from "../../../../lib/ModelMixins/MappableMixin";
 import GeoJsonCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import SplitItemReference from "../../../../lib/Models/Catalog/CatalogReferences/SplitItemReference";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 import TerriaFeature from "../../../../lib/Models/Feature/Feature";
+import {
+  TerriaFeatureData,
+  isTerriaFeatureData
+} from "../../../../lib/Models/Feature/FeatureData";
 import Terria from "../../../../lib/Models/Terria";
 
 describe("GeoJsonCatalogItemSpec", () => {
@@ -497,9 +504,7 @@ describe("GeoJsonCatalogItemSpec", () => {
         expect(entities.length).toEqual(1);
 
         const entity1 = entities[0];
-        console.log(
-          entity1.properties?.getValue(terria.timelineClock.currentTime).year
-        );
+
         expect(
           entity1.properties?.getValue(terria.timelineClock.currentTime).year
         ).toBe(2019);
@@ -823,6 +828,8 @@ describe("GeoJsonCatalogItemSpec", () => {
           ?.getValue(terria.timelineClock.currentTime)
           ?.toCssColorString()
       ).toBe("rgb(103,0,13)");
+
+      expect(geojson.disableSplitter).toBeTruthy();
     });
 
     it("Supports LegendOwnerTraits to override TableMixin.legends", async () => {
@@ -922,12 +929,13 @@ describe("GeoJsonCatalogItemSpec", () => {
       geojson.setTrait(
         CommonStrata.user,
         "geoJsonString",
-        `{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"stroke":"#555555","stroke-width":2,"stroke-opacity":1,"fill":"#ff0051","fill-opacity":0.5},"geometry":{"type":"Polygon","coordinates":[[[35.859375,53.54030739150022],[11.25,40.17887331434696],[15.1171875,14.604847155053898],[53.4375,44.84029065139799],[35.859375,53.54030739150022]]]}},{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[85.4296875,66.93006025862448],[53.4375,43.83452678223682],[89.296875,34.88593094075317],[91.40625,50.958426723359935],[85.4296875,66.93006025862448]]]}},{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[119.17968749999999,66.79190947341796],[100.1953125,53.74871079689897],[109.3359375,47.517200697839414],[119.17968749999999,66.79190947341796]]]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[30.585937499999996,-2.108898659243126]}},{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[71.015625,-2.811371193331128],[99.49218749999999,-2.811371193331128],[99.49218749999999,18.646245142670608],[71.015625,18.646245142670608],[71.015625,-2.811371193331128]]]}},{"type":"Feature","properties":{},"geometry":{"type":"LineString","coordinates":[[140.9765625,19.642587534013032],[134.296875,-17.978733095556155],[88.9453125,-36.597889133070204],[119.53125,15.961329081596647],[130.078125,27.371767300523047]]}}]}`
+        `{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"stroke":"#555555","stroke-width":2,"stroke-opacity":1,"fill":"#ff0051","fill-opacity":0.5},"geometry":{"type":"Polygon","coordinates":[[[35.859375,53.54030739150022],[11.25,40.17887331434696],[15.1171875,14.604847155053898],[53.4375,44.84029065139799],[35.859375,53.54030739150022]]]}},{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[85.4296875,66.93006025862448],[53.4375,43.83452678223682],[89.296875,34.88593094075317],[91.40625,50.958426723359935],[85.4296875,66.93006025862448]]]}},{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[119.17968749999999,66.79190947341796],[100.1953125,53.74871079689897],[109.3359375,47.517200697839414],[119.17968749999999,66.79190947341796]]]}},{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[71.015625,-2.811371193331128],[99.49218749999999,-2.811371193331128],[99.49218749999999,18.646245142670608],[71.015625,18.646245142670608],[71.015625,-2.811371193331128]]]}},{"type":"Feature","properties":{},"geometry":{"type":"LineString","coordinates":[[140.9765625,19.642587534013032],[134.296875,-17.978733095556155],[88.9453125,-36.597889133070204],[119.53125,15.961329081596647],[130.078125,27.371767300523047]]}}]}`
       );
       await geojson.loadMapItems();
       expect(geojson.mapItems[0] instanceof GeoJsonDataSource).toBeFalsy();
       expect(geojson.useTableStylingAndProtomaps).toBeTruthy();
       expect(geojson.legends.length).toBe(1);
+      expect(geojson.disableSplitter).toBeFalsy();
     });
 
     it("Disabled protomaps - More than 50% features detected", async () => {
@@ -942,6 +950,143 @@ describe("GeoJsonCatalogItemSpec", () => {
       expect(geojson.useTableStylingAndProtomaps).toBeFalsy();
 
       expect(geojson.legends.length).toBe(0);
+      expect(geojson.disableSplitter).toBeTruthy();
+    });
+
+    it("correctly matches feature _id_ with table rowId - with features with empty geoms", async () => {
+      geojson.setTrait(
+        CommonStrata.user,
+        "url",
+        "test/GeoJSON/empty-geoms.geojson"
+      );
+
+      await geojson.loadMapItems();
+      expect(geojson.readyData?.features.length).toBe(4);
+      // Check _id_ vs rowIds
+      expect(
+        geojson.readyData?.features.map((f) => f.properties?.[FEATURE_ID_PROP])
+      ).toEqual(geojson.rowIds);
+      // Check "someOtherProp" column
+      expect(
+        geojson.readyData?.features.map((f) => f.properties?.someOtherProp)
+      ).toEqual(
+        geojson.tableColumns.find((c) => c.name === "someOtherProp")
+          ?.values as string[]
+      );
+    });
+
+    it("correctly matches feature _id_ with table rowId - with filterByProperties", async () => {
+      geojson.setTrait(
+        CommonStrata.user,
+        "url",
+        "test/GeoJSON/time-based.geojson"
+      );
+      geojson.setTrait(CommonStrata.user, "filterByProperties", {
+        year: 2019
+      });
+      await geojson.loadMapItems();
+
+      expect(geojson.readyData?.features.length).toBe(1);
+      expect(
+        geojson.readyData?.features.map((f) => f.properties?.[FEATURE_ID_PROP])
+      ).toEqual(geojson.rowIds);
+    });
+
+    it("supports time", async function () {
+      geojson.setTrait(
+        CommonStrata.definition,
+        "url",
+        "test/GeoJSON/time-based-automatic-styles.geojson"
+      );
+
+      updateModelFromJson(geojson, CommonStrata.definition, {
+        currentTime: "2018-01-01",
+        defaultStyle: {
+          time: { timeColumn: "date", idColumns: ["idProperty"] }
+        }
+      });
+
+      const observeMapItems = reaction(
+        () => [geojson.mapItems],
+        () => {}
+      );
+
+      (await geojson.loadMapItems()).throwIfError();
+
+      expect(geojson.activeTableStyle.timeColumn?.name).toBe("date");
+
+      const firstProtomapsImageryProvider =
+        "imageryProvider" in geojson.mapItems[0]
+          ? (geojson.mapItems[0].imageryProvider as ProtomapsImageryProvider)
+          : undefined;
+
+      if (!firstProtomapsImageryProvider) throw "protomaps should be defined";
+
+      const testFeature = {
+        props: {},
+        geomType: GeomType.Polygon,
+        numVertices: 0,
+        geom: [],
+        bbox: { minX: 0, minY: 0, maxX: 0, maxY: 0 }
+      };
+
+      const firstFilter = firstProtomapsImageryProvider.paintRules[0].filter;
+
+      if (!firstFilter) {
+        throw "filter should be defined";
+      }
+
+      // Current time is 2018-01-01
+      // First feature maps to 2018-01-01
+      testFeature.props = { [FEATURE_ID_PROP]: 0 };
+      expect(firstFilter(0, testFeature)).toBeTruthy();
+
+      // Second feature maps to 2019-01-01
+      testFeature.props = { [FEATURE_ID_PROP]: 1 };
+      expect(firstFilter(0, testFeature)).toBeFalsy();
+
+      // Change time to 2019-01-01
+      geojson.setTrait(CommonStrata.definition, "currentTime", "2019-01-01");
+
+      // Check new imagery provider
+      const nextProtomapsImageryProvider =
+        "imageryProvider" in geojson.mapItems[0]
+          ? (geojson.mapItems[0].imageryProvider as ProtomapsImageryProvider)
+          : undefined;
+
+      if (!nextProtomapsImageryProvider) throw "protomaps should be defined";
+
+      const nextFilter = nextProtomapsImageryProvider.paintRules[0].filter;
+
+      if (!nextFilter) {
+        throw "filter should be defined";
+      }
+
+      testFeature.props = { [FEATURE_ID_PROP]: 0 };
+      expect(nextFilter(0, testFeature)).toBeFalsy();
+      testFeature.props = { [FEATURE_ID_PROP]: 1 };
+      expect(nextFilter(0, testFeature)).toBeTruthy();
+
+      expect(
+        firstProtomapsImageryProvider === nextProtomapsImageryProvider
+      ).toBeFalsy();
+
+      // Now change the currentTime to 2019- g01-02 - this should not trigger a new imagery provider - as it within the current time interval
+      geojson.setTrait(CommonStrata.definition, "currentTime", "2019-01-02");
+
+      // Check new imagery provider
+      const lastProtomapsImageryProvider =
+        "imageryProvider" in geojson.mapItems[0]
+          ? (geojson.mapItems[0].imageryProvider as ProtomapsImageryProvider)
+          : undefined;
+
+      if (!lastProtomapsImageryProvider) throw "protomaps should be defined";
+
+      expect(
+        nextProtomapsImageryProvider === lastProtomapsImageryProvider
+      ).toBeTruthy();
+
+      observeMapItems();
     });
   });
 
@@ -986,11 +1131,13 @@ describe("GeoJsonCatalogItemSpec", () => {
       geojson = new GeoJsonCatalogItem("test-geojson", terria);
     });
 
-    it("protomaps-mvt", async function () {
+    it("protomaps-mvt - polygons/lines", async function () {
       terria.addModel(geojson);
-      const geojsonString = await loadText("test/GeoJSON/cemeteries.geojson");
+      const geojsonString = await loadText("test/GeoJSON/time-based.geojson");
       geojson.setTrait(CommonStrata.user, "geoJsonString", geojsonString);
       await geojson.loadMapItems();
+
+      expect(geojson.disableSplitter).toBeFalsy();
 
       const split = new SplitItemReference(createGuid(), terria);
       split.setTrait(
@@ -1008,6 +1155,15 @@ describe("GeoJsonCatalogItemSpec", () => {
       expect(
         (await (split.target as GeoJsonCatalogItem).loadMapItems()).error
       ).toBeUndefined();
+    });
+
+    it("cesium - points - splitter disabled", async function () {
+      terria.addModel(geojson);
+      const geojsonString = await loadText("test/GeoJSON/cemeteries.geojson");
+      geojson.setTrait(CommonStrata.user, "geoJsonString", geojsonString);
+      await geojson.loadMapItems();
+
+      expect(geojson.disableSplitter).toBeTruthy();
     });
   });
 
@@ -1217,6 +1373,124 @@ describe("GeoJsonCatalogItemSpec", () => {
       } else {
         throw "Invalid geojson.mapItems";
       }
+    });
+
+    it("ProtomapsImageryProvider pickFeatures", async function () {
+      const geojsonData = {
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "Polygon",
+              coordinates: [
+                [
+                  [145.5908203125, -40.17887331434695],
+                  [143.349609375, -42.08191667830631],
+                  [146.35986328124997, -44.040218713142124],
+                  [149.08447265625, -42.859859815062784],
+                  [148.55712890625, -41.36031866306708],
+                  [145.5908203125, -40.17887331434695]
+                ]
+              ]
+            }
+          },
+          {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "Polygon",
+              coordinates: [
+                [
+                  [75.9375, 51.069016659603896],
+                  [59.94140624999999, 39.095962936305476],
+                  [79.453125, 42.032974332441405],
+                  [80.15625, 46.800059446787316],
+                  [75.673828125, 51.45400691005982],
+                  [75.9375, 51.069016659603896]
+                ]
+              ]
+            }
+          }
+        ]
+      };
+      geojson.setTrait(
+        CommonStrata.definition,
+        "geoJsonString",
+        JSON.stringify(geojsonData)
+      );
+
+      (await geojson.loadMapItems()).throwIfError();
+
+      const imagery = geojson.mapItems[0] as ImageryParts;
+
+      expect(
+        imagery.imageryProvider instanceof ProtomapsImageryProvider
+      ).toBeTruthy();
+
+      const spyOnProcessPickedFeatures = spyOn(
+        imagery.imageryProvider,
+        "pickFeatures"
+      ).and.callThrough();
+
+      const features =
+        (await imagery.imageryProvider.pickFeatures(
+          1,
+          1,
+          3,
+          1.2946797849754814,
+          0.7826107094181278
+        )) ?? [];
+
+      expect(spyOnProcessPickedFeatures).toHaveBeenCalledTimes(1);
+      expect(features.length).toBe(1);
+      expect(features[0].data.geometry).toEqual(
+        geojsonData.features[1].geometry
+      );
+    });
+
+    it("ProtomapsImageryProvider pickFeatures - with time", async function () {
+      geojson.setTrait(
+        CommonStrata.definition,
+        "url",
+        "test/GeoJSON/time-based-automatic-styles.geojson"
+      );
+
+      updateModelFromJson(geojson, CommonStrata.definition, {
+        defaultStyle: {
+          time: { timeColumn: "date", idColumns: ["idProperty"] }
+        }
+      });
+
+      (await geojson.loadMapItems()).throwIfError();
+
+      const imagery = geojson.mapItems[0] as ImageryParts;
+
+      expect(
+        imagery.imageryProvider instanceof ProtomapsImageryProvider
+      ).toBeTruthy();
+
+      const spyOnProcessPickedFeatures = spyOn(
+        imagery.imageryProvider,
+        "pickFeatures"
+      ).and.callThrough();
+
+      const features =
+        (await imagery.imageryProvider.pickFeatures(
+          59166,
+          40202,
+          16,
+          2.5309053894540012,
+          -0.6590723957845167
+        )) ?? [];
+
+      expect(spyOnProcessPickedFeatures).toHaveBeenCalledTimes(1);
+      expect(features.length).toBe(1);
+      expect(isTerriaFeatureData(features[0].data)).toBeTruthy();
+
+      const terriaFeatureData = features[0].data as TerriaFeatureData;
+      expect(terriaFeatureData.rowIds).toEqual([4, 5, 6, 7, 8]);
     });
   });
 });
