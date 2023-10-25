@@ -2632,6 +2632,20 @@
         96.81694140799998, -43.74050960300003, 159.10921900799997,
         -9.142175976999999
       ]
+    },
+    "City_of_Melbourne_CLUE": {
+      "layerName": "City_of_Melbourne_CLUE",
+      "server": "https://tiles.terria.io/City_of_Melbourne_CLUE/{z}/{x}/{y}.pbf",
+      "serverType": "MVT",
+      "serverMaxNativeZoom": 16,
+      "serverMinZoom": 10,
+      "serverMaxZoom": 28,
+      "regionIdsFile": "https://tiles.terria.io/region-mapping/regionids/region_map-City_of_Melbourne_CLUE.json",
+      "uniqueIdProp": "FID",
+      "regionProp": "block_id",
+      "nameProp": "clue_area",
+      "description": "City of Melbourne Census of Land Use and Employment",
+      "bbox": [144.88, -37.86, 145, -37.77]
     }
   }
 }
