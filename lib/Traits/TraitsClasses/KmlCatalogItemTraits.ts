@@ -19,4 +19,12 @@ export default class KmlCatalogItemTraits extends mixTraits(
     description: "A kml string"
   })
   kmlString?: string;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Clamp to Ground",
+    description:
+      "Whether the polygon features in this KML should be clamped to the terrain surface."
+  })
+  clampPolygonsToGround: boolean = true;
 }

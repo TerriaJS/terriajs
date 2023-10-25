@@ -125,7 +125,7 @@ class KmlCatalogItem
 
   private doneLoading(kmlDataSource: KmlDataSource) {
     // Clamp features to terrain.
-    if (isDefined(this.terria.cesium)) {
+    if (isDefined(this.terria.cesium) && this.clampPolygonsToGround) {
       const positionsToSample: Cartographic[] = [];
       const correspondingCartesians: Cartesian3[] = [];
 
