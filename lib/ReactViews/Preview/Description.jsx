@@ -64,7 +64,11 @@ class Description extends React.Component {
         </If>
 
         <If
-          condition={!catalogItem.hasLocalData && !catalogItem.hasDescription}
+          condition={
+            !catalogItem.hasLocalData &&
+            !catalogItem.hasDescription &&
+            !catalogItem.hideDefaultDescription
+          }
         >
           <p>{t("description.dataNotLocal")}</p>
         </If>
