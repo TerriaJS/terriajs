@@ -11,6 +11,7 @@
 - Fix bug in mismatched GeoJSON Feature `_id_` and TableMixin `rowId` - this was causing incorrect styling when using `filterByProperties` or features had `null` geometry
 - Fix splitter for `GeoJsonMixin` (lines and polygon features only)
 - Fix share links with picked features from `ProtomapsImageryProvider`
+- Added on screen attribution and Google logo for Google Photorealistic 3D Tiles.
 - Add `hideDefaultDescription` to `CatalogMemberTraits` - if true, then no generic default description will be shown when `description` is empty.
 - [The next improvement]
 
