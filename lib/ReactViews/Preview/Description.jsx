@@ -96,9 +96,11 @@ class Description extends React.Component {
 
         {catalogItem.hasLocalData && <p>{t("description.dataLocal")}</p>}
 
-        {!catalogItem.hasLocalData && !catalogItem.hasDescription && (
-          <p>{t("description.dataNotLocal")}</p>
-        )}
+        {!catalogItem.hasLocalData &&
+          !catalogItem.hasDescription &&
+          !catalogItem.hideDefaultDescription && (
+            <p>{t("description.dataNotLocal")}</p>
+          )}
 
         {metadataUrls && metadataUrls.length > 0 && (
           <>

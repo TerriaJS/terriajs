@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import {
   filterSelectableDimensions,
@@ -17,6 +18,7 @@ export const SelectableDimensionGroup: React.FC<{
   id: string;
   dim: SelectableDimensionGroupModel | SelectableDimensionCheckboxGroupModel;
 }> = ({ id, dim }) => {
+  const { t } = useTranslation();
   const childDims = filterSelectableDimensions(dim.placement)(
     dim.selectableDimensions
   );
@@ -29,7 +31,9 @@ export const SelectableDimensionGroup: React.FC<{
         dim.type === "group"
           ? dim.name ?? dim.id ?? ""
           : dim.options?.find((opt) => opt.id === dim.selectedId)?.name ??
-            (dim.selectedId === "true" ? "Enabled" : "Disabled")
+            (dim.selectedId === "true"
+              ? t("selectableDimensions.enabled")
+              : t("selectableDimensions.disabled"))
       }
       bodyBoxProps={{
         displayInlineBlock: true,
