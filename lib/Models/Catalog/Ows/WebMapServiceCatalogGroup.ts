@@ -168,8 +168,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @action
-  createMemberFromLayer(layer: CapabilitiesLayer) {
-    const layerId = this.getLayerId(layer);
+  createMemberFromLayer(layer: CapabilitiesLayer, parentLayerId?: string) {
+    const layerId = this.getLayerId(layer, parentLayerId);
 
     if (!layerId) {
       return;
@@ -185,7 +185,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         members = [layer.Layer as CapabilitiesLayer];
       }
 
-      members.forEach((member) => this.createMemberFromLayer(member));
+      members.forEach((member) => this.createMemberFromLayer(member, layerId));
 
       // Create group
       const existingModel = this.catalogGroup.terria.getModelById(
@@ -215,7 +215,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
       model.setTrait(
         CommonStrata.definition,
         "members",
-        filterOutUndefined(members.map((member) => this.getLayerId(member)))
+        filterOutUndefined(
+          members.map((member) => this.getLayerId(member, layerId))
+        )
       );
 
       // Set group `info` trait if applicable
@@ -318,11 +320,13 @@ class GetCapabilitiesStratum extends LoadableStratum(
     model.createGetCapabilitiesStratumFromParent(this.capabilities);
   }
 
-  getLayerId(layer: CapabilitiesLayer) {
-    if (!isDefined(this.catalogGroup.uniqueId)) {
+  getLayerId(layer: CapabilitiesLayer, parentLayerId?: string) {
+    if (!isDefined(this.catalogGroup.uniqueId) && !isDefined(parentLayerId)) {
       return;
     }
-    return `${this.catalogGroup.uniqueId}/${layer.Name ?? layer.Title}`;
+    return `${parentLayerId ?? this.catalogGroup.uniqueId}/${
+      layer.Name ?? layer.Title
+    }`;
   }
 
   /** For backward-compatibility.

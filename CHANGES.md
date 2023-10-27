@@ -2,8 +2,9 @@
 
 #### next release (8.3.8)
 
-- [The next improvement]
+- Fix WMS nested group IDs - nested groups with the same name were not being created
 - Remove `jsx-control-statements` dependency
+- [The next improvement]
 
 #### 8.3.7 - 2023-10-26
 
