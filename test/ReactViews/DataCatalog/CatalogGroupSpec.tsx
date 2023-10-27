@@ -6,7 +6,7 @@ import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
 import { create } from "react-test-renderer";
 import { act } from "react-dom/test-utils";
 
-fdescribe("CatalogGroup", () => {
+describe("CatalogGroup", () => {
   let testRenderer: ReturnType<typeof create>;
 
   describe("Loading", () => {
