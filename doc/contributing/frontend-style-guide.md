@@ -167,5 +167,3 @@ const BoxSpan: any = require("../../../Styled/Box").BoxSpan;
 
 Components written in TypeScript will not need `PropTypes` defined on them, as
 type errors on props will be caught at compilation rather than a runtime check.
-
-All jsx-control-statements should be removed when migrating a .jsx file to .tsx.

@@ -64,7 +64,7 @@ class MyDataTab extends React.Component {
     ];
     return (
       <ul className={Styles.tabList}>
-        <For each="tab" of={tabs}>
+        {tabs.map((tab) => (
           <li className={Styles.tabListItem} key={tab.id}>
             <button
               type="button"
@@ -88,7 +88,7 @@ class MyDataTab extends React.Component {
               {tab.caption}
             </button>
           </li>
-        </For>
+        ))}
       </ul>
     );
   }
@@ -137,37 +137,39 @@ class MyDataTab extends React.Component {
             [Styles.oneCol]: !showTwoColumn
           })}
         >
-          <If condition={this.state.activeTab}>
-            <button
-              type="button"
-              onClick={() => this.resetTab()}
-              className={Styles.btnBackToMyData}
-              css={`
-                color: ${(p) => p.theme.colorPrimary};
-                &:hover,
-                &:focus {
-                  border: 1px solid ${(p) => p.theme.colorPrimary};
-                }
-                svg {
-                  fill: ${(p) => p.theme.colorPrimary};
-                }
-              `}
-            >
-              <Icon glyph={Icon.GLYPHS.left} />
-              {t("addData.back")}
-            </button>
-            <AddData
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-              activeTab={this.state.activeTab}
-              resetTab={() => this.resetTab()}
-              onFileAddFinished={this.props.onFileAddFinished}
-              onUrlAddFinished={this.props.onUrlAddFinished}
-              localDataTypes={this.props.localDataTypes}
-              remoteDataTypes={this.props.remoteDataTypes}
-            />
-          </If>
-          <If condition={showTwoColumn}>
+          {this.state.activeTab && (
+            <>
+              <button
+                type="button"
+                onClick={() => this.resetTab()}
+                className={Styles.btnBackToMyData}
+                css={`
+                  color: ${(p) => p.theme.colorPrimary};
+                  &:hover,
+                  &:focus {
+                    border: 1px solid ${(p) => p.theme.colorPrimary};
+                  }
+                  svg {
+                    fill: ${(p) => p.theme.colorPrimary};
+                  }
+                `}
+              >
+                <Icon glyph={Icon.GLYPHS.left} />
+                {t("addData.back")}
+              </button>
+              <AddData
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+                activeTab={this.state.activeTab}
+                resetTab={() => this.resetTab()}
+                onFileAddFinished={this.props.onFileAddFinished}
+                onUrlAddFinished={this.props.onUrlAddFinished}
+                localDataTypes={this.props.localDataTypes}
+                remoteDataTypes={this.props.remoteDataTypes}
+              />
+            </>
+          )}
+          {showTwoColumn && (
             <Box flexShrinkZero column>
               <p className={Styles.explanation}>
                 <Trans i18nKey="addData.note">
@@ -188,10 +190,10 @@ class MyDataTab extends React.Component {
                 />
               </ul>
             </Box>
-          </If>
-          <If condition={!this.state.activeTab}>{this.renderPromptBox()}</If>
+          )}
+          {!this.state.activeTab && this.renderPromptBox()}
         </div>
-        <If condition={showTwoColumn}>
+        {showTwoColumn && (
           <Box styledWidth="60%">
             <DataPreview
               terria={this.props.terria}
@@ -199,7 +201,7 @@ class MyDataTab extends React.Component {
               previewed={this.props.viewState.userDataPreviewedItem}
             />
           </Box>
-        </If>
+        )}
       </Box>
     );
   }
