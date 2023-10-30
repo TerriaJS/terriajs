@@ -4,9 +4,7 @@ import { withTranslation } from "react-i18next";
 import DataUri from "../../Core/DataUri";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import JsonValue, { JsonObject } from "../../Core/Json";
-import ViewState from "../../ReactViewModels/ViewState";
 import Icon from "../../Styled/Icon";
-import { withViewState } from "../Context";
 import Styles from "./feature-info-download.scss";
 
 const Dropdown = require("../Generic/Dropdown");
@@ -14,7 +12,6 @@ const Dropdown = require("../Generic/Dropdown");
 class FeatureInfoDownload extends Component<{
   data: JsonObject;
   name: string;
-  viewState: ViewState;
   t: TFunction;
 }> {
   getLinks() {
@@ -103,4 +100,4 @@ function makeSafeForCsv(value: JsonValue) {
   return '"' + value.replace(/"/g, '""') + '"';
 }
 
-export default withTranslation()(withViewState(FeatureInfoDownload));
+export default withTranslation()(FeatureInfoDownload);
