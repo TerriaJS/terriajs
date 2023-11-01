@@ -7,11 +7,7 @@ import Scene from "terriajs-cesium/Source/Scene/Scene";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import GeocoderService from "terriajs-cesium/Source/Core/GeocoderService";
 import loadJson from "../../Core/loadJson";
-import bbox from "@turf/bbox";
 interface CesiumIonSearchProviderOptions {
   terria: Terria;
   url?: string;
