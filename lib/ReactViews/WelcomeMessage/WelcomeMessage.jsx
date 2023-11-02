@@ -241,72 +241,78 @@ export const WelcomeMessagePure = (props) => {
                 </Text>
               </Box>
               <Spacing bottom={6} />
-              <If condition={!viewState.useSmallScreenInterface}>
-                <Text bold textLight extraLarge>
-                  {
-                    viewState.terria.configParameters.welcomeMessageVideo
-                      .videoTitle
-                  }
-                </Text>
-                <Spacing bottom={2} />
-              </If>
-              <Box fullWidth styledMinHeight={"160px"}>
-                <If condition={!viewState.useSmallScreenInterface}>
-                  <Box
-                    col6
-                    centered
-                    backgroundImage={
+              {!viewState.useSmallScreenInterface && (
+                <>
+                  <Text bold textLight extraLarge>
+                    {
                       viewState.terria.configParameters.welcomeMessageVideo
-                        .placeholderImage
+                        .videoTitle
                     }
-                    backgroundBlackOverlay={"50%"}
-                  >
-                    <RawButton
-                      fullWidth
-                      fullHeight
-                      onClick={() =>
-                        viewState.setVideoGuideVisible(WELCOME_MESSAGE_VIDEO)
+                  </Text>
+                  <Spacing bottom={2} />
+                </>
+              )}
+              <Box fullWidth styledMinHeight={"160px"}>
+                {!viewState.useSmallScreenInterface && (
+                  <>
+                    <Box
+                      col6
+                      centered
+                      backgroundImage={
+                        viewState.terria.configParameters.welcomeMessageVideo
+                          .placeholderImage
                       }
+                      backgroundBlackOverlay={"50%"}
                     >
-                      <StyledIcon
-                        styledWidth={"48px"}
-                        light
-                        glyph={Icon.GLYPHS.playInverted}
-                        css={`
-                          margin: auto;
-                        `}
-                      />
-                    </RawButton>
-                  </Box>
-                  <Spacing right={5} />
-                </If>
+                      <RawButton
+                        fullWidth
+                        fullHeight
+                        onClick={() =>
+                          viewState.setVideoGuideVisible(WELCOME_MESSAGE_VIDEO)
+                        }
+                      >
+                        <StyledIcon
+                          styledWidth={"48px"}
+                          light
+                          glyph={Icon.GLYPHS.playInverted}
+                          css={`
+                            margin: auto;
+                          `}
+                        />
+                      </RawButton>
+                    </Box>
+                    <Spacing right={5} />
+                  </>
+                )}
                 <Box styledMargin={"0 auto"} displayInlineBlock>
-                  <If condition={!viewState.useSmallScreenInterface}>
-                    <WelcomeMessageButton
-                      onClick={() => {
-                        handleClose(false);
-                        // not sure if we should wait for the exit animation,
-                        // if we don't, we have a flicker due to the difference
-                        // in overlay darkness - but if we wait, it goes
-                        // dark -> light -> dark anyway..
-                        setShouldTakeTour(true);
-                        viewState.setTourIndex(0);
-                        viewState.setShowTour(true);
-                        viewState.setTopElement(TourPortalDisplayName);
-                      }}
-                      buttonText={t("welcomeMessage.tourBtnText")}
-                      buttonIcon={Icon.GLYPHS.tour}
-                    />
-                    <Spacing bottom={4} />
-                    <WelcomeMessageButton
-                      buttonText={t("welcomeMessage.helpBtnText")}
-                      buttonIcon={Icon.GLYPHS.newHelp}
-                      onClick={() => {
-                        handleClose(false);
-                        setShouldOpenHelp(true);
-                      }}
-                    />
-                  </If>
+                  {!viewState.useSmallScreenInterface && (
+                    <>
+                      <WelcomeMessageButton
+                        onClick={() => {
+                          handleClose(false);
+                          // not sure if we should wait for the exit animation,
+                          // if we don't, we have a flicker due to the difference
+                          // in overlay darkness - but if we wait, it goes
+                          // dark -> light -> dark anyway..
+                          setShouldTakeTour(true);
+                          viewState.setTourIndex(0);
+                          viewState.setShowTour(true);
+                          viewState.setTopElement(TourPortalDisplayName);
+                        }}
+                        buttonText={t("welcomeMessage.tourBtnText")}
+                        buttonIcon={Icon.GLYPHS.tour}
+                      />
+                      <Spacing bottom={4} />
+                      <WelcomeMessageButton
+                        buttonText={t("welcomeMessage.helpBtnText")}
+                        buttonIcon={Icon.GLYPHS.newHelp}
+                        onClick={() => {
+                          handleClose(false);
+                          setShouldOpenHelp(true);
+                        }}
+                      />
+                    </>
+                  )}
                   <Spacing bottom={4} />
                   <WelcomeMessageButton
                     buttonText={t("welcomeMessage.exploreDataBtnText")}
@@ -331,9 +337,7 @@ export const WelcomeMessagePure = (props) => {
                   )}
                 </Box>
               </Box>
-              <If condition={!viewState.useSmallScreenInterface}>
-                <Spacing bottom={13} />
-              </If>
+              {!viewState.useSmallScreenInterface && <Spacing bottom={13} />}
               <Box fullWidth centered>
                 <RawButton onClick={handleClose.bind(null, true)}>
                   <TextSpan textLight isLink>

@@ -265,17 +265,20 @@ ParameterEditor.parameterTypeConverters = [
         )[0];
         return (
           <div>
-            <If condition={regionParam === undefined}>
-              {parameterEditor.renderLabel()}
-              <RegionTypeParameterEditor
-                previewed={parameterEditor.props.previewed}
-                parameter={parameterEditor.props.parameter}
-                parameterViewModel={parameterEditor.props.parameterViewModel}
-              />
-            </If>
-            <If condition={!parameterEditor.props.parameter.showInUi}>
+            {regionParam === undefined && (
+              <>
+                {parameterEditor.renderLabel()}
+                <RegionTypeParameterEditor
+                  previewed={parameterEditor.props.previewed}
+                  parameter={parameterEditor.props.parameter}
+                  parameterViewModel={parameterEditor.props.parameterViewModel}
+                />
+              </>
+            )}
+
+            {!parameterEditor.props.parameter.showInUi && (
               <div className="Placeholder for regionType" />
-            </If>
+            )}
           </div>
         );
       }
