@@ -5,7 +5,7 @@ import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import LatLonHeight from "../../../Core/LatLonHeight";
-import PickedFeatures from "../../../Map/PickedFeatures";
+import PickedFeatures from "../../../Map/PickedFeatures/PickedFeatures";
 import { addMarker, removeMarker } from "../../../Models/LocationMarkerUtils";
 import MapInteractionMode, { UIMode } from "../../../Models/MapInteractionMode";
 import Terria from "../../../Models/Terria";

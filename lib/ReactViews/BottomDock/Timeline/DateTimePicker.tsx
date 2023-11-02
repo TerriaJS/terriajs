@@ -180,29 +180,29 @@ class DateTimePicker extends React.Component<PropsType> {
     let defaultDay: number | undefined;
     let defaultGranularity: Granularity = "century";
 
-    if (datesObject.indice.length === 1) {
+    if (datesObject.index.length === 1) {
       // only one century
-      const soleCentury = datesObject.indice[0];
+      const soleCentury = datesObject.index[0];
       const dataFromThisCentury = datesObject[soleCentury];
       defaultCentury = soleCentury;
 
-      if (dataFromThisCentury.indice.length === 1) {
+      if (dataFromThisCentury.index.length === 1) {
         // only one year, check if this year has only one month
-        const soleYear = dataFromThisCentury.indice[0];
+        const soleYear = dataFromThisCentury.index[0];
         const dataFromThisYear = dataFromThisCentury[soleYear];
         defaultYear = soleYear;
         defaultGranularity = "year";
 
-        if (dataFromThisYear.indice.length === 1) {
+        if (dataFromThisYear.index.length === 1) {
           // only one month data from this one year, need to check day then
-          const soleMonth = dataFromThisYear.indice[0];
+          const soleMonth = dataFromThisYear.index[0];
           const dataFromThisMonth = dataFromThisYear[soleMonth];
           defaultMonth = soleMonth;
           defaultGranularity = "month";
 
-          if (dataFromThisMonth.indice.length === 1) {
+          if (dataFromThisMonth.index.length === 1) {
             // only one day has data
-            defaultDay = dataFromThisMonth.indice[0];
+            defaultDay = dataFromThisMonth.index[0];
           }
         }
       }
@@ -266,7 +266,7 @@ class DateTimePicker extends React.Component<PropsType> {
   }
 
   renderCenturyGrid(datesObject: ObjectifiedDates) {
-    const centuries = datesObject.indice;
+    const centuries = datesObject.index;
     if (datesObject.dates && datesObject.dates.length >= 12) {
       return (
         <Grid>
@@ -294,7 +294,7 @@ class DateTimePicker extends React.Component<PropsType> {
 
   renderYearGrid(datesObject: ObjectifiedYears) {
     if (datesObject.dates && datesObject.dates.length > 12) {
-      const years = datesObject.indice;
+      const years = datesObject.index;
       const monthOfYear = (Array.apply as any)(null, { length: 12 }).map(
         Number.call,
         Number
@@ -415,7 +415,7 @@ class DateTimePicker extends React.Component<PropsType> {
       // Create one date object per day, using an arbitrary time. This does it via Object.keys and moment().
       const days =
         datesObject[this.currentDateIndice.year][this.currentDateIndice.month]
-          .indice;
+          .index;
       const daysToDisplay = days.map(d =>
         moment()
           .date(d)
@@ -540,7 +540,7 @@ class DateTimePicker extends React.Component<PropsType> {
           <GridBody>
             {datesObject[this.currentDateIndice.year][
               this.currentDateIndice.month
-            ][this.currentDateIndice.day].indice.map(item => (
+            ][this.currentDateIndice.day].index.map(item => (
               <DateButton
                 key={item}
                 onClick={() =>

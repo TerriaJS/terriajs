@@ -1,7 +1,7 @@
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
-import { featureBelongsToCatalogItem } from "../../lib/Map/PickedFeatures";
+import { featureBelongsToCatalogItem } from "../../lib/Map/PickedFeatures/PickedFeatures";
 import Feature from "../../lib/Models/Feature";
 import Terria from "../../lib/Models/Terria";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";

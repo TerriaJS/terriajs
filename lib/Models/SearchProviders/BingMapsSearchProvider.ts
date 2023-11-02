@@ -7,7 +7,7 @@ import {
   SearchAction
 } from "../../Core/AnalyticEvents/analyticEvents";
 import loadJsonp from "../../Core/loadJsonp";
-import { useTranslationIfExists } from "../../Language/languageHelpers";
+import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import LocationSearchProviderMixin, {
   getMapCenter
 } from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
@@ -17,6 +17,7 @@ import Terria from "../Terria";
 import CommonStrata from "./../Definition/CommonStrata";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
+import i18next from "i18next";
 
 export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
   CreateModel(BingMapsSearchProviderTraits)
@@ -44,7 +45,7 @@ export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
   showWarning() {
     if (!this.key || this.key === "") {
       console.warn(
-        `The ${useTranslationIfExists(this.name)}(${
+        `The ${applyTranslationIfExists(this.name, i18next)}(${
           this.type
         }) geocoder will always return no results because a Bing Maps key has not been provided. Please get a Bing Maps key from bingmapsportal.com and add it to parameters.bingMapsKey in config.json.`
       );

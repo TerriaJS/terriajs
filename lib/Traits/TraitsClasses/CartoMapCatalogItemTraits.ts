@@ -4,16 +4,18 @@ import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
-import RasterLayerTraits from "./RasterLayerTraits";
+import ImageryProviderTraits from "./ImageryProviderTraits";
 import UrlTraits from "./UrlTraits";
 
 export default class CartoMapCatalogItemTraits extends mixTraits(
-  RasterLayerTraits,
+  ImageryProviderTraits,
   LayerOrderingTraits,
   UrlTraits,
   MappableTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  LegendOwnerTraits
 ) {
   @anyTrait({
     name: "Config",
@@ -27,18 +29,4 @@ export default class CartoMapCatalogItemTraits extends mixTraits(
     description: "The authorization token to pass to the Carto Maps API"
   })
   auth_token?: string;
-
-  @primitiveTrait({
-    name: "Minimum Level",
-    description: "The minimum tile level to retrieve from the map data",
-    type: "number"
-  })
-  minimumLevel = 0;
-
-  @primitiveTrait({
-    name: "Maximum Level",
-    description: "The maximum tile level to retrieve from the map data",
-    type: "number"
-  })
-  maximumLevel = 25;
 }

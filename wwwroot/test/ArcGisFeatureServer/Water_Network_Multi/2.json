@@ -1,0 +1,597 @@
+{
+    "currentVersion": 10.71,
+    "id": 2,
+    "name": "Water Abandoned Points",
+    "type": "Feature Layer",
+    "parentLayer": {
+     "id": 1,
+     "name": "Water Abandoned Assets"
+    },
+    "defaultVisibility": true,
+    "minScale": 0,
+    "maxScale": 0,
+    "geometryType": "esriGeometryPoint",
+    "description": "Water Data",
+    "copyrightText": "Water Copyright",
+    "editFieldsInfo": null,
+    "ownershipBasedAccessControlForFeatures": null,
+    "syncCanReturnChanges": false,
+    "relationships": [],
+    "isDataVersioned": true,
+    "isDataArchived": false,
+    "isCoGoEnabled": false,
+    "supportsRollbackOnFailureParameter": false,
+    "archivingInfo": {
+     "supportsQueryWithHistoricMoment": false,
+     "startArchivingMoment": -1
+    },
+    "supportsStatistics": true,
+    "supportsAdvancedQueries": true,
+    "supportsValidateSQL": true,
+    "supportsCoordinatesQuantization": true,
+    "supportsCalculate": false,
+    "advancedQueryCapabilities": {
+     "supportsPagination": true,
+     "supportsTrueCurve": true,
+     "supportsQueryWithDistance": true,
+     "supportsReturningQueryExtent": true,
+     "supportsStatistics": true,
+     "supportsHavingClause": true,
+     "supportsOrderBy": true,
+     "supportsDistinct": true,
+     "supportsCountDistinct": true,
+     "supportsQueryWithResultType": true,
+     "supportsReturningGeometryCentroid": false,
+     "supportsSqlExpression": true
+    },
+    "extent" : {
+      "xmin" : -20037507, 
+      "ymin" : -7538976, 
+      "xmax" : 20037507, 
+      "ymax" : 16423937, 
+      "spatialReference" : {
+        "wkid" : 102100, 
+        "latestWkid" : 3857
+      }
+    }, 
+    "sourceSpatialReference": {"wkt": "PROJCS[\"NAD_1983_HARN_StatePlane_Illinois_East_FIPS_1201\",GEOGCS[\"GCS_North_American_1983_HARN\",DATUM[\"D_North_American_1983_HARN\",SPHEROID[\"GRS_1980\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"False_Easting\",984250.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",-88.33333333333333],PARAMETER[\"Scale_Factor\",0.999975],PARAMETER[\"Latitude_Of_Origin\",36.66666666666666],UNIT[\"Foot_US\",0.3048006096012192]]"},
+    "effectiveMinScale": 2500,
+    "drawingInfo": {
+     "renderer": {
+      "type": "simple",
+      "symbol": {
+       "type": "esriPMS",
+       "url": "e0aaf4b5a88cac5109e9021f9f6291e3",
+       "imageData": "iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAdVJREFUOI2tlM9LVFEUxz9nnOYladRoEEUaLjImahFqMuOqCFwUbYRokUht1H9AF0EjQdDCjZtMEuwfqFZBizbVPCqhjeCPCrFFMVBaDI7DHR/vtNCHc6c3DwW/cOGee7mfc77ncm+cfVI8cvejNiQ9zhThsImRp5slRHT3IFdTwBge19fAAcAHXH7i6hR1jHNJ1qNBrt5GeQokQlKcQMk6HrfMe71Gj3wLBTmu9hplBohFGMZAO8JrPmgX3bJqgz7rQVNiKoCk4zByHNoaoOzDpzUY+m3x2vD1ATBsg0r0AacAbiRg+hw01e+cutgMHUeh82sFSuUuro6SlsIOSLQXFQDun7YhgTqOweM/VmUJlMvAy4oeSUswO3ukdn+6koBtscW2ppSD6YGIVif+3zM2CF0CuQLwowitjeGg5XU7doQvphLkiDw3unUDM9/hXgrqqrKvluBR3lr6ZYq8syoyaXlDTnNAJlsA5mGgFU4egk0fFv/C2Aq4ngV6yFXxqqwB0A/MAslsAbJz4fa29YoNJoLABmVkmZz2OPDCQHtthj6jXgbJiB8O2oItmFk9T5k7wE3gAtAI5EHfOsikycRy1cfCX3+nbAJPtoclU6PG6P9oD/oHCkKM3BFkcewAAAAASUVORK5CYII=",
+       "contentType": "image/png",
+       "width": 13,
+       "height": 13,
+       "angle": 0,
+       "xoffset": 0,
+       "yoffset": 0
+      },
+      "label": "",
+      "description": ""
+     },
+     "transparency": 0,
+     "labelingInfo": null
+    },
+    "hasM": true,
+    "hasZ": false,
+    "allowUpdateWithoutMValues": false,
+    "allowGeometryUpdates": true,
+    "allowTrueCurvesUpdates": false,
+    "onlyAllowTrueCurveUpdatesByTrueCurveClients": true,
+    "hasAttachments": false,
+    "supportsApplyEditsWithGlobalIds": false,
+    "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+    "objectIdField": "objectid",
+    "globalIdField": "",
+    "displayField": "pointtype",
+    "typeIdField": "",
+    "subtypeField": "",
+    "fields": [
+     {
+      "name": "objectid",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "domain": null,
+      "editable": false,
+      "nullable": false,
+      "defaultValue": null,
+      "modelName": "System-maintained ObjectID"
+     },
+     {
+      "name": "pointtype",
+      "type": "esriFieldTypeString",
+      "alias": "Point Type",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 60,
+      "defaultValue": null,
+      "modelName": "POINTTYPE"
+     },
+     {
+      "name": "installdate",
+      "type": "esriFieldTypeDate",
+      "alias": "Install Date",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 8,
+      "defaultValue": null,
+      "modelName": "INSTALLDATE"
+     },
+     {
+      "name": "abandate",
+      "type": "esriFieldTypeDate",
+      "alias": "Abandoned Date",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 8,
+      "defaultValue": null,
+      "modelName": "ABANDATE"
+     },
+     {
+      "name": "material",
+      "type": "esriFieldTypeString",
+      "alias": "Material",
+      "domain": {
+       "type": "codedValue",
+       "name": "piPipeMaterial",
+       "description": "The list of pipe materials types based on the NASSCO standards",
+       "codedValues": [
+        {
+         "name": "ABS Plastic",
+         "code": "ABS"
+        },
+        {
+         "name": "Asbestos Cement",
+         "code": "AC"
+        },
+        {
+         "name": "Asphalt",
+         "code": "ASP"
+        },
+        {
+         "name": "Brick Masonary",
+         "code": "BMP"
+        },
+        {
+         "name": "Brick",
+         "code": "BR"
+        },
+        {
+         "name": "Cast Iron",
+         "code": "CAS"
+        },
+        {
+         "name": "Clay Tile",
+         "code": "CT"
+        },
+        {
+         "name": "Concrete (Non-Reinforced)",
+         "code": "CP"
+        },
+        {
+         "name": "Concrete Segments (Bolted)",
+         "code": "CSB"
+        },
+        {
+         "name": "Concrete Segments (Unbolted)",
+         "code": "CSU"
+        },
+        {
+         "name": "Corrugated Metal",
+         "code": "CMP"
+        },
+        {
+         "name": "Copper",
+         "code": "COP"
+        },
+        {
+         "name": "Cured In Place",
+         "code": "CIPP"
+        },
+        {
+         "name": "Ductile Iron",
+         "code": "DIP"
+        },
+        {
+         "name": "Fiberglass Reinforced",
+         "code": "FRP"
+        },
+        {
+         "name": "Earth & Geotextile",
+         "code": "EARGEO"
+        },
+        {
+         "name": "Earthen",
+         "code": "EAR"
+        },
+        {
+         "name": "Geotextile",
+         "code": "GEO"
+        },
+        {
+         "name": "Galvanized Pipe",
+         "code": "GP"
+        },
+        {
+         "name": "Glass Reinforced Cement",
+         "code": "GRC"
+        },
+        {
+         "name": "Pitch Fiber (Orangeburg)",
+         "code": "OB"
+        },
+        {
+         "name": "Plastic/Steel Composite",
+         "code": "PSC"
+        },
+        {
+         "name": "High Density Polyethelene",
+         "code": "HDPE"
+        },
+        {
+         "name": "Polyethylene",
+         "code": "PE"
+        },
+        {
+         "name": "Polypropylene",
+         "code": "PP"
+        },
+        {
+         "name": "Polyvinyl Chloride",
+         "code": "PVC"
+        },
+        {
+         "name": "Pre-Stressed Concrete Cylinder",
+         "code": "PCCP"
+        },
+        {
+         "name": "Reinforced Concrete",
+         "code": "RCP"
+        },
+        {
+         "name": "Reinforced Plastic (Truss)",
+         "code": "RPM"
+        },
+        {
+         "name": "Segmented Block",
+         "code": "SB"
+        },
+        {
+         "name": "Steel",
+         "code": "SP"
+        },
+        {
+         "name": "Transite",
+         "code": "TTE"
+        },
+        {
+         "name": "Vitrified Clay",
+         "code": "VCP"
+        },
+        {
+         "name": "Wood",
+         "code": "WD"
+        },
+        {
+         "name": "Other",
+         "code": "OTH"
+        },
+        {
+         "name": "Unknown",
+         "code": "UNK"
+        }
+       ],
+       "mergePolicy": "esriMPTDefaultValue",
+       "splitPolicy": "esriSPTDefaultValue"
+      },
+      "editable": true,
+      "nullable": true,
+      "length": 20,
+      "defaultValue": null,
+      "modelName": "MATERIAL"
+     },
+     {
+      "name": "diameter",
+      "type": "esriFieldTypeDouble",
+      "alias": "Diameter",
+      "domain": {
+       "type": "codedValue",
+       "name": "piPipeDiameter",
+       "description": "A list of pipe diameters",
+       "codedValues": [
+        {
+         "name": "3/4\"",
+         "code": 0.75
+        },
+        {
+         "name": "1\"",
+         "code": 1
+        },
+        {
+         "name": "1 1/4\"",
+         "code": 1.25
+        },
+        {
+         "name": "1 1/2\"",
+         "code": 1.5
+        },
+        {
+         "name": "2\"",
+         "code": 2
+        },
+        {
+         "name": "2 1/2\"",
+         "code": 2.5
+        },
+        {
+         "name": "3\"",
+         "code": 3
+        },
+        {
+         "name": "4\"",
+         "code": 4
+        },
+        {
+         "name": "6\"",
+         "code": 6
+        },
+        {
+         "name": "8\"",
+         "code": 8
+        },
+        {
+         "name": "10\"",
+         "code": 10
+        },
+        {
+         "name": "12\"",
+         "code": 12
+        },
+        {
+         "name": "14\"",
+         "code": 14
+        },
+        {
+         "name": "15\"",
+         "code": 15
+        },
+        {
+         "name": "16\"",
+         "code": 16
+        },
+        {
+         "name": "18\"",
+         "code": 18
+        },
+        {
+         "name": "20\"",
+         "code": 20
+        },
+        {
+         "name": "24\"",
+         "code": 24
+        },
+        {
+         "name": "30\"",
+         "code": 30
+        },
+        {
+         "name": "36\"",
+         "code": 36
+        },
+        {
+         "name": "40\"",
+         "code": 40
+        },
+        {
+         "name": "42\"",
+         "code": 42
+        },
+        {
+         "name": "48\"",
+         "code": 48
+        },
+        {
+         "name": "54\"",
+         "code": 54
+        },
+        {
+         "name": "60\"",
+         "code": 60
+        },
+        {
+         "name": "66\"",
+         "code": 66
+        },
+        {
+         "name": "72\"",
+         "code": 72
+        },
+        {
+         "name": "75\"",
+         "code": 75
+        },
+        {
+         "name": "Unknown",
+         "code": 0
+        },
+        {
+         "name": "Other",
+         "code": -1
+        }
+       ],
+       "mergePolicy": "esriMPTDefaultValue",
+       "splitPolicy": "esriSPTDuplicate"
+      },
+      "editable": false,
+      "nullable": true,
+      "defaultValue": null,
+      "modelName": "DIAMETER"
+     },
+     {
+      "name": "facilityid",
+      "type": "esriFieldTypeString",
+      "alias": "Facility Identifier",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 20,
+      "defaultValue": null,
+      "modelName": "FACILITYID"
+     },
+     {
+      "name": "lastupdate",
+      "type": "esriFieldTypeDate",
+      "alias": "Last Update Date",
+      "domain": null,
+      "editable": false,
+      "nullable": true,
+      "length": 8,
+      "defaultValue": null,
+      "modelName": "LASTUPDATE"
+     },
+     {
+      "name": "lasteditor",
+      "type": "esriFieldTypeString",
+      "alias": "Last Editor",
+      "domain": null,
+      "editable": false,
+      "nullable": true,
+      "length": 50,
+      "defaultValue": null,
+      "modelName": "LASTEDITOR"
+     },
+     {
+      "name": "enabled",
+      "type": "esriFieldTypeSmallInteger",
+      "alias": "Enabled",
+      "domain": {
+       "type": "codedValue",
+       "name": "EnabledDomain",
+       "description": "Geometric Network Enabled domain",
+       "codedValues": [
+        {
+         "name": "False",
+         "code": 0
+        },
+        {
+         "name": "True",
+         "code": 1
+        }
+       ],
+       "mergePolicy": "esriMPTDefaultValue",
+       "splitPolicy": "esriSPTDefaultValue"
+      },
+      "editable": true,
+      "nullable": true,
+      "defaultValue": 1,
+      "modelName": "Enabled"
+     }
+    ],
+    "geometryField": {
+     "name": "shape",
+     "type": "esriFieldTypeGeometry",
+     "alias": "SHAPE",
+     "domain": null,
+     "editable": true,
+     "nullable": true,
+     "defaultValue": null,
+     "modelName": "System-maintained Geometry for a feature"
+    },
+    "dateFieldsTimeReference": {
+     "timeZone": "UTC",
+     "respectsDaylightSaving": false
+    },
+    "types": [],
+    "templates": [
+     {
+      "name": "Abandoned Water Test Station",
+      "description": "",
+      "prototype": {
+       "attributes": {
+        "enabled": null,
+        "pointtype": "wTestStation",
+        "installdate": null,
+        "abandate": null,
+        "material": null,
+        "facilityid": null
+       }
+      },
+      "drawingTool": "esriFeatureEditToolPoint"
+     },
+     {
+      "name": "Abandoned Water Sampling Station",
+      "description": "",
+      "prototype": {
+       "attributes": {
+        "enabled": null,
+        "pointtype": "wSamplingStation",
+        "installdate": null,
+        "abandate": null,
+        "material": null,
+        "facilityid": null
+       }
+      },
+      "drawingTool": "esriFeatureEditToolPoint"
+     },
+     {
+      "name": "Abandoned Water Service Connection",
+      "description": "",
+      "prototype": {
+       "attributes": {
+        "enabled": null,
+        "pointtype": "wServiceConnection",
+        "installdate": null,
+        "abandate": null,
+        "material": null,
+        "facilityid": null
+       }
+      },
+      "drawingTool": "esriFeatureEditToolPoint"
+     },
+     {
+      "name": "Abandoned Water Hydrant",
+      "description": "",
+      "prototype": {
+       "attributes": {
+        "enabled": null,
+        "pointtype": "wHydrant",
+        "installdate": null,
+        "abandate": null,
+        "material": null,
+        "facilityid": null
+       }
+      },
+      "drawingTool": "esriFeatureEditToolPoint"
+     },
+     {
+      "name": "Abandoned Water Pump",
+      "description": "",
+      "prototype": {
+       "attributes": {
+        "enabled": null,
+        "pointtype": "wPump",
+        "installdate": null,
+        "abandate": null,
+        "material": null,
+        "facilityid": null
+       }
+      },
+      "drawingTool": "esriFeatureEditToolPoint"
+     }
+    ],
+    "maxRecordCount": 1000,
+    "supportedQueryFormats": "JSON, geoJSON",
+    "capabilities": "Query,Create,Update,Delete,Uploads,Editing",
+    "useStandardizedQueries": true,
+    "standardMaxRecordCount": 32000,
+    "tileMaxRecordCount": 8000,
+    "maxRecordCountFactor": 1
+   }

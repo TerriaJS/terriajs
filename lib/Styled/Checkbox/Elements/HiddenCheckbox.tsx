@@ -15,7 +15,6 @@ export default React.forwardRef(
   ) => (
     <input
       type="checkbox"
-      {...props}
       ref={ref}
       aria-checked={isIndeterminate ? "mixed" : props.checked}
       css={{
@@ -28,6 +27,7 @@ export default React.forwardRef(
         padding: 0,
         border: 0
       }}
+      {...props}
     />
   )
 );

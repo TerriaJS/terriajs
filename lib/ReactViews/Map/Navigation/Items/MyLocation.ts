@@ -8,9 +8,11 @@ import isDefined from "../../../../Core/isDefined";
 import TerriaError from "../../../../Core/TerriaError";
 import GeoJsonCatalogItem from "../../../../Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import CommonStrata from "../../../../Models/Definition/CommonStrata";
+import createStratumInstance from "../../../../Models/Definition/createStratumInstance";
 import Terria from "../../../../Models/Terria";
 import ViewerMode from "../../../../Models/ViewerMode";
 import { GLYPHS } from "../../../../Styled/Icon";
+import StyleTraits from "../../../../Traits/TraitsClasses/StyleTraits";
 import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
 
 interface PropTypes {
@@ -124,18 +126,16 @@ class MyLocation extends MapNavigationItemController {
           latitude: latitude
         }
       });
-      this._marker.setTrait(CommonStrata.user, "style", {
-        "marker-size": "25",
-        "marker-color": "#08ABD5",
-        "marker-symbol": undefined,
-        "marker-opacity": undefined,
-        "marker-url": undefined,
-        stroke: "#ffffff",
-        "stroke-opacity": undefined,
-        "stroke-width": 3,
-        fill: undefined,
-        "fill-opacity": undefined
-      });
+      this._marker.setTrait(
+        CommonStrata.user,
+        "style",
+        createStratumInstance(StyleTraits, {
+          "marker-size": "25",
+          "marker-color": "#08ABD5",
+          stroke: "#ffffff",
+          "stroke-width": 3
+        })
+      );
 
       this.terria.workbench.add(this._marker);
     });

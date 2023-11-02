@@ -63,6 +63,8 @@ class VideoGuide extends React.Component {
     videoName: PropTypes.string.isRequired,
     videoLink: PropTypes.string,
     background: PropTypes.string,
+    // A number between 0 and 1.0
+    backgroundOpacity: PropTypes.number,
     theme: PropTypes.object,
     t: PropTypes.func
   };
@@ -72,6 +74,9 @@ class VideoGuide extends React.Component {
   }
 
   render() {
+    const backgroundOpacity = this.props.backgroundOpacity;
+    const backgroundBlackOverlay =
+      backgroundOpacity === undefined ? undefined : 1.0 - backgroundOpacity;
     return (
       <FadeIn
         isVisible={
@@ -84,6 +89,7 @@ class VideoGuide extends React.Component {
             col11
             styledHeight={"87%"}
             backgroundImage={this.props.background}
+            backgroundBlackOverlay={backgroundBlackOverlay}
             css={`
               svg {
                 fill: #fff;

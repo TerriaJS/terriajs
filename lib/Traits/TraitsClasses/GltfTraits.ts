@@ -1,11 +1,17 @@
-import mixTraits from "../mixTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import CatalogMemberTraits from "./CatalogMemberTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
+import MappableTraits from "./MappableTraits";
 import ShadowTraits from "./ShadowTraits";
 import TransformationTraits from "./TransformationTraits";
 
 export default class GltfTraits extends mixTraits(
+  MappableTraits,
   TransformationTraits,
-  ShadowTraits
+  ShadowTraits,
+  CatalogMemberTraits,
+  LegendOwnerTraits
 ) {
   @primitiveTrait({
     type: "string",

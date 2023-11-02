@@ -1,13 +1,13 @@
-import CatalogMemberTraits from "./CatalogMemberTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
-import MappableTraits from "./MappableTraits";
-import ShadowTraits from "./ShadowTraits";
 import mixTraits from "../mixTraits";
-import UrlTraits from "./UrlTraits";
-import TransformationTraits from "./TransformationTraits";
-import PlaceEditorTraits from "./PlaceEditorTraits";
+import CatalogMemberTraits from "./CatalogMemberTraits";
 import Cesium3DTilesTraits from "./Cesium3dTilesTraits";
+import FeatureInfoUrlTemplateTraits from "./FeatureInfoTraits";
+import MappableTraits from "./MappableTraits";
+import PlaceEditorTraits from "./PlaceEditorTraits";
 import SearchableItemTraits from "./SearchableItemTraits";
+import ShadowTraits from "./ShadowTraits";
+import TransformationTraits from "./TransformationTraits";
+import UrlTraits from "./UrlTraits";
 
 /**
  * This is a description of the 3D Tiles Catalog Item
@@ -22,7 +22,7 @@ export default class Cesium3DTilesCatalogItemTraits extends mixTraits(
   SearchableItemTraits,
   PlaceEditorTraits,
   TransformationTraits,
-  FeatureInfoTraits,
+  FeatureInfoUrlTemplateTraits,
   MappableTraits,
   UrlTraits,
   CatalogMemberTraits,

@@ -163,5 +163,35 @@ describe("createCombinedModel", function() {
       const combined = createCombinedModel(top, bottom);
       expect(combined.nestedWithoutDefault.anotherWithDefault).toBe("default");
     });
+
+    it("handles addObject if idProperty = index", function() {
+      runInAction(() => {
+        top
+          .addObject("definition", "nestedArrayWithoutIdProperty")
+          ?.setTrait("definition", "someValue", "some value");
+        top
+          .addObject("definition", "nestedArrayWithoutIdProperty")
+          ?.setTrait("definition", "someValue", null);
+        top
+          .addObject("definition", "nestedArrayWithoutIdProperty")
+          ?.setTrait("definition", "someValue", "the top value");
+        bottom
+          .addObject("definition", "nestedArrayWithoutIdProperty")
+          ?.setTrait("definition", "someValue", null);
+        bottom
+          .addObject("definition", "nestedArrayWithoutIdProperty")
+          ?.setTrait("definition", "someValue", "another value");
+      });
+
+      const combined = createCombinedModel(top, bottom);
+      expect(combined.nestedArrayWithoutIdProperty.length).toBe(2);
+
+      expect(combined.nestedArrayWithoutIdProperty[0].someValue).toBe(
+        "some value"
+      );
+      expect(combined.nestedArrayWithoutIdProperty[1].someValue).toBe(
+        "the top value"
+      );
+    });
   });
 });

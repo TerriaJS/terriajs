@@ -1,21 +1,21 @@
-import CatalogMemberTraits from "./CatalogMemberTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
-import LayerOrderingTraits from "./LayerOrderingTraits";
-import MappableTraits from "./MappableTraits";
-import mixTraits from "../mixTraits";
-import primitiveTrait from "../Decorators/primitiveTrait";
-import RasterLayerTraits from "./RasterLayerTraits";
-import UrlTraits from "./UrlTraits";
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import CatalogMemberTraits from "./CatalogMemberTraits";
+import ImageryProviderTraits from "./ImageryProviderTraits";
+import LayerOrderingTraits from "./LayerOrderingTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
+import MappableTraits from "./MappableTraits";
+import UrlTraits from "./UrlTraits";
 
 export default class MapboxVectorTileCatalogItemTraits extends mixTraits(
   LayerOrderingTraits,
-  FeatureInfoTraits,
   UrlTraits,
   MappableTraits,
   CatalogMemberTraits,
-  RasterLayerTraits
+  LegendOwnerTraits,
+  ImageryProviderTraits
 ) {
   @primitiveTrait({
     type: "string",

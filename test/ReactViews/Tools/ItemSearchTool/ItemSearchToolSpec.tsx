@@ -22,7 +22,7 @@ import ItemSearchTool, {
 import Loading from "../../../../lib/ReactViews/Tools/ItemSearchTool/Loading";
 import SearchForm from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchForm";
 import SearchResults from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchResults";
-import { withThemeContext } from "../../withThemeContext";
+import { withThemeContext } from "../../withContext";
 import MockSearchableItem from "./MockSearchableItem";
 import i18next from "i18next";
 
@@ -70,8 +70,11 @@ describe("ItemSearchTool", function() {
       parameters: []
     });
     const provider = item.createItemSearchProvider();
-    assertObject(provider);
-    itemSearchProvider = provider;
+    if (provider) {
+      itemSearchProvider = provider;
+    } else {
+      throw new Error("item.createItemSearchProvider returned undefined");
+    }
   });
 
   it("can be rendered", function() {

@@ -2,7 +2,7 @@ import { action, computed, observable } from "mobx";
 import isDefined from "../../Core/isDefined";
 import { CompositeBarItemController } from "./CompositeBarItemController";
 
-export type ScreenSize = "small" | "medium";
+export type ScreenSize = "small" | "medium" | "any";
 
 export enum CompositeOrientation {
   HORIZONTAL,
@@ -23,8 +23,8 @@ export interface ICompositeBarItem<
   id: string;
   name: string;
   title?: string;
-  screenSize: ScreenSize | undefined;
-  order: number;
+  screenSize?: ScreenSize;
+  order?: number;
   controller: ItemController;
 }
 
@@ -117,7 +117,7 @@ export abstract class CompositeBarModel<
         while (
           index < this.items.length &&
           typeof this.items[index].order === "number" &&
-          this.items[index].order < item.order
+          (this.items[index].order as number) < item.order
         ) {
           index++;
         }

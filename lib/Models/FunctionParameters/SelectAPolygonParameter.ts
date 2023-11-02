@@ -1,4 +1,4 @@
-import { Feature, Polygon } from "geojson";
+import { Feature, Polygon } from "@turf/helpers";
 import { computed, isObservableArray } from "mobx";
 import { JsonObject } from "../../Core/Json";
 import FunctionParameter from "./FunctionParameter";

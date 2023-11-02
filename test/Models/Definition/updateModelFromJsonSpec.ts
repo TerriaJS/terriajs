@@ -103,6 +103,24 @@ describe("updateModelFromJson", function() {
       ).toContain(newJson.members[0].id);
     });
 
+    it("ignores adding duplicate ids to members", function() {
+      const model = terria.getModelById(BaseModel, "testgroup")!;
+      const newJson: any = {
+        name: "TestGroup",
+        type: "group",
+        id: "testgroup",
+        members: ["1", "2", "hello", "hello", "goodbye", "hello"]
+      };
+
+      updateModelFromJson(model, CommonStrata.definition, newJson);
+      expect(
+        (model.getTrait(CommonStrata.definition, "members") as any[]).length
+      ).toBe(4);
+      expect(
+        model.getTrait(CommonStrata.definition, "members") as any[]
+      ).toEqual(["1", "2", "hello", "goodbye"]);
+    });
+
     it("updating any other trait should replace the existing traits with the new trait", function() {
       const model = terria.getModelById(BaseModel, "testgroup")!;
       const newJson: any = {

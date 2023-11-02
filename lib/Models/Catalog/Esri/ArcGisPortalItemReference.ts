@@ -307,12 +307,6 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
     });
   }
 
-  setItemProperties(model: BaseModel, itemProperties: any) {
-    runInAction(() => {
-      model.setTrait(CommonStrata.override, "itemProperties", itemProperties);
-    });
-  }
-
   async forceLoadReference(
     previousTarget: BaseModel | undefined
   ): Promise<BaseModel | undefined> {
@@ -363,14 +357,6 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
     if (defintionStratum) {
       model.strata.set(CommonStrata.definition, defintionStratum);
       model.setTrait(CommonStrata.definition, "url", undefined);
-    }
-
-    if (this.itemProperties !== undefined) {
-      const ipKeys: string[] = Object.keys(this.itemProperties);
-      ipKeys.forEach((p: string) => {
-        // @ts-ignore
-        model.setTrait(CommonStrata.override, p, this.itemProperties[p]);
-      });
     }
 
     return model;

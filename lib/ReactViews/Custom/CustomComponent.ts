@@ -44,6 +44,9 @@ export interface ProcessNodeContext {
    * The feature for which this HTML is being processed.
    */
   readonly feature?: Feature;
+
+  /** These are added in FeatureInfoSection.jsx getInfoAsReactComponent() */
+  readonly updateCounters?: unknown;
 }
 
 /**

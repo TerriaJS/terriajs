@@ -1,17 +1,19 @@
-import CatalogMemberTraits from "./CatalogMemberTraits";
-import mixTraits from "../mixTraits";
+import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import CatalogMemberTraits from "./CatalogMemberTraits";
+import EnumDimensionTraits from "./DimensionTraits";
+import FeatureInfoUrlTemplateTraits from "./FeatureInfoTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
-import DimensionTraits from "./DimensionTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
-import objectTrait from "../Decorators/objectTrait";
 
 export default class OpenDataSoftCatalogItemTraits extends mixTraits(
   TableTraits,
-  FeatureInfoTraits,
+  FeatureInfoUrlTemplateTraits,
   UrlTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  LegendOwnerTraits
 ) {
   @primitiveTrait({
     type: "string",
@@ -63,11 +65,11 @@ export default class OpenDataSoftCatalogItemTraits extends mixTraits(
   groupByFields?: string;
 
   @objectTrait({
-    type: DimensionTraits,
+    type: EnumDimensionTraits,
     name: "Available fields",
     description: "Names of fields which can be 'selected'"
   })
-  availableFields?: DimensionTraits;
+  availableFields?: EnumDimensionTraits;
 
   @primitiveTrait({
     type: "string",

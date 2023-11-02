@@ -69,7 +69,7 @@ export default class CompositeCatalogItem extends MappableMixin(
     const { show } = this;
     this.memberModels.forEach(model => {
       runInAction(() => {
-        model.setTrait(CommonStrata.user, "show", show);
+        model.setTrait(CommonStrata.underride, "show", show);
       });
     });
   }

@@ -60,6 +60,10 @@
     @include transform(translate3d(0, 0, 0));
     opacity: 1;
   }
+
+  button {
+    color: $text-light;
+  }
 }
 .inner-close-btn {
   composes: btn from "../../../Sass/common/_buttons.scss";

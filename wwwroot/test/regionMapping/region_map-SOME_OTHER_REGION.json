@@ -1,0 +1,7 @@
+{
+  "layer": "SOME_OTHER_REGION",
+  "property": "SOME_OTHER_REGION",
+  "values": [
+    "this is not a real region IDs file"
+  ]
+}

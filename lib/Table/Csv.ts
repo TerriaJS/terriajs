@@ -61,7 +61,7 @@ export default class Csv {
     filterOutComments: boolean = false,
     options: papaparse.ParseConfig = {}
   ): Promise<string[][]> {
-    return loadWithXhr({ url }).then(csv => {
+    return loadWithXhr({ url }).then((csv: any) => {
       if (typeof csv === "string") {
         return Csv.parseString(csv, columnMajor, filterOutComments, options);
       } else {

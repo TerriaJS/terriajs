@@ -23,7 +23,8 @@ spy(event => {
 beforeAll(async function() {
   await i18next.init({
     lng: "cimode",
-    debug: false
+    debug: false,
+    resources: {}
   });
 });
 

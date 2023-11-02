@@ -4,8 +4,6 @@ import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
 import { withTranslation } from "react-i18next";
 
-import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
-
 import DataUri from "../../Core/DataUri";
 import Dropdown from "../Generic/Dropdown";
 import Icon from "../../Styled/Icon";
@@ -17,17 +15,7 @@ const FeatureInfoDownload = createReactClass({
     data: PropTypes.object.isRequired,
     name: PropTypes.string.isRequired,
     viewState: PropTypes.object.isRequired,
-    canUseDataUri: PropTypes.bool,
     t: PropTypes.func.isRequired
-  },
-
-  getDefaultProps() {
-    return {
-      canUseDataUri: !(
-        FeatureDetection.isInternetExplorer() ||
-        /Edge/.exec(navigator.userAgent)
-      )
-    };
   },
 
   getLinks() {
@@ -55,25 +43,21 @@ const FeatureInfoDownload = createReactClass({
       </span>
     );
 
-    if (DataUri.checkCompatibility()) {
-      return (
-        <Dropdown
-          options={links}
-          textProperty="label"
-          theme={{
-            dropdown: Styles.download,
-            list: Styles.dropdownList,
-            button: Styles.dropdownButton,
-            icon: icon
-          }}
-          buttonClassName={Styles.btn}
-        >
-          {t("featureInfo.download")}
-        </Dropdown>
-      );
-    } else {
-      return null;
-    }
+    return (
+      <Dropdown
+        options={links}
+        textProperty="label"
+        theme={{
+          dropdown: Styles.download,
+          list: Styles.dropdownList,
+          button: Styles.dropdownButton,
+          icon: icon
+        }}
+        buttonClassName={Styles.btn}
+      >
+        {t("featureInfo.download")}
+      </Dropdown>
+    );
   }
 });
 

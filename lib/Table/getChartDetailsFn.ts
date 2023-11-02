@@ -2,7 +2,8 @@ import TableStyle from "./TableStyle";
 
 export default function getChartDetailsFn(style: TableStyle, rowIds: number[]) {
   return () => {
-    if (!style.timeColumn || !style.colorColumn || rowIds.length < 2) return {};
+    if (!style.timeColumn || !style.colorColumn || rowIds.length < 2)
+      return undefined;
     const chartColumns = [style.timeColumn, style.colorColumn];
     const csvData = [
       chartColumns.map(col => col!.title).join(","),

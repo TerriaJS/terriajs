@@ -1,0 +1,133 @@
+<wcs:CoverageDescriptions xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:ogc="http://www.opengis.net/ogc"
+  xmlns:ows="http://www.opengis.net/ows/2.0"
+  xmlns:gml="http://www.opengis.net/gml/3.2"
+  xmlns:gmlcov="http://www.opengis.net/gmlcov/1.0"
+  xmlns:wcs="http://www.opengis.net/wcs/2.0"
+  xmlns:crs="http://www.opengis.net/wcs/crs/1.0"
+  xmlns:rsub="http://www.opengis.net/wcs/range-subsetting/1.0"
+  xmlns:wcseo="http://www.opengis.net/wcs/wcseo/1.0"
+  xmlns:om="http://www.opengis.net/om/2.0"
+  xmlns:eop="http://www.opengis.net/eop/2.0"
+  xmlns:swe="http://www.opengis.net/swe/2.0"
+  xmlns:int="http://www.opengis.net/wcs/interpolation/1.0"
+  xmlns:scal="http://www.opengis.net/wcs/scaling/1.0"
+  xmlns:geotiff="http://www.opengis.net/gmlcov/geotiff/1.0">
+  <wcs:CoverageDescription gml:id="ls8_nbart_geomedian_annual">
+    <gml:description>Surface Reflectance Geometric Median 25 metre, 100km tile, Australian Albers Equal Area projection (EPSG:3577)</gml:description>
+    <gml:name>DEA Surface Reflectance Calendar Year (Landsat 8 OLI-TIRS)</gml:name>
+    <gml:boundedBy>
+      <gml:EnvelopeWithTimePeriod srsName="EPSG:3577" srsDimension="2" axisLabels="x y" uomLabels="deg deg" frame="ISO-8601">
+        <gml:lowerCorner>-2407997.698275973 -5195577.268631221</gml:lowerCorner>
+        <gml:upperCorner>2834723.884831468 -936107.8735469982</gml:upperCorner>
+        <gml:beginPosition>2013-01-01T00:00:00.000Z</gml:beginPosition>
+        <gml:endPosition>2020-01-01T00:00:00.000Z</gml:endPosition>
+      </gml:EnvelopeWithTimePeriod>
+    </gml:boundedBy>
+    <wcs:CoverageId>ls8_nbart_geomedian_annual</wcs:CoverageId>
+    <gml:domainSet>
+      <gml:Grid gml:id="ls8_nbart_geomedian_annual__grid" dimension="3" srsName="EPSG:3577" uomLabels="deg deg ISO-8601">
+        <gml:identifier>ls8_nbart_geomedian_annual__grid</gml:identifier>
+        <gml:limits>
+          <gml:GridLimits>
+            <gml:low>0 0 0</gml:low>
+            <gml:high>209708 -170378 8</gml:high>
+          </gml:GridLimits>
+        </gml:limits>
+        <gml:axisLabels>x y time</gml:axisLabels>
+      </gml:Grid>
+    </gml:domainSet>
+    <gmlcov:rangeType>
+      <swe:DataRecord>
+        <swe:field name="red">
+          <swe:Quantity>
+            <swe:description>red</swe:description>
+            <swe:nilValues>
+              <swe:NilValues>
+                <swe:nilValue reason="invalid">-999</swe:nilValue>
+              </swe:NilValues>
+            </swe:nilValues>
+            <swe:uom code="red"/>
+            <swe:constraint>
+              <swe:AllowedValues/>
+            </swe:constraint>
+          </swe:Quantity>
+        </swe:field>
+        <swe:field name="green">
+          <swe:Quantity>
+            <swe:description>green</swe:description>
+            <swe:nilValues>
+              <swe:NilValues>
+                <swe:nilValue reason="invalid">-999</swe:nilValue>
+              </swe:NilValues>
+            </swe:nilValues>
+            <swe:uom code="green"/>
+            <swe:constraint>
+              <swe:AllowedValues/>
+            </swe:constraint>
+          </swe:Quantity>
+        </swe:field>
+        <swe:field name="blue">
+          <swe:Quantity>
+            <swe:description>blue</swe:description>
+            <swe:nilValues>
+              <swe:NilValues>
+                <swe:nilValue reason="invalid">-999</swe:nilValue>
+              </swe:NilValues>
+            </swe:nilValues>
+            <swe:uom code="blue"/>
+            <swe:constraint>
+              <swe:AllowedValues/>
+            </swe:constraint>
+          </swe:Quantity>
+        </swe:field>
+        <swe:field name="nir">
+          <swe:Quantity>
+            <swe:description>nir</swe:description>
+            <swe:nilValues>
+              <swe:NilValues>
+                <swe:nilValue reason="invalid">-999</swe:nilValue>
+              </swe:NilValues>
+            </swe:nilValues>
+            <swe:uom code="nir"/>
+            <swe:constraint>
+              <swe:AllowedValues/>
+            </swe:constraint>
+          </swe:Quantity>
+        </swe:field>
+        <swe:field name="swir1">
+          <swe:Quantity>
+            <swe:description>swir1</swe:description>
+            <swe:nilValues>
+              <swe:NilValues>
+                <swe:nilValue reason="invalid">-999</swe:nilValue>
+              </swe:NilValues>
+            </swe:nilValues>
+            <swe:uom code="swir1"/>
+            <swe:constraint>
+              <swe:AllowedValues/>
+            </swe:constraint>
+          </swe:Quantity>
+        </swe:field>
+        <swe:field name="swir2">
+          <swe:Quantity>
+            <swe:description>swir2</swe:description>
+            <swe:nilValues>
+              <swe:NilValues>
+                <swe:nilValue reason="invalid">-999</swe:nilValue>
+              </swe:NilValues>
+            </swe:nilValues>
+            <swe:uom code="swir2"/>
+            <swe:constraint>
+              <swe:AllowedValues/>
+            </swe:constraint>
+          </swe:Quantity>
+        </swe:field>
+      </swe:DataRecord>
+    </gmlcov:rangeType>
+    <wcs:ServiceParameters>
+      <wcs:CoverageSubtype>RectifiedGridCoverage</wcs:CoverageSubtype>
+      <wcs:nativeFormat>image/geotiff</wcs:nativeFormat>
+    </wcs:ServiceParameters>
+  </wcs:CoverageDescription>
+</wcs:CoverageDescriptions>

@@ -1,11 +1,10 @@
-import FeatureInfoTraits from "./FeatureInfoTraits";
-import mixTraits from "../mixTraits";
-import ModelTraits from "../ModelTraits";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import ModelTraits from "../ModelTraits";
+import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
-import AutoRefreshingTraits from "./AutoRefreshingTraits";
 
 class PollingTraits extends ModelTraits {
   @primitiveTrait({
@@ -34,7 +33,6 @@ class PollingTraits extends ModelTraits {
 
 export default class CsvCatalogItemTraits extends mixTraits(
   AutoRefreshingTraits,
-  FeatureInfoTraits,
   UrlTraits,
   TableTraits
 ) {

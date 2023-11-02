@@ -254,14 +254,6 @@ const Description = observer(
             <If
               condition={!this.props.printView && defined(catalogItem.metadata)}
             >
-              {/*
-                            // By default every catalog item has an error message here, so better to ignore it.
-                        <If condition={defined(catalogItem.metadata.dataSourceErrorMessage)}>
-                            <div className={Styles.error}>
-                                Error loading data source details: {catalogItem.metadata.dataSourceErrorMessage}
-                            </div>
-                        </If>
-                        */}
               <If
                 condition={
                   defined(catalogItem.metadata.dataSourceMetadata) &&
@@ -279,14 +271,6 @@ const Description = observer(
                   </Collapsible>
                 </div>
               </If>
-
-              {/*
-                        <If condition={defined(catalogItem.metadata.serviceErrorMessage)}>
-                            <div className={Styles.error}>
-                                Error loading data service details: {catalogItem.metadata.serviceErrorMessage}
-                            </div>
-                        </If>
-                        */}
               <If
                 condition={
                   defined(catalogItem.metadata.dataSourceMetadata) &&
@@ -306,7 +290,9 @@ const Description = observer(
               </If>
             </If>
           </If>
-          <ExportData item={catalogItem}></ExportData>
+          {!this.props.printView ? (
+            <ExportData item={catalogItem}></ExportData>
+          ) : null}
         </div>
       );
     }

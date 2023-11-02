@@ -224,7 +224,6 @@ describe("Workbench", function() {
 
     const workbenchWithSingleModel = () => {
       expect(model.target).toBeDefined();
-      console.log(workbench.items);
       expect(workbench.items).toEqual([model.target!]); // Note gets deferenced model
       expect(workbench.itemIds).toEqual(["magda-reference"]); // This just gets id of model
       expect(workbench.items[0].type).toBe(WebMapServiceCatalogItem.type);

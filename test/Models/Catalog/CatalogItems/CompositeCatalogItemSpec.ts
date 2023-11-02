@@ -130,6 +130,6 @@ describe("CompositeCatalogItem", function() {
   //       ]);
   //     })
   //     .then(done)
-  //     .otherwise(fail);
+  //     .catch(fail);
   // });
 });

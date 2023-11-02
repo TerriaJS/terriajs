@@ -2,8 +2,7 @@ import { runInAction } from "mobx";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
 import Constructor from "../../Core/Constructor";
-import makeRealPromise from "../../Core/makeRealPromise";
-import zoomRectangleFromPoint from "../../Map/zoomRectangleFromPoint";
+import zoomRectangleFromPoint from "../../Map/Vector/zoomRectangleFromPoint";
 import Model from "../../Models/Definition/Model";
 import SearchProviderResults from "../../Models/SearchProviders/SearchProviderResults";
 import SearchResult from "../../Models/SearchProviders/SearchResult";
@@ -37,9 +36,9 @@ function WebFeatureServiceSearchProviderMixin<
     getXml(url: string): Promise<XMLDocument> {
       const resource = new Resource({ url });
       this._waitingForResults = true;
-      const xmlPromise = resource.fetchXML();
+      const xmlPromise = resource.fetchXML()!;
       this.cancelRequest = resource.request.cancelFunction;
-      return makeRealPromise<XMLDocument>(xmlPromise).finally(() => {
+      return xmlPromise.finally(() => {
         this._waitingForResults = false;
       });
     }

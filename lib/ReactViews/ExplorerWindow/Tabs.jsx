@@ -198,4 +198,4 @@ const ButtonTab = styled.button`
   `}
 `;
 
-module.exports = withTranslation()(Tabs);
+export default withTranslation()(Tabs);

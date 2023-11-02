@@ -7,7 +7,6 @@ describe("uriHelpers", function() {
       const uriWithPath = new URI(
         "https://a.fully.qualified.domain/and-a-path"
       );
-      console.log("uriWithPath is", uriWithPath);
       expect(getUriWithoutPath(uriWithPath)).toBe(
         "https://a.fully.qualified.domain/"
       );

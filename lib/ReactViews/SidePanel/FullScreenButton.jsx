@@ -2,13 +2,14 @@
 const React = require("react");
 const createReactClass = require("create-react-class");
 const PropTypes = require("prop-types");
-import Styles from "./full_screen_button.scss";
 import classNames from "classnames";
-import Icon from "../../Styled/Icon";
-import { withTranslation } from "react-i18next";
 import { observer } from "mobx-react";
-import withControlledVisibility from "../HOCs/withControlledVisibility";
+import { withTranslation } from "react-i18next";
 import { Category, ViewAction } from "../../Core/AnalyticEvents/analyticEvents";
+import Icon from "../../Styled/Icon";
+import withControlledVisibility from "../HOCs/withControlledVisibility";
+import { withViewState } from "../StandardUserInterface/ViewStateContext";
+import Styles from "./full_screen_button.scss";
 
 // The button to make the map full screen and hide the workbench.
 const FullScreenButton = observer(
@@ -16,7 +17,6 @@ const FullScreenButton = observer(
     displayName: "FullScreenButton",
 
     propTypes: {
-      terria: PropTypes.object,
       viewState: PropTypes.object.isRequired,
       btnText: PropTypes.string,
       minified: PropTypes.bool,
@@ -36,7 +36,7 @@ const FullScreenButton = observer(
       );
 
       // log a GA event
-      this.props.terria.analytics?.logEvent(
+      this.props.viewState.terria.analytics?.logEvent(
         Category.view,
         this.props.viewState.isMapFullScreen
           ? ViewAction.exitFullScreen
@@ -105,4 +105,6 @@ const FullScreenButton = observer(
     }
   })
 );
-module.exports = withTranslation()(withControlledVisibility(FullScreenButton));
+export default withTranslation()(
+  withViewState(withControlledVisibility(FullScreenButton))
+);

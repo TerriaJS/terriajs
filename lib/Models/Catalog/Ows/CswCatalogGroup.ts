@@ -129,11 +129,11 @@ export interface SearchResultsType {
   elementSet?: "brief" | "summary" | "full";
   expires?: Date;
   /** position of next record in the result set (0 if no records remain) */
-  nextRecord?: number;
+  nextRecord?: string | number;
   /** number of records matched by the query */
-  numberOfRecordsMatched: number;
+  numberOfRecordsMatched: string | number;
   /** number of records returned to client */
-  numberOfRecordsReturned: number;
+  numberOfRecordsReturned: string | number;
   recordSchema?: string;
   resultSetId?: string;
   Record?: Records;
@@ -302,11 +302,19 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       records.push(...(json?.SearchResults?.Record ?? []));
 
       // Get next start position - or stop pageing
-      const nextRecord = json?.SearchResults?.nextRecord;
+      const nextRecord =
+        typeof json?.SearchResults?.nextRecord === "string"
+          ? parseInt(json?.SearchResults?.nextRecord ?? "0")
+          : json?.SearchResults?.nextRecord;
+
+      const numberOfRecordsMatched =
+        typeof json?.SearchResults?.numberOfRecordsMatched === "string"
+          ? parseInt(json?.SearchResults?.numberOfRecordsMatched ?? "0")
+          : json?.SearchResults?.numberOfRecordsMatched;
       if (
         !isDefined(nextRecord) ||
         nextRecord === 0 ||
-        nextRecord >= json?.SearchResults?.numberOfRecordsMatched
+        nextRecord >= numberOfRecordsMatched
       ) {
         paging = false;
       } else {
@@ -387,11 +395,10 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       model = existingModel;
     }
     // Replace the stratum inherited from the parent group.
-    const stratum = CommonStrata.underride;
-    model.strata.delete(stratum);
-    model.setTrait(CommonStrata.underride, "name", metadataGroup.groupName);
+    model.strata.delete(CommonStrata.definition);
+    model.setTrait(CommonStrata.definition, "name", metadataGroup.groupName);
     model.setTrait(
-      CommonStrata.underride,
+      CommonStrata.definition,
       "members",
       filterOutUndefined([
         ...metadataGroup.children.map(
@@ -471,21 +478,25 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
         model = existingModel;
       }
       // Replace the stratum inherited from the parent group.
-      const stratum = CommonStrata.underride;
-      model.strata.delete(stratum);
-      model.setTrait(stratum, "name", record.title ?? record.identifier);
+      model.strata.delete(CommonStrata.definition);
+
+      model.setTrait(
+        CommonStrata.definition,
+        "name",
+        record.title ?? record.identifier
+      );
       const uri = acceptableUris[urlIndex];
-      model.setTrait(stratum, "url", uri.toString());
+      model.setTrait(CommonStrata.definition, "url", uri.toString());
 
       if (record.abstract) {
         model.setTrait(
-          stratum,
+          CommonStrata.definition,
           "description",
           toArray(record.abstract)?.join("\n\n")
         );
       } else if (record.description) {
         model.setTrait(
-          stratum,
+          CommonStrata.definition,
           "description",
           toArray(record.description)?.join("\n\n")
         );
@@ -507,9 +518,9 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
           .join("\n\n")
       });
 
-      model.setTrait(stratum, "info", infoSections);
+      model.setTrait(CommonStrata.definition, "info", infoSections);
 
-      model.setTrait(stratum, "metadataUrls", [
+      model.setTrait(CommonStrata.definition, "metadataUrls", [
         {
           title: i18next.t("models.csw.metadataURL"),
           url: new URI(
@@ -528,7 +539,9 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       ]);
 
       if (legendUri) {
-        model.setTrait(stratum, "legends", [{ url: legendUri.toString() }]);
+        model.setTrait(CommonStrata.definition, "legends", [
+          { url: legendUri.toString() }
+        ]);
       }
 
       // If this is a WMS item, we MUST set `layers` trait to `uri.name`
@@ -536,7 +549,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
         if (!uri.name) {
           return;
         }
-        model.setTrait(stratum, "layers", uri.name);
+        model.setTrait(CommonStrata.definition, "layers", uri.name);
       }
 
       // Same with ArcGis MapServer
@@ -544,14 +557,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
         if (!uri.name) {
           return;
         }
-        model.setTrait(stratum, "layers", uri.name);
-      }
-
-      // Copy over itemProperties
-      if (this.catalogGroup.itemProperties !== undefined) {
-        Object.keys(this.catalogGroup.itemProperties).map((k: any) =>
-          model.setTrait(stratum, k, this.catalogGroup.itemProperties![k])
-        );
+        model.setTrait(CommonStrata.definition, "layers", uri.name);
       }
 
       return model;

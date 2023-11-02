@@ -1,10 +1,10 @@
 import { runInAction } from "mobx";
 import CatalogMemberFactory from "../../../lib/Models/Catalog/CatalogMemberFactory";
-import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
-import Terria from "../../../lib/Models/Terria";
-import upsertModelFromJson from "../../../lib/Models/Definition/upsertModelFromJson";
 import WebMapServiceCatalogGroup from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
+import upsertModelFromJson from "../../../lib/Models/Definition/upsertModelFromJson";
+import Terria from "../../../lib/Models/Terria";
 
 describe("upsertModelFromJson", function() {
   it("can create basic WMS item", function() {
@@ -47,7 +47,7 @@ describe("upsertModelFromJson", function() {
           type: "wms",
           localId:
             "mobile-black-spot-programme:funded-base-stations-round4-group",
-          name: "Override"
+          name: "This will be overridden by GetCapabilites"
         }
       ]
     };
@@ -86,7 +86,7 @@ describe("upsertModelFromJson", function() {
     );
     expect(group.memberModels.length).toBe(1);
     expect(group.memberModels[0]).toBe(item);
-    expect(item.name).toBe("Override");
+    expect(item.name).toBe("This will be overridden by GetCapabilites");
     expect(item.layers).toBeUndefined();
     expect(item.isGeoServer).toBe(
       false,
@@ -112,7 +112,7 @@ describe("upsertModelFromJson", function() {
 
     expect(group.memberModels.length).toBeGreaterThan(1);
     expect(group.memberModels.indexOf(item)).toBeGreaterThanOrEqual(0);
-    expect(item.name).toBe("Override");
+    expect(item.name).toBe("Funded Base Stations with Ineligible Areas");
     expect(item.layers).toBe(
       "mobile-black-spot-programme:funded-base-stations-round4-group"
     );
@@ -145,18 +145,21 @@ describe("upsertModelFromJson", function() {
     expect(model instanceof WebMapServiceCatalogItem).toBe(true);
     expect(model.type).toBe("wms");
 
+    const modelFromSharekey = terria.shareKeysMap.get(
+      "Root Group/Communications/Broadband Availability"
+    );
+
     const model2 = upsertModelFromJson(
       CatalogMemberFactory,
       terria,
       "",
       CommonStrata.user,
       {
-        id: "Root Group/Communications/Broadband Availability",
+        id: modelFromSharekey,
         opacity: 0.5
       },
       {
-        replaceStratum: false,
-        matchByShareKey: true
+        replaceStratum: false
       }
     ).throwIfUndefined();
     expect(model).toBe(model2, "Failed to match model by shareKey");

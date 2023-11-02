@@ -1,5 +1,3 @@
-declare module "terriajs-cesium/Source/ThirdParty/when";
-
 declare module "terriajs-cesium/Source/Scene/TweenCollection" {
   export default class TweenCollection {
     get length(): number;
@@ -41,6 +39,8 @@ declare module "terriajs-cesium/Source/Widgets/getElement" {
     element: string | HTMLElement
   ): HTMLElement | undefined;
 }
+
+declare module "terriajs-cesium/Source/Core/PolygonGeometryLibrary";
 
 declare interface Axis {
   X: number;

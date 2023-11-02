@@ -1,10 +1,9 @@
-import Terria from "../../../../lib/Models/Terria";
-import GeoRssCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoRssCatalogItem";
 import i18next from "i18next";
-import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import { runInAction } from "mobx";
-import isDefined from "../../../../lib/Core/isDefined";
-import { JsonArray } from "../../../../lib/Core/Json";
+import ProtomapsImageryProvider from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
+import GeoRssCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoRssCatalogItem";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
+import Terria from "../../../../lib/Models/Terria";
 
 describe("GeoRssCatalogItem", function() {
   let terria: Terria;
@@ -20,7 +19,9 @@ describe("GeoRssCatalogItem", function() {
     expect(item.typeName).toBe(i18next.t("models.georss.name"));
   });
 
-  it("supports zooming to extent", function() {
+  it("supports zooming to extent", async function() {
+    item.setTrait(CommonStrata.definition, "url", "test/GeoRSS/rss2/rss2.xml");
+    await item.loadMapItems();
     expect(item.disableZoomTo).toBeFalsy();
   });
 
@@ -38,18 +39,13 @@ describe("GeoRssCatalogItem", function() {
       });
 
       await item.loadMapItems();
-
-      expect(item.geoJsonItem).toBeDefined();
-      if (isDefined(item.geoJsonItem)) {
-        const geoJsonData = item.geoJsonItem.geoJsonData;
-        expect(geoJsonData).toBeDefined();
-        if (isDefined(geoJsonData)) {
-          expect(geoJsonData.type).toEqual("FeatureCollection");
-
-          const features = <JsonArray>geoJsonData.features;
-          expect(features.length).toEqual(3);
-        }
-      }
+      expect(item.mapItems.length).toEqual(2);
+      const mapItem = item.mapItems[1];
+      expect(
+        "imageryProvider" in mapItem &&
+          mapItem.imageryProvider instanceof ProtomapsImageryProvider
+      ).toBeTruthy();
+      expect(item.readyData?.features.length).toEqual(3);
     });
 
     it("load combined geometry rss", async function() {
@@ -61,16 +57,13 @@ describe("GeoRssCatalogItem", function() {
         );
       });
       await item.loadMapItems();
-      expect(item.geoJsonItem).toBeDefined();
-      if (isDefined(item.geoJsonItem)) {
-        const geoJsonData = item.geoJsonItem.geoJsonData;
-        expect(geoJsonData).toBeDefined();
-        if (isDefined(geoJsonData)) {
-          expect(geoJsonData.type).toEqual("FeatureCollection");
-          const features = <JsonArray>geoJsonData.features;
-          expect(features.length).toEqual(8);
-        }
-      }
+      expect(item.mapItems.length).toEqual(2);
+      const mapItem = item.mapItems[1];
+      expect(
+        "imageryProvider" in mapItem &&
+          mapItem.imageryProvider instanceof ProtomapsImageryProvider
+      ).toBeTruthy();
+      expect(item.readyData?.features.length).toEqual(8);
     });
 
     it("properly handles entry with no geometry", async function() {
@@ -82,16 +75,13 @@ describe("GeoRssCatalogItem", function() {
         );
       });
       await item.loadMapItems();
-      expect(item.geoJsonItem).toBeDefined();
-      if (isDefined(item.geoJsonItem)) {
-        const geoJsonData = item.geoJsonItem.geoJsonData;
-        expect(geoJsonData).toBeDefined();
-        if (isDefined(geoJsonData)) {
-          expect(geoJsonData.type).toEqual("FeatureCollection");
-          const features = <JsonArray>geoJsonData.features;
-          expect(features.length).toEqual(2);
-        }
-      }
+      expect(item.mapItems.length).toEqual(1);
+      const mapItem = item.mapItems[0];
+      expect(
+        "imageryProvider" in mapItem &&
+          mapItem.imageryProvider instanceof ProtomapsImageryProvider
+      ).toBeTruthy();
+      expect(item.readyData?.features.length).toEqual(2);
     });
   });
 
@@ -107,17 +97,13 @@ describe("GeoRssCatalogItem", function() {
 
       await item.loadMapItems();
 
-      expect(item.geoJsonItem).toBeDefined();
-      if (isDefined(item.geoJsonItem)) {
-        const geoJsonData = item.geoJsonItem.geoJsonData;
-        expect(geoJsonData).toBeDefined();
-        if (isDefined(geoJsonData)) {
-          expect(geoJsonData.type).toEqual("FeatureCollection");
-
-          const features = <JsonArray>geoJsonData.features;
-          expect(features.length).toEqual(3);
-        }
-      }
+      expect(item.mapItems.length).toEqual(2);
+      const mapItem = item.mapItems[1];
+      expect(
+        "imageryProvider" in mapItem &&
+          mapItem.imageryProvider instanceof ProtomapsImageryProvider
+      ).toBeTruthy();
+      expect(item.readyData?.features.length).toEqual(3);
     });
 
     it("load combined geometry atom feed", async function() {
@@ -129,16 +115,13 @@ describe("GeoRssCatalogItem", function() {
         );
       });
       await item.loadMapItems();
-      expect(item.geoJsonItem).toBeDefined();
-      if (isDefined(item.geoJsonItem)) {
-        const geoJsonData = item.geoJsonItem.geoJsonData;
-        expect(geoJsonData).toBeDefined();
-        if (isDefined(geoJsonData)) {
-          expect(geoJsonData.type).toEqual("FeatureCollection");
-          const features = <JsonArray>geoJsonData.features;
-          expect(features.length).toEqual(8);
-        }
-      }
+      expect(item.mapItems.length).toEqual(2);
+      const mapItem = item.mapItems[1];
+      expect(
+        "imageryProvider" in mapItem &&
+          mapItem.imageryProvider instanceof ProtomapsImageryProvider
+      ).toBeTruthy();
+      expect(item.readyData?.features.length).toEqual(8);
     });
 
     it("properly handles entry with no geometry", async function() {
@@ -150,16 +133,13 @@ describe("GeoRssCatalogItem", function() {
         );
       });
       await item.loadMapItems();
-      expect(item.geoJsonItem).toBeDefined();
-      if (isDefined(item.geoJsonItem)) {
-        const geoJsonData = item.geoJsonItem.geoJsonData;
-        expect(geoJsonData).toBeDefined();
-        if (isDefined(geoJsonData)) {
-          expect(geoJsonData.type).toEqual("FeatureCollection");
-          const features = <JsonArray>geoJsonData.features;
-          expect(features.length).toEqual(2);
-        }
-      }
+      expect(item.mapItems.length).toEqual(2);
+      const mapItem = item.mapItems[1];
+      expect(
+        "imageryProvider" in mapItem &&
+          mapItem.imageryProvider instanceof ProtomapsImageryProvider
+      ).toBeTruthy();
+      expect(item.readyData?.features.length).toEqual(2);
     });
   });
 

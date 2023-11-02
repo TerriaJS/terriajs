@@ -34,7 +34,7 @@ describe("Chart", function() {
         expect(data[0].points.length).toEqual(8);
       })
       .then(done)
-      .otherwise(fail);
+      .catch(fail);
   });
 
   it("can have TableStructure data passed directly", function(done) {
@@ -50,7 +50,7 @@ describe("Chart", function() {
         expect(data[0].points.length).toEqual(3);
       })
       .then(done)
-      .otherwise(fail);
+      .catch(fail);
   });
 
   it("can have an array of ChartData passed directly", function(done) {
@@ -73,6 +73,6 @@ describe("Chart", function() {
         expect(data[0].points.length).toEqual(2);
       })
       .then(done)
-      .otherwise(fail);
+      .catch(fail);
   });
 });

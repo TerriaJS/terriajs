@@ -2,6 +2,7 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import { observable } from "mobx";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
+import Cesium3DTilePointFeature from "terriajs-cesium/Source/Scene/Cesium3DTilePointFeature";
 
 const customProperties = ["entityCollection", "properties", "data"];
 /**
@@ -51,7 +52,7 @@ export default class Feature extends Entity {
   cesiumPrimitive?: any;
 
   _catalogItem?: unknown;
-  _cesium3DTileFeature?: Cesium3DTileFeature;
+  _cesium3DTileFeature?: Cesium3DTileFeature | Cesium3DTilePointFeature;
 
   constructor(options: any) {
     super(options);

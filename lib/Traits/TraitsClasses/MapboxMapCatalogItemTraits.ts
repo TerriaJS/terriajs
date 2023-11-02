@@ -1,13 +1,15 @@
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
-import RasterLayerTraits from "./RasterLayerTraits";
+import ImageryProviderTraits from "./ImageryProviderTraits";
 
 export default class MapboxMapCatalogItemTraits extends mixTraits(
-  RasterLayerTraits,
+  ImageryProviderTraits,
   CatalogMemberTraits,
-  MappableTraits
+  MappableTraits,
+  LegendOwnerTraits
 ) {
   @primitiveTrait({
     name: "url",
@@ -29,14 +31,6 @@ export default class MapboxMapCatalogItemTraits extends mixTraits(
     type: "string"
   })
   accessToken?: string;
-
-  @primitiveTrait({
-    name: "maximumLevel",
-    description:
-      "The maximum level-of-detail supported by the imagery provider, or undefined if there is no limit.",
-    type: "number"
-  })
-  maximumLevel = 25;
 
   @primitiveTrait({
     name: "format",

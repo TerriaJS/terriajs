@@ -14,7 +14,6 @@ var L = require("leaflet");
 var Leaflet = require("../../lib/Models/Leaflet");
 var loadJson = require("../../lib/Core/loadJson").default;
 var Terria = require("../../lib/Models/Terria");
-var when = require("terriajs-cesium/Source/ThirdParty/when").default;
 
 var DEFAULT_ZOOM_LEVEL = 5;
 
@@ -139,11 +138,18 @@ describe("Leaflet Model", function() {
 
   describe("feature picking", function() {
     var latlng = { lat: 50, lng: 50 };
-    var deferred1, deferred2;
+    var deferred1 = {},
+      deferred2 = {};
 
     beforeEach(function() {
-      deferred1 = when.defer();
-      deferred2 = when.defer();
+      deferred1.promise = new Promise((resolve, reject) => {
+        deferred1.resolve = resolve;
+        deferred1.reject = reject;
+      });
+      deferred2.promise = new Promise((resolve, reject) => {
+        deferred2.resolve = resolve;
+        deferred2.reject = reject;
+      });
 
       terria.nowViewing.items = [
         {
@@ -268,7 +274,7 @@ describe("Leaflet Model", function() {
             expect(terria.pickedFeatures.features[0].name).toBe("existing");
           })
           .then(done)
-          .otherwise(done.fail);
+          .catch(done.fail);
       });
     });
 
@@ -325,7 +331,7 @@ describe("Leaflet Model", function() {
               expect(terria.pickedFeatures.features[2].name).toBe("1");
             })
             .then(done)
-            .otherwise(done.fail);
+            .catch(done.fail);
         });
 
         it("resets the picked vector features if a subsequent map click is made", function(done) {
@@ -353,7 +359,7 @@ describe("Leaflet Model", function() {
                 expect(terria.pickedFeatures.features[0].name).toBe("1");
               })
               .then(done)
-              .otherwise(done.fail);
+              .catch(done.fail);
           }, 50);
         });
       });
@@ -374,7 +380,7 @@ describe("Leaflet Model", function() {
             expect(terria.pickedFeatures.isLoading).toBe(false);
           })
           .then(done)
-          .otherwise(done.fail);
+          .catch(done.fail);
       });
 
       it("should load imagery layer features when feature info requests are enabled", function(done) {
@@ -400,7 +406,7 @@ describe("Leaflet Model", function() {
             expect(terria.pickedFeatures.features[1].name).toBe("name2");
           })
           .then(done)
-          .otherwise(done.fail);
+          .catch(done.fail);
       });
 
       it("should not load imagery layer features when feature info requests are disabled", function(done) {
@@ -413,7 +419,7 @@ describe("Leaflet Model", function() {
             expect(terria.pickedFeatures.features.length).toBe(0);
           })
           .then(done)
-          .otherwise(done.fail);
+          .catch(done.fail);
       });
 
       it("records pickPosition", function() {
@@ -469,7 +475,7 @@ describe("Leaflet Model", function() {
 
             terria.pickedFeatures.allFeaturesAvailablePromise
               .then(done)
-              .otherwise(done.fail);
+              .catch(done.fail);
           });
 
           it("combines promise results", function() {
@@ -518,7 +524,7 @@ describe("Leaflet Model", function() {
           });
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
 
     it("should create GeoJSON for polyline when a rasterized polyline feature is selected", function(done) {
@@ -542,7 +548,7 @@ describe("Leaflet Model", function() {
           });
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
 
     it("should update the style of a vector polygon when selected", function(done) {
@@ -563,7 +569,7 @@ describe("Leaflet Model", function() {
           );
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
 
     it("should update the style of a vector polyline when selected", function(done) {
@@ -582,7 +588,7 @@ describe("Leaflet Model", function() {
           expect(entity.polyline.width.getValue()).not.toEqual(2);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
 
     function finishPickingPromise() {

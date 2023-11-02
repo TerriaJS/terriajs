@@ -6,12 +6,12 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import makeRealPromise from "../../lib/Core/makeRealPromise";
 import pollToPromise from "../../lib/Core/pollToPromise";
 import supportsWebGL from "../../lib/Core/supportsWebGL";
-import PickedFeatures from "../../lib/Map/PickedFeatures";
+import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
 import Terria from "../../lib/Models/Terria";
 import UserDrawing from "../../lib/Models/UserDrawing";
+import Feature from "../../lib/Models/Feature";
 
 const describeIfSupported = supportsWebGL() ? describe : xdescribe;
 
@@ -23,11 +23,9 @@ describeIfSupported("UserDrawing that requires WebGL", function() {
     terria.mainViewer.attach(container);
 
     const userDrawing = new UserDrawing({ terria });
-    makeRealPromise(
-      pollToPromise(() => {
-        return userDrawing.terria.cesium !== undefined;
-      })
-    )
+    pollToPromise(() => {
+      return userDrawing.terria.cesium !== undefined;
+    })
       .then(() => {
         const cesium = userDrawing.terria.cesium;
         expect(cesium).toBeDefined();
@@ -338,7 +336,7 @@ describe("UserDrawing", function() {
     // If in the UI the user clicks on a point, it returns that entity, so we're pulling it out of userDrawing and
     // pretending the user actually clicked on it.
     const pt1Entity = userDrawing.pointEntities.entities.values[0];
-    pickedFeatures.features = [pt1Entity];
+    pickedFeatures.features = [pt1Entity as Feature];
     runInAction(() => {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
     });
@@ -402,7 +400,7 @@ describe("UserDrawing", function() {
     // If in the UI the user clicks on a point, it returns that entity, so we're pulling it out of userDrawing and
     // pretending the user actually clicked on it.
     const pt1Entity = userDrawing.pointEntities.entities.values[0];
-    pickedFeatures.features = [pt1Entity];
+    pickedFeatures.features = [pt1Entity as Feature];
     runInAction(() => {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
     });
@@ -466,7 +464,7 @@ describe("UserDrawing", function() {
     // If in the UI the user clicks on a point, it returns that entity, so we're pulling it out of userDrawing and
     // pretending the user actually clicked on it.
     const pt1Entity = userDrawing.pointEntities.entities.values[0];
-    pickedFeatures.features = [pt1Entity];
+    pickedFeatures.features = [pt1Entity as Feature];
     runInAction(() => {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
     });
@@ -546,7 +544,7 @@ describe("UserDrawing", function() {
     // If in the UI the user clicks on a point, it returns that entity, so we're pulling it out of userDrawing and
     // pretending the user actually clicked on it.
     const pt2Entity = userDrawing.pointEntities.entities.values[1];
-    pickedFeatures.features = [pt2Entity];
+    pickedFeatures.features = [pt2Entity as Feature];
     runInAction(() => {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
     });
@@ -615,5 +613,58 @@ describe("UserDrawing", function() {
     expect(rectangle.south).toBeCloseTo(CesiumMath.toRadians(-35.311));
 
     expect(userDrawing.mapItems.length).toBe(1);
+  });
+
+  it("calls onDrawingComplete with the drawn points or rectangle", function() {
+    let completedPoints: Cartesian3[] | undefined;
+    let completedRectangle: Rectangle | undefined;
+    const userDrawing = new UserDrawing({
+      terria,
+      allowPolygon: false,
+      drawRectangle: true,
+      onDrawingComplete: ({ points, rectangle }) => {
+        completedPoints = points;
+        completedRectangle = rectangle;
+      }
+    });
+    userDrawing.enterDrawMode();
+    const pickedFeatures = new PickedFeatures();
+
+    // First point
+    // Points around Parliament house
+    const pt1Position = new Cartographic(
+      CesiumMath.toRadians(149.121),
+      CesiumMath.toRadians(-35.309),
+      CesiumMath.toRadians(0)
+    );
+    const pt1CartesianPosition = Ellipsoid.WGS84.cartographicToCartesian(
+      pt1Position
+    );
+    pickedFeatures.pickPosition = pt1CartesianPosition;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
+
+    // Second point
+    const pt2Position = new Cartographic(
+      CesiumMath.toRadians(149.124),
+      CesiumMath.toRadians(-35.311),
+      CesiumMath.toRadians(0)
+    );
+    const pt2CartesianPosition = Ellipsoid.WGS84.cartographicToCartesian(
+      pt2Position
+    );
+    pickedFeatures.pickPosition = pt2CartesianPosition;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
+
+    // Check onDrawingComplete was called when we end the drawing.
+    userDrawing.terria.mapInteractionModeStack[0].onCancel?.();
+    expect(completedPoints).toBeDefined();
+    if (completedPoints) {
+      expect(completedPoints.length).toEqual(2);
+    }
+    expect(completedRectangle).toBeDefined();
   });
 });

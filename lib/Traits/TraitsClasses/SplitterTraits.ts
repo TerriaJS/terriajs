@@ -1,4 +1,4 @@
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 
 import ModelTraits from "../ModelTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
@@ -10,7 +10,7 @@ export default class SplitterTraits extends ModelTraits {
     description:
       "The side of the splitter to display this imagery layer on. Defaults to both sides."
   })
-  splitDirection = ImagerySplitDirection.NONE;
+  splitDirection = SplitDirection.NONE;
 
   @primitiveTrait({
     type: "boolean",

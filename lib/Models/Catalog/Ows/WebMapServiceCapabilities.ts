@@ -52,6 +52,19 @@ export interface MetadataURL {
 
 export interface CapabilitiesLayer {
   readonly _parent?: CapabilitiesLayer;
+  /** ### Adapted from WMS 1.3.0 spec:
+   *
+   * #### 7.2.4.2
+   *
+   * A number of elements have both a `<Name>` and a `<Title>`.
+   * The `Name` is a text string used for machine-to-machine communication while the `Title` is for the benefit of humans.
+   *
+   * #### 7.2.4.6.3
+   *
+   * If, and only if, a layer has a `<Name>`, then it is a map layer that can be requested by using that `Name` in the `LAYERS` parameter of a GetMap request.
+   * If the layer has a `Title` but no `Name`, then that layer is only a category title for all the layers nested within.
+   * A client shall not attempt to request a layer that has a `Title` but no `Name`.
+   */
   readonly Name?: string;
   readonly Title: string;
   readonly Abstract?: string;

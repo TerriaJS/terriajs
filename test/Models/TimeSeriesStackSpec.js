@@ -14,7 +14,7 @@ describe("TimeSeriesStack", function() {
     clock = {
       setCatalogItem: jasmine.createSpy("setCatalogItem")
     };
-    stack = new TimelineStack(clock);
+    stack = new TimelineStack(terria, clock);
   });
 
   describe("when one layer is added", function() {

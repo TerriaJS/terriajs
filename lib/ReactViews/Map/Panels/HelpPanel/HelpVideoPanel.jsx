@@ -28,6 +28,7 @@ class HelpVideoPanel extends React.Component {
     markdownContent: PropTypes.string,
     videoUrl: PropTypes.string,
     placeholderImage: PropTypes.string,
+    videoCoverImageOpacity: PropTypes.number,
     theme: PropTypes.object,
     t: PropTypes.func.isRequired,
     i18n: PropTypes.object.isRequired
@@ -49,75 +50,79 @@ class HelpVideoPanel extends React.Component {
       [Styles.shiftedToRight]:
         !isExpanded ||
         !this.props.viewState.showHelpMenu ||
-        this.props.viewState.topElement !== "HelpPanel",
-      [Styles.isHidden]: !itemSelected // when the item isn't selected
+        this.props.viewState.topElement !== "HelpPanel"
     });
     return (
-      <div className={className}>
-        <VideoGuide
-          viewState={this.props.viewState}
-          videoLink={this.props.videoUrl}
-          background={this.props.placeholderImage}
-          videoName={HELP_VIDEO_NAME}
-        />
-        <Box
-          centered
-          fullWidth
-          fullHeight
-          displayInlineBlock
-          paddedHorizontally={4}
-          paddedVertically={18}
-          css={`
-            overflow: auto;
-            overflow-x: hidden;
-            overflow-y: auto;
-          `}
-          scroll
-        >
-          <If condition={helpItemType === "videoAndContent"}>
-            {this.props.videoUrl && this.props.placeholderImage && (
-              <div key={"image"}>
-                <div
-                  className={Styles.videoLink}
-                  style={{
-                    backgroundImage: `linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.35)), url(${this.props.placeholderImage})`
-                  }}
-                >
-                  <button
-                    className={Styles.videoBtn}
-                    onClick={() =>
-                      this.props.viewState.setVideoGuideVisible(HELP_VIDEO_NAME)
-                    }
+      itemSelected && (
+        <div className={className}>
+          <VideoGuide
+            viewState={this.props.viewState}
+            videoLink={this.props.videoUrl}
+            background={this.props.placeholderImage}
+            backgroundOpacity={this.props.videoCoverImageOpacity}
+            videoName={HELP_VIDEO_NAME}
+          />
+          <Box
+            centered
+            fullWidth
+            fullHeight
+            displayInlineBlock
+            paddedHorizontally={4}
+            paddedVertically={18}
+            css={`
+              overflow: auto;
+              overflow-x: hidden;
+              overflow-y: auto;
+            `}
+            scroll
+          >
+            <If condition={helpItemType === "videoAndContent"}>
+              {this.props.videoUrl && this.props.placeholderImage && (
+                <div key={"image"}>
+                  <div
+                    className={Styles.videoLink}
+                    style={{
+                      backgroundImage: `linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.35)), url(${this.props.placeholderImage})`
+                    }}
                   >
-                    <Icon glyph={Icon.GLYPHS.play} />
-                  </button>
+                    <button
+                      className={Styles.videoBtn}
+                      onClick={() =>
+                        this.props.viewState.setVideoGuideVisible(
+                          HELP_VIDEO_NAME
+                        )
+                      }
+                    >
+                      <Icon glyph={Icon.GLYPHS.play} />
+                    </button>
+                  </div>
+                  <Spacing bottom={5} />
                 </div>
-                <Spacing bottom={5} />
-              </div>
-            )}
-            {this.props.markdownContent && (
-              <StyledHtml
-                key={"markdownContent"}
+              )}
+              {this.props.markdownContent && (
+                <StyledHtml
+                  key={"markdownContent"}
+                  viewState={this.props.viewState}
+                  markdown={this.props.markdownContent}
+                />
+              )}
+            </If>
+            <If condition={helpItemType === "slider"}>
+              <SatelliteGuide
+                terria={this.props.terria}
                 viewState={this.props.viewState}
-                markdown={this.props.markdownContent}
               />
-            )}
-          </If>
-          <If condition={helpItemType === "slider"}>
-            <SatelliteGuide
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-            />
-          </If>
-          <If condition={helpItemType === "trainer"}>
-            <TrainerPane
-              content={this.props.content}
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-            />
-          </If>
-        </Box>
-      </div>
+            </If>
+            <If condition={helpItemType === "trainer"}>
+              <TrainerPane
+                content={this.props.content}
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+              />
+            </If>
+          </Box>
+        </div>
+      )
     );
   }
 }

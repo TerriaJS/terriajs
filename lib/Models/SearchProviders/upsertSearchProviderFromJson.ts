@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
-import { useTranslationIfExists } from "../../Language/languageHelpers";
+import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import CommonStrata from "../Definition/CommonStrata";
 import { BaseModel } from "../Definition/Model";
 import ModelFactory from "../Definition/ModelFactory";
@@ -55,7 +55,7 @@ export default function upsertSearchProviderFromJson(
       try {
         model.terria.configParameters.searchBarModel?.addSearchProvider(model);
       } catch (error) {
-        errors.push(error);
+        errors.push(TerriaError.from(error));
       }
     }
   }
@@ -71,8 +71,9 @@ export default function upsertSearchProviderFromJson(
     model,
     TerriaError.combine(
       errors,
-      `Error upserting search provider JSON: \`${useTranslationIfExists(
-        uniqueId
+      `Error upserting search provider JSON: \`${applyTranslationIfExists(
+        uniqueId,
+        i18next
       )}\``
     )
   );

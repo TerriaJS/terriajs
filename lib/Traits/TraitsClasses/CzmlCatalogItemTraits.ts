@@ -1,20 +1,20 @@
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
 import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
-import mixTraits from "../mixTraits";
-import primitiveTrait from "../Decorators/primitiveTrait";
+import TimeVaryingTraits from "./TimeVaryingTraits";
 import UrlTraits from "./UrlTraits";
 
 export default class CzmlCatalogItemTraits extends mixTraits(
   AutoRefreshingTraits,
-  DiscretelyTimeVaryingTraits,
-  FeatureInfoTraits,
+  TimeVaryingTraits,
   UrlTraits,
   CatalogMemberTraits,
+  LegendOwnerTraits,
   MappableTraits
 ) {
   @anyTrait({

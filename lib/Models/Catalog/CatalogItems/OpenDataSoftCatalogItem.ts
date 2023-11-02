@@ -5,17 +5,18 @@ import { computed, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import flatten from "../../../Core/flatten";
 import isDefined from "../../../Core/isDefined";
 import { isJsonObject } from "../../../Core/Json";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import FeatureInfoMixin from "../../../ModelMixins/FeatureInfoMixin";
+import FeatureInfoUrlTemplateMixin from "../../../ModelMixins/FeatureInfoUrlTemplateMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStratum";
 import { MetadataUrlTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
-import DimensionTraits from "../../../Traits/TraitsClasses/DimensionTraits";
+import EnumDimensionTraits from "../../../Traits/TraitsClasses/DimensionTraits";
 import { FeatureInfoTemplateTraits } from "../../../Traits/TraitsClasses/FeatureInfoTraits";
 import OpenDataSoftCatalogItemTraits from "../../../Traits/TraitsClasses/OpenDataSoftCatalogItemTraits";
 import TableColumnTraits from "../../../Traits/TraitsClasses/TableColumnTraits";
@@ -23,18 +24,18 @@ import TableStyleTraits from "../../../Traits/TraitsClasses/TableStyleTraits";
 import TableTimeStyleTraits from "../../../Traits/TraitsClasses/TableTimeStyleTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import Feature from "../../Feature";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
+import StratumOrder from "../../Definition/StratumOrder";
+import Feature from "../../Feature";
+import SelectableDimensions, {
+  SelectableDimension
+} from "../../SelectableDimensions/SelectableDimensions";
+import Terria from "../../Terria";
 import {
   isValidDataset,
   ValidDataset
 } from "../CatalogGroups/OpenDataSoftCatalogGroup";
-import SelectableDimensions, {
-  SelectableDimension
-} from "../../SelectableDimensions";
-import StratumOrder from "../../Definition/StratumOrder";
-import Terria from "../../Terria";
 
 type PointTimeSeries = {
   samples?: number;
@@ -190,8 +191,8 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     // Find first field which matches a region type
     return this.dataset.fields?.find(
       f =>
-        this.catalogItem.matchRegionType(f.name) ||
-        this.catalogItem.matchRegionType(f.label)
+        this.catalogItem.matchRegionProvider(f.name)?.regionType ||
+        this.catalogItem.matchRegionProvider(f.label)?.regionType
     )?.name;
   }
 
@@ -244,7 +245,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
 
     return filterOutUndefined([
       this.catalogItem.timeFieldName,
-      // If aggregating time - avergage color field
+      // If aggregating time - average color field
       this.aggregateTime
         ? `avg(${this.catalogItem.colorFieldName}) as ${this.catalogItem.colorFieldName}`
         : this.catalogItem.colorFieldName,
@@ -272,7 +273,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     }
   }
 
-  // Set reigon column type
+  // Set region column type
   @computed get regionColumn() {
     if (this.catalogItem.regionFieldName) {
       return createStratumInstance(TableColumnTraits, {
@@ -401,7 +402,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     const row = (title: string, value: string) =>
       `<tr><td style="vertical-align: middle">${title}</td><td>${value}</td></tr>`;
 
-    // Add fields (exepct for geo_* fields)
+    // Add fields (except for geo_* fields)
     template += this.dataset.fields
       ?.filter(
         field => field.type !== "geo_point_2d" && field.type !== "geo_shape"
@@ -503,7 +504,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     return lastDate.toString();
   }
 
-  /** Get fields with useful infomation (for visualisation). Eg numbers, text, not IDs, not region... */
+  /** Get fields with useful information (for visualisation). Eg numbers, text, not IDs, not region... */
   @computed get usefulFields() {
     return (
       this.dataset.fields?.filter(
@@ -515,19 +516,19 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
           !isIdField(f.name) &&
           !isIdField(f.label) &&
           f.name !== this.catalogItem.regionFieldName &&
-          !this.catalogItem.matchRegionType(f.name) &&
-          !this.catalogItem.matchRegionType(f.label)
+          !this.catalogItem.matchRegionProvider(f.name)?.regionType &&
+          !this.catalogItem.matchRegionProvider(f.label)?.regionType
       ) ?? []
     );
   }
 
-  /** Convert usefulFields to a Dimenion (which gets turned into a SelectableDimension in OpenDataSoftCatalogItem).
+  /** Convert usefulFields to a Dimension (which gets turned into a SelectableDimension in OpenDataSoftCatalogItem).
    * This means we can chose which field to "select" when downloading data.
    */
   @computed get availableFields() {
     if (!this.selectAllFields)
-      return createStratumInstance(DimensionTraits, {
-        id: "available-fieds",
+      return createStratumInstance(EnumDimensionTraits, {
+        id: "available-fields",
         name: "Fields",
         selectedId: this.catalogItem.colorFieldName,
         options: this.usefulFields.map(f => ({
@@ -567,7 +568,7 @@ function getTimeField(dataset: Dataset) {
 StratumOrder.addLoadStratum(OpenDataSoftDatasetStratum.stratumName);
 
 export default class OpenDataSoftCatalogItem
-  extends FeatureInfoMixin(
+  extends FeatureInfoUrlTemplateMixin(
     TableMixin(
       UrlMixin(CatalogMemberMixin(CreateModel(OpenDataSoftCatalogItemTraits)))
     )
@@ -595,13 +596,18 @@ export default class OpenDataSoftCatalogItem
     _screenPosition: Cartesian2 | undefined,
     pickResult: any
   ) {
-    const feature = new Feature(pickResult?.id);
-    // If feature is time-series, we have to make sure that recordId is set in feature.proprties
-    // Otherwise we won't be able to use featureInfoUrlTemplate in FeatureInfoMixin
+    let feature: Feature | undefined;
+    if (pickResult instanceof Entity) {
+      feature = Feature.fromEntityCollectionOrEntity(pickResult);
+    } else {
+      feature = new Feature(pickResult?.id);
+    }
+    // If feature is time-series, we have to make sure that recordId is set in feature.properties
+    // Otherwise we won't be able to use featureInfoUrlTemplate in FeatureInfoUrlTemplateMixin
     const recordId = pickResult?.id?.data?.getValue?.(
       this.terria.timelineClock.currentTime
     )?.[RECORD_ID_COL];
-    feature.properties?.addProperty(RECORD_ID_COL, recordId);
+    feature?.properties?.addProperty(RECORD_ID_COL, recordId);
     return feature;
   }
 
@@ -710,7 +716,10 @@ export default class OpenDataSoftCatalogItem
         name: this.availableFields.name,
         selectedId: this.availableFields.selectedId,
         options: this.availableFields.options,
-        setDimensionValue: async (strataId: string, selectedId: string) => {
+        setDimensionValue: async (
+          strataId: string,
+          selectedId: string | undefined
+        ) => {
           this.setTrait(strataId, "colorFieldName", selectedId);
           (await this.loadMapItems()).throwIfError();
         }

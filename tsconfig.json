@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "es2018",
+        "target": "es2019",
         "experimentalDecorators": true,
         "module": "esNext",
         "moduleResolution": "node",

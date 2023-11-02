@@ -19,7 +19,7 @@ Then, the parent window can send messages like this:
 </head>
 
 <body>
-    <iframe id="embeddedNationalMap" src="http://nationalmap.gov.au" width="1024" height="768"></iframe>
+    <iframe id="embeddedNationalMap" src="https://nationalmap.gov.au" width="1024" height="768"></iframe>
 
     <script type="text/javascript">
         window.addEventListener('message', function(e) {
@@ -35,7 +35,7 @@ Then, the parent window can send messages like this:
                                 "south": -33.907,
                                 "west": 151.165
                             },
-                            workbench: ["my-data"]
+                            workbench: ["my-data"],
                             catalog: [
                                 {
                                     type: "group",
@@ -45,14 +45,14 @@ Then, the parent window can send messages like this:
                                             type: "csv",
                                             name: "My Data",
                                             id: "my-data",
-                                            data: "POA,Some Value\n2000,1\n2205,2"
+                                            csvString: "POA,Some Value\n2000,1\n2205,2"
                                         }
                                     ]
                                 }
                             ]
                         }
                     ]
-                }, 'http://nationalmap.gov.au');
+                }, 'https://nationalmap.gov.au');
             }
         });
     </script>

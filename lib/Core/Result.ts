@@ -148,8 +148,7 @@ export default class Result<T = undefined> {
    * @param errorOverrides can be used to add error context
    */
   logError(errorOverrides?: TerriaErrorOverrides) {
-    if (this._error)
-      console.error(TerriaError.from(this._error, errorOverrides).toError());
+    if (this._error) TerriaError.from(this._error, errorOverrides).log();
     return this.value;
   }
 
@@ -178,19 +177,20 @@ export default class Result<T = undefined> {
     return this.value;
   }
 
-  /** Throw error if one occurred OR value is undefined, otherwise return value
+  /** Throw error if value is undefined (regardless of if an error has occurred), otherwise return value.
    *
    * @param errorOverrides will be used to create error if value is undefined
    */
   throwIfUndefined(errorOverrides?: TerriaErrorOverrides): NotUndefined<T> {
-    if (this._error) throw TerriaError.from(this._error, errorOverrides);
     if (isDefined(this.value)) return this.value as NotUndefined<T>;
 
-    // If value is undefined, throw a new TerriaError using errorOverrides
-    throw new TerriaError({
-      message: "Unhandled required Result exception",
-      ...parseOverrides(errorOverrides)
-    });
+    // If value is undefined, throw error
+    throw this._error
+      ? TerriaError.from(this._error, errorOverrides)
+      : new TerriaError({
+          message: "Unhandled required Result exception",
+          ...parseOverrides(errorOverrides)
+        });
   }
 
   pushErrorTo(errors: TerriaError[], errorOverrides?: TerriaErrorOverrides) {

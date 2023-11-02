@@ -57,6 +57,7 @@ const TerriaErrorBox = (props: {
             margin: 5px 0px;
           }
         `}
+        textLight
       >
         {parseCustomMarkdownToReact(props.error.message, {
           viewState: props.viewState,
@@ -93,7 +94,7 @@ export const terriaErrorNotification = (error: TerriaError) => (
       : [error.originalError];
   }
 
-  // We only show FeedbankLink if the error message doesn't include the <feedbacklink> custom component (so we don't get duplicates)
+  // We only show FeedbackLink if the error message doesn't include the <feedbacklink> custom component (so we don't get duplicates)
   const includesFeedbackLink = error.highestImportanceError.message.includes(
     `<${FeedbackLinkCustomComponent.componentName}`
   );
@@ -105,7 +106,12 @@ export const terriaErrorNotification = (error: TerriaError) => (
           p {
             margin: 5px 0px;
           }
+          // Fix feedback button color
+          button {
+            color: ${(p: any) => p.theme.textLight};
+          }
         `}
+        textLight
       >
         {parseCustomMarkdownToReact(error.highestImportanceError.message, {
           viewState: viewState,
@@ -122,8 +128,9 @@ export const terriaErrorNotification = (error: TerriaError) => (
             titleTextProps={{ large: true }}
             bodyBoxProps={{ padded: true }}
             isOpen={error.showDetails}
-            onToggle={show => () =>
-              runInAction(() => (error.showDetails = show))}
+            onToggle={show => {
+              runInAction(() => (error.showDetails = show));
+            }}
           >
             <ErrorsBox
               errors={detailedErrors}

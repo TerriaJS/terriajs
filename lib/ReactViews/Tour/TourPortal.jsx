@@ -23,7 +23,8 @@ import { parseCustomMarkdownToReactWithOptions } from "../Custom/parseCustomMark
 import Caret from "../Generic/Caret";
 import CloseButton from "../Generic/CloseButton";
 import { useWindowSize } from "../Hooks/useWindowSize";
-import { useTranslationIfExists } from "./../../Language/languageHelpers";
+import { useViewState } from "../StandardUserInterface/ViewStateContext";
+import { applyTranslationIfExists } from "./../../Language/languageHelpers";
 import {
   calculateLeftPosition,
   calculateTopPosition,
@@ -192,7 +193,9 @@ TourExplanation.propTypes = {
   active: PropTypes.bool
 };
 
-const TourGrouping = observer(({ viewState, tourPoints }) => {
+const TourGrouping = observer(({ tourPoints }) => {
+  const { i18n } = useTranslation();
+  const viewState = useViewState();
   const currentTourPoint = tourPoints[viewState.currentTourIndex];
   const currentTourPointRef = viewState.appRefs.get(
     currentTourPoint?.appRefName
@@ -263,7 +266,7 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
             indicatorOffsetLeft={indicatorOffsetLeft}
           >
             {parseCustomMarkdownToReactWithOptions(
-              useTranslationIfExists(tourPoint?.content),
+              applyTranslationIfExists(tourPoint?.content, i18n),
               {
                 injectTermsAsTooltips: true,
                 tooltipTerms: viewState.terria.configParameters.helpContentTerms
@@ -276,8 +279,9 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
   );
 });
 
-export const TourPreface = ({ viewState }) => {
+export const TourPreface = () => {
   const { t } = useTranslation();
+  const viewState = useViewState();
   const theme = useTheme();
   return (
     <>
@@ -342,12 +346,11 @@ export const TourPreface = ({ viewState }) => {
     </>
   );
 };
-TourPreface.propTypes = {
-  viewState: PropTypes.object.isRequired
-};
 
 export const TourPortalDisplayName = "TourPortal";
-export const TourPortal = observer(({ viewState }) => {
+export const TourPortal = observer(() => {
+  const viewState = useViewState();
+
   const showPortal = viewState.currentTourIndex !== -1;
   const showPreface = showPortal && !viewState.showTour;
   // should we bump up the debounce here? feels like 16ms is quite aggressive
@@ -378,8 +381,7 @@ export const TourPortal = observer(({ viewState }) => {
 });
 
 TourPortal.propTypes = {
-  children: PropTypes.node,
-  viewState: PropTypes.object.isRequired
+  children: PropTypes.node
 };
 
 export default withTheme(TourPortal);

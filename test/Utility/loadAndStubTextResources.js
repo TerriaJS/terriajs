@@ -1,19 +1,16 @@
 "use strict";
 
 var loadText = require("../../lib/Core/loadText");
-var when = require("terriajs-cesium/Source/ThirdParty/when").default;
 
 function loadTextResources(resources) {
   var result = {};
-  return when
-    .all(
-      resources.map(function(resource) {
-        return loadText(resource).then(function(text) {
-          result[resource] = text;
-        });
-      })
-    )
-    .yield(result);
+  return Promise.all(
+    resources.map(function(resource) {
+      return loadText(resource).then(function(text) {
+        result[resource] = text;
+      });
+    })
+  ).then(() => result);
 }
 
 function loadAndStubTextResources(done, resources) {

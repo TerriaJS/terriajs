@@ -150,7 +150,7 @@ describe("WebProcessingServiceCatalogGroup", function() {
         wpsGroup.setTrait(CommonStrata.user, "itemProperties", {
           parameters: { test: "123" }
         });
-        await wpsGroup.forceLoadMembers();
+        await wpsGroup.loadMembers();
         expect(member.parameters).toEqual({ test: "123" });
       });
     });

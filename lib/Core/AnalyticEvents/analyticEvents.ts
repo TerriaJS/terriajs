@@ -15,7 +15,8 @@ export enum Category {
 export enum SearchAction {
   bing = "Bing",
   catalog = "Catalog",
-  gazetteer = "Gazetteer"
+  gazetteer = "Gazetteer",
+  nominatim = "nominatim"
 }
 
 export enum LaunchAction {
@@ -48,7 +49,9 @@ export enum DataSourceAction {
   removeFromCatalogue = "Remove from catalogue",
   addFromPreviewButton = "Add from preview button",
   removeFromPreviewButton = "Remove from preview button",
-  removeAllFromWorkbench = "Remove all from workbench"
+  removeFromWorkbench = "Remove from workbench",
+  removeAllFromWorkbench = "Remove all from workbench",
+  addFromDragAndDrop = "Add from Drag and Drop"
 }
 
 export enum DatatabAction {

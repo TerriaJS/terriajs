@@ -393,7 +393,7 @@ describe("CatalogItem", function() {
             expect(item.nowViewingCatalogItem.isEnabled).toBe(true);
           })
           .then(done)
-          .otherwise(fail);
+          .catch(fail);
       });
     });
 
@@ -412,7 +412,7 @@ describe("CatalogItem", function() {
             expect(item.nowViewingCatalogItem.isEnabled).toBe(true);
           })
           .then(done)
-          .otherwise(fail);
+          .catch(fail);
       });
     });
   });

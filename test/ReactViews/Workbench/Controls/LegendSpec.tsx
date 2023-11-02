@@ -1,12 +1,13 @@
 const findAllWithType = require("react-shallow-testutils").findAllWithType;
 const findAllWithClass = require("react-shallow-testutils").findAllWithClass;
-import { getShallowRenderedOutput } from "../../MoreShallowTools";
-import React from "react";
 
-import Terria from "../../../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import React from "react";
+import TestRenderer from "react-test-renderer";
 import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
+import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import Terria from "../../../../lib/Models/Terria";
 import Legend from "../../../../lib/ReactViews/Workbench/Controls/Legend";
+import { getShallowRenderedOutput } from "../../MoreShallowTools";
 
 describe("Legend", function() {
   let terria: Terria;
@@ -35,10 +36,10 @@ describe("Legend", function() {
         .loadMapItems()
         .then(() => {
           // @ts-ignore
-          const legendSection = <Legend item={wmsItem} />;
-          const result = getShallowRenderedOutput(legendSection);
-          const memberComponents = findAllWithType(result, "img");
-          expect(memberComponents.length).toEqual(1);
+          const testRenderer = TestRenderer.create(<Legend item={wmsItem} />);
+
+          const legends = testRenderer.root.findAllByType("img");
+          expect(legends.length).toEqual(1);
         })
         .then(done);
     });

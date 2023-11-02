@@ -16,20 +16,20 @@ import AccessControlMixin from "../../../ModelMixins/AccessControlMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import ReferenceMixin from "../../../ModelMixins/ReferenceMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
+import ModelTraits from "../../../Traits/ModelTraits";
 import MagdaDistributionFormatTraits from "../../../Traits/TraitsClasses/MagdaDistributionFormatTraits";
 import MagdaReferenceTraits from "../../../Traits/TraitsClasses/MagdaReferenceTraits";
-import ModelTraits from "../../../Traits/ModelTraits";
-import CatalogMemberFactory from "../CatalogMemberFactory";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import { BaseModel } from "../../Definition/Model";
 import ModelPropertiesFromTraits from "../../Definition/ModelPropertiesFromTraits";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
-import Terria from "../../Terria";
 import updateModelFromJson from "../../Definition/updateModelFromJson";
+import Terria from "../../Terria";
+import CatalogMemberFactory from "../CatalogMemberFactory";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 const magdaRecordStratum = "magda-record";
 StratumOrder.addDefaultStratum(magdaRecordStratum);
@@ -51,6 +51,13 @@ export default class MagdaReference extends AccessControlMixin(
       formatRegex: "^wms$",
       definition: {
         type: "wms"
+      }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+      id: "WMS-GROUP",
+      formatRegex: "^wms-group$",
+      definition: {
+        type: "wms-group"
       }
     }),
     createStratumInstance(MagdaDistributionFormatTraits, {
@@ -167,6 +174,7 @@ export default class MagdaReference extends AccessControlMixin(
 
     const magdaUri = this.uri;
     const override = toJS(this.override);
+    const addOrOverrideAspects = toJS(this.addOrOverrideAspects);
     const distributionFormats = this.preparedDistributionFormats;
 
     // `runLater` is needed due to no actions in `AsyncLoader` computed promise (See AsyncLoader.ts)
@@ -179,7 +187,8 @@ export default class MagdaReference extends AccessControlMixin(
         this.uniqueId,
         existingRecord,
         override,
-        previousTarget
+        previousTarget,
+        addOrOverrideAspects
       );
 
       if (target !== undefined) {
@@ -200,6 +209,7 @@ export default class MagdaReference extends AccessControlMixin(
         magdaReferenceHeaders: this.terria.configParameters
           .magdaReferenceHeaders
       });
+
       return MagdaReference.createMemberFromRecord(
         this.terria,
         this,
@@ -208,12 +218,27 @@ export default class MagdaReference extends AccessControlMixin(
         this.uniqueId,
         record,
         override,
-        previousTarget
+        previousTarget,
+        addOrOverrideAspects
       );
     });
   }
 
-  private static createMemberFromRecord(
+  private static overrideRecordAspects(
+    record: JsonObject | undefined,
+    override: JsonObject | undefined
+  ) {
+    if (record && override && isJsonObject(override.aspects)) {
+      if (isJsonObject(record.aspects)) {
+        for (let key in override.aspects)
+          record.aspects[key] = override.aspects[key];
+      } else {
+        record.aspects = override.aspects;
+      }
+    }
+  }
+
+  static createMemberFromRecord(
     terria: Terria,
     sourceReference: BaseModel | undefined,
     distributionFormats: readonly PreparedDistributionFormat[],
@@ -221,11 +246,14 @@ export default class MagdaReference extends AccessControlMixin(
     id: string | undefined,
     record: JsonObject | undefined,
     override: JsonObject | undefined,
-    previousTarget: BaseModel | undefined
+    previousTarget: BaseModel | undefined,
+    addOrOverrideAspects: JsonObject | undefined = undefined
   ): BaseModel | undefined {
     if (record === undefined) {
       return undefined;
     }
+
+    this.overrideRecordAspects(record, addOrOverrideAspects);
 
     const aspects = record.aspects;
     if (!isJsonObject(aspects)) {
@@ -391,8 +419,8 @@ export default class MagdaReference extends AccessControlMixin(
         );
         let shareKeys;
         if (
-          isJsonObject(member.aspects) &&
-          isJsonObject(member.aspects.terria) &&
+          isJsonObject(member.aspects, false) &&
+          isJsonObject(member.aspects.terria, false) &&
           Array.isArray(member.aspects.terria.shareKeys)
         ) {
           shareKeys = member.aspects.terria.shareKeys.filter(isJsonString);
@@ -408,8 +436,8 @@ export default class MagdaReference extends AccessControlMixin(
           ref.setTrait(CommonStrata.definition, "recordId", memberId);
 
           if (
-            isJsonObject(member.aspects) &&
-            isJsonObject(member.aspects.group)
+            isJsonObject(member.aspects, false) &&
+            isJsonObject(member.aspects.group, false)
           ) {
             // This is most likely a group.
             ref.setTrait(CommonStrata.definition, "isGroup", true);
@@ -421,9 +449,9 @@ export default class MagdaReference extends AccessControlMixin(
 
           // Use the name from the terria aspect if there is one.
           if (
-            isJsonObject(member.aspects) &&
-            isJsonObject(member.aspects.terria) &&
-            isJsonObject(member.aspects.terria.definition) &&
+            isJsonObject(member.aspects, false) &&
+            isJsonObject(member.aspects.terria, false) &&
+            isJsonObject(member.aspects.terria.definition, false) &&
             isJsonString(member.aspects.terria.definition.name)
           ) {
             ref.setTrait(
@@ -469,13 +497,19 @@ export default class MagdaReference extends AccessControlMixin(
       }
     }
 
-    if (isJsonObject(aspects.terria)) {
-      const terriaStrata = aspects.terria;
-      Object.keys(terriaStrata).forEach(stratum => {
-        if (stratum === "id" || stratum === "type" || stratum === "shareKeys") {
+    if (isJsonObject(aspects.terria, false)) {
+      const terriaAspect = aspects.terria;
+      Object.keys(terriaAspect).forEach(key => {
+        const terriaStratum = terriaAspect[key];
+        if (
+          key === "id" ||
+          key === "type" ||
+          key === "shareKeys" ||
+          !isJsonObject(terriaStratum, false)
+        ) {
           return;
         }
-        updateModelFromJson(group, stratum, terriaStrata[stratum], true);
+        updateModelFromJson(group, key, terriaStratum, true);
       });
     }
 
@@ -526,16 +560,17 @@ export default class MagdaReference extends AccessControlMixin(
       result.setTrait(magdaRecordStratum, "name", record.name);
     }
 
-    Object.keys(terriaAspect).forEach(stratum => {
-      if (stratum === "id" || stratum === "type" || stratum === "shareKeys") {
+    Object.keys(terriaAspect).forEach(key => {
+      const terriaStratum = terriaAspect[key];
+      if (
+        key === "id" ||
+        key === "type" ||
+        key === "shareKeys" ||
+        !isJsonObject(terriaStratum, false)
+      ) {
         return;
       }
-      updateModelFromJson(
-        result,
-        stratum,
-        terriaAspect[stratum],
-        true
-      ).catchError(error =>
+      updateModelFromJson(result, key, terriaStratum, true).catchError(error =>
         result.setTrait(CommonStrata.underride, "isExperiencingIssues", true)
       );
     });
@@ -605,7 +640,7 @@ export default class MagdaReference extends AccessControlMixin(
       }
     }
 
-    const underride: any = {
+    const definition: any = {
       url: url,
       info: [],
       ...format.definition
@@ -614,11 +649,11 @@ export default class MagdaReference extends AccessControlMixin(
     if (
       isJsonObject(datasetDcat) &&
       isJsonString(datasetDcat.description) &&
-      !underride.info.find(
+      !definition.info.find(
         (section: any) => section.name === "Dataset Description"
       )
     ) {
-      underride.info.push({
+      definition.info.push({
         name: "Dataset Description",
         content: datasetDcat.description
       });
@@ -627,26 +662,27 @@ export default class MagdaReference extends AccessControlMixin(
     if (
       isJsonObject(distributionDcat) &&
       isJsonString(distributionDcat.description) &&
-      !underride.info.find(
+      !definition.info.find(
         (section: any) => section.name === "Distribution Description"
       )
     ) {
-      underride.info.push({
+      definition.info.push({
         name: "Distribution Description",
         content: distributionDcat.description
       });
     }
 
-    updateModelFromJson(
-      result,
-      magdaRecordStratum,
-      {
-        name: datasetRecord.name
-      },
-      true
-    );
+    if (isJsonString(datasetRecord.name))
+      updateModelFromJson(
+        result,
+        magdaRecordStratum,
+        {
+          name: datasetRecord.name
+        },
+        true
+      );
 
-    updateModelFromJson(result, CommonStrata.underride, underride, true);
+    updateModelFromJson(result, CommonStrata.definition, definition, true);
 
     if (override) {
       updateModelFromJson(result, CommonStrata.override, override, true);

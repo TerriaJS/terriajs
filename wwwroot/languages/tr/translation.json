@@ -1,0 +1,13 @@
+{
+  "general": {
+    "next": "Sonra",
+    "skip": "Geç",
+    "back": "Geri",
+    "delete": "Sil",
+    "cancel": "İptal",
+    "confirm": "Onayla",
+    "close": "Kapat",
+    "open": "Aç",
+    "prev": "Önce"
+  }
+}

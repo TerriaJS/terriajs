@@ -17,7 +17,6 @@ export const DataCatalog = observer(
       terria: PropTypes.object,
       viewState: PropTypes.object,
       items: PropTypes.array,
-      overrideState: PropTypes.string,
       onActionButtonClicked: PropTypes.func,
       removable: PropTypes.bool,
       t: PropTypes.func.isRequired
@@ -59,7 +58,6 @@ export const DataCatalog = observer(
                   isSearching && !catalogSearchProvider.resultsAreReferences
                 }
                 key={item.uniqueId}
-                overrideState={this.props.overrideState}
                 onActionButtonClicked={this.props.onActionButtonClicked}
                 removable={this.props.removable}
                 terria={this.props.terria}

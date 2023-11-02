@@ -37,4 +37,12 @@ export default class WebProcessingServiceCatalogFunctionTraits extends mixTraits
     description: "The identifier for the process"
   })
   identifier?: string;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Force convert results to v8",
+    description:
+      "If true, then all results will be converted from v7 to v8. If false, then the `result.version` string will be checked to see if conversion is necessary."
+  })
+  forceConvertResultsToV8: boolean = false;
 }

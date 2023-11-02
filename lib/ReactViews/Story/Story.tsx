@@ -1,17 +1,16 @@
-import React, { MouseEventHandler, useEffect, useRef } from "react";
-import { useTranslation } from "react-i18next";
-import styled, { useTheme } from "styled-components";
-import { sortable } from "react-anything-sortable";
 import classNames from "classnames";
 import { TFunction } from "i18next";
-
+import React, { MouseEventHandler, useEffect, useRef } from "react";
+import { sortable } from "react-anything-sortable";
+import { useTranslation } from "react-i18next";
+import styled, { useTheme } from "styled-components";
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
-import Ul from "../../Styled/List";
-import Text from "../../Styled/Text";
-import Spacing from "../../Styled/Spacing";
-import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import Icon, { StyledIcon } from "../../Styled/Icon";
+import Ul from "../../Styled/List";
+import Spacing from "../../Styled/Spacing";
+import Text from "../../Styled/Text";
+import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 
 export interface Story {
   title: string;
@@ -156,7 +155,7 @@ const renderMenu = (props: MenuProps) => {
   const { t } = props;
 
   return (
-    <Ul>
+    <Ul column>
       <li>
         <StoryMenuButton
           onClick={viewStory(props)}

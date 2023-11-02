@@ -249,7 +249,6 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     }
 
     // Replace the stratum inherited from the parent group.
-    const stratum = CommonStrata.underride;
 
     // If has nested layers -> create model for CatalogGroup
     if (node.members && Object.keys(node.members).length > 0) {
@@ -273,9 +272,13 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
         groupModel = existingGroupModel;
       }
 
-      groupModel.setTrait(stratum, "name", node.item.name || node.item.id);
       groupModel.setTrait(
-        stratum,
+        CommonStrata.definition,
+        "name",
+        node.item.name || node.item.id
+      );
+      groupModel.setTrait(
+        CommonStrata.definition,
         "members",
         filterOutUndefined(
           Object.values(node.members).map(member => this.getMemberId(member))
@@ -284,7 +287,11 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
 
       // Set group description
       if (node.item.description) {
-        groupModel.setTrait(stratum, "description", node.item.description);
+        groupModel.setTrait(
+          CommonStrata.definition,
+          "description",
+          node.item.description
+        );
       }
 
       return;
@@ -315,20 +322,32 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
       itemModel = existingItemModel;
     }
 
-    itemModel.strata.delete(stratum);
-
-    itemModel.setTrait(stratum, "name", node.item.name || node.item.id);
-    itemModel.setTrait(stratum, "url", this.catalogGroup.url);
-    // Set group description
-    if (node.item.description) {
-      itemModel.setTrait(stratum, "description", node.item.description);
-    }
-
-    itemModel.setTrait(stratum, "agencyId", node.item.agencyID as string);
-    itemModel.setTrait(stratum, "dataflowId", node.item.id);
+    itemModel.strata.delete(CommonStrata.definition);
 
     itemModel.setTrait(
-      stratum,
+      CommonStrata.definition,
+      "name",
+      node.item.name || node.item.id
+    );
+    itemModel.setTrait(CommonStrata.definition, "url", this.catalogGroup.url);
+    // Set group description
+    if (node.item.description) {
+      itemModel.setTrait(
+        CommonStrata.definition,
+        "description",
+        node.item.description
+      );
+    }
+
+    itemModel.setTrait(
+      CommonStrata.definition,
+      "agencyId",
+      node.item.agencyID as string
+    );
+    itemModel.setTrait(CommonStrata.definition, "dataflowId", node.item.id);
+
+    itemModel.setTrait(
+      CommonStrata.definition,
       "modelOverrides",
       this.catalogGroup.traits.modelOverrides.toJson(
         this.catalogGroup.modelOverrides

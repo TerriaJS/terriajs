@@ -13,7 +13,7 @@ import {
   determineCatalogItem
 } from "../../lib/ReactViews/FeatureInfo/FeatureInfoPanel";
 import Loader from "../../lib/ReactViews/Loader";
-import PickedFeatures from "../../lib/Map/PickedFeatures";
+import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import Feature from "../../lib/Models/Feature";

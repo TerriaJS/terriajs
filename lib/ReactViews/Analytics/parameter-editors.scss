@@ -14,6 +14,7 @@
 .parameter-editor {
   margin-bottom: $padding;
   position: relative;
+  clear: both;
   input[type="date"] {
     width: 50%;
     float: left;
@@ -26,7 +27,7 @@
 .field {
   composes: field from "../../Sass/common/_form.scss";
   margin-bottom: $padding;
-
+  clear: both;
   color: $text-black !important;
 
   &::-webkit-input-placeholder {
@@ -62,6 +63,7 @@
 .field--parameter-editor {
   margin-bottom: $padding;
   position: relative;
+  clear: both;
   input[type="date"] {
     width: 50%;
     float: left;

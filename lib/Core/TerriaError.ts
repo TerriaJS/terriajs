@@ -3,6 +3,7 @@
 import i18next from "i18next";
 import { observable } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
+import Terria from "../Models/Terria";
 import { Notification } from "../ReactViewModels/NotificationState";
 import { terriaErrorNotification } from "../ReactViews/Notification/terriaErrorNotification";
 import filterOutUndefined from "./filterOutUndefined";
@@ -305,6 +306,13 @@ export default class TerriaError {
     return this.flatten().find(error => error._raisedToUser) ? true : false;
   }
 
+  /** Resolve error seveirty */
+  get resolvedSeverity() {
+    return typeof this.severity === "function"
+      ? this.severity()
+      : this.severity;
+  }
+
   /** Set raisedToUser value for **all** `TerriaErrors` in this tree. */
   set raisedToUser(r: boolean) {
     this._raisedToUser = r;
@@ -313,6 +321,13 @@ export default class TerriaError {
         err instanceof TerriaError ? (err.raisedToUser = r) : null
       );
     }
+  }
+
+  /** Print error to console */
+  log() {
+    this.resolvedSeverity === TerriaErrorSeverity.Warning
+      ? console.warn(this.toString())
+      : console.error(this.toString());
   }
 
   /** Convert `TerriaError` to `Notification` */
@@ -415,9 +430,50 @@ export default class TerriaError {
     error.stack = stack;
     return error;
   }
+
+  toString(): string {
+    // indentation required per nesting when stringifying nested error messages
+    const indentChar = "  ";
+    const buildNested: (
+      error: TerriaError,
+      depth: number
+    ) => string | undefined = (error, depth) => {
+      if (!Array.isArray(error.originalError)) {
+        return;
+      }
+
+      const indent = indentChar.repeat(depth);
+      const nestedMessage = error.originalError
+        .map(e => {
+          const log = `${e.message}\n${e.stack}`
+            .split("\n")
+            .map(s => indent + s)
+            .join("\n");
+          if (e instanceof TerriaError) {
+            // recursively build the message for nested errors
+            return `${log}\n${buildNested(e, depth + 1)}`;
+          } else {
+            return log;
+          }
+        })
+        .join("\n");
+      return nestedMessage;
+    };
+
+    const nestedMessage = buildNested(this, 1);
+    return `${this.title}: ${this.highestImportanceError.message}\n${nestedMessage}`;
+  }
+
+  raiseError(
+    terria: Terria,
+    errorOverrides?: TerriaErrorOverrides,
+    forceRaiseToUser?: boolean
+  ) {
+    terria.raiseErrorToUser(this, errorOverrides, forceRaiseToUser);
+  }
 }
 
-/** Wrap up network requets error with user-friendly message */
+/** Wrap up network request error with user-friendly message */
 export function networkRequestError(error: TerriaError | TerriaErrorOptions) {
   // Combine network error with "networkRequestMessageDetailed" - this contains extra info about what could cause network error
   return TerriaError.combine(

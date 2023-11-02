@@ -9,7 +9,6 @@ import PropTypes from "prop-types";
 
 import defined from "terriajs-cesium/Source/Core/defined";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
-import when from "terriajs-cesium/Source/ThirdParty/when";
 
 import GeoJsonCatalogItem from "../../Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import WebMapServiceCatalogItem from "../../Models/Catalog/Ows/WebMapServiceCatalogItem";
@@ -83,7 +82,7 @@ const RegionPicker = createReactClass({
           return;
         }
         that._lastPickedFeatures = pickedFeatures;
-        when(pickedFeatures.allFeaturesAvailablePromise, function() {
+        pickedFeatures.allFeaturesAvailablePromise.then(function() {
           if (
             pickedFeatures !== that._lastPickedFeatures ||
             pickedFeatures.features.length === 0
@@ -155,36 +154,34 @@ const RegionPicker = createReactClass({
     this._loadingRegionProvider = this.regionProvider;
 
     const that = this;
-    when
-      .all([
-        that.regionProvider.loadRegionIDs(),
-        that.regionProvider.loadRegionNames()
-      ])
-      .then(function() {
-        if (that.regionProvider !== that._loadingRegionProvider) {
-          return;
-        }
-        that._regionNames = that.regionProvider.regionNames;
+    Promise.all([
+      that.regionProvider.loadRegionIDs(),
+      that.regionProvider.loadRegionNames()
+    ]).then(function() {
+      if (that.regionProvider !== that._loadingRegionProvider) {
+        return;
+      }
+      that._regionNames = that.regionProvider.regionNames;
 
-        if (defined(that._regionsCatalogItem)) {
-          that._regionsCatalogItem.isEnabled = false;
-          that._regionsCatalogItem = undefined;
-        }
+      if (defined(that._regionsCatalogItem)) {
+        that._regionsCatalogItem.isEnabled = false;
+        that._regionsCatalogItem = undefined;
+      }
 
-        that._regionsCatalogItem = new WebMapServiceCatalogItem(
-          that.props.previewed.terria
-        );
-        that._regionsCatalogItem.name = "Available Regions";
-        that._regionsCatalogItem.url = that.regionProvider.analyticsWmsServer;
-        that._regionsCatalogItem.layers =
-          that.regionProvider.analyticsWmsLayerName;
-        that._regionsCatalogItem.parameters = {
-          styles: "border_black_fill_aqua"
-        };
-        that._regionsCatalogItem.isEnabled = true;
+      that._regionsCatalogItem = new WebMapServiceCatalogItem(
+        that.props.previewed.terria
+      );
+      that._regionsCatalogItem.name = "Available Regions";
+      that._regionsCatalogItem.url = that.regionProvider.analyticsWmsServer;
+      that._regionsCatalogItem.layers =
+        that.regionProvider.analyticsWmsLayerName;
+      that._regionsCatalogItem.parameters = {
+        styles: "border_black_fill_aqua"
+      };
+      that._regionsCatalogItem.isEnabled = true;
 
-        that._loadingRegionProvider = undefined;
-      });
+      that._loadingRegionProvider = undefined;
+    });
   },
 
   updateMapFromValue() {
@@ -223,7 +220,7 @@ const RegionPicker = createReactClass({
           that._selectedRegionCatalogItem.zoomTo();
         }
       })
-      .otherwise(function() {
+      .catch(function() {
         if (that.props.parameter.value !== value) {
           // Value has already changed.
           return;

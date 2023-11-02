@@ -3,7 +3,7 @@ import FunctionParameter, {
   Options as FunctionParameterOptions
 } from "./FunctionParameter";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
-const Reproject = require("../../Map/Reproject");
+const Reproject = require("../../Map/Vector/Reproject");
 
 interface Options extends FunctionParameterOptions {
   crs?: string;

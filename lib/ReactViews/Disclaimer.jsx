@@ -2,17 +2,17 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import { withTheme } from "styled-components";
-import Box from "../Styled/Box";
-import Text from "../Styled/Text";
-import Spacing from "../Styled/Spacing";
 // if we must use a placeholder image,
 // do not bundle in the full res `wwwroot/images/bing-aerial-labels-wide.png`
 // image as it's a 1.4mb png
 // import bingAerialBackground from "../../wwwroot/images/bing-aerial-labels-wide-low-quality.jpg";
-import styled from "styled-components";
-import parseCustomMarkdownToReact from "./Custom/parseCustomMarkdownToReact";
+import styled, { withTheme } from "styled-components";
+import Box from "../Styled/Box";
 import Button from "../Styled/Button";
+import Spacing from "../Styled/Spacing";
+import Text from "../Styled/Text";
+import parseCustomMarkdownToReact from "./Custom/parseCustomMarkdownToReact";
+import { withViewState } from "./StandardUserInterface/ViewStateContext";
 import FadeIn from "./Transitions/FadeIn/FadeIn";
 
 const TopElementBox = styled(Box)`
@@ -166,4 +166,4 @@ class Disclaimer extends React.Component {
   }
 }
 
-export default withTranslation()(withTheme(Disclaimer));
+export default withTranslation()(withViewState(withTheme(Disclaimer)));

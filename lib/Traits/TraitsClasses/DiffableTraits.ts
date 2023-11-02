@@ -1,8 +1,9 @@
-import ModelTraits from "../ModelTraits";
-import primitiveTrait from "../Decorators/primitiveTrait";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import TimeFilterTraits from "./TimeFilterTraits";
 
-export default class DiffableTraits extends ModelTraits {
+export default class DiffableTraits extends mixTraits(TimeFilterTraits) {
   @primitiveArrayTrait({
     type: "string",
     name: "Available diff styles",

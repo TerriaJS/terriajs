@@ -24,10 +24,10 @@ describe("DiscretelyTimeVaryingMixin", () => {
 
     const years = wmsItem.objectifiedDates[20];
     expect(years.dates.length).toBe(1000);
-    expect(years.indice[0]).toBe(2015);
-    const months = years[years.indice[0]];
+    expect(years.index[0]).toBe(2015);
+    const months = years[years.index[0]];
     expect(months.dates.length).toBe(1000);
-    expect(months.indice[0]).toBe(3);
+    expect(months.index[0]).toBe(3);
   });
 
   it("supports specifying a chartColor", async function() {

@@ -1,22 +1,25 @@
 import classNames from "classnames";
-import { action, flow, runInAction } from "mobx";
+import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { Trans, withTranslation, WithTranslation } from "react-i18next";
+import {
+  Category,
+  DataSourceAction
+} from "../Core/AnalyticEvents/analyticEvents";
 import isDefined from "../Core/isDefined";
+import Result from "../Core/Result";
 import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import addUserFiles from "../Models/Catalog/addUserFiles";
 import { BaseModel } from "../Models/Definition/Model";
-import Terria from "../Models/Terria";
-import ViewState from "../ReactViewModels/ViewState";
 import Styles from "./drag-drop-file.scss";
-import Result from "../Core/Result";
+import {
+  WithViewState,
+  withViewState
+} from "./StandardUserInterface/ViewStateContext";
 
-interface PropsType extends WithTranslation {
-  terria: Terria;
-  viewState: ViewState;
-}
+interface PropsType extends WithTranslation, WithViewState {}
 
 @observer
 class DragDropFile extends React.Component<PropsType> {
@@ -28,10 +31,23 @@ class DragDropFile extends React.Component<PropsType> {
 
     const props = this.props;
 
+    for (let i = 0; i < e.dataTransfer.files.length; i++) {
+      // Log event to analytics for each file dropped (sometimes multiple files dropped in one DragEvent)
+      const fileType =
+        e.dataTransfer.files[i].type ||
+        e.dataTransfer.files[i].name.split(".").pop(); // use file extension if type property is empty
+
+      this.props.viewState.terria.analytics?.logEvent(
+        Category.dataSource,
+        DataSourceAction.addFromDragAndDrop,
+        `File Type: ${fileType}, File Size(B): ${e.dataTransfer.files[i].size}`
+      );
+    }
+
     try {
       const addedCatalogItems: BaseModel[] | undefined = await addUserFiles(
         e.dataTransfer.files,
-        props.terria,
+        props.viewState.terria,
         props.viewState
       );
 
@@ -60,7 +76,7 @@ class DragDropFile extends React.Component<PropsType> {
         Result.combine(
           await Promise.all(mappableItems.map(f => f.loadMapItems())),
           "Failed to load uploaded files"
-        ).raiseError(props.terria);
+        ).raiseError(props.viewState.terria);
 
         // Zoom to first item
         const firstZoomableItem = mappableItems.find(i =>
@@ -69,13 +85,13 @@ class DragDropFile extends React.Component<PropsType> {
 
         isDefined(firstZoomableItem) &&
           runInAction(() =>
-            props.terria.currentViewer.zoomTo(firstZoomableItem, 1)
+            props.viewState.terria.currentViewer.zoomTo(firstZoomableItem, 1)
           );
       }
 
       runInAction(() => (props.viewState.isDraggingDroppingFile = false));
     } catch (e) {
-      props.terria.raiseErrorToUser(e, "Failed to upload files");
+      props.viewState.terria.raiseErrorToUser(e, "Failed to upload files");
     }
   }
 
@@ -135,4 +151,5 @@ class DragDropFile extends React.Component<PropsType> {
     );
   }
 }
-module.exports = withTranslation()(DragDropFile);
+
+export default withTranslation()(withViewState(DragDropFile));

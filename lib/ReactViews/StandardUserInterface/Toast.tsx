@@ -13,11 +13,14 @@ const Toast: React.FC<ToastProps> = ({ children }) => {
 };
 
 const Container = styled.div`
-  position: absolute;
-  bottom: 40px;
-  left: 20px; // on mobile
+  position: fixed;
+  z-index: 99999;
+  bottom: 80px; //on mobile make it appear above play story button
+  left: 35%;
   @media (min-width: ${props => props.theme.sm}px) {
+    position: absolute;
     left: 45%; // on larger screens
+    bottom: 40px;
   }
 
   display: flex;

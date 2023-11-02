@@ -196,6 +196,11 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<
     parsed.chartGlyphStyle = nodeAttrs["chart-glyph-style"];
     return parsed;
   }
+
+  constructDownloadUrlFromBody = (body: string) => {
+    const blob = new Blob([body], { type: "text/csv;charset=utf-8" });
+    return URL.createObjectURL(blob);
+  };
 }
 
 function parseIntOrUndefined(s: string | undefined): number | undefined {

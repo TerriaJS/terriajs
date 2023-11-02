@@ -14,7 +14,6 @@ import CsvCatalogItem from "./CatalogItems/CsvCatalogItem";
 import CzmlCatalogItem from "./CatalogItems/CzmlCatalogItem";
 import GeoJsonCatalogItem from "./CatalogItems/GeoJsonCatalogItem";
 import GeoRssCatalogItem from "./CatalogItems/GeoRssCatalogItem";
-import GltfCatalogItem from "./CatalogItems/GltfCatalogItem";
 import GpxCatalogItem from "./CatalogItems/GpxCatalogItem";
 import IonImageryCatalogItem from "./CatalogItems/IonImageryCatalogItem";
 import KmlCatalogItem from "./CatalogItems/KmlCatalogItem";
@@ -27,6 +26,7 @@ import SenapsLocationsCatalogItem from "./CatalogItems/SenapsLocationsCatalogIte
 import ShapefileCatalogItem from "./CatalogItems/ShapefileCatalogItem";
 import SocrataMapViewCatalogItem from "./CatalogItems/SocrataMapViewCatalogItem";
 import StubCatalogItem from "./CatalogItems/StubCatalogItem";
+import UrlTemplateImageryCatalogItem from "./CatalogItems/UrlTemplateImageryCatalogItem";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import CatalogIndexReference from "./CatalogReferences/CatalogIndexReference";
 import MagdaReference from "./CatalogReferences/MagdaReference";
@@ -45,6 +45,8 @@ import ArcGisMapServerCatalogItem from "./Esri/ArcGisMapServerCatalogItem";
 import ArcGisPortalCatalogGroup from "./Esri/ArcGisPortalCatalogGroup";
 import ArcGisPortalItemReference from "./Esri/ArcGisPortalItemReference";
 import ArcGisTerrainCatalogItem from "./Esri/ArcGisTerrainCatalogItem";
+import AssImpCatalogItem from "./Gltf/AssImpCatalogItem";
+import GltfCatalogItem from "./Gltf/GltfCatalogItem";
 import GtfsCatalogItem from "./Gtfs/GtfsCatalogItem";
 import CswCatalogGroup from "./Ows/CswCatalogGroup";
 import SensorObservationServiceCatalogItem from "./Ows/SensorObservationServiceCatalogItem";
@@ -219,6 +221,11 @@ export default function registerCatalogMembers() {
     CatalogIndexReference.type,
     CatalogIndexReference
   );
+  CatalogMemberFactory.register(
+    UrlTemplateImageryCatalogItem.type,
+    UrlTemplateImageryCatalogItem
+  );
+  CatalogMemberFactory.register(AssImpCatalogItem.type, AssImpCatalogItem);
 
   UrlToCatalogMemberMapping.register(
     matchesExtension("csv"),

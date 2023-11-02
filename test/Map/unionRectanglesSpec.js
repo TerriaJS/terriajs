@@ -2,7 +2,7 @@
 
 var Rectangle = require("terriajs-cesium/Source/Core/Rectangle").default;
 
-var unionRectangles = require("../../lib/Map/unionRectangles");
+var unionRectangles = require("../../lib/Map/Vector/unionRectangles");
 
 describe("unionRectangles", function() {
   it("throws when first is not provided", function() {

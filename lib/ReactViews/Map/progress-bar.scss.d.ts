@@ -2,6 +2,9 @@
 // Please do not change this file!
 interface CssExports {
   'complete': string;
+  'indeterminate-bar-animated': string;
+  'indeterminateAnimation': string;
+  'indeterminateBarAnimated': string;
   'progress-bar': string;
   'progressBar': string;
 }

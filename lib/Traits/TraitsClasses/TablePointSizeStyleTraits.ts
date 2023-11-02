@@ -4,7 +4,8 @@ import primitiveTrait from "../Decorators/primitiveTrait";
 export default class TablePointSizeStyleTraits extends ModelTraits {
   @primitiveTrait({
     name: "Point Size Column",
-    description: "The column to use to size points.",
+    description:
+      "The column to use to size points. This column must be of type `scalar`",
     type: "string"
   })
   pointSizeColumn?: string;

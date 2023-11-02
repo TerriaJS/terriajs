@@ -1,6 +1,6 @@
 "use strict";
 
-var Reproject = require("../../lib/Map/Reproject");
+var Reproject = require("../../lib/Map/Vector/Reproject");
 
 describe("Reproject", function() {
   it("function crsStringToCode translates CRS strings to Proj4 codes", function() {

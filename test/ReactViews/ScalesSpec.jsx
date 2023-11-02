@@ -42,7 +42,7 @@ describe("Scales", function() {
         expect(scale.y.undefined(2)).toEqual(size.plotHeight);
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   it("handles overlapping X and Y domains correctly", function(done) {
@@ -75,6 +75,6 @@ describe("Scales", function() {
         expect(scale.y.undefined(102)).toEqual(size.plotHeight);
       })
       .then(done)
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 });

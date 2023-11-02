@@ -4,7 +4,7 @@ Date: 2020-08-28
 
 ## Status
 
-Accepted
+Superseded by [0010-never-support-ie11](./0010-never-support-ie11.md) on 2022-05-12
 
 ## Context
 

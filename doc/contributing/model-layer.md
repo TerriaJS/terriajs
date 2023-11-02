@@ -130,7 +130,7 @@ export class SomeExtendingTraits extends DimensionTraits {
 }
 ```
 
-If `Traits` are extended directly, trait properties may leak into the super class.
+If `Traits` are extended directly, trait properties may leak into the super class. For more details see [traits in depth](./traits-in-depth.md).
 
 ## Time
 

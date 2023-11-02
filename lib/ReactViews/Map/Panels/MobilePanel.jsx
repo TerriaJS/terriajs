@@ -38,6 +38,7 @@ const MobilePanel = createReactClass({
             caretOffset="15px"
             doNotCloseFlag={this.getDoNotCloseFlag()}
             onDismissed={this.onDismissed}
+            disableCloseOnFocusLoss={this.disableCloseOnFocusLoss}
           >
             {this.props.children}
           </InnerPanel>

@@ -1,13 +1,11 @@
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ChartTraits from "./ChartTraits";
-import MappableTraits from "./MappableTraits";
 import TimeVaryingTraits from "./TimeVaryingTraits";
 
 export default class DiscretelyTimeVaryingTraits extends mixTraits(
   ChartTraits,
-  TimeVaryingTraits,
-  MappableTraits
+  TimeVaryingTraits
 ) {
   @primitiveTrait({
     name: "Mapping from Continuous Time",

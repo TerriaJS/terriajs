@@ -39,7 +39,6 @@ describe("TerriaError", function() {
     expect(test.message).toBe("some stringy object");
     expect(test.title).toBe("core.terriaError.defaultTitle");
     expect(test.originalError?.[0]).toEqual(new Error("some stringy object"));
-    console.log(test);
   });
 
   it("Can create chain of TerriaErrors and combine them", function() {

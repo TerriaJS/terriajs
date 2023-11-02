@@ -1,8 +1,10 @@
+import { ComponentProps } from "react";
 import styled from "styled-components";
 import { OneKeyFrom } from "./Styled.types";
 
 interface ITextSize {
   noFontSize?: boolean;
+  mini?: boolean;
   small?: boolean;
   medium?: boolean;
   large?: boolean;
@@ -39,19 +41,21 @@ interface ITextPropsBase {
   primary?: boolean;
   fullWidth?: boolean;
   noWrap?: boolean;
-  as?: keyof JSX.IntrinsicElements;
+  as?: React.ElementType | keyof JSX.IntrinsicElements;
   styledLineHeight?: string;
   highlightLinks?: boolean;
   overflowHide?: boolean;
   overflowEllipsis?: boolean;
   isDisabled?: boolean;
   style?: any;
+  maxLines?: boolean | number;
 }
 
-type ITextProps = ITextPropsBase &
+export type ITextProps = ITextPropsBase &
   OneKeyFrom<ITextSize> &
   OneKeyFrom<ITextColor> &
-  OneKeyFrom<ITextWeight>;
+  OneKeyFrom<ITextWeight> &
+  ComponentProps<"div">;
 
 // should it be a span or inline-block-div? - leaning to div
 export const Text = styled.div<ITextProps>`
@@ -59,7 +63,7 @@ export const Text = styled.div<ITextProps>`
 
   // Unsure about this one, as we don't have react-router / "actual links" at
   // the moment, no present way to distinguish external links, etc
-  ${props => props.isLink && `text-decoration: underline;`}
+  ${props => props.isLink && `text-decoration: underline; cursor: pointer;`}
 
   // TODO: themeify family
   font-family: ${props => props.theme.fontBase};
@@ -120,6 +124,12 @@ export const Text = styled.div<ITextProps>`
     `
     font-size: 13px;
     line-height: normal;
+  `}
+
+  ${props =>
+    props.mini &&
+    `
+    font-size: 10px;
   `}
 
   ${props =>
@@ -198,11 +208,20 @@ export const Text = styled.div<ITextProps>`
   ${props => props.overflowHide && ` overflow: hidden;`}
   ${props => props.overflowEllipsis && ` text-overflow: ellipsis;`}
 
+  ${props =>
+    props.maxLines &&
+    `
+    -webkit-line-clamp: ${props.maxLines === true ? 2 : props.maxLines};
+    display: -webkit-box;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+  `}
 `;
 
 export const TextSpan = styled(Text).attrs<{
-  as?: keyof JSX.IntrinsicElements;
-}>((props: { as?: keyof JSX.IntrinsicElements }) => ({
+  as?: React.ElementType | keyof JSX.IntrinsicElements;
+}>((props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => ({
   as: props.as || "span"
 }))``;
 

@@ -8,6 +8,7 @@ import ModelTraits from "../ModelTraits";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import UrlTraits from "./UrlTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 
 export type QueryPropertyName =
   | "identifier"
@@ -29,8 +30,8 @@ export class DomainSpecTraits extends ModelTraits {
   domainPropertyName?: string;
   @primitiveTrait({
     type: "string",
-    name: "Hierarchy Seperator",
-    description: "Hierarchy Seperator."
+    name: "Hierarchy Separator",
+    description: "Hierarchy Separator."
   })
   hierarchySeparator?: string;
   @primitiveTrait({
@@ -45,7 +46,8 @@ export default class CswCatalogGroupTraits extends mixTraits(
   GetCapabilitiesTraits,
   GroupTraits,
   UrlTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  LegendOwnerTraits
 ) {
   @primitiveTrait({
     type: "boolean",
@@ -54,12 +56,6 @@ export default class CswCatalogGroupTraits extends mixTraits(
       "True to flatten the layers into a single list; false to use the layer hierarchy."
   })
   flatten?: boolean = false;
-
-  @anyTrait({
-    name: "Item Properties",
-    description: "Sets traits on records"
-  })
-  itemProperties?: JsonObject;
 
   @objectTrait({
     type: DomainSpecTraits,

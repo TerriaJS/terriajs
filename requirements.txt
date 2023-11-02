@@ -6,12 +6,12 @@ livereload==2.6.3
 lunr==0.5.8
 Markdown==3.2.2
 MarkupSafe==1.1.1
-mkdocs==1.1.2
-mkdocs-material==5.5.13
+mkdocs==1.2.3
+mkdocs-material==8.1.10
 mkdocs-material-extensions==1.0
 nltk==3.5
-Pygments==2.7.1
-pymdown-extensions==8.0
+Pygments==2.11.2
+pymdown-extensions==9.1
 PyYAML==5.4
 regex==2020.7.14
 six==1.15.0

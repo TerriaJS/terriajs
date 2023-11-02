@@ -1,18 +1,20 @@
-import CatalogMemberTraits from "./CatalogMemberTraits";
-import LayerOrderingTraits from "./LayerOrderingTraits";
-import MappableTraits from "./MappableTraits";
-import mixTraits from "../mixTraits";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
-import RasterLayerTraits from "./RasterLayerTraits";
+import mixTraits from "../mixTraits";
+import CatalogMemberTraits from "./CatalogMemberTraits";
+import LayerOrderingTraits from "./LayerOrderingTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
+import MappableTraits from "./MappableTraits";
+import ImageryProviderTraits from "./ImageryProviderTraits";
 import UrlTraits from "./UrlTraits";
 
 export default class OpenStreetMapCatalogItemTraits extends mixTraits(
-  RasterLayerTraits,
+  ImageryProviderTraits,
   LayerOrderingTraits,
   UrlTraits,
   MappableTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  LegendOwnerTraits
 ) {
   @primitiveTrait({
     name: "File extension",
@@ -28,11 +30,4 @@ export default class OpenStreetMapCatalogItemTraits extends mixTraits(
     type: "string"
   })
   subdomains: string[] = [];
-
-  @primitiveTrait({
-    name: "Maximum Level",
-    description: "The maximum level of details to fetch",
-    type: "number"
-  })
-  maximumLevel = 25;
 }

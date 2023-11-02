@@ -7,22 +7,19 @@ import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import LatLonHeight from "../Core/LatLonHeight";
 import runLater from "../Core/runLater";
-import { ProviderCoords, ProviderCoordsMap } from "../Map/PickedFeatures";
-import MappableMixin, { ImageryParts } from "./MappableMixin";
+import {
+  ProviderCoords,
+  ProviderCoordsMap
+} from "../Map/PickedFeatures/PickedFeatures";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import Model from "../Models/Definition/Model";
-import DiscretelyTimeVaryingTraits from "../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
-import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import TimeFilterTraits, {
   TimeFilterCoordinates
 } from "../Traits/TraitsClasses/TimeFilterTraits";
 import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
+import MappableMixin, { ImageryParts } from "./MappableMixin";
 import TimeVarying from "./TimeVarying";
-
-type MixinModel = Model<
-  TimeFilterTraits & DiscretelyTimeVaryingTraits & MappableTraits
->;
 
 /**
  * A Mixin for filtering the dates for which imagery is available at a location
@@ -34,7 +31,9 @@ type MixinModel = Model<
  * Mixin is used to implement the Location filter feature for Satellite
  * Imagery.
  */
-function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
+function TimeFilterMixin<T extends Constructor<Model<TimeFilterTraits>>>(
+  Base: T
+) {
   abstract class TimeFilterMixin extends DiscretelyTimeVaryingMixin(Base) {
     @observable _currentTimeFilterFeature?: Entity;
 

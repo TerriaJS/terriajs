@@ -1,4 +1,3 @@
-import { TFunction } from "i18next";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React, { useEffect, useRef } from "react";
@@ -9,20 +8,22 @@ import sendFeedback from "../../Models/sendFeedback";
 import ViewState from "../../ReactViewModels/ViewState";
 import Box from "../../Styled/Box";
 import Button, { RawButton } from "../../Styled/Button";
-import Checkbox from "../../Styled/Checkbox/Checkbox";
+import Checkbox from "../../Styled/Checkbox";
 import { GLYPHS, StyledIcon } from "../../Styled/Icon";
-import Input, { StyledInput } from "../../Styled/Input";
+import Input, { StyledTextArea } from "../../Styled/Input";
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
 import parseCustomMarkdownToReact, {
   parseCustomMarkdownToReactWithOptions
 } from "../Custom/parseCustomMarkdownToReact";
-import { useTranslationIfExists } from "./../../Language/languageHelpers";
+import {
+  WithViewState,
+  withViewState
+} from "../StandardUserInterface/ViewStateContext";
+import { applyTranslationIfExists } from "./../../Language/languageHelpers";
 
-interface IProps extends WithTranslation {
+interface IProps extends WithTranslation, WithViewState {
   theme: DefaultTheme;
-  viewState: ViewState;
-  t: TFunction;
 }
 
 interface IState {
@@ -165,10 +166,22 @@ class FeedbackForm extends React.Component<IProps, IState> {
   }
 
   render() {
-    const { t, viewState, theme } = this.props;
+    const { t, i18n, viewState, theme } = this.props;
     const preamble = parseCustomMarkdownToReact(
-      useTranslationIfExists(viewState.terria.configParameters.feedbackPreamble)
+      applyTranslationIfExists(
+        viewState.terria.configParameters.feedbackPreamble ||
+          "translate#feedback.feedbackPreamble",
+        i18n
+      )
     );
+    const postamble = viewState.terria.configParameters.feedbackPostamble
+      ? parseCustomMarkdownToReact(
+          applyTranslationIfExists(
+            viewState.terria.configParameters.feedbackPostamble,
+            i18n
+          )
+        )
+      : undefined;
     return (
       <FormWrapper>
         <Box backgroundColor={theme.darkLighter} paddedRatio={2}>
@@ -184,7 +197,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
           >
             {t("feedback.title")}
           </Text>
-          <RawButton onClick={this.onDismiss}>
+          <RawButton onClick={this.onDismiss} title={t("feedback.close")}>
             <StyledIcon styledWidth={"15px"} light glyph={GLYPHS.close} />
           </RawButton>
         </Box>
@@ -264,14 +277,18 @@ class FeedbackForm extends React.Component<IProps, IState> {
           <Checkbox
             isChecked={this.state.sendShareURL}
             value="sendShareUrl"
-            label={
-              t("feedback.shareWithDevelopers", {
-                appName: this.props.viewState.terria.appName
-              })!
-            }
             onChange={this.changeSendShareUrl}
-          />
+          >
+            <Text>
+              {
+                t("feedback.shareWithDevelopers", {
+                  appName: this.props.viewState.terria.appName
+                })!
+              }
+            </Text>
+          </Checkbox>
           <Spacing bottom={2} />
+          {postamble ? <Text textDarker>{postamble}</Text> : null}
           <Box right>
             <Button
               type="button"
@@ -337,14 +354,6 @@ const TextArea: React.FC<TextAreaProps> = (props: TextAreaProps) => {
     );
   }, [value]);
 
-  const onChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    textAreaRef.current!.style.setProperty("height", "auto");
-
-    if (props.onChange) {
-      props.onChange(event);
-    }
-  };
-
   return (
     <StyledTextArea
       {...rest}
@@ -353,36 +362,17 @@ const TextArea: React.FC<TextAreaProps> = (props: TextAreaProps) => {
       styledHeight={styledMinHeight}
       styledMinHeight={styledMinHeight}
       styledMaxHeight={styledMaxHeight}
-      onChange={onChangeHandler}
+      onChange={event => {
+        textAreaRef.current!.style.setProperty("height", "auto");
+
+        if (props.onChange) {
+          props.onChange(event);
+        }
+      }}
       invalidValue={!valueIsValid}
     ></StyledTextArea>
   );
 };
-
-const StyledTextArea = styled(StyledInput).attrs({
-  as: "textarea"
-})`
-  line-height: ${props => props.lineHeight};
-  padding-top: 5px;
-  padding-bottom: 5px;
-  cursor: auto;
-  -webkit-overflow-scrolling: touch;
-  min-width: 100%;
-  max-width: 100%;
-
-  &::-webkit-scrollbar {
-    width: 10px; /* for vertical scrollbars */
-    height: 8px; /* for horizontal scrollbars */
-  }
-
-  &::-webkit-scrollbar-track {
-    background: rgba(136, 136, 136, 0.1);
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgba(136, 136, 136, 0.6);
-  }
-`;
 
 interface StyledLabelProps {
   viewState: ViewState;
@@ -449,4 +439,4 @@ const FormWrapper = styled(Box).attrs(props => ({
   }
 `;
 
-export default withTranslation()(withTheme(FeedbackForm));
+export default withTranslation()(withViewState(withTheme(FeedbackForm)));

@@ -47,9 +47,9 @@ describe("Catalog", function() {
             );
             done();
           })
-          .otherwise(done.fail);
+          .catch(done.fail);
       })
-      .otherwise(done.fail);
+      .catch(done.fail);
   });
 
   describe("chartDataGroup", function() {
@@ -96,7 +96,7 @@ describe("Catalog", function() {
           expect(catalog.group.isOpen).toBeTruthy();
           done();
         })
-        .otherwise(fail);
+        .catch(fail);
     });
 
     it("works when resolving by shareKeys", function(done) {
@@ -133,7 +133,7 @@ describe("Catalog", function() {
           expect(catalog.group.isOpen).toBeTruthy();
           done();
         })
-        .otherwise(fail);
+        .catch(fail);
     });
 
     it("opens parent groups", function(done) {
@@ -163,7 +163,7 @@ describe("Catalog", function() {
           expect(catalog.group.isOpen).toBe(true);
           done();
         })
-        .otherwise(fail);
+        .catch(fail);
     });
 
     it("works for multiple share keys", function(done) {
@@ -200,7 +200,7 @@ describe("Catalog", function() {
           expect(catalog.group.items[1].items[0].isEnabled).toBe(true);
           done();
         })
-        .otherwise(fail);
+        .catch(fail);
     });
 
     it("only enabled a catalog member after all those before it have finished loading", function(done) {
@@ -232,7 +232,7 @@ describe("Catalog", function() {
           expect(catalog.group.items[0].items[0].isEnabled).toBe(true);
           done();
         })
-        .otherwise(fail);
+        .catch(fail);
     });
 
     it("updates associated shared data like opacity", function(done) {
@@ -256,7 +256,7 @@ describe("Catalog", function() {
           expect(catalog.group.items[0].opacity).toBe(0.3);
           done();
         })
-        .otherwise(fail);
+        .catch(fail);
     });
   });
 
@@ -308,7 +308,7 @@ describe("Catalog", function() {
           expect(newCatalog.items).toEqual(catalog.items);
           done();
         })
-        .otherwise(fail);
+        .catch(fail);
     });
 
     it("ignores properties filtered out by propertyFilter", function() {

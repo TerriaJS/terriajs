@@ -1,12 +1,11 @@
-import { computed, observable } from "mobx";
+import { observable } from "mobx";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import Constructor from "../Core/Constructor";
+import isDefined from "../Core/isDefined";
 import Model from "../Models/Definition/Model";
 import { scaleDenominatorToLevel } from "./../Core/scaleToDenominator";
-import { MinMaxLevelTraits } from "./../Traits/TraitsClasses/MinMaxLevelTraits";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import { createTransformer } from "mobx-utils";
 import CommonStrata from "./../Models/Definition/CommonStrata";
-import isDefined from "../Core/isDefined";
+import { MinMaxLevelTraits } from "./../Traits/TraitsClasses/MinMaxLevelTraits";
 
 function MinMaxLevelMixin<T extends Constructor<Model<MinMaxLevelTraits>>>(
   Base: T

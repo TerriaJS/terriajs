@@ -164,14 +164,12 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
     }
 
     // Replace the stratum inherited from the parent group.
-    const stratum = CommonStrata.underride;
+    model.strata.delete(CommonStrata.definition);
 
-    model.strata.delete(stratum);
-
-    model.setTrait(stratum, "name", replaceUnderscores(folder));
+    model.setTrait(CommonStrata.definition, "name", replaceUnderscores(folder));
 
     var uri = new URI(this._catalogGroup.url).segment(folder);
-    model.setTrait(stratum, "url", uri.toString());
+    model.setTrait(CommonStrata.definition, "url", uri.toString());
   }
 
   @action
@@ -223,16 +221,18 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
     }
 
     // Replace the stratum inherited from the parent group.
-    const stratum = CommonStrata.underride;
+    model.strata.delete(CommonStrata.definition);
 
-    model.strata.delete(stratum);
-
-    model.setTrait(stratum, "name", replaceUnderscores(localName));
+    model.setTrait(
+      CommonStrata.definition,
+      "name",
+      replaceUnderscores(localName)
+    );
 
     var uri = new URI(this._catalogGroup.url)
       .segment(localName)
       .segment(service.type);
-    model.setTrait(stratum, "url", uri.toString());
+    model.setTrait(CommonStrata.definition, "url", uri.toString());
   }
 }
 

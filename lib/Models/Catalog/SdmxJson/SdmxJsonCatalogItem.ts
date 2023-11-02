@@ -5,8 +5,6 @@ import Resource from "terriajs-cesium/Source/Core/Resource";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import TerriaError, { TerriaErrorSeverity } from "../../../Core/TerriaError";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import ChartableMixin from "../../../ModelMixins/ChartableMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import Csv from "../../../Table/Csv";
@@ -14,19 +12,18 @@ import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStra
 import SdmxCatalogItemTraits from "../../../Traits/TraitsClasses/SdmxCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import SelectableDimensions, {
-  SelectableDimension
-} from "../../SelectableDimensions";
 import StratumOrder from "../../Definition/StratumOrder";
+import SelectableDimensions, {
+  filterEnums,
+  SelectableDimension
+} from "../../SelectableDimensions/SelectableDimensions";
 import Terria from "../../Terria";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { SdmxJsonDataflowStratum } from "./SdmxJsonDataflowStratum";
 import { sdmxErrorString, SdmxHttpErrorCodes } from "./SdmxJsonServerStratum";
 
 export default class SdmxJsonCatalogItem
-  extends ChartableMixin(
-    TableMixin(UrlMixin(CatalogMemberMixin(CreateModel(SdmxCatalogItemTraits))))
-  )
+  extends TableMixin(UrlMixin(CreateModel(SdmxCatalogItemTraits)))
   implements SelectableDimensions {
   static get type() {
     return "sdmx-json";
@@ -80,7 +77,10 @@ export default class SdmxJsonCatalogItem
         disable:
           dim.disable ||
           this.columns.find(col => col.name === dim.id)?.type === "region",
-        setDimensionValue: async (stratumId: string, value: string) => {
+        setDimensionValue: async (
+          stratumId: string,
+          value: string | undefined
+        ) => {
           let dimensionTraits = this.dimensions?.find(
             sdmxDim => sdmxDim.id === dim.id
           );
@@ -102,9 +102,7 @@ export default class SdmxJsonCatalogItem
       ...super.selectableDimensions.filter(
         d => d.id !== this.styleDimensions?.id
       ),
-      ...this.sdmxSelectableDimensions,
-      this.regionColumnDimensions,
-      this.regionProviderDimensions
+      ...this.sdmxSelectableDimensions
     ]);
   }
 
@@ -179,7 +177,7 @@ export default class SdmxJsonCatalogItem
             message: i18next.t(
               "models.sdmxCatalogItem.noResultsWithDimensions",
               {
-                dimensions: this.selectableDimensions
+                dimensions: filterEnums(this.selectableDimensions)
                   .filter(dim => !dim.disable && dim.options?.length !== 1)
                   .map(
                     dim =>

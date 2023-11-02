@@ -168,9 +168,15 @@ describe("CswCatalogGroup", function() {
 
     await group.loadMembers();
 
-    const wmsLayer = ((group.memberModels[1] as CatalogGroup)
-      .memberModels[0] as CatalogGroup)
-      .memberModels[0] as WebMapServiceCatalogItem;
+    const nestedGroup = group.memberModels[1] as CatalogGroup;
+
+    await nestedGroup.loadMembers();
+
+    const nestedGroup2 = nestedGroup.memberModels[0] as CatalogGroup;
+
+    await nestedGroup2.loadMembers();
+
+    const wmsLayer = nestedGroup2.memberModels[0] as WebMapServiceCatalogItem;
 
     expect(wmsLayer.shortReport).toBe("test");
   });

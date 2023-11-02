@@ -6,7 +6,7 @@ GITHUB_BRANCH=${GITHUB_REF##*/}
 
 # Don't run for greenkeeper branches; there are too many!
 if [[ $GITHUB_BRANCH =~ ^greenkeeper/ ]]; then
-    exit 0
+  exit 0
 fi
 
 # A version of the branch name that can be used as a DNS name once we prepend and append some stuff.
@@ -33,7 +33,9 @@ git tag -a "TerriaMap-$TERRIAMAP_COMMIT_HASH--TerriaJS-$TERRIAJS_COMMIT_HASH" -m
 rm yarn.lock # because TerriaMap's yarn.lock won't reflect terriajs dependencies
 yarn install
 yarn add -W moment@2.24.0
-yarn gulp build
+yarn gulp build --baseHref="/${SAFE_BRANCH_NAME}/"
+
+pwd
 
 yarn "--terriajs-map:docker_name=terriajs-ci" docker-build-ci -- --tag "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME"
 gcloud auth configure-docker asia.gcr.io --quiet

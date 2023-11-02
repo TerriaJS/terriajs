@@ -1,18 +1,18 @@
-import mixTraits from "../mixTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
-import CatalogMemberTraits from "./CatalogMemberTraits";
+import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import CatalogMemberTraits from "./CatalogMemberTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
 import SplitterTraits from "./SplitterTraits";
-import objectTrait from "../Decorators/objectTrait";
 import StyleTraits from "./StyleTraits";
 import UrlTraits from "./UrlTraits";
 
 export default class SenapsLocationsCatalogItemTraits extends mixTraits(
-  FeatureInfoTraits,
   SplitterTraits,
   MappableTraits,
   CatalogMemberTraits,
+  LegendOwnerTraits,
   UrlTraits
 ) {
   @primitiveTrait({

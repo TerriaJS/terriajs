@@ -4,6 +4,7 @@ import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
+import SplitterTraits from "./SplitterTraits";
 
 export class TileCoordinates extends ModelTraits {
   @primitiveTrait({
@@ -39,7 +40,8 @@ export class TimeFilterCoordinates extends mixTraits(LatLonHeightTraits) {
 }
 
 export default class TimeFilterTraits extends mixTraits(
-  DiscretelyTimeVaryingTraits
+  DiscretelyTimeVaryingTraits,
+  SplitterTraits
 ) {
   @primitiveTrait({
     type: "string",

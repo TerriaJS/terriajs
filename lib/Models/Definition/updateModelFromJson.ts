@@ -1,14 +1,16 @@
+import { uniq } from "lodash-es";
 import { isObservableArray, runInAction } from "mobx";
 import isDefined from "../../Core/isDefined";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
+import { ModelJson } from "../InitSource";
 import createStratumInstance from "./createStratumInstance";
 import { BaseModel } from "./Model";
 
 export default function updateModelFromJson(
   model: BaseModel,
   stratumName: string,
-  json: any,
+  json: ModelJson,
   replaceStratum: boolean = false
 ): Result<undefined> {
   const traits = model.traits;
@@ -83,7 +85,9 @@ function mergeWithExistingMembers(
 ) {
   const existingTrait = model.getTrait(stratumName, propertyName);
   if (existingTrait !== undefined && isObservableArray(existingTrait)) {
-    existingTrait.push(...newTrait);
+    existingTrait.push(
+      ...uniq(newTrait).filter(id => !existingTrait.includes(id))
+    );
     return existingTrait;
   }
   return newTrait;

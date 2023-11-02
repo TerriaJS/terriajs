@@ -109,12 +109,6 @@ export default class ThreddsItemReference extends UrlMixin(
     });
   }
 
-  setItemProperties(model: BaseModel, itemProperties: any) {
-    runInAction(() => {
-      model.setTrait(CommonStrata.override, "itemProperties", itemProperties);
-    });
-  }
-
   async forceLoadReference(
     previousTarget: BaseModel | undefined
   ): Promise<BaseModel | undefined> {

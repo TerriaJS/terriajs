@@ -1,7 +1,8 @@
 import Terria from "../Terria";
+import { BaseMapJson } from "./BaseMapsModel";
 
-export function defaultBaseMaps(terria: Terria): any[] {
-  const baseMaps: any[] = [];
+export function defaultBaseMaps(terria: Terria): BaseMapJson[] {
+  const baseMaps: BaseMapJson[] = [];
 
   if (
     terria.configParameters.bingMapsKey &&
@@ -15,7 +16,8 @@ export function defaultBaseMaps(terria: Terria): any[] {
         mapStyle: "AerialWithLabelsOnDemand",
         opacity: 1.0
       },
-      image: "build/TerriaJS/images/bing-aerial-labels.png"
+      image: "build/TerriaJS/images/bing-aerial-labels.png",
+      contrastColor: "#ffffff"
     });
 
     baseMaps.push({
@@ -26,7 +28,8 @@ export function defaultBaseMaps(terria: Terria): any[] {
         mapStyle: "Aerial",
         opacity: 1.0
       },
-      image: "build/TerriaJS/images/bing-aerial.png"
+      image: "build/TerriaJS/images/bing-aerial.png",
+      contrastColor: "#ffffff"
     });
     baseMaps.push({
       item: {
@@ -36,7 +39,8 @@ export function defaultBaseMaps(terria: Terria): any[] {
         mapStyle: "RoadOnDemand",
         opacity: 1.0
       },
-      image: "build/TerriaJS/images/bing-maps-roads.png"
+      image: "build/TerriaJS/images/bing-maps-roads.png",
+      contrastColor: "#000000"
     });
   } else if (terria.configParameters.useCesiumIonBingImagery === true) {
     baseMaps.push({
@@ -47,7 +51,8 @@ export function defaultBaseMaps(terria: Terria): any[] {
         ionAssetId: 3,
         opacity: 1.0
       },
-      image: "build/TerriaJS/images/bing-aerial-labels.png"
+      image: "build/TerriaJS/images/bing-aerial-labels.png",
+      contrastColor: "#ffffff"
     });
 
     baseMaps.push({
@@ -58,7 +63,8 @@ export function defaultBaseMaps(terria: Terria): any[] {
         ionAssetId: 2,
         opacity: 1.0
       },
-      image: "build/TerriaJS/images/bing-aerial.png"
+      image: "build/TerriaJS/images/bing-aerial.png",
+      contrastColor: "#ffffff"
     });
     baseMaps.push({
       item: {
@@ -68,7 +74,8 @@ export function defaultBaseMaps(terria: Terria): any[] {
         ionAssetId: 4,
         opacity: 1.0
       },
-      image: "build/TerriaJS/images/bing-maps-roads.png"
+      image: "build/TerriaJS/images/bing-maps-roads.png",
+      contrastColor: "#000000"
     });
   }
 
@@ -76,13 +83,16 @@ export function defaultBaseMaps(terria: Terria): any[] {
     item: {
       id: "basemap-natural-earth-II",
       name: "Natural Earth II",
-      type: "wms",
+      type: "url-template-imagery",
       url:
-        "http://geoserver.nationalmap.nicta.com.au/imagery/natural-earth-ii/wms",
-      layers: "NE2_HR_LC_SR_W_DR",
+        "https://storage.googleapis.com/terria-datasets-public/basemaps/natural-earth-tiles/{z}/{x}/{reverseY}.png",
+      attribution:
+        "<a href='https://www.naturalearthdata.com/downloads/10m-raster-data/10m-natural-earth-2/'>Natural Earth II</a> - From Natural Earth. <a href='https://www.naturalearthdata.com/about/terms-of-use/'>Public Domain</a>.",
+      maximumLevel: 7,
       opacity: 1.0
     },
-    image: "build/TerriaJS/images/natural-earth.png"
+    image: "build/TerriaJS/images/natural-earth.png",
+    contrastColor: "#000000"
   });
 
   baseMaps.push({
@@ -92,10 +102,13 @@ export function defaultBaseMaps(terria: Terria): any[] {
       type: "wms",
       url:
         "http://geoserver.nationalmap.nicta.com.au/imagery/nasa-black-marble/wms",
+      attribution:
+        "<a href='https://earthobservatory.nasa.gov/Features/NightLights'>Black Marble</a> - From NASA's Earth Observatory. <a href='https://earthobservatory.nasa.gov/image-use-policy'>Use Policy</a>.",
       layers: "nasa-black-marble:dnb_land_ocean_ice.2012.54000x27000_geo",
       opacity: 1.0
     },
-    image: "build/TerriaJS/images/black-marble.png"
+    image: "build/TerriaJS/images/black-marble.png",
+    contrastColor: "#ffffff"
   });
 
   baseMaps.push({
@@ -109,7 +122,8 @@ export function defaultBaseMaps(terria: Terria): any[] {
       subdomains: ["a", "b", "c", "d"],
       opacity: 1.0
     },
-    image: "build/TerriaJS/images/positron.png"
+    image: "build/TerriaJS/images/positron.png",
+    contrastColor: "#000000"
   });
 
   baseMaps.push({
@@ -123,7 +137,8 @@ export function defaultBaseMaps(terria: Terria): any[] {
       subdomains: ["a", "b", "c", "d"],
       opacity: 1.0
     },
-    image: "build/TerriaJS/images/dark-matter.png"
+    image: "build/TerriaJS/images/dark-matter.png",
+    contrastColor: "#ffffff"
   });
 
   return baseMaps;

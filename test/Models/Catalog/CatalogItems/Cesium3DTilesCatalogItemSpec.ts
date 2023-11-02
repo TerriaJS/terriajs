@@ -62,7 +62,7 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
       );
       let show: any = item.showExpressionFromFilters;
       expect(show).toBe(
-        "${feature['stratumlev']} >= -1 && ${feature['stratumlev']} <= 10"
+        "Number(${feature['stratumlev']}) >= -1 && Number(${feature['stratumlev']}) <= 10"
       );
     });
 
@@ -81,7 +81,7 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
 
   describe("cesiumTileStyle", function() {
     let style: any;
-    beforeEach(function() {
+    beforeEach(async function() {
       runInAction(() =>
         item.setTrait("definition", "style", {
           color: "vec4(${Height})",
@@ -104,14 +104,30 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
       expect(style.color._expression).toBe("vec4(${Height})");
     });
 
+    it("reflects changes to the catalog item's opacity in its style", async function() {
+      item.setTrait("definition", "style", {
+        color: "#ff0000"
+      });
+
+      item.setTrait("user", "opacity", 0.5);
+
+      style = item.cesiumTileStyle;
+      await item.loadMapItems();
+
+      expect(style.color._expression).toBe("color('#ff0000', ${opacity})");
+    });
+
     describe("when filters are specified", function() {
-      it("adds the filters to the style", function() {
+      it("adds the filters to the style", async function() {
         runInAction(() =>
           item.setTrait("definition", "filters", [
             createStratumLevelFilter(-2, 11, 5, 8)
           ])
         );
+
         style = item.cesiumTileStyle;
+        await item.loadMapItems();
+
         expect(style.show._expression).toBe(item.showExpressionFromFilters);
       });
     });
@@ -147,7 +163,8 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
       try {
         await item.loadMapItems();
       } catch {}
-      expect(item.mapItems[0].maximumScreenSpaceError).toBe(3);
+      const tileset = item.mapItems[0] as Cesium3DTileset;
+      expect(tileset.maximumScreenSpaceError).toBe(3);
     });
   });
 
@@ -186,13 +203,15 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
 
           it("sets the shadow mode", function() {
             runInAction(() => item.setTrait("definition", "shadows", "CAST"));
-            expect(item.mapItems[0].shadows).toBe(ShadowMode.CAST_ONLY);
+            const tileset = item.mapItems[0] as Cesium3DTileset;
+            expect(tileset.shadows).toBe(ShadowMode.CAST_ONLY);
           });
 
           it("sets the color blend mode", function() {
             runInAction(() => {
               item.setTrait("definition", "colorBlendMode", "REPLACE");
-              expect(item.mapItems[0].colorBlendMode).toBe(
+              const tileset = item.mapItems[0] as Cesium3DTileset;
+              expect(tileset.colorBlendMode).toBe(
                 Cesium3DTileColorBlendMode.REPLACE
               );
             });
@@ -201,13 +220,15 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
           it("sets the color blend amount", function() {
             runInAction(() => {
               item.setTrait("user", "colorBlendAmount", 0.42);
-              expect(item.mapItems[0].colorBlendAmount).toBe(0.42);
+              const tileset = item.mapItems[0] as Cesium3DTileset;
+              expect(tileset.colorBlendAmount).toBe(0.42);
             });
           });
 
           it("sets the shadow mode", function() {
             runInAction(() => item.setTrait("definition", "shadows", "CAST"));
-            expect(item.mapItems[0].shadows).toBe(ShadowMode.CAST_ONLY);
+            const tileset = item.mapItems[0] as Cesium3DTileset;
+            expect(tileset.shadows).toBe(ShadowMode.CAST_ONLY);
           });
 
           it("sets the style", function() {
@@ -216,7 +237,8 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
                 show: "${ZipCode} === '19341'"
               })
             );
-            expect(item.mapItems[0].style).toBe((<any>item).cesiumTileStyle);
+            const tileset = item.mapItems[0] as Cesium3DTileset;
+            expect(tileset.style).toBe((<any>item).cesiumTileStyle);
           });
 
           // TODO: fix later
@@ -234,8 +256,9 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
           // });
 
           it("sets the rootTransform to IDENTITY", function() {
+            const tileset = item.mapItems[0] as Cesium3DTileset;
             expect(
-              Matrix4.equals(item.mapItems[0].root.transform, Matrix4.IDENTITY)
+              Matrix4.equals(tileset.root.transform, Matrix4.IDENTITY)
             ).toBeTruthy();
           });
 
@@ -258,7 +281,8 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
               })
             );
             item.setTrait(CommonStrata.user, "scale", 5);
-            const modelMatrix = item.mapItems[0].modelMatrix;
+            const tileset = item.mapItems[0] as Cesium3DTileset;
+            const modelMatrix = tileset.modelMatrix;
             const rotation = HeadingPitchRoll.fromQuaternion(
               Quaternion.fromRotationMatrix(
                 Matrix4.getMatrix3(modelMatrix, new Matrix3())

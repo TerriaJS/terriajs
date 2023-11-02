@@ -15,7 +15,7 @@ import {
 } from "react-i18next";
 import styled, { DefaultTheme } from "styled-components";
 import isDefined from "../../Core/isDefined";
-import { useTranslationIfExists } from "../../Language/languageHelpers";
+import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import LocationSearchProviderMixin from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
 import SearchProviderResults from "../../Models/SearchProviders/SearchProviderResults";
 import Terria from "../../Models/Terria";
@@ -157,12 +157,12 @@ class LocationSearchResults extends React.Component<PropsType> {
                   justifySpaceBetween
                 >
                   <RawButton onClick={this.toggleExpand}>
-                    <Text small isLink>
+                    <TextSpan small isLink>
                       <SearchResultsFooter
                         isExpanded={this.isExpanded}
                         name={searchProvider.name}
                       />
-                    </Text>
+                    </TextSpan>
                   </RawButton>
                 </BoxSpan>
               )}
@@ -182,14 +182,14 @@ interface SearchResultsFooterProps {
 const SearchResultsFooter: React.FC<SearchResultsFooterProps> = (
   props: SearchResultsFooterProps
 ) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   if (props.isExpanded) {
     return t("search.viewLess", {
-      name: useTranslationIfExists(props.name)
+      name: applyTranslationIfExists(props.name, i18n)
     });
   }
   return t("search.viewMore", {
-    name: useTranslationIfExists(props.name)
+    name: applyTranslationIfExists(props.name, i18n)
   });
 };
 
@@ -202,18 +202,22 @@ interface NameWithLoaderProps {
 }
 
 const NameWithLoader: React.FC<NameWithLoaderProps> = observer(
-  (props: NameWithLoaderProps) => (
-    <BoxSpan styledHeight={"25px"}>
-      <BoxSpan verticalCenter>
-        <TextSpan textDarker uppercase>{`${useTranslationIfExists(
-          props.name
-        )} (${props.length || 0})`}</TextSpan>
+  (props: NameWithLoaderProps) => {
+    const { i18n } = useTranslation();
+    return (
+      <BoxSpan styledHeight={"25px"}>
+        <BoxSpan verticalCenter>
+          <TextSpan textDarker uppercase>{`${applyTranslationIfExists(
+            props.name,
+            i18n
+          )} (${props.length || 0})`}</TextSpan>
+        </BoxSpan>
+        {!props.isOpen &&
+          (props.search.isSearching || props.isWaitingForSearchToStart) && (
+            <Loader hideMessage boxProps={{ fullWidth: false }} />
+          )}
       </BoxSpan>
-      {!props.isOpen &&
-        (props.search.isSearching || props.isWaitingForSearchToStart) && (
-          <Loader hideMessage boxProps={{ fullWidth: false }} />
-        )}
-    </BoxSpan>
-  )
+    )
+  }
 );
 export default withTranslation()(LocationSearchResults);

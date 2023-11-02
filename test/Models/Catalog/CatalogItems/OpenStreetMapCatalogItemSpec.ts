@@ -142,7 +142,7 @@ describe("OpenStreetMapCatalogItem", function() {
             tileWidth: 256,
             tileHeight: 256,
             minimumLevel: 0,
-            maximumLevel: item.maximumLevel,
+            maximumLevel: 25,
             subdomains: ["a"]
           });
         });

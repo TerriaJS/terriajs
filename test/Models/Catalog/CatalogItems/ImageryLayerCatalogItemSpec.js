@@ -17,7 +17,6 @@ const TimeIntervalCollection = require("terriajs-cesium/Source/Core/TimeInterval
   .default;
 const TimeInterval = require("terriajs-cesium/Source/Core/TimeInterval")
   .default;
-const when = require("terriajs-cesium/Source/ThirdParty/when").default;
 
 const Terria = require("../../../../lib/Models/Terria");
 const ImageryLayerCatalogItem = require("../../lib/Models/ImageryLayerCatalogItem");
@@ -186,12 +185,12 @@ describe("ImageryLayerCatalogItem", function() {
         if (times > 0) {
           --times;
           if (options.preferBlob) {
-            return when.reject(new RequestErrorEvent(statusCode, "bad", []));
+            return Promise.reject(new RequestErrorEvent(statusCode, "bad", []));
           } else {
-            return when.reject(image);
+            return Promise.reject(image);
           }
         } else {
-          return when.resolve(image);
+          return Promise.resolve(image);
         }
       });
     }
@@ -209,7 +208,7 @@ describe("ImageryLayerCatalogItem", function() {
           expect(fetchImage.calls.count()).toEqual(1);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
 
     it("retries images that fail with a 503 error", function(done) {
@@ -224,7 +223,7 @@ describe("ImageryLayerCatalogItem", function() {
           expect(fetchImage.calls.count()).toEqual(4);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
 
     it("eventually gives up on a tile that only succeeds when loaded via blob", function(done) {
@@ -236,7 +235,7 @@ describe("ImageryLayerCatalogItem", function() {
             });
           } else {
             return runLater(function() {
-              return when.reject(image);
+              return Promise.reject(image);
             });
           }
         }
@@ -251,7 +250,7 @@ describe("ImageryLayerCatalogItem", function() {
           expect(fetchImage.calls.count()).toBeGreaterThan(5);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
 
     it("ignores any number of 404 errors if treat404AsError is false", function(done) {
@@ -279,7 +278,7 @@ describe("ImageryLayerCatalogItem", function() {
           expect(fetchImage.calls.count()).toEqual(tiles.length * 2);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
 
     it("ignores any number of 403 errors if treat403AsError is false", function(done) {
@@ -307,7 +306,7 @@ describe("ImageryLayerCatalogItem", function() {
           expect(fetchImage.calls.count()).toEqual(tiles.length * 2);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
 
     it("doesn't disable the layer after only five 404s if treat404AsError is true", function(done) {
@@ -337,7 +336,7 @@ describe("ImageryLayerCatalogItem", function() {
           expect(catalogItem.isShown).toBe(true);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
 
     it("disables the layer after six 404s if treat404AsError is true", function(done) {
@@ -367,7 +366,7 @@ describe("ImageryLayerCatalogItem", function() {
           expect(catalogItem.isShown).toBe(false);
         })
         .then(done)
-        .otherwise(done.fail);
+        .catch(done.fail);
     });
   });
 });

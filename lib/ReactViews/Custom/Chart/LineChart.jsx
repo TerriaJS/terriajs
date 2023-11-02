@@ -2,7 +2,9 @@ import { LinePath } from "@visx/shape";
 import { line } from "d3-shape";
 import PropTypes from "prop-types";
 import React from "react";
+import { observer } from "mobx-react";
 
+@observer
 export default class LineChart extends React.PureComponent {
   static propTypes = {
     id: PropTypes.string.isRequired,
