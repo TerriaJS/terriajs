@@ -23,7 +23,7 @@ export function calculateDomain(points: ChartPoint[]): ChartDomain {
   const ys = points.map((p) => p.y);
   const asNum = (x: Date | number) => (x instanceof Date ? x.getTime() : x);
   return {
-    x: [minBy(xs, asNum) || 0, maxBy(xs, asNum) || 0],
+    x: [minBy(xs, asNum) ?? 0, maxBy(xs, asNum) ?? 0],
     y: [getMin(ys) ?? 0, getMax(ys) ?? 0]
   };
 }
