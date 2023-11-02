@@ -2,13 +2,12 @@ import classNames from "classnames";
 import "inobounce";
 import { action } from "mobx";
 import { observer } from "mobx-react";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { DefaultTheme } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
 import arrayContains from "../../Core/arrayContains";
 import ViewState from "../../ReactViewModels/ViewState";
-import { MapCredits } from "../Credits";
 import Disclaimer from "../Disclaimer";
 import DragDropFile from "../DragDropFile";
 import DragDropNotification from "../DragDropNotification";
@@ -43,7 +42,7 @@ import processCustomElements from "./processCustomElements";
 import SidePanelContainer from "./SidePanelContainer";
 import Styles from "./standard-user-interface.scss";
 import { terriaTheme } from "./StandardTheme";
-import WorkflowPanelContainer from "./WorkflowPanelContainer";
+import WorkflowPanelPortal from "../Workflow/WorkflowPanelPortal";
 
 export const animationDuration = 250;
 
@@ -54,6 +53,7 @@ interface StandardUserInterfaceProps {
   themeOverrides?: Partial<DefaultTheme>;
   minimumLargeScreenWidth?: number;
   version: string;
+  children?: ReactNode;
 }
 
 const StandardUserInterface: React.FC<StandardUserInterfaceProps> = observer(
@@ -183,7 +183,7 @@ const StandardUserInterface: React.FC<StandardUserInterfaceProps> = observer(
                     </Small>
                     <Medium>
                       <>
-                        <WorkflowPanelContainer
+                        <WorkflowPanelPortal
                           show={props.terria.isWorkflowPanelActive}
                         />
                         <SidePanelContainer
@@ -234,11 +234,6 @@ const StandardUserInterface: React.FC<StandardUserInterfaceProps> = observer(
                     customElements={customElements}
                     allBaseMaps={allBaseMaps}
                     animationDuration={animationDuration}
-                  />
-                  <MapCredits
-                    hideTerriaLogo={!!terria.configParameters.hideTerriaLogo}
-                    credits={terria.configParameters.extraCreditLinks?.slice()}
-                    currentViewer={terria.mainViewer.currentViewer}
                   />
                   <div id="map-data-attribution"></div>
                   <main>

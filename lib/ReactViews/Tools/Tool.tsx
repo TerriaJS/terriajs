@@ -42,7 +42,7 @@ const Tool: React.FC<ToolProps> = (props) => {
       ),
       params
     ]);
-  }, [getToolComponent]);
+  }, [getToolComponent, params]);
 
   let ToolComponent;
   let toolProps;

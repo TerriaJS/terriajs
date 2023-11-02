@@ -1,3 +1,5 @@
+# Controlling Terria with URL parameters
+
 Many aspects of TerriaJS (and hence TerriaMap, NationalMap, and others) can be configured by the end user by passing URL parameters. Combine them like this:
 
 - The base URL, then a `#`
@@ -8,21 +10,21 @@ For example: [http://nationalmap.gov.au#test&map=2d](http://nationalmap.gov.au#t
 
 ### Display parameters
 
-| Parameter            | Meaning                                                                                                                                                 |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `clean`              | Don't load the default catalog files for this site.                                                                                                     |
-| `map=2d`             | Use the 2D (Leaflet) map, instead of the default.                                                                                                       |
-| `map=3d`             | Use the 3D (Cesium) map, instead of the default.                                                                                                        |
-| `map=3dSmooth`       | Use the 3D (Cesium) map without terrain, instead of the default.                                                                                        |
-| `playStory=1`        | Automatically start playing the map's Story, if there is one.                                                                                           |
-| `hideWorkbench=1`    | Collapse the workbench (left side) panel, useful for embedding. Also automatically plays a story, if there is one.                                      |
-| `mode=preview`       | Operate in "preview mode", which mostly means not showing a warning if the screen is `small`                                                            |
-| `share=`...          | Load a map view previously saved using the "Share" function with URL shortening.                                                                        |
-| `start=`...          | Load a map view previously saved without URL shortening. The argument is a URL-encoded JSON structure defined using an internal format described below. |
-| `<initfile>`         | Load catalog file as described below.                                                                                                                   |
-| `hideWelcomeMessage` | Forces the welcome message not to be displayed.                                                                                                         |
-| `ignoreErrors=1`     | Ignore **all** error messages.                                                                                                                          |
-| `configUrl=`...      | Overwrite Terria config URL in **dev environment only**.                                                                                                |
+| Parameter            | Meaning                                                                                                                                                                                                                                                                                                          |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `clean`              | Don't load the default [init/catalog file](../customizing/initialization-files.md) for this site.                                                                                                                                                                                                                |
+| `map=2d`             | Use the 2D (Leaflet) map, instead of the default.                                                                                                                                                                                                                                                                |
+| `map=3d`             | Use the 3D (Cesium) map, instead of the default.                                                                                                                                                                                                                                                                 |
+| `map=3dSmooth`       | Use the 3D (Cesium) map without terrain, instead of the default.                                                                                                                                                                                                                                                 |
+| `playStory=1`        | Automatically start playing the map's Story, if there is one.                                                                                                                                                                                                                                                    |
+| `hideWorkbench=1`    | Collapse the workbench (left side) panel, useful for embedding. Also automatically plays a story, if there is one.                                                                                                                                                                                               |
+| `mode=preview`       | Operate in "preview mode", which mostly means not showing a warning if the screen is `small`                                                                                                                                                                                                                     |
+| `share=`...          | Load a map view previously saved using the "Share" function with URL shortening.                                                                                                                                                                                                                                 |
+| `start=`...          | Load a map view previously saved without URL shortening. The argument is a URL-encoded JSON structure defined using an internal format described below.                                                                                                                                                          |
+| `<initfile>`         | Load [init/catalog file](../customizing/initialization-files.md) as described below. This can be a URL to an init file - or an "init fragment" (eg `simple` - which resolves to `init/simple.json`). See `initFragmentPaths` in [client side config parameters](../customizing/client-side-config.md#parameters) |
+| `hideWelcomeMessage` | Forces the welcome message not to be displayed.                                                                                                                                                                                                                                                                  |
+| `ignoreErrors=1`     | Ignore **all** error messages.                                                                                                                                                                                                                                                                                   |
+| `configUrl=`...      | Overwrite Terria config URL in **dev environment only**.                                                                                                                                                                                                                                                         |
 
 ### Catalog files (init files)
 
@@ -37,13 +39,17 @@ Multiple catalog files can be loaded this way, and will be combined. Files are l
 
 For example, http://nationalmap.gov.au#test will load init file http://nationalmap.gov.au/init/test.json
 
-### Start data
+Full Init file docs are [available here](../customizing/initialization-files.md)
 
-The `start=` parameter essentially embeds an entire catalog file in the URL. The format is:
+### Start data (`ShareData`)
+
+Full `ShareData` docs are [available here](../customizing/initialization-files.md#sharedata)
+
+The `start=` parameter essentially embeds an entire init/catalog file in the URL. The format is:
 
 ```
 {
-    "version": "0.0.05",
+    "version": "8.0.0",
     "initSources": [
         "init/nm.json",
         "init/test.json",
@@ -54,34 +60,12 @@ The `start=` parameter essentially embeds an entire catalog file in the URL. The
             ]
         },
         {
-            "initialCamera": {
-                "west": <lon>,
-                "south": <lat>,
-                "east": <lon>,
-                "north": <lat>,
-                "position": {
-                    "x": ...,
-                    "y": ...,
-                    "z": ...
-                },
-                "direction": {
-                    "x": ...,
-                    "y": ...,
-                    "z": ...
-                },
-                "up": {
-                    "x": ...,
-                    "y": ...,
-                    "z": ...
-                }
-            },
             "homeCamera": {
                 "west": ...,
                 "south": ...,
                 "east": ...,
                 "north": -...
             },
-            "baseMapName": "Positron (Light)",
             "viewerMode": "3d"
         }
     ]

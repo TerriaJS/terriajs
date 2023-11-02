@@ -4,7 +4,7 @@ import mixTraits from "../mixTraits";
 import EnumDimensionTraits from "./DimensionTraits";
 import LegendOwnerTraits from "./FeatureInfoTraits";
 import SdmxCommonTraits from "./SdmxCommonTraits";
-import TableTraits from "./TableTraits";
+import TableTraits from "./Table/TableTraits";
 import UrlTraits from "./UrlTraits";
 
 export class SdmxDimensionTraits extends mixTraits(EnumDimensionTraits) {

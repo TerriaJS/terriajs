@@ -40,7 +40,7 @@ describe("SenapsLocationsCatalogItem", function () {
       {{/streamIds}}</ul>
       <br/>
       <chart
-      id='{{id}}'
+      identifier='{{id}}'
       title='{{id}}'
       sources='${url}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=1440&media=csv&csvheader=false&sort=descending,${url}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=7200&media=csv&csvheader=false&sort=descending'
       source-names='1d,5d'

@@ -17,13 +17,15 @@ import TableMixin from "../ModelMixins/TableMixin";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import createCombinedModel from "../Models/Definition/createCombinedModel";
 import Model from "../Models/Definition/Model";
-import TableChartStyleTraits from "../Traits/TraitsClasses/TableChartStyleTraits";
-import TableColorStyleTraits from "../Traits/TraitsClasses/TableColorStyleTraits";
-import { OutlineSymbolTraits } from "../Traits/TraitsClasses/TableOutlineStyleTraits";
-import TablePointSizeStyleTraits from "../Traits/TraitsClasses/TablePointSizeStyleTraits";
-import { PointSymbolTraits } from "../Traits/TraitsClasses/TablePointStyleTraits";
-import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
-import TableTimeStyleTraits from "../Traits/TraitsClasses/TableTimeStyleTraits";
+import TableChartStyleTraits from "../Traits/TraitsClasses/Table/ChartStyleTraits";
+import TableColorStyleTraits from "../Traits/TraitsClasses/Table/ColorStyleTraits";
+import { LabelSymbolTraits } from "../Traits/TraitsClasses/Table/LabelStyleTraits";
+import { OutlineSymbolTraits } from "../Traits/TraitsClasses/Table/OutlineStyleTraits";
+import TablePointSizeStyleTraits from "../Traits/TraitsClasses/Table/PointSizeStyleTraits";
+import { PointSymbolTraits } from "../Traits/TraitsClasses/Table/PointStyleTraits";
+import { TrailSymbolTraits } from "../Traits/TraitsClasses/Table/TrailStyleTraits";
+import TableStyleTraits from "../Traits/TraitsClasses/Table/StyleTraits";
+import TableTimeStyleTraits from "../Traits/TraitsClasses/Table/TimeStyleTraits";
 import TableColorMap from "./TableColorMap";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
@@ -123,19 +125,25 @@ export default class TableStyle {
   /** Is style "custom" - that is - has the style been created/modified by the user (either directly, or indirectly through a share link).
    */
   @computed get isCustom() {
-    const userStrata = this.colorTraits.strata.get(CommonStrata.user);
-    if (!userStrata) return false;
+    const colorTraits = this.colorTraits.strata.get(CommonStrata.user);
+    const pointSizeTraits = this.pointSizeTraits.strata.get(CommonStrata.user);
+    const styleTraits = this.styleTraits.strata.get(CommonStrata.user);
 
     return (
-      (userStrata.binColors ?? [])?.length > 0 ||
-      (userStrata.binMaximums ?? [])?.length > 0 ||
-      (userStrata.enumColors ?? [])?.length > 0 ||
-      isDefined(userStrata.numberOfBins) ||
-      isDefined(userStrata.minimumValue) ||
-      isDefined(userStrata.maximumValue) ||
-      isDefined(userStrata.regionColor) ||
-      isDefined(userStrata.nullColor) ||
-      isDefined(userStrata.outlierColor)
+      (colorTraits?.binColors ?? [])?.length > 0 ||
+      (colorTraits?.binMaximums ?? [])?.length > 0 ||
+      (colorTraits?.enumColors ?? [])?.length > 0 ||
+      isDefined(colorTraits?.numberOfBins) ||
+      isDefined(colorTraits?.minimumValue) ||
+      isDefined(colorTraits?.maximumValue) ||
+      isDefined(colorTraits?.regionColor) ||
+      isDefined(colorTraits?.nullColor) ||
+      isDefined(colorTraits?.outlierColor) ||
+      pointSizeTraits ||
+      styleTraits?.point ||
+      styleTraits?.outline ||
+      styleTraits?.label ||
+      styleTraits?.trail
     );
   }
 
@@ -390,6 +398,22 @@ export default class TableStyle {
       this.tableModel,
       this.styleTraits,
       "outline"
+    );
+  }
+
+  @computed get trailStyleMap() {
+    return new TableStyleMap<TrailSymbolTraits>(
+      this.tableModel,
+      this.styleTraits,
+      "trail"
+    );
+  }
+
+  @computed get labelStyleMap() {
+    return new TableStyleMap<LabelSymbolTraits>(
+      this.tableModel,
+      this.styleTraits,
+      "label"
     );
   }
 

@@ -43,6 +43,8 @@ The translation language file contains all translations used throughout the Terr
 
 The languageOverrides language file is used to override the translation language file's translations without rebuilding the application and specifying the additional translations needed. This file is located in `/wwwroot/languages/{abbreviation}/languageOverrides.json` inside the root folder of TerriaMap (where the abbreviation is a short name of the language specified in the config). A namespace for this translation file is `languageOverrides`.
 
+Note the base URL to overrides language files can be changed by setting `LanguageConfiguration.overridesBaseUrl`. See [config.json documentation](../customizing/client-side-config.md#LanguageConfiguration)
+
 ## Best practice
 
 This section describes how to use i18next to provide a translation of TerriaJS.

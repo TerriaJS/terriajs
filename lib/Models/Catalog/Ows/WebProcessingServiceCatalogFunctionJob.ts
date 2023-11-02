@@ -360,7 +360,9 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
             features: geojsonFeatures,
             totalFeatures: this.geojsonFeatures!.length
           }
-        });
+        }).logError(
+          "Error ocurred while updating Input Features GeoJSON model JSON"
+        );
       });
       (await this.geoJsonItem!.loadMapItems()).throwIfError;
     }

@@ -1,7 +1,7 @@
-import * as MapToolbar from "../../../lib/ViewModels/MapNavigation/MapToolbar";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import Icon from "../../../lib/Styled/Icon";
+import * as MapToolbar from "../../../lib/ViewModels/MapNavigation/MapToolbar";
 
 describe("MapToolbar", function () {
   let viewState: ViewState;
@@ -16,115 +16,140 @@ describe("MapToolbar", function () {
     });
   });
 
-  describe("simple click button", function () {
-    it("can be added to the toolbar", function () {
+  describe("addTool", function () {
+    it("adds the new tool button to toolbar", function () {
       expect(terria.mapNavigationModel.items.length).toBe(0);
-      MapToolbar.addButton(viewState, {
-        text: "Simple button",
-        icon: Icon.GLYPHS.eye,
-        onClick: () => {}
+      const toolId = MapToolbar.addTool(viewState, {
+        id: "x-tool-id",
+        name: "X Tool",
+        toolComponentLoader: () => Promise.resolve({ default: () => null }),
+        toolButton: {
+          text: "Open X tool",
+          icon: Icon.GLYPHS.bulb
+        }
       });
+      expect(toolId).toBe("x-tool-id"); // returns the tool id
       expect(terria.mapNavigationModel.items.length).toBe(1);
-      expect(terria.mapNavigationModel.items[0].name).toBe("Simple button");
+      expect(terria.mapNavigationModel.items[0].name).toBe("Open X tool");
     });
 
-    it("calls `onClick` when clicked", function () {
-      const onClickSpy = jasmine.createSpy("onClick");
-      MapToolbar.addButton(viewState, {
-        text: "Simple button",
-        icon: Icon.GLYPHS.eye,
-        onClick: onClickSpy
+    it("generates a random id when called without an `id`", function () {
+      const toolId = MapToolbar.addTool(viewState, {
+        name: "X Tool",
+        toolComponentLoader: () => Promise.resolve({ default: () => null }),
+        toolButton: {
+          text: "Open X tool",
+          icon: Icon.GLYPHS.bulb
+        }
       });
-      const navItem = terria.mapNavigationModel.items[0];
-      expect(navItem).toBeDefined();
-      navItem.controller.handleClick();
-      expect(onClickSpy).toHaveBeenCalledTimes(1);
+      expect(toolId).toBeDefined();
     });
   });
 
-  describe("mode button", function () {
-    it("can be added to the toolbar", function () {
-      expect(terria.mapNavigationModel.items.length).toBe(0);
-      MapToolbar.addModeButton(viewState, {
-        text: "Mode button",
-        icon: Icon.GLYPHS.pedestrian,
-        onUserEnterMode: () => {},
-        onUserCloseMode: () => {}
-      });
-      expect(terria.mapNavigationModel.items.length).toBe(1);
-      expect(terria.mapNavigationModel.items[0].name).toBe("Mode button");
-    });
-
-    describe("onUserEnterMode", function () {
-      it("is called once when user activates the mode button", function () {
-        const onUserEnterModeSpy = jasmine.createSpy("onUserEnterMode");
-        MapToolbar.addModeButton(viewState, {
-          text: "Mode button",
-          icon: Icon.GLYPHS.pedestrian,
-          onUserEnterMode: onUserEnterModeSpy,
-          onUserCloseMode: () => {}
-        });
-        const navItem = terria.mapNavigationModel.items[0];
-        expect(navItem).toBeDefined();
-
-        expect(onUserEnterModeSpy).toHaveBeenCalledTimes(0);
-        navItem.controller.activate();
-        expect(onUserEnterModeSpy).toHaveBeenCalledTimes(1);
-      });
-
-      it("raises any callback errors to the user", function () {
-        MapToolbar.addModeButton(viewState, {
-          text: "Mode button",
-          icon: Icon.GLYPHS.pedestrian,
-          onUserEnterMode: () => {
-            throw "onUserEnterMode error";
-          },
-          onUserCloseMode: () => {}
-        });
-
-        const raiseErrorToUserSpy = spyOn(terria, "raiseErrorToUser");
-        const navItem = terria.mapNavigationModel.items[0];
-        expect(navItem).toBeDefined();
-        expect(raiseErrorToUserSpy).toHaveBeenCalledTimes(0);
-        navItem.controller.activate();
-        expect(raiseErrorToUserSpy).toHaveBeenCalledTimes(1);
+  describe("openTool", function () {
+    let toolId = "x-tool-id";
+    beforeEach(function () {
+      MapToolbar.addTool(viewState, {
+        id: toolId,
+        name: "X Tool",
+        toolComponentLoader: () => Promise.resolve({ default: () => null }),
+        toolButton: {
+          text: "Open X tool",
+          icon: Icon.GLYPHS.bulb
+        }
       });
     });
 
-    describe("onUserCloseMode", function () {
-      it("is called once when user deactivates the mode button", function () {
-        const onUserCloseModeSpy = jasmine.createSpy("onUserCloseMode");
-        MapToolbar.addModeButton(viewState, {
-          text: "Mode button",
-          icon: Icon.GLYPHS.pedestrian,
-          onUserEnterMode: () => {},
-          onUserCloseMode: onUserCloseModeSpy
-        });
-        const navItem = terria.mapNavigationModel.items[0];
-        expect(navItem).toBeDefined();
+    it("activates the tool", function () {
+      const isOpen = MapToolbar.openTool(viewState, toolId);
+      expect(isOpen).toBe(true);
+      const navItem = terria.mapNavigationModel.items[0];
+      expect(navItem.controller.active).toBe(true);
+    });
 
-        expect(onUserCloseModeSpy).toHaveBeenCalledTimes(0);
-        navItem.controller.deactivate();
-        expect(onUserCloseModeSpy).toHaveBeenCalledTimes(1);
+    it("returns false if there is no tool with given id", function () {
+      const isOpen = MapToolbar.openTool(viewState, "no-such-tool");
+      expect(isOpen).toBe(false);
+    });
+  });
+
+  describe("closeTool", function () {
+    it("closes the tool", function () {
+      const toolId = MapToolbar.addTool(viewState, {
+        name: "X Tool",
+        toolComponentLoader: () => Promise.resolve({ default: () => null }),
+        toolButton: {
+          text: "Open X tool",
+          icon: Icon.GLYPHS.bulb
+        }
       });
 
-      it("raises any callback errors to the user", function () {
-        MapToolbar.addModeButton(viewState, {
-          text: "Mode button",
-          icon: Icon.GLYPHS.pedestrian,
-          onUserEnterMode: () => {},
-          onUserCloseMode: () => {
-            throw "onUserCloseMode error";
-          }
-        });
+      const isOpen = MapToolbar.openTool(viewState, toolId);
+      expect(isOpen).toBe(true);
+      MapToolbar.closeTool(viewState, toolId);
+      const navItem = terria.mapNavigationModel.items[0];
+      expect(navItem.controller.active).toBe(false);
+    });
+  });
 
-        const raiseErrorToUserSpy = spyOn(terria, "raiseErrorToUser");
-        const navItem = terria.mapNavigationModel.items[0];
-        expect(navItem).toBeDefined();
-        expect(raiseErrorToUserSpy).toHaveBeenCalledTimes(0);
-        navItem.controller.deactivate();
-        expect(raiseErrorToUserSpy).toHaveBeenCalledTimes(1);
+  describe("isToolOpen", function () {
+    let toolId = "x-tool-id";
+    beforeEach(function () {
+      MapToolbar.addTool(viewState, {
+        id: toolId,
+        name: "X Tool",
+        toolComponentLoader: () => Promise.resolve({ default: () => null }),
+        toolButton: {
+          text: "Open X tool",
+          icon: Icon.GLYPHS.bulb
+        }
       });
     });
+
+    it("returns true if the tool is open", function () {
+      MapToolbar.openTool(viewState, toolId);
+      expect(MapToolbar.isToolOpen(viewState, toolId)).toBe(true);
+    });
+
+    it("otherwise, returns false", function () {
+      expect(MapToolbar.isToolOpen(viewState, toolId)).toBe(false);
+    });
+  });
+
+  describe("removeTool", function () {
+    it("removes the tool from the toolbar", function () {
+      const toolId = MapToolbar.addTool(viewState, {
+        name: "X Tool",
+        toolComponentLoader: () => Promise.resolve({ default: () => null }),
+        toolButton: {
+          text: "Open X tool",
+          icon: Icon.GLYPHS.bulb
+        }
+      });
+
+      let navItem = terria.mapNavigationModel.items[0];
+      expect(navItem.name).toBe("Open X tool");
+      MapToolbar.removeTool(viewState, toolId);
+      navItem = terria.mapNavigationModel.items[0];
+      expect(navItem).toBeUndefined();
+    });
+  });
+
+  it("is correctly deactivated even when the tool is closed through other means", function () {
+    const toolId = MapToolbar.addTool(viewState, {
+      name: "X Tool",
+      toolComponentLoader: () => Promise.resolve({ default: () => null }),
+      toolButton: {
+        text: "Open X tool",
+        icon: Icon.GLYPHS.bulb
+      }
+    });
+    const navItem = terria.mapNavigationModel.items[0];
+    MapToolbar.openTool(viewState, toolId);
+    expect(navItem.controller.active).toBe(true);
+    // The tool can be closed by other means, not nessecarily by calling toolButton.closeTool()
+    // It should still deactivate correctly.
+    viewState.closeTool();
+    expect(navItem.controller.active).toBe(false);
   });
 });

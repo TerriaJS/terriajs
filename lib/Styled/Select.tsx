@@ -1,6 +1,6 @@
 /**
  * sample usage:
- * 
+ *
 
 <Select>
   <option>one</option>
@@ -74,7 +74,7 @@ const LeftIconPositioning = styled.div`
   pointer-events: none;
 `;
 
-interface SelectProps {
+export interface SelectProps {
   boxProps?: any;
   dropdownIconProps?: any;
   light?: boolean;

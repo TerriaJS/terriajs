@@ -5,7 +5,9 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
+import ActionBarPortal from "../ActionBar/ActionBarPortal";
 import BottomDock from "../BottomDock/BottomDock";
+import { MapCredits } from "../Credits";
 import Loader from "../Loader";
 import BottomLeftBar from "../Map/BottomLeftBar/BottomLeftBar";
 import DistanceLegend from "../Map/Legend/DistanceLegend";
@@ -69,8 +71,6 @@ const MapColumn = observer(
                   `}
                 >
                   <MenuBar
-                    terria={this.props.viewState.terria}
-                    viewState={this.props.viewState}
                     allBaseMaps={this.props.allBaseMaps}
                     menuItems={customElements.menu}
                     menuLeftItems={customElements.menuLeft}
@@ -105,6 +105,9 @@ const MapColumn = observer(
                   terria={this.props.viewState.terria}
                   viewState={this.props.viewState}
                 />
+                <ActionBarPortal
+                  show={this.props.viewState.isActionBarVisible}
+                />
                 <SlideUpFadeIn isVisible={this.props.viewState.isMapZooming}>
                   <Toast>
                     <Loader
@@ -117,6 +120,16 @@ const MapColumn = observer(
                     />
                   </Toast>
                 </SlideUpFadeIn>
+                <MapCredits
+                  hideTerriaLogo={
+                    !!this.props.viewState.terria.configParameters
+                      .hideTerriaLogo
+                  }
+                  credits={this.props.viewState.terria.configParameters.extraCreditLinks?.slice()}
+                  currentViewer={
+                    this.props.viewState.terria.mainViewer.currentViewer
+                  }
+                />
                 <div className={Styles.locationDistance}>
                   <LocationBar
                     terria={this.props.viewState.terria}

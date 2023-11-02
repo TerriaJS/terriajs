@@ -2,6 +2,7 @@ import { runInAction } from "mobx";
 import OpenDataSoftCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/OpenDataSoftCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import fetchMock from "fetch-mock";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 
 const dataset = JSON.stringify(
   require("../../../../wwwroot/test/ods/weather-station-dataset.json")
@@ -72,6 +73,18 @@ describe("OpenDataSoftCatalogItem", function () {
       expect(odsItem.name).toBe("Environmental sensors");
       expect(odsItem.description?.length).toBe(244);
       expect(odsItem.datasetId).toBe("weather-stations");
+    });
+
+    it("sets refreshInterval from refreshIntervalTemplate", async function () {
+      odsItem.setTrait(
+        CommonStrata.definition,
+        "refreshIntervalTemplate",
+        "{{metas.custom.update_frequency}}"
+      );
+      await odsItem.loadMapItems();
+
+      // metametas.custom.update_frequency = "10 min"
+      expect(odsItem.refreshInterval).toBe(10 * 60);
     });
   });
 });

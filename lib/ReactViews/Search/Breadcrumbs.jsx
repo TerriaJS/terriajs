@@ -38,7 +38,9 @@ class Breadcrumbs extends React.Component {
         item.setTrait(CommonStrata.user, "isOpen", true);
       });
     });
-    await this.props.viewState.viewCatalogMember(items[0]);
+    (await this.props.viewState.viewCatalogMember(items[0])).raiseError(
+      this.props.viewState.terria
+    );
     this.props.viewState.changeSearchState("");
   }
 

@@ -1,0 +1,17 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [23.167256, 54.365886]
+      },
+      "properties": {
+        "cartodb_id": 34098,
+        "gps_code": null,
+        "name": "Airport"
+      }
+    }
+  ]
+}

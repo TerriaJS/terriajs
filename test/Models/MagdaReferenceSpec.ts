@@ -1,17 +1,12 @@
 import { runInAction } from "mobx";
 import CatalogGroup from "../../lib/Models/Catalog/CatalogGroup";
-import CatalogMemberFactory from "../../lib/Models/Catalog/CatalogMemberFactory";
-import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import GeoJsonCatalogItem from "../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import MagdaReference from "../../lib/Models/Catalog/CatalogReferences/MagdaReference";
-import Terria from "../../lib/Models/Terria";
-import StubCatalogItem from "../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
-import { BaseModel } from "../../lib/Models/Definition/Model";
 import WebMapServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
-import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson";
-import ModelFactory from "../../lib/Models/Definition/ModelFactory";
+import Terria from "../../lib/Models/Terria";
 
 describe("MagdaReference", function () {
   const recordGroupWithOneCsv = {
@@ -398,5 +393,197 @@ describe("MagdaReference", function () {
     );
     expect(catalogItem!.uniqueId).toBe(theRecordId);
     done();
+  });
+
+  describe("UI access type", function () {
+    it("returns 'public' when magda v1 access control says the record is public", function (done) {
+      const terria = new Terria();
+      const reference = new MagdaReference("magda-reference", terria);
+      reference.setTrait(CommonStrata.definition, "recordId", "test id");
+      reference.setTrait(CommonStrata.definition, "magdaRecord", {
+        id: "test id",
+        name: "Test",
+        aspects: {
+          "esri-access-control": {
+            access: "public"
+          }
+        }
+      });
+      expect(reference.accessType === "public").toBeTruthy();
+      done();
+    });
+
+    it("does not return 'public' when magda v1 access control does not say the record is public", function (done) {
+      const terria = new Terria();
+      const reference = new MagdaReference("magda-reference", terria);
+      reference.setTrait(CommonStrata.definition, "recordId", "test id");
+      reference.setTrait(CommonStrata.definition, "magdaRecord", {
+        id: "test id",
+        name: "Test",
+        aspects: {
+          "esri-access-control": {
+            access: "non-public"
+          }
+        }
+      });
+      expect(reference.accessType === "public").toBeFalsy();
+      done();
+    });
+
+    it("does not return 'public' when magda v2 access control says the record belongs to an org unit without constraint exemption being set.", function (done) {
+      const terria = new Terria();
+      const reference = new MagdaReference("magda-reference", terria);
+      reference.setTrait(CommonStrata.definition, "recordId", "test id");
+      reference.setTrait(CommonStrata.definition, "magdaRecord", {
+        id: "test id",
+        name: "Test",
+        aspects: {
+          "access-control": {
+            orgUnitId: "some org id"
+          }
+        }
+      });
+      expect(reference.accessType === "public").toBeFalsy();
+      done();
+    });
+
+    it("returns 'public' when magda v2 access control says the record belongs to an org unit with constraint exemption being set to true.", function (done) {
+      const terria = new Terria();
+      const reference = new MagdaReference("magda-reference", terria);
+      reference.setTrait(CommonStrata.definition, "recordId", "test id");
+      reference.setTrait(CommonStrata.definition, "magdaRecord", {
+        id: "test id",
+        name: "Test",
+        aspects: {
+          "access-control": {
+            orgUnitId: "some org id",
+            constraintExemption: true
+          }
+        }
+      });
+      expect(reference.accessType === "public").toBeTruthy();
+      done();
+    });
+
+    it("does not return 'public' when magda v2 access control says the record belongs to an org unit with constraint exemption being set to false.", function (done) {
+      const terria = new Terria();
+      const reference = new MagdaReference("magda-reference", terria);
+      reference.setTrait(CommonStrata.definition, "recordId", "test id");
+      reference.setTrait(CommonStrata.definition, "magdaRecord", {
+        id: "test id",
+        name: "Test",
+        aspects: {
+          "access-control": {
+            orgUnitId: "some org id",
+            constraintExemption: false
+          }
+        }
+      });
+      expect(reference.accessType === "public").toBeFalsy();
+      done();
+    });
+
+    it("returns 'public' when magda v2 access control does not say the record belongs to an org unit.", function (done) {
+      const terria = new Terria();
+      const reference = new MagdaReference("magda-reference", terria);
+      reference.setTrait(CommonStrata.definition, "recordId", "test id");
+      reference.setTrait(CommonStrata.definition, "magdaRecord", {
+        id: "test id",
+        name: "Test",
+        aspects: {
+          "access-control": {
+            someOtherProperty: "something else"
+          }
+        }
+      });
+      expect(reference.accessType === "public").toBeTruthy();
+      done();
+    });
+
+    it("returns value depends on magda v2 access control if magda v1 access control also exists.", function (done) {
+      const terria = new Terria();
+      const reference = new MagdaReference("magda-reference", terria);
+      reference.setTrait(CommonStrata.definition, "recordId", "test id");
+      reference.setTrait(CommonStrata.definition, "magdaRecord", {
+        id: "test id",
+        name: "Test",
+        aspects: {
+          "esri-access-control": {
+            access: "public"
+          },
+          "access-control": {
+            orgUnitId: "some org id"
+          }
+        }
+      });
+      expect(reference.accessType === "public").toBeFalsy();
+
+      reference.setTrait(CommonStrata.definition, "magdaRecord", {
+        id: "test id",
+        name: "Test",
+        aspects: {
+          "esri-access-control": {
+            access: "non-public"
+          },
+          "access-control": {
+            someOtherProperty: "something else"
+          }
+        }
+      });
+      expect(reference.accessType === "public").toBeTruthy();
+
+      reference.setTrait(CommonStrata.definition, "magdaRecord", {
+        id: "test id",
+        name: "Test",
+        aspects: {
+          "esri-access-control": {
+            access: "public"
+          },
+          "access-control": {
+            orgUnitId: "some org id"
+          }
+        }
+      });
+      expect(reference.accessType === "public").toBeFalsy();
+
+      done();
+    });
+
+    it("returns 'public' when there are no any access control aspects.", function (done) {
+      const terria = new Terria();
+      const reference = new MagdaReference("magda-reference", terria);
+      reference.setTrait(CommonStrata.definition, "recordId", "test id");
+      reference.setTrait(CommonStrata.definition, "magdaRecord", {
+        id: "test id",
+        name: "Test",
+        aspects: {
+          "some other aspect": {}
+        }
+      });
+      expect(reference.accessType === "public").toBeTruthy();
+      done();
+    });
+
+    it("returns `super.accessType` when magdaRecord is unset", function () {
+      const terria = new Terria();
+      const reference = new MagdaReference("magda-reference", terria);
+      reference.setAccessType("foo-doesnt-matter");
+      reference.setTrait(CommonStrata.definition, "recordId", "test id");
+      reference.setTrait(CommonStrata.definition, "magdaRecord", {
+        id: "test id",
+        name: "Test",
+        aspects: {
+          "access-control": {
+            orgUnitId: "some org id",
+            constraintExemption: false
+          }
+        }
+      });
+      // Picks up the access type from magdaRecord settings
+      expect(reference.accessType).toBe("non-public");
+      reference.setTrait(CommonStrata.definition, "magdaRecord", undefined);
+      // Reverts to whatever accessType value is returned by super.accessType
+      expect(reference.accessType).toBe("foo-doesnt-matter");
+    });
   });
 });
