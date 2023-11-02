@@ -1,9 +1,7 @@
-import Cesium from "../Cesium";
 import SearchProvider from "./SearchProvider";
 import { observable, makeObservable } from "mobx";
 import Terria from "../Terria";
-import { defaultValue } from "terriajs-cesium";
-import Scene from "terriajs-cesium/Source/Scene/Scene";
+import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
